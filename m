@@ -2,36 +2,35 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1238038D15E
-	for <lists+dmaengine@lfdr.de>; Sat, 22 May 2021 00:22:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6E9838D160
+	for <lists+dmaengine@lfdr.de>; Sat, 22 May 2021 00:22:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229939AbhEUWYG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 21 May 2021 18:24:06 -0400
-Received: from mga09.intel.com ([134.134.136.24]:56359 "EHLO mga09.intel.com"
+        id S230178AbhEUWYO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 21 May 2021 18:24:14 -0400
+Received: from mga01.intel.com ([192.55.52.88]:16647 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229926AbhEUWYG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 21 May 2021 18:24:06 -0400
-IronPort-SDR: aNVD9SuQzldcFU4ZF/QITjmZZan7UtQO30eskTsTBLb9AkpY9ZfSqZ2VgkE8tgwE0mFs2CPWYQ
- BN5N2U6pNqiw==
-X-IronPort-AV: E=McAfee;i="6200,9189,9991"; a="201620108"
+        id S230052AbhEUWYL (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 21 May 2021 18:24:11 -0400
+IronPort-SDR: DDIulCkf5YOwsCwtFNRes7nb7cKYshI07kUxj7/ZH6xkJ4tEuqYwIuTu+7BIkXtIeedw7T4IhS
+ t8LFZBbz/92Q==
+X-IronPort-AV: E=McAfee;i="6200,9189,9991"; a="222698406"
 X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
-   d="scan'208";a="201620108"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 15:22:42 -0700
-IronPort-SDR: FXFLpEkVQvOptMA6jNhOsdDDa51DFq3kK7RDkL4T4mRwviKI+3AuuMj8UU59PYCuYf8gqiQMi/
- B7xgF53hkBcw==
+   d="scan'208";a="222698406"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 15:22:48 -0700
+IronPort-SDR: Vi4Zusx32r/WxeORy7gHQzHWLqDKbcyYptGwWgaJDSF2nHCcPW6Bsxx7aOtkMQZZugEdkbMEtp
+ YfKpYrjVmB0A==
 X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
-   d="scan'208";a="544246020"
+   d="scan'208";a="412776655"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 15:22:41 -0700
-Subject: [PATCH 13/18] dmaengine: idxd: add type to driver in order to allow
- device matching
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 15:22:47 -0700
+Subject: [PATCH 14/18] dmaengine: idxd: create idxd_device sub-driver
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     vkoul@kernel.org
-Cc:     Dan Willliams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, jgg@nvidia.com, ramesh.thomas@intel.com
-Date:   Fri, 21 May 2021 15:22:41 -0700
-Message-ID: <162163576130.260470.5739763941303052192.stgit@djiang5-desk3.ch.intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
+        jgg@nvidia.com, ramesh.thomas@intel.com
+Date:   Fri, 21 May 2021 15:22:46 -0700
+Message-ID: <162163576688.260470.16290873965761455524.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <162163546245.260470.18336189072934823712.stgit@djiang5-desk3.ch.intel.com>
 References: <162163546245.260470.18336189072934823712.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/0.23-29-ga622f1
@@ -42,90 +41,98 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add an array of support device types to the idxd_device_driver
-definition in order to enable simple matching of device type to a
-given driver. The deprecated / omnibus dsa_drv driver specifies
-IDXD_DEV_NONE as its only role is to service legacy userspace (old
-accel-config) directed bind requests and route them to them the proper
-driver. It need not attach to a device when the bus is autoprobed. The
-accel-config tooling is being updated to drop its dependency on this
-deprecated bind scheme.
+The original architecture of /sys/bus/dsa invented a scheme whereby a
+single entry in the list of bus drivers, /sys/bus/drivers/dsa, handled
+all device types and internally routed them to different drivers.
+Those internal drivers were invisible to userspace. Now, as
+/sys/bus/dsa wants to grow support for alternate drivers for a given
+device, for example vfio-mdev instead of kernel-internal-dmaengine, a
+proper bus device-driver model is needed. The first step in that process
+is separating the existing omnibus/implicit "dsa" driver into proper
+individual drivers registered on /sys/bus/dsa. Establish the idxd_drv
+driver that control the enabling and disabling of the accelerator device.
 
-Reviewed-by: Dan Willliams <dan.j.williams@intel.com>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/dma/idxd/idxd.h  |    1 +
- drivers/dma/idxd/init.c  |    5 +++++
- drivers/dma/idxd/sysfs.c |   16 +++++++++++++++-
- 3 files changed, 21 insertions(+), 1 deletion(-)
+ drivers/dma/idxd/device.c |   13 +++++++++++++
+ drivers/dma/idxd/idxd.h   |    3 +++
+ drivers/dma/idxd/init.c   |    7 +++++++
+ 3 files changed, 23 insertions(+)
 
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index f530f90b28a8..d19db0f71ab0 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -51,6 +51,7 @@ enum idxd_type {
- 
- struct idxd_device_driver {
- 	const char *name;
-+	enum idxd_dev_type *type;
- 	int (*probe)(struct idxd_dev *idxd_dev);
- 	void (*remove)(struct idxd_dev *idxd_dev);
- 	struct device_driver drv;
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index d576df19c401..d65d484483a3 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -820,6 +820,11 @@ int __idxd_driver_register(struct idxd_device_driver *idxd_drv, struct module *o
- {
- 	struct device_driver *drv = &idxd_drv->drv;
- 
-+	if (!idxd_drv->type) {
-+		pr_debug("driver type not set (%ps)\n", __builtin_return_address(0));
-+		return -EINVAL;
-+	}
-+
- 	drv->name = idxd_drv->name;
- 	drv->bus = &dsa_bus_type;
- 	drv->owner = owner;
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index f5471311788e..49df72bc97b0 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -19,9 +19,18 @@ static char *idxd_wq_type_names[] = {
- static int idxd_config_bus_match(struct device *dev,
- 				 struct device_driver *drv)
- {
-+	struct idxd_device_driver *idxd_drv =
-+		container_of(drv, struct idxd_device_driver, drv);
- 	struct idxd_dev *idxd_dev = confdev_to_idxd_dev(dev);
-+	int i = 0;
-+
-+	while (idxd_drv->type[i] != IDXD_DEV_NONE) {
-+		if (idxd_dev->type == idxd_drv->type[i])
-+			return 1;
-+		i++;
-+	}
- 
--	return (is_idxd_dev(idxd_dev) || is_idxd_wq_dev(idxd_dev));
-+	return 0;
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index 8fac0a3cdbcc..f1a82d46245f 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -1319,3 +1319,16 @@ void idxd_device_drv_remove(struct idxd_dev *idxd_dev)
+ 	if (rc < 0)
+ 		dev_dbg(dev, "Device disable failed\n");
  }
- 
- static int idxd_config_bus_probe(struct device *dev)
-@@ -79,10 +88,15 @@ static void idxd_dsa_drv_remove(struct idxd_dev *idxd_dev)
- 	}
- }
- 
++
 +static enum idxd_dev_type dev_types[] = {
++	IDXD_DEV_DSA,
++	IDXD_DEV_IAX,
 +	IDXD_DEV_NONE,
 +};
 +
- struct idxd_device_driver dsa_drv = {
- 	.name = "dsa",
- 	.probe = idxd_dsa_drv_probe,
- 	.remove = idxd_dsa_drv_remove,
++struct idxd_device_driver idxd_drv = {
 +	.type = dev_types,
++	.probe = idxd_device_drv_probe,
++	.remove = idxd_device_drv_remove,
++	.name = "idxd",
++};
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index d19db0f71ab0..bb7561948abb 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -58,6 +58,7 @@ struct idxd_device_driver {
  };
  
- /* IDXD engine attributes */
+ extern struct idxd_device_driver dsa_drv;
++extern struct idxd_device_driver idxd_drv;
+ 
+ struct idxd_irq_entry {
+ 	struct idxd_device *idxd;
+@@ -495,6 +496,8 @@ void idxd_mask_msix_vector(struct idxd_device *idxd, int vec_id);
+ void idxd_unmask_msix_vector(struct idxd_device *idxd, int vec_id);
+ 
+ /* device control */
++int idxd_register_idxd_drv(void);
++void idxd_unregister_idxd_drv(void);
+ int idxd_device_drv_probe(struct idxd_dev *idxd_dev);
+ void idxd_device_drv_remove(struct idxd_dev *idxd_dev);
+ int drv_enable_wq(struct idxd_wq *wq);
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index d65d484483a3..01720d259259 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -781,6 +781,10 @@ static int __init idxd_init_module(void)
+ 	if (err < 0)
+ 		return err;
+ 
++	err = idxd_driver_register(&idxd_drv);
++	if (err < 0)
++		goto err_idxd_driver_register;
++
+ 	err = idxd_driver_register(&dsa_drv);
+ 	if (err < 0)
+ 		goto err_dsa_driver_register;
+@@ -800,6 +804,8 @@ static int __init idxd_init_module(void)
+ err_cdev_register:
+ 	idxd_driver_unregister(&dsa_drv);
+ err_dsa_driver_register:
++	idxd_driver_unregister(&idxd_drv);
++err_idxd_driver_register:
+ 	idxd_unregister_bus_type();
+ 	return err;
+ }
+@@ -807,6 +813,7 @@ module_init(idxd_init_module);
+ 
+ static void __exit idxd_exit_module(void)
+ {
++	idxd_driver_unregister(&idxd_drv);
+ 	idxd_driver_unregister(&dsa_drv);
+ 	pci_unregister_driver(&idxd_pci_driver);
+ 	idxd_cdev_remove();
 
 

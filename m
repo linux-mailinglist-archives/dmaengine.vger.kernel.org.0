@@ -2,644 +2,260 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5665638B9EF
-	for <lists+dmaengine@lfdr.de>; Fri, 21 May 2021 01:02:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1542E38BBCD
+	for <lists+dmaengine@lfdr.de>; Fri, 21 May 2021 03:43:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232827AbhETXEC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 20 May 2021 19:04:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232619AbhETXEC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 May 2021 19:04:02 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 944CAC061574;
-        Thu, 20 May 2021 16:02:39 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id b7so5798810plg.0;
-        Thu, 20 May 2021 16:02:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QhESEWNq0QZuoMD/+nbvb2Hxc08lKuOSGspufr3QET4=;
-        b=Bk/WuQ0qDbXrMgK8dvol3N22a1lMiMoO9omeYGFNzXchgnuJ/HZqlGo6s0OZatbpeL
-         v+KV8d4gFSmwEaHfVaV1C+XqoMP1qoAbfYnDm9vhwhBAvJeBgSqi/OjwnH5iv/G2r/Hp
-         zknKuhv/DaPDsMhTmEprVFAqo6ectWkyWVikjsF2DmySI/I9j54TSFnAjPrLjQdYMFYw
-         tjZt9F2eEBcfsNCtj5wbicy2tZVo86UZyHwaFv4i+L6ScHr8lr6XDO/Dg4Ndn1nR8Bix
-         zOj1DXja1V/muNp9g61DWLhAEvEbjCPYu4LSZAktr5Ttw0ZfCk3iMkybBvJ1Kmb8Vm6e
-         lAqQ==
+        id S237564AbhEUBop (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 20 May 2021 21:44:45 -0400
+Received: from mail-ot1-f44.google.com ([209.85.210.44]:44824 "EHLO
+        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237548AbhEUBoo (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 May 2021 21:44:44 -0400
+Received: by mail-ot1-f44.google.com with SMTP id r26-20020a056830121ab02902a5ff1c9b81so16636342otp.11;
+        Thu, 20 May 2021 18:43:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QhESEWNq0QZuoMD/+nbvb2Hxc08lKuOSGspufr3QET4=;
-        b=EfHYcCI7PleSuMnQAoAtIYC44scasCQjsuGE9PKzz0xxETwxsECpUialY7668iwjCA
-         BCXzFjcU49/Aa/JCKdinAZXjjNWw2U0TD2fhHAYb17htCCXZBQQzK7k8HUuNwcqLme+f
-         xVCegA+blc7dvW7T8JEa0h3DHvSiETeKmKjWnoGvcgQnEzpkJWFLLvAvj1saf7klGU4Z
-         fphLZ2SkNp/qfCa9N83Dw26g0MP9ynyq/Xi3LM2HV3l8IQLyPAZjFXOmLArmRsZaYhEo
-         Yy/DlDwlh8plKI6XqfmCJQa7uCSHfQWclsnnz85wicNvwKWjISVVAi1D3CHcFPlY/xED
-         Xt2g==
-X-Gm-Message-State: AOAM533rHyAqOva3oTkf6Oe92VXWTg9VcVMM6dS+2em1+peN3/M+jiPZ
-        Ali3ThDhoPbb27hu1cZUpVYt9dLJSgy63g==
-X-Google-Smtp-Source: ABdhPJwswUlJQ52Yx2IwQucl/Vxrp+E8ukwZ7A4CGNkRPr9kEW1PUuybmkLlov0NVmDTn5wvfNlsYw==
-X-Received: by 2002:a17:903:4106:b029:e9:244f:9aca with SMTP id r6-20020a1709034106b02900e9244f9acamr8624559pld.58.1621551758300;
-        Thu, 20 May 2021 16:02:38 -0700 (PDT)
-Received: from kelvin-System-Product-Name.lan ([117.173.227.56])
-        by smtp.gmail.com with ESMTPSA id e34sm3604276pjk.31.2021.05.20.16.02.34
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9S9XS3Yg9GWaFqOj2PYCXeBhYEX4PcdUFzpuE9sqB4g=;
+        b=GjOKCVe3XUpMHF7f59Q8JC2KCyNmACD3u614tR1/qgY7b9rAVRl1fEO/HzAyepKJiN
+         YXvZ4MnLiu4WS3DyZ2KGaKbGC+s4wFLxgMV9XXt5Zf8t2gfXfZpyD3W1uAJNq1kZGj29
+         7XPGIof4v0xDYcULx051rIG8vQVzIotrTvYiI1QtZYWAr5jKXwQE/60nNj0jI9o8d/Tu
+         imVNd6oJ4lsuGzYQXunGfSs97vZzsLAZYoOZSsmMPxlscQgY16bn+T186t9xju1gf7Jf
+         rDGO1gxCOdSLNgGGHW9a4l95oDpB57jQYYyE9p4uofTRUhMUERMWXVCTMN7X+OFlaBzU
+         Y3GA==
+X-Gm-Message-State: AOAM5336UlGxQAp70TnHE6rQZkl0IlDOuiC2J1nXPuVxBqMHl4OdgVTD
+        fwpOPJrOeB3Br62VE9wwqQ==
+X-Google-Smtp-Source: ABdhPJzEANfqFxE4Om5iMLjsSLwh6xktkUCyClwjVw7r/DNw3lOe3BzOKAJKqe6s95hkV2bCtuDbDQ==
+X-Received: by 2002:a05:6830:1bed:: with SMTP id k13mr3959289otb.194.1621561398402;
+        Thu, 20 May 2021 18:43:18 -0700 (PDT)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y7sm999499oto.60.2021.05.20.18.43.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 May 2021 16:02:37 -0700 (PDT)
-From:   Keguang Zhang <keguang.zhang@gmail.com>
-To:     dmaengine@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Kelvin Cheung <keguang.zhang@gmail.com>
-Subject: [PATCH V4 RESEND] dmaengine: Loongson1: Add Loongson1 dmaengine driver
-Date:   Fri, 21 May 2021 07:02:25 +0800
-Message-Id: <20210520230225.11911-1-keguang.zhang@gmail.com>
-X-Mailer: git-send-email 2.30.2
+        Thu, 20 May 2021 18:43:17 -0700 (PDT)
+Received: (nullmailer pid 2467209 invoked by uid 1000);
+        Fri, 21 May 2021 01:43:16 -0000
+Date:   Thu, 20 May 2021 20:43:16 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhupesh.linux@gmail.com
+Subject: Re: [PATCH v3 01/17] dt-bindings: qcom-bam: Convert binding to YAML
+Message-ID: <20210521014316.GA2462277@robh.at.kernel.org>
+References: <20210519143700.27392-1-bhupesh.sharma@linaro.org>
+ <20210519143700.27392-2-bhupesh.sharma@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210519143700.27392-2-bhupesh.sharma@linaro.org>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Kelvin Cheung <keguang.zhang@gmail.com>
+On Wed, May 19, 2021 at 08:06:44PM +0530, Bhupesh Sharma wrote:
+> Convert Qualcomm BAM DMA devicetree binding to YAML.
+> 
+> Cc: Thara Gopinath <thara.gopinath@linaro.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: dmaengine@vger.kernel.org
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-crypto@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: bhupesh.linux@gmail.com
+> Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
+> ---
+>  .../devicetree/bindings/dma/qcom_bam_dma.txt  | 50 ----------
+>  .../devicetree/bindings/dma/qcom_bam_dma.yaml | 91 +++++++++++++++++++
+>  2 files changed, 91 insertions(+), 50 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+>  create mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+> deleted file mode 100644
+> index cf5b9e44432c..000000000000
+> --- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+> +++ /dev/null
+> @@ -1,50 +0,0 @@
+> -QCOM BAM DMA controller
+> -
+> -Required properties:
+> -- compatible: must be one of the following:
+> - * "qcom,bam-v1.4.0" for MSM8974, APQ8074 and APQ8084
+> - * "qcom,bam-v1.3.0" for APQ8064, IPQ8064 and MSM8960
+> - * "qcom,bam-v1.7.0" for MSM8916
+> -- reg: Address range for DMA registers
+> -- interrupts: Should contain the one interrupt shared by all channels
+> -- #dma-cells: must be <1>, the cell in the dmas property of the client device
+> -  represents the channel number
+> -- clocks: required clock
+> -- clock-names: must contain "bam_clk" entry
+> -- qcom,ee : indicates the active Execution Environment identifier (0-7) used in
+> -  the secure world.
+> -- qcom,controlled-remotely : optional, indicates that the bam is controlled by
+> -  remote proccessor i.e. execution environment.
+> -- num-channels : optional, indicates supported number of DMA channels in a
+> -  remotely controlled bam.
+> -- qcom,num-ees : optional, indicates supported number of Execution Environments
+> -  in a remotely controlled bam.
+> -
+> -Example:
+> -
+> -	uart-bam: dma@f9984000 = {
+> -		compatible = "qcom,bam-v1.4.0";
+> -		reg = <0xf9984000 0x15000>;
+> -		interrupts = <0 94 0>;
+> -		clocks = <&gcc GCC_BAM_DMA_AHB_CLK>;
+> -		clock-names = "bam_clk";
+> -		#dma-cells = <1>;
+> -		qcom,ee = <0>;
+> -	};
+> -
+> -DMA clients must use the format described in the dma.txt file, using a two cell
+> -specifier for each channel.
+> -
+> -Example:
+> -	serial@f991e000 {
+> -		compatible = "qcom,msm-uart";
+> -		reg = <0xf991e000 0x1000>
+> -			<0xf9944000 0x19000>;
+> -		interrupts = <0 108 0>;
+> -		clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
+> -			<&gcc GCC_BLSP1_AHB_CLK>;
+> -		clock-names = "core", "iface";
+> -
+> -		dmas = <&uart-bam 0>, <&uart-bam 1>;
+> -		dma-names = "rx", "tx";
+> -	};
+> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml b/Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
+> new file mode 100644
+> index 000000000000..173e4d7508a6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
+> @@ -0,0 +1,91 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/qcom_bam_dma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: QCOM BAM DMA controller binding
+> +
+> +maintainers:
+> +  - Bhupesh Sharma <bhupesh.sharma@linaro.org>
+> +
+> +description: |
+> +  This document defines the binding for the BAM DMA controller
+> +  found on Qualcomm parts.
+> +
+> +allOf:
+> +  - $ref: "dma-controller.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,bam-v1.4.0
+> +      - qcom,bam-v1.3.0
+> +      - qcom,bam-v1.7.0
 
-This patch adds DMA Engine driver for Loongson1B.
+Can we keep the SoC association please.
 
-Signed-off-by: Kelvin Cheung <keguang.zhang@gmail.com>
----
-V3 -> V4:
-   Use dma_slave_map to find the proper channel.
-   Explicitly call devm_request_irq() and tasklet_kill().
-   Fix namespace issue.
-   Some minor fixes and cleanups.
-V2 -> V3:
-   Rename ls1x_dma_filter_fn to ls1x_dma_filter.
-V1 -> V2:
-   Change the config from 'DMA_LOONGSON1' to 'LOONGSON1_DMA',
-   and rearrange it in alphabetical order in Kconfig and Makefile.
-   Fix comment style.
----
- drivers/dma/Kconfig         |   9 +
- drivers/dma/Makefile        |   1 +
- drivers/dma/loongson1-dma.c | 514 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 524 insertions(+)
- create mode 100644 drivers/dma/loongson1-dma.c
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: Address range of the DMA registers.
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 6ab9d9a488a6..b3ceeae61483 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -343,6 +343,15 @@ config K3_DMA
- 	  Support the DMA engine for Hisilicon K3 platform
- 	  devices.
- 
-+config LOONGSON1_DMA
-+	tristate "Loongson1 DMA support"
-+	depends on MACH_LOONGSON32
-+	select DMA_ENGINE
-+	select DMA_VIRTUAL_CHANNELS
-+	help
-+	  This selects support for the DMA controller in Loongson1 SoCs,
-+	  and is required by Loongson1 NAND controller and AC97 support.
-+
- config LPC18XX_DMAMUX
- 	bool "NXP LPC18xx/43xx DMA MUX for PL080"
- 	depends on ARCH_LPC18XX || COMPILE_TEST
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index aa69094e3547..6d54e485036e 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -44,6 +44,7 @@ obj-$(CONFIG_INTEL_IOATDMA) += ioat/
- obj-$(CONFIG_INTEL_IDXD) += idxd/
- obj-$(CONFIG_INTEL_IOP_ADMA) += iop-adma.o
- obj-$(CONFIG_K3_DMA) += k3dma.o
-+obj-$(CONFIG_LOONGSON1_DMA) += loongson1-dma.o
- obj-$(CONFIG_LPC18XX_DMAMUX) += lpc18xx-dmamux.o
- obj-$(CONFIG_MILBEAUT_HDMAC) += milbeaut-hdmac.o
- obj-$(CONFIG_MILBEAUT_XDMAC) += milbeaut-xdmac.o
-diff --git a/drivers/dma/loongson1-dma.c b/drivers/dma/loongson1-dma.c
-new file mode 100644
-index 000000000000..5899509125fe
---- /dev/null
-+++ b/drivers/dma/loongson1-dma.c
-@@ -0,0 +1,514 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * DMA Driver for Loongson 1 SoC
-+ *
-+ * Copyright (C) 2015-2021 Zhang, Keguang <keguang.zhang@gmail.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/dmapool.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_dma.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#include <dma.h>
-+
-+#include "dmaengine.h"
-+#include "virt-dma.h"
-+
-+/* Loongson 1 DMA Register Definitions */
-+#define LS1X_DMA_CTRL		0x0
-+
-+/* DMA Control Register Bits */
-+#define LS1X_DMA_STOP		BIT(4)
-+#define LS1X_DMA_START		BIT(3)
-+
-+#define LS1X_DMA_ADDR_MASK	GENMASK(31, 6)
-+
-+/* DMA Command Register Bits */
-+#define LS1X_DMA_RAM2DEV		BIT(12)
-+#define LS1X_DMA_TRANS_OVER		BIT(3)
-+#define LS1X_DMA_SINGLE_TRANS_OVER	BIT(2)
-+#define LS1X_DMA_INT			BIT(1)
-+#define LS1X_DMA_INT_MASK		BIT(0)
-+
-+struct ls1x_dma_lli {
-+	u32 next;		/* next descriptor address */
-+	u32 saddr;		/* memory DMA address */
-+	u32 daddr;		/* device DMA address */
-+	u32 length;
-+	u32 stride;
-+	u32 cycles;
-+	u32 cmd;
-+} __aligned(64);
-+
-+struct ls1x_dma_hwdesc {
-+	struct ls1x_dma_lli *lli;
-+	dma_addr_t phys;
-+};
-+
-+struct ls1x_dma_desc {
-+	struct virt_dma_desc vdesc;
-+	struct ls1x_dma_chan *chan;
-+
-+	enum dma_transfer_direction dir;
-+	enum dma_transaction_type type;
-+
-+	unsigned int nr_descs;	/* number of descriptors */
-+	unsigned int nr_done;	/* number of completed descriptors */
-+	struct ls1x_dma_hwdesc hwdesc[];	/* DMA coherent descriptors */
-+};
-+
-+struct ls1x_dma_chan {
-+	struct virt_dma_chan vchan;
-+	struct dma_pool *desc_pool;
-+	struct dma_slave_config cfg;
-+
-+	unsigned int id;
-+	void __iomem *reg_base;
-+	unsigned int irq;
-+
-+	struct ls1x_dma_desc *desc;
-+};
-+
-+struct ls1x_dma {
-+	struct dma_device ddev;
-+	struct clk *clk;
-+	void __iomem *reg_base;
-+
-+	unsigned int nr_chans;
-+	struct ls1x_dma_chan chan[];
-+};
-+
-+#define to_ls1x_dma_chan(dchan)		\
-+	container_of(dchan, struct ls1x_dma_chan, vchan.chan)
-+
-+#define to_ls1x_dma_desc(vdesc)		\
-+	container_of(vdesc, struct ls1x_dma_desc, vdesc)
-+
-+/* macros for registers read/write */
-+#define chan_readl(chan, off)		\
-+	readl((chan)->reg_base + (off))
-+
-+#define chan_writel(chan, off, val)	\
-+	writel((val), (chan)->reg_base + (off))
-+
-+static bool ls1x_dma_filter(struct dma_chan *chan, void *param);
-+
-+static inline struct device *chan2dev(struct dma_chan *chan)
-+{
-+	return &chan->dev->device;
-+}
-+
-+static void ls1x_dma_free_chan_resources(struct dma_chan *dchan)
-+{
-+	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-+
-+	vchan_free_chan_resources(&chan->vchan);
-+	dma_pool_destroy(chan->desc_pool);
-+	chan->desc_pool = NULL;
-+}
-+
-+static int ls1x_dma_alloc_chan_resources(struct dma_chan *dchan)
-+{
-+	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-+
-+	chan->desc_pool = dma_pool_create(dma_chan_name(dchan),
-+					  dchan->device->dev,
-+					  sizeof(struct ls1x_dma_lli),
-+					  __alignof__(struct ls1x_dma_lli), 0);
-+	if (!chan->desc_pool) {
-+		dev_err(chan2dev(dchan),
-+			"failed to alloc DMA descriptor pool!\n");
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static void ls1x_dma_free_desc(struct virt_dma_desc *vdesc)
-+{
-+	struct ls1x_dma_desc *desc = to_ls1x_dma_desc(vdesc);
-+
-+	if (desc->nr_descs) {
-+		unsigned int i = desc->nr_descs;
-+		struct ls1x_dma_hwdesc *hwdesc;
-+
-+		do {
-+			hwdesc = &desc->hwdesc[--i];
-+			dma_pool_free(desc->chan->desc_pool, hwdesc->lli,
-+				      hwdesc->phys);
-+		} while (i);
-+	}
-+
-+	kfree(desc);
-+}
-+
-+static struct ls1x_dma_desc *ls1x_dma_alloc_desc(struct ls1x_dma_chan *chan,
-+						 int sg_len)
-+{
-+	struct ls1x_dma_desc *desc;
-+	struct dma_chan *dchan = &chan->vchan.chan;
-+
-+	desc = kzalloc(struct_size(desc, hwdesc, sg_len), GFP_NOWAIT);
-+	if (!desc)
-+		dev_err(chan2dev(dchan), "failed to alloc DMA descriptor!\n");
-+
-+	return desc;
-+}
-+
-+static struct dma_async_tx_descriptor *
-+ls1x_dma_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
-+		       unsigned int sg_len,
-+		       enum dma_transfer_direction direction,
-+		       unsigned long flags, void *context)
-+{
-+	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-+	struct dma_slave_config *cfg = &chan->cfg;
-+	struct ls1x_dma_desc *desc;
-+	struct scatterlist *sg;
-+	unsigned int dev_addr, bus_width, cmd, i;
-+
-+	if (!is_slave_direction(direction)) {
-+		dev_err(chan2dev(dchan), "invalid DMA direction!\n");
-+		return NULL;
-+	}
-+
-+	dev_dbg(chan2dev(dchan), "sg_len=%d, dir=%s, flags=0x%lx\n", sg_len,
-+		direction == DMA_MEM_TO_DEV ? "to device" : "from device",
-+		flags);
-+
-+	switch (direction) {
-+	case DMA_MEM_TO_DEV:
-+		dev_addr = cfg->dst_addr;
-+		bus_width = cfg->dst_addr_width;
-+		cmd = LS1X_DMA_RAM2DEV | LS1X_DMA_INT;
-+		break;
-+	case DMA_DEV_TO_MEM:
-+		dev_addr = cfg->src_addr;
-+		bus_width = cfg->src_addr_width;
-+		cmd = LS1X_DMA_INT;
-+		break;
-+	default:
-+		dev_err(chan2dev(dchan),
-+			"unsupported DMA transfer mode! %d\n", direction);
-+		return NULL;
-+	}
-+
-+	/* allocate DMA descriptor */
-+	desc = ls1x_dma_alloc_desc(chan, sg_len);
-+	if (!desc)
-+		return NULL;
-+
-+	for_each_sg(sgl, sg, sg_len, i) {
-+		dma_addr_t buf_addr = sg_dma_address(sg);
-+		size_t buf_len = sg_dma_len(sg);
-+		struct ls1x_dma_hwdesc *hwdesc = &desc->hwdesc[i];
-+		struct ls1x_dma_lli *lli;
-+
-+		if (!is_dma_copy_aligned(dchan->device, buf_addr, 0, buf_len)) {
-+			dev_err(chan2dev(dchan), "%s: buffer is not aligned!\n",
-+				__func__);
-+			goto err;
-+		}
-+
-+		/* allocate HW DMA descriptors */
-+		lli = dma_pool_alloc(chan->desc_pool, GFP_NOWAIT,
-+				     &hwdesc->phys);
-+		if (!lli) {
-+			dev_err(chan2dev(dchan),
-+				"%s: failed to alloc HW DMA descriptor!\n",
-+				__func__);
-+			goto err;
-+		}
-+		hwdesc->lli = lli;
-+
-+		/* config HW DMA descriptors */
-+		lli->saddr = buf_addr;
-+		lli->daddr = dev_addr;
-+		lli->length = buf_len / bus_width;
-+		lli->stride = 0;
-+		lli->cycles = 1;
-+		lli->cmd = cmd;
-+		lli->next = 0;
-+
-+		if (i)
-+			desc->hwdesc[i - 1].lli->next = hwdesc->phys;
-+
-+		dev_dbg(chan2dev(dchan),
-+			"hwdesc=%px, saddr=%08x, daddr=%08x, length=%u\n",
-+			hwdesc, buf_addr, dev_addr, buf_len);
-+	}
-+
-+	/* config DMA descriptor */
-+	desc->chan = chan;
-+	desc->dir = direction;
-+	desc->type = DMA_SLAVE;
-+	desc->nr_descs = sg_len;
-+	desc->nr_done = 0;
-+
-+	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
-+err:
-+	desc->nr_descs = i;
-+	ls1x_dma_free_desc(&desc->vdesc);
-+	return NULL;
-+}
-+
-+static int ls1x_dma_slave_config(struct dma_chan *dchan,
-+				 struct dma_slave_config *config)
-+{
-+	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-+
-+	if (!dchan)
-+		return -EINVAL;
-+
-+	chan->cfg = *config;
-+
-+	return 0;
-+}
-+
-+static int ls1x_dma_terminate_all(struct dma_chan *dchan)
-+{
-+	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-+	unsigned long flags;
-+	LIST_HEAD(head);
-+
-+	spin_lock_irqsave(&chan->vchan.lock, flags);
-+
-+	chan_writel(chan, LS1X_DMA_CTRL,
-+		    chan_readl(chan, LS1X_DMA_CTRL) | LS1X_DMA_STOP);
-+	chan->desc = NULL;
-+	vchan_get_all_descriptors(&chan->vchan, &head);
-+
-+	spin_unlock_irqrestore(&chan->vchan.lock, flags);
-+
-+	vchan_dma_desc_free_list(&chan->vchan, &head);
-+
-+	return 0;
-+}
-+
-+static void ls1x_dma_trigger(struct ls1x_dma_chan *chan)
-+{
-+	struct dma_chan *dchan = &chan->vchan.chan;
-+	struct ls1x_dma_desc *desc;
-+	struct virt_dma_desc *vdesc;
-+	unsigned int val;
-+
-+	vdesc = vchan_next_desc(&chan->vchan);
-+	if (!vdesc) {
-+		dev_warn(chan2dev(dchan), "No pending descriptor\n");
-+		return;
-+	}
-+	chan->desc = desc = to_ls1x_dma_desc(vdesc);
-+
-+	dev_dbg(chan2dev(dchan), "cookie=%d, %u descs, starting hwdesc=%px\n",
-+		dchan->cookie, desc->nr_descs, &desc->hwdesc[0]);
-+
-+	val = desc->hwdesc[0].phys & LS1X_DMA_ADDR_MASK;
-+	val |= chan->id;
-+	val |= LS1X_DMA_START;
-+	chan_writel(chan, LS1X_DMA_CTRL, val);
-+}
-+
-+static void ls1x_dma_issue_pending(struct dma_chan *dchan)
-+{
-+	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&chan->vchan.lock, flags);
-+
-+	if (vchan_issue_pending(&chan->vchan) && !chan->desc)
-+		ls1x_dma_trigger(chan);
-+
-+	spin_unlock_irqrestore(&chan->vchan.lock, flags);
-+}
-+
-+static irqreturn_t ls1x_dma_irq_handler(int irq, void *data)
-+{
-+	struct ls1x_dma_chan *chan = data;
-+	struct dma_chan *dchan = &chan->vchan.chan;
-+
-+	dev_dbg(chan2dev(dchan), "DMA IRQ %d on channel %d\n", irq, chan->id);
-+	if (!chan->desc) {
-+		dev_warn(chan2dev(dchan),
-+			 "DMA IRQ with no active descriptor on channel %d\n",
-+			 chan->id);
-+		return IRQ_NONE;
-+	}
-+
-+	spin_lock(&chan->vchan.lock);
-+
-+	if (chan->desc->type == DMA_CYCLIC) {
-+		vchan_cyclic_callback(&chan->desc->vdesc);
-+	} else {
-+		list_del(&chan->desc->vdesc.node);
-+		vchan_cookie_complete(&chan->desc->vdesc);
-+		chan->desc = NULL;
-+	}
-+
-+	spin_unlock(&chan->vchan.lock);
-+	return IRQ_HANDLED;
-+}
-+
-+static int ls1x_dma_chan_probe(struct platform_device *pdev,
-+			       struct ls1x_dma *dma, int chan_id)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct ls1x_dma_chan *chan = &dma->chan[chan_id];
-+	char *irq_name;
-+	int ret;
-+
-+	chan->irq = platform_get_irq(pdev, chan_id);
-+	if (chan->irq < 0) {
-+		dev_err(dev, "failed to get IRQ %d!\n", chan->irq);
-+		return ret;
-+	}
-+
-+	irq_name = devm_kasprintf(dev, GFP_KERNEL, "%s:ch%u",
-+				  dev_name(dev), chan_id);
-+	if (!irq_name)
-+		return -ENOMEM;
-+
-+	ret = devm_request_irq(dev, chan->irq, ls1x_dma_irq_handler,
-+			       IRQF_SHARED, irq_name, chan);
-+	if (ret) {
-+		dev_err(dev, "failed to request IRQ %u!\n", chan->irq);
-+		return ret;
-+	}
-+
-+	chan->id = chan_id;
-+	chan->reg_base = dma->reg_base;
-+	chan->vchan.desc_free = ls1x_dma_free_desc;
-+	vchan_init(&chan->vchan, &dma->ddev);
-+	dev_info(dev, "channel %d (irq %d) initialized\n", chan->id, chan->irq);
-+
-+	return 0;
-+}
-+
-+static void ls1x_dma_chan_remove(struct ls1x_dma *dma, int chan_id)
-+{
-+	struct device *dev = dma->ddev.dev;
-+	struct ls1x_dma_chan *chan = &dma->chan[chan_id];
-+
-+	devm_free_irq(dev, chan->irq, chan);
-+	list_del(&chan->vchan.chan.device_node);
-+	tasklet_kill(&chan->vchan.task);
-+}
-+
-+static int ls1x_dma_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct plat_ls1x_dma *pdata;
-+	struct dma_device *ddev;
-+	struct ls1x_dma *dma;
-+	int nr_chans, ret, i;
-+
-+	pdata = dev_get_platdata(dev);
-+	if (!pdata) {
-+		dev_err(dev, "platform data missing!\n");
-+		return -EINVAL;
-+	}
-+
-+	nr_chans = platform_irq_count(pdev);
-+	if (nr_chans <= 0)
-+		return nr_chans;
-+
-+	dma = devm_kzalloc(dev, struct_size(dma, chan, nr_chans), GFP_KERNEL);
-+	if (!dma)
-+		return -ENOMEM;
-+
-+	/* initialize DMA device */
-+	dma->reg_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(dma->reg_base))
-+		return PTR_ERR(dma->reg_base);
-+
-+	ddev = &dma->ddev;
-+	ddev->dev = dev;
-+	ddev->copy_align = DMAENGINE_ALIGN_16_BYTES;
-+	ddev->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
-+	ddev->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
-+	ddev->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
-+	ddev->residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
-+	ddev->device_alloc_chan_resources = ls1x_dma_alloc_chan_resources;
-+	ddev->device_free_chan_resources = ls1x_dma_free_chan_resources;
-+	ddev->device_prep_slave_sg = ls1x_dma_prep_slave_sg;
-+	ddev->device_config = ls1x_dma_slave_config;
-+	ddev->device_terminate_all = ls1x_dma_terminate_all;
-+	ddev->device_tx_status = dma_cookie_status;
-+	ddev->device_issue_pending = ls1x_dma_issue_pending;
-+	ddev->filter.map = pdata->slave_map;
-+	ddev->filter.mapcnt = pdata->slavecnt;
-+	ddev->filter.fn = ls1x_dma_filter;
-+
-+	dma_cap_set(DMA_SLAVE, ddev->cap_mask);
-+	INIT_LIST_HEAD(&ddev->channels);
-+
-+	/* initialize DMA channels */
-+	for (i = 0; i < nr_chans; i++) {
-+		ret = ls1x_dma_chan_probe(pdev, dma, i);
-+		if (ret)
-+			return ret;
-+	}
-+	dma->nr_chans = nr_chans;
-+
-+	dma->clk = devm_clk_get(dev, pdev->name);
-+	if (IS_ERR(dma->clk)) {
-+		dev_err(dev, "failed to get %s clock!\n", pdev->name);
-+		return PTR_ERR(dma->clk);
-+	}
-+	clk_prepare_enable(dma->clk);
-+
-+	ret = dma_async_device_register(ddev);
-+	if (ret) {
-+		dev_err(dev, "failed to register DMA device! %d\n", ret);
-+		clk_disable_unprepare(dma->clk);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, dma);
-+	dev_info(dev, "Loongson1 DMA driver registered\n");
-+
-+	return 0;
-+}
-+
-+static int ls1x_dma_remove(struct platform_device *pdev)
-+{
-+	struct ls1x_dma *dma = platform_get_drvdata(pdev);
-+	int i;
-+
-+	dma_async_device_unregister(&dma->ddev);
-+	clk_disable_unprepare(dma->clk);
-+	for (i = 0; i < dma->nr_chans; i++)
-+		ls1x_dma_chan_remove(dma, i);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver ls1x_dma_driver = {
-+	.probe	= ls1x_dma_probe,
-+	.remove	= ls1x_dma_remove,
-+	.driver	= {
-+		.name	= "ls1x-dma",
-+	},
-+};
-+
-+module_platform_driver(ls1x_dma_driver);
-+
-+static bool ls1x_dma_filter(struct dma_chan *dchan, void *param)
-+{
-+	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-+	unsigned int chan_id = (unsigned int)param;
-+
-+	if (dchan->device->dev->driver != &ls1x_dma_driver.driver)
-+		return false;
-+
-+	return chan_id == chan->id;
-+}
-+
-+MODULE_AUTHOR("Kelvin Cheung <keguang.zhang@gmail.com>");
-+MODULE_DESCRIPTION("Loongson1 DMA driver");
-+MODULE_LICENSE("GPL");
+Drop description.
 
-base-commit: 6f64aa5746d254f2b9b94b837b7862549f2565a0
--- 
-2.30.2
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 8
+> +
+> +  clock-names:
+> +    const: bam_clk
 
+This is going to fail if you try more than 1 clock.
+
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: Single interrupt line shared by all channels.
+
+Drop description
+
+> +
+> +  num-channels:
+> +    maxItems: 31
+> +    description: |
+> +      Indicates supported number of DMA channels in a remotely controlled bam.
+> +
+> +  "#dma-cells":
+> +    const: 1
+> +    description: The single cell represents the channel index.
+> +
+> +  qcom,ee:
+> +    $ref: /schemas/types.yaml#/definitions/uint8
+> +    description:
+> +      Indicates the active Execution Environment identifier (0-7)
+> +      used in the secure world.
+> +    enum: [0, 1, 2, 3, 4, 5, 6, 7]
+> +
+> +  qcom,controlled-remotely:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description:
+> +      Indicates that the bam is controlled by remote proccessor i.e.
+> +      execution environment.
+> +
+> +  qcom,num-ees:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Indicates supported number of Execution Environments in a
+> +      remotely controlled bam.
+
+0-2^32 is valid?
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - "#dma-cells"
+> +  - qcom,ee
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-msm8974.h>
+> +    dma-controller@f9984000 {
+> +        compatible = "qcom,bam-v1.4.0";
+> +        reg = <0xf9984000 0x15000>;
+> +        interrupts = <0 94 0>;
+> +        clocks = <&gcc GCC_BAM_DMA_AHB_CLK>;
+> +        clock-names = "bam_clk";
+> +        #dma-cells = <1>;
+> +        qcom,ee = /bits/ 8 <0>;
+> +    };
+> -- 
+> 2.31.1
+> 

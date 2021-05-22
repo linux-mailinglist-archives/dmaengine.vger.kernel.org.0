@@ -2,99 +2,69 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B334038D284
-	for <lists+dmaengine@lfdr.de>; Sat, 22 May 2021 02:22:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75C6038D2ED
+	for <lists+dmaengine@lfdr.de>; Sat, 22 May 2021 04:13:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230408AbhEVAYG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 21 May 2021 20:24:06 -0400
-Received: from mga09.intel.com ([134.134.136.24]:27120 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231249AbhEVAXV (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 21 May 2021 20:23:21 -0400
-IronPort-SDR: a7SWcpXHx8XgFp3XCAELEXspmXEjkKNZLzmiDELMc7EZjE7ILFDr1jR6muv+TsusbBxDkb57Xf
- xjGdKOV+7/Qw==
-X-IronPort-AV: E=McAfee;i="6200,9189,9991"; a="201634436"
-X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
-   d="scan'208";a="201634436"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 17:21:11 -0700
-IronPort-SDR: QF/V6SSZ5KjbpoMVOKNr3+Vz2atm7msoUr2SSTfKs6IoniD3wJ4wKkOVcO11Wpf6eoE5uEaDJ8
- Lm6WE2bQNDBg==
-X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
-   d="scan'208";a="476324236"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 17:21:10 -0700
-Subject: [PATCH v6 20/20] vfio: mdev: idxd: setup request interrupt
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     alex.williamson@redhat.com, kwankhede@nvidia.com,
-        tglx@linutronix.de, vkoul@kernel.org, jgg@mellanox.com
-Cc:     megha.dey@intel.com, jacob.jun.pan@intel.com, ashok.raj@intel.com,
-        yi.l.liu@intel.com, baolu.lu@intel.com, kevin.tian@intel.com,
-        sanjay.k.kumar@intel.com, tony.luck@intel.com,
-        dan.j.williams@intel.com, eric.auger@redhat.com,
-        pbonzini@redhat.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Date:   Fri, 21 May 2021 17:21:10 -0700
-Message-ID: <162164287046.261970.257439178688866229.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <162164243591.261970.3439987543338120797.stgit@djiang5-desk3.ch.intel.com>
-References: <162164243591.261970.3439987543338120797.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/0.23-29-ga622f1
+        id S230492AbhEVCOo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 21 May 2021 22:14:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230407AbhEVCOn (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 21 May 2021 22:14:43 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A8E4C06138A;
+        Fri, 21 May 2021 19:13:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=8yyvZSyaBPFumaiPcWW1BjhsGS7WM1RNusn1RJNc8rc=; b=yk4Vuq038VXor6d5ScVj9TcXsc
+        /zTB48ViAHLhOQQhIl0QEBfkTIxtmJhNFklfRF4cAYpsLJKSYKYrMvduU/ygGUp9c57SNBoHme/SL
+        lBUW/wwLLVDeFYgHNKM8SftKFHMjk28jUPEXk8JBIhWFAdgesRm3D9o09ZalZJQtCoWzdwZapOg+a
+        vOXItpsUxuZ84IjHyVRlObo0JmrPyVJ3M54lkfF8SCvZOQTfdXboUC1/rbWqpsL8vA+dQlJ1hJjpD
+        NwyDjMBKyqYQTAaSLWv5QcT446j+SUJqZsULXPPj4RGmv8/YrotHXdWki53OtmHVUsXSFrCV2ORxM
+        Z003oYQw==;
+Received: from [2601:1c0:6280:3f0::7376] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
+        id 1lkH8d-00HX9I-Gf; Sat, 22 May 2021 02:13:15 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>, Stefan Roese <sr@denx.de>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Sinan Kaya <okaya@codeaurora.org>,
+        Green Wan <green.wan@sifive.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Tejas Upadhyay <tejasu@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH 0/4] DMA: several drivers depend on HAS_IOMEM
+Date:   Fri, 21 May 2021 19:13:09 -0700
+Message-Id: <20210522021313.16405-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add request interrupt support for idxd-mdev driver to support requesting
-release of device.
+A few drivers in drivers/dma/ use iomap(), ioremap(), devm_ioremap(),
+etc. Building these drivers when CONFIG_HAS_IOMEM is not set results
+in build errors, so make these drivers depend on HAS_IOMEM.
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/vfio/mdev/idxd/mdev.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+Cc: Stefan Roese <sr@denx.de>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Cc: Sinan Kaya <okaya@codeaurora.org>
+Cc: Green Wan <green.wan@sifive.com>
+Cc: Hyun Kwon <hyun.kwon@xilinx.com>
+Cc: Tejas Upadhyay <tejasu@xilinx.com>
+Cc: Michal Simek <michal.simek@xilinx.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-diff --git a/drivers/vfio/mdev/idxd/mdev.c b/drivers/vfio/mdev/idxd/mdev.c
-index 25d1ac67b0c9..6bf2ec43656c 100644
---- a/drivers/vfio/mdev/idxd/mdev.c
-+++ b/drivers/vfio/mdev/idxd/mdev.c
-@@ -52,6 +52,8 @@ static int idxd_vdcm_get_irq_count(struct vfio_device *vdev, int type)
- {
- 	if (type == VFIO_PCI_MSIX_IRQ_INDEX)
- 		return VIDXD_MAX_MSIX_VECS;
-+	else if (type == VFIO_PCI_REQ_IRQ_INDEX)
-+		return 1;
- 
- 	return 0;
- }
-@@ -486,6 +488,12 @@ static int idxd_vdcm_set_irqs(struct vdcm_idxd *vidxd, uint32_t flags,
- 			return mdev_set_msix_trigger(mdev, index, start, count, flags, data);
- 		}
- 		break;
-+	case VFIO_PCI_REQ_IRQ_INDEX:
-+		switch (flags & VFIO_IRQ_SET_ACTION_TYPE_MASK) {
-+		case VFIO_IRQ_SET_ACTION_TRIGGER:
-+			return vfio_mdev_set_req_trigger(mdev, index, start, count, flags, data);
-+		}
-+		break;
- 	}
- 
- 	return -ENOTTY;
-@@ -678,6 +686,7 @@ static long idxd_vdcm_ioctl(struct vfio_device *vdev, unsigned int cmd, unsigned
- 
- 		switch (info.index) {
- 		case VFIO_PCI_MSIX_IRQ_INDEX:
-+		case VFIO_PCI_REQ_IRQ_INDEX:
- 			info.flags |= VFIO_IRQ_INFO_NORESIZE;
- 			break;
- 		default:
-@@ -750,6 +759,7 @@ static const struct vfio_device_ops idxd_mdev_ops = {
- 	.write = idxd_vdcm_write,
- 	.mmap = idxd_vdcm_mmap,
- 	.ioctl = idxd_vdcm_ioctl,
-+	.request = vfio_mdev_request,
- };
- 
- static ssize_t name_show(struct mdev_type *mtype, struct mdev_type_attribute *attr, char *buf)
+[PATCH 1/4] DMA: ALTERA_MSGDMA depends on HAS_IOMEM
+[PATCH 2/4] DMA: QCOM_HIDMA_MGMT depends on HAS_IOMEM
+[PATCH 3/4] DMA: SF_PDMA depends on HAS_IOMEM
+[PATCH 4/4] DMA: XILINX_ZYNQMP_DPDMA depends on HAS_IOMEM
 
-
+ Kconfig |    4 ++++
+ 1 file changed, 4 insertions(+)

@@ -2,100 +2,148 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7156F38D427
-	for <lists+dmaengine@lfdr.de>; Sat, 22 May 2021 09:21:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AC2138D524
+	for <lists+dmaengine@lfdr.de>; Sat, 22 May 2021 12:29:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229985AbhEVHW7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 22 May 2021 03:22:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229951AbhEVHW6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 22 May 2021 03:22:58 -0400
-Received: from mout-u-107.mailbox.org (mout-u-107.mailbox.org [IPv6:2001:67c:2050:1::465:107])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A86BC061574;
-        Sat, 22 May 2021 00:21:31 -0700 (PDT)
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-u-107.mailbox.org (Postfix) with ESMTPS id 4FnFJn12krzQk1P;
-        Sat, 22 May 2021 09:21:29 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
-        with ESMTP id ZH0Aaqzj-JRA; Sat, 22 May 2021 09:21:26 +0200 (CEST)
-Subject: Re: [PATCH 1/4] DMA: ALTERA_MSGDMA depends on HAS_IOMEM
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Sinan Kaya <okaya@codeaurora.org>,
-        Green Wan <green.wan@sifive.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Tejas Upadhyay <tejasu@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        kernel test robot <lkp@intel.com>
-References: <20210522021313.16405-1-rdunlap@infradead.org>
- <20210522021313.16405-2-rdunlap@infradead.org>
-From:   Stefan Roese <sr@denx.de>
-Message-ID: <4fde705b-6d57-ba73-e7d6-63beb690117e@denx.de>
-Date:   Sat, 22 May 2021 09:21:24 +0200
+        id S230236AbhEVKaa convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Sat, 22 May 2021 06:30:30 -0400
+Received: from aposti.net ([89.234.176.197]:51886 "EHLO aposti.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230232AbhEVKa3 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sat, 22 May 2021 06:30:29 -0400
+Date:   Sat, 22 May 2021 11:28:52 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: Possible bug when using dmam_alloc_coherent in conjonction with
+ of_reserved_mem_device_release
+To:     Olivier Dautricourt <olivier.dautricourt@orolia.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Message-Id: <4S7ITQ.ORCLYUEJD8BH3@crapouillou.net>
+In-Reply-To: <YKf4zlklLdfJBN6p@orolia.com>
+References: <YKf4zlklLdfJBN6p@orolia.com>
 MIME-Version: 1.0
-In-Reply-To: <20210522021313.16405-2-rdunlap@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
-X-MBO-SPAM-Probability: 
-X-Rspamd-Score: -6.42 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 0573E17FF
-X-Rspamd-UID: f6adc0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 22.05.21 04:13, Randy Dunlap wrote:
-> When CONFIG_HAS_IOMEM is not set/enabled, certain iomap() family
-> functions [including ioremap(), devm_ioremap(), etc.] are not
-> available.
-> Drivers that use these functions should depend on HAS_IOMEM so that
-> they do not cause build errors.
+Hi Olivier,
+
+
+Le ven., mai 21 2021 at 20:15:42 +0200, Olivier Dautricourt 
+<olivier.dautricourt@orolia.com> a �crit :
+> Hello all,
 > 
-> Repairs this build error:
-> s390-linux-ld: drivers/dma/altera-msgdma.o: in function `request_and_map':
-> altera-msgdma.c:(.text+0x14b0): undefined reference to `devm_ioremap'
+> I am facing a problem when using dmam_alloc_coherent (the managed
+> version of dma_alloc_coherent) along with a device-specific reserved 
+> memory
+> region using the CMA.
 > 
-> Fixes: a85c6f1b2921 ("dmaengine: Add driver for Altera / Intel mSGDMA IP core")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Cc: Stefan Roese <sr@denx.de>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: dmaengine@vger.kernel.org
-
-Reviewed-by: Stefan Roese <sr@denx.de>
-
-Thanks,
-Stefan
-
-> ---
->   drivers/dma/Kconfig |    1 +
->   1 file changed, 1 insertion(+)
+> My observation is on a kernel 5.10.19 (arm), as i'm unable to test 
+> the exact
+> same configuration on a newer kernel. However it seems that the 
+> relevent code
+> did not change too much since, so i think it's still applicable.
 > 
-> --- linux-next-20210521.orig/drivers/dma/Kconfig
-> +++ linux-next-20210521/drivers/dma/Kconfig
-> @@ -59,6 +59,7 @@ config DMA_OF
->   #devices
->   config ALTERA_MSGDMA
->   	tristate "Altera / Intel mSGDMA Engine"
-> +	depends on HAS_IOMEM
->   	select DMA_ENGINE
->   	help
->   	  Enable support for Altera / Intel mSGDMA controller.
+> 
+> ....
+> The issue:
+> 
+> I declare a reserved region on my board such as:
+> 
+> mydevice_reserved: linux,cma {
+>         compatible = "shared-dma-pool";
+>         reusable;
+>         size = <0x2400000>;
+> };
+> 
+> and start the kernel with cma=0, i want my region to be reserved to 
+> my device.
+> 
+> My driver basically does:
+> 
+> probe(dev):
+> 	of_reserved_mem_device_init(dev)
+> 	dmam_alloc_coherent(...)
+> 
+> release(dev):
+> 	of_reserved_mem_device_release(dev)
+
+You must make sure that whatever is allocated or initialized is freed 
+or deinitialized in the reverse order, which is not what will happen 
+here: release(dev) will be called before the dev-managed cleanups.
+
+To fix your issue, either use dma_alloc_coherent() and call 
+dma_free_coherent() in release(), or register 
+of_reserved_mem_device_release() as a dev-managed cleanup function 
+(which is what my driver does).
+
+Cheers,
+-Paul
+
+> On driver detach, of_reserved_mem_device_release will call
+> rmem_cma_device_release which sets dev->cma_area = NULL;
+> Then the manager will try to free the dma memory allocated in the 
+> probe:
+> 
+> __free_from_contiguous -> dma_release_from_contiguous ->
+> cma_release(dev_get_cma_area(dev), ...);
+> 
+> Except that now dev_get_cma_area will return 
+> dma_contiguous_default_area
+> which is null in my setup:
+> 
+> static inline struct cma *dev_get_cma_area(struct device *dev)
+> {
+> 	if (dev && dev->cma_area) // dev->cma_area is null
+> 		return dev->cma_area;
+> 
+> 	return dma_contiguous_default_area; // null in my setup
+> }
+> 
+> and so cma_release will do nothing.
+> 
+> bool cma_release(struct cma *cma, const struct page *pages, unsigned 
+> int count)
+> {
+> 	unsigned long pfn;
+> 
+> 	if (!cma || !pages) // cma is NULL
+> 		return false;
+> 
+> __free_from_contiguous will fail silently because it ignores
+> dma_release_from_contiguous boolean result.
+> 
+> The driver will be unable to load and allocate memory again because 
+> the
+> area allocated with dmam_alloc_coherent is not freed.
+> ...
+> 
+> So i started to look at drivers using both dmam_alloc_coherent and
+> of_reserved_mem_device_release and found this driver:
+> (gpu/drm/ingenic/ingenic-drm-drv.c).
+> This is why i included the original author, Paul Cercueil, in the 
+> loop.
+> 
+> Q:
+> 
+> I noticed that Paul used devm_add_action_or_reset to trigger
+> of_reserved_mem_device_release on driver detach, is this because of 
+> this
+> problem that we use a devm trigger here ?
+> 
+> I tried to do the same in my driver, but rmem_cma_device_release is 
+> still
+> called before dmam_release, is there a way to force the order ?
+> 
+> Is what i described a bug that needs fixing ?
+> 
+> 
+> Thank you,
+> 
+> 
+> Olivier
+> 
 > 
 
 
-Viele Grüße,
-Stefan
-
--- 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-51 Fax: (+49)-8142-66989-80 Email: sr@denx.de

@@ -2,31 +2,31 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75C6038D2ED
-	for <lists+dmaengine@lfdr.de>; Sat, 22 May 2021 04:13:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E824438D2EB
+	for <lists+dmaengine@lfdr.de>; Sat, 22 May 2021 04:13:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230492AbhEVCOo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 21 May 2021 22:14:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58828 "EHLO
+        id S230497AbhEVCOp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 21 May 2021 22:14:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230407AbhEVCOn (ORCPT
+        with ESMTP id S230453AbhEVCOn (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Fri, 21 May 2021 22:14:43 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A8E4C06138A;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90609C06138B;
         Fri, 21 May 2021 19:13:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=8yyvZSyaBPFumaiPcWW1BjhsGS7WM1RNusn1RJNc8rc=; b=yk4Vuq038VXor6d5ScVj9TcXsc
-        /zTB48ViAHLhOQQhIl0QEBfkTIxtmJhNFklfRF4cAYpsLJKSYKYrMvduU/ygGUp9c57SNBoHme/SL
-        lBUW/wwLLVDeFYgHNKM8SftKFHMjk28jUPEXk8JBIhWFAdgesRm3D9o09ZalZJQtCoWzdwZapOg+a
-        vOXItpsUxuZ84IjHyVRlObo0JmrPyVJ3M54lkfF8SCvZOQTfdXboUC1/rbWqpsL8vA+dQlJ1hJjpD
-        NwyDjMBKyqYQTAaSLWv5QcT446j+SUJqZsULXPPj4RGmv8/YrotHXdWki53OtmHVUsXSFrCV2ORxM
-        Z003oYQw==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=otxB9XgkPaq33SprB3S94UgubLgv8m0t9c6KhElQH1Q=; b=1ZwVArsUR4vtRRxGxtDwtiQRrP
+        upYDwwkeFi47c8OOh0d63VK2OwPczmAn2ReeyrBkz1WUQxH3ENuhUzgErvfHGIva9BpxKh+bZnEKn
+        y1mezx4m74rVh7eudaRNmF5+Af1v7ZXpXeNNbDT0mQ/3eiy+a+YOLXMrFvaLcih5rGS4xLrngPSvQ
+        P4m1Urs7tGwaSxnDuD2IvHnHv9QRTAxLHMY9Jl08F3TppuGLqD26xgeQK8eK00NBtSS8yUr/fP356
+        Yb0X1qs5w9N/UK1Noi7voU3ENfl4SL4gConObfdNHCz7hS0d4dAA1Kl8lDIvjgptTIq9VQGNcaz3n
+        OvYQaIDw==;
 Received: from [2601:1c0:6280:3f0::7376] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lkH8d-00HX9I-Gf; Sat, 22 May 2021 02:13:15 +0000
+        id 1lkH8e-00HX9I-3N; Sat, 22 May 2021 02:13:16 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>, Stefan Roese <sr@denx.de>,
@@ -36,35 +36,47 @@ Cc:     Randy Dunlap <rdunlap@infradead.org>, Stefan Roese <sr@denx.de>,
         Hyun Kwon <hyun.kwon@xilinx.com>,
         Tejas Upadhyay <tejasu@xilinx.com>,
         Michal Simek <michal.simek@xilinx.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH 0/4] DMA: several drivers depend on HAS_IOMEM
-Date:   Fri, 21 May 2021 19:13:09 -0700
-Message-Id: <20210522021313.16405-1-rdunlap@infradead.org>
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH 1/4] DMA: ALTERA_MSGDMA depends on HAS_IOMEM
+Date:   Fri, 21 May 2021 19:13:10 -0700
+Message-Id: <20210522021313.16405-2-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20210522021313.16405-1-rdunlap@infradead.org>
+References: <20210522021313.16405-1-rdunlap@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-A few drivers in drivers/dma/ use iomap(), ioremap(), devm_ioremap(),
-etc. Building these drivers when CONFIG_HAS_IOMEM is not set results
-in build errors, so make these drivers depend on HAS_IOMEM.
+When CONFIG_HAS_IOMEM is not set/enabled, certain iomap() family
+functions [including ioremap(), devm_ioremap(), etc.] are not
+available.
+Drivers that use these functions should depend on HAS_IOMEM so that
+they do not cause build errors.
 
+Repairs this build error:
+s390-linux-ld: drivers/dma/altera-msgdma.o: in function `request_and_map':
+altera-msgdma.c:(.text+0x14b0): undefined reference to `devm_ioremap'
+
+Fixes: a85c6f1b2921 ("dmaengine: Add driver for Altera / Intel mSGDMA IP core")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Reported-by: kernel test robot <lkp@intel.com>
 Cc: Stefan Roese <sr@denx.de>
 Cc: Vinod Koul <vkoul@kernel.org>
 Cc: dmaengine@vger.kernel.org
-Cc: Sinan Kaya <okaya@codeaurora.org>
-Cc: Green Wan <green.wan@sifive.com>
-Cc: Hyun Kwon <hyun.kwon@xilinx.com>
-Cc: Tejas Upadhyay <tejasu@xilinx.com>
-Cc: Michal Simek <michal.simek@xilinx.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ drivers/dma/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
-[PATCH 1/4] DMA: ALTERA_MSGDMA depends on HAS_IOMEM
-[PATCH 2/4] DMA: QCOM_HIDMA_MGMT depends on HAS_IOMEM
-[PATCH 3/4] DMA: SF_PDMA depends on HAS_IOMEM
-[PATCH 4/4] DMA: XILINX_ZYNQMP_DPDMA depends on HAS_IOMEM
-
- Kconfig |    4 ++++
- 1 file changed, 4 insertions(+)
+--- linux-next-20210521.orig/drivers/dma/Kconfig
++++ linux-next-20210521/drivers/dma/Kconfig
+@@ -59,6 +59,7 @@ config DMA_OF
+ #devices
+ config ALTERA_MSGDMA
+ 	tristate "Altera / Intel mSGDMA Engine"
++	depends on HAS_IOMEM
+ 	select DMA_ENGINE
+ 	help
+ 	  Enable support for Altera / Intel mSGDMA controller.

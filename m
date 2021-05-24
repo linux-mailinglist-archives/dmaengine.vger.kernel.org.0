@@ -2,27 +2,27 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A0D538EBC6
-	for <lists+dmaengine@lfdr.de>; Mon, 24 May 2021 17:07:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E86A38EC7D
+	for <lists+dmaengine@lfdr.de>; Mon, 24 May 2021 17:14:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233159AbhEXPHP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 24 May 2021 11:07:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37814 "EHLO mail.kernel.org"
+        id S234438AbhEXPPq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 24 May 2021 11:15:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234728AbhEXPEw (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 24 May 2021 11:04:52 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F284861407;
-        Mon, 24 May 2021 14:50:50 +0000 (UTC)
+        id S234150AbhEXPGx (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 24 May 2021 11:06:53 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3F233616E9;
+        Mon, 24 May 2021 14:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621867851;
-        bh=efU9PGSbDtdu1/hSrc3mX1eRJyc9rgg2Flsb++jTol4=;
+        s=k20201202; t=1621867878;
+        bh=sFBDKRlr2yCxCkhrMba95+PZDRbdIVMxsq7Qo0+qhxg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bFxGqG+k3SU5wPTscAgxf7op5E/5/DpkDROswQlMMYoNd7nq/IF35cEr76nHifa/q
-         hyqYFzB/VFEOdBBi4XZ9UTUaOvC3Naa9iqEfY4uwj3QT81C1nzGefQTSs9Xi1sVkxr
-         Thzvj6ez/EVP88f0HAA7zGChVE39rzJpCcaA0PkAp66xNCUEK58wePamt3BUFVoF6u
-         BMufaQ4munlsHtKap2R0NU90eKUgSODkvFo1Vmp7g1SCi8p+bdlG1wJhRpt9Q4RasL
-         mBwNgs3UX+kr0YYvJnsMqRDmsxyJlWvKGLw0NNdl8l2ivgafvVGix1f4yLj+bWTT3y
-         b31Wqb5xWW9dA==
+        b=h8AIwXoBal0O9Bkr3hiTHjueB+C3np7zv/SlTHa6coG4iridLY2WL6TuKbdKCyNxw
+         iPFgckky4eASPvEpynqMO2h0q15EVirDmSMzwD+4XPiOkPSSu1/CMffet14KjKGv21
+         VxNrQL2AZp95+8uJ7G61VQzo7X5HTM2eaHbnqrn2tbfUE4FwszE0tDR9DA+PH++v3/
+         TIPgrpJkJokVjpkF8JRV8V8ZwKnEqMud4e6UNqlejC1CVjpmqCgqxq2Hz53gPP2B3p
+         AFbezmlYSmzSS9oR9tPR/F/+/bqogORl6tucGbYpFwR+mJB8dBVH79QelOHMT/GW30
+         MmWCfKAh0urOg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Phillip Potter <phil@philpotter.co.uk>,
@@ -31,12 +31,12 @@ Cc:     Phillip Potter <phil@philpotter.co.uk>,
         Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 09/21] dmaengine: qcom_hidma: comment platform_driver_register call
-Date:   Mon, 24 May 2021 10:50:28 -0400
-Message-Id: <20210524145040.2499322-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 09/19] dmaengine: qcom_hidma: comment platform_driver_register call
+Date:   Mon, 24 May 2021 10:50:56 -0400
+Message-Id: <20210524145106.2499571-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210524145040.2499322-1-sashal@kernel.org>
-References: <20210524145040.2499322-1-sashal@kernel.org>
+In-Reply-To: <20210524145106.2499571-1-sashal@kernel.org>
+References: <20210524145106.2499571-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -65,11 +65,11 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 14 insertions(+)
 
 diff --git a/drivers/dma/qcom/hidma_mgmt.c b/drivers/dma/qcom/hidma_mgmt.c
-index 7335e2eb9b72..fd1b3a09de91 100644
+index 82f36e466083..143ea7cad756 100644
 --- a/drivers/dma/qcom/hidma_mgmt.c
 +++ b/drivers/dma/qcom/hidma_mgmt.c
-@@ -454,6 +454,20 @@ static int __init hidma_mgmt_init(void)
- 		hidma_mgmt_of_populate_channels(child);
+@@ -398,6 +398,20 @@ static int __init hidma_mgmt_init(void)
+ 		of_node_put(child);
  	}
  #endif
 +	/*

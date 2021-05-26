@@ -2,40 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B8BA6391BAE
-	for <lists+dmaengine@lfdr.de>; Wed, 26 May 2021 17:23:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76B4A391BB3
+	for <lists+dmaengine@lfdr.de>; Wed, 26 May 2021 17:24:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235479AbhEZPZV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 26 May 2021 11:25:21 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:57254 "EHLO
+        id S235476AbhEZPZ3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 26 May 2021 11:25:29 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57266 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235470AbhEZPZP (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 26 May 2021 11:25:15 -0400
+        with ESMTP id S235507AbhEZPZ0 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 26 May 2021 11:25:26 -0400
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 14QFNZFF076842;
-        Wed, 26 May 2021 10:23:35 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 14QFNeHt076862;
+        Wed, 26 May 2021 10:23:40 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1622042615;
-        bh=YxJAyBuPJt+20Tmz+rFXgMt9hinHGh2Zdv4e/6trMVg=;
+        s=ti-com-17Q1; t=1622042620;
+        bh=W9KtbhWc69uFW7TWtNV1CvIGGgRjw1aPelfSIlmtk3k=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=kE1KXBvci06ZjrKHbphRdCvcvyiMb775yNNyqtk8+br7g4pj/ZGB1x1hczK6+Fe+F
-         T0C2XYZyHJS8DKznE4GXtObYmd3nzqch4mDq1UqajLN+6y9zzJqi7AarHy2Gy9RQJu
-         yDOk5b8pSDeuSg1UqyZpUPWgCpS08BfCyk894S4w=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 14QFNZF3093354
+        b=BkGYJ3+bQW2YTFj1iMj9YPRtjxTYbX+9sNeZCVqwyDvmPwAYmueKYpk+y3P+r/ZFn
+         2yRflgihVz7KMTzL3OmwHNNLY3eKRC3fQhfnVupQ3LVTwY+gOl1FU4qde1QkCcxS0a
+         Qty/V8mqyCU40PVxEPGoO9BTKtLUXcJvLKlHczI4=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 14QFNebX093422
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 May 2021 10:23:35 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Wed, 26
- May 2021 10:23:35 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE112.ent.ti.com
+        Wed, 26 May 2021 10:23:40 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE112.ent.ti.com
  (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Wed, 26
+ May 2021 10:23:40 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Wed, 26 May 2021 10:23:35 -0500
+ Frontend Transport; Wed, 26 May 2021 10:23:40 -0500
 Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 14QFN9Jc056314;
-        Wed, 26 May 2021 10:23:30 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 14QFN9Jd056314;
+        Wed, 26 May 2021 10:23:35 -0500
 From:   Pratyush Yadav <p.yadav@ti.com>
 To:     Maxime Ripard <mripard@kernel.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -52,9 +52,9 @@ CC:     Vignesh Raghavendra <vigneshr@ti.com>,
         Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
         Chunfeng Yun <chunfeng.yun@mediatek.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v2 04/18] phy: cdns-dphy: Add Rx support
-Date:   Wed, 26 May 2021 20:52:54 +0530
-Message-ID: <20210526152308.16525-5-p.yadav@ti.com>
+Subject: [PATCH v2 05/18] media: ov5640: Use runtime PM to control sensor power
+Date:   Wed, 26 May 2021 20:52:55 +0530
+Message-ID: <20210526152308.16525-6-p.yadav@ti.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20210526152308.16525-1-p.yadav@ti.com>
 References: <20210526152308.16525-1-p.yadav@ti.com>
@@ -66,325 +66,281 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The Cadence DPHY can be used to receive image data over the CSI-2
-protocol. Add support for Rx mode. The programming sequence differs from
-the Tx mode so it is added as a separate set of hooks to isolate the two
-paths.
+Calling s_power subdev callback is discouraged. Instead, the subdevs
+should use runtime PM to control its power. Use runtime PM callbacks to
+control sensor power. The pm counter is incremented when the stream is
+started and decremented when the stream is stopped.
 
-The PHY is in Tx mode by default and it needs to be set in Rx mode by
-setting the submode to PHY_MIPI_DPHY_SUBMODE_RX in the set_mode()
-callback.
+Refactor s_stream() a bit to make this new control flow easier. Add a
+helper to choose whether mipi or dvp set_stream needs to be called. The
+logic flow is also changed to make it a bit clearer.
 
 Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+
 ---
 
-(no changes since v1)
+Changes in v2:
+- New in v2.
 
- drivers/phy/cadence/cdns-dphy.c | 237 ++++++++++++++++++++++++++++++++
- 1 file changed, 237 insertions(+)
+ drivers/media/i2c/Kconfig  |   2 +-
+ drivers/media/i2c/ov5640.c | 124 +++++++++++++++++++++++--------------
+ 2 files changed, 77 insertions(+), 49 deletions(-)
 
-diff --git a/drivers/phy/cadence/cdns-dphy.c b/drivers/phy/cadence/cdns-dphy.c
-index 7d5f7b333893..7bbca679e2bb 100644
---- a/drivers/phy/cadence/cdns-dphy.c
-+++ b/drivers/phy/cadence/cdns-dphy.c
-@@ -1,11 +1,14 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-  * Copyright: 2017-2018 Cadence Design Systems, Inc.
-+ * Copyright (C) 2021 Texas Instruments Incorporated - https://www.ti.com/
-  */
+diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+index 462c0e059754..5588fc1cc14a 100644
+--- a/drivers/media/i2c/Kconfig
++++ b/drivers/media/i2c/Kconfig
+@@ -914,7 +914,7 @@ config VIDEO_OV2740
  
- #include <linux/bitops.h>
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/io.h>
-+#include <linux/iopoll.h>
+ config VIDEO_OV5640
+ 	tristate "OmniVision OV5640 sensor support"
+-	depends on OF
++	depends on OF && PM
+ 	depends on GPIOLIB && VIDEO_V4L2 && I2C
+ 	select MEDIA_CONTROLLER
+ 	select VIDEO_V4L2_SUBDEV_API
+diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+index 5b9cc71df473..4ed5758e2398 100644
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -15,6 +15,7 @@
+ #include <linux/init.h>
  #include <linux/module.h>
- #include <linux/of_address.h>
  #include <linux/of_device.h>
-@@ -25,10 +28,14 @@
- #define DPHY_PMA_RCLK(reg)		(0x600 + (reg))
- #define DPHY_PMA_RDATA(lane, reg)	(0x700 + ((lane) * 0x100) + (reg))
- #define DPHY_PCS(reg)			(0xb00 + (reg))
-+#define DPHY_ISO(reg)			(0xc00 + (reg))
++#include <linux/pm_runtime.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+@@ -238,8 +239,6 @@ struct ov5640_dev {
+ 	/* lock to protect all members below */
+ 	struct mutex lock;
  
- #define DPHY_CMN_SSM			DPHY_PMA_CMN(0x20)
- #define DPHY_CMN_SSM_EN			BIT(0)
-+#define DPHY_CMN_RX_BANDGAP_TIMER_MASK	GENMASK(8, 1)
- #define DPHY_CMN_TX_MODE_EN		BIT(9)
-+#define DPHY_CMN_RX_MODE_EN		BIT(10)
-+#define DPHY_CMN_RX_BANDGAP_TIMER	0x14
+-	int power_count;
+-
+ 	struct v4l2_mbus_framefmt fmt;
+ 	bool pending_fmt_change;
  
- #define DPHY_CMN_PWM			DPHY_PMA_CMN(0x40)
- #define DPHY_CMN_PWM_DIV(x)		((x) << 20)
-@@ -45,10 +52,27 @@
- #define DPHY_CMN_OPDIV_FROM_REG		BIT(6)
- #define DPHY_CMN_OPDIV(x)		((x) << 7)
+@@ -1277,6 +1276,14 @@ static int ov5640_set_stream_mipi(struct ov5640_dev *sensor, bool on)
+ 				on ? 0x00 : 0x0f);
+ }
  
-+#define DPHY_BAND_CFG			DPHY_PCS(0x0)
-+#define DPHY_BAND_CFG_LEFT_BAND		GENMASK(4, 0)
-+#define DPHY_BAND_CFG_RIGHT_BAND	GENMASK(9, 5)
-+
- #define DPHY_PSM_CFG			DPHY_PCS(0x4)
- #define DPHY_PSM_CFG_FROM_REG		BIT(0)
- #define DPHY_PSM_CLK_DIV(x)		((x) << 1)
- 
-+#define DPHY_POWER_ISLAND_EN_DATA	DPHY_PCS(0x8)
-+#define DPHY_POWER_ISLAND_EN_DATA_VAL	0xaaaaaaaa
-+#define DPHY_POWER_ISLAND_EN_CLK	DPHY_PCS(0xc)
-+#define DPHY_POWER_ISLAND_EN_CLK_VAL	0xaa
-+
-+#define DPHY_ISO_CL_CTRL_L		DPHY_ISO(0x10)
-+#define DPHY_ISO_DL_CTRL_L0		DPHY_ISO(0x14)
-+#define DPHY_ISO_DL_CTRL_L1		DPHY_ISO(0x20)
-+#define DPHY_ISO_DL_CTRL_L2		DPHY_ISO(0x30)
-+#define DPHY_ISO_DL_CTRL_L3		DPHY_ISO(0x3c)
-+#define DPHY_ISO_LANE_READY_BIT		0
-+#define DPHY_ISO_LANE_READY_TIMEOUT_MS	100UL
-+
- #define DSI_HBP_FRAME_OVERHEAD		12
- #define DSI_HSA_FRAME_OVERHEAD		14
- #define DSI_HFP_FRAME_OVERHEAD		6
-@@ -57,6 +81,9 @@
- #define DSI_NULL_FRAME_OVERHEAD		6
- #define DSI_EOT_PKT_SIZE		4
- 
-+#define DPHY_LANES_MIN			1
-+#define DPHY_LANES_MAX			4
-+
- struct cdns_dphy_cfg {
- 	u8 pll_ipdiv;
- 	u8 pll_opdiv;
-@@ -312,6 +339,214 @@ static const struct cdns_dphy_ops tx_ref_dphy_ops = {
- 	.set_psm_div = cdns_dphy_ref_set_psm_div,
- };
- 
-+static int cdns_dphy_rx_power_on(struct cdns_dphy *dphy)
++static int ov5640_set_stream(struct ov5640_dev *sensor, bool on)
 +{
-+	/* Start RX state machine. */
-+	writel(DPHY_CMN_SSM_EN | DPHY_CMN_RX_MODE_EN |
-+	       FIELD_PREP(DPHY_CMN_RX_BANDGAP_TIMER_MASK,
-+			  DPHY_CMN_RX_BANDGAP_TIMER),
-+	       dphy->regs + DPHY_CMN_SSM);
-+
-+	return 0;
++	if (sensor->ep.bus_type == V4L2_MBUS_CSI2_DPHY)
++		return ov5640_set_stream_mipi(sensor, on);
++	else
++		return ov5640_set_stream_dvp(sensor, on);
 +}
 +
-+static int cdns_dphy_rx_power_off(struct cdns_dphy *dphy)
-+{
-+	writel(0, dphy->regs + DPHY_CMN_SSM);
+ static int ov5640_get_sysclk(struct ov5640_dev *sensor)
+ {
+ 	 /* calculate sysclk */
+@@ -2155,37 +2162,6 @@ static int ov5640_set_power(struct ov5640_dev *sensor, bool on)
+ 
+ /* --------------- Subdev Operations --------------- */
+ 
+-static int ov5640_s_power(struct v4l2_subdev *sd, int on)
+-{
+-	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+-	int ret = 0;
+-
+-	mutex_lock(&sensor->lock);
+-
+-	/*
+-	 * If the power count is modified from 0 to != 0 or from != 0 to 0,
+-	 * update the power state.
+-	 */
+-	if (sensor->power_count == !on) {
+-		ret = ov5640_set_power(sensor, !!on);
+-		if (ret)
+-			goto out;
+-	}
+-
+-	/* Update the power count. */
+-	sensor->power_count += on ? 1 : -1;
+-	WARN_ON(sensor->power_count < 0);
+-out:
+-	mutex_unlock(&sensor->lock);
+-
+-	if (on && !ret && sensor->power_count == 1) {
+-		/* restore controls */
+-		ret = v4l2_ctrl_handler_setup(&sensor->ctrls.handler);
+-	}
+-
+-	return ret;
+-}
+-
+ static int ov5640_try_frame_interval(struct ov5640_dev *sensor,
+ 				     struct v4l2_fract *fi,
+ 				     u32 width, u32 height)
+@@ -2681,6 +2657,7 @@ static int ov5640_s_ctrl(struct v4l2_ctrl *ctrl)
+ {
+ 	struct v4l2_subdev *sd = ctrl_to_sd(ctrl);
+ 	struct ov5640_dev *sensor = to_ov5640_dev(sd);
++	struct device *dev = &sensor->i2c_client->dev;
+ 	int ret;
+ 
+ 	/* v4l2_ctrl_lock() locks our own mutex */
+@@ -2690,7 +2667,7 @@ static int ov5640_s_ctrl(struct v4l2_ctrl *ctrl)
+ 	 * not apply any controls to H/W at this time. Instead
+ 	 * the controls will be restored right after power-up.
+ 	 */
+-	if (sensor->power_count == 0)
++	if (pm_runtime_suspended(dev))
+ 		return 0;
+ 
+ 	switch (ctrl->id) {
+@@ -2939,39 +2916,56 @@ static int ov5640_enum_mbus_code(struct v4l2_subdev *sd,
+ static int ov5640_s_stream(struct v4l2_subdev *sd, int enable)
+ {
+ 	struct ov5640_dev *sensor = to_ov5640_dev(sd);
++	struct device *dev = &sensor->i2c_client->dev;
+ 	int ret = 0;
+ 
+ 	mutex_lock(&sensor->lock);
+ 
+-	if (sensor->streaming == !enable) {
+-		if (enable && sensor->pending_mode_change) {
++	if (sensor->streaming == enable)
++		goto out;
 +
-+	return 0;
++	if (enable) {
++		ret = pm_runtime_get_sync(dev);
++		if (ret < 0) {
++			pm_runtime_put_noidle(dev);
++			goto out;
++		}
++
++		if (sensor->pending_mode_change) {
+ 			ret = ov5640_set_mode(sensor);
+ 			if (ret)
+-				goto out;
++				goto put_pm;
+ 		}
+ 
+-		if (enable && sensor->pending_fmt_change) {
++		if (sensor->pending_fmt_change) {
+ 			ret = ov5640_set_framefmt(sensor, &sensor->fmt);
+ 			if (ret)
+-				goto out;
++				goto put_pm;
+ 			sensor->pending_fmt_change = false;
+ 		}
+ 
+-		if (sensor->ep.bus_type == V4L2_MBUS_CSI2_DPHY)
+-			ret = ov5640_set_stream_mipi(sensor, enable);
+-		else
+-			ret = ov5640_set_stream_dvp(sensor, enable);
++		ret = ov5640_set_stream(sensor, enable);
++		if (ret)
++			goto put_pm;
++	} else {
++		ret = ov5640_set_stream(sensor, enable);
++		if (ret)
++			goto out;
+ 
+-		if (!ret)
+-			sensor->streaming = enable;
++		pm_runtime_put(dev);
+ 	}
++
++	sensor->streaming = enable;
++	goto out;
++
++put_pm:
++	pm_runtime_put(dev);
+ out:
+ 	mutex_unlock(&sensor->lock);
+ 	return ret;
+ }
+ 
+ static const struct v4l2_subdev_core_ops ov5640_core_ops = {
+-	.s_power = ov5640_s_power,
+ 	.log_status = v4l2_ctrl_subdev_log_status,
+ 	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
+ 	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
+@@ -3037,6 +3031,29 @@ static int ov5640_check_chip_id(struct ov5640_dev *sensor)
+ 	return ret;
+ }
+ 
++static int ov5640_suspend(struct device *dev)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct v4l2_subdev *subdev = i2c_get_clientdata(client);
++	struct ov5640_dev *sensor = to_ov5640_dev(subdev);
++
++	return ov5640_set_power(sensor, false);
 +}
 +
-+static int cdns_dphy_rx_get_band_ctrl(unsigned long hs_clk_rate)
++static int ov5640_resume(struct device *dev)
 +{
-+	unsigned int rate = hs_clk_rate / 1000000UL;
++	struct i2c_client *client = to_i2c_client(dev);
++	struct v4l2_subdev *subdev = i2c_get_clientdata(client);
++	struct ov5640_dev *sensor = to_ov5640_dev(subdev);
++	int ret = 0;
 +
-+	if (rate < 80 || rate >= 2500)
-+		return -EOPNOTSUPP;
-+
-+	if (rate >= 80 && rate < 100)
-+		return 0;
-+
-+	if (rate >= 100 && rate < 120)
-+		return 1;
-+
-+	if (rate >= 120 && rate < 160)
-+		return 2;
-+
-+	if (rate >= 160 && rate < 200)
-+		return 3;
-+
-+	if (rate >= 200 && rate < 240)
-+		return 4;
-+
-+	if (rate >= 240 && rate < 280)
-+		return 5;
-+
-+	if (rate >= 280 && rate < 320)
-+		return 6;
-+
-+	if (rate >= 320 && rate < 360)
-+		return 7;
-+
-+	if (rate >= 360 && rate < 400)
-+		return 8;
-+
-+	if (rate >= 400 && rate < 480)
-+		return 9;
-+
-+	if (rate >= 480 && rate < 560)
-+		return 10;
-+
-+	if (rate >= 560 && rate < 640)
-+		return 11;
-+
-+	if (rate >= 640 && rate < 720)
-+		return 12;
-+
-+	if (rate >= 720 && rate < 800)
-+		return 13;
-+
-+	if (rate >= 800 && rate < 880)
-+		return 14;
-+
-+	if (rate >= 880 && rate < 1040)
-+		return 15;
-+
-+	if (rate >= 1040 && rate < 1200)
-+		return 16;
-+
-+	if (rate >= 1200 && rate < 1350)
-+		return 17;
-+
-+	if (rate >= 1350 && rate < 1500)
-+		return 18;
-+
-+	if (rate >= 1500 && rate < 1750)
-+		return 19;
-+
-+	if (rate >= 1750 && rate < 2000)
-+		return 20;
-+
-+	if (rate >= 2000 && rate < 2250)
-+		return 21;
-+
-+	if (rate >= 2250 && rate < 2500)
-+		return 22;
-+
-+	/* Unreachable. */
-+	WARN(1, "Reached unreachable code.");
-+	return -EINVAL;
-+}
-+
-+static int cdns_dphy_rx_wait_for_bit(void __iomem *addr, unsigned int bit)
-+{
-+	u32 val;
-+
-+	return readl_relaxed_poll_timeout(addr, val, val & BIT(bit), 10,
-+					  DPHY_ISO_LANE_READY_TIMEOUT_MS * 1000);
-+}
-+
-+static int cdns_dphy_rx_wait_lane_ready(struct cdns_dphy *dphy, int lanes)
-+{
-+	void __iomem *reg = dphy->regs;
-+	int ret;
-+
-+	if (lanes < DPHY_LANES_MIN || lanes > DPHY_LANES_MAX)
-+		return -EINVAL;
-+
-+	/* Clock lane */
-+	ret = cdns_dphy_rx_wait_for_bit(reg + DPHY_ISO_CL_CTRL_L,
-+					DPHY_ISO_LANE_READY_BIT);
++	ret = ov5640_set_power(sensor, true);
 +	if (ret)
 +		return ret;
 +
-+	/* Data lanes. Minimum one lane is mandatory. */
-+	ret = cdns_dphy_rx_wait_for_bit(reg + DPHY_ISO_DL_CTRL_L0,
-+					DPHY_ISO_LANE_READY_BIT);
-+	if (ret)
-+		return ret;
-+
-+	if (lanes < 2)
-+		return 0;
-+
-+	ret = cdns_dphy_rx_wait_for_bit(reg + DPHY_ISO_DL_CTRL_L1,
-+					DPHY_ISO_LANE_READY_BIT);
-+	if (ret)
-+		return ret;
-+
-+	if (lanes < 3)
-+		return 0;
-+
-+	ret = cdns_dphy_rx_wait_for_bit(reg + DPHY_ISO_DL_CTRL_L2,
-+					DPHY_ISO_LANE_READY_BIT);
-+	if (ret)
-+		return ret;
-+
-+	if (lanes < 4)
-+		return 0;
-+
-+	ret = cdns_dphy_rx_wait_for_bit(reg + DPHY_ISO_DL_CTRL_L3,
-+					DPHY_ISO_LANE_READY_BIT);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
++	return __v4l2_ctrl_handler_setup(&sensor->ctrls.handler);
 +}
 +
-+static int cdns_dphy_rx_configure(struct cdns_dphy *dphy,
-+				  union phy_configure_opts *opts)
-+{
-+	unsigned int reg;
-+	int band_ctrl, ret;
+ static int ov5640_probe(struct i2c_client *client)
+ {
+ 	struct device *dev = &client->dev;
+@@ -3162,13 +3179,17 @@ static int ov5640_probe(struct i2c_client *client)
+ 	if (ret)
+ 		goto entity_cleanup;
+ 
++	pm_runtime_enable(dev);
++	pm_runtime_set_suspended(dev);
 +
-+	band_ctrl = cdns_dphy_rx_get_band_ctrl(opts->mipi_dphy.hs_clk_rate);
-+	if (band_ctrl < 0)
-+		return band_ctrl;
-+
-+	reg = FIELD_PREP(DPHY_BAND_CFG_LEFT_BAND, band_ctrl) |
-+	      FIELD_PREP(DPHY_BAND_CFG_RIGHT_BAND, band_ctrl);
-+	writel(reg, dphy->regs + DPHY_BAND_CFG);
-+
-+	/*
-+	 * Set the required power island phase 2 time. This is mandated by DPHY
-+	 * specs.
-+	 */
-+	reg = DPHY_POWER_ISLAND_EN_DATA_VAL;
-+	writel(reg, dphy->regs + DPHY_POWER_ISLAND_EN_DATA);
-+	reg = DPHY_POWER_ISLAND_EN_CLK_VAL;
-+	writel(reg, dphy->regs + DPHY_POWER_ISLAND_EN_CLK);
-+
-+	ret = cdns_dphy_rx_wait_lane_ready(dphy, opts->mipi_dphy.lanes);
-+	if (ret) {
-+		dev_err(dphy->dev, "DPHY wait for lane ready timeout\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int cdns_dphy_rx_validate(struct cdns_dphy *dphy, enum phy_mode mode,
-+				 int submode, union phy_configure_opts *opts)
-+{
-+	int ret;
-+
-+	if (submode != PHY_MIPI_DPHY_SUBMODE_RX)
-+		return -EINVAL;
-+
-+	ret = cdns_dphy_rx_get_band_ctrl(opts->mipi_dphy.hs_clk_rate);
-+	if (ret < 0)
-+		return ret;
-+
-+	return phy_mipi_dphy_config_validate(&opts->mipi_dphy);
-+}
-+
-+static const struct cdns_dphy_ops rx_ref_dphy_ops = {
-+	.power_on = cdns_dphy_rx_power_on,
-+	.power_off = cdns_dphy_rx_power_off,
-+	.configure = cdns_dphy_rx_configure,
-+	.validate = cdns_dphy_rx_validate,
+ 	ret = v4l2_async_register_subdev_sensor(&sensor->sd);
+ 	if (ret)
+-		goto free_ctrls;
++		goto error_pm;
+ 
+ 	return 0;
+ 
+-free_ctrls:
++error_pm:
++	pm_runtime_disable(dev);
+ 	v4l2_ctrl_handler_free(&sensor->ctrls.handler);
+ entity_cleanup:
+ 	media_entity_cleanup(&sensor->sd.entity);
+@@ -3178,17 +3199,23 @@ static int ov5640_probe(struct i2c_client *client)
+ 
+ static int ov5640_remove(struct i2c_client *client)
+ {
++	struct device *dev = &client->dev;
+ 	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+ 	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+ 
+ 	v4l2_async_unregister_subdev(&sensor->sd);
+ 	media_entity_cleanup(&sensor->sd.entity);
++	pm_runtime_disable(dev);
+ 	v4l2_ctrl_handler_free(&sensor->ctrls.handler);
+ 	mutex_destroy(&sensor->lock);
+ 
+ 	return 0;
+ }
+ 
++static const struct dev_pm_ops ov5640_pm_ops = {
++	SET_RUNTIME_PM_OPS(ov5640_suspend, ov5640_resume, NULL)
 +};
 +
- /*
-  * This is the reference implementation of DPHY hooks. Specific integration of
-  * this IP may have to re-implement some of them depending on how they decided
-@@ -319,6 +554,7 @@ static const struct cdns_dphy_ops tx_ref_dphy_ops = {
-  */
- static const struct cdns_dphy_driver_data ref_dphy_ops = {
- 	.tx = &tx_ref_dphy_ops,
-+	.rx = &rx_ref_dphy_ops,
- };
- 
- static int cdns_dphy_validate(struct phy *phy, enum phy_mode mode, int submode,
-@@ -483,5 +719,6 @@ static struct platform_driver cdns_dphy_platform_driver = {
- module_platform_driver(cdns_dphy_platform_driver);
- 
- MODULE_AUTHOR("Maxime Ripard <maxime.ripard@bootlin.com>");
-+MODULE_AUTHOR("Pratyush Yadav <p.yadav@ti.com>");
- MODULE_DESCRIPTION("Cadence MIPI D-PHY Driver");
- MODULE_LICENSE("GPL");
+ static const struct i2c_device_id ov5640_id[] = {
+ 	{"ov5640", 0},
+ 	{},
+@@ -3205,6 +3232,7 @@ static struct i2c_driver ov5640_i2c_driver = {
+ 	.driver = {
+ 		.name  = "ov5640",
+ 		.of_match_table	= ov5640_dt_ids,
++		.pm = &ov5640_pm_ops,
+ 	},
+ 	.id_table = ov5640_id,
+ 	.probe_new = ov5640_probe,
 -- 
 2.30.0
 

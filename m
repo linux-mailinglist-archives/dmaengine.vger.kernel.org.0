@@ -2,114 +2,113 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71E1E391BDC
-	for <lists+dmaengine@lfdr.de>; Wed, 26 May 2021 17:26:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27EB83923BA
+	for <lists+dmaengine@lfdr.de>; Thu, 27 May 2021 02:22:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235591AbhEZP0e (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 26 May 2021 11:26:34 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:57454 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235494AbhEZP0Z (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 26 May 2021 11:26:25 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 14QFOl2g077230;
-        Wed, 26 May 2021 10:24:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1622042687;
-        bh=pTeLkA7bx6KOILpF/7/Br9MYMivB1gWNfgEKpM+42C8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Sa7mg3swfvYSY5fEXKTgFe09iCQMa2L+FTlEWUMbpwsMjpcWUDtgYtK6Dp/UXnW/P
-         j+OpLrzDllzOFoSXaPXwT0uWNqSCdjOUuTLxmcYF6bTsY17Isw+Csql30A5SUx+b+Y
-         VtuwpRJKGC6K7VbYpNkYlqb5SLO5QxQYfZ+gyv58=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 14QFOlj0079626
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 May 2021 10:24:47 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Wed, 26
- May 2021 10:24:47 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Wed, 26 May 2021 10:24:47 -0500
-Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 14QFN9Jq056314;
-        Wed, 26 May 2021 10:24:42 -0500
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     Maxime Ripard <mripard@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Pratyush Yadav <p.yadav@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Benoit Parrot <bparrot@ti.com>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <dmaengine@vger.kernel.org>
-CC:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v2 18/18] phy: dt-bindings: cdns,dphy: add power-domains property
-Date:   Wed, 26 May 2021 20:53:08 +0530
-Message-ID: <20210526152308.16525-19-p.yadav@ti.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20210526152308.16525-1-p.yadav@ti.com>
-References: <20210526152308.16525-1-p.yadav@ti.com>
+        id S233768AbhE0AX6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 26 May 2021 20:23:58 -0400
+Received: from mga12.intel.com ([192.55.52.136]:57917 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232916AbhE0AX6 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 26 May 2021 20:23:58 -0400
+IronPort-SDR: cjNgE5E0lSk/oyQrDIK/EK2mhvKSPpQIRcmSIPQnkLUGYEwBObWJ72qEsPKBHn3klEuOidVXbO
+ 60DfuDY0zslg==
+X-IronPort-AV: E=McAfee;i="6200,9189,9996"; a="182267163"
+X-IronPort-AV: E=Sophos;i="5.82,333,1613462400"; 
+   d="scan'208";a="182267163"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2021 17:22:25 -0700
+IronPort-SDR: lReY4mf/OSOR576x/j9wiVXic53pGNKIMBXd9Q5X67WVlkom8Pmyt0pOkhSksaugZcWYbBl+Ua
+ aRjSY6JaussA==
+X-IronPort-AV: E=Sophos;i="5.82,333,1613462400"; 
+   d="scan'208";a="397527172"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.10.31]) ([10.212.10.31])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2021 17:22:23 -0700
+Subject: Re: [PATCH v6 15/20] vfio/mdev: idxd: ims domain setup for the vdcm
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     alex.williamson@redhat.com, kwankhede@nvidia.com,
+        tglx@linutronix.de, vkoul@kernel.org, megha.dey@intel.com,
+        jacob.jun.pan@intel.com, ashok.raj@intel.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, dan.j.williams@intel.com,
+        eric.auger@redhat.com, pbonzini@redhat.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <162164243591.261970.3439987543338120797.stgit@djiang5-desk3.ch.intel.com>
+ <162164283796.261970.11020270418798826121.stgit@djiang5-desk3.ch.intel.com>
+ <20210523235023.GL1002214@nvidia.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <29cec5cd-3f23-f947-4545-f507b3f70988@intel.com>
+Date:   Wed, 26 May 2021 17:22:22 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20210523235023.GL1002214@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This property is needed on TI platforms to enable the PD of the DPHY
-before it can be used.
 
-Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+On 5/23/2021 4:50 PM, Jason Gunthorpe wrote:
+> On Fri, May 21, 2021 at 05:20:37PM -0700, Dave Jiang wrote:
+>> @@ -77,8 +80,18 @@ int idxd_mdev_host_init(struct idxd_device *idxd, struct mdev_driver *drv)
+>>   		return rc;
+>>   	}
+>>   
+>> +	ims_info.max_slots = idxd->ims_size;
+>> +	ims_info.slots = idxd->reg_base + idxd->ims_offset;
+>> +	idxd->ims_domain = pci_ims_array_create_msi_irq_domain(idxd->pdev, &ims_info);
+>> +	if (!idxd->ims_domain) {
+>> +		dev_warn(dev, "Fail to acquire IMS domain\n");
+>> +		iommu_dev_disable_feature(dev, IOMMU_DEV_FEAT_AUX);
+>> +		return -ENODEV;
+>> +	}
+> I'm quite surprised that every mdev doesn't create its own ims_domain
+> in its probe function.
+>
+> This places a global total limit on the # of vectors which makes me
+> ask what was the point of using IMS in the first place ?
+>
+> The entire idea for IMS was to make the whole allocation system fully
+> dynamic based on demand.
 
----
+Hi Jason, thank you for the review of the series.
 
-Changes in v2:
-- Add power-domain to the example.
-- Add Laurent's R-by.
-- Re-order subject prefixes.
+My understanding is that the driver creates a single IMS domain for the 
+device and provides the address base and IMS numbers for the domain 
+based on device IMS resources. So the IMS region needs to be contiguous. 
+Each mdev can call msi_domain_alloc_irqs() and acquire the number of IMS 
+vectors it desires and the DEV MSI core code will keep track of which 
+vectors are being used. This allows the mdev devices to dynamically 
+allocate based on demand. If the driver allocates a domain per mdev, 
+it'll needs to do internal accounting of the base and vector numbers for 
+each of those domains that the MSI core already provides. Isn't that 
+what we are trying to avoid? As mdevs come and go, that partitioning 
+will become fragmented.
 
- Documentation/devicetree/bindings/phy/cdns,dphy.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+For example, mdev 0 allocates 1 vector, mdev 1 allocates 2 vectors, and 
+mdev 3 allocates 3 vector. You have 1 vectors unallocated. When mdev 1 
+goes away and a new mdev shows up wanting 3 vectors, you won't be able 
+to allocate the domain because of fragmentation even though you have 
+enough vectors.
 
-diff --git a/Documentation/devicetree/bindings/phy/cdns,dphy.yaml b/Documentation/devicetree/bindings/phy/cdns,dphy.yaml
-index 3bb5be05e825..d5a5e1f0b671 100644
---- a/Documentation/devicetree/bindings/phy/cdns,dphy.yaml
-+++ b/Documentation/devicetree/bindings/phy/cdns,dphy.yaml
-@@ -30,6 +30,9 @@ properties:
-   "#phy-cells":
-     const: 0
- 
-+  power-domains:
-+    maxItems: 1
-+
- required:
-   - compatible
-   - reg
-@@ -39,11 +42,13 @@ additionalProperties: false
- 
- examples:
-   - |
-+    #include <dt-bindings/soc/ti,sci_pm_domain.h>
- 
-     dphy0: phy@fd0e0000{
-         compatible = "cdns,dphy";
-         reg = <0xfd0e0000 0x1000>;
-         clocks = <&psm_clk>, <&pll_ref_clk>;
-         clock-names = "psm", "pll_ref";
-+        power-domains = <&k3_pds 147 TI_SCI_PD_EXCLUSIVE>;
-         #phy-cells = <0>;
-     };
--- 
-2.30.0
+If all mdevs allocate the same IMS numbers, the fragmentation issue does 
+not exist. But the driver still has to keep track of which vectors are 
+free and which ones are used in order to provide the appropriate base. 
+And dev msi core already does this for us if we have a single domain. 
+Feels like we would just be duplicating code doing the same thing?
 
+
+>
+>>   	rc = mdev_register_device(dev, drv);
+>>   	if (rc < 0) {
+>> +		irq_domain_remove(idxd->ims_domain);
+>>   		iommu_dev_disable_feature(dev, IOMMU_DEV_FEAT_AUX);
+>>   		return rc;
+>>   	}
+> This really wants a goto error unwind
+>
+> Jason

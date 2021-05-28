@@ -2,149 +2,181 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E47E2393416
-	for <lists+dmaengine@lfdr.de>; Thu, 27 May 2021 18:36:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB331393B31
+	for <lists+dmaengine@lfdr.de>; Fri, 28 May 2021 03:50:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236340AbhE0Qhd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 27 May 2021 12:37:33 -0400
-Received: from mail-dm6nam11on2083.outbound.protection.outlook.com ([40.107.223.83]:59938
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S234779AbhE0Qhc (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 27 May 2021 12:37:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YiJ9DMWeny1Y1SgxIdJ0RCZgSnSdFvbaaprQLUvI1oLEgv6m2KSlKoiqmCtB6JOxPes19y1HhXGPlsSEaky7bQd8YAnwRUd63C8vPBrG5n8AM8xBg+8wnxB9OyZFUzqCdhZBlexzwmfVkiaKmKASFMYOf0j3oCpecjk7pUvn+T5pyN0vuPiqp4XYxutoDDdeWurzgB7IkGTCIhOwYZZrVjfMDVM2tIC0S7yFb1CpY3FvmaarNy+eYAig1t4pAIuhHYq6ZY88V3a8YT1lrixesK5qfjzymyQc7HmBCK86tlokCDRN/ZcMie1pBY9AHJG3luC9fqHyVNjam6A1u+d4EQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kpbbRXJxikposfpW9roHLFX2Zscqs3BECYDHkm08EV8=;
- b=HLZZ6TiHfXknIAJeOYnUUCK/kH28/ElzzPOHdA/dhtTiBlRRAnaoxIK1oG2xAjqi7W0HnO6m7DSFIHk+rb6N+hulLIHU73Wn1qzi20q3BGcnZFKA/mHBMO8A+/JIDD4LYbE/wlos1l490daeGvLIQTYNYGxZpDgK0gd+HpSoA4W+e9v11mXQ9mEZedWE1dlUOCQpKsMF2Z6MTpXN3NZF29YbL8HUMRbQQE+6sLIq58HE+6Wwc58knhvjGjfZsSwHYnmMO2ozlzFkMLcW7OrxxC3qIEPcs8j/6stw0KGkZfUano8fNGFWH/MCI6l+FTcczxqzC+f+o0v0u72ddEWUEQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kpbbRXJxikposfpW9roHLFX2Zscqs3BECYDHkm08EV8=;
- b=AheWQsRkZpNTRmc50Te8h4S4LGSw60igCawyoSFN15ZeKlQlt63iswoWKTITaagLkkqLlYzG4bkDlScdh9KKqmHsIm5Xsziaozv/LTAmIS6YyPrUyANx1asncwVerXtvCCmaJfPSurYYH9HO6HBergiATPbMfE7NJtGFRzeyhwo=
-Received: from BYAPR02MB4535.namprd02.prod.outlook.com (2603:10b6:a03:14::16)
- by BY5PR02MB6834.namprd02.prod.outlook.com (2603:10b6:a03:211::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.21; Thu, 27 May
- 2021 16:35:57 +0000
-Received: from BYAPR02MB4535.namprd02.prod.outlook.com
- ([fe80::798a:95d4:7245:7bd8]) by BYAPR02MB4535.namprd02.prod.outlook.com
- ([fe80::798a:95d4:7245:7bd8%7]) with mapi id 15.20.4173.022; Thu, 27 May 2021
- 16:35:57 +0000
-From:   Jianqiang Chen <jianqian@xilinx.com>
-To:     'Laurent Pinchart' <laurent.pinchart@ideasonboard.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-CC:     Vinod Koul <vkoul@kernel.org>, Michal Simek <michals@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH 0/4] dmaengine: xilinx: dpdma: Fix freeze after 64k frames
-Thread-Topic: [PATCH 0/4] dmaengine: xilinx: dpdma: Fix freeze after 64k
- frames
-Thread-Index: AQHXTYw5rPfZt2ti3E+ZF2FpqblCjar3kXIw
-Date:   Thu, 27 May 2021 16:35:57 +0000
-Message-ID: <BYAPR02MB45350CAC4266729C0678CCB3AC239@BYAPR02MB4535.namprd02.prod.outlook.com>
-References: <20210520152420.23986-1-laurent.pinchart@ideasonboard.com>
-In-Reply-To: <20210520152420.23986-1-laurent.pinchart@ideasonboard.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: ideasonboard.com; dkim=none (message not signed)
- header.d=none;ideasonboard.com; dmarc=none action=none
- header.from=xilinx.com;
-x-originating-ip: [149.199.62.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b4a70a5d-baa3-43dc-b8c1-08d9212d8180
-x-ms-traffictypediagnostic: BY5PR02MB6834:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR02MB6834EC0A1C6699E0F5C947D2AC239@BY5PR02MB6834.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3atMQUrdwMzucSahipkbKFgJToNG00hH7MlgXFpOY2uuBCdNc6D2rgArjOiKYmTHmZb/ybmSmoN0CzNiVcXS3TmCi/Drz6IvBSq3SdWptYXu7YuIeuh3D6f2d1QgitJd6KRFvGPC6fR5Ka66gqNxX+NIl6zsKQ4zWKK8aXc30HHACP4tq82NwJyidMda2ExMhz/jW/0fPGq7bbMBmVGWK9J3xsV1lxavjvab74RMSLCEzScRYXWyzPPpf/vpxiiphgwCdAdUevUwXlzrcd+yPMqkhQ6Rv3bj+wjPGr+6VP1S/IGpxS1rFmhTkDg9ksd4kY5bjsB628Wh62JXioeE1rrKkJZpQ6gZejnnftlmcJCZeEmI3rQhoYB7ZhiD3++FHUrKwGeeujNXqHQZtQt75Busa5LBIAx/9bvpeSW2Ghl3trERJvMYJd+Cij7VQdiRXdlHswx79dQU+6GmhbGCwBWeVIF1QTtz9mw45JXhMy+YcOFVijZ/LAXkeAguINHv9zQ/IavCF6fA0ilAZAlki5l0w5Bpxuk2QsQLwQa21+hR3QfO/I/pvOATV2eBDLIjxAto0j4nt+/xt5wLjaFYA467+5p6js6CXwPJNxJezgQ=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB4535.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(39860400002)(346002)(396003)(376002)(26005)(66446008)(33656002)(71200400001)(6506007)(186003)(53546011)(9686003)(8676002)(7696005)(66556008)(64756008)(478600001)(5660300002)(86362001)(66476007)(52536014)(2906002)(55016002)(66946007)(4326008)(38100700002)(8936002)(122000001)(76116006)(316002)(110136005)(54906003)(83380400001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 2
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?hgGvYq2on5XI66AIu+mhGLJmDxB80xZAPa0X98sSDRhvNumWtw/leOjRX2E6?=
- =?us-ascii?Q?r/WOkZidotpq9Y7d2etbcc8Ofz2KWwhBXMh8kmxs9FPpQWpxUqeOlfvVvCYx?=
- =?us-ascii?Q?hBNKd/SY6XzaJilR5jC0zxZSEWeBa4YNzFHswINNkPfa3dTZJQZ27Jhot6gN?=
- =?us-ascii?Q?bquCuly4nc8gR7x3wKO/3m6LCMR4GadVaJD++lPWwRa/RynnrICfvOjbZJk7?=
- =?us-ascii?Q?0xuLBF0PR3jJSu+v1Y5QXngq63otxd6mY0PynUMdbIldXesbD61Q97Oc6fUj?=
- =?us-ascii?Q?szMnohuMgefssv2ynFchFxdphjyMnUCHr07VvUVh+dPYWTSe5iGGiNp1B6ll?=
- =?us-ascii?Q?BF5zy0cTUk37Ehqqx1GjpN2YyTOZAeER+0nbC1CAN61V0+q92otRvc6Fv7AA?=
- =?us-ascii?Q?acuM6XwaI7TEUlbiU3Mfc6gZJNTe+zui9BJMLQT3hAJo6ae2lYYwo+yHyd1V?=
- =?us-ascii?Q?41CozHLm4XeaRX7uNg20FYyAPHlsKuzbVMWACen0kZQxTLeDOC10YsC2MYoB?=
- =?us-ascii?Q?2WDfjmAZPlJdj9Pk6dxGzXu6GhIL0DThtgGKYkApkqH2ZwhUPezK82x7hC+6?=
- =?us-ascii?Q?XkR3hdCIhFkAyk1BQ1h8OBeDFqgfqZBm0KnC2HzGe0mbH4SVke6kgKaV7V/y?=
- =?us-ascii?Q?xG5YbkEjkGFr6tS3+Ocn7ROeA5JzliJN5Oa0wnmkswpJ1Y0/YKss0WCI7X/e?=
- =?us-ascii?Q?w42cCPntC946Ps/KQ9CkrL2frUltDuLyjwoBH4vxjZ9KuEojrZmOlxOwR/L5?=
- =?us-ascii?Q?ojH7yLrU/PewtBC3DiqAGCpcLXMgVNfH8gMO/fGcwcuL+IB9+mUS6p6lGm+o?=
- =?us-ascii?Q?q3QMzTaAGqhnOUU/y90VYeG/K+9HMwCscCguUvLekNmT35xeG4rxUwGUIhdq?=
- =?us-ascii?Q?WSe7ssvO5dbdu6IWwu/hM0o5ksFRHGSD1M/yBfIC9Um+ahyk1BRUAreSj6mF?=
- =?us-ascii?Q?itMysqtyooTcLm9Hosl4cnKflAuN5ySNNhxswovE?=
-x-ms-exchange-antispam-messagedata-1: IFmpwR+LtLLvd1KWVdY0iXgwAFDMsYfP8gD8KCmopgja+KaJpMp0DI5ePUiPuN46pZ5qQBlGyafFccgmNL5QC2/QwpFGxx6Q37XW+du/+QE4Bs4aD1rEUh/bjSJ3FNDJGqEWh/7uoM6ObdNBt0f9JwRV7x2DDjv3fAhW0Na8FklBm+fDH411u8v3mjuj5GT4jRLjxjlXifqAYeRKYqzRv4QqZxsYsQoPkKaqGWgVwy/yWxR067B9M2i66zV6uA10m9eqPOMAxaSLaIJxk7RYL89XL4f6izvEQ/vPunVqIXPLlqsAoybMnbmIxvfhOS1tqDUQmJ57LTrQgmOzpY+4ABSd
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S234595AbhE1Bvh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 27 May 2021 21:51:37 -0400
+Received: from mga04.intel.com ([192.55.52.120]:39392 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229749AbhE1Bvg (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 27 May 2021 21:51:36 -0400
+IronPort-SDR: tc2jgbkSga8ADZf9QjQzAGndxcwaHOYLUZsxsvqs+0J1DBpAVTRVSq8BJ1KQEuOTYxdgDWY7da
+ ZrikEfyXmpaA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9997"; a="200984711"
+X-IronPort-AV: E=Sophos;i="5.83,228,1616482800"; 
+   d="scan'208";a="200984711"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2021 18:50:00 -0700
+IronPort-SDR: cqzfkh8Ja8aZVzK2amhZWKbPkE2ICqfjSx+ieb40hAr76ifKYSjc3lGQyUvG1P+6v7IVHqtPre
+ /0iBt9PI5Keg==
+X-IronPort-AV: E=Sophos;i="5.83,228,1616482800"; 
+   d="scan'208";a="465625144"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.255.70.31]) ([10.255.70.31])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2021 18:49:59 -0700
+Subject: Re: [PATCH v6 05/20] vfio: mdev: common lib code for setting up
+ Interrupt Message Store
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     alex.williamson@redhat.com, kwankhede@nvidia.com,
+        tglx@linutronix.de, vkoul@kernel.org, megha.dey@intel.com,
+        jacob.jun.pan@intel.com, ashok.raj@intel.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, dan.j.williams@intel.com,
+        eric.auger@redhat.com, pbonzini@redhat.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <162164243591.261970.3439987543338120797.stgit@djiang5-desk3.ch.intel.com>
+ <162164277624.261970.7989190254803052804.stgit@djiang5-desk3.ch.intel.com>
+ <20210524000257.GN1002214@nvidia.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <44ba4c5f-aa40-3149-85a5-3e382f9c2eae@intel.com>
+Date:   Thu, 27 May 2021 18:49:59 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR02MB4535.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b4a70a5d-baa3-43dc-b8c1-08d9212d8180
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2021 16:35:57.8178
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2xogL/uj4jipWKhSc6F7+jHXjMxU3WLIAoPq+dlr0TWhRTN33g0ynrsHHsLgCEGH8tmpHs4Qg7LH7poKrERdfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6834
+In-Reply-To: <20210524000257.GN1002214@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Tested-by: Jianqiang Chen <jianqiang.chen@xilinx.com>
-Reviewed-by: Jianqiang Chen <jianqiang.chen@xilinx.com>
 
-Thanks,
-Jason
+On 5/23/2021 5:02 PM, Jason Gunthorpe wrote:
+> On Fri, May 21, 2021 at 05:19:36PM -0700, Dave Jiang wrote:
+>> Add common helper code to setup IMS once the MSI domain has been
+>> setup by the device driver. The main helper function is
+>> mdev_ims_set_msix_trigger() that is called by the VFIO ioctl
+>> VFIO_DEVICE_SET_IRQS. The function deals with the setup and
+>> teardown of emulated and IMS backed eventfd that gets exported
+>> to the guest kernel via VFIO as MSIX vectors.
+>>
+>> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>   drivers/vfio/mdev/Kconfig     |   12 ++
+>>   drivers/vfio/mdev/Makefile    |    3
+>>   drivers/vfio/mdev/mdev_irqs.c |  318 +++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/mdev.h          |   51 +++++++
+>>   4 files changed, 384 insertions(+)
+>>   create mode 100644 drivers/vfio/mdev/mdev_irqs.c
+> IMS is not mdev specific, do not entangle it with mdev code. This
+> should be generic VFIO stuff.
+>
+>> +static int mdev_msix_set_vector_signal(struct mdev_irq *mdev_irq, int vector, int fd)
+>> +{
+>> +	int rc, irq;
+>> +	struct mdev_device *mdev = irq_to_mdev(mdev_irq);
+>> +	struct mdev_irq_entry *entry;
+>> +	struct device *dev = &mdev->dev;
+>> +	struct eventfd_ctx *trigger;
+>> +	char *name;
+>> +	bool pasid_en;
+>> +	u32 auxval;
+>> +
+>> +	if (vector < 0 || vector >= mdev_irq->num)
+>> +		return -EINVAL;
+>> +
+>> +	entry = &mdev_irq->irq_entries[vector];
+>> +
+>> +	if (entry->ims)
+>> +		irq = dev_msi_irq_vector(dev, entry->ims_id);
+>> +	else
+>> +		irq = 0;
+>> +
+>> +	pasid_en = mdev_irq->pasid != INVALID_IOASID ? true : false;
+>> +
+>> +	/* IMS and invalid pasid is not a valid configuration */
+>> +	if (entry->ims && !pasid_en)
+>> +		return -EINVAL;
+>> +
+>> +	if (entry->trigger) {
+>> +		if (irq) {
+>> +			irq_bypass_unregister_producer(&entry->producer);
+>> +			free_irq(irq, entry->trigger);
+>> +			if (pasid_en) {
+>> +				auxval = ims_ctrl_pasid_aux(0, false);
+>> +				irq_set_auxdata(irq, IMS_AUXDATA_CONTROL_WORD, auxval);
+>> +			}
+>> +		}
+>> +		kfree(entry->name);
+>> +		eventfd_ctx_put(entry->trigger);
+>> +		entry->trigger = NULL;
+>> +	}
+>> +
+>> +	if (fd < 0)
+>> +		return 0;
+>> +
+>> +	name = kasprintf(GFP_KERNEL, "vfio-mdev-irq[%d](%s)", vector, dev_name(dev));
+>> +	if (!name)
+>> +		return -ENOMEM;
+>> +
+>> +	trigger = eventfd_ctx_fdget(fd);
+>> +	if (IS_ERR(trigger)) {
+>> +		kfree(name);
+>> +		return PTR_ERR(trigger);
+>> +	}
+>> +
+>> +	entry->name = name;
+>> +	entry->trigger = trigger;
+>> +
+>> +	if (!irq)
+>> +		return 0;
+>> +
+>> +	if (pasid_en) {
+>> +		auxval = ims_ctrl_pasid_aux(mdev_irq->pasid, true);
+>> +		rc = irq_set_auxdata(irq, IMS_AUXDATA_CONTROL_WORD, auxval);
+>> +		if (rc < 0)
+>> +			goto err;
+> Why is anything to do with PASID here? Something has gone wrong with
+> the layers I suspect..
+>
+> Oh yes. drivers/irqchip/irq-ims-msi.c is dxd specific and shouldn't be
+> pretending to be common code.
+>
+> The protocol to stuff the pasid and other stuff into the auxdata is
+> also compeltely idxd specific and is just a hacky way to communicate
+> from this code to the IDXD irq-chip.
+>
+> So this doesn't belong here either. Pass in the auxdata from the idxd
+> code and I'd rename the irq-ims-msi to irq-ims-idxd
+>
+>> +static int mdev_msix_enable(struct mdev_irq *mdev_irq, int nvec)
+>> +{
+>> +	struct mdev_device *mdev = irq_to_mdev(mdev_irq);
+>> +	struct device *dev;
+>> +	int rc;
+>> +
+>> +	if (nvec != mdev_irq->num)
+>> +		return -EINVAL;
+>> +
+>> +	if (mdev_irq->ims_num) {
+>> +		dev = &mdev->dev;
+>> +		rc = msi_domain_alloc_irqs(dev_get_msi_domain(dev), dev, mdev_irq->ims_num);
+> Huh? The PCI device should be the only device touching IRQ stuff. I'm
+> nervous to see you mix in the mdev struct device into this function.
 
-> -----Original Message-----
-> From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Sent: Thursday, May 20, 2021 8:24 AM
-> To: dmaengine@vger.kernel.org
-> Cc: Vinod Koul <vkoul@kernel.org>; Michal Simek <michals@xilinx.com>;
-> Jianqiang Chen <jianqian@xilinx.com>; linux-arm-kernel@lists.infradead.or=
-g
-> Subject: [PATCH 0/4] dmaengine: xilinx: dpdma: Fix freeze after 64k frame=
-s
->=20
-> Hello,
->=20
-> This patch series addresses an issue in the Xilixn ZynqMP DPDMA driver th=
-at
-> causes a display freeze after 65536 frames. The first three patches inclu=
-de a
-> small compilation breakage issue (1/4) and enhancements to the messages
-> logged by the driver (2/4 and 3/4). The last patch fixes the freeze bug. =
-Please
-> see individual patches for details.
->=20
-> Laurent Pinchart (4):
->   dmaengine: xilinx: dpdma: Add missing dependencies to Kconfig
->   dmaengine: xilinx: dpdma: Print channel number in kernel log messages
->   dmaengine: xilinx: dpdma: Print debug message when losing vsync race
->   dmaengine: xilinx: dpdma: Limit descriptor IDs to 16 bits
->=20
->  drivers/dma/Kconfig               |  1 +
->  drivers/dma/xilinx/xilinx_dpdma.c | 45 ++++++++++++++++++++-----------
->  2 files changed, 31 insertions(+), 15 deletions(-)
->=20
-> --
-> Regards,
->=20
-> Laurent Pinchart
+As we talked about in the other thread. We have a single IMS domain per 
+device. The domain is set to the mdev 'struct device' and we allocate 
+the vectors to each mdev 'struct device' so we can manage those IMS 
+vectors specifically for that mdev.
 
+>
+> Isn't the msi_domain just idxd->ims_domain?
+
+Yes
+
+
+>
+> Jason

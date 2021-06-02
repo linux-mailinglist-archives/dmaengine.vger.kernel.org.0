@@ -2,370 +2,312 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D83139796D
-	for <lists+dmaengine@lfdr.de>; Tue,  1 Jun 2021 19:45:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 434D73984AC
+	for <lists+dmaengine@lfdr.de>; Wed,  2 Jun 2021 10:55:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234597AbhFARrF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 1 Jun 2021 13:47:05 -0400
-Received: from mail-oi1-f173.google.com ([209.85.167.173]:35796 "EHLO
-        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233397AbhFARrF (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 1 Jun 2021 13:47:05 -0400
-Received: by mail-oi1-f173.google.com with SMTP id v22so205241oic.2;
-        Tue, 01 Jun 2021 10:45:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=D/RwutDeiUE8RoJ6NiieivInKsIh5wCxpSy1RciiElU=;
-        b=d+BjN3tFef4zR6n7uTAPc2qwEs2Z2SRd5ciWNtgILFMTSU9rOS3DACqxE7Q+GTq6w5
-         ZRF01MdXu645/rvrlYxAvMvXzXa9ox2oDM0J3DD2HiPeaybr/CQutJT1uVxCo5aiR6SU
-         oS924KRxanrGFzaiLrg9rVl/y1ABRMGaFZX4yBDq2mc6n2aSDzqav25UoDhZq68GPjuX
-         ouKLVyZPXDJQvbaW2l1DRx8PLC1OCa9VMzzmPWnLjp8k4xrpx7RMbsy5nyEAy6j05VBi
-         Q1mKqayZ3/z6jcvMDrqiwvu/7OM2+PbtWNZ/kUuB9TPz+eli1JBFUJsqiw7NoJb3IRSZ
-         WrWA==
-X-Gm-Message-State: AOAM5331Us+pDrvwhnYXfeRRmBKJHT8W5VXVrHh/kUNNEelKBaCpPHm8
-        DsCihmgfO0+q2VtslaRNJgKs8TGvaQ==
-X-Google-Smtp-Source: ABdhPJzvNU9U33YqpbUUxKRtRnym65kpSninZ/cD0ub81YCj0r4m8yLb2ew3h563MJZYBCJh6BxCow==
-X-Received: by 2002:a05:6808:1592:: with SMTP id t18mr18633949oiw.123.1622569522240;
-        Tue, 01 Jun 2021 10:45:22 -0700 (PDT)
-Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z9sm3554897oog.25.2021.06.01.10.45.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Jun 2021 10:45:21 -0700 (PDT)
-Received: (nullmailer pid 684833 invoked by uid 1000);
-        Tue, 01 Jun 2021 17:45:19 -0000
-Date:   Tue, 1 Jun 2021 12:45:19 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Pratyush Yadav <p.yadav@ti.com>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Benoit Parrot <bparrot@ti.com>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-phy@lists.infradead.org, dmaengine@vger.kernel.org,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 15/18] media: dt-bindings: Convert Cadence CSI2RX
- binding to YAML
-Message-ID: <20210601174519.GA666193@robh.at.kernel.org>
-References: <20210526152308.16525-1-p.yadav@ti.com>
- <20210526152308.16525-16-p.yadav@ti.com>
+        id S230056AbhFBI5b (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 2 Jun 2021 04:57:31 -0400
+Received: from mga11.intel.com ([192.55.52.93]:44523 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230523AbhFBI5b (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 2 Jun 2021 04:57:31 -0400
+IronPort-SDR: Eo/2mzYLw7JE4scw08Ghx2ANcseCIARFYHMG/CI7mjfHbFRdE/ulvPVeYPfe/O9Q9SmuDBslqL
+ 3EipZop9IRqQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10002"; a="200731144"
+X-IronPort-AV: E=Sophos;i="5.83,241,1616482800"; 
+   d="scan'208";a="200731144"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2021 01:55:49 -0700
+IronPort-SDR: oPn/XOVGpK6kBtUxVZn5Ey1eQP133TOeKrW+kt3A+vUlTnC/tl8KFrryT0Im2mtsbv2Ab59DUC
+ Dz9AsUf8TEyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,241,1616482800"; 
+   d="scan'208";a="635793808"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 02 Jun 2021 01:55:48 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 8E2B053E; Wed,  2 Jun 2021 11:56:10 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Viresh Kumar <vireshk@kernel.org>
+Subject: [PATCH v1 1/1] dmaengine: dw: Program xBAR hardware for Elkhart Lake
+Date:   Wed,  2 Jun 2021 11:56:04 +0300
+Message-Id: <20210602085604.21933-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210526152308.16525-16-p.yadav@ti.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, May 26, 2021 at 08:53:05PM +0530, Pratyush Yadav wrote:
-> Convert the Cadence CSI2RX binding to use YAML schema.
-> 
-> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
-> 
-> ---
-> 
-> Changes in v2:
-> - New in v2.
-> 
->  .../devicetree/bindings/media/cdns,csi2rx.txt | 100 -----------
->  .../bindings/media/cdns,csi2rx.yaml           | 164 ++++++++++++++++++
->  2 files changed, 164 insertions(+), 100 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/media/cdns,csi2rx.txt
->  create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2rx.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-> deleted file mode 100644
-> index 6b02a0657ad9..000000000000
-> --- a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-> +++ /dev/null
-> @@ -1,100 +0,0 @@
-> -Cadence MIPI-CSI2 RX controller
-> -===============================
-> -
-> -The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting up to 4 CSI
-> -lanes in input, and 4 different pixel streams in output.
-> -
-> -Required properties:
-> -  - compatible: must be set to "cdns,csi2rx" and an SoC-specific compatible
-> -  - reg: base address and size of the memory mapped region
-> -  - clocks: phandles to the clocks driving the controller
-> -  - clock-names: must contain:
-> -    * sys_clk: main clock
-> -    * p_clk: register bank clock
-> -    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
-> -                         implemented in hardware, between 0 and 3
-> -
-> -Optional properties:
-> -  - phys: phandle to the external D-PHY, phy-names must be provided
-> -  - phy-names: must contain "dphy", if the implementation uses an
-> -               external D-PHY
-> -
-> -Required subnodes:
-> -  - ports: A ports node with one port child node per device input and output
-> -           port, in accordance with the video interface bindings defined in
-> -           Documentation/devicetree/bindings/media/video-interfaces.txt. The
-> -           port nodes are numbered as follows:
-> -
-> -           Port Description
-> -           -----------------------------
-> -           0    CSI-2 input
-> -           1    Stream 0 output
-> -           2    Stream 1 output
-> -           3    Stream 2 output
-> -           4    Stream 3 output
-> -
-> -           The stream output port nodes are optional if they are not
-> -           connected to anything at the hardware level or implemented
-> -           in the design.Since there is only one endpoint per port,
-> -           the endpoints are not numbered.
-> -
-> -
-> -Example:
-> -
-> -csi2rx: csi-bridge@0d060000 {
-> -	compatible = "cdns,csi2rx";
-> -	reg = <0x0d060000 0x1000>;
-> -	clocks = <&byteclock>, <&byteclock>
-> -		 <&coreclock>, <&coreclock>,
-> -		 <&coreclock>, <&coreclock>;
-> -	clock-names = "sys_clk", "p_clk",
-> -		      "pixel_if0_clk", "pixel_if1_clk",
-> -		      "pixel_if2_clk", "pixel_if3_clk";
-> -
-> -	ports {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -
-> -		port@0 {
-> -			reg = <0>;
-> -
-> -			csi2rx_in_sensor: endpoint {
-> -				remote-endpoint = <&sensor_out_csi2rx>;
-> -				clock-lanes = <0>;
-> -				data-lanes = <1 2>;
-> -			};
-> -		};
-> -
-> -		port@1 {
-> -			reg = <1>;
-> -
-> -			csi2rx_out_grabber0: endpoint {
-> -				remote-endpoint = <&grabber0_in_csi2rx>;
-> -			};
-> -		};
-> -
-> -		port@2 {
-> -			reg = <2>;
-> -
-> -			csi2rx_out_grabber1: endpoint {
-> -				remote-endpoint = <&grabber1_in_csi2rx>;
-> -			};
-> -		};
-> -
-> -		port@3 {
-> -			reg = <3>;
-> -
-> -			csi2rx_out_grabber2: endpoint {
-> -				remote-endpoint = <&grabber2_in_csi2rx>;
-> -			};
-> -		};
-> -
-> -		port@4 {
-> -			reg = <4>;
-> -
-> -			csi2rx_out_grabber3: endpoint {
-> -				remote-endpoint = <&grabber3_in_csi2rx>;
-> -			};
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml b/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml
-> new file mode 100644
-> index 000000000000..ff5dd4211ac9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml
-> @@ -0,0 +1,164 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/cdns,csi2rx.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Cadence MIPI-CSI2 RX controller
-> +
-> +description: |
-> +  The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting up to 4 CSI
-> +  lanes in input, and 4 different pixel streams in output.
-> +
-> +maintainers:
-> +  - Pratyush Yadav <p.yadav@ti.com>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: cdns,csi2rx
+Intel Elkhart Lake PSE DMA implementation is integrated with crossbar IP
+in order to serve more hardware than there are DMA request lines available.
 
-Since there has to be an SoC specific compatible, this should be:
+Due to this, program xBAR hardware to make flexible support of PSE peripheral.
 
-compatible:
-  contains:
-    const: cdns,csi2rx
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/dma/dw/idma32.c              | 146 ++++++++++++++++++++++++++-
+ drivers/dma/dw/internal.h            |  16 +++
+ drivers/dma/dw/pci.c                 |   6 +-
+ drivers/dma/dw/platform.c            |   6 +-
+ include/linux/platform_data/dma-dw.h |   3 +
+ 5 files changed, 168 insertions(+), 9 deletions(-)
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 3
-> +    maxItems: 6
-> +
-> +  clock-names:
-> +    minItems: 3
-> +    maxItems: 6
-> +    items:
-> +      - const: sys_clk # main clock
-> +      - const: p_clk # register bank clock
-> +      - const: pixel_if0_clk # pixel stream 0 output clock
-> +      - const: pixel_if1_clk # pixel stream 1 output clock
-> +      - const: pixel_if2_clk # pixel stream 2 output clock
-> +      - const: pixel_if3_clk # pixel stream 3 output clock
-> +
-> +  phys:
-> +    maxItems: 1
-> +    description: phandle to the external D-PHY
-> +
-> +  phy-names:
-> +    items:
-> +      - const: dphy
-> +
-> +  ports:
-> +    $ref: /schemas/graph.yaml#/properties/ports
-> +
-> +    properties:
-> +      port@0:
-> +        $ref: /schemas/graph.yaml#/$defs/port-base
-> +        unevaluatedProperties: false
-> +        description: CSI-2 input
-> +
-> +        properties:
-> +          endpoint:
-> +            $ref: video-interfaces.yaml#
-> +            unevaluatedProperties: false
-> +
-> +            properties:
-> +              clock-lanes:
-> +                maxItems: 1
-> +
-> +              data-lanes:
-> +                maxItems: 1
+diff --git a/drivers/dma/dw/idma32.c b/drivers/dma/dw/idma32.c
+index 3ce44de25d33..5232fcb1a736 100644
+--- a/drivers/dma/dw/idma32.c
++++ b/drivers/dma/dw/idma32.c
+@@ -1,15 +1,152 @@
+ // SPDX-License-Identifier: GPL-2.0
+-// Copyright (C) 2013,2018 Intel Corporation
++// Copyright (C) 2013,2018,2020 Intel Corporation
+ 
+ #include <linux/bitops.h>
+ #include <linux/dmaengine.h>
+ #include <linux/errno.h>
++#include <linux/io.h>
++#include <linux/pci.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+ 
+ #include "internal.h"
+ 
+-static void idma32_initialize_chan(struct dw_dma_chan *dwc)
++#define DMA_CTL_CH(x)			(0x1000 + (x) * 4)
++#define DMA_SRC_ADDR_FILLIN(x)		(0x1100 + (x) * 4)
++#define DMA_DST_ADDR_FILLIN(x)		(0x1200 + (x) * 4)
++#define DMA_XBAR_SEL(x)			(0x1300 + (x) * 4)
++#define DMA_REGACCESS_CHID_CFG		(0x1400)
++
++#define CTL_CH_TRANSFER_MODE_MASK	GENMASK(1, 0)
++#define CTL_CH_TRANSFER_MODE_S2S	0
++#define CTL_CH_TRANSFER_MODE_S2D	1
++#define CTL_CH_TRANSFER_MODE_D2S	2
++#define CTL_CH_TRANSFER_MODE_D2D	3
++#define CTL_CH_RD_RS_MASK		GENMASK(4, 3)
++#define CTL_CH_WR_RS_MASK		GENMASK(6, 5)
++#define CTL_CH_RD_NON_SNOOP_BIT		BIT(8)
++#define CTL_CH_WR_NON_SNOOP_BIT		BIT(9)
++
++#define XBAR_SEL_DEVID_MASK		GENMASK(15, 0)
++#define XBAR_SEL_RX_TX_BIT		BIT(16)
++#define XBAR_SEL_RX_TX_SHIFT		16
++
++#define REGACCESS_CHID_MASK		GENMASK(2, 0)
++
++static unsigned int idma32_get_slave_devid(struct dw_dma_chan *dwc)
++{
++	struct device *slave = dwc->chan.slave;
++
++	if (!slave || !dev_is_pci(slave))
++		return 0;
++
++	return to_pci_dev(slave)->devfn;
++}
++
++static void idma32_initialize_chan_xbar(struct dw_dma_chan *dwc)
++{
++	struct dw_dma *dw = to_dw_dma(dwc->chan.device);
++	void __iomem *misc = __dw_regs(dw);
++	u32 cfghi = 0, cfglo = 0;
++	u8 dst_id, src_id;
++	u32 value;
++
++	/* DMA Channel ID Configuration register must be programmed first */
++	value = readl(misc + DMA_REGACCESS_CHID_CFG);
++
++	value &= ~REGACCESS_CHID_MASK;
++	value |= dwc->chan.chan_id;
++
++	writel(value, misc + DMA_REGACCESS_CHID_CFG);
++
++	/* Configure channel attributes */
++	value = readl(misc + DMA_CTL_CH(dwc->chan.chan_id));
++
++	value &= ~(CTL_CH_RD_NON_SNOOP_BIT | CTL_CH_WR_NON_SNOOP_BIT);
++	value &= ~(CTL_CH_RD_RS_MASK | CTL_CH_WR_RS_MASK);
++	value &= ~CTL_CH_TRANSFER_MODE_MASK;
++
++	switch (dwc->direction) {
++	case DMA_MEM_TO_MEM:
++		value |= CTL_CH_TRANSFER_MODE_D2D;
++		break;
++	case DMA_MEM_TO_DEV:
++		value |= CTL_CH_TRANSFER_MODE_D2S;
++		value |= CTL_CH_WR_NON_SNOOP_BIT;
++		break;
++	case DMA_DEV_TO_MEM:
++		value |= CTL_CH_TRANSFER_MODE_S2D;
++		value |= CTL_CH_RD_NON_SNOOP_BIT;
++		break;
++	case DMA_DEV_TO_DEV:
++	default:
++		value |= CTL_CH_WR_NON_SNOOP_BIT | CTL_CH_RD_NON_SNOOP_BIT;
++		value |= CTL_CH_TRANSFER_MODE_S2S;
++		break;
++	}
++
++	writel(value, misc + DMA_CTL_CH(dwc->chan.chan_id));
++
++	/* Configure crossbar selection */
++	value = readl(misc + DMA_XBAR_SEL(dwc->chan.chan_id));
++
++	/* DEVFN selection */
++	value &= ~XBAR_SEL_DEVID_MASK;
++	value |= idma32_get_slave_devid(dwc);
++
++	switch (dwc->direction) {
++	case DMA_MEM_TO_MEM:
++		break;
++	case DMA_MEM_TO_DEV:
++		value |= XBAR_SEL_RX_TX_BIT;
++		break;
++	case DMA_DEV_TO_MEM:
++		value &= ~XBAR_SEL_RX_TX_BIT;
++		break;
++	case DMA_DEV_TO_DEV:
++	default:
++		break;
++	}
++
++	writel(value, misc + DMA_XBAR_SEL(dwc->chan.chan_id));
++
++	/* Configure DMA channel low and high registers */
++	switch (dwc->direction) {
++	case DMA_MEM_TO_MEM:
++		dst_id = dwc->chan.chan_id;
++		src_id = dwc->chan.chan_id;
++		break;
++	case DMA_MEM_TO_DEV:
++		dst_id = dwc->chan.chan_id;
++		src_id = dwc->dws.src_id;
++		break;
++	case DMA_DEV_TO_MEM:
++		dst_id = dwc->dws.dst_id;
++		src_id = dwc->chan.chan_id;
++		break;
++	case DMA_DEV_TO_DEV:
++	default:
++		dst_id = dwc->dws.src_id;
++		src_id = dwc->dws.dst_id;
++		break;
++	}
++
++	/* Set default burst alignment */
++	cfglo |= IDMA32C_CFGL_DST_BURST_ALIGN | IDMA32C_CFGL_SRC_BURST_ALIGN;
++
++	/* Low 4 bits of the request lines */
++	cfghi |= IDMA32C_CFGH_DST_PER(dst_id & 0xf);
++	cfghi |= IDMA32C_CFGH_SRC_PER(src_id & 0xf);
++
++	/* Request line extension (2 bits) */
++	cfghi |= IDMA32C_CFGH_DST_PER_EXT(dst_id >> 4 & 0x3);
++	cfghi |= IDMA32C_CFGH_SRC_PER_EXT(src_id >> 4 & 0x3);
++
++	channel_writel(dwc, CFG_LO, cfglo);
++	channel_writel(dwc, CFG_HI, cfghi);
++}
++
++static void idma32_initialize_chan_generic(struct dw_dma_chan *dwc)
+ {
+ 	u32 cfghi = 0;
+ 	u32 cfglo = 0;
+@@ -134,7 +271,10 @@ int idma32_dma_probe(struct dw_dma_chip *chip)
+ 		return -ENOMEM;
+ 
+ 	/* Channel operations */
+-	dw->initialize_chan = idma32_initialize_chan;
++	if (chip->pdata->quirks & DW_DMA_QUIRK_XBAR_PRESENT)
++		dw->initialize_chan = idma32_initialize_chan_xbar;
++	else
++		dw->initialize_chan = idma32_initialize_chan_generic;
+ 	dw->suspend_chan = idma32_suspend_chan;
+ 	dw->resume_chan = idma32_resume_chan;
+ 	dw->prepare_ctllo = idma32_prepare_ctllo;
+diff --git a/drivers/dma/dw/internal.h b/drivers/dma/dw/internal.h
+index 2e1c52eefdeb..563ce73488db 100644
+--- a/drivers/dma/dw/internal.h
++++ b/drivers/dma/dw/internal.h
+@@ -74,4 +74,20 @@ static __maybe_unused const struct dw_dma_chip_pdata idma32_chip_pdata = {
+ 	.remove = idma32_dma_remove,
+ };
+ 
++static const struct dw_dma_platform_data xbar_pdata = {
++	.nr_channels = 8,
++	.chan_allocation_order = CHAN_ALLOCATION_ASCENDING,
++	.chan_priority = CHAN_PRIORITY_ASCENDING,
++	.block_size = 131071,
++	.nr_masters = 1,
++	.data_width = {4},
++	.quirks = DW_DMA_QUIRK_XBAR_PRESENT,
++};
++
++static __maybe_unused const struct dw_dma_chip_pdata xbar_chip_pdata = {
++	.pdata = &xbar_pdata,
++	.probe = idma32_dma_probe,
++	.remove = idma32_dma_remove,
++};
++
+ #endif /* _DMA_DW_INTERNAL_H */
+diff --git a/drivers/dma/dw/pci.c b/drivers/dma/dw/pci.c
+index 1142aa6f8c4a..26a3f926da02 100644
+--- a/drivers/dma/dw/pci.c
++++ b/drivers/dma/dw/pci.c
+@@ -120,9 +120,9 @@ static const struct pci_device_id dw_pci_id_table[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x22c0), (kernel_ulong_t)&dw_dma_chip_pdata },
+ 
+ 	/* Elkhart Lake iDMA 32-bit (PSE DMA) */
+-	{ PCI_VDEVICE(INTEL, 0x4bb4), (kernel_ulong_t)&idma32_chip_pdata },
+-	{ PCI_VDEVICE(INTEL, 0x4bb5), (kernel_ulong_t)&idma32_chip_pdata },
+-	{ PCI_VDEVICE(INTEL, 0x4bb6), (kernel_ulong_t)&idma32_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x4bb4), (kernel_ulong_t)&xbar_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x4bb5), (kernel_ulong_t)&xbar_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x4bb6), (kernel_ulong_t)&xbar_chip_pdata },
+ 
+ 	/* Haswell */
+ 	{ PCI_VDEVICE(INTEL, 0x9c60), (kernel_ulong_t)&dw_dma_chip_pdata },
+diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
+index 0585d749d935..246118955877 100644
+--- a/drivers/dma/dw/platform.c
++++ b/drivers/dma/dw/platform.c
+@@ -149,9 +149,9 @@ static const struct acpi_device_id dw_dma_acpi_id_table[] = {
+ 	{ "808622C0", (kernel_ulong_t)&dw_dma_chip_pdata },
+ 
+ 	/* Elkhart Lake iDMA 32-bit (PSE DMA) */
+-	{ "80864BB4", (kernel_ulong_t)&idma32_chip_pdata },
+-	{ "80864BB5", (kernel_ulong_t)&idma32_chip_pdata },
+-	{ "80864BB6", (kernel_ulong_t)&idma32_chip_pdata },
++	{ "80864BB4", (kernel_ulong_t)&xbar_chip_pdata },
++	{ "80864BB5", (kernel_ulong_t)&xbar_chip_pdata },
++	{ "80864BB6", (kernel_ulong_t)&xbar_chip_pdata },
+ 
+ 	{ }
+ };
+diff --git a/include/linux/platform_data/dma-dw.h b/include/linux/platform_data/dma-dw.h
+index b34a094b2258..b11b0c8bc5da 100644
+--- a/include/linux/platform_data/dma-dw.h
++++ b/include/linux/platform_data/dma-dw.h
+@@ -52,6 +52,7 @@ struct dw_dma_slave {
+  * @max_burst: Maximum value of burst transaction size supported by hardware
+  *	       per channel (in units of CTL.SRC_TR_WIDTH/CTL.DST_TR_WIDTH).
+  * @protctl: Protection control signals setting per channel.
++ * @quirks: Optional platform quirks.
+  */
+ struct dw_dma_platform_data {
+ 	unsigned int	nr_channels;
+@@ -71,6 +72,8 @@ struct dw_dma_platform_data {
+ #define CHAN_PROTCTL_CACHEABLE		BIT(2)
+ #define CHAN_PROTCTL_MASK		GENMASK(2, 0)
+ 	unsigned char	protctl;
++#define DW_DMA_QUIRK_XBAR_PRESENT	BIT(0)
++	unsigned int	quirks;
+ };
+ 
+ #endif /* _PLATFORM_DATA_DMA_DW_H */
+-- 
+2.30.2
 
-If there's only 1 lane, are you assigning between clock and data lanes? 
-If not, then there's no mapping needed.
-
-> +
-> +            required:
-> +              - clock-lanes
-> +              - data-lanes
-> +
-> +      port@1:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: Stream 0 output
-> +
-> +      port@2:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: Stream 1 output
-> +
-> +      port@3:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: Stream 2 output
-> +
-> +      port@4:
-> +        $ref: /schemas/graph.yaml#/properties/port
-> +        description: Stream 3 output
-> +
-> +    required:
-> +      - port@0
-> +
-> +
-> +dependencies:
-> +  phys: [ 'phy-names' ]
-> +  phy-names: [ 'phys' ]
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    csi2rx: csi-bridge@d060000 {
-> +      compatible = "cdns,csi2rx";
-> +      reg = <0x0d060000 0x1000>;
-> +      clocks = <&byteclock>, <&byteclock>,
-> +        <&coreclock>, <&coreclock>,
-> +        <&coreclock>, <&coreclock>;
-> +      clock-names = "sys_clk", "p_clk",
-> +              "pixel_if0_clk", "pixel_if1_clk",
-> +              "pixel_if2_clk", "pixel_if3_clk";
-> +      phys = <&dphy0>;
-> +      phy-names = "dphy";
-> +
-> +      ports {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        port@0 {
-> +          reg = <0>;
-> +
-> +          csi2rx_in_sensor: endpoint {
-> +            remote-endpoint = <&sensor_out_csi2rx>;
-> +            clock-lanes = <0>;
-> +            data-lanes = <1 2>;
-> +          };
-> +        };
-> +
-> +        port@1 {
-> +          reg = <1>;
-> +
-> +          csi2rx_out_grabber0: endpoint {
-> +            remote-endpoint = <&grabber0_in_csi2rx>;
-> +          };
-> +        };
-> +
-> +        port@2 {
-> +          reg = <2>;
-> +
-> +          csi2rx_out_grabber1: endpoint {
-> +            remote-endpoint = <&grabber1_in_csi2rx>;
-> +          };
-> +        };
-> +
-> +        port@3 {
-> +          reg = <3>;
-> +
-> +          csi2rx_out_grabber2: endpoint {
-> +            remote-endpoint = <&grabber2_in_csi2rx>;
-> +          };
-> +        };
-> +
-> +        port@4 {
-> +          reg = <4>;
-> +
-> +          csi2rx_out_grabber3: endpoint {
-> +            remote-endpoint = <&grabber3_in_csi2rx>;
-> +          };
-> +        };
-> +      };
-> +    };
-> -- 
-> 2.30.0

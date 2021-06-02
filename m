@@ -2,83 +2,105 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C51E0398EDA
-	for <lists+dmaengine@lfdr.de>; Wed,  2 Jun 2021 17:40:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D0258398F0C
+	for <lists+dmaengine@lfdr.de>; Wed,  2 Jun 2021 17:43:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230440AbhFBPmm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 2 Jun 2021 11:42:42 -0400
-Received: from mga12.intel.com ([192.55.52.136]:62051 "EHLO mga12.intel.com"
+        id S232492AbhFBPpT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 2 Jun 2021 11:45:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230246AbhFBPml (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 2 Jun 2021 11:42:41 -0400
-IronPort-SDR: 45+E8r9bh5eXM6wWQ4phn8eiYrnKXyn6RRvuWP4Rb6VO0u8Rx6rnp4oF+OBQitnpeSVyseiCa3
- We35UMG/UM4g==
-X-IronPort-AV: E=McAfee;i="6200,9189,10003"; a="183498170"
-X-IronPort-AV: E=Sophos;i="5.83,242,1616482800"; 
-   d="scan'208";a="183498170"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2021 08:40:53 -0700
-IronPort-SDR: fygxpcgJ3k09ad+5wsx/bbZIYzXgQ3NYwhn46RK80I4bKEM5GOZOA6SO5QKmeqsQdSvAQqZNmI
- Ydz7uxkN31Lw==
-X-IronPort-AV: E=Sophos;i="5.83,242,1616482800"; 
-   d="scan'208";a="416934415"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.254.187.108]) ([10.254.187.108])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2021 08:40:52 -0700
-Subject: Re: [PATCH v6 00/20] Add VFIO mediated device support and DEV-MSI
- support for the idxd driver
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     alex.williamson@redhat.com, kwankhede@nvidia.com,
-        tglx@linutronix.de, vkoul@kernel.org,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, megha.dey@intel.com,
-        jacob.jun.pan@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        sanjay.k.kumar@intel.com, tony.luck@intel.com,
-        dan.j.williams@intel.com, eric.auger@redhat.com,
-        pbonzini@redhat.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <162164243591.261970.3439987543338120797.stgit@djiang5-desk3.ch.intel.com>
- <20210523232219.GG1002214@nvidia.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <86cde154-37c7-c00d-b0c6-06b15b50dbf7@intel.com>
-Date:   Wed, 2 Jun 2021 08:40:51 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        id S232376AbhFBPpG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 2 Jun 2021 11:45:06 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7867E6140C;
+        Wed,  2 Jun 2021 15:43:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622648602;
+        bh=0MELa+vkFf8qciInEiANCeWuJgsCWdc+iIN4XgabBlU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Ow5ucdX+cLyyshfYKKgUmaN7u1vT8JE6wpcqUKxTUm3f4VAqfL+vN/ipg7eINBHcs
+         5myl1FE98NtMXFFNDejrwHifMf/IbOWqgFNtE+klnW+5/PCO4dWEcwpTfDeeVN6Ckn
+         JvczV9Y13kiuvQ2CanTKQdGdOzLB1jTQO4uU50i8/+hZ241IyBQ7yZ1+WRb4p5SFpk
+         EUvYoaJtuDfi/UdKVyvZWcnoFLquBLPz4d3uwoHmZIEwE+ahs53PrxMsQovuDF6qo9
+         sI0gAHsVnC3iacI5pyrpN+81xksmA46ctCWF+HtJhVLTBaKuRBj1aOhgCo0bi3Z0n0
+         AK5H0lWSJ7oUA==
+Received: by mail.kernel.org with local (Exim 4.94.2)
+        (envelope-from <mchehab@kernel.org>)
+        id 1loT1b-006XbY-6u; Wed, 02 Jun 2021 17:43:19 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Keerthy <j-keerthy@ti.com>, Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Mark Brown <broonie@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Peter Rosin <peda@axentia.se>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH 00/12] Fix broken docs references at next-20210602
+Date:   Wed,  2 Jun 2021 17:43:06 +0200
+Message-Id: <cover.1622648507.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-In-Reply-To: <20210523232219.GG1002214@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+There are some broken references at today's linux-next with regards
+to files inside Documentation/.
 
-On 5/23/2021 4:22 PM, Jason Gunthorpe wrote:
-> On Fri, May 21, 2021 at 05:19:05PM -0700, Dave Jiang wrote:
->> Introducing mdev types “1dwq-v1” type. This mdev type allows
->> allocation of a single dedicated wq from available dedicated wqs. After
->> a workqueue (wq) is enabled, the user will generate an uuid. On mdev
->> creation, the mdev driver code will find a dwq depending on the mdev
->> type. When the create operation is successful, the user generated uuid
->> can be passed to qemu. When the guest boots up, it should discover a
->> DSA device when doing PCI discovery.
->>
->> For example of “1dwq-v1” type:
->> 1. Enable wq with “mdev” wq type
->> 2. A user generated uuid.
->> 3. The uuid is written to the mdev class sysfs path:
->> echo $UUID > /sys/class/mdev_bus/0000\:00\:0a.0/mdev_supported_types/idxd-1dwq-v1/create
->> 4. Pass the following parameter to qemu:
->> "-device vfio-pci,sysfsdev=/sys/bus/pci/devices/0000:00:0a.0/$UUID"
-> So the idxd core driver knows to create a "vfio" wq with its own much
-> machinery but you still want to involve the horrible mdev guid stuff?
->
-> Why??
+Address them.
 
-Are you referring to calling mdev_device_create() directly in the mdev 
-idxd_driver probe? I think this would work with our dedicated wq where a 
-single mdev can be assigned to a wq. However, later on when we need to 
-support shared wq where we can create multiple mdev per wq, we'll need 
-an entry point to do so. In the name of making things consistent from 
-user perspective, going through sysfs seems the way to do it.
+Mauro Carvalho Chehab (12):
+  dt-bindings: power: supply: cpcap-battery: update cpcap-battery.yaml
+    reference
+  dt-bindings: power: supply: cpcap-charger: update cpcap-charger.yaml
+    reference
+  dt-bindings: soc: ti: update sci-pm-domain.yaml references
+  dt-bindings: clock: update ti,sci-clk.yaml references
+  dt-bindings: reset: update ti,sci-reset.yaml references
+  dt-bindings: iio: io-channel-mux.yaml: fix a typo
+  docs: accounting: update delay-accounting.rst reference
+  MAINTAINERS: update faraday,ftrtc010.yaml reference
+  MAINTAINERS: update marvell,armada-3700-utmi-phy.yaml reference
+  MAINTAINERS: update ti,omap-gpio.yaml reference
+  MAINTAINERS: update ti,sci.yaml reference
+  MAINTAINERS: update nxp,imx8-jpeg.yaml reference
+
+ Documentation/admin-guide/sysctl/kernel.rst      |  2 +-
+ .../devicetree/bindings/dma/ti-edma.txt          |  4 ++--
+ .../devicetree/bindings/gpio/gpio-davinci.txt    |  2 +-
+ .../devicetree/bindings/i2c/i2c-davinci.txt      |  4 ++--
+ .../bindings/iio/multiplexer/io-channel-mux.yaml |  2 +-
+ .../devicetree/bindings/mfd/motorola-cpcap.txt   |  4 ++--
+ .../devicetree/bindings/mmc/ti-omap-hsmmc.txt    |  4 ++--
+ .../devicetree/bindings/net/can/c_can.txt        |  4 ++--
+ .../bindings/remoteproc/ti,keystone-rproc.txt    |  4 ++--
+ .../devicetree/bindings/spi/spi-davinci.txt      |  2 +-
+ .../devicetree/bindings/usb/ti,j721e-usb.yaml    |  2 +-
+ .../bindings/usb/ti,keystone-dwc3.yaml           |  2 +-
+ MAINTAINERS                                      | 16 ++++++++--------
+ 13 files changed, 26 insertions(+), 26 deletions(-)
+
+-- 
+2.31.1
+
 

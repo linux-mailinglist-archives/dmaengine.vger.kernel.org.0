@@ -2,119 +2,77 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4204B398A65
-	for <lists+dmaengine@lfdr.de>; Wed,  2 Jun 2021 15:27:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85158398DAD
+	for <lists+dmaengine@lfdr.de>; Wed,  2 Jun 2021 17:01:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229607AbhFBN3S (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 2 Jun 2021 09:29:18 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:50759 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229606AbhFBN3R (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 2 Jun 2021 09:29:17 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 0A1DC58080F;
-        Wed,  2 Jun 2021 09:27:34 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Wed, 02 Jun 2021 09:27:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=t
-        EtNI5XfZ6vhm4RT4AXBLdGYkWoF8xb2B7jzYSkFXwQ=; b=XzA6utgrMy5gqmgND
-        Pgl6Oapfn8N0hQa9AFoi/7TdiBaJAcJmRMCFVh6csYA8DVV6MP8Sws6XfW+FmmAy
-        xzQzgrS1G0UUYGwPxzJqnq7WB7EpbsxJf9XJiGEm4CJYsx5zXo5bUlmxIjwYzAqI
-        TIp8kQdIUuw/ZgwSJt0oRU2/vf67cGOt/zkPr9clb2iQAd27HnTlujVOob4JKIhH
-        qgpcfT+Z1BxZ0MTBkWW7qWO1bcT/dEIARvoUs8HZBpY+6C5FZCK2T29ktPu2ga2M
-        +owQE0g1M/x5yvH5tDhL6xl5JFIkCV8tJusRIzETL3MtcvieqrjRGB1ZdH9a3Uyr
-        PYx9A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=tEtNI5XfZ6vhm4RT4AXBLdGYkWoF8xb2B7jzYSkFX
-        wQ=; b=ZuNBU3QOJi8+Un8XIIGXqEvx2f22ZUavZeJ3aWhLT3CGYbo4bEPNqJZ+Q
-        9G10DoKGLJjFhDd2zjnwdN+PkqX+PvPd2Wk3aKrA9Qtefujl0a8YC4FbmA54C6OD
-        VhFisBmd/OxxnDh8MNNNsWGQCMcyKpjZcimO9nUd7Sivw5F35D+EGPDWF5OCSx80
-        RcMLWd8APZCpaa93x2xPqXxUyOiCY+G6foJEwEr/fQ66I0ybsufsJxcRRn9//jWI
-        cZtySYkLJm8y7CBggyOrHO8n0M0EBHsC38BdFle36/+O5YK7WaoXY7HpucoRqCZa
-        1RPWwulWEtFa4ZjYcKmuI8l1n0uSg==
-X-ME-Sender: <xms:Q4e3YH6HxDHcMJLxVFk3ubMRTk6kmBVLHHdJuFLp8bEmk9gK3lhvRg>
-    <xme:Q4e3YM4AhzYT3Dl793iNtcVbNThbFNjhxOcZulnsi-dF9SDUu9IoDoWolrvkCSixx
-    f6g-eZsJoE7hkta7yY>
-X-ME-Received: <xmr:Q4e3YOfDfNtMQQ2sGJ8X1uHGlOet52fQsfV9jgn9kG-eg5dtsH9lHj1vXkKebfywxSOxOE7k83hXyC8o4vnJsqEERMn0aNtirJLe>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrvdeljedgieehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtugfgjgesthhqredttddtvdenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
-    htthgvrhhnpefgjeettdejgffgffdvteeutdehtdehgeehueetkeefgefhtdetjeekledu
-    gedvudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    hmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:Q4e3YIJf-LuxWGaE89vINCRk2sw3jBsbz9IlwawJCIA0c63jKkLCOg>
-    <xmx:Q4e3YLI6qzJFFZm6NIU7dAh49s2rTOqVc4oy2wNy-meQSOczwZoCPw>
-    <xmx:Q4e3YByGomI-AKkDrcqoelcxwDw1Qtua2_A7CPCNnjnvk5LZpBlzaA>
-    <xmx:RYe3YM5tYXluYgIaDHX_8VitHSvFxXAOqHzGdWouLhCtpbe_MFIg3Q>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 2 Jun 2021 09:27:31 -0400 (EDT)
-Date:   Wed, 2 Jun 2021 15:27:28 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Pratyush Yadav <p.yadav@ti.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Benoit Parrot <bparrot@ti.com>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-phy@lists.infradead.org, dmaengine@vger.kernel.org,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 17/18] phy: dt-bindings: cdns,dphy: make clocks
- optional
-Message-ID: <20210602132728.5lv5n2mgap2o7eyx@gilmour>
-References: <20210526152308.16525-1-p.yadav@ti.com>
- <20210526152308.16525-18-p.yadav@ti.com>
+        id S230029AbhFBPCs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 2 Jun 2021 11:02:48 -0400
+Received: from mga14.intel.com ([192.55.52.115]:20829 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230257AbhFBPCs (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 2 Jun 2021 11:02:48 -0400
+IronPort-SDR: 1TCTk3OuZg1JBjCteus9LJJqrobJsaktq6Ve0Q++ayI32XFIyBN1p9sMqUAQKVA4WXK6N7KhR3
+ TeIcwQlCn0dQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10003"; a="203618574"
+X-IronPort-AV: E=Sophos;i="5.83,242,1616482800"; 
+   d="scan'208";a="203618574"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2021 08:00:59 -0700
+IronPort-SDR: Cd+uXJb63GiwoEBc50BsSOY6scdBxuwpVtC9XSXEORYi71h0i8IJ7PTNAA0OU8qHEzNIF7GVDB
+ J9GFUIO1l8qw==
+X-IronPort-AV: E=Sophos;i="5.83,242,1616482800"; 
+   d="scan'208";a="416921576"
+Received: from rgstilwe-mobl.amr.corp.intel.com (HELO [10.254.187.108]) ([10.254.187.108])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2021 08:00:58 -0700
+Subject: Re: [PATCH] dmaengine: idxd: Fix missing error code in
+ idxd_cdev_open()
+To:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1622628446-87909-1-git-send-email-jiapeng.chong@linux.alibaba.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <f4e25e75-35cc-23dc-667a-0d7feb9dc35b@intel.com>
+Date:   Wed, 2 Jun 2021 08:00:57 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20210526152308.16525-18-p.yadav@ti.com>
+In-Reply-To: <1622628446-87909-1-git-send-email-jiapeng.chong@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,
 
-On Wed, May 26, 2021 at 08:53:07PM +0530, Pratyush Yadav wrote:
-> The clocks are not used by the DPHY when used in Rx mode so make them
-> optional.
->=20
-> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
->=20
+On 6/2/2021 3:07 AM, Jiapeng Chong wrote:
+> The error code is missing in this code scenario, add the error code
+> '-EINVAL' to the return value 'rc'.
+>
+> Eliminate the follow smatch warning:
+>
+> drivers/dma/idxd/cdev.c:113 idxd_cdev_open() warn: missing error code
+> 'rc'.
+>
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+
+Acked-by: Dave Jiang <dave.jiang@intel.com>
+
+
 > ---
->=20
-> Changes in v2:
-> - Re-order subject prefixes.
->=20
->  Documentation/devicetree/bindings/phy/cdns,dphy.yaml | 2 --
->  1 file changed, 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/phy/cdns,dphy.yaml b/Docum=
-entation/devicetree/bindings/phy/cdns,dphy.yaml
-> index b90a58773bf2..3bb5be05e825 100644
-> --- a/Documentation/devicetree/bindings/phy/cdns,dphy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/cdns,dphy.yaml
-> @@ -33,8 +33,6 @@ properties:
->  required:
->    - compatible
->    - reg
-> -  - clocks
-> -  - clock-names
-
-As far as I can remember from the cadence documentation, those clocks
-were required. I guess this is the integration that provides a few fixed
-clocks?
-
-Maxime
+>   drivers/dma/idxd/cdev.c | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+> index 302cba5..d4419bf 100644
+> --- a/drivers/dma/idxd/cdev.c
+> +++ b/drivers/dma/idxd/cdev.c
+> @@ -110,6 +110,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
+>   		pasid = iommu_sva_get_pasid(sva);
+>   		if (pasid == IOMMU_PASID_INVALID) {
+>   			iommu_sva_unbind_device(sva);
+> +			rc = -EINVAL;
+>   			goto failed;
+>   		}
+>   

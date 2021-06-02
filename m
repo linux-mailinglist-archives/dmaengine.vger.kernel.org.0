@@ -2,77 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85158398DAD
-	for <lists+dmaengine@lfdr.de>; Wed,  2 Jun 2021 17:01:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C51E0398EDA
+	for <lists+dmaengine@lfdr.de>; Wed,  2 Jun 2021 17:40:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230029AbhFBPCs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 2 Jun 2021 11:02:48 -0400
-Received: from mga14.intel.com ([192.55.52.115]:20829 "EHLO mga14.intel.com"
+        id S230440AbhFBPmm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 2 Jun 2021 11:42:42 -0400
+Received: from mga12.intel.com ([192.55.52.136]:62051 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230257AbhFBPCs (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 2 Jun 2021 11:02:48 -0400
-IronPort-SDR: 1TCTk3OuZg1JBjCteus9LJJqrobJsaktq6Ve0Q++ayI32XFIyBN1p9sMqUAQKVA4WXK6N7KhR3
- TeIcwQlCn0dQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,10003"; a="203618574"
+        id S230246AbhFBPml (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 2 Jun 2021 11:42:41 -0400
+IronPort-SDR: 45+E8r9bh5eXM6wWQ4phn8eiYrnKXyn6RRvuWP4Rb6VO0u8Rx6rnp4oF+OBQitnpeSVyseiCa3
+ We35UMG/UM4g==
+X-IronPort-AV: E=McAfee;i="6200,9189,10003"; a="183498170"
 X-IronPort-AV: E=Sophos;i="5.83,242,1616482800"; 
-   d="scan'208";a="203618574"
+   d="scan'208";a="183498170"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2021 08:00:59 -0700
-IronPort-SDR: Cd+uXJb63GiwoEBc50BsSOY6scdBxuwpVtC9XSXEORYi71h0i8IJ7PTNAA0OU8qHEzNIF7GVDB
- J9GFUIO1l8qw==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2021 08:40:53 -0700
+IronPort-SDR: fygxpcgJ3k09ad+5wsx/bbZIYzXgQ3NYwhn46RK80I4bKEM5GOZOA6SO5QKmeqsQdSvAQqZNmI
+ Ydz7uxkN31Lw==
 X-IronPort-AV: E=Sophos;i="5.83,242,1616482800"; 
-   d="scan'208";a="416921576"
-Received: from rgstilwe-mobl.amr.corp.intel.com (HELO [10.254.187.108]) ([10.254.187.108])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2021 08:00:58 -0700
-Subject: Re: [PATCH] dmaengine: idxd: Fix missing error code in
- idxd_cdev_open()
-To:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1622628446-87909-1-git-send-email-jiapeng.chong@linux.alibaba.com>
+   d="scan'208";a="416934415"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.254.187.108]) ([10.254.187.108])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2021 08:40:52 -0700
+Subject: Re: [PATCH v6 00/20] Add VFIO mediated device support and DEV-MSI
+ support for the idxd driver
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     alex.williamson@redhat.com, kwankhede@nvidia.com,
+        tglx@linutronix.de, vkoul@kernel.org,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, megha.dey@intel.com,
+        jacob.jun.pan@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
+        sanjay.k.kumar@intel.com, tony.luck@intel.com,
+        dan.j.williams@intel.com, eric.auger@redhat.com,
+        pbonzini@redhat.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <162164243591.261970.3439987543338120797.stgit@djiang5-desk3.ch.intel.com>
+ <20210523232219.GG1002214@nvidia.com>
 From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <f4e25e75-35cc-23dc-667a-0d7feb9dc35b@intel.com>
-Date:   Wed, 2 Jun 2021 08:00:57 -0700
+Message-ID: <86cde154-37c7-c00d-b0c6-06b15b50dbf7@intel.com>
+Date:   Wed, 2 Jun 2021 08:40:51 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <1622628446-87909-1-git-send-email-jiapeng.chong@linux.alibaba.com>
+In-Reply-To: <20210523232219.GG1002214@nvidia.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On 6/2/2021 3:07 AM, Jiapeng Chong wrote:
-> The error code is missing in this code scenario, add the error code
-> '-EINVAL' to the return value 'rc'.
+On 5/23/2021 4:22 PM, Jason Gunthorpe wrote:
+> On Fri, May 21, 2021 at 05:19:05PM -0700, Dave Jiang wrote:
+>> Introducing mdev types “1dwq-v1” type. This mdev type allows
+>> allocation of a single dedicated wq from available dedicated wqs. After
+>> a workqueue (wq) is enabled, the user will generate an uuid. On mdev
+>> creation, the mdev driver code will find a dwq depending on the mdev
+>> type. When the create operation is successful, the user generated uuid
+>> can be passed to qemu. When the guest boots up, it should discover a
+>> DSA device when doing PCI discovery.
+>>
+>> For example of “1dwq-v1” type:
+>> 1. Enable wq with “mdev” wq type
+>> 2. A user generated uuid.
+>> 3. The uuid is written to the mdev class sysfs path:
+>> echo $UUID > /sys/class/mdev_bus/0000\:00\:0a.0/mdev_supported_types/idxd-1dwq-v1/create
+>> 4. Pass the following parameter to qemu:
+>> "-device vfio-pci,sysfsdev=/sys/bus/pci/devices/0000:00:0a.0/$UUID"
+> So the idxd core driver knows to create a "vfio" wq with its own much
+> machinery but you still want to involve the horrible mdev guid stuff?
 >
-> Eliminate the follow smatch warning:
->
-> drivers/dma/idxd/cdev.c:113 idxd_cdev_open() warn: missing error code
-> 'rc'.
->
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+> Why??
 
-Acked-by: Dave Jiang <dave.jiang@intel.com>
+Are you referring to calling mdev_device_create() directly in the mdev 
+idxd_driver probe? I think this would work with our dedicated wq where a 
+single mdev can be assigned to a wq. However, later on when we need to 
+support shared wq where we can create multiple mdev per wq, we'll need 
+an entry point to do so. In the name of making things consistent from 
+user perspective, going through sysfs seems the way to do it.
 
-
-> ---
->   drivers/dma/idxd/cdev.c | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-> index 302cba5..d4419bf 100644
-> --- a/drivers/dma/idxd/cdev.c
-> +++ b/drivers/dma/idxd/cdev.c
-> @@ -110,6 +110,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
->   		pasid = iommu_sva_get_pasid(sva);
->   		if (pasid == IOMMU_PASID_INVALID) {
->   			iommu_sva_unbind_device(sva);
-> +			rc = -EINVAL;
->   			goto failed;
->   		}
->   

@@ -2,136 +2,89 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EAE9839A151
-	for <lists+dmaengine@lfdr.de>; Thu,  3 Jun 2021 14:43:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1358F39A161
+	for <lists+dmaengine@lfdr.de>; Thu,  3 Jun 2021 14:47:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230378AbhFCMpl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 3 Jun 2021 08:45:41 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49810 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229966AbhFCMpl (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 3 Jun 2021 08:45:41 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 153ChlMY102052;
-        Thu, 3 Jun 2021 07:43:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1622724227;
-        bh=1g7f2iazNLoRP6uhUTcbq8C+Xj9mTn/TWmB4q7LOYQA=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=uMW89sKGfRqX3wUKfNHVidskiY08d3MivnaPcdrQIkdYeLOD5E+5cf92U2V0aM5Km
-         fdVDBpcVRy9V/1bPTbNPbHnRESMIwahVsYXZMMIYZaTYQFGNvdLJQlLUmB64iWkTrw
-         aZOyHrIa05mYWiTZNHXSLUjzJcjQkC8ne4oOVVfY=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 153ChlEi043928
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 3 Jun 2021 07:43:47 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Thu, 3 Jun
- 2021 07:43:47 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Thu, 3 Jun 2021 07:43:46 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 153ChkqU119106;
-        Thu, 3 Jun 2021 07:43:46 -0500
-Date:   Thu, 3 Jun 2021 18:13:45 +0530
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Maxime Ripard <mripard@kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        <devicetree@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>,
-        <dmaengine@vger.kernel.org>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        <linux-media@vger.kernel.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-phy@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 14/18] media: dt-bindings: Add DT bindings for TI
- J721E CSI2RX driver
-Message-ID: <20210603124343.mpyjdc7yxcnajkc3@ti.com>
-References: <20210526152308.16525-1-p.yadav@ti.com>
- <20210526152308.16525-15-p.yadav@ti.com>
- <1622125407.764961.731785.nullmailer@robh.at.kernel.org>
+        id S229994AbhFCMsw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 3 Jun 2021 08:48:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229801AbhFCMsw (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 3 Jun 2021 08:48:52 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BAE416139A;
+        Thu,  3 Jun 2021 12:47:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622724427;
+        bh=Su72vlEv6szuZvJdTn531CxoIL0BBrwp4O+j1wekIvI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WqP8lNYoU8Jc1bKjVXmNl7TjxqjpU7g3r26V2pgNhoXRfZ+5iA5+P+my9ZnKAvWf8
+         FhLl7wxvQAifwtnr/Zo/gkmO4svx2LZrlljcHAvuTAWqY/5cDsuoJGGRkzLb6tlYRM
+         lXBTHx8b5zvOXpQcB0ZkYFsfDYyY0OE6feHgoVIkRuMEjnSUerh6R2U0t/I1mqa0uM
+         i5dZKGOi94gh8gnYwXu/wsA8dCs51dLHItLfv8QYrWXxOSmfvTYjmCSu2lylHD6MF+
+         hCTpT0jMfRNvnaV9p14C6u3kA84QV4yuPCyDSezC9eRViu/zX9HblFrdSG5v8YP8+z
+         2dcTq8nH5ARZQ==
+Date:   Thu, 3 Jun 2021 18:17:04 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        dmaengine@vger.kernel.org
+Subject: Re: [PATCH] x86/cpufeatures: Force disable X86_FEATURE_ENQCMD and
+ remove update_pasid()
+Message-ID: <YLjPSAfBPIfQvmha@vkoul-mobl>
+References: <1600187413-163670-1-git-send-email-fenghua.yu@intel.com>
+ <1600187413-163670-10-git-send-email-fenghua.yu@intel.com>
+ <87mtsd6gr9.ffs@nanos.tec.linutronix.de>
+ <YLdZ7bZDPNup1n9c@zn.tnic>
+ <YLi6+vICUmu07b0E@vkoul-mobl>
+ <YLjALi9hoxv2kubX@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1622125407.764961.731785.nullmailer@robh.at.kernel.org>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <YLjALi9hoxv2kubX@zn.tnic>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 27/05/21 09:23AM, Rob Herring wrote:
-> On Wed, 26 May 2021 20:53:04 +0530, Pratyush Yadav wrote:
-> > TI's J721E uses the Cadence CSI2RX and DPHY peripherals to facilitate
-> > capture over a CSI-2 bus. The TI CSI2RX platform driver glues all the
-> > parts together.
-> > 
-> > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
-> > 
-> > ---
-> > 
-> > Changes in v2:
-> > - Rename to ti,j721e-csi2rx.yaml
-> > - Add an entry in MAINTAINERS.
-> > - Add a description for the binding.
-> > - Change compatible to ti,j721e-csi2rx to make it SoC specific.
-> > - Remove description from dmas, reg, power-domains.
-> > - Remove a limit of 2 from #address-cells and #size-cells.
-> > - Fix add ^ to csi-bridge subnode regex.
-> > - Make ranges mandatory.
-> > - Add unit address in example.
-> > - Add a reference to cdns,csi2rx in csi-bridge subnode.
-> > - Expand the example to include the csi-bridge subnode as well.
-> > - Re-order subject prefixes.
-> > 
-> >  .../bindings/media/ti,j721e-csi2rx.yaml       | 101 ++++++++++++++++++
-> >  MAINTAINERS                                   |   1 +
-> >  2 files changed, 102 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/ti,j721e-csi2rx.yaml
-> > 
+On 03-06-21, 13:42, Borislav Petkov wrote:
+> On Thu, Jun 03, 2021 at 04:50:26PM +0530, Vinod Koul wrote:
+> > Applied, thanks
 > 
-> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-> on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> Actually, I'd prefer if I take it through the tip tree:
 > 
-> yamllint warnings/errors:
+> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=x86/urgent
 > 
-> dtschema/dtc warnings/errors:
-> Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.8/dist-packages/dtschema/schemas/media/cdns,csi2rx.yaml'
-> xargs: dt-doc-validate: exited with status 255; aborting
-> make[1]: *** Deleting file 'Documentation/devicetree/bindings/media/ti,j721e-csi2rx.example.dt.yaml'
-> Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.8/dist-packages/dtschema/schemas/media/cdns,csi2rx.yaml'
-> make[1]: *** [scripts/Makefile.lib:380: Documentation/devicetree/bindings/media/ti,j721e-csi2rx.example.dt.yaml] Error 255
-> make[1]: *** Waiting for unfinished jobs....
-> make: *** [Makefile:1416: dt_binding_check] Error 2
+> because it is needed for the following patch by tglx:
 > 
-> See https://patchwork.ozlabs.org/patch/1484096
+> 6867ee8bcb75 x86/cpufeatures: Force disable X86_FEATURE_ENQCMD and remove update_pasid()
+> db099bafbf5e dmaengine: idxd: Use cpu_feature_enabled()
 > 
-> This check can fail if there are any dependencies. The base for a patch
-> series is generally the most recent rc1.
+> if you don't mind.
+> 
+> I'll be sending this to Linus this weekend.
 
-I think this is the case here since it can't find the 
-ti,j721e-csi2rx.yaml file.
+Okay dropped now..
 
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
-> 
-> pip3 install dtschema --upgrade
-> 
-> Please check and re-submit.
-> 
+You can add:
+
+Acked-By: Vinod Koul <vkoul@kernel.org>
 
 -- 
-Regards,
-Pratyush Yadav
-Texas Instruments Inc.
+~Vinod

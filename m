@@ -2,101 +2,75 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B88F399F90
-	for <lists+dmaengine@lfdr.de>; Thu,  3 Jun 2021 13:09:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7784A399FA9
+	for <lists+dmaengine@lfdr.de>; Thu,  3 Jun 2021 13:20:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229976AbhFCLK5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 3 Jun 2021 07:10:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34106 "EHLO mail.kernel.org"
+        id S229675AbhFCLWP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 3 Jun 2021 07:22:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229982AbhFCLK4 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 3 Jun 2021 07:10:56 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6B771613DC;
-        Thu,  3 Jun 2021 11:09:11 +0000 (UTC)
+        id S229629AbhFCLWO (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 3 Jun 2021 07:22:14 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 77519613E6;
+        Thu,  3 Jun 2021 11:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622718552;
-        bh=oulCTMRij/0YKDHZtxJlmXnKJmrq738g2Nu5+8hJZhk=;
+        s=k20201202; t=1622719230;
+        bh=yvu1ioWFgeXoiNI15+SCoMtyfAMfsZdkNLqkvbW5ChA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uEQn0pJD1PpIW/izJTVru84b4xULfY30cOgBeXGpgSr7q5q89Jf33lpwgdwsqXLlT
-         biDKRwbm7WED7jPvms1Cyc5RgvtroAhrGbmW7f8W7pHWmgm97ATjGqDbGyWeG4UImp
-         l2zOPwL9yFJYCiUrmaSCutPVRLYtpU2MetnIHIJ/4bEmM2qvbCf3l3kI1xvDTnLi8P
-         jPQh+3lQ6ap43tRTp5K+DPtNPGiPa2l6axks1L42ELpdYspCMnQZqVtgz8sDgbFXFY
-         j9cnekwJbpza7J93CZaPTIwHmIq/IEtOltSu61nImCQcYJKQKwvo8WrZhGCYEIm2FA
-         tdGFp450SBXdg==
-Date:   Thu, 3 Jun 2021 16:39:08 +0530
+        b=kuUpuVw6pZ0+xCWatONfbiD7PZPYm3CYPslvjBhz43wurBSp8e/Lf/cepm9y9RA6j
+         SpU7YOwwjb6x0MbNkWXmUiv5Vz0O+A4iSJ9Z64Kk+vU2ws5lda5ih7wn2WGdIYDaQl
+         lg4xvtwu9Rps0VVIJk6B2Wb0BoB4H9O+dtg1uCZkqCqEQaT3V/2v/O7znsM8iXuT2W
+         53UM+etyclo69iNcWVx1U/V8ZjuS9Fg6c4mtjrT+5MWmPdevIHvqUGXsYxlwP+pd5I
+         DDMjDH8C18ecxj8lpm1JP4sBrgkoHaDy0hXVBQFRKIL9cbWzUx6xQPAGnT+2U7uQii
+         zWOzBxa1vF9Wg==
+Date:   Thu, 3 Jun 2021 16:50:26 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     "yukuai (C)" <yukuai3@huawei.com>, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@foss.st.com, michal.simek@xilinx.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, yi.zhang@huawei.com
-Subject: Re: [PATCH 2/3] dmaengine: usb-dmac: Fix PM reference leak in
- usb_dmac_probe()
-Message-ID: <YLi4VGwzrat8wJHP@vkoul-mobl>
-References: <20210517081826.1564698-1-yukuai3@huawei.com>
- <20210517081826.1564698-3-yukuai3@huawei.com>
- <YLRfZfnuxc0+n/LN@vkoul-mobl.Dlink>
- <b6c340de-b0b5-6aad-94c0-03f062575b63@huawei.com>
- <YLSk/i6GmYWGEa9E@vkoul-mobl.Dlink>
- <YLSqD+9nZIWJpn+r@hovoldconsulting.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        dmaengine@vger.kernel.org
+Subject: Re: [PATCH] x86/cpufeatures: Force disable X86_FEATURE_ENQCMD and
+ remove update_pasid()
+Message-ID: <YLi6+vICUmu07b0E@vkoul-mobl>
+References: <1600187413-163670-1-git-send-email-fenghua.yu@intel.com>
+ <1600187413-163670-10-git-send-email-fenghua.yu@intel.com>
+ <87mtsd6gr9.ffs@nanos.tec.linutronix.de>
+ <YLdZ7bZDPNup1n9c@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YLSqD+9nZIWJpn+r@hovoldconsulting.com>
+In-Reply-To: <YLdZ7bZDPNup1n9c@zn.tnic>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 31-05-21, 11:19, Johan Hovold wrote:
-> On Mon, May 31, 2021 at 02:27:34PM +0530, Vinod Koul wrote:
-> > On 31-05-21, 14:11, yukuai (C) wrote:
-> > > On 2021/05/31 12:00, Vinod Koul wrote:
-> > > > On 17-05-21, 16:18, Yu Kuai wrote:
-> > > > > pm_runtime_get_sync will increment pm usage counter even it failed.
-> > > > > Forgetting to putting operation will result in reference leak here.
-> > > > > Fix it by replacing it with pm_runtime_resume_and_get to keep usage
-> > > > > counter balanced.
-> > > > > 
-> > > > > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > > > > Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> > > > > ---
-> > > > >   drivers/dma/sh/usb-dmac.c | 2 +-
-> > > > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/drivers/dma/sh/usb-dmac.c b/drivers/dma/sh/usb-dmac.c
-> > > > > index 8f7ceb698226..2a6c8fd8854e 100644
-> > > > > --- a/drivers/dma/sh/usb-dmac.c
-> > > > > +++ b/drivers/dma/sh/usb-dmac.c
-> > > > > @@ -796,7 +796,7 @@ static int usb_dmac_probe(struct platform_device *pdev)
-> > > > >   	/* Enable runtime PM and initialize the device. */
-> > > > >   	pm_runtime_enable(&pdev->dev);
-> > > > > -	ret = pm_runtime_get_sync(&pdev->dev);
-> > > > > +	ret = pm_runtime_resume_and_get(&pdev->dev);
-> > > > 
-> > > > This does not seem to fix anything.. the below goto goes and disables
-> > > > the runtime_pm for this device and thus there wont be any leak
-> > > Hi,
-> > > 
-> > > If pm_runtime_get_sync() fails and increments the pm.usage_count
-> > > variable, pm_runtime_disable() does not reset the counter, and
-> > > we still need to decrement the usage count when pm_runtime_get_sync()
-> > > fails. Do I miss anthing?
-> > 
-> > Yes the rumtime_pm is disabled on failure here and the count would have
-> > no consequence...
+On 02-06-21, 12:14, Borislav Petkov wrote:
+> ---
+> From: Borislav Petkov <bp@suse.de>
+> Date: Wed, 2 Jun 2021 12:07:52 +0200
+> Subject: [PATCH] dmaengine: idxd: Use cpu_feature_enabled()
 > 
-> You should still balance the PM usage counter as it isn't reset for
-> example when reloading the driver.
+> When testing x86 feature bits, use cpu_feature_enabled() so that
+> build-disabled features can remain off, regardless of what CPUID says.
 
-Should I driver trust that on load PM usage counter is balanced and not
-to be reset..?
-
-> Using pm_runtime_resume_and_get() is one way of handling this, but
-> alternatively you could also move the error_pm label above the
-> pm_runtime_put() in the error path.
-
-That would be a better way I think
+Applied, thanks
 
 -- 
 ~Vinod

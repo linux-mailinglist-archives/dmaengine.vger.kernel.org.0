@@ -2,221 +2,132 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DD7839B111
-	for <lists+dmaengine@lfdr.de>; Fri,  4 Jun 2021 05:42:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C60B339B119
+	for <lists+dmaengine@lfdr.de>; Fri,  4 Jun 2021 05:47:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229886AbhFDDn4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 3 Jun 2021 23:43:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229794AbhFDDn4 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 3 Jun 2021 23:43:56 -0400
-Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D58A0C0613CE
-        for <dmaengine@vger.kernel.org>; Thu,  3 Jun 2021 20:41:54 -0700 (PDT)
-Received: by mail-ot1-x329.google.com with SMTP id 69-20020a9d0a4b0000b02902ed42f141e1so7889212otg.2
-        for <dmaengine@vger.kernel.org>; Thu, 03 Jun 2021 20:41:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qDKqotNOGIxidneZCpCOFm1Xj7iQGtbVhRVMvdBpFyw=;
-        b=FrW4olx7vH1AWpZD4jiByfMBDwVT9dg4znQeN7xlFnmHlgwgZfuneJl36K8INWvP7S
-         RnDudy0d7iVbU2l1xvdenvPuV4HuItSIRlA7CG2/qt4ye3I/DpVYkTSoy2/+I6DD7GoF
-         HS2ctFuqsS6vAHeld+orfNCC61pfw9MV9kCV6agFhqpAUXNZB8vv2Rw0vD2m/0t+VJnA
-         InK5jZr0vsAfHSeonW30O07YgBryNQ/HtsPAipgo8nzhzJYV6MdIlHkQF23DZdseVV42
-         x0dJycPdpgaJJ7v4skSAm5C4Y4mGWs5ZxHIjZVvri/joAxcFeY75eTIS5mcCbIGk1BLX
-         c5HQ==
+        id S229769AbhFDDtW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 3 Jun 2021 23:49:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:51927 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229718AbhFDDtV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 3 Jun 2021 23:49:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1622778456;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qYVKZDuvt5Qic5U7hRSglNEDW7YcTuvFUNtFxiNT7O8=;
+        b=AZ/Y54HvkpKqAG3KwZEZoyWKVhYffiS+2s8wSYi48rDrWlS9ZH2W11E0vXkZfQ3XoNPesD
+        3G5jXFszrhz5lwTHMcFxUGdOuzswtqtAH17BKm/NqK5fDDXmqaoq2gMgk/JR7G1bBJEgY2
+        RMOKDCo5+iFnfCQLTTw8KAjOKqzOYAc=
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
+ [209.85.210.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-542-H8Q4fobpPIyCE3xk6TkCbw-1; Thu, 03 Jun 2021 23:47:34 -0400
+X-MC-Unique: H8Q4fobpPIyCE3xk6TkCbw-1
+Received: by mail-ot1-f71.google.com with SMTP id a1-20020a9d47010000b0290320d09a96aaso4358772otf.16
+        for <dmaengine@vger.kernel.org>; Thu, 03 Jun 2021 20:47:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qDKqotNOGIxidneZCpCOFm1Xj7iQGtbVhRVMvdBpFyw=;
-        b=ZWvrvPIEQqu0ewrP8FwrPZGQi+Qcrya4io7hEGIoX8S+jeOmZ6Fz0jcOA9grhgwcAU
-         4lOxTCPUnzGWU2Iorg1Hb6QTz2JkG0osCtJO4DriAB7ouD5Go/Dh3Mv9CJix2CW7XbgX
-         4NA7aGjpsCtjY8WTh8JFRRqM3DuPzW4eXmWkHaoLxtbS8Q14aXrskoojhji/NDggdS2X
-         fGhLv5hTLmo8pTyZtPTz8ndQHsXDzY8WhgZwUez7Vs5wFTL8TsDQqG4UgAmIC2WuL2OY
-         tamjMADB3GTdmD7yYROcagv0E5tu6zX4ZzyhrQ2XjIhpwUGnVHaBDlMcKx24AhvEoNfs
-         dJlw==
-X-Gm-Message-State: AOAM533uXLctkVvk2XmPsBDkLv2DqKTs5nkUl8+6lyAXVYTHAJakDmaL
-        ED+X7IYNlQMvN4ldixRXheUiK7suUNMIA5Y/EDNIfg==
-X-Google-Smtp-Source: ABdhPJyBlwS4ywW9sYM/BIc6j44E7w/DxEwFdwnUPP5GI2rf2VfVa1kQMxnDXRQPbeqMJpbsxfrDhGUQO3gEMNTgd6s=
-X-Received: by 2002:a9d:4f15:: with SMTP id d21mr2107757otl.155.1622778112475;
- Thu, 03 Jun 2021 20:41:52 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qYVKZDuvt5Qic5U7hRSglNEDW7YcTuvFUNtFxiNT7O8=;
+        b=LrNPiySrNr2hAvkw0mRbbsTaPNNvi9EIRHM82x29eW0G7+erE6oXEvA64e1PM9QaMF
+         OMsLSr+wDmSUMtbSbwIguuFR0MeMlIUaChb+rm5evQn7kHtTA2CM43KGUs7MULovYm5M
+         vwhsBEJOBKtGgdOLe33394FgFEPijcGH2fyUn/lwYRI/J/HPPOmNBk1Rx99g2kUmowzw
+         LeH9HKOZDBYdaZMhrwhaTL2wt+kfwl0NoLKwFTEDDZM9UGzEGlvIJdnM2s6hLoFob0kh
+         GHqU6ZxQPliedypYg4+DKLbOabNe/bPp5ZyqaDUSXh09Rgclk3Js/3eRZz4q7YcYbfvY
+         n4uA==
+X-Gm-Message-State: AOAM532joyYjm320ZxkglIkObkm539UUuv0Tccmhrgws+23fYgjVqgcy
+        1wa84Tp8PFng7KwSYiGpiG2hBR44lxX8qn7HKtBaWM2Dqar+OMDv5CwlynUR+R/onbVR3caYT9h
+        GUc3DLhrx/9zYUmRggpM8
+X-Received: by 2002:aca:42c6:: with SMTP id p189mr9377793oia.36.1622778454090;
+        Thu, 03 Jun 2021 20:47:34 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzPpaWKooEIC1jgqP5XfvYz7fSFRzk4H+W3/+1Ves6P7f1pdUp+76S8SrIRLTsgQayfXww8vg==
+X-Received: by 2002:aca:42c6:: with SMTP id p189mr9377780oia.36.1622778453943;
+        Thu, 03 Jun 2021 20:47:33 -0700 (PDT)
+Received: from redhat.com ([198.99.80.109])
+        by smtp.gmail.com with ESMTPSA id n11sm214881oom.1.2021.06.03.20.47.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jun 2021 20:47:33 -0700 (PDT)
+Date:   Thu, 3 Jun 2021 21:47:31 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     kwankhede@nvidia.com, tglx@linutronix.de, vkoul@kernel.org,
+        jgg@mellanox.com, megha.dey@intel.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
+        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, dan.j.williams@intel.com,
+        eric.auger@redhat.com, pbonzini@redhat.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v6 12/20] vfio: move VFIO PCI macros to common header
+Message-ID: <20210603214731.1631a480.alex.williamson@redhat.com>
+In-Reply-To: <162164281969.261970.17759783730654052269.stgit@djiang5-desk3.ch.intel.com>
+References: <162164243591.261970.3439987543338120797.stgit@djiang5-desk3.ch.intel.com>
+        <162164281969.261970.17759783730654052269.stgit@djiang5-desk3.ch.intel.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20210519143700.27392-1-bhupesh.sharma@linaro.org>
- <20210519143700.27392-5-bhupesh.sharma@linaro.org> <20210521014547.GA2469643@robh.at.kernel.org>
-In-Reply-To: <20210521014547.GA2469643@robh.at.kernel.org>
-From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Date:   Fri, 4 Jun 2021 09:11:41 +0530
-Message-ID: <CAH=2Ntz4x08UZp2guT4YX6A1UPKDk9nThuBtbj=vARMO2AK84w@mail.gmail.com>
-Subject: Re: [PATCH v3 04/17] dt-bindings: qcom-qce: Convert bindings to yaml
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhupesh.linux@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Rob,
+On Fri, 21 May 2021 17:20:19 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-On Fri, 21 May 2021 at 07:15, Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, May 19, 2021 at 08:06:47PM +0530, Bhupesh Sharma wrote:
-> > Convert Qualcomm QCE crypto devicetree binding to YAML.
-> >
-> > Cc: Thara Gopinath <thara.gopinath@linaro.org>
-> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Andy Gross <agross@kernel.org>
-> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> > Cc: David S. Miller <davem@davemloft.net>
-> > Cc: Stephen Boyd <sboyd@kernel.org>
-> > Cc: Michael Turquette <mturquette@baylibre.com>
-> > Cc: Vinod Koul <vkoul@kernel.org>
-> > Cc: dmaengine@vger.kernel.org
-> > Cc: linux-clk@vger.kernel.org
-> > Cc: linux-crypto@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: bhupesh.linux@gmail.com
-> > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> > ---
-> >  .../devicetree/bindings/crypto/qcom-qce.txt   | 25 -------
-> >  .../devicetree/bindings/crypto/qcom-qce.yaml  | 69 +++++++++++++++++++
-> >  2 files changed, 69 insertions(+), 25 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/crypto/qcom-qce.txt
-> >  create mode 100644 Documentation/devicetree/bindings/crypto/qcom-qce.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/crypto/qcom-qce.txt b/Documentation/devicetree/bindings/crypto/qcom-qce.txt
-> > deleted file mode 100644
-> > index fdd53b184ba8..000000000000
-> > --- a/Documentation/devicetree/bindings/crypto/qcom-qce.txt
-> > +++ /dev/null
-> > @@ -1,25 +0,0 @@
-> > -Qualcomm crypto engine driver
-> > -
-> > -Required properties:
-> > -
-> > -- compatible  : should be "qcom,crypto-v5.1"
-> > -- reg         : specifies base physical address and size of the registers map
-> > -- clocks      : phandle to clock-controller plus clock-specifier pair
-> > -- clock-names : "iface" clocks register interface
-> > -                "bus" clocks data transfer interface
-> > -                "core" clocks rest of the crypto block
-> > -- dmas        : DMA specifiers for tx and rx dma channels. For more see
-> > -                Documentation/devicetree/bindings/dma/dma.txt
-> > -- dma-names   : DMA request names should be "rx" and "tx"
-> > -
-> > -Example:
-> > -     crypto@fd45a000 {
-> > -             compatible = "qcom,crypto-v5.1";
-> > -             reg = <0xfd45a000 0x6000>;
-> > -             clocks = <&gcc GCC_CE2_AHB_CLK>,
-> > -                      <&gcc GCC_CE2_AXI_CLK>,
-> > -                      <&gcc GCC_CE2_CLK>;
-> > -             clock-names = "iface", "bus", "core";
-> > -             dmas = <&cryptobam 2>, <&cryptobam 3>;
-> > -             dma-names = "rx", "tx";
-> > -     };
-> > diff --git a/Documentation/devicetree/bindings/crypto/qcom-qce.yaml b/Documentation/devicetree/bindings/crypto/qcom-qce.yaml
-> > new file mode 100644
-> > index 000000000000..a691cd08f372
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/crypto/qcom-qce.yaml
-> > @@ -0,0 +1,69 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/crypto/qcom-qce.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Qualcomm crypto engine driver
-> > +
-> > +maintainers:
-> > +  - Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> > +
-> > +description: |
-> > +  This document defines the binding for the QCE crypto
-> > +  controller found on Qualcomm parts.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: qcom,crypto-v5.1
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +    description: |
-> > +      Specifies base physical address and size of the registers map.
->
-> Yep, that's every 'reg'. Drop.
->
-> With that dropped,
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Move some VFIO_PCI macros to a common header as they will be shared between
+> mdev and vfio_pci.
 
-Ok, I will drop this in v4.
+No, this is the current implementation of vfio-pci, it's specifically
+not meant to be a standard.  Each vfio device driver is free to expose
+regions on the device file descriptor as they wish.  If you want to use
+a 40-bit implementation as well, great, but it should not be imposed as
+a standard.  Thanks,
 
-Thanks,
-Bhupesh
+Alex
 
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: iface clocks register interface.
-> > +      - description: bus clocks data transfer interface.
-> > +      - description: core clocks rest of the crypto block.
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: iface
-> > +      - const: bus
-> > +      - const: core
-> > +
-> > +  dmas:
-> > +    items:
-> > +      - description: DMA specifiers for tx dma channel.
-> > +      - description: DMA specifiers for rx dma channel.
-> > +
-> > +  dma-names:
-> > +    items:
-> > +      - const: rx
-> > +      - const: tx
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +  - dmas
-> > +  - dma-names
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/qcom,gcc-apq8084.h>
-> > +    crypto-engine@fd45a000 {
-> > +        compatible = "qcom,crypto-v5.1";
-> > +        reg = <0xfd45a000 0x6000>;
-> > +        clocks = <&gcc GCC_CE2_AHB_CLK>,
-> > +                 <&gcc GCC_CE2_AXI_CLK>,
-> > +                 <&gcc GCC_CE2_CLK>;
-> > +        clock-names = "iface", "bus", "core";
-> > +        dmas = <&cryptobam 2>, <&cryptobam 3>;
-> > +        dma-names = "rx", "tx";
-> > +    };
-> > --
-> > 2.31.1
-> >
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/vfio/pci/vfio_pci_private.h |    6 ------
+>  include/linux/vfio.h                |    6 ++++++
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
+> index a17943911fcb..e644f981509c 100644
+> --- a/drivers/vfio/pci/vfio_pci_private.h
+> +++ b/drivers/vfio/pci/vfio_pci_private.h
+> @@ -18,12 +18,6 @@
+>  #ifndef VFIO_PCI_PRIVATE_H
+>  #define VFIO_PCI_PRIVATE_H
+>  
+> -#define VFIO_PCI_OFFSET_SHIFT   40
+> -
+> -#define VFIO_PCI_OFFSET_TO_INDEX(off)	(off >> VFIO_PCI_OFFSET_SHIFT)
+> -#define VFIO_PCI_INDEX_TO_OFFSET(index)	((u64)(index) << VFIO_PCI_OFFSET_SHIFT)
+> -#define VFIO_PCI_OFFSET_MASK	(((u64)(1) << VFIO_PCI_OFFSET_SHIFT) - 1)
+> -
+>  /* Special capability IDs predefined access */
+>  #define PCI_CAP_ID_INVALID		0xFF	/* default raw access */
+>  #define PCI_CAP_ID_INVALID_VIRT		0xFE	/* default virt access */
+> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+> index 3b372fa57ef4..ed5ca027eb49 100644
+> --- a/include/linux/vfio.h
+> +++ b/include/linux/vfio.h
+> @@ -15,6 +15,12 @@
+>  #include <linux/poll.h>
+>  #include <uapi/linux/vfio.h>
+>  
+> +#define VFIO_PCI_OFFSET_SHIFT   40
+> +
+> +#define VFIO_PCI_OFFSET_TO_INDEX(off)	((off) >> VFIO_PCI_OFFSET_SHIFT)
+> +#define VFIO_PCI_INDEX_TO_OFFSET(index)	((u64)(index) << VFIO_PCI_OFFSET_SHIFT)
+> +#define VFIO_PCI_OFFSET_MASK	(((u64)(1) << VFIO_PCI_OFFSET_SHIFT) - 1)
+> +
+>  struct vfio_device {
+>  	struct device *dev;
+>  	const struct vfio_device_ops *ops;
+> 
+> 
+

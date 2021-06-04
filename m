@@ -2,286 +2,186 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51E3539B0E3
-	for <lists+dmaengine@lfdr.de>; Fri,  4 Jun 2021 05:28:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 143EE39B0FF
+	for <lists+dmaengine@lfdr.de>; Fri,  4 Jun 2021 05:40:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229769AbhFDDaY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 3 Jun 2021 23:30:24 -0400
-Received: from mail-oi1-f175.google.com ([209.85.167.175]:41812 "EHLO
-        mail-oi1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbhFDDaX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 3 Jun 2021 23:30:23 -0400
-Received: by mail-oi1-f175.google.com with SMTP id c3so8439953oic.8
-        for <dmaengine@vger.kernel.org>; Thu, 03 Jun 2021 20:28:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ofLA5Yth7cNuIGM6YFGLuq5e5gElaG+msVA631CxO2I=;
-        b=uM528HoRNzisbbP1Ciydmknx8eMheK6X+d6E3rFSymcflD7mvtYlMX8p+3OZLkxMS+
-         aQg4bL5+kY4XKLbALNfehxg67eEFzpu/twKRRtQxlMbHHr1d8iLxJgtbZqXzIZn9wsKA
-         jf3J5tPcWgNnTKTOOiB+0QnWDhxeJ+u73zsFnu7dsxibWXvKcdUtnaNKt9atMtxfXEWK
-         8fmtPLQ4rr1iYa/JLWs7dWaxw52R/dOpfDtBvlwnc7ut65sMphdq7gntNT6VYsfxuket
-         ZeVgNhVGOIjPZ63VSskpHKw3zIabYe8fddOPme9cXw8nlIBLDuZEhlF9WC7PfQ18Q0xI
-         fPig==
+        id S229751AbhFDDmA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 3 Jun 2021 23:42:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44023 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229761AbhFDDmA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 3 Jun 2021 23:42:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1622778014;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aFUnYpKRreDc48wVwuXCdbokDvF9b+3ny8yIoFA0wCM=;
+        b=amDeYvdCtCn1iUg1XfCfRvzF+WZn1mR2WDOmWc+VGfybhwYMmtskVlp5kw8i5N1WX7Hgdw
+        yKIEATS9jwDKFa5mHOqtk0OCGmLnA1p76Q1SWdDiDTvQbOgKLsGHlErveLnVcSGPSAcNOQ
+        pArJlzk92lTCllTJK/skI2o0vunJUUk=
+Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
+ [209.85.210.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-WZkuOp5qNOyTEol5bm92mw-1; Thu, 03 Jun 2021 23:40:12 -0400
+X-MC-Unique: WZkuOp5qNOyTEol5bm92mw-1
+Received: by mail-ot1-f70.google.com with SMTP id i25-20020a9d4a990000b0290304f00e3e3aso4349856otf.15
+        for <dmaengine@vger.kernel.org>; Thu, 03 Jun 2021 20:40:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ofLA5Yth7cNuIGM6YFGLuq5e5gElaG+msVA631CxO2I=;
-        b=SKe00h4wLAlN2yiMl6CxcKUC2K0UBITjDme2E//+T0z9vWijWbJfvPiHPlKvFdOXsf
-         U0a8MQ5sdWhJaa/feGPd5arN7pdd7dV9jYMV9dWvYE8zxV50WrIE/FSu9aRvzbIaZVw4
-         Ob3TY44q5A2fnuHxVcmriBjTNZhxH7rg8snxaUG+tQ/4ei6XyxzTcpgv4lKskgO9fH7S
-         nhx8cp3ARbjhDet5LbDYXi+ZJpLjB0h3mkoAodnxQvu+7fe6S95fj+QT79Y0M9Mw3ZSj
-         HZuICDg8eP+nfpwQ6xp9nqTfpqdXlqZCS1epd5Ba/Klxlz4hqoNSlb+e0sQ1pTCPWzPS
-         IQzA==
-X-Gm-Message-State: AOAM530peIvlJlbhk4H63dpkHFPyoXFK+wouL8Kc19HxPLtlJ7zZfYgO
-        HzyIFpAHGOJ2NdBMD1Z8VJ+RjCGiQgMhQugOsulV+w==
-X-Google-Smtp-Source: ABdhPJxD8+rFjLez4xtP2gnQcSqIZih5Kb5zZR7kQs9ajpSPJ77foKTuFLdY4J+edKcnDerJJr4PzhoV8pQ+xB7PRrg=
-X-Received: by 2002:a05:6808:b15:: with SMTP id s21mr592285oij.40.1622777258224;
- Thu, 03 Jun 2021 20:27:38 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=aFUnYpKRreDc48wVwuXCdbokDvF9b+3ny8yIoFA0wCM=;
+        b=KAKMb8gTuL1/KUzO5OkF0oOKCn35L7pf5jYyMQoB21eNyBPFsDuwDFR2MV72TWrDBF
+         lpFhen0Hod/hghOIEN5ZW8tP79D/V2MrqzeHLn7FKdmGqplEendEFifS5z8DMJRWac1f
+         JjcXH1fvDpHTCc2ZGWnUV5buTenv5UMZFpCrPDthyZ6sA//vKoakC8gOORfryCIFYsvZ
+         gEvM5ndrWzuUYW7tk0ngLOH4Pw3mVxdyeSc+0pP5x5hr85L3y1wg+YgsnxzZjjzLEXbw
+         Ar1kdFyJjbeAKRUFCjMfZDRQc1UFl7a2qhUQOVst2Y/i/DAhgKG8PE2P949yZkTuwf1v
+         sSuQ==
+X-Gm-Message-State: AOAM5309bBBe/ORHDkOtNml21KKPKW8vv5Ur9j3n1R4JsCjGTxpfYXGV
+        ntoErNYNB8hxGxHPV8bHcPF0CIQYiWPCyTkshF1fga1nflXiVwYqlXGjzbs/irfY/PGYV8O2Ypn
+        ruznJGRQoaBM7+AeTTlmF
+X-Received: by 2002:a54:4494:: with SMTP id v20mr1624080oiv.74.1622778012141;
+        Thu, 03 Jun 2021 20:40:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxyoQSP7oUcYQgpMaIhA3jFP+XxgrJ7TW7ji9ff5F2mCl2XeqDgdz5AJt7rZgUmclwKq5uEIg==
+X-Received: by 2002:a54:4494:: with SMTP id v20mr1624062oiv.74.1622778011907;
+        Thu, 03 Jun 2021 20:40:11 -0700 (PDT)
+Received: from redhat.com ([198.99.80.109])
+        by smtp.gmail.com with ESMTPSA id d1sm223468otu.9.2021.06.03.20.40.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jun 2021 20:40:11 -0700 (PDT)
+Date:   Thu, 3 Jun 2021 21:40:09 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH v6 00/20] Add VFIO mediated device support and DEV-MSI
+ support for the idxd driver
+Message-ID: <20210603214009.68fac0c4.alex.williamson@redhat.com>
+In-Reply-To: <MWHPR11MB1886D613948986530E9B61CB8C3C9@MWHPR11MB1886.namprd11.prod.outlook.com>
+References: <162164243591.261970.3439987543338120797.stgit@djiang5-desk3.ch.intel.com>
+        <20210523232219.GG1002214@nvidia.com>
+        <86cde154-37c7-c00d-b0c6-06b15b50dbf7@intel.com>
+        <20210602231747.GK1002214@nvidia.com>
+        <MWHPR11MB188664D9E7CA60782B75AC718C3C9@MWHPR11MB1886.namprd11.prod.outlook.com>
+        <20210603014932.GN1002214@nvidia.com>
+        <MWHPR11MB1886D613948986530E9B61CB8C3C9@MWHPR11MB1886.namprd11.prod.outlook.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20210519143700.27392-1-bhupesh.sharma@linaro.org>
- <20210519143700.27392-2-bhupesh.sharma@linaro.org> <20210521014316.GA2462277@robh.at.kernel.org>
-In-Reply-To: <20210521014316.GA2462277@robh.at.kernel.org>
-From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Date:   Fri, 4 Jun 2021 08:57:27 +0530
-Message-ID: <CAH=2NtwzFMre_+6LRM_JL+itbG09UuKLtH+Awbv_zK++qns49w@mail.gmail.com>
-Subject: Re: [PATCH v3 01/17] dt-bindings: qcom-bam: Convert binding to YAML
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhupesh.linux@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello Rob,
+On Thu, 3 Jun 2021 05:52:58 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
-Thanks for the review and sorry for the late reply.
+> > From: Jason Gunthorpe <jgg@nvidia.com>
+> > Sent: Thursday, June 3, 2021 9:50 AM
+> > 
+> > On Thu, Jun 03, 2021 at 01:11:37AM +0000, Tian, Kevin wrote:
+> >   
+> > > Jason, can you clarify your attitude on mdev guid stuff? Are you
+> > > completely against it or case-by-case? If the former, this is a big
+> > > decision thus it's better to have consensus with Alex/Kirti. If the
+> > > latter, would like to hear your criteria for when it can be used
+> > > and when not...  
+> > 
+> > I dislike it generally, but it exists so <shrug>. I know others feel
+> > more strongly about it being un-kernely and the wrong way to use sysfs.
+> > 
+> > Here I was remarking how the example in the cover letter made the mdev
+> > part seem totally pointless. If it is pointless then don't do it.  
+> 
+> Is your point about that as long as a mdev requires pre-config
+> through driver specific sysfs then it doesn't make sense to use
+> mdev guid interface anymore?
 
-On Fri, 21 May 2021 at 07:13, Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, May 19, 2021 at 08:06:44PM +0530, Bhupesh Sharma wrote:
-> > Convert Qualcomm BAM DMA devicetree binding to YAML.
-> >
-> > Cc: Thara Gopinath <thara.gopinath@linaro.org>
-> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Andy Gross <agross@kernel.org>
-> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> > Cc: David S. Miller <davem@davemloft.net>
-> > Cc: Stephen Boyd <sboyd@kernel.org>
-> > Cc: Michael Turquette <mturquette@baylibre.com>
-> > Cc: Vinod Koul <vkoul@kernel.org>
-> > Cc: dmaengine@vger.kernel.org
-> > Cc: linux-clk@vger.kernel.org
-> > Cc: linux-crypto@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: bhupesh.linux@gmail.com
-> > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> > ---
-> >  .../devicetree/bindings/dma/qcom_bam_dma.txt  | 50 ----------
-> >  .../devicetree/bindings/dma/qcom_bam_dma.yaml | 91 +++++++++++++++++++
-> >  2 files changed, 91 insertions(+), 50 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> >  create mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> > deleted file mode 100644
-> > index cf5b9e44432c..000000000000
-> > --- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> > +++ /dev/null
-> > @@ -1,50 +0,0 @@
-> > -QCOM BAM DMA controller
-> > -
-> > -Required properties:
-> > -- compatible: must be one of the following:
-> > - * "qcom,bam-v1.4.0" for MSM8974, APQ8074 and APQ8084
-> > - * "qcom,bam-v1.3.0" for APQ8064, IPQ8064 and MSM8960
-> > - * "qcom,bam-v1.7.0" for MSM8916
-> > -- reg: Address range for DMA registers
-> > -- interrupts: Should contain the one interrupt shared by all channels
-> > -- #dma-cells: must be <1>, the cell in the dmas property of the client device
-> > -  represents the channel number
-> > -- clocks: required clock
-> > -- clock-names: must contain "bam_clk" entry
-> > -- qcom,ee : indicates the active Execution Environment identifier (0-7) used in
-> > -  the secure world.
-> > -- qcom,controlled-remotely : optional, indicates that the bam is controlled by
-> > -  remote proccessor i.e. execution environment.
-> > -- num-channels : optional, indicates supported number of DMA channels in a
-> > -  remotely controlled bam.
-> > -- qcom,num-ees : optional, indicates supported number of Execution Environments
-> > -  in a remotely controlled bam.
-> > -
-> > -Example:
-> > -
-> > -     uart-bam: dma@f9984000 = {
-> > -             compatible = "qcom,bam-v1.4.0";
-> > -             reg = <0xf9984000 0x15000>;
-> > -             interrupts = <0 94 0>;
-> > -             clocks = <&gcc GCC_BAM_DMA_AHB_CLK>;
-> > -             clock-names = "bam_clk";
-> > -             #dma-cells = <1>;
-> > -             qcom,ee = <0>;
-> > -     };
-> > -
-> > -DMA clients must use the format described in the dma.txt file, using a two cell
-> > -specifier for each channel.
-> > -
-> > -Example:
-> > -     serial@f991e000 {
-> > -             compatible = "qcom,msm-uart";
-> > -             reg = <0xf991e000 0x1000>
-> > -                     <0xf9944000 0x19000>;
-> > -             interrupts = <0 108 0>;
-> > -             clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
-> > -                     <&gcc GCC_BLSP1_AHB_CLK>;
-> > -             clock-names = "core", "iface";
-> > -
-> > -             dmas = <&uart-bam 0>, <&uart-bam 1>;
-> > -             dma-names = "rx", "tx";
-> > -     };
-> > diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml b/Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
-> > new file mode 100644
-> > index 000000000000..173e4d7508a6
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
-> > @@ -0,0 +1,91 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/dma/qcom_bam_dma.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: QCOM BAM DMA controller binding
-> > +
-> > +maintainers:
-> > +  - Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> > +
-> > +description: |
-> > +  This document defines the binding for the BAM DMA controller
-> > +  found on Qualcomm parts.
-> > +
-> > +allOf:
-> > +  - $ref: "dma-controller.yaml#"
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - qcom,bam-v1.4.0
-> > +      - qcom,bam-v1.3.0
-> > +      - qcom,bam-v1.7.0
->
-> Can we keep the SoC association please.
+Can you describe exactly what step 1. is doing in this case from the
+original cover letter ("Enable wq with "mdev" wq type")?  That does
+sound a bit like configuring something to use mdev then separately
+going to the trouble of creating the mdev.  As Jason suggests, if a wq
+is tagged for mdev/vfio, it could just register itself as a vfio bus
+driver.
 
-The original bam dma bindings are as per the underlying bam IP
-version, so I would prefer that we keep it this way for this series.
+But if we want to use mdev, why doesn't available_instances for your
+mdev type simply report all unassigned wq and the `echo $UUID > create`
+grabs a wq for mdev?  That would remove this pre-config contention,
+right?
 
-Later on I can send a patchset to convert the bam DMA dt-bindings, dts
-and driver to work with 'SoC association' instead.
+> The value of mdev guid interface is providing a vendor-agnostic
+> interface for mdev life-cycle management which allows one-
+> enable-fit-all in upper management stack. Requiring vendor
+> specific pre-config does blur the boundary here.
 
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +    description: Address range of the DMA registers.
->
-> Drop description.
+We need to be careful about using work-avoidance in the upper
+management stack as a primary use case for an interface though.
 
-Sure.
+> Alex/Kirt/Cornelia, what about your opinion here? It's better 
+> we can have an consensus on when and where the existing
+> mdev sysfs could be used, as this will affect every new mdev
+> implementation from now on.
 
-> > +
-> > +  clocks:
-> > +    minItems: 1
-> > +    maxItems: 8
-> > +
-> > +  clock-names:
-> > +    const: bam_clk
->
-> This is going to fail if you try more than 1 clock.
+I have a hard time defining some fixed criteria for using mdev.  It's
+essentially always been true that vendors could write their own vfio
+"bus driver", like vfio-pci or vfio-platform, specific to their device.
+Mdevs were meant to be a way for the (non-vfio) driver of a device to
+expose portions of the device through mediation for use with vfio.  It
+seems like that's largely being done here.
 
-Right, currently we have one clock, but I can recheck and make fixes in v4.
+What I think has changed recently is this desire to make it easier to
+create those vendor drivers and some promise of making module binding
+work to avoid the messiness around picking a driver for the device.  In
+the auxiliary bus case that I think Jason is working on, it sounds like
+the main device driver exposes portions of itself on an auxiliary bus
+where drivers on that bus can integrate into the vfio subsystem.  It
+starts to get pretty fuzzy with what mdev already does, but it's also a
+more versatile interface.  Is it right for everyone?  Probably not.
 
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +    description: Single interrupt line shared by all channels.
->
-> Drop description
+Is the pre-configuration issue here really a push vs pull problem?  I
+can see the requirement in step 1. is dedicating some resources to an
+mdev use case, so at that point it seems like the argument is whether we
+should just create aux bus devices that get automatically bound to a
+vendor vfio-pci variant and we avoid the mdev lifecycle, which is both
+convenient and ugly.  On the other hand, mdev has more of a pull
+interface, ie. here are a bunch of device types and how many of each we
+can support, use create to pull what you need.
 
-Ok.
+> > Remember we have stripped away the actual special need to use
+> > mdev. You don't *have* to use mdev anymore to use vfio. That is a
+> > significant ideology change even from a few months ago.
+> >   
+> 
+> Yes, "don't have to" but if there is value of doing so  it's
+> not necessary to blocking it? One point in my mind is that if
+> we should minimize vendor-specific contracts for user to
+> manage mdev or subdevice...
 
-> > +
-> > +  num-channels:
-> > +    maxItems: 31
-> > +    description: |
-> > +      Indicates supported number of DMA channels in a remotely controlled bam.
-> > +
-> > +  "#dma-cells":
-> > +    const: 1
-> > +    description: The single cell represents the channel index.
-> > +
-> > +  qcom,ee:
-> > +    $ref: /schemas/types.yaml#/definitions/uint8
-> > +    description:
-> > +      Indicates the active Execution Environment identifier (0-7)
-> > +      used in the secure world.
-> > +    enum: [0, 1, 2, 3, 4, 5, 6, 7]
-> > +
-> > +  qcom,controlled-remotely:
-> > +    $ref: /schemas/types.yaml#/definitions/flag
-> > +    description:
-> > +      Indicates that the bam is controlled by remote proccessor i.e.
-> > +      execution environment.
-> > +
-> > +  qcom,num-ees:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description:
-> > +      Indicates supported number of Execution Environments in a
-> > +      remotely controlled bam.
->
-> 0-2^32 is valid?
+Again, this in itself is not a great justification for using mdev,
+we're creating vendor specific device types with vendor specific
+additional features, that could all be done via some sort of netlink
+interface too.  The thing that pushes this more towards mdev for me is
+that I don't think each of these wqs appear as devices to the host,
+they're internal resources of the parent device and we want to compose
+them in ways that are slightly more amenable to traditional mdevs... I
+think.  Thanks,
 
-Oh, got it. Will fix it in v4.
+Alex
 
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +  - clock-names
-> > +  - "#dma-cells"
-> > +  - qcom,ee
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/qcom,gcc-msm8974.h>
-> > +    dma-controller@f9984000 {
-> > +        compatible = "qcom,bam-v1.4.0";
-> > +        reg = <0xf9984000 0x15000>;
-> > +        interrupts = <0 94 0>;
-> > +        clocks = <&gcc GCC_BAM_DMA_AHB_CLK>;
-> > +        clock-names = "bam_clk";
-> > +        #dma-cells = <1>;
-> > +        qcom,ee = /bits/ 8 <0>;
-> > +    };
-> > --
-> > 2.31.1
-
-Thanks,
-Bhupesh

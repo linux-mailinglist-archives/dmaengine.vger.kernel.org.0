@@ -2,53 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DEC5039C6C8
-	for <lists+dmaengine@lfdr.de>; Sat,  5 Jun 2021 10:28:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD99739C6CD
+	for <lists+dmaengine@lfdr.de>; Sat,  5 Jun 2021 10:31:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230035AbhFEIaD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 5 Jun 2021 04:30:03 -0400
-Received: from mail-ot1-f41.google.com ([209.85.210.41]:46660 "EHLO
-        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230029AbhFEIaC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 5 Jun 2021 04:30:02 -0400
-Received: by mail-ot1-f41.google.com with SMTP id 66-20020a9d02c80000b02903615edf7c1aso11404725otl.13
-        for <dmaengine@vger.kernel.org>; Sat, 05 Jun 2021 01:27:59 -0700 (PDT)
+        id S229889AbhFEIdS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 5 Jun 2021 04:33:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229892AbhFEIdQ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 5 Jun 2021 04:33:16 -0400
+Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3AD0C061767
+        for <dmaengine@vger.kernel.org>; Sat,  5 Jun 2021 01:31:16 -0700 (PDT)
+Received: by mail-oi1-x22f.google.com with SMTP id x196so11868404oif.10
+        for <dmaengine@vger.kernel.org>; Sat, 05 Jun 2021 01:31:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HKyUqf7NI2Yuw0Cm11CrEyV9uYKyJhwCEAKigEKJNJ8=;
-        b=ZS6EUPMoBJoX6MkxGQ9BXtnrqLzaWaesaMMxH99UlWaxLN0dTg8LcmeGrxD5kWX0OT
-         RL+cn0uTJqQmllPGzucLq8e/7lvwU4XSeiaX4MMIZSFLeODXFvXfENBjbp70qDH7lTiF
-         65bdM67WQJwnlcr//9cu38chzebttAT4TXJA3BA0A8+IJjo2v2xqG6KBwB769tFB8UK7
-         sp7L7k3FWnKHFS4Gguj+Vb57YMMQr4R6ptKeW0MKZqDgQz1F+w13d37fdO7wQQMsg89k
-         e0hXbn5vaHyz1AHDz0vVS+SdXyir9I/k+ueh88t33DXZub8SPyqQWaMuBRc4zmEbkH2n
-         4uMg==
+        bh=xotmvldeiH2nvjCl/SbEJZu3HovTS9rXIMr+8EDJUGs=;
+        b=GkZkiIXLSc9IYvsZt5bHxw1XquCV0h6dyXndU3IdFYXRet08kPIUHWIdJnp1w4+ujd
+         WUQtLGkKtK8BZ34Gcm1qeW0aVCFlQuAjd0IUDauK9RCOKj9Jmpwf8H91IsPE8y185n2i
+         HDdiLaG1ruahA79NvlpdcvspmOT2oaLjN3bTI0aeZoeftRHwzt+fGUayWizf6Lc1U585
+         hYxx/014JgUSSIPKxpgzbpN/8Qf1Rn0tOiFtn2ig8EE8PEiD1e00/o0EWG5rM39M3585
+         BfVbfgP8Jtr7Anh0iZnw6NFO5xvs4mYaNRg8whPrrIgmDYXNWiPWa1Dzc//dtnTv+Tg/
+         pj/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HKyUqf7NI2Yuw0Cm11CrEyV9uYKyJhwCEAKigEKJNJ8=;
-        b=csoLdxrQijIZKQURak/TDirI0/LB4yGhzsqZhZ6RB1y/0mO4bmNLZBswcRwVUi7LaQ
-         4G2S3iD/jm1E6662EM7O65yEZapaq6YL169qqEXNcXzo7q2v5dnU8ktkzeeEwVJ/Mqnf
-         4TW9rl2pvKN49KVndhIob/pS9Ih84Ctp9y8GGjbZrGS45uly1UsPAqGk3UAJrt6K5EUZ
-         2JX4d6C0UQJAFaRaSZhGyJZYXF8QoZ0xoTg2dtjtUQh/4Dv1Ji6bHJ6Aq93RNWFwr6tW
-         qZxXzwJd5gjLlJMAxuyVQ7cVoZfDZbwpNC846gEkB4qU6lj0T8fOlhwzOG+U3/eAPWXS
-         R8IA==
-X-Gm-Message-State: AOAM530iYmBHltG9Gst+L+7+BJ5L6rWT/WORyeItIe0IU85JoryaZBz1
-        0J3mgJG/wYHpFLWFFqGRGNzz8Mug/oy9uOT/g20t4g==
-X-Google-Smtp-Source: ABdhPJxnmzc/8hxfB8fveUdflIof7ixtQvUsNexucCkGmlOQVpwJQn70pCPp044bin6dr/pH+6DjV0HdWVtuhUOPgQg=
-X-Received: by 2002:a9d:7982:: with SMTP id h2mr742263otm.51.1622881619504;
- Sat, 05 Jun 2021 01:26:59 -0700 (PDT)
+        bh=xotmvldeiH2nvjCl/SbEJZu3HovTS9rXIMr+8EDJUGs=;
+        b=WAUw2++de1Tn/xfcmrJVyojquVXnvi8pmWFzxmwcD3NifgG+aI2JwhEBynkZTcQE3i
+         ZpKfWhWDkZ5srwVErwbUb9rES1xG9iXXS1f0sZHK3OAcaDbm0hykmN+bYQvyBu9UllbK
+         KhSlsAmtw72wDPcawY6Srz2r6gegh+WPI2qkwefzvrGaf4gjI8j3zKG7QHnkaF2y3dRo
+         QV5IXjc3MFr+53gK/9Z3m9J1VHjP/V2EVzMpAzi4R+Vrd5NbM96QVmAk8lIh0QYPI2IO
+         y0MWgxvz8CFM359BT5DBD8jgtcOwhdPni6GjsLdpxlFLFlI54/2l9cBfmdWypKEzy21c
+         veTA==
+X-Gm-Message-State: AOAM5327Tn43JJt2XmSZKnFU4NpOvHOR6rRGe3yKovdy+/lWmJSmmrwf
+        nMGiwhOztpV/egyWu/L4320yOKwTQ4Kcn8MYIn/dkQ==
+X-Google-Smtp-Source: ABdhPJxllf5Ssjpm3lFPxiJPWMd5Wxxeq3l3Izy+0Rt6E9PYAhe5xf8H1gYjuJ8AEr3M47JsUmdIV5rodrDFbk9jlQg=
+X-Received: by 2002:a54:438e:: with SMTP id u14mr12136616oiv.126.1622881876215;
+ Sat, 05 Jun 2021 01:31:16 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210519143700.27392-1-bhupesh.sharma@linaro.org>
- <20210519143700.27392-17-bhupesh.sharma@linaro.org> <ca0e576d-0231-d1a8-06c5-e85f0706c993@linaro.org>
-In-Reply-To: <ca0e576d-0231-d1a8-06c5-e85f0706c993@linaro.org>
+ <20210519143700.27392-14-bhupesh.sharma@linaro.org> <125e1f83-e340-9cd3-91a8-cd1ee3ee8b7f@linaro.org>
+In-Reply-To: <125e1f83-e340-9cd3-91a8-cd1ee3ee8b7f@linaro.org>
 From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Date:   Sat, 5 Jun 2021 13:56:48 +0530
-Message-ID: <CAH=2NtwuPP+qAidYKJ6i_iQg1VMtPS6xeGvnSKcNE0pf0HqcNQ@mail.gmail.com>
-Subject: Re: [PATCH v3 16/17] crypto: qce: Defer probing if BAM dma channel is
- not yet initialized
+Date:   Sat, 5 Jun 2021 14:01:05 +0530
+Message-ID: <CAH=2Ntw3FbZLO3pkB9w--6DNQH0owv0RSFPxKfpDaC-iUzTjQg@mail.gmail.com>
+Subject: Re: [PATCH v3 13/17] crypto: qce: core: Make clocks optional
 To:     Thara Gopinath <thara.gopinath@linaro.org>
 Cc:     linux-arm-msm@vger.kernel.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -67,61 +69,21 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Thara,
+Hi Thara
 
-Thanks for the review and sorry for the late reply.
-
-On Fri, 21 May 2021 at 07:27, Thara Gopinath <thara.gopinath@linaro.org> wrote:
+On Fri, 21 May 2021 at 07:41, Thara Gopinath <thara.gopinath@linaro.org> wrote:
 >
->
+> Hi Bhupesh,
 >
 > On 5/19/21 10:36 AM, Bhupesh Sharma wrote:
-> > Since the Qualcomm qce crypto driver needs the BAM dma driver to be
-> > setup first (to allow crypto operations), it makes sense to defer
-> > the qce crypto driver probing in case the BAM dma driver is not yet
-> > probed.
+> > From: Thara Gopinath <thara.gopinath@linaro.org>
 > >
-> > Move the code leg requesting dma channels earlier in the
-> > probe() flow. This fixes the qce probe failure issues when both qce
-> > and BMA dma are compiled as static part of the kernel.
->
-> So, I do not understand what issue you faced with the current code
-> ordering. When bam dma is not initialized, qce_dma_request will fail and
-> rest the error path kicks in.
-> To me the correct ordering for enabling a driver is to turn on clocks
-> and interconnect before requesting for dma. Unless, there is a specific
-> issue, I will ask for that order to be maintained.
-
-Sure. The problem I faced was the following. Let's consider the
-scenario where while the qce crypto driver and the interconnect are
-compiled as static parts of the kernel, the bam DMA driver is compiled
-as a module, then the -EPROBE_DEFER return leg from the qce crypto
-driver is very late in the probe() flow, as we first turn on the
-clocks and then the interconnect.
-
-Now the suggested linux deferred probe implementation is to return as
-early from the caling driver in case the called driver (subdev) is not
-yet ready. SInce the qce crypto driver requires the bam DMA to be set
-up first, it makes sense to move 'qce_dma_request' early in the boot
-flow. If it's not yet probed(), it probably doesn't make sense to set
-up the clks and interconnects yet in the qce driver. We can do it
-later when the bam DMA is setup.
-
-I have tested the following combinations with the change I made in
-this patchset:
-
-1. qce - static, bam - module, interconnect - module ->
-qce_dma_request returned -EPROBE_DEFER
-2. qce - static, bam - module, interconnect - static ->
-qce_dma_request returned -EPROBE_DEFER
-3. qce - static, bam - static, interconnect - module ->
-qce_dma_request returned -EPROBE_DEFER
-4. qce - static, bam - static, interconnect - static -> no -EPROBE_DEFER
-
-Thanks,
-Bhupesh
-
-> > Cc: Thara Gopinath <thara.gopinath@linaro.org>
+> > On certain Snapdragon processors, the crypto engine clocks are enabled by
+> > default by security firmware and the driver need not handle the
+> > clocks. Make acquiring of all the clocks optional in crypto enginer driver
+> > so that the driver intializes properly even if no clocks are specified in
+> > the dt.
+> >
 > > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
 > > Cc: Rob Herring <robh+dt@kernel.org>
 > > Cc: Andy Gross <agross@kernel.org>
@@ -136,55 +98,208 @@ Bhupesh
 > > Cc: devicetree@vger.kernel.org
 > > Cc: linux-kernel@vger.kernel.org
 > > Cc: bhupesh.linux@gmail.com
+> > Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> > [ bhupesh.sharma@linaro.org: Make clock enablement optional only for qcom parts where
+> >    firmware has already initialized them, using a bool variable and fix
+> >    error paths ]
 > > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
 > > ---
-> >   drivers/crypto/qce/core.c | 16 +++++++++-------
-> >   1 file changed, 9 insertions(+), 7 deletions(-)
+> >   drivers/crypto/qce/core.c | 89 +++++++++++++++++++++++++--------------
+> >   drivers/crypto/qce/core.h |  2 +
+> >   2 files changed, 59 insertions(+), 32 deletions(-)
 > >
 > > diff --git a/drivers/crypto/qce/core.c b/drivers/crypto/qce/core.c
-> > index 8b3e2b4580c2..207221d5b996 100644
+> > index 905378906ac7..8c3c68ba579e 100644
 > > --- a/drivers/crypto/qce/core.c
 > > +++ b/drivers/crypto/qce/core.c
-> > @@ -218,6 +218,14 @@ static int qce_crypto_probe(struct platform_device *pdev)
-> >       if (ret < 0)
-> >               goto err_out;
+> > @@ -9,6 +9,7 @@
+> >   #include <linux/interrupt.h>
+> >   #include <linux/module.h>
+> >   #include <linux/mod_devicetable.h>
+> > +#include <linux/of_device.h>
+> >   #include <linux/platform_device.h>
+> >   #include <linux/spinlock.h>
+> >   #include <linux/types.h>
+> > @@ -184,10 +185,20 @@ static int qce_check_version(struct qce_device *qce)
+> >       return 0;
+> >   }
 > >
-> > +     /* qce driver requires BAM dma driver to be setup first.
-> > +      * In case the dma channel are not set yet, this check
-> > +      * helps use to return -EPROBE_DEFER earlier.
-> > +      */
-> > +     ret = qce_dma_request(qce->dev, &qce->dma);
-> > +     if (ret)
-> > +             return ret;
+> > +static const struct of_device_id qce_crypto_of_match[] = {
+> > +     { .compatible = "qcom,ipq6018-qce", },
+> > +     { .compatible = "qcom,sdm845-qce", },
+> > +     { .compatible = "qcom,sm8250-qce", },
+>
+> Adding qcom,sm8250-qce does not belong in this patch. It deserves a
+> separate patch of it's own.
+
+Ok, I will fix it in v4.
+
+> > +     {}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, qce_crypto_of_match);
 > > +
+> >   static int qce_crypto_probe(struct platform_device *pdev)
+> >   {
+> >       struct device *dev = &pdev->dev;
+> >       struct qce_device *qce;
+> > +     const struct of_device_id *of_id =
+> > +                     of_match_device(qce_crypto_of_match, &pdev->dev);
+> >       int ret;
+> >
+> >       qce = devm_kzalloc(dev, sizeof(*qce), GFP_KERNEL);
+> > @@ -198,45 +209,65 @@ static int qce_crypto_probe(struct platform_device *pdev)
+> >       platform_set_drvdata(pdev, qce);
+> >
+> >       qce->base = devm_platform_ioremap_resource(pdev, 0);
+> > -     if (IS_ERR(qce->base))
+> > -             return PTR_ERR(qce->base);
+> > +     if (IS_ERR(qce->base)) {
+> > +             ret = PTR_ERR(qce->base);
+> > +             goto err_out;
+> > +     }
+>
+> I don't see the reason for change in error handling here or below. But
+> ,for whatever reason this is changed, it has to be a separate patch.
+
+Ok, I will fix it in v4.
+
+> >       ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+> >       if (ret < 0)
+> > -             return ret;
+> > +             goto err_out;
+> >
 > >       qce->mem_path = devm_of_icc_get(qce->dev, "memory");
 > >       if (IS_ERR(qce->mem_path))
 > >               return dev_err_probe(dev, PTR_ERR(qce->mem_path),
-> > @@ -269,10 +277,6 @@ static int qce_crypto_probe(struct platform_device *pdev)
-> >                       goto err_clks_iface;
-> >       }
+> >                                    "Failed to get mem path\n");
 > >
-> > -     ret = qce_dma_request(qce->dev, &qce->dma);
-> > -     if (ret)
-> > -             goto err_clks;
+> > -     qce->core = devm_clk_get(qce->dev, "core");
+> > -     if (IS_ERR(qce->core))
+> > -             return PTR_ERR(qce->core);
 > > -
-> >       ret = qce_check_version(qce);
+> > -     qce->iface = devm_clk_get(qce->dev, "iface");
+> > -     if (IS_ERR(qce->iface))
+> > -             return PTR_ERR(qce->iface);
+> > -
+> > -     qce->bus = devm_clk_get(qce->dev, "bus");
+> > -     if (IS_ERR(qce->bus))
+> > -             return PTR_ERR(qce->bus);
+> > -
+> >       ret = icc_set_bw(qce->mem_path, QCE_DEFAULT_MEM_BANDWIDTH, QCE_DEFAULT_MEM_BANDWIDTH);
 > >       if (ret)
-> >               goto err_clks;
-> > @@ -287,12 +291,10 @@ static int qce_crypto_probe(struct platform_device *pdev)
+> > -             return ret;
+> > +             goto err_out;
 > >
-> >       ret = qce_register_algs(qce);
+> > -     ret = clk_prepare_enable(qce->core);
+> > -     if (ret)
+> > -             return ret;
+> > +     /* On some qcom parts the crypto clocks are already configured by
+> > +      * the firmware running before linux. In such cases we don't need to
+> > +      * enable/configure them again. Check here for the same.
+> > +      */
+> > +     if (!strcmp(of_id->compatible, "qcom,ipq6018-qce") ||
+> > +         !strcmp(of_id->compatible, "qcom,sdm845-qce"))
+>
+> You can avoid this and most of this patch by using
+> devm_clk_get_optional. This patch can be like just three lines of code
+> change. clk_prepare_enable returns 0 if the clock is null. There is no
+> need to check for the compatibles above. Use devm_clk_get_optional
+> instead of devm_clk_get and everything else can be left as is.
+
+Ok, I will fix it in v4.
+
+Thanks,
+Bhupesh
+
+> Warm Regards
+> Thara
+>
+> > +             qce->clks_configured_by_fw = false;
+> > +     else
+> > +             qce->clks_configured_by_fw = true;
+> > +
+> > +     if (!qce->clks_configured_by_fw) {
+> > +             qce->core = devm_clk_get(qce->dev, "core");
+> > +             if (IS_ERR(qce->core)) {
+> > +                     ret = PTR_ERR(qce->core);
+> > +                     goto err_out;
+> > +             }
+> > +
+> > +             qce->iface = devm_clk_get(qce->dev, "iface");
+> > +             if (IS_ERR(qce->iface)) {
+> > +                     ret = PTR_ERR(qce->iface);
+> > +                     goto err_out;
+> > +             }
+> > +
+> > +             qce->bus = devm_clk_get(qce->dev, "bus");
+> > +             if (IS_ERR(qce->bus)) {
+> > +                     ret = PTR_ERR(qce->bus);
+> > +                     goto err_out;
+> > +             }
+> > +
+> > +             ret = clk_prepare_enable(qce->core);
+> > +             if (ret)
+> > +                     goto err_out;
+> >
+> > -     ret = clk_prepare_enable(qce->iface);
+> > -     if (ret)
+> > -             goto err_clks_core;
+> > +             ret = clk_prepare_enable(qce->iface);
+> > +             if (ret)
+> > +                     goto err_clks_core;
+> >
+> > -     ret = clk_prepare_enable(qce->bus);
+> > -     if (ret)
+> > -             goto err_clks_iface;
+> > +             ret = clk_prepare_enable(qce->bus);
+> > +             if (ret)
+> > +                     goto err_clks_iface;
+> > +     }
+> >
+> >       ret = qce_dma_request(qce->dev, &qce->dma);
 > >       if (ret)
-> > -             goto err_dma;
-> > +             goto err_clks;
+> > @@ -268,6 +299,7 @@ static int qce_crypto_probe(struct platform_device *pdev)
+> >       clk_disable_unprepare(qce->iface);
+> >   err_clks_core:
+> >       clk_disable_unprepare(qce->core);
+> > +err_out:
+> >       return ret;
+> >   }
 > >
+> > @@ -284,13 +316,6 @@ static int qce_crypto_remove(struct platform_device *pdev)
 > >       return 0;
+> >   }
 > >
-> > -err_dma:
-> > -     qce_dma_release(&qce->dma);
-> >   err_clks:
-> >       clk_disable_unprepare(qce->bus);
-> >   err_clks_iface:
+> > -static const struct of_device_id qce_crypto_of_match[] = {
+> > -     { .compatible = "qcom,ipq6018-qce", },
+> > -     { .compatible = "qcom,sdm845-qce", },
+> > -     {}
+> > -};
+> > -MODULE_DEVICE_TABLE(of, qce_crypto_of_match);
+> > -
+> >   static struct platform_driver qce_crypto_driver = {
+> >       .probe = qce_crypto_probe,
+> >       .remove = qce_crypto_remove,
+> > diff --git a/drivers/crypto/qce/core.h b/drivers/crypto/qce/core.h
+> > index 228fcd69ec51..d9bf05babecc 100644
+> > --- a/drivers/crypto/qce/core.h
+> > +++ b/drivers/crypto/qce/core.h
+> > @@ -23,6 +23,7 @@
+> >    * @dma: pointer to dma data
+> >    * @burst_size: the crypto burst size
+> >    * @pipe_pair_id: which pipe pair id the device using
+> > + * @clks_configured_by_fw: clocks are already configured by fw
+> >    * @async_req_enqueue: invoked by every algorithm to enqueue a request
+> >    * @async_req_done: invoked by every algorithm to finish its request
+> >    */
+> > @@ -39,6 +40,7 @@ struct qce_device {
+> >       struct qce_dma_data dma;
+> >       int burst_size;
+> >       unsigned int pipe_pair_id;
+> > +     bool clks_configured_by_fw;
+> >       int (*async_req_enqueue)(struct qce_device *qce,
+> >                                struct crypto_async_request *req);
+> >       void (*async_req_done)(struct qce_device *qce, int ret);
 > >
 >
 >

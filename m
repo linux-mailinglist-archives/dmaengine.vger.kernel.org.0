@@ -2,334 +2,189 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B355239C42B
-	for <lists+dmaengine@lfdr.de>; Sat,  5 Jun 2021 02:06:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEC5039C6C8
+	for <lists+dmaengine@lfdr.de>; Sat,  5 Jun 2021 10:28:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229853AbhFEAIK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 4 Jun 2021 20:08:10 -0400
-Received: from mga02.intel.com ([134.134.136.20]:6800 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229847AbhFEAIK (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 4 Jun 2021 20:08:10 -0400
-IronPort-SDR: z43179csJ2hIsXzKabLSXn2L2I6UkrCEhEMV5UlWtOYf9KeMUF1u4JPbqEH9kcxHacclgS6yEC
- fK9p1ja3UqRg==
-X-IronPort-AV: E=McAfee;i="6200,9189,10005"; a="191504476"
-X-IronPort-AV: E=Sophos;i="5.83,249,1616482800"; 
-   d="scan'208";a="191504476"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 17:06:22 -0700
-IronPort-SDR: EvY2CmGcLA42WUjyEG7Txg6J6yZNYzI5M9ES5XVNEgy91E3CnGuzyXS09vCxYvq81ep9fpOXXr
- Sd8cNdrsQOGg==
-X-IronPort-AV: E=Sophos;i="5.83,249,1616482800"; 
-   d="scan'208";a="401114553"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 17:06:21 -0700
-Subject: [PATCH v2] dmanegine: idxd: cleanup all device related bits after
- disabling device
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org
-Date:   Fri, 04 Jun 2021 17:06:21 -0700
-Message-ID: <162285154108.2096632.5572805472362321307.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/0.23-29-ga622f1
+        id S230035AbhFEIaD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 5 Jun 2021 04:30:03 -0400
+Received: from mail-ot1-f41.google.com ([209.85.210.41]:46660 "EHLO
+        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230029AbhFEIaC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 5 Jun 2021 04:30:02 -0400
+Received: by mail-ot1-f41.google.com with SMTP id 66-20020a9d02c80000b02903615edf7c1aso11404725otl.13
+        for <dmaengine@vger.kernel.org>; Sat, 05 Jun 2021 01:27:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HKyUqf7NI2Yuw0Cm11CrEyV9uYKyJhwCEAKigEKJNJ8=;
+        b=ZS6EUPMoBJoX6MkxGQ9BXtnrqLzaWaesaMMxH99UlWaxLN0dTg8LcmeGrxD5kWX0OT
+         RL+cn0uTJqQmllPGzucLq8e/7lvwU4XSeiaX4MMIZSFLeODXFvXfENBjbp70qDH7lTiF
+         65bdM67WQJwnlcr//9cu38chzebttAT4TXJA3BA0A8+IJjo2v2xqG6KBwB769tFB8UK7
+         sp7L7k3FWnKHFS4Gguj+Vb57YMMQr4R6ptKeW0MKZqDgQz1F+w13d37fdO7wQQMsg89k
+         e0hXbn5vaHyz1AHDz0vVS+SdXyir9I/k+ueh88t33DXZub8SPyqQWaMuBRc4zmEbkH2n
+         4uMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HKyUqf7NI2Yuw0Cm11CrEyV9uYKyJhwCEAKigEKJNJ8=;
+        b=csoLdxrQijIZKQURak/TDirI0/LB4yGhzsqZhZ6RB1y/0mO4bmNLZBswcRwVUi7LaQ
+         4G2S3iD/jm1E6662EM7O65yEZapaq6YL169qqEXNcXzo7q2v5dnU8ktkzeeEwVJ/Mqnf
+         4TW9rl2pvKN49KVndhIob/pS9Ih84Ctp9y8GGjbZrGS45uly1UsPAqGk3UAJrt6K5EUZ
+         2JX4d6C0UQJAFaRaSZhGyJZYXF8QoZ0xoTg2dtjtUQh/4Dv1Ji6bHJ6Aq93RNWFwr6tW
+         qZxXzwJd5gjLlJMAxuyVQ7cVoZfDZbwpNC846gEkB4qU6lj0T8fOlhwzOG+U3/eAPWXS
+         R8IA==
+X-Gm-Message-State: AOAM530iYmBHltG9Gst+L+7+BJ5L6rWT/WORyeItIe0IU85JoryaZBz1
+        0J3mgJG/wYHpFLWFFqGRGNzz8Mug/oy9uOT/g20t4g==
+X-Google-Smtp-Source: ABdhPJxnmzc/8hxfB8fveUdflIof7ixtQvUsNexucCkGmlOQVpwJQn70pCPp044bin6dr/pH+6DjV0HdWVtuhUOPgQg=
+X-Received: by 2002:a9d:7982:: with SMTP id h2mr742263otm.51.1622881619504;
+ Sat, 05 Jun 2021 01:26:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20210519143700.27392-1-bhupesh.sharma@linaro.org>
+ <20210519143700.27392-17-bhupesh.sharma@linaro.org> <ca0e576d-0231-d1a8-06c5-e85f0706c993@linaro.org>
+In-Reply-To: <ca0e576d-0231-d1a8-06c5-e85f0706c993@linaro.org>
+From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
+Date:   Sat, 5 Jun 2021 13:56:48 +0530
+Message-ID: <CAH=2NtwuPP+qAidYKJ6i_iQg1VMtPS6xeGvnSKcNE0pf0HqcNQ@mail.gmail.com>
+Subject: Re: [PATCH v3 16/17] crypto: qce: Defer probing if BAM dma channel is
+ not yet initialized
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhupesh.linux@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The previous state cleanup patch only performed wq state cleanups. This
-does not go far enough as when device is disabled or reset, the state
-for groups and engines must also be cleaned up. Add additional state
-cleanup beyond wq cleanup. Tie those cleanups directly to device
-disable and reset, and wq disable and reset.
+Hi Thara,
 
-Fixes: da32b28c95a7 ("dmaengine: idxd: cleanup workqueue config after disabling")
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
+Thanks for the review and sorry for the late reply.
 
-v2:
-- Fix 0-day report on unused var
-- Fix device reset so it only happens on configurable devices
+On Fri, 21 May 2021 at 07:27, Thara Gopinath <thara.gopinath@linaro.org> wrote:
+>
+>
+>
+> On 5/19/21 10:36 AM, Bhupesh Sharma wrote:
+> > Since the Qualcomm qce crypto driver needs the BAM dma driver to be
+> > setup first (to allow crypto operations), it makes sense to defer
+> > the qce crypto driver probing in case the BAM dma driver is not yet
+> > probed.
+> >
+> > Move the code leg requesting dma channels earlier in the
+> > probe() flow. This fixes the qce probe failure issues when both qce
+> > and BMA dma are compiled as static part of the kernel.
+>
+> So, I do not understand what issue you faced with the current code
+> ordering. When bam dma is not initialized, qce_dma_request will fail and
+> rest the error path kicks in.
+> To me the correct ordering for enabling a driver is to turn on clocks
+> and interconnect before requesting for dma. Unless, there is a specific
+> issue, I will ask for that order to be maintained.
 
- drivers/dma/idxd/device.c |   88 +++++++++++++++++++++++++++++++++------------
- drivers/dma/idxd/idxd.h   |    6 +--
- drivers/dma/idxd/irq.c    |    4 +-
- drivers/dma/idxd/sysfs.c  |   22 +++--------
- 4 files changed, 74 insertions(+), 46 deletions(-)
+Sure. The problem I faced was the following. Let's consider the
+scenario where while the qce crypto driver and the interconnect are
+compiled as static parts of the kernel, the bam DMA driver is compiled
+as a module, then the -EPROBE_DEFER return leg from the qce crypto
+driver is very late in the probe() flow, as we first turn on the
+clocks and then the interconnect.
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 5357dfdd02bb..c8cf1de72176 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -15,6 +15,8 @@
- 
- static void idxd_cmd_exec(struct idxd_device *idxd, int cmd_code, u32 operand,
- 			  u32 *status);
-+static void idxd_device_wqs_clear_state(struct idxd_device *idxd);
-+static void idxd_wq_disable_cleanup(struct idxd_wq *wq);
- 
- /* Interrupt control bits */
- void idxd_mask_msix_vector(struct idxd_device *idxd, int vec_id)
-@@ -234,7 +236,7 @@ int idxd_wq_enable(struct idxd_wq *wq)
- 	return 0;
- }
- 
--int idxd_wq_disable(struct idxd_wq *wq)
-+int idxd_wq_disable(struct idxd_wq *wq, bool reset_config)
- {
- 	struct idxd_device *idxd = wq->idxd;
- 	struct device *dev = &idxd->pdev->dev;
-@@ -255,6 +257,8 @@ int idxd_wq_disable(struct idxd_wq *wq)
- 		return -ENXIO;
- 	}
- 
-+	if (reset_config)
-+		idxd_wq_disable_cleanup(wq);
- 	wq->state = IDXD_WQ_DISABLED;
- 	dev_dbg(dev, "WQ %d disabled\n", wq->id);
- 	return 0;
-@@ -289,6 +293,7 @@ void idxd_wq_reset(struct idxd_wq *wq)
- 
- 	operand = BIT(wq->id % 16) | ((wq->id / 16) << 16);
- 	idxd_cmd_exec(idxd, IDXD_CMD_RESET_WQ, operand, NULL);
-+	idxd_wq_disable_cleanup(wq);
- 	wq->state = IDXD_WQ_DISABLED;
- }
- 
-@@ -337,7 +342,7 @@ int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
- 	unsigned int offset;
- 	unsigned long flags;
- 
--	rc = idxd_wq_disable(wq);
-+	rc = idxd_wq_disable(wq, false);
- 	if (rc < 0)
- 		return rc;
- 
-@@ -364,7 +369,7 @@ int idxd_wq_disable_pasid(struct idxd_wq *wq)
- 	unsigned int offset;
- 	unsigned long flags;
- 
--	rc = idxd_wq_disable(wq);
-+	rc = idxd_wq_disable(wq, false);
- 	if (rc < 0)
- 		return rc;
- 
-@@ -383,11 +388,11 @@ int idxd_wq_disable_pasid(struct idxd_wq *wq)
- 	return 0;
- }
- 
--void idxd_wq_disable_cleanup(struct idxd_wq *wq)
-+static void idxd_wq_disable_cleanup(struct idxd_wq *wq)
- {
- 	struct idxd_device *idxd = wq->idxd;
- 
--	lockdep_assert_held(&idxd->dev_lock);
-+	lockdep_assert_held(&wq->wq_lock);
- 	memset(wq->wqcfg, 0, idxd->wqcfg_size);
- 	wq->type = IDXD_WQT_NONE;
- 	wq->size = 0;
-@@ -549,22 +554,6 @@ int idxd_device_enable(struct idxd_device *idxd)
- 	return 0;
- }
- 
--void idxd_device_wqs_clear_state(struct idxd_device *idxd)
--{
--	int i;
--
--	lockdep_assert_held(&idxd->dev_lock);
--
--	for (i = 0; i < idxd->max_wqs; i++) {
--		struct idxd_wq *wq = idxd->wqs[i];
--
--		if (wq->state == IDXD_WQ_ENABLED) {
--			idxd_wq_disable_cleanup(wq);
--			wq->state = IDXD_WQ_DISABLED;
--		}
--	}
--}
--
- int idxd_device_disable(struct idxd_device *idxd)
- {
- 	struct device *dev = &idxd->pdev->dev;
-@@ -586,7 +575,7 @@ int idxd_device_disable(struct idxd_device *idxd)
- 	}
- 
- 	spin_lock_irqsave(&idxd->dev_lock, flags);
--	idxd_device_wqs_clear_state(idxd);
-+	idxd_device_clear_state(idxd);
- 	idxd->state = IDXD_DEV_CONF_READY;
- 	spin_unlock_irqrestore(&idxd->dev_lock, flags);
- 	return 0;
-@@ -598,7 +587,7 @@ void idxd_device_reset(struct idxd_device *idxd)
- 
- 	idxd_cmd_exec(idxd, IDXD_CMD_RESET_DEVICE, 0, NULL);
- 	spin_lock_irqsave(&idxd->dev_lock, flags);
--	idxd_device_wqs_clear_state(idxd);
-+	idxd_device_clear_state(idxd);
- 	idxd->state = IDXD_DEV_CONF_READY;
- 	spin_unlock_irqrestore(&idxd->dev_lock, flags);
- }
-@@ -686,6 +675,59 @@ int idxd_device_release_int_handle(struct idxd_device *idxd, int handle,
- }
- 
- /* Device configuration bits */
-+static void idxd_engines_clear_state(struct idxd_device *idxd)
-+{
-+	struct idxd_engine *engine;
-+	int i;
-+
-+	lockdep_assert_held(&idxd->dev_lock);
-+	for (i = 0; i < idxd->max_engines; i++) {
-+		engine = idxd->engines[i];
-+		engine->group = NULL;
-+	}
-+}
-+
-+static void idxd_groups_clear_state(struct idxd_device *idxd)
-+{
-+	struct idxd_group *group;
-+	int i;
-+
-+	lockdep_assert_held(&idxd->dev_lock);
-+	for (i = 0; i < idxd->max_groups; i++) {
-+		group = idxd->groups[i];
-+		memset(&group->grpcfg, 0, sizeof(group->grpcfg));
-+		group->num_engines = 0;
-+		group->num_wqs = 0;
-+		group->use_token_limit = false;
-+		group->tokens_allowed = 0;
-+		group->tokens_reserved = 0;
-+		group->tc_a = -1;
-+		group->tc_b = -1;
-+	}
-+}
-+
-+static void idxd_device_wqs_clear_state(struct idxd_device *idxd)
-+{
-+	int i;
-+
-+	lockdep_assert_held(&idxd->dev_lock);
-+	for (i = 0; i < idxd->max_wqs; i++) {
-+		struct idxd_wq *wq = idxd->wqs[i];
-+
-+		if (wq->state == IDXD_WQ_ENABLED) {
-+			idxd_wq_disable_cleanup(wq);
-+			wq->state = IDXD_WQ_DISABLED;
-+		}
-+	}
-+}
-+
-+void idxd_device_clear_state(struct idxd_device *idxd)
-+{
-+	idxd_groups_clear_state(idxd);
-+	idxd_engines_clear_state(idxd);
-+	idxd_device_wqs_clear_state(idxd);
-+}
-+
- void idxd_msix_perm_setup(struct idxd_device *idxd)
- {
- 	union msix_perm mperm;
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 26482c7d4c3a..1f0991dec679 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -420,9 +420,8 @@ int idxd_device_init_reset(struct idxd_device *idxd);
- int idxd_device_enable(struct idxd_device *idxd);
- int idxd_device_disable(struct idxd_device *idxd);
- void idxd_device_reset(struct idxd_device *idxd);
--void idxd_device_cleanup(struct idxd_device *idxd);
-+void idxd_device_clear_state(struct idxd_device *idxd);
- int idxd_device_config(struct idxd_device *idxd);
--void idxd_device_wqs_clear_state(struct idxd_device *idxd);
- void idxd_device_drain_pasid(struct idxd_device *idxd, int pasid);
- int idxd_device_load_config(struct idxd_device *idxd);
- int idxd_device_request_int_handle(struct idxd_device *idxd, int idx, int *handle,
-@@ -435,12 +434,11 @@ void idxd_wqs_unmap_portal(struct idxd_device *idxd);
- int idxd_wq_alloc_resources(struct idxd_wq *wq);
- void idxd_wq_free_resources(struct idxd_wq *wq);
- int idxd_wq_enable(struct idxd_wq *wq);
--int idxd_wq_disable(struct idxd_wq *wq);
-+int idxd_wq_disable(struct idxd_wq *wq, bool reset_config);
- void idxd_wq_drain(struct idxd_wq *wq);
- void idxd_wq_reset(struct idxd_wq *wq);
- int idxd_wq_map_portal(struct idxd_wq *wq);
- void idxd_wq_unmap_portal(struct idxd_wq *wq);
--void idxd_wq_disable_cleanup(struct idxd_wq *wq);
- int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid);
- int idxd_wq_disable_pasid(struct idxd_wq *wq);
- void idxd_wq_quiesce(struct idxd_wq *wq);
-diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-index ae68e1e5487a..7a2cf0512501 100644
---- a/drivers/dma/idxd/irq.c
-+++ b/drivers/dma/idxd/irq.c
-@@ -59,7 +59,7 @@ static void idxd_device_reinit(struct work_struct *work)
- 	return;
- 
-  out:
--	idxd_device_wqs_clear_state(idxd);
-+	idxd_device_clear_state(idxd);
- }
- 
- static void idxd_device_fault_work(struct work_struct *work)
-@@ -192,7 +192,7 @@ static int process_misc_interrupts(struct idxd_device *idxd, u32 cause)
- 			spin_lock_bh(&idxd->dev_lock);
- 			idxd_wqs_quiesce(idxd);
- 			idxd_wqs_unmap_portal(idxd);
--			idxd_device_wqs_clear_state(idxd);
-+			idxd_device_clear_state(idxd);
- 			dev_err(&idxd->pdev->dev,
- 				"idxd halted, need %s.\n",
- 				gensts.reset_type == IDXD_DEVICE_RESET_FLR ?
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 0460d58e3941..71cd73fefec6 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -129,7 +129,7 @@ static int enable_wq(struct idxd_wq *wq)
- 	rc = idxd_wq_map_portal(wq);
- 	if (rc < 0) {
- 		dev_warn(dev, "wq portal mapping failed: %d\n", rc);
--		rc = idxd_wq_disable(wq);
-+		rc = idxd_wq_disable(wq, false);
- 		if (rc < 0)
- 			dev_warn(dev, "IDXD wq disable failed\n");
- 		mutex_unlock(&wq->wq_lock);
-@@ -262,8 +262,6 @@ static void disable_wq(struct idxd_wq *wq)
- 
- static int idxd_config_bus_remove(struct device *dev)
- {
--	int rc;
--
- 	dev_dbg(dev, "%s called for %s\n", __func__, dev_name(dev));
- 
- 	/* disable workqueue here */
-@@ -288,22 +286,12 @@ static int idxd_config_bus_remove(struct device *dev)
- 		}
- 
- 		idxd_unregister_dma_device(idxd);
--		rc = idxd_device_disable(idxd);
--		if (test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags)) {
--			for (i = 0; i < idxd->max_wqs; i++) {
--				struct idxd_wq *wq = idxd->wqs[i];
--
--				mutex_lock(&wq->wq_lock);
--				idxd_wq_disable_cleanup(wq);
--				mutex_unlock(&wq->wq_lock);
--			}
--		}
-+		idxd_device_disable(idxd);
-+		if (test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
-+			idxd_device_reset(idxd);
- 		module_put(THIS_MODULE);
--		if (rc < 0)
--			dev_warn(dev, "Device disable failed\n");
--		else
--			dev_info(dev, "Device %s disabled\n", dev_name(dev));
- 
-+		dev_info(dev, "Device %s disabled\n", dev_name(dev));
- 	}
- 
- 	return 0;
+Now the suggested linux deferred probe implementation is to return as
+early from the caling driver in case the called driver (subdev) is not
+yet ready. SInce the qce crypto driver requires the bam DMA to be set
+up first, it makes sense to move 'qce_dma_request' early in the boot
+flow. If it's not yet probed(), it probably doesn't make sense to set
+up the clks and interconnects yet in the qce driver. We can do it
+later when the bam DMA is setup.
 
+I have tested the following combinations with the change I made in
+this patchset:
 
+1. qce - static, bam - module, interconnect - module ->
+qce_dma_request returned -EPROBE_DEFER
+2. qce - static, bam - module, interconnect - static ->
+qce_dma_request returned -EPROBE_DEFER
+3. qce - static, bam - static, interconnect - module ->
+qce_dma_request returned -EPROBE_DEFER
+4. qce - static, bam - static, interconnect - static -> no -EPROBE_DEFER
+
+Thanks,
+Bhupesh
+
+> > Cc: Thara Gopinath <thara.gopinath@linaro.org>
+> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Andy Gross <agross@kernel.org>
+> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > Cc: David S. Miller <davem@davemloft.net>
+> > Cc: Stephen Boyd <sboyd@kernel.org>
+> > Cc: Michael Turquette <mturquette@baylibre.com>
+> > Cc: Vinod Koul <vkoul@kernel.org>
+> > Cc: dmaengine@vger.kernel.org
+> > Cc: linux-clk@vger.kernel.org
+> > Cc: linux-crypto@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: bhupesh.linux@gmail.com
+> > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
+> > ---
+> >   drivers/crypto/qce/core.c | 16 +++++++++-------
+> >   1 file changed, 9 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/crypto/qce/core.c b/drivers/crypto/qce/core.c
+> > index 8b3e2b4580c2..207221d5b996 100644
+> > --- a/drivers/crypto/qce/core.c
+> > +++ b/drivers/crypto/qce/core.c
+> > @@ -218,6 +218,14 @@ static int qce_crypto_probe(struct platform_device *pdev)
+> >       if (ret < 0)
+> >               goto err_out;
+> >
+> > +     /* qce driver requires BAM dma driver to be setup first.
+> > +      * In case the dma channel are not set yet, this check
+> > +      * helps use to return -EPROBE_DEFER earlier.
+> > +      */
+> > +     ret = qce_dma_request(qce->dev, &qce->dma);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> >       qce->mem_path = devm_of_icc_get(qce->dev, "memory");
+> >       if (IS_ERR(qce->mem_path))
+> >               return dev_err_probe(dev, PTR_ERR(qce->mem_path),
+> > @@ -269,10 +277,6 @@ static int qce_crypto_probe(struct platform_device *pdev)
+> >                       goto err_clks_iface;
+> >       }
+> >
+> > -     ret = qce_dma_request(qce->dev, &qce->dma);
+> > -     if (ret)
+> > -             goto err_clks;
+> > -
+> >       ret = qce_check_version(qce);
+> >       if (ret)
+> >               goto err_clks;
+> > @@ -287,12 +291,10 @@ static int qce_crypto_probe(struct platform_device *pdev)
+> >
+> >       ret = qce_register_algs(qce);
+> >       if (ret)
+> > -             goto err_dma;
+> > +             goto err_clks;
+> >
+> >       return 0;
+> >
+> > -err_dma:
+> > -     qce_dma_release(&qce->dma);
+> >   err_clks:
+> >       clk_disable_unprepare(qce->bus);
+> >   err_clks_iface:
+> >
+>
+>

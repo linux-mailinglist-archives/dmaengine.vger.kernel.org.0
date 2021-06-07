@@ -2,124 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E1AF339D57C
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Jun 2021 08:59:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7DBC39D6BC
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Jun 2021 10:06:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230128AbhFGHBE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 7 Jun 2021 03:01:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42728 "EHLO mail.kernel.org"
+        id S230194AbhFGIIo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 7 Jun 2021 04:08:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229436AbhFGHBE (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 7 Jun 2021 03:01:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A551C611ED;
-        Mon,  7 Jun 2021 06:59:12 +0000 (UTC)
+        id S229545AbhFGIIn (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 7 Jun 2021 04:08:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5849D6102A;
+        Mon,  7 Jun 2021 08:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623049153;
-        bh=CJwQoGvE79OdB5eYRHptkf7GcTv7hS5ovcjpiMrOAAs=;
+        s=k20201202; t=1623053212;
+        bh=xmIDJ297EbDzxkQF9obeTuoyIAjOCtz2+6Ofw+DrFXA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F1iQXjnW3zBKMCsDTcVypvyfS0M4IUWgntNdXwaFQeqFKzLc4zGWNGxq+UQeQpYK6
-         UtVVR8/hyeA4TICEMAqSiNYhgvnTgXmeJFAQqNbXkXGnyx8kP+YzdnhUBqVA8EeOha
-         GvUa5lgKfGUeg57pLOlqYL1aVRN8Z49q53mbxbtXrEji3eqpJWCZj1kgNS1RQX2NeA
-         utSQdXfx67mWk7D5KDHzzKumTK+xjozOVFYywxcpahN0/GroEPmZ6ZF1eVwF2kQENh
-         3X70hfA5nZV6csoIjAegh2EovHBSFVmy3AvV5mRSlGXHvyPyBZdfvHZAME3aVN/UnJ
-         c9fKvGqGJk4yQ==
-Date:   Mon, 7 Jun 2021 12:29:09 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Olivier Dautricourt <olivier.dautricourt@orolia.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Stefan Roese <sr@denx.de>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] dmaengine: altera-msgdma: add OF support
-Message-ID: <YL3DvQWhn+SsBqhJ@vkoul-mobl>
-References: <7d77772f49b978e3d52d3815b8743fe54c816994.1621343877.git.olivier.dautricourt@orolia.com>
- <088a373c92bdee6e24da771c1ae2e4ed0887c0d7.1621343877.git.olivier.dautricourt@orolia.com>
+        b=sM2u+WyfdldAkzzqhNEq2wVbktPE9gknkrkYPnr8/LdjYaKYBXHFiOr+U8NylodnI
+         dKCe3oCN2qVP2hFpiTEofcH0Pq0cCumErxKYvFsJMlgjmNMABEE2OdTPsV2zfG8KZA
+         r5hy6REuclAD4YTFgHZlkFFt2VpdPNzwM6wsdtfajESdm8taI/7o37jA+65CEvmp8y
+         Y3SfrV4VpNVsJttuF/Fu93gt+mfN10rkDCg+YM1BV5Jho1oqoDXosVqcXuQ8HBmBhR
+         6+O4rcp61F7naUFa5GLuo6zPA7M0I7iKcn8mc/jVvLmTPOnFU7sAaFhRo+eFqHvdpZ
+         hLfIiy8HB0bGg==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1lqAHU-0004Ne-KD; Mon, 07 Jun 2021 10:06:45 +0200
+Date:   Mon, 7 Jun 2021 10:06:44 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     "yukuai (C)" <yukuai3@huawei.com>, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@foss.st.com, michal.simek@xilinx.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, yi.zhang@huawei.com
+Subject: Re: [PATCH 2/3] dmaengine: usb-dmac: Fix PM reference leak in
+ usb_dmac_probe()
+Message-ID: <YL3TlDqe4KSr3ICl@hovoldconsulting.com>
+References: <20210517081826.1564698-1-yukuai3@huawei.com>
+ <20210517081826.1564698-3-yukuai3@huawei.com>
+ <YLRfZfnuxc0+n/LN@vkoul-mobl.Dlink>
+ <b6c340de-b0b5-6aad-94c0-03f062575b63@huawei.com>
+ <YLSk/i6GmYWGEa9E@vkoul-mobl.Dlink>
+ <YLSqD+9nZIWJpn+r@hovoldconsulting.com>
+ <YLi4VGwzrat8wJHP@vkoul-mobl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <088a373c92bdee6e24da771c1ae2e4ed0887c0d7.1621343877.git.olivier.dautricourt@orolia.com>
+In-Reply-To: <YLi4VGwzrat8wJHP@vkoul-mobl>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 18-05-21, 15:25, Olivier Dautricourt wrote:
-> This driver had no device tree support.
-> 
-> - add compatible field "altr,socfpga-msgdma"
-> - define msgdma_of_xlate, with no argument
-> - register dma controller with of_dma_controller_register
-> 
-> Reviewed-by: Stefan Roese <sr@denx.de>
-> Signed-off-by: Olivier Dautricourt <olivier.dautricourt@orolia.com>
-> ---
-> 
-> Notes:
->     Changes in v2:
->         none
-> 
->     Changes from v2 to v3:
->         Removed CONFIG_OF #ifdef's and use if (IS_ENABLED(CONFIG_OF))
->         only once.
-> 
->     Changes from v3 to v4
->         Reintroduce #ifdef CONFIG_OF for msgdma_match
->         as it produces a unused variable warning
-> 
->     Changes from v4 to v5
->         - As per Rob's comments on patch 1/2:
->           change compatible field from altr,msgdma to
->           altr,socfpga-msgdma.
->         - change commit title to fit previous commits naming
->         - As per Vinod's comments:
->           - use dma_get_slave_channel instead of dma_get_any_slave_channel which
->             makes more sense.
->           - remove if (IS_ENABLED(CONFIG_OF)) for of_dma_controller_register
->             as it is taken care by the core
-> 
->  drivers/dma/altera-msgdma.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/drivers/dma/altera-msgdma.c b/drivers/dma/altera-msgdma.c
-> index 9a841ce5f0c5..acf0990d73ae 100644
-> --- a/drivers/dma/altera-msgdma.c
-> +++ b/drivers/dma/altera-msgdma.c
-> @@ -19,6 +19,7 @@
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
-> +#include <linux/of_dma.h>
-> 
->  #include "dmaengine.h"
-> 
-> @@ -784,6 +785,14 @@ static int request_and_map(struct platform_device *pdev, const char *name,
->  	return 0;
->  }
-> 
-> +static struct dma_chan *msgdma_of_xlate(struct of_phandle_args *dma_spec,
-> +					struct of_dma *ofdma)
-> +{
-> +	struct msgdma_device *d = ofdma->of_dma_data;
-> +
-> +	return dma_get_slave_channel(&d->dmachan);
-> +}
+On Thu, Jun 03, 2021 at 04:39:08PM +0530, Vinod Koul wrote:
+> On 31-05-21, 11:19, Johan Hovold wrote:
+> > On Mon, May 31, 2021 at 02:27:34PM +0530, Vinod Koul wrote:
+> > > On 31-05-21, 14:11, yukuai (C) wrote:
+> > > > On 2021/05/31 12:00, Vinod Koul wrote:
+> > > > > On 17-05-21, 16:18, Yu Kuai wrote:
+> > > > > > pm_runtime_get_sync will increment pm usage counter even it failed.
+> > > > > > Forgetting to putting operation will result in reference leak here.
+> > > > > > Fix it by replacing it with pm_runtime_resume_and_get to keep usage
+> > > > > > counter balanced.
 
-Why not use of_dma_simple_xlate() instead?
-
-> +
->  /**
->   * msgdma_probe - Driver probe function
->   * @pdev: Pointer to the platform_device structure
-> @@ -888,6 +897,13 @@ static int msgdma_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto fail;
+> > > Yes the rumtime_pm is disabled on failure here and the count would have
+> > > no consequence...
+> > 
+> > You should still balance the PM usage counter as it isn't reset for
+> > example when reloading the driver.
 > 
-> +	ret = of_dma_controller_register(pdev->dev.of_node,
-> +					 msgdma_of_xlate, mdev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to register dma controller");
-> +		goto fail;
+> Should I driver trust that on load PM usage counter is balanced and not
+> to be reset..?
 
-Should this be treated as an error.. the probe will be invoked on non of
-systems too..
+Not sure what you're asking here. But a driver should never leave the PM
+usage counter unbalanced.
 
--- 
-~Vinod
+> > Using pm_runtime_resume_and_get() is one way of handling this, but
+> > alternatively you could also move the error_pm label above the
+> > pm_runtime_put() in the error path.
+> 
+> That would be a better way I think
+
+Johan

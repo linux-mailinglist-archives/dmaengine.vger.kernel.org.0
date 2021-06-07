@@ -2,208 +2,160 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1E0639DAA6
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Jun 2021 13:07:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8715539DB6D
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Jun 2021 13:35:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230330AbhFGLJC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 7 Jun 2021 07:09:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54758 "EHLO mail.kernel.org"
+        id S230264AbhFGLgw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 7 Jun 2021 07:36:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230131AbhFGLJC (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 7 Jun 2021 07:09:02 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 99C4E60FF2;
-        Mon,  7 Jun 2021 11:07:10 +0000 (UTC)
+        id S230230AbhFGLgv (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 7 Jun 2021 07:36:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0ABF5610C7;
+        Mon,  7 Jun 2021 11:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623064031;
-        bh=XXIzcNn0RfGrbstV7HqbdbJu6dyRY4Wigc4ycJ5cQAA=;
+        s=k20201202; t=1623065700;
+        bh=v0YJkBcz+6wfgXabI+7TF72vY2yLxw672rc/FUtSO5Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SCHcXrAYH6lYO04Q1YOP/5j+Y/z78DgbM9QO3dK7sackBRR7JTleFkFPkZVP/OAjB
-         OIHE0TxF2gXIqBwvb2sGo8LFn5fbNSnintYjs9yughUH4XwSvHVdhKknqg/0eUb9ZA
-         5ARqT8d4oN0uYHXJYFtGtZHEsiNAt7A5lnAycRgshjZHrNqcmMMhj8h/w/8OATBFq4
-         B2yVZJcHZVnpRfIDRYeiBV4bmKXRyelr/gnAT+Al4YGybZuPaXT5pk/RLXkrX5hbYD
-         afYCA0ux1AUGutkUnhXQXsHv1gElNu+kV9r2B6S/002ySyWOnKKfdUsbC0sZtQcLmi
-         BAiM6MCqkhD6w==
-Date:   Mon, 7 Jun 2021 16:37:07 +0530
+        b=cPgbGmqf+oGa6/ijvcX0YbECLH3xQ6+fkn3gJEjG1h+mcGRVlaaUfDvr8scLldozp
+         p1gkiCfIap8DrG31wbs97znYWf2nu7TT6b8KFTHYMXCwVuMU+K8uQQeUjTvzNI6VWm
+         6ZNBnk0Wl9UYIZpqBzqncM9magLVWccGGqWefcHmYSqBnac7bCZ6bdDpNIq/BnNBvZ
+         vB3G+WsxQEYcnxz/EBz6BlwT6ogG5T1RMt2+S8REfAn12w6ZoBBe7KXbhwQWKtl8Zo
+         u5CsgbaTRhaDqx6H/xAbFZjY6f0JS44Meml23n7F3Sjl4YfW1p5aPf+jdV8yTfJC48
+         p1fKMaNt5yIDw==
+Date:   Mon, 7 Jun 2021 17:04:57 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Keguang Zhang <keguang.zhang@gmail.com>
-Cc:     dmaengine@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4 RESEND] dmaengine: Loongson1: Add Loongson1 dmaengine
- driver
-Message-ID: <YL392y4a6iRf1UyQ@vkoul-mobl>
-References: <20210520230225.11911-1-keguang.zhang@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Viresh Kumar <vireshk@kernel.org>
+Subject: Re: [PATCH v1 1/1] dmaengine: dw: Program xBAR hardware for Elkhart
+ Lake
+Message-ID: <YL4EYb35GOVYxdQO@vkoul-mobl>
+References: <20210602085604.21933-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210520230225.11911-1-keguang.zhang@gmail.com>
+In-Reply-To: <20210602085604.21933-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 21-05-21, 07:02, Keguang Zhang wrote:
+On 02-06-21, 11:56, Andy Shevchenko wrote:
+> Intel Elkhart Lake PSE DMA implementation is integrated with crossbar IP
+> in order to serve more hardware than there are DMA request lines available.
+> 
+> Due to this, program xBAR hardware to make flexible support of PSE peripheral.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/dma/dw/idma32.c              | 146 ++++++++++++++++++++++++++-
+>  drivers/dma/dw/internal.h            |  16 +++
+>  drivers/dma/dw/pci.c                 |   6 +-
+>  drivers/dma/dw/platform.c            |   6 +-
+>  include/linux/platform_data/dma-dw.h |   3 +
+>  5 files changed, 168 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/dma/dw/idma32.c b/drivers/dma/dw/idma32.c
+> index 3ce44de25d33..5232fcb1a736 100644
+> --- a/drivers/dma/dw/idma32.c
+> +++ b/drivers/dma/dw/idma32.c
+> @@ -1,15 +1,152 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -// Copyright (C) 2013,2018 Intel Corporation
+> +// Copyright (C) 2013,2018,2020 Intel Corporation
 
-> +config LOONGSON1_DMA
-> +	tristate "Loongson1 DMA support"
-> +	depends on MACH_LOONGSON32
+2021..?
 
-Why does it have to do that? The dma driver is generic..
-
-> +static int ls1x_dma_alloc_chan_resources(struct dma_chan *dchan)
+>  
+>  #include <linux/bitops.h>
+>  #include <linux/dmaengine.h>
+>  #include <linux/errno.h>
+> +#include <linux/io.h>
+> +#include <linux/pci.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+>  
+>  #include "internal.h"
+>  
+> -static void idma32_initialize_chan(struct dw_dma_chan *dwc)
+> +#define DMA_CTL_CH(x)			(0x1000 + (x) * 4)
+> +#define DMA_SRC_ADDR_FILLIN(x)		(0x1100 + (x) * 4)
+> +#define DMA_DST_ADDR_FILLIN(x)		(0x1200 + (x) * 4)
+> +#define DMA_XBAR_SEL(x)			(0x1300 + (x) * 4)
+> +#define DMA_REGACCESS_CHID_CFG		(0x1400)
+> +
+> +#define CTL_CH_TRANSFER_MODE_MASK	GENMASK(1, 0)
+> +#define CTL_CH_TRANSFER_MODE_S2S	0
+> +#define CTL_CH_TRANSFER_MODE_S2D	1
+> +#define CTL_CH_TRANSFER_MODE_D2S	2
+> +#define CTL_CH_TRANSFER_MODE_D2D	3
+> +#define CTL_CH_RD_RS_MASK		GENMASK(4, 3)
+> +#define CTL_CH_WR_RS_MASK		GENMASK(6, 5)
+> +#define CTL_CH_RD_NON_SNOOP_BIT		BIT(8)
+> +#define CTL_CH_WR_NON_SNOOP_BIT		BIT(9)
+> +
+> +#define XBAR_SEL_DEVID_MASK		GENMASK(15, 0)
+> +#define XBAR_SEL_RX_TX_BIT		BIT(16)
+> +#define XBAR_SEL_RX_TX_SHIFT		16
+> +
+> +#define REGACCESS_CHID_MASK		GENMASK(2, 0)
+> +
+> +static unsigned int idma32_get_slave_devid(struct dw_dma_chan *dwc)
 > +{
-> +	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
+> +	struct device *slave = dwc->chan.slave;
 > +
-> +	chan->desc_pool = dma_pool_create(dma_chan_name(dchan),
-> +					  dchan->device->dev,
-> +					  sizeof(struct ls1x_dma_lli),
-> +					  __alignof__(struct ls1x_dma_lli), 0);
-> +	if (!chan->desc_pool) {
-> +		dev_err(chan2dev(dchan),
-> +			"failed to alloc DMA descriptor pool!\n");
-
-This can be dropped, allocators will warn you for the allocation
-failures
-
-> +		return -ENOMEM;
-> +	}
+> +	if (!slave || !dev_is_pci(slave))
+> +		return 0;
 > +
-> +	return 0;
+> +	return to_pci_dev(slave)->devfn;
+
+so this return devfn.. maybe rename function to get_slave_devfn() ?
+
 > +}
 > +
-> +static void ls1x_dma_free_desc(struct virt_dma_desc *vdesc)
+> +static void idma32_initialize_chan_xbar(struct dw_dma_chan *dwc)
 > +{
-> +	struct ls1x_dma_desc *desc = to_ls1x_dma_desc(vdesc);
+> +	struct dw_dma *dw = to_dw_dma(dwc->chan.device);
+> +	void __iomem *misc = __dw_regs(dw);
+> +	u32 cfghi = 0, cfglo = 0;
+> +	u8 dst_id, src_id;
+> +	u32 value;
 > +
-> +	if (desc->nr_descs) {
-> +		unsigned int i = desc->nr_descs;
-> +		struct ls1x_dma_hwdesc *hwdesc;
+> +	/* DMA Channel ID Configuration register must be programmed first */
+> +	value = readl(misc + DMA_REGACCESS_CHID_CFG);
 > +
-> +		do {
-> +			hwdesc = &desc->hwdesc[--i];
-> +			dma_pool_free(desc->chan->desc_pool, hwdesc->lli,
-> +				      hwdesc->phys);
-> +		} while (i);
-> +	}
+> +	value &= ~REGACCESS_CHID_MASK;
+> +	value |= dwc->chan.chan_id;
 > +
-> +	kfree(desc);
-> +}
+> +	writel(value, misc + DMA_REGACCESS_CHID_CFG);
 > +
-> +static struct ls1x_dma_desc *ls1x_dma_alloc_desc(struct ls1x_dma_chan *chan,
-> +						 int sg_len)
-
-single line now :)
-
-> +{
-> +	struct ls1x_dma_desc *desc;
-> +	struct dma_chan *dchan = &chan->vchan.chan;
+> +	/* Configure channel attributes */
+> +	value = readl(misc + DMA_CTL_CH(dwc->chan.chan_id));
 > +
-> +	desc = kzalloc(struct_size(desc, hwdesc, sg_len), GFP_NOWAIT);
-> +	if (!desc)
-> +		dev_err(chan2dev(dchan), "failed to alloc DMA descriptor!\n");
-
-this can be dropped too..
-
-> +static struct dma_async_tx_descriptor *
-> +ls1x_dma_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
-> +		       unsigned int sg_len,
-> +		       enum dma_transfer_direction direction,
-> +		       unsigned long flags, void *context)
-> +{
-> +	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-> +	struct dma_slave_config *cfg = &chan->cfg;
-> +	struct ls1x_dma_desc *desc;
-> +	struct scatterlist *sg;
-> +	unsigned int dev_addr, bus_width, cmd, i;
+> +	value &= ~(CTL_CH_RD_NON_SNOOP_BIT | CTL_CH_WR_NON_SNOOP_BIT);
+> +	value &= ~(CTL_CH_RD_RS_MASK | CTL_CH_WR_RS_MASK);
+> +	value &= ~CTL_CH_TRANSFER_MODE_MASK;
 > +
-> +	if (!is_slave_direction(direction)) {
-> +		dev_err(chan2dev(dchan), "invalid DMA direction!\n");
-> +		return NULL;
-> +	}
-> +
-> +	dev_dbg(chan2dev(dchan), "sg_len=%d, dir=%s, flags=0x%lx\n", sg_len,
-> +		direction == DMA_MEM_TO_DEV ? "to device" : "from device",
-> +		flags);
-> +
-> +	switch (direction) {
+> +	switch (dwc->direction) {
+> +	case DMA_MEM_TO_MEM:
+> +		value |= CTL_CH_TRANSFER_MODE_D2D;
+> +		break;
 > +	case DMA_MEM_TO_DEV:
-> +		dev_addr = cfg->dst_addr;
-> +		bus_width = cfg->dst_addr_width;
-> +		cmd = LS1X_DMA_RAM2DEV | LS1X_DMA_INT;
+> +		value |= CTL_CH_TRANSFER_MODE_D2S;
+> +		value |= CTL_CH_WR_NON_SNOOP_BIT;
 > +		break;
 > +	case DMA_DEV_TO_MEM:
-> +		dev_addr = cfg->src_addr;
-> +		bus_width = cfg->src_addr_width;
-> +		cmd = LS1X_DMA_INT;
+> +		value |= CTL_CH_TRANSFER_MODE_S2D;
+> +		value |= CTL_CH_RD_NON_SNOOP_BIT;
 > +		break;
+> +	case DMA_DEV_TO_DEV:
 > +	default:
-> +		dev_err(chan2dev(dchan),
-> +			"unsupported DMA transfer mode! %d\n", direction);
-> +		return NULL;
+> +		value |= CTL_CH_WR_NON_SNOOP_BIT | CTL_CH_RD_NON_SNOOP_BIT;
+> +		value |= CTL_CH_TRANSFER_MODE_S2S;
+> +		break;
 
-will this be ever executed?
-
-> +static int ls1x_dma_slave_config(struct dma_chan *dchan,
-> +				 struct dma_slave_config *config)
-> +{
-> +	struct ls1x_dma_chan *chan = to_ls1x_dma_chan(dchan);
-> +
-> +	if (!dchan)
-> +		return -EINVAL;
-
-should this not be checked before you dereference this to get chan
-
-> +static void ls1x_dma_trigger(struct ls1x_dma_chan *chan)
-> +{
-> +	struct dma_chan *dchan = &chan->vchan.chan;
-> +	struct ls1x_dma_desc *desc;
-> +	struct virt_dma_desc *vdesc;
-> +	unsigned int val;
-> +
-> +	vdesc = vchan_next_desc(&chan->vchan);
-> +	if (!vdesc) {
-> +		dev_warn(chan2dev(dchan), "No pending descriptor\n");
-
-Hmm, I would not log that... this is called from
-ls1x_dma_issue_pending() and which can be called from client driver but
-previous completion would push and this can find empty queue so it can
-happen quite frequently
-
-> +static irqreturn_t ls1x_dma_irq_handler(int irq, void *data)
-> +{
-> +	struct ls1x_dma_chan *chan = data;
-> +	struct dma_chan *dchan = &chan->vchan.chan;
-> +
-> +	dev_dbg(chan2dev(dchan), "DMA IRQ %d on channel %d\n", irq, chan->id);
-> +	if (!chan->desc) {
-> +		dev_warn(chan2dev(dchan),
-> +			 "DMA IRQ with no active descriptor on channel %d\n",
-> +			 chan->id);
-
-single line pls
-
-> +		return IRQ_NONE;
-> +	}
-> +
-> +	spin_lock(&chan->vchan.lock);
-> +
-> +	if (chan->desc->type == DMA_CYCLIC) {
-> +		vchan_cyclic_callback(&chan->desc->vdesc);
-> +	} else {
-> +		list_del(&chan->desc->vdesc.node);
-> +		vchan_cookie_complete(&chan->desc->vdesc);
-> +		chan->desc = NULL;
-> +	}
-
-not submitting next txn, defeats the purpose of dma if we dont push txns
-as fast as possible..
-
-> +static struct platform_driver ls1x_dma_driver = {
-> +	.probe	= ls1x_dma_probe,
-> +	.remove	= ls1x_dma_remove,
-> +	.driver	= {
-> +		.name	= "ls1x-dma",
-> +	},
-
-No device tree?
+aha, how did you test this...
 
 -- 
 ~Vinod

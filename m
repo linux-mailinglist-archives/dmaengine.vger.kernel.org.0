@@ -2,151 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D0B539D94E
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Jun 2021 12:09:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64D2D39D973
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Jun 2021 12:19:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230198AbhFGKKw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 7 Jun 2021 06:10:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35402 "EHLO mail.kernel.org"
+        id S230097AbhFGKVE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 7 Jun 2021 06:21:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230193AbhFGKKv (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 7 Jun 2021 06:10:51 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 036B5610A8;
-        Mon,  7 Jun 2021 10:08:59 +0000 (UTC)
+        id S230193AbhFGKVD (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 7 Jun 2021 06:21:03 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 728CB6108C;
+        Mon,  7 Jun 2021 10:19:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623060540;
-        bh=lWJ/kujdK5M3idQlHhodKdwMajeQnqhFEQfjEgs2J1U=;
+        s=k20201202; t=1623061153;
+        bh=VTXaUpTsvgBICiL2lKaVnHTXuZH2cZNa6FWeUX+IisE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IwVEEmQ2rgAjSxhzZkkifSOtnjSC8O8kS5EBlR+NI7lBo8PedjfmzKTr4KmN5Vcrn
-         QIQMQzZkRm3G7VrZkTKHEqJi2okpWLeyt19Q7Sm0WrnrRykcUkWqxKRRRazbN5fHSs
-         Zic2+djzxi/jpRFxkQflF86de6VRe0OFZCYdGqjvbuc712Soqz1XR1+4cJHLTgYEpX
-         zOR/P7fbBswg8pzBPEBS3egxUETtOQ9E/eUIWmx111eRZ0F/RSE0ENaTlADK7RHmLz
-         Y2x9HIvzqQQ1BZm+JpeZigX/fzhkihouuxmOSOTuh7hC+z85L2bWPVlyOZKDxtRpn9
-         lnIqFpWzpizug==
-Date:   Mon, 7 Jun 2021 15:38:57 +0530
+        b=RVVTU06jgeAsSo/v/fEAlG1xId7qFWDasaTznd2qQ64Uk30/NJbygYrmH4HWiWaou
+         Nx9OEPtvZlVibiqfpvZU8qf2uIp7A/lSu+BaSGZHU0V1ky2KF3nK24EJix6mir/gkm
+         M5OuKTah7QnercdV/DgyniAVxs5A+4BkYGy6BI/CtHTsdlcO9n5EnmH7Z87tsoTMHL
+         QjpmLdSzV4/7F/ruljRn9IflXQA4J6+rfnM8SZwX2UZv5Uj2wd+PVTRAXd8uo8537i
+         chhMxB+tdfdxIMdeh2+gRz7+jrcEIO+A8a6w1d9t7insDVjhZWJJ3HHSJDtS7G9f7Z
+         GR8wQQl1SVUcQ==
+Date:   Mon, 7 Jun 2021 15:49:09 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Olivier Dautricourt <olivier.dautricourt@orolia.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Stefan Roese <sr@denx.de>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] dmaengine: altera-msgdma: add OF support
-Message-ID: <YL3wOT1B8Qp+EXSV@vkoul-mobl>
-References: <7d77772f49b978e3d52d3815b8743fe54c816994.1621343877.git.olivier.dautricourt@orolia.com>
- <088a373c92bdee6e24da771c1ae2e4ed0887c0d7.1621343877.git.olivier.dautricourt@orolia.com>
- <YL3DvQWhn+SsBqhJ@vkoul-mobl>
- <YL3Ynm9xBQ419qK3@orolia.com>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     "yukuai (C)" <yukuai3@huawei.com>, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@foss.st.com, michal.simek@xilinx.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, yi.zhang@huawei.com
+Subject: Re: [PATCH 2/3] dmaengine: usb-dmac: Fix PM reference leak in
+ usb_dmac_probe()
+Message-ID: <YL3ynd1KiJoe9y6+@vkoul-mobl>
+References: <20210517081826.1564698-1-yukuai3@huawei.com>
+ <20210517081826.1564698-3-yukuai3@huawei.com>
+ <YLRfZfnuxc0+n/LN@vkoul-mobl.Dlink>
+ <b6c340de-b0b5-6aad-94c0-03f062575b63@huawei.com>
+ <YLSk/i6GmYWGEa9E@vkoul-mobl.Dlink>
+ <YLSqD+9nZIWJpn+r@hovoldconsulting.com>
+ <YLi4VGwzrat8wJHP@vkoul-mobl>
+ <YL3TlDqe4KSr3ICl@hovoldconsulting.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YL3Ynm9xBQ419qK3@orolia.com>
+In-Reply-To: <YL3TlDqe4KSr3ICl@hovoldconsulting.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 07-06-21, 10:28, Olivier Dautricourt wrote:
-> The 06/07/2021 12:29, Vinod Koul wrote:
-> > On 18-05-21, 15:25, Olivier Dautricourt wrote:
-> > > This driver had no device tree support.
-> > >
-> > > - add compatible field "altr,socfpga-msgdma"
-> > > - define msgdma_of_xlate, with no argument
-> > > - register dma controller with of_dma_controller_register
-> > >
-> > > Reviewed-by: Stefan Roese <sr@denx.de>
-> > > Signed-off-by: Olivier Dautricourt <olivier.dautricourt@orolia.com>
-> > > ---
-> > >
-> > > Notes:
-> > >     Changes in v2:
-> > >         none
-> > >
-> > >     Changes from v2 to v3:
-> > >         Removed CONFIG_OF #ifdef's and use if (IS_ENABLED(CONFIG_OF))
-> > >         only once.
-> > >
-> > >     Changes from v3 to v4
-> > >         Reintroduce #ifdef CONFIG_OF for msgdma_match
-> > >         as it produces a unused variable warning
-> > >
-> > >     Changes from v4 to v5
-> > >         - As per Rob's comments on patch 1/2:
-> > >           change compatible field from altr,msgdma to
-> > >           altr,socfpga-msgdma.
-> > >         - change commit title to fit previous commits naming
-> > >         - As per Vinod's comments:
-> > >           - use dma_get_slave_channel instead of dma_get_any_slave_channel which
-> > >             makes more sense.
-> > >           - remove if (IS_ENABLED(CONFIG_OF)) for of_dma_controller_register
-> > >             as it is taken care by the core
-> > >
-> > >  drivers/dma/altera-msgdma.c | 26 ++++++++++++++++++++++++++
-> > >  1 file changed, 26 insertions(+)
-> > >
-> > > diff --git a/drivers/dma/altera-msgdma.c b/drivers/dma/altera-msgdma.c
-> > > index 9a841ce5f0c5..acf0990d73ae 100644
-> > > --- a/drivers/dma/altera-msgdma.c
-> > > +++ b/drivers/dma/altera-msgdma.c
-> > > @@ -19,6 +19,7 @@
-> > >  #include <linux/module.h>
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/slab.h>
-> > > +#include <linux/of_dma.h>
-> > >
-> > >  #include "dmaengine.h"
-> > >
-> > > @@ -784,6 +785,14 @@ static int request_and_map(struct platform_device *pdev, const char *name,
-> > >       return 0;
-> > >  }
-> > >
-> > > +static struct dma_chan *msgdma_of_xlate(struct of_phandle_args *dma_spec,
-> > > +                                     struct of_dma *ofdma)
-> > > +{
-> > > +     struct msgdma_device *d = ofdma->of_dma_data;
-> > > +
-> > > +     return dma_get_slave_channel(&d->dmachan);
-> > > +}
-> >
-> > Why not use of_dma_simple_xlate() instead?
-> I guess i could, but i don't think i need to define a filter function,
-> also there is only one possible channel.
+On 07-06-21, 10:06, Johan Hovold wrote:
+> On Thu, Jun 03, 2021 at 04:39:08PM +0530, Vinod Koul wrote:
+> > On 31-05-21, 11:19, Johan Hovold wrote:
+> > > On Mon, May 31, 2021 at 02:27:34PM +0530, Vinod Koul wrote:
+> > > > On 31-05-21, 14:11, yukuai (C) wrote:
+> > > > > On 2021/05/31 12:00, Vinod Koul wrote:
+> > > > > > On 17-05-21, 16:18, Yu Kuai wrote:
+> > > > > > > pm_runtime_get_sync will increment pm usage counter even it failed.
+> > > > > > > Forgetting to putting operation will result in reference leak here.
+> > > > > > > Fix it by replacing it with pm_runtime_resume_and_get to keep usage
+> > > > > > > counter balanced.
+> 
+> > > > Yes the rumtime_pm is disabled on failure here and the count would have
+> > > > no consequence...
+> > > 
+> > > You should still balance the PM usage counter as it isn't reset for
+> > > example when reloading the driver.
+> > 
+> > Should I driver trust that on load PM usage counter is balanced and not
+> > to be reset..?
+> 
+> Not sure what you're asking here. But a driver should never leave the PM
+> usage counter unbalanced.
 
-Yeah no point in adding filter_fn. I guess we need
-of_dma_xlate_by_chan_id() here, I guess you are specifying channel in dts
-right? If not above would be okay
-
-> >
-> > > +
-> > >  /**
-> > >   * msgdma_probe - Driver probe function
-> > >   * @pdev: Pointer to the platform_device structure
-> > > @@ -888,6 +897,13 @@ static int msgdma_probe(struct platform_device *pdev)
-> > >       if (ret)
-> > >               goto fail;
-> > >
-> > > +     ret = of_dma_controller_register(pdev->dev.of_node,
-> > > +                                      msgdma_of_xlate, mdev);
-> > > +     if (ret) {
-> > > +             dev_err(&pdev->dev, "failed to register dma controller");
-> > > +             goto fail;
-> >
-> > Should this be treated as an error.. the probe will be invoked on non of
-> > systems too..
-> Ok, i'm a bit confused,
-> in v4 those lines were enclosed with 'if (IS_ENABLED(CONFIG_OF)) { }'
-> when you said to me that it was already taken care by the core i though
-> that of_dma_controller_register will return 0 on non-of systems.
-> Now i can add back IS_ENABLED(CONFIG_OF) or discard the ret value.
-
-Well including in CONFIG_OF sounded protection from compilation which is
-not required.
-
-Now the issue is that you maybe running on a system which may or maynot
-have DT and even on DT based systems your device may not be DT one..
-
-So i think the return should be handled here if DT device is not present
-and warn that and continue for not DT modes.. Also someone who has this
-non DT device should test the changes
-
+Thinking about again, yes we should safely assume the counter is
+balanced when driver loads.. so unloading while balancing sounds better
+behaviour
 
 Thanks
 -- 

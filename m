@@ -2,49 +2,113 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FC6639DB76
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Jun 2021 13:36:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD1EC39DC65
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Jun 2021 14:30:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230314AbhFGLin (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 7 Jun 2021 07:38:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50530 "EHLO mail.kernel.org"
+        id S230299AbhFGMcL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 7 Jun 2021 08:32:11 -0400
+Received: from mga12.intel.com ([192.55.52.136]:61308 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230219AbhFGLim (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 7 Jun 2021 07:38:42 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D028B61105;
-        Mon,  7 Jun 2021 11:36:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623065811;
-        bh=c2Qi/RwHy+r+UZ6YvWxKLfFKoK0T162ZDDxeg9kewIU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TROfEnugC4Mv3l6B7v0lZWq4GZliyMxg7ylZ9k/XaO9f8gv2ZyA+8065CnDm2HAv3
-         9QCja98C2GL7hb7K9lZJuMReFxFLiXc+irdEWeLo8jLSAFp5bQRIJFoQtnetpMh0bt
-         Dx14XVMNBcDq+iTnolM0cBKROLaSaNJydQIYfxPg/FarPAl1fXpX0XcLEldt0RIZmU
-         C8n+xyV23OKp/TfizO/dIzt/L1RO4pRGnoYzLD24AlLVdAbJ0Nl51HaVGavTaHGLMv
-         1gZIyfQHcgIEjbflDL2e1ShtzfMD/mWowrTiSs8yfpMCpLKnPqL74N1jTwQpRNNF6S
-         qUrgYRpO1aKCQ==
-Date:   Mon, 7 Jun 2021 17:06:47 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Zou Wei <zou_wei@huawei.com>
-Cc:     mripard@kernel.org, wens@csie.org, jernej.skrabec@gmail.com,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] dmaengine: sun4i: Use list_move_tail instead of
- list_del/list_add_tail
-Message-ID: <YL4Ez+DWRF15MKgI@vkoul-mobl>
-References: <1623036035-30614-1-git-send-email-zou_wei@huawei.com>
+        id S230213AbhFGMcI (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 7 Jun 2021 08:32:08 -0400
+IronPort-SDR: nETW6aXoj+Xlp6NVBHKPIowttY0GiQypLnFwCPsjaRKpWEeGjLrrPfaotg6Nk0QglvYjXNSdTE
+ 7wSbzm621iBA==
+X-IronPort-AV: E=McAfee;i="6200,9189,10007"; a="184293537"
+X-IronPort-AV: E=Sophos;i="5.83,255,1616482800"; 
+   d="scan'208";a="184293537"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2021 05:30:17 -0700
+IronPort-SDR: btYoB+df5b1KaX044ICw0fUZK6+EP0PXPNnumH6QCEThOdCowIoM2z/GBHeYseBoZiGkUpY1rk
+ DO2fL9a0gdcQ==
+X-IronPort-AV: E=Sophos;i="5.83,255,1616482800"; 
+   d="scan'208";a="551868470"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2021 05:30:15 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lqEOS-000FhU-ND; Mon, 07 Jun 2021 15:30:12 +0300
+Date:   Mon, 7 Jun 2021 15:30:12 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Viresh Kumar <vireshk@kernel.org>
+Subject: Re: [PATCH v1 1/1] dmaengine: dw: Program xBAR hardware for Elkhart
+ Lake
+Message-ID: <YL4RVEIJrSMy+Slf@smile.fi.intel.com>
+References: <20210602085604.21933-1-andriy.shevchenko@linux.intel.com>
+ <YL4EYb35GOVYxdQO@vkoul-mobl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1623036035-30614-1-git-send-email-zou_wei@huawei.com>
+In-Reply-To: <YL4EYb35GOVYxdQO@vkoul-mobl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 07-06-21, 11:20, Zou Wei wrote:
-> Using list_move_tail() instead of list_del() + list_add_tail().
+On Mon, Jun 07, 2021 at 05:04:57PM +0530, Vinod Koul wrote:
+> On 02-06-21, 11:56, Andy Shevchenko wrote:
+> > Intel Elkhart Lake PSE DMA implementation is integrated with crossbar IP
+> > in order to serve more hardware than there are DMA request lines available.
+> > 
+> > Due to this, program xBAR hardware to make flexible support of PSE peripheral.
 
-Applied, thanks
+...
+
+> > -// Copyright (C) 2013,2018 Intel Corporation
+> > +// Copyright (C) 2013,2018,2020 Intel Corporation
+> 
+> 2021..?
+
+Actually 2020.
+But I can add 2021.
+
+...
+
+> > +static unsigned int idma32_get_slave_devid(struct dw_dma_chan *dwc)
+> > +{
+> > +	struct device *slave = dwc->chan.slave;
+> > +
+> > +	if (!slave || !dev_is_pci(slave))
+> > +		return 0;
+> > +
+> > +	return to_pci_dev(slave)->devfn;
+> 
+> so this return devfn.. maybe rename function to get_slave_devfn() ?
+
+Will do in v2.
+
+> > +}
+
+...
+
+> > +	switch (dwc->direction) {
+> > +	case DMA_MEM_TO_MEM:
+> > +		value |= CTL_CH_TRANSFER_MODE_D2D;
+> > +		break;
+> > +	case DMA_MEM_TO_DEV:
+> > +		value |= CTL_CH_TRANSFER_MODE_D2S;
+> > +		value |= CTL_CH_WR_NON_SNOOP_BIT;
+> > +		break;
+> > +	case DMA_DEV_TO_MEM:
+> > +		value |= CTL_CH_TRANSFER_MODE_S2D;
+> > +		value |= CTL_CH_RD_NON_SNOOP_BIT;
+> > +		break;
+> > +	case DMA_DEV_TO_DEV:
+> > +	default:
+> > +		value |= CTL_CH_WR_NON_SNOOP_BIT | CTL_CH_RD_NON_SNOOP_BIT;
+> > +		value |= CTL_CH_TRANSFER_MODE_S2S;
+> > +		break;
+> 
+> aha, how did you test this...
+
+Not sure what the question is about. You are talking about last two cases
+or the entire switch? Last two weren't tested, just filed for the sake of
+being documented. First two were tested with SPI host controllers.
 
 -- 
-~Vinod
+With Best Regards,
+Andy Shevchenko
+
+

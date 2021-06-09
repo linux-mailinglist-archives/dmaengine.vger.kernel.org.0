@@ -2,83 +2,95 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 024B53A0D94
-	for <lists+dmaengine@lfdr.de>; Wed,  9 Jun 2021 09:18:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA4213A16A9
+	for <lists+dmaengine@lfdr.de>; Wed,  9 Jun 2021 16:10:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237210AbhFIHUu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 9 Jun 2021 03:20:50 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:5465 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235479AbhFIHUt (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 9 Jun 2021 03:20:49 -0400
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4G0JLD0FbszZfb0;
-        Wed,  9 Jun 2021 15:16:04 +0800 (CST)
-Received: from dggpeml500020.china.huawei.com (7.185.36.88) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Wed, 9 Jun 2021 15:18:53 +0800
-Received: from huawei.com (10.175.127.227) by dggpeml500020.china.huawei.com
- (7.185.36.88) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Wed, 9 Jun 2021
- 15:18:53 +0800
-From:   Baokun Li <libaokun1@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Zhen Lei <thunder.leizhen@huawei.com>
-CC:     <weiyongjun1@huawei.com>, <yuehaibing@huawei.com>,
-        <yangjihong1@huawei.com>, <yukuai3@huawei.com>,
-        <libaokun1@huawei.com>, <dmaengine@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH -next v2] dmaengine: fsl-dpaa2-qdma: Use list_move_tail instead of list_del/list_add_tail
-Date:   Wed, 9 Jun 2021 15:28:02 +0800
-Message-ID: <20210609072802.1368785-1-libaokun1@huawei.com>
-X-Mailer: git-send-email 2.31.1
+        id S233491AbhFIOMF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 9 Jun 2021 10:12:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232474AbhFIOMF (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 9 Jun 2021 10:12:05 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A37D261285;
+        Wed,  9 Jun 2021 14:10:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623247810;
+        bh=XVSIs8gLCt9INCVjowedsNE35bHNbRG2HRz7YC4IGEA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X8cuFTUdMUT+9okGGDOIiJCiOdAc0FC8MUql48zi2Vdl7aeyAYG1bLOni2EhLTTzR
+         0uEXQS6LGkOINcBB8l9n0dI6BZmuflz38/XmUvjbVTS22G2s++0XD+rQuegn/ul5eV
+         guyjQCGc7wY+U4V6nqMEysAdOwM+XM5biJdRNPB/QPcenqaM9y3STSK261rgGQJ7Cy
+         h1nu1nwmiKwWwq1uxlbyIX5t7nYH+hx6ZY2SKIE8ukjC7aFfdk25oeVGX0I134wBYX
+         xiPIMw7TKbq20Nnl8/Z4/DdwYC01EZ4PasoKqhG1au5oUEqueHVMixaDYI8Leo4m5D
+         MIWg5e6UvVfvg==
+Date:   Wed, 9 Jun 2021 19:40:06 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sanjay R Mehta <Sanju.Mehta@amd.com>
+Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
+        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
+        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v9 3/3] dmaengine: ptdma: Add debugfs entries for PTDMA
+Message-ID: <YMDLvnCyfo8+StpW@vkoul-mobl>
+References: <1622654551-9204-1-git-send-email-Sanju.Mehta@amd.com>
+ <1622654551-9204-4-git-send-email-Sanju.Mehta@amd.com>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpeml500020.china.huawei.com (7.185.36.88)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1622654551-9204-4-git-send-email-Sanju.Mehta@amd.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Using list_move_tail() instead of list_del() + list_add_tail().
+On 02-06-21, 12:22, Sanjay R Mehta wrote:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Baokun Li <libaokun1@huawei.com>
----
-V1->V2:
-	CC mailist
+> +/* DebugFS helpers */
+> +#define	MAX_NAME_LEN	20
+> +#define	RI_VERSION_NUM	0x0000003F
+> +
+> +#define	RI_NUM_VQM	0x00078000
+> +#define	RI_NVQM_SHIFT	15
+> +
+> +static DEFINE_MUTEX(pt_debugfs_lock);
 
- drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+unused?
 
-diff --git a/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
-index 4ae057922ef1..a0358f2c5cbb 100644
---- a/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
-+++ b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
-@@ -291,9 +291,8 @@ static void dpaa2_qdma_issue_pending(struct dma_chan *chan)
- 
- 		err = dpaa2_io_service_enqueue_fq(NULL, dpaa2_chan->fqid, fd);
- 		if (err) {
--			list_del(&dpaa2_comp->list);
--			list_add_tail(&dpaa2_comp->list,
--				      &dpaa2_chan->comp_free);
-+			list_move_tail(&dpaa2_comp->list,
-+				       &dpaa2_chan->comp_free);
- 		}
- 	}
- err_enqueue:
-@@ -626,8 +625,7 @@ static void dpaa2_qdma_free_desc(struct virt_dma_desc *vdesc)
- 	dpaa2_comp = to_fsl_qdma_comp(vdesc);
- 	qchan = dpaa2_comp->qchan;
- 	spin_lock_irqsave(&qchan->queue_lock, flags);
--	list_del(&dpaa2_comp->list);
--	list_add_tail(&dpaa2_comp->list, &qchan->comp_free);
-+	list_move_tail(&dpaa2_comp->list, &qchan->comp_free);
- 	spin_unlock_irqrestore(&qchan->queue_lock, flags);
- }
- 
+> +
+> +static int pt_debugfs_info_show(struct seq_file *s, void *p)
+> +{
+> +	struct pt_device *pt = s->private;
+> +	unsigned int regval;
+> +
+> +	if (!pt)
+> +		return 0;
 
+better return an error code?
+
+> +
+> +	seq_printf(s, "Device name: %s\n", pt->name);
+> +	seq_printf(s, "   # Queues: %d\n", 1);
+> +	seq_printf(s, "     # Cmds: %d\n", pt->cmd_count);
+> +
+> +	regval = ioread32(pt->io_regs + CMD_PT_VERSION);
+
+how do you ensure your device is not sleeping or you can access iomem
+safely?
+
+> +void ptdma_debugfs_setup(struct pt_device *pt)
+> +{
+> +	struct pt_cmd_queue *cmd_q;
+> +	char name[MAX_NAME_LEN + 1];
+> +	struct dentry *debugfs_q_instance;
+> +
+> +	if (!debugfs_initialized())
+> +		return;
+> +
+> +	debugfs_create_file("info", 0400, pt->dma_dev.dbg_dev_root, pt,
+> +			    &pt_debugfs_info_fops);
+> +
+> +	debugfs_create_file("stats", 0600, pt->dma_dev.dbg_dev_root, pt,
+
+why 600 here?
+-- 
+~Vinod

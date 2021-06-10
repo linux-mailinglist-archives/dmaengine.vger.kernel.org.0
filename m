@@ -2,86 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3340D3A21EC
-	for <lists+dmaengine@lfdr.de>; Thu, 10 Jun 2021 03:38:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D92F33A23A7
+	for <lists+dmaengine@lfdr.de>; Thu, 10 Jun 2021 06:52:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229634AbhFJBku (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 9 Jun 2021 21:40:50 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:33894 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbhFJBku (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 9 Jun 2021 21:40:50 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 943DA8A2;
-        Thu, 10 Jun 2021 03:38:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1623289133;
-        bh=yqpHWZPanjkC+V9yvODkHojqHp3PntAQ434IwkjrduM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YZNBT8CDKmhWq5cKGb3SHMOG5gszAfxe0XtLk6Wo7lVNi70RuY9TvK2QpWtgZ1nRH
-         D6T9KUrJtNCgWdqCpoaVFXVsaCTZM+Zp1wVyZjlQH71nyGToUpOxi74t2yetS/p5Kc
-         DxCca1Z28Wn1wvjNYmofmVM0reUIVR9mfjTTkXYg=
-Date:   Thu, 10 Jun 2021 04:38:34 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Yang Li <yang.lee@linux.alibaba.com>
-Cc:     hyun.kwon@xilinx.com, vkoul@kernel.org, michal.simek@xilinx.com,
-        nathan@kernel.org, ndesaulniers@google.com,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dmaengine: xilinx: dpdma: fix kernel-doc
-Message-ID: <YMFtGqicAMoZ0LOV@pendragon.ideasonboard.com>
-References: <1623222893-123227-1-git-send-email-yang.lee@linux.alibaba.com>
+        id S229634AbhFJEyE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 10 Jun 2021 00:54:04 -0400
+Received: from mail.chalver.com.ec ([186.3.12.10]:37826 "EHLO
+        mail.chalver.com.ec" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229529AbhFJEyC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Jun 2021 00:54:02 -0400
+X-Greylist: delayed 660 seconds by postgrey-1.27 at vger.kernel.org; Thu, 10 Jun 2021 00:54:02 EDT
+Received: from mail.chalver.com.ec (localhost.localdomain [127.0.0.1])
+        by mail.chalver.com.ec (Postfix) with ESMTPS id A69F01F21BBA;
+        Wed,  9 Jun 2021 23:28:59 -0500 (ECT)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.chalver.com.ec (Postfix) with ESMTP id C25F11F21DFA;
+        Wed,  9 Jun 2021 23:26:56 -0500 (ECT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.chalver.com.ec C25F11F21DFA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=chalver.com.ec;
+        s=E2A417BC-DDA7-11E6-85F6-38495636B764; t=1623299216;
+        bh=PxMh0SAMbBGlctefOH2OhvTlJNlHw25bONEEE7Ldp0I=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=S6SQlTZ3Uwh+CsEleBPFny3gA8vPOGsQ/olord2SA3yB6LVowkyexHgn1DUHyKyuf
+         i3cXovILFxhrBH91noJQbkJba6NDl3TQSfm7Y/0bHJhehU3eK0HtUJKlXdYHuy0GS9
+         wZr0l9taZgBKQII3fjLJpSpTO8oK3c8yvFEQnJ8Ualnr+8YA4Jp9GT2rUQjtblyCtb
+         sS4ZFCclBOSlHJIsLGPi81kYaxLMd3l7m80SDEgm7++YVDXcXv5srHbzsYCZ4qFipf
+         WlNd9cmu4oF685/E6Cjqi6Fhwr1RJ2E64JDce/VgAiU8+sAVbUAtCMnImSF5aqbN4t
+         RwJVRYJ/mLSaQ==
+X-Virus-Scanned: amavisd-new at chalver.com.ec
+Received: from mail.chalver.com.ec ([127.0.0.1])
+        by localhost (mail.chalver.com.ec [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id MzJT2GuvOwp7; Wed,  9 Jun 2021 23:26:56 -0500 (ECT)
+Received: from cris-PC.wifi (unknown [105.9.120.116])
+        by mail.chalver.com.ec (Postfix) with ESMTPSA id 2A1B21F21D09;
+        Wed,  9 Jun 2021 23:26:43 -0500 (ECT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1623222893-123227-1-git-send-email-yang.lee@linux.alibaba.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?q?Covid_19_Wohlt=C3=A4tigkeitsfonds?=
+To:     Recipients <mpaucar@chalver.com.ec>
+From:   ''Tayeb souami'' <mpaucar@chalver.com.ec>
+Date:   Thu, 10 Jun 2021 06:33:58 +0200
+Reply-To: Tayebsouam.spende@gmail.com
+Message-Id: <20210610042644.2A1B21F21D09@mail.chalver.com.ec>
+X-Laboratorios-Chalver-MailScanner-Information: Please contact the ISP for more information
+X-Laboratorios-Chalver-MailScanner-ID: 2A1B21F21D09.AF793
+X-Laboratorios-Chalver-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Yang Li,
 
-Thank you for the patch.
+Lieber Freund,
 
-On Wed, Jun 09, 2021 at 03:14:53PM +0800, Yang Li wrote:
-> Fix function name in xilinx/xilinx_dpdma.c comment to remove 
-> a warning found by kernel-doc.
-> 
-> drivers/dma/xilinx/xilinx_dpdma.c:935: warning: expecting prototype for
-> xilinx_dpdma_chan_no_ostand(). Prototype was for
-> xilinx_dpdma_chan_notify_no_ostand() instead.
-> 
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika, der =
+Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich an 5 zu=
+f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
+il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
+meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
+und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
+Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
+ spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen, sehen Sie bitte meine Y=
+ou Tube Seite unten.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+UHR MICH HIER: https://www.youtube.com/watch?v=3DZ6ui8ZDQ6Ks
 
-> ---
-> 
-> Change in v2:
-> --replaced s/clang(make W=1 LLVM=1)/kernel-doc/ in commit.
-> https://lore.kernel.org/patchwork/patch/1442639/
-> 
->  drivers/dma/xilinx/xilinx_dpdma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/xilinx/xilinx_dpdma.c b/drivers/dma/xilinx/xilinx_dpdma.c
-> index 70b29bd..0c8739a 100644
-> --- a/drivers/dma/xilinx/xilinx_dpdma.c
-> +++ b/drivers/dma/xilinx/xilinx_dpdma.c
-> @@ -915,7 +915,7 @@ static u32 xilinx_dpdma_chan_ostand(struct xilinx_dpdma_chan *chan)
->  }
->  
->  /**
-> - * xilinx_dpdma_chan_no_ostand - Notify no outstanding transaction event
-> + * xilinx_dpdma_chan_notify_no_ostand - Notify no outstanding transaction event
->   * @chan: DPDMA channel
->   *
->   * Notify waiters for no outstanding event, so waiters can stop the channel
 
--- 
-Regards,
 
-Laurent Pinchart
+Das ist dein Spendencode: [TS530342018]
+
+
+
+Antworten Sie mit dem SPENDE-CODE an diese
+
+E-Mail:Tayebsouam.spende@gmail.com
+
+
+Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
+
+Gr=C3=BC=C3=9Fe
+Herr Tayeb Souami

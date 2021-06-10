@@ -2,107 +2,162 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B600B3A23D2
-	for <lists+dmaengine@lfdr.de>; Thu, 10 Jun 2021 07:22:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B13113A2C51
+	for <lists+dmaengine@lfdr.de>; Thu, 10 Jun 2021 15:00:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230029AbhFJFYq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 10 Jun 2021 01:24:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229993AbhFJFYp (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Jun 2021 01:24:45 -0400
-Received: from mout-u-107.mailbox.org (mout-u-107.mailbox.org [IPv6:2001:67c:2050:1::465:107])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A76FC061574;
-        Wed,  9 Jun 2021 22:22:49 -0700 (PDT)
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-u-107.mailbox.org (Postfix) with ESMTPS id 4G0sn12lfgzQjZ5;
-        Thu, 10 Jun 2021 07:22:45 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
-        with ESMTP id 3etomxc0zP3G; Thu, 10 Jun 2021 07:22:42 +0200 (CEST)
-Subject: Re: [PATCH v6 2/3] MAINTAINERS: add entry for Altera mSGDMA
-To:     Olivier Dautricourt <olivier.dautricourt@orolia.com>,
-        Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <7487a25cdb240d1be4a8593aa602c3c73d8f5acb.1623251990.git.olivier.dautricourt@orolia.com>
- <4258cb93e0f7ff57c4e116c3e8cd9a1a3159cec6.1623251990.git.olivier.dautricourt@orolia.com>
-From:   Stefan Roese <sr@denx.de>
-Message-ID: <31a0e56b-3cb7-122a-ec44-b504ea2c0960@denx.de>
-Date:   Thu, 10 Jun 2021 07:22:41 +0200
+        id S230451AbhFJNCn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 10 Jun 2021 09:02:43 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60958 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230035AbhFJNCn (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Jun 2021 09:02:43 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1623330045;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZzkRlz8+MqeOaaHBWpHKuxVmWTuasJwPOdO8ljJCk0g=;
+        b=exzVZMomiEpuYg1EmWtXdGSQv+zn10DAb7E6jodHrTleeODF2amKk5FLbTEiF66yVOOJyD
+        WXIL5+kq6f12dAdqv+RC4Lt52VA+efoRwdPxyvpnMirXNDrKor6UZZZHkq353eBa4e0HKV
+        omX9LkNotO+gELDGRcAhxmbZrF0kkykzJl1cLiaLOOeIACuHg8lbUzqJ8zfdElGwPvnXq0
+        SgMtJjRAKbjU1N4pRZeylRBysTlBBT5oZwVe6JYI0+UDGRj3yIOrhRfGOEyVAhP1kiUn+B
+        cew5dblrcvOLUplFvlD6RWdeEcjfDYc2fulWZPiShNxs5SfxbwhOthzv9h5mwA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1623330045;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZzkRlz8+MqeOaaHBWpHKuxVmWTuasJwPOdO8ljJCk0g=;
+        b=21A3bT6ApPeJPmtO1SMUzY3kZTuGNpEQmJEvJ7TdEoOcsMxt67F5KSMo+6LHLHexpPtbSL
+        H8VM9BXRoWxeWPAA==
+To:     Dave Jiang <dave.jiang@intel.com>, alex.williamson@redhat.com,
+        kwankhede@nvidia.com, vkoul@kernel.org, jgg@mellanox.com
+Cc:     Jason Gunthorpe <jgg@nvidia.com>, megha.dey@intel.com,
+        jacob.jun.pan@intel.com, ashok.raj@intel.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, dan.j.williams@intel.com,
+        eric.auger@redhat.com, pbonzini@redhat.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v6 05/20] vfio: mdev: common lib code for setting up Interrupt Message Store
+In-Reply-To: <febc19ac-4105-fb83-709a-5d1fa5871b7e@intel.com>
+References: <162164243591.261970.3439987543338120797.stgit@djiang5-desk3.ch.intel.com> <162164277624.261970.7989190254803052804.stgit@djiang5-desk3.ch.intel.com> <87pmx73tfw.ffs@nanos.tec.linutronix.de> <febc19ac-4105-fb83-709a-5d1fa5871b7e@intel.com>
+Date:   Thu, 10 Jun 2021 15:00:45 +0200
+Message-ID: <87im2lyiv6.ffs@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <4258cb93e0f7ff57c4e116c3e8cd9a1a3159cec6.1623251990.git.olivier.dautricourt@orolia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
-X-MBO-SPAM-Probability: 
-X-Rspamd-Score: -7.14 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 4CC0017FC
-X-Rspamd-UID: 930263
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 09.06.21 17:20, Olivier Dautricourt wrote:
-> This entry is for the standalone driver in drivers/dma/altera-msgdma.c
-> Add myself as 'Odd fixes' maintainer for this driver as i am currently
-> writing new code and have access to the hardware.
-> Add Stefan Roese as reviewer.
-> 
-> Signed-off-by: Olivier Dautricourt <olivier.dautricourt@orolia.com>
+On Tue, Jun 08 2021 at 08:57, Dave Jiang wrote:
+> On 5/31/2021 6:48 AM, Thomas Gleixner wrote:
+>> What's unclear to me is under which circumstances does the IMS interrupt
+>> require a PASID.
+>>
+>>     1) Always
+>>     2) Use case dependent
+>>
+> Thomas, thank you for the review. I'll try to provide a summary below
+> with what's going on with IMS after taking in yours and Jason's
+> comments.
 
-Acked-by: Stefan Roese <sr@denx.de>
+<snip>
+
+No need to paste the manuals into mail.
+
+</snip>
+
+> DSA provides a way to skip PASID validation for IMS handles. This can
+> be used if host kernel is the *only* agent generating work. Host
+> usages without IOMMU scalable mode are not currently implemented.
+
+So the IMS irq chip driver can do:
+
+ims_array_alloc_msi_store(domain, dev)
+{
+        struct msi_domain_info *info =3D domain->host_data;
+        struct ims_array_data *ims =3D info->data;
+
+        if (ims->flags & VALIDATE_PASID) {
+        	if (!valid_pasid(dev))
+                	return -EINVAL;
+        }
+
+or something like that.
+
+> The following is the call flow for mdev without vSVM support:
+> 1.=C2=A0=C2=A0=C2=A0 idxd host driver sets PASID from iommu_aux_get_pasid=
+() to =E2=80=98struct device=E2=80=99
+
+Why needs every driver to implement that?
+
+That should be part of the iommu management to store that.
+
+> 2.=C2=A0=C2=A0=C2=A0 idxd guest driver calls request_irq()
+> 3.=C2=A0=C2=A0=C2=A0 VFIO calls VFIO_DEVICE_SET_IRQS ioctl
+
+How does the guest driver request_irq() end up in the VFIO ioctl on the
+host?
+
+> 4.=C2=A0=C2=A0=C2=A0 idxd host driver calls vfio_set_ims_trigger() (newly=
+ created common helper function)
+> 	a.=C2=A0=C2=A0=C2=A0 VFIO calls msi_domain_alloc_irqs() and programs val=
+id 'struct device' PASID as auxdata to IMS entry
+
+VFIO does not program anything into the IMS entry.
+
+The IMS irq chip driver retrieves PASID from struct device and does
+that. That can be part of the domain allocation function, but there is
+no requirement to do so. It can be done later, e.g. when the interrupt
+is started up.
+
+> 	b.=C2=A0=C2=A0=C2=A0 Host driver calls request_irq() for IMS interrupts
+>
+> With a default pasid programmed to 'struct device', for this use case
+> above we shouldn't have the need of programming pasid outside of
+> irqchip.
+
+s/shouldn't/do not/
+
+> The following is the call flow for mdev with vSVM support:
+> 1. idxd host driver sets PASID to mdev =E2=80=98struct device=E2=80=99 vi=
+a iommu_aux_get_PASID()
+> 2. idxd guest driver binds supervisor pasid
+> 3. idxd guest driver calls request_irq()
+> 4. VFIO calls VFIO_DEVICE_SET_IRQS ioctl
+> 5. idxd host driver calls vfio_set_ims_trigger()
+>    a. VFIO calls msi_domain_alloc_irqs() and programs PASID as auxdata to=
+ IMS entry
+>    b. Host driver calls request_irq() for IMS interrupts
+> 6. idxd guest driver programs virtual device MSIX permission table with g=
+uest PASID.
+> 7. Host driver mdev MMIO emulation retrieves guest PASID from vdev
+>    MSIXPERM table and matches to host PASID via ioasid_find_by_spid().
+>    a. Host driver calls irq_set_auxdata() to change to the new PASID
+>       for IMS entry.
+
+What enforces this ordering? Certainly not the hardware.
+
+The guest driver knows the guest PASID _before_ interrupts are allocated
+or requested for the device. So it can store the guest PASID _before_ it
+triggers the mechanism which makes vfio/host initialize the interrupts.
+
+So no. It's not needed at all. It's pretty much the same as the host
+side driver except for the that MSIXPERM stuff.
+
+And just for the record. Setting MSIXPERM _after_ request_irq()
+completed is just wrong because if an interrupt is raised _before_ that
+MSIXPERM muck is set up, then it will fire with the host PASID and not
+with the guest's.
+
+This whole IDXD stuff has been a monstrous layering violation from the
+very beginning and unfortunately this hasn't changed much since then.
 
 Thanks,
-Stefan
 
-> ---
-> 
-> Notes:
->      splitted commit, introduced in v5
-> 
->      v6:
->        add Stefan Roese as Reviewer (after consulting him)
-> 
->   MAINTAINERS | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b706dd20ff2b..3167d26f0718 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -783,6 +783,14 @@ M:	Ley Foon Tan <ley.foon.tan@intel.com>
->   S:	Maintained
->   F:	drivers/mailbox/mailbox-altera.c
-> 
-> +ALTERA MSGDMA IP CORE DRIVER
-> +M:	Olivier Dautricourt <olivier.dautricourt@orolia.com>
-> +R:	Stefan Roese <sr@denx.de>
-> +L:	dmaengine@vger.kernel.org
-> +S:	Odd Fixes
-> +F:	Documentation/devicetree/bindings/dma/altr,msgdma.yaml
-> +F:	drivers/dma/altera-msgdma.c
-> +
->   ALTERA PIO DRIVER
->   M:	Joyce Ooi <joyce.ooi@intel.com>
->   L:	linux-gpio@vger.kernel.org
-> --
-> 2.31.0.rc2
-> 
-> 
-> --
-> Olivier Dautricourt
-> 
-
-
-Viele Grüße,
-Stefan
-
--- 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-51 Fax: (+49)-8142-66989-80 Email: sr@denx.de
+        tglx

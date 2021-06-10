@@ -2,84 +2,107 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D92F33A23A7
-	for <lists+dmaengine@lfdr.de>; Thu, 10 Jun 2021 06:52:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B600B3A23D2
+	for <lists+dmaengine@lfdr.de>; Thu, 10 Jun 2021 07:22:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229634AbhFJEyE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 10 Jun 2021 00:54:04 -0400
-Received: from mail.chalver.com.ec ([186.3.12.10]:37826 "EHLO
-        mail.chalver.com.ec" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbhFJEyC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Jun 2021 00:54:02 -0400
-X-Greylist: delayed 660 seconds by postgrey-1.27 at vger.kernel.org; Thu, 10 Jun 2021 00:54:02 EDT
-Received: from mail.chalver.com.ec (localhost.localdomain [127.0.0.1])
-        by mail.chalver.com.ec (Postfix) with ESMTPS id A69F01F21BBA;
-        Wed,  9 Jun 2021 23:28:59 -0500 (ECT)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.chalver.com.ec (Postfix) with ESMTP id C25F11F21DFA;
-        Wed,  9 Jun 2021 23:26:56 -0500 (ECT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.chalver.com.ec C25F11F21DFA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=chalver.com.ec;
-        s=E2A417BC-DDA7-11E6-85F6-38495636B764; t=1623299216;
-        bh=PxMh0SAMbBGlctefOH2OhvTlJNlHw25bONEEE7Ldp0I=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=S6SQlTZ3Uwh+CsEleBPFny3gA8vPOGsQ/olord2SA3yB6LVowkyexHgn1DUHyKyuf
-         i3cXovILFxhrBH91noJQbkJba6NDl3TQSfm7Y/0bHJhehU3eK0HtUJKlXdYHuy0GS9
-         wZr0l9taZgBKQII3fjLJpSpTO8oK3c8yvFEQnJ8Ualnr+8YA4Jp9GT2rUQjtblyCtb
-         sS4ZFCclBOSlHJIsLGPi81kYaxLMd3l7m80SDEgm7++YVDXcXv5srHbzsYCZ4qFipf
-         WlNd9cmu4oF685/E6Cjqi6Fhwr1RJ2E64JDce/VgAiU8+sAVbUAtCMnImSF5aqbN4t
-         RwJVRYJ/mLSaQ==
-X-Virus-Scanned: amavisd-new at chalver.com.ec
-Received: from mail.chalver.com.ec ([127.0.0.1])
-        by localhost (mail.chalver.com.ec [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id MzJT2GuvOwp7; Wed,  9 Jun 2021 23:26:56 -0500 (ECT)
-Received: from cris-PC.wifi (unknown [105.9.120.116])
-        by mail.chalver.com.ec (Postfix) with ESMTPSA id 2A1B21F21D09;
-        Wed,  9 Jun 2021 23:26:43 -0500 (ECT)
-Content-Type: text/plain; charset="utf-8"
+        id S230029AbhFJFYq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 10 Jun 2021 01:24:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37520 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229993AbhFJFYp (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Jun 2021 01:24:45 -0400
+Received: from mout-u-107.mailbox.org (mout-u-107.mailbox.org [IPv6:2001:67c:2050:1::465:107])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A76FC061574;
+        Wed,  9 Jun 2021 22:22:49 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-u-107.mailbox.org (Postfix) with ESMTPS id 4G0sn12lfgzQjZ5;
+        Thu, 10 Jun 2021 07:22:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
+        with ESMTP id 3etomxc0zP3G; Thu, 10 Jun 2021 07:22:42 +0200 (CEST)
+Subject: Re: [PATCH v6 2/3] MAINTAINERS: add entry for Altera mSGDMA
+To:     Olivier Dautricourt <olivier.dautricourt@orolia.com>,
+        Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <7487a25cdb240d1be4a8593aa602c3c73d8f5acb.1623251990.git.olivier.dautricourt@orolia.com>
+ <4258cb93e0f7ff57c4e116c3e8cd9a1a3159cec6.1623251990.git.olivier.dautricourt@orolia.com>
+From:   Stefan Roese <sr@denx.de>
+Message-ID: <31a0e56b-3cb7-122a-ec44-b504ea2c0960@denx.de>
+Date:   Thu, 10 Jun 2021 07:22:41 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: =?utf-8?q?Covid_19_Wohlt=C3=A4tigkeitsfonds?=
-To:     Recipients <mpaucar@chalver.com.ec>
-From:   ''Tayeb souami'' <mpaucar@chalver.com.ec>
-Date:   Thu, 10 Jun 2021 06:33:58 +0200
-Reply-To: Tayebsouam.spende@gmail.com
-Message-Id: <20210610042644.2A1B21F21D09@mail.chalver.com.ec>
-X-Laboratorios-Chalver-MailScanner-Information: Please contact the ISP for more information
-X-Laboratorios-Chalver-MailScanner-ID: 2A1B21F21D09.AF793
-X-Laboratorios-Chalver-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+In-Reply-To: <4258cb93e0f7ff57c4e116c3e8cd9a1a3159cec6.1623251990.git.olivier.dautricourt@orolia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
+X-MBO-SPAM-Probability: 
+X-Rspamd-Score: -7.14 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 4CC0017FC
+X-Rspamd-UID: 930263
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On 09.06.21 17:20, Olivier Dautricourt wrote:
+> This entry is for the standalone driver in drivers/dma/altera-msgdma.c
+> Add myself as 'Odd fixes' maintainer for this driver as i am currently
+> writing new code and have access to the hardware.
+> Add Stefan Roese as reviewer.
+> 
+> Signed-off-by: Olivier Dautricourt <olivier.dautricourt@orolia.com>
 
-Lieber Freund,
+Acked-by: Stefan Roese <sr@denx.de>
 
-Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika, der =
-Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich an 5 zu=
-f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
-il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
-meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
-und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
-Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
- spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen, sehen Sie bitte meine Y=
-ou Tube Seite unten.
+Thanks,
+Stefan
 
-UHR MICH HIER: https://www.youtube.com/watch?v=3DZ6ui8ZDQ6Ks
+> ---
+> 
+> Notes:
+>      splitted commit, introduced in v5
+> 
+>      v6:
+>        add Stefan Roese as Reviewer (after consulting him)
+> 
+>   MAINTAINERS | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b706dd20ff2b..3167d26f0718 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -783,6 +783,14 @@ M:	Ley Foon Tan <ley.foon.tan@intel.com>
+>   S:	Maintained
+>   F:	drivers/mailbox/mailbox-altera.c
+> 
+> +ALTERA MSGDMA IP CORE DRIVER
+> +M:	Olivier Dautricourt <olivier.dautricourt@orolia.com>
+> +R:	Stefan Roese <sr@denx.de>
+> +L:	dmaengine@vger.kernel.org
+> +S:	Odd Fixes
+> +F:	Documentation/devicetree/bindings/dma/altr,msgdma.yaml
+> +F:	drivers/dma/altera-msgdma.c
+> +
+>   ALTERA PIO DRIVER
+>   M:	Joyce Ooi <joyce.ooi@intel.com>
+>   L:	linux-gpio@vger.kernel.org
+> --
+> 2.31.0.rc2
+> 
+> 
+> --
+> Olivier Dautricourt
+> 
 
 
+Viele Grüße,
+Stefan
 
-Das ist dein Spendencode: [TS530342018]
-
-
-
-Antworten Sie mit dem SPENDE-CODE an diese
-
-E-Mail:Tayebsouam.spende@gmail.com
-
-
-Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
-
-Gr=C3=BC=C3=9Fe
-Herr Tayeb Souami
+-- 
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-51 Fax: (+49)-8142-66989-80 Email: sr@denx.de

@@ -2,94 +2,111 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BB6A3A482F
-	for <lists+dmaengine@lfdr.de>; Fri, 11 Jun 2021 19:56:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C10C03A4889
+	for <lists+dmaengine@lfdr.de>; Fri, 11 Jun 2021 20:21:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230455AbhFKR55 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 11 Jun 2021 13:57:57 -0400
-Received: from mail-il1-f171.google.com ([209.85.166.171]:39594 "EHLO
-        mail-il1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230035AbhFKR54 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 11 Jun 2021 13:57:56 -0400
-Received: by mail-il1-f171.google.com with SMTP id j14so3135918ila.6;
-        Fri, 11 Jun 2021 10:55:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=eS7FoRD0YGUsWFSvjA1QCJvmsWkR4OAgwFy2PP5WSik=;
-        b=ExK0KnhyDgr1mHze7TtcUu0i8B5Tkk/RYOuOXh9+A6/aB6J+bZq9EL8l0BygNMfCgw
-         RFS5aDDu7FOH8hXJ+X5mwwyzlhLn7HxDtp1CYwoGGJs3+CllgYeArocTNNV05ezqozBX
-         aWr0/BJB7juUH9HDgoivtCQ2/K+QMsuYeSKB1Ro4B6y6hqMcdZ1o/SNoOccGsyzZRAWK
-         4ev2aagrCDMjagxjMFp8LCi3/klZqb2bSn0CoVtkaBQSzVCIr8gKs8D3+XdLGdBWHvZM
-         GNRhDgvf+F5h8llWM0F2Mer/CaSQCUWyARJRElCv/UoP+aJWvOLHfWpOOoclpFsYma6D
-         SBFA==
-X-Gm-Message-State: AOAM531dOUbAAbqjGSj6QcRtE0CI6mUpvQSgGq+lm3yCKVVU/8bE3xw8
-        haE6vd0Vj3eq5EW8c7ApQw==
-X-Google-Smtp-Source: ABdhPJwh4rmlDzrOw1v2SpR3LQ7g2YDOFobuL3xpaUvLChd9WlR1HaFFk0rRQsoHkYBQQY3NAGj4BQ==
-X-Received: by 2002:a92:c546:: with SMTP id a6mr3809792ilj.39.1623434142862;
-        Fri, 11 Jun 2021 10:55:42 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id m7sm3988523ilu.75.2021.06.11.10.55.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Jun 2021 10:55:42 -0700 (PDT)
-Received: (nullmailer pid 1208943 invoked by uid 1000);
-        Fri, 11 Jun 2021 17:55:33 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        devicetree@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-renesas-soc@vger.kernel.org,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org
-In-Reply-To: <20210611113642.18457-2-biju.das.jz@bp.renesas.com>
-References: <20210611113642.18457-1-biju.das.jz@bp.renesas.com> <20210611113642.18457-2-biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH 1/5] dt-bindings: dma: Document RZ/G2L bindings
-Date:   Fri, 11 Jun 2021 11:55:33 -0600
-Message-Id: <1623434133.974776.1208942.nullmailer@robh.at.kernel.org>
+        id S230239AbhFKSXr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 11 Jun 2021 14:23:47 -0400
+Received: from mga03.intel.com ([134.134.136.65]:50739 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230023AbhFKSXq (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 11 Jun 2021 14:23:46 -0400
+IronPort-SDR: ci/Kk1l0D2v8QYXMBFGy1ZbkU6PPktOUs9bIID86NpiJt644tE4MFNaSTsKsE0ZGtUtXNnoUd6
+ d8Zk0s9MQXXA==
+X-IronPort-AV: E=McAfee;i="6200,9189,10012"; a="205609389"
+X-IronPort-AV: E=Sophos;i="5.83,267,1616482800"; 
+   d="scan'208";a="205609389"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2021 11:21:44 -0700
+IronPort-SDR: w9TxV2FNT8i/u7UpQAXKrviI2R+3AE9mCVzZe8ZGTOOSSo7JPXmawrYaVWibYxMlus6hC6THkp
+ 1gNtX1azImVg==
+X-IronPort-AV: E=Sophos;i="5.83,267,1616482800"; 
+   d="scan'208";a="420147048"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.213.170.146]) ([10.213.170.146])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2021 11:21:43 -0700
+Subject: Re: [PATCH v6 00/20] Add VFIO mediated device support and DEV-MSI
+ support for the idxd driver
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+References: <162164243591.261970.3439987543338120797.stgit@djiang5-desk3.ch.intel.com>
+ <20210523232219.GG1002214@nvidia.com>
+ <86cde154-37c7-c00d-b0c6-06b15b50dbf7@intel.com>
+ <20210602231747.GK1002214@nvidia.com>
+ <MWHPR11MB188664D9E7CA60782B75AC718C3C9@MWHPR11MB1886.namprd11.prod.outlook.com>
+ <20210603014932.GN1002214@nvidia.com>
+ <MWHPR11MB1886D613948986530E9B61CB8C3C9@MWHPR11MB1886.namprd11.prod.outlook.com>
+ <20210603214009.68fac0c4.alex.williamson@redhat.com>
+ <MWHPR11MB18861FBE62D10E1FC77AB6208C389@MWHPR11MB1886.namprd11.prod.outlook.com>
+ <168ee05a-faf4-3fce-e278-d783104fc442@intel.com>
+ <20210607191126.GP1002214@nvidia.com>
+ <bb39b5d4-093b-ded4-8ff1-73bbd472d905@intel.com>
+Message-ID: <46472732-e139-87b9-ca3d-e8c41fda83aa@intel.com>
+Date:   Fri, 11 Jun 2021 11:21:42 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
+MIME-Version: 1.0
+In-Reply-To: <bb39b5d4-093b-ded4-8ff1-73bbd472d905@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, 11 Jun 2021 12:36:38 +0100, Biju Das wrote:
-> Document RZ/G2L DMAC bindings.
-> 
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  .../bindings/dma/renesas,rz-dmac.yaml         | 132 ++++++++++++++++++
->  1 file changed, 132 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
-> 
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/dma/renesas,rz-dmac.example.dts:20:18: fatal error: dt-bindings/clock/r9a07g044-cpg.h: No such file or directory
-   20 |         #include <dt-bindings/clock/r9a07g044-cpg.h>
-      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-make[1]: *** [scripts/Makefile.lib:380: Documentation/devicetree/bindings/dma/renesas,rz-dmac.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-make: *** [Makefile:1416: dt_binding_check] Error 2
-\ndoc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/patch/1490917
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+On 6/8/2021 9:02 AM, Dave Jiang wrote:
+>
+> On 6/7/2021 12:11 PM, Jason Gunthorpe wrote:
+>> On Mon, Jun 07, 2021 at 11:13:04AM -0700, Dave Jiang wrote:
+>>
+>>> So in step 1, we 'tag' the wq to be dedicated to guest usage and put 
+>>> the
+>>> hardware wq into enable state. For a dedicated mode wq, we can 
+>>> definitely
+>>> just register directly and skip the mdev step. For a shared wq mode, 
+>>> we can
+>>> have multiple mdev running on top of a single wq. So we need some 
+>>> way to
+>>> create more mdevs. We can either go with the existing established 
+>>> creation
+>>> path by mdev, or invent something custom for the driver as Jason 
+>>> suggested
+>>> to accomodate additional virtual devices for guests. We implemented 
+>>> the mdev
+>>> path originally with consideration of mdev is established and has a 
+>>> known
+>>> interface already.
+>> It sounds like you could just as easially have a 'create new vfio'
+>> file under the idxd sysfs.. Especially since you already have a bus
+>> and dynamic vfio specific things being created on this bus.
+>
+> Will explore this and using of 'struct vfio_device' without mdev.
+>
+Hi Jason. I hacked the idxd driver to remove mdev association and use 
+vfio_device directly. Ran into some issues. Specifically mdev does some 
+special handling when it comes to iommu domain. When we hit 
+vfio_iommu_type1_attach_group(), there's a branch in there for 
+mdev_bus_type. It sets the group with mdev_group flag, which later has 
+effect of special handling for iommu_attach_group. And in addition, it 
+ends up switching the bus to pci_bus_type before iommu_domain_alloc() is 
+called.  Do we need to provide similar type of handling for vfio_device 
+that are not backed by an entire PCI device like vfio_pci? Not sure it's 
+the right thing to do to attach these devices to pci_bus_type directly.

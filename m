@@ -2,105 +2,92 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E75AA3A3C50
-	for <lists+dmaengine@lfdr.de>; Fri, 11 Jun 2021 08:53:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F3EF3A4007
+	for <lists+dmaengine@lfdr.de>; Fri, 11 Jun 2021 12:18:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230280AbhFKGzj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 11 Jun 2021 02:55:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37108 "EHLO
+        id S230382AbhFKKUr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 11 Jun 2021 06:20:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230272AbhFKGzi (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 11 Jun 2021 02:55:38 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9F17C061574;
-        Thu, 10 Jun 2021 23:53:41 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id g4so5183220pjk.0;
-        Thu, 10 Jun 2021 23:53:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=sklyKCkqcoBClcesbRPk+D2OM57H8Au21vymPqCxTpU=;
-        b=AH2/OLdVQvlbPqkJ3iD9lFMZN+QxGv4u7G7KOW18l494tp/TTBclaWaHJYXPz/JXyO
-         JdmvFCqRQon7SWFTh02oUrFIPPn6XXDWtZb7skgDgsXOA5APBkxZrIshGZKCS+YfJaJb
-         nJtOXEelb4ehtZYW635V8bQ1N1HB5zvM9S5u/UWBseYXltq7BTdFjIEVn6eT/WcwUJHE
-         Nm4EBWTsJqcowQrApCQhKLAt+zOVjQ0HCPLrBOApxo2XJ3x5P2GR9+S5OZl/kVTNz445
-         tqdF0aDnDd0pgQ45QTJAjIfelzgZhH+UZ8ZpWstHrQrBu4Oe+zaOGAYiqHSg1Or1kPtO
-         ojKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=sklyKCkqcoBClcesbRPk+D2OM57H8Au21vymPqCxTpU=;
-        b=NynXLrhpGIOzPscXxNVR+nhkz/nJDCmJep3zkNDJxcokBLCws0Y6UWsuZby7mDJ5zN
-         66OeU9NI/WDv2+0IU9P2Fsp7q7uAJU2iy3fiDePU7g+LZmhSVSHoszJWcTreQxOj9KYY
-         Lt4WguMbes5hieedZGawgiX4LWfoBM33YPkKlgiK0bpYnq/nUzZ1+tNYrRmg/p62Pg/3
-         3UB2AtqU+flWtlIlMyIPln/W0DzzBXUNxsf0njC+AdLwNxFo+Ils/P92yXi1/Y4OrjI+
-         aCdxsaTSxf0jQpyKhMtdCR5ZE9baQVyyVg6BpTTbJ5VgUFG67+7oJQG71j6Q+EKZ6rq3
-         RuoQ==
-X-Gm-Message-State: AOAM5300Y0nsRwBEuw0MY/B/xir2+X2JzHgZFRsUQwi8AE1L06sYCfid
-        2fKsOXnxyBFjxBaVKe7UZao=
-X-Google-Smtp-Source: ABdhPJz3O0QWQXkwaviwj76i6+j6t2lC+fPSgVjypMvB90Rdh9vqgL7jvGu/YhI0hAGbB2QU9CiXJw==
-X-Received: by 2002:a17:90a:1b6b:: with SMTP id q98mr7960516pjq.53.1623394421237;
-        Thu, 10 Jun 2021 23:53:41 -0700 (PDT)
-Received: from raspberrypi ([125.141.84.155])
-        by smtp.gmail.com with ESMTPSA id a13sm4332599pgm.3.2021.06.10.23.53.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Jun 2021 23:53:40 -0700 (PDT)
-Date:   Fri, 11 Jun 2021 07:53:36 +0100
-From:   Austin Kim <austindh.kim@gmail.com>
-To:     green.wan@sifive.com, vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        austindh.kim@gmail.com, austin.kim@lge.com
-Subject: [PATCH] dmaengine: sf-pdma: apply proper spinlock flags in
- sf_pdma_prep_dma_memcpy()
-Message-ID: <20210611065336.GA1121@raspberrypi>
+        with ESMTP id S230392AbhFKKUr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 11 Jun 2021 06:20:47 -0400
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E2EC0613A2
+        for <dmaengine@vger.kernel.org>; Fri, 11 Jun 2021 03:18:48 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:2411:a261:8fe2:b47f])
+        by baptiste.telenet-ops.be with bizsmtp
+        id FmJl2500K25eH3q01mJl6A; Fri, 11 Jun 2021 12:18:46 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1lreFQ-00Fd29-VD; Fri, 11 Jun 2021 12:18:44 +0200
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1lreFQ-00CaZT-H1; Fri, 11 Jun 2021 12:18:44 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>
+Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 0/3] Remove shdma DT support
+Date:   Fri, 11 Jun 2021 12:18:38 +0200
+Message-Id: <cover.1623405675.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Austin Kim <austin.kim@lge.com>
+	Hi all,
 
-The second parameter of spinlock_irq[save/restore] function is flags,
-which is the last input parameter of sf_pdma_prep_dma_memcpy().
+Documentation/devicetree/bindings/dma/renesas,shdma.txt is one of the
+few^W57% of the DT bindings that haven't been converted to json-schema
+yet.  These bindings were originally intended to cover all SH/R-Mobile
+SoCs, but the DMA multiplexer node and one DMA controller instance were
+only ever added to one .dtsi file, for R-Mobile APE6.  Still, DMA
+support for R-Mobile APE6 was never completed to the point that it would
+actually work, cfr. commit a19788612f51b787 ("dmaengine: sh: Remove
+R-Mobile APE6 support").  Later, the mux idea was dropped when
+implementing support for DMA on (very similar) R-Car Gen2, cfr.
+renesas,rcar-dmac.yaml.
 
-So declare local variable 'iflags' to be used as the second parameter of
-spinlock_irq[save/restore] function.
+Hence this series removes the Renesas SHDMA Device Tree bindings, the
+SHDMA DMA multiplexer driver, and the corresponding description in the
+R-Mobile APE6 DTS.
 
-Signed-off-by: Austin Kim <austin.kim@lge.com>
----
- drivers/dma/sf-pdma/sf-pdma.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+I plan to queue [PATCH 3/3] in renesas-devel for v5.15.
 
-diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
-index c4c4e8575764..f12606aeff87 100644
---- a/drivers/dma/sf-pdma/sf-pdma.c
-+++ b/drivers/dma/sf-pdma/sf-pdma.c
-@@ -94,6 +94,7 @@ sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,	dma_addr_t dest, dma_addr_t src,
- {
- 	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
- 	struct sf_pdma_desc *desc;
-+	unsigned long iflags;
- 
- 	if (chan && (!len || !dest || !src)) {
- 		dev_err(chan->pdma->dma_dev.dev,
-@@ -109,10 +110,10 @@ sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,	dma_addr_t dest, dma_addr_t src,
- 	desc->dirn = DMA_MEM_TO_MEM;
- 	desc->async_tx = vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
- 
--	spin_lock_irqsave(&chan->vchan.lock, flags);
-+	spin_lock_irqsave(&chan->vchan.lock, iflags);
- 	chan->desc = desc;
- 	sf_pdma_fill_desc(desc, dest, src, len);
--	spin_unlock_irqrestore(&chan->vchan.lock, flags);
-+	spin_unlock_irqrestore(&chan->vchan.lock, iflags);
- 
- 	return desc->async_tx;
- }
+Thanks for your comments!
+
+Geert Uytterhoeven (3):
+  dt-bindings: dmaengine: Remove SHDMA Device Tree bindings
+  dmaengine: sh: Remove unused shdma-of driver
+  ARM: dts: r8a73a4: Remove non-functional DMA support
+
+ .../devicetree/bindings/dma/renesas,shdma.txt | 84 -------------------
+ arch/arm/boot/dts/r8a73a4.dtsi                | 44 ----------
+ drivers/dma/sh/Makefile                       |  2 +-
+ drivers/dma/sh/shdma-of.c                     | 76 -----------------
+ 4 files changed, 1 insertion(+), 205 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/renesas,shdma.txt
+ delete mode 100644 drivers/dma/sh/shdma-of.c
+
 -- 
-2.20.1
+2.25.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds

@@ -2,29 +2,29 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F38793A4009
+	by mail.lfdr.de (Postfix) with ESMTP id F38B43A400A
 	for <lists+dmaengine@lfdr.de>; Fri, 11 Jun 2021 12:18:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230392AbhFKKUs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        id S230515AbhFKKUs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
         Fri, 11 Jun 2021 06:20:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55136 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231252AbhFKKUr (ORCPT
+        with ESMTP id S231224AbhFKKUr (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Fri, 11 Jun 2021 06:20:47 -0400
 Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2245AC061283
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1459CC0613A4
         for <dmaengine@vger.kernel.org>; Fri, 11 Jun 2021 03:18:48 -0700 (PDT)
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:2411:a261:8fe2:b47f])
         by baptiste.telenet-ops.be with bizsmtp
-        id FmJl2500o25eH3q01mJl6K; Fri, 11 Jun 2021 12:18:47 +0200
+        id FmJl2500e25eH3q01mJl6H; Fri, 11 Jun 2021 12:18:46 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.93)
         (envelope-from <geert@linux-m68k.org>)
-        id 1lreFR-00Fd2B-Cm; Fri, 11 Jun 2021 12:18:45 +0200
+        id 1lreFR-00Fd2C-81; Fri, 11 Jun 2021 12:18:45 +0200
 Received: from geert by rox.of.borg with local (Exim 4.93)
         (envelope-from <geert@linux-m68k.org>)
-        id 1lreFQ-00CaZf-Jy; Fri, 11 Jun 2021 12:18:44 +0200
+        id 1lreFQ-00CaZn-LO; Fri, 11 Jun 2021 12:18:44 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
         Magnus Damm <magnus.damm@gmail.com>
@@ -34,9 +34,9 @@ Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
         linux-renesas-soc@vger.kernel.org, linux-sh@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/3] dmaengine: sh: Remove unused shdma-of driver
-Date:   Fri, 11 Jun 2021 12:18:40 +0200
-Message-Id: <e9445a5f4ac15fc4d3b376b5e675e39f8c95b967.1623406640.git.geert+renesas@glider.be>
+Subject: [PATCH 3/3] ARM: dts: r8a73a4: Remove non-functional DMA support
+Date:   Fri, 11 Jun 2021 12:18:41 +0200
+Message-Id: <21d4e03c906f5a4a6d9bf5d88d0fc94c069e6325.1623406640.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1623406640.git.geert+renesas@glider.be>
 References: <cover.1623406640.git.geert+renesas@glider.be>
@@ -46,114 +46,70 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Remove the DT-based Renesas SHDMA DMA multiplexer driver, as it is
-unused.  The DMA multiplexer node and one DMA controller instance were
-added to the R-Mobile APE6 .dtsi file, but DMA support was never fully
-enabled, cfr. commit a19788612f51b787 ("dmaengine: sh: Remove R-Mobile
-APE6 support").
+The DMA multiplexer node and one DMA controller instance are present,
+but DMA support was never fully enabled, cfr. commit a19788612f51b787
+("dmaengine: sh: Remove R-Mobile APE6 support").
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/dma/sh/Makefile   |  2 +-
- drivers/dma/sh/shdma-of.c | 76 ---------------------------------------
- 2 files changed, 1 insertion(+), 77 deletions(-)
- delete mode 100644 drivers/dma/sh/shdma-of.c
+ arch/arm/boot/dts/r8a73a4.dtsi | 44 ----------------------------------
+ 1 file changed, 44 deletions(-)
 
-diff --git a/drivers/dma/sh/Makefile b/drivers/dma/sh/Makefile
-index 112fbd22bb3fb984..abdf10341725c36b 100644
---- a/drivers/dma/sh/Makefile
-+++ b/drivers/dma/sh/Makefile
-@@ -3,7 +3,7 @@
- # DMA Engine Helpers
- #
+diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
+index 0813e70d5b60f353..704b0e4acb4dedf6 100644
+--- a/arch/arm/boot/dts/r8a73a4.dtsi
++++ b/arch/arm/boot/dts/r8a73a4.dtsi
+@@ -162,50 +162,6 @@ dbsc2: memory-controller@e67a0000 {
+ 		power-domains = <&pd_a3bc>;
+ 	};
  
--obj-$(CONFIG_SH_DMAE_BASE) += shdma-base.o shdma-of.o
-+obj-$(CONFIG_SH_DMAE_BASE) += shdma-base.o
- 
- #
- # DMA Controllers
-diff --git a/drivers/dma/sh/shdma-of.c b/drivers/dma/sh/shdma-of.c
-deleted file mode 100644
-index be89dd894328f589..0000000000000000
---- a/drivers/dma/sh/shdma-of.c
-+++ /dev/null
-@@ -1,76 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * SHDMA Device Tree glue
-- *
-- * Copyright (C) 2013 Renesas Electronics Inc.
-- * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-- */
+-	dmac: dma-multiplexer {
+-		compatible = "renesas,shdma-mux";
+-		#dma-cells = <1>;
+-		dma-channels = <20>;
+-		dma-requests = <256>;
+-		#address-cells = <2>;
+-		#size-cells = <2>;
+-		ranges;
 -
--#include <linux/dmaengine.h>
--#include <linux/module.h>
--#include <linux/of.h>
--#include <linux/of_dma.h>
--#include <linux/of_platform.h>
--#include <linux/platform_device.h>
--#include <linux/shdma-base.h>
+-		dma0: dma-controller@e6700020 {
+-			compatible = "renesas,shdma-r8a73a4";
+-			reg = <0 0xe6700020 0 0x89e0>;
+-			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 201 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 202 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 203 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 214 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-names = "error",
+-					"ch0", "ch1", "ch2", "ch3",
+-					"ch4", "ch5", "ch6", "ch7",
+-					"ch8", "ch9", "ch10", "ch11",
+-					"ch12", "ch13", "ch14", "ch15",
+-					"ch16", "ch17", "ch18", "ch19";
+-			clocks = <&mstp2_clks R8A73A4_CLK_DMAC>;
+-			power-domains = <&pd_a3sp>;
+-		};
+-	};
 -
--#define to_shdma_chan(c) container_of(c, struct shdma_chan, dma_chan)
--
--static struct dma_chan *shdma_of_xlate(struct of_phandle_args *dma_spec,
--				       struct of_dma *ofdma)
--{
--	u32 id = dma_spec->args[0];
--	dma_cap_mask_t mask;
--	struct dma_chan *chan;
--
--	if (dma_spec->args_count != 1)
--		return NULL;
--
--	dma_cap_zero(mask);
--	/* Only slave DMA channels can be allocated via DT */
--	dma_cap_set(DMA_SLAVE, mask);
--
--	chan = dma_request_channel(mask, shdma_chan_filter,
--				   (void *)(uintptr_t)id);
--	if (chan)
--		to_shdma_chan(chan)->hw_req = id;
--
--	return chan;
--}
--
--static int shdma_of_probe(struct platform_device *pdev)
--{
--	const struct of_dev_auxdata *lookup = dev_get_platdata(&pdev->dev);
--	int ret;
--
--	ret = of_dma_controller_register(pdev->dev.of_node,
--					 shdma_of_xlate, pdev);
--	if (ret < 0)
--		return ret;
--
--	ret = of_platform_populate(pdev->dev.of_node, NULL, lookup, &pdev->dev);
--	if (ret < 0)
--		of_dma_controller_free(pdev->dev.of_node);
--
--	return ret;
--}
--
--static const struct of_device_id shdma_of_match[] = {
--	{ .compatible = "renesas,shdma-mux", },
--	{ }
--};
--MODULE_DEVICE_TABLE(of, sh_dmae_of_match);
--
--static struct platform_driver shdma_of = {
--	.driver		= {
--		.name	= "shdma-of",
--		.of_match_table = shdma_of_match,
--	},
--	.probe		= shdma_of_probe,
--};
--
--module_platform_driver(shdma_of);
--
--MODULE_LICENSE("GPL v2");
--MODULE_DESCRIPTION("SH-DMA driver DT glue");
--MODULE_AUTHOR("Guennadi Liakhovetski <g.liakhovetski@gmx.de>");
+ 	i2c5: i2c@e60b0000 {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
 -- 
 2.25.1
 

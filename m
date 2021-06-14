@@ -2,318 +2,159 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 671403A67E6
-	for <lists+dmaengine@lfdr.de>; Mon, 14 Jun 2021 15:30:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68EE23A6903
+	for <lists+dmaengine@lfdr.de>; Mon, 14 Jun 2021 16:30:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233403AbhFNNcD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 14 Jun 2021 09:32:03 -0400
-Received: from mga03.intel.com ([134.134.136.65]:52643 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233699AbhFNNcC (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 14 Jun 2021 09:32:02 -0400
-IronPort-SDR: dESMnGN6ZelFmp9NAPs+lq0LiVlfy3euBtiNT3Ej87QXcYeVXKzq+hi225SmCRR7cBTpKVMipT
- JjpUshdAVEIg==
-X-IronPort-AV: E=McAfee;i="6200,9189,10015"; a="205840609"
-X-IronPort-AV: E=Sophos;i="5.83,273,1616482800"; 
-   d="scan'208";a="205840609"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2021 06:29:57 -0700
-IronPort-SDR: u2FcVsVTe2vFuBxGrDo6Okelb+rqwYBy+mZBA3o9ghIOyZO9XCG0rfexie/cieeJ44U3TIxXnS
- iEWj2l3I5irw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.83,273,1616482800"; 
-   d="scan'208";a="471312854"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 14 Jun 2021 06:29:56 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id A0CB7147; Mon, 14 Jun 2021 16:30:20 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Viresh Kumar <vireshk@kernel.org>
-Subject: [PATCH v2 1/1] dmaengine: dw: Program xBAR hardware for Elkhart Lake
-Date:   Mon, 14 Jun 2021 16:30:18 +0300
-Message-Id: <20210614133018.66931-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
+        id S232994AbhFNOcB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 14 Jun 2021 10:32:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232978AbhFNOcA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 14 Jun 2021 10:32:00 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79CC2C061574;
+        Mon, 14 Jun 2021 07:29:57 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 924CBA59;
+        Mon, 14 Jun 2021 16:29:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1623680993;
+        bh=ItYUbNE1wkEmOLKTUmXApXsK2mUUF//5SSNCNuwzBbE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Qiqu8Wbe4qwcsIr7AZp7ivE6vXi5FF1di15cbmWxutpYnHjDHn9PLEahEFahvRxsB
+         dtcDhCltP+S4pw1BsHPz+fuyO/8iuDpLEDSb1/tPzTHmJUxUtP5AMByDes771T3AB+
+         nncT0Z83XXXsXAXyOWMAoge6Ld5KjQX6UQLpWwEk=
+Date:   Mon, 14 Jun 2021 17:29:33 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chris Brandt <Chris.Brandt@renesas.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 1/5] dt-bindings: dma: Document RZ/G2L bindings
+Message-ID: <YMdnzdCvX/ur9qVr@pendragon.ideasonboard.com>
+References: <20210611113642.18457-1-biju.das.jz@bp.renesas.com>
+ <20210611113642.18457-2-biju.das.jz@bp.renesas.com>
+ <CAMuHMdUQRHtVFhqmgi5EE2TNobspM3tNTP10gz-yPDJSK31ytA@mail.gmail.com>
+ <OS0PR01MB5922B2355864A98B14C6DE6D86319@OS0PR01MB5922.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <OS0PR01MB5922B2355864A98B14C6DE6D86319@OS0PR01MB5922.jpnprd01.prod.outlook.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Intel Elkhart Lake PSE DMA implementation is integrated with crossbar IP
-in order to serve more hardware than there are DMA request lines available.
+On Mon, Jun 14, 2021 at 12:54:02PM +0000, Biju Das wrote:
+> > -----Original Message-----
+> > Subject: Re: [PATCH 1/5] dt-bindings: dma: Document RZ/G2L bindings
+> > 
+> > Hi Biju,
+> > 
+> > On Fri, Jun 11, 2021 at 1:36 PM Biju Das <biju.das.jz@bp.renesas.com>
+> > wrote:
+> > > Document RZ/G2L DMAC bindings.
+> > >
+> > > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > > Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > 
+> > Thanks for your patch!
+> > 
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+> > > @@ -0,0 +1,132 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
+> > > +---
+> > > +$id:
+> > > +https://jpn01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevi
+> > > +cetree.org%2Fschemas%2Fdma%2Frenesas%2Crz-dmac.yaml%23&amp;data=04%7C
+> > > +01%7Cbiju.das.jz%40bp.renesas.com%7C4b547e10cbe64b6f4d8508d92f2da0c0%
+> > > +7C53d82571da1947e49cb4625a166a4a2a%7C0%7C0%7C637592695286846809%7CUnk
+> > > +nown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haW
+> > > +wiLCJXVCI6Mn0%3D%7C1000&amp;sdata=5Jh%2FxPaia5ZOY0CrViQCcrNtzuDejp8wo
+> > > +Nrx9iO0ht8%3D&amp;reserved=0
+> > > +$schema:
+> > > +https://jpn01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevi
+> > > +cetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=04%7C01%7Cbiju.das.
+> > > +jz%40bp.renesas.com%7C4b547e10cbe64b6f4d8508d92f2da0c0%7C53d82571da19
+> > > +47e49cb4625a166a4a2a%7C0%7C0%7C637592695286846809%7CUnknown%7CTWFpbGZ
+> > > +sb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%
+> > > +3D%7C1000&amp;sdata=5qQ1PljM3e4Bn4%2FjdldYUHRBQL3jArJgRIAdLnhJraw%3D&
+> > > +amp;reserved=0
 
-Due to this, program xBAR hardware to make flexible support of PSE peripheral.
+*sigh*
 
-The Device-to-Device has not been tested and it's not supported by DMA Engine,
-but it's left in the code for the sake of documenting hardware features.
+> > > +
+> > > +title: Renesas RZ/G2L DMA Controller
+> > > +
+> > > +maintainers:
+> > > +  - Biju Das <biju.das.jz@bp.renesas.com>
+> > > +
+> > > +allOf:
+> > > +  - $ref: "dma-controller.yaml#"
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    items:
+> > > +      - enum:
+> > > +          - renesas,dmac-r9a07g044  # RZ/G2{L,LC}
+> > 
+> > Please use "renesas,r9a07g044-dmac".
+> 
+> OK. Will change.
+> 
+> > > +      - const: renesas,rz-dmac
+> > 
+> > Does this need many changes for RZ/A1H and RZ/A2M?
+> 
+> It will work on both RZ/A1H and RZ/A2M. I have n't tested since I don't have the board.
+> There is some difference in MID bit size. Other wise both identical.
+> 
+>  
+> > > +  renesas,rz-dmac-slavecfg:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > +    description: |
+> > > +      DMA configuration for a slave channel. Each channel must have an
+> > array of
+> > > +      3 items as below.
+> > > +      first item in the array is MID+RID
+> > 
+> > Already in dmas.
+> > 
+> > > +      second item in the array is slave src or dst address
+> > 
+> > As pointed out by Rob, already known by the slave driver.
+> > 
+> > > +      third item in the array is channel configuration value.
+> > 
+> > What exactly is this?
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v2: updated year, added explanation about D2D code, renamed func (Vinod)
- drivers/dma/dw/idma32.c              | 149 ++++++++++++++++++++++++++-
- drivers/dma/dw/internal.h            |  16 +++
- drivers/dma/dw/pci.c                 |   6 +-
- drivers/dma/dw/platform.c            |   6 +-
- include/linux/platform_data/dma-dw.h |   3 +
- 5 files changed, 171 insertions(+), 9 deletions(-)
+What would prevent the DMA client from passing the configuration to the
+DMA channel through the DMA engine API, just like it passes the slave
+source or destination address ?
 
-diff --git a/drivers/dma/dw/idma32.c b/drivers/dma/dw/idma32.c
-index 3ce44de25d33..22af77a3276d 100644
---- a/drivers/dma/dw/idma32.c
-+++ b/drivers/dma/dw/idma32.c
-@@ -1,15 +1,155 @@
- // SPDX-License-Identifier: GPL-2.0
--// Copyright (C) 2013,2018 Intel Corporation
-+// Copyright (C) 2013,2018,2020-2021 Intel Corporation
- 
- #include <linux/bitops.h>
- #include <linux/dmaengine.h>
- #include <linux/errno.h>
-+#include <linux/io.h>
-+#include <linux/pci.h>
- #include <linux/slab.h>
- #include <linux/types.h>
- 
- #include "internal.h"
- 
--static void idma32_initialize_chan(struct dw_dma_chan *dwc)
-+#define DMA_CTL_CH(x)			(0x1000 + (x) * 4)
-+#define DMA_SRC_ADDR_FILLIN(x)		(0x1100 + (x) * 4)
-+#define DMA_DST_ADDR_FILLIN(x)		(0x1200 + (x) * 4)
-+#define DMA_XBAR_SEL(x)			(0x1300 + (x) * 4)
-+#define DMA_REGACCESS_CHID_CFG		(0x1400)
-+
-+#define CTL_CH_TRANSFER_MODE_MASK	GENMASK(1, 0)
-+#define CTL_CH_TRANSFER_MODE_S2S	0
-+#define CTL_CH_TRANSFER_MODE_S2D	1
-+#define CTL_CH_TRANSFER_MODE_D2S	2
-+#define CTL_CH_TRANSFER_MODE_D2D	3
-+#define CTL_CH_RD_RS_MASK		GENMASK(4, 3)
-+#define CTL_CH_WR_RS_MASK		GENMASK(6, 5)
-+#define CTL_CH_RD_NON_SNOOP_BIT		BIT(8)
-+#define CTL_CH_WR_NON_SNOOP_BIT		BIT(9)
-+
-+#define XBAR_SEL_DEVID_MASK		GENMASK(15, 0)
-+#define XBAR_SEL_RX_TX_BIT		BIT(16)
-+#define XBAR_SEL_RX_TX_SHIFT		16
-+
-+#define REGACCESS_CHID_MASK		GENMASK(2, 0)
-+
-+static unsigned int idma32_get_slave_devfn(struct dw_dma_chan *dwc)
-+{
-+	struct device *slave = dwc->chan.slave;
-+
-+	if (!slave || !dev_is_pci(slave))
-+		return 0;
-+
-+	return to_pci_dev(slave)->devfn;
-+}
-+
-+static void idma32_initialize_chan_xbar(struct dw_dma_chan *dwc)
-+{
-+	struct dw_dma *dw = to_dw_dma(dwc->chan.device);
-+	void __iomem *misc = __dw_regs(dw);
-+	u32 cfghi = 0, cfglo = 0;
-+	u8 dst_id, src_id;
-+	u32 value;
-+
-+	/* DMA Channel ID Configuration register must be programmed first */
-+	value = readl(misc + DMA_REGACCESS_CHID_CFG);
-+
-+	value &= ~REGACCESS_CHID_MASK;
-+	value |= dwc->chan.chan_id;
-+
-+	writel(value, misc + DMA_REGACCESS_CHID_CFG);
-+
-+	/* Configure channel attributes */
-+	value = readl(misc + DMA_CTL_CH(dwc->chan.chan_id));
-+
-+	value &= ~(CTL_CH_RD_NON_SNOOP_BIT | CTL_CH_WR_NON_SNOOP_BIT);
-+	value &= ~(CTL_CH_RD_RS_MASK | CTL_CH_WR_RS_MASK);
-+	value &= ~CTL_CH_TRANSFER_MODE_MASK;
-+
-+	switch (dwc->direction) {
-+	case DMA_MEM_TO_MEM:
-+		value |= CTL_CH_TRANSFER_MODE_D2D;
-+		break;
-+	case DMA_MEM_TO_DEV:
-+		value |= CTL_CH_TRANSFER_MODE_D2S;
-+		value |= CTL_CH_WR_NON_SNOOP_BIT;
-+		break;
-+	case DMA_DEV_TO_MEM:
-+		value |= CTL_CH_TRANSFER_MODE_S2D;
-+		value |= CTL_CH_RD_NON_SNOOP_BIT;
-+		break;
-+	case DMA_DEV_TO_DEV:
-+		value |= CTL_CH_WR_NON_SNOOP_BIT | CTL_CH_RD_NON_SNOOP_BIT;
-+		value |= CTL_CH_TRANSFER_MODE_S2S;
-+		break;
-+	default:
-+		return;
-+	}
-+
-+	writel(value, misc + DMA_CTL_CH(dwc->chan.chan_id));
-+
-+	/* Configure crossbar selection */
-+	value = readl(misc + DMA_XBAR_SEL(dwc->chan.chan_id));
-+
-+	/* DEVFN selection */
-+	value &= ~XBAR_SEL_DEVID_MASK;
-+	value |= idma32_get_slave_devfn(dwc);
-+
-+	switch (dwc->direction) {
-+	case DMA_MEM_TO_MEM:
-+		break;
-+	case DMA_MEM_TO_DEV:
-+		value |= XBAR_SEL_RX_TX_BIT;
-+		break;
-+	case DMA_DEV_TO_MEM:
-+		value &= ~XBAR_SEL_RX_TX_BIT;
-+		break;
-+	case DMA_DEV_TO_DEV:
-+		break;
-+	default:
-+		return;
-+	}
-+
-+	writel(value, misc + DMA_XBAR_SEL(dwc->chan.chan_id));
-+
-+	/* Configure DMA channel low and high registers */
-+	switch (dwc->direction) {
-+	case DMA_MEM_TO_MEM:
-+		dst_id = dwc->chan.chan_id;
-+		src_id = dwc->chan.chan_id;
-+		break;
-+	case DMA_MEM_TO_DEV:
-+		dst_id = dwc->chan.chan_id;
-+		src_id = dwc->dws.src_id;
-+		break;
-+	case DMA_DEV_TO_MEM:
-+		dst_id = dwc->dws.dst_id;
-+		src_id = dwc->chan.chan_id;
-+		break;
-+	case DMA_DEV_TO_DEV:
-+		dst_id = dwc->dws.src_id;
-+		src_id = dwc->dws.dst_id;
-+		break;
-+	default:
-+		return;
-+	}
-+
-+	/* Set default burst alignment */
-+	cfglo |= IDMA32C_CFGL_DST_BURST_ALIGN | IDMA32C_CFGL_SRC_BURST_ALIGN;
-+
-+	/* Low 4 bits of the request lines */
-+	cfghi |= IDMA32C_CFGH_DST_PER(dst_id & 0xf);
-+	cfghi |= IDMA32C_CFGH_SRC_PER(src_id & 0xf);
-+
-+	/* Request line extension (2 bits) */
-+	cfghi |= IDMA32C_CFGH_DST_PER_EXT(dst_id >> 4 & 0x3);
-+	cfghi |= IDMA32C_CFGH_SRC_PER_EXT(src_id >> 4 & 0x3);
-+
-+	channel_writel(dwc, CFG_LO, cfglo);
-+	channel_writel(dwc, CFG_HI, cfghi);
-+}
-+
-+static void idma32_initialize_chan_generic(struct dw_dma_chan *dwc)
- {
- 	u32 cfghi = 0;
- 	u32 cfglo = 0;
-@@ -134,7 +274,10 @@ int idma32_dma_probe(struct dw_dma_chip *chip)
- 		return -ENOMEM;
- 
- 	/* Channel operations */
--	dw->initialize_chan = idma32_initialize_chan;
-+	if (chip->pdata->quirks & DW_DMA_QUIRK_XBAR_PRESENT)
-+		dw->initialize_chan = idma32_initialize_chan_xbar;
-+	else
-+		dw->initialize_chan = idma32_initialize_chan_generic;
- 	dw->suspend_chan = idma32_suspend_chan;
- 	dw->resume_chan = idma32_resume_chan;
- 	dw->prepare_ctllo = idma32_prepare_ctllo;
-diff --git a/drivers/dma/dw/internal.h b/drivers/dma/dw/internal.h
-index 2e1c52eefdeb..563ce73488db 100644
---- a/drivers/dma/dw/internal.h
-+++ b/drivers/dma/dw/internal.h
-@@ -74,4 +74,20 @@ static __maybe_unused const struct dw_dma_chip_pdata idma32_chip_pdata = {
- 	.remove = idma32_dma_remove,
- };
- 
-+static const struct dw_dma_platform_data xbar_pdata = {
-+	.nr_channels = 8,
-+	.chan_allocation_order = CHAN_ALLOCATION_ASCENDING,
-+	.chan_priority = CHAN_PRIORITY_ASCENDING,
-+	.block_size = 131071,
-+	.nr_masters = 1,
-+	.data_width = {4},
-+	.quirks = DW_DMA_QUIRK_XBAR_PRESENT,
-+};
-+
-+static __maybe_unused const struct dw_dma_chip_pdata xbar_chip_pdata = {
-+	.pdata = &xbar_pdata,
-+	.probe = idma32_dma_probe,
-+	.remove = idma32_dma_remove,
-+};
-+
- #endif /* _DMA_DW_INTERNAL_H */
-diff --git a/drivers/dma/dw/pci.c b/drivers/dma/dw/pci.c
-index 1142aa6f8c4a..26a3f926da02 100644
---- a/drivers/dma/dw/pci.c
-+++ b/drivers/dma/dw/pci.c
-@@ -120,9 +120,9 @@ static const struct pci_device_id dw_pci_id_table[] = {
- 	{ PCI_VDEVICE(INTEL, 0x22c0), (kernel_ulong_t)&dw_dma_chip_pdata },
- 
- 	/* Elkhart Lake iDMA 32-bit (PSE DMA) */
--	{ PCI_VDEVICE(INTEL, 0x4bb4), (kernel_ulong_t)&idma32_chip_pdata },
--	{ PCI_VDEVICE(INTEL, 0x4bb5), (kernel_ulong_t)&idma32_chip_pdata },
--	{ PCI_VDEVICE(INTEL, 0x4bb6), (kernel_ulong_t)&idma32_chip_pdata },
-+	{ PCI_VDEVICE(INTEL, 0x4bb4), (kernel_ulong_t)&xbar_chip_pdata },
-+	{ PCI_VDEVICE(INTEL, 0x4bb5), (kernel_ulong_t)&xbar_chip_pdata },
-+	{ PCI_VDEVICE(INTEL, 0x4bb6), (kernel_ulong_t)&xbar_chip_pdata },
- 
- 	/* Haswell */
- 	{ PCI_VDEVICE(INTEL, 0x9c60), (kernel_ulong_t)&dw_dma_chip_pdata },
-diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
-index 0585d749d935..246118955877 100644
---- a/drivers/dma/dw/platform.c
-+++ b/drivers/dma/dw/platform.c
-@@ -149,9 +149,9 @@ static const struct acpi_device_id dw_dma_acpi_id_table[] = {
- 	{ "808622C0", (kernel_ulong_t)&dw_dma_chip_pdata },
- 
- 	/* Elkhart Lake iDMA 32-bit (PSE DMA) */
--	{ "80864BB4", (kernel_ulong_t)&idma32_chip_pdata },
--	{ "80864BB5", (kernel_ulong_t)&idma32_chip_pdata },
--	{ "80864BB6", (kernel_ulong_t)&idma32_chip_pdata },
-+	{ "80864BB4", (kernel_ulong_t)&xbar_chip_pdata },
-+	{ "80864BB5", (kernel_ulong_t)&xbar_chip_pdata },
-+	{ "80864BB6", (kernel_ulong_t)&xbar_chip_pdata },
- 
- 	{ }
- };
-diff --git a/include/linux/platform_data/dma-dw.h b/include/linux/platform_data/dma-dw.h
-index b34a094b2258..b11b0c8bc5da 100644
---- a/include/linux/platform_data/dma-dw.h
-+++ b/include/linux/platform_data/dma-dw.h
-@@ -52,6 +52,7 @@ struct dw_dma_slave {
-  * @max_burst: Maximum value of burst transaction size supported by hardware
-  *	       per channel (in units of CTL.SRC_TR_WIDTH/CTL.DST_TR_WIDTH).
-  * @protctl: Protection control signals setting per channel.
-+ * @quirks: Optional platform quirks.
-  */
- struct dw_dma_platform_data {
- 	unsigned int	nr_channels;
-@@ -71,6 +72,8 @@ struct dw_dma_platform_data {
- #define CHAN_PROTCTL_CACHEABLE		BIT(2)
- #define CHAN_PROTCTL_MASK		GENMASK(2, 0)
- 	unsigned char	protctl;
-+#define DW_DMA_QUIRK_XBAR_PRESENT	BIT(0)
-+	unsigned int	quirks;
- };
- 
- #endif /* _PLATFORM_DATA_DMA_DW_H */
+> > Does the R-Car DMAC have this too? If yes, how does its driver handle it?
+> 
+> On R-CAR DMAC, we have only MID + RID values. Where as here we have channel configuration value With different set of parameter as mentioned in Table 16.4.
+> 
+> Please see Page 569, Table 16.4 On-Chip Module requests section. 
+> 
+> For eg:- as per Rob's suggestion, I have modelled the driver with the below entries in ALSA driver for playback/record use case.
+> 
+> dmas = <&dmac 0x255 0x10049c18 CH_CFG(0x1,0x0,0x1,0x0,0x2,0x1,0x1,0x0)>,
+>        <&dmac 0x256 0x10049c1c CH_CFG(0x0,0x0,0x1,0x0,0x2,0x1,0x1,0x0)>;
+> dma-names = "tx", "rx";
+> 
+> Using first parameter, it gets dmac channel. using second and third parameter it configures 
+> the channel.
+
 -- 
-2.30.2
+Regards,
 
+Laurent Pinchart

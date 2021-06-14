@@ -2,241 +2,318 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4C253A672E
-	for <lists+dmaengine@lfdr.de>; Mon, 14 Jun 2021 14:54:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 671403A67E6
+	for <lists+dmaengine@lfdr.de>; Mon, 14 Jun 2021 15:30:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232992AbhFNM4J (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 14 Jun 2021 08:56:09 -0400
-Received: from mail-eopbgr1400097.outbound.protection.outlook.com ([40.107.140.97]:16293
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232901AbhFNM4I (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 14 Jun 2021 08:56:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EuZFsxrdTJGYsaUoMYCoJTYrKC8may2jiCtsxXRQvrriS+7n9nN8Cdp/uMUZElAh4nDvI0Ukt+Rjtq52UjvhDHFvATzJYUzcvCU6JW5mh9fDtioFy3IgaexBZVRvBwl2CM/nwL6vEWfCYez9CfbneL4nFreD029g7ORvX8UDAFrP9JrRU5EVnGq1EbRWuk1f7MuQgaw4fprVv+1NoVg/J2NdLv5Bs1XssRvlvP+gL3xoRylG+UJGXcGvM+Ypm+iQzdox5A7l3vuQAlh4qVEvEoOqMf5yXPsH2H/CKO3FZAeFcIhdVq3QUR9D0gitBYpa8JUROK5EXHP6Rjs+dviUZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tUrm29er9fIZ5k4h1XWh991PYwky8HH6aibPA/rR9bI=;
- b=PFgYNuWeA2kA9eLQSQnclW0jJfM+XcRAt26UwLW0ix4TVUAw/Zu3LM/KuVipqnE+lUVV4miVZYAb4e7R8CCIN+KBpTk6ku3IegCS8HencKvI2MlKXOFHv1igVEicXSra93/bHVzMw4x0b2qs7cGwLnjQhLTCd9YiguKECFLKZDsvUu8+OYpBcDZJS7aA8tE9h0ajya0lQt9c/VMZCHH39cJUJm8C6QVBMM37OO+RjaNRchmY0w7DDfvyWVvL21iH1evxBVoXDLwo03qoxUvZRVjHBGa/W6e19Y0u6HaviW0g20L7mA4+mOv8ZhzdjBgwIZ1nrMztMlVCsMH4370EVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tUrm29er9fIZ5k4h1XWh991PYwky8HH6aibPA/rR9bI=;
- b=nRZAt2piEeGFL77lCHZDXa4tfVzWpd9vSYCuDcRGWG1h2tzAfWaEiljS2Cim0T0ZOgrpDosayT/KBLqA0t3QwFFkoGCnI0YqirTMWGn6eJZWF+hjbbAF9iBlk1uwqwkM6nBU6yPwFWArD4ctf7JuCmlQbZWWgvS+51yBQ8+mRhY=
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
- by OSBPR01MB4021.jpnprd01.prod.outlook.com (2603:1096:604:4f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.24; Mon, 14 Jun
- 2021 12:54:02 +0000
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::b834:5e50:2ce8:9ae0]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::b834:5e50:2ce8:9ae0%3]) with mapi id 15.20.4219.025; Mon, 14 Jun 2021
- 12:54:02 +0000
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Chris Brandt <Chris.Brandt@renesas.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: RE: [PATCH 1/5] dt-bindings: dma: Document RZ/G2L bindings
-Thread-Topic: [PATCH 1/5] dt-bindings: dma: Document RZ/G2L bindings
-Thread-Index: AQHXXrYS1Y35K9bUV02GRKgFCWvED6sTb4CAgAAIHiA=
-Date:   Mon, 14 Jun 2021 12:54:02 +0000
-Message-ID: <OS0PR01MB5922B2355864A98B14C6DE6D86319@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-References: <20210611113642.18457-1-biju.das.jz@bp.renesas.com>
- <20210611113642.18457-2-biju.das.jz@bp.renesas.com>
- <CAMuHMdUQRHtVFhqmgi5EE2TNobspM3tNTP10gz-yPDJSK31ytA@mail.gmail.com>
-In-Reply-To: <CAMuHMdUQRHtVFhqmgi5EE2TNobspM3tNTP10gz-yPDJSK31ytA@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linux-m68k.org; dkim=none (message not signed)
- header.d=none;linux-m68k.org; dmarc=none action=none
- header.from=bp.renesas.com;
-x-originating-ip: [193.141.219.20]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bdac68df-0814-4bb6-8ffc-08d92f337c27
-x-ms-traffictypediagnostic: OSBPR01MB4021:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <OSBPR01MB4021CF88E27F55B971145A6C86319@OSBPR01MB4021.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZYuIulsLlsdMhZRRpufCJzCOZEcP7YETLYbbpXHjwQD6kovAT+NqQb+A7nHymXybq1uSnWGW8D/Lx5ZCYly3hdPpNGFvtnePkucgrY6o9DoM2cgy/FlF8sdBOexik5BNuERWgog+S4RLhiFkD33FcdxmuA8Xm6fM98FjWi5ONbkxZn9T1r1hcrV2NJ3SyBZ6o4ytmpxS/RSgpLCj7lWDk09E64++FHFq56z2z/FadyuisKK0Do0khnivpYI2Yop/D3KWW/l1mCcz4+mCxKQaoKBHjeGIb7CQRYBmK09TXwpLimtbcI6O+Sk6pp3iDSCkV7Oqj+JdMiLshIhMvX+ruE39NdlXOUwvgXKtsl8Ym6Ck1jXnWnePU+gFU0b6Q/hI711273LUVdZ+B00ODiDOquMzZGFx/W95uALZ5hE9yHb/B4B767+3ITpaST8eaRyDBKOAr24fAbmBOe+TLeE+jVxOlShTE5Nrjj8lHRbVwJM/xYuXX28Tz1aMxPNAbPrSgcVBz7tkPv88y17xBfhALQMt0oo/YRzoAVNc9mLVAczU4dFMX5+a9yDCA/3OSsMZJ+2/DU2zB6E+pWEIWnyweNHG/FUF/Lm89qUUsI/s67fMXbIpGYhp4RurOG8jLjY93n92TtvMtLmnaSFsfFrSTM7oRxoP37+o2iHrRxKqGDlqIY6DMvfNWxvAQt+CFlVLLflUy8VDr4wEuVSauGCU5w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(366004)(346002)(136003)(39860400002)(376002)(83380400001)(8676002)(64756008)(54906003)(66446008)(66476007)(86362001)(66556008)(66946007)(2906002)(8936002)(71200400001)(55016002)(5660300002)(316002)(45080400002)(478600001)(52536014)(9686003)(6506007)(53546011)(76116006)(4326008)(7696005)(26005)(38100700002)(186003)(33656002)(6916009)(122000001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?H8LuPAPYFHOotVOD0wp+C++8y1oo9Y4yYxcUUhXIDxpuZEsIvOow3xU7BiMu?=
- =?us-ascii?Q?nW62j+1JRa+593eOloUtoupuC88OdkJXHiUU4G2ak+GUjqRtNILiK9lgDZRz?=
- =?us-ascii?Q?wYOQWbW9TbLYjfSeZqkgEneVtUn6zXemxgJtnd4ZBgu0yds8saA71LB8DH3n?=
- =?us-ascii?Q?L48gYnEn5mG6B0ihmU8XIPz8QLlNr4jxM76vAWAQLFhqSVJHWkhKt4OAs9nu?=
- =?us-ascii?Q?w9yMuWAY7OZuNICed2j4vfESUCFSpoZzwST2v5/D9D3rWcBmWrGFDAwwE1ye?=
- =?us-ascii?Q?u1WQgCUgj+/tDqvLqxjheeRlupMIHWX5ATp2QE7Ql7KfHkhQKJjsEfqx47Zp?=
- =?us-ascii?Q?xyy2c8Py26x6Dhj52fhJLLQ6UsdtIWv+oldAPAOPrT+1PE4Ej1sAuC9VEUOt?=
- =?us-ascii?Q?GPQeF7+e5JahgOdoy2qR0XOoOLLnOFuQhcIWj7SGI0nP2t9I++vSLubR7D1s?=
- =?us-ascii?Q?K5nlOe+tNg5LAna9tCG7CbzOVfFEKrtuaOGgAr2rDTSUMG0MiRTY6CvF8qNY?=
- =?us-ascii?Q?ErOWhioErTcZLwz5XqUfx7KKDLZq26JDysWJMKjmJw1EyXf7By7c/vavTguf?=
- =?us-ascii?Q?HNr7fsMuePjOVi/r9mai3u6fzmDD8IuT5FCsrJdAgnf1a9KdMTJ/NWf3FFTX?=
- =?us-ascii?Q?0af++KUB/9T92/M25NwZmKmlVUSw4HHU0cTA/UXJ3P3bcgek1zHK/ZHiwxbA?=
- =?us-ascii?Q?07MfYOF5FqTW965YwWWrOXNzCeCNVGiTGhLp5eSTcAlkRHBLNLfulha63kf+?=
- =?us-ascii?Q?Na7BC/CIBF+l4z7qk7Mx50dyh2ymxjg2vVLMfjfxf4EgIb/jIajnobGR2HKT?=
- =?us-ascii?Q?jauapM1rWUambIc6GPDxIBjWoikh7+H7xIf0fUm+ICLs2T0uVpteW8Funfzq?=
- =?us-ascii?Q?DbtsZFmFVjRYioX1uFBSCz5adZZvackQg+00dYE3GuuqQhNNJonFd0bR2oAg?=
- =?us-ascii?Q?5rxNVu5Kmud7ALgIX8n7SlSAw7TcKFNhqpgsmvR9rsHQdTISXeXbluTIPUzf?=
- =?us-ascii?Q?I9N7J14436lQCBV6CeDW5EE3LpcpxcRn4oDP/UeUpfZePz3PxlGCkczSYzJ5?=
- =?us-ascii?Q?DWJDVXdvmSq49NkXpy/TQBQish4fHB+kjE72/Xj2IMPzTRpEWZhJYio1mICe?=
- =?us-ascii?Q?vF+4i+myXilBEjQlaP5+VFxxAfzP/39LeqbnY8IlMRPY8YeUsoHPJVJ090xH?=
- =?us-ascii?Q?fqfsa7N3/fm3loHKXP3agC6Ms8EkzDSJBu6LXXnPfhAGYsX1KL94OXjBfvSi?=
- =?us-ascii?Q?byjDlyYzKNi/9J6uewZ8jm+GkkEEl/SSuWdDHOiQ0I9fHBCrDgQoIkiSJnrk?=
- =?us-ascii?Q?0WtS9U2ES50hyyqzT6f3KMhT?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S233403AbhFNNcD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 14 Jun 2021 09:32:03 -0400
+Received: from mga03.intel.com ([134.134.136.65]:52643 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233699AbhFNNcC (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 14 Jun 2021 09:32:02 -0400
+IronPort-SDR: dESMnGN6ZelFmp9NAPs+lq0LiVlfy3euBtiNT3Ej87QXcYeVXKzq+hi225SmCRR7cBTpKVMipT
+ JjpUshdAVEIg==
+X-IronPort-AV: E=McAfee;i="6200,9189,10015"; a="205840609"
+X-IronPort-AV: E=Sophos;i="5.83,273,1616482800"; 
+   d="scan'208";a="205840609"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2021 06:29:57 -0700
+IronPort-SDR: u2FcVsVTe2vFuBxGrDo6Okelb+rqwYBy+mZBA3o9ghIOyZO9XCG0rfexie/cieeJ44U3TIxXnS
+ iEWj2l3I5irw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,273,1616482800"; 
+   d="scan'208";a="471312854"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Jun 2021 06:29:56 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id A0CB7147; Mon, 14 Jun 2021 16:30:20 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Viresh Kumar <vireshk@kernel.org>
+Subject: [PATCH v2 1/1] dmaengine: dw: Program xBAR hardware for Elkhart Lake
+Date:   Mon, 14 Jun 2021 16:30:18 +0300
+Message-Id: <20210614133018.66931-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bdac68df-0814-4bb6-8ffc-08d92f337c27
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2021 12:54:02.0340
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eoGDIWm0BGgQPlauI54cgYWPz69X/F+TT3L4FeEk3UwHI7op47F+jVxo4XfI2Y3VLFq1Kzm5gue911P+a1jI4pmLRu+gHCjZSTB6BccqAAc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB4021
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Geert,
+Intel Elkhart Lake PSE DMA implementation is integrated with crossbar IP
+in order to serve more hardware than there are DMA request lines available.
 
-Thanks for the feedback.
+Due to this, program xBAR hardware to make flexible support of PSE peripheral.
 
-> -----Original Message-----
-> Subject: Re: [PATCH 1/5] dt-bindings: dma: Document RZ/G2L bindings
->=20
-> Hi Biju,
->=20
-> On Fri, Jun 11, 2021 at 1:36 PM Biju Das <biju.das.jz@bp.renesas.com>
-> wrote:
-> > Document RZ/G2L DMAC bindings.
-> >
-> > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->=20
-> Thanks for your patch!
->=20
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
-> > @@ -0,0 +1,132 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
-> > +---
-> > +$id:
-> > +https://jpn01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdev=
-i
-> > +cetree.org%2Fschemas%2Fdma%2Frenesas%2Crz-dmac.yaml%23&amp;data=3D04%7=
-C
-> > +01%7Cbiju.das.jz%40bp.renesas.com%7C4b547e10cbe64b6f4d8508d92f2da0c0%
-> > +7C53d82571da1947e49cb4625a166a4a2a%7C0%7C0%7C637592695286846809%7CUnk
-> > +nown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haW
-> > +wiLCJXVCI6Mn0%3D%7C1000&amp;sdata=3D5Jh%2FxPaia5ZOY0CrViQCcrNtzuDejp8w=
-o
-> > +Nrx9iO0ht8%3D&amp;reserved=3D0
-> > +$schema:
-> > +https://jpn01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdev=
-i
-> > +cetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=3D04%7C01%7Cbiju.das=
-.
-> > +jz%40bp.renesas.com%7C4b547e10cbe64b6f4d8508d92f2da0c0%7C53d82571da19
-> > +47e49cb4625a166a4a2a%7C0%7C0%7C637592695286846809%7CUnknown%7CTWFpbGZ
-> > +sb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%
-> > +3D%7C1000&amp;sdata=3D5qQ1PljM3e4Bn4%2FjdldYUHRBQL3jArJgRIAdLnhJraw%3D=
-&
-> > +amp;reserved=3D0
-> > +
-> > +title: Renesas RZ/G2L DMA Controller
-> > +
-> > +maintainers:
-> > +  - Biju Das <biju.das.jz@bp.renesas.com>
-> > +
-> > +allOf:
-> > +  - $ref: "dma-controller.yaml#"
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +          - renesas,dmac-r9a07g044  # RZ/G2{L,LC}
->=20
-> Please use "renesas,r9a07g044-dmac".
+The Device-to-Device has not been tested and it's not supported by DMA Engine,
+but it's left in the code for the sake of documenting hardware features.
 
-OK. Will change.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: updated year, added explanation about D2D code, renamed func (Vinod)
+ drivers/dma/dw/idma32.c              | 149 ++++++++++++++++++++++++++-
+ drivers/dma/dw/internal.h            |  16 +++
+ drivers/dma/dw/pci.c                 |   6 +-
+ drivers/dma/dw/platform.c            |   6 +-
+ include/linux/platform_data/dma-dw.h |   3 +
+ 5 files changed, 171 insertions(+), 9 deletions(-)
 
-> > +      - const: renesas,rz-dmac
->=20
-> Does this need many changes for RZ/A1H and RZ/A2M?
+diff --git a/drivers/dma/dw/idma32.c b/drivers/dma/dw/idma32.c
+index 3ce44de25d33..22af77a3276d 100644
+--- a/drivers/dma/dw/idma32.c
++++ b/drivers/dma/dw/idma32.c
+@@ -1,15 +1,155 @@
+ // SPDX-License-Identifier: GPL-2.0
+-// Copyright (C) 2013,2018 Intel Corporation
++// Copyright (C) 2013,2018,2020-2021 Intel Corporation
+ 
+ #include <linux/bitops.h>
+ #include <linux/dmaengine.h>
+ #include <linux/errno.h>
++#include <linux/io.h>
++#include <linux/pci.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+ 
+ #include "internal.h"
+ 
+-static void idma32_initialize_chan(struct dw_dma_chan *dwc)
++#define DMA_CTL_CH(x)			(0x1000 + (x) * 4)
++#define DMA_SRC_ADDR_FILLIN(x)		(0x1100 + (x) * 4)
++#define DMA_DST_ADDR_FILLIN(x)		(0x1200 + (x) * 4)
++#define DMA_XBAR_SEL(x)			(0x1300 + (x) * 4)
++#define DMA_REGACCESS_CHID_CFG		(0x1400)
++
++#define CTL_CH_TRANSFER_MODE_MASK	GENMASK(1, 0)
++#define CTL_CH_TRANSFER_MODE_S2S	0
++#define CTL_CH_TRANSFER_MODE_S2D	1
++#define CTL_CH_TRANSFER_MODE_D2S	2
++#define CTL_CH_TRANSFER_MODE_D2D	3
++#define CTL_CH_RD_RS_MASK		GENMASK(4, 3)
++#define CTL_CH_WR_RS_MASK		GENMASK(6, 5)
++#define CTL_CH_RD_NON_SNOOP_BIT		BIT(8)
++#define CTL_CH_WR_NON_SNOOP_BIT		BIT(9)
++
++#define XBAR_SEL_DEVID_MASK		GENMASK(15, 0)
++#define XBAR_SEL_RX_TX_BIT		BIT(16)
++#define XBAR_SEL_RX_TX_SHIFT		16
++
++#define REGACCESS_CHID_MASK		GENMASK(2, 0)
++
++static unsigned int idma32_get_slave_devfn(struct dw_dma_chan *dwc)
++{
++	struct device *slave = dwc->chan.slave;
++
++	if (!slave || !dev_is_pci(slave))
++		return 0;
++
++	return to_pci_dev(slave)->devfn;
++}
++
++static void idma32_initialize_chan_xbar(struct dw_dma_chan *dwc)
++{
++	struct dw_dma *dw = to_dw_dma(dwc->chan.device);
++	void __iomem *misc = __dw_regs(dw);
++	u32 cfghi = 0, cfglo = 0;
++	u8 dst_id, src_id;
++	u32 value;
++
++	/* DMA Channel ID Configuration register must be programmed first */
++	value = readl(misc + DMA_REGACCESS_CHID_CFG);
++
++	value &= ~REGACCESS_CHID_MASK;
++	value |= dwc->chan.chan_id;
++
++	writel(value, misc + DMA_REGACCESS_CHID_CFG);
++
++	/* Configure channel attributes */
++	value = readl(misc + DMA_CTL_CH(dwc->chan.chan_id));
++
++	value &= ~(CTL_CH_RD_NON_SNOOP_BIT | CTL_CH_WR_NON_SNOOP_BIT);
++	value &= ~(CTL_CH_RD_RS_MASK | CTL_CH_WR_RS_MASK);
++	value &= ~CTL_CH_TRANSFER_MODE_MASK;
++
++	switch (dwc->direction) {
++	case DMA_MEM_TO_MEM:
++		value |= CTL_CH_TRANSFER_MODE_D2D;
++		break;
++	case DMA_MEM_TO_DEV:
++		value |= CTL_CH_TRANSFER_MODE_D2S;
++		value |= CTL_CH_WR_NON_SNOOP_BIT;
++		break;
++	case DMA_DEV_TO_MEM:
++		value |= CTL_CH_TRANSFER_MODE_S2D;
++		value |= CTL_CH_RD_NON_SNOOP_BIT;
++		break;
++	case DMA_DEV_TO_DEV:
++		value |= CTL_CH_WR_NON_SNOOP_BIT | CTL_CH_RD_NON_SNOOP_BIT;
++		value |= CTL_CH_TRANSFER_MODE_S2S;
++		break;
++	default:
++		return;
++	}
++
++	writel(value, misc + DMA_CTL_CH(dwc->chan.chan_id));
++
++	/* Configure crossbar selection */
++	value = readl(misc + DMA_XBAR_SEL(dwc->chan.chan_id));
++
++	/* DEVFN selection */
++	value &= ~XBAR_SEL_DEVID_MASK;
++	value |= idma32_get_slave_devfn(dwc);
++
++	switch (dwc->direction) {
++	case DMA_MEM_TO_MEM:
++		break;
++	case DMA_MEM_TO_DEV:
++		value |= XBAR_SEL_RX_TX_BIT;
++		break;
++	case DMA_DEV_TO_MEM:
++		value &= ~XBAR_SEL_RX_TX_BIT;
++		break;
++	case DMA_DEV_TO_DEV:
++		break;
++	default:
++		return;
++	}
++
++	writel(value, misc + DMA_XBAR_SEL(dwc->chan.chan_id));
++
++	/* Configure DMA channel low and high registers */
++	switch (dwc->direction) {
++	case DMA_MEM_TO_MEM:
++		dst_id = dwc->chan.chan_id;
++		src_id = dwc->chan.chan_id;
++		break;
++	case DMA_MEM_TO_DEV:
++		dst_id = dwc->chan.chan_id;
++		src_id = dwc->dws.src_id;
++		break;
++	case DMA_DEV_TO_MEM:
++		dst_id = dwc->dws.dst_id;
++		src_id = dwc->chan.chan_id;
++		break;
++	case DMA_DEV_TO_DEV:
++		dst_id = dwc->dws.src_id;
++		src_id = dwc->dws.dst_id;
++		break;
++	default:
++		return;
++	}
++
++	/* Set default burst alignment */
++	cfglo |= IDMA32C_CFGL_DST_BURST_ALIGN | IDMA32C_CFGL_SRC_BURST_ALIGN;
++
++	/* Low 4 bits of the request lines */
++	cfghi |= IDMA32C_CFGH_DST_PER(dst_id & 0xf);
++	cfghi |= IDMA32C_CFGH_SRC_PER(src_id & 0xf);
++
++	/* Request line extension (2 bits) */
++	cfghi |= IDMA32C_CFGH_DST_PER_EXT(dst_id >> 4 & 0x3);
++	cfghi |= IDMA32C_CFGH_SRC_PER_EXT(src_id >> 4 & 0x3);
++
++	channel_writel(dwc, CFG_LO, cfglo);
++	channel_writel(dwc, CFG_HI, cfghi);
++}
++
++static void idma32_initialize_chan_generic(struct dw_dma_chan *dwc)
+ {
+ 	u32 cfghi = 0;
+ 	u32 cfglo = 0;
+@@ -134,7 +274,10 @@ int idma32_dma_probe(struct dw_dma_chip *chip)
+ 		return -ENOMEM;
+ 
+ 	/* Channel operations */
+-	dw->initialize_chan = idma32_initialize_chan;
++	if (chip->pdata->quirks & DW_DMA_QUIRK_XBAR_PRESENT)
++		dw->initialize_chan = idma32_initialize_chan_xbar;
++	else
++		dw->initialize_chan = idma32_initialize_chan_generic;
+ 	dw->suspend_chan = idma32_suspend_chan;
+ 	dw->resume_chan = idma32_resume_chan;
+ 	dw->prepare_ctllo = idma32_prepare_ctllo;
+diff --git a/drivers/dma/dw/internal.h b/drivers/dma/dw/internal.h
+index 2e1c52eefdeb..563ce73488db 100644
+--- a/drivers/dma/dw/internal.h
++++ b/drivers/dma/dw/internal.h
+@@ -74,4 +74,20 @@ static __maybe_unused const struct dw_dma_chip_pdata idma32_chip_pdata = {
+ 	.remove = idma32_dma_remove,
+ };
+ 
++static const struct dw_dma_platform_data xbar_pdata = {
++	.nr_channels = 8,
++	.chan_allocation_order = CHAN_ALLOCATION_ASCENDING,
++	.chan_priority = CHAN_PRIORITY_ASCENDING,
++	.block_size = 131071,
++	.nr_masters = 1,
++	.data_width = {4},
++	.quirks = DW_DMA_QUIRK_XBAR_PRESENT,
++};
++
++static __maybe_unused const struct dw_dma_chip_pdata xbar_chip_pdata = {
++	.pdata = &xbar_pdata,
++	.probe = idma32_dma_probe,
++	.remove = idma32_dma_remove,
++};
++
+ #endif /* _DMA_DW_INTERNAL_H */
+diff --git a/drivers/dma/dw/pci.c b/drivers/dma/dw/pci.c
+index 1142aa6f8c4a..26a3f926da02 100644
+--- a/drivers/dma/dw/pci.c
++++ b/drivers/dma/dw/pci.c
+@@ -120,9 +120,9 @@ static const struct pci_device_id dw_pci_id_table[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x22c0), (kernel_ulong_t)&dw_dma_chip_pdata },
+ 
+ 	/* Elkhart Lake iDMA 32-bit (PSE DMA) */
+-	{ PCI_VDEVICE(INTEL, 0x4bb4), (kernel_ulong_t)&idma32_chip_pdata },
+-	{ PCI_VDEVICE(INTEL, 0x4bb5), (kernel_ulong_t)&idma32_chip_pdata },
+-	{ PCI_VDEVICE(INTEL, 0x4bb6), (kernel_ulong_t)&idma32_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x4bb4), (kernel_ulong_t)&xbar_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x4bb5), (kernel_ulong_t)&xbar_chip_pdata },
++	{ PCI_VDEVICE(INTEL, 0x4bb6), (kernel_ulong_t)&xbar_chip_pdata },
+ 
+ 	/* Haswell */
+ 	{ PCI_VDEVICE(INTEL, 0x9c60), (kernel_ulong_t)&dw_dma_chip_pdata },
+diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
+index 0585d749d935..246118955877 100644
+--- a/drivers/dma/dw/platform.c
++++ b/drivers/dma/dw/platform.c
+@@ -149,9 +149,9 @@ static const struct acpi_device_id dw_dma_acpi_id_table[] = {
+ 	{ "808622C0", (kernel_ulong_t)&dw_dma_chip_pdata },
+ 
+ 	/* Elkhart Lake iDMA 32-bit (PSE DMA) */
+-	{ "80864BB4", (kernel_ulong_t)&idma32_chip_pdata },
+-	{ "80864BB5", (kernel_ulong_t)&idma32_chip_pdata },
+-	{ "80864BB6", (kernel_ulong_t)&idma32_chip_pdata },
++	{ "80864BB4", (kernel_ulong_t)&xbar_chip_pdata },
++	{ "80864BB5", (kernel_ulong_t)&xbar_chip_pdata },
++	{ "80864BB6", (kernel_ulong_t)&xbar_chip_pdata },
+ 
+ 	{ }
+ };
+diff --git a/include/linux/platform_data/dma-dw.h b/include/linux/platform_data/dma-dw.h
+index b34a094b2258..b11b0c8bc5da 100644
+--- a/include/linux/platform_data/dma-dw.h
++++ b/include/linux/platform_data/dma-dw.h
+@@ -52,6 +52,7 @@ struct dw_dma_slave {
+  * @max_burst: Maximum value of burst transaction size supported by hardware
+  *	       per channel (in units of CTL.SRC_TR_WIDTH/CTL.DST_TR_WIDTH).
+  * @protctl: Protection control signals setting per channel.
++ * @quirks: Optional platform quirks.
+  */
+ struct dw_dma_platform_data {
+ 	unsigned int	nr_channels;
+@@ -71,6 +72,8 @@ struct dw_dma_platform_data {
+ #define CHAN_PROTCTL_CACHEABLE		BIT(2)
+ #define CHAN_PROTCTL_MASK		GENMASK(2, 0)
+ 	unsigned char	protctl;
++#define DW_DMA_QUIRK_XBAR_PRESENT	BIT(0)
++	unsigned int	quirks;
+ };
+ 
+ #endif /* _PLATFORM_DATA_DMA_DW_H */
+-- 
+2.30.2
 
-It will work on both RZ/A1H and RZ/A2M. I have n't tested since I don't hav=
-e the board.
-There is some difference in MID bit size. Other wise both identical.
-
-=20
-> > +  renesas,rz-dmac-slavecfg:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +    description: |
-> > +      DMA configuration for a slave channel. Each channel must have an
-> array of
-> > +      3 items as below.
-> > +      first item in the array is MID+RID
->=20
-> Already in dmas.
->=20
-> > +      second item in the array is slave src or dst address
->=20
-> As pointed out by Rob, already known by the slave driver.
->=20
-> > +      third item in the array is channel configuration value.
->=20
-> What exactly is this?
-> Does the R-Car DMAC have this too? If yes, how does its driver handle it?
-
-On R-CAR DMAC, we have only MID + RID values. Where as here we have channel=
- configuration value With different set of parameter as mentioned in Table =
-16.4.
-
-Please see Page 569, Table 16.4 On-Chip Module requests section.=20
-
-For eg:- as per Rob's suggestion, I have modelled the driver with the below=
- entries in ALSA driver for playback/record use case.
-
-dmas =3D <&dmac 0x255 0x10049c18 CH_CFG(0x1,0x0,0x1,0x0,0x2,0x1,0x1,0x0)>,
-       <&dmac 0x256 0x10049c1c CH_CFG(0x0,0x0,0x1,0x0,0x2,0x1,0x1,0x0)>;
-dma-names =3D "tx", "rx";
-
-Using first parameter, it gets dmac channel. using second and third paramet=
-er it configures=20
-the channel.
-
-Regards,
-Biju
-
->=20
-> Gr{oetje,eeting}s,
->=20
->                         Geert
->=20
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-
-> m68k.org
->=20
-> In personal conversations with technical people, I call myself a hacker.
-> But when I'm talking to journalists I just say "programmer" or something
-> like that.
->                                 -- Linus Torvalds

@@ -2,100 +2,119 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 098F83A5D85
-	for <lists+dmaengine@lfdr.de>; Mon, 14 Jun 2021 09:16:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B7873A664A
+	for <lists+dmaengine@lfdr.de>; Mon, 14 Jun 2021 14:12:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232454AbhFNHSQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 14 Jun 2021 03:18:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232096AbhFNHSP (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 14 Jun 2021 03:18:15 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D365C061574
-        for <dmaengine@vger.kernel.org>; Mon, 14 Jun 2021 00:16:13 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lsgog-0000BB-Lg; Mon, 14 Jun 2021 09:15:26 +0200
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1lsgoe-0005Jf-D8; Mon, 14 Jun 2021 09:15:24 +0200
-Date:   Mon, 14 Jun 2021 09:15:21 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Nikita Shubin <nikita.shubin@maquefel.me>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, dmaengine@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] Prepare EP93xx drivers for Common Clock Framework
-Message-ID: <20210614071521.bv6tc5d27tj3yvlv@pengutronix.de>
-References: <20210613233041.128961-1-alexander.sverdlin@gmail.com>
+        id S233042AbhFNMOT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 14 Jun 2021 08:14:19 -0400
+Received: from mail-ua1-f46.google.com ([209.85.222.46]:36692 "EHLO
+        mail-ua1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232977AbhFNMOQ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 14 Jun 2021 08:14:16 -0400
+Received: by mail-ua1-f46.google.com with SMTP id p9so5365140uar.3;
+        Mon, 14 Jun 2021 05:12:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P4Iq/knWjwzfpXwSZUSxpj5Oaukze11zDNFuFkO7hjQ=;
+        b=TJpszwR/z+45Holrbe/dC2LYm9BY8V3ITyx9+ImfyzPjfx53V88MiqvX23zJJWlNBP
+         F3scIHAPe8P+nFgHeFd88Ox5cnLCMrDfXV9jxLM2u8+HlpfcpA6E9a6HgqbP64jqBFV/
+         3ONZg/XMPVFdfoJ/01S/IDKpVb/YYEx3t69N6QtT0JEE6PB0QuVeszDrwleZZNm76SFr
+         KYCnryfHCkoSZBTNDzvUtIimtIGlOIphXEr3qcHP1YFZo/35qXcnB1qaAGVvla6f0N11
+         D+LXrOovqNbH3BEK0/pY51bGG30uia3I/LMJixf6XDaEReyq6oKejqqwM0Pz4qBgnwrb
+         U7BQ==
+X-Gm-Message-State: AOAM531HcKp9UyqRIPpoIPyECD9cTIEtb4UR3vMl7OWeyAdp0bFLFnMG
+        CvsDcrsS8PlpRTbCh9okIdXup62AKs35cxpcYXiT8PyPYKoMDg==
+X-Google-Smtp-Source: ABdhPJwnqsYX7iRpE8vBsuVNoKR7cr27Qc4NXONjjirn5j/sIGqnyTffGa9LUYBOK7WFZgySMZinzkEHhTMc7zoiwEk=
+X-Received: by 2002:ab0:63d9:: with SMTP id i25mr11354554uap.106.1623672724647;
+ Mon, 14 Jun 2021 05:12:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tzksnyblxledsl3b"
-Content-Disposition: inline
-In-Reply-To: <20210613233041.128961-1-alexander.sverdlin@gmail.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+References: <20210611113642.18457-1-biju.das.jz@bp.renesas.com> <20210611113642.18457-2-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20210611113642.18457-2-biju.das.jz@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 14 Jun 2021 14:11:53 +0200
+Message-ID: <CAMuHMdUQRHtVFhqmgi5EE2TNobspM3tNTP10gz-yPDJSK31ytA@mail.gmail.com>
+Subject: Re: [PATCH 1/5] dt-bindings: dma: Document RZ/G2L bindings
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Biju,
 
---tzksnyblxledsl3b
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jun 11, 2021 at 1:36 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> Document RZ/G2L DMAC bindings.
+>
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On Mon, Jun 14, 2021 at 01:30:34AM +0200, Alexander Sverdlin wrote:
-> Nikita posted a patch converting EP93xx to use Common Clock Framework. It
-> turns out some cleanup is necessary in the EP93xx drivers to avoid
-> "Enabling unprepared" clock warnings.
->=20
-> Patches with stack traces in the commit messages are tested on EP9302.
+Thanks for your patch!
 
-One thing to note is: ep93xx currently doesn't provide a clk_prepare
-function, this isn't a problem though because include/linux/clk.h
-provides a dummy if CONFIG_HAVE_CLK_PREPARE isn't defined. So as ep93xx
-doesn't define this symbol the changes here effectively only add a
-might_sleep.
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+> @@ -0,0 +1,132 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/renesas,rz-dmac.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas RZ/G2L DMA Controller
+> +
+> +maintainers:
+> +  - Biju Das <biju.das.jz@bp.renesas.com>
+> +
+> +allOf:
+> +  - $ref: "dma-controller.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - renesas,dmac-r9a07g044  # RZ/G2{L,LC}
 
-Best regards
-Uwe
+Please use "renesas,r9a07g044-dmac".
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> +      - const: renesas,rz-dmac
 
---tzksnyblxledsl3b
-Content-Type: application/pgp-signature; name="signature.asc"
+Does this need many changes for RZ/A1H and RZ/A2M?
 
------BEGIN PGP SIGNATURE-----
+> +  renesas,rz-dmac-slavecfg:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description: |
+> +      DMA configuration for a slave channel. Each channel must have an array of
+> +      3 items as below.
+> +      first item in the array is MID+RID
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmDHAgYACgkQwfwUeK3K
-7Anz4wf/fZ6UpIbiQ9trvkqr6Bj6ontdmEdjh7ZjZkt/uCGHoWMQ1h2blpmdMD/z
-wzcscbTaQkBDOdRPlWqqRB77EOqy7TdJe7vKeGygZflhyBx6so3Yk+Jf9NhZ73sY
-WpFRQP5v/utpk7qmx7SXBdlJG3mkWmIujPAJd56OX6RwFped6Bqh+bpRv+jMKhHv
-KLWyqkKehDsDd9EQtPokkcgnhvFo584TGv3oWUFi0AtPTgVXCSSNCiIxkR8BKLhs
-/pwCZo/rdneUeHPZpvBsR2AAVefwMmCQphi9CA4JaCsxGkA6Hfa5c1YBpsPXKnSZ
-aL6XNpm9fn67SU0C3GhW4R4lGjRoMQ==
-=giTe
------END PGP SIGNATURE-----
+Already in dmas.
 
---tzksnyblxledsl3b--
+> +      second item in the array is slave src or dst address
+
+As pointed out by Rob, already known by the slave driver.
+
+> +      third item in the array is channel configuration value.
+
+What exactly is this?
+Does the R-Car DMAC have this too? If yes, how does its driver handle it?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds

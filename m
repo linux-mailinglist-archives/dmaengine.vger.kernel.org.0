@@ -2,74 +2,110 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CE523A9A18
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Jun 2021 14:23:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 966B13A9A44
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Jun 2021 14:27:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232752AbhFPMZn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 16 Jun 2021 08:25:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47628 "EHLO mail.kernel.org"
+        id S232884AbhFPM3w (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 16 Jun 2021 08:29:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229503AbhFPMZl (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 16 Jun 2021 08:25:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C0E9B6128C;
-        Wed, 16 Jun 2021 12:23:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1623846215;
-        bh=JQHmCW/leR0CDqLSwgusxk3rhfxZDcyA0XqoiaaOZ5k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T4xAKtxu+l8eMdudgT4MXh8qwS97EpK/VvA/hIGLH5nvQXF4yOTbf7COB+jj9NKNO
-         dFUfvzrIP6f05fGgeZ6hNvWIbHFcYxGmmXAUGBW/LI+iNqParxo7hXEh9ZQ9y06lMI
-         nW/uBtKxILs7bUAd4l2+U9102kr7vjvPFnn1tfwI=
-Date:   Wed, 16 Jun 2021 14:23:32 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sanjay R Mehta <sanmehta@amd.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Sanjay R Mehta <Sanju.Mehta@amd.com>,
-        dan.j.williams@intel.com, Thomas.Lendacky@amd.com,
-        Shyam-sundar.S-k@amd.com, Nehal-bakulchandra.Shah@amd.com,
-        robh@kernel.org, mchehab+samsung@kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v9 1/3] dmaengine: ptdma: Initial driver for the AMD PTDMA
-Message-ID: <YMntRILEO3ceyeZU@kroah.com>
-References: <1622654551-9204-1-git-send-email-Sanju.Mehta@amd.com>
- <1622654551-9204-2-git-send-email-Sanju.Mehta@amd.com>
- <YL+rUBGUJoFLS902@vkoul-mobl>
- <94bba5dd-b755-81d0-de30-ce3cdaa3f241@amd.com>
- <YMl6zpjVHls8bk/A@vkoul-mobl>
- <0bc4e249-b8ce-1d92-ddde-b763667a0bcb@amd.com>
- <YMmXPMy7Lz9Jo89j@kroah.com>
- <12ff7989-c89d-d220-da23-c13ddc53384e@amd.com>
- <YMmt1qhC1dIiYx7O@vkoul-mobl>
- <627518e2-8b20-d6a9-1e0c-9822c4fa95ed@amd.com>
+        id S232637AbhFPM3l (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 16 Jun 2021 08:29:41 -0400
+Received: from jic23-huawei (cpc108967-cmbg20-2-0-cust86.5-4.cable.virginm.net [81.101.6.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBA8561369;
+        Wed, 16 Jun 2021 12:27:07 +0000 (UTC)
+Date:   Wed, 16 Jun 2021 13:29:08 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, dmaengine@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
+        alsa-devel@alsa-project.org, iommu@lists.linux-foundation.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Stephen Boyd <sboyd@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Vinod Koul <vkoul@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] dt-bindings: Drop redundant minItems/maxItems
+Message-ID: <20210616132908.76a780b8@jic23-huawei>
+In-Reply-To: <20210615191543.1043414-1-robh@kernel.org>
+References: <20210615191543.1043414-1-robh@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <627518e2-8b20-d6a9-1e0c-9822c4fa95ed@amd.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Jun 16, 2021 at 05:30:49PM +0530, Sanjay R Mehta wrote:
-> The pt_device is allocated and initialized in the PCI probe function and
-> then we just get the "dev" from the "pci_dev" object and save it in
-> "pt->dev" as shown in below snippet.
+On Tue, 15 Jun 2021 13:15:43 -0600
+Rob Herring <robh@kernel.org> wrote:
+
+> If a property has an 'items' list, then a 'minItems' or 'maxItems' with the
+> same size as the list is redundant and can be dropped. Note that is DT
+> schema specific behavior and not standard json-schema behavior. The tooling
+> will fixup the final schema adding any unspecified minItems/maxItems.
 > 
+> This condition is partially checked with the meta-schema already, but
+> only if both 'minItems' and 'maxItems' are equal to the 'items' length.
+> An improved meta-schema is pending.
 > 
->    static int pt_pci_probe(struct pci_dev *pdev, const struct
-> pci_device_id *id)
->    {
-> 	struct pt_device *pt;
-> 	struct pt_msix *pt_msix;
-> 	struct device *dev = &pdev->dev;
 
-So "dev" is a parent here, or something else?
+...
 
-If it is the parent, please call it such otherwise it is confusing.
+>  .../devicetree/bindings/iio/adc/amlogic,meson-saradc.yaml   | 1 -
 
-If you are creating child devices, what bus do they belong to?
+For this one, the fact it overrides maxItems elsewhere makes this a little
+bit odd.  I guess we can get used to it being implicit.
 
-Can you fix up this series and resend it so that we can review it again?
+>  .../devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml     | 2 --
 
-thanks,
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-greg k-h
+

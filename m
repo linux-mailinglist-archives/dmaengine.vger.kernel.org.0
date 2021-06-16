@@ -2,81 +2,185 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F4113A983F
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Jun 2021 12:57:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 871843A98EC
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Jun 2021 13:14:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231180AbhFPK7G (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 16 Jun 2021 06:59:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230262AbhFPK7G (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 16 Jun 2021 06:59:06 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE501C061574;
-        Wed, 16 Jun 2021 03:57:00 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id s14so1882173pfd.9;
-        Wed, 16 Jun 2021 03:57:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=w//y6HzGeeu412j7fzF2nhyN+nMt8aXOPDkXjgQ3ZQ4=;
-        b=ggC5cbKP9AXBEs+Pe/HLwWnonWnqW2xwpIQ8gk0G3pZhNbt7revm3ityNfh5mYTpVa
-         5PzB5Jia2GKpBE50y6Y9TLzxqjlUZ5K18XK/yZcsvZACiuxGAsxysMP1VJDvZDt9+lcI
-         kfoAdrgutRyPbtwYqjTm3FR2rx+G7iN/pBs6d+Bgpq8UIbLNd2Aw45IwKCfAYLLhjzoF
-         gRIIjoTX04dG38MQtSW/rmOoRijB5VOIFpqkGKZ1byhxYgv9L9DZU1NA3riaE3pYtTe1
-         fvG4F2I95ZNXWDDv2gTf1ZVEpmZ47xe/YkxvJ57AuLrLqJ7wmR8fZWqX2C++E2gAtaF/
-         HY7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=w//y6HzGeeu412j7fzF2nhyN+nMt8aXOPDkXjgQ3ZQ4=;
-        b=O2gsRkVcIfTRIE/UX8RQxVvbga3bGZUBg/yHKCEZKX85Q2ypChLoKbU2Mqghm7L1eT
-         3sm2QCJnTnfuQ+gZFt/76j/SmVCPXyAw/H7dMd6owsMmF1EseqxmW5AVt9muPHZ6rTYr
-         CcThiGjinwr7yDIX1XpSmeuNLSADMlJXa1WhgOPg2JSED7R7V6wf3yiB9V7v1V5dtdko
-         QLDOESpLAE1QOAW0KqQQvKL6DFD2Wn/Ifsy7/Yw3YbjeYa2shcFf6wWA/TXDaUVtYVk8
-         vNialNwo4d39MamGMfFBAmv4O0X8wXRrjdsY84m+7jNgAYbUKFzNbyWMch5cMhhRHL2s
-         VWSA==
-X-Gm-Message-State: AOAM532A50VaiBZ15yUVjUfa2L0iH04DqaH1vN1HUDf1f897TdMPs/5f
-        CViKwKTZNtls978N+GM31PdXs+70XNgxFTXU8dfguyk19no=
-X-Google-Smtp-Source: ABdhPJw9ZB0RRBljpr8xPQLiyZo07M8XF6ka9SVkEaB9dd2kKY4DiCFI0y068zjUDmdnnDeMBX2V7d+ReaaRG4gcfII=
-X-Received: by 2002:a63:4b16:: with SMTP id y22mr4338230pga.410.1623841020315;
- Wed, 16 Jun 2021 03:57:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210611065336.GA1121@raspberrypi> <YMnVDJM8foWIZTGk@vkoul-mobl>
-In-Reply-To: <YMnVDJM8foWIZTGk@vkoul-mobl>
-From:   Austin Kim <austindh.kim@gmail.com>
-Date:   Wed, 16 Jun 2021 19:56:53 +0900
-Message-ID: <CADLLry7tv4xG2d0Pivq86F-Lr1-nBbmgYxEoJGyFx4SNTsUNYA@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: sf-pdma: apply proper spinlock flags in sf_pdma_prep_dma_memcpy()
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     green.wan@sifive.com, dmaengine@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?6rmA64+Z7ZiE?= <austin.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        id S229943AbhFPLQj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 16 Jun 2021 07:16:39 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:36685 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S229546AbhFPLQj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 16 Jun 2021 07:16:39 -0400
+X-IronPort-AV: E=Sophos;i="5.83,277,1616425200"; 
+   d="scan'208";a="84538440"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 16 Jun 2021 20:14:31 +0900
+Received: from localhost.localdomain (unknown [10.226.93.117])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 1356A421789D;
+        Wed, 16 Jun 2021 20:14:28 +0900 (JST)
+From:   Biju Das <biju.das.jz@bp.renesas.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Biju Das <biju.das.jz@bp.renesas.com>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH v2] dt-bindings: dma: Document RZ/G2L bindings
+Date:   Wed, 16 Jun 2021 11:55:57 +0100
+Message-Id: <20210616105557.9321-1-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-2021=EB=85=84 6=EC=9B=94 16=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 7:40, V=
-inod Koul <vkoul@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On 11-06-21, 07:53, Austin Kim wrote:
-> > From: Austin Kim <austin.kim@lge.com>
-> >
-> > The second parameter of spinlock_irq[save/restore] function is flags,
-> > which is the last input parameter of sf_pdma_prep_dma_memcpy().
-> >
-> > So declare local variable 'iflags' to be used as the second parameter o=
-f
-> > spinlock_irq[save/restore] function.
->
-> Applied, thanks
+Document RZ/G2L DMAC bindings.
 
-Great, thanks!
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+Note:-  This patch has dependency on #include <dt-bindings/clock/r9a07g044-cpg.h> file which will be in 
+next 5.14-rc1 release.
 
->
-> --
-> ~Vinod
+v1->v2:
+  * Made interrupt names in defined order
+  * Removed src address and channel configuration from dma-cells.
+  * Changed the compatibele string to "renesas,r9a07g044-dmac".
+  * 
+v1:-
+  * https://patchwork.kernel.org/project/linux-renesas-soc/patch/20210611113642.18457-2-biju.das.jz@bp.renesas.com/
+---
+ .../bindings/dma/renesas,rz-dmac.yaml         | 118 ++++++++++++++++++
+ 1 file changed, 118 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+
+diff --git a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+new file mode 100644
+index 000000000000..0389050aadf6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+@@ -0,0 +1,118 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/renesas,rz-dmac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas RZ/G2L DMA Controller
++
++maintainers:
++  - Biju Das <biju.das.jz@bp.renesas.com>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - renesas,r9a07g044-dmac # RZ/G2{L,LC}
++      - const: renesas,rz-dmac
++
++  reg:
++    items:
++      - description: Control and channel register block
++      - description: DMA extended resource selector block
++
++  interrupts:
++    maxItems: 17
++
++  interrupt-names:
++    items:
++      - const: ch0
++      - const: ch1
++      - const: ch2
++      - const: ch3
++      - const: ch4
++      - const: ch5
++      - const: ch6
++      - const: ch7
++      - const: ch8
++      - const: ch9
++      - const: ch10
++      - const: ch11
++      - const: ch12
++      - const: ch13
++      - const: ch14
++      - const: ch15
++      - const: error
++
++  clocks:
++    maxItems: 1
++
++  '#dma-cells':
++    const: 1
++    description:
++      The cell specifies the MID/RID of the DMAC port connected to
++      the DMA client.
++
++  dma-channels:
++    const: 16
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++  - clocks
++  - '#dma-cells'
++  - dma-channels
++  - power-domains
++  - resets
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/r9a07g044-cpg.h>
++
++    dmac: dma-controller@11820000 {
++        compatible = "renesas,r9a07g044-dmac",
++                     "renesas,rz-dmac";
++        reg = <0x11820000 0x10000>,
++              <0x11830000 0x10000>;
++        interrupts = <GIC_SPI 125 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 126 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 127 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 128 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 129 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 130 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 131 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 132 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 133 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 134 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 135 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 136 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 137 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 138 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 139 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 140 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 141 IRQ_TYPE_EDGE_RISING>;
++        interrupt-names = "ch0", "ch1", "ch2", "ch3",
++                          "ch4", "ch5", "ch6", "ch7",
++                          "ch8", "ch9", "ch10", "ch11",
++                          "ch12", "ch13", "ch14", "ch15",
++                          "error";
++        clocks = <&cpg CPG_MOD R9A07G044_CLK_DMAC>;
++        power-domains = <&cpg>;
++        resets = <&cpg R9A07G044_CLK_DMAC>;
++        #dma-cells = <1>;
++        dma-channels = <16>;
++    };
+-- 
+2.17.1
+

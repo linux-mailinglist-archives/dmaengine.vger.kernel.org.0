@@ -2,124 +2,89 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57BD43A98B0
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Jun 2021 13:05:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CAB13A98FB
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Jun 2021 13:18:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230055AbhFPLHI convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Wed, 16 Jun 2021 07:07:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230225AbhFPLHA (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 16 Jun 2021 07:07:00 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A2EC06175F
-        for <dmaengine@vger.kernel.org>; Wed, 16 Jun 2021 04:04:54 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1ltTLZ-0008JI-NL; Wed, 16 Jun 2021 13:04:37 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1ltTLV-0004Gb-1x; Wed, 16 Jun 2021 13:04:33 +0200
-Message-ID: <7847f2e656fa7ad4c72856c1ea0068d849842113.camel@pengutronix.de>
-Subject: Re: [PATCH] dt-bindings: Drop redundant minItems/maxItems
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
-        iommu@lists.linux-foundation.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
-        linux-can@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Vinod Koul <vkoul@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Date:   Wed, 16 Jun 2021 13:04:32 +0200
-In-Reply-To: <20210615191543.1043414-1-robh@kernel.org>
-References: <20210615191543.1043414-1-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        id S231856AbhFPLUg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 16 Jun 2021 07:20:36 -0400
+Received: from mail-ua1-f50.google.com ([209.85.222.50]:45728 "EHLO
+        mail-ua1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231741AbhFPLUg (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 16 Jun 2021 07:20:36 -0400
+Received: by mail-ua1-f50.google.com with SMTP id v17so627201uar.12;
+        Wed, 16 Jun 2021 04:18:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KFppgdT7CLKOLDaLJGeivAUUwv8mpERUMDgjR5mFX2Q=;
+        b=BBeVsvoZ4AVSy+Y8yHwdEmm5VnqLTJRxB/oarkG9s8C2HRFpJvpV+Y7+gkXdhdzCYt
+         u4gaF3RUWOnSk7QWmQPj7ejeGSlZAeTfbC28/PXrdt8awQpGrlkRIoEhANUrvvRxSoyw
+         3eVOo93+6DEDuBDZ/KwPQHg++XM7nzuLRTtUggwGA+FqHWeU1femrCrTUarsi5PLXOf6
+         GcmwOWzKQsjK5jwTp2qkrJW7XbmWyRyHPOPTvkQ97OnIMc62PmAbzh7UsxsdoJ9f2ZEA
+         TZvaW2iEjYkB3/73sZqNGjJZQ6RjwwzWNqg+mp2U7n6mF48qBWrN2dxUZmKY34MKnAag
+         jY3Q==
+X-Gm-Message-State: AOAM530+WmRtpWEfnV0XLLJs/TZZdUYqwriS8gjlBz5xfdYJ1RlZxr6d
+        aDD8hRf3fwcCqIOFf6l9dyjmAdY/YbBvXisARXk=
+X-Google-Smtp-Source: ABdhPJy9W5ndu5bvPys51QNrj75YVXl0pvjisg4IJQA0U4LMfMINRJyD7Z5sYALWQifxuYErXQHn1iBe9VLGxsU9S+A=
+X-Received: by 2002:ab0:647:: with SMTP id f65mr3978118uaf.4.1623842308529;
+ Wed, 16 Jun 2021 04:18:28 -0700 (PDT)
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+References: <cover.1623405675.git.geert+renesas@glider.be> <0c6bdd6a-826c-6831-1477-3a1e782cced3@physik.fu-berlin.de>
+In-Reply-To: <0c6bdd6a-826c-6831-1477-3a1e782cced3@physik.fu-berlin.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 16 Jun 2021 13:18:17 +0200
+Message-ID: <CAMuHMdU_B4pRyaz4nhp3k0dtXy3A8tRYbdCpmYYaSpzeZCeWOw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Remove shdma DT support
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Chris Brandt <Chris.Brandt@renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, 2021-06-15 at 13:15 -0600, Rob Herring wrote:
-> If a property has an 'items' list, then a 'minItems' or 'maxItems' with the
-> same size as the list is redundant and can be dropped. Note that is DT
-> schema specific behavior and not standard json-schema behavior. The tooling
-> will fixup the final schema adding any unspecified minItems/maxItems.
-> 
-> This condition is partially checked with the meta-schema already, but
-> only if both 'minItems' and 'maxItems' are equal to the 'items' length.
-> An improved meta-schema is pending.
-[...]
->  Documentation/devicetree/bindings/reset/fsl,imx-src.yaml    | 1 -
-[...]
-> diff --git a/Documentation/devicetree/bindings/reset/fsl,imx-src.yaml b/Documentation/devicetree/bindings/reset/fsl,imx-src.yaml
-> index 27c5e34a3ac6..b11ac533f914 100644
-> --- a/Documentation/devicetree/bindings/reset/fsl,imx-src.yaml
-> +++ b/Documentation/devicetree/bindings/reset/fsl,imx-src.yaml
-> @@ -59,7 +59,6 @@ properties:
->        - description: SRC interrupt
->        - description: CPU WDOG interrupts out of SRC
->      minItems: 1
-> -    maxItems: 2
->  
->    '#reset-cells':
->      const: 1
+Hi Adrian,
 
-Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+On Wed, Jun 16, 2021 at 12:42 PM John Paul Adrian Glaubitz
+<glaubitz@physik.fu-berlin.de> wrote:
+> On 6/11/21 12:18 PM, Geert Uytterhoeven wrote:
+> > Hence this series removes the Renesas SHDMA Device Tree bindings, the
+> > SHDMA DMA multiplexer driver, and the corresponding description in the
+> > R-Mobile APE6 DTS.
+> Do these changes make life harder in case we want to convert SH to device
+> tree as already prepared by Yoshinori Sato? [1]
 
-regards
-Philipp
+Probably not. The only modern DT-aware DMAC drivers for Renesas
+hardware are drivers/dma/sh/{rcar,usb}-dmac.c.  Soon there will be
+drivers/dma/sh/rz-dmac.c, for RZ/G2L (and RZ/A1 and RZ/A2 later).
+Given the R-Car DMAC is very similar to the SH/R-Mobile DMAC, the
+latter may be made to work with rcar-dmac.c, if anyone is willing
+to spend cycles on that.  Likewise, the RZ/A DMAC probably has its
+roots in older SH SoCs, so that may be helpful for you, too.
+
+Chris (CCed) may know better...
+
+> > [1] https://lore.kernel.org/patchwork/cover/693910/
+
+None of these handle DMA?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds

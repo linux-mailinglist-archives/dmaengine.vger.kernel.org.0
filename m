@@ -2,60 +2,78 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D8853AA0DA
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Jun 2021 18:07:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10D853AA2B2
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Jun 2021 19:56:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234511AbhFPQJK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 16 Jun 2021 12:09:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234603AbhFPQJG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 16 Jun 2021 12:09:06 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id E2646610A0;
-        Wed, 16 Jun 2021 16:06:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623859619;
-        bh=MfLY5pA8NkxXhmHUzct5mKaHg2b+WWu8jg9BXogUvVc=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=g1anxOxyIGTp8kvhE5ti9opBJP/bsTz9F+zjIdH7AOYjfJdke6TIMQ7EzUAeILwpT
-         6Zu6kMuSaYX6CeO39IlzU+cys+SnwtZNBhsXYi2h4v5RuaqdkjMUeTe9fVMVxFg9A1
-         +OHrWJ8FeMZ3NF4V3egrAZ4noAdCcrGig9wQaCgPtxUgz8O8U/rqM8U4uFWIRlhh1N
-         sKzhhyf2R3P7vOpExK4ceOPQhH+yYkre6j+EBSUsUFeGd0iFZq1RuL2v7TS9EJJXBe
-         iHluQMLGk5EqDuw7crEowCrJ3iA2XL17HOKbRUd9KxJSgaCA/1Ot34kSJzemKNNAyj
-         aYI4Chko6Wxdg==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id CE0AF60953;
-        Wed, 16 Jun 2021 16:06:59 +0000 (UTC)
-Subject: Re: [GIT PULL]: dmaengine fixes for v5.13
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <YMn1xTAqhOUI5sle@vkoul-mobl>
-References: <YMn1xTAqhOUI5sle@vkoul-mobl>
-X-PR-Tracked-List-Id: <dmaengine.vger.kernel.org>
-X-PR-Tracked-Message-Id: <YMn1xTAqhOUI5sle@vkoul-mobl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-fix-5.13
-X-PR-Tracked-Commit-Id: 9041575348b21ade1fb74d790f1aac85d68198c7
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6b00bc639f1f2beeff3595e1bab9faaa51d23b01
-Message-Id: <162385961978.26862.12670467491333586773.pr-tracker-bot@kernel.org>
-Date:   Wed, 16 Jun 2021 16:06:59 +0000
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        id S230377AbhFPR6w (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 16 Jun 2021 13:58:52 -0400
+Received: from mail-il1-f178.google.com ([209.85.166.178]:42668 "EHLO
+        mail-il1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230291AbhFPR6w (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 16 Jun 2021 13:58:52 -0400
+Received: by mail-il1-f178.google.com with SMTP id h3so3076641ilc.9;
+        Wed, 16 Jun 2021 10:56:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/py5L9Q9HSWwFy0NUmVJdPgH/ue50u6DETIV0QpNLhU=;
+        b=hGZgSbBKR5Je6QJ/6EGvb+PgJ5v6H34ME2beldu6lcTZxbqln8Wz7Dn/mDSY812Jhx
+         U4btitBI0bi7LGMGo60VY7IexkSFDDIxsW2Mgpa5VVLQ8r+Pgs/iCvngyR8ESiObJ9Pp
+         awu7IOXIzS+POGa3myPwe3ot9xHeMXM/BV+35zlUJYEeA6/3DicXuoaOjZeK0P9Yt7Im
+         RZr+0fvT8VJMk/yWSSfNRLOIyqvW1KPNbqPHRde37F+TdKGKFG5Fw43urraBvYvb/5jh
+         k+dKIzXCe4bWFLqfuYM3ibr5be+bYsNyZoUteeonBlskYCp7HLm0qOnkkQH4W9M6A8lw
+         6cvQ==
+X-Gm-Message-State: AOAM530dLQccbPavgolf38IJA6daQxCza3SgsiGxHsGwLuh2c/HiNnaS
+        Mc5LWK9pK6c8m1uFkffMUw==
+X-Google-Smtp-Source: ABdhPJxLM7mtUE5wO0OfkXJfNJhh1g1eIoDeP8YYOXTqhfbSbWH63TbwS+zYyN8fRZCLPXHGek1YCQ==
+X-Received: by 2002:a92:6b06:: with SMTP id g6mr594663ilc.270.1623866205437;
+        Wed, 16 Jun 2021 10:56:45 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id i13sm1532726ilr.16.2021.06.16.10.56.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Jun 2021 10:56:44 -0700 (PDT)
+Received: (nullmailer pid 3616686 invoked by uid 1000);
+        Wed, 16 Jun 2021 17:56:43 -0000
+Date:   Wed, 16 Jun 2021 11:56:43 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Vinod Koul <vkoul@kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-renesas-soc@vger.kernel.org,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        linux-sh@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Remove SHDMA Device Tree
+ bindings
+Message-ID: <20210616175643.GA3616655@robh.at.kernel.org>
+References: <cover.1623406640.git.geert+renesas@glider.be>
+ <ba56b7199fcf3516f202389d2c8f836c9ec51e7a.1623406640.git.geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ba56b7199fcf3516f202389d2c8f836c9ec51e7a.1623406640.git.geert+renesas@glider.be>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The pull request you sent on Wed, 16 Jun 2021 18:29:49 +0530:
+On Fri, 11 Jun 2021 12:18:39 +0200, Geert Uytterhoeven wrote:
+> Remove the Renesas SHDMA Device Tree bindings, as they are unused.
+> The DMA multiplexer node and one DMA controller instance were added to
+> the R-Mobile APE6 .dtsi file, but DMA support was never fully enabled,
+> cfr. commit a19788612f51b787 ("dmaengine: sh: Remove R-Mobile APE6
+> support").
+> 
+> Note that the mux idea was dropped when implementing support for DMA on
+> R-Car Gen2, cfr. renesas,rcar-dmac.yaml.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  .../devicetree/bindings/dma/renesas,shdma.txt | 84 -------------------
+>  1 file changed, 84 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/dma/renesas,shdma.txt
+> 
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-fix-5.13
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6b00bc639f1f2beeff3595e1bab9faaa51d23b01
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Acked-by: Rob Herring <robh@kernel.org>

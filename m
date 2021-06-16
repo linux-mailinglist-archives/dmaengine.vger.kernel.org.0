@@ -2,119 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 916833A9782
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Jun 2021 12:35:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E3523A979C
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Jun 2021 12:36:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232444AbhFPKhX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 16 Jun 2021 06:37:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50158 "EHLO mail.kernel.org"
+        id S231931AbhFPKio (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 16 Jun 2021 06:38:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232370AbhFPKhA (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 16 Jun 2021 06:37:00 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 998E661107;
-        Wed, 16 Jun 2021 10:34:50 +0000 (UTC)
+        id S231922AbhFPKin (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 16 Jun 2021 06:38:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id ED88960FF4;
+        Wed, 16 Jun 2021 10:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623839691;
-        bh=uJEv3OvJMqswalWvG2rx1DCmioR+VtUOrO7CZGR2Ajw=;
+        s=k20201202; t=1623839797;
+        bh=3oTb/1+XDcFsTnzsrZvYuutb3J6p97qLHaHtThQAkqc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A6wsFevRhS9CeafwlT529v2rV3Gm9GGwn4GGkmYDghQBgvSltNdLhA2d1VwUgm9YV
-         V+BZ/Z7dkVuRC9jA+aF8uUIN4oppwPSoc0YE3UC/NPxsGiCugwhXT7XZEbbeh2pmB/
-         M4rdDOJ4s0X9LmiRn4axjJlxF+T4B+Wd1HYLAz0MgEG64RvZ+ZZaXxAxnqcCDwPJej
-         pW3zx7fe6lsVprl/vQScwg/OlH7/cEN61iAlussljsV2mRmi/pOkb0n3FbRiUdCHAK
-         H6X3SZGPBKP1nePHfXCLHq/6yaW3vQZyt5NRvZBipljaN3xhgyRVkvGP83STRQZ1Xh
-         jhhQBOeaewbeQ==
-Date:   Wed, 16 Jun 2021 16:04:47 +0530
+        b=IFSOjzgUTgRVG+msUdDw2KENqBmzvBhpu7O5BIhA3opNeq215BrJnOxmlXZMRZ0av
+         7kEGyZsLzKzKy5HCXAzl6+TROnko29I3j2HZ9rA7scbnrIRMlStxTumWl/UnrIKgVY
+         L3oRPnh4SRv/5s258GLwl8hm7DDcBdOHhOfwjEz+dzW6rjuRWfV9BxY2+hsFGvZysu
+         aQsKIDvJEhS4YBlb5puVpz7EgEN4LE2M7dkaQqt84XDN+xzNuFyuEwIT3SelMipH+U
+         /dKshZ/hc6tOYokOCDJiPjri2GgP3WqgLD1vhFP5ku1kqek3nRP53wa2MKsabB10Sc
+         AIz5jQ3fCWlfg==
+Date:   Wed, 16 Jun 2021 16:06:34 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, dmaengine@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
-        alsa-devel@alsa-project.org, iommu@lists.linux-foundation.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, Stephen Boyd <sboyd@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] dt-bindings: Drop redundant minItems/maxItems
-Message-ID: <YMnTx4GqTWu75o2n@vkoul-mobl>
-References: <20210615191543.1043414-1-robh@kernel.org>
+To:     Konrad Dybcio <konrad.dybcio@somainline.org>
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, martin.botka@somainline.org,
+        angelogioacchino.delregno@somainline.org,
+        marijn.suijten@somainline.org, jamipkettunen@somainline.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: qcom: gpi: add compatible
+ for sm8250
+Message-ID: <YMnUMuUahJM/9KTA@vkoul-mobl>
+References: <20210614235358.444834-1-konrad.dybcio@somainline.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210615191543.1043414-1-robh@kernel.org>
+In-Reply-To: <20210614235358.444834-1-konrad.dybcio@somainline.org>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 15-06-21, 13:15, Rob Herring wrote:
-> If a property has an 'items' list, then a 'minItems' or 'maxItems' with the
-> same size as the list is redundant and can be dropped. Note that is DT
-> schema specific behavior and not standard json-schema behavior. The tooling
-> will fixup the final schema adding any unspecified minItems/maxItems.
-> 
-> This condition is partially checked with the meta-schema already, but
-> only if both 'minItems' and 'maxItems' are equal to the 'items' length.
-> An improved meta-schema is pending.
+On 15-06-21, 01:53, Konrad Dybcio wrote:
+> No functional changes, just adding a new compatible for a different
+> SoC.
 
->  .../devicetree/bindings/dma/renesas,rcar-dmac.yaml          | 1 -
-
->  Documentation/devicetree/bindings/phy/brcm,sata-phy.yaml    | 1 -
->  Documentation/devicetree/bindings/phy/mediatek,tphy.yaml    | 2 --
->  .../devicetree/bindings/phy/phy-cadence-sierra.yaml         | 2 --
->  .../devicetree/bindings/phy/phy-cadence-torrent.yaml        | 4 ----
->  .../devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml    | 1 -
->  .../devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml    | 1 -
->  Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml     | 1 -
->  Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml   | 2 --
->  Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml | 2 --
->  Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml | 1 -
-
-Acked-By: Vinod Koul <vkoul@kernel.org>
+Applied 1 & 2, thanks
 
 -- 
 ~Vinod

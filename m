@@ -2,104 +2,212 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EDBC3A970C
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Jun 2021 12:16:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 762213A9753
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Jun 2021 12:31:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232202AbhFPKSg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 16 Jun 2021 06:18:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44024 "EHLO mail.kernel.org"
+        id S232334AbhFPKdM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 16 Jun 2021 06:33:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232013AbhFPKSf (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 16 Jun 2021 06:18:35 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 04FB76128B;
-        Wed, 16 Jun 2021 10:16:28 +0000 (UTC)
+        id S232030AbhFPKdL (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 16 Jun 2021 06:33:11 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7210C61245;
+        Wed, 16 Jun 2021 10:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623838589;
-        bh=Yl3Fo5sP4nLowKYxQeJ+73AVzv13OFqSVG1zQ6Fifj0=;
+        s=k20201202; t=1623839465;
+        bh=kbRtLUdWaOWuC+aonTy88qSE/5UTRrrJ//3tQJQaeHs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PCrvbYraugyfHXvka5f/phJsh3QDa6OznDlXu8faA7q37prFWtVHGl6LuEN00T0SS
-         vP0YR5YY0ohYfBI8cxPR0tMn4D90wmj+ELllI0RX5tfsn6vScrffmOccAburP9nQJR
-         3Wkdjg0tNJffmta+IbH+DNpGkQhWTPpjDA1fL4m2l3/tIeM+6uYqAwt8Bz2YHfq0wG
-         V017dBo6le+T6fViF9eDqgFhhX8H/1SntHmNcfD3zMIyXwfYvCqbtNUAy1d1Vsx8wJ
-         srdQAblkQP9BiT2EXtL/X1BAxtalPZjk6mJ6RUV6qA+IDGC4RzK9z5qQdqHjE1bfrg
-         CHm5+/UufwQiQ==
-Date:   Wed, 16 Jun 2021 15:46:24 +0530
+        b=fQQkni44Pz2Xzx7UXwLDLr9BeEhWuB2ch5AiNSFGj7KOPyy4V0zo26RxLbd31iKJ2
+         Yr3mBzNnspnWYKydCAdDEWIwgF8d9lXENdbgDFQ1V84m3p0+z6ov6gp9GUgc/tq1w+
+         99MxrGa+QZp3MMIIqynyylyJs5ueoetr8x3GU5TPYQNTohH92ajGPdJGfDiwQ5QrD9
+         suY/nQYlgmeVH3xotVWaKKGkHPmMMPx6LABJACKet5Wlmws6WxWdu2+ButTswZQCBO
+         bRt23hBMyIa+3j9Ticj6etTqGZEyCIwpdYQFzLV4VaOgQV8+71x0TblnIOWwokF90O
+         +Mf6r9NbT2nIA==
+Date:   Wed, 16 Jun 2021 16:01:00 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Clark Wang <xiaoning.wang@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v14 00/12] add ecspi ERR009165 for i.mx6/7 soc family
-Message-ID: <YMnPeLHM8SXTEVQP@vkoul-mobl>
-References: <1617809456-17693-1-git-send-email-yibin.gong@nxp.com>
- <CAOMZO5CNjpek0vkDrMyTmfbnr2cLcquck6QQBqXLBiyTDKPXvA@mail.gmail.com>
- <VE1PR04MB6688017E125D42C5DCB3C17D89309@VE1PR04MB6688.eurprd04.prod.outlook.com>
- <YMhDvlPrFvSZP//I@vkoul-mobl>
- <VE1PR04MB6688E8EECC03C5290DE10BC089309@VE1PR04MB6688.eurprd04.prod.outlook.com>
- <YMiYEZDgutW+KRsO@vkoul-mobl>
- <VE1PR04MB6688F98FE0B76AF20392DD6E89309@VE1PR04MB6688.eurprd04.prod.outlook.com>
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        dmaengine@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 3/5] drivers: dma: sh: Add DMAC driver for RZ/G2L SoC
+Message-ID: <YMnS5AdR8PL0hKuC@vkoul-mobl>
+References: <20210611113642.18457-1-biju.das.jz@bp.renesas.com>
+ <20210611113642.18457-4-biju.das.jz@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <VE1PR04MB6688F98FE0B76AF20392DD6E89309@VE1PR04MB6688.eurprd04.prod.outlook.com>
+In-Reply-To: <20210611113642.18457-4-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 15-06-21, 14:10, Robin Gong wrote:
-> On 15/06/21 20:08 Vinod Koul <vkoul@kernel.org> wrote:
-> > On 15-06-21, 06:36, Robin Gong wrote:
-> > > On 15/06/21 14:08 Vinod Koul <vkoul@kernel.org> wrote:
-> > > > On 15-06-21, 01:55, Robin Gong wrote:
-> > > > > On 06/11/21 21:51 Fabio Estevam <festevam@gmail.com> wrote:
-> > > >
-> > > > > > Without this series, SPI DMA does not work on i.MX8MM:
-> > > > > >
-> > > > > >  [   41.315984] spi_master spi1: I/O Error in DMA RX
-> > > > > >
-> > > > > > I applied your series and SPI DMA works now:
-> > > > > >
-> > > > > > Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> > > > > Thanks Fabio.
-> > > > > Hello Vinod, Mark,
-> > > > > Is my patch set good enough to merge? I remember someone else are
-> > > > > requesting it from last year like Fabio.
-> > > >
-> > > > I have acked the last dmaengine patch, is there any else required from me?
-> > > > Which tree will be this merged thru?
-> > > Thanks Vinod, mainline is enough I think.
-> > 
-> > I meant which subsystem tree will this go thru :)
-> I thought the patches with 'spi' tag could be merged into spi tree while
-> 'dmaengine' merged into dmaengine tree, the rest of dts patch merged
-> into i.mx branch. But from HW errata view, maybe merging all into i.mx
-> branch is a better way?
+On 11-06-21, 12:36, Biju Das wrote:
+> Add DMA Controller driver for RZ/G2L SoC.
+> 
+> Based on the work done by Chris Brandt for RZ/A DMA driver.
+> 
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  drivers/dma/sh/Kconfig   |    8 +
+>  drivers/dma/sh/Makefile  |    1 +
+>  drivers/dma/sh/rz-dmac.c | 1050 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1059 insertions(+)
+>  create mode 100644 drivers/dma/sh/rz-dmac.c
+> 
+> diff --git a/drivers/dma/sh/Kconfig b/drivers/dma/sh/Kconfig
+> index 13437323a85b..280a6d359e36 100644
+> --- a/drivers/dma/sh/Kconfig
+> +++ b/drivers/dma/sh/Kconfig
+> @@ -47,3 +47,11 @@ config RENESAS_USB_DMAC
+>  	help
+>  	  This driver supports the USB-DMA controller found in the Renesas
+>  	  SoCs.
+> +
+> +config RZ_DMAC
+> +	tristate "Renesas RZ/G2L Controller"
+> +	depends on ARCH_R9A07G044 || COMPILE_TEST
+> +	select RENESAS_DMA
+> +	help
+> +	  This driver supports the general purpose DMA controller found in the
+> +	  Renesas RZ/G2L SoC variants.
+> diff --git a/drivers/dma/sh/Makefile b/drivers/dma/sh/Makefile
+> index 112fbd22bb3f..9b2927f543bf 100644
+> --- a/drivers/dma/sh/Makefile
+> +++ b/drivers/dma/sh/Makefile
+> @@ -15,3 +15,4 @@ obj-$(CONFIG_SH_DMAE) += shdma.o
+>  
+>  obj-$(CONFIG_RCAR_DMAC) += rcar-dmac.o
+>  obj-$(CONFIG_RENESAS_USB_DMAC) += usb-dmac.o
+> +obj-$(CONFIG_RZ_DMAC) += rz-dmac.o
+> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
+> new file mode 100644
+> index 000000000000..87a902ba3cfa
+> --- /dev/null
+> +++ b/drivers/dma/sh/rz-dmac.c
+> @@ -0,0 +1,1050 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Renesas RZ/G2L Controller Driver
+> + *
+> + * Based on imx-dma.c
+> + *
+> + * Copyright (C) 2021 Renesas Electronics Corp.
+> + * Copyright 2010 Sascha Hauer, Pengutronix <s.hauer@pengutronix.de>
+> + * Copyright 2012 Javier Martin, Vista Silicon <javier.martin@vista-silicon.com>
+> + */
+> +
+> +#include <linux/dma-mapping.h>
+> +#include <linux/dmaengine.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/list.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_dma.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +
+> +#include "../dmaengine.h"
+> +
+> +struct rz_dmac_slave_config {
+> +	u32 mid_rid;
+> +	dma_addr_t addr;
+> +	u32 chcfg;
+> +};
 
-Are there any dependecies between patches? If not all can merge thru
-respective subsystem. You already have the ack, so I dont mind if you
-pick thru imx tree
+why not use dma_slave_config()
 
+> +
+> +enum  rz_dmac_prep_type {
+> +	RZ_DMAC_DESC_MEMCPY,
+> +	RZ_DMAC_DESC_SLAVE_SG,
+> +};
+> +
+> +struct rz_lmdesc {
+> +	u32 header;
+> +	u32 sa;
+> +	u32 da;
+> +	u32 tb;
+> +	u32 chcfg;
+> +	u32 chitvl;
+> +	u32 chext;
+> +	u32 nxla;
+> +};
+> +
+> +struct rz_dmac_desc {
+> +	struct list_head node;
+
+what is this list node for?
+
+> +	struct dma_async_tx_descriptor desc;
+> +	enum dma_status status;
+> +	dma_addr_t src;
+> +	dma_addr_t dest;
+> +	size_t len;
+> +	enum dma_transfer_direction direction;
+> +	enum rz_dmac_prep_type type;
+> +	/* For memcpy */
+> +	unsigned int config_port;
+> +	unsigned int config_mem;
+> +	/* For slave sg */
+> +	struct scatterlist *sg;
+> +	unsigned int sgcount;
+> +};
+
+why not use virt_dma_desc ?
+
+> +
+> +struct rz_dmac_channel {
+> +	struct rz_dmac_engine *rzdma;
+> +	unsigned int index;
+> +	int irq;
+> +
+> +	spinlock_t lock;
+> +	struct list_head ld_free;
+> +	struct list_head ld_queue;
+> +	struct list_head ld_active;
+
+why not use virt_dma_chan() ?
+
+> +
+> +	int descs_allocated;
+> +	enum dma_slave_buswidth word_size;
+> +	dma_addr_t per_address;
+> +	struct dma_chan chan;
+> +	struct dma_async_tx_descriptor desc;
+> +	enum dma_status status;
+
+Both desc and chan need status?
+
+> +	const struct rz_dmac_slave_config *slave;
+> +	void __iomem *ch_base;
+> +	void __iomem *ch_cmn_base;
+> +
+> +	struct {
+> +		struct rz_lmdesc *base;
+> +		struct rz_lmdesc *head;
+> +		struct rz_lmdesc *tail;
+> +		int valid;
+> +		dma_addr_t base_dma;
+> +	} lmdesc;
+> +
+> +	u32 chcfg;
+> +	u32 chctrl;
+> +
+> +	struct {
+> +		int issue;
+> +		int prep_slave_sg;
+> +	} stat;
+> +};
+
+I have glanced at the rest of the driver, looks mostly okay but please
+move this to use virt_dma_chan and virt_dma_desc that would ease a lot
+of code from driver
+
+Thanks
 -- 
 ~Vinod

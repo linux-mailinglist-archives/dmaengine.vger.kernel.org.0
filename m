@@ -2,130 +2,124 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78B5F3AB4F4
-	for <lists+dmaengine@lfdr.de>; Thu, 17 Jun 2021 15:39:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E1E13AB8D4
+	for <lists+dmaengine@lfdr.de>; Thu, 17 Jun 2021 18:08:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232359AbhFQNlZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 17 Jun 2021 09:41:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53008 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231454AbhFQNlY (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 17 Jun 2021 09:41:24 -0400
-Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A1D8C061574;
-        Thu, 17 Jun 2021 06:39:16 -0700 (PDT)
-Received: by mail-io1-xd31.google.com with SMTP id a6so3225210ioe.0;
-        Thu, 17 Jun 2021 06:39:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8uLouHcYHuvh5T6xM8yIVrzF523FcxAB8VCcMY44PSs=;
-        b=DrkJglOKwg+WmIiFFG6K712yfI6x/RLf5UEIcKJydGaOBMRZNFam7wWwsGYeL6N5JC
-         40XbFWouWd4QbPoLw8juqNhDZjeFW8IIRYwllHXIDFq7EEBSOdqop4JrK/NiPWcrxHZP
-         /7Xin9xwWygH3SObqeMvZKjZ2iaQKa1insYgEv0RWSpNGlKsE4RoDeEL46eBil9pauhu
-         NNEsvRKP+YC8j+BjCLOuR9lNaBR92oHV3zowMDb2lWi+WdOnuqIjH2NQUK2KvphQxb1t
-         hK2dV+lsVMmfmM0S2aVlI4PLW+ESdaXkuzI8NPiT9kFyN0CohBvacdSflevgnk8XhAvL
-         2/nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8uLouHcYHuvh5T6xM8yIVrzF523FcxAB8VCcMY44PSs=;
-        b=UmvHzrrm1XoMTphnbEhgZho3vQQozBoUG9e497vImcNb7/N4rrHRPh0us3T5opzGKG
-         c25fJdQQfCNQkdhSMg4WZBNDtBB4kajxQxmwi8hQMqiQK9KK8ptyfxkXOPJGvXLp7Iqd
-         Ahclu1nWudjxZaPwpn0MkbnC0QkrIcmHX5ufGppAkoWJHzNq4D9jWT1Zbn+ze66QMKyE
-         k/6bn41x8pLJ2i8yWRjJMSNw1uZMJHRx3IzNUumuzXCXFQzlQn7plorqLVJX32361Hav
-         +peDKGXiI7oRpp5hmPwiCJkuRmwyFti1qpVcolsWjAdapHlSmW0nGkXuOEwjC3H7Omek
-         y9pA==
-X-Gm-Message-State: AOAM531q429JijDXscApyyjVwEp0RhfgdwpFDsH1d0jDZOoO6md27W0D
-        1go6JUQNmEoLhtr3Ku9vOorpIgpj4rVsNxfJdYo=
-X-Google-Smtp-Source: ABdhPJxnfkeEWGUJgQcDn0I2Ve0wSFkY7REYvBKyja2+qam6LK577H+YFA9dEQrKZJ960bwwySGIDnthxfzoxsKE1u0=
-X-Received: by 2002:a5d:97d9:: with SMTP id k25mr3918157ios.197.1623937155671;
- Thu, 17 Jun 2021 06:39:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210615191543.1043414-1-robh@kernel.org>
-In-Reply-To: <20210615191543.1043414-1-robh@kernel.org>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Thu, 17 Jun 2021 08:39:04 -0500
-Message-ID: <CABb+yY1hR8=7Bc7tw8koqNd2_r0-P6HiHkoyb0j=C7QbN4Dvrw@mail.gmail.com>
+        id S231463AbhFQQKy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 17 Jun 2021 12:10:54 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:37854 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233682AbhFQQKB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 17 Jun 2021 12:10:01 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 15HG62FL083373;
+        Thu, 17 Jun 2021 11:06:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1623945962;
+        bh=LVkWEpy5e6cRZkuXdEoUXgk9+WHo500mtyYaCdD+Lf0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=jeALzHLk3n7+qQeuxED/H4L5B0pUGfd+IKm4cHUnNDcbGNi/N/vECD6HccgWs8Rdc
+         A79ZIeBKglC2uQcNptT6Rqq9rI3jaHqWmNvG1vKe80Rl9RF+rCyfhlpGUEyO1JBVae
+         q2yQKhqF9u2BVEw+7gi7jwzlSE7Jbm56DgmZH8PQ=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 15HG60jb058606
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 17 Jun 2021 11:06:01 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Thu, 17
+ Jun 2021 11:06:00 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Thu, 17 Jun 2021 11:06:00 -0500
+Received: from [10.250.36.147] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 15HG5xDj116986;
+        Thu, 17 Jun 2021 11:05:59 -0500
 Subject: Re: [PATCH] dt-bindings: Drop redundant minItems/maxItems
-To:     Rob Herring <robh@kernel.org>
-Cc:     Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-crypto@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
-        iommu@lists.linux-foundation.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        linux-can@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org,
-        linux-spi <linux-spi@vger.kernel.org>, linux-pm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, Stephen Boyd <sboyd@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Vinod Koul <vkoul@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
+To:     Rob Herring <robh@kernel.org>, <devicetree@vger.kernel.org>
+CC:     Andrew Lunn <andrew@lunn.ch>, <alsa-devel@alsa-project.org>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        <linux-iio@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        <linux-remoteproc@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-ide@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-riscv@lists.infradead.org>,
+        Lee Jones <lee.jones@linaro.org>, <linux-clk@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        David Airlie <airlied@linux.ie>,
+        <linux-serial@vger.kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        <linux-media@vger.kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        <linux-pwm@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>,
+        <linux-watchdog@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-can@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, <netdev@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <linux-usb@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <iommu@lists.linux-foundation.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        <linux-crypto@vger.kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <dmaengine@vger.kernel.org>, Vladimir Oltean <olteanv@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <jic23@kernel.org>
+References: <20210615191543.1043414-1-robh@kernel.org>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <bb8c18f6-139d-76be-87e7-0c93e03cc92c@ti.com>
+Date:   Thu, 17 Jun 2021 11:05:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
+MIME-Version: 1.0
+In-Reply-To: <20210615191543.1043414-1-robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Jun 15, 2021 at 2:15 PM Rob Herring <robh@kernel.org> wrote:
->
-> If a property has an 'items' list, then a 'minItems' or 'maxItems' with t=
-he
+Hi Rob,
+
+On 6/15/21 2:15 PM, Rob Herring wrote:
+> If a property has an 'items' list, then a 'minItems' or 'maxItems' with the
 > same size as the list is redundant and can be dropped. Note that is DT
-> schema specific behavior and not standard json-schema behavior. The tooli=
-ng
+> schema specific behavior and not standard json-schema behavior. The tooling
 > will fixup the final schema adding any unspecified minItems/maxItems.
->
+> 
 > This condition is partially checked with the meta-schema already, but
 > only if both 'minItems' and 'maxItems' are equal to the 'items' length.
 > An improved meta-schema is pending.
->
+> 
 > Cc: Jens Axboe <axboe@kernel.dk>
 > Cc: Stephen Boyd <sboyd@kernel.org>
 > Cc: Herbert Xu <herbert@gondor.apana.org.au>
@@ -153,7 +147,7 @@ ng
 > Cc: Bjorn Helgaas <bhelgaas@google.com>
 > Cc: Kishon Vijay Abraham I <kishon@ti.com>
 > Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: "Uwe Kleine-K=C3=B6nig" <u.kleine-koenig@pengutronix.de>
+> Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
 > Cc: Lee Jones <lee.jones@linaro.org>
 > Cc: Ohad Ben-Cohen <ohad@wizery.com>
 > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
@@ -273,8 +267,71 @@ ng
 >  Documentation/devicetree/bindings/usb/renesas,usbhs.yaml    | 3 ---
 >  .../devicetree/bindings/watchdog/st,stm32-iwdg.yaml         | 1 -
 >  101 files changed, 2 insertions(+), 163 deletions(-)
->
-mailbox stuff
-Acked-by: Jassi Brar <jassisinghbrar@gmail.com>
+> 
 
-thanks.
+[snip]
+
+> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+> index 6070456a7b67..f399743b631b 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+> +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+> @@ -57,7 +57,6 @@ properties:
+>  
+>    memory-region:
+>      minItems: 2
+> -    maxItems: 8
+>      description: |
+>        phandle to the reserved memory nodes to be associated with the remoteproc
+>        device. There should be at least two reserved memory nodes defined. The
+
+Does this enforce the maxItems to be 2 only now? Or should this be dropping the
+minItems here which matches the length of items instead of maxItems?
+
+I have originally listed the individual item list only for the mandatory items
+and rest are scalable. I provided this through "additionalItems: true" under
+this property.
+
+Also, have the exact same usage in
+Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml as well which
+is not included in this patch.
+
+> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+> index 73400bc6e91d..75161f191ac3 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+> +++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+> @@ -116,7 +116,6 @@ properties:
+>        list, in the specified order, each representing the corresponding
+>        internal RAM memory region.
+>      minItems: 1
+> -    maxItems: 3
+>      items:
+>        - const: l2ram
+>        - const: l1pram
+
+
+[snip]
+
+> diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
+> index dbc62821c60b..9790617af1bc 100644
+> --- a/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
+> +++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
+> @@ -100,7 +100,6 @@ patternProperties:
+>      properties:
+>        reg:
+>          minItems: 2 # On AM437x one of two PRUSS units don't contain Shared RAM.
+> -        maxItems: 3
+>          items:
+>            - description: Address and size of the Data RAM0.
+>            - description: Address and size of the Data RAM1.
+> @@ -111,7 +110,6 @@ patternProperties:
+>  
+>        reg-names:
+>          minItems: 2
+> -        maxItems: 3
+>          items:
+>            - const: dram0
+>            - const: dram1
+
+
+regards
+Suman

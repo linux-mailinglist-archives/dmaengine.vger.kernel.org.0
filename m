@@ -2,212 +2,318 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22AF03ABD26
-	for <lists+dmaengine@lfdr.de>; Thu, 17 Jun 2021 21:53:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 320533ABEA1
+	for <lists+dmaengine@lfdr.de>; Fri, 18 Jun 2021 00:17:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230161AbhFQTzn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 17 Jun 2021 15:55:43 -0400
-Received: from mail-eopbgr10087.outbound.protection.outlook.com ([40.107.1.87]:34791
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230039AbhFQTzm (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 17 Jun 2021 15:55:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dfo4Zodf9VtU0bVKAcMuwnLTHWEvQU9Hq1xrudbhi8KJ26KEx1TelEHCvrRIyvQK2U4yPeaIq49xeBcDpUvJZd83KCpXp/GYJkPVqvSpT3XhGzCqx2KH30C9fp377LUskapza1Y1L/UTDCp9oi/FG5/W3cnhnKCSGQuU/lTVtrO1M4NXDRJec869pPmwQTrqoTUNtGN21yZVs0aUk2PYzw6YYqvHlnriToAvBk2jzkXtuTUQKYHtMMLfJowYBLCSPDBH6HttqFSRcGk3v7DOTdFtSdYxjc5xKWUKrefK50V+u8f4nC3Nj0mgvBBDeYeTHfmS7uvozxf6lbIe3Lqh0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FZu5JboXnL6ZHX4tMUTk82zb6sV47V19ykSVOezA0dw=;
- b=Xtlu1+gdJHZ2jMiTWxKHQaMsKAYhaT4VC3JdHvnyMEVW3QjSs3CWYcHQUlGqmGwQT/hBIgr+c2NJ1GhDaA9HjFfvo6nToUjTPEYGqbHsnYfkDu7blqQfxZKfHagOddlenSAIw4YtLOuIDRs400kK1S1e6maRD+Z2Btz9yy+UBTi/Qm/ayG1jsHnv9eEurpSvQMvWwbxYm/53OF62eX5jR7V7b5ol5w6YpKZDPoiegc1EZ4qd9zCXDtNgIsJ9UE4bPHVP4oncKuSnztiNTP72hD244uKgBOdNZo6H7/VNQ6zDtCDBJ6kQN8AmmWZIvDmR8wRLxOGbAfLAURNa0Ldupg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=orolia.com; dmarc=pass action=none header.from=orolia.com;
- dkim=pass header.d=orolia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=orolia.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FZu5JboXnL6ZHX4tMUTk82zb6sV47V19ykSVOezA0dw=;
- b=pB3HQbnSqggcjwG6Y4bI35pAr1KiE+k1GgDgSKd2YbLuT1btJqGqdPt0h4OlHDzAcTWFshSjdxszti70xvtrJw+njHQ+kYM1Wu3apqS7WMdSeY6rdoNPyMAMWphZ8iaX7z5lpx2XlKMYXrafJjtPIUdkkl4Q2gYikjNSt08KdJM=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=orolia.com;
-Received: from PR1PR06MB4746.eurprd06.prod.outlook.com (2603:10a6:102:11::28)
- by PAXPR06MB7710.eurprd06.prod.outlook.com (2603:10a6:102:de::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.15; Thu, 17 Jun
- 2021 19:53:32 +0000
-Received: from PR1PR06MB4746.eurprd06.prod.outlook.com
- ([fe80::81ef:de90:c451:d6e3]) by PR1PR06MB4746.eurprd06.prod.outlook.com
- ([fe80::81ef:de90:c451:d6e3%5]) with mapi id 15.20.4195.030; Thu, 17 Jun 2021
- 19:53:32 +0000
-Date:   Thu, 17 Jun 2021 21:53:18 +0200
-From:   Olivier Dautricourt <olivier.dautricourt@orolia.com>
-To:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Stefan Roese <sr@denx.de>
-Cc:     Olivier Dautricourt <olivier.dautricourt@orolia.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dmaengine: altera-msgdma: make response port optional
-Message-ID: <8220756f2191ca08cb21702252d1f2d4f753a7f5.1623898678.git.olivier.dautricourt@orolia.com>
-References: <cover.1623898678.git.olivier.dautricourt@orolia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1623898678.git.olivier.dautricourt@orolia.com>
-X-Originating-IP: [2a01:e34:ec42:fd70:167:681b:bc47:e8b1]
-X-ClientProxiedBy: LO4P123CA0070.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:153::21) To PR1PR06MB4746.eurprd06.prod.outlook.com
- (2603:10a6:102:11::28)
+        id S232105AbhFQWTO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 17 Jun 2021 18:19:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56494 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232088AbhFQWTM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 17 Jun 2021 18:19:12 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F0DD6613B4;
+        Thu, 17 Jun 2021 22:17:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623968224;
+        bh=8lLNvAQJFBYHcwyHgNEpUKH4liF//tJL8IXh/++g2VQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=huvrHHpH2Av8vejTexiFgCIX8gaey/rp/0fjLnRAt1uHvre0POa9FMvPn6CSKF4vP
+         c1dyDYSMYo16eAP+y8b7jCtqCSK/GxM08QdxX1G394l3E8JBesdgSfezsVwCObf+XY
+         7aWLgTlzsBBO6TKNEHxE7nsZ/+OgD85yLW8ohdjh7wOtV4YkqobaNmS5taze+KHWCO
+         fK6lrJ8I7DNEWJB2YicAQ/PLhU6Y66Is1uaJonoeXzDn/9t9wK0lIH/tQqckcXFuET
+         u5Swl2hwja6dodRo6iE7Vpv+Vl8JR6ZLXVJxbLuKQjO/HsCiolAUliP6AHbf478B1T
+         ZnwiO+IrhijxQ==
+Received: by mail-ej1-f42.google.com with SMTP id g8so12572868ejx.1;
+        Thu, 17 Jun 2021 15:17:03 -0700 (PDT)
+X-Gm-Message-State: AOAM533H3WTBiNxJM6fB2cmYC7GQaa7pmWFlsaU47n2KIwiQ92m1Lq8f
+        UK4pz+k6qhTXDxkxwrDizAPdZXHPBGMyCwOnhw==
+X-Google-Smtp-Source: ABdhPJxzgkf6C07sPN7yjl1phyvHCv9pAxXmIQ1iuWsb7n6aw/LK46UKCpGaWvweVtQco41YaA9gmDx268LBgSxFl4o=
+X-Received: by 2002:a17:907:264b:: with SMTP id ar11mr7391845ejc.525.1623968222450;
+ Thu, 17 Jun 2021 15:17:02 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from orolia.com (2a01:e34:ec42:fd70:167:681b:bc47:e8b1) by LO4P123CA0070.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:153::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.19 via Frontend Transport; Thu, 17 Jun 2021 19:53:31 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8840a06c-8f5c-4a41-4bb5-08d931c995ee
-X-MS-TrafficTypeDiagnostic: PAXPR06MB7710:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <PAXPR06MB771064D59BEEE05F7F5FAF5C8F0E9@PAXPR06MB7710.eurprd06.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4NEw81uPR9r4JG5j4yHPgjuQ0BiEf9PgvR3aqRdpaEn07En3nZEHNzb4iZrJjuOQYkP380zeKhCDEy0tIIPvEZE9/4Y2sL58NzyFQrWLeMpRM/uCMxJQh8Jokp1Pj0zZnjKxEDNlBhiqVQ1HBKBwPqBjQgYOmiy2mZ2Ahe4vmtagKB/XfzBeCK3svtLT6eo01Adzqg3QOkUCN6mnjEHpzagmIZNfuwSZYB7+zvl5oGp1aggybwMar7hLC+wGWqalL07dlvtO+eI+8eeMXVl9n57IpsHv197BXd3wVzv7i6U/xe6Lh5pGhhjruqt+q0Q4iNV9DgjleSBU+ve9pE0y9qAiLBxybby+j4BpZRnK5F3LjInk1v/cO2nCQf5WxArEShc2sX/GUagCCYKOLEbtwFqw27Bl6AD5rHyYWN13KMHSFSFS/9a7jp0pmheUzrwkBstDX1mos0vCjliDUR9euDxv7ow7FszwWP+szRnV6/NYpeaDqidgIcIiN5e/JRJ+Ml2KwgdjJJCuldZR+CQ1cRdhkEvO+zJS1Ev26gtqSz4BrSTAswf+SgH5gjt/RIIYX3NI+ANjmdSDOVLFIr2urn5wYtw9r2QgmxoKmctRF5Wu7mMWxFkHBnT/IQBTIKjbGrQjpanBvQDJQfXBBSxR0mZUGLWYl+msurd8pAx4GQvMyWKHGyGrqHLMbgqBkvO2QB6KeAuaPjNAXidWDavPYDP63PWoYmvpXAN6zGOSlcQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PR1PR06MB4746.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(39840400004)(376002)(136003)(396003)(83380400001)(8676002)(86362001)(8886007)(2616005)(478600001)(55016002)(36756003)(966005)(38100700002)(186003)(4326008)(44832011)(16526019)(66476007)(66556008)(6666004)(66946007)(316002)(110136005)(5660300002)(8936002)(7696005)(2906002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?uEXusXrf5gYGsh/OgPBOoLe6CljjVr7k7ITm64stmpM5lZRI+kInIsHr0nU5?=
- =?us-ascii?Q?Tm9jMjfcH1kYZ91ROzb1hCdlUbxDLZU2qu9f/GRK+I3ncfnyMAqFjOoaAwM0?=
- =?us-ascii?Q?e5uzghUUJ7i2os9A407awMRrFDl9JsthtMEV0quwR4gdOcvT6MebO4424M0l?=
- =?us-ascii?Q?GgCnANK8m93sWKQy8AUnIV0DA47K92MH3R7QWXXK0HWtLmz3x+kaxJ1DxHK3?=
- =?us-ascii?Q?EgMwYtOFZQMYO7lybmqYA8dDqWbfpMBa50S0ibcncYLjD0H/MvzdNQ/zCH6M?=
- =?us-ascii?Q?YOdYpejqwdMmyCSTxhZwdl7zd0K++eNhQc/UM8LTx8vLfjJNIaCn6xMDW1DI?=
- =?us-ascii?Q?+T+rPImBNsszw3Z+Ap/cfactb/4Q7F7yRevT8MXf6Jbr4RPXTcMxEEiD/xY4?=
- =?us-ascii?Q?7+yoM8VO41oZSu+MPShCDat/7wPsVYbCT7qYCCNp0dWBIyHzMsHu5EA6rPeU?=
- =?us-ascii?Q?O+pDu7ujBwEUBhaJRXCrPsEJceRDbjH2QqTFXcuW3pu0nX4pz4m4+3T3JOHv?=
- =?us-ascii?Q?qdMoaIn2JanMUna0X7tZcSGf2wcdOBdHFq6ywmatysFcrHuYy2McuYrX+0jo?=
- =?us-ascii?Q?8J0APCHhgR4YBf3YXfjoBJW8PMnYqRpGkcemT6xkTNDc5lX5gyYKP6UW+mj4?=
- =?us-ascii?Q?Vomqp4H1ABp6lOMpw9dUxzhI75IycUQhbnleCuoaaYluxWptDvcn7Y6XZg6Z?=
- =?us-ascii?Q?9tRHIgvEOkHsO1vjuqRPM7iNFleLVke8aLmVEgmNbATKPuV128CjCtRr2qz7?=
- =?us-ascii?Q?8w8MQt1Y+pwcnm9racjZhqyJyBOIWAKds3HCErs2B1xOrZ+ttObP9XH+CwwV?=
- =?us-ascii?Q?QO+NlsRE2+y2ik0+fw6llVBu+DxdKVI/rxnrU6cXCoqa6xhL9JFdXSfGxYzn?=
- =?us-ascii?Q?rjxebYgoQCtQMM48gPO7d864qJGYSCZnTnTzIQmpgtlPNDDh16KIDVbjw5/H?=
- =?us-ascii?Q?C9S7cWjNL3FfbZDADMIkiusk1jgyQ0A4/j2yoHngOD56Fa6DL4nk0DisxvIA?=
- =?us-ascii?Q?JdJDIn/49CTf362qt0joWfU4KppIuwl9Ypxk2Gtg9pFBG3+gxnivKFulSq4g?=
- =?us-ascii?Q?Th2fnBnk7hTzSs31KZoSJVhGVhLzUuD3V+28C77ZU1hdfVgXM4eTzS8spcDz?=
- =?us-ascii?Q?OHdoGdyGHiIiAzkOlOnvrToBKtITJf+II8dJ83QgVRHMz74Y/5esKstgPpKO?=
- =?us-ascii?Q?OONNiR0ofde74fL7Klrm5DmmdOoFeVlecdNNVSb8Wz83YBUcQcRTIB7fG8VT?=
- =?us-ascii?Q?VK2n65RlpSDRt2Wa4eNLqguPSv7m8VqUoFDnrxltMhoqgZKy6xENznQOyD6e?=
- =?us-ascii?Q?ECInIsiI2cUX4CEA/UtUaEknpKRa0I//GJhk2RWCbEjqu/ep+qsTmYK9Mslh?=
- =?us-ascii?Q?RjtfKsHUjby3Zj0plrzEkvfypFsD?=
-X-OriginatorOrg: orolia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8840a06c-8f5c-4a41-4bb5-08d931c995ee
-X-MS-Exchange-CrossTenant-AuthSource: PR1PR06MB4746.eurprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2021 19:53:32.4714
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a263030c-9c1b-421f-9471-1dec0b29c664
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qF5KuoeLDaiYy90deb5DUdec6yQLUcLOnkcCrGx/UiCNnJG1cKYyKaiOcq4q+whXg/WnNCeriBq6r845D/8mz4j9I3vsGMjP0b1lJh0XaYg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR06MB7710
+References: <20210615191543.1043414-1-robh@kernel.org> <bb8c18f6-139d-76be-87e7-0c93e03cc92c@ti.com>
+In-Reply-To: <bb8c18f6-139d-76be-87e7-0c93e03cc92c@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 17 Jun 2021 16:16:50 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+-ggeBMT_507HN+mM1KirM+w2ZnhZNe+Q7tRsFRJxDOw@mail.gmail.com>
+Message-ID: <CAL_Jsq+-ggeBMT_507HN+mM1KirM+w2ZnhZNe+Q7tRsFRJxDOw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Drop redundant minItems/maxItems
+To:     Suman Anna <s-anna@ti.com>
+Cc:     devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>,
+        linux-phy@lists.infradead.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        David Airlie <airlied@linux.ie>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-can@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-crypto@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        dmaengine@vger.kernel.org, Vladimir Oltean <olteanv@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The response slave port can be disabled in some configuration [1] and
-csr + MSGDMA_CSR_RESP_FILL_LEVEL will be 0 even if transfer has suceeded.
-We have to only rely on the interrupts in that scenario.
-This was tested on cyclone V with the controller resp port disabled.
+On Thu, Jun 17, 2021 at 10:06 AM Suman Anna <s-anna@ti.com> wrote:
+>
+> Hi Rob,
+>
+> On 6/15/21 2:15 PM, Rob Herring wrote:
+> > If a property has an 'items' list, then a 'minItems' or 'maxItems' with=
+ the
+> > same size as the list is redundant and can be dropped. Note that is DT
+> > schema specific behavior and not standard json-schema behavior. The too=
+ling
+> > will fixup the final schema adding any unspecified minItems/maxItems.
+> >
+> > This condition is partially checked with the meta-schema already, but
+> > only if both 'minItems' and 'maxItems' are equal to the 'items' length.
+> > An improved meta-schema is pending.
+> >
+> > Cc: Jens Axboe <axboe@kernel.dk>
+> > Cc: Stephen Boyd <sboyd@kernel.org>
+> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: David Airlie <airlied@linux.ie>
+> > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > Cc: Vinod Koul <vkoul@kernel.org>
+> > Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > Cc: Kamal Dasu <kdasu.kdev@gmail.com>
+> > Cc: Jonathan Cameron <jic23@kernel.org>
+> > Cc: Lars-Peter Clausen <lars@metafoo.de>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Marc Zyngier <maz@kernel.org>
+> > Cc: Joerg Roedel <joro@8bytes.org>
+> > Cc: Jassi Brar <jassisinghbrar@gmail.com>
+> > Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> > Cc: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> > Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: Wolfgang Grandegger <wg@grandegger.com>
+> > Cc: Marc Kleine-Budde <mkl@pengutronix.de>
+> > Cc: Andrew Lunn <andrew@lunn.ch>
+> > Cc: Vivien Didelot <vivien.didelot@gmail.com>
+> > Cc: Vladimir Oltean <olteanv@gmail.com>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: "Uwe Kleine-K=C3=B6nig" <u.kleine-koenig@pengutronix.de>
+> > Cc: Lee Jones <lee.jones@linaro.org>
+> > Cc: Ohad Ben-Cohen <ohad@wizery.com>
+> > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> > Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> > Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> > Cc: Albert Ou <aou@eecs.berkeley.edu>
+> > Cc: Alessandro Zummo <a.zummo@towertech.it>
+> > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Mark Brown <broonie@kernel.org>
+> > Cc: Zhang Rui <rui.zhang@intel.com>
+> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Cc: Wim Van Sebroeck <wim@linux-watchdog.org>
+> > Cc: Guenter Roeck <linux@roeck-us.net>
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../devicetree/bindings/ata/nvidia,tegra-ahci.yaml          | 1 -
+> >  .../devicetree/bindings/clock/allwinner,sun4i-a10-ccu.yaml  | 2 --
+> >  .../devicetree/bindings/clock/qcom,gcc-apq8064.yaml         | 1 -
+> >  Documentation/devicetree/bindings/clock/qcom,gcc-sdx55.yaml | 2 --
+> >  .../devicetree/bindings/clock/qcom,gcc-sm8350.yaml          | 2 --
+> >  .../devicetree/bindings/clock/sprd,sc9863a-clk.yaml         | 1 -
+> >  .../devicetree/bindings/crypto/allwinner,sun8i-ce.yaml      | 2 --
+> >  Documentation/devicetree/bindings/crypto/fsl-dcp.yaml       | 1 -
+> >  .../display/allwinner,sun4i-a10-display-backend.yaml        | 6 ------
+> >  .../bindings/display/allwinner,sun6i-a31-mipi-dsi.yaml      | 1 -
+> >  .../bindings/display/allwinner,sun8i-a83t-dw-hdmi.yaml      | 4 ----
+> >  .../bindings/display/allwinner,sun8i-a83t-hdmi-phy.yaml     | 2 --
+> >  .../bindings/display/allwinner,sun8i-r40-tcon-top.yaml      | 2 --
+> >  .../devicetree/bindings/display/bridge/cdns,mhdp8546.yaml   | 2 --
+> >  .../bindings/display/rockchip/rockchip,dw-hdmi.yaml         | 2 --
+> >  Documentation/devicetree/bindings/display/st,stm32-dsi.yaml | 2 --
+> >  .../devicetree/bindings/display/st,stm32-ltdc.yaml          | 1 -
+> >  .../devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml | 4 ----
+> >  .../devicetree/bindings/dma/renesas,rcar-dmac.yaml          | 1 -
+> >  .../devicetree/bindings/edac/amazon,al-mc-edac.yaml         | 2 --
+> >  Documentation/devicetree/bindings/eeprom/at24.yaml          | 1 -
+> >  Documentation/devicetree/bindings/example-schema.yaml       | 2 --
+> >  Documentation/devicetree/bindings/gpu/brcm,bcm-v3d.yaml     | 1 -
+> >  Documentation/devicetree/bindings/gpu/vivante,gc.yaml       | 1 -
+> >  Documentation/devicetree/bindings/i2c/brcm,brcmstb-i2c.yaml | 1 -
+> >  .../devicetree/bindings/i2c/marvell,mv64xxx-i2c.yaml        | 2 --
+> >  .../devicetree/bindings/i2c/mellanox,i2c-mlxbf.yaml         | 1 -
+> >  .../devicetree/bindings/iio/adc/amlogic,meson-saradc.yaml   | 1 -
+> >  .../devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml     | 2 --
+> >  .../bindings/interrupt-controller/fsl,irqsteer.yaml         | 1 -
+> >  .../bindings/interrupt-controller/loongson,liointc.yaml     | 1 -
+> >  Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml    | 1 -
+> >  .../devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml       | 1 -
+> >  .../devicetree/bindings/mailbox/st,stm32-ipcc.yaml          | 2 --
+> >  .../devicetree/bindings/media/amlogic,gx-vdec.yaml          | 1 -
+> >  Documentation/devicetree/bindings/media/i2c/adv7604.yaml    | 1 -
+> >  .../devicetree/bindings/media/marvell,mmp2-ccic.yaml        | 1 -
+> >  .../devicetree/bindings/media/qcom,sc7180-venus.yaml        | 1 -
+> >  .../devicetree/bindings/media/qcom,sdm845-venus-v2.yaml     | 1 -
+> >  .../devicetree/bindings/media/qcom,sm8250-venus.yaml        | 1 -
+> >  Documentation/devicetree/bindings/media/renesas,drif.yaml   | 1 -
+> >  .../bindings/memory-controllers/mediatek,smi-common.yaml    | 6 ++----
+> >  .../bindings/memory-controllers/mediatek,smi-larb.yaml      | 1 -
+> >  .../devicetree/bindings/mmc/allwinner,sun4i-a10-mmc.yaml    | 2 --
+> >  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml    | 1 -
+> >  Documentation/devicetree/bindings/mmc/mtk-sd.yaml           | 2 --
+> >  Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml     | 2 --
+> >  Documentation/devicetree/bindings/mmc/sdhci-am654.yaml      | 1 -
+> >  Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml        | 1 -
+> >  .../devicetree/bindings/net/amlogic,meson-dwmac.yaml        | 2 --
+> >  .../devicetree/bindings/net/brcm,bcm4908-enet.yaml          | 2 --
+> >  Documentation/devicetree/bindings/net/can/bosch,m_can.yaml  | 2 --
+> >  Documentation/devicetree/bindings/net/dsa/brcm,sf2.yaml     | 2 --
+> >  Documentation/devicetree/bindings/net/snps,dwmac.yaml       | 2 --
+> >  Documentation/devicetree/bindings/net/stm32-dwmac.yaml      | 1 -
+> >  Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml    | 2 --
+> >  Documentation/devicetree/bindings/pci/loongson.yaml         | 1 -
+> >  .../devicetree/bindings/pci/mediatek-pcie-gen3.yaml         | 1 -
+> >  .../devicetree/bindings/pci/microchip,pcie-host.yaml        | 2 --
+> >  Documentation/devicetree/bindings/perf/arm,cmn.yaml         | 1 -
+> >  .../devicetree/bindings/phy/brcm,bcm63xx-usbh-phy.yaml      | 1 -
+> >  .../devicetree/bindings/phy/brcm,brcmstb-usb-phy.yaml       | 3 ---
+> >  Documentation/devicetree/bindings/phy/brcm,sata-phy.yaml    | 1 -
+> >  Documentation/devicetree/bindings/phy/mediatek,tphy.yaml    | 2 --
+> >  .../devicetree/bindings/phy/phy-cadence-sierra.yaml         | 2 --
+> >  .../devicetree/bindings/phy/phy-cadence-torrent.yaml        | 4 ----
+> >  .../devicetree/bindings/phy/qcom,ipq806x-usb-phy-hs.yaml    | 1 -
+> >  .../devicetree/bindings/phy/qcom,ipq806x-usb-phy-ss.yaml    | 1 -
+> >  Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml     | 1 -
+> >  Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml   | 2 --
+> >  Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml | 2 --
+> >  Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml | 1 -
+> >  .../devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml   | 1 -
+> >  .../devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml    | 1 -
+> >  .../devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml    | 1 -
+> >  .../devicetree/bindings/remoteproc/st,stm32-rproc.yaml      | 2 --
+> >  .../devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml     | 1 -
+> >  .../devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml  | 1 -
+> >  Documentation/devicetree/bindings/reset/fsl,imx-src.yaml    | 1 -
+> >  .../devicetree/bindings/riscv/sifive-l2-cache.yaml          | 1 -
+> >  .../devicetree/bindings/rtc/allwinner,sun6i-a31-rtc.yaml    | 1 -
+> >  Documentation/devicetree/bindings/rtc/imxdi-rtc.yaml        | 1 -
+> >  Documentation/devicetree/bindings/serial/fsl-lpuart.yaml    | 2 --
+> >  Documentation/devicetree/bindings/serial/samsung_uart.yaml  | 1 -
+> >  .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml          | 1 -
+> >  Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml      | 2 --
+> >  .../bindings/sound/nvidia,tegra-audio-graph-card.yaml       | 1 -
+> >  .../devicetree/bindings/sound/nvidia,tegra210-i2s.yaml      | 2 --
+> >  Documentation/devicetree/bindings/sound/st,stm32-sai.yaml   | 3 ---
+> >  .../devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml     | 1 -
+> >  .../devicetree/bindings/spi/brcm,spi-bcm-qspi.yaml          | 2 --
+> >  .../bindings/thermal/allwinner,sun8i-a83t-ths.yaml          | 2 --
+> >  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml   | 1 -
+> >  .../bindings/timer/allwinner,sun5i-a13-hstimer.yaml         | 1 -
+> >  Documentation/devicetree/bindings/timer/arm,arch_timer.yaml | 1 -
+> >  .../devicetree/bindings/timer/arm,arch_timer_mmio.yaml      | 2 --
+> >  .../devicetree/bindings/timer/intel,ixp4xx-timer.yaml       | 1 -
+> >  .../devicetree/bindings/usb/maxim,max3420-udc.yaml          | 2 --
+> >  .../devicetree/bindings/usb/nvidia,tegra-xudc.yaml          | 4 ----
+> >  Documentation/devicetree/bindings/usb/renesas,usbhs.yaml    | 3 ---
+> >  .../devicetree/bindings/watchdog/st,stm32-iwdg.yaml         | 1 -
+> >  101 files changed, 2 insertions(+), 163 deletions(-)
+> >
+>
+> [snip]
+>
+> > diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rpr=
+oc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+> > index 6070456a7b67..f399743b631b 100644
+> > --- a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+> > +++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+> > @@ -57,7 +57,6 @@ properties:
+> >
+> >    memory-region:
+> >      minItems: 2
+> > -    maxItems: 8
+> >      description: |
+> >        phandle to the reserved memory nodes to be associated with the r=
+emoteproc
+> >        device. There should be at least two reserved memory nodes defin=
+ed. The
+>
+> Does this enforce the maxItems to be 2 only now? Or should this be droppi=
+ng the
+> minItems here which matches the length of items instead of maxItems?
+>
+> I have originally listed the individual item list only for the mandatory =
+items
+> and rest are scalable. I provided this through "additionalItems: true" un=
+der
+> this property.
 
-[1] https://www.intel.com/content/www/us/en/programmable/documentation/sfo1400787952932.html
-30.3.1.2
-30.3.1.3
-30.5.5
+Good catch. This should be dropped. The meta-schema doesn't enforce
+this if "additionalItems: true" which is rarely used.
 
-Fixes:
-https://forum.rocketboards.org/t/ip-msgdma-linux-driver/1919
-Signed-off-by: Olivier Dautricourt <olivier.dautricourt@orolia.com>
----
- drivers/dma/altera-msgdma.c | 37 ++++++++++++++++++++++++++-----------
- 1 file changed, 26 insertions(+), 11 deletions(-)
+> Also, have the exact same usage in
+> Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml as well=
+ which
+> is not included in this patch.
 
-diff --git a/drivers/dma/altera-msgdma.c b/drivers/dma/altera-msgdma.c
-index 0fe0676f8e1d..5a2c7573b692 100644
---- a/drivers/dma/altera-msgdma.c
-+++ b/drivers/dma/altera-msgdma.c
-@@ -691,10 +691,14 @@ static void msgdma_tasklet(struct tasklet_struct *t)
+Yeah, I just missed this one. I've double checked and there aren't any more=
+.
 
- 	spin_lock_irqsave(&mdev->lock, flags);
-
--	/* Read number of responses that are available */
--	count = ioread32(mdev->csr + MSGDMA_CSR_RESP_FILL_LEVEL);
--	dev_dbg(mdev->dev, "%s (%d): response count=%d\n",
--		__func__, __LINE__, count);
-+	if (mdev->resp) {
-+		/* Read number of responses that are available */
-+		count = ioread32(mdev->csr + MSGDMA_CSR_RESP_FILL_LEVEL);
-+		dev_dbg(mdev->dev, "%s (%d): response count=%d\n",
-+			__func__, __LINE__, count);
-+	} else {
-+		count = 1;
-+	}
-
- 	while (count--) {
- 		/*
-@@ -703,8 +707,12 @@ static void msgdma_tasklet(struct tasklet_struct *t)
- 		 * have any real values, like transferred bytes or error
- 		 * bits. So we need to just drop these values.
- 		 */
--		size = ioread32(mdev->resp + MSGDMA_RESP_BYTES_TRANSFERRED);
--		status = ioread32(mdev->resp + MSGDMA_RESP_STATUS);
-+		if (mdev->resp) {
-+			size = ioread32(mdev->resp +
-+					MSGDMA_RESP_BYTES_TRANSFERRED);
-+			status = ioread32(mdev->resp +
-+					MSGDMA_RESP_STATUS);
-+		}
-
- 		msgdma_complete_descriptor(mdev);
- 		msgdma_chan_desc_cleanup(mdev);
-@@ -757,14 +765,21 @@ static void msgdma_dev_remove(struct msgdma_device *mdev)
- }
-
- static int request_and_map(struct platform_device *pdev, const char *name,
--			   struct resource **res, void __iomem **ptr)
-+			   struct resource **res, void __iomem **ptr,
-+			   bool optional)
- {
- 	struct resource *region;
- 	struct device *device = &pdev->dev;
-
- 	*res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
- 	if (*res == NULL) {
--		dev_err(device, "resource %s not defined\n", name);
-+		if (optional) {
-+			*ptr = NULL;
-+			dev_info(device, "optional resource %s not defined\n",
-+				 name);
-+			return 0;
-+		}
-+		dev_err(device, "mandatory resource %s not defined\n", name);
- 		return -ENODEV;
- 	}
-
-@@ -805,17 +820,17 @@ static int msgdma_probe(struct platform_device *pdev)
- 	mdev->dev = &pdev->dev;
-
- 	/* Map CSR space */
--	ret = request_and_map(pdev, "csr", &dma_res, &mdev->csr);
-+	ret = request_and_map(pdev, "csr", &dma_res, &mdev->csr, false);
- 	if (ret)
- 		return ret;
-
- 	/* Map (extended) descriptor space */
--	ret = request_and_map(pdev, "desc", &dma_res, &mdev->desc);
-+	ret = request_and_map(pdev, "desc", &dma_res, &mdev->desc, false);
- 	if (ret)
- 		return ret;
-
- 	/* Map response space */
--	ret = request_and_map(pdev, "resp", &dma_res, &mdev->resp);
-+	ret = request_and_map(pdev, "resp", &dma_res, &mdev->resp, true);
- 	if (ret)
- 		return ret;
-
---
-2.31.0.rc2
-
+Rob

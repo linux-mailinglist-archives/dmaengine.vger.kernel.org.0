@@ -2,66 +2,80 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 034073ADFED
-	for <lists+dmaengine@lfdr.de>; Sun, 20 Jun 2021 21:31:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BFDE3AE027
+	for <lists+dmaengine@lfdr.de>; Sun, 20 Jun 2021 22:12:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229708AbhFTTd2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 20 Jun 2021 15:33:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60572 "EHLO
+        id S229872AbhFTUOy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 20 Jun 2021 16:14:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229875AbhFTTd1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 20 Jun 2021 15:33:27 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C089C06175F
-        for <dmaengine@vger.kernel.org>; Sun, 20 Jun 2021 12:31:14 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id x24so26399523lfr.10
-        for <dmaengine@vger.kernel.org>; Sun, 20 Jun 2021 12:31:14 -0700 (PDT)
+        with ESMTP id S229632AbhFTUOy (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 20 Jun 2021 16:14:54 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5302C061574
+        for <dmaengine@vger.kernel.org>; Sun, 20 Jun 2021 13:12:40 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id h4so26535988lfu.8
+        for <dmaengine@vger.kernel.org>; Sun, 20 Jun 2021 13:12:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=a2zlJLb2cHVJ/vhYiwd0h6Ss03bH4wa1SiOeNNr1qqA=;
-        b=sGNxSEzTe3lM18ghhBrYte1cyID3zgB/+zcBJ1qkOjj6nENXnw6gczAwH9pGc27/IP
-         AYmB9Vfsm7CU4mFnkv3Pc0Mhk5fhJ+7y21dSGdYCrU16IkKdItmkVFZuaqIyGZGVK8Ip
-         cSfiwscB18hUwstZEHQ/uOyfNKzCjTDh/9pYwz0W/4MCkz4GT8Vo+plZzTD9RrFx4qI1
-         EJ0Nc82GBzCc7mb3VEaLFAigTgpPYj10mphmlS8yVMLKAhOhByUFCnPybO8XDdnAtIxc
-         cMIFll5v6r8SM8KesUBMrzEzcOV7icIdhWuOke0YPVG7IYNf+Frc8fNuQpUWUS2kUWzD
-         BCaQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iQCE+dliVmLf3P2AuQopOl7SKalAr83I8wCiqD5FuhU=;
+        b=Szy3QAm2SramFPCzL8FuRDsJjSYHjWPB0EnFobXDw2C9XZZbe/QYwhumAHT0zVz49u
+         GRLPKvVWquZ0ApOWaWq5bnFdxSOBDJ7CE7kfL+/f6+eavn0mPFOJBgfGJd5HYYX6G+e/
+         6jtThp20XGhg0z3IF3cgKeakIetlqW4LRqGAO1Efl6O8ZvKvh+xMmem/rAloxmBx+6bQ
+         An2iXpu/ZOWhBf6vGCtu9+Wds4RpGAz8xegx20oJy4mhFBTQi5akSLJZoBxVGpzmTJUB
+         16kmbB5rGWWXOK0pLgH2pn9ErGbmRgAGk3ib3+GhjSpfxEnLH2AZ27MNSsxHThz0ybAf
+         0OoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=a2zlJLb2cHVJ/vhYiwd0h6Ss03bH4wa1SiOeNNr1qqA=;
-        b=hxcYmpNck1+7YV70vXbjP+kq03qLdJb+58QBKim+l0sn9PaB5mY2R4A1e9O9dxZAKS
-         2drAkVY672BXA+zF2fHslwTASea/nwWmRcSEf6oE3sZgYFwUV1QMMWO/Pvtsf+vM/5lB
-         sXJIC5cPg4b5EWEtREbKBv2StnuzYcojv6ykGKl3Tm/oJlRyKwsH0nvZ3+zdGPXpeQBx
-         SeG0hbhCSaRfut4FNwwa//jM+lZ9+sTIjIRZQWfDz07GGzNbhUVnLUM4lAQuQ98qwA1W
-         Rqs5WCRmuR9cz1X9vwHlgsE7f5pRL+ySxwyhD8xRHkhZlGZ1S6T2C67f/1UeF+TXjMd9
-         hQkQ==
-X-Gm-Message-State: AOAM533R6fVwoX2W/VlSRb2Q5qKCyYObYbdiu4p/YIV8uoxqoI8xJZMV
-        B+rf0t+iidd/C+UAgDHw6523dRYCvfGIYxkoG4A=
-X-Google-Smtp-Source: ABdhPJydiXAjiWRRfRKkE6cjZ22caaoTAUIaiMw8gatLOa/mlsGUwqR9psDlbY3dZ0D9qCd+QTz7eYk5yP4HuE0WRP4=
-X-Received: by 2002:a05:6512:30b:: with SMTP id t11mr11942418lfp.661.1624217472769;
- Sun, 20 Jun 2021 12:31:12 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iQCE+dliVmLf3P2AuQopOl7SKalAr83I8wCiqD5FuhU=;
+        b=j7U/q1AaUf98L4mXwe79L0NRF3IUJ35isGQ3i5zGsEIx8yhM9cTLXM72QEh7iCjmbw
+         AiSWMa4nVuRf2uCfWgTIs7jYSRWIepow2GOJsZnOmiiAFipIszvCyZNBgogI3ywSEpQO
+         8iEeVCKL8DPRGrHJZO+8JNhwk9+F1KCBcsFTkTUR6OcjkEy22HuEdxsZIcxa5F28Cpt2
+         AHQwTA3Zfmwpe3wjTVHr/PcppK59ZbOjV5acsRGv460p6jqKGzzB3N099exl/FFWW6Gu
+         e1XU1zvWba4fJ7fC5abZzGXhzgwyTP2wU0aFC4ZP5Auop/t1H9XOeKGpX3AM5EjRazcG
+         TB5w==
+X-Gm-Message-State: AOAM530ceIKLvnPj/3jFRFOp195JHY8zkiViHejRAiL28gMPdAOWcocM
+        RZfZYdms3qnsVgwPZTqJ2/nNpWX2OuqLBCEvTCYVcAGISFU=
+X-Google-Smtp-Source: ABdhPJzmdSIW8Y+J5yBD8slKYsSZudmwwc1RmOtUue2gOR9HjFhtBJdcGfmM5RJyjcVKDf5Mb3OkFzFzYLkg3vumpFA=
+X-Received: by 2002:a05:6512:219:: with SMTP id a25mr1867992lfo.295.1624219959093;
+ Sun, 20 Jun 2021 13:12:39 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:aa6:da47:0:b029:fa:6d7d:24c with HTTP; Sun, 20 Jun 2021
- 12:31:12 -0700 (PDT)
-Reply-To: contactcenter@gnbinvestorsb.com
-From:   Gnb Investors Bank <sandraquntoo@gmail.com>
-Date:   Sun, 20 Jun 2021 22:31:12 +0300
-Message-ID: <CAPu=tC6LghNW-EG0_b_zTZNRwF=O9d28K9+F0+-DCZ5EqNPj8A@mail.gmail.com>
-Subject: Brauchen Sie einen Kredit?
-To:     undisclosed-recipients:;
+References: <20210620191103.156626-1-vz@mleia.com>
+In-Reply-To: <20210620191103.156626-1-vz@mleia.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Sun, 20 Jun 2021 17:12:27 -0300
+Message-ID: <CAOMZO5BVEP0Z06-v5RShB5tk7h1JxYiDNmaEomx_+NcSEgG+QQ@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: imx-sdma: Remove platform data header
+To:     Vladimir Zapolskiy <vz@mleia.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        dmaengine@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
---=20
-Brauchen Sie einen Kredit? Unsere Bank vergibt Kredite zu einem Zinssatz vo=
-n 2%
+Hi Vladimir,
 
-Melden Sie sich f=C3=BCr weitere Informationen bei uns.
+On Sun, Jun 20, 2021 at 4:11 PM Vladimir Zapolskiy <vz@mleia.com> wrote:
+>
+> Since commit 6c5f05a6cd88 ("ARM: imx3: Remove imx3 soc_init()")
+> there are no more users of struct sdma_script_start_addrs outside
+> of the driver itself, thus let's move the struct declaration just
+> to the driver source code and remove the header file as unused one.
+>
+> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
 
-E-Mail: contactcenter@gnbinvestorsb.com
+Good catch:
+
+Reviewed-by: Fabio Estevam <festevam@gmail.com>

@@ -2,36 +2,37 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B16423AF2E1
-	for <lists+dmaengine@lfdr.de>; Mon, 21 Jun 2021 19:56:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA9913AF2EA
+	for <lists+dmaengine@lfdr.de>; Mon, 21 Jun 2021 19:56:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233018AbhFUR53 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 21 Jun 2021 13:57:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39196 "EHLO mail.kernel.org"
+        id S232429AbhFUR6F (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 21 Jun 2021 13:58:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232693AbhFURzd (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 21 Jun 2021 13:55:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 96E4761206;
-        Mon, 21 Jun 2021 17:53:06 +0000 (UTC)
+        id S231736AbhFUR4J (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 21 Jun 2021 13:56:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 69DD361353;
+        Mon, 21 Jun 2021 17:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624297987;
-        bh=B7X9n0KxSfKATjIy3luIVXkiz2zILgPhXb7wwnPFLKM=;
+        s=k20201202; t=1624297993;
+        bh=CtLT/lzwUI8ebT8vGhX4RAeNFaQvGQpIJCVCOAIQ0WU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G7gUSvXu4jP28jc4P5sugh6knMM9Z1emNFJHYgvVJ37H/s8V7k9ZFWyBnzQ+wz9lx
-         O7DJNnEkQONdVwRgxyTTJ7YzVgD/aedkq9UYMbnBv8L5UP/Jp5xlX28qWKjx6JTCA2
-         AkyYfQxPLtPRrC1Eg3TXBvi5JT5gJ4QX0+2TNr7ClSgViRTOGdvkuAgSCUrjed4WLF
-         hqgDXHaJjKwx7Jy7OvwVxyzlHHfStfsxht2MCCkdjAOorcfo/zK0KGTC6gmW0iU2Ly
-         qTTmMzVofBlljtp/zs3BHRKL+S5b0JUrJMCYo40IF4uBrpM0Tk+NP2e/ksSw8UNWFs
-         rluTP8nmWKJHA==
+        b=l6iO8rv0W1UFeuWNWeYr+7K7mNEiT4eh9gHZZsy3ZNlIICZGDjWIAdYbtjCD/I7Lr
+         rR354lq1uQtkPbIAPd1Ypho/lf3xEf3CEMS4dErVjoFQrtdEtCSeP5c/nC4ZQdrAju
+         6zSrDHZg0lvP7yZChGdpc9YgyHL+S8TZJl1hf5HFoniEK4Cg/adN7HQqiqXTNZJavh
+         CLQVKOZNBePXHKtC0ROTVsp22iJ0aIOQxyNftatxOFu0FqLi7kKH2OgttKUeIKia08
+         fqoIoFxjvN/fRD2vurnUA8xevDx8LGyP91tKDKli98DL+3GNIsWj4tcSkCF7n94xLZ
+         DvAQCXf5BYVAg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jianqiang Chen <jianqiang.chen@xilinx.com>,
+Cc:     Zou Wei <zou_wei@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.10 04/35] dmaengine: xilinx: dpdma: Limit descriptor IDs to 16 bits
-Date:   Mon, 21 Jun 2021 13:52:29 -0400
-Message-Id: <20210621175300.735437-4-sashal@kernel.org>
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 08/35] dmaengine: rcar-dmac: Fix PM reference leak in rcar_dmac_probe()
+Date:   Mon, 21 Jun 2021 13:52:33 -0400
+Message-Id: <20210621175300.735437-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210621175300.735437-1-sashal@kernel.org>
 References: <20210621175300.735437-1-sashal@kernel.org>
@@ -43,58 +44,39 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Zou Wei <zou_wei@huawei.com>
 
-[ Upstream commit 9f007e7b6643799e2a6538a5fe04f51c371c6657 ]
+[ Upstream commit dea8464ddf553803382efb753b6727dbf3931d06 ]
 
-While the descriptor ID is stored in a 32-bit field in the hardware
-descriptor, only 16 bits are used by the hardware and are reported
-through the XILINX_DPDMA_CH_DESC_ID register. Failure to handle the
-wrap-around results in a descriptor ID mismatch after 65536 frames. Fix
-it.
+pm_runtime_get_sync will increment pm usage counter even it failed.
+Forgetting to putting operation will result in reference leak here.
+Fix it by replacing it with pm_runtime_resume_and_get to keep usage
+counter balanced.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Tested-by: Jianqiang Chen <jianqiang.chen@xilinx.com>
-Reviewed-by: Jianqiang Chen <jianqiang.chen@xilinx.com>
-Link: https://lore.kernel.org/r/20210520152420.23986-5-laurent.pinchart@ideasonboard.com
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/1622442963-54095-1-git-send-email-zou_wei@huawei.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/xilinx/xilinx_dpdma.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/dma/sh/rcar-dmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/xilinx/xilinx_dpdma.c b/drivers/dma/xilinx/xilinx_dpdma.c
-index 70b29bd079c9..249ce3988a59 100644
---- a/drivers/dma/xilinx/xilinx_dpdma.c
-+++ b/drivers/dma/xilinx/xilinx_dpdma.c
-@@ -113,6 +113,7 @@
- #define XILINX_DPDMA_CH_VDO				0x020
- #define XILINX_DPDMA_CH_PYLD_SZ				0x024
- #define XILINX_DPDMA_CH_DESC_ID				0x028
-+#define XILINX_DPDMA_CH_DESC_ID_MASK			GENMASK(15, 0)
+diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
+index a57705356e8b..991a7b5da29f 100644
+--- a/drivers/dma/sh/rcar-dmac.c
++++ b/drivers/dma/sh/rcar-dmac.c
+@@ -1874,7 +1874,7 @@ static int rcar_dmac_probe(struct platform_device *pdev)
  
- /* DPDMA descriptor fields */
- #define XILINX_DPDMA_DESC_CONTROL_PREEMBLE		0xa5
-@@ -866,7 +867,8 @@ static void xilinx_dpdma_chan_queue_transfer(struct xilinx_dpdma_chan *chan)
- 	 * will be used, but it should be enough.
- 	 */
- 	list_for_each_entry(sw_desc, &desc->descriptors, node)
--		sw_desc->hw.desc_id = desc->vdesc.tx.cookie;
-+		sw_desc->hw.desc_id = desc->vdesc.tx.cookie
-+				    & XILINX_DPDMA_CH_DESC_ID_MASK;
- 
- 	sw_desc = list_first_entry(&desc->descriptors,
- 				   struct xilinx_dpdma_sw_desc, node);
-@@ -1086,7 +1088,8 @@ static void xilinx_dpdma_chan_vsync_irq(struct  xilinx_dpdma_chan *chan)
- 	if (!chan->running || !pending)
- 		goto out;
- 
--	desc_id = dpdma_read(chan->reg, XILINX_DPDMA_CH_DESC_ID);
-+	desc_id = dpdma_read(chan->reg, XILINX_DPDMA_CH_DESC_ID)
-+		& XILINX_DPDMA_CH_DESC_ID_MASK;
- 
- 	/* If the retrigger raced with vsync, retry at the next frame. */
- 	sw_desc = list_first_entry(&pending->descriptors,
+ 	/* Enable runtime PM and initialize the device. */
+ 	pm_runtime_enable(&pdev->dev);
+-	ret = pm_runtime_get_sync(&pdev->dev);
++	ret = pm_runtime_resume_and_get(&pdev->dev);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "runtime PM get sync failed (%d)\n", ret);
+ 		return ret;
 -- 
 2.30.2
 

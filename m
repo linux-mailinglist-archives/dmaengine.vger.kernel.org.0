@@ -2,74 +2,66 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B4093AE978
-	for <lists+dmaengine@lfdr.de>; Mon, 21 Jun 2021 14:56:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F1F33AEB64
+	for <lists+dmaengine@lfdr.de>; Mon, 21 Jun 2021 16:33:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229663AbhFUM6Y (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 21 Jun 2021 08:58:24 -0400
-Received: from m12-17.163.com ([220.181.12.17]:57941 "EHLO m12-17.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229651AbhFUM6X (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 21 Jun 2021 08:58:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Date:From:Subject:Message-ID:MIME-Version; bh=RhEua
-        8GR26tvHREEceUWP4wYPENJiGTDNytWgn9r17Q=; b=NZx5Q/R1GsGvehJ0EG7Ow
-        RiwmL6IYx7uTs2x4P9QKW8fdFiyZBBd9BsoTtof21Qbu9VEOTvq6WlmCgeq9yCIM
-        MpWLetNW+7Zb8TnZc1YvZcPURH9qKn/H6NB3yeVyhtx+Ga2I9CHvf1rywKJ18hmF
-        vzVcSuTVtkN+QMfFfpCEAo=
-Received: from localhost (unknown [218.17.89.92])
-        by smtp13 (Coremail) with SMTP id EcCowAD30GhYjNBg8pE98w--.56118S2;
-        Mon, 21 Jun 2021 20:55:53 +0800 (CST)
-Date:   Mon, 21 Jun 2021 20:56:02 +0800
-From:   Junlin Yang <angkery@163.com>
+        id S230283AbhFUOgC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 21 Jun 2021 10:36:02 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:13241 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S230161AbhFUOf7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 21 Jun 2021 10:35:59 -0400
+X-IronPort-AV: E=Sophos;i="5.83,289,1616425200"; 
+   d="scan'208";a="85068679"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 21 Jun 2021 23:33:43 +0900
+Received: from localhost.localdomain (unknown [10.226.92.241])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id EFBE3400A8A8;
+        Mon, 21 Jun 2021 23:33:41 +0900 (JST)
+From:   Biju Das <biju.das.jz@bp.renesas.com>
 To:     Vinod Koul <vkoul@kernel.org>
-Cc:     sean.wang@mediatek.com, matthias.bgg@gmail.com,
-        long.cheng@mediatek.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Junlin Yang <yangjunlin@yulong.com>
-Subject: Re: [PATCH v1] dmaengine: mediatek: Return the correct errno code
-Message-ID: <20210621205602.00003658.angkery@163.com>
-In-Reply-To: <YNBN684ZiVdVb4eU@vkoul-mobl>
-References: <20210621062048.1935-1-angkery@163.com>
-        <YNBN684ZiVdVb4eU@vkoul-mobl>
-Organization: yulong
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: EcCowAD30GhYjNBg8pE98w--.56118S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKw1kGw1xXFy3uw4fJw47Arb_yoWxAwb_CF
-        1Syry8Wr4DZw4vq3s8GFyrG34SyayYyrWvgFnrCFyDAry3CrWUJr9rCr1Fvw43Jrs7ury3
-        uan0ka92qr1YyjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU0LID7UUUUU==
-X-Originating-IP: [218.17.89.92]
-X-CM-SenderInfo: 5dqjyvlu16il2tof0z/1tbiLBm4I1spa5dUdwAAsD
+Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Chris Brandt <Chris.Brandt@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        dmaengine@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH v2 0/4] Add RZ/G2L DMAC support
+Date:   Mon, 21 Jun 2021 15:33:35 +0100
+Message-Id: <20210621143339.16754-1-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, 21 Jun 2021 13:59:31 +0530
-Vinod Koul <vkoul@kernel.org> wrote:
+This patch series aims to add DMAC support on RZ/G2L SoC's.
 
-> On 21-06-21, 14:20, angkery wrote:
-> > From: Junlin Yang <yangjunlin@yulong.com>
-> > 
-> > When devm_kzalloc failed, should return ENOMEM rather than ENODEV.
-> > 
-> > Fixes: 9135408c3ace ("dmaengine: mediatek: Add MediaTek UART APDMA
-> > support") Signed-off-by: Junlin Yang <yangjunlin@yulong.com>  
-> 
-> Patch was sent by angkery <angkery@163.com> and signed off by Junlin
-> Yang <yangjunlin@yulong.com>. I would need s-o-b by sender as well...
-> 
-> Thanks
-> 
+It is based on the work done by Chris Brandt for RZ/A DMA driver.
 
-Due to the mailbox problem, I configured a sending mailbox, and now I
-change the mailbox display name.
+This patch set is based on master branch [1]
+[1]https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/
 
-Thanks
---
-Junlin Yang
+v1->v2
+ * Started using virtual DMAC
+ * Added Geert's Rb tag for binding patch.
+
+Biju Das (4):
+  dt-bindings: dma: Document RZ/G2L bindings
+  drivers: dma: sh: Add DMAC driver for RZ/G2L SoC
+  arm64: dts: renesas: r9a07g044: Add DMAC support
+  arm64: defconfig: Enable DMA controller for RZ/G2L SoC's
+
+ .../bindings/dma/renesas,rz-dmac.yaml         | 120 +++
+ arch/arm64/boot/dts/renesas/r9a07g044.dtsi    |  36 +
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/dma/sh/Kconfig                        |   9 +
+ drivers/dma/sh/Makefile                       |   1 +
+ drivers/dma/sh/rz-dmac.c                      | 946 ++++++++++++++++++
+ 6 files changed, 1113 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+ create mode 100644 drivers/dma/sh/rz-dmac.c
+
+-- 
+2.17.1
 

@@ -2,66 +2,192 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F1F33AEB64
-	for <lists+dmaengine@lfdr.de>; Mon, 21 Jun 2021 16:33:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3CF73AEB67
+	for <lists+dmaengine@lfdr.de>; Mon, 21 Jun 2021 16:33:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230283AbhFUOgC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 21 Jun 2021 10:36:02 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:13241 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S230161AbhFUOf7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 21 Jun 2021 10:35:59 -0400
+        id S230204AbhFUOgI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 21 Jun 2021 10:36:08 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:34940 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S230235AbhFUOgC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 21 Jun 2021 10:36:02 -0400
 X-IronPort-AV: E=Sophos;i="5.83,289,1616425200"; 
-   d="scan'208";a="85068679"
+   d="scan'208";a="84948112"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 21 Jun 2021 23:33:43 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 21 Jun 2021 23:33:46 +0900
 Received: from localhost.localdomain (unknown [10.226.92.241])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id EFBE3400A8A8;
-        Mon, 21 Jun 2021 23:33:41 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 6938D400B9C1;
+        Mon, 21 Jun 2021 23:33:44 +0900 (JST)
 From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Vinod Koul <vkoul@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>
 Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Chris Brandt <Chris.Brandt@renesas.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Chris Paterson <Chris.Paterson2@renesas.com>,
-        dmaengine@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v2 0/4] Add RZ/G2L DMAC support
-Date:   Mon, 21 Jun 2021 15:33:35 +0100
-Message-Id: <20210621143339.16754-1-biju.das.jz@bp.renesas.com>
+Subject: [PATCH v2 1/4] dt-bindings: dma: Document RZ/G2L bindings
+Date:   Mon, 21 Jun 2021 15:33:36 +0100
+Message-Id: <20210621143339.16754-2-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20210621143339.16754-1-biju.das.jz@bp.renesas.com>
+References: <20210621143339.16754-1-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This patch series aims to add DMAC support on RZ/G2L SoC's.
+Document RZ/G2L DMAC bindings.
 
-It is based on the work done by Chris Brandt for RZ/A DMA driver.
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Note:-  This patch has dependency on #include <dt-bindings/clock/r9a07g044-cpg.h> file which will be in 
+next 5.14-rc1 release.
 
-This patch set is based on master branch [1]
-[1]https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/
-
-v1->v2
- * Started using virtual DMAC
- * Added Geert's Rb tag for binding patch.
-
-Biju Das (4):
-  dt-bindings: dma: Document RZ/G2L bindings
-  drivers: dma: sh: Add DMAC driver for RZ/G2L SoC
-  arm64: dts: renesas: r9a07g044: Add DMAC support
-  arm64: defconfig: Enable DMA controller for RZ/G2L SoC's
-
- .../bindings/dma/renesas,rz-dmac.yaml         | 120 +++
- arch/arm64/boot/dts/renesas/r9a07g044.dtsi    |  36 +
- arch/arm64/configs/defconfig                  |   1 +
- drivers/dma/sh/Kconfig                        |   9 +
- drivers/dma/sh/Makefile                       |   1 +
- drivers/dma/sh/rz-dmac.c                      | 946 ++++++++++++++++++
- 6 files changed, 1113 insertions(+)
+v2->v3:
+  * Added error interrupt first.
+  * Updated clock and reset maxitems.
+  * Added Geert's Rb tag.
+v1->v2:
+  * Made interrupt names in defined order
+  * Removed src address and channel configuration from dma-cells.
+  * Changed the compatibele string to "renesas,r9a07g044-dmac".
+v1:-
+  * https://patchwork.kernel.org/project/linux-renesas-soc/patch/20210611113642.18457-2-biju.das.jz@bp.renesas.com/
+---
+ .../bindings/dma/renesas,rz-dmac.yaml         | 120 ++++++++++++++++++
+ 1 file changed, 120 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
- create mode 100644 drivers/dma/sh/rz-dmac.c
 
+diff --git a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+new file mode 100644
+index 000000000000..0a59907ed041
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+@@ -0,0 +1,120 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/renesas,rz-dmac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas RZ/G2L DMA Controller
++
++maintainers:
++  - Biju Das <biju.das.jz@bp.renesas.com>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - renesas,r9a07g044-dmac # RZ/G2{L,LC}
++      - const: renesas,rz-dmac
++
++  reg:
++    items:
++      - description: Control and channel register block
++      - description: DMA extended resource selector block
++
++  interrupts:
++    maxItems: 17
++
++  interrupt-names:
++    items:
++      - const: error
++      - const: ch0
++      - const: ch1
++      - const: ch2
++      - const: ch3
++      - const: ch4
++      - const: ch5
++      - const: ch6
++      - const: ch7
++      - const: ch8
++      - const: ch9
++      - const: ch10
++      - const: ch11
++      - const: ch12
++      - const: ch13
++      - const: ch14
++      - const: ch15
++
++  clocks:
++    maxItems: 2
++
++  '#dma-cells':
++    const: 1
++    description:
++      The cell specifies the MID/RID of the DMAC port connected to
++      the DMA client.
++
++  dma-channels:
++    const: 16
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    maxItems: 2
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++  - clocks
++  - '#dma-cells'
++  - dma-channels
++  - power-domains
++  - resets
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/r9a07g044-cpg.h>
++
++    dmac: dma-controller@11820000 {
++        compatible = "renesas,r9a07g044-dmac",
++                     "renesas,rz-dmac";
++        reg = <0x11820000 0x10000>,
++              <0x11830000 0x10000>;
++        interrupts = <GIC_SPI 141 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 125 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 126 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 127 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 128 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 129 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 130 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 131 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 132 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 133 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 134 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 135 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 136 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 137 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 138 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 139 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 140 IRQ_TYPE_EDGE_RISING>;
++        interrupt-names = "error",
++                          "ch0", "ch1", "ch2", "ch3",
++                          "ch4", "ch5", "ch6", "ch7",
++                          "ch8", "ch9", "ch10", "ch11",
++                          "ch12", "ch13", "ch14", "ch15";
++        clocks = <&cpg CPG_MOD R9A07G044_DMAC_ACLK>,
++                 <&cpg CPG_MOD R9A07G044_DMAC_PCLK>;
++        power-domains = <&cpg>;
++        resets = <&cpg R9A07G044_DMAC_ACLK>,
++                 <&cpg R9A07G044_DMAC_PCLK>;
++        #dma-cells = <1>;
++        dma-channels = <16>;
++    };
 -- 
 2.17.1
 

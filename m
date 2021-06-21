@@ -2,70 +2,74 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FD283AE2DF
-	for <lists+dmaengine@lfdr.de>; Mon, 21 Jun 2021 07:53:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E4A03AE340
+	for <lists+dmaengine@lfdr.de>; Mon, 21 Jun 2021 08:31:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229597AbhFUFzL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 21 Jun 2021 01:55:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54224 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbhFUFzK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 21 Jun 2021 01:55:10 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D44BAC061756
-        for <dmaengine@vger.kernel.org>; Sun, 20 Jun 2021 22:52:56 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id p7so27989452lfg.4
-        for <dmaengine@vger.kernel.org>; Sun, 20 Jun 2021 22:52:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qvVLIkjY2BI+dv8+oCzZLh2KWK9nzy5kALZ0tBgTgmM=;
-        b=OWh41pBG1J4S+aLNqN8FY1vGAKOVV0q8cLx0SnuOQVGkqNsSOZ83FJ5fuLi+ubVelR
-         4WkFpbVlmdmn0DH11aP6ooZZE+k/uzmghMpqCwLH+nhYm/DkPSncwuOs+wOqujw4LSH/
-         BzhX8IumdS4THN9ErkgjjNxMbBAMHrliXysss=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qvVLIkjY2BI+dv8+oCzZLh2KWK9nzy5kALZ0tBgTgmM=;
-        b=SH0eWlJoky7y0+KleUOZe+54aTboAbIBtW300/pHvC3PV3//k3eJY7ir+HnyIBGhJF
-         2NYJU2XOMtHBMxA9Ku4dpLAhrmq34+tufnqkwk3s9SFtOT0wNW+aY2PmksE/bp+SKpzg
-         J+ptMjkIU30He5dfComViDglUO41ATEGGj8K0oTeeSN7K+pTlxXjb6svyF3u3FKEcoPd
-         MHG4L6lEj4w4M/Lr7l0tpSF91udovhvTMkQIPdKyUOva8spWsLl9tCoMgkYxUUBaCIVz
-         IA8YIDgRBNN6/ulIHrPlBVCoJda+YxflPabGUyViuB842SxtdioDpwYMcGst+ZGis1mI
-         MlWQ==
-X-Gm-Message-State: AOAM532nQAgcq+cJF3BNs8kv5PVvrsZjBtt+aOadvoXOTvrN7Qb1WVPV
-        Wa4MqvxqNtv/GEwPP1Ql8auo9OtkzG2r6xwXTnCsew==
-X-Google-Smtp-Source: ABdhPJxAPpJQjlpnjyn3YLrmWUJot6rk04KH2QgEsE4DP+8OOfnqFG1fFvwljBtxFszUAT/f7w1dADXRAMG6cRn/VGo=
-X-Received: by 2002:a19:488e:: with SMTP id v136mr12811091lfa.647.1624254775065;
- Sun, 20 Jun 2021 22:52:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210617133229.1497-1-angkery@163.com>
-In-Reply-To: <20210617133229.1497-1-angkery@163.com>
-From:   Chen-Yu Tsai <wenst@chromium.org>
-Date:   Mon, 21 Jun 2021 13:52:44 +0800
-Message-ID: <CAGXv+5Eb7oJ2db41K2vvSN84uAg-V5SjthnvCuuF7H7SfE1aaQ@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: mediatek: Return the correct errno code
-To:     angkery <angkery@163.com>
-Cc:     sean.wang@mediatek.com, vkoul@kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        id S229765AbhFUGdT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 21 Jun 2021 02:33:19 -0400
+Received: from m12-17.163.com ([220.181.12.17]:49664 "EHLO m12-17.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229641AbhFUGdT (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 21 Jun 2021 02:33:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=u6hdI
+        srs/V2lafii/maxw5n7uLgulGr69u1vMtVbjTg=; b=Bn9hr3KKSw9migEdJLagL
+        DCoyTSpINFl5H6Y4cRzHxe4TQGXDepwx2emDbT8u1R9HR8WwdRV3m5eykp3IzRP1
+        oJ1lFtv62NsJuuX1uHrXJTLB0UEwQb6SXfV9mh1b4kT0QRt0/A+FcKk0dBttFOW0
+        FAIrWyAd07uLG0iGNlsqqg=
+Received: from yangjunlin.ccdomain.com (unknown [218.17.89.92])
+        by smtp13 (Coremail) with SMTP id EcCowACXbGQBMtBgMeQF8w--.52581S2;
+        Mon, 21 Jun 2021 14:30:26 +0800 (CST)
+From:   angkery <angkery@163.com>
+To:     sean.wang@mediatek.com, vkoul@kernel.org, matthias.bgg@gmail.com,
+        long.cheng@mediatek.com
+Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
         Junlin Yang <yangjunlin@yulong.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH v1] dmaengine: mediatek: Return the correct errno code
+Date:   Mon, 21 Jun 2021 14:20:48 +0800
+Message-Id: <20210621062048.1935-1-angkery@163.com>
+X-Mailer: git-send-email 2.24.0.windows.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: EcCowACXbGQBMtBgMeQF8w--.52581S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZF1kXryxXFyxJr1kGFW5Awb_yoWfWrc_ua
+        yvvrZ7WF1DAwnayr1rGr1UuryayFWkuF1fWF45Kr13ZrW5CrsrCrWq9r9avw43X3Z2vFn7
+        GF1UZrn3uFsxCjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUeveHDUUUUU==
+X-Originating-IP: [218.17.89.92]
+X-CM-SenderInfo: 5dqjyvlu16il2tof0z/xtbBFAK4I1aD-8Sw1QAAsG
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Jun 17, 2021 at 9:35 PM angkery <angkery@163.com> wrote:
->
-> From: Junlin Yang <yangjunlin@yulong.com>
->
-> When devm_kzalloc failed, should return ENOMEM rather than ENODEV.
->
-> Signed-off-by: Junlin Yang <yangjunlin@yulong.com>
+From: Junlin Yang <yangjunlin@yulong.com>
 
-Please add proper fixes tags:
+When devm_kzalloc failed, should return ENOMEM rather than ENODEV.
 
 Fixes: 9135408c3ace ("dmaengine: mediatek: Add MediaTek UART APDMA support")
+Signed-off-by: Junlin Yang <yangjunlin@yulong.com>
+---
+Changes in v1:
+Add fixes tags.
+
+ drivers/dma/mediatek/mtk-uart-apdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/dma/mediatek/mtk-uart-apdma.c b/drivers/dma/mediatek/mtk-uart-apdma.c
+index 375e7e6..a4cb30f 100644
+--- a/drivers/dma/mediatek/mtk-uart-apdma.c
++++ b/drivers/dma/mediatek/mtk-uart-apdma.c
+@@ -529,7 +529,7 @@ static int mtk_uart_apdma_probe(struct platform_device *pdev)
+ 	for (i = 0; i < mtkd->dma_requests; i++) {
+ 		c = devm_kzalloc(mtkd->ddev.dev, sizeof(*c), GFP_KERNEL);
+ 		if (!c) {
+-			rc = -ENODEV;
++			rc = -ENOMEM;
+ 			goto err_no_dma;
+ 		}
+ 
+-- 
+1.9.1
+
+

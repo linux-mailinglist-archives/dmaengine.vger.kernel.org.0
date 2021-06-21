@@ -2,39 +2,36 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 65B0B3AF31E
-	for <lists+dmaengine@lfdr.de>; Mon, 21 Jun 2021 19:57:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DBD93AF35C
+	for <lists+dmaengine@lfdr.de>; Mon, 21 Jun 2021 19:58:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232303AbhFUR7U (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 21 Jun 2021 13:59:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39062 "EHLO mail.kernel.org"
+        id S231859AbhFUSAt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 21 Jun 2021 14:00:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232888AbhFUR4M (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 21 Jun 2021 13:56:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BADBC61380;
-        Mon, 21 Jun 2021 17:53:16 +0000 (UTC)
+        id S233167AbhFUR6P (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 21 Jun 2021 13:58:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B396E61289;
+        Mon, 21 Jun 2021 17:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624297997;
-        bh=zwjrpBQ7o0x2xqtiyXHPgA7MFvj9vARlzFvp3O45wJc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sdb+N3G5AVaUAotaq0eKMI+IGHViFyorcmkVg4B7BnynU2Xpxr8B6rg0s5Hp2CGJQ
-         vdsiArlhKC1sRg5cFDszCS0NQcLOJXhjl5R1LQa/9M1hNLoqQAm41N2h+utQyxZMgc
-         8Er8kd3cdbOAuS9uMtM3cT+8hTyQLN3UVQ60NArw53b9QZIkKc6k5KR9cCnbQObpzS
-         InbjR3LJwt36K+BKMJGJ+rL70B6T8yNRXI834yAdNarWkeKKl0MylyFQwUzptiOeQD
-         lXYcc9cfV3iIu8j5yJVlK2LVB1nhEtHzHr3ESaIkPx3GIdUP03B2C5hCLvpwhJt4xF
-         fN+y3cn7SRkjg==
+        s=k20201202; t=1624298042;
+        bh=C3zD+YGqJM3yC94ihyfLYGL7l36I0vVTfiurb62Ssqg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CHLCiODYBeDHfwVzJl4b+yccK19tei2kxIpUSEZ8LxpoDQUgDeyqHqItvVhIe4gQp
+         7C0czEwWuT8ZD06WBl779r+raI4u7R7Px5bPwcx/dz6xNW82v6DghIoF82ii+EdpEC
+         FAqd92oLtL1Md4lwon8hjvv9dS2wlngDfh2TfZNoT8gobcq3RSKHs1rJc6li79OB0O
+         ERDKQmI3+Mcc9ye3Tu+1PbLAJ498fMFyEd4vFZtXlqBklAoHuponj4LWIT9UWovInn
+         c1H2tPl0I65CI6+l4rNuZgg+XTePnwCFfiOFHR2ocTCfrpnRrdOtl1mBJuwhPMLsXu
+         24m108hmBoSqQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guillaume Ranquet <granquet@baylibre.com>,
+Cc:     Yu Kuai <yukuai3@huawei.com>, Hulk Robot <hulkci@huawei.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.10 11/35] dmaengine: mediatek: use GFP_NOWAIT instead of GFP_ATOMIC in prep_dma
-Date:   Mon, 21 Jun 2021 13:52:36 -0400
-Message-Id: <20210621175300.735437-11-sashal@kernel.org>
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 01/26] dmaengine: zynqmp_dma: Fix PM reference leak in zynqmp_dma_alloc_chan_resourc()
+Date:   Mon, 21 Jun 2021 13:53:34 -0400
+Message-Id: <20210621175400.735800-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210621175300.735437-1-sashal@kernel.org>
-References: <20210621175300.735437-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -43,36 +40,36 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Guillaume Ranquet <granquet@baylibre.com>
+From: Yu Kuai <yukuai3@huawei.com>
 
-[ Upstream commit 9041575348b21ade1fb74d790f1aac85d68198c7 ]
+[ Upstream commit 8982d48af36d2562c0f904736b0fc80efc9f2532 ]
 
-As recommended by the doc in:
-Documentation/drivers-api/dmaengine/provider.rst
+pm_runtime_get_sync will increment pm usage counter even it failed.
+Forgetting to putting operation will result in reference leak here.
+Fix it by replacing it with pm_runtime_resume_and_get to keep usage
+counter balanced.
 
-Use GFP_NOWAIT to not deplete the emergency pool.
-
-Signed-off-by: Guillaume Ranquet <granquet@baylibre.com>
-
-Link: https://lore.kernel.org/r/20210513192642.29446-4-granquet@baylibre.com
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Link: https://lore.kernel.org/r/20210517081826.1564698-4-yukuai3@huawei.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/mediatek/mtk-uart-apdma.c | 2 +-
+ drivers/dma/xilinx/zynqmp_dma.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/mediatek/mtk-uart-apdma.c b/drivers/dma/mediatek/mtk-uart-apdma.c
-index a09ab2dd3b46..375e7e647df6 100644
---- a/drivers/dma/mediatek/mtk-uart-apdma.c
-+++ b/drivers/dma/mediatek/mtk-uart-apdma.c
-@@ -349,7 +349,7 @@ static struct dma_async_tx_descriptor *mtk_uart_apdma_prep_slave_sg
- 		return NULL;
+diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
+index d47749a35863..84009c5e0f33 100644
+--- a/drivers/dma/xilinx/zynqmp_dma.c
++++ b/drivers/dma/xilinx/zynqmp_dma.c
+@@ -467,7 +467,7 @@ static int zynqmp_dma_alloc_chan_resources(struct dma_chan *dchan)
+ 	struct zynqmp_dma_desc_sw *desc;
+ 	int i, ret;
  
- 	/* Now allocate and setup the descriptor */
--	d = kzalloc(sizeof(*d), GFP_ATOMIC);
-+	d = kzalloc(sizeof(*d), GFP_NOWAIT);
- 	if (!d)
- 		return NULL;
+-	ret = pm_runtime_get_sync(chan->dev);
++	ret = pm_runtime_resume_and_get(chan->dev);
+ 	if (ret < 0)
+ 		return ret;
  
 -- 
 2.30.2

@@ -2,51 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D2473AFEF0
-	for <lists+dmaengine@lfdr.de>; Tue, 22 Jun 2021 10:17:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A58563B060E
+	for <lists+dmaengine@lfdr.de>; Tue, 22 Jun 2021 15:43:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbhFVIT7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 22 Jun 2021 04:19:59 -0400
-Received: from mail-vs1-f54.google.com ([209.85.217.54]:46782 "EHLO
-        mail-vs1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229844AbhFVIT7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 22 Jun 2021 04:19:59 -0400
-Received: by mail-vs1-f54.google.com with SMTP id z15so10758892vsn.13;
-        Tue, 22 Jun 2021 01:17:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s0hVMlLFV5eIwzuXXBEJWEV7FxMfuDBGtQwv1PuAfDc=;
-        b=Yc8JShUBMH1dnjUYyQ4i3CS2+y2GF6q1YtRwv/bRUTq4JGwOzFH8jz0/QYnr8ZuDpr
-         HcEesiBUGFsp/umSzAQ1ucxKn54tANWqVfYyhNDVX62VWxoC03W6vKFzSWDS1INIUujo
-         EfpD0ZvANCW00iJ41ZnsyYqUYQ7WKnBJFLN0taGCgErNoNfbEbrJRexR6AwIwIKT2Knb
-         /0emor8cfQJbNOnIXhfpVS1iQMsX9FEwTZTkt2w2NsDGz2POO5RqhJxIgP7TG7ACSbj/
-         GkkcJgg3HdSB+eNLe7DKVV3GNyEiHob+PVe9RVIKAdqt1PMr45YhOFebl4O9XRmtiOlY
-         SQDQ==
-X-Gm-Message-State: AOAM530BLNzCLpsQ3ZsdxG/iSlElsnvEgk5f19JQOeLC0TziQs7pI7vp
-        kFMx7YZsKONrP5YDTSXRni3TndxcwI12ri99DDk=
-X-Google-Smtp-Source: ABdhPJz3clw2O8tsVFk5F4OGcaBfo9Z8eHqvoF8LwYXAPGollSTCOREHx1S0f08A9nsiznMjaM5G5srL4UVXlJSotsU=
-X-Received: by 2002:a05:6102:2011:: with SMTP id p17mr21421376vsr.40.1624349860512;
- Tue, 22 Jun 2021 01:17:40 -0700 (PDT)
+        id S230102AbhFVNqK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 22 Jun 2021 09:46:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37118 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229988AbhFVNqJ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 22 Jun 2021 09:46:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BC2F861353;
+        Tue, 22 Jun 2021 13:43:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1624369432;
+        bh=NqFXh1RzaIB7T3yUivBhV+3jLDLAyj/zzCtWY0JA0SQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=n2C4l95B/w+7fm3Hy/W1ls3BjWTgUnPkeMWPcJwuHNhjALViq36NSNRvf1J+UxXwT
+         W1of8Zg2OiipKGz+JaQJVEN0Rymz9BqpYAiOBzmrtdT5/mgiDbEVBsHlr3gDk+TOBO
+         Fe7qpiKq+UgUir5JlR9fsJDRZtySIEJhB36NWX9yf5t0mO64+Z1mYCq7ew8ZAwg0KI
+         F5hwQr8sPPDgEGs9UTcylTzkdsRMaQyTccf/acpKJhxDJxKtULLFNQYEsUOGj4MJxK
+         B3a0hJqzs9FjH4X1uUrkMDUidT5NSByby5xfUTkfYV6nW2261SSjbz6fXsdgEAv5QU
+         qCbHec6qB4IfA==
+Received: by mail-ed1-f48.google.com with SMTP id t3so23726766edc.7;
+        Tue, 22 Jun 2021 06:43:52 -0700 (PDT)
+X-Gm-Message-State: AOAM530naL8j0CKzvJfrllBmASUFsX2bsI1GjGzC0mAXDpPnd7e/OVpX
+        4EDZT2wnXe4JGzDS7JIUEAN3Ta5uIGiYDz5J5Q==
+X-Google-Smtp-Source: ABdhPJzR0Ub3ZgSNkr3MEhjSHq6x9DynzmvMX7quMzOS1boijoDJs7nsAsYPAJuJ3rupM/aSXMVZuLXS4ayPZR+vCGA=
+X-Received: by 2002:a05:6402:ca2:: with SMTP id cn2mr2897976edb.62.1624369431373;
+ Tue, 22 Jun 2021 06:43:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210615191543.1043414-1-robh@kernel.org>
-In-Reply-To: <20210615191543.1043414-1-robh@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 22 Jun 2021 10:17:28 +0200
-Message-ID: <CAMuHMdUGXu8yj3JWKwM8mt7axkrzGMiowC1t0PHrbpxRCBME3w@mail.gmail.com>
+References: <20210615191543.1043414-1-robh@kernel.org> <CAMuHMdUGXu8yj3JWKwM8mt7axkrzGMiowC1t0PHrbpxRCBME3w@mail.gmail.com>
+In-Reply-To: <CAMuHMdUGXu8yj3JWKwM8mt7axkrzGMiowC1t0PHrbpxRCBME3w@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 22 Jun 2021 07:43:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ8jjkufTAmoFHuqpWB0bMUfCCkUR-pFFa2MoyeGzgBvA@mail.gmail.com>
+Message-ID: <CAL_JsqJ8jjkufTAmoFHuqpWB0bMUfCCkUR-pFFa2MoyeGzgBvA@mail.gmail.com>
 Subject: Re: [PATCH] dt-bindings: Drop redundant minItems/maxItems
-To:     Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-ide@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
         DRI Development <dri-devel@lists.freedesktop.org>,
         dmaengine <dmaengine@vger.kernel.org>,
         Linux I2C <linux-i2c@vger.kernel.org>,
-        linux-iio@vger.kernel.org,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
         ALSA Development Mailing List <alsa-devel@alsa-project.org>,
         Linux IOMMU <iommu@lists.linux-foundation.org>,
         Linux Media Mailing List <linux-media@vger.kernel.org>,
@@ -59,7 +62,8 @@ Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
         "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
         <linux-remoteproc@vger.kernel.org>,
         linux-riscv <linux-riscv@lists.infradead.org>,
-        linux-rtc@vger.kernel.org,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
         "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
         linux-spi <linux-spi@vger.kernel.org>,
         Linux PM list <linux-pm@vger.kernel.org>,
@@ -110,60 +114,63 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Rob,
-
-On Tue, Jun 15, 2021 at 9:16 PM Rob Herring <robh@kernel.org> wrote:
-> If a property has an 'items' list, then a 'minItems' or 'maxItems' with the
-> same size as the list is redundant and can be dropped. Note that is DT
-> schema specific behavior and not standard json-schema behavior. The tooling
-> will fixup the final schema adding any unspecified minItems/maxItems.
+On Tue, Jun 22, 2021 at 2:17 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
-> This condition is partially checked with the meta-schema already, but
-> only if both 'minItems' and 'maxItems' are equal to the 'items' length.
-> An improved meta-schema is pending.
-
-> Signed-off-by: Rob Herring <robh@kernel.org>
-
-> --- a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-> @@ -46,7 +46,6 @@ properties:
+> Hi Rob,
 >
->    clocks:
->      minItems: 3
-> -    maxItems: 5
->      items:
->        - description: GMAC main clock
->        - description: MAC TX clock
+> On Tue, Jun 15, 2021 at 9:16 PM Rob Herring <robh@kernel.org> wrote:
+> > If a property has an 'items' list, then a 'minItems' or 'maxItems' with the
+> > same size as the list is redundant and can be dropped. Note that is DT
+> > schema specific behavior and not standard json-schema behavior. The tooling
+> > will fixup the final schema adding any unspecified minItems/maxItems.
+> >
+> > This condition is partially checked with the meta-schema already, but
+> > only if both 'minItems' and 'maxItems' are equal to the 'items' length.
+> > An improved meta-schema is pending.
+>
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+>
+> > --- a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+> > +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+> > @@ -46,7 +46,6 @@ properties:
+> >
+> >    clocks:
+> >      minItems: 3
+> > -    maxItems: 5
+> >      items:
+> >        - description: GMAC main clock
+> >        - description: MAC TX clock
+>
+> While resolving the conflict with commit fea99822914039c6
+> ("dt-bindings: net: document ptp_ref clk in dwmac") in soc/for-next,
+> I noticed the following construct for clock-names:
+>
+>   clock-names:
+>     minItems: 3
+>     maxItems: 6
+>     contains:
+>       enum:
+>         - stmmaceth
+>         - mac-clk-tx
+>         - mac-clk-rx
+>         - ethstp
+>         - eth-ck
+>         - ptp_ref
+>
+> Should this use items instead of enum, and drop maxItems, or is this
+> a valid construct to support specifying the clocks in random order?
+> If the latter, it does mean that the order of clock-names may not
+> match the order of the clock descriptions.
 
-While resolving the conflict with commit fea99822914039c6
-("dt-bindings: net: document ptp_ref clk in dwmac") in soc/for-next,
-I noticed the following construct for clock-names:
+'contains' is true if one or more entries match the strings. So it is
+really saying one of these is required. That's not really much of a
+constraint. There's 'minContains' and 'maxContains' in newer
+json-schema versions (not yet supported) that could add some
+constraints if there has to be at least N entries from contains. An
+'items' schema (as opposed to a list) would say all items have to
+match one of the strings. I'm sure that's too strict.
 
-  clock-names:
-    minItems: 3
-    maxItems: 6
-    contains:
-      enum:
-        - stmmaceth
-        - mac-clk-tx
-        - mac-clk-rx
-        - ethstp
-        - eth-ck
-        - ptp_ref
+TLDR: clocks for this binding are a mess and the above is probably all
+we can do here.
 
-Should this use items instead of enum, and drop maxItems, or is this
-a valid construct to support specifying the clocks in random order?
-If the latter, it does mean that the order of clock-names may not
-match the order of the clock descriptions.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Rob

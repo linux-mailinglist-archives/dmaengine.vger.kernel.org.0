@@ -2,108 +2,169 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 213353B32B2
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Jun 2021 17:36:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A6073B3599
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Jun 2021 20:24:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232399AbhFXPi0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 24 Jun 2021 11:38:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232398AbhFXPi0 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Jun 2021 11:38:26 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66561C061574
-        for <dmaengine@vger.kernel.org>; Thu, 24 Jun 2021 08:36:06 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mtr@pengutronix.de>)
-        id 1lwROe-0005zk-Uh; Thu, 24 Jun 2021 17:36:04 +0200
-Received: from mtr by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mtr@pengutronix.de>)
-        id 1lwROe-0006MU-3W; Thu, 24 Jun 2021 17:36:04 +0200
-Date:   Thu, 24 Jun 2021 17:36:04 +0200
-From:   Michael Tretter <m.tretter@pengutronix.de>
-To:     dmaengine@vger.kernel.org, vkoul@kernel.org
-Cc:     michal.simek@xilinx.com, appanad@xilinx.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: dmaengine: zynqmp_dma: lockdep warning
-Message-ID: <20210624153604.GA24339@pengutronix.de>
-References: <20210601130108.GA12967@pengutronix.de>
+        id S232460AbhFXS1O (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 24 Jun 2021 14:27:14 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:33762 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229464AbhFXS1O (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Jun 2021 14:27:14 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 15OIOqVh068351;
+        Thu, 24 Jun 2021 13:24:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1624559092;
+        bh=8KRZ/rQJoyKTVZLM1HkAYTd5DyUGX7sHeS6CvLIljlc=;
+        h=From:To:CC:Subject:Date;
+        b=rxcRu2KXKalvdz/9QExEmBKE6RvGzPRxAoDCyp8T6bsnp26UCr9RgEW5mUAqsqg/6
+         4vndrbmlJScmbrRjyVD2e9Xl/t15VuaM25pUpOsjRR70xUzXCS6ZTg3oTpS3dz2it9
+         J8eIlZWUD2MfoFRFHDsvlsIaUJmsReTstpDWuQK4=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 15OIOqni085788
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 24 Jun 2021 13:24:52 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Thu, 24
+ Jun 2021 13:24:52 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Thu, 24 Jun 2021 13:24:52 -0500
+Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 15OIOosR011847;
+        Thu, 24 Jun 2021 13:24:51 -0500
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Peter Ujfalusi <peter.ujfalusi@gmail.com>
+CC:     Pratyush Yadav <p.yadav@ti.com>, Vinod Koul <vkoul@kernel.org>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3] dmaengine: ti: k3-psil-j721e: Add entry for CSI2RX
+Date:   Thu, 24 Jun 2021 23:54:49 +0530
+Message-ID: <20210624182449.31164-1-p.yadav@ti.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210601130108.GA12967@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 17:35:24 up 126 days, 18:59, 125 users,  load average: 0.02, 0.07,
- 0.12
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: mtr@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, 01 Jun 2021 15:01:08 +0200, Michael Tretter wrote:
-> I get a lockdep warning in the zynqmp dma driver and I am not entirely sure
-> how to fix it.
-> 
-> The code in drivers/dma/xilinx/zynqmp_dma.c looks as follows:
-> 
-> 604 static void zynqmp_dma_chan_desc_cleanup(struct zynqmp_dma_chan *chan)
-> 605 {
-> [...]
-> 612	callback = desc->async_tx.callback;
-> 613	callback_param = desc->async_tx.callback_param;
-> 614	if (callback) {
-> 615		spin_unlock(&chan->lock);
-> 616		callback(callback_param);
-> 617		spin_lock(&chan->lock);
-> 618	}
-> [...]
-> 626 }
-> [...]
-> 747 static void zynqmp_dma_do_tasklet(struct tasklet_struct *t)
-> 748 {
-> [...]
-> 753	spin_lock_irqsave(&chan->lock, irqflags);
-> [...]
-> 763	while (count) {
-> 764		zynqmp_dma_complete_descriptor(chan);
-> 765		zynqmp_dma_chan_desc_cleanup(chan);
-> 766		count--;
-> 767	}
-> [...]
-> 773	spin_unlock_irqrestore(&chan->lock, irqflags);
-> 774 }
-> 
-> Lockdep reports that in line 617 spin_lock() is called from a non-hardirq
-> context, while the same lock is used from a hardirq context. During runtime,
-> the sequence is as follows:
-> 
-> line 753: acquire lock and disable interrupts
-> line 615: release lock without enabling interrupts
-> line 617: re-acquire lock with still disabled interrupts
-> line 773: released lock and re-enable interrupts
-> 
-> Is this a false positive of lockdep, because it does not know that the irqs
-> are still disabled in line 617? Is it actually OK to leave interrupts disabled
-> over a spin_unlock() -> spin_lock() sequence or is this a problem?
-> 
-> Additionally, the lock is held for the entire tasklet that handles the
-> finished dma transfer. This is conflict to the rule that spin locks should be
-> held only for a short time. Is it necessary to hold the lock that long? I
-> understand that the lock is only used to protect the descriptor lists and it
-> would be better to only get the lock when descriptors are moved between lists.
-> 
-> Any guidance would be helpful.
+The CSI2RX subsystem uses PSI-L DMA to transfer frames to memory. It can
+have up to 32 threads per instance. J721E has two instances of the
+subsystem, so there are 64 threads total. Add them to the endpoint map.
 
-Gentle ping.
+Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 
-Michael
+---
+This patch has been split off from [0] to facilitate easier merging. I
+have still kept it as v3 to maintain continuity with the previous patches.
+
+[0] https://patchwork.linuxtv.org/project/linux-media/list/?series=5526&state=%2A&archive=both
+
+Changes in v3:
+- Update commit message to mention that all 64 threads are being added.
+
+Changes in v2:
+- Add all 64 threads, instead of having only the one thread being
+  currently used by the driver.
+
+ drivers/dma/ti/k3-psil-j721e.c | 73 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
+
+diff --git a/drivers/dma/ti/k3-psil-j721e.c b/drivers/dma/ti/k3-psil-j721e.c
+index 7580870ed746..34e3fc565a37 100644
+--- a/drivers/dma/ti/k3-psil-j721e.c
++++ b/drivers/dma/ti/k3-psil-j721e.c
+@@ -58,6 +58,14 @@
+ 		},					\
+ 	}
+ 
++#define PSIL_CSI2RX(x)					\
++	{						\
++		.thread_id = x,				\
++		.ep_config = {				\
++			.ep_type = PSIL_EP_NATIVE,	\
++		},					\
++	}
++
+ /* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
+ static struct psil_ep j721e_src_ep_map[] = {
+ 	/* SA2UL */
+@@ -138,6 +146,71 @@ static struct psil_ep j721e_src_ep_map[] = {
+ 	PSIL_PDMA_XY_PKT(0x4707),
+ 	PSIL_PDMA_XY_PKT(0x4708),
+ 	PSIL_PDMA_XY_PKT(0x4709),
++	/* CSI2RX */
++	PSIL_CSI2RX(0x4940),
++	PSIL_CSI2RX(0x4941),
++	PSIL_CSI2RX(0x4942),
++	PSIL_CSI2RX(0x4943),
++	PSIL_CSI2RX(0x4944),
++	PSIL_CSI2RX(0x4945),
++	PSIL_CSI2RX(0x4946),
++	PSIL_CSI2RX(0x4947),
++	PSIL_CSI2RX(0x4948),
++	PSIL_CSI2RX(0x4949),
++	PSIL_CSI2RX(0x494a),
++	PSIL_CSI2RX(0x494b),
++	PSIL_CSI2RX(0x494c),
++	PSIL_CSI2RX(0x494d),
++	PSIL_CSI2RX(0x494e),
++	PSIL_CSI2RX(0x494f),
++	PSIL_CSI2RX(0x4950),
++	PSIL_CSI2RX(0x4951),
++	PSIL_CSI2RX(0x4952),
++	PSIL_CSI2RX(0x4953),
++	PSIL_CSI2RX(0x4954),
++	PSIL_CSI2RX(0x4955),
++	PSIL_CSI2RX(0x4956),
++	PSIL_CSI2RX(0x4957),
++	PSIL_CSI2RX(0x4958),
++	PSIL_CSI2RX(0x4959),
++	PSIL_CSI2RX(0x495a),
++	PSIL_CSI2RX(0x495b),
++	PSIL_CSI2RX(0x495c),
++	PSIL_CSI2RX(0x495d),
++	PSIL_CSI2RX(0x495e),
++	PSIL_CSI2RX(0x495f),
++	PSIL_CSI2RX(0x4960),
++	PSIL_CSI2RX(0x4961),
++	PSIL_CSI2RX(0x4962),
++	PSIL_CSI2RX(0x4963),
++	PSIL_CSI2RX(0x4964),
++	PSIL_CSI2RX(0x4965),
++	PSIL_CSI2RX(0x4966),
++	PSIL_CSI2RX(0x4967),
++	PSIL_CSI2RX(0x4968),
++	PSIL_CSI2RX(0x4969),
++	PSIL_CSI2RX(0x496a),
++	PSIL_CSI2RX(0x496b),
++	PSIL_CSI2RX(0x496c),
++	PSIL_CSI2RX(0x496d),
++	PSIL_CSI2RX(0x496e),
++	PSIL_CSI2RX(0x496f),
++	PSIL_CSI2RX(0x4970),
++	PSIL_CSI2RX(0x4971),
++	PSIL_CSI2RX(0x4972),
++	PSIL_CSI2RX(0x4973),
++	PSIL_CSI2RX(0x4974),
++	PSIL_CSI2RX(0x4975),
++	PSIL_CSI2RX(0x4976),
++	PSIL_CSI2RX(0x4977),
++	PSIL_CSI2RX(0x4978),
++	PSIL_CSI2RX(0x4979),
++	PSIL_CSI2RX(0x497a),
++	PSIL_CSI2RX(0x497b),
++	PSIL_CSI2RX(0x497c),
++	PSIL_CSI2RX(0x497d),
++	PSIL_CSI2RX(0x497e),
++	PSIL_CSI2RX(0x497f),
+ 	/* CPSW9 */
+ 	PSIL_ETHERNET(0x4a00),
+ 	/* CPSW0 */
+-- 
+2.30.0
+

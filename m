@@ -2,394 +2,422 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BEE823B46F1
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Jun 2021 17:49:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 266113B4877
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Jun 2021 19:50:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230014AbhFYPwQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 25 Jun 2021 11:52:16 -0400
-Received: from mga07.intel.com ([134.134.136.100]:6823 "EHLO mga07.intel.com"
+        id S229630AbhFYRxB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 25 Jun 2021 13:53:01 -0400
+Received: from mga11.intel.com ([192.55.52.93]:32685 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230019AbhFYPwP (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 25 Jun 2021 11:52:15 -0400
-IronPort-SDR: SI+maRnQq/0az/zMH+BeH2XZVdmwH0Wwqy5ERjpSGVJvdjadIR+N+OE0cGN4u07F+G3i9+cCtD
- CIr1c3BDi8KA==
-X-IronPort-AV: E=McAfee;i="6200,9189,10026"; a="271550905"
+        id S229671AbhFYRxB (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 25 Jun 2021 13:53:01 -0400
+IronPort-SDR: N2eLUz390BmPKeSK4jDz/QooLVsNQJ8Yq8+E+Vit3RpqTgEaIVoObLshnF1TuLZ88m51nwyv8C
+ GTyEGqv2AsKA==
+X-IronPort-AV: E=McAfee;i="6200,9189,10026"; a="204709336"
 X-IronPort-AV: E=Sophos;i="5.83,299,1616482800"; 
-   d="scan'208";a="271550905"
+   d="scan'208";a="204709336"
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2021 08:49:54 -0700
-IronPort-SDR: aW8xp1S6yg2k1eeLIkTHnL0WYuXuOCAK6525kE9/C4qMFfqumEbpt8HYKq71gKldVXClLA/Kdk
- 42cwfpgNixKw==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2021 10:50:38 -0700
+IronPort-SDR: rAwhp8HkEUECATvFIWo6zVU13h+VmbHSBEa/bEagDHVI710S6ORl+RSn+pgw0NMtBL/zezC0Xs
+ qlSGyB2S8dGQ==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.83,299,1616482800"; 
-   d="scan'208";a="481892394"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.255.81.86]) ([10.255.81.86])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2021 08:49:54 -0700
-Subject: Re: [PATCH] dmaengine: idxd: fix submission race window
-To:     "Ananyev, Konstantin" <konstantin.ananyev@intel.com>,
+   d="scan'208";a="481926916"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by FMSMGA003.fm.intel.com with ESMTP; 25 Jun 2021 10:50:37 -0700
+Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.4; Fri, 25 Jun 2021 10:50:37 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4
+ via Frontend Transport; Fri, 25 Jun 2021 10:50:37 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.173)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2242.4; Fri, 25 Jun 2021 10:50:37 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VUO8WVBz3toro7b5dAX3DPqIKbosgClc7m+vd0P5OA9Wc2Obcb2fhRKlaQSZAUeeT1eC4HOvob6YF0OGlZSxIz1iaRBx5QH8tbI6Jc7vLu/lqE3sp1lKuHoh7+odRxUK91Y8wXomUQElAOebqHhC5iqIYfewwW388jigdD6cbEXOrCMnJHVztFcZUwsXvvA9hBpseNRgKoGrWImDCmYHIo+OnPuoCplNjYmXvcTphxiXkINYa1D3L5e8/gQjXNF27LUQCyR50QPKbiT3BUpMIuaLAfnMKh5RLp2B6/JLMPqyff9XRnP0YPiCcucHmfAJRc/J3Z8LOm/45NqBgINDmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1ZcJPjMeUWwvPrF7SVD2OtPRyuVJGuC2efGMQs6cFgY=;
+ b=WO2qfQgwoRRfYJkGfaLA+DTJKn+WpqfxndHllxeiB9yJyl4VJNLUPCg6CGF4ctvf0l/NfZvijKDBeA2S4f8HuOhYDmdZpwwt/lpAESCB4C2bW9bjtKaZfT7pOOzo0FUxFDxUNwgjknVXmbhSbeXqP14uRtcb2vDIqCOG834RDeC32dwr3qDSoMtp8cQyV5vu6YCWRFmvHYhEqdYO6qdARPo8dq/pQ2J7FhhEncvkuzL3pr51FtzG8d+IRITe4SApmM+Ia3MYXAmcVe6bFP0hEKxp8P0C8kNhhET7/E9ahCe4rnweBO3qFb9ZVnufBcWYiKlCWd+QOgNoVSFwTEh+bA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1ZcJPjMeUWwvPrF7SVD2OtPRyuVJGuC2efGMQs6cFgY=;
+ b=eTjbGVUo3PIzRNOEvAMS/VqTgu0zmt0NQ4uHI/mIR/zQ4gveRnXJx0dd0/OJMtptmhSYeWNLcMoBhyF5hUxee7EV0n5KScLQQEv88lfAGx1s+niuO1MfMXyFbbvP/J4n988ADPoH/nEag9R7iDM7+oTlknT4aZ4Aeko29LvyS64=
+Received: from DM6PR11MB4491.namprd11.prod.outlook.com (2603:10b6:5:204::19)
+ by DM5PR11MB1532.namprd11.prod.outlook.com (2603:10b6:4:a::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4264.19; Fri, 25 Jun 2021 17:50:35 +0000
+Received: from DM6PR11MB4491.namprd11.prod.outlook.com
+ ([fe80::7dc4:66b0:f76b:6d48]) by DM6PR11MB4491.namprd11.prod.outlook.com
+ ([fe80::7dc4:66b0:f76b:6d48%7]) with mapi id 15.20.4264.023; Fri, 25 Jun 2021
+ 17:50:35 +0000
+From:   "Ananyev, Konstantin" <konstantin.ananyev@intel.com>
+To:     "Jiang, Dave" <dave.jiang@intel.com>,
         "vkoul@kernel.org" <vkoul@kernel.org>
-Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+CC:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+Subject: RE: [PATCH] dmaengine: idxd: fix submission race window
+Thread-Topic: [PATCH] dmaengine: idxd: fix submission race window
+Thread-Index: AQHXaS0L5uj5rJGvF0ytwCwTlGoCMaskxDLAgAAc7YCAABYL0A==
+Date:   Fri, 25 Jun 2021 17:50:34 +0000
+Message-ID: <DM6PR11MB4491DA436F12DF0A973939179A069@DM6PR11MB4491.namprd11.prod.outlook.com>
 References: <162456201091.1127851.8448033220391062931.stgit@djiang5-desk3.ch.intel.com>
  <DM6PR11MB449105D5A196ED015559D6039A069@DM6PR11MB4491.namprd11.prod.outlook.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <5e0d3e8b-a44a-003f-8e48-00547cde5768@intel.com>
-Date:   Fri, 25 Jun 2021 08:49:53 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-MIME-Version: 1.0
-In-Reply-To: <DM6PR11MB449105D5A196ED015559D6039A069@DM6PR11MB4491.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <5e0d3e8b-a44a-003f-8e48-00547cde5768@intel.com>
+In-Reply-To: <5e0d3e8b-a44a-003f-8e48-00547cde5768@intel.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+authentication-results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [109.255.184.192]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 71f8f7db-5646-4d75-a204-08d93801bc03
+x-ms-traffictypediagnostic: DM5PR11MB1532:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR11MB1532C966B4DF4F18C7AE5A9C9A069@DM5PR11MB1532.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: CSTfulN/53Lb2vpMR/oMclbzvhbOur6zxZEn9vE9p47ekB0usUAqx6zOPLQkn+TkvAUOQYK7STv57NzFS/Z2Ya7igIca7njJFN/Lh0p1kNU4TQ/XL6wLBzOYg8TIivffrK9mag1lCDGOsQ9OE8tvHXR27vfpTrKyzDfGmpF4UBcnG7+FgT8yTG96F43Y581thGYIx8UB5tH00SRT1WEUfe7yqlHubV71+voxjfkSstzi8U7/BvazSd9qqx2tF/odG/DyivfVFuuwDVj59eV0t/nJyKEzP9iG7v/jf6WP4Q7wg7QUe+c1lfA33pgnp3UT9xTKNgSANQIgTT8Db8ONj1SzbwrvCa2tKhjEOcn2nSOOVWotZZyIAe7ptkjLFLTYtIk0Y/6XSiBlXRJAYQ1eI2mbdnMieFJmdQ3i/B0x4FouY1CUaCCa5nY+ETGNM1yUo5TAezxFfjABXqGwbdovnA40NZ81erGpHICS+vdKj3XQ+qOZ+0Bgb+efD9Vj3N/x8qEDZPCMkkaLU/t7vSnzSou8pIcN10NmZ/xgeAlq9M7rUZsY9l+Op466uqTecU0e+AF3JcKti190BYHRBv1z36UhgizV1xoYTHWnMvKjLTc=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4491.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(366004)(39850400004)(136003)(346002)(376002)(86362001)(186003)(2906002)(33656002)(8676002)(26005)(8936002)(7696005)(9686003)(316002)(110136005)(55016002)(30864003)(6506007)(55236004)(71200400001)(66946007)(5660300002)(83380400001)(52536014)(122000001)(4326008)(38100700002)(66556008)(66446008)(66476007)(76116006)(478600001)(64756008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VzZLUncvV0tLcUJqTDRnZWpvdUVCcDBDV0FsNkpId3JDM1FDeDZCN1YrT2px?=
+ =?utf-8?B?Y0RYZVJjM25NMEdtZkMrTTRHU0czZUc0R2plVWJieURRbXN3NEFRcVpvdDdl?=
+ =?utf-8?B?STJEdTRDYVJpSkNVNXdjSTFDa1N6WlFacVByRHVVS2lGajFGcVEzM3lPTlB1?=
+ =?utf-8?B?NmdTSzZiU3NxZEwrQmNkZnF6NHNlZnJpMG5WL3dlcGNQZFBRKzBDc1lKVjRO?=
+ =?utf-8?B?bytrWWo0UDJTUU0wdTMzT1NQOW1EQ1N2YTluOUY1MHVacmtUK2REdktnbDgz?=
+ =?utf-8?B?ZURoZTZMWm1IbUljQnovNVNxdnNtNGY1RjVvbXBwbXFrTk10WGUrUWU1MlAw?=
+ =?utf-8?B?NG95OWdrWjBBTkgyY0xzKzVhYjJzTnFVbmZ4OFlWY1ZJVVNnR3daZlBneG9z?=
+ =?utf-8?B?VFRENEhDaGVSQ0ZTV0dGN1B0R1BQZDdITnY4dkk3RlBvYnVGRG9rQktkWmc3?=
+ =?utf-8?B?SndvYUZocnptK0ZKWjVyRyt4SEd2Um9obnpiUS9CTmxoZGc5OWFsOXBmREJR?=
+ =?utf-8?B?MHM3SFhKbytJaDJGQ2VUWEVFZUUvQ3hya0Y0OEtRT2R1UHdzcW5maTk3blpX?=
+ =?utf-8?B?ZWN0SjJJMmg1emxJWWFadS84a1YvRkpIdHNZN1N5ZFVkME1sUC9BRmlUd0pk?=
+ =?utf-8?B?UFJxMVl5Q3VwTEJQYjhKRTdGNVpBamhxc1lMblo0VXFpTm9vRktyYWJLbGNI?=
+ =?utf-8?B?R2U3MW9EUTN6YjA5UmQ4TlptSG9YVGhtMW9XU2xibU9kNzNwVXhoL00rTVFB?=
+ =?utf-8?B?RGdYQXR4RGhwYzQ3Q1VxUnBwbmUwRjYrRklYK2dqUU1NYmpuT1B5bFBCSE05?=
+ =?utf-8?B?NlJBSEFtUkN0OHhDSFNHOXIvdVpwMGk1MXBqaDliNlNyd3NveXRYUXBTeE5D?=
+ =?utf-8?B?Z2xzOFh1ZVB4RTFWQi9WVEhNbkVXbXBPQnRwTUdwdFkyZ3BsdHhUU1AvK280?=
+ =?utf-8?B?S2Z0WCtReHlkZnVvZkRZQUVLampINmFkeXAvUS9KdmxVSHlXRzFSZW9XU2ky?=
+ =?utf-8?B?ZVZBTER5djNtb001S2VaVW13VlBNVTNnL0w2M2RySlQ4a0FpcWxzOXNwOExo?=
+ =?utf-8?B?RXkyVXpVNWFab0NFZTRXQmFHQzZvMXRLdkl0M0hjRDdLRnEwOXZBQk05aDBq?=
+ =?utf-8?B?ZTFMWVA3L0dxRDFUSzJxN1JzWU9vZXFKbmxXV013bkxGNHR1dkVUcjlHZG5Q?=
+ =?utf-8?B?aEZFbzFCT2ZYRHR3VVllTndlZFQ3U0l1M3I2Z21Uc2tka2pVMlo1bEF0TEpP?=
+ =?utf-8?B?azBuVEowdFg4NU5LZDFNcXhRUlZ1clVVTk9VRXdmUHJqNXBpdGtjN0UwTUR5?=
+ =?utf-8?B?dW5PVENVQnorM0xnVWlJRGVXc3piMWxwZ3VmRDlFZTFSZ3F4a0I5RDR0U2tj?=
+ =?utf-8?B?SDV6bkY1d3c3dFZKdnEraGlrNzQvM1dDZ0lPekNwSVFaTzBySUlNTmtHWk94?=
+ =?utf-8?B?dVVwUHZwTHdkc2Q2SzdYb3pkUmJqL09MZXNHTTBRNzVWRnEydW9yMkxGTGhu?=
+ =?utf-8?B?RjVzR2kvOWdwUnRiNXJzcmtWc0MrdXpjTmpyRkV1SHZ2S2xISzFpYmdEQ1A5?=
+ =?utf-8?B?cE5yOXYzbUpRU0Zockw4REhOWE1CZEtOT0RBNVUzZmx4RUR6WVNEY2dqQVJH?=
+ =?utf-8?B?ZXYyNVJrUXR3Zkt0cUpyTU5UUnpmaVI5SGh6dE1WaGFPcnh5a0xDRUx1R1Jn?=
+ =?utf-8?B?QXVoZy82ajQ2YjVONW43aE5LNy8zV0loZ1FXZEExT3RnelZrOFVZajhPUTA4?=
+ =?utf-8?Q?UFLp9W/eYebZZyb9qichRuIYJf7tiGUrDn26Mkd?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB4491.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71f8f7db-5646-4d75-a204-08d93801bc03
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2021 17:50:34.8724
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ryTxQzkQDPjoyANwozoHumva/GMJHvVnoTkLrEtfKWyHYUIvwsn70N5a8uY57zSMFjnepA6lZ1GYHHc9b+mqn6gLFGSLdW+WWjRF9hUkR1s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1532
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-On 6/25/2021 7:37 AM, Ananyev, Konstantin wrote:
-> Hi Dave,
->
->> Konstantin observed that when descriptors are submitted, the descriptor is
->> added to the pending list after the submission. This creates a race window
->> with the slight possibility that the descriptor can complete before it
->> gets added to the pending list and this window would cause the completion
->> handler to miss processing the descriptor.
->>
->> To address the issue, the addition of the descriptor to the pending list
->> must be done before it gets submitted to the hardware. However, submitting
->> to swq with ENQCMDS instruction can cause a failure with the condition of
->> either wq is full or wq is not "active".
->>
->> With the descriptor allocation being the gate to the wq capacity, it is not
->> possible to hit a retry with ENQCMDS submission to the swq. The only
->> possible failure can happen is when wq is no longer "active" due to hw
->> error and therefore we are moving towards taking down the portal. Given
->> this is a rare condition and there's no longer concern over I/O
->> performance, the driver can walk the completion lists in order to retrieve
->> and abort the descriptor.
->>
->> The error path will set the descriptor to aborted status. It will take the
->> work list lock to prevent further processing of worklist. It will do a
->> delete_all on the pending llist to retrieve all descriptors on the pending
->> llist. The delete_all action does not require a lock. It will walk through
->> the acquired llist to find the aborted descriptor while add all remaining
->> descriptors to the work list since it holds the lock. If it does not find
->> the aborted descriptor on the llist, it will walk through the work
->> list. And if it still does not find the descriptor, then it means the
->> interrupt handler has removed the desc from the llist but is pending on the work
->> list lock and will process it once the error path releases the lock.
->>
->> Fixes: eb15e7154fbf ("dmaengine: idxd: add interrupt handle request and release support")
->> Reported-by: Konstantin Ananyev <konstantin.ananyev@intel.com>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>   drivers/dma/idxd/idxd.h   |   14 ++++++++
->>   drivers/dma/idxd/irq.c    |   36 +++++++++++----------
->>   drivers/dma/idxd/submit.c |   77 ++++++++++++++++++++++++++++++++++++++++-----
->>   3 files changed, 101 insertions(+), 26 deletions(-)
->>
->> diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
->> index 1f0991dec679..0f27374eae4b 100644
->> --- a/drivers/dma/idxd/idxd.h
->> +++ b/drivers/dma/idxd/idxd.h
->> @@ -294,6 +294,14 @@ struct idxd_desc {
->>        struct idxd_wq *wq;
->>   };
->>
->> +/*
->> + * This is software defined error for the completion status. We overload the error code
->> + * that will never appear in completion status and only SWERR register.
->> + */
->> +enum idxd_completion_status {
->> +     IDXD_COMP_DESC_ABORT = 0xff,
->> +};
->> +
->>   #define confdev_to_idxd(dev) container_of(dev, struct idxd_device, conf_dev)
->>   #define confdev_to_wq(dev) container_of(dev, struct idxd_wq, conf_dev)
->>
->> @@ -480,4 +488,10 @@ static inline void perfmon_init(void) {}
->>   static inline void perfmon_exit(void) {}
->>   #endif
->>
->> +static inline void complete_desc(struct idxd_desc *desc, enum idxd_complete_type reason)
->> +{
->> +     idxd_dma_complete_txd(desc, reason);
->> +     idxd_free_desc(desc->wq, desc);
->> +}
->> +
->>   #endif
->> diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
->> index 7a2cf0512501..8fd52937537a 100644
->> --- a/drivers/dma/idxd/irq.c
->> +++ b/drivers/dma/idxd/irq.c
->> @@ -245,12 +245,6 @@ static inline bool match_fault(struct idxd_desc *desc, u64 fault_addr)
->>        return false;
->>   }
->>
->> -static inline void complete_desc(struct idxd_desc *desc, enum idxd_complete_type reason)
->> -{
->> -     idxd_dma_complete_txd(desc, reason);
->> -     idxd_free_desc(desc->wq, desc);
->> -}
->> -
->>   static int irq_process_pending_llist(struct idxd_irq_entry *irq_entry,
->>                                     enum irq_work_type wtype,
->>                                     int *processed, u64 data)
->> @@ -258,8 +252,7 @@ static int irq_process_pending_llist(struct idxd_irq_entry *irq_entry,
->>        struct idxd_desc *desc, *t;
->>        struct llist_node *head;
->>        int queued = 0;
->> -     unsigned long flags;
->> -     enum idxd_complete_type reason;
->> +     enum idxd_complete_type reason = IDXD_COMPLETE_NORMAL;
->>
->>        *processed = 0;
->>        head = llist_del_all(&irq_entry->pending_llist);
->> @@ -272,16 +265,20 @@ static int irq_process_pending_llist(struct idxd_irq_entry *irq_entry,
->>                reason = IDXD_COMPLETE_DEV_FAIL;
->>
->>        llist_for_each_entry_safe(desc, t, head, llnode) {
->> -             if (desc->completion->status) {
->> -                     if ((desc->completion->status & DSA_COMP_STATUS_MASK) != DSA_COMP_SUCCESS)
->> +             u8 status = desc->completion->status & DSA_COMP_STATUS_MASK;
->> +
->> +             if (status) {
->> +                     if (status == IDXD_COMP_DESC_ABORT)
->> +                             reason = IDXD_COMPLETE_ABORT;
->> +                     else if (status != DSA_COMP_SUCCESS)
->>                                match_fault(desc, data);
->>                        complete_desc(desc, reason);
-> reason was overwritten above for one particular desc, but not restored.
-> So all futher descs will be completed with = IDXD_COMPLETE_ABORT.
-> I think we need either to set it up on each iteration, or:
-> if (status == IDXD_COMP_DESC_ABORT)
->        complete_desc(desc, IDXD_COMPLETE_ABORT);
-> else {
-> if (status != DSA_COMP_SUCCESS)
->      match_fault(desc, data);
->      complete_desc(desc, reason);
-> }
-
-Ah right. I'll fix that.
-
-
->
->>                        (*processed)++;
->>                } else {
->> -                     spin_lock_irqsave(&irq_entry->list_lock, flags);
->> +                     spin_lock_bh(&irq_entry->list_lock);
->>                        list_add_tail(&desc->list,
->>                                      &irq_entry->work_list);
->> -                     spin_unlock_irqrestore(&irq_entry->list_lock, flags);
->> +                     spin_unlock_bh(&irq_entry->list_lock);
->>                        queued++;
->>                }
->>        }
->> @@ -295,10 +292,9 @@ static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
->>                                 int *processed, u64 data)
->>   {
->>        int queued = 0;
->> -     unsigned long flags;
->>        LIST_HEAD(flist);
->>        struct idxd_desc *desc, *n;
->> -     enum idxd_complete_type reason;
->> +     enum idxd_complete_type reason = IDXD_COMPLETE_NORMAL;
->>
->>        *processed = 0;
->>        if (wtype == IRQ_WORK_NORMAL)
->> @@ -310,9 +306,9 @@ static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
->>         * This lock protects list corruption from access of list outside of the irq handler
->>         * thread.
->>         */
->> -     spin_lock_irqsave(&irq_entry->list_lock, flags);
->> +     spin_lock_bh(&irq_entry->list_lock);
-> I am not really an expert in kenel sipn lock flavours...
-> Can you explain to me why we can now replace _irqsave_ with _bh_?
-
-Actually I think we can do the callbacks directly now that we are using 
-spin_lock_bh(). Honestly I don't think we ever needed to call 
-spin_lock_irqsave(). It disables interrupts and therefore the driver was 
-doing the callbacks outside of the lock. But since we are running 
-threaded interrupt and we don't actually touch the list in the hard 
-interrupt handler, there's no need to disable interrupt. spin_lock_bh() 
-disables software interrupts and that should cover the thread interrupt 
-handler.
-
-
->
->>        if (list_empty(&irq_entry->work_list)) {
->> -             spin_unlock_irqrestore(&irq_entry->list_lock, flags);
->> +             spin_unlock_bh(&irq_entry->list_lock);
->>                return 0;
->>        }
->>
->> @@ -326,10 +322,14 @@ static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
->>                }
->>        }
->>
->> -     spin_unlock_irqrestore(&irq_entry->list_lock, flags);
->> +     spin_unlock_bh(&irq_entry->list_lock);
->>
->>        list_for_each_entry(desc, &flist, list) {
->> -             if ((desc->completion->status & DSA_COMP_STATUS_MASK) != DSA_COMP_SUCCESS)
->> +             u8 status = desc->completion->status & DSA_COMP_STATUS_MASK;
->> +
->> +             if (desc->completion->status == IDXD_COMP_DESC_ABORT)
->> +                     reason = IDXD_COMPLETE_ABORT;
->> +             else if (status != DSA_COMP_SUCCESS)
->>                        match_fault(desc, data);
->>                complete_desc(desc, reason);
-> Same comment as above for pending list.
->
->>        }
->> diff --git a/drivers/dma/idxd/submit.c b/drivers/dma/idxd/submit.c
->> index 736def129fa8..d99a3aeb038c 100644
->> --- a/drivers/dma/idxd/submit.c
->> +++ b/drivers/dma/idxd/submit.c
->> @@ -88,9 +88,66 @@ void idxd_free_desc(struct idxd_wq *wq, struct idxd_desc *desc)
->>        sbitmap_queue_clear(&wq->sbq, desc->id, cpu);
->>   }
->>
->> +static void list_abort_desc(struct idxd_wq *wq, struct idxd_irq_entry *ie,
->> +                         struct idxd_desc *desc)
->> +{
->> +     struct idxd_desc *d, *n;
->> +
->> +     lockdep_assert_held(&ie->list_lock);
->> +     list_for_each_entry_safe(d, n, &ie->work_list, list) {
->> +             if (d == desc) {
->> +                     list_del(&d->list);
->> +                     complete_desc(desc, IDXD_COMPLETE_ABORT);
->> +                     return;
->> +             }
->> +     }
->> +
->> +     /*
->> +      * At this point, the desc needs to be aborted is held by the completion
->> +      * handler where it has taken it off the pending list but has not added to the
->> +      * work list. It will be cleaned up by the interrupt handler when it sees the
->> +      * IDXD_COMP_DESC_ABORT for completion status.
->> +      */
->> +}
->> +
->> +static void llist_abort_desc(struct idxd_wq *wq, struct idxd_irq_entry *ie,
->> +                          struct idxd_desc *desc)
->> +{
->> +     struct idxd_desc *d, *t;
->> +     struct llist_node *head;
->> +     bool found = false;
->> +
->> +     desc->completion->status = IDXD_COMP_DESC_ABORT;
->> +     /*
->> +      * Grab the list lock so it will block the irq thread handler. This allows the
->> +      * abort code to locate the descriptor need to be aborted.
->> +      */
->> +     spin_lock_bh(&ie->list_lock);
->> +     head = llist_del_all(&ie->pending_llist);
->> +     if (!head) {
->> +             list_abort_desc(wq, ie, desc);
->> +             spin_unlock_bh(&ie->list_lock);
->> +             return;
->> +     }
->> +
->> +     llist_for_each_entry_safe(d, t, head, llnode) {
->> +             if (d == desc) {
->> +                     complete_desc(desc, IDXD_COMPLETE_ABORT);
->> +                     found = true;
->> +                     continue;
->> +             }
->> +             list_add_tail(&desc->list, &ie->work_list);
->> +     }
->> +
->> +     if (!found)
->> +             list_abort_desc(wq, ie, desc);
->> +     spin_unlock_bh(&ie->list_lock);
->> +}
-> There is one thing that worries me in that approach:
->  From what I see, right now idxd calls complete_desc() without list_lock held.
-> I think it is better to keep things like that.
-> I suppose it should be easy enough to re-arrange your code a bit:
-> 1) make list_abort_desc() not to call complete_desc(), but simply
-> return desc if found or null otherwise.
-> 2) In llist_abort_desc() - grab the lock and try to find the desc in one of the lists.
->      If found in the work_list, then remove it from the llist, but don't call complete() yet.
->      Then release the lock and do complete().
->
-> Something like that, to be more specific:
->
->   static void llist_abort_desc(struct idxd_wq *wq, struct idxd_irq_entry *ie,
->                               struct idxd_desc *desc)
-> {
->                struct idxd_desc *d, *found, *t;
->                struct llist_node *head;
->
->                desc->completion->status = IDXD_COMP_DESC_ABORT;
->                found = NULL;
->
->                 spin_lock_bh(&ie->list_lock);
->          head = llist_del_all(&ie->pending_llist);
->          if (head != NULL) {
->                      llist_for_each_entry_safe(d, t, head, llnode) {
->                     if (d == desc) {
->                                found = desc;
->                                continue;
->                          }
->                     list_add_tail(&desc->list, &ie->work_list);
->              }
->
->              If (found == NULL)
->                   found = list_abort_desc(wq, ie, desc);
->
->              spin_unlock_bh(&ie->list_lock);
->
->              if (found != NULL)
->                   complete_desc(found, IDXD_COMPLETE_ABORT);
-> }
->
->
->> +
->>   int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
->>   {
->>        struct idxd_device *idxd = wq->idxd;
->> +     struct idxd_irq_entry *ie = NULL;
->>        void __iomem *portal;
->>        int rc;
->>
->> @@ -108,6 +165,16 @@ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
->>         * even on UP because the recipient is a device.
->>         */
->>        wmb();
->> +
->> +     /*
->> +      * Pending the descriptor to the lockless list for the irq_entry
->> +      * that we designated the descriptor to.
->> +      */
->> +     if (desc->hw->flags & IDXD_OP_FLAG_RCI) {
->> +             ie = &idxd->irq_entries[desc->vector];
->> +             llist_add(&desc->llnode, &ie->pending_llist);
->> +     }
->> +
->>        if (wq_dedicated(wq)) {
->>                iosubmit_cmds512(portal, desc->hw, 1);
->>        } else {
->> @@ -120,18 +187,12 @@ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
->>                rc = enqcmds(portal, desc->hw);
->>                if (rc < 0) {
->>                        percpu_ref_put(&wq->wq_active);
->> +                     if (ie)
->> +                             llist_abort_desc(wq, ie, desc);
->>                        return rc;
->>                }
->>        }
->>
->>        percpu_ref_put(&wq->wq_active);
->> -
->> -     /*
->> -      * Pending the descriptor to the lockless list for the irq_entry
->> -      * that we designated the descriptor to.
->> -      */
->> -     if (desc->hw->flags & IDXD_OP_FLAG_RCI)
->> -             llist_add(&desc->llnode, &idxd->irq_entries[desc->vector].pending_llist);
->> -
->>        return 0;
->>   }
->>
+DQo+ID4+IEtvbnN0YW50aW4gb2JzZXJ2ZWQgdGhhdCB3aGVuIGRlc2NyaXB0b3JzIGFyZSBzdWJt
+aXR0ZWQsIHRoZSBkZXNjcmlwdG9yIGlzDQo+ID4+IGFkZGVkIHRvIHRoZSBwZW5kaW5nIGxpc3Qg
+YWZ0ZXIgdGhlIHN1Ym1pc3Npb24uIFRoaXMgY3JlYXRlcyBhIHJhY2Ugd2luZG93DQo+ID4+IHdp
+dGggdGhlIHNsaWdodCBwb3NzaWJpbGl0eSB0aGF0IHRoZSBkZXNjcmlwdG9yIGNhbiBjb21wbGV0
+ZSBiZWZvcmUgaXQNCj4gPj4gZ2V0cyBhZGRlZCB0byB0aGUgcGVuZGluZyBsaXN0IGFuZCB0aGlz
+IHdpbmRvdyB3b3VsZCBjYXVzZSB0aGUgY29tcGxldGlvbg0KPiA+PiBoYW5kbGVyIHRvIG1pc3Mg
+cHJvY2Vzc2luZyB0aGUgZGVzY3JpcHRvci4NCj4gPj4NCj4gPj4gVG8gYWRkcmVzcyB0aGUgaXNz
+dWUsIHRoZSBhZGRpdGlvbiBvZiB0aGUgZGVzY3JpcHRvciB0byB0aGUgcGVuZGluZyBsaXN0DQo+
+ID4+IG11c3QgYmUgZG9uZSBiZWZvcmUgaXQgZ2V0cyBzdWJtaXR0ZWQgdG8gdGhlIGhhcmR3YXJl
+LiBIb3dldmVyLCBzdWJtaXR0aW5nDQo+ID4+IHRvIHN3cSB3aXRoIEVOUUNNRFMgaW5zdHJ1Y3Rp
+b24gY2FuIGNhdXNlIGEgZmFpbHVyZSB3aXRoIHRoZSBjb25kaXRpb24gb2YNCj4gPj4gZWl0aGVy
+IHdxIGlzIGZ1bGwgb3Igd3EgaXMgbm90ICJhY3RpdmUiLg0KPiA+Pg0KPiA+PiBXaXRoIHRoZSBk
+ZXNjcmlwdG9yIGFsbG9jYXRpb24gYmVpbmcgdGhlIGdhdGUgdG8gdGhlIHdxIGNhcGFjaXR5LCBp
+dCBpcyBub3QNCj4gPj4gcG9zc2libGUgdG8gaGl0IGEgcmV0cnkgd2l0aCBFTlFDTURTIHN1Ym1p
+c3Npb24gdG8gdGhlIHN3cS4gVGhlIG9ubHkNCj4gPj4gcG9zc2libGUgZmFpbHVyZSBjYW4gaGFw
+cGVuIGlzIHdoZW4gd3EgaXMgbm8gbG9uZ2VyICJhY3RpdmUiIGR1ZSB0byBodw0KPiA+PiBlcnJv
+ciBhbmQgdGhlcmVmb3JlIHdlIGFyZSBtb3ZpbmcgdG93YXJkcyB0YWtpbmcgZG93biB0aGUgcG9y
+dGFsLiBHaXZlbg0KPiA+PiB0aGlzIGlzIGEgcmFyZSBjb25kaXRpb24gYW5kIHRoZXJlJ3Mgbm8g
+bG9uZ2VyIGNvbmNlcm4gb3ZlciBJL08NCj4gPj4gcGVyZm9ybWFuY2UsIHRoZSBkcml2ZXIgY2Fu
+IHdhbGsgdGhlIGNvbXBsZXRpb24gbGlzdHMgaW4gb3JkZXIgdG8gcmV0cmlldmUNCj4gPj4gYW5k
+IGFib3J0IHRoZSBkZXNjcmlwdG9yLg0KPiA+Pg0KPiA+PiBUaGUgZXJyb3IgcGF0aCB3aWxsIHNl
+dCB0aGUgZGVzY3JpcHRvciB0byBhYm9ydGVkIHN0YXR1cy4gSXQgd2lsbCB0YWtlIHRoZQ0KPiA+
+PiB3b3JrIGxpc3QgbG9jayB0byBwcmV2ZW50IGZ1cnRoZXIgcHJvY2Vzc2luZyBvZiB3b3JrbGlz
+dC4gSXQgd2lsbCBkbyBhDQo+ID4+IGRlbGV0ZV9hbGwgb24gdGhlIHBlbmRpbmcgbGxpc3QgdG8g
+cmV0cmlldmUgYWxsIGRlc2NyaXB0b3JzIG9uIHRoZSBwZW5kaW5nDQo+ID4+IGxsaXN0LiBUaGUg
+ZGVsZXRlX2FsbCBhY3Rpb24gZG9lcyBub3QgcmVxdWlyZSBhIGxvY2suIEl0IHdpbGwgd2FsayB0
+aHJvdWdoDQo+ID4+IHRoZSBhY3F1aXJlZCBsbGlzdCB0byBmaW5kIHRoZSBhYm9ydGVkIGRlc2Ny
+aXB0b3Igd2hpbGUgYWRkIGFsbCByZW1haW5pbmcNCj4gPj4gZGVzY3JpcHRvcnMgdG8gdGhlIHdv
+cmsgbGlzdCBzaW5jZSBpdCBob2xkcyB0aGUgbG9jay4gSWYgaXQgZG9lcyBub3QgZmluZA0KPiA+
+PiB0aGUgYWJvcnRlZCBkZXNjcmlwdG9yIG9uIHRoZSBsbGlzdCwgaXQgd2lsbCB3YWxrIHRocm91
+Z2ggdGhlIHdvcmsNCj4gPj4gbGlzdC4gQW5kIGlmIGl0IHN0aWxsIGRvZXMgbm90IGZpbmQgdGhl
+IGRlc2NyaXB0b3IsIHRoZW4gaXQgbWVhbnMgdGhlDQo+ID4+IGludGVycnVwdCBoYW5kbGVyIGhh
+cyByZW1vdmVkIHRoZSBkZXNjIGZyb20gdGhlIGxsaXN0IGJ1dCBpcyBwZW5kaW5nIG9uIHRoZSB3
+b3JrDQo+ID4+IGxpc3QgbG9jayBhbmQgd2lsbCBwcm9jZXNzIGl0IG9uY2UgdGhlIGVycm9yIHBh
+dGggcmVsZWFzZXMgdGhlIGxvY2suDQo+ID4+DQo+ID4+IEZpeGVzOiBlYjE1ZTcxNTRmYmYgKCJk
+bWFlbmdpbmU6IGlkeGQ6IGFkZCBpbnRlcnJ1cHQgaGFuZGxlIHJlcXVlc3QgYW5kIHJlbGVhc2Ug
+c3VwcG9ydCIpDQo+ID4+IFJlcG9ydGVkLWJ5OiBLb25zdGFudGluIEFuYW55ZXYgPGtvbnN0YW50
+aW4uYW5hbnlldkBpbnRlbC5jb20+DQo+ID4+IFNpZ25lZC1vZmYtYnk6IERhdmUgSmlhbmcgPGRh
+dmUuamlhbmdAaW50ZWwuY29tPg0KPiA+PiAtLS0NCj4gPj4gICBkcml2ZXJzL2RtYS9pZHhkL2lk
+eGQuaCAgIHwgICAxNCArKysrKysrKw0KPiA+PiAgIGRyaXZlcnMvZG1hL2lkeGQvaXJxLmMgICAg
+fCAgIDM2ICsrKysrKysrKysrLS0tLS0tLS0tLQ0KPiA+PiAgIGRyaXZlcnMvZG1hL2lkeGQvc3Vi
+bWl0LmMgfCAgIDc3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0t
+LQ0KPiA+PiAgIDMgZmlsZXMgY2hhbmdlZCwgMTAxIGluc2VydGlvbnMoKyksIDI2IGRlbGV0aW9u
+cygtKQ0KPiA+Pg0KPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9kbWEvaWR4ZC9pZHhkLmggYi9k
+cml2ZXJzL2RtYS9pZHhkL2lkeGQuaA0KPiA+PiBpbmRleCAxZjA5OTFkZWM2NzkuLjBmMjczNzRl
+YWU0YiAxMDA2NDQNCj4gPj4gLS0tIGEvZHJpdmVycy9kbWEvaWR4ZC9pZHhkLmgNCj4gPj4gKysr
+IGIvZHJpdmVycy9kbWEvaWR4ZC9pZHhkLmgNCj4gPj4gQEAgLTI5NCw2ICsyOTQsMTQgQEAgc3Ry
+dWN0IGlkeGRfZGVzYyB7DQo+ID4+ICAgICAgICBzdHJ1Y3QgaWR4ZF93cSAqd3E7DQo+ID4+ICAg
+fTsNCj4gPj4NCj4gPj4gKy8qDQo+ID4+ICsgKiBUaGlzIGlzIHNvZnR3YXJlIGRlZmluZWQgZXJy
+b3IgZm9yIHRoZSBjb21wbGV0aW9uIHN0YXR1cy4gV2Ugb3ZlcmxvYWQgdGhlIGVycm9yIGNvZGUN
+Cj4gPj4gKyAqIHRoYXQgd2lsbCBuZXZlciBhcHBlYXIgaW4gY29tcGxldGlvbiBzdGF0dXMgYW5k
+IG9ubHkgU1dFUlIgcmVnaXN0ZXIuDQo+ID4+ICsgKi8NCj4gPj4gK2VudW0gaWR4ZF9jb21wbGV0
+aW9uX3N0YXR1cyB7DQo+ID4+ICsgICAgIElEWERfQ09NUF9ERVNDX0FCT1JUID0gMHhmZiwNCj4g
+Pj4gK307DQo+ID4+ICsNCj4gPj4gICAjZGVmaW5lIGNvbmZkZXZfdG9faWR4ZChkZXYpIGNvbnRh
+aW5lcl9vZihkZXYsIHN0cnVjdCBpZHhkX2RldmljZSwgY29uZl9kZXYpDQo+ID4+ICAgI2RlZmlu
+ZSBjb25mZGV2X3RvX3dxKGRldikgY29udGFpbmVyX29mKGRldiwgc3RydWN0IGlkeGRfd3EsIGNv
+bmZfZGV2KQ0KPiA+Pg0KPiA+PiBAQCAtNDgwLDQgKzQ4OCwxMCBAQCBzdGF0aWMgaW5saW5lIHZv
+aWQgcGVyZm1vbl9pbml0KHZvaWQpIHt9DQo+ID4+ICAgc3RhdGljIGlubGluZSB2b2lkIHBlcmZt
+b25fZXhpdCh2b2lkKSB7fQ0KPiA+PiAgICNlbmRpZg0KPiA+Pg0KPiA+PiArc3RhdGljIGlubGlu
+ZSB2b2lkIGNvbXBsZXRlX2Rlc2Moc3RydWN0IGlkeGRfZGVzYyAqZGVzYywgZW51bSBpZHhkX2Nv
+bXBsZXRlX3R5cGUgcmVhc29uKQ0KPiA+PiArew0KPiA+PiArICAgICBpZHhkX2RtYV9jb21wbGV0
+ZV90eGQoZGVzYywgcmVhc29uKTsNCj4gPj4gKyAgICAgaWR4ZF9mcmVlX2Rlc2MoZGVzYy0+d3Es
+IGRlc2MpOw0KPiA+PiArfQ0KPiA+PiArDQo+ID4+ICAgI2VuZGlmDQo+ID4+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL2RtYS9pZHhkL2lycS5jIGIvZHJpdmVycy9kbWEvaWR4ZC9pcnEuYw0KPiA+PiBp
+bmRleCA3YTJjZjA1MTI1MDEuLjhmZDUyOTM3NTM3YSAxMDA2NDQNCj4gPj4gLS0tIGEvZHJpdmVy
+cy9kbWEvaWR4ZC9pcnEuYw0KPiA+PiArKysgYi9kcml2ZXJzL2RtYS9pZHhkL2lycS5jDQo+ID4+
+IEBAIC0yNDUsMTIgKzI0NSw2IEBAIHN0YXRpYyBpbmxpbmUgYm9vbCBtYXRjaF9mYXVsdChzdHJ1
+Y3QgaWR4ZF9kZXNjICpkZXNjLCB1NjQgZmF1bHRfYWRkcikNCj4gPj4gICAgICAgIHJldHVybiBm
+YWxzZTsNCj4gPj4gICB9DQo+ID4+DQo+ID4+IC1zdGF0aWMgaW5saW5lIHZvaWQgY29tcGxldGVf
+ZGVzYyhzdHJ1Y3QgaWR4ZF9kZXNjICpkZXNjLCBlbnVtIGlkeGRfY29tcGxldGVfdHlwZSByZWFz
+b24pDQo+ID4+IC17DQo+ID4+IC0gICAgIGlkeGRfZG1hX2NvbXBsZXRlX3R4ZChkZXNjLCByZWFz
+b24pOw0KPiA+PiAtICAgICBpZHhkX2ZyZWVfZGVzYyhkZXNjLT53cSwgZGVzYyk7DQo+ID4+IC19
+DQo+ID4+IC0NCj4gPj4gICBzdGF0aWMgaW50IGlycV9wcm9jZXNzX3BlbmRpbmdfbGxpc3Qoc3Ry
+dWN0IGlkeGRfaXJxX2VudHJ5ICppcnFfZW50cnksDQo+ID4+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIGVudW0gaXJxX3dvcmtfdHlwZSB3dHlwZSwNCj4gPj4gICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50ICpwcm9jZXNzZWQsIHU2NCBkYXRhKQ0KPiA+
+PiBAQCAtMjU4LDggKzI1Miw3IEBAIHN0YXRpYyBpbnQgaXJxX3Byb2Nlc3NfcGVuZGluZ19sbGlz
+dChzdHJ1Y3QgaWR4ZF9pcnFfZW50cnkgKmlycV9lbnRyeSwNCj4gPj4gICAgICAgIHN0cnVjdCBp
+ZHhkX2Rlc2MgKmRlc2MsICp0Ow0KPiA+PiAgICAgICAgc3RydWN0IGxsaXN0X25vZGUgKmhlYWQ7
+DQo+ID4+ICAgICAgICBpbnQgcXVldWVkID0gMDsNCj4gPj4gLSAgICAgdW5zaWduZWQgbG9uZyBm
+bGFnczsNCj4gPj4gLSAgICAgZW51bSBpZHhkX2NvbXBsZXRlX3R5cGUgcmVhc29uOw0KPiA+PiAr
+ICAgICBlbnVtIGlkeGRfY29tcGxldGVfdHlwZSByZWFzb24gPSBJRFhEX0NPTVBMRVRFX05PUk1B
+TDsNCj4gPj4NCj4gPj4gICAgICAgICpwcm9jZXNzZWQgPSAwOw0KPiA+PiAgICAgICAgaGVhZCA9
+IGxsaXN0X2RlbF9hbGwoJmlycV9lbnRyeS0+cGVuZGluZ19sbGlzdCk7DQo+ID4+IEBAIC0yNzIs
+MTYgKzI2NSwyMCBAQCBzdGF0aWMgaW50IGlycV9wcm9jZXNzX3BlbmRpbmdfbGxpc3Qoc3RydWN0
+IGlkeGRfaXJxX2VudHJ5ICppcnFfZW50cnksDQo+ID4+ICAgICAgICAgICAgICAgIHJlYXNvbiA9
+IElEWERfQ09NUExFVEVfREVWX0ZBSUw7DQo+ID4+DQo+ID4+ICAgICAgICBsbGlzdF9mb3JfZWFj
+aF9lbnRyeV9zYWZlKGRlc2MsIHQsIGhlYWQsIGxsbm9kZSkgew0KPiA+PiAtICAgICAgICAgICAg
+IGlmIChkZXNjLT5jb21wbGV0aW9uLT5zdGF0dXMpIHsNCj4gPj4gLSAgICAgICAgICAgICAgICAg
+ICAgIGlmICgoZGVzYy0+Y29tcGxldGlvbi0+c3RhdHVzICYgRFNBX0NPTVBfU1RBVFVTX01BU0sp
+ICE9IERTQV9DT01QX1NVQ0NFU1MpDQo+ID4+ICsgICAgICAgICAgICAgdTggc3RhdHVzID0gZGVz
+Yy0+Y29tcGxldGlvbi0+c3RhdHVzICYgRFNBX0NPTVBfU1RBVFVTX01BU0s7DQo+ID4+ICsNCj4g
+Pj4gKyAgICAgICAgICAgICBpZiAoc3RhdHVzKSB7DQo+ID4+ICsgICAgICAgICAgICAgICAgICAg
+ICBpZiAoc3RhdHVzID09IElEWERfQ09NUF9ERVNDX0FCT1JUKQ0KPiA+PiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICByZWFzb24gPSBJRFhEX0NPTVBMRVRFX0FCT1JUOw0KPiA+PiArICAg
+ICAgICAgICAgICAgICAgICAgZWxzZSBpZiAoc3RhdHVzICE9IERTQV9DT01QX1NVQ0NFU1MpDQo+
+ID4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtYXRjaF9mYXVsdChkZXNjLCBkYXRh
+KTsNCj4gPj4gICAgICAgICAgICAgICAgICAgICAgICBjb21wbGV0ZV9kZXNjKGRlc2MsIHJlYXNv
+bik7DQo+ID4gcmVhc29uIHdhcyBvdmVyd3JpdHRlbiBhYm92ZSBmb3Igb25lIHBhcnRpY3VsYXIg
+ZGVzYywgYnV0IG5vdCByZXN0b3JlZC4NCj4gPiBTbyBhbGwgZnV0aGVyIGRlc2NzIHdpbGwgYmUg
+Y29tcGxldGVkIHdpdGggPSBJRFhEX0NPTVBMRVRFX0FCT1JULg0KPiA+IEkgdGhpbmsgd2UgbmVl
+ZCBlaXRoZXIgdG8gc2V0IGl0IHVwIG9uIGVhY2ggaXRlcmF0aW9uLCBvcjoNCj4gPiBpZiAoc3Rh
+dHVzID09IElEWERfQ09NUF9ERVNDX0FCT1JUKQ0KPiA+ICAgICAgICBjb21wbGV0ZV9kZXNjKGRl
+c2MsIElEWERfQ09NUExFVEVfQUJPUlQpOw0KPiA+IGVsc2Ugew0KPiA+IGlmIChzdGF0dXMgIT0g
+RFNBX0NPTVBfU1VDQ0VTUykNCj4gPiAgICAgIG1hdGNoX2ZhdWx0KGRlc2MsIGRhdGEpOw0KPiA+
+ICAgICAgY29tcGxldGVfZGVzYyhkZXNjLCByZWFzb24pOw0KPiA+IH0NCj4gDQo+IEFoIHJpZ2h0
+LiBJJ2xsIGZpeCB0aGF0Lg0KPiANCj4gDQo+ID4NCj4gPj4gICAgICAgICAgICAgICAgICAgICAg
+ICAoKnByb2Nlc3NlZCkrKzsNCj4gPj4gICAgICAgICAgICAgICAgfSBlbHNlIHsNCj4gPj4gLSAg
+ICAgICAgICAgICAgICAgICAgIHNwaW5fbG9ja19pcnFzYXZlKCZpcnFfZW50cnktPmxpc3RfbG9j
+aywgZmxhZ3MpOw0KPiA+PiArICAgICAgICAgICAgICAgICAgICAgc3Bpbl9sb2NrX2JoKCZpcnFf
+ZW50cnktPmxpc3RfbG9jayk7DQo+ID4+ICAgICAgICAgICAgICAgICAgICAgICAgbGlzdF9hZGRf
+dGFpbCgmZGVzYy0+bGlzdCwNCj4gPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICZpcnFfZW50cnktPndvcmtfbGlzdCk7DQo+ID4+IC0gICAgICAgICAgICAgICAgICAgICBz
+cGluX3VubG9ja19pcnFyZXN0b3JlKCZpcnFfZW50cnktPmxpc3RfbG9jaywgZmxhZ3MpOw0KPiA+
+PiArICAgICAgICAgICAgICAgICAgICAgc3Bpbl91bmxvY2tfYmgoJmlycV9lbnRyeS0+bGlzdF9s
+b2NrKTsNCj4gPj4gICAgICAgICAgICAgICAgICAgICAgICBxdWV1ZWQrKzsNCj4gPj4gICAgICAg
+ICAgICAgICAgfQ0KPiA+PiAgICAgICAgfQ0KPiA+PiBAQCAtMjk1LDEwICsyOTIsOSBAQCBzdGF0
+aWMgaW50IGlycV9wcm9jZXNzX3dvcmtfbGlzdChzdHJ1Y3QgaWR4ZF9pcnFfZW50cnkgKmlycV9l
+bnRyeSwNCj4gPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnQgKnByb2Nlc3Nl
+ZCwgdTY0IGRhdGEpDQo+ID4+ICAgew0KPiA+PiAgICAgICAgaW50IHF1ZXVlZCA9IDA7DQo+ID4+
+IC0gICAgIHVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4+ICAgICAgICBMSVNUX0hFQUQoZmxpc3Qp
+Ow0KPiA+PiAgICAgICAgc3RydWN0IGlkeGRfZGVzYyAqZGVzYywgKm47DQo+ID4+IC0gICAgIGVu
+dW0gaWR4ZF9jb21wbGV0ZV90eXBlIHJlYXNvbjsNCj4gPj4gKyAgICAgZW51bSBpZHhkX2NvbXBs
+ZXRlX3R5cGUgcmVhc29uID0gSURYRF9DT01QTEVURV9OT1JNQUw7DQo+ID4+DQo+ID4+ICAgICAg
+ICAqcHJvY2Vzc2VkID0gMDsNCj4gPj4gICAgICAgIGlmICh3dHlwZSA9PSBJUlFfV09SS19OT1JN
+QUwpDQo+ID4+IEBAIC0zMTAsOSArMzA2LDkgQEAgc3RhdGljIGludCBpcnFfcHJvY2Vzc193b3Jr
+X2xpc3Qoc3RydWN0IGlkeGRfaXJxX2VudHJ5ICppcnFfZW50cnksDQo+ID4+ICAgICAgICAgKiBU
+aGlzIGxvY2sgcHJvdGVjdHMgbGlzdCBjb3JydXB0aW9uIGZyb20gYWNjZXNzIG9mIGxpc3Qgb3V0
+c2lkZSBvZiB0aGUgaXJxIGhhbmRsZXINCj4gPj4gICAgICAgICAqIHRocmVhZC4NCj4gPj4gICAg
+ICAgICAqLw0KPiA+PiAtICAgICBzcGluX2xvY2tfaXJxc2F2ZSgmaXJxX2VudHJ5LT5saXN0X2xv
+Y2ssIGZsYWdzKTsNCj4gPj4gKyAgICAgc3Bpbl9sb2NrX2JoKCZpcnFfZW50cnktPmxpc3RfbG9j
+ayk7DQo+ID4gSSBhbSBub3QgcmVhbGx5IGFuIGV4cGVydCBpbiBrZW5lbCBzaXBuIGxvY2sgZmxh
+dm91cnMuLi4NCj4gPiBDYW4geW91IGV4cGxhaW4gdG8gbWUgd2h5IHdlIGNhbiBub3cgcmVwbGFj
+ZSBfaXJxc2F2ZV8gd2l0aCBfYmhfPw0KPiANCj4gQWN0dWFsbHkgSSB0aGluayB3ZSBjYW4gZG8g
+dGhlIGNhbGxiYWNrcyBkaXJlY3RseSBub3cgdGhhdCB3ZSBhcmUgdXNpbmcNCj4gc3Bpbl9sb2Nr
+X2JoKCkuIEhvbmVzdGx5IEkgZG9uJ3QgdGhpbmsgd2UgZXZlciBuZWVkZWQgdG8gY2FsbA0KPiBz
+cGluX2xvY2tfaXJxc2F2ZSgpLiBJdCBkaXNhYmxlcyBpbnRlcnJ1cHRzIGFuZCB0aGVyZWZvcmUg
+dGhlIGRyaXZlciB3YXMNCj4gZG9pbmcgdGhlIGNhbGxiYWNrcyBvdXRzaWRlIG9mIHRoZSBsb2Nr
+LiBCdXQgc2luY2Ugd2UgYXJlIHJ1bm5pbmcNCj4gdGhyZWFkZWQgaW50ZXJydXB0IGFuZCB3ZSBk
+b24ndCBhY3R1YWxseSB0b3VjaCB0aGUgbGlzdCBpbiB0aGUgaGFyZA0KPiBpbnRlcnJ1cHQgaGFu
+ZGxlciwgdGhlcmUncyBubyBuZWVkIHRvIGRpc2FibGUgaW50ZXJydXB0LiBzcGluX2xvY2tfYmgo
+KQ0KPiBkaXNhYmxlcyBzb2Z0d2FyZSBpbnRlcnJ1cHRzIGFuZCB0aGF0IHNob3VsZCBjb3ZlciB0
+aGUgdGhyZWFkIGludGVycnVwdA0KPiBoYW5kbGVyLg0KDQpPaywgdGhhbmtzIGZvciBleHBsYW5h
+dGlvbi4NCkFib3V0IGNhbGxpbmcgY29tcGxldGVfdHhkKCkgd2hpbGUgaG9sZGluZyB0aGUgbG9j
+ayAtIGFncmVlLCBpdCBzZWVtcyBhbGxvd2FibGUuDQpUaG91Z2ggYm90aCBkbWFfZGVzY3JpcHRv
+cl91bm1hcCgpIGFuZCB1c2VyLXByb3ZpZGVkIGNhbGxiYWNrcyBtaWdodCBiZQ0KdGltZSBjb25z
+dW1pbmcuIElmIGV4ZWN1dGUgdGhlbSBob2xkaW5nIHRoZSBsaXN0X2xvY2sgLSBpdCBtZWFucyBu
+b3JtYWwgaXJxDQpoYW5kbGVyIHdvdWxkbid0IGJlIGFibGUgdG8gcHJvZ3Jlc3MgdGlsbCB0aGV5
+IGFyZSBjb21wbGV0ZWQuDQpQcm9iYWJseSBub3QgdGhhdCBiaWcgZGVhbCwgYnV0IElNTyBzdGls
+bCBiZXR0ZXIgdG8gZG8gY29tcGxldGUoKQ0Kb3V0c2lkZSB0aGUgbG9jayBzZWN0aW9uLCBhZnRl
+ciBhbGwgaXQgc2VlbXMgZWFzeSBlbm91Z2ggdG8gZG8uIA0KDQo+IA0KPiANCj4gPg0KPiA+PiAg
+ICAgICAgaWYgKGxpc3RfZW1wdHkoJmlycV9lbnRyeS0+d29ya19saXN0KSkgew0KPiA+PiAtICAg
+ICAgICAgICAgIHNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmlycV9lbnRyeS0+bGlzdF9sb2NrLCBm
+bGFncyk7DQo+ID4+ICsgICAgICAgICAgICAgc3Bpbl91bmxvY2tfYmgoJmlycV9lbnRyeS0+bGlz
+dF9sb2NrKTsNCj4gPj4gICAgICAgICAgICAgICAgcmV0dXJuIDA7DQo+ID4+ICAgICAgICB9DQo+
+ID4+DQo+ID4+IEBAIC0zMjYsMTAgKzMyMiwxNCBAQCBzdGF0aWMgaW50IGlycV9wcm9jZXNzX3dv
+cmtfbGlzdChzdHJ1Y3QgaWR4ZF9pcnFfZW50cnkgKmlycV9lbnRyeSwNCj4gPj4gICAgICAgICAg
+ICAgICAgfQ0KPiA+PiAgICAgICAgfQ0KPiA+Pg0KPiA+PiAtICAgICBzcGluX3VubG9ja19pcnFy
+ZXN0b3JlKCZpcnFfZW50cnktPmxpc3RfbG9jaywgZmxhZ3MpOw0KPiA+PiArICAgICBzcGluX3Vu
+bG9ja19iaCgmaXJxX2VudHJ5LT5saXN0X2xvY2spOw0KPiA+Pg0KPiA+PiAgICAgICAgbGlzdF9m
+b3JfZWFjaF9lbnRyeShkZXNjLCAmZmxpc3QsIGxpc3QpIHsNCj4gPj4gLSAgICAgICAgICAgICBp
+ZiAoKGRlc2MtPmNvbXBsZXRpb24tPnN0YXR1cyAmIERTQV9DT01QX1NUQVRVU19NQVNLKSAhPSBE
+U0FfQ09NUF9TVUNDRVNTKQ0KPiA+PiArICAgICAgICAgICAgIHU4IHN0YXR1cyA9IGRlc2MtPmNv
+bXBsZXRpb24tPnN0YXR1cyAmIERTQV9DT01QX1NUQVRVU19NQVNLOw0KPiA+PiArDQo+ID4+ICsg
+ICAgICAgICAgICAgaWYgKGRlc2MtPmNvbXBsZXRpb24tPnN0YXR1cyA9PSBJRFhEX0NPTVBfREVT
+Q19BQk9SVCkNCj4gPj4gKyAgICAgICAgICAgICAgICAgICAgIHJlYXNvbiA9IElEWERfQ09NUExF
+VEVfQUJPUlQ7DQo+ID4+ICsgICAgICAgICAgICAgZWxzZSBpZiAoc3RhdHVzICE9IERTQV9DT01Q
+X1NVQ0NFU1MpDQo+ID4+ICAgICAgICAgICAgICAgICAgICAgICAgbWF0Y2hfZmF1bHQoZGVzYywg
+ZGF0YSk7DQo+ID4+ICAgICAgICAgICAgICAgIGNvbXBsZXRlX2Rlc2MoZGVzYywgcmVhc29uKTsN
+Cj4gPiBTYW1lIGNvbW1lbnQgYXMgYWJvdmUgZm9yIHBlbmRpbmcgbGlzdC4NCj4gPg0KPiA+PiAg
+ICAgICAgfQ0KPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9kbWEvaWR4ZC9zdWJtaXQuYyBiL2Ry
+aXZlcnMvZG1hL2lkeGQvc3VibWl0LmMNCj4gPj4gaW5kZXggNzM2ZGVmMTI5ZmE4Li5kOTlhM2Fl
+YjAzOGMgMTAwNjQ0DQo+ID4+IC0tLSBhL2RyaXZlcnMvZG1hL2lkeGQvc3VibWl0LmMNCj4gPj4g
+KysrIGIvZHJpdmVycy9kbWEvaWR4ZC9zdWJtaXQuYw0KPiA+PiBAQCAtODgsOSArODgsNjYgQEAg
+dm9pZCBpZHhkX2ZyZWVfZGVzYyhzdHJ1Y3QgaWR4ZF93cSAqd3EsIHN0cnVjdCBpZHhkX2Rlc2Mg
+KmRlc2MpDQo+ID4+ICAgICAgICBzYml0bWFwX3F1ZXVlX2NsZWFyKCZ3cS0+c2JxLCBkZXNjLT5p
+ZCwgY3B1KTsNCj4gPj4gICB9DQo+ID4+DQo+ID4+ICtzdGF0aWMgdm9pZCBsaXN0X2Fib3J0X2Rl
+c2Moc3RydWN0IGlkeGRfd3EgKndxLCBzdHJ1Y3QgaWR4ZF9pcnFfZW50cnkgKmllLA0KPiA+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBpZHhkX2Rlc2MgKmRlc2MpDQo+ID4+ICt7
+DQo+ID4+ICsgICAgIHN0cnVjdCBpZHhkX2Rlc2MgKmQsICpuOw0KPiA+PiArDQo+ID4+ICsgICAg
+IGxvY2tkZXBfYXNzZXJ0X2hlbGQoJmllLT5saXN0X2xvY2spOw0KPiA+PiArICAgICBsaXN0X2Zv
+cl9lYWNoX2VudHJ5X3NhZmUoZCwgbiwgJmllLT53b3JrX2xpc3QsIGxpc3QpIHsNCj4gPj4gKyAg
+ICAgICAgICAgICBpZiAoZCA9PSBkZXNjKSB7DQo+ID4+ICsgICAgICAgICAgICAgICAgICAgICBs
+aXN0X2RlbCgmZC0+bGlzdCk7DQo+ID4+ICsgICAgICAgICAgICAgICAgICAgICBjb21wbGV0ZV9k
+ZXNjKGRlc2MsIElEWERfQ09NUExFVEVfQUJPUlQpOw0KPiA+PiArICAgICAgICAgICAgICAgICAg
+ICAgcmV0dXJuOw0KPiA+PiArICAgICAgICAgICAgIH0NCj4gPj4gKyAgICAgfQ0KPiA+PiArDQo+
+ID4+ICsgICAgIC8qDQo+ID4+ICsgICAgICAqIEF0IHRoaXMgcG9pbnQsIHRoZSBkZXNjIG5lZWRz
+IHRvIGJlIGFib3J0ZWQgaXMgaGVsZCBieSB0aGUgY29tcGxldGlvbg0KPiA+PiArICAgICAgKiBo
+YW5kbGVyIHdoZXJlIGl0IGhhcyB0YWtlbiBpdCBvZmYgdGhlIHBlbmRpbmcgbGlzdCBidXQgaGFz
+IG5vdCBhZGRlZCB0byB0aGUNCj4gPj4gKyAgICAgICogd29yayBsaXN0LiBJdCB3aWxsIGJlIGNs
+ZWFuZWQgdXAgYnkgdGhlIGludGVycnVwdCBoYW5kbGVyIHdoZW4gaXQgc2VlcyB0aGUNCj4gPj4g
+KyAgICAgICogSURYRF9DT01QX0RFU0NfQUJPUlQgZm9yIGNvbXBsZXRpb24gc3RhdHVzLg0KPiA+
+PiArICAgICAgKi8NCj4gPj4gK30NCj4gPj4gKw0KPiA+PiArc3RhdGljIHZvaWQgbGxpc3RfYWJv
+cnRfZGVzYyhzdHJ1Y3QgaWR4ZF93cSAqd3EsIHN0cnVjdCBpZHhkX2lycV9lbnRyeSAqaWUsDQo+
+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBpZHhkX2Rlc2MgKmRlc2MpDQo+
+ID4+ICt7DQo+ID4+ICsgICAgIHN0cnVjdCBpZHhkX2Rlc2MgKmQsICp0Ow0KPiA+PiArICAgICBz
+dHJ1Y3QgbGxpc3Rfbm9kZSAqaGVhZDsNCj4gPj4gKyAgICAgYm9vbCBmb3VuZCA9IGZhbHNlOw0K
+PiA+PiArDQo+ID4+ICsgICAgIGRlc2MtPmNvbXBsZXRpb24tPnN0YXR1cyA9IElEWERfQ09NUF9E
+RVNDX0FCT1JUOw0KPiA+PiArICAgICAvKg0KPiA+PiArICAgICAgKiBHcmFiIHRoZSBsaXN0IGxv
+Y2sgc28gaXQgd2lsbCBibG9jayB0aGUgaXJxIHRocmVhZCBoYW5kbGVyLiBUaGlzIGFsbG93cyB0
+aGUNCj4gPj4gKyAgICAgICogYWJvcnQgY29kZSB0byBsb2NhdGUgdGhlIGRlc2NyaXB0b3IgbmVl
+ZCB0byBiZSBhYm9ydGVkLg0KPiA+PiArICAgICAgKi8NCj4gPj4gKyAgICAgc3Bpbl9sb2NrX2Jo
+KCZpZS0+bGlzdF9sb2NrKTsNCj4gPj4gKyAgICAgaGVhZCA9IGxsaXN0X2RlbF9hbGwoJmllLT5w
+ZW5kaW5nX2xsaXN0KTsNCj4gPj4gKyAgICAgaWYgKCFoZWFkKSB7DQo+ID4+ICsgICAgICAgICAg
+ICAgbGlzdF9hYm9ydF9kZXNjKHdxLCBpZSwgZGVzYyk7DQo+ID4+ICsgICAgICAgICAgICAgc3Bp
+bl91bmxvY2tfYmgoJmllLT5saXN0X2xvY2spOw0KPiA+PiArICAgICAgICAgICAgIHJldHVybjsN
+Cj4gPj4gKyAgICAgfQ0KPiA+PiArDQo+ID4+ICsgICAgIGxsaXN0X2Zvcl9lYWNoX2VudHJ5X3Nh
+ZmUoZCwgdCwgaGVhZCwgbGxub2RlKSB7DQo+ID4+ICsgICAgICAgICAgICAgaWYgKGQgPT0gZGVz
+Yykgew0KPiA+PiArICAgICAgICAgICAgICAgICAgICAgY29tcGxldGVfZGVzYyhkZXNjLCBJRFhE
+X0NPTVBMRVRFX0FCT1JUKTsNCj4gPj4gKyAgICAgICAgICAgICAgICAgICAgIGZvdW5kID0gdHJ1
+ZTsNCj4gPj4gKyAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlOw0KPiA+PiArICAgICAgICAg
+ICAgIH0NCj4gPj4gKyAgICAgICAgICAgICBsaXN0X2FkZF90YWlsKCZkZXNjLT5saXN0LCAmaWUt
+PndvcmtfbGlzdCk7DQo+ID4+ICsgICAgIH0NCj4gPj4gKw0KPiA+PiArICAgICBpZiAoIWZvdW5k
+KQ0KPiA+PiArICAgICAgICAgICAgIGxpc3RfYWJvcnRfZGVzYyh3cSwgaWUsIGRlc2MpOw0KPiA+
+PiArICAgICBzcGluX3VubG9ja19iaCgmaWUtPmxpc3RfbG9jayk7DQo+ID4+ICt9DQo+ID4gVGhl
+cmUgaXMgb25lIHRoaW5nIHRoYXQgd29ycmllcyBtZSBpbiB0aGF0IGFwcHJvYWNoOg0KPiA+ICBG
+cm9tIHdoYXQgSSBzZWUsIHJpZ2h0IG5vdyBpZHhkIGNhbGxzIGNvbXBsZXRlX2Rlc2MoKSB3aXRo
+b3V0IGxpc3RfbG9jayBoZWxkLg0KPiA+IEkgdGhpbmsgaXQgaXMgYmV0dGVyIHRvIGtlZXAgdGhp
+bmdzIGxpa2UgdGhhdC4NCj4gPiBJIHN1cHBvc2UgaXQgc2hvdWxkIGJlIGVhc3kgZW5vdWdoIHRv
+IHJlLWFycmFuZ2UgeW91ciBjb2RlIGEgYml0Og0KPiA+IDEpIG1ha2UgbGlzdF9hYm9ydF9kZXNj
+KCkgbm90IHRvIGNhbGwgY29tcGxldGVfZGVzYygpLCBidXQgc2ltcGx5DQo+ID4gcmV0dXJuIGRl
+c2MgaWYgZm91bmQgb3IgbnVsbCBvdGhlcndpc2UuDQo+ID4gMikgSW4gbGxpc3RfYWJvcnRfZGVz
+YygpIC0gZ3JhYiB0aGUgbG9jayBhbmQgdHJ5IHRvIGZpbmQgdGhlIGRlc2MgaW4gb25lIG9mIHRo
+ZSBsaXN0cy4NCj4gPiAgICAgIElmIGZvdW5kIGluIHRoZSB3b3JrX2xpc3QsIHRoZW4gcmVtb3Zl
+IGl0IGZyb20gdGhlIGxsaXN0LCBidXQgZG9uJ3QgY2FsbCBjb21wbGV0ZSgpIHlldC4NCj4gPiAg
+ICAgIFRoZW4gcmVsZWFzZSB0aGUgbG9jayBhbmQgZG8gY29tcGxldGUoKS4NCj4gPg0KPiA+IFNv
+bWV0aGluZyBsaWtlIHRoYXQsIHRvIGJlIG1vcmUgc3BlY2lmaWM6DQo+ID4NCj4gPiAgIHN0YXRp
+YyB2b2lkIGxsaXN0X2Fib3J0X2Rlc2Moc3RydWN0IGlkeGRfd3EgKndxLCBzdHJ1Y3QgaWR4ZF9p
+cnFfZW50cnkgKmllLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBp
+ZHhkX2Rlc2MgKmRlc2MpDQo+ID4gew0KPiA+ICAgICAgICAgICAgICAgIHN0cnVjdCBpZHhkX2Rl
+c2MgKmQsICpmb3VuZCwgKnQ7DQo+ID4gICAgICAgICAgICAgICAgc3RydWN0IGxsaXN0X25vZGUg
+KmhlYWQ7DQo+ID4NCj4gPiAgICAgICAgICAgICAgICBkZXNjLT5jb21wbGV0aW9uLT5zdGF0dXMg
+PSBJRFhEX0NPTVBfREVTQ19BQk9SVDsNCj4gPiAgICAgICAgICAgICAgICBmb3VuZCA9IE5VTEw7
+DQo+ID4NCj4gPiAgICAgICAgICAgICAgICAgc3Bpbl9sb2NrX2JoKCZpZS0+bGlzdF9sb2NrKTsN
+Cj4gPiAgICAgICAgICBoZWFkID0gbGxpc3RfZGVsX2FsbCgmaWUtPnBlbmRpbmdfbGxpc3QpOw0K
+PiA+ICAgICAgICAgIGlmIChoZWFkICE9IE5VTEwpIHsNCj4gPiAgICAgICAgICAgICAgICAgICAg
+ICBsbGlzdF9mb3JfZWFjaF9lbnRyeV9zYWZlKGQsIHQsIGhlYWQsIGxsbm9kZSkgew0KPiA+ICAg
+ICAgICAgICAgICAgICAgICAgaWYgKGQgPT0gZGVzYykgew0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBmb3VuZCA9IGRlc2M7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIGNvbnRpbnVlOw0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICB9DQo+ID4gICAg
+ICAgICAgICAgICAgICAgICBsaXN0X2FkZF90YWlsKCZkZXNjLT5saXN0LCAmaWUtPndvcmtfbGlz
+dCk7DQo+ID4gICAgICAgICAgICAgIH0NCj4gPg0KPiA+ICAgICAgICAgICAgICBJZiAoZm91bmQg
+PT0gTlVMTCkNCj4gPiAgICAgICAgICAgICAgICAgICBmb3VuZCA9IGxpc3RfYWJvcnRfZGVzYyh3
+cSwgaWUsIGRlc2MpOw0KPiA+DQo+ID4gICAgICAgICAgICAgIHNwaW5fdW5sb2NrX2JoKCZpZS0+
+bGlzdF9sb2NrKTsNCj4gPg0KPiA+ICAgICAgICAgICAgICBpZiAoZm91bmQgIT0gTlVMTCkNCj4g
+PiAgICAgICAgICAgICAgICAgICBjb21wbGV0ZV9kZXNjKGZvdW5kLCBJRFhEX0NPTVBMRVRFX0FC
+T1JUKTsNCj4gPiB9DQo+ID4NCj4gPg0KPiA+PiArDQo+ID4+ICAgaW50IGlkeGRfc3VibWl0X2Rl
+c2Moc3RydWN0IGlkeGRfd3EgKndxLCBzdHJ1Y3QgaWR4ZF9kZXNjICpkZXNjKQ0KPiA+PiAgIHsN
+Cj4gPj4gICAgICAgIHN0cnVjdCBpZHhkX2RldmljZSAqaWR4ZCA9IHdxLT5pZHhkOw0KPiA+PiAr
+ICAgICBzdHJ1Y3QgaWR4ZF9pcnFfZW50cnkgKmllID0gTlVMTDsNCj4gPj4gICAgICAgIHZvaWQg
+X19pb21lbSAqcG9ydGFsOw0KPiA+PiAgICAgICAgaW50IHJjOw0KPiA+Pg0KPiA+PiBAQCAtMTA4
+LDYgKzE2NSwxNiBAQCBpbnQgaWR4ZF9zdWJtaXRfZGVzYyhzdHJ1Y3QgaWR4ZF93cSAqd3EsIHN0
+cnVjdCBpZHhkX2Rlc2MgKmRlc2MpDQo+ID4+ICAgICAgICAgKiBldmVuIG9uIFVQIGJlY2F1c2Ug
+dGhlIHJlY2lwaWVudCBpcyBhIGRldmljZS4NCj4gPj4gICAgICAgICAqLw0KPiA+PiAgICAgICAg
+d21iKCk7DQo+ID4+ICsNCj4gPj4gKyAgICAgLyoNCj4gPj4gKyAgICAgICogUGVuZGluZyB0aGUg
+ZGVzY3JpcHRvciB0byB0aGUgbG9ja2xlc3MgbGlzdCBmb3IgdGhlIGlycV9lbnRyeQ0KPiA+PiAr
+ICAgICAgKiB0aGF0IHdlIGRlc2lnbmF0ZWQgdGhlIGRlc2NyaXB0b3IgdG8uDQo+ID4+ICsgICAg
+ICAqLw0KPiA+PiArICAgICBpZiAoZGVzYy0+aHctPmZsYWdzICYgSURYRF9PUF9GTEFHX1JDSSkg
+ew0KPiA+PiArICAgICAgICAgICAgIGllID0gJmlkeGQtPmlycV9lbnRyaWVzW2Rlc2MtPnZlY3Rv
+cl07DQo+ID4+ICsgICAgICAgICAgICAgbGxpc3RfYWRkKCZkZXNjLT5sbG5vZGUsICZpZS0+cGVu
+ZGluZ19sbGlzdCk7DQo+ID4+ICsgICAgIH0NCj4gPj4gKw0KPiA+PiAgICAgICAgaWYgKHdxX2Rl
+ZGljYXRlZCh3cSkpIHsNCj4gPj4gICAgICAgICAgICAgICAgaW9zdWJtaXRfY21kczUxMihwb3J0
+YWwsIGRlc2MtPmh3LCAxKTsNCj4gPj4gICAgICAgIH0gZWxzZSB7DQo+ID4+IEBAIC0xMjAsMTgg
+KzE4NywxMiBAQCBpbnQgaWR4ZF9zdWJtaXRfZGVzYyhzdHJ1Y3QgaWR4ZF93cSAqd3EsIHN0cnVj
+dCBpZHhkX2Rlc2MgKmRlc2MpDQo+ID4+ICAgICAgICAgICAgICAgIHJjID0gZW5xY21kcyhwb3J0
+YWwsIGRlc2MtPmh3KTsNCj4gPj4gICAgICAgICAgICAgICAgaWYgKHJjIDwgMCkgew0KPiA+PiAg
+ICAgICAgICAgICAgICAgICAgICAgIHBlcmNwdV9yZWZfcHV0KCZ3cS0+d3FfYWN0aXZlKTsNCj4g
+Pj4gKyAgICAgICAgICAgICAgICAgICAgIGlmIChpZSkNCj4gPj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgbGxpc3RfYWJvcnRfZGVzYyh3cSwgaWUsIGRlc2MpOw0KPiA+PiAgICAgICAg
+ICAgICAgICAgICAgICAgIHJldHVybiByYzsNCj4gPj4gICAgICAgICAgICAgICAgfQ0KPiA+PiAg
+ICAgICAgfQ0KPiA+Pg0KPiA+PiAgICAgICAgcGVyY3B1X3JlZl9wdXQoJndxLT53cV9hY3RpdmUp
+Ow0KPiA+PiAtDQo+ID4+IC0gICAgIC8qDQo+ID4+IC0gICAgICAqIFBlbmRpbmcgdGhlIGRlc2Ny
+aXB0b3IgdG8gdGhlIGxvY2tsZXNzIGxpc3QgZm9yIHRoZSBpcnFfZW50cnkNCj4gPj4gLSAgICAg
+ICogdGhhdCB3ZSBkZXNpZ25hdGVkIHRoZSBkZXNjcmlwdG9yIHRvLg0KPiA+PiAtICAgICAgKi8N
+Cj4gPj4gLSAgICAgaWYgKGRlc2MtPmh3LT5mbGFncyAmIElEWERfT1BfRkxBR19SQ0kpDQo+ID4+
+IC0gICAgICAgICAgICAgbGxpc3RfYWRkKCZkZXNjLT5sbG5vZGUsICZpZHhkLT5pcnFfZW50cmll
+c1tkZXNjLT52ZWN0b3JdLnBlbmRpbmdfbGxpc3QpOw0KPiA+PiAtDQo+ID4+ICAgICAgICByZXR1
+cm4gMDsNCj4gPj4gICB9DQo+ID4+DQo=

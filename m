@@ -2,363 +2,394 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 075D43B45E5
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Jun 2021 16:38:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEE823B46F1
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Jun 2021 17:49:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231521AbhFYOkd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 25 Jun 2021 10:40:33 -0400
-Received: from mga07.intel.com ([134.134.136.100]:64678 "EHLO mga07.intel.com"
+        id S230014AbhFYPwQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 25 Jun 2021 11:52:16 -0400
+Received: from mga07.intel.com ([134.134.136.100]:6823 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232032AbhFYOkR (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 25 Jun 2021 10:40:17 -0400
-IronPort-SDR: UFCPaVfPRRCRIS2Ic9XtgssvFL75cldYKKfCJQV+jH/AWjqXYto++D98ZMnKaDavksZJKswyOU
- k1wCZ1mf1UZQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,10026"; a="271536174"
+        id S230019AbhFYPwP (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 25 Jun 2021 11:52:15 -0400
+IronPort-SDR: SI+maRnQq/0az/zMH+BeH2XZVdmwH0Wwqy5ERjpSGVJvdjadIR+N+OE0cGN4u07F+G3i9+cCtD
+ CIr1c3BDi8KA==
+X-IronPort-AV: E=McAfee;i="6200,9189,10026"; a="271550905"
 X-IronPort-AV: E=Sophos;i="5.83,299,1616482800"; 
-   d="scan'208";a="271536174"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2021 07:37:06 -0700
-IronPort-SDR: ortkE1VclecPxnGLBjxTUPFck6qnWdJlvO35m/22vP6tP3mjXbbBZai+HmS+w5ZgP6LK3zDpKV
- oFUye7JPXQ4w==
-X-ExtLoop1: 1
+   d="scan'208";a="271550905"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2021 08:49:54 -0700
+IronPort-SDR: aW8xp1S6yg2k1eeLIkTHnL0WYuXuOCAK6525kE9/C4qMFfqumEbpt8HYKq71gKldVXClLA/Kdk
+ 42cwfpgNixKw==
 X-IronPort-AV: E=Sophos;i="5.83,299,1616482800"; 
-   d="scan'208";a="488205078"
-Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
-  by orsmga001.jf.intel.com with ESMTP; 25 Jun 2021 07:37:06 -0700
-Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.4; Fri, 25 Jun 2021 07:37:05 -0700
-Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
- fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.4; Fri, 25 Jun 2021 07:37:05 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4
- via Frontend Transport; Fri, 25 Jun 2021 07:37:05 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2242.4; Fri, 25 Jun 2021 07:37:05 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d5deqfOrf1YX94+xiI+jV9ndAWQ8MN4qLbnFmk/IqhDwUJR6yMR7pgyZNJxXimj/DQ9/pMRhayJZ4Oq40TTzyWob3bhCDI/I2E6x7jezIRFRX/a1YGz4uBXRRQ+P5XXHoT+dDUUrDRCGtkV9Q/VaXX6Yq9rgYUXCmHovNHtqtqOWb5NXDdZzXPca39aW3gJrbCozZzBkW1h/7SnxPvZb/W9dVfgXtjhpB15UgqxPtmR8r2HdIxKDVBVYlnzSWonzqemEMHoUTamcaHh9e9XeSRlZKgPXK1oixfvakbnXtMiNgqQ5ZlMdt1yw8NITVugnIvBqakmcV8PPaW2a6TuQKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=223N8UaJG3gwEG+QmlCVglOew/6PDgrQiKaX4t+filg=;
- b=b7nMw/Z+hEcUMJnHZQdIGe93awgJoJc1KUtVbjpl2s3602gTIJwKrOZn0SljecVeSLddKIQgmf0DbdzZZ6mbXedK20CJZhIAKPfQKZpS3Q/TKGcjlkHQwpud31pwh1vX5fmP5s+J7FpgTX2P2+67g48uW0zAEtKvjYurFH0m7iNOXt5wHCw8GO0QBC/qNIVAvOqVNhbSmfmUmkfUcIB4gpb1dhhYQnpAVZHndZdaTH5l30V3KY5RH7oSmXFViGbYgUaX4mDmdbAMiKbe/xxzJDvUydTm3q5seBmZ0NGxx1lrBd/tnUTbP0M9tFYK/wjlhq6yZGydTYQz7836ysZUyA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=223N8UaJG3gwEG+QmlCVglOew/6PDgrQiKaX4t+filg=;
- b=EAeinbHqG3kXVQCeEn2Jc6s1hbz0qyfewM4+w9Q/vyeQuO34QZBOGyV6pE9uPKou0aTue4+cPUUZVEYPGcBwrw0s8jQgUxtgPeW7pRuOq9d5+0eIFGJv15LefzF9GyvjwZDx93YkbZE7yls/KNuOOrkMEWwTMB6sCYb//J4EPy0=
-Received: from DM6PR11MB4491.namprd11.prod.outlook.com (2603:10b6:5:204::19)
- by DM6PR11MB3466.namprd11.prod.outlook.com (2603:10b6:5:e::23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4242.22; Fri, 25 Jun 2021 14:37:03 +0000
-Received: from DM6PR11MB4491.namprd11.prod.outlook.com
- ([fe80::7dc4:66b0:f76b:6d48]) by DM6PR11MB4491.namprd11.prod.outlook.com
- ([fe80::7dc4:66b0:f76b:6d48%7]) with mapi id 15.20.4264.023; Fri, 25 Jun 2021
- 14:37:03 +0000
-From:   "Ananyev, Konstantin" <konstantin.ananyev@intel.com>
-To:     "Jiang, Dave" <dave.jiang@intel.com>,
+   d="scan'208";a="481892394"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.255.81.86]) ([10.255.81.86])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2021 08:49:54 -0700
+Subject: Re: [PATCH] dmaengine: idxd: fix submission race window
+To:     "Ananyev, Konstantin" <konstantin.ananyev@intel.com>,
         "vkoul@kernel.org" <vkoul@kernel.org>
-CC:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: RE: [PATCH] dmaengine: idxd: fix submission race window
-Thread-Topic: [PATCH] dmaengine: idxd: fix submission race window
-Thread-Index: AQHXaS0L5uj5rJGvF0ytwCwTlGoCMaskxDLA
-Date:   Fri, 25 Jun 2021 14:37:03 +0000
-Message-ID: <DM6PR11MB449105D5A196ED015559D6039A069@DM6PR11MB4491.namprd11.prod.outlook.com>
+Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
 References: <162456201091.1127851.8448033220391062931.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <162456201091.1127851.8448033220391062931.stgit@djiang5-desk3.ch.intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-authentication-results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [109.255.184.192]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9b0f54bc-652e-4ec1-03ff-08d937e6b319
-x-ms-traffictypediagnostic: DM6PR11MB3466:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB3466FEED72C2686487B4DADC9A069@DM6PR11MB3466.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NjbnsoeMqniuV/TLlbg/i+XKc1bjZ3nvaRxjj5ZWRC+4FHoBsNHFI/DmEFO1byHXpejkLUtk/Z1fYMNtMcfIPCjogZPLNzZUdNt4C8bxgBEzrHeEzDAEWrOhpX+UZg1cGV0j+yiPDZ0xnAhOtmQU+51wrBa0oWDgZ9oLIJlri+AD4YYGz89Ja932uKYeLpT08qOP6nlBTMuhpnFb1s2ceZ5apooybf3gDGl//1m/PSLxfC8yHyu25BSzHiSmbp0fT6H4Zhi5pzego+EnEXZ/eqp3LlAroXY35epBEEO38xH9vzlwLKO6C41YrYTu9IHgVwAxGsjcFRfbJy/yyrpvtHQVRnPWcPYoqnvAQXhoIC8QuP14oBx3zuK0RJOvvhafOeIdqwGzBBtDCZbkZLdkL0C6yWJgdgMiQQMTHoETZQvx0lhlMEkXgHu47mxYhLLbBJEsYGRWQIhVU0aniUot0eh+MHDP2xfl9mYMqvJ1aW7TJxwjhhvuXbimFZbjpwLZgOZHQ50YW5rFmkRNPcPXyIiXyZiY+XOXjBXJ6qniwa5n57IPTyPor7s01vuUWL63VKxjkdolhaoc12IJ19K7AioK9aqIViQTY2bLGUKEVt0=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4491.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(396003)(39860400002)(136003)(346002)(366004)(2906002)(4326008)(64756008)(66446008)(8936002)(86362001)(66946007)(122000001)(66476007)(76116006)(66556008)(8676002)(38100700002)(30864003)(7696005)(83380400001)(52536014)(478600001)(5660300002)(186003)(71200400001)(6506007)(9686003)(26005)(110136005)(55236004)(55016002)(33656002)(316002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VEJjMjVXVWtKUG9LK1NXV3c3dG9YOUgvekhNSG9sY3dkMUhrM1lra1VxQ3RR?=
- =?utf-8?B?anpHZzhrbWFaVks0S3dEU2cyTjloV0duaTJMN29HUnhNeUFSZC8yczh4emt6?=
- =?utf-8?B?dWdVNnZFMTBlUCtOZG1LbGx4aWpqNGpkeGpjT3E0WWFpdmx2c2JsRHJJejl4?=
- =?utf-8?B?VW54NWt4KzhPT2xmWmlkWE96VHpibFlRUVJTUzNhbWZuWFhIYnk3dE0xSzl2?=
- =?utf-8?B?VSsreG9LdmJXVXBLV2xVb1ExZHcycG5KYmNCMS9oRUlnSkdZQUVubEg0UGNS?=
- =?utf-8?B?RHREVUJpOGdZV0NmejhVZS9oVHJ0bDRVRHpZWmE1WFZPZ0NaNEMwaUYraTFK?=
- =?utf-8?B?aW9ueEt4ckQ3a0FqZ3ZuNW5nZmlreUx6UDJWNTIrRFdReklhYTFtMVkyOXF4?=
- =?utf-8?B?bkdmdThWZDM4eHZIZG1RMDhSYUs5ZGhNVkpkWnJ0d3J1dzJwMlNaOVBIVHlR?=
- =?utf-8?B?Mkg5RDA4TFpaR0dVM2tKdHcyYTd4QmdWV2tCMmZDUDFaU1NXZ21tR1FNNGs4?=
- =?utf-8?B?anhublNVUHpQd1BsR1lGajNRMW96bjE3YmRqK3h1SUwva3Rxb0dybEhnbGVT?=
- =?utf-8?B?OFJDaE9VZTJyWU42dnJ2cWJxV1IvMW93cXFrdlZhUnYwd0ZSdG9uSkpUS0hh?=
- =?utf-8?B?NlVjWFo3MGlGcm5QWnczbDZLMlhOanJGNXV6blhrNXgzczAyd0gxOEZibStM?=
- =?utf-8?B?UlVKWXhsS0I5cDRNY2p1WWQvdWZDTXVCcFIzaGl4Z0NwRDVrc01CRWJZZXQ4?=
- =?utf-8?B?OHVvb1lrbGNXRmR2QS8yWlJ1Y2lVQm1EcmhybkhJbEE0MFJHUTZtZmRuc1Rw?=
- =?utf-8?B?aERQZ3ZrbGYwckxaTXJLUzZUNTRldUtQVFE4bHorT3dVNUFkbWJpcmxtYmRu?=
- =?utf-8?B?OFNabVVRaGp2N0lKN1czb1hCZVdZazJDNndEQ20yR3FrS2FpY0h1SzE5REY1?=
- =?utf-8?B?SDJvU29icjlGaFBBSHQ1eFBwNEhoYkZ3VW95MXJOOGJ1UmgwWWR4ZUdvZUFM?=
- =?utf-8?B?bDlhdndHOG50RmJwYm04K2NZa1l0S2czS1kvdUx2WmdXQVhPcFNQK0NvMGFH?=
- =?utf-8?B?VEp1SmYvVDN1N3dKbXI3U0JZZ2U5VFdYRUF3QzhzdmtoVWd1NmUzK0Rhb3pW?=
- =?utf-8?B?UEdqTGlmVnVsczhRSDV3Y2ROaDNiWGQvN0liMTl2ZzhZVkh4YWg2U2d2YktL?=
- =?utf-8?B?K2VGZ3E3ZVF1Z2kzYUUzRDNIU2pNVDBmSnBUWGJ4bDM4bHhnNkJ3Y29EMWo2?=
- =?utf-8?B?ZXNDd2lpcVIwWVdOYVJYUlAzcXZEclpGNGhzODZueHlvNUJ4dDJFYWFyUlBm?=
- =?utf-8?B?anVmOVZtSWR2Ym54UEwwV0t3cXkraVRtYTZkVXNZWW1CT0pjV1pMbjZVWDlN?=
- =?utf-8?B?V0lucDhyZ0g3NjRHUDZyemYwZzdCcURqWDNyNjJ5LytyWGZxQ0hSaUVMUXB2?=
- =?utf-8?B?Vkx1VDdhbndzMEw3MWRrR2c3OUt6anlHeDhaWUJmNlNIZjVJSTY0bjF3cEN0?=
- =?utf-8?B?enpDdHRsK21WcFRDMGM2Qm84SlRVa0lNZGpjVVpodFFqTG81cVlYRlVrSnNZ?=
- =?utf-8?B?ZUVDQnExQlFqL1AybE9oWmZSbVdBQ0tuMWltUm80aUJQWnNReHVuR2FWRHI3?=
- =?utf-8?B?c2JPWVI4d1ZnaENaU1dTdkViaGdTTXZIQXBFbWFCWFBWZWpnM1QveXlwYWRX?=
- =?utf-8?B?STlUSWh2eUkrWThiTWhjRXZsbHdieUJiRnRxbjZFckw3aC8wamxqYmNSUDRM?=
- =?utf-8?Q?rSqrGLwYN6YNmN0RLODsqZKi5Ytj2dhkLpYvBEg?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ <DM6PR11MB449105D5A196ED015559D6039A069@DM6PR11MB4491.namprd11.prod.outlook.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <5e0d3e8b-a44a-003f-8e48-00547cde5768@intel.com>
+Date:   Fri, 25 Jun 2021 08:49:53 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB4491.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b0f54bc-652e-4ec1-03ff-08d937e6b319
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2021 14:37:03.3934
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DhUqnSihNiSgBBA1x10ns7mdEj2GTePkXYaqV4kO7Iy+B5Ko5HMr3hHakKdVzQeh+CWnoWxvcNmc5Tuq6Og22RdW/1FsFVGGUNghp1yAq7E=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3466
-X-OriginatorOrg: intel.com
+In-Reply-To: <DM6PR11MB449105D5A196ED015559D6039A069@DM6PR11MB4491.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-SGkgRGF2ZSwNCg0KPiBLb25zdGFudGluIG9ic2VydmVkIHRoYXQgd2hlbiBkZXNjcmlwdG9ycyBh
-cmUgc3VibWl0dGVkLCB0aGUgZGVzY3JpcHRvciBpcw0KPiBhZGRlZCB0byB0aGUgcGVuZGluZyBs
-aXN0IGFmdGVyIHRoZSBzdWJtaXNzaW9uLiBUaGlzIGNyZWF0ZXMgYSByYWNlIHdpbmRvdw0KPiB3
-aXRoIHRoZSBzbGlnaHQgcG9zc2liaWxpdHkgdGhhdCB0aGUgZGVzY3JpcHRvciBjYW4gY29tcGxl
-dGUgYmVmb3JlIGl0DQo+IGdldHMgYWRkZWQgdG8gdGhlIHBlbmRpbmcgbGlzdCBhbmQgdGhpcyB3
-aW5kb3cgd291bGQgY2F1c2UgdGhlIGNvbXBsZXRpb24NCj4gaGFuZGxlciB0byBtaXNzIHByb2Nl
-c3NpbmcgdGhlIGRlc2NyaXB0b3IuDQo+IA0KPiBUbyBhZGRyZXNzIHRoZSBpc3N1ZSwgdGhlIGFk
-ZGl0aW9uIG9mIHRoZSBkZXNjcmlwdG9yIHRvIHRoZSBwZW5kaW5nIGxpc3QNCj4gbXVzdCBiZSBk
-b25lIGJlZm9yZSBpdCBnZXRzIHN1Ym1pdHRlZCB0byB0aGUgaGFyZHdhcmUuIEhvd2V2ZXIsIHN1
-Ym1pdHRpbmcNCj4gdG8gc3dxIHdpdGggRU5RQ01EUyBpbnN0cnVjdGlvbiBjYW4gY2F1c2UgYSBm
-YWlsdXJlIHdpdGggdGhlIGNvbmRpdGlvbiBvZg0KPiBlaXRoZXIgd3EgaXMgZnVsbCBvciB3cSBp
-cyBub3QgImFjdGl2ZSIuDQo+IA0KPiBXaXRoIHRoZSBkZXNjcmlwdG9yIGFsbG9jYXRpb24gYmVp
-bmcgdGhlIGdhdGUgdG8gdGhlIHdxIGNhcGFjaXR5LCBpdCBpcyBub3QNCj4gcG9zc2libGUgdG8g
-aGl0IGEgcmV0cnkgd2l0aCBFTlFDTURTIHN1Ym1pc3Npb24gdG8gdGhlIHN3cS4gVGhlIG9ubHkN
-Cj4gcG9zc2libGUgZmFpbHVyZSBjYW4gaGFwcGVuIGlzIHdoZW4gd3EgaXMgbm8gbG9uZ2VyICJh
-Y3RpdmUiIGR1ZSB0byBodw0KPiBlcnJvciBhbmQgdGhlcmVmb3JlIHdlIGFyZSBtb3ZpbmcgdG93
-YXJkcyB0YWtpbmcgZG93biB0aGUgcG9ydGFsLiBHaXZlbg0KPiB0aGlzIGlzIGEgcmFyZSBjb25k
-aXRpb24gYW5kIHRoZXJlJ3Mgbm8gbG9uZ2VyIGNvbmNlcm4gb3ZlciBJL08NCj4gcGVyZm9ybWFu
-Y2UsIHRoZSBkcml2ZXIgY2FuIHdhbGsgdGhlIGNvbXBsZXRpb24gbGlzdHMgaW4gb3JkZXIgdG8g
-cmV0cmlldmUNCj4gYW5kIGFib3J0IHRoZSBkZXNjcmlwdG9yLg0KPiANCj4gVGhlIGVycm9yIHBh
-dGggd2lsbCBzZXQgdGhlIGRlc2NyaXB0b3IgdG8gYWJvcnRlZCBzdGF0dXMuIEl0IHdpbGwgdGFr
-ZSB0aGUNCj4gd29yayBsaXN0IGxvY2sgdG8gcHJldmVudCBmdXJ0aGVyIHByb2Nlc3Npbmcgb2Yg
-d29ya2xpc3QuIEl0IHdpbGwgZG8gYQ0KPiBkZWxldGVfYWxsIG9uIHRoZSBwZW5kaW5nIGxsaXN0
-IHRvIHJldHJpZXZlIGFsbCBkZXNjcmlwdG9ycyBvbiB0aGUgcGVuZGluZw0KPiBsbGlzdC4gVGhl
-IGRlbGV0ZV9hbGwgYWN0aW9uIGRvZXMgbm90IHJlcXVpcmUgYSBsb2NrLiBJdCB3aWxsIHdhbGsg
-dGhyb3VnaA0KPiB0aGUgYWNxdWlyZWQgbGxpc3QgdG8gZmluZCB0aGUgYWJvcnRlZCBkZXNjcmlw
-dG9yIHdoaWxlIGFkZCBhbGwgcmVtYWluaW5nDQo+IGRlc2NyaXB0b3JzIHRvIHRoZSB3b3JrIGxp
-c3Qgc2luY2UgaXQgaG9sZHMgdGhlIGxvY2suIElmIGl0IGRvZXMgbm90IGZpbmQNCj4gdGhlIGFi
-b3J0ZWQgZGVzY3JpcHRvciBvbiB0aGUgbGxpc3QsIGl0IHdpbGwgd2FsayB0aHJvdWdoIHRoZSB3
-b3JrDQo+IGxpc3QuIEFuZCBpZiBpdCBzdGlsbCBkb2VzIG5vdCBmaW5kIHRoZSBkZXNjcmlwdG9y
-LCB0aGVuIGl0IG1lYW5zIHRoZQ0KPiBpbnRlcnJ1cHQgaGFuZGxlciBoYXMgcmVtb3ZlZCB0aGUg
-ZGVzYyBmcm9tIHRoZSBsbGlzdCBidXQgaXMgcGVuZGluZyBvbiB0aGUgd29yaw0KPiBsaXN0IGxv
-Y2sgYW5kIHdpbGwgcHJvY2VzcyBpdCBvbmNlIHRoZSBlcnJvciBwYXRoIHJlbGVhc2VzIHRoZSBs
-b2NrLg0KPiANCj4gRml4ZXM6IGViMTVlNzE1NGZiZiAoImRtYWVuZ2luZTogaWR4ZDogYWRkIGlu
-dGVycnVwdCBoYW5kbGUgcmVxdWVzdCBhbmQgcmVsZWFzZSBzdXBwb3J0IikNCj4gUmVwb3J0ZWQt
-Ynk6IEtvbnN0YW50aW4gQW5hbnlldiA8a29uc3RhbnRpbi5hbmFueWV2QGludGVsLmNvbT4NCj4g
-U2lnbmVkLW9mZi1ieTogRGF2ZSBKaWFuZyA8ZGF2ZS5qaWFuZ0BpbnRlbC5jb20+DQo+IC0tLQ0K
-PiAgZHJpdmVycy9kbWEvaWR4ZC9pZHhkLmggICB8ICAgMTQgKysrKysrKysNCj4gIGRyaXZlcnMv
-ZG1hL2lkeGQvaXJxLmMgICAgfCAgIDM2ICsrKysrKysrKysrLS0tLS0tLS0tLQ0KPiAgZHJpdmVy
-cy9kbWEvaWR4ZC9zdWJtaXQuYyB8ICAgNzcgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKy0tLS0tDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDEwMSBpbnNlcnRpb25zKCspLCAy
-NiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2RtYS9pZHhkL2lkeGQu
-aCBiL2RyaXZlcnMvZG1hL2lkeGQvaWR4ZC5oDQo+IGluZGV4IDFmMDk5MWRlYzY3OS4uMGYyNzM3
-NGVhZTRiIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2RtYS9pZHhkL2lkeGQuaA0KPiArKysgYi9k
-cml2ZXJzL2RtYS9pZHhkL2lkeGQuaA0KPiBAQCAtMjk0LDYgKzI5NCwxNCBAQCBzdHJ1Y3QgaWR4
-ZF9kZXNjIHsNCj4gIAlzdHJ1Y3QgaWR4ZF93cSAqd3E7DQo+ICB9Ow0KPiANCj4gKy8qDQo+ICsg
-KiBUaGlzIGlzIHNvZnR3YXJlIGRlZmluZWQgZXJyb3IgZm9yIHRoZSBjb21wbGV0aW9uIHN0YXR1
-cy4gV2Ugb3ZlcmxvYWQgdGhlIGVycm9yIGNvZGUNCj4gKyAqIHRoYXQgd2lsbCBuZXZlciBhcHBl
-YXIgaW4gY29tcGxldGlvbiBzdGF0dXMgYW5kIG9ubHkgU1dFUlIgcmVnaXN0ZXIuDQo+ICsgKi8N
-Cj4gK2VudW0gaWR4ZF9jb21wbGV0aW9uX3N0YXR1cyB7DQo+ICsJSURYRF9DT01QX0RFU0NfQUJP
-UlQgPSAweGZmLA0KPiArfTsNCj4gKw0KPiAgI2RlZmluZSBjb25mZGV2X3RvX2lkeGQoZGV2KSBj
-b250YWluZXJfb2YoZGV2LCBzdHJ1Y3QgaWR4ZF9kZXZpY2UsIGNvbmZfZGV2KQ0KPiAgI2RlZmlu
-ZSBjb25mZGV2X3RvX3dxKGRldikgY29udGFpbmVyX29mKGRldiwgc3RydWN0IGlkeGRfd3EsIGNv
-bmZfZGV2KQ0KPiANCj4gQEAgLTQ4MCw0ICs0ODgsMTAgQEAgc3RhdGljIGlubGluZSB2b2lkIHBl
-cmZtb25faW5pdCh2b2lkKSB7fQ0KPiAgc3RhdGljIGlubGluZSB2b2lkIHBlcmZtb25fZXhpdCh2
-b2lkKSB7fQ0KPiAgI2VuZGlmDQo+IA0KPiArc3RhdGljIGlubGluZSB2b2lkIGNvbXBsZXRlX2Rl
-c2Moc3RydWN0IGlkeGRfZGVzYyAqZGVzYywgZW51bSBpZHhkX2NvbXBsZXRlX3R5cGUgcmVhc29u
-KQ0KPiArew0KPiArCWlkeGRfZG1hX2NvbXBsZXRlX3R4ZChkZXNjLCByZWFzb24pOw0KPiArCWlk
-eGRfZnJlZV9kZXNjKGRlc2MtPndxLCBkZXNjKTsNCj4gK30NCj4gKw0KPiAgI2VuZGlmDQo+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2RtYS9pZHhkL2lycS5jIGIvZHJpdmVycy9kbWEvaWR4ZC9pcnEu
-Yw0KPiBpbmRleCA3YTJjZjA1MTI1MDEuLjhmZDUyOTM3NTM3YSAxMDA2NDQNCj4gLS0tIGEvZHJp
-dmVycy9kbWEvaWR4ZC9pcnEuYw0KPiArKysgYi9kcml2ZXJzL2RtYS9pZHhkL2lycS5jDQo+IEBA
-IC0yNDUsMTIgKzI0NSw2IEBAIHN0YXRpYyBpbmxpbmUgYm9vbCBtYXRjaF9mYXVsdChzdHJ1Y3Qg
-aWR4ZF9kZXNjICpkZXNjLCB1NjQgZmF1bHRfYWRkcikNCj4gIAlyZXR1cm4gZmFsc2U7DQo+ICB9
-DQo+IA0KPiAtc3RhdGljIGlubGluZSB2b2lkIGNvbXBsZXRlX2Rlc2Moc3RydWN0IGlkeGRfZGVz
-YyAqZGVzYywgZW51bSBpZHhkX2NvbXBsZXRlX3R5cGUgcmVhc29uKQ0KPiAtew0KPiAtCWlkeGRf
-ZG1hX2NvbXBsZXRlX3R4ZChkZXNjLCByZWFzb24pOw0KPiAtCWlkeGRfZnJlZV9kZXNjKGRlc2Mt
-PndxLCBkZXNjKTsNCj4gLX0NCj4gLQ0KPiAgc3RhdGljIGludCBpcnFfcHJvY2Vzc19wZW5kaW5n
-X2xsaXN0KHN0cnVjdCBpZHhkX2lycV9lbnRyeSAqaXJxX2VudHJ5LA0KPiAgCQkJCSAgICAgZW51
-bSBpcnFfd29ya190eXBlIHd0eXBlLA0KPiAgCQkJCSAgICAgaW50ICpwcm9jZXNzZWQsIHU2NCBk
-YXRhKQ0KPiBAQCAtMjU4LDggKzI1Miw3IEBAIHN0YXRpYyBpbnQgaXJxX3Byb2Nlc3NfcGVuZGlu
-Z19sbGlzdChzdHJ1Y3QgaWR4ZF9pcnFfZW50cnkgKmlycV9lbnRyeSwNCj4gIAlzdHJ1Y3QgaWR4
-ZF9kZXNjICpkZXNjLCAqdDsNCj4gIAlzdHJ1Y3QgbGxpc3Rfbm9kZSAqaGVhZDsNCj4gIAlpbnQg
-cXVldWVkID0gMDsNCj4gLQl1bnNpZ25lZCBsb25nIGZsYWdzOw0KPiAtCWVudW0gaWR4ZF9jb21w
-bGV0ZV90eXBlIHJlYXNvbjsNCj4gKwllbnVtIGlkeGRfY29tcGxldGVfdHlwZSByZWFzb24gPSBJ
-RFhEX0NPTVBMRVRFX05PUk1BTDsNCj4gDQo+ICAJKnByb2Nlc3NlZCA9IDA7DQo+ICAJaGVhZCA9
-IGxsaXN0X2RlbF9hbGwoJmlycV9lbnRyeS0+cGVuZGluZ19sbGlzdCk7DQo+IEBAIC0yNzIsMTYg
-KzI2NSwyMCBAQCBzdGF0aWMgaW50IGlycV9wcm9jZXNzX3BlbmRpbmdfbGxpc3Qoc3RydWN0IGlk
-eGRfaXJxX2VudHJ5ICppcnFfZW50cnksDQo+ICAJCXJlYXNvbiA9IElEWERfQ09NUExFVEVfREVW
-X0ZBSUw7DQo+IA0KPiAgCWxsaXN0X2Zvcl9lYWNoX2VudHJ5X3NhZmUoZGVzYywgdCwgaGVhZCwg
-bGxub2RlKSB7DQo+IC0JCWlmIChkZXNjLT5jb21wbGV0aW9uLT5zdGF0dXMpIHsNCj4gLQkJCWlm
-ICgoZGVzYy0+Y29tcGxldGlvbi0+c3RhdHVzICYgRFNBX0NPTVBfU1RBVFVTX01BU0spICE9IERT
-QV9DT01QX1NVQ0NFU1MpDQo+ICsJCXU4IHN0YXR1cyA9IGRlc2MtPmNvbXBsZXRpb24tPnN0YXR1
-cyAmIERTQV9DT01QX1NUQVRVU19NQVNLOw0KPiArDQo+ICsJCWlmIChzdGF0dXMpIHsNCj4gKwkJ
-CWlmIChzdGF0dXMgPT0gSURYRF9DT01QX0RFU0NfQUJPUlQpDQo+ICsJCQkJcmVhc29uID0gSURY
-RF9DT01QTEVURV9BQk9SVDsNCj4gKwkJCWVsc2UgaWYgKHN0YXR1cyAhPSBEU0FfQ09NUF9TVUND
-RVNTKQ0KPiAgCQkJCW1hdGNoX2ZhdWx0KGRlc2MsIGRhdGEpOw0KPiAgCQkJY29tcGxldGVfZGVz
-YyhkZXNjLCByZWFzb24pOw0KDQpyZWFzb24gd2FzIG92ZXJ3cml0dGVuIGFib3ZlIGZvciBvbmUg
-cGFydGljdWxhciBkZXNjLCBidXQgbm90IHJlc3RvcmVkLg0KU28gYWxsIGZ1dGhlciBkZXNjcyB3
-aWxsIGJlIGNvbXBsZXRlZCB3aXRoID0gSURYRF9DT01QTEVURV9BQk9SVC4NCkkgdGhpbmsgd2Ug
-bmVlZCBlaXRoZXIgdG8gc2V0IGl0IHVwIG9uIGVhY2ggaXRlcmF0aW9uLCBvcjoNCmlmIChzdGF0
-dXMgPT0gSURYRF9DT01QX0RFU0NfQUJPUlQpDQogICAgICBjb21wbGV0ZV9kZXNjKGRlc2MsIElE
-WERfQ09NUExFVEVfQUJPUlQpOw0KZWxzZSB7DQppZiAoc3RhdHVzICE9IERTQV9DT01QX1NVQ0NF
-U1MpDQogICAgbWF0Y2hfZmF1bHQoZGVzYywgZGF0YSk7DQogICAgY29tcGxldGVfZGVzYyhkZXNj
-LCByZWFzb24pOw0KfQ0KICAgDQoNCj4gIAkJCSgqcHJvY2Vzc2VkKSsrOw0KPiAgCQl9IGVsc2Ug
-ew0KPiAtCQkJc3Bpbl9sb2NrX2lycXNhdmUoJmlycV9lbnRyeS0+bGlzdF9sb2NrLCBmbGFncyk7
-DQo+ICsJCQlzcGluX2xvY2tfYmgoJmlycV9lbnRyeS0+bGlzdF9sb2NrKTsNCj4gIAkJCWxpc3Rf
-YWRkX3RhaWwoJmRlc2MtPmxpc3QsDQo+ICAJCQkJICAgICAgJmlycV9lbnRyeS0+d29ya19saXN0
-KTsNCj4gLQkJCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmlycV9lbnRyeS0+bGlzdF9sb2NrLCBm
-bGFncyk7DQo+ICsJCQlzcGluX3VubG9ja19iaCgmaXJxX2VudHJ5LT5saXN0X2xvY2spOw0KPiAg
-CQkJcXVldWVkKys7DQo+ICAJCX0NCj4gIAl9DQo+IEBAIC0yOTUsMTAgKzI5Miw5IEBAIHN0YXRp
-YyBpbnQgaXJxX3Byb2Nlc3Nfd29ya19saXN0KHN0cnVjdCBpZHhkX2lycV9lbnRyeSAqaXJxX2Vu
-dHJ5LA0KPiAgCQkJCSBpbnQgKnByb2Nlc3NlZCwgdTY0IGRhdGEpDQo+ICB7DQo+ICAJaW50IHF1
-ZXVlZCA9IDA7DQo+IC0JdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gIAlMSVNUX0hFQUQoZmxpc3Qp
-Ow0KPiAgCXN0cnVjdCBpZHhkX2Rlc2MgKmRlc2MsICpuOw0KPiAtCWVudW0gaWR4ZF9jb21wbGV0
-ZV90eXBlIHJlYXNvbjsNCj4gKwllbnVtIGlkeGRfY29tcGxldGVfdHlwZSByZWFzb24gPSBJRFhE
-X0NPTVBMRVRFX05PUk1BTDsNCj4gDQo+ICAJKnByb2Nlc3NlZCA9IDA7DQo+ICAJaWYgKHd0eXBl
-ID09IElSUV9XT1JLX05PUk1BTCkNCj4gQEAgLTMxMCw5ICszMDYsOSBAQCBzdGF0aWMgaW50IGly
-cV9wcm9jZXNzX3dvcmtfbGlzdChzdHJ1Y3QgaWR4ZF9pcnFfZW50cnkgKmlycV9lbnRyeSwNCj4g
-IAkgKiBUaGlzIGxvY2sgcHJvdGVjdHMgbGlzdCBjb3JydXB0aW9uIGZyb20gYWNjZXNzIG9mIGxp
-c3Qgb3V0c2lkZSBvZiB0aGUgaXJxIGhhbmRsZXINCj4gIAkgKiB0aHJlYWQuDQo+ICAJICovDQo+
-IC0Jc3Bpbl9sb2NrX2lycXNhdmUoJmlycV9lbnRyeS0+bGlzdF9sb2NrLCBmbGFncyk7DQo+ICsJ
-c3Bpbl9sb2NrX2JoKCZpcnFfZW50cnktPmxpc3RfbG9jayk7DQoNCkkgYW0gbm90IHJlYWxseSBh
-biBleHBlcnQgaW4ga2VuZWwgc2lwbiBsb2NrIGZsYXZvdXJzLi4uDQpDYW4geW91IGV4cGxhaW4g
-dG8gbWUgd2h5IHdlIGNhbiBub3cgcmVwbGFjZSBfaXJxc2F2ZV8gd2l0aCBfYmhfPw0KDQo+ICAJ
-aWYgKGxpc3RfZW1wdHkoJmlycV9lbnRyeS0+d29ya19saXN0KSkgew0KPiAtCQlzcGluX3VubG9j
-a19pcnFyZXN0b3JlKCZpcnFfZW50cnktPmxpc3RfbG9jaywgZmxhZ3MpOw0KPiArCQlzcGluX3Vu
-bG9ja19iaCgmaXJxX2VudHJ5LT5saXN0X2xvY2spOw0KPiAgCQlyZXR1cm4gMDsNCj4gIAl9DQo+
-IA0KPiBAQCAtMzI2LDEwICszMjIsMTQgQEAgc3RhdGljIGludCBpcnFfcHJvY2Vzc193b3JrX2xp
-c3Qoc3RydWN0IGlkeGRfaXJxX2VudHJ5ICppcnFfZW50cnksDQo+ICAJCX0NCj4gIAl9DQo+IA0K
-PiAtCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmlycV9lbnRyeS0+bGlzdF9sb2NrLCBmbGFncyk7
-DQo+ICsJc3Bpbl91bmxvY2tfYmgoJmlycV9lbnRyeS0+bGlzdF9sb2NrKTsNCj4gDQo+ICAJbGlz
-dF9mb3JfZWFjaF9lbnRyeShkZXNjLCAmZmxpc3QsIGxpc3QpIHsNCj4gLQkJaWYgKChkZXNjLT5j
-b21wbGV0aW9uLT5zdGF0dXMgJiBEU0FfQ09NUF9TVEFUVVNfTUFTSykgIT0gRFNBX0NPTVBfU1VD
-Q0VTUykNCj4gKwkJdTggc3RhdHVzID0gZGVzYy0+Y29tcGxldGlvbi0+c3RhdHVzICYgRFNBX0NP
-TVBfU1RBVFVTX01BU0s7DQo+ICsNCj4gKwkJaWYgKGRlc2MtPmNvbXBsZXRpb24tPnN0YXR1cyA9
-PSBJRFhEX0NPTVBfREVTQ19BQk9SVCkNCj4gKwkJCXJlYXNvbiA9IElEWERfQ09NUExFVEVfQUJP
-UlQ7DQo+ICsJCWVsc2UgaWYgKHN0YXR1cyAhPSBEU0FfQ09NUF9TVUNDRVNTKQ0KPiAgCQkJbWF0
-Y2hfZmF1bHQoZGVzYywgZGF0YSk7DQo+ICAJCWNvbXBsZXRlX2Rlc2MoZGVzYywgcmVhc29uKTsN
-Cg0KU2FtZSBjb21tZW50IGFzIGFib3ZlIGZvciBwZW5kaW5nIGxpc3QuDQoNCj4gIAl9DQo+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2RtYS9pZHhkL3N1Ym1pdC5jIGIvZHJpdmVycy9kbWEvaWR4ZC9z
-dWJtaXQuYw0KPiBpbmRleCA3MzZkZWYxMjlmYTguLmQ5OWEzYWViMDM4YyAxMDA2NDQNCj4gLS0t
-IGEvZHJpdmVycy9kbWEvaWR4ZC9zdWJtaXQuYw0KPiArKysgYi9kcml2ZXJzL2RtYS9pZHhkL3N1
-Ym1pdC5jDQo+IEBAIC04OCw5ICs4OCw2NiBAQCB2b2lkIGlkeGRfZnJlZV9kZXNjKHN0cnVjdCBp
-ZHhkX3dxICp3cSwgc3RydWN0IGlkeGRfZGVzYyAqZGVzYykNCj4gIAlzYml0bWFwX3F1ZXVlX2Ns
-ZWFyKCZ3cS0+c2JxLCBkZXNjLT5pZCwgY3B1KTsNCj4gIH0NCj4gDQo+ICtzdGF0aWMgdm9pZCBs
-aXN0X2Fib3J0X2Rlc2Moc3RydWN0IGlkeGRfd3EgKndxLCBzdHJ1Y3QgaWR4ZF9pcnFfZW50cnkg
-KmllLA0KPiArCQkJICAgIHN0cnVjdCBpZHhkX2Rlc2MgKmRlc2MpDQo+ICt7DQo+ICsJc3RydWN0
-IGlkeGRfZGVzYyAqZCwgKm47DQo+ICsNCj4gKwlsb2NrZGVwX2Fzc2VydF9oZWxkKCZpZS0+bGlz
-dF9sb2NrKTsNCj4gKwlsaXN0X2Zvcl9lYWNoX2VudHJ5X3NhZmUoZCwgbiwgJmllLT53b3JrX2xp
-c3QsIGxpc3QpIHsNCj4gKwkJaWYgKGQgPT0gZGVzYykgew0KPiArCQkJbGlzdF9kZWwoJmQtPmxp
-c3QpOw0KPiArCQkJY29tcGxldGVfZGVzYyhkZXNjLCBJRFhEX0NPTVBMRVRFX0FCT1JUKTsNCj4g
-KwkJCXJldHVybjsNCj4gKwkJfQ0KPiArCX0NCj4gKw0KPiArCS8qDQo+ICsJICogQXQgdGhpcyBw
-b2ludCwgdGhlIGRlc2MgbmVlZHMgdG8gYmUgYWJvcnRlZCBpcyBoZWxkIGJ5IHRoZSBjb21wbGV0
-aW9uDQo+ICsJICogaGFuZGxlciB3aGVyZSBpdCBoYXMgdGFrZW4gaXQgb2ZmIHRoZSBwZW5kaW5n
-IGxpc3QgYnV0IGhhcyBub3QgYWRkZWQgdG8gdGhlDQo+ICsJICogd29yayBsaXN0LiBJdCB3aWxs
-IGJlIGNsZWFuZWQgdXAgYnkgdGhlIGludGVycnVwdCBoYW5kbGVyIHdoZW4gaXQgc2VlcyB0aGUN
-Cj4gKwkgKiBJRFhEX0NPTVBfREVTQ19BQk9SVCBmb3IgY29tcGxldGlvbiBzdGF0dXMuDQo+ICsJ
-ICovDQo+ICt9DQo+ICsNCj4gK3N0YXRpYyB2b2lkIGxsaXN0X2Fib3J0X2Rlc2Moc3RydWN0IGlk
-eGRfd3EgKndxLCBzdHJ1Y3QgaWR4ZF9pcnFfZW50cnkgKmllLA0KPiArCQkJICAgICBzdHJ1Y3Qg
-aWR4ZF9kZXNjICpkZXNjKQ0KPiArew0KPiArCXN0cnVjdCBpZHhkX2Rlc2MgKmQsICp0Ow0KPiAr
-CXN0cnVjdCBsbGlzdF9ub2RlICpoZWFkOw0KPiArCWJvb2wgZm91bmQgPSBmYWxzZTsNCj4gKw0K
-PiArCWRlc2MtPmNvbXBsZXRpb24tPnN0YXR1cyA9IElEWERfQ09NUF9ERVNDX0FCT1JUOw0KPiAr
-CS8qDQo+ICsJICogR3JhYiB0aGUgbGlzdCBsb2NrIHNvIGl0IHdpbGwgYmxvY2sgdGhlIGlycSB0
-aHJlYWQgaGFuZGxlci4gVGhpcyBhbGxvd3MgdGhlDQo+ICsJICogYWJvcnQgY29kZSB0byBsb2Nh
-dGUgdGhlIGRlc2NyaXB0b3IgbmVlZCB0byBiZSBhYm9ydGVkLg0KPiArCSAqLw0KPiArCXNwaW5f
-bG9ja19iaCgmaWUtPmxpc3RfbG9jayk7DQo+ICsJaGVhZCA9IGxsaXN0X2RlbF9hbGwoJmllLT5w
-ZW5kaW5nX2xsaXN0KTsNCj4gKwlpZiAoIWhlYWQpIHsNCj4gKwkJbGlzdF9hYm9ydF9kZXNjKHdx
-LCBpZSwgZGVzYyk7DQo+ICsJCXNwaW5fdW5sb2NrX2JoKCZpZS0+bGlzdF9sb2NrKTsNCj4gKwkJ
-cmV0dXJuOw0KPiArCX0NCj4gKw0KPiArCWxsaXN0X2Zvcl9lYWNoX2VudHJ5X3NhZmUoZCwgdCwg
-aGVhZCwgbGxub2RlKSB7DQo+ICsJCWlmIChkID09IGRlc2MpIHsNCj4gKwkJCWNvbXBsZXRlX2Rl
-c2MoZGVzYywgSURYRF9DT01QTEVURV9BQk9SVCk7DQo+ICsJCQlmb3VuZCA9IHRydWU7DQo+ICsJ
-CQljb250aW51ZTsNCj4gKwkJfQ0KPiArCQlsaXN0X2FkZF90YWlsKCZkZXNjLT5saXN0LCAmaWUt
-PndvcmtfbGlzdCk7DQo+ICsJfQ0KPiArDQo+ICsJaWYgKCFmb3VuZCkNCj4gKwkJbGlzdF9hYm9y
-dF9kZXNjKHdxLCBpZSwgZGVzYyk7DQo+ICsJc3Bpbl91bmxvY2tfYmgoJmllLT5saXN0X2xvY2sp
-Ow0KPiArfQ0KDQpUaGVyZSBpcyBvbmUgdGhpbmcgdGhhdCB3b3JyaWVzIG1lIGluIHRoYXQgYXBw
-cm9hY2g6DQpGcm9tIHdoYXQgSSBzZWUsIHJpZ2h0IG5vdyBpZHhkIGNhbGxzIGNvbXBsZXRlX2Rl
-c2MoKSB3aXRob3V0IGxpc3RfbG9jayBoZWxkLg0KSSB0aGluayBpdCBpcyBiZXR0ZXIgdG8ga2Vl
-cCB0aGluZ3MgbGlrZSB0aGF0Lg0KSSBzdXBwb3NlIGl0IHNob3VsZCBiZSBlYXN5IGVub3VnaCB0
-byByZS1hcnJhbmdlIHlvdXIgY29kZSBhIGJpdDoNCjEpIG1ha2UgbGlzdF9hYm9ydF9kZXNjKCkg
-bm90IHRvIGNhbGwgY29tcGxldGVfZGVzYygpLCBidXQgc2ltcGx5DQpyZXR1cm4gZGVzYyBpZiBm
-b3VuZCBvciBudWxsIG90aGVyd2lzZS4NCjIpIEluIGxsaXN0X2Fib3J0X2Rlc2MoKSAtIGdyYWIg
-dGhlIGxvY2sgYW5kIHRyeSB0byBmaW5kIHRoZSBkZXNjIGluIG9uZSBvZiB0aGUgbGlzdHMuDQog
-ICAgSWYgZm91bmQgaW4gdGhlIHdvcmtfbGlzdCwgdGhlbiByZW1vdmUgaXQgZnJvbSB0aGUgbGxp
-c3QsIGJ1dCBkb24ndCBjYWxsIGNvbXBsZXRlKCkgeWV0Lg0KICAgIFRoZW4gcmVsZWFzZSB0aGUg
-bG9jayBhbmQgZG8gY29tcGxldGUoKS4NCg0KU29tZXRoaW5nIGxpa2UgdGhhdCwgdG8gYmUgbW9y
-ZSBzcGVjaWZpYzoNCg0KIHN0YXRpYyB2b2lkIGxsaXN0X2Fib3J0X2Rlc2Moc3RydWN0IGlkeGRf
-d3EgKndxLCBzdHJ1Y3QgaWR4ZF9pcnFfZW50cnkgKmllLA0KCQkJICAgICBzdHJ1Y3QgaWR4ZF9k
-ZXNjICpkZXNjKQ0Kew0KICAgICAgICAgICAgICBzdHJ1Y3QgaWR4ZF9kZXNjICpkLCAqZm91bmQs
-ICp0Ow0KICAgICAgICAgICAgICBzdHJ1Y3QgbGxpc3Rfbm9kZSAqaGVhZDsNCgkNCiAgICAgICAg
-ICAgICAgZGVzYy0+Y29tcGxldGlvbi0+c3RhdHVzID0gSURYRF9DT01QX0RFU0NfQUJPUlQ7DQog
-ICAgICAgICAgICAgIGZvdW5kID0gTlVMTDsNCg0KICAgICAgICAgICAgICAgc3Bpbl9sb2NrX2Jo
-KCZpZS0+bGlzdF9sb2NrKTsNCgloZWFkID0gbGxpc3RfZGVsX2FsbCgmaWUtPnBlbmRpbmdfbGxp
-c3QpOw0KCWlmIChoZWFkICE9IE5VTEwpIHsNCiAgICAgICAgICAgICAgICAgICAgbGxpc3RfZm9y
-X2VhY2hfZW50cnlfc2FmZShkLCB0LCBoZWFkLCBsbG5vZGUpIHsNCgkgICAgICAgICAgIGlmIChk
-ID09IGRlc2MpIHsNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZvdW5kID0gZGVzYzsN
-CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlOw0KICAgICAgICAgICAgICAg
-ICAgICAgICAgfQ0KICAgICAgICAgICAgICAgICAgIGxpc3RfYWRkX3RhaWwoJmRlc2MtPmxpc3Qs
-ICZpZS0+d29ya19saXN0KTsNCiAgICAgICAgICAgIH0NCg0KICAgICAgICAgICAgSWYgKGZvdW5k
-ID09IE5VTEwpDQogICAgICAgICAgICAgICAgIGZvdW5kID0gbGlzdF9hYm9ydF9kZXNjKHdxLCBp
-ZSwgZGVzYyk7DQoNCiAgICAgICAgICAgIHNwaW5fdW5sb2NrX2JoKCZpZS0+bGlzdF9sb2NrKTsN
-Cg0KICAgICAgICAgICAgaWYgKGZvdW5kICE9IE5VTEwpDQogICAgICAgICAgICAgICAgIGNvbXBs
-ZXRlX2Rlc2MoZm91bmQsIElEWERfQ09NUExFVEVfQUJPUlQpOw0KfQ0KIA0KDQo+ICsNCj4gIGlu
-dCBpZHhkX3N1Ym1pdF9kZXNjKHN0cnVjdCBpZHhkX3dxICp3cSwgc3RydWN0IGlkeGRfZGVzYyAq
-ZGVzYykNCj4gIHsNCj4gIAlzdHJ1Y3QgaWR4ZF9kZXZpY2UgKmlkeGQgPSB3cS0+aWR4ZDsNCj4g
-KwlzdHJ1Y3QgaWR4ZF9pcnFfZW50cnkgKmllID0gTlVMTDsNCj4gIAl2b2lkIF9faW9tZW0gKnBv
-cnRhbDsNCj4gIAlpbnQgcmM7DQo+IA0KPiBAQCAtMTA4LDYgKzE2NSwxNiBAQCBpbnQgaWR4ZF9z
-dWJtaXRfZGVzYyhzdHJ1Y3QgaWR4ZF93cSAqd3EsIHN0cnVjdCBpZHhkX2Rlc2MgKmRlc2MpDQo+
-ICAJICogZXZlbiBvbiBVUCBiZWNhdXNlIHRoZSByZWNpcGllbnQgaXMgYSBkZXZpY2UuDQo+ICAJ
-ICovDQo+ICAJd21iKCk7DQo+ICsNCj4gKwkvKg0KPiArCSAqIFBlbmRpbmcgdGhlIGRlc2NyaXB0
-b3IgdG8gdGhlIGxvY2tsZXNzIGxpc3QgZm9yIHRoZSBpcnFfZW50cnkNCj4gKwkgKiB0aGF0IHdl
-IGRlc2lnbmF0ZWQgdGhlIGRlc2NyaXB0b3IgdG8uDQo+ICsJICovDQo+ICsJaWYgKGRlc2MtPmh3
-LT5mbGFncyAmIElEWERfT1BfRkxBR19SQ0kpIHsNCj4gKwkJaWUgPSAmaWR4ZC0+aXJxX2VudHJp
-ZXNbZGVzYy0+dmVjdG9yXTsNCj4gKwkJbGxpc3RfYWRkKCZkZXNjLT5sbG5vZGUsICZpZS0+cGVu
-ZGluZ19sbGlzdCk7DQo+ICsJfQ0KPiArDQo+ICAJaWYgKHdxX2RlZGljYXRlZCh3cSkpIHsNCj4g
-IAkJaW9zdWJtaXRfY21kczUxMihwb3J0YWwsIGRlc2MtPmh3LCAxKTsNCj4gIAl9IGVsc2Ugew0K
-PiBAQCAtMTIwLDE4ICsxODcsMTIgQEAgaW50IGlkeGRfc3VibWl0X2Rlc2Moc3RydWN0IGlkeGRf
-d3EgKndxLCBzdHJ1Y3QgaWR4ZF9kZXNjICpkZXNjKQ0KPiAgCQlyYyA9IGVucWNtZHMocG9ydGFs
-LCBkZXNjLT5odyk7DQo+ICAJCWlmIChyYyA8IDApIHsNCj4gIAkJCXBlcmNwdV9yZWZfcHV0KCZ3
-cS0+d3FfYWN0aXZlKTsNCj4gKwkJCWlmIChpZSkNCj4gKwkJCQlsbGlzdF9hYm9ydF9kZXNjKHdx
-LCBpZSwgZGVzYyk7DQo+ICAJCQlyZXR1cm4gcmM7DQo+ICAJCX0NCj4gIAl9DQo+IA0KPiAgCXBl
-cmNwdV9yZWZfcHV0KCZ3cS0+d3FfYWN0aXZlKTsNCj4gLQ0KPiAtCS8qDQo+IC0JICogUGVuZGlu
-ZyB0aGUgZGVzY3JpcHRvciB0byB0aGUgbG9ja2xlc3MgbGlzdCBmb3IgdGhlIGlycV9lbnRyeQ0K
-PiAtCSAqIHRoYXQgd2UgZGVzaWduYXRlZCB0aGUgZGVzY3JpcHRvciB0by4NCj4gLQkgKi8NCj4g
-LQlpZiAoZGVzYy0+aHctPmZsYWdzICYgSURYRF9PUF9GTEFHX1JDSSkNCj4gLQkJbGxpc3RfYWRk
-KCZkZXNjLT5sbG5vZGUsICZpZHhkLT5pcnFfZW50cmllc1tkZXNjLT52ZWN0b3JdLnBlbmRpbmdf
-bGxpc3QpOw0KPiAtDQo+ICAJcmV0dXJuIDA7DQo+ICB9DQo+IA0KDQo=
+
+On 6/25/2021 7:37 AM, Ananyev, Konstantin wrote:
+> Hi Dave,
+>
+>> Konstantin observed that when descriptors are submitted, the descriptor is
+>> added to the pending list after the submission. This creates a race window
+>> with the slight possibility that the descriptor can complete before it
+>> gets added to the pending list and this window would cause the completion
+>> handler to miss processing the descriptor.
+>>
+>> To address the issue, the addition of the descriptor to the pending list
+>> must be done before it gets submitted to the hardware. However, submitting
+>> to swq with ENQCMDS instruction can cause a failure with the condition of
+>> either wq is full or wq is not "active".
+>>
+>> With the descriptor allocation being the gate to the wq capacity, it is not
+>> possible to hit a retry with ENQCMDS submission to the swq. The only
+>> possible failure can happen is when wq is no longer "active" due to hw
+>> error and therefore we are moving towards taking down the portal. Given
+>> this is a rare condition and there's no longer concern over I/O
+>> performance, the driver can walk the completion lists in order to retrieve
+>> and abort the descriptor.
+>>
+>> The error path will set the descriptor to aborted status. It will take the
+>> work list lock to prevent further processing of worklist. It will do a
+>> delete_all on the pending llist to retrieve all descriptors on the pending
+>> llist. The delete_all action does not require a lock. It will walk through
+>> the acquired llist to find the aborted descriptor while add all remaining
+>> descriptors to the work list since it holds the lock. If it does not find
+>> the aborted descriptor on the llist, it will walk through the work
+>> list. And if it still does not find the descriptor, then it means the
+>> interrupt handler has removed the desc from the llist but is pending on the work
+>> list lock and will process it once the error path releases the lock.
+>>
+>> Fixes: eb15e7154fbf ("dmaengine: idxd: add interrupt handle request and release support")
+>> Reported-by: Konstantin Ananyev <konstantin.ananyev@intel.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>   drivers/dma/idxd/idxd.h   |   14 ++++++++
+>>   drivers/dma/idxd/irq.c    |   36 +++++++++++----------
+>>   drivers/dma/idxd/submit.c |   77 ++++++++++++++++++++++++++++++++++++++++-----
+>>   3 files changed, 101 insertions(+), 26 deletions(-)
+>>
+>> diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+>> index 1f0991dec679..0f27374eae4b 100644
+>> --- a/drivers/dma/idxd/idxd.h
+>> +++ b/drivers/dma/idxd/idxd.h
+>> @@ -294,6 +294,14 @@ struct idxd_desc {
+>>        struct idxd_wq *wq;
+>>   };
+>>
+>> +/*
+>> + * This is software defined error for the completion status. We overload the error code
+>> + * that will never appear in completion status and only SWERR register.
+>> + */
+>> +enum idxd_completion_status {
+>> +     IDXD_COMP_DESC_ABORT = 0xff,
+>> +};
+>> +
+>>   #define confdev_to_idxd(dev) container_of(dev, struct idxd_device, conf_dev)
+>>   #define confdev_to_wq(dev) container_of(dev, struct idxd_wq, conf_dev)
+>>
+>> @@ -480,4 +488,10 @@ static inline void perfmon_init(void) {}
+>>   static inline void perfmon_exit(void) {}
+>>   #endif
+>>
+>> +static inline void complete_desc(struct idxd_desc *desc, enum idxd_complete_type reason)
+>> +{
+>> +     idxd_dma_complete_txd(desc, reason);
+>> +     idxd_free_desc(desc->wq, desc);
+>> +}
+>> +
+>>   #endif
+>> diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+>> index 7a2cf0512501..8fd52937537a 100644
+>> --- a/drivers/dma/idxd/irq.c
+>> +++ b/drivers/dma/idxd/irq.c
+>> @@ -245,12 +245,6 @@ static inline bool match_fault(struct idxd_desc *desc, u64 fault_addr)
+>>        return false;
+>>   }
+>>
+>> -static inline void complete_desc(struct idxd_desc *desc, enum idxd_complete_type reason)
+>> -{
+>> -     idxd_dma_complete_txd(desc, reason);
+>> -     idxd_free_desc(desc->wq, desc);
+>> -}
+>> -
+>>   static int irq_process_pending_llist(struct idxd_irq_entry *irq_entry,
+>>                                     enum irq_work_type wtype,
+>>                                     int *processed, u64 data)
+>> @@ -258,8 +252,7 @@ static int irq_process_pending_llist(struct idxd_irq_entry *irq_entry,
+>>        struct idxd_desc *desc, *t;
+>>        struct llist_node *head;
+>>        int queued = 0;
+>> -     unsigned long flags;
+>> -     enum idxd_complete_type reason;
+>> +     enum idxd_complete_type reason = IDXD_COMPLETE_NORMAL;
+>>
+>>        *processed = 0;
+>>        head = llist_del_all(&irq_entry->pending_llist);
+>> @@ -272,16 +265,20 @@ static int irq_process_pending_llist(struct idxd_irq_entry *irq_entry,
+>>                reason = IDXD_COMPLETE_DEV_FAIL;
+>>
+>>        llist_for_each_entry_safe(desc, t, head, llnode) {
+>> -             if (desc->completion->status) {
+>> -                     if ((desc->completion->status & DSA_COMP_STATUS_MASK) != DSA_COMP_SUCCESS)
+>> +             u8 status = desc->completion->status & DSA_COMP_STATUS_MASK;
+>> +
+>> +             if (status) {
+>> +                     if (status == IDXD_COMP_DESC_ABORT)
+>> +                             reason = IDXD_COMPLETE_ABORT;
+>> +                     else if (status != DSA_COMP_SUCCESS)
+>>                                match_fault(desc, data);
+>>                        complete_desc(desc, reason);
+> reason was overwritten above for one particular desc, but not restored.
+> So all futher descs will be completed with = IDXD_COMPLETE_ABORT.
+> I think we need either to set it up on each iteration, or:
+> if (status == IDXD_COMP_DESC_ABORT)
+>        complete_desc(desc, IDXD_COMPLETE_ABORT);
+> else {
+> if (status != DSA_COMP_SUCCESS)
+>      match_fault(desc, data);
+>      complete_desc(desc, reason);
+> }
+
+Ah right. I'll fix that.
+
+
+>
+>>                        (*processed)++;
+>>                } else {
+>> -                     spin_lock_irqsave(&irq_entry->list_lock, flags);
+>> +                     spin_lock_bh(&irq_entry->list_lock);
+>>                        list_add_tail(&desc->list,
+>>                                      &irq_entry->work_list);
+>> -                     spin_unlock_irqrestore(&irq_entry->list_lock, flags);
+>> +                     spin_unlock_bh(&irq_entry->list_lock);
+>>                        queued++;
+>>                }
+>>        }
+>> @@ -295,10 +292,9 @@ static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
+>>                                 int *processed, u64 data)
+>>   {
+>>        int queued = 0;
+>> -     unsigned long flags;
+>>        LIST_HEAD(flist);
+>>        struct idxd_desc *desc, *n;
+>> -     enum idxd_complete_type reason;
+>> +     enum idxd_complete_type reason = IDXD_COMPLETE_NORMAL;
+>>
+>>        *processed = 0;
+>>        if (wtype == IRQ_WORK_NORMAL)
+>> @@ -310,9 +306,9 @@ static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
+>>         * This lock protects list corruption from access of list outside of the irq handler
+>>         * thread.
+>>         */
+>> -     spin_lock_irqsave(&irq_entry->list_lock, flags);
+>> +     spin_lock_bh(&irq_entry->list_lock);
+> I am not really an expert in kenel sipn lock flavours...
+> Can you explain to me why we can now replace _irqsave_ with _bh_?
+
+Actually I think we can do the callbacks directly now that we are using 
+spin_lock_bh(). Honestly I don't think we ever needed to call 
+spin_lock_irqsave(). It disables interrupts and therefore the driver was 
+doing the callbacks outside of the lock. But since we are running 
+threaded interrupt and we don't actually touch the list in the hard 
+interrupt handler, there's no need to disable interrupt. spin_lock_bh() 
+disables software interrupts and that should cover the thread interrupt 
+handler.
+
+
+>
+>>        if (list_empty(&irq_entry->work_list)) {
+>> -             spin_unlock_irqrestore(&irq_entry->list_lock, flags);
+>> +             spin_unlock_bh(&irq_entry->list_lock);
+>>                return 0;
+>>        }
+>>
+>> @@ -326,10 +322,14 @@ static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
+>>                }
+>>        }
+>>
+>> -     spin_unlock_irqrestore(&irq_entry->list_lock, flags);
+>> +     spin_unlock_bh(&irq_entry->list_lock);
+>>
+>>        list_for_each_entry(desc, &flist, list) {
+>> -             if ((desc->completion->status & DSA_COMP_STATUS_MASK) != DSA_COMP_SUCCESS)
+>> +             u8 status = desc->completion->status & DSA_COMP_STATUS_MASK;
+>> +
+>> +             if (desc->completion->status == IDXD_COMP_DESC_ABORT)
+>> +                     reason = IDXD_COMPLETE_ABORT;
+>> +             else if (status != DSA_COMP_SUCCESS)
+>>                        match_fault(desc, data);
+>>                complete_desc(desc, reason);
+> Same comment as above for pending list.
+>
+>>        }
+>> diff --git a/drivers/dma/idxd/submit.c b/drivers/dma/idxd/submit.c
+>> index 736def129fa8..d99a3aeb038c 100644
+>> --- a/drivers/dma/idxd/submit.c
+>> +++ b/drivers/dma/idxd/submit.c
+>> @@ -88,9 +88,66 @@ void idxd_free_desc(struct idxd_wq *wq, struct idxd_desc *desc)
+>>        sbitmap_queue_clear(&wq->sbq, desc->id, cpu);
+>>   }
+>>
+>> +static void list_abort_desc(struct idxd_wq *wq, struct idxd_irq_entry *ie,
+>> +                         struct idxd_desc *desc)
+>> +{
+>> +     struct idxd_desc *d, *n;
+>> +
+>> +     lockdep_assert_held(&ie->list_lock);
+>> +     list_for_each_entry_safe(d, n, &ie->work_list, list) {
+>> +             if (d == desc) {
+>> +                     list_del(&d->list);
+>> +                     complete_desc(desc, IDXD_COMPLETE_ABORT);
+>> +                     return;
+>> +             }
+>> +     }
+>> +
+>> +     /*
+>> +      * At this point, the desc needs to be aborted is held by the completion
+>> +      * handler where it has taken it off the pending list but has not added to the
+>> +      * work list. It will be cleaned up by the interrupt handler when it sees the
+>> +      * IDXD_COMP_DESC_ABORT for completion status.
+>> +      */
+>> +}
+>> +
+>> +static void llist_abort_desc(struct idxd_wq *wq, struct idxd_irq_entry *ie,
+>> +                          struct idxd_desc *desc)
+>> +{
+>> +     struct idxd_desc *d, *t;
+>> +     struct llist_node *head;
+>> +     bool found = false;
+>> +
+>> +     desc->completion->status = IDXD_COMP_DESC_ABORT;
+>> +     /*
+>> +      * Grab the list lock so it will block the irq thread handler. This allows the
+>> +      * abort code to locate the descriptor need to be aborted.
+>> +      */
+>> +     spin_lock_bh(&ie->list_lock);
+>> +     head = llist_del_all(&ie->pending_llist);
+>> +     if (!head) {
+>> +             list_abort_desc(wq, ie, desc);
+>> +             spin_unlock_bh(&ie->list_lock);
+>> +             return;
+>> +     }
+>> +
+>> +     llist_for_each_entry_safe(d, t, head, llnode) {
+>> +             if (d == desc) {
+>> +                     complete_desc(desc, IDXD_COMPLETE_ABORT);
+>> +                     found = true;
+>> +                     continue;
+>> +             }
+>> +             list_add_tail(&desc->list, &ie->work_list);
+>> +     }
+>> +
+>> +     if (!found)
+>> +             list_abort_desc(wq, ie, desc);
+>> +     spin_unlock_bh(&ie->list_lock);
+>> +}
+> There is one thing that worries me in that approach:
+>  From what I see, right now idxd calls complete_desc() without list_lock held.
+> I think it is better to keep things like that.
+> I suppose it should be easy enough to re-arrange your code a bit:
+> 1) make list_abort_desc() not to call complete_desc(), but simply
+> return desc if found or null otherwise.
+> 2) In llist_abort_desc() - grab the lock and try to find the desc in one of the lists.
+>      If found in the work_list, then remove it from the llist, but don't call complete() yet.
+>      Then release the lock and do complete().
+>
+> Something like that, to be more specific:
+>
+>   static void llist_abort_desc(struct idxd_wq *wq, struct idxd_irq_entry *ie,
+>                               struct idxd_desc *desc)
+> {
+>                struct idxd_desc *d, *found, *t;
+>                struct llist_node *head;
+>
+>                desc->completion->status = IDXD_COMP_DESC_ABORT;
+>                found = NULL;
+>
+>                 spin_lock_bh(&ie->list_lock);
+>          head = llist_del_all(&ie->pending_llist);
+>          if (head != NULL) {
+>                      llist_for_each_entry_safe(d, t, head, llnode) {
+>                     if (d == desc) {
+>                                found = desc;
+>                                continue;
+>                          }
+>                     list_add_tail(&desc->list, &ie->work_list);
+>              }
+>
+>              If (found == NULL)
+>                   found = list_abort_desc(wq, ie, desc);
+>
+>              spin_unlock_bh(&ie->list_lock);
+>
+>              if (found != NULL)
+>                   complete_desc(found, IDXD_COMPLETE_ABORT);
+> }
+>
+>
+>> +
+>>   int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
+>>   {
+>>        struct idxd_device *idxd = wq->idxd;
+>> +     struct idxd_irq_entry *ie = NULL;
+>>        void __iomem *portal;
+>>        int rc;
+>>
+>> @@ -108,6 +165,16 @@ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
+>>         * even on UP because the recipient is a device.
+>>         */
+>>        wmb();
+>> +
+>> +     /*
+>> +      * Pending the descriptor to the lockless list for the irq_entry
+>> +      * that we designated the descriptor to.
+>> +      */
+>> +     if (desc->hw->flags & IDXD_OP_FLAG_RCI) {
+>> +             ie = &idxd->irq_entries[desc->vector];
+>> +             llist_add(&desc->llnode, &ie->pending_llist);
+>> +     }
+>> +
+>>        if (wq_dedicated(wq)) {
+>>                iosubmit_cmds512(portal, desc->hw, 1);
+>>        } else {
+>> @@ -120,18 +187,12 @@ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
+>>                rc = enqcmds(portal, desc->hw);
+>>                if (rc < 0) {
+>>                        percpu_ref_put(&wq->wq_active);
+>> +                     if (ie)
+>> +                             llist_abort_desc(wq, ie, desc);
+>>                        return rc;
+>>                }
+>>        }
+>>
+>>        percpu_ref_put(&wq->wq_active);
+>> -
+>> -     /*
+>> -      * Pending the descriptor to the lockless list for the irq_entry
+>> -      * that we designated the descriptor to.
+>> -      */
+>> -     if (desc->hw->flags & IDXD_OP_FLAG_RCI)
+>> -             llist_add(&desc->llnode, &idxd->irq_entries[desc->vector].pending_llist);
+>> -
+>>        return 0;
+>>   }
+>>

@@ -2,113 +2,63 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC4B33B93F9
-	for <lists+dmaengine@lfdr.de>; Thu,  1 Jul 2021 17:31:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 131673B9B1D
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Jul 2021 05:44:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233239AbhGAPe2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 1 Jul 2021 11:34:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233064AbhGAPe1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 1 Jul 2021 11:34:27 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D40AC061762;
-        Thu,  1 Jul 2021 08:31:56 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id p8so8816479wrr.1;
-        Thu, 01 Jul 2021 08:31:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition;
-        bh=qN42ft8TO2D20OJfcUBVmNsGjubNKzxaIpoGBDjnO30=;
-        b=Q7QeFRYl7E8TGVI6mpGHeYbpPhGVz34QWBhGzMMsjh4Bs6YWjM2qYqgmf0JRNBJy2a
-         3lFCVl6R3hyIpFjKdgZkNYD5bD9CVRXcyIfLCeIamimChCDq7kslUlK7dFN7WiyZgpUI
-         pPJ8EueVXNyQKlLN4tgYi5Lfzk+QnzKr0hiUcQskudq/84vuANguULX/weG/7mCLDWP4
-         yMdxwZZihKgyWXuzbbx/Pm16tuOL4vXbVdSzSQuGXjOpH1WoEgfq56HIDPnkrTV74eb9
-         uICaBniL/x9CXDDy1ASKA+KPBCFam8+J9SrY2O9Kk/eUm0jAxYKQOWzCnn1TxRPtmj0g
-         6FVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition;
-        bh=qN42ft8TO2D20OJfcUBVmNsGjubNKzxaIpoGBDjnO30=;
-        b=PaXa6yoCWMlehVrVPLWskcCpsvxrob/TC/Btov3OC1RvVhaifeImcc8cJ7lM8DqfH0
-         SBGzS/dHsWI5tfhg6+Zpmq2G7gcXb8+76SWZnM8cZsqmI0mfg3XSf97Y3Bd/wIONCTrg
-         Yx7I53Ym9Bx6HXS2JNu9N296kMRf0vxrHtJjndvAFhqYwakH/9RJbvkSHB8mxKqee4na
-         fUDGUSc+mgSciqjS/6nXwTCEsfa/3vPNTL0nACnLIVv73FhxMwgtRDt6JTUU4OgQtOe7
-         ASOsVCUKHXUoeuphf4tPEIn6XXAVXmu1QkQ28wJAcwpUEbl2cqCBBxw7e1+Bt/uFUgct
-         sd/A==
-X-Gm-Message-State: AOAM531QmgMsSNShiwsfJtAu/yutHJckTCOx76sKaVBgFoa1VFvW4+oG
-        D7S9RHfVl5XJuGtQYFt/9FunrSeUAIxCi93+
-X-Google-Smtp-Source: ABdhPJyIwrGCUiIisBSvA/Fnc66c8FQsKA95biC021Cnax4FXkMb2O882/LBxxAptkQ4atwhOeO7mw==
-X-Received: by 2002:a5d:5307:: with SMTP id e7mr242782wrv.353.1625153514460;
-        Thu, 01 Jul 2021 08:31:54 -0700 (PDT)
-Received: from pc ([196.235.73.129])
-        by smtp.gmail.com with ESMTPSA id l20sm385220wmq.3.2021.07.01.08.31.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Jul 2021 08:31:54 -0700 (PDT)
-Date:   Thu, 1 Jul 2021 16:31:52 +0100
-From:   Salah Triki <salah.triki@gmail.com>
-To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ppc4xx: replace sscanf() by kstrtoul()
-Message-ID: <20210701153152.GA256018@pc>
+        id S234835AbhGBDrU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 1 Jul 2021 23:47:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234758AbhGBDrU (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 1 Jul 2021 23:47:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0C80E61351;
+        Fri,  2 Jul 2021 03:44:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625197488;
+        bh=FH9ihmHFOloobA056nvq51v/JLxmAlMmEXmE6ME7Rzk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E1H0fFmafakhg7MFITgptj8wRdzSd4q8f5+FDhDxjHxOV53+OKncdTG3xlDfkOfaG
+         BEPG4a/cRNTAw+gSuOdSxF5lTm/KNsgCWXqhcOVCgkY8JTe9GG4gB39/MNlD+dUrP9
+         wthfWM3RfyA+4mIskNJzKEkeTBpMq0B29980naIiTD+pTwRE/NMWHBuG7yDzX8lLSK
+         A0wXWxkVf5PJPirWF3JI6kPgAWxcYc68vUh1yz3lAfztSm44FDGfMsyyewF3+lBGjd
+         5GPTyN0kfJa7DZxfPDDs6yv8ZYQC76FD+9Bwc3wzprERLJVxiwAiBqPOInPujqABcR
+         j83oAtrxkFK3Q==
+Date:   Fri, 2 Jul 2021 09:14:45 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
+        jgg@nvidia.com, ramesh.thomas@intel.com
+Subject: Re: [PATCH 00/18] Fix idxd sub-drivers setup
+Message-ID: <YN6LrRyP8p8sSkV6@matsya>
+References: <162163546245.260470.18336189072934823712.stgit@djiang5-desk3.ch.intel.com>
+ <4212b8af-0f02-d2b9-a128-0576a2a8b4e5@intel.com>
+ <cdf50526-8179-c5ef-b45a-d737f6d3acfd@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cdf50526-8179-c5ef-b45a-d737f6d3acfd@intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Fix the checkpatch.pl warning: "Prefer kstrto<type> to single variable sscanf".
+On 28-06-21, 09:53, Dave Jiang wrote:
+> 
+> On 6/14/2021 10:18 AM, Dave Jiang wrote:
+> > 
+> > On 5/21/2021 3:21 PM, Dave Jiang wrote:
+> > > Vinod,
+> > > Please consider this series for the 5.14 merge window. Thank you!
+> > 
+> > Hi Vinod. Gently ping on this series. Thanks!
+> 
+> Hi Vinod, any chance this series make it into 5.14 merge window? Thanks!
 
-Signed-off-by: Salah Triki <salah.triki@gmail.com>
----
- drivers/dma/ppc4xx/adma.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+Hi Dave,
 
-diff --git a/drivers/dma/ppc4xx/adma.c b/drivers/dma/ppc4xx/adma.c
-index df7704053d91..e2b5129c5f84 100644
---- a/drivers/dma/ppc4xx/adma.c
-+++ b/drivers/dma/ppc4xx/adma.c
-@@ -4319,6 +4319,7 @@ static ssize_t enable_store(struct device_driver *dev, const char *buf,
- 			    size_t count)
- {
- 	unsigned long val;
-+	int err;
- 
- 	if (!count || count > 11)
- 		return -EINVAL;
-@@ -4327,7 +4328,10 @@ static ssize_t enable_store(struct device_driver *dev, const char *buf,
- 		return -EFAULT;
- 
- 	/* Write a key */
--	sscanf(buf, "%lx", &val);
-+	err = kstrtoul(buf, 16, &val);
-+	if (err)
-+		return err;
-+
- 	dcr_write(ppc440spe_mq_dcr_host, DCRN_MQ0_XORBA, val);
- 	isync();
- 
-@@ -4368,7 +4372,7 @@ static ssize_t poly_store(struct device_driver *dev, const char *buf,
- 			  size_t count)
- {
- 	unsigned long reg, val;
--
-+	int err;
- #ifdef CONFIG_440SP
- 	/* 440SP uses default 0x14D polynomial only */
- 	return -EINVAL;
-@@ -4378,7 +4382,9 @@ static ssize_t poly_store(struct device_driver *dev, const char *buf,
- 		return -EINVAL;
- 
- 	/* e.g., 0x14D or 0x11D */
--	sscanf(buf, "%lx", &val);
-+	err = kstrtoul(buf, 16, &val);
-+	if (err)
-+		return err;
- 
- 	if (val & ~0x1FF)
- 		return -EINVAL;
+Sorry we are late, I will review and do the needful once the merge
+window closes
+
+Thanks
+
 -- 
-2.25.1
-
+~Vinod

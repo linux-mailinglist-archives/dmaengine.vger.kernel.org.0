@@ -2,87 +2,266 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A17B3BA518
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Jul 2021 23:37:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A45D63BAD7E
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Jul 2021 16:45:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230031AbhGBVkK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 2 Jul 2021 17:40:10 -0400
-Received: from mail-il1-f173.google.com ([209.85.166.173]:43935 "EHLO
-        mail-il1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229648AbhGBVkI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 2 Jul 2021 17:40:08 -0400
-Received: by mail-il1-f173.google.com with SMTP id g3so9775687ilq.10;
-        Fri, 02 Jul 2021 14:37:36 -0700 (PDT)
+        id S229539AbhGDOsT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 4 Jul 2021 10:48:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229502AbhGDOsS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 4 Jul 2021 10:48:18 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15295C061574;
+        Sun,  4 Jul 2021 07:45:42 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id h6so20876619ljl.8;
+        Sun, 04 Jul 2021 07:45:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/tn9GXsWXZzt6kLfMw0SMtKg8iPYOSHc9JqYwK69jOc=;
+        b=rjZZAjNNmQUThWs4UGgxaOl0evHxqeFRVzr7mX/KdmA4xOJeXX77T/h7dVcRzGgWww
+         8wXS0HlXkm+y2iokl8egwavzxIwYHxHzQk1AO7b73l4I07fjxAp/ULPA4Qy35NQbG5DA
+         huXF0ndr+K0/4j7N4Jdm5/91i1ptVTXMXeq49R+f6pR8sfZrZ47q+eHEZ2oC4BhI5ZdJ
+         UA+mo0+ldNb5oDxJm2pZuf+5dr6/DFMeOWFa94FY7z3IZpFXVLvZ80LsQF7k8XPi43B0
+         xAgpa7ucxqAGaN30aPoYcdZ9+jxt4LxyuaE0mfLjrBuduqe/sgVQ0/pEGB28EDWlBI7E
+         gbTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oYyph8nrXzYeAFYlpDbusdemGHzqXKlwZfNTuv7wxWU=;
-        b=nqjZaNZKwCC/DPk06oYkUFgUSunHl4Y2EMxf+56VHSkoWhEnFVIxxA3cOLebsnB7x8
-         Jo64Tj047QxVOihoXNad8lBAaJmFgbGzh1/EhyJdfTAGSBiJub/e3iYWWqg5nAkkkQ6p
-         iZmyRfHDzhY4Ur+6uorlShsttZ1e5lbELXA0AUrGuMxP6n+/UVRU3SkW+U7BzQZEYnXn
-         xW1kIzQ+8k76hBQoJ8Z5+2Ch9VwJ70rxs53NfwVQ/POgGwz8CjMua2R9REjeI4lgoSOl
-         j0MTUyBcM3TRJT+6dqn4D7O1vVcraFx/VUuUK9lY3ZX/WeyiBBq6vx0E10p8Fw/k8038
-         pDww==
-X-Gm-Message-State: AOAM5310H8DUXWSIqElMDLceEB+/Q0uKKqULVLYoxMwqVyplgKqBILal
-        fAFKhiU9GIgUat4Yzm+P28ccZkiJzQ==
-X-Google-Smtp-Source: ABdhPJyGdRJcTdbTC9KEycbjoSYoHLWUZktYrtueoXQbrskJs/Rqc6mtGRBbxvZC7NblRiaChIsKZA==
-X-Received: by 2002:a92:c887:: with SMTP id w7mr1370838ilo.28.1625261855659;
-        Fri, 02 Jul 2021 14:37:35 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id v19sm2260356iom.32.2021.07.02.14.37.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jul 2021 14:37:35 -0700 (PDT)
-Received: (nullmailer pid 1061679 invoked by uid 1000);
-        Fri, 02 Jul 2021 21:37:32 -0000
-Date:   Fri, 2 Jul 2021 15:37:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Chris Brandt <chris.brandt@renesas.com>,
-        dmaengine@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: dma: Document RZ/G2L bindings
-Message-ID: <20210702213732.GA1061622@robh.at.kernel.org>
-References: <20210702100527.28251-1-biju.das.jz@bp.renesas.com>
- <20210702100527.28251-2-biju.das.jz@bp.renesas.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/tn9GXsWXZzt6kLfMw0SMtKg8iPYOSHc9JqYwK69jOc=;
+        b=QGvvpd02/qStuFB04VU3fhZjtKhIvBIh1I4Jd+66JMJcF9X0JAlb4ssAFsY+S8EHdj
+         PSt/o4ypvGc/J0xC0hrDdyw/dGY6BqexFsVv43lwAH30yaRJTZGPTuwJ/Sqk+3k/aYYm
+         jnHgwzhIqWdAPUIlJRy1c99ZaH3Y8f0KJftYG2VVCg1mJZgbMx+qNgsx/CPs1JGbkkHq
+         bn5vP/ugIAggfmpDqdO5QZwxw+gaOUv6Oz0MYRzz3f1qgCvpynxGSQ3omeRfFItK9jel
+         u6bzaCkqkMPsYKHUO4dxUglsofPJ5IXdNqVbNIzRHSQDbqbIlw/4bB5XB3MNCrRXmivo
+         929Q==
+X-Gm-Message-State: AOAM532e2FbV1Y1PfCooIuKHoRBrTpuq9Lbbii75OhIjddR3ScN8KRCp
+        Ffnw2S7Rer+hS2Ha54I7rE+LIJcds56xGEPqSu8=
+X-Google-Smtp-Source: ABdhPJyVHCYURMQGTzNjPBI5aI8Cb+OjONLnvZ2DadK37N2BRs6rHj/CogSBbPNHgV362lSYsTzsOcquckJSyaCsLAQ=
+X-Received: by 2002:a05:651c:1689:: with SMTP id bd9mr7440099ljb.409.1625409940359;
+ Sun, 04 Jul 2021 07:45:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210702100527.28251-2-biju.das.jz@bp.renesas.com>
+References: <20210520230225.11911-1-keguang.zhang@gmail.com> <YL392y4a6iRf1UyQ@vkoul-mobl>
+In-Reply-To: <YL392y4a6iRf1UyQ@vkoul-mobl>
+From:   Kelvin Cheung <keguang.zhang@gmail.com>
+Date:   Sun, 4 Jul 2021 22:45:28 +0800
+Message-ID: <CAJhJPsXv42e23tyQjA52_my1Au6nP_VdLX3c_yzk5MxadQ95iw@mail.gmail.com>
+Subject: Re: [PATCH V4 RESEND] dmaengine: Loongson1: Add Loongson1 dmaengine driver
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, 02 Jul 2021 11:05:24 +0100, Biju Das wrote:
-> Document RZ/G2L DMAC bindings.
-> 
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Note:-  This patch has dependency on #include <dt-bindings/clock/r9a07g044-cpg.h> file which will be in
-> next 5.14-rc1 release.
-> 
-> v3->v4:
->   * Described clocks and reset properties
-> v2->v3:
->   * Added error interrupt first.
->   * Updated clock and reset maxitems.
->   * Added Geert's Rb tag.
-> v1->v2:
->   * Made interrupt names in defined order
->   * Removed src address and channel configuration from dma-cells.
->   * Changed the compatibele string to "renesas,r9a07g044-dmac".
-> v1:-
->   * https://patchwork.kernel.org/project/linux-renesas-soc/patch/20210611113642.18457-2-biju.das.jz@bp.renesas.com/
-> ---
->  .../bindings/dma/renesas,rz-dmac.yaml         | 124 ++++++++++++++++++
->  1 file changed, 124 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
-> 
+Vinod Koul <vkoul@kernel.org> =E4=BA=8E2021=E5=B9=B46=E6=9C=887=E6=97=A5=E5=
+=91=A8=E4=B8=80 =E4=B8=8B=E5=8D=887:07=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On 21-05-21, 07:02, Keguang Zhang wrote:
+>
+> > +config LOONGSON1_DMA
+> > +     tristate "Loongson1 DMA support"
+> > +     depends on MACH_LOONGSON32
+>
+> Why does it have to do that? The dma driver is generic..
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This driver is only available for LOONGSON32 CPUs.
+>
+> > +static int ls1x_dma_alloc_chan_resources(struct dma_chan *dchan)
+> > +{
+> > +     struct ls1x_dma_chan *chan =3D to_ls1x_dma_chan(dchan);
+> > +
+> > +     chan->desc_pool =3D dma_pool_create(dma_chan_name(dchan),
+> > +                                       dchan->device->dev,
+> > +                                       sizeof(struct ls1x_dma_lli),
+> > +                                       __alignof__(struct ls1x_dma_lli=
+), 0);
+> > +     if (!chan->desc_pool) {
+> > +             dev_err(chan2dev(dchan),
+> > +                     "failed to alloc DMA descriptor pool!\n");
+>
+> This can be dropped, allocators will warn you for the allocation
+> failures
+
+will do.
+>
+> > +             return -ENOMEM;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static void ls1x_dma_free_desc(struct virt_dma_desc *vdesc)
+> > +{
+> > +     struct ls1x_dma_desc *desc =3D to_ls1x_dma_desc(vdesc);
+> > +
+> > +     if (desc->nr_descs) {
+> > +             unsigned int i =3D desc->nr_descs;
+> > +             struct ls1x_dma_hwdesc *hwdesc;
+> > +
+> > +             do {
+> > +                     hwdesc =3D &desc->hwdesc[--i];
+> > +                     dma_pool_free(desc->chan->desc_pool, hwdesc->lli,
+> > +                                   hwdesc->phys);
+> > +             } while (i);
+> > +     }
+> > +
+> > +     kfree(desc);
+> > +}
+> > +
+> > +static struct ls1x_dma_desc *ls1x_dma_alloc_desc(struct ls1x_dma_chan =
+*chan,
+> > +                                              int sg_len)
+>
+> single line now :)
+
+will do.
+>
+> > +{
+> > +     struct ls1x_dma_desc *desc;
+> > +     struct dma_chan *dchan =3D &chan->vchan.chan;
+> > +
+> > +     desc =3D kzalloc(struct_size(desc, hwdesc, sg_len), GFP_NOWAIT);
+> > +     if (!desc)
+> > +             dev_err(chan2dev(dchan), "failed to alloc DMA descriptor!=
+\n");
+>
+> this can be dropped too..
+
+will do.
+>
+> > +static struct dma_async_tx_descriptor *
+> > +ls1x_dma_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl=
+,
+> > +                    unsigned int sg_len,
+> > +                    enum dma_transfer_direction direction,
+> > +                    unsigned long flags, void *context)
+> > +{
+> > +     struct ls1x_dma_chan *chan =3D to_ls1x_dma_chan(dchan);
+> > +     struct dma_slave_config *cfg =3D &chan->cfg;
+> > +     struct ls1x_dma_desc *desc;
+> > +     struct scatterlist *sg;
+> > +     unsigned int dev_addr, bus_width, cmd, i;
+> > +
+> > +     if (!is_slave_direction(direction)) {
+> > +             dev_err(chan2dev(dchan), "invalid DMA direction!\n");
+> > +             return NULL;
+> > +     }
+> > +
+> > +     dev_dbg(chan2dev(dchan), "sg_len=3D%d, dir=3D%s, flags=3D0x%lx\n"=
+, sg_len,
+> > +             direction =3D=3D DMA_MEM_TO_DEV ? "to device" : "from dev=
+ice",
+> > +             flags);
+> > +
+> > +     switch (direction) {
+> > +     case DMA_MEM_TO_DEV:
+> > +             dev_addr =3D cfg->dst_addr;
+> > +             bus_width =3D cfg->dst_addr_width;
+> > +             cmd =3D LS1X_DMA_RAM2DEV | LS1X_DMA_INT;
+> > +             break;
+> > +     case DMA_DEV_TO_MEM:
+> > +             dev_addr =3D cfg->src_addr;
+> > +             bus_width =3D cfg->src_addr_width;
+> > +             cmd =3D LS1X_DMA_INT;
+> > +             break;
+> > +     default:
+> > +             dev_err(chan2dev(dchan),
+> > +                     "unsupported DMA transfer mode! %d\n", direction)=
+;
+> > +             return NULL;
+>
+> will this be ever executed?
+
+just in case.
+>
+> > +static int ls1x_dma_slave_config(struct dma_chan *dchan,
+> > +                              struct dma_slave_config *config)
+> > +{
+> > +     struct ls1x_dma_chan *chan =3D to_ls1x_dma_chan(dchan);
+> > +
+> > +     if (!dchan)
+> > +             return -EINVAL;
+>
+> should this not be checked before you dereference this to get chan
+
+will drop this check.
+>
+> > +static void ls1x_dma_trigger(struct ls1x_dma_chan *chan)
+> > +{
+> > +     struct dma_chan *dchan =3D &chan->vchan.chan;
+> > +     struct ls1x_dma_desc *desc;
+> > +     struct virt_dma_desc *vdesc;
+> > +     unsigned int val;
+> > +
+> > +     vdesc =3D vchan_next_desc(&chan->vchan);
+> > +     if (!vdesc) {
+> > +             dev_warn(chan2dev(dchan), "No pending descriptor\n");
+>
+> Hmm, I would not log that... this is called from
+> ls1x_dma_issue_pending() and which can be called from client driver but
+> previous completion would push and this can find empty queue so it can
+> happen quite frequently
+
+will drop this warning.
+>
+> > +static irqreturn_t ls1x_dma_irq_handler(int irq, void *data)
+> > +{
+> > +     struct ls1x_dma_chan *chan =3D data;
+> > +     struct dma_chan *dchan =3D &chan->vchan.chan;
+> > +
+> > +     dev_dbg(chan2dev(dchan), "DMA IRQ %d on channel %d\n", irq, chan-=
+>id);
+> > +     if (!chan->desc) {
+> > +             dev_warn(chan2dev(dchan),
+> > +                      "DMA IRQ with no active descriptor on channel %d=
+\n",
+> > +                      chan->id);
+>
+> single line pls
+
+will do.
+>
+> > +             return IRQ_NONE;
+> > +     }
+> > +
+> > +     spin_lock(&chan->vchan.lock);
+> > +
+> > +     if (chan->desc->type =3D=3D DMA_CYCLIC) {
+> > +             vchan_cyclic_callback(&chan->desc->vdesc);
+> > +     } else {
+> > +             list_del(&chan->desc->vdesc.node);
+> > +             vchan_cookie_complete(&chan->desc->vdesc);
+> > +             chan->desc =3D NULL;
+> > +     }
+>
+> not submitting next txn, defeats the purpose of dma if we dont push txns
+> as fast as possible..
+
+will fix it.
+>
+> > +static struct platform_driver ls1x_dma_driver =3D {
+> > +     .probe  =3D ls1x_dma_probe,
+> > +     .remove =3D ls1x_dma_remove,
+> > +     .driver =3D {
+> > +             .name   =3D "ls1x-dma",
+> > +     },
+>
+> No device tree?
+
+Because the LOONGSON32 platform doesn't support DT yet.
+>
+> --
+> ~Vinod
+
+
+
+--=20
+Best regards,
+
+Kelvin Cheung

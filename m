@@ -2,25 +2,26 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 518CB3C21AD
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Jul 2021 11:35:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CE213C21BC
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Jul 2021 11:41:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231956AbhGIJie (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 9 Jul 2021 05:38:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49656 "EHLO
+        id S231954AbhGIJoh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 9 Jul 2021 05:44:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231938AbhGIJie (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 9 Jul 2021 05:38:34 -0400
+        with ESMTP id S232016AbhGIJog (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 9 Jul 2021 05:44:36 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC50C0613DD
-        for <dmaengine@vger.kernel.org>; Fri,  9 Jul 2021 02:35:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2761C0613E6
+        for <dmaengine@vger.kernel.org>; Fri,  9 Jul 2021 02:41:53 -0700 (PDT)
 Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <l.stach@pengutronix.de>)
-        id 1m1mv3-0007h4-JP; Fri, 09 Jul 2021 11:35:37 +0200
-Message-ID: <6cacef63be4c6335b8bfa26043c3f787c9affd41.camel@pengutronix.de>
-Subject: Re: [PATCH v14 07/12] spi: imx: fix ERR009165
+        id 1m1n0s-0000EC-H7; Fri, 09 Jul 2021 11:41:38 +0200
+Message-ID: <dfa12f89f112966197518aa8df25cb47d69b30f7.camel@pengutronix.de>
+Subject: Re: [PATCH v14 08/12] spi: imx: remove ERR009165 workaround on
+ i.mx6ul
 From:   Lucas Stach <l.stach@pengutronix.de>
 To:     Robin Gong <yibin.gong@nxp.com>, vkoul@kernel.org,
         mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
@@ -34,10 +35,10 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-imx@nxp.com,
         kernel@pengutronix.de, dmaengine@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Date:   Fri, 09 Jul 2021 11:35:35 +0200
-In-Reply-To: <1617809456-17693-8-git-send-email-yibin.gong@nxp.com>
+Date:   Fri, 09 Jul 2021 11:41:35 +0200
+In-Reply-To: <1617809456-17693-9-git-send-email-yibin.gong@nxp.com>
 References: <1617809456-17693-1-git-send-email-yibin.gong@nxp.com>
-         <1617809456-17693-8-git-send-email-yibin.gong@nxp.com>
+         <1617809456-17693-9-git-send-email-yibin.gong@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.40.1 (3.40.1-1.fc34) 
 MIME-Version: 1.0
@@ -51,53 +52,139 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 Am Mittwoch, dem 07.04.2021 um 23:30 +0800 schrieb Robin Gong:
-> Change to XCH  mode even in dma mode, please refer to the below
-> errata:
-> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
+> ERR009165 fixed on i.mx6ul/6ull/6sll. All other i.mx6/7 and
+> i.mx8m/8mm still need this errata. Please refer to nxp official
+> errata document from https://www.nxp.com/ .
+> 
+> For removing workaround on those chips. Add new i.mx6ul type.
 > 
 > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 > Acked-by: Mark Brown <broonie@kernel.org>
-
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-
 > ---
->  drivers/spi/spi-imx.c | 10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
+>  drivers/spi/spi-imx.c | 47 +++++++++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 43 insertions(+), 4 deletions(-)
 > 
 > diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-> index 4fe767a..cf235b9 100644
+> index cf235b9..d18ee25 100644
 > --- a/drivers/spi/spi-imx.c
 > +++ b/drivers/spi/spi-imx.c
-> @@ -593,8 +593,8 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
+> @@ -59,6 +59,7 @@ enum spi_imx_devtype {
+>  	IMX35_CSPI,	/* CSPI on all i.mx except above */
+>  	IMX51_ECSPI,	/* ECSPI on i.mx51 */
+>  	IMX53_ECSPI,	/* ECSPI on i.mx53 and later */
+> +	IMX6UL_ECSPI,	/* ERR009165 fix from i.mx6ul */
+
+This patch could be a lot smaller if you didn't introduce a new
+devtype. You could just use the IMX51_ECSPI in
+imx6ul_ecspi_devtype_data, as all you care about as a relevant
+difference is the tx_glitch_fixed property, which isn't tied to the
+devtype.
+
+Regards,
+Lucas
+
+>  };
+>  
+>  struct spi_imx_data;
+> @@ -78,6 +79,11 @@ struct spi_imx_devtype_data {
+>  	bool has_slavemode;
+>  	unsigned int fifo_size;
+>  	bool dynamic_burst;
+> +	/*
+> +	 * ERR009165 fixed or not:
+> +	 * https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
+> +	 */
+> +	bool tx_glitch_fixed;
+>  	enum spi_imx_devtype devtype;
+>  };
+>  
+> @@ -134,6 +140,11 @@ static inline int is_imx51_ecspi(struct spi_imx_data *d)
+>  	return d->devtype_data->devtype == IMX51_ECSPI;
+>  }
+>  
+> +static inline int is_imx6ul_ecspi(struct spi_imx_data *d)
+> +{
+> +	return d->devtype_data->devtype == IMX6UL_ECSPI;
+> +}
+> +
+>  static inline int is_imx53_ecspi(struct spi_imx_data *d)
+>  {
+>  	return d->devtype_data->devtype == IMX53_ECSPI;
+> @@ -593,8 +604,14 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
 >  	ctrl |= mx51_ecspi_clkdiv(spi_imx, t->speed_hz, &clk);
 >  	spi_imx->spi_bus_clk = clk;
 >  
-> -	if (spi_imx->usedma)
-> -		ctrl |= MX51_ECSPI_CTRL_SMC;
-> +	/* ERR009165: work in XHC mode as PIO */
-> +	ctrl &= ~MX51_ECSPI_CTRL_SMC;
+> -	/* ERR009165: work in XHC mode as PIO */
+> -	ctrl &= ~MX51_ECSPI_CTRL_SMC;
+> +	/*
+> +	 * ERR009165: work in XHC mode instead of SMC as PIO on the chips
+> +	 * before i.mx6ul.
+> +	 */
+> +	if (spi_imx->usedma && spi_imx->devtype_data->tx_glitch_fixed)
+> +		ctrl |= MX51_ECSPI_CTRL_SMC;
+> +	else
+> +		ctrl &= ~MX51_ECSPI_CTRL_SMC;
 >  
 >  	writel(ctrl, spi_imx->base + MX51_ECSPI_CTRL);
 >  
-> @@ -625,7 +625,7 @@ static void mx51_setup_wml(struct spi_imx_data *spi_imx)
+> @@ -620,12 +637,16 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
+>  
+>  static void mx51_setup_wml(struct spi_imx_data *spi_imx)
+>  {
+> +	u32 tx_wml = 0;
+> +
+> +	if (spi_imx->devtype_data->tx_glitch_fixed)
+> +		tx_wml = spi_imx->wml;
+>  	/*
+>  	 * Configure the DMA register: setup the watermark
 >  	 * and enable DMA request.
 >  	 */
 >  	writel(MX51_ECSPI_DMA_RX_WML(spi_imx->wml - 1) |
-> -		MX51_ECSPI_DMA_TX_WML(spi_imx->wml) |
-> +		MX51_ECSPI_DMA_TX_WML(0) |
+> -		MX51_ECSPI_DMA_TX_WML(0) |
+> +		MX51_ECSPI_DMA_TX_WML(tx_wml) |
 >  		MX51_ECSPI_DMA_RXT_WML(spi_imx->wml) |
 >  		MX51_ECSPI_DMA_TEDEN | MX51_ECSPI_DMA_RXDEN |
 >  		MX51_ECSPI_DMA_RXTDEN, spi_imx->base + MX51_ECSPI_DMA);
-> @@ -1234,10 +1234,6 @@ static int spi_imx_sdma_init(struct device *dev, struct spi_imx_data *spi_imx,
->  {
->  	int ret;
+> @@ -1019,6 +1040,23 @@ static struct spi_imx_devtype_data imx53_ecspi_devtype_data = {
+>  	.devtype = IMX53_ECSPI,
+>  };
 >  
-> -	/* use pio mode for i.mx6dl chip TKT238285 */
-> -	if (of_machine_is_compatible("fsl,imx6dl"))
-> -		return 0;
-> -
->  	spi_imx->wml = spi_imx->devtype_data->fifo_size / 2;
+> +static struct spi_imx_devtype_data imx6ul_ecspi_devtype_data = {
+> +	.intctrl = mx51_ecspi_intctrl,
+> +	.prepare_message = mx51_ecspi_prepare_message,
+> +	.prepare_transfer = mx51_ecspi_prepare_transfer,
+> +	.trigger = mx51_ecspi_trigger,
+> +	.rx_available = mx51_ecspi_rx_available,
+> +	.reset = mx51_ecspi_reset,
+> +	.setup_wml = mx51_setup_wml,
+> +	.fifo_size = 64,
+> +	.has_dmamode = true,
+> +	.dynamic_burst = true,
+> +	.has_slavemode = true,
+> +	.tx_glitch_fixed = true,
+> +	.disable = mx51_ecspi_disable,
+> +	.devtype = IMX6UL_ECSPI,
+> +};
+> +
+>  static const struct of_device_id spi_imx_dt_ids[] = {
+>  	{ .compatible = "fsl,imx1-cspi", .data = &imx1_cspi_devtype_data, },
+>  	{ .compatible = "fsl,imx21-cspi", .data = &imx21_cspi_devtype_data, },
+> @@ -1027,6 +1065,7 @@ static const struct of_device_id spi_imx_dt_ids[] = {
+>  	{ .compatible = "fsl,imx35-cspi", .data = &imx35_cspi_devtype_data, },
+>  	{ .compatible = "fsl,imx51-ecspi", .data = &imx51_ecspi_devtype_data, },
+>  	{ .compatible = "fsl,imx53-ecspi", .data = &imx53_ecspi_devtype_data, },
+> +	{ .compatible = "fsl,imx6ul-ecspi", .data = &imx6ul_ecspi_devtype_data, },
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, spi_imx_dt_ids);
+> @@ -1604,7 +1643,7 @@ static int spi_imx_probe(struct platform_device *pdev)
+>  	spi_imx->bitbang.master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH \
+>  					     | SPI_NO_CS;
+>  	if (is_imx35_cspi(spi_imx) || is_imx51_ecspi(spi_imx) ||
+> -	    is_imx53_ecspi(spi_imx))
+> +	    is_imx53_ecspi(spi_imx) || is_imx6ul_ecspi(spi_imx))
+>  		spi_imx->bitbang.master->mode_bits |= SPI_LOOP | SPI_READY;
 >  
->  	/* Prepare for TX DMA: */
+>  	spi_imx->spi_drctl = spi_drctl;
 
 

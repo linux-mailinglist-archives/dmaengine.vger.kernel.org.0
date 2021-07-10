@@ -2,76 +2,115 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 400E83C2F75
-	for <lists+dmaengine@lfdr.de>; Sat, 10 Jul 2021 04:29:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AE723C35A5
+	for <lists+dmaengine@lfdr.de>; Sat, 10 Jul 2021 19:16:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234436AbhGJCb3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 9 Jul 2021 22:31:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233220AbhGJC3z (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 9 Jul 2021 22:29:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7FDD9613AF;
-        Sat, 10 Jul 2021 02:27:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625884031;
-        bh=kWGsgISN7lcqmtjugESr6/bNe397iyJKqWDj4dYdleo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=DYYaE+JKxKXkKQUqa1We+8NxiyK5YJXR3/itVAxV4I1s1WxeBDiOqaase8M6lcz9C
-         r9dji0YCuzcck+UWF65VfwA0aFN9Zato34lcEjeoydOvTmB8PPUt0XHJ79s0xvhYia
-         hGR1Gp0V/QEEIjCWGczHJaxvytLHCM45OlABsRRJ/XUjIGNNsZYvXyxCrmKVfV4dqv
-         sEdEJLjmxbgNEdsLa2AAxijxD3o88J1AZNQ/xf4Ti51R1OTcs4jl6t+pyQyMqRqEwQ
-         NdphRfuTzB74xun5N0H04QDkyXt8BFkOl2Kc61bEbW42gfBJ6BlCv0GYVXoHFq1r4t
-         3/tR0llo7DadQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 01/63] dmaengine: fsl-qdma: check dma_set_mask return value
-Date:   Fri,  9 Jul 2021 22:26:07 -0400
-Message-Id: <20210710022709.3170675-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.2
+        id S229783AbhGJQ5W (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 10 Jul 2021 12:57:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229704AbhGJQ5W (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 10 Jul 2021 12:57:22 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD0EEC0613DD;
+        Sat, 10 Jul 2021 09:54:35 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id ca14so2280868edb.2;
+        Sat, 10 Jul 2021 09:54:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=qN42ft8TO2D20OJfcUBVmNsGjubNKzxaIpoGBDjnO30=;
+        b=KG0sSGBzPIyk5dn/9sNt5fk1YQ28ryo6J2vVotiVbPPWEYatde9dumrcWhqceKiI3f
+         IPDwqLnDEWzLXU4vPZg6+SegLfF3/3Fvf1Isv1yl3+vTyl+pgYUDMKM9493eZ7qT0H6o
+         5b0907j01AT7ZHVH4/ByLhKetsMah6WUxupKX5PMuvRFiBj1gQKNDlHIuU5sPKJDBnDt
+         YUqV5R/mnwb5U9eQgia3WxIs6JQDH1RYmi2/snrCPZ8H4rvyP/iulnc6+hBdBYWwzhp0
+         u1/Sgp9M50AGqYuBpdzY4FElsnwk0WjKDAZPGi/gKFo3pKmp5QH5WZPeBc6OWP7ERKdi
+         eviA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=qN42ft8TO2D20OJfcUBVmNsGjubNKzxaIpoGBDjnO30=;
+        b=Met8Keoe20GeKKAbmMkhcE6xTxioMMieM6xU+jE5IEXSojveYpKmAuvoCqQfadHQOV
+         VanYY9hRyEB4IevKCjnRt1Lr3MVDPPc3Q5so7blJ4o+lDFSslE0XNYsUMhDOyj/0axT3
+         +p8lzCMm8LXStTzmmpR1r6N9fTRHXRIeCJyBB2+0T5J8h6NWO1QoQBZCbL+KGPjuID7R
+         f37+66cDl5NscrUbAGDPBytCRwhzIAHdafr/uKb4Hq7RWIC0KWelBq+O5Kj/edocqtXs
+         jPI5JaH8J5wkYF5jPywZK8VfpTio05KVvUILLuZQNjrRKqBHYcUYG2+6Kimtwj+N2L01
+         HCNg==
+X-Gm-Message-State: AOAM533caYDaWphKQPTZG+UxXxrzJ7GBtUjWBfIK6jd58nkrBi0pWkS6
+        N5xy21kh4SomMGbaeSNHPDYyxAt6Ovw=
+X-Google-Smtp-Source: ABdhPJyGZeQGHL0WIRf20gdnN8dNBz8RmT6sCRdzAsQgX3VQjmUP/4iWG4gOTCW+bCr/hOuxLfsJ5A==
+X-Received: by 2002:aa7:dc01:: with SMTP id b1mr54151950edu.239.1625936074121;
+        Sat, 10 Jul 2021 09:54:34 -0700 (PDT)
+Received: from pc ([196.235.212.194])
+        by smtp.gmail.com with ESMTPSA id e2sm4854801edy.12.2021.07.10.09.54.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 Jul 2021 09:54:33 -0700 (PDT)
+Date:   Sat, 10 Jul 2021 17:54:32 +0100
+From:   Salah Triki <salah.triki@gmail.com>
+To:     vkoul@kernel.org, krzk@kernel.org, allen.lkml@gmail.com,
+        romain.perier@gmail.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RESEND] ppc4xx: replace sscanf() by kstrtoul()
+Message-ID: <20210710165432.GA690401@pc>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Robin Gong <yibin.gong@nxp.com>
+Fix the checkpatch.pl warning: "Prefer kstrto<type> to single variable sscanf".
 
-[ Upstream commit f0c07993af0acf5545d5c1445798846565f4f147 ]
-
-For fix below warning reported by static code analysis tool like Coverity
-from Synopsys:
-
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Addresses-Coverity-ID: 12285639 ("Unchecked return value")
-Link: https://lore.kernel.org/r/1619427549-20498-1-git-send-email-yibin.gong@nxp.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Salah Triki <salah.triki@gmail.com>
 ---
- drivers/dma/fsl-qdma.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/dma/ppc4xx/adma.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
-index 95cc0256b387..f5a1ae164193 100644
---- a/drivers/dma/fsl-qdma.c
-+++ b/drivers/dma/fsl-qdma.c
-@@ -1184,7 +1184,11 @@ static int fsl_qdma_probe(struct platform_device *pdev)
- 	fsl_qdma->dma_dev.device_synchronize = fsl_qdma_synchronize;
- 	fsl_qdma->dma_dev.device_terminate_all = fsl_qdma_terminate_all;
+diff --git a/drivers/dma/ppc4xx/adma.c b/drivers/dma/ppc4xx/adma.c
+index df7704053d91..e2b5129c5f84 100644
+--- a/drivers/dma/ppc4xx/adma.c
++++ b/drivers/dma/ppc4xx/adma.c
+@@ -4319,6 +4319,7 @@ static ssize_t enable_store(struct device_driver *dev, const char *buf,
+ 			    size_t count)
+ {
+ 	unsigned long val;
++	int err;
  
--	dma_set_mask(&pdev->dev, DMA_BIT_MASK(40));
-+	ret = dma_set_mask(&pdev->dev, DMA_BIT_MASK(40));
-+	if (ret) {
-+		dev_err(&pdev->dev, "dma_set_mask failure.\n");
-+		return ret;
-+	}
+ 	if (!count || count > 11)
+ 		return -EINVAL;
+@@ -4327,7 +4328,10 @@ static ssize_t enable_store(struct device_driver *dev, const char *buf,
+ 		return -EFAULT;
  
- 	platform_set_drvdata(pdev, fsl_qdma);
+ 	/* Write a key */
+-	sscanf(buf, "%lx", &val);
++	err = kstrtoul(buf, 16, &val);
++	if (err)
++		return err;
++
+ 	dcr_write(ppc440spe_mq_dcr_host, DCRN_MQ0_XORBA, val);
+ 	isync();
  
+@@ -4368,7 +4372,7 @@ static ssize_t poly_store(struct device_driver *dev, const char *buf,
+ 			  size_t count)
+ {
+ 	unsigned long reg, val;
+-
++	int err;
+ #ifdef CONFIG_440SP
+ 	/* 440SP uses default 0x14D polynomial only */
+ 	return -EINVAL;
+@@ -4378,7 +4382,9 @@ static ssize_t poly_store(struct device_driver *dev, const char *buf,
+ 		return -EINVAL;
+ 
+ 	/* e.g., 0x14D or 0x11D */
+-	sscanf(buf, "%lx", &val);
++	err = kstrtoul(buf, 16, &val);
++	if (err)
++		return err;
+ 
+ 	if (val & ~0x1FF)
+ 		return -EINVAL;
 -- 
-2.30.2
+2.25.1
 

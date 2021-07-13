@@ -2,26 +2,26 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E8073C6EA3
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Jul 2021 12:34:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 331193C6EA7
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Jul 2021 12:35:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235544AbhGMKhf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 13 Jul 2021 06:37:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46940 "EHLO
+        id S235304AbhGMKhx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 13 Jul 2021 06:37:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235536AbhGMKhZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 13 Jul 2021 06:37:25 -0400
+        with ESMTP id S235574AbhGMKhu (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 13 Jul 2021 06:37:50 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0DE1C0613E9
-        for <dmaengine@vger.kernel.org>; Tue, 13 Jul 2021 03:34:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 458EEC0613DD
+        for <dmaengine@vger.kernel.org>; Tue, 13 Jul 2021 03:35:01 -0700 (PDT)
 Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <l.stach@pengutronix.de>)
-        id 1m3Fk1-0001hZ-OH; Tue, 13 Jul 2021 12:34:17 +0200
-Message-ID: <b3e94d1dfe77ec53686ed0be04a17b33c3fc37fa.camel@pengutronix.de>
-Subject: Re: [PATCH v15 05/12] dmaengine: dma: imx-sdma: add fw_loaded and
- is_ram_script
+        id 1m3FkW-0001lP-3A; Tue, 13 Jul 2021 12:34:48 +0200
+Message-ID: <338c8a458b97799d47d9686634d35f75b408ea47.camel@pengutronix.de>
+Subject: Re: [PATCH v15 08/12] spi: imx: remove ERR009165 workaround on
+ i.mx6ul
 From:   Lucas Stach <l.stach@pengutronix.de>
 To:     Robin Gong <yibin.gong@nxp.com>, vkoul@kernel.org,
         mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
@@ -35,10 +35,10 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-imx@nxp.com,
         kernel@pengutronix.de, dmaengine@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Date:   Tue, 13 Jul 2021 12:34:13 +0200
-In-Reply-To: <1626201709-19643-6-git-send-email-yibin.gong@nxp.com>
+Date:   Tue, 13 Jul 2021 12:34:46 +0200
+In-Reply-To: <1626201709-19643-9-git-send-email-yibin.gong@nxp.com>
 References: <1626201709-19643-1-git-send-email-yibin.gong@nxp.com>
-         <1626201709-19643-6-git-send-email-yibin.gong@nxp.com>
+         <1626201709-19643-9-git-send-email-yibin.gong@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.40.1 (3.40.1-1.fc34) 
 MIME-Version: 1.0
@@ -52,93 +52,103 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 Am Mittwoch, dem 14.07.2021 um 02:41 +0800 schrieb Robin Gong:
-> Add 'fw_loaded' and 'is_ram_script' to check if the script used by channel
-> is ram script and it's loaded or not, so that could prevent meaningless
-> following malloc dma descriptor and bd allocate in sdma_transfer_init(),
-> otherwise memory may be consumed out potentially without free in case
-> that spi fallback into pio while dma transfer failed by sdma firmware not
-> ready(next ERR009165 patch depends on sdma RAM scripts/firmware).
+> ERR009165 fixed on i.mx6ul/6ull/6sll. All other i.mx6/7 and
+> i.mx8m/8mm still need this errata. Please refer to nxp official
+> errata document from https://www.nxp.com/ .
+> 
+> For removing workaround on those chips. Add new i.mx6ul type.
 > 
 > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> Acked-by: Vinod Koul <vkoul@kernel.org>
+> Acked-by: Mark Brown <broonie@kernel.org>
+
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+
 > ---
->  drivers/dma/imx-sdma.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+>  drivers/spi/spi-imx.c | 39 ++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 36 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> index 665ccbf..639a783 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -435,6 +435,7 @@ struct sdma_channel {
->  	enum dma_status			status;
->  	struct imx_dma_data		data;
->  	struct work_struct		terminate_worker;
-> +	bool				is_ram_script;
+> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+> index 61e4fa0..63a8d7b 100644
+> --- a/drivers/spi/spi-imx.c
+> +++ b/drivers/spi/spi-imx.c
+> @@ -77,6 +77,11 @@ struct spi_imx_devtype_data {
+>  	bool has_slavemode;
+>  	unsigned int fifo_size;
+>  	bool dynamic_burst;
+> +	/*
+> +	 * ERR009165 fixed or not:
+> +	 * https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
+> +	 */
+> +	bool tx_glitch_fixed;
+>  	enum spi_imx_devtype devtype;
 >  };
 >  
->  #define IMX_DMA_SG_LOOP		BIT(0)
-> @@ -498,6 +499,7 @@ struct sdma_engine {
->  	struct sdma_buffer_descriptor	*bd0;
->  	/* clock ratio for AHB:SDMA core. 1:1 is 1, 2:1 is 0*/
->  	bool				clk_ratio;
-> +	bool                            fw_loaded;
+> @@ -608,8 +613,14 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
+>  	ctrl |= mx51_ecspi_clkdiv(spi_imx, spi_imx->spi_bus_clk, &clk);
+>  	spi_imx->spi_bus_clk = clk;
+>  
+> -	/* ERR009165: work in XHC mode as PIO */
+> -	ctrl &= ~MX51_ECSPI_CTRL_SMC;
+> +	/*
+> +	 * ERR009165: work in XHC mode instead of SMC as PIO on the chips
+> +	 * before i.mx6ul.
+> +	 */
+> +	if (spi_imx->usedma && spi_imx->devtype_data->tx_glitch_fixed)
+> +		ctrl |= MX51_ECSPI_CTRL_SMC;
+> +	else
+> +		ctrl &= ~MX51_ECSPI_CTRL_SMC;
+>  
+>  	writel(ctrl, spi_imx->base + MX51_ECSPI_CTRL);
+>  
+> @@ -618,12 +629,16 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
+>  
+>  static void mx51_setup_wml(struct spi_imx_data *spi_imx)
+>  {
+> +	u32 tx_wml = 0;
+> +
+> +	if (spi_imx->devtype_data->tx_glitch_fixed)
+> +		tx_wml = spi_imx->wml;
+>  	/*
+>  	 * Configure the DMA register: setup the watermark
+>  	 * and enable DMA request.
+>  	 */
+>  	writel(MX51_ECSPI_DMA_RX_WML(spi_imx->wml - 1) |
+> -		MX51_ECSPI_DMA_TX_WML(0) |
+> +		MX51_ECSPI_DMA_TX_WML(tx_wml) |
+>  		MX51_ECSPI_DMA_RXT_WML(spi_imx->wml) |
+>  		MX51_ECSPI_DMA_TEDEN | MX51_ECSPI_DMA_RXDEN |
+>  		MX51_ECSPI_DMA_RXTDEN, spi_imx->base + MX51_ECSPI_DMA);
+> @@ -1014,6 +1029,23 @@ static struct spi_imx_devtype_data imx53_ecspi_devtype_data = {
+>  	.devtype = IMX53_ECSPI,
 >  };
 >  
->  static int sdma_config_write(struct dma_chan *chan,
-> @@ -953,6 +955,7 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
->  	case IMX_DMATYPE_SSI_DUAL:
->  		per_2_emi = sdma->script_addrs->ssish_2_mcu_addr;
->  		emi_2_per = sdma->script_addrs->mcu_2_ssish_addr;
-> +		sdmac->is_ram_script = true;
->  		break;
->  	case IMX_DMATYPE_SSI_SP:
->  	case IMX_DMATYPE_MMC:
-> @@ -967,6 +970,7 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
->  		per_2_emi = sdma->script_addrs->asrc_2_mcu_addr;
->  		emi_2_per = sdma->script_addrs->asrc_2_mcu_addr;
->  		per_2_per = sdma->script_addrs->per_2_per_addr;
-> +		sdmac->is_ram_script = true;
->  		break;
->  	case IMX_DMATYPE_ASRC_SP:
->  		per_2_emi = sdma->script_addrs->shp_2_mcu_addr;
-> @@ -1363,6 +1367,11 @@ static struct sdma_desc *sdma_transfer_init(struct sdma_channel *sdmac,
->  {
->  	struct sdma_desc *desc;
->  
-> +	if (!sdmac->sdma->fw_loaded && sdmac->is_ram_script) {
-> +		dev_warn_once(sdmac->sdma->dev, "sdma firmware not ready!\n");
-> +		goto err_out;
-> +	}
+> +static struct spi_imx_devtype_data imx6ul_ecspi_devtype_data = {
+> +	.intctrl = mx51_ecspi_intctrl,
+> +	.prepare_message = mx51_ecspi_prepare_message,
+> +	.prepare_transfer = mx51_ecspi_prepare_transfer,
+> +	.trigger = mx51_ecspi_trigger,
+> +	.rx_available = mx51_ecspi_rx_available,
+> +	.reset = mx51_ecspi_reset,
+> +	.setup_wml = mx51_setup_wml,
+> +	.fifo_size = 64,
+> +	.has_dmamode = true,
+> +	.dynamic_burst = true,
+> +	.has_slavemode = true,
+> +	.tx_glitch_fixed = true,
+> +	.disable = mx51_ecspi_disable,
+> +	.devtype = IMX51_ECSPI,
+> +};
 > +
->  	desc = kzalloc((sizeof(*desc)), GFP_NOWAIT);
->  	if (!desc)
->  		goto err_out;
-> @@ -1613,6 +1622,8 @@ static int sdma_config_write(struct dma_chan *chan,
->  {
->  	struct sdma_channel *sdmac = to_sdma_chan(chan);
->  
-> +	sdmac->is_ram_script = false;
-> +
-Again, I think this initialization should move into sdma_get_pc() to
-move it into close proximity of the code where it gets overwritten to
-true. This would make this flow of events much easier to see when
-reading the driver code.
-
-Regards,
-Lucas
-
->  	if (direction == DMA_DEV_TO_MEM) {
->  		sdmac->per_address = dmaengine_cfg->src_addr;
->  		sdmac->watermark_level = dmaengine_cfg->src_maxburst *
-> @@ -1792,6 +1803,8 @@ static void sdma_load_firmware(const struct firmware *fw, void *context)
->  
->  	sdma_add_scripts(sdma, addr);
->  
-> +	sdma->fw_loaded = true;
-> +
->  	dev_info(sdma->dev, "loaded firmware %d.%d\n",
->  			header->version_major,
->  			header->version_minor);
+>  static const struct of_device_id spi_imx_dt_ids[] = {
+>  	{ .compatible = "fsl,imx1-cspi", .data = &imx1_cspi_devtype_data, },
+>  	{ .compatible = "fsl,imx21-cspi", .data = &imx21_cspi_devtype_data, },
+> @@ -1022,6 +1054,7 @@ static const struct of_device_id spi_imx_dt_ids[] = {
+>  	{ .compatible = "fsl,imx35-cspi", .data = &imx35_cspi_devtype_data, },
+>  	{ .compatible = "fsl,imx51-ecspi", .data = &imx51_ecspi_devtype_data, },
+>  	{ .compatible = "fsl,imx53-ecspi", .data = &imx53_ecspi_devtype_data, },
+> +	{ .compatible = "fsl,imx6ul-ecspi", .data = &imx6ul_ecspi_devtype_data, },
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, spi_imx_dt_ids);
 
 

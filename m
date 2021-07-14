@@ -2,31 +2,32 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97BE23C9372
-	for <lists+dmaengine@lfdr.de>; Wed, 14 Jul 2021 23:57:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E66DC3C9461
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Jul 2021 01:20:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234563AbhGNWAL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 14 Jul 2021 18:00:11 -0400
-Received: from mga12.intel.com ([192.55.52.136]:15591 "EHLO mga12.intel.com"
+        id S235717AbhGNXXQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 14 Jul 2021 19:23:16 -0400
+Received: from mga03.intel.com ([134.134.136.65]:18936 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229498AbhGNWAL (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 14 Jul 2021 18:00:11 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10045"; a="190116164"
+        id S230525AbhGNXXQ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 14 Jul 2021 19:23:16 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10045"; a="210487775"
 X-IronPort-AV: E=Sophos;i="5.84,240,1620716400"; 
-   d="scan'208";a="190116164"
+   d="scan'208";a="210487775"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 14:57:19 -0700
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 16:20:23 -0700
 X-IronPort-AV: E=Sophos;i="5.84,240,1620716400"; 
-   d="scan'208";a="654988494"
+   d="scan'208";a="655008389"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 14:57:19 -0700
-Subject: [PATCH] dmaengine: idxd: fix sequence for pci driver remove() and
- shutdown()
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 16:20:23 -0700
+Subject: [PATCH v2 00/18] Fix idxd sub-drivers setup
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, dan.j.williams@intel.com
-Date:   Wed, 14 Jul 2021 14:57:19 -0700
-Message-ID: <162629983901.395844.17964803190905549615.stgit@djiang5-desk3.ch.intel.com>
+Cc:     Dan Willliams <dan.j.williams@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org
+Date:   Wed, 14 Jul 2021 16:20:22 -0700
+Message-ID: <162630468448.631529.1963704964865951650.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -35,90 +36,56 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-->shutdown() call should only be responsible for quiescing the device.
-Currently it is doing PCI device tear down. This causes issue when things
-like MMIO mapping is removed while idxd_unregister_devices() will trigger
-removal of idxd device sub-driver and still initiates MMIO writes to the
-device. Another issue is with the unregistering of idxd 'struct device',
-the memory context gets freed. So the teardown calls are accessing freed
-memory and can cause kernel oops. Move all the teardown bits that doesn't
-belong in shutdown to ->remove() call. Move unregistering of the idxd
-conf_dev 'struct device' to after doing all the teardown to free all
-the memory that's no longer needed.
+Hi Vinod,
+This has been rebased against dmaengine/next tree per request. Please
+consider merge. Thanks.
 
-Fixes: 47c16ac27d4c ("dmaengine: idxd: fix idxd conf_dev 'struct device' lifetime")
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+v2:
+- Rebase
+
+The original dsa_bus_type did not use idiomatic mechanisms for attaching
+dsa-devices to dsa-drivers. Switch to the idiomatic style. Once this
+cleanup is in place it will ease the addition of the VFIO mdev driver
+as another dsa-driver.
+
 ---
- drivers/dma/idxd/init.c  |   26 +++++++++++++++++---------
- drivers/dma/idxd/sysfs.c |    2 --
- 2 files changed, 17 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 4e32a4dcc3ab..c0f4c0422f32 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -760,32 +760,40 @@ static void idxd_shutdown(struct pci_dev *pdev)
- 	for (i = 0; i < msixcnt; i++) {
- 		irq_entry = &idxd->irq_entries[i];
- 		synchronize_irq(irq_entry->vector);
--		free_irq(irq_entry->vector, irq_entry);
- 		if (i == 0)
- 			continue;
- 		idxd_flush_pending_llist(irq_entry);
- 		idxd_flush_work_list(irq_entry);
- 	}
--
--	idxd_msix_perm_clear(idxd);
--	idxd_release_int_handles(idxd);
--	pci_free_irq_vectors(pdev);
--	pci_iounmap(pdev, idxd->reg_base);
--	pci_disable_device(pdev);
--	destroy_workqueue(idxd->wq);
-+	flush_workqueue(idxd->wq);
- }
- 
- static void idxd_remove(struct pci_dev *pdev)
- {
- 	struct idxd_device *idxd = pci_get_drvdata(pdev);
-+	struct idxd_irq_entry *irq_entry;
-+	int msixcnt = pci_msix_vec_count(pdev);
-+	int i;
- 
- 	dev_dbg(&pdev->dev, "%s called\n", __func__);
- 	idxd_shutdown(pdev);
- 	if (device_pasid_enabled(idxd))
- 		idxd_disable_system_pasid(idxd);
- 	idxd_unregister_devices(idxd);
--	perfmon_pmu_remove(idxd);
-+
-+	for (i = 0; i < msixcnt; i++) {
-+		irq_entry = &idxd->irq_entries[i];
-+		free_irq(irq_entry->vector, irq_entry);
-+	}
-+	idxd_msix_perm_clear(idxd);
-+	idxd_release_int_handles(idxd);
-+	pci_free_irq_vectors(pdev);
-+	pci_iounmap(pdev, idxd->reg_base);
- 	iommu_dev_disable_feature(&pdev->dev, IOMMU_DEV_FEAT_SVA);
-+	pci_disable_device(pdev);
-+	destroy_workqueue(idxd->wq);
-+	perfmon_pmu_remove(idxd);
-+	device_unregister(&idxd->conf_dev);
- }
- 
- static struct pci_driver idxd_pci_driver = {
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 0460d58e3941..bb4df63906a7 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -1744,8 +1744,6 @@ void idxd_unregister_devices(struct idxd_device *idxd)
- 
- 		device_unregister(&group->conf_dev);
- 	}
--
--	device_unregister(&idxd->conf_dev);
- }
- 
- int idxd_register_bus_type(void)
+Dave Jiang (18):
+      dmaengine: idxd: add driver register helper
+      dmaengine: idxd: add driver name
+      dmaengine: idxd: add 'struct idxd_dev' as wrapper for conf_dev
+      dmaengine: idxd: remove IDXD_DEV_CONF_READY
+      dmaengine: idxd: move wq_enable() to device.c
+      dmaengine: idxd: move wq_disable() to device.c
+      dmaengine: idxd: remove bus shutdown
+      dmaengine: idxd: remove iax_bus_type prototype
+      dmaengine: idxd: fix bus_probe() and bus_remove() for dsa_bus
+      dmaengine: idxd: move probe() bits for idxd 'struct device' to device.c
+      dmaengine: idxd: idxd: move remove() bits for idxd 'struct device' to device.c
+      dmanegine: idxd: open code the dsa_drv registration
+      dmaengine: idxd: add type to driver in order to allow device matching
+      dmaengine: idxd: create idxd_device sub-driver
+      dmaengine: idxd: create dmaengine driver for wq 'device'
+      dmaengine: idxd: create user driver for wq 'device'
+      dmaengine: dsa: move dsa_bus_type out of idxd driver to standalone
+      dmaengine: idxd: move dsa_drv support to compatible mode
 
+
+ drivers/dma/Kconfig       |  21 ++
+ drivers/dma/Makefile      |   2 +-
+ drivers/dma/idxd/Makefile |   8 +
+ drivers/dma/idxd/bus.c    |  92 +++++++
+ drivers/dma/idxd/cdev.c   |  65 ++++-
+ drivers/dma/idxd/compat.c | 114 ++++++++
+ drivers/dma/idxd/device.c | 194 +++++++++++++-
+ drivers/dma/idxd/dma.c    |  82 +++++-
+ drivers/dma/idxd/idxd.h   | 129 +++++++--
+ drivers/dma/idxd/init.c   | 140 +++++-----
+ drivers/dma/idxd/irq.c    |   2 +-
+ drivers/dma/idxd/sysfs.c  | 541 ++++++++------------------------------
+ 12 files changed, 858 insertions(+), 532 deletions(-)
+ create mode 100644 drivers/dma/idxd/bus.c
+ create mode 100644 drivers/dma/idxd/compat.c
+
+--
 

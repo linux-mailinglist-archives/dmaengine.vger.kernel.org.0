@@ -2,201 +2,136 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E57133C7FCA
-	for <lists+dmaengine@lfdr.de>; Wed, 14 Jul 2021 10:09:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98F2C3C7FE2
+	for <lists+dmaengine@lfdr.de>; Wed, 14 Jul 2021 10:17:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238450AbhGNIMd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 14 Jul 2021 04:12:33 -0400
-Received: from mail-vs1-f53.google.com ([209.85.217.53]:42527 "EHLO
-        mail-vs1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238443AbhGNIMc (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Jul 2021 04:12:32 -0400
-Received: by mail-vs1-f53.google.com with SMTP id u7so468950vst.9;
-        Wed, 14 Jul 2021 01:09:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wfB2Bf/ewMYqgY1zZmUeNM2ulG9069p5Wk8W/IUC/II=;
-        b=A0HpwRGij6+s9Albdes6+JGApM0pC+4O/ji3ogsM2f6dAY1nqG2ce5d/SJhdSKyIUP
-         W3/Q6GPsKLMpIebPpoe7VwZUmZ3QH0v7Amqa79go6ZCTrL7B5IDAIEi8b1SLFx70dQUO
-         810GEhKZ2SH4808B59Uk5uA28B9AV70HIh2qUv2gU+hWMzTMuCXhQthwcCMKT0gkJqy4
-         7tSu9XsBWL581ljBkLYnAkeaVU90b1AJripnGuPzKU7h4Rz5eXz/Yzwim7gSgZZzXqXx
-         iLtVZO8awr7JdNVgc6TeMd7zFH+aS6ds4tUJ38Kd6U4cDZsJCkUw9P2kiaQP8ozTNIvB
-         MUbA==
-X-Gm-Message-State: AOAM5334cyEGAUGnlHtnp0lSMQkgqKyGmD+XezDfI+TqKA2m7LvPxIJ5
-        EQx3W56b9x7mYY/TB4ElRYMQLaZfM7OqbK7L9RFXOqn1Cps=
-X-Google-Smtp-Source: ABdhPJwXG46ASU0GsUrjem2Rl4YE3iFNrK3VYfY8aMm6AopdEYtEcizJdl3F+jIVf3OhhYC+tL16SxU0w8lHe+5mqAU=
-X-Received: by 2002:a67:1542:: with SMTP id 63mr10391525vsv.40.1626250180000;
- Wed, 14 Jul 2021 01:09:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210702100527.28251-1-biju.das.jz@bp.renesas.com> <20210702100527.28251-3-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20210702100527.28251-3-biju.das.jz@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 14 Jul 2021 10:09:28 +0200
-Message-ID: <CAMuHMdV8VFoUC_Od9F=4On6=tZwr-qN4s4g+=_QcHQTrxrvQJg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] drivers: dma: sh: Add DMAC driver for RZ/G2L SoC
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+        id S238432AbhGNIUW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 14 Jul 2021 04:20:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229940AbhGNIUW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Jul 2021 04:20:22 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84A82C06175F
+        for <dmaengine@vger.kernel.org>; Wed, 14 Jul 2021 01:17:31 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1m3a4v-00059P-Hz; Wed, 14 Jul 2021 10:17:13 +0200
+Message-ID: <efae56878575297039d745c61503b96321d31e52.camel@pengutronix.de>
+Subject: Re: [PATCH v16 05/12] dmaengine: dma: imx-sdma: add fw_loaded and
+ is_ram_script
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>, vkoul@kernel.org,
+        mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
+        catalin.marinas@arm.com, will.deacon@arm.com, shawnguo@kernel.org,
+        festevam@gmail.com, s.hauer@pengutronix.de,
+        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
+        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com,
+        frieder.schrempf@kontron.de, m.felsch@pengutronix.de,
+        xiaoning.wang@nxp.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-imx@nxp.com,
+        kernel@pengutronix.de, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Date:   Wed, 14 Jul 2021 10:17:04 +0200
+In-Reply-To: <1626258052-22198-6-git-send-email-yibin.gong@nxp.com>
+References: <1626258052-22198-1-git-send-email-yibin.gong@nxp.com>
+         <1626258052-22198-6-git-send-email-yibin.gong@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.3 (3.40.3-1.fc34) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Biju,
+Am Mittwoch, dem 14.07.2021 um 18:20 +0800 schrieb Robin Gong:
+> Add 'fw_loaded' and 'is_ram_script' to check if the script used by channel
+> is ram script and it's loaded or not, so that could prevent meaningless
+> following malloc dma descriptor and bd allocate in sdma_transfer_init(),
+> otherwise memory may be consumed out potentially without free in case
+> that spi fallback into pio while dma transfer failed by sdma firmware not
+> ready(next ERR009165 patch depends on sdma RAM scripts/firmware).
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Acked-by: Vinod Koul <vkoul@kernel.org>
 
-On Fri, Jul 2, 2021 at 12:05 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
-> Add DMA Controller driver for RZ/G2L SoC.
->
-> Based on the work done by Chris Brandt for RZ/A DMA driver.
->
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
-Thanks for your patch!
-
-> --- /dev/null
-> +++ b/drivers/dma/sh/rz-dmac.c
-
-> +static void rz_dmac_set_dmars_register(struct rz_dmac *dmac, int nr,
-> +                                      u32 dmars)
-> +{
-> +       u32 dmars_offset = (nr / 2) * 4;
-> +       u32 dmars32;
+> ---
+>  drivers/dma/imx-sdma.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index 665ccbf..d366198 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -435,6 +435,7 @@ struct sdma_channel {
+>  	enum dma_status			status;
+>  	struct imx_dma_data		data;
+>  	struct work_struct		terminate_worker;
+> +	bool				is_ram_script;
+>  };
+>  
+>  #define IMX_DMA_SG_LOOP		BIT(0)
+> @@ -498,6 +499,7 @@ struct sdma_engine {
+>  	struct sdma_buffer_descriptor	*bd0;
+>  	/* clock ratio for AHB:SDMA core. 1:1 is 1, 2:1 is 0*/
+>  	bool				clk_ratio;
+> +	bool                            fw_loaded;
+>  };
+>  
+>  static int sdma_config_write(struct dma_chan *chan,
+> @@ -918,6 +920,7 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
+>  	sdmac->pc_to_device = 0;
+>  	sdmac->device_to_device = 0;
+>  	sdmac->pc_to_pc = 0;
+> +	sdmac->is_ram_script = false;
+>  
+>  	switch (peripheral_type) {
+>  	case IMX_DMATYPE_MEMORY:
+> @@ -953,6 +956,7 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
+>  	case IMX_DMATYPE_SSI_DUAL:
+>  		per_2_emi = sdma->script_addrs->ssish_2_mcu_addr;
+>  		emi_2_per = sdma->script_addrs->mcu_2_ssish_addr;
+> +		sdmac->is_ram_script = true;
+>  		break;
+>  	case IMX_DMATYPE_SSI_SP:
+>  	case IMX_DMATYPE_MMC:
+> @@ -967,6 +971,7 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
+>  		per_2_emi = sdma->script_addrs->asrc_2_mcu_addr;
+>  		emi_2_per = sdma->script_addrs->asrc_2_mcu_addr;
+>  		per_2_per = sdma->script_addrs->per_2_per_addr;
+> +		sdmac->is_ram_script = true;
+>  		break;
+>  	case IMX_DMATYPE_ASRC_SP:
+>  		per_2_emi = sdma->script_addrs->shp_2_mcu_addr;
+> @@ -1363,6 +1368,11 @@ static struct sdma_desc *sdma_transfer_init(struct sdma_channel *sdmac,
+>  {
+>  	struct sdma_desc *desc;
+>  
+> +	if (!sdmac->sdma->fw_loaded && sdmac->is_ram_script) {
+> +		dev_warn_once(sdmac->sdma->dev, "sdma firmware not ready!\n");
+> +		goto err_out;
+> +	}
 > +
-> +       dmars32 = rz_dmac_ext_readl(dmac, dmars_offset);
-> +       if (nr % 2) {
-> +               dmars32 &= 0x0000ffff;
-> +               dmars32 |= dmars << 16;
-> +       } else {
-> +               dmars32 &= 0xffff0000;
-> +               dmars32 |= dmars;
-> +       }
-
-An alternative to Vinod's suggestion:
-
-    shift = (nr %2) * 16;
-    dmars32 &= ~(0xffff << shift);
-    dmars32 |= dmars << shift;
-
+>  	desc = kzalloc((sizeof(*desc)), GFP_NOWAIT);
+>  	if (!desc)
+>  		goto err_out;
+> @@ -1792,6 +1802,8 @@ static void sdma_load_firmware(const struct firmware *fw, void *context)
+>  
+>  	sdma_add_scripts(sdma, addr);
+>  
+> +	sdma->fw_loaded = true;
 > +
-> +       rz_dmac_ext_writel(dmac, dmars32, dmars_offset);
-> +}
+>  	dev_info(sdma->dev, "loaded firmware %d.%d\n",
+>  			header->version_major,
+>  			header->version_minor);
 
-> +static int rz_dmac_chan_probe(struct rz_dmac *dmac,
-> +                             struct rz_dmac_chan *channel,
-> +                             unsigned int index)
-> +{
-> +       struct platform_device *pdev = to_platform_device(dmac->dev);
-> +       struct rz_lmdesc *lmdesc;
-> +       char pdev_irqname[5];
-> +       char *irqname;
-> +       int ret;
-> +
-> +       channel->index = index;
-> +       channel->mid_rid = -EINVAL;
-> +
-> +       /* Request the channel interrupt. */
-> +       sprintf(pdev_irqname, "ch%u", index);
-> +       channel->irq = platform_get_irq_byname(pdev, pdev_irqname);
-> +       if (channel->irq < 0)
-> +               return -ENODEV;
 
-Please propagate the error in channel->irq, which might be
--EPROBE_DEFER.
-
-> +static int rz_dmac_parse_of(struct device *dev, struct rz_dmac *dmac)
-> +{
-> +       struct device_node *np = dev->of_node;
-> +       int ret;
-> +
-> +       ret = of_property_read_u32(np, "dma-channels", &dmac->n_channels);
-> +       if (ret < 0) {
-> +               dev_err(dev, "unable to read dma-channels property\n");
-> +               return ret;
-> +       }
-> +
-> +       if (!dmac->n_channels || dmac->n_channels > RZ_DMAC_MAX_CHANNELS) {
-> +               dev_err(dev, "invalid number of channels %u\n", dmac->n_channels);
-> +               return -EINVAL;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int rz_dmac_probe(struct platform_device *pdev)
-> +{
-> +       const char *irqname = "error";
-> +       struct dma_device *engine;
-> +       struct rz_dmac *dmac;
-> +       int channel_num;
-> +       int ret, i;
-
-unsigned int i;
-
-> +       int irq;
-> +
-> +       dmac = devm_kzalloc(&pdev->dev, sizeof(*dmac), GFP_KERNEL);
-> +       if (!dmac)
-> +               return -ENOMEM;
-> +
-> +       dmac->dev = &pdev->dev;
-> +       platform_set_drvdata(pdev, dmac);
-> +
-> +       ret = rz_dmac_parse_of(&pdev->dev, dmac);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       dmac->channels = devm_kcalloc(&pdev->dev, dmac->n_channels,
-> +                                     sizeof(*dmac->channels), GFP_KERNEL);
-> +       if (!dmac->channels)
-> +               return -ENOMEM;
-> +
-> +       /* Request resources */
-> +       dmac->base = devm_platform_ioremap_resource(pdev, 0);
-> +       if (IS_ERR(dmac->base))
-> +               return PTR_ERR(dmac->base);
-> +
-> +       dmac->ext_base = devm_platform_ioremap_resource(pdev, 1);
-> +       if (IS_ERR(dmac->ext_base))
-> +               return PTR_ERR(dmac->ext_base);
-> +
-> +       /* Register interrupt handler for error */
-> +       irq = platform_get_irq_byname(pdev, irqname);
-> +       if (irq < 0) {
-> +               dev_err(&pdev->dev, "no error IRQ specified\n");
-> +               return -ENODEV;
-
-I'd say "return dev_err_probe(&pdev->dev, irq, ..);", but
-platform_get_irq_byname() already prints an error message, so
-please just use "return irq;" to propagate the error, which could
-be -EPROBE_DEFER.
-
-> +       }
-
-> +static int rz_dmac_remove(struct platform_device *pdev)
-> +{
-> +       struct rz_dmac *dmac = platform_get_drvdata(pdev);
-> +       int i;
-
-unsigned int it;
-
-> +
-> +       for (i = 0; i < dmac->n_channels; i++) {
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds

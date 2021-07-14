@@ -2,46 +2,46 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A5853C7ED6
-	for <lists+dmaengine@lfdr.de>; Wed, 14 Jul 2021 08:57:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E0D73C7ED7
+	for <lists+dmaengine@lfdr.de>; Wed, 14 Jul 2021 08:58:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238104AbhGNHAn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 14 Jul 2021 03:00:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53070 "EHLO mail.kernel.org"
+        id S238129AbhGNHBT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 14 Jul 2021 03:01:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237948AbhGNHAn (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 14 Jul 2021 03:00:43 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9D5F46100C;
-        Wed, 14 Jul 2021 06:57:51 +0000 (UTC)
+        id S237948AbhGNHBS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 14 Jul 2021 03:01:18 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E77B46100C;
+        Wed, 14 Jul 2021 06:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626245872;
-        bh=FGm4fJkUZ8hM3Kn8jLZpJQD5fv1LvXH6R9PJwuhr49k=;
+        s=k20201202; t=1626245907;
+        bh=7rYn8qhbP5gr0VccdQ6vD/FAZ5ES5/hm8SCvpF8lbiA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fPd9m7tAU9OV6WG1K4OcEP5GmPY9qQClWRqDHwKMa7no0v9xHS4V3neUbaMA5HMmJ
-         IMyr0sKUp1Sx3bIrguCQTzm0kiC5jSWaZTcN7TVotDqqnIgrWkqGQQ+a0LnaiH1i5C
-         5WUHWg7IuRgRp/4DHaI/v+Ks3FgDZK/95iEyUxHYPPumQ4JfD1gaDF0PE6X+8MNmAK
-         FKjl8JNnvdAgQMfkxHl75wtULOXxpNMpNX8iG43npbJextVVIwrnzIO1U5CBPZ9ian
-         kuaWZBnS94+4VYx15QN4vvfqbqFA9R/EOqrrwJZdzbmGzTuVqXcEbfDpmGzmLS7ISv
-         8kjUBscL169EQ==
-Date:   Wed, 14 Jul 2021 12:27:48 +0530
+        b=hQjAsrNvA3w7Ky/28cSk2Yj/jOBMl2nCk+QfIFAF7BuRWCacv7apzEZEczCdIdj0a
+         rwZAGIEqrozbLJU/RJn5C08JqiRihxeGADwq6cmWCa2BIuNlIl2HU2brRFvirO4MAj
+         0zBxjF0KtADnfub2dbXSm23OKe5zGOBcx5J8JtaPVwlqBsAXoLJBGUpVAYezYYk1MC
+         KKqFHhWYWIrg+A5rHIQsb5DXOwRd45wIpJ5ZNJkaYYdN+tBsf/N4wwMqf6MM/AlR2O
+         JEYKY+O424jz1OssrtOPP2DJ4FHrRSCYy5UOg6cNNLZZS+By/JIrsGB2bWT+dgRCv5
+         MwskSETrDt75w==
+Date:   Wed, 14 Jul 2021 12:28:24 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Dave Jiang <dave.jiang@intel.com>
 Cc:     dmaengine@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: idxd: fix setup sequence for MSIXPERM table
-Message-ID: <YO6K7CdodqjP758S@matsya>
-References: <162456741222.1138073.1298447364671237896.stgit@djiang5-desk3.ch.intel.com>
+Subject: Re: [PATCH] dmaengine: idxd: add missing percpu ref put on failure
+Message-ID: <YO6LEIJbUSb03c3j@matsya>
+References: <162456170168.1121236.7240941044089212312.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <162456741222.1138073.1298447364671237896.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <162456170168.1121236.7240941044089212312.stgit@djiang5-desk3.ch.intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 24-06-21, 13:43, Dave Jiang wrote:
-> The MSIX permission table should be programmed BEFORE request_irq()
-> happens. This prevents any possibility of an interrupt happening before the
-> MSIX perm table is setup, however slight.
+On 24-06-21, 12:08, Dave Jiang wrote:
+> When enqcmds() fails, exit path is missing a percpu_ref_put(). This can
+> cause failure on shutdown path when the driver is attempting to quiesce the
+> wq. Add missing percpu_ref_put() call on the error exit path.
 
 Applied, thanks
 

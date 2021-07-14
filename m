@@ -2,26 +2,26 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98F2C3C7FE2
-	for <lists+dmaengine@lfdr.de>; Wed, 14 Jul 2021 10:17:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA5E33C7FE6
+	for <lists+dmaengine@lfdr.de>; Wed, 14 Jul 2021 10:18:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238432AbhGNIUW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 14 Jul 2021 04:20:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59832 "EHLO
+        id S238469AbhGNIVJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 14 Jul 2021 04:21:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229940AbhGNIUW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Jul 2021 04:20:22 -0400
+        with ESMTP id S238462AbhGNIVI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Jul 2021 04:21:08 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84A82C06175F
-        for <dmaengine@vger.kernel.org>; Wed, 14 Jul 2021 01:17:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35E95C061760
+        for <dmaengine@vger.kernel.org>; Wed, 14 Jul 2021 01:18:17 -0700 (PDT)
 Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[IPv6:::1])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <l.stach@pengutronix.de>)
-        id 1m3a4v-00059P-Hz; Wed, 14 Jul 2021 10:17:13 +0200
-Message-ID: <efae56878575297039d745c61503b96321d31e52.camel@pengutronix.de>
-Subject: Re: [PATCH v16 05/12] dmaengine: dma: imx-sdma: add fw_loaded and
- is_ram_script
+        id 1m3a5h-0005Hf-Ex; Wed, 14 Jul 2021 10:18:01 +0200
+Message-ID: <152cb353c4c6fe66ba40c084cd62947967080011.camel@pengutronix.de>
+Subject: Re: [PATCH v16 09/12] dmaengine: imx-sdma: remove ERR009165 on
+ i.mx6ul
 From:   Lucas Stach <l.stach@pengutronix.de>
 To:     Robin Gong <yibin.gong@nxp.com>, vkoul@kernel.org,
         mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
@@ -35,10 +35,10 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-imx@nxp.com,
         kernel@pengutronix.de, dmaengine@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Date:   Wed, 14 Jul 2021 10:17:04 +0200
-In-Reply-To: <1626258052-22198-6-git-send-email-yibin.gong@nxp.com>
+Date:   Wed, 14 Jul 2021 10:17:59 +0200
+In-Reply-To: <1626258052-22198-10-git-send-email-yibin.gong@nxp.com>
 References: <1626258052-22198-1-git-send-email-yibin.gong@nxp.com>
-         <1626258052-22198-6-git-send-email-yibin.gong@nxp.com>
+         <1626258052-22198-10-git-send-email-yibin.gong@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.40.3 (3.40.3-1.fc34) 
 MIME-Version: 1.0
@@ -52,12 +52,8 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 Am Mittwoch, dem 14.07.2021 um 18:20 +0800 schrieb Robin Gong:
-> Add 'fw_loaded' and 'is_ram_script' to check if the script used by channel
-> is ram script and it's loaded or not, so that could prevent meaningless
-> following malloc dma descriptor and bd allocate in sdma_transfer_init(),
-> otherwise memory may be consumed out potentially without free in case
-> that spi fallback into pio while dma transfer failed by sdma firmware not
-> ready(next ERR009165 patch depends on sdma RAM scripts/firmware).
+> ECSPI issue fixed from i.mx6ul at hardware level, no need
+> ERR009165 anymore on those chips such as i.mx8mq.
 > 
 > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 > Acked-by: Vinod Koul <vkoul@kernel.org>
@@ -65,73 +61,66 @@ Am Mittwoch, dem 14.07.2021 um 18:20 +0800 schrieb Robin Gong:
 Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
 > ---
->  drivers/dma/imx-sdma.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+>  drivers/dma/imx-sdma.c | 26 ++++++++++++++++++++++++--
+>  1 file changed, 24 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> index 665ccbf..d366198 100644
+> index 5969df8..cfcd413 100644
 > --- a/drivers/dma/imx-sdma.c
 > +++ b/drivers/dma/imx-sdma.c
-> @@ -435,6 +435,7 @@ struct sdma_channel {
->  	enum dma_status			status;
->  	struct imx_dma_data		data;
->  	struct work_struct		terminate_worker;
-> +	bool				is_ram_script;
+> @@ -476,6 +476,13 @@ struct sdma_driver_data {
+>  	int num_events;
+>  	struct sdma_script_start_addrs	*script_addrs;
+>  	bool check_ratio;
+> +	/*
+> +	 * ecspi ERR009165 fixed should be done in sdma script
+> +	 * and it has been fixed in soc from i.mx6ul.
+> +	 * please get more information from the below link:
+> +	 * https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
+> +	 */
+> +	bool ecspi_fixed;
 >  };
 >  
->  #define IMX_DMA_SG_LOOP		BIT(0)
-> @@ -498,6 +499,7 @@ struct sdma_engine {
->  	struct sdma_buffer_descriptor	*bd0;
->  	/* clock ratio for AHB:SDMA core. 1:1 is 1, 2:1 is 0*/
->  	bool				clk_ratio;
-> +	bool                            fw_loaded;
+>  struct sdma_engine {
+> @@ -596,6 +603,13 @@ static struct sdma_driver_data sdma_imx6q = {
+>  	.script_addrs = &sdma_script_imx6q,
 >  };
 >  
->  static int sdma_config_write(struct dma_chan *chan,
-> @@ -918,6 +920,7 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
->  	sdmac->pc_to_device = 0;
->  	sdmac->device_to_device = 0;
->  	sdmac->pc_to_pc = 0;
-> +	sdmac->is_ram_script = false;
->  
->  	switch (peripheral_type) {
->  	case IMX_DMATYPE_MEMORY:
-> @@ -953,6 +956,7 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
->  	case IMX_DMATYPE_SSI_DUAL:
->  		per_2_emi = sdma->script_addrs->ssish_2_mcu_addr;
->  		emi_2_per = sdma->script_addrs->mcu_2_ssish_addr;
-> +		sdmac->is_ram_script = true;
->  		break;
->  	case IMX_DMATYPE_SSI_SP:
->  	case IMX_DMATYPE_MMC:
-> @@ -967,6 +971,7 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
->  		per_2_emi = sdma->script_addrs->asrc_2_mcu_addr;
->  		emi_2_per = sdma->script_addrs->asrc_2_mcu_addr;
->  		per_2_per = sdma->script_addrs->per_2_per_addr;
-> +		sdmac->is_ram_script = true;
->  		break;
->  	case IMX_DMATYPE_ASRC_SP:
->  		per_2_emi = sdma->script_addrs->shp_2_mcu_addr;
-> @@ -1363,6 +1368,11 @@ static struct sdma_desc *sdma_transfer_init(struct sdma_channel *sdmac,
->  {
->  	struct sdma_desc *desc;
->  
-> +	if (!sdmac->sdma->fw_loaded && sdmac->is_ram_script) {
-> +		dev_warn_once(sdmac->sdma->dev, "sdma firmware not ready!\n");
-> +		goto err_out;
-> +	}
+> +static struct sdma_driver_data sdma_imx6ul = {
+> +	.chnenbl0 = SDMA_CHNENBL0_IMX35,
+> +	.num_events = 48,
+> +	.script_addrs = &sdma_script_imx6q,
+> +	.ecspi_fixed = true,
+> +};
 > +
->  	desc = kzalloc((sizeof(*desc)), GFP_NOWAIT);
->  	if (!desc)
->  		goto err_out;
-> @@ -1792,6 +1802,8 @@ static void sdma_load_firmware(const struct firmware *fw, void *context)
->  
->  	sdma_add_scripts(sdma, addr);
->  
-> +	sdma->fw_loaded = true;
+>  static struct sdma_script_start_addrs sdma_script_imx7d = {
+>  	.ap_2_ap_addr = 644,
+>  	.uart_2_mcu_addr = 819,
+> @@ -629,6 +643,7 @@ static const struct of_device_id sdma_dt_ids[] = {
+>  	{ .compatible = "fsl,imx31-sdma", .data = &sdma_imx31, },
+>  	{ .compatible = "fsl,imx25-sdma", .data = &sdma_imx25, },
+>  	{ .compatible = "fsl,imx7d-sdma", .data = &sdma_imx7d, },
+> +	{ .compatible = "fsl,imx6ul-sdma", .data = &sdma_imx6ul, },
+>  	{ .compatible = "fsl,imx8mq-sdma", .data = &sdma_imx8mq, },
+>  	{ /* sentinel */ }
+>  };
+> @@ -948,8 +963,15 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
+>  		break;
+>  	case IMX_DMATYPE_CSPI:
+>  		per_2_emi = sdma->script_addrs->app_2_mcu_addr;
+> -		emi_2_per = sdma->script_addrs->mcu_2_ecspi_addr;
+> -		sdmac->is_ram_script = true;
 > +
->  	dev_info(sdma->dev, "loaded firmware %d.%d\n",
->  			header->version_major,
->  			header->version_minor);
+> +		/* Use rom script mcu_2_app if ERR009165 fixed */
+> +		if (sdmac->sdma->drvdata->ecspi_fixed) {
+> +			emi_2_per = sdma->script_addrs->mcu_2_app_addr;
+> +		} else {
+> +			emi_2_per = sdma->script_addrs->mcu_2_ecspi_addr;
+> +			sdmac->is_ram_script = true;
+> +		}
+> +
+>  		break;
+>  	case IMX_DMATYPE_EXT:
+>  	case IMX_DMATYPE_SSI:
 
 

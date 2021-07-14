@@ -2,41 +2,41 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 36CA43C7B58
-	for <lists+dmaengine@lfdr.de>; Wed, 14 Jul 2021 04:04:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC3AE3C7B5D
+	for <lists+dmaengine@lfdr.de>; Wed, 14 Jul 2021 04:05:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237413AbhGNCHq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 13 Jul 2021 22:07:46 -0400
-Received: from mail-eopbgr60058.outbound.protection.outlook.com ([40.107.6.58]:59743
+        id S237389AbhGNCH4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 13 Jul 2021 22:07:56 -0400
+Received: from mail-eopbgr60072.outbound.protection.outlook.com ([40.107.6.72]:6252
         "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S237415AbhGNCHq (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 13 Jul 2021 22:07:46 -0400
+        id S237428AbhGNCHx (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 13 Jul 2021 22:07:53 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Jm2rU8TLwi8eBYdlV7hUwNH774rM70TX16oaHvZbaHHh5LbdRd3CDY2PqCP67Dtxe8NeurzK2AcwzR4zDnzLasuclaLjr5FEyOB5FatpLj8cJLtxFIaX5MZ3tO2kXQs7yxXvdmQQTVkXgM+prCDFYkbfC+KPR3Gynp78gpjWKo9irDi6NhQX7N3QH5Ch4t5Nivd0JdDSrpJyFTdQACEf5jd4TW0IFfi/67vmJALpnaOz6vQk+Y0xshcjtfnXdSCu/6pKcTUKOhwxhFmxp6fAjFID7KpdtUFNSxW9unX7Fy6wYVAhJKHYZ3VW3Dy3+8sjt61hDo3IfvqlLWLUukU/NQ==
+ b=k+BZ/ZMlEAsYyr4kQcUsATuzdLruiTfTvvcN85+0Cozwozy7dK5siKkSUtTORN8/1J3lwTnRBiWob+ROpmJ3i0PVSyouXIdLB1PUSLYq6yrnQjHYwcWarAXtiYMvqjJqjW/HXaPDheP0ZICVRMpM3LTjFitZqs/zYhgLy+o8kzflBtFX842LvAfZPH1oDUo5g1B0D4nCeyyyINz1yeQYZDD3m9STekbWRowQ1M2bA6nC5r3zSIYxmb7CCjDHTKtX+ftr7IDjUY6IEc1RgoqbBSNia99CxV5d3tB6/CXVHCFYpPtZ9HvLVPvme/Ivd/M4JiXcwDatJN1t3vnvu8R4IQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ckDPSsFVzv3NWjjrNqcD68iD8bHaj5KBipoUq89jOm0=;
- b=G8eSYpDDHgWfjcGyI7ppzVksf6nUKHqQmnjzQp4r2Bx+xZW9eGDh95CrffPgGuTWPfsf5SBhTUvtvB4dSJzU8aDbJ6cyi3LoA+ZP+qHp7bvyT8f12FP3/Pv996nztgct1ua5nlo6vKwUOWQxkZlButW/fNwOOIldDjdUIGcazUfXwHbDz49h9mbRdgAXSH8Kz/AVWKDvDqmjN4IcpUOzNhg2TwXtCZGuyOWHgJ5MBmvge3Qjg0yT2zQWPN0y5JFEKA1VUP8vj+3Ag5xv64XX0fn41HiJkUY9mhNIaqV83CILw9/jt/YNprmqW53cI4cBavXdwDjJjXDYbUZsU1RGpQ==
+ bh=L+wNYSXkpgwjMDrrP/9fWqjfNAb2CmAVUWdGJvYPzQQ=;
+ b=h6cDmDm5tdosekmCIjiKnnPPYa4VfoswWKJYYp6Meak/QOByV9BT/9lNI92U0ORXWVpid/LEd6muXogTdOCJ/epssKiFRmtC1AFKZtqFnqFYtrYyJyIQkL+myeya1xDFTdluu5Ob9xQYlhtYuRBSaR4V8qaUXJyd+DXoLK4zo+epQTYBwNGar5xzETEv1lWUDNhGj9sm8xip5VZo9SLx3DGPo6mN31hT6DaDrBoKsH3Idf4C6xGUmZRz07YYx6Q9NQ4GeQVTrQjYMA5sTcoAwgfTbRnML1wlwxbOnnLj9Ss5ROOcs8psr5YFcsEojrSEKl3nZB9iyxze/y/WZB6ECQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ckDPSsFVzv3NWjjrNqcD68iD8bHaj5KBipoUq89jOm0=;
- b=YbfXaLhEv4G8aJXScX6kUtLMm/DUE2Z39sKbPunZKmedh+FEr2tbH8aNqXg+VZGNOyMf9A3xkzNzzJNSxMDFUyHffpDGOIE/QW6KLkD4gUbSJ7zxkRZ5Xr7TJpO6u2Eq4BEHu+8Gx8v/+R1ueJbpjsga3bJBKafmlSaLJ+FB9Xc=
+ bh=L+wNYSXkpgwjMDrrP/9fWqjfNAb2CmAVUWdGJvYPzQQ=;
+ b=HheEpRqOLpFr8U6zXTr25mmhcOHt4KgOsEe9/JRxS0apx3SO0XGpoAwgZWzZCB3TD/hU+Nd2RHADYElbQRL5eHHWaULhohadZUN+iYKHLyaTh9+ndC0bZKrGosaIwV7hG4eEFajBYdHvR96t8fv6ZUlWX2Yf+i6+fu7E8eZtMxs=
 Authentication-Results: kernel.org; dkim=none (message not signed)
  header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
 Received: from VE1PR04MB6688.eurprd04.prod.outlook.com (2603:10a6:803:127::25)
  by VI1PR04MB4175.eurprd04.prod.outlook.com (2603:10a6:803:40::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4308.22; Wed, 14 Jul
- 2021 02:04:53 +0000
+ 2021 02:05:00 +0000
 Received: from VE1PR04MB6688.eurprd04.prod.outlook.com
  ([fe80::a978:6f38:2bce:9076]) by VE1PR04MB6688.eurprd04.prod.outlook.com
  ([fe80::a978:6f38:2bce:9076%5]) with mapi id 15.20.4331.021; Wed, 14 Jul 2021
- 02:04:53 +0000
+ 02:05:00 +0000
 From:   Robin Gong <yibin.gong@nxp.com>
 To:     vkoul@kernel.org, mark.rutland@arm.com, broonie@kernel.org,
         robh+dt@kernel.org, catalin.marinas@arm.com, will.deacon@arm.com,
@@ -49,9 +49,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-imx@nxp.com,
         kernel@pengutronix.de, dmaengine@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v16 04/12] dmaengine: imx-sdma: remove duplicated sdma_load_context
-Date:   Wed, 14 Jul 2021 18:20:44 +0800
-Message-Id: <1626258052-22198-5-git-send-email-yibin.gong@nxp.com>
+Subject: [PATCH v16 05/12] dmaengine: dma: imx-sdma: add fw_loaded and is_ram_script
+Date:   Wed, 14 Jul 2021 18:20:45 +0800
+Message-Id: <1626258052-22198-6-git-send-email-yibin.gong@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1626258052-22198-1-git-send-email-yibin.gong@nxp.com>
 References: <1626258052-22198-1-git-send-email-yibin.gong@nxp.com>
@@ -61,91 +61,134 @@ X-ClientProxiedBy: SG2PR02CA0016.apcprd02.prod.outlook.com
  (2603:10a6:803:127::25)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR02CA0016.apcprd02.prod.outlook.com (2603:1096:3:17::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.4331.21 via Frontend Transport; Wed, 14 Jul 2021 02:04:47 +0000
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR02CA0016.apcprd02.prod.outlook.com (2603:1096:3:17::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.4331.21 via Frontend Transport; Wed, 14 Jul 2021 02:04:54 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 68ab3e1e-78b9-4eac-c8ba-08d9466bc52a
+X-MS-Office365-Filtering-Correlation-Id: 60c91c20-3fa8-4783-c999-08d9466bc949
 X-MS-TrafficTypeDiagnostic: VI1PR04MB4175:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB4175D85BCFB8F1E8ED33A47189139@VI1PR04MB4175.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2331;
+X-Microsoft-Antispam-PRVS: <VI1PR04MB4175C2C80D9BDA0B5C4C582989139@VI1PR04MB4175.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RPrFb04//5rSgYSyqI/R4FVAcUi6NDuomAvdlcx/PGMjsjepb96Ri9099phRZiVxoIfzE91sbo4nRLVACI4QmvjHnNYYly0X6MHmA85BaK77+4TTaFGYPRqKM7U/WY++8rnofzvJ68PbqS1GRQVcFpzsqpGxzGXU7JoRODyZuIYShxDY2DReIIFF2NeUY1x3RQyitp9VVbDT6rujP6LHkdUSC+ESiCrMhk1ieIAsUTz15z9BWvX/2w91wI0AuMYFe9aX/Trj//PYOwzSw8d1K94Gklb3qJ0dj5sX1rmLdL1zqv/RsS8nd7RLGciBmd1rtkybw2OX6pz1E4cVRXBHDE4w8zJY5OzV3bJ3isvjcPqkUJr2Colwj/VKeXzCAP1k8ZElE9zPBi6rPs0+1IIV6ClksPqEmvx/8uv//wdK2Z2FsMZPvRygcFh+sglfBN7rPpK7jRXRaSmdKJ8jRgKZMD1+hBQ7OQpo7nVo71h2Uzp5C0ZpD/7pFChN4/1HKDGYVYW14vyddO6LKQgz2IxgXpOPRFnJcxUmhnd0xo8/GRvSKNZksWFNLNSSqj6ujYBzNkmPNpDnFrwfHi+l1Pk+8Ze/eIwdO3ctyWVyZZCff9ZcAnSNDLLXeRlFhOjkWySbFJtqsq6dZ0BZB+dECdngcDd1eNu7HRtq3lDHvZL8cDxTIIiJWWBTR8Eh2UP8RvnQfv7nAy3K7PIvsCF6wlFzRDOd8EAsdRGraZTc4JHb8ac=
+X-Microsoft-Antispam-Message-Info: dZqRkSR2sejJWzwzJvktPfvOBV27KCbwjIzKM53e4x+vMlL8SZAhmRZ9UtGO/Tt3Ea+afNqRC8u8sTATAAY6RYqW9Vk4mKy7FxR8e4Zr+/6p0ZVUMFG2RdvxZHG0ySWTMm7Q72BAAl+JBTB0RsH8AHrMBW+KkHRgC+a4scQnMF+qFoZZcSdGLUEivOI4VGcCBsS6qJtDeRWn+155q7rRym0WhBk/K6cFkJKuFbY2Wv7VmjzW+5hhQC7S63HwledMgIJbKRcITYIKrNl6nAtF05uyXdtWPFvH3Ucx/Nymw1oIUvz4J7N6mv+jmEVvuVjvwmZY22xlhBCPcit8i5ybMtbhkfzk9yuKpi7XGuM45Oedyar6730wY6DN+vn3tgJoapA/Rv/Pd69Yq2++MvOvHJk4IU1mFdSpp/utdVcl+g9eAOUoTPsBp7y6s0bhhQQs7ZaxvoNHXakrpsgmXd/geCXDgx48+0VNh/9l46zsv8s+nrEBgIiN6E7b7rx3t/v/+AXu7dLUCdvP2VPAfxsIU2/PzqmO2Q3fZYo5Ni5fAIq1R5eOxl2Ag05YL9Pz16yTzHXr+DAomm4Pf3xsAbSmdiASYrRj1460SH+pSbgNJfkz1My76jKTCZD5T9L6D6pgXpeQ7Q1i3GbFiNV3pUthnHdaWVvkgRtr4KdVCZ96y/oJkrnSEOiCg5/zI5bCN9uWdHdVLVEs620RxsBqDrL0EI3E8p/ZuH0S7/tNR3c1dso=
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6688.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(136003)(39860400002)(376002)(346002)(8936002)(7416002)(6512007)(2906002)(921005)(6636002)(6666004)(83380400001)(6506007)(86362001)(26005)(36756003)(4326008)(66476007)(478600001)(66556008)(956004)(52116002)(6486002)(8676002)(38350700002)(38100700002)(186003)(5660300002)(2616005)(316002)(66946007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?TZ1J8xbRyBmr5g7vOobkENJjGSTRjw5EQWfC0JXxFRjEZzcD8JHdHKNbsFkk?=
- =?us-ascii?Q?NEt1l26e2Wr5PA6WwvEziI2LLZ+8CNq49+UjSfuBntBl0oEHhUjfhVHVraAB?=
- =?us-ascii?Q?C83iCEsZusqIVymWOf5RDU1yf/U4o90BtbWQibAhWRMKwuQ9i6Ys8tn73UkX?=
- =?us-ascii?Q?o2S7/0/QekoXL/9rjy3AJ1gMyT8G/gKMpyq7MbP88kh60jRfgSKDq7Mn+eL9?=
- =?us-ascii?Q?75oxD4/2z7PvbxEwjWuvrxIjMgF3kBzjR9WpE2BA3ABGfcCQgdB73FZ2gWjC?=
- =?us-ascii?Q?TYoZsO5rGAIqqVPpRsNZ93F7lKFwlR0PnEU30N3/3xD6QOeB4IPhm0/GoD5p?=
- =?us-ascii?Q?syeussGN7JBH/TYyjs2uSyBHrNhidB7vp58vEDK+bNO0gqdfhza75VyLnUGo?=
- =?us-ascii?Q?8tSrrlrTNILoPqZn0ty4Hx9JaYGL8JTCweXTGTlcDM8aI2yENJfVO6QSKIWK?=
- =?us-ascii?Q?c3kUVZpKAWpIuLhhdKXcXQoO9xgy2T/nVBSf3O7HPyN9MmQo0OkQzxoikpaC?=
- =?us-ascii?Q?NG3XSpsKTAMSGqISHrPw1VRMtJUVwayUul9xdw+6VYi4J6LknXGoevBxIjvk?=
- =?us-ascii?Q?bjH3KYFRTkd8DkVo3YDl3QMRp/nNm2hQ6AVRJKSv4d2pNYhmqXjpjLF4WvMj?=
- =?us-ascii?Q?LQCy3pAi4EEMHBKf704kIGGMx1kGvLiW2oqnqOJ6H35/jac1lTL7HcZwKMX/?=
- =?us-ascii?Q?MCx3b8Ay2qEDK0uiTXpZLwnTKLEp8lGbxKKsZlf3ypkhRJtpF5ndGNCyzFaA?=
- =?us-ascii?Q?HKWlPCiHGAC47ecmGIq7ohnaC1PLjTqJVGH/F2aNE8BF8GyV/FNV6Re1zEj0?=
- =?us-ascii?Q?YPi7K/xKxfy0gxXoSvhajFKEGreZLLbyb0ZGO9LBIYfqxrHezn/jJud6aOPp?=
- =?us-ascii?Q?HFJ57/bq3gcDBX1wi8x/Z+tvrBv5dmbfHnuvNSaD1wXiNZA7soY2to7Y4RFA?=
- =?us-ascii?Q?wnj1py6FlW5mAdXweTbbyP3iT0AszX68663fQDDJdLZz0XsE88fw4ZcQupKf?=
- =?us-ascii?Q?x8FfknPkak6/BnGWXe5xoAX5bwV+qYkIxpStPUlRrrpm2SJICbLblafDqdRw?=
- =?us-ascii?Q?lwETj78xcRy20OcODvSa9YEcvctFzD0aQvdOj1MTYnHs3qisPt+QfWRx7WLD?=
- =?us-ascii?Q?SlLzSDmU+f9nyIJk7qmoyVp4AHArRb1uxTcJIsl/OnCl1jSH+rGd8XPcB4xW?=
- =?us-ascii?Q?GaEVw5KmqSgzpBKI903Nlp2mPcO7Pzo1eO+LOGU3Dp2DsoO/Cdf7Ys4FgePP?=
- =?us-ascii?Q?z/FgjLluVdrhbujI2gsYyxZeXBSfJ4fOyj6Hm/2YabtotFWiODn/kfS6Mo6G?=
- =?us-ascii?Q?izcmF8my2gMW/xDW25D6+Awi?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?U820x/kAKbbma9XOIy1HoN9k4gE833G8enmUldlf8xSJBbzYFlv6N/n5ugkP?=
+ =?us-ascii?Q?ab0mxv+AJ/Vwdzm9lMbwwe+e4oM5ncGNKIvZMavwlM10jb+oanWbVahaPWHs?=
+ =?us-ascii?Q?nWCSJntNwiE3ndnKACOk3LIz5Qz7VwK1TwQxdmhbDS5/5uWYPcBfzZ/XbAQ4?=
+ =?us-ascii?Q?NAsBJK3TFbJ+7xjRLz1U0M9U9SdG28f0q7ZVThEfd5BpU3gPmo9kzEtlLVuy?=
+ =?us-ascii?Q?89PzompJ18ZV822PZMpwhv8+qOHLG7xJlY8wc/sFgQKNpW0bPTkpnF/TiIk/?=
+ =?us-ascii?Q?f79JU0EjeGzvBfzgOFtjHMSHmTIBJMt29KBr/bn92kWZdnq7WZ1USkJBBcOB?=
+ =?us-ascii?Q?BDG206Uisl24yh+EKYah/GlTSnPjXXFChrjerU/BbW7rjntv7uK/mwXpS6Vo?=
+ =?us-ascii?Q?cYU+x2/zl3QqLaf1ZgvYBOKC6F/F1LcIyUSYglLfMgl+4WeoseB2D2AhG8HF?=
+ =?us-ascii?Q?zWnpY+g1rEV/+njPo3iieGBHmhB/GfQ5S0Y00E+ZE4xmO1msOf/7aW7sk6mi?=
+ =?us-ascii?Q?lmz8ToUnCNRXJe70XnHYhInvqeiPwSfcmORdjeufVUChD+8Bwjyi6Gn+1pkR?=
+ =?us-ascii?Q?k3/bHjj9+IBSUbe9AsRMK/XzfLO3+K4KXvcBRdYCK8lsj6WgUp0PdQkYpRYW?=
+ =?us-ascii?Q?8TQmn0A1VF/w4kkPJ1OhK9WGJIa51UDZ4NhgpBjbiJe1hwIE9+RFwLUAaVEK?=
+ =?us-ascii?Q?+iQUUiByWbjodLZmCd6mQ2SvA3dk58jgMTu57URZ2D+A3OBJaxWJCJ881hvI?=
+ =?us-ascii?Q?JBtv6/bQqeV4TS0XlKruIWA954Y5EK9hyAdEY20fGV7XnClPe+E8R/vPvcN/?=
+ =?us-ascii?Q?By/8BXUVO5bNP8wHjfzoN2k6B49SmrdPAHv3LKsJ16E892Ig8APRw4LqoO38?=
+ =?us-ascii?Q?olxGh4wAwFeBNnrUHmmkK2CG9lQO7RmrJTlecVEE+TpQOevUpjwJDF81tS7c?=
+ =?us-ascii?Q?6ELnx7yEElIF4rSAYSEkC5Dna43kPqr5PepNydVemco+o6QAzIs7FckXqr0A?=
+ =?us-ascii?Q?YrQntFWVDkE8UaJgmqz3MFvNa2nY6e/FKuihGwiRE0P/wm35Y3qQRJNyQUP5?=
+ =?us-ascii?Q?akHmRl4k/lP9G3JZaEq4OvEJacZ/s/QqONxypLvUXVLPx45abYsef2HvB5te?=
+ =?us-ascii?Q?A/MmG6qUlP5kDSDswCajXyYB9TJzAkUHixyilFTHHKkiHpOsY6AxvF/33kIg?=
+ =?us-ascii?Q?lUpenmadSmTjrIHKOaTOrDQtF820wl81PM+DxZlJzU12zOTKZGdjwryMHSw9?=
+ =?us-ascii?Q?FeMkL4PFE3UIqU8Uhzfsz2HPbvM/ZYieObt4CdxCMUQwRmPr0YJoRA6OYK6B?=
+ =?us-ascii?Q?gERU+CNx0AeTH+eN15XpnyIv?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68ab3e1e-78b9-4eac-c8ba-08d9466bc52a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60c91c20-3fa8-4783-c999-08d9466bc949
 X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6688.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2021 02:04:53.6564
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2021 02:05:00.7054
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: S2+lgaOClQgDnd8Iq4eIG9AucPtjKQkvy5NzhD2MyJN2NnV7q+xVdTrYi8IucEzsPtpUKs0EUD0n5H7CoE9n2g==
+X-MS-Exchange-CrossTenant-UserPrincipalName: sP4wnIGZ1cbAhB0Z9UwQXEJR9Kmj4tBSe0JXKjN3bcLPi43tTBigmeTMfLzegyEZP3SUVTsyqKKvhDVFD3dqCQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4175
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Since sdma_transfer_init() will do sdma_load_context before any
-sdma transfer, no need once more in sdma_config_channel().
+Add 'fw_loaded' and 'is_ram_script' to check if the script used by channel
+is ram script and it's loaded or not, so that could prevent meaningless
+following malloc dma descriptor and bd allocate in sdma_transfer_init(),
+otherwise memory may be consumed out potentially without free in case
+that spi fallback into pio while dma transfer failed by sdma firmware not
+ready(next ERR009165 patch depends on sdma RAM scripts/firmware).
 
-Fixes: ad0d92d7ba6a ("dmaengine: imx-sdma: refine to load context only once")
-Cc: <stable@vger.kernel.org>
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 Acked-by: Vinod Koul <vkoul@kernel.org>
-Tested-by: Richard Leitner <richard.leitner@skidata.com>
 ---
- drivers/dma/imx-sdma.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/dma/imx-sdma.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index e510df0..665ccbf 100644
+index 665ccbf..d366198 100644
 --- a/drivers/dma/imx-sdma.c
 +++ b/drivers/dma/imx-sdma.c
-@@ -1161,7 +1161,6 @@ static void sdma_set_watermarklevel_for_p2p(struct sdma_channel *sdmac)
- static int sdma_config_channel(struct dma_chan *chan)
+@@ -435,6 +435,7 @@ struct sdma_channel {
+ 	enum dma_status			status;
+ 	struct imx_dma_data		data;
+ 	struct work_struct		terminate_worker;
++	bool				is_ram_script;
+ };
+ 
+ #define IMX_DMA_SG_LOOP		BIT(0)
+@@ -498,6 +499,7 @@ struct sdma_engine {
+ 	struct sdma_buffer_descriptor	*bd0;
+ 	/* clock ratio for AHB:SDMA core. 1:1 is 1, 2:1 is 0*/
+ 	bool				clk_ratio;
++	bool                            fw_loaded;
+ };
+ 
+ static int sdma_config_write(struct dma_chan *chan,
+@@ -918,6 +920,7 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
+ 	sdmac->pc_to_device = 0;
+ 	sdmac->device_to_device = 0;
+ 	sdmac->pc_to_pc = 0;
++	sdmac->is_ram_script = false;
+ 
+ 	switch (peripheral_type) {
+ 	case IMX_DMATYPE_MEMORY:
+@@ -953,6 +956,7 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
+ 	case IMX_DMATYPE_SSI_DUAL:
+ 		per_2_emi = sdma->script_addrs->ssish_2_mcu_addr;
+ 		emi_2_per = sdma->script_addrs->mcu_2_ssish_addr;
++		sdmac->is_ram_script = true;
+ 		break;
+ 	case IMX_DMATYPE_SSI_SP:
+ 	case IMX_DMATYPE_MMC:
+@@ -967,6 +971,7 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
+ 		per_2_emi = sdma->script_addrs->asrc_2_mcu_addr;
+ 		emi_2_per = sdma->script_addrs->asrc_2_mcu_addr;
+ 		per_2_per = sdma->script_addrs->per_2_per_addr;
++		sdmac->is_ram_script = true;
+ 		break;
+ 	case IMX_DMATYPE_ASRC_SP:
+ 		per_2_emi = sdma->script_addrs->shp_2_mcu_addr;
+@@ -1363,6 +1368,11 @@ static struct sdma_desc *sdma_transfer_init(struct sdma_channel *sdmac,
  {
- 	struct sdma_channel *sdmac = to_sdma_chan(chan);
--	int ret;
+ 	struct sdma_desc *desc;
  
- 	sdma_disable_channel(chan);
++	if (!sdmac->sdma->fw_loaded && sdmac->is_ram_script) {
++		dev_warn_once(sdmac->sdma->dev, "sdma firmware not ready!\n");
++		goto err_out;
++	}
++
+ 	desc = kzalloc((sizeof(*desc)), GFP_NOWAIT);
+ 	if (!desc)
+ 		goto err_out;
+@@ -1792,6 +1802,8 @@ static void sdma_load_firmware(const struct firmware *fw, void *context)
  
-@@ -1201,9 +1200,7 @@ static int sdma_config_channel(struct dma_chan *chan)
- 		sdmac->watermark_level = 0; /* FIXME: M3_BASE_ADDRESS */
- 	}
+ 	sdma_add_scripts(sdma, addr);
  
--	ret = sdma_load_context(sdmac);
--
--	return ret;
-+	return 0;
- }
- 
- static int sdma_set_channel_priority(struct sdma_channel *sdmac,
++	sdma->fw_loaded = true;
++
+ 	dev_info(sdma->dev, "loaded firmware %d.%d\n",
+ 			header->version_major,
+ 			header->version_minor);
 -- 
 2.7.4
 

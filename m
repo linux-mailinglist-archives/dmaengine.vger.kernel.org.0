@@ -2,30 +2,30 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BEF23C9466
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Jul 2021 01:20:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CE793C9467
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Jul 2021 01:20:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237556AbhGNXXi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 14 Jul 2021 19:23:38 -0400
-Received: from mga11.intel.com ([192.55.52.93]:61905 "EHLO mga11.intel.com"
+        id S237550AbhGNXXo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 14 Jul 2021 19:23:44 -0400
+Received: from mga12.intel.com ([192.55.52.136]:21850 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237550AbhGNXXh (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 14 Jul 2021 19:23:37 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10045"; a="207423689"
+        id S236097AbhGNXXn (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 14 Jul 2021 19:23:43 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10045"; a="190126144"
 X-IronPort-AV: E=Sophos;i="5.84,240,1620716400"; 
-   d="scan'208";a="207423689"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 16:20:45 -0700
+   d="scan'208";a="190126144"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 16:20:51 -0700
 X-IronPort-AV: E=Sophos;i="5.84,240,1620716400"; 
-   d="scan'208";a="655008425"
+   d="scan'208";a="412943419"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 16:20:45 -0700
-Subject: [PATCH v2 04/18] dmaengine: idxd: remove IDXD_DEV_CONF_READY
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 16:20:51 -0700
+Subject: [PATCH v2 05/18] dmaengine: idxd: move wq_enable() to device.c
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     vkoul@kernel.org
 Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org
-Date:   Wed, 14 Jul 2021 16:20:45 -0700
-Message-ID: <162630484516.631529.3337124300586927282.stgit@djiang5-desk3.ch.intel.com>
+Date:   Wed, 14 Jul 2021 16:20:50 -0700
+Message-ID: <162630485068.631529.4798937944461278800.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <162630468448.631529.1963704964865951650.stgit@djiang5-desk3.ch.intel.com>
 References: <162630468448.631529.1963704964865951650.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/0.23-29-ga622f1
@@ -36,116 +36,302 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The IDXD_DEV_CONF_READY state flag is no longer needed. The current
-implementation uses this flag to stop the device from doing
-configuration until the pci driver probe has completed. With the
-driver architecture going towards multiple sub-driver attached to
-the dsa_bus, this is no longer feasible. The sub-drivers will be
-allowed to probe and return with failure when they are not ready
-to complete the probe rather than using a state flag to gate the
-probing.
-
-There is no expectation that the devices auto-attach to a driver.
-Userspace configuration is expected to setup the device before
-enabling.
+Move the wq_enable() function to device.c in preparation of setting up the
+idxd internal sub-driver framework. No logic changes.
 
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/dma/idxd/device.c |    4 ++--
- drivers/dma/idxd/idxd.h   |    1 -
- drivers/dma/idxd/init.c   |    2 --
- drivers/dma/idxd/sysfs.c  |   14 --------------
- 4 files changed, 2 insertions(+), 19 deletions(-)
+ drivers/dma/idxd/device.c |  124 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/dma/idxd/idxd.h   |    1 
+ drivers/dma/idxd/sysfs.c  |  124 ---------------------------------------------
+ 3 files changed, 126 insertions(+), 123 deletions(-)
 
 diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index c8cf1de72176..4a2af9799239 100644
+index 4a2af9799239..b1c509bcfa31 100644
 --- a/drivers/dma/idxd/device.c
 +++ b/drivers/dma/idxd/device.c
-@@ -576,7 +576,7 @@ int idxd_device_disable(struct idxd_device *idxd)
+@@ -1129,3 +1129,127 @@ int idxd_device_load_config(struct idxd_device *idxd)
  
- 	spin_lock_irqsave(&idxd->dev_lock, flags);
- 	idxd_device_clear_state(idxd);
--	idxd->state = IDXD_DEV_CONF_READY;
-+	idxd->state = IDXD_DEV_DISABLED;
- 	spin_unlock_irqrestore(&idxd->dev_lock, flags);
  	return 0;
  }
-@@ -588,7 +588,7 @@ void idxd_device_reset(struct idxd_device *idxd)
- 	idxd_cmd_exec(idxd, IDXD_CMD_RESET_DEVICE, 0, NULL);
- 	spin_lock_irqsave(&idxd->dev_lock, flags);
- 	idxd_device_clear_state(idxd);
--	idxd->state = IDXD_DEV_CONF_READY;
-+	idxd->state = IDXD_DEV_DISABLED;
- 	spin_unlock_irqrestore(&idxd->dev_lock, flags);
- }
- 
++
++static int __drv_enable_wq(struct idxd_wq *wq)
++{
++	struct idxd_device *idxd = wq->idxd;
++	struct device *dev = &idxd->pdev->dev;
++	unsigned long flags;
++	int rc = -ENXIO;
++
++	lockdep_assert_held(&wq->wq_lock);
++
++	if (idxd->state != IDXD_DEV_ENABLED)
++		goto err;
++
++	if (wq->state != IDXD_WQ_DISABLED) {
++		dev_dbg(dev, "wq %d already enabled.\n", wq->id);
++		rc = -EBUSY;
++		goto err;
++	}
++
++	if (!wq->group) {
++		dev_dbg(dev, "wq %d not attached to group.\n", wq->id);
++		goto err;
++	}
++
++	if (strlen(wq->name) == 0) {
++		dev_dbg(dev, "wq %d name not set.\n", wq->id);
++		goto err;
++	}
++
++	/* Shared WQ checks */
++	if (wq_shared(wq)) {
++		if (!device_swq_supported(idxd)) {
++			dev_dbg(dev, "PASID not enabled and shared wq.\n");
++			goto err;
++		}
++		/*
++		 * Shared wq with the threshold set to 0 means the user
++		 * did not set the threshold or transitioned from a
++		 * dedicated wq but did not set threshold. A value
++		 * of 0 would effectively disable the shared wq. The
++		 * driver does not allow a value of 0 to be set for
++		 * threshold via sysfs.
++		 */
++		if (wq->threshold == 0) {
++			dev_dbg(dev, "Shared wq and threshold 0.\n");
++			goto err;
++		}
++	}
++
++	rc = idxd_wq_alloc_resources(wq);
++	if (rc < 0) {
++		dev_dbg(dev, "wq resource alloc failed\n");
++		goto err;
++	}
++
++	spin_lock_irqsave(&idxd->dev_lock, flags);
++	if (test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
++		rc = idxd_device_config(idxd);
++	spin_unlock_irqrestore(&idxd->dev_lock, flags);
++	if (rc < 0) {
++		dev_dbg(dev, "Writing wq %d config failed: %d\n", wq->id, rc);
++		goto err;
++	}
++
++	rc = idxd_wq_enable(wq);
++	if (rc < 0) {
++		dev_dbg(dev, "wq %d enabling failed: %d\n", wq->id, rc);
++		goto err;
++	}
++
++	rc = idxd_wq_map_portal(wq);
++	if (rc < 0) {
++		dev_dbg(dev, "wq %d portal mapping failed: %d\n", wq->id, rc);
++		goto err_map_portal;
++	}
++
++	wq->client_count = 0;
++
++	if (wq->type == IDXD_WQT_KERNEL) {
++		rc = idxd_wq_init_percpu_ref(wq);
++		if (rc < 0) {
++			dev_dbg(dev, "wq %d percpu_ref setup failed\n", wq->id);
++			goto err_cpu_ref;
++		}
++	}
++
++	if (is_idxd_wq_dmaengine(wq)) {
++		rc = idxd_register_dma_channel(wq);
++		if (rc < 0) {
++			dev_dbg(dev, "wq %d DMA channel register failed\n", wq->id);
++			goto err_client;
++		}
++	} else if (is_idxd_wq_cdev(wq)) {
++		rc = idxd_wq_add_cdev(wq);
++		if (rc < 0) {
++			dev_dbg(dev, "wq %d cdev creation failed\n", wq->id);
++			goto err_client;
++		}
++	}
++
++	dev_info(dev, "wq %s enabled\n", dev_name(wq_confdev(wq)));
++	return 0;
++
++err_client:
++	idxd_wq_quiesce(wq);
++err_cpu_ref:
++	idxd_wq_unmap_portal(wq);
++err_map_portal:
++	rc = idxd_wq_disable(wq, false);
++	if (rc < 0)
++		dev_dbg(dev, "wq %s disable failed\n", dev_name(wq_confdev(wq)));
++err:
++	return rc;
++}
++
++int drv_enable_wq(struct idxd_wq *wq)
++{
++	int rc;
++
++	mutex_lock(&wq->wq_lock);
++	rc = __drv_enable_wq(wq);
++	mutex_unlock(&wq->wq_lock);
++	return rc;
++}
 diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 2a8327ad2984..e58787a62421 100644
+index e58787a62421..e2773eb9d02c 100644
 --- a/drivers/dma/idxd/idxd.h
 +++ b/drivers/dma/idxd/idxd.h
-@@ -210,7 +210,6 @@ struct idxd_hw {
- enum idxd_device_state {
- 	IDXD_DEV_HALTED = -1,
- 	IDXD_DEV_DISABLED = 0,
--	IDXD_DEV_CONF_READY,
- 	IDXD_DEV_ENABLED,
- };
+@@ -487,6 +487,7 @@ void idxd_mask_msix_vector(struct idxd_device *idxd, int vec_id);
+ void idxd_unmask_msix_vector(struct idxd_device *idxd, int vec_id);
  
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index ace67d31e17e..e4cb24769a4c 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -680,8 +680,6 @@ static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 		goto err_dev_register;
- 	}
- 
--	idxd->state = IDXD_DEV_CONF_READY;
--
- 	dev_info(&pdev->dev, "Intel(R) Accelerator Device (v%x)\n",
- 		 idxd->hw.version);
- 
+ /* device control */
++int drv_enable_wq(struct idxd_wq *wq);
+ int idxd_device_init_reset(struct idxd_device *idxd);
+ int idxd_device_enable(struct idxd_device *idxd);
+ int idxd_device_disable(struct idxd_device *idxd);
 diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index be1ee748d754..56f13a71c1cb 100644
+index 56f13a71c1cb..4e492d31e094 100644
 --- a/drivers/dma/idxd/sysfs.c
 +++ b/drivers/dma/idxd/sysfs.c
-@@ -22,17 +22,9 @@ static int idxd_config_bus_match(struct device *dev,
- 	int matched = 0;
+@@ -39,128 +39,6 @@ static int idxd_config_bus_match(struct device *dev,
+ 	return matched;
+ }
  
- 	if (is_idxd_dev(dev)) {
--		struct idxd_device *idxd = confdev_to_idxd(dev);
+-static int enable_wq(struct idxd_wq *wq)
+-{
+-	struct idxd_device *idxd = wq->idxd;
+-	struct device *dev = &idxd->pdev->dev;
+-	unsigned long flags;
+-	int rc;
 -
--		if (idxd->state != IDXD_DEV_CONF_READY)
--			return 0;
- 		matched = 1;
+-	mutex_lock(&wq->wq_lock);
+-
+-	if (idxd->state != IDXD_DEV_ENABLED) {
+-		mutex_unlock(&wq->wq_lock);
+-		dev_warn(dev, "Enabling while device not enabled.\n");
+-		return -EPERM;
+-	}
+-
+-	if (wq->state != IDXD_WQ_DISABLED) {
+-		mutex_unlock(&wq->wq_lock);
+-		dev_warn(dev, "WQ %d already enabled.\n", wq->id);
+-		return -EBUSY;
+-	}
+-
+-	if (!wq->group) {
+-		mutex_unlock(&wq->wq_lock);
+-		dev_warn(dev, "WQ not attached to group.\n");
+-		return -EINVAL;
+-	}
+-
+-	if (strlen(wq->name) == 0) {
+-		mutex_unlock(&wq->wq_lock);
+-		dev_warn(dev, "WQ name not set.\n");
+-		return -EINVAL;
+-	}
+-
+-	/* Shared WQ checks */
+-	if (wq_shared(wq)) {
+-		if (!device_swq_supported(idxd)) {
+-			dev_warn(dev, "PASID not enabled and shared WQ.\n");
+-			mutex_unlock(&wq->wq_lock);
+-			return -ENXIO;
+-		}
+-		/*
+-		 * Shared wq with the threshold set to 0 means the user
+-		 * did not set the threshold or transitioned from a
+-		 * dedicated wq but did not set threshold. A value
+-		 * of 0 would effectively disable the shared wq. The
+-		 * driver does not allow a value of 0 to be set for
+-		 * threshold via sysfs.
+-		 */
+-		if (wq->threshold == 0) {
+-			dev_warn(dev, "Shared WQ and threshold 0.\n");
+-			mutex_unlock(&wq->wq_lock);
+-			return -EINVAL;
+-		}
+-	}
+-
+-	rc = idxd_wq_alloc_resources(wq);
+-	if (rc < 0) {
+-		mutex_unlock(&wq->wq_lock);
+-		dev_warn(dev, "WQ resource alloc failed\n");
+-		return rc;
+-	}
+-
+-	spin_lock_irqsave(&idxd->dev_lock, flags);
+-	if (test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
+-		rc = idxd_device_config(idxd);
+-	spin_unlock_irqrestore(&idxd->dev_lock, flags);
+-	if (rc < 0) {
+-		mutex_unlock(&wq->wq_lock);
+-		dev_warn(dev, "Writing WQ %d config failed: %d\n", wq->id, rc);
+-		return rc;
+-	}
+-
+-	rc = idxd_wq_enable(wq);
+-	if (rc < 0) {
+-		mutex_unlock(&wq->wq_lock);
+-		dev_warn(dev, "WQ %d enabling failed: %d\n", wq->id, rc);
+-		return rc;
+-	}
+-
+-	rc = idxd_wq_map_portal(wq);
+-	if (rc < 0) {
+-		dev_warn(dev, "wq portal mapping failed: %d\n", rc);
+-		rc = idxd_wq_disable(wq, false);
+-		if (rc < 0)
+-			dev_warn(dev, "IDXD wq disable failed\n");
+-		mutex_unlock(&wq->wq_lock);
+-		return rc;
+-	}
+-
+-	wq->client_count = 0;
+-
+-	if (wq->type == IDXD_WQT_KERNEL) {
+-		rc = idxd_wq_init_percpu_ref(wq);
+-		if (rc < 0) {
+-			dev_dbg(dev, "percpu_ref setup failed\n");
+-			mutex_unlock(&wq->wq_lock);
+-			return rc;
+-		}
+-	}
+-
+-	if (is_idxd_wq_dmaengine(wq)) {
+-		rc = idxd_register_dma_channel(wq);
+-		if (rc < 0) {
+-			dev_dbg(dev, "DMA channel register failed\n");
+-			mutex_unlock(&wq->wq_lock);
+-			return rc;
+-		}
+-	} else if (is_idxd_wq_cdev(wq)) {
+-		rc = idxd_wq_add_cdev(wq);
+-		if (rc < 0) {
+-			dev_dbg(dev, "Cdev creation failed\n");
+-			mutex_unlock(&wq->wq_lock);
+-			return rc;
+-		}
+-	}
+-
+-	mutex_unlock(&wq->wq_lock);
+-	dev_info(dev, "wq %s enabled\n", dev_name(wq_confdev(wq)));
+-
+-	return 0;
+-}
+-
+ static int idxd_config_bus_probe(struct device *dev)
+ {
+ 	int rc = 0;
+@@ -205,7 +83,7 @@ static int idxd_config_bus_probe(struct device *dev)
  	} else if (is_idxd_wq_dev(dev)) {
  		struct idxd_wq *wq = confdev_to_wq(dev);
--		struct idxd_device *idxd = wq->idxd;
--
--		if (idxd->state < IDXD_DEV_CONF_READY)
--			return 0;
  
- 		if (wq->state != IDXD_WQ_DISABLED) {
- 			dev_dbg(dev, "%s not disabled\n", dev_name(dev));
-@@ -179,11 +171,6 @@ static int idxd_config_bus_probe(struct device *dev)
- 	if (is_idxd_dev(dev)) {
- 		struct idxd_device *idxd = confdev_to_idxd(dev);
+-		return enable_wq(wq);
++		return drv_enable_wq(wq);
+ 	}
  
--		if (idxd->state != IDXD_DEV_CONF_READY) {
--			dev_warn(dev, "Device not ready for config\n");
--			return -EBUSY;
--		}
--
- 		if (!try_module_get(THIS_MODULE))
- 			return -ENXIO;
- 
-@@ -1430,7 +1417,6 @@ static ssize_t state_show(struct device *dev,
- 
- 	switch (idxd->state) {
- 	case IDXD_DEV_DISABLED:
--	case IDXD_DEV_CONF_READY:
- 		return sysfs_emit(buf, "disabled\n");
- 	case IDXD_DEV_ENABLED:
- 		return sysfs_emit(buf, "enabled\n");
+ 	return -ENODEV;
 
 

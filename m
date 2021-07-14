@@ -2,153 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34DE63C7E6C
-	for <lists+dmaengine@lfdr.de>; Wed, 14 Jul 2021 08:15:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B501C3C7EBB
+	for <lists+dmaengine@lfdr.de>; Wed, 14 Jul 2021 08:52:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238000AbhGNGSI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 14 Jul 2021 02:18:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47464 "EHLO mail.kernel.org"
+        id S238141AbhGNGyY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 14 Jul 2021 02:54:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237958AbhGNGSH (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 14 Jul 2021 02:18:07 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E46FE6127C;
-        Wed, 14 Jul 2021 06:15:15 +0000 (UTC)
+        id S238104AbhGNGyY (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 14 Jul 2021 02:54:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C6B1D613AF;
+        Wed, 14 Jul 2021 06:51:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626243316;
-        bh=KUK1LwW20wP3EqcQiPE5rpv4X3DjPYHIE3Ahfa2rIKM=;
+        s=k20201202; t=1626245493;
+        bh=aC8YyFw7g3a24JrV8Copqbnq3nQ8kdn5UOWWkMjj3Q4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O0RtBQ0mFpIz2J0df4y5K1QZ1k182MYXSVBsATd0Oo2x2rqVZSBrgzyQkv7ODRa4D
-         yxm2z4io/KAxDlYSO3EHTTnN+JRo3oDNfTEK4s1rKOy2neAGyfg+bePaY8+l9xC5ZX
-         KZYCHdXF/BFs4UrQmq1wrW4G90Qt1HTn9i/MdThDm/ZJNIQFUDa0EmiQo2yv7c8HW1
-         4JD4+ZDNoc/JnOK0K//vj9ng8aKX8dzikRogVkbgdA+Nwgq7KBwWUmFvSlgnnVBa8z
-         aoiH3jVLp+8Np971wMHELoJS8V1jf56iQAU9wIBiMyEezeSxSwZQMxQMjJZE8lc8+E
-         ZkDqXP+fa5f1Q==
-Date:   Wed, 14 Jul 2021 11:45:12 +0530
+        b=sD1xA44YubdUkOxcLqoQOpPAIWdwCG56H/2kLARJOopPnqh/n4ESG6Cgwj8MAl/Cw
+         qxRP5/8SBDpqzydb6OD44eX7WM8NVQUWtu3sRFzZ7KGXJjhUA8XZ5vGExQFjg6Pwic
+         2l6VID+zz6ShQi52l8KN5BGL9v+OWRz0HbjIBCa8iBTWNDvSoGCjL4qAOThfeSVsg7
+         Ew4w5pbiFqPsKMlK3JuS44vk8XVwqqsv7U20cG0YK3kA/zYkzYagGhBiTCm7eeDY2q
+         JOeezEvW3GzR/xLxIFEuOv6luqK9qc613yKhxIni8VoBxofvZjCPttRrOiV0bWfju0
+         ZzVwsi9FLcBRQ==
+Date:   Wed, 14 Jul 2021 12:21:29 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        dmaengine@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] drivers: dma: sh: Add DMAC driver for RZ/G2L SoC
-Message-ID: <YO6A8KXRSvqUN6pL@matsya>
-References: <20210702100527.28251-1-biju.das.jz@bp.renesas.com>
- <20210702100527.28251-3-biju.das.jz@bp.renesas.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     dmaengine@vger.kernel.org
+Subject: Re: [PATCH v2] dmanegine: idxd: cleanup all device related bits
+ after disabling device
+Message-ID: <YO6JcTGtr7kxDOY1@matsya>
+References: <162285154108.2096632.5572805472362321307.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210702100527.28251-3-biju.das.jz@bp.renesas.com>
+In-Reply-To: <162285154108.2096632.5572805472362321307.stgit@djiang5-desk3.ch.intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 02-07-21, 11:05, Biju Das wrote:
+On 04-06-21, 17:06, Dave Jiang wrote:
+> The previous state cleanup patch only performed wq state cleanups. This
+> does not go far enough as when device is disabled or reset, the state
+> for groups and engines must also be cleaned up. Add additional state
+> cleanup beyond wq cleanup. Tie those cleanups directly to device
+> disable and reset, and wq disable and reset.
 
-> +static void rz_dmac_set_dmars_register(struct rz_dmac *dmac, int nr,
-> +				       u32 dmars)
-> +{
-> +	u32 dmars_offset = (nr / 2) * 4;
-> +	u32 dmars32;
-> +
-> +	dmars32 = rz_dmac_ext_readl(dmac, dmars_offset);
-> +	if (nr % 2) {
-> +		dmars32 &= 0x0000ffff;
-> +		dmars32 |= dmars << 16;
-> +	} else {
-> +		dmars32 &= 0xffff0000;
-> +		dmars32 |= dmars;
-> +	}
+Applied, thanks
 
-how about using upper_16_bits() and lower_16_bits() for extracting
-above?
-
-> +static void rz_dmac_prepare_desc_for_memcpy(struct rz_dmac_chan *channel)
-> +{
-> +	struct dma_chan *chan = &channel->vc.chan;
-> +	struct rz_dmac *dmac = to_rz_dmac(chan->device);
-> +	struct rz_lmdesc *lmdesc = channel->lmdesc.base;
-> +	struct rz_dmac_desc *d = channel->desc;
-> +	u32 chcfg = CHCFG_MEM_COPY;
-> +	u32 dmars = 0;
-> +
-> +	lmdesc = channel->lmdesc.tail;
-> +
-> +	/* prepare descriptor */
-> +	lmdesc->sa = d->src;
-> +	lmdesc->da = d->dest;
-> +	lmdesc->tb = d->len;
-> +	lmdesc->chcfg = chcfg;
-> +	lmdesc->chitvl = 0;
-> +	lmdesc->chext = 0;
-> +	lmdesc->header = HEADER_LV;
-> +
-> +	rz_dmac_set_dmars_register(dmac, channel->index, dmars);
-
-why not pass 0 as last arg and remove dmars?
-
-> +static enum dma_status rz_dmac_tx_status(struct dma_chan *chan,
-> +					 dma_cookie_t cookie,
-> +					 struct dma_tx_state *txstate)
-> +{
-> +	return dma_cookie_status(chan, cookie, txstate);
-> +}
-
-why not assign status as dma_cookie_status and remove
-rz_dmac_tx_status()
-
-> +static int rz_dmac_config(struct dma_chan *chan,
-> +			  struct dma_slave_config *config)
-> +{
-> +	struct rz_dmac_chan *channel = to_rz_dmac_chan(chan);
-> +	u32 *ch_cfg;
-> +	u32 val;
-> +
-> +	if (config->direction == DMA_DEV_TO_MEM) {
-
-config->direction is deprecated, pls save the dma_slave_config here and
-then use based on txn direction...
-
-> +static bool rz_dmac_chan_filter(struct dma_chan *chan, void *arg)
-> +{
-> +	struct rz_dmac_chan *channel = to_rz_dmac_chan(chan);
-> +	struct rz_dmac *dmac = to_rz_dmac(chan->device);
-> +	struct of_phandle_args *dma_spec = arg;
-> +
-> +	if (chan->device->device_config != rz_dmac_config)
-> +		return false;
-
-which cases would this be false?
-
-> +
-> +	channel->mid_rid = dma_spec->args[0];
-> +
-> +	return !test_and_set_bit(dma_spec->args[0], dmac->modules);
-> +}
-> +
-> +static struct dma_chan *rz_dmac_of_xlate(struct of_phandle_args *dma_spec,
-> +					 struct of_dma *ofdma)
-> +{
-> +	dma_cap_mask_t mask;
-> +
-> +	if (dma_spec->args_count != 1)
-> +		return NULL;
-> +
-> +	/* Only slave DMA channels can be allocated via DT */
-> +	dma_cap_zero(mask);
-> +	dma_cap_set(DMA_SLAVE, mask);
-> +
-> +	return dma_request_channel(mask, rz_dmac_chan_filter, dma_spec);
-> +}
-> +
-> +/* -----------------------------------------------------------------------------
-> + * Probe and remove
-> + */
-
-we use
-/*
- * this style
- * multi-line comments
- */
 -- 
 ~Vinod

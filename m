@@ -2,77 +2,123 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F3C93C8BA5
-	for <lists+dmaengine@lfdr.de>; Wed, 14 Jul 2021 21:27:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97BE23C9372
+	for <lists+dmaengine@lfdr.de>; Wed, 14 Jul 2021 23:57:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229721AbhGNTaD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 14 Jul 2021 15:30:03 -0400
-Received: from mail-il1-f175.google.com ([209.85.166.175]:33624 "EHLO
-        mail-il1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229650AbhGNTaC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Jul 2021 15:30:02 -0400
-Received: by mail-il1-f175.google.com with SMTP id z1so2751599ils.0;
-        Wed, 14 Jul 2021 12:27:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RzPhtbgpbxnOvk9KnY8WTPdMhffL639krC2aO6F+axU=;
-        b=Uq6PsLoR/abnq414Rswh511c+OAbWqH2D+YaJuzTeFSffYUhiqn9rzEn5kA6xn9aB1
-         jZkZ3GGvuIZBbpJnHKq3rET2/nKZtIt9WqWYQNWRTCJxDGyMxTPdEnRCbK+MNRhZMbrm
-         TspJMcBuY1jE4phNt2seqNNnxYwKX0OMAvsgfFtnKjZYKfmqFke0de9ZznXr12PJlluy
-         XIkfcwx/FHap0nzkTLOQXlB/9BrKDvFOEx8dQoKgOrgJJQQyaTitfxINhngiJdz7Ct1u
-         z37thi14bPiq2d76Kj667xa+oNCdrvRmO2rAgnde9nQsz62fFt7Kdv31bjVrqFJ3xBCU
-         97rg==
-X-Gm-Message-State: AOAM533PC0u2JbAP09eYfgCayuikEGQwOeB6rOu7i7TyLTnphR7czZoB
-        JQxVPVmoIAxm2MAnK3EEv7WZaD0Bfw==
-X-Google-Smtp-Source: ABdhPJym1dGtLhVjJOsI52JP8TEA6Em+rrrz6Bg6Vyph2weEybKYkuer9VVBZkwLRLrDFITR1rJA+g==
-X-Received: by 2002:a05:6e02:5ad:: with SMTP id k13mr7656353ils.284.1626290830593;
-        Wed, 14 Jul 2021 12:27:10 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id f4sm1722768ile.8.2021.07.14.12.27.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jul 2021 12:27:09 -0700 (PDT)
-Received: (nullmailer pid 3078602 invoked by uid 1000);
-        Wed, 14 Jul 2021 19:27:05 -0000
-Date:   Wed, 14 Jul 2021 13:27:05 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Amelie Delaunay <amelie.delaunay@foss.st.com>
-Cc:     Pierre-Yves Mordret <pierre-yves.mordret@foss.st.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] dt-bindings: dma: add alternative REQ/ACK protocol
- selection in stm32-dma
-Message-ID: <20210714192705.GA3078178@robh.at.kernel.org>
-References: <20210624093959.142265-1-amelie.delaunay@foss.st.com>
- <20210624093959.142265-2-amelie.delaunay@foss.st.com>
+        id S234563AbhGNWAL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 14 Jul 2021 18:00:11 -0400
+Received: from mga12.intel.com ([192.55.52.136]:15591 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229498AbhGNWAL (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 14 Jul 2021 18:00:11 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10045"; a="190116164"
+X-IronPort-AV: E=Sophos;i="5.84,240,1620716400"; 
+   d="scan'208";a="190116164"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 14:57:19 -0700
+X-IronPort-AV: E=Sophos;i="5.84,240,1620716400"; 
+   d="scan'208";a="654988494"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 14:57:19 -0700
+Subject: [PATCH] dmaengine: idxd: fix sequence for pci driver remove() and
+ shutdown()
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, dan.j.williams@intel.com
+Date:   Wed, 14 Jul 2021 14:57:19 -0700
+Message-ID: <162629983901.395844.17964803190905549615.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210624093959.142265-2-amelie.delaunay@foss.st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, 24 Jun 2021 11:39:58 +0200, Amelie Delaunay wrote:
-> Default REQ/ACK protocol consists in maintaining ACK signal up to the
-> removal of REQuest and the transfer completion.
-> In case of alternative REQ/ACK protocol, ACK de-assertion does not wait the
-> removal of the REQuest, but only the transfer completion.
-> Due to a possible DMA stream lock when transferring data to/from STM32
-> USART/UART, this new bindings allow to select this alternative protocol in
-> device tree, especially for STM32 USART/UART nodes.
-> 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-> ---
->  Documentation/devicetree/bindings/dma/st,stm32-dma.yaml | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
+->shutdown() call should only be responsible for quiescing the device.
+Currently it is doing PCI device tear down. This causes issue when things
+like MMIO mapping is removed while idxd_unregister_devices() will trigger
+removal of idxd device sub-driver and still initiates MMIO writes to the
+device. Another issue is with the unregistering of idxd 'struct device',
+the memory context gets freed. So the teardown calls are accessing freed
+memory and can cause kernel oops. Move all the teardown bits that doesn't
+belong in shutdown to ->remove() call. Move unregistering of the idxd
+conf_dev 'struct device' to after doing all the teardown to free all
+the memory that's no longer needed.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Fixes: 47c16ac27d4c ("dmaengine: idxd: fix idxd conf_dev 'struct device' lifetime")
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/dma/idxd/init.c  |   26 +++++++++++++++++---------
+ drivers/dma/idxd/sysfs.c |    2 --
+ 2 files changed, 17 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 4e32a4dcc3ab..c0f4c0422f32 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -760,32 +760,40 @@ static void idxd_shutdown(struct pci_dev *pdev)
+ 	for (i = 0; i < msixcnt; i++) {
+ 		irq_entry = &idxd->irq_entries[i];
+ 		synchronize_irq(irq_entry->vector);
+-		free_irq(irq_entry->vector, irq_entry);
+ 		if (i == 0)
+ 			continue;
+ 		idxd_flush_pending_llist(irq_entry);
+ 		idxd_flush_work_list(irq_entry);
+ 	}
+-
+-	idxd_msix_perm_clear(idxd);
+-	idxd_release_int_handles(idxd);
+-	pci_free_irq_vectors(pdev);
+-	pci_iounmap(pdev, idxd->reg_base);
+-	pci_disable_device(pdev);
+-	destroy_workqueue(idxd->wq);
++	flush_workqueue(idxd->wq);
+ }
+ 
+ static void idxd_remove(struct pci_dev *pdev)
+ {
+ 	struct idxd_device *idxd = pci_get_drvdata(pdev);
++	struct idxd_irq_entry *irq_entry;
++	int msixcnt = pci_msix_vec_count(pdev);
++	int i;
+ 
+ 	dev_dbg(&pdev->dev, "%s called\n", __func__);
+ 	idxd_shutdown(pdev);
+ 	if (device_pasid_enabled(idxd))
+ 		idxd_disable_system_pasid(idxd);
+ 	idxd_unregister_devices(idxd);
+-	perfmon_pmu_remove(idxd);
++
++	for (i = 0; i < msixcnt; i++) {
++		irq_entry = &idxd->irq_entries[i];
++		free_irq(irq_entry->vector, irq_entry);
++	}
++	idxd_msix_perm_clear(idxd);
++	idxd_release_int_handles(idxd);
++	pci_free_irq_vectors(pdev);
++	pci_iounmap(pdev, idxd->reg_base);
+ 	iommu_dev_disable_feature(&pdev->dev, IOMMU_DEV_FEAT_SVA);
++	pci_disable_device(pdev);
++	destroy_workqueue(idxd->wq);
++	perfmon_pmu_remove(idxd);
++	device_unregister(&idxd->conf_dev);
+ }
+ 
+ static struct pci_driver idxd_pci_driver = {
+diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+index 0460d58e3941..bb4df63906a7 100644
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -1744,8 +1744,6 @@ void idxd_unregister_devices(struct idxd_device *idxd)
+ 
+ 		device_unregister(&group->conf_dev);
+ 	}
+-
+-	device_unregister(&idxd->conf_dev);
+ }
+ 
+ int idxd_register_bus_type(void)
+
+

@@ -2,31 +2,31 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A71483CA648
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Jul 2021 20:44:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE1673CA64D
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Jul 2021 20:44:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238526AbhGOSq7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 15 Jul 2021 14:46:59 -0400
-Received: from mga07.intel.com ([134.134.136.100]:48783 "EHLO mga07.intel.com"
+        id S238560AbhGOSrI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 15 Jul 2021 14:47:08 -0400
+Received: from mga01.intel.com ([192.55.52.88]:57283 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238441AbhGOSq4 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 15 Jul 2021 14:46:56 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10046"; a="274436329"
+        id S236794AbhGOSrB (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 15 Jul 2021 14:47:01 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10046"; a="232438432"
 X-IronPort-AV: E=Sophos;i="5.84,243,1620716400"; 
-   d="scan'208";a="274436329"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2021 11:44:02 -0700
+   d="scan'208";a="232438432"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2021 11:44:08 -0700
 X-IronPort-AV: E=Sophos;i="5.84,243,1620716400"; 
-   d="scan'208";a="573108829"
+   d="scan'208";a="655959873"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2021 11:44:02 -0700
-Subject: [PATCH v3 10/18] dmaengine: idxd: move probe() bits for idxd 'struct
- device' to device.c
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2021 11:44:07 -0700
+Subject: [PATCH v3 11/18] dmaengine: idxd: idxd: move remove() bits for idxd
+ 'struct device' to device.c
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     vkoul@kernel.org
 Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org
-Date:   Thu, 15 Jul 2021 11:44:01 -0700
-Message-ID: <162637464189.744545.17423830646786162194.stgit@djiang5-desk3.ch.intel.com>
+Date:   Thu, 15 Jul 2021 11:44:07 -0700
+Message-ID: <162637464768.744545.15797285510999151668.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <162637445139.744545.6008938867943724701.stgit@djiang5-desk3.ch.intel.com>
 References: <162637445139.744545.6008938867943724701.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/0.23-29-ga622f1
@@ -37,125 +37,91 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Move the code related to a ->probe() function for the idxd
+Move the code related to a ->remove() function for the idxd
 'struct device' to device.c to prep for the idxd device
 sub-driver in device.c.
 
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/dma/idxd/device.c |   37 +++++++++++++++++++++++++++++++++++++
+ drivers/dma/idxd/device.c |   22 ++++++++++++++++++++++
  drivers/dma/idxd/idxd.h   |    1 +
- drivers/dma/idxd/sysfs.c  |   40 ++--------------------------------------
- 3 files changed, 40 insertions(+), 38 deletions(-)
+ drivers/dma/idxd/sysfs.c  |   20 +-------------------
+ 3 files changed, 24 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 8d8e249931a9..b9aa209efee4 100644
+index b9aa209efee4..d5a0b6fff3b9 100644
 --- a/drivers/dma/idxd/device.c
 +++ b/drivers/dma/idxd/device.c
-@@ -1290,3 +1290,40 @@ void drv_disable_wq(struct idxd_wq *wq)
- 	__drv_disable_wq(wq);
- 	mutex_unlock(&wq->wq_lock);
+@@ -1327,3 +1327,25 @@ int idxd_device_drv_probe(struct idxd_dev *idxd_dev)
+ 
+ 	return 0;
  }
 +
-+int idxd_device_drv_probe(struct idxd_dev *idxd_dev)
++void idxd_device_drv_remove(struct idxd_dev *idxd_dev)
 +{
++	struct device *dev = &idxd_dev->conf_dev;
 +	struct idxd_device *idxd = idxd_dev_to_idxd(idxd_dev);
-+	unsigned long flags;
-+	int rc = 0;
++	int i;
 +
-+	/*
-+	 * Device should be in disabled state for the idxd_drv to load. If it's in
-+	 * enabled state, then the device was altered outside of driver's control.
-+	 * If the state is in halted state, then we don't want to proceed.
-+	 */
-+	if (idxd->state != IDXD_DEV_DISABLED)
-+		return -ENXIO;
++	for (i = 0; i < idxd->max_wqs; i++) {
++		struct idxd_wq *wq = idxd->wqs[i];
++		struct device *wq_dev = wq_confdev(wq);
 +
-+	/* Device configuration */
-+	spin_lock_irqsave(&idxd->dev_lock, flags);
-+	if (test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
-+		rc = idxd_device_config(idxd);
-+	spin_unlock_irqrestore(&idxd->dev_lock, flags);
-+	if (rc < 0)
-+		return -ENXIO;
-+
-+	/* Start device */
-+	rc = idxd_device_enable(idxd);
-+	if (rc < 0)
-+		return rc;
-+
-+	/* Setup DMA device without channels */
-+	rc = idxd_register_dma_device(idxd);
-+	if (rc < 0) {
-+		idxd_device_disable(idxd);
-+		return rc;
++		if (wq->state == IDXD_WQ_DISABLED)
++			continue;
++		dev_warn(dev, "Active wq %d on disable %s.\n", i, dev_name(wq_dev));
++		device_release_driver(wq_dev);
 +	}
 +
-+	return 0;
++	idxd_unregister_dma_device(idxd);
++	idxd_device_disable(idxd);
++	if (test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
++		idxd_device_reset(idxd);
 +}
 diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 87349c12c834..dfde2db26f7b 100644
+index dfde2db26f7b..f933fd23155a 100644
 --- a/drivers/dma/idxd/idxd.h
 +++ b/drivers/dma/idxd/idxd.h
-@@ -490,6 +490,7 @@ void idxd_mask_msix_vector(struct idxd_device *idxd, int vec_id);
- void idxd_unmask_msix_vector(struct idxd_device *idxd, int vec_id);
+@@ -491,6 +491,7 @@ void idxd_unmask_msix_vector(struct idxd_device *idxd, int vec_id);
  
  /* device control */
-+int idxd_device_drv_probe(struct idxd_dev *idxd_dev);
+ int idxd_device_drv_probe(struct idxd_dev *idxd_dev);
++void idxd_device_drv_remove(struct idxd_dev *idxd_dev);
  int drv_enable_wq(struct idxd_wq *wq);
  void drv_disable_wq(struct idxd_wq *wq);
  int idxd_device_init_reset(struct idxd_device *idxd);
 diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 378580942386..4822454aea45 100644
+index 4822454aea45..233593ff784e 100644
 --- a/drivers/dma/idxd/sysfs.c
 +++ b/drivers/dma/idxd/sysfs.c
-@@ -52,44 +52,8 @@ struct bus_type dsa_bus_type = {
+@@ -66,26 +66,8 @@ static int idxd_dsa_drv_probe(struct idxd_dev *idxd_dev)
  
- static int idxd_dsa_drv_probe(struct idxd_dev *idxd_dev)
+ static void idxd_dsa_drv_remove(struct idxd_dev *idxd_dev)
  {
 -	struct device *dev = &idxd_dev->conf_dev;
--	unsigned long flags;
--	int rc;
 -
--	if (is_idxd_dev(idxd_dev)) {
+ 	if (is_idxd_dev(idxd_dev)) {
 -		struct idxd_device *idxd = idxd_dev_to_idxd(idxd_dev);
+-		int i;
 -
--		if (idxd->state != IDXD_DEV_DISABLED)
--			return -ENXIO;
+-		for (i = 0; i < idxd->max_wqs; i++) {
+-			struct idxd_wq *wq = idxd->wqs[i];
 -
--		/* Device configuration */
--		spin_lock_irqsave(&idxd->dev_lock, flags);
+-			if (wq->state == IDXD_WQ_DISABLED)
+-				continue;
+-			dev_warn(dev, "Active wq %d on disable %s.\n", i,
+-				 dev_name(wq_confdev(wq)));
+-			device_release_driver(wq_confdev(wq));
+-		}
+-
+-		idxd_unregister_dma_device(idxd);
+-		idxd_device_disable(idxd);
 -		if (test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
--			rc = idxd_device_config(idxd);
--		spin_unlock_irqrestore(&idxd->dev_lock, flags);
--		if (rc < 0) {
--			dev_dbg(dev, "Device config failed: %d\n", rc);
--			return rc;
--		}
--
--		/* Start device */
--		rc = idxd_device_enable(idxd);
--		if (rc < 0) {
--			dev_warn(dev, "Device enable failed: %d\n", rc);
--			return rc;
--		}
--
--		/* Setup DMA device without channels */
--		rc = idxd_register_dma_device(idxd);
--		if (rc < 0) {
--			dev_dbg(dev, "Failed to register dmaengine device\n");
--			idxd_device_disable(idxd);
--			return rc;
--		}
--
--		dev_info(dev, "Device %s enabled\n", dev_name(dev));
--		return 0;
--	}
-+	if (is_idxd_dev(idxd_dev))
-+		return idxd_device_drv_probe(idxd_dev);
+-			idxd_device_reset(idxd);
++		idxd_device_drv_remove(idxd_dev);
+ 		return;
+ 	}
  
- 	if (is_idxd_wq_dev(idxd_dev)) {
- 		struct idxd_wq *wq = idxd_dev_to_wq(idxd_dev);
 
 

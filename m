@@ -2,76 +2,92 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 490B03CA44B
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Jul 2021 19:26:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E48E03CA610
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Jul 2021 20:43:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235437AbhGOR2s (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 15 Jul 2021 13:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235729AbhGOR2r (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 15 Jul 2021 13:28:47 -0400
-Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3CD2C06175F
-        for <dmaengine@vger.kernel.org>; Thu, 15 Jul 2021 10:25:53 -0700 (PDT)
-Received: by mail-oi1-x233.google.com with SMTP id p67so7548160oig.2
-        for <dmaengine@vger.kernel.org>; Thu, 15 Jul 2021 10:25:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=Ibb5KNEw1DKqJEg9n4gJy5KnzVasBofn6QaWYsu9UCQ=;
-        b=A07qw47jpyx7/pJf1ZS9aQv4pD7PiHBZWlsl9UoiurRqqc+7ZndQI51YdaaD0nkecu
-         Qd4i+G02coH8O2I/r6ZupOF8oYSIAoIwVq4zkuCtuhDJYsbynWGQdegcG7aq+QxGg/bp
-         poyp2DbaibSeABlojQr/pIAqMWExNaHg4RIE+IQzBlXdCiQq16Yp/UqkBXwITYu4DgIP
-         XTs1gXkC7Br62pPmJXs/2nF+jRhXCAs3iAxTxuy51YthTghMWE/kONdSGZKCG8sWM+Ev
-         WU1ATEDaIH5W63c7UQCvZTdM21+mq9I9FOl7BCTb650pCRFEJMZ521zklByg85zlNwmj
-         7b/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=Ibb5KNEw1DKqJEg9n4gJy5KnzVasBofn6QaWYsu9UCQ=;
-        b=bk5pHV4Q3J5yBxj75bQH82bMnCyodV5fOL6Rolnhr3c+j4xwvOrxoCq+aUdsmYbAKF
-         pkeDwBQ5LHU0mz9eZb7xqlXql9z0v14XFa062eVHNUt3qGr5XgtQgzJDM+ctmCo4Ofko
-         GFyj9Z9l+VIzbohBcR1w9ubLvMaMenDeKsQeP2hkfKK5UCOUWk9Co7oG2eUP6rJ8dnw/
-         X/zw+67HkFO+NalUiLqxkHnHhVFR75e7548Ep+jat1rsoLrps4uv05+P0Lq/9XOo6MLK
-         JB9asqjoQkT1ojdEtVwdFA/zyCwGHo2BiWrttxqUsyRuGd8+VY8EGzNiT8Bw9dVZKSOq
-         8Thg==
-X-Gm-Message-State: AOAM532+7zt1xqjx9wJghNp5GJS8S9kkIHiyrHstWrKG73jsjqUXfWpT
-        3N4IoYBz6Fm244p1+bVLE4UcRp+6M3zi2UCDCLNK924pI+4=
-X-Google-Smtp-Source: ABdhPJyZMrq1Z7I3pjjmyAtUHW3ABh0oEghTe77F5dAxRk/llsByjQhtZ30eIUOoh7sIooPsLTy5+nPJ1BCNgIavtsM=
-X-Received: by 2002:a17:90b:d8f:: with SMTP id bg15mr10963237pjb.152.1626369941880;
- Thu, 15 Jul 2021 10:25:41 -0700 (PDT)
+        id S237179AbhGOSqB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 15 Jul 2021 14:46:01 -0400
+Received: from mga01.intel.com ([192.55.52.88]:57216 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231633AbhGOSp7 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 15 Jul 2021 14:45:59 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10046"; a="232438228"
+X-IronPort-AV: E=Sophos;i="5.84,243,1620716400"; 
+   d="scan'208";a="232438228"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2021 11:43:04 -0700
+X-IronPort-AV: E=Sophos;i="5.84,243,1620716400"; 
+   d="scan'208";a="495601413"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2021 11:43:04 -0700
+Subject: [PATCH v3 00/18] Fix idxd sub-drivers setup
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     Dan Willliams <dan.j.williams@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org
+Date:   Thu, 15 Jul 2021 11:43:03 -0700
+Message-ID: <162637445139.744545.6008938867943724701.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:fc85:0:0:0:0 with HTTP; Thu, 15 Jul 2021 10:25:41
- -0700 (PDT)
-Reply-To: faty.muhamad@gmail.com
-From:   Ms Fatima Muhammad <general.infofederalreserve@gmail.com>
-Date:   Thu, 15 Jul 2021 17:25:41 +0000
-Message-ID: <CAJzJz_Dwu6rUxmnqq1QV9qD4hugxutFJZuENGUwx7RamXm5txA@mail.gmail.com>
-Subject: Hello Dear
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello Dear,
+Vinod,
+The series did not encounter any issues pushed on top of the latest 'next'
+branch.
 
-My name is Ms.Fatima Muhammad., Please forgive me for stressing you
-with my predicaments and I sorry to approach you through this media
-because is serves the fastest means of  my communication right now,
+v3:
+- Fix 0-day report on idxd_dev_set_type() type conversion
+v2:
+- Rebase
 
-I came across your Email from my personal search and I decided to
-contact you believing you will be honest to fulfill my business
-proposal which I believe that will be a very good opportunity for both
-of us. Please it is my pleasure to contact you today for a business
-partnership investments projects worth $4.6 million USD which I intend
-to establish in your country..
+The original dsa_bus_type did not use idiomatic mechanisms for attaching
+dsa-devices to dsa-drivers. Switch to the idiomatic style. Once this
+cleanup is in place it will ease the addition of the VFIO mdev driver
+as another dsa-driver.
 
-Pls If this business proposal offends your moral and ethic values do
-accept my apology. therefore kindly contact me immediately if you are
-interested for more details.
+---
 
-Thank you for your wiliness to help me
-Yours Sincerely Fatima Muhammad
+Dave Jiang (18):
+      dmaengine: idxd: add driver register helper
+      dmaengine: idxd: add driver name
+      dmaengine: idxd: add 'struct idxd_dev' as wrapper for conf_dev
+      dmaengine: idxd: remove IDXD_DEV_CONF_READY
+      dmaengine: idxd: move wq_enable() to device.c
+      dmaengine: idxd: move wq_disable() to device.c
+      dmaengine: idxd: remove bus shutdown
+      dmaengine: idxd: remove iax_bus_type prototype
+      dmaengine: idxd: fix bus_probe() and bus_remove() for dsa_bus
+      dmaengine: idxd: move probe() bits for idxd 'struct device' to device.c
+      dmaengine: idxd: idxd: move remove() bits for idxd 'struct device' to device.c
+      dmanegine: idxd: open code the dsa_drv registration
+      dmaengine: idxd: add type to driver in order to allow device matching
+      dmaengine: idxd: create idxd_device sub-driver
+      dmaengine: idxd: create dmaengine driver for wq 'device'
+      dmaengine: idxd: create user driver for wq 'device'
+      dmaengine: dsa: move dsa_bus_type out of idxd driver to standalone
+      dmaengine: idxd: move dsa_drv support to compatible mode
+
+
+ drivers/dma/Kconfig       |  21 ++
+ drivers/dma/Makefile      |   2 +-
+ drivers/dma/idxd/Makefile |   8 +
+ drivers/dma/idxd/bus.c    |  92 +++++++
+ drivers/dma/idxd/cdev.c   |  65 ++++-
+ drivers/dma/idxd/compat.c | 114 ++++++++
+ drivers/dma/idxd/device.c | 194 +++++++++++++-
+ drivers/dma/idxd/dma.c    |  82 +++++-
+ drivers/dma/idxd/idxd.h   | 129 +++++++--
+ drivers/dma/idxd/init.c   | 140 +++++-----
+ drivers/dma/idxd/irq.c    |   2 +-
+ drivers/dma/idxd/sysfs.c  | 541 ++++++++------------------------------
+ 12 files changed, 858 insertions(+), 532 deletions(-)
+ create mode 100644 drivers/dma/idxd/bus.c
+ create mode 100644 drivers/dma/idxd/compat.c
+
+--
+

@@ -2,240 +2,74 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B32953C947D
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Jul 2021 01:25:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 051983C9D95
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Jul 2021 13:13:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229782AbhGNX1x (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 14 Jul 2021 19:27:53 -0400
-Received: from mga11.intel.com ([192.55.52.93]:62109 "EHLO mga11.intel.com"
+        id S241822AbhGOLQv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 15 Jul 2021 07:16:51 -0400
+Received: from mga01.intel.com ([192.55.52.88]:17800 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229666AbhGNX1x (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 14 Jul 2021 19:27:53 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10045"; a="207423944"
+        id S241139AbhGOLQu (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 15 Jul 2021 07:16:50 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10045"; a="232348410"
 X-IronPort-AV: E=Sophos;i="5.84,240,1620716400"; 
-   d="scan'208";a="207423944"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 16:25:00 -0700
+   d="scan'208";a="232348410"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2021 04:13:57 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,240,1620716400"; 
-   d="scan'208";a="460162391"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2021 16:25:00 -0700
-Subject: [PATCH v2] dmaengine: idxd: remove fault processing code
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org
-Date:   Wed, 14 Jul 2021 16:25:00 -0700
-Message-ID: <162630502789.631986.10591230961790023856.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/0.23-29-ga622f1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+   d="scan'208";a="452381223"
+Received: from coresw01.iind.intel.com ([10.223.252.64])
+  by orsmga007.jf.intel.com with ESMTP; 15 Jul 2021 04:13:54 -0700
+From:   pandith.n@intel.com
+To:     Eugeniy.Paltsev@synopsys.com, vkoul@kernel.org,
+        dmaengine@vger.kernel.org
+Cc:     lakshmi.bai.raja.subramanian@intel.com, kris.pan@intel.com,
+        mallikarjunappa.sangannavar@intel.com, Srikanth.Thokala@intel.com,
+        Pandith N <pandith.n@intel.com>
+Subject: [PATCH V3 0/3] dmaengine: dw-axi-dmac: support parallel memory <--> peripheral transfers
+Date:   Thu, 15 Jul 2021 16:43:51 +0530
+Message-Id: <20210715111354.16979-1-pandith.n@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Kernel memory are pinned and will not cause faults. Since the driver
-does not support interrupts for user descriptors, no fault errors are
-expected to come through the misc interrupt. Remove dead code.
+From: Pandith N <pandith.n@intel.com>
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
+Added support for multiple DMA_MEM_TO_DEV, DMA_DEV_TO_MEM transfers in
+parallel. Peripherals can use DMA for both transmit and receive
+operations in parallel.
+To setup DMA handshaking, the peripheral source number to be programmed
+in respective channel select slot of AXIDMA_CTRL_DMA_HS_SEL. No need to
+check for free slot in dw_axi_dma_set_hw_channel().
 
-Vinod,
-I applied this after the "Fix idxd sub-drivers setup" series. So if you
-apply that after you apply the series, it should apply.
+The channel slot used in AXIDMA_CTRL_DMA_HS_SEL needs to be set in
+src_per/dst_per of CHx_CFG register
 
-v2:
-- Rebased against dmaengine/next
+Burst length, DMA HW capability set in dt-binding is now used in driver.
 
- drivers/dma/idxd/irq.c |   98 ++----------------------------------------------
- 1 file changed, 5 insertions(+), 93 deletions(-)
+Changes since v1:
+Added new macro, magic mask for HW handshake select.
+Typos in commit message are corrected
 
-diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-index d974a2b45c59..0e7683db8081 100644
---- a/drivers/dma/idxd/irq.c
-+++ b/drivers/dma/idxd/irq.c
-@@ -23,10 +23,8 @@ struct idxd_fault {
- };
- 
- static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
--				 enum irq_work_type wtype,
- 				 int *processed, u64 data);
- static int irq_process_pending_llist(struct idxd_irq_entry *irq_entry,
--				     enum irq_work_type wtype,
- 				     int *processed, u64 data);
- 
- static void idxd_device_reinit(struct work_struct *work)
-@@ -62,46 +60,6 @@ static void idxd_device_reinit(struct work_struct *work)
- 	idxd_device_clear_state(idxd);
- }
- 
--static void idxd_device_fault_work(struct work_struct *work)
--{
--	struct idxd_fault *fault = container_of(work, struct idxd_fault, work);
--	struct idxd_irq_entry *ie;
--	int i;
--	int processed;
--	int irqcnt = fault->idxd->num_wq_irqs + 1;
--
--	for (i = 1; i < irqcnt; i++) {
--		ie = &fault->idxd->irq_entries[i];
--		irq_process_work_list(ie, IRQ_WORK_PROCESS_FAULT,
--				      &processed, fault->addr);
--		if (processed)
--			break;
--
--		irq_process_pending_llist(ie, IRQ_WORK_PROCESS_FAULT,
--					  &processed, fault->addr);
--		if (processed)
--			break;
--	}
--
--	kfree(fault);
--}
--
--static int idxd_device_schedule_fault_process(struct idxd_device *idxd,
--					      u64 fault_addr)
--{
--	struct idxd_fault *fault;
--
--	fault = kmalloc(sizeof(*fault), GFP_ATOMIC);
--	if (!fault)
--		return -ENOMEM;
--
--	fault->addr = fault_addr;
--	fault->idxd = idxd;
--	INIT_WORK(&fault->work, idxd_device_fault_work);
--	queue_work(idxd->wq, &fault->work);
--	return 0;
--}
--
- static int process_misc_interrupts(struct idxd_device *idxd, u32 cause)
- {
- 	struct device *dev = &idxd->pdev->dev;
-@@ -168,15 +126,6 @@ static int process_misc_interrupts(struct idxd_device *idxd, u32 cause)
- 	if (!err)
- 		return 0;
- 
--	/*
--	 * This case should rarely happen and typically is due to software
--	 * programming error by the driver.
--	 */
--	if (idxd->sw_err.valid &&
--	    idxd->sw_err.desc_valid &&
--	    idxd->sw_err.fault_addr)
--		idxd_device_schedule_fault_process(idxd, idxd->sw_err.fault_addr);
--
- 	gensts.bits = ioread32(idxd->reg_base + IDXD_GENSTATS_OFFSET);
- 	if (gensts.state == IDXD_DEVICE_STATE_HALT) {
- 		idxd->state = IDXD_DEV_HALTED;
-@@ -228,23 +177,6 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
- 	return IRQ_HANDLED;
- }
- 
--static inline bool match_fault(struct idxd_desc *desc, u64 fault_addr)
--{
--	/*
--	 * Completion address can be bad as well. Check fault address match for descriptor
--	 * and completion address.
--	 */
--	if ((u64)desc->hw == fault_addr || (u64)desc->completion == fault_addr) {
--		struct idxd_device *idxd = desc->wq->idxd;
--		struct device *dev = &idxd->pdev->dev;
--
--		dev_warn(dev, "desc with fault address: %#llx\n", fault_addr);
--		return true;
--	}
--
--	return false;
--}
--
- static inline void complete_desc(struct idxd_desc *desc, enum idxd_complete_type reason)
- {
- 	idxd_dma_complete_txd(desc, reason);
-@@ -252,30 +184,21 @@ static inline void complete_desc(struct idxd_desc *desc, enum idxd_complete_type
- }
- 
- static int irq_process_pending_llist(struct idxd_irq_entry *irq_entry,
--				     enum irq_work_type wtype,
- 				     int *processed, u64 data)
- {
- 	struct idxd_desc *desc, *t;
- 	struct llist_node *head;
- 	int queued = 0;
- 	unsigned long flags;
--	enum idxd_complete_type reason;
- 
- 	*processed = 0;
- 	head = llist_del_all(&irq_entry->pending_llist);
- 	if (!head)
- 		goto out;
- 
--	if (wtype == IRQ_WORK_NORMAL)
--		reason = IDXD_COMPLETE_NORMAL;
--	else
--		reason = IDXD_COMPLETE_DEV_FAIL;
--
- 	llist_for_each_entry_safe(desc, t, head, llnode) {
- 		if (desc->completion->status) {
--			if ((desc->completion->status & DSA_COMP_STATUS_MASK) != DSA_COMP_SUCCESS)
--				match_fault(desc, data);
--			complete_desc(desc, reason);
-+			complete_desc(desc, IDXD_COMPLETE_NORMAL);
- 			(*processed)++;
- 		} else {
- 			spin_lock_irqsave(&irq_entry->list_lock, flags);
-@@ -291,20 +214,14 @@ static int irq_process_pending_llist(struct idxd_irq_entry *irq_entry,
- }
- 
- static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
--				 enum irq_work_type wtype,
- 				 int *processed, u64 data)
- {
- 	int queued = 0;
- 	unsigned long flags;
- 	LIST_HEAD(flist);
- 	struct idxd_desc *desc, *n;
--	enum idxd_complete_type reason;
- 
- 	*processed = 0;
--	if (wtype == IRQ_WORK_NORMAL)
--		reason = IDXD_COMPLETE_NORMAL;
--	else
--		reason = IDXD_COMPLETE_DEV_FAIL;
- 
- 	/*
- 	 * This lock protects list corruption from access of list outside of the irq handler
-@@ -328,11 +245,8 @@ static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
- 
- 	spin_unlock_irqrestore(&irq_entry->list_lock, flags);
- 
--	list_for_each_entry(desc, &flist, list) {
--		if ((desc->completion->status & DSA_COMP_STATUS_MASK) != DSA_COMP_SUCCESS)
--			match_fault(desc, data);
--		complete_desc(desc, reason);
--	}
-+	list_for_each_entry(desc, &flist, list)
-+		complete_desc(desc, IDXD_COMPLETE_NORMAL);
- 
- 	return queued;
- }
-@@ -361,14 +275,12 @@ static int idxd_desc_process(struct idxd_irq_entry *irq_entry)
- 	 * 5. Repeat until no more descriptors.
- 	 */
- 	do {
--		rc = irq_process_work_list(irq_entry, IRQ_WORK_NORMAL,
--					   &processed, 0);
-+		rc = irq_process_work_list(irq_entry, &processed, 0);
- 		total += processed;
- 		if (rc != 0)
- 			continue;
- 
--		rc = irq_process_pending_llist(irq_entry, IRQ_WORK_NORMAL,
--					       &processed, 0);
-+		rc = irq_process_pending_llist(irq_entry, &processed, 0);
- 		total += processed;
- 	} while (rc != 0);
- 
+Changes since v2:
+Split the patch as follows
+Patch 1: Remove free slot check algorithm in dw_axi_dma_set_hw_channel()
+Patch 2: The channel slot used needs to be set in CHx_CFG src/dst_per
+Patch 3: Usage of burst length HW capability
 
+Pandith N (3):
+  dmaengine: dw-axi-dmac: Remove free slot check algorithm in
+    dw_axi_dma_set_hw_channel
+  dmaengine: dw-axi-dmac: support parallel memory <--> peripheral
+    transfers
+  dmaengine: dw-axi-dmac: Burst length settings
+
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 56 +++++++++----------
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  4 ++
+ 2 files changed, 29 insertions(+), 31 deletions(-)
+
+-- 
+2.17.1
 

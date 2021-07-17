@@ -2,53 +2,53 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F09913CC2AE
-	for <lists+dmaengine@lfdr.de>; Sat, 17 Jul 2021 12:53:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 674093CC2B1
+	for <lists+dmaengine@lfdr.de>; Sat, 17 Jul 2021 12:58:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229780AbhGQK4A (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 17 Jul 2021 06:56:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58666 "EHLO
+        id S233065AbhGQLBJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 17 Jul 2021 07:01:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbhGQK4A (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Jul 2021 06:56:00 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F1B0C06175F;
-        Sat, 17 Jul 2021 03:53:02 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id a6so17737277ljq.3;
-        Sat, 17 Jul 2021 03:53:02 -0700 (PDT)
+        with ESMTP id S229471AbhGQLBI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Jul 2021 07:01:08 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DCBCC06175F;
+        Sat, 17 Jul 2021 03:58:11 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id a6so17748753ljq.3;
+        Sat, 17 Jul 2021 03:58:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=DCRC3rQb6QUFHodoiHVlMqRF0dyiXmaZMG9uskF+xX8=;
-        b=TWOYlUzJ6mAil9DPO60Vrg9hPzn756jShGgHB5ifi05EcMAMeGV7aZmStVVfQz1FNN
-         p2WqVSazQwFXlyAKT6IDfGl29DvEW8JtyX+Fdkwy+s/iKaAOunaL+Jp6uj2KcHoejDC0
-         6UBlMfhPzJAtuX/8zsfg0MG+Ai4UJ0fdv7ECnTOyuBNlQebr4FccMCCo3t1L2edgyLOR
-         6W3kEVo+FC6zpXaPxJ2CNMmgab1RqwF9k8Yyv8fAHpO9Jy33BpVY4r2fGCGLqqafK0nt
-         0QBfgc60otZaOG1tUlbzUXzbHVyoNwXCLWBC8FI3IT+2jJTHKJDN/wKj2zLvNqjvD8oU
-         7NAg==
+        bh=riZ0swWsKuGdDEmTdXrsgKlYgCsX0yiDWHJgVmDqtqw=;
+        b=gQ2X7WOZi437l1jmm5+BK4QO1RqNBrUHSEdBTC7ImGYfaTzp5LjTgvuaf7JeZM9kgt
+         Ao0eY3JqsMHtZTJLgEt6eD2+4joiWuEKchrJnihmJ2ETlwZnHWNAQQ0+eDhfUtBefFeS
+         bOo+rvqY/nWcTtnaqXiUYS4myF7yEMVYz6n8fORpCvTH96ESlr/58aNJhobT4sruDwLA
+         UEIqswXX4J8DH0+dejnpK6MIa6HKmMf/BGdDiYGPHUWJQslx4aVpyNWqxaoynj+RwrtS
+         tnP25GwSmxRFPR5VgcSr3mlWSe0azI8HoXm/pMM0mhNhBtq5RYOyeFRjiO2iIk96/HNS
+         IqyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DCRC3rQb6QUFHodoiHVlMqRF0dyiXmaZMG9uskF+xX8=;
-        b=FfOr//LatlsLr2Sge5EOByGKVqLmp/ZnSmcoEhFAbKnk82HGU8D/qN8Z+uL+odRqNQ
-         GWRhcSSf6fBhiAx0tKvYf0qMkNtLrias8dURz1OYjYlZPlcvJSK6fN2q6rb0q9g4gr/1
-         AXXKCucwo924uR8YxIJRWzF/mdrp29sOa2qUJKSWvKi4p5luiX25cQR60dEODTDZb3yk
-         DjybVCyJJuO60FHjd7IxLcYiV0qN8abJq49g9gMwopuG8K6nBNdACJn1H7xnJRmBXVi2
-         bIBi0w2owycximEydBHoXrU2nngzsy5gFzx8/ye51Qz3bGwqU0PK/DE/FA1dS7sBjCP+
-         YINw==
-X-Gm-Message-State: AOAM532vTAEE7TXtIw0n8WCeWdjd+/+vgcpJ49C8xT+dFS3BA2g8ViyJ
-        cpp2lCxw4is5oHlpR1a2c8J8Cr1itRDyWcXKvW4=
-X-Google-Smtp-Source: ABdhPJwIv1nSMaBkgtLZ1JeUIDv1zTV+jTgiz3WR+enxsQIMSv3tLHCFmKp0AFfeW+Sdkv3Zw0Pxd2ria7DJrBhoEE0=
-X-Received: by 2002:a2e:9e1a:: with SMTP id e26mr13146709ljk.265.1626519180043;
- Sat, 17 Jul 2021 03:53:00 -0700 (PDT)
+        bh=riZ0swWsKuGdDEmTdXrsgKlYgCsX0yiDWHJgVmDqtqw=;
+        b=LXqWpUMnoIoNluIE55uiiKW5IzDTW7fgp73kOd97WdFHR69OQVx86tq6dvgvydAdIT
+         seRDKkoeZnffIawwrjPO0ZAqIDYoNYhwwutd1TfEC05UOOClbYpE8VreszM1iWDH4bVD
+         b6+j+MZTOveFjQi9QymMll1TSEM0Gi71rqaCRBwpMqSYDqEDXoy/yz8cnOTUrh8QU/c5
+         ErzyKFKgsAWKczbd6FMtRW8UjiXgJuA/1Ei6YrZQBVOeHwyh8yoD2Lvw/p8I+oBeN/0U
+         phYwh6ailinGMY3qRmhXmjTYYyR+++WWP3w0zoaJklrf3wKc4RoGU+fILal4zcmoFoUQ
+         5Kvg==
+X-Gm-Message-State: AOAM532xDxjXBdUqEtpW7F9oAF47ojY9vVvAJDZmzafV35S4jRguQktZ
+        Kiz/8Dv+7V4rqNMD39I4krQXBpNm1eAa1GW0FeE=
+X-Google-Smtp-Source: ABdhPJwooc9NPIkEHpAlWzWz1Ob6W8OdIMQH6EtwbSE5QM5bp1olWeWauSTAOJ9Y5IsQlqaPRywsVJQSFE11Bu3ueJw=
+X-Received: by 2002:a2e:8554:: with SMTP id u20mr13308698ljj.257.1626519490015;
+ Sat, 17 Jul 2021 03:58:10 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210704153314.6995-1-keguang.zhang@gmail.com> <YO5yo8v/tRZLGEdo@matsya>
 In-Reply-To: <YO5yo8v/tRZLGEdo@matsya>
 From:   Kelvin Cheung <keguang.zhang@gmail.com>
-Date:   Sat, 17 Jul 2021 18:52:48 +0800
-Message-ID: <CAJhJPsWBbfHresHYpmsydsuf=1LFtc-ZPuAX+bi_a2nx=y0zAw@mail.gmail.com>
+Date:   Sat, 17 Jul 2021 18:57:58 +0800
+Message-ID: <CAJhJPsUNCSK4VYv9Z4ZNDxC03F4CxQoAXCCf+TJmmbdUe4XNNA@mail.gmail.com>
 Subject: Re: [PATCH V5] dmaengine: Loongson1: Add Loongson1 dmaengine driver
 To:     Vinod Koul <vkoul@kernel.org>
 Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -76,8 +76,8 @@ Vinod Koul <vkoul@kernel.org> =E4=BA=8E2021=E5=B9=B47=E6=9C=8814=E6=97=A5=
 > so my comment was left unanswered, who creates this device!
 
 Sorry!
-This patch will create the device: https://patchwork.kernel.org/patch/12357=
-539
+This patch will create the device: https://patchwork.kernel.org/patch/12281=
+691
 
 >
 > --
@@ -85,7 +85,7 @@ This patch will create the device: https://patchwork.kernel.org/patch/12357=
 
 
 
---=20
+--
 Best regards,
 
 Kelvin Cheung

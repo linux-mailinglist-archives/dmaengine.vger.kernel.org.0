@@ -2,93 +2,90 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E4A03CBBCC
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Jul 2021 20:22:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F09913CC2AE
+	for <lists+dmaengine@lfdr.de>; Sat, 17 Jul 2021 12:53:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231828AbhGPSZm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 16 Jul 2021 14:25:42 -0400
-Received: from phobos.denx.de ([85.214.62.61]:51458 "EHLO phobos.denx.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229462AbhGPSZl (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 16 Jul 2021 14:25:41 -0400
-Received: from tr.lan (ip-89-176-112-137.net.upcbroadband.cz [89.176.112.137])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: marex@denx.de)
-        by phobos.denx.de (Postfix) with ESMTPSA id 64F6D82BE8;
-        Fri, 16 Jul 2021 20:22:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-        s=phobos-20191101; t=1626459765;
-        bh=/7JOK2DOQ1jrCqA8oGoP6+ZDHVle9/SriRJJeSUTQK4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=shSzfDk75D5ZME4ryi00CVO1Djkeajtuy5kq8QaUn2XvRaJppdHtFQrqQxsIu7w3R
-         dmBCUFdn7pleSZqA9YwtzXLaV585eP0n3ggNKWglvKzRYv0iV3GFMi9TXyTUqQPjSY
-         9DEJ4tEp1/4EbKSpglkFOxTghr+5p+UDLDw3WHUVRXLfxPNWcHfI3XfIy2KsU1ixGE
-         wSvyaXjprXKZSurSVRa/lSeViFrmnSTgWxasbVSBUOLt9NwCcJpno2O5Egv+pU+zKU
-         ZAffwehKfp/mZ9e9XNqWosi6WIP7WgHH6Geokdns1whpkj0gqZoaXLkwOgomb9IJ1h
-         /koC5egTi54VA==
-From:   Marek Vasut <marex@denx.de>
-To:     dmaengine@vger.kernel.org
-Cc:     Marek Vasut <marex@denx.de>, Akinobu Mita <akinobu.mita@gmail.com>,
-        Kedareswara rao Appana <appana.durga.rao@xilinx.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Vinod Koul <vinod.koul@intel.com>
-Subject: [PATCH] dmaengine: xilinx: Add empty device_config function
-Date:   Fri, 16 Jul 2021 20:22:41 +0200
-Message-Id: <20210716182241.218705-1-marex@denx.de>
-X-Mailer: git-send-email 2.30.2
+        id S229780AbhGQK4A (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 17 Jul 2021 06:56:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229471AbhGQK4A (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Jul 2021 06:56:00 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F1B0C06175F;
+        Sat, 17 Jul 2021 03:53:02 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id a6so17737277ljq.3;
+        Sat, 17 Jul 2021 03:53:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DCRC3rQb6QUFHodoiHVlMqRF0dyiXmaZMG9uskF+xX8=;
+        b=TWOYlUzJ6mAil9DPO60Vrg9hPzn756jShGgHB5ifi05EcMAMeGV7aZmStVVfQz1FNN
+         p2WqVSazQwFXlyAKT6IDfGl29DvEW8JtyX+Fdkwy+s/iKaAOunaL+Jp6uj2KcHoejDC0
+         6UBlMfhPzJAtuX/8zsfg0MG+Ai4UJ0fdv7ECnTOyuBNlQebr4FccMCCo3t1L2edgyLOR
+         6W3kEVo+FC6zpXaPxJ2CNMmgab1RqwF9k8Yyv8fAHpO9Jy33BpVY4r2fGCGLqqafK0nt
+         0QBfgc60otZaOG1tUlbzUXzbHVyoNwXCLWBC8FI3IT+2jJTHKJDN/wKj2zLvNqjvD8oU
+         7NAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DCRC3rQb6QUFHodoiHVlMqRF0dyiXmaZMG9uskF+xX8=;
+        b=FfOr//LatlsLr2Sge5EOByGKVqLmp/ZnSmcoEhFAbKnk82HGU8D/qN8Z+uL+odRqNQ
+         GWRhcSSf6fBhiAx0tKvYf0qMkNtLrias8dURz1OYjYlZPlcvJSK6fN2q6rb0q9g4gr/1
+         AXXKCucwo924uR8YxIJRWzF/mdrp29sOa2qUJKSWvKi4p5luiX25cQR60dEODTDZb3yk
+         DjybVCyJJuO60FHjd7IxLcYiV0qN8abJq49g9gMwopuG8K6nBNdACJn1H7xnJRmBXVi2
+         bIBi0w2owycximEydBHoXrU2nngzsy5gFzx8/ye51Qz3bGwqU0PK/DE/FA1dS7sBjCP+
+         YINw==
+X-Gm-Message-State: AOAM532vTAEE7TXtIw0n8WCeWdjd+/+vgcpJ49C8xT+dFS3BA2g8ViyJ
+        cpp2lCxw4is5oHlpR1a2c8J8Cr1itRDyWcXKvW4=
+X-Google-Smtp-Source: ABdhPJwIv1nSMaBkgtLZ1JeUIDv1zTV+jTgiz3WR+enxsQIMSv3tLHCFmKp0AFfeW+Sdkv3Zw0Pxd2ria7DJrBhoEE0=
+X-Received: by 2002:a2e:9e1a:: with SMTP id e26mr13146709ljk.265.1626519180043;
+ Sat, 17 Jul 2021 03:53:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.103.2 at phobos.denx.de
-X-Virus-Status: Clean
+References: <20210704153314.6995-1-keguang.zhang@gmail.com> <YO5yo8v/tRZLGEdo@matsya>
+In-Reply-To: <YO5yo8v/tRZLGEdo@matsya>
+From:   Kelvin Cheung <keguang.zhang@gmail.com>
+Date:   Sat, 17 Jul 2021 18:52:48 +0800
+Message-ID: <CAJhJPsWBbfHresHYpmsydsuf=1LFtc-ZPuAX+bi_a2nx=y0zAw@mail.gmail.com>
+Subject: Re: [PATCH V5] dmaengine: Loongson1: Add Loongson1 dmaengine driver
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Various DMA users call the dmaengine_slave_config() and expect it to
-succeed, but that can only succeed if .device_config is implemented.
-Add empty device_config function rather than patching all the places
-which use dmaengine_slave_config().
+Vinod Koul <vkoul@kernel.org> =E4=BA=8E2021=E5=B9=B47=E6=9C=8814=E6=97=A5=
+=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=881:14=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On 04-07-21, 23:33, Keguang Zhang wrote:
+>
+> > +static struct platform_driver ls1x_dma_driver =3D {
+> > +     .probe  =3D ls1x_dma_probe,
+> > +     .remove =3D ls1x_dma_remove,
+> > +     .driver =3D {
+> > +             .name   =3D "ls1x-dma",
+> > +     },
+> > +};
+> > +
+> > +module_platform_driver(ls1x_dma_driver);
+>
+> so my comment was left unanswered, who creates this device!
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Cc: Michal Simek <monstr@monstr.eu>
-Cc: Vinod Koul <vinod.koul@intel.com>
----
- drivers/dma/xilinx/xilinx_dma.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Sorry!
+This patch will create the device: https://patchwork.kernel.org/patch/12357=
+539
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 4b9530a7bf65..d6f4bf0d50e8 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -1658,6 +1658,17 @@ static void xilinx_dma_issue_pending(struct dma_chan *dchan)
- 	spin_unlock_irqrestore(&chan->lock, flags);
- }
- 
-+/**
-+ * xilinx_dma_issue_pending - Configure the DMA channel
-+ * @dchan: DMA channel
-+ * @config: channel configuration
-+ */
-+static int xilinx_dma_device_config(struct dma_chan *dchan,
-+				    struct dma_slave_config *config)
-+{
-+	return 0;
-+}
-+
- /**
-  * xilinx_dma_complete_descriptor - Mark the active descriptor as complete
-  * @chan : xilinx DMA channel
-@@ -3096,6 +3107,7 @@ static int xilinx_dma_probe(struct platform_device *pdev)
- 	xdev->common.device_synchronize = xilinx_dma_synchronize;
- 	xdev->common.device_tx_status = xilinx_dma_tx_status;
- 	xdev->common.device_issue_pending = xilinx_dma_issue_pending;
-+	xdev->common.device_config = xilinx_dma_device_config;
- 	if (xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA) {
- 		dma_cap_set(DMA_CYCLIC, xdev->common.cap_mask);
- 		xdev->common.device_prep_slave_sg = xilinx_dma_prep_slave_sg;
--- 
-2.30.2
+>
+> --
+> ~Vinod
 
+
+
+--=20
+Best regards,
+
+Kelvin Cheung

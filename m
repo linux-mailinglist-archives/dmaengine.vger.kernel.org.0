@@ -2,109 +2,114 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6838B3CD60F
-	for <lists+dmaengine@lfdr.de>; Mon, 19 Jul 2021 15:49:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B65343CD836
+	for <lists+dmaengine@lfdr.de>; Mon, 19 Jul 2021 17:02:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240583AbhGSNHN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 19 Jul 2021 09:07:13 -0400
-Received: from mail-io1-f45.google.com ([209.85.166.45]:38862 "EHLO
-        mail-io1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240575AbhGSNHL (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 19 Jul 2021 09:07:11 -0400
-Received: by mail-io1-f45.google.com with SMTP id k11so20008755ioa.5;
-        Mon, 19 Jul 2021 06:47:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=2fiuab3AUpirMe+xcclBf/WRW6F2pGS4dTs8jwQGUok=;
-        b=rRKzrFG5kP1ZnDRHejsXEeT2mvpcay1R8SgXex8sQTeMdMfibVvDKe9OriNc+L8PTU
-         8lOxpqlvhugX41u69deGWf8fRFJsHSZXape2AV/hHlU/aTPQo6SH1CSyjhRy1IMUmtiU
-         LgI3un7qrkRDz5DBRW4MZaE9/otEKKmxiAw2WrTEOgG9nKdR0TFBbGevqVeI53hl40le
-         2xxuZk9Loy7P8m2Ytfu0a4qA6syfHobjlaeryee6fLmslESPLTczhXkrKpyRgVcqDeK2
-         jSQ3aZ4j/fsGcNy+MY4vv/jVw4K9Y+Zyuuk0zSuGhwVaIgquYwgx3z5Jkdd3u3Z/oMIK
-         XaGQ==
-X-Gm-Message-State: AOAM531C/qAxfm2zkFOlHJPuFEa40H+NfSMRhZhxOtrLWiRrqyYbu2xP
-        BScEZLRBDpgz9ZDeZUZBfA==
-X-Google-Smtp-Source: ABdhPJwtlqHg9Kb15lUpckwCOQNa37haWnmd3xy+aNRnUC51mh9WF0lrFw3p6rfXDDQsCQrzJo6s+w==
-X-Received: by 2002:a5d:8888:: with SMTP id d8mr18994729ioo.170.1626702469074;
-        Mon, 19 Jul 2021 06:47:49 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id z12sm10612764iom.6.2021.07.19.06.47.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jul 2021 06:47:48 -0700 (PDT)
-Received: (nullmailer pid 1811208 invoked by uid 1000);
-        Mon, 19 Jul 2021 13:47:28 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        id S232727AbhGSOVM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 19 Jul 2021 10:21:12 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:11923 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242638AbhGSOUP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 19 Jul 2021 10:20:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1626706842;
+    s=strato-dkim-0002; d=gerhold.net;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=5asqN0lZNo3xHl1CBAymxXSuEQ1yqbDJbz4DcdRrSLk=;
+    b=J9E+jk/CxpvlIzVoB/gE8iHadnpWEZV9qry2QxLZXyEkGS7q4EgvuV9EjmJIRSVpem
+    KeFT3hGVQ6Tj9uCV5zEIE4TqdyV1AFUiM1Hry1Fof7HFo6pNjNOKae5EmecnZ5+DHFRR
+    ayD0gafOmrrg9Tl82I/2xmSaciITVipVQU0LdlBaii+/6w2b6rTJhsuWVkp0VzmKK7rG
+    dTJed3H6EXEJof3peozzJWgjGwHDCJzXg4ijsslOKUowXCcsU+33yb0ApAwQvyh3ituP
+    mZAduTazt+061IzKtbWUOfzTOpzboSLhVsM4fQ9uDmPy2jSNB0JIeCcoNojLHFrxacBP
+    Fy9g==
+Authentication-Results: strato.com;
+    dkim=none
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB4m6O43/v"
+X-RZG-CLASS-ID: mo00
+Received: from droid..
+    by smtp.strato.de (RZmta 47.28.1 DYNA|AUTH)
+    with ESMTPSA id g02a44x6JF0c42H
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+    Mon, 19 Jul 2021 17:00:38 +0200 (CEST)
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Loic Poulain <loic.poulain@linaro.org>,
+        Sergey Ryazanov <ryazanov.s.a@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-In-Reply-To: <20210719092842.4686-1-biju.das.jz@bp.renesas.com>
-References: <20210719092842.4686-1-biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH v4 1/4] dt-bindings: dma: Document RZ/G2L bindings
-Date:   Mon, 19 Jul 2021 07:47:28 -0600
-Message-Id: <1626702448.459307.1811207.nullmailer@robh.at.kernel.org>
+        Aleksander Morgado <aleksander@aleksander.es>,
+        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, phone-devel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Stephan Gerhold <stephan@gerhold.net>
+Subject: [RFC PATCH net-next 0/4] net: wwan: Add Qualcomm BAM-DMUX WWAN network driver
+Date:   Mon, 19 Jul 2021 16:53:13 +0200
+Message-Id: <20210719145317.79692-1-stephan@gerhold.net>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, 19 Jul 2021 10:28:42 +0100, Biju Das wrote:
-> Document RZ/G2L DMAC bindings.
-> 
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> v4->v5:
->   * Added Rob's Rb tag
-> v3->v4:
->   * Described clocks and reset properties
-> v2->v3:
->   * Added error interrupt first.
->   * Updated clock and reset maxitems.
->   * Added Geert's Rb tag.
-> v1->v2:
->   * Made interrupt names in defined order
->   * Removed src address and channel configuration from dma-cells.
->   * Changed the compatibele string to "renesas,r9a07g044-dmac".
-> v1:-
->   * https://patchwork.kernel.org/project/linux-renesas-soc/patch/20210611113642.18457-2-biju.das.jz@bp.renesas.com/
-> ---
->  .../bindings/dma/renesas,rz-dmac.yaml         | 124 ++++++++++++++++++
->  1 file changed, 124 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
-> 
+The BAM Data Multiplexer provides access to the network data channels
+of modems integrated into many older Qualcomm SoCs, e.g. Qualcomm MSM8916
+or MSM8974. This series adds a driver that allows using it.
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+For more information about BAM-DMUX, see PATCH 4/4.
 
-yamllint warnings/errors:
+Shortly said, BAM-DMUX is built using a simple protocol layer on top of
+a DMA engine (Qualcomm BAM DMA). For BAM-DMUX, the BAM DMA engine runs in
+a quite strange mode that I call "remote power collapse", where the
+modem/remote side is responsible for powering on the BAM when needed but we
+are responsible to initialize it. The BAM is power-collapsed when unneeded
+by coordinating power control via bidirectional interrupts from the
+BAM-DMUX driver.
 
-dtschema/dtc warnings/errors:
-Error: Documentation/devicetree/bindings/dma/renesas,rz-dmac.example.dts:49.30-31 syntax error
-FATAL ERROR: Unable to parse input tree
-make[1]: *** [scripts/Makefile.lib:380: Documentation/devicetree/bindings/dma/renesas,rz-dmac.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-make: *** [Makefile:1418: dt_binding_check] Error 2
-\ndoc reference errors (make refcheckdocs):
+The series first adds one possible solution for handling this "remote power
+collapse" mode in the bam_dma driver, then it adds the BAM-DMUX driver to
+the WWAN subsystem. Note that the BAM-DMUX driver does not actually make
+use of the WWAN subsystem yet, since I'm not sure how to fit it in there
+yet (see PATCH 4/4).
 
-See https://patchwork.ozlabs.org/patch/1506873
+Please note that all of the changes in this patch series are based on
+a fairly complicated driver from Qualcomm [1].
+I do not have access to any documentation about "BAM-DMUX". :(
 
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
+The driver has been used in postmarketOS [2] on various smartphones/tablets
+based on Qualcomm MSM8916 and MSM8974 for a year now with no reported
+problems.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+At runtime (but not compile-time), the following two patches are needed
+additionally for full functionality:
+  - https://lore.kernel.org/linux-arm-msm/20210712135703.324748-1-stephan@gerhold.net/
+  - https://lore.kernel.org/linux-arm-msm/20210712135703.324748-2-stephan@gerhold.net/
 
-pip3 install dtschema --upgrade
+[1]: https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/drivers/soc/qcom/bam_dmux.c?h=LA.BR.1.2.9.1-02310-8x16.0
+[2]: https://postmarketos.org/
 
-Please check and re-submit.
+Stephan Gerhold (4):
+  dt-bindings: dmaengine: bam_dma: Add remote power collapse mode
+  dmaengine: qcom: bam_dma: Add remote power collapse mode
+  dt-bindings: net: Add schema for Qualcomm BAM-DMUX
+  net: wwan: Add Qualcomm BAM-DMUX WWAN network driver
+
+ .../devicetree/bindings/dma/qcom_bam_dma.txt  |   2 +
+ .../bindings/net/qcom,bam-dmux.yaml           |  87 ++
+ MAINTAINERS                                   |   8 +
+ drivers/dma/qcom/bam_dma.c                    |  88 +-
+ drivers/net/wwan/Kconfig                      |  13 +
+ drivers/net/wwan/Makefile                     |   1 +
+ drivers/net/wwan/qcom_bam_dmux.c              | 907 ++++++++++++++++++
+ 7 files changed, 1074 insertions(+), 32 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/qcom,bam-dmux.yaml
+ create mode 100644 drivers/net/wwan/qcom_bam_dmux.c
+
+-- 
+2.32.0
 

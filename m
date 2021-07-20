@@ -2,96 +2,69 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 777723CF973
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Jul 2021 14:18:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1E673CF97D
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Jul 2021 14:23:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235524AbhGTLhs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 20 Jul 2021 07:37:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59024 "EHLO mail.kernel.org"
+        id S236898AbhGTLms (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 20 Jul 2021 07:42:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234417AbhGTLhr (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 20 Jul 2021 07:37:47 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1D31B6113B;
-        Tue, 20 Jul 2021 12:18:24 +0000 (UTC)
+        id S235407AbhGTLmH (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 20 Jul 2021 07:42:07 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9668861164;
+        Tue, 20 Jul 2021 12:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626783505;
-        bh=VIQnM/IKpMG9t235B8zbrp4hUhe5FWvYJ4Jx0VCgmh4=;
+        s=k20201202; t=1626783765;
+        bh=YRLjcBlqPGxnu3xGSqaltTSQ92aKXDwWqXW2BW/djd8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q9kiumv2VZXe4Bjzpjb/1THxPHpv0nZeR8RbhNvHwMRkBatuvXLGejbTlYjr/m4lH
-         ctgUV94yu61G3yQISVN5+LTKycqI+XilAWRp1Ar/NiqmsHJMNXlE/KlxqG0Y+yGFgk
-         /163Z3npgPrMurRMFzF662r0TlgHEqBxb8BWNOWbvxfsmaui7ZHIebj7/bNZS0YioQ
-         1ClnU9YJQTBolW8UEMi9lH71UK6nFmfNt36Z/VpiViaen735egkL0pCIgJIVzaJZqr
-         cbBK7iDdQO0OFDd4w3PvKXlHy3jZ5T9m7ii4jHKaaU8B250FHKozwhTcSMX3O40gs0
-         QEgfX4rkQAr2w==
-Date:   Tue, 20 Jul 2021 17:48:22 +0530
+        b=NPZ4cfCH2/QnEkLnTe8nyWmaJD9PRK01bggfFSdcQBzmdqrKZEkJs84HG06yA+Qwd
+         epd5Q81sv2+8nfQ9/P5i4cQ/bBWC3FLNbfQbR7Fo1KrAxojWJJoXDZh0L3ElTxDZVh
+         aa5nNQ+9uzOCULt8kH4XhVBQXyNJyy+Rvtvo5KT5FJtfPD5MU3ygCZgau6i7WNY0OY
+         U3zWyFLnzawiOAflK1CGrptof3SA1JPp+HLDML80ZxG5r/sXGbKHjp3NznQRW5qglh
+         ReVpCNq8ETRcQVJVaYAPUrOyCY/RZMZM3Jzxg1zTsAXyhn+oc5T5fDs3u3ok9GETtW
+         m6kTbN5xFADeQ==
+Date:   Tue, 20 Jul 2021 17:52:41 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Kelvin Cheung <keguang.zhang@gmail.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V5] dmaengine: Loongson1: Add Loongson1 dmaengine driver
-Message-ID: <YPa/DsO1vWcXKJKd@matsya>
-References: <20210704153314.6995-1-keguang.zhang@gmail.com>
- <YO5yo8v/tRZLGEdo@matsya>
- <CAJhJPsUNCSK4VYv9Z4ZNDxC03F4CxQoAXCCf+TJmmbdUe4XNNA@mail.gmail.com>
- <YPLrsXEmmHPtbZ+N@matsya>
- <YPMVyYoBojHYsMbJ@kroah.com>
- <YPa2+TsdL0PrR3hR@matsya>
- <YPa4IAk3sh7bai15@kroah.com>
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     Robin Gong <yibin.gong@nxp.com>, broonie@kernel.org,
+        shawnguo@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-imx@nxp.com, kernel@pengutronix.de,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, festevam@gmail.com, s.hauer@pengutronix.de,
+        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
+        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com,
+        frieder.schrempf@kontron.de, m.felsch@pengutronix.de,
+        xiaoning.wang@nxp.com
+Subject: Re: [PATCH v16 00/12] add ecspi ERR009165 for i.mx6/7 soc family
+Message-ID: <YPbAEbcOzBrK2KfB@matsya>
+References: <1626258052-22198-1-git-send-email-yibin.gong@nxp.com>
+ <8f8a307a2dc99ca3beab2767ac3188b4ba1a394f.camel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YPa4IAk3sh7bai15@kroah.com>
+In-Reply-To: <8f8a307a2dc99ca3beab2767ac3188b4ba1a394f.camel@pengutronix.de>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 20-07-21, 13:48, Greg KH wrote:
-> On Tue, Jul 20, 2021 at 05:13:53PM +0530, Vinod Koul wrote:
-> > On 17-07-21, 19:39, Greg KH wrote:
-> > > On Sat, Jul 17, 2021 at 08:09:45PM +0530, Vinod Koul wrote:
-> > > > On 17-07-21, 18:57, Kelvin Cheung wrote:
-> > > > > Vinod Koul <vkoul@kernel.org> 于2021年7月14日周三 下午1:14写道：
-> > > > > >
-> > > > > > On 04-07-21, 23:33, Keguang Zhang wrote:
-> > > > > >
-> > > > > > > +static struct platform_driver ls1x_dma_driver = {
-> > > > > > > +     .probe  = ls1x_dma_probe,
-> > > > > > > +     .remove = ls1x_dma_remove,
-> > > > > > > +     .driver = {
-> > > > > > > +             .name   = "ls1x-dma",
-> > > > > > > +     },
-> > > > > > > +};
-> > > > > > > +
-> > > > > > > +module_platform_driver(ls1x_dma_driver);
-> > > > > >
-> > > > > > so my comment was left unanswered, who creates this device!
-> > > > > 
-> > > > > Sorry!
-> > > > > This patch will create the device: https://patchwork.kernel.org/patch/12281691
-> > > > 
-> > > > Greg, looks like the above patch creates platform devices in mips, is
-> > > > that the right way..?
-> > > 
-> > > I do not understand, what exactly is the question?
-> > 
-> > So this patch was adding Loongson1 dmaengine driver which is a platform
-> > device. I asked about the platform device and was told that [1] creates
-> > the platform device. I am not sure if that is the recommended way given
-> > that you have been asking people to not use platform devices.
+On 14-07-21, 11:05, Lucas Stach wrote:
+> Hi Vinod, Mark, Shawn,
 > 
-> Yes, but this link:
+> with this revision I think this series is ready to be picked up, at
+> least I couldn't spot any blockers anymore.
 > 
-> > [1]: https://patchwork.kernel.org/patch/12281691
-> 
-> Does look like a "real" platform device in that you have fixed resources
-> for the device and no way to discover it on your own.
-> 
-> But why are you not using DT for this?  That looks like the old platform
-> data files.
+> How would you like to deal with this? While the complete series is
+> needed to fix the issues and restore proper DMA functionality on
+> unaffected SoCs, there are no dependencies between the patches
+> targeting different subsystems.
+> Do you prefer to pick dma/spi/dt patches from this series in your
+> respective trees, or do you want the whole series to go through the imx
+> tree? AFAICS all dma and spi patches are already acked, so taking them
+> through one tree would be possible, I think.
 
-Apparently I was told that this platform does not use DT :( Looking at
-it it should.. Maybe Kelvin can explain why..
+Sure, since you have acks, feel free to merge thru imx6 tree
 
 -- 
 ~Vinod

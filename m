@@ -2,30 +2,30 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2FFF3D0379
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Jul 2021 22:57:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FA0D3D037B
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Jul 2021 22:57:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234288AbhGTULe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 20 Jul 2021 16:11:34 -0400
-Received: from mga18.intel.com ([134.134.136.126]:62680 "EHLO mga18.intel.com"
+        id S234708AbhGTUMB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 20 Jul 2021 16:12:01 -0400
+Received: from mga12.intel.com ([192.55.52.136]:41173 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234571AbhGTUBd (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 20 Jul 2021 16:01:33 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10051"; a="198595678"
+        id S234829AbhGTUBp (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 20 Jul 2021 16:01:45 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10051"; a="190909286"
 X-IronPort-AV: E=Sophos;i="5.84,256,1620716400"; 
-   d="scan'208";a="198595678"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2021 13:42:10 -0700
+   d="scan'208";a="190909286"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2021 13:42:16 -0700
 X-IronPort-AV: E=Sophos;i="5.84,256,1620716400"; 
-   d="scan'208";a="564539392"
+   d="scan'208";a="469893107"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2021 13:42:10 -0700
-Subject: [PATCH] dmaengine: idxd: Set defaults for GRPCFG traffic class
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2021 13:42:16 -0700
+Subject: [PATCH] dmanegine: idxd: add software command status
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org
-Date:   Tue, 20 Jul 2021 13:42:10 -0700
-Message-ID: <162681373005.1968485.3761065664382799202.stgit@djiang5-desk3.ch.intel.com>
+Cc:     Ramesh Thomas <ramesh.thomas@intel.com>, dmaengine@vger.kernel.org
+Date:   Tue, 20 Jul 2021 13:42:15 -0700
+Message-ID: <162681373579.1968485.5891788397526827892.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -34,115 +34,263 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Set GRPCFG traffic class to value of 1 for best performance on current
-generation of accelerators. Also add override option to allow experimentation.
-Sysfs knobs are disabled for DSA/IAX gen1 devices.
+Enabling device and wq returns standard errno and that does not provide
+enough details to indicate what exactly failed. The hardware command status
+is only 8bits. Expand the command status to 32bits and use the upper 16
+bits to define software errors to provide more details on the exact
+failure. Bit 31 will be used to indicate the error is software set as the
+driver is using some of the spec defined hardware error as well.
 
+Cc: Ramesh Thomas <ramesh.thomas@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- Documentation/admin-guide/kernel-parameters.txt |    5 +++++
- drivers/dma/idxd/idxd.h                         |    1 +
- drivers/dma/idxd/init.c                         |   13 +++++++++++--
- drivers/dma/idxd/registers.h                    |    3 +++
- drivers/dma/idxd/sysfs.c                        |    6 ++++++
- 5 files changed, 26 insertions(+), 2 deletions(-)
+ Documentation/ABI/stable/sysfs-driver-dma-idxd |    2 ++
+ drivers/dma/idxd/cdev.c                        |    5 ++++-
+ drivers/dma/idxd/device.c                      |   22 +++++++++++++++++++---
+ drivers/dma/idxd/dma.c                         |    4 ++++
+ drivers/dma/idxd/idxd.h                        |    2 +-
+ drivers/dma/idxd/sysfs.c                       |   11 ++++++++++-
+ include/uapi/linux/idxd.h                      |   23 +++++++++++++++++++++++
+ 7 files changed, 63 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index bdb22006f713..ec5411cdec20 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1747,6 +1747,11 @@
- 			support for the idxd driver. By default it is set to
- 			true (1).
+diff --git a/Documentation/ABI/stable/sysfs-driver-dma-idxd b/Documentation/ABI/stable/sysfs-driver-dma-idxd
+index adb0c93e8dfc..df4afbccf037 100644
+--- a/Documentation/ABI/stable/sysfs-driver-dma-idxd
++++ b/Documentation/ABI/stable/sysfs-driver-dma-idxd
+@@ -128,6 +128,8 @@ Date:		Aug 28, 2020
+ KernelVersion:	5.10.0
+ Contact:	dmaengine@vger.kernel.org
+ Description:	The last executed device administrative command's status/error.
++		Also last configuration error overloaded.
++		Writing to it will clear the status.
  
-+	idxd.tc_override= [HW]
-+			Format: <bool>
-+			Allow override of default traffic class configuration
-+			for the device. By default it is set to false (0).
-+
- 	ieee754=	[MIPS] Select IEEE Std 754 conformance mode
- 			Format: { strict | legacy | 2008 | relaxed }
- 			Default: strict
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 34d4f43bfedc..94983bced189 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -17,6 +17,7 @@
- #define IDXD_DRIVER_VERSION	"1.00"
+ What:		/sys/bus/dsa/devices/wq<m>.<n>/block_on_fault
+ Date:		Oct 27, 2020
+diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+index f6a4603517ba..4d2ecdb130e7 100644
+--- a/drivers/dma/idxd/cdev.c
++++ b/drivers/dma/idxd/cdev.c
+@@ -320,9 +320,12 @@ static int idxd_user_drv_probe(struct idxd_dev *idxd_dev)
+ 		goto err;
  
- extern struct kmem_cache *idxd_desc_pool;
-+extern bool tc_override;
+ 	rc = idxd_wq_add_cdev(wq);
+-	if (rc < 0)
++	if (rc < 0) {
++		idxd->cmd_status = IDXD_SCMD_CDEV_ERR;
+ 		goto err_cdev;
++	}
  
- struct idxd_wq;
- struct idxd_dev;
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 8db56f98059f..eb09bc591c31 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -32,6 +32,10 @@ static bool sva = true;
- module_param(sva, bool, 0644);
- MODULE_PARM_DESC(sva, "Toggle SVA support on/off");
++	idxd->cmd_status = 0;
+ 	mutex_unlock(&wq->wq_lock);
+ 	return 0;
  
-+bool tc_override;
-+module_param(tc_override, bool, 0644);
-+MODULE_PARM_DESC(tc_override, "Override traffic class defaults");
-+
- #define DRV_NAME "idxd"
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index 41f67a195eb6..86fa4b4590f9 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -840,6 +840,7 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
+ 	wq->wqcfg->wq_size = wq->size;
  
- bool support_enqcmd;
-@@ -336,8 +340,13 @@ static int idxd_setup_groups(struct idxd_device *idxd)
+ 	if (wq->size == 0) {
++		idxd->cmd_status = IDXD_SCMD_WQ_NO_SIZE;
+ 		dev_warn(dev, "Incorrect work queue size: 0\n");
+ 		return -EINVAL;
+ 	}
+@@ -975,6 +976,7 @@ static int idxd_wqs_setup(struct idxd_device *idxd)
+ 			continue;
+ 
+ 		if (wq_shared(wq) && !device_swq_supported(idxd)) {
++			idxd->cmd_status = IDXD_SCMD_WQ_NO_SWQ_SUPPORT;
+ 			dev_warn(dev, "No shared wq support but configured.\n");
+ 			return -EINVAL;
  		}
- 
- 		idxd->groups[i] = group;
--		group->tc_a = -1;
--		group->tc_b = -1;
-+		if (idxd->hw.version < DEVICE_VERSION_2 && !tc_override) {
-+			group->tc_a = 1;
-+			group->tc_b = 1;
-+		} else {
-+			group->tc_a = -1;
-+			group->tc_b = -1;
-+		}
+@@ -983,8 +985,10 @@ static int idxd_wqs_setup(struct idxd_device *idxd)
+ 		configured++;
  	}
  
- 	return 0;
-diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
-index 7343a8f48819..ffc7550a77ee 100644
---- a/drivers/dma/idxd/registers.h
-+++ b/drivers/dma/idxd/registers.h
-@@ -7,6 +7,9 @@
- #define PCI_DEVICE_ID_INTEL_DSA_SPR0	0x0b25
- #define PCI_DEVICE_ID_INTEL_IAX_SPR0	0x0cfe
+-	if (configured == 0)
++	if (configured == 0) {
++		idxd->cmd_status = IDXD_SCMD_WQ_NONE_CONFIGURED;
+ 		return -EINVAL;
++	}
  
-+#define DEVICE_VERSION_1		0x100
-+#define DEVICE_VERSION_2		0x200
-+
- #define IDXD_MMIO_BAR		0
- #define IDXD_WQ_BAR		2
- #define IDXD_PORTAL_SIZE	PAGE_SIZE
+ 	return 0;
+ }
+@@ -1140,21 +1144,26 @@ int __drv_enable_wq(struct idxd_wq *wq)
+ 
+ 	lockdep_assert_held(&wq->wq_lock);
+ 
+-	if (idxd->state != IDXD_DEV_ENABLED)
++	if (idxd->state != IDXD_DEV_ENABLED) {
++		idxd->cmd_status = IDXD_SCMD_DEV_NOT_ENABLED;
+ 		goto err;
++	}
+ 
+ 	if (wq->state != IDXD_WQ_DISABLED) {
+ 		dev_dbg(dev, "wq %d already enabled.\n", wq->id);
++		idxd->cmd_status = IDXD_SCMD_WQ_ENABLED;
+ 		rc = -EBUSY;
+ 		goto err;
+ 	}
+ 
+ 	if (!wq->group) {
+ 		dev_dbg(dev, "wq %d not attached to group.\n", wq->id);
++		idxd->cmd_status = IDXD_SCMD_WQ_NO_GRP;
+ 		goto err;
+ 	}
+ 
+ 	if (strlen(wq->name) == 0) {
++		idxd->cmd_status = IDXD_SCMD_WQ_NO_NAME;
+ 		dev_dbg(dev, "wq %d name not set.\n", wq->id);
+ 		goto err;
+ 	}
+@@ -1162,6 +1171,7 @@ int __drv_enable_wq(struct idxd_wq *wq)
+ 	/* Shared WQ checks */
+ 	if (wq_shared(wq)) {
+ 		if (!device_swq_supported(idxd)) {
++			idxd->cmd_status = IDXD_SCMD_WQ_NO_SVM;
+ 			dev_dbg(dev, "PASID not enabled and shared wq.\n");
+ 			goto err;
+ 		}
+@@ -1174,6 +1184,7 @@ int __drv_enable_wq(struct idxd_wq *wq)
+ 		 * threshold via sysfs.
+ 		 */
+ 		if (wq->threshold == 0) {
++			idxd->cmd_status = IDXD_SCMD_WQ_NO_THRESH;
+ 			dev_dbg(dev, "Shared wq and threshold 0.\n");
+ 			goto err;
+ 		}
+@@ -1197,6 +1208,7 @@ int __drv_enable_wq(struct idxd_wq *wq)
+ 
+ 	rc = idxd_wq_map_portal(wq);
+ 	if (rc < 0) {
++		idxd->cmd_status = IDXD_SCMD_WQ_PORTAL_ERR;
+ 		dev_dbg(dev, "wq %d portal mapping failed: %d\n", wq->id, rc);
+ 		goto err_map_portal;
+ 	}
+@@ -1259,8 +1271,10 @@ int idxd_device_drv_probe(struct idxd_dev *idxd_dev)
+ 	 * enabled state, then the device was altered outside of driver's control.
+ 	 * If the state is in halted state, then we don't want to proceed.
+ 	 */
+-	if (idxd->state != IDXD_DEV_DISABLED)
++	if (idxd->state != IDXD_DEV_DISABLED) {
++		idxd->cmd_status = IDXD_SCMD_DEV_ENABLED;
+ 		return -ENXIO;
++	}
+ 
+ 	/* Device configuration */
+ 	spin_lock_irqsave(&idxd->dev_lock, flags);
+@@ -1279,9 +1293,11 @@ int idxd_device_drv_probe(struct idxd_dev *idxd_dev)
+ 	rc = idxd_register_dma_device(idxd);
+ 	if (rc < 0) {
+ 		idxd_device_disable(idxd);
++		idxd->cmd_status = IDXD_SCMD_DEV_DMA_ERR;
+ 		return rc;
+ 	}
+ 
++	idxd->cmd_status = 0;
+ 	return 0;
+ }
+ 
+diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
+index 2fd7ec29a08f..a195225687bb 100644
+--- a/drivers/dma/idxd/dma.c
++++ b/drivers/dma/idxd/dma.c
+@@ -284,22 +284,26 @@ static int idxd_dmaengine_drv_probe(struct idxd_dev *idxd_dev)
+ 
+ 	rc = idxd_wq_alloc_resources(wq);
+ 	if (rc < 0) {
++		idxd->cmd_status = IDXD_SCMD_WQ_RES_ALLOC_ERR;
+ 		dev_dbg(dev, "WQ resource alloc failed\n");
+ 		goto err_res_alloc;
+ 	}
+ 
+ 	rc = idxd_wq_init_percpu_ref(wq);
+ 	if (rc < 0) {
++		idxd->cmd_status = IDXD_SCMD_PERCPU_ERR;
+ 		dev_dbg(dev, "percpu_ref setup failed\n");
+ 		goto err_ref;
+ 	}
+ 
+ 	rc = idxd_register_dma_channel(wq);
+ 	if (rc < 0) {
++		idxd->cmd_status = IDXD_SCMD_DMA_CHAN_ERR;
+ 		dev_dbg(dev, "Failed to register dma channel\n");
+ 		goto err_dma;
+ 	}
+ 
++	idxd->cmd_status = 0;
+ 	mutex_unlock(&wq->wq_lock);
+ 	return 0;
+ 
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index 94983bced189..bfcb03329f77 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -252,7 +252,7 @@ struct idxd_device {
+ 	unsigned long flags;
+ 	int id;
+ 	int major;
+-	u8 cmd_status;
++	u32 cmd_status;
+ 
+ 	struct pci_dev *pdev;
+ 	void __iomem *reg_base;
 diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index b883e9f16e7f..881a12596d4b 100644
+index 881a12596d4b..4c01587c9d4a 100644
 --- a/drivers/dma/idxd/sysfs.c
 +++ b/drivers/dma/idxd/sysfs.c
-@@ -327,6 +327,9 @@ static ssize_t group_traffic_class_a_store(struct device *dev,
- 	if (idxd->state == IDXD_DEV_ENABLED)
- 		return -EPERM;
+@@ -1217,7 +1217,16 @@ static ssize_t cmd_status_show(struct device *dev,
  
-+	if (idxd->hw.version < DEVICE_VERSION_2 && !tc_override)
-+		return -EPERM;
+ 	return sysfs_emit(buf, "%#x\n", idxd->cmd_status);
+ }
+-static DEVICE_ATTR_RO(cmd_status);
 +
- 	if (val < 0 || val > 7)
- 		return -EINVAL;
- 
-@@ -366,6 +369,9 @@ static ssize_t group_traffic_class_b_store(struct device *dev,
- 	if (idxd->state == IDXD_DEV_ENABLED)
- 		return -EPERM;
- 
-+	if (idxd->hw.version < DEVICE_VERSION_2 && !tc_override)
-+		return -EPERM;
++static ssize_t cmd_status_store(struct device *dev, struct device_attribute *attr,
++				const char *buf, size_t count)
++{
++	struct idxd_device *idxd = confdev_to_idxd(dev);
 +
- 	if (val < 0 || val > 7)
- 		return -EINVAL;
++	idxd->cmd_status = 0;
++	return count;
++}
++static DEVICE_ATTR_RW(cmd_status);
  
+ static struct attribute *idxd_device_attributes[] = {
+ 	&dev_attr_version.attr,
+diff --git a/include/uapi/linux/idxd.h b/include/uapi/linux/idxd.h
+index e33997b4d750..3f67255ae46f 100644
+--- a/include/uapi/linux/idxd.h
++++ b/include/uapi/linux/idxd.h
+@@ -9,6 +9,29 @@
+ #include <stdint.h>
+ #endif
+ 
++/* Driver command error status */
++enum idxd_scmd_stat {
++	IDXD_SCMD_DEV_ENABLED = 0x80000010,
++	IDXD_SCMD_DEV_NOT_ENABLED = 0x80000020,
++	IDXD_SCMD_WQ_ENABLED = 0x80000021,
++	IDXD_SCMD_DEV_DMA_ERR = 0x80020000,
++	IDXD_SCMD_WQ_NO_GRP = 0x80030000,
++	IDXD_SCMD_WQ_NO_NAME = 0x80040000,
++	IDXD_SCMD_WQ_NO_SVM = 0x80050000,
++	IDXD_SCMD_WQ_NO_THRESH = 0x80060000,
++	IDXD_SCMD_WQ_PORTAL_ERR = 0x80070000,
++	IDXD_SCMD_WQ_RES_ALLOC_ERR = 0x80080000,
++	IDXD_SCMD_PERCPU_ERR = 0x80090000,
++	IDXD_SCMD_DMA_CHAN_ERR= 0x800a0000,
++	IDXD_SCMD_CDEV_ERR = 0x800b0000,
++	IDXD_SCMD_WQ_NO_SWQ_SUPPORT = 0x800c0000,
++	IDXD_SCMD_WQ_NONE_CONFIGURED = 0x800d0000,
++	IDXD_SCMD_WQ_NO_SIZE = 0x800e0000,
++};
++
++#define IDXD_SCMD_SOFTERR_MASK	0x80000000
++#define IDXD_SCMD_SOFTERR_SHIFT	16
++
+ /* Descriptor flags */
+ #define IDXD_OP_FLAG_FENCE	0x0001
+ #define IDXD_OP_FLAG_BOF	0x0002
 
 

@@ -2,69 +2,105 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1E673CF97D
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Jul 2021 14:23:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F37B43CF98C
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Jul 2021 14:25:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236898AbhGTLms (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 20 Jul 2021 07:42:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32938 "EHLO mail.kernel.org"
+        id S237755AbhGTLoG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 20 Jul 2021 07:44:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235407AbhGTLmH (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 20 Jul 2021 07:42:07 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9668861164;
-        Tue, 20 Jul 2021 12:22:44 +0000 (UTC)
+        id S237933AbhGTLn4 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 20 Jul 2021 07:43:56 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0EFFA6113C;
+        Tue, 20 Jul 2021 12:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626783765;
-        bh=YRLjcBlqPGxnu3xGSqaltTSQ92aKXDwWqXW2BW/djd8=;
+        s=k20201202; t=1626783874;
+        bh=IZ5fhQBw8lF0jQ4KZtvtrkcrPT0qfOGp7+3yoW724r8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NPZ4cfCH2/QnEkLnTe8nyWmaJD9PRK01bggfFSdcQBzmdqrKZEkJs84HG06yA+Qwd
-         epd5Q81sv2+8nfQ9/P5i4cQ/bBWC3FLNbfQbR7Fo1KrAxojWJJoXDZh0L3ElTxDZVh
-         aa5nNQ+9uzOCULt8kH4XhVBQXyNJyy+Rvtvo5KT5FJtfPD5MU3ygCZgau6i7WNY0OY
-         U3zWyFLnzawiOAflK1CGrptof3SA1JPp+HLDML80ZxG5r/sXGbKHjp3NznQRW5qglh
-         ReVpCNq8ETRcQVJVaYAPUrOyCY/RZMZM3Jzxg1zTsAXyhn+oc5T5fDs3u3ok9GETtW
-         m6kTbN5xFADeQ==
-Date:   Tue, 20 Jul 2021 17:52:41 +0530
+        b=mvabbFBt+0+ugsNUpYDAJJZix9b2PjrxN33kYiEDL8Q8N7nIQaF4aE84M1GRDaeJ1
+         rHT07bcYrpBZ9FGulOJf2QDy6s6qYKB51qU7fgVULaWaI5ZxYZER5vFyL82yc8Ud0j
+         hdFo0dM2csjbZ08++HcpEYyiVkf8EUEl9Te+Dm01svees7+S7P9hmA+irfGluJMdOF
+         GKZk0vq7GjV4FGzUwIbGajYBZWTJOi5iWcsL+Zrq/5YEzJ2oDxXpA+RDgNr3Wo2vFN
+         vcM4irgBNJG388/BuOPD4x+zfraVt5FWd5EbKOTy2pb1qPpQHKvq0yroOC6R6K8v44
+         4Lp3UVNwQ8dpg==
+Date:   Tue, 20 Jul 2021 17:54:31 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Robin Gong <yibin.gong@nxp.com>, broonie@kernel.org,
-        shawnguo@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-imx@nxp.com, kernel@pengutronix.de,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        mark.rutland@arm.com, robh+dt@kernel.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, festevam@gmail.com, s.hauer@pengutronix.de,
-        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
-        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com,
-        frieder.schrempf@kontron.de, m.felsch@pengutronix.de,
-        xiaoning.wang@nxp.com
-Subject: Re: [PATCH v16 00/12] add ecspi ERR009165 for i.mx6/7 soc family
-Message-ID: <YPbAEbcOzBrK2KfB@matsya>
-References: <1626258052-22198-1-git-send-email-yibin.gong@nxp.com>
- <8f8a307a2dc99ca3beab2767ac3188b4ba1a394f.camel@pengutronix.de>
+To:     "N, Pandith" <pandith.n@intel.com>
+Cc:     "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "Raja Subramanian, Lakshmi Bai" 
+        <lakshmi.bai.raja.subramanian@intel.com>,
+        "Pan, Kris" <kris.pan@intel.com>,
+        "Sangannavar, Mallikarjunappa" 
+        <mallikarjunappa.sangannavar@intel.com>,
+        "Thokala, Srikanth" <srikanth.thokala@intel.com>
+Subject: Re: [linux-drivers-review] [PATCH V2 1/1] dmaengine: dw-axi-dmac:
+ support parallel memory <--> peripheral transfers
+Message-ID: <YPbAf6zd3uI61ZbM@matsya>
+References: <20210709095133.26867-1-pandith.n@intel.com>
+ <YO5tAlVshNLat2jt@matsya>
+ <BYAPR11MB35282B43582FAB4C6619790EE1139@BYAPR11MB3528.namprd11.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8f8a307a2dc99ca3beab2767ac3188b4ba1a394f.camel@pengutronix.de>
+In-Reply-To: <BYAPR11MB35282B43582FAB4C6619790EE1139@BYAPR11MB3528.namprd11.prod.outlook.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 14-07-21, 11:05, Lucas Stach wrote:
-> Hi Vinod, Mark, Shawn,
+On 14-07-21, 12:45, N, Pandith wrote:
+> Hi Vinod,
 > 
-> with this revision I think this series is ready to be picked up, at
-> least I couldn't spot any blockers anymore.
-> 
-> How would you like to deal with this? While the complete series is
-> needed to fix the issues and restore proper DMA functionality on
-> unaffected SoCs, there are no dependencies between the patches
-> targeting different subsystems.
-> Do you prefer to pick dma/spi/dt patches from this series in your
-> respective trees, or do you want the whole series to go through the imx
-> tree? AFAICS all dma and spi patches are already acked, so taking them
-> through one tree would be possible, I think.
+> Thanks for review, Please check for in-line response for the comments
 
-Sure, since you have acks, feel free to merge thru imx6 tree
+Pls do not *top post*
+
+> 
+> Regards
+> Pandith
+> 
+> > -----Original Message-----
+> > From: Vinod Koul <vkoul@kernel.org>
+> > Sent: Wednesday, July 14, 2021 10:20 AM
+> > To: N, Pandith <pandith.n@intel.com>
+> > Cc: Eugeniy.Paltsev@synopsys.com; dmaengine@vger.kernel.org; Raja
+> > Subramanian, Lakshmi Bai <lakshmi.bai.raja.subramanian@intel.com>; Pan, Kris
+> > <kris.pan@intel.com>; Sangannavar, Mallikarjunappa
+> > <mallikarjunappa.sangannavar@intel.com>; Thokala, Srikanth
+> > <srikanth.thokala@intel.com>
+> > Subject: Re: [linux-drivers-review] [PATCH V2 1/1] dmaengine: dw-axi-dmac:
+> > support parallel memory <--> peripheral transfers
+> > 
+> > On 09-07-21, 15:21, pandith.n@intel.com wrote:
+> > > From: Pandith N <pandith.n@intel.com>
+> > >
+> > > Added support for multiple DMA_MEM_TO_DEV, DMA_DEV_TO_MEM
+> > transfers in
+> > > parallel. This is required for peripherals using DMA for transmit and
+> > > receive operations at the same time. APB slot number needs to be
+> > > programmed in channel hardware handshaking interface.
+> > >
+> > > Removed free slot check algorithm in dw_axi_dma_set_hw_channel. For 8
+> > > DMA channels, use respective handshake slot in DMA_HS_SEL APB register.
+> > 
+> > and why was that removed, maybe a different patch for that?
+> > 
+> For every channel, an dedicated slot is provided in  hardware handshake register.
+> Peripheral source number is programmed in respective channel slots.
+
+Pls explain that in the log as well
+
+> 
+> > >
+> > > Burst length, DMA HW capability set in dt-binding is now used in driver.
+> > 
+> > Another patch...
+> > 
+> > So, too many changes below for the description above, pls split
+> > 
+> I will split the changes as separate patches in next version.
+
+ok
 
 -- 
 ~Vinod

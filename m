@@ -2,119 +2,177 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EFB3D3D0E4C
-	for <lists+dmaengine@lfdr.de>; Wed, 21 Jul 2021 14:02:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FBD93D0EB3
+	for <lists+dmaengine@lfdr.de>; Wed, 21 Jul 2021 14:17:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235056AbhGULSY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 21 Jul 2021 07:18:24 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:60994 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S238498AbhGUK7l (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 21 Jul 2021 06:59:41 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 16LBbEAw030559;
-        Wed, 21 Jul 2021 13:40:00 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=selector1;
- bh=9K0el6v2S3oKMB5e1ZaxFrvwWS0dlKkQ3UZ872NGc4Y=;
- b=SE3RxeW+3onxzEVgY3qgSnz33Taq62il7B//FTbvpaLIP7ZxmghjVbz7eqbjhGDnKBhw
- tAEE4anqZ7I82aK/O1rhb+/OLVXKW99bJHqya6ZDuKzDoVGVfElqR4Re1hB22xtqnAIm
- PKxFv+mkoxEPqDYr5vStdQtDFUy//ZqloiW52huVFB0+xfNLrdhIfLds2xBJ/O0vFfz/
- 58opMxs4hM1LpKKhWp9fmAHZmqv1XqU6d+MEDct2Br4OPQ7eQweMj4pB68rFXxXQNt8k
- RWqZHUnwd8Fn5t+8XKzJzNNtDQvkR2nG1EbTZfclaTA8la+ON2/SB3VTj5MXeIM3HbXg zA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 39xg2c11bc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 21 Jul 2021 13:40:00 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C33DD100038;
-        Wed, 21 Jul 2021 13:39:59 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag2node3.st.com [10.75.127.6])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B37052238C2;
-        Wed, 21 Jul 2021 13:39:59 +0200 (CEST)
-Received: from localhost (10.75.127.49) by SFHDAG2NODE3.st.com (10.75.127.6)
- with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 21 Jul 2021 13:39:59
- +0200
-From:   Amelie Delaunay <amelie.delaunay@foss.st.com>
-To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC:     <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Amelie Delaunay <amelie.delaunay@foss.st.com>,
-        Pierre-Yves Mordret <pierre-yves.mordret@foss.st.com>
-Subject: [RESEND PATCH 2/2] dmaengine: stm32-dma: add alternate REQ/ACK protocol management
-Date:   Wed, 21 Jul 2021 13:39:46 +0200
-Message-ID: <20210721113946.81001-3-amelie.delaunay@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210721113946.81001-1-amelie.delaunay@foss.st.com>
-References: <20210721113946.81001-1-amelie.delaunay@foss.st.com>
+        id S233792AbhGULgr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 21 Jul 2021 07:36:47 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:15463 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231680AbhGULgr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 21 Jul 2021 07:36:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1626869837;
+    s=strato-dkim-0002; d=gerhold.net;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=4CcqRIyqsFHa+Wrw0Xd8JK00I+Bxru7P9shO2wlwNwU=;
+    b=dGicpEYuymH5XiHV1X2jtV6vho0U2eObya9dVNRiN3pM/HV7FpgxOSa5u543RpQDMh
+    hGyTM8ZdlvCiR3veJMxQEyjlZz1XPnXx7H+MikPjsuoSxX+gnH1dGPOf93LixychWWTW
+    ApdUqIJHJJ6CReda6RR+SgboBJX6ctHa3KotJ6JVtf12AcPy+LnVq1k1Zt8PrXOm4hdS
+    n3UupM8cgyapWQyEzMI3hKsJJ2Eu/HoNd+1AVE+Yrs01SohlCCM/veva6y5H2/h/szC0
+    4MsLnlzVre/kSFtBOxMZ6tCUCfs6NP8Rb0xYESNo7p1K4FCgOEuUd8KFltsRvNH6uuEf
+    Gy1A==
+Authentication-Results: strato.com;
+    dkim=none
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u261EJF5OxJD4peA9Z7h"
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+    by smtp.strato.de (RZmta 47.28.1 DYNA|AUTH)
+    with ESMTPSA id g02a44x6LCHFHg9
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+    Wed, 21 Jul 2021 14:17:15 +0200 (CEST)
+Date:   Wed, 21 Jul 2021 14:17:11 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Sergey Ryazanov <ryazanov.s.a@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Aleksander Morgado <aleksander@aleksander.es>,
+        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: Re: [RFC PATCH net-next 4/4] net: wwan: Add Qualcomm BAM-DMUX WWAN
+ network driver
+Message-ID: <YPgQR/VbNVyxERnb@gerhold.net>
+References: <20210719145317.79692-1-stephan@gerhold.net>
+ <20210719145317.79692-5-stephan@gerhold.net>
+ <CAHNKnsTVSg5T_ZK3PQ50wuJydHbANFfpJd5NZ-71b1m3B_4dQg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG2NODE3.st.com
- (10.75.127.6)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-07-21_08:2021-07-21,2021-07-21 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHNKnsTVSg5T_ZK3PQ50wuJydHbANFfpJd5NZ-71b1m3B_4dQg@mail.gmail.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-STM32 USART/UART is not managing correctly the default DMA REQ/ACK protocol
-leading to possibly lock the DMA stream.
-Default protocol consists in maintaining ACK signal up to the removal of
-REQuest and the transfer completion.
-In case of alternative REQ/ACK protocol, ACK de-assertion does not wait the
-removal of the REQuest, but only the transfer completion.
+Hi Sergey,
 
-This patch retrieves the need of the alternative protocol through the
-device tree, and sets the protocol accordingly.
-It also unwrap STM32_DMA_DIRECT_MODE_GET macro definition for consistency
-with new STM32_DMA_ALT_ACK_MODE_GET macro definition.
+On Tue, Jul 20, 2021 at 12:10:42PM +0300, Sergey Ryazanov wrote:
+> On Mon, Jul 19, 2021 at 6:01 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+> > The BAM Data Multiplexer provides access to the network data channels of
+> > modems integrated into many older Qualcomm SoCs, e.g. Qualcomm MSM8916 or
+> > MSM8974. It is built using a simple protocol layer on top of a DMA engine
+> > (Qualcomm BAM) and bidirectional interrupts to coordinate power control.
+> >
+> > The modem announces a fixed set of channels by sending an OPEN command.
+> > The driver exports each channel as separate network interface so that
+> > a connection can be established via QMI from userspace. The network
+> > interface can work either in Ethernet or Raw-IP mode (configurable via
+> > QMI). However, Ethernet mode seems to be broken with most firmwares
+> > (network packets are actually received as Raw-IP), therefore the driver
+> > only supports Raw-IP mode.
+> >
+> > The driver uses runtime PM to coordinate power control with the modem.
+> > TX/RX buffers are put in a kind of "ring queue" and submitted via
+> > the bam_dma driver of the DMAEngine subsystem.
+> >
+> > The basic architecture looks roughly like this:
+> >
+> >                    +------------+                +-------+
+> >          [IPv4/6]  |  BAM-DMUX  |                |       |
+> >          [Data...] |            |                |       |
+> >         ---------->|rmnet0      | [DMUX chan: x] |       |
+> >          [IPv4/6]  | (chan: 0)  | [IPv4/6]       |       |
+> >          [Data...] |            | [Data...]      |       |
+> >         ---------->|rmnet1      |--------------->| Modem |
+> >                    | (chan: 1)  |      BAM       |       |
+> >          [IPv4/6]  | ...        |  (DMA Engine)  |       |
+> >          [Data...] |            |                |       |
+> >         ---------->|rmnet7      |                |       |
+> >                    | (chan: 7)  |                |       |
+> >                    +------------+                +-------+
+> >
+> > However, on newer SoCs/firmware versions Qualcomm began gradually moving
+> > to QMAP (rmnet driver) as backend-independent protocol for multiplexing
+> > and data aggegration. Some firmware versions allow using QMAP on top of
+> > BAM-DMUX (effectively resulting in a second multiplexing layer plus data
+> > aggregation). The architecture with QMAP would look roughly like this:
+> >
+> >            +-------------+           +------------+                  +-------+
+> >  [IPv4/6]  |    RMNET    |           |  BAM-DMUX  |                  |       |
+> >  [Data...] |             |           |            | [DMUX chan: 0]   |       |
+> > ---------->|rmnet_data1  |     ----->|rmnet0      | [QMAP mux-id: x] |       |
+> >            | (mux-id: 1) |     |     | (chan: 0)  | [IPv4/6]         |       |
+> >            |             |     |     |            | [Data...]        |       |
+> >  [IPv4/6]  | ...         |------     |            |----------------->| Modem |
+> >  [Data...] |             |           |            |       BAM        |       |
+> > ---------->|rmnet_data42 | [QMAP: x] |[rmnet1]    |   (DMA Engine)   |       |
+> >            | (mux-id: 42)| [IPv4/6]  |... unused! |                  |       |
+> >            |             | [Data...] |[rmnet7]    |                  |       |
+> >            |             |           |            |                  |       |
+> >            +-------------+           +------------+                  +-------+
+> >
+> > In this case, rmnet1-7 would remain unused. The firmware used on the most
+> > recent SoCs with BAM-DMUX even seems to announce only a single BAM-DMUX
+> > channel (rmnet0), which makes QMAP the only option for multiplexing there.
+> >
+> > So far the driver is mainly tested on various smartphones/tablets based on
+> > Qualcomm MSM8916/MSM8974 without QMAP. It looks like QMAP depends on a MTU
+> > negotiation feature in BAM-DMUX which is not yet supported by the driver.
+> >
+> > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> > ---
+> > Note that this is my first network driver, so I apologize in advance
+> > if I made some obvious mistakes. :)
+> >
+> > I'm not sure how to integrate the driver with the WWAN subsystem yet.
+> > At the moment the driver creates network interfaces for all channels
+> > announced by the modem, it does not make use of the WWAN link management
+> > yet. Unfortunately, this is a bit complicated:
+> >
+> > Both QMAP and the built-in multiplexing layer might be needed at some point.
+> > There are firmware versions that do not support QMAP and the other way around
+> > (the built-in multiplexing was disabled on very recent firmware versions).
+> > Only userspace can check if QMAP is supported in the firmware (via QMI).
+> 
+> I am not very familiar with the Qualcomm protocols and am just curious
+> whether BAM-DMUX has any control (management) channels or only IPv4/v6
+> data channels?
+> 
+> The WWAN subsystem began as a framework for exporting management
+> interfaces (MBIM, AT, etc.) to user space. And then the network
+> interfaces (data channels) management interface was added to
+> facilitate management of devices with multiple data channels. That is
+> why I am curious about the BAM-DMUX device management interface or in
+> other words, how a user space application could control the modem
+> work?
+> 
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
----
- drivers/dma/stm32-dma.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Sorry for the confusion! It's briefly mentioned in the Kconfig option
+but I should have made this more clear in the commit message. It was so
+long already that I wasn't sure where to put it. :)
 
-diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index f54ecb123a52..d3aa34b3d2f7 100644
---- a/drivers/dma/stm32-dma.c
-+++ b/drivers/dma/stm32-dma.c
-@@ -60,6 +60,7 @@
- #define STM32_DMA_SCR_PSIZE_GET(n)	((n & STM32_DMA_SCR_PSIZE_MASK) >> 11)
- #define STM32_DMA_SCR_DIR_MASK		GENMASK(7, 6)
- #define STM32_DMA_SCR_DIR(n)		((n & 0x3) << 6)
-+#define STM32_DMA_SCR_TRBUFF		BIT(20) /* Bufferable transfer for USART/UART */
- #define STM32_DMA_SCR_CT		BIT(19) /* Target in double buffer */
- #define STM32_DMA_SCR_DBM		BIT(18) /* Double Buffer Mode */
- #define STM32_DMA_SCR_PINCOS		BIT(15) /* Peripheral inc offset size */
-@@ -138,8 +139,9 @@
- #define STM32_DMA_THRESHOLD_FTR_MASK	GENMASK(1, 0)
- #define STM32_DMA_THRESHOLD_FTR_GET(n)	((n) & STM32_DMA_THRESHOLD_FTR_MASK)
- #define STM32_DMA_DIRECT_MODE_MASK	BIT(2)
--#define STM32_DMA_DIRECT_MODE_GET(n)	(((n) & STM32_DMA_DIRECT_MODE_MASK) \
--					 >> 2)
-+#define STM32_DMA_DIRECT_MODE_GET(n)	(((n) & STM32_DMA_DIRECT_MODE_MASK) >> 2)
-+#define STM32_DMA_ALT_ACK_MODE_MASK	BIT(4)
-+#define STM32_DMA_ALT_ACK_MODE_GET(n)	(((n) & STM32_DMA_ALT_ACK_MODE_MASK) >> 4)
- 
- enum stm32_dma_width {
- 	STM32_DMA_BYTE,
-@@ -1252,6 +1254,8 @@ static void stm32_dma_set_config(struct stm32_dma_chan *chan,
- 	chan->threshold = STM32_DMA_THRESHOLD_FTR_GET(cfg->features);
- 	if (STM32_DMA_DIRECT_MODE_GET(cfg->features))
- 		chan->threshold = STM32_DMA_FIFO_THRESHOLD_NONE;
-+	if (STM32_DMA_ALT_ACK_MODE_GET(cfg->features))
-+		chan->chan_reg.dma_scr |= STM32_DMA_SCR_TRBUFF;
- }
- 
- static struct dma_chan *stm32_dma_of_xlate(struct of_phandle_args *dma_spec,
--- 
-2.25.1
+BAM-DMUX does not have any control channels. Instead I use it together
+with the rpmsg_wwan_ctrl driver [1] that I already submitted for 5.14.
+The control/data channels are pretty much separate in this setup and
+don't have much to do with each other.
 
+I also had a short overview of some of the many different modem
+protocols Qualcomm has come up with in a related RFC for that driver,
+see [2] if you are curious.
+
+I hope that clarifies some things, please let me know if I should
+explain something better! :)
+
+Thanks!
+Stephan
+
+[1]: https://lore.kernel.org/netdev/20210618173611.134685-3-stephan@gerhold.net/
+[2]: https://lore.kernel.org/netdev/YLfL9Q+4860uqS8f@gerhold.net/

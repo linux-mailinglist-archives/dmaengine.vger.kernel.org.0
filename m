@@ -2,177 +2,138 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FBD93D0EB3
-	for <lists+dmaengine@lfdr.de>; Wed, 21 Jul 2021 14:17:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 046C63D0EC5
+	for <lists+dmaengine@lfdr.de>; Wed, 21 Jul 2021 14:23:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233792AbhGULgr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 21 Jul 2021 07:36:47 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:15463 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231680AbhGULgr (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 21 Jul 2021 07:36:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1626869837;
-    s=strato-dkim-0002; d=gerhold.net;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=4CcqRIyqsFHa+Wrw0Xd8JK00I+Bxru7P9shO2wlwNwU=;
-    b=dGicpEYuymH5XiHV1X2jtV6vho0U2eObya9dVNRiN3pM/HV7FpgxOSa5u543RpQDMh
-    hGyTM8ZdlvCiR3veJMxQEyjlZz1XPnXx7H+MikPjsuoSxX+gnH1dGPOf93LixychWWTW
-    ApdUqIJHJJ6CReda6RR+SgboBJX6ctHa3KotJ6JVtf12AcPy+LnVq1k1Zt8PrXOm4hdS
-    n3UupM8cgyapWQyEzMI3hKsJJ2Eu/HoNd+1AVE+Yrs01SohlCCM/veva6y5H2/h/szC0
-    4MsLnlzVre/kSFtBOxMZ6tCUCfs6NP8Rb0xYESNo7p1K4FCgOEuUd8KFltsRvNH6uuEf
-    Gy1A==
-Authentication-Results: strato.com;
-    dkim=none
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u261EJF5OxJD4peA9Z7h"
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-    by smtp.strato.de (RZmta 47.28.1 DYNA|AUTH)
-    with ESMTPSA id g02a44x6LCHFHg9
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-    Wed, 21 Jul 2021 14:17:15 +0200 (CEST)
-Date:   Wed, 21 Jul 2021 14:17:11 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Sergey Ryazanov <ryazanov.s.a@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Aleksander Morgado <aleksander@aleksander.es>,
-        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: [RFC PATCH net-next 4/4] net: wwan: Add Qualcomm BAM-DMUX WWAN
- network driver
-Message-ID: <YPgQR/VbNVyxERnb@gerhold.net>
-References: <20210719145317.79692-1-stephan@gerhold.net>
- <20210719145317.79692-5-stephan@gerhold.net>
- <CAHNKnsTVSg5T_ZK3PQ50wuJydHbANFfpJd5NZ-71b1m3B_4dQg@mail.gmail.com>
+        id S237347AbhGULlt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 21 Jul 2021 07:41:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231680AbhGULls (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 21 Jul 2021 07:41:48 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40F94C061574;
+        Wed, 21 Jul 2021 05:22:24 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id v6so2848678lfp.6;
+        Wed, 21 Jul 2021 05:22:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Pg7bD+390UpqjI+zQBvxj/TSzQC4X2004JklWBEs0bY=;
+        b=LUib2WexrgHs6dHS2ImFFSKnys6Z4IfUNURmd3L3rcrbu/qM2k/pxZk6isFvvjjtO9
+         Rx6VnzE7dnFUW6klXr879NaXvYj98sDikoJPMv3vKcslqo7FjDHw0l0jkfzjKRruIcXY
+         JC5TGQa3SEby+2Wzl98tK8rfo71NEu9livn5zu8+5h7YUqeg8hXgYc99TOsBGPVCA7Ev
+         yYYmXOzcp7Ifr30MYgAKAYIdALKMyYliOaGMGo4IWC9BiFhQuxqq+PeUdG9bxLq6WV/v
+         CQB//583m0ixI9tuMz29LCRx5NkppMsfr0+mbwBzT/Pyy+8GYv01TSnWsD1Z2EJOG46r
+         F/9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Pg7bD+390UpqjI+zQBvxj/TSzQC4X2004JklWBEs0bY=;
+        b=pGZ3F25F45EuaxHb50MItReJkV0Db5mFtkaczvPaNxwhaRMaU1IfxxQnUDiRYtRU6x
+         vWegiGz0UOZAk58KaOM6EqX1IVC5bLDtbmBTJO5t1HALx5TX6n88oOivQ0NPFiAFc8By
+         t78+FE9IeGSVp7fxTyzpv8wZg/QLuSaLi69P6Km/nTJq+atnnvl7wowf6tr1xqYH3DG3
+         7idnKDubhuIxKmkXOvvI2ZDa0nxhtoZJKRL/x6+wvP51Wsz9l/g/NGQpMZCZyXKZ11Ns
+         GCeEz2febfXjyNowLJF/ZbnEaZtk2a2boimgGcDD6JO+rTKy1d7RWv1agdo0dMkpuXsD
+         bnSg==
+X-Gm-Message-State: AOAM530TN/+zTMiuJL5zz9Wsw01aQD+soqRZ+4Oe7w3CiVtioHM8TzXr
+        JxmN9hbePMrpFBQmWgelLQPchr1tvNMWpXT9anQ=
+X-Google-Smtp-Source: ABdhPJx4EF5xnEFx9vKv2ALcD1ZOdgQU3l5QRL1R03YNWeU5AazWr4HjIsELUaOh9e+0QKlMJBe3lnzqtYx9BFb/ulE=
+X-Received: by 2002:a05:6512:33af:: with SMTP id i15mr26072779lfg.25.1626870142549;
+ Wed, 21 Jul 2021 05:22:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHNKnsTVSg5T_ZK3PQ50wuJydHbANFfpJd5NZ-71b1m3B_4dQg@mail.gmail.com>
+References: <20210704153314.6995-1-keguang.zhang@gmail.com>
+ <YO5yo8v/tRZLGEdo@matsya> <CAJhJPsUNCSK4VYv9Z4ZNDxC03F4CxQoAXCCf+TJmmbdUe4XNNA@mail.gmail.com>
+ <YPLrsXEmmHPtbZ+N@matsya> <YPMVyYoBojHYsMbJ@kroah.com> <YPa2+TsdL0PrR3hR@matsya>
+ <YPa4IAk3sh7bai15@kroah.com> <YPa/DsO1vWcXKJKd@matsya>
+In-Reply-To: <YPa/DsO1vWcXKJKd@matsya>
+From:   Kelvin Cheung <keguang.zhang@gmail.com>
+Date:   Wed, 21 Jul 2021 20:22:10 +0800
+Message-ID: <CAJhJPsV211=Y_wrXqaiWz7Tqhvbj-ETwSNWqLcbt8PHi8=JMLA@mail.gmail.com>
+Subject: Re: [PATCH V5] dmaengine: Loongson1: Add Loongson1 dmaengine driver
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Sergey,
+Hi Vinod, Greg,
 
-On Tue, Jul 20, 2021 at 12:10:42PM +0300, Sergey Ryazanov wrote:
-> On Mon, Jul 19, 2021 at 6:01 PM Stephan Gerhold <stephan@gerhold.net> wrote:
-> > The BAM Data Multiplexer provides access to the network data channels of
-> > modems integrated into many older Qualcomm SoCs, e.g. Qualcomm MSM8916 or
-> > MSM8974. It is built using a simple protocol layer on top of a DMA engine
-> > (Qualcomm BAM) and bidirectional interrupts to coordinate power control.
+Vinod Koul <vkoul@kernel.org> =E4=BA=8E2021=E5=B9=B47=E6=9C=8820=E6=97=A5=
+=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=888:18=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On 20-07-21, 13:48, Greg KH wrote:
+> > On Tue, Jul 20, 2021 at 05:13:53PM +0530, Vinod Koul wrote:
+> > > On 17-07-21, 19:39, Greg KH wrote:
+> > > > On Sat, Jul 17, 2021 at 08:09:45PM +0530, Vinod Koul wrote:
+> > > > > On 17-07-21, 18:57, Kelvin Cheung wrote:
+> > > > > > Vinod Koul <vkoul@kernel.org> =E4=BA=8E2021=E5=B9=B47=E6=9C=881=
+4=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=881:14=E5=86=99=E9=81=93=EF=BC=
+=9A
+> > > > > > >
+> > > > > > > On 04-07-21, 23:33, Keguang Zhang wrote:
+> > > > > > >
+> > > > > > > > +static struct platform_driver ls1x_dma_driver =3D {
+> > > > > > > > +     .probe  =3D ls1x_dma_probe,
+> > > > > > > > +     .remove =3D ls1x_dma_remove,
+> > > > > > > > +     .driver =3D {
+> > > > > > > > +             .name   =3D "ls1x-dma",
+> > > > > > > > +     },
+> > > > > > > > +};
+> > > > > > > > +
+> > > > > > > > +module_platform_driver(ls1x_dma_driver);
+> > > > > > >
+> > > > > > > so my comment was left unanswered, who creates this device!
+> > > > > >
+> > > > > > Sorry!
+> > > > > > This patch will create the device: https://patchwork.kernel.org=
+/patch/12281691
+> > > > >
+> > > > > Greg, looks like the above patch creates platform devices in mips=
+, is
+> > > > > that the right way..?
+> > > >
+> > > > I do not understand, what exactly is the question?
+> > >
+> > > So this patch was adding Loongson1 dmaengine driver which is a platfo=
+rm
+> > > device. I asked about the platform device and was told that [1] creat=
+es
+> > > the platform device. I am not sure if that is the recommended way giv=
+en
+> > > that you have been asking people to not use platform devices.
 > >
-> > The modem announces a fixed set of channels by sending an OPEN command.
-> > The driver exports each channel as separate network interface so that
-> > a connection can be established via QMI from userspace. The network
-> > interface can work either in Ethernet or Raw-IP mode (configurable via
-> > QMI). However, Ethernet mode seems to be broken with most firmwares
-> > (network packets are actually received as Raw-IP), therefore the driver
-> > only supports Raw-IP mode.
+> > Yes, but this link:
 > >
-> > The driver uses runtime PM to coordinate power control with the modem.
-> > TX/RX buffers are put in a kind of "ring queue" and submitted via
-> > the bam_dma driver of the DMAEngine subsystem.
+> > > [1]: https://patchwork.kernel.org/patch/12281691
 > >
-> > The basic architecture looks roughly like this:
+> > Does look like a "real" platform device in that you have fixed resource=
+s
+> > for the device and no way to discover it on your own.
 > >
-> >                    +------------+                +-------+
-> >          [IPv4/6]  |  BAM-DMUX  |                |       |
-> >          [Data...] |            |                |       |
-> >         ---------->|rmnet0      | [DMUX chan: x] |       |
-> >          [IPv4/6]  | (chan: 0)  | [IPv4/6]       |       |
-> >          [Data...] |            | [Data...]      |       |
-> >         ---------->|rmnet1      |--------------->| Modem |
-> >                    | (chan: 1)  |      BAM       |       |
-> >          [IPv4/6]  | ...        |  (DMA Engine)  |       |
-> >          [Data...] |            |                |       |
-> >         ---------->|rmnet7      |                |       |
-> >                    | (chan: 7)  |                |       |
-> >                    +------------+                +-------+
-> >
-> > However, on newer SoCs/firmware versions Qualcomm began gradually moving
-> > to QMAP (rmnet driver) as backend-independent protocol for multiplexing
-> > and data aggegration. Some firmware versions allow using QMAP on top of
-> > BAM-DMUX (effectively resulting in a second multiplexing layer plus data
-> > aggregation). The architecture with QMAP would look roughly like this:
-> >
-> >            +-------------+           +------------+                  +-------+
-> >  [IPv4/6]  |    RMNET    |           |  BAM-DMUX  |                  |       |
-> >  [Data...] |             |           |            | [DMUX chan: 0]   |       |
-> > ---------->|rmnet_data1  |     ----->|rmnet0      | [QMAP mux-id: x] |       |
-> >            | (mux-id: 1) |     |     | (chan: 0)  | [IPv4/6]         |       |
-> >            |             |     |     |            | [Data...]        |       |
-> >  [IPv4/6]  | ...         |------     |            |----------------->| Modem |
-> >  [Data...] |             |           |            |       BAM        |       |
-> > ---------->|rmnet_data42 | [QMAP: x] |[rmnet1]    |   (DMA Engine)   |       |
-> >            | (mux-id: 42)| [IPv4/6]  |... unused! |                  |       |
-> >            |             | [Data...] |[rmnet7]    |                  |       |
-> >            |             |           |            |                  |       |
-> >            +-------------+           +------------+                  +-------+
-> >
-> > In this case, rmnet1-7 would remain unused. The firmware used on the most
-> > recent SoCs with BAM-DMUX even seems to announce only a single BAM-DMUX
-> > channel (rmnet0), which makes QMAP the only option for multiplexing there.
-> >
-> > So far the driver is mainly tested on various smartphones/tablets based on
-> > Qualcomm MSM8916/MSM8974 without QMAP. It looks like QMAP depends on a MTU
-> > negotiation feature in BAM-DMUX which is not yet supported by the driver.
-> >
-> > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> > ---
-> > Note that this is my first network driver, so I apologize in advance
-> > if I made some obvious mistakes. :)
-> >
-> > I'm not sure how to integrate the driver with the WWAN subsystem yet.
-> > At the moment the driver creates network interfaces for all channels
-> > announced by the modem, it does not make use of the WWAN link management
-> > yet. Unfortunately, this is a bit complicated:
-> >
-> > Both QMAP and the built-in multiplexing layer might be needed at some point.
-> > There are firmware versions that do not support QMAP and the other way around
-> > (the built-in multiplexing was disabled on very recent firmware versions).
-> > Only userspace can check if QMAP is supported in the firmware (via QMI).
-> 
-> I am not very familiar with the Qualcomm protocols and am just curious
-> whether BAM-DMUX has any control (management) channels or only IPv4/v6
-> data channels?
-> 
-> The WWAN subsystem began as a framework for exporting management
-> interfaces (MBIM, AT, etc.) to user space. And then the network
-> interfaces (data channels) management interface was added to
-> facilitate management of devices with multiple data channels. That is
-> why I am curious about the BAM-DMUX device management interface or in
-> other words, how a user space application could control the modem
-> work?
-> 
+> > But why are you not using DT for this?  That looks like the old platfor=
+m
+> > data files.
+>
+> Apparently I was told that this platform does not use DT :( Looking at
+> it it should.. Maybe Kelvin can explain why..
 
-Sorry for the confusion! It's briefly mentioned in the Kconfig option
-but I should have made this more clear in the commit message. It was so
-long already that I wasn't sure where to put it. :)
+Yes, the DT support of Loongson32 is still on the way.
+Therefore, I have to use the old way to let the driver work.
+I will update this driver once this platform supports DT.
 
-BAM-DMUX does not have any control channels. Instead I use it together
-with the rpmsg_wwan_ctrl driver [1] that I already submitted for 5.14.
-The control/data channels are pretty much separate in this setup and
-don't have much to do with each other.
+>
+> --
+> ~Vinod
 
-I also had a short overview of some of the many different modem
-protocols Qualcomm has come up with in a related RFC for that driver,
-see [2] if you are curious.
 
-I hope that clarifies some things, please let me know if I should
-explain something better! :)
 
-Thanks!
-Stephan
+--=20
+Best regards,
 
-[1]: https://lore.kernel.org/netdev/20210618173611.134685-3-stephan@gerhold.net/
-[2]: https://lore.kernel.org/netdev/YLfL9Q+4860uqS8f@gerhold.net/
+Kelvin Cheung

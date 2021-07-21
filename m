@@ -2,295 +2,221 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FA0D3D037B
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Jul 2021 22:57:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EC2A3D0D65
+	for <lists+dmaengine@lfdr.de>; Wed, 21 Jul 2021 13:24:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234708AbhGTUMB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 20 Jul 2021 16:12:01 -0400
-Received: from mga12.intel.com ([192.55.52.136]:41173 "EHLO mga12.intel.com"
+        id S234563AbhGUKla (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 21 Jul 2021 06:41:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234829AbhGTUBp (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 20 Jul 2021 16:01:45 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10051"; a="190909286"
-X-IronPort-AV: E=Sophos;i="5.84,256,1620716400"; 
-   d="scan'208";a="190909286"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2021 13:42:16 -0700
-X-IronPort-AV: E=Sophos;i="5.84,256,1620716400"; 
-   d="scan'208";a="469893107"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2021 13:42:16 -0700
-Subject: [PATCH] dmanegine: idxd: add software command status
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     Ramesh Thomas <ramesh.thomas@intel.com>, dmaengine@vger.kernel.org
-Date:   Tue, 20 Jul 2021 13:42:15 -0700
-Message-ID: <162681373579.1968485.5891788397526827892.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/0.23-29-ga622f1
+        id S238695AbhGUJ3J (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 21 Jul 2021 05:29:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0BAC960FE7;
+        Wed, 21 Jul 2021 10:09:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1626862185;
+        bh=AkCAzoeKK4dm3J0IYr3eqKdLUog3VqnY+aXSEhth1R0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c1tD+1+8N7ya+U+R4FoCk5r1AY0+njsEQDtKrpnu5fKg2Nsyw8ad0RAbDRa8LMlYN
+         kIGK/SB0S4EC/Bt9LoElGD8+QX12QgKfoR1683w3NYrmezl45haNH7nWDa/e7NVumf
+         ZIzS+wQ0FwO2WzFS4jJEXOjj+Re557OYzd+zf9Xc=
+Date:   Wed, 21 Jul 2021 12:09:41 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     kernel@pengutronix.de,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Alex Dubov <oakad@yahoo.com>, Alex Elder <elder@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Andy Gross <agross@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bodo Stroesser <bostroesser@gmail.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Dexuan Cui <decui@microsoft.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Eric Farman <farman@linux.ibm.com>,
+        Finn Thain <fthain@linux-m68k.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Frank Li <lznuaa@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Geoff Levand <geoff@infradead.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>, Ira Weiny <ira.weiny@intel.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jason Wang <jasowang@redhat.com>,
+        Jens Taprogge <jens.taprogge@taprogge.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Joey Pabalan <jpabalanb@gmail.com>,
+        Johan Hovold <johan@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Johannes Thumshirn <morbidrsa@gmail.com>,
+        Jon Mason <jdmason@kudzu.us>, Juergen Gross <jgross@suse.com>,
+        Julien Grall <jgrall@amazon.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Lee Jones <lee.jones@linaro.org>, Len Brown <lenb@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Manohar Vanga <manohar.vanga@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Martyn Welch <martyn@welchs.me.uk>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Michael Buesch <m@bues.ch>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Rich Felker <dalias@libc.org>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+        Samuel Holland <samuel@sholland.org>,
+        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
+        SeongJae Park <sjpark@amazon.de>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thorsten Scherer <t.scherer@eckelmann.de>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Tom Rix <trix@redhat.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Wolfram Sang <wsa@kernel.org>, Wu Hao <hao.wu@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Yufen Yu <yuyufen@huawei.com>, alsa-devel@alsa-project.org,
+        dmaengine@vger.kernel.org, greybus-dev@lists.linaro.org,
+        industrypack-devel@lists.sourceforge.net, kvm@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-media@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-ntb@googlegroups.com, linux-parisc@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-staging@lists.linux.dev, linux-sunxi@lists.linux.dev,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, nvdimm@lists.linux.dev,
+        platform-driver-x86@vger.kernel.org, sparclinux@vger.kernel.org,
+        target-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v4 0/5] bus: Make remove callback return void
+Message-ID: <YPfyZen4Y0uDKqDT@kroah.com>
+References: <20210713193522.1770306-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210713193522.1770306-1-u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Enabling device and wq returns standard errno and that does not provide
-enough details to indicate what exactly failed. The hardware command status
-is only 8bits. Expand the command status to 32bits and use the upper 16
-bits to define software errors to provide more details on the exact
-failure. Bit 31 will be used to indicate the error is software set as the
-driver is using some of the spec defined hardware error as well.
+On Tue, Jul 13, 2021 at 09:35:17PM +0200, Uwe Kleine-König wrote:
+> Hello,
+> 
+> this is v4 of the final patch set for my effort to make struct
+> bus_type::remove return void.
+> 
+> The first four patches contain cleanups that make some of these
+> callbacks (more obviously) always return 0. They are acked by the
+> respective maintainers. Bjorn Helgaas explicitly asked to include the
+> pci patch (#1) into this series, so Greg taking this is fine. I assume
+> the s390 people are fine with Greg taking patches #2 to #4, too, they
+> didn't explicitly said so though.
+> 
+> The last patch actually changes the prototype and so touches quite some
+> drivers and has the potential to conflict with future developments, so I
+> consider it beneficial to put these patches into next soon. I expect
+> that it will be Greg who takes the complete series, he already confirmed
+> via irc (for v2) to look into this series.
+> 
+> The only change compared to v3 is in the fourth patch where I modified a
+> few more drivers to fix build failures. Some of them were found by build
+> bots (thanks!), some of them I found myself using a regular expression
+> search. The newly modified files are:
+> 
+>  arch/sparc/kernel/vio.c
+>  drivers/nubus/bus.c
+>  drivers/sh/superhyway/superhyway.c
+>  drivers/vlynq/vlynq.c
+>  drivers/zorro/zorro-driver.c
+>  sound/ac97/bus.c
+> 
+> Best regards
+> Uwe
 
-Cc: Ramesh Thomas <ramesh.thomas@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- Documentation/ABI/stable/sysfs-driver-dma-idxd |    2 ++
- drivers/dma/idxd/cdev.c                        |    5 ++++-
- drivers/dma/idxd/device.c                      |   22 +++++++++++++++++++---
- drivers/dma/idxd/dma.c                         |    4 ++++
- drivers/dma/idxd/idxd.h                        |    2 +-
- drivers/dma/idxd/sysfs.c                       |   11 ++++++++++-
- include/uapi/linux/idxd.h                      |   23 +++++++++++++++++++++++
- 7 files changed, 63 insertions(+), 6 deletions(-)
+Now queued up.  I can go make a git tag that people can pull from after
+0-day is finished testing this to verify all is good, if others need it.
 
-diff --git a/Documentation/ABI/stable/sysfs-driver-dma-idxd b/Documentation/ABI/stable/sysfs-driver-dma-idxd
-index adb0c93e8dfc..df4afbccf037 100644
---- a/Documentation/ABI/stable/sysfs-driver-dma-idxd
-+++ b/Documentation/ABI/stable/sysfs-driver-dma-idxd
-@@ -128,6 +128,8 @@ Date:		Aug 28, 2020
- KernelVersion:	5.10.0
- Contact:	dmaengine@vger.kernel.org
- Description:	The last executed device administrative command's status/error.
-+		Also last configuration error overloaded.
-+		Writing to it will clear the status.
- 
- What:		/sys/bus/dsa/devices/wq<m>.<n>/block_on_fault
- Date:		Oct 27, 2020
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index f6a4603517ba..4d2ecdb130e7 100644
---- a/drivers/dma/idxd/cdev.c
-+++ b/drivers/dma/idxd/cdev.c
-@@ -320,9 +320,12 @@ static int idxd_user_drv_probe(struct idxd_dev *idxd_dev)
- 		goto err;
- 
- 	rc = idxd_wq_add_cdev(wq);
--	if (rc < 0)
-+	if (rc < 0) {
-+		idxd->cmd_status = IDXD_SCMD_CDEV_ERR;
- 		goto err_cdev;
-+	}
- 
-+	idxd->cmd_status = 0;
- 	mutex_unlock(&wq->wq_lock);
- 	return 0;
- 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 41f67a195eb6..86fa4b4590f9 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -840,6 +840,7 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
- 	wq->wqcfg->wq_size = wq->size;
- 
- 	if (wq->size == 0) {
-+		idxd->cmd_status = IDXD_SCMD_WQ_NO_SIZE;
- 		dev_warn(dev, "Incorrect work queue size: 0\n");
- 		return -EINVAL;
- 	}
-@@ -975,6 +976,7 @@ static int idxd_wqs_setup(struct idxd_device *idxd)
- 			continue;
- 
- 		if (wq_shared(wq) && !device_swq_supported(idxd)) {
-+			idxd->cmd_status = IDXD_SCMD_WQ_NO_SWQ_SUPPORT;
- 			dev_warn(dev, "No shared wq support but configured.\n");
- 			return -EINVAL;
- 		}
-@@ -983,8 +985,10 @@ static int idxd_wqs_setup(struct idxd_device *idxd)
- 		configured++;
- 	}
- 
--	if (configured == 0)
-+	if (configured == 0) {
-+		idxd->cmd_status = IDXD_SCMD_WQ_NONE_CONFIGURED;
- 		return -EINVAL;
-+	}
- 
- 	return 0;
- }
-@@ -1140,21 +1144,26 @@ int __drv_enable_wq(struct idxd_wq *wq)
- 
- 	lockdep_assert_held(&wq->wq_lock);
- 
--	if (idxd->state != IDXD_DEV_ENABLED)
-+	if (idxd->state != IDXD_DEV_ENABLED) {
-+		idxd->cmd_status = IDXD_SCMD_DEV_NOT_ENABLED;
- 		goto err;
-+	}
- 
- 	if (wq->state != IDXD_WQ_DISABLED) {
- 		dev_dbg(dev, "wq %d already enabled.\n", wq->id);
-+		idxd->cmd_status = IDXD_SCMD_WQ_ENABLED;
- 		rc = -EBUSY;
- 		goto err;
- 	}
- 
- 	if (!wq->group) {
- 		dev_dbg(dev, "wq %d not attached to group.\n", wq->id);
-+		idxd->cmd_status = IDXD_SCMD_WQ_NO_GRP;
- 		goto err;
- 	}
- 
- 	if (strlen(wq->name) == 0) {
-+		idxd->cmd_status = IDXD_SCMD_WQ_NO_NAME;
- 		dev_dbg(dev, "wq %d name not set.\n", wq->id);
- 		goto err;
- 	}
-@@ -1162,6 +1171,7 @@ int __drv_enable_wq(struct idxd_wq *wq)
- 	/* Shared WQ checks */
- 	if (wq_shared(wq)) {
- 		if (!device_swq_supported(idxd)) {
-+			idxd->cmd_status = IDXD_SCMD_WQ_NO_SVM;
- 			dev_dbg(dev, "PASID not enabled and shared wq.\n");
- 			goto err;
- 		}
-@@ -1174,6 +1184,7 @@ int __drv_enable_wq(struct idxd_wq *wq)
- 		 * threshold via sysfs.
- 		 */
- 		if (wq->threshold == 0) {
-+			idxd->cmd_status = IDXD_SCMD_WQ_NO_THRESH;
- 			dev_dbg(dev, "Shared wq and threshold 0.\n");
- 			goto err;
- 		}
-@@ -1197,6 +1208,7 @@ int __drv_enable_wq(struct idxd_wq *wq)
- 
- 	rc = idxd_wq_map_portal(wq);
- 	if (rc < 0) {
-+		idxd->cmd_status = IDXD_SCMD_WQ_PORTAL_ERR;
- 		dev_dbg(dev, "wq %d portal mapping failed: %d\n", wq->id, rc);
- 		goto err_map_portal;
- 	}
-@@ -1259,8 +1271,10 @@ int idxd_device_drv_probe(struct idxd_dev *idxd_dev)
- 	 * enabled state, then the device was altered outside of driver's control.
- 	 * If the state is in halted state, then we don't want to proceed.
- 	 */
--	if (idxd->state != IDXD_DEV_DISABLED)
-+	if (idxd->state != IDXD_DEV_DISABLED) {
-+		idxd->cmd_status = IDXD_SCMD_DEV_ENABLED;
- 		return -ENXIO;
-+	}
- 
- 	/* Device configuration */
- 	spin_lock_irqsave(&idxd->dev_lock, flags);
-@@ -1279,9 +1293,11 @@ int idxd_device_drv_probe(struct idxd_dev *idxd_dev)
- 	rc = idxd_register_dma_device(idxd);
- 	if (rc < 0) {
- 		idxd_device_disable(idxd);
-+		idxd->cmd_status = IDXD_SCMD_DEV_DMA_ERR;
- 		return rc;
- 	}
- 
-+	idxd->cmd_status = 0;
- 	return 0;
- }
- 
-diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
-index 2fd7ec29a08f..a195225687bb 100644
---- a/drivers/dma/idxd/dma.c
-+++ b/drivers/dma/idxd/dma.c
-@@ -284,22 +284,26 @@ static int idxd_dmaengine_drv_probe(struct idxd_dev *idxd_dev)
- 
- 	rc = idxd_wq_alloc_resources(wq);
- 	if (rc < 0) {
-+		idxd->cmd_status = IDXD_SCMD_WQ_RES_ALLOC_ERR;
- 		dev_dbg(dev, "WQ resource alloc failed\n");
- 		goto err_res_alloc;
- 	}
- 
- 	rc = idxd_wq_init_percpu_ref(wq);
- 	if (rc < 0) {
-+		idxd->cmd_status = IDXD_SCMD_PERCPU_ERR;
- 		dev_dbg(dev, "percpu_ref setup failed\n");
- 		goto err_ref;
- 	}
- 
- 	rc = idxd_register_dma_channel(wq);
- 	if (rc < 0) {
-+		idxd->cmd_status = IDXD_SCMD_DMA_CHAN_ERR;
- 		dev_dbg(dev, "Failed to register dma channel\n");
- 		goto err_dma;
- 	}
- 
-+	idxd->cmd_status = 0;
- 	mutex_unlock(&wq->wq_lock);
- 	return 0;
- 
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 94983bced189..bfcb03329f77 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -252,7 +252,7 @@ struct idxd_device {
- 	unsigned long flags;
- 	int id;
- 	int major;
--	u8 cmd_status;
-+	u32 cmd_status;
- 
- 	struct pci_dev *pdev;
- 	void __iomem *reg_base;
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 881a12596d4b..4c01587c9d4a 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -1217,7 +1217,16 @@ static ssize_t cmd_status_show(struct device *dev,
- 
- 	return sysfs_emit(buf, "%#x\n", idxd->cmd_status);
- }
--static DEVICE_ATTR_RO(cmd_status);
-+
-+static ssize_t cmd_status_store(struct device *dev, struct device_attribute *attr,
-+				const char *buf, size_t count)
-+{
-+	struct idxd_device *idxd = confdev_to_idxd(dev);
-+
-+	idxd->cmd_status = 0;
-+	return count;
-+}
-+static DEVICE_ATTR_RW(cmd_status);
- 
- static struct attribute *idxd_device_attributes[] = {
- 	&dev_attr_version.attr,
-diff --git a/include/uapi/linux/idxd.h b/include/uapi/linux/idxd.h
-index e33997b4d750..3f67255ae46f 100644
---- a/include/uapi/linux/idxd.h
-+++ b/include/uapi/linux/idxd.h
-@@ -9,6 +9,29 @@
- #include <stdint.h>
- #endif
- 
-+/* Driver command error status */
-+enum idxd_scmd_stat {
-+	IDXD_SCMD_DEV_ENABLED = 0x80000010,
-+	IDXD_SCMD_DEV_NOT_ENABLED = 0x80000020,
-+	IDXD_SCMD_WQ_ENABLED = 0x80000021,
-+	IDXD_SCMD_DEV_DMA_ERR = 0x80020000,
-+	IDXD_SCMD_WQ_NO_GRP = 0x80030000,
-+	IDXD_SCMD_WQ_NO_NAME = 0x80040000,
-+	IDXD_SCMD_WQ_NO_SVM = 0x80050000,
-+	IDXD_SCMD_WQ_NO_THRESH = 0x80060000,
-+	IDXD_SCMD_WQ_PORTAL_ERR = 0x80070000,
-+	IDXD_SCMD_WQ_RES_ALLOC_ERR = 0x80080000,
-+	IDXD_SCMD_PERCPU_ERR = 0x80090000,
-+	IDXD_SCMD_DMA_CHAN_ERR= 0x800a0000,
-+	IDXD_SCMD_CDEV_ERR = 0x800b0000,
-+	IDXD_SCMD_WQ_NO_SWQ_SUPPORT = 0x800c0000,
-+	IDXD_SCMD_WQ_NONE_CONFIGURED = 0x800d0000,
-+	IDXD_SCMD_WQ_NO_SIZE = 0x800e0000,
-+};
-+
-+#define IDXD_SCMD_SOFTERR_MASK	0x80000000
-+#define IDXD_SCMD_SOFTERR_SHIFT	16
-+
- /* Descriptor flags */
- #define IDXD_OP_FLAG_FENCE	0x0001
- #define IDXD_OP_FLAG_BOF	0x0002
+thanks,
 
-
+greg k-h

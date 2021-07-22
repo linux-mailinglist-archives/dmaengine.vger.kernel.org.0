@@ -2,114 +2,80 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DFB13D2C2F
-	for <lists+dmaengine@lfdr.de>; Thu, 22 Jul 2021 20:56:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 925143D2D69
+	for <lists+dmaengine@lfdr.de>; Thu, 22 Jul 2021 22:10:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229556AbhGVSQU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 22 Jul 2021 14:16:20 -0400
-Received: from smtp-relay-canonical-0.canonical.com ([185.125.188.120]:42476
-        "EHLO smtp-relay-canonical-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229545AbhGVSQU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 22 Jul 2021 14:16:20 -0400
-Received: from [10.172.193.212] (1.general.cking.uk.vpn [10.172.193.212])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id EA4203F224;
-        Thu, 22 Jul 2021 18:56:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1626980214;
-        bh=sB8qp9ivM8n28sdXFVpMHUr9NTbiCrxpWCndjr7l/Ek=;
-        h=To:Cc:From:Subject:Message-ID:Date:MIME-Version:Content-Type;
-        b=KEglPHnIfPyfDBCZjvmNwouyrbJsRQxjjHiDf+Tfb8c+hbynbgcvSmeIncTGaUgGK
-         t8S0lcMmHar7+C5y2/7H2wMPZwBNxqenj8Sph3PcTPsZmDSc/ZVWd7bTu2jP8OII8p
-         CcagJR1ni3WbQDGryKgx5l4Vi4qE6pAf/SiqtWynZtdJDUDNfEej14v6vMtwDxq/vU
-         blrKCqnikfuZxWHQ4vL5JCXXZ2P7MC+fj7WxM/kBTAoh0Ozdl3qmT8eyI99teIBtqJ
-         HjbCFHcRGyDUAszLvoWOM5h71XBop+eOPnt03sJomt8u4L4K6/gRWa0/3KEpobesgj
-         W8nS6M8t6SMfg==
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Colin Ian King <colin.king@canonical.com>
-Subject: re: dmaengine: idxd: fix submission race window
-Message-ID: <92a5510c-f426-1001-5311-6c615df2e7de@canonical.com>
-Date:   Thu, 22 Jul 2021 19:56:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        id S230266AbhGVTaS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 22 Jul 2021 15:30:18 -0400
+Received: from mga17.intel.com ([192.55.52.151]:8260 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229969AbhGVTaS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 22 Jul 2021 15:30:18 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10053"; a="192005164"
+X-IronPort-AV: E=Sophos;i="5.84,262,1620716400"; 
+   d="scan'208";a="192005164"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2021 13:10:52 -0700
+X-IronPort-AV: E=Sophos;i="5.84,262,1620716400"; 
+   d="scan'208";a="470787520"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2021 13:10:51 -0700
+Subject: [PATCH] dmaengine: idxd: fix abort status check
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        dmaengine@vger.kernel.org
+Date:   Thu, 22 Jul 2021 13:10:51 -0700
+Message-ID: <162698465160.3560828.18173186265683415384.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,
-
-Static analysis with Coverity on Linux-next has found an issue with the
-following commit:
-
-commit 6b4b87f2c31ac1af4f244990a7cbfb50d3f3e33f
-Author: Dave Jiang <dave.jiang@intel.com>
-Date:   Wed Jul 14 11:50:06 2021 -0700
-
-    dmaengine: idxd: fix submission race window
-
-The analysis is as follows:
-
-180static int irq_process_pending_llist(struct idxd_irq_entry *irq_entry,
-181                                     int *processed, u64 data)
-182{
-183        struct idxd_desc *desc, *t;
-184        struct llist_node *head;
-185        int queued = 0;
-186        unsigned long flags;
-187
-188        *processed = 0;
-189        head = llist_del_all(&irq_entry->pending_llist);
-190        if (!head)
-191                goto out;
-192
-193        llist_for_each_entry_safe(desc, t, head, llnode) {
-
-   assignment: Assigning: status = (*desc).completion->status & 0x7f.
-
-194                u8 status = desc->completion->status &
-DSA_COMP_STATUS_MASK;
-195
-
-   cond_between: Condition status, taking true branch. Now the value of
-status is between 1 and 127.
-   cond_cannot_single: Condition status, taking true branch. Now the
-value of status cannot be equal to 0.
-
-196                if (status) {
-
-   between: At condition status == IDXD_COMP_DESC_ABORT, the value of
-status must be between 1 and 127.
-   cond_cannot_set: Condition status == IDXD_COMP_DESC_ABORT, taking
-false branch. Now the value of status cannot be equal to any of {0, 255}.
-
-   cannot_single: At condition status == IDXD_COMP_DESC_ABORT, the value
-of status cannot be equal to 0.
-   dead_error_condition: The condition !!(status ==
-IDXD_COMP_DESC_ABORT) cannot be true.
-
-197                        if (unlikely(status == IDXD_COMP_DESC_ABORT)) {
-   Logically dead code (DEADCODE)
-   dead_error_begin: Execution cannot reach this statement:
-
-   complete_desc(desc, IDXD_CO....
-
-198                                complete_desc(desc, IDXD_COMPLETE_ABORT);
-199                                (*processed)++;
-200                                continue;
-201                        }
-202
-203                        complete_desc(desc, IDXD_COMPLETE_NORMAL);
-204                        (*processed)++;
+Coverity static analysis of linux-next found issue.
 
 The check (status == IDXD_COMP_DESC_ABORT) is always false since status
-was previously masked with 0x7f and IDXD_COMP_DESC_ABORT is 0xff
+was previously masked with 0x7f and IDXD_COMP_DESC_ABORT is 0xff.
 
-Colin.
+Fixes: 6b4b87f2c31a ("dmaengine: idxd: fix submission race window")
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/dma/idxd/irq.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+index 4e3a7198c0ca..78de2ac1520e 100644
+--- a/drivers/dma/idxd/irq.c
++++ b/drivers/dma/idxd/irq.c
+@@ -269,7 +269,11 @@ static int irq_process_pending_llist(struct idxd_irq_entry *irq_entry,
+ 		u8 status = desc->completion->status & DSA_COMP_STATUS_MASK;
+ 
+ 		if (status) {
+-			if (unlikely(status == IDXD_COMP_DESC_ABORT)) {
++			/*
++			 * Check against the original status as ABORT is software defined
++			 * and 0xff, which DSA_COMP_STATUS_MASK can mask out.
++			 */
++			if (unlikely(desc->completion->status == IDXD_COMP_DESC_ABORT)) {
+ 				complete_desc(desc, IDXD_COMPLETE_ABORT);
+ 				(*processed)++;
+ 				continue;
+@@ -333,7 +337,11 @@ static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
+ 	list_for_each_entry(desc, &flist, list) {
+ 		u8 status = desc->completion->status & DSA_COMP_STATUS_MASK;
+ 
+-		if (unlikely(status == IDXD_COMP_DESC_ABORT)) {
++		/*
++		 * Check against the original status as ABORT is software defined
++		 * and 0xff, which DSA_COMP_STATUS_MASK can mask out.
++		 */
++		if (unlikely(desc->completion->status == IDXD_COMP_DESC_ABORT)) {
+ 			complete_desc(desc, IDXD_COMPLETE_ABORT);
+ 			continue;
+ 		}
+
+

@@ -2,305 +2,357 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C8623D25D5
-	for <lists+dmaengine@lfdr.de>; Thu, 22 Jul 2021 16:33:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CBD43D2635
+	for <lists+dmaengine@lfdr.de>; Thu, 22 Jul 2021 16:51:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230343AbhGVNw3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 22 Jul 2021 09:52:29 -0400
-Received: from mail-bn7nam10on2042.outbound.protection.outlook.com ([40.107.92.42]:63105
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232272AbhGVNw2 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 22 Jul 2021 09:52:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kkEdluWqVNIGj3EcCbBtKbfSEbIL6oeKKlmyaDGri+YFIpZY/46M0dszaIfSCpgWm4+Ln3xwIYHxnuNMt+xV+ddi2rSYg13fnagyLOsTzjVfPazOpCuT2Qyo4v0KOux35zdMzZK4TEvWBYsN4sKT/7jjPK6JIewiAISDyhtq55g3FO0lh0St1TETND+SZEjYkCoHCvqA3UxnlWKzLAhVAUZ13pwM2zPlG0NTxzFoSpYMGwrIT00oT30iEGAVlXeyhjJXwxT4fn1F4xFPw4b6s4z4UIubQIx3AP/z+X00T9wYgwdusgnJKd7newRE5JxhbseqaXkTkiyF1pKfIoOWLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ng3cXNd8yQ4tRxMCrEqXgOg4VkYyEdEHnfObrebxhnU=;
- b=ES0Wmznz78I0aP4oZa64Amcl8j5W3JGPcTximqsP90k6N8PGOD4/MtnZOHIFRea9qFbfGj277dYmZC/9bbPW643Xwhc+mKTonYDWLEazVvDR+y/InhJiE4M1EQoBb6ZjyXZLjFq/eNCMGtWhaf0faOlax1vL4wOQhhC7bEjR+aTcZcV0X8/cpkGUezTqznNpwMkX7Da3FUqMR9ezCSsvET30Q2mXj6p/racchOkmCMideMgKF+BA7fkzYvxRfUgVGuC1kvctGdZTdUe2qXSLkKMbB6QamfwNyBZS+vo3qPXE4EF5oXxzc2fyLifyGxQLwdTWmGiweeE+029tcT/WDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ng3cXNd8yQ4tRxMCrEqXgOg4VkYyEdEHnfObrebxhnU=;
- b=Tfh4TZKCS0fO+Y6oqghoREaS10HBOVM/VVU1TtY5TnxAbVLwTLTgRcVIQ/2uibq5LjKRu3uFOcZabT3Ln3mBWeJbVNHC2IOsydNI9z1Mlnyx/8sKSmR0ODZYaEdgyNuOZL0bnBDoa266iQ2ODrIz2pNWCOdebov01h8l6hKNGd4=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5103.namprd12.prod.outlook.com (2603:10b6:5:392::13)
- by DM4PR12MB5038.namprd12.prod.outlook.com (2603:10b6:5:389::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.26; Thu, 22 Jul
- 2021 14:33:01 +0000
-Received: from DM4PR12MB5103.namprd12.prod.outlook.com
- ([fe80::18ea:5df5:f06e:f822]) by DM4PR12MB5103.namprd12.prod.outlook.com
- ([fe80::18ea:5df5:f06e:f822%2]) with mapi id 15.20.4352.025; Thu, 22 Jul 2021
- 14:33:01 +0000
-Subject: Re: [PATCH v10 0/3] Add support for AMD PTDMA controller driver
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Sanjay R Mehta <Sanju.Mehta@amd.com>, gregkh@linuxfoundation.org,
-        dan.j.williams@intel.com, Thomas.Lendacky@amd.com,
-        Shyam-sundar.S-k@amd.com, Nehal-bakulchandra.Shah@amd.com,
-        robh@kernel.org, mchehab+samsung@kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-References: <1624207298-115928-1-git-send-email-Sanju.Mehta@amd.com>
- <5dd9b34f-3e12-6ca1-1d4d-ddc3f82e341f@amd.com> <YPl8OZwMlKs7a+lK@matsya>
-From:   Sanjay R Mehta <sanmehta@amd.com>
-Message-ID: <6674b7db-dedf-9b0c-7ae8-0218978a65ce@amd.com>
-Date:   Thu, 22 Jul 2021 20:02:49 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
-In-Reply-To: <YPl8OZwMlKs7a+lK@matsya>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA1PR0101CA0052.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:20::14) To DM4PR12MB5103.namprd12.prod.outlook.com
- (2603:10b6:5:392::13)
+        id S232453AbhGVOLF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 22 Jul 2021 10:11:05 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:35200 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232375AbhGVOLF (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 22 Jul 2021 10:11:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1626965496;
+    s=strato-dkim-0002; d=gerhold.net;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=uP4TsvpFx9nQKeKPbR8DKd9/Fuky9++kCPOybE2K3L0=;
+    b=q/fuMHssTtaUQ5MwO1Nivxs9RaTCt8rQbAexWXTta7ec1lCGilYSyWEHaKxnETzjfF
+    oHUpujefYSynw/ibCelbw+yTDjrJWcZUt3azGq7oipbszwX7iNXhqUXMVfSCJuR6SYW1
+    iamKKSzlcRqNuQo+ke1zMbVwHUTHA6I1+yxueyt/WcXlW99zWwUlyMbCtAlGepA4hT48
+    khK2f32H14AjsGJ7J9ALGEJnfPPcFX/BlEC0YNUA6D+k9onA4eMENAbT9MjnJD+YXXiu
+    cB2SAoDao1QGJLVkd+5hpAohZp+QSm2CwOeMFAZZAad299h3BN0L7E6BDWmBthHJx+Ng
+    P+2A==
+Authentication-Results: strato.com;
+    dkim=none
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u261EJF5OxJD4paA8ZuO1A=="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+    by smtp.strato.de (RZmta 47.28.1 DYNA|AUTH)
+    with ESMTPSA id g02a44x6MEpYPn2
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+    Thu, 22 Jul 2021 16:51:34 +0200 (CEST)
+Date:   Thu, 22 Jul 2021 16:51:29 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Jeffrey Hugo <quic_jhugo@quicinc.com>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Sergey Ryazanov <ryazanov.s.a@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Aleksander Morgado <aleksander@aleksander.es>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>, dmaengine@vger.kernel.org,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, phone-devel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [RFC PATCH net-next 0/4] net: wwan: Add Qualcomm BAM-DMUX WWAN
+ network driver
+Message-ID: <YPmF8bzevuabO2K9@gerhold.net>
+References: <20210719145317.79692-1-stephan@gerhold.net>
+ <CAOCk7NonuOKWrpr-MwdjAwF1F4jviEMf=c04vVBxQ-OmfY2b-g@mail.gmail.com>
+ <YPXC7PDCUopdCdTV@gerhold.net>
+ <e37868ee-2bd0-3b50-eb95-8eb2bf32d956@quicinc.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.6] (122.182.203.158) by MA1PR0101CA0052.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:20::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.25 via Frontend Transport; Thu, 22 Jul 2021 14:32:58 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a7aa015d-2d40-40a5-e8f8-08d94d1d9c08
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5038:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM4PR12MB50388F074BE96EFD500C14FBE5E49@DM4PR12MB5038.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: N7HJtUKrDspjP8dsonTfYgi1y7ve5MoeHobqmlavBDIZ5vcSMNBOdxhq/2XTMhxF+I5/7ZMZ8sU7frKjP7hUAHz+Mi3NX593IfnwJhIer6FjWPTHlJl4hwhF6kWVBfrTInUpMjH0xg2LSH0WD9wPxHsyc0u2bOpNHaMjdFCHNzGVHH3fUcGpV9cSFLJW3gJpdbSx4selMuYlnZlo4CqWY87Rqy0BihOPyirJi4alWfikzE4k4eeDwdqbXtWY8syhziq6JRFp0kkrdkxhdn1ZqZsn2Fy85ikL7SX41lQOEKQIIt5XYZxbTQW08Di8T+B1b4yIwHPWp2Tbc/4CWULUwmv7UZxPUyv1DnhSisyshinaBs7TtzkfYXyZbZv+P/GVaQYPktgDJsv4gtQCvXv1w12qS21e/JaoSYWIQQczWNLCpUMYFNr/MXTfb3DisbfSd9msW907tztHAOTmoOY8P80XwxngEom8LKDirLfqu5j1zHAvP+VfrmqT9bpzNfK90Oe31yxnJl93AojdJoQmEx84Wz57WCbLTW97T1gmO7oaFpvUlfLY4Xiz1SZvsed/KnNQELBCK9ppRJWi7XrPjwHTe/LlryyWI/YNJYCRptkYh6slVFutxu2mBuDNslgZqV/HbFqtctVvt39tGhY1ci6uXH7EODeeTkLWN5TI8OD27OfCWTUnik4QbSqd7p1im8ZI6YOPBVehQ/3XfAsxtV6yZ+CT5x2LnQGl0hAzePK6PA5xigqWRFnLfG0E12XFj2Skw10LPqnARlJ/gnSlwHipoO8pK/27F2mliUquLjpjSLP1pldvf9LfJNkbg3e6DUYhU/aQHbkpYSSvF8NgLwOG1AMoe2CmoNQn1D1DrFc=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5103.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(136003)(376002)(39850400004)(396003)(53546011)(8936002)(6666004)(478600001)(38100700002)(8676002)(316002)(956004)(66476007)(31686004)(66946007)(2616005)(6486002)(66556008)(186003)(6916009)(45080400002)(31696002)(26005)(2906002)(5660300002)(30864003)(4326008)(83380400001)(36756003)(16576012)(966005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NUIwU1ZwUk11dW5FcVRXRUtpaU0zZHhyL1dFa3JqUStjbkxLUGlhcjB6NDBm?=
- =?utf-8?B?cUhGRVMxc2VOdmtOOUppVnRUcDZIc21uVDYvZXNKeEpicVY1YmJUcU5TRHE3?=
- =?utf-8?B?bXVZaXI0djdoaDQ5ZFVXTXBCNXR4RGVBT2puQlN0ZXdZTTVxR2Vaczk0UXJk?=
- =?utf-8?B?cGlZS2syWmNMWlVOQlQ1U3R6MzJmRTkxMlVad0didDBJOUdUbzVzUUdmSGMr?=
- =?utf-8?B?SmY3Zm9wRnFOelhHZ0FvNzlFeTJJUzlsR2lYSmRvSmN1WkhHaXJ4bWkzVVdx?=
- =?utf-8?B?TFI1OWhWY05XdzU2VXpuSnZkc2JQU0RDV0dLMzdHWGM2anpUWXdOZGdBbzVz?=
- =?utf-8?B?UGo3MXk2NDRPT3JvK2NWUENlMGdqNnVXN1QxeGF2QXdrQ0N0L1lVQnM2ajAv?=
- =?utf-8?B?NWRRWGJEdTRzaTFiY2ljK3ZyTzZxM3RzdVpjN1RYcnNVMDRhVEZLbzgwaE11?=
- =?utf-8?B?MktBZGkweDV3end2SnR6MFJWQUpaVjRlVEtoQzJHUmtScG55dUE4SkxXNXAw?=
- =?utf-8?B?d01aMThEUGJyZGxwbFBZVm5rdzRSbjJteTJjS3ZMK05QR3RRNWNOd1ZtTDdQ?=
- =?utf-8?B?cUoyUkswUTJtYTVjVE9LQWtFQXN2QnFVNTJFbEZra2tKYnZ6Y1ZnNTV2RWM4?=
- =?utf-8?B?QmlSZDhKUU1lRUFjVlgvS1hWQ1ByTHJURXRqL3JhaDlLdEhBdnovejFYa0lM?=
- =?utf-8?B?emRjd1ljc1ZpdGIxNFlWRCtNbWZyM3ZsTmROMG5YVEorcXQyTUJmN0FjTDFP?=
- =?utf-8?B?L0RYVFc2dm9sYjBiQzBBbWVnRnFTVC9wMVVjUC9Kdnp4bVBiR1RUbFFNK0ph?=
- =?utf-8?B?Y3RpYXVmT3VlbHRsMW81ZVd1SHBDTWpST3MxaWNER3JHR29hdkFKSWJBRWFY?=
- =?utf-8?B?ZDVRYlZ2aEF3cUdmWVl5VVdnR2JBdkhLZmZBWllWdUJoYk8xOCtjc3kyNXZ4?=
- =?utf-8?B?YkxUb1liaHlCckJJajEwc0k0eUxjRFVsZnhsK1BZblhnVFVRc05pdktaWklk?=
- =?utf-8?B?YnFwTnVHSm11ZmtHekFEWTlwV29sZmRyUGNucEZmMmowenNKSTNzQ1V6elBJ?=
- =?utf-8?B?TEJZRjAyblU0cWMyZWprZ2tHMXVCQ2w2T3h3L1dyZ0FLeDJwRTcydkhLdTZp?=
- =?utf-8?B?RWZmWHl2RGIva09oVzh1dFJOVGgzeEg3ZnJldDgwaXdXZVJnbjFDTkhxeUs2?=
- =?utf-8?B?SkhuUXlRRmNEcXZPZ3hSSW9PYVJSQW5mT1FGR2FEZWpLT05vcm13ODlGTDJE?=
- =?utf-8?B?OHplSU8wd1UwQTl6bFFUcmZDaktHZEV4b0hSZXNleFJFbFJwTjA1YkVHSjd5?=
- =?utf-8?B?QU1Iam1LMXJlaExjRmZ2MWVudno5VkNuc3ZadmwxSGljbzN0aDBUcko1TlBt?=
- =?utf-8?B?YXgrSGp2RzJBV3cwWng0Y25ldUdpN0IyRDJVdDRUSU5sWFpCWUw0VGh0N25K?=
- =?utf-8?B?L3c5aERHZ082aGdyQ3BBWGF3TmpXdVdqTndiSVNtbWlKUWVOUVlvcjRMMGc0?=
- =?utf-8?B?N2lHNzdyY2h2NHlVRFZFa2VFcGxnaVU1dWU0UVNrL1MwQ05Ib0JmUjRDV2NJ?=
- =?utf-8?B?S3l5K0JWbnpUNTlSRk96UGh3N3lMdno5WmtWT0ZzMnhUUWFSM0t2WENiMVQv?=
- =?utf-8?B?Y1BpNUYrbVRZZWJRN2F4OFJBbFFBZHFCZVpicmQ3SjFCRzE0d3hKVlhCb1RB?=
- =?utf-8?B?VTFGdnhra05YcVlrTnpKNy94WEY0SVltYVRLWGpzTDdyUjFPcytDblk0NTBI?=
- =?utf-8?Q?PSMNLmzLQ4p+gN+71XMWlh6t1/uC4r8gPfLVAeu?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a7aa015d-2d40-40a5-e8f8-08d94d1d9c08
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5103.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2021 14:33:01.8160
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XROWHrfPGVlZ+wSJw9srDUuZCJptVGN+ieIRLAtcwiaK5o3cgCECIEY8P66Q5V+L4lve/qflea+DQ5Oi2Igp6Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5038
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e37868ee-2bd0-3b50-eb95-8eb2bf32d956@quicinc.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Mon, Jul 19, 2021 at 05:13:32PM -0600, Jeffrey Hugo wrote:
+> On 7/19/2021 12:23 PM, Stephan Gerhold wrote:
+> > On Mon, Jul 19, 2021 at 09:43:27AM -0600, Jeffrey Hugo wrote:
+> > > On Mon, Jul 19, 2021 at 9:01 AM Stephan Gerhold <stephan@gerhold.net> wrote:
+> > > > 
+> > > > The BAM Data Multiplexer provides access to the network data channels
+> > > > of modems integrated into many older Qualcomm SoCs, e.g. Qualcomm MSM8916
+> > > > or MSM8974. This series adds a driver that allows using it.
+> > > > 
+> > > > For more information about BAM-DMUX, see PATCH 4/4.
+> > > > 
+> > > > Shortly said, BAM-DMUX is built using a simple protocol layer on top of
+> > > > a DMA engine (Qualcomm BAM DMA). For BAM-DMUX, the BAM DMA engine runs in
+> > > > a quite strange mode that I call "remote power collapse", where the
+> > > > modem/remote side is responsible for powering on the BAM when needed but we
+> > > > are responsible to initialize it. The BAM is power-collapsed when unneeded
+> > > > by coordinating power control via bidirectional interrupts from the
+> > > > BAM-DMUX driver.
+> > > 
+> > > The hardware is physically located on the modem, and tied to the modem
+> > > regulators, etc.  The modem has the ultimate "off" switch.  However,
+> > > due to the BAM architecture (which is complicated), configuration uses
+> > > cooperation on both ends.
+> > > 
+> > 
+> > What I find strange is that it wasn't done similarly to e.g. Slimbus
+> > which has a fairly similar setup. (I used that driver as inspiration for
+> > how to use the mainline qcom_bam driver instead of the "SPS" from
+> > downstream.)
+> > 
+> > Slimbus uses qcom,controlled-remotely together with the LPASS
+> > remoteproc, so it looks like there LPASS does both power-collapse
+> > and initialization of the BAM. Whereas here the modem does the
+> > power-collapse but we're supposed to do the initialization.
+> 
+> I suspect I don't have a satisfactory answer for you.  The teams that did
+> slimbus were not the teams involved in the bam_dmux, and the two didn't talk
+> to each-other.  The bam_dmux side wasn't aware of the slimbus situation, at
+> the time.  I don't know if the slimbus folks knew about bam_dmux.  If you
+> have two silos working independently, its unlikely they will create exactly
+> the same solution.
+> 
 
+Fair enough :)
 
-On 7/22/2021 7:40 PM, Vinod Koul wrote:
-> [CAUTION: External Email]
+> > 
+> > It's somewhat unrelated to this initial patch set since I'm not using
+> > QMAP at the moment, but I'm quite confused about the "MTU negotiation
+> > feature" that you added support for in [1]. (I *think* that is you,
+> > right?) :)
 > 
-> On 22-07-21, 19:27, Sanjay R Mehta wrote:
->>
->>
->> On 6/20/2021 10:11 PM, Sanjay R Mehta wrote:
->>> From: Sanjay R Mehta <sanju.mehta@amd.com>
->>>
->>> This patch series add support for AMD PTDMA controller which
->>> performs high bandwidth memory-to-memory and IO copy operation,
->>> performs DMA transfer through queue based descriptor management.
->>>
->>> AMD Processor has multiple ptdma device instances with each controller
->>> having single queue. The driver also adds support for for multiple PTDMA
->>> instances, each device will get an unique identifier and uniquely
->>> named resources.
->>>
->>> v10:
->>>     - modified ISR to return IR_HANDLED only in non-error condition.
->>>     - removed unnecessary prints, variables and made some cosmetic changes.
->>>     - removed pt_ordinal atomic variable and instead using dev_name()
->>>       for device name.
->>>     - removed the cmdlist dependency and instead using vc.desc_issued list.
->>>     - freeing the desc and list which was missing in the pt_terminate_all()
->>>       funtion.
->>>     - Added comment for marking PTDMA as DMA_PRIVATE.
->>>     - removed unused pt_debugfs_lock from debufs code.
->>>     - keeping same file permision for all the debug directoris.
->>>
->>> v9:
->>>     - Modified the help message in Kconfig as per Randy's comment.
->>>     - reverted the split of code for "pt_handle_active_desc" as there
->>>       was driver hang being observerd after few iterations.
->>>
->>> v8:
->>>     - splitted the code into different functions, one to find active desc
->>>       and second to complete and invoke callback.
->>>     - used FIELD_PREP & FIELD_GET instead of union struct bitfields.
->>>     - modified all style fixes as per the comments.
->>>
->>> v7:
->>>     - Fixed module warnings reported ( by kernel test robot <lkp@intel.com> ).
->>>
->>> v6:
->>>     - Removed debug artifacts and made the suggested cosmetic changes.
->>>     - implemented and used to_pt_chan and to_pt_desc inline functions.
->>>     - Removed src and dst address check as framework does this.
->>>     - Removed devm_kcalloc() usage and used devm_kzalloc() api.
->>>     - Using framework debugfs directory to store dma info.
->>>
->>> v5:
->>>     - modified code to submit next tranction in ISR itself and removed the tasklet.
->>>     - implemented .device_synchronize API.
->>>     - converted debugfs code by using DEFINE_SHOW_ATTRIBUTE()
->>>     - using dbg_dev_root for debugfs root directory.
->>>     - removed dma_status from pt_dma_chan
->>>     - removed module parameter cmd_queue_lenght.
->>>     - removed global device list for multiple devics.
->>>     - removed code related to dynamic adding/deleting to device list
->>>     - removed pt_add_device and pt_del_device functions
->>>
->>> v4:
->>>     - modified DMA channel and descriptor management using virt-dma layer
->>>       instead of list based management.
->>>     - return only status of the cookie from pt_tx_status
->>>     - copyright year changed from 2019 to 2020
->>>     - removed dummy code for suspend & resume
->>>     - used bitmask and genmask
->>>
->>> v3:
->>>         - Fixed the sparse warnings.
->>>
->>> v2:
->>>         - Added controller description in cover letter
->>>         - Removed "default m" from Kconfig
->>>         - Replaced low_address() and high_address() functions with kernel
->>>           API's lower_32_bits & upper_32_bits().
->>>         - Removed the BH handler function pt_core_irq_bh() and instead
->>>           handling transaction in irq handler itself.
->>>         - Moved presetting of command queue registers into new function
->>>           "init_cmdq_regs()"
->>>         - Removed the kernel thread dependency to submit transaction.
->>>         - Increased the hardware command queue size to 32 and adding it
->>>           as a module parameter.
->>>         - Removed backlog command queue handling mechanism.
->>>         - Removed software command queue handling and instead submitting
->>>           transaction command directly to
->>>           hardware command queue.
->>>         - Added tasklet structure variable in "struct pt_device".
->>>           This is used to invoke pt_do_cmd_complete() upon receiving interrupt
->>>           for command completion.
->>>         - pt_core_perform_passthru() function parameters are modified and it is
->>>           now used to submit command directly to hardware from dmaengine framew
->>>         - Removed below structures, enums, macros and functions, as these value
->>>           constants. Making command submission simple,
->>>            - Removed "union pt_function"  and several macros like PT_VERSION,
->>>              PT_BYTESWAP, PT_CMD_* etc..
->>>            - enum pt_passthru_bitwise, enum pt_passthru_byteswap, enum pt_memty
->>>              struct pt_dma_info, struct pt_data, struct pt_mem, struct pt_passt
->>>              struct pt_op,
->>>
->>> Links of the review comments for v10:
->>> 1. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2021%2F6%2F8%2F976&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082849269%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=WeGA5LwGm9mnQ594VpBPAbUGZXkLZ4oup1T77fJoitc%3D&amp;reserved=0
->>> 2. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2021%2F6%2F16%2F7&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082859237%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=z3iiY0cfRUgtA5cP2lJqwmCxICyCN4FjsRI1u4aLPVU%3D&amp;reserved=0
->>> 3. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2021%2F6%2F16%2F65&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082859237%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=TABmc6i98zw%2BpjIq0hxawCL2L%2BiQe9uJvRtajCFsR6E%3D&amp;reserved=0
->>> 4. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2021%2F6%2F16%2F192&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082859237%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=vnmjIVQfPdTaoSIAyQiA%2FjyKWY6YXnmIOuvpn3QCj%2BI%3D&amp;reserved=0
->>> 5. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2021%2F6%2F16%2F273&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082859237%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=ZtH5A19dQYiHMHQS6rVenSj2Jo7%2B9pNjC8%2B24FK5zNI%3D&amp;reserved=0
->>> 6. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2021%2F6%2F8%2F1698&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082859237%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=%2BrlAck2STVZ82dnW6MeJaSvelS7FK5sKUEdh8ftMrvc%3D&amp;reserved=0
->>> 7. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2021%2F6%2F16%2F8&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082859237%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=5EP0t9eYgx0tWUu1W8eR7MhvzGtLhJm1%2FYMvJksr5jU%3D&amp;reserved=0
->>> 8. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2021%2F6%2F9%2F808&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082859237%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=WzeuQCeW2q%2FU8rEZybHezhBnYH9yG0Z7PV5dH4KeK28%3D&amp;reserved=0
->>>
->>> Links of the review comments for v7:
->>> 1. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F11%2F18%2F351&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082859237%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=0uFWTom212inntZl3C2jmQ0EYVRG8hXlDKDkMdxToAA%3D&amp;reserved=0
->>> 2. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F11%2F18%2F384&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082859237%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=agZRP0WYYpWO4c1AoVSmbi0%2BPv%2FHYIsmknPkDUqwcuU%3D&amp;reserved=0
->>>
->>> Links of the review comments for v5:
->>> 1. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F7%2F3%2F154&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082859237%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=rhXLYx8qk6Uwt7hYiUv8zZFz%2BAekntk5x7%2BF7yrDi%2Fg%3D&amp;reserved=0
->>> 2. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F8%2F25%2F431&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082859237%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=qeIQAK%2FtcrsJjJLftPVp1h2jAewJxcUOFWYiCsBFgC8%3D&amp;reserved=0
->>> 3. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F7%2F3%2F177&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082859237%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=DM3NiBmaXQRbe7dw4vyDwaWtkGB9IMDBkM9ieSzJ%2BlM%3D&amp;reserved=0
->>> 4. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F7%2F3%2F186&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082859237%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=BU8wRPlcKJXRSVbNO9o2a4WzPIRCBj%2BHVqK9XWWBUog%3D&amp;reserved=0
->>>
->>> Links of the review comments for v5:
->>> 1. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F5%2F4%2F42&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082859237%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=%2FLzrpW49oJQvOojpJcnyEPH6886BfeBdbPnAv8Gzyxk%3D&amp;reserved=0
->>> 2. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F5%2F4%2F45&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082859237%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=fNCM6mogdUJtziiyTS5VeaigZcOdTRovTiAgLN7eNlo%3D&amp;reserved=0
->>> 3. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F5%2F4%2F38&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082859237%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=uZnxL%2FzXr8D6wgZffIZQpEiXtQfJTlAWtJ5X5k%2Bxm1c%3D&amp;reserved=0
->>> 4. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F5%2F26%2F70&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082869186%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=bTNsPcdGciOdNnj7%2FFCOBHc%2FevZBQAqhyJZAkHt1iLI%3D&amp;reserved=0
->>>
->>> Links of the review comments for v4:
->>> 1. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F1%2F24%2F12&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082869186%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=Tox6tf88tSPVA%2Fq5y6ssuNlskxK3cgBpynJTtHEpPOw%3D&amp;reserved=0
->>> 2. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F1%2F24%2F17&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082869186%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=cWe5KvRLulu55PlsxwoQwJAZFbgoV0H8mLVqCe5eePw%3D&amp;reserved=0
->>>
->>> Links of the review comments for v2:
->>> 1https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2019%2F12%2F27%2F630&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082869186%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=lSo%2BPMBxKI5nB%2FWXscbJBUvaCn7n7TfbozKhPhhDviU%3D&amp;reserved=0
->>> 2. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F1%2F3%2F23&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082869186%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=e371CMeEbKW1K2%2Fn%2BukG0DU5U9x2LsbmgFrRrva25CM%3D&amp;reserved=0
->>> 3. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F1%2F3%2F314&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082869186%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=IJ2xiQSIH1jfDxDKuLg9F4bjJJGgxXJq5jHBNWeSAV8%3D&amp;reserved=0
->>> 4. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F1%2F10%2F100&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082869186%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=mDUnVUEREIpoUeYUeACYMQSzAon4t9652Uj4PQCrwPQ%3D&amp;reserved=0
->>>
->>> Links of the review comments for v1:
->>> 1. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2019%2F9%2F24%2F490&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082869186%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=MvwpsDwevzgU8Qn3zc29u8hjhFBZIAFZJy7lSYcegnQ%3D&amp;reserved=0
->>> 2. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2019%2F9%2F24%2F399&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082869186%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=6v6SMJY%2BY6RfGty9QxG72fsQ%2BV7NfJm%2B8Dh3cVIx%2BtQ%3D&amp;reserved=0
->>> 3. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2019%2F9%2F24%2F862&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082869186%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=7cY3MBVmXSQ40wVpdVWDDYqTV3Z%2FzCB0j%2ByNeiIO3FA%3D&amp;reserved=0
->>> 4. https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2019%2F9%2F24%2F122&amp;data=04%7C01%7CSanju.Mehta%40amd.com%7C775e5c3c08a24a2a7dc608d94d1a67e3%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637625598082869186%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=IoLPSuBMdz8T8Qyyknb2%2FJzzV8o62BqzkrQ6kirzOIM%3D&amp;reserved=0
->>>
->>> Sanjay R Mehta (3):
->>>   dmaengine: ptdma: Initial driver for the AMD PTDMA
->>>   dmaengine: ptdma: register PTDMA controller as a DMA resource
->>>   dmaengine: ptdma: Add debugfs entries for PTDMA
->>>
->>>  MAINTAINERS                         |   6 +
->>>  drivers/dma/Kconfig                 |   2 +
->>>  drivers/dma/Makefile                |   1 +
->>>  drivers/dma/ptdma/Kconfig           |  13 ++
->>>  drivers/dma/ptdma/Makefile          |  10 +
->>>  drivers/dma/ptdma/ptdma-debugfs.c   | 110 ++++++++++
->>>  drivers/dma/ptdma/ptdma-dev.c       | 327 ++++++++++++++++++++++++++++++
->>>  drivers/dma/ptdma/ptdma-dmaengine.c | 389 ++++++++++++++++++++++++++++++++++++
->>>  drivers/dma/ptdma/ptdma-pci.c       | 245 +++++++++++++++++++++++
->>>  drivers/dma/ptdma/ptdma.h           | 334 +++++++++++++++++++++++++++++++
->>>  10 files changed, 1437 insertions(+)
->>>  create mode 100644 drivers/dma/ptdma/Kconfig
->>>  create mode 100644 drivers/dma/ptdma/Makefile
->>>  create mode 100644 drivers/dma/ptdma/ptdma-debugfs.c
->>>  create mode 100644 drivers/dma/ptdma/ptdma-dev.c
->>>  create mode 100644 drivers/dma/ptdma/ptdma-dmaengine.c
->>>  create mode 100644 drivers/dma/ptdma/ptdma-pci.c
->>>  create mode 100644 drivers/dma/ptdma/ptdma.h
->>
->> Hi Vinod, Greg,
->>
->>
->> I had re-sent this patch series as per your advice a month ago with all
->> the review feedback's addressed.
->>
->> Need your guidance and feedback to get this code reviewed and up-streamed.
+> Yes.  Do I owe you for some brain damage?  :)
 > 
-> This was sent during the merge window... and right now this is in my
-> review queue and will be addressed shortly.
-> 
-Ok sure. Thank you!
 
-> --
-> ~Vinod
+A bit to be absolutely honest. :D
+But I was able to ignore this feature so far so it was not much of
+a problem. ;)
+
+> > 
+> > The part that I somewhat understand is the "signal" sent in the "OPEN"
+> > command from the modem. It tells us the maximum buffer size the modem
+> > is willing to accept for TX packets ("ul_mtu" in that commit).
+> > 
+> > Similarly, if we send "OPEN" to the modem we make the modem aware
+> > of our maximum RX buffer size plus the number of RX buffers.
+> > (create_open_signal() function).
+> > 
+> > The part that is confusing me is the way the "dynamic MTU" is
+> > enabled/disabled based on the "signal" in "DATA" commands as well.
+> > (process_dynamic_mtu() function). When would that happen? The code
+> > suggests that the modem might just suddenly announce that the large
+> > MTU should be used from now on. But the "buffer_size" is only changed
+> > for newly queued RX buffers so I'm not even sure how the modem knows
+> > that it can now send more data at once.
+> > 
+> > Any chance you could clarify how this should work exactly?
 > 
+> So, I think some of this might make more sense after my response to question
+> #2.
+> 
+
+Indeed, I was worried that you wouldn't be able to answer the second
+one, otherwise I would probably have asked it first. I'll reorder the
+mail because it's clearer:
+
+> > And a second question if you don't mind: What kind of hardware block
+> > am I actually talking to here? I say "modem" above but I just know about
+> > the BAM and the DMUX protocol layer. I have also seen assertion failures
+> > of the modem DSP firmware if I implement something incorrectly.
+> > 
+> > Is the DMUX protocol just some firmware concept or actually something
+> > understood by some hardware block? I've also often seen mentions of some
+> > "A2" hardware block but I have no idea what that actually is. What's
+> > even worse, in a really old kernel A2/BAM-DMUX also appears as part of
+> > the IPA driver [2], and I thought IPA is the new thing after BAM-DMUX...
+> 
+> A2 predates IPA.  IPA is essentially an evolution of A2.
+> 
+> Sit down son, let me tell you the history of the world  :)
+> 
+> A long time ago, there was only a single processor that did both the "modem"
+> and the "apps".  We generally would call these the 6K days as that was the
+> number of the chips (6XXX).  Then it was decided that the roles of Apps and
+> Modem should be separated into two different cores. The modem, handling more
+> "real time" things, and apps, being more "general purpose".  This started
+> with the 7K series.
+> 
+> However, this created a problem as data from a data call may need to be
+> consumed by the modem, or the apps, and it wouldn't be clear until the
+> packet headers were inspected, where the packet needed to be routed to.
+> Sometimes this was handled on apps, sometimes on modem.  Usually via a fully
+> featured IP stack.
+> 
+> With LTE, software couldn't really keep up, and so a hardware engine to
+> parse the fields and route the package based on programmed filters was
+> implemented.  This is the "Algorithm Accelerator", aka AA, aka A2.
+> 
+> The A2 first appeared on the 9600 chip, which was originally intended for
+> Gobi- those dongles you could plug into your laptop to give it a data
+> connection on the go when there was no wifi.  It was then coupled with both
+> 7x30 and 8660 in what we would call "fusion" to create the first LTE capable
+> phones (HTC thunderbolt is the product I recall) until an integrated
+> solution could come along.
+> 
+> That integrated solution was 8960.
+> 
+> Back to the fusion solution for a second, the 9600 was connected to the
+> 7x30/8660 via SDIO.  Prior to this, the data call control and data path was
+> all in chip via SMD.  Each rmnet instance had its own SMD channel, so
+> essentially its own physical pipe.  With SDIO and 9600, there were not
+> enough lanes, so we invented SDIO_CMUX and SDIO_DMUX - the Control and Data
+> multiplexers over SDIO.
+> 
+> With 8960, everything was integrated again, so we could run the control path
+> over SMD and didn't need a mux.  However, the A2 moved from the 9600 modem
+> to the 8960 integrated modem, and now we had a direct connection to its BAM.
+> Again, the BAM had a limited number of physical pipes, so we needed a data
+> multiplexer again.  Thus SDIO_DMUX evolved into BAM_DMUX.
+> 
+> The A2 is a hardware block with an attached BAM, that "hangs off" the modem.
+> There is a software component that also runs on the modem, but in general is
+> limited to configuration.  Processing of data is expected to be all in
+> hardware.  As I think I mentioned, the A2 is a hardware engine that routes
+> IP packets based on programmed filters.
+> 
+> BAM instances (as part of the smart peripheral subsystem or SPS) can either
+> be out in the system, or attached to a peripheral.  The A2 BAM is attached
+> to the A2 peripheral.  BAM instances can run in one of 3 modes - BAM-to-BAM,
+> BAM-to-System, or System-to-System.  BAM-to-BAM is two BAM instances talking
+> to eachother.  If the USB controller has a BAM, and the A2 has a BAM, those
+> two BAMS could talk directly to copy data between the A2 and USB hardware
+> blocks without software interaction (after some configuration).  "System"
+> means system memory, or DDR. Bam-to-System is the mode the A2 BAM runs in
+> where it takes data to/from DDR and gives/takes that data with the A2.
+> System-to-System would be used by a BAM instance not associated with any
+> peripheral to transfer data say from Apps DDR to Modem DDR.
+> 
+> The A2 can get data from the RF interface, and determine if that needs to go
+> to some modem consumer, the apps processor, or on some chips to the wifi
+> processor.  All in hardware, much faster than software for multiple reasons,
+> but mainly because multiple filters can be evaluated in parallel, each
+> filter looking at multiple fields in parallel.  In a nutshell, the IPA is a
+> revised A2 that is not associated with any processor (like the modem), which
+> allows it to route data better (think wifi and audio usecases).
+> 
+> Hope that all helps.  I'm "around" for more questions.
+> 
+
+Wow, I can't thank you enough for all the detailed explanations!
+I've seen many small hints of this in various places but I could never
+really understand how they all relate to each other.
+This is much clearer now. :)
+
+> I don't know how much of this translates to modern platforms.  I don't
+> really work on MSMs anymore, but I can convey what I recall and how things
+> were "back then"
+> 
+> So, essentially the change you are looking at is the bam_dmux portion of an
+> overall feature for improving the performance of what was known as "tethered
+> rmnet".
+> 
+> Per my understanding (which the documentation of this feature reinforces),
+> teathered rmnet was chiefly a test feature.  Your "data" (websites, email,
+> etc) could be consumed by the device itself, or exported off, if you
+> teathered your phone to a laptop so that the laptop could use the phone's
+> data connection.  There ends up being 3 implementations for this.
+> 
+> Consuming the data on the phone would route it to the IP stack via the rmnet
+> driver.
+> 
+> Consuming the data on an external device could take one of 2 routes.
+> 
+> Android would use the "native" routing of the Linux IP stack to essentially
+> NAT the laptop.  The data would go to the rmnet driver, to the IP stack, and
+> the IP stack would route it to USB.
+> 
+> The other route is that the data could be routed directly to USB.  This is
+> "teathered rmnet".  In the case of bam_dmux platforms, the USB stack is a
+> client of bam_dmux.
+> 
+> Teathered rmnet was never an end-user usecase.
+>
+
+I'm pretty sure it's actively used now on typical USB modems based on
+MDM9607. As far as I know that one has BAM-DMUX and "forwards" it via
+USB (without NAT).
+
+> It was essentially a validation feature for both internal testing, and
+> also qualifying the device with the carriers.  The carriers knew that
+> Android teathering involved NAT based routing on the phone, and wanted
+> to figure out if the phone could meet the raw performance specs of the
+> RF technology (LTE Category 4 in this case) in a tethered scenario,
+> without the routing.
+> 
+> For tethered rmnet, USB (at the time) was having issues consistently meeting
+> those data rates (50mbps UL, 100mbps DL concurrently, if I recall
+> correctly).  So, the decided solution was to implement QMAP aggregation.
+> 
+> A QMAP "call" over tethered rmnet would be negotiated between the app on the
+> PC, and "dataservices" or "DS" on the modem.  One of the initial steps of
+> that negotitation causes DS to tell A2 software that QMAP over tethered
+> rmnet is being activated.  That would trigger A2 to activate the
+> process_dynamic_mtu() code path.  Now bam_dmux would allocate future RX
+> buffers of the increased size which could handle the aggregated packets.  I
+> think the part that is confusing you is, what about the already queued
+> buffers that are of the old size?  Well, essentially those get consumed by
+> the rest of the QMAP call negotiation, so by the time actual aggregated data
+> is going to be sent from Modem to bam_dmux, the pool has been consumed and
+> refilled.
+> 
+> When the tethered rmnet connection is "brought down", DS notifies A2, and A2
+> stops requesting the larger buffers.
+> 
+
+Hmm, is this "DS" on the modem something special I don't know about?
+It sounds like the part of the modem that I talk to via QMI to establish
+new connections. However, since QMI does not go through BAM-DMUX
+(RPMSG/SMD or QRTR instead) there should be only very few packets sent
+via BAM-DMUX during negotation of QMAP.
+
+To be sure I just tried QMAP with my BAM-DMUX driver again. It's been
+quite some time since I tried it and it turns out this causes even more
+"brain damage" than I could even remember. :D For reference:
+
+ 1. First I need to set the modem to QMAP mode, this works e.g. with
+    qmicli -pd /dev/wwan0qmi0 \
+    --wda-set-data-format="link-layer-protocol=raw-ip,ul-protocol=qmap,dl-protocol=qmap,dl-datagram-max-size=4096"
+
+    However, it's important that my BAM-DMUX driver OPENs the channel
+    before doing this (together with announcing support for the "dynamic
+    MTU" feature). Otherwise the modem hangs forever and stops responding
+    to any QMI messages. This doesn't happen when switching to Raw-IP mode.
+
+ 2. With QMAP, the struct bam_dmux_hdr->len is always set to 0xffff (65535)
+    instead of the actual packet length, which means my current driver
+    just drops those packets ("Data larger than buffer? (65535 > 4088)").
+
+    This is also handled in your commit (you get the size from the SPS
+    driver instead), but the bam_dma driver in mainline currently does
+    not have this feature. :/
+
+ 3. I sent some ping packets but never got the signal to "enable large
+    MTU" from the modem. Something is still strange here. :/
+
+Given all these complications (that are not present when ignoring QMAP)
+I would generally agree with you that it's not worth supporting this:
+
+> Since this not something an end user should ever exercise, you may want to
+> consider dropping it.
+> 
+
+Personally, I have indeed no need for it. I just suspect someone might
+want this eventually for one of the following two use cases:
+
+  1. Multiplexing on new firmwares: AFAICT there is only one BAM-DMUX
+     channel on recent firmware versions (e.g. MSM8937/MDM9607). In that
+     case multiple connections are only possible through the multiplexing
+     layer in QMAP. I've been told the multiplexing is actually useful and
+     necessary in some cases (maybe it was for some MMS configurations,
+     I don't remember exactly).
+
+  2. USB tethering: I know some people are working on mainline Linux
+     for some MDM9607-based USB modems and they will probably want the
+     weird USB tethering feature at some point.
+
+But all in all given all the trouble involved when making QMAP work
+I think I will just ignore that feature for now and wait until someone
+shows up who absolutely needs this feature...
+
+Thanks again for all the explanations!
+Stephan

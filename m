@@ -2,105 +2,65 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A4F33D3C27
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Jul 2021 17:06:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E5903D402E
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Jul 2021 20:13:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235440AbhGWO0N (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 23 Jul 2021 10:26:13 -0400
-Received: from mga11.intel.com ([192.55.52.93]:36182 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235351AbhGWO0N (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 23 Jul 2021 10:26:13 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10054"; a="208781636"
-X-IronPort-AV: E=Sophos;i="5.84,264,1620716400"; 
-   d="scan'208";a="208781636"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2021 08:06:46 -0700
-X-IronPort-AV: E=Sophos;i="5.84,264,1620716400"; 
-   d="scan'208";a="433686816"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.100.174]) ([10.212.100.174])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2021 08:06:45 -0700
-Subject: Re: [bug report] dmaengine: idxd: move dsa_drv support to compatible
- mode
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     dmaengine@vger.kernel.org
-References: <20210723133508.GA18022@kili>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <60a20b28-bf03-9bc9-e80d-301ec7c5b4e8@intel.com>
-Date:   Fri, 23 Jul 2021 08:06:44 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        id S229575AbhGWRc5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 23 Jul 2021 13:32:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58972 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229570AbhGWRc5 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 23 Jul 2021 13:32:57 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3E45C061575
+        for <dmaengine@vger.kernel.org>; Fri, 23 Jul 2021 11:13:29 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id f12so2760859ljn.1
+        for <dmaengine@vger.kernel.org>; Fri, 23 Jul 2021 11:13:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=s3ORVPfeqsbIwaEF6gwDU0K19fRVauQoSNaQl2dZZuU=;
+        b=Xsd7MV9SKatJxetjmmEbr0TPAq0S26zlfmPuWZORGOM9SWlL2TN+pyio/TCqTnaQ0e
+         7LNXQ5Z3lCMlmhyaIP6whrUijZK5P2GUcyfeM1rNK/ec5U65yNjVS7Z9XofPWKcvc8bR
+         Pmp7hj2wIziVnagmHtj1hbjBTLD7JPPF82/pR1jf5sjvKz51SX8ngKuaX0c8/CPqBgCd
+         1osazDQJdJagwVnU3MtMHPyw10yweMUl7ezmX7eybArgjgHGZVMN5LS3Uet/oMaPjkb2
+         1t5qvhtVJFMJkEMERpDDC2PPigD1kyGJ2IsTIiF5TJasYUolW3+fYcZa2v+iiyrrESvJ
+         m0ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=s3ORVPfeqsbIwaEF6gwDU0K19fRVauQoSNaQl2dZZuU=;
+        b=e6AjL5fxdqGvhpnBiDGnYPr/WsbC9PCAZz1NG1Ao9Kq+kQnqCZyBRpWruRFGvpD6Mj
+         EfftvpV73/DuZaw/JAuCkxrQmuBjcXAhSObXf1AoEGxBDDMhw+qmKh89Z2VOYGC0ghI0
+         BkXJoFbudivDMCjJ/8Cn60NKOTJwGhb61hf5L094qlm+lJmZt0KVO4hUZCK6EvlyNEiM
+         y8Clxcug8bVdswvXr5DSNFAwFRjD0V1icrt3HeCZ/JFmHmwrxyHBg3iJCAjlFR/DFE5V
+         8JFNx1HjA1ZDYd4ITIL4Scu3QuaHuVkA1YoNsdQHp9+f2TL9aOdiWM285LUlqfK9xmZ2
+         /VXw==
+X-Gm-Message-State: AOAM533RBlVOAd1Nu0GBuh8DMnthbn9w/ikDpBfMrA5VHOkCIe52KI/N
+        vVbWiW2071/T7sHvBrRuo5qFz/kB+kv4U0TWhyA=
+X-Google-Smtp-Source: ABdhPJzftf8M7BPlw+oxhIHGjf0xwhZfuFP+bWnBxqNzxMJlBfrejjkMEGDSVn5iiEJQ3nSrPciM1BJDyg0sVPJC8E4=
+X-Received: by 2002:a2e:9f17:: with SMTP id u23mr4171344ljk.489.1627064008029;
+ Fri, 23 Jul 2021 11:13:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210723133508.GA18022@kili>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Received: by 2002:a9a:7edd:0:b029:11e:4843:491e with HTTP; Fri, 23 Jul 2021
+ 11:13:27 -0700 (PDT)
+Reply-To: s7jamesl@gmail.com
+From:   "JAMES L. SMITH" <engr.stanleygeorge@gmail.com>
+Date:   Fri, 23 Jul 2021 18:13:27 +0000
+Message-ID: <CAPH3pA79pNN5YvfB9mbhrEeFeBVxTb2Y-T3ateyNt_uWfg3fkg@mail.gmail.com>
+Subject: rere.:re
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Greetings,
 
-On 7/23/2021 6:35 AM, Dan Carpenter wrote:
-> Hello Dave Jiang,
->
-> The patch 6e7f3ee97bbe: "dmaengine: idxd: move dsa_drv support to
-> compatible mode" from Jul 15, 2021, leads to the following static
-> checker warning:
->
-> 	drivers/dma/idxd/compat.c:66 bind_store()
-> 	error: uninitialized symbol 'alt_drv'.
+Why haven't you replied to me? Please, kindly let me know your
+thoughts towards project funding.
 
-
-Thanks Dan! This patch should make static checker happy:
-
-https://lore.kernel.org/dmaengine/162689250332.2114335.636367120454420852.stgit@djiang5-desk3.ch.intel.com/T/#u
-
-
->
-> drivers/dma/idxd/compat.c
->      33  static ssize_t bind_store(struct device_driver *drv, const char *buf, size_t count)
->      34  {
->      35          struct bus_type *bus = drv->bus;
->      36          struct device *dev;
->      37          struct device_driver *alt_drv;
->      38          int rc = -ENODEV;
->      39          struct idxd_dev *idxd_dev;
->      40
->      41          dev = bus_find_device_by_name(bus, NULL, buf);
->      42          if (!dev || dev->driver || drv != &dsa_drv.drv)
->      43                  return -ENODEV;
->      44
->      45          idxd_dev = confdev_to_idxd_dev(dev);
->      46          if (is_idxd_dev(idxd_dev)) {
->      47                  alt_drv = driver_find("idxd", bus);
->      48                  if (!alt_drv)
->      49                          return -ENODEV;
->      50          } else if (is_idxd_wq_dev(idxd_dev)) {
->                             ^^^^^^^^^^^^^^^^^^^^^^^^
-> Presumably this condition is always true but the static checker is not
-> smart enough to figure it out.
->
->      51                  struct idxd_wq *wq = confdev_to_wq(dev);
->      52
->      53                  if (is_idxd_wq_kernel(wq)) {
->      54                          alt_drv = driver_find("dmaengine", bus);
->      55                          if (!alt_drv)
->      56                                  return -ENODEV;
->      57                  } else if (is_idxd_wq_user(wq)) {
->      58                          alt_drv = driver_find("user", bus);
->      59                          if (!alt_drv)
->      60                                  return -ENODEV;
->      61                  } else {
->      62                          return -ENODEV;
->      63                  }
->      64          }
->      65
->      66          rc = device_driver_attach(alt_drv, dev);
->      67          if (rc < 0)
->      68                  return rc;
->      69
->      70          return count;
->      71  }
->
-> regards,
-> dan carpenter
+Best regards,
+James L. Smith
+Accredited Broker

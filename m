@@ -2,67 +2,68 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95AF93D470C
-	for <lists+dmaengine@lfdr.de>; Sat, 24 Jul 2021 12:22:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E97063D4765
+	for <lists+dmaengine@lfdr.de>; Sat, 24 Jul 2021 13:25:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234786AbhGXJlk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 24 Jul 2021 05:41:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46438 "EHLO
+        id S231970AbhGXKpS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 24 Jul 2021 06:45:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234232AbhGXJlj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 24 Jul 2021 05:41:39 -0400
-Received: from mail-ot1-x336.google.com (mail-ot1-x336.google.com [IPv6:2607:f8b0:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2F33C061575;
-        Sat, 24 Jul 2021 03:22:11 -0700 (PDT)
-Received: by mail-ot1-x336.google.com with SMTP id f20-20020a9d6c140000b02904bb9756274cso4634987otq.6;
-        Sat, 24 Jul 2021 03:22:11 -0700 (PDT)
+        with ESMTP id S231922AbhGXKpS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 24 Jul 2021 06:45:18 -0400
+Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99151C061575;
+        Sat, 24 Jul 2021 04:25:49 -0700 (PDT)
+Received: by mail-ot1-x332.google.com with SMTP id f20-20020a9d6c140000b02904bb9756274cso4733159otq.6;
+        Sat, 24 Jul 2021 04:25:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aRoUv1wABabEGBHGqPIcqO0DCv1yalyroN2HGWm8Zyc=;
-        b=ZpBG5Pth38l1GL8iZw9LT6YoGIh2Vig8EYSbVQbIqo3lsSK+Rb0k8O7UEMPdTUZ/4n
-         CnXZNA4W5N6+BGBVH83xffazL9hQx65nvkeBgkgbcmZoKYY4xUes4Z5HMTk1e5kJfSUm
-         kuBlcxCw9fLoPSH5qIFMfYOfMfDcb4490HpA3Zi8L80p/ZzL8ruYX3986d9jK54Wj2cv
-         WCyXvoyRt/8xNYGw8q+Z9aR+fpuSPBdabA1CGaPmgWGw0cTtCH9gDRneYKNmtFSCNV7k
-         5YTqzSFIDYtPh+MMWhFtbYIjDp++TNTljwL97B331mt5/O2V0amzUdzIMn3A+WXn0u0E
-         Lo/g==
+        bh=Wmho9+Wg/RJHAISJdsior3XXLcEk7YEvFee8MxRP09k=;
+        b=sBD4JZJyWmX6lsJDfGpjMimE5kudyumm+g9ej2RbDy+wldPtx+AOWP1CP9pzLNSnCt
+         fniZmpcjSyXySqZMR+CI7yIbOq6xNSpN7pz71BmiK4TJfTF8hKm9GVP8buPkk4nWuimA
+         yvgd5GfIp6GEfVcYkg5tSUf2i+2jpOXoLqhMox93HF0V528bcDtlaG4/cE2Zshf5tdfW
+         88Som5LckR0nEdi+wwwVL2uo5KYN7CPpZRgVvuxM6c8QEu/FVXW2BhZOnB5HpwqYqndy
+         uVvluUxjBI53gK+1dPEDmKefXtkMymgMoacRCF1AwItOycd0FteeVK1bTVXxAkR8pHo3
+         Bd+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aRoUv1wABabEGBHGqPIcqO0DCv1yalyroN2HGWm8Zyc=;
-        b=p3gXqNZtumkaCdnv74uerCVq4UlfaU8m5dzB2t0wRGNUJQE1PO8LKnDv5Mv6iSvmEc
-         8Cd1C+c3nx9FIFItCfbs3tT9TZ6WPFGcYP0ah5G2SdENFoVyFeeNKlK9rtW9XGgOFcXV
-         fTGaSG/NDD+fD5a6Ndy9Q8I8l5okrJxhK1XsqUYLxMKDUBuPFc1AltcKNn8NTk7ILVWd
-         NxXae9wL/yM2zMOdhGPecqDPTBLqwue+GkCX9jseqhQWrcGwxv9Ep+7Oj2UhHOoPGZyK
-         dVbmIl75BFjjDa3km8f14pmrrk2AbjR8cKw+7KAx2ad+aHLrfFkdpPdSWsJMxlX5enX0
-         3uoA==
-X-Gm-Message-State: AOAM531pxEC/GpuEhT2ah0jESCWDWehw4/oYEJsepynByL3PiuHvWttR
-        WWg3A/PYgQ1EA0KJrdlZji6O1Ey6XQb12e2lCbM=
-X-Google-Smtp-Source: ABdhPJyvCXh0jYmGBSOC0D0TYxIXw+zOnL0ZwXIXYQACqxrb4F0ld7fFvBJidMAWaiJja0NqDuBj0twE7d7V1H9aPJs=
-X-Received: by 2002:a9d:3608:: with SMTP id w8mr5886963otb.371.1627122130908;
- Sat, 24 Jul 2021 03:22:10 -0700 (PDT)
+        bh=Wmho9+Wg/RJHAISJdsior3XXLcEk7YEvFee8MxRP09k=;
+        b=f3oCgdAygLb+G/KJjZFHCKJ4sBuMqpJcL5FkCHlrmjGD6zQ+Xh3DDV7K8yZ3J2CSD9
+         A8Nk/KhdCC2EWmtah3v79EE3Wn/CL0JuOxqaLIOwXhAYQ3SGcWRIyu08XTAL4P0k1g+2
+         A+ISeSIrVkVB6b+RnEDO7Ig21grdpSDabW5WmbFzFKihoXwPMZI1myzEIwRem5Egb1OK
+         B2lzwXOpSdFuculpqetfHVKocmyEiIG8Cl6zFhWlhBvmcvjhBaEErxAk8NdDAKNBFDnp
+         US3gCbp4PNPDr+EZNk76TX6euLPupl7v2Sos4/ZatZ1mjwSI4tOg1jCd8kIBjoXUivxy
+         +09w==
+X-Gm-Message-State: AOAM532eWDBXqWDevStAaBJcebfbthX0DSjVbUXCruoTEDIZmXY9n85T
+        95OYMCA3UJ/uYfeIcZcQeKpoOapnkXhrgnMvFNk=
+X-Google-Smtp-Source: ABdhPJxWgrDKgFnxb3wKdHMq7ugLW3b0qOd75IBA+QSiFRt4LAmH1DY21+1lfsI6y1v/C7JczAcLz3MBghtlQjbR88E=
+X-Received: by 2002:a9d:6d83:: with SMTP id x3mr5656396otp.110.1627125949017;
+ Sat, 24 Jul 2021 04:25:49 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210719145317.79692-1-stephan@gerhold.net> <20210719145317.79692-5-stephan@gerhold.net>
- <CAHNKnsTVSg5T_ZK3PQ50wuJydHbANFfpJd5NZ-71b1m3B_4dQg@mail.gmail.com> <YPgQR/VbNVyxERnb@gerhold.net>
-In-Reply-To: <YPgQR/VbNVyxERnb@gerhold.net>
+ <CAMZdPi8oxRMo0erfd0wrUPzD2UsbexoR=86u2N75Fd9RpXHoKg@mail.gmail.com> <YPmRcBXpRtKKSDl8@gerhold.net>
+In-Reply-To: <YPmRcBXpRtKKSDl8@gerhold.net>
 From:   Sergey Ryazanov <ryazanov.s.a@gmail.com>
-Date:   Sat, 24 Jul 2021 13:22:21 +0300
-Message-ID: <CAHNKnsQXb6H0Ee3sjbVi_UyED0UAXv7LK7mL1aKAG3SQtQ48ng@mail.gmail.com>
+Date:   Sat, 24 Jul 2021 14:25:59 +0300
+Message-ID: <CAHNKnsQr4Ys8q3Ctru-H=L3ZDwb__2D3E08mMZchDLAs1KetAg@mail.gmail.com>
 Subject: Re: [RFC PATCH net-next 4/4] net: wwan: Add Qualcomm BAM-DMUX WWAN
  network driver
-To:     Stephan Gerhold <stephan@gerhold.net>
+To:     Stephan Gerhold <stephan@gerhold.net>,
+        Loic Poulain <loic.poulain@linaro.org>
 Cc:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
-        Loic Poulain <loic.poulain@linaro.org>,
         Johannes Berg <johannes@sipsolutions.net>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Aleksander Morgado <aleksander@aleksander.es>,
-        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dmaengine@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>,
         phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
         Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
@@ -71,77 +72,9 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello Stephan,
-
-On Wed, Jul 21, 2021 at 3:17 PM Stephan Gerhold <stephan@gerhold.net> wrote:
-> On Tue, Jul 20, 2021 at 12:10:42PM +0300, Sergey Ryazanov wrote:
->> On Mon, Jul 19, 2021 at 6:01 PM Stephan Gerhold <stephan@gerhold.net> wrote:
->>> The BAM Data Multiplexer provides access to the network data channels of
->>> modems integrated into many older Qualcomm SoCs, e.g. Qualcomm MSM8916 or
->>> MSM8974. It is built using a simple protocol layer on top of a DMA engine
->>> (Qualcomm BAM) and bidirectional interrupts to coordinate power control.
->>>
->>> The modem announces a fixed set of channels by sending an OPEN command.
->>> The driver exports each channel as separate network interface so that
->>> a connection can be established via QMI from userspace. The network
->>> interface can work either in Ethernet or Raw-IP mode (configurable via
->>> QMI). However, Ethernet mode seems to be broken with most firmwares
->>> (network packets are actually received as Raw-IP), therefore the driver
->>> only supports Raw-IP mode.
->>>
->>> The driver uses runtime PM to coordinate power control with the modem.
->>> TX/RX buffers are put in a kind of "ring queue" and submitted via
->>> the bam_dma driver of the DMAEngine subsystem.
->>>
->>> The basic architecture looks roughly like this:
->>>
->>>                    +------------+                +-------+
->>>          [IPv4/6]  |  BAM-DMUX  |                |       |
->>>          [Data...] |            |                |       |
->>>         ---------->|rmnet0      | [DMUX chan: x] |       |
->>>          [IPv4/6]  | (chan: 0)  | [IPv4/6]       |       |
->>>          [Data...] |            | [Data...]      |       |
->>>         ---------->|rmnet1      |--------------->| Modem |
->>>                    | (chan: 1)  |      BAM       |       |
->>>          [IPv4/6]  | ...        |  (DMA Engine)  |       |
->>>          [Data...] |            |                |       |
->>>         ---------->|rmnet7      |                |       |
->>>                    | (chan: 7)  |                |       |
->>>                    +------------+                +-------+
->>>
->>> However, on newer SoCs/firmware versions Qualcomm began gradually moving
->>> to QMAP (rmnet driver) as backend-independent protocol for multiplexing
->>> and data aggegration. Some firmware versions allow using QMAP on top of
->>> BAM-DMUX (effectively resulting in a second multiplexing layer plus data
->>> aggregation). The architecture with QMAP would look roughly like this:
->>>
->>>            +-------------+           +------------+                  +-------+
->>>  [IPv4/6]  |    RMNET    |           |  BAM-DMUX  |                  |       |
->>>  [Data...] |             |           |            | [DMUX chan: 0]   |       |
->>> ---------->|rmnet_data1  |     ----->|rmnet0      | [QMAP mux-id: x] |       |
->>>            | (mux-id: 1) |     |     | (chan: 0)  | [IPv4/6]         |       |
->>>            |             |     |     |            | [Data...]        |       |
->>>  [IPv4/6]  | ...         |------     |            |----------------->| Modem |
->>>  [Data...] |             |           |            |       BAM        |       |
->>> ---------->|rmnet_data42 | [QMAP: x] |[rmnet1]    |   (DMA Engine)   |       |
->>>            | (mux-id: 42)| [IPv4/6]  |... unused! |                  |       |
->>>            |             | [Data...] |[rmnet7]    |                  |       |
->>>            |             |           |            |                  |       |
->>>            +-------------+           +------------+                  +-------+
->>>
->>> In this case, rmnet1-7 would remain unused. The firmware used on the most
->>> recent SoCs with BAM-DMUX even seems to announce only a single BAM-DMUX
->>> channel (rmnet0), which makes QMAP the only option for multiplexing there.
->>>
->>> So far the driver is mainly tested on various smartphones/tablets based on
->>> Qualcomm MSM8916/MSM8974 without QMAP. It looks like QMAP depends on a MTU
->>> negotiation feature in BAM-DMUX which is not yet supported by the driver.
->>>
->>> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
->>> ---
->>> Note that this is my first network driver, so I apologize in advance
->>> if I made some obvious mistakes. :)
->>>
+On Thu, Jul 22, 2021 at 6:40 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+> On Mon, Jul 19, 2021 at 06:01:33PM +0200, Loic Poulain wrote:
+>> On Mon, 19 Jul 2021 at 17:01, Stephan Gerhold <stephan@gerhold.net> wrote:
 >>> I'm not sure how to integrate the driver with the WWAN subsystem yet.
 >>> At the moment the driver creates network interfaces for all channels
 >>> announced by the modem, it does not make use of the WWAN link management
@@ -151,44 +84,149 @@ On Wed, Jul 21, 2021 at 3:17 PM Stephan Gerhold <stephan@gerhold.net> wrote:
 >>> There are firmware versions that do not support QMAP and the other way around
 >>> (the built-in multiplexing was disabled on very recent firmware versions).
 >>> Only userspace can check if QMAP is supported in the firmware (via QMI).
+>>>
+>>> I could ignore QMAP completely for now but I think someone will show up
+>>> who will need this eventually. And if there is going to be common code for
+>>> QMAP/rmnet link management it would be nice if BAM-DMUX could also make
+>>> use of it.
 >>
->> I am not very familiar with the Qualcomm protocols and am just curious
->> whether BAM-DMUX has any control (management) channels or only IPv4/v6
->> data channels?
+>> I have this on my TODO list for mhi-net QMAP.
+>
+> Great, thanks!
+>
+>>> But the question is, how could this look like? How do we know if we should
+>>> create a link for QMAP or a BAM-DMUX channel? Does it even make sense
+>>> to manage the 1-8 channels via the WWAN link management?
 >>
->> The WWAN subsystem began as a framework for exporting management
->> interfaces (MBIM, AT, etc.) to user space. And then the network
->> interfaces (data channels) management interface was added to
->> facilitate management of devices with multiple data channels. That is
->> why I am curious about the BAM-DMUX device management interface or in
->> other words, how a user space application could control the modem
->> work?
+>> Couldn't it be specified via dts (property or different compatible
+>> string)?
 >
-> Sorry for the confusion! It's briefly mentioned in the Kconfig option
-> but I should have made this more clear in the commit message. It was so
-> long already that I wasn't sure where to put it. :)
+> It would probably work in most cases, but I have to admit that I would
+> prefer to avoid this for the following reason: This driver is used on
+> some smartphones that have different variants for different parts of the
+> world. As far as Linux is concerned the hardware is pretty much
+> identical, but the modem firmware is often somewhat device-specific.
 >
-> BAM-DMUX does not have any control channels. Instead I use it together
-> with the rpmsg_wwan_ctrl driver [1] that I already submitted for 5.14.
-> The control/data channels are pretty much separate in this setup and
-> don't have much to do with each other.
+> This means that the same device tree is often used with different
+> firmware versions. Perhaps we are lucky enough that the firmware
+> versions have the same capabilities, but I'm not fully sure about that.
 >
-> I also had a short overview of some of the many different modem
-> protocols Qualcomm has come up with in a related RFC for that driver,
-> see [2] if you are curious.
+> I think at the end the situation is fairly similar to qmi_wwan/USB.
+> There the kernel also does not know if the modem supports QMAP or not.
+> The way it's solved there at the moment is that ModemManager tries to
+> enable it from user space and then the mode of the network interface
+> can be switched through a sysfs file ("qmi/pass_through").
 >
-> I hope that clarifies some things, please let me know if I should
-> explain something better! :)
+> Something like this should probably also work in my case. This should
+> also allow me to ignore QMAP for now and deal with it if someone really
+> needs it at some point since it's quite complicated for BAM-DMUX.
+> (I tried QMAP again today and listed the problems in [1] for reference,
+>  but it's all BAM-DMUX specific...)
 >
-> [1]: https://lore.kernel.org/netdev/20210618173611.134685-3-stephan@gerhold.net/
-> [2]: https://lore.kernel.org/netdev/YLfL9Q+4860uqS8f@gerhold.net/
+> [1] https://lore.kernel.org/netdev/YPmF8bzevuabO2K9@gerhold.net/
+>
+>> would it make sense to have two drivers (with common core) to
+>> manage either the multi-bam channel or newer QMAP based single
+>> bam-channel modems.
+>
+> There should be fairly little difference between those two usage modes,
+> so I don't think it's worth splitting the driver for this. Actually
+> right now (ignoring the link management of the WWAN subsystem),
+> it's already possible to use both.
+>
+> I can use the network interfaces as-is in Raw-IP mode or I do
+> "sudo ip link add link rmnet0 name rmnet0_qmap type rmnet mux_id 1"
+> on top and use QMAP. The BAM-DMUX driver does not care, because it
+> just hands over sent/received packets as-is and the modem data format
+> must be always configured via QMI from user space.
+>
+>>> Another problem is that the WWAN subsystem currently creates all network
+>>> interfaces below the common WWAN device. This means that userspace like
+>>> ModemManager has no way to check which driver provides them. This is
+>>> necessary though to decide how to set it up via QMI (ModemManager uses it).
+>>
+>> Well, I have quite a similar concern since I'm currently porting
+>> mhi-net mbim to wwan framework, and I was thinking about not making
+>> wwan device parent of the network link/netdev (in the same way as
+>> wlan0 is not child of ieee80211 device), but not sure if it's a good
+>> idea or not since we can not really consider driver name part of the
+>> uapi.
+>
+> Hm, I think the main disadvantage of that would be that the network
+> interface is no longer directly related to the WWAN device, right?
+> Userspace would then need some special matching to find the network
+> interfaces that belong to a certain control port.
+>
+> With the current setup, e.g. ModemManager can simply match the WWAN
+> device and then look at its children and find the control port and
+> network interfaces. How would it find the network interfaces if they are
+> no longer below the WWAN device?
+>
+> > The way links are created is normally abstracted, so if you know which
+> > bam variant you have from wwan network driver side (e.g. via dts), you
+> > should have nothing to check on the user side, except the session id.
+>
+> In a perfect world it would probably be like this, but I'm afraid the
+> Qualcomm firmware situation isn't as simple. User space needs to know
+> which setup it is dealing with because all the setup happens via QMI.
+>
+> Let's take the BAM-DMUX channels vs QMAP mux-IDs for example:
+>
+> First, user space needs to configure the data format. This happens with
+> the QMI WDA (Wireless Data Administrative Service) "Set Data Format"
+> message. Parameter would be link layer format (Raw-IP in both cases)
+> but also the uplink/downlink data aggregation protocol. This is either
+> one of many QMAP versions (qmap|qmapv2|qmapv3|qmapv4|qmapv5), or simply
+> "none" when using BAM-DMUX without QMAP.
+>
+> Then, the "session ID" (= BAM-DMUX channel or QMAP mux-ID) must be bound
+> to a WDS (Wireless Data Service) session. The QMI message for that is
+> different for BAM-DMUX and QMAP:
+>
+>   - BAM-DMUX: WDS "Bind Data Port"
+>       (Parameter: SIO port number, can be derived from channel ID)
+>
+>   - QMAP: WDS "Bind MUX Data Port" (note the "MUX", different message!)
+>       (Parameter: MUX ID, port type (USB/embedded/...), port number)
+>
+> My point here: Since userspace is responsible for QMI at the moment
+> we will definitely need to make it aware of the setup that it needs to
+> apply. Just having an abstract "session ID" won't be enough to set up
+> the connection properly. :/
 
-Many thanks for such informative clarification, especially for
-pointing me to  the rpmsg_wwan_ctrl driver. I saw it, but by a some
-reason I did not link it to BAM-DMUX. Reading these links in
-conjunction with your parallel talks make the situation much more
-clear. I could not say that "I know kung fu", but I can say that now I
-know how complex kung fu is.
+Stephan, Loic, I have a polemic question related to a drivers model
+that we should build to smoothly support qualcomm hardware by the
+kernel. I would depict the situation as I see it and then ask the
+question. Please correct me if I am misunderstanding something or
+simply wrong. Or maybe you will be gracious once more and point me to
+earlier discussions :)
 
---
+We always talk that a userspace software should take care of
+multiplexing configuration to make data communication possible at all.
+The motivation here is simple - management protocol (QMI) is complex,
+userspace software must implement it anyway to manage network
+connectivity, so why not implement the multiplexing management there
+too?
+
+This way the userspace software that should simply command a "modem"
+to establish a data connection and poll a "modem" for a signal level
+became a self contained device manager that knows all modem-to-host
+interconnection details and even must to perform an initial
+modem-to-host interfaces negotiation and configuration. The last task
+is what userspace software usually expects to be performed by an OS
+kernel.
+
+But what if we implement the QMI multiplexing management part in the
+kernel? This way the kernel will take care about modem-to-host
+communication protocols and interfaces, and provides userspace with a
+single WWAN device (possibly with multiple network and network
+management interfaces).
+
+I do not propose to fully implement QMI protocol inside the kernel,
+but implement only a mux management part, while passing all other
+messages between a "modem" and a userspace software as-is.
+
+What pros and cons of such a design do you see?
+
+-- 
 Sergey

@@ -2,143 +2,116 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D03A93D550B
-	for <lists+dmaengine@lfdr.de>; Mon, 26 Jul 2021 10:15:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF6403D58EE
+	for <lists+dmaengine@lfdr.de>; Mon, 26 Jul 2021 13:58:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232690AbhGZHak (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 26 Jul 2021 03:30:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55054 "EHLO
+        id S233696AbhGZLRy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 26 Jul 2021 07:17:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232390AbhGZHaj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 26 Jul 2021 03:30:39 -0400
-Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14323C061765
-        for <dmaengine@vger.kernel.org>; Mon, 26 Jul 2021 01:11:09 -0700 (PDT)
-Received: by mail-oi1-x234.google.com with SMTP id o20so9928040oiw.12
-        for <dmaengine@vger.kernel.org>; Mon, 26 Jul 2021 01:11:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=aleksander-es.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0GP/EHeB2F+joGDHU02CEiGN7OLbvD6PYDzreWGz75Y=;
-        b=bWjvUWCy0CBmB2s70fd3Kkx52yx3LEJ5JZnLcv9ee1cv2SjeoIlDKIDVayngd9K6ks
-         UveqbpPisyT3xluAnHYHLDprWWh2tLvzKadsLyzxne/z2bhqFc6YXb9Qd7fAKIjYLSzg
-         P+LO6KSqbJAfTMh/W7efJ6IRgtWFmAE/jioTo6b4o43BFnu/9mfTiSKzx8wueYiLV3zj
-         ASvdYD9wTNOl+27Jf02f246TWynZ8WNpPHy9rUWftoBYQSbAedJSSjEo2Doqu/h5CuSr
-         3tGPl9uEvYchI/5PtRtMD0nn1Fi69fRKhfwv/G9/NAZJArgg/ouaSEYIe5AXV/A8JMna
-         ntpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0GP/EHeB2F+joGDHU02CEiGN7OLbvD6PYDzreWGz75Y=;
-        b=oIT6FSNLNmxoQ8ulPfbTWOdfNNOOJpQd7ov2CB07U3HqWXKhm3dwZxq137Vx3yEWCp
-         ZDE9GLCZgzaSVnM66PFli8SBrilQwRxRVQYwWKPvtT/SpT1uIfM84j2sacrVn5eO6qHa
-         q/UdH8COqj9U9UBgBRR7XZMRFwOsjkmrthZmvbU4l7lcXqepUd3CKZ0eYEdLDJ5c/GAR
-         QyrQ76Y85mhiAw0fVeiv8y4OVvR2sOmNqLanZLaM0HO89AfspPxMPgel2NJjj+v40/Bm
-         o90PYulHhDJ94Ya2pGV+fHwcR2z6Nw2EavvAGUIBNCif8b/xG87kymaVJLSA8WQYORYW
-         JBEw==
-X-Gm-Message-State: AOAM532TAlWtCt4QkC1XU0DPTDQYFZHs90U7ddxndWplzrhlzM7g2uY0
-        pbPYWGfREnbD7acEcYuVQNWMs7UVDRXNSncDwXZB+Q==
-X-Google-Smtp-Source: ABdhPJxsLtxOE30YI4uU9tzXePvXaR+jEzI/+O8buRjlY4pKNDL9jEQFsrUHWJneA04tkY5laBLNP5cPn8JGfpAlsCg=
-X-Received: by 2002:aca:3094:: with SMTP id w142mr8854244oiw.37.1627287068295;
- Mon, 26 Jul 2021 01:11:08 -0700 (PDT)
+        with ESMTP id S233606AbhGZLRy (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 26 Jul 2021 07:17:54 -0400
+X-Greylist: delayed 405 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 26 Jul 2021 04:58:22 PDT
+Received: from forward105o.mail.yandex.net (forward105o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::608])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 712E1C061757;
+        Mon, 26 Jul 2021 04:58:22 -0700 (PDT)
+Received: from iva8-40f91c705526.qloud-c.yandex.net (iva8-40f91c705526.qloud-c.yandex.net [IPv6:2a02:6b8:c0c:b9a7:0:640:40f9:1c70])
+        by forward105o.mail.yandex.net (Yandex) with ESMTP id 57BEC4200B66;
+        Mon, 26 Jul 2021 14:51:31 +0300 (MSK)
+Received: from iva6-2d18925256a6.qloud-c.yandex.net (iva6-2d18925256a6.qloud-c.yandex.net [2a02:6b8:c0c:7594:0:640:2d18:9252])
+        by iva8-40f91c705526.qloud-c.yandex.net (mxback/Yandex) with ESMTP id lkre8hYrIW-pTH0Ga7j;
+        Mon, 26 Jul 2021 14:51:31 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1627300291;
+        bh=syS++HTe1Cfn1grqGafzmOlSb2JtfOhz46f0mgWNJy4=;
+        h=Date:Subject:To:From:Message-Id:Cc;
+        b=E0wy+n4muSO1ZLMeBWliO0BhcyWs6KoSoeJWdqaCR52kWT6mHi7gxowiUFGY6irYT
+         be1AwLTE4dNL+xYTAkyBJYWgCXYptO8V83/LNeZFDp4RbyoGeo2C+M9Dr7oKoKzW4P
+         dZKZcvyhEJp7DS7GLat0LUjSneb5gTIb+hVwaHc8=
+Authentication-Results: iva8-40f91c705526.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
+Received: by iva6-2d18925256a6.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id PIKatQa27D-pR2S8g73;
+        Mon, 26 Jul 2021 14:51:28 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Nikita Shubin <nikita.shubin@maquefel.me>
+To:     Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Nikita Shubin <nikita.shubin@maquefel.me>,
+        alsa-devel@alsa-project.org (moderated list:SOUND - SOC LAYER / DYNAMIC
+        AUDIO POWER MANAGEM...),
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE
+        SUBSYSTEM), Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        dri-devel@lists.freedesktop.org (open list:FRAMEBUFFER LAYER),
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
+        linux-fbdev@vger.kernel.org (open list:FRAMEBUFFER LAYER),
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK
+        , TOUCHSCREEN)...), linux-kernel@vger.kernel.org (open list),
+        linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM),
+        linux-spi@vger.kernel.org (open list:SPI SUBSYSTEM),
+        Mark Brown <broonie@kernel.org>,
+        Mike Rapoport <rppt@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, YiFei Zhu <yifeifz2@illinois.edu>
+Subject: [PATCH 0/8] arm: ep93xx: CCF conversion
+Date:   Mon, 26 Jul 2021 14:50:44 +0300
+Message-Id: <20210726115058.23729-1-nikita.shubin@maquefel.me>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20210719145317.79692-1-stephan@gerhold.net> <20210719145317.79692-5-stephan@gerhold.net>
- <CAMZdPi8oxRMo0erfd0wrUPzD2UsbexoR=86u2N75Fd9RpXHoKg@mail.gmail.com>
- <YPmRcBXpRtKKSDl8@gerhold.net> <CAHNKnsQr4Ys8q3Ctru-H=L3ZDwb__2D3E08mMZchDLAs1KetAg@mail.gmail.com>
-In-Reply-To: <CAHNKnsQr4Ys8q3Ctru-H=L3ZDwb__2D3E08mMZchDLAs1KetAg@mail.gmail.com>
-From:   Aleksander Morgado <aleksander@aleksander.es>
-Date:   Mon, 26 Jul 2021 10:10:57 +0200
-Message-ID: <CAAP7ucLDEoJzwNvWLCWyCNE+kKBDn4aBU-9XT_Uv_yetnX4h-g@mail.gmail.com>
-Subject: Re: [RFC PATCH net-next 4/4] net: wwan: Add Qualcomm BAM-DMUX WWAN
- network driver
-To:     Sergey Ryazanov <ryazanov.s.a@gmail.com>,
-        =?UTF-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dmaengine@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hey!
+This series series of patches converts ep93xx to Common Clock Framework.
 
->
-> But what if we implement the QMI multiplexing management part in the
-> kernel? This way the kernel will take care about modem-to-host
-> communication protocols and interfaces, and provides userspace with a
-> single WWAN device (possibly with multiple network and network
-> management interfaces).
->
-> I do not propose to fully implement QMI protocol inside the kernel,
-> but implement only a mux management part, while passing all other
-> messages between a "modem" and a userspace software as-is.
->
-> What pros and cons of such a design do you see?
->
+It consists of preparation patches to use clk_prepare_enable where it is 
+needed, instead of clk_enable used in ep93xx drivers prior to CCF and
+a patch converting mach-ep93xx/clock.c to CCF.
 
-The original GobiNet driver already provided some QMI protocol
-implementation in the driver itself. In addition to initial device
-setup as you suggest, it also allowed userspace applications to
-allocate and release QMI clients for the different services that could
-be used independently by different processes. Not going to say that
-was the wrong way to do it, but the implementation is definitely not
-simple. The decision taken in qmi_wwan to make the driver as simple as
-possible and leave all the QMI management to userspace was quite an
-important one; it made the driver extremely simple, leaving all the
-complexity of managing the protocol to userspace, and while it had
-some initial drawbacks (e.g. only one process could talk QMI at a
-time) the userspace tools have evolved to avoid them (e.g. the
-qmi-proxy).
+Link: https://lore.kernel.org/patchwork/cover/1445563/
+Link: https://lore.kernel.org/patchwork/patch/1435884/
 
-I wrote some time ago about this, maybe it's still relevant today:
-Blogpost https://sigquit.wordpress.com/2014/06/11/qmiwwan-or-gobinet/,
-Article in PDF https://aleksander.es/data/Qualcomm%20Gobi%20devices%20on%20Linux.pdf
+Alexander Sverdlin (7):
+  iio: ep93xx: Prepare clock before using it
+  spi: spi-ep93xx: Prepare clock before using it
+  Input: ep93xx_keypad: Prepare clock before using it
+  video: ep93xx: Prepare clock before using it
+  dmaengine: ep93xx: Prepare clock before using it
+  ASoC: cirrus: i2s: Prepare clock before using it
+  pwm: ep93xx: Prepare clock before using it
 
-Making the driver talk QMI just for device setup would require the
-kernel to know how the QMI protocol works, how QMI client allocations
-and releases are done, how errors are reported, how is the format of
-the requests and responses involved; it would require the kernel to
-wait until the QMI protocol endpoint in the modem is capable of
-returning QMI responses (this could be up to 20 or 30 secs after the
-device is available in the bus), it would require to have possibly
-some specific rules on how the QMI clients are managed after a
-suspend/resume operation. It would also require to sync the access to
-the CTL service, which is the one running QMI service allocations and
-releases, so that both kernel and userspace can perform operations
-with that service at the same time. It would need to know how
-different QMI capable devices behave, because not all devices support
-the same services, and some don't even support the WDA service that
-would be the one needed to setup data aggregation. There is definitely
-some overlap on what the kernel could do and what userspace could do,
-and I'd say that we have much more flexibility in userspace to do all
-this leaving all the complexity out of the kernel driver.
+Nikita Shubin (1):
+  ep93xx: clock: convert in-place to COMMON_CLK
 
-ModemManager already provides a unified API to e.g. setup multiplexed
-data sessions, regardless of what the underlying kernel implementation
-is (qmi_wwan only, qmi_wwan+rmnet, ipa+rmnet, bam-dmux, cdc_mbim...) .
-The logic doing all that is extremely complex and possibly full of
-errors, I would definitely not want to have all that logic in the
-kernel itself, let the errors be in userspace! Unifying stuff in the
-kernel is a good idea, but if you ask me, it should be done in a way
-that is as simple as possible, leaving complexity to userspace, even
-if that means that userspace still needs to know what type of device
-we have behind the wwan subsystem, because userspace will anyway need
-to know all that.
+ arch/arm/Kconfig                       |   2 +-
+ arch/arm/mach-ep93xx/clock.c           | 975 ++++++++++++++-----------
+ arch/arm/mach-ep93xx/core.c            |   2 +-
+ arch/arm/mach-ep93xx/soc.h             |  42 +-
+ drivers/dma/ep93xx_dma.c               |   6 +-
+ drivers/iio/adc/ep93xx_adc.c           |   6 +-
+ drivers/input/keyboard/ep93xx_keypad.c |   4 +-
+ drivers/pwm/pwm-ep93xx.c               |  12 +-
+ drivers/spi/spi-ep93xx.c               |   4 +-
+ drivers/video/fbdev/ep93xx-fb.c        |   4 +-
+ sound/soc/cirrus/ep93xx-i2s.c          |  12 +-
+ 11 files changed, 605 insertions(+), 464 deletions(-)
 
+
+base-commit: 64376a981a0e2e57c46efa63197c2ebb7dab35df
 -- 
-Aleksander
-https://aleksander.es
+2.26.2
+

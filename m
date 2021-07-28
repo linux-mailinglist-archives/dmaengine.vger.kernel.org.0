@@ -2,194 +2,969 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45A1E3D8E0C
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Jul 2021 14:42:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 041B73D902E
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Jul 2021 16:15:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234917AbhG1MmV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 28 Jul 2021 08:42:21 -0400
-Received: from mail-eopbgr1400128.outbound.protection.outlook.com ([40.107.140.128]:32646
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S234979AbhG1MmU (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 28 Jul 2021 08:42:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZHHB8Yf+HCiusT4efsMJcybzNiXoyr/7S9PyH/G7h2B1dq97MzMD6HLfvdC2fbOaxB1cwznE381fIGGZHFSko/C2d0h/4//+ldGDjte6mDUFuicdwGq/CSj+AU605I6TgAEKhAqmHkMWwsr+xsMM7PcD4Ajh9O4yUSQ/5OtikxDi3xbgyp2VPi38zUL6LprL+rh1NOauTNJLsIY7D/ziNQ4ANxIqzscYmBulEObPS08xTCADcNCBBh9pyGmN//TT9q+mFH89c/qAWASNUNNFb1YEWs43RIR0uoPHRk8+tyn2GU8jyRnBl6X7VAsFMKSzV+ZuJcPV6kmHwjAv+xRk3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LxEyeFb5RX2KhT3gzLRO9epKqIF5a+753ZS5NJ3YeiI=;
- b=iuSkHRSUCiv0GSvxgJu8mwEj7z0QUDcHor8QREPYVlG61m7sIKMNgMSI4ixJRlOQPp6Z2QRPoDKc4+0eq2oMdkC255pxiCfPPYsaAOQEw3caH4nqb5E2qnyxuJ54XA0M4joiPbg3frc3PvOqCUeAanPl28BQuz+P17wJcW4H0T1eTtFkQRCe2pMXP+Iy7XLV7GH7qGL1sh2rvTC4uDhJC6X4ezlCMo7qCeghW3K8MGnkprAxn6vTsxRzcG4O47fU3UQjjm19AXBj59yaabi8mLUhnYqpE0FNxJQPEyMuSZo1DAQ43iodzd1jcsFCdF/YP0M8M71dFbNiC2wKjASXIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LxEyeFb5RX2KhT3gzLRO9epKqIF5a+753ZS5NJ3YeiI=;
- b=fXWS84Eczp5R+oElYfBZVvkelJU9cbvZqhhQenyKGZGCBhnN/pitjttSSsuDOwqRmMCtCSPArqCmZU6OB58UR3n5dIEqJkR7vjqQw2Vg+dLKhvDGy45xHahpMntU5m0tQnTMHWBn88tedxTAR8/MCK9/7ubC3inhmrt8rCpJCWo=
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
- by OSYPR01MB5445.jpnprd01.prod.outlook.com (2603:1096:604:84::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.25; Wed, 28 Jul
- 2021 12:42:15 +0000
-Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::c6f:e31f:eaa9:60fe]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
- ([fe80::c6f:e31f:eaa9:60fe%8]) with mapi id 15.20.4373.020; Wed, 28 Jul 2021
- 12:42:15 +0000
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Vinod Koul <vkoul@kernel.org>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Chris Brandt <Chris.Brandt@renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v4 2/4] drivers: dma: sh: Add DMAC driver for RZ/G2L SoC
-Thread-Topic: [PATCH v4 2/4] drivers: dma: sh: Add DMAC driver for RZ/G2L SoC
-Thread-Index: AQHXfIANJc0R/9gnn0any8kXgzWfvKtW0BiAgAAIXJCAAR/AAIAABG1QgABLOICAAATp4IAAE+wAgAAA8cA=
-Date:   Wed, 28 Jul 2021 12:42:14 +0000
-Message-ID: <OS0PR01MB59220E0282D0EF21437B6EF786EA9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
-References: <20210719092535.4474-1-biju.das.jz@bp.renesas.com>
- <20210719092535.4474-3-biju.das.jz@bp.renesas.com> <YP/+r4HzCaAZbUWh@matsya>
- <OS0PR01MB59224844C17A1EE620E2D18786E99@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <YQD3FLN0YEVk6rnr@matsya>
- <OS0PR01MB59228D6F0AD7A51DAFFB512A86EA9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <YQE542kiEGcYCCFO@matsya>
- <OS0PR01MB592222F26C8684E8D88DA55486EA9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
- <CAMuHMdUFr8FWk_i2hG3HJ1vTz7wjdHc=Sr8eYtzU20AwcA+2+g@mail.gmail.com>
-In-Reply-To: <CAMuHMdUFr8FWk_i2hG3HJ1vTz7wjdHc=Sr8eYtzU20AwcA+2+g@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linux-m68k.org; dkim=none (message not signed)
- header.d=none;linux-m68k.org; dmarc=none action=none
- header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dfa22030-557d-4288-ead0-08d951c520e5
-x-ms-traffictypediagnostic: OSYPR01MB5445:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <OSYPR01MB5445BB1DDFFFBA09AEB45BE286EA9@OSYPR01MB5445.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2eojJkKjXdGhuRRqZGiD/nXAupgRB1TjWRv+S9wWesZg0rmS9XfgqE1+nIDdPOgiNQqWUcGG75zgi20MAoQ/0JYRmnCYP1yTeA44ut2JUysFuAE1frJLpooKEEjWTO4LuHS/IKCZfPAeT6rEB88cPh5+dW8xlcza9xIN3HyGHTTFuEsyQlX6pWIx4koAPU2eNuFY7jcyMMPxchDPwjgjD+COY1/08C1TGa6KJ3keVv2wYnaZikR5dnsYmAEaI2qPpDhc42ERdBQXjcNLrxAX17GzU9lxq9TirN54PJSPFn0/WaucFiRXJxkL6jastuLYR4grqkvSP8Ew78f7anKFLGIVjSO60atn7cnhKV8w1zXKtVKmH9hCIbJzKkLQ/y9sZBeXCLAaLB8BWDP+QIIyxhtLm1A0/r/GRH0j6IzTLJoMUg0Uutj1GD/dmDu/bGMqH7pEc09MEiqgEHAp0a2hyAjBogPbKzjUCapZDYImTsjPjqIvKLev5AsI90maSdr/wfpDdu3awezYiaWMWxk8WC3CplZhcDeiT0Bf2v3lfAiXT0zYgKwVF46zj96s5BgrNRt8jlTb9WeFHom0eC6sadkBVrziNm+LQObkAt0yi8ilwjvh+HHZ9oB99vEGJqlcut6RRkFY63YdCyeh5852SD58vHVxf4EiDGsLU5MHX5HBzbeSSZMWR8xxYZz2qClWG6kh/HdhRVqc8BEBr833Lw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(39850400004)(136003)(396003)(376002)(122000001)(38100700002)(52536014)(76116006)(66476007)(6506007)(2906002)(66446008)(53546011)(86362001)(186003)(5660300002)(66556008)(26005)(7696005)(64756008)(66946007)(4326008)(54906003)(55016002)(33656002)(71200400001)(9686003)(8936002)(8676002)(83380400001)(316002)(478600001)(6916009)(38070700005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?aVRoR1U0czRQdEptK1Zib1FMTm1wNTFsN09sTldDZjVmdnYraXdWT3Q4dm9v?=
- =?utf-8?B?STdpYmZDdjg0bDJaWmNXeDBhbXZjUm5RYzZNY3R5czc5bGZlcnhrTUtWcnhx?=
- =?utf-8?B?RFhSSTNwVEpzNmkwZEsyaVB0ck9mZGFUNzE1YmRIWHdnSyt5S0x0dWVvWEYw?=
- =?utf-8?B?dVpqcEo5MzYwa3hsSmUvZG02TjFwd0ZDNExkb2hpeUc0c2U4dzMreFc4UjhZ?=
- =?utf-8?B?NjlaMEdVNmZRN1ljUG9kM244UUV5MGRXZExzckRpT3VEcVJMTk5QZHlIOFRD?=
- =?utf-8?B?QlFDaHZZSlYrYlhlbE5MRlFGWC94Qko2OWkrTFRjeGNmNGF2RytBM2hwZjdG?=
- =?utf-8?B?cXFzcWNvTFNsT3FuSmpHRzZCMkJKViszdDFDWEtRc01iYk5yU3U2Sld6RGNT?=
- =?utf-8?B?eEFNVVdZbFpvOGVrd2tMRGdvSUZ2VlpEUmZLQVo0N0lvM01FemFFSjBoS1JN?=
- =?utf-8?B?ZmNMNHBnSEdqVDUrUTJjK2hQU0Q4b3NqZEZJN3VSQyt4Y3BrcFFpdVBBMFA5?=
- =?utf-8?B?QlV2U1NZaVR3Q1RnSTZXUFZ3MlVlbVZmMGFNUjhxWlIxNkMwZHY4Y1JkamZX?=
- =?utf-8?B?Vk5zY3dmb1g4MmY3SmUrVjRvOVZQK2plRmhTUmRoZ0Jhb3AxeHRsYWcxK1Yw?=
- =?utf-8?B?NFBEa3NBSTdkdS83WWRiUWZHck93T3hQMVFQbEdCYXhMdDBKTGRoN2ZMKzFq?=
- =?utf-8?B?RExBMDZKcDRVTzFOTUpaNTFwQ2srcWZ6L2dheGFFdFJwZzZwR2VwNVU5aXNh?=
- =?utf-8?B?Y2VJL2t2U0J2N2ptOWc5Rno4VlJjMm9tVDN1U21yODFsRWNuRkRNZzBEVzZr?=
- =?utf-8?B?R1E3aEJmSldtZDBnck1YZWlySDUycWpxc0tiVDV6QlpvZ2N1MXdLallweXVN?=
- =?utf-8?B?RG9BTWtzVko1RjM5UlhMY0JjZXVJZmxnNnV2Wm1GS2Fwa3ZZMjd0aU51c3h6?=
- =?utf-8?B?Ti9rdVJWalM4MW54TzBaZU1zMkF3V2ZYL3VnaG91WE84M005ZWo0ZEEvNWtZ?=
- =?utf-8?B?OTZpUGszSUhSa0hTaU5yc1I1M0RMRCtKTTMrZGh4dXlPTWVlRmExMGkxQjhU?=
- =?utf-8?B?Ykk4UENlSktxZHEybkduaXRMcVFHa2hUMHBvb0tlOVY1ZEcydHcvTnZlKzNp?=
- =?utf-8?B?YWZqYStvRjkyQTMrcmorWUd0VXFFazNWSm1kU21MYURIK3JOTG5lK3MySWdD?=
- =?utf-8?B?WktFNjNHYTRYOHhJS2tjb3pZbnQweGtwY0JJdU1CSkZsMjdRVDBGc1R3Snkr?=
- =?utf-8?B?cHQ2RGl3b3hDZDRneU0yVCtBL1RkOXhmdlM3SkRFcnN2a0t2dWowdnh0YjNV?=
- =?utf-8?B?UmxIU1VVZGxZWmRxVXR5bDFTOGZxZWd1Nit2NWJrSzUrSnYvejc3RXRXRUs5?=
- =?utf-8?B?RVo1MWU4cjRha1FnQko0c2ZsSVFjWVFiWG9zN1N0MWtWT2N6OHBMTFI4VFlQ?=
- =?utf-8?B?bE5sd2Zib0tMc3o0dmMxY0crNTNlNDFXTCsybURrQ296Vkp3aWtHcFhoYXdl?=
- =?utf-8?B?OEhTbXByU2FiS0M3SGxlNm1meDRRR25tWWE4U2YxRy8wQ1NkUHVqSkt5N3o3?=
- =?utf-8?B?dzVjSGF3N3FRb3RDS2ZaQ1BiZzlSYktlOE1aT2FhRlFUaW9ub2FaY1grSzNI?=
- =?utf-8?B?TXBzSUp5V052RDlIeXdsNTV4UVlESHV5eFF0bldCNFQxbDVFamZlc0c2VWtL?=
- =?utf-8?B?c2V4dm53dHppZVhQMnJ3M2VZZHJ2S1A2eDl1ODNRZ2s3ek1GL09lNkV3bDBS?=
- =?utf-8?Q?5tl70Uy9WX1oqaWIDwD0UQcrWWsgVo3TjAuPgUG?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S236604AbhG1OPH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 28 Jul 2021 10:15:07 -0400
+Received: from mail.teo-en-ming-corp.com ([194.233.66.226]:45706 "EHLO
+        mail.teo-en-ming-corp.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235427AbhG1OPG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 28 Jul 2021 10:15:06 -0400
+Received: from mail.teo-en-ming-corp.com (mail.teo-en-ming-corp.com [127.0.0.1])
+        by mail.teo-en-ming-corp.com (Postfix) with ESMTP id 4GZb8t1bWqzkWq1
+        for <dmaengine@vger.kernel.org>; Wed, 28 Jul 2021 22:07:58 +0800 (+08)
+Authentication-Results: mail.teo-en-ming-corp.com (amavisd-new);
+        dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
+        header.d=teo-en-ming-corp.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+        teo-en-ming-corp.com; h=content-transfer-encoding:content-type
+        :organization:message-id:user-agent:reply-to:subject:to:from
+        :date:mime-version; s=dkim; t=1627481276; x=1630073277; bh=5TfC1
+        R+HWcz/4phYypQXN+kbYSdbs3GuB1ZJ3ojB+K0=; b=zKSoABzA0TwoPXU5Ru/k2
+        2lA/LKntCrvkjk43ooGJLjClWokgVjXnhJq3r/S1WHHv3nlze6awsS02c1VmxIXl
+        mCAAn8KPkyi8TzFdrk8wX6I16LAU2DtxbBY3N6wyj1UInvqMz+DTs1fOom8R/oZd
+        xcC6RCH2XtmWr1iuMYzK0FaDpdetUvwp97tXu0NhBAcYVk2jfUrVtY/5bp49zDvh
+        n6ey7MEak1Ez3Nv83Esn0OdAAvdwkua/8V5N1HF3DgTh50fk9tHC4LRuVO5Pfabi
+        b7YzQIC3kUJJ6kNvL1u8HKrYcP6+ZyOs5t7kPpg7+Ohgup40YJnDsnXFwEXLXoNI
+        Q==
+X-Virus-Scanned: Debian amavisd-new at vmi576090.contaboserver.net
+Received: from mail.teo-en-ming-corp.com ([127.0.0.1])
+        by mail.teo-en-ming-corp.com (mail.teo-en-ming-corp.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id we-AbersAgAQ for <dmaengine@vger.kernel.org>;
+        Wed, 28 Jul 2021 22:07:56 +0800 (+08)
+Received: from localhost (mail.teo-en-ming-corp.com [127.0.0.1])
+        by mail.teo-en-ming-corp.com (Postfix) with ESMTPSA id 4GZb8r0bXCzkWq3
+        for <dmaengine@vger.kernel.org>; Wed, 28 Jul 2021 22:07:56 +0800 (+08)
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dfa22030-557d-4288-ead0-08d951c520e5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2021 12:42:14.9900
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AmAHqrdvtjh4pwFZeVROlRpVpxdpKjlmU7xNmeFsE/lKU0JtVc6KFgqfCnKE9+ATxtt1pw110TtVtdxV1Dvj6plsJtMyxSBpFYiiusbYHIU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSYPR01MB5445
+Date:   Wed, 28 Jul 2021 22:07:55 +0800
+From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming-corp.com>
+To:     dmaengine@vger.kernel.org
+Subject: I discovered that UniFi USW-24P-250 POE network switch is based on
+ Linux kernel 3.6.5
+Reply-To: ceo@teo-en-ming-corp.com
+User-Agent: Roundcube Webmail
+Message-ID: <0a9534bca5051fc844f1c42d683af085@teo-en-ming-corp.com>
+X-Sender: ceo@teo-en-ming-corp.com
+Organization: Teo En Ming Corporation
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnRAbGludXgtbTY4
-ay5vcmc+DQo+IFNlbnQ6IDI4IEp1bHkgMjAyMSAxMzozNA0KPiBUbzogQmlqdSBEYXMgPGJpanUu
-ZGFzLmp6QGJwLnJlbmVzYXMuY29tPg0KPiBDYzogVmlub2QgS291bCA8dmtvdWxAa2VybmVsLm9y
-Zz47IFByYWJoYWthciBNYWhhZGV2IExhZA0KPiA8cHJhYmhha2FyLm1haGFkZXYtbGFkLnJqQGJw
-LnJlbmVzYXMuY29tPjsgQ2hyaXMgUGF0ZXJzb24NCj4gPENocmlzLlBhdGVyc29uMkByZW5lc2Fz
-LmNvbT47IGRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmc7IENocmlzIEJyYW5kdA0KPiA8Q2hyaXMu
-QnJhbmR0QHJlbmVzYXMuY29tPjsgbGludXgtcmVuZXNhcy1zb2NAdmdlci5rZXJuZWwub3JnDQo+
-IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjQgMi80XSBkcml2ZXJzOiBkbWE6IHNoOiBBZGQgRE1BQyBk
-cml2ZXIgZm9yIFJaL0cyTA0KPiBTb0MNCj4gDQo+IEhpIEJpanUsDQo+IA0KPiBPbiBXZWQsIEp1
-bCAyOCwgMjAyMSBhdCAxOjU4IFBNIEJpanUgRGFzIDxiaWp1LmRhcy5qekBicC5yZW5lc2FzLmNv
-bT4NCj4gd3JvdGU6DQo+ID4gPiBPbiAyOC0wNy0yMSwgMDc6MDAsIEJpanUgRGFzIHdyb3RlOg0K
-PiA+ID4gPiA+IFNvcnJ5IEkgZG9udCBsaWtlIHBhc3NpbmcgbnVtYmVycyBsaWtlIHRoaXMgOigN
-Cj4gPiA+ID4gPg0KPiA+ID4gPiA+IENhbiB5b3UgZXhwbGFpbiB3aGF0IGlzIG1lYW50IGJ5IGVh
-Y2ggb2YgdGhlIGFib3ZlIHZhbHVlcyBhbmQNCj4gPiA+ID4gPiBsb29rcyBsaWtlIHNvbWUgKGlm
-IG5vdCBhbGwpIGNhbiBiZSBkZXJpdmVkIChzbGF2ZSBjb25maWcgYXMNCj4gPiA+ID4gPiB3ZWxs
-IGFzIHRyYW5zYWN0aW9uDQo+ID4gPiA+ID4gcHJvcGVydGllcykNCj4gPiA+ID4NCj4gPiA+ID4N
-Cj4gPiA+ID4gMHgxMTIyOCAoVHgpDQo+ID4gPiA+IDB4MTEyMjAgKFJ4KQ0KPiA+ID4gPg0KPiA+
-ID4gPiBCSVQgMjI6LSBUTSA6LSBUcmFuc2ZlciBNb2RlDQo+ID4gPg0KPiA+ID4gV2hhdCBhcmUg
-dGhlIHZhbHVlcywgaGVyZSBpdCBzZWVtcyAwDQo+ID4NCj4gPiBZZXMsIHRoYXQgaXMgY29ycmVj
-dCBzaW5nbGUgYml0LiAwIG1lYW5zIHNpbmdsZSB0cmFuc2ZlciBtb2RlLCAxIGJsb2NrDQo+IHRy
-YW5zZmVyIG1vZGUuDQo+ID4NCj4gPiA+DQo+ID4gPiA+IEJpdHMgMTYtPjE5IDotIEREUyhEZXN0
-aW5hdGlvbiBEYXRhIFNpemUpIC0tPiAweDAwMDEgKDE2IGJpdHMpDQo+ID4gPiA+IEJpdHMNCj4g
-PiA+ID4gMTItPjE1IDotIFNEUyhTb3VyY2UgRGF0YSBzaXplKS0tPiAweDAwMDEgKDE2IGJpdHMp
-DQo+ID4gPg0KPiA+ID4gdXNlIHNyY19hZGRyX3dpZHRoL2RzdF9hZGRyX3dpZHRoIC4uPw0KPiA+
-DQo+ID4gV2Ugc3VwcG9ydCAxMjgsMjU2LDUxMiBhbmQgMTAyNCBiaXRzIGFzIHdlbGwuIEkgd2ls
-bCBleHRlbmQgZW51bQ0KPiBkbWFfc2xhdmVfYnVzd2lkdGggdG8gc3VwcG9ydCB0aGlzIGluIGFu
-b3RoZXIgcGF0Y2guDQo+ID4gSXMgaXQgb2s/DQo+ID4NCj4gPiA+DQo+ID4gPiA+IEJpdCAgMTEg
-ICAgIDotIFJlc2VydmVkDQo+ID4gPiA+IEJpdHMgOC0+MTAgOi0gQWNrIG1vZGUgIC0tPiAweDAx
-MCAoQnVzIGN5Y2xlIG1vZGUpDQo+ID4gPg0KPiA+ID4gV2hhdCBkb2VzIHRoaXMgbWVhbj8NCj4g
-Pg0KPiA+IERNQUFDSyBvdXRwdXQgbW9kZSBpcyBjb21pbmcgZnJvbSBIVyBtYW51YWwsIEEgYmln
-IHRhYmxlIG9mIGFyb3VuZCAyMzANCj4gZW50cmllcyBmb3Igb24gY2hpcCByZXF1ZXN0IHdpdGgg
-ZGVkaWNhdGVkIHZhbHVlcyBmb3IgdGhlIGFib3ZlIGJpdHMuDQo+ID4NCj4gPiAweDAwMCAtLSBJ
-bml0aWFsIHZhbHVlDQo+ID4gMHgwMDEgLS0gMDAxIChMRVZFTCBNb2RlKSAoMDAxIGZvciBNVFUs
-UFdNLENBTiBldGNjYyAweDAxeCAtLSBCdXMNCj4gPiBjeWNsZSBtb2RlICgwMTAgZm9yIE9TVE0s
-STJDLCBTU0lGKSAweDF4eCAtLSBETUFBQ0sgbm90IHRvDQo+ID4gb3V0cHV0KFNDSUYpDQo+ID4N
-Cj4gPiA+DQo+ID4gPiA+IEJpdCA3IDotICBSZXNlcnZlZA0KPiA+ID4gPiBCaXQgNjotIExWTCAt
-LT4gIExldmVsIC0tPjAgKERNQSByZXF1ZXN0IGJhc2VkIG9uIGVkZ2Ugb2YNCj4gPiA+ID4gdGhl
-c2lnbmFsKSBCaXQgNTotIEhJRU4gLS0+ICBIaWdoIEVuYWJsZSAtLT4gMSAoRGV0ZWN0cyBhIERN
-QQ0KPiA+ID4gPiByZXF1ZXN0IG9uIHJpc2luZyBlZGdlIG9mIHRoZSBzaWduYWwpIEJpdCA0Oi0g
-TE9FTiAtLT4gTG93IEVuYWJsZQ0KPiA+ID4gPiAtLT4wIChEb2VzIG5vdCBETUEgcmVxdWVzdCBv
-biBmYWxsaW5nIGVkZ2Ugb2YgdGhlIHNpZ25hbCkgQml0IDM6LQ0KPiA+ID4gPiBSRVFEIC0tPiBS
-ZXF1ZXN0IERpcmVjdGlvbiAtPjEgKERNQVJFUSBpcyBEZXN0aW5hdGlvbikNCj4gPiA+DQo+ID4g
-PiBob3cgYW5kIHdoYXQgZGVjaWRlcyB0aGVzZSB2YWx1ZXMNCj4gPiA+IEl0IGlzIG5vdyBoYXJk
-Y29kZWQgaW4gdGhlIGNsaWVudCBkcml2ZXIsDQo+ID4NCj4gPiBJdCBpcyBTb0Mgc3BlY2lmaWMs
-IGNvbWluZyBmcm9tIEhXIG1hbnVhbC4gRWFjaCBvbiBjaGlwIHBlcmlwaGVyYWwgaGFzDQo+IGl0
-J3Mgb3duIHZhbHVlcy4NCj4gPiBFdmVuIHNvdXJjZSBhZGRyZXNzL0Rlc3RpbmF0aW9uIGFkZHJl
-c3Mgb2YgdGhlIG9uIGNoaXAgbW9kdWxlIGlzIGFsc28NCj4gcGFydCBvZiB0aGF0IHRhYmxlLg0K
-PiA+DQo+ID4gY2FuIHdlIGRvIHRoYXQgaW4gZG1hIGRyaXZlcg0KPiA+ID4gaW5zdGVhZD8gV2hp
-bGUgZGVyaXZpbmcgbW9zdCBvZiB0aGUgdmFsdWVzPw0KPiA+DQo+ID4gSWYgd2UgYWRkIHRoaXMg
-aW4gRE1BIGRyaXZlciwgaXQgd29uJ3QgYmUgZ2VuZXJpYy4gV2UgbmVlZCB0byBwcmVwYXJlDQo+
-ID4gYSBiaWcgTFVUKGJhc2VkIG9uIE1JRCArUklEKSBmb3IgYWxsIHRoZSBwZXJpcGhlcmFscyBJ
-ZiBTU0kgdGhlbiB1c2UgYQ0KPiB2YWx1ZSBmcm9tIExVVCwgU0NJRiB0aGVuIGFub3RoZXIgdmFs
-dWUgbGlrZSB0aGF0Lg0KPiA+DQo+ID4gU28gcGxlYXNlIGxldCBtZSBrbm93IGhvdyBkbyB3ZSB3
-YW50IHRvIHByb2NlZWQgaGVyZT8NCj4gDQo+IExvb2tzIGxpa2Ugd2Ugc2hvdWxkIHBhc3MgdGhp
-cyBpbiB0aGUgZG1hcyBwcm9wZXJ0aWVzIGluIERUIGluc3RlYWQsDQo+IGVpdGhlciBieSBpbmNy
-ZWFzaW5nICNkbWEtY2VsbHMsIG9yIGJ5IGVuY29kaW5nIGl0IHdpdGggdGhlIE1JRC9SSUQgdmFs
-dWUNCj4gaW4gdGhlIGV4aXN0aW5nIGNlbGw/DQoNCkkgbGlrZSB0aGUgaWRlYSBvZiBlbmNvZGlu
-ZyBpdCB3aXRoIE1JRC9SSUQgaW4gdGhlIGV4aXN0aW5nIGNlbGwuIEkgd2lsbCBwb3N0IG5leHQg
-dmVyc2lvbiBiYXNlZCBvbiB0aGlzLg0KDQpDaGVlcnMsDQpCaWp1DQoNCj4gDQo+IEdye29ldGpl
-LGVldGluZ31zLA0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0t
-DQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlh
-MzIgLS0gZ2VlcnRAbGludXgtDQo+IG02OGsub3JnDQo+IA0KPiBJbiBwZXJzb25hbCBjb252ZXJz
-YXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4NCj4g
-QnV0IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1l
-ciIgb3Igc29tZXRoaW5nDQo+IGxpa2UgdGhhdC4NCj4gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0K
+Subject: I discovered that UniFi USW-24P-250 POE network switch is based=20
+on Linux kernel 3.6.5
+
+Good day from Singapore,
+
+I discovered that UniFi USW-24P-250 POE network switch is based on Linux=20
+kernel 3.6.5 and other open source software. I had an opportunity to=20
+play with this UniFi USW-24P-250 POE network switch recently. The=20
+console output and other information below shows that UniFi USW-24P-250=20
+POE network switch is based on Linux kernel 3.6.5.
+
+Please DO NOT try to configure UniFi network switches using the CLI. It=20
+WILL NOT work. If you configure UniFi network switches using the CLI,=20
+the IP address that you have manually configured will always go back to=20
+192.168.1.20, which is the default IP address.
+
+The only way to configure UniFi network switches is to connect them to a=20
+network environment with DHCP server. You can then install and use UniFi=20
+Controller to adopt the UniFi network switch. Configuring UniFi network=20
+switches using UniFi Controller (GUI) is extremely easy and straight=20
+forward. There is no need to use the CLI at all.
+
+How to Configure UniFi USW-24P-250 POE Network Switch using CLI
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+Putty Settings
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+Connection > Serial:
+
+Speed(baud): 115200
+Data bits: 8
+Stop bits: 1
+Parity: None
+Flow control: None
+
+Session:
+
+Serial
+Serial line: COM1
+Speed: 115200
+
+Default username and password to login to UniFi switch
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+
+Default login: ubnt
+Default password: ubnt
+
+How to enter CLI of UniFi switch
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+
+telnet localhost
+
+enable
+
+show run
+
+=3D=3D=3DBegin of Default switch configuration=3D=3D=3D
+
+!Current Configuration:
+!
+!System Description "USW-24P-250, 5.11.0.11599, Linux 3.6.5"
+!System Software Version "5.11.0.11599"
+!System Up Time          "0 days 0 hrs 24 mins 4 secs"
+!Additional Packages     QOS,IPv6 Management
+!
+network parms 0.0.0.0 0.0.0.0 0.0.0.0
+vlan database
+exit
+
+configure
+line console
+exit
+
+line telnet
+exit
+
+spanning-tree mode rstp
+!
+no snmp-server community "public"
+no snmp-server community "private"
+set igmp reportforward lldp
+set mld reportforward lldp
+ip dhcp snooping
+ip dhcp snooping vlan 1
+cos-queue min-bandwidth 0 10 10 10 10 0 0 0
+keepalive
+
+interface 0/1
+description 'Port 1'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/2
+description 'Port 2'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/3
+description 'Port 3'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/4
+description 'Port 4'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/5
+description 'Port 5'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/6
+description 'Port 6'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/7
+description 'Port 7'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/8
+description 'Port 8'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/9
+description 'Port 9'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/10
+description 'Port 10'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/11
+description 'Port 11'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/12
+description 'Port 12'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/13
+description 'Port 13'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/14
+description 'Port 14'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/15
+description 'Port 15'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/16
+description 'Port 16'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/17
+description 'Port 17'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/18
+description 'Port 18'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/19
+description 'Port 19'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/20
+description 'Port 20'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/21
+description 'Port 21'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/22
+description 'Port 22'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/23
+description 'Port 23'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/24
+description 'Port 24'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/25
+description 'Port 25'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface 0/26
+description 'Port 26'
+vlan ingressfilter
+port-security max-dynamic 0
+lldp transmit
+lldp receive
+lldp transmit-tlv port-desc
+lldp transmit-tlv sys-name
+lldp transmit-tlv sys-desc
+lldp transmit-tlv sys-cap
+lldp med
+exit
+
+
+
+interface lag 1
+shutdown
+no port-channel static
+vlan participation exclude 1
+exit
+
+
+
+interface lag 2
+shutdown
+no port-channel static
+vlan participation exclude 1
+exit
+
+
+
+interface lag 3
+shutdown
+no port-channel static
+vlan participation exclude 1
+exit
+
+
+
+interface lag 4
+shutdown
+no port-channel static
+vlan participation exclude 1
+exit
+
+
+
+interface lag 5
+shutdown
+no port-channel static
+vlan participation exclude 1
+exit
+
+
+
+interface lag 6
+shutdown
+no port-channel static
+vlan participation exclude 1
+exit
+
+
+no errdisable recovery cause mac-locking
+no errdisable recovery cause denial-of-service
+exit
+
+=3D=3D=3DEnd of default switch configuration=3D=3D=3D
+
+show network
+
+Interface Status............................... Up
+IP Address..................................... 0.0.0.0
+Subnet Mask.................................... 0.0.0.0
+Default Gateway................................ 0.0.0.0
+IPv6 Administrative Mode....................... Enabled
+IPv6 Prefix is ................................=20
+fe80::f692:bfff:fe71:aac7/64
+Burned In MAC Address.......................... F4:92:BF:71:AA:C7
+Locally Administered MAC address............... 00:00:00:00:00:00
+MAC Address Type............................... Burned In
+Configured IPv4 Protocol....................... None
+Configured IPv6 Protocol....................... None
+IPv6 AutoConfig Mode........................... Enabled
+Management VLAN ID............................. 1
+
+Reference Guide: Getting into the CLI for a Unifi switch
+Link:=20
+https://dan.langille.org/2018/01/12/getting-into-the-cli-for-a-unifi-swit=
+ch/
+
+Reference Guide: Ubiquiti Networks EdgeSwitch CLI Command Reference
+Link:=20
+https://www.doubleradius.com/site/stores/ubiquiti/Ubiquiti-Edgeswitch-CLI=
+-Command-Reference-Quick-Start-Guide.pdf
+
+Configure the management interface of UniFi switch
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+hostname UniFi-USW-24P-250-Switch
+
+network parms 192.168.0.6 255.255.255.0 192.168.0.2
+
+(UniFi-USW-24P-250-Switch) #show network
+
+Interface Status............................... Up
+IP Address..................................... 192.168.0.6
+Subnet Mask.................................... 255.255.255.0
+Default Gateway................................ 192.168.0.2
+IPv6 Administrative Mode....................... Enabled
+IPv6 Prefix is ................................=20
+fe80::f692:bfff:fe71:aac7/64
+Burned In MAC Address.......................... F4:92:BF:71:AA:C7
+Locally Administered MAC address............... 00:00:00:00:00:00
+MAC Address Type............................... Burned In
+Configured IPv4 Protocol....................... None
+Configured IPv6 Protocol....................... None
+IPv6 AutoConfig Mode........................... Enabled
+Management VLAN ID............................. 1
+
+configure
+
+username admin level 15 password
+
+Enter new password:****************
+
+Confirm new password:****************
+
+write memory
+
+
+This operation may take a few minutes.
+Management interfaces will not be available during this time.
+
+Are you sure you want to save? (y/n) y
+
+Config file 'startup-config' created successfully .
+
+
+Configuration Saved!
+
+UBNT-US.v5.11.0# reboot now
+UBNT-US.v5.11.0# + exec
+umount: can't remount rootfs read-only
+The system is going down NOW!
+Sent SIGTERM to all processes
+Sent SIGKILL to[  991.180000] Disabling non-boot CPUs ...
+[  991.180000] Restarting system.
+
+
+U-Boot usw-v1.1.4.115-g14af1ee6 (Feb 14 2017 - 18:50:54)
+
+DEV ID=3D 0000db56
+SKU ID =3D 0x8344
+DDR type: DDR3
+MEMC 0 DDR speed =3D 667MHz
+Validate Shmoo parameters stored in flash ..... OK
+Press Ctrl-C to run Shmoo ..... skipped
+Restoring Shmoo parameters from flash ..... done
+Running simple memory test ..... OK
+DDR Tune Completed
+DRAM:  256 MiB
+WARNING: Caches not enabled
+
+  soc_pcie_hw_init : port->reg_base =3D 0x18012000 , its value =3D 0x1
+PCIe port 0 in RC mode
+
+  pos is 172
+=3D=3D>PCIE: LINKSTA reg 0xbe val 0x1001
+
+**************
+  port 0 is not active!!
+**************
+In:    serial
+Out:   serial
+Err:   serial
+Unlocking L2 Cache ...Done
+arm_clk=3D400MHz, axi_clk=3D200MHz, apb_clk=3D50MHz, arm_periph_clk=3D200=
+MHz
+Disabling outer cache
+Net:   Board Net Initialization Failed
+No ethernet found.
+Hit any key to stop autoboot:  0
+ubnt_bootsel_init: bootsel magic=3Da34de82b, bootsel =3D 0
+UBNT application initialized
+Boot partition selected =3D 0
+Loading Kernel Image @ 1000000, size =3D 15728640
+Verifying 'kernel0' parition:OK
+## Booting kernel from Legacy Image at 01000000 ...
+    Image Name:   Ubiquiti 5.11.0.11599
+    Image Type:   ARM Linux Kernel Image (uncompressed)
+    Data Size:    15068480 Bytes =3D 14.4 MiB
+    Load Address: 00018000
+    Entry Point:  00018000
+    Verifying Checksum ... OK
+    Loading Kernel Image ... OK
+OK
+boot_prep_linux commandline: console=3DttyS0,115200 mem=3D128M@0x0=20
+mem=3D128M@0x68000000=20
+mtdparts=3Dspi1.0:768k(u-boot),64k(u-boot-env),64k(shmoo),15360k(kernel0)=
+,15424k(kernel1),1024k(cfg),64k(EEPROM)=20
+ubntbootid=3D0
+
+Starting kernel ...
+
+Disabling outer cache
+[    0.000000] Booting Linux on physical CPU 0
+[    0.000000] Linux version 3.6.5 (builder@link-owrt1505-builder) (gcc=20
+version 4.7.2 (OpenWrt GCC 4.7.2 unknown) ) #2 SMP Wed Apr 22 10:09:32=20
+MDT 2020
+[    0.000000] CPU: ARMv7 Processor [414fc091] revision 1 (ARMv7),=20
+cr=3D10c53c7d
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing=20
+instruction cache
+[    0.000000] Machine: Broadcom iProc
+[    0.000000] Memory policy: ECC disabled, Data cache writealloc
+[    0.000000] BUG: mapping for 0x18000000 at 0xf0000000 out of vmalloc=20
+space
+[    0.000000] BUG: mapping for 0x19000000 at 0xf1000000 out of vmalloc=20
+space
+[    0.000000] PERCPU: Embedded 7 pages/cpu @c1caf000 s6272 r8192 d14208=20
+u32768
+[    0.000000] Built 1 zonelists in Zone order, mobility grouping on. =20
+Total pages: 61952
+[    0.000000] Kernel command line: console=3DttyS0,115200 mem=3D128M@0x0=
+=20
+mem=3D128M@0x68000000=20
+mtdparts=3Dspi1.0:768k(u-boot),64k(u-boot-env),64k(shmoo),15360k(kernel0)=
+,15424k(kernel1),1024k(cfg),64k(EEPROM)=20
+ubntbootid=3D0 ubootver=3Dusw-v1.1.4.115-g14af1ee6
+[    0.000000] PID hash table entries: 512 (order: -1, 2048 bytes)
+[    0.000000] Dentry cache hash table entries: 16384 (order: 4, 65536=20
+bytes)
+[    0.000000] Inode-cache hash table entries: 8192 (order: 3, 32768=20
+bytes)
+[    0.000000] Memory: 128MB 128MB =3D 256MB total
+[    0.000000] Memory: 244992k/244992k available, 17152k reserved,=20
+131072K highmem
+[    0.000000] Virtual kernel memory layout:
+[    0.000000]     vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+[    0.000000]     fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
+[    0.000000]     vmalloc : 0xc8800000 - 0xf0000000   ( 632 MB)
+[    0.000000]     lowmem  : 0xc0000000 - 0xc8000000   ( 128 MB)
+[    0.000000]     pkmap   : 0xbfe00000 - 0xc0000000   (   2 MB)
+[    0.000000]     modules : 0xbf000000 - 0xbfe00000   (  14 MB)
+[    0.000000]       .text : 0xc0018000 - 0xc034d7f8   (3286 kB)
+[    0.000000]       .init : 0xc034e000 - 0xc0e4c880   (11259 kB)
+[    0.000000]       .data : 0xc0e4e000 - 0xc0e76d40   ( 164 kB)
+[    0.000000]        .bss : 0xc0e76d64 - 0xc0ea5354   ( 186 kB)
+[    0.000000] SLUB: Genslabs=3D11, HWalign=3D64, Order=3D0-3, MinObjects=
+=3D0,=20
+CPUs=3D1, Nodes=3D1
+[    0.000000] Hierarchical RCU implementation.
+[    0.000000]  RCU restricting CPUs from NR_CPUS=3D4 to nr_cpu_ids=3D1.
+[    0.000000] NR_IRQS:292
+[    0.000000] sched_clock: 32 bits at 100 Hz, resolution 10000000ns,=20
+wraps every 4294967286ms
+[    0.010000] Calibrating delay loop... 795.44 BogoMIPS (lpj=3D3977216)
+[    0.050000] pid_max: default: 4096 minimum: 301
+[    0.050000] Mount-cache hash table entries: 512
+[    0.050000] CPU: Testing write buffer coherency: ok
+[    0.050000] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+[    0.050000] Setting up static identity map for 0x282350 - 0x2823a8
+[    0.050000] L310 cache controller enabled
+[    0.050000] l2x0: 8 ways, CACHE_ID 0x410000c9, AUX_CTRL 0x0a120000,=20
+Cache size: 131072 B
+[    0.050000] Brought up 1 CPUs
+[    0.050000] SMP: Total of 1 processors activated (795.44 BogoMIPS).
+[    0.050000] devtmpfs: initialized
+[    0.060000] NET: Registered protocol family 16
+[    0.060000] DMA: preallocated 256 KiB pool for atomic coherent=20
+allocations
+[    0.060000] GENPLL[5] mdiv=3D40 rate=3D2000000000
+[    0.060000] Sel=3D1 Ovr=3D1 Div=3D48
+[    0.060000] UART clock rate 50000000
+[    0.080000] bio: create slab <bio-0> at 0
+[    0.080000] Bluetooth: Core ver 2.16
+[    0.080000] NET: Registered protocol family 31
+[    0.080000] Bluetooth: HCI device and connection manager initialized
+[    0.080000] Bluetooth: HCI socket layer initialized
+[    0.080000] Bluetooth: L2CAP socket layer initialized
+[    0.080000] Bluetooth: SCO socket layer initialized
+[    0.080000] Switching to clocksource iproc_gtimer
+[    0.090000] NET: Registered protocol family 2
+[    0.090000] TCP established hash table entries: 4096 (order: 3, 32768=20
+bytes)
+[    0.090000] TCP bind hash table entries: 4096 (order: 3, 32768 bytes)
+[    0.090000] TCP: Hash tables configured (established 4096 bind 4096)
+[    0.090000] TCP: reno registered
+[    0.090000] UDP hash table entries: 128 (order: 0, 4096 bytes)
+[    0.090000] UDP-Lite hash table entries: 128 (order: 0, 4096 bytes)
+[    0.090000] NET: Registered protocol family 1
+[   14.360000] pm_init: Initializing Power Management ....
+[   14.360000] iproc gpiochip add GPIOA
+[   14.360000] GPIOA:ioaddr f0000060
+[   14.360000] GPIOA:intr_ioaddr f0000000 dmu_ioaddr   (null)
+[   14.610000] PCIE0: LINKSTA reg 0xbe val 0x1001
+[   14.610000] reg[0xac]=3D0x10, reg[0xae]=3D0x42, reg[0xb0]=3D0x8000,=20
+reg[0xb4]=3D0x2c10, reg[0xb6]=3D0x10, reg[0xb8]=3D0x5c12, reg[0xba]=3D0x6=
+5,=20
+reg[0xbe]=3D0x1001, reg[0xc6]=3D0x40, reg[0xca]=3D0x1, reg[0xd0]=3D0x1f,=20
+reg[0xd2]=3D0x8, reg[0xdc]=3D0x1, PCIE0 link=3D0
+[   14.860000] PCIe port 1 in End-Point mode - ignored
+[   14.860000] Registering iproc_pmu_device
+[   14.860000] bounce pool size: 64 pages
+[   14.880000] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[   14.880000] jffs2: version 2.2. (NAND) =C2=A9 2001-2006 Red Hat, Inc.
+[   14.880000] msgmni has been set to 222
+[   14.880000] Block layer SCSI generic (bsg) driver version 0.4 loaded=20
+(major 254)
+[   14.880000] io scheduler noop registered
+[   14.880000] io scheduler deadline registered (default)
+[   14.880000] io scheduler cfq registered
+[   14.880000] Serial: 8250/16550 driver, 2 ports, IRQ sharing enabled
+[   14.890000] serial8250.0: ttyS0 at MMIO 0x18000400 (irq =3D 123) is a=20
+16550A
+[   15.360000] console [ttyS0] enabled
+[   15.370000] serial8250.0: ttyS1 at MMIO 0x18000300 (irq =3D 123) is a=20
+16550A
+[   15.400000] brd: module loaded
+[   15.410000] loop: module loaded
+[   15.420000] nbd: registered device at major 43
+[   15.440000] tun: Universal TUN/TAP device driver, 1.6
+[   15.450000] tun: (C) 1999-2004 Max Krasnyansky <maxk@qualcomm.com>
+[   15.450000] Bluetooth: HCI UART driver ver 2.2
+[   15.460000] Bluetooth: HCI H4 protocol initialized
+[   15.460000] Bluetooth: HCI BCSP protocol initialized
+[   15.470000] TCP: cubic registered
+[   15.470000] NET: Registered protocol family 10
+[   15.480000] sit: IPv6 over IPv4 tunneling driver
+[   15.490000] NET: Registered protocol family 17
+[   15.490000] Bluetooth: RFCOMM TTY layer initialized
+[   15.500000] Bluetooth: RFCOMM socket layer initialized
+[   15.500000] Bluetooth: RFCOMM ver 1.11
+[   15.510000] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+[   15.510000] Bluetooth: BNEP filters: protocol multicast
+[   15.520000] Bluetooth: HIDP (Human Interface Emulation) ver 1.2
+[   15.520000] 8021q: 802.1Q VLAN Support v1.8
+[   15.530000] GENPLL[5] mdiv=3D40 rate=3D2000000000
+[   15.530000] qspi_iproc qspi_iproc.1: 1-lane output, 3-byte address
+[   15.540000] m25p80 spi1.0: found mx25l25635e, expected m25p80
+[   15.550000] m25p80 spi1.0: mx25l25635e (32768 Kbytes)
+[   15.550000] 7 cmdlinepart partitions found on MTD device spi1.0
+[   15.560000] Creating 7 MTD partitions on "spi1.0":
+[   15.560000] 0x000000000000-0x0000000c0000 : "u-boot"
+[   15.570000] 0x0000000c0000-0x0000000d0000 : "u-boot-env"
+[   15.580000] 0x0000000d0000-0x0000000e0000 : "shmoo"
+[   15.580000] 0x0000000e0000-0x000000fe0000 : "kernel0"
+[   15.590000] 0x000000fe0000-0x000001ef0000 : "kernel1"
+[   15.600000] 0x000001ef0000-0x000001ff0000 : "cfg"
+[   15.610000] 0x000001ff0000-0x000002000000 : "EEPROM"
+[   15.640000] Freeing init memory: 11256K
+[   15.700000] ubnt_common: module license 'Proprietary' taints kernel.
+[   15.710000] Disabling lock debugging due to kernel taint
+[   15.780000] Data abort at addr=3D0xc8a10224, fsr=3D0x1406 ignored.
+[   15.790000] Data abort at addr=3D0xc8a10224, fsr=3D0x1406 ignored.
+[   15.810000] gpiodev: reset_timeout=3D3
+Could not find cfg type: 1
+Could not find cfg type: 2
+...running /sbin/init
+init started: BusyBox v1.23.2 (2020-04-22 10:04:15 MDT)
++ exec
+Restoring EEPROM data from ubnthal
+MAC: f4:92:bf:71:aa:c7
+Validating the active image /dev/mtd3..."5.11.0.11599"
+Validating the backup image /dev/mtd4..."5.11.0.11599"
+DMA pool size: 4194304
+AXI unit 0: Dev 0x8344, Rev 0x01, Chip BCM53344_A0, Driver BCM56150_A0
+SOC unit 0 attached to PCI device BCM53344_A0
+
+
+(Unit 1)>
+
+Applying Global configuration, please wait ...
+
+Applying Interface configuration, please wait ...
+
+Please press Enter to activate this console. inform sent
+inform sent
+inform sent
+
+Using the UniFi Controller to adopt the UniFi Switch
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+
+192.168.0.10 is the UniFi Controller on the management laptop.
+
+UBNT-US.v5.11.0# set-inform http://192.168.0.10:8080/inform
+
+Adoption request sent to 'http://192.168.0.10:8080/inform'.  Use the=20
+controller to complete the adopt process.
+
+telnet localhost
+
+enable
+
+network parms 192.168.0.6 255.255.255.0 192.168.0.2
+
+UBNT-US.v5.11.0# info
+
+Model:       USW-24P-250
+Version:     5.11.0.11599
+MAC Address: f4:92:bf:71:aa:c7
+IP Address:  192.168.1.20
+Hostname:    UBNT
+Uptime:      7868 seconds
+
+Status:      Connected (http://192.168.0.10:8080/inform)
+
+Mr. Turritopsis Dohrnii Teo En Ming, 43 years old as of 28 July 2021, is=20
+a TARGETED INDIVIDUAL living in Singapore. He is an IT Consultant with a=20
+System Integrator (SI)/computer firm in Singapore. He is an IT=20
+enthusiast.
+
+
+
+
+
+--=20
+-----BEGIN EMAIL SIGNATURE-----
+
+The Gospel for all Targeted Individuals (TIs):
+
+[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
+U.S. Embassy Workers
+
+Link:
+https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwave.ht=
+ml
+
+*************************************************************************=
+*******************
+
+Singaporean Targeted Individual Mr. Turritopsis Dohrnii Teo En Ming's
+Academic Qualifications as at 14 Feb 2019 and refugee seeking attempts
+at the United Nations Refugee Agency Bangkok (21 Mar 2017), in Taiwan
+(5 Aug 2019) and Australia (25 Dec 2019 to 9 Jan 2020):
+
+[1] https://tdtemcerts.wordpress.com/
+
+[2] https://tdtemcerts.blogspot.sg/
+
+[3] https://www.scribd.com/user/270125049/Teo-En-Ming
+
+-----END EMAIL SIGNATURE-----

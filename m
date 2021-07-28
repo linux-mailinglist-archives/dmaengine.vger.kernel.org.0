@@ -2,60 +2,75 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 753533D884A
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Jul 2021 08:54:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00A1D3D8859
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Jul 2021 08:56:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232798AbhG1Gyd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 28 Jul 2021 02:54:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
+        id S233573AbhG1G44 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 28 Jul 2021 02:56:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229939AbhG1Gyc (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 28 Jul 2021 02:54:32 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E59CB60F6D;
-        Wed, 28 Jul 2021 06:54:30 +0000 (UTC)
+        id S233187AbhG1G4z (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 28 Jul 2021 02:56:55 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D3ECA60F6D;
+        Wed, 28 Jul 2021 06:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627455271;
-        bh=MUYV0jG/ERmQtuox6LweFr8+A2D3sFP9Wy/d49bVa9s=;
+        s=k20201202; t=1627455414;
+        bh=uG4A0x8I1qOLetqrP5zVU9v4dMBfQQBdM6FU6vTMBmI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tb1BeW2kP47Po9LG2m56LlnWgbwntinZ2CESWupylKM3VooppvH9XlGVQVrEOV2dF
-         zAkBGpXHQ3IjeeQBjAVPsEs4O+yjrrUtjyQPZ/K01fOPYVWgYC1GuVRhiZeV5d4Xw6
-         kB0lxfKoGjYkn+AqXVjZnX/eHiJu1LGQFw87zrI2rpBCGqu12pI0aQtvSVTtjFzPTN
-         OPf8r5QLgcrkcKGvlWLXtbjigzj6A3QdEQZXLTLNKRT6/e4afKmXTMpRHJXumRQTEc
-         kqeKHwLe3RFg76KCbVSqBJKfs7zg2oXPPYsltyxq26WL9mDifc8W5Q6R2NspKgqDh2
-         m+YR8Vg37mFOQ==
-Date:   Wed, 28 Jul 2021 12:24:25 +0530
+        b=MVAR6HwsGo+IqLUIwPYqelXm/CDjdZpXlJve7lqY+otMsIuecNvV63Kjed3G+Kg2Y
+         RnxvH8vBjrpT8FwSCuYJLaWzVBwcBQY7AVDmGVRUCVsdDchbpizp6zYA7lm2tbaE0B
+         vRS/Mop+nvQR413/a8uPim3ovhtUo94W9WhLX3C7OUA53CaSOCrlB2Z+xC4677JRE8
+         1OyG/NrxNUePg0+CJH8pomkIM9I2ioyve586lkR544a15EOxa/6+xXzb8nVTMOwzxl
+         I0kpJnd91f+fYW7lqplTZto7aOLm4R4qpvPgqbe2OsdDIOEJvDgvqF8aHbAvdoBn/q
+         zMpKbiHrJMSlA==
+Date:   Wed, 28 Jul 2021 12:26:50 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Olivier Dautricourt <olivier.dautricourt@orolia.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Stefan Roese <sr@denx.de>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+To:     =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] dmaengine: altera-msgdma: make response port optional
-Message-ID: <YQD/IecbSJFVWQzo@matsya>
-References: <cover.1623898678.git.olivier.dautricourt@orolia.com>
- <8220756f2191ca08cb21702252d1f2d4f753a7f5.1623898678.git.olivier.dautricourt@orolia.com>
+Subject: Re: [PATCH] dmaengine: at_xdmac: use module_platform_driver
+Message-ID: <YQD/skGeS0rzYS5P@matsya>
+References: <20210625090042.17085-1-clement.leger@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <8220756f2191ca08cb21702252d1f2d4f753a7f5.1623898678.git.olivier.dautricourt@orolia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210625090042.17085-1-clement.leger@bootlin.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 17-06-21, 21:53, Olivier Dautricourt wrote:
-> The response slave port can be disabled in some configuration [1] and
-> csr + MSGDMA_CSR_RESP_FILL_LEVEL will be 0 even if transfer has suceeded.
-> We have to only rely on the interrupts in that scenario.
-> This was tested on cyclone V with the controller resp port disabled.
+On 25-06-21, 11:00, Clément Léger wrote:
+> The driver was previously probed with platform_driver_probe. This does
+> not allow the driver to be probed again later if probe function
+> returns -EPROBE_DEFER. This patch replace the use of
+> platform_driver_probe with module_platform_driver which allows that.
 > 
-> [1] https://www.intel.com/content/www/us/en/programmable/documentation/sfo1400787952932.html
-> 30.3.1.2
-> 30.3.1.3
-> 30.5.5
+> Signed-off-by: Clément Léger <clement.leger@bootlin.com>
+> ---
+>  drivers/dma/at_xdmac.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
 > 
-> Fixes:
-> https://forum.rocketboards.org/t/ip-msgdma-linux-driver/1919
+> diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+> index 64a52bf4d737..109a4c0895f4 100644
+> --- a/drivers/dma/at_xdmac.c
+> +++ b/drivers/dma/at_xdmac.c
+> @@ -2238,11 +2238,7 @@ static struct platform_driver at_xdmac_driver = {
+>  	}
+>  };
+>  
+> -static int __init at_xdmac_init(void)
+> -{
+> -	return platform_driver_probe(&at_xdmac_driver, at_xdmac_probe);
+> -}
+> -subsys_initcall(at_xdmac_init);
+> +module_platform_driver(at_xdmac_driver);
 
-This should be single line, fixed it up while applying the series
+You are also changing the init call here, there is a reason why
+dmaengine drivers are subsys_initcall.. have you tested this?
 
 -- 
 ~Vinod

@@ -2,49 +2,56 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 83F173D87F9
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Jul 2021 08:34:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E2173D8809
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Jul 2021 08:35:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234068AbhG1Ge3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 28 Jul 2021 02:34:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35086 "EHLO mail.kernel.org"
+        id S234826AbhG1GfY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 28 Jul 2021 02:35:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233989AbhG1Ge2 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 28 Jul 2021 02:34:28 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 48D86601FE;
-        Wed, 28 Jul 2021 06:34:25 +0000 (UTC)
+        id S233670AbhG1GfU (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 28 Jul 2021 02:35:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 18103601FE;
+        Wed, 28 Jul 2021 06:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627454067;
-        bh=C0FNTOnyxUD0u4VKjgMCo4MT78njp9/ePeqMC0wr4aY=;
+        s=k20201202; t=1627454119;
+        bh=/F4quowviUqBgU6xUZEdvyD7ZkAGro7MOFqKiLTxMiY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q0jaCs56hHgGNUyu1WhaGCiBvXaMWBZ3YaFFg5YXmsBg8UrD9jx0YHJOL8BJVOuGG
-         oA2gNrVKGYIkHeE3XhNoUQBkTRGqi6vabH6YgZz2FO1Nmkvenz04RGMd9ccdA4w2BN
-         2B8j33He8zRqDcjLBfctF0ChcJWD52ZviPqOxz1cpduLS0qAyCR6bBT39pc9aKHUOj
-         yc3ofBVPEDJKq3vyfu9Qyx0XoptQeWXSwrKfQ4ERqhVl5WpfaYqnQFdeu16pcpBy0n
-         KwpVXin36c2PjYt4oq5u/KJPQA6he/loqZszJ2uscwIFMA3NK8G97KFcM8gfyV9d7x
-         3kRlBCBZqwi3Q==
-Date:   Wed, 28 Jul 2021 12:04:20 +0530
+        b=TSR44dGrzPJWGOIVySOQTfpJ7rtSUyoDou208+49rDQbkFjlBbMSGKqL114eZlBnO
+         lUwCSG6hGbjQx/fmk81zxszmjXTp9HDUSqpMBnGXRAKdlgZhwfngX3zj6IAuSMWN19
+         H7zFS8jK/RgYPICpipsrY4wuG0jJ3mWQArDYup1Ezd6IecdZ5lqSk/BeZayBQiF7zm
+         EI9dAwVpCZCchNlyOAocQkVu+yVcqsMSqvMzQ0XJvZNd6oGWTButXU67evOc8H47P/
+         8Bxfxr6YWQyeUmKOpHpPsvhG5G9XBjq5GaOgKLeijc7WDDBryGWSuZ8I0+v+O8GX5v
+         V473H4NuRDEJg==
+Date:   Wed, 28 Jul 2021 12:05:13 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Zhang Qilong <zhangqilong3@huawei.com>
-Cc:     mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-        pierre-yves.mordret@st.com, amelie.delaunay@st.com,
-        dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH -next 0/3] Fix PM usage counter imblance and clear code
-Message-ID: <YQD6bADgB6KTfQ/R@matsya>
-References: <20210607064640.121394-1-zhangqilong3@huawei.com>
+To:     Baokun Li <libaokun1@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Michal Simek <michal.simek@xilinx.com>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        Shravya Kumbham <shravya.kumbham@xilinx.com>,
+        Matthew Murrian <matthew.murrian@goctsi.com>,
+        Romain Perier <romain.perier@gmail.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Allen Pais <allen.lkml@gmail.com>, weiyongjun1@huawei.com,
+        yuehaibing@huawei.com, yangjihong1@huawei.com, yukuai3@huawei.com,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel-janitors@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH -next] dmaengine: xilinx_dma: Use list_move_tail instead
+ of list_del/list_add_tail
+Message-ID: <YQD6oediFBgOuW7l@matsya>
+References: <20210608030905.2818831-1-libaokun1@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210607064640.121394-1-zhangqilong3@huawei.com>
+In-Reply-To: <20210608030905.2818831-1-libaokun1@huawei.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 07-06-21, 14:46, Zhang Qilong wrote:
-> The first two patches fix PM disable depth imbalance and
-> the last clear pm_runtime_get_sync calls.
+On 08-06-21, 11:09, Baokun Li wrote:
+> Using list_move_tail() instead of list_del() + list_add_tail().
 
 Applied, thanks
 

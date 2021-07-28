@@ -2,148 +2,112 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 389A03D89AE
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Jul 2021 10:22:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3809D3D89B5
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Jul 2021 10:23:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234311AbhG1IWu convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Wed, 28 Jul 2021 04:22:50 -0400
-Received: from aposti.net ([89.234.176.197]:43998 "EHLO aposti.net"
+        id S234974AbhG1IXz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 28 Jul 2021 04:23:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235169AbhG1IWu (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 28 Jul 2021 04:22:50 -0400
-Date:   Wed, 28 Jul 2021 09:22:34 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 3/3] dma: jz4780: Add support for the MDMA in the
- JZ4760(B)
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, list@opendingux.net
-Message-Id: <ML4YWQ.2MOPKABT5JGC1@crapouillou.net>
-In-Reply-To: <YQEERH97pngKbTiG@matsya>
-References: <20210718122024.204907-1-paul@crapouillou.net>
-        <20210718122024.204907-3-paul@crapouillou.net> <YQEERH97pngKbTiG@matsya>
+        id S235070AbhG1IXz (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 28 Jul 2021 04:23:55 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C665A6052B;
+        Wed, 28 Jul 2021 08:23:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627460633;
+        bh=JoL5rq4g2TYiFcHdBW5n8r5L+GbGCJK1HloPFAw/yUk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NOAhwpI1yPbejtEhoQx7rMG5w0ynfAtNeucI9UbyeChRmeQVvakqDG1A44DWowXGJ
+         wZ+sZtaUi3E2gdgtPeBn49xdLz3LRpqnpeB4z/RDeT+JysJgLKv4nheODa+m+1MiV2
+         kEGwDolaplwBmgxM8VETT2V0mF9REOyEi8ykMxNk4egw+kI++oJD67gmzPoLuOIH2N
+         MTP5TiPJvsM6sXxThfwlOIc5MxRIGBLDEGWuxpVUR48WLnk1kfwqFADsML0ao33JDq
+         PXeW6Rny1ggVRPV4QEQdiORxCKoP9D6q/5DzrqwUgqFrWfkaNQ2BVm2FGPHmSJb9RT
+         jEVdaFNFOtpHg==
+Date:   Wed, 28 Jul 2021 13:53:48 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: at_xdmac: use module_platform_driver
+Message-ID: <YQEUFADKhGtzz++g@matsya>
+References: <20210625090042.17085-1-clement.leger@bootlin.com>
+ <YQD/skGeS0rzYS5P@matsya>
+ <20210728093831.27430737@fixe.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210728093831.27430737@fixe.home>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vinod,
-
-Le mer., juil. 28 2021 at 12:46:20 +0530, Vinod Koul <vkoul@kernel.org> 
-a écrit :
-> On 18-07-21, 13:20, Paul Cercueil wrote:
->>  The JZ4760 and JZ4760B SoCs have two regular DMA controllers with 6
->>  channels each. They also have an extra DMA controller named MDMA
->>  with only 2 channels, that only supports memcpy operations.
+On 28-07-21, 09:38, Clément Léger wrote:
+> Le Wed, 28 Jul 2021 12:26:50 +0530,
+> Vinod Koul <vkoul@kernel.org> a écrit :
 > 
-> It is dmaengine not dma:
+> > On 25-06-21, 11:00, Clément Léger wrote:
+> > > The driver was previously probed with platform_driver_probe. This
+> > > does not allow the driver to be probed again later if probe function
+> > > returns -EPROBE_DEFER. This patch replace the use of
+> > > platform_driver_probe with module_platform_driver which allows that.
+> > > 
+> > > Signed-off-by: Clément Léger <clement.leger@bootlin.com>
+> > > ---
+> > >  drivers/dma/at_xdmac.c | 6 +-----
+> > >  1 file changed, 1 insertion(+), 5 deletions(-)
+> > > 
+> > > diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+> > > index 64a52bf4d737..109a4c0895f4 100644
+> > > --- a/drivers/dma/at_xdmac.c
+> > > +++ b/drivers/dma/at_xdmac.c
+> > > @@ -2238,11 +2238,7 @@ static struct platform_driver
+> > > at_xdmac_driver = { }
+> > >  };
+> > >  
+> > > -static int __init at_xdmac_init(void)
+> > > -{
+> > > -	return platform_driver_probe(&at_xdmac_driver,
+> > > at_xdmac_probe); -}
+> > > -subsys_initcall(at_xdmac_init);
+> > > +module_platform_driver(at_xdmac_driver);  
+> > 
+> > You are also changing the init call here, there is a reason why
+> > dmaengine drivers are subsys_initcall.. have you tested this?
+> > 
 > 
->> 
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  ---
->>   drivers/dma/dma-jz4780.c | 22 ++++++++++++++++++++--
->>   1 file changed, 20 insertions(+), 2 deletions(-)
->> 
->>  diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
->>  index d71bc7235959..eed505e3cce2 100644
->>  --- a/drivers/dma/dma-jz4780.c
->>  +++ b/drivers/dma/dma-jz4780.c
->>  @@ -93,6 +93,7 @@
->>   #define JZ_SOC_DATA_PER_CHAN_PM		BIT(2)
->>   #define JZ_SOC_DATA_NO_DCKES_DCKEC	BIT(3)
->>   #define JZ_SOC_DATA_BREAK_LINKS		BIT(4)
->>  +#define JZ_SOC_DATA_ONLY_MEMCPY		BIT(5)
+> I understood that the subsys initcall was there to probe the DMA driver
+> earlier than other drivers (at least I guess this was the reason). I
+
+That is correct
+
+> also tested it and can confirm you this works as expected on my
+> platform (sama5d2_xplained and sama5d27_som1).
 > 
-> Why -ve logic? Looks like MEMCPY is eveywhere and only peripheral is 
-> not
-> there at few SoC, so use JZ_SOC_DATA_PERIPHERAL
+> In my configuration, the clocks are provided using SCMI and the SCMI
+> driver probes them later than other drivers. 
 
-That means touching every other jz4780_dma_soc_data structure in a 
-patch that's focused on one SoC. That means a messy patch, and I don't 
-like that.
+Heh, clocks should get probed even earlier
 
-Negative logic is a problem if it makes it harder to understand, I 
-don't think it's the case here. Besides, we already have 
-JZ_SOC_DATA_NO_DCKES_DCKEC.
-
-Cheers,
--Paul
-
->> 
->>   /**
->>    * struct jz4780_dma_hwdesc - descriptor structure read by the DMA 
->> controller.
->>  @@ -896,8 +897,10 @@ static int jz4780_dma_probe(struct 
->> platform_device *pdev)
->>   	dd = &jzdma->dma_device;
->> 
->>   	dma_cap_set(DMA_MEMCPY, dd->cap_mask);
->>  -	dma_cap_set(DMA_SLAVE, dd->cap_mask);
->>  -	dma_cap_set(DMA_CYCLIC, dd->cap_mask);
->>  +	if (!(soc_data->flags & JZ_SOC_DATA_ONLY_MEMCPY)) {
->>  +		dma_cap_set(DMA_SLAVE, dd->cap_mask);
->>  +		dma_cap_set(DMA_CYCLIC, dd->cap_mask);
->>  +	}
+> With the current subsys_initcall, platform_driver_probe calls
+> __platform_driver_probe which will eventually calls platform_probe.
+> This one will fails because SCMI clocks are not available at this time.
+> And as said in the kernel doc, __platform_driver_probe is incompatible
+> with deferred probing. This leads to failure of all drivers that needs
+> DMA channels provbided by at_xdmac.
 > 
-> and set this if JZ_SOC_DATA_PERIPHERAL is set?
-> 
->> 
->>   	dd->dev = dev;
->>   	dd->copy_align = DMAENGINE_ALIGN_4_BYTES;
->>  @@ -1018,12 +1021,25 @@ static const struct jz4780_dma_soc_data 
->> jz4760_dma_soc_data = {
->>   	.flags = JZ_SOC_DATA_PER_CHAN_PM | JZ_SOC_DATA_NO_DCKES_DCKEC,
->>   };
->> 
->>  +static const struct jz4780_dma_soc_data jz4760_mdma_soc_data = {
->>  +	.nb_channels = 2,
->>  +	.transfer_ord_max = 6,
->>  +	.flags = JZ_SOC_DATA_PER_CHAN_PM | JZ_SOC_DATA_NO_DCKES_DCKEC |
->>  +		 JZ_SOC_DATA_ONLY_MEMCPY,
->>  +};
->>  +
->>   static const struct jz4780_dma_soc_data jz4760b_dma_soc_data = {
->>   	.nb_channels = 5,
->>   	.transfer_ord_max = 6,
->>   	.flags = JZ_SOC_DATA_PER_CHAN_PM,
->>   };
->> 
->>  +static const struct jz4780_dma_soc_data jz4760b_mdma_soc_data = {
->>  +	.nb_channels = 2,
->>  +	.transfer_ord_max = 6,
->>  +	.flags = JZ_SOC_DATA_PER_CHAN_PM | JZ_SOC_DATA_ONLY_MEMCPY,
->>  +};
->>  +
->>   static const struct jz4780_dma_soc_data jz4770_dma_soc_data = {
->>   	.nb_channels = 6,
->>   	.transfer_ord_max = 6,
->>  @@ -1052,7 +1068,9 @@ static const struct of_device_id 
->> jz4780_dma_dt_match[] = {
->>   	{ .compatible = "ingenic,jz4740-dma", .data = 
->> &jz4740_dma_soc_data },
->>   	{ .compatible = "ingenic,jz4725b-dma", .data = 
->> &jz4725b_dma_soc_data },
->>   	{ .compatible = "ingenic,jz4760-dma", .data = 
->> &jz4760_dma_soc_data },
->>  +	{ .compatible = "ingenic,jz4760-mdma", .data = 
->> &jz4760_mdma_soc_data },
->>   	{ .compatible = "ingenic,jz4760b-dma", .data = 
->> &jz4760b_dma_soc_data },
->>  +	{ .compatible = "ingenic,jz4760b-mdma", .data = 
->> &jz4760b_mdma_soc_data },
->>   	{ .compatible = "ingenic,jz4770-dma", .data = 
->> &jz4770_dma_soc_data },
->>   	{ .compatible = "ingenic,jz4780-dma", .data = 
->> &jz4780_dma_soc_data },
->>   	{ .compatible = "ingenic,x1000-dma", .data = &x1000_dma_soc_data 
->> },
->>  --
->>  2.30.2
-> 
-> --
-> ~Vinod
+> With module_platform_driver, the at_xdmac driver is correctly probed
+> again later and all drivers that depends on DMA channels provided by
+> this one are also correctly probed. The deferred probing mechanism seems
+> to do its job correctly (at least in my case).
 
+OK would then recommend making it like module_platform_driver ie remove
+platform_driver_probe, so the defer probe would work, but keep the init
+at subsys level. That should work for you while keeping this sane for
+folks that dont need this
 
+-- 
+~Vinod

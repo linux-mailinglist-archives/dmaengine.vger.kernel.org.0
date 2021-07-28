@@ -2,93 +2,91 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 912A63D88C4
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Jul 2021 09:23:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 192973D88F7
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Jul 2021 09:38:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233684AbhG1HXB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 28 Jul 2021 03:23:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231949AbhG1HXB (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 28 Jul 2021 03:23:01 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1CD6D60F00;
-        Wed, 28 Jul 2021 07:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627456980;
-        bh=EDBmXlbmP6Xd5Bp59xQuv5zXXYXGXlS1g1brWU8FTTY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TrZ0IW2GT9SzRYSMOfUn3GaQhDLFTZIYW84Skg5CIRcudI80iuq0OCvBSdbtrPJ89
-         mRMkxMf87yHT4TaHr3X2IaffVX4zQHvkjJcH4PNT+LwAu/v4OGSaSmBF66L92f1lvD
-         CSe/vmbHiZ8n/yO3LZv8hfczRgqofNwvpOhuuIeHZFSFzcMx/WUV3cuYKdg/KFipio
-         TK3DZzUmnYQN2W+dXyKjvgat/sr2THgD+kjlKC+bMgKJTcc8JEhVxFMlQM8KkwfQh5
-         ESt+CwVjbqkwRf84YKhPEp0aZwoPrc7vX5yPreIiQNwzFBuqyKdutkQ8hYwWWLYzrb
-         pWwt5ut8Q1XNg==
-Date:   Wed, 28 Jul 2021 12:52:55 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     pandith.n@intel.com
-Cc:     Eugeniy.Paltsev@synopsys.com, dmaengine@vger.kernel.org,
-        lakshmi.bai.raja.subramanian@intel.com, kris.pan@intel.com,
-        mallikarjunappa.sangannavar@intel.com, Srikanth.Thokala@intel.com
-Subject: Re: [PATCH V4 1/3] dmaengine: dw-axi-dmac: Remove free slot check
- algorithm in dw_axi_dma_set_hw_channel
-Message-ID: <YQEFzyJnXvQg/uh9@matsya>
-References: <20210720174713.13282-1-pandith.n@intel.com>
- <20210720174713.13282-2-pandith.n@intel.com>
+        id S234995AbhG1Hik convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Wed, 28 Jul 2021 03:38:40 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:57451 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234417AbhG1Hif (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 28 Jul 2021 03:38:35 -0400
+Received: (Authenticated sender: clement.leger@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 374BD1BF206;
+        Wed, 28 Jul 2021 07:38:32 +0000 (UTC)
+Date:   Wed, 28 Jul 2021 09:38:31 +0200
+From:   =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: at_xdmac: use module_platform_driver
+Message-ID: <20210728093831.27430737@fixe.home>
+In-Reply-To: <YQD/skGeS0rzYS5P@matsya>
+References: <20210625090042.17085-1-clement.leger@bootlin.com>
+        <YQD/skGeS0rzYS5P@matsya>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210720174713.13282-2-pandith.n@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 20-07-21, 23:17, pandith.n@intel.com wrote:
-> From: Pandith N <pandith.n@intel.com>
-> 
-> Removed free slot check algorithm in dw_axi_dma_set_hw_channel. For 8
-> DMA channels, use respective handshake slot in DMA_HS_SEL APB register.
-> 
-> For every channel, an dedicated slot is provided in  hardware handshake
-> register AXIDMA_CTRL_DMA_HS_SEL_n. Peripheral source number is
-> programmed in respective channel slots.
-> 
-> Signed-off-by: Pandith N <pandith.n@intel.com>
-> Tested-by: Pan Kris <kris.pan@intel.com>
-> ---
->  .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 49 +++++++------------
->  drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  2 +
->  2 files changed, 21 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> index d9e4ac3edb4e..6b871e20ae27 100644
-> --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> @@ -470,19 +470,14 @@ static void dma_chan_free_chan_resources(struct dma_chan *dchan)
->  	pm_runtime_put(chan->chip->dev);
->  }
->  
-> -static void dw_axi_dma_set_hw_channel(struct axi_dma_chip *chip,
-> -				      u32 handshake_num, bool set)
-> +static int dw_axi_dma_set_hw_channel(struct axi_dma_chan *chan, bool set)
+Le Wed, 28 Jul 2021 12:26:50 +0530,
+Vinod Koul <vkoul@kernel.org> a écrit :
 
-what is point of returning error if that is not checked and action taken
-in caller?
+> On 25-06-21, 11:00, Clément Léger wrote:
+> > The driver was previously probed with platform_driver_probe. This
+> > does not allow the driver to be probed again later if probe function
+> > returns -EPROBE_DEFER. This patch replace the use of
+> > platform_driver_probe with module_platform_driver which allows that.
+> > 
+> > Signed-off-by: Clément Léger <clement.leger@bootlin.com>
+> > ---
+> >  drivers/dma/at_xdmac.c | 6 +-----
+> >  1 file changed, 1 insertion(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+> > index 64a52bf4d737..109a4c0895f4 100644
+> > --- a/drivers/dma/at_xdmac.c
+> > +++ b/drivers/dma/at_xdmac.c
+> > @@ -2238,11 +2238,7 @@ static struct platform_driver
+> > at_xdmac_driver = { }
+> >  };
+> >  
+> > -static int __init at_xdmac_init(void)
+> > -{
+> > -	return platform_driver_probe(&at_xdmac_driver,
+> > at_xdmac_probe); -}
+> > -subsys_initcall(at_xdmac_init);
+> > +module_platform_driver(at_xdmac_driver);  
+> 
+> You are also changing the init call here, there is a reason why
+> dmaengine drivers are subsys_initcall.. have you tested this?
+> 
 
->  {
-> -	unsigned long start = 0;
-> -	unsigned long reg_value;
-> -	unsigned long reg_mask;
-> -	unsigned long reg_set;
-> -	unsigned long mask;
-> -	unsigned long val;
-> +	struct axi_dma_chip *chip = chan->chip;
-> +	unsigned long reg_value, val;
->  
->  	if (!chip->apb_regs) {
->  		dev_dbg(chip->dev, "apb_regs not initialized\n");
-> -		return;
-> +		return -EINVAL;
+I understood that the subsys initcall was there to probe the DMA driver
+earlier than other drivers (at least I guess this was the reason). I
+also tested it and can confirm you this works as expected on my
+platform (sama5d2_xplained and sama5d27_som1).
 
-should the above log not be error now?
--- 
-~Vinod
+In my configuration, the clocks are provided using SCMI and the SCMI
+driver probes them later than other drivers. 
+
+With the current subsys_initcall, platform_driver_probe calls
+__platform_driver_probe which will eventually calls platform_probe.
+This one will fails because SCMI clocks are not available at this time.
+And as said in the kernel doc, __platform_driver_probe is incompatible
+with deferred probing. This leads to failure of all drivers that needs
+DMA channels provbided by at_xdmac.
+
+With module_platform_driver, the at_xdmac driver is correctly probed
+again later and all drivers that depends on DMA channels provided by
+this one are also correctly probed. The deferred probing mechanism seems
+to do its job correctly (at least in my case).
+
+

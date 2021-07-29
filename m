@@ -2,42 +2,39 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C2693DABE9
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Jul 2021 21:36:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F3143DAC16
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Jul 2021 21:51:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230056AbhG2Tgk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 29 Jul 2021 15:36:40 -0400
-Received: from mail-io1-f47.google.com ([209.85.166.47]:37451 "EHLO
-        mail-io1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229606AbhG2Tgj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 29 Jul 2021 15:36:39 -0400
-Received: by mail-io1-f47.google.com with SMTP id r18so8611048iot.4;
-        Thu, 29 Jul 2021 12:36:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BQ1Wv9ddwXtPpU7j1mUV1G/GqYenPRdcCt53ijsc20g=;
-        b=WnGsS28BWtUdNGNdbnOiUfEmL611UGZceAJruf1AccuMg7zp7Q0Qj27+LUQ7Mtub29
-         XC05o0rvrxNWluPQMlp7XYeQ8Knvuyc809gR9qgsjCKAmQrn2qLbYgD1ATP9ov1vrw3N
-         6Mb3bzn1vmVgEXe/9I1pbewAcLoJTXpdCBSrQ2HGiQMHNUo7/nQniF76GvWVt5UfxVsh
-         WKkOAcjxcoPHTbg0LXXt+LtZ7Tzp/An6slL/l4B3MzRT1xli6RXabhM2i53mDigBN54P
-         8I1JLcmP4olfVdU5far8p3qtVxyTPsjM4J4ef2GKodWZilWkg3kBGk2H22PcqaKnFGTM
-         kEtQ==
-X-Gm-Message-State: AOAM532GDFqw69jWj1DH/y/L0P2A6w+u4bIFae74buqtRCHXgV/waCzm
-        X+Hg+3K+54KjDtWgVgJMmg==
-X-Google-Smtp-Source: ABdhPJw306z8um1VvUQHdgAaAo9WYY6NNurP6o5EaePO37Jj55vvXGbyVjs7e4DyNkNQm+zGyVujOw==
-X-Received: by 2002:a05:6602:2801:: with SMTP id d1mr5299475ioe.73.1627587394656;
-        Thu, 29 Jul 2021 12:36:34 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id n12sm2485056ilo.57.2021.07.29.12.36.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jul 2021 12:36:33 -0700 (PDT)
-Received: (nullmailer pid 747746 invoked by uid 1000);
-        Thu, 29 Jul 2021 19:36:31 -0000
-Date:   Thu, 29 Jul 2021 13:36:31 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Stephan Gerhold <stephan@gerhold.net>
+        id S229645AbhG2TvM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 29 Jul 2021 15:51:12 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:29746 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229606AbhG2TvL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 29 Jul 2021 15:51:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1627588261;
+    s=strato-dkim-0002; d=gerhold.net;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=a1f/4Mzvy91uylKaEBSa+SbUv2oypgU64QN38rZ/W1A=;
+    b=BhFcK3pVObxgbgbV6J1xl7tDYIcvcsOU6ZLYorGXAWqwHPUe2gEwIbvGh/j5F63rvm
+    XZudNTAUZFotrbXXFDcjDo7N9schc9DbXE0dH+dYZldo0aCHzeob3yid8SmfRXCIWJzf
+    KJTRsqB+Z8kZZJbucHz3eYSSMYEh79Y0Y6me2QB2PJzXC6bDG1Mleo5vTcwAvt/Q3nvU
+    ax6+Fz5bqesHLub+E37q4wkquBD1Nt2BMZmoca33kxypXWrPsFyLeq60GrpY9DeBLMTJ
+    T4zdtqrjxfy6u/zGiY42LM1HPSOAR43XHwViPsYFy9AM6FJYHvOV2Bi78eGArf/VHitk
+    Tgnw==
+Authentication-Results: strato.com;
+    dkim=none
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u261EJF5OxJD4peA8paM1A=="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+    by smtp.strato.de (RZmta 47.28.1 DYNA|AUTH)
+    with ESMTPSA id g02a44x6TJp06W6
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+    Thu, 29 Jul 2021 21:51:00 +0200 (CEST)
+Date:   Thu, 29 Jul 2021 21:50:54 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Rob Herring <robh@kernel.org>
 Cc:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
         Loic Poulain <loic.poulain@linaro.org>,
@@ -53,52 +50,64 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 Subject: Re: [RFC PATCH net-next 1/4] dt-bindings: dmaengine: bam_dma: Add
  remote power collapse mode
-Message-ID: <YQMDP6+ft/iRJQQr@robh.at.kernel.org>
+Message-ID: <YQMGnmXEOCmCzKnr@gerhold.net>
 References: <20210719145317.79692-1-stephan@gerhold.net>
  <20210719145317.79692-2-stephan@gerhold.net>
+ <YQMDP6+ft/iRJQQr@robh.at.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210719145317.79692-2-stephan@gerhold.net>
+In-Reply-To: <YQMDP6+ft/iRJQQr@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Jul 19, 2021 at 04:53:14PM +0200, Stephan Gerhold wrote:
-> In some configurations, the BAM DMA controller is set up by a remote
-> processor and the local processor can simply start making use of it
-> without setting up the BAM. This is already supported using the
-> "qcom,controlled-remotely" property.
+On Thu, Jul 29, 2021 at 01:36:31PM -0600, Rob Herring wrote:
+> On Mon, Jul 19, 2021 at 04:53:14PM +0200, Stephan Gerhold wrote:
+> > In some configurations, the BAM DMA controller is set up by a remote
+> > processor and the local processor can simply start making use of it
+> > without setting up the BAM. This is already supported using the
+> > "qcom,controlled-remotely" property.
+> > 
+> > However, for some reason another possible configuration is that the
+> > remote processor is responsible for powering up the BAM, but we are
+> > still responsible for initializing it (e.g. resetting it etc). Add
+> > a "qcom,remote-power-collapse" property to describe that configuration.
+> > 
+> > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> > ---
+> > NOTE: This is *not* a compile-time requirement for the BAM-DMUX driver
+> >       so this could also go through the dmaengine tree.
+> > 
+> > Also note that there is an ongoing effort to convert these bindings
+> > to DT schema but sadly there were not any updates for a while. :/
+> > https://lore.kernel.org/linux-arm-msm/20210519143700.27392-2-bhupesh.sharma@linaro.org/
+> > ---
+> >  Documentation/devicetree/bindings/dma/qcom_bam_dma.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+> > index cf5b9e44432c..362a4f0905a8 100644
+> > --- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+> > +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+> > @@ -15,6 +15,8 @@ Required properties:
+> >    the secure world.
+> >  - qcom,controlled-remotely : optional, indicates that the bam is controlled by
+> >    remote proccessor i.e. execution environment.
+> > +- qcom,remote-power-collapse : optional, indicates that the bam is powered up by
+> > +  a remote processor but must be initialized by the local processor.
 > 
-> However, for some reason another possible configuration is that the
-> remote processor is responsible for powering up the BAM, but we are
-> still responsible for initializing it (e.g. resetting it etc). Add
-> a "qcom,remote-power-collapse" property to describe that configuration.
+> Wouldn't 'qcom,remote-power' or 'qcom,remote-powered' be sufficient? I 
+> don't understand what 'collapse' means here. Doesn't sound good though.
 > 
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> ---
-> NOTE: This is *not* a compile-time requirement for the BAM-DMUX driver
->       so this could also go through the dmaengine tree.
-> 
-> Also note that there is an ongoing effort to convert these bindings
-> to DT schema but sadly there were not any updates for a while. :/
-> https://lore.kernel.org/linux-arm-msm/20210519143700.27392-2-bhupesh.sharma@linaro.org/
-> ---
->  Documentation/devicetree/bindings/dma/qcom_bam_dma.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> index cf5b9e44432c..362a4f0905a8 100644
-> --- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> @@ -15,6 +15,8 @@ Required properties:
->    the secure world.
->  - qcom,controlled-remotely : optional, indicates that the bam is controlled by
->    remote proccessor i.e. execution environment.
-> +- qcom,remote-power-collapse : optional, indicates that the bam is powered up by
-> +  a remote processor but must be initialized by the local processor.
 
-Wouldn't 'qcom,remote-power' or 'qcom,remote-powered' be sufficient? I 
-don't understand what 'collapse' means here. Doesn't sound good though.
+Yeah I can't think of any significant meaning of the "collapse" part
+for the bindings, I probably just picked it up somewhere while trying to
+find some information about how the BAM DMUX setup works. :)
 
-Rob
+Just one question, would you prefer "qcom,remote-powered" or rather
+"qcom,powered-remotely" for consistency with the existing
+"qcom,controlled-remotely"? Both sounds fine to me.
+
+Thanks!
+Stephan

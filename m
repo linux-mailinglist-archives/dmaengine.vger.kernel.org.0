@@ -2,94 +2,96 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A222E3DA89E
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Jul 2021 18:13:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D7573DAA99
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Jul 2021 20:00:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229542AbhG2QNl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 29 Jul 2021 12:13:41 -0400
-Received: from mga04.intel.com ([192.55.52.120]:42247 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229485AbhG2QNl (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 29 Jul 2021 12:13:41 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10060"; a="211035522"
-X-IronPort-AV: E=Sophos;i="5.84,278,1620716400"; 
-   d="scan'208";a="211035522"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2021 09:12:04 -0700
-X-IronPort-AV: E=Sophos;i="5.84,278,1620716400"; 
-   d="scan'208";a="465130370"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.170.107]) ([10.209.170.107])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2021 09:12:04 -0700
-Subject: Re: [PATCH] dmaengine: idxd: Fix a possible NULL pointer dereference
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        vkoul@kernel.org, dan.j.williams@intel.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <77f0dc4f3966591d1f0cffb614a94085f8895a85.1627560174.git.christophe.jaillet@wanadoo.fr>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <44c9607e-2cde-02b9-7e4e-68578a775fb3@intel.com>
-Date:   Thu, 29 Jul 2021 09:12:03 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        id S229614AbhG2SAt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 29 Jul 2021 14:00:49 -0400
+Received: from mail-io1-f51.google.com ([209.85.166.51]:46594 "EHLO
+        mail-io1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229485AbhG2SAs (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 29 Jul 2021 14:00:48 -0400
+Received: by mail-io1-f51.google.com with SMTP id z7so7412951iog.13;
+        Thu, 29 Jul 2021 11:00:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=na8BkWUA5gMutg6qlMuN6847wnsVMn6PQTz3HEtGN8g=;
+        b=ZRDpz676cggKPazRiaGHA5j+eSgrlRjKxVoJ0jVgUNlWHMUYlwsGe+VFMFnodGQPRD
+         OULDME/+iuR5ihXPTPAObD7D0lJCacXowFxLibnF/fhzHHWCRAUNvCyRo8xz0QNBMxmv
+         77tGTCoctsckESzV4fBcG+QNfEPVjsuC3EEawpGd/Q2VcOcLcsqD6jrASImix4vVQXqO
+         Qvq4z3ekTzulm3q2hWe+CwgLchr11lt1nIgp/ANC3IVzNOLISS2MipPxFwBdChalZVU/
+         ggJPJrGU0mzoQ7I/IVbjPKImyxyLSKzczwWubiESup8Y5koNH5T+Sr4RcOYXRTNZsiXW
+         MQvA==
+X-Gm-Message-State: AOAM53168fk4/xEvjY3EcFtQKKwykS0hU1PGuh2G5k04PyP2p+GEXKn+
+        31SbW84Jonsb+pysIk0+hA==
+X-Google-Smtp-Source: ABdhPJyyLaALH3IuCiyR6jnGkq4nhdmhKmJq1u9FckH2SSDuzIvc24kHJAdJpEA7v69Ag+QZFobSsQ==
+X-Received: by 2002:a05:6602:446:: with SMTP id e6mr5082379iov.85.1627581644107;
+        Thu, 29 Jul 2021 11:00:44 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id d9sm2297620ilu.9.2021.07.29.11.00.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Jul 2021 11:00:43 -0700 (PDT)
+Received: (nullmailer pid 578452 invoked by uid 1000);
+        Thu, 29 Jul 2021 18:00:42 -0000
+Date:   Thu, 29 Jul 2021 12:00:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Chris Brandt <chris.brandt@renesas.com>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v5 1/3] dt-bindings: dma: Document RZ/G2L bindings
+Message-ID: <YQLsykqsogHXMVpA@robh.at.kernel.org>
+References: <20210729082520.26186-1-biju.das.jz@bp.renesas.com>
+ <20210729082520.26186-2-biju.das.jz@bp.renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <77f0dc4f3966591d1f0cffb614a94085f8895a85.1627560174.git.christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210729082520.26186-2-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-On 7/29/2021 5:04 AM, Christophe JAILLET wrote:
-> 'device_driver_attach()' dereferences its first argument (i.e. 'alt_drv')
-> so it must not be NULL.
-> Simplify the error handling logic about NULL 'alt_drv' in order to be
-> more robust and future-proof.
->
-> Fixes: 568b2126466f ("dmaengine: idxd: fix uninit var for alt_drv")
-> Fixes: 6e7f3ee97bbe ("dmaengine: idxd: move dsa_drv support to compatible mode")
->
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-
-
-Thanks for the cleanup.
-
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-
+On Thu, 29 Jul 2021 09:25:18 +0100, Biju Das wrote:
+> Document RZ/G2L DMAC bindings.
+> 
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
->   drivers/dma/idxd/compat.c | 15 ++++-----------
->   1 file changed, 4 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/dma/idxd/compat.c b/drivers/dma/idxd/compat.c
-> index d7616c240dcd..3df21615f888 100644
-> --- a/drivers/dma/idxd/compat.c
-> +++ b/drivers/dma/idxd/compat.c
-> @@ -45,23 +45,16 @@ static ssize_t bind_store(struct device_driver *drv, const char *buf, size_t cou
->   	idxd_dev = confdev_to_idxd_dev(dev);
->   	if (is_idxd_dev(idxd_dev)) {
->   		alt_drv = driver_find("idxd", bus);
-> -		if (!alt_drv)
-> -			return -ENODEV;
->   	} else if (is_idxd_wq_dev(idxd_dev)) {
->   		struct idxd_wq *wq = confdev_to_wq(dev);
->   
-> -		if (is_idxd_wq_kernel(wq)) {
-> +		if (is_idxd_wq_kernel(wq))
->   			alt_drv = driver_find("dmaengine", bus);
-> -			if (!alt_drv)
-> -				return -ENODEV;
-> -		} else if (is_idxd_wq_user(wq)) {
-> +		else if (is_idxd_wq_user(wq))
->   			alt_drv = driver_find("user", bus);
-> -			if (!alt_drv)
-> -				return -ENODEV;
-> -		} else {
-> -			return -ENODEV;
-> -		}
->   	}
-> +	if (!alt_drv)
-> +		return -ENODEV;
->   
->   	rc = device_driver_attach(alt_drv, dev);
->   	if (rc < 0)
+> Note:-
+>  This base series for this patch is Linux 5.14-rc2(or +) otherwise bots would
+>  complain about check failures
+> 
+> v4->v5:
+>   * Passing legacy slave channel configuration parameters using dmaengine_slave_config is prohibited.
+>     So started passing this parameters in DT instead, by encoding MID/RID values with channel parameters
+>     in the #dma-cells.
+>   * Updated the description for #dma-cells
+>   * Removed Rb tag's of Geert and Rob since there is a modification in binding patch
+> v3->v4:
+>   * Added Rob's Rb tag
+>   * Described clocks and reset properties
+> v2->v3:
+>   * Added error interrupt first.
+>   * Updated clock and reset maxitems.
+>   * Added Geert's Rb tag.
+> v1->v2:
+>   * Made interrupt names in defined order
+>   * Removed src address and channel configuration from dma-cells.
+>   * Changed the compatibele string to "renesas,r9a07g044-dmac".
+> v1:-
+>   * https://patchwork.kernel.org/project/linux-renesas-soc/patch/20210611113642.18457-2-biju.das.jz@bp.renesas.com/
+> ---
+> ---
+>  .../bindings/dma/renesas,rz-dmac.yaml         | 130 ++++++++++++++++++
+>  1 file changed, 130 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>

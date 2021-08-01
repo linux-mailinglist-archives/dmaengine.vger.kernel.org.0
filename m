@@ -2,55 +2,68 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4C203DC9D3
-	for <lists+dmaengine@lfdr.de>; Sun,  1 Aug 2021 06:35:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A58973DCA54
+	for <lists+dmaengine@lfdr.de>; Sun,  1 Aug 2021 08:27:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229491AbhHAEfI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 1 Aug 2021 00:35:08 -0400
-Received: from [209.97.156.48] ([209.97.156.48]:60372 "EHLO cujjun.com"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229451AbhHAEfH (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 1 Aug 2021 00:35:07 -0400
-X-Greylist: delayed 5445 seconds by postgrey-1.27 at vger.kernel.org; Sun, 01 Aug 2021 00:35:07 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=philiseua.com; s=mail; h=Message-ID:Reply-To:Subject:To:From:Date:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Cc:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=AraX+mehJYKpMuvj544s5UwrwYceyYzfZ4jAWA0wKMk=; b=wepvjzhrsTbDNJAIYEyJMTG/xs
-        ihVhVYtHu5FMjJCZy5w/159rwSF/ZENVpAZVCkWIAGDn3pArY6VKzEePrMCnqvrp/T3fDIxTLAxGw
-        xavWDpuhBwYnL8P1LVi0YD0X3TvKtm9ZiApRWRNF1+4pBprjiPSfTCpj0ADBaUSsMpOM=;
-Received: from localhost ([127.0.0.1] helo=philiseua.com)
-        by cujjun.com with esmtpa (Exim 4.90_1)
-        (envelope-from <michael@philiseua.com>)
-        id 1mA1kq-0007fp-Pj; Sun, 01 Aug 2021 03:03:08 +0000
+        id S229521AbhHAG17 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 1 Aug 2021 02:27:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229505AbhHAG16 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 1 Aug 2021 02:27:58 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4A70061057;
+        Sun,  1 Aug 2021 06:27:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1627799270;
+        bh=2PHY9JhVD/YwlHDPKNMJfQk6cWOpOdiuFnlPIR1Cyco=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AMQuE1xbZE1JJWZGWWPuMZ/Fex6D/H6joQKK92I03ggzjSYiFMjisUA7zElyV8ziB
+         /Sd5sVOJWdRrWhw639yl86nLzowtIQOYOQE+6TZn42QrN9j2JZg5UsgYsKFg/HXD2m
+         qv77iiTKxi+5rRW+KDRNDHbP31NthSL+kzW0w848=
+Date:   Sun, 1 Aug 2021 08:27:48 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jordy Zomer <jordy@pwning.systems>
+Cc:     dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: usb-dmac: make usb_dmac_get_current_residue
+ unsigned
+Message-ID: <YQY+5OaQKYeWQ+/n@kroah.com>
+References: <20210731091939.510816-1-jordy@pwning.systems>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 01 Aug 2021 05:03:08 +0200
-From:   Luis Fernandez <michael@philiseua.com>
-To:     undisclosed-recipients:;
-Subject: Re: Mutual Business Establishment
-Reply-To: luisfernandezconsultant@gmail.com
-Mail-Reply-To: luisfernandezconsultant@gmail.com
-Message-ID: <14eb5cee690cb9fdc9e4114506ba55f7@philiseua.com>
-X-Sender: michael@philiseua.com
-User-Agent: Roundcube Webmail/1.3.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210731091939.510816-1-jordy@pwning.systems>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Sat, Jul 31, 2021 at 11:19:38AM +0200, Jordy Zomer wrote:
+> The usb_dmac_get_current_residue function used to
+> take a signed integer as a pos parameter.
+> The only callers of this function passes an unsigned integer to it.
+> Therefore to make it obviously safe, let's just make this an unsgined
+> integer as this is used in pointer arithmetics.
+> 
+> Signed-off-by: Jordy Zomer <jordy@pwning.systems>
+> ---
+>  drivers/dma/sh/usb-dmac.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/sh/usb-dmac.c b/drivers/dma/sh/usb-dmac.c
+> index 8f7ceb698226..a5e225c15730 100644
+> --- a/drivers/dma/sh/usb-dmac.c
+> +++ b/drivers/dma/sh/usb-dmac.c
+> @@ -466,7 +466,7 @@ static int usb_dmac_chan_terminate_all(struct dma_chan *chan)
+>  
+>  static unsigned int usb_dmac_get_current_residue(struct usb_dmac_chan *chan,
+>  						 struct usb_dmac_desc *desc,
+> -						 int sg_index)
+> +						 unsigned int sg_index)
+>  {
+>  	struct usb_dmac_sg *sg = desc->sg + sg_index;
+>  	u32 mem_addr = sg->mem_addr & 0xffffffff;
+> -- 
+> 2.27.0
+> 
 
-
--- 
-Good day,
-
-I have an investment proposal that I would like to discuss with you. I 
-await your urgent response so that I will explain more regarding this 
-awesome Investment Opportunity.
-
-Regards,
-
-Luis Fernandez
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>

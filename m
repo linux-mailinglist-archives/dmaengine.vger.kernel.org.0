@@ -2,43 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FE6E3E08FE
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Aug 2021 21:50:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F8B93E0904
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Aug 2021 21:51:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237061AbhHDTuY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 4 Aug 2021 15:50:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44306 "EHLO
+        id S237566AbhHDTwE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 4 Aug 2021 15:52:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236893AbhHDTuX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Aug 2021 15:50:23 -0400
+        with ESMTP id S240716AbhHDTwD (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Aug 2021 15:52:03 -0400
 Received: from phobos.denx.de (phobos.denx.de [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E39D7C0613D5
-        for <dmaengine@vger.kernel.org>; Wed,  4 Aug 2021 12:50:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2352C06179A
+        for <dmaengine@vger.kernel.org>; Wed,  4 Aug 2021 12:51:50 -0700 (PDT)
 Received: from tr.lan (ip-89-176-112-137.net.upcbroadband.cz [89.176.112.137])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: marex@denx.de)
-        by phobos.denx.de (Postfix) with ESMTPSA id 3414C82DD4;
-        Wed,  4 Aug 2021 21:50:08 +0200 (CEST)
+        by phobos.denx.de (Postfix) with ESMTPSA id 686B082DD4;
+        Wed,  4 Aug 2021 21:51:49 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-        s=phobos-20191101; t=1628106608;
-        bh=xRhMLRf6O0xB1XOX6QHSauuZQQ4UkaoZuMx4/xgRmgs=;
+        s=phobos-20191101; t=1628106709;
+        bh=Y3rYlM6xco26mZCewvCy+cCEksGtErQGPlwQlEeVmp8=;
         h=From:To:Cc:Subject:Date:From;
-        b=KIN3TB6d4miJVIY9eIvMBrmkXDMuyuIveWXB48jFryyTU7af9ws6OZMvlPg/LO7jK
-         eBhPRbcccGcwMPDqEsrJdk6xe+BT/RUU0qLLfJbqmNKgvv2Cm3lA9PPDLI3a284gBF
-         ShHh3KxissxojF+sPavb1UtbmmCKuVTq6R4C3JxrjBuGf8wQazsjJSP4uPjzui0uzl
-         rWS55ySPU9b+xWdreCAbU9vrLHXZMTK7dRc2/xJyDxqchMsi8e9hLO+rKJOXLgKKHU
-         N5ocD+QekOg332XHuA/ZoBzTrYQ6ymnEdUpmSEuieqlNcrz1VBUFe9IZNpSSfBR8Qv
-         UkAv5YH4+kNEA==
+        b=Q/wDpFUoDSbMtryOlx4RcGU0i4SsiO2JZ0mocAhIlAYuazLdhwKgZjSoVr5MrEFTV
+         fngA1wl+no7xa4Evd4Hqpd1zT9x1h6XDx9ZlrEhAohn/GZyaTCf0LCR6Rw2iROeIDF
+         BFzinyi+7jeVBTgOmOHod+ULbWiPPS+Tcy/MjCX/vWJx5LkbUzqYdjg2BFTYvgYb68
+         52Kl5h8osOsy3v3ZMarzm5mQmsd7MNzhPNhTb7ZfoeyORFSoFMDxcBtIbWqXE5C39W
+         abE+dR4rw0kGrxvuLGwLGsRiYOl/vDcDuVicEKjsq8+b1vS9BitSa1pvE2wN3oy9zf
+         dQudBP/KDG5uw==
 From:   Marek Vasut <marex@denx.de>
 To:     dmaengine@vger.kernel.org
 Cc:     Marek Vasut <marex@denx.de>, Akinobu Mita <akinobu.mita@gmail.com>,
         Kedareswara rao Appana <appana.durga.rao@xilinx.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Vinod Koul <vinod.koul@intel.com>
-Subject: [PATCH V2] dmaengine: xilinx: Add empty device_config function
-Date:   Wed,  4 Aug 2021 21:49:45 +0200
-Message-Id: <20210804194945.61172-1-marex@denx.de>
+        Michal Simek <monstr@monstr.eu>, Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH V3] dmaengine: xilinx: Add empty device_config function
+Date:   Wed,  4 Aug 2021 21:51:40 +0200
+Message-Id: <20210804195140.61396-1-marex@denx.de>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -57,9 +56,10 @@ Signed-off-by: Marek Vasut <marex@denx.de>
 Cc: Akinobu Mita <akinobu.mita@gmail.com>
 Cc: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
 Cc: Michal Simek <monstr@monstr.eu>
-Cc: Vinod Koul <vinod.koul@intel.com>
+Cc: Vinod Koul <vkoul@kernel.org>
 ---
 V2: Fix copy-paste error in kerneldoc function name
+V3: Use k.org email address for Vinod
 ---
  drivers/dma/xilinx/xilinx_dma.c | 12 ++++++++++++
  1 file changed, 12 insertions(+)

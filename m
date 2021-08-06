@@ -2,22 +2,22 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7DE23E27D4
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Aug 2021 11:53:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F5E53E27D6
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Aug 2021 11:53:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244748AbhHFJxp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 6 Aug 2021 05:53:45 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:23306 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S231672AbhHFJxo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 6 Aug 2021 05:53:44 -0400
+        id S244753AbhHFJxr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 6 Aug 2021 05:53:47 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:48907 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S244750AbhHFJxr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 6 Aug 2021 05:53:47 -0400
 X-IronPort-AV: E=Sophos;i="5.84,300,1620658800"; 
-   d="scan'208";a="90014088"
+   d="scan'208";a="90029366"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 06 Aug 2021 18:53:27 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 06 Aug 2021 18:53:30 +0900
 Received: from localhost.localdomain (unknown [10.226.92.62])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 532C542121FB;
-        Fri,  6 Aug 2021 18:53:25 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id E222742127CC;
+        Fri,  6 Aug 2021 18:53:27 +0900 (JST)
 From:   Biju Das <biju.das.jz@bp.renesas.com>
 To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>
 Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
@@ -27,65 +27,190 @@ Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
         Chris Paterson <Chris.Paterson2@renesas.com>,
         Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v7 0/3] Add RZ/G2L DMAC support
-Date:   Fri,  6 Aug 2021 10:53:19 +0100
-Message-Id: <20210806095322.2326-1-biju.das.jz@bp.renesas.com>
+Subject: [PATCH v7 1/3] dt-bindings: dma: Document RZ/G2L bindings
+Date:   Fri,  6 Aug 2021 10:53:20 +0100
+Message-Id: <20210806095322.2326-2-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20210806095322.2326-1-biju.das.jz@bp.renesas.com>
+References: <20210806095322.2326-1-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This patch series aims to add DMAC support on RZ/G2L SoC's.
+Document RZ/G2L DMAC bindings.
 
-It is based on the work done by Chris Brandt for RZ/A DMA driver.
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Note:-
+ This base series for this patch is Linux 5.14-rc2(or +) otherwise bots would 
+ complain about check failures
 
 v6->v7:
- * As per the DMA documention vc.lock must be held by caller for
-   vchan_cookie_complete. So added vc.lock for this function.
- * Added lock for the lists used in rz_dmac_terminate_all.
-
+  * No Change.
 v5->v6:
- * Added Rb tag from Rob for binding patch
- * Fixed dma_addr_t and size_t format specifier issue reported by
-   kernel test robot
- * Started using ARRAY_SIZE macro instead of  magic number in
-   rz_dmac_ds_to_val_mapping function.
-
+  * No Change. Added Rb tag from Rob.
 v4->v5:
- * Passing legacy slave channel configuration parameters using dmaengine_slave_config is prohibited.
-   So started passing this parameters in DT instead, by encoding MID/RID values with channel parameters
-   in the #dma-cells.
- * Removed Rb tag's of Geert and Rob since there is a modification in binding patch
- * Added 128 byte slave bus width support
- * Removed SoC dtsi and Defconfig patch from this series. Will send as separate patch.
-
-Ref:-
-  https://lore.kernel.org/linux-renesas-soc/20210719092535.4474-1-biju.das.jz@bp.renesas.com/T/#ma0b261df6d4400882204aaaaa014ddb59c479db4
-
+  * Passing legacy slave channel configuration parameters using dmaengine_slave_config is prohibited.
+    So started passing this parameters in DT instead, by encoding MID/RID values with channel parameters
+    in the #dma-cells.
+  * Updated the description for #dma-cells
+  * Removed Rb tag's of Geert and Rob since there is a modification in binding patch
 v3->v4:
- * Added Rob's Rb tag for binding patch.
- * Incorporated Vinod and Geert's review comments.
+  * Added Rob's Rb tag
+  * Described clocks and reset properties
 v2->v3:
-  * Described clocks and resets in binding file as per Rob's feedback.
-
-v1->v2
- * Started using virtual DMAC
- * Added Geert's Rb tag for binding patch.
-
-Biju Das (3):
-  dt-bindings: dma: Document RZ/G2L bindings
-  dmaengine: Extend the dma_slave_width for 128 bytes
-  drivers: dma: sh: Add DMAC driver for RZ/G2L SoC
-
- .../bindings/dma/renesas,rz-dmac.yaml         | 130 +++
- drivers/dma/sh/Kconfig                        |   9 +
- drivers/dma/sh/Makefile                       |   1 +
- drivers/dma/sh/rz-dmac.c                      | 971 ++++++++++++++++++
- include/linux/dmaengine.h                     |   3 +-
- 5 files changed, 1113 insertions(+), 1 deletion(-)
+  * Added error interrupt first.
+  * Updated clock and reset maxitems.
+  * Added Geert's Rb tag.
+v1->v2:
+  * Made interrupt names in defined order
+  * Removed src address and channel configuration from dma-cells.
+  * Changed the compatibele string to "renesas,r9a07g044-dmac".
+v1:-
+  * https://patchwork.kernel.org/project/linux-renesas-soc/patch/20210611113642.18457-2-biju.das.jz@bp.renesas.com/
+---
+ .../bindings/dma/renesas,rz-dmac.yaml         | 130 ++++++++++++++++++
+ 1 file changed, 130 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
- create mode 100644 drivers/dma/sh/rz-dmac.c
 
+diff --git a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+new file mode 100644
+index 000000000000..7a4f415d74dc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+@@ -0,0 +1,130 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/renesas,rz-dmac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas RZ/G2L DMA Controller
++
++maintainers:
++  - Biju Das <biju.das.jz@bp.renesas.com>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - renesas,r9a07g044-dmac # RZ/G2{L,LC}
++      - const: renesas,rz-dmac
++
++  reg:
++    items:
++      - description: Control and channel register block
++      - description: DMA extended resource selector block
++
++  interrupts:
++    maxItems: 17
++
++  interrupt-names:
++    items:
++      - const: error
++      - const: ch0
++      - const: ch1
++      - const: ch2
++      - const: ch3
++      - const: ch4
++      - const: ch5
++      - const: ch6
++      - const: ch7
++      - const: ch8
++      - const: ch9
++      - const: ch10
++      - const: ch11
++      - const: ch12
++      - const: ch13
++      - const: ch14
++      - const: ch15
++
++  clocks:
++    items:
++      - description: DMA main clock
++      - description: DMA register access clock
++
++  '#dma-cells':
++    const: 1
++    description:
++      The cell specifies the encoded MID/RID values of the DMAC port
++      connected to the DMA client and the slave channel configuration
++      parameters.
++      bits[0:9] - Specifies MID/RID value
++      bit[10] - Specifies DMA request high enable (HIEN)
++      bit[11] - Specifies DMA request detection type (LVL)
++      bits[12:14] - Specifies DMAACK output mode (AM)
++      bit[15] - Specifies Transfer Mode (TM)
++
++  dma-channels:
++    const: 16
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    items:
++      - description: Reset for DMA ARESETN reset terminal
++      - description: Reset for DMA RST_ASYNC reset terminal
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++  - clocks
++  - '#dma-cells'
++  - dma-channels
++  - power-domains
++  - resets
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/r9a07g044-cpg.h>
++
++    dmac: dma-controller@11820000 {
++        compatible = "renesas,r9a07g044-dmac",
++                     "renesas,rz-dmac";
++        reg = <0x11820000 0x10000>,
++              <0x11830000 0x10000>;
++        interrupts = <GIC_SPI 141 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 125 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 126 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 127 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 128 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 129 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 130 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 131 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 132 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 133 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 134 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 135 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 136 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 137 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 138 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 139 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 140 IRQ_TYPE_EDGE_RISING>;
++        interrupt-names = "error",
++                          "ch0", "ch1", "ch2", "ch3",
++                          "ch4", "ch5", "ch6", "ch7",
++                          "ch8", "ch9", "ch10", "ch11",
++                          "ch12", "ch13", "ch14", "ch15";
++        clocks = <&cpg CPG_MOD R9A07G044_DMAC_ACLK>,
++                 <&cpg CPG_MOD R9A07G044_DMAC_PCLK>;
++        power-domains = <&cpg>;
++        resets = <&cpg R9A07G044_DMAC_ARESETN>,
++                 <&cpg R9A07G044_DMAC_RST_ASYNC>;
++        #dma-cells = <1>;
++        dma-channels = <16>;
++    };
 -- 
 2.17.1
 

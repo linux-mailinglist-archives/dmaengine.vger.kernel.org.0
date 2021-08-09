@@ -2,59 +2,65 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C328F3E2F48
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Aug 2021 20:27:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 000BA3E428A
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Aug 2021 11:22:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243008AbhHFS1e (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 6 Aug 2021 14:27:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241541AbhHFS1b (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 6 Aug 2021 14:27:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 0BF3561186;
-        Fri,  6 Aug 2021 18:27:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628274435;
-        bh=Gd5VYs8Xefz+uIWTI75YeI+t3r2vF1GcVdLexLpxbaU=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=G2YjaLfuYNKIZhNJGSyeX5NKWPCm0hBB0UdeAAo0UNB7DdNfF1Es4QobQ5a3IJgk+
-         pnciEX+lYBwXpxMg+51yoDTq797/50eDiLGsFpMFx/88nOC3/G8sEBBLVOmJ/H/58v
-         oJgGo29fSpMCbg2QSpnZmkDHkiiXMfG+1ybjXhafytC80Uo9m5jkhW6lc2iSGx0Bd2
-         TOzHfObSSrbmEp6/wcCh7qP9DHutPxcGyJiAhXyOyqMVKmazIBTv04Iasp9Z2AXrDw
-         ghho7s5QL1Z3EKveT/PoFGacWICsq4kw69TPZ26COySdXhPshAbfbrk+Yq4lJ1HUjS
-         bMk7p+GfSiV6A==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 06232609F1;
-        Fri,  6 Aug 2021 18:27:15 +0000 (UTC)
-Subject: Re: [GIT PULL]: dmaengine fixes for v5.14
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <YQ1BhK0C9utGOOIn@matsya>
-References: <YQ1BhK0C9utGOOIn@matsya>
-X-PR-Tracked-List-Id: <dmaengine.vger.kernel.org>
-X-PR-Tracked-Message-Id: <YQ1BhK0C9utGOOIn@matsya>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-fix-5.14
-X-PR-Tracked-Commit-Id: 7199ddede9f0f2f68d41e6928e1c6c4bca9c39c0
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4f1be39638a538f6495c0a29e648255fb8c54f8b
-Message-Id: <162827443501.9282.11129555084175274541.pr-tracker-bot@kernel.org>
-Date:   Fri, 06 Aug 2021 18:27:15 +0000
+        id S234255AbhHIJWp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 9 Aug 2021 05:22:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234180AbhHIJWo (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Aug 2021 05:22:44 -0400
+Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC171C0613CF
+        for <dmaengine@vger.kernel.org>; Mon,  9 Aug 2021 02:22:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
+        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+        Resent-Cc:Resent-Message-ID; bh=d3BncnrCAXNnuK2nAENrl+5xP+0HPMsrLNcL+uNpbvw=;
+        t=1628500944; x=1629710544; b=EvzQmQlONwoFE/BAGC8zPLeFNt5+6pE1LMnc6fov+69N4yP
+        aTetPNHd8k2sc+DsRE1WBFQLUx5dYG6zycnBdJfTWR5AG/BjR6lKoK4q9mlcU9AyBx5bPVgHXHf5f
+        Oj+QXjZrfEntrnRyUAkfQbR9RsllhQ7MH7aUCCLM8WzabzcAt3qMARQR7mP05SSWkGdtwHQ4K6Gfn
+        r+U8O9HVOa4NW8HW/TLL2Z9ksh2dmP8tK9CvHJ028oFjecShk11+8XYF0yOK0Psf/Ykwa9r2PmpI1
+        eyvfJEZc3awgdyedJvcJOjdk2qfH5bkEAETxRKrvFCKzfZw5rhKkWLUF/KLtlM0w==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.94.2)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1mD1RD-0083jI-UL; Mon, 09 Aug 2021 11:21:54 +0200
+Message-ID: <09b654a819dc2985ee18419931a710572bf2b8f9.camel@sipsolutions.net>
+Subject: Re: [PATCH] dmaengine: idxd: depends on !UML
+From:   Johannes Berg <johannes@sipsolutions.net>
 To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        dma <dmaengine@vger.kernel.org>
+Cc:     dmaengine@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
+        linux-um@lists.infradead.org, kernel test robot <lkp@intel.com>
+Date:   Mon, 09 Aug 2021 11:21:53 +0200
+In-Reply-To: <YO6LdCg2/4M47k7/@matsya>
+References: <20210625103810.fe877ae0aef4.If240438e3f50ae226f3f755fc46ea498c6858393@changeid>
+         <YO6LdCg2/4M47k7/@matsya>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-malware-bazaar: not-scanned
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The pull request you sent on Fri, 6 Aug 2021 19:34:52 +0530:
+On Wed, 2021-07-14 at 12:30 +0530, Vinod Koul wrote:
+> On 25-06-21, 10:38, Johannes Berg wrote:
+> > From: Johannes Berg <johannes.berg@intel.com>
+> > 
+> > Now that UML has PCI support, this driver must depend also on
+> > !UML since it pokes at X86_64 architecture internals that don't
+> > exist on ARCH=um.
+> 
+> Applied, thanks
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-fix-5.14
+Thanks.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4f1be39638a538f6495c0a29e648255fb8c54f8b
+Any reason this hasn't landed in Linus's tree yet? I keep getting build
+failure reports from there.
 
-Thank you!
+johannes
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html

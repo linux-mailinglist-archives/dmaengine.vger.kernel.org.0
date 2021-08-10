@@ -2,38 +2,36 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C555B3E5D36
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Aug 2021 16:18:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 862D13E5D55
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Aug 2021 16:19:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243169AbhHJOSF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 10 Aug 2021 10:18:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54602 "EHLO mail.kernel.org"
+        id S243271AbhHJOSp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 10 Aug 2021 10:18:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242680AbhHJOQd (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 10 Aug 2021 10:16:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1939C6108F;
-        Tue, 10 Aug 2021 14:16:11 +0000 (UTC)
+        id S242780AbhHJOQ7 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 10 Aug 2021 10:16:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 39BF4610A3;
+        Tue, 10 Aug 2021 14:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628604971;
-        bh=EI7Oty0XmL9W1SsnlEGJzpIBSMOcSDym1SN9PJNdnLQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t4UNqGxgJtH110cTMi6KUIPOH6H0aAvukCGL1lPMNvZuRh1tg/Ew1IEYvkVqPq3xh
-         nlPwmLvbz6vSxUdMR0vqnBroa5kMMAPUqtc5KKH2XGLp7So6F7oMnpnnuIzLupdfSZ
-         XMfM9NNRglKj5ETaaja+9LJ+THjiCgZCW2h1kv6Nl70tXJZ9YcRzxcdPo5WnTBRUJP
-         bS/sGn+kOOhu1tZ2NVyBqF31dzJsPdBGVQIo65u7As+UER8EboyMvfDi0l/oX4Oh4O
-         cieJjUo3CD0QiIlmOL0Rf/LSXGAr+LCDcmXoK5VJd1zvEnjZwHOwe9AZ4mzdQN+nvg
-         pHTeu3SueiLoQ==
+        s=k20201202; t=1628604987;
+        bh=MSbu1neapRlMUuym5EKpLXNK+liHInZpCf98VFak1Q4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sr+tjjMqoxyJs65vEjkdFgviURunCdQetdKGukEa3jUoaEBuo0WaBNK0vXW2iCxHa
+         7LaaWqM+Pdf71MG7WKDuil+cUIedO5PMKtAFyrz3Nv4qcC5oaTk3KMcnJVBUOSUKbi
+         nOSoopfRetLD6ChTeshvgR+cr5QTqo1AxESNwuG7rG8ILxSmXEubN/nVl9UvP+7uuO
+         U/j47HsUXpzMbtix0wptgdxz2LYRAcc4p04IGdJExqkypUwlQSLQTViUNKlrR6WTkD
+         /2X9MpnRuPwwkQCgZnjuq5i3+BP3WX5HWGN5E284z6lEF9vmXqc5O/tGdbZ2FwZdIa
+         SRuZaZnQ/5C+Q==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+Cc:     Adrian Larumbe <adrian.martinezlarumbe@imgtec.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 04/13] dmaengine: of-dma: router_xlate to return -EPROBE_DEFER if controller is not yet available
-Date:   Tue, 10 Aug 2021 10:15:56 -0400
-Message-Id: <20210810141606.3117932-4-sashal@kernel.org>
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 01/11] dmaengine: xilinx_dma: Fix read-after-free bug when terminating transfers
+Date:   Tue, 10 Aug 2021 10:16:14 -0400
+Message-Id: <20210810141625.3118097-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210810141606.3117932-1-sashal@kernel.org>
-References: <20210810141606.3117932-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -42,60 +40,80 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+From: Adrian Larumbe <adrian.martinezlarumbe@imgtec.com>
 
-[ Upstream commit eda97cb095f2958bbad55684a6ca3e7d7af0176a ]
+[ Upstream commit 7dd2dd4ff9f3abda601f22b9d01441a0869d20d7 ]
 
-If the router_xlate can not find the controller in the available DMA
-devices then it should return with -EPORBE_DEFER in a same way as the
-of_dma_request_slave_channel() does.
+When user calls dmaengine_terminate_sync, the driver will clean up any
+remaining descriptors for all the pending or active transfers that had
+previously been submitted. However, this might happen whilst the tasklet is
+invoking the DMA callback for the last finished transfer, so by the time it
+returns and takes over the channel's spinlock, the list of completed
+descriptors it was traversing is no longer valid. This leads to a
+read-after-free situation.
 
-The issue can be reproduced if the event router is registered before the
-DMA controller itself and a driver would request for a channel before the
-controller is registered.
-In of_dma_request_slave_channel():
-1. of_dma_find_controller() would find the dma_router
-2. ofdma->of_dma_xlate() would fail and returned NULL
-3. -ENODEV is returned as error code
+Fix it by signalling whether a user-triggered termination has happened by
+means of a boolean variable.
 
-with this patch we would return in this case the correct -EPROBE_DEFER and
-the client can try to request the channel later.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-Link: https://lore.kernel.org/r/20210717190021.21897-1-peter.ujfalusi@gmail.com
+Signed-off-by: Adrian Larumbe <adrian.martinezlarumbe@imgtec.com>
+Link: https://lore.kernel.org/r/20210706234338.7696-3-adrian.martinezlarumbe@imgtec.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/of-dma.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/dma/xilinx/xilinx_dma.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
-index 4bbf4172b9bf..e3f1d4ab8e4f 100644
---- a/drivers/dma/of-dma.c
-+++ b/drivers/dma/of-dma.c
-@@ -65,8 +65,12 @@ static struct dma_chan *of_dma_router_xlate(struct of_phandle_args *dma_spec,
- 		return NULL;
- 
- 	ofdma_target = of_dma_find_controller(&dma_spec_target);
--	if (!ofdma_target)
--		return NULL;
-+	if (!ofdma_target) {
-+		ofdma->dma_router->route_free(ofdma->dma_router->dev,
-+					      route_data);
-+		chan = ERR_PTR(-EPROBE_DEFER);
-+		goto err;
-+	}
- 
- 	chan = ofdma_target->of_dma_xlate(&dma_spec_target, ofdma_target);
- 	if (IS_ERR_OR_NULL(chan)) {
-@@ -77,6 +81,7 @@ static struct dma_chan *of_dma_router_xlate(struct of_phandle_args *dma_spec,
- 		chan->route_data = route_data;
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index 0c5668e897fe..d891ec05bc48 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -332,6 +332,7 @@ struct xilinx_dma_tx_descriptor {
+  * @genlock: Support genlock mode
+  * @err: Channel has errors
+  * @idle: Check for channel idle
++ * @terminating: Check for channel being synchronized by user
+  * @tasklet: Cleanup work after irq
+  * @config: Device configuration info
+  * @flush_on_fsync: Flush on Frame sync
+@@ -369,6 +370,7 @@ struct xilinx_dma_chan {
+ 	bool genlock;
+ 	bool err;
+ 	bool idle;
++	bool terminating;
+ 	struct tasklet_struct tasklet;
+ 	struct xilinx_vdma_config config;
+ 	bool flush_on_fsync;
+@@ -843,6 +845,13 @@ static void xilinx_dma_chan_desc_cleanup(struct xilinx_dma_chan *chan)
+ 		/* Run any dependencies, then free the descriptor */
+ 		dma_run_dependencies(&desc->async_tx);
+ 		xilinx_dma_free_tx_descriptor(chan, desc);
++
++		/*
++		 * While we ran a callback the user called a terminate function,
++		 * which takes care of cleaning up any remaining descriptors
++		 */
++		if (chan->terminating)
++			break;
  	}
  
-+err:
- 	/*
- 	 * Need to put the node back since the ofdma->of_dma_route_allocate
- 	 * has taken it for generating the new, translated dma_spec
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+@@ -1612,6 +1621,8 @@ static dma_cookie_t xilinx_dma_tx_submit(struct dma_async_tx_descriptor *tx)
+ 	if (desc->cyclic)
+ 		chan->cyclic = true;
+ 
++	chan->terminating = false;
++
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+ 
+ 	return cookie;
+@@ -2068,6 +2079,7 @@ static int xilinx_dma_terminate_all(struct dma_chan *dchan)
+ 	}
+ 
+ 	/* Remove and free all of the descriptors in the lists */
++	chan->terminating = true;
+ 	xilinx_dma_free_descriptors(chan);
+ 	chan->idle = true;
+ 
 -- 
 2.30.2
 

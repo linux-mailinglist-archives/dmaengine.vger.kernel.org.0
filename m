@@ -2,100 +2,69 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C45593E5DA3
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Aug 2021 16:22:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 236B33E7F81
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Aug 2021 19:41:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239443AbhHJOWU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 10 Aug 2021 10:22:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54694 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241990AbhHJOTy (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 10 Aug 2021 10:19:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8B24C60F41;
-        Tue, 10 Aug 2021 14:17:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628605032;
-        bh=xGSvjU0nc0iKr95fdCCVuHuhvuglMua4omPmd1c6baA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DVwAEPx4hkdSrFp4SiVazKlHWV+Gb0wbvoYLosG0okZqs9Zrx0CGHsIDX47UDGKKb
-         xNDAImsw3hx1OBfO7NbZLSdBPXFwZhfxsZlfVu9IamhHk0bKK7NEe4Bc6np7hE8wuc
-         vNk2ud5z+q0FAoNKyDi1gqE3iWJgDKaW55ZouSYQjcYfN53eRRaNPIayM8ffsVnua0
-         MocupieIQRjmC9DLHSt8Xy7gPwocrcvRQD0NwZKVgdUvpXDeXreKCutTWRULzKdYiO
-         lUVSHniNrMRWO8Q8yKZ3yFbXb/UYhAuSUFOxujsH1p0MLdG2Shn83uo05mjhzqix31
-         eSRl6dXPim+uQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 3/6] dmaengine: of-dma: router_xlate to return -EPROBE_DEFER if controller is not yet available
-Date:   Tue, 10 Aug 2021 10:17:04 -0400
-Message-Id: <20210810141707.3118714-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210810141707.3118714-1-sashal@kernel.org>
-References: <20210810141707.3118714-1-sashal@kernel.org>
+        id S233353AbhHJRkn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 10 Aug 2021 13:40:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233895AbhHJRhi (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 10 Aug 2021 13:37:38 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 170B3C0619E8
+        for <dmaengine@vger.kernel.org>; Tue, 10 Aug 2021 10:33:37 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id h11so15239772ljo.12
+        for <dmaengine@vger.kernel.org>; Tue, 10 Aug 2021 10:33:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=y3BZ+wT7TMDVjM2/WQcyPOhYkG/NWjvDbJIsMqFI2RA=;
+        b=BggyEzSIpVznrhWTl8MIRAYEe15KlTxcMGseAQSFa7RDeDzVHxU4eSoETbmExnaLIE
+         zuq8OYsbcAC4TRTZpDVHuqOpZQ9IWzoDnFG9KE9Hgoh5GHNRpLrX7GaTa2Rlpi17Sa+7
+         wynv7o5vGtXcABH0YLjEMHBgYbVN4gwCCmMbmqM96vylTsH+XuSJQxB2T0aZ0px1WpyQ
+         RfAqEbEJWHwau3sZBSpHTPqcKq0lEWF+TZfP6Hoo/gEZtnmpQsbvRYpoOVsYPdrPzr7x
+         t3j+1ErMjanfyKX6UgQnU/AAqtfTm/Qksyzzn7HfgMwEBK6s4oZtKRsuVtciK72GKLQ3
+         6YUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=y3BZ+wT7TMDVjM2/WQcyPOhYkG/NWjvDbJIsMqFI2RA=;
+        b=kK8+aH2IYpzJgCvPkZSTZ6mueu0V/qzX6iNSwli+FFmKB70+NMb0TNrkKchlz3NgwQ
+         /hvebMxpuCERaDORL9gVvTQzxNnLL8DPF7OMNppw0egnuJwH1IZm0ZzG2KHvL10QY/yu
+         IjlK0BHSi1rSw72OKeSZKILFOfL16LewNF2saSeqr9oIkR9gy4mAn1Cp9az5EmsV5rwO
+         3WjqyokBlJSMMwXrxNyzkj9dOQvc5NbdxukDsHctFwhEUjZT8DFcn+poFg1LIgFvGhmj
+         QunGqNS+5LGPiFps/ZrCvl4EH6S9i0G4RVG1ursxybccYY4oX7u9o30qX9jVPQYOWjt9
+         ucUA==
+X-Gm-Message-State: AOAM532SIZ8Y5/IbAuyirYLXRiDNk536L6AR4+m8Xzo80RSSPVwyTaH8
+        zuILDKRZM1a0GJP/V0WOhEGfDFHYlS5wSVtK5Ng=
+X-Google-Smtp-Source: ABdhPJxJzT1Kb5atT5yD66iaERNxaunOV6XJPdXL1z2OXUo9BKjwXZsRFKaZJQfJZWzQJ7vPYlv2A2MhcLNWOaJIEsQ=
+X-Received: by 2002:a2e:b61c:: with SMTP id r28mr13615658ljn.274.1628616814996;
+ Tue, 10 Aug 2021 10:33:34 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Received: by 2002:ac2:5d2e:0:0:0:0:0 with HTTP; Tue, 10 Aug 2021 10:33:33
+ -0700 (PDT)
+Reply-To: majidmuzaffar8@gmail.com
+From:   Majid Muzaffar <ing.abdullabin.rishid.me@gmail.com>
+Date:   Tue, 10 Aug 2021 20:33:33 +0300
+Message-ID: <CAFsu49W_3bbJbgEKV5RQo3TBRgLduTA-4EwS7hHkwcfSHSRrcg@mail.gmail.com>
+Subject: Proposal
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Salam alaikum,
 
-[ Upstream commit eda97cb095f2958bbad55684a6ca3e7d7af0176a ]
+I am the investment officer of UAE based investment company who are
+ready to fund projects outside UAE, in the form of debt finance. We
+grant loan to both Corporate and private entities at a low interest
+rate of 3% ROI per annum. The terms are very flexible and interesting.
+Kindly revert back if you have projects that needs funding for further
+discussion and negotiation.
 
-If the router_xlate can not find the controller in the available DMA
-devices then it should return with -EPORBE_DEFER in a same way as the
-of_dma_request_slave_channel() does.
+Thanks
 
-The issue can be reproduced if the event router is registered before the
-DMA controller itself and a driver would request for a channel before the
-controller is registered.
-In of_dma_request_slave_channel():
-1. of_dma_find_controller() would find the dma_router
-2. ofdma->of_dma_xlate() would fail and returned NULL
-3. -ENODEV is returned as error code
-
-with this patch we would return in this case the correct -EPROBE_DEFER and
-the client can try to request the channel later.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-Link: https://lore.kernel.org/r/20210717190021.21897-1-peter.ujfalusi@gmail.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/of-dma.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
-index 86c591481dfe..4a5dbf30605a 100644
---- a/drivers/dma/of-dma.c
-+++ b/drivers/dma/of-dma.c
-@@ -68,8 +68,12 @@ static struct dma_chan *of_dma_router_xlate(struct of_phandle_args *dma_spec,
- 		return NULL;
- 
- 	ofdma_target = of_dma_find_controller(&dma_spec_target);
--	if (!ofdma_target)
--		return NULL;
-+	if (!ofdma_target) {
-+		ofdma->dma_router->route_free(ofdma->dma_router->dev,
-+					      route_data);
-+		chan = ERR_PTR(-EPROBE_DEFER);
-+		goto err;
-+	}
- 
- 	chan = ofdma_target->of_dma_xlate(&dma_spec_target, ofdma_target);
- 	if (IS_ERR_OR_NULL(chan)) {
-@@ -80,6 +84,7 @@ static struct dma_chan *of_dma_router_xlate(struct of_phandle_args *dma_spec,
- 		chan->route_data = route_data;
- 	}
- 
-+err:
- 	/*
- 	 * Need to put the node back since the ofdma->of_dma_route_allocate
- 	 * has taken it for generating the new, translated dma_spec
--- 
-2.30.2
-
+investment officer

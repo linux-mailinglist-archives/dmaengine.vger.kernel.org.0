@@ -2,35 +2,35 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 118063E5CAE
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Aug 2021 16:15:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D727D3E5CBA
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Aug 2021 16:15:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242167AbhHJOPb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 10 Aug 2021 10:15:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50628 "EHLO mail.kernel.org"
+        id S242239AbhHJOPh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 10 Aug 2021 10:15:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238812AbhHJOPb (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 10 Aug 2021 10:15:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5F43660FDA;
-        Tue, 10 Aug 2021 14:15:08 +0000 (UTC)
+        id S242228AbhHJOPg (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 10 Aug 2021 10:15:36 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7F18260F41;
+        Tue, 10 Aug 2021 14:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628604909;
-        bh=iWvU1n7Xu0JlgJ0bdwl8Mf+K9kye/OKxXwSbIDFd6S0=;
+        s=k20201202; t=1628604914;
+        bh=YepSXCU2ju4mtjkbVuCQPJaTKoncqIMO34FMAlD89l0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q1pwg/pl/GPy8+pN7cGC78R6UxrZZ/qY42J+3GbK7b6tzZUaQzgOvYqPVWCa02N3N
-         K/2BvKk8+gfG3z5YlWMTlVowQjIr/r/IJsOHwevouqoeqY0mLD5CRPNqmpYjm9XJq5
-         2SH2KOHjkT/4VfyQbChEFpmsRDEM9rCeDF1ROGfs9Kxoz1ROoVm2vaCWvVq7bIiACz
-         9jJ+9PnUgg6/b0UCkYuxUtZE/ZFsaN6m025j80Gmc5X/jkAurBJkt1UHBDwjNsMKEV
-         x98C5iGQKqIZN7Ph4Wxp1O7jpIFqJ7qAZhIiSPRNtGgoCci+KP1Ga1hmg6FzNaA0pa
-         f2B1+13z2/f+g==
+        b=s/hgCBtJ4JVKHNseZQa4z9F0UMBJQmkR2ugNamOwTCmGRMsJ854vXguKGPnsF9ycw
+         vmSkp2+y+NIXe7Y/lbagwR31pXexeiEjoxGXh7jKWweRHy47RI4DPiitLINblet+WT
+         J0arlzRxNNQu0ZyFKqS8OqLR4UYI9+Bdux+3zOx/Ke9lwEwoYhybIbMozQvKRWZQBs
+         ZQZJ7bi7TMkwPz/qZAOLOSmSQ0JcqgNKxNBT06Wng3s31klcWRPjysPJUDUCkZVvdu
+         pMdNR+8HgvsN42VFzVY3hYWNZsGda2huzt+iNJbbRKnNvR9VH6RBQglagwEkF1ENZn
+         WtXoWDzY+fxBQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yu Kuai <yukuai3@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+Cc:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
         dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.13 02/24] dmaengine: usb-dmac: Fix PM reference leak in usb_dmac_probe()
-Date:   Tue, 10 Aug 2021 10:14:43 -0400
-Message-Id: <20210810141505.3117318-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.13 06/24] dmaengine: of-dma: router_xlate to return -EPROBE_DEFER if controller is not yet available
+Date:   Tue, 10 Aug 2021 10:14:47 -0400
+Message-Id: <20210810141505.3117318-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210810141505.3117318-1-sashal@kernel.org>
 References: <20210810141505.3117318-1-sashal@kernel.org>
@@ -42,38 +42,60 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+From: Peter Ujfalusi <peter.ujfalusi@gmail.com>
 
-[ Upstream commit 1da569fa7ec8cb0591c74aa3050d4ea1397778b4 ]
+[ Upstream commit eda97cb095f2958bbad55684a6ca3e7d7af0176a ]
 
-pm_runtime_get_sync will increment pm usage counter even it failed.
-Forgetting to putting operation will result in reference leak here.
-Fix it by moving the error_pm label above the pm_runtime_put() in
-the error path.
+If the router_xlate can not find the controller in the available DMA
+devices then it should return with -EPORBE_DEFER in a same way as the
+of_dma_request_slave_channel() does.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Link: https://lore.kernel.org/r/20210706124521.1371901-1-yukuai3@huawei.com
+The issue can be reproduced if the event router is registered before the
+DMA controller itself and a driver would request for a channel before the
+controller is registered.
+In of_dma_request_slave_channel():
+1. of_dma_find_controller() would find the dma_router
+2. ofdma->of_dma_xlate() would fail and returned NULL
+3. -ENODEV is returned as error code
+
+with this patch we would return in this case the correct -EPROBE_DEFER and
+the client can try to request the channel later.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Link: https://lore.kernel.org/r/20210717190021.21897-1-peter.ujfalusi@gmail.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sh/usb-dmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/of-dma.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/sh/usb-dmac.c b/drivers/dma/sh/usb-dmac.c
-index 8f7ceb698226..1cc06900153e 100644
---- a/drivers/dma/sh/usb-dmac.c
-+++ b/drivers/dma/sh/usb-dmac.c
-@@ -855,8 +855,8 @@ static int usb_dmac_probe(struct platform_device *pdev)
+diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+index ec00b20ae8e4..ac61ecda2926 100644
+--- a/drivers/dma/of-dma.c
++++ b/drivers/dma/of-dma.c
+@@ -67,8 +67,12 @@ static struct dma_chan *of_dma_router_xlate(struct of_phandle_args *dma_spec,
+ 		return NULL;
  
- error:
- 	of_dma_controller_free(pdev->dev.of_node);
--	pm_runtime_put(&pdev->dev);
- error_pm:
-+	pm_runtime_put(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
- 	return ret;
- }
+ 	ofdma_target = of_dma_find_controller(&dma_spec_target);
+-	if (!ofdma_target)
+-		return NULL;
++	if (!ofdma_target) {
++		ofdma->dma_router->route_free(ofdma->dma_router->dev,
++					      route_data);
++		chan = ERR_PTR(-EPROBE_DEFER);
++		goto err;
++	}
+ 
+ 	chan = ofdma_target->of_dma_xlate(&dma_spec_target, ofdma_target);
+ 	if (IS_ERR_OR_NULL(chan)) {
+@@ -89,6 +93,7 @@ static struct dma_chan *of_dma_router_xlate(struct of_phandle_args *dma_spec,
+ 		}
+ 	}
+ 
++err:
+ 	/*
+ 	 * Need to put the node back since the ofdma->of_dma_route_allocate
+ 	 * has taken it for generating the new, translated dma_spec
 -- 
 2.30.2
 

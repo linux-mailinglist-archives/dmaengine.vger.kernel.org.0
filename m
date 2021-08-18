@@ -2,100 +2,114 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0575D3F07A5
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Aug 2021 17:14:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C2FF3F0804
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Aug 2021 17:28:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235131AbhHRPOv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 18 Aug 2021 11:14:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32804 "EHLO
+        id S239411AbhHRP3H (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 18 Aug 2021 11:29:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239864AbhHRPOr (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 18 Aug 2021 11:14:47 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DF4DC061764
-        for <dmaengine@vger.kernel.org>; Wed, 18 Aug 2021 08:14:12 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id u1so1890973wmm.0
-        for <dmaengine@vger.kernel.org>; Wed, 18 Aug 2021 08:14:12 -0700 (PDT)
+        with ESMTP id S238837AbhHRP3H (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 18 Aug 2021 11:29:07 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 876B7C061764;
+        Wed, 18 Aug 2021 08:28:32 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id l11so2022989plk.6;
+        Wed, 18 Aug 2021 08:28:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Da0DCFGolB9uAM2tKDPuHVOlQ6ovhGIdi2wnEJL3jXc=;
-        b=JqZOf7zXT9L88sx2XhatvSar77vpGtprbyBun1lpZtJkBsF+4ehXeieZmHzpi9PLaS
-         vnfRTYvY4mLwIWtikv3stTQ73/K8xZZ7i665vDbr0iKXPrKEiUjNRKf1aFOcmJLD6pJe
-         t8OKIH6jT3o8Vo7Lzt5QlglKpxiKeJTMDtMdU9Piaz7txTB1P+PrgxbU9Hv25TvZh39P
-         HAXJM0cwfE1AEtLDilFWuBp4BjpdqBiOi+Y6/Hwh+aW4loV+2i7cSC3VA47moIWgppLR
-         /wRH8qbEZQl2uMvS+eTwmm6zsxfjZJM6QKry80ezpD5cXAoOgL01r3zghpua9u9SFoKq
-         ijNw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dT+pL+9YhtUImpcGN/cKN8jzBfuzVCiFl8hmF6VGry0=;
+        b=hD3mxBhnDdODBl5zrCmekRuyAN49XWYkOcgChl79sRL1WCPUAuS5sDnhh8IeB80ab9
+         RhOqTw8wduv5KWLenIcV0a0/dMAHR+ewwJYm6xaZpKNA0rHrO7I9GxxJgBl9VgpeTqqT
+         pw0eQQ+s2z4wz11RAu+nyA4UCDz4ooPceIeLdoVYki8A56TaRrjcsNVYt1EVoLLesx/9
+         u6erXipMKMQkZa1UF3Ik568mL57hskgp8b4OMc/fkl5pT+C9wcE4kohy5Dtp/+hxFNr7
+         EIHPWWjl8EUmlN3dUD5RLsV6BCSwrmy9vRhhEx7+SgLTfkwFHqwd1OujaiSGaK91V8Hb
+         rn+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Da0DCFGolB9uAM2tKDPuHVOlQ6ovhGIdi2wnEJL3jXc=;
-        b=nKeFKHY8pO13i3I9zTC1yosw6plpQqtPoJYQmkVex8kmHXAXKTolCJYMkl+XSLFKlJ
-         CI/krLOFK8cF4IqxxEd6pDnMXg7AkJKshULsphNf4sQAClgY+mOPSlvQ+fVb1RTx5MJo
-         /y51u/c3AxG6sBlWE8KUSG0pIkIDvwMLAnm1rxFvHYFqpvCdLzS3TYdSFakL7JfDav5N
-         N+kBRUyhbqZDfOCw85WFoi7mbjRlYex31dpmXr9d3BM7rgg1IBXz6xgAVl5f9BHTU4tM
-         BU8J+OTmy8w/zJPAs0WdTLnRBGF6aX8Jw5e0Hx/0RkUSKvVLMIyNrSiwrxFmUPUL5Ytb
-         /Tpg==
-X-Gm-Message-State: AOAM530oocamY5yutfceHB7hroikMBl+aoZay74leAYicOpXe4RYgFv7
-        ncBjpvybBKrvIz+dsFFfWn9D/nIEk4rJhd+z
-X-Google-Smtp-Source: ABdhPJznDIbrC67RLd4q1jhvYx2titLrWoxzZktsdZNo655PU1Rk/lZxfAqsbScG+aYG6eBYozaydw==
-X-Received: by 2002:a1c:4a:: with SMTP id 71mr9102711wma.87.1629299640460;
-        Wed, 18 Aug 2021 08:14:00 -0700 (PDT)
-Received: from maple.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
-        by smtp.gmail.com with ESMTPSA id l21sm101829wmh.31.2021.08.18.08.13.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Aug 2021 08:14:00 -0700 (PDT)
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        dmaengine@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, patches@linaro.org
-Subject: [PATCH 2/2] Documentation: dmaengine: Correctly describe dmatest with channel unset
-Date:   Wed, 18 Aug 2021 16:13:15 +0100
-Message-Id: <20210818151315.9505-3-daniel.thompson@linaro.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210818151315.9505-1-daniel.thompson@linaro.org>
-References: <20210818151315.9505-1-daniel.thompson@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dT+pL+9YhtUImpcGN/cKN8jzBfuzVCiFl8hmF6VGry0=;
+        b=AtySR+V5gvPlj3XyXIXFgAUOyk51VvBWDymQdrvF8gAaVq2SuqzmU7fIKa8BXzOfCd
+         B5X1+cs1nEM6/icKPG2zLGFKSuNSyajaixkfy5B1gBk2dvJukccVbX2cfenzM6+2HO9c
+         n31dVhLewIwW4QM3vlXJn7fojEtToz07hPXN8h0bFfGMZbmtp+navo6EO7aV4oOGFZX+
+         1I2zCUhsPd9C7dFI32+oRVLtAk+auD4eM+IPzafackJXtfjAlsN5lfsDL7K4LA2r83MC
+         mp6ZTZXlq8BdYKCq7KiBV4yxMToxsRQCFJp5TAknU2DHPd8boAY29NjNov7Kvp1KMvS0
+         KEPQ==
+X-Gm-Message-State: AOAM532CYwBuiw1xLtI4D/Ff5wC9CtD+iZdIrJmFqoNG4Da5BSA+E4Mq
+        HwH8u/56Nr14TTFGxfXIlLCDrl27MxqPNQidfY8=
+X-Google-Smtp-Source: ABdhPJz37Yoh/AQvwctMhVs2WQyFUTaJPKB6tkwCcsPDUiRztdii+LOHXMP3q4VbsAXM9iNGkqkeUajI37fr6Cquw2E=
+X-Received: by 2002:a17:902:bb81:b0:12d:a7ec:3d85 with SMTP id
+ m1-20020a170902bb8100b0012da7ec3d85mr7739762pls.17.1629300511960; Wed, 18 Aug
+ 2021 08:28:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210818151315.9505-1-daniel.thompson@linaro.org> <20210818151315.9505-2-daniel.thompson@linaro.org>
+In-Reply-To: <20210818151315.9505-2-daniel.thompson@linaro.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 18 Aug 2021 18:27:52 +0300
+Message-ID: <CAHp75VdDZJ+aUtx-A3y62WQ5+OtrS47Ts6PDe1bGQ0OcRRV+7Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] Documentation: dmaengine: Add a description of what
+ dmatest does
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        patches@linaro.org, Haavard Skinnemoen <hskinnemoen@atmel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Currently the documentation states that channels must be configured before
-running the dmatest. This has not been true since commit 6b41030fdc79
-("dmaengine: dmatest: Restore default for channel"). Fix accordingly.
+On Wed, Aug 18, 2021 at 6:15 PM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> Currently it can difficult to determine what dmatest does without
+> reading the source code. Let's add a description.
+>
+> The description is taken mostly from the patch header of
+> commit 4a776f0aa922 ("dmatest: Simple DMA memcpy test client")
+> although it has been edited and updated slightly.
 
-Fixes: 6b41030fdc79 ("dmaengine: dmatest: Restore default for channel")
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
----
- Documentation/driver-api/dmaengine/dmatest.rst | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+> Signed-off-by: Haavard Skinnemoen <hskinnemoen@atmel.com>
 
-diff --git a/Documentation/driver-api/dmaengine/dmatest.rst b/Documentation/driver-api/dmaengine/dmatest.rst
-index 529cc2cbbb1b..cf9859cd0b43 100644
---- a/Documentation/driver-api/dmaengine/dmatest.rst
-+++ b/Documentation/driver-api/dmaengine/dmatest.rst
-@@ -153,13 +153,14 @@ Part 5 - Handling channel allocation
- Allocating Channels
- -------------------
- 
--Channels are required to be configured prior to starting the test run.
--Attempting to run the test without configuring the channels will fail.
-+Channels do not need to be configured prior to starting a test run. Attempting
-+to run the test without configuring the channels will result in testing any
-+channels that are available.
- 
- Example::
- 
-     % echo 1 > /sys/module/dmatest/parameters/run
--    dmatest: Could not start test, no channels configured
-+    dmatest: No channels configured, continue with any
- 
- Channels are registered using the "channel" parameter. Channels can be requested by their
- name, once requested, the channel is registered and a pending thread is added to the test list.
+Not sure if you can use it like this (I mean the above SoB)
+Otherwise it's a good idea, thanks!
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> ---
+>  Documentation/driver-api/dmaengine/dmatest.rst | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/Documentation/driver-api/dmaengine/dmatest.rst b/Documentation/driver-api/dmaengine/dmatest.rst
+> index ee268d445d38..529cc2cbbb1b 100644
+> --- a/Documentation/driver-api/dmaengine/dmatest.rst
+> +++ b/Documentation/driver-api/dmaengine/dmatest.rst
+> @@ -6,6 +6,16 @@ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>
+>  This small document introduces how to test DMA drivers using dmatest module.
+>
+> +The dmatest module tests DMA memcpy, memset, XOR and RAID6 P+Q operations using
+> +various lengths and various offsets into the source and destination buffers. It
+> +will initialize both buffers with a repeatable pattern and verify that the DMA
+> +engine copies the requested region and nothing more. It will also verify that
+> +the bytes aren't swapped around, and that the source buffer isn't modified.
+> +
+> +The dmatest module can be configured to test a specific channel. It can also
+> +test multiple channels at the same time, and it can start multiple threads
+> +competing for the same channel.
+> +
+>  .. note::
+>    The test suite works only on the channels that have at least one
+>    capability of the following: DMA_MEMCPY (memory-to-memory), DMA_MEMSET
+> --
+> 2.30.2
+>
+
+
 -- 
-2.30.2
-
+With Best Regards,
+Andy Shevchenko

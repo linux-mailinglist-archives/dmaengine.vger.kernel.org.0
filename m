@@ -2,139 +2,177 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C47CF3F15EE
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Aug 2021 11:13:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7C353F179C
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Aug 2021 13:01:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237257AbhHSJOJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 19 Aug 2021 05:14:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237121AbhHSJOJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 19 Aug 2021 05:14:09 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03EE5C0613CF
-        for <dmaengine@vger.kernel.org>; Thu, 19 Aug 2021 02:13:33 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id q6so7961425wrv.6
-        for <dmaengine@vger.kernel.org>; Thu, 19 Aug 2021 02:13:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Mu9b4mblc/ExPlSUnMroTgqBzEI9hLYiUrbLs2ZdCaU=;
-        b=xeqOJFv4Yk292z5h/hTFjEN/0ui5PwnRO2mKenFqm6I4TTp1INPK3NKzStaZMpmI1J
-         Ysa7qwchiDka9i8OTzaigrmYgdyztKhoA64bp532bl3zJzO+gPBRxYZBdbx+CEOpsWMd
-         WKf4Q6BTwSCzp2Q0GhEBO3nka7Ov+fi0E/JVNMGls+iI2OzEOM0DtyKZDwPf2mn1NsEb
-         pEQPsYSLyBstiPeq2gjWgjbYLRzwZfy2rhS8jH+OZ7NA1gL5zIVklP2lJ7CP5xb663sz
-         c1dvWXtFlyQeSMXIE6IYtlL5Xfcp4eAW430w4l6VnPQrMlrla3cg81rGf43mAgdQuXdl
-         06RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Mu9b4mblc/ExPlSUnMroTgqBzEI9hLYiUrbLs2ZdCaU=;
-        b=NfDoSvH/FubDEYFgF7apCpcPi6QDFD3t/NNkKHPIWOTxXOuwojSqOkWUv0/EJiL1eD
-         IOKtpPBRNx/bfDCd3Pye/vglJXgodIFnJZHsRxqqhb6teocM4PNQwPWy8Qu3THghSvsV
-         6BMw7AqdGaMrCxrzcNwtMFvybOJMLBCUY2WXuNa7okc7UF24d6+sqv77Cly9e71cltad
-         yrjILRJHR4YbRnUe0Od8/4/uSn7VgkOWZg4ssL6Z7bQEwbs6FnDUJkvxmxKha1QbSZLh
-         2xMfYzzeN7poc3IM568Fcz8t+Z/gjN2r4+m7oa9uL62wGLjJKV0ikVWlS24HCfMXtZjs
-         9xww==
-X-Gm-Message-State: AOAM531a1FoJN5gvVYox88z+DGLfiHS7O0fGQflCK75zqSNQclbRe5W7
-        M2VocAFzXCRDvnHSIhJ7xY+wGw==
-X-Google-Smtp-Source: ABdhPJwu8ApgZURG1smRQNq5OoDX0gahn5gKM2eQ/sizWhYa+rCQGx1dpSOz0CNUkakynGmxjbtGrw==
-X-Received: by 2002:adf:ea09:: with SMTP id q9mr2498131wrm.64.1629364411576;
-        Thu, 19 Aug 2021 02:13:31 -0700 (PDT)
-Received: from maple.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
-        by smtp.gmail.com with ESMTPSA id s10sm2730312wrv.54.2021.08.19.02.13.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Aug 2021 02:13:30 -0700 (PDT)
-Date:   Thu, 19 Aug 2021 10:13:28 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        patches@linaro.org, Haavard Skinnemoen <hskinnemoen@atmel.com>,
-        =?utf-8?Q?H=C3=A5vard?= Skinnemoen <hskinnemoen@gmail.com>
-Subject: Re: [PATCH 1/2] Documentation: dmaengine: Add a description of what
- dmatest does
-Message-ID: <20210819091328.6up4oprx4j7u5bjl@maple.lan>
-References: <20210818151315.9505-1-daniel.thompson@linaro.org>
- <20210818151315.9505-2-daniel.thompson@linaro.org>
- <CAHp75VdDZJ+aUtx-A3y62WQ5+OtrS47Ts6PDe1bGQ0OcRRV+7Q@mail.gmail.com>
+        id S237959AbhHSLBt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 19 Aug 2021 07:01:49 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:43694 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236149AbhHSLBs (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 19 Aug 2021 07:01:48 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 17JB19lK127769;
+        Thu, 19 Aug 2021 06:01:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1629370869;
+        bh=GYwL4KMn9MwNzBaNPtVm7kwbuDADlm8h+rKdpDKQ7Y4=;
+        h=From:To:CC:Subject:Date;
+        b=BYyKLDFs1PU+DDBDLEiZ7CvgjJMGQjbejL5jkLng0ET0kY4cN+3iW0brys0GXgs8k
+         8HhblVSmeWK9a7tBtr1EwDVbnpWbwdhWCzyqzW84pDzxjJLLD2+TfDyNLzz8uVT+aH
+         lUBTNnvG6U4VG0MhMLdNb9Dvs3rjzgzi7CD4CSI0=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 17JB19Np071686
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Aug 2021 06:01:09 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Thu, 19
+ Aug 2021 06:01:08 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Thu, 19 Aug 2021 06:01:09 -0500
+Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 17JB169u012836;
+        Thu, 19 Aug 2021 06:01:07 -0500
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Pratyush Yadav <p.yadav@ti.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4] dmaengine: ti: k3-psil-j721e: Add entry for CSI2RX
+Date:   Thu, 19 Aug 2021 16:31:05 +0530
+Message-ID: <20210819110106.31409-1-p.yadav@ti.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdDZJ+aUtx-A3y62WQ5+OtrS47Ts6PDe1bGQ0OcRRV+7Q@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Aug 18, 2021 at 06:27:52PM +0300, Andy Shevchenko wrote:
-> On Wed, Aug 18, 2021 at 6:15 PM Daniel Thompson
-> <daniel.thompson@linaro.org> wrote:
-> >
-> > Currently it can difficult to determine what dmatest does without
-> > reading the source code. Let's add a description.
-> >
-> > The description is taken mostly from the patch header of
-> > commit 4a776f0aa922 ("dmatest: Simple DMA memcpy test client")
-> > although it has been edited and updated slightly.
-> 
-> > Signed-off-by: Haavard Skinnemoen <hskinnemoen@atmel.com>
-> 
-> Not sure if you can use it like this (I mean the above SoB)
+The CSI2RX subsystem on J721E is serviced by UDMA via PSI-L to transfer
+frames to memory. It can have up to 32 threads per instance. J721E has
+two instances of the subsystem, so there are 64 threads total. Add them
+to the endpoint map.
 
-I wondered about that.
+Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+Acked-by: Peter Ujfalusi <peter.ujflausi@gmail.com>
 
-In the end I concluded that if I had picked up code from an old patch
-and edited to this degree then I would probably consider it a new
-patch but be clear about credit and preserve the original SoB. I saw no
-real reason to treat the contents of a patch header much different.
+---
+This patch has been split off from [0] to facilitate easier merging. I
+have still kept the version number to maintain continuity with the
+previous patches.
 
-However, I'm very happy to make the credit more informal if needed.
+[0] https://patchwork.linuxtv.org/project/linux-media/list/?series=5526&state=%2A&archive=both
 
-> Otherwise it's a good idea, thanks!
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Changes in v4:
+- Update commit message with Peter's suggested changes.
+- Add Peter's Ack.
 
-Thanks!
+Changes in v3:
+- Update commit message to mention that all 64 threads are being added.
 
+Changes in v2:
+- Add all 64 threads, instead of having only the one thread being
+  currently used by the driver.
 
-Daniel.
+ drivers/dma/ti/k3-psil-j721e.c | 73 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
 
+diff --git a/drivers/dma/ti/k3-psil-j721e.c b/drivers/dma/ti/k3-psil-j721e.c
+index 7580870ed746..34e3fc565a37 100644
+--- a/drivers/dma/ti/k3-psil-j721e.c
++++ b/drivers/dma/ti/k3-psil-j721e.c
+@@ -58,6 +58,14 @@
+ 		},					\
+ 	}
+ 
++#define PSIL_CSI2RX(x)					\
++	{						\
++		.thread_id = x,				\
++		.ep_config = {				\
++			.ep_type = PSIL_EP_NATIVE,	\
++		},					\
++	}
++
+ /* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
+ static struct psil_ep j721e_src_ep_map[] = {
+ 	/* SA2UL */
+@@ -138,6 +146,71 @@ static struct psil_ep j721e_src_ep_map[] = {
+ 	PSIL_PDMA_XY_PKT(0x4707),
+ 	PSIL_PDMA_XY_PKT(0x4708),
+ 	PSIL_PDMA_XY_PKT(0x4709),
++	/* CSI2RX */
++	PSIL_CSI2RX(0x4940),
++	PSIL_CSI2RX(0x4941),
++	PSIL_CSI2RX(0x4942),
++	PSIL_CSI2RX(0x4943),
++	PSIL_CSI2RX(0x4944),
++	PSIL_CSI2RX(0x4945),
++	PSIL_CSI2RX(0x4946),
++	PSIL_CSI2RX(0x4947),
++	PSIL_CSI2RX(0x4948),
++	PSIL_CSI2RX(0x4949),
++	PSIL_CSI2RX(0x494a),
++	PSIL_CSI2RX(0x494b),
++	PSIL_CSI2RX(0x494c),
++	PSIL_CSI2RX(0x494d),
++	PSIL_CSI2RX(0x494e),
++	PSIL_CSI2RX(0x494f),
++	PSIL_CSI2RX(0x4950),
++	PSIL_CSI2RX(0x4951),
++	PSIL_CSI2RX(0x4952),
++	PSIL_CSI2RX(0x4953),
++	PSIL_CSI2RX(0x4954),
++	PSIL_CSI2RX(0x4955),
++	PSIL_CSI2RX(0x4956),
++	PSIL_CSI2RX(0x4957),
++	PSIL_CSI2RX(0x4958),
++	PSIL_CSI2RX(0x4959),
++	PSIL_CSI2RX(0x495a),
++	PSIL_CSI2RX(0x495b),
++	PSIL_CSI2RX(0x495c),
++	PSIL_CSI2RX(0x495d),
++	PSIL_CSI2RX(0x495e),
++	PSIL_CSI2RX(0x495f),
++	PSIL_CSI2RX(0x4960),
++	PSIL_CSI2RX(0x4961),
++	PSIL_CSI2RX(0x4962),
++	PSIL_CSI2RX(0x4963),
++	PSIL_CSI2RX(0x4964),
++	PSIL_CSI2RX(0x4965),
++	PSIL_CSI2RX(0x4966),
++	PSIL_CSI2RX(0x4967),
++	PSIL_CSI2RX(0x4968),
++	PSIL_CSI2RX(0x4969),
++	PSIL_CSI2RX(0x496a),
++	PSIL_CSI2RX(0x496b),
++	PSIL_CSI2RX(0x496c),
++	PSIL_CSI2RX(0x496d),
++	PSIL_CSI2RX(0x496e),
++	PSIL_CSI2RX(0x496f),
++	PSIL_CSI2RX(0x4970),
++	PSIL_CSI2RX(0x4971),
++	PSIL_CSI2RX(0x4972),
++	PSIL_CSI2RX(0x4973),
++	PSIL_CSI2RX(0x4974),
++	PSIL_CSI2RX(0x4975),
++	PSIL_CSI2RX(0x4976),
++	PSIL_CSI2RX(0x4977),
++	PSIL_CSI2RX(0x4978),
++	PSIL_CSI2RX(0x4979),
++	PSIL_CSI2RX(0x497a),
++	PSIL_CSI2RX(0x497b),
++	PSIL_CSI2RX(0x497c),
++	PSIL_CSI2RX(0x497d),
++	PSIL_CSI2RX(0x497e),
++	PSIL_CSI2RX(0x497f),
+ 	/* CPSW9 */
+ 	PSIL_ETHERNET(0x4a00),
+ 	/* CPSW0 */
+-- 
+2.30.0
 
-> 
-> > Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > ---
-> >  Documentation/driver-api/dmaengine/dmatest.rst | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/Documentation/driver-api/dmaengine/dmatest.rst b/Documentation/driver-api/dmaengine/dmatest.rst
-> > index ee268d445d38..529cc2cbbb1b 100644
-> > --- a/Documentation/driver-api/dmaengine/dmatest.rst
-> > +++ b/Documentation/driver-api/dmaengine/dmatest.rst
-> > @@ -6,6 +6,16 @@ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> >
-> >  This small document introduces how to test DMA drivers using dmatest module.
-> >
-> > +The dmatest module tests DMA memcpy, memset, XOR and RAID6 P+Q operations using
-> > +various lengths and various offsets into the source and destination buffers. It
-> > +will initialize both buffers with a repeatable pattern and verify that the DMA
-> > +engine copies the requested region and nothing more. It will also verify that
-> > +the bytes aren't swapped around, and that the source buffer isn't modified.
-> > +
-> > +The dmatest module can be configured to test a specific channel. It can also
-> > +test multiple channels at the same time, and it can start multiple threads
-> > +competing for the same channel.
-> > +
-> >  .. note::
-> >    The test suite works only on the channels that have at least one
-> >    capability of the following: DMA_MEMCPY (memory-to-memory), DMA_MEMSET
-> > --
-> > 2.30.2
-> >
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko

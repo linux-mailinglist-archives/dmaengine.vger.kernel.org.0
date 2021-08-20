@@ -2,149 +2,196 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DCCC3F1DEB
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Aug 2021 18:34:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5391D3F2BF5
+	for <lists+dmaengine@lfdr.de>; Fri, 20 Aug 2021 14:22:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229521AbhHSQeo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 19 Aug 2021 12:34:44 -0400
-Received: from mga06.intel.com ([134.134.136.31]:8773 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229451AbhHSQeo (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 19 Aug 2021 12:34:44 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="277616347"
-X-IronPort-AV: E=Sophos;i="5.84,335,1620716400"; 
-   d="scan'208";a="277616347"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2021 09:34:07 -0700
-X-IronPort-AV: E=Sophos;i="5.84,335,1620716400"; 
-   d="scan'208";a="681846461"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2021 09:34:07 -0700
-Subject: [PATCH] dmaengine: idxd: fix setting up priv mode for dwq
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     Ramesh Thomas <ramesh.thomas@intel.com>, dmaengine@vger.kernel.org,
-        mona.hossain@intel.com
-Date:   Thu, 19 Aug 2021 09:34:06 -0700
-Message-ID: <162939084657.903168.14160019185148244596.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/0.23-29-ga622f1
+        id S240285AbhHTMXA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 20 Aug 2021 08:23:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237882AbhHTMW6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 20 Aug 2021 08:22:58 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DAB9C061575;
+        Fri, 20 Aug 2021 05:22:20 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id y6so17040925lje.2;
+        Fri, 20 Aug 2021 05:22:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=L1UVWaFQOUZDHm5at21ToeLBscrRk6wAog3AJNeFE1E=;
+        b=EkXhnLTWLlB6XKwlspU1wedJ7d8RJ4tg/ut7z5etYmlrPQL2gyoN4sqKM2vhmQ9mNx
+         C2jZxG8STNASmMWR1yRavWShl8mpdTapYIslgex4rckDTxdM8qSSALa4bLAOiR96kjDN
+         WpfpoZ3COacbM94Y7fyzoxvBweMSmr8Qx4oBUrn0+fINIKVEEB1J6zV5hpk0ZP8wPWAO
+         3V0vZCXdPiRdbhqVc8v9UGGMogGACQTmThoYzuRQobrhbwBtkeigTDQBMCxyac9xpCCP
+         GkLnoHzASayjNoWaJCGczDiHJrcSdYDOpQQB8lhwXgvy4P+PBiYttbpDNrYLbvO/bM6J
+         985A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=L1UVWaFQOUZDHm5at21ToeLBscrRk6wAog3AJNeFE1E=;
+        b=c67hHqeD5oYRrff7Y/F/q60DOmoADSeF6UvAfpbkDFtAx/ynDiLGAMB3mXcIdoNBFf
+         ACHfy53QpbuGDYXkZXJxNsY8ulWYGURl0i6WyQo3xDGnpdRX/Z9OUflNE/0AnYaskLZV
+         9TiVGc93EoPsFlDeuLakguP2WRmMAJr4YixD6c4oufiL8QEvUIv58ljozm9BcE0KxB9l
+         Rr6WS246P/iaP67Sje/NqssCvktCU1077mqrjr3T24x4ykByoDWXbNVO8BZj/Z3efj1B
+         ITG1B7+r05zgTeMzZ+vAqs7FyTre7dANSgCKzhOHfls/eCCKUIbNt3ro/d6+xSqtwLJQ
+         ch5Q==
+X-Gm-Message-State: AOAM532MqZoGJSBUn6swyRxs/q7veczJ1Y4MoycQjpgfXXLcQvfEhtya
+        xP/OeJjri+42lvtETTUEp76H90Y7vGQ61A==
+X-Google-Smtp-Source: ABdhPJx6Yy/uv6/JJRwCZUDYn/Wol3ZWjVSPbcTYNgVkLtaJ14kwAACNNvXJI7ay1SP7T+ZOo5IciQ==
+X-Received: by 2002:a2e:9e05:: with SMTP id e5mr10488211ljk.166.1629462138388;
+        Fri, 20 Aug 2021 05:22:18 -0700 (PDT)
+Received: from [10.0.0.40] (91-155-111-71.elisa-laajakaista.fi. [91.155.111.71])
+        by smtp.gmail.com with ESMTPSA id z11sm618059lfb.52.2021.08.20.05.22.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Aug 2021 05:22:17 -0700 (PDT)
+Subject: Re: [PATCH v4] dmaengine: ti: k3-psil-j721e: Add entry for CSI2RX
+To:     Pratyush Yadav <p.yadav@ti.com>, Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210819110106.31409-1-p.yadav@ti.com>
+From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+Message-ID: <55060c2e-ba6e-cb85-64f9-833789e2d5bd@gmail.com>
+Date:   Fri, 20 Aug 2021 15:22:36 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20210819110106.31409-1-p.yadav@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-DSA spec says WQ priv bit is 0 if the Privileged Mode Enable field of the
-PCI Express PASID capability is 0 and pasid is enabled. Make sure that the
-WQCFG priv field is set correctly according to usage type. Reject config if
-setting up kernel WQ type and no support. Also add the correct priv setup
-for a descriptor.
+Hi Pratyush,
 
-Fixes: 484f910e93b4 ("dmaengine: idxd: fix wq config registers offset programming")
-Cc: Ramesh Thomas <ramesh.thomas@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/dma/Kconfig       |    1 +
- drivers/dma/idxd/device.c |   29 ++++++++++++++++++++++++++++-
- drivers/dma/idxd/dma.c    |    6 +++++-
- include/uapi/linux/idxd.h |    1 +
- 4 files changed, 35 insertions(+), 2 deletions(-)
+On 19/08/2021 14:01, Pratyush Yadav wrote:
+> The CSI2RX subsystem on J721E is serviced by UDMA via PSI-L to transfer
+> frames to memory. It can have up to 32 threads per instance. J721E has
+> two instances of the subsystem, so there are 64 threads total. Add them
+> to the endpoint map.
+> 
+> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+> Acked-by: Peter Ujfalusi <peter.ujflausi@gmail.com>
+> 
+> ---
+> This patch has been split off from [0] to facilitate easier merging. I
+> have still kept the version number to maintain continuity with the
+> previous patches.
+> 
+> [0] https://patchwork.linuxtv.org/project/linux-media/list/?series=5526&state=%2A&archive=both
+> 
+> Changes in v4:
+> - Update commit message with Peter's suggested changes.
+> - Add Peter's Ack.
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index ceb41be0505e..a623da679fd4 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -285,6 +285,7 @@ config INTEL_IDXD
- 	tristate "Intel Data Accelerators support"
- 	depends on PCI && X86_64 && !UML
- 	depends on PCI_MSI
-+	depends on PCI_PASID
- 	depends on SBITMAP
- 	select DMA_ENGINE
- 	help
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index e093cf225a5c..241df74fc047 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -818,6 +818,15 @@ static int idxd_groups_config_write(struct idxd_device *idxd)
- 	return 0;
- }
- 
-+static bool idxd_device_pasid_priv_enabled(struct idxd_device *idxd)
-+{
-+	struct pci_dev *pdev = idxd->pdev;
-+
-+	if (pdev->pasid_enabled && (pdev->pasid_features & PCI_PASID_CAP_PRIV))
-+		return true;
-+	return false;
-+}
-+
- static int idxd_wq_config_write(struct idxd_wq *wq)
- {
- 	struct idxd_device *idxd = wq->idxd;
-@@ -850,7 +859,6 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
- 	wq->wqcfg->wq_thresh = wq->threshold;
- 
- 	/* byte 8-11 */
--	wq->wqcfg->priv = !!(wq->type == IDXD_WQT_KERNEL);
- 	if (wq_dedicated(wq))
- 		wq->wqcfg->mode = 1;
- 
-@@ -860,6 +868,25 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
- 			wq->wqcfg->pasid = idxd->pasid;
- 	}
- 
-+	/*
-+	 * Here the priv bit is set depending on the WQ type. priv = 1 if the
-+	 * WQ type is kernel to indicate privileged access. This setting only
-+	 * matters for dedicated WQ. According to the DSA spec:
-+	 * If the WQ is in dedicated mode, WQ PASID Enable is 1, and the
-+	 * Privileged Mode Enable field of the PCI Express PASID capability
-+	 * is 0, this field must be 0.
-+	 *
-+	 * In the case of a dedicated kernel WQ that is not able to support
-+	 * the PASID cap, then the configuration will be rejected.
-+	 */
-+	wq->wqcfg->priv = !!(wq->type == IDXD_WQT_KERNEL);
-+	if (wq_dedicated(wq) && wq->wqcfg->pasid_en &&
-+	    !idxd_device_pasid_priv_enabled(idxd) &&
-+	    wq->type == IDXD_WQT_KERNEL) {
-+		idxd->cmd_status = IDXD_SCMD_WQ_NO_PRIV;
-+		return -EOPNOTSUPP;
-+	}
-+
- 	wq->wqcfg->priority = wq->priority;
- 
- 	if (idxd->hw.gen_cap.block_on_fault &&
-diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
-index 5c0a4d8a31f5..e0f056c1d1f5 100644
---- a/drivers/dma/idxd/dma.c
-+++ b/drivers/dma/idxd/dma.c
-@@ -69,7 +69,11 @@ static inline void idxd_prep_desc_common(struct idxd_wq *wq,
- 	hw->src_addr = addr_f1;
- 	hw->dst_addr = addr_f2;
- 	hw->xfer_size = len;
--	hw->priv = !!(wq->type == IDXD_WQT_KERNEL);
-+	/*
-+	 * For dedicated WQ, this field is ignored and HW will use the WQCFG.priv
-+	 * field instead. This field should be set to 1 for kernel descriptors.
-+	 */
-+	hw->priv = 1;
- 	hw->completion_addr = compl;
- }
- 
-diff --git a/include/uapi/linux/idxd.h b/include/uapi/linux/idxd.h
-index ca24c25252fb..c750eac09fc9 100644
---- a/include/uapi/linux/idxd.h
-+++ b/include/uapi/linux/idxd.h
-@@ -27,6 +27,7 @@ enum idxd_scmd_stat {
- 	IDXD_SCMD_WQ_NO_SWQ_SUPPORT = 0x800c0000,
- 	IDXD_SCMD_WQ_NONE_CONFIGURED = 0x800d0000,
- 	IDXD_SCMD_WQ_NO_SIZE = 0x800e0000,
-+	IDXD_SCMD_WQ_NO_PRIV = 0x800f0000,
- };
- 
- #define IDXD_SCMD_SOFTERR_MASK	0x80000000
+Looks good, thank you.
 
+> Changes in v3:
+> - Update commit message to mention that all 64 threads are being added.
+> 
+> Changes in v2:
+> - Add all 64 threads, instead of having only the one thread being
+>   currently used by the driver.
+> 
+>  drivers/dma/ti/k3-psil-j721e.c | 73 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 73 insertions(+)
+> 
+> diff --git a/drivers/dma/ti/k3-psil-j721e.c b/drivers/dma/ti/k3-psil-j721e.c
+> index 7580870ed746..34e3fc565a37 100644
+> --- a/drivers/dma/ti/k3-psil-j721e.c
+> +++ b/drivers/dma/ti/k3-psil-j721e.c
+> @@ -58,6 +58,14 @@
+>  		},					\
+>  	}
+>  
+> +#define PSIL_CSI2RX(x)					\
+> +	{						\
+> +		.thread_id = x,				\
+> +		.ep_config = {				\
+> +			.ep_type = PSIL_EP_NATIVE,	\
+> +		},					\
+> +	}
+> +
+>  /* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
+>  static struct psil_ep j721e_src_ep_map[] = {
+>  	/* SA2UL */
+> @@ -138,6 +146,71 @@ static struct psil_ep j721e_src_ep_map[] = {
+>  	PSIL_PDMA_XY_PKT(0x4707),
+>  	PSIL_PDMA_XY_PKT(0x4708),
+>  	PSIL_PDMA_XY_PKT(0x4709),
+> +	/* CSI2RX */
+> +	PSIL_CSI2RX(0x4940),
+> +	PSIL_CSI2RX(0x4941),
+> +	PSIL_CSI2RX(0x4942),
+> +	PSIL_CSI2RX(0x4943),
+> +	PSIL_CSI2RX(0x4944),
+> +	PSIL_CSI2RX(0x4945),
+> +	PSIL_CSI2RX(0x4946),
+> +	PSIL_CSI2RX(0x4947),
+> +	PSIL_CSI2RX(0x4948),
+> +	PSIL_CSI2RX(0x4949),
+> +	PSIL_CSI2RX(0x494a),
+> +	PSIL_CSI2RX(0x494b),
+> +	PSIL_CSI2RX(0x494c),
+> +	PSIL_CSI2RX(0x494d),
+> +	PSIL_CSI2RX(0x494e),
+> +	PSIL_CSI2RX(0x494f),
+> +	PSIL_CSI2RX(0x4950),
+> +	PSIL_CSI2RX(0x4951),
+> +	PSIL_CSI2RX(0x4952),
+> +	PSIL_CSI2RX(0x4953),
+> +	PSIL_CSI2RX(0x4954),
+> +	PSIL_CSI2RX(0x4955),
+> +	PSIL_CSI2RX(0x4956),
+> +	PSIL_CSI2RX(0x4957),
+> +	PSIL_CSI2RX(0x4958),
+> +	PSIL_CSI2RX(0x4959),
+> +	PSIL_CSI2RX(0x495a),
+> +	PSIL_CSI2RX(0x495b),
+> +	PSIL_CSI2RX(0x495c),
+> +	PSIL_CSI2RX(0x495d),
+> +	PSIL_CSI2RX(0x495e),
+> +	PSIL_CSI2RX(0x495f),
+> +	PSIL_CSI2RX(0x4960),
+> +	PSIL_CSI2RX(0x4961),
+> +	PSIL_CSI2RX(0x4962),
+> +	PSIL_CSI2RX(0x4963),
+> +	PSIL_CSI2RX(0x4964),
+> +	PSIL_CSI2RX(0x4965),
+> +	PSIL_CSI2RX(0x4966),
+> +	PSIL_CSI2RX(0x4967),
+> +	PSIL_CSI2RX(0x4968),
+> +	PSIL_CSI2RX(0x4969),
+> +	PSIL_CSI2RX(0x496a),
+> +	PSIL_CSI2RX(0x496b),
+> +	PSIL_CSI2RX(0x496c),
+> +	PSIL_CSI2RX(0x496d),
+> +	PSIL_CSI2RX(0x496e),
+> +	PSIL_CSI2RX(0x496f),
+> +	PSIL_CSI2RX(0x4970),
+> +	PSIL_CSI2RX(0x4971),
+> +	PSIL_CSI2RX(0x4972),
+> +	PSIL_CSI2RX(0x4973),
+> +	PSIL_CSI2RX(0x4974),
+> +	PSIL_CSI2RX(0x4975),
+> +	PSIL_CSI2RX(0x4976),
+> +	PSIL_CSI2RX(0x4977),
+> +	PSIL_CSI2RX(0x4978),
+> +	PSIL_CSI2RX(0x4979),
+> +	PSIL_CSI2RX(0x497a),
+> +	PSIL_CSI2RX(0x497b),
+> +	PSIL_CSI2RX(0x497c),
+> +	PSIL_CSI2RX(0x497d),
+> +	PSIL_CSI2RX(0x497e),
+> +	PSIL_CSI2RX(0x497f),
+>  	/* CPSW9 */
+>  	PSIL_ETHERNET(0x4a00),
+>  	/* CPSW0 */
+> 
 
+-- 
+Péter

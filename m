@@ -2,99 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 072623F76C1
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Aug 2021 16:03:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B74E3F7755
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Aug 2021 16:26:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238092AbhHYODt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 25 Aug 2021 10:03:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44546 "EHLO mail.kernel.org"
+        id S241591AbhHYO12 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 25 Aug 2021 10:27:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232058AbhHYODt (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 25 Aug 2021 10:03:49 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4EAD3610E8;
-        Wed, 25 Aug 2021 14:03:02 +0000 (UTC)
+        id S237860AbhHYO1Y (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 25 Aug 2021 10:27:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0528360184;
+        Wed, 25 Aug 2021 14:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629900183;
-        bh=VIKzuu4xITV3ArU39CmlrxTodlTpUkcESqyApfVLu5M=;
+        s=k20201202; t=1629901599;
+        bh=b+M7siFsJ0MC41QBMbYLM4b/m/yRMBUl03hhqa207Mg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S6IcAU40+PaPQ2D87Qd98+EZIeLzzUAAWLP18PQncTxxr6pP3IOBE5NvGSjXKp3wW
-         xM549Yu7GnkDY9biqpYioK00x+/YRrZatY0Mw2Kne8U2aFI05scDlhzK+oGWiodchd
-         h6YDS5n/VUbgMYq0mMeMOM8FQ+CnBaFYkpTxmlaInAK4A3//oK9BZzBe3JYf33JvE0
-         4iR5qK+AeTTnZBenFytofhzVZMZUpwplE2qzBcqjhjogL3jY6pvqa67a/2EWGC026G
-         Iamm8x94qggZ/NABpea/6X50nyqAT4g37NHna7CBnllMy7vncNVwrvRoMQoYOyI363
-         uTzIRM1m3J+lQ==
-Date:   Wed, 25 Aug 2021 19:32:58 +0530
+        b=JJs9BY1+QfE62i0Xqj1dLZMJIPTKg05XrykJCaq7wi2VFO83atFgVFtaGxOYd5tB7
+         usdKsMvT946bUbgH6q3qmiHUpCBM/i2vLU/kGa0huYYtuiPCvI7QQA4CdBvwtTXcfK
+         TD6rMwBseffQ+fQw+1ssXber8TiCs+9/BYf0eLIuVo52u8o2R6l27xIbXpMzqkRXbV
+         d4EIREoZozRhS9TQeT/FPoumBiakn3w1u94mmt1ofRAUuP1CrkCmwLMnG+JWazY8vv
+         KPxQxE3DamPTh7TRVEFcndTuTkVrbf+0NT5af6BPFkFwGhlBsT6lGY9vr5VgLrAC9i
+         PGs8ZfcCAOQbw==
+Date:   Wed, 25 Aug 2021 19:56:34 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maxime Ripard <mripard@kernel.org>,
-        Vignesh R <vigneshr@ti.com>, Marc Zyngier <maz@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Use 'enum' instead of 'oneOf' plus 'const'
- entries
-Message-ID: <YSZNkraWdMGXsjbf@matsya>
-References: <20210824202014.978922-1-robh@kernel.org>
+To:     Keguang Zhang <keguang.zhang@gmail.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V5] dmaengine: Loongson1: Add Loongson1 dmaengine driver
+Message-ID: <YSZTGhBcSTFEPB4d@matsya>
+References: <20210704153314.6995-1-keguang.zhang@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210824202014.978922-1-robh@kernel.org>
+In-Reply-To: <20210704153314.6995-1-keguang.zhang@gmail.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 24-08-21, 15:20, Rob Herring wrote:
-> 'enum' is equivalent to 'oneOf' with a list of 'const' entries, but 'enum'
-> is more concise and yields better error messages.
+On 04-07-21, 23:33, Keguang Zhang wrote:
+> From: Kelvin Cheung <keguang.zhang@gmail.com>
 > 
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Vignesh R <vigneshr@ti.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: dmaengine@vger.kernel.org
-> Cc: linux-i2c@vger.kernel.org
-> Cc: linux-media@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-phy@lists.infradead.org
-> Cc: linux-serial@vger.kernel.org
-> Cc: alsa-devel@alsa-project.org
-> Cc: linux-spi@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../bindings/display/msm/dsi-phy-10nm.yaml           |  6 +++---
->  .../bindings/display/msm/dsi-phy-14nm.yaml           |  6 +++---
->  .../bindings/display/msm/dsi-phy-28nm.yaml           |  8 ++++----
+> This patch adds DMA Engine driver for Loongson1B.
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-
->  .../bindings/dma/allwinner,sun6i-a31-dma.yaml        | 12 ++++++------
->  .../devicetree/bindings/phy/intel,lgm-emmc-phy.yaml  |  6 +++---
-
-Acked-By: Vinod Koul <vkoul@kernel.org>
+Applied, thanks
 
 -- 
 ~Vinod

@@ -2,49 +2,47 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6475B3F745D
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Aug 2021 13:30:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC6A73F745F
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Aug 2021 13:30:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236560AbhHYLbZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 25 Aug 2021 07:31:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60588 "EHLO mail.kernel.org"
+        id S239022AbhHYLbn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 25 Aug 2021 07:31:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232304AbhHYLbZ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 25 Aug 2021 07:31:25 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 350C56113C;
-        Wed, 25 Aug 2021 11:30:38 +0000 (UTC)
+        id S232304AbhHYLbl (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 25 Aug 2021 07:31:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 55F9D610E8;
+        Wed, 25 Aug 2021 11:30:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629891040;
-        bh=Fj8t0eLCUPwZyBH+9GtMRZDY3pi44HsmqGl3uwHvMYo=;
+        s=k20201202; t=1629891056;
+        bh=JcZZLBdpO8qUcwhRFW/lAWPV8tm/6SN6LluqohSw/Ig=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=URme5+oJeCiOBX1OO/ZoIw9uW2zEKW/ryn0UMDas44dPKcb1gzqWdu3Yxf/QwtHT9
-         mZEEJ3XRw4d35euZGWiRQGudAe4cwLUrzElUGIWSjVvPZLb5Vkp+z75WrAY3Q9Pw23
-         H2XTQzE+3dGfME9guINd6tFg243Ro14yrjEjHAhvrM2nV/qAtrZWUP1/Om3SxoLvZH
-         POBfLayHizD0eM0+R3wRKv4boSt8JFtN4R+c0EdX5Au6uQ4ubnIO6RJEl9Gi4TzOCa
-         fw3qhA8o7XzXFkaurLIOZTaFP6j3uEEDJgVcdXYlEjR8/64p+vVA6wcn+YmJLccJxK
-         2vUgI+scEW/Jw==
-Date:   Wed, 25 Aug 2021 17:00:35 +0530
+        b=DLsG8XEmXdhQ5iEe5gmztJ+RmELEms+Jb3iBa5qm5JicHMS4frumDb0xdT8mquC2n
+         n2PLRAuj1c1l2lRKYJVsZ93plA5Hq52sSAUMysTrf0fu/8RKKeJ2k/RJwmRMNE+WnV
+         dDYS3zDfIx29FUfMC4IywSmEqJxM2CKhQT2U//WrYAq+BUHiZrEc1aZGkUEke1F3cl
+         n9HOEYCwWu+P2AN/+x67Yy/dOEq8rejxQQJZqQycetgExV8WyHnSU70Reb9WiFLc5r
+         j9KsCJwpDbEkpmr2D+SI/7G2j1IzlsTMID6Z6K8CmZCh4EVrYxrFYEyE9PQ5B1A0hu
+         rEUfOEx3rMbEQ==
+Date:   Wed, 25 Aug 2021 17:00:52 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Dave Jiang <dave.jiang@intel.com>
 Cc:     dmaengine@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: idxd: make submit failure path consistent on
- desc freeing
-Message-ID: <YSYp2/lv6cATOX+C@matsya>
-References: <162827146072.3459011.10255348500504659810.stgit@djiang5-desk3.ch.intel.com>
+Subject: Re: [PATCH] dmaengine: idxd: set descriptor allocation size to
+ threshold for swq
+Message-ID: <YSYp7EPdWJXQb0Ab@matsya>
+References: <162827151733.3459223.3829837172226042408.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <162827146072.3459011.10255348500504659810.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <162827151733.3459223.3829837172226042408.stgit@djiang5-desk3.ch.intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 06-08-21, 10:37, Dave Jiang wrote:
-> The submission path for dmaengine API does not do descriptor freeing on
-> failure. Also, with the abort mechanism, the freeing of desriptor happens
-> when the abort callback is completed. Therefore free descriptor on all
-> error paths for submission call to make things consistent. Also remove the
-> double free that would happen on abort in idxd_dma_tx_submit() call.
+On 06-08-21, 10:38, Dave Jiang wrote:
+> Since submission is sent to limited portal, the actual wq size for shared
+> wq is set by the threshold rather than the wq size. When the wq type is
+> shared, set the allocated descriptors to the threshold.
 
 Applied, thanks
 

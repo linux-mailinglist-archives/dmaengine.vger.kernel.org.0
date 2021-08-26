@@ -2,84 +2,69 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27BB83F86D0
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Aug 2021 13:57:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 402033F874F
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Aug 2021 14:25:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242374AbhHZL6i (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 26 Aug 2021 07:58:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242307AbhHZL6f (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 26 Aug 2021 07:58:35 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5B82B6102A;
-        Thu, 26 Aug 2021 11:57:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1629979068;
-        bh=VqrmZfvdySGGpRkZfJ9sTmMn3wWb3fwMDv/A6XRJ5g0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lzvupKGm6DHeJEI0TqRmS03OkixQqyNvn5fHICulBulOAdMBqEccYq8nc5D2E6XhM
-         gWy/yQjptw7v0BYdQVMP3sXyUlMzJb2TDV9Ccg4Kg4G1aHaVRKNtLVfFwr83vd5wme
-         FgPiaOq7JB0o7euja3GB3WosZG/JyuK67iUcwAk8=
-Date:   Thu, 26 Aug 2021 13:57:44 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Vignesh R <vigneshr@ti.com>, Marc Zyngier <maz@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Use 'enum' instead of 'oneOf' plus 'const'
- entries
-Message-ID: <YSeBuMtUa77AR7Tn@kroah.com>
-References: <20210824202014.978922-1-robh@kernel.org>
+        id S240553AbhHZMZt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 26 Aug 2021 08:25:49 -0400
+Received: from smtp-relay-canonical-0.canonical.com ([185.125.188.120]:39816
+        "EHLO smtp-relay-canonical-0.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240725AbhHZMZt (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 26 Aug 2021 08:25:49 -0400
+Received: from localhost (1.general.cking.uk.vpn [10.172.193.212])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id D43033F051;
+        Thu, 26 Aug 2021 12:25:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1629980700;
+        bh=s+hrSkGmeiLA9/GhpGpUgimq/yCOJD7q2NZj6bIs8Go=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type;
+        b=em2kgWn3xT3trjNWtti14jeqDNC1cJ5v1/l14oomj6FMht9ct/DSe7AyP880XB8V5
+         MawUkYO+Fe9zVq8ixNxTHlwCeAXhmU/LAEp59SA6M2PQyyuhA8ShAaBa060ydnE8FA
+         rkFoQAWyu2IW/L/XJ5mMOLUIOTJBkCfy66sPLC/HVnvjjUGDNIqbdLLyCUzD51T1Ji
+         BYsWF/AujgPSHq7vAXqUqRyktm25hvM/jiks+Iez0K80JqZtpnjQcbxYYNPmhX3ng4
+         DzPCr2ZIGYh8QdApHuAz2xfS2rP6ZMEDN/pVGwTCXrR/ELwTn6OfU+nm2AAlWgKEuT
+         VZKWWtFlTXBJQ==
+From:   Colin King <colin.king@canonical.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        Baokun Li <libaokun1@huawei.com>, dmaengine@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: fsl-dpaa2-qdma: Fix spelling mistake "faile" -> "failed"
+Date:   Thu, 26 Aug 2021 13:25:00 +0100
+Message-Id: <20210826122500.13743-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210824202014.978922-1-robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Aug 24, 2021 at 03:20:14PM -0500, Rob Herring wrote:
-> 'enum' is equivalent to 'oneOf' with a list of 'const' entries, but 'enum'
-> is more concise and yields better error messages.
-> 
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Vignesh R <vigneshr@ti.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: dmaengine@vger.kernel.org
-> Cc: linux-i2c@vger.kernel.org
-> Cc: linux-media@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-phy@lists.infradead.org
-> Cc: linux-serial@vger.kernel.org
-> Cc: alsa-devel@alsa-project.org
-> Cc: linux-spi@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+There is a spelling mistake in a dev_err error message. Fix it.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
+index a0358f2c5cbb..8dd40d00a672 100644
+--- a/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
++++ b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
+@@ -701,7 +701,7 @@ static int dpaa2_qdma_probe(struct fsl_mc_device *dpdmai_dev)
+ 	/* DPDMAI enable */
+ 	err = dpdmai_enable(priv->mc_io, 0, dpdmai_dev->mc_handle);
+ 	if (err) {
+-		dev_err(dev, "dpdmai_enable() faile\n");
++		dev_err(dev, "dpdmai_enable() failed\n");
+ 		goto err_enable;
+ 	}
+ 
+-- 
+2.32.0
+

@@ -2,75 +2,73 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C6873FC070
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Aug 2021 03:20:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BE483FC773
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Aug 2021 14:42:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231297AbhHaBVA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 30 Aug 2021 21:21:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57652 "EHLO
+        id S232209AbhHaMnY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 31 Aug 2021 08:43:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239138AbhHaBU7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 30 Aug 2021 21:20:59 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F3D5C061575
-        for <dmaengine@vger.kernel.org>; Mon, 30 Aug 2021 18:20:05 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id j18so22599578ioj.8
-        for <dmaengine@vger.kernel.org>; Mon, 30 Aug 2021 18:20:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=yCbLbKyx2WDTRu05T+7NOFzjYG6UqRL6+2MZGZr1GfM=;
-        b=HUJtbnqFb2A6jaNzcloab77x5vC0gqYRmPSTC7GJZmglJQ/sPN9PCjgMdU1rP3Cq8t
-         d4dHPJjYYhOhtMHRLO+Y4DQhdu4Lzp1TJK5yyCHqCaHDL/JxaxiVBr1yIKlDW+ExC3cR
-         lY0ctYj2Bl6Z0IsJjuPsgb2mz0nBoRX8b2IBrZaStCXWCxH2PSZhK3wfg/rqMkeroJrd
-         wGFxOU7XUXN040bFYywMtJgmQBZWjFZdFAzErwqRyf4AM74jYxcp6fIv/xWDtBGI42zu
-         v5dO3Y8O21IC1VbNg7fYFf/iGjmd7Ie8z/zem10Xcgb0Ai3xIFpFkxfXYQAa7yJkvkxr
-         Dxcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=yCbLbKyx2WDTRu05T+7NOFzjYG6UqRL6+2MZGZr1GfM=;
-        b=FgMi2J1k7wRwiOa8r2eYIBPYnLD3fryLXeyll8R8UhTDtAZJU62c25wHI+pll66kxX
-         vy9NqtaUgaoOIx77cyTjiYgXHdsSSlpKOxnBVh542xBvjL/BUaiGO7ffbhjd1c6BeZ2Y
-         SABNMO5mnCm3rksP4beY71kEXbVHZTjHEBNp/Xu7wdbnhAl5GR5bBEv6NNX6qOv27I5s
-         nZheiTPWSDXp51yEWM4hPjggRM4Ncfmqr+/KztM0y/4ODhEXidbcnhE4oNVhiwLnf8HK
-         PxQ1eOWeSNSB61EMAEoJ85ofdEXNnbiGCqxJV3QdK0P8VjQBTJJ/cjICpZNKMV0Ta/8S
-         noaw==
-X-Gm-Message-State: AOAM532pwG6YztT16UCER467L616wGpGZOiW8XEyJv0WsYsetdSEBG3b
-        28Hxf3N1U9OBwqfPmEMSx0jEf90KAi1sOWSi/68=
-X-Google-Smtp-Source: ABdhPJzenT5ZUiKjSD56JyVENJjHLWS+gc7qLnhoXI0u2cQvpHSSHoop/hLPPGgR024msLT9KOqkFPKYFehyf7WQf4o=
-X-Received: by 2002:a5d:8e11:: with SMTP id e17mr20784549iod.138.1630372804797;
- Mon, 30 Aug 2021 18:20:04 -0700 (PDT)
+        with ESMTP id S229625AbhHaMnW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 31 Aug 2021 08:43:22 -0400
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 520ABC06175F
+        for <dmaengine@vger.kernel.org>; Tue, 31 Aug 2021 05:42:27 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:2193:279a:893d:20ae])
+        by andre.telenet-ops.be with bizsmtp
+        id oCiP2500V1ZidPp01CiP54; Tue, 31 Aug 2021 14:42:23 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1mL35r-000rJA-82; Tue, 31 Aug 2021 14:42:23 +0200
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1mL35q-00027I-KK; Tue, 31 Aug 2021 14:42:22 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Vinod Koul <vkoul@kernel.org>, Sanjay R Mehta <sanju.mehta@amd.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] MAINTAINERS: Fix AMD PTDMA DRIVER entry
+Date:   Tue, 31 Aug 2021 14:42:21 +0200
+Message-Id: <28b7663ebcaf9363324a615129417b24625a7038.1630413650.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Received: by 2002:a5d:8c82:0:0:0:0:0 with HTTP; Mon, 30 Aug 2021 18:20:04
- -0700 (PDT)
-Reply-To: stjor21@gmail.com
-From:   Torres Werner <ojoborijeomajuliet@gmail.com>
-Date:   Mon, 30 Aug 2021 21:20:04 -0400
-Message-ID: <CABDNeeuC+DAnNjcMGVBfFXFnTe2dADNPRuFMrWdQTf5Ppz2SpQ@mail.gmail.com>
-Subject: Attn:Employment
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello,
+Remove the bogus leading plus signs from the entry for the AMD PTDMA
+driver.
 
-We are looking for a part-time personal assistant/task runner that
-would be available for 5-6 hours on one day per week to start. In this
-role, you will be responsible for fielding and fulfilling personal
-errand requests. The position will start at a few hours per week, but
-we expect the hours to grow as you develop relationships with the
-team. We will have various tasks for this person throughout the day
-running errands for our executives. This individual would have
-dedicated hours each week. With the holidays approaching, we have
-additional projects launching that we will need assistance with as
-well. Although this will start as only a few hours one day a week, if
-successful with the right person, more time will be added. Kindly get
-back to me if you're interested.
+Fixes: fa5d823b16a9442d ("dmaengine: ptdma: Initial driver for the AMD PTDMA")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ MAINTAINERS | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Thanks,
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 51827224c141eaa8..3b024911ce6e50fe 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -985,11 +985,11 @@ S:	Supported
+ T:	git https://gitlab.freedesktop.org/agd5f/linux.git
+ F:	drivers/gpu/drm/amd/pm/powerplay/
+ 
+-+AMD PTDMA DRIVER
+-+M:	Sanjay R Mehta <sanju.mehta@amd.com>
+-+L:	dmaengine@vger.kernel.org
+-+S:	Maintained
+-+F:	drivers/dma/ptdma/
++AMD PTDMA DRIVER
++M:	Sanjay R Mehta <sanju.mehta@amd.com>
++L:	dmaengine@vger.kernel.org
++S:	Maintained
++F:	drivers/dma/ptdma/
+ 
+ AMD SEATTLE DEVICE TREE SUPPORT
+ M:	Brijesh Singh <brijeshkumar.singh@amd.com>
+-- 
+2.25.1
 
-Torres Werner

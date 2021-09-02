@@ -2,253 +2,193 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 02C3D3FEC57
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Sep 2021 12:42:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1440C3FEC8B
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Sep 2021 12:57:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244817AbhIBKnp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 2 Sep 2021 06:43:45 -0400
-Received: from mail-dm6nam11on2060.outbound.protection.outlook.com ([40.107.223.60]:29408
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        id S233427AbhIBK6Z (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 2 Sep 2021 06:58:25 -0400
+Received: from mail-mw2nam12on2056.outbound.protection.outlook.com ([40.107.244.56]:7937
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S245041AbhIBKno (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 2 Sep 2021 06:43:44 -0400
+        id S231133AbhIBK6Z (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 2 Sep 2021 06:58:25 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V0wCkCt4reZX5/pI1oN8+MTEdN7nOm1KB2z2zTQ0lxK9IoA+ilLncP3QHGdWuaXF2nROSELOkDBKe0uSlJ60AF0BIY34de8e2SquIFMCX/LEq0r9ACdz3SsB/x81IV1HGA5al6aG8LbzaEr7QngNyFB6UXydSZzOdaRcR0v46cWon37T5pfLo1UQ6UEmtFhFYz8x78WX1AtOH+ibTcGYR2iu3r0xiXPm0Y91+krv6/P6CSToF/FBUoOpvIn9apyB2yDMT8ZbwZpQu9ASIl+jWcbBjuzGF/YaicxTEPjGjWnh1NoXyMpzrBWTmnafcZab6pSISOtoAz0pdH0f1App5Q==
+ b=NPjKYjRmcPVLOaH7GpKIy17Qu3j77IqmWMVh96ERbcQz7taFVJCUpx+gjLgnFqYNwacfLf3n3IY+yL7UuJvUEdgiGYIIsMnxpZgnyTbq/6Fz0c2bz9II4eRw1YEsOX25MYy9J2DHUlnwQw52DvqCdmIDhRFdBXHRjbPTaQRfDVtxEMNNd4g5mep4DoSRworQQ/u7Q4qdApDsR5/DJPNRsX4GhUZt9flcF0uSZ/a19vNR26FP4Y1+2bTkSjzZhlW+dF96f+wFujIRaAtQMVI+QcMMXdNdqzeynYjYXeXmyRmMCdwMoFiQ/9WR89fPUQPIXVLrHawNqG4sa2mM9zSHRg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IOh2HwgVF+wTFJXT3cl5gelwYic0WEx4a7udXKw2BuI=;
- b=PaFrA0wqczXTHtKbWjV19EaEYzXjUzxoZfk3nKqw4UzWkn9znbTMXOYuuCgq45d9Ad7rIJf2vkCMvK7nbB8bk18f1Et/3ZQQodQuRLN8wd+2kUOW3NjTTL/L5tqKDKDwEwPd7Sgrvh0pulzH0tQYlmNIUPujs9tCAnmcqgexw7SPBR+PjkLPRwhrdn2KzEAcSNIQnLSWwVvns1W6Wccnqusus1PKaz9U596OpcLi/35PawEkuXGzC3g8/O4osAR/clnlos8MD2VvBbr5FlSa7VGyIuyaUpixiLuhbaj2jWXaGDmG9fjpi686sCk31LlLNwTowXZuU1NEH0ZuS6fFHQ==
+ bh=PeW0MmJaslvMcOD7K6hWrM1/w+o+9+7kmnLEKhDPjLc=;
+ b=Vs8tDzRPeuUMkWK03PsRzc3jTJJNYUVj92s2/CVfKTe2cvo9OTvdTO6LWziBmv1fnJG51QMYW6MhAAcQduMxlBPiCngiDzOsUZj4dsjtTmvoHF4xEQ7nngLuW4bUwzV45Xz1bNv6FuKKVedXAU/efbGq/by9U0h7NnQMiSxUzSWi9AJaeiYt8K0Za3UkG/ngzD8e1PpjnCWdFFzB5viX/vPY7CM84jjgNy4up5j5yLKIB/XIp1iQluigR78w79QrA5nJIIrD4GC+xzge7j9vynp884xetz3pL3he/eEybJ3o06crLou9IU1oG00Hk+SVnlfr5mHmfr6azEJowMj5Sw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.36) smtp.rcpttodomain=pengutronix.de smtp.mailfrom=nvidia.com;
+ 216.228.112.35) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IOh2HwgVF+wTFJXT3cl5gelwYic0WEx4a7udXKw2BuI=;
- b=XV0234FeEq7jC6u6zB9UZfJDFYm8+E5QGi8dCSQm9h7kkd/IuPwImoHt5ut7UXCkMp1C0jy/z5j2tC6mC+Sw+uArvDIH89M2vCs7oxNC8tguZBZTrvE3EoU7WFcSgMfgIssdeEpFy2daBTjvG3EW0ga9BCAb68N86nXBbtu99+0DZTI9tybJJysW9SigHfwS+Pd2RXJ5vKb8absgDJAdP4kY++aC9PvLW73eZlhiRJLExs9ADlS5agb7gVqY5xRwCsjnyniResKM0KqdbWS2JgRgVHtKNvx6ZneH47uaO7Lw7pME6cFoBk0ltEpQavHN8aaP+3741843y/RteTftPg==
-Received: from BN8PR16CA0029.namprd16.prod.outlook.com (2603:10b6:408:4c::42)
- by BYAPR12MB3269.namprd12.prod.outlook.com (2603:10b6:a03:12f::27) with
+ bh=PeW0MmJaslvMcOD7K6hWrM1/w+o+9+7kmnLEKhDPjLc=;
+ b=cqN210zNjY3sJs3n8ahdodr08Wt9msD9LEH2frfNbAmZ/jhKaUDLy+6FP1z+4lPY5sSrqliE/LuypMaIAqTKJZedI9NQj2spwDLqhwv4JPoUr5Q/HsNXnVxDWxLbkPAFZHOwwuS9jg5yjlRFNL2anrrBX+JshTlEzg2uuUWm6pmRznzS5VSu26yCRBbO2YvXGNPIphHJVs6FO8hh+8G/vPFMQRtPpQVfd4dGdepNKyuO77z0ucmDEuFrTi2jb7UryepJzHOCneD0RNY9PBnOSwYMylFPq11cVzZ6YkPsqYE+P6yxC4wvi1Cl8y/9GjstrLqVIlwHU8CnqUI81hsliQ==
+Received: from MW3PR05CA0017.namprd05.prod.outlook.com (2603:10b6:303:2b::22)
+ by DM4PR12MB5376.namprd12.prod.outlook.com (2603:10b6:5:39a::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.24; Thu, 2 Sep
- 2021 10:42:44 +0000
-Received: from BN8NAM11FT023.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:4c:cafe::b6) by BN8PR16CA0029.outlook.office365.com
- (2603:10b6:408:4c::42) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.19 via Frontend
- Transport; Thu, 2 Sep 2021 10:42:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.36)
- smtp.mailfrom=nvidia.com; pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=pass action=none header.from=nvidia.com;
+ 2021 10:57:25 +0000
+Received: from CO1NAM11FT061.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:2b:cafe::d7) by MW3PR05CA0017.outlook.office365.com
+ (2603:10b6:303:2b::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.6 via Frontend
+ Transport; Thu, 2 Sep 2021 10:57:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.35)
+ smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.36 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.36; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.36) by
- BN8NAM11FT023.mail.protection.outlook.com (10.13.177.103) with Microsoft SMTP
+ 216.228.112.35 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.35; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.35) by
+ CO1NAM11FT061.mail.protection.outlook.com (10.13.175.200) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4478.19 via Frontend Transport; Thu, 2 Sep 2021 10:42:44 +0000
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 2 Sep
- 2021 10:42:43 +0000
-Received: from [10.26.49.12] (172.20.187.5) by DRHQMAIL107.nvidia.com
+ 15.20.4478.19 via Frontend Transport; Thu, 2 Sep 2021 10:57:25 +0000
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 2 Sep
+ 2021 10:57:24 +0000
+Received: from [10.26.49.12] (172.20.187.6) by DRHQMAIL107.nvidia.com
  (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 2 Sep 2021
- 10:42:40 +0000
-Subject: Re: [PATCH v3 1/4] dt-bindings: dmaengine: Add doc for tegra gpcdma
+ 10:57:21 +0000
+Subject: Re: [PATCH v3 2/4] dmaengine: tegra: Add tegra gpcdma driver
+From:   Jon Hunter <jonathanh@nvidia.com>
 To:     Akhil R <akhilrajeev@nvidia.com>, <rgumasta@nvidia.com>
 CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <kyarlagadda@nvidia.com>, <ldewangan@nvidia.com>,
         <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <p.zabel@pengutronix.de>, <thierry.reding@gmail.com>,
-        <vkoul@kernel.org>
+        <vkoul@kernel.org>, Pavan Kunapuli <pkunapuli@nvidia.com>
 References: <MN2PR12MB41438B94148A6D522C056771A2A70@MN2PR12MB4143.namprd12.prod.outlook.com>
  <1630044294-21169-1-git-send-email-akhilrajeev@nvidia.com>
- <1630044294-21169-2-git-send-email-akhilrajeev@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <e5d01478-6129-6161-43f6-59f2c9322478@nvidia.com>
-Date:   Thu, 2 Sep 2021 11:42:38 +0100
+ <1630044294-21169-3-git-send-email-akhilrajeev@nvidia.com>
+ <4f0293e1-01de-8735-40e7-0622d185188a@nvidia.com>
+Message-ID: <64505970-1d68-b4cb-490b-7bfa1c842a1f@nvidia.com>
+Date:   Thu, 2 Sep 2021 11:57:19 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <1630044294-21169-2-git-send-email-akhilrajeev@nvidia.com>
+In-Reply-To: <4f0293e1-01de-8735-40e7-0622d185188a@nvidia.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.20.187.5]
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [172.20.187.6]
 X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
  DRHQMAIL107.nvidia.com (10.27.9.16)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 018fe264-ed4c-438e-35ca-08d96dfe65a2
-X-MS-TrafficTypeDiagnostic: BYAPR12MB3269:
-X-Microsoft-Antispam-PRVS: <BYAPR12MB3269CCF6E80419AE35981D72D9CE9@BYAPR12MB3269.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Office365-Filtering-Correlation-Id: eba119a5-5e3f-4cdd-dc4c-08d96e0072b0
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5376:
+X-Microsoft-Antispam-PRVS: <DM4PR12MB537609613ED034D764A1863ED9CE9@DM4PR12MB5376.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: haqh1gsyMtyinCxSyhVp2aRW7Mf3+gzz3K+Y1idE2fBTW2mrRbmkTo2dsiB1YqX0e02nGHWyuYA1OlUAAad5FrsDMPsgcDJQmdKsWe0ONTpLqMnpEBmYG3Y+U6Cb4pFi8KPxh9Oy3qGD0wCU9+ZERBCMYZ/sAPF0gmqrgEEdsJAPPSrZstdCdZM0aL9I1kETarkn+KAdxglCpcfa3RilSgrlhSnIhDL7E5eDlEn7OwMkWRS/8gpjBBq0n0f3V8jsTa6ThNqHM8ebSHwc7WrDzmD2b5amNaLt/pibZYJscnP8hNM6iC2dXbCvjkxiP2wi9A2lWriNzGqn/JDiQ9fnsewdAyCYr0m9Ryt3xL1cU4fpfFQtVOHbUnUMUhdqRzDQxyvui6SsJ0A/R+Eoc346I+zMKfFsYevp2GelJnTTBOjlsdit1hArweKA2kuff5lTuRHlrq2/21x0g4+en3m1Ndl5fJ5/mpSXAUpSavUuqwfTCtHMWQtBNd8ewqyBE1lu2Q0rn4dKRge0t5uJjPwmMeXamf4/WqGKOZSjskAsst2vmkhlVRbA5LLH8vr/Ta3dGVzXYsRY4w7DqSwhVU/8ovEWU1capd4j1U0UF4Ru2TbE8sQhKKNUHF1blfdODTfYXV4yM4klUCDDP/ObaWzPILa0uy7V41iCwXrgL83iCtNqtvty/BAo/XDNX23K+b0Czj6rvTB/TFZoeqb2Fq4ymzS9K2np/sJp3iGvrTS80Iic9qLRDPPBuvEHTCkyiRglw2xkghJ/l0JrwiS752xeF/Sx32/oFh5NirjY2XG+MRCABq9GAzLorssoEPsZE4HJT1Rxwt22MlOza9byVgrBOGsBH5KX4Bvlf7hz6KELaQs=
-X-Forefront-Antispam-Report: CIP:216.228.112.36;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid05.nvidia.com;CAT:NONE;SFS:(4636009)(396003)(346002)(39860400002)(376002)(136003)(36840700001)(46966006)(426003)(16576012)(8936002)(966005)(26005)(2616005)(82740400003)(53546011)(316002)(31686004)(356005)(8676002)(31696002)(36906005)(7636003)(16526019)(54906003)(86362001)(110136005)(5660300002)(70586007)(70206006)(6636002)(4326008)(336012)(82310400003)(36860700001)(36756003)(186003)(478600001)(2906002)(47076005)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: HiFOE/8Afk72yCKhos++UtGjVM27wl50mkCk2eWhUcmWSMojvxCW7Nd42ZIECNmTFt5t9508nusEdcnytw/joFAXw1tvqevq39A6bfXW+m1ypCr38b8yoVz8iX8iBmjgB6YHSghcsVsEBL9YnmGlSv8Z2hNKRkp3llOeCMQgucmbFwV44GaOVC53nJ+ek929gZOReRDycfoDycS94+08+lVwxjuDPXmzfAwS4tW/leTzY5zTt5Tnii0Ob94miDDI5IM7i3/WY+ZWHzJ7I1LW1U9AYstVReohuHbbkVLCcduc5XS0wZnBC6pvS9zOiV+NVEYypGWzp7UPRRFV+jfO5bUwPbfi201wzU76jZoR1A62g5on01xDEoGPVqU4wAB+o6DpbtEUS/ahUnft6i69ac1UUuBiuZKogQqjRHN+mFv/BaCk5HcFK5yP67ILw3IKa5d4mFPvVk1hZ9cXn2+NuTwlp7b4pz0B8kqMrj61uBWpDGFHWPcCWA9rP3dQANrhagKOwgGO5bKLD4oLcCJP7UraDjKEG+2godAf9QjxUktLQ1vd2fT9JpUGa6CZBqTKkdD4/wx1DHj/mjMsxnFgPiu5ZfGxzv/MS/0LkQtmz770GiAq+dGd+BC0gCMhCJCr/BHDYWSzvBfoumYhC7taoxLbt2CRJ+1T6W3uLLM5HA5evF46mor9ZN9/KZElpes14bijxgs/hKzuwr9lsn6WbY4kBjAXOmu0tbu7P3suBmM=
+X-Forefront-Antispam-Report: CIP:216.228.112.35;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid04.nvidia.com;CAT:NONE;SFS:(4636009)(376002)(39860400002)(346002)(396003)(136003)(36840700001)(46966006)(426003)(82310400003)(316002)(478600001)(16576012)(26005)(82740400003)(107886003)(186003)(53546011)(36906005)(2616005)(31686004)(356005)(7636003)(31696002)(8676002)(6636002)(36756003)(86362001)(4326008)(70586007)(8936002)(54906003)(5660300002)(70206006)(83380400001)(47076005)(336012)(36860700001)(2906002)(16526019)(110136005)(43740500002);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2021 10:42:44.0388
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2021 10:57:25.1715
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 018fe264-ed4c-438e-35ca-08d96dfe65a2
+X-MS-Exchange-CrossTenant-Network-Message-Id: eba119a5-5e3f-4cdd-dc4c-08d96e0072b0
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.36];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT023.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.35];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT061.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3269
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5376
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-
-On 27/08/2021 07:04, Akhil R wrote:
-> Add DT binding document for Nvidia Tegra GPCDMA controller.
+On 01/09/2021 21:56, Jon Hunter wrote:
 > 
-> Signed-off-by: Rajesh Gumasta <rgumasta@nvidia.com>
-> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
-> ---
->   .../bindings/dma/nvidia,tegra-gpc-dma.yaml         | 99 ++++++++++++++++++++++
->   1 file changed, 99 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra-gpc-dma.yaml
+> On 27/08/2021 07:04, Akhil R wrote:
+>> Adding GPC DMA controller driver for Tegra186 and Tegra194. The driver
+>> supports dma transfers between memory to memory, IO peripheral to memory
+>> and memory to IO peripheral.
+>>
+>> Signed-off-by: Pavan Kunapuli <pkunapuli@nvidia.com>
+>> Signed-off-by: Rajesh Gumasta <rgumasta@nvidia.com>
+>> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+>> ---
+>>   drivers/dma/Kconfig         |   12 +
+>>   drivers/dma/Makefile        |    1 +
+>>   drivers/dma/tegra-gpc-dma.c | 1343 
+>> +++++++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 1356 insertions(+)
+>>   create mode 100644 drivers/dma/tegra-gpc-dma.c
+
+...
+
+>> +static int tegra_dma_terminate_all(struct dma_chan *dc)
+>> +{
+>> +    struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+>> +    unsigned long wcount = 0;
+>> +    unsigned long status;
+>> +    unsigned long flags;
+>> +    bool was_busy;
+>> +    int err;
+>> +
+>> +    raw_spin_lock_irqsave(&tdc->lock, flags);
+>> +
+>> +    if (!tdc->dma_desc) {
+>> +        raw_spin_unlock_irqrestore(&tdc->lock, flags);
+>> +        return 0;
+>> +    }
+>> +
+>> +    if (!tdc->busy)
+>> +        goto skip_dma_stop;
+>> +
+>> +    if (tdc->tdma->chip_data->hw_support_pause) {
+>> +        err = tegra_dma_pause(tdc);
+>> +        if (err) {
+>> +            raw_spin_unlock_irqrestore(&tdc->lock, flags);
+>> +            return err;
+>> +        }
+>> +    } else {
+>> +        /* Before Reading DMA status to figure out number
+>> +         * of bytes transferred by DMA channel:
+>> +         * Change the client associated with the DMA channel
+>> +         * to stop DMA engine from starting any more bursts for
+>> +         * the given client and wait for in flight bursts to complete
+>> +         */
+>> +        tegra_dma_reset_client(tdc);
+>> +
+>> +        /* Wait for in flight data transfer to finish */
+>> +        udelay(TEGRA_GPCDMA_BURST_COMPLETE_TIME);
+>> +
+>> +        /* If TX/RX path is still active wait till it becomes
+>> +         * inactive
+>> +         */
+>> +
+>> +        if (readl_relaxed_poll_timeout_atomic(tdc->tdma->base_addr +
+>> +                tdc->chan_base_offset +
+>> +                TEGRA_GPCDMA_CHAN_STATUS,
+>> +                status,
+>> +                !(status & (TEGRA_GPCDMA_STATUS_CHANNEL_TX |
+>> +                TEGRA_GPCDMA_STATUS_CHANNEL_RX)),
+>> +                5,
+>> +                TEGRA_GPCDMA_BURST_COMPLETION_TIMEOUT)) {
+>> +            dev_dbg(tdc2dev(tdc), "Timeout waiting for DMA burst 
+>> completion!\n");
+>> +            tegra_dma_dump_chan_regs(tdc);
+>> +        }
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra-gpc-dma.yaml b/Documentation/devicetree/bindings/dma/nvidia,tegra-gpc-dma.yaml
-> new file mode 100644
-> index 0000000..39827ab
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra-gpc-dma.yaml
-> @@ -0,0 +1,99 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/nvidia,tegra-gpc-dma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Nvidia Tegra GPC DMA Controller Device Tree Bindings
-
-I think we typically say NVIDIA in all caps.
-
-> +
-> +description: |
-> +  Tegra GPC DMA controller is a general purpose dma used for faster data
-
-Maybe worth saying that the GPC DMA is the Genernal Purpose Central 
-(GPC) DMA controller. Also 'DMA' should be in all caps and not 'dma'.
+> I would be tempted to make the code in the 'else' clause 
+> tegra_dma_sw_pause(). Then you could have tegra_dma_hw_pause() and 
+> tegra_dma_sw_pause().
 
 
-> +  transfers between memory to memory, memory to device and device to memory.
-> +  Terms 'dma' and 'gpcdma' can be used interchangeably.
-
-Note sure this last sentence really adds any value.
-
-> +
-> +maintainers:
-> +  - Jon Hunter <jonathanh@nvidia.com>
-> +  - Rajesh Gumasta <rgumasta@nvidia.com>
-> +
-> +allOf:
-> +  - $ref: "dma-controller.yaml#"
-> +
-> +properties:
-> +  "#dma-cells":
-> +    const: 1
-
-Good to add a description here. Look at the 
-Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml for 
-reference.
-
-> +
-> +  compatible:
-> +    - enum:
-> +      - nvidia,tegra186-gpcdma
-> +      - nvidia,tegra194-gpcdma
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-
-I believe that this should be 32. Look at the 
-Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml for 
-reference.
-
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  reset-names:
-> +    const: gpcdma
-> +
-> +  iommus:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - resets
-> +  - reset-names
-> +  - "#dma-cells"
-> +  - iommus
-> +
-> +examples:
-> +  - |
-> +    gpcdma: dma@2600000 {
-> +	  compatible = "nvidia,tegra186-gpcdma";
-> +	  reg = <0x0 0x2600000 0x0 0x210000>;
-> +	  resets = <&bpmp TEGRA186_RESET_GPCDMA>;
-> +	  reset-names = "gpcdma";
-> +	  interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH
-> +	                GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH
-
-Please fix indentation.
-
-> +					GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH
-> +					GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-> +       #dma-cells = <1>;
-
-Please fix indentation.
-
-> +	   iommus = <&smmu TEGRA_SID_GPCDMA_0>;
-> +	   dma-coherent;
-> +	};
-> +
-> +...
-> 
+Thinking some more tegra_dma_hw_pause() and tegra_dma_sw_pause() it not 
+very clear/accurate. I would be tempted to call these tegra_dma_pause() 
+and tegra_dma_stop_client() or tegra_dma_stop_transactions(), because 
+without having a proper hardware pause, you are simply ignoring the 
+client sync events.
 
 Jon
-
---
+-- 
 nvpublic

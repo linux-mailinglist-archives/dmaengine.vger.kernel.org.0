@@ -2,96 +2,142 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5BCE400BBB
-	for <lists+dmaengine@lfdr.de>; Sat,  4 Sep 2021 16:58:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C00A94018F5
+	for <lists+dmaengine@lfdr.de>; Mon,  6 Sep 2021 11:38:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232532AbhIDO7r (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 4 Sep 2021 10:59:47 -0400
-Received: from mout.gmx.net ([212.227.15.18]:44473 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230514AbhIDO7q (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 4 Sep 2021 10:59:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1630767520;
-        bh=kHtuAbYiiBfGxvhY45tuo5q2d2Qu8ss/9ZK1wHJ1PWA=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=Wj532fDDWd7ji7XrN17RIRGtf/MgSvCBh+8fW7803p2BqmLxsR8MYSTobDjCbVd3U
-         wmaVGPvjLCN6kC20IJ/GbQgXzF4q4QZ7Q2GMGqj1y7Rmdj+bPFg2B5PPrZJTIP6Gl2
-         n9OPlXux4V2tKE2JNAP9TOpQI2PhM5KN+cBv/hZ0=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MybKp-1nBtic3Mq5-00yzDG; Sat, 04 Sep 2021 16:58:39 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Len Baker <len.baker@gmx.com>, Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: milbeaut-hdmac: Prefer kcalloc over open coded arithmetic
-Date:   Sat,  4 Sep 2021 16:58:13 +0200
-Message-Id: <20210904145813.5161-1-len.baker@gmx.com>
-X-Mailer: git-send-email 2.25.1
+        id S241363AbhIFJgQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 6 Sep 2021 05:36:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241502AbhIFJes (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Sep 2021 05:34:48 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26BB0C0613C1
+        for <dmaengine@vger.kernel.org>; Mon,  6 Sep 2021 02:33:44 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id m9so8892719wrb.1
+        for <dmaengine@vger.kernel.org>; Mon, 06 Sep 2021 02:33:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=i2+NvsBgnBTOZ+uAcUxvlIaM13WedkLbcL6bup+H1UM=;
+        b=q9eDwDZxue+JjKYKIP+w/ygZ5RrOIy/6a/V0xWsuwzRdA+DY9pSefRgNpnnYpm5BQZ
+         jcdsEFl+fmxv1rv5K31l4dvYsDgRRwrUDRSzPK+5TxnLrRKkeZrRIMX8t00nTTDrCsNi
+         uf638hMv8OsnzcALsgDmG4mf5Gq7vuKLtqqOIWfbZSTBJC9+5AAZImMHCH6jbKGweNZY
+         0rFAtFa8MeWkgidZTVKx5NAsJxCv7TwpC8fsiZdr5uQa0ixm8d4bVKAPP52HXRvZ99cf
+         Q+yyT+iPmmajoU/79Hm6iTVhB2TuOulKMfd2QGm1q9pIns3NH7VucMIJue0cMY68rhls
+         XvRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=i2+NvsBgnBTOZ+uAcUxvlIaM13WedkLbcL6bup+H1UM=;
+        b=rlxY1tcTjlqTIodZ+J30hyqzsv56MGljrSC4iSd07TLOo1k6jJQULBfjVUYSmkT81H
+         OgEQU5wPRt2A4gzzatqJSR5cSxXe+/4QPUKAb4w9KIGDVqURfNtBtV9DqG2aSs48aAOq
+         6o8Zjaak6AzqbP5JGwouz/rfw7xEKH+WwzsvkwhqF6e28n5gOGSqxINQwpBX6iWD062f
+         BcQF0fdUVBTcJMcsb6JbuMap4UGZr0CoNG3aZFMYoMQ+F8Nbk09s0ouVvKCD0YhIGyKG
+         u6cC+4W1rIZ5ej8KvW8RSqrqSfQdAthTWR04dHjkcofpiZomKTDyBM43bB6OjwjpRB1c
+         F8HA==
+X-Gm-Message-State: AOAM532anS1wg3wM9yIeaIulVmLwlWCPiKfcTQCUBybzZ6qakd7YiJEB
+        Q6KT6wISSeNoBbtGLpF7AgrihQ==
+X-Google-Smtp-Source: ABdhPJzzIakAt8tQ+64AcWO9lDYlr4Dh32B1+kDEcgR0qe3zm7ry+opFn+4PQ93e0dV7eey6Ev0dkg==
+X-Received: by 2002:adf:8006:: with SMTP id 6mr12342436wrk.38.1630920822630;
+        Mon, 06 Sep 2021 02:33:42 -0700 (PDT)
+Received: from google.com ([31.124.24.187])
+        by smtp.gmail.com with ESMTPSA id i21sm7106080wrb.62.2021.09.06.02.33.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Sep 2021 02:33:42 -0700 (PDT)
+Date:   Mon, 6 Sep 2021 10:33:39 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Vignesh R <vigneshr@ti.com>, Marc Zyngier <maz@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Use 'enum' instead of 'oneOf' plus 'const'
+ entries
+Message-ID: <YTXgc/GhZVKzJR9H@google.com>
+References: <20210824202014.978922-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:NSQFmTYhh/v2YneA2W5Ogc8MRxblor3ZiAgHPc+Z3Fg9SuI3aN8
- /+x7hJn+9pOrlLQfyzRLGYbnCoaTk0GppfuHyJwHf8q4sbq1c5HITIzK7E9+NoRAl9izBhF
- JMTQ830MDv6lRKX8j3lRT+heSk9Wdy+Vl8va/12qCess5IkxRQaQBZiqrsWE/pZNZ5oxTC/
- sOe6BHT4QTXqbs47F1ruw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qex0b/X3PnI=:hitT94Zrb/n84OxuD0tlVr
- MxRw+2EmoU5WK0rtdpk+rJRlA+Tpk4h124IU4P9YBdaXi5Q/vNHG6ecGn3rNlFlDYqkZnsItD
- FNwXE2IVeIRXtsOJ+Uhacr5NGv7MdK8HKQ2DmZ1w1s5oc9pB0Gv3QlGEevl+NEoycWh1eKcV1
- dSBfLTRh3VTa7Lz0R5ozdVKCfFSnrMSXT4JyIfdquH/dCqEBhJXevDPT5E83VO9hQlVYQCpvD
- A+p9qVKuIgWfFyqRQ0GcdoItFZXxciKPbMHEr5OsTgqbVvYHPUZ/Y9A0W6wpp0UHkChwmWgWV
- o2Sw4u4jiovfqIDxe9OKOYSNbwAi4+yZyq4fRb2GUboJqjU1Z2lltIsPYljXzdERlfCEpfF2A
- JS7c33WMd8/vmE23E2mySnJO9Yh214wVM20NU4bgGnvlGB1CKF2HeerdDDce92ATEN0oJHNZL
- CeuO/3ziMBrmQ8l9+N94RAKDi4HQfOXjtaKHc6bPbevh18bEOegnd6HJ8jHdvhT255cwcq2kT
- nEqhH8wlIj4CD/ucfc8QhGcp76yjwF4EMDwP5qfVbEII3f9stXeyWZaajPko/G/rTHNyGz/cE
- fzrRFYWRE/V8avPkUb75hExN17ZSzOafax+Cy9dUtgUX+CiOJ7xS45MZR8BkBZxtZHLV8nvcf
- Aw387J0v5PhTIjNgpMH6OuTKuGsxnl5F7NjhA3ekxbER6IQGQOfhrfu7zG0MCEOP2xmYu+3rp
- UaHhGIoFCXl6Qhf+4j+bpua0PKIb7hS2wTcEFZd0O0I6902VPOHSk1ioB23vU0ueWDNrJf4Dt
- 2VWWaq3574Jm1hpdBJ1YN9ager1hT2x05NlyWaUq6Z5+Eocn+/i+SlLwOn6isFS6rAj2wAo9G
- Y4ygFOrA3sGzAtYX0Kirq3dXhe3hueTVjokP1BUeyy2u7UCtkKzVbnhpdNXlCgy1sP6Sj9ynI
- qSPJ7COsJzyOKeD6dFyl7w+ebmwBnCbFbe96me1x3o4xZStvddcbXsob/AjP0lTBjPETUUjgE
- h6wIbQ/9mRjTu0k/ccY9OwmkxUbX/P25hRmCuN2n4vN6oKG3jREztQPgDvlGdEjMXLyjRG62f
- HUTtinN2SjgaL/EWm40Rhy6WVoKvEGq8xiMR3F4iGbVvoVD3PQ3qL1aXw==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210824202014.978922-1-robh@kernel.org>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-As noted in the "Deprecated Interfaces, Language Features, Attributes,
-and Conventions" documentation [1], size calculations (especially
-multiplication) should not be performed in memory allocator (or similar)
-function arguments due to the risk of them overflowing. This could lead
-to values wrapping around and a smaller allocation being made than the
-caller was expecting. Using those allocations could lead to linear
-overflows of heap memory and other misbehaviors.
+On Tue, 24 Aug 2021, Rob Herring wrote:
 
-So, use the purpose specific kcalloc() function instead of the argument
-size * count in the kzalloc() function.
+> 'enum' is equivalent to 'oneOf' with a list of 'const' entries, but 'enum'
+> is more concise and yields better error messages.
+> 
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Vignesh R <vigneshr@ti.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: dmaengine@vger.kernel.org
+> Cc: linux-i2c@vger.kernel.org
+> Cc: linux-media@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-phy@lists.infradead.org
+> Cc: linux-serial@vger.kernel.org
+> Cc: alsa-devel@alsa-project.org
+> Cc: linux-spi@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/display/msm/dsi-phy-10nm.yaml           |  6 +++---
+>  .../bindings/display/msm/dsi-phy-14nm.yaml           |  6 +++---
+>  .../bindings/display/msm/dsi-phy-28nm.yaml           |  8 ++++----
+>  .../bindings/dma/allwinner,sun6i-a31-dma.yaml        | 12 ++++++------
+>  .../devicetree/bindings/firmware/arm,scpi.yaml       |  6 +++---
+>  .../devicetree/bindings/i2c/ti,omap4-i2c.yaml        | 10 +++++-----
+>  .../interrupt-controller/loongson,liointc.yaml       |  8 ++++----
+>  .../devicetree/bindings/media/i2c/mipi-ccs.yaml      |  8 ++++----
+>  .../devicetree/bindings/mfd/ti,lp87565-q1.yaml       |  6 +++---
 
-[1] https://www.kernel.org/doc/html/v5.14/process/deprecated.html#open-cod=
-ed-arithmetic-in-allocator-arguments
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-Signed-off-by: Len Baker <len.baker@gmx.com>
-=2D--
- drivers/dma/milbeaut-hdmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../devicetree/bindings/net/realtek-bluetooth.yaml   |  8 ++++----
+>  .../bindings/net/ti,k3-am654-cpsw-nuss.yaml          |  8 ++++----
+>  .../devicetree/bindings/net/ti,k3-am654-cpts.yaml    |  6 +++---
+>  Documentation/devicetree/bindings/pci/loongson.yaml  |  8 ++++----
+>  .../devicetree/bindings/phy/intel,lgm-emmc-phy.yaml  |  6 +++---
+>  .../devicetree/bindings/serial/8250_omap.yaml        |  9 +++++----
+>  .../devicetree/bindings/sound/qcom,sm8250.yaml       |  6 +++---
+>  .../devicetree/bindings/sound/tlv320adcx140.yaml     |  8 ++++----
+>  .../devicetree/bindings/spi/realtek,rtl-spi.yaml     | 12 ++++++------
+>  .../devicetree/bindings/timer/arm,sp804.yaml         |  6 +++---
+>  19 files changed, 74 insertions(+), 73 deletions(-)
 
-diff --git a/drivers/dma/milbeaut-hdmac.c b/drivers/dma/milbeaut-hdmac.c
-index a8cfb59f6efe..1b0a95892627 100644
-=2D-- a/drivers/dma/milbeaut-hdmac.c
-+++ b/drivers/dma/milbeaut-hdmac.c
-@@ -269,7 +269,7 @@ milbeaut_hdmac_prep_slave_sg(struct dma_chan *chan, st=
-ruct scatterlist *sgl,
- 	if (!md)
- 		return NULL;
-
--	md->sgl =3D kzalloc(sizeof(*sgl) * sg_len, GFP_NOWAIT);
-+	md->sgl =3D kcalloc(sg_len, sizeof(*sgl), GFP_NOWAIT);
- 	if (!md->sgl) {
- 		kfree(md);
- 		return NULL;
-=2D-
-2.25.1
-
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog

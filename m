@@ -2,68 +2,64 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B0C1401F21
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Sep 2021 19:25:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6AB9403060
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Sep 2021 23:40:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234036AbhIFR0V (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 6 Sep 2021 13:26:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44654 "EHLO
+        id S1347287AbhIGVll (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 7 Sep 2021 17:41:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231274AbhIFR0V (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Sep 2021 13:26:21 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40F82C061575
-        for <dmaengine@vger.kernel.org>; Mon,  6 Sep 2021 10:25:16 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id x21so4132545uan.6
-        for <dmaengine@vger.kernel.org>; Mon, 06 Sep 2021 10:25:16 -0700 (PDT)
+        with ESMTP id S229875AbhIGVlk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Sep 2021 17:41:40 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F5FBC061575
+        for <dmaengine@vger.kernel.org>; Tue,  7 Sep 2021 14:40:33 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id v10so137350wrd.4
+        for <dmaengine@vger.kernel.org>; Tue, 07 Sep 2021 14:40:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=gPWXiaNTPVTv8v8NJ16SYW6dYjSrDpzV61pQz3V3yPU=;
-        b=E9IFQkBqYs5f+NgfO1pWHzwW8PG+Y0qSMieACTh9/Wt4lttxTDNWPzAT8d1axfJDl1
-         nxBAN/meYQCYx/pAe9KclRYwClMGNPwzj4h/9nQmCSOzyVX4l/93mIupsB4Sdee/edjb
-         qu9donJYqyxSP/zYU5VlpdzMu3KTPa/95QRFunsP7gHJycaygtDjgBR40ixnXwhA2Sp6
-         Sx3SPvhoN7MXCakpjKkFNKHexd9syqFepZgolrhUGpAPGtXgU0yeAMOdMciKSK4zHSsW
-         47KP4vnbnHAIPP30kAoYi1fMRz4A9BGL5gyU07MqYOXKylc6Ba6frK7WTsAsfWBtGw6E
-         3a3A==
+        bh=4ZeMqFoWSo+tWRP8ze+5Nkj/uqSjpLi4OjSOBk1BCRM=;
+        b=Y1YbXz/rG94v2SkbBjy6MZzc2LwcCJQeC1UUw4UwHVJfP+wt7rUbl6v9pYF239LVZl
+         rRIGfU83HEVsg/QBGGx3ROU65OryT3sMcYVU73rkTeFVnKCLVaHjqaXrZ0UUbvNV1soi
+         9AGkhpJNRStYv7NeqGN0Ou941l7Qf/84Eb9TzSjnUbIuX/3oKhxIvAYGEYcXgMFocGV0
+         NzJ+EwX6IrM27xNRtbEepKYBY6CL3cfg3usS5Re3/6TbU3ZyRt+PQ4hb0bk2iDK4ipLv
+         hU55jQwGurNvVYM2OPoZ/nKQnpQRzW/TYd64HvVHmpxksKwE1AIxzcgUDFpq1DYx02Hv
+         M2DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:reply-to:from:date:message-id
          :subject:to;
-        bh=gPWXiaNTPVTv8v8NJ16SYW6dYjSrDpzV61pQz3V3yPU=;
-        b=FvgkRg3NrVKyTF2Ci4CDSJKqvbpHtuilPnKtq5NZ7EXO5iWnSZ/jUJDbzU4ZPhF0Xe
-         vHccPrnPpoz/IqTa2ChpCq3j/foEy9YR+yMuZr++m/qm3cSZyUFESaPPrL4SK8zKM4/B
-         tMM0I7ee9E6oIDeFGKe0NtPHb3cscBXNjyiyHVehG2kuqX+TKa6kbU4rmTcERTuPfGo7
-         AY/tHNVOzl2mLQxcsEBIKVMK7txUXIfpkZ435ZgYczwfRER0lPIb+pGUex7Cbx7yycdN
-         tPykfJ8agzdRiX1tU+0jENnkN9EgX5cS8mIA8ToycH6zLLw0tKsQX/dbwf3rFMFpyM7t
-         1rqw==
-X-Gm-Message-State: AOAM531RRiCGSWFak1LZOFKrt+DmlXMzlavVYx4ifpZmDKNKoTM+cex4
-        Boxowhjff9UZH2zStYaZSOm4T3ihL8h1pvk+dEo=
-X-Google-Smtp-Source: ABdhPJzyiGKFTl9675swJWU3HBm0IdAORh9p88Hc53wvnD7eZlGS6xUgTy46LMG1PpZl/h7/Ru39XCRTd1n4as6ZQMI=
-X-Received: by 2002:ab0:778c:: with SMTP id x12mr6368274uar.121.1630949115389;
- Mon, 06 Sep 2021 10:25:15 -0700 (PDT)
+        bh=4ZeMqFoWSo+tWRP8ze+5Nkj/uqSjpLi4OjSOBk1BCRM=;
+        b=Ej/+YbbcNsr8Vk2Fw88iFRtSOJxZKfyafNWhHZ9+zIfNe4QD8hxBAq0DuhX1VwTRN9
+         l6ME57ANCaLq4EccXWdnc5xkVEtfgnp7ZMmi5T+vFvEadHkP0th+UN/FXrQAheXEkNwf
+         355kx0PvIN7iZlJZSRw2MpefAwdI+11gTV0PMjK8zG5tMz/VwrBdcCxUYLJ6EPSTBi88
+         li2paCpzju01sl3LuRdYqoJRkkxqXT7AAmJ5yOLJBq7eHjYNk43obG6Z9/Jd+fDUzFY5
+         GpeBtrpUWMk3/kRprDgEmaVeExMdEjjzcOcm3QkSzx/tvsdGvmCYog4ZxtitjKeh8uuI
+         6OZw==
+X-Gm-Message-State: AOAM530Pp3b8xZsBHQHIJdjSQof+c4Q2oThKoHHG3wmxRhAhWF2N5jqs
+        w3bm+A0yPWN68aS3IDPw/jyGWIaKm0aYfLPxIA==
+X-Google-Smtp-Source: ABdhPJxCayLl8QM4Z8Vp1Ck5WmdC8rqgyBiwNbvMzzi+r0FhSToiW7ZyDWgg2SciG75Asbqux/AfgdJ4KDNHbCoRvLA=
+X-Received: by 2002:adf:eb4b:: with SMTP id u11mr431683wrn.327.1631050832110;
+ Tue, 07 Sep 2021 14:40:32 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:ab0:2a08:0:0:0:0:0 with HTTP; Mon, 6 Sep 2021 10:25:14 -0700 (PDT)
-Reply-To: geomic123@yahoo.com
-From:   George <georgefox277@gmail.com>
-Date:   Mon, 6 Sep 2021 18:25:14 +0100
-Message-ID: <CADSebuQdejauxPSunjx9Hi0C5aRTsT0VzR7w6WQhBLBn8zwFCg@mail.gmail.com>
-Subject: Read My Mail
+Received: by 2002:adf:f0cc:0:0:0:0:0 with HTTP; Tue, 7 Sep 2021 14:40:31 -0700 (PDT)
+Reply-To: hameedsaedi01@gmail.com
+From:   Hameed Saedi <hameedsaedi8@gmail.com>
+Date:   Tue, 7 Sep 2021 22:40:31 +0100
+Message-ID: <CABg9ctM=6iU6LoWmMBOU199KyZcBYxMKOC4FwtNSRMg2NL84KQ@mail.gmail.com>
+Subject: Partnership Proposal
 To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
--- 
-Dear Sir/Madam
+Hello,
+.
+I want to use this medium to propose a lucrative crude oil proposal
+and will need your partnership.Let me know if interested so as to
+provide further briefing on the project.
 
-My name is Mr George Michael,i am the Personal Aid to former
-President Baba Yahya Abdul-Aziz Jemus Jammeh the Republic of Gambia in
-west Africa, who is currently in exile with his farmily. I have been
-trying on how to get in touch with you over an important issue
-concerning a project that will be profitable . I anticipate hearing
-from you for more details.
-
-Yours faithfully
-Mr George Michael
+Respectfully,
+Hameed Saedi

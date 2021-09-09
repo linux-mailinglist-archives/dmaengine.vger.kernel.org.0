@@ -2,89 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 579E740418E
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Sep 2021 01:04:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 942C3405CAD
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Sep 2021 20:11:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233709AbhIHXFN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 8 Sep 2021 19:05:13 -0400
-Received: from mga17.intel.com ([192.55.52.151]:2301 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229677AbhIHXFN (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 8 Sep 2021 19:05:13 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10101"; a="200822188"
-X-IronPort-AV: E=Sophos;i="5.85,279,1624345200"; 
-   d="scan'208";a="200822188"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2021 16:04:04 -0700
-X-IronPort-AV: E=Sophos;i="5.85,279,1624345200"; 
-   d="scan'208";a="430833156"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2021 16:04:03 -0700
-Subject: [PATCH] dmaengine: idxd: add halt interrupt support
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org
-Date:   Wed, 08 Sep 2021 16:04:03 -0700
-Message-ID: <163114224352.846654.14334468363464318828.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/0.23-29-ga622f1
+        id S242975AbhIISMd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 9 Sep 2021 14:12:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237354AbhIISMb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Sep 2021 14:12:31 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C21C061574
+        for <dmaengine@vger.kernel.org>; Thu,  9 Sep 2021 11:11:21 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id j12so4333457ljg.10
+        for <dmaengine@vger.kernel.org>; Thu, 09 Sep 2021 11:11:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3w4XX6yR0QzRiZJpSGde7fWq2eAjHlmLHnFHbdMV8Zw=;
+        b=f8cWzc+qPXq7JuEevYzkWEktyjooBtzN5s+4yG2cN4TTsZYh2v6gDrh7DzBnD/HsUt
+         7dG5gNYf+VAJHqprxMeXXmPbMSUowyhN0J0ScQ9rgrLGtjM7perzG3nqOrVNByGfv7m3
+         a2Oap21jix6+PYdZXqkBY6EVh1jxBOES7Uwbg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3w4XX6yR0QzRiZJpSGde7fWq2eAjHlmLHnFHbdMV8Zw=;
+        b=XmTD/TCt/9CDhfGmCtOqmifaJFay1Wr8hPQMePzA31jv799ns/QshF3sYMJJKL/KHK
+         YTe/yy2d7FSvyPHRykTC8Sg84DTrU7tFz7kv6HIfapqnQku7soUU7Azhfdc+S00ACTLM
+         57EH4TAFHv3QvOUNBCJGw2jliGr4MiHC/XAlcP2sHzAb6ITwDX+LIGljCt0aa7tnFAYD
+         2taSbvhFt3quyvPQbP52qOpRaT4ozthvWQ98KRWy5b7l2Cgr6aOcoYqSS3Xef/SHOUQJ
+         F39DCV1L0NbVQFTy18fyHz8xlM4AmfGz2H36Bk/Wii/xrMLnyYkTh2K2DINBgh4jyY53
+         pa3w==
+X-Gm-Message-State: AOAM531+ihJkW6iHfV27HkSA8U5Kzqf3LPRFBi7Z/WMeenOQ3+rDPHd2
+        7UGsmHASrJKl18AcaRCqS84VM8kSleWDnDq7nXo=
+X-Google-Smtp-Source: ABdhPJzXKaJTkBOF8xj+U1sj25FyPXqpDYs99ZI92flI0jbDFhkP++54xFlWxhQluqVjGGW8mlJsBQ==
+X-Received: by 2002:a2e:86d6:: with SMTP id n22mr1002343ljj.416.1631211079732;
+        Thu, 09 Sep 2021 11:11:19 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id q18sm279978ljm.50.2021.09.09.11.11.18
+        for <dmaengine@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Sep 2021 11:11:19 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id g14so4364704ljk.5
+        for <dmaengine@vger.kernel.org>; Thu, 09 Sep 2021 11:11:18 -0700 (PDT)
+X-Received: by 2002:a2e:8185:: with SMTP id e5mr899668ljg.31.1631211078697;
+ Thu, 09 Sep 2021 11:11:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <YTg+csY9wy4mk035@matsya>
+In-Reply-To: <YTg+csY9wy4mk035@matsya>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 9 Sep 2021 11:11:02 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiVLppF6shSBiKK7-B7FRZ3UP_sMVKcLvtRs8AQM+k2vg@mail.gmail.com>
+Message-ID: <CAHk-=wiVLppF6shSBiKK7-B7FRZ3UP_sMVKcLvtRs8AQM+k2vg@mail.gmail.com>
+Subject: Re: [GIT PULL]: dmaengine updates for v5.15-rc1
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add halt interrupt support. Given that the misc interrupt handler already
-check halt state, the driver just need to run the halt handling code when
-receiving the halt interrupt.
+On Tue, Sep 7, 2021 at 9:39 PM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> Also contains, bus_remove_return_void-5.15 to resolve dependencies
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/dma/idxd/irq.c       |    5 +++++
- drivers/dma/idxd/registers.h |    1 +
- 2 files changed, 6 insertions(+)
+That one actually has a commit message with explanations about that
+branch from Greg.
 
-diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-index ca88fa7a328e..3261ea247e83 100644
---- a/drivers/dma/idxd/irq.c
-+++ b/drivers/dma/idxd/irq.c
-@@ -63,6 +63,9 @@ static int process_misc_interrupts(struct idxd_device *idxd, u32 cause)
- 	int i;
- 	bool err = false;
- 
-+	if (cause & IDXD_INTC_HALT_STATE)
-+		goto halt;
-+
- 	if (cause & IDXD_INTC_ERR) {
- 		spin_lock(&idxd->dev_lock);
- 		for (i = 0; i < 4; i++)
-@@ -121,6 +124,7 @@ static int process_misc_interrupts(struct idxd_device *idxd, u32 cause)
- 	if (!err)
- 		return 0;
- 
-+halt:
- 	gensts.bits = ioread32(idxd->reg_base + IDXD_GENSTATS_OFFSET);
- 	if (gensts.state == IDXD_DEVICE_STATE_HALT) {
- 		idxd->state = IDXD_DEV_HALTED;
-@@ -134,6 +138,7 @@ static int process_misc_interrupts(struct idxd_device *idxd, u32 cause)
- 			queue_work(idxd->wq, &idxd->work);
- 		} else {
- 			spin_lock(&idxd->dev_lock);
-+			idxd->state = IDXD_DEV_HALTED;
- 			idxd_wqs_quiesce(idxd);
- 			idxd_wqs_unmap_portal(idxd);
- 			idxd_device_clear_state(idxd);
-diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
-index ffc7550a77ee..97ffb06de9b0 100644
---- a/drivers/dma/idxd/registers.h
-+++ b/drivers/dma/idxd/registers.h
-@@ -158,6 +158,7 @@ enum idxd_device_reset_type {
- #define IDXD_INTC_CMD			0x02
- #define IDXD_INTC_OCCUPY			0x04
- #define IDXD_INTC_PERFMON_OVFL		0x08
-+#define IDXD_INTC_HALT_STATE		0x10
- 
- #define IDXD_CMD_OFFSET			0xa0
- union idxd_command_reg {
+There are other merges that _don't_ have any reason for them. Like
+randomly merging 5.14-rc5 with no explanation.
 
+Or the three random "merge fixes".
 
+Please people. For the Nth time. Merges need commit messages that tell
+people _why_ you merge, and what the code is that you merge. Not just
+"merge tree X"
+
+             Linus

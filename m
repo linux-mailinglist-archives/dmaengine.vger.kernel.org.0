@@ -2,83 +2,60 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 942C3405CAD
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Sep 2021 20:11:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AB84405D0C
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Sep 2021 20:55:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242975AbhIISMd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 9 Sep 2021 14:12:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237354AbhIISMb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Sep 2021 14:12:31 -0400
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C21C061574
-        for <dmaengine@vger.kernel.org>; Thu,  9 Sep 2021 11:11:21 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id j12so4333457ljg.10
-        for <dmaengine@vger.kernel.org>; Thu, 09 Sep 2021 11:11:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3w4XX6yR0QzRiZJpSGde7fWq2eAjHlmLHnFHbdMV8Zw=;
-        b=f8cWzc+qPXq7JuEevYzkWEktyjooBtzN5s+4yG2cN4TTsZYh2v6gDrh7DzBnD/HsUt
-         7dG5gNYf+VAJHqprxMeXXmPbMSUowyhN0J0ScQ9rgrLGtjM7perzG3nqOrVNByGfv7m3
-         a2Oap21jix6+PYdZXqkBY6EVh1jxBOES7Uwbg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3w4XX6yR0QzRiZJpSGde7fWq2eAjHlmLHnFHbdMV8Zw=;
-        b=XmTD/TCt/9CDhfGmCtOqmifaJFay1Wr8hPQMePzA31jv799ns/QshF3sYMJJKL/KHK
-         YTe/yy2d7FSvyPHRykTC8Sg84DTrU7tFz7kv6HIfapqnQku7soUU7Azhfdc+S00ACTLM
-         57EH4TAFHv3QvOUNBCJGw2jliGr4MiHC/XAlcP2sHzAb6ITwDX+LIGljCt0aa7tnFAYD
-         2taSbvhFt3quyvPQbP52qOpRaT4ozthvWQ98KRWy5b7l2Cgr6aOcoYqSS3Xef/SHOUQJ
-         F39DCV1L0NbVQFTy18fyHz8xlM4AmfGz2H36Bk/Wii/xrMLnyYkTh2K2DINBgh4jyY53
-         pa3w==
-X-Gm-Message-State: AOAM531+ihJkW6iHfV27HkSA8U5Kzqf3LPRFBi7Z/WMeenOQ3+rDPHd2
-        7UGsmHASrJKl18AcaRCqS84VM8kSleWDnDq7nXo=
-X-Google-Smtp-Source: ABdhPJzXKaJTkBOF8xj+U1sj25FyPXqpDYs99ZI92flI0jbDFhkP++54xFlWxhQluqVjGGW8mlJsBQ==
-X-Received: by 2002:a2e:86d6:: with SMTP id n22mr1002343ljj.416.1631211079732;
-        Thu, 09 Sep 2021 11:11:19 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id q18sm279978ljm.50.2021.09.09.11.11.18
-        for <dmaengine@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Sep 2021 11:11:19 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id g14so4364704ljk.5
-        for <dmaengine@vger.kernel.org>; Thu, 09 Sep 2021 11:11:18 -0700 (PDT)
-X-Received: by 2002:a2e:8185:: with SMTP id e5mr899668ljg.31.1631211078697;
- Thu, 09 Sep 2021 11:11:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <YTg+csY9wy4mk035@matsya>
-In-Reply-To: <YTg+csY9wy4mk035@matsya>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 9 Sep 2021 11:11:02 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiVLppF6shSBiKK7-B7FRZ3UP_sMVKcLvtRs8AQM+k2vg@mail.gmail.com>
-Message-ID: <CAHk-=wiVLppF6shSBiKK7-B7FRZ3UP_sMVKcLvtRs8AQM+k2vg@mail.gmail.com>
+        id S242328AbhIIS4P (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 9 Sep 2021 14:56:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S242417AbhIIS4P (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 9 Sep 2021 14:56:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 60EE16113E;
+        Thu,  9 Sep 2021 18:55:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631213705;
+        bh=7SvczpszirmtlTywpIOahQEFZcqDt/yHh4r5WJTP+iY=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=sKSLTgjM4SfZ4L1no6e2a+6Xu2kAokeqpFTXkS7T+Tvsty2f+9WW7B5wFrrNM3Lg8
+         6qcyCwQterTWsFWYmfjNJShuY3zS8Yu2zrfQrwRgmNRxYURjFpghA+NmINzxYlWpjw
+         folWjYJrCxvz6J1ssHv0UQ0lShyYb0qtlh9mmkCSvbRzbk2i0uGBPOprGy/wRIauHr
+         MGZJ1wObO5Lobh4m2jmlb4CMUQ0WJrKiokwIMA5RkVf8hY7CvNa6E9fAmJPdv4xVAd
+         nDOsCpeYXlYoCXehoiNOuCk5OsEBnMqOKZqrvHgRO6DARlknTxvhnfwu1foCPyMeOh
+         4CYa4RFwsuTUA==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 5934E60978;
+        Thu,  9 Sep 2021 18:55:05 +0000 (UTC)
 Subject: Re: [GIT PULL]: dmaengine updates for v5.15-rc1
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <YTg+csY9wy4mk035@matsya>
+References: <YTg+csY9wy4mk035@matsya>
+X-PR-Tracked-List-Id: <dmaengine.vger.kernel.org>
+X-PR-Tracked-Message-Id: <YTg+csY9wy4mk035@matsya>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-5.15-rc1
+X-PR-Tracked-Commit-Id: 11a427be2c4749954e8b868ef5301dc65ca5a14b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 0aa2516017123a7c35a2c0c35c4dc7727579b8a3
+Message-Id: <163121370535.14164.16687061404078666435.pr-tracker-bot@kernel.org>
+Date:   Thu, 09 Sep 2021 18:55:05 +0000
 To:     Vinod Koul <vkoul@kernel.org>
-Cc:     dma <dmaengine@vger.kernel.org>,
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        dma <dmaengine@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Sep 7, 2021 at 9:39 PM Vinod Koul <vkoul@kernel.org> wrote:
->
-> Also contains, bus_remove_return_void-5.15 to resolve dependencies
+The pull request you sent on Wed, 8 Sep 2021 10:09:14 +0530:
 
-That one actually has a commit message with explanations about that
-branch from Greg.
+> git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-5.15-rc1
 
-There are other merges that _don't_ have any reason for them. Like
-randomly merging 5.14-rc5 with no explanation.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/0aa2516017123a7c35a2c0c35c4dc7727579b8a3
 
-Or the three random "merge fixes".
+Thank you!
 
-Please people. For the Nth time. Merges need commit messages that tell
-people _why_ you merge, and what the code is that you merge. Not just
-"merge tree X"
-
-             Linus
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html

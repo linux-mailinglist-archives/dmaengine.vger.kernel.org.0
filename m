@@ -2,132 +2,155 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 967F2408350
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Sep 2021 06:08:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0F9C408834
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Sep 2021 11:28:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229571AbhIMEJz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 13 Sep 2021 00:09:55 -0400
-Received: from mail-co1nam11on2051.outbound.protection.outlook.com ([40.107.220.51]:14596
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        id S238634AbhIMJaI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 13 Sep 2021 05:30:08 -0400
+Received: from mail-bn8nam12on2060.outbound.protection.outlook.com ([40.107.237.60]:10695
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229563AbhIMEJz (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 13 Sep 2021 00:09:55 -0400
+        id S238597AbhIMJaH (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 13 Sep 2021 05:30:07 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VJb1luOM6mor1ly4iWGbM88ssVakaf/FGZPodUgIWIC223H2a4GpCU3+6jSXv4Go0n31D1a6nIw5isfMLZvhkuA5vtO1RGxKaJ1g3yDtbbYG4614T4/iLlnnKAdVB5bn1qlTxbQ+wuwNyMmjXYGlEzUVPtrlkJ9PxYB68jKgGvxisW1D5LTHLKUtB6QvRMUMeOYyhU3xkIdG/Q1swls04R/ODP959qZZ2nd+cb4cHUplLXqkVbF8yLuudMZGt6Gq/YzlNX/zoEiStMibfNX19XwNJ+f90u59AFoY97pT2YIu7tgmj+BNVTNECUoT1y+2m1kHnHcivGqcDpUQzY2Nhg==
+ b=U3ztF4r06FpcC1NzciW6A4LOb+Vut87cNl/QnkSif/OWKDTRLWwEhJLaENOBnvdhnTTX4jIBPbzddZshMffWTrOnMPbng4IXCccG6D1XvgOMu398kRsxWJ2t6dpvmQpazrcaYmoG6FThr67ZpQntEthejPeJL6PLqqarkBskgs9/OwmxvhdSU+914K7I9+xElVhQ4fZYkR0OhprmsK0hSt18a92E3suaynDzToNCJhCsCt/7ILH3z8XWs5D/iHbQj2d92bhEhnpQZ/vRy8pNL9jWvrJIf5DHVMNOpF+Dcz9F41eV0k1kwyo9xF4Ff71QDX9gcoPuOh4JSFgXBatAkA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=GHr5wp9KuZlxJqVcfZ0FVCUnUfBmuOBOtbBT3MHDuis=;
- b=aOPoGNUy/3UowmbIAgGvh/lTDtcFFnQZE++YWEbiHM1n9sP5MnugevYxPZc2dGCyNOx5ibUvo3X35iVhJhrMYp0PIBvsv+tVilbWG5UC3cJpNDbxhgw0yMhf2agJuumCmoITyxnOlWVRkoUaE0sgyOuE4SinFHIlL+5FEFnviklyx3jbFD6Z5ZuXlNNbfeRncjvedJxVNYhijWvr412b+3NHm7ytjC/WjnzwBt8Z3RvctddVMeuWPEDK1j8vZt1p1ZlprSTDUA9XKYU8mkTMuCSGfntEljP7VcwBHsZTNiXHY4OgM9IGKxnocuT8slVoUL8e+D78J3mLIAGKjeE9sQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=4jcC8fPHcVQvkuD9YZaceKZ7A4AVM598nxrITSvidbM=;
+ b=jzMh4+kGSFthSyRFRLOl1SnhSXAkPNPbmEhwnafzQ1drknnSIsm/95eRBUVhOd8zgUK3RbZsfK/QdnWgZT6NM0yw/A50P4ypk0VsRh2q2naPPXvHpqZZ/fLRgz8JrAIP88mnJRgAFUb3J1Y2F/BDu/FXfMpdjdN4shcPbel58/tOI1jNhT4xqhW9Jo3CQyf1NQb7RAevGf321Rj3c4x7G1qaSKShHsIlpndYt/X5YmvKxJQn6Aw+pkzFnSnUe8C8pSbvOzQ1YFDIBEnJsLpLmrmQrhdVc8MI+G6cmQ11AWkjQ9ORYV9xA1HuqkOCsRIA02itrWi+4hKzUfXiXK7TlQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=gmail.com smtp.mailfrom=xilinx.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GHr5wp9KuZlxJqVcfZ0FVCUnUfBmuOBOtbBT3MHDuis=;
- b=TP80qfPJBPkqK2wEX2IWQAkDdm9XeNrY+ez0Ek2jg4QM/t2p5pMzMLkZzMb0tQAfep9Nh+ZI1gEF4Q8RkwIiLu2SD+NJpfF/oVV/L8eiTkaa8w/Lmu3oazLt+DskH1wBN52s12+OTGVMGj339GHd78501wQzqJkZmmuml0f3Zp9XcL1jru9DfFo7LnWL8Xkmjv2JFMqMMPQKVme728aL9jMX7R9lLGSwwLsd5rwdpcbiHefzw5TkqRU0/u8LstpetgBAz7hl5CKe2H++G5sZAYg13+bFeQfpLorPGiolzUZYRJp6hJUIhVkxlxj3YTmksWL4vB0HpN7YkKaKop/oUg==
-Received: from BN9PR12MB5273.namprd12.prod.outlook.com (2603:10b6:408:11e::22)
- by BN9PR12MB5193.namprd12.prod.outlook.com (2603:10b6:408:11a::16) with
+ bh=4jcC8fPHcVQvkuD9YZaceKZ7A4AVM598nxrITSvidbM=;
+ b=A3+1VHUkIqNm+2Z+NOJ8RPnTFk1ReFdyKKZTS3o0CsIjdwmW4Wz2Qq6lkoJ2Jibhr+dD55FAcoOWbarZ06W/nsTa7GrV3ipMLXCNX8/s3ytQIzbs7TghLUXs2EBmtJRAGTVaoackV622TC3LCACM3bdLTbF8qMl/8pH6DPxToko=
+Received: from BN6PR17CA0055.namprd17.prod.outlook.com (2603:10b6:405:75::44)
+ by BYAPR02MB5159.namprd02.prod.outlook.com (2603:10b6:a03:6e::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.19; Mon, 13 Sep
- 2021 04:08:38 +0000
-Received: from BN9PR12MB5273.namprd12.prod.outlook.com
- ([fe80::b54f:5a6c:caf8:7445]) by BN9PR12MB5273.namprd12.prod.outlook.com
- ([fe80::b54f:5a6c:caf8:7445%3]) with mapi id 15.20.4500.018; Mon, 13 Sep 2021
- 04:08:38 +0000
-From:   Akhil R <akhilrajeev@nvidia.com>
-To:     Jonathan Hunter <jonathanh@nvidia.com>
-CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Krishna Yarlagadda <kyarlagadda@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        Rajesh Gumasta <rgumasta@nvidia.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>
-Subject: RE: [PATCH v4 0/4] Add Nvidia Tegra GPC-DMA driver
-Thread-Topic: [PATCH v4 0/4] Add Nvidia Tegra GPC-DMA driver
-Thread-Index: AQHXpL5bVT7HzQ/p6k+8gpwSO/kO/KuaWCmAgAcHUeA=
-Date:   Mon, 13 Sep 2021 04:08:38 +0000
-Message-ID: <BN9PR12MB527310DDAAB7F703CD7CD126C0D99@BN9PR12MB5273.namprd12.prod.outlook.com>
-References: <1630044294-21169-1-git-send-email-akhilrajeev@nvidia.com>
- <1631111538-31467-1-git-send-email-akhilrajeev@nvidia.com>
- <8525e868-30c2-017d-0feb-fc0e8f344da9@nvidia.com>
-In-Reply-To: <8525e868-30c2-017d-0feb-fc0e8f344da9@nvidia.com>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nvidia.com; dkim=none (message not signed)
- header.d=none;nvidia.com; dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 030193ce-0821-4836-ce79-08d9766c2a38
-x-ms-traffictypediagnostic: BN9PR12MB5193:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN9PR12MB51938179B720FDA6AF060336C0D99@BN9PR12MB5193.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3N0eRtC2CS7EKLgKkVp5uX7yrWue0CalIq2LP/FWwrHqVONy/hJhnk+6qCHEKqArNDseaYw8jE+UcR1a5AQPLqYOg4ycmtsm+sequtsgG4+pVf/KU8+N86e5joqFrnL4tv/yVdWcxlccMULIHBmlOI7Xqc8xoty045AkrtimeGjb7cdjAfqcDt8z4Ze4XSek290mktVKuH+DaY9AnTvzdeooRcIA6u8y87bMFDEY9H9W9li1EQ8BFVvi5zDyUSnzmCcLVEFc1MuhcslHB+F1Np5U1raljUXvu1vdR7dugFJVNu+TcDg3oNtX5gzvElz0LeWn1iXWyyXeTV/3OlpeN4dXD2HR/R5TTxA2Zcr/a2zgYlrA88uRi7n1Ppql9Wwvty0sIsj+BimdCPzz5sjkSuDfuwBYo/NnTL+4Krz2mRQ0taO/qgtNGXms8J3YOTCzdDmlRsPu9ondaDqxvTMKgxHkSj4MlC67Hu+OylDP0X6Gqyk9L9M+Cd9F9PkISwxmJoXzgkIc834a3FZad6hjIgvCEJOrNfxJDvhNT/E+hxbxcYiSvJosyGJgh7t1SRDhKMXjwhU16nMiC40c9TEsBOx8CR7imMrgGMHAdwkZ/3UpH1womhuYN/dWiA/mPGbs1FgxEpK1vxkUnpZ8HNWTUjKMX05aFlliTFpt81EOdiAwujYL59gTAEuVJz1Ywq1mPBW+FWWQWYrFTKeQEo6DWQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5273.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(376002)(136003)(346002)(366004)(396003)(316002)(6636002)(86362001)(2906002)(66446008)(64756008)(478600001)(54906003)(8936002)(33656002)(6506007)(8676002)(7696005)(186003)(5660300002)(4744005)(38070700005)(6862004)(66476007)(76116006)(9686003)(66946007)(66556008)(122000001)(4326008)(38100700002)(52536014)(55016002)(26005)(71200400001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RFRtMjVtNGsvbHROOC9HYzhqbGNFQlNVdlMrZDNJSnVFK0pJOXJSMFg5eU5n?=
- =?utf-8?B?R0lnQmhSak94Qk5NRHZWZEpra3FaRjB3T05MVERYczI1aTNIUHh2djYxLzZp?=
- =?utf-8?B?Qit6NG01bUNBc204K1BkZVg2ZGxhOGF0bjhUYnIyRU4rZENSc3QxVUxwVkt1?=
- =?utf-8?B?NXV0TzYvaUZxYVhjUXFoR0pPTXB2VWNSOWp1MGNnVGdQeGxRMjF5aDJUd2dO?=
- =?utf-8?B?RURLbFJYTDI0Qjg4U3E2WWZZYnhwaDQwazNXK25Rc1hrNXVYNmwvdFFZNDh0?=
- =?utf-8?B?QktJTHhaM3ZGdnp2aHlzNEdlT3R5Tm9qQTJqMFFLNitNOUc0Wms0OUV2eDVN?=
- =?utf-8?B?TXBOWWxUR2I1TUcxTzBLbHFBTEk3VWhNWGY3KzNrb29iL2l5OFRVTzdKL2JW?=
- =?utf-8?B?OW8rUVIwdzN0UVBJS1BubnYxSGwrVkhETW1qbFlXS3o0NEU3NWdaUE5yVnRS?=
- =?utf-8?B?UkxEYnp5VnJRL3Bha0c4RHZmUllmeEZUbVFDTWhYcG1vcy82c1RpNGZUZFpS?=
- =?utf-8?B?VS9MYTB2d0FMMzdEWUw0VlJjcWxiTkNTcXdwdDZkTHJBS0wwdk82ZVdPVWVT?=
- =?utf-8?B?UjNid29leUV6MnFoeERydTB4UEU2ckdwTEhXMW9qVDFDYXJkYnhjYWtaYWt0?=
- =?utf-8?B?NythWFE5NVEweTdXMUxYSVl0U1N3YkdyejhDOFFEaUdWZmJ5bCt4MnV4Z0JK?=
- =?utf-8?B?RHhSS3dqNkoxWGFZdktrQ0RER3BOZkY3ckJQOExrUmszZFFYdWZ4NEttL1lW?=
- =?utf-8?B?YzFGTllnWWFaYmtyRFI1MUJwWGVIb2d2Ty9KeTRtWlVtOTBSYTFQem5Ga2Y1?=
- =?utf-8?B?K292MDZrYU5RQ0svUzlxWE93cThpcE8rdU1NNXJnbDYvKzJPL1gyV0xnbmtE?=
- =?utf-8?B?TG1WUTdYU0o5SExHSEt6QVlMK2FvbEl1OFAzdDRBSTdmdzlMVGRUdmJjQnlm?=
- =?utf-8?B?VEhEb1V6WmlsTnJpdndjNmU0UW5oK1M4QWRVS0VrSkZCKzlRT1I4eWNvbFNL?=
- =?utf-8?B?NjBFd2xMR2ROTnkzRVpyRFFZS2VEMXhEcGJvU243QUsvSTAxY0JUc2FmZTd2?=
- =?utf-8?B?K0RLRFZvRUxRbkh2eGZaSTJVMWdBVDZVc0JlZGNGR3hjYllFRzA0RGdTOFlw?=
- =?utf-8?B?bXB0UnNkSlV0a2poMzlWd3JvaWZDQkFEUXNCeGFudUJUQ1U4R3gyMkJpUkxC?=
- =?utf-8?B?aXlHWmxscUl3T3NsMjRSZytIR2Npa1VWWS94QXdOYWl0TWVHQVlFYjNMWjEr?=
- =?utf-8?B?V3UwMFArZzFaMW4rN0lrWDg0NHphbWVKQlkwTUtPQVZaVjFJNWt2VWJTdHZP?=
- =?utf-8?B?OWNFZlMwbHRwVFZ0NHMxZkFsazV3TmpTY0NYbytmV0V2elJGUjUyOVJ5QkJI?=
- =?utf-8?B?cis2dXFOSHJHTHl2Q0tRMytJSDEzUWhlZDdEVTBkaCs5bncwdDVTZVdiUm9q?=
- =?utf-8?B?ZHVGbERnTXZMMWdDQk91V1JkS3VmeVREZkx4UE85dlJxcUZhNHdBL2N0empj?=
- =?utf-8?B?MGE2QXhibHVXUlo0elI4cTFwMTA5RjlLaEMzVWhMNU03bGRRbENycjIyNkEr?=
- =?utf-8?B?Zk1xNjhXdWIxalRDY0N2Sko4RU9NSlFzSy9zNW9VTTlVdkNWcGVTMEt1bEZh?=
- =?utf-8?B?SWFrN1lvRURQRmRsTmdnQkx6d1RXM2kyMVZUSy9ENFg4dVliMWowYS9kcko0?=
- =?utf-8?B?WmIzTk95UWF0ZmRQTTI2TVJOZUNNRTRWK2VjY0MraXhrdE1wSHQrWGZiSHhC?=
- =?utf-8?Q?PVrbKD6sJWLEVNUGsn1+FkbBefDl2pxT3Go3eAG?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.25; Mon, 13 Sep
+ 2021 09:28:50 +0000
+Received: from BN1NAM02FT007.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:405:75:cafe::f1) by BN6PR17CA0055.outlook.office365.com
+ (2603:10b6:405:75::44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.14 via Frontend
+ Transport; Mon, 13 Sep 2021 09:28:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=pass action=none header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com;
+Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
+ BN1NAM02FT007.mail.protection.outlook.com (10.13.3.155) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4500.14 via Frontend Transport; Mon, 13 Sep 2021 09:28:49 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Mon, 13 Sep 2021 02:28:47 -0700
+Received: from smtp.xilinx.com (172.19.127.95) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.2176.14 via Frontend Transport; Mon, 13 Sep 2021 02:28:47 -0700
+Envelope-to: git@xilinx.com,
+ andrea.merello@gmail.com,
+ nick.graumann@gmail.com,
+ dan.j.williams@intel.com,
+ mcgrof@kernel.org,
+ vkoul@kernel.org,
+ dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Received: from [172.23.64.5] (port=56079 helo=xhdvnc105.xilinx.com)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <radhey.shyam.pandey@xilinx.com>)
+        id 1mPiGc-0004K7-C3; Mon, 13 Sep 2021 02:28:46 -0700
+Received: by xhdvnc105.xilinx.com (Postfix, from userid 13245)
+        id 972DA61058; Mon, 13 Sep 2021 14:58:45 +0530 (IST)
+From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+To:     <vkoul@kernel.org>, <dan.j.williams@intel.com>,
+        <michal.simek@xilinx.com>, <nick.graumann@gmail.com>,
+        <andrea.merello@gmail.com>, <appana.durga.rao@xilinx.com>,
+        <mcgrof@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <git@xilinx.com>, Shravya Kumbham <shravya.kumbham@xilinx.com>,
+        "Radhey Shyam Pandey" <radhey.shyam.pandey@xilinx.com>
+Subject: [PATCH] dmaengine: xilinx_dma: Fix kernel-doc warnings
+Date:   Mon, 13 Sep 2021 14:58:36 +0530
+Message-ID: <1631525316-2323-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+X-Mailer: git-send-email 2.1.1
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5273.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 030193ce-0821-4836-ce79-08d9766c2a38
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Sep 2021 04:08:38.5511
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: aa7f7395-fd5a-43c0-a52c-08d97698e50a
+X-MS-TrafficTypeDiagnostic: BYAPR02MB5159:
+X-Microsoft-Antispam-PRVS: <BYAPR02MB5159639C7EDD3B7BF6DD3671C7D99@BYAPR02MB5159.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: C32DU9CrHJROwdhVvTdQVU5HybK+WL1AY2D4UTt0OTA96CiRHZo3DYaXygLynvBijiRjGNoN6cOQt/5TCJdsYkaySyggPJFvBED+hg8n5bXUIVuhVKP2eOa7a3A1787HCX8uJuyGBYZ7zgYS4ZU/yRU9GqSLMrrRnUWkQcpnWBewN0ezWvJGtvwiEb+0LFM02DfYxcQjMByGKL3ikPlV4bOijUl5rIZyVCrns5le545xxxyxku7ZM0x5vM7LVDDG1NxTdLnHdNCrIVsqpjC1lDXzDAwW/JARe7fEY/+kkJjvAvP04M76PniaEBkD11aBTTHkKbytOvzo3oSzSMdbaTiY+w5eSardz0jLN2jYOogdbCUwzPDyyEmwCNIzfMo2fFxMBs0HmO2FvxgRFhUAQ98Bs44ZMgBlx5O3nQajDXVxIwiBi3L37bRuQtVmgGauq62elWqyc5vI5tLRflg+G4OczR1iYG8daPXmCbPhqeeh7lxEBh7NQR30Jvb5sYNcacP7PD89vzt+BkBUMJGdWhIbp9n53cYONF1K/k6spfM8GEMkLy4vnJugQ7Gw21zC+Azo62KNZpU71vLUf3HR1rE+jtQJrMdcK/dyXRENBmNmJfx6ctLX64wojiDnT21BP4U8H0JotL2r6Fxoeq6ojDLvYDb7M5CjHtsbxWZ4HHWTmIM/PwF5xk+CsPmtasb6WpXVshnVuVS9+kpEg/VyrQtFkktzkPXi15mXT2oMW6UgC8NZmmfA3WIKBszasxop
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(136003)(396003)(376002)(346002)(39850400004)(36840700001)(46966006)(8676002)(316002)(478600001)(82310400003)(110136005)(82740400003)(336012)(36756003)(186003)(7636003)(4326008)(42186006)(70586007)(70206006)(8936002)(356005)(83380400001)(36860700001)(5660300002)(47076005)(6266002)(107886003)(36906005)(54906003)(2906002)(426003)(6666004)(2616005)(26005)(102446001)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2021 09:28:49.8103
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: I2rMxdt9h4ITg1UlFCmWi4OdXbHk36FcRW2SfnkUBrZ1dN4Qu3V4byTsuTkHkQoUP2HSAPkgDHf+VC4w4iB59A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5193
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa7f7395-fd5a-43c0-a52c-08d97698e50a
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN1NAM02FT007.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5159
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Pj4gQWRkIHN1cHBvcnQgZm9yIE52aWRhIFRlZ3JhIGdlbmVyYWwgcHVycG9zZSBETUEgZHJpdmVy
-IGZvcg0KPj4gVGVncmExODYgYW5kIFRlZ3JhMTk0IHBsYXRmb3JtLg0KPj4gDQo+PiBDaGFuZ2Vz
-IGluIHBhdGNoIHY0Og0KPj4gCUFkZHJlc3NlZCByZXZpZXcgY29tbWVudHMgaW4gcGF0Y2ggdjMN
-Cj4NCj4gV291bGQgYmUgZ29vZCB0byBiZSBzcGVjaWZpYywgYmVjYXVzZSBub3QgYWxsIHRoZSBj
-b21tZW50cyBmcm9tIFYzIGhhdmUgYmVlbiBhZGRyZXNzZWQgOi0pDQo+DQo+IEpvbg0KDQpIaSBK
-b24sDQpJIGFtIHNvcnJ5IHRoYXQgSSB0b3RhbGx5IG1pc3NlZCB0aGUgY29tbWVudHMgZnJvbSBQ
-QVRDSCB2MyA0LzQgYW5kIHRob3VnaHQgSSBhZGRyZXNzZWQgYWxsIHRoZSBjb21tZW50cy4gV291
-bGQgY29ycmVjdCB0aG9zZSBhcyB3ZWxsIGFuZCBzZW5kIG91dCBhIG5ldyB2ZXJzaW9uLg0KDQpU
-aGFua3MsDQpBa2hpbA0KLS0NCm52cHVibGljDQo=
+From: Shravya Kumbham <shravya.kumbham@xilinx.com>
+
+Modify the prototype from xilinx_dma_tx_descriptor to
+xilinx_dma_alloc_tx_descriptor and xilinx_dma_channel_set_config
+to xilinx_vdma_channel_set_config in API description to
+fix below linux kernel-doc warnings.
+
+drivers/dma/xilinx/xilinx_dma.c:800: warning: expecting
+prototype for xilinx_dma_tx_descriptor(). Prototype was
+for xilinx_dma_alloc_tx_descriptor() instead.
+
+drivers/dma/xilinx/xilinx_dma.c:2471: warning: expecting
+prototype for xilinx_dma_channel_set_config(). Prototype
+was for xilinx_vdma_channel_set_config() instead.
+
+Signed-off-by: Shravya Kumbham <shravya.kumbham@xilinx.com>
+Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+---
+ drivers/dma/xilinx/xilinx_dma.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index 75c0b8e904e5..5efaea74e6e3 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -790,7 +790,7 @@ static void xilinx_vdma_free_tx_segment(struct xilinx_dma_chan *chan,
+ }
+ 
+ /**
+- * xilinx_dma_tx_descriptor - Allocate transaction descriptor
++ * xilinx_dma_alloc_tx_descriptor - Allocate transaction descriptor
+  * @chan: Driver specific DMA channel
+  *
+  * Return: The allocated descriptor on success and NULL on failure.
+@@ -2461,7 +2461,7 @@ static void xilinx_dma_synchronize(struct dma_chan *dchan)
+ }
+ 
+ /**
+- * xilinx_dma_channel_set_config - Configure VDMA channel
++ * xilinx_vdma_channel_set_config - Configure VDMA channel
+  * Run-time configuration for Axi VDMA, supports:
+  * . halt the channel
+  * . configure interrupt coalescing and inter-packet delay threshold
+-- 
+2.7.4
+

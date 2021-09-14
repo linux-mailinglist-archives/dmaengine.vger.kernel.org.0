@@ -2,22 +2,22 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5D6640A929
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Sep 2021 10:28:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9718F40A92B
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Sep 2021 10:28:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229570AbhINI3l (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 14 Sep 2021 04:29:41 -0400
-Received: from mail-bn8nam12on2084.outbound.protection.outlook.com ([40.107.237.84]:25984
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        id S230049AbhINI3x (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 14 Sep 2021 04:29:53 -0400
+Received: from mail-dm6nam08on2057.outbound.protection.outlook.com ([40.107.102.57]:11744
+        "EHLO NAM04-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229829AbhINI3k (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 14 Sep 2021 04:29:40 -0400
+        id S230072AbhINI3q (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 14 Sep 2021 04:29:46 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gBPiGhvhhffMLRurMvl4jpqYME57SvJEeudXRDGty0crzMVRI6XCIEfsiIqeBwLbtYs5tEX656vy/Q2sAxVhT9VaplXRM+llSO3vQkzPlU8n3jWQdXUQcL2/hSCv84+7YA+2l1ZHwtA93JSBBRjKvo/avd/nyeOHEB8rwEXapszSBp33E+Uuw48hZ8H99OSjBozbMZ/bRZCrg0w/zITT2K9XHPPKQtYy8GhpJYpUfwW8WBid+tdM4M8X3oFF7OGSTligoSC87qNK6blOmhL7NPQa+HuZMr/+S+jbaxKBSKB/3HFQzMmgpT3O89TkqUrMzw6d2Cr7Yvl5zgDHmI2Q/A==
+ b=F/hktOTU+EQ0POxr36hwbXRME32w09aEJDvcUMY85kV1REKb8121uhbLqnddv3M1lUPU+LkUPqki2kiGXhEzYwT8E4hP/RDdYi7ttpnsEbp5voNnzNsbarukLBHwjV6MuvTaz5qwAY7vMayySRo6CmK5/QSek1M4wMdoBiH/7CHaWzowIZCVmLOS43gHjGOjdpB5ruUzGENzGzRgevxCcQ05pjghQshpBFKv5LY6S7bZPXOW2GeDYLa/flCQvEDF7UpA5THSvz79zemvwJct5IarDD0jp+h8MsBI3P3RDA6BzM+bIzjlaFVHDgsqhvtAs37hglpMRk0uD7/Q2A94FA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=+pr/LF66+wyHrDlhmER87h+gocC4LDyfpLZYX47nfBw=;
- b=DJaYyQ8fZJuMTtpVHz45IQApWmAV/GUU0WhydDVY45WSpmXw0cw0WwwbL/+AuqaK/x1c1mtBdEo7AC10nBHyZlXdYdXiWsLtajG4kK3nEsqD6PqhtmR73suFrM6AUOT81zJDr7MFBEd/BbfCljBgMNrskh9M8ZtujHtjD7P6bgHvhY33+CdxxRxSEbzGoLwpPdu5Y+P88dhypeD+DX3VkBTL1n8N5UPsxqeLMSCXTCgAx5kY2+a3hvYOzVuFbKyEpa6+mkIDvZmuK2UoN3nBKmuTCdC9ZBNA8jovGIuFZQUtXbsxrRRgtKyIs+vLAB1zvtvTqAWNO2eN5PooFXCuqg==
+ bh=rTVl+iqbrrMSgEzQGPiHm66OekzzwfwmiPD4MHxj/Lc=;
+ b=CPH2QEQETuhaFF6CcaccMBN388N1Bbp+hQaTV2CmysTQCtGgE4tAlel+Nm38SLjTrHyIIEenWc3wqgpOXbEXQbFkOwRtyg4uRBoadlF4263+1xMyO2TOs1qf0m1/JoApdTKhg9BXslk2sAWWaXsPSlUvjzV9S8foTNteMvhPBtjjJAuzOlX/O39UJqyH4dKOJe4sUptLKon3BZnXhcTZ8IipkCWIWSYMiBUrI1tfL742qptz4qaHSciMXLUazIHtg1xgqIHlJ5RmsLLaeioaRnpj2LcXsaRh4+uOaBq6haLTs4SLTsp/eYVb4GczGwVqfGKupKSKJYAarNCxPe/heg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.62.198) smtp.rcpttodomain=kernel.org smtp.mailfrom=xilinx.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
@@ -25,18 +25,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+pr/LF66+wyHrDlhmER87h+gocC4LDyfpLZYX47nfBw=;
- b=qxyXGFpPWLzxIDGF2GbRK9PYRBWDjyQos3FeZmtbN71tsAyiLcAbg83dE/78uTU9hGeEPuaOx0afcyaLm874WBTSxSxh6RS6xurXvc0CX1z0RDHPV0LYmUEIBx2LldbJF1R/3ifuU7It8hQly83BPDs8pSpprHUBc0mJ8r9Jh3M=
-Received: from SA9PR13CA0080.namprd13.prod.outlook.com (2603:10b6:806:23::25)
- by DM6PR02MB6633.namprd02.prod.outlook.com (2603:10b6:5:222::10) with
+ bh=rTVl+iqbrrMSgEzQGPiHm66OekzzwfwmiPD4MHxj/Lc=;
+ b=RZ3G6lK2aElMAXfMv3NPNsBadcqGVsmQ3L2WGWJJxCjoMUQR7+rZ0VAvaGnOYxv8V2I9ALcODNXew4Dtru8k1ZTJK/6IvBGfMgTKHskRGHVYSZR9TH9s6M7EWKiR4D+GWEXdk1kho58rTMFcn2hxEx5PutwMypRoIBBRK44aoyY=
+Received: from SA0PR11CA0110.namprd11.prod.outlook.com (2603:10b6:806:d1::25)
+ by DM5PR02MB2698.namprd02.prod.outlook.com (2603:10b6:3:10e::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.14; Tue, 14 Sep
- 2021 08:28:22 +0000
-Received: from SN1NAM02FT0051.eop-nam02.prod.protection.outlook.com
- (2603:10b6:806:23:cafe::bc) by SA9PR13CA0080.outlook.office365.com
- (2603:10b6:806:23::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.9 via Frontend
- Transport; Tue, 14 Sep 2021 08:28:22 +0000
+ 2021 08:28:27 +0000
+Received: from SN1NAM02FT0008.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:806:d1:cafe::27) by SA0PR11CA0110.outlook.office365.com
+ (2603:10b6:806:d1::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4500.14 via Frontend
+ Transport; Tue, 14 Sep 2021 08:28:26 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
  smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
  header.d=none;kernel.org; dmarc=pass action=none header.from=xilinx.com;
@@ -44,16 +44,16 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.62.198 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
 Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
- SN1NAM02FT0051.mail.protection.outlook.com (10.97.5.34) with Microsoft SMTP
+ SN1NAM02FT0008.mail.protection.outlook.com (10.97.5.9) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4500.14 via Frontend Transport; Tue, 14 Sep 2021 08:28:22 +0000
+ 15.20.4500.14 via Frontend Transport; Tue, 14 Sep 2021 08:28:26 +0000
 Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
  xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Tue, 14 Sep 2021 01:28:21 -0700
+ 15.1.2176.14; Tue, 14 Sep 2021 01:28:24 -0700
 Received: from smtp.xilinx.com (172.19.127.95) by
  xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2176.14 via Frontend Transport; Tue, 14 Sep 2021 01:28:21 -0700
+ 15.1.2176.14 via Frontend Transport; Tue, 14 Sep 2021 01:28:24 -0700
 Envelope-to: vkoul@kernel.org,
  romain.perier@gmail.com,
  allen.lkml@gmail.com,
@@ -65,7 +65,7 @@ Envelope-to: vkoul@kernel.org,
 Received: from [10.140.6.13] (port=35510 helo=xhdharinik40.xilinx.com)
         by smtp.xilinx.com with esmtp (Exim 4.90)
         (envelope-from <harini.katakam@xilinx.com>)
-        id 1mQ3nh-00094b-3h; Tue, 14 Sep 2021 01:28:21 -0700
+        id 1mQ3nk-00094b-Fs; Tue, 14 Sep 2021 01:28:24 -0700
 From:   Harini Katakam <harini.katakam@xilinx.com>
 To:     <vkoul@kernel.org>, <romain.perier@gmail.com>,
         <allen.lkml@gmail.com>, <yukuai3@huawei.com>
@@ -74,50 +74,88 @@ CC:     <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <harinikatakamlinux@gmail.com>,
         <michal.simek@xilinx.com>, <harini.katakam@xilinx.com>,
         <radhey.shyam.pandey@xilinx.com>, <shravya.kumbham@xilinx.com>
-Subject: [PATCH 0/4] ZynqMP DMA fixes
-Date:   Tue, 14 Sep 2021 13:58:13 +0530
-Message-ID: <20210914082817.22311-1-harini.katakam@xilinx.com>
+Subject: [PATCH 1/4] dmaengine: zynqmp_dma: Typecast the variable to handle overflow
+Date:   Tue, 14 Sep 2021 13:58:14 +0530
+Message-ID: <20210914082817.22311-2-harini.katakam@xilinx.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20210914082817.22311-1-harini.katakam@xilinx.com>
+References: <20210914082817.22311-1-harini.katakam@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9fde4a64-6c4b-47b6-e00e-08d977599d41
-X-MS-TrafficTypeDiagnostic: DM6PR02MB6633:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB6633C13C3EE14669275B327DC9DA9@DM6PR02MB6633.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 7b9f8617-cc8d-46fa-ddf2-08d977599fd0
+X-MS-TrafficTypeDiagnostic: DM5PR02MB2698:
+X-Microsoft-Antispam-PRVS: <DM5PR02MB26985C9AF5308BCF25E83A8FC9DA9@DM5PR02MB2698.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aSMurGS3dw1ycDVtDlf5zApqm4BXS67xQDhi6+NJIuqqWvwp21mGFlr//+MZ5nZVtvAgdPJ1IOM9o9Y0Ga5DcCqQ3j/bP8GQvF1bhg/VHTknz7eIHZ38LL3Tr86FNoTj7RHypyl/bDUsCPvR1dON9dNgku1x756x+qzZl/c2LvTbEgvQv2La9++7ipHfIwnieUCJML0d4cJSf4nj0c1SAZxaM2q2ycg/mBl3YWhGFVhx81/JXJB7KOdqr4h4joabX7hipU3JzNQPYBTJ7rEnIXaGGuWMXAWzf2xoZinvmH0f1yyVONiBmYCTB0+dGzwk2wlI455TA47qz4U0m6d//bSzu1HSF9HeKT2uOZnQFEL+BXgcqLWFFLcZ4RCVtqyx1EqqLCizccM09axYXI1NiA5fZg4biN44vJtK/dUtc8zy0AIRb3WI/U5maF8nIT/m8GCOcVqc1Oocov2eGTZjGIo9R/Y2p0718rDf/uNdVuQV/0FdyGSJkMvzxdS998TgoLjUj53APvhc6fb6urk5Uh5hRd7A+HgSH7yEED3OeFe37Qa4E5uPaHbczNc4MVoq5TjnHCCcTDWEI/0ihpaIZ96Q1sKXNYg3BHEiSkCjkHL5hRxCcaAvnknC6H20sXCirKW3Sga7dYP9BbyM1wOGWF/btgqyDuuuVgwvAIeeyFDyjkQjKhqE1wVYXvsxANGU3nas4Qeq62TGU0aSPmpdaKyGY7mR5y64bUh6vm+XzKY=
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(376002)(39860400002)(396003)(136003)(346002)(36840700001)(46966006)(316002)(36860700001)(110136005)(36906005)(2906002)(70206006)(7636003)(70586007)(8676002)(1076003)(8936002)(9786002)(478600001)(107886003)(83380400001)(6666004)(2616005)(36756003)(54906003)(426003)(26005)(4744005)(4326008)(186003)(336012)(7696005)(44832011)(82310400003)(5660300002)(356005)(47076005)(82740400003)(102446001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: nLFltj2cplKIQ25Z0t6GuNO7hkhBK99GUsAF0oiSld8F8IgXaZV4osxtiZ4VHhkUfjvjzc4+NEODxGnW0e9cTz/T5mRKvmkWGkLpg+gPPFbJ9S8mriJ0XFWqaWSW8RYjATm8UWezBAcgVXiq0r3cWiAurq51723JeyKT/T+Lha/w5zwibM6AOggviZUzdgICg0XAcNJYcWdbCQhBwsE0TvBXehCbTaM10VEJQ28stMgfEhOq9oFzWXfmJUkW2+dXNKjZEY4esa1obQc19aAjR7QlhyX99282fRG2YpxISnJ9pqEq6guSFW5Owz3Eryal1MLzuj+/FKTD/s64NmuyD9bz3eZ/7dycn1eQ/O921IEaKZxzAzjm65HpGTUUMn8MUSkGQIY4t4fPGUGolBuSNog8mDBWP7yq5Ybb/76+XklOs2hBgSzbGxjvb3TSm7qUqOxzIg1h2ClCp0J5PCTH1Z24e+pvZZjd7orRfoS+MPOd4MTkR0DX3f8zwtZiZyYnOD8dkO634hnECnPsYSZ3Vu7iKmdBhFnq1WWbFjeLOXc/unshw9zb2KwhFsvLPwMVTrQVKoGTCzkvA90dMm+tajfpBIRKjTvtCmZz91BleUwhfY0hMqVlq7g5lnZDZOWLkmrw1uRz28T6XNHona7pZeVKZ/zLitI0B4F+ONBTp4hjcG6+KoNj7BeTXAGA8MU0j3TBtfvWyuy5km1x9LOtoCfXzW5hxrU+qoDwdnjjy5o=
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(39860400002)(396003)(376002)(136003)(346002)(36840700001)(46966006)(7636003)(26005)(186003)(36906005)(8676002)(356005)(107886003)(82310400003)(110136005)(8936002)(70586007)(316002)(82740400003)(2616005)(36860700001)(44832011)(4326008)(7696005)(47076005)(54906003)(70206006)(36756003)(1076003)(2906002)(9786002)(83380400001)(5660300002)(336012)(426003)(478600001)(6666004)(102446001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Sep 2021 08:28:22.2970
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Sep 2021 08:28:26.5886
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9fde4a64-6c4b-47b6-e00e-08d977599d41
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b9f8617-cc8d-46fa-ddf2-08d977599fd0
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0051.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0008.eop-nam02.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6633
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB2698
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Address coverage related issues in ZynqMP DMA driver.
+From: Shravya Kumbham <shravya.kumbham@xilinx.com>
 
-Shravya Kumbham (4):
-  dmaengine: zynqmp_dma: Typecast the variable to handle overflow
-  dmaengine: zynqmp_dma: Typecast the variable with dma_addr_t to handle
-    overflow
-  dmaengine: zynqmp_dma: Add conditions for return value check
-  dmaengine: zynqmp_dma: Typecast with enum to fix the coverity warning
+In zynqmp_dma_alloc/free_chan_resources functions there is a
+potential overflow in the below expressions.
 
- drivers/dma/xilinx/zynqmp_dma.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+dma_alloc_coherent(chan->dev, (2 * chan->desc_size *
+		   ZYNQMP_DMA_NUM_DESCS),
+		   &chan->desc_pool_p, GFP_KERNEL);
 
+dma_free_coherent(chan->dev,(2 * ZYNQMP_DMA_DESC_SIZE(chan) *
+                 ZYNQMP_DMA_NUM_DESCS),
+                chan->desc_pool_v, chan->desc_pool_p);
+
+The arguments desc_size and ZYNQMP_DMA_NUM_DESCS are 32 bit. Though
+this overflow condition is not observed but it is a potential problem
+in the case of 32-bit multiplication. Hence fix it by using typecast.
+
+Addresses-Coverity: Event overflow_before_widen.
+Signed-off-by: Shravya Kumbham <shravya.kumbham@xilinx.com>
+Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+---
+ drivers/dma/xilinx/zynqmp_dma.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
+index 5fecf5aa6e85..2d0eba25739d 100644
+--- a/drivers/dma/xilinx/zynqmp_dma.c
++++ b/drivers/dma/xilinx/zynqmp_dma.c
+@@ -490,7 +490,8 @@ static int zynqmp_dma_alloc_chan_resources(struct dma_chan *dchan)
+ 	}
+ 
+ 	chan->desc_pool_v = dma_alloc_coherent(chan->dev,
+-					       (2 * chan->desc_size * ZYNQMP_DMA_NUM_DESCS),
++					       ((size_t)(2 * chan->desc_size) *
++						ZYNQMP_DMA_NUM_DESCS),
+ 					       &chan->desc_pool_p, GFP_KERNEL);
+ 	if (!chan->desc_pool_v)
+ 		return -ENOMEM;
+@@ -677,7 +678,8 @@ static void zynqmp_dma_free_chan_resources(struct dma_chan *dchan)
+ 	zynqmp_dma_free_descriptors(chan);
+ 	spin_unlock_irqrestore(&chan->lock, irqflags);
+ 	dma_free_coherent(chan->dev,
+-		(2 * ZYNQMP_DMA_DESC_SIZE(chan) * ZYNQMP_DMA_NUM_DESCS),
++		((size_t)(2 * ZYNQMP_DMA_DESC_SIZE(chan)) *
++		 ZYNQMP_DMA_NUM_DESCS),
+ 		chan->desc_pool_v, chan->desc_pool_p);
+ 	kfree(chan->sw_desc_pool);
+ 	pm_runtime_mark_last_busy(chan->dev);
 -- 
 2.17.1
 

@@ -2,102 +2,82 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 092174105F3
-	for <lists+dmaengine@lfdr.de>; Sat, 18 Sep 2021 12:41:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8825410BE0
+	for <lists+dmaengine@lfdr.de>; Sun, 19 Sep 2021 16:33:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235290AbhIRKnC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 18 Sep 2021 06:43:02 -0400
-Received: from mout.gmx.net ([212.227.17.21]:54145 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234492AbhIRKnA (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 18 Sep 2021 06:43:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1631961675;
-        bh=BJyBSDq1vg3gPl9/hHfnt695lOw4ev4/ffazgBhzBCo=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=IWcS6flJU9YNVYC5w3ByxN1KoStXSdVm6i5CtSFHFdWCCgTnH7yoJfqru5xpUWXu5
-         qTg+2IMMYt0RYJYBmNbGJRfltyIfIp/IUxyb0yl0varXaWI3bsCLwWJHN3IE0eXuva
-         FewU0JazI3EOavR0MDfpD/WEw3UqLvmrQAxlqQqk=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.150.72.99]) by mail.gmx.net
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MgvvJ-1n5rPj33NN-00hLOQ; Sat, 18 Sep 2021 12:41:14 +0200
-From:   Len Baker <len.baker@gmx.com>
-To:     Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     Len Baker <len.baker@gmx.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: pxa_dma: Prefer struct_size over open coded arithmetic
-Date:   Sat, 18 Sep 2021 12:40:55 +0200
-Message-Id: <20210918104055.8444-1-len.baker@gmx.com>
-X-Mailer: git-send-email 2.25.1
+        id S231960AbhISOet (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 19 Sep 2021 10:34:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231918AbhISOet (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 19 Sep 2021 10:34:49 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8A1FC061574;
+        Sun, 19 Sep 2021 07:33:23 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id s11so14759849pgr.11;
+        Sun, 19 Sep 2021 07:33:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BDxzixVW4qLygzz/rLWj9i1sOmn4ydTQ+VNVepgXop4=;
+        b=bQXsrcOSH4L3JxdQRZRCUYUU4dxddjNDV2CKo1g88ucDU2jw4z5k24S1G3roj70hxI
+         XoAPo11ZZdYCz8yOwiFkv4BDAoCtErTCf7IGVyR1c4obYEpe61d+pyNRTjoJXvqbgFaR
+         HfziQO2K7pQS/eOvh5pbowqVnxfJVD7gshi0Nf9c5nwE7gx0KkwQRD/r5Qm6/GoY3QPG
+         g6S3/atA31w0BwKjZczj3XsCZNoFvaD4r5ytdd3Uxk5qG30oOeW8ZoDDdurn6I+fBLSp
+         EzY96o2wYnYSRTPqHWJ8Kr4ORzY7T6cQUrkIEQ9vVddFUR++u7SHDrKN1GPx4Zv+L8Uv
+         kcNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BDxzixVW4qLygzz/rLWj9i1sOmn4ydTQ+VNVepgXop4=;
+        b=4pBkQ05+7YOGtglYqPdctayiICkcz/j/3A6fIhjQLXEoUhtkpLM5XOz8ERL/v6jzaR
+         m1xNgcjsfBI/UagZtis39NWlpxeCLjdij2ge8BcXl2nO0PQ4wBdyfLl6VkwUmuHGQKvG
+         tARF3BxT6R2J1P0TBCGkJRTw5eUL6UzL1/K3TH+7mzZg3l/s/vcaTy/32qbCZwJP1fVP
+         ohAXlDDvjvmFAoAElZWOhrJqnqvDhU1rMwRsY2LIWoZWhSHLGNmJ8bx6Nl0+f86ONCHX
+         /9slYkxfzjGWzJ2TGxqJhyKZ+0pMQ+AHLzDMX8g1IOJ0okwsLkUk4faD5uRsU+kloc0C
+         qOxw==
+X-Gm-Message-State: AOAM530tnI5Rew+UZTiXuR0svfaCNbnwps4fk1Vy531zGk4Ziv+6TRo5
+        Xj4BiJ4nOY9kE9lAdzFA7cSyEqUnpZG0bg==
+X-Google-Smtp-Source: ABdhPJwUIh6IB3dx/EHH8UIYeMxZ/aDKDyVul/PTJJsUNhJZxC+tGt+oEU38ATN29dWoZjnFc40sdw==
+X-Received: by 2002:a62:8015:0:b0:43b:400c:7a73 with SMTP id j21-20020a628015000000b0043b400c7a73mr21045432pfd.34.1632062002769;
+        Sun, 19 Sep 2021 07:33:22 -0700 (PDT)
+Received: from skynet-linux.local ([106.201.127.154])
+        by smtp.googlemail.com with ESMTPSA id m2sm13062149pgd.70.2021.09.19.07.33.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Sep 2021 07:33:22 -0700 (PDT)
+From:   Sireesh Kodali <sireeshkodali1@gmail.com>
+To:     phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Cc:     Sireesh Kodali <sireeshkodali1@gmail.com>
+Subject: [PATCH 0/1] Add support for metadata in bam_dma
+Date:   Sun, 19 Sep 2021 20:03:10 +0530
+Message-Id: <20210919143311.31015-1-sireeshkodali1@gmail.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:aKPT9HrV3eSSCxGAWSMTQvGr3LwrGp+4r78lkLF0wZ5cm0aCXXV
- BfIzMcoW1vr0AKTwLukCf06hSyzSTMz6szYRSIPD35P8rT4enLt8b2/BLW3q0WS41glkBr5
- uWcmGw1zyHl/dOpiVa7rfJEfqe1J3qC95XlbpWRlc1L/nDk/fd5v2agCvzVzuumbAsQyVUm
- McKq8WoZ7IENYoVL3sO9Q==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:T7anHeQreg8=:mOX+MzsS6IIrLyXa8GTyoy
- r9uR+sNSkSKsUmKGYrbBiGJjcsRjkLFth7/BZkvIHtb8JJYr0+CTtB80TgMnrvcdg/T5OPS1h
- xnsCwADCVoWeX8/VG+jtGSBFZxrxor23gNS+voSYxtid7C9u5lrZ+ujxWKABSXMdjBIl2NdmW
- bY9uyVl5wvdoXOJHyXZPz4ivGWWxKshJ0Ctd/7tPjL2E+RcKc9otm1wAO1Emv3DqUFuKmsM/f
- hYCUyqAqYCDWbhPpjVQYTED4ZZk+qLWAiHjwZJlNM8enxK3H6+X3R5cH3ClupkT9Hwb8Z9sL3
- qD55ABaLvqqNc2BpDncYTNPNItdMRJHhQc3YxLLdoIkUOqF8+qiON0XwPnklgR3noVOcV4/i+
- o21Fs8QbNyW2HTM5fXfJfhIqrwd3YjQTW4VVQq8COIssSAtdz1uXi09H8cfdsXCwnka0wqKyq
- 92LHoVbpOguxcFDTEgYl88SsZ9M6wAjbDl0JMm+oXZyrZws/RmtF2Pk/LTvnCwoRM5q5zV/7b
- rbB/N1s3ngVnvb7P1u4gArr/CtOUkMnWjYvzHSG0UTS7PXPuUGGZtR44jr936cH5ct1GO3wOQ
- mHqdgclGgCFuflhDgpdr3Mon8xPfAd1GUj4m64xmaJ7enSldZmMhraQhxuGNG1bhzGbEDHdkY
- 792qzcFZCyt/af+4+WVUrycpKDfHAlblzdjowPPvysO4Z5lXJWatopbRn2BUoolr1Yt8XeJmZ
- BbSOFmPtjYMaKDpRBFd6wXxqk7BFLQuCB6lZPKlGYPI1MT23T7Q4DLGI+hpRnZl13Kf0r+CGE
- 2Myx7EA2O8a0yd2LMh3lLKLFzongDWFEIujeHLmGMPOC/+MHtPt+hdl/lKczhwPWyQn/uFP1O
- 3WGnvpbs0u3geBJV9mfQ+P2FU/zq7F9wvG72dZeJNYQihTYdrsqIs1u1WuGwpMZlkx06xQuit
- dtTSDAlWH/jJVwIllBevHz1DPjPebW7T+FmnQWu8SRxzbAMscnmWFLt5MPSBDFpDCaLg9A17O
- pqFb53rnfwYRDgnsZKTEg4nNymuZK+R/MWIgZyImTyK7WFTsLtfGBSy/mCLrZiXdxD43RBmu4
- mO080zyroYDgp8=
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-As noted in the "Deprecated Interfaces, Language Features, Attributes,
-and Conventions" documentation [1], size calculations (especially
-multiplication) should not be performed in memory allocator (or similar)
-function arguments due to the risk of them overflowing. This could lead
-to values wrapping around and a smaller allocation being made than the
-caller was expecting. Using those allocations could lead to linear
-overflows of heap memory and other misbehaviors.
+IPA v2.x uses BAM to send and receive IP packets, to and from the AP.
+However, unlike its predecessor BAM-DMUX, it doesn't send information
+about the packet length. To find the length of the packet, one must
+instead read the bam_desc metadata. This patch adds support for sending
+the size metadata over the dmaengine metadata api. Currently only the
+dma size is stored in the metadata. Only client-side metadata is
+supported for now, because host-side metadata doesn't make sense for
+IPA, where more than one DMA descriptors could be waiting to be acked
+and processed.
 
-So, use the struct_size() helper to do the arithmetic instead of the
-argument "size + count * size" in the kzalloc() function.
+Sireesh Kodali (1):
+  dmaengine: qcom: bam_dma: Add support for metadata
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#open-co=
-ded-arithmetic-in-allocator-arguments
+ drivers/dma/qcom/bam_dma.c | 74 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
 
-Signed-off-by: Len Baker <len.baker@gmx.com>
-=2D--
- drivers/dma/pxa_dma.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
-index 4a2a796e348c..52d04641e361 100644
-=2D-- a/drivers/dma/pxa_dma.c
-+++ b/drivers/dma/pxa_dma.c
-@@ -742,8 +742,7 @@ pxad_alloc_desc(struct pxad_chan *chan, unsigned int n=
-b_hw_desc)
- 	dma_addr_t dma;
- 	int i;
-
--	sw_desc =3D kzalloc(sizeof(*sw_desc) +
--			  nb_hw_desc * sizeof(struct pxad_desc_hw *),
-+	sw_desc =3D kzalloc(struct_size(sw_desc, hw_desc, nb_hw_desc),
- 			  GFP_NOWAIT);
- 	if (!sw_desc)
- 		return NULL;
-=2D-
-2.25.1
+-- 
+2.33.0
 

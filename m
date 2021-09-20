@@ -2,31 +2,43 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 789274114D8
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Sep 2021 14:47:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7613A4114E3
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Sep 2021 14:51:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238775AbhITMtS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 20 Sep 2021 08:49:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237095AbhITMtI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 Sep 2021 08:49:08 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1AB0C061574;
-        Mon, 20 Sep 2021 05:47:41 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5B38BE57;
-        Mon, 20 Sep 2021 14:47:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1632142057;
-        bh=sUHy5mI48lLJfk0k+EUA5Q2mX9cYsAejPY8yjVUg2ks=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=msjI+3iUrWdFQ0rNpQ9h1aEphCugLPzQGK+AvdqcX51vj4ctb8kiB26dSBp/iwEvw
-         qwEqmoZfKEXornPDuVtejK5URA38OVvGakD/wefgsjEzoSSlxEJD/E/pcDTzvekBaY
-         1pC2bixWM3bGWoPPFeQ3CJZr5Z/q1kyOunX34bTs=
-Date:   Mon, 20 Sep 2021 15:47:07 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Arnd Bergmann <arnd@kernel.org>
+        id S237787AbhITMwh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 20 Sep 2021 08:52:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233587AbhITMwh (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 20 Sep 2021 08:52:37 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9F65E610A8;
+        Mon, 20 Sep 2021 12:51:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632142270;
+        bh=4WoXR2w/h9re32MIQ0x+GJKbqB4GhEs6CMM54BSGfSE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LNSxxG4vjfOT5jWs0Azwe5jxmYBWyLg3WgYpAFCdNepx7w2EnOHuAuQUuhKvs8HLs
+         Nfk3wkE6tswZtAzK713jWu+LkH1iH5jlRjvcPzskBxe1+DeVuqc/z0DmCBha73hb7P
+         xg8HFEr58wYhNiiYCcJiv0FEDE7S+POoytMwoWlSHmxjyAiV+xVk33tb2sNJLldPPY
+         uPeC5MW3gPbE8J8qvSFhIPqBjE19yWlr5PmlQIgbXxtbVM7VuVXvQ1JmX2nRoDgOmJ
+         P3Ij/hTet6Gc4DNdyvkhiUm/6rolYgijAZwGjmbUNxwFW9D5RuSFKc7T/PM/PqHOgO
+         4TJp6jQGAmhHQ==
+Received: by mail-wr1-f44.google.com with SMTP id q11so29359873wrr.9;
+        Mon, 20 Sep 2021 05:51:10 -0700 (PDT)
+X-Gm-Message-State: AOAM530NBAjU8yu07A/JGQ3REZf4A6nJ26x4nU3qxjgkU5C5bJDuXN4G
+        +ci7oaEvw0FBAPxubyWDy/8FsA5wkHPlzbgmT18=
+X-Google-Smtp-Source: ABdhPJzFtZLgwcroeT9Z0tz/FjbRi+f8dH2LRv8hahyF9SoTtIHIO8zGevWiY6lKXq4ydmHTOt/2gr9MwU4SIvH0gdk=
+X-Received: by 2002:a5d:4b50:: with SMTP id w16mr28119752wrs.71.1632142268846;
+ Mon, 20 Sep 2021 05:51:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210920122017.205975-1-arnd@kernel.org> <YUiCy7A9cXTDGx6s@pendragon.ideasonboard.com>
+In-Reply-To: <YUiCy7A9cXTDGx6s@pendragon.ideasonboard.com>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Mon, 20 Sep 2021 14:50:52 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1fcmCWsOuqF8qy4ko9MC8nCd4gyt2K6Rk5K-Zs7yCbJA@mail.gmail.com>
+Message-ID: <CAK8P3a1fcmCWsOuqF8qy4ko9MC8nCd4gyt2K6Rk5K-Zs7yCbJA@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: remove debugfs #ifdef
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc:     Hyun Kwon <hyun.kwon@xilinx.com>, Vinod Koul <vkoul@kernel.org>,
         Michal Simek <michal.simek@xilinx.com>,
         Sanjay R Mehta <sanju.mehta@amd.com>,
@@ -39,113 +51,22 @@ Cc:     Hyun Kwon <hyun.kwon@xilinx.com>, Vinod Koul <vkoul@kernel.org>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Biju Das <biju.das.jz@bp.renesas.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: remove debugfs #ifdef
-Message-ID: <YUiCy7A9cXTDGx6s@pendragon.ideasonboard.com>
-References: <20210920122017.205975-1-arnd@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210920122017.205975-1-arnd@kernel.org>
+        dmaengine@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Arnd,
-
-Thank you for the patch.
-
-On Mon, Sep 20, 2021 at 02:20:07PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The ptdma driver has added debugfs support, but this fails to build
-> when debugfs is disabled:
-> 
-> drivers/dma/ptdma/ptdma-debugfs.c: In function 'ptdma_debugfs_setup':
-> drivers/dma/ptdma/ptdma-debugfs.c:93:54: error: 'struct dma_device' has no member named 'dbg_dev_root'
->    93 |         debugfs_create_file("info", 0400, pt->dma_dev.dbg_dev_root, pt,
->       |                                                      ^
-> drivers/dma/ptdma/ptdma-debugfs.c:96:55: error: 'struct dma_device' has no member named 'dbg_dev_root'
->    96 |         debugfs_create_file("stats", 0400, pt->dma_dev.dbg_dev_root, pt,
->       |                                                       ^
-> drivers/dma/ptdma/ptdma-debugfs.c:102:52: error: 'struct dma_device' has no member named 'dbg_dev_root'
->   102 |                 debugfs_create_dir("q", pt->dma_dev.dbg_dev_root);
->       |                                                    ^
+On Mon, Sep 20, 2021 at 2:47 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
 >
-> Remove the #ifdef in the header, as this only saves a few bytes,
-> but would require ugly #ifdefs in each driver using it.
-> Simplify the other user while we're at it.
-> 
-> Fixes: e2fb2e2a33fa ("dmaengine: ptdma: Add debugfs entries for PTDMA")
-> Fixes: 26cf132de6f7 ("dmaengine: Create debug directories for DMA devices")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/dma/xilinx/xilinx_dpdma.c | 15 +--------------
->  include/linux/dmaengine.h         |  2 --
->  2 files changed, 1 insertion(+), 16 deletions(-)
-> 
-> diff --git a/drivers/dma/xilinx/xilinx_dpdma.c b/drivers/dma/xilinx/xilinx_dpdma.c
-> index b280a53e8570..ce5c66e6897d 100644
-> --- a/drivers/dma/xilinx/xilinx_dpdma.c
-> +++ b/drivers/dma/xilinx/xilinx_dpdma.c
-> @@ -271,9 +271,6 @@ struct xilinx_dpdma_device {
->  /* -----------------------------------------------------------------------------
->   * DebugFS
->   */
-> -
-> -#ifdef CONFIG_DEBUG_FS
-> -
+> It's only a few bytes of data in struct dma_device, but a bit more in
+> .text here. Is the simplification really required in this driver ?
 
-It's only a few bytes of data in struct dma_device, but a bit more in
-.text here. Is the simplification really required in this driver ?
+The intention was to not change the resulting object code in this driver,
+and I still don't see where it would grow after dead-code-elimination removes
+all the unused static functions. What am I missing?
 
->  #define XILINX_DPDMA_DEBUGFS_READ_MAX_SIZE	32
->  #define XILINX_DPDMA_DEBUGFS_UINT16_MAX_STR	"65535"
->  
-> @@ -299,7 +296,7 @@ struct xilinx_dpdma_debugfs_request {
->  
->  static void xilinx_dpdma_debugfs_desc_done_irq(struct xilinx_dpdma_chan *chan)
->  {
-> -	if (chan->id == dpdma_debugfs.chan_id)
-> +	if (IS_ENABLED(CONFIG_DEBUG_FS) && chan->id == dpdma_debugfs.chan_id)
->  		dpdma_debugfs.xilinx_dpdma_irq_done_count++;
->  }
->  
-> @@ -462,16 +459,6 @@ static void xilinx_dpdma_debugfs_init(struct xilinx_dpdma_device *xdev)
->  		dev_err(xdev->dev, "Failed to create debugfs testcase file\n");
->  }
->  
-> -#else
-> -static void xilinx_dpdma_debugfs_init(struct xilinx_dpdma_device *xdev)
-> -{
-> -}
-> -
-> -static void xilinx_dpdma_debugfs_desc_done_irq(struct xilinx_dpdma_chan *chan)
-> -{
-> -}
-> -#endif /* CONFIG_DEBUG_FS */
-> -
->  /* -----------------------------------------------------------------------------
->   * I/O Accessors
->   */
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index e5c2c9e71bf1..9000f3ffce8b 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -944,10 +944,8 @@ struct dma_device {
->  	void (*device_issue_pending)(struct dma_chan *chan);
->  	void (*device_release)(struct dma_device *dev);
->  	/* debugfs support */
-> -#ifdef CONFIG_DEBUG_FS
->  	void (*dbg_summary_show)(struct seq_file *s, struct dma_device *dev);
->  	struct dentry *dbg_dev_root;
-> -#endif
->  };
->  
->  static inline int dmaengine_slave_config(struct dma_chan *chan,
-
--- 
-Regards,
-
-Laurent Pinchart
+        Arnd

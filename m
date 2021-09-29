@@ -2,82 +2,71 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E80241CC7C
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Sep 2021 21:15:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C75941CF35
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Sep 2021 00:25:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344853AbhI2TRV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 29 Sep 2021 15:17:21 -0400
-Received: from mga01.intel.com ([192.55.52.88]:14413 "EHLO mga01.intel.com"
+        id S1347229AbhI2W07 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 29 Sep 2021 18:26:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1344094AbhI2TRU (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 29 Sep 2021 15:17:20 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10122"; a="247551246"
-X-IronPort-AV: E=Sophos;i="5.85,334,1624345200"; 
-   d="scan'208";a="247551246"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2021 12:15:39 -0700
-X-IronPort-AV: E=Sophos;i="5.85,334,1624345200"; 
-   d="scan'208";a="588189742"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2021 12:15:38 -0700
-Subject: [PATCH] dmaengine: idxd: move out percpu_ref_exit() to ensure it's
- outside submission
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     Kevin Tian <kevin.tian@intel.com>, dmaengine@vger.kernel.org
-Date:   Wed, 29 Sep 2021 12:15:38 -0700
-Message-ID: <163294293832.914350.10326422026738506152.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/0.23-29-ga622f1
+        id S1346527AbhI2W07 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 29 Sep 2021 18:26:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5633361425;
+        Wed, 29 Sep 2021 22:25:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632954318;
+        bh=gCBBC7JLGcZQaPz+Vpq0Pd8Hio930/7xgACvcEd+XUY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VQjSOMwzO2qj85XL58H9btVmTAisQxj9svagsvJ6Fs1umbMjHiELrKopvMjhlXg2t
+         EAP0K+SlqqlNQ+pNDOw8GXjcAkF/wP/n31E5BRUhe82OBzspT6S7YBIzxJY79iu0/I
+         jB8TWO2wVwhzXWNfWEdC2mznHwmsOI86fGjBusdQ2f6lvOpBHCI9xfrPQVLLh+5xqo
+         GclWImlBNL0OMGqYw8Lk62q+IF6kHK+E70AgPj9Sx1alMFoOmilsKP8nr9OLwSkg5P
+         hFxaUdEEYJiYFgNWjs4cDvbXUaPAwMfnUmfwJ2VLI7WxAzerck07FJkbcC6bpzksmL
+         OTg52+ALhspWw==
+Date:   Wed, 29 Sep 2021 17:29:22 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc:     dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] dmaengine: stm32-mdma: Use struct_size() helper in
+ devm_kzalloc()
+Message-ID: <20210929222922.GA357509@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-percpu_ref_tryget_live() is safe to call as long as ref is between init and
-exit according to the function comment. Move percpu_ref_exit() so it is
-called after the dma channel is no longer valid to ensure this holds true.
+Make use of the struct_size() helper instead of an open-coded version,
+in order to avoid any potential type mistakes or integer overflows that,
+in the worse scenario, could lead to heap overflows.
 
-Fixes: 93a40a6d7428 ("dmaengine: idxd: add percpu_ref to descriptor submission path")
-Suggested-by: Kevin Tian <kevin.tian@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://github.com/KSPP/linux/issues/160
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/dma/idxd/device.c |    1 -
- drivers/dma/idxd/dma.c    |    2 ++
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/dma/stm32-mdma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 83a5ff2ecf2a..cbbfa17d8d11 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -427,7 +427,6 @@ void idxd_wq_quiesce(struct idxd_wq *wq)
- {
- 	percpu_ref_kill(&wq->wq_active);
- 	wait_for_completion(&wq->wq_dead);
--	percpu_ref_exit(&wq->wq_active);
- }
+diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
+index 18cbd1e43c2e..d30a4a28d3bf 100644
+--- a/drivers/dma/stm32-mdma.c
++++ b/drivers/dma/stm32-mdma.c
+@@ -1566,7 +1566,8 @@ static int stm32_mdma_probe(struct platform_device *pdev)
+ 	if (count < 0)
+ 		count = 0;
  
- /* Device control bits */
-diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
-index e0f056c1d1f5..b90b085d18cf 100644
---- a/drivers/dma/idxd/dma.c
-+++ b/drivers/dma/idxd/dma.c
-@@ -311,6 +311,7 @@ static int idxd_dmaengine_drv_probe(struct idxd_dev *idxd_dev)
- 
- err_dma:
- 	idxd_wq_quiesce(wq);
-+	percpu_ref_exit(&wq->wq_active);
- err_ref:
- 	idxd_wq_free_resources(wq);
- err_res_alloc:
-@@ -329,6 +330,7 @@ static void idxd_dmaengine_drv_remove(struct idxd_dev *idxd_dev)
- 	idxd_wq_quiesce(wq);
- 	idxd_unregister_dma_channel(wq);
- 	__drv_disable_wq(wq);
-+	percpu_ref_exit(&wq->wq_active);
- 	idxd_wq_free_resources(wq);
- 	wq->type = IDXD_WQT_NONE;
- 	mutex_unlock(&wq->wq_lock);
-
+-	dmadev = devm_kzalloc(&pdev->dev, sizeof(*dmadev) + sizeof(u32) * count,
++	dmadev = devm_kzalloc(&pdev->dev,
++			      struct_size(dmadev, ahb_addr_masks, count),
+ 			      GFP_KERNEL);
+ 	if (!dmadev)
+ 		return -ENOMEM;
+-- 
+2.27.0
 

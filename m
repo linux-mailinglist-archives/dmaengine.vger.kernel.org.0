@@ -2,52 +2,47 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B288441ECA8
-	for <lists+dmaengine@lfdr.de>; Fri,  1 Oct 2021 13:57:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17B9941ECAB
+	for <lists+dmaengine@lfdr.de>; Fri,  1 Oct 2021 13:59:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354145AbhJAL7k (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 1 Oct 2021 07:59:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43292 "EHLO mail.kernel.org"
+        id S1354116AbhJAMAp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 1 Oct 2021 08:00:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230510AbhJAL7k (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 1 Oct 2021 07:59:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 868EF61A6F;
-        Fri,  1 Oct 2021 11:57:55 +0000 (UTC)
+        id S230510AbhJAMAn (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 1 Oct 2021 08:00:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9660361A82;
+        Fri,  1 Oct 2021 11:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633089476;
-        bh=Vjg+dy9vAItiQLb0Oo9y0H4LZgIlPk1bRan5HVpoMuk=;
+        s=k20201202; t=1633089539;
+        bh=LQC6CmmtQLl4UkLmtEOJTMSLNO/8kv2yuaHw0MLrByc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IitrVAZnOU4Uo+Ex9E30ZIidfe6/9XfmwIeYentyjgXVa+pusXNob5qilym+i5fLk
-         zD1180QRkSemZpWEZhOYzBb8PCF4fNtCKV3MMqLi+GHgTwgAkD2Ycn1ClslVu58M88
-         +oo5JaY1742r8E8UzGME4tL+D/44FzeBPufS4veMDHGDGPiVZQOpKTHIBwjKcKSFqq
-         ZPDWQE1IPkWlSyiLa7vJBHy+FO4Mf3yaR3KXVQMiVwcse96GLsh2f+5WSQZWlWqZdR
-         zUESFd8AYy9cq+gu2SjE25hFJI+PAdxNCKRMOL8wZEqlPnUXh4H5BIOEvQV3qrD5E6
-         0iIApfM2vAZGA==
-Date:   Fri, 1 Oct 2021 17:27:52 +0530
+        b=ciEKqFcWN0NnMeQsB2c5cV5YHs2gMztoMIfl96SGLX4njHHpz2ioD+0yGBjrElydi
+         f+JH3VU51wmhyOgh9pzehL/S0FgQid7wUj9recpNe/L6STy5pW+6mopgL5px4+XlRa
+         a1+lra/TBHJnCsGYvQm4BjiiuH3aQMrx9Fbr0d9+/6O2ptyeLzZDpqxltpBgR6UBlC
+         74YxC+gh5j6yd5WvHNPYWWWcgzE7813HnuWet/bwoKKR8ZeJSmc9oS5owcOwEGHka4
+         334YVsaM9VosSpiY36u1ASzaayivHpwU4U0kV8hv4/oAAiqNuywdJSaRGQZa9BdjVW
+         0JVXLSidXRzlQ==
+Date:   Fri, 1 Oct 2021 17:28:55 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] dmaengine: stm32-mdma: Use struct_size() helper in
- devm_kzalloc()
-Message-ID: <YVb3wADDQuoynu1W@matsya>
-References: <20210929222922.GA357509@embeddedor>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     Kevin Tian <kevin.tian@intel.com>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: idxd: move out percpu_ref_exit() to ensure
+ it's outside submission
+Message-ID: <YVb3/1gesMcTB7IY@matsya>
+References: <163294293832.914350.10326422026738506152.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210929222922.GA357509@embeddedor>
+In-Reply-To: <163294293832.914350.10326422026738506152.stgit@djiang5-desk3.ch.intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 29-09-21, 17:29, Gustavo A. R. Silva wrote:
-> Make use of the struct_size() helper instead of an open-coded version,
-> in order to avoid any potential type mistakes or integer overflows that,
-> in the worse scenario, could lead to heap overflows.
+On 29-09-21, 12:15, Dave Jiang wrote:
+> percpu_ref_tryget_live() is safe to call as long as ref is between init and
+> exit according to the function comment. Move percpu_ref_exit() so it is
+> called after the dma channel is no longer valid to ensure this holds true.
 
 Applied, thanks
 

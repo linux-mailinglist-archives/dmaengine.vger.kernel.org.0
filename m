@@ -2,59 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2030541ECA4
-	for <lists+dmaengine@lfdr.de>; Fri,  1 Oct 2021 13:56:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B288441ECA8
+	for <lists+dmaengine@lfdr.de>; Fri,  1 Oct 2021 13:57:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231167AbhJAL6j (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 1 Oct 2021 07:58:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43026 "EHLO mail.kernel.org"
+        id S1354145AbhJAL7k (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 1 Oct 2021 07:59:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230522AbhJAL6j (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 1 Oct 2021 07:58:39 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 17EAD6135E;
-        Fri,  1 Oct 2021 11:56:53 +0000 (UTC)
+        id S230510AbhJAL7k (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 1 Oct 2021 07:59:40 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 868EF61A6F;
+        Fri,  1 Oct 2021 11:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633089415;
-        bh=VceA1nbn1q6t4P/0QR99Pc1TuhtvAKnzyYVgMoL+cjI=;
+        s=k20201202; t=1633089476;
+        bh=Vjg+dy9vAItiQLb0Oo9y0H4LZgIlPk1bRan5HVpoMuk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JmkDlByp2NlYJS2tNQ7xSG4Xg9FmKqQk8ZA6z5f0RXh6PaxERPAhGM2k3diDVnYI6
-         mQzpINO2EAs9KUgQmADwXEtMDIVOF6TTSTRB1k/NdNzTo+PlOwd3pO3pb5tLPJuK+C
-         RsQ5FJB3HlJ1y8Y9UFBaU6m7PonB1qPNFsEkB4iW4FclLmrgxJ5+6gOe6F0874LLMA
-         0WThjtEvKRn2dvGtzttdhk6YZ6As6dqjFbu62BFnUEHrPv/iwgDv4Ggpfl3bfxHaUv
-         f6lZOl7RTwYaiJPKYG/1rulJg8nhFHzmLbY8IesUJIdQ9KQNe7Ljjkzyki1BSOQUaD
-         tjHcBcCJURgBA==
-Date:   Fri, 1 Oct 2021 17:26:50 +0530
+        b=IitrVAZnOU4Uo+Ex9E30ZIidfe6/9XfmwIeYentyjgXVa+pusXNob5qilym+i5fLk
+         zD1180QRkSemZpWEZhOYzBb8PCF4fNtCKV3MMqLi+GHgTwgAkD2Ycn1ClslVu58M88
+         +oo5JaY1742r8E8UzGME4tL+D/44FzeBPufS4veMDHGDGPiVZQOpKTHIBwjKcKSFqq
+         ZPDWQE1IPkWlSyiLa7vJBHy+FO4Mf3yaR3KXVQMiVwcse96GLsh2f+5WSQZWlWqZdR
+         zUESFd8AYy9cq+gu2SjE25hFJI+PAdxNCKRMOL8wZEqlPnUXh4H5BIOEvQV3qrD5E6
+         0iIApfM2vAZGA==
+Date:   Fri, 1 Oct 2021 17:27:52 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Michael Tretter <m.tretter@pengutronix.de>
-Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        appana.durga.rao@xilinx.com, michal.simek@xilinx.com,
-        kernel@pengutronix.de
-Subject: Re: [PATCH 0/7] dmaengine: zynqmp_dma: fix lockdep warning and
- cleanup
-Message-ID: <YVb3gtSOamU91E5I@matsya>
-References: <20210826094742.1302009-1-m.tretter@pengutronix.de>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] dmaengine: stm32-mdma: Use struct_size() helper in
+ devm_kzalloc()
+Message-ID: <YVb3wADDQuoynu1W@matsya>
+References: <20210929222922.GA357509@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210826094742.1302009-1-m.tretter@pengutronix.de>
+In-Reply-To: <20210929222922.GA357509@embeddedor>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 26-08-21, 11:47, Michael Tretter wrote:
-> Hi,
-> 
-> I reported a lockdep warning in the ZynqMP DMA driver a few weeks ago [0].
-> This series fixes the reported warning and performs some cleanup that I found
-> while looking at the driver more closely.
-> 
-> Patches 1-4 are the cleanups. They affect the log output of the driver, allow
-> to compile the driver on other platforms when COMPILE_TEST is enabled, and
-> remove unused included header files from the driver.
-> 
-> Patches 5-7 aim to fix the lockdep warning. Patch 5 and 6 restructure the
-> locking in the driver to make it more fine-grained instead of holding the lock
-> for the entire tasklet. Patch 7 finally fixes the warning.
+On 29-09-21, 17:29, Gustavo A. R. Silva wrote:
+> Make use of the struct_size() helper instead of an open-coded version,
+> in order to avoid any potential type mistakes or integer overflows that,
+> in the worse scenario, could lead to heap overflows.
 
 Applied, thanks
 

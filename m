@@ -2,91 +2,71 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 35F3441E946
-	for <lists+dmaengine@lfdr.de>; Fri,  1 Oct 2021 10:56:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 333CB41EC4E
+	for <lists+dmaengine@lfdr.de>; Fri,  1 Oct 2021 13:37:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241512AbhJAI55 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 1 Oct 2021 04:57:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60534 "EHLO
+        id S1353951AbhJALin (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 1 Oct 2021 07:38:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231324AbhJAI55 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 1 Oct 2021 04:57:57 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 746C9C061775
-        for <dmaengine@vger.kernel.org>; Fri,  1 Oct 2021 01:56:13 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mtr@pengutronix.de>)
-        id 1mWEKw-0004mI-Og; Fri, 01 Oct 2021 10:56:10 +0200
-Received: from mtr by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mtr@pengutronix.de>)
-        id 1mWEKw-00041u-55; Fri, 01 Oct 2021 10:56:10 +0200
-Date:   Fri, 1 Oct 2021 10:56:10 +0200
-From:   Michael Tretter <m.tretter@pengutronix.de>
-To:     vkoul@kernel.org, dmaengine@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, appana.durga.rao@xilinx.com,
-        michal.simek@xilinx.com, kernel@pengutronix.de
-Subject: Re: [PATCH 0/7] dmaengine: zynqmp_dma: fix lockdep warning and
- cleanup
-Message-ID: <20211001085610.GD28226@pengutronix.de>
-References: <20210826094742.1302009-1-m.tretter@pengutronix.de>
+        with ESMTP id S230352AbhJALim (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 1 Oct 2021 07:38:42 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0B18C061775
+        for <dmaengine@vger.kernel.org>; Fri,  1 Oct 2021 04:36:58 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id ba1so33670740edb.4
+        for <dmaengine@vger.kernel.org>; Fri, 01 Oct 2021 04:36:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=5L/E4eErsLvrvRSyjenHMn1XgR3BfAibYkaUBTxnmho=;
+        b=E/ZQs9cLmJkth2Q8cc5U/otLIE9Kx/cH5Lkj/gQnHR1/cqsX4TKQXq26pA+7DQz6IC
+         o2me6ZHWDpDYjs9Hzs382MzIejiRj9IZuIRRVx53a1HVPhi05La8kQZ6eo3/jP/U1GDL
+         CLSqhqZsKwdqehjq4fuDZvxyOiCWdMoiMaI8QZZB/JDL1EEdILWnBIFaD3AyZVOvz1Q3
+         nRqlT9FplFhwRRkB6FuvjTcR+Bzm9yd0OhDBeQ3RvGIdxv6KpdJl03zx1SzEXwAg32VO
+         FoY3l4BUcyJ02ascCAwXxnqjP3kAKK3QSD9tbnAYwqxHEt3NRa0GZZCGU7RKA9HCbG6G
+         K/bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=5L/E4eErsLvrvRSyjenHMn1XgR3BfAibYkaUBTxnmho=;
+        b=kppjb0jV1ajNA2OKh8/mitdrnf8mF+pBPsYPSirH1sJfvwe1NQosaWtjhRRB6Zj6Hc
+         zIfGvyBjqxbgYOhBrZ00CbOcrznTxVT7durW05NlpqRGCq0DjCztTnwpFKc96IkD5Rhr
+         9nDoXNlDZ0OWqZGvcGK5WZ4TMPKgSbJKn/uwPUOBS11iikmByB6IL1QxsxlILmd5G6TH
+         Ke2rUiYzTw6pz90pY6f+khQ3j+MEH6T5Li2NBvrjXoNGY4QmPiQZbevwvqTvMtQ3/J7O
+         Jzwj30lulj7kBTxbfqgh3VDswY6F1kORSd1pUDm8XK6n4uOFMXVuBFNx3bA5vpPVfApY
+         GkZQ==
+X-Gm-Message-State: AOAM533Htg+G6IGgxNif9uWQq6z9dFdT532U38FbbA2wqM9zbyX7ssDt
+        WsC3fRV9Con9QcAxwbTjb6fGNQmmK18Af03w59E=
+X-Google-Smtp-Source: ABdhPJxxnlx2JTzk4rKi0IekdwyJWnTHbsFoK8akhZzZEpaijFMqOVtcHxQ6zVIdOIUOPVkE81IhDGmYU6etYUVyTco=
+X-Received: by 2002:a17:906:564e:: with SMTP id v14mr5645544ejr.424.1633088216927;
+ Fri, 01 Oct 2021 04:36:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210826094742.1302009-1-m.tretter@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:54:53 up 225 days, 12:18, 134 users,  load average: 0.18, 0.29,
- 0.26
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: mtr@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+Received: by 2002:a17:906:724a:0:0:0:0 with HTTP; Fri, 1 Oct 2021 04:36:56
+ -0700 (PDT)
+Reply-To: joymat52@gmail.com
+From:   Joyce Thomas <tjoyc1234@gmail.com>
+Date:   Fri, 1 Oct 2021 04:36:56 -0700
+Message-ID: <CAF-RpUgYM140rK4-SVsgRM4q9F2+9RZnhASEUudO=95_JARAiA@mail.gmail.com>
+Subject: ATTN:
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, 26 Aug 2021 11:47:35 +0200, Michael Tretter wrote:
-> I reported a lockdep warning in the ZynqMP DMA driver a few weeks ago [0].
-> This series fixes the reported warning and performs some cleanup that I found
-> while looking at the driver more closely.
-> 
-> Patches 1-4 are the cleanups. They affect the log output of the driver, allow
-> to compile the driver on other platforms when COMPILE_TEST is enabled, and
-> remove unused included header files from the driver.
-> 
-> Patches 5-7 aim to fix the lockdep warning. Patch 5 and 6 restructure the
-> locking in the driver to make it more fine-grained instead of holding the lock
-> for the entire tasklet. Patch 7 finally fixes the warning.
-
-Gentle ping.
-
-Michael
-
-> 
-> Michael
-> 
-> [0] https://lore.kernel.org/linux-arm-kernel/20210601130108.GA12967@pengutronix.de/
-> 
-> Michael Tretter (7):
->   dmaengine: zynqmp_dma: simplify with dev_err_probe
->   dmaengine: zynqmp_dma: drop message on probe success
->   dmaengine: zynqmp_dma: enable COMPILE_TEST
->   dmaengine: zynqmp_dma: cleanup includes
->   dmaengine: zynqmp_dma: cleanup after completing all descriptors
->   dmaengine: zynqmp_dma: refine dma descriptor locking
->   dmaengine: zynqmp_dma: fix lockdep warning in tasklet
-> 
->  drivers/dma/Kconfig             |  2 +-
->  drivers/dma/xilinx/zynqmp_dma.c | 67 +++++++++++++++++----------------
->  2 files changed, 35 insertions(+), 34 deletions(-)
-> 
-> -- 
-> 2.30.2
-> 
-> 
+Hello Dear
+My Name is Mr. Joyce Thomas. Contact me for more information on the
+transfer of ($7.9 million dollars) left by my late client from your
+Country. I want to present you as a business partner and next of kin
+of the fund. I will give you the details of this transaction, as soon
+as I hear from you. I need the information below:
+Full Name:
+Address:
+Occupation:
+Age:
+Personal Email:
+Personal Telephone:
+Best Regards,
+Mr.Joyce  Thomas

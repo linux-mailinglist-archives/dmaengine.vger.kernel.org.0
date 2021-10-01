@@ -2,76 +2,99 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E026D41E436
-	for <lists+dmaengine@lfdr.de>; Fri,  1 Oct 2021 00:57:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DD8341E822
+	for <lists+dmaengine@lfdr.de>; Fri,  1 Oct 2021 09:15:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229895AbhI3W71 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 30 Sep 2021 18:59:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348913AbhI3W7Z (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Sep 2021 18:59:25 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC484C06176A
-        for <dmaengine@vger.kernel.org>; Thu, 30 Sep 2021 15:57:41 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id t8so12572408wri.1
-        for <dmaengine@vger.kernel.org>; Thu, 30 Sep 2021 15:57:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=AnIUtRQtDgk3YDJAatwz+LXUKRWPbctJNdAprjwvZ5o=;
-        b=NbyMdHEZeBs3sGq/yDHhFme6/Fat2fIEs1FbuecL1VGVLNPFVKU5MMEzqqtmtv3lrT
-         LyW5uhTxAor2u02W/ObGaIVKkso13EmNkPeqEKWvp/MUMhviRWbZ8nckHCYJ556NudOp
-         CVsQD4dF9ZylhNVdYAbBqX0A0zUyE0K2pGMLE76ziizR4sORoxcFl/sLgtHo3wxalxgg
-         zVWop8qYFvchibQzEbMROBdDHjlzHZVZJ1FRfybhb6wrSwetzJb9THEFmdLn6gkHaAVz
-         dFyBj/yMHcUaz8lAQTBNC3OUOyaayX15aeEcmR3hIb43fnzJKw76ohBZCKh7LDPECDvY
-         Mt4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=AnIUtRQtDgk3YDJAatwz+LXUKRWPbctJNdAprjwvZ5o=;
-        b=CMvJ2BYM+RNaZY7mDJMM65smIttbFCSsjAB76+KvETZPQFTYUlupsGffNq5Wj71bgV
-         lk7vvARbx84wx8WZVr9RgtUnWTmcej/Kv2reUugY1QrodPdx3Ktgkx044fENz6uYH3oM
-         ZdIYAsGauDwDR8AP7S3Akppe+urz5ZUOT4FycoeSvqbyR7Zo7ckR7E106RfcqME+CG1i
-         Ma48AxJVF8+KzjKinZ+mmG5eTAXbV+DWxw60yzT1ttIfksW1H0QzH/UZDQgl+cLu2QZr
-         eMJMNnOCVPHm0c6xQ8jJEfZeRrcvjoTe+G9ejiIfUO+BjzcNZQ+/Dv2NXZIwPO0XsQeF
-         WcqQ==
-X-Gm-Message-State: AOAM532Y5DOFufaSLbLtKyU/6+KUwuYBIpYqloCd/pgzDuK9PqPah67O
-        OYJNrU8EFiJMlVsDBrvFM/G5Z81B7RBiSJX3QFoTOfZlSRoYAOTg
-X-Google-Smtp-Source: ABdhPJwtAjakrk22PhsocMynsw1dcpQi8Yyjww/qtw286RJir5/Sf5h95h400OE8CslcguyIOaDpjCBWapvMI27/7k0=
-X-Received: by 2002:a2e:5705:: with SMTP id l5mr8854699ljb.456.1633042649694;
- Thu, 30 Sep 2021 15:57:29 -0700 (PDT)
+        id S1352057AbhJAHRD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 1 Oct 2021 03:17:03 -0400
+Received: from mx07-00178001.pphosted.com ([185.132.182.106]:44126 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238668AbhJAHRC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 1 Oct 2021 03:17:02 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19129KNc001404;
+        Fri, 1 Oct 2021 09:15:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=selector1;
+ bh=l2iRc9kE2dEezV+1JNj+2fgTrN2R77mcxJ4PyU00rHI=;
+ b=s3sfagtqbEzHHRR7KHJtK29t/qWlc7KaqSCMMZd6wXby6gYi6QoM/G9FSInnHCltCajY
+ aSgiufAe2PZYntmsee+ajhZSnC4b2+RowNEMUwXUakl3KB9vY0IiILKB5dGhbFEAWQOV
+ 0X8biN7PWN2Zz3ySA5+SSls98/9/oMGJqs+F/CkozqQL59p9QnFzzzKTWK8s3fktSOQM
+ C41qyf0Z41jx2x3leRdAK+wWZHeoD3/K9MrgHcwhVnftQaaS+9okQLqcMOlWoowJkZqF
+ 0ZY3yXDdJl7msgkcWptNrEKxYMn8VhiGxfh+oFRi/CQGoDA8wkWfie2dqShmq9anoy2q 5A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 3bds9nh9pe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 01 Oct 2021 09:15:02 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B950A10002A;
+        Fri,  1 Oct 2021 09:14:59 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag2node2.st.com [10.75.127.5])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AE47A211F3F;
+        Fri,  1 Oct 2021 09:14:59 +0200 (CEST)
+Received: from lmecxl0995.lme.st.com (10.75.127.44) by SFHDAG2NODE2.st.com
+ (10.75.127.5) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Fri, 1 Oct
+ 2021 09:14:59 +0200
+Subject: Re: [PATCH][next] dmaengine: stm32-mdma: Use struct_size() helper in
+ devm_kzalloc()
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>
+CC:     <dmaengine@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
+References: <20210929222922.GA357509@embeddedor>
+From:   Amelie DELAUNAY <amelie.delaunay@foss.st.com>
+Message-ID: <2e2fdc65-da02-90f3-e870-d63b43593c10@foss.st.com>
+Date:   Fri, 1 Oct 2021 09:14:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Received: by 2002:a05:6512:5d8:0:0:0:0 with HTTP; Thu, 30 Sep 2021 15:57:29
- -0700 (PDT)
-Reply-To: southwestloanco59@gmail.com
-From:   SOUTHWESTLOANCO <saniabdullahinng2020@gmail.com>
-Date:   Thu, 30 Sep 2021 15:57:29 -0700
-Message-ID: <CA+3X9TxSf18dxD51aJOg_UrukfudS2Vv1PZk=HxC5aHG_Y0JQg@mail.gmail.com>
-Subject: Dear owner,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210929222922.GA357509@embeddedor>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG2NODE2.st.com
+ (10.75.127.5)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
+ definitions=2021-09-30_07,2021-09-30_01,2020-04-07_01
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
--- 
-Good day,
-          Do you need a loan ? We offer any kind of loan to repay in
-6months with just 2% interest
 
-Kindly Reply with below information
 
-NAME...............
-ADDRESS..........
-OCCUPATION....
-AGE...................
-PHONE..............
-AMOUNT NEEDED......
+On 9/30/21 12:29 AM, Gustavo A. R. Silva wrote:
+> Make use of the struct_size() helper instead of an open-coded version,
+> in order to avoid any potential type mistakes or integer overflows that,
+> in the worse scenario, could lead to heap overflows.
+> 
+> Link: https://github.com/KSPP/linux/issues/160
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Regards
+Reviewed-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
 
-Contact  Mr Gary Edward +13182955380
-
-Remittance Department southwestloanco59@gmail.com
+> ---
+>   drivers/dma/stm32-mdma.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
+> index 18cbd1e43c2e..d30a4a28d3bf 100644
+> --- a/drivers/dma/stm32-mdma.c
+> +++ b/drivers/dma/stm32-mdma.c
+> @@ -1566,7 +1566,8 @@ static int stm32_mdma_probe(struct platform_device *pdev)
+>   	if (count < 0)
+>   		count = 0;
+>   
+> -	dmadev = devm_kzalloc(&pdev->dev, sizeof(*dmadev) + sizeof(u32) * count,
+> +	dmadev = devm_kzalloc(&pdev->dev,
+> +			      struct_size(dmadev, ahb_addr_masks, count),
+>   			      GFP_KERNEL);
+>   	if (!dmadev)
+>   		return -ENOMEM;
+> 

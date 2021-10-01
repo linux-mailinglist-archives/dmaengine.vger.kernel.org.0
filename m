@@ -2,63 +2,72 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56B2A41ECC6
-	for <lists+dmaengine@lfdr.de>; Fri,  1 Oct 2021 14:00:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50D3841EF2D
+	for <lists+dmaengine@lfdr.de>; Fri,  1 Oct 2021 16:12:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354210AbhJAMCc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 1 Oct 2021 08:02:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45546 "EHLO mail.kernel.org"
+        id S231723AbhJAOOf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 1 Oct 2021 10:14:35 -0400
+Received: from mga01.intel.com ([192.55.52.88]:11422 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1354141AbhJAMCb (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 1 Oct 2021 08:02:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6E62F61A85;
-        Fri,  1 Oct 2021 12:00:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633089647;
-        bh=dlFohkdyq4B3ChcKaI0Uh88n7YiWcgS8pefiGzDjOXY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h267QHBVglJ5HU3jQ/1Mj5NLl4Mkdkkvyvp7kwvOkY1Upd6Xhr7fjimI/F6NfvQ54
-         0x3msTrnmpaDAHrdfVObAQIntRMGjRqST/3ayer4POOJrirJqxT+2DxvzU77S4Hyny
-         T1b0K/qWI7AtSks0l6USgco/t50I5CNsESi/dRJdz3OVx+asaTpJv5BS7Vf7x83f0s
-         ZVAbEqtwfQR0TT2QjA+Hc2anGr5+n0vn+zE7b4QQkkdGPlp4wCukYKGBexNYp6Oh3a
-         jOUUqUTjtvhvz9LwZ6C9ik7FtOT7WoyE5XoxoQvsjJa1Op7HDBaGnbX5X1EsqcBv8k
-         /RGRUzAA2qgCA==
-Date:   Fri, 1 Oct 2021 17:30:43 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Qing Wang <wangqing@vivo.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] dma: plx_dma: switch from 'pci_' to 'dma_' API
-Message-ID: <YVb4a0CN/X/T+voq@matsya>
-References: <1632800542-108522-1-git-send-email-wangqing@vivo.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1632800542-108522-1-git-send-email-wangqing@vivo.com>
+        id S231438AbhJAOOe (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 1 Oct 2021 10:14:34 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10123"; a="248005302"
+X-IronPort-AV: E=Sophos;i="5.85,339,1624345200"; 
+   d="scan'208";a="248005302"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2021 07:08:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,339,1624345200"; 
+   d="scan'208";a="480470550"
+Received: from coresw01.iind.intel.com ([10.106.46.194])
+  by fmsmga007.fm.intel.com with ESMTP; 01 Oct 2021 07:08:13 -0700
+From:   pandith.n@intel.com
+To:     vkoul@kernel.org, eugeniy.paltsev@synopsys.com,
+        dmaengine@vger.kernel.org
+Cc:     andriy.shevchenko@linux.intel.com,
+        mallikarjunappa.sangannavar@intel.com, srikanth.thokala@intel.com,
+        kenchappa.demakkanavar@intel.com, Pandith N <pandith.n@intel.com>
+Subject: [PATCH V3 0/3] Add DMA support for transfers in multiple cases
+Date:   Fri,  1 Oct 2021 19:38:09 +0530
+Message-Id: <20211001140812.24977-1-pandith.n@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 27-09-21, 20:42, Qing Wang wrote:
-> The wrappers in include/linux/pci-dma-compat.h should go away.
-> 
-> The patch has been generated with the coccinelle script below.
-> expression e1, e2;
-> @@
-> -    pci_set_dma_mask(e1, e2)
-> +    dma_set_mask(&e1->dev, e2)
-> 
-> @@
-> expression e1, e2;
-> @@
-> -    pci_set_consistent_dma_mask(e1, e2)
-> +    dma_set_coherent_mask(&e1->dev, e2)
-> 
-> While at it, some 'dma_set_mask()/dma_set_coherent_mask()' have been
-> updated to a much less verbose 'dma_set_mask_and_coherent()'.
+From: Pandith N <pandith.n@intel.com>
 
-the susbsystem tag is dmaengine: pls use that and send a series for
-similar stuff, no point is having different patches
+This series adds dma support in following transfers
+mem2mem: set dma coherent mask
+mem2per: memory to peripheral with hardware handshake control, when APB
+register extension is not provided.
+per2mem: peripheral to memory with hardware handshake control, when APB
+register extnesion is not provided
+
+Support DMAX_NUM_CHANNELS > 8
+--------------------------------------------
+Depending on number of channels the register map changes in DMAC.
+DMA driver now supports both register maps based of number of
+channels used in platform.
+
+Setting hardware handshake for peripheral transfers
+-----------------------------------------------------------------------
+mem2per and per2mem transfers are supported with hardware handshake
+control, without apb register extension.
+
+setting dma coherent mask
+--------------------------------------------------
+Added 64-bit dma coherent mask setting
+
+Pandith N (3):
+  dmaengine: dw-axi-dmac: support DMAX_NUM_CHANNELS > 8
+  dmaengine: dw-axi-dmac: Hardware handshake configuration
+  dmaengine: dw-axi-dmac: set coherent mask
+
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 113 +++++++++++++-----
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  35 +++++-
+ 2 files changed, 117 insertions(+), 31 deletions(-)
 
 -- 
-~Vinod
+2.17.1
+

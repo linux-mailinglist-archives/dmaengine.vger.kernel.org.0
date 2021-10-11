@@ -2,75 +2,121 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D30E4290EA
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Oct 2021 16:12:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40A32429259
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Oct 2021 16:42:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240686AbhJKOOG convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Mon, 11 Oct 2021 10:14:06 -0400
-Received: from aposti.net ([89.234.176.197]:41516 "EHLO aposti.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239076AbhJKOLi (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 11 Oct 2021 10:11:38 -0400
-Date:   Mon, 11 Oct 2021 16:09:29 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] dmaengine: jz4780: Set max number of SGs per burst
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Vinod Koul <vkoul@kernel.org>, linux-mips@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <TNGT0R.X6IU8OUDO4HW2@crapouillou.net>
-In-Reply-To: <GLCNYQ.LL8K0PVSTZ1W1@crapouillou.net>
-References: <20210829195805.148964-1-contact@artur-rojek.eu>
-        <GLCNYQ.LL8K0PVSTZ1W1@crapouillou.net>
+        id S244004AbhJKOoY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 11 Oct 2021 10:44:24 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:29120 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243934AbhJKOoP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Oct 2021 10:44:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1633963327;
+    s=strato-dkim-0002; d=gerhold.net;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=xSsNGdNQB08KyOhFukELZ4y35yt3el1uuyG09AFN9Gw=;
+    b=UTq16JQObMxCVxmJy5Bblpbus46OFB8i+8sbv1hd/0iZD95z63xQOSYII3Fj+3uUVS
+    h+F2mYFivYcakD/T+6MMLm/v6SsunRjx33iF/d9JRYAX3FiP/wWFwyRiI9niJ4Of9tat
+    ClsruDZsFkxwVt4bNXP3P7vo4V4MrZ7TElzrjg83QV+s7PQipEjQI7KWjXqYcCvv5H7b
+    /mjHkKlHBzuTmh/AFKzqk9rxqTl3ogFR2mkScG6CvROmZekn/PnIsXuik7diVALyT+0l
+    B2jQwp+sk7vRwzllBomZG251qnwOsXNTZmypLQ57bSHrvnUg3bi4cCAY7/ZrPqvyRbnx
+    yGsQ==
+Authentication-Results: strato.com;
+    dkim=none
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXTbAOHjRHIhr3eFeIrw=="
+X-RZG-CLASS-ID: mo00
+Received: from droid..
+    by smtp.strato.de (RZmta 47.33.8 SBL|AUTH)
+    with ESMTPSA id 301038x9BEg3tv6
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+    Mon, 11 Oct 2021 16:42:03 +0200 (CEST)
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Loic Poulain <loic.poulain@linaro.org>,
+        Sergey Ryazanov <ryazanov.s.a@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Aleksander Morgado <aleksander@aleksander.es>,
+        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, phone-devel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH net-next v2 0/4] net: wwan: Add Qualcomm BAM-DMUX WWAN network driver
+Date:   Mon, 11 Oct 2021 16:17:32 +0200
+Message-Id: <20211011141733.3999-1-stephan@gerhold.net>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vinod,
+The BAM Data Multiplexer provides access to the network data channels
+of modems integrated into many older Qualcomm SoCs, e.g. Qualcomm MSM8916
+or MSM8974. This series adds a driver that allows using it.
 
-Le lun., août 30 2021 at 10:48:52 +0100, Paul Cercueil 
-<paul@crapouillou.net> a écrit :
-> Hi,
-> 
-> Le dim., août 29 2021 at 21:58:05 +0200, Artur Rojek 
-> <contact@artur-rojek.eu> a écrit :
->> Total amount of SG list entries executed in a single burst is 
->> limited by
->> the number of available DMA descriptors.
->> This information is useful for device drivers utilizing this DMA 
->> engine.
->> 
->> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> 
-> Acked-by: Paul Cercueil <paul@crapouillou.net>
+For more information about BAM-DMUX, see PATCH 4/4.
 
-Feedback on this?
+Shortly said, BAM-DMUX is built using a simple protocol layer on top of
+a DMA engine (Qualcomm BAM DMA). For BAM-DMUX, the BAM DMA engine runs in
+a special mode where the modem/remote side is responsible for powering
+on the BAM when needed but we are responsible to initialize it.
+The BAM is powered off when unneeded by coordinating power control
+via bidirectional interrupts from the BAM-DMUX driver.
 
-Cheers,
--Paul
+The series first adds one possible solution for handling the "powered
+remotely" mode in the bam_dma driver, then it adds the BAM-DMUX driver.
+In combination with the RPMSG_WWAN_CTRL driver the WWAN control ports
+(QMI/AT) are exposed via the WWAN subsystem. However, the driver does
+not currently make use of the link management of the WWAN subsystem.
+Unifying the link management for the many different Qualcomm modem
+setups is a huge undertaking that I believe is better addressed
+separately. I discuss this in detail in PATCH 4/4.
 
->> ---
->>  drivers/dma/dma-jz4780.c | 1 +
->>  1 file changed, 1 insertion(+)
->> 
->> diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
->> index ebee94dbd630..96701dedcac8 100644
->> --- a/drivers/dma/dma-jz4780.c
->> +++ b/drivers/dma/dma-jz4780.c
->> @@ -915,6 +915,7 @@ static int jz4780_dma_probe(struct 
->> platform_device *pdev)
->>  	dd->dst_addr_widths = JZ_DMA_BUSWIDTHS;
->>  	dd->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
->>  	dd->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
->> +	dd->max_sg_burst = JZ_DMA_MAX_DESC;
->> 
->>  	/*
->>  	 * Enable DMA controller, mark all channels as not programmable.
->> --
->> 2.33.0
->> 
-> 
+All the changes in this patch series are based on a fairly complicated
+driver from Qualcomm [1]. I do not have access to documentation about
+"BAM-DMUX", although Jeffrey Hugo has shared many helpful insights
+about the creation process of BAM-DMUX [2].
 
+The driver has been used in postmarketOS [3] on various smartphones/tablets
+based on Qualcomm MSM8916 and MSM8974 for more than a year now with
+no reported problems. It works out of the box with ModemManager and only
+requires minor changes in oFono (in particular since it does not support
+WWAN control ports, e.g. /dev/wwan0qmi0 yet).
+
+Changes in v2:
+  - Rename "qcom,remote-power-collapse" -> "qcom,powered-remotely"
+  - Rebase on net-net and fix conflicts
+  - Rename network interfaces from "rmnet%d" -> "wwan%d"
+  - Fix wrong file name in MAINTAINERS entry
+
+[1]: https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/drivers/soc/qcom/bam_dmux.c?h=LA.BR.1.2.9.1-02310-8x16.0
+[2]: https://lore.kernel.org/netdev/e37868ee-2bd0-3b50-eb95-8eb2bf32d956@quicinc.com/
+[3]: https://postmarketos.org/
+
+Stephan Gerhold (4):
+  dt-bindings: dmaengine: bam_dma: Add "powered remotely" mode
+  dmaengine: qcom: bam_dma: Add "powered remotely" mode
+  dt-bindings: net: Add schema for Qualcomm BAM-DMUX
+  net: wwan: Add Qualcomm BAM-DMUX WWAN network driver
+
+ .../devicetree/bindings/dma/qcom_bam_dma.txt  |   2 +
+ .../bindings/net/qcom,bam-dmux.yaml           |  87 ++
+ MAINTAINERS                                   |   8 +
+ drivers/dma/qcom/bam_dma.c                    |  88 +-
+ drivers/net/wwan/Kconfig                      |  13 +
+ drivers/net/wwan/Makefile                     |   1 +
+ drivers/net/wwan/qcom_bam_dmux.c              | 907 ++++++++++++++++++
+ 7 files changed, 1074 insertions(+), 32 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/qcom,bam-dmux.yaml
+ create mode 100644 drivers/net/wwan/qcom_bam_dmux.c
+
+-- 
+2.33.0
 

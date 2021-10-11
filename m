@@ -2,187 +2,235 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 156D3429246
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Oct 2021 16:41:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 512A042928F
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Oct 2021 16:51:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241243AbhJKOnn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 11 Oct 2021 10:43:43 -0400
-Received: from aposti.net ([89.234.176.197]:46952 "EHLO aposti.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243617AbhJKOmu (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 11 Oct 2021 10:42:50 -0400
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc:     list@opendingux.net, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 5/5] dmaengine: jz4780: Support bidirectional I/O on one channel
-Date:   Mon, 11 Oct 2021 16:36:52 +0200
-Message-Id: <20211011143652.51976-6-paul@crapouillou.net>
-In-Reply-To: <20211011143652.51976-1-paul@crapouillou.net>
-References: <20211011143652.51976-1-paul@crapouillou.net>
+        id S237253AbhJKOxX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 11 Oct 2021 10:53:23 -0400
+Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.100]:25177 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237236AbhJKOxW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Oct 2021 10:53:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1633963878;
+    s=strato-dkim-0002; d=gerhold.net;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=aPdmmwfYu/N36PdvoMDHm+Iisa38vvvxbSOQGVHHG6g=;
+    b=hysDLpUK0e3i+XAmX6jEtAm6OHSn0BkbUgWTKMx2O+hLf1/HFXG4N+YlOqA1++q9K9
+    9VypPwlmRDRj2QtoxGR1KV0U3/RMkEzznebsLIvg0NfI6VndELQFZjIBEywO+jnvpTmC
+    bXrt0vNHJw5rQRq2i6/l1xknV+ZbdboDyK7uYoqU/wH9PwEeAwQRU6GHw0dwKaJeWX8Z
+    JPU+AdDnQ5Yvd4/kg3vXI71/85u+VPDr4BCN7xY3UvbPUP4r1YCwjbNeGvuT01KmmYbZ
+    MqRQ4LeiPcJS9iveUS9OL/LtaovD/lafUg8r1owsLdbUt7UfVaSLgerq8vDSDRS6Rhnh
+    yAVw==
+Authentication-Results: strato.com;
+    dkim=none
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u261EJF5OxJD4pSA8p7h"
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+    by smtp.strato.de (RZmta 47.33.8 SBL|AUTH)
+    with ESMTPSA id 301038x9BEpItxG
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+    Mon, 11 Oct 2021 16:51:18 +0200 (CEST)
+Date:   Mon, 11 Oct 2021 16:51:10 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Loic Poulain <loic.poulain@linaro.org>,
+        Sergey Ryazanov <ryazanov.s.a@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Aleksander Morgado <aleksander@aleksander.es>,
+        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, phone-devel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: Re: [PATCH net-next v2 4/4] net: wwan: Add Qualcomm BAM-DMUX WWAN
+ network driver
+Message-ID: <YWRPXnzh+NLVqHvo@gerhold.net>
+References: <20211011141733.3999-1-stephan@gerhold.net>
+ <20211011141733.3999-5-stephan@gerhold.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211011141733.3999-5-stephan@gerhold.net>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-For some devices with only half-duplex capabilities, it doesn't make
-much sense to use one DMA channel per direction, as both channels will
-never be active at the same time.
+On Mon, Oct 11, 2021 at 04:17:36PM +0200, Stephan Gerhold wrote:
+> The BAM Data Multiplexer provides access to the network data channels of
+> modems integrated into many older Qualcomm SoCs, e.g. Qualcomm MSM8916 or
+> MSM8974. It is built using a simple protocol layer on top of a DMA engine
+> (Qualcomm BAM) and bidirectional interrupts to coordinate power control.
+> 
+> The modem announces a fixed set of channels by sending an OPEN command.
+> The driver exports each channel as separate network interface so that
+> a connection can be established via QMI from userspace. The network
+> interface can work either in Ethernet or Raw-IP mode (configurable via
+> QMI). However, Ethernet mode seems to be broken with most firmwares
+> (network packets are actually received as Raw-IP), therefore the driver
+> only supports Raw-IP mode.
+> 
+> Note that the control channel (QMI/AT) is entirely separate from
+> BAM-DMUX and is already supported by the RPMSG_WWAN_CTRL driver.
+> 
+> The driver uses runtime PM to coordinate power control with the modem.
+> TX/RX buffers are put in a kind of "ring queue" and submitted via
+> the bam_dma driver of the DMAEngine subsystem.
+> 
+> The basic architecture looks roughly like this:
+> 
+>                    +------------+                +-------+
+>          [IPv4/6]  |  BAM-DMUX  |                |       |
+>          [Data...] |            |                |       |
+>         ---------->|wwan0       | [DMUX chan: x] |       |
+>          [IPv4/6]  | (chan: 0)  | [IPv4/6]       |       |
+>          [Data...] |            | [Data...]      |       |
+>         ---------->|wwan1       |--------------->| Modem |
+>                    | (chan: 1)  |      BAM       |       |
+>          [IPv4/6]  | ...        |  (DMA Engine)  |       |
+>          [Data...] |            |                |       |
+>         ---------->|wwan7       |                |       |
+>                    | (chan: 7)  |                |       |
+>                    +------------+                +-------+
+> 
+> However, on newer SoCs/firmware versions Qualcomm began gradually moving
+> to QMAP (rmnet driver) as backend-independent protocol for multiplexing
+> and data aggegration. Some firmware versions allow using QMAP on top of
+> BAM-DMUX (effectively resulting in a second multiplexing layer plus data
+> aggregation). The architecture with QMAP would look roughly like this:
+> 
+>            +-------------+           +------------+                  +-------+
+>  [IPv4/6]  |    RMNET    |           |  BAM-DMUX  |                  |       |
+>  [Data...] |             |           |            | [DMUX chan: 0]   |       |
+> ---------->|rmnet_data1  |     ----->|wwan0       | [QMAP mux-id: x] |       |
+>            | (mux-id: 1) |     |     | (chan: 0)  | [IPv4/6]         |       |
+>            |             |     |     |            | [Data...]        |       |
+>  [IPv4/6]  | ...         |------     |            |----------------->| Modem |
+>  [Data...] |             |           |            |       BAM        |       |
+> ---------->|rmnet_data42 | [QMAP: x] |[wwan1]     |   (DMA Engine)   |       |
+>            | (mux-id: 42)| [IPv4/6]  |... unused! |                  |       |
+>            |             | [Data...] |[wwan7]     |                  |       |
+>            |             |           |            |                  |       |
+>            +-------------+           +------------+                  +-------+
+> 
+> In this case, wwan1-7 would remain unused. The firmware used on the most
+> recent SoCs with BAM-DMUX even seems to announce only a single BAM-DMUX
+> channel (wwan0), which makes QMAP the only option for multiplexing there.
+> 
+> However, so far the driver is mainly tested without QMAP, on various
+> smartphones/tablets based on Qualcomm MSM8916/MSM8974. It looks like QMAP
+> depends on a MTU negotiation feature in BAM-DMUX which is not supported yet.
+> 
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> ---
+> Note that this is my first network driver, so I apologize in advance
+> if I made some obvious mistakes. :)
+> 
+> Changes since RFC:
+>   - Rebase on net-next and fix conflicts
+>   - Rename network interfaces from "rmnet%d" -> "wwan%d"
+>   - Fix wrong file name in MAINTAINERS entry
+>   - Clarify control channel in commit message. (It is entirely independent
+>     of BAM-DMUX and is already supported by the RPMSG WWAN CTRL driver.)
+> 
+> Like in the RFC version [1], the driver does not currently use the link
+> management of the WWAN subsystem. Instead, it simply exposes one network
+> interface for each of the up to 8 channels.
+> 
+> This setup works out of the box with all available open-source userspace
+> WWAN implementations, especially ModemManager (no changes needed).
+> oFono works too although it requires minor changes to support WWAN control
+> ports (/dev/wwan0qmi0) which are independent of BAM-DMUX (already provided
+> by the "rpmsg_wwan_ctrl" driver).
+> It was easy to support because the setup is very similar to ones already
+> supported for USB modems. Some of them provide multiple network interfaces
+> and ModemManager can bundle them together to a single modem.
+> 
+> I believe it is best to keep this setup as-is for now and not add even
+> more complexity to userspace with another setup that works only in this
+> particular configuration. I will reply to this patch separately to explain
+> that a bit more clearly. This patch is already long enough as-is. :)
+> 
+> [1]: https://lore.kernel.org/netdev/20210719145317.79692-5-stephan@gerhold.net/
+>
 
-Add support for bidirectional I/O on DMA channels. The client drivers
-can then request a "tx-rx" DMA channel which will be used for both
-directions.
+The main goal of the WWAN link management is to make the multiplexing
+setup transparent to userspace. Unfortunately it's still unclear to me
+how or even if this can be achieved for the many different different
+setups that exist for Qualcomm modems. To show that more clearly I'll
+"briefly" list the various currently supported setups in ModemManager
+(there might be even more that I am not even aware of).
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/dma/dma-jz4780.c | 48 ++++++++++++++++++++++++++--------------
- 1 file changed, 32 insertions(+), 16 deletions(-)
+The details are not too important, this list only exists to show the
+complexity that is already handled in ModemManager:
 
-diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 4d62e24ebff9..ee1d50792c32 100644
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -122,6 +122,7 @@ struct jz4780_dma_desc {
- 	dma_addr_t desc_phys;
- 	unsigned int count;
- 	enum dma_transaction_type type;
-+	uint32_t transfer_type;
- 	uint32_t status;
- };
- 
-@@ -130,7 +131,7 @@ struct jz4780_dma_chan {
- 	unsigned int id;
- 	struct dma_pool *desc_pool;
- 
--	uint32_t transfer_type;
-+	uint32_t transfer_type_tx, transfer_type_rx;
- 	uint32_t transfer_shift;
- 	struct dma_slave_config	config;
- 
-@@ -157,7 +158,7 @@ struct jz4780_dma_dev {
- };
- 
- struct jz4780_dma_filter_data {
--	uint32_t transfer_type;
-+	uint32_t transfer_type_tx, transfer_type_rx;
- 	int channel;
- };
- 
-@@ -226,9 +227,10 @@ static inline void jz4780_dma_chan_disable(struct jz4780_dma_dev *jzdma,
- 		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKEC, BIT(chn));
- }
- 
--static struct jz4780_dma_desc *jz4780_dma_desc_alloc(
--	struct jz4780_dma_chan *jzchan, unsigned int count,
--	enum dma_transaction_type type)
-+static struct jz4780_dma_desc *
-+jz4780_dma_desc_alloc(struct jz4780_dma_chan *jzchan, unsigned int count,
-+		      enum dma_transaction_type type,
-+		      enum dma_transfer_direction direction)
- {
- 	struct jz4780_dma_desc *desc;
- 
-@@ -248,6 +250,12 @@ static struct jz4780_dma_desc *jz4780_dma_desc_alloc(
- 
- 	desc->count = count;
- 	desc->type = type;
-+
-+	if (direction == DMA_DEV_TO_MEM)
-+		desc->transfer_type = jzchan->transfer_type_rx;
-+	else
-+		desc->transfer_type = jzchan->transfer_type_tx;
-+
- 	return desc;
- }
- 
-@@ -361,7 +369,7 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_slave_sg(
- 	unsigned int i;
- 	int err;
- 
--	desc = jz4780_dma_desc_alloc(jzchan, sg_len, DMA_SLAVE);
-+	desc = jz4780_dma_desc_alloc(jzchan, sg_len, DMA_SLAVE, direction);
- 	if (!desc)
- 		return NULL;
- 
-@@ -410,7 +418,7 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_dma_cyclic(
- 
- 	periods = buf_len / period_len;
- 
--	desc = jz4780_dma_desc_alloc(jzchan, periods, DMA_CYCLIC);
-+	desc = jz4780_dma_desc_alloc(jzchan, periods, DMA_CYCLIC, direction);
- 	if (!desc)
- 		return NULL;
- 
-@@ -455,14 +463,14 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_dma_memcpy(
- 	struct jz4780_dma_desc *desc;
- 	uint32_t tsz;
- 
--	desc = jz4780_dma_desc_alloc(jzchan, 1, DMA_MEMCPY);
-+	desc = jz4780_dma_desc_alloc(jzchan, 1, DMA_MEMCPY, 0);
- 	if (!desc)
- 		return NULL;
- 
- 	tsz = jz4780_dma_transfer_size(jzchan, dest | src | len,
- 				       &jzchan->transfer_shift);
- 
--	jzchan->transfer_type = JZ_DMA_DRT_AUTO;
-+	desc->transfer_type = JZ_DMA_DRT_AUTO;
- 
- 	desc->desc[0].dsa = src;
- 	desc->desc[0].dta = dest;
-@@ -528,7 +536,7 @@ static void jz4780_dma_begin(struct jz4780_dma_chan *jzchan)
- 
- 	/* Set transfer type. */
- 	jz4780_dma_chn_writel(jzdma, jzchan->id, JZ_DMA_REG_DRT,
--			      jzchan->transfer_type);
-+			      jzchan->desc->transfer_type);
- 
- 	/*
- 	 * Set the transfer count. This is redundant for a descriptor-driven
-@@ -788,7 +796,8 @@ static bool jz4780_dma_filter_fn(struct dma_chan *chan, void *param)
- 		return false;
- 	}
- 
--	jzchan->transfer_type = data->transfer_type;
-+	jzchan->transfer_type_tx = data->transfer_type_tx;
-+	jzchan->transfer_type_rx = data->transfer_type_rx;
- 
- 	return true;
- }
-@@ -800,11 +809,17 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
- 	dma_cap_mask_t mask = jzdma->dma_device.cap_mask;
- 	struct jz4780_dma_filter_data data;
- 
--	if (dma_spec->args_count != 2)
-+	if (dma_spec->args_count == 2) {
-+		data.transfer_type_tx = dma_spec->args[0];
-+		data.transfer_type_rx = dma_spec->args[0];
-+		data.channel = dma_spec->args[1];
-+	} else if (dma_spec->args_count == 3) {
-+		data.transfer_type_tx = dma_spec->args[0];
-+		data.transfer_type_rx = dma_spec->args[1];
-+		data.channel = dma_spec->args[2];
-+	} else {
- 		return NULL;
--
--	data.transfer_type = dma_spec->args[0];
--	data.channel = dma_spec->args[1];
-+	}
- 
- 	if (data.channel > -1) {
- 		if (data.channel >= jzdma->soc_data->nb_channels) {
-@@ -822,7 +837,8 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
- 			return NULL;
- 		}
- 
--		jzdma->chan[data.channel].transfer_type = data.transfer_type;
-+		jzdma->chan[data.channel].transfer_type_tx = data.transfer_type_tx;
-+		jzdma->chan[data.channel].transfer_type_rx = data.transfer_type_rx;
- 
- 		return dma_get_slave_channel(
- 			&jzdma->chan[data.channel].vchan.chan);
--- 
-2.33.0
+Control ports (QMI/AT/MBIM):
+ *1. Preferred: WWAN subsystem control port (chardev)*
+     - cdc-wdm
+     - rpmsg_wwan_ctrl (most common setup for BAM-DMUX)
+     - mhi_wwan_ctrl
+  2. QRTR network sockets (net/qrtr) on newer Qualcomm SoCs
+     (most common setup for IPA (drivers/net/ipa)
+ (3. Legacy: Driver-specific char devices)
+     - cdc-wdm usbmisc chardev
+     - rpmsg-char
 
+Network interfaces:
+ *1. Preferred: WWAN subsystem link management*
+     - mhi_wwan_mbim (only for MHI+MBIM, not MHI+QMI)
+     - (iosm, but that's not Qualcomm)
+  2. Single/multiple exposed network interfaces
+     - USB modems
+     - qcom_bam_dmux (this patch)
+  3. qmimux (built-in multiplexing of qmi_wwan driver)
+     - qmi_wwan
+  4. "rmnet" links created via netlink, works on top of:
+     Note: Various different "rmnet" versions and configurations
+           exist that need to be configured appropriately.
+     - qmi_wwan, optional
+     - IPA (drivers/net/ipa), always required
+     - qcom_bam_dmux, optional
+       (supported only on very recent firmware versions/SoCs)
+
+ModemManager already provides an unified API for all these in userspace.
+The goal for the WWAN subsystem would be to unify all these approaches
+in the kernel, to simplify userspace.
+
+We have *partially* achieved this for the QMI/AT control ports where
+there are multiple backends with the same frontend now (USB cdc-wdm,
+RPMSG, MHI). But not fully, new Qualcomm SoCs require controlling the
+modem via QRTR network sockets and I'm not sure if this can be mapped to
+the WWAN subsystem chardevs. The "partially" means that userspace still
+needs to support multiple approaches, and usually needs to keep
+supporting old approaches for compatibility with old kernels anyway.
+
+And for the network interfaces it is even more unclear to me if
+there is a good way to abstract those transparently to userspace.
+The QMI configuration that is currently done in userspace is quite
+specific to hardware/firmware version [2].
+
+Sergey suggested to address some of these points by moving the
+QMI setup to the the kernel [3]. Unfortunately, this comes with a lot of
+complexity, which is why this was purposefully left up to userspace when
+the qmi_wwan driver (for USB modems) was added to the kernel [4].
+
+All in all, I believe finding a solution that can cover all the setups
+listed above is a huge undertaking, for both kernel and userspace.
+It goes way beyond the scope of this patch and is therefore better
+addressed separately.
+
+This is why I think it's best to keep the current setup in this patch
+for now (which is already supported by userspace!), and investigate
+unifying the interface separately.
+
+Thanks for reading. :)
+Stephan
+
+[2]: https://lore.kernel.org/netdev/YPmRcBXpRtKKSDl8@gerhold.net/
+[3]: https://lore.kernel.org/netdev/CAHNKnsQr4Ys8q3Ctru-H=L3ZDwb__2D3E08mMZchDLAs1KetAg@mail.gmail.com/
+[4]: https://lore.kernel.org/netdev/CAAP7ucLDEoJzwNvWLCWyCNE+kKBDn4aBU-9XT_Uv_yetnX4h-g@mail.gmail.com/

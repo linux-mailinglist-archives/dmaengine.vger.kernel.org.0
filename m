@@ -2,60 +2,65 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13C0F42AB71
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Oct 2021 20:02:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D2B942CCD8
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Oct 2021 23:34:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233541AbhJLSE2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 12 Oct 2021 14:04:28 -0400
-Received: from mga11.intel.com ([192.55.52.93]:41540 "EHLO mga11.intel.com"
+        id S230007AbhJMVgq convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Wed, 13 Oct 2021 17:36:46 -0400
+Received: from aposti.net ([89.234.176.197]:38510 "EHLO aposti.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233376AbhJLSEU (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 12 Oct 2021 14:04:20 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10135"; a="224657245"
-X-IronPort-AV: E=Sophos;i="5.85,368,1624345200"; 
-   d="scan'208";a="224657245"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2021 11:01:59 -0700
-X-IronPort-AV: E=Sophos;i="5.85,368,1624345200"; 
-   d="scan'208";a="524323335"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2021 11:01:59 -0700
-Subject: [PATCH] dmaengine: idxd: check GENCAP config support for gencfg
- register
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org
-Date:   Tue, 12 Oct 2021 11:01:59 -0700
-Message-ID: <163406171896.1303830.11217958011385656998.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/0.23-29-ga622f1
+        id S229706AbhJMVgp (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 13 Oct 2021 17:36:45 -0400
+Date:   Wed, 13 Oct 2021 22:34:30 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 1/5] dt-bindings: dma: ingenic: Add compatible strings for
+ MDMA and BDMA
+To:     Rob Herring <robh@kernel.org>
+Cc:     list@opendingux.net, Rob Herring <robh+dt@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>
+Message-Id: <ILQX0R.H5HOCWNV78AZ1@crapouillou.net>
+In-Reply-To: <YWTbbOWhtrTniXWV@robh.at.kernel.org>
+References: <20211011143652.51976-1-paul@crapouillou.net>
+        <20211011143652.51976-2-paul@crapouillou.net>
+        <YWTbbOWhtrTniXWV@robh.at.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-DSA spec 1.2 has moved the GENCFG register under the GENCAP configuration
-support with respect to writability. Add check in driver before writing to
-GENCFG register.
+Hi,
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/dma/idxd/device.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Le lun., oct. 11 2021 at 19:48:44 -0500, Rob Herring <robh@kernel.org> 
+a écrit :
+> On Mon, 11 Oct 2021 16:36:48 +0200, Paul Cercueil wrote:
+>>  The JZ4760 and JZ4760B SoCs have two additional DMA controllers: the
+>>  MDMA, which only supports memcpy operations, and the BDMA which is
+>>  mostly used for transfer between memories and the BCH controller.
+>>  The JZ4770 also features the same BDMA as in the JZ4760B, but does 
+>> not
+>>  seem to have a MDMA.
+>> 
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>   .../devicetree/bindings/dma/ingenic,dma.yaml  | 26 
+>> ++++++++++++-------
+>>   1 file changed, 17 insertions(+), 9 deletions(-)
+>> 
+> 
+> With the indentation fixed:
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 419b206f8a42..1e153725432e 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -793,7 +793,7 @@ static int idxd_groups_config_write(struct idxd_device *idxd)
- 	struct device *dev = &idxd->pdev->dev;
- 
- 	/* Setup bandwidth token limit */
--	if (idxd->token_limit) {
-+	if (idxd->hw.gen_cap.config_en && idxd->token_limit) {
- 		reg.bits = ioread32(idxd->reg_base + IDXD_GENCFG_OFFSET);
- 		reg.token_limit = idxd->token_limit;
- 		iowrite32(reg.bits, idxd->reg_base + IDXD_GENCFG_OFFSET);
+Thanks Rob, I'll V2 then.
+
+Could you have a look at patch 2/5 too? It touches the dt-bindings as 
+well.
+
+Cheers,
+-Paul
 
 

@@ -2,102 +2,82 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E7A2431045
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Oct 2021 08:17:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08275431088
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Oct 2021 08:28:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229847AbhJRGTX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 18 Oct 2021 02:19:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43672 "EHLO mail.kernel.org"
+        id S230091AbhJRGax (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 18 Oct 2021 02:30:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229533AbhJRGTV (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 18 Oct 2021 02:19:21 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0F0B360EB2;
-        Mon, 18 Oct 2021 06:17:09 +0000 (UTC)
+        id S229708AbhJRGax (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 18 Oct 2021 02:30:53 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6C1BC610A6;
+        Mon, 18 Oct 2021 06:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634537830;
-        bh=tbeYO4SB6h2XwPY3OFzR5vFWaqhgyaKQVbzLGhlxkeY=;
+        s=k20201202; t=1634538522;
+        bh=KaJW2C05NuSoGJsMWHo1icknCRLExC6rgqhz+K0yhTw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=n8gi+n9fU46L71M9i6Ez2+q9n35ml71iVpTSOJzpjVaHTUl2ddSz3OA3vKSRAoPW0
-         TWybBKHD8YvUsS4kMoxshh6g03RnDd08Zvz40yuLvddWvke8D4x9XlB9koWAqTngH6
-         AwvxBeCEE9eRMUx0UbvLN0FuCgKc6m6/VRbtb9xZr93jYknUKwsH2x+p6WTDKy3Zto
-         US/bq5LlG7WoSW1QFnFxXgzwfP2MpxUEc8Z25WjQL5upuu5R3YNgO+kvwpr4s2zfNO
-         wE/7unG207pTadTy0mjUm//vnpfGtk2mmxw+d7n+z1XIxwa2WIiS0bKEZU6U7DYGYT
-         7HeNV2C2Zce1g==
-Date:   Mon, 18 Oct 2021 11:47:06 +0530
+        b=LIm8scMJlm0Gr3qcmlO53p34g3Au6hUzdjqwpwvm83bsqOWNHGwcuNOz6G6t+JIRN
+         ES36EvMPr6cFgYeDxZk/BV3rI9HE8nHOAjaxrUE8mKxJe0f/MgdouyMh0bVkUWJuUq
+         sLoxhgNyovZ/SwyEREfm7EmhIziY0CwlpY38vm81gjeCvbZTiUkuI/9IQuPvfc/eOD
+         2dGCdQrUhgj1717un/0v1D5IyEzhCS2o0ZADryES/Jfw9ptxSjPPChN5xVDvhN+FxC
+         6iD9woTaskGwNTwqH01dh05zwjYG8wh4te45KKlPqqvizobXTF9+eDFXym06zxbHKn
+         PqXB45e9Bfr4Q==
+Date:   Mon, 18 Oct 2021 11:58:37 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Sergey Ryazanov <ryazanov.s.a@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Aleksander Morgado <aleksander@aleksander.es>,
-        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Rob Herring <robh+dt@kernel.org>, list@opendingux.net,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, phone-devel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: [PATCH net-next v2 1/4] dt-bindings: dmaengine: bam_dma: Add
- "powered remotely" mode
-Message-ID: <YW0RYufCyPi5JLo3@matsya>
-References: <20211011141733.3999-1-stephan@gerhold.net>
- <20211011141733.3999-2-stephan@gerhold.net>
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH 2/5] dt-bindings: dma: ingenic: Support #dma-cells = <3>
+Message-ID: <YW0UFWWNuYNEC8y+@matsya>
+References: <20211011143652.51976-1-paul@crapouillou.net>
+ <20211011143652.51976-3-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211011141733.3999-2-stephan@gerhold.net>
+In-Reply-To: <20211011143652.51976-3-paul@crapouillou.net>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 11-10-21, 16:17, Stephan Gerhold wrote:
-> In some configurations, the BAM DMA controller is set up by a remote
-> processor and the local processor can simply start making use of it
-> without setting up the BAM. This is already supported using the
-> "qcom,controlled-remotely" property.
+On 11-10-21, 16:36, Paul Cercueil wrote:
+> Extend the binding to support specifying a different request type for
+> each direction.
 > 
-> However, for some reason another possible configuration is that the
-> remote processor is responsible for powering up the BAM, but we are
-> still responsible for initializing it (e.g. resetting it etc). Add
-> a "qcom,powered-remotely" property to describe that configuration.
-> 
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
-> Changes since RFC:
->   - Rename qcom,remote-power-collapse -> qcom,powered-remotely
->     for consistency with "qcom,controlled-remotely"
+>  Documentation/devicetree/bindings/dma/ingenic,dma.yaml | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> NOTE: This is *not* a compile-time requirement for the BAM-DMUX driver
->       so this could also go through the dmaengine tree.
+> diff --git a/Documentation/devicetree/bindings/dma/ingenic,dma.yaml b/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
+> index f45fd5235879..51b41e4795a2 100644
+> --- a/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
+> +++ b/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
+> @@ -44,13 +44,17 @@ properties:
+>      maxItems: 1
+>  
+>    "#dma-cells":
+> -    const: 2
+> +    enum: [2, 3]
+>      description: >
+>        DMA clients must use the format described in dma.txt, giving a phandle
+> -      to the DMA controller plus the following 2 integer cells:
+> +      to the DMA controller plus the following integer cells:
+>  
+>        - Request type: The DMA request type for transfers to/from the
+>          device on the allocated channel, as defined in the SoC documentation.
+> +        If "#dma-cells" is 2, the request type is a single cell. If
+> +        "#dma-cells" is 3, the request type has two cells; the first one
+> +        corresponds to the host to device direction, the second one corresponds
+> +        to the device to host direction.
 
-Can we split that this to dmaengine & net series if there is not
-dependency on the two... I think I skipped rev1 when I saw net-next
+Why would you need the direction here, that should be a runtime
+parameter and not a DT one?
 
-
-> 
-> Also note that there is an ongoing effort to convert these bindings
-> to DT schema but sadly there were not any updates for a while. :/
-> https://lore.kernel.org/linux-arm-msm/20210519143700.27392-2-bhupesh.sharma@linaro.org/
-> ---
->  Documentation/devicetree/bindings/dma/qcom_bam_dma.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> index cf5b9e44432c..6e9a5497b3f2 100644
-> --- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> @@ -15,6 +15,8 @@ Required properties:
->    the secure world.
->  - qcom,controlled-remotely : optional, indicates that the bam is controlled by
->    remote proccessor i.e. execution environment.
-> +- qcom,powered-remotely : optional, indicates that the bam is powered up by
-> +  a remote processor but must be initialized by the local processor.
->  - num-channels : optional, indicates supported number of DMA channels in a
->    remotely controlled bam.
->  - qcom,num-ees : optional, indicates supported number of Execution Environments
+>  
+>        - Channel: If set to 0xffffffff, any available channel will be allocated
+>          for the client. Otherwise, the exact channel specified will be used.
 > -- 
 > 2.33.0
 

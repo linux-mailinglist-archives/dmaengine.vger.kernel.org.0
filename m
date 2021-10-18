@@ -2,82 +2,210 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 08275431088
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Oct 2021 08:28:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC69243109C
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Oct 2021 08:33:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230091AbhJRGax (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 18 Oct 2021 02:30:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60452 "EHLO mail.kernel.org"
+        id S230114AbhJRGgA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 18 Oct 2021 02:36:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229708AbhJRGax (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 18 Oct 2021 02:30:53 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6C1BC610A6;
-        Mon, 18 Oct 2021 06:28:41 +0000 (UTC)
+        id S230001AbhJRGf6 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 18 Oct 2021 02:35:58 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C7DC2610E8;
+        Mon, 18 Oct 2021 06:33:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634538522;
-        bh=KaJW2C05NuSoGJsMWHo1icknCRLExC6rgqhz+K0yhTw=;
+        s=k20201202; t=1634538827;
+        bh=8Duvbt7Tr+2iGsTsmx8skOoyJai429Qy3uMCGXSBySA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LIm8scMJlm0Gr3qcmlO53p34g3Au6hUzdjqwpwvm83bsqOWNHGwcuNOz6G6t+JIRN
-         ES36EvMPr6cFgYeDxZk/BV3rI9HE8nHOAjaxrUE8mKxJe0f/MgdouyMh0bVkUWJuUq
-         sLoxhgNyovZ/SwyEREfm7EmhIziY0CwlpY38vm81gjeCvbZTiUkuI/9IQuPvfc/eOD
-         2dGCdQrUhgj1717un/0v1D5IyEzhCS2o0ZADryES/Jfw9ptxSjPPChN5xVDvhN+FxC
-         6iD9woTaskGwNTwqH01dh05zwjYG8wh4te45KKlPqqvizobXTF9+eDFXym06zxbHKn
-         PqXB45e9Bfr4Q==
-Date:   Mon, 18 Oct 2021 11:58:37 +0530
+        b=e4FZ1PWQO/Uip/YT4S6mgAiC8jjEugYD0gkMGyxz5gPLfmy8aojycaQPpuQJbCVjQ
+         3hzirrqdt6pKz4WtdJOkRn8xFEfx2cn7kSpdWFpUJ3KVusBmKQwR0uXpoKbouE7S25
+         lzdReyNtBEoMjgTudnjeK7hE7lFQ1q84rtmB5W05uySFMWn6sKXDm0uxqm9xbNvDws
+         fLf4guJxmEjyvXk3LogtJrnLRAzuLkoQ8WX2dI0hFB0n3KxKajZJ0DUEl2aofMG15C
+         VeEf26DEHz/OaMw8rAYA01soKQylUZLJm5K7PfytpMClgd0vwCw847s4V6NFRhVGIl
+         7B6/1e9RqlvoQ==
+Date:   Mon, 18 Oct 2021 12:03:42 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Paul Cercueil <paul@crapouillou.net>
 Cc:     Rob Herring <robh+dt@kernel.org>, list@opendingux.net,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH 2/5] dt-bindings: dma: ingenic: Support #dma-cells = <3>
-Message-ID: <YW0UFWWNuYNEC8y+@matsya>
+Subject: Re: [PATCH 5/5] dmaengine: jz4780: Support bidirectional I/O on one
+ channel
+Message-ID: <YW0VRnFGcYFY0+XZ@matsya>
 References: <20211011143652.51976-1-paul@crapouillou.net>
- <20211011143652.51976-3-paul@crapouillou.net>
+ <20211011143652.51976-6-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211011143652.51976-3-paul@crapouillou.net>
+In-Reply-To: <20211011143652.51976-6-paul@crapouillou.net>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 On 11-10-21, 16:36, Paul Cercueil wrote:
-> Extend the binding to support specifying a different request type for
-> each direction.
+> For some devices with only half-duplex capabilities, it doesn't make
+> much sense to use one DMA channel per direction, as both channels will
+> never be active at the same time.
+> 
+> Add support for bidirectional I/O on DMA channels. The client drivers
+> can then request a "tx-rx" DMA channel which will be used for both
+> directions.
 > 
 > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  Documentation/devicetree/bindings/dma/ingenic,dma.yaml | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+>  drivers/dma/dma-jz4780.c | 48 ++++++++++++++++++++++++++--------------
+>  1 file changed, 32 insertions(+), 16 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/ingenic,dma.yaml b/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
-> index f45fd5235879..51b41e4795a2 100644
-> --- a/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
-> @@ -44,13 +44,17 @@ properties:
->      maxItems: 1
->  
->    "#dma-cells":
-> -    const: 2
-> +    enum: [2, 3]
->      description: >
->        DMA clients must use the format described in dma.txt, giving a phandle
-> -      to the DMA controller plus the following 2 integer cells:
-> +      to the DMA controller plus the following integer cells:
->  
->        - Request type: The DMA request type for transfers to/from the
->          device on the allocated channel, as defined in the SoC documentation.
-> +        If "#dma-cells" is 2, the request type is a single cell. If
-> +        "#dma-cells" is 3, the request type has two cells; the first one
-> +        corresponds to the host to device direction, the second one corresponds
-> +        to the device to host direction.
+> diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+> index 4d62e24ebff9..ee1d50792c32 100644
+> --- a/drivers/dma/dma-jz4780.c
+> +++ b/drivers/dma/dma-jz4780.c
+> @@ -122,6 +122,7 @@ struct jz4780_dma_desc {
+>  	dma_addr_t desc_phys;
+>  	unsigned int count;
+>  	enum dma_transaction_type type;
+> +	uint32_t transfer_type;
 
-Why would you need the direction here, that should be a runtime
-parameter and not a DT one?
+why not u32?
 
+>  	uint32_t status;
+>  };
 >  
->        - Channel: If set to 0xffffffff, any available channel will be allocated
->          for the client. Otherwise, the exact channel specified will be used.
+> @@ -130,7 +131,7 @@ struct jz4780_dma_chan {
+>  	unsigned int id;
+>  	struct dma_pool *desc_pool;
+>  
+> -	uint32_t transfer_type;
+> +	uint32_t transfer_type_tx, transfer_type_rx;
+>  	uint32_t transfer_shift;
+>  	struct dma_slave_config	config;
+>  
+> @@ -157,7 +158,7 @@ struct jz4780_dma_dev {
+>  };
+>  
+>  struct jz4780_dma_filter_data {
+> -	uint32_t transfer_type;
+> +	uint32_t transfer_type_tx, transfer_type_rx;
+>  	int channel;
+>  };
+>  
+> @@ -226,9 +227,10 @@ static inline void jz4780_dma_chan_disable(struct jz4780_dma_dev *jzdma,
+>  		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKEC, BIT(chn));
+>  }
+>  
+> -static struct jz4780_dma_desc *jz4780_dma_desc_alloc(
+> -	struct jz4780_dma_chan *jzchan, unsigned int count,
+> -	enum dma_transaction_type type)
+> +static struct jz4780_dma_desc *
+> +jz4780_dma_desc_alloc(struct jz4780_dma_chan *jzchan, unsigned int count,
+> +		      enum dma_transaction_type type,
+> +		      enum dma_transfer_direction direction)
+>  {
+>  	struct jz4780_dma_desc *desc;
+>  
+> @@ -248,6 +250,12 @@ static struct jz4780_dma_desc *jz4780_dma_desc_alloc(
+>  
+>  	desc->count = count;
+>  	desc->type = type;
+> +
+> +	if (direction == DMA_DEV_TO_MEM)
+> +		desc->transfer_type = jzchan->transfer_type_rx;
+> +	else
+> +		desc->transfer_type = jzchan->transfer_type_tx;
+> +
+>  	return desc;
+>  }
+>  
+> @@ -361,7 +369,7 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_slave_sg(
+>  	unsigned int i;
+>  	int err;
+>  
+> -	desc = jz4780_dma_desc_alloc(jzchan, sg_len, DMA_SLAVE);
+> +	desc = jz4780_dma_desc_alloc(jzchan, sg_len, DMA_SLAVE, direction);
+>  	if (!desc)
+>  		return NULL;
+>  
+> @@ -410,7 +418,7 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_dma_cyclic(
+>  
+>  	periods = buf_len / period_len;
+>  
+> -	desc = jz4780_dma_desc_alloc(jzchan, periods, DMA_CYCLIC);
+> +	desc = jz4780_dma_desc_alloc(jzchan, periods, DMA_CYCLIC, direction);
+>  	if (!desc)
+>  		return NULL;
+>  
+> @@ -455,14 +463,14 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_dma_memcpy(
+>  	struct jz4780_dma_desc *desc;
+>  	uint32_t tsz;
+>  
+> -	desc = jz4780_dma_desc_alloc(jzchan, 1, DMA_MEMCPY);
+> +	desc = jz4780_dma_desc_alloc(jzchan, 1, DMA_MEMCPY, 0);
+>  	if (!desc)
+>  		return NULL;
+>  
+>  	tsz = jz4780_dma_transfer_size(jzchan, dest | src | len,
+>  				       &jzchan->transfer_shift);
+>  
+> -	jzchan->transfer_type = JZ_DMA_DRT_AUTO;
+> +	desc->transfer_type = JZ_DMA_DRT_AUTO;
+>  
+>  	desc->desc[0].dsa = src;
+>  	desc->desc[0].dta = dest;
+> @@ -528,7 +536,7 @@ static void jz4780_dma_begin(struct jz4780_dma_chan *jzchan)
+>  
+>  	/* Set transfer type. */
+>  	jz4780_dma_chn_writel(jzdma, jzchan->id, JZ_DMA_REG_DRT,
+> -			      jzchan->transfer_type);
+> +			      jzchan->desc->transfer_type);
+>  
+>  	/*
+>  	 * Set the transfer count. This is redundant for a descriptor-driven
+> @@ -788,7 +796,8 @@ static bool jz4780_dma_filter_fn(struct dma_chan *chan, void *param)
+>  		return false;
+>  	}
+>  
+> -	jzchan->transfer_type = data->transfer_type;
+> +	jzchan->transfer_type_tx = data->transfer_type_tx;
+> +	jzchan->transfer_type_rx = data->transfer_type_rx;
+>  
+>  	return true;
+>  }
+> @@ -800,11 +809,17 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
+>  	dma_cap_mask_t mask = jzdma->dma_device.cap_mask;
+>  	struct jz4780_dma_filter_data data;
+>  
+> -	if (dma_spec->args_count != 2)
+> +	if (dma_spec->args_count == 2) {
+> +		data.transfer_type_tx = dma_spec->args[0];
+> +		data.transfer_type_rx = dma_spec->args[0];
+> +		data.channel = dma_spec->args[1];
+> +	} else if (dma_spec->args_count == 3) {
+> +		data.transfer_type_tx = dma_spec->args[0];
+> +		data.transfer_type_rx = dma_spec->args[1];
+
+aha so you have a different values for tx and rx, that seems okay. Maybe
+word a better in binding and also add examples in binding for this
+
+> +		data.channel = dma_spec->args[2];
+> +	} else {
+>  		return NULL;
+> -
+> -	data.transfer_type = dma_spec->args[0];
+> -	data.channel = dma_spec->args[1];
+> +	}
+>  
+>  	if (data.channel > -1) {
+>  		if (data.channel >= jzdma->soc_data->nb_channels) {
+> @@ -822,7 +837,8 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
+>  			return NULL;
+>  		}
+>  
+> -		jzdma->chan[data.channel].transfer_type = data.transfer_type;
+> +		jzdma->chan[data.channel].transfer_type_tx = data.transfer_type_tx;
+> +		jzdma->chan[data.channel].transfer_type_rx = data.transfer_type_rx;
+>  
+>  		return dma_get_slave_channel(
+>  			&jzdma->chan[data.channel].vchan.chan);
 > -- 
 > 2.33.0
 

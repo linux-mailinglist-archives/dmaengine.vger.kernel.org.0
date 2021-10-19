@@ -2,149 +2,105 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94E32433716
-	for <lists+dmaengine@lfdr.de>; Tue, 19 Oct 2021 15:31:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B35A5433A9F
+	for <lists+dmaengine@lfdr.de>; Tue, 19 Oct 2021 17:35:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231616AbhJSNdk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 19 Oct 2021 09:33:40 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:11050 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231563AbhJSNde (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 19 Oct 2021 09:33:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1634650271;
-    s=strato-dkim-0002; d=gerhold.net;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=Q/NtJ7KiFCCIZLLJe6eyRG2jqj17800w/HejDZWo5fU=;
-    b=AZSL3FWYlJWnXLmLbVr3hbc/1HGF95QmiBNeB14RNYwupVBKZFUzA+Q2yBmAoES+No
-    E1RmkdV7PYGQwnFi2CO7uHAv8nY9U469hiC3FpMoQEGn2FFbH8/Pmu5Q7Z3T4yHdpWIt
-    LuEvNWBEOVedrcjMsk+Hib9jakIAnTDoodEuslmlsDN3kJNQiLnhUK4gXFYLwZxZIwQ4
-    yAoaNHtHQKuDHKIsUYIV7jjcRoN4W+REZo7IHJU82I0O+ldUKZfr4p+aKN+VYWBG2gaU
-    1J/nEi8klDQcCvO717VaAtIO+494qKzsVYtso1TMTzOZDHxhJmhdv8MZ+UG9fduzSyXY
-    KVGQ==
-Authentication-Results: strato.com;
-    dkim=none
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u267FZF9PwpcNKLVrKw5+aY="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-    by smtp.strato.de (RZmta 47.33.8 AUTH)
-    with ESMTPSA id 301038x9JDV9e1k
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-    Tue, 19 Oct 2021 15:31:09 +0200 (CEST)
-Date:   Tue, 19 Oct 2021 15:31:04 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Rob Herring <robh@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Sergey Ryazanov <ryazanov.s.a@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Aleksander Morgado <aleksander@aleksander.es>,
-        netdev <netdev@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        phone-devel@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-        <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy
-        Shevchenko <andy.shevchenko@gmail.com>," 
-        <~postmarketos/upstreaming@lists.sr.ht>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: [PATCH net-next v2 3/4] dt-bindings: net: Add schema for
- Qualcomm BAM-DMUX
-Message-ID: <YW7ImCwT/ERdnfni@gerhold.net>
-References: <20211011141733.3999-1-stephan@gerhold.net>
- <20211011141733.3999-4-stephan@gerhold.net>
- <YW3XgaiT2jBv4D+L@robh.at.kernel.org>
- <YW5t01Su5ycLm67c@gerhold.net>
- <CAL_JsqLWV56ehsT2HHpg_qCDxhWmTHgCQoKgZLot_Q8xCdF-OA@mail.gmail.com>
+        id S231479AbhJSPhu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 19 Oct 2021 11:37:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231888AbhJSPht (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 19 Oct 2021 11:37:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 84BEE61074;
+        Tue, 19 Oct 2021 15:35:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634657736;
+        bh=DxWRJWAj/zdrQswUAfCVlDVJpMFIF9IpXMFPLAXRYKM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GMsDOCQAJEt1Pl+XVrt0Iv8x1+PjbfYdPlx9J7nbNsAiudShRlGG9Dr3cDkSrF6bN
+         14GyBkn5FUfK98ABuA7gwqGb+nIWyFMebbtGStkFXt73MCDjAOx608vUXnFLIkAgHr
+         rWirUVzn9ynJxsdrp05ZZy3HGtcCavsgD4g4E02kDGG4PW6K6/FVOL26xJ74NV0UhR
+         69HvskM7S6jwMecRCS6K8SjQYKtw/Ck/uBW9+emraQTk5MuPfDZKjenF9WYhLg/GQy
+         xZNqZmdzfl2r8Ip4jjO01eRN9z9Xtpko7dQx+h0W9V4PBVbv5MHSQhT2zKfIZV7QCl
+         zl/O9vWN6eAgg==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Amelie Delaunay <amelie.delaunay@foss.st.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Zhang Qilong <zhangqilong3@huawei.com>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: stm32-dma: avoid 64-bit division in stm32_dma_get_max_width
+Date:   Tue, 19 Oct 2021 17:35:27 +0200
+Message-Id: <20211019153532.366429-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLWV56ehsT2HHpg_qCDxhWmTHgCQoKgZLot_Q8xCdF-OA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Oct 19, 2021 at 08:19:42AM -0500, Rob Herring wrote:
-> On Tue, Oct 19, 2021 at 2:03 AM Stephan Gerhold <stephan@gerhold.net> wrote:
-> >
-> > On Mon, Oct 18, 2021 at 03:22:25PM -0500, Rob Herring wrote:
-> > > On Mon, Oct 11, 2021 at 04:17:35PM +0200, Stephan Gerhold wrote:
-> > > > The BAM Data Multiplexer provides access to the network data channels of
-> > > > modems integrated into many older Qualcomm SoCs, e.g. Qualcomm MSM8916 or
-> > > > MSM8974. It is built using a simple protocol layer on top of a DMA engine
-> > > > (Qualcomm BAM) and bidirectional interrupts to coordinate power control.
-> > > >
-> > > > The device tree node combines the incoming interrupt with the outgoing
-> > > > interrupts (smem-states) as well as the two DMA channels, which allows
-> > > > the BAM-DMUX driver to request all necessary resources.
-> > > >
-> > > > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> > > > ---
-> > > > Changes since RFC: None.
-> > > > ---
-> > > >  .../bindings/net/qcom,bam-dmux.yaml           | 87 +++++++++++++++++++
-> > > >  1 file changed, 87 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/net/qcom,bam-dmux.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/net/qcom,bam-dmux.yaml b/Documentation/devicetree/bindings/net/qcom,bam-dmux.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..33e125e70cb4
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/net/qcom,bam-dmux.yaml
-> > > > @@ -0,0 +1,87 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/net/qcom,bam-dmux.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Qualcomm BAM Data Multiplexer
-> > > > +
-> > > > +maintainers:
-> > > > +  - Stephan Gerhold <stephan@gerhold.net>
-> > > > +
-> > > > +description: |
-> > > > +  The BAM Data Multiplexer provides access to the network data channels
-> > > > +  of modems integrated into many older Qualcomm SoCs, e.g. Qualcomm MSM8916
-> > > > +  or MSM8974. It is built using a simple protocol layer on top of a DMA engine
-> > > > +  (Qualcomm BAM DMA) and bidirectional interrupts to coordinate power control.
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    const: qcom,bam-dmux
-> > >
-> > > Is this block the same on every SoC? It needs to be SoC specific.
-> > >
-> >
-> > Hm, I think describing it as *SoC*-specific wouldn't be accurate:
-> > This node does not describe any hardware block, it's more a "firmware
-> > convention". The only hardware involved is the BAM DMA engine, which
-> > already has SoC/IP-specific compatibles in its own device tree node.
-> >
-> > This means that if anything there should be "firmware version"-specific
-> > compatibles, because one SoC might have different (typically signed)
-> > firmware versions that provide slightly different functionality.
-> > However, I have to admit that I'm not familiar enough with the different
-> > firmware versions to come up with a reasonable naming schema for the
-> > compatible. :/
-> >
-> > In general, I cannot think of any difference between different versions
-> > that would matter to a driver. The protocol is quite simple, and minor
-> > firmware differences can be better handled through the control channel
-> > that sets up the connection for the modem.
-> >
-> > Does that make sense?
-> 
-> Okay. Please add some of the above details to the binding.
-> 
+From: Arnd Bergmann <arnd@arndb.de>
 
-OK, I will try to clarify this a bit in v3.
+Using the % operator on a 64-bit variable is expensive and can
+cause a link failure:
 
-Thanks!
-Stephan
+arm-linux-gnueabi-ld: drivers/dma/stm32-dma.o: in function `stm32_dma_get_max_width':
+stm32-dma.c:(.text+0x170): undefined reference to `__aeabi_uldivmod'
+arm-linux-gnueabi-ld: drivers/dma/stm32-dma.o: in function `stm32_dma_set_xfer_param':
+stm32-dma.c:(.text+0x1cd4): undefined reference to `__aeabi_uldivmod'
+
+As we know that we just want to check the alignment in
+stm32_dma_get_max_width(), there is no need for a full division, and
+using a simple mask is a faster replacement.
+
+In stm32_dma_set_xfer_param(), it is possible to pass a non-power-of-two
+length, so this does not work. I assume this would in fact be a mistake,
+and the hardware does not work correctly with a burst of e.g. 5 bytes
+on a five-byte aligned address. Change this to only allow burst
+transfers if the address is a multiple of the length, and that length
+is a power-of-two number.
+
+Fixes: b20fd5fa310c ("dmaengine: stm32-dma: fix stm32_dma_get_max_width")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/dma/stm32-dma.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+index 2283c500f4ce..102278f7d13e 100644
+--- a/drivers/dma/stm32-dma.c
++++ b/drivers/dma/stm32-dma.c
+@@ -280,7 +280,7 @@ static enum dma_slave_buswidth stm32_dma_get_max_width(u32 buf_len,
+ 	       max_width > DMA_SLAVE_BUSWIDTH_1_BYTE)
+ 		max_width = max_width >> 1;
+ 
+-	if (buf_addr % max_width)
++	if (buf_addr & (max_width - 1))
+ 		max_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
+ 
+ 	return max_width;
+@@ -757,7 +757,7 @@ static int stm32_dma_set_xfer_param(struct stm32_dma_chan *chan,
+ 		 * Set memory burst size - burst not possible if address is not aligned on
+ 		 * the address boundary equal to the size of the transfer
+ 		 */
+-		if (buf_addr % buf_len)
++		if (!is_power_of_2(buf_len) || (buf_addr & (buf_len -1)))
+ 			src_maxburst = 1;
+ 		else
+ 			src_maxburst = STM32_DMA_MAX_BURST;
+@@ -813,7 +813,7 @@ static int stm32_dma_set_xfer_param(struct stm32_dma_chan *chan,
+ 		 * Set memory burst size - burst not possible if address is not aligned on
+ 		 * the address boundary equal to the size of the transfer
+ 		 */
+-		if (buf_addr % buf_len)
++		if (!is_power_of_2(buf_len) || (buf_addr & (buf_len -1)))
+ 			dst_maxburst = 1;
+ 		else
+ 			dst_maxburst = STM32_DMA_MAX_BURST;
+-- 
+2.29.2
+

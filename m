@@ -2,160 +2,151 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA93B434943
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Oct 2021 12:45:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 889E4434A3A
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Oct 2021 13:39:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230268AbhJTKrm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 Oct 2021 06:47:42 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:51148 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S230242AbhJTKrk (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Oct 2021 06:47:40 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19KAOVfX018155;
-        Wed, 20 Oct 2021 12:45:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=selector1;
- bh=MlxYuucZ3hZA3qvuKEJnxNhi1CYH/kqnrHAjiFr79Po=;
- b=Hs14Rn5RB7KO632z6fryOsvT+wyNnBwekph0ayCGJavFI4brgsuQ/2llb3Af1xqPod9m
- w9q74e18eoN60W8CH2UsOps2rZ3uyl8Q+sIwgJuM/vbDSq1dSyaO6LQ7kF1GmbYgQLe2
- 4DrBYgmIpYEXgikLK81erL5nuwDWObAWDLrf46lrVd+72X9rBEgGqWCMQRvbE5IhZQE7
- XEZ4Yqn4upavnnEK8kggCO443cnP5UZtu9E0ebURc9oXqiUMwICpQHLLlu4MZ7lvul4d
- 2M7YXGceErpGogWh3jKSq9Mbo/lyVdO4cqShCzkDvlFMa+h9fNuPYm7Tsl0vuLGI89xH FQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3btdkya26d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Oct 2021 12:45:07 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7833710002A;
-        Wed, 20 Oct 2021 12:45:05 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag2node2.st.com [10.75.127.5])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6A46A21A230;
-        Wed, 20 Oct 2021 12:45:05 +0200 (CEST)
-Received: from lmecxl0995.lme.st.com (10.75.127.50) by SFHDAG2NODE2.st.com
- (10.75.127.5) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Wed, 20 Oct
- 2021 12:45:04 +0200
-Subject: Re: [PATCH] dmaengine: stm32-dma: avoid 64-bit division in
- stm32_dma_get_max_width
-To:     Arnd Bergmann <arnd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        Zhang Qilong <zhangqilong3@huawei.com>,
-        <dmaengine@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20211019153532.366429-1-arnd@kernel.org>
-From:   Amelie DELAUNAY <amelie.delaunay@foss.st.com>
-Message-ID: <da5ceaac-a123-06a9-c5a9-d0b16cb4d6e5@foss.st.com>
-Date:   Wed, 20 Oct 2021 12:45:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <20211019153532.366429-1-arnd@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG2NODE2.st.com
- (10.75.127.5)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-10-20_04,2021-10-20_01,2020-04-07_01
+        id S230134AbhJTLlb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 20 Oct 2021 07:41:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56848 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229941AbhJTLla (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 20 Oct 2021 07:41:30 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BCC3611B0;
+        Wed, 20 Oct 2021 11:39:15 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1md9w8-000Q93-UK; Wed, 20 Oct 2021 12:39:13 +0100
+Date:   Wed, 20 Oct 2021 12:39:11 +0100
+Message-ID: <878ryoc4dc.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        patrice.chotard@foss.st.com
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        maxime coquelin <mcoquelin.stm32@gmail.com>,
+        alexandre torgue <alexandre.torgue@foss.st.com>,
+        michael turquette <mturquette@baylibre.com>,
+        stephen boyd <sboyd@kernel.org>,
+        herbert xu <herbert@gondor.apana.org.au>,
+        "david s . miller" <davem@davemloft.net>,
+        david airlie <airlied@linux.ie>,
+        daniel vetter <daniel@ffwll.ch>,
+        thierry reding <thierry.reding@gmail.com>,
+        sam ravnborg <sam@ravnborg.org>,
+        yannick fertre <yannick.fertre@foss.st.com>,
+        philippe cornu <philippe.cornu@foss.st.com>,
+        benjamin gaignard <benjamin.gaignard@linaro.org>,
+        vinod koul <vkoul@kernel.org>,
+        ohad ben-cohen <ohad@wizery.com>,
+        bjorn andersson <bjorn.andersson@linaro.org>,
+        baolin wang <baolin.wang7@gmail.com>,
+        jonathan cameron <jic23@kernel.org>,
+        lars-peter clausen <lars@metafoo.de>,
+        olivier moysan <olivier.moysan@foss.st.com>,
+        arnaud pouliquen <arnaud.pouliquen@foss.st.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hugues Fruchet <hugues.fruchet@foss.st.com>,
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        dillon min <dillon.minfei@gmail.com>,
+        Marek Vasut <marex@denx.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        Christophe Roullier <christophe.roullier@foss.st.com>,
+        Gabriel Fernandez <gabriel.fernandez@foss.st.com>,
+        Lionel Debieve <lionel.debieve@foss.st.com>,
+        Amelie Delaunay <amelie.delaunay@foss.st.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
+        Ludovic Barre <ludovic.barre@foss.st.com>,
+        Christophe Kerello <christophe.kerello@foss.st.com>,
+        pascal Paillet <p.paillet@foss.st.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Le Ray <erwan.leray@foss.st.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-crypto@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-media@vger.kernel.org,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+        linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: dt-bindings: treewide: Update @st.com email address to @foss.st.com
+In-Reply-To: <22fb6f19-21eb-dcb5-fa31-bb243d4a7eaf@canonical.com>
+References: <20211020065000.21312-1-patrice.chotard@foss.st.com>
+        <22fb6f19-21eb-dcb5-fa31-bb243d4a7eaf@canonical.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: krzysztof.kozlowski@canonical.com, patrice.chotard@foss.st.com, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, mturquette@baylibre.com, sboyd@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, airlied@linux.ie, daniel@ffwll.ch, thierry.reding@gmail.com, sam@ravnborg.org, yannick.fertre@foss.st.com, philippe.cornu@foss.st.com, benjamin.gaignard@linaro.org, vkoul@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org, baolin.wang7@gmail.com, jic23@kernel.org, lars@metafoo.de, olivier.moysan@foss.st.com, arnaud.pouliquen@foss.st.com, tglx@linutronix.de, jassisinghbrar@gmail.com, mchehab@kernel.org, hugues.fruchet@foss.st.com, fabrice.gasnier@foss.st.com, lee.jones@linaro.org, miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com, kuba@kernel.org, srinivas.kandagatla@linaro.org, kishon@ti.com, linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mathieu.poirier@linaro.org, mpm@selenic.com, a.zummo@towertech.i
+ t, alexandre.belloni@bootlin.com, gregkh@linuxfoundation.org, rafael@kernel.org, daniel.lezcano@linaro.org, amitk@kernel.org, rui.zhang@intel.com, wim@linux-watchdog.org, linux@roeck-us.net, geert+renesas@glider.be, viresh.kumar@linaro.org, a.fatoum@pengutronix.de, jagan@amarulasolutions.com, dillon.minfei@gmail.com, marex@denx.de, laurent.pinchart@ideasonboard.com, sre@kernel.org, dmitry.torokhov@gmail.com, paul@crapouillou.net, fabien.dessenne@foss.st.com, christophe.roullier@foss.st.com, gabriel.fernandez@foss.st.com, lionel.debieve@foss.st.com, amelie.delaunay@foss.st.com, pierre-yves.mordret@foss.st.com, ludovic.barre@foss.st.com, christophe.kerello@foss.st.com, p.paillet@foss.st.com, peppe.cavallaro@st.com, joabreu@synopsys.com, erwan.leray@foss.st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org, dri-devel@lists.freedesktop.org,
+  dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, alsa-devel@alsa-project.org, linux-media@vger.kernel.org, linux-mtd@lists.infradead.org, netdev@vger.kernel.org, linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org, linux-spi@vger.kernel.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Arnd,
-
-Thanks for your patch.
-
-On 10/19/21 5:35 PM, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Wed, 20 Oct 2021 08:45:02 +0100,
+Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com> wrote:
 > 
-> Using the % operator on a 64-bit variable is expensive and can
-> cause a link failure:
+> On 20/10/2021 08:50, patrice.chotard@foss.st.com wrote:
+> > From: Patrice Chotard <patrice.chotard@foss.st.com>
+> > 
+> > Not all @st.com email address are concerned, only people who have
+> > a specific @foss.st.com email will see their entry updated.
+> > For some people, who left the company, remove their email.
+> > 
 > 
-> arm-linux-gnueabi-ld: drivers/dma/stm32-dma.o: in function `stm32_dma_get_max_width':
-> stm32-dma.c:(.text+0x170): undefined reference to `__aeabi_uldivmod'
-> arm-linux-gnueabi-ld: drivers/dma/stm32-dma.o: in function `stm32_dma_set_xfer_param':
-> stm32-dma.c:(.text+0x1cd4): undefined reference to `__aeabi_uldivmod'
+> Please split simple address change from maintainer updates (removal,
+> addition).
 > 
-> As we know that we just want to check the alignment in
-> stm32_dma_get_max_width(), there is no need for a full division, and
-> using a simple mask is a faster replacement.
-> 
-> In stm32_dma_set_xfer_param(), it is possible to pass a non-power-of-two
-> length, so this does not work. I assume this would in fact be a mistake,
-> and the hardware does not work correctly with a burst of e.g. 5 bytes
-> on a five-byte aligned address. Change this to only allow burst
-> transfers if the address is a multiple of the length, and that length
-> is a power-of-two number.
-> 
-> Fixes: b20fd5fa310c ("dmaengine: stm32-dma: fix stm32_dma_get_max_width")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->   drivers/dma/stm32-dma.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-> index 2283c500f4ce..102278f7d13e 100644
-> --- a/drivers/dma/stm32-dma.c
-> +++ b/drivers/dma/stm32-dma.c
-> @@ -280,7 +280,7 @@ static enum dma_slave_buswidth stm32_dma_get_max_width(u32 buf_len,
->   	       max_width > DMA_SLAVE_BUSWIDTH_1_BYTE)
->   		max_width = max_width >> 1;
->   
-> -	if (buf_addr % max_width)
-> +	if (buf_addr & (max_width - 1))
->   		max_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
->   
->   	return max_width;
-> @@ -757,7 +757,7 @@ static int stm32_dma_set_xfer_param(struct stm32_dma_chan *chan,
->   		 * Set memory burst size - burst not possible if address is not aligned on
->   		 * the address boundary equal to the size of the transfer
->   		 */
-> -		if (buf_addr % buf_len)
-> +		if (!is_power_of_2(buf_len) || (buf_addr & (buf_len -1)))
+> Also would be nice to see here explained *why* are you doing this.
 
-No need to check !is_power_of_2(buf_len) here.
-Just after computing src_maxburst,
-	src_best_burst = stm32_dma_get_best_burst(buf_len,
-						  src_maxburst,
-						  fifoth,
-						  src_addr_width);
-The configured burst (src_best_best) already take buf_len into account.
+And why this can't be done with a single update to .mailmap, like
+anyone else does.
 
-So I would remove !is_power_of_2(buf_len) from the if here and fix the 
-missing space:
+	M.
 
-CHECK: spaces preferred around that '-' (ctx:WxV)
-#68: FILE: drivers/dma/stm32-dma.c:760:
-+		if (!is_power_of_2(buf_len) || (buf_addr & (buf_len -1)))
-  		                                                    ^
-
->   			src_maxburst = 1;
->   		else
->   			src_maxburst = STM32_DMA_MAX_BURST;
-> @@ -813,7 +813,7 @@ static int stm32_dma_set_xfer_param(struct stm32_dma_chan *chan,
->   		 * Set memory burst size - burst not possible if address is not aligned on
->   		 * the address boundary equal to the size of the transfer
->   		 */
-> -		if (buf_addr % buf_len)
-> +		if (!is_power_of_2(buf_len) || (buf_addr & (buf_len -1)))
-
-Ditto.
-
->   			dst_maxburst = 1;
->   		else
->   			dst_maxburst = STM32_DMA_MAX_BURST;
-> 
-
-With these fixes, you can add my
-Reviewed-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Tested-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-
-Regards,
-Amelie
+-- 
+Without deviation from the norm, progress is not possible.

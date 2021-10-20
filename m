@@ -2,151 +2,136 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 889E4434A3A
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Oct 2021 13:39:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22318434DEB
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Oct 2021 16:36:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230134AbhJTLlb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 Oct 2021 07:41:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229941AbhJTLla (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 20 Oct 2021 07:41:30 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BCC3611B0;
-        Wed, 20 Oct 2021 11:39:15 +0000 (UTC)
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1md9w8-000Q93-UK; Wed, 20 Oct 2021 12:39:13 +0100
-Date:   Wed, 20 Oct 2021 12:39:11 +0100
-Message-ID: <878ryoc4dc.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        patrice.chotard@foss.st.com
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        maxime coquelin <mcoquelin.stm32@gmail.com>,
-        alexandre torgue <alexandre.torgue@foss.st.com>,
-        michael turquette <mturquette@baylibre.com>,
-        stephen boyd <sboyd@kernel.org>,
-        herbert xu <herbert@gondor.apana.org.au>,
-        "david s . miller" <davem@davemloft.net>,
-        david airlie <airlied@linux.ie>,
-        daniel vetter <daniel@ffwll.ch>,
-        thierry reding <thierry.reding@gmail.com>,
-        sam ravnborg <sam@ravnborg.org>,
-        yannick fertre <yannick.fertre@foss.st.com>,
-        philippe cornu <philippe.cornu@foss.st.com>,
-        benjamin gaignard <benjamin.gaignard@linaro.org>,
-        vinod koul <vkoul@kernel.org>,
-        ohad ben-cohen <ohad@wizery.com>,
-        bjorn andersson <bjorn.andersson@linaro.org>,
-        baolin wang <baolin.wang7@gmail.com>,
-        jonathan cameron <jic23@kernel.org>,
-        lars-peter clausen <lars@metafoo.de>,
-        olivier moysan <olivier.moysan@foss.st.com>,
-        arnaud pouliquen <arnaud.pouliquen@foss.st.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hugues Fruchet <hugues.fruchet@foss.st.com>,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
+        id S229570AbhJTOiS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 20 Oct 2021 10:38:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230354AbhJTOiQ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Oct 2021 10:38:16 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3775DC06161C;
+        Wed, 20 Oct 2021 07:36:02 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id q19so3141932pfl.4;
+        Wed, 20 Oct 2021 07:36:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cfz1Zt+WpCxZx3WpWtEfu9axg9w9nrknlqeCT2LYqKg=;
+        b=TiEQgmCq8QCJKAkaZEhFfCgFqbbnx2CBXJ0ol7ukt12WSDD+37xEgSLYQE8k1s0slp
+         nG7M6JvQ0645JM3IExH47ak1cZuV2nrtbdZEJMRKkXxKd7RSoqkq7uBPIy4dvDqQ00Rp
+         BmOplSFhRgJwcBuBcoehFI/mpZuauYU8S1OIAOqo3ETMiOEjR+KVDJw22/qwyX/l0XjZ
+         /5xFjhDYYf0CTLklJE/qFvTMyxAwgjX2O3DXZNgQqdBzZLtf9Gje995xTp0ggug3LyQo
+         1hTpU0UgpRCWJVPmV0pWuUCjSO8Yo5Gf2/qAMEgZ+WfIijP5kOM8bdBRv0vgW64dbRH3
+         ZNPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cfz1Zt+WpCxZx3WpWtEfu9axg9w9nrknlqeCT2LYqKg=;
+        b=XtuGbPAkSas4z6mz5XmI7bBfs/aH0uUjAJhTMm+b1UuhSCVRpWcbVZz//V++astkGe
+         hFgWE9NHx1BK7ljOG8mRKohghDqAf4ypZmOjRBWBB0+OKN5H6FjQc0YDcoHy2o8v2pot
+         IG/nrMbiPFvUr1fjg4csBoHKeCNLOgZEEqVU0b1tLRDbT2m36f3lkvOIZ6xky54eV1Cp
+         ZZbmfpnQOTFhRxvSym4csHOfXBGWpJecdpelW7IumnxCR+x8A9Bhn25sy3v8h/+GEeiL
+         8AJ8kMwGwEvHeKugjrAym7W7EkXF4XNjw1Z/EMAPWMJiP3PxrhWCx/19n5gZpj8QcYyz
+         OJJQ==
+X-Gm-Message-State: AOAM531t96nw5U0OUbHw/ztvAbU3OKrtuh4A2hvXZQtUGoo7622HDs2S
+        KHHomadCjlH/FLUJ+uojAkI=
+X-Google-Smtp-Source: ABdhPJxizZIfK/O3NaQ3AaE+iZnmb6nb6E6g+tM9VSovTFxUPDq6wUHumX7CfgB+fD215PhCx2d74Q==
+X-Received: by 2002:a63:7e5c:: with SMTP id o28mr269142pgn.201.1634740561663;
+        Wed, 20 Oct 2021 07:36:01 -0700 (PDT)
+Received: from localhost.localdomain ([94.177.118.132])
+        by smtp.gmail.com with ESMTPSA id j6sm2508771pgf.60.2021.10.20.07.35.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Oct 2021 07:36:00 -0700 (PDT)
+From:   Dongliang Mu <mudongliangabcd@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        dillon min <dillon.minfei@gmail.com>,
-        Marek Vasut <marex@denx.de>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>,
-        Christophe Roullier <christophe.roullier@foss.st.com>,
-        Gabriel Fernandez <gabriel.fernandez@foss.st.com>,
-        Lionel Debieve <lionel.debieve@foss.st.com>,
-        Amelie Delaunay <amelie.delaunay@foss.st.com>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
-        Ludovic Barre <ludovic.barre@foss.st.com>,
-        Christophe Kerello <christophe.kerello@foss.st.com>,
-        pascal Paillet <p.paillet@foss.st.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Le Ray <erwan.leray@foss.st.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-crypto@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-media@vger.kernel.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: dt-bindings: treewide: Update @st.com email address to @foss.st.com
-In-Reply-To: <22fb6f19-21eb-dcb5-fa31-bb243d4a7eaf@canonical.com>
-References: <20211020065000.21312-1-patrice.chotard@foss.st.com>
-        <22fb6f19-21eb-dcb5-fa31-bb243d4a7eaf@canonical.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: krzysztof.kozlowski@canonical.com, patrice.chotard@foss.st.com, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, mturquette@baylibre.com, sboyd@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net, airlied@linux.ie, daniel@ffwll.ch, thierry.reding@gmail.com, sam@ravnborg.org, yannick.fertre@foss.st.com, philippe.cornu@foss.st.com, benjamin.gaignard@linaro.org, vkoul@kernel.org, ohad@wizery.com, bjorn.andersson@linaro.org, baolin.wang7@gmail.com, jic23@kernel.org, lars@metafoo.de, olivier.moysan@foss.st.com, arnaud.pouliquen@foss.st.com, tglx@linutronix.de, jassisinghbrar@gmail.com, mchehab@kernel.org, hugues.fruchet@foss.st.com, fabrice.gasnier@foss.st.com, lee.jones@linaro.org, miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com, kuba@kernel.org, srinivas.kandagatla@linaro.org, kishon@ti.com, linus.walleij@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, mathieu.poirier@linaro.org, mpm@selenic.com, a.zummo@towertech.i
- t, alexandre.belloni@bootlin.com, gregkh@linuxfoundation.org, rafael@kernel.org, daniel.lezcano@linaro.org, amitk@kernel.org, rui.zhang@intel.com, wim@linux-watchdog.org, linux@roeck-us.net, geert+renesas@glider.be, viresh.kumar@linaro.org, a.fatoum@pengutronix.de, jagan@amarulasolutions.com, dillon.minfei@gmail.com, marex@denx.de, laurent.pinchart@ideasonboard.com, sre@kernel.org, dmitry.torokhov@gmail.com, paul@crapouillou.net, fabien.dessenne@foss.st.com, christophe.roullier@foss.st.com, gabriel.fernandez@foss.st.com, lionel.debieve@foss.st.com, amelie.delaunay@foss.st.com, pierre-yves.mordret@foss.st.com, ludovic.barre@foss.st.com, christophe.kerello@foss.st.com, p.paillet@foss.st.com, peppe.cavallaro@st.com, joabreu@synopsys.com, erwan.leray@foss.st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org, dri-devel@lists.freedesktop.org,
-  dmaengine@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, alsa-devel@alsa-project.org, linux-media@vger.kernel.org, linux-mtd@lists.infradead.org, netdev@vger.kernel.org, linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org, linux-spi@vger.kernel.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Zou Wei <zou_wei@huawei.com>,
+        Dongliang Mu <mudongliangabcd@gmail.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: rcar-dmac: refactor the error handling code of rcar_dmac_probe
+Date:   Wed, 20 Oct 2021 22:35:33 +0800
+Message-Id: <20211020143546.3436205-1-mudongliangabcd@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, 20 Oct 2021 08:45:02 +0100,
-Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com> wrote:
-> 
-> On 20/10/2021 08:50, patrice.chotard@foss.st.com wrote:
-> > From: Patrice Chotard <patrice.chotard@foss.st.com>
-> > 
-> > Not all @st.com email address are concerned, only people who have
-> > a specific @foss.st.com email will see their entry updated.
-> > For some people, who left the company, remove their email.
-> > 
-> 
-> Please split simple address change from maintainer updates (removal,
-> addition).
-> 
-> Also would be nice to see here explained *why* are you doing this.
+In rcar_dmac_probe, if pm_runtime_resume_and_get fails, it forgets to
+disable runtime PM. And of_dma_controller_free should only be invoked
+after the success of of_dma_controller_register.
 
-And why this can't be done with a single update to .mailmap, like
-anyone else does.
+Fix this by refactoring the error handling code.
 
-	M.
+Signed-off-by: Dongliang Mu <mudongliangabcd@gmail.com>
+---
+ drivers/dma/sh/rcar-dmac.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
+index 6885b3dcd7a9..5c7716fd6bc5 100644
+--- a/drivers/dma/sh/rcar-dmac.c
++++ b/drivers/dma/sh/rcar-dmac.c
+@@ -1916,7 +1916,7 @@ static int rcar_dmac_probe(struct platform_device *pdev)
+ 	ret = pm_runtime_resume_and_get(&pdev->dev);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "runtime PM get sync failed (%d)\n", ret);
+-		return ret;
++		goto err_pm_disable;
+ 	}
+ 
+ 	ret = rcar_dmac_init(dmac);
+@@ -1924,7 +1924,7 @@ static int rcar_dmac_probe(struct platform_device *pdev)
+ 
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to reset device\n");
+-		goto error;
++		goto err_pm_disable;
+ 	}
+ 
+ 	/* Initialize engine */
+@@ -1958,14 +1958,14 @@ static int rcar_dmac_probe(struct platform_device *pdev)
+ 	for_each_rcar_dmac_chan(i, dmac, chan) {
+ 		ret = rcar_dmac_chan_probe(dmac, chan);
+ 		if (ret < 0)
+-			goto error;
++			goto err_pm_disable;
+ 	}
+ 
+ 	/* Register the DMAC as a DMA provider for DT. */
+ 	ret = of_dma_controller_register(pdev->dev.of_node, rcar_dmac_of_xlate,
+ 					 NULL);
+ 	if (ret < 0)
+-		goto error;
++		goto err_pm_disable;
+ 
+ 	/*
+ 	 * Register the DMA engine device.
+@@ -1974,12 +1974,13 @@ static int rcar_dmac_probe(struct platform_device *pdev)
+ 	 */
+ 	ret = dma_async_device_register(engine);
+ 	if (ret < 0)
+-		goto error;
++		goto err_dma_free;
+ 
+ 	return 0;
+ 
+-error:
++err_dma_free:
+ 	of_dma_controller_free(pdev->dev.of_node);
++err_pm_disable:
+ 	pm_runtime_disable(&pdev->dev);
+ 	return ret;
+ }
 -- 
-Without deviation from the norm, progress is not possible.
+2.25.1
+

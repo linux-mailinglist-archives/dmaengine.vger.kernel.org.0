@@ -2,215 +2,125 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68C1A436FD7
-	for <lists+dmaengine@lfdr.de>; Fri, 22 Oct 2021 04:16:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAECD4371D6
+	for <lists+dmaengine@lfdr.de>; Fri, 22 Oct 2021 08:36:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232370AbhJVCP1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 21 Oct 2021 22:15:27 -0400
-Received: from thorn.bewilderbeest.net ([71.19.156.171]:53843 "EHLO
-        thorn.bewilderbeest.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232306AbhJVCP0 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 Oct 2021 22:15:26 -0400
-X-Greylist: delayed 740 seconds by postgrey-1.27 at vger.kernel.org; Thu, 21 Oct 2021 22:15:26 EDT
-Received: from hatter.bewilderbeest.net (71-212-29-146.tukw.qwest.net [71.212.29.146])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: zev)
-        by thorn.bewilderbeest.net (Postfix) with ESMTPSA id AC68DB49;
-        Thu, 21 Oct 2021 19:00:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bewilderbeest.net;
-        s=thorn; t=1634868048;
-        bh=7bg47D2PUr63KTjRLOr3QPGPVQLLJR5F+XwJqWsUVxg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d32Nc7aVCto4w6Kfipr6ZiL8YdmnB5OWrXB2lhs04vNQPWK+6EyeHSmMros6UlQlu
-         3k3pSDbEuMoaMFI/V5OYe4FmeEtp3HfKObSMowHvvQjJ69rKZdSeBuAH9jlxfoxGYg
-         mnUgrPoj2bSp1jM/i2Ypqq2xmph608ytcAVaee8w=
-From:   Zev Weiss <zev@bewilderbeest.net>
-To:     Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     openbmc@lists.ozlabs.org, Jeremy Kerr <jk@codeconstruct.com.au>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Zev Weiss <zev@bewilderbeest.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        Jianxiong Gao <jxgao@google.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        dmaengine@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH 4/5] driver core: inhibit automatic driver binding on reserved devices
-Date:   Thu, 21 Oct 2021 19:00:31 -0700
-Message-Id: <20211022020032.26980-5-zev@bewilderbeest.net>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20211022020032.26980-1-zev@bewilderbeest.net>
-References: <20211022020032.26980-1-zev@bewilderbeest.net>
+        id S229609AbhJVGib (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 22 Oct 2021 02:38:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229545AbhJVGib (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 22 Oct 2021 02:38:31 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21AC5C061764;
+        Thu, 21 Oct 2021 23:36:14 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 512632BA;
+        Fri, 22 Oct 2021 08:36:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1634884571;
+        bh=U0FboxTA05+7tjiLG4A0dtnQ8ZEIufZXGq7gnRwqHfQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ItsoRW+YZGu9L4r6FrQktDN4gkFX/Nlyd/U8K/sQNqUdl3XeKmREGHLA4iFDPDS8x
+         sA0JkVV2/zkKulOopLxLzeTszBdYcfmlwxAncG0ew6Ppd12imPm+j4S47oC7ir8/5S
+         YCs8SQJO7QLyy7SfNz9kIsnoNv+vIDlx6Q/9KfVI=
+Date:   Fri, 22 Oct 2021 09:35:52 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Dongliang Mu <mudongliangabcd@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Zou Wei <zou_wei@huawei.com>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: rcar-dmac: refactor the error handling code
+ of rcar_dmac_probe
+Message-ID: <YXJbyF3cY7cPpYsi@pendragon.ideasonboard.com>
+References: <20211020143546.3436205-1-mudongliangabcd@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20211020143546.3436205-1-mudongliangabcd@gmail.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Devices whose fwnodes are marked as reserved are instantiated, but
-will not have a driver bound to them unless userspace explicitly
-requests it by writing to a 'bind' sysfs file.  This is to enable
-devices that may require special (userspace-mediated) preparation
-before a driver can safely probe them.
+Hi Dongliang,
 
-Signed-off-by: Zev Weiss <zev@bewilderbeest.net>
----
- drivers/base/bus.c            |  2 +-
- drivers/base/dd.c             | 13 ++++++++-----
- drivers/dma/idxd/compat.c     |  3 +--
- drivers/vfio/mdev/mdev_core.c |  2 +-
- include/linux/device.h        | 14 +++++++++++++-
- 5 files changed, 24 insertions(+), 10 deletions(-)
+Thank you for the patch.
 
-diff --git a/drivers/base/bus.c b/drivers/base/bus.c
-index bdc98c5713d5..8a30f9a02de0 100644
---- a/drivers/base/bus.c
-+++ b/drivers/base/bus.c
-@@ -211,7 +211,7 @@ static ssize_t bind_store(struct device_driver *drv, const char *buf,
- 
- 	dev = bus_find_device_by_name(bus, NULL, buf);
- 	if (dev && driver_match_device(drv, dev)) {
--		err = device_driver_attach(drv, dev);
-+		err = device_driver_attach(drv, dev, DRV_BIND_EXPLICIT);
- 		if (!err) {
- 			/* success */
- 			err = count;
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 68ea1f949daa..ee64740a63d9 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -22,6 +22,7 @@
- #include <linux/dma-map-ops.h>
- #include <linux/init.h>
- #include <linux/module.h>
-+#include <linux/property.h>
- #include <linux/kthread.h>
- #include <linux/wait.h>
- #include <linux/async.h>
-@@ -727,13 +728,14 @@ void wait_for_device_probe(void)
- }
- EXPORT_SYMBOL_GPL(wait_for_device_probe);
- 
--static int __driver_probe_device(struct device_driver *drv, struct device *dev)
-+static int __driver_probe_device(struct device_driver *drv, struct device *dev, u32 flags)
- {
- 	int ret = 0;
- 
- 	if (dev->p->dead || !device_is_registered(dev))
- 		return -ENODEV;
--	if (dev->driver)
-+	if (dev->driver ||
-+	    (fwnode_device_is_reserved(dev->fwnode) && !(flags & DRV_BIND_EXPLICIT)))
- 		return -EBUSY;
- 
- 	dev->can_match = true;
-@@ -778,7 +780,7 @@ static int driver_probe_device(struct device_driver *drv, struct device *dev)
- 	int ret;
- 
- 	atomic_inc(&probe_count);
--	ret = __driver_probe_device(drv, dev);
-+	ret = __driver_probe_device(drv, dev, DRV_BIND_DEFAULT);
- 	if (ret == -EPROBE_DEFER || ret == EPROBE_DEFER) {
- 		driver_deferred_probe_add(dev);
- 
-@@ -1052,16 +1054,17 @@ static void __device_driver_unlock(struct device *dev, struct device *parent)
-  * device_driver_attach - attach a specific driver to a specific device
-  * @drv: Driver to attach
-  * @dev: Device to attach it to
-+ * @flags: Bitmask of DRV_BIND_* flags
-  *
-  * Manually attach driver to a device. Will acquire both @dev lock and
-  * @dev->parent lock if needed. Returns 0 on success, -ERR on failure.
-  */
--int device_driver_attach(struct device_driver *drv, struct device *dev)
-+int device_driver_attach(struct device_driver *drv, struct device *dev, u32 flags)
- {
- 	int ret;
- 
- 	__device_driver_lock(dev, dev->parent);
--	ret = __driver_probe_device(drv, dev);
-+	ret = __driver_probe_device(drv, dev, flags);
- 	__device_driver_unlock(dev, dev->parent);
- 
- 	/* also return probe errors as normal negative errnos */
-diff --git a/drivers/dma/idxd/compat.c b/drivers/dma/idxd/compat.c
-index 3df21615f888..51df38dea15a 100644
---- a/drivers/dma/idxd/compat.c
-+++ b/drivers/dma/idxd/compat.c
-@@ -7,7 +7,6 @@
- #include <linux/device/bus.h>
- #include "idxd.h"
- 
--extern int device_driver_attach(struct device_driver *drv, struct device *dev);
- extern void device_driver_detach(struct device *dev);
- 
- #define DRIVER_ATTR_IGNORE_LOCKDEP(_name, _mode, _show, _store)	\
-@@ -56,7 +55,7 @@ static ssize_t bind_store(struct device_driver *drv, const char *buf, size_t cou
- 	if (!alt_drv)
- 		return -ENODEV;
- 
--	rc = device_driver_attach(alt_drv, dev);
-+	rc = device_driver_attach(alt_drv, dev, DRV_BIND_EXPLICIT);
- 	if (rc < 0)
- 		return rc;
- 
-diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-index b314101237fe..f42c6ec543c8 100644
---- a/drivers/vfio/mdev/mdev_core.c
-+++ b/drivers/vfio/mdev/mdev_core.c
-@@ -309,7 +309,7 @@ int mdev_device_create(struct mdev_type *type, const guid_t *uuid)
- 
- 	if (!drv)
- 		drv = &vfio_mdev_driver;
--	ret = device_driver_attach(&drv->driver, &mdev->dev);
-+	ret = device_driver_attach(&drv->driver, &mdev->dev, DRV_BIND_DEFAULT);
- 	if (ret)
- 		goto out_del;
- 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index e270cb740b9e..1ada1093799b 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -876,12 +876,24 @@ static inline void *dev_get_platdata(const struct device *dev)
- 	return dev->platform_data;
- }
- 
-+/*
-+ * Driver-binding flags (for passing to device_driver_attach())
-+ *
-+ * DRV_BIND_DEFAULT: a default, automatic bind, e.g. as a result of a device
-+ *                   being added for which we already have a driver, or vice
-+ *                   versa.
-+ * DRV_BIND_EXPLICIT: an explicit, userspace-requested driver bind, e.g. as a
-+ *                    result of a write to /sys/bus/.../drivers/.../bind
-+ */
-+#define DRV_BIND_DEFAULT	0
-+#define DRV_BIND_EXPLICIT	BIT(0)
-+
- /*
-  * Manual binding of a device to driver. See drivers/base/bus.c
-  * for information on use.
-  */
- int __must_check device_driver_attach(struct device_driver *drv,
--				      struct device *dev);
-+				      struct device *dev, u32 flags);
- int __must_check device_bind_driver(struct device *dev);
- void device_release_driver(struct device *dev);
- int  __must_check device_attach(struct device *dev);
+On Wed, Oct 20, 2021 at 10:35:33PM +0800, Dongliang Mu wrote:
+> In rcar_dmac_probe, if pm_runtime_resume_and_get fails, it forgets to
+> disable runtime PM. And of_dma_controller_free should only be invoked
+> after the success of of_dma_controller_register.
+> 
+> Fix this by refactoring the error handling code.
+> 
+> Signed-off-by: Dongliang Mu <mudongliangabcd@gmail.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  drivers/dma/sh/rcar-dmac.c | 13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
+> index 6885b3dcd7a9..5c7716fd6bc5 100644
+> --- a/drivers/dma/sh/rcar-dmac.c
+> +++ b/drivers/dma/sh/rcar-dmac.c
+> @@ -1916,7 +1916,7 @@ static int rcar_dmac_probe(struct platform_device *pdev)
+>  	ret = pm_runtime_resume_and_get(&pdev->dev);
+>  	if (ret < 0) {
+>  		dev_err(&pdev->dev, "runtime PM get sync failed (%d)\n", ret);
+> -		return ret;
+> +		goto err_pm_disable;
+>  	}
+>  
+>  	ret = rcar_dmac_init(dmac);
+> @@ -1924,7 +1924,7 @@ static int rcar_dmac_probe(struct platform_device *pdev)
+>  
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "failed to reset device\n");
+> -		goto error;
+> +		goto err_pm_disable;
+>  	}
+>  
+>  	/* Initialize engine */
+> @@ -1958,14 +1958,14 @@ static int rcar_dmac_probe(struct platform_device *pdev)
+>  	for_each_rcar_dmac_chan(i, dmac, chan) {
+>  		ret = rcar_dmac_chan_probe(dmac, chan);
+>  		if (ret < 0)
+> -			goto error;
+> +			goto err_pm_disable;
+>  	}
+>  
+>  	/* Register the DMAC as a DMA provider for DT. */
+>  	ret = of_dma_controller_register(pdev->dev.of_node, rcar_dmac_of_xlate,
+>  					 NULL);
+>  	if (ret < 0)
+> -		goto error;
+> +		goto err_pm_disable;
+>  
+>  	/*
+>  	 * Register the DMA engine device.
+> @@ -1974,12 +1974,13 @@ static int rcar_dmac_probe(struct platform_device *pdev)
+>  	 */
+>  	ret = dma_async_device_register(engine);
+>  	if (ret < 0)
+> -		goto error;
+> +		goto err_dma_free;
+>  
+>  	return 0;
+>  
+> -error:
+> +err_dma_free:
+>  	of_dma_controller_free(pdev->dev.of_node);
+> +err_pm_disable:
+>  	pm_runtime_disable(&pdev->dev);
+>  	return ret;
+>  }
+
 -- 
-2.33.1
+Regards,
 
+Laurent Pinchart

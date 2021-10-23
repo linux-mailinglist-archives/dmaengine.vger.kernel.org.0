@@ -2,106 +2,99 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 11AB2438277
-	for <lists+dmaengine@lfdr.de>; Sat, 23 Oct 2021 10:56:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B3A684383D4
+	for <lists+dmaengine@lfdr.de>; Sat, 23 Oct 2021 15:41:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230113AbhJWI7I (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 23 Oct 2021 04:59:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229666AbhJWI7I (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 23 Oct 2021 04:59:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9A1EB60FE3;
-        Sat, 23 Oct 2021 08:56:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1634979409;
-        bh=MQ6wVrxyRcZanowXUW3z8SklNft5GH7I+NPAlmFZ89U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lOgCEGtbsXU9ZmPHmlxnRHjXHmdadZCFqhdfjCjqh4b2K//kn9T1Ta5bkvrsjk8Jb
-         NJQXChCKVkfabcQNV5BPInS0yPuMdgsYBDItULN76AoDIYT/WA57772ivr4Pgu4oy5
-         1cud104Tcdd25BmP5ub1A5ZIQIXvmtr2eXrV8SMo=
-Date:   Sat, 23 Oct 2021 10:56:41 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Patrick Williams <patrick@stwcx.xyz>
-Cc:     Zev Weiss <zev@bewilderbeest.net>, kvm@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Jeremy Kerr <jk@codeconstruct.com.au>,
-        Rajat Jain <rajatja@google.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Jianxiong Gao <jxgao@google.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH 4/5] driver core: inhibit automatic driver binding on
- reserved devices
-Message-ID: <YXPOSZPA41f+EUvM@kroah.com>
-References: <20211022020032.26980-1-zev@bewilderbeest.net>
- <20211022020032.26980-5-zev@bewilderbeest.net>
- <YXJeYCFJ5DnBB63R@kroah.com>
- <YXJ3IPPkoLxqXiD3@hatter.bewilderbeest.net>
- <YXJ88eARBE3vU1aA@kroah.com>
- <YXLWMyleiTFDDZgm@heinlein>
+        id S230512AbhJWNnx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 23 Oct 2021 09:43:53 -0400
+Received: from www381.your-server.de ([78.46.137.84]:35292 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229870AbhJWNnw (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 23 Oct 2021 09:43:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:
+        Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References;
+        bh=d+hgxX4jJYF26CkNDNNduedpUDzvtOT9wysZnWWk5Zo=; b=C0wqXdT39shFYJU60M26cL7jfL
+        GmhFl3X5bxGiTO6F3sBDy3PQkzQFLNtYBAdITro1V/+XbU7cqtsUiGG64wbw9oGErCjKIiCF+Oelh
+        4JGELNNj2oR+uE7onUxJ8Ajqk2GFm1Q84mm/XqeTEvwpzBr9GssqrVfuuXS93X22QqKrJGyLncqoV
+        3o4zCewcJ5olvi0YrB/jg2ku+J2tevRpjtgAsO2XpC4WobOLVQ9HUUVkkBkqxrO6pcvkGNmBXRtU2
+        nwKO3xFnygePuCTZBU1VYX9WDLNiUHEX9QGNfeqD9FEXEnok/Do8PtEhY5l8nBB1DVKuslRsTb+wg
+        E2quCwyg==;
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www381.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <lars@metafoo.de>)
+        id 1meHH9-000F1u-Rn; Sat, 23 Oct 2021 15:41:31 +0200
+Received: from [82.135.83.71] (helo=lars-desktop.fritz.box)
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1meHH9-000R8x-MH; Sat, 23 Oct 2021 15:41:31 +0200
+From:   Lars-Peter Clausen <lars@metafoo.de>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org,
+        Lars-Peter Clausen <lars@metafoo.de>
+Subject: [PATCH] dmaengine: dmaengine_desc_callback_valid(): Check for `callback_result`
+Date:   Sat, 23 Oct 2021 15:41:01 +0200
+Message-Id: <20211023134101.28042-1-lars@metafoo.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YXLWMyleiTFDDZgm@heinlein>
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.103.3/26331/Sat Oct 23 10:18:59 2021)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Oct 22, 2021 at 10:18:11AM -0500, Patrick Williams wrote:
-> Hi Greg,
-> 
-> On Fri, Oct 22, 2021 at 10:57:21AM +0200, Greg Kroah-Hartman wrote:
-> > On Fri, Oct 22, 2021 at 01:32:32AM -0700, Zev Weiss wrote:
-> > > On Thu, Oct 21, 2021 at 11:46:56PM PDT, Greg Kroah-Hartman wrote:
-> > > > On Thu, Oct 21, 2021 at 07:00:31PM -0700, Zev Weiss wrote:
-> 
-> > > So we want the kernel to be aware of the device's existence (so that we
-> > > *can* bind a driver to it when needed), but we don't want it touching the
-> > > device unless we really ask for it.
-> > > 
-> > > Does that help clarify the motivation for wanting this functionality?
-> > 
-> > Sure, then just do this type of thing in the driver itself.  Do not have
-> > any matching "ids" for this hardware it so that the bus will never call
-> > the probe function for this hardware _until_ a manual write happens to
-> > the driver's "bind" sysfs file.
-> 
-> It sounds like you're suggesting a change to one particular driver to satisfy
-> this one particular case (and maybe I'm just not understanding your suggestion).
-> For a BMC, this is a pretty regular situation and not just as one-off as Zev's
-> example.
-> 
-> Another good example is where a system can have optional riser cards with a
-> whole tree of devices that might be on that riser card (and there might be
-> different variants of a riser card that could go in the same slot).  Usually
-> there is an EEPROM of some sort at a well-known address that can be parsed to
-> identify which kind of riser card it is and then the appropriate sub-devices can
-> be enumerated.  That EEPROM parsing is something that is currently done in
-> userspace due to the complexity and often vendor-specific nature of it.
-> 
-> Many of these devices require quite a bit more configuration information than
-> can be passed along a `bind` call.  I believe it has been suggested previously
-> that this riser-card scenario could also be solved with dynamic loading of DT
-> snippets, but that support seems simple pretty far from being merged.
+Before the `callback_result` callback was introduced drivers coded their
+invocation to the callback in a similar way to:
 
-Then work to get the DT code merged!  Do not try to create
-yet-another-way of doing things here if DT overlays is the correct
-solution here (and it seems like it is.)
+	if (cb->callback) {
+		spin_unlock(&dma->lock);
+		cb->callback(cb->callback_param);
+		spin_lock(&dma->lock);
+	}
 
-thanks,
+With the introduction of `callback_result` two helpers where introduced to
+transparently handle both types of callbacks. And drivers where updated to
+look like this:
 
-greg k-h
+	if (dmaengine_desc_callback_valid(cb)) {
+		spin_unlock(&dma->lock);
+		dmaengine_desc_callback_invoke(cb, ...);
+		spin_lock(&dma->lock);
+	}
+
+dmaengine_desc_callback_invoke() correctly handles both `callback_result`
+and `callback`. But we forgot to update the dmaengine_desc_callback_valid()
+function to check for `callback_result`. As a result DMA descriptors that
+use the `callback_result` rather than `callback` don't have their callback
+invoked by drivers that follow the pattern above.
+
+Fix this by checking for both `callback` and `callback_result` in
+dmaengine_desc_callback_valid().
+
+Fixes: f067025bc676 ("dmaengine: add support to provide error result from a DMA transation")
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+---
+ drivers/dma/dmaengine.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/dma/dmaengine.h b/drivers/dma/dmaengine.h
+index 1bfbd64b1371..53f16d3f0029 100644
+--- a/drivers/dma/dmaengine.h
++++ b/drivers/dma/dmaengine.h
+@@ -176,7 +176,7 @@ dmaengine_desc_get_callback_invoke(struct dma_async_tx_descriptor *tx,
+ static inline bool
+ dmaengine_desc_callback_valid(struct dmaengine_desc_callback *cb)
+ {
+-	return (cb->callback) ? true : false;
++	return cb->callback || cb->callback_result;
+ }
+ 
+ struct dma_chan *dma_get_slave_channel(struct dma_chan *chan);
+-- 
+2.20.1
+

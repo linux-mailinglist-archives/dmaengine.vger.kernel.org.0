@@ -2,100 +2,140 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2A67438F2D
-	for <lists+dmaengine@lfdr.de>; Mon, 25 Oct 2021 08:12:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44847438F37
+	for <lists+dmaengine@lfdr.de>; Mon, 25 Oct 2021 08:15:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229851AbhJYGOz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 25 Oct 2021 02:14:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40980 "EHLO mail.kernel.org"
+        id S230106AbhJYGSO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 25 Oct 2021 02:18:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229841AbhJYGOy (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 25 Oct 2021 02:14:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1767A60F02;
-        Mon, 25 Oct 2021 06:12:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635142353;
-        bh=Eyk0/QdwLpez3FKx+3E7de9QeAfVV2V9Ch+6XzrvUZU=;
+        id S229841AbhJYGSO (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 25 Oct 2021 02:18:14 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3C87160C4B;
+        Mon, 25 Oct 2021 06:15:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1635142552;
+        bh=u9RFlgxwvggAHpp7I4+HRdZrg6XEuwYHqHQWNGfxSN0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eYmziX4j5TuXVhGhtIhsPPnR5gUqCohOyvqZxGi+Uu5umIX0sdpYwHGUPkMw8Ck4d
-         82VVMFOm6iduRvUtFwUFtQTYNfcqrtPsO1eDW05/9BKpLzLwNBlCtPHjYZG8tFojT7
-         IaudZWZo/GBlwBi++f4XiHbU+eeQ2mmDjlZa7JtII8PBHZZndb4ibwFa82uUnkGOnV
-         EBQs1+0fw+KzcMqS5zyYKxb8IAZE8r4whMru4XtmAaA3xN1VIQJcY+3Do1hxvmDQGj
-         LozKe04iLhC0+MWMxun7mIR96dB+mHZSje+S8JmKwkH78RnRbCd429Ln2xG5yD3HLY
-         wFHi57TKivojg==
-Date:   Mon, 25 Oct 2021 11:42:28 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Harini Katakam <harini.katakam@xilinx.com>
-Cc:     romain.perier@gmail.com, allen.lkml@gmail.com, yukuai3@huawei.com,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, harinikatakamlinux@gmail.com,
-        michal.simek@xilinx.com, radhey.shyam.pandey@xilinx.com,
-        shravya.kumbham@xilinx.com
-Subject: Re: [PATCH 3/4] dmaengine: zynqmp_dma: Add conditions for return
- value check
-Message-ID: <YXZKzMmw9ga6hCcC@matsya>
-References: <20210914082817.22311-1-harini.katakam@xilinx.com>
- <20210914082817.22311-4-harini.katakam@xilinx.com>
+        b=QcD21YYGVBBXK0h72/zv5Qxuw9Yl0WUj3Wnm092zX6gBExTHPK8PxzzU9Yu00Ln09
+         epbz6ZBrDNhM4Wk82l6Vd7RDb59BnHIYiaGAcz/Ijwa0t5okU981n6iDmwMCyVJeur
+         W855A2NWAW9yAO4gGBSoAz8A6OMUMPoRDK3igEww=
+Date:   Mon, 25 Oct 2021 08:15:41 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Patrick Williams <patrick@stwcx.xyz>,
+        Zev Weiss <zev@bewilderbeest.net>, kvm@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Jeremy Kerr <jk@codeconstruct.com.au>,
+        Rajat Jain <rajatja@google.com>,
+        Jianxiong Gao <jxgao@google.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: Re: [PATCH 4/5] driver core: inhibit automatic driver binding on
+ reserved devices
+Message-ID: <YXZLjTvGevAXcidW@kroah.com>
+References: <20211022020032.26980-1-zev@bewilderbeest.net>
+ <20211022020032.26980-5-zev@bewilderbeest.net>
+ <YXJeYCFJ5DnBB63R@kroah.com>
+ <YXJ3IPPkoLxqXiD3@hatter.bewilderbeest.net>
+ <YXJ88eARBE3vU1aA@kroah.com>
+ <YXLWMyleiTFDDZgm@heinlein>
+ <YXPOSZPA41f+EUvM@kroah.com>
+ <627101ee-7414-57d1-9952-6e023b8db317@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210914082817.22311-4-harini.katakam@xilinx.com>
+In-Reply-To: <627101ee-7414-57d1-9952-6e023b8db317@gmail.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 14-09-21, 13:58, Harini Katakam wrote:
-> From: Shravya Kumbham <shravya.kumbham@xilinx.com>
+On Mon, Oct 25, 2021 at 12:38:08AM -0500, Frank Rowand wrote:
+> On 10/23/21 3:56 AM, Greg Kroah-Hartman wrote:
+> > On Fri, Oct 22, 2021 at 10:18:11AM -0500, Patrick Williams wrote:
+> >> Hi Greg,
+> >>
+> >> On Fri, Oct 22, 2021 at 10:57:21AM +0200, Greg Kroah-Hartman wrote:
+> >>> On Fri, Oct 22, 2021 at 01:32:32AM -0700, Zev Weiss wrote:
+> >>>> On Thu, Oct 21, 2021 at 11:46:56PM PDT, Greg Kroah-Hartman wrote:
+> >>>>> On Thu, Oct 21, 2021 at 07:00:31PM -0700, Zev Weiss wrote:
+> >>
+> >>>> So we want the kernel to be aware of the device's existence (so that we
+> >>>> *can* bind a driver to it when needed), but we don't want it touching the
+> >>>> device unless we really ask for it.
+> >>>>
+> >>>> Does that help clarify the motivation for wanting this functionality?
+> >>>
+> >>> Sure, then just do this type of thing in the driver itself.  Do not have
+> >>> any matching "ids" for this hardware it so that the bus will never call
+> >>> the probe function for this hardware _until_ a manual write happens to
+> >>> the driver's "bind" sysfs file.
+> >>
+> >> It sounds like you're suggesting a change to one particular driver to satisfy
+> >> this one particular case (and maybe I'm just not understanding your suggestion).
+> >> For a BMC, this is a pretty regular situation and not just as one-off as Zev's
+> >> example.
+> >>
+> >> Another good example is where a system can have optional riser cards with a
+> >> whole tree of devices that might be on that riser card (and there might be
+> >> different variants of a riser card that could go in the same slot).  Usually
+> >> there is an EEPROM of some sort at a well-known address that can be parsed to
+> >> identify which kind of riser card it is and then the appropriate sub-devices can
+> >> be enumerated.  That EEPROM parsing is something that is currently done in
+> >> userspace due to the complexity and often vendor-specific nature of it.
+> >>
+> >> Many of these devices require quite a bit more configuration information than
+> >> can be passed along a `bind` call.  I believe it has been suggested previously
+> >> that this riser-card scenario could also be solved with dynamic loading of DT
+> >> snippets, but that support seems simple pretty far from being merged.
+> > 
+> > Then work to get the DT code merged!  Do not try to create
+> > yet-another-way of doing things here if DT overlays is the correct
+> > solution here (and it seems like it is.)
 > 
-> Add condition to check the return value of dma_async_device_register
-> and pm_runtime_get_sync functions.
+> I don't think this is a case that fits the overlay model.
 > 
-> Addresses-Coverity: Event check_return.
-> Signed-off-by: Shravya Kumbham <shravya.kumbham@xilinx.com>
-
-sob missing
-
-> Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> ---
->  drivers/dma/xilinx/zynqmp_dma.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
+> We know what the description of the device is (which is what devicetree
+> is all about), but the device is to be shared between the Linux kernel
+> and some other entity, such as the firmware or another OS.  The issue
+> to be resolved is how to describe that the device is to be shared (in
+> this case exclusively by the kernel _or_ by the other entity at any
+> given moment), and how to move ownership of the device between the
+> Linux kernel and the other entity.
 > 
-> diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
-> index d28b9ffb4309..588460e56ab8 100644
-> --- a/drivers/dma/xilinx/zynqmp_dma.c
-> +++ b/drivers/dma/xilinx/zynqmp_dma.c
-> @@ -1080,7 +1080,11 @@ static int zynqmp_dma_probe(struct platform_device *pdev)
->  	pm_runtime_set_autosuspend_delay(zdev->dev, ZDMA_PM_TIMEOUT);
->  	pm_runtime_use_autosuspend(zdev->dev);
->  	pm_runtime_enable(zdev->dev);
-> -	pm_runtime_get_sync(zdev->dev);
-> +	ret = pm_runtime_get_sync(zdev->dev);
-> +	if (ret < 0) {
-> +		dev_err(zdev->dev, "pm_runtime_get_sync() failed\n");
-> +		pm_runtime_disable(zdev->dev);
+> In the scenario presented by Zev, it is suggested that a user space
+> agent will be involved in deciding which entity owns the device and
+> to tell the Linux kernel when to take ownership of the device (and
+> presumably when to relinquish ownership, although we haven't seen
+> the implementation of relinquishing ownership yet).  One could
+> imagine direct communication between the driver and the other
+> entity to mediate ownership.  That seems like a driver specific
+> defined choice to me, though if there are enough different drivers
+> facing this situation then eventually a shared framework would
+> make sense.
 
-disable is okay but it wont fix the count, you should call put and then
-disable if required
+We have the bind/unbind ability today, from userspace, that can control
+this.  Why not just have Linux grab the device when it boots, and then
+when userspace wants to "give the device up", it writes to "unbind" in
+sysfs, and then when all is done, it writes to the "bind" file and then
+Linux takes back over.
 
-> +	}
->  	if (!pm_runtime_enabled(zdev->dev)) {
->  		ret = zynqmp_dma_runtime_resume(zdev->dev);
->  		if (ret)
-> @@ -1096,7 +1100,11 @@ static int zynqmp_dma_probe(struct platform_device *pdev)
->  	p->dst_addr_widths = BIT(zdev->chan->bus_width / 8);
->  	p->src_addr_widths = BIT(zdev->chan->bus_width / 8);
->  
-> -	dma_async_device_register(&zdev->common);
-> +	ret = dma_async_device_register(&zdev->common);
-> +	if (ret) {
-> +		dev_err(zdev->dev, "failed to register the dma device\n");
-> +		goto free_chan_resources;
-> +	}
->  
->  	ret = of_dma_controller_register(pdev->dev.of_node,
->  					 of_zynqmp_dma_xlate, zdev);
-> -- 
-> 2.17.1
+Unless for some reason Linux should _not_ grab the device when booting,
+then things get messier, as we have seen in this thread.
 
--- 
-~Vinod
+thanks,
+
+greg k-h

@@ -2,73 +2,199 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D1AB439987
-	for <lists+dmaengine@lfdr.de>; Mon, 25 Oct 2021 17:01:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 085A9439AE0
+	for <lists+dmaengine@lfdr.de>; Mon, 25 Oct 2021 17:54:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233681AbhJYPD6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 25 Oct 2021 11:03:58 -0400
-Received: from mga03.intel.com ([134.134.136.65]:63626 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233744AbhJYPD5 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 25 Oct 2021 11:03:57 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10148"; a="229613193"
-X-IronPort-AV: E=Sophos;i="5.87,180,1631602800"; 
-   d="scan'208";a="229613193"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2021 08:01:08 -0700
-X-IronPort-AV: E=Sophos;i="5.87,180,1631602800"; 
-   d="scan'208";a="578146736"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2021 08:01:06 -0700
-Subject: [PATCH v2] dmaengine: idxd: fix resource leak on dmaengine driver
- disable
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        id S233303AbhJYP4t (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 25 Oct 2021 11:56:49 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:56503 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233222AbhJYP4s (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 25 Oct 2021 11:56:48 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 2AFED580565;
+        Mon, 25 Oct 2021 11:54:25 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Mon, 25 Oct 2021 11:54:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwcx.xyz; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=7Lt0k6A2AQYTvM69ey9mLazpSHP
+        whVPhfDQe2pFO0n8=; b=uIEKyAdugpjJCTJJB3D18APBAQv66TGIg9cS2eIkPOl
+        Vj9Nr8TyKEz/W5Av7vkFU7LaOKqWltfZCoBwGB8F9Heba/tAcT4qxrngHy0SGTjf
+        D0zOA0/sFuzEvXlcJzPqgSypzGHuSOOoWWXIxo43R+DGO3vADojj1J/jNP0m3Y/w
+        a7VDivJmM0pjR+L2wBREXDY4zT4nBskt6unfB5lBpicLr+viN1tXFLP+L3k4tb9w
+        2li4uS+L4Kqg+tGAwAe/tiRfztTAlqKpOQbl0+mNVgkR/KH7+meYMrJyjn/4MOtY
+        c2nUYLy6pwAK2cmWyFsBklolFrDiPVHCjBCuV75oJGg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=7Lt0k6
+        A2AQYTvM69ey9mLazpSHPwhVPhfDQe2pFO0n8=; b=ezLem8TPwEbDCt5ng2Xr/0
+        dmUsypkC5C34MDkGAzg6JqbVKWmoQyYWAgd+T4RScIi2bXt1N19dlx4Sd81Q2aGr
+        ++8ltY6ilo6QZSoKV9pHVP6Jq97G9R4+IxcnVGhuCAPACeUseLz8it6XgmLu4Gjk
+        O6xmlYl7GwPMmQf0M/oraqRcI2j6DBn/jGcWzYhLyJqjGcIxGO0KSAAqd44p+9fO
+        fbaGqmyx7EHJa90bIun41mOpYJRwGJH0h3sCbkN4bRH2fGRetDHc1yvTdmt9qK+R
+        +1T7O41wIp9Yv8SJdTcYIuueD2YnEfdqG5QiC+LQoNuFHICRWQFVhfZRLC55rfPw
+        ==
+X-ME-Sender: <xms:L9N2YUdZoc0rilMIpO1zGrBp7s2cVY0sjegSK1tTEqxzR527YnC6EA>
+    <xme:L9N2YWPpUqv8V4RHkPyfV9pBe1QRQCyZ9V0lZg8JjtHvh2TxXgoquQlkVgjr4DyDP
+    E2MHd7xt-jjQ_9Tovc>
+X-ME-Received: <xmr:L9N2YVipoGj-TpshW2OlKqzsXX3G3ykDSUESUQrXz9KS1UwtUE6I5jUfHMykWdcCEZ1ETGRMwZszRdF1mRptx3uQOvrIFDlLT2uvtg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrvdefhedgkeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdljedtmdenucfjughrpeffhffvuffkfhggtggujgesghdtreertddt
+    vdenucfhrhhomheprfgrthhrihgtkhcuhghilhhlihgrmhhsuceophgrthhrihgtkhessh
+    htfigtgidrgiihiieqnecuggftrfgrthhtvghrnhepgeehheefffegkeevhedthffgudfh
+    geefgfdthefhkedtleffveekgfeuffehtdeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepphgrthhrihgtkhesshhtfigtgidrgiihii
+X-ME-Proxy: <xmx:L9N2YZ-WkJYYSvoGRwmsT_6SPbiVf54pcrDuZ8_Q68-82Kit0JSTxw>
+    <xmx:L9N2YQvAuvsmC00aBxXrwp_GYY1jVEna8xMqB5JV4n2HFqAQheQ8Ow>
+    <xmx:L9N2YQFDGAwX1xqqm_78qJ0gyMqC6X7sQUPNgA7zdCIk-YwA8RDyIQ>
+    <xmx:MdN2YdtGbwICmM5LUx98Jfs2-Lp5COgjISeC2vqKoby7uurvRn0KaA>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 25 Oct 2021 11:54:22 -0400 (EDT)
+Date:   Mon, 25 Oct 2021 10:54:21 -0500
+From:   Patrick Williams <patrick@stwcx.xyz>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Zev Weiss <zev@bewilderbeest.net>, kvm@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Jeremy Kerr <jk@codeconstruct.com.au>,
+        Rajat Jain <rajatja@google.com>,
+        Jianxiong Gao <jxgao@google.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
         dmaengine@vger.kernel.org
-Date:   Mon, 25 Oct 2021 08:01:04 -0700
-Message-ID: <163517405099.3484556.12521975053711345244.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/0.23-29-ga622f1
+Subject: Re: [PATCH 4/5] driver core: inhibit automatic driver binding on
+ reserved devices
+Message-ID: <YXbTLYzHadphE5ZN@heinlein>
+References: <YXLWMyleiTFDDZgm@heinlein>
+ <YXPOSZPA41f+EUvM@kroah.com>
+ <627101ee-7414-57d1-9952-6e023b8db317@gmail.com>
+ <YXZLjTvGevAXcidW@kroah.com>
+ <YXaYmie/CUHnixtX@heinlein>
+ <YXap8V/jMM3Ksj7x@smile.fi.intel.com>
+ <YXavBWTNYsufqj8u@heinlein>
+ <YXayTeJiQvpRutU0@kroah.com>
+ <YXa5AExKg+k0MmHV@heinlein>
+ <YXa6t/ifxZGGSCNj@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="IBKYz2UKeI4sOQXI"
+Content-Disposition: inline
+In-Reply-To: <YXa6t/ifxZGGSCNj@kroah.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The wq resources needs to be released before the kernel type is reset by
-__drv_disable_wq(). With dma channels unregistered and wq quiesced, all the
-wq resources for dmaengine can be freed. There is no need to wait until wq
-is disabled. With the wq->type being reset to "unknown", the driver is
-skipping the freeing of the resources.
 
-Fixes: 0cda4f6986a3 ("dmaengine: idxd: create dmaengine driver for wq 'device'")
-Reported-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Tested-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
+--IBKYz2UKeI4sOQXI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-v2: rebase against latest dmaengine/next
+On Mon, Oct 25, 2021 at 04:09:59PM +0200, Greg Kroah-Hartman wrote:
+> On Mon, Oct 25, 2021 at 09:02:40AM -0500, Patrick Williams wrote:
+> > On Mon, Oct 25, 2021 at 03:34:05PM +0200, Greg Kroah-Hartman wrote:
+> > > On Mon, Oct 25, 2021 at 08:20:05AM -0500, Patrick Williams wrote:
+> > > I think "it" is "something needs to be the moderator between the two
+> > > operating systems".  What is the external entity that handles the
+> > > switching between the two?
+> >=20
+> > Ah, ok.
+> >=20
+> > Those usually end up being system / device specific.  In the case of th=
+e BIOS
+> > flash, most designs I've seen use a SPI mux between the BMC and the host
+> > processor or IO hub (PCH on Xeons).  The BMC has a GPIO to control the =
+mux.
+> >=20
+> > As far as state, the BMC on start-up will go through a set of discovery=
+ code to
+> > figure out where it left the system prior to getting reset.  That invol=
+ves
+> > looking at the power subsystem and usually doing some kind of query to =
+the host
+> > to see if it is alive.  These queries are mostly system / host-processo=
+r design
+> > specific.  I've seen anything from an IPMI/IPMB message alert from the =
+BMC to
+> > the BIOS to ask "are you alive" to reading host processor state over JT=
+AG to
+> > figure out if the processors are "making progress".
+>=20
+> But which processor is "in control" here over the hardware? =20
 
- drivers/dma/idxd/dma.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+The BMC.  It owns the GPIO that controls the SPI mux. =20
 
-diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
-index b90b085d18cf..c39e9483206a 100644
---- a/drivers/dma/idxd/dma.c
-+++ b/drivers/dma/idxd/dma.c
-@@ -329,10 +329,9 @@ static void idxd_dmaengine_drv_remove(struct idxd_dev *idxd_dev)
- 	mutex_lock(&wq->wq_lock);
- 	idxd_wq_quiesce(wq);
- 	idxd_unregister_dma_channel(wq);
-+	idxd_wq_free_resources(wq);
- 	__drv_disable_wq(wq);
- 	percpu_ref_exit(&wq->wq_active);
--	idxd_wq_free_resources(wq);
--	wq->type = IDXD_WQT_NONE;
- 	mutex_unlock(&wq->wq_lock);
- }
- 
+But, the BMC is responsible for doing all operations in a way that doesn't =
+mess
+up the running host processor(s).  Pulling away the SPI flash containing the
+BIOS code at an incorrect time might do that.
 
+> What method
+> is used to pass the device from one CPU to another from a logical point
+> of view? =20
 
+The state of the server as a whole is determined and maintained by the BMC.=
+  I'm
+simplifying here a bit but the operation "turn on the host processors" impl=
+ies
+"the host processors will access the BIOS" so the BMC must ensure "SPI mux =
+is
+switched towards the host" before "turn on the host processors".
+
+> Sounds like it is another driver that needs to handle all of
+> this, so why not have that be the one that adds/removes the devices
+> under control here?
+
+If what you're describing is moving all of the state control logic into the
+kernel, I don't think that is feasible.  For some systems it would mean mov=
+ing
+yet another entire IPMI stack into the kernel tree.  On others it might be
+somewhat simpler, but it is still a good amount of code.  We could probably
+write up more details on the scope of this.
+
+If what you're describing is a small driver, similar to the board support
+drivers that were used before the device tree, that instantiates subordinate
+devices it doesn't seem like an unreasonable alternative to DT overlays to =
+me
+(for whatever my limited kernel contribution experience counts for).
+
+--=20
+Patrick Williams
+
+--IBKYz2UKeI4sOQXI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEBGD9ii4LE9cNbqJBqwNHzC0AwRkFAmF20ysACgkQqwNHzC0A
+wRllog//fo/4DsHCATlBG2JbJ+kty/4DMaxw9s4LPzxMRjzAcpUNlU4aZU0MCE8I
+OscYTGpzhNhtddtAWjgJpLWLIokDJfdQ+K/fj/c/gV6lFgBzdRB8V3i4WKCnxb+s
+1GZpKmb+f5AKRLz83jRe9bx8X4lBafvlt1Riwmz4wywVqrzKcB9wJDQHmM90hsCI
+XgJ82cdNBTYzw+tYl534zZiAU4qn6kq1+5oVi5qeCGMylF9dcZhnWdtyxSWNagSk
+FbcmxLztkVEuzxI0GWoJsUc8fKL/bJPCwIJzIs+/+mdwd5iINh3TFZ0Ik3SM/6+V
+3GvaXafAyTrSFHwbd7BFdljgrnvteE81XLd8X+VHP3GZ/T2yFNRY381KuXMmC0ti
+X11xR+nNYVRtTrqZmmUPQ/FyQ2z6A30SzSdMav2y15SAVyoYY6KxU4/k+amxACzS
+n06PV7i+2LLGwl83I1vqzdLS7dTdXj0dyyP/EzxG1OSS65FnJ1F6GItJq4BAcDQL
+VhMVCegClPqjHUaKQsNRZLW6c0lfZJeVJG8Cl82TLPXb7eSAMT7OS0BG4pCnX+6L
+csbREZYtI3j9QSzEkeM14dAS322I3iiQPpubwSwHMn8OOG4mFj9K3paoEQXsG0yF
+C2bUFdioZUpiLRvmwFhkrOUOOavOjxRit7hIsDOSvCrUue4rKl8=
+=VXwf
+-----END PGP SIGNATURE-----
+
+--IBKYz2UKeI4sOQXI--

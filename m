@@ -2,140 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44847438F37
-	for <lists+dmaengine@lfdr.de>; Mon, 25 Oct 2021 08:15:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37742438F45
+	for <lists+dmaengine@lfdr.de>; Mon, 25 Oct 2021 08:17:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230106AbhJYGSO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 25 Oct 2021 02:18:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229841AbhJYGSO (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 25 Oct 2021 02:18:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3C87160C4B;
-        Mon, 25 Oct 2021 06:15:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1635142552;
-        bh=u9RFlgxwvggAHpp7I4+HRdZrg6XEuwYHqHQWNGfxSN0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QcD21YYGVBBXK0h72/zv5Qxuw9Yl0WUj3Wnm092zX6gBExTHPK8PxzzU9Yu00Ln09
-         epbz6ZBrDNhM4Wk82l6Vd7RDb59BnHIYiaGAcz/Ijwa0t5okU981n6iDmwMCyVJeur
-         W855A2NWAW9yAO4gGBSoAz8A6OMUMPoRDK3igEww=
-Date:   Mon, 25 Oct 2021 08:15:41 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Patrick Williams <patrick@stwcx.xyz>,
-        Zev Weiss <zev@bewilderbeest.net>, kvm@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Jeremy Kerr <jk@codeconstruct.com.au>,
-        Rajat Jain <rajatja@google.com>,
-        Jianxiong Gao <jxgao@google.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        id S230325AbhJYGTs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 25 Oct 2021 02:19:48 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:12820 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230106AbhJYGTr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 25 Oct 2021 02:19:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1635142642;
+    s=strato-dkim-0002; d=gerhold.net;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=FzGDnxr5iXiYUSz2axj//eT4Wsv8vgWvAfW+iVGHdf8=;
+    b=ImfAx+t4NXRYNr0a6G3iB9mT/O1t9DcFUMzYWZCq0RrQVfit2gU8t8CufoZr4KJREm
+    Tj/vd6t/Ar//kz7xeq/+leVFICZ6n7YvhaXGJDrAwVMMr9XfqdmMN4Lde9Cob3RCxA+d
+    b7Kgfqql2J34Lja18GF8LWH+oBIecqQIV5mAvR7zebGinjWzVKmrQaevOyY+MgnpyXss
+    +HtJIthQyLyM8MWe7+9040VAy4+0xDWzjLG5qnh1RGk10jk+OLiOZDrh2HCv23T0ozkC
+    M4rgDRPocd8M8FZU6gmDxqOLw4p4YC9h9aQiQlhgLjxXUohPo37WxgeXHDZ7P/Z67q6z
+    bYPw==
+Authentication-Results: strato.com;
+    dkim=none
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u267FZF9PwpcNKLVrK8+86Y="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+    by smtp.strato.de (RZmta 47.33.8 AUTH)
+    with ESMTPSA id 301038x9P6HL6Ln
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+    Mon, 25 Oct 2021 08:17:21 +0200 (CEST)
+Date:   Mon, 25 Oct 2021 08:17:15 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Bhupesh Sharma <bhupesh.sharma@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH 4/5] driver core: inhibit automatic driver binding on
- reserved devices
-Message-ID: <YXZLjTvGevAXcidW@kroah.com>
-References: <20211022020032.26980-1-zev@bewilderbeest.net>
- <20211022020032.26980-5-zev@bewilderbeest.net>
- <YXJeYCFJ5DnBB63R@kroah.com>
- <YXJ3IPPkoLxqXiD3@hatter.bewilderbeest.net>
- <YXJ88eARBE3vU1aA@kroah.com>
- <YXLWMyleiTFDDZgm@heinlein>
- <YXPOSZPA41f+EUvM@kroah.com>
- <627101ee-7414-57d1-9952-6e023b8db317@gmail.com>
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v3 0/2] dmaengine: qcom: bam_dma: Add "powered remotely"
+ mode for BAM-DMUX
+Message-ID: <YXZL655lHukjar/x@gerhold.net>
+References: <20211018102421.19848-1-stephan@gerhold.net>
+ <YXZFGFH5lxDKeenw@matsya>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <627101ee-7414-57d1-9952-6e023b8db317@gmail.com>
+In-Reply-To: <YXZFGFH5lxDKeenw@matsya>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Oct 25, 2021 at 12:38:08AM -0500, Frank Rowand wrote:
-> On 10/23/21 3:56 AM, Greg Kroah-Hartman wrote:
-> > On Fri, Oct 22, 2021 at 10:18:11AM -0500, Patrick Williams wrote:
-> >> Hi Greg,
-> >>
-> >> On Fri, Oct 22, 2021 at 10:57:21AM +0200, Greg Kroah-Hartman wrote:
-> >>> On Fri, Oct 22, 2021 at 01:32:32AM -0700, Zev Weiss wrote:
-> >>>> On Thu, Oct 21, 2021 at 11:46:56PM PDT, Greg Kroah-Hartman wrote:
-> >>>>> On Thu, Oct 21, 2021 at 07:00:31PM -0700, Zev Weiss wrote:
-> >>
-> >>>> So we want the kernel to be aware of the device's existence (so that we
-> >>>> *can* bind a driver to it when needed), but we don't want it touching the
-> >>>> device unless we really ask for it.
-> >>>>
-> >>>> Does that help clarify the motivation for wanting this functionality?
-> >>>
-> >>> Sure, then just do this type of thing in the driver itself.  Do not have
-> >>> any matching "ids" for this hardware it so that the bus will never call
-> >>> the probe function for this hardware _until_ a manual write happens to
-> >>> the driver's "bind" sysfs file.
-> >>
-> >> It sounds like you're suggesting a change to one particular driver to satisfy
-> >> this one particular case (and maybe I'm just not understanding your suggestion).
-> >> For a BMC, this is a pretty regular situation and not just as one-off as Zev's
-> >> example.
-> >>
-> >> Another good example is where a system can have optional riser cards with a
-> >> whole tree of devices that might be on that riser card (and there might be
-> >> different variants of a riser card that could go in the same slot).  Usually
-> >> there is an EEPROM of some sort at a well-known address that can be parsed to
-> >> identify which kind of riser card it is and then the appropriate sub-devices can
-> >> be enumerated.  That EEPROM parsing is something that is currently done in
-> >> userspace due to the complexity and often vendor-specific nature of it.
-> >>
-> >> Many of these devices require quite a bit more configuration information than
-> >> can be passed along a `bind` call.  I believe it has been suggested previously
-> >> that this riser-card scenario could also be solved with dynamic loading of DT
-> >> snippets, but that support seems simple pretty far from being merged.
+On Mon, Oct 25, 2021 at 11:18:08AM +0530, Vinod Koul wrote:
+> On 18-10-21, 12:24, Stephan Gerhold wrote:
+> > The BAM Data Multiplexer (BAM-DMUX) provides access to the network data
+> > channels of modems integrated into many older Qualcomm SoCs, e.g.
+> > Qualcomm MSM8916 or MSM8974.
 > > 
-> > Then work to get the DT code merged!  Do not try to create
-> > yet-another-way of doing things here if DT overlays is the correct
-> > solution here (and it seems like it is.)
+> > Shortly said, BAM-DMUX is built using a simple protocol layer on top of
+> > a DMA engine (Qualcomm BAM DMA). For BAM-DMUX, the BAM DMA engine runs in
+> > a special mode where the modem/remote side is responsible for powering
+> > on the BAM when needed but we are responsible to initialize it.
+> > The BAM is powered off when unneeded by coordinating power control
+> > via bidirectional interrupts from the BAM-DMUX driver.
+> > 
+> > This series adds one possible solution for handling the "powered remotely"
+> > mode in the bam_dma driver.
 > 
-> I don't think this is a case that fits the overlay model.
+> This looks good me me. Bhupesh/Stephan what was the conclusion on the
+> the discussion you folks had?
 > 
-> We know what the description of the device is (which is what devicetree
-> is all about), but the device is to be shared between the Linux kernel
-> and some other entity, such as the firmware or another OS.  The issue
-> to be resolved is how to describe that the device is to be shared (in
-> this case exclusively by the kernel _or_ by the other entity at any
-> given moment), and how to move ownership of the device between the
-> Linux kernel and the other entity.
-> 
-> In the scenario presented by Zev, it is suggested that a user space
-> agent will be involved in deciding which entity owns the device and
-> to tell the Linux kernel when to take ownership of the device (and
-> presumably when to relinquish ownership, although we haven't seen
-> the implementation of relinquishing ownership yet).  One could
-> imagine direct communication between the driver and the other
-> entity to mediate ownership.  That seems like a driver specific
-> defined choice to me, though if there are enough different drivers
-> facing this situation then eventually a shared framework would
-> make sense.
 
-We have the bind/unbind ability today, from userspace, that can control
-this.  Why not just have Linux grab the device when it boots, and then
-when userspace wants to "give the device up", it writes to "unbind" in
-sysfs, and then when all is done, it writes to the "bind" file and then
-Linux takes back over.
+Basically I said I would wait if you still want to take this for 5.16. :)
+There is a conflict with the DT schema conversion in Bhupesh's series,
+but it's trivial to solve no matter which of the patches is applied first.
 
-Unless for some reason Linux should _not_ grab the device when booting,
-then things get messier, as we have seen in this thread.
+Since Bhupesh still needs to send v5 as far as I can tell (and has a
+much larger series overall), I think it's fine to apply this one first.
 
-thanks,
+Bhupesh, you can just copy-paste this below qcom,controlled-remotely
+in your DT schema if Vinod applies this patch first:
 
-greg k-h
+  qcom,powered-remotely:
+    $ref: /schemas/types.yaml#/definitions/flag
+    description:
+      Indicates that the bam is powered up by a remote processor
+      but must be initialized by the local processor.
+
+Thanks!
+Stephan

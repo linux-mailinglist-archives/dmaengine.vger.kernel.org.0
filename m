@@ -2,57 +2,46 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 91C3F438FA1
-	for <lists+dmaengine@lfdr.de>; Mon, 25 Oct 2021 08:40:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1A83438FA2
+	for <lists+dmaengine@lfdr.de>; Mon, 25 Oct 2021 08:41:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230178AbhJYGnU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 25 Oct 2021 02:43:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47850 "EHLO mail.kernel.org"
+        id S230111AbhJYGnk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 25 Oct 2021 02:43:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229850AbhJYGnT (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 25 Oct 2021 02:43:19 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E7A6760EFE;
-        Mon, 25 Oct 2021 06:40:56 +0000 (UTC)
+        id S229850AbhJYGnk (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 25 Oct 2021 02:43:40 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9BACC60EFE;
+        Mon, 25 Oct 2021 06:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635144057;
-        bh=1m8Qm6Ar8P58zbGlX/cdwDXzRK1atE7UaM/YE71m+8w=;
+        s=k20201202; t=1635144078;
+        bh=SQ/wzwscheYstIyR1dmQ0uAEaXgUPZG3vaPygcq0SBY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iSdqyhfOqhC5XOHj2Us46t1Wo8lkTPR3VIQOfBmip741WzHQm936QMwUUzT24B3Ka
-         2tGOapQZO14Px7zrrosO5i6RjE/AdIBskw0F4UoBYky7PNehxfZKxWwGixjly2rTT3
-         CggvpISYhMX1Dl1lTBkdeZa1RakXKWc7jxaNxsKPssLZclTVJIfcHufhgdLmK6LIiQ
-         DMjs9ICD0TidG7hQGjbuyicEvJF/2g9Zcrc1cwaDMM/iCrH7vaeiLkSVdJR3oNz/Ma
-         NxCmLbOYTO6/uwT5dxww+Zk2Fu0C2OKMAUeu3mVDLy+OpduIZQ3oEB2gKB/yy7osw6
-         FSQAmRRX467zg==
-Date:   Mon, 25 Oct 2021 12:10:53 +0530
+        b=b8A8pGlrUqWgo9FSnAKiyhRLyJ/u8rSCtUUq2WnR/cMsoeurFIEo+XGeptMiwoIAY
+         WcEIYXjwf2Kujw8s0Z6UKxvGHUzcnLI6aMKiqqeIJyDt4Od1NZ419UQm0AtShNnQMB
+         1R3CKedBaktzGa4qcPvlQML0EhDOiNBAnCVOB4Wd1XyPyQhmte5+BVGxvz1CHMFShV
+         2wSd16mnnPYig313r4z7Mi17sOIL6bvV/iTRr7hcvJfnjlDleL1FnxABd5vqTMtZHK
+         H/EOnMgv2cpzxS2LX/J9X92VpwMKB1r8O6DzMjvZj8iE0ETIfU35ZPwyNKVxXqMjz9
+         ygVYDm+dlqVQA==
+Date:   Mon, 25 Oct 2021 12:11:14 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Angelo Dureghello <angelo.dureghello@timesys.com>
-Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-m68k@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: fsl-edma: fix for missing dmamux module
-Message-ID: <YXZRdfcFXSk5Wi0X@matsya>
-References: <20210901211610.662077-1-angelo.dureghello@timesys.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     Sanjay Kumar <sanjay.k.kumar@intel.com>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: idxd: reconfig device after device reset
+ command
+Message-ID: <YXZRimMWybR68RJ7@matsya>
+References: <163054188513.2853562.12077053294595278181.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210901211610.662077-1-angelo.dureghello@timesys.com>
+In-Reply-To: <163054188513.2853562.12077053294595278181.stgit@djiang5-desk3.ch.intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 01-09-21, 23:16, Angelo Dureghello wrote:
-> Fix following panic on system halt:
-> 
-> Requesting system halt
-> [   10.600000] spi spi0.1: spi_device 0.1 cleanup
-> [   10.630000] fsl_edma_chan_mux() fsl_chan->edma->n_chans 64 dmamux_nr 0
-> [   10.630000] *** ZERO DIVIDE ***   FORMAT=4
-> [   10.630000] Current process id is 38
-> [   10.630000] BAD KERNEL TRAP: 00000000
-> [   10.630000] PC: [<402f09ba>] fsl_edma_chan_mux+0x7c/0x12e
-> ...
-> 
-> Some architecture as mcf5441x (ColdFire) may not have
-> a dmamux, so dmamux_nr is set to 0. This patch considers this case.
+On 01-09-21, 17:18, Dave Jiang wrote:
+> Device reset clears the MSIXPERM table and the device registers. Re-program
+> the MSIXPERM table and re-enable the error interrupts post reset.
 
 Applied, thanks
 

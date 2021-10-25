@@ -2,126 +2,125 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15C77439827
-	for <lists+dmaengine@lfdr.de>; Mon, 25 Oct 2021 16:10:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE95B43997D
+	for <lists+dmaengine@lfdr.de>; Mon, 25 Oct 2021 16:59:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233040AbhJYOM0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 25 Oct 2021 10:12:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54886 "EHLO mail.kernel.org"
+        id S233723AbhJYPCN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 25 Oct 2021 11:02:13 -0400
+Received: from mga12.intel.com ([192.55.52.136]:47175 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233009AbhJYOMY (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 25 Oct 2021 10:12:24 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7A8B860F70;
-        Mon, 25 Oct 2021 14:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1635171002;
-        bh=keekYHdYAWdyATEPVva/BLVQO6EKoTmmk3kBb7KadD8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XBxJJmEPAXirY/tRVpXuJnIeh0slTyHNA95Ovi49PA5U63ohfmz3WuMZLCiyIc9n2
-         IaoxVT1evX8GtEwThTfwpaycwgwr9lo3SyMekZYko/T6kWJN8V7UdDHig+8qKnkNoq
-         NvA/6Nx4qGIvRfBzPaEpi5OlMuu/+inZXvjn3oTk=
-Date:   Mon, 25 Oct 2021 16:09:59 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Patrick Williams <patrick@stwcx.xyz>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Zev Weiss <zev@bewilderbeest.net>, kvm@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Jeremy Kerr <jk@codeconstruct.com.au>,
-        Rajat Jain <rajatja@google.com>,
-        Jianxiong Gao <jxgao@google.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        id S233520AbhJYPCM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 25 Oct 2021 11:02:12 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10148"; a="209767794"
+X-IronPort-AV: E=Sophos;i="5.87,180,1631602800"; 
+   d="scan'208";a="209767794"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2021 07:59:50 -0700
+X-IronPort-AV: E=Sophos;i="5.87,180,1631602800"; 
+   d="scan'208";a="464909085"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2021 07:59:49 -0700
+Subject: [PATCH v2] dmaengine: idxd: cleanup completion record allocation
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
         dmaengine@vger.kernel.org
-Subject: Re: [PATCH 4/5] driver core: inhibit automatic driver binding on
- reserved devices
-Message-ID: <YXa6t/ifxZGGSCNj@kroah.com>
-References: <YXJ88eARBE3vU1aA@kroah.com>
- <YXLWMyleiTFDDZgm@heinlein>
- <YXPOSZPA41f+EUvM@kroah.com>
- <627101ee-7414-57d1-9952-6e023b8db317@gmail.com>
- <YXZLjTvGevAXcidW@kroah.com>
- <YXaYmie/CUHnixtX@heinlein>
- <YXap8V/jMM3Ksj7x@smile.fi.intel.com>
- <YXavBWTNYsufqj8u@heinlein>
- <YXayTeJiQvpRutU0@kroah.com>
- <YXa5AExKg+k0MmHV@heinlein>
+Date:   Mon, 25 Oct 2021 07:59:49 -0700
+Message-ID: <163517396063.3484297.7494385225280705372.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YXa5AExKg+k0MmHV@heinlein>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Oct 25, 2021 at 09:02:40AM -0500, Patrick Williams wrote:
-> On Mon, Oct 25, 2021 at 03:34:05PM +0200, Greg Kroah-Hartman wrote:
-> > On Mon, Oct 25, 2021 at 08:20:05AM -0500, Patrick Williams wrote:
-> > > On Mon, Oct 25, 2021 at 03:58:25PM +0300, Andy Shevchenko wrote:
-> > > > On Mon, Oct 25, 2021 at 06:44:26AM -0500, Patrick Williams wrote:
-> > > > > On Mon, Oct 25, 2021 at 08:15:41AM +0200, Greg Kroah-Hartman wrote:
-> > > > > > On Mon, Oct 25, 2021 at 12:38:08AM -0500, Frank Rowand wrote:
-> > > > > > > On 10/23/21 3:56 AM, Greg Kroah-Hartman wrote:
-> > > > >  
-> > > > > > We have the bind/unbind ability today, from userspace, that can control
-> > > > > > this.  Why not just have Linux grab the device when it boots, and then
-> > > > > > when userspace wants to "give the device up", it writes to "unbind" in
-> > > > > > sysfs, and then when all is done, it writes to the "bind" file and then
-> > > > > > Linux takes back over.
-> > > > > > 
-> > > > > > Unless for some reason Linux should _not_ grab the device when booting,
-> > > > > > then things get messier, as we have seen in this thread.
-> > > > > 
-> > > > > This is probably more typical on a BMC than atypical.  The systems often require
-> > > > > the BMC (running Linux) to be able to reboot independently from the managed host
-> > > > > (running anything).  In the example Zev gave, the BMC rebooting would rip away
-> > > > > the BIOS chip from the running host.
-> > > > > 
-> > > > > The BMC almost always needs to come up in a "I don't know what could possibly be
-> > > > > going on in the system" state and re-discover where the system was left off.
-> > > > 
-> > > > Isn't it an architectural issue then?
-> > > 
-> > > I'm not sure what "it" you are referring to here.
-> > > 
-> > > I was trying to explain why starting in "bind" state is not a good idea for a
-> > > BMC in most of these cases where we want to be able to dynamically add a device.
-> > 
-> > I think "it" is "something needs to be the moderator between the two
-> > operating systems".  What is the external entity that handles the
-> > switching between the two?
-> 
-> Ah, ok.
-> 
-> Those usually end up being system / device specific.  In the case of the BIOS
-> flash, most designs I've seen use a SPI mux between the BMC and the host
-> processor or IO hub (PCH on Xeons).  The BMC has a GPIO to control the mux.
-> 
-> As far as state, the BMC on start-up will go through a set of discovery code to
-> figure out where it left the system prior to getting reset.  That involves
-> looking at the power subsystem and usually doing some kind of query to the host
-> to see if it is alive.  These queries are mostly system / host-processor design
-> specific.  I've seen anything from an IPMI/IPMB message alert from the BMC to
-> the BIOS to ask "are you alive" to reading host processor state over JTAG to
-> figure out if the processors are "making progress".
+According to core-api/dma-api-howto.rst, the address from
+dma_alloc_coherent is gauranteed to align to the smallest PAGE_SIZE order.
+That supercedes the 64B/32B alignment requirement of the completion record.
+Remove alignment adjustment code.
 
-But which processor is "in control" here over the hardware?  What method
-is used to pass the device from one CPU to another from a logical point
-of view?  Sounds like it is another driver that needs to handle all of
-this, so why not have that be the one that adds/removes the devices
-under control here?
+Tested-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
 
-thanks,
+v2: rebase against latest dmaengine/next
 
-greg k-h
+ drivers/dma/idxd/device.c |   22 +++++-----------------
+ drivers/dma/idxd/idxd.h   |    2 --
+ 2 files changed, 5 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index b1407465d5c4..fab412349f7f 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -135,8 +135,6 @@ int idxd_wq_alloc_resources(struct idxd_wq *wq)
+ 	struct idxd_device *idxd = wq->idxd;
+ 	struct device *dev = &idxd->pdev->dev;
+ 	int rc, num_descs, i;
+-	int align;
+-	u64 tmp;
+ 
+ 	if (wq->type != IDXD_WQT_KERNEL)
+ 		return 0;
+@@ -148,21 +146,13 @@ int idxd_wq_alloc_resources(struct idxd_wq *wq)
+ 	if (rc < 0)
+ 		return rc;
+ 
+-	align = idxd->data->align;
+-	wq->compls_size = num_descs * idxd->data->compl_size + align;
+-	wq->compls_raw = dma_alloc_coherent(dev, wq->compls_size,
+-					    &wq->compls_addr_raw, GFP_KERNEL);
+-	if (!wq->compls_raw) {
++	wq->compls_size = num_descs * idxd->data->compl_size;
++	wq->compls = dma_alloc_coherent(dev, wq->compls_size, &wq->compls_addr, GFP_KERNEL);
++	if (!wq->compls) {
+ 		rc = -ENOMEM;
+ 		goto fail_alloc_compls;
+ 	}
+ 
+-	/* Adjust alignment */
+-	wq->compls_addr = (wq->compls_addr_raw + (align - 1)) & ~(align - 1);
+-	tmp = (u64)wq->compls_raw;
+-	tmp = (tmp + (align - 1)) & ~(align - 1);
+-	wq->compls = (struct dsa_completion_record *)tmp;
+-
+ 	rc = alloc_descs(wq, num_descs);
+ 	if (rc < 0)
+ 		goto fail_alloc_descs;
+@@ -191,8 +181,7 @@ int idxd_wq_alloc_resources(struct idxd_wq *wq)
+  fail_sbitmap_init:
+ 	free_descs(wq);
+  fail_alloc_descs:
+-	dma_free_coherent(dev, wq->compls_size, wq->compls_raw,
+-			  wq->compls_addr_raw);
++	dma_free_coherent(dev, wq->compls_size, wq->compls, wq->compls_addr);
+  fail_alloc_compls:
+ 	free_hw_descs(wq);
+ 	return rc;
+@@ -207,8 +196,7 @@ void idxd_wq_free_resources(struct idxd_wq *wq)
+ 
+ 	free_hw_descs(wq);
+ 	free_descs(wq);
+-	dma_free_coherent(dev, wq->compls_size, wq->compls_raw,
+-			  wq->compls_addr_raw);
++	dma_free_coherent(dev, wq->compls_size, wq->compls, wq->compls_addr);
+ 	sbitmap_queue_free(&wq->sbq);
+ }
+ 
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index bfcb03329f77..0cf8d3145870 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -187,9 +187,7 @@ struct idxd_wq {
+ 		struct dsa_completion_record *compls;
+ 		struct iax_completion_record *iax_compls;
+ 	};
+-	void *compls_raw;
+ 	dma_addr_t compls_addr;
+-	dma_addr_t compls_addr_raw;
+ 	int compls_size;
+ 	struct idxd_desc **descs;
+ 	struct sbitmap_queue sbq;
+
+

@@ -2,76 +2,85 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3B09438FC4
-	for <lists+dmaengine@lfdr.de>; Mon, 25 Oct 2021 08:55:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B15443907B
+	for <lists+dmaengine@lfdr.de>; Mon, 25 Oct 2021 09:40:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230015AbhJYG6R (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 25 Oct 2021 02:58:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229727AbhJYG6Q (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 25 Oct 2021 02:58:16 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2FE2B60FBF;
-        Mon, 25 Oct 2021 06:55:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635144955;
-        bh=mCUUICw/JeXhAZz3eSIXTOZdzi+Udz+TQU0R3Z2yS5E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PeLi8oMrZObadCGLF1LOUnP7iNF/bwmCw/WHlLWuN7cu51mee8+a9tdUMfi3SC6Ya
-         OZHgQUxWeH59ggZqSuE2twrHhkV+eVs9zAamyeXR7Nyd83RLezKQPLkokRlTUzUltz
-         P3zYpvG3YkKBlCoPl7hyZWgumhbR7BnK5OK6MhnHLc5MDjRgCZTnyNfTzvkuG+QUI6
-         5WM+ZtWLUCk+QPIyX/TWpAt3fuJMG4jGjcGAKLjFBn9NmyWr/KIUbtqIfh2Umg0ui8
-         RGIb9pSHSkvbbidAmw2q5hvsgIsk5814LApAy4Gerjzc9Usi85bKBjLrrLiConxtGO
-         MRdrP5WXgNrRg==
-Date:   Mon, 25 Oct 2021 12:25:50 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Qing Wang <wangqing@vivo.com>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH V3 0/7] switch from 'pci_' to 'dma_' API
-Message-ID: <YXZU9suGqrIurbX2@matsya>
-References: <1633663733-47199-1-git-send-email-wangqing@vivo.com>
+        id S229521AbhJYHmf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 25 Oct 2021 03:42:35 -0400
+Received: from esa.microchip.iphmx.com ([68.232.154.123]:45947 "EHLO
+        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229491AbhJYHmf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 25 Oct 2021 03:42:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1635147613; x=1666683613;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NSqowQVDiJxwRL5modbxvpdelUWTtieJAuCRc83AKN0=;
+  b=aD0WWi/d0LTTt+wB1F3lMw8t4xtx8CVp0lroqg182PE61E10ap8jnfft
+   mXKsM01RrAUvz2re/KeHA5Yb0m4BMCnxUtvsU46NjqxtoMyTp9OVXKzG6
+   id2GlJ8MXXoCditEIycs1osB6bNiy9ybCD84gnHZRE9tEuMBPEVt/Cfvd
+   0ENM9M8CBJqBFmELF+DBJbr9mxQuVhNNjU9Hn2g1cgLjPID09R5c8k/yL
+   CV8l0bg9Vra78udGx6Fg+dE5hI/7IZNTKCquFFufYA/MJDTn9/PGpeLSI
+   DKD4imYhSRtaQmSIJ/4Y9WUEikQcdxf6Srs6bmHahQrEKRdPs3DzD0A12
+   g==;
+IronPort-SDR: ggKVEtS4xyXw+nVxEw7loM1xOMfa9edDv6YCUl5Wj5hiEHKHiNSVOP419/DJHc+PNl5gjDyWat
+ RJREPzbjMTDvmlMbkY7TT4UiwFSfyg4kKJ4mq934dANgsAva5sXwu4jXaUUjX8/uJxlvC2MWdg
+ Y4rzXeeIH/7+wlHLezpXtgy6Y2NPOvoQQk02a+F9txSwqaa+u7gwWPJ77YEsqa1MHXBRANm8WW
+ cAiYsG+harWyBZPQIMOeOUgWBsqke2mRv9QD2DhfU69Afut9icil4qrXCgejTeeODQXJfL/3jX
+ 6mQD5v94V0Fi2B137DyHSygo
+X-IronPort-AV: E=Sophos;i="5.87,179,1631602800"; 
+   d="scan'208";a="74141363"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Oct 2021 00:40:13 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Mon, 25 Oct 2021 00:40:12 -0700
+Received: from rob-dk-mpu01.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2176.14 via Frontend Transport; Mon, 25 Oct 2021 00:40:10 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <ludovic.desroches@microchip.com>, <tudor.ambarus@microchip.com>,
+        <vkoul@kernel.org>
+CC:     <claudiu.beznea@microchip.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "kernel test robot" <lkp@intel.com>
+Subject: [PATCH] dmaengine: at_xdmac: fix compilation warning
+Date:   Mon, 25 Oct 2021 10:40:02 +0300
+Message-ID: <20211025074002.722504-1-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1633663733-47199-1-git-send-email-wangqing@vivo.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 07-10-21, 20:28, Qing Wang wrote:
-> The wrappers in include/linux/pci-dma-compat.h should go away.
-> 
-> The patch has been generated with the coccinelle script below.
-> expression e1, e2;
-> @@
-> -    pci_set_dma_mask(e1, e2)
-> +    dma_set_mask(&e1->dev, e2)
-> 
-> @@
-> expression e1, e2;
-> @@
-> -    pci_set_consistent_dma_mask(e1, e2)
-> +    dma_set_coherent_mask(&e1->dev, e2)
-> 
-> While at it, some 'dma_set_mask()/dma_set_coherent_mask()' have been
-> updated to a much less verbose 'dma_set_mask_and_coherent()'.
-> 
-> This type of patches has been going on for a long time, I plan to 
-> clean it up in the near future. If needed, see post from 
-> Christoph Hellwig on the kernel-janitors ML:
-> https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
+Fixed "unused variable 'atmel_xdmac_dev_pm_ops'" compilation warning
+when CONFIG_PM is not defined.
 
-Applied, thanks
+Fixes: 8e0c7e486014 ("dmaengine: at_xdmac: use pm_ptr()")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+ drivers/dma/at_xdmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index 7fb19bd18ac3..f5d053df66a5 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -2207,7 +2207,7 @@ static int at_xdmac_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static const struct dev_pm_ops atmel_xdmac_dev_pm_ops = {
++static const struct dev_pm_ops __maybe_unused atmel_xdmac_dev_pm_ops = {
+ 	.prepare	= atmel_xdmac_prepare,
+ 	SET_LATE_SYSTEM_SLEEP_PM_OPS(atmel_xdmac_suspend, atmel_xdmac_resume)
+ };
 -- 
-~Vinod
+2.33.0
+

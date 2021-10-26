@@ -2,76 +2,50 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96A2C43AA14
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Oct 2021 04:05:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBD8C43AB18
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Oct 2021 06:23:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231234AbhJZCHk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 25 Oct 2021 22:07:40 -0400
-Received: from mx24.baidu.com ([111.206.215.185]:56146 "EHLO baidu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230216AbhJZCHk (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 25 Oct 2021 22:07:40 -0400
-Received: from BC-Mail-Ex26.internal.baidu.com (unknown [172.31.51.20])
-        by Forcepoint Email with ESMTPS id 1D7A79FF81B90FB8BF1C;
-        Tue, 26 Oct 2021 10:05:15 +0800 (CST)
-Received: from BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) by
- BC-Mail-Ex26.internal.baidu.com (172.31.51.20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2176.2; Tue, 26 Oct 2021 10:05:14 +0800
-Received: from LAPTOP-UKSR4ENP.internal.baidu.com (172.31.63.8) by
- BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.14; Tue, 26 Oct 2021 10:05:14 +0800
-From:   Cai Huoqing <caihuoqing@baidu.com>
-To:     <caihuoqing@baidu.com>
-CC:     Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] dmaengine: sa11x0: Mark PM functions as __maybe_unused
-Date:   Tue, 26 Oct 2021 10:05:07 +0800
-Message-ID: <20211026020508.550-1-caihuoqing@baidu.com>
-X-Mailer: git-send-email 2.17.1
+        id S231224AbhJZEZX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 26 Oct 2021 00:25:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57214 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231164AbhJZEZX (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 26 Oct 2021 00:25:23 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5F9336103C;
+        Tue, 26 Oct 2021 04:22:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635222180;
+        bh=5a9A9jUrWj/VSmZBsEtQ6pQ+MWERbmpRwQykDkKGiyE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DgDq31sEtRXi6Qaz+EUZoII+/wwIqdGLEA8EvDtI1SL3Y8jtHOu0PvCE8GbJKXS+o
+         exKFuZUz8gptatWx01gnMsf1ID6+3uGppafEAq4ur1JgNn8JhKvqxVWDOSGzKPXgpC
+         6DUE9jj1HzP6tP/Lq/S3B85Y6u38vY5+idVcrerU6wIy5sn8pZHy23oikdSI9O0JD1
+         monBBDtCWBcLVR6iDL5H+vs+zWN0qoYNRvhyee3ytedFk7SuSgcPeKrgD4Za70+r0A
+         Mx5d7hFza8Mv2JUoLWusILFBNkQGDU12VaH9ldANUqSdlPAZJjvBe2DTscAPlC2e3W
+         fBnai+/MUUmUg==
+Date:   Tue, 26 Oct 2021 09:52:55 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Cai Huoqing <caihuoqing@baidu.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: sa11x0: Mark PM functions as __maybe_unused
+Message-ID: <YXeCnzPW9yv5iLse@matsya>
+References: <20211026020508.550-1-caihuoqing@baidu.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.31.63.8]
-X-ClientProxiedBy: BC-Mail-EX08.internal.baidu.com (172.31.51.48) To
- BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211026020508.550-1-caihuoqing@baidu.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Without CONFIG_PM_SLEEP, the runtime suspend/resume functions
-are unused, producing a warning:
+On 26-10-21, 10:05, Cai Huoqing wrote:
+> Without CONFIG_PM_SLEEP, the runtime suspend/resume functions
+> are unused, producing a warning:
+> 
+> ../drivers/dma/sa11x0-dma.c:1042:12: error: 'sa11x0_dma_resume' defined but not used
+> ../drivers/dma/sa11x0-dma.c:1004:12: error: 'sa11x0_dma_suspend' defined but not used
 
-../drivers/dma/sa11x0-dma.c:1042:12: error: 'sa11x0_dma_resume' defined but not used
-../drivers/dma/sa11x0-dma.c:1004:12: error: 'sa11x0_dma_suspend' defined but not used
+Applied, thanks
 
-Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
----
- drivers/dma/sa11x0-dma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/sa11x0-dma.c b/drivers/dma/sa11x0-dma.c
-index 38f318b2f80d..a29c13cae716 100644
---- a/drivers/dma/sa11x0-dma.c
-+++ b/drivers/dma/sa11x0-dma.c
-@@ -1001,7 +1001,7 @@ static int sa11x0_dma_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static int sa11x0_dma_suspend(struct device *dev)
-+static __maybe_unused int sa11x0_dma_suspend(struct device *dev)
- {
- 	struct sa11x0_dma_dev *d = dev_get_drvdata(dev);
- 	unsigned pch;
-@@ -1039,7 +1039,7 @@ static int sa11x0_dma_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int sa11x0_dma_resume(struct device *dev)
-+static __maybe_unused int sa11x0_dma_resume(struct device *dev)
- {
- 	struct sa11x0_dma_dev *d = dev_get_drvdata(dev);
- 	unsigned pch;
 -- 
-2.25.1
-
+~Vinod

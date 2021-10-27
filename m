@@ -2,111 +2,89 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 954EB43C56A
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Oct 2021 10:45:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91FAA43C87C
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Oct 2021 13:22:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240945AbhJ0IrX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 27 Oct 2021 04:47:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49260 "EHLO
+        id S241636AbhJ0LZM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 27 Oct 2021 07:25:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239549AbhJ0IrT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Oct 2021 04:47:19 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF235C061570;
-        Wed, 27 Oct 2021 01:44:53 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id l13so4587457lfg.6;
-        Wed, 27 Oct 2021 01:44:53 -0700 (PDT)
+        with ESMTP id S241637AbhJ0LZL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Oct 2021 07:25:11 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23A65C061348
+        for <dmaengine@vger.kernel.org>; Wed, 27 Oct 2021 04:22:46 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id i65so5475636ybb.2
+        for <dmaengine@vger.kernel.org>; Wed, 27 Oct 2021 04:22:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:content-language:to:cc
-         :references:from:subject:in-reply-to:content-transfer-encoding;
-        bh=zMWK8hvpGJbXGsvO9RmIPb4Vp8Zoi5fIPTWz4fMTBMw=;
-        b=lbp34rNa/A5IA66pNvQbVeLii9gDFaqxoc8T1ixMhEQ9u0s6rc9lz5UznqFulj10j9
-         3HjPSYEC3cLm01QHECPUwJU3i7J5jXygj4E8S7xOFxgloAeqCYOl6GbXYHEhdYYtMV8v
-         8NgMv3vE658xpSc1jtV+UY/jU8Wx5F++mGGHh74Emr1qyy7LO+0j8w0vQBBwHDiQ8LKx
-         CrTibSTE3yvkc7H1qFQIn6mYmQUKRdIQTlaA0XdVP8GFD7tGW2wLCDndW2QyitVDB8VQ
-         uN2jWh1VBHNWr/7EP+sx28ZxiR5ARAG2G/nAlnkf0x1++0qFIEEV8kzFFiH6Fo5oBWjN
-         cJlg==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=gbhxMvAYGbSqfpcSxn09gxeDfjPDxDoohtl7lweoc/0=;
+        b=eUcpayX7BvE9u9aeoNU3cahyObkGc6SpG/RwrKju9Z10qtgj0Gbk4tFk9zhocYFoFR
+         Fmt2g4tcJCdSa8lZgfvpn2xZ5NCcU3F1lkQWoHUgkzIb5MB4Nwy3Nt0+8ocJxMNPMsle
+         ziua1Qqdh/IlgIttzBfL7Vt/1Bgqb+vd07MNSMZ8teJzrSVfOgU6QBoCU+YPTAgLcwco
+         izJ6NxYgiMy8rgzqh+PsbrOMqXXpcSWO9ODfjl3yDZqkRV/KSu9xGJ7PA8WjcdhqTvNr
+         BkNydrd6C5rHo5F1121N43TGwGvWhLdwUzw/7TSb43gIFF7XC+7ZIwJ925YL3AZWndMy
+         6N7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent
-         :content-language:to:cc:references:from:subject:in-reply-to
-         :content-transfer-encoding;
-        bh=zMWK8hvpGJbXGsvO9RmIPb4Vp8Zoi5fIPTWz4fMTBMw=;
-        b=VyIECKDXWhEhBwpCzEWJWteTb0OIlVHspAJoIrUL1CXiMRBJvD4u+DSmCS5qzS+LXG
-         mkfl0bDWasxWmboPiHdocjn/aw9kIkzjHrw9yoM4Wm+4q0bx66Hpsgo9NbyYscd6M82L
-         MoL+tmZep9OJjldNeiD6SRNLdweiifb9Ms/uQg22Mx/T3wPNXdbd0ZwJaUnwxBXJc8nY
-         /CRq8X/oI8DT1uZKgnUrgBq2nhr4+FAQI9Hty5T4ab/JG2mLhgIsCOtwn/Ei1e2CH7BM
-         orfrQoLF4kJ/vjD5Ig2OkMPlc1KfjgD6TB3/pUCoRCPcjK+5G0sZf/cgKh4MmSR5WVv7
-         woIA==
-X-Gm-Message-State: AOAM533yqE4bOKYU/v2WFCPlC/TyVv7t6IVoesJ6b0mJwzOnkhTuvTTF
-        TGQ+F9Ir6Jf84mGScc6OyXkubJuHcE+q3g==
-X-Google-Smtp-Source: ABdhPJyolc92grZUbacq8NFy/dsIGCz8Kges8hMolhaRfnor8WtDO4jgVL1W8bGkP3K22LfHLBuHnA==
-X-Received: by 2002:ac2:5ed9:: with SMTP id d25mr4652910lfq.197.1635324292149;
-        Wed, 27 Oct 2021 01:44:52 -0700 (PDT)
-Received: from [10.0.0.115] (91-155-111-71.elisa-laajakaista.fi. [91.155.111.71])
-        by smtp.gmail.com with ESMTPSA id d12sm793838lft.214.2021.10.27.01.44.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Oct 2021 01:44:51 -0700 (PDT)
-Message-ID: <3d825723-6bed-75e0-492b-a9ec1c9e4994@gmail.com>
-Date:   Wed, 27 Oct 2021 11:45:16 +0300
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=gbhxMvAYGbSqfpcSxn09gxeDfjPDxDoohtl7lweoc/0=;
+        b=ti1EGBtVV3XJHhLWjQgcbOapr7JVlymRhN2JuP3o/TyFiqRjzk/xE5lC9jZyTd73qp
+         IEImEKoAIztIpuuC5WSrHdGozA/KHG0pAnrIEygt751ZXwRNX23N0efOqeTPtEpMyEtf
+         kVYHSp5rqovXtKXIy2IxQxseoB0A2Gw5oFF+La6FR17yVKddQOwSR5BeqywsPy7N6Gu+
+         98vmyXj8OxzVaaFbM1OkW0MPE/sL/xH/PqLb8o2N65sCVYFJdXR1e1zq1TO3r4GR3j7N
+         QTBU5Yr4MkX91li+a2tbZXhxLhgfQQwm7AJDgep4FMkwPto17Npmxn4M44MgW5G8qNsf
+         1n5w==
+X-Gm-Message-State: AOAM531Z5PTAjK3YUkr7rxZprPoJ60lAjxVlWy9BHlMV93oj5nq/obm+
+        HTtNPZFdF+csbrcs+0qC+9ho+PMM3kkjrFTqCXw=
+X-Google-Smtp-Source: ABdhPJzqceLJUFLiIgyEogAsJbolMtoSSeFWEKvJ+Dc/RNC8boxQrXMUlSg+6OLK8Y9gHlMcEQFCUOxp4pTSWS/yvF8=
+X-Received: by 2002:a25:408f:: with SMTP id n137mr32188689yba.10.1635333765015;
+ Wed, 27 Oct 2021 04:22:45 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.1
-Content-Language: en-US
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vignesh Raghavendra <vigneshr@ti.com>
-References: <20211027055625.11150-1-kishon@ti.com>
-From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-Subject: Re: [RESEND PATCH v2 0/2] dmaengine: ti: k3-udma: Fix NULL pointer
- dereference error
-In-Reply-To: <20211027055625.11150-1-kishon@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a05:7010:3d95:b0:145:d0f1:ca17 with HTTP; Wed, 27 Oct 2021
+ 04:22:44 -0700 (PDT)
+Reply-To: aabdulwalialhashmi@gmail.com
+From:   Abdulwali Alhashmi <victorjohnson202@gmail.com>
+Date:   Wed, 27 Oct 2021 04:22:44 -0700
+Message-ID: <CAAY7gEt1Cgs8VXbCk0QT4L2uC89QbVO6B01n0FynONQrExHFNg@mail.gmail.com>
+Subject: CAN I TRUST YOU
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Kishon,
-
-On 27/10/2021 08:56, Kishon Vijay Abraham I wrote:
-> NULL pointer de-reference error was observed when all the PCIe endpoint
-> functions (22 function in J721E) request a DMA channel. The issue was
-> specfically observed in BCDMA (Block copy DMA) but the issue is
-> applicable in PKTDMA as well.
-
-Nice catch, interesting that it did not materialized before.
-
-Can you re-word the patch subjects and commit messages accordingly?
-
-This is not really BCDMA/PKTDMA issue but a missed uc->Xchan = NULL;
-which would cause the de-reference error.
-
-> Changes from v1:
-> 1) Split the patch for BCDMA and PKTDMA separately
-> 2) Fixed the return value of udma_get_rflow() to 0.
-> 3) Removed the fixes tag as the patches does not directly apply to the
-> commits.
-> 
-> v1 => https://lore.kernel.org/r/20210209090036.30832-1-kishon@ti.com
-> 
-> Kishon Vijay Abraham I (2):
->   dmaengine: ti: k3-udma: Fix NULL pointer dereference error for BCDMA
-
-dmaengine: ti: k3-udma: Set bchan to NULL if a channel request fail
-
->   dmaengine: ti: k3-udma: Fix NULL pointer dereference error for PKTDMA
-
-dmaengine: ti: k3-udma: Set rchan/tchan to NULL if a channel request fail
-
-This is also applicable for UDMA which only have rchan and tchan.
-
-> 
->  drivers/dma/ti/k3-udma.c | 32 ++++++++++++++++++++++++++------
->  1 file changed, 26 insertions(+), 6 deletions(-)
-> 
-
 -- 
-Péter
+Greetings,
+
+Firstly, I apologize for encroaching into your privacy in this manner
+as it may seem unethical though it is a matter of great importance.
+
+I am Abdulwali Alhashmi, I work with Cayman National Bank (Cayman Islands).
+
+I am contacting you because my status would not permit me to do this
+alone as it is concerning our customer and an investment placed under
+our bank's management over 5 years ago.
+
+I have a proposal I would love to discuss with you which will be very
+beneficial to both of us. It's regarding my late client who has a huge
+deposit with my bank.
+
+He is from your country and shares the same last name with you.
+
+I want to seek your consent to present you as the next of kin to my
+late client who died and left a huge deposit with my bank.
+
+I would respectfully request that you keep the contents of this mail
+confidential and respect the integrity of the information you come by
+as a result of this mail.
+
+Please kindly get back to me for more details if I can TRUST YOU.{
+aabdulwalialhashmi@gmail.com }
+
+Regards
+Abdulwali Alhashmi
+Treasury and Deposit Management,
+Cayman National Bank Cayman Islands.

@@ -2,49 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47FEC43C26F
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Oct 2021 07:56:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C93D43C271
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Oct 2021 07:56:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238267AbhJ0F7G (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 27 Oct 2021 01:59:06 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35466 "EHLO
+        id S238291AbhJ0F7K (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 27 Oct 2021 01:59:10 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:35482 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231297AbhJ0F7F (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Oct 2021 01:59:05 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 19R5udar049773;
-        Wed, 27 Oct 2021 00:56:39 -0500
+        with ESMTP id S231297AbhJ0F7J (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Oct 2021 01:59:09 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 19R5uh9I049805;
+        Wed, 27 Oct 2021 00:56:43 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1635314199;
-        bh=G1G/nxbLKPZnpWOP2ZsyQlrDr5BUxyCaW1OxAXd1tp0=;
+        s=ti-com-17Q1; t=1635314203;
+        bh=jjoWNHqmoNbQOkWKgtA4LQGH4kaQ4d1y2qTsNbcQDJI=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=tLnA5QHXM6iX+ZPe17Ce072U03cysWR0MPUBoe/gMmgflQT4TORWpD4RBy7KprCdL
-         cyUgmGzLvlQOir6hIqNVkHq+6iJjxtgidtM01s13CCufzHwo7KUH7pWXRCq+loMQTR
-         IBw/ITTSNiYW8fdVjHVYWy/2iQiJgOxIN71+90Hg=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 19R5udE2105533
+        b=n5RkEzv9OL+gt48PA3QMvhqKuzrMBcdQSta846vlPbOWivAOY6+rSAr7xq6RKjhtc
+         QlP6JM4ySLu/FSzvDAoVWwtAWWyxTasgpGJunUJ05kgGP5KP99A9N9jntVPM6B7GIE
+         Elkg7qIe9/zS0/9JF4zsRoluTbx6LuZcapriOjv4=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 19R5uhxe064932
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 Oct 2021 00:56:39 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 27 Oct 2021 00:56:43 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Wed, 27
- Oct 2021 00:56:38 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2021 00:56:43 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Wed, 27 Oct 2021 00:56:38 -0500
+ Frontend Transport; Wed, 27 Oct 2021 00:56:43 -0500
 Received: from a0393678-lt.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 19R5uRPL126251;
-        Wed, 27 Oct 2021 00:56:35 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 19R5uRPM126251;
+        Wed, 27 Oct 2021 00:56:39 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
         Vinod Koul <vkoul@kernel.org>
 CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RESEND PATCH v2 1/2] dmaengine: ti: k3-udma: Fix NULL pointer dereference error for BCDMA
-Date:   Wed, 27 Oct 2021 11:26:24 +0530
-Message-ID: <20211027055625.11150-2-kishon@ti.com>
+Subject: [RESEND PATCH v2 2/2] dmaengine: ti: k3-udma: Fix NULL pointer dereference error for PKTDMA
+Date:   Wed, 27 Oct 2021 11:26:25 +0530
+Message-ID: <20211027055625.11150-3-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211027055625.11150-1-kishon@ti.com>
 References: <20211027055625.11150-1-kishon@ti.com>
@@ -55,45 +55,92 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-bcdma_get_*() checks if bchan is already allocated by checking if it
-has a NON NULL value. For the error cases, bchan will have error value
-and bcdma_get_*() considers this as already allocated (PASS) since the
-error values are NON NULL. This results in NULL pointer dereference
-error while de-referencing bchan.
+udma_get_*() checks if rchan/tchan/rflow is already allocated by checking
+if it has a NON NULL value. For the error cases, rchan/tchan/rflow will
+have error value and udma_get_*() considers this as already allocated
+(PASS) since the error values are NON NULL. This results in NULL pointer
+dereference error while de-referencing rchan/tchan/rflow.
 
-Reset the value of bchan to NULL if the allocation actually fails.
+Reset the value of rchan/tchan/rflow to NULL if the allocation actually
+fails.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/dma/ti/k3-udma.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/dma/ti/k3-udma.c | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index a35858610780..14ae28830871 100644
+index 14ae28830871..041d8e32d630 100644
 --- a/drivers/dma/ti/k3-udma.c
 +++ b/drivers/dma/ti/k3-udma.c
-@@ -1348,6 +1348,7 @@ static int bcdma_get_bchan(struct udma_chan *uc)
+@@ -1380,6 +1380,7 @@ static int bcdma_get_bchan(struct udma_chan *uc)
+ static int udma_get_tchan(struct udma_chan *uc)
  {
  	struct udma_dev *ud = uc->ud;
- 	enum udma_tp_level tpl;
 +	int ret;
  
- 	if (uc->bchan) {
- 		dev_dbg(ud->dev, "chan%d: already have bchan%d allocated\n",
-@@ -1365,8 +1366,11 @@ static int bcdma_get_bchan(struct udma_chan *uc)
- 		tpl = ud->bchan_tpl.levels - 1;
- 
- 	uc->bchan = __udma_reserve_bchan(ud, tpl, -1);
--	if (IS_ERR(uc->bchan))
--		return PTR_ERR(uc->bchan);
-+	if (IS_ERR(uc->bchan)) {
-+		ret = PTR_ERR(uc->bchan);
-+		uc->bchan = NULL;
+ 	if (uc->tchan) {
+ 		dev_dbg(ud->dev, "chan%d: already have tchan%d allocated\n",
+@@ -1394,8 +1395,11 @@ static int udma_get_tchan(struct udma_chan *uc)
+ 	 */
+ 	uc->tchan = __udma_reserve_tchan(ud, uc->config.channel_tpl,
+ 					 uc->config.mapped_channel_id);
+-	if (IS_ERR(uc->tchan))
+-		return PTR_ERR(uc->tchan);
++	if (IS_ERR(uc->tchan)) {
++		ret = PTR_ERR(uc->tchan);
++		uc->tchan = NULL;
 +		return ret;
 +	}
  
- 	uc->tchan = uc->bchan;
+ 	if (ud->tflow_cnt) {
+ 		int tflow_id;
+@@ -1425,6 +1429,7 @@ static int udma_get_tchan(struct udma_chan *uc)
+ static int udma_get_rchan(struct udma_chan *uc)
+ {
+ 	struct udma_dev *ud = uc->ud;
++	int ret;
  
+ 	if (uc->rchan) {
+ 		dev_dbg(ud->dev, "chan%d: already have rchan%d allocated\n",
+@@ -1439,8 +1444,13 @@ static int udma_get_rchan(struct udma_chan *uc)
+ 	 */
+ 	uc->rchan = __udma_reserve_rchan(ud, uc->config.channel_tpl,
+ 					 uc->config.mapped_channel_id);
++	if (IS_ERR(uc->rchan)) {
++		ret = PTR_ERR(uc->rchan);
++		uc->rchan = NULL;
++		return ret;
++	}
+ 
+-	return PTR_ERR_OR_ZERO(uc->rchan);
++	return 0;
+ }
+ 
+ static int udma_get_chan_pair(struct udma_chan *uc)
+@@ -1494,6 +1504,7 @@ static int udma_get_chan_pair(struct udma_chan *uc)
+ static int udma_get_rflow(struct udma_chan *uc, int flow_id)
+ {
+ 	struct udma_dev *ud = uc->ud;
++	int ret;
+ 
+ 	if (!uc->rchan) {
+ 		dev_err(ud->dev, "chan%d: does not have rchan??\n", uc->id);
+@@ -1507,8 +1518,13 @@ static int udma_get_rflow(struct udma_chan *uc, int flow_id)
+ 	}
+ 
+ 	uc->rflow = __udma_get_rflow(ud, flow_id);
++	if (IS_ERR(uc->rflow)) {
++		ret = PTR_ERR(uc->rflow);
++		uc->rflow = NULL;
++		return ret;
++	}
+ 
+-	return PTR_ERR_OR_ZERO(uc->rflow);
++	return 0;
+ }
+ 
+ static void bcdma_put_bchan(struct udma_chan *uc)
 -- 
 2.17.1
 

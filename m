@@ -2,49 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E1EF643C25D
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Oct 2021 07:53:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1FEE43C25F
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Oct 2021 07:53:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239722AbhJ0Fzc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 27 Oct 2021 01:55:32 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37344 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236625AbhJ0Fzb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Oct 2021 01:55:31 -0400
+        id S239773AbhJ0Fzf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 27 Oct 2021 01:55:35 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:45750 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236625AbhJ0Fze (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Oct 2021 01:55:34 -0400
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 19R5r4lX011258;
-        Wed, 27 Oct 2021 00:53:04 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 19R5r7KX104869;
+        Wed, 27 Oct 2021 00:53:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1635313984;
-        bh=jjoWNHqmoNbQOkWKgtA4LQGH4kaQ4d1y2qTsNbcQDJI=;
+        s=ti-com-17Q1; t=1635313987;
+        bh=g92cF+PG1Y8ft/dPCWjVaGnIySgCFpdj/dtBjMg5QSA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=MgikWE0KCBFJr3kYXa8UVCHqiN5XjVbd7+V1NODG7ZKywC5wQ72YVTMKXIFEkKSQr
-         +jXQlpySR5Hem+SSmo+9Ns/OBPB2d4pAifkrKWkBeqe57CKI9WjFWuK3XOgUEMHbfP
-         2fROCFbO96LKZ5s7xPKPRLO6aMl7DvcXD/2Qj7uA=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 19R5r4pr130603
+        b=gYlPBXChwCxqxfiAU78qeerrApf/jmGZLgnB9SvpBAKV9GHhEaIPHiUrJqKxlChRc
+         J1MjKkG+5VjLA/avxFO7mW18QaTGkfqhUWIOzaFoNiUtGICacYEVzIOyx8rxeBkWPZ
+         +d2nZIyTDRh6FlVk1PZIXJHit7nkWIN/yie/f/fA=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 19R5r7kp130663
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 Oct 2021 00:53:04 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 27 Oct 2021 00:53:07 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Wed, 27
- Oct 2021 00:53:04 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ Oct 2021 00:53:07 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Wed, 27 Oct 2021 00:53:04 -0500
+ Frontend Transport; Wed, 27 Oct 2021 00:53:07 -0500
 Received: from a0393678-lt.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 19R5qvNO100051;
-        Wed, 27 Oct 2021 00:53:01 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 19R5qvNP100051;
+        Wed, 27 Oct 2021 00:53:04 -0500
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
         Vinod Koul <vkoul@kernel.org>
 CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 2/2] dmaengine: ti: k3-udma: Fix NULL pointer dereference error for PKTDMA
-Date:   Wed, 27 Oct 2021 11:22:51 +0530
-Message-ID: <20211027055254.10912-2-kishon@ti.com>
+Subject: [PATCH v2 0/2] dmaengine: ti: k3-udma: Fix NULL pointer dereference error
+Date:   Wed, 27 Oct 2021 11:22:52 +0530
+Message-ID: <20211027055254.10912-3-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211027055254.10912-1-kishon@ti.com>
 References: <20211027055254.10912-1-kishon@ti.com>
@@ -55,92 +55,26 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-udma_get_*() checks if rchan/tchan/rflow is already allocated by checking
-if it has a NON NULL value. For the error cases, rchan/tchan/rflow will
-have error value and udma_get_*() considers this as already allocated
-(PASS) since the error values are NON NULL. This results in NULL pointer
-dereference error while de-referencing rchan/tchan/rflow.
+NULL pointer de-reference error was observed when all the PCIe endpoint
+functions (22 function in J721E) request a DMA channel. The issue was
+specfically observed in BCDMA (Block copy DMA) but the issue is
+applicable in PKTDMA as well.
 
-Reset the value of rchan/tchan/rflow to NULL if the allocation actually
-fails.
+Changes from v1:
+1) Split the patch for BCDMA and PKTDMA separately
+2) Fixed the return value of udma_get_rflow() to 0.
+3) Removed the fixes tag as the patches does not directly apply to the
+commits.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/dma/ti/k3-udma.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+v1 => https://lore.kernel.org/r/20210209090036.30832-1-kishon@ti.com
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 14ae28830871..041d8e32d630 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -1380,6 +1380,7 @@ static int bcdma_get_bchan(struct udma_chan *uc)
- static int udma_get_tchan(struct udma_chan *uc)
- {
- 	struct udma_dev *ud = uc->ud;
-+	int ret;
- 
- 	if (uc->tchan) {
- 		dev_dbg(ud->dev, "chan%d: already have tchan%d allocated\n",
-@@ -1394,8 +1395,11 @@ static int udma_get_tchan(struct udma_chan *uc)
- 	 */
- 	uc->tchan = __udma_reserve_tchan(ud, uc->config.channel_tpl,
- 					 uc->config.mapped_channel_id);
--	if (IS_ERR(uc->tchan))
--		return PTR_ERR(uc->tchan);
-+	if (IS_ERR(uc->tchan)) {
-+		ret = PTR_ERR(uc->tchan);
-+		uc->tchan = NULL;
-+		return ret;
-+	}
- 
- 	if (ud->tflow_cnt) {
- 		int tflow_id;
-@@ -1425,6 +1429,7 @@ static int udma_get_tchan(struct udma_chan *uc)
- static int udma_get_rchan(struct udma_chan *uc)
- {
- 	struct udma_dev *ud = uc->ud;
-+	int ret;
- 
- 	if (uc->rchan) {
- 		dev_dbg(ud->dev, "chan%d: already have rchan%d allocated\n",
-@@ -1439,8 +1444,13 @@ static int udma_get_rchan(struct udma_chan *uc)
- 	 */
- 	uc->rchan = __udma_reserve_rchan(ud, uc->config.channel_tpl,
- 					 uc->config.mapped_channel_id);
-+	if (IS_ERR(uc->rchan)) {
-+		ret = PTR_ERR(uc->rchan);
-+		uc->rchan = NULL;
-+		return ret;
-+	}
- 
--	return PTR_ERR_OR_ZERO(uc->rchan);
-+	return 0;
- }
- 
- static int udma_get_chan_pair(struct udma_chan *uc)
-@@ -1494,6 +1504,7 @@ static int udma_get_chan_pair(struct udma_chan *uc)
- static int udma_get_rflow(struct udma_chan *uc, int flow_id)
- {
- 	struct udma_dev *ud = uc->ud;
-+	int ret;
- 
- 	if (!uc->rchan) {
- 		dev_err(ud->dev, "chan%d: does not have rchan??\n", uc->id);
-@@ -1507,8 +1518,13 @@ static int udma_get_rflow(struct udma_chan *uc, int flow_id)
- 	}
- 
- 	uc->rflow = __udma_get_rflow(ud, flow_id);
-+	if (IS_ERR(uc->rflow)) {
-+		ret = PTR_ERR(uc->rflow);
-+		uc->rflow = NULL;
-+		return ret;
-+	}
- 
--	return PTR_ERR_OR_ZERO(uc->rflow);
-+	return 0;
- }
- 
- static void bcdma_put_bchan(struct udma_chan *uc)
+Kishon Vijay Abraham I (2):
+  dmaengine: ti: k3-udma: Fix NULL pointer dereference error for BCDMA
+  dmaengine: ti: k3-udma: Fix NULL pointer dereference error for PKTDMA
+
+ drivers/dma/ti/k3-udma.c | 32 ++++++++++++++++++++++++++------
+ 1 file changed, 26 insertions(+), 6 deletions(-)
+
 -- 
 2.17.1
 

@@ -2,177 +2,111 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D43243C2AB
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Oct 2021 08:12:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 954EB43C56A
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Oct 2021 10:45:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239797AbhJ0GOp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 27 Oct 2021 02:14:45 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:47286 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S231208AbhJ0GOo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Oct 2021 02:14:44 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19R4bM68014856;
-        Wed, 27 Oct 2021 08:11:49 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=selector1;
- bh=nT19xZKAS1g6Wr2Uc3j1zTC0eEqLF61U2hb0csAByE8=;
- b=qpkz848/RtyF6rGQB646MxF7l3lRxh06i/JQDEq4QXdNf0bBls4oIzPKu9hJoks6f/Qu
- zZ5EPSZzQPRMBZmURzYyXHIGJHoV4pRjFM5QrtfySALfgLuclLRwFWXOohJuaq9ZdXXU
- 1A/tvhP9HqzAkj7qPpIoRWuTrxgBM2xIlkxBQmQxMEry3YegaYhl15hpEr+uFaZRHM09
- G2djmdsXb1j1BFg4VMmDFOY0NS6CiVjZ+SJVVgVnIEPs22BxO+HytLu9jDmcsJjCYtyk
- jzPyozDJ9b4xRK9AsLTKfGq8y+d1KoyRnwgOYG+KGwS3rDJRaK+8FSk1qCrfTltXZ7Qd XQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3bxm40v5fh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Oct 2021 08:11:49 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0B2CC100034;
-        Wed, 27 Oct 2021 08:11:49 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag2node2.st.com [10.75.127.5])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E23C3218104;
-        Wed, 27 Oct 2021 08:11:48 +0200 (CEST)
-Received: from lmecxl0573.lme.st.com (10.75.127.51) by SFHDAG2NODE2.st.com
- (10.75.127.5) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Wed, 27 Oct
- 2021 08:11:45 +0200
-Subject: Re: dt-bindings: treewide: Update @st.com email address to
- @foss.st.com
-To:     Marc Zyngier <maz@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        maxime coquelin <mcoquelin.stm32@gmail.com>,
-        alexandre torgue <alexandre.torgue@foss.st.com>,
-        michael turquette <mturquette@baylibre.com>,
-        stephen boyd <sboyd@kernel.org>,
-        herbert xu <herbert@gondor.apana.org.au>,
-        "david s . miller" <davem@davemloft.net>,
-        david airlie <airlied@linux.ie>,
-        daniel vetter <daniel@ffwll.ch>,
-        thierry reding <thierry.reding@gmail.com>,
-        sam ravnborg <sam@ravnborg.org>,
-        yannick fertre <yannick.fertre@foss.st.com>,
-        "philippe cornu" <philippe.cornu@foss.st.com>,
-        benjamin gaignard <benjamin.gaignard@linaro.org>,
-        vinod koul <vkoul@kernel.org>,
-        ohad ben-cohen <ohad@wizery.com>,
-        bjorn andersson <bjorn.andersson@linaro.org>,
-        baolin wang <baolin.wang7@gmail.com>,
-        jonathan cameron <jic23@kernel.org>,
-        "lars-peter clausen" <lars@metafoo.de>,
-        olivier moysan <olivier.moysan@foss.st.com>,
-        arnaud pouliquen <arnaud.pouliquen@foss.st.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Hugues Fruchet <hugues.fruchet@foss.st.com>,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        "Richard Weinberger" <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        "Jakub Kicinski" <kuba@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Matt Mackall <mpm@selenic.com>,
-        "Alessandro Zummo" <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Ahmad Fatoum" <a.fatoum@pengutronix.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        dillon min <dillon.minfei@gmail.com>,
-        Marek Vasut <marex@denx.de>,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>,
-        Christophe Roullier <christophe.roullier@foss.st.com>,
-        Gabriel Fernandez <gabriel.fernandez@foss.st.com>,
-        Lionel Debieve <lionel.debieve@foss.st.com>,
-        Amelie Delaunay <amelie.delaunay@foss.st.com>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
-        Ludovic Barre <ludovic.barre@foss.st.com>,
-        Christophe Kerello <christophe.kerello@foss.st.com>,
-        pascal Paillet <p.paillet@foss.st.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "Jose Abreu" <joabreu@synopsys.com>,
-        Le Ray <erwan.leray@foss.st.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-clk@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <dmaengine@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-media@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        <netdev@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>
-References: <20211020065000.21312-1-patrice.chotard@foss.st.com>
- <22fb6f19-21eb-dcb5-fa31-bb243d4a7eaf@canonical.com>
- <878ryoc4dc.wl-maz@kernel.org>
-From:   Patrice CHOTARD <patrice.chotard@foss.st.com>
-Message-ID: <82492eb2-5a5e-39a2-a058-5e2ba75323e0@foss.st.com>
-Date:   Wed, 27 Oct 2021 08:11:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S240945AbhJ0IrX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 27 Oct 2021 04:47:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239549AbhJ0IrT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Oct 2021 04:47:19 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF235C061570;
+        Wed, 27 Oct 2021 01:44:53 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id l13so4587457lfg.6;
+        Wed, 27 Oct 2021 01:44:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:content-language:to:cc
+         :references:from:subject:in-reply-to:content-transfer-encoding;
+        bh=zMWK8hvpGJbXGsvO9RmIPb4Vp8Zoi5fIPTWz4fMTBMw=;
+        b=lbp34rNa/A5IA66pNvQbVeLii9gDFaqxoc8T1ixMhEQ9u0s6rc9lz5UznqFulj10j9
+         3HjPSYEC3cLm01QHECPUwJU3i7J5jXygj4E8S7xOFxgloAeqCYOl6GbXYHEhdYYtMV8v
+         8NgMv3vE658xpSc1jtV+UY/jU8Wx5F++mGGHh74Emr1qyy7LO+0j8w0vQBBwHDiQ8LKx
+         CrTibSTE3yvkc7H1qFQIn6mYmQUKRdIQTlaA0XdVP8GFD7tGW2wLCDndW2QyitVDB8VQ
+         uN2jWh1VBHNWr/7EP+sx28ZxiR5ARAG2G/nAlnkf0x1++0qFIEEV8kzFFiH6Fo5oBWjN
+         cJlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:cc:references:from:subject:in-reply-to
+         :content-transfer-encoding;
+        bh=zMWK8hvpGJbXGsvO9RmIPb4Vp8Zoi5fIPTWz4fMTBMw=;
+        b=VyIECKDXWhEhBwpCzEWJWteTb0OIlVHspAJoIrUL1CXiMRBJvD4u+DSmCS5qzS+LXG
+         mkfl0bDWasxWmboPiHdocjn/aw9kIkzjHrw9yoM4Wm+4q0bx66Hpsgo9NbyYscd6M82L
+         MoL+tmZep9OJjldNeiD6SRNLdweiifb9Ms/uQg22Mx/T3wPNXdbd0ZwJaUnwxBXJc8nY
+         /CRq8X/oI8DT1uZKgnUrgBq2nhr4+FAQI9Hty5T4ab/JG2mLhgIsCOtwn/Ei1e2CH7BM
+         orfrQoLF4kJ/vjD5Ig2OkMPlc1KfjgD6TB3/pUCoRCPcjK+5G0sZf/cgKh4MmSR5WVv7
+         woIA==
+X-Gm-Message-State: AOAM533yqE4bOKYU/v2WFCPlC/TyVv7t6IVoesJ6b0mJwzOnkhTuvTTF
+        TGQ+F9Ir6Jf84mGScc6OyXkubJuHcE+q3g==
+X-Google-Smtp-Source: ABdhPJyolc92grZUbacq8NFy/dsIGCz8Kges8hMolhaRfnor8WtDO4jgVL1W8bGkP3K22LfHLBuHnA==
+X-Received: by 2002:ac2:5ed9:: with SMTP id d25mr4652910lfq.197.1635324292149;
+        Wed, 27 Oct 2021 01:44:52 -0700 (PDT)
+Received: from [10.0.0.115] (91-155-111-71.elisa-laajakaista.fi. [91.155.111.71])
+        by smtp.gmail.com with ESMTPSA id d12sm793838lft.214.2021.10.27.01.44.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Oct 2021 01:44:51 -0700 (PDT)
+Message-ID: <3d825723-6bed-75e0-492b-a9ec1c9e4994@gmail.com>
+Date:   Wed, 27 Oct 2021 11:45:16 +0300
 MIME-Version: 1.0
-In-Reply-To: <878ryoc4dc.wl-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.1
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG2NODE2.st.com
- (10.75.127.5)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-10-27_01,2021-10-26_01,2020-04-07_01
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vignesh Raghavendra <vigneshr@ti.com>
+References: <20211027055625.11150-1-kishon@ti.com>
+From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+Subject: Re: [RESEND PATCH v2 0/2] dmaengine: ti: k3-udma: Fix NULL pointer
+ dereference error
+In-Reply-To: <20211027055625.11150-1-kishon@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Marc
+Hi Kishon,
 
-On 10/20/21 1:39 PM, Marc Zyngier wrote:
-> On Wed, 20 Oct 2021 08:45:02 +0100,
-> Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com> wrote:
->>
->> On 20/10/2021 08:50, patrice.chotard@foss.st.com wrote:
->>> From: Patrice Chotard <patrice.chotard@foss.st.com>
->>>
->>> Not all @st.com email address are concerned, only people who have
->>> a specific @foss.st.com email will see their entry updated.
->>> For some people, who left the company, remove their email.
->>>
->>
->> Please split simple address change from maintainer updates (removal,
->> addition).
->>
->> Also would be nice to see here explained *why* are you doing this.
+On 27/10/2021 08:56, Kishon Vijay Abraham I wrote:
+> NULL pointer de-reference error was observed when all the PCIe endpoint
+> functions (22 function in J721E) request a DMA channel. The issue was
+> specfically observed in BCDMA (Block copy DMA) but the issue is
+> applicable in PKTDMA as well.
+
+Nice catch, interesting that it did not materialized before.
+
+Can you re-word the patch subjects and commit messages accordingly?
+
+This is not really BCDMA/PKTDMA issue but a missed uc->Xchan = NULL;
+which would cause the de-reference error.
+
+> Changes from v1:
+> 1) Split the patch for BCDMA and PKTDMA separately
+> 2) Fixed the return value of udma_get_rflow() to 0.
+> 3) Removed the fixes tag as the patches does not directly apply to the
+> commits.
 > 
-> And why this can't be done with a single update to .mailmap, like
-> anyone else does.
+> v1 => https://lore.kernel.org/r/20210209090036.30832-1-kishon@ti.com
+> 
+> Kishon Vijay Abraham I (2):
+>   dmaengine: ti: k3-udma: Fix NULL pointer dereference error for BCDMA
 
-Thanks for the tips, yes, it will be simpler.
+dmaengine: ti: k3-udma: Set bchan to NULL if a channel request fail
 
-Thanks
-Patrice
+>   dmaengine: ti: k3-udma: Fix NULL pointer dereference error for PKTDMA
+
+dmaengine: ti: k3-udma: Set rchan/tchan to NULL if a channel request fail
+
+This is also applicable for UDMA which only have rchan and tchan.
 
 > 
-> 	M.
+>  drivers/dma/ti/k3-udma.c | 32 ++++++++++++++++++++++++++------
+>  1 file changed, 26 insertions(+), 6 deletions(-)
 > 
+
+-- 
+Péter

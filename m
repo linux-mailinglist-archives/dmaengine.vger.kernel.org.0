@@ -2,81 +2,60 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77D8D4414EC
-	for <lists+dmaengine@lfdr.de>; Mon,  1 Nov 2021 09:06:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E7C444200D
+	for <lists+dmaengine@lfdr.de>; Mon,  1 Nov 2021 19:31:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231708AbhKAIJA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 1 Nov 2021 04:09:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231787AbhKAIIo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 1 Nov 2021 04:08:44 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D98FEC06120C
-        for <dmaengine@vger.kernel.org>; Mon,  1 Nov 2021 01:06:11 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id d13so26921237wrf.11
-        for <dmaengine@vger.kernel.org>; Mon, 01 Nov 2021 01:06:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=J/sLAHxRh6EjJh2rcjPDJLzA40VXjb4DP54UXQAr8IU=;
-        b=jTwGY7UqyQ8YIhJUDjrqZPtk3LzrWCAUOAMDPLz5M7CqLBHqNsFTo9C861qV1B25Xf
-         r5L553Wxmro5Ww3I0Kz3a52AwkmZqFToii6+0ZOhpUkOfcb53PnNGE9m6Sqik3zmhZwo
-         n/R9HTp53zn5NI3DbL08muEwIh9gH7g9lDe2tstM5tUGQD80ibC8oJ7RZsh0jabUj80l
-         TjW7jDszyj0LgBKofuNs3yAxUhi8ze1MSxaF3AEB8qSt1N3bygNegk5wBFiWacOIsTYm
-         giGQNkRW+M+En5ZqEkyuSVwtFALtbKc66CUkcVFPmwMgTZmFkWlfrtrQ91sQ12FB43ir
-         IgcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=J/sLAHxRh6EjJh2rcjPDJLzA40VXjb4DP54UXQAr8IU=;
-        b=xU/IJ5UyOojizY6GREQjMMQYjbDtS7UCcZBFLiOiYK5ca0wE6SYNyvnM937V6L1dPQ
-         W6SXe/gQD9mUbGS2hvITuoF5wVLu9ig/s1CbcdyOtdBAu3KwzjTWrQ8EphQoiiUezlnR
-         7isHK5K5PtQjsT9aS5oSu3Pg1s8lOyXwSxcWYT4ekQiIDxMSK10ckVjxWWr4wa7+SfTF
-         w75GSAjd4yyqtCZ5gIVqlGlRWHO7TjbsUekg9g8h8wN+Q53A5XBCNLrLu83mCXcjQwS7
-         OhrDVihIR38SzA1qSkaoI7DrRSwcGQqvgoqHbFM+hvfrVvLvBXsd2nld1WbGwoRV7Mb4
-         g7Zg==
-X-Gm-Message-State: AOAM532bpB3WQV034Tuanl+PQaAdS2a1/0RT6+QkKs63JznOlAd1svvZ
-        Tn33NoCJJO9TDOliTHa4DTJV6wBmuVDxh5WGFq9exdXliVE=
-X-Google-Smtp-Source: ABdhPJxmqEVdpxtX6Hrcfxe4l+hmj7ibNqiYjCRoHEGQmkHQsxyv4j0y0ocCVsmwYp4ABnpO0ho1EyHAGzTI8DbI2zw=
-X-Received: by 2002:a05:6512:3696:: with SMTP id d22mr7627111lfs.659.1635753959932;
- Mon, 01 Nov 2021 01:05:59 -0700 (PDT)
+        id S231453AbhKASdp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 1 Nov 2021 14:33:45 -0400
+Received: from neon-v2.ccupm.upm.es ([138.100.198.70]:44713 "EHLO
+        neon-v2.ccupm.upm.es" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229760AbhKASdn (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 1 Nov 2021 14:33:43 -0400
+X-Greylist: delayed 828 seconds by postgrey-1.27 at vger.kernel.org; Mon, 01 Nov 2021 14:33:43 EDT
+Received: from localhost.localdomain (62-3-70-206.dsl.in-addr.zen.co.uk [62.3.70.206] (may be forged))
+        (user=adrianml@alumnos.upm.es mech=LOGIN bits=0)
+        by neon-v2.ccupm.upm.es (8.15.2/8.15.2/neon-v2-001) with ESMTPSA id 1A1I8fSN016585
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 1 Nov 2021 18:08:53 GMT
+From:   Adrian Larumbe <adrianml@alumnos.upm.es>
+To:     vkoul@kernel.org, dmaengine@vger.kernel.org
+Cc:     michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        Adrian Larumbe <adrianml@alumnos.upm.es>
+Subject: [PATCH 0/3] Add support for MEMCPY_SG transfers
+Date:   Mon,  1 Nov 2021 18:08:22 +0000
+Message-Id: <20211101180825.241048-1-adrianml@alumnos.upm.es>
+X-Mailer: git-send-email 2.33.1
+In-Reply-To: <20210706234338.7696-1-adrian.martinezlarumbe@imgtec.com>
+References: <20210706234338.7696-1-adrian.martinezlarumbe@imgtec.com>
 MIME-Version: 1.0
-Received: by 2002:a05:6512:304b:0:0:0:0 with HTTP; Mon, 1 Nov 2021 01:05:59
- -0700 (PDT)
-Reply-To: aisha.7d@yahoo.com
-From:   Aisha AG <rbx17058@gmail.com>
-Date:   Mon, 1 Nov 2021 00:05:59 -0800
-Message-ID: <CA+KbyychNgycp0rGBpdptJEdAFJQQCku4iDOhYe4CxitYXaueA@mail.gmail.com>
-Subject: Hello Dear,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Bring back dmaengine API support for scatter-gather memcpy's.
+
+Changes in patch v2:
+  * Expanded API function documentation to elaborate on its semantics,
+    limitations and corner case behaviour.
+  * Broke the patch series into three different ones: documentation, core
+    API change and consumer driver
+
+v1 - https://lore.kernel.org/dmaengine/20210706234338.7696-1-adrian.martinezlarumbe@imgtec.com
+
+Adrian Larumbe (3):
+  dmaengine: Add documentation for new memcpy scatter-gather function
+  dmaengine: Add core function and capability check for DMA_MEMCPY_SG
+  dmaengine: Add consumer for the new DMA_MEMCPY_SG API function.
+
+ .../driver-api/dmaengine/provider.rst         |  23 ++++
+ drivers/dma/dmaengine.c                       |   7 +
+ drivers/dma/xilinx/xilinx_dma.c               | 122 ++++++++++++++++++
+ include/linux/dmaengine.h                     |  20 +++
+ 4 files changed, 172 insertions(+)
+
+
+base-commit: e0674853943287669a82d1ffe09a700944615978
 -- 
+2.33.1
 
-Hello Dear,
-
-I came across your e-mail contact prior to a private search while in
-need of your assistance. I am Aisha Al-Qaddafi, the only biological
-Daughter of Former President of Libya Col.Muammar Al-Qaddafi.
-Am a Widow and a single Mother with three Children.
-
-I have investment funds worth Twenty Seven Million Five Hundred
-Thousand United State Dollar $27.500.000.00, and i need a trusted
-investment Manager/Partner because of my current refugee status,
-however, I am interested in you for investment project assistance in
-your country,may be from there,we can build business relationship
-in the nearest future.
-
-I am willing to negotiate an investment/business profit sharing ratio
-with you based on the future investment earning profits.
-
-If you are willing to handle this project on my behalf kindly reply
-urgently to enable me to provide you more information about the
-investment funds.
-Best Regards
-Mrs Aisha Al-Qaddafi.

@@ -2,187 +2,137 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10F88442010
-	for <lists+dmaengine@lfdr.de>; Mon,  1 Nov 2021 19:31:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ECB11442BB2
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Nov 2021 11:33:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231636AbhKASeE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 1 Nov 2021 14:34:04 -0400
-Received: from neon-v2.ccupm.upm.es ([138.100.198.70]:41129 "EHLO
-        neon-v2.ccupm.upm.es" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229760AbhKASeD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 1 Nov 2021 14:34:03 -0400
-Received: from localhost.localdomain (62-3-70-206.dsl.in-addr.zen.co.uk [62.3.70.206] (may be forged))
-        (user=adrianml@alumnos.upm.es mech=LOGIN bits=0)
-        by neon-v2.ccupm.upm.es (8.15.2/8.15.2/neon-v2-001) with ESMTPSA id 1A1I8fSQ016585
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 1 Nov 2021 18:08:54 GMT
-From:   Adrian Larumbe <adrianml@alumnos.upm.es>
-To:     vkoul@kernel.org, dmaengine@vger.kernel.org
-Cc:     michal.simek@xilinx.com, linux-arm-kernel@lists.infradead.org,
-        Adrian Larumbe <adrianml@alumnos.upm.es>
-Subject: [PATCH 3/3] dmaengine: Add consumer for the new DMA_MEMCPY_SG API function.
-Date:   Mon,  1 Nov 2021 18:08:25 +0000
-Message-Id: <20211101180825.241048-4-adrianml@alumnos.upm.es>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20211101180825.241048-1-adrianml@alumnos.upm.es>
+        id S229778AbhKBKgJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 2 Nov 2021 06:36:09 -0400
+Received: from mail-bn8nam08on2089.outbound.protection.outlook.com ([40.107.100.89]:46656
+        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229577AbhKBKgI (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 2 Nov 2021 06:36:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=US9YjvR2T0wt9WwEbGOstgMvY8JdJ7oTDizgM/j3fdJ1Zsb7Q9o5g4H99phvYKvH8+mkwDd5N/Gr/xdiss9XshvpJX3wdgN77K9jPkP/p7MgWF8WTfC/a5/0we0KnVaWQFisQi2IDJLnOuw34DUQ0OaGcXvFcFVc3WC6V6vgAj2qhtlroj+XzfcPHeYH0Q6loNQwEZNp43pxz46HQZlJGaOuZI24NeHV913dO4XPWAyq3F/TjCwENjJ040ALj8EnOlmi8dGvUeA6Sbju2EefYCJ/LzDbXPRN9nO6tllWm60nhS8DVnqyLjDzpz2X872EGZjFvjwVLOA+C94CCWGxsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EHrTPIxPxeKDXv/S3tN8o7YQklY7eIHYv4qMrIlZ0lc=;
+ b=LNnto/fhxnKNk1PbSiynZwCkEPaycGpKwzknBkBxwFYgHoAC7Zr2ThqVb3RS/aYhAsHNXpaFGXJYwApD5s9zlUZSza4vF4f18MrNRz4ct0H3z8VCBt03gEPXXYEUWUfWKbz3TiwN60NiGdGUlspfsEXiFRj8LB3KKMrv5O3jvfZHAYhJGFY+1Lgt9NGSL504OncOEyzOXGZTK+oRsiO+Z1Hy8VmbhC/OAzhja3EYps9fXKTxUQmkJuUJmjYXOPDQ4h6AWHichrRIoc9TJnS4X4Ko4RozgnDy4BiJq35yN8YKKrL0LBulpgtCC9iRb9o3UYRC28iW0QHh1b4ZGzO5DA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=alumnos.upm.es smtp.mailfrom=xilinx.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EHrTPIxPxeKDXv/S3tN8o7YQklY7eIHYv4qMrIlZ0lc=;
+ b=lETSZVv9FPqdnC3SfMUzmxAwYQb4vx68tWxpULgUVAnNkCor4hApdnXwOvT8VY9y1gbzKFcQUUZBxi9HwEBvYownU1rXDB8ceWsPtKB6UO07ufwdkk/Wj0iCXmL7iLU9iULi8NH5rebD+cJTOBmz0zQfzMtKEQrboPaZB5NNszk=
+Received: from DM6PR17CA0024.namprd17.prod.outlook.com (2603:10b6:5:1b3::37)
+ by DM6PR02MB6986.namprd02.prod.outlook.com (2603:10b6:5:22e::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.17; Tue, 2 Nov
+ 2021 10:33:32 +0000
+Received: from DM3NAM02FT045.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:5:1b3:cafe::80) by DM6PR17CA0024.outlook.office365.com
+ (2603:10b6:5:1b3::37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.14 via Frontend
+ Transport; Tue, 2 Nov 2021 10:33:32 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; alumnos.upm.es; dkim=none (message not signed)
+ header.d=none;alumnos.upm.es; dmarc=pass action=none header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com;
+Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
+ DM3NAM02FT045.mail.protection.outlook.com (10.13.4.189) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4649.14 via Frontend Transport; Tue, 2 Nov 2021 10:33:31 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Tue, 2 Nov 2021 03:33:30 -0700
+Received: from smtp.xilinx.com (172.19.127.95) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.2176.14 via Frontend Transport; Tue, 2 Nov 2021 03:33:30 -0700
+Envelope-to: adrianml@alumnos.upm.es,
+ vkoul@kernel.org,
+ dmaengine@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Received: from [10.254.241.49] (port=41354)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1mhr6f-0008wr-TZ; Tue, 02 Nov 2021 03:33:30 -0700
+Message-ID: <e43c32d3-6f08-5b48-7bf2-a2ef660c658c@xilinx.com>
+Date:   Tue, 2 Nov 2021 11:33:28 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.1
+Subject: Re: [PATCH 0/3] Add support for MEMCPY_SG transfers
+Content-Language: en-US
+To:     Adrian Larumbe <adrianml@alumnos.upm.es>, <vkoul@kernel.org>,
+        <dmaengine@vger.kernel.org>,
+        Radhey Shyam Pandey <radheys@xilinx.com>
+CC:     <michal.simek@xilinx.com>, <linux-arm-kernel@lists.infradead.org>
 References: <20210706234338.7696-1-adrian.martinezlarumbe@imgtec.com>
  <20211101180825.241048-1-adrianml@alumnos.upm.es>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Michal Simek <michal.simek@xilinx.com>
+In-Reply-To: <20211101180825.241048-1-adrianml@alumnos.upm.es>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 38ee3bb2-6945-461c-8e1c-08d99dec3767
+X-MS-TrafficTypeDiagnostic: DM6PR02MB6986:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB6986F011707AB325EF818AF4C68B9@DM6PR02MB6986.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:565;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HMgoyJSf3WHY53gIDuTNCQ/QwhcuL1gh/seUAvEHSXVHUV0i2rSn4xb3FVFQC8IzIdVkV4GQb2Oeenlnn2+GwEzvY0+/dsq9fGf8Qs5npYwxKA1/2pj+8/FypINx0dNOW7tW9vswXZFE4GdrexwiHb6zBurgN0yeyxnUtjF4ztWOT2+BqyduFZ+VTSl4rvaAwwo0Yui/iKX3ps64dlzfEDloFWQzOfHoEVoYc9A5omK4VC5TdoQeTj1SzFvHSiJYYLzwc0ohjtMbnEV/YQrpqRTe8w2Sx/BH9/nTrN/terVBYoT6V7yfBruVHEPGDfZfidgPmX696qnTI5W1pXLrHMbrHEdPIl3kB2dYrVJIAGEQfyi9OgeDaCArZnDFRr8VjyWEANWmxhilogEFYRvwlRemnBPGtbDUEFxnKvDlnKH5QPPHQOcg4165ONIryoFiZOjZ78gdWkqMlLZNV/NkRC1buH67GZigqzqQjhmRuI5rZQOibmEL4j7WOccXDALDJyKcEotiwCRp4mDI50rXsYQY0kmRIYkuTxvEWmqUxTaXSBz3NyMga8inqjjBJgXPs92p2Z2I5nC7BRmSrZlBnGxymHVCGRqJ3fGxIwpr0gZ8bMtakFR/bSMNpX34+ZsjiNJKFGG4fRTUFBE+Atb5mzCM30DmHbWmDvzmMf3HPz+KvMgGur0FuOpSNY1kuRhtrzqX9aRXxfFsm19weDjpN5zgef+pIauVeH2+1oY3QqIlvSayywRX/c9tAnx5c9DSAxZSjFUazJ4syIvaF3TkJvUHSoq5GdNaTTWmw267ESs+BuR1rCCsmWZ3CQ4YFLbnkrSSiDrQSTeRK6OwGEHN0b5VPy6cn+Pr9kcz6hH+pPY=
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(36840700001)(46966006)(36756003)(53546011)(966005)(83380400001)(2616005)(82310400003)(2906002)(36906005)(70586007)(316002)(31696002)(356005)(7636003)(4744005)(54906003)(110136005)(6636002)(5660300002)(8676002)(186003)(426003)(336012)(44832011)(70206006)(47076005)(31686004)(9786002)(508600001)(36860700001)(4326008)(26005)(8936002)(50156003)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Nov 2021 10:33:31.6112
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 38ee3bb2-6945-461c-8e1c-08d99dec3767
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM3NAM02FT045.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6986
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This new CDMA binding for device_prep_dma_memcpy_sg was partially borrowed
-from xlnx kernel tree, an expanded with extended address space support when
-linking descriptor segments and checking for incorrect zero transfer size.
++Radhey,
 
-Signed-off-by: Adrian Larumbe <adrianml@alumnos.upm.es>
----
- drivers/dma/xilinx/xilinx_dma.c | 122 ++++++++++++++++++++++++++++++++
- 1 file changed, 122 insertions(+)
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 4677ce08ed40..61618148f9d4 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -2127,6 +2127,126 @@ xilinx_cdma_prep_memcpy(struct dma_chan *dchan, dma_addr_t dma_dst,
- 	return NULL;
- }
- 
-+/**
-+ * xilinx_cdma_prep_memcpy_sg - prepare descriptors for a memcpy_sg transaction
-+ * @dchan: DMA channel
-+ * @dst_sg: Destination scatter list
-+ * @dst_sg_len: Number of entries in destination scatter list
-+ * @src_sg: Source scatter list
-+ * @src_sg_len: Number of entries in source scatter list
-+ * @flags: transfer ack flags
-+ *
-+ * Return: Async transaction descriptor on success and NULL on failure
-+ */
-+static struct dma_async_tx_descriptor *xilinx_cdma_prep_memcpy_sg(
-+			struct dma_chan *dchan, struct scatterlist *dst_sg,
-+			unsigned int dst_sg_len, struct scatterlist *src_sg,
-+			unsigned int src_sg_len, unsigned long flags)
-+{
-+	struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
-+	struct xilinx_dma_tx_descriptor *desc;
-+	struct xilinx_cdma_tx_segment *segment, *prev = NULL;
-+	struct xilinx_cdma_desc_hw *hw;
-+	size_t len, dst_avail, src_avail;
-+	dma_addr_t dma_dst, dma_src;
-+
-+	if (unlikely(dst_sg_len == 0 || src_sg_len == 0))
-+		return NULL;
-+
-+	if (unlikely(!dst_sg  || !src_sg))
-+		return NULL;
-+
-+	desc = xilinx_dma_alloc_tx_descriptor(chan);
-+	if (!desc)
-+		return NULL;
-+
-+	dma_async_tx_descriptor_init(&desc->async_tx, &chan->common);
-+	desc->async_tx.tx_submit = xilinx_dma_tx_submit;
-+
-+	dst_avail = sg_dma_len(dst_sg);
-+	src_avail = sg_dma_len(src_sg);
-+	/*
-+	 * loop until there is either no more source or no more destination
-+	 * scatterlist entry
-+	 */
-+	while (true) {
-+		len = min_t(size_t, src_avail, dst_avail);
-+		len = min_t(size_t, len, chan->xdev->max_buffer_len);
-+		if (len == 0)
-+			goto fetch;
-+
-+		/* Allocate the link descriptor from DMA pool */
-+		segment = xilinx_cdma_alloc_tx_segment(chan);
-+		if (!segment)
-+			goto error;
-+
-+		dma_dst = sg_dma_address(dst_sg) + sg_dma_len(dst_sg) -
-+			dst_avail;
-+		dma_src = sg_dma_address(src_sg) + sg_dma_len(src_sg) -
-+			src_avail;
-+		hw = &segment->hw;
-+		hw->control = len;
-+		hw->src_addr = dma_src;
-+		hw->dest_addr = dma_dst;
-+		if (chan->ext_addr) {
-+			hw->src_addr_msb = upper_32_bits(dma_src);
-+			hw->dest_addr_msb = upper_32_bits(dma_dst);
-+		}
-+
-+		if (prev) {
-+			prev->hw.next_desc = segment->phys;
-+			if (chan->ext_addr)
-+				prev->hw.next_desc_msb =
-+					upper_32_bits(segment->phys);
-+		}
-+
-+		prev = segment;
-+		dst_avail -= len;
-+		src_avail -= len;
-+		list_add_tail(&segment->node, &desc->segments);
-+
-+fetch:
-+		/* Fetch the next dst scatterlist entry */
-+		if (dst_avail == 0) {
-+			if (dst_sg_len == 0)
-+				break;
-+			dst_sg = sg_next(dst_sg);
-+			if (dst_sg == NULL)
-+				break;
-+			dst_sg_len--;
-+			dst_avail = sg_dma_len(dst_sg);
-+		}
-+		/* Fetch the next src scatterlist entry */
-+		if (src_avail == 0) {
-+			if (src_sg_len == 0)
-+				break;
-+			src_sg = sg_next(src_sg);
-+			if (src_sg == NULL)
-+				break;
-+			src_sg_len--;
-+			src_avail = sg_dma_len(src_sg);
-+		}
-+	}
-+
-+	if (list_empty(&desc->segments)) {
-+		dev_err(chan->xdev->dev,
-+			"%s: Zero-size SG transfer requested\n", __func__);
-+		goto error;
-+	}
-+
-+	/* Link the last hardware descriptor with the first. */
-+	segment = list_first_entry(&desc->segments,
-+				struct xilinx_cdma_tx_segment, node);
-+	desc->async_tx.phys = segment->phys;
-+	prev->hw.next_desc = segment->phys;
-+
-+	return &desc->async_tx;
-+
-+error:
-+	xilinx_dma_free_tx_descriptor(chan, desc);
-+	return NULL;
-+}
-+
- /**
-  * xilinx_dma_prep_slave_sg - prepare descriptors for a DMA_SLAVE transaction
-  * @dchan: DMA channel
-@@ -3115,7 +3235,9 @@ static int xilinx_dma_probe(struct platform_device *pdev)
- 					  DMA_RESIDUE_GRANULARITY_SEGMENT;
- 	} else if (xdev->dma_config->dmatype == XDMA_TYPE_CDMA) {
- 		dma_cap_set(DMA_MEMCPY, xdev->common.cap_mask);
-+		dma_cap_set(DMA_MEMCPY_SG, xdev->common.cap_mask);
- 		xdev->common.device_prep_dma_memcpy = xilinx_cdma_prep_memcpy;
-+		xdev->common.device_prep_dma_memcpy_sg = xilinx_cdma_prep_memcpy_sg;
- 		/* Residue calculation is supported by only AXI DMA and CDMA */
- 		xdev->common.residue_granularity =
- 					  DMA_RESIDUE_GRANULARITY_SEGMENT;
--- 
-2.33.1
+On 11/1/21 19:08, Adrian Larumbe wrote:
+> Bring back dmaengine API support for scatter-gather memcpy's.
+> 
+> Changes in patch v2:
+>    * Expanded API function documentation to elaborate on its semantics,
+>      limitations and corner case behaviour.
+>    * Broke the patch series into three different ones: documentation, core
+>      API change and consumer driver
+> 
+> v1 - https://lore.kernel.org/dmaengine/20210706234338.7696-1-adrian.martinezlarumbe@imgtec.com
+> 
+> Adrian Larumbe (3):
+>    dmaengine: Add documentation for new memcpy scatter-gather function
+>    dmaengine: Add core function and capability check for DMA_MEMCPY_SG
+>    dmaengine: Add consumer for the new DMA_MEMCPY_SG API function.
+> 
+>   .../driver-api/dmaengine/provider.rst         |  23 ++++
+>   drivers/dma/dmaengine.c                       |   7 +
+>   drivers/dma/xilinx/xilinx_dma.c               | 122 ++++++++++++++++++
+>   include/linux/dmaengine.h                     |  20 +++
+>   4 files changed, 172 insertions(+)
+> 
+> 
+> base-commit: e0674853943287669a82d1ffe09a700944615978
+> 
+
 

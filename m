@@ -2,71 +2,61 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F507447416
-	for <lists+dmaengine@lfdr.de>; Sun,  7 Nov 2021 17:50:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BFC5447B35
+	for <lists+dmaengine@lfdr.de>; Mon,  8 Nov 2021 08:36:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235859AbhKGQxE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 7 Nov 2021 11:53:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35564 "EHLO
+        id S235417AbhKHHi7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 8 Nov 2021 02:38:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235011AbhKGQxC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 7 Nov 2021 11:53:02 -0500
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B8E0C061224
-        for <dmaengine@vger.kernel.org>; Sun,  7 Nov 2021 08:50:19 -0800 (PST)
-Received: by mail-pj1-x1036.google.com with SMTP id o6-20020a17090a0a0600b001a64b9a11aeso6984477pjo.3
-        for <dmaengine@vger.kernel.org>; Sun, 07 Nov 2021 08:50:19 -0800 (PST)
+        with ESMTP id S235453AbhKHHi6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 8 Nov 2021 02:38:58 -0500
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA8D8C061714
+        for <dmaengine@vger.kernel.org>; Sun,  7 Nov 2021 23:36:14 -0800 (PST)
+Received: by mail-ed1-x541.google.com with SMTP id z21so13268066edb.5
+        for <dmaengine@vger.kernel.org>; Sun, 07 Nov 2021 23:36:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=3KhLtwCKP93j3EcWq+BGTsAWsp8Oi4eBuXX0Ov40ah8=;
-        b=CGgoC4BsgHelzytn+/VTrKwS3n0T68QEW7GeWdpL8zfErEA81MOI4RL138iNx/cHCC
-         3mOCWFKMwLBKqHyI1x8QZIxdZmn/T2z7wxCAL1QJSDwY+yMd/5vpY5vZsY6UEO3VfUIk
-         NmE02Lf+f1FnTMQjl4bIN7/MkullBrFIYleaUA1lhngjIcmWGropAefRtmKn85kF4AjF
-         9REnU8D8TvvsrxnzIdJuHntvDW0z4R21EhRUYYG9p+p2KSbQQtyOBLs4eMyycwEMv9DU
-         iYxtgVtsDfraOGEV3mHhUsdsFHn4Oc6mkCc25JbUs6k1jHra7jUoaikUuMgz3yZaGGWB
-         oWWg==
+        bh=gS+G2bXPLTc8QV9oSOsVFPfildfSifO+gabOlUjPn+8=;
+        b=fD0Bw3fRV4eYrDgSxFsI3hrOIOW5eHFOGjExJsHvKe1PJkTOA/Vd7hLKoQJHbDzpNl
+         EQatN33cW5tZoc3rrJW3xjXjEN90S/PF00O3BqENlw+c0A+FbO7eSaEU3AM7mNMZqw/L
+         PPQTfBk+oEtxTVxMgt0O1qYzqQgKzEydI4nr6y2IsrLy0Rf2AM5sSynqoQZHTM1GEWV7
+         16cElo5bql33yYmZIxteIKGK5CY/ImEtro9y7gFlZXJXqFIJjehtYWWpht+ww04Bh+OZ
+         TjLT1bAP0wgfciitD+ohAJXplu0Ud0y4hb2+S89AHxUp3HdVsl/l3apePqsUc0+8Dmk7
+         ZoxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:reply-to:from:date:message-id
          :subject:to;
-        bh=3KhLtwCKP93j3EcWq+BGTsAWsp8Oi4eBuXX0Ov40ah8=;
-        b=zNqNXyPpm7uhoWVOAOy1t2llbuONrddLuMedPEYzftB58K97rOmyq/gIt35hin9GmY
-         OUnt1ja5xrf2RdsD6/IN5X1G5kTCYVyvbMKC1+AvpwRZ2TkZ0WOr7gcZ3qLrdZkG981I
-         R22XzDKOEfy5XVghHrbDdNtCKBwWtyFNrxueCPC+q+rnf/0DHNhNvSCIsu07X92yrSht
-         OIcFznHCk7Rv36qb+wsAK2gRD0xsHJfOrrLMZ8LAUzh+KnciSC2BQOPgU3EjgRK9ztDf
-         jD/sjmJugyFD8PodIrlFR+q17L6cV39zpfRwidaeewevFLamN/fEDoaqS8jSvMSXTF7e
-         XpDQ==
-X-Gm-Message-State: AOAM532s5O55SQvCH2v4GgOmT4oMLTeCDYoONXc26v28g/glivTAyblg
-        kUfWyKh3vNqTv8bOLYzHY0Sfjx/kg5IvZgyoIAM=
-X-Google-Smtp-Source: ABdhPJwRzqzdXmZqk+E0BGOtRSVuotVxv3vktjD61tF3yrYnFRN7LmPJ9X2Sktepu1Y4J0ZwltgXDIouReyvwFUOa3w=
-X-Received: by 2002:a17:902:d2ce:b0:141:f710:922 with SMTP id
- n14-20020a170902d2ce00b00141f7100922mr42873278plc.7.1636303818711; Sun, 07
- Nov 2021 08:50:18 -0800 (PST)
+        bh=gS+G2bXPLTc8QV9oSOsVFPfildfSifO+gabOlUjPn+8=;
+        b=mAfN8u8lsxPRKL8CFMm2i4BNxDZYBYSYrJwl2wA27XRwMhev8ESTQ+WOIG5aJ8PRgn
+         oeWs6czpb8Pxlg971VS5eNtEi7bMxHtIXuxkKLgsT+gU18pPxavQRexVZjQvSAenyne7
+         ugBRwNqD5Dm+wuuyq1l/eODZokjRE9gh32ioNTzGnHi8hHsTglVELig7jA3sOg1X7Ewc
+         I2nZlN1WQQDlDWgUtJz78ZSSZFMXQ7zGELxVpNVNX4yZFavj85iJyuwIWDQ5EsngstIZ
+         NF8TiyQF0O7c89ocee3NKP9f8+ISni7hobK0XqCXLPifaQf4pZ0djn6HjmPzO7j4nGtV
+         CERg==
+X-Gm-Message-State: AOAM533D8AVbNX+X2gxgLLZSx6gnqvRXKqKSnNBtU3lVtEiNNdwYLeNY
+        RpkHVjFP/wjLmXbEcxwGjpeDsXfFEf6/o2Wa8do=
+X-Google-Smtp-Source: ABdhPJzy7lQA3Qt17kUNGJykbPHy1NnrMhPzc/xMAV3G0b9GHKXnLgS00/Mt3TTNFwRpHos9mBnH7CJHS81IynH2Ez0=
+X-Received: by 2002:a17:907:a414:: with SMTP id sg20mr58789895ejc.183.1636356973453;
+ Sun, 07 Nov 2021 23:36:13 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:4a14:0:0:0:0 with HTTP; Sun, 7 Nov 2021 08:50:18
- -0800 (PST)
-Reply-To: amabenchambers00@gmail.com
-From:   Amadou Benjamin <ousmanekarim54@gmail.com>
-Date:   Sun, 7 Nov 2021 08:50:18 -0800
-Message-ID: <CAJFAt4ZtDp1d-Lyr-uxqQ9skQkUswz-oAXSiT_oB13J29FH1QQ@mail.gmail.com>
-Subject: 
+Received: by 2002:a50:2501:0:0:0:0:0 with HTTP; Sun, 7 Nov 2021 23:36:13 -0800 (PST)
+Reply-To: mariaschaefler@gmx.com
+From:   Maria Schaefler <ziskoraa@gmail.com>
+Date:   Mon, 8 Nov 2021 07:36:13 +0000
+Message-ID: <CAJh0Fjg-6VfPFkQokpU5XxrEe2q501tY9=hfFi2YV1rhWp_MAQ@mail.gmail.com>
+Subject: MY HEART CHOOSE YOU.
 To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
--- 
-Hello good day.
-
-I am Barrister Amadou Benjamin by name, with due respect, I am
-contacting you to help get the deposit 10.5 million Dollars, my late
-client Engineer Vasiliy left in his Bank before his sudden death on
-April 21, 2007, to avoid confiscation by Lloyds bank. Please write me
-back through this email (amabenchambers00@gmail.com)for more
-information about this transaction or send me your private email to
-Contact you myself.
-
-Sincerely,
-Barrister Amadou Benjamin Esq
+Given my current state of health, I have decided to donate what I
+inherited from my late husband to you to help the poor and needy. I am
+Mrs Maria Schaefler,a 57years old dying woman. I was diagnosed for
+cancer about 2 years ago and I have few months to live according to
+medical experts. Email me for my directives

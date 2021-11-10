@@ -2,280 +2,215 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC8B444C0C0
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Nov 2021 13:06:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6655444C3A4
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Nov 2021 16:02:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231873AbhKJMJC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 10 Nov 2021 07:09:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231741AbhKJMIS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 10 Nov 2021 07:08:18 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 64AC4611ED;
-        Wed, 10 Nov 2021 12:05:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636545931;
-        bh=JzIbMq+7kunI5DNdzU02uwvqlI184e8UlvxT6Wtvzlw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=B28j495gxqjHX4UfKE4GvmqSdEJqXintNPmWBf149xPvkXN1JfQCcF6kWrkbrMHMo
-         5vWGliCZ/jLHnXqqZ9MsCYwvlqaT8jhmTXQVdUkji5+hxfVFf6GTsdeIHUzUEiTaY1
-         B1V+2kFRIc67mGkGS915dQyPK37St4Nb71H2jR+YzBM6wqgXD0epUSEyrgvEGuvGsx
-         +MXT8natMOCbFHJ2HvUAbc7GqVKrNm+W6cWazvUPnX2j1ID4CkOWjuF9QHvr1e0Syo
-         3fLrdxeSMy/5zTSlRTxtQukvz9HP0mIRYQTiICLm5QFwT1Q1yCKW5YLotDRR5YotWy
-         Q4aBoJjsApGIg==
-Date:   Wed, 10 Nov 2021 17:35:26 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL]: dmaengine updates for v5.16-rc1
-Message-ID: <YYu1huhCBnGJUPZg@matsya>
+        id S232422AbhKJPFM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 10 Nov 2021 10:05:12 -0500
+Received: from mx07-00178001.pphosted.com ([185.132.182.106]:45810 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232395AbhKJPFK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 10 Nov 2021 10:05:10 -0500
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1AADAFhf017710;
+        Wed, 10 Nov 2021 16:01:50 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=selector1;
+ bh=Sh0W/4ohStKFB2Xy24SvmA8j0+SruP92VNN5TAvdPDM=;
+ b=4ioO9K5CklY1uultzOl+2wdStUShYa9KwjSsBeH8j+ws1/hc6fEjrrK2S9QoFI+x3nKT
+ 9TKyTlI8oUzXv2dzA8dD0RCFdvtmNC39IwzbyhfWHEVQzT2tHtbZL+D1Ir6i19UE2Mu3
+ rL7pEWUsA7h0rQrPetRarCkcX3aZUyr0EqV6qgMzrA7eqvVLWdzEUlbJ6JRR15iweWC6
+ ZelRPAeDuz56JphJbCkPRNC/ioWG5rdZo3VU1xvOQwl9YMCWcMaNDDd+D9IzD1ZJ1TZf
+ eg4+EfFUEwtooNW2w9bh+Mu6POIfvoiQadGnf2juwF/X1+vGUUit+7n+93HVvDEMRjnT fA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3c7ufnfuf7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Nov 2021 16:01:49 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1E14810002A;
+        Wed, 10 Nov 2021 16:01:49 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag2node2.st.com [10.75.127.5])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F3764207568;
+        Wed, 10 Nov 2021 16:01:48 +0100 (CET)
+Received: from localhost (10.75.127.50) by SFHDAG2NODE2.st.com (10.75.127.5)
+ with Microsoft SMTP Server (TLS) id 15.0.1497.18; Wed, 10 Nov 2021 16:01:48
+ +0100
+From:   <patrice.chotard@foss.st.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        maxime coquelin <mcoquelin.stm32@gmail.com>,
+        alexandre torgue <alexandre.torgue@foss.st.com>,
+        michael turquette <mturquette@baylibre.com>,
+        stephen boyd <sboyd@kernel.org>,
+        herbert xu <herbert@gondor.apana.org.au>,
+        "david s . miller" <davem@davemloft.net>,
+        david airlie <airlied@linux.ie>,
+        daniel vetter <daniel@ffwll.ch>,
+        thierry reding <thierry.reding@gmail.com>,
+        sam ravnborg <sam@ravnborg.org>,
+        yannick fertre <yannick.fertre@foss.st.com>,
+        "philippe cornu" <philippe.cornu@foss.st.com>,
+        benjamin gaignard <benjamin.gaignard@linaro.org>,
+        vinod koul <vkoul@kernel.org>,
+        ohad ben-cohen <ohad@wizery.com>,
+        bjorn andersson <bjorn.andersson@linaro.org>,
+        baolin wang <baolin.wang7@gmail.com>,
+        jonathan cameron <jic23@kernel.org>,
+        "lars-peter clausen" <lars@metafoo.de>,
+        olivier moysan <olivier.moysan@foss.st.com>,
+        arnaud pouliquen <arnaud.pouliquen@foss.st.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hugues Fruchet <hugues.fruchet@foss.st.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "Miquel Raynal" <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Matt Mackall <mpm@selenic.com>,
+        "Alessandro Zummo" <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        "dillon min" <dillon.minfei@gmail.com>,
+        Marek Vasut <marex@denx.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        Christophe Roullier <christophe.roullier@foss.st.com>,
+        Gabriel Fernandez <gabriel.fernandez@foss.st.com>,
+        Lionel Debieve <lionel.debieve@foss.st.com>,
+        Amelie Delaunay <amelie.delaunay@foss.st.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
+        Ludovic Barre <ludovic.barre@foss.st.com>,
+        Christophe Kerello <christophe.kerello@foss.st.com>,
+        pascal Paillet <p.paillet@foss.st.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        "Jose Abreu" <joabreu@synopsys.com>,
+        Le Ray <erwan.leray@foss.st.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-clk@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <dmaengine@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-media@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+        <netdev@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-watchdog@vger.kernel.org>
+Subject: [PATCH v3 0/5] Update STMicroelectronics maintainers email
+Date:   Wed, 10 Nov 2021 16:01:39 +0100
+Message-ID: <20211110150144.18272-1-patrice.chotard@foss.st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="55uKwjtuR0hH29Lc"
-Content-Disposition: inline
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG2NODE2.st.com
+ (10.75.127.5)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-11-10_05,2021-11-08_02,2020-04-07_01
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+From: Patrice Chotard <patrice.chotard@foss.st.com>
 
---55uKwjtuR0hH29Lc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Update maintainers name for some yaml files.
+Update @st.com email address to @foss.st.com as @foss.st.com email
+address is dedicated for upstream activities.
 
-Hello Linus,
+Changes in v3:
+  _ fix typo in patch 2/3/4 commit message 
+  _ resend to missing mailing list
 
-Please pull to receive dmaengine update. Bunch of driver updates, no
-new driver or controller support this time though!
+Patrice Chotard (5):
+  dt-bindings: timer: Update maintainers for st,stm32-timer
+  dt-bindings: mfd: timers: Update maintainers for st,stm32-timers
+  dt-bindings: media: Update maintainers for st,stm32-cec.yaml
+  dt-bindings: media: Update maintainers for st,stm32-hwspinlock.yaml
+  dt-bindings: treewide: Update @st.com email address to @foss.st.com
 
-The following changes since commit 6880fa6c56601bb8ed59df6c30fd390cc5f6dd8f:
+ Documentation/devicetree/bindings/arm/sti.yaml                | 2 +-
+ Documentation/devicetree/bindings/arm/stm32/st,mlahb.yaml     | 4 ++--
+ .../devicetree/bindings/arm/stm32/st,stm32-syscon.yaml        | 4 ++--
+ Documentation/devicetree/bindings/arm/stm32/stm32.yaml        | 2 +-
+ Documentation/devicetree/bindings/clock/st,stm32mp1-rcc.yaml  | 2 +-
+ Documentation/devicetree/bindings/crypto/st,stm32-crc.yaml    | 2 +-
+ Documentation/devicetree/bindings/crypto/st,stm32-cryp.yaml   | 2 +-
+ Documentation/devicetree/bindings/crypto/st,stm32-hash.yaml   | 2 +-
+ .../devicetree/bindings/display/bridge/snps,dw-mipi-dsi.yaml  | 2 +-
+ .../devicetree/bindings/display/panel/orisetech,otm8009a.yaml | 2 +-
+ .../devicetree/bindings/display/panel/raydium,rm68200.yaml    | 2 +-
+ Documentation/devicetree/bindings/display/st,stm32-dsi.yaml   | 4 ++--
+ Documentation/devicetree/bindings/display/st,stm32-ltdc.yaml  | 4 ++--
+ Documentation/devicetree/bindings/dma/st,stm32-dma.yaml       | 2 +-
+ Documentation/devicetree/bindings/dma/st,stm32-dmamux.yaml    | 2 +-
+ Documentation/devicetree/bindings/dma/st,stm32-mdma.yaml      | 2 +-
+ .../devicetree/bindings/hwlock/st,stm32-hwspinlock.yaml       | 3 +--
+ Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml       | 2 +-
+ .../devicetree/bindings/iio/adc/sigma-delta-modulator.yaml    | 2 +-
+ Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml   | 2 +-
+ .../devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml       | 4 ++--
+ Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml   | 2 +-
+ .../bindings/interrupt-controller/st,stm32-exti.yaml          | 4 ++--
+ Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml  | 4 ++--
+ Documentation/devicetree/bindings/media/st,stm32-cec.yaml     | 3 +--
+ Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml    | 2 +-
+ .../bindings/memory-controllers/st,stm32-fmc2-ebi.yaml        | 2 +-
+ Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml   | 2 +-
+ Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml    | 3 +--
+ Documentation/devicetree/bindings/mfd/st,stmfx.yaml           | 2 +-
+ Documentation/devicetree/bindings/mfd/st,stpmic1.yaml         | 2 +-
+ Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml | 2 +-
+ Documentation/devicetree/bindings/net/snps,dwmac.yaml         | 2 +-
+ Documentation/devicetree/bindings/net/stm32-dwmac.yaml        | 4 ++--
+ Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml   | 2 +-
+ Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.yaml  | 2 +-
+ .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml         | 2 +-
+ .../devicetree/bindings/regulator/st,stm32-booster.yaml       | 2 +-
+ .../devicetree/bindings/regulator/st,stm32-vrefbuf.yaml       | 2 +-
+ .../devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml    | 2 +-
+ .../devicetree/bindings/remoteproc/st,stm32-rproc.yaml        | 4 ++--
+ Documentation/devicetree/bindings/rng/st,stm32-rng.yaml       | 2 +-
+ Documentation/devicetree/bindings/rtc/st,stm32-rtc.yaml       | 2 +-
+ Documentation/devicetree/bindings/serial/st,stm32-uart.yaml   | 2 +-
+ Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml   | 2 +-
+ Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml     | 2 +-
+ Documentation/devicetree/bindings/sound/st,stm32-sai.yaml     | 2 +-
+ Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml | 2 +-
+ Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml      | 4 ++--
+ Documentation/devicetree/bindings/spi/st,stm32-spi.yaml       | 4 ++--
+ .../devicetree/bindings/thermal/st,stm32-thermal.yaml         | 2 +-
+ Documentation/devicetree/bindings/timer/st,stm32-timer.yaml   | 3 ++-
+ Documentation/devicetree/bindings/usb/st,stusb160x.yaml       | 2 +-
+ Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml | 4 ++--
+ 54 files changed, 67 insertions(+), 69 deletions(-)
 
-  Linux 5.15-rc1 (2021-09-12 16:28:37 -0700)
+-- 
+2.17.1
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dm=
-aengine-5.16-rc1
-
-for you to fetch changes up to eb91224e47ec33a0a32c9be0ec0fcb3433e555fd:
-
-  dmaengine: ti: k3-udma: Set r/tchan or rflow to NULL if request fail (202=
-1-11-09 11:24:06 +0530)
-
-----------------------------------------------------------------
-dmaengine updates for v5.16-rc1
-
-Updates:
- - Another pile of idxd updates
- - pm routines cleanup for at_xdmac driver
- - Correct handling of callback_result for few drivers
- - zynqmp_dma driver updates and descriptor management refinement
- - Hardware handshaking support for dw-axi-dmac
- - Support for remotely powered controllers in Qcom bam dma
- - tegra driver updates
-
-----------------------------------------------------------------
-Amelie Delaunay (3):
-      dmaengine: stm32-dma: mark pending descriptor complete in terminate_a=
-ll
-      dmaengine: stm32-dma: fix stm32_dma_get_max_width
-      dmaengine: stm32-dma: fix burst in case of unaligned memory address
-
-Anatolij Gustschin (1):
-      dmaengine: bestcomm: fix system boot lockups
-
-Angelo Dureghello (1):
-      dmaengine: fsl-edma: fix for missing dmamux module
-
-Arnd Bergmann (2):
-      dmaengine: remove debugfs #ifdef
-      dmaengine: stm32-dma: avoid 64-bit division in stm32_dma_get_max_width
-
-Artur Rojek (1):
-      dmaengine: jz4780: Set max number of SGs per burst
-
-Biju Das (1):
-      dmaengine: sh: rz-dmac: Add DMA clock handling
-
-Bixuan Cui (1):
-      dmaengine: idxd: Use list_move_tail instead of list_del/list_add_tail
-
-Cai Huoqing (2):
-      dmaengine: sa11x0: Make use of the helper macro SET_NOIRQ_SYSTEM_SLEE=
-P_PM_OPS()
-      dmaengine: sa11x0: Mark PM functions as __maybe_unused
-
-Christophe JAILLET (1):
-      dmaengine: dw-edma: Remove an unused variable
-
-Claudiu Beznea (5):
-      dmaengine: at_xdmac: call at_xdmac_axi_config() on resume path
-      dmaengine: at_xdmac: fix AT_XDMAC_CC_PERID() macro
-      dmaengine: at_xdmac: use __maybe_unused for pm functions
-      dmaengine: at_xdmac: use pm_ptr()
-      dmaengine: at_xdmac: fix compilation warning
-
-Colin Ian King (2):
-      dmaengine: Remove redundant initialization of variable err
-      dmaengine: sh: make array ds_lut static
-
-Dave Jiang (9):
-      dmaengine: idxd: move out percpu_ref_exit() to ensure it's outside su=
-bmission
-      dmaengine: idxd: check GENCAP config support for gencfg register
-      dmaengine: idxd: remove gen cap field per spec 1.2 update
-      dmaengine: idxd: remove kernel wq type set when load configuration
-      dmanegine: idxd: fix resource free ordering on driver removal
-      dmaengine: idxd: add halt interrupt support
-      dmaengine: idxd: reconfig device after device reset command
-      dmaengine: idxd: cleanup completion record allocation
-      dmaengine: idxd: fix resource leak on dmaengine driver disable
-
-Dongliang Mu (3):
-      dmaengine: rcar-dmac: refactor the error handling code of rcar_dmac_p=
-robe
-      dmaengine: tegra210-adma: fix pm runtime unbalance
-      dmaengine: tegra210-adma: fix pm runtime unbalance in tegra_adma_remo=
-ve
-
-Flavio Suligoi (4):
-      dmaengine: imx-sdma: remove useless braces
-      dmaengine: imx-sdma: add missed braces
-      dmaengine: imx-sdma: align statement to open parenthesis
-      dmaengine: imx-sdma: remove space after sizeof
-
-Geert Uytterhoeven (1):
-      dmaengine: dw-axi-dmac: Simplify assignment in dma_chan_pause()
-
-Gustavo A. R. Silva (1):
-      dmaengine: stm32-mdma: Use struct_size() helper in devm_kzalloc()
-
-Joy Zou (1):
-      dmaengine: fsl-edma: support edma memcpy
-
-Kishon Vijay Abraham I (2):
-      dmaengine: ti: k3-udma: Set bchan to NULL if a channel request fail
-      dmaengine: ti: k3-udma: Set r/tchan or rflow to NULL if request fail
-
-Lars-Peter Clausen (4):
-      dmaengine: dmaengine_desc_callback_valid(): Check for `callback_resul=
-t`
-      dmaengine: altera-msgdma: Correctly handle descriptor callbacks
-      dmaengine: xilinx_dma: Correctly handle cyclic descriptor callbacks
-      dmaengine: zynqmp_dma: Correctly handle descriptor callbacks
-
-Len Baker (1):
-      dmaengine: milbeaut-hdmac: Prefer kcalloc over open coded arithmetic
-
-Michael Tretter (7):
-      dmaengine: zynqmp_dma: simplify with dev_err_probe
-      dmaengine: zynqmp_dma: drop message on probe success
-      dmaengine: zynqmp_dma: enable COMPILE_TEST
-      dmaengine: zynqmp_dma: cleanup includes
-      dmaengine: zynqmp_dma: cleanup after completing all descriptors
-      dmaengine: zynqmp_dma: refine dma descriptor locking
-      dmaengine: zynqmp_dma: fix lockdep warning in tasklet
-
-Pandith N (3):
-      dmaengine: dw-axi-dmac: support DMAX_NUM_CHANNELS > 8
-      dmaengine: dw-axi-dmac: Hardware handshake configuration
-      dmaengine: dw-axi-dmac: set coherent mask
-
-Qing Wang (5):
-      dmaengine: dw: switch from 'pci_' to 'dma_' API
-      dmaengine: hisi_dma: switch from 'pci_' to 'dma_' API
-      dmaengine: hsu: switch from 'pci_' to 'dma_' API
-      dmaengine: ioat: switch from 'pci_' to 'dma_' API
-      dmaengine: switch from 'pci_' to 'dma_' API
-
-Sameer Pujar (3):
-      dmaengine: tegra210-adma: Re-order 'has_outstanding_reqs' member
-      dmaengine: tegra210-adma: Add description for 'adma_get_burst_config'
-      dmaengine: tegra210-adma: Override ADMA FIFO size
-
-Shravya Kumbham (1):
-      dmaengine: xilinx_dma: Fix kernel-doc warnings
-
-Stephan Gerhold (2):
-      dt-bindings: dmaengine: bam_dma: Add "powered remotely" mode
-      dmaengine: qcom: bam_dma: Add "powered remotely" mode
-
-Wang Qing (1):
-      dmaengine: dw-edma-pcie: switch from 'pci_' to 'dma_' API
-
-Xin Xiong (1):
-      dmaengine: mmp_pdma: fix reference count leaks in mmp_pdma_probe
-
- .../devicetree/bindings/dma/qcom_bam_dma.txt       |   2 +
- drivers/dma/Kconfig                                |   2 +-
- drivers/dma/altera-msgdma.c                        |  10 +-
- drivers/dma/at_xdmac.c                             |  69 ++++++-------
- drivers/dma/bestcomm/ata.c                         |   2 +-
- drivers/dma/bestcomm/bestcomm.c                    |  22 ++--
- drivers/dma/bestcomm/fec.c                         |   4 +-
- drivers/dma/bestcomm/gen_bd.c                      |   4 +-
- drivers/dma/dma-jz4780.c                           |   1 +
- drivers/dma/dmaengine.c                            |   3 +-
- drivers/dma/dmaengine.h                            |   2 +-
- drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c     | 112 +++++++++++++++--=
-----
- drivers/dma/dw-axi-dmac/dw-axi-dmac.h              |  35 ++++++-
- drivers/dma/dw-edma/dw-edma-core.c                 |   1 -
- drivers/dma/dw-edma/dw-edma-pcie.c                 |  17 +---
- drivers/dma/dw/pci.c                               |   6 +-
- drivers/dma/fsl-edma-common.c                      |  35 ++++++-
- drivers/dma/fsl-edma-common.h                      |   4 +
- drivers/dma/fsl-edma.c                             |   7 ++
- drivers/dma/hisi_dma.c                             |   6 +-
- drivers/dma/hsu/pci.c                              |   6 +-
- drivers/dma/idxd/device.c                          |  29 ++----
- drivers/dma/idxd/dma.c                             |   5 +-
- drivers/dma/idxd/idxd.h                            |   2 -
- drivers/dma/idxd/init.c                            |  14 ++-
- drivers/dma/idxd/irq.c                             |   8 +-
- drivers/dma/idxd/registers.h                       |   4 +-
- drivers/dma/imx-sdma.c                             |  28 +++---
- drivers/dma/ioat/init.c                            |  10 +-
- drivers/dma/milbeaut-hdmac.c                       |   2 +-
- drivers/dma/mmp_pdma.c                             |   1 +
- drivers/dma/plx_dma.c                              |  10 +-
- drivers/dma/qcom/bam_dma.c                         |  90 +++++++++++------
- drivers/dma/sa11x0-dma.c                           |  11 +-
- drivers/dma/sh/rcar-dmac.c                         |  13 +--
- drivers/dma/sh/rz-dmac.c                           |  16 ++-
- drivers/dma/stm32-dma.c                            |  24 +++--
- drivers/dma/stm32-mdma.c                           |   3 +-
- drivers/dma/tegra210-adma.c                        |  58 +++++++----
- drivers/dma/ti/k3-udma.c                           |  32 ++++--
- drivers/dma/xilinx/xilinx_dma.c                    |  14 ++-
- drivers/dma/xilinx/xilinx_dpdma.c                  |  15 +--
- drivers/dma/xilinx/zynqmp_dma.c                    |  79 +++++++--------
- include/linux/dmaengine.h                          |   2 -
- 44 files changed, 490 insertions(+), 330 deletions(-)
-
-Thanks
---=20
-~Vinod
-
---55uKwjtuR0hH29Lc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAmGLtYYACgkQfBQHDyUj
-g0djcw/9EI8k/d3h2ouKB+JwGA12TxNzjAgGf98bj/NHHC3W6XXs1sICkaBHo5T2
-cRIS+87Ku/EzAB1ILLGPl2kDs3XTWKnaHPLrtCm8I4kOlqXJBvEaT1aFrBFwl3pB
-PjR2RBTRRhmXln8J7zWnO8KG+snUei+KtU9mlXRG+I066SYD386YvdfpafxrVphi
-TVnQRp5m17VjiUTyKmiHo76JxcsmqRHimRc+LoaBBSzAukqtpwLiHdU7aNFXF8PD
-jSjlIJWHzamxW8kQUgKTWc0Zs/7fv7Z/DrYM1uS6P4dbykporl8KkqYuFou0pHT0
-zeI2dy8RZ6xFiaT2rUfS6n3+RXlqBTeagfgWUdLBIvzqVkAsGLW+57zPfBBmDH0f
-eHMhO7+C5QDVXQrOpMufEUVe4bzHAwLww7+m33ZPMDYUWj6WarJrRx/858s+yc35
-AF+TOqb0BMVBh+46EVXD3sJv71nZCfFjWC7soMFu2E4VW+t9KcMB5F+bBmSoGaEO
-JbvJe/jxvjWn/2ad+qLs5jxd5Pb9LCT6NJnZ8iWQ4hbWeBZ6p5e+qzxzPD4119FV
-bDbQQqxjMPrPrJDZ+aZqBsM1XqmpAcgnuSY0WogfSlU8B2GP2lLUE1tY4CFj5I6Y
-5Aa4DE+LlwHxjW8TpaEeqFn5yDKgklPa38h3gYMGq0ObDct0Zak=
-=Ug+G
------END PGP SIGNATURE-----
-
---55uKwjtuR0hH29Lc--

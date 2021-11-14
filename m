@@ -2,82 +2,74 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA85244ED90
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Nov 2021 20:52:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B208744F6FF
+	for <lists+dmaengine@lfdr.de>; Sun, 14 Nov 2021 07:09:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235489AbhKLTyu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 12 Nov 2021 14:54:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235398AbhKLTyt (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 Nov 2021 14:54:49 -0500
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 741B0C061203
-        for <dmaengine@vger.kernel.org>; Fri, 12 Nov 2021 11:51:58 -0800 (PST)
-Received: by mail-qt1-x833.google.com with SMTP id v22so4890952qtx.8
-        for <dmaengine@vger.kernel.org>; Fri, 12 Nov 2021 11:51:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=sbMEA9n9Pj/HfzsuX4iVianfftPXl0x7Eo0HpPDJsqs=;
-        b=Yw+p9Uo+5KQGoccvBks5Ci8+ZDlSvu7l93VGRCY8ZYQsu1lz4knSEy8/eb+Lm1NrTH
-         GzipEoLboD7DWs9KzyvxslfEQnOs47b4R+Mj3XTWdKpp9XbQbKGtQ5YEG4ijUfu4jtFE
-         /W10fgxlqEe+6aRVIUBq8hjn0WDG4ehNda55kNT8iGXmOlSHaRwW1cWqtcqPo7/8IsYv
-         ++i9VPM2+sDvzFA/3oGv0pgZ14q/FD3/XGYca2kZucVBmfHmPufcVhCxgT6+p0hlokNp
-         mczuTft5lmdIQk+wmMyhToWgPsUVVogCgYAJYJiCefNKNr/IESGhoapdVJe5hEI4CWJ5
-         GL1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=sbMEA9n9Pj/HfzsuX4iVianfftPXl0x7Eo0HpPDJsqs=;
-        b=Z+hCLoE5MguumHoAOOkGS79fV4fW1AHerlSxWzPdlr++zlIFNhzkT1asgQE8qZz3eK
-         1lyWeDeaw0NS+ezToFEE2xLyTCQ2U/xYnifXm5AfEYvIUFtYdHzwS8qJNa0vHR3nHfuG
-         OoWZOQIudYj82tmUUwAfhGjiCeH17OwuGrsO+48GWzqHaeuFm4p6PIWon2XskQfAV9v6
-         sQ60KVQN4x6mDHmGR1xuWYd6izhoFfUmAaosE3kkIBC4T7UDcD1ByXwiH5kjsu3zlWbK
-         H5pRMF5gPorQBG+LBySvjh3YbFMKLavZqS+KuatH7E80t3hKLIDqwrnNoP4vjERPTP/M
-         iKcw==
-X-Gm-Message-State: AOAM532laTu+EvruCvQ+/TfFWlK+ZTh3sC9nvrQBrr5fgOEokRSFmkEO
-        CaODt/PnsEzdwvFLDXzLPGrhiy0Ixxk1GKZnHs4=
-X-Google-Smtp-Source: ABdhPJzgXRGarOjDsfXSyoLLQhf4PuMveqEb8UybTzsWaDF3my0/TZkv9ycoscWO5tfBf/dcGT3T28QHSdbjOxuqecM=
-X-Received: by 2002:ac8:74c7:: with SMTP id j7mr18777867qtr.118.1636746717505;
- Fri, 12 Nov 2021 11:51:57 -0800 (PST)
+        id S229563AbhKNGMD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 14 Nov 2021 01:12:03 -0500
+Received: from smtpbg126.qq.com ([106.55.201.22]:24254 "EHLO smtpbg587.qq.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229537AbhKNGMC (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 14 Nov 2021 01:12:02 -0500
+X-QQ-mid: bizesmtp34t1636870141t6olfinn
+Received: from localhost.localdomain (unknown [125.69.41.88])
+        by esmtp6.qq.com (ESMTP) with 
+        id ; Sun, 14 Nov 2021 14:09:00 +0800 (CST)
+X-QQ-SSF: 01000000002000C0F000B00A0000000
+X-QQ-FEAT: lC5HeAtE+yY7ieI7k5ozcsT2mHbmUCx7ecPfiLQCJcdRW/HMeiQe9BFfGAp+t
+        j46q9+ju91OdN4ziKKXkkJA5ZA+w2LJcOga3IYFgAymVXZEQPLdU8+mcf1989/ohjhVoHv8
+        usK6mPB/qayQ3EJUU6P6ovXmUptfFZimbhW7FqvvHkAvI5yO1ban2qoabkIOxyhFlaEhell
+        3ZPOO6FMS2QChk+zAHV/2iqAzCwbkn+VqCH8KhkbvJhA7nOC6DGfFIz8J/r8epgsk+2EPM5
+        MtKjOy36xHHiOvaEscnNffjVafnVWMuzqQat4sNNvjtk3Sz8t963WPZROqKoiVBBQtUGaWm
+        U3RFoHxYxMwoMDQgF3ytugx2Xplrh3bMX3wayKpDTIZ0sG0DXw=
+X-QQ-GoodBg: 0
+From:   Jason Wang <wangborong@cdjrlc.com>
+To:     vkoul@kernel.org
+Cc:     salah.triki@gmail.com, wangborong@cdjrlc.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: ppc4xx: remove unused variable `rval'
+Date:   Sun, 14 Nov 2021 14:08:56 +0800
+Message-Id: <20211114060856.239314-1-wangborong@cdjrlc.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Received: by 2002:ac8:5a03:0:0:0:0:0 with HTTP; Fri, 12 Nov 2021 11:51:56
- -0800 (PST)
-Reply-To: wmchfa@gmail.com
-From:   William Chalmers <pv.wcha@gmail.com>
-Date:   Fri, 12 Nov 2021 20:51:56 +0100
-Message-ID: <CAO9cJj-OSU5qoJZ85Ow=KAGpF82M3g_cF3aScOinyZwY3Tj3mw@mail.gmail.com>
-Subject: URGENT
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:cdjrlc.com:qybgspam:qybgspam2
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-ATTENTION,
-        Sir/Madam.
+The variable used for returning status in
+`ppc440spe_adma_dma2rxor_prep_src' function is never changed
+and this function just need to return 0. Thus, the `rval' can
+be removed and return 0 from `ppc440spe_adma_dma2rxor_prep_src'.
 
-Greetings to you, I am contacting you after going through your
-interesting profile. I am Mr.William Chalmers. I am from London, United
-Kingdom, If this message successfully gets to you, I will like to
-discuss business with you, which you will have an immense benefit from
-if we can work together with, The Group Finance Director of Lloyds
-Banking Group United Kingdom.
+Signed-off-by: Jason Wang <wangborong@cdjrlc.com>
+---
+ drivers/dma/ppc4xx/adma.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-I am contacting you for a legitimate business transaction strictly for
-you and me alone. I personally discovered a dormant account with a
-total sum of =C2=A3 1,35,000.000.00 - [One-hundred Thirty-Five Million GBP
-Only] here in our bank. The owner of this dormant account died on 4th
-Jan 2012. Since his death, nobody has operated in his account because
-the account has NO BENEFICIARY attached to it. I wish to present you
-as the next of kin to the bank.
+diff --git a/drivers/dma/ppc4xx/adma.c b/drivers/dma/ppc4xx/adma.c
+index e2b5129c5f84..5e46e347e28b 100644
+--- a/drivers/dma/ppc4xx/adma.c
++++ b/drivers/dma/ppc4xx/adma.c
+@@ -3240,7 +3240,6 @@ static int ppc440spe_adma_dma2rxor_prep_src(
+ 		struct ppc440spe_rxor *cursor, int index,
+ 		int src_cnt, u32 addr)
+ {
+-	int rval = 0;
+ 	u32 sign;
+ 	struct ppc440spe_adma_desc_slot *desc = hdesc;
+ 	int i;
+@@ -3348,7 +3347,7 @@ static int ppc440spe_adma_dma2rxor_prep_src(
+ 		break;
+ 	}
+ 
+-	return rval;
++	return 0;
+ }
+ 
+ /**
+-- 
+2.33.0
 
-Kindly get back to me as soon as possible for more details on how to
-proceed further. I look forward to hearing from you soon.
-
-Regards,
-Mr.William Chalmers.

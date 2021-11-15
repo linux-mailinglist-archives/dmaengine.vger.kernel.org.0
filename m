@@ -2,44 +2,44 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA34E45025D
-	for <lists+dmaengine@lfdr.de>; Mon, 15 Nov 2021 11:23:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C74904502AD
+	for <lists+dmaengine@lfdr.de>; Mon, 15 Nov 2021 11:42:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230419AbhKOK0j (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 15 Nov 2021 05:26:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53170 "EHLO mail.kernel.org"
+        id S237623AbhKOKp1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 15 Nov 2021 05:45:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231166AbhKOK0g (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 15 Nov 2021 05:26:36 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5B11F630EF;
-        Mon, 15 Nov 2021 10:23:41 +0000 (UTC)
+        id S237647AbhKOKpZ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 15 Nov 2021 05:45:25 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 605EE63232;
+        Mon, 15 Nov 2021 10:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636971821;
-        bh=/t8XfUWWM8z249haMNnkzo9rz3rqA5hhnI/QUDdDTws=;
+        s=k20201202; t=1636972950;
+        bh=GF5ppKwJBGyzBz8YYmc0v0PuTfRZzEb8KsPYdX9kZys=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=BuOY5ELTwM8ARl8dht0vPj74GqpW7Omi9ye6DZXl4ISYUdhHvn/MD+ynDDUT+QFtA
-         v8L7yTHPnv3tNZT+6a7jmvQiyHLX42OhSBtuErgkkpXMWboLAxbpYYXhkMyhP3kE41
-         WUL+WGa8r2Ml5m1pmbyJCKNiWaAA/tcOe62yL/fiNo14Evo43QgmMCKuyU9uToylcA
-         J85yoCIJTYPD2hiiYP9cnEUTFS41uyXrFoia9J9lYRG9OY91kMrhg72OL5ozjj1uQi
-         01RuRIianAw8FITBywentT0od4DYro7YDzqlmkyd3IDz3Pd+duWc1lFOAhroRxLO8P
-         vWZ7OvjtlSIUw==
-Received: by mail-wr1-f52.google.com with SMTP id n29so29548818wra.11;
-        Mon, 15 Nov 2021 02:23:41 -0800 (PST)
-X-Gm-Message-State: AOAM530SMRgaOUzmX6nZtiCcl9TuL8m5mYGtNGugcD81RHh+Jx05UT/J
-        Nxry9F/zaJU92ORYm2EY3k39/zcWa/LX7A8YiGc=
-X-Google-Smtp-Source: ABdhPJzrg17TRzVZ0g7WiohBQZUnVilsZRnhlMklfo7pQF89sOPyjg8lWeE+TbAhUi7fYkrm+wuR9SFoHCL7lz7Lazw=
-X-Received: by 2002:adf:df89:: with SMTP id z9mr45210699wrl.336.1636971819867;
- Mon, 15 Nov 2021 02:23:39 -0800 (PST)
+        b=Ah/2tRgiVpL5fsi7FPpcL635JDhcln6l2ExZIWHTLBUbMjdBJtz0DoVh8A2lD2GeS
+         Vn5loajjfQVDFPQtLSRLZGgFOOu9gaKK3ygqoSrLlln9jWXCpaNqhh48lZ8c+k+4gu
+         sRf7wuCD69gIDwdqAcDKjxNp/YsEuFSMvDDDQT7VHpaJYuJxZPW/xofRGd5PidTsHa
+         kAWstx1aMCAeHyFhdJIprnubYysWs5QAKZBMy/vWApTOP0uD7D8phUBIQiY3lLQ5f/
+         +MVP+HB9F9xrWDthVsi8GxjjhUCyNhOn85FTRAs3rVEuGA/K5Upw6e+cpw5gK86TyV
+         zRQeafG4VMnqA==
+Received: by mail-wm1-f48.google.com with SMTP id i12so12630047wmq.4;
+        Mon, 15 Nov 2021 02:42:30 -0800 (PST)
+X-Gm-Message-State: AOAM533V71Zs+sw2dEBymXO02n62snMw7/lgyzhTvq1NziLMRdPVOwAr
+        Jwd8dWTGYB1PEaibVHYthPczN0VjzeXVDRxaY3I=
+X-Google-Smtp-Source: ABdhPJxXAexhirAvGW2LKyfe3zijMEf2dKYT5qfqRJ6eAMXzz6GR60sm0yXhnH6+pWfe4YG9EjpedQhiHwxXAXFjyDM=
+X-Received: by 2002:a1c:770e:: with SMTP id t14mr57234330wmi.173.1636972948695;
+ Mon, 15 Nov 2021 02:42:28 -0800 (PST)
 MIME-Version: 1.0
-References: <20211115085403.360194-1-arnd@kernel.org> <20211115085403.360194-11-arnd@kernel.org>
- <CAMhs-H98kPNqH491+X0Mp81Ng++v1aQ=97XSHEhs+vx3g8W_4A@mail.gmail.com>
-In-Reply-To: <CAMhs-H98kPNqH491+X0Mp81Ng++v1aQ=97XSHEhs+vx3g8W_4A@mail.gmail.com>
+References: <20211115085403.360194-1-arnd@kernel.org> <20211115085403.360194-2-arnd@kernel.org>
+ <647b842d-76a1-7a96-3ea7-8a37b62bc18e@metafoo.de>
+In-Reply-To: <647b842d-76a1-7a96-3ea7-8a37b62bc18e@metafoo.de>
 From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Mon, 15 Nov 2021 11:23:24 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2hfcbTJ-yKik1hN35dTdqhjhCd=3X6G_hW4MXRHDVrfA@mail.gmail.com>
-Message-ID: <CAK8P3a2hfcbTJ-yKik1hN35dTdqhjhCd=3X6G_hW4MXRHDVrfA@mail.gmail.com>
-Subject: Re: [PATCH 10/11] staging: ralink-gdma: stop using slave_id config
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Mon, 15 Nov 2021 11:42:12 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2EVseM4t=e982fFhzBGSZxZ2_V-FHwr-fQPd-bkAKaJg@mail.gmail.com>
+Message-ID: <CAK8P3a2EVseM4t=e982fFhzBGSZxZ2_V-FHwr-fQPd-bkAKaJg@mail.gmail.com>
+Subject: Re: [PATCH 01/11] ASoC: dai_dma: remove slave_id field
+To:     Lars-Peter Clausen <lars@metafoo.de>
 Cc:     Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Andy Gross <agross@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -50,7 +50,6 @@ Cc:     Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Hyun Kwon <hyun.kwon@xilinx.com>,
         Jaroslav Kysela <perex@perex.cz>,
         Jon Hunter <jonathanh@nvidia.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Laxman Dewangan <ldewangan@nvidia.com>,
         Manivannan Sadhasivam <mani@kernel.org>,
@@ -68,7 +67,7 @@ Cc:     Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         dri-devel <dri-devel@lists.freedesktop.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-mmc <linux-mmc@vger.kernel.org>,
         linux-mtd <linux-mtd@lists.infradead.org>,
         "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
@@ -82,16 +81,31 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Nov 15, 2021 at 10:55 AM Sergio Paracuellos
-<sergio.paracuellos@gmail.com> wrote:
-> On Mon, Nov 15, 2021 at 9:55 AM Arnd Bergmann <arnd@kernel.org> wrote:
-> > ---
-> >  drivers/staging/ralink-gdma/ralink-gdma.c | 12 +++++-------
-> >  1 file changed, 5 insertions(+), 7 deletions(-)
+On Mon, Nov 15, 2021 at 11:14 AM Lars-Peter Clausen <lars@metafoo.de> wrote:
 >
-> This driver has been already deleted from the staging tree. See [0].
+> On 11/15/21 9:53 AM, Arnd Bergmann wrote:
+> > From: Arnd Bergmann <arnd@arndb.de>
+> >
+> > This field is never set, and serves no purpose, so remove it.
+>
+> I agree that we should remove it. Its been legacy support code for a
+> while, but the description that there is no user is not right.
+>
+> The tegra20_spdif driver obviously uses it and that user is removed in
+> this patch. I think it makes sense to split that out into a separate
+> patch with a description why the driver will still work even with
+> slave_id removed. Maybe the best is to remove the whole tegra20_spdif
+> driver.
 
-Ok, thanks! I'll just leave out the patch from future submissions, and remove
-it completely once your commit hits mainline.
+Ok, I'll split out the tegra patch and try to come up with a better
+description for it. What I saw in that driver is it just passes down the
+slave_id number from a 'struct resource', but there is nothing in
+the kernel that sets up this resource.
 
-       Arnd
+Do you or someone else have more information on the state of this
+driver? I can see that it does not contain any of_device_id based
+probing, so it seems that this is either dead code, the platform_device
+gets created by some other code that is no longer compatible with
+this driver.
+
+      Arnd

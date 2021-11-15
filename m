@@ -2,54 +2,29 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EF3F45050B
-	for <lists+dmaengine@lfdr.de>; Mon, 15 Nov 2021 14:10:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B27F4450570
+	for <lists+dmaengine@lfdr.de>; Mon, 15 Nov 2021 14:29:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231215AbhKONMw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 15 Nov 2021 08:12:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231539AbhKONMn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 15 Nov 2021 08:12:43 -0500
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CF3FC061714
-        for <dmaengine@vger.kernel.org>; Mon, 15 Nov 2021 05:09:47 -0800 (PST)
-Received: by mail-lj1-x22a.google.com with SMTP id i63so35393420lji.3
-        for <dmaengine@vger.kernel.org>; Mon, 15 Nov 2021 05:09:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zdNnu6u0t53RxSPdU4MDPOEl5NW5wFhi+3tVJwsouBE=;
-        b=AdlSGIXoBXq0VXgOWXENRxISfNEhM8HAmvts1hlgX2aW8p19gg4TWR8iIt27dsvmv1
-         Er40yU2EVPgsKue7HjKRPzcvCEAOuYUSYPQRd7hA06J3e13A1mkLA77EDajw9vHVT420
-         Lbp3x0tqpEh+8MBGtUYl/2+fVKsJM1+f+AKqTG6X7Kh0veEaJi77Iw0fl7cmv+hbpWsF
-         4j+O7DBKUFLat0Nxi8uwYiTs345Prp9Z/jgqtkOJyAyKfWa7I7unOeTjMa5rmjmc3Xwr
-         9Mt+CjQwmzF7FQsUxJSUVdME7aWf6slT3nqVKg54VhTbXds90COzK7cp9x7YBV5y9jx3
-         XScw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zdNnu6u0t53RxSPdU4MDPOEl5NW5wFhi+3tVJwsouBE=;
-        b=q/wLVwzCkAGO2TG/QFj+Bteh509liPKOcjAtZ6O/IQiX9ROmck/pR17yzwON0anWTe
-         hXqGaXGMOtsX+5ttI+5whs4rMKut/drcQkgDCKyELB9LVX06uZwryFzXbEG1b5VlRUrT
-         gG+8dpJsKG0dPevOcpd/MjLcPfZML9DM84fmPI4OUQiX/uZO5Ava255N1xg/Td2G5fix
-         n4p60tMHpK1yKzQvSRjhEVzLjKdUPnHFd8mA8WUCAJQQvRF+zPLetHbarkzntp8DEQxv
-         A2oABXS9K/NfLE0nCOZ8Vr3NhiU3CWN0U0quxVMBSDcDWZLQdlLPnKCVKVlS7IFHI5ry
-         C93Q==
-X-Gm-Message-State: AOAM530mxKE3ObD0Vs8XQeTcfx6HN5tJ8RNvL0uUN0hJz2ZNwnfU/34K
-        BmRsq4+B/SZbXYd03T884H2xfN9e1Zg7W2xZ7IOvIg==
-X-Google-Smtp-Source: ABdhPJxdsC0uW2HE6zj+9SqQN+4ObrVjDxA5TLNECz/k4cRg87wjRG7GU625P/bUeyp/NjunxRKqIwie+Tr+AjkZQG4=
-X-Received: by 2002:a2e:80c3:: with SMTP id r3mr38617043ljg.4.1636981785962;
- Mon, 15 Nov 2021 05:09:45 -0800 (PST)
-MIME-Version: 1.0
-References: <20211115085403.360194-1-arnd@kernel.org> <20211115085403.360194-4-arnd@kernel.org>
-In-Reply-To: <20211115085403.360194-4-arnd@kernel.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 15 Nov 2021 14:09:09 +0100
-Message-ID: <CAPDyKFovVgrDxJ5eFgvAzwJNTrYSzjtz7z9UCa3rHMsgkFqsxA@mail.gmail.com>
-Subject: Re: [PATCH 03/11] mmc: bcm2835: stop setting chan_config->slave_id
+        id S231728AbhKONca (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 15 Nov 2021 08:32:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231805AbhKONcN (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 15 Nov 2021 08:32:13 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 01B2961C4F;
+        Mon, 15 Nov 2021 13:29:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636982957;
+        bh=d7tYqUsWDtoH/nl2BZKWt1Fg723w2autMfgUYEMNJag=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NxAtFPBbvP/6AMCR/771dj85JLwT9nMjXuRQW/p/vGkRcrzxY2dfXvwIZFnFfefwu
+         kvsKyiub8ajs3EgHPbs6+p59+0bA/wbHJl2rz7tgW3TeuyJq/UzZVAAAGhAdFi+CZW
+         Uw+2qQawe1sg1MzO5qZDCDpwqeQYNaR5EdOhc2COOEUfXCP0x7GGBQFYXF9J63TxGW
+         AwoXnh5gr7ftDkRGa/KmDw/s4JgpvjP7FcwtMuv6k/iKRgLccKlkjLmXo33ME7VFfJ
+         JbTTzrKQ/VAOfK2BvkUlHyAruho4/iLVVQdqlwG9oXsUX0VqxqKDDGf3cxU4kWKLOe
+         vGM3FZPU3/xnQ==
+Date:   Mon, 15 Nov 2021 13:29:07 +0000
+From:   Mark Brown <broonie@kernel.org>
 To:     Arnd Bergmann <arnd@kernel.org>
 Cc:     Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Andy Gross <agross@kernel.org>,
@@ -65,7 +40,6 @@ Cc:     Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Laxman Dewangan <ldewangan@nvidia.com>,
         Manivannan Sadhasivam <mani@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
         Michal Simek <michal.simek@xilinx.com>,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Orson Zhai <orsonzhai@gmail.com>,
@@ -81,49 +55,48 @@ Cc:     Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         linux-rpi-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
         linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 02/11] spi: pic32: stop setting dma_config->slave_id
+Message-ID: <YZJgoxE15OYKYP2K@sirena.org.uk>
+References: <20211115085403.360194-1-arnd@kernel.org>
+ <20211115085403.360194-3-arnd@kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IMTM3OEYqWoLprto"
+Content-Disposition: inline
+In-Reply-To: <20211115085403.360194-3-arnd@kernel.org>
+X-Cookie: Custer committed Siouxicide.
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, 15 Nov 2021 at 09:55, Arnd Bergmann <arnd@kernel.org> wrote:
->
+
+--IMTM3OEYqWoLprto
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Nov 15, 2021 at 09:53:54AM +0100, Arnd Bergmann wrote:
 > From: Arnd Bergmann <arnd@arndb.de>
->
-> The field is not interpreted by the DMA engine driver, as all the data
-> is passed from devicetree instead. Remove the assignment so the field
-> can eventually be deleted.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>=20
+> Setting slave_id makes no sense with DT based probing, and
+> should eventually get removed entirely. Address this driver
+> by no longer setting the field here.
 
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Kind regards
-Uffe
+--IMTM3OEYqWoLprto
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> ---
->  drivers/mmc/host/bcm2835.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
-> index 8c2361e66277..463b707d9e99 100644
-> --- a/drivers/mmc/host/bcm2835.c
-> +++ b/drivers/mmc/host/bcm2835.c
-> @@ -1293,14 +1293,12 @@ static int bcm2835_add_host(struct bcm2835_host *host)
->
->                 host->dma_cfg_tx.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->                 host->dma_cfg_tx.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-> -               host->dma_cfg_tx.slave_id = 13;         /* DREQ channel */
->                 host->dma_cfg_tx.direction = DMA_MEM_TO_DEV;
->                 host->dma_cfg_tx.src_addr = 0;
->                 host->dma_cfg_tx.dst_addr = host->phys_addr + SDDATA;
->
->                 host->dma_cfg_rx.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->                 host->dma_cfg_rx.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-> -               host->dma_cfg_rx.slave_id = 13;         /* DREQ channel */
->                 host->dma_cfg_rx.direction = DMA_DEV_TO_MEM;
->                 host->dma_cfg_rx.src_addr = host->phys_addr + SDDATA;
->                 host->dma_cfg_rx.dst_addr = 0;
-> --
-> 2.30.2
->
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmGSYKMACgkQJNaLcl1U
+h9BFJgf/fpBvGqcjOVPEzPWsUxd950Aql84mdfpVf7Q34yAtuAJMlorUf+ARZFeV
+RvrFCJ6tyeWZsZCKm+HMgfJFIp4GSOcn2asZ7p06z3lpAzDdX9Yn8aFW1bcIUOee
+EjiSLquSQyBmUy+upf3bbaVPV1YyDaj5IajH5PQCVwj1mfRcilnqGpBPEJgpEo99
+MNhpTEA3rcd6ESQQ0QyMAliW+T4BwAkXCtnWnSt4bVq1NfViOEbTGn/Nh7OaGwrI
+dNe0cE4t3/9Vo3mtQY6IgF2d7gcIiTePrXRq74w940zsn4Rh6RpX5mGPiwM+OYh3
+l7AvLSoqMeL1h9M5Yek/O6k8yVVJuQ==
+=RhAB
+-----END PGP SIGNATURE-----
+
+--IMTM3OEYqWoLprto--

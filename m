@@ -2,27 +2,27 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ADBB4500B2
-	for <lists+dmaengine@lfdr.de>; Mon, 15 Nov 2021 09:58:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29C894500AA
+	for <lists+dmaengine@lfdr.de>; Mon, 15 Nov 2021 09:58:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229944AbhKOJBs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 15 Nov 2021 04:01:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56190 "EHLO mail.kernel.org"
+        id S236975AbhKOJBL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 15 Nov 2021 04:01:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230376AbhKOI6r (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 15 Nov 2021 03:58:47 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 97B2063227;
-        Mon, 15 Nov 2021 08:55:45 +0000 (UTC)
+        id S236344AbhKOI6x (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 15 Nov 2021 03:58:53 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1D85961BF5;
+        Mon, 15 Nov 2021 08:55:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636966551;
-        bh=t+sujmlGUVrYtWCA2Iqgm4qzwcVm4cE+7MUCYHiTmt8=;
+        s=k20201202; t=1636966558;
+        bh=KymEuSb1ZBu9d4ip60ZapuAOc2fPUmm65BckI1F9t+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E3hAwHAFBi1veWTZ9KC3LUqplVBzvhHkJdmHwzLmUaxHGxHQt/Uao9jUuL7+wYtM1
-         t5/KCd2DhDnIMvpS1fzLHld+q6AChRUElQMbmbJgDaTpHm5vW1Uyudi7cSpoV3wALW
-         3+TEcRqIWccqr7FIxw+On4njyPKMPuD/VUQ+uBZMxLJI2xjFiVqAFgV6Ym1M8MXblp
-         H3AtGfulWPCW1XQE3Nvr6vFEwAXxjhfbUBy3AmIdd5/EjenYc84yhK4dgbFVtzWJe/
-         uGxVZ0BY9bYvtABbO19Hw4xqxf+bkbhZDmO0g57I7eSW+8dnN8ZNhH3IrlxeCNnqJt
-         h19+P/ZGx52Ig==
+        b=LdZ6xF0xp+O72e2bWrz1JbVB8H175gzm3ebqcgB4b1TFRnEbOtg/Co/2UVmy2RSYO
+         K4PGopsAL2+EPUBQXn3pIZuRLnOiV7Z4ZHRzhRaGpOOilkyT8qB7djWEyRGQxY+o07
+         0pURtU5ha6Bqhqi3VRo20hpuTebBqhRUMgKKcND/ItqTEUbbBG6gtFAFRdgoUlbWQv
+         nllnKfHGybN+48IS6aBEK9XM+8ihm/vdNwSp8OLBPdHs4lV1MKpoIy38LN4jK4yIhT
+         e7DvDqpq2WV2gb8/H5hLIdnkM9Qc2HOyUeSrulI8xZE0lHPXJ5SUm3GD7JPkNCpR/k
+         kEJCWgx/yAgzA==
 From:   Arnd Bergmann <arnd@kernel.org>
 To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Arnd Bergmann <arnd@arndb.de>, Andy Gross <agross@kernel.org>,
@@ -54,9 +54,9 @@ Cc:     Arnd Bergmann <arnd@arndb.de>, Andy Gross <agross@kernel.org>,
         linux-rpi-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
         linux-tegra@vger.kernel.org
-Subject: [PATCH 10/11] staging: ralink-gdma: stop using slave_id config
-Date:   Mon, 15 Nov 2021 09:54:02 +0100
-Message-Id: <20211115085403.360194-11-arnd@kernel.org>
+Subject: [PATCH 11/11] dmaengine: remove slave_id config field
+Date:   Mon, 15 Nov 2021 09:54:03 +0100
+Message-Id: <20211115085403.360194-12-arnd@kernel.org>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20211115085403.360194-1-arnd@kernel.org>
 References: <20211115085403.360194-1-arnd@kernel.org>
@@ -68,83 +68,37 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-Picking the connection between a DMA controller and its attached device
-is done through devicetree using the "dmas" property, which is implemented
-by the gdma driver, but it also allows overriding the "req" configuration
-with the slave_id field, as it was done in some linux-2.6 era drivers.
-
-There is no driver in the tree that sets these values, so stop
-interpreting them before anything accidentally starts relying on it.
-Rename the field in the channel from "slave_id" to "req" to better match
-the purpose and the naming in the hardware.
-
-If any driver actually starts using this DMA engine, it may be necessary
-to implement a .xlate callback that sets this field at probe time.
+All references to the slave_id field have been removed, so
+remove the field as well to prevent new references from
+creeping in again.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/staging/ralink-gdma/ralink-gdma.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ include/linux/dmaengine.h | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/staging/ralink-gdma/ralink-gdma.c b/drivers/staging/ralink-gdma/ralink-gdma.c
-index b5229bc6eae5..f00240e62e1b 100644
---- a/drivers/staging/ralink-gdma/ralink-gdma.c
-+++ b/drivers/staging/ralink-gdma/ralink-gdma.c
-@@ -106,7 +106,7 @@ struct gdma_dma_desc {
- struct gdma_dmaengine_chan {
- 	struct virt_dma_chan vchan;
- 	unsigned int id;
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 9000f3ffce8b..0349b35235e6 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -418,9 +418,6 @@ enum dma_slave_buswidth {
+  * @device_fc: Flow Controller Settings. Only valid for slave channels. Fill
+  * with 'true' if peripheral should be flow controller. Direction will be
+  * selected at Runtime.
+- * @slave_id: Slave requester id. Only valid for slave channels. The dma
+- * slave peripheral will have unique id as dma requester which need to be
+- * pass as slave config.
+  * @peripheral_config: peripheral configuration for programming peripheral
+  * for dmaengine transfer
+  * @peripheral_size: peripheral configuration buffer size
+@@ -448,7 +445,6 @@ struct dma_slave_config {
+ 	u32 src_port_window_size;
+ 	u32 dst_port_window_size;
+ 	bool device_fc;
 -	unsigned int slave_id;
-+	unsigned int req;
- 
- 	dma_addr_t fifo_addr;
- 	enum gdma_dma_transfer_size burst_size;
-@@ -194,7 +194,6 @@ static int gdma_dma_config(struct dma_chan *c,
- 			dev_err(dma_dev->ddev.dev, "only support 4 byte buswidth\n");
- 			return -EINVAL;
- 		}
--		chan->slave_id = config->slave_id;
- 		chan->fifo_addr = config->dst_addr;
- 		chan->burst_size = gdma_dma_maxburst(config->dst_maxburst);
- 		break;
-@@ -203,7 +202,6 @@ static int gdma_dma_config(struct dma_chan *c,
- 			dev_err(dma_dev->ddev.dev, "only support 4 byte buswidth\n");
- 			return -EINVAL;
- 		}
--		chan->slave_id = config->slave_id;
- 		chan->fifo_addr = config->src_addr;
- 		chan->burst_size = gdma_dma_maxburst(config->src_maxburst);
- 		break;
-@@ -288,12 +286,12 @@ static int rt305x_gdma_start_transfer(struct gdma_dmaengine_chan *chan)
- 		dst_addr = chan->fifo_addr;
- 		ctrl0 = GDMA_REG_CTRL0_DST_ADDR_FIXED |
- 			(8 << GDMA_RT305X_CTRL0_SRC_REQ_SHIFT) |
--			(chan->slave_id << GDMA_RT305X_CTRL0_DST_REQ_SHIFT);
-+			(chan->req << GDMA_RT305X_CTRL0_DST_REQ_SHIFT);
- 	} else if (chan->desc->direction == DMA_DEV_TO_MEM) {
- 		src_addr = chan->fifo_addr;
- 		dst_addr = sg->dst_addr;
- 		ctrl0 = GDMA_REG_CTRL0_SRC_ADDR_FIXED |
--			(chan->slave_id << GDMA_RT305X_CTRL0_SRC_REQ_SHIFT) |
-+			(chan->req << GDMA_RT305X_CTRL0_SRC_REQ_SHIFT) |
- 			(8 << GDMA_RT305X_CTRL0_DST_REQ_SHIFT);
- 	} else if (chan->desc->direction == DMA_MEM_TO_MEM) {
- 		/*
-@@ -365,12 +363,12 @@ static int rt3883_gdma_start_transfer(struct gdma_dmaengine_chan *chan)
- 		dst_addr = chan->fifo_addr;
- 		ctrl0 = GDMA_REG_CTRL0_DST_ADDR_FIXED;
- 		ctrl1 = (32 << GDMA_REG_CTRL1_SRC_REQ_SHIFT) |
--			(chan->slave_id << GDMA_REG_CTRL1_DST_REQ_SHIFT);
-+			(chan->req << GDMA_REG_CTRL1_DST_REQ_SHIFT);
- 	} else if (chan->desc->direction == DMA_DEV_TO_MEM) {
- 		src_addr = chan->fifo_addr;
- 		dst_addr = sg->dst_addr;
- 		ctrl0 = GDMA_REG_CTRL0_SRC_ADDR_FIXED;
--		ctrl1 = (chan->slave_id << GDMA_REG_CTRL1_SRC_REQ_SHIFT) |
-+		ctrl1 = (chan->req << GDMA_REG_CTRL1_SRC_REQ_SHIFT) |
- 			(32 << GDMA_REG_CTRL1_DST_REQ_SHIFT) |
- 			GDMA_REG_CTRL1_COHERENT;
- 	} else if (chan->desc->direction == DMA_MEM_TO_MEM) {
+ 	void *peripheral_config;
+ 	size_t peripheral_size;
+ };
 -- 
 2.30.2
 

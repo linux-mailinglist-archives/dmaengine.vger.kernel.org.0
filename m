@@ -2,98 +2,75 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C841450808
-	for <lists+dmaengine@lfdr.de>; Mon, 15 Nov 2021 16:16:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 224F445255C
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Nov 2021 02:47:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236359AbhKOPSz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 15 Nov 2021 10:18:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236609AbhKOPSO (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 15 Nov 2021 10:18:14 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 06F1363244;
-        Mon, 15 Nov 2021 15:15:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636989318;
-        bh=caNhQR6MItqyqj8aVGADFWmRHHEWyDNeG1UmwE7ptic=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=V/bQc6DKqJJ9P37PTBVcjhzef7pDvNHRvr3F3EgUQSqR6cy9gSS6hyzZDciApni0a
-         3QMWN6MNNmORUy4BghYhYSm0TENrtMowNG+BxfSpe4F6N3jXjJPkkbXvN49Ox0bMTt
-         fWhgBksXDZXchbDYG70HcbRVWZGHGtswftEIz2iyfbKUP7KKPZVOsGmmLlIrKIXyeJ
-         gzuikhV7beCSHi+4AycaC9/XDi8NPveqOXyRlBsMjwDJnNyhOY3SSISSPPYeOikYGF
-         0Xs8EXetoSOIeENEILqVUTpQifde5TJSWu7mnaCK9kgeWQDH6Cm3MkdBV5hVy9UqQz
-         656gt9SaY+hCg==
-Received: by mail-wm1-f46.google.com with SMTP id 77-20020a1c0450000000b0033123de3425so16153670wme.0;
-        Mon, 15 Nov 2021 07:15:17 -0800 (PST)
-X-Gm-Message-State: AOAM531xs+IPX2RCSN9J1njBgrefS67r2uh/SdbOMuhx2rxiZT5t7T8V
-        vlBbRGV4LnBUfFJsSLR5VfWbdUljPLopFKe/7NA=
-X-Google-Smtp-Source: ABdhPJy8n2MSwzh6suyWZ9JESZ+B+WCCwhvtwsBUIZeDj84QhV0+ZckRDxWsOxlhdmOo7jylNl8QiKm3gBRShRPmqHI=
-X-Received: by 2002:a1c:2382:: with SMTP id j124mr42651026wmj.35.1636989316377;
- Mon, 15 Nov 2021 07:15:16 -0800 (PST)
+        id S1357930AbhKPBuE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 15 Nov 2021 20:50:04 -0500
+Received: from smtp21.cstnet.cn ([159.226.251.21]:44472 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1381608AbhKPBqj (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 15 Nov 2021 20:46:39 -0500
+X-Greylist: delayed 586 seconds by postgrey-1.27 at vger.kernel.org; Mon, 15 Nov 2021 20:46:39 EST
+Received: from localhost.localdomain (unknown [124.16.141.244])
+        by APP-01 (Coremail) with SMTP id qwCowACnrQloCpNhgpCmBw--.11161S2;
+        Tue, 16 Nov 2021 09:33:29 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, vkoul@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: qcom: gpi: Remove unnecessary print function dev_err()
+Date:   Tue, 16 Nov 2021 01:33:06 +0000
+Message-Id: <20211116013306.784-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20211115085403.360194-1-arnd@kernel.org> <20211115085403.360194-2-arnd@kernel.org>
- <647b842d-76a1-7a96-3ea7-8a37b62bc18e@metafoo.de> <CAK8P3a2EVseM4t=e982fFhzBGSZxZ2_V-FHwr-fQPd-bkAKaJg@mail.gmail.com>
- <d2dd42fc-e58a-0c06-7f7e-a6a2161c368d@metafoo.de> <5737810c-420a-2f8d-99bf-24a2558d5855@gmail.com>
-In-Reply-To: <5737810c-420a-2f8d-99bf-24a2558d5855@gmail.com>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Mon, 15 Nov 2021 16:15:00 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1dGSF-S4msKKWvPYORwYCFvtkNSJwkhtxvETgiQjC7_Q@mail.gmail.com>
-Message-ID: <CAK8P3a1dGSF-S4msKKWvPYORwYCFvtkNSJwkhtxvETgiQjC7_Q@mail.gmail.com>
-Subject: Re: [PATCH 01/11] ASoC: dai_dma: remove slave_id field
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andy Gross <agross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Scott Branden <sbranden@broadcom.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        dmaengine@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-staging@lists.linux.dev,
-        "open list:TEGRA ARCHITECTURE SUPPORT" <linux-tegra@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: qwCowACnrQloCpNhgpCmBw--.11161S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZrWrWF45tw4UXF1fKF18Grg_yoW3JrcEk3
+        W8urZ3Wr40yFyqvr1Ikw13AryvvF90vrs5uws2qa13t3s8X3saq39rAF4kAr48X3yjkryj
+        kr98ur43Cr4fAjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbwxYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I
+        8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCF
+        x2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+        v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
+        67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
+        IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
+        xVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcVWlDUUUU
+X-Originating-IP: [124.16.141.244]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgcHA10TfwQQVwAAs3
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Nov 15, 2021 at 3:46 PM Dmitry Osipenko <digetx@gmail.com> wrote:
-> 15.11.2021 14:53, Lars-Peter Clausen =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> That Tegra SPDIF driver was never used. Still there is a growing
-> interest nowadays in making it alive by implementing HDMI audio support
-> for Tegra20 SoC. It was on my todo list for a long time, I'll try to
-> prioritize that work 5.17, it shouldn't take much effort.
->
-> The slave_id should be removed anyways, it won't be needed.
+The print function dev_err() is redundant because
+platform_get_irq() already prints an error.
 
-Ok, thanks for the background, I'll mention that in the changelog text then=
-.
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ drivers/dma/qcom/gpi.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-     Arnd
+diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
+index 1a1b7d8458c9..94f3648f7483 100644
+--- a/drivers/dma/qcom/gpi.c
++++ b/drivers/dma/qcom/gpi.c
+@@ -2206,10 +2206,8 @@ static int gpi_probe(struct platform_device *pdev)
+ 
+ 		/* set up irq */
+ 		ret = platform_get_irq(pdev, i);
+-		if (ret < 0) {
+-			dev_err(gpi_dev->dev, "platform_get_irq failed for %d:%d\n", i, ret);
++		if (ret < 0)
+ 			return ret;
+-		}
+ 		gpii->irq = ret;
+ 
+ 		/* set up channel specific register info */
+-- 
+2.25.1
+

@@ -2,44 +2,44 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58AAC45305A
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Nov 2021 12:22:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A3E745304E
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Nov 2021 12:22:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235072AbhKPLZK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 16 Nov 2021 06:25:10 -0500
-Received: from esa.microchip.iphmx.com ([68.232.153.233]:18426 "EHLO
+        id S235014AbhKPLYw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 16 Nov 2021 06:24:52 -0500
+Received: from esa.microchip.iphmx.com ([68.232.154.123]:9441 "EHLO
         esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234882AbhKPLY0 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 16 Nov 2021 06:24:26 -0500
+        with ESMTP id S234876AbhKPLYY (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 16 Nov 2021 06:24:24 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1637061689; x=1668597689;
+  t=1637061687; x=1668597687;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=WIpbBPu+LDILnDfRZxv4mO7fUQqnAghfChRhfJnCk4s=;
-  b=qf5qY/GIbLzigIcQW/Fs/U7DdRvziok5U5LtBU/FMu64LC12WAYhGIl8
-   fdRY8zwlW/h83fdNn05bAxaihgdxQamSoyohWw/8eE9t3k/JnUNpZv73e
-   8c1JgDiqQdvt1AgWaVlL+UiaDqDpgXpdJTA7eO7sORaMe1gnLK4we/yuj
-   OeVQSOtS3TryxcsK6P8p4pEudWjy+OTun0faTZidFW3KP3+43v78YAKxe
-   p/L6aG5KntbFyryMTz3+4aGC5ueIhAlB3AGQY9dJJoZJxrdYBjaSqBdi2
-   XOcWzAc/TdhNUUh3QSPeVFqWPWqqExsM6nyDMAHNp/ukZkZtnHGy/CCrd
+  bh=9cKQ8DLE+KtiJG/oBAobTtHTIQZeH+YXTokO734xUTw=;
+  b=r9ucFM20OtXXrUpnO87TnNSGTxqx4IIju26qOpE5NHggrxnmen5Nr33u
+   5mpFVHUqvpYOhHrK2c9gvbNeJX8hQETuQa31SdKx56dur3eO9JwX8+AMT
+   d+2YqXq5SQXO7ebmIy9jv09w4qpWqPUoOnGrLs77/Kk1/bmc0a4jFHQl5
+   0WYXfdLiTCtkJMLewr/xPDG+62h0IFCPhhRkeRMIGUqGct79RBSs0fT78
+   h/BfQzHQd42Xfd9C2nsGMh97HmuGVg3JRi6T1+S8Yu6kukxsZWMi4PPaI
+   0Xw32Ag0WonmjFxO9f7Q7xfN7y0J7HVgsFLURcAAksi9TOpU4H2KVyaYp
    w==;
-IronPort-SDR: UJTd3fqXcByB4684k5Xcsv1qqUyJGo9NJsIK5Ns6PXs1zkKvKFpIzlkMPqCh3Urt1ctD/I8QCR
- wc9Wkc0fuVKzAwd+2oxGAoYd2sPV6ENaCg2aOEp4YoloplUsu6K/tNFSjFUz3yVmRMuVAaXc2+
- X0oYi3La+NuzJYO2lOWgB9Zcczvbwa6FywPfEyFsff7bJ8dSrrQXNjuynbPW6uoLO3qFxFDewD
- /sJU1TPrfL5kIP7itZjd9w2+O8pE/LBvG2g3AvWQf67RzNSMM7tw2oZseu7dXc7AKzgNcdAyl3
- WL2a3tDBKzuhoDAM7aE6PTJG
+IronPort-SDR: YbAApsWQeRxOCI3wgOMxDyDDfskDzjL/SsnFWmWm9ppDJ/xZkCCvkPmfIVqn1+bTDJaqQFaBux
+ Cu6f3YZwNmxcPHgqKzBQv/bA/Akz3pmi+Ky4MGP8NO7q0psMB+tJRC0vb/eIwey841NUsRgnGQ
+ vZGp57Oo+zj7bAngS96MK5GmNTW7oWFrj2h09yCjZECI5G/s1wNbWS9lGPvVLPP3az1GT/ufJa
+ HoSo/cHxJpNwPodask0Jr1F6VHo3R1H+OQKsb/vy8T68i4llqciAMQC5abkcGhV87Q1CgCr6nQ
+ efTizVsPZH1O8g0ubRO0nynR
 X-IronPort-AV: E=Sophos;i="5.87,239,1631602800"; 
-   d="scan'208";a="152085434"
+   d="scan'208";a="139278017"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Nov 2021 04:21:28 -0700
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 16 Nov 2021 04:21:26 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Tue, 16 Nov 2021 04:21:21 -0700
+ 15.1.2176.14; Tue, 16 Nov 2021 04:21:25 -0700
 Received: from ROB-ULT-M18064N.mchp-main.com (10.10.115.15) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2176.14 via Frontend Transport; Tue, 16 Nov 2021 04:21:18 -0700
+ 15.1.2176.14 via Frontend Transport; Tue, 16 Nov 2021 04:21:22 -0700
 From:   Tudor Ambarus <tudor.ambarus@microchip.com>
 To:     <ludovic.desroches@microchip.com>, <vkoul@kernel.org>,
         <richard.genoud@gmail.com>, <gregkh@linuxfoundation.org>,
@@ -49,9 +49,9 @@ CC:     <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
         <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-serial@vger.kernel.org>,
         Tudor Ambarus <tudor.ambarus@microchip.com>
-Subject: [PATCH 11/13] dmaengine: at_xdmac: Fix lld view setting
-Date:   Tue, 16 Nov 2021 13:20:34 +0200
-Message-ID: <20211116112036.96349-12-tudor.ambarus@microchip.com>
+Subject: [PATCH 12/13] dmaengine: at_xdmac: Fix at_xdmac_lld struct definition
+Date:   Tue, 16 Nov 2021 13:20:35 +0200
+Message-ID: <20211116112036.96349-13-tudor.ambarus@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211116112036.96349-1-tudor.ambarus@microchip.com>
 References: <20211116112036.96349-1-tudor.ambarus@microchip.com>
@@ -62,37 +62,46 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-AT_XDMAC_CNDC_NDVIEW_NDV3 was set even for AT_XDMAC_MBR_UBC_NDV2,
-because of the wrong bit handling. Fix it.
+The hardware channel next descriptor view structure contains just
+fields of 32 bits, while dma_addr_t can be of type u64 or u32
+depending on CONFIG_ARCH_DMA_ADDR_T_64BIT. Force u32 to comply with
+what the hardware expects.
 
-Fixes: ee0fe35c8dcd ("dmaengine: xdmac: Handle descriptor's view 3 registers")
+Fixes: e1f7c9eee707 ("dmaengine: at_xdmac: creation of the atmel eXtended DMA Controller driver")
 Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 ---
- drivers/dma/at_xdmac.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/dma/at_xdmac.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index 89d0fc229d68..ba2fe383fa5e 100644
+index ba2fe383fa5e..ccd6ddb12b83 100644
 --- a/drivers/dma/at_xdmac.c
 +++ b/drivers/dma/at_xdmac.c
-@@ -99,6 +99,7 @@
- #define		AT_XDMAC_CNDC_NDE		(0x1 << 0)		/* Channel x Next Descriptor Enable */
- #define		AT_XDMAC_CNDC_NDSUP		(0x1 << 1)		/* Channel x Next Descriptor Source Update */
- #define		AT_XDMAC_CNDC_NDDUP		(0x1 << 2)		/* Channel x Next Descriptor Destination Update */
-+#define		AT_XDMAC_CNDC_NDVIEW_MASK	GENMASK(28, 27)
- #define		AT_XDMAC_CNDC_NDVIEW_NDV0	(0x0 << 3)		/* Channel x Next Descriptor View 0 */
- #define		AT_XDMAC_CNDC_NDVIEW_NDV1	(0x1 << 3)		/* Channel x Next Descriptor View 1 */
- #define		AT_XDMAC_CNDC_NDVIEW_NDV2	(0x2 << 3)		/* Channel x Next Descriptor View 2 */
-@@ -402,7 +403,8 @@ static void at_xdmac_start_xfer(struct at_xdmac_chan *atchan,
- 	 */
- 	if (at_xdmac_chan_is_cyclic(atchan))
- 		reg = AT_XDMAC_CNDC_NDVIEW_NDV1;
--	else if (first->lld.mbr_ubc & AT_XDMAC_MBR_UBC_NDV3)
-+	else if ((first->lld.mbr_ubc &
-+		  AT_XDMAC_CNDC_NDVIEW_MASK) == AT_XDMAC_MBR_UBC_NDV3)
- 		reg = AT_XDMAC_CNDC_NDVIEW_NDV3;
- 	else
- 		reg = AT_XDMAC_CNDC_NDVIEW_NDV2;
+@@ -253,15 +253,15 @@ struct at_xdmac {
+ 
+ /* Linked List Descriptor */
+ struct at_xdmac_lld {
+-	dma_addr_t	mbr_nda;	/* Next Descriptor Member */
+-	u32		mbr_ubc;	/* Microblock Control Member */
+-	dma_addr_t	mbr_sa;		/* Source Address Member */
+-	dma_addr_t	mbr_da;		/* Destination Address Member */
+-	u32		mbr_cfg;	/* Configuration Register */
+-	u32		mbr_bc;		/* Block Control Register */
+-	u32		mbr_ds;		/* Data Stride Register */
+-	u32		mbr_sus;	/* Source Microblock Stride Register */
+-	u32		mbr_dus;	/* Destination Microblock Stride Register */
++	u32 mbr_nda;	/* Next Descriptor Member */
++	u32 mbr_ubc;	/* Microblock Control Member */
++	u32 mbr_sa;	/* Source Address Member */
++	u32 mbr_da;	/* Destination Address Member */
++	u32 mbr_cfg;	/* Configuration Register */
++	u32 mbr_bc;	/* Block Control Register */
++	u32 mbr_ds;	/* Data Stride Register */
++	u32 mbr_sus;	/* Source Microblock Stride Register */
++	u32 mbr_dus;	/* Destination Microblock Stride Register */
+ };
+ 
+ /* 64-bit alignment needed to update CNDA and CUBC registers in an atomic way. */
 -- 
 2.25.1
 

@@ -2,46 +2,71 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A17A7457258
-	for <lists+dmaengine@lfdr.de>; Fri, 19 Nov 2021 17:04:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A36454572E3
+	for <lists+dmaengine@lfdr.de>; Fri, 19 Nov 2021 17:27:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236210AbhKSQH5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 19 Nov 2021 11:07:57 -0500
-Received: from mout01.posteo.de ([185.67.36.65]:42155 "EHLO mout01.posteo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235596AbhKSQH5 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 19 Nov 2021 11:07:57 -0500
-Received: from submission (posteo.de [89.146.220.130]) 
-        by mout01.posteo.de (Postfix) with ESMTPS id A121A240035
-        for <dmaengine@vger.kernel.org>; Fri, 19 Nov 2021 17:04:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-        t=1637337893; bh=ei4Pk91+TG41LS+YkQ10EcqKAyIbbtRGkKfMKOIYZ2M=;
-        h=Subject:To:Cc:From:Date:From;
-        b=m9IglhsjeQX7m+RVmH1faKP63vrgMJ2K5PGP2RQLWJPlRkuMzLzn7k8/VuvyODaqO
-         mc/UAgZ41rwKweXHivlXechl7F4Hdll+7K3xZupCn04/JgwI5gp3l8E3arQ1dJQsZa
-         c5hV2qTDI7aI9WOv3PW7aDHi6HBIpDi0NJq9jZNGZ8x7FWPXMm1b9eJs/bh79EIaSZ
-         eKIYxjP/AiSc7TFT5vZL8eB+AyM08OhsDQj/fOJ63NeiKoNXHQ54VnlyP3htmRAYG1
-         POKN4GW51xFTAyf9osFeIwVGRxFPrtj3GDloMZmmlSRe/WgZkfitE0/7pE6R67TWnB
-         qg+1cphB1tU+Q==
-Received: from customer (localhost [127.0.0.1])
-        by submission (posteo.de) with ESMTPSA id 4HwhM649g7z9rwg;
-        Fri, 19 Nov 2021 17:04:50 +0100 (CET)
-Subject: Re: [PATCH 03/13] tty: serial: atmel: Call dma_async_issue_pending()
+        id S236452AbhKSQar (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 19 Nov 2021 11:30:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236466AbhKSQar (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 19 Nov 2021 11:30:47 -0500
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DC69C061574;
+        Fri, 19 Nov 2021 08:27:45 -0800 (PST)
+Received: by mail-wm1-x333.google.com with SMTP id b184-20020a1c1bc1000000b0033140bf8dd5so7916887wmb.5;
+        Fri, 19 Nov 2021 08:27:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jwyOhCiVlhmifA4bQDRHR85Pklwt1LGn8eLudMr/F2U=;
+        b=DXZJ3UxygHcwt/Ha22NnYjmjVvsTF2q5k2iQDCloE/XQtXoXu0gXs0MpgLg5nElxHX
+         92VQKPRfQ64AJB+Z3ucjT/elxJyDkna3rqIfo8QdHFSJPyOH3R4qsP/AtIetXse1ONYd
+         36iAFHEStgzGWkV4lC6x2SS4OIdDStB20P59n4sGblcn9oMkYRK1bM6HGJrIXen565+r
+         ZYDbOSN3kGL0SA1ajPS1Ra1LunjlpUiJYxia0ZuilYcr8qaZ6X2rgUhRGN59WIZMi9Z+
+         4nzqjnlJ4rw8bjjNa8cWGk+Ua7uV9O3opF84xIK1c6VEoDQoY7mnbtSdhvtW/3wtu62X
+         e31A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jwyOhCiVlhmifA4bQDRHR85Pklwt1LGn8eLudMr/F2U=;
+        b=1cwTSuEl6GKPLqw8o37W5/HSOhgjB28xny0q6V2FVY4uf0jbCNmuOJAWi7n6qdp7AQ
+         XnAwptGwkibwgP6nI9IBeoNxRVZPSGAvrXOOQnNGYFCxXfmdzegTCoRXvO9xd6lx0iMS
+         wx/aZXWOGMLcMeSyuiXaUwXcYXS6g7JuVbfG2X9scCBNeARGpFzFteOW3atAjFri89p7
+         7WH93TFkDiQsxfo//6zgb3AJe6bnq/o8uA/WX65AgFcyquAOOiMLXXAB4qmNPM66f8M5
+         8uF0Mel8l4qqRAg4ZmMRZJgNbJL6cuJLRB0wxs4MsAKbWsIHkW8hkpOSwOsmWmUtUKOy
+         Otxw==
+X-Gm-Message-State: AOAM533DA9dFHHghITz5LxlMJcLi/kPuURr321yQ7uCe5lsv7pxhgYKV
+        XQGS/ab/h7K6SLFeF3+j6che44j99N/aoA==
+X-Google-Smtp-Source: ABdhPJw89k7Fg4fI6tevke/MA4dVfBOQAF5PSa1qwrzPD2v2HDse9qwZJjlDBngFvFlQcTmuYn7KwQ==
+X-Received: by 2002:a05:600c:1d28:: with SMTP id l40mr1079389wms.192.1637339263651;
+        Fri, 19 Nov 2021 08:27:43 -0800 (PST)
+Received: from [192.168.2.41] ([46.227.18.67])
+        by smtp.gmail.com with ESMTPSA id c16sm179452wrx.96.2021.11.19.08.27.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Nov 2021 08:27:43 -0800 (PST)
+Subject: Re: [PATCH 02/13] tty: serial: atmel: Check return code of
+ dmaengine_submit()
 To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
         ludovic.desroches@microchip.com, vkoul@kernel.org,
-        gregkh@linuxfoundation.org, jirislaby@kernel.org,
-        Richard Genoud <richard.genoud@gmail.com>
+        richard.genoud@gmail.com, gregkh@linuxfoundation.org,
+        jirislaby@kernel.org
 Cc:     nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
         mripard@kernel.org, linux-arm-kernel@lists.infradead.org,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-serial@vger.kernel.org
 References: <20211116112036.96349-1-tudor.ambarus@microchip.com>
- <20211116112036.96349-4-tudor.ambarus@microchip.com>
-From:   Richard Genoud <richard.genoud@posteo.net>
-Message-ID: <6e29ab5d-070e-0407-96ad-129eb82afc88@posteo.net>
-Date:   Fri, 19 Nov 2021 16:04:49 +0000
+ <20211116112036.96349-3-tudor.ambarus@microchip.com>
+From:   Richard Genoud <richard.genoud@gmail.com>
+Message-ID: <e87ef826-1d03-e319-1d27-d876cf4fda5f@gmail.com>
+Date:   Fri, 19 Nov 2021 17:27:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <20211116112036.96349-4-tudor.ambarus@microchip.com>
+In-Reply-To: <20211116112036.96349-3-tudor.ambarus@microchip.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -52,104 +77,52 @@ X-Mailing-List: dmaengine@vger.kernel.org
 Hi,
 
 Le 16/11/2021 à 12:20, Tudor Ambarus a écrit :
-> The driver wrongly assummed that tx_submit() will start the transfer,
-> which is not the case, now that the at_xdmac driver is fixed. tx_submit
-> is supposed to push the current transaction descriptor to a pending queue,
-> waiting for issue_pending to be called. issue_pending must start the
-> transfer, not tx_submit. While touching atmel_prepare_rx_dma(), introduce
-> a local variable for the RX dma channel.
+> The tx_submit() method of struct dma_async_tx_descriptor is entitled
+> to do sanity checks and return errors if encountered. It's not the
+> case for the DMA controller drivers that this client is using
+> (at_h/xdmac), because they currently don't do sanity checks and always
+> return a positive cookie at tx_submit() method. In case the controller
+> drivers will implement sanity checks and return errors, print a message
+> so that the client will be informed that something went wrong at
+> tx_submit() level.
 > 
-> Fixes: 34df42f59a60 ("serial: at91: add rx dma support")
 > Fixes: 08f738be88bb ("serial: at91: add tx dma support")
 > Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 > ---
->  drivers/tty/serial/atmel_serial.c | 20 +++++++++++++-------
->  1 file changed, 13 insertions(+), 7 deletions(-)
+>  drivers/tty/serial/atmel_serial.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
 > diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-> index 376f7a9c2868..b3e593f3c17f 100644
+> index 2c99a47a2535..376f7a9c2868 100644
 > --- a/drivers/tty/serial/atmel_serial.c
 > +++ b/drivers/tty/serial/atmel_serial.c
-> @@ -1009,6 +1009,8 @@ static void atmel_tx_dma(struct uart_port *port)
->  				atmel_port->cookie_tx);
->  			return;
->  		}
-> +
-> +		dma_async_issue_pending(chan);
+> @@ -1004,6 +1004,11 @@ static void atmel_tx_dma(struct uart_port *port)
+>  		desc->callback = atmel_complete_tx_dma;
+>  		desc->callback_param = atmel_port;
+>  		atmel_port->cookie_tx = dmaengine_submit(desc);
+> +		if (dma_submit_error(atmel_port->cookie_tx)) {
+> +			dev_err(port->dev, "dma_submit_error %d\n",
+> +				atmel_port->cookie_tx);
+> +			return;
+> +		}
 >  	}
 >  
 >  	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
-
-From this hunk...
-> @@ -1191,6 +1193,7 @@ static void atmel_rx_from_dma(struct uart_port *port)
->  static int atmel_prepare_rx_dma(struct uart_port *port)
->  {
->  	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
-> +	struct dma_chan *chan_rx;
->  	struct device *mfd_dev = port->dev->parent;
->  	struct dma_async_tx_descriptor *desc;
->  	dma_cap_mask_t		mask;
-> @@ -1203,11 +1206,13 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
->  	dma_cap_zero(mask);
->  	dma_cap_set(DMA_CYCLIC, mask);
+> @@ -1258,6 +1263,11 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
+>  	desc->callback_param = port;
+>  	atmel_port->desc_rx = desc;
+>  	atmel_port->cookie_rx = dmaengine_submit(desc);
+> +	if (dma_submit_error(atmel_port->cookie_rx)) {
+> +		dev_err(port->dev, "dma_submit_error %d\n",
+> +			atmel_port->cookie_rx);
+> +		goto chan_err;
+> +	}
 >  
-> -	atmel_port->chan_rx = dma_request_slave_channel(mfd_dev, "rx");
-> -	if (atmel_port->chan_rx == NULL)
-> +	chan_rx = dma_request_slave_channel(mfd_dev, "rx");
-> +	if (chan_rx == NULL)
->  		goto chan_err;
-> +	atmel_port->chan_rx = chan_rx;
-> +
->  	dev_info(port->dev, "using %s for rx DMA transfers\n",
-> -		dma_chan_name(atmel_port->chan_rx));
-> +		 dma_chan_name(chan_rx));
->  
->  	spin_lock_init(&atmel_port->lock_rx);
->  	sg_init_table(&atmel_port->sg_rx, 1);
-> @@ -1239,8 +1244,7 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
->  	config.src_addr = port->mapbase + ATMEL_US_RHR;
->  	config.src_maxburst = 1;
->  
-> -	ret = dmaengine_slave_config(atmel_port->chan_rx,
-> -				     &config);
-> +	ret = dmaengine_slave_config(chan_rx, &config);
->  	if (ret) {
->  		dev_err(port->dev, "DMA rx slave configuration failed\n");
->  		goto chan_err;
-> @@ -1249,7 +1253,7 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
->  	 * Prepare a cyclic dma transfer, assign 2 descriptors,
->  	 * each one is half ring buffer size
->  	 */
-> -	desc = dmaengine_prep_dma_cyclic(atmel_port->chan_rx,
-> +	desc = dmaengine_prep_dma_cyclic(chan_rx,
->  					 sg_dma_address(&atmel_port->sg_rx),
->  					 sg_dma_len(&atmel_port->sg_rx),
->  					 sg_dma_len(&atmel_port->sg_rx)/2,
-...to here :
-I think this should go in another patch since these hunks only introduce "chan_rx".
-And in this other patch, maybe add a little note on why "atmel_port->chan_rx = chan_rx;"
-is after "chan_rx = dma_request_slave_channel(mfd_dev, "rx");"
-
-
-> @@ -1269,12 +1273,14 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
->  		goto chan_err;
->  	}
->  
-> +	dma_async_issue_pending(chan_rx);
-> +
 >  	return 0;
 >  
->  chan_err:
->  	dev_err(port->dev, "RX channel not available, switch to pio\n");
->  	atmel_port->use_dma_rx = false;
-> -	if (atmel_port->chan_rx)
-> +	if (chan_rx)
->  		atmel_release_rx_dma(port);
->  	return -EINVAL;
->  }
 > 
-The rest seems ok.
+
+Acked-by: Richard Genoud <richard.genoud@gmail.com>
+
 
 Thanks !
-
-Richard.

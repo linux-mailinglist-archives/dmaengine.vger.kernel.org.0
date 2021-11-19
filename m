@@ -2,58 +2,58 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78AD34569BB
-	for <lists+dmaengine@lfdr.de>; Fri, 19 Nov 2021 06:27:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96D944569BD
+	for <lists+dmaengine@lfdr.de>; Fri, 19 Nov 2021 06:27:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232406AbhKSFaN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 19 Nov 2021 00:30:13 -0500
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:49015 "EHLO
+        id S232014AbhKSFaQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 19 Nov 2021 00:30:16 -0500
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:41517 "EHLO
         wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232114AbhKSFaN (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 19 Nov 2021 00:30:13 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 715963201C38;
-        Fri, 19 Nov 2021 00:27:11 -0500 (EST)
+        by vger.kernel.org with ESMTP id S232445AbhKSFaP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 19 Nov 2021 00:30:15 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 0752B3201C2F;
+        Fri, 19 Nov 2021 00:27:13 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Fri, 19 Nov 2021 00:27:12 -0500
+  by compute3.internal (MEProxy); Fri, 19 Nov 2021 00:27:14 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=5zCC9a0f67fcj
-        SBH1kDT49fesxeTKEkALCUxYdq5wQk=; b=nWpF5teaaYCnxlWSQlM8HLqZZH77Z
-        YF7IqvWWlzvX+6TKVXGqBCzbwbIoX45nnLeSC4RL9B4trhbpMgCAc1MLGavwg2px
-        PAuisKDiW+40o+SKG1SjBUgWrpHMsfUf8eWfzk4cZ7v4jR7Tm9sSYRUEYv9tZA5C
-        SxYV/P3/4Ytbw+Dl+r5+qB9F0qIPIp5JWBSlHZu040LKcAXkzRUygb7kjBJsF79Y
-        G/WRn0xbEgOf83nxdwHdxbVgVTC7zdZYplJ6MZP3Oy5EeiaKtSOJ8Hsh+pGha26f
-        Cya8d1KkMP8i3HPGDShQ8qHZnqDDUKZmMSLO23cqNO1UB+b+WDRA8kCwA==
+        :mime-version:content-transfer-encoding; s=fm1; bh=+xYtIdU+vy/w4
+        wAaJntDKQbRHQnV1NUkDSd39ihXndk=; b=G/LKt7w71/vqGhEITYI+sJF4UOnPH
+        4t+HJ/6tuUSMAGB3+Yx0X9aZ58MwIiLvll30eMWGWrhYFcwpUUPZCzt12gkJ1Tye
+        /dH0LprxtmqKwpl5bxmLxpNXyrC78Ncz7Km/sZJezRY1uTC9pWXfbDBrfOA9W3m7
+        KAm4veohEzlsQFwph6dZQUFxZ2C8tjUMeESxgLsoiSxyDOjb9htXgB2UdnBsGSdo
+        z9y1XqUD2hlyAmK+30+27xAopfSJc2c8CyR8m0rCOlFZLBruUyY1fJX3hK50bkfs
+        OFf1a4gErf73kI58FWYi5+gO2NIdRRSdwmLyXm5/pYmnMBueI7xF9r6Zw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=5zCC9a0f67fcjSBH1kDT49fesxeTKEkALCUxYdq5wQk=; b=eoSNQANe
-        brYNfiRwB0xuPXaZbhyiQJL7W4cSsjGH0IMbDpehxmel3MaFzc5YAiuBkOOlD1L7
-        rMcY0S4b3pQX3kdbulTcu9HxU+5SeW53AK7NMjx105ZeWX6AGuLqUb3ModStM3jt
-        oA1peuWwqwZbBjeNEIaxN9UzENXSj5AKUqER7f6vyVHQMSDzQKQ++95hfaMXSDZP
-        aDjYKgBemQmiD99UJvgh5wOxzi8Sc/2RW8TOl5UBPylIncHBvN8AEtf5ouKvFPlg
-        Rci2WR0x49pJBD4EpJueVxQsZUAyxs7PJ586cZFymw7kRWFvbytTdZ4UoS3OISP+
-        0cHJGW8+m1Z0Gg==
-X-ME-Sender: <xms:rzWXYSz5UFfJtb5XtFBtPnnMAZFR-gYnxxMvvZpRlW-yABQtBQLvrg>
-    <xme:rzWXYeS73RFZK2Un1Z-SAXvswPEJReyriSDhFjC0lKlbBsCFhV6iMYCTJgZz-fQzL
-    HNn6ESvHI-cKLVBPg>
-X-ME-Received: <xmr:rzWXYUUwyLfDzmz65icPiZd-Ua1a9A8Z7rtZXScF3PjDbiTgXZJJ8mQkdQr8oVPA0qk9Rx6Jk2nMy5SEFZIy2v_FhfKydnYZuzihXJl5jod-nwBGbhgFsVOw9PxilzMPTpHUog>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvuddrfeejgdekvdcutefuodetggdotefrodftvf
+        fm1; bh=+xYtIdU+vy/w4wAaJntDKQbRHQnV1NUkDSd39ihXndk=; b=av0f56yW
+        2ymTz2VX+l1oV5FBu4lfAAJPr05zR84DdL7OfYwBMUOSezhw2Sd05L5gdNUDnZq6
+        5q0oBbWx3kHyOdwUrbjTqiHfgzOOeoWN3IS1aLYzQWYR/SWgIkNLT0mz6vDgHz0W
+        q9R+s8UxbFQzdnj4YE+F/rCVpZQweR5RazlKO1MGY725boEiZNAMo0s8oB716/+f
+        3CKtBP1MFRl8XdvtzY3BTBmFIcNitsNIgVQWn3hYXNBgDsRPzRdxwELqOYDjbAMY
+        X5xrtg1lDUl6QhHA7EiWP8xSzK6wVhMRVaHKWdt3L3GFvdE4pxIbAF34qFA6AgGi
+        PTj7fFkYIFChmQ==
+X-ME-Sender: <xms:sTWXYbLa7ae8G4fj4Stzk10YT-Hk3I3HvO6VIbMJ7V8YV_oNQOp6Dw>
+    <xme:sTWXYfIl0HIeD8fpDEm9e1LMSkvx9uJfvRmRvKRqRZrGlbYJfFzcXlgx-jZ9jHsCg
+    q8720MmM7paM87QCg>
+X-ME-Received: <xmr:sTWXYTvsL7P8MlR4KYh_rf73f_OL5CwBk2OVDuWYwuszse0rhe8dEoJxr3-ys4Fd9SwynARkuTZbK0l85uvJ61fEtWr09ZcCqVfrghTd5VRGN63YnGqqVoEDzW6plljhreoekw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvuddrfeejgdekudcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
     ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecuggftrf
     grthhtvghrnhepudfhjeefvdfhgfefheetgffhieeigfefhefgvddvveefgeejheejvdfg
-    jeehueeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    jeehueeinecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomh
     epshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
-X-ME-Proxy: <xmx:rzWXYYj3GbYMuOb2aOsTYueoYn_6INb5Jo50juqG_pa6jqAoCalsig>
-    <xmx:rzWXYUBZFjtFvwUOwUAF4EKrKl72TUTyZK_RFR3DieTEjrMD47QxHg>
-    <xmx:rzWXYZIcmoRyfHUMxoVRLIBc_uRIxCU1ZY7JnWlmvXmucIn7dhPrXA>
-    <xmx:rzWXYSAHfto6vy26rUyF9I5ini7lAKxh9OaRZLLnII4_n4a-ABWbbg>
+X-ME-Proxy: <xmx:sTWXYUYD7I6xONRNo4lsu9LbUDHnz2obklWm9VS2S0Rcd14ZwT8OkQ>
+    <xmx:sTWXYSYNOtorjRH4L7dd3565WB5LizZ-3KsqBw0pVGRAZldypZgp6g>
+    <xmx:sTWXYYBZdqZkHT5R9X-PIIqL_ENs6SRKM51zNUXTE95oD4nLeN0c0Q>
+    <xmx:sTWXYa4QN6sGgVMd66xynbLVm19Ytk2Ud0Od6CjXHlgkBJ_QNuEQFA>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 19 Nov 2021 00:27:10 -0500 (EST)
+ 19 Nov 2021 00:27:12 -0500 (EST)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
         Maxime Ripard <mripard@kernel.org>,
@@ -62,9 +62,9 @@ To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
         linux-sunxi@lists.linux.dev
 Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Samuel Holland <samuel@sholland.org>
-Subject: [PATCH 3/4] dmaengine: sun6i: Add support for 34-bit physical addresses
-Date:   Thu, 18 Nov 2021 23:27:00 -0600
-Message-Id: <20211119052702.14392-4-samuel@sholland.org>
+Subject: [PATCH 4/4] dmaengine: sun6i: Add support for the D1 variant
+Date:   Thu, 18 Nov 2021 23:27:01 -0600
+Message-Id: <20211119052702.14392-5-samuel@sholland.org>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20211119052702.14392-1-samuel@sholland.org>
 References: <20211119052702.14392-1-samuel@sholland.org>
@@ -74,155 +74,43 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Recent Allwinner SoCs support >4 GiB of DRAM, so those variants of the
-DMA engine support >32 bit physical addresses. This is accomplished by
-placing the high bits in the "para" word in the DMA descriptor.
+So far it appears to match the configuration of the A100 variant.
 
-DMA descriptors themselves can be located at >32 bit addresses by
-putting the high bits in the LSBs of the descriptor address register,
-taking advantage of the required DMA descriptor alignment. However,
-support for this is not really necessary, so we can avoid the
-complication by allocating them from the DMA_32 zone.
+Since D1 is a RISC-V chip, it does not meet any of the existing
+dependencies for this driver, so relax the dependency somewhat.
 
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
 
- drivers/dma/sun6i-dma.c | 39 ++++++++++++++++++++++++++++++++++-----
- 1 file changed, 34 insertions(+), 5 deletions(-)
+ drivers/dma/Kconfig     | 2 +-
+ drivers/dma/sun6i-dma.c | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 6bcdb4e6a0d1..1ab216054694 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -163,7 +163,7 @@ config DMA_SUN4I
+ 
+ config DMA_SUN6I
+ 	tristate "Allwinner A31 SoCs DMA support"
+-	depends on MACH_SUN6I || MACH_SUN8I || (ARM64 && ARCH_SUNXI) || COMPILE_TEST
++	depends on ARCH_SUNXI || COMPILE_TEST
+ 	depends on RESET_CONTROLLER
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
 diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index a9334f969b28..8c7cce643cdc 100644
+index 8c7cce643cdc..795cce445532 100644
 --- a/drivers/dma/sun6i-dma.c
 +++ b/drivers/dma/sun6i-dma.c
-@@ -90,6 +90,14 @@
- 
- #define DMA_CHAN_CUR_PARA	0x1c
- 
-+/*
-+ * LLI address mangling
-+ *
-+ * The LLI link physical address is also mangled, but we avoid dealing
-+ * with that by allocating LLIs from the DMA32 zone.
-+ */
-+#define SET_SRC_HIGH_ADDR(x)		((((x) >> 32) & 0x3U) << 16)
-+#define SET_DST_HIGH_ADDR(x)		((((x) >> 32) & 0x3U) << 18)
- 
- /*
-  * Various hardware related defines
-@@ -132,6 +140,7 @@ struct sun6i_dma_config {
- 	u32 dst_burst_lengths;
- 	u32 src_addr_widths;
- 	u32 dst_addr_widths;
-+	bool has_high_addr;
- 	bool has_mbus_clk;
- };
- 
-@@ -223,6 +232,12 @@ to_sun6i_desc(struct dma_async_tx_descriptor *tx)
- 	return container_of(tx, struct sun6i_desc, vd.tx);
- }
- 
-+static inline bool sun6i_dma_has_high_addr(struct sun6i_dma_dev *sdev)
-+{
-+	return IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT) &&
-+		sdev->cfg->has_high_addr;
-+}
-+
- static inline void sun6i_dma_dump_com_regs(struct sun6i_dma_dev *sdev)
- {
- 	dev_dbg(sdev->slave.dev, "Common register:\n"
-@@ -645,7 +660,7 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_memcpy(
- 	if (!txd)
- 		return NULL;
- 
--	v_lli = dma_pool_alloc(sdev->pool, GFP_NOWAIT, &p_lli);
-+	v_lli = dma_pool_alloc(sdev->pool, GFP_DMA32|GFP_NOWAIT, &p_lli);
- 	if (!v_lli) {
- 		dev_err(sdev->slave.dev, "Failed to alloc lli memory\n");
- 		goto err_txd_free;
-@@ -655,6 +670,9 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_memcpy(
- 	v_lli->dst = dest;
- 	v_lli->len = len;
- 	v_lli->para = NORMAL_WAIT;
-+	if (sun6i_dma_has_high_addr(sdev))
-+		v_lli->para |= SET_SRC_HIGH_ADDR(src) |
-+			       SET_DST_HIGH_ADDR(dest);
- 
- 	burst = convert_burst(8);
- 	width = convert_buswidth(DMA_SLAVE_BUSWIDTH_4_BYTES);
-@@ -705,7 +723,7 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_slave_sg(
- 		return NULL;
- 
- 	for_each_sg(sgl, sg, sg_len, i) {
--		v_lli = dma_pool_alloc(sdev->pool, GFP_NOWAIT, &p_lli);
-+		v_lli = dma_pool_alloc(sdev->pool, GFP_DMA32|GFP_NOWAIT, &p_lli);
- 		if (!v_lli)
- 			goto err_lli_free;
- 
-@@ -715,6 +733,9 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_slave_sg(
- 		if (dir == DMA_MEM_TO_DEV) {
- 			v_lli->src = sg_dma_address(sg);
- 			v_lli->dst = sconfig->dst_addr;
-+			if (sun6i_dma_has_high_addr(sdev))
-+				v_lli->para |= SET_SRC_HIGH_ADDR(sg_dma_address(sg)) |
-+					       SET_DST_HIGH_ADDR(sconfig->dst_addr);
- 			v_lli->cfg = lli_cfg;
- 			sdev->cfg->set_drq(&v_lli->cfg, DRQ_SDRAM, vchan->port);
- 			sdev->cfg->set_mode(&v_lli->cfg, LINEAR_MODE, IO_MODE);
-@@ -728,6 +749,9 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_slave_sg(
- 		} else {
- 			v_lli->src = sconfig->src_addr;
- 			v_lli->dst = sg_dma_address(sg);
-+			if (sun6i_dma_has_high_addr(sdev))
-+				v_lli->para |= SET_SRC_HIGH_ADDR(sconfig->src_addr) |
-+					       SET_DST_HIGH_ADDR(sg_dma_address(sg));
- 			v_lli->cfg = lli_cfg;
- 			sdev->cfg->set_drq(&v_lli->cfg, vchan->port, DRQ_SDRAM);
- 			sdev->cfg->set_mode(&v_lli->cfg, IO_MODE, LINEAR_MODE);
-@@ -786,7 +810,7 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_cyclic(
- 		return NULL;
- 
- 	for (i = 0; i < periods; i++) {
--		v_lli = dma_pool_alloc(sdev->pool, GFP_NOWAIT, &p_lli);
-+		v_lli = dma_pool_alloc(sdev->pool, GFP_DMA32|GFP_NOWAIT, &p_lli);
- 		if (!v_lli) {
- 			dev_err(sdev->slave.dev, "Failed to alloc lli memory\n");
- 			goto err_lli_free;
-@@ -798,12 +822,18 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_cyclic(
- 		if (dir == DMA_MEM_TO_DEV) {
- 			v_lli->src = buf_addr + period_len * i;
- 			v_lli->dst = sconfig->dst_addr;
-+			if (sun6i_dma_has_high_addr(sdev))
-+				v_lli->para |= SET_SRC_HIGH_ADDR(buf_addr + period_len * i) |
-+					       SET_DST_HIGH_ADDR(sconfig->dst_addr);
- 			v_lli->cfg = lli_cfg;
- 			sdev->cfg->set_drq(&v_lli->cfg, DRQ_SDRAM, vchan->port);
- 			sdev->cfg->set_mode(&v_lli->cfg, LINEAR_MODE, IO_MODE);
- 		} else {
- 			v_lli->src = sconfig->src_addr;
- 			v_lli->dst = buf_addr + period_len * i;
-+			if (sun6i_dma_has_high_addr(sdev))
-+				v_lli->para |= SET_SRC_HIGH_ADDR(sconfig->src_addr) |
-+					       SET_DST_HIGH_ADDR(buf_addr + period_len * i);
- 			v_lli->cfg = lli_cfg;
- 			sdev->cfg->set_drq(&v_lli->cfg, vchan->port, DRQ_SDRAM);
- 			sdev->cfg->set_mode(&v_lli->cfg, IO_MODE, LINEAR_MODE);
-@@ -1174,8 +1204,6 @@ static struct sun6i_dma_config sun50i_a64_dma_cfg = {
- };
- 
- /*
-- * TODO: Add support for more than 4g physical addressing.
-- *
-  * The A100 binding uses the number of dma channels from the
-  * device tree node.
-  */
-@@ -1194,6 +1222,7 @@ static struct sun6i_dma_config sun50i_a100_dma_cfg = {
- 			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
- 			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
- 			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
-+	.has_high_addr = true,
- 	.has_mbus_clk = true,
- };
- 
+@@ -1277,6 +1277,7 @@ static const struct of_device_id sun6i_dma_match[] = {
+ 	{ .compatible = "allwinner,sun8i-a83t-dma", .data = &sun8i_a83t_dma_cfg },
+ 	{ .compatible = "allwinner,sun8i-h3-dma", .data = &sun8i_h3_dma_cfg },
+ 	{ .compatible = "allwinner,sun8i-v3s-dma", .data = &sun8i_v3s_dma_cfg },
++	{ .compatible = "allwinner,sun20i-d1-dma", .data = &sun50i_a100_dma_cfg },
+ 	{ .compatible = "allwinner,sun50i-a64-dma", .data = &sun50i_a64_dma_cfg },
+ 	{ .compatible = "allwinner,sun50i-a100-dma", .data = &sun50i_a100_dma_cfg },
+ 	{ .compatible = "allwinner,sun50i-h6-dma", .data = &sun50i_h6_dma_cfg },
 -- 
 2.32.0
 

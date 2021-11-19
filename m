@@ -2,280 +2,154 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3105F456F86
-	for <lists+dmaengine@lfdr.de>; Fri, 19 Nov 2021 14:23:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A17A7457258
+	for <lists+dmaengine@lfdr.de>; Fri, 19 Nov 2021 17:04:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235412AbhKSN0e (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 19 Nov 2021 08:26:34 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52314 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235383AbhKSN0e (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 19 Nov 2021 08:26:34 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 1AJDNV84056965;
-        Fri, 19 Nov 2021 07:23:31 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1637328211;
-        bh=wy4dRmqoXFb+TtgwOyvUhGUG91NmjVfZqmMCsGsPJH0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=iczrI76RJB1ShUHVAZZdSddnkxT6W/GojxCkUQGb2CAnYeuWCmSvD68SaOQKcMjVY
-         CHr69r1AGm2wGPK5kRSiccsE3tcwR88NCSqOhkV+z0EqRI2c6a/w0k8z2mDGaUNPM0
-         BHlJe0lRXuIvDm7/CUlFoMuvPn/H3JsckZJNNMfc=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 1AJDNV7L075858
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 19 Nov 2021 07:23:31 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Fri, 19
- Nov 2021 07:23:30 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Fri, 19 Nov 2021 07:23:30 -0600
-Received: from gsaswath-HP-ProBook-640-G5.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 1AJDNHbW098826;
-        Fri, 19 Nov 2021 07:23:28 -0600
-From:   Aswath Govindraju <a-govindraju@ti.com>
-CC:     Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Aswath Govindraju <a-govindraju@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>
-Subject: [PATCH 2/2] drivers: dma: ti: k3-psil: Add support for J721S2
-Date:   Fri, 19 Nov 2021 18:53:14 +0530
-Message-ID: <20211119132315.15901-3-a-govindraju@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20211119132315.15901-1-a-govindraju@ti.com>
-References: <20211119132315.15901-1-a-govindraju@ti.com>
+        id S236210AbhKSQH5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 19 Nov 2021 11:07:57 -0500
+Received: from mout01.posteo.de ([185.67.36.65]:42155 "EHLO mout01.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235596AbhKSQH5 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 19 Nov 2021 11:07:57 -0500
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout01.posteo.de (Postfix) with ESMTPS id A121A240035
+        for <dmaengine@vger.kernel.org>; Fri, 19 Nov 2021 17:04:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+        t=1637337893; bh=ei4Pk91+TG41LS+YkQ10EcqKAyIbbtRGkKfMKOIYZ2M=;
+        h=Subject:To:Cc:From:Date:From;
+        b=m9IglhsjeQX7m+RVmH1faKP63vrgMJ2K5PGP2RQLWJPlRkuMzLzn7k8/VuvyODaqO
+         mc/UAgZ41rwKweXHivlXechl7F4Hdll+7K3xZupCn04/JgwI5gp3l8E3arQ1dJQsZa
+         c5hV2qTDI7aI9WOv3PW7aDHi6HBIpDi0NJq9jZNGZ8x7FWPXMm1b9eJs/bh79EIaSZ
+         eKIYxjP/AiSc7TFT5vZL8eB+AyM08OhsDQj/fOJ63NeiKoNXHQ54VnlyP3htmRAYG1
+         POKN4GW51xFTAyf9osFeIwVGRxFPrtj3GDloMZmmlSRe/WgZkfitE0/7pE6R67TWnB
+         qg+1cphB1tU+Q==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 4HwhM649g7z9rwg;
+        Fri, 19 Nov 2021 17:04:50 +0100 (CET)
+Subject: Re: [PATCH 03/13] tty: serial: atmel: Call dma_async_issue_pending()
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        ludovic.desroches@microchip.com, vkoul@kernel.org,
+        gregkh@linuxfoundation.org, jirislaby@kernel.org,
+        Richard Genoud <richard.genoud@gmail.com>
+Cc:     nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        mripard@kernel.org, linux-arm-kernel@lists.infradead.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org
+References: <20211116112036.96349-1-tudor.ambarus@microchip.com>
+ <20211116112036.96349-4-tudor.ambarus@microchip.com>
+From:   Richard Genoud <richard.genoud@posteo.net>
+Message-ID: <6e29ab5d-070e-0407-96ad-129eb82afc88@posteo.net>
+Date:   Fri, 19 Nov 2021 16:04:49 +0000
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20211116112036.96349-4-tudor.ambarus@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add support for J721S2 SOC.
+Hi,
 
-Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
----
- drivers/dma/ti/Makefile         |   3 +-
- drivers/dma/ti/k3-psil-j721s2.c | 167 ++++++++++++++++++++++++++++++++
- drivers/dma/ti/k3-psil-priv.h   |   1 +
- drivers/dma/ti/k3-psil.c        |   1 +
- 4 files changed, 171 insertions(+), 1 deletion(-)
- create mode 100644 drivers/dma/ti/k3-psil-j721s2.c
+Le 16/11/2021 à 12:20, Tudor Ambarus a écrit :
+> The driver wrongly assummed that tx_submit() will start the transfer,
+> which is not the case, now that the at_xdmac driver is fixed. tx_submit
+> is supposed to push the current transaction descriptor to a pending queue,
+> waiting for issue_pending to be called. issue_pending must start the
+> transfer, not tx_submit. While touching atmel_prepare_rx_dma(), introduce
+> a local variable for the RX dma channel.
+> 
+> Fixes: 34df42f59a60 ("serial: at91: add rx dma support")
+> Fixes: 08f738be88bb ("serial: at91: add tx dma support")
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> ---
+>  drivers/tty/serial/atmel_serial.c | 20 +++++++++++++-------
+>  1 file changed, 13 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+> index 376f7a9c2868..b3e593f3c17f 100644
+> --- a/drivers/tty/serial/atmel_serial.c
+> +++ b/drivers/tty/serial/atmel_serial.c
+> @@ -1009,6 +1009,8 @@ static void atmel_tx_dma(struct uart_port *port)
+>  				atmel_port->cookie_tx);
+>  			return;
+>  		}
+> +
+> +		dma_async_issue_pending(chan);
+>  	}
+>  
+>  	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
 
-diff --git a/drivers/dma/ti/Makefile b/drivers/dma/ti/Makefile
-index bd496efadff7..1d4081a049b7 100644
---- a/drivers/dma/ti/Makefile
-+++ b/drivers/dma/ti/Makefile
-@@ -8,5 +8,6 @@ obj-$(CONFIG_TI_K3_PSIL) += k3-psil.o \
- 			    k3-psil-am654.o \
- 			    k3-psil-j721e.o \
- 			    k3-psil-j7200.o \
--			    k3-psil-am64.o
-+			    k3-psil-am64.o \
-+			    k3-psil-j721s2.o
- obj-$(CONFIG_TI_DMA_CROSSBAR) += dma-crossbar.o
-diff --git a/drivers/dma/ti/k3-psil-j721s2.c b/drivers/dma/ti/k3-psil-j721s2.c
-new file mode 100644
-index 000000000000..4c4172a4d271
---- /dev/null
-+++ b/drivers/dma/ti/k3-psil-j721s2.c
-@@ -0,0 +1,167 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Copyright (C) 2021 Texas Instruments Incorporated - https://www.ti.com
-+ */
-+
-+#include <linux/kernel.h>
-+
-+#include "k3-psil-priv.h"
-+
-+#define PSIL_PDMA_XY_TR(x)				\
-+	{						\
-+		.thread_id = x,				\
-+		.ep_config = {				\
-+			.ep_type = PSIL_EP_PDMA_XY,	\
-+		},					\
-+	}
-+
-+#define PSIL_PDMA_XY_PKT(x)				\
-+	{						\
-+		.thread_id = x,				\
-+		.ep_config = {				\
-+			.ep_type = PSIL_EP_PDMA_XY,	\
-+			.pkt_mode = 1,			\
-+		},					\
-+	}
-+
-+#define PSIL_PDMA_MCASP(x)				\
-+	{						\
-+		.thread_id = x,				\
-+		.ep_config = {				\
-+			.ep_type = PSIL_EP_PDMA_XY,	\
-+			.pdma_acc32 = 1,		\
-+			.pdma_burst = 1,		\
-+		},					\
-+	}
-+
-+#define PSIL_ETHERNET(x)				\
-+	{						\
-+		.thread_id = x,				\
-+		.ep_config = {				\
-+			.ep_type = PSIL_EP_NATIVE,	\
-+			.pkt_mode = 1,			\
-+			.needs_epib = 1,		\
-+			.psd_size = 16,			\
-+		},					\
-+	}
-+
-+#define PSIL_SA2UL(x, tx)				\
-+	{						\
-+		.thread_id = x,				\
-+		.ep_config = {				\
-+			.ep_type = PSIL_EP_NATIVE,	\
-+			.pkt_mode = 1,			\
-+			.needs_epib = 1,		\
-+			.psd_size = 64,			\
-+			.notdpkt = tx,			\
-+		},					\
-+	}
-+
-+/* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
-+static struct psil_ep j721s2_src_ep_map[] = {
-+	/* PDMA_MCASP - McASP0-4 */
-+	PSIL_PDMA_MCASP(0x4400),
-+	PSIL_PDMA_MCASP(0x4401),
-+	PSIL_PDMA_MCASP(0x4402),
-+	PSIL_PDMA_MCASP(0x4403),
-+	PSIL_PDMA_MCASP(0x4404),
-+	/* PDMA_SPI_G0 - SPI0-3 */
-+	PSIL_PDMA_XY_PKT(0x4600),
-+	PSIL_PDMA_XY_PKT(0x4601),
-+	PSIL_PDMA_XY_PKT(0x4602),
-+	PSIL_PDMA_XY_PKT(0x4603),
-+	PSIL_PDMA_XY_PKT(0x4604),
-+	PSIL_PDMA_XY_PKT(0x4605),
-+	PSIL_PDMA_XY_PKT(0x4606),
-+	PSIL_PDMA_XY_PKT(0x4607),
-+	PSIL_PDMA_XY_PKT(0x4608),
-+	PSIL_PDMA_XY_PKT(0x4609),
-+	PSIL_PDMA_XY_PKT(0x460a),
-+	PSIL_PDMA_XY_PKT(0x460b),
-+	PSIL_PDMA_XY_PKT(0x460c),
-+	PSIL_PDMA_XY_PKT(0x460d),
-+	PSIL_PDMA_XY_PKT(0x460e),
-+	PSIL_PDMA_XY_PKT(0x460f),
-+	/* PDMA_SPI_G1 - SPI4-7 */
-+	PSIL_PDMA_XY_PKT(0x4610),
-+	PSIL_PDMA_XY_PKT(0x4611),
-+	PSIL_PDMA_XY_PKT(0x4612),
-+	PSIL_PDMA_XY_PKT(0x4613),
-+	PSIL_PDMA_XY_PKT(0x4614),
-+	PSIL_PDMA_XY_PKT(0x4615),
-+	PSIL_PDMA_XY_PKT(0x4616),
-+	PSIL_PDMA_XY_PKT(0x4617),
-+	PSIL_PDMA_XY_PKT(0x4618),
-+	PSIL_PDMA_XY_PKT(0x4619),
-+	PSIL_PDMA_XY_PKT(0x461a),
-+	PSIL_PDMA_XY_PKT(0x461b),
-+	PSIL_PDMA_XY_PKT(0x461c),
-+	PSIL_PDMA_XY_PKT(0x461d),
-+	PSIL_PDMA_XY_PKT(0x461e),
-+	PSIL_PDMA_XY_PKT(0x461f),
-+	/* PDMA_USART_G0 - UART0-1 */
-+	PSIL_PDMA_XY_PKT(0x4700),
-+	PSIL_PDMA_XY_PKT(0x4701),
-+	/* PDMA_USART_G1 - UART2-3 */
-+	PSIL_PDMA_XY_PKT(0x4702),
-+	PSIL_PDMA_XY_PKT(0x4703),
-+	/* PDMA_USART_G2 - UART4-9 */
-+	PSIL_PDMA_XY_PKT(0x4704),
-+	PSIL_PDMA_XY_PKT(0x4705),
-+	PSIL_PDMA_XY_PKT(0x4706),
-+	PSIL_PDMA_XY_PKT(0x4707),
-+	PSIL_PDMA_XY_PKT(0x4708),
-+	PSIL_PDMA_XY_PKT(0x4709),
-+	/* CPSW0 */
-+	PSIL_ETHERNET(0x7000),
-+	/* MCU_PDMA0 (MCU_PDMA_MISC_G0) - SPI0 */
-+	PSIL_PDMA_XY_PKT(0x7100),
-+	PSIL_PDMA_XY_PKT(0x7101),
-+	PSIL_PDMA_XY_PKT(0x7102),
-+	PSIL_PDMA_XY_PKT(0x7103),
-+	/* MCU_PDMA1 (MCU_PDMA_MISC_G1) - SPI1-2 */
-+	PSIL_PDMA_XY_PKT(0x7200),
-+	PSIL_PDMA_XY_PKT(0x7201),
-+	PSIL_PDMA_XY_PKT(0x7202),
-+	PSIL_PDMA_XY_PKT(0x7203),
-+	PSIL_PDMA_XY_PKT(0x7204),
-+	PSIL_PDMA_XY_PKT(0x7205),
-+	PSIL_PDMA_XY_PKT(0x7206),
-+	PSIL_PDMA_XY_PKT(0x7207),
-+	/* MCU_PDMA2 (MCU_PDMA_MISC_G2) - UART0 */
-+	PSIL_PDMA_XY_PKT(0x7300),
-+	/* MCU_PDMA_ADC - ADC0-1 */
-+	PSIL_PDMA_XY_TR(0x7400),
-+	PSIL_PDMA_XY_TR(0x7401),
-+	PSIL_PDMA_XY_TR(0x7402),
-+	PSIL_PDMA_XY_TR(0x7403),
-+	/* SA2UL */
-+	PSIL_SA2UL(0x7500, 0),
-+	PSIL_SA2UL(0x7501, 0),
-+	PSIL_SA2UL(0x7502, 0),
-+	PSIL_SA2UL(0x7503, 0),
-+};
-+
-+/* PSI-L destination thread IDs, used for TX (DMA_MEM_TO_DEV) */
-+static struct psil_ep j721s2_dst_ep_map[] = {
-+	/* CPSW0 */
-+	PSIL_ETHERNET(0xf000),
-+	PSIL_ETHERNET(0xf001),
-+	PSIL_ETHERNET(0xf002),
-+	PSIL_ETHERNET(0xf003),
-+	PSIL_ETHERNET(0xf004),
-+	PSIL_ETHERNET(0xf005),
-+	PSIL_ETHERNET(0xf006),
-+	PSIL_ETHERNET(0xf007),
-+	/* SA2UL */
-+	PSIL_SA2UL(0xf500, 1),
-+	PSIL_SA2UL(0xf501, 1),
-+};
-+
-+struct psil_ep_map j721s2_ep_map = {
-+	.name = "j721s2",
-+	.src = j721s2_src_ep_map,
-+	.src_count = ARRAY_SIZE(j721s2_src_ep_map),
-+	.dst = j721s2_dst_ep_map,
-+	.dst_count = ARRAY_SIZE(j721s2_dst_ep_map),
-+};
-diff --git a/drivers/dma/ti/k3-psil-priv.h b/drivers/dma/ti/k3-psil-priv.h
-index b74e192e3c2d..e51e179cdb56 100644
---- a/drivers/dma/ti/k3-psil-priv.h
-+++ b/drivers/dma/ti/k3-psil-priv.h
-@@ -41,5 +41,6 @@ extern struct psil_ep_map am654_ep_map;
- extern struct psil_ep_map j721e_ep_map;
- extern struct psil_ep_map j7200_ep_map;
- extern struct psil_ep_map am64_ep_map;
-+extern struct psil_ep_map j721s2_ep_map;
- 
- #endif /* K3_PSIL_PRIV_H_ */
-diff --git a/drivers/dma/ti/k3-psil.c b/drivers/dma/ti/k3-psil.c
-index 13ce7367d870..8867b4bd0c51 100644
---- a/drivers/dma/ti/k3-psil.c
-+++ b/drivers/dma/ti/k3-psil.c
-@@ -21,6 +21,7 @@ static const struct soc_device_attribute k3_soc_devices[] = {
- 	{ .family = "J721E", .data = &j721e_ep_map },
- 	{ .family = "J7200", .data = &j7200_ep_map },
- 	{ .family = "AM64X", .data = &am64_ep_map },
-+	{ .family = "J721S2", .data = &j721s2_ep_map },
- 	{ /* sentinel */ }
- };
- 
--- 
-2.17.1
+From this hunk...
+> @@ -1191,6 +1193,7 @@ static void atmel_rx_from_dma(struct uart_port *port)
+>  static int atmel_prepare_rx_dma(struct uart_port *port)
+>  {
+>  	struct atmel_uart_port *atmel_port = to_atmel_uart_port(port);
+> +	struct dma_chan *chan_rx;
+>  	struct device *mfd_dev = port->dev->parent;
+>  	struct dma_async_tx_descriptor *desc;
+>  	dma_cap_mask_t		mask;
+> @@ -1203,11 +1206,13 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
+>  	dma_cap_zero(mask);
+>  	dma_cap_set(DMA_CYCLIC, mask);
+>  
+> -	atmel_port->chan_rx = dma_request_slave_channel(mfd_dev, "rx");
+> -	if (atmel_port->chan_rx == NULL)
+> +	chan_rx = dma_request_slave_channel(mfd_dev, "rx");
+> +	if (chan_rx == NULL)
+>  		goto chan_err;
+> +	atmel_port->chan_rx = chan_rx;
+> +
+>  	dev_info(port->dev, "using %s for rx DMA transfers\n",
+> -		dma_chan_name(atmel_port->chan_rx));
+> +		 dma_chan_name(chan_rx));
+>  
+>  	spin_lock_init(&atmel_port->lock_rx);
+>  	sg_init_table(&atmel_port->sg_rx, 1);
+> @@ -1239,8 +1244,7 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
+>  	config.src_addr = port->mapbase + ATMEL_US_RHR;
+>  	config.src_maxburst = 1;
+>  
+> -	ret = dmaengine_slave_config(atmel_port->chan_rx,
+> -				     &config);
+> +	ret = dmaengine_slave_config(chan_rx, &config);
+>  	if (ret) {
+>  		dev_err(port->dev, "DMA rx slave configuration failed\n");
+>  		goto chan_err;
+> @@ -1249,7 +1253,7 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
+>  	 * Prepare a cyclic dma transfer, assign 2 descriptors,
+>  	 * each one is half ring buffer size
+>  	 */
+> -	desc = dmaengine_prep_dma_cyclic(atmel_port->chan_rx,
+> +	desc = dmaengine_prep_dma_cyclic(chan_rx,
+>  					 sg_dma_address(&atmel_port->sg_rx),
+>  					 sg_dma_len(&atmel_port->sg_rx),
+>  					 sg_dma_len(&atmel_port->sg_rx)/2,
+...to here :
+I think this should go in another patch since these hunks only introduce "chan_rx".
+And in this other patch, maybe add a little note on why "atmel_port->chan_rx = chan_rx;"
+is after "chan_rx = dma_request_slave_channel(mfd_dev, "rx");"
 
+
+> @@ -1269,12 +1273,14 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
+>  		goto chan_err;
+>  	}
+>  
+> +	dma_async_issue_pending(chan_rx);
+> +
+>  	return 0;
+>  
+>  chan_err:
+>  	dev_err(port->dev, "RX channel not available, switch to pio\n");
+>  	atmel_port->use_dma_rx = false;
+> -	if (atmel_port->chan_rx)
+> +	if (chan_rx)
+>  		atmel_release_rx_dma(port);
+>  	return -EINVAL;
+>  }
+> 
+The rest seems ok.
+
+Thanks !
+
+Richard.

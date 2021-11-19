@@ -2,40 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D55C0456F81
-	for <lists+dmaengine@lfdr.de>; Fri, 19 Nov 2021 14:23:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5E7B456F83
+	for <lists+dmaengine@lfdr.de>; Fri, 19 Nov 2021 14:23:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234531AbhKSN0Y (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 19 Nov 2021 08:26:24 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:41540 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232080AbhKSN0Y (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 19 Nov 2021 08:26:24 -0500
+        id S235292AbhKSN03 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 19 Nov 2021 08:26:29 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56130 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235131AbhKSN03 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 19 Nov 2021 08:26:29 -0500
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 1AJDNLqC116338;
-        Fri, 19 Nov 2021 07:23:21 -0600
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 1AJDNQld095904;
+        Fri, 19 Nov 2021 07:23:26 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1637328201;
-        bh=+cYPq112zaLUFWeWrMVnWAkuSqlv9Z6H35GNFCrzKdo=;
-        h=From:To:CC:Subject:Date;
-        b=lJJS3XmA6iRF8n4SKQc6uVvay9MeuzoiW0THjNqmpKOu4GBo3nF6KYiPE6SjJQ9cc
-         DFPa98K8xx2+E2/4NiwxhYIJnWLw3Q65dC9sy9xzms9eZ1GNurbpylkXOQ9fTNbgle
-         qsSgFNW5VmX5f2efa0oNIh+EXCyg92RrkeMnk0u8=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 1AJDNL9s075749
+        s=ti-com-17Q1; t=1637328206;
+        bh=BBXJ/b5sPYbB356jWMzfygFqZ2TuG47zr60+AaJBZKI=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=IZPRt9Ns7F9jP9g0ki3zNWdY6Fi/eepmCbnGFPthiarjVeLecmGdClVAmX6O0E1PJ
+         vuWSAnLP64WNJt6UgpJHtPu9j5bSBzrmm133iGjnowLGyoaKXm5C5u07PU3JuonRFU
+         zQBEGnOQogmAJPlNp5k0JUP8YFGOIwz873mWVT3g=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 1AJDNQUi075784
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 19 Nov 2021 07:23:21 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 19 Nov 2021 07:23:26 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Fri, 19
- Nov 2021 07:23:20 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2021 07:23:25 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Fri, 19 Nov 2021 07:23:20 -0600
+ Frontend Transport; Fri, 19 Nov 2021 07:23:25 -0600
 Received: from gsaswath-HP-ProBook-640-G5.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 1AJDNHbU098826;
-        Fri, 19 Nov 2021 07:23:18 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 1AJDNHbV098826;
+        Fri, 19 Nov 2021 07:23:23 -0600
 From:   Aswath Govindraju <a-govindraju@ti.com>
 CC:     Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
@@ -43,10 +43,12 @@ CC:     Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
         Peter Ujfalusi <peter.ujfalusi@gmail.com>,
         Vinod Koul <vkoul@kernel.org>, <linux-kernel@vger.kernel.org>,
         <dmaengine@vger.kernel.org>
-Subject: [PATCH 0/2] J721S2: Add initial support
-Date:   Fri, 19 Nov 2021 18:53:12 +0530
-Message-ID: <20211119132315.15901-1-a-govindraju@ti.com>
+Subject: [PATCH 1/2] dmaengine: ti: k3-udma: Add SoC dependent data for J721S2 SoC
+Date:   Fri, 19 Nov 2021 18:53:13 +0530
+Message-ID: <20211119132315.15901-2-a-govindraju@ti.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20211119132315.15901-1-a-govindraju@ti.com>
+References: <20211119132315.15901-1-a-govindraju@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -55,27 +57,25 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The following series of patches add support for J721S2 SoC.
+Add SYSFW defined rchan_oes_offset number for J721S2 SoC in soc data.
 
-Currently, the PSIL source and destination thread IDs for only a few of the
-IPs have been added. The remaning ones will be added as and when they are
-tested.
+Signed-off-by: Aswath Govindraju <a-govindraju@ti.com>
+---
+ drivers/dma/ti/k3-udma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-The following series of patches are dependent on,
-- http://lists.infradead.org/pipermail/linux-arm-kernel/2021-November/697574.html
-
-Aswath Govindraju (2):
-  dmaengine: ti: k3-udma: Add SoC dependent data for J721S2 SoC
-  drivers: dma: ti: k3-psil: Add support for J721S2
-
- drivers/dma/ti/Makefile         |   3 +-
- drivers/dma/ti/k3-psil-j721s2.c | 167 ++++++++++++++++++++++++++++++++
- drivers/dma/ti/k3-psil-priv.h   |   1 +
- drivers/dma/ti/k3-psil.c        |   1 +
- drivers/dma/ti/k3-udma.c        |   1 +
- 5 files changed, 172 insertions(+), 1 deletion(-)
- create mode 100644 drivers/dma/ti/k3-psil-j721s2.c
-
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 041d8e32d630..895dcd0e8b60 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -4376,6 +4376,7 @@ static const struct soc_device_attribute k3_soc_devices[] = {
+ 	{ .family = "J721E", .data = &j721e_soc_data },
+ 	{ .family = "J7200", .data = &j7200_soc_data },
+ 	{ .family = "AM64X", .data = &am64_soc_data },
++	{ .family = "J721S2", .data = &j721e_soc_data},
+ 	{ /* sentinel */ }
+ };
+ 
 -- 
 2.17.1
 

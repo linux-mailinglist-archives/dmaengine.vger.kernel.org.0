@@ -2,104 +2,85 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D95A3459480
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Nov 2021 19:07:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F3A145959C
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Nov 2021 20:30:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239879AbhKVSK5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 22 Nov 2021 13:10:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239790AbhKVSK5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 Nov 2021 13:10:57 -0500
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52950C061574;
-        Mon, 22 Nov 2021 10:07:50 -0800 (PST)
-Received: by mail-lj1-x22e.google.com with SMTP id 13so5661409ljj.11;
-        Mon, 22 Nov 2021 10:07:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:content-language:to:cc
-         :references:from:subject:in-reply-to:content-transfer-encoding;
-        bh=TlT7QEDEVoVqR1uMHZtQsjoaJXJhc4T6ceWBzoyGtaM=;
-        b=E2TvTy0wDE6xxBX7mcXCZgcuFXiH+2qi2tV9v+38NAg4inwKz9wmjC33+P3d9gmjLz
-         BFNvNzzcE2+JEdoO9ikT1oLAFvwzipONkTTI8qVQfVMSX5h8YB5a1oLUofO9G9R5Z2fr
-         kj/4/msvz5Y9lOpl357iUXe6K56/XHLxMriRS6gxzlbm8OBmXq//T0V6N5wep06EpsDd
-         gPtQmEXlm8k9mCxlEjauBGeYS47aIw5r1yN5Q+51DxWG5O3njWpqfK+IocT4Rer3rxNw
-         e8XM1L5m9nn4xIo5P7KKIML2rRRKguVOhJPx70ndNyAiDu7CKIVS3goGMHoKVIqmnvPx
-         AScw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent
-         :content-language:to:cc:references:from:subject:in-reply-to
-         :content-transfer-encoding;
-        bh=TlT7QEDEVoVqR1uMHZtQsjoaJXJhc4T6ceWBzoyGtaM=;
-        b=AfcumeSiycatYZu2zihboYfWdNFzpLFOSnGt+52Du1vePEolvegleeXQ3t1fYWRWPF
-         R6wemlhau2L98kbioLUgfBS0hP8KsR+NVwr6Rn469pGcxcpgirBKIWqnr5YopoGxLNSc
-         ZYPZifu8g3V9Wn9lfhgTI6gPj+nN6SE7rfdtoI05pVXcBjcTpWYwuI/Dxg6aU9Hpp1ec
-         TI5+zkQGzGpkJyK9vIofzqS/B0WItpaB5dQ/vJ5qKRnUxnQeG3kfgRURuqA/IJM9qCvc
-         D2KIj/2moIeFHWBp+pAUtvYMllwtBwAHLM/TpI43C3gXjT3r9nG5RHtEO+VnCTSzYqrr
-         eqSw==
-X-Gm-Message-State: AOAM532JdE2eoNO/bH5zjPRfk2VtrPO7MLd6PkhiPyU1BlxwM2LGJV81
-        iXVDHbByo/Xa90YuloHDJPE=
-X-Google-Smtp-Source: ABdhPJxD88nkyfyUBOYDBOuN5m4/4EHB+MEbMzubFqP9/JqlfgQWQulOh4gMVeRh2HksgIexK/N7jA==
-X-Received: by 2002:a2e:7216:: with SMTP id n22mr53702276ljc.44.1637604468358;
-        Mon, 22 Nov 2021 10:07:48 -0800 (PST)
-Received: from [10.0.0.115] (91-153-170-164.elisa-laajakaista.fi. [91.153.170.164])
-        by smtp.gmail.com with ESMTPSA id m18sm1029044lfj.265.2021.11.22.10.07.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Nov 2021 10:07:47 -0800 (PST)
-Message-ID: <4e11d837-1534-adb7-d902-1d171c3bc0cb@gmail.com>
-Date:   Mon, 22 Nov 2021 20:08:13 +0200
+        id S239564AbhKVTdx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 22 Nov 2021 14:33:53 -0500
+Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:59797 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232145AbhKVTdu (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 Nov 2021 14:33:50 -0500
+Received: from [192.168.1.18] ([86.243.171.122])
+        by smtp.orange.fr with ESMTPA
+        id pF1UmhF3gRLGppF1UmZGpk; Mon, 22 Nov 2021 20:30:41 +0100
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
+X-ME-Date: Mon, 22 Nov 2021 20:30:41 +0100
+X-ME-IP: 86.243.171.122
+Subject: Re: [PATCH] dmaengine: dw-edma: Fix (and simplify) the probe broken
+ since ecb8c88bd31c
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     gustavo.pimentel@synopsys.com, wangqing@vivo.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <935fbb40ae930c5fe87482a41dcb73abf2257973.1636492127.git.christophe.jaillet@wanadoo.fr>
+ <YZs/OeBJDMc4A4EC@matsya>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <2cbd5202-6b0d-b5b3-62a0-8ade7bf0d199@wanadoo.fr>
+Date:   Mon, 22 Nov 2021 20:30:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
+In-Reply-To: <YZs/OeBJDMc4A4EC@matsya>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-To:     Aswath Govindraju <a-govindraju@ti.com>
-Cc:     Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org
-References: <20211119132315.15901-1-a-govindraju@ti.com>
-From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-Subject: Re: [PATCH 0/2] J721S2: Add initial support
-In-Reply-To: <20211119132315.15901-1-a-govindraju@ti.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Aswath,
-
-On 19/11/2021 15:23, Aswath Govindraju wrote:
-> The following series of patches add support for J721S2 SoC.
+Le 22/11/2021 à 07:56, Vinod Koul a écrit :
+> On 09-11-21, 22:09, Christophe JAILLET wrote:
+>> The commit in the Fixes: tag has changed the logic of the code and now it
+>> is likely that the probe will return an early success (0), even if not
+>> completely executed.
+>>
+>> This should lead to a crash or similar issue later on when the code
+>> accesses to some never allocated resources.
+>>
+>> Change the '!err' into a 'err' when checking if
+>> 'dma_set_mask_and_coherent()' has failed or not.
+>>
+>> While at it, simplify the code and remove the "can't success code" related
+>> to 32 DMA mask.
+>> As stated in [1], 'dma_set_mask_and_coherent(DMA_BIT_MASK(64))' can't fail
+>> if 'dev->dma_mask' is non-NULL. And if it is NULL, it would fail for the
+>> same reason when tried with DMA_BIT_MASK(32).
 > 
-> Currently, the PSIL source and destination thread IDs for only a few of the
-> IPs have been added. The remaning ones will be added as and when they are
-> tested.
-
-I would have added the complete map as the hardware is not going to
-change (likely), but fine this way as well.
-
-> The following series of patches are dependent on,
-> - http://lists.infradead.org/pipermail/linux-arm-kernel/2021-November/697574.html
-
-It is runtime dependency, so not an issue.
-
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-
-> Aswath Govindraju (2):
->   dmaengine: ti: k3-udma: Add SoC dependent data for J721S2 SoC
->   drivers: dma: ti: k3-psil: Add support for J721S2
-> 
->  drivers/dma/ti/Makefile         |   3 +-
->  drivers/dma/ti/k3-psil-j721s2.c | 167 ++++++++++++++++++++++++++++++++
->  drivers/dma/ti/k3-psil-priv.h   |   1 +
->  drivers/dma/ti/k3-psil.c        |   1 +
->  drivers/dma/ti/k3-udma.c        |   1 +
->  5 files changed, 172 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/dma/ti/k3-psil-j721s2.c
+> The patch title should describe the changes in the patch and not the
+> outcome! So I have taken the liberty to update this to:
+> dmaengine: dw-edma: Fix return value check for dma_set_mask_and_coherent()
 > 
 
--- 
-Péter
+Hi,
+
+In fact, this 'bad' patch title was a way for me to express my 
+frustration to someone who 'stole' someone else work:
+    - without letting him know about it
+    - without fixing his broken patch by himself when informed
+    - without taking into account others comments (Andy Shevchenko about 
+64 DMA mask)
+
+So, thanks for fixing it (and thanks to Wang Qing for pushing in the 
+right direction, even if a better communication would have been 
+appreciated :) )
+
+
+If you could just confirmed the 64 DMA mask cleanup, it would be great 
+for me. I trust the one who stated that such code could be simplified 
+and I've tried to audit code to confirm it by myself.
+However, this pattern looks quite common in the kernel, so I'm still 
+unsure about it :( !
+
+CJ

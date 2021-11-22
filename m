@@ -2,254 +2,86 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F755458B79
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Nov 2021 10:28:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 06634459195
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Nov 2021 16:44:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238743AbhKVJcA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 22 Nov 2021 04:32:00 -0500
-Received: from mail-dm3nam07on2057.outbound.protection.outlook.com ([40.107.95.57]:5216
-        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S238882AbhKVJb6 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 22 Nov 2021 04:31:58 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GzpPkDWbhy0UtTccxrrsL4h+7eGnKWkvPckjDt1S6n6Tsi3UDYWKX+tYng0CGx+rTef3XtphyuPDkup+A/36jlVzwMiQm14tzEFiTFK+4wOW0QapVt8aJhTIqt54D2LKD0ljJRBkKdzSR3SrtdTvaZyLDj5kxDOKKmmJoBMDgdYuVFLzvChEEA0X4ZasH69OS566Gs8lKnvgslvVTk4fO4kd/FjCKh8ycC55+t/w7Kw5YMGCrhfS3E14HKk7aQGDV9SI24GyRw/Y+HDFFqOM+vOlR25v+djFe7ndrmI05pyAm2/jUNQLnpIQvaluF1RykYC3Wvp1Gq8NKblzSIkJRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RxUTRP1liNDyjHVFnt3LTW8J+Co3Z9glzukOc0gNp1A=;
- b=BwjYytvZIEiKQL+myInZf+B7tuFXlNrgycfjCrB0SqW17xHxuL6LCUJGRxqIVytebVHA8DSRqXwIzzFeOPlnHxhMRq2gX9yPzDZyAiJVgnmkznk978ygTjv3i2A+IHj4gjT+Ox+Zp6+2TdJt3JvRLLPpmquXHU54CxQAvTpMmTqmnJStwqYOYqtmtE2FT5xx59Wf5JnRFBzgv1rTpDrMJf5g5PhPvi87SGvLheYo0bLC2xBHmj3ZnsVt3vX7USsTA38CJGw00W3MlJb3JcgDXsjSruST+4+BrY/omLHxT7DYkD/mdUqDshZpUZ6qTqBRIlNoDJZ70q3j1g/TzBtFPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.32) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RxUTRP1liNDyjHVFnt3LTW8J+Co3Z9glzukOc0gNp1A=;
- b=gGh2FBij/GyaffwEA+D76TJRzsu5p9Q+o5Cb2oUR3166dzHnor/KAjyNJFMrXhYmze2zktkwg3Zsm0FszIgTT4yMklZXbrvlvMZI4DzDdywGOLRQIyLi7osv0mhg6jEaiB/FJTHbISuw5LXWba+mnvai7n7FjJylT/6ZUydEGZXwFGbXJ23+MExEZGUikFRwhQeiVdhS0GmIJJxEQ6H5AgQmlX6iPsmzrQJMas4bd+ctE/SURmZ1+8kFk6nlV5j5c9rpEcxRzEHiEC05zrerSGbAb9s6gLUtOA5gG/0fQ65QXnJbnnVTwuW/0dr3hPSiExVzrxfHihDAb153e7JFXw==
-Received: from DM5PR06CA0060.namprd06.prod.outlook.com (2603:10b6:3:37::22) by
- BY5PR12MB3764.namprd12.prod.outlook.com (2603:10b6:a03:1ac::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.22; Mon, 22 Nov
- 2021 09:28:50 +0000
-Received: from DM6NAM11FT063.eop-nam11.prod.protection.outlook.com
- (2603:10b6:3:37:cafe::4a) by DM5PR06CA0060.outlook.office365.com
- (2603:10b6:3:37::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19 via Frontend
- Transport; Mon, 22 Nov 2021 09:28:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.32)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.32 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.32; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.32) by
- DM6NAM11FT063.mail.protection.outlook.com (10.13.172.219) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4713.20 via Frontend Transport; Mon, 22 Nov 2021 09:28:49 +0000
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Mon, 22 Nov
- 2021 01:28:48 -0800
-Received: from kyarlagadda-linux.nvidia.com (172.20.187.5) by mail.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
- Transport; Mon, 22 Nov 2021 01:28:45 -0800
-From:   Akhil R <akhilrajeev@nvidia.com>
-To:     <dan.j.williams@intel.com>, <devicetree@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <jonathanh@nvidia.com>,
-        <kyarlagadda@nvidia.com>, <ldewangan@nvidia.com>,
-        <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <p.zabel@pengutronix.de>, <rgumasta@nvidia.com>,
-        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
-        <vkoul@kernel.org>
-CC:     Akhil R <akhilrajeev@nvidia.com>
-Subject: [PATCH v13 4/4] arm64: tegra: Add GPCDMA node for tegra186 and tegra194
-Date:   Mon, 22 Nov 2021 14:58:12 +0530
-Message-ID: <1637573292-13214-5-git-send-email-akhilrajeev@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1637573292-13214-1-git-send-email-akhilrajeev@nvidia.com>
-References: <1637573292-13214-1-git-send-email-akhilrajeev@nvidia.com>
-X-NVConfidentiality: public
+        id S234636AbhKVPrw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 22 Nov 2021 10:47:52 -0500
+Received: from mout.gmx.net ([212.227.15.15]:41009 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233449AbhKVPrw (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 22 Nov 2021 10:47:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1637595881;
+        bh=VAaW+o1uIRbUv/clS8qcRz1aeqUmiJaltnrY8fX+G3U=;
+        h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
+        b=WsjrjhpRaeUWptezcEGm5yAlqPr93ecbr6Vhl/dzfxPoDxckv8FdOqqXI1jgq5PMS
+         e1Sk/Pk1KfsDLPMcuqp6LyQbGcNrmdkwloIo1ngcDnRwsrdwFLViy1Qzed6FvhL6am
+         1DS7pQl2PZF6idwTpOFpEUaW6qcTSn6HhZ0kUPAE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.178.23] ([77.10.78.233]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MPGW7-1n13a82Q8L-00PcPW; Mon, 22
+ Nov 2021 16:44:41 +0100
+Message-ID: <8e2dc5fc-b51b-1143-7eb2-8a1eed1f4d01@gmx.de>
+Date:   Mon, 22 Nov 2021 16:44:41 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 97f0730f-0a28-4dcb-ccec-08d9ad9a7df6
-X-MS-TrafficTypeDiagnostic: BY5PR12MB3764:
-X-Microsoft-Antispam-PRVS: <BY5PR12MB3764BB3E8C27267819A264F0C09F9@BY5PR12MB3764.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1227;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yq+vym6vAR40gB7mhC3VE3k4AXUlaxeolXd2ubX016RvbR9ZwzoR3yGvKhZuV8KAKidxgzOP1ALxK64g+h5WGpLvosIZjRbjhCP3S7GU8ChxBa2IRjWmhSl6WJl9MSqyRNPPm0XMF76lRmI91VHvEoCA4XVNUGBErs+U4gzgQ7Qd3dXzqFVAo8JBbL+b64tVf3hQyoKG0daDyqtaQf3GBH9NgfXyKlkUngzEHeV8S+HH4x4sdaFRegaJEHGL/PNWx/6vnT+Y71uQlC+VcKF8BVUba9L8nFX+5zeZpuJ9Jsnk/Y1mpETbYGLf6Qd0+zWeCa//4di1+259GAJJc9Ug3bbCzfylK9W/m7HgnctUvebLz2+81jtYrHkflDo7S2lWFt5tYzxI914g+TdbFHWLgCSozjF2oE2Lgjvhi0kIjJ1aONVHQnHPzZ/n7uwaAGHkCUrqtdKDJo0Qe35yhwH7Zla/l6u1l7U1JmmjePBMQF8N5VP1U8wqQPTAXRhUC7ciaGk9FfD2Rl7wcmnujCFCJsF+O4L815bfRxJ2jsJqiB0WjA1ajgmbvFcldxZ04h80XxDy+mxwCzbqU7bm0QVyNicK2OsU1YNHn8xt3TPXorLZ+AXKDID8ji2xXRnhhNRnyAK3p/1RMtY5WJobP5EF10kMCbEn6CDUAMiezBA6BoZKbXZgAkL1m9fBwxfTRjPIef4qbJRb36UrbEYN/ZRzLZ+uXgRKqSbfIhLUzoYtUPg/aVb7LiM7NY64EuwO/Q1rt79IPUmVRyjm/9xXp9+ScQ==
-X-Forefront-Antispam-Report: CIP:216.228.112.32;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid01.nvidia.com;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(107886003)(47076005)(36756003)(36860700001)(70586007)(508600001)(86362001)(356005)(110136005)(186003)(316002)(6666004)(8936002)(26005)(921005)(70206006)(8676002)(336012)(2906002)(7636003)(7696005)(82310400003)(5660300002)(2616005)(426003)(83380400001)(4326008)(83996005)(2101003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Nov 2021 09:28:49.8381
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97f0730f-0a28-4dcb-ccec-08d9ad9a7df6
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.32];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT063.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB3764
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.1
+Subject: Re: compile error for 5.15.4
+Content-Language: en-US
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        dmaengine@vger.kernel.org
+References: <747802b9-6c5d-cdb5-66e2-05b820f5213c@gmx.de>
+ <YZp6yfVUx4eEwaxm@matsya> <fda4aa94-22d9-b54c-2bde-b91a579af802@gmx.de>
+ <YZsZM/FqwJTqqJfj@matsya>
+From:   =?UTF-8?Q?Toralf_F=c3=b6rster?= <toralf.foerster@gmx.de>
+In-Reply-To: <YZsZM/FqwJTqqJfj@matsya>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:HpHBwUprH7IyiGD+C28Emzpuc/1DzCw77nxar2yBIhZs8J3MypI
+ FRtSXhWGGo2RLGEHQJrw7h2eE3Xda7mSbuhv6bGNMuhv81eXZp4uLXh7t4NzaGQPhyAv1m/
+ /catZ6y9/z8xKQIgA9PZc7/64fhzpSFdam+erGBqxfwi49kI/hYuyft6f0iGcUZLQE6xc6g
+ DSwOYsLiYts1bDYlWbArA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:g1p5IM3/Yt0=:mCl1lKEUcJ26zH8eB7qiSu
+ leL64F2MV4QK5cQtD40kPG1Zt7d4VSvMyjPI3mbPJn1VdAu1bYRyjcvfILE6yHRSntBbVn3PM
+ s7TI4oMKujtIwr8T+8dt+N+r0PDgwB1fIbyIp9mn3ZvuagWRg7fM6gsrWAh7bar1uNXWjXPd7
+ PV/tcedSuGutwZnpfGxVp9UwyhJPdJuwoOlJZmXvjHmYW0kwVgUHizM7j8lbp3a25Zp8P8rUS
+ s0mdULvq2mKYQbOwpJhdE1AZvWGn0HNqbR/eZbpj1YdDU8k9peZooMhP8efzBWesqQSACXhUe
+ JBhNX1LHjVcX6jpIQEXtvkyCCHYHoQ4sBMyL16g65PqVefeehuMZqKJNjJ60S0BWNBvh9QW9A
+ v+PSyTPb/WQKQ9/EO0or1C3+b6eNSAFqIz4grkQhRbRDoWrRfHjHyOPxIanrchNTik1gb2LJB
+ /Q2bGJBxfMW5cm49nwuRgPrUDRW2kGn87RgzaithqC+V/1MwxkEr5HopuNVEKWfuv0eqfq5bk
+ 8nLEZxrEnss7FQ3Lw+HkSmfvZ6WCdhVdtMdegxwZLKU1OmM9wJLtQqXIKhSL1TlDzuj980Dcl
+ AJqxnqaEtvS5APloj77uneNXFcY9fYbNEDf5NDhWCPdFl4xSUE1bJV4Kbb1hhcXAhSuk2nPe3
+ n0xfxFc0H/+N1ZmMeppxUTVSdj4C2Ts3Jlf+guZ60p9Q9OOp9ttPKpq3lfZvX3USTQR1bZWDN
+ OAolA1wCK+rpaato5RBmA9HKRPF8/OqCv+0Gh2B294B9vLFoqvmv8Wl8FJXmx0T+GpAJRpSK8
+ mZroYlRnEmLVrM7dFiL1ESQ82C0ZidVM6NIqvtynD5Mhu5ei+oWaMN20zOkTrSl0BDmERU0zH
+ 9MwVnlAdDw40dv7ieHo4fFBavqgAXL+42Z6HmoRJNlLIHdZf4Ap1sQs9InQPGvOgYliuqXn4a
+ vW3AFfeboUFS5ILlilgGutHyKVJ/+buJjyPqpsyd+gwcbSieynuFmYp3y39eA/yqWrD4OOhaM
+ tarpoPOUKd3RMd8ebSa0Jf3PiBHY7yyjjB5SvqxHsiyah+9iAnhHlhjy/rhEhsKUu0YUoLoDD
+ fBCNEwwINq4cpQ=
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add device tree node for GPCDMA controller on Tegra186 target
-and Tegra194 target.
+On 11/22/21 05:14, Vinod Koul wrote:
+> On 21-11-21, 18:18, Toralf F=C3=B6rster wrote:
+>> On 11/21/21 17:58, Vinod Koul wrote:
+>>> Can you please send your config file when you saw this, which toolchai=
+n
+>>> was used to compile...
+>>>
+>>> Thanks
+>> sure,
+>
+> This is fixed by:
+> b3b180e73540 ("dmaengine: remove debugfs #ifdef")
+>
+> Pls confirm by cherry-picking. I will send this fix to stable.
+>
+confirmed - solved it.
+If you want you can add a Tested-by: to the commit.
 
-Signed-off-by: Rajesh Gumasta <rgumasta@nvidia.com>
-Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi |  4 +++
- arch/arm64/boot/dts/nvidia/tegra186.dtsi       | 44 ++++++++++++++++++++++++++
- arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi |  4 +++
- arch/arm64/boot/dts/nvidia/tegra194.dtsi       | 44 ++++++++++++++++++++++++++
- 4 files changed, 96 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi b/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
-index fcd71bf..f5ef04d3 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
-@@ -56,6 +56,10 @@
- 		};
- 	};
- 
-+	dma-controller@2600000 {
-+		status = "okay";
-+	};
-+
- 	memory-controller@2c00000 {
- 		status = "okay";
- 	};
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-index e94f8ad..355d53c 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-@@ -73,6 +73,50 @@
- 		snps,rxpbl = <8>;
- 	};
- 
-+	dma-controller@2600000 {
-+		compatible = "nvidia,tegra186-gpcdma";
-+		reg = <0x2600000 0x210000>;
-+		resets = <&bpmp TEGRA186_RESET_GPCDMA>;
-+		reset-names = "gpcdma";
-+		interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-+		#dma-cells = <1>;
-+		iommus = <&smmu TEGRA186_SID_GPCDMA_0>;
-+		dma-coherent;
-+		status = "disabled";
-+	};
-+
- 	aconnect@2900000 {
- 		compatible = "nvidia,tegra186-aconnect",
- 			     "nvidia,tegra210-aconnect";
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-index c4058ee..5bc74af 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-@@ -49,6 +49,10 @@
- 			};
- 		};
- 
-+		dma-controller@2600000 {
-+			status = "okay";
-+		};
-+
- 		memory-controller@2c00000 {
- 			status = "okay";
- 		};
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index c8250a3..94094f3 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -72,6 +72,50 @@
- 			snps,rxpbl = <8>;
- 		};
- 
-+		dma-controller@2600000 {
-+			compatible = "nvidia,tegra194-gpcdma";
-+			reg = <0x2600000 0x210000>;
-+			resets = <&bpmp TEGRA194_RESET_GPCDMA>;
-+			reset-names = "gpcdma";
-+			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-+			#dma-cells = <1>;
-+			iommus = <&smmu TEGRA194_SID_GPCDMA_0>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
- 		aconnect@2900000 {
- 			compatible = "nvidia,tegra194-aconnect",
- 				     "nvidia,tegra210-aconnect";
--- 
-2.7.4
-
+=2D-
+Toralf

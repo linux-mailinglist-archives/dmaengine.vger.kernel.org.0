@@ -2,30 +2,32 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DFAD45979D
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Nov 2021 23:23:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 609B245981B
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Nov 2021 00:01:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232408AbhKVW04 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 22 Nov 2021 17:26:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37494 "EHLO mail.kernel.org"
+        id S229943AbhKVXEv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 22 Nov 2021 18:04:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240277AbhKVW0v (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 22 Nov 2021 17:26:51 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 064F96103C;
-        Mon, 22 Nov 2021 22:23:37 +0000 (UTC)
+        id S229739AbhKVXEp (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 22 Nov 2021 18:04:45 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5DBA960FED;
+        Mon, 22 Nov 2021 23:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637619824;
-        bh=kK/0hn3Tn2Fi1LQ6SeIagL/0lsO2CrpknZyQZAqq6H8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D2/yNDzBENZCV3sSIl45F//FfTAukYJn/aB/UGh8I2KaOy7hp22Bp+4Hk7x39Hi7u
-         6e+dm5/YqhRogLXgrZ4AGc43mg64vHlOq1gIn5GVeiq9ATMgMjPD8mxPFDFaQ3aa+j
-         MQv7bncgFO5dExmwoX3s7KxgzNmRdjAvJ8L8yiSvS5qic4CJs5WDTicWXy2EK3Rvgg
-         cAaYtYpjbFTPUW/LIgaSPH1XVukM1CNyFl/il1Z3hpw7wYnUGTRu2xxQu7y1304Q4O
-         DqXPeJwj0DSwecC7x7qSXRZYQTTmspHVwU6Jw3E235yowtMHJ5mtFd1BPBQlG3mqm6
-         Syi2DD+et8CSw==
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Andy Gross <agross@kernel.org>,
+        s=k20201202; t=1637622097;
+        bh=5HPGeejKcq0/skHJyiqCEkuW5nT9h90VXdWH7CYPbFE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nEdiJ23lulIvuZIRcBfsS+qhZQdy45DABTeQ/9eMEUl1h55xvksxls/uuZO4VBeI8
+         VaCo7TKNLJwRLa3QYvdv6RNwEp2FVuh3jDzzlTQaQEP63m8H/MG3PA9JAEloDYolQp
+         c9/rmjY39HvZyawWUPIV3NjC+iYFEvh7eF6njpejVduCoCGuYmDwm0WoROg8MZpuON
+         SIl6D9XkBqQ40owCHtFzbFPFXQsgb6+Hp4V/BoNJJJnMHVdW/zgOyJBpirCAwPOfIz
+         HcfB+kkGUqemGZoka/SinHrWStHXFAUQPzrIQFgTm1oadehKRNNCm1qA6BWKPpcaq0
+         1TgibwoU5fvdw==
+Date:   Mon, 22 Nov 2021 23:01:28 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andy Gross <agross@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Baolin Wang <baolin.wang7@gmail.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -38,7 +40,6 @@ Cc:     Arnd Bergmann <arnd@arndb.de>, Andy Gross <agross@kernel.org>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Laxman Dewangan <ldewangan@nvidia.com>,
         Manivannan Sadhasivam <mani@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
         Michal Simek <michal.simek@xilinx.com>,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Orson Zhai <orsonzhai@gmail.com>,
@@ -54,59 +55,49 @@ Cc:     Arnd Bergmann <arnd@arndb.de>, Andy Gross <agross@kernel.org>,
         linux-rpi-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
         linux-tegra@vger.kernel.org
-Subject: [PATCH v2 11/11] dmaengine: remove slave_id config field
-Date:   Mon, 22 Nov 2021 23:22:03 +0100
-Message-Id: <20211122222203.4103644-12-arnd@kernel.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20211122222203.4103644-1-arnd@kernel.org>
+Subject: Re: [PATCH v2 00/11] dmaengine: kill off dma_slave_config->slave_id
+Message-ID: <YZwhSPkhAqZy3bqY@sirena.org.uk>
 References: <20211122222203.4103644-1-arnd@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="71Si6a9AhnlReqww"
+Content-Disposition: inline
+In-Reply-To: <20211122222203.4103644-1-arnd@kernel.org>
+X-Cookie: Lake Erie died for your sins.
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
 
-All references to the slave_id field have been removed, so remove the
-field as well to prevent new references from creeping in again.
+--71Si6a9AhnlReqww
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Originally this allowed slave DMA drivers to configure which device
-is accessed with the dmaengine_slave_config() call, but this was
-inconsistent, as the same information is also passed while requesting
-a channel, and never changes in practice.
+On Mon, Nov 22, 2021 at 11:21:52PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+>=20
+> I recently came across some new uses of the 'slave_id' field that
+> I had (almost) removed a few years ago. There are no legitimate
+> uses of this field in the kernel, only a few stale references and
+> two drivers that abuse the field as a side-channel between the
+> dmaengine driver and its client.
 
-In modern kernels, the device is always selected when requesting
-the channel, so the .slave_id field is no longer useful.
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- include/linux/dmaengine.h | 4 ----
- 1 file changed, 4 deletions(-)
+--71Si6a9AhnlReqww
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 9000f3ffce8b..0349b35235e6 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -418,9 +418,6 @@ enum dma_slave_buswidth {
-  * @device_fc: Flow Controller Settings. Only valid for slave channels. Fill
-  * with 'true' if peripheral should be flow controller. Direction will be
-  * selected at Runtime.
-- * @slave_id: Slave requester id. Only valid for slave channels. The dma
-- * slave peripheral will have unique id as dma requester which need to be
-- * pass as slave config.
-  * @peripheral_config: peripheral configuration for programming peripheral
-  * for dmaengine transfer
-  * @peripheral_size: peripheral configuration buffer size
-@@ -448,7 +445,6 @@ struct dma_slave_config {
- 	u32 src_port_window_size;
- 	u32 dst_port_window_size;
- 	bool device_fc;
--	unsigned int slave_id;
- 	void *peripheral_config;
- 	size_t peripheral_size;
- };
--- 
-2.29.2
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmGcIUcACgkQJNaLcl1U
+h9B/hgf6AiPwJAMMKcdb/6uCfAJACPZtqMFn2hE6HQgrw8mlTsR3sGqhQj3c3NWF
+vkLYtSZ20L2tPvS1uyAxjIRzIm91rqriu6pNurmupB6D+347UfSMpYhtbEKXvbBw
+1UF5ftPw1t5IGduAX6HKBfaN1Iab53577DJb/uJwR3Mb/WBh9aFpuyRwuZgjBOwE
+MvpTaAK2GHY4loDjJChSAK+zlCQMFbc4I2mZuahtf4wvBts/eZn7bAqAruzPMnTL
+e3crlktLeH7C0DMKJpmrxvTvS0CDsEUUOJ+tM7aNmtsdyYTAZEG35vzJgVly61jc
+7e5I5GHB1Jxsid3oM7WeznOhbimQEw==
+=AKUT
+-----END PGP SIGNATURE-----
+
+--71Si6a9AhnlReqww--

@@ -2,207 +2,104 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5C054591B9
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Nov 2021 16:54:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D95A3459480
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Nov 2021 19:07:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240092AbhKVP5Q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 22 Nov 2021 10:57:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37084 "EHLO
+        id S239879AbhKVSK5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 22 Nov 2021 13:10:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240073AbhKVP5N (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 Nov 2021 10:57:13 -0500
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7854AC06174A
-        for <dmaengine@vger.kernel.org>; Mon, 22 Nov 2021 07:54:06 -0800 (PST)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:e4da:38c:79e9:48bf])
-        by baptiste.telenet-ops.be with bizsmtp
-        id MTu6260024yPVd601Tu6vX; Mon, 22 Nov 2021 16:54:06 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1mpBdt-00EL28-Nt; Mon, 22 Nov 2021 16:54:05 +0100
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1mpBdt-00HGon-3o; Mon, 22 Nov 2021 16:54:05 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc:     dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dmaengine: stm32-mdma: Use bitfield helpers
-Date:   Mon, 22 Nov 2021 16:54:04 +0100
-Message-Id: <36ceab242a594233dc7dc6f1dddb4ac32d1e846f.1637593297.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <a1445d3abb45cfc95cb1b03180fd53caf122035b.1637593297.git.geert+renesas@glider.be>
-References: <a1445d3abb45cfc95cb1b03180fd53caf122035b.1637593297.git.geert+renesas@glider.be>
+        with ESMTP id S239790AbhKVSK5 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 Nov 2021 13:10:57 -0500
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52950C061574;
+        Mon, 22 Nov 2021 10:07:50 -0800 (PST)
+Received: by mail-lj1-x22e.google.com with SMTP id 13so5661409ljj.11;
+        Mon, 22 Nov 2021 10:07:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:content-language:to:cc
+         :references:from:subject:in-reply-to:content-transfer-encoding;
+        bh=TlT7QEDEVoVqR1uMHZtQsjoaJXJhc4T6ceWBzoyGtaM=;
+        b=E2TvTy0wDE6xxBX7mcXCZgcuFXiH+2qi2tV9v+38NAg4inwKz9wmjC33+P3d9gmjLz
+         BFNvNzzcE2+JEdoO9ikT1oLAFvwzipONkTTI8qVQfVMSX5h8YB5a1oLUofO9G9R5Z2fr
+         kj/4/msvz5Y9lOpl357iUXe6K56/XHLxMriRS6gxzlbm8OBmXq//T0V6N5wep06EpsDd
+         gPtQmEXlm8k9mCxlEjauBGeYS47aIw5r1yN5Q+51DxWG5O3njWpqfK+IocT4Rer3rxNw
+         e8XM1L5m9nn4xIo5P7KKIML2rRRKguVOhJPx70ndNyAiDu7CKIVS3goGMHoKVIqmnvPx
+         AScw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:cc:references:from:subject:in-reply-to
+         :content-transfer-encoding;
+        bh=TlT7QEDEVoVqR1uMHZtQsjoaJXJhc4T6ceWBzoyGtaM=;
+        b=AfcumeSiycatYZu2zihboYfWdNFzpLFOSnGt+52Du1vePEolvegleeXQ3t1fYWRWPF
+         R6wemlhau2L98kbioLUgfBS0hP8KsR+NVwr6Rn469pGcxcpgirBKIWqnr5YopoGxLNSc
+         ZYPZifu8g3V9Wn9lfhgTI6gPj+nN6SE7rfdtoI05pVXcBjcTpWYwuI/Dxg6aU9Hpp1ec
+         TI5+zkQGzGpkJyK9vIofzqS/B0WItpaB5dQ/vJ5qKRnUxnQeG3kfgRURuqA/IJM9qCvc
+         D2KIj/2moIeFHWBp+pAUtvYMllwtBwAHLM/TpI43C3gXjT3r9nG5RHtEO+VnCTSzYqrr
+         eqSw==
+X-Gm-Message-State: AOAM532JdE2eoNO/bH5zjPRfk2VtrPO7MLd6PkhiPyU1BlxwM2LGJV81
+        iXVDHbByo/Xa90YuloHDJPE=
+X-Google-Smtp-Source: ABdhPJxD88nkyfyUBOYDBOuN5m4/4EHB+MEbMzubFqP9/JqlfgQWQulOh4gMVeRh2HksgIexK/N7jA==
+X-Received: by 2002:a2e:7216:: with SMTP id n22mr53702276ljc.44.1637604468358;
+        Mon, 22 Nov 2021 10:07:48 -0800 (PST)
+Received: from [10.0.0.115] (91-153-170-164.elisa-laajakaista.fi. [91.153.170.164])
+        by smtp.gmail.com with ESMTPSA id m18sm1029044lfj.265.2021.11.22.10.07.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Nov 2021 10:07:47 -0800 (PST)
+Message-ID: <4e11d837-1534-adb7-d902-1d171c3bc0cb@gmail.com>
+Date:   Mon, 22 Nov 2021 20:08:13 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.1
+Content-Language: en-US
+To:     Aswath Govindraju <a-govindraju@ti.com>
+Cc:     Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org
+References: <20211119132315.15901-1-a-govindraju@ti.com>
+From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+Subject: Re: [PATCH 0/2] J721S2: Add initial support
+In-Reply-To: <20211119132315.15901-1-a-govindraju@ti.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Use the FIELD_{GET,PREP}() helpers, instead of defining custom macros
-implementing the same operations.
+Hi Aswath,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Compile-tested only.
+On 19/11/2021 15:23, Aswath Govindraju wrote:
+> The following series of patches add support for J721S2 SoC.
+> 
+> Currently, the PSIL source and destination thread IDs for only a few of the
+> IPs have been added. The remaning ones will be added as and when they are
+> tested.
 
-See "[PATCH 00/17] Non-const bitfield helper conversions"
-(https://lore.kernel.org/r/cover.1637592133.git.geert+renesas@glider.be)
-for background and more conversions.
----
- drivers/dma/stm32-mdma.c | 74 +++++++++++++---------------------------
- 1 file changed, 23 insertions(+), 51 deletions(-)
+I would have added the complete map as the hardware is not going to
+change (likely), but fine this way as well.
 
-diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
-index d30a4a28d3bfd585..03ff64ff34bf594e 100644
---- a/drivers/dma/stm32-mdma.c
-+++ b/drivers/dma/stm32-mdma.c
-@@ -10,6 +10,7 @@
-  * Inspired by stm32-dma.c and dma-jz4780.c
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/dmaengine.h>
-@@ -32,13 +33,6 @@
- 
- #include "virt-dma.h"
- 
--/*  MDMA Generic getter/setter */
--#define STM32_MDMA_SHIFT(n)		(ffs(n) - 1)
--#define STM32_MDMA_SET(n, mask)		(((n) << STM32_MDMA_SHIFT(mask)) & \
--					 (mask))
--#define STM32_MDMA_GET(n, mask)		(((n) & (mask)) >> \
--					 STM32_MDMA_SHIFT(mask))
--
- #define STM32_MDMA_GISR0		0x0000 /* MDMA Int Status Reg 1 */
- #define STM32_MDMA_GISR1		0x0004 /* MDMA Int Status Reg 2 */
- 
-@@ -80,8 +74,7 @@
- #define STM32_MDMA_CCR_HEX		BIT(13)
- #define STM32_MDMA_CCR_BEX		BIT(12)
- #define STM32_MDMA_CCR_PL_MASK		GENMASK(7, 6)
--#define STM32_MDMA_CCR_PL(n)		STM32_MDMA_SET(n, \
--						       STM32_MDMA_CCR_PL_MASK)
-+#define STM32_MDMA_CCR_PL(n)		FIELD_PREP(STM32_MDMA_CCR_PL_MASK, (n))
- #define STM32_MDMA_CCR_TCIE		BIT(5)
- #define STM32_MDMA_CCR_BTIE		BIT(4)
- #define STM32_MDMA_CCR_BRTIE		BIT(3)
-@@ -99,48 +92,33 @@
- #define STM32_MDMA_CTCR_BWM		BIT(31)
- #define STM32_MDMA_CTCR_SWRM		BIT(30)
- #define STM32_MDMA_CTCR_TRGM_MSK	GENMASK(29, 28)
--#define STM32_MDMA_CTCR_TRGM(n)		STM32_MDMA_SET((n), \
--						       STM32_MDMA_CTCR_TRGM_MSK)
--#define STM32_MDMA_CTCR_TRGM_GET(n)	STM32_MDMA_GET((n), \
--						       STM32_MDMA_CTCR_TRGM_MSK)
-+#define STM32_MDMA_CTCR_TRGM(n)		FIELD_PREP(STM32_MDMA_CTCR_TRGM_MSK, (n))
-+#define STM32_MDMA_CTCR_TRGM_GET(n)	FIELD_GET(STM32_MDMA_CTCR_TRGM_MSK, (n))
- #define STM32_MDMA_CTCR_PAM_MASK	GENMASK(27, 26)
--#define STM32_MDMA_CTCR_PAM(n)		STM32_MDMA_SET(n, \
--						       STM32_MDMA_CTCR_PAM_MASK)
-+#define STM32_MDMA_CTCR_PAM(n)		FIELD_PREP(STM32_MDMA_CTCR_PAM_MASK, (n))
- #define STM32_MDMA_CTCR_PKE		BIT(25)
- #define STM32_MDMA_CTCR_TLEN_MSK	GENMASK(24, 18)
--#define STM32_MDMA_CTCR_TLEN(n)		STM32_MDMA_SET((n), \
--						       STM32_MDMA_CTCR_TLEN_MSK)
--#define STM32_MDMA_CTCR_TLEN_GET(n)	STM32_MDMA_GET((n), \
--						       STM32_MDMA_CTCR_TLEN_MSK)
-+#define STM32_MDMA_CTCR_TLEN(n)		FIELD_PREP(STM32_MDMA_CTCR_TLEN_MSK, (n))
-+#define STM32_MDMA_CTCR_TLEN_GET(n)	FIELD_GET(STM32_MDMA_CTCR_TLEN_MSK, (n))
- #define STM32_MDMA_CTCR_LEN2_MSK	GENMASK(25, 18)
--#define STM32_MDMA_CTCR_LEN2(n)		STM32_MDMA_SET((n), \
--						       STM32_MDMA_CTCR_LEN2_MSK)
--#define STM32_MDMA_CTCR_LEN2_GET(n)	STM32_MDMA_GET((n), \
--						       STM32_MDMA_CTCR_LEN2_MSK)
-+#define STM32_MDMA_CTCR_LEN2(n)		FIELD_PREP(STM32_MDMA_CTCR_LEN2_MSK, (n))
-+#define STM32_MDMA_CTCR_LEN2_GET(n)	FIELD_GET(STM32_MDMA_CTCR_LEN2_MSK, (n))
- #define STM32_MDMA_CTCR_DBURST_MASK	GENMASK(17, 15)
--#define STM32_MDMA_CTCR_DBURST(n)	STM32_MDMA_SET(n, \
--						    STM32_MDMA_CTCR_DBURST_MASK)
-+#define STM32_MDMA_CTCR_DBURST(n)	FIELD_PREP(STM32_MDMA_CTCR_DBURST_MASK, (n))
- #define STM32_MDMA_CTCR_SBURST_MASK	GENMASK(14, 12)
--#define STM32_MDMA_CTCR_SBURST(n)	STM32_MDMA_SET(n, \
--						    STM32_MDMA_CTCR_SBURST_MASK)
-+#define STM32_MDMA_CTCR_SBURST(n)	FIELD_PREP(STM32_MDMA_CTCR_SBURST_MASK, (n))
- #define STM32_MDMA_CTCR_DINCOS_MASK	GENMASK(11, 10)
--#define STM32_MDMA_CTCR_DINCOS(n)	STM32_MDMA_SET((n), \
--						    STM32_MDMA_CTCR_DINCOS_MASK)
-+#define STM32_MDMA_CTCR_DINCOS(n)	FIELD_PREP(STM32_MDMA_CTCR_DINCOS_MASK, (n))
- #define STM32_MDMA_CTCR_SINCOS_MASK	GENMASK(9, 8)
--#define STM32_MDMA_CTCR_SINCOS(n)	STM32_MDMA_SET((n), \
--						    STM32_MDMA_CTCR_SINCOS_MASK)
-+#define STM32_MDMA_CTCR_SINCOS(n)	FIELD_PREP(STM32_MDMA_CTCR_SINCOS_MASK, (n))
- #define STM32_MDMA_CTCR_DSIZE_MASK	GENMASK(7, 6)
--#define STM32_MDMA_CTCR_DSIZE(n)	STM32_MDMA_SET(n, \
--						     STM32_MDMA_CTCR_DSIZE_MASK)
-+#define STM32_MDMA_CTCR_DSIZE(n)	FIELD_PREP(STM32_MDMA_CTCR_DSIZE_MASK, (n))
- #define STM32_MDMA_CTCR_SSIZE_MASK	GENMASK(5, 4)
--#define STM32_MDMA_CTCR_SSIZE(n)	STM32_MDMA_SET(n, \
--						     STM32_MDMA_CTCR_SSIZE_MASK)
-+#define STM32_MDMA_CTCR_SSIZE(n)	FIELD_PREP(STM32_MDMA_CTCR_SSIZE_MASK, (n))
- #define STM32_MDMA_CTCR_DINC_MASK	GENMASK(3, 2)
--#define STM32_MDMA_CTCR_DINC(n)		STM32_MDMA_SET((n), \
--						      STM32_MDMA_CTCR_DINC_MASK)
-+#define STM32_MDMA_CTCR_DINC(n)		FIELD_PREP(STM32_MDMA_CTCR_DINC_MASK, (n))
- #define STM32_MDMA_CTCR_SINC_MASK	GENMASK(1, 0)
--#define STM32_MDMA_CTCR_SINC(n)		STM32_MDMA_SET((n), \
--						      STM32_MDMA_CTCR_SINC_MASK)
-+#define STM32_MDMA_CTCR_SINC(n)		FIELD_PREP(STM32_MDMA_CTCR_SINC_MASK, (n))
- #define STM32_MDMA_CTCR_CFG_MASK	(STM32_MDMA_CTCR_SINC_MASK \
- 					| STM32_MDMA_CTCR_DINC_MASK \
- 					| STM32_MDMA_CTCR_SINCOS_MASK \
-@@ -151,16 +129,13 @@
- /* MDMA Channel x block number of data register */
- #define STM32_MDMA_CBNDTR(x)		(0x54 + 0x40 * (x))
- #define STM32_MDMA_CBNDTR_BRC_MK	GENMASK(31, 20)
--#define STM32_MDMA_CBNDTR_BRC(n)	STM32_MDMA_SET(n, \
--						       STM32_MDMA_CBNDTR_BRC_MK)
--#define STM32_MDMA_CBNDTR_BRC_GET(n)	STM32_MDMA_GET((n), \
--						       STM32_MDMA_CBNDTR_BRC_MK)
-+#define STM32_MDMA_CBNDTR_BRC(n)	FIELD_PREP(STM32_MDMA_CBNDTR_BRC_MK, (n))
-+#define STM32_MDMA_CBNDTR_BRC_GET(n)	FIELD_GET(STM32_MDMA_CBNDTR_BRC_MK, (n))
- 
- #define STM32_MDMA_CBNDTR_BRDUM		BIT(19)
- #define STM32_MDMA_CBNDTR_BRSUM		BIT(18)
- #define STM32_MDMA_CBNDTR_BNDT_MASK	GENMASK(16, 0)
--#define STM32_MDMA_CBNDTR_BNDT(n)	STM32_MDMA_SET(n, \
--						    STM32_MDMA_CBNDTR_BNDT_MASK)
-+#define STM32_MDMA_CBNDTR_BNDT(n)	FIELD_PREP(STM32_MDMA_CBNDTR_BNDT_MASK, (n))
- 
- /* MDMA Channel x source address register */
- #define STM32_MDMA_CSAR(x)		(0x58 + 0x40 * (x))
-@@ -171,11 +146,9 @@
- /* MDMA Channel x block repeat address update register */
- #define STM32_MDMA_CBRUR(x)		(0x60 + 0x40 * (x))
- #define STM32_MDMA_CBRUR_DUV_MASK	GENMASK(31, 16)
--#define STM32_MDMA_CBRUR_DUV(n)		STM32_MDMA_SET(n, \
--						      STM32_MDMA_CBRUR_DUV_MASK)
-+#define STM32_MDMA_CBRUR_DUV(n)		FIELD_PREP(STM32_MDMA_CBRUR_DUV_MASK, (n))
- #define STM32_MDMA_CBRUR_SUV_MASK	GENMASK(15, 0)
--#define STM32_MDMA_CBRUR_SUV(n)		STM32_MDMA_SET(n, \
--						      STM32_MDMA_CBRUR_SUV_MASK)
-+#define STM32_MDMA_CBRUR_SUV(n)		FIELD_PREP(STM32_MDMA_CBRUR_SUV_MASK, (n))
- 
- /* MDMA Channel x link address register */
- #define STM32_MDMA_CLAR(x)		(0x64 + 0x40 * (x))
-@@ -185,8 +158,7 @@
- #define STM32_MDMA_CTBR_DBUS		BIT(17)
- #define STM32_MDMA_CTBR_SBUS		BIT(16)
- #define STM32_MDMA_CTBR_TSEL_MASK	GENMASK(7, 0)
--#define STM32_MDMA_CTBR_TSEL(n)		STM32_MDMA_SET(n, \
--						      STM32_MDMA_CTBR_TSEL_MASK)
-+#define STM32_MDMA_CTBR_TSEL(n)		FIELD_PREP(STM32_MDMA_CTBR_TSEL_MASK, (n))
- 
- /* MDMA Channel x mask address register */
- #define STM32_MDMA_CMAR(x)		(0x70 + 0x40 * (x))
+> The following series of patches are dependent on,
+> - http://lists.infradead.org/pipermail/linux-arm-kernel/2021-November/697574.html
+
+It is runtime dependency, so not an issue.
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+
+> Aswath Govindraju (2):
+>   dmaengine: ti: k3-udma: Add SoC dependent data for J721S2 SoC
+>   drivers: dma: ti: k3-psil: Add support for J721S2
+> 
+>  drivers/dma/ti/Makefile         |   3 +-
+>  drivers/dma/ti/k3-psil-j721s2.c | 167 ++++++++++++++++++++++++++++++++
+>  drivers/dma/ti/k3-psil-priv.h   |   1 +
+>  drivers/dma/ti/k3-psil.c        |   1 +
+>  drivers/dma/ti/k3-udma.c        |   1 +
+>  5 files changed, 172 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/dma/ti/k3-psil-j721s2.c
+> 
+
 -- 
-2.25.1
-
+Péter

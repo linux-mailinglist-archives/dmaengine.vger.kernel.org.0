@@ -2,58 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61717458890
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Nov 2021 05:14:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93AF8458896
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Nov 2021 05:20:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230253AbhKVERy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 21 Nov 2021 23:17:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38460 "EHLO mail.kernel.org"
+        id S231444AbhKVEXz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 21 Nov 2021 23:23:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229544AbhKVERy (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 21 Nov 2021 23:17:54 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 63E1E606A5;
-        Mon, 22 Nov 2021 04:14:47 +0000 (UTC)
+        id S231375AbhKVEXz (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 21 Nov 2021 23:23:55 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6087F60231;
+        Mon, 22 Nov 2021 04:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637554488;
-        bh=YNn4+8WDKdGZ8O44BogasOLlwHLNvIIYf1h2THEU4a0=;
+        s=k20201202; t=1637554849;
+        bh=B7KD529cvJfaNs5780+0sXyIgYGBNJj1081GK2QN5ew=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JjOF/MztR8BScLqSpiXQw+VaHTKIq3bqKUJfQlJ9fBY7fYdXHC0Q7KPLT5DFxK5FK
-         ySi0iA4wOsAWuT3F0y0DM97WihsQScXkoLiLaYoAAIaZF07SA5SdarFjj0mXH9XVoz
-         DcNpyzmWGNo7sSlHBS6V2UFqBbDUekYt2aDXV/6bsUaTRDYrpejGOjeyQjYhIX0pe0
-         RovhvPo+fnITvDCLuLecl5b6K6+OOW+lq9zm8zfH9C6IVy3fljyN4E8IAODGG/9E0U
-         4c+eP+BcChDXSp8J6K0V/WJaojAOK//zHFeaNysTEYfb9VefSPJra+uq4u6OqAE2oQ
-         DXkjtni1VNwHA==
-Date:   Mon, 22 Nov 2021 09:44:43 +0530
+        b=OphBsWCD1ZE0MiYHDdC4iVA74iiWQNylTkXwEFhKLhvpCEOZZHH9imCTzSS2RKu+4
+         n+LuX50N6Bf2iO+SLYlQHvbklCyiRrzAreNmF9kYackZlf0sUq2Pxw5ojA3MvGv7vK
+         nvSBLfp/cJCfYeH+mI0SgNVKRQjaI1MkCqRBiri1lTfBSJ9Za9fzqflNh9G02rccPY
+         BOuCwEEnWfqBi56yzx2/fkVWQwJHecHJsZMoLPtQLZ+xWW8fFvS4JR8P2mN3OX/QX4
+         Iyg3pKagge7YPPKbeM4eABlcP2MRNIyO+E2QIxcFEWsQFMgBQ6wnhXnRQ6gu/jYTFQ
+         xJrcERw9fZhpQ==
+Date:   Mon, 22 Nov 2021 09:50:44 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Toralf =?iso-8859-1?Q?F=F6rster?= <toralf.foerster@gmx.de>
-Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: Re: compile error for 5.15.4
-Message-ID: <YZsZM/FqwJTqqJfj@matsya>
-References: <747802b9-6c5d-cdb5-66e2-05b820f5213c@gmx.de>
- <YZp6yfVUx4eEwaxm@matsya>
- <fda4aa94-22d9-b54c-2bde-b91a579af802@gmx.de>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     peter.ujfalusi@gmail.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: ti: edma: Use 'for_each_set_bit' when possible
+Message-ID: <YZsanLUxiFpfVjZx@matsya>
+References: <47a7415d3aff8dfb66780bd6f80b085db4503bf7.1637263609.git.christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fda4aa94-22d9-b54c-2bde-b91a579af802@gmx.de>
+In-Reply-To: <47a7415d3aff8dfb66780bd6f80b085db4503bf7.1637263609.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 21-11-21, 18:18, Toralf Förster wrote:
-> On 11/21/21 17:58, Vinod Koul wrote:
-> > Can you please send your config file when you saw this, which toolchain
-> > was used to compile...
-> > 
-> > Thanks
-> sure,
+On 18-11-21, 20:28, Christophe JAILLET wrote:
+> Use 'for_each_set_bit()' instead of hand wrinting it. It is much less
+> version.
 
-This is fixed by:
-b3b180e73540 ("dmaengine: remove debugfs #ifdef")
-
-Pls confirm by cherry-picking. I will send this fix to stable.
+Applied, thanks
 
 -- 
 ~Vinod

@@ -2,131 +2,88 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6388245A136
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Nov 2021 12:19:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B65A245A7F0
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Nov 2021 17:34:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235090AbhKWLW1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 23 Nov 2021 06:22:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231246AbhKWLW0 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 23 Nov 2021 06:22:26 -0500
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12679C061574
-        for <dmaengine@vger.kernel.org>; Tue, 23 Nov 2021 03:19:18 -0800 (PST)
-Received: by mail-lj1-x236.google.com with SMTP id t11so10388461ljh.6
-        for <dmaengine@vger.kernel.org>; Tue, 23 Nov 2021 03:19:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w+ogjWxG1DbsOOSKAdBRBvdcSf1vlOMjAXY68aT/3+U=;
-        b=g2Y3CYQC1NcCLavzUvr4ErWMQvZ4fzsgBv6CCbmTOoZcOun8WjSds54sZrtzeYEA0U
-         N5KF7mJ3kl8nFIULnhlxeAUeFZAuCfq+uX5Urd7Y31Xp8cHxNzCxkkp6HS46EZb3D6jZ
-         c7TwybE0YdC9woGghm+c/KCOlK35CIfDZrYTO7zFljpZaTHjklc27An1TOol1n/1idvS
-         kCKfDejnDdUw+aN2JJNNmUQf32+SP4pOXJVkzxhNH+rbEkLFMLkjE8yfz5ElxThNneaF
-         SJXtBIs1DuxaYn0676eJKdryXGQlku5s0UQEwOdM0oGilYhXoK+2140z6YDVV15iHy6a
-         9PQw==
+        id S236653AbhKWQhn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 23 Nov 2021 11:37:43 -0500
+Received: from mail-io1-f53.google.com ([209.85.166.53]:46626 "EHLO
+        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236344AbhKWQhm (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 23 Nov 2021 11:37:42 -0500
+Received: by mail-io1-f53.google.com with SMTP id x6so6945823iol.13;
+        Tue, 23 Nov 2021 08:34:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w+ogjWxG1DbsOOSKAdBRBvdcSf1vlOMjAXY68aT/3+U=;
-        b=VFRWX4CBebfKzoc2JvA5FVWQ6er4vDnOZqFth8JN8Zehfnb4uB7Mb9uTyGebGhE+St
-         dx2lAMkrZX+NI8oUjhBbN+J9bWv/P6CXtw2qrcLZ34xrSjHxpbNc3ldKctbV8IUpy5Ez
-         An35XVhj6mqtQEzTd/JYlC5UpaiISaSFIdtoNouf/AEZwcUoFEXekODIyWEU7WTjohDR
-         xn6fcIOTGHd95KZKaKrpVaj5aDzpz/ChFJeRxW0LxV49/nciqXnyZisQ3khzL4UazMX5
-         2USQbqnh66YJbVqQfBgxGEU9ZbqhFRGumNhyLZYD03E8/vyJk2wQa/uB9J5v1hCZQKsF
-         nNRw==
-X-Gm-Message-State: AOAM531MgGE3l68wBAhEYDk+gKDZfmjj3b6YJk6MbQU+CEFPHuQarjAu
-        2SXGvloLRMD1BoODlHZ1WXBcuoTDLnO5WLa0xvoLZA==
-X-Google-Smtp-Source: ABdhPJxH+dIDF8nBsp8fxznpkoFe9y9Zmc/xUzjvp4Mfv2L5TNuCMH6djlHGcQ7ManpwMDd1PzQBcWJG8pF2EVa/HSY=
-X-Received: by 2002:a05:651c:1507:: with SMTP id e7mr4381662ljf.300.1637666356182;
- Tue, 23 Nov 2021 03:19:16 -0800 (PST)
-MIME-Version: 1.0
-References: <20211122222203.4103644-1-arnd@kernel.org> <20211122222203.4103644-5-arnd@kernel.org>
-In-Reply-To: <20211122222203.4103644-5-arnd@kernel.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 23 Nov 2021 12:18:40 +0100
-Message-ID: <CAPDyKFrCOoFWuM_6Renu+M5SHotyuzXeyH99WZb69G1PFQ1z5A@mail.gmail.com>
-Subject: Re: [PATCH v2 04/11] mmc: bcm2835: stop setting chan_config->slave_id
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andy Gross <agross@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Scott Branden <sbranden@broadcom.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        alsa-devel@alsa-project.org, bcm-kernel-feedback-list@broadcom.com,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
-        linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=xHCYnhDhZCTxewpY+KOZ7LWuKPncTJz1crmpYlrkqfo=;
+        b=PAqxeekM2RcvZS+nZUr787NKDxK6yV4I54L5EdE8BljedVUnj55TkUnfvJ8stWvns9
+         qoMBYAnaMmCdZ1wAJNYXiEggRiA0i+nOnCThNPaYGKTuu1l9tSyyA93/1CXILsHS+det
+         RhyODwipXCMa38CgbZ/dTbmq5tZHpJRKhUQJH9Api/I76v558N1sZdTssTvEYix02akJ
+         t9CJna22pX6Dkm8KSJ9BHaXOoIc6P7Wqxt/24Dl3a895/qB1slrA8ZCiAomrkE2Dmjog
+         HgZ1tuX2iVJgn0PqQzC8jM2V8gUg9d7FulimqoYh8XXaYREQmbuCcb4axORycA/13qH1
+         VefQ==
+X-Gm-Message-State: AOAM533aufxMr+kW4txcBVw82kpV9TBG3S86swKPLqX0zqjD9YWQGURt
+        a7bm0sqG136Pu3ysh78nn/C0J1DzOw==
+X-Google-Smtp-Source: ABdhPJxwurIBVfozv0WaI04vNkMxK4z+wmlyG1U73zTi5k9/UxcwuBZEH75s2hOm1c8qOB6d3OBS6w==
+X-Received: by 2002:a05:6638:2585:: with SMTP id s5mr8115068jat.68.1637685272706;
+        Tue, 23 Nov 2021 08:34:32 -0800 (PST)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id o22sm8929199iow.52.2021.11.23.08.34.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Nov 2021 08:34:32 -0800 (PST)
+Received: (nullmailer pid 3442903 invoked by uid 1000);
+        Tue, 23 Nov 2021 16:34:29 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Akhil R <akhilrajeev@nvidia.com>
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org, vkoul@kernel.org,
+        rgumasta@nvidia.com, dan.j.williams@intel.com,
+        jonathanh@nvidia.com, p.zabel@pengutronix.de,
+        linux-kernel@vger.kernel.org, ldewangan@nvidia.com,
+        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        dmaengine@vger.kernel.org, kyarlagadda@nvidia.com
+In-Reply-To: <1637573292-13214-2-git-send-email-akhilrajeev@nvidia.com>
+References: <1637573292-13214-1-git-send-email-akhilrajeev@nvidia.com> <1637573292-13214-2-git-send-email-akhilrajeev@nvidia.com>
+Subject: Re: [PATCH v13 1/4] dt-bindings: dmaengine: Add doc for tegra gpcdma
+Date:   Tue, 23 Nov 2021 09:34:29 -0700
+Message-Id: <1637685269.617639.3442902.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, 22 Nov 2021 at 23:23, Arnd Bergmann <arnd@kernel.org> wrote:
->
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> The field is not interpreted by the DMA engine driver, as all the data
-> is passed from devicetree instead. Remove the assignment so the field
-> can eventually be deleted.
->
-> Reviewed-by: Nicolas Saenz Julienne <nsaenz@kernel.org>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-I think I acked the previous version, but nevermind:
-
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-Kind regards
-Uffe
-
+On Mon, 22 Nov 2021 14:58:09 +0530, Akhil R wrote:
+> Add DT binding document for Nvidia Tegra GPCDMA controller.
+> 
+> Signed-off-by: Rajesh Gumasta <rgumasta@nvidia.com>
+> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
 > ---
->  drivers/mmc/host/bcm2835.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
-> index 8c2361e66277..463b707d9e99 100644
-> --- a/drivers/mmc/host/bcm2835.c
-> +++ b/drivers/mmc/host/bcm2835.c
-> @@ -1293,14 +1293,12 @@ static int bcm2835_add_host(struct bcm2835_host *host)
->
->                 host->dma_cfg_tx.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->                 host->dma_cfg_tx.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-> -               host->dma_cfg_tx.slave_id = 13;         /* DREQ channel */
->                 host->dma_cfg_tx.direction = DMA_MEM_TO_DEV;
->                 host->dma_cfg_tx.src_addr = 0;
->                 host->dma_cfg_tx.dst_addr = host->phys_addr + SDDATA;
->
->                 host->dma_cfg_rx.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->                 host->dma_cfg_rx.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-> -               host->dma_cfg_rx.slave_id = 13;         /* DREQ channel */
->                 host->dma_cfg_rx.direction = DMA_DEV_TO_MEM;
->                 host->dma_cfg_rx.src_addr = host->phys_addr + SDDATA;
->                 host->dma_cfg_rx.dst_addr = 0;
-> --
-> 2.29.2
->
+>  .../bindings/dma/nvidia,tegra186-gpc-dma.yaml      | 111 +++++++++++++++++++++
+>  1 file changed, 111 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml
+> 
+
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
+
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml:26:10: [warning] wrong indentation: expected 10 but found 9 (indentation)
+
+dtschema/dtc warnings/errors:
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/patch/1557933
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+

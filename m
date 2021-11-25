@@ -2,44 +2,44 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 458CA45D6AD
-	for <lists+dmaengine@lfdr.de>; Thu, 25 Nov 2021 10:02:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 974C945D6B2
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Nov 2021 10:02:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353769AbhKYJF6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 25 Nov 2021 04:05:58 -0500
-Received: from esa.microchip.iphmx.com ([68.232.154.123]:17363 "EHLO
+        id S1353827AbhKYJGC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 25 Nov 2021 04:06:02 -0500
+Received: from esa.microchip.iphmx.com ([68.232.154.123]:25006 "EHLO
         esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353515AbhKYJD5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 25 Nov 2021 04:03:57 -0500
+        with ESMTP id S1353564AbhKYJEB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 25 Nov 2021 04:04:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1637830846; x=1669366846;
+  t=1637830851; x=1669366851;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=CIM45Syj4kYFKQaSN/c1s5pHZ3uPQK0krZOBDew05DM=;
-  b=O46lbanNL958YrKfYF02PQzb2lk7fKRNVprYEyl9RgTQbPvinn/0Sxbf
-   Pqgc7+kqANVnBlDspz8j124LUzNXXT9NZ+V96bSpbVkRnYXfptr9rH6Qv
-   FtVcoOHc87Z7pep5GEwPmwUKAYkKRAFp7vVEUKzltY3CxJ8ZsBqIkyWuD
-   1s8zzvyFSLF50KRVSP8PoU6zWgELUFEZeo1msUuE965cvQUWF/FnoZAN0
-   q40VxvYKPvhl4Q6P5horMXuHgl1pCEAImYZ/FsAivUA81I+o0etxRB37D
-   0w9t5qw16iGyiTzZprE8SJRFaF25vsx4xg58btLm3HVMZ547KEejfeWow
-   g==;
-IronPort-SDR: Nxij3NzZqEF/71SN6wh8X6Zq5Wz54ngQptptk6TV745XvJ67XxLVRSGtoMWyEBrhn9zO+UKsTj
- MDXQ5xUbIPhz692e5yi3NGOtFMkEWv66y7S15mqsKUJxciYmusrFm6P0tP9DhA4lzP3EBq6PYP
- FgKmtAgo5atTQJQy66FuaBli7sTX7sIZL3dvVgTFChBcP6b1xdz/ORMMhzMGqhYVZk2LTX/aqR
- gTUvpU+Su7wfGrcHT9jB5O8oqyrxV92OKOrlUrQOmWcEYd/JkjdQM/16vGz08zOWL3uO1P1u4x
- sQBArGZkb8DjD+rZvOTsZCXA
+  bh=tVeVzCqLqbVxX1jH3+OLNjcxNS2IlcvbF+cf1Wql48c=;
+  b=vnbyhKdwQzLOBeGu6tHb2FvRgiXTZthbhqunbnrNJnfeyYU4ESMVxa/l
+   cHc13jKw9TbDlfP7ismVuDFrK4STFJalEnZK3VLHr3RUTWOOx85XrARp7
+   W55yUpmOmD25pqi4E8UO/sa2F4ZX7QMG3+xpO75/kMFnlR8uStYzx6vOL
+   Pf9gNe7g/4Jxn/VcBV1PY6kh+a8bkGf4iqoGhqPJUV6hKI1WYFo0T8Xoz
+   xQXy9yu4yrI2jTfF8KVvbB9lVP0RVap835DAJSqah03A6j1cZpDMSB0qc
+   eSYNu/d9JWwFijRmW/V6KEKe4flsl3UGercY+VWKk68SXPKg8Zzga7Jfh
+   Q==;
+IronPort-SDR: wwdNLaSeDwc3uZjrbnVoHjfv6c3saIjn6b2PUPy/Jnh+fPFqY5h0ByCAKWbZCuT5EsXsayUO1I
+ 2GGDGUbInNcUfliVF6ouY3j7BfHii7/GUxarWU7rrSmf4ExD44lLakQQOSLY95oZE03GLN1tTp
+ X9wq/I6V+gWnXfrQF7WagYn3lmKmgYqQpitsIwEn87d7EylYbgMKnWo72FP7vvUmqEFgEQ78Rl
+ KLi/sCU0wEx5BpdnvKPTyjsE7PvE0NaaZEMCqsVSEcMvIHSdYusGV25Qenxw4a4+bD4KHHeYKK
+ pc+Eoq4Gu0+MAgBfipR4aScO
 X-IronPort-AV: E=Sophos;i="5.87,262,1631602800"; 
-   d="scan'208";a="137700238"
+   d="scan'208";a="77556049"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Nov 2021 02:00:45 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Nov 2021 02:00:50 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Thu, 25 Nov 2021 02:00:43 -0700
+ 15.1.2176.14; Thu, 25 Nov 2021 02:00:46 -0700
 Received: from ROB-ULT-M18064N.mchp-main.com (10.10.115.15) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2176.14 via Frontend Transport; Thu, 25 Nov 2021 02:00:40 -0700
+ 15.1.2176.14 via Frontend Transport; Thu, 25 Nov 2021 02:00:43 -0700
 From:   Tudor Ambarus <tudor.ambarus@microchip.com>
 To:     <ludovic.desroches@microchip.com>, <vkoul@kernel.org>,
         <richard.genoud@gmail.com>, <gregkh@linuxfoundation.org>,
@@ -49,9 +49,9 @@ CC:     <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
         <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-serial@vger.kernel.org>,
         Tudor Ambarus <tudor.ambarus@microchip.com>
-Subject: [PATCH v2 03/13] tty: serial: atmel: Call dma_async_issue_pending()
-Date:   Thu, 25 Nov 2021 11:00:18 +0200
-Message-ID: <20211125090028.786832-4-tudor.ambarus@microchip.com>
+Subject: [PATCH v2 04/13] dmaengine: at_xdmac: Start transfer for cyclic channels in issue_pending
+Date:   Thu, 25 Nov 2021 11:00:19 +0200
+Message-ID: <20211125090028.786832-5-tudor.ambarus@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211125090028.786832-1-tudor.ambarus@microchip.com>
 References: <20211125090028.786832-1-tudor.ambarus@microchip.com>
@@ -62,41 +62,36 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The driver wrongly assummed that tx_submit() will start the transfer,
-which is not the case, now that the at_xdmac driver is fixed. tx_submit
-is supposed to push the current transaction descriptor to a pending queue,
-waiting for issue_pending to be called. issue_pending must start the
-transfer, not tx_submit.
+Cyclic channels must too call issue_pending in order to start a
+transfer. This wrongly worked before, because in the past the
+transfer was started at tx_submit level when only a desc in the
+transfer list.
 
-Fixes: 34df42f59a60 ("serial: at91: add rx dma support")
-Fixes: 08f738be88bb ("serial: at91: add tx dma support")
+Fixes: e1f7c9eee707 ("dmaengine: at_xdmac: creation of the atmel eXtended DMA Controller driver")
 Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 ---
- drivers/tty/serial/atmel_serial.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/dma/at_xdmac.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-index 376f7a9c2868..269b4500e9e7 100644
---- a/drivers/tty/serial/atmel_serial.c
-+++ b/drivers/tty/serial/atmel_serial.c
-@@ -1009,6 +1009,8 @@ static void atmel_tx_dma(struct uart_port *port)
- 				atmel_port->cookie_tx);
- 			return;
- 		}
-+
-+		dma_async_issue_pending(chan);
- 	}
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index ccf796a3b9f3..9a5c68eda801 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -1778,11 +1778,9 @@ static void at_xdmac_issue_pending(struct dma_chan *chan)
  
- 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
-@@ -1269,6 +1271,8 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
- 		goto chan_err;
- 	}
+ 	dev_dbg(chan2dev(&atchan->chan), "%s\n", __func__);
  
-+	dma_async_issue_pending(atmel_port->chan_rx);
-+
- 	return 0;
+-	if (!at_xdmac_chan_is_cyclic(atchan)) {
+-		spin_lock_irqsave(&atchan->lock, flags);
+-		at_xdmac_advance_work(atchan);
+-		spin_unlock_irqrestore(&atchan->lock, flags);
+-	}
++	spin_lock_irqsave(&atchan->lock, flags);
++	at_xdmac_advance_work(atchan);
++	spin_unlock_irqrestore(&atchan->lock, flags);
  
- chan_err:
+ 	return;
+ }
 -- 
 2.25.1
 

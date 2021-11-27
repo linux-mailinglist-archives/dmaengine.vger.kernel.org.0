@@ -2,36 +2,33 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0677945FB73
-	for <lists+dmaengine@lfdr.de>; Sat, 27 Nov 2021 02:48:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD1DC45FA2A
+	for <lists+dmaengine@lfdr.de>; Sat, 27 Nov 2021 02:27:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232012AbhK0Bvy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 26 Nov 2021 20:51:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235889AbhK0Btx (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 26 Nov 2021 20:49:53 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 182A3C0617A0;
-        Fri, 26 Nov 2021 17:25:03 -0800 (PST)
-Message-ID: <20211126230524.600490756@linutronix.de>
+        id S1348784AbhK0BaT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 26 Nov 2021 20:30:19 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40092 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1347993AbhK0B2S (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 26 Nov 2021 20:28:18 -0500
+Message-ID: <20211126230524.661169696@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1637976095;
+        s=2020; t=1637976098;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=rnKORZE/4q0+dcWq5txOsnvSH8CsBB5Zw8/HocPRCso=;
-        b=mo6zD0Aqr7U54k+FSOHjrEzlOHKb1QgppSxapZGm79sRdVC/yTiLntOXeL+iE2rLfw8rM7
-        AGraTGE71anj/PDVEb84qtD/kGahkk1EQxcbsGr/P9Xm/s+q7knW7WrwXjuYYEfS2G5nsT
-        +QUmkWlRARQ2SlZYduNIUN9KZ7uGsocaHEYF50ZNtokaDiZFdBFmKctMv8JxcvL8OwccY+
-        NMjiqGGYFm0jw+2MSOMoKh34QWzGYnNnymPdhCPx6fvdm4KstWYyzqIT+xsNMfDArJOahV
-        PeUL5lO+o4/GgN7b8j/998+6DBTMcVm2s0hutWJMot0WyH2RzhpLgtvPlFpIjQ==
+         references:references; bh=7645zM4jmr/sh6ufNFcrhF4sFIscYYINKeWaqJ1fetg=;
+        b=jiPreCbVs12njCCZweHOmBOAhMuIsqM2ExR7sM/ZsVAtZu0Y0kftUWI318lEK9zNtiU695
+        +c3T5vXj0yIwvR5rCoMptYJeBmwl+ZhQyG2pNcjzcWfsJmRmFzoxd9iN033vYaeGHOJA+R
+        5z2xZMqW2wYsHa6kAVtZkv/oqrq5vGDgDvVVQuKUpAFj3lK0EJ01Bn3OBl+y0dcvAaCl0m
+        jV66mze3Xx91sa9BEBZ7MJxT/KVNJPJtWQvUb0jQUs8fg61m6dKXPqbeBtckG9li5euQ0W
+        EAhLe+E3bhHBdiEA1b0YJqaLA1d8kQElMj29R+T4CD9+36y7AENUIFhGO3mk4g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1637976095;
+        s=2020e; t=1637976098;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=rnKORZE/4q0+dcWq5txOsnvSH8CsBB5Zw8/HocPRCso=;
-        b=71f/riK2awxxr5jNfsDzPA4UMVkE8RGUx6WhaYcnER7ZmV57jsbMtOaHgYPB48tYk4AZ5B
-        Ai3G8Q0PhijenYBQ==
+         references:references; bh=7645zM4jmr/sh6ufNFcrhF4sFIscYYINKeWaqJ1fetg=;
+        b=0aIM/SBhnBJqx7fyESV7apIGofVTBFLdJ7dK7jfrzY1WePIZ3lU1PkQWfwdT9B9NYT0GtK
+        72xr/kO/M8VAzvBw==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -50,122 +47,187 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Will Deacon <will@kernel.org>, Sinan Kaya <okaya@kernel.org>
-Subject: [patch 11/37] genirq/msi: Remove the original sysfs interfaces
+Subject: [patch 12/37] platform-msi: Rename functions and clarify comments
 References: <20211126224100.303046749@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Sat, 27 Nov 2021 02:21:34 +0100 (CET)
+Date:   Sat, 27 Nov 2021 02:21:36 +0100 (CET)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-No more users. Refactor the core code accordingly.
+It's hard to distinguish what platform_msi_domain_alloc() and
+platform_msi_domain_alloc_irqs() are about. Make the distinction more
+explicit and add comments which explain the use cases properly.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/msi.h |   12 -----------
- kernel/irq/msi.c    |   53 +++++++++++++++++++---------------------------------
- 2 files changed, 20 insertions(+), 45 deletions(-)
+ drivers/base/platform-msi.c     |   36 +++++++++++++++++++++---------------
+ drivers/irqchip/irq-mbigen.c    |    4 ++--
+ drivers/irqchip/irq-mvebu-icu.c |    6 +++---
+ include/linux/msi.h             |    8 ++++----
+ 4 files changed, 30 insertions(+), 24 deletions(-)
 
+--- a/drivers/base/platform-msi.c
++++ b/drivers/base/platform-msi.c
+@@ -313,17 +313,18 @@ EXPORT_SYMBOL_GPL(platform_msi_domain_fr
+  *                              a platform-msi domain
+  * @domain:	The platform-msi domain
+  *
+- * Returns the private data provided when calling
+- * platform_msi_create_device_domain.
++ * Return: The private data provided when calling
++ * platform_msi_create_device_domain().
+  */
+ void *platform_msi_get_host_data(struct irq_domain *domain)
+ {
+ 	struct platform_msi_priv_data *data = domain->host_data;
++
+ 	return data->host_data;
+ }
+ 
+ /**
+- * __platform_msi_create_device_domain - Create a platform-msi domain
++ * __platform_msi_create_device_domain - Create a platform-msi device domain
+  *
+  * @dev:		The device generating the MSIs
+  * @nvec:		The number of MSIs that need to be allocated
+@@ -332,7 +333,11 @@ void *platform_msi_get_host_data(struct
+  * @ops:		The hierarchy domain operations to use
+  * @host_data:		Private data associated to this domain
+  *
+- * Returns an irqdomain for @nvec interrupts
++ * Return: An irqdomain for @nvec interrupts on success, NULL in case of error.
++ *
++ * This is for interrupt domains which stack on a platform-msi domain
++ * created by platform_msi_create_irq_domain(). @dev->msi.domain points to
++ * that platform-msi domain which is the parent for the new domain.
+  */
+ struct irq_domain *
+ __platform_msi_create_device_domain(struct device *dev,
+@@ -372,18 +377,19 @@ struct irq_domain *
+ }
+ 
+ /**
+- * platform_msi_domain_free - Free interrupts associated with a platform-msi
+- *                            domain
++ * platform_msi_device_domain_free - Free interrupts associated with a platform-msi
++ *				     device domain
+  *
+- * @domain:	The platform-msi domain
++ * @domain:	The platform-msi device domain
+  * @virq:	The base irq from which to perform the free operation
+  * @nvec:	How many interrupts to free from @virq
+  */
+-void platform_msi_domain_free(struct irq_domain *domain, unsigned int virq,
+-			      unsigned int nvec)
++void platform_msi_device_domain_free(struct irq_domain *domain, unsigned int virq,
++				     unsigned int nvec)
+ {
+ 	struct platform_msi_priv_data *data = domain->host_data;
+ 	struct msi_desc *desc, *tmp;
++
+ 	for_each_msi_entry_safe(desc, tmp, data->dev) {
+ 		if (WARN_ON(!desc->irq || desc->nvec_used != 1))
+ 			return;
+@@ -397,10 +403,10 @@ void platform_msi_domain_free(struct irq
+ }
+ 
+ /**
+- * platform_msi_domain_alloc - Allocate interrupts associated with
+- *			       a platform-msi domain
++ * platform_msi_device_domain_alloc - Allocate interrupts associated with
++ *				      a platform-msi device domain
+  *
+- * @domain:	The platform-msi domain
++ * @domain:	The platform-msi device domain
+  * @virq:	The base irq from which to perform the allocate operation
+  * @nr_irqs:	How many interrupts to free from @virq
+  *
+@@ -408,8 +414,8 @@ void platform_msi_domain_free(struct irq
+  * with irq_domain_mutex held (which can only be done as part of a
+  * top-level interrupt allocation).
+  */
+-int platform_msi_domain_alloc(struct irq_domain *domain, unsigned int virq,
+-			      unsigned int nr_irqs)
++int platform_msi_device_domain_alloc(struct irq_domain *domain, unsigned int virq,
++				     unsigned int nr_irqs)
+ {
+ 	struct platform_msi_priv_data *data = domain->host_data;
+ 	int err;
+@@ -421,7 +427,7 @@ int platform_msi_domain_alloc(struct irq
+ 	err = msi_domain_populate_irqs(domain->parent, data->dev,
+ 				       virq, nr_irqs, &data->arg);
+ 	if (err)
+-		platform_msi_domain_free(domain, virq, nr_irqs);
++		platform_msi_device_domain_free(domain, virq, nr_irqs);
+ 
+ 	return err;
+ }
+--- a/drivers/irqchip/irq-mbigen.c
++++ b/drivers/irqchip/irq-mbigen.c
+@@ -207,7 +207,7 @@ static int mbigen_irq_domain_alloc(struc
+ 	if (err)
+ 		return err;
+ 
+-	err = platform_msi_domain_alloc(domain, virq, nr_irqs);
++	err = platform_msi_device_domain_alloc(domain, virq, nr_irqs);
+ 	if (err)
+ 		return err;
+ 
+@@ -223,7 +223,7 @@ static int mbigen_irq_domain_alloc(struc
+ static void mbigen_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+ 				   unsigned int nr_irqs)
+ {
+-	platform_msi_domain_free(domain, virq, nr_irqs);
++	platform_msi_device_domain_free(domain, virq, nr_irqs);
+ }
+ 
+ static const struct irq_domain_ops mbigen_domain_ops = {
+--- a/drivers/irqchip/irq-mvebu-icu.c
++++ b/drivers/irqchip/irq-mvebu-icu.c
+@@ -221,7 +221,7 @@ mvebu_icu_irq_domain_alloc(struct irq_do
+ 		icu_irqd->icu_group = msi_data->subset_data->icu_group;
+ 	icu_irqd->icu = icu;
+ 
+-	err = platform_msi_domain_alloc(domain, virq, nr_irqs);
++	err = platform_msi_device_domain_alloc(domain, virq, nr_irqs);
+ 	if (err) {
+ 		dev_err(icu->dev, "failed to allocate ICU interrupt in parent domain\n");
+ 		goto free_irqd;
+@@ -245,7 +245,7 @@ mvebu_icu_irq_domain_alloc(struct irq_do
+ 	return 0;
+ 
+ free_msi:
+-	platform_msi_domain_free(domain, virq, nr_irqs);
++	platform_msi_device_domain_free(domain, virq, nr_irqs);
+ free_irqd:
+ 	kfree(icu_irqd);
+ 	return err;
+@@ -260,7 +260,7 @@ mvebu_icu_irq_domain_free(struct irq_dom
+ 
+ 	kfree(icu_irqd);
+ 
+-	platform_msi_domain_free(domain, virq, nr_irqs);
++	platform_msi_device_domain_free(domain, virq, nr_irqs);
+ }
+ 
+ static const struct irq_domain_ops mvebu_icu_domain_ops = {
 --- a/include/linux/msi.h
 +++ b/include/linux/msi.h
-@@ -246,21 +246,9 @@ void pci_msi_unmask_irq(struct irq_data
- #ifdef CONFIG_SYSFS
- int msi_device_populate_sysfs(struct device *dev);
- void msi_device_destroy_sysfs(struct device *dev);
--
--const struct attribute_group **msi_populate_sysfs(struct device *dev);
--void msi_destroy_sysfs(struct device *dev,
--		       const struct attribute_group **msi_irq_groups);
- #else
- static inline int msi_device_populate_sysfs(struct device *dev) { return 0; }
- static inline void msi_device_destroy_sysfs(struct device *dev) { }
--
--static inline const struct attribute_group **msi_populate_sysfs(struct device *dev)
--{
--	return NULL;
--}
--static inline void msi_destroy_sysfs(struct device *dev, const struct attribute_group **msi_irq_groups)
--{
--}
- #endif
+@@ -432,10 +432,10 @@ struct irq_domain *
+ #define platform_msi_create_device_tree_domain(dev, nvec, write, ops, data) \
+ 	__platform_msi_create_device_domain(dev, nvec, true, write, ops, data)
  
- /*
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -132,12 +132,8 @@ static ssize_t msi_mode_show(struct devi
- /**
-  * msi_populate_sysfs - Populate msi_irqs sysfs entries for devices
-  * @dev:	The device(PCI, platform etc) who will get sysfs entries
-- *
-- * Return attribute_group ** so that specific bus MSI can save it to
-- * somewhere during initilizing msi irqs. If devices has no MSI irq,
-- * return NULL; if it fails to populate sysfs, return ERR_PTR
-  */
--const struct attribute_group **msi_populate_sysfs(struct device *dev)
-+static const struct attribute_group **msi_populate_sysfs(struct device *dev)
- {
- 	const struct attribute_group **msi_irq_groups;
- 	struct attribute **msi_attrs, *msi_attr;
-@@ -228,41 +224,32 @@ int msi_device_populate_sysfs(struct dev
- }
- 
- /**
-- * msi_destroy_sysfs - Destroy msi_irqs sysfs entries for devices
-- * @dev:		The device(PCI, platform etc) who will remove sysfs entries
-- * @msi_irq_groups:	attribute_group for device msi_irqs entries
-- */
--void msi_destroy_sysfs(struct device *dev, const struct attribute_group **msi_irq_groups)
--{
--	struct device_attribute *dev_attr;
--	struct attribute **msi_attrs;
--	int count = 0;
--
--	if (msi_irq_groups) {
--		sysfs_remove_groups(&dev->kobj, msi_irq_groups);
--		msi_attrs = msi_irq_groups[0]->attrs;
--		while (msi_attrs[count]) {
--			dev_attr = container_of(msi_attrs[count],
--					struct device_attribute, attr);
--			kfree(dev_attr->attr.name);
--			kfree(dev_attr);
--			++count;
--		}
--		kfree(msi_attrs);
--		kfree(msi_irq_groups[0]);
--		kfree(msi_irq_groups);
--	}
--}
--
--/**
-  * msi_device_destroy_sysfs - Destroy msi_irqs sysfs entries for a device
-  * @dev:		The device(PCI, platform etc) for which to remove
-  *			sysfs entries
-  */
- void msi_device_destroy_sysfs(struct device *dev)
- {
--	msi_destroy_sysfs(dev, dev->msi.data->attrs);
-+	const struct attribute_group **msi_irq_groups = dev->msi.data->attrs;
-+	struct device_attribute *dev_attr;
-+	struct attribute **msi_attrs;
-+	int count = 0;
-+
- 	dev->msi.data->attrs = NULL;
-+	if (!msi_irq_groups)
-+		return;
-+
-+	sysfs_remove_groups(&dev->kobj, msi_irq_groups);
-+	msi_attrs = msi_irq_groups[0]->attrs;
-+	while (msi_attrs[count]) {
-+		dev_attr = container_of(msi_attrs[count], struct device_attribute, attr);
-+		kfree(dev_attr->attr.name);
-+		kfree(dev_attr);
-+		++count;
-+	}
-+	kfree(msi_attrs);
-+	kfree(msi_irq_groups[0]);
-+	kfree(msi_irq_groups);
- }
- #endif
+-int platform_msi_domain_alloc(struct irq_domain *domain, unsigned int virq,
+-			      unsigned int nr_irqs);
+-void platform_msi_domain_free(struct irq_domain *domain, unsigned int virq,
+-			      unsigned int nvec);
++int platform_msi_device_domain_alloc(struct irq_domain *domain, unsigned int virq,
++				     unsigned int nr_irqs);
++void platform_msi_device_domain_free(struct irq_domain *domain, unsigned int virq,
++				     unsigned int nvec);
+ void *platform_msi_get_host_data(struct irq_domain *domain);
+ #endif /* CONFIG_GENERIC_MSI_IRQ_DOMAIN */
  
 

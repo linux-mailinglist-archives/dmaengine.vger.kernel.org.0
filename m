@@ -2,33 +2,33 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A81A45F9FA
+	by mail.lfdr.de (Postfix) with ESMTP id AD73445F9FC
 	for <lists+dmaengine@lfdr.de>; Sat, 27 Nov 2021 02:26:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242904AbhK0B3M (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 26 Nov 2021 20:29:12 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36436 "EHLO
+        id S1347018AbhK0B3N (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 26 Nov 2021 20:29:13 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:36550 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346943AbhK0B1G (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 26 Nov 2021 20:27:06 -0500
-Message-ID: <20211126230524.045836616@linutronix.de>
+        with ESMTP id S241986AbhK0B1L (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 26 Nov 2021 20:27:11 -0500
+Message-ID: <20211126230524.112845775@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1637976081;
+        s=2020; t=1637976082;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=6M1tvQVxDKTLunwyY5ENMp/fgv1O4+f2pv6jOyEcyuQ=;
-        b=RoMaeYBXqfvYikW2dyCuxJ6KQSj+1Alpl5ig7CgptFI22cFUVZ2ULVY63sEGGRgCSf1Igh
-        8JyvZZFaDPIGtkI+/xIUsZ5QMDtG8EMnNXtfwFWvS0ipnAar67OgIF+f2WY8/7B4eKwuSY
-        LlJK6duEPSiwZhWR0pTRi45NEGtrsIbGBoBibV4jKgZDRoq0hMMSdnd0pYgTNnLu4pZhWb
-        WvVFk+IMY0CTCZ7Q2vjNzcb3Ev7pcl7fx3s/+XLebe0hyqsJzk8xiBHsLvyUz+iakbh+Cj
-        Zg91ToKJg2PkwD6RsLPUH+YZPOf//dmX6sgW/0/aFuEIkbJSxRHh2K1ivmlRUA==
+         references:references; bh=PN3ExRN1k42hfHq1uj98iHzkfSIuhUpOYD8o8PLDemE=;
+        b=CP7AHsOeiCofaClIDYfrrlr4ZTfikHYL6L+ePsfOVaLzvytVt8rxY5MS2fPxkXF0pCPMSg
+        BnYJd1fFxGCEvG6PkcG0aaC/fFYhs2iDYr85FcfFnW8XtwWWEERMEXzDiBETVkF5AZ/U16
+        3JVuF9tMf0N4ygmYCI2PA1ziqVEG6BzwXOYPkHIQuZSHwFxnwhVgL1RmeMnS4FT+Pe5XXU
+        zaI0cY/XgwfdI5/QOvFWZctgE+QQxxMB6QQ0b5xbpqwpYQyf5V88D826ehqDVfoPAZOMm9
+        Oz2XWg7JmLe9HitCjTM7NdSqn03HqCSv02KSGxQ5w3MtFO0vccWWmdMKJepS7A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1637976081;
+        s=2020e; t=1637976082;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=6M1tvQVxDKTLunwyY5ENMp/fgv1O4+f2pv6jOyEcyuQ=;
-        b=MfwoEOsvNa0S4UjUhiikhPEJC3UcLIA2qNYJfS2PbS9nj/LtcUOLRj2Fjr51lEk7LBBF52
-        1WIAe9cPjD1QU0CA==
+         references:references; bh=PN3ExRN1k42hfHq1uj98iHzkfSIuhUpOYD8o8PLDemE=;
+        b=MYTkd4TwNrAcWOX8VX/1sMslLnKJgzGhqYjt4CXqo1X6rPga6taXu0j+zxWW/MnHG6jTAA
+        P7EBHuieujIYm2Ag==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -47,127 +47,66 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Will Deacon <will@kernel.org>, Sinan Kaya <okaya@kernel.org>
-Subject: [patch 02/37] device: Add device::msi_data pointer and struct msi_device_data
+Subject: [patch 03/37] PCI/MSI: Allocate MSI device data on first use
 References: <20211126224100.303046749@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Sat, 27 Nov 2021 02:21:20 +0100 (CET)
+Date:   Sat, 27 Nov 2021 02:21:22 +0100 (CET)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Create struct msi_device_data and add a pointer of that type to struct
-dev_msi_info, which is part of struct device. Provide an allocator function
-which can be invoked from the MSI interrupt allocation code pathes.
+Allocate MSI device data on first use, i.e. when a PCI driver invokes one
+of the PCI/MSI enablement functions.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/device.h |    5 +++++
- include/linux/msi.h    |   12 +++++++++++-
- kernel/irq/msi.c       |   33 +++++++++++++++++++++++++++++++++
- 3 files changed, 49 insertions(+), 1 deletion(-)
+ drivers/pci/msi/msi.c |   20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -45,6 +45,7 @@ struct iommu_ops;
- struct iommu_group;
- struct dev_pin_info;
- struct dev_iommu;
-+struct msi_device_data;
- 
- /**
-  * struct subsys_interface - interfaces to device functions
-@@ -374,11 +375,15 @@ struct dev_links_info {
- /**
-  * struct dev_msi_info - Device data related to MSI
-  * @domain:	The MSI interrupt domain associated to the device
-+ * @data:	Pointer to MSI device data
-  */
- struct dev_msi_info {
- #ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
- 	struct irq_domain	*domain;
- #endif
-+#ifdef CONFIG_GENERIC_MSI_IRQ
-+	struct msi_device_data	*data;
-+#endif
- };
- 
- /**
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -2,6 +2,7 @@
- #ifndef LINUX_MSI_H
- #define LINUX_MSI_H
- 
-+#include <linux/spinlock.h>
- #include <linux/list.h>
- #include <asm/msi.h>
- 
-@@ -170,6 +171,16 @@ struct msi_desc {
- 	};
- };
- 
-+/**
-+ * msi_device_data - MSI per device data
-+ * @lock:		Spinlock to protect register access
-+ */
-+struct msi_device_data {
-+	raw_spinlock_t		lock;
-+};
-+
-+int msi_setup_device_data(struct device *dev);
-+
- /* Helpers to hide struct msi_desc implementation details */
- #define msi_desc_to_dev(desc)		((desc)->dev)
- #define dev_to_msi_list(dev)		(&(dev)->msi_list)
-@@ -185,7 +196,6 @@ struct msi_desc {
- 			for (__irq = (desc)->irq;			\
- 			     __irq < ((desc)->irq + (desc)->nvec_used);	\
- 			     __irq++)
--
- #ifdef CONFIG_IRQ_MSI_IOMMU
- static inline const void *msi_desc_get_iommu_cookie(struct msi_desc *desc)
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -889,10 +889,12 @@ static int __pci_enable_msi_range(struct
+ /* deprecated, don't use */
+ int pci_enable_msi(struct pci_dev *dev)
  {
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -73,6 +73,39 @@ void get_cached_msi_msg(unsigned int irq
+-	int rc = __pci_enable_msi_range(dev, 1, 1, NULL);
+-	if (rc < 0)
+-		return rc;
+-	return 0;
++	int rc = msi_setup_device_data(&dev->dev);
++
++	if (!rc)
++		rc = __pci_enable_msi_range(dev, 1, 1, NULL);
++
++	return rc < 0 ? rc : 0;
  }
- EXPORT_SYMBOL_GPL(get_cached_msi_msg);
+ EXPORT_SYMBOL(pci_enable_msi);
  
-+static void msi_device_data_release(struct device *dev, void *res)
-+{
-+	WARN_ON_ONCE(!list_empty(&dev->msi_list));
-+	dev->msi.data = NULL;
-+}
+@@ -947,7 +949,11 @@ static int __pci_enable_msix_range(struc
+ int pci_enable_msix_range(struct pci_dev *dev, struct msix_entry *entries,
+ 		int minvec, int maxvec)
+ {
+-	return __pci_enable_msix_range(dev, entries, minvec, maxvec, NULL, 0);
++	int ret = msi_setup_device_data(&dev->dev);
 +
-+/**
-+ * msi_setup_device_data - Setup MSI device data
-+ * @dev:	Device for which MSI device data should be set up
-+ *
-+ * Return: 0 on success, appropriate error code otherwise
-+ *
-+ * This can be called more than once for @dev. If the MSI device data is
-+ * already allocated the call succeeds. The allocated memory is
-+ * automatically released when the device is destroyed.
-+ */
-+int msi_setup_device_data(struct device *dev)
-+{
-+	struct msi_device_data *md;
++	if (!ret)
++		ret = __pci_enable_msix_range(dev, entries, minvec, maxvec, NULL, 0);
++	return ret;
+ }
+ EXPORT_SYMBOL(pci_enable_msix_range);
+ 
+@@ -974,8 +980,12 @@ int pci_alloc_irq_vectors_affinity(struc
+ 				   struct irq_affinity *affd)
+ {
+ 	struct irq_affinity msi_default_affd = {0};
++	int ret = msi_setup_device_data(&dev->dev);
+ 	int nvecs = -ENOSPC;
+ 
++	if (ret)
++		return ret;
 +
-+	if (dev->msi.data)
-+		return 0;
-+
-+	md = devres_alloc(msi_device_data_release, sizeof(*md), GFP_KERNEL);
-+	if (!md)
-+		return -ENOMEM;
-+
-+	raw_spin_lock_init(&md->lock);
-+	dev->msi.data = md;
-+	devres_add(dev, md);
-+	return 0;
-+}
-+
- #ifdef CONFIG_SYSFS
- static ssize_t msi_mode_show(struct device *dev, struct device_attribute *attr,
- 			     char *buf)
+ 	if (flags & PCI_IRQ_AFFINITY) {
+ 		if (!affd)
+ 			affd = &msi_default_affd;
 

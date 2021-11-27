@@ -2,33 +2,33 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D587B45F96D
-	for <lists+dmaengine@lfdr.de>; Sat, 27 Nov 2021 02:24:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3794F45F972
+	for <lists+dmaengine@lfdr.de>; Sat, 27 Nov 2021 02:24:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346727AbhK0B04 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 26 Nov 2021 20:26:56 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36172 "EHLO
+        id S1346832AbhK0B1C (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 26 Nov 2021 20:27:02 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:36344 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241901AbhK0BYz (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 26 Nov 2021 20:24:55 -0500
-Message-ID: <20211126230525.016223236@linutronix.de>
+        with ESMTP id S1347181AbhK0BZB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 26 Nov 2021 20:25:01 -0500
+Message-ID: <20211126230525.076279841@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1637976036;
+        s=2020; t=1637976037;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=fkSRZAFKOg49WRvcaWCK3eXzS4tUTHUaar/EP1a26n8=;
-        b=BaAP7ZFHRr6LDKJ6ECi5DZwk9MCX3vw86fWdLWDXimT45ta8gg4+Emf11jo5B8dIRA0sg7
-        ly4JU1B6DGo67i7rv/efRxU4eCxjK1wZFjCMdPl/Xt0ztPHYV6pF4c7fS0tOB8OnrdFooM
-        JKJUQGdZXAjUyiD9McrchguqbwOLI15MfUjVzlQwtS8IqwXRx66XeGCe/woKBa+BCEkGwN
-        lc1SEdrxxe98/CCc5OoXFKghQWA7ch1nqlpN/wh8STsnSBxsdDtku8NCp7QcE2uWcR8+t7
-        PG2xcN9Pc0xA49cEyY9fOTWQFMvrrG2/B3m5YdOpOku1+J6z2a/1/nKcDIk6lg==
+         references:references; bh=gZLgk03W9BPqX4Y47drAtN3rUO/Oc3l0uTHU4EywtJI=;
+        b=haWzMt4KR9DWFpGWdGE1l1s2+vs+6A08HfUC3wCsW3ct8bY8hzzw5Zksb1QAtSqqKXiTLV
+        90HL8F+IY3f388igePB9oG82ZtrhY+pUqOOsbCmR2UT/4VVzeLQMGXQ7XBpjTJVwJYV4gI
+        WYrto37nJcH9GJjyMqoKYfnwaCKd3a9/AJtrxjeb2TiAS5tmTf34lQJzwzHb8XlIXVJWOr
+        i65Z3V0NA6W4UMX3WRllvGzZNGYs2fwg6buB6N3fX2WBKGLJIFIaq0bn5EZ88rtrKujv++
+        Pb6chN5PsN34skBdrvROx5hCigMHTKQgd0gRtXaVoWnySgsBCrEuicXBelakSw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1637976036;
+        s=2020e; t=1637976038;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=fkSRZAFKOg49WRvcaWCK3eXzS4tUTHUaar/EP1a26n8=;
-        b=n3NLXrUnIiVZ06B8SMasYjM5jUUN8ut8VQU8xaH2Nlufvi7CXtZ13q1AQ8NA/MzMttwCWg
-        U1SxiFaIf3d1ynDA==
+         references:references; bh=gZLgk03W9BPqX4Y47drAtN3rUO/Oc3l0uTHU4EywtJI=;
+        b=pmIRurktZCqaSiTjEwau1BH/cen1Z4IWsZYOdf1qJ4Pt16qpjmgbTpo368LzRvhdZG1dgu
+        sjE9naEhMlft7uAw==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -47,161 +47,87 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Will Deacon <will@kernel.org>, Sinan Kaya <okaya@kernel.org>
-Subject: [patch 18/37] PCI/MSI: Use msi_desc::msi_index
+Subject: [patch 19/37] genirq/msi: Add msi_device_data::properties
 References: <20211126224100.303046749@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Sat, 27 Nov 2021 02:20:35 +0100 (CET)
+Date:   Sat, 27 Nov 2021 02:20:37 +0100 (CET)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The usage of msi_desc::pci::entry_nr is confusing at best. It's the index
-into the MSI[X] descriptor table.
-
-Use msi_desc::msi_index which is shared between all MSI incarnations
-instead of having a PCI specific storage for no value.
+Add a properties field which allows core code to store information for easy
+retrieval in order to replace MSI descriptor fiddling.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/powerpc/platforms/pseries/msi.c |    4 ++--
- arch/x86/pci/xen.c                   |    2 +-
- drivers/pci/msi/irqdomain.c          |    2 +-
- drivers/pci/msi/msi.c                |   20 ++++++++------------
- drivers/pci/xen-pcifront.c           |    2 +-
- include/linux/msi.h                  |    2 --
- 6 files changed, 13 insertions(+), 19 deletions(-)
+ include/linux/msi.h |   17 +++++++++++++++++
+ kernel/irq/msi.c    |   12 ++++++++++++
+ 2 files changed, 29 insertions(+)
 
---- a/arch/powerpc/platforms/pseries/msi.c
-+++ b/arch/powerpc/platforms/pseries/msi.c
-@@ -332,7 +332,7 @@ static int check_msix_entries(struct pci
- 
- 	expected = 0;
- 	for_each_pci_msi_entry(entry, pdev) {
--		if (entry->pci.msi_attrib.entry_nr != expected) {
-+		if (entry->msi_index != expected) {
- 			pr_debug("rtas_msi: bad MSI-X entries.\n");
- 			return -EINVAL;
- 		}
-@@ -580,7 +580,7 @@ static int pseries_irq_domain_alloc(stru
- 	int hwirq;
- 	int i, ret;
- 
--	hwirq = rtas_query_irq_number(pci_get_pdn(pdev), desc->pci.msi_attrib.entry_nr);
-+	hwirq = rtas_query_irq_number(pci_get_pdn(pdev), desc->msi_index);
- 	if (hwirq < 0) {
- 		dev_err(&pdev->dev, "Failed to query HW IRQ: %d\n", hwirq);
- 		return hwirq;
---- a/arch/x86/pci/xen.c
-+++ b/arch/x86/pci/xen.c
-@@ -306,7 +306,7 @@ static int xen_initdom_setup_msi_irqs(st
- 				return -EINVAL;
- 
- 			map_irq.table_base = pci_resource_start(dev, bir);
--			map_irq.entry_nr = msidesc->pci.msi_attrib.entry_nr;
-+			map_irq.entry_nr = msidesc->msi_index;
- 		}
- 
- 		ret = -EINVAL;
---- a/drivers/pci/msi/irqdomain.c
-+++ b/drivers/pci/msi/irqdomain.c
-@@ -57,7 +57,7 @@ static irq_hw_number_t pci_msi_domain_ca
- {
- 	struct pci_dev *dev = msi_desc_to_pci_dev(desc);
- 
--	return (irq_hw_number_t)desc->pci.msi_attrib.entry_nr |
-+	return (irq_hw_number_t)desc->msi_index |
- 		pci_dev_id(dev) << 11 |
- 		(pci_domain_nr(dev->bus) & 0xFFFFFFFF) << 27;
- }
---- a/drivers/pci/msi/msi.c
-+++ b/drivers/pci/msi/msi.c
-@@ -44,7 +44,7 @@ static inline void pci_msi_unmask(struct
- 
- static inline void __iomem *pci_msix_desc_addr(struct msi_desc *desc)
- {
--	return desc->pci.mask_base + desc->pci.msi_attrib.entry_nr * PCI_MSIX_ENTRY_SIZE;
-+	return desc->pci.mask_base + desc->msi_index * PCI_MSIX_ENTRY_SIZE;
- }
- 
- /*
-@@ -354,13 +354,10 @@ msi_setup_entry(struct pci_dev *dev, int
- 	if (dev->dev_flags & PCI_DEV_FLAGS_HAS_MSI_MASKING)
- 		control |= PCI_MSI_FLAGS_MASKBIT;
- 
--	entry->pci.msi_attrib.is_msix	= 0;
--	entry->pci.msi_attrib.is_64		= !!(control & PCI_MSI_FLAGS_64BIT);
--	entry->pci.msi_attrib.is_virtual    = 0;
--	entry->pci.msi_attrib.entry_nr	= 0;
-+	entry->pci.msi_attrib.is_64	= !!(control & PCI_MSI_FLAGS_64BIT);
- 	entry->pci.msi_attrib.can_mask	= !pci_msi_ignore_mask &&
- 					  !!(control & PCI_MSI_FLAGS_MASKBIT);
--	entry->pci.msi_attrib.default_irq	= dev->irq;	/* Save IOAPIC IRQ */
-+	entry->pci.msi_attrib.default_irq = dev->irq;
- 	entry->pci.msi_attrib.multi_cap	= (control & PCI_MSI_FLAGS_QMASK) >> 1;
- 	entry->pci.msi_attrib.multiple	= ilog2(__roundup_pow_of_two(nvec));
- 
-@@ -494,12 +491,11 @@ static int msix_setup_entries(struct pci
- 		entry->pci.msi_attrib.is_64	= 1;
- 
- 		if (entries)
--			entry->pci.msi_attrib.entry_nr = entries[i].entry;
-+			entry->msi_index = entries[i].entry;
- 		else
--			entry->pci.msi_attrib.entry_nr = i;
-+			entry->msi_index = i;
- 
--		entry->pci.msi_attrib.is_virtual =
--			entry->pci.msi_attrib.entry_nr >= vec_count;
-+		entry->pci.msi_attrib.is_virtual = entry->msi_index >= vec_count;
- 
- 		entry->pci.msi_attrib.can_mask	= !pci_msi_ignore_mask &&
- 						  !entry->pci.msi_attrib.is_virtual;
-@@ -1025,7 +1021,7 @@ int pci_irq_vector(struct pci_dev *dev,
- 		struct msi_desc *entry;
- 
- 		for_each_pci_msi_entry(entry, dev) {
--			if (entry->pci.msi_attrib.entry_nr == nr)
-+			if (entry->msi_index == nr)
- 				return entry->irq;
- 		}
- 		WARN_ON_ONCE(1);
-@@ -1057,7 +1053,7 @@ const struct cpumask *pci_irq_get_affini
- 		struct msi_desc *entry;
- 
- 		for_each_pci_msi_entry(entry, dev) {
--			if (entry->pci.msi_attrib.entry_nr == nr)
-+			if (entry->msi_index == nr)
- 				return &entry->affinity->mask;
- 		}
- 		WARN_ON_ONCE(1);
---- a/drivers/pci/xen-pcifront.c
-+++ b/drivers/pci/xen-pcifront.c
-@@ -263,7 +263,7 @@ static int pci_frontend_enable_msix(stru
- 
- 	i = 0;
- 	for_each_pci_msi_entry(entry, dev) {
--		op.msix_entries[i].entry = entry->pci.msi_attrib.entry_nr;
-+		op.msix_entries[i].entry = entry->msi_index;
- 		/* Vector is useless at this point. */
- 		op.msix_entries[i].vector = -1;
- 		i++;
 --- a/include/linux/msi.h
 +++ b/include/linux/msi.h
-@@ -79,7 +79,6 @@ typedef void (*irq_write_msi_msg_t)(stru
-  * @multi_cap:	[PCI MSI/X] log2 num of messages supported
-  * @can_mask:	[PCI MSI/X] Masking supported?
-  * @is_64:	[PCI MSI/X] Address size: 0=32bit 1=64bit
-- * @entry_nr:	[PCI MSI/X] Entry which is described by this descriptor
-  * @default_irq:[PCI MSI/X] The default pre-assigned non-MSI irq
-  * @mask_pos:	[PCI MSI]   Mask register position
-  * @mask_base:	[PCI MSI-X] Mask register base address
-@@ -96,7 +95,6 @@ struct pci_msi_desc {
- 		u8	can_mask	: 1;
- 		u8	is_64		: 1;
- 		u8	is_virtual	: 1;
--		u16	entry_nr;
- 		unsigned default_irq;
- 	} msi_attrib;
- 	union {
+@@ -4,6 +4,7 @@
+ 
+ #include <linux/spinlock.h>
+ #include <linux/list.h>
++#include <linux/bits.h>
+ #include <asm/msi.h>
+ 
+ /* Dummy shadow structures if an architecture does not define them */
+@@ -141,17 +142,33 @@ struct msi_desc {
+ /**
+  * msi_device_data - MSI per device data
+  * @lock:		Spinlock to protect register access
++ * @properties:		MSI properties which are interesting to drivers
+  * @attrs:		Pointer to the sysfs attribute group
+  * @platform_data:	Platform-MSI specific data
+  */
+ struct msi_device_data {
+ 	raw_spinlock_t			lock;
++	unsigned long			properties;
+ 	const struct attribute_group    **attrs;
+ 	struct platform_msi_priv_data	*platform_data;
+ };
+ 
+ int msi_setup_device_data(struct device *dev);
+ 
++/* MSI device properties */
++#define MSI_PROP_PCI_MSI		BIT(0)
++#define MSI_PROP_PCI_MSIX		BIT(1)
++#define MSI_PROP_64BIT			BIT(2)
++
++#ifdef CONFIG_GENERIC_MSI_IRQ
++bool msi_device_has_property(struct device *dev, unsigned long prop);
++#else
++static inline bool msi_device_has_property(struct device *dev, unsigned long prop)
++{
++	return false;
++}
++#endif
++
+ /* Helpers to hide struct msi_desc implementation details */
+ #define msi_desc_to_dev(desc)		((desc)->dev)
+ #define dev_to_msi_list(dev)		(&(dev)->msi_list)
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -60,6 +60,18 @@ void free_msi_entry(struct msi_desc *ent
+ 	kfree(entry);
+ }
+ 
++/**
++ * msi_device_has_property - Check whether a device has a specific MSI property
++ * @dev:	Pointer to the device which is queried
++ * @prop:	Property to check for
++ */
++bool msi_device_has_property(struct device *dev, unsigned long prop)
++{
++	if (!dev->msi.data)
++		return false;
++	return !!(dev->msi.data->properties & prop);
++}
++
+ void __get_cached_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+ {
+ 	*msg = entry->msg;
 

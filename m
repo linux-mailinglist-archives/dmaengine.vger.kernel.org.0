@@ -2,36 +2,36 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45DD045F9CC
-	for <lists+dmaengine@lfdr.de>; Sat, 27 Nov 2021 02:25:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73E2845FA04
+	for <lists+dmaengine@lfdr.de>; Sat, 27 Nov 2021 02:26:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345713AbhK0B2U (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 26 Nov 2021 20:28:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36100 "EHLO
+        id S1350239AbhK0B3v (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 26 Nov 2021 20:29:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347911AbhK0B0J (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 26 Nov 2021 20:26:09 -0500
+        with ESMTP id S1348146AbhK0B1v (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 26 Nov 2021 20:27:51 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEFD7C06174A;
-        Fri, 26 Nov 2021 17:20:50 -0800 (PST)
-Message-ID: <20211126230524.112845775@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82DB1C0617A2;
+        Fri, 26 Nov 2021 17:20:52 -0800 (PST)
+Message-ID: <20211126230524.173951799@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1637976012;
+        s=2020; t=1637976013;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=PN3ExRN1k42hfHq1uj98iHzkfSIuhUpOYD8o8PLDemE=;
-        b=01xVLTHMPuXuTeYCxg++1loVxFY22XwJw5EINvUVSLR8b6vSaVnJ4Eu3iDunii/+YGqLM6
-        1drlMi0SdMVbvjgfsBIj/PC0bDlRQRAjJbK5kv8969+ScHcA2xWUiPoos8LQZuh/d5d6jO
-        D4ZE4rS/9iuO7f9eC1ny9luoPcBYIsrAVb7FPZeswFUjFFtIZXaqBBRhGMZLS9/8GAr3AR
-        er7pPeOso93vK8TDq62PmgRQUj0m+taEbDUNcx8zjRG0i4QrPGMjYK76RagxwJyeeMhyiP
-        I1tFT/vQYHZYOcsSJT14z3970ncLT74pAvEx8q/OQY2M3Dhgv2UuT9sGxMkwXw==
+         references:references; bh=KQEQh1eEOaSazo6Y93s5vbUnfdxHtVwCI6okaSxjU/U=;
+        b=vOf/lyTy9Uvmhdzml5O3C7qmhYgs45igzDfSxx9p/drTW4VD4VSEhQhVNKiZUAfNCJC30V
+        e8dQfeYGka8ujhdMrin/sl62vtIrmrIzH00l67bof2S+Q3Z7Q8piEwzoezvFzBpT/UVwF9
+        Pf29t3lrcwYow+KPk9l0tBxP23ixAtq/6FqL/RBaICUbQyDjtFGxyYOVz+Sd2uZPVZ1Uz3
+        nclIsoqxq6pO5kZNm6idrPVjFDs/KgaaVEga7pC1jek22SyMs4baM3OacmLcoLv8zH2rfO
+        Z9NON2r61HIbXOghsRUeQUkzUqIYhhlfiPaomHDPH3IfBdziy5prETd8nwUe2A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1637976012;
+        s=2020e; t=1637976013;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=PN3ExRN1k42hfHq1uj98iHzkfSIuhUpOYD8o8PLDemE=;
-        b=+xLyiosPdGZFZyXGwvjUBwEVY8q/I9iXLgSGR5i+pmeNwky76oEsuTtAiA8kT8N3t4LbfE
-        qeYgv7hKS+NIrRAQ==
+         references:references; bh=KQEQh1eEOaSazo6Y93s5vbUnfdxHtVwCI6okaSxjU/U=;
+        b=f86YkWaUYpzObWEqjBLcBy9kuRvnNi405nX87dWtTERX9WPsxoSHwoDQWqHz9JSQ/8qoXh
+        nNdFaAmaI4EFxYBQ==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -50,66 +50,62 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Will Deacon <will@kernel.org>, Sinan Kaya <okaya@kernel.org>
-Subject: [patch 03/37] PCI/MSI: Allocate MSI device data on first use
+Subject: [patch 04/37] PCI/MSI: Use lock from msi_device_data
 References: <20211126224100.303046749@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Sat, 27 Nov 2021 02:20:11 +0100 (CET)
+Date:   Sat, 27 Nov 2021 02:20:13 +0100 (CET)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Allocate MSI device data on first use, i.e. when a PCI driver invokes one
-of the PCI/MSI enablement functions.
+Remove the register lock from struct device and use the one in
+struct msi_device_data.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- drivers/pci/msi/msi.c |   20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ drivers/base/core.c    |    1 -
+ drivers/pci/msi/msi.c  |    2 +-
+ include/linux/device.h |    2 --
+ 3 files changed, 1 insertion(+), 4 deletions(-)
 
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -2875,7 +2875,6 @@ void device_initialize(struct device *de
+ 	device_pm_init(dev);
+ 	set_dev_node(dev, NUMA_NO_NODE);
+ #ifdef CONFIG_GENERIC_MSI_IRQ
+-	raw_spin_lock_init(&dev->msi_lock);
+ 	INIT_LIST_HEAD(&dev->msi_list);
+ #endif
+ 	INIT_LIST_HEAD(&dev->links.consumers);
 --- a/drivers/pci/msi/msi.c
 +++ b/drivers/pci/msi/msi.c
-@@ -889,10 +889,12 @@ static int __pci_enable_msi_range(struct
- /* deprecated, don't use */
- int pci_enable_msi(struct pci_dev *dev)
- {
--	int rc = __pci_enable_msi_range(dev, 1, 1, NULL);
--	if (rc < 0)
--		return rc;
--	return 0;
-+	int rc = msi_setup_device_data(&dev->dev);
-+
-+	if (!rc)
-+		rc = __pci_enable_msi_range(dev, 1, 1, NULL);
-+
-+	return rc < 0 ? rc : 0;
- }
- EXPORT_SYMBOL(pci_enable_msi);
+@@ -18,7 +18,7 @@ int pci_msi_ignore_mask;
  
-@@ -947,7 +949,11 @@ static int __pci_enable_msix_range(struc
- int pci_enable_msix_range(struct pci_dev *dev, struct msix_entry *entries,
- 		int minvec, int maxvec)
+ static noinline void pci_msi_update_mask(struct msi_desc *desc, u32 clear, u32 set)
  {
--	return __pci_enable_msix_range(dev, entries, minvec, maxvec, NULL, 0);
-+	int ret = msi_setup_device_data(&dev->dev);
-+
-+	if (!ret)
-+		ret = __pci_enable_msix_range(dev, entries, minvec, maxvec, NULL, 0);
-+	return ret;
- }
- EXPORT_SYMBOL(pci_enable_msix_range);
+-	raw_spinlock_t *lock = &desc->dev->msi_lock;
++	raw_spinlock_t *lock = &desc->dev->msi.data->lock;
+ 	unsigned long flags;
  
-@@ -974,8 +980,12 @@ int pci_alloc_irq_vectors_affinity(struc
- 				   struct irq_affinity *affd)
- {
- 	struct irq_affinity msi_default_affd = {0};
-+	int ret = msi_setup_device_data(&dev->dev);
- 	int nvecs = -ENOSPC;
- 
-+	if (ret)
-+		return ret;
-+
- 	if (flags & PCI_IRQ_AFFINITY) {
- 		if (!affd)
- 			affd = &msi_default_affd;
+ 	if (!desc->pci.msi_attrib.can_mask)
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -422,7 +422,6 @@ struct dev_msi_info {
+  * @em_pd:	device's energy model performance domain
+  * @pins:	For device pin management.
+  *		See Documentation/driver-api/pin-control.rst for details.
+- * @msi_lock:	Lock to protect MSI mask cache and mask register
+  * @msi_list:	Hosts MSI descriptors
+  * @numa_node:	NUMA node this device is close to.
+  * @dma_ops:    DMA mapping operations for this device.
+@@ -520,7 +519,6 @@ struct device {
+ #endif
+ 	struct dev_msi_info	msi;
+ #ifdef CONFIG_GENERIC_MSI_IRQ
+-	raw_spinlock_t		msi_lock;
+ 	struct list_head	msi_list;
+ #endif
+ #ifdef CONFIG_DMA_OPS
 

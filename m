@@ -2,46 +2,44 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69E9846097E
-	for <lists+dmaengine@lfdr.de>; Sun, 28 Nov 2021 20:39:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 811B44609AC
+	for <lists+dmaengine@lfdr.de>; Sun, 28 Nov 2021 21:29:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230246AbhK1TnG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 28 Nov 2021 14:43:06 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:53702 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235084AbhK1TlG (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 28 Nov 2021 14:41:06 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D56366111B;
-        Sun, 28 Nov 2021 19:37:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E7BAC004E1;
-        Sun, 28 Nov 2021 19:37:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638128269;
-        bh=9kshVg9cWpie2kn2nDFxTot3kBs7ISxnybYkG4sh8SM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nZest/lJT4X+8M592uWupGcZA3K/bqpTbWXeabbvC0ZxQ9e7NFcweRsLi7hPITUxi
-         cv3N1cQ4AvwAkP/8BbG8U4/eNiDUwizouClthzINE6Z02aJay9QfGBzvB3o5zRpY0t
-         A7u6aKdfeU7rzeujANQP3gXKyhtm7f45fn8Vx11KlK2MUAuEC3uHEX680Tb6AayILE
-         IK/Ufbe3Hdy9YtKCoMnccCSllNGTkg36pvnE3PXBdSW2gwDFjmBDIbhUmOCuHLkcMG
-         ctIZ0c1oxyCwilUk8uaY0b04ik5js9T60W6ssAhdZleFp0cihB1hYaWxYe/eqGc93f
-         OwcqHzbhqKY6A==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1mrPze-008TDJ-Q8; Sun, 28 Nov 2021 19:37:47 +0000
-Date:   Sun, 28 Nov 2021 19:37:45 +0000
-Message-ID: <871r30rrzq.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
+        id S237422AbhK1Ucj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 28 Nov 2021 15:32:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231527AbhK1Uaj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 28 Nov 2021 15:30:39 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9B63C061748;
+        Sun, 28 Nov 2021 12:27:22 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1638131240;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=34cEonPYoHn2wOD4iyX9ID5tmiVh/WyoVyXwqDXryy0=;
+        b=oPRc3eq0k+Tw8NUVD33WjmT1yTwdDLqkvp0k8L0fhSlgI1D7uqHcq0GMPi3xW2KkValqF4
+        f5+puEWtkAmZQdWC59ouxHon7GH94O2JlbvCxRQE9FC0LWhmJpHAbFNeQ3DsfMLG+EixpT
+        hZSGFuc3YgBIjuAqAs5dcF3jT9Jqg1fD8TVHhI2W7B6NwkElYoFJ/x3rfoBW9TCXYktSB/
+        7JCQiSAnY6v16Mi6SX4hF9iVphpSdW7rzPWmj9h3jzBE1irCfw+8iZ1z8Ba0yvELN0tdUE
+        jvbgs+JgRTKN87ldu+pCs8ssio7C6Aj2xXaDx576hfi5qFT2JGCWpokNJEKoGg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1638131240;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=34cEonPYoHn2wOD4iyX9ID5tmiVh/WyoVyXwqDXryy0=;
+        b=qYh8H7dUzo5GOUV8STynfR6skQ9RyXxzWobJRhhOvRzBoMIDa6HMBwwWiZzqU46S2s7nZL
+        1Dk2qEe1TKRHefAQ==
+To:     Jason Gunthorpe <jgg@nvidia.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
         Alex Williamson <alex.williamson@redhat.com>,
         Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
         Megha Dey <megha.dey@intel.com>,
         Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -54,100 +52,41 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Will Deacon <will@kernel.org>, Sinan Kaya <okaya@kernel.org>
-Subject: Re: [patch 29/37] PCI/MSI: Use __msi_get_virq() in pci_get_vector()
-In-Reply-To: <20211126230525.660206325@linutronix.de>
+Subject: Re: [patch 00/37] genirq/msi, PCI/MSI: Spring cleaning - Part 2
+In-Reply-To: <20211128003905.GU4670@nvidia.com>
 References: <20211126224100.303046749@linutronix.de>
-        <20211126230525.660206325@linutronix.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, helgaas@kernel.org, alex.williamson@redhat.com, kevin.tian@intel.com, jgg@nvidia.com, megha.dey@intel.com, ashok.raj@intel.com, linux-pci@vger.kernel.org, gregkh@linuxfoundation.org, ssantosh@kernel.org, iommu@lists.linux-foundation.org, dmaengine@vger.kernel.org, stuyoder@gmail.com, laurentiu.tudor@nxp.com, nm@ti.com, kristo@kernel.org, linux-arm-kernel@lists.infradead.org, x86@kernel.org, vkoul@kernel.org, mark.rutland@arm.com, will@kernel.org, okaya@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+ <20211128003905.GU4670@nvidia.com>
+Date:   Sun, 28 Nov 2021 21:27:19 +0100
+Message-ID: <87y258do0o.ffs@tglx>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sat, 27 Nov 2021 01:22:03 +0000,
-Thomas Gleixner <tglx@linutronix.de> wrote:
-> 
-> Use __msi_get_vector() and handle the return values to be compatible.
-> 
-> No functional change intended.
+On Sat, Nov 27 2021 at 20:39, Jason Gunthorpe wrote:
+> On Sat, Nov 27, 2021 at 02:21:17AM +0100, Thomas Gleixner wrote:
+>>    4) Provide a function to retrieve the Linux interrupt number for a given
+>>       MSI index similar to pci_irq_vector() and cleanup all open coded
+>>       variants.
+>
+> The msi_get_virq() sure does make a big difference.. Though it does
+> highlight there is some asymmetry with how platform and PCI works here
+> where PCI fills some 'struct msix_entry *'. Many drivers would be
+> quite happy to just call msi_get_virq() and avoid the extra memory, so
+> I think the msi_get_virq() version is good.
 
-You wish ;-).
+struct msix_entry should just go away.
 
-[   15.779540] pcieport 0001:00:01.0: AER: request AER IRQ -22 failed
+90+% of the use cases fill it with a linear index range 0...N and then
+use the virq entry for request_irq(). So they can just use
+pci_alloc_irs_vectors_affinity() and retrieve the interrupt number via
+pci_irq_vector().
 
-Notice how amusing the IRQ number is?
+The few drivers which actually use it to allocate a sparse populated MSI
+index, e.g. 0, 12, 14 can be converted over to alloc vector 0 and then
+use the dynamic extenstion for the rest.
 
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  drivers/pci/msi/msi.c |   25 +++++--------------------
->  1 file changed, 5 insertions(+), 20 deletions(-)
-> 
-> --- a/drivers/pci/msi/msi.c
-> +++ b/drivers/pci/msi/msi.c
-> @@ -1023,28 +1023,13 @@ EXPORT_SYMBOL(pci_free_irq_vectors);
->   */
->  int pci_irq_vector(struct pci_dev *dev, unsigned int nr)
->  {
-> -	if (dev->msix_enabled) {
-> -		struct msi_desc *entry;
-> +	int irq = __msi_get_virq(&dev->dev, nr);
->  
-> -		for_each_pci_msi_entry(entry, dev) {
-> -			if (entry->msi_index == nr)
-> -				return entry->irq;
-> -		}
-> -		WARN_ON_ONCE(1);
-> -		return -EINVAL;
-> +	switch (irq) {
-> +	case -ENODEV: return !nr ? dev->irq : -EINVAL;
-> +	case -ENOENT: return -EINVAL;
->  	}
-> -
-> -	if (dev->msi_enabled) {
-> -		struct msi_desc *entry = first_pci_msi_entry(dev);
-> -
-> -		if (WARN_ON_ONCE(nr >= entry->nvec_used))
-> -			return -EINVAL;
-> -	} else {
-> -		if (WARN_ON_ONCE(nr > 0))
-> -			return -EINVAL;
-> -	}
-> -
-> -	return dev->irq + nr;
-> +	return irq;
->  }
->  EXPORT_SYMBOL(pci_irq_vector);
+Thanks,
 
-I worked around it with the hack below, but I doubt this is the real
-thing. portdrv_core.c does complicated things, and I don't completely
-understand its logic.
-
-	M.
-
-diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
-index 1f72bc734226..b15278a5fb4b 100644
---- a/drivers/pci/msi/msi.c
-+++ b/drivers/pci/msi/msi.c
-@@ -1092,8 +1092,9 @@ int pci_irq_vector(struct pci_dev *dev, unsigned int nr)
- 	int irq = __msi_get_virq(&dev->dev, nr);
- 
- 	switch (irq) {
--	case -ENODEV: return !nr ? dev->irq : -EINVAL;
--	case -ENOENT: return -EINVAL;
-+	case -ENOENT:
-+	case -ENODEV:
-+		return !nr ? dev->irq : -EINVAL;
- 	}
- 	return irq;
- }
-
--- 
-Without deviation from the norm, progress is not possible.
+        tglx

@@ -2,41 +2,46 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D07A246093A
-	for <lists+dmaengine@lfdr.de>; Sun, 28 Nov 2021 20:11:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69E9846097E
+	for <lists+dmaengine@lfdr.de>; Sun, 28 Nov 2021 20:39:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231997AbhK1TOg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 28 Nov 2021 14:14:36 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:48912 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235084AbhK1TMg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 28 Nov 2021 14:12:36 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638126558;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CjZcRIM8mi5Lga3dE0YMFAAVgRUsLCHnKUD78SK4AQQ=;
-        b=RXQ9TCzzfl4WPtWcEJoRHxY0CML6p5j+vVn642rlvX4FXeGOQlTdOUHJA7TT/zMvTcjhsJ
-        z2rlcikR4dPUEfkkZEyKLgBw5JNje7IukbrP5rH+IE6poqMYiao1Ca4Jv76m34iRN55Ugp
-        9P197uGT9ReR6cEJgyZzR2bL1i5B2LiF3G8u3m1MGyv/K7P7ZcAj693GrLpygGCZMR0zi0
-        0KJ7ALQY8WY49eWHTHuU3ao5WzbumtDwaMd5vjrhuQEmq6z0WkfUTzt9rSRrTjaYjKnNAh
-        cfKsUGOras+oIgI8Eal2B4zXTACelM12H/MpiLBy/YwAKS60vXfzAPoKFbwzqA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638126558;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CjZcRIM8mi5Lga3dE0YMFAAVgRUsLCHnKUD78SK4AQQ=;
-        b=bp81l/mvh3aNr1oJURqDKy63fAKoxH05F3XfT4StsiB+7OI2VuNNOHrlu3G2D0TFLaaxGV
-        tRyuRxEuQqfHuuBA==
-To:     Jason Gunthorpe <jgg@nvidia.com>
+        id S230246AbhK1TnG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 28 Nov 2021 14:43:06 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:53702 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235084AbhK1TlG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 28 Nov 2021 14:41:06 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D56366111B;
+        Sun, 28 Nov 2021 19:37:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E7BAC004E1;
+        Sun, 28 Nov 2021 19:37:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638128269;
+        bh=9kshVg9cWpie2kn2nDFxTot3kBs7ISxnybYkG4sh8SM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nZest/lJT4X+8M592uWupGcZA3K/bqpTbWXeabbvC0ZxQ9e7NFcweRsLi7hPITUxi
+         cv3N1cQ4AvwAkP/8BbG8U4/eNiDUwizouClthzINE6Z02aJay9QfGBzvB3o5zRpY0t
+         A7u6aKdfeU7rzeujANQP3gXKyhtm7f45fn8Vx11KlK2MUAuEC3uHEX680Tb6AayILE
+         IK/Ufbe3Hdy9YtKCoMnccCSllNGTkg36pvnE3PXBdSW2gwDFjmBDIbhUmOCuHLkcMG
+         ctIZ0c1oxyCwilUk8uaY0b04ik5js9T60W6ssAhdZleFp0cihB1hYaWxYe/eqGc93f
+         OwcqHzbhqKY6A==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mrPze-008TDJ-Q8; Sun, 28 Nov 2021 19:37:47 +0000
+Date:   Sun, 28 Nov 2021 19:37:45 +0000
+Message-ID: <871r30rrzq.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
         Alex Williamson <alex.williamson@redhat.com>,
         Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Megha Dey <megha.dey@intel.com>,
         Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -49,62 +54,100 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Will Deacon <will@kernel.org>, Sinan Kaya <okaya@kernel.org>
-Subject: Re: [patch 02/37] device: Add device::msi_data pointer and struct
- msi_device_data
-In-Reply-To: <20211128001406.GT4670@nvidia.com>
+Subject: Re: [patch 29/37] PCI/MSI: Use __msi_get_virq() in pci_get_vector()
+In-Reply-To: <20211126230525.660206325@linutronix.de>
 References: <20211126224100.303046749@linutronix.de>
- <20211126230524.045836616@linutronix.de>
- <20211128001406.GT4670@nvidia.com>
-Date:   Sun, 28 Nov 2021 20:09:18 +0100
-Message-ID: <87czmkf675.ffs@tglx>
-MIME-Version: 1.0
-Content-Type: text/plain
+        <20211126230525.660206325@linutronix.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, helgaas@kernel.org, alex.williamson@redhat.com, kevin.tian@intel.com, jgg@nvidia.com, megha.dey@intel.com, ashok.raj@intel.com, linux-pci@vger.kernel.org, gregkh@linuxfoundation.org, ssantosh@kernel.org, iommu@lists.linux-foundation.org, dmaengine@vger.kernel.org, stuyoder@gmail.com, laurentiu.tudor@nxp.com, nm@ti.com, kristo@kernel.org, linux-arm-kernel@lists.infradead.org, x86@kernel.org, vkoul@kernel.org, mark.rutland@arm.com, will@kernel.org, okaya@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sat, Nov 27 2021 at 20:14, Jason Gunthorpe wrote:
-> On Sat, Nov 27, 2021 at 02:20:09AM +0100, Thomas Gleixner wrote:
->
->> +/**
->> + * msi_setup_device_data - Setup MSI device data
->> + * @dev:	Device for which MSI device data should be set up
->> + *
->> + * Return: 0 on success, appropriate error code otherwise
->> + *
->> + * This can be called more than once for @dev. If the MSI device data is
->> + * already allocated the call succeeds. The allocated memory is
->> + * automatically released when the device is destroyed.
->
-> I would say 'by devres when the driver is removed' rather than device
-> is destroyed - to me the latter implies it would happen at device_del
-> or perhaps during release..
+On Sat, 27 Nov 2021 01:22:03 +0000,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> Use __msi_get_vector() and handle the return values to be compatible.
+> 
+> No functional change intended.
 
-Ah. Indeed it's when the driver unbinds because that's what disables MSI.
+You wish ;-).
 
->> +int msi_setup_device_data(struct device *dev)
->> +{
->> +	struct msi_device_data *md;
->> +
->> +	if (dev->msi.data)
->> +		return 0;
->> +
->> +	md = devres_alloc(msi_device_data_release, sizeof(*md), GFP_KERNEL);
->> +	if (!md)
->> +		return -ENOMEM;
->> +
->> +	raw_spin_lock_init(&md->lock);
->
-> I also couldn't guess why this needed to be raw?
+[   15.779540] pcieport 0001:00:01.0: AER: request AER IRQ -22 failed
 
-That lock is to replace the raw spinlock we have in struct device right
-now, which is protecting low level register access and that's called
-from within irq_desc::lock held regions with interrupts disabled. I had
-to stick something into the data structure because allocating 0 bytes is
-invalid. But yes, I should have mentioned it in the changelog.
+Notice how amusing the IRQ number is?
 
-Thanks,
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  drivers/pci/msi/msi.c |   25 +++++--------------------
+>  1 file changed, 5 insertions(+), 20 deletions(-)
+> 
+> --- a/drivers/pci/msi/msi.c
+> +++ b/drivers/pci/msi/msi.c
+> @@ -1023,28 +1023,13 @@ EXPORT_SYMBOL(pci_free_irq_vectors);
+>   */
+>  int pci_irq_vector(struct pci_dev *dev, unsigned int nr)
+>  {
+> -	if (dev->msix_enabled) {
+> -		struct msi_desc *entry;
+> +	int irq = __msi_get_virq(&dev->dev, nr);
+>  
+> -		for_each_pci_msi_entry(entry, dev) {
+> -			if (entry->msi_index == nr)
+> -				return entry->irq;
+> -		}
+> -		WARN_ON_ONCE(1);
+> -		return -EINVAL;
+> +	switch (irq) {
+> +	case -ENODEV: return !nr ? dev->irq : -EINVAL;
+> +	case -ENOENT: return -EINVAL;
+>  	}
+> -
+> -	if (dev->msi_enabled) {
+> -		struct msi_desc *entry = first_pci_msi_entry(dev);
+> -
+> -		if (WARN_ON_ONCE(nr >= entry->nvec_used))
+> -			return -EINVAL;
+> -	} else {
+> -		if (WARN_ON_ONCE(nr > 0))
+> -			return -EINVAL;
+> -	}
+> -
+> -	return dev->irq + nr;
+> +	return irq;
+>  }
+>  EXPORT_SYMBOL(pci_irq_vector);
 
-        tglx
+I worked around it with the hack below, but I doubt this is the real
+thing. portdrv_core.c does complicated things, and I don't completely
+understand its logic.
 
+	M.
 
+diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+index 1f72bc734226..b15278a5fb4b 100644
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -1092,8 +1092,9 @@ int pci_irq_vector(struct pci_dev *dev, unsigned int nr)
+ 	int irq = __msi_get_virq(&dev->dev, nr);
+ 
+ 	switch (irq) {
+-	case -ENODEV: return !nr ? dev->irq : -EINVAL;
+-	case -ENOENT: return -EINVAL;
++	case -ENOENT:
++	case -ENODEV:
++		return !nr ? dev->irq : -EINVAL;
+ 	}
+ 	return irq;
+ }
+
+-- 
+Without deviation from the norm, progress is not possible.

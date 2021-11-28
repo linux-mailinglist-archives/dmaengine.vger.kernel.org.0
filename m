@@ -2,172 +2,105 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 414DF46029B
-	for <lists+dmaengine@lfdr.de>; Sun, 28 Nov 2021 01:41:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2584746075E
+	for <lists+dmaengine@lfdr.de>; Sun, 28 Nov 2021 17:08:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356623AbhK1AoZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 27 Nov 2021 19:44:25 -0500
-Received: from mail-dm6nam12on2074.outbound.protection.outlook.com ([40.107.243.74]:13216
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1356720AbhK1AmY (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 27 Nov 2021 19:42:24 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FkoDlLpe8gk/rOuXCNZs5vImIznaaYm1UjjgSAUOmXcJWxoJyJyABCgeLlGsJMjPA6jWCbNNZGvDLrUSRx33qWf8DDFkkLGTZ3kxPAZJbQ2Y3Fj0Nfl7BNe2DvENHcgHsNkYJFR1F/B3Kn1pacpEJGMVpKLKaDu4Cz/1y0ljmkTi6lZnaZqeyo1b0ZgKImv3DCIIkUNNMiINARK/Z6sLvTkJEnEufI6pQOa5pWmG0V71KDKiTrma3WhmAewV/yRygUGMTn5RRcv209gNR33RxMh0+kxojtlJgbvUSn+AhpGU4Q9qabBA2D3KYMRveZLV5uhmqzplE7toZc6lUuQoHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Tz4cpaIwFwSIj7EnQHsvxDTuJb0X+4M1u9/QqVv1eVo=;
- b=mQ69ugxjNGno5DUeUESQ5/MrJXU65afZgKW44GsPh/GkTq/t/wuofUAM5Pyd/IyrtYUAfQltNPMx9E0DNfEvvD/hN4hkZ0qw2FJxi3sVa2BCI1iaUHe02+7PLyRb+0IPCWek9kG2NC5GoxSzKftNdxohRlYoWlTQf3U7qplLFu4b9YwQLsYPQoSiY3sh7nUpASh115WgnPdWg67s44hfXYQ6FApfJDrwf1GR52qNqRDdXyj6VKnJqSZ13hHWe0IJEBYQO05jOsCPzOU2pibXelqTy/OIuTckkCMYazVgi4FxqgI3a2Ls91opEhPZNANdjt9dSaEOrCdGUKGwx6Xknw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tz4cpaIwFwSIj7EnQHsvxDTuJb0X+4M1u9/QqVv1eVo=;
- b=AMJGjwdI0LwyFtJQuBWNLqriiAD4cIxSVD0j3xB6kSL5mrL+MV7TWvJHBtwNEQpIktMP4p0pioq0xH+q29C257hmtBEGETWZFHdrt/sjXFT/tqd3+OtSsMVrK/BCk5xY1QaToZlFjn7IWDZ9pQhAi57UOqXRjDRtd29t02uRr8PeQwtAUEHjX1R8+1iTcx0LYd4+PMpa9RS8adKIdVaTtAsXreZw07zjOP4DEBwXRSW2jLiPKFpnxJOPE9TZZHndvAFDxUFCqMiffwA1r+fs9zEXyJ9EjE+0lSKXUkpShzMrZdmcfuNHVtLgtAtRgpK5pEJphukqHWRlXfyrEHdVhA==
-Received: from BL0PR12MB5508.namprd12.prod.outlook.com (2603:10b6:208:1c1::17)
- by BL1PR12MB5142.namprd12.prod.outlook.com (2603:10b6:208:312::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.23; Sun, 28 Nov
- 2021 00:39:07 +0000
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
- by BL0PR12MB5508.namprd12.prod.outlook.com (2603:10b6:208:1c1::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.23; Sun, 28 Nov
- 2021 00:39:07 +0000
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::5897:83b2:a704:7909]) by BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::5897:83b2:a704:7909%8]) with mapi id 15.20.4734.023; Sun, 28 Nov 2021
- 00:39:06 +0000
-Date:   Sat, 27 Nov 2021 20:39:05 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        iommu@lists.linux-foundation.org, dmaengine@vger.kernel.org,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-        Vinod Koul <vkoul@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>, Sinan Kaya <okaya@kernel.org>
-Subject: Re: [patch 00/37] genirq/msi, PCI/MSI: Spring cleaning - Part 2
-Message-ID: <20211128003905.GU4670@nvidia.com>
-References: <20211126224100.303046749@linutronix.de>
+        id S235855AbhK1QLk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 28 Nov 2021 11:11:40 -0500
+Received: from mail-oi1-f173.google.com ([209.85.167.173]:40798 "EHLO
+        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238569AbhK1QJk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 28 Nov 2021 11:09:40 -0500
+Received: by mail-oi1-f173.google.com with SMTP id bk14so29645066oib.7;
+        Sun, 28 Nov 2021 08:06:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6XcdVLR5T8aEqWDjXmGT4FtJ9lSL6Rm6Y96yhhLDME0=;
+        b=4taXed+QR7SrHztucROx6uelGYy2q0iUcqYS3LBQkVwPhpmVaYT9tAZEWL3R9cQeHt
+         aQdSP0/huV8hw0ihrik92vGsIMf2I14vEHl0KKW2QDwzZpHH2zFb4sD3bulkuspQ8e/K
+         k6pjsZp2eUsD8uZmI0GnG8Y5wpkZwd2THd9fMC5GturI+smrVD+NQrGut5cc5b+Bpi5V
+         k2V2qAqaOWhN9V3tKV3t0Q3hU8OWeOZDF7RXHNG/SL0bX2UUCHTzwdVvaBNaW4q7j70y
+         H//9rO4fb5qAOwuY0fpj6bLW+L3qJXMOydUUxjARYYzwctQzl+gILw754rVguoIMj/IS
+         wslQ==
+X-Gm-Message-State: AOAM530vxLSlS8AnM8U/HdrlODPsg0KLAMfGDTy1KAV/qDHzyFx8fiR9
+        KGCh4+KjnHgfy/NYkYQqTA==
+X-Google-Smtp-Source: ABdhPJwKIwsK+qKc3/WIO+9F/yWvFZR4TMP+v+GAwfhU3SlRfqN972FhHTZlzd0Etz2MduGDNYwiZg==
+X-Received: by 2002:aca:1708:: with SMTP id j8mr34441661oii.62.1638115583942;
+        Sun, 28 Nov 2021 08:06:23 -0800 (PST)
+Received: from robh.at.kernel.org ([2607:fb90:20d6:afc8:f6e9:d57a:3e26:ee41])
+        by smtp.gmail.com with ESMTPSA id y12sm2487710oiv.49.2021.11.28.08.06.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Nov 2021 08:06:23 -0800 (PST)
+Received: (nullmailer pid 2561004 invoked by uid 1000);
+        Sun, 28 Nov 2021 16:06:20 -0000
+Date:   Sun, 28 Nov 2021 10:06:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Akhil R <akhilrajeev@nvidia.com>
+Cc:     dan.j.williams@intel.com, devicetree@vger.kernel.org,
+        dmaengine@vger.kernel.org, jonathanh@nvidia.com,
+        kyarlagadda@nvidia.com, ldewangan@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        p.zabel@pengutronix.de, rgumasta@nvidia.com,
+        thierry.reding@gmail.com, vkoul@kernel.org
+Subject: Re: [PATCH v13 1/4] dt-bindings: dmaengine: Add doc for tegra gpcdma
+Message-ID: <YaOo/FHKQBAa93hd@robh.at.kernel.org>
+References: <1637573292-13214-1-git-send-email-akhilrajeev@nvidia.com>
+ <1637573292-13214-2-git-send-email-akhilrajeev@nvidia.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211126224100.303046749@linutronix.de>
-X-ClientProxiedBy: BL0PR05CA0001.namprd05.prod.outlook.com
- (2603:10b6:208:91::11) To BL0PR12MB5506.namprd12.prod.outlook.com
- (2603:10b6:208:1cb::22)
-MIME-Version: 1.0
-Received: from mlx.ziepe.ca (142.162.113.129) by BL0PR05CA0001.namprd05.prod.outlook.com (2603:10b6:208:91::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.9 via Frontend Transport; Sun, 28 Nov 2021 00:39:06 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mr8Dh-003ndX-GD; Sat, 27 Nov 2021 20:39:05 -0400
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7c2fd1b1-3b57-4471-8ac1-08d9b2077bf6
-X-MS-TrafficTypeDiagnostic: BL0PR12MB5508:|BL1PR12MB5142:
-X-Microsoft-Antispam-PRVS: <BL0PR12MB5508568AF0E7403C0116375FC2659@BL0PR12MB5508.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VTTPo45AbnTQ9Zu0VMI5BBlrWx/0NkRfKNETYyLh9peRo0I/rLcmkol++Ht5BVq5//3ejeZ+zoVIza1i8gT0mdbwjl7dVjwbZ966AOHLG2qsbH6X5xWL2u109KCTf7nFt5mAZ4vwLAfT9xXEASoaGgUvvUzHiEumbW1rdSPVuivYG8D6/bsZVwg9U8WSw18w6mighKihtMd8svQoIERNBFf3GQkwrM0gltDEJIsjLUm3D0AddLxruLdIkcEj9EEX5HmqAoCjegKcp2B2KfG5kuBz78qaGIxclMHpG8ApHo4/H51/r61dMkAtpUClY7CwOSQ6QTDtKj5e49/k3X6bTNKrgu94zwifIUBGtSaVHxrOOfYPncJsCSau5YXXAwqDobVnopJCwMHt4gCjobYY22mDu1AtZIs/dxGHf/CqvUGsrPMKsBDvt6ZeffmFwHjztPweu0MYO08+pawhS8TPcrMt+P5NW3oaSDbd1hq6oWCLV8Uytv7WstyMSX1AyPKTcvF7ZqO2Fg4D3PSO6f2flNaWMGp1Ub1EoyrUPPxRlqiZ+nPO6phiOlbQK6Bb9i7qLnY9NyddaiEeaK8jMu4xBnlNiOsVHXsFM2yWdeUslEF1KUPzUR7OXkrk0pPSCuja4l2/SW5g+k1HqcQlbnfR75l4fYWhpOule1fos0Ks5bOhRsNqgpEabHIUNpANSS9yOCHFGslD4oHA8L0xKqiYOmyqoRoEFp/RB1JYrdK6iqw=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5508.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(33656002)(36756003)(26005)(6916009)(5660300002)(38100700002)(8676002)(4326008)(186003)(9786002)(426003)(2616005)(54906003)(2906002)(316002)(66946007)(7416002)(8936002)(1076003)(508600001)(9746002)(86362001)(66476007)(66556008)(966005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?XAyuai/FfcqzYUyutbGOfi1yy1QcxAzOxUc0MYm0LIl0gNBWEQwEGEedtq5R?=
- =?us-ascii?Q?yw0ClOnO+bMqMiERVsTw1V7SL7iui97VbXKdQ9KwoimuA6IHqXsCFYx6sf6k?=
- =?us-ascii?Q?wFmW6VG9TCbW/BVU3QeoVu2zuTmtJNfiiwbOUjssAqJGOQoSqhe45s2iFlBL?=
- =?us-ascii?Q?ihwaT3JmkIzPpI2QVtZBmu9xuCN9Z3+Igf8Pio70cI1yAlk7GTMRw18GR7PB?=
- =?us-ascii?Q?WIoXJN1a6OqKeu3ophJmlL9rOxGa85+WjZ486L4jTDd51UU9m0SB3AsEiWp6?=
- =?us-ascii?Q?dr7SCkenEirUTQOX+tc5jBrNJpHTi1X4qJcr1qe2nri2nxQmK0VTG137RMKk?=
- =?us-ascii?Q?EVtynFgFJngKbHiTbGzr7dW/ZYh68gyRXKV75zyjhJ6UtNaQh1cTEcBnavb7?=
- =?us-ascii?Q?pmt1KwbIvtaUTQsRDDAMFILv18wGP6FGar9CpZDyGpjx/gOSDxI+6ZfJBZ+h?=
- =?us-ascii?Q?kpZdCf5nzfLUOpgcYw1/rtyvJyv+9RNVhv3+i6IpD1aU9jzKAS9Xs3G59RCj?=
- =?us-ascii?Q?Cc8Ivcgyb6cCFnL2zUAJw5pQ8Lzhy6Dq7JB8XNjEcb2jnz/MIB9Bi7NTLWYJ?=
- =?us-ascii?Q?zIn4eSgSFmkQfgdmndsEwC4A8Wrt8iiP9WtvKzahOOP/Pj3AX4z9u6XbA5St?=
- =?us-ascii?Q?X0o8ekXyLkuv6nNySte8Chpv+UGU1gYJs1spLKqyKlJrpxWRDCN3tkL2qu2W?=
- =?us-ascii?Q?IE0iN7T7eZiiYbJNLxF94XpyjecVDtcA3S5DhiHvFKVkQdxB6+RyZ+GvtGUu?=
- =?us-ascii?Q?hifcIeUj+ssk95ihRwob1db/MpiUDM04XcW9kxVEJZG73JqEpXYVWjiReaZF?=
- =?us-ascii?Q?swbQ1nNy0Eon1oX0oxLce/D6rjUuvQfIBsCP+X/wczKZAeER+Z3wWEeWlDCh?=
- =?us-ascii?Q?q4nwVkvumqGv5gkw81OzlZl18C2RpAJE1MzU+x+Jz9tCfaSTFLzq3agB1NAF?=
- =?us-ascii?Q?m+eR0LkaVaf6qRHEpq16OgaMbzMAb/L6kGyGeeaojxtb7bqD13IapJU/Boha?=
- =?us-ascii?Q?5h7JUzWa98p4jx2IU1nsR9t3DF2NJp2WucHAVujePbWZUy0rN8i5EZnX5REx?=
- =?us-ascii?Q?9560Fc77hz7W9SCPmg0oLpOXDso/j9stqjwtusHeyxKwCvcGbD9erBFaQHUQ?=
- =?us-ascii?Q?Gn3qRpjklY5NmDcU08p24PcoL3+bSgjCpvmizdUv210WCWK89AJDkTGk0/a9?=
- =?us-ascii?Q?3tH2q5NWeQKfhpD6azbTEFOapx/RLmFo8TfuE5SbK+UUd61bsuL7GMuJKYI8?=
- =?us-ascii?Q?MSjq7XBYeTfCDK6hWhYzAOIX2LpjePGGKNHCCTNilujkodrYs384bd1dBz89?=
- =?us-ascii?Q?i91BVJ3qL4onCYoXUCQp6dbRHHApeeL2mW4vcQHJTwLBuyLGdRbvR37rBWRn?=
- =?us-ascii?Q?4zeK4ZxFqN/DIfDXBoTT+T14eC1yXiLxi3948WcqhE/ujVGaZAkL3LXyet8u?=
- =?us-ascii?Q?XKs4hH5QIiTbeSwGLpHoRYph482nMzRlMgxW2vf9SgCfubWzmbZYoGByZ/lZ?=
- =?us-ascii?Q?HFlet1uDNPP1LX0LV4qQ/RWXhhqHXksXiMyFL4j7uRdmDSNq00JRzZjPSCoG?=
- =?us-ascii?Q?cSzvkVvvwNDexh8OjVY=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c2fd1b1-3b57-4471-8ac1-08d9b2077bf6
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2021 00:39:06.6235
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xrqlAexVn5snThqU+O4W7p/UeFb4IBeJhx1NbfCGCxt53/579dmiNnEQzYixlyVY
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5142
+In-Reply-To: <1637573292-13214-2-git-send-email-akhilrajeev@nvidia.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sat, Nov 27, 2021 at 02:21:17AM +0100, Thomas Gleixner wrote:
-> This is the second part of [PCI]MSI refactoring which aims to provide the
-> ability of expanding MSI-X vectors after enabling MSI-X.
+On Mon, Nov 22, 2021 at 02:58:09PM +0530, Akhil R wrote:
+> Add DT binding document for Nvidia Tegra GPCDMA controller.
 > 
-> The first part of this work can be found here:
+> Signed-off-by: Rajesh Gumasta <rgumasta@nvidia.com>
+> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  .../bindings/dma/nvidia,tegra186-gpc-dma.yaml      | 111 +++++++++++++++++++++
+>  1 file changed, 111 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml
 > 
->     https://lore.kernel.org/r/20211126222700.862407977@linutronix.de
-> 
-> This second part has the following important changes:
-> 
->    1) Cleanup of the MSI related data in struct device
-> 
->       struct device contains at the moment various MSI related parts. Some
->       of them (the irq domain pointer) cannot be moved out, but the rest
->       can be allocated on first use. This is in preparation of adding more
->       per device MSI data later on.
-> 
->    2) Consolidation of sysfs handling
-> 
->       As a first step this moves the sysfs pointer from struct msi_desc
->       into the new per device MSI data structure where it belongs.
-> 
->       Later changes will cleanup this code further, but that's not possible
->       at this point.
-> 
->    3) Store per device properties in the per device MSI data to avoid
->       looking up MSI descriptors and analysing their data. Cleanup all
->       related use cases.
-> 
->    4) Provide a function to retrieve the Linux interrupt number for a given
->       MSI index similar to pci_irq_vector() and cleanup all open coded
->       variants.
+> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml b/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml
+> new file mode 100644
+> index 0000000..3a5a70d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml
+> @@ -0,0 +1,111 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/nvidia,tegra186-gpc-dma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NVIDIA Tegra GPC DMA Controller Device Tree Bindings
+> +
+> +description: |
+> +  The Tegra General Purpose Central (GPC) DMA controller is used for faster
+> +  data transfers between memory to memory, memory to device and device to
+> +  memory.
+> +
+> +maintainers:
+> +  - Jon Hunter <jonathanh@nvidia.com>
+> +  - Rajesh Gumasta <rgumasta@nvidia.com>
+> +
+> +allOf:
+> +  - $ref: "dma-controller.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: nvidia,tegra186-gpcdma
+> +      - items:
+> +         - const: nvidia,tegra186-gpcdma
+> +         - const: nvidia,tegra194-gpcdma
 
-The msi_get_virq() sure does make a big difference.. Though it does
-highlight there is some asymmetry with how platform and PCI works here
-where PCI fills some 'struct msix_entry *'. Many drivers would be
-quite happy to just call msi_get_virq() and avoid the extra memory, so
-I think the msi_get_virq() version is good.
+Still not how 'compatible' works nor what I wrote out for you.
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-
-Thanks,
-Jason
+Rob

@@ -2,105 +2,109 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2584746075E
-	for <lists+dmaengine@lfdr.de>; Sun, 28 Nov 2021 17:08:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D07A246093A
+	for <lists+dmaengine@lfdr.de>; Sun, 28 Nov 2021 20:11:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235855AbhK1QLk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 28 Nov 2021 11:11:40 -0500
-Received: from mail-oi1-f173.google.com ([209.85.167.173]:40798 "EHLO
-        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238569AbhK1QJk (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 28 Nov 2021 11:09:40 -0500
-Received: by mail-oi1-f173.google.com with SMTP id bk14so29645066oib.7;
-        Sun, 28 Nov 2021 08:06:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6XcdVLR5T8aEqWDjXmGT4FtJ9lSL6Rm6Y96yhhLDME0=;
-        b=4taXed+QR7SrHztucROx6uelGYy2q0iUcqYS3LBQkVwPhpmVaYT9tAZEWL3R9cQeHt
-         aQdSP0/huV8hw0ihrik92vGsIMf2I14vEHl0KKW2QDwzZpHH2zFb4sD3bulkuspQ8e/K
-         k6pjsZp2eUsD8uZmI0GnG8Y5wpkZwd2THd9fMC5GturI+smrVD+NQrGut5cc5b+Bpi5V
-         k2V2qAqaOWhN9V3tKV3t0Q3hU8OWeOZDF7RXHNG/SL0bX2UUCHTzwdVvaBNaW4q7j70y
-         H//9rO4fb5qAOwuY0fpj6bLW+L3qJXMOydUUxjARYYzwctQzl+gILw754rVguoIMj/IS
-         wslQ==
-X-Gm-Message-State: AOAM530vxLSlS8AnM8U/HdrlODPsg0KLAMfGDTy1KAV/qDHzyFx8fiR9
-        KGCh4+KjnHgfy/NYkYQqTA==
-X-Google-Smtp-Source: ABdhPJwKIwsK+qKc3/WIO+9F/yWvFZR4TMP+v+GAwfhU3SlRfqN972FhHTZlzd0Etz2MduGDNYwiZg==
-X-Received: by 2002:aca:1708:: with SMTP id j8mr34441661oii.62.1638115583942;
-        Sun, 28 Nov 2021 08:06:23 -0800 (PST)
-Received: from robh.at.kernel.org ([2607:fb90:20d6:afc8:f6e9:d57a:3e26:ee41])
-        by smtp.gmail.com with ESMTPSA id y12sm2487710oiv.49.2021.11.28.08.06.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Nov 2021 08:06:23 -0800 (PST)
-Received: (nullmailer pid 2561004 invoked by uid 1000);
-        Sun, 28 Nov 2021 16:06:20 -0000
-Date:   Sun, 28 Nov 2021 10:06:20 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Akhil R <akhilrajeev@nvidia.com>
-Cc:     dan.j.williams@intel.com, devicetree@vger.kernel.org,
-        dmaengine@vger.kernel.org, jonathanh@nvidia.com,
-        kyarlagadda@nvidia.com, ldewangan@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        p.zabel@pengutronix.de, rgumasta@nvidia.com,
-        thierry.reding@gmail.com, vkoul@kernel.org
-Subject: Re: [PATCH v13 1/4] dt-bindings: dmaengine: Add doc for tegra gpcdma
-Message-ID: <YaOo/FHKQBAa93hd@robh.at.kernel.org>
-References: <1637573292-13214-1-git-send-email-akhilrajeev@nvidia.com>
- <1637573292-13214-2-git-send-email-akhilrajeev@nvidia.com>
+        id S231997AbhK1TOg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 28 Nov 2021 14:14:36 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:48912 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235084AbhK1TMg (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 28 Nov 2021 14:12:36 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1638126558;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CjZcRIM8mi5Lga3dE0YMFAAVgRUsLCHnKUD78SK4AQQ=;
+        b=RXQ9TCzzfl4WPtWcEJoRHxY0CML6p5j+vVn642rlvX4FXeGOQlTdOUHJA7TT/zMvTcjhsJ
+        z2rlcikR4dPUEfkkZEyKLgBw5JNje7IukbrP5rH+IE6poqMYiao1Ca4Jv76m34iRN55Ugp
+        9P197uGT9ReR6cEJgyZzR2bL1i5B2LiF3G8u3m1MGyv/K7P7ZcAj693GrLpygGCZMR0zi0
+        0KJ7ALQY8WY49eWHTHuU3ao5WzbumtDwaMd5vjrhuQEmq6z0WkfUTzt9rSRrTjaYjKnNAh
+        cfKsUGOras+oIgI8Eal2B4zXTACelM12H/MpiLBy/YwAKS60vXfzAPoKFbwzqA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1638126558;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CjZcRIM8mi5Lga3dE0YMFAAVgRUsLCHnKUD78SK4AQQ=;
+        b=bp81l/mvh3aNr1oJURqDKy63fAKoxH05F3XfT4StsiB+7OI2VuNNOHrlu3G2D0TFLaaxGV
+        tRyuRxEuQqfHuuBA==
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        iommu@lists.linux-foundation.org, dmaengine@vger.kernel.org,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>, Sinan Kaya <okaya@kernel.org>
+Subject: Re: [patch 02/37] device: Add device::msi_data pointer and struct
+ msi_device_data
+In-Reply-To: <20211128001406.GT4670@nvidia.com>
+References: <20211126224100.303046749@linutronix.de>
+ <20211126230524.045836616@linutronix.de>
+ <20211128001406.GT4670@nvidia.com>
+Date:   Sun, 28 Nov 2021 20:09:18 +0100
+Message-ID: <87czmkf675.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1637573292-13214-2-git-send-email-akhilrajeev@nvidia.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Nov 22, 2021 at 02:58:09PM +0530, Akhil R wrote:
-> Add DT binding document for Nvidia Tegra GPCDMA controller.
-> 
-> Signed-off-by: Rajesh Gumasta <rgumasta@nvidia.com>
-> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
-> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
->  .../bindings/dma/nvidia,tegra186-gpc-dma.yaml      | 111 +++++++++++++++++++++
->  1 file changed, 111 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml b/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml
-> new file mode 100644
-> index 0000000..3a5a70d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml
-> @@ -0,0 +1,111 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/nvidia,tegra186-gpc-dma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NVIDIA Tegra GPC DMA Controller Device Tree Bindings
-> +
-> +description: |
-> +  The Tegra General Purpose Central (GPC) DMA controller is used for faster
-> +  data transfers between memory to memory, memory to device and device to
-> +  memory.
-> +
-> +maintainers:
-> +  - Jon Hunter <jonathanh@nvidia.com>
-> +  - Rajesh Gumasta <rgumasta@nvidia.com>
-> +
-> +allOf:
-> +  - $ref: "dma-controller.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: nvidia,tegra186-gpcdma
-> +      - items:
-> +         - const: nvidia,tegra186-gpcdma
-> +         - const: nvidia,tegra194-gpcdma
+On Sat, Nov 27 2021 at 20:14, Jason Gunthorpe wrote:
+> On Sat, Nov 27, 2021 at 02:20:09AM +0100, Thomas Gleixner wrote:
+>
+>> +/**
+>> + * msi_setup_device_data - Setup MSI device data
+>> + * @dev:	Device for which MSI device data should be set up
+>> + *
+>> + * Return: 0 on success, appropriate error code otherwise
+>> + *
+>> + * This can be called more than once for @dev. If the MSI device data is
+>> + * already allocated the call succeeds. The allocated memory is
+>> + * automatically released when the device is destroyed.
+>
+> I would say 'by devres when the driver is removed' rather than device
+> is destroyed - to me the latter implies it would happen at device_del
+> or perhaps during release..
 
-Still not how 'compatible' works nor what I wrote out for you.
+Ah. Indeed it's when the driver unbinds because that's what disables MSI.
 
-Rob
+>> +int msi_setup_device_data(struct device *dev)
+>> +{
+>> +	struct msi_device_data *md;
+>> +
+>> +	if (dev->msi.data)
+>> +		return 0;
+>> +
+>> +	md = devres_alloc(msi_device_data_release, sizeof(*md), GFP_KERNEL);
+>> +	if (!md)
+>> +		return -ENOMEM;
+>> +
+>> +	raw_spin_lock_init(&md->lock);
+>
+> I also couldn't guess why this needed to be raw?
+
+That lock is to replace the raw spinlock we have in struct device right
+now, which is protecting low level register access and that's called
+from within irq_desc::lock held regions with interrupts disabled. I had
+to stick something into the data structure because allocating 0 bytes is
+invalid. But yes, I should have mentioned it in the changelog.
+
+Thanks,
+
+        tglx
+
+

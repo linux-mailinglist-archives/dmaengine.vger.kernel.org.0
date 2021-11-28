@@ -2,104 +2,163 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 536124600E0
-	for <lists+dmaengine@lfdr.de>; Sat, 27 Nov 2021 19:13:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79155460282
+	for <lists+dmaengine@lfdr.de>; Sun, 28 Nov 2021 01:16:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230146AbhK0SQe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 27 Nov 2021 13:16:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232836AbhK0SOe (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 27 Nov 2021 13:14:34 -0500
-Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7368C06174A
-        for <dmaengine@vger.kernel.org>; Sat, 27 Nov 2021 10:11:19 -0800 (PST)
-Received: by mail-io1-xd2a.google.com with SMTP id k21so15657430ioh.4
-        for <dmaengine@vger.kernel.org>; Sat, 27 Nov 2021 10:11:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=nSnzgrxddn0odJ+F4Pm2LVSoEistsw4jHMhtjB6XfyM=;
-        b=XN/ElNhsNQBJiHmbU/JVKD9rYUttrQM7azDcGO49P67hiT6PBdPy4RI5z0Eazd1bAd
-         fowhBm23JQGU1oBz0Nft9tBYdt1HheoU77GK2I/JQvtKpd8+OKCT/Qvx8hXSLYbXEX+6
-         NGY1BDNoF2M4SvxVQ1lHRpzZ3eP1X7wKRDzcfO5Y/FUufiZxKbevNVF/KdZAstzTIrY6
-         f5pm+m5KuDYfzm/Nn1eGbhgP7F9NgnqL+scYTUiAZ5NFqm8LVF+G4bQz8BOQlYKx+msw
-         8iDZ1NWv6dQmhg5ezBRFEavG5a4OVBBSZWgc64DNVYCX3WRqhWsKS6UB+x6N94HMqujs
-         cYUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=nSnzgrxddn0odJ+F4Pm2LVSoEistsw4jHMhtjB6XfyM=;
-        b=Z7BiriwoiQP9FzixH7plmF3vIUcCOuioal+3q2zeYVBUydl6VNTjNUJFvslTuY6nhp
-         pRF+pMiSgg7jPb8F4+jB+rB/kZxPnhA/xqy6Ma8CYMpUWQbNR1njpnnJa7Mxb2KruAY9
-         LKiVHHUHsc5e02td95RG3W5bKDj5G0N1KQ5ArCBF0qKHEvrUvPsEbhl5B3gL0vR4w0f+
-         csgmZ4tjhJUo/m/2Ugp7T1Pvttc/NOsUJpd9+MbkpU2/+vMn/M3DyygGCYl4vn2Wtngn
-         CcU/hxUEaHiFzU6gXHj/b7TprBmuaiYXop/AIQJBpoJNNU26MKgC2Kvw3Co+GMdzd1ZQ
-         wQfQ==
-X-Gm-Message-State: AOAM531ugulG9HC+xU9m/incJf0MQ3X9bAOSFueHt8pJMbWEx6YK6qRh
-        eZrLPC1fWEjke9RcVvHoZ3+OiJCFyBNxxT2L+HQ=
-X-Google-Smtp-Source: ABdhPJzAlZ2nUOg1wmDGl15+bRA8oPvrtd+Hc2roaOrUxpZO8v1xoehHfI7TtoP/4sK3dSEph0JUjtYABOtO+17Yo1w=
-X-Received: by 2002:a6b:3b43:: with SMTP id i64mr13538944ioa.182.1638036679030;
- Sat, 27 Nov 2021 10:11:19 -0800 (PST)
+        id S237078AbhK1AT0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 27 Nov 2021 19:19:26 -0500
+Received: from mail-co1nam11on2089.outbound.protection.outlook.com ([40.107.220.89]:20064
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232401AbhK1AR0 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sat, 27 Nov 2021 19:17:26 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dWp/BDlzWYtIlijhJHGAdirEHji82PxcKWfXztkaQKpoDqXL5BOFwLl+WyA2c93skSFj4afEPwub5dNGnErIFb+1bX6DP0G6UFJfuzy0WV37SzyfsWHmPiSk2qnBTqXSAw1GOp8EOwm1xSOwkk/xi1IAHDFLSbUUY32diGFe8ZhUTAHuHg9h6u4nibufDeBwOPZgvjZqmzfrqYBqMUtptxdAUAr/YWepdKyhDTAUBjzbof2iMHqRt1CLA+TtSSx7BHT6tSpOKCPfjcyM3Na7AhHNbXlgKuq2YCgUEw8gHsCuBv6OezzHP0FZujwt9gh0dgt6Tmg+R94kyjv4TkN2NQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=y+TCrf6m63JuJDO+0D1p/tfBsj7N9yAJ5LYodPWa1UY=;
+ b=l8ABiC0k02B21VElgstFudAgSmRPqVzyh7Iee/yuU77nqKM3xoQiLXqilmSU+ESYxjgDMTJgB7swawnXTSxI5GuIyMiKRyalLZE01J3qB0fSpHwpQiGVMakrof7p1zIN1pGUVYcQ8jKLEJU/kcw+8f7EFRHiHGs57K+oGi9WMinuUXCVFjPVYHtqzIDBGiUSUGdnKqSpleeTEfeOSeJirnDMzH1e57JvaRCzx5O6wOgioMJDIXczIBDh5WFJv9XvK3gHDd0/MitBZ6zYDAYshEyAJpOKuuQFNX5CTL0t+0hA84lygeJ3gA9dA/OXQ0Qnp2s7s5H99t5diB0Ti8D6GQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y+TCrf6m63JuJDO+0D1p/tfBsj7N9yAJ5LYodPWa1UY=;
+ b=NiEsOrL+ZotAfsKDxVa5D74+vxq8x1irDDVEoHMBSetYoTDl7pi/hxgkvoE/B4tzCMfq6JbwJwuPUUZqv8Cm29/WVTyu3JMw6HfC1Zh1l6NcdNh/UqVyqpWVYFNcL2Xl1znh49/H7t3iWJeQ7DChqlRoSYogq6CNezZEhcQ+zb+kJc9yuxrs3hLdYMelKzRmIO2gqxbOJNBbcL2Kdk+l/nFFtCmMmBuPZ8hwS89IQ1ZZ6Jb9bPLj/m2eI262OkDSYutFmBuToRXj01oBDrQirQYlDkLH3hOHKFFddQJaeSvEWQwWz3TepWkUBoCsmcNcTiuwrucod+G2KwiHBAruzw==
+Received: from BL1PR12MB5285.namprd12.prod.outlook.com (2603:10b6:208:31f::14)
+ by BL1PR12MB5255.namprd12.prod.outlook.com (2603:10b6:208:315::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.22; Sun, 28 Nov
+ 2021 00:14:08 +0000
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL1PR12MB5285.namprd12.prod.outlook.com (2603:10b6:208:31f::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.23; Sun, 28 Nov
+ 2021 00:14:07 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::5897:83b2:a704:7909]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::5897:83b2:a704:7909%8]) with mapi id 15.20.4734.023; Sun, 28 Nov 2021
+ 00:14:07 +0000
+Date:   Sat, 27 Nov 2021 20:14:06 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        iommu@lists.linux-foundation.org, dmaengine@vger.kernel.org,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>, Sinan Kaya <okaya@kernel.org>
+Subject: Re: [patch 02/37] device: Add device::msi_data pointer and struct
+ msi_device_data
+Message-ID: <20211128001406.GT4670@nvidia.com>
+References: <20211126224100.303046749@linutronix.de>
+ <20211126230524.045836616@linutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211126230524.045836616@linutronix.de>
+X-ClientProxiedBy: BL0PR0102CA0049.prod.exchangelabs.com
+ (2603:10b6:208:25::26) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
 MIME-Version: 1.0
-Reply-To: gen.ireneduncan@gmail.com
-Sender: afringawa1212@gmail.com
-Received: by 2002:a4f:f5d4:0:0:0:0:0 with HTTP; Sat, 27 Nov 2021 10:11:18
- -0800 (PST)
-From:   Irene Duncan <gn.ireneduncan@gmail.com>
-Date:   Sat, 27 Nov 2021 19:11:18 +0100
-X-Google-Sender-Auth: sAVwdTDKwZ-uOtHmcUItota6Rf0
-Message-ID: <CABmWdz-mntiSjHWjFRvoEs-idk4F6sFuCWRET4BDStN2U7KyQQ@mail.gmail.com>
-Subject: With due respect
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Received: from mlx.ziepe.ca (142.162.113.129) by BL0PR0102CA0049.prod.exchangelabs.com (2603:10b6:208:25::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.20 via Frontend Transport; Sun, 28 Nov 2021 00:14:07 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mr7pW-003nEe-HR; Sat, 27 Nov 2021 20:14:06 -0400
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 44bbdb6c-7155-4037-3ab1-08d9b203fe7f
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5285:|BL1PR12MB5255:
+X-Microsoft-Antispam-PRVS: <BL1PR12MB5285164E24B3F194758FC1F4C2659@BL1PR12MB5285.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Org5Xo6PEIdn8V/PU7GyUVqGVLfHETnxSpTXgjDqpFsuL50/2JdjJ+KmD1U5DhqQi90uSMzhmQDqemfeJ2vMnO7CZYrmssGerGhi5ldr8yKwsQPWXJXBjuQXV3WaFlTlqXDfGmo0qCmad80vGU859L/dBfnmz+HCq0LWtFWtQs+SAF+hqNYPZovgz8MgVuDr0GjvP97HF1DrJpYvRIma3AhsaEPZ2dGyfhgXKIskFO9PWGUEsDUrPd0F12ax6pDk+LeZZjHd36fBCMZD2atctpmAvoZOduRL1L6ijDACcKkH7/Ueml6HrPl0MvAz5uILpdYWTFJOkpKl7e+An1uLI5slefhyvMncJ8lM6+VjR0Bwf+545HKU5vPkmb27d1nJQXzFjm8vqCvqfSVFJvyfaTLnofRp9/f/sLTZyCRvcG9JJdMlDEYbWKRHryvqmVBuZ5AFmR1HvP31bYwiAzlaadER+ZQrdhEcTmzFN+jxKgxFrZYUJA1RerDlNYYpKXsnqeC4vLBTi+LJerXTCE4TMWwTZR4OA5TaTL4ZVV1uhnUr4kKMS27k/6IcIth6Rrf+e7BVSkAJPxYyl/mV0nBSlDpHI85ZBKnGZoNIIWaBDvhOv12ElSgHEvb9/iTl07uhoaROfQiUmjrpxdh5QUuWdQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5285.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(8676002)(9746002)(9786002)(54906003)(86362001)(33656002)(36756003)(316002)(5660300002)(8936002)(7416002)(66556008)(4744005)(26005)(66946007)(66476007)(83380400001)(2906002)(2616005)(38100700002)(186003)(508600001)(426003)(6916009)(4326008)(1076003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?RRsHo0qRY+B4SlGd36X+60HpRCou+GDRqJcYrw0CyCgkGqJRqBsAtsAJgNW2?=
+ =?us-ascii?Q?K3q7UaND7fYX3Gkb0lyEvv0TdAU4zLm6A84F+iAYAEQeMSutGh/uubKjiSTW?=
+ =?us-ascii?Q?EMpYANrGxHencQ2D8JgtOu2ToZjnUwF1aHgThAQuCrrYyr7un0OygKYROA3p?=
+ =?us-ascii?Q?mmbUJr8IXqcSS1WZqyf4GGlp/r1QAod9tducsO43drJYr/I16OD5XnkJm+xS?=
+ =?us-ascii?Q?Fm6MtYsvT+8h8u9b4x40eIATHhlKYSF3Y3PuZa+FTfRvyYHv7O1Er3NCXZ7l?=
+ =?us-ascii?Q?iy7jEKuxXky7Ycgmm9USg0L0LikCkyrT5zHx/hB4uQSOqgEFuBF7z7hCq89g?=
+ =?us-ascii?Q?dBVwbcWvkA7gzSegC+HnyrND1+YW+LHsN/tK2Boq9IXkfB/QmuibG+6ZEFke?=
+ =?us-ascii?Q?dIK8VxEHzMtK8Opo5tcarpOAwj806JQJML/RRANc4MZJvUBWaBv6anAyLAB2?=
+ =?us-ascii?Q?12tgSlbtYUjTjH+3BTd40zcixD/RvGHt9nm/iuiuFG6ajW/aBDg0E2d/ozfx?=
+ =?us-ascii?Q?LNjcp162/xAVEywoXWtTLtsLsIuv8uVqxH2MF8JsSd1B6cSATNHy9Q92a8G1?=
+ =?us-ascii?Q?PAp+Br2TUFOfp/r3094epid4xy8mYBes8DKaNq+AMzAUgTV0mU/mZCaWlYW7?=
+ =?us-ascii?Q?1EmyKpD4GX1iuVrzbu/dz3SXjt5IAYCi45jRLFYpQY66QJwtRPTMGAFz9Khw?=
+ =?us-ascii?Q?zdKYxisLYNjGDfFofhITnoJqcts/QZOz+YhDjjQ03tfZS6NJ0clt21ncPlks?=
+ =?us-ascii?Q?Fhtjjg250IGLJt4tznAiuxZy4uQ5pPCNU/94Dbot7fJDDBKDxN5q5jR5ao5O?=
+ =?us-ascii?Q?LVXN+hiLYzDsJ17rx0gdJYIvSSqoVG95n5rmuXBdUyYzzYW/7om0NkJEz62P?=
+ =?us-ascii?Q?FIETsaJt6IvhLX8skWsunRIr3e4CHeG0j1B+ec/bVfhRPbwHaFVFv5P80M5v?=
+ =?us-ascii?Q?Zh/CcsKvbSqaspU0146aPmXWctaaXIYRaZPO76EnrUzlqyGOJy1eMS6yNqb2?=
+ =?us-ascii?Q?NtaGQMGQ3z1xr0Hkwjq3gQyJq7vdZo47G8uy39MqO4dLw55WjoeX71WQStE1?=
+ =?us-ascii?Q?DPHIMM53Yaz4mN8+HTh6NtmXP017Gf0i8go/9g62L7aWKO5M9GdZU8CxvZT8?=
+ =?us-ascii?Q?ixgLO1umYOyNaxBYUlRW3nDsngj907cZDZ8j2dL40x4dxVE4JFi8bOayJCvt?=
+ =?us-ascii?Q?m8w+qidHEhxJzsqG32yCw6gVRjkccTwVQERi6U8kLUGDM4WIVBNjHaA84fyO?=
+ =?us-ascii?Q?rQxv10A7zDonk0tZnTnfKNkinClEBvOmhB6DZppz89ZE1raxzHe3unlU8Ruz?=
+ =?us-ascii?Q?RnxgazabkhUH39jZm9peWZrg5yNNNEcqzGJHWnSS5chb3RiwM8duIrtBGSao?=
+ =?us-ascii?Q?lbQsdGVz8mjG+uUzRadEUPvZj+7ihArCOH60jx1kzcKP5h/B3p4v7FZbgnXw?=
+ =?us-ascii?Q?GJu0wXebsROsxkaT3iXAn6jwMYmY9tbO7Ep0IFNnXfGwjUohDeWWsktoEpvc?=
+ =?us-ascii?Q?i4p5F1Mwa0jzvxK8yQsKi3ONFxRTh0c3omwx3IZx7C5sZwi04C2Ox+jr5e8n?=
+ =?us-ascii?Q?HTSHbAbHLNoLSpUhaKY=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44bbdb6c-7155-4037-3ab1-08d9b203fe7f
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Nov 2021 00:14:07.5217
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: L2xi5fOw6dVj8XLGT4aUbG58aAdrDMITs1/raskUu7rf5W5niyEATarM7I9lYG82
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5255
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello,
+On Sat, Nov 27, 2021 at 02:20:09AM +0100, Thomas Gleixner wrote:
 
-I am General Irene Duncan from the USA working in the US Army but
-presently in Syria for a peacekeeping mission, I sincerely apologize
-for intruding into your privacy. I have something very important to
-discuss with you.
+> +/**
+> + * msi_setup_device_data - Setup MSI device data
+> + * @dev:	Device for which MSI device data should be set up
+> + *
+> + * Return: 0 on success, appropriate error code otherwise
+> + *
+> + * This can be called more than once for @dev. If the MSI device data is
+> + * already allocated the call succeeds. The allocated memory is
+> + * automatically released when the device is destroyed.
 
-Some money in various currencies where discovered in barrels at a farm
-house in the middle East during a rescue operation in Iraq War and it
-was agreed by Sergeant Kenneth Buff and myself that some part of these
-money be shared between us, I was given a total of ($5 Million US
-Dollars) as my own share , I kept this money in a security company for
-a long while now which i declared and deposit as my personal and
-family treasure and it has been secured and protected for years now
-with the security company.
+I would say 'by devres when the driver is removed' rather than device
+is destroyed - to me the latter implies it would happen at device_del
+or perhaps during release..
 
-Now, the WAR in Iraq is over, and all possible problems that could
-have emanated from the shared money has been totally cleaned up and
-all files closed, all what was discovered in the Middle East is no
-more discussed, i am ready to retire from active services by the end
-of next month, but, i need a trustworthy person that can help me take
-possession of this funds and keep it safe while i work on my
-retirement letter to join you so that we could discuss possible
-business partnership together with the money.
+> +int msi_setup_device_data(struct device *dev)
+> +{
+> +	struct msi_device_data *md;
+> +
+> +	if (dev->msi.data)
+> +		return 0;
+> +
+> +	md = devres_alloc(msi_device_data_release, sizeof(*md), GFP_KERNEL);
+> +	if (!md)
+> +		return -ENOMEM;
+> +
+> +	raw_spin_lock_init(&md->lock);
 
-I'll tell you what! No compensation can make up for the risk we are
-taking with our lives.
+I also couldn't guess why this needed to be raw?
 
-I=E2=80=99m seeking your kind assistance to move the sum of US$5 Million
-Dollars to you as long as you will assure me that the money will be
-safe in your care until I complete my service here in (Syria ) before
-the end of next month.
-
-The most important thing is; =E2=80=9CCan I Trust you=E2=80=9D?As an office=
-r on ACTIVE
-DUTY I am not allowed to have access to money, therefore, I have
-declared the content of the consignment as personal and my treasure. I
-would like to deliver to you. You will be rewarded with 30% of this
-funds for your assistance, all that I require is your mutual trust
-between us. Don't betray me when you receive the consignment.
-
-Sincerely,
-General Irene Duncan
+Jason

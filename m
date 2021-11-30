@@ -2,203 +2,90 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22D5046336F
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Nov 2021 12:54:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C53BE46344C
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Nov 2021 13:30:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230404AbhK3L5Y (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 30 Nov 2021 06:57:24 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:4180 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230273AbhK3L5W (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 Nov 2021 06:57:22 -0500
-Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4J3LF31Knkz67jq6;
-        Tue, 30 Nov 2021 19:52:39 +0800 (CST)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.20; Tue, 30 Nov 2021 12:54:00 +0100
-Received: from localhost (10.202.226.41) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Tue, 30 Nov
- 2021 11:53:59 +0000
-Date:   Tue, 30 Nov 2021 11:53:58 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     LKML <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Stuart Yoder <stuyoder@gmail.com>, <linux-pci@vger.kernel.org>,
-        Will Deacon <will@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
-        Marc Zygnier <maz@kernel.org>, <x86@kernel.org>,
-        Sinan Kaya <okaya@kernel.org>,
-        <iommu@lists.linux-foundation.org>,
-        "Bjorn Helgaas" <helgaas@kernel.org>,
+        id S241582AbhK3MeO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 30 Nov 2021 07:34:14 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:32822 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231559AbhK3MeO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 Nov 2021 07:34:14 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1638275453;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MoxU22IJJPvJRa8OS7V+vWzcBzYBFKmJ+AzUDqGDJ0c=;
+        b=By9F2CxzS/o9ToFNEiRxLUVS4AyQNuM7azBeEiD814EleLq+hJGIFbr5Pb7s+yxDcghQJZ
+        bz+QmgZkMouYYFY+n8NIMmEVrzBGnKypYEtqksbB0LcQcsXrqkseVFUPXnb/sd5ZkkeCjp
+        Pnu87QVrfqY+aPFRcb2JbkA20ryw2kwZX8Zt58hXMuKopfKcpJeEcYrsQaBCBid5TfxvzR
+        pg01jc6fTOy30S6/4paKJbL3nUdr+wHzyl4B2pcoryuGOAyzDqtURCC8EFqCHDYt+1EdmP
+        Tn7K/VVDH3bM9b/JWsuJU4BSSPJHX1HAmQQ17NBsztNZhn1jdrGHUG7vESjD7A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1638275453;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MoxU22IJJPvJRa8OS7V+vWzcBzYBFKmJ+AzUDqGDJ0c=;
+        b=b3LRCCrahGv4zVsp1t2g38jgPS8/TbYK4NCKubQCW9LmpN8f4nz/THoNrepB7KLN6Bne8n
+        caFNq7QymQ+tnnDg==
+To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+Cc:     Nishanth Menon <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>,
+        Stuart Yoder <stuyoder@gmail.com>, linux-pci@vger.kernel.org,
+        Ashok Raj <ashok.raj@intel.com>, Marc Zygnier <maz@kernel.org>,
+        x86@kernel.org, Sinan Kaya <okaya@kernel.org>,
+        iommu@lists.linux-foundation.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
         Megha Dey <megha.dey@intel.com>,
-        "Jason Gunthorpe" <jgg@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Kevin Tian <kevin.tian@intel.com>,
-        "Alex Williamson" <alex.williamson@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Santosh Shilimkar <ssantosh@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-kernel@lists.infradead.org,
         Tero Kristo <kristo@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Vinod Koul" <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
-Subject: Re: [patch 08/37] genirq/msi: Provide
- msi_device_populate/destroy_sysfs()
-Message-ID: <20211130115358.000017ec@Huawei.com>
-In-Reply-To: <20211126230524.416227100@linutronix.de>
+        LKML <linux-kernel@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Subject: Re: [patch 33/37] iommu/arm-smmu-v3: Use msi_get_virq()
+In-Reply-To: <20211130093607.GA23941@willie-the-truck>
 References: <20211126224100.303046749@linutronix.de>
-        <20211126230524.416227100@linutronix.de>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+ <20211126230525.885757679@linutronix.de>
+ <20211129105506.GA22761@willie-the-truck>
+ <76a1b5c1-01c8-bb30-6105-b4073dc23065@arm.com> <87czmjdnw9.ffs@tglx>
+ <b192ad88-5e4e-6f32-1cc7-7a50fc0676a1@arm.com>
+ <20211130093607.GA23941@willie-the-truck>
+Date:   Tue, 30 Nov 2021 13:30:53 +0100
+Message-ID: <878rx5ddvm.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.41]
-X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sat, 27 Nov 2021 02:20:19 +0100 (CET)
-Thomas Gleixner <tglx@linutronix.de> wrote:
+On Tue, Nov 30 2021 at 09:36, Will Deacon wrote:
+> On Mon, Nov 29, 2021 at 02:54:18PM +0000, Robin Murphy wrote:
+>> On 2021-11-29 14:42, Thomas Gleixner wrote:
+>> > It's actually 0 when the vector cannot be found.
+>> 
+>> Oh, -1 for my reading comprehension but +1 for my confidence in the patch
+>> then :)
+>> 
+>> I'll let Will have the final say over how cautious we really want to be
+>> here, but as far as I'm concerned it's a welcome cleanup as-is. Ditto for
+>> patch #32 based on the same reasoning, although I don't have a suitable test
+>> platform on-hand to sanity-check that one.
+>
+> If, as it appears, msi_get_virq() isn't going to fail meaningfully after
+> we've successfully called platform_msi_domain_alloc_irqs() then it sounds
+> like the patch is fine. Just wanted to check though, as Spring cleaning at
+> the end of November raised an eyebrow over here :)
 
-> Add new allocation functions which can be activated by domain info
-> flags. They store the groups pointer in struct msi_device_data.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Fair enough. Next time I'll name it 'Cleaning the Augean stables' when
+it's the wrong season.
 
-A few trivial comments...
+Thanks,
 
-> ---
->  include/linux/msi.h |   12 +++++++++++-
->  kernel/irq/msi.c    |   42 ++++++++++++++++++++++++++++++++++++++++--
->  2 files changed, 51 insertions(+), 3 deletions(-)
-> 
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -174,9 +174,11 @@ struct msi_desc {
->  /**
->   * msi_device_data - MSI per device data
->   * @lock:		Spinlock to protect register access
-> + * @attrs:		Pointer to the sysfs attribute group
->   */
->  struct msi_device_data {
-> -	raw_spinlock_t		lock;
-> +	raw_spinlock_t			lock;
-
-Trivial: Move the alignment change back to patch 2.
-
-> +	const struct attribute_group    **attrs;
->  };
->  
->  int msi_setup_device_data(struct device *dev);
-> @@ -242,10 +244,16 @@ void pci_msi_mask_irq(struct irq_data *d
->  void pci_msi_unmask_irq(struct irq_data *data);
->  
->  #ifdef CONFIG_SYSFS
-> +int msi_device_populate_sysfs(struct device *dev);
-> +void msi_device_destroy_sysfs(struct device *dev);
-> +
->  const struct attribute_group **msi_populate_sysfs(struct device *dev);
->  void msi_destroy_sysfs(struct device *dev,
->  		       const struct attribute_group **msi_irq_groups);
->  #else
-> +static inline int msi_device_populate_sysfs(struct device *dev) { return 0; }
-> +static inline void msi_device_destroy_sysfs(struct device *dev) { }
-> +
->  static inline const struct attribute_group **msi_populate_sysfs(struct device *dev)
->  {
->  	return NULL;
-> @@ -393,6 +401,8 @@ enum {
->  	MSI_FLAG_MUST_REACTIVATE	= (1 << 5),
->  	/* Is level-triggered capable, using two messages */
->  	MSI_FLAG_LEVEL_CAPABLE		= (1 << 6),
-> +	/* Populate sysfs on alloc() and destroy it on free() */
-> +	MSI_FLAG_DEV_SYSFS		= (1 << 7),
->  };
->  
->  int msi_domain_set_affinity(struct irq_data *data, const struct cpumask *mask,
-> --- a/kernel/irq/msi.c
-> +++ b/kernel/irq/msi.c
-> @@ -214,6 +214,20 @@ const struct attribute_group **msi_popul
->  }
->  
->  /**
-> + * msi_device_populate_sysfs - Populate msi_irqs sysfs entries for a device
-> + * @dev:	The device(PCI, platform etc) which will get sysfs entries
-
-Space after device
-
-> + */
-> +int msi_device_populate_sysfs(struct device *dev)
-> +{
-> +	const struct attribute_group **group = msi_populate_sysfs(dev);
-> +
-> +	if (IS_ERR(group))
-> +		return PTR_ERR(group);
-> +	dev->msi.data->attrs = group;
-> +	return 0;
-> +}
-> +
-> +/**
->   * msi_destroy_sysfs - Destroy msi_irqs sysfs entries for devices
->   * @dev:		The device(PCI, platform etc) who will remove sysfs entries
->   * @msi_irq_groups:	attribute_group for device msi_irqs entries
-> @@ -239,6 +253,17 @@ void msi_destroy_sysfs(struct device *de
->  		kfree(msi_irq_groups);
->  	}
->  }
-> +
-> +/**
-> + * msi_device_destroy_sysfs - Destroy msi_irqs sysfs entries for a device
-> + * @dev:		The device(PCI, platform etc) for which to remove
-> + *			sysfs entries
-> + */
-> +void msi_device_destroy_sysfs(struct device *dev)
-> +{
-> +	msi_destroy_sysfs(dev, dev->msi.data->attrs);
-> +	dev->msi.data->attrs = NULL;
-> +}
->  #endif
->  
->  #ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
-> @@ -686,8 +711,19 @@ int msi_domain_alloc_irqs(struct irq_dom
->  {
->  	struct msi_domain_info *info = domain->host_data;
->  	struct msi_domain_ops *ops = info->ops;
-> +	int ret;
->  
-> -	return ops->domain_alloc_irqs(domain, dev, nvec);
-> +	ret = ops->domain_alloc_irqs(domain, dev, nvec);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!(info->flags & MSI_FLAG_DEV_SYSFS))
-> +		return 0;
-> +
-> +	ret = msi_device_populate_sysfs(dev);
-> +	if (ret)
-> +		msi_domain_free_irqs(domain, dev);
-> +	return ret;
->  }
->  
->  void __msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
-> @@ -726,7 +762,9 @@ void msi_domain_free_irqs(struct irq_dom
->  	struct msi_domain_info *info = domain->host_data;
->  	struct msi_domain_ops *ops = info->ops;
->  
-> -	return ops->domain_free_irqs(domain, dev);
-> +	if (info->flags & MSI_FLAG_DEV_SYSFS)
-> +		msi_device_destroy_sysfs(dev);
-> +	ops->domain_free_irqs(domain, dev);
->  }
->  
->  /**
-> 
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+        tglx
 

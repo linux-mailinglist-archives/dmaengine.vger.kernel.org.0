@@ -2,91 +2,90 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3649446611A
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Dec 2021 11:04:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0641A4671CB
+	for <lists+dmaengine@lfdr.de>; Fri,  3 Dec 2021 07:11:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345034AbhLBKIL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 2 Dec 2021 05:08:11 -0500
-Received: from mail-ua1-f53.google.com ([209.85.222.53]:38849 "EHLO
-        mail-ua1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241413AbhLBKHv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 2 Dec 2021 05:07:51 -0500
-Received: by mail-ua1-f53.google.com with SMTP id w23so54729463uao.5;
-        Thu, 02 Dec 2021 02:04:29 -0800 (PST)
+        id S1350423AbhLCGOw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 3 Dec 2021 01:14:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238272AbhLCGOv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 3 Dec 2021 01:14:51 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B4F4C06174A;
+        Thu,  2 Dec 2021 22:11:27 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id np6-20020a17090b4c4600b001a90b011e06so1614119pjb.5;
+        Thu, 02 Dec 2021 22:11:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Qe9TsMPoc9Li6+dUgwQtyeT32RNAnDmS4X1L/pUrWR8=;
+        b=nCkVuC2ZxAKGT0FNO/lfEwz+llY5WO5JxM9G5Q25is+6dflVNvNraPGCjV+GRp3sR7
+         jObfAmYF0YYxQ4zCOKW6yKb/S2FUTNNDy3bYUps5lnlCCuGPz357KqSUurGTQosXKAK3
+         xNWM5LIkqdcWRVvOxG3zBroSJOc2V41XR2owuGTMK+UL8j4YVwot8Fh9N+KXJQZypZjr
+         kAO3sd/SrqYnN/pNM0Kletuw3U8JDSUewL7Gsnl97sdvIiDy5JvHa38r8+ldJbcC6A+x
+         GzMp7l7fs1z9j9AHeRqRaZJ8RSeVWMbKWCcV6Pc8yc4nh1DKrdCn0HZSbEgeoYwZjA1R
+         61sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=54g/h1vHmCTiyAGVZtHNa46rksNUGNErFPNGl5DOYdM=;
-        b=OlV4Gu7Gk0eAB+4rlFYkODFpimQZxmg3xX+WZ6g3ygQV6r+I58bemDVqLDsg242hLd
-         WfuRFypXSNxWxPYQvva+n+tNZiY0Kg9KagetenEjonNgp2mTlUS2dfzDMCALlkPOI4hh
-         znvT1GDia7KcUHajdsWDUOqz0ZcAccx/1zJ4L780jb06yooUE4tmi1vHWsCXjrGKXM8h
-         oPT/qrcMG/A9i4GmdVDsfNCXVzEdXFLSuBvKGIiGs3jyCvucxdfaolR9K+KyAMC30g6a
-         YBHLg3wfqxOEZc3dU2Y45Ligc31JFDt6WaQLzitlXFVflP5AzAARIpSwV3/Shk88vybh
-         SJNQ==
-X-Gm-Message-State: AOAM533apjnL0L6yicr2zU2zp4Xq2i/nVCJzYoFQ+uNuNqL0hKIGGQUT
-        IlpBOAayBJB/JvD+5KbGUODSpNqYMr8kPA==
-X-Google-Smtp-Source: ABdhPJzESsx8qhHLtPxAAyeS0Fab7UPXda4RIKWcgdpAsOVB8caFYXY02b6LtrYrmQsqDMJpFQq3wA==
-X-Received: by 2002:a67:efd5:: with SMTP id s21mr13802474vsp.73.1638439468388;
-        Thu, 02 Dec 2021 02:04:28 -0800 (PST)
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
-        by smtp.gmail.com with ESMTPSA id y22sm683086vkn.42.2021.12.02.02.04.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Dec 2021 02:04:27 -0800 (PST)
-Received: by mail-vk1-f180.google.com with SMTP id j1so18075195vkr.1;
-        Thu, 02 Dec 2021 02:04:27 -0800 (PST)
-X-Received: by 2002:a05:6122:920:: with SMTP id j32mr15229249vka.20.1638439467494;
- Thu, 02 Dec 2021 02:04:27 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Qe9TsMPoc9Li6+dUgwQtyeT32RNAnDmS4X1L/pUrWR8=;
+        b=N35kZnha+BydPbdLG6N9jfLAehUDmprYfrn591gd6URmCRC897l43Uje5siAmsEn6l
+         SqehJDIPSTM0KlfdNo9ePUNzsIbWXBvLBlAKNt6siamYdvc7vnpCs0mhdpIs2qj+zsoo
+         dTvmLMpyFQoWTALDppLiSv61Z6Ape59exJKBoYDAYo80BTwENCAWEVQ1Xc3LVEWGP7M9
+         UHPQ3OA0kKZAw7GYpn4Yi8DIx5XIvthLeIsz+Pj0wDuFyOsb1q48HMtuAo7bYkCo4DlJ
+         csQGVy66SwrmdjZvD1pKM9UkXQBNXhSzQfI8iz7aNYCIHVGXXvDQIOFcFNymfz7nQgVz
+         28bg==
+X-Gm-Message-State: AOAM533purttWvDkeeg1r0410p5tDMIg/sBJ20fWDbTLZ4mJuSnCu2fA
+        eRNNyaDjf+nxE5tAJMp75A==
+X-Google-Smtp-Source: ABdhPJx9oW6yrUXXx5Nyk1wOX9/D/Es4lkJxt/ROQWOPEAqNLUHWf8onuCZDn8d1hiQ1otNwHfw99g==
+X-Received: by 2002:a17:903:10d:b0:142:6343:a48e with SMTP id y13-20020a170903010d00b001426343a48emr20546375plc.29.1638511886980;
+        Thu, 02 Dec 2021 22:11:26 -0800 (PST)
+Received: from localhost.localdomain ([202.112.238.128])
+        by smtp.gmail.com with ESMTPSA id y23sm1216315pgf.86.2021.12.02.22.11.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Dec 2021 22:11:26 -0800 (PST)
+From:   Zheyu Ma <zheyuma97@gmail.com>
+To:     gustavo.pimentel@synopsys.com, vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Zheyu Ma <zheyuma97@gmail.com>
+Subject: [PATCH] dmaengine: dw-edma: Fix error handling in dw_edma_pcied_probe()
+Date:   Fri,  3 Dec 2021 06:11:15 +0000
+Message-Id: <20211203061115.19458-1-zheyuma97@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20211125151918.162446-1-geert@linux-m68k.org> <Yaf6wa5tyO/oCCeK@robh.at.kernel.org>
-In-Reply-To: <Yaf6wa5tyO/oCCeK@robh.at.kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 2 Dec 2021 11:04:16 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWaW2Bv4Q7LPkVDeYngRWoTMztzUHZEvpLWbDkn9epH_A@mail.gmail.com>
-Message-ID: <CAMuHMdWaW2Bv4Q7LPkVDeYngRWoTMztzUHZEvpLWbDkn9epH_A@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: dma: snps,dw-axi-dmac: Group tuples in snps properties
-To:     Rob Herring <robh@kernel.org>
-Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Heng Sia <jee.heng.sia@intel.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Rob,
+When err is a non-zero value, it means failure.
 
-On Wed, Dec 1, 2021 at 11:44 PM Rob Herring <robh@kernel.org> wrote:
-> On Thu, Nov 25, 2021 at 04:19:18PM +0100, Geert Uytterhoeven wrote:
-> > To improve human readability and enable automatic validation, the tuples
-> > in "snps,block-size" and "snps,priority" properties should be grouped
-> > using angle brackets.
->
-> For these, the tools should allow either way. Where are you seeing an
-> error?
+Signed-off-by: Zheyu Ma <zheyuma97@gmail.com>
+---
+ drivers/dma/dw-edma/dw-edma-pcie.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Good to know. I'm not seeing any errors.
+diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+index 198f6cd8ac1b..92c4f5b7d229 100644
+--- a/drivers/dma/dw-edma/dw-edma-pcie.c
++++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+@@ -187,12 +187,10 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 
+ 	/* DMA configuration */
+ 	err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+-	if (!err) {
++	if (err) {
+ 		pci_err(pdev, "DMA mask 64 set failed\n");
+ 		return err;
+ 	} else {
+-		pci_err(pdev, "DMA mask 64 set failed\n");
+-
+ 		err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+ 		if (err) {
+ 			pci_err(pdev, "DMA mask 32 set failed\n");
+-- 
+2.25.1
 
-> I tried to rationalize which way should be 'correct' and gave up. I
-> think bracketing only makes sense for matrix and phandle+arg cases.
-
-That makes sense.  And "interrupts" is special, because it's really a
-short-hand for "interrupts-extended", with the phandle specified by
-"interrupt-parent" at the same or a higher level.
-
-Hence I'll drop this patch.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds

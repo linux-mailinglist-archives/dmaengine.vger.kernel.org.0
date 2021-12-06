@@ -2,36 +2,36 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F5DE46ACAB
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Dec 2021 23:41:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 200DB46ACCB
+	for <lists+dmaengine@lfdr.de>; Mon,  6 Dec 2021 23:41:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358919AbhLFWnz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 6 Dec 2021 17:43:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51278 "EHLO
+        id S1359648AbhLFWod (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 6 Dec 2021 17:44:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358948AbhLFWnD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Dec 2021 17:43:03 -0500
+        with ESMTP id S1358749AbhLFWnw (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Dec 2021 17:43:52 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1829EC0698CA;
-        Mon,  6 Dec 2021 14:39:30 -0800 (PST)
-Message-ID: <20211206210438.742297272@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0993C0613F8;
+        Mon,  6 Dec 2021 14:39:31 -0800 (PST)
+Message-ID: <20211206210438.798385721@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638830368;
+        s=2020; t=1638830370;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=W2lCRcP9RIug8p7Jz6C0/K2R924e9P+4OVHLDtbDEY4=;
-        b=NAItHuLmL2ZcCfnzc7fXrckrfGRBHJLTQ6z+8GQi+pDtw3TJzWlrZdzM68dhy4eE1OUrN4
-        WQpDNI30CiepjXFq3GVRqOgL6lbHugqbiK1cgKeYZQQlmp0QNv6K3/G1f9qICr1H7udj02
-        IL3YCTHnXu0Nc9n7X5/vnjZpUzoBt0BVJmug9p6XoFHASymZZCX8NBeLxW7a+KomP2zscN
-        Yw4oyjCuV9LJAUYax/vCmkxmlobmILYr9Kaz4DUGkfdOhTY2fy7moleVn4aZ55FimhJjry
-        KhYtaopElknezT4DQ1+BGYb8QpKLSmpd8RvSeJ/uyfPSLa3v/+iGr3ib39VvMg==
+         references:references; bh=QKm5Bkgh66jv1esKyW8TAnHsECmZ82riLvDb0inI4Eg=;
+        b=D895zweyz5rbn/kKNt1XSIZZIuu70zOfe8t7aNy6eaPuk9Jq384UyDeqpSVebKzdt73wdz
+        bv7oA/8soERWvg0vMVEhhtWvYy4IfPCtuN/t3lSP2LujCACSKlucdnk1rwd2IuGWqJIFD8
+        nOVDr0ME8uC+jRHNJzxXbEtkp66jTzTjncgcDGqbqeAttmBFKXBWKcHTEzc0T76+lCvfWa
+        MAQDG916FrRq9K4G7NfDRXGR98nTfIVsRZ1vGbWC8yf3qj15N4x8kVyYNA45iti3xk7yDI
+        ytFRfME9YaBXfT1xX96SqT4gmdILXf5V3Ng1EWWU6qBlvAGu+w/79e/X7HV6Ow==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638830368;
+        s=2020e; t=1638830370;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=W2lCRcP9RIug8p7Jz6C0/K2R924e9P+4OVHLDtbDEY4=;
-        b=1Bo7ypMWpOuT+BmW7TSVzw6bj18E4LKNZBSZWEJqZFWNgSmXB22SiYHDMtnKsfQTyHA/Yy
-        OLurUGAL5gX1tZAQ==
+         references:references; bh=QKm5Bkgh66jv1esKyW8TAnHsECmZ82riLvDb0inI4Eg=;
+        b=sryxMrjcTSIoBdRCnKd98j0nEMOVFGKXsMpQoApejZmYu5+s8j3Ve6PT3Ubr/cO+sp4m5N
+        PPEkyZUsYvUJINDg==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -54,11 +54,11 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Robin Murphy <robin.murphy@arm.com>,
         Sinan Kaya <okaya@kernel.org>
-Subject: [patch V2 20/36] x86/pci/XEN: Use device MSI properties
+Subject: [patch V2 21/36] x86/apic/msi: Use device MSI properties
 References: <20211206210307.625116253@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Mon,  6 Dec 2021 23:39:28 +0100 (CET)
+Date:   Mon,  6 Dec 2021 23:39:29 +0100 (CET)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -69,29 +69,22 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 ---
- arch/x86/pci/xen.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/x86/kernel/apic/msi.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/arch/x86/pci/xen.c
-+++ b/arch/x86/pci/xen.c
-@@ -399,9 +399,7 @@ static void xen_teardown_msi_irqs(struct
- 
- static void xen_pv_teardown_msi_irqs(struct pci_dev *dev)
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -160,11 +160,8 @@ static struct irq_chip pci_msi_controlle
+ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+ 		    msi_alloc_info_t *arg)
  {
--	struct msi_desc *msidesc = first_pci_msi_entry(dev);
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct msi_desc *desc = first_pci_msi_entry(pdev);
 -
--	if (msidesc->pci.msi_attrib.is_msix)
-+	if (msi_device_has_property(&dev->dev, MSI_PROP_PCI_MSIX))
- 		xen_pci_frontend_disable_msix(dev);
- 	else
- 		xen_pci_frontend_disable_msi(dev);
-@@ -417,7 +415,7 @@ static int xen_msi_domain_alloc_irqs(str
- 	if (WARN_ON_ONCE(!dev_is_pci(dev)))
- 		return -EINVAL;
- 
--	if (first_msi_entry(dev)->pci.msi_attrib.is_msix)
-+	if (msi_device_has_property(dev, MSI_PROP_PCI_MSIX))
- 		type = PCI_CAP_ID_MSIX;
- 	else
- 		type = PCI_CAP_ID_MSI;
+ 	init_irq_alloc_info(arg, NULL);
+-	if (desc->pci.msi_attrib.is_msix) {
++	if (msi_device_has_property(dev, MSI_PROP_PCI_MSIX)) {
+ 		arg->type = X86_IRQ_ALLOC_TYPE_PCI_MSIX;
+ 	} else {
+ 		arg->type = X86_IRQ_ALLOC_TYPE_PCI_MSI;
 

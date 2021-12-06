@@ -2,24 +2,23 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B79FD46A35B
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Dec 2021 18:43:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66D0546A35E
+	for <lists+dmaengine@lfdr.de>; Mon,  6 Dec 2021 18:43:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244404AbhLFRqr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 6 Dec 2021 12:46:47 -0500
-Received: from aposti.net ([89.234.176.197]:59616 "EHLO aposti.net"
+        id S232629AbhLFRq7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 6 Dec 2021 12:46:59 -0500
+Received: from aposti.net ([89.234.176.197]:59656 "EHLO aposti.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243600AbhLFRqq (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 6 Dec 2021 12:46:46 -0500
+        id S245375AbhLFRqx (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 6 Dec 2021 12:46:53 -0500
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>
 Cc:     list@opendingux.net, dmaengine@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 1/6] dt-bindings: dma: ingenic: Add compatible strings for MDMA and BDMA
-Date:   Mon,  6 Dec 2021 17:42:54 +0000
-Message-Id: <20211206174259.68133-2-paul@crapouillou.net>
+        linux-mips@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 2/6] dt-bindings: dma: ingenic: Support #dma-cells = <3>
+Date:   Mon,  6 Dec 2021 17:42:55 +0000
+Message-Id: <20211206174259.68133-3-paul@crapouillou.net>
 In-Reply-To: <20211206174259.68133-1-paul@crapouillou.net>
 References: <20211206174259.68133-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -28,59 +27,47 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The JZ4760 and JZ4760B SoCs have two additional DMA controllers: the
-MDMA, which only supports memcpy operations, and the BDMA which is
-mostly used for transfer between memories and the BCH controller.
-The JZ4770 also features the same BDMA as in the JZ4760B, but does not
-seem to have a MDMA.
+Extend the binding to support specifying a different request type for
+each direction.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 
 Notes:
-    v2: Fix indentation
+    v2: Enhance documentation
 
- .../devicetree/bindings/dma/ingenic,dma.yaml  | 26 ++++++++++++-------
- 1 file changed, 17 insertions(+), 9 deletions(-)
+ .../devicetree/bindings/dma/ingenic,dma.yaml     | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/dma/ingenic,dma.yaml b/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
-index dc059d6fd037..2607b403277e 100644
+index 2607b403277e..3b0b3b919af8 100644
 --- a/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
 +++ b/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
-@@ -14,15 +14,23 @@ allOf:
+@@ -44,13 +44,19 @@ properties:
+     maxItems: 1
  
- properties:
-   compatible:
--    enum:
--      - ingenic,jz4740-dma
--      - ingenic,jz4725b-dma
--      - ingenic,jz4760-dma
--      - ingenic,jz4760b-dma
--      - ingenic,jz4770-dma
--      - ingenic,jz4780-dma
--      - ingenic,x1000-dma
--      - ingenic,x1830-dma
-+    oneOf:
-+      - enum:
-+          - ingenic,jz4740-dma
-+          - ingenic,jz4725b-dma
-+          - ingenic,jz4760-dma
-+          - ingenic,jz4760-bdma
-+          - ingenic,jz4760-mdma
-+          - ingenic,jz4760b-dma
-+          - ingenic,jz4760b-bdma
-+          - ingenic,jz4760b-mdma
-+          - ingenic,jz4770-dma
-+          - ingenic,jz4780-dma
-+          - ingenic,x1000-dma
-+          - ingenic,x1830-dma
-+      - items:
-+          - const: ingenic,jz4770-bdma
-+          - const: ingenic,jz4760b-bdma
+   "#dma-cells":
+-    const: 2
++    enum: [2, 3]
+     description: >
+       DMA clients must use the format described in dma.txt, giving a phandle
+-      to the DMA controller plus the following 2 integer cells:
+-
+-      - Request type: The DMA request type for transfers to/from the
+-        device on the allocated channel, as defined in the SoC documentation.
++      to the DMA controller plus the following integer cells:
++
++      - Request type: The DMA request type specifies the device endpoint that
++        will be the source or destination of the DMA transfer.
++        If "#dma-cells" is 2, the request type is a single cell, and the
++        direction will be unidirectional (either RX or TX but not both).
++        If "#dma-cells" is 3, the request type has two cells; the first
++        one corresponds to the host to device direction (TX), the second one
++        corresponds to the device to host direction (RX). The DMA channel is
++        then bidirectional.
  
-   reg:
-     items:
+       - Channel: If set to 0xffffffff, any available channel will be allocated
+         for the client. Otherwise, the exact channel specified will be used.
 -- 
 2.33.0
 

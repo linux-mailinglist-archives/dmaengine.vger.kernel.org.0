@@ -2,23 +2,23 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B78A846A369
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Dec 2021 18:43:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12B3146A36D
+	for <lists+dmaengine@lfdr.de>; Mon,  6 Dec 2021 18:44:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245706AbhLFRrT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 6 Dec 2021 12:47:19 -0500
-Received: from aposti.net ([89.234.176.197]:59744 "EHLO aposti.net"
+        id S245477AbhLFRrZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 6 Dec 2021 12:47:25 -0500
+Received: from aposti.net ([89.234.176.197]:59760 "EHLO aposti.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S245477AbhLFRrS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 6 Dec 2021 12:47:18 -0500
+        id S239205AbhLFRrZ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 6 Dec 2021 12:47:25 -0500
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>
 Cc:     list@opendingux.net, dmaengine@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mips@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 5/6] dmaengine: jz4780: Replace uint32_t with u32
-Date:   Mon,  6 Dec 2021 17:42:58 +0000
-Message-Id: <20211206174259.68133-6-paul@crapouillou.net>
+Subject: [PATCH v2 6/6] dmaengine: jz4780: Support bidirectional I/O on one channel
+Date:   Mon,  6 Dec 2021 17:42:59 +0000
+Message-Id: <20211206174259.68133-7-paul@crapouillou.net>
 In-Reply-To: <20211206174259.68133-1-paul@crapouillou.net>
 References: <20211206174259.68133-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -27,146 +27,162 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Replace the uint32_t type used all over dma-jz4780.c with the equivalent
-Linux type: u32.
+For some devices with only half-duplex capabilities, it doesn't make
+much sense to use one DMA channel per direction, as both channels will
+never be active at the same time.
+
+Add support for bidirectional I/O on DMA channels. The client drivers
+can then request a "tx-rx" DMA channel which will be used for both
+directions.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/dma/dma-jz4780.c | 38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+ drivers/dma/dma-jz4780.c | 48 ++++++++++++++++++++++++++--------------
+ 1 file changed, 32 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index bcd21d7a559d..c8c4bbd57d14 100644
+index c8c4bbd57d14..fc513eb2b289 100644
 --- a/drivers/dma/dma-jz4780.c
 +++ b/drivers/dma/dma-jz4780.c
-@@ -104,10 +104,10 @@
-  * descriptor base address in the upper 8 bits.
-  */
- struct jz4780_dma_hwdesc {
--	uint32_t dcm;
--	uint32_t dsa;
--	uint32_t dta;
--	uint32_t dtc;
-+	u32 dcm;
-+	u32 dsa;
-+	u32 dta;
-+	u32 dtc;
- };
- 
- /* Size of allocations for hardware descriptor blocks. */
-@@ -122,7 +122,7 @@ struct jz4780_dma_desc {
+@@ -122,6 +122,7 @@ struct jz4780_dma_desc {
  	dma_addr_t desc_phys;
  	unsigned int count;
  	enum dma_transaction_type type;
--	uint32_t status;
-+	u32 status;
++	u32 transfer_type;
+ 	u32 status;
  };
  
- struct jz4780_dma_chan {
-@@ -130,8 +130,8 @@ struct jz4780_dma_chan {
+@@ -130,7 +131,7 @@ struct jz4780_dma_chan {
  	unsigned int id;
  	struct dma_pool *desc_pool;
  
--	uint32_t transfer_type;
--	uint32_t transfer_shift;
-+	u32 transfer_type;
-+	u32 transfer_shift;
+-	u32 transfer_type;
++	u32 transfer_type_tx, transfer_type_rx;
+ 	u32 transfer_shift;
  	struct dma_slave_config	config;
  
- 	struct jz4780_dma_desc *desc;
-@@ -152,12 +152,12 @@ struct jz4780_dma_dev {
- 	unsigned int irq;
- 	const struct jz4780_dma_soc_data *soc_data;
- 
--	uint32_t chan_reserved;
-+	u32 chan_reserved;
- 	struct jz4780_dma_chan chan[];
+@@ -157,7 +158,7 @@ struct jz4780_dma_dev {
  };
  
  struct jz4780_dma_filter_data {
--	uint32_t transfer_type;
-+	u32 transfer_type;
+-	u32 transfer_type;
++	u32 transfer_type_tx, transfer_type_rx;
  	int channel;
  };
  
-@@ -179,26 +179,26 @@ static inline struct jz4780_dma_dev *jz4780_dma_chan_parent(
- 			    dma_device);
+@@ -226,9 +227,10 @@ static inline void jz4780_dma_chan_disable(struct jz4780_dma_dev *jzdma,
+ 		jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DCKEC, BIT(chn));
  }
  
--static inline uint32_t jz4780_dma_chn_readl(struct jz4780_dma_dev *jzdma,
-+static inline u32 jz4780_dma_chn_readl(struct jz4780_dma_dev *jzdma,
- 	unsigned int chn, unsigned int reg)
+-static struct jz4780_dma_desc *jz4780_dma_desc_alloc(
+-	struct jz4780_dma_chan *jzchan, unsigned int count,
+-	enum dma_transaction_type type)
++static struct jz4780_dma_desc *
++jz4780_dma_desc_alloc(struct jz4780_dma_chan *jzchan, unsigned int count,
++		      enum dma_transaction_type type,
++		      enum dma_transfer_direction direction)
  {
- 	return readl(jzdma->chn_base + reg + JZ_DMA_REG_CHAN(chn));
- }
- 
- static inline void jz4780_dma_chn_writel(struct jz4780_dma_dev *jzdma,
--	unsigned int chn, unsigned int reg, uint32_t val)
-+	unsigned int chn, unsigned int reg, u32 val)
- {
- 	writel(val, jzdma->chn_base + reg + JZ_DMA_REG_CHAN(chn));
- }
- 
--static inline uint32_t jz4780_dma_ctrl_readl(struct jz4780_dma_dev *jzdma,
-+static inline u32 jz4780_dma_ctrl_readl(struct jz4780_dma_dev *jzdma,
- 	unsigned int reg)
- {
- 	return readl(jzdma->ctrl_base + reg);
- }
- 
- static inline void jz4780_dma_ctrl_writel(struct jz4780_dma_dev *jzdma,
--	unsigned int reg, uint32_t val)
-+	unsigned int reg, u32 val)
- {
- 	writel(val, jzdma->ctrl_base + reg);
- }
-@@ -260,8 +260,8 @@ static void jz4780_dma_desc_free(struct virt_dma_desc *vdesc)
- 	kfree(desc);
- }
- 
--static uint32_t jz4780_dma_transfer_size(struct jz4780_dma_chan *jzchan,
--	unsigned long val, uint32_t *shift)
-+static u32 jz4780_dma_transfer_size(struct jz4780_dma_chan *jzchan,
-+	unsigned long val, u32 *shift)
- {
- 	struct jz4780_dma_dev *jzdma = jz4780_dma_chan_parent(jzchan);
- 	int ord = ffs(val) - 1;
-@@ -303,7 +303,7 @@ static int jz4780_dma_setup_hwdesc(struct jz4780_dma_chan *jzchan,
- 	enum dma_transfer_direction direction)
- {
- 	struct dma_slave_config *config = &jzchan->config;
--	uint32_t width, maxburst, tsz;
-+	u32 width, maxburst, tsz;
- 
- 	if (direction == DMA_MEM_TO_DEV) {
- 		desc->dcm = JZ_DMA_DCM_SAI;
-@@ -453,7 +453,7 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_dma_memcpy(
- {
- 	struct jz4780_dma_chan *jzchan = to_jz4780_dma_chan(chan);
  	struct jz4780_dma_desc *desc;
--	uint32_t tsz;
-+	u32 tsz;
  
- 	desc = jz4780_dma_desc_alloc(jzchan, 1, DMA_MEMCPY);
+@@ -248,6 +250,12 @@ static struct jz4780_dma_desc *jz4780_dma_desc_alloc(
+ 
+ 	desc->count = count;
+ 	desc->type = type;
++
++	if (direction == DMA_DEV_TO_MEM)
++		desc->transfer_type = jzchan->transfer_type_rx;
++	else
++		desc->transfer_type = jzchan->transfer_type_tx;
++
+ 	return desc;
+ }
+ 
+@@ -361,7 +369,7 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_slave_sg(
+ 	unsigned int i;
+ 	int err;
+ 
+-	desc = jz4780_dma_desc_alloc(jzchan, sg_len, DMA_SLAVE);
++	desc = jz4780_dma_desc_alloc(jzchan, sg_len, DMA_SLAVE, direction);
  	if (!desc)
-@@ -670,7 +670,7 @@ static bool jz4780_dma_chan_irq(struct jz4780_dma_dev *jzdma,
- {
- 	const unsigned int soc_flags = jzdma->soc_data->flags;
- 	struct jz4780_dma_desc *desc = jzchan->desc;
--	uint32_t dcs;
-+	u32 dcs;
- 	bool ack = true;
+ 		return NULL;
  
- 	spin_lock(&jzchan->vchan.lock);
-@@ -727,7 +727,7 @@ static irqreturn_t jz4780_dma_irq_handler(int irq, void *data)
- 	struct jz4780_dma_dev *jzdma = data;
- 	unsigned int nb_channels = jzdma->soc_data->nb_channels;
- 	unsigned long pending;
--	uint32_t dmac;
-+	u32 dmac;
- 	int i;
+@@ -410,7 +418,7 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_dma_cyclic(
  
- 	pending = jz4780_dma_ctrl_readl(jzdma, JZ_DMA_REG_DIRQP);
+ 	periods = buf_len / period_len;
+ 
+-	desc = jz4780_dma_desc_alloc(jzchan, periods, DMA_CYCLIC);
++	desc = jz4780_dma_desc_alloc(jzchan, periods, DMA_CYCLIC, direction);
+ 	if (!desc)
+ 		return NULL;
+ 
+@@ -455,14 +463,14 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_dma_memcpy(
+ 	struct jz4780_dma_desc *desc;
+ 	u32 tsz;
+ 
+-	desc = jz4780_dma_desc_alloc(jzchan, 1, DMA_MEMCPY);
++	desc = jz4780_dma_desc_alloc(jzchan, 1, DMA_MEMCPY, 0);
+ 	if (!desc)
+ 		return NULL;
+ 
+ 	tsz = jz4780_dma_transfer_size(jzchan, dest | src | len,
+ 				       &jzchan->transfer_shift);
+ 
+-	jzchan->transfer_type = JZ_DMA_DRT_AUTO;
++	desc->transfer_type = JZ_DMA_DRT_AUTO;
+ 
+ 	desc->desc[0].dsa = src;
+ 	desc->desc[0].dta = dest;
+@@ -528,7 +536,7 @@ static void jz4780_dma_begin(struct jz4780_dma_chan *jzchan)
+ 
+ 	/* Set transfer type. */
+ 	jz4780_dma_chn_writel(jzdma, jzchan->id, JZ_DMA_REG_DRT,
+-			      jzchan->transfer_type);
++			      jzchan->desc->transfer_type);
+ 
+ 	/*
+ 	 * Set the transfer count. This is redundant for a descriptor-driven
+@@ -788,7 +796,8 @@ static bool jz4780_dma_filter_fn(struct dma_chan *chan, void *param)
+ 		return false;
+ 	}
+ 
+-	jzchan->transfer_type = data->transfer_type;
++	jzchan->transfer_type_tx = data->transfer_type_tx;
++	jzchan->transfer_type_rx = data->transfer_type_rx;
+ 
+ 	return true;
+ }
+@@ -800,11 +809,17 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
+ 	dma_cap_mask_t mask = jzdma->dma_device.cap_mask;
+ 	struct jz4780_dma_filter_data data;
+ 
+-	if (dma_spec->args_count != 2)
++	if (dma_spec->args_count == 2) {
++		data.transfer_type_tx = dma_spec->args[0];
++		data.transfer_type_rx = dma_spec->args[0];
++		data.channel = dma_spec->args[1];
++	} else if (dma_spec->args_count == 3) {
++		data.transfer_type_tx = dma_spec->args[0];
++		data.transfer_type_rx = dma_spec->args[1];
++		data.channel = dma_spec->args[2];
++	} else {
+ 		return NULL;
+-
+-	data.transfer_type = dma_spec->args[0];
+-	data.channel = dma_spec->args[1];
++	}
+ 
+ 	if (data.channel > -1) {
+ 		if (data.channel >= jzdma->soc_data->nb_channels) {
+@@ -822,7 +837,8 @@ static struct dma_chan *jz4780_of_dma_xlate(struct of_phandle_args *dma_spec,
+ 			return NULL;
+ 		}
+ 
+-		jzdma->chan[data.channel].transfer_type = data.transfer_type;
++		jzdma->chan[data.channel].transfer_type_tx = data.transfer_type_tx;
++		jzdma->chan[data.channel].transfer_type_rx = data.transfer_type_rx;
+ 
+ 		return dma_get_slave_channel(
+ 			&jzdma->chan[data.channel].vchan.chan);
 -- 
 2.33.0
 

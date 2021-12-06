@@ -2,36 +2,36 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B43FE46ACD2
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Dec 2021 23:41:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0996946ACD3
+	for <lists+dmaengine@lfdr.de>; Mon,  6 Dec 2021 23:41:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376824AbhLFWog (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        id S1376833AbhLFWog (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
         Mon, 6 Dec 2021 17:44:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51532 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359758AbhLFWnx (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Dec 2021 17:43:53 -0500
+        with ESMTP id S1376257AbhLFWny (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Dec 2021 17:43:54 -0500
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18553C0698D0;
-        Mon,  6 Dec 2021 14:39:43 -0800 (PST)
-Message-ID: <20211206210439.181331216@linutronix.de>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 915BDC0698D3;
+        Mon,  6 Dec 2021 14:39:44 -0800 (PST)
+Message-ID: <20211206210439.235197701@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638830381;
+        s=2020; t=1638830383;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=VrULNCMH+O8xsmxJgHu1VunM7q/HyFmEpUljbWBlO+M=;
-        b=1WyUya3l8fZi6fy1zbrOKQrTo97M/mFRNLJk70qGOPb0JPRgzFKQUP3Ap98oq2yIU+W79y
-        WmvByYmwToUfcQdjSAd5N46svh0Lkih1RSbg6furNRI0+XUMr1pOBKIX+irSBkIRN609j/
-        jgDcnPD7jjQZ/ZAEDMijZa34I3oXKq99mGxdyY7uvZ2xHboD3lTKRVNV1ahRc0v6NJpUyd
-        2djS86MgaRG75KvoijVeoRbChYP6OBHa4h+jnI5iBX5I8xLG5cijyFLO/hLr8BePuB5G8D
-        EXG5Csvz4BostgHD1hbblseyHYWXy7KyZk0QJOjUNO2iPqUZZX60PIldxOiaQQ==
+         references:references; bh=5qM8oTMdwr/Y2E0GqvCoV+ICoCbtIN+qv9nd5yB9GSs=;
+        b=JZUiFd3pdAJSDHq3VUKyD1OasA2Oro+g6/uvV4V1qDl2UvEQOxkAZViWPoRa1NZRu4vrzp
+        FSTaStgm9FEmDsBsZ66XQO/bZ/+okt7KGfKcrN/2NbxpxF/R1qyGnY78CRd8GruycHQEVZ
+        rkanxCjOU0JZth6BjhfeH6jyiNEl10eM8zmu0QdZv039kX8m7iaUJndnRdzGqDcBs3ZHK5
+        fGBt+IglBMNHOnTm6Ak4gC7GTGciTERnIJ7HCpMCN4ClaPBo4nxP6A1orRZulEBjSPWeRe
+        UwbpdXn6gbDNBMeTOE1BJabB7epz/u6ZhmrKNcIC5JFZ98DTuQ3Giaf/QufpbQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638830381;
+        s=2020e; t=1638830383;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=VrULNCMH+O8xsmxJgHu1VunM7q/HyFmEpUljbWBlO+M=;
-        b=4SHbAktYMF4p3JfEkG2RuP8fQBgK7GPTe1sN6CDnwn2pN1kMTUy4TffqwybjaftPt18Fji
-        W4koD0rufC6aGiCQ==
+         references:references; bh=5qM8oTMdwr/Y2E0GqvCoV+ICoCbtIN+qv9nd5yB9GSs=;
+        b=m7lB0SchfJa9KJJz6u/QEd1BWWy3oYWAfOm6ycYh04Bv8BpwvZDfPvxc4nUATe4yTmjDlt
+        Ejzuwe8vxERhfFCQ==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -54,60 +54,62 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Robin Murphy <robin.murphy@arm.com>,
         Sinan Kaya <okaya@kernel.org>
-Subject: [patch V2 28/36] PCI/MSI: Use __msi_get_virq() in pci_get_vector()
+Subject: [patch V2 29/36] PCI/MSI: Simplify pci_irq_get_affinity()
 References: <20211206210307.625116253@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Mon,  6 Dec 2021 23:39:41 +0100 (CET)
+Date:   Mon,  6 Dec 2021 23:39:42 +0100 (CET)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Use msi_get_vector() and handle the return value to be compatible.
-
-No functional change intended.
+Replace open coded MSI descriptor chasing and use the proper accessor
+functions instead.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 ---
-V2: Handle the INTx case directly instead of trying to be overly smart - Marc
----
- drivers/pci/msi/msi.c |   25 +++++--------------------
- 1 file changed, 5 insertions(+), 20 deletions(-)
+ drivers/pci/msi/msi.c |   26 ++++++++++----------------
+ 1 file changed, 10 insertions(+), 16 deletions(-)
 
 --- a/drivers/pci/msi/msi.c
 +++ b/drivers/pci/msi/msi.c
-@@ -1032,28 +1032,13 @@ EXPORT_SYMBOL(pci_free_irq_vectors);
+@@ -1056,26 +1056,20 @@ EXPORT_SYMBOL(pci_irq_vector);
   */
- int pci_irq_vector(struct pci_dev *dev, unsigned int nr)
+ const struct cpumask *pci_irq_get_affinity(struct pci_dev *dev, int nr)
  {
 -	if (dev->msix_enabled) {
 -		struct msi_desc *entry;
-+	unsigned int irq;
++	int irq = pci_irq_vector(dev, nr);
++	struct msi_desc *desc;
  
 -		for_each_pci_msi_entry(entry, dev) {
 -			if (entry->msi_index == nr)
--				return entry->irq;
+-				return &entry->affinity->mask;
 -		}
 -		WARN_ON_ONCE(1);
--		return -EINVAL;
--	}
-+	if (!dev->msi_enabled && !dev->msix_enabled)
-+		return !nr ? dev->irq : -EINVAL;
- 
--	if (dev->msi_enabled) {
++	if (WARN_ON_ONCE(irq <= 0))
+ 		return NULL;
+-	} else if (dev->msi_enabled) {
 -		struct msi_desc *entry = first_pci_msi_entry(dev);
+ 
+-		if (WARN_ON_ONCE(!entry || !entry->affinity ||
+-				 nr >= entry->nvec_used))
+-			return NULL;
 -
--		if (WARN_ON_ONCE(nr >= entry->nvec_used))
--			return -EINVAL;
+-		return &entry->affinity[nr].mask;
 -	} else {
--		if (WARN_ON_ONCE(nr > 0))
--			return -EINVAL;
++	desc = irq_get_msi_desc(irq);
++	/* Non-MSI does not have the information handy */
++	if (!desc)
+ 		return cpu_possible_mask;
 -	}
--
--	return dev->irq + nr;
-+	irq = msi_get_virq(&dev->dev, nr);
-+	return irq ? irq : -EINVAL;
++
++	if (WARN_ON_ONCE(!desc->affinity))
++		return NULL;
++	return &desc->affinity[nr].mask;
  }
- EXPORT_SYMBOL(pci_irq_vector);
+ EXPORT_SYMBOL(pci_irq_get_affinity);
  
 

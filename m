@@ -2,155 +2,104 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77EE146ACE0
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Dec 2021 23:41:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC29046AFE2
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Dec 2021 02:38:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358954AbhLFWor (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 6 Dec 2021 17:44:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51346 "EHLO
+        id S232496AbhLGBmO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 6 Dec 2021 20:42:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376311AbhLFWnz (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Dec 2021 17:43:55 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D96B5C0698E0;
-        Mon,  6 Dec 2021 14:39:55 -0800 (PST)
-Message-ID: <20211206210439.616608151@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638830394;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=LQ/fEdCb15XlPMORiCBx0zVLCBalBxQN731AvqWpOBo=;
-        b=3Tr/OwgWIjMrczL8k1Y7KpZrpQnBzbzk9jNn+YVhicF0q1/EBaWLJA5EQBnAdsN1D0Wulq
-        fAFu1JfAhDg12kjnKrY2feAVfczr4B+D+aUKxqRZIoJXfcp1b/l9lDzmvNTqF83GMPtmNg
-        O0L6lFFrGJsZpIUFf96nNzXT4R0YcnNglyNnCKK28eg5CfoXrplM1E/O55dg7JVrhTT4Ku
-        8OKWXgKy/6DEHxFU+DSvrITn94Q+Iw/VdTagX65qE9U6P1e6EDxwHz+zW2M2yl46BHw3XE
-        y5F6c4xy7ygjQQk0fTm74ujfKrEoV6cO6elD5cK86MxFI4yGcgRgty/GSG5jgw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638830394;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=LQ/fEdCb15XlPMORiCBx0zVLCBalBxQN731AvqWpOBo=;
-        b=MVm0lNeB+aCsPEoi2uRKK0tL8KdeGC0UXyY+t/l2SKc/6bvFzzrRpVEcjpjs9glSsWZ1fc
-        khvHgThvvOwd8zBA==
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sinan Kaya <okaya@kernel.org>, dmaengine@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        iommu@lists.linux-foundation.org,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Vinod Koul <vkoul@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: [patch V2 36/36] dmaengine: qcom_hidma: Cleanup MSI handling
-References: <20211206210307.625116253@linutronix.de>
+        with ESMTP id S229734AbhLGBmO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Dec 2021 20:42:14 -0500
+Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4287C061746;
+        Mon,  6 Dec 2021 17:38:44 -0800 (PST)
+Received: by mail-qv1-xf2b.google.com with SMTP id j9so11612799qvm.10;
+        Mon, 06 Dec 2021 17:38:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TtX5Ua1bFK7U/ze5aptE0nmXvt0FV6UQIzQSovRpPk0=;
+        b=Fc0NJJWlIsvOOQPTjV7ybl0o/gG2buF2Ao4AFw3HZBtOUMHdx3N0b0GDbMrHdVHEGr
+         f2VU5s02Q5oCnpngXUvm1iyQuvbmGiGRQv6C0jmWei7y5mEJh5X0wNVhWSQ3qn0fNSiT
+         R6N4NdC32Glypm4dJBTgBddG4mlV6ACgPJlA/pFEY0If4iycaICREhU3ZY4Ib3uT+jW2
+         XhJmT8jPasUUVCewWaBBr6TzLP6R2ahvVKUgM1uDhNQeLsiKvC07MuKzhrVk5o0IYFj8
+         W4MTTTs7NJnFfd0oy97QJO+L+yjdmRyMsTrRxlYhjrCMCU2qVRs4UO1AWihwupydpPhJ
+         rwvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TtX5Ua1bFK7U/ze5aptE0nmXvt0FV6UQIzQSovRpPk0=;
+        b=M0swkeHtN/uaY4UJT/fVFLn4Ewl31x9Ra4NKNUI94NV1JmxAsv/2Okn2vZza2UAbF0
+         bhBXT3KJfx1I1hWpkEB6qNbMDtAWYJ4pv2bRdTWiM1pCWTtD6CexawhJaNZ9X5C9eTSi
+         zCmSjhndJsb5V2FB1I9oYXl+TSEPs6SgZnu70JdX3nIZy39yr8QwTYB+ybZ6sU2JAH1q
+         h20Ml8l9XNNiHU7kD6QeEou+bvQE6hb679jmW8oB/DU9oNmoAG+ligH2eBaeqAHvIws5
+         x0rgfGn/6xUXtuY+7rvr9/FEsjPV2/dRg9eO4vQwBWR+U5mpx6lMovU/XxF+F2jG0TBz
+         08Mg==
+X-Gm-Message-State: AOAM533dzkeohOcbU9hTmR26kZICmT1qX1EeZqbPvIhsmZzOi6FuFZ/p
+        0luMkVXgqgPQ6LX0qGg67iK0I5Dq3fMYGP/tRAg=
+X-Google-Smtp-Source: ABdhPJw9IBOmfDzr2lw9BdL22wzIVyQOHdH9Q/My/9L3cfmA6oJbyB4PFgg0Wceil0iKnLXIVfFpqkyL+Ebm2HeIx70=
+X-Received: by 2002:ad4:4027:: with SMTP id q7mr41260760qvp.117.1638841124062;
+ Mon, 06 Dec 2021 17:38:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon,  6 Dec 2021 23:39:54 +0100 (CET)
+References: <20211206113437.2820889-1-mudongliangabcd@gmail.com>
+In-Reply-To: <20211206113437.2820889-1-mudongliangabcd@gmail.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Tue, 7 Dec 2021 09:39:24 +0800
+Message-ID: <CADBw62pSJ=rHjwTocxeeuCgtadLKqz-U7gAQek5Eo_bBQSzBzQ@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: sprd: move pm_runtime_disable to err_rpm
+To:     Dongliang Mu <mudongliangabcd@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Baolin Wang <baolin.wang@spreadtrum.com>,
+        dmaengine@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-There is no reason to walk the MSI descriptors to retrieve the interrupt
-number for a device. Use msi_get_virq() instead.
+Hi Dongliang,
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Acked-by: Sinan Kaya <okaya@kernel.org>
-Cc: dmaengine@vger.kernel.org
----
- drivers/dma/qcom/hidma.c |   42 ++++++++++++++++++------------------------
- 1 file changed, 18 insertions(+), 24 deletions(-)
+On Mon, Dec 6, 2021 at 7:34 PM Dongliang Mu <mudongliangabcd@gmail.com> wrote:
+>
+> When pm_runtime_get_sync fails, it forgets to invoke pm_runtime_disable
+> in the label err_rpm.
+>
+> Fix this by moving pm_runtime_disable to label err_rpm.
+>
+> Fixes: 9b3b8171f7f4 ("dmaengine: sprd: Add Spreadtrum DMA driver")
+> Signed-off-by: Dongliang Mu <mudongliangabcd@gmail.com>
+> ---
 
---- a/drivers/dma/qcom/hidma.c
-+++ b/drivers/dma/qcom/hidma.c
-@@ -678,11 +678,13 @@ static void hidma_free_msis(struct hidma
- {
- #ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
- 	struct device *dev = dmadev->ddev.dev;
--	struct msi_desc *desc;
-+	int i, virq;
- 
--	/* free allocated MSI interrupts above */
--	for_each_msi_entry(desc, dev)
--		devm_free_irq(dev, desc->irq, &dmadev->lldev);
-+	for (i = 0; i < HIDMA_MSI_INTS; i++) {
-+		virq = msi_get_virq(dev, i);
-+		if (virq)
-+			devm_free_irq(dev, virq, &dmadev->lldev);
-+	}
- 
- 	platform_msi_domain_free_irqs(dev);
- #endif
-@@ -692,45 +694,37 @@ static int hidma_request_msi(struct hidm
- 			     struct platform_device *pdev)
- {
- #ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
--	int rc;
--	struct msi_desc *desc;
--	struct msi_desc *failed_desc = NULL;
-+	int rc, i, virq;
- 
- 	rc = platform_msi_domain_alloc_irqs(&pdev->dev, HIDMA_MSI_INTS,
- 					    hidma_write_msi_msg);
- 	if (rc)
- 		return rc;
- 
--	for_each_msi_entry(desc, &pdev->dev) {
--		if (!desc->msi_index)
--			dmadev->msi_virqbase = desc->irq;
--
--		rc = devm_request_irq(&pdev->dev, desc->irq,
-+	for (i = 0; i < HIDMA_MSI_INTS; i++) {
-+		virq = msi_get_virq(&pdev->dev, i);
-+		rc = devm_request_irq(&pdev->dev, virq,
- 				       hidma_chirq_handler_msi,
- 				       0, "qcom-hidma-msi",
- 				       &dmadev->lldev);
--		if (rc) {
--			failed_desc = desc;
-+		if (rc)
- 			break;
--		}
-+		if (!i)
-+			dmadev->msi_virqbase = virq;
- 	}
- 
- 	if (rc) {
- 		/* free allocated MSI interrupts above */
--		for_each_msi_entry(desc, &pdev->dev) {
--			if (desc == failed_desc)
--				break;
--			devm_free_irq(&pdev->dev, desc->irq,
--				      &dmadev->lldev);
-+		for (--i; i >= 0; i--) {
-+			virq = msi_get_virq(&pdev->dev, i);
-+			devm_free_irq(&pdev->dev, virq, &dmadev->lldev);
- 		}
-+		dev_warn(&pdev->dev,
-+			 "failed to request MSI irq, falling back to wired IRQ\n");
- 	} else {
- 		/* Add callback to free MSIs on teardown */
- 		hidma_ll_setup_irq(dmadev->lldev, true);
--
- 	}
--	if (rc)
--		dev_warn(&pdev->dev,
--			 "failed to request MSI irq, falling back to wired IRQ\n");
- 	return rc;
- #else
- 	return -EINVAL;
+Thanks for your patch, but looking at the code in detail, I think we
+also should decrease the rpm counter when failing to call the
+pm_runtime_get_sync().
 
+--- a/drivers/dma/sprd-dma.c
++++ b/drivers/dma/sprd-dma.c
+@@ -1210,7 +1210,7 @@ static int sprd_dma_probe(struct platform_device *pdev)
+        ret = dma_async_device_register(&sdev->dma_dev);
+        if (ret < 0) {
+                dev_err(&pdev->dev, "register dma device failed:%d\n", ret);
+-               goto err_register;
++               goto err_rpm;
+        }
+
+        sprd_dma_info.dma_cap = sdev->dma_dev.cap_mask;
+@@ -1224,10 +1224,9 @@ static int sprd_dma_probe(struct platform_device *pdev)
+
+ err_of_register:
+        dma_async_device_unregister(&sdev->dma_dev);
+-err_register:
++err_rpm:
+        pm_runtime_put_noidle(&pdev->dev);
+        pm_runtime_disable(&pdev->dev);
+-err_rpm:
+        sprd_dma_disable(sdev);
+        return ret;
+ }
+
+-- 
+Baolin Wang

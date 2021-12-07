@@ -2,95 +2,116 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDBC946BBD1
-	for <lists+dmaengine@lfdr.de>; Tue,  7 Dec 2021 13:53:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F12BD46BD65
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Dec 2021 15:18:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232183AbhLGM5J (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 7 Dec 2021 07:57:09 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52868 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232142AbhLGM5I (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Dec 2021 07:57:08 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638881617;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aNhnkzcLIHS9o6REcIVVTdi6HJHMTMekwoWhR5Os8KA=;
-        b=fDdfjoBrqymOl2a+g4MXycXTFQvrRmQZeNf3rg3L6n1PiCtdWcCcmDaVpdvwx1WHZPu2/v
-        fJ5y/fl9rqcMBqPDwA5dGahXUq/mN6Rr/ElGbNuccnYfY2zSKXTbzkZQodP7GLSEpFoYdh
-        46+uktDwZ2vMiIgjrLAfY7tW6+YkhG+kEnyrqVcu/yhSumZnuVQZSPFDDqkewYdktBX2W1
-        E5XHAvsHcg+oePKYbcgXP8R5bFs+hJf3t4yTvMtPo50NBwX80mLh/AIBUE7bofDK/aFu6H
-        qtf+AY+yYI2U4AcWEXhnQ22yGPrAzddB3aN+8X6CX1qpB5O1+EGPIoTqDwRh5g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638881617;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aNhnkzcLIHS9o6REcIVVTdi6HJHMTMekwoWhR5Os8KA=;
-        b=9LR8QBp7ApgLB6V6Z+0XA4lyUUgGXXJ03ul38aiaIn/PFJSbmKuGwWEzOcLJoDF8z5Se10
-        uqB+RdhRp6Pw8iDA==
-To:     =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        iommu@lists.linux-foundation.org, dmaengine@vger.kernel.org,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Vinod Koul <vkoul@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sinan Kaya <okaya@kernel.org>
-Subject: Re: [patch V2 18/36] genirq/msi: Add msi_device_data::properties
-In-Reply-To: <87ilw037km.ffs@tglx>
-References: <20211206210307.625116253@linutronix.de>
- <20211206210438.634566968@linutronix.de>
- <6f06c9f0-1f8f-e467-b0fb-2f9985d5be0d@kaod.org> <87ilw037km.ffs@tglx>
-Date:   Tue, 07 Dec 2021 13:53:36 +0100
-Message-ID: <87fsr437an.ffs@tglx>
+        id S232279AbhLGOVk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 7 Dec 2021 09:21:40 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:41244 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229615AbhLGOVk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Dec 2021 09:21:40 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 566AFCE1AB3;
+        Tue,  7 Dec 2021 14:18:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FC76C341C5;
+        Tue,  7 Dec 2021 14:18:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638886686;
+        bh=1chlDx3iIHLkU8O/4MF4tixPugbIgeHoET/PZmxRlCc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=U8eq9OK6ookKoEdM8US+bMmhjjBIeBKaG08316vwnUsYIx1KTmHBQmIra0IsvXU7E
+         bZoC/hvP7Btb13n7VFCdBExxWzoCt7dD1MIG2wpWPtk1Hy9/M3TWPzbOd2C2otw1/4
+         UPRN5Z+kaA90E4cQhV5ZdWnMn3yIWx7xwLjIcY6b3N4foEcx+0Gq5lQQVSDWvwxXg1
+         hdONry5oEDjXNIo/KD/O3NeOmOBV3+iTKQypMgZhs2Fbgyb3WlCBSt1y5ogUlHj8iN
+         n+YnqtzinROisJA4YcbOdpgZRGPaTG12oANjMU4Qf9oLbBRi/CqDNrj34M+yIwVg7D
+         2alBIYJg/L70g==
+Received: by mail-ed1-f44.google.com with SMTP id g14so56959651edb.8;
+        Tue, 07 Dec 2021 06:18:06 -0800 (PST)
+X-Gm-Message-State: AOAM530e1aSQGQ8a2PPlHkJEBZ60kPt0IZoD463lZjfZ8vEbFTv/Vexw
+        APD8NUzvou0yE9yNF4DkzjCn86SL9jmNnyQ+Xg==
+X-Google-Smtp-Source: ABdhPJyTgmbH9yu5bvdESYeVKS5w5HdszrdhnlBeddmJ5KKCuYkIuj/4w0Tdr+EVYOMNuLHtyqZYJSIruTjMk9MHMq8=
+X-Received: by 2002:a05:6402:35ce:: with SMTP id z14mr9462522edc.197.1638886684437;
+ Tue, 07 Dec 2021 06:18:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20211206174226.2298135-1-robh@kernel.org> <Ya8eC9UkwMZaNozs@orome.fritz.box>
+In-Reply-To: <Ya8eC9UkwMZaNozs@orome.fritz.box>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 7 Dec 2021 08:17:52 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJCwXqyijyavk8oKx3CG2KTb=8p+5kbCJiMe4mMt9DhSQ@mail.gmail.com>
+Message-ID: <CAL_JsqJCwXqyijyavk8oKx3CG2KTb=8p+5kbCJiMe4mMt9DhSQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: dma: ti: Add missing ti,k3-sci-common.yaml reference
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org,
+        dmaengine@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Dec 07 2021 at 13:47, Thomas Gleixner wrote:
-> On Tue, Dec 07 2021 at 10:04, C=C3=A9dric Le Goater wrote:
->>> +/**
->>> + * msi_device_set_properties - Set device specific MSI properties
->>> + * @dev:	Pointer to the device which is queried
->>> + * @prop:	Properties to set
->>> + */
->>> +void msi_device_set_properties(struct device *dev, unsigned long prop)
->>> +{
->>> +	if (WARN_ON_ONCE(!dev->msi.data))
->>> +		return ;
->>> +	dev->msi.data->properties =3D 0;
->> It would work better if the prop variable was used instead of 0.
->>
->> With that fixed,
+On Tue, Dec 7, 2021 at 2:40 AM Thierry Reding <thierry.reding@gmail.com> wrote:
 >
-> Indeed. Copy & pasta w/o brain usage ...
+> On Mon, Dec 06, 2021 at 11:42:26AM -0600, Rob Herring wrote:
+> > The TI k3-bcdma and k3-pktdma both use 'ti,sci' and 'ti,sci-dev-id'
+> > properties defined in ti,k3-sci-common.yaml. When 'unevaluatedProperties'
+> > support is enabled, a the follow warning is generated:
+>
+> s/a the following/the following/
+>
+> Otherwise looks good:
+>
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
 
-I've pushed out an incremental fix on top. Will be folded back.
+Thanks.
 
-     git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git msi-v2-pa=
-rt-3-1
+>
+> One question below...
+>
+> >
+> > Documentation/devicetree/bindings/dma/ti/k3-bcdma.example.dt.yaml: dma-controller@485c0100: Unevaluated properties are not allowed ('ti,sci', 'ti,sci-dev-id' were unexpected)
+> > Documentation/devicetree/bindings/dma/ti/k3-pktdma.example.dt.yaml: dma-controller@485c0000: Unevaluated properties are not allowed ('ti,sci', 'ti,sci-dev-id' were unexpected)
+> >
+> > Add a reference to ti,k3-sci-common.yaml to fix this.
+> >
+> > Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+> > Cc: Vinod Koul <vkoul@kernel.org>
+> > Cc: dmaengine@vger.kernel.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml  | 1 +
+> >  Documentation/devicetree/bindings/dma/ti/k3-pktdma.yaml | 1 +
+> >  2 files changed, 2 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml b/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
+> > index df29d59d13a8..08627d91e607 100644
+> > --- a/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
+> > +++ b/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
+> > @@ -30,6 +30,7 @@ description: |
+> >
+> >  allOf:
+> >    - $ref: /schemas/dma/dma-controller.yaml#
+> > +  - $ref: /schemas/arm/keystone/ti,k3-sci-common.yaml#
+>
+> Out of curiosity: is the # at the end necessary, or do you just use it
+> as a convention?
 
-Thanks,
+It is at least convention. The jsonschema module doesn't require it,
+but not sure what the spec says.
 
-        tglx
+> I've seen a mix of both and there also seems to be a
+> healthy mix of quoted and unquoted paths. Do we want to settle on one
+> going forward or do we not care enough?
+
+I don't really want to dictate one way if it can't automatically be
+checked. The '#' could be checked easily, but quoting is harder. There
+is some tool support for checking quotes actually, but you have to
+enable the yaml round trip loader which is noticeably slower. yamllint
+might be the better place to add it though getting yaml quoting rules
+right in the general case is a bit harder. Also, to enforce it, I have
+to first go fix all the existing cases.
+
+Rob

@@ -2,37 +2,37 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4157546BB9D
-	for <lists+dmaengine@lfdr.de>; Tue,  7 Dec 2021 13:47:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDBC946BBD1
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Dec 2021 13:53:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236623AbhLGMvK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 7 Dec 2021 07:51:10 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52798 "EHLO
+        id S232183AbhLGM5J (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 7 Dec 2021 07:57:09 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:52868 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236624AbhLGMvJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Dec 2021 07:51:09 -0500
+        with ESMTP id S232142AbhLGM5I (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Dec 2021 07:57:08 -0500
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638881258;
+        s=2020; t=1638881617;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=rfvMhKPhb1o//czxJpD8hEyO6OfjVQhOJc2oIhKZDZw=;
-        b=1QK7A5Quf6kWCtw53J7LvMSn21VoC3/a3rTC4N/K9KOL4NOIZguih61ltj5o2xfGP8fosF
-        BeQwVchpb12p0y5ddl73SUOzMBu6gIMOsGkxFdl5DJrfmj1Eim1xbeRkUgaFost/P/l1rc
-        R2cgY1UjJCMU1gjgvFUxFmbrR1966LIsSNzq5oGXncv5V0Y5vYAuEeLPzjweMxQI48uHLx
-        MdMtGCM3OlYqjQpPgR4EUu0q413CYfgQ72I0nJ6osdk/lVoifAMucYRoeBo63dPfAw6clb
-        UTcRGoe1SrHcnbJssHPqCjL3MC2C5BTHwEW6fNyn25OsD54B/nKqidN8WpkUhw==
+        bh=aNhnkzcLIHS9o6REcIVVTdi6HJHMTMekwoWhR5Os8KA=;
+        b=fDdfjoBrqymOl2a+g4MXycXTFQvrRmQZeNf3rg3L6n1PiCtdWcCcmDaVpdvwx1WHZPu2/v
+        fJ5y/fl9rqcMBqPDwA5dGahXUq/mN6Rr/ElGbNuccnYfY2zSKXTbzkZQodP7GLSEpFoYdh
+        46+uktDwZ2vMiIgjrLAfY7tW6+YkhG+kEnyrqVcu/yhSumZnuVQZSPFDDqkewYdktBX2W1
+        E5XHAvsHcg+oePKYbcgXP8R5bFs+hJf3t4yTvMtPo50NBwX80mLh/AIBUE7bofDK/aFu6H
+        qtf+AY+yYI2U4AcWEXhnQ22yGPrAzddB3aN+8X6CX1qpB5O1+EGPIoTqDwRh5g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638881258;
+        s=2020e; t=1638881617;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=rfvMhKPhb1o//czxJpD8hEyO6OfjVQhOJc2oIhKZDZw=;
-        b=iWRt10cM8F7Z6E8RZ9a3abFTVEBRiybM6wE8GDhsSLisml9tvmBdzmeYXcqagp5wZeqokg
-        ZkJiPjEuHtHx+wCA==
+        bh=aNhnkzcLIHS9o6REcIVVTdi6HJHMTMekwoWhR5Os8KA=;
+        b=9LR8QBp7ApgLB6V6Z+0XA4lyUUgGXXJ03ul38aiaIn/PFJSbmKuGwWEzOcLJoDF8z5Se10
+        uqB+RdhRp6Pw8iDA==
 To:     =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
         LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -55,12 +55,12 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
         Sinan Kaya <okaya@kernel.org>
 Subject: Re: [patch V2 18/36] genirq/msi: Add msi_device_data::properties
-In-Reply-To: <6f06c9f0-1f8f-e467-b0fb-2f9985d5be0d@kaod.org>
+In-Reply-To: <87ilw037km.ffs@tglx>
 References: <20211206210307.625116253@linutronix.de>
  <20211206210438.634566968@linutronix.de>
- <6f06c9f0-1f8f-e467-b0fb-2f9985d5be0d@kaod.org>
-Date:   Tue, 07 Dec 2021 13:47:37 +0100
-Message-ID: <87ilw037km.ffs@tglx>
+ <6f06c9f0-1f8f-e467-b0fb-2f9985d5be0d@kaod.org> <87ilw037km.ffs@tglx>
+Date:   Tue, 07 Dec 2021 13:53:36 +0100
+Message-ID: <87fsr437an.ffs@tglx>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -68,19 +68,29 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Dec 07 2021 at 10:04, C=C3=A9dric Le Goater wrote:
->> +/**
->> + * msi_device_set_properties - Set device specific MSI properties
->> + * @dev:	Pointer to the device which is queried
->> + * @prop:	Properties to set
->> + */
->> +void msi_device_set_properties(struct device *dev, unsigned long prop)
->> +{
->> +	if (WARN_ON_ONCE(!dev->msi.data))
->> +		return ;
->> +	dev->msi.data->properties =3D 0;
-> It would work better if the prop variable was used instead of 0.
+On Tue, Dec 07 2021 at 13:47, Thomas Gleixner wrote:
+> On Tue, Dec 07 2021 at 10:04, C=C3=A9dric Le Goater wrote:
+>>> +/**
+>>> + * msi_device_set_properties - Set device specific MSI properties
+>>> + * @dev:	Pointer to the device which is queried
+>>> + * @prop:	Properties to set
+>>> + */
+>>> +void msi_device_set_properties(struct device *dev, unsigned long prop)
+>>> +{
+>>> +	if (WARN_ON_ONCE(!dev->msi.data))
+>>> +		return ;
+>>> +	dev->msi.data->properties =3D 0;
+>> It would work better if the prop variable was used instead of 0.
+>>
+>> With that fixed,
 >
-> With that fixed,
+> Indeed. Copy & pasta w/o brain usage ...
 
-Indeed. Copy & pasta w/o brain usage ...
+I've pushed out an incremental fix on top. Will be folded back.
+
+     git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git msi-v2-pa=
+rt-3-1
+
+Thanks,
+
+        tglx

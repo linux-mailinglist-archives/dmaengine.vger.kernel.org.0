@@ -2,124 +2,255 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39C1B46C692
-	for <lists+dmaengine@lfdr.de>; Tue,  7 Dec 2021 22:19:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E51646C836
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Dec 2021 00:27:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232588AbhLGVWe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 7 Dec 2021 16:22:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232518AbhLGVWe (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Dec 2021 16:22:34 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 755FAC061574;
-        Tue,  7 Dec 2021 13:19:03 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638911940;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fejqz/bIS5UVVez3Xtjq2jInYaufJY/nLKnDbenyBtw=;
-        b=VC5Rvg7jiq8Ikfw+JFC2if6V+C51JARVBdC0uW9vUW0CHLXLMJTCVCws2bKyhUrgzzbYBD
-        TspgTWIoCN3z1mpSmBTfGbx4XIbh9GbNDRxSmFXBfJwIBX3j0sw+jnfm/oYCbc43OrEUpM
-        SS9tX2diiZM5lYRGla6ljcr7iPYUAT/RJ9qMdqhJZgpVF0sfTve/39i5qs1L2SbKmA26Kk
-        RuYaS8IxyMjfJtp5yErMcFm+uepejATF2VudC9wKWykGQzcm11Soqa0vOKrqlwq9Qy2ES/
-        hIUI+MznVV8wAM/ESPIdQN7tFRoLJxRc700tRc0QEredDULx8y3xvMEgR1lqVw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638911940;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fejqz/bIS5UVVez3Xtjq2jInYaufJY/nLKnDbenyBtw=;
-        b=tpxYQz931aJ9NXdPSYYAooQnjmQcVTU6ncg1A9XfE7ZYmworf/GnMN1rkeaSCd4LIsHO3E
-        LsosR2mIUwj5rrDw==
-To:     =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        iommu@lists.linux-foundation.org, dmaengine@vger.kernel.org,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Vinod Koul <vkoul@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Keith Busch <kbusch@kernel.org>
-Subject: Re: [patch V2 29/36] PCI/MSI: Simplify pci_irq_get_affinity()
-In-Reply-To: <e32237f3-0ff2-cf80-cd99-0b4813d1ed21@kaod.org>
-References: <20211206210307.625116253@linutronix.de>
- <20211206210439.235197701@linutronix.de>
- <e32237f3-0ff2-cf80-cd99-0b4813d1ed21@kaod.org>
-Date:   Tue, 07 Dec 2021 22:19:00 +0100
-Message-ID: <87zgpc15bv.ffs@tglx>
+        id S238426AbhLGXah (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 7 Dec 2021 18:30:37 -0500
+Received: from mga05.intel.com ([192.55.52.43]:61404 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238376AbhLGXag (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 7 Dec 2021 18:30:36 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="323966452"
+X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
+   d="scan'208";a="323966452"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 15:27:05 -0800
+X-IronPort-AV: E=Sophos;i="5.87,295,1631602800"; 
+   d="scan'208";a="611876673"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.88.239]) ([10.212.88.239])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 15:27:04 -0800
+Message-ID: <dbb90f20-d9fb-1f24-b59d-15a2a42437e2@intel.com>
+Date:   Tue, 7 Dec 2021 16:27:03 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH 4/4] dmaengine: idxd: Use DMA API for in-kernel DMA with
+ PASID
+Content-Language: en-US
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+Cc:     Jacob Pan <jacob.jun.pan@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        Tony Luck <tony.luck@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Barry Song <21cnbao@gmail.com>,
+        "Zanussi, Tom" <tom.zanussi@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+References: <1638884834-83028-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1638884834-83028-5-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <1638884834-83028-5-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Cedric,
 
-On Tue, Dec 07 2021 at 18:42, C=C3=A9dric Le Goater wrote:
+On 12/7/2021 6:47 AM, Jacob Pan wrote:
+> In-kernel DMA should be managed by DMA mapping API. The existing kernel
+> PASID support is based on the SVA machinery in SVA lib that is intended
+> for user process SVA. The binding between a kernel PASID and kernel
+> mapping has many flaws. See discussions in the link below.
 >
-> This is breaking nvme on pseries but it's probably one of the previous
-> patches. I haven't figured out what's wrong yet. Here is the oops FYI.
+> This patch utilizes iommu_enable_pasid_dma() to enable DSA to perform DMA
+> requests with PASID under the same mapping managed by DMA mapping API.
+> In addition, SVA-related bits for kernel DMA are removed. As a result,
+> DSA users shall use DMA mapping API to obtain DMA handles instead of
+> using kernel virtual addresses.
+>
+> Link: https://lore.kernel.org/linux-iommu/20210511194726.GP1002214@nvidia.com/
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-Hrm.
+Acked-by: Dave Jiang <dave.jiang@intel.com>
 
-> [   32.494562] WARNING: CPU: 26 PID: 658 at kernel/irq/chip.c:210 irq_sta=
-rtup+0x1c0/0x1e0
+Also cc Vinod and dmaengine@vger
 
-This complains about a manual enable_irq() on a managed interrupt.
 
-> [   32.494575] Modules linked in: ibmvscsi ibmveth scsi_transport_srp bnx=
-2x ipr libata xhci_pci xhci_hcd nvme xts vmx_crypto nvme_core mdio t10_pi l=
-ibcrc32c dm_mirror dm_region_hash dm_log dm_mod
-> [   32.494601] CPU: 26 PID: 658 Comm: kworker/26:1H Not tainted 5.16.0-rc=
-4-clg+ #54
-> [   32.494607] Workqueue: kblockd blk_mq_timeout_work
-> [   32.494681] NIP [c000000000206f00] irq_startup+0x1c0/0x1e0
-> [   32.494686] LR [c000000000206df0] irq_startup+0xb0/0x1e0
-> [   32.494690] Call Trace:
-> [   32.494692] [c0000018050f38b0] [c000000000206df0] irq_startup+0xb0/0x1=
-e0 (unreliable)
-> [   32.494699] [c0000018050f38f0] [c00000000020155c] __enable_irq+0x9c/0x=
-b0
-> [   32.494705] [c0000018050f3950] [c0000000002015d0] enable_irq+0x60/0xc0
-> [   32.494710] [c0000018050f39d0] [c008000014a54ae8] nvme_poll_irqdisable=
-+0x80/0xc0 [nvme]
-> [   32.494719] [c0000018050f3a00] [c008000014a55824] nvme_timeout+0x18c/0=
-x420 [nvme]
-> [   32.494726] [c0000018050f3ae0] [c00000000076e1b8] blk_mq_check_expired=
-+0xa8/0x130
-> [   32.494732] [c0000018050f3b10] [c0000000007793e8] bt_iter+0xd8/0x120
-> [   32.494737] [c0000018050f3b60] [c00000000077a34c] blk_mq_queue_tag_bus=
-y_iter+0x25c/0x3f0
-> [   32.494742] [c0000018050f3c20] [c00000000076ffa4] blk_mq_timeout_work+=
-0x84/0x1a0
-> [   32.494747] [c0000018050f3c70] [c000000000182a78] process_one_work+0x2=
-a8/0x5a0
-
-Confused. I diffed against v1, but could not spot anything except that
-properties issue which you found too.
-
-Thanks,
-
-        tglx
-
+> ---
+>   .../admin-guide/kernel-parameters.txt         |  6 --
+>   drivers/dma/Kconfig                           | 10 ----
+>   drivers/dma/idxd/idxd.h                       |  1 -
+>   drivers/dma/idxd/init.c                       | 59 ++++++-------------
+>   drivers/dma/idxd/sysfs.c                      |  7 ---
+>   5 files changed, 19 insertions(+), 64 deletions(-)
+>
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 9725c546a0d4..fe73d02c62f3 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1751,12 +1751,6 @@
+>   			In such case C2/C3 won't be used again.
+>   			idle=nomwait: Disable mwait for CPU C-states
+>   
+> -	idxd.sva=	[HW]
+> -			Format: <bool>
+> -			Allow force disabling of Shared Virtual Memory (SVA)
+> -			support for the idxd driver. By default it is set to
+> -			true (1).
+> -
+>   	idxd.tc_override= [HW]
+>   			Format: <bool>
+>   			Allow override of default traffic class configuration
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index 6bcdb4e6a0d1..3b28bd720e7d 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -313,16 +313,6 @@ config INTEL_IDXD_COMPAT
+>   
+>   	  If unsure, say N.
+>   
+> -# Config symbol that collects all the dependencies that's necessary to
+> -# support shared virtual memory for the devices supported by idxd.
+> -config INTEL_IDXD_SVM
+> -	bool "Accelerator Shared Virtual Memory Support"
+> -	depends on INTEL_IDXD
+> -	depends on INTEL_IOMMU_SVM
+> -	depends on PCI_PRI
+> -	depends on PCI_PASID
+> -	depends on PCI_IOV
+> -
+>   config INTEL_IDXD_PERFMON
+>   	bool "Intel Data Accelerators performance monitor support"
+>   	depends on INTEL_IDXD
+> diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+> index 0cf8d3145870..3155e3a2d3ae 100644
+> --- a/drivers/dma/idxd/idxd.h
+> +++ b/drivers/dma/idxd/idxd.h
+> @@ -262,7 +262,6 @@ struct idxd_device {
+>   	struct idxd_wq **wqs;
+>   	struct idxd_engine **engines;
+>   
+> -	struct iommu_sva *sva;
+>   	unsigned int pasid;
+>   
+>   	int num_groups;
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index 7bf03f371ce1..44633f8113e2 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
+> @@ -16,6 +16,7 @@
+>   #include <linux/idr.h>
+>   #include <linux/intel-svm.h>
+>   #include <linux/iommu.h>
+> +#include <linux/dma-iommu.h>
+>   #include <uapi/linux/idxd.h>
+>   #include <linux/dmaengine.h>
+>   #include "../dmaengine.h"
+> @@ -28,10 +29,6 @@ MODULE_LICENSE("GPL v2");
+>   MODULE_AUTHOR("Intel Corporation");
+>   MODULE_IMPORT_NS(IDXD);
+>   
+> -static bool sva = true;
+> -module_param(sva, bool, 0644);
+> -MODULE_PARM_DESC(sva, "Toggle SVA support on/off");
+> -
+>   bool tc_override;
+>   module_param(tc_override, bool, 0644);
+>   MODULE_PARM_DESC(tc_override, "Override traffic class defaults");
+> @@ -530,36 +527,22 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
+>   
+>   static int idxd_enable_system_pasid(struct idxd_device *idxd)
+>   {
+> -	int flags;
+> -	unsigned int pasid;
+> -	struct iommu_sva *sva;
+> -
+> -	flags = SVM_FLAG_SUPERVISOR_MODE;
+> -
+> -	sva = iommu_sva_bind_device(&idxd->pdev->dev, NULL, &flags);
+> -	if (IS_ERR(sva)) {
+> -		dev_warn(&idxd->pdev->dev,
+> -			 "iommu sva bind failed: %ld\n", PTR_ERR(sva));
+> -		return PTR_ERR(sva);
+> -	}
+> +	u32 pasid;
+>   
+> -	pasid = iommu_sva_get_pasid(sva);
+> -	if (pasid == IOMMU_PASID_INVALID) {
+> -		iommu_sva_unbind_device(sva);
+> +	pasid = iommu_enable_pasid_dma(&idxd->pdev->dev);
+> +	if (pasid == INVALID_IOASID) {
+> +		dev_err(&idxd->pdev->dev, "No kernel DMA PASID\n");
+>   		return -ENODEV;
+>   	}
+> -
+> -	idxd->sva = sva;
+>   	idxd->pasid = pasid;
+> -	dev_dbg(&idxd->pdev->dev, "system pasid: %u\n", pasid);
+> +
+>   	return 0;
+>   }
+>   
+>   static void idxd_disable_system_pasid(struct idxd_device *idxd)
+>   {
+> -
+> -	iommu_sva_unbind_device(idxd->sva);
+> -	idxd->sva = NULL;
+> +	iommu_disable_pasid_dma(&idxd->pdev->dev);
+> +	idxd->pasid = 0;
+>   }
+>   
+>   static int idxd_probe(struct idxd_device *idxd)
+> @@ -575,21 +558,17 @@ static int idxd_probe(struct idxd_device *idxd)
+>   
+>   	dev_dbg(dev, "IDXD reset complete\n");
+>   
+> -	if (IS_ENABLED(CONFIG_INTEL_IDXD_SVM) && sva) {
+> -		rc = iommu_dev_enable_feature(dev, IOMMU_DEV_FEAT_SVA);
+> -		if (rc == 0) {
+> -			rc = idxd_enable_system_pasid(idxd);
+> -			if (rc < 0) {
+> -				iommu_dev_disable_feature(dev, IOMMU_DEV_FEAT_SVA);
+> -				dev_warn(dev, "Failed to enable PASID. No SVA support: %d\n", rc);
+> -			} else {
+> -				set_bit(IDXD_FLAG_PASID_ENABLED, &idxd->flags);
+> -			}
+> -		} else {
+> -			dev_warn(dev, "Unable to turn on SVA feature.\n");
+> -		}
+> -	} else if (!sva) {
+> -		dev_warn(dev, "User forced SVA off via module param.\n");
+> +	/*
+> +	 * Try to enable both in-kernel and user DMA request with PASID.
+> +	 * PASID is supported unless both user and kernel PASID are
+> +	 * supported. Do not fail probe here in that idxd can still be
+> +	 * used w/o PASID or IOMMU.
+> +	 */
+> +	if (iommu_dev_enable_feature(dev, IOMMU_DEV_FEAT_SVA) ||
+> +		idxd_enable_system_pasid(idxd)) {
+> +		dev_warn(dev, "Failed to enable PASID\n");
+> +	} else {
+> +		set_bit(IDXD_FLAG_PASID_ENABLED, &idxd->flags);
+>   	}
+>   
+>   	idxd_read_caps(idxd);
+> diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+> index a9025be940db..35737299c355 100644
+> --- a/drivers/dma/idxd/sysfs.c
+> +++ b/drivers/dma/idxd/sysfs.c
+> @@ -776,13 +776,6 @@ static ssize_t wq_name_store(struct device *dev,
+>   	if (strlen(buf) > WQ_NAME_SIZE || strlen(buf) == 0)
+>   		return -EINVAL;
+>   
+> -	/*
+> -	 * This is temporarily placed here until we have SVM support for
+> -	 * dmaengine.
+> -	 */
+> -	if (wq->type == IDXD_WQT_KERNEL && device_pasid_enabled(wq->idxd))
+> -		return -EOPNOTSUPP;
+> -
+>   	memset(wq->name, 0, WQ_NAME_SIZE + 1);
+>   	strncpy(wq->name, buf, WQ_NAME_SIZE);
+>   	strreplace(wq->name, '\n', '\0');

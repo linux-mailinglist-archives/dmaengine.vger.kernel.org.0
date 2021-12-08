@@ -2,182 +2,217 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3087046D346
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Dec 2021 13:29:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A63E46D745
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Dec 2021 16:45:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233312AbhLHMcj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 8 Dec 2021 07:32:39 -0500
-Received: from mail-bn8nam11on2066.outbound.protection.outlook.com ([40.107.236.66]:9127
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        id S236244AbhLHPsl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 8 Dec 2021 10:48:41 -0500
+Received: from mail-co1nam11on2069.outbound.protection.outlook.com ([40.107.220.69]:24778
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233308AbhLHMch (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 8 Dec 2021 07:32:37 -0500
+        id S233650AbhLHPsk (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 8 Dec 2021 10:48:40 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HnfsnwBEtM4BC/UjC4+DkE3hOhAytw9Ea4mPiPNHofIHB+zNi8H6EKHr3pf8p/515Rt2lxlP8/SnJSccj6gNwl2U7IIKp/69dWOu/p3WIhDSvosEfaqI1fJuDWAI87Y1pGXFTOP0yn7KWSiUS0j1FoDiCQ14XjRAzKfbnpkhOvos5ltreFrTtgm860MfFjY4cqIuIfi2pd4S5v1VPKIDnZACv7Ie5B+pSYDPd7lQmcNFmO5pik1W0NTEC3qSUJw2StYwh2NkB6ceMzNoGKJULbsicpmUeIY7yBfEmNWxoSY9YHspIAYdWEFfWMdfhTjAhqB+kLxRnNWPQCrl9jC0ZA==
+ b=LTL3jC/soHCZRgpiqGm9Ug+/yvgXqlSiCUtU/n6kCxBojGQWF1vul2ni9HhPEGpjTf3+Gmyluqfvc47ZpBs/BTkkxnvxEvDE5gbAeiFPBXGJCJ/wBrs0IISR8tvzzwqVlRq8kgw0CHG5GA/4GMdBkljzQrn7J71+e+2IGr5Df3W53c4ok41i+HGDbM/zlEoRsBvPsnbeWw5zcstF2OWrkbm3sIptmZj4IJMffj8mUn3g85Da8KoN0j/CpVRQE4ulf4PXcrS0eiTlPi5byZvEorYue+vPRs4iIOo0v6c94ZP0s58AQ7Ihj1pSpZ+rwWwcCuR0HnTKkUJejUIK0hhWRA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0NbPUvZaYHCXy1dBKHTpXT0ZtSqPsrkI07K6kT5xgMw=;
- b=DPJ0uECg99ekDbwgHexvt4wJdpseZZTZ6R8Gsl+0SkDlF2xoIQbKz9rPw2GQmV9BFadM1zyyomJHJDukf49z8Z038l9M7g6UagQxXLIbpzpuaveo1xmTuRm3TfRUSp+PJAzGK0u3xR98+/JQSR76DxrXFhUw4Ab6rfOLmJyxZpPvLbp58id9QkB4bjc74Yd6lwr2r4v9FRBsT92wfJ6R80jZLZXNRYxgk+K16E6Jkq3ulnME8TJz+NhOyWBv8VzBB5TfFzEkH/4LieqyvzFWXpqfYHz6MBXJetgZ7P2WJNie5P0wWWFrB+uH1/RSI6GaaRdEcNv/a8/WlE+yuTRfKg==
+ bh=sHmYS/B98+JED+8Wv+3w810KgqCQ3Nsl3heM6MOFHMY=;
+ b=JuFd5s85ipvEr1iVDb/FAwb5mxYKd/ws47f8HNDdMTpxFgs24PtGeiSJObKyOzwCMNyE43Z6e1VICCw5KXC20hLcQU/f1ftbAZg7hQ62B53RYGzHmUwHwXFwNCT0L2MFFNs8x+VQlEEL7dDVuqg9q5B7DfYfxhABaezJGOjt9xcFM5a/Y/DB2qS7z80YBOZ8Th1A/YIE1ms54WRhOx1PS+PJdTgmHxEPASieSvSk/xZ/yMRx8YTEvYub4qwts9DsiwDqYj39WaewKTKYtM1PaDaG7tisGnw1Sq8gQ7p8bUMYv8u1obWIS6dr277qtY78c88quLp0MX+FfPRpZokfFQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0NbPUvZaYHCXy1dBKHTpXT0ZtSqPsrkI07K6kT5xgMw=;
- b=Sc3G0MBbAhJZL3OQbeNBzz9ayIboqlf1ofpgJB6upmB6n/bwWn+rwkt4w/fJ3sqQ4n2QANvA480q7TY4ToMBFDfzHFGNy/XosfzVOzjZAt0umdN+XzuGuy2BYFckD/Gh/5OWLn7SXDbNThIApOL85p8ILJdJcBvqHGkE8CUH/iw=
-Received: from SA1PR02MB8560.namprd02.prod.outlook.com (2603:10b6:806:1fb::24)
- by SN4PR0201MB3424.namprd02.prod.outlook.com (2603:10b6:803:51::16) with
+ bh=sHmYS/B98+JED+8Wv+3w810KgqCQ3Nsl3heM6MOFHMY=;
+ b=d5rRlYXFKdGNp5gjoAizr6qUuyQ240IxmXy4byrN/NBsSF7kmb7es7rgGhHkq2uw+XMh/4+nRRnpNkK/boGQz2+OzzlVKOf2pp3AbdB2lWcKPIKCm2BI/wEJ2CqlL7fdUHr7QmKolq83aFkqpFn8LNIJO11wnJrvjjVD/UUgiyci0oL76JpRPteNdczVCGkl7Yn73Q9CO2abg3KLv2Y2Z4QPDc2/UKpy0tPxLYx2/676IRbSGUV44DqSaJ8rW6evKbFKJqKVRFrnZBXKxqeVShOIogDr6npaEiHrBb40fem7+aAYXOTr39wrGFYjqiQ9dUE4KecYi8CDK/PRVgm8PQ==
+Received: from BL1PR12MB5301.namprd12.prod.outlook.com (2603:10b6:208:31f::13)
+ by BL0PR12MB5508.namprd12.prod.outlook.com (2603:10b6:208:1c1::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.21; Wed, 8 Dec
+ 2021 15:45:06 +0000
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL1PR12MB5301.namprd12.prod.outlook.com (2603:10b6:208:31f::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.16; Wed, 8 Dec
- 2021 12:29:03 +0000
-Received: from SA1PR02MB8560.namprd02.prod.outlook.com
- ([fe80::b9c2:c09a:cf61:2389]) by SA1PR02MB8560.namprd02.prod.outlook.com
- ([fe80::b9c2:c09a:cf61:2389%6]) with mapi id 15.20.4755.022; Wed, 8 Dec 2021
- 12:29:02 +0000
-From:   Radhey Shyam Pandey <radheys@xilinx.com>
-To:     Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul <vkoul@kernel.org>
-CC:     Michal Simek <michals@xilinx.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: RE: [PATCH] dmaengine: xilinx: Handle IRQ mapping errors
-Thread-Topic: [PATCH] dmaengine: xilinx: Handle IRQ mapping errors
-Thread-Index: AQHX7CioyqFXcQ4vC0uyXU8RCP1+9qwoe8+g
-Date:   Wed, 8 Dec 2021 12:29:02 +0000
-Message-ID: <SA1PR02MB85604F1C613CC2312C52D627C76F9@SA1PR02MB8560.namprd02.prod.outlook.com>
-References: <20211208114212.234130-1-lars@metafoo.de>
-In-Reply-To: <20211208114212.234130-1-lars@metafoo.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=xilinx.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d9ecc7e8-4744-4612-4549-08d9ba46519a
-x-ms-traffictypediagnostic: SN4PR0201MB3424:EE_
-x-microsoft-antispam-prvs: <SN4PR0201MB342487CD23CED6114D960AEDC76F9@SN4PR0201MB3424.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nkpJrCU8KZidEcDOQkpKWZAOtq0UfmQ9YPDljv6zyz0KtJe2o3EXIqRqvMaqABJqWMv/eA9SZQ9nEbYwg2RjW5SYIwubTFI3hT2FowjXQuGPmOvPdgakp4rxDftZrBwbnQiwMblSbmE9YD/mNsmT013GWurnvESXrCmefVoHlYb032ZK0ToV0ZJ5+RlgBU20bOIeVL8vIu7Anxk/tOke6mmoI6Rgsb9MEdXWdelMsmWXZypoLDGGpAyogLdXFTe8W7kTfz447gqaHgfSDRrx0kKpfk4m9Duw93QyxIeAtRlgnycl0a2igK0EBkOrq3glj7yGG/TKXW1V0U921rUkuzBAVBDV5wqWZ2DGAkP5ocI9xXF0mzncwRvC6AUX6VAboWsMKNDuu+kE9CyxF+dwekVWxEhM5qMYA1GWextsFhpmU2PrnaVYTHtSIRTa8C27glBUpxxjk4LhVn3cWfav9BNTp773IOTgBZ2DdHIRVsZYeTKEcwCpoNWo0jW8Ip7t1yd0/Sl9ZmeEq8iFLUUc/2bZXb2NYsZNZI3ydG3tAUDoyPLlVZTeniWoC7FwS7xB2vptOHS2dI1OUMR01T4jghFUYQAfe53eqYIOKVt+PXBHjjPtKi8K1/FX0AahBb89Nk1qCNKs7q4Lre/p9DV+J0eRtvVEhE6UDLp04Px6YTQhzSEk4GBvArog+k9epjHrKYnqJeynB+Kdn0FvM5JMmw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR02MB8560.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(38100700002)(316002)(86362001)(6506007)(53546011)(71200400001)(122000001)(8936002)(26005)(8676002)(66556008)(64756008)(186003)(76116006)(66446008)(66476007)(66946007)(5660300002)(2906002)(52536014)(83380400001)(33656002)(7696005)(38070700005)(110136005)(54906003)(508600001)(9686003)(55016003)(4326008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?pxETw2UW5BwQsQ8YkVaQwtXH4Kxsx7QapL//TCzbfHgWt47ROfZhSpnkpiuM?=
- =?us-ascii?Q?DpWpsbnexgr9k2jyqw87GP9d0AmyOg81t7ppjEIKU8DhIdf9eIGns/6eikiK?=
- =?us-ascii?Q?Hx5CdlWuq4ivx/tilz3SM8aaImrs1EWtfHhE4DI02FZQivBzNJP0gmjd1kEP?=
- =?us-ascii?Q?SC5WsyMEnKKgr+pvk0wW95yxRwFe+f3641s/gMLy4NmX+yW44zepjBF6Hbz3?=
- =?us-ascii?Q?85XHw1y0qP+Yl4GJX1uzTjHmvcjio5DUzitBxBjt8TO4VekCnJ7A7bZTw6U6?=
- =?us-ascii?Q?VxTJ6uKziuu1Wa8kDPZMtK3MXVjBcmkEXyODvPxPvpgbxO/JuUXu1aHt+Kud?=
- =?us-ascii?Q?3nKovopJ7tJ7HWsLKNaieyLPzM1ioHwvZYYwVmMOCZvS4KUrrR00eAktrHmU?=
- =?us-ascii?Q?9xZKYOyV6cbTNP5c/KRrAgXL1xsvzoh8J+sn3rSoU4M0jAyX97oddWUfiPEB?=
- =?us-ascii?Q?E4UC7EIVLqjbI2O9+QIFs56McFdZfjlNIFqigGCfntYccJU1Xi1hCv+99odk?=
- =?us-ascii?Q?TBcvGQp6tXLKoDyH6C69OxXjNIg2jhoM6XXVriUL027N7ESl6Y5TD33zJrVb?=
- =?us-ascii?Q?rtBEo9sy7yo+uXHbRYlFpvEIxa8cNTd8SlN/8ALVM2PS/EW4547h0+Omb8rm?=
- =?us-ascii?Q?rBP9oKohyGFdOlFlbwCljPMpiq5Wo1aLB8UGE76ybPHAmqcLSYthKpZbZGot?=
- =?us-ascii?Q?BEm/L+sk1LNJA0tL7foCJtiPO3BDa7gd90qErI8Z1ixOzijWMdmXBto5euHx?=
- =?us-ascii?Q?197/44zdfxZjT1mYrlOm//p1NqeN/IpAbPbG5z+kZ1yOaMbYGsmCYzlOa3Jp?=
- =?us-ascii?Q?DDrBvjfhdsKehf8UcbEo9HXtBTRdLA8eXSluj6xNODLXFu3z1FusghT2Im/M?=
- =?us-ascii?Q?fjxP1b6rA+3Nv9PXvVHOJt2lWUVYpC5hawir1nEPZQ7x784pLWjOvYAb/vxY?=
- =?us-ascii?Q?buc9GhFJvQCoVoTB6VtcqjauE6foeRnWLeOsySW5/ucXFKpfoAt0jOUuPwJ0?=
- =?us-ascii?Q?paWqAEvsNpy4DrHtJK8lBUBMHdtDZl/N3KGKmmnrUTwBnf+NS5yv84zQAwq9?=
- =?us-ascii?Q?hfQyZ/Xgvqp+idoHLeAH7qz/VATapOi0EkLx/Q7auENXZOc9BZ/y81nRUNS5?=
- =?us-ascii?Q?th9o6TAzbLNIwREge6+sgBbGxhFcW9bQfS2q+zngqyVsKkiBXu1myZVCG0TL?=
- =?us-ascii?Q?Try1uc03WdUCcOXydxZ1DtP1IjM5KlM6wtCr3Qmp1kp09HFuopD4ZCZMd5Ds?=
- =?us-ascii?Q?/Bf9d8vIgpQzNqxscx/qCBD//cuPmACLVr9ehvc70hKNgxB4cGJQMu/HqG3y?=
- =?us-ascii?Q?g0MRgtfWs1iv/XdZIRj4520t61N9hjaDEdeA24XBTy8ncTof4BTvNMs1fMBB?=
- =?us-ascii?Q?o/6K8wo3hXCioE6Ums2s+NDQuXgeGh+fDSXUskpIPTtPEf2G6qcIk3Heteeo?=
- =?us-ascii?Q?NzKtFu0fUzdC8B9TiXpVL5COIckQp3ZEOfAwAOfxckv6UaWfuwmno7K1tiEN?=
- =?us-ascii?Q?I8sXdzmqsKCyKEw5qdoXcZZZe8f5dxd9HtZaSTn1zTuYot/GsI69zHCvYySL?=
- =?us-ascii?Q?JAPIa/zJs5iPgtejEKzWlWvAgvJoJBnn2vPwt1rsBbIpzbxCGItdUR1iEJ9Z?=
- =?us-ascii?Q?wxMJZQBkHs99NeiCRWVuvtU=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ 2021 15:45:06 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::d8be:e4e4:ce53:6d11]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::d8be:e4e4:ce53:6d11%7]) with mapi id 15.20.4778.013; Wed, 8 Dec 2021
+ 15:45:05 +0000
+Date:   Wed, 8 Dec 2021 11:45:02 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Cedric Le Goater <clg@kaod.org>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        iommu@lists.linux-foundation.org, dmaengine@vger.kernel.org,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Sinan Kaya <okaya@kernel.org>
+Subject: Re: [patch V2 21/36] x86/apic/msi: Use device MSI properties
+Message-ID: <20211208154502.GV6385@nvidia.com>
+References: <20211206210307.625116253@linutronix.de>
+ <20211206210438.798385721@linutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211206210438.798385721@linutronix.de>
+X-ClientProxiedBy: BY5PR03CA0024.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::34) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7848950a-ea12-4c39-187c-08d9ba61b492
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5301:EE_|BL0PR12MB5508:EE_
+X-Microsoft-Antispam-PRVS: <BL1PR12MB53010068C37C4A97DB7CC9F0C26F9@BL1PR12MB5301.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: glWwDnif56mLRPbZ8kUqqsPht1x3doVlpO2gB4WiA/rQ0JmiR7xiLVi+BagkT77Xys7V2LD2ZpHeG34ziXTR9m/w9Kg+tBoHhoDVfKzDP6nZMN39rnDnJp6CbzpXSJ09VQx87j6jXBkVvESbkCjKAZuQDDrAjxukrej4a2Ppc0P7Vz3VwWnDrfoZ5Cftfgipbt1CumCjrHInWilFLhAgv70M98BZBCMJJmuaLUWK82JpJdvrs0MrCREQawGMsL991ws45nwvzSCcOseRTdZYL9T3rUdFlPNJRg/x3zfipl7OZ9shPvzYpJlakMKWaa8v3ukT1Ph4aCYKwE49m/l2ZGm9LWela4IIcFXh/JDfC4DugFRv8xXYFUClYsX5xB6Y9s6V0zVFgSnl0pyGOjEht0ojQ7fl1Pd470SZPDQmygZu9fvs5FNCqTTRIs1BljW7ZHYmWu+adjtPSLhH8o635Zh/BX3PJBP/RDuwoDYbYDxJIWGdaJ1mYKklA7vXkKVAOfmFYy2stVuMcAvZEwDBhmt+rwFjtS5CWx9i5HKza22VfTorwf7xjK8PmqZF7ze6oFUzZ2jyubH+pl6q4bcr0SsZQk1qQsglgvrC6YXc7Jm5k9fQa3ktr/tdi13B9x4K3wlaJgdh2svJYUfEz3jUVw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5301.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(38100700002)(1076003)(316002)(33656002)(2906002)(7416002)(86362001)(186003)(5660300002)(2616005)(8676002)(66556008)(8936002)(66946007)(26005)(66476007)(508600001)(4326008)(6916009)(6506007)(83380400001)(36756003)(6486002)(6512007)(6666004)(54906003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ZQlqhYh3++2ZcACxMS8bMJRuANV8tj8QLJhC7SeAXuQ3ILkt2f/fZogf3Xwz?=
+ =?us-ascii?Q?pIR2bqPDL1Q66DQiXKrqlHBN3ZUWfr+RpfPyi3CwH8Oo+UQdpazy/ipOQayl?=
+ =?us-ascii?Q?zmIZ7TrlcOtBDAgcLaeIEJkDAox1KexnOlGqPKzxPLsGiT2nyDhHWWKlrX+6?=
+ =?us-ascii?Q?F1FL3vzo1lvbGPqn2XJLUmzF0WeuDgUTWvXBe+NFNB9WHAOuRX0pVzUxTCy9?=
+ =?us-ascii?Q?uFURWq85J/nzBBF8R2mc5VXjo+9pGEV05vn4XEoDiioRXxxI8mXOlmx3fOk3?=
+ =?us-ascii?Q?P12y/apAWO7gtBHg21LRkyY/z8DUVJinrIS0N2gSUB+DeeTPMRdvzH3W/B11?=
+ =?us-ascii?Q?GMc59swR91PcgKQYzCQgSNxf+GBWcAHpYVyMv6RmM0/pMjJxvMX2/y/kgrYc?=
+ =?us-ascii?Q?yHP/w3rxRJo+mAEbT5S2VYqL5b6aXY6+ETLnabvRii1onvyrcM79Sz7NEmUK?=
+ =?us-ascii?Q?vrUVXg3rks0OtLieoL545yheMa5qv7b8/wgeeoqO3+FAnoV7JrNpYiL24VPI?=
+ =?us-ascii?Q?G7jFNfOC3EcCwXeUUnm72+0kIsf3GBSPpEiB8nCkPa00au3Fbak/MLUXvGlZ?=
+ =?us-ascii?Q?Bq/SA4xhMY0tEdeD+DYrijH9rQDXs5MRw7Dl/DI2PlOkHATVG8p+ygg4/9a3?=
+ =?us-ascii?Q?nMhMigjoSXMiG7ReueZR1FVMP/oLpxphlfyfkQNHptQH1JKiqI5rq/cK3CTU?=
+ =?us-ascii?Q?2wuO9ldJl6+FzECoeAcltTOgfTXhFWskBfR4c3ZmiiB3cj0ti9f2CH0N/f3z?=
+ =?us-ascii?Q?QkROYmqjR+7K3PWnzelQ9QoHVzs54F4qsL2UJPuzQeYoX0DPLXrQXses4Jst?=
+ =?us-ascii?Q?gArajhYIVhr/9+w02Ovnkdp8mQThsjotXYMI5n5OzLRYkXI7ORYEuQkvKP2e?=
+ =?us-ascii?Q?VszthOUscvDZxaiyxpEzZaFGm8lDoAnPwxkOa5MqszALqR0lMX3Xz88TXpVz?=
+ =?us-ascii?Q?Hk0BY3o/28HHLITvPj3IV7BJJDIDtZu1iYn+QoLX0UlOfr2daohJeTtdVvtD?=
+ =?us-ascii?Q?4Kcbk/YzBPK6uSD9JylOBN2+favHiQzW1E1fY/K2IY2zmDj3n8iqSL74W4sK?=
+ =?us-ascii?Q?RJZQltsG+S+M+Dv7nRK55s+O2rBDWmz6dsRceL9SD2MyHARAdX//UUjOrB7j?=
+ =?us-ascii?Q?Z2WYLMVQlCmnQ8hfxgmvZBXOYIAaBQ4K504aKJnQQ0tYagMeKTR4PRI6mzI4?=
+ =?us-ascii?Q?nzRh3LrzP2h7enG5SbtEP05k1TcEoUQ9uVFWX2ZM2TIPC0rHPj+/pzDRF4Sq?=
+ =?us-ascii?Q?T18Njd8gx8xOW9sYJkGXOyS7UlV9uRamnGU+vmZKbMJksZeDnqHyOYO87aAG?=
+ =?us-ascii?Q?OHe43in1TnfLkmsJr3xJ199W0bZCHnm9QFrODtW4PM9y8KUYFIEhFh3KR19v?=
+ =?us-ascii?Q?OWL/NfPew69SNZACQvxs/RfNGR1pg4/d5f9gl0qchq1GmBAOqFon2ukSPGbn?=
+ =?us-ascii?Q?Am18Jk7Gj7oiF6MU9ogoackgLY7rAXsSVaFjjfZgR9Sn/BGRlc1r3v1j3NmJ?=
+ =?us-ascii?Q?OdLSVeNYoe3kBOFnBWtwWTNY3lyAICgc2Jxy+BNJRnKcohCZtHAYc07kPRSf?=
+ =?us-ascii?Q?+fIwe9ja0to7rnh8ods=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7848950a-ea12-4c39-187c-08d9ba61b492
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR02MB8560.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9ecc7e8-4744-4612-4549-08d9ba46519a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Dec 2021 12:29:02.7783
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2021 15:45:05.5723
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: deEyqr3SXjSEhYiFHAAYZASAHtR5QBzbGkOn3IEdU1xsIqgk3esmWHAdq4BYRuZAT5jpqHS9lqlT6KZCJlpP4Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0201MB3424
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0RuoZIjeNCCpQ3AakyMBCvnQgaKTQpdCbc4ZqJ4MyQBApVoNRtiLLghWvKPfTXFb
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB5508
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-> -----Original Message-----
-> From: Lars-Peter Clausen <lars@metafoo.de>
-> Sent: Wednesday, December 8, 2021 5:12 PM
-> To: Vinod Koul <vkoul@kernel.org>
-> Cc: Michal Simek <michals@xilinx.com>; Radhey Shyam Pandey
-> <radheys@xilinx.com>; dmaengine@vger.kernel.org; Lars-Peter Clausen
-> <lars@metafoo.de>
-> Subject: [PATCH] dmaengine: xilinx: Handle IRQ mapping errors
->=20
-> Handle errors when trying to map the IRQ for the DMA channels.
->=20
-> The main motivation here is to be able to handle probe deferral. E.g. whe=
-n
-> using DT overlays it is possible that the DMA controller is probed before
-> interrupt controller, depending on the order in the DT.
->=20
-> In order to support this switch from irq_of_parse_and_map() to of_irq_get=
-(),
-> which internally does the same, but it will return EPROBE_DEFER when the
-> interrupt controller is not yet available.
->=20
-> As a result other errors, such as an invalid IRQ specification, or missin=
-g IRQ are
-> also properly handled.
->=20
-> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-
-Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Thanks!
+On Mon, Dec 06, 2021 at 11:39:29PM +0100, Thomas Gleixner wrote:
+> instead of fiddling with MSI descriptors.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 > ---
->  drivers/dma/xilinx/xilinx_dma.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_=
-dma.c
-> index 61618148f9d4..cd62bbb50e8b 100644
-> --- a/drivers/dma/xilinx/xilinx_dma.c
-> +++ b/drivers/dma/xilinx/xilinx_dma.c
-> @@ -2980,7 +2980,9 @@ static int xilinx_dma_chan_probe(struct
-> xilinx_dma_device *xdev,
->  	}
->=20
->  	/* Request the interrupt */
-> -	chan->irq =3D irq_of_parse_and_map(node, chan->tdest);
-> +	chan->irq =3D of_irq_get(node, chan->tdest);
-> +	if (chan->irq < 0)
-> +		return dev_err_probe(xdev->dev, chan->irq, "failed to get
-> irq\n");
->  	err =3D request_irq(chan->irq, xdev->dma_config->irq_handler,
->  			  IRQF_SHARED, "xilinx-dma-controller", chan);
->  	if (err) {
-> @@ -3054,8 +3056,11 @@ static int xilinx_dma_child_probe(struct
-> xilinx_dma_device *xdev,
->  	if (xdev->dma_config->dmatype =3D=3D XDMA_TYPE_AXIMCDMA && ret <
-> 0)
->  		dev_warn(xdev->dev, "missing dma-channels property\n");
->=20
-> -	for (i =3D 0; i < nr_channels; i++)
-> -		xilinx_dma_chan_probe(xdev, node);
-> +	for (i =3D 0; i < nr_channels; i++) {
-> +		ret =3D xilinx_dma_chan_probe(xdev, node);
-> +		if (ret)
-> +			return ret;
-> +	}
->=20
->  	return 0;
->  }
-> --
-> 2.30.2
+>  arch/x86/kernel/apic/msi.c |    5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> --- a/arch/x86/kernel/apic/msi.c
+> +++ b/arch/x86/kernel/apic/msi.c
+> @@ -160,11 +160,8 @@ static struct irq_chip pci_msi_controlle
+>  int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+>  		    msi_alloc_info_t *arg)
+>  {
+> -	struct pci_dev *pdev = to_pci_dev(dev);
+> -	struct msi_desc *desc = first_pci_msi_entry(pdev);
+> -
+>  	init_irq_alloc_info(arg, NULL);
+> -	if (desc->pci.msi_attrib.is_msix) {
+> +	if (msi_device_has_property(dev, MSI_PROP_PCI_MSIX)) {
+>  		arg->type = X86_IRQ_ALLOC_TYPE_PCI_MSIX;
+>  	} else {
+>  		arg->type = X86_IRQ_ALLOC_TYPE_PCI_MSI;
+>
 
+Just thought for future
+
+It looks like the only use of this is to link to the irq_remapping
+which is only using it to get back to the physical device:
+
+	case X86_IRQ_ALLOC_TYPE_PCI_MSI:
+	case X86_IRQ_ALLOC_TYPE_PCI_MSIX:
+		set_msi_sid(irte,
+			    pci_real_dma_dev(msi_desc_to_pci_dev(info->desc)));
+
+	case X86_IRQ_ALLOC_TYPE_PCI_MSI:
+	case X86_IRQ_ALLOC_TYPE_PCI_MSIX:
+		return get_device_id(msi_desc_to_dev(info->desc));
+
+And this is super confusing:
+
+static inline int get_device_id(struct device *dev)
+{
+	int devid;
+
+	if (dev_is_pci(dev))
+		devid = get_pci_device_id(dev);
+	else
+		devid = get_acpihid_device_id(dev, NULL);
+
+	return devid;
+}
+
+How does an ACPI device have a *PCI* MSI or MSI-X ??
+
+IMHO this makes more sense written as:
+
+  struct device *origin_device = msi_desc_get_origin_dev(info->desc);
+
+  if (dev_is_pci(origin_device)
+      devid = get_pci_device_id(origin_device);
+  else if (dev_is_acpi(origin_device))
+      devid = get_acpihid_device_id(dev, NULL);
+
+And similar in all places touching X86_IRQ_ALLOC_TYPE_PCI_MSI/X
+
+Like this oddball thing in AMD too:
+
+	} else if (info->type == X86_IRQ_ALLOC_TYPE_PCI_MSI ||
+		   info->type == X86_IRQ_ALLOC_TYPE_PCI_MSIX) {
+		bool align = (info->type == X86_IRQ_ALLOC_TYPE_PCI_MSI);
+
+		index = alloc_irq_index(devid, nr_irqs, align,
+					msi_desc_to_pci_dev(info->desc));
+	} else {
+		index = alloc_irq_index(devid, nr_irqs, false, NULL);
+
+This should just use a dev and inside alloc_irq_table do the dev_is_pci()
+thing to guard the pci_for_each_dma_alias()
+
+Then just call it X86_IRQ_ALLOC_TYPE_DEVICE (ie allocated for a struct device)
+
+Jason

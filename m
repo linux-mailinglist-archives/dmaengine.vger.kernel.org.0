@@ -2,52 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4171546F5CF
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Dec 2021 22:19:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AA4946F5DC
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Dec 2021 22:23:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231177AbhLIVXJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 9 Dec 2021 16:23:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48066 "EHLO
+        id S232078AbhLIV1b (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 9 Dec 2021 16:27:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbhLIVXI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Dec 2021 16:23:08 -0500
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8896EC061746;
-        Thu,  9 Dec 2021 13:19:34 -0800 (PST)
-Received: by mail-lf1-x133.google.com with SMTP id d10so14499675lfg.6;
-        Thu, 09 Dec 2021 13:19:34 -0800 (PST)
+        with ESMTP id S232186AbhLIV1a (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Dec 2021 16:27:30 -0500
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98438C0617A1;
+        Thu,  9 Dec 2021 13:23:56 -0800 (PST)
+Received: by mail-lj1-x235.google.com with SMTP id k2so10980650lji.4;
+        Thu, 09 Dec 2021 13:23:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=w9NVyA3r1gS0dHQGhaIwt4BqUyoksHzNXKqQm+vkFKw=;
-        b=jwRbEoyklu2JLCqR1SMPDJAr7IpOzlLs9QkrICOFL3ztGXNx/oCpBPKK4I2a4guZWq
-         mZLCzNgqApguCAFNnEjqvxcDBn8iYd40PeV6agk4OQ4WdvKTFGdnIpXLh723BjueY1Bv
-         X6RY/enamdBFCXhVpsiGyp3JTOmsgsqeOVzCbQ1vW2tg0NWfMsJbu1O9p1Jk2F3fYumg
-         ULZ/S2m26clxYk+DKKo/eunXZ+e5Dy0XPGydyNrUyIhFm/TAcO0ZTpPq9/ipbiybiSy0
-         WaSXkqWpVuhN5wSGwXFREo9/6X2LXt4hOGAMGGfd9Ca2YByneOobW8SgHdr75lS/67te
-         7QyQ==
+        bh=ZXTNkYXQHnTQSZD4ZzDdjes6xAr43HXjXGxdFUbLRnE=;
+        b=dP8u4CtVKXCNbb2CAS991Vh1ad0yhAVlwuPS7WXBUDifdmafLgq0hKSpfyKhc4/CvU
+         M1maEjcgUP7+Qd45VwSnB3mMxS6MFGtndKgcGyZK5nO2xpB16k5SdpnmuUMQMRcN/LXT
+         S1WXmhKtcup0RdxDviDR5PfaygGVZeCCijHkyb7Pf8W54cszS/3pgfxO1uz1Cs81MntC
+         A6KuWggJAyEnU3sZ7+bW8vqWxe8iE0OOFR8pxQmrURkdruwvUcK1fdcCDFX4i9fej3vl
+         8GpKWuA6ptabORzqdcCxY2AuWYlV5Kj6EOigFxxm5ejNkR9K02eP254nYBK23ekXQILH
+         yurw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=w9NVyA3r1gS0dHQGhaIwt4BqUyoksHzNXKqQm+vkFKw=;
-        b=PyzrE5y+Zbioe6FhLYrkcTiJ8oy/GJkb0QQcKF+34Z+QcmbJueakaUY4qQl8b7ZWqp
-         PITod4eOcnFYYuH+fq8C/KCjOkWa5N6DxfuOnt6LItk5cxF3KwCAUh8RCuPV1aRUn2CI
-         sNrK+oYQJJJWhZReK9mVw2p95BEYGkz9IENW9yHBJDlvV0Ypihp7yv9yz/YpYF5AAAQ5
-         5pMeeLZtrnxTLJi/NnHeWEw7JPndwYmMse1pZOi4vZYbgnMxzsbv7d/E2ssE5s5DNOiF
-         uzvUEjmVdgWtzjTQygJo8tBKZahz0IL2e9F/I1Y2BWzxM25L/hLQ8z6rJm6zm1OF/tRj
-         eXEg==
-X-Gm-Message-State: AOAM531ts33McOycXYNebnk5ttCh7TOykz33VHlQIs81qR652Wyopfeo
-        ZUDpu2jrd7C9MvpV26hUve0=
-X-Google-Smtp-Source: ABdhPJxQCqULlQtELM136fDWzedMTP7IrJZ/S5NS9VmXHVC56VfQeh6sXcNLIF7qxZ4Io+03QXbN5w==
-X-Received: by 2002:ac2:5ec6:: with SMTP id d6mr3004349lfq.297.1639084772893;
-        Thu, 09 Dec 2021 13:19:32 -0800 (PST)
+        bh=ZXTNkYXQHnTQSZD4ZzDdjes6xAr43HXjXGxdFUbLRnE=;
+        b=8C5ZWsdC1POiVW2trsBt+R+rds6GKrmwK95LaBoXobnFxNVe4Ag16VXkpaZxuz4tPP
+         Xy0+hl5QwsL+QiKaAW56OytltmeO8Kh5N6cx2pzcH5CK8FfzahRsTMN2Yuno7kLOvO+b
+         Bea194Zre4Ki4uehDBFSr5Mj9jT8wR+hRM7G1AuzoV5tSbS5v7SJ/A/IYjAOneQWO3hW
+         MR6ELEHGB6xF51kvpyEnJIIJVob1nRCFcdS4xHqv6t8Mcj/DTMpRsaDzANb40CcNwRso
+         drSFf7VBy7rtsYRU1q27ktvjstsKQvW6BG1K+6rMJ+axLfrpwBUTqaPknYx1GhUsaDfG
+         lsxQ==
+X-Gm-Message-State: AOAM531accyULurZZ9Xb5F10ml0MmKU4dPRtOgONRDLzIWSHUhu219hd
+        BJ1BNngXoYy6NE+SU147Gpc=
+X-Google-Smtp-Source: ABdhPJwq5NDxB+zb3LmrxqlAKT6sdnILpFGCQR5edZiTzLkQeIuRRYSEaeKy+Lf/FAM6M3t4nwtBaA==
+X-Received: by 2002:a2e:bf05:: with SMTP id c5mr9283889ljr.104.1639085034919;
+        Thu, 09 Dec 2021 13:23:54 -0800 (PST)
 Received: from [192.168.2.145] (94-29-46-111.dynamic.spd-mgts.ru. [94.29.46.111])
-        by smtp.googlemail.com with ESMTPSA id be25sm100371ljb.114.2021.12.09.13.19.31
+        by smtp.googlemail.com with ESMTPSA id y11sm107408ljd.117.2021.12.09.13.23.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Dec 2021 13:19:32 -0800 (PST)
+        Thu, 09 Dec 2021 13:23:54 -0800 (PST)
 Subject: Re: [PATCH v14 2/4] dmaengine: tegra: Add tegra gpcdma driver
 To:     Akhil R <akhilrajeev@nvidia.com>, dan.j.williams@intel.com,
         devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
@@ -59,8 +59,8 @@ Cc:     Pavan Kunapuli <pkunapuli@nvidia.com>
 References: <1638795639-3681-1-git-send-email-akhilrajeev@nvidia.com>
  <1638795639-3681-3-git-send-email-akhilrajeev@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <913af84a-957f-6392-1526-6732d43fec5b@gmail.com>
-Date:   Fri, 10 Dec 2021 00:19:31 +0300
+Message-ID: <3f7b072d-f108-ebce-e862-eff9869d1d92@gmail.com>
+Date:   Fri, 10 Dec 2021 00:23:53 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.14.0
 MIME-Version: 1.0
@@ -73,12 +73,8 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 06.12.2021 16:00, Akhil R пишет:
-> +struct tegra_dma_channel;
+> +static const struct __maybe_unused dev_pm_ops tegra_dma_dev_pm_ops = {
+> +	SET_LATE_SYSTEM_SLEEP_PM_OPS(tegra_dma_pm_suspend, tegra_dma_pm_resume)
+> +};
 
-This prototype is unuseful.
-
-> +/*
-> + * tegra_dma_channel: Channel specific information
-> + */
-> +struct tegra_dma_channel {
-
+Why late?

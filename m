@@ -2,33 +2,33 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6474C470D54
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Dec 2021 23:19:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1FBE470D5C
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Dec 2021 23:19:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344826AbhLJWXO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 10 Dec 2021 17:23:14 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:50238 "EHLO
+        id S1344824AbhLJWXR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 10 Dec 2021 17:23:17 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:50544 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344830AbhLJWXA (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Dec 2021 17:23:00 -0500
-Message-ID: <20211210221814.780824745@linutronix.de>
+        with ESMTP id S1344848AbhLJWXC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Dec 2021 17:23:02 -0500
+Message-ID: <20211210221814.841243231@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1639174764;
+        s=2020; t=1639174765;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=ZEIc+hYHtGZ+R8Y42PTVzHWVlXMSBVtNMJGsH152424=;
-        b=ZnOdjYsyWWWPA45DX/sEP1Hz7/N21g6u4UZdn8c1qyQRQwctj1a4i6BAp20kDLoVrj6D2s
-        MbD+ZTo1q9CByKhQo2XRoN4WdhbqsWP8IhvQmO5n4QjDLb4bQeMj+tjt/r7iv7ulqjYgof
-        F4ISSFlfQwvH4mj7rI3COb7fhYfIaOuZZwt6hdi7/i1KgHhxe1miuwBC9ALPHJWSgBGtAq
-        Hm9GThVygPLyQUzGEUG99ih95uj7Ifn3w+/L6+ojF2urlcLuEKAYpMauAHf1+Mdai5rTl4
-        6N8IRoupzCe+vvFuCq6MovD0Voro2Z7OmtZqPzl66KvGCxnWY1NqHMI0nV1/OA==
+         references:references; bh=ja9fbkTMChiYC+RHKTG35XzzVDvmaXMgaMrb6WY3XeQ=;
+        b=z6iPEnfVAgwlW1Qbnq1nCFWwA6bNapErKquzAi3fk6aQqeO9o4U4iwQjv+EebRfvLnwN8n
+        e63ahKnp4QuQIaqzvffdsynbWgeJGaK4CvS+c+uMgRBceXI7VODqOegmQe3L/CvghbDhuO
+        LN91tjaF0S12KexgZs8cR5/oZ2rSgoo7wgdZrtLgJvkHGW3yStep1fiuvR7g41IWJCZNnu
+        Rdmmg97HfnTylsxqpzgAYVzZaMeXvWfNQQ5rvNFbwpEWwzgtXnQ4/DZTiIX/XN8OvdQ75p
+        NdflsNWb6DcWnXBSu0XhAKL30N7MQvosu7Eo61JG6PvjMi8bgOFzC5eVez11kQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1639174764;
+        s=2020e; t=1639174765;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=ZEIc+hYHtGZ+R8Y42PTVzHWVlXMSBVtNMJGsH152424=;
-        b=IxahGrtxRlopXsWUYNpTNdhCUtnqonpOEodZ3IuQBz/DFc/KxGCheju7XzPFrWnx3hqpKg
-        Kcg6g5cSFSWCRQCA==
+         references:references; bh=ja9fbkTMChiYC+RHKTG35XzzVDvmaXMgaMrb6WY3XeQ=;
+        b=ClMHqdNEhBqMOb1sVFaSm0KweWWAEZJCgeJM/hGJMp5ROj9kquAcj3PJfKxxeM3i7GOxBS
+        FHUfoC+s+JX7GLDA==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -58,87 +58,63 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Jassi Brar <jassisinghbrar@gmail.com>,
         Peter Ujfalusi <peter.ujfalusi@gmail.com>,
         Sinan Kaya <okaya@kernel.org>
-Subject: [patch V3 26/35] genirq/msi: Provide interface to retrieve Linux
- interrupt number
+Subject: [patch V3 27/35] PCI/MSI: Use __msi_get_virq() in pci_get_vector()
 References: <20211210221642.869015045@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 10 Dec 2021 23:19:23 +0100 (CET)
+Date:   Fri, 10 Dec 2021 23:19:25 +0100 (CET)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-This allows drivers to retrieve the Linux interrupt number instead of
-fiddling with MSI descriptors.
+Use msi_get_vector() and handle the return value to be compatible.
 
-msi_get_virq() returns the Linux interrupt number or 0 in case that there
-is no entry for the given MSI index.
+No functional change intended.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
-V2: Simplify the implementation and let PCI deal with the PCI specialities - Marc
+V2: Handle the INTx case directly instead of trying to be overly smart - Marc
 ---
- include/linux/msi.h |    2 ++
- kernel/irq/msi.c    |   36 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 38 insertions(+)
+ drivers/pci/msi/msi.c |   25 +++++--------------------
+ 1 file changed, 5 insertions(+), 20 deletions(-)
 
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -153,6 +153,8 @@ struct msi_device_data {
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -1037,28 +1037,13 @@ EXPORT_SYMBOL(pci_free_irq_vectors);
+  */
+ int pci_irq_vector(struct pci_dev *dev, unsigned int nr)
+ {
+-	if (dev->msix_enabled) {
+-		struct msi_desc *entry;
++	unsigned int irq;
  
- int msi_setup_device_data(struct device *dev);
+-		for_each_pci_msi_entry(entry, dev) {
+-			if (entry->msi_index == nr)
+-				return entry->irq;
+-		}
+-		WARN_ON_ONCE(1);
+-		return -EINVAL;
+-	}
++	if (!dev->msi_enabled && !dev->msix_enabled)
++		return !nr ? dev->irq : -EINVAL;
  
-+unsigned int msi_get_virq(struct device *dev, unsigned int index);
-+
- /* Helpers to hide struct msi_desc implementation details */
- #define msi_desc_to_dev(desc)		((desc)->dev)
- #define dev_to_msi_list(dev)		(&(dev)->msi_list)
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -105,6 +105,42 @@ int msi_setup_device_data(struct device
- 	return 0;
+-	if (dev->msi_enabled) {
+-		struct msi_desc *entry = first_pci_msi_entry(dev);
+-
+-		if (WARN_ON_ONCE(nr >= entry->nvec_used))
+-			return -EINVAL;
+-	} else {
+-		if (WARN_ON_ONCE(nr > 0))
+-			return -EINVAL;
+-	}
+-
+-	return dev->irq + nr;
++	irq = msi_get_virq(&dev->dev, nr);
++	return irq ? irq : -EINVAL;
  }
+ EXPORT_SYMBOL(pci_irq_vector);
  
-+/**
-+ * msi_get_virq - Return Linux interrupt number of a MSI interrupt
-+ * @dev:	Device to operate on
-+ * @index:	MSI interrupt index to look for (0-based)
-+ *
-+ * Return: The Linux interrupt number on success (> 0), 0 if not found
-+ */
-+unsigned int msi_get_virq(struct device *dev, unsigned int index)
-+{
-+	struct msi_desc *desc;
-+	bool pcimsi;
-+
-+	if (!dev->msi.data)
-+		return 0;
-+
-+	pcimsi = dev_is_pci(dev) ? to_pci_dev(dev)->msi_enabled : false;
-+
-+	for_each_msi_entry(desc, dev) {
-+		/* PCI-MSI has only one descriptor for multiple interrupts. */
-+		if (pcimsi) {
-+			if (desc->irq && index < desc->nvec_used)
-+				return desc->irq + index;
-+			break;
-+		}
-+
-+		/*
-+		 * PCI-MSIX and platform MSI use a descriptor per
-+		 * interrupt.
-+		 */
-+		if (desc->msi_index == index)
-+			return desc->irq;
-+	}
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(msi_get_virq);
-+
- #ifdef CONFIG_SYSFS
- static ssize_t msi_mode_show(struct device *dev, struct device_attribute *attr,
- 			     char *buf)
 

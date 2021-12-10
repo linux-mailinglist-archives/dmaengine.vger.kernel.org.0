@@ -2,391 +2,144 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9938470B87
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Dec 2021 21:10:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E9B0470D08
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Dec 2021 23:19:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243165AbhLJUNw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 10 Dec 2021 15:13:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344070AbhLJUNr (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Dec 2021 15:13:47 -0500
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED5CCC061746;
-        Fri, 10 Dec 2021 12:10:11 -0800 (PST)
-Received: by mail-lf1-x130.google.com with SMTP id c32so20073494lfv.4;
-        Fri, 10 Dec 2021 12:10:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language
-         :from:to:cc:references:in-reply-to:content-transfer-encoding;
-        bh=4G75zrFmP3EOC48QBaJaY3ao+hx7H9EjZviE86tt3PI=;
-        b=BjCEdwj1qCwDxQ/S7QmFVuN0PyNR9aeKk7pCqi7IXsQNR552iCN0EZxryqyUB8W8Id
-         yh5kEAjiB9C8sugSKNWYszBHfeYa0nq04pjYziOkbLQG8UL/I4xoiqXKGV/x7FWtAT72
-         HaiL5dXfRKprh9Y6sGE5QL3Loh4QLhuunsfitQ5M7m5mknYvKyn0jJL3MM2XfDoVx8Yk
-         NhTv3hIRPAjLa0hU1DXFAaZqFm4bUuuevDQrKyk+et4o9gW9jDHIl1cSGz1av1k3ixdX
-         HFWYr3UWJRIDp8q+SoxNaB/NHBJjDTx7PrO8e4fPirLBcATGBG5dnGjnhDlobTZt3ir9
-         NRgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:in-reply-to
-         :content-transfer-encoding;
-        bh=4G75zrFmP3EOC48QBaJaY3ao+hx7H9EjZviE86tt3PI=;
-        b=aixE5j6uEavpb8yIxMpyXWgoaZzhv1Yt1ZvpYIBsyVjZkctN5JHktxT17m+s74KdFO
-         xhto65Qt09QNQ3qTHi8B3Y5TYMnd2x3OCeln6MEH3EGLDlLtzI0nGP4Q/VKyPHlxoKlP
-         IRIJbnlJWi3ojTJHOp7AYaROzRs0RwN+Zlz0LwvevTTnHmPtlii5U++bkgie/aqvCwWD
-         uL1BPKUhyIrxigyT92z4m43MQOeRr41joG4TT7CSYflQCcsGGDnYeiMrqVJVOCrS7bZ1
-         Uu1dRr8YqVA+iLnx3SRNgvx4bamPptiwvGEaH1Pe19u6tHzAbeRfz2QPGtTAVvIHt0Bd
-         2g7A==
-X-Gm-Message-State: AOAM532BWMrQltxXHNBhkfKJeSFBha5H9P6sprmVGq2nh/aPWwww10em
-        iIJGgKsnwNDIPYWr7TQieHY=
-X-Google-Smtp-Source: ABdhPJzqG8E2onB/M0lIde9K/PpYK/hD3n2+yOPvNJCOky0h9cpuynfWIriMF4tAMPLGNg7EZlLryQ==
-X-Received: by 2002:ac2:4564:: with SMTP id k4mr14614572lfm.380.1639167010105;
-        Fri, 10 Dec 2021 12:10:10 -0800 (PST)
-Received: from [10.0.0.115] (91-153-170-164.elisa-laajakaista.fi. [91.153.170.164])
-        by smtp.gmail.com with ESMTPSA id h12sm400326lfc.239.2021.12.10.12.10.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Dec 2021 12:10:09 -0800 (PST)
-Message-ID: <b1966631-d0ea-eccd-a07d-a4d573b942f6@gmail.com>
-Date:   Fri, 10 Dec 2021 22:10:38 +0200
+        id S1344696AbhLJWWb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 10 Dec 2021 17:22:31 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49616 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1344667AbhLJWWV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Dec 2021 17:22:21 -0500
+Message-ID: <20211210221642.869015045@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1639174723;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=IBbfy8DUMmeX2/DxJ4bxtqprC0vLuk1jWkG3suZ0PZw=;
+        b=qC+ywncigd88uX881G7drnWnPitC8LQEDjIxWICRbmx1CnZuuhH2HOM78Mj73Xd+ZCv0Kb
+        ncvkjbnzAtbd+ixrpTmp/mZ4pThJranbywfqMLopOdcOEGpsPc6uk3V8xaldwObLZfsa/F
+        EQ9V2dZmFKR1bqfNssiazFt8n3Mf+7q1vPMaTRADEfAyYuxcvDch8l/qTyx/UZYaRnEdfG
+        107k2ftTZl52fiKXc5XfVwoW5s/CdJw8zCMdv0ss6LKqyYgeRXX/LiA2+XXHlrLhd7JdKS
+        +inOsrufS8ZmeqDmP1k3/yTr0mCeJApmaMV52ZYaBfM4TpXhGFC+GjjHRExr/A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1639174723;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=IBbfy8DUMmeX2/DxJ4bxtqprC0vLuk1jWkG3suZ0PZw=;
+        b=5lxdmWfE59j3yHf4IXX2tpXuGGPaN2BKbOiQcB9ippOtvBNy75YsOs7y6x5FiIbDSi4ZaA
+        +C6w+xOR5nRMXFBA==
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Cedric Le Goater <clg@kaod.org>,
+        Juergen Gross <jgross@suse.com>,
+        xen-devel@lists.xenproject.org, Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>
+Subject: [patch V3 00/35] genirq/msi, PCI/MSI: Spring cleaning - Part 2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH] dma: ti: k3-udma: Fix smatch warnings
-Content-Language: en-US
-From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Nishanth Menon <nm@ti.com>
-References: <20211209180957.29036-1-vigneshr@ti.com>
- <8ae3b70e-3697-2d3f-9a62-378f1a3748d7@gmail.com>
-In-Reply-To: <8ae3b70e-3697-2d3f-9a62-378f1a3748d7@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Date:   Fri, 10 Dec 2021 23:18:43 +0100 (CET)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 10/12/2021 22:10, Péter Ujfalusi wrote:
-> 
-> 
-> On 09/12/2021 20:09, Vignesh Raghavendra wrote:
->> Smatch reports below warnings [1] wrt dereferencing rm_res when it can
->> potentially be ERR_PTR(). This is possible when entire range is
->> allocated to Linux
->> Fix this case by making sure, there is no deference of rm_res when its
->> ERR_PTR().
-> 
-> Valid, early sysfs did not had rm ranges, thus we assumed all channels
-
-s/sysfs/sysfw
-
-
-> are for Linux, then we got support for one range per channel type and
-> then the sets got introduced for supporting the differnt throughput
-> levels of channles in the types.
-> This surely got overlooked.
-> 
-> Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-> 
->>
->> [1]:
->>  drivers/dma/ti/k3-udma.c:4524 udma_setup_resources() error: 'rm_res' dereferencing possible ERR_PTR()
->>  drivers/dma/ti/k3-udma.c:4537 udma_setup_resources() error: 'rm_res' dereferencing possible ERR_PTR()
->>  drivers/dma/ti/k3-udma.c:4681 bcdma_setup_resources() error: 'rm_res' dereferencing possible ERR_PTR()
->>  drivers/dma/ti/k3-udma.c:4696 bcdma_setup_resources() error: 'rm_res' dereferencing possible ERR_PTR()
->>  drivers/dma/ti/k3-udma.c:4711 bcdma_setup_resources() error: 'rm_res' dereferencing possible ERR_PTR()
->>  drivers/dma/ti/k3-udma.c:4848 pktdma_setup_resources() error: 'rm_res' dereferencing possible ERR_PTR()
->>  drivers/dma/ti/k3-udma.c:4861 pktdma_setup_resources() error: 'rm_res' dereferencing possible ERR_PTR()
->>
->> Reported-by: Nishanth Menon <nm@ti.com>
->> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
->> ---
->>  drivers/dma/ti/k3-udma.c | 157 ++++++++++++++++++++++++++-------------
->>  1 file changed, 107 insertions(+), 50 deletions(-)
->>
->> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
->> index 041d8e32d630..6e56d1cef5ee 100644
->> --- a/drivers/dma/ti/k3-udma.c
->> +++ b/drivers/dma/ti/k3-udma.c
->> @@ -4534,45 +4534,60 @@ static int udma_setup_resources(struct udma_dev *ud)
->>  	rm_res = tisci_rm->rm_ranges[RM_RANGE_TCHAN];
->>  	if (IS_ERR(rm_res)) {
->>  		bitmap_zero(ud->tchan_map, ud->tchan_cnt);
->> +		irq_res.sets = 1;
->>  	} else {
->>  		bitmap_fill(ud->tchan_map, ud->tchan_cnt);
->>  		for (i = 0; i < rm_res->sets; i++)
->>  			udma_mark_resource_ranges(ud, ud->tchan_map,
->>  						  &rm_res->desc[i], "tchan");
->> +		irq_res.sets = rm_res->sets;
->>  	}
->> -	irq_res.sets = rm_res->sets;
->>  
->>  	/* rchan and matching default flow ranges */
->>  	rm_res = tisci_rm->rm_ranges[RM_RANGE_RCHAN];
->>  	if (IS_ERR(rm_res)) {
->>  		bitmap_zero(ud->rchan_map, ud->rchan_cnt);
->> +		irq_res.sets++;
->>  	} else {
->>  		bitmap_fill(ud->rchan_map, ud->rchan_cnt);
->>  		for (i = 0; i < rm_res->sets; i++)
->>  			udma_mark_resource_ranges(ud, ud->rchan_map,
->>  						  &rm_res->desc[i], "rchan");
->> +		irq_res.sets += rm_res->sets;
->>  	}
->>  
->> -	irq_res.sets += rm_res->sets;
->>  	irq_res.desc = kcalloc(irq_res.sets, sizeof(*irq_res.desc), GFP_KERNEL);
->> +	if (!irq_res.desc)
->> +		return -ENOMEM;
->>  	rm_res = tisci_rm->rm_ranges[RM_RANGE_TCHAN];
->> -	for (i = 0; i < rm_res->sets; i++) {
->> -		irq_res.desc[i].start = rm_res->desc[i].start;
->> -		irq_res.desc[i].num = rm_res->desc[i].num;
->> -		irq_res.desc[i].start_sec = rm_res->desc[i].start_sec;
->> -		irq_res.desc[i].num_sec = rm_res->desc[i].num_sec;
->> +	if (IS_ERR(rm_res)) {
->> +		irq_res.desc[0].start = 0;
->> +		irq_res.desc[0].num = ud->tchan_cnt;
->> +		i = 1;
->> +	} else {
->> +		for (i = 0; i < rm_res->sets; i++) {
->> +			irq_res.desc[i].start = rm_res->desc[i].start;
->> +			irq_res.desc[i].num = rm_res->desc[i].num;
->> +			irq_res.desc[i].start_sec = rm_res->desc[i].start_sec;
->> +			irq_res.desc[i].num_sec = rm_res->desc[i].num_sec;
->> +		}
->>  	}
->>  	rm_res = tisci_rm->rm_ranges[RM_RANGE_RCHAN];
->> -	for (j = 0; j < rm_res->sets; j++, i++) {
->> -		if (rm_res->desc[j].num) {
->> -			irq_res.desc[i].start = rm_res->desc[j].start +
->> -					ud->soc_data->oes.udma_rchan;
->> -			irq_res.desc[i].num = rm_res->desc[j].num;
->> -		}
->> -		if (rm_res->desc[j].num_sec) {
->> -			irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
->> -					ud->soc_data->oes.udma_rchan;
->> -			irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
->> +	if (IS_ERR(rm_res)) {
->> +		irq_res.desc[i].start = 0;
->> +		irq_res.desc[i].num = ud->rchan_cnt;
->> +	} else {
->> +		for (j = 0; j < rm_res->sets; j++, i++) {
->> +			if (rm_res->desc[j].num) {
->> +				irq_res.desc[i].start = rm_res->desc[j].start +
->> +						ud->soc_data->oes.udma_rchan;
->> +				irq_res.desc[i].num = rm_res->desc[j].num;
->> +			}
->> +			if (rm_res->desc[j].num_sec) {
->> +				irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
->> +						ud->soc_data->oes.udma_rchan;
->> +				irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
->> +			}
->>  		}
->>  	}
->>  	ret = ti_sci_inta_msi_domain_alloc_irqs(ud->dev, &irq_res);
->> @@ -4690,14 +4705,15 @@ static int bcdma_setup_resources(struct udma_dev *ud)
->>  		rm_res = tisci_rm->rm_ranges[RM_RANGE_BCHAN];
->>  		if (IS_ERR(rm_res)) {
->>  			bitmap_zero(ud->bchan_map, ud->bchan_cnt);
->> +			irq_res.sets++;
->>  		} else {
->>  			bitmap_fill(ud->bchan_map, ud->bchan_cnt);
->>  			for (i = 0; i < rm_res->sets; i++)
->>  				udma_mark_resource_ranges(ud, ud->bchan_map,
->>  							  &rm_res->desc[i],
->>  							  "bchan");
->> +			irq_res.sets += rm_res->sets;
->>  		}
->> -		irq_res.sets += rm_res->sets;
->>  	}
->>  
->>  	/* tchan ranges */
->> @@ -4705,14 +4721,15 @@ static int bcdma_setup_resources(struct udma_dev *ud)
->>  		rm_res = tisci_rm->rm_ranges[RM_RANGE_TCHAN];
->>  		if (IS_ERR(rm_res)) {
->>  			bitmap_zero(ud->tchan_map, ud->tchan_cnt);
->> +			irq_res.sets += 2;
->>  		} else {
->>  			bitmap_fill(ud->tchan_map, ud->tchan_cnt);
->>  			for (i = 0; i < rm_res->sets; i++)
->>  				udma_mark_resource_ranges(ud, ud->tchan_map,
->>  							  &rm_res->desc[i],
->>  							  "tchan");
->> +			irq_res.sets += rm_res->sets * 2;
->>  		}
->> -		irq_res.sets += rm_res->sets * 2;
->>  	}
->>  
->>  	/* rchan ranges */
->> @@ -4720,47 +4737,72 @@ static int bcdma_setup_resources(struct udma_dev *ud)
->>  		rm_res = tisci_rm->rm_ranges[RM_RANGE_RCHAN];
->>  		if (IS_ERR(rm_res)) {
->>  			bitmap_zero(ud->rchan_map, ud->rchan_cnt);
->> +			irq_res.sets += 2;
->>  		} else {
->>  			bitmap_fill(ud->rchan_map, ud->rchan_cnt);
->>  			for (i = 0; i < rm_res->sets; i++)
->>  				udma_mark_resource_ranges(ud, ud->rchan_map,
->>  							  &rm_res->desc[i],
->>  							  "rchan");
->> +			irq_res.sets += rm_res->sets * 2;
->>  		}
->> -		irq_res.sets += rm_res->sets * 2;
->>  	}
->>  
->>  	irq_res.desc = kcalloc(irq_res.sets, sizeof(*irq_res.desc), GFP_KERNEL);
->> +	if (!irq_res.desc)
->> +		return -ENOMEM;
->>  	if (ud->bchan_cnt) {
->>  		rm_res = tisci_rm->rm_ranges[RM_RANGE_BCHAN];
->> -		for (i = 0; i < rm_res->sets; i++) {
->> -			irq_res.desc[i].start = rm_res->desc[i].start +
->> -						oes->bcdma_bchan_ring;
->> -			irq_res.desc[i].num = rm_res->desc[i].num;
->> +		if (IS_ERR(rm_res)) {
->> +			irq_res.desc[0].start = oes->bcdma_bchan_ring;
->> +			irq_res.desc[0].num = ud->bchan_cnt;
->> +			i = 1;
->> +		} else {
->> +			for (i = 0; i < rm_res->sets; i++) {
->> +				irq_res.desc[i].start = rm_res->desc[i].start +
->> +							oes->bcdma_bchan_ring;
->> +				irq_res.desc[i].num = rm_res->desc[i].num;
->> +			}
->>  		}
->>  	}
->>  	if (ud->tchan_cnt) {
->>  		rm_res = tisci_rm->rm_ranges[RM_RANGE_TCHAN];
->> -		for (j = 0; j < rm_res->sets; j++, i += 2) {
->> -			irq_res.desc[i].start = rm_res->desc[j].start +
->> -						oes->bcdma_tchan_data;
->> -			irq_res.desc[i].num = rm_res->desc[j].num;
->> -
->> -			irq_res.desc[i + 1].start = rm_res->desc[j].start +
->> -						oes->bcdma_tchan_ring;
->> -			irq_res.desc[i + 1].num = rm_res->desc[j].num;
->> +		if (IS_ERR(rm_res)) {
->> +			irq_res.desc[i].start = oes->bcdma_tchan_data;
->> +			irq_res.desc[i].num = ud->tchan_cnt;
->> +			irq_res.desc[i + 1].start = oes->bcdma_tchan_ring;
->> +			irq_res.desc[i + 1].num = ud->tchan_cnt;
->> +			i += 2;
->> +		} else {
->> +			for (j = 0; j < rm_res->sets; j++, i += 2) {
->> +				irq_res.desc[i].start = rm_res->desc[j].start +
->> +							oes->bcdma_tchan_data;
->> +				irq_res.desc[i].num = rm_res->desc[j].num;
->> +
->> +				irq_res.desc[i + 1].start = rm_res->desc[j].start +
->> +							oes->bcdma_tchan_ring;
->> +				irq_res.desc[i + 1].num = rm_res->desc[j].num;
->> +			}
->>  		}
->>  	}
->>  	if (ud->rchan_cnt) {
->>  		rm_res = tisci_rm->rm_ranges[RM_RANGE_RCHAN];
->> -		for (j = 0; j < rm_res->sets; j++, i += 2) {
->> -			irq_res.desc[i].start = rm_res->desc[j].start +
->> -						oes->bcdma_rchan_data;
->> -			irq_res.desc[i].num = rm_res->desc[j].num;
->> -
->> -			irq_res.desc[i + 1].start = rm_res->desc[j].start +
->> -						oes->bcdma_rchan_ring;
->> -			irq_res.desc[i + 1].num = rm_res->desc[j].num;
->> +		if (IS_ERR(rm_res)) {
->> +			irq_res.desc[i].start = oes->bcdma_rchan_data;
->> +			irq_res.desc[i].num = ud->rchan_cnt;
->> +			irq_res.desc[i + 1].start = oes->bcdma_rchan_ring;
->> +			irq_res.desc[i + 1].num = ud->rchan_cnt;
->> +			i += 2;
->> +		} else {
->> +			for (j = 0; j < rm_res->sets; j++, i += 2) {
->> +				irq_res.desc[i].start = rm_res->desc[j].start +
->> +							oes->bcdma_rchan_data;
->> +				irq_res.desc[i].num = rm_res->desc[j].num;
->> +
->> +				irq_res.desc[i + 1].start = rm_res->desc[j].start +
->> +							oes->bcdma_rchan_ring;
->> +				irq_res.desc[i + 1].num = rm_res->desc[j].num;
->> +			}
->>  		}
->>  	}
->>  
->> @@ -4858,39 +4900,54 @@ static int pktdma_setup_resources(struct udma_dev *ud)
->>  	if (IS_ERR(rm_res)) {
->>  		/* all rflows are assigned exclusively to Linux */
->>  		bitmap_zero(ud->rflow_in_use, ud->rflow_cnt);
->> +		irq_res.sets = 1;
->>  	} else {
->>  		bitmap_fill(ud->rflow_in_use, ud->rflow_cnt);
->>  		for (i = 0; i < rm_res->sets; i++)
->>  			udma_mark_resource_ranges(ud, ud->rflow_in_use,
->>  						  &rm_res->desc[i], "rflow");
->> +		irq_res.sets = rm_res->sets;
->>  	}
->> -	irq_res.sets = rm_res->sets;
->>  
->>  	/* tflow ranges */
->>  	rm_res = tisci_rm->rm_ranges[RM_RANGE_TFLOW];
->>  	if (IS_ERR(rm_res)) {
->>  		/* all tflows are assigned exclusively to Linux */
->>  		bitmap_zero(ud->tflow_map, ud->tflow_cnt);
->> +		irq_res.sets++;
->>  	} else {
->>  		bitmap_fill(ud->tflow_map, ud->tflow_cnt);
->>  		for (i = 0; i < rm_res->sets; i++)
->>  			udma_mark_resource_ranges(ud, ud->tflow_map,
->>  						  &rm_res->desc[i], "tflow");
->> +		irq_res.sets += rm_res->sets;
->>  	}
->> -	irq_res.sets += rm_res->sets;
->>  
->>  	irq_res.desc = kcalloc(irq_res.sets, sizeof(*irq_res.desc), GFP_KERNEL);
->> +	if (!irq_res.desc)
->> +		return -ENOMEM;
->>  	rm_res = tisci_rm->rm_ranges[RM_RANGE_TFLOW];
->> -	for (i = 0; i < rm_res->sets; i++) {
->> -		irq_res.desc[i].start = rm_res->desc[i].start +
->> -					oes->pktdma_tchan_flow;
->> -		irq_res.desc[i].num = rm_res->desc[i].num;
->> +	if (IS_ERR(rm_res)) {
->> +		irq_res.desc[0].start = oes->pktdma_tchan_flow;
->> +		irq_res.desc[0].num = ud->tflow_cnt;
->> +		i = 1;
->> +	} else {
->> +		for (i = 0; i < rm_res->sets; i++) {
->> +			irq_res.desc[i].start = rm_res->desc[i].start +
->> +						oes->pktdma_tchan_flow;
->> +			irq_res.desc[i].num = rm_res->desc[i].num;
->> +		}
->>  	}
->>  	rm_res = tisci_rm->rm_ranges[RM_RANGE_RFLOW];
->> -	for (j = 0; j < rm_res->sets; j++, i++) {
->> -		irq_res.desc[i].start = rm_res->desc[j].start +
->> -					oes->pktdma_rchan_flow;
->> -		irq_res.desc[i].num = rm_res->desc[j].num;
->> +	if (IS_ERR(rm_res)) {
->> +		irq_res.desc[i].start = oes->pktdma_rchan_flow;
->> +		irq_res.desc[i].num = ud->rflow_cnt;
->> +	} else {
->> +		for (j = 0; j < rm_res->sets; j++, i++) {
->> +			irq_res.desc[i].start = rm_res->desc[j].start +
->> +						oes->pktdma_rchan_flow;
->> +			irq_res.desc[i].num = rm_res->desc[j].num;
->> +		}
->>  	}
->>  	ret = ti_sci_inta_msi_domain_alloc_irqs(ud->dev, &irq_res);
->>  	kfree(irq_res.desc);
->>
-> 
-
--- 
-Péter
+VGhpcyBpcyB0aGUgc2Vjb25kIHBhcnQgb2YgW1BDSV1NU0kgcmVmYWN0b3Jpbmcgd2hpY2ggYWlt
+cyB0byBwcm92aWRlIHRoZQphYmlsaXR5IG9mIGV4cGFuZGluZyBNU0ktWCB2ZWN0b3JzIGFmdGVy
+IGVuYWJsaW5nIE1TSS1YLgoKVGhpcyBpcyBiYXNlZCBvbiB0aGUgZmlyc3QgcGFydCBvZiB0aGlz
+IHdvcmsgd2hpY2ggY2FuIGJlIGZvdW5kIGhlcmU6CgogICAgaHR0cHM6Ly9sb3JlLmtlcm5lbC5v
+cmcvci8yMDIxMTIwNjIxMDE0Ny44NzI4NjU4MjNAbGludXRyb25peC5kZQoKYW5kIGhhcyBiZWVu
+IGFwcGxpZWQgdG86CgogICAgIGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2Vy
+bmVsL2dpdC90aXAvdGlwLmdpdCBpcnEvbXNpCgoKVGhpcyBzZWNvbmQgcGFydCBoYXMgdGhlIGZv
+bGxvd2luZyBpbXBvcnRhbnQgY2hhbmdlczoKCiAgIDEpIENsZWFudXAgb2YgdGhlIE1TSSByZWxh
+dGVkIGRhdGEgaW4gc3RydWN0IGRldmljZQoKICAgICAgc3RydWN0IGRldmljZSBjb250YWlucyBh
+dCB0aGUgbW9tZW50IHZhcmlvdXMgTVNJIHJlbGF0ZWQgcGFydHMuIFNvbWUKICAgICAgb2YgdGhl
+bSAodGhlIGlycSBkb21haW4gcG9pbnRlcikgY2Fubm90IGJlIG1vdmVkIG91dCwgYnV0IHRoZSBy
+ZXN0CiAgICAgIGNhbiBiZSBhbGxvY2F0ZWQgb24gZmlyc3QgdXNlLiBUaGlzIGlzIGluIHByZXBh
+cmF0aW9uIG9mIGFkZGluZyBtb3JlCiAgICAgIHBlciBkZXZpY2UgTVNJIGRhdGEgbGF0ZXIgb24u
+CgogICAyKSBDb25zb2xpZGF0aW9uIG9mIHN5c2ZzIGhhbmRsaW5nCgogICAgICBBcyBhIGZpcnN0
+IHN0ZXAgdGhpcyBtb3ZlcyB0aGUgc3lzZnMgcG9pbnRlciBmcm9tIHN0cnVjdCBtc2lfZGVzYwog
+ICAgICBpbnRvIHRoZSBuZXcgcGVyIGRldmljZSBNU0kgZGF0YSBzdHJ1Y3R1cmUgd2hlcmUgaXQg
+YmVsb25ncy4KCiAgICAgIExhdGVyIGNoYW5nZXMgd2lsbCBjbGVhbnVwIHRoaXMgY29kZSBmdXJ0
+aGVyLCBidXQgdGhhdCdzIG5vdCBwb3NzaWJsZQogICAgICBhdCB0aGlzIHBvaW50LgoKICAgMykg
+VXNlIFBDSSBkZXZpY2UgcHJvcGVydGllcyBpbnN0ZWFkIG9mIGxvb2tpbmcgdXAgTVNJIGRlc2Ny
+aXB0b3JzIGFuZAogICAgICBhbmFseXNpbmcgdGhlaXIgZGF0YS4KCiAgIDQpIFByb3ZpZGUgYSBm
+dW5jdGlvbiB0byByZXRyaWV2ZSB0aGUgTGludXggaW50ZXJydXB0IG51bWJlciBmb3IgYSBnaXZl
+bgogICAgICBNU0kgaW5kZXggc2ltaWxhciB0byBwY2lfaXJxX3ZlY3RvcigpIGFuZCBjbGVhbnVw
+IGFsbCBvcGVuIGNvZGVkCiAgICAgIHZhcmlhbnRzLgoKSXQncyBhbHNvIGF2YWlsYWJsZSBmcm9t
+IGdpdDoKCiAgICAgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0
+L3RnbHgvZGV2ZWwuZ2l0IG1zaS12My1wYXJ0LTIKClBhcnQgMyBvZiB0aGlzIGVmZm9ydCBpcyBh
+dmFpbGFibGUgb24gdG9wCgogICAgIGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgv
+a2VybmVsL2dpdC90Z2x4L2RldmVsLmdpdCBtc2ktdjMtcGFydC0zCgogICAgIFBhcnQgMyBpcyBu
+b3QgZ29pbmcgdG8gYmUgcmVwb3N0ZWQgYXMgdGhlcmUgaXMgbm8gY2hhbmdlIHZzLiBWMi4KClYy
+IG9mIHBhcnQgMiBjYW4gYmUgZm91bmQgaGVyZToKCiAgICBodHRwczovL2xvcmUua2VybmVsLm9y
+Zy9yLzIwMjExMjA2MjEwMzA3LjYyNTExNjI1M0BsaW51dHJvbml4LmRlCgpDaGFuZ2VzIHZlcnN1
+cyBWMjoKCiAgLSBVc2UgUENJIGRldmljZSBwcm9wZXJ0aWVzIGluc3RlYWQgb2YgY3JlYXRpbmcg
+YSBuZXcgc2V0IC0gSmFzb24KCiAgLSBQaWNrZWQgdXAgUmV2aWV3ZWQvVGVzdGVkL0Fja2VkLWJ5
+IHRhZ3MgYXMgYXBwcm9wcmlhdGUKClRoYW5rcywKCgl0Z2x4Ci0tLQogYXJjaC9wb3dlcnBjL3Bs
+YXRmb3Jtcy9jZWxsL2F4b25fbXNpLmMgICAgICAgICAgICAgIHwgICAgNSAKIGFyY2gvcG93ZXJw
+Yy9wbGF0Zm9ybXMvcHNlcmllcy9tc2kuYyAgICAgICAgICAgICAgICB8ICAgMzggKy0tLQogYXJj
+aC94ODYva2VybmVsL2FwaWMvbXNpLmMgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgNSAK
+IGFyY2gveDg2L3BjaS94ZW4uYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
+MTEgLQogZHJpdmVycy9iYXNlL3BsYXRmb3JtLW1zaS5jICAgICAgICAgICAgICAgICAgICAgICAg
+IHwgIDE1MiArKysrKysrKy0tLS0tLS0tLS0tCiBkcml2ZXJzL2J1cy9mc2wtbWMvZHByYy1kcml2
+ZXIuYyAgICAgICAgICAgICAgICAgICAgfCAgICA4IC0KIGRyaXZlcnMvYnVzL2ZzbC1tYy9mc2wt
+bWMtYWxsb2NhdG9yLmMgICAgICAgICAgICAgICB8ICAgIDkgLQogZHJpdmVycy9idXMvZnNsLW1j
+L2ZzbC1tYy1tc2kuYyAgICAgICAgICAgICAgICAgICAgIHwgICAyNiArLS0KIGRyaXZlcnMvZG1h
+L212X3hvcl92Mi5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMTYgLS0KIGRyaXZl
+cnMvZG1hL3Fjb20vaGlkbWEuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNDQgKyst
+LS0KIGRyaXZlcnMvZG1hL3RpL2szLXVkbWEtcHJpdmF0ZS5jICAgICAgICAgICAgICAgICAgICB8
+ICAgIDYgCiBkcml2ZXJzL2RtYS90aS9rMy11ZG1hLmMgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgIDE0IC0KIGRyaXZlcnMvaW9tbXUvYXJtL2FybS1zbW11LXYzL2FybS1zbW11LXYzLmMg
+ICAgICAgICB8ICAgMjMgLS0KIGRyaXZlcnMvaXJxY2hpcC9pcnEtbWJpZ2VuLmMgICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgIDQgCiBkcml2ZXJzL2lycWNoaXAvaXJxLW12ZWJ1LWljdS5jICAg
+ICAgICAgICAgICAgICAgICAgfCAgIDEyIC0KIGRyaXZlcnMvaXJxY2hpcC9pcnEtdGktc2NpLWlu
+dGEuYyAgICAgICAgICAgICAgICAgICB8ICAgIDIgCiBkcml2ZXJzL21haWxib3gvYmNtLWZsZXhy
+bS1tYWlsYm94LmMgICAgICAgICAgICAgICAgfCAgICA5IC0KIGRyaXZlcnMvbmV0L2V0aGVybmV0
+L2ZyZWVzY2FsZS9kcGFhMi9kcGFhMi1ldGguYyAgICB8ICAgIDQgCiBkcml2ZXJzL25ldC9ldGhl
+cm5ldC9mcmVlc2NhbGUvZHBhYTIvZHBhYTItcHRwLmMgICAgfCAgICA0IAogZHJpdmVycy9uZXQv
+ZXRoZXJuZXQvZnJlZXNjYWxlL2RwYWEyL2RwYWEyLXN3aXRjaC5jIHwgICAgNSAKIGRyaXZlcnMv
+cGNpL21zaS9pcnFkb21haW4uYyAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMjAgKysKIGRy
+aXZlcnMvcGNpL21zaS9sZWdhY3kuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDYg
+CiBkcml2ZXJzL3BjaS9tc2kvbXNpLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAg
+MTMzICsrKysrKy0tLS0tLS0tLS0KIGRyaXZlcnMvcGNpL3hlbi1wY2lmcm9udC5jICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8ICAgIDIgCiBkcml2ZXJzL3BlcmYvYXJtX3NtbXV2M19wbXUuYyAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgICA1IAogZHJpdmVycy9zb2MvZnNsL2RwaW8vZHBpby1k
+cml2ZXIuYyAgICAgICAgICAgICAgICAgIHwgICAgOCAtCiBkcml2ZXJzL3NvYy90aS9rMy1yaW5n
+YWNjLmMgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICA2IAogZHJpdmVycy9zb2MvdGkvdGlf
+c2NpX2ludGFfbXNpLmMgICAgICAgICAgICAgICAgICAgIHwgICAyMiAtLQogZHJpdmVycy92Zmlv
+L2ZzbC1tYy92ZmlvX2ZzbF9tY19pbnRyLmMgICAgICAgICAgICAgIHwgICAgNCAKIGluY2x1ZGUv
+bGludXgvZGV2aWNlLmggICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMjUgKystCiBp
+bmNsdWRlL2xpbnV4L2ZzbC9tYy5oICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICA0
+IAogaW5jbHVkZS9saW51eC9tc2kuaCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
+ICA5NSArKysrLS0tLS0tLS0KIGluY2x1ZGUvbGludXgvcGNpLmggICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgIDEgCiBpbmNsdWRlL2xpbnV4L3NvYy90aS90aV9zY2lfaW50YV9t
+c2kuaCAgICAgICAgICAgICAgfCAgICAxIAoga2VybmVsL2lycS9tc2kuYyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgIDE1OCArKysrKysrKysrKysrKystLS0tLQogMzUgZmls
+ZXMgY2hhbmdlZCwgNDI5IGluc2VydGlvbnMoKyksIDQ1OCBkZWxldGlvbnMoLSkKCg==

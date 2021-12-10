@@ -2,33 +2,33 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B0BB470D0F
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Dec 2021 23:19:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E6F8470D12
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Dec 2021 23:19:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344710AbhLJWWi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 10 Dec 2021 17:22:38 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:49730 "EHLO
+        id S1344720AbhLJWWm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 10 Dec 2021 17:22:42 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49782 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231806AbhLJWWX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Dec 2021 17:22:23 -0500
-Message-ID: <20211210221813.311410967@linutronix.de>
+        with ESMTP id S1344684AbhLJWWZ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Dec 2021 17:22:25 -0500
+Message-ID: <20211210221813.372357371@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1639174727;
+        s=2020; t=1639174728;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=4+wAkdppI+0FsjiVOjRoboRfUoEGu3PdDBK/1dnuCFY=;
-        b=ijWPKjClq9DRfiqDCauUOqeI5yYXU3tP5wg1MsLiKOCZqSOsagFln3c4OzFUS8Elgn46kT
-        qZIz6lyQXHxfolX96i5XU3cIY+D4MK65b0BisdPtXRaGLKyN22HIG9WMFc+a+Pb5r7Yt/N
-        eix//MgfLCsvJT9BqyxVTdFM2ahx+ztKJ8+enXpo3Chemrr7l8l5NLYSQHADKus4XYZZnO
-        QmX2SU6sGHvlTDt+nKERO7dywK6hGk9HZOEQsczXKbt2T6kRuRb78llE48vY+tc3PmAP5s
-        m+ydYZQD/Zwgx9B4Nu5/uGrHlQvSDdMfqU4QRjzINF5B0nfUQ1l0aHNZvqeKkQ==
+         references:references; bh=jxff/xJv3Qst4ZB5tRChjTLXCWZK8WA2PIPQRiU/rvY=;
+        b=0nUrI//widUx8A75bvq7IZvZU0OgOd7DLmm1Zp2ltSlJUJ9r/TrE9oF6ObjsG/CcBOkiYi
+        qXw9+h4dQG4uyEMuyKeiBlxL4kElXM0TpMwsf3wmE81Z2stJW+ptloJgs/g6qP6M8dR2QU
+        njRyGX3+6rX5xnHULZR7tzFqLrE14gpMsFum/pVWgPlIZ+TpaG54gue+YwCmJ2mvy52BBv
+        eJfY6AUb8aIr3HCk56T6i2B/ksAdJHhdmvylSbmQ1UvjRhp/j3IltXf1nTsUbtPgTPyfJ7
+        dTv1xOVMJ9eZrRTBBhQoxRXkLcJLQxyY0zHx9KeMYtAVYinBZUzQopdXWot8gQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1639174727;
+        s=2020e; t=1639174728;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=4+wAkdppI+0FsjiVOjRoboRfUoEGu3PdDBK/1dnuCFY=;
-        b=GMWdydzWOH0ZCkNPtZwjkukJHdiZ5ohuNFeG5sc5tFhBJYzUGlpxrb3zsKf8GNmvxEolyK
-        fEg7ZZ5yE3oPqGCg==
+         references:references; bh=jxff/xJv3Qst4ZB5tRChjTLXCWZK8WA2PIPQRiU/rvY=;
+        b=vv6Me8N9GQvFvm+KtHhMWgm41j6C3fva9jay/jD8ClFpKD7/3pJq+KAqrq6JZCZO9BTGwf
+        CoMF7Kja5mNu2oDA==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -59,11 +59,11 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Jassi Brar <jassisinghbrar@gmail.com>,
         Peter Ujfalusi <peter.ujfalusi@gmail.com>,
         Sinan Kaya <okaya@kernel.org>
-Subject: [patch V3 02/35] x86/pci/XEN: Use PCI device property
+Subject: [patch V3 03/35] x86/apic/msi: Use PCI device MSI property
 References: <20211210221642.869015045@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 10 Dec 2021 23:18:46 +0100 (CET)
+Date:   Fri, 10 Dec 2021 23:18:47 +0100 (CET)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -73,37 +73,25 @@ From: Thomas Gleixner <tglx@linutronix.de>
 instead of fiddling with MSI descriptors.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: xen-devel@lists.xenproject.org
 ---
-V3: Use pci_dev->msix_enabled.
+V3: Use pci_dev->msix_enabled - Jason
 ---
- arch/x86/pci/xen.c |    9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ arch/x86/kernel/apic/msi.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/arch/x86/pci/xen.c
-+++ b/arch/x86/pci/xen.c
-@@ -399,9 +399,7 @@ static void xen_teardown_msi_irqs(struct
- 
- static void xen_pv_teardown_msi_irqs(struct pci_dev *dev)
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -160,11 +160,8 @@ static struct irq_chip pci_msi_controlle
+ int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
+ 		    msi_alloc_info_t *arg)
  {
--	struct msi_desc *msidesc = first_pci_msi_entry(dev);
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct msi_desc *desc = first_pci_msi_entry(pdev);
 -
--	if (msidesc->pci.msi_attrib.is_msix)
-+	if (dev->msix_enabled)
- 		xen_pci_frontend_disable_msix(dev);
- 	else
- 		xen_pci_frontend_disable_msi(dev);
-@@ -417,10 +415,7 @@ static int xen_msi_domain_alloc_irqs(str
- 	if (WARN_ON_ONCE(!dev_is_pci(dev)))
- 		return -EINVAL;
- 
--	if (first_msi_entry(dev)->pci.msi_attrib.is_msix)
--		type = PCI_CAP_ID_MSIX;
--	else
--		type = PCI_CAP_ID_MSI;
-+	type = to_pci_dev(dev)->msix_enabled ? PCI_CAP_ID_MSIX : PCI_CAP_ID_MSI;
- 
- 	return xen_msi_ops.setup_msi_irqs(to_pci_dev(dev), nvec, type);
- }
+ 	init_irq_alloc_info(arg, NULL);
+-	if (desc->pci.msi_attrib.is_msix) {
++	if (to_pci_dev(dev)->msix_enabled) {
+ 		arg->type = X86_IRQ_ALLOC_TYPE_PCI_MSIX;
+ 	} else {
+ 		arg->type = X86_IRQ_ALLOC_TYPE_PCI_MSI;
 

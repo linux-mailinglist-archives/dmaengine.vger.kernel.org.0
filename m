@@ -2,33 +2,33 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F695470D0D
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Dec 2021 23:19:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B0BB470D0F
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Dec 2021 23:19:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344685AbhLJWWf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 10 Dec 2021 17:22:35 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:49686 "EHLO
+        id S1344710AbhLJWWi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 10 Dec 2021 17:22:38 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49730 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344683AbhLJWWW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Dec 2021 17:22:22 -0500
-Message-ID: <20211210221813.250049810@linutronix.de>
+        with ESMTP id S231806AbhLJWWX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Dec 2021 17:22:23 -0500
+Message-ID: <20211210221813.311410967@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1639174725;
+        s=2020; t=1639174727;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=LAPO48TeSRvyraOCUaLnLGoqr3cykpYVLg5Q2NPw+tk=;
-        b=RVFQBQqAHeoiRwlZ3riRsRVnIL91ZjHAfRJRIp58J8GUnDjLQx7L9kWYIIUbdLwuKR/jwL
-        JcJBPfohipM62TDgI++91yG93z8S9yOtP19oQQE8Q8k13Dz0zt5IP/hM5mMrevOXLmlklN
-        kWOoGd3So5Fe6OgP0QbWV76D4psb9hl5USqdOyh+D6Aqhblm4cpa5e5Vf78Qu6ZYHkQHTi
-        bgYvnB6aYzx+LTLoj46c14I2SP51PPz15FBrvc8JBpekzRO6sF7T8vtiJHTJFweb24goaW
-        joW6zxk5fBYith6L0SW2dhYjEXttIyscMDGJDovBvIbb2eL2uBhx9UWrfH/KNw==
+         references:references; bh=4+wAkdppI+0FsjiVOjRoboRfUoEGu3PdDBK/1dnuCFY=;
+        b=ijWPKjClq9DRfiqDCauUOqeI5yYXU3tP5wg1MsLiKOCZqSOsagFln3c4OzFUS8Elgn46kT
+        qZIz6lyQXHxfolX96i5XU3cIY+D4MK65b0BisdPtXRaGLKyN22HIG9WMFc+a+Pb5r7Yt/N
+        eix//MgfLCsvJT9BqyxVTdFM2ahx+ztKJ8+enXpo3Chemrr7l8l5NLYSQHADKus4XYZZnO
+        QmX2SU6sGHvlTDt+nKERO7dywK6hGk9HZOEQsczXKbt2T6kRuRb78llE48vY+tc3PmAP5s
+        m+ydYZQD/Zwgx9B4Nu5/uGrHlQvSDdMfqU4QRjzINF5B0nfUQ1l0aHNZvqeKkQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1639174725;
+        s=2020e; t=1639174727;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=LAPO48TeSRvyraOCUaLnLGoqr3cykpYVLg5Q2NPw+tk=;
-        b=W5z8GHgzI4pNn8BJLekDX4e1pfDaOzUgMdqste1q3KO/3rlD+JtPo0I0BMrvt2m3/1G3Vk
-        MFABiwOkTOMR3XAQ==
+         references:references; bh=4+wAkdppI+0FsjiVOjRoboRfUoEGu3PdDBK/1dnuCFY=;
+        b=GMWdydzWOH0ZCkNPtZwjkukJHdiZ5ohuNFeG5sc5tFhBJYzUGlpxrb3zsKf8GNmvxEolyK
+        fEg7ZZ5yE3oPqGCg==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
@@ -59,100 +59,51 @@ Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
         Jassi Brar <jassisinghbrar@gmail.com>,
         Peter Ujfalusi <peter.ujfalusi@gmail.com>,
         Sinan Kaya <okaya@kernel.org>
-Subject: [patch V3 01/35] PCI/MSI: Set pci_dev::msi[x]_enabled early
+Subject: [patch V3 02/35] x86/pci/XEN: Use PCI device property
 References: <20211210221642.869015045@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 10 Dec 2021 23:18:44 +0100 (CET)
+Date:   Fri, 10 Dec 2021 23:18:46 +0100 (CET)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-There are quite some places which retrieve the first MSI descriptor to
-evaluate whether the setup is for MSI or MSI-X. That's required because
-pci_dev::msi[x]_enabled is only set when the setup completed successfully.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-There is no real reason why msi[x]_enabled can't be set at the beginning of
-the setup sequence and cleared in case of a failure.
-
-Implement that so the MSI descriptor evaluations can be converted to simple
-property queries.
+instead of fiddling with MSI descriptors.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: xen-devel@lists.xenproject.org
 ---
-V3: New patch
+V3: Use pci_dev->msix_enabled.
 ---
- drivers/pci/msi/msi.c |   23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+ arch/x86/pci/xen.c |    9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
---- a/drivers/pci/msi/msi.c
-+++ b/drivers/pci/msi/msi.c
-@@ -421,11 +421,18 @@ static int msi_capability_init(struct pc
- 	struct msi_desc *entry;
- 	int ret;
+--- a/arch/x86/pci/xen.c
++++ b/arch/x86/pci/xen.c
+@@ -399,9 +399,7 @@ static void xen_teardown_msi_irqs(struct
  
--	pci_msi_set_enable(dev, 0);	/* Disable MSI during set up */
-+	/*
-+	 * Disable MSI during setup in the hardware, but mark it enabled
-+	 * so that setup code can evaluate it.
-+	 */
-+	pci_msi_set_enable(dev, 0);
-+	dev->msi_enabled = 1;
+ static void xen_pv_teardown_msi_irqs(struct pci_dev *dev)
+ {
+-	struct msi_desc *msidesc = first_pci_msi_entry(dev);
+-
+-	if (msidesc->pci.msi_attrib.is_msix)
++	if (dev->msix_enabled)
+ 		xen_pci_frontend_disable_msix(dev);
+ 	else
+ 		xen_pci_frontend_disable_msi(dev);
+@@ -417,10 +415,7 @@ static int xen_msi_domain_alloc_irqs(str
+ 	if (WARN_ON_ONCE(!dev_is_pci(dev)))
+ 		return -EINVAL;
  
- 	entry = msi_setup_entry(dev, nvec, affd);
--	if (!entry)
--		return -ENOMEM;
-+	if (!entry) {
-+		ret = -ENOMEM;
-+		goto fail;
-+	}
+-	if (first_msi_entry(dev)->pci.msi_attrib.is_msix)
+-		type = PCI_CAP_ID_MSIX;
+-	else
+-		type = PCI_CAP_ID_MSI;
++	type = to_pci_dev(dev)->msix_enabled ? PCI_CAP_ID_MSIX : PCI_CAP_ID_MSI;
  
- 	/* All MSIs are unmasked by default; mask them all */
- 	pci_msi_mask(entry, msi_multi_mask(entry));
-@@ -452,7 +459,6 @@ static int msi_capability_init(struct pc
- 	/* Set MSI enabled bits	*/
- 	pci_intx_for_msi(dev, 0);
- 	pci_msi_set_enable(dev, 1);
--	dev->msi_enabled = 1;
- 
- 	pcibios_free_irq(dev);
- 	dev->irq = entry->irq;
-@@ -461,6 +467,8 @@ static int msi_capability_init(struct pc
- err:
- 	pci_msi_unmask(entry, msi_multi_mask(entry));
- 	free_msi_irqs(dev);
-+fail:
-+	dev->msi_enabled = 0;
- 	return ret;
+ 	return xen_msi_ops.setup_msi_irqs(to_pci_dev(dev), nvec, type);
  }
- 
-@@ -589,6 +597,9 @@ static int msix_capability_init(struct p
- 	pci_msix_clear_and_set_ctrl(dev, 0, PCI_MSIX_FLAGS_MASKALL |
- 				    PCI_MSIX_FLAGS_ENABLE);
- 
-+	/* Mark it enabled so setup functions can query it */
-+	dev->msix_enabled = 1;
-+
- 	pci_read_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, &control);
- 	/* Request & Map MSI-X table region */
- 	tsize = msix_table_size(control);
-@@ -626,9 +637,8 @@ static int msix_capability_init(struct p
- 
- 	dev->msi_irq_groups = groups;
- 
--	/* Set MSI-X enabled bits and unmask the function */
-+	/* Disable INTX and unmask MSI-X */
- 	pci_intx_for_msi(dev, 0);
--	dev->msix_enabled = 1;
- 	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
- 
- 	pcibios_free_irq(dev);
-@@ -638,6 +648,7 @@ static int msix_capability_init(struct p
- 	free_msi_irqs(dev);
- 
- out_disable:
-+	dev->msix_enabled = 0;
- 	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_ENABLE, 0);
- 
- 	return ret;
 

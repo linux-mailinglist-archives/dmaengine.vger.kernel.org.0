@@ -2,61 +2,60 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2AF14720EF
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Dec 2021 07:07:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FC12472103
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Dec 2021 07:22:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232095AbhLMGHR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 13 Dec 2021 01:07:17 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:53444 "EHLO
+        id S232159AbhLMGWl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 13 Dec 2021 01:22:41 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:60358 "EHLO
         sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230405AbhLMGHR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Dec 2021 01:07:17 -0500
+        with ESMTP id S232157AbhLMGWk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Dec 2021 01:22:40 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 7062ACE0D07;
-        Mon, 13 Dec 2021 06:07:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B65C3C00446;
-        Mon, 13 Dec 2021 06:07:12 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id D908FCE0DDA;
+        Mon, 13 Dec 2021 06:22:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 232EFC00446;
+        Mon, 13 Dec 2021 06:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639375633;
-        bh=uDI/N5ve5tFJvyHw4ZHMMMocIwdr/gLZTJp5n1/pV/E=;
+        s=k20201202; t=1639376557;
+        bh=lXQk8DuzTcWO7+mYniXCjQRwf3MAXuhib/Ultl23U/Q=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j0dHcyEgK2lEzgrOvYRuhRRgDkLYqbPXyCz9AhUG0iGeWFBe/SWYerJsofFkeVZPh
-         IMsEYfCTHHsYEKDbRUUGwUJcCLX5SEDJhvTCWALe+qof1zcAeAxe37OPmHvfU0z7jp
-         vkCATMfq8MFHxgxWA74GsUUw77vhalY/zhf7r6lGWJbXM6FNJYD9TFDwtCTijqFAO9
-         Uv28IeEAByaXVw0Wy2499sv2ZSLHH5tqd1H9lhCWtjLbYoOMJW68yitS1YYYN+jSRp
-         MYkLyXfuITQYtke8KI6378nkJnFIMTLNlWZOfi2uZEgS5CisqEf2+UQOzWgPd+/AW9
-         wC8JQDInaNYXg==
-Date:   Mon, 13 Dec 2021 11:37:09 +0530
+        b=RF9r/PY36KFBoA6phg62nsHrctdXgAZw/+VyoRobtOWdVWZmPna2IfsVivf/eeH2S
+         8XD7RStCk5xoQYds2ZXdwajgpccJGnZyFOeSDRGqQcXMJY6PXr1EJFD/2xReyHSXAg
+         2dVihIqFAj19Su+f0NKg57tWX3Ntf5W/c277KQMRWvdk26Yjd4iuuimHI5opjEDDgH
+         DX6xUiCDngaY1vd7iNbir1qee0Er9jVNJvBD6it/BVkykekoGnoOJPWpaiM/s7ENow
+         FIiAZ76i9xYJ4ZoD9j1A+vzxa1mSx1uy5QekIUOPjSZ/WeqD7deHK+kUpMeOjHu2+X
+         Ax/QPOmbo2vaQ==
+Date:   Mon, 13 Dec 2021 11:52:32 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        devicetree@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        dmaengine@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: dma: ti: Add missing ti,k3-sci-common.yaml
- reference
-Message-ID: <YbbjDSx4AlJuTkTL@matsya>
-References: <20211206174226.2298135-1-robh@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Rob Herring <robh+dt@kernel.org>, list@opendingux.net,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] dmaengine: jz4780: Driver updates v2
+Message-ID: <YbbmqI6MHSwZTfIc@matsya>
+References: <20211206174259.68133-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211206174226.2298135-1-robh@kernel.org>
+In-Reply-To: <20211206174259.68133-1-paul@crapouillou.net>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 06-12-21, 11:42, Rob Herring wrote:
-> The TI k3-bcdma and k3-pktdma both use 'ti,sci' and 'ti,sci-dev-id'
-> properties defined in ti,k3-sci-common.yaml. When 'unevaluatedProperties'
-> support is enabled, a the follow warning is generated:
+On 06-12-21, 17:42, Paul Cercueil wrote:
+> Hi Vinod,
 > 
-> Documentation/devicetree/bindings/dma/ti/k3-bcdma.example.dt.yaml: dma-controller@485c0100: Unevaluated properties are not allowed ('ti,sci', 'ti,sci-dev-id' were unexpected)
-> Documentation/devicetree/bindings/dma/ti/k3-pktdma.example.dt.yaml: dma-controller@485c0000: Unevaluated properties are not allowed ('ti,sci', 'ti,sci-dev-id' were unexpected)
+> A small set of updates to the dma-jz4780 driver.
 > 
-> Add a reference to ti,k3-sci-common.yaml to fix this.
+> It adds support for the MDMA/BDMA engines in the JZ4760(B) and JZ4770
+> SoCs, which are just regular cores with less channels.
+> 
+> It also adds support for bidirectional channels, so that devices that
+> only do half-duplex transfers can request a single DMA channel for both
+> directions.
 
 Applied, thanks
 

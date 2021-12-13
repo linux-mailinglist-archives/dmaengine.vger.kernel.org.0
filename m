@@ -2,59 +2,66 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BEA34720E7
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Dec 2021 07:04:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 05D304720EE
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Dec 2021 07:06:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232049AbhLMGE6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 13 Dec 2021 01:04:58 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:52352 "EHLO
-        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbhLMGE6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Dec 2021 01:04:58 -0500
+        id S232096AbhLMGGy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 13 Dec 2021 01:06:54 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:48400 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232083AbhLMGGx (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Dec 2021 01:06:53 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 80EFECE0D07;
-        Mon, 13 Dec 2021 06:04:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B052EC00446;
-        Mon, 13 Dec 2021 06:04:53 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A1AA5B80D7C;
+        Mon, 13 Dec 2021 06:06:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CB66C00446;
+        Mon, 13 Dec 2021 06:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639375494;
-        bh=mO2Am3NA7/Lh5otbQkMxGHOHLA4azyRI8FOw664jYZA=;
+        s=k20201202; t=1639375611;
+        bh=51XhMkIPpjD7Sz/KLBJL9LCG1cdPx1zpRsb6s/TO8wY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dJIvC0NjG1dQN83f4cQT9l9nYU2GNjxXklRZaIltoSdXRKwnVAkf2xEaWIvj079ef
-         KvYiONmN453WM5QYgG/e5EPipFQ8DFByGR5h2O3xLkCTsZ5CuiqGsDwcgW8fHHmsfa
-         0zEnGAJNb5Au5ctJNYO3EhdaeZ7odrvoQDnwX7PLKfq/OAc+ofm4NzE7h+vezRaWDN
-         +J/Cne2C3X5gF8c3rgkV8HFOar/QFnENt0sQZKGOk/7lA7gCaV92ROTyB6nm/RQx3b
-         2e2hVBZ6QOLNWvVyvbuHzaszZqZePu1TCZnVwKZWElLM3/pSFnieyVOM8FT5jloaHa
-         e645+vLxbfJnQ==
-Date:   Mon, 13 Dec 2021 11:34:50 +0530
+        b=KPX+6g++lKx0OEHyuDpZ7Qa5HYMaB+tk4msYyZ1cgq06UZsCzIRLbSLLmSIfXTmIc
+         vFZ5MWQtUOlI8MidSb3mxKh3L7mtWAnEaKhHO/Qz2W3GN02XiDMoEFLOXn5Shpsp0E
+         JqplpyB2nqYM37tSLh7MhzD8o/psbxIJJWC/VBPnoXyMRDZt8svCPcdPiTj4HVNAst
+         VbFSCAKjiIigw3l+4e691ohozASDVzV8+JuSX9bNLcZ6vv7n2yYp21fH45yRx6fp2j
+         2958BrqT2mT/0vt9mB89qf6eP3Z6/bAup9XFYmEJPKfrYsm838xLrPo/zsEKhAYqy0
+         zQCOj8hFg69IQ==
+Date:   Mon, 13 Dec 2021 11:36:47 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: dma: pl08x: Fix unevaluatedProperties
- warnings
-Message-ID: <YbbigoCeQn0qM7jJ@matsya>
-References: <20211206174231.2298349-1-robh@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: dma: ti: Add missing ti,k3-sci-common.yaml
+ reference
+Message-ID: <Ybbi9+6Dhca9SOOd@matsya>
+References: <20211206174226.2298135-1-robh@kernel.org>
+ <Ya8eC9UkwMZaNozs@orome.fritz.box>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211206174231.2298349-1-robh@kernel.org>
+In-Reply-To: <Ya8eC9UkwMZaNozs@orome.fritz.box>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 06-12-21, 11:42, Rob Herring wrote:
-> With 'unevaluatedProperties' support implemented, the example has
-> warnings on primecell properties and 'resets':
+On 07-12-21, 09:40, Thierry Reding wrote:
+> On Mon, Dec 06, 2021 at 11:42:26AM -0600, Rob Herring wrote:
+> > The TI k3-bcdma and k3-pktdma both use 'ti,sci' and 'ti,sci-dev-id'
+> > properties defined in ti,k3-sci-common.yaml. When 'unevaluatedProperties'
+> > support is enabled, a the follow warning is generated:
 > 
-> Documentation/devicetree/bindings/dma/arm-pl08x.example.dt.yaml: dma-controller@67000000: Unevaluated properties are not allowed ('arm,primecell-periphid', 'resets' were unexpected)
+> s/a the following/the following/
 > 
-> Add the missing reference to primecell.yaml and definition for 'resets'.
+> Otherwise looks good:
 
-Applied, thanks
+Fixed up while applying..
+
+
 
 -- 
 ~Vinod

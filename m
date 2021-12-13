@@ -2,125 +2,72 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 04002473407
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Dec 2021 19:31:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2FB4473459
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Dec 2021 19:51:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239201AbhLMSbY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 13 Dec 2021 13:31:24 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59894 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230114AbhLMSbX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Dec 2021 13:31:23 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 1BDITweD032784;
-        Mon, 13 Dec 2021 12:29:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1639420199;
-        bh=CIwJXsDVc6MpWMxloZbtRdlpLw1Ztan/9G2UzPwMY0E=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=aQr+rT7AbNmri1BYm4glcZYUB4D0/LtbXNn0eGzLe1Xq4LgTziMH/fZw9NMlUSxOJ
-         eUvgRnz/JUOtWmI/LUlydZmqlDtGvShVqc/335BSewifnzHFovUoMb7LUYizCR9g/k
-         /rYDbql0vQTQMlM2Nnxl+1kL4PPvB9mCQmf5UIQI=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 1BDITwlR038320
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 Dec 2021 12:29:58 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Mon, 13
- Dec 2021 12:29:58 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Mon, 13 Dec 2021 12:29:58 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 1BDITwZX089938;
-        Mon, 13 Dec 2021 12:29:58 -0600
-Date:   Mon, 13 Dec 2021 12:29:58 -0600
-From:   Nishanth Menon <nm@ti.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, <linux-pci@vger.kernel.org>,
-        Cedric Le Goater <clg@kaod.org>,
-        Juergen Gross <jgross@suse.com>,
-        <xen-devel@lists.xenproject.org>, Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        <linuxppc-dev@lists.ozlabs.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        <iommu@lists.linux-foundation.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Sinan Kaya <okaya@kernel.org>
-Subject: Re: [patch V3 00/35] genirq/msi, PCI/MSI: Spring cleaning - Part 2
-Message-ID: <20211213182958.ytj4m6gsg35u77cv@detonator>
-References: <20211210221642.869015045@linutronix.de>
+        id S240438AbhLMSvT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 13 Dec 2021 13:51:19 -0500
+Received: from mga07.intel.com ([134.134.136.100]:27537 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239853AbhLMSvT (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 13 Dec 2021 13:51:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1639421479; x=1670957479;
+  h=subject:from:to:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6YidgoZQJ+buaCUzm+Z5MkJVgkbVqll5hRVJ0NPxOWE=;
+  b=a6cEa7SIsF/HJ902tjCcZp+V8K9CdzbvR/1SpTWLFBMvreFx92Qnnfrd
+   ubZ0tzqkEjBWpP5q+IRRGseL++8qSNssbkdQQ6SqgJ0nQzWlhdvwX5IJD
+   pS2UaWhIrV0E7PyCyEFblZkz+Idk+WfrorkXC3FABR9wsIPoPiRERCO/T
+   DO0ytnYMdsLvBRwyBVnVTAAkGN8t2fvmh30mZk28YBE+xhodURLVhQ1pD
+   tMO1E0CSsfzONl+2OIPqjPnw4VEMsXnZYXFTrdWXb6dMjYj1u8H5o0ZWd
+   pdFCNoZlQN4n31TuZgVY5MDLxv3V0CNEknO8R0JZvlbQEOjthhuL2hPB/
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10197"; a="302183517"
+X-IronPort-AV: E=Sophos;i="5.88,203,1635231600"; 
+   d="scan'208";a="302183517"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 10:51:18 -0800
+X-IronPort-AV: E=Sophos;i="5.88,203,1635231600"; 
+   d="scan'208";a="613934067"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 10:51:18 -0800
+Subject: [PATCH 0/3] refactor driver to only enable irq for wq enable
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org, dmaengine@vger.kernel.org
+Date:   Mon, 13 Dec 2021 11:51:17 -0700
+Message-ID: <163942143944.2412839.16850082171909136030.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20211210221642.869015045@linutronix.de>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 23:18-20211210, Thomas Gleixner wrote:
-[...]
+This patch series refactors the code to enable irq on wq enable only
+when necessary instead of allocation all msix vectors at probe. This saves
+CPU irq vector allocation on x86 platforms.
 
-> 
-> It's also available from git:
-> 
->      git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git msi-v3-part-2
+MSIX vector 0 is special and remain being allocated at probe.
+---
 
-[...]
+Dave Jiang (3):
+      dmaengine: idxd: embed irq_entry in idxd_wq struct
+      dmaengine: idxd: fix descriptor flushing locking
+      dmaengine: idxd: change MSIX allocation based on per wq activation
 
-> ---
->  drivers/dma/ti/k3-udma-private.c                    |    6 
->  drivers/dma/ti/k3-udma.c                            |   14 -
->  drivers/irqchip/irq-ti-sci-inta.c                   |    2 
->  drivers/soc/ti/k3-ringacc.c                         |    6 
->  drivers/soc/ti/ti_sci_inta_msi.c                    |   22 --
->  include/linux/soc/ti/ti_sci_inta_msi.h              |    1 
 
-Also while testing on TI K3 platforms, I noticed:
+ drivers/dma/idxd/device.c | 163 +++++++++++++++++++++-------------
+ drivers/dma/idxd/dma.c    |  12 +++
+ drivers/dma/idxd/idxd.h   |  29 +++---
+ drivers/dma/idxd/init.c   | 181 ++++++--------------------------------
+ drivers/dma/idxd/irq.c    |  13 +--
+ drivers/dma/idxd/submit.c |   8 +-
+ drivers/dma/idxd/sysfs.c  |   1 -
+ include/uapi/linux/idxd.h |   1 +
+ 8 files changed, 168 insertions(+), 240 deletions(-)
 
-msi_device_data_release/msi_device_destroy_sysfs in am64xx-evm / j7200
-[1] https://gist.github.com/nmenon/36899c7819681026cfe1ef185fb95f33#file-am64xx-evm-txt-L1018
-[2] https://gist.github.com/nmenon/36899c7819681026cfe1ef185fb95f33#file-j7200-evm-txt-L1076
+--
 
-Which is not present in vanilla v5.16-rc4
-
-v5.16-rc4:
-https://gist.github.com/nmenon/1aee3f0a7da47d5e9dcb7336b32a70cb
-
-msi-v3-part-2:
-https://gist.github.com/nmenon/36899c7819681026cfe1ef185fb95f33
-
-(.config https://gist.github.com/nmenon/ec6f95303828abf16a64022d8e3a269f)
-
-Vs:
-next-20211208:
-https://gist.github.com/nmenon/f5ca3558bd5c1fbe62dc5ceb420b536e
-
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D)/Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D

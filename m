@@ -2,62 +2,57 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ECB8C4720E2
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Dec 2021 07:02:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BEA34720E7
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Dec 2021 07:04:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232026AbhLMGCU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 13 Dec 2021 01:02:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232022AbhLMGCT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Dec 2021 01:02:19 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92B05C061748;
-        Sun, 12 Dec 2021 22:02:19 -0800 (PST)
+        id S232049AbhLMGE6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 13 Dec 2021 01:04:58 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:52352 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229601AbhLMGE6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Dec 2021 01:04:58 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3790AB80D1F;
-        Mon, 13 Dec 2021 06:02:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18009C00446;
-        Mon, 13 Dec 2021 06:02:15 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 80EFECE0D07;
+        Mon, 13 Dec 2021 06:04:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B052EC00446;
+        Mon, 13 Dec 2021 06:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639375337;
-        bh=ph5goTJMds46I3p7wgsridNAuEgW6rLlPVPgKZVmFS8=;
+        s=k20201202; t=1639375494;
+        bh=mO2Am3NA7/Lh5otbQkMxGHOHLA4azyRI8FOw664jYZA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PIxfSGqAtIGpWzktmh4ZjuGdsNZ3enWQB5P+WsMv4W9z/8LkzDwMaxiBgIDNwMk1F
-         jo+n3MAWAwjbHmz2hssrbt5+wHXMu2+EZjmW1peEqcMhsjSSBGeFtCMQPp2dKhRAFq
-         S7osAybvMgaklmqtfOyUV1DY3i7UVqH4j9RjnmhHxR6MW16Bp9WmCuusmma4X11RZ+
-         Ukyho0I9YBhtpW/cj2lFXyGbeHIveRL4VrIIMHIEX0IkfOI5As9BtHoK9NFfagAzd1
-         7MUcj+35gKRDnIajKrL/Ecu/FDbrExQMbusjW+mbAaORCWADSg0OXkw92eiDXfQEM4
-         nqAKl5ge9McbA==
-Date:   Mon, 13 Dec 2021 11:32:12 +0530
+        b=dJIvC0NjG1dQN83f4cQT9l9nYU2GNjxXklRZaIltoSdXRKwnVAkf2xEaWIvj079ef
+         KvYiONmN453WM5QYgG/e5EPipFQ8DFByGR5h2O3xLkCTsZ5CuiqGsDwcgW8fHHmsfa
+         0zEnGAJNb5Au5ctJNYO3EhdaeZ7odrvoQDnwX7PLKfq/OAc+ofm4NzE7h+vezRaWDN
+         +J/Cne2C3X5gF8c3rgkV8HFOar/QFnENt0sQZKGOk/7lA7gCaV92ROTyB6nm/RQx3b
+         2e2hVBZ6QOLNWvVyvbuHzaszZqZePu1TCZnVwKZWElLM3/pSFnieyVOM8FT5jloaHa
+         e645+vLxbfJnQ==
+Date:   Mon, 13 Dec 2021 11:34:50 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Aswath Govindraju <a-govindraju@ti.com>
-Cc:     Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH 0/2] J721S2: Add initial support
-Message-ID: <Ybbh5BwCdezGjJkz@matsya>
-References: <20211119132315.15901-1-a-govindraju@ti.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: dma: pl08x: Fix unevaluatedProperties
+ warnings
+Message-ID: <YbbigoCeQn0qM7jJ@matsya>
+References: <20211206174231.2298349-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211119132315.15901-1-a-govindraju@ti.com>
+In-Reply-To: <20211206174231.2298349-1-robh@kernel.org>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 19-11-21, 18:53, Aswath Govindraju wrote:
-> The following series of patches add support for J721S2 SoC.
+On 06-12-21, 11:42, Rob Herring wrote:
+> With 'unevaluatedProperties' support implemented, the example has
+> warnings on primecell properties and 'resets':
 > 
-> Currently, the PSIL source and destination thread IDs for only a few of the
-> IPs have been added. The remaning ones will be added as and when they are
-> tested.
+> Documentation/devicetree/bindings/dma/arm-pl08x.example.dt.yaml: dma-controller@67000000: Unevaluated properties are not allowed ('arm,primecell-periphid', 'resets' were unexpected)
 > 
-> The following series of patches are dependent on,
-> - http://lists.infradead.org/pipermail/linux-arm-kernel/2021-November/697574.html
+> Add the missing reference to primecell.yaml and definition for 'resets'.
 
 Applied, thanks
 

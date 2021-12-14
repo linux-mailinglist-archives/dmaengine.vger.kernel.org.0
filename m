@@ -2,406 +2,121 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8986B474C95
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Dec 2021 21:23:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB9E2474CDF
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Dec 2021 21:57:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229795AbhLNUXR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 14 Dec 2021 15:23:17 -0500
-Received: from mga06.intel.com ([134.134.136.31]:34487 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237611AbhLNUXR (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 14 Dec 2021 15:23:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1639513397; x=1671049397;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=1XJJzJUuyGL8NfojoavaWQBJGPAfpXaStR0KIcjsbvo=;
-  b=ftr63mBEIjMVOD81Kd1k7GfOVANrITWLbQoPbSodSbh75t+bMiO1OwoI
-   XYuoKtykLp4jyYIVAqTfO3z5OhB//phZYfRBkNA1ApLeZB0DZzvFmKKN8
-   ilBwQ1bw9Qwv4EXUTNPm0pGxFCKATmoS+pz8eOdH6NEN3yXHxI6F45xW/
-   tRLl70G5rtSF+IZuzImTpDrY5pDY3IxPVNIBoVdofFECfF8eIrFE5KGo/
-   Z2xxpPyxPuHEar0eFL2i4R3eR29RS8YjGesXBm1avL5LGk7aTj7jN0Tul
-   tGfjMo8gRou/Kubwfa3VPg0/bRd1i1jGM9N5PPol1kxPl21t1Gh5ef9jS
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10197"; a="299856512"
-X-IronPort-AV: E=Sophos;i="5.88,206,1635231600"; 
-   d="scan'208";a="299856512"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2021 12:23:15 -0800
-X-IronPort-AV: E=Sophos;i="5.88,206,1635231600"; 
-   d="scan'208";a="519359384"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2021 12:23:15 -0800
-Subject: [PATCH 2/2] dmaengine: idxd: deprecate token sysfs attributes for
- read buffers
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org
-Date:   Tue, 14 Dec 2021 13:23:14 -0700
-Message-ID: <163951339488.2988321.2424012059911316373.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <163951326835.2988321.1053110337527742301.stgit@djiang5-desk3.ch.intel.com>
-References: <163951326835.2988321.1053110337527742301.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/1.1
+        id S237724AbhLNU54 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 14 Dec 2021 15:57:56 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49094 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230382AbhLNU5y (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Dec 2021 15:57:54 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 1BEKuQ2G087867;
+        Tue, 14 Dec 2021 14:56:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1639515386;
+        bh=j3osEyGU+RxWIqSwbtxX3t4fWrHk6cyOWUyU3Kklrls=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=ro9Zy1BiNWwoHciKsimW9l8VopF6tYlVp/6zMhM4RqRr5OMdDNHhzpvvxTClpNzB8
+         dPzQuK5sKOVV9r4w2zlsPGBt+0LP2kgt2QlGyvAvguubR7lVNMCWrPyux0hcVHFUr4
+         7zdyFM5y9LIDHeI/2x8RTh77XgWACTwR6L5QvGfs=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 1BEKuQZP071677
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 14 Dec 2021 14:56:26 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Tue, 14
+ Dec 2021 14:56:26 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
+ Frontend Transport; Tue, 14 Dec 2021 14:56:26 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 1BEKuQKW080208;
+        Tue, 14 Dec 2021 14:56:26 -0600
+Date:   Tue, 14 Dec 2021 14:56:26 -0600
+From:   Nishanth Menon <nm@ti.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, <linux-pci@vger.kernel.org>,
+        Cedric Le Goater <clg@kaod.org>,
+        Juergen Gross <jgross@suse.com>,
+        <xen-devel@lists.xenproject.org>, Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        <linuxppc-dev@lists.ozlabs.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        <iommu@lists.linux-foundation.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        <linux-wireless@vger.kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: Re: [patch V3 00/35] genirq/msi, PCI/MSI: Spring cleaning - Part 2
+Message-ID: <20211214205626.lrnddha6bd6d6es5@possibly>
+References: <20211210221642.869015045@linutronix.de>
+ <20211213182958.ytj4m6gsg35u77cv@detonator>
+ <87fsqvttfv.ffs@tglx>
+ <20211214162247.ocjm7ihg5oi7uiuv@slider>
+ <87wnk7rvnz.ffs@tglx>
+ <87tufbrudl.ffs@tglx>
+ <87mtl3rli1.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <87mtl3rli1.ffs@tglx>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The following sysfs attributes will be obsolete due to the name change of
-tokens to read buffers:
-max_tokens
-token_limit
-group/tokens_allowed
-group/tokens_reserved
-group/use_token_limit
-
-Create new entries and have old entry print warning of deprecation.
-
-New attributes to replace the token ones:
-max_read_buffers
-read_buffer_limit
-group/read_buffers_allowed
-group/read_buffers_reserved
-group/use_read_buffer_limit
-
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- Documentation/ABI/stable/sysfs-driver-dma-idxd |   47 ++++++--
- drivers/dma/idxd/sysfs.c                       |  145 ++++++++++++++++++++----
- 2 files changed, 153 insertions(+), 39 deletions(-)
-
-diff --git a/Documentation/ABI/stable/sysfs-driver-dma-idxd b/Documentation/ABI/stable/sysfs-driver-dma-idxd
-index 4d3a23eb05b9..0c2b613f2373 100644
---- a/Documentation/ABI/stable/sysfs-driver-dma-idxd
-+++ b/Documentation/ABI/stable/sysfs-driver-dma-idxd
-@@ -41,14 +41,14 @@ KernelVersion:  5.6.0
- Contact:        dmaengine@vger.kernel.org
- Description:    The maximum number of groups can be created under this device.
- 
--What:           /sys/bus/dsa/devices/dsa<m>/max_tokens
--Date:           Oct 25, 2019
--KernelVersion:  5.6.0
-+What:           /sys/bus/dsa/devices/dsa<m>/max_read_buffers
-+Date:           Dec 10, 2021
-+KernelVersion:  5.17.0
- Contact:        dmaengine@vger.kernel.org
--Description:    The total number of bandwidth tokens supported by this device.
--		The bandwidth tokens represent resources within the DSA
-+Description:    The total number of read buffers supported by this device.
-+		The read buffers represent resources within the DSA
- 		implementation, and these resources are allocated by engines to
--		support operations.
-+		support operations. See DSA spec v1.2 9.2.4 Total Read Buffers.
- 
- What:           /sys/bus/dsa/devices/dsa<m>/max_transfer_size
- Date:           Oct 25, 2019
-@@ -115,13 +115,13 @@ KernelVersion:  5.6.0
- Contact:        dmaengine@vger.kernel.org
- Description:    To indicate if this device is configurable or not.
- 
--What:           /sys/bus/dsa/devices/dsa<m>/token_limit
--Date:           Oct 25, 2019
--KernelVersion:  5.6.0
-+What:           /sys/bus/dsa/devices/dsa<m>/read_buffer_limit
-+Date:           Dec 10, 2021
-+KernelVersion:  5.17.0
- Contact:        dmaengine@vger.kernel.org
--Description:    The maximum number of bandwidth tokens that may be in use at
-+Description:    The maximum number of read buffers that may be in use at
- 		one time by operations that access low bandwidth memory in the
--		device.
-+		device. See DSA spec v1.2 9.2.8 GENCFG on Global Read Buffer Limit.
- 
- What:		/sys/bus/dsa/devices/dsa<m>/cmd_status
- Date:		Aug 28, 2020
-@@ -224,7 +224,7 @@ What:		/sys/bus/dsa/devices/wq<m>.<n>/enqcmds_retries
- Date		Oct 29, 2021
- KernelVersion:	5.17.0
- Contact:	dmaengine@vger.kernel.org
--Description:	Indicate the number of retires for an enqcmds submission on a shared wq.
-+Description:	Indicate the number of retires for an enqcmds submission on a sharedwq.
- 		A max value to set attribute is capped at 64.
- 
- What:           /sys/bus/dsa/devices/engine<m>.<n>/group_id
-@@ -232,3 +232,26 @@ Date:           Oct 25, 2019
- KernelVersion:  5.6.0
- Contact:        dmaengine@vger.kernel.org
- Description:    The group that this engine belongs to.
-+
-+What:		/sys/bus/dsa/devices/group<m>.<n>/use_read_buffer_limit
-+Date:		Dec 10, 2021
-+KernelVersion:	5.17.0
-+Contact:	dmaengine@vger.kernel.org
-+Description:	Enable the use of global read buffer limit for the group. See DSA
-+		spec v1.2 9.2.18 GRPCFG Use Global Read Buffer Limit.
-+
-+What:		/sys/bus/dsa/devices/group<m>.<n>/read_buffers_allowed
-+Date:		Dec 10, 2021
-+KernelVersion:	5.17.0
-+Contact:	dmaengine@vger.kernel.org
-+Description:	Indicates max number of read buffers that may be in use at one time
-+		by all engines in the group. See DSA spec v1.2 9.2.18 GRPCFG Read
-+		Buffers Allowed.
-+
-+What:		/sys/bus/dsa/devices/group<m>.<n>/read_buffers_reserved
-+Date:		Dec 10, 2021
-+KernelVersion:	5.17.0
-+Contact:	dmaengine@vger.kernel.org
-+Description:	Indicates the number of Read Buffers reserved for the use of
-+		engines in the group. See DSA spec v1.2 9.2.18 GRPCFG Read Buffers
-+		Reserved.
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 6f1ebf08878a..7e19ab92b61a 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -112,18 +112,26 @@ static void idxd_set_free_rdbufs(struct idxd_device *idxd)
- 	idxd->nr_rdbufs = idxd->max_rdbufs - rdbufs;
- }
- 
--static ssize_t group_tokens_reserved_show(struct device *dev,
--					  struct device_attribute *attr,
--					  char *buf)
-+static ssize_t group_read_buffers_reserved_show(struct device *dev,
-+						struct device_attribute *attr,
-+						char *buf)
- {
- 	struct idxd_group *group = confdev_to_group(dev);
- 
- 	return sysfs_emit(buf, "%u\n", group->rdbufs_reserved);
- }
- 
--static ssize_t group_tokens_reserved_store(struct device *dev,
--					   struct device_attribute *attr,
--					   const char *buf, size_t count)
-+static ssize_t group_tokens_reserved_show(struct device *dev,
-+					  struct device_attribute *attr,
-+					  char *buf)
-+{
-+	dev_warn_once(dev, "attribute deprecated, see read_buffers_reserved.\n");
-+	return group_read_buffers_reserved_show(dev, attr, buf);
-+}
-+
-+static ssize_t group_read_buffers_reserved_store(struct device *dev,
-+						 struct device_attribute *attr,
-+						 const char *buf, size_t count)
- {
- 	struct idxd_group *group = confdev_to_group(dev);
- 	struct idxd_device *idxd = group->idxd;
-@@ -154,22 +162,42 @@ static ssize_t group_tokens_reserved_store(struct device *dev,
- 	return count;
- }
- 
-+static ssize_t group_tokens_reserved_store(struct device *dev,
-+					   struct device_attribute *attr,
-+					   const char *buf, size_t count)
-+{
-+	dev_warn_once(dev, "attribute deprecated, see read_buffers_reserved.\n");
-+	return group_read_buffers_reserved_store(dev, attr, buf, count);
-+}
-+
- static struct device_attribute dev_attr_group_tokens_reserved =
- 		__ATTR(tokens_reserved, 0644, group_tokens_reserved_show,
- 		       group_tokens_reserved_store);
- 
--static ssize_t group_tokens_allowed_show(struct device *dev,
--					 struct device_attribute *attr,
--					 char *buf)
-+static struct device_attribute dev_attr_group_read_buffers_reserved =
-+		__ATTR(read_buffers_reserved, 0644, group_read_buffers_reserved_show,
-+		       group_read_buffers_reserved_store);
-+
-+static ssize_t group_read_buffers_allowed_show(struct device *dev,
-+					       struct device_attribute *attr,
-+					       char *buf)
- {
- 	struct idxd_group *group = confdev_to_group(dev);
- 
- 	return sysfs_emit(buf, "%u\n", group->rdbufs_allowed);
- }
- 
--static ssize_t group_tokens_allowed_store(struct device *dev,
--					  struct device_attribute *attr,
--					  const char *buf, size_t count)
-+static ssize_t group_tokens_allowed_show(struct device *dev,
-+					 struct device_attribute *attr,
-+					 char *buf)
-+{
-+	dev_warn_once(dev, "attribute deprecated, see read_buffers_allowed.\n");
-+	return group_read_buffers_allowed_show(dev, attr, buf);
-+}
-+
-+static ssize_t group_read_buffers_allowed_store(struct device *dev,
-+						struct device_attribute *attr,
-+						const char *buf, size_t count)
- {
- 	struct idxd_group *group = confdev_to_group(dev);
- 	struct idxd_device *idxd = group->idxd;
-@@ -197,22 +225,42 @@ static ssize_t group_tokens_allowed_store(struct device *dev,
- 	return count;
- }
- 
-+static ssize_t group_tokens_allowed_store(struct device *dev,
-+					  struct device_attribute *attr,
-+					  const char *buf, size_t count)
-+{
-+	dev_warn_once(dev, "attribute deprecated, see read_buffers_allowed.\n");
-+	return group_read_buffers_allowed_store(dev, attr, buf, count);
-+}
-+
- static struct device_attribute dev_attr_group_tokens_allowed =
- 		__ATTR(tokens_allowed, 0644, group_tokens_allowed_show,
- 		       group_tokens_allowed_store);
- 
--static ssize_t group_use_token_limit_show(struct device *dev,
--					  struct device_attribute *attr,
--					  char *buf)
-+static struct device_attribute dev_attr_group_read_buffers_allowed =
-+		__ATTR(read_buffers_allowed, 0644, group_read_buffers_allowed_show,
-+		       group_read_buffers_allowed_store);
-+
-+static ssize_t group_use_read_buffer_limit_show(struct device *dev,
-+						struct device_attribute *attr,
-+						char *buf)
- {
- 	struct idxd_group *group = confdev_to_group(dev);
- 
- 	return sysfs_emit(buf, "%u\n", group->use_rdbuf_limit);
- }
- 
--static ssize_t group_use_token_limit_store(struct device *dev,
--					   struct device_attribute *attr,
--					   const char *buf, size_t count)
-+static ssize_t group_use_token_limit_show(struct device *dev,
-+					  struct device_attribute *attr,
-+					  char *buf)
-+{
-+	dev_warn_once(dev, "attribute deprecated, see use_read_buffer_limit.\n");
-+	return group_use_read_buffer_limit_show(dev, attr, buf);
-+}
-+
-+static ssize_t group_use_read_buffer_limit_store(struct device *dev,
-+						 struct device_attribute *attr,
-+						 const char *buf, size_t count)
- {
- 	struct idxd_group *group = confdev_to_group(dev);
- 	struct idxd_device *idxd = group->idxd;
-@@ -239,10 +287,22 @@ static ssize_t group_use_token_limit_store(struct device *dev,
- 	return count;
- }
- 
-+static ssize_t group_use_token_limit_store(struct device *dev,
-+					   struct device_attribute *attr,
-+					   const char *buf, size_t count)
-+{
-+	dev_warn_once(dev, "attribute deprecated, see use_read_buffer_limit.\n");
-+	return group_use_read_buffer_limit_store(dev, attr, buf, count);
-+}
-+
- static struct device_attribute dev_attr_group_use_token_limit =
- 		__ATTR(use_token_limit, 0644, group_use_token_limit_show,
- 		       group_use_token_limit_store);
- 
-+static struct device_attribute dev_attr_group_use_read_buffer_limit =
-+		__ATTR(use_read_buffer_limit, 0644, group_use_read_buffer_limit_show,
-+		       group_use_read_buffer_limit_store);
-+
- static ssize_t group_engines_show(struct device *dev,
- 				  struct device_attribute *attr, char *buf)
- {
-@@ -387,8 +447,11 @@ static struct attribute *idxd_group_attributes[] = {
- 	&dev_attr_group_work_queues.attr,
- 	&dev_attr_group_engines.attr,
- 	&dev_attr_group_use_token_limit.attr,
-+	&dev_attr_group_use_read_buffer_limit.attr,
- 	&dev_attr_group_tokens_allowed.attr,
-+	&dev_attr_group_read_buffers_allowed.attr,
- 	&dev_attr_group_tokens_reserved.attr,
-+	&dev_attr_group_read_buffers_reserved.attr,
- 	&dev_attr_group_traffic_class_a.attr,
- 	&dev_attr_group_traffic_class_b.attr,
- 	NULL,
-@@ -1192,26 +1255,42 @@ static ssize_t errors_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(errors);
- 
--static ssize_t max_tokens_show(struct device *dev,
--			       struct device_attribute *attr, char *buf)
-+static ssize_t max_read_buffers_show(struct device *dev,
-+				     struct device_attribute *attr, char *buf)
- {
- 	struct idxd_device *idxd = confdev_to_idxd(dev);
- 
- 	return sysfs_emit(buf, "%u\n", idxd->max_rdbufs);
- }
--static DEVICE_ATTR_RO(max_tokens);
- 
--static ssize_t token_limit_show(struct device *dev,
--				struct device_attribute *attr, char *buf)
-+static ssize_t max_tokens_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	dev_warn_once(dev, "attribute deprecated, see max_read_buffers.\n");
-+	return max_read_buffers_show(dev, attr, buf);
-+}
-+
-+static DEVICE_ATTR_RO(max_tokens);	/* deprecated */
-+static DEVICE_ATTR_RO(max_read_buffers);
-+
-+static ssize_t read_buffer_limit_show(struct device *dev,
-+				      struct device_attribute *attr, char *buf)
- {
- 	struct idxd_device *idxd = confdev_to_idxd(dev);
- 
- 	return sysfs_emit(buf, "%u\n", idxd->rdbuf_limit);
- }
- 
--static ssize_t token_limit_store(struct device *dev,
--				 struct device_attribute *attr,
--				 const char *buf, size_t count)
-+static ssize_t token_limit_show(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	dev_warn_once(dev, "attribute deprecated, see read_buffer_limit.\n");
-+	return read_buffer_limit_show(dev, attr, buf);
-+}
-+
-+static ssize_t read_buffer_limit_store(struct device *dev,
-+				       struct device_attribute *attr,
-+				       const char *buf, size_t count)
- {
- 	struct idxd_device *idxd = confdev_to_idxd(dev);
- 	unsigned long val;
-@@ -1236,7 +1315,17 @@ static ssize_t token_limit_store(struct device *dev,
- 	idxd->rdbuf_limit = val;
- 	return count;
- }
--static DEVICE_ATTR_RW(token_limit);
-+
-+static ssize_t token_limit_store(struct device *dev,
-+				 struct device_attribute *attr,
-+				 const char *buf, size_t count)
-+{
-+	dev_warn_once(dev, "attribute deprecated, see read_buffer_limit\n");
-+	return read_buffer_limit_store(dev, attr, buf, count);
-+}
-+
-+static DEVICE_ATTR_RW(token_limit);	/* deprecated */
-+static DEVICE_ATTR_RW(read_buffer_limit);
- 
- static ssize_t cdev_major_show(struct device *dev,
- 			       struct device_attribute *attr, char *buf)
-@@ -1282,7 +1371,9 @@ static struct attribute *idxd_device_attributes[] = {
- 	&dev_attr_state.attr,
- 	&dev_attr_errors.attr,
- 	&dev_attr_max_tokens.attr,
-+	&dev_attr_max_read_buffers.attr,
- 	&dev_attr_token_limit.attr,
-+	&dev_attr_read_buffer_limit.attr,
- 	&dev_attr_cdev_major.attr,
- 	&dev_attr_cmd_status.attr,
- 	NULL,
+On 21:15-20211214, Thomas Gleixner wrote:
+> Nishanth,
+> 
+> On Tue, Dec 14 2021 at 18:03, Thomas Gleixner wrote:
+> >     msi_device_data_release()
+> >     ...
+> >     pcim_release()
+> >        pci_disable_msi[x]()
+> >
+> > Groan....
+> 
+> I think I managed to distangle this. Can you please give:
+> 
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git msi-v4-part-2
 
 
+Umm.. I am not entirely sure what is going on.. but all kinds of weird
+corruption seems to occur with msi-v4-part-2 that does'nt seem to be
+present in v5.16-rc5. (I use NFS since ethernet in K3 platforms use
+inta/intr and dma that is impacted by this series).
+
+I will try and rebase your patches on v5.16-rc4 to be sure as well and
+report back later today once i get some time.
+
+[1] https://gist.github.com/nmenon/a66e022926c4c15313c45d44313d860c msi-v4-part-2
+[2] https://gist.github.com/nmenon/43085664d69ad846d596e76a06ed0656  v5.16-rc5
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D

@@ -2,104 +2,72 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 65065474C84
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Dec 2021 21:15:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A199474C93
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Dec 2021 21:23:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237584AbhLNUPj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 14 Dec 2021 15:15:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229795AbhLNUPi (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Dec 2021 15:15:38 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 796D9C061574;
-        Tue, 14 Dec 2021 12:15:38 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1639512936;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=d4wqcXY+MET+Bv0FcRzIRIc5XGvbPUI2bHV9pxD9Ydo=;
-        b=moChZUSho9BA78Zeq1WI5tu/U00oT82AtvfenvZ7wj4+/rbRuMvnEvgp06APrkesXoQIzl
-        7RPpBe3m0oONdQpdS7DAAUNLaW0sDBUgC0jenFPjG7Wr9CEB6Oy4B9l4Iuq/IfEVofBt4t
-        vnaGOWsnREceAU8uxY8NAKpNhml+AgXrJsZ6gKqMSiQL7bA9CFgw8w2TYZeEYT8V3NhbQ8
-        JAqpROxGWfe9cCXptM9xGI/fDzxgqMZx8ZITW8fq90knUugjlJY38p2e8sp+HmqqufWXbS
-        n3mRyaNC3MmjNNomr7JUos4qRao6JylFxbVwVGdREF91hazpGg2c9oB6BzqE4w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1639512936;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=d4wqcXY+MET+Bv0FcRzIRIc5XGvbPUI2bHV9pxD9Ydo=;
-        b=+ecmdjzCvUtoz/ixJ5pxFaVr7F21Ajeaa5ilYhIAuSfZy+n3tm1NOnNdHltlRFCs+3G/Mc
-        B5RpqeVcmdLBkuDA==
-To:     Nishanth Menon <nm@ti.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        Juergen Gross <jgross@suse.com>,
-        xen-devel@lists.xenproject.org, Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Sinan Kaya <okaya@kernel.org>, linux-wireless@vger.kernel.org,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: Re: [patch V3 00/35] genirq/msi, PCI/MSI: Spring cleaning - Part 2
-In-Reply-To: <87tufbrudl.ffs@tglx>
-References: <20211210221642.869015045@linutronix.de>
- <20211213182958.ytj4m6gsg35u77cv@detonator> <87fsqvttfv.ffs@tglx>
- <20211214162247.ocjm7ihg5oi7uiuv@slider> <87wnk7rvnz.ffs@tglx>
- <87tufbrudl.ffs@tglx>
-Date:   Tue, 14 Dec 2021 21:15:34 +0100
-Message-ID: <87mtl3rli1.ffs@tglx>
+        id S237608AbhLNUXF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 14 Dec 2021 15:23:05 -0500
+Received: from mga12.intel.com ([192.55.52.136]:22040 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229795AbhLNUXE (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 14 Dec 2021 15:23:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1639513384; x=1671049384;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=RtKOIgUsX0ONjn3LDYm25DDa4ssMMVTq7ABiD1A96fg=;
+  b=iB0320x8QAEdCNQkB1x56tgkUm4PKLM/EGwah39qk+OsRwbuP6w86K8k
+   jMzwEjcBAjI8X+ivjQlXtr+QBfjjEugv9sj+THQMeqc9yTTu0MJPBneUI
+   lE3lCzRx3jNGI+J0D49GUw3n9PP/te17TdmbJ2VxfC9xo1nNsVmC26fnW
+   yj+POgPOHtZ1ZMNDS8bTsxLsHwoxhUMtnwlugazO+kPmCHHLy023NZyZZ
+   ro1G4jQG/wJDsLZD0YsJALZS1v5+LtMx/modfWawAhQNHukkLg9SHM1gA
+   ct2Jp43Zf4WQNj66XZQK2purPrJtJAwnHK80lhYrEKmFoTR4JoAOAXlTv
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10197"; a="219094454"
+X-IronPort-AV: E=Sophos;i="5.88,206,1635231600"; 
+   d="scan'208";a="219094454"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2021 12:23:04 -0800
+X-IronPort-AV: E=Sophos;i="5.88,206,1635231600"; 
+   d="scan'208";a="753107996"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2021 12:23:04 -0800
+Subject: [PATCH 0/2] Repalce term 'token' with 'read buffer'
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org
+Date:   Tue, 14 Dec 2021 13:23:03 -0700
+Message-ID: <163951326835.2988321.1053110337527742301.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/1.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Nishanth,
+DSA spec v1.2 has replaced the term 'token' with 'read buffer' to clarify
+the intended usage. Update driver to replace 'token' with 'read buffer' in
+order to be in sync with the spec and remove confusion.
 
-On Tue, Dec 14 2021 at 18:03, Thomas Gleixner wrote:
->     msi_device_data_release()
->     ...
->     pcim_release()
->        pci_disable_msi[x]()
->
-> Groan....
+Old token sysfs attributes is moved to deprecated under documentation and
+will print warning when used.
 
-I think I managed to distangle this. Can you please give:
+---
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git msi-v4-part-2
+Dave Jiang (2):
+      dmaengine: idxd: change bandwidth token to read buffers
+      dmaengine: idxd: deprecate token sysfs attributes for read buffers
 
-and/or the full pile:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git msi-v4-part-3
+ .../ABI/stable/sysfs-driver-dma-idxd          |  47 +++--
+ drivers/dma/idxd/device.c                     |  25 ++-
+ drivers/dma/idxd/idxd.h                       |  12 +-
+ drivers/dma/idxd/init.c                       |   6 +-
+ drivers/dma/idxd/registers.h                  |  14 +-
+ drivers/dma/idxd/sysfs.c                      | 177 +++++++++++++-----
+ 6 files changed, 197 insertions(+), 84 deletions(-)
 
-a test ride?
+--
 
-Thanks,
-
-        tglx

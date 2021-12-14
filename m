@@ -2,117 +2,103 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 23E634748BD
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Dec 2021 18:03:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3499F474C83
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Dec 2021 21:15:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236243AbhLNRDx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 14 Dec 2021 12:03:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236244AbhLNRDw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Dec 2021 12:03:52 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62854C061574;
-        Tue, 14 Dec 2021 09:03:52 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1639501430;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RXDy+gEt+jM/GLA+wNxlJEuBnWYy8r3p2Ru1kkxGm4Q=;
-        b=4P9YNy0ES7591XCDm5PSWup8bN4QZP7lauZPNqzguglGF810Qx6tlHC+ni+cCTXT//bRrL
-        8sy8xtbBW2WNueS1zjqp8h8A0yb4naQSxUV7RBh2hqT1tsFq6begUYU0evqtkPzN01b278
-        fd9gHbaeywBmVDCmDPd2qQ/zpjMiaB9wQAqsRoE0OI6pkTd0Mdkr8wct9zyvWczqltcPfP
-        gVFurKQstARHhwA4cqkMjQuwW0a240akK7UOWCq2KqJXtL/Zk07hDvbDB6Geb3dHg82+ku
-        rQEa7JysFMGTutJcrfi+Bj+sn5C4cesBd4+iCf7oAFV+qmPbWW589QvaRwSxBw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1639501430;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RXDy+gEt+jM/GLA+wNxlJEuBnWYy8r3p2Ru1kkxGm4Q=;
-        b=NEaZQwUVupGSoHFBC83jQ5nykyNdZrjtpZRBFsQka5WyTgqzd9VoqFy4Lrz/ewIMzZW0fK
-        mYumgixv6qanTNBQ==
-To:     Nishanth Menon <nm@ti.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        Juergen Gross <jgross@suse.com>,
-        xen-devel@lists.xenproject.org, Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Sinan Kaya <okaya@kernel.org>, linux-wireless@vger.kernel.org,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: Re: [patch V3 00/35] genirq/msi, PCI/MSI: Spring cleaning - Part 2
-In-Reply-To: <87wnk7rvnz.ffs@tglx>
-References: <20211210221642.869015045@linutronix.de>
- <20211213182958.ytj4m6gsg35u77cv@detonator> <87fsqvttfv.ffs@tglx>
- <20211214162247.ocjm7ihg5oi7uiuv@slider> <87wnk7rvnz.ffs@tglx>
-Date:   Tue, 14 Dec 2021 18:03:50 +0100
-Message-ID: <87tufbrudl.ffs@tglx>
+        id S234643AbhLNUPS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 14 Dec 2021 15:15:18 -0500
+Received: from mga07.intel.com ([134.134.136.100]:25493 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229795AbhLNUPS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 14 Dec 2021 15:15:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1639512918; x=1671048918;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NFIXCYcFEwBbOGpuni9SswRm98iTOgbpK/74BEb+ZV0=;
+  b=ZdRynlzpACWuJoxYv0bHphidqBxwMpmesWLelpRzgYyxV8FyKsfV+KJN
+   3AsZTWSvO+AjQ4gXOttSObWuujOSjZt5v+spc/zpWOtPBdZeSm+QZ+DcC
+   4tWWxNW5Llhpyytc2HUu3BiGArKtFJrEo0+vaKmdC8wyjnGuCjF9YApPh
+   fiQAi/uvxvV8ICX/C6OkaIPtszdRf9RPL70Gy32vEsQWOD90+CPKuOudr
+   JAmiTcMvzEjbnQcc4FIjKqoJRvVLfsi+6vOU0vhdSZ7UnCCTwX4lG8wmZ
+   pcBHqGfNJoZ7vB4flAvPA3hWLo4dnacTLDvJ+OyPXJgghmmMUzbZ+kILJ
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10197"; a="302454500"
+X-IronPort-AV: E=Sophos;i="5.88,206,1635231600"; 
+   d="scan'208";a="302454500"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2021 12:15:18 -0800
+X-IronPort-AV: E=Sophos;i="5.88,206,1635231600"; 
+   d="scan'208";a="463941113"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2021 12:15:17 -0800
+Subject: [PATCH] dmaengine: idxd: fix wq settings post wq disable
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     Lucas Van <lucas.van@intel.com>, Lucas Van <lucas.van@intel.com>,
+        dmaengine@vger.kernel.org
+Date:   Tue, 14 Dec 2021 13:15:17 -0700
+Message-ID: <163951291732.2987775.13576571320501115257.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/1.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Dec 14 2021 at 17:36, Thomas Gleixner wrote:
-> On Tue, Dec 14 2021 at 10:22, Nishanth Menon wrote:
->> On 10:41-20211214, Thomas Gleixner wrote:
-> [   13.478122] Call trace:
-> [   13.509042]  msi_device_destroy_sysfs+0x18/0x88
-> [   13.509058]  msi_domain_free_irqs+0x34/0x58
-> [   13.509064]  pci_msi_teardown_msi_irqs+0x30/0x3c
-> [   13.509072]  free_msi_irqs+0x78/0xd4
-> [   13.509077]  pci_disable_msix+0x138/0x164
-> [   13.529930]  pcim_release+0x70/0x238
-> [   13.529942]  devres_release_all+0x9c/0xfc
-> [   13.529951]  device_release_driver_internal+0x1a0/0x244
-> [   13.542725]  device_release_driver+0x18/0x24
-> [   13.542741]  iwl_req_fw_callback+0x1a28/0x1ddc [iwlwifi]
-> [   13.552308]  request_firmware_work_func+0x50/0x9c
-> [   13.552320]  process_one_work+0x194/0x25c
->
-> That's not a driver problem, that's an ordering issue vs. the devres
-> muck. Let me go back to the drawing board. Sigh...
+By the spec, wq size and group association is not changeable unless device
+is disabled. Exclude clearing the shadow copy on wq disable/reset. This
+allows wq type to be changed after disable to be re-enabled.
 
-Which is pretty obvious why:
+Move the size and group association to its own cleanup and only call it
+during device disable.
 
-   pcim_enable_device()
-        devres_alloc(pcim_release...);
-        ...
-        pci_irq_alloc()
-          msi_setup_device_data()
-             devres_alloc(msi_device_data_release, ...)
+Fixes: 0dcfe41e9a4c ("dmanegine: idxd: cleanup all device related bits after disabling device")
+Reported-by: Lucas Van <lucas.van@intel.com>
+Tested-by: Lucas Van <lucas.van@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/dma/idxd/device.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-and once the device is released:
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index 280b41417f41..3fce7629daa7 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -358,8 +358,6 @@ static void idxd_wq_disable_cleanup(struct idxd_wq *wq)
+ 	lockdep_assert_held(&wq->wq_lock);
+ 	memset(wq->wqcfg, 0, idxd->wqcfg_size);
+ 	wq->type = IDXD_WQT_NONE;
+-	wq->size = 0;
+-	wq->group = NULL;
+ 	wq->threshold = 0;
+ 	wq->priority = 0;
+ 	wq->ats_dis = 0;
+@@ -371,6 +369,15 @@ static void idxd_wq_disable_cleanup(struct idxd_wq *wq)
+ 	wq->max_batch_size = WQ_DEFAULT_MAX_BATCH;
+ }
+ 
++static void idxd_wq_device_reset_cleanup(struct idxd_wq *wq)
++{
++	lockdep_assert_held(&wq->wq_lock);
++
++	idxd_wq_disable_cleanup(wq);
++	wq->size = 0;
++	wq->group = NULL;
++}
++
+ static void idxd_wq_ref_release(struct percpu_ref *ref)
+ {
+ 	struct idxd_wq *wq = container_of(ref, struct idxd_wq, wq_active);
+@@ -689,6 +696,7 @@ static void idxd_device_wqs_clear_state(struct idxd_device *idxd)
+ 
+ 		if (wq->state == IDXD_WQ_ENABLED) {
+ 			idxd_wq_disable_cleanup(wq);
++			idxd_wq_device_reset_cleanup(wq);
+ 			wq->state = IDXD_WQ_DISABLED;
+ 		}
+ 	}
 
-    msi_device_data_release()
-    ...
-    pcim_release()
-       pci_disable_msi[x]()
 
-Groan....

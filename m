@@ -2,98 +2,96 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA977475B25
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Dec 2021 15:56:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83DC3475D39
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Dec 2021 17:19:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243583AbhLOO40 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 15 Dec 2021 09:56:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56426 "EHLO
+        id S238024AbhLOQSQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 15 Dec 2021 11:18:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243575AbhLOO4Z (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Dec 2021 09:56:25 -0500
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA356C06173E;
-        Wed, 15 Dec 2021 06:56:24 -0800 (PST)
-Received: by mail-lj1-x22f.google.com with SMTP id u22so33686892lju.7;
-        Wed, 15 Dec 2021 06:56:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VlpUM4pVnFF7b/v49q5hG/QwrE0qXlxltwh39I/Lb3U=;
-        b=aa6oe37gkeikvLqkgQh4Y837T645JoVUUPcc6Rkd9TBbGuzq8J7gfQnQJxKEfazilm
-         xjVa0jXe5Rizo7oGsjIlD+H4jIPSNziX6oKVz1TfSZKcy/UyUwX7Y3Uxcqnla9a+N0+7
-         PGaF+FerxDS3CvJKQxLCUk/m478BUgaON1nKCFZjUCzTVUCsAIqHnBNtZW5iuchZkwgT
-         yWKQqC4UGy8UZ0i36y0hM73bTREHeJzrl9AGWHAkjz9sUBSRVAmQXd956vjX+GTSI3hw
-         OK7zVF+Lr4VZu9yE9dt/aGk6xRHkfRz/GVlTbCVf11Nl9HNlXmJ0RQ4s01FEdcUSl+gy
-         VeqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VlpUM4pVnFF7b/v49q5hG/QwrE0qXlxltwh39I/Lb3U=;
-        b=Z2qHA55au2qwu6s21olx0D4NVmqk/HaxsgDYmGw10K2Dosvk9Y5dSEo2Kb6mR6Tvai
-         25TYuckmD8vrvNuqPcn334rv/aonX1gt6zHHmuIPgjljAKTIfwb8Qguj2g29Hrr0AHPs
-         NzleO6L/u5OPrCd//caB6EL7rqsHSbHyGdwWLadzw6JNu9C2HQ2IIGfOwj9Se2JZ7aTy
-         xGOaTzW6WFdc3Fk96Nx8FRI8qYQiC5OmyUShiJ3uhcsnzgkjf7eBNqT4Y6kXLLtXIrq3
-         ZXq3qVirb76zGbZd9M1QkPExKMyGa+DQKHAZWA6/9IQGO+bQuwrzx5mhlsbua6Qvf+ix
-         Nsig==
-X-Gm-Message-State: AOAM532n/i/TcpAK8cQ7NmEhfjYSBeSx08X9DlJQb8gUjVCLSXoZIVRq
-        1WnbKuTSNzg/5U/G4x2jL+STSy2Goqg=
-X-Google-Smtp-Source: ABdhPJxtZzId3hlV/qfDQ7GjmHdzLoX/TCsop5PDpRClHgQYUT0FtHwvACVezQ3yUAbTdn7cYaU8bw==
-X-Received: by 2002:a2e:9903:: with SMTP id v3mr10380295lji.143.1639580182548;
-        Wed, 15 Dec 2021 06:56:22 -0800 (PST)
-Received: from [192.168.2.145] (94-29-63-156.dynamic.spd-mgts.ru. [94.29.63.156])
-        by smtp.googlemail.com with ESMTPSA id c34sm357937lfv.83.2021.12.15.06.56.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Dec 2021 06:56:22 -0800 (PST)
-Subject: Re: [PATCH v14 2/4] dmaengine: tegra: Add tegra gpcdma driver
-To:     Akhil R <akhilrajeev@nvidia.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Krishna Yarlagadda <kyarlagadda@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        Rajesh Gumasta <rgumasta@nvidia.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>
-Cc:     Pavan Kunapuli <pkunapuli@nvidia.com>
-References: <1638795639-3681-1-git-send-email-akhilrajeev@nvidia.com>
- <1638795639-3681-3-git-send-email-akhilrajeev@nvidia.com>
- <3f7b072d-f108-ebce-e862-eff9869d1d92@gmail.com>
- <BN9PR12MB52738F4B5B7494466A9CB5A1C0769@BN9PR12MB5273.namprd12.prod.outlook.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <70cce574-4022-16a9-ae10-4b84696d21d5@gmail.com>
-Date:   Wed, 15 Dec 2021 17:56:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        with ESMTP id S237946AbhLOQSP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Dec 2021 11:18:15 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C030C061574;
+        Wed, 15 Dec 2021 08:18:15 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1639585092;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rJVDTOuDDTSDYTKGknJ4P2/i6V8wI5GXY78I0tAdccE=;
+        b=Duk9xXYJRbMmemMIOmEyunjHOHUpSQ52ka5BJz2QJs2S0qPRIK58y+S3Lko1ZlEjQE4BX8
+        ZU028VnNCSYc9l0XY8uhQma7yD4UrOymDjltXVY4rv8h7zgNlwduFdqwAcAFDON1RX3zi2
+        mmVT0W/J+Dnpx9gU69YThbgcMVdIGDwktBYeU8w6xHDNNQ1cfVXfi7UJUdu8cZFpZ4djvW
+        sNfj11z/AlBcs/iBjLIkOdp3fZ5Jn2Frw6ku5unRVchcjEBwGq+5TST3aSGvBDLz4W/cCs
+        +a6ygbS16QffcOcKDJAfM3Xj6o1sZeY6YbYJAVGM9q/cH3hPizriXmurSZqczA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1639585092;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rJVDTOuDDTSDYTKGknJ4P2/i6V8wI5GXY78I0tAdccE=;
+        b=VaI3p2v0+/sjSWEzfZRRZs5oPT3dZJd36h/55liytya3KHC+MGusZdBUZeky4AheCysSDm
+        D0SIY5tvwLxpauBg==
+To:     Nishanth Menon <nm@ti.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Cedric Le Goater <clg@kaod.org>,
+        Juergen Gross <jgross@suse.com>,
+        xen-devel@lists.xenproject.org, Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>, linux-wireless@vger.kernel.org,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: Re: [patch V3 00/35] genirq/msi, PCI/MSI: Spring cleaning - Part 2
+In-Reply-To: <87h7basx36.ffs@tglx>
+References: <20211210221642.869015045@linutronix.de>
+ <20211213182958.ytj4m6gsg35u77cv@detonator> <87fsqvttfv.ffs@tglx>
+ <20211214162247.ocjm7ihg5oi7uiuv@slider> <87wnk7rvnz.ffs@tglx>
+ <87tufbrudl.ffs@tglx> <87mtl3rli1.ffs@tglx>
+ <20211214205626.lrnddha6bd6d6es5@possibly> <87h7basx36.ffs@tglx>
+Date:   Wed, 15 Dec 2021 17:18:11 +0100
+Message-ID: <87zgp1rge4.ffs@tglx>
 MIME-Version: 1.0
-In-Reply-To: <BN9PR12MB52738F4B5B7494466A9CB5A1C0769@BN9PR12MB5273.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-15.12.2021 16:50, Akhil R пишет:
->> 06.12.2021 16:00, Akhil R пишет:
->>> +static const struct __maybe_unused dev_pm_ops tegra_dma_dev_pm_ops =
->> {
->>> +     SET_LATE_SYSTEM_SLEEP_PM_OPS(tegra_dma_pm_suspend,
->>> +tegra_dma_pm_resume) };
->>
->> Why late?
-> To wait for the drivers using the dma to be suspended so that they
-> don't keep the dma busy.
-> Agree with the other comments.
+On Tue, Dec 14 2021 at 22:19, Thomas Gleixner wrote:
+> On Tue, Dec 14 2021 at 14:56, Nishanth Menon wrote:
+>
+> thanks for trying. I'll have a look again with brain awake tomorrow
+> morning.
 
-Drivers are suspended in the opposite order to the probe order. DMA
-controller driver is always probed first. The "late" is unneeded, please
-see tegra20-apb-dma driver for the example.
+Morning was busy with other things, but I found what my sleepy brain
+managed to do wrong yesterday evening.
+
+Let me reintegrate the pile and I'll send you an update.
+
+Thanks,
+
+        tglx

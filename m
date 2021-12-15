@@ -2,53 +2,53 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59AD1475737
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Dec 2021 12:01:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AD87475741
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Dec 2021 12:02:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241940AbhLOLBq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 15 Dec 2021 06:01:46 -0500
-Received: from esa.microchip.iphmx.com ([68.232.153.233]:47834 "EHLO
+        id S241915AbhLOLB7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 15 Dec 2021 06:01:59 -0500
+Received: from esa.microchip.iphmx.com ([68.232.154.123]:16372 "EHLO
         esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241931AbhLOLBo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Dec 2021 06:01:44 -0500
+        with ESMTP id S241945AbhLOLBr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Dec 2021 06:01:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1639566104; x=1671102104;
+  t=1639566106; x=1671102106;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=wRIv3ubIX5xAKe7fyTIOsp2EcT/w6mzbj8LN+1DMbDQ=;
-  b=Qvn34RVzvRxx8dy7yeQzNaoT/29mLwfDfGzYtGz/5CgxZVAwaUV4txW7
-   orpS0HxDTnVqoczez3xDcmF3XuzN77gMxVJ0N2/J62hBxt74d7+PPwTbD
-   29fliBAcI2zotPPUVtNggF8PDnJwIyHQHCKdYmAkL5Y5FnkyY92VP7RP9
-   rnI/KCv7Q+LsXUok7c7mqK4MVqK1l8R2O3cwQ63x1cs9hP0rvErZKOZxo
-   MBZxBbkwWlGUq+caUK7e+WC6rgitZY5KS95lhbDOBN4qWwojxxLE5t1q1
-   bMu8vbrCAXF0yXKR6YFnErDAbGkb+C/UX1DOIVckJxV4VJ7G0I9PytBtk
-   Q==;
-IronPort-SDR: Fsz88XrgCtebLa3EfjLEQf4u+oi9crAkKTf3DVfGNDskAz0axCJ2nHMeZLPybHbqK2AfeUd2m0
- ac0NO21yMNuesZ4fQHC410CzbRr5PnAsA78colDNt3bKuntRpPj0cLmzt46xds/Hq/KCVSzmwA
- 9bx9PLxwqsSSUsxNADoJpLGv4LcWOfW5evAQGa0/nK1pl24KPgG5weDNoQXjae7YUYyTUmkZNi
- 19lWsopd1+rXYwe6E4FoJ/R7uHV+CUvxaTFXMEbOGA9JUl9mxD4InhogpfqzDclyrrnANQiK8I
- 2Lc7ni0R4+8mCSqwAGSU4ekf
+  bh=8RYbGapbxedXgpRLmZEbbzAVzO7YuLjgxhiAaZYRrrQ=;
+  b=tVMyev2mQUOBD+OlXmhZpCkGhhegPmbQHvLjqValBMZJZkFzUUgdi02z
+   2XwH6QIIZffnCzay788wK0ZBnnzujVg8bRYk2WuuPJj3/8qJ+UJ+p4fqX
+   JgD7eMvc4JG9fcVa7otkwLgEKM09WLQhvoHhVEtROTxpo5LBJwUNDBlI8
+   lmX83idgEE/dMYUThn+7ahksOgMySxluwFMb+1XMTDJc3iQ9IuDoWA+J/
+   3JBwHhfV4MXaMlFuw7HiwsJzn0Gd5MAYYzdGbS7fuHc/zj6L8RUZypOnf
+   P/M+Qqe/X2XzS2mciXdSq4HYk+zkbxsp6nT1SW93WhwLnbf/yhCeTYSAE
+   w==;
+IronPort-SDR: bPjJrCgEAhaWqGBOXZUmFz/AXofXvRlH40bZwQRZtjEoICIRpJl0pk76Jekwyua1Qq5mi/dje0
+ ay01HCpO4GE5xIV09wy5UHyLFGn9DWT5N39mdHL2tMkixOb1NfzEsgHxbKeGq2xLYNdYKFo6xt
+ 2CTuSf6vcpkNE1kc4/J+oRNWwtmTF8L1GFKzJmVG66yBXxEeC6/quDVnGwIFotj5alTKIGWkL1
+ sC4z9s8wj88Aexo6Y8gRZCMec+Ac2Qbm1RNnrzIaj1jO37v6V5MnqLxumzSEeEdi2TdWqvdLbx
+ cr2zZpz99zBG9c7OQ07VprIM
 X-IronPort-AV: E=Sophos;i="5.88,207,1635231600"; 
-   d="scan'208";a="155559242"
+   d="scan'208";a="139842714"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Dec 2021 04:01:43 -0700
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Dec 2021 04:01:46 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Wed, 15 Dec 2021 04:01:43 -0700
+ 15.1.2375.17; Wed, 15 Dec 2021 04:01:45 -0700
 Received: from ROB-ULT-M18064N.mchp-main.com (10.10.115.15) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2375.17 via Frontend Transport; Wed, 15 Dec 2021 04:01:41 -0700
+ 15.1.2375.17 via Frontend Transport; Wed, 15 Dec 2021 04:01:43 -0700
 From:   Tudor Ambarus <tudor.ambarus@microchip.com>
 To:     <vkoul@kernel.org>
 CC:     <ludovic.desroches@microchip.com>, <nicolas.ferre@microchip.com>,
         <mripard@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
         <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Tudor Ambarus <tudor.ambarus@microchip.com>
-Subject: [PATCH v3 09/12] dmaengine: at_xdmac: Fix lld view setting
-Date:   Wed, 15 Dec 2021 13:01:12 +0200
-Message-ID: <20211215110115.191749-10-tudor.ambarus@microchip.com>
+Subject: [PATCH v3 10/12] dmaengine: at_xdmac: Fix at_xdmac_lld struct definition
+Date:   Wed, 15 Dec 2021 13:01:13 +0200
+Message-ID: <20211215110115.191749-11-tudor.ambarus@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211215110115.191749-1-tudor.ambarus@microchip.com>
 References: <20211215110115.191749-1-tudor.ambarus@microchip.com>
@@ -59,37 +59,46 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-AT_XDMAC_CNDC_NDVIEW_NDV3 was set even for AT_XDMAC_MBR_UBC_NDV2,
-because of the wrong bit handling. Fix it.
+The hardware channel next descriptor view structure contains just
+fields of 32 bits, while dma_addr_t can be of type u64 or u32
+depending on CONFIG_ARCH_DMA_ADDR_T_64BIT. Force u32 to comply with
+what the hardware expects.
 
-Fixes: ee0fe35c8dcd ("dmaengine: xdmac: Handle descriptor's view 3 registers")
+Fixes: e1f7c9eee707 ("dmaengine: at_xdmac: creation of the atmel eXtended DMA Controller driver")
 Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 ---
- drivers/dma/at_xdmac.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/dma/at_xdmac.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index 0b09ec752db4..6e5bfc9b3825 100644
+index 6e5bfc9b3825..abe8c4615e65 100644
 --- a/drivers/dma/at_xdmac.c
 +++ b/drivers/dma/at_xdmac.c
-@@ -99,6 +99,7 @@
- #define		AT_XDMAC_CNDC_NDE		(0x1 << 0)		/* Channel x Next Descriptor Enable */
- #define		AT_XDMAC_CNDC_NDSUP		(0x1 << 1)		/* Channel x Next Descriptor Source Update */
- #define		AT_XDMAC_CNDC_NDDUP		(0x1 << 2)		/* Channel x Next Descriptor Destination Update */
-+#define		AT_XDMAC_CNDC_NDVIEW_MASK	GENMASK(28, 27)
- #define		AT_XDMAC_CNDC_NDVIEW_NDV0	(0x0 << 3)		/* Channel x Next Descriptor View 0 */
- #define		AT_XDMAC_CNDC_NDVIEW_NDV1	(0x1 << 3)		/* Channel x Next Descriptor View 1 */
- #define		AT_XDMAC_CNDC_NDVIEW_NDV2	(0x2 << 3)		/* Channel x Next Descriptor View 2 */
-@@ -402,7 +403,8 @@ static void at_xdmac_start_xfer(struct at_xdmac_chan *atchan,
- 	 */
- 	if (at_xdmac_chan_is_cyclic(atchan))
- 		reg = AT_XDMAC_CNDC_NDVIEW_NDV1;
--	else if (first->lld.mbr_ubc & AT_XDMAC_MBR_UBC_NDV3)
-+	else if ((first->lld.mbr_ubc &
-+		  AT_XDMAC_CNDC_NDVIEW_MASK) == AT_XDMAC_MBR_UBC_NDV3)
- 		reg = AT_XDMAC_CNDC_NDVIEW_NDV3;
- 	else
- 		reg = AT_XDMAC_CNDC_NDVIEW_NDV2;
+@@ -253,15 +253,15 @@ struct at_xdmac {
+ 
+ /* Linked List Descriptor */
+ struct at_xdmac_lld {
+-	dma_addr_t	mbr_nda;	/* Next Descriptor Member */
+-	u32		mbr_ubc;	/* Microblock Control Member */
+-	dma_addr_t	mbr_sa;		/* Source Address Member */
+-	dma_addr_t	mbr_da;		/* Destination Address Member */
+-	u32		mbr_cfg;	/* Configuration Register */
+-	u32		mbr_bc;		/* Block Control Register */
+-	u32		mbr_ds;		/* Data Stride Register */
+-	u32		mbr_sus;	/* Source Microblock Stride Register */
+-	u32		mbr_dus;	/* Destination Microblock Stride Register */
++	u32 mbr_nda;	/* Next Descriptor Member */
++	u32 mbr_ubc;	/* Microblock Control Member */
++	u32 mbr_sa;	/* Source Address Member */
++	u32 mbr_da;	/* Destination Address Member */
++	u32 mbr_cfg;	/* Configuration Register */
++	u32 mbr_bc;	/* Block Control Register */
++	u32 mbr_ds;	/* Data Stride Register */
++	u32 mbr_sus;	/* Source Microblock Stride Register */
++	u32 mbr_dus;	/* Destination Microblock Stride Register */
+ };
+ 
+ /* 64-bit alignment needed to update CNDA and CUBC registers in an atomic way. */
 -- 
 2.25.1
 

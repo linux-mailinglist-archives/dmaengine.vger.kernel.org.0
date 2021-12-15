@@ -2,108 +2,102 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B345474D27
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Dec 2021 22:20:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8E7B475727
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Dec 2021 12:01:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230093AbhLNVUC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 14 Dec 2021 16:20:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229990AbhLNVUC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Dec 2021 16:20:02 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C72FCC061574;
-        Tue, 14 Dec 2021 13:20:01 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1639516798;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UY5SIbLiQJhNf3IcwLAaYT3af81CnBCUSA3qSWP4dj0=;
-        b=EzQFCHRvraOq6euqkQn1B+tUeoQ1uw1bo4mwk9Q+vKSF8S8PO4nMGeLKZ/WNHEDZ5eJhpq
-        mjggZFTuoIKEO/OrzzxxfitzasNIFFxeDKcRyrdk7DdmUaNmMFC1unLIMtUfaK38TWwXYn
-        h2orgm5VCZyrGWnjQirGszYr8438eZQal4q/1iuBvD2zWg9nOeapYD6mAyJQRKxCWoQSAd
-        enz2/bCSy9StMuvCnU8bbCEhKsc+iX17V3lbzwiD4WPpGEDgVUswHFbLH8z54QbwfbJl42
-        iPxl/XpXV7+3L/A3q2mlzAY6VVHUHz35mnJZ8s3Ze10jfDmKSXRCDaOkhFkkdQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1639516798;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UY5SIbLiQJhNf3IcwLAaYT3af81CnBCUSA3qSWP4dj0=;
-        b=lDR2zL85oMI4BdOLKEJ1Arl/dti0X9kWdevk0BKKPLGWBqf9hwgLOpBluOuP1fE4iBCR8Y
-        5fOFMFfQxW57zEAA==
-To:     Nishanth Menon <nm@ti.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        Juergen Gross <jgross@suse.com>,
-        xen-devel@lists.xenproject.org, Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Sinan Kaya <okaya@kernel.org>, linux-wireless@vger.kernel.org,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: Re: [patch V3 00/35] genirq/msi, PCI/MSI: Spring cleaning - Part 2
-In-Reply-To: <20211214205626.lrnddha6bd6d6es5@possibly>
-References: <20211210221642.869015045@linutronix.de>
- <20211213182958.ytj4m6gsg35u77cv@detonator> <87fsqvttfv.ffs@tglx>
- <20211214162247.ocjm7ihg5oi7uiuv@slider> <87wnk7rvnz.ffs@tglx>
- <87tufbrudl.ffs@tglx> <87mtl3rli1.ffs@tglx>
- <20211214205626.lrnddha6bd6d6es5@possibly>
-Date:   Tue, 14 Dec 2021 22:19:57 +0100
-Message-ID: <87h7basx36.ffs@tglx>
+        id S236773AbhLOLBW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 15 Dec 2021 06:01:22 -0500
+Received: from esa.microchip.iphmx.com ([68.232.153.233]:24908 "EHLO
+        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233928AbhLOLBW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Dec 2021 06:01:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1639566082; x=1671102082;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7qxF1rA3WXG5vGkMtaJGRRx4q17WASpZMPPVSSKMp4E=;
+  b=t/tNp10IIAbSmRtbZslGHuqde/cVJC7x7IA29W5aCuHF5T52rql3MKJH
+   q7DhJFNw5c4DYR5CmDmZUiFi/N1xp54mlmDJQOuEHNihxW0DkQT7/413G
+   kNG/uHggY5rvO8qeLWHyWnNL4D3LXu7VCA72bPJ69Zr8Uw2oE1WauNt2x
+   dc/sHMsg03a2pLxtfio/AhSWwsyj66MFLq05Cq4Yjca8mSCnlMPVDw1pV
+   aJbZr5guepGlf1A9J8hHCLMPPAHPdN1KWkWbb7vPDCqHkiG5bFSiSZMBm
+   vsimWsD0Op18rM8iQl5cYjaqdShVar+A7SlwQkiqIPW4TfEgVNNmJlVzs
+   Q==;
+IronPort-SDR: rt0MniAA6+tOR8zkPgA15sOR02cmfmIJBrTMU11WBH8riBw6+s4phEY9z+gqRBdm6K8fL1vIqX
+ P+wlRdTlH9x3fw6+pmVFZ3umjBbWFZY7mJNxq4rXLrzRKoV5skOFtgO+GxJNH0yWAtWpWDJfaK
+ 041INyAJy7orwm6JNIJiM+kQRadfzl8X4XwDpDrO5SHDJAyQEKyzcOVhlmm3w6zzE5tOzIZqdB
+ a5vBxb/CRBNUw8u57yN1/LosRNFulfDVhKdPBIuUQalhMEXCxQeekkL+1zybc04hYpl+SZnRfE
+ xZqN1CggSikst3QcO1U+EpUK
+X-IronPort-AV: E=Sophos;i="5.88,207,1635231600"; 
+   d="scan'208";a="147304249"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Dec 2021 04:01:20 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.17; Wed, 15 Dec 2021 04:01:20 -0700
+Received: from ROB-ULT-M18064N.mchp-main.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2375.17 via Frontend Transport; Wed, 15 Dec 2021 04:01:18 -0700
+From:   Tudor Ambarus <tudor.ambarus@microchip.com>
+To:     <vkoul@kernel.org>
+CC:     <ludovic.desroches@microchip.com>, <nicolas.ferre@microchip.com>,
+        <mripard@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+Subject: [PATCH v3 00/12] dmaengine: at_xdmac: Various fixes
+Date:   Wed, 15 Dec 2021 13:01:03 +0200
+Message-ID: <20211215110115.191749-1-tudor.ambarus@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Nishanth,
+Bugs identified when debugging a hang encountered when operating
+an octal DTR SPI NOR memory. The culprit was the flash, not the
+DMA driver, so all these bugs are not experienced in real life,
+they are all theoretical fixes. Nevertheless the bugs are there
+and I think they should be squashed.
 
-On Tue, Dec 14 2021 at 14:56, Nishanth Menon wrote:
-> On 21:15-20211214, Thomas Gleixner wrote:
->> I think I managed to distangle this. Can you please give:
->> 
->>    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git msi-v4-part-2
->
->
-> Umm.. I am not entirely sure what is going on.. but all kinds of weird
-> corruption seems to occur with msi-v4-part-2 that does'nt seem to be
-> present in v5.16-rc5. (I use NFS since ethernet in K3 platforms use
-> inta/intr and dma that is impacted by this series).
->
-> I will try and rebase your patches on v5.16-rc4 to be sure as well and
-> report back later today once i get some time.
->
-> [1] https://gist.github.com/nmenon/a66e022926c4c15313c45d44313d860c msi-v4-part-2
-> [2] https://gist.github.com/nmenon/43085664d69ad846d596e76a06ed0656  v5.16-rc5
+Tested the serial with DMA on sama5d2_xplained. Tested QSPI with DMA on
+sama7g5ek. All went well.
 
-thanks for trying. I'll have a look again with brain awake tomorrow
-morning.
+v3:
+- drop tty patches, they were applied by Greg.
+- improve all commit descriptions
+- split v2's patch 13/13 in two: one removing a level of indentation
+  and one fixing the race.
 
-Thanks,
+v2:
+- drop local chan_rx local variable in patch 3/13, focus just on fixes
+for now.
+- collect Richard's Acked-by tag.
+- add details in the cover letter about what tests were performed.
 
-        tglx
+Tudor Ambarus (12):
+  dmaengine: at_xdmac: Don't start transactions at tx_submit level
+  dmaengine: at_xdmac: Start transfer for cyclic channels in
+    issue_pending
+  dmaengine: at_xdmac: Print debug message after realeasing the lock
+  dmaengine: at_xdmac: Fix concurrency over chan's completed_cookie
+  dmaengine: at_xdmac: Fix race for the tx desc callback
+  dmaengine: at_xdmac: Move the free desc to the tail of the desc list
+  dmaengine: at_xdmac: Fix concurrency over xfers_list
+  dmaengine: at_xdmac: Remove a level of indentation in
+    at_xdmac_advance_work()
+  dmaengine: at_xdmac: Fix lld view setting
+  dmaengine: at_xdmac: Fix at_xdmac_lld struct definition
+  dmaengine: at_xdmac: Remove a level of indentation in
+    at_xdmac_tasklet()
+  dmaengine: at_xdmac: Fix race over irq_status
+
+ drivers/dma/at_xdmac.c | 186 ++++++++++++++++++++---------------------
+ 1 file changed, 89 insertions(+), 97 deletions(-)
+
+-- 
+2.25.1
+

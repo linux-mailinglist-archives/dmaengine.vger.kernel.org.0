@@ -2,92 +2,129 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 38337477A7A
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Dec 2021 18:23:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4B43477AC9
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Dec 2021 18:42:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240233AbhLPRXt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Dec 2021 12:23:49 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55632 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240204AbhLPRXo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Dec 2021 12:23:44 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1639675422;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ih3MOpW/yCW+x5F+uZuuVRHaDZ9exo66WfrPCFsrhAY=;
-        b=OMVjennJ3dIFrwVfMs8MzDcb41Xr30oKty6fkqZ9/dg2KPX2j01Itd6kvCYu1225sOnYuo
-        IeaHw/JoJkXrtGr3oWwJMzzEwGmbkJFG3vgu9mNytV1jkcv4dag6oBGHon+mbf9Ogyak6J
-        JF0hQ4F7JA1yDzHNDLmTJM8en1l9nh0l4RtyKkhJNdGp1qF+PkIKoY49IEUHTkOsVif77X
-        EDZmJYVvTSc9g7y9TRGoIHjKz9B63drgsnnIlXTKDk1IKqeYDrXtl+Qq6LpiQy1hqLdDie
-        mG/yWvrQXdNGXa7j6B8oNi6M8Sbe5B02MnwHdqWu6fekNoxcotWWNW+EPmJPkg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1639675422;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ih3MOpW/yCW+x5F+uZuuVRHaDZ9exo66WfrPCFsrhAY=;
-        b=KLmanqyVLTn1a9p7GzpJVoRlRAGdDGqehRu/zZHojbSx8/zpp5uAkFxpqxeluTK3IDEpyQ
-        hmWFXp91ZBiOKlBQ==
-To:     Nishanth Menon <nm@ti.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        Juergen Gross <jgross@suse.com>,
-        xen-devel@lists.xenproject.org, Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Sinan Kaya <okaya@kernel.org>, linux-wireless@vger.kernel.org,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: Re: [patch V3 00/35] genirq/msi, PCI/MSI: Spring cleaning - Part 2
-In-Reply-To: <20211216014527.5d3sqs2klrqjmm2k@lunacy>
-References: <20211213182958.ytj4m6gsg35u77cv@detonator>
- <87fsqvttfv.ffs@tglx> <20211214162247.ocjm7ihg5oi7uiuv@slider>
- <87wnk7rvnz.ffs@tglx> <87tufbrudl.ffs@tglx> <87mtl3rli1.ffs@tglx>
- <20211214205626.lrnddha6bd6d6es5@possibly> <87h7basx36.ffs@tglx>
- <87zgp1rge4.ffs@tglx> <87wnk5rfkt.ffs@tglx>
- <20211216014527.5d3sqs2klrqjmm2k@lunacy>
-Date:   Thu, 16 Dec 2021 18:23:41 +0100
-Message-ID: <87wnk4cvky.ffs@tglx>
+        id S235715AbhLPRmb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 16 Dec 2021 12:42:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230338AbhLPRmb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Dec 2021 12:42:31 -0500
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D883CC061574;
+        Thu, 16 Dec 2021 09:42:30 -0800 (PST)
+Received: by mail-lf1-x12c.google.com with SMTP id m6so39320918lfu.1;
+        Thu, 16 Dec 2021 09:42:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7FYfhrvLo3GwXmePy+p2yzbv60phNdldW5PFmWfPiXs=;
+        b=OBJnVNMSYP1adOeWa8AFJJttrXnKOZ5+oNGEc7fxOVyfUhGwE2eSmsmDBRM30+2mPa
+         W6UrrIxQpQldr/2PWt5ViY+Y5BC8bl6hqL+10epmYRyJwHIItwb7C59vc0OfjO1eaxTH
+         jWWJSKFwZayFn9lvRON51g0t3THbTvJnO+vSYFKglpURt9oYefVHOdClgKA636UCwlwN
+         ANQyvGQiTLtz0czKOq6n3YVvY0lXkjpAVhiP3OVNkcX6EKuvkgH1UeX5KsUHOof2Udo9
+         nN+D2uoXmGx9hFm4ZuoHTwOX4YtOT/wFsP5xIrb+7YVkg9mSFwYyitromSiLKg241wyS
+         PG3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7FYfhrvLo3GwXmePy+p2yzbv60phNdldW5PFmWfPiXs=;
+        b=mqDDzWOpRf1IdF6ZfD8tkzVmcBQODcnM/OBgJV+TepnSmWWPWUvJcgGryPR7ilCkCH
+         TO1x3GsLo+Irj0j47jRtrZ/UKN/2z2u09mIoBWLXHs3zWo/PAaI3GSQNu1mQ2sYlOwIu
+         eTR0qIWNm/Zovoqw2sSTz/v6zaSvEzIOn01JrErdYmLZWi7oD2dVouJwyCUuBJyN2r51
+         uIM+xaG3fKavfYoZ4iVc0p1o96CpxR4aettmvg5D7r7XKFhNSR6pSIOXstkMKNahKUws
+         KKAO26+r8HZOjdvaDDDBYExaXCEuX8jeqqF72oP0/jSguY1RFXHbFMK1AS9woA9fOSQR
+         tf1w==
+X-Gm-Message-State: AOAM531pAR69FFnL+NQ8LnqJTSEfXcv70AwPXmqVMZ6QTeJ8006CQp/i
+        EjU9e02bvA1ZfAdM9+2xClU=
+X-Google-Smtp-Source: ABdhPJxAQ0zmacqcYgTECIF74iTzW5n9uJt+DffNRDOYvj8/CQFPVFgscJUsXmswmHpoSH2OV23h1Q==
+X-Received: by 2002:ac2:5966:: with SMTP id h6mr15703116lfp.358.1639676549126;
+        Thu, 16 Dec 2021 09:42:29 -0800 (PST)
+Received: from [192.168.2.145] (94-29-63-156.dynamic.spd-mgts.ru. [94.29.63.156])
+        by smtp.googlemail.com with ESMTPSA id w15sm1244847ljo.97.2021.12.16.09.42.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Dec 2021 09:42:28 -0800 (PST)
+Subject: Re: [PATCH v15 2/4] dmaengine: tegra: Add tegra gpcdma driver
+To:     Akhil R <akhilrajeev@nvidia.com>, dan.j.williams@intel.com,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        jonathanh@nvidia.com, kyarlagadda@nvidia.com, ldewangan@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        p.zabel@pengutronix.de, rgumasta@nvidia.com, robh+dt@kernel.org,
+        thierry.reding@gmail.com, vkoul@kernel.org
+Cc:     Pavan Kunapuli <pkunapuli@nvidia.com>
+References: <1639674720-18930-1-git-send-email-akhilrajeev@nvidia.com>
+ <1639674720-18930-3-git-send-email-akhilrajeev@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <45ba3abe-5e7e-4917-2b23-0616a758c4eb@gmail.com>
+Date:   Thu, 16 Dec 2021 20:42:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1639674720-18930-3-git-send-email-akhilrajeev@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Nishanth,
+16.12.2021 20:11, Akhil R пишет:
+> +static int tegra_dma_terminate_all(struct dma_chan *dc)
+> +{
+> +	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+> +	unsigned long wcount = 0;
+> +	unsigned long status;
+> +	unsigned long flags;
+> +	int err;
+> +
+> +	raw_spin_lock_irqsave(&tdc->lock, flags);
+> +
+> +	if (!tdc->dma_desc) {
+> +		raw_spin_unlock_irqrestore(&tdc->lock, flags);
+> +		return 0;
+> +	}
+> +
+> +	if (!tdc->busy)
+> +		goto skip_dma_stop;
+> +
+> +	if (tdc->tdma->chip_data->hw_support_pause)
+> +		err = tegra_dma_pause(tdc);
+> +	else
+> +		err = tegra_dma_stop_client(tdc);
+> +
+> +	if (err) {
+> +		raw_spin_unlock_irqrestore(&tdc->lock, flags);
+> +		return err;
+> +	}
+> +
+> +	status = tdc_read(tdc, TEGRA_GPCDMA_CHAN_STATUS);
+> +	if (status & TEGRA_GPCDMA_STATUS_ISE_EOC) {
+> +		dev_dbg(tdc2dev(tdc), "%s():handling isr\n", __func__);
+> +		tegra_dma_xfer_complete(tdc);
+> +		status = tdc_read(tdc, TEGRA_GPCDMA_CHAN_STATUS);
+> +	}
+> +
+> +	wcount = tdc_read(tdc, TEGRA_GPCDMA_CHAN_XFER_COUNT);
+> +	tegra_dma_stop(tdc);
+> +
+> +	tdc->dma_desc->bytes_transferred +=
+> +			tdc->dma_desc->bytes_requested - (wcount * 4);
+> +
+> +skip_dma_stop:
+> +	tegra_dma_sid_free(tdc);
+> +	vchan_free_chan_resources(&tdc->vc);
+> +	kfree(&tdc->vc);
 
-On Wed, Dec 15 2021 at 19:45, Nishanth Menon wrote:
-> On 17:35-20211215, Thomas Gleixner wrote:
-> Thanks once again for your help. Hope we can roll in the fixes for
-> part3.
+You really going to kfree the head of tegra_dma_channel here? Once
+again, this code was 100% untested :/
 
-Sure, it's only the one-liner for ti sci. Got it folded already.
+You're not allowed to free channel from the dma_terminate_all()
+callback. This callback terminates submitted descs, that's it.
 
-Thanks for your help and testing!
+https://elixir.bootlin.com/linux/v5.16-rc5/source/include/linux/dmaengine.h#L1105
 
-       tglx
+https://elixir.bootlin.com/linux/v5.16-rc5/source/drivers/i2c/busses/i2c-tegra.c#L962

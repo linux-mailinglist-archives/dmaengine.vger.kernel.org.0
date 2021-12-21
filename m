@@ -2,87 +2,356 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F74947B1B7
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Dec 2021 17:58:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D033D47B71F
+	for <lists+dmaengine@lfdr.de>; Tue, 21 Dec 2021 02:58:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234242AbhLTQ6u (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 20 Dec 2021 11:58:50 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:48192 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S231579AbhLTQ6u (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 Dec 2021 11:58:50 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1BKAxI08029724;
-        Mon, 20 Dec 2021 17:58:28 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=selector1;
- bh=t9KotEOtaUjd/KKdckEBhPCxa4PXFHnRLpPF61TOvNw=;
- b=Y+zi37jyu+mL0uYAzkH3j+KcCaNGazX12tmu6OCOrB2V3cgWgnoS6vqFJKnDdNTcyViX
- H0Dn8VXxsOBEtWhlpO8cAZLOdcR8paEwMmCFYwqLwcFCg4ipA/Z9v+zW4+5IoCNA2ZH0
- X3fIhMaHeWl3QpkGO5UilcxitAqy5tusfbHPlkkjOerR9u08G47cjU7YeQaiKLMO9ANx
- 1p9NN5tdCxfuBvkBAMNa+7gAFPjJVKhO+ujcnwXKBXhBmUp6u9wHB+yCdYX+wfrbgdeS
- +/y71YK6SxSVHKUyDsVCGKsvRp/bhRQsjNaFfGw6mM7ZxyhrP/eZZaqKAcRTND5IbPf8 sQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3d2kerbrhp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Dec 2021 17:58:28 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3EBE410002A;
-        Mon, 20 Dec 2021 17:58:28 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag2node2.st.com [10.75.127.5])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3718520B20C;
-        Mon, 20 Dec 2021 17:58:28 +0100 (CET)
-Received: from localhost (10.75.127.48) by SFHDAG2NODE2.st.com (10.75.127.5)
- with Microsoft SMTP Server (TLS) id 15.0.1497.26; Mon, 20 Dec 2021 17:58:27
- +0100
-From:   Amelie Delaunay <amelie.delaunay@foss.st.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC:     <dmaengine@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Amelie Delaunay <amelie.delaunay@foss.st.com>
-Subject: [PATCH 1/1] dmaengine: stm32-mdma: fix STM32_MDMA_CTBR_TSEL_MASK
-Date:   Mon, 20 Dec 2021 17:58:27 +0100
-Message-ID: <20211220165827.1238097-1-amelie.delaunay@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+        id S232354AbhLUB6M (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 20 Dec 2021 20:58:12 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:53128 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232285AbhLUB6L (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 Dec 2021 20:58:11 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9CCAD6135A;
+        Tue, 21 Dec 2021 01:58:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F4BBC36AEC;
+        Tue, 21 Dec 2021 01:58:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1640051889;
+        bh=KPVOu2AWP/ZP+N90LND8m1+C1rNv2jCenSaaArn28R4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Qu/+hgG7WwM3/6UZxUUdVy9IihTuWaygJOiMnXA/jj2eVm/jlfOfN9TiLNt+8D+kD
+         /KublgD5cgCCTk4lH7cIZC5CKHbFhzHWzrb9CfPutedRujGfQ0V7Ts60sUQAQgk8ah
+         99lxmUdnVtxjkj9+XIAITlmC4W6PsNscU/ZCqF/VIXD97JLWGZJZRMKYKOdu7Bdh7X
+         dvBG+6L8nBE/RgmB1MkixAcBJtuN8Kclz7PhdpszIazyNHMtzlEjilN2YgnPNqPA/X
+         QgT0BVVEXEIbNc6PNiKhVIxlYncpv8W0fl8ANS24HuwluCo4u2DvUeVkVpCvYXgAQp
+         osllL3+YMZioA==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 11/29] dmaengine: ti: k3-udma: Fix smatch warnings
+Date:   Mon, 20 Dec 2021 20:57:32 -0500
+Message-Id: <20211221015751.116328-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20211221015751.116328-1-sashal@kernel.org>
+References: <20211221015751.116328-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG2NODE2.st.com
- (10.75.127.5)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2021-12-20_08,2021-12-20_01,2021-12-02_01
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This patch fixes STM32_MDMA_CTBR_TSEL_MASK, which is [5:0], not [7:0].
+From: Vignesh Raghavendra <vigneshr@ti.com>
 
-Fixes: a4ffb13c8946 ("dmaengine: Add STM32 MDMA driver")
-Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+[ Upstream commit 80936d68665be88dc3bf60884a71f2694eb6b1f1 ]
+
+Smatch reports below warnings [1] wrt dereferencing rm_res when it can
+potentially be ERR_PTR(). This is possible when entire range is
+allocated to Linux
+Fix this case by making sure, there is no deference of rm_res when its
+ERR_PTR().
+
+[1]:
+ drivers/dma/ti/k3-udma.c:4524 udma_setup_resources() error: 'rm_res' dereferencing possible ERR_PTR()
+ drivers/dma/ti/k3-udma.c:4537 udma_setup_resources() error: 'rm_res' dereferencing possible ERR_PTR()
+ drivers/dma/ti/k3-udma.c:4681 bcdma_setup_resources() error: 'rm_res' dereferencing possible ERR_PTR()
+ drivers/dma/ti/k3-udma.c:4696 bcdma_setup_resources() error: 'rm_res' dereferencing possible ERR_PTR()
+ drivers/dma/ti/k3-udma.c:4711 bcdma_setup_resources() error: 'rm_res' dereferencing possible ERR_PTR()
+ drivers/dma/ti/k3-udma.c:4848 pktdma_setup_resources() error: 'rm_res' dereferencing possible ERR_PTR()
+ drivers/dma/ti/k3-udma.c:4861 pktdma_setup_resources() error: 'rm_res' dereferencing possible ERR_PTR()
+
+Reported-by: Nishanth Menon <nm@ti.com>
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Link: https://lore.kernel.org/r/20211209180957.29036-1-vigneshr@ti.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/stm32-mdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/ti/k3-udma.c | 157 ++++++++++++++++++++++++++-------------
+ 1 file changed, 107 insertions(+), 50 deletions(-)
 
-diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
-index 76cf2e333e63..6f57ff0e7b37 100644
---- a/drivers/dma/stm32-mdma.c
-+++ b/drivers/dma/stm32-mdma.c
-@@ -157,7 +157,7 @@
- #define STM32_MDMA_CTBR(x)		(0x68 + 0x40 * (x))
- #define STM32_MDMA_CTBR_DBUS		BIT(17)
- #define STM32_MDMA_CTBR_SBUS		BIT(16)
--#define STM32_MDMA_CTBR_TSEL_MASK	GENMASK(7, 0)
-+#define STM32_MDMA_CTBR_TSEL_MASK	GENMASK(5, 0)
- #define STM32_MDMA_CTBR_TSEL(n)		FIELD_PREP(STM32_MDMA_CTBR_TSEL_MASK, (n))
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 041d8e32d6300..6e56d1cef5eee 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -4534,45 +4534,60 @@ static int udma_setup_resources(struct udma_dev *ud)
+ 	rm_res = tisci_rm->rm_ranges[RM_RANGE_TCHAN];
+ 	if (IS_ERR(rm_res)) {
+ 		bitmap_zero(ud->tchan_map, ud->tchan_cnt);
++		irq_res.sets = 1;
+ 	} else {
+ 		bitmap_fill(ud->tchan_map, ud->tchan_cnt);
+ 		for (i = 0; i < rm_res->sets; i++)
+ 			udma_mark_resource_ranges(ud, ud->tchan_map,
+ 						  &rm_res->desc[i], "tchan");
++		irq_res.sets = rm_res->sets;
+ 	}
+-	irq_res.sets = rm_res->sets;
  
- /* MDMA Channel x mask address register */
+ 	/* rchan and matching default flow ranges */
+ 	rm_res = tisci_rm->rm_ranges[RM_RANGE_RCHAN];
+ 	if (IS_ERR(rm_res)) {
+ 		bitmap_zero(ud->rchan_map, ud->rchan_cnt);
++		irq_res.sets++;
+ 	} else {
+ 		bitmap_fill(ud->rchan_map, ud->rchan_cnt);
+ 		for (i = 0; i < rm_res->sets; i++)
+ 			udma_mark_resource_ranges(ud, ud->rchan_map,
+ 						  &rm_res->desc[i], "rchan");
++		irq_res.sets += rm_res->sets;
+ 	}
+ 
+-	irq_res.sets += rm_res->sets;
+ 	irq_res.desc = kcalloc(irq_res.sets, sizeof(*irq_res.desc), GFP_KERNEL);
++	if (!irq_res.desc)
++		return -ENOMEM;
+ 	rm_res = tisci_rm->rm_ranges[RM_RANGE_TCHAN];
+-	for (i = 0; i < rm_res->sets; i++) {
+-		irq_res.desc[i].start = rm_res->desc[i].start;
+-		irq_res.desc[i].num = rm_res->desc[i].num;
+-		irq_res.desc[i].start_sec = rm_res->desc[i].start_sec;
+-		irq_res.desc[i].num_sec = rm_res->desc[i].num_sec;
++	if (IS_ERR(rm_res)) {
++		irq_res.desc[0].start = 0;
++		irq_res.desc[0].num = ud->tchan_cnt;
++		i = 1;
++	} else {
++		for (i = 0; i < rm_res->sets; i++) {
++			irq_res.desc[i].start = rm_res->desc[i].start;
++			irq_res.desc[i].num = rm_res->desc[i].num;
++			irq_res.desc[i].start_sec = rm_res->desc[i].start_sec;
++			irq_res.desc[i].num_sec = rm_res->desc[i].num_sec;
++		}
+ 	}
+ 	rm_res = tisci_rm->rm_ranges[RM_RANGE_RCHAN];
+-	for (j = 0; j < rm_res->sets; j++, i++) {
+-		if (rm_res->desc[j].num) {
+-			irq_res.desc[i].start = rm_res->desc[j].start +
+-					ud->soc_data->oes.udma_rchan;
+-			irq_res.desc[i].num = rm_res->desc[j].num;
+-		}
+-		if (rm_res->desc[j].num_sec) {
+-			irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
+-					ud->soc_data->oes.udma_rchan;
+-			irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
++	if (IS_ERR(rm_res)) {
++		irq_res.desc[i].start = 0;
++		irq_res.desc[i].num = ud->rchan_cnt;
++	} else {
++		for (j = 0; j < rm_res->sets; j++, i++) {
++			if (rm_res->desc[j].num) {
++				irq_res.desc[i].start = rm_res->desc[j].start +
++						ud->soc_data->oes.udma_rchan;
++				irq_res.desc[i].num = rm_res->desc[j].num;
++			}
++			if (rm_res->desc[j].num_sec) {
++				irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
++						ud->soc_data->oes.udma_rchan;
++				irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
++			}
+ 		}
+ 	}
+ 	ret = ti_sci_inta_msi_domain_alloc_irqs(ud->dev, &irq_res);
+@@ -4690,14 +4705,15 @@ static int bcdma_setup_resources(struct udma_dev *ud)
+ 		rm_res = tisci_rm->rm_ranges[RM_RANGE_BCHAN];
+ 		if (IS_ERR(rm_res)) {
+ 			bitmap_zero(ud->bchan_map, ud->bchan_cnt);
++			irq_res.sets++;
+ 		} else {
+ 			bitmap_fill(ud->bchan_map, ud->bchan_cnt);
+ 			for (i = 0; i < rm_res->sets; i++)
+ 				udma_mark_resource_ranges(ud, ud->bchan_map,
+ 							  &rm_res->desc[i],
+ 							  "bchan");
++			irq_res.sets += rm_res->sets;
+ 		}
+-		irq_res.sets += rm_res->sets;
+ 	}
+ 
+ 	/* tchan ranges */
+@@ -4705,14 +4721,15 @@ static int bcdma_setup_resources(struct udma_dev *ud)
+ 		rm_res = tisci_rm->rm_ranges[RM_RANGE_TCHAN];
+ 		if (IS_ERR(rm_res)) {
+ 			bitmap_zero(ud->tchan_map, ud->tchan_cnt);
++			irq_res.sets += 2;
+ 		} else {
+ 			bitmap_fill(ud->tchan_map, ud->tchan_cnt);
+ 			for (i = 0; i < rm_res->sets; i++)
+ 				udma_mark_resource_ranges(ud, ud->tchan_map,
+ 							  &rm_res->desc[i],
+ 							  "tchan");
++			irq_res.sets += rm_res->sets * 2;
+ 		}
+-		irq_res.sets += rm_res->sets * 2;
+ 	}
+ 
+ 	/* rchan ranges */
+@@ -4720,47 +4737,72 @@ static int bcdma_setup_resources(struct udma_dev *ud)
+ 		rm_res = tisci_rm->rm_ranges[RM_RANGE_RCHAN];
+ 		if (IS_ERR(rm_res)) {
+ 			bitmap_zero(ud->rchan_map, ud->rchan_cnt);
++			irq_res.sets += 2;
+ 		} else {
+ 			bitmap_fill(ud->rchan_map, ud->rchan_cnt);
+ 			for (i = 0; i < rm_res->sets; i++)
+ 				udma_mark_resource_ranges(ud, ud->rchan_map,
+ 							  &rm_res->desc[i],
+ 							  "rchan");
++			irq_res.sets += rm_res->sets * 2;
+ 		}
+-		irq_res.sets += rm_res->sets * 2;
+ 	}
+ 
+ 	irq_res.desc = kcalloc(irq_res.sets, sizeof(*irq_res.desc), GFP_KERNEL);
++	if (!irq_res.desc)
++		return -ENOMEM;
+ 	if (ud->bchan_cnt) {
+ 		rm_res = tisci_rm->rm_ranges[RM_RANGE_BCHAN];
+-		for (i = 0; i < rm_res->sets; i++) {
+-			irq_res.desc[i].start = rm_res->desc[i].start +
+-						oes->bcdma_bchan_ring;
+-			irq_res.desc[i].num = rm_res->desc[i].num;
++		if (IS_ERR(rm_res)) {
++			irq_res.desc[0].start = oes->bcdma_bchan_ring;
++			irq_res.desc[0].num = ud->bchan_cnt;
++			i = 1;
++		} else {
++			for (i = 0; i < rm_res->sets; i++) {
++				irq_res.desc[i].start = rm_res->desc[i].start +
++							oes->bcdma_bchan_ring;
++				irq_res.desc[i].num = rm_res->desc[i].num;
++			}
+ 		}
+ 	}
+ 	if (ud->tchan_cnt) {
+ 		rm_res = tisci_rm->rm_ranges[RM_RANGE_TCHAN];
+-		for (j = 0; j < rm_res->sets; j++, i += 2) {
+-			irq_res.desc[i].start = rm_res->desc[j].start +
+-						oes->bcdma_tchan_data;
+-			irq_res.desc[i].num = rm_res->desc[j].num;
+-
+-			irq_res.desc[i + 1].start = rm_res->desc[j].start +
+-						oes->bcdma_tchan_ring;
+-			irq_res.desc[i + 1].num = rm_res->desc[j].num;
++		if (IS_ERR(rm_res)) {
++			irq_res.desc[i].start = oes->bcdma_tchan_data;
++			irq_res.desc[i].num = ud->tchan_cnt;
++			irq_res.desc[i + 1].start = oes->bcdma_tchan_ring;
++			irq_res.desc[i + 1].num = ud->tchan_cnt;
++			i += 2;
++		} else {
++			for (j = 0; j < rm_res->sets; j++, i += 2) {
++				irq_res.desc[i].start = rm_res->desc[j].start +
++							oes->bcdma_tchan_data;
++				irq_res.desc[i].num = rm_res->desc[j].num;
++
++				irq_res.desc[i + 1].start = rm_res->desc[j].start +
++							oes->bcdma_tchan_ring;
++				irq_res.desc[i + 1].num = rm_res->desc[j].num;
++			}
+ 		}
+ 	}
+ 	if (ud->rchan_cnt) {
+ 		rm_res = tisci_rm->rm_ranges[RM_RANGE_RCHAN];
+-		for (j = 0; j < rm_res->sets; j++, i += 2) {
+-			irq_res.desc[i].start = rm_res->desc[j].start +
+-						oes->bcdma_rchan_data;
+-			irq_res.desc[i].num = rm_res->desc[j].num;
+-
+-			irq_res.desc[i + 1].start = rm_res->desc[j].start +
+-						oes->bcdma_rchan_ring;
+-			irq_res.desc[i + 1].num = rm_res->desc[j].num;
++		if (IS_ERR(rm_res)) {
++			irq_res.desc[i].start = oes->bcdma_rchan_data;
++			irq_res.desc[i].num = ud->rchan_cnt;
++			irq_res.desc[i + 1].start = oes->bcdma_rchan_ring;
++			irq_res.desc[i + 1].num = ud->rchan_cnt;
++			i += 2;
++		} else {
++			for (j = 0; j < rm_res->sets; j++, i += 2) {
++				irq_res.desc[i].start = rm_res->desc[j].start +
++							oes->bcdma_rchan_data;
++				irq_res.desc[i].num = rm_res->desc[j].num;
++
++				irq_res.desc[i + 1].start = rm_res->desc[j].start +
++							oes->bcdma_rchan_ring;
++				irq_res.desc[i + 1].num = rm_res->desc[j].num;
++			}
+ 		}
+ 	}
+ 
+@@ -4858,39 +4900,54 @@ static int pktdma_setup_resources(struct udma_dev *ud)
+ 	if (IS_ERR(rm_res)) {
+ 		/* all rflows are assigned exclusively to Linux */
+ 		bitmap_zero(ud->rflow_in_use, ud->rflow_cnt);
++		irq_res.sets = 1;
+ 	} else {
+ 		bitmap_fill(ud->rflow_in_use, ud->rflow_cnt);
+ 		for (i = 0; i < rm_res->sets; i++)
+ 			udma_mark_resource_ranges(ud, ud->rflow_in_use,
+ 						  &rm_res->desc[i], "rflow");
++		irq_res.sets = rm_res->sets;
+ 	}
+-	irq_res.sets = rm_res->sets;
+ 
+ 	/* tflow ranges */
+ 	rm_res = tisci_rm->rm_ranges[RM_RANGE_TFLOW];
+ 	if (IS_ERR(rm_res)) {
+ 		/* all tflows are assigned exclusively to Linux */
+ 		bitmap_zero(ud->tflow_map, ud->tflow_cnt);
++		irq_res.sets++;
+ 	} else {
+ 		bitmap_fill(ud->tflow_map, ud->tflow_cnt);
+ 		for (i = 0; i < rm_res->sets; i++)
+ 			udma_mark_resource_ranges(ud, ud->tflow_map,
+ 						  &rm_res->desc[i], "tflow");
++		irq_res.sets += rm_res->sets;
+ 	}
+-	irq_res.sets += rm_res->sets;
+ 
+ 	irq_res.desc = kcalloc(irq_res.sets, sizeof(*irq_res.desc), GFP_KERNEL);
++	if (!irq_res.desc)
++		return -ENOMEM;
+ 	rm_res = tisci_rm->rm_ranges[RM_RANGE_TFLOW];
+-	for (i = 0; i < rm_res->sets; i++) {
+-		irq_res.desc[i].start = rm_res->desc[i].start +
+-					oes->pktdma_tchan_flow;
+-		irq_res.desc[i].num = rm_res->desc[i].num;
++	if (IS_ERR(rm_res)) {
++		irq_res.desc[0].start = oes->pktdma_tchan_flow;
++		irq_res.desc[0].num = ud->tflow_cnt;
++		i = 1;
++	} else {
++		for (i = 0; i < rm_res->sets; i++) {
++			irq_res.desc[i].start = rm_res->desc[i].start +
++						oes->pktdma_tchan_flow;
++			irq_res.desc[i].num = rm_res->desc[i].num;
++		}
+ 	}
+ 	rm_res = tisci_rm->rm_ranges[RM_RANGE_RFLOW];
+-	for (j = 0; j < rm_res->sets; j++, i++) {
+-		irq_res.desc[i].start = rm_res->desc[j].start +
+-					oes->pktdma_rchan_flow;
+-		irq_res.desc[i].num = rm_res->desc[j].num;
++	if (IS_ERR(rm_res)) {
++		irq_res.desc[i].start = oes->pktdma_rchan_flow;
++		irq_res.desc[i].num = ud->rflow_cnt;
++	} else {
++		for (j = 0; j < rm_res->sets; j++, i++) {
++			irq_res.desc[i].start = rm_res->desc[j].start +
++						oes->pktdma_rchan_flow;
++			irq_res.desc[i].num = rm_res->desc[j].num;
++		}
+ 	}
+ 	ret = ti_sci_inta_msi_domain_alloc_irqs(ud->dev, &irq_res);
+ 	kfree(irq_res.desc);
 -- 
-2.25.1
+2.34.1
 

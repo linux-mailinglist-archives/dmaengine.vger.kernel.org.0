@@ -2,100 +2,87 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 11FA447C195
-	for <lists+dmaengine@lfdr.de>; Tue, 21 Dec 2021 15:36:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0939B47CEEA
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Dec 2021 10:13:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238508AbhLUOgN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 21 Dec 2021 09:36:13 -0500
-Received: from mail-qv1-f54.google.com ([209.85.219.54]:39554 "EHLO
-        mail-qv1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234548AbhLUOgM (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 21 Dec 2021 09:36:12 -0500
-Received: by mail-qv1-f54.google.com with SMTP id g15so11243446qvi.6;
-        Tue, 21 Dec 2021 06:36:11 -0800 (PST)
+        id S243791AbhLVJNJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 22 Dec 2021 04:13:09 -0500
+Received: from mail-ua1-f41.google.com ([209.85.222.41]:41833 "EHLO
+        mail-ua1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236486AbhLVJNI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Dec 2021 04:13:08 -0500
+Received: by mail-ua1-f41.google.com with SMTP id p37so2988149uae.8;
+        Wed, 22 Dec 2021 01:13:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=DAgxIL5+LfBMOUij7dixBA2kzok+uhqjW0YOVP3FJ64=;
-        b=iPqQbnlc5nFOllfSKi7vz2BQst5cYpXBWvcKH2KEQVbvvGNBfbr+wC0BXMaOBbw9Um
-         UyMfW2guV3g5SFzi4Xf8nar2CaS3crpjp1IAAL2FrmF8xwLnkLJf2zWmPna5MELV7PHz
-         +k3RCGkJFLhPc8wlQR4x6PV1EhNEiHrdiTvZVqhT4MVUNtxpnE1vXzfOarVFA+dPiCzO
-         i7S7qLgTTGh27JYGlwvzSlJH7xghu5w7FGKHGuJg/EYubAwu5Hv2O8wC4pka/djP58Mx
-         MpiEp9q9Vdopi3DLSDpOTJpIKwqmbrn77WJ7KQthDW5NZFZqKQgo37laEXnZ1zewMoC0
-         KK/g==
-X-Gm-Message-State: AOAM532vTVHO4fFFcIHdRgKp7fQgXmfW6zSPkvmefcyczcjVjfgxpT6A
-        QOoZ4Mm9inVrPILzKNq7hA==
-X-Google-Smtp-Source: ABdhPJylBXG4muz9ukCyJcRPgG5j/wh/YvvIRKT8d1OTxRKfi+lOHWdekpwKJ6hBomGZ8F/6CfNqsA==
-X-Received: by 2002:a05:6214:76a:: with SMTP id f10mr2246866qvz.80.1640097371373;
-        Tue, 21 Dec 2021 06:36:11 -0800 (PST)
-Received: from robh.at.kernel.org ([24.55.105.145])
-        by smtp.gmail.com with ESMTPSA id u7sm14864481qkp.17.2021.12.21.06.36.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Dec 2021 06:36:10 -0800 (PST)
-Received: (nullmailer pid 1365872 invoked by uid 1000);
-        Tue, 21 Dec 2021 14:36:08 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Jakub Kicinski <kuba@kernel.org>, devicetree@vger.kernel.org,
-        linux-serial@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        netdev@vger.kernel.org, linux-clk@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20211221094717.16187-12-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20211221094717.16187-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20211221094717.16187-12-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 11/16] dt-bindings: pinctrl: renesas: Document RZ/V2L pinctrl
-Date:   Tue, 21 Dec 2021 10:36:08 -0400
-Message-Id: <1640097368.261963.1365871.nullmailer@robh.at.kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VW/Pwg5Ke22MAchuX1prlmMQk+F7qSVh6AcCbguvgR0=;
+        b=6K3RJGybQlQfcYETAcJ+fZP7vph3Scl5F+ZGxIGwucDAzdjmI5yQzQa2E+YWmOjd6t
+         TCUlXl+xdBWaEADREucAOndI5t0tNVP31GXu48S3AZhH41jqJpOoO3C0JRy6P1y+UvTC
+         C2vuPI1kATiwDLjhUcUuxGjM940ajZwpncPLzksB0lL2L47p4fnH5Pk1ZUm2DC3SaFax
+         BBBUR2aliPVsYYugl1omj3XGt+68HZvorYotoSNH1u5nnjmisl2k0BLTvhAEQA7MNN1/
+         iZFESp0kGztbmX7B6kX1B45NqxmP7Fmq1TM7VBXspr2HVLF/bZDZzqiLD8WPoA4O5xtj
+         JUFQ==
+X-Gm-Message-State: AOAM531j90oDOCTsZT+5secCHO7IkET4jfmru1rb6XcxHLeT2W2DXhHt
+        Ct6AI6TsEnsCNvntQdA4cN1rT9HLSzciqw==
+X-Google-Smtp-Source: ABdhPJxePAvMnmofP8+cl0tRMycrkicpCdPZCT2Ha13eW8cHO4Qe+UVcJKjCweHt3QQNL5fJILlCFw==
+X-Received: by 2002:ab0:3c4f:: with SMTP id u15mr709432uaw.108.1640164387237;
+        Wed, 22 Dec 2021 01:13:07 -0800 (PST)
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
+        by smtp.gmail.com with ESMTPSA id r2sm283609vsk.28.2021.12.22.01.13.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Dec 2021 01:13:07 -0800 (PST)
+Received: by mail-ua1-f41.google.com with SMTP id n7so2970857uaq.12;
+        Wed, 22 Dec 2021 01:13:07 -0800 (PST)
+X-Received: by 2002:a05:6102:2155:: with SMTP id h21mr605418vsg.68.1640164386939;
+ Wed, 22 Dec 2021 01:13:06 -0800 (PST)
+MIME-Version: 1.0
+References: <20211221052722.597407-1-yoshihiro.shimoda.uh@renesas.com> <20211221052722.597407-2-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20211221052722.597407-2-yoshihiro.shimoda.uh@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 22 Dec 2021 10:12:55 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWS+6wdN+3eE-A3EF74-SsY4bZrFZ+8-Now78H0U+fG1g@mail.gmail.com>
+Message-ID: <CAMuHMdWS+6wdN+3eE-A3EF74-SsY4bZrFZ+8-Now78H0U+fG1g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: renesas,rcar-dmac: Add r8a779f0 support
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Vinod <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, 21 Dec 2021 09:47:12 +0000, Lad Prabhakar wrote:
-> From: Biju Das <biju.das.jz@bp.renesas.com>
-> 
-> Document Renesas RZ/V2L pinctrl bindings. The RZ/V2L is package- and
-> pin-compatible with the RZ/G2L. No driver changes are required as RZ/G2L
-> compatible string "renesas,r9a07g044-pinctrl" will be used as a fallback.
-> 
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  .../bindings/pinctrl/renesas,rzg2l-pinctrl.yaml   | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
+Hi Shimoda-san,
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Thanks for your patch!
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml:26:13: [warning] wrong indentation: expected 14 but found 12 (indentation)
+On Tue, Dec 21, 2021 at 10:50 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> Document the compatible value for the Direct Memory Access Controller
+> blocks in the Renesas R-Car S4-8 (R8A779F0) SoC.
+>
+> The most visible difference with DMAC blocks on other R-Car SoCs
+> (except R8A779F0) is the move of the per-channel registers to
 
-dtschema/dtc warnings/errors:
+R8A779A0.
 
-doc reference errors (make refcheckdocs):
+> a separate register block.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-See https://patchwork.ozlabs.org/patch/1571555
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
+Gr{oetje,eeting}s,
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+                        Geert
 
-pip3 install dtschema --upgrade
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Please check and re-submit.
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds

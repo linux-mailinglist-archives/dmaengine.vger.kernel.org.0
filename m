@@ -2,85 +2,125 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4286C47D6D0
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Dec 2021 19:28:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3911747D775
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Dec 2021 20:11:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344729AbhLVS2T (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 22 Dec 2021 13:28:19 -0500
-Received: from mail-qk1-f180.google.com ([209.85.222.180]:43810 "EHLO
-        mail-qk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236475AbhLVS2S (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Dec 2021 13:28:18 -0500
-Received: by mail-qk1-f180.google.com with SMTP id f138so3148494qke.10;
-        Wed, 22 Dec 2021 10:28:17 -0800 (PST)
+        id S1345105AbhLVTK6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 22 Dec 2021 14:10:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233746AbhLVTK6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Dec 2021 14:10:58 -0500
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B067C061574;
+        Wed, 22 Dec 2021 11:10:58 -0800 (PST)
+Received: by mail-yb1-xb2b.google.com with SMTP id y68so9589955ybe.1;
+        Wed, 22 Dec 2021 11:10:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q1hdt0rDFdHxjRFH+PlDJWOqrqXjNMYQgzxO9JoTv1M=;
+        b=FH2OIxLlfjCXKeNd/w+tj2e0QGACBuGzCP0Fhd3T/Tf2/WdQsKb4rYZVS+uTdEgxjj
+         O8FmiismtHSnMdjGL8U7TWJ7AuREpe6l+UTCVnut4l7vAUjTvISWXO4RJPWd1jOBRJMH
+         sR2+14tkAKlD7YIqeMmFFzYoHWu6OCqOZPGUl6z5rR7yJdsI2czfK2MiJ2TRCownNX0r
+         Ux8sjsqDU6wwIxuKIeX1dJTdiKnS3s1OKu+6pNjudwWl6zXpFfkP5v66ZVq2d8Apho6W
+         FOeJD42qUSwtcdx9n1MmOYObey+UGMeNvY6UAq6hZi8RTmTn2GT7AIJDb6SsXuaVZy8t
+         Cu1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BQVHinv4Cgd22h/GWeg09N0p9AK9353UAAMDL16H6IM=;
-        b=pqUxQE3X0CtYNXz5C2fDZN9vaC7fdCsHa3AIL0uzThZG+AwMzk2/Fo0rdoK4ZtUEuM
-         /n4jViGRF4qyaSNjkYIXG93IbHld2vaJe/o9Q7jnhocuF0tonG1tU0RLnoGbLoqvyiwj
-         2Z3lkK0VW7mwMFqWH563qep4HobgHdXoeQ68vwlhE3m3nM6js8WUfZ+NSC+KCYp81nlm
-         0yf0VvfN3nKSqt/y5Iwiv3WgHQ8jIgFR/tu8ejRS8UYXVF3ksWbH2c6aPU3VHPsPLzRQ
-         CeRNg/VXyRdBT6ZUUc7oNQqnClEHfCfBoWJ1EqcTrtXTC1BgOiuo13RdrB1pg6+RIAr1
-         crUA==
-X-Gm-Message-State: AOAM530PY4R7UTPbYX7jNkwDmvH5GFYkI/cRXxrr/fyMpY9vImGXKchJ
-        804/sLrs01oGuXy7hnMm/g==
-X-Google-Smtp-Source: ABdhPJyTGIBihg0G/yVtVYX1Gz0fkM6asEfTlgU/B6KKvYzxPNc4S5SjaaGD5r8Uu2e3WnF02Fhg0w==
-X-Received: by 2002:a37:94c2:: with SMTP id w185mr2854133qkd.666.1640197697351;
-        Wed, 22 Dec 2021 10:28:17 -0800 (PST)
-Received: from robh.at.kernel.org ([24.55.105.145])
-        by smtp.gmail.com with ESMTPSA id y18sm2492143qtx.19.2021.12.22.10.28.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Dec 2021 10:28:16 -0800 (PST)
-Received: (nullmailer pid 2463743 invoked by uid 1000);
-        Wed, 22 Dec 2021 18:28:14 -0000
-Date:   Wed, 22 Dec 2021 14:28:14 -0400
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     linux-serial@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>,
-        netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        linux-kernel@vger.kernel.org,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q1hdt0rDFdHxjRFH+PlDJWOqrqXjNMYQgzxO9JoTv1M=;
+        b=19U+CsRDxhx9V1Q8Cat4jEibhW0BS+9+PMDwhcDqQI+vNdnU9maajMmlF0+vMsCWfd
+         5y3TVbDhxSLbTg11QzIjzeFzDgJijdOk1rv6+DOM7whB3PX46bm0qYxI1sIMUsr2ujW/
+         PR7RICQM/MX5+Rq8OKgH3IIvvl+GV7kuE7AWz2G+15O05MoeZjDf47domItn361g9hUa
+         BT9Wu6YAzB8qjyLWtsrQfGceEc+AxK3+oVrJcN8E5Ak/Sqlno+ql9JJPnWqvG5QscYGU
+         FAQ2HILM1DX2SlpaBR2qNojGQ/6X2c4PCCXqMIF0swCB1Y97X5O+YAYMm6z777KDZwQx
+         N6XA==
+X-Gm-Message-State: AOAM5323Zg4Nn7Lfa/t/ESzjidVjjlBM4c2+D9LAaen/piFCkA5Y1fVq
+        1vka1SL0EKgATlExOeEjHBnTt43E/OwgBZo1zLo=
+X-Google-Smtp-Source: ABdhPJz//MnasOLSuKMhIkomj1Wv97uOQxSUzI7hnBEHjkfeiJQY3u0+Z4FPT5sDi7cOY5fXd4ytr3iALOVPk1fQlgM=
+X-Received: by 2002:a5b:ecd:: with SMTP id a13mr6058913ybs.251.1640200257217;
+ Wed, 22 Dec 2021 11:10:57 -0800 (PST)
+MIME-Version: 1.0
+References: <20211221094717.16187-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20211221094717.16187-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <YcNtAtVZgM+Z9i3X@robh.at.kernel.org>
+In-Reply-To: <YcNtAtVZgM+Z9i3X@robh.at.kernel.org>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 22 Dec 2021 19:10:31 +0000
+Message-ID: <CA+V-a8sjY7JOYuXhh50nfk9U+QdF0vQ5w-O9aLHGURfU8hKc0Q@mail.gmail.com>
+Subject: Re: [PATCH 01/16] dt-bindings: arm: renesas: Document Renesas RZ/V2L SoC
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
         "David S. Miller" <davem@davemloft.net>,
-        Vinod Koul <vkoul@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Biju Das <biju.das.jz@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org, dmaengine@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 14/16] dt-bindings: net: renesas,etheravb: Document
- RZ/V2L SoC
-Message-ID: <YcNuPnkXLBBjFRG0@robh.at.kernel.org>
-References: <20211221094717.16187-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20211221094717.16187-15-prabhakar.mahadev-lad.rj@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211221094717.16187-15-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, 21 Dec 2021 09:47:15 +0000, Lad Prabhakar wrote:
-> From: Biju Das <biju.das.jz@bp.renesas.com>
-> 
-> Document Gigabit Ethernet IP found on RZ/V2L SoC. Gigabit Ethernet
-> Interface is identical to one found on the RZ/G2L SoC. No driver changes
-> are required as generic compatible string "renesas,rzg2l-gbeth" will be
-> used as a fallback.
-> 
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/net/renesas,etheravb.yaml | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+Hi Rob,
 
-Acked-by: Rob Herring <robh@kernel.org>
+Thank you for the review.
+
+On Wed, Dec 22, 2021 at 6:23 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Dec 21, 2021 at 09:47:02AM +0000, Lad Prabhakar wrote:
+> > From: Biju Das <biju.das.jz@bp.renesas.com>
+> >
+> > Document Renesas RZ/V2L SoC.
+> >
+> > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/renesas.yaml | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/renesas.yaml b/Documentation/devicetree/bindings/arm/renesas.yaml
+> > index 6a9350ee690b..55a5aec418ab 100644
+> > --- a/Documentation/devicetree/bindings/arm/renesas.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/renesas.yaml
+> > @@ -421,6 +421,13 @@ properties:
+> >                - renesas,r9a07g044l2 # Dual Cortex-A55 RZ/G2L
+> >            - const: renesas,r9a07g044
+> >
+> > +      - description: RZ/V2L (R9A07G054)
+> > +        items:
+> > +          - enum:
+> > +              - renesas,r9a07g054l1 # Single Cortex-A55 RZ/V2L
+> > +              - renesas,r9a07g054l2 # Dual Cortex-A55 RZ/V2L
+>
+> I'd assume this is just a fuse difference and with cpu nodes you can
+> distinguish how many cores.
+>
+Yes and there is a register too which tells the CPU count.
+
+Cheers,
+Prabhakar
+
+> > +          - const: renesas,r9a07g054
+> > +
+> >  additionalProperties: true
+> >
+> >  ...
+> > --
+> > 2.17.1
+> >
+> >

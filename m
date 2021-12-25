@@ -2,104 +2,104 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1596D47F29D
-	for <lists+dmaengine@lfdr.de>; Sat, 25 Dec 2021 09:16:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0035F47F423
+	for <lists+dmaengine@lfdr.de>; Sat, 25 Dec 2021 18:47:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229494AbhLYIQQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 25 Dec 2021 03:16:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55226 "EHLO
+        id S232588AbhLYRrY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 25 Dec 2021 12:47:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbhLYIQP (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 25 Dec 2021 03:16:15 -0500
-Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA8EFC061401
-        for <dmaengine@vger.kernel.org>; Sat, 25 Dec 2021 00:16:15 -0800 (PST)
-Received: by mail-ua1-x934.google.com with SMTP id t18so11040369uaj.1
-        for <dmaengine@vger.kernel.org>; Sat, 25 Dec 2021 00:16:15 -0800 (PST)
+        with ESMTP id S229488AbhLYRrX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 25 Dec 2021 12:47:23 -0500
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B5B9C061401;
+        Sat, 25 Dec 2021 09:47:23 -0800 (PST)
+Received: by mail-ed1-x52f.google.com with SMTP id y22so44909930edq.2;
+        Sat, 25 Dec 2021 09:47:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=zOHJbgxEeKcTUS1M3dbg/CCHL8zxNc7o7Y1pwSiNVNQ=;
-        b=pQIhIOMevxV70x6KiEVxbBwBZErCtCkmvQSC217osRtOc5tPxzj31MPsyQ1l91I4nw
-         80EGlwKn8lQw61Dm+rc89f+jQ3iHpSsq2Iyn4eQ9DOFjkV+/2XIyvvu+es22KTUAFkY0
-         ZVVSUqmn6I1WO610aVFbCKKfnMMJwQnGD5dGHQIXrbpGa25DwzCu5KpeGFLCNmuCmtnC
-         FSNlpfhDBrR3I6lm9UbMFU9IMbOoETtERujy335X2W7RVu968wl+1v9/izaGeFfSRePm
-         nQG+pEk6Htdl2Q06LDAr+Vu9GLTUhNGHGPiYFtVbSptTskY6qY4YqEoMEOmSkPf+6Hxp
-         1XJQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LGUNV55wraKWttlHu9LEsxw2TMdFSIetUkp+Aa5vOlw=;
+        b=jvMxGG2qz701VH7PS5s1+nb3Z9EUfyfO+MeYE6dw1gHB7kICCA0bZUN9qosVmcpvrD
+         Vv2jc+BnVukAgcIKHQAhvF6bZ5nLDjQNTDfJAmG/UBV1vhY+8QZLg9mORq8BGvRRTbML
+         JKvGPmuvE3UcRMumC002eUUO7X26fvTPYhdqhC1jApLGt0lhX7hSy7I20913r6/9CtsV
+         atUnvumDY17hms6SByBTOgwN5Bzkls9ePsKjDMURaYSqkbH0jmcUXZZDBaBAVJY4EerO
+         BuanjrOvfciZZFIVPijfT5OnxsNYbIHd/LXYzM5mXaa2Qr6qwrXM7tRp6ipvYyB3WCek
+         316Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to:content-transfer-encoding;
-        bh=zOHJbgxEeKcTUS1M3dbg/CCHL8zxNc7o7Y1pwSiNVNQ=;
-        b=H3YpxTgX2In0Lr56U6QzB9IdyouemRL7w+Ga4Z/M0aemz7h/UP5qvLKIbG56FlLMPE
-         tx0XpJZdHiajcObq4Al1SfqmhAYvSQ0gbuUlKFQcY1Akm2YjC7hQFCk8AHlTX9qUgpue
-         NYE/PqokhBRy0ApadXnHDvoCe+fSlM9i5pEWN0p05Coj6hryqNjMK+28XUnfw4z5EZz1
-         AGxp5iDvN8A/Cw73WMB3jT6f6N8cbPJnFz2zqFqUR05iBuCfIY7zRgcuUcwL+2vVH9BW
-         gnTm7fiVqzTCyfi/RtC99li3QigH3SBsopY9f82L6NMk8wWRTA6crYhtRb0Xi9Ut4dAR
-         JjDQ==
-X-Gm-Message-State: AOAM5331JFf1NBNZqeYT4zHxlHF6xX6gdc2LTcTNxrRoBMg7iSKRuHsf
-        GpTh6VNMZiaw6XwkYAw2REPgHWM7GPu/Ug2QkEk=
-X-Google-Smtp-Source: ABdhPJzoHq3am6inbfmBPqBVtinf0P3a3olO2HHGrr8a58tf6AA0dumKGgGOPmdd7LdKesiDxGNJz1QlubReQrWZ5K4=
-X-Received: by 2002:a67:6684:: with SMTP id a126mr2950575vsc.87.1640420174241;
- Sat, 25 Dec 2021 00:16:14 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LGUNV55wraKWttlHu9LEsxw2TMdFSIetUkp+Aa5vOlw=;
+        b=JCuIPR1/XbYauxGS5wdkzd+5gQ0V88lQT0XFfvZlxGhUwPRut1kIzqvIJ/e62l059D
+         Hr7Svq9CVHSXdPU7t7a5abrKWPuzJ5zkJ+AtGHwbEru0RkicNmcKn8zNenRn8FL8+unx
+         wbqos2O8ynQXquOgo+BUf5mBBr1LG08+JMusl4u2bnKgfhJTrwPZnIPrY9+s06uuKfu9
+         6YxQDOv6R2UfJlnH10iyjiqEeQzcEoe20WNKK+Rt3arGoZXhA1yfEV1SsFPxMkuwKikW
+         ANe6RbWAI1ZhgM0J0iKHZcvs4tJsejUq3yRA0NLNi5VBQcfOJRa/tI1Dx55f+1K5xeYr
+         9wPw==
+X-Gm-Message-State: AOAM533PXsEUj3lduur4cRsL75vkZATSsoBR7mg2mp6UbxoDNr1VFZCl
+        R6Zn1LoGS8Y6Ogz5CnleKHrgCZmAqVL5AFOHeB8=
+X-Google-Smtp-Source: ABdhPJyidpd9u5ux/81gVytN22NQ9SN65KnC06z6cIHTHqerrI7WWeQin+0FapdM5Hb1MSG1DYvDHJ8AKXbcja9W6Bw=
+X-Received: by 2002:a17:907:76d4:: with SMTP id kf20mr8680594ejc.44.1640454441883;
+ Sat, 25 Dec 2021 09:47:21 -0800 (PST)
 MIME-Version: 1.0
-Sender: ifeanyiomaka1@gmail.com
-Received: by 2002:a59:a72c:0:b0:272:b4dc:643c with HTTP; Sat, 25 Dec 2021
- 00:16:13 -0800 (PST)
-From:   DINA MCKENNA <dinamckennahowley@gmail.com>
-Date:   Sat, 25 Dec 2021 08:16:13 +0000
-X-Google-Sender-Auth: st2aEKz2qPW9jgiiJ3grf12IMJw
-Message-ID: <CAO-KV1-opPaB793kh=Hv-18Y5f3Vg1tVuAJjfepKinHsFSMR2g@mail.gmail.com>
-Subject: Calvary greetings.
-To:     undisclosed-recipients:;
+References: <20211222161534.1263-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20211222161534.1263-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20211222161534.1263-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 25 Dec 2021 19:46:45 +0200
+Message-ID: <CAHp75VfC-1Lt2JZ-e_ReySNQTOwOfBi6JLOjEHUMNEyYk5JVyg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dmaengine: nbpfaxi: Use platform_get_irq_optional()
+ to get the interrupt
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello my dear,
+On Fri, Dec 24, 2021 at 3:14 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+>
+> platform_get_resource(pdev, IORESOURCE_IRQ, ..) relies on static
+> allocation of IRQ resources in DT core code, this causes an issue
+> when using hierarchical interrupt domains using "interrupts" property
+> in the node as this bypasses the hierarchical setup and messes up the
+> irq chaining.
+>
+> In preparation for removal of static setup of IRQ resource from DT core
+> code use platform_get_irq_optional().
+>
+> There are no non-DT users for this driver so interrupt range
+> (irq_res->start-irq_res->end) is no longer required and with DT we will
+> be sure it will be a single IRQ resource for each index.
 
- I sent this mail praying it will get to you in a good condition of
-health, since I myself are in a very critical health condition in
-which I sleep every night without knowing if I may be alive to see the
-next day. I bring peace and love to you. It is by the grace of God, I
-had no choice than to do what is lawful and right in the sight of God
-for eternal life and in the sight of man, for witness of God=E2=80=99s merc=
-y
-and glory upon my life. I am Mrs. Dina. Howley Mckenna, a widow. I am
-suffering from a long time brain tumor, It has defiled all forms of
-medical treatment, and right now I have about a few months to leave,
-according to medical experts. The situation has gotten complicated
-recently with my inability to hear proper, am communicating with you
-with the help of the chief nurse herein the hospital, from all
-indication my conditions is really deteriorating and it is quite
-obvious that, according to my doctors they have advised me that I may
-not live too long, Because this illness has gotten to a very bad
-stage. I plead that you will not expose or betray this trust and
-confidence that I am about to repose on you for the mutual benefit of
-the orphans and the less privilege. I have some funds I inherited from
-my late husband, the sum of ($ 11,000,000.00, Eleven Million Dollars).
-Having known my condition, I decided to donate this fund to you
-believing that you will utilize it the way i am going to instruct
-herein. I need you to assist me and reclaim this money and use it for
-Charity works therein your country  for orphanages and gives justice
-and help to the poor, needy and widows says The Lord." Jeremiah
-22:15-16.=E2=80=9C and also build schools for less privilege that will be
-named after my late husband if possible and to promote the word of God
-and the effort that the house of God is maintained. I do not want a
-situation where this money will be used in an ungodly manner. That's
-why I'm taking this decision. I'm not afraid of death, so I know where
-I'm going. I accept this decision because I do not have any child who
-will inherit this money after I die.. Please I want your sincerely and
-urgent answer to know if you will be able to execute this project for
-the glory of God, and I will give you more information on how the fund
-will be transferred to your bank account. May the grace, peace, love
-and the truth in the Word of God be with you and all those that you
-love and care for.
+>         for (i = 0; irqs < ARRAY_SIZE(irqbuf); i++) {
+> -               irq_res = platform_get_resource(pdev, IORESOURCE_IRQ, i);
+> -               if (!irq_res)
+> +               irq = platform_get_irq_optional(pdev, i);
+> +               if (irq == -ENXIO)
+>                         break;
+> -
+> -               for (irq = irq_res->start; irq <= irq_res->end;
+> -                    irq++, irqs++)
+> -                       irqbuf[irqs] = irq;
+> +               if (irq < 0)
+> +                       return irq;
+> +               irqbuf[irqs++] = irq;
+>         }
 
-I'm waiting for your immediate reply..
+Same comment as per other patch(es), i.e. consider 0 as no IRQ.
 
-May God Bless you,
-Mrs. Dina. Howley Mckenna.
+-- 
+With Best Regards,
+Andy Shevchenko

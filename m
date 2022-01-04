@@ -2,123 +2,77 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C29A84843CE
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Jan 2022 15:52:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC6E44845FB
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Jan 2022 17:33:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234449AbiADOwW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 4 Jan 2022 09:52:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59648 "EHLO
+        id S235314AbiADQdf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 4 Jan 2022 11:33:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233034AbiADOwT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Jan 2022 09:52:19 -0500
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A8C1C061761
-        for <dmaengine@vger.kernel.org>; Tue,  4 Jan 2022 06:52:19 -0800 (PST)
-Received: by mail-wr1-x430.google.com with SMTP id v6so14979695wra.8
-        for <dmaengine@vger.kernel.org>; Tue, 04 Jan 2022 06:52:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CE9wC1I8Y3S4XjOVWKsIkWX1PPAYp2L1AtPQgtpQePQ=;
-        b=Glp0dKp29nU4yXeghEDQr2iDSZMAXFTnQ7bOgIkaML2Vu/d/mB7XCDQ8EH3AUcW7m+
-         rozyVDSuCz5Cyi5gj1cjC0iWsRsviHskHscxURkh0dx30nDv2D9m0hdI/o6EeODcuD7C
-         okbaoGoqznvIobpoboDqgMgilMW/V+rb3Dwlumy/68SMTjtiLFWEAVs+tfHLqvHr5h4k
-         1A6uqnXZ80wywuKduleS4/ORhbgE9nrepvolcMv7jsMPSV3SsX6EMO1mA3y3dcINKjTN
-         98liTF6YFZQdvqJShmRYS78VuywWMYHI41Kg2syoTamNpn+CpqrIsvVh3oinMATHGwaV
-         qwuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CE9wC1I8Y3S4XjOVWKsIkWX1PPAYp2L1AtPQgtpQePQ=;
-        b=Yqc8LOzXs74vE/Ce04xRaytFPr8oEd7Xc8eZKaN6GjR9UoIUdpDfeodI1IGW8l61Fw
-         EslBoChSoLOduo+dmogRKXf61xVGJ+XNpHa5z/he62OrB2MUk3x7ZzSrPozWVE7h/HM9
-         7phZ4XBFsdDSWs+UCQXYnAAxRdt6oWiQZVPqiCaGrsxYNCWQ+A6mpHtNQTDminAmea/P
-         YAh//aDAH++66PQNV7rGjN2zXOEaIk9JnWXIbQWOAqSS6SicEh2kHzh5WvpeKtPQiXwT
-         cMKMvvA7CpkK03ioSFpiiOWBNfLaEls5RBLal50o10wNAW7h35haaCkLavGVOzi/oIlK
-         45LQ==
-X-Gm-Message-State: AOAM533KGTdr/6sRPSMapnCszFefHCMm4fTjgeqSmFSfw1qqxD6fzFq1
-        1HRAaIgvSUizqI9MY1aWL3wWKA==
-X-Google-Smtp-Source: ABdhPJzoD9KCrAW7cQc3I5OWzupEwE2HWlQZKpJqoxpt5YQyfqDhSf1gYObZVM419BaAFM/vInqSqA==
-X-Received: by 2002:a5d:488a:: with SMTP id g10mr29191706wrq.653.1641307937870;
-        Tue, 04 Jan 2022 06:52:17 -0800 (PST)
-Received: from localhost.localdomain ([2001:861:44c0:66c0:f6da:6ac:481:1df0])
-        by smtp.gmail.com with ESMTPSA id s8sm44631911wra.9.2022.01.04.06.52.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jan 2022 06:52:17 -0800 (PST)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     vkoul@kernel.org
-Cc:     linux-oxnas@groups.io, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 4/4] ARM: dts: ox810se: Add DMA Support
-Date:   Tue,  4 Jan 2022 15:52:06 +0100
-Message-Id: <20220104145206.135524-5-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220104145206.135524-1-narmstrong@baylibre.com>
-References: <20220104145206.135524-1-narmstrong@baylibre.com>
+        with ESMTP id S229984AbiADQde (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Jan 2022 11:33:34 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2587C061761;
+        Tue,  4 Jan 2022 08:33:34 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 52F66614E8;
+        Tue,  4 Jan 2022 16:33:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F2D8C36AEF;
+        Tue,  4 Jan 2022 16:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1641314013;
+        bh=vabCdgzGBopzaMxZsiqlElK4HXDziw223Sx8f6RNEnU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fsPrZa12dtKnpY9P4Ik57sdPyPS98kMT02NEUpalVmhOfV0rdj5w3YP/Hg1VPRdj5
+         fogj6NK0ee8vx0fJ9UxIq6lL14HsJdhY3gFocIuR9opvD82haro3JjDY5BaN6q06wW
+         nQaZpcksval/Zb1RZRxxPXwffTk7uJ0VVmKIOA54=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Subject: [PATCH] dmaengine: ioatdma: use default_groups in kobj_type
+Date:   Tue,  4 Jan 2022 17:33:30 +0100
+Message-Id: <20220104163330.1338824-1-gregkh@linuxfoundation.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1065; h=from:subject; bh=vabCdgzGBopzaMxZsiqlElK4HXDziw223Sx8f6RNEnU=; b=owGbwMvMwCRo6H6F97bub03G02pJDIlXym75pN9Lby3t23v6Zf29/6uem724oPJlzrn4WXZbL5gu qZte0BHLwiDIxCArpsjyZRvP0f0VhxS9DG1Pw8xhZQIZwsDFKQAT0b7GMFfaMvnxR4XKk9sS8yd9dr FU8D6t95hhwYHjLYF/bebeqJ8t5bf7lpLFJMXGbgA=
+X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This adds the DMA engine node.
+There are currently 2 ways to create a set of sysfs files for a
+kobj_type, through the default_attrs field, and the default_groups
+field.  Move the ioatdma sysfs code to use default_groups field which has
+been the preferred way since aa30f47cf666 ("kobject: Add support for
+default attribute groups to kobj_type") so that we can soon get rid of
+the obsolete default_attrs field.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/boot/dts/ox810se-wd-mbwe.dts |  4 ++++
- arch/arm/boot/dts/ox810se.dtsi        | 21 +++++++++++++++++++++
- 2 files changed, 25 insertions(+)
+ drivers/dma/ioat/sysfs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/ox810se-wd-mbwe.dts b/arch/arm/boot/dts/ox810se-wd-mbwe.dts
-index 7e2fcb220aea..19e5d510e425 100644
---- a/arch/arm/boot/dts/ox810se-wd-mbwe.dts
-+++ b/arch/arm/boot/dts/ox810se-wd-mbwe.dts
-@@ -103,6 +103,10 @@ rtc0: rtc@48 {
- 	};
+diff --git a/drivers/dma/ioat/sysfs.c b/drivers/dma/ioat/sysfs.c
+index aa44bcd6a356..168adf28c5b1 100644
+--- a/drivers/dma/ioat/sysfs.c
++++ b/drivers/dma/ioat/sysfs.c
+@@ -158,8 +158,9 @@ static struct attribute *ioat_attrs[] = {
+ 	&intr_coalesce_attr.attr,
+ 	NULL,
  };
++ATTRIBUTE_GROUPS(ioat);
  
-+&dma {
-+	status = "okay";
-+};
-+
- &uart1 {
- 	status = "okay";
- 
-diff --git a/arch/arm/boot/dts/ox810se.dtsi b/arch/arm/boot/dts/ox810se.dtsi
-index 0755e5864c4a..79b2b49dcfbb 100644
---- a/arch/arm/boot/dts/ox810se.dtsi
-+++ b/arch/arm/boot/dts/ox810se.dtsi
-@@ -334,6 +334,27 @@ timer0: timer@200 {
- 					interrupts = <4 5>;
- 				};
- 			};
-+
-+			dma: dma-controller@600000 {
-+				compatible = "oxsemi,ox810se-dma";
-+				reg = <0x600000 0x100000>,
-+				      <0xc00000 0x100000>;
-+				reg-names = "dma", "sgdma";
-+				interrupts = <13>, <14>, <15>, <16>, <20>;
-+				clocks = <&stdclk 1>;
-+				resets = <&reset 8>, <&reset 24>;
-+				reset-names = "dma", "sgdma";
-+
-+				/* Encodes the authorized memory types */
-+				oxsemi,targets-types =
-+					<0x45900000 0x45a00000 0>,  /* SATA */
-+					<0x42000000 0x43000000 0>,  /* SATA DATA */
-+					<0x48000000 0x58000000 15>, /* DDR */
-+					<0x58000000 0x58020000 15>; /* SRAM */
-+
-+				#dma-cells = <1>;
-+				dma-channels = <5>;
-+			};
- 		};
- 	};
+ struct kobj_type ioat_ktype = {
+ 	.sysfs_ops = &ioat_sysfs_ops,
+-	.default_attrs = ioat_attrs,
++	.default_groups = ioat_groups,
  };
 -- 
-2.25.1
+2.34.1
 

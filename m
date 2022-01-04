@@ -2,88 +2,88 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FE65484602
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Jan 2022 17:35:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0630A484611
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Jan 2022 17:38:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235352AbiADQfz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 4 Jan 2022 11:35:55 -0500
-Received: from relmlor1.renesas.com ([210.160.252.171]:61995 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S235363AbiADQfz (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Jan 2022 11:35:55 -0500
-X-IronPort-AV: E=Sophos;i="5.88,261,1635174000"; 
-   d="scan'208";a="105490652"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 05 Jan 2022 01:35:54 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id C6F524017282;
-        Wed,  5 Jan 2022 01:35:51 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] dmaengine: mediatek-cqdma: Use platform_get_irq() to get the interrupt
-Date:   Tue,  4 Jan 2022 16:35:19 +0000
-Message-Id: <20220104163519.21929-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220104163519.21929-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20220104163519.21929-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        id S235326AbiADQiv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 4 Jan 2022 11:38:51 -0500
+Received: from mga03.intel.com ([134.134.136.65]:1249 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235378AbiADQiv (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 4 Jan 2022 11:38:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641314331; x=1672850331;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=yrlkfkw0EATYTcD13m01vf/iKb4S1IVr6BflCrHC4vI=;
+  b=lz2I2SPHLGpLd8x849WPMPoZuUtZsgRrw5dSyj+46deZwRq5ewqKHGT1
+   akRqC+CFdZ8mKwJaVWON1zKaRXGnvyfaO43fkiG1h/T6sp4+k8XHzE/Ln
+   o7yKAzuOUcIJF8BI5PLVj7TnkpGW5IVjd0FI4BetK1CeU8YtTDoeIIbE+
+   AUKR8c5n/A5wsUt6OAXMssLxaboltxG/Ljyf/XT4VkbkeB9kXfD5ic8Wb
+   a0Jgdy/hB3w+FL3I78KFCDRAFxwjMU6TnsHGJX7WpKXX+85pRHOnbSbDy
+   RYPtpjTySddmE9ZvWSMb0v8lveWSS325uey2+HsrguUpho/2zvsXAPhs2
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10216"; a="242211648"
+X-IronPort-AV: E=Sophos;i="5.88,261,1635231600"; 
+   d="scan'208";a="242211648"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 08:38:46 -0800
+X-IronPort-AV: E=Sophos;i="5.88,261,1635231600"; 
+   d="scan'208";a="526311879"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.114.22]) ([10.212.114.22])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 08:38:45 -0800
+Message-ID: <d5a34c44-82e1-1d7c-1bb2-3fe257d6a572@intel.com>
+Date:   Tue, 4 Jan 2022 09:38:44 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.1
+Subject: Re: [PATCH] dmaengine: ioatdma: use default_groups in kobj_type
+Content-Language: en-US
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+References: <20220104163330.1338824-1-gregkh@linuxfoundation.org>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20220104163330.1338824-1-gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-platform_get_resource(pdev, IORESOURCE_IRQ, ..) relies on static
-allocation of IRQ resources in DT core code, this causes an issue
-when using hierarchical interrupt domains using "interrupts" property
-in the node as this bypasses the hierarchical setup and messes up the
-irq chaining.
 
-In preparation for removal of static setup of IRQ resource from DT core
-code use platform_get_irq().
+On 1/4/2022 9:33 AM, Greg Kroah-Hartman wrote:
+> There are currently 2 ways to create a set of sysfs files for a
+> kobj_type, through the default_attrs field, and the default_groups
+> field.  Move the ioatdma sysfs code to use default_groups field which has
+> been the preferred way since aa30f47cf666 ("kobject: Add support for
+> default attribute groups to kobj_type") so that we can soon get rid of
+> the obsolete default_attrs field.
+>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: dmaengine@vger.kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
-v1->v2
-* No change
----
- drivers/dma/mediatek/mtk-cqdma.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+Acked-by: Dave Jiang <dave.jiang@intel.com>
 
-diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
-index 41ef9f15d3d5..f8847c48ba03 100644
---- a/drivers/dma/mediatek/mtk-cqdma.c
-+++ b/drivers/dma/mediatek/mtk-cqdma.c
-@@ -751,7 +751,6 @@ static int mtk_cqdma_probe(struct platform_device *pdev)
- 	struct mtk_cqdma_device *cqdma;
- 	struct mtk_cqdma_vchan *vc;
- 	struct dma_device *dd;
--	struct resource *res;
- 	int err;
- 	u32 i;
- 
-@@ -824,13 +823,10 @@ static int mtk_cqdma_probe(struct platform_device *pdev)
- 			return PTR_ERR(cqdma->pc[i]->base);
- 
- 		/* allocate IRQ resource */
--		res = platform_get_resource(pdev, IORESOURCE_IRQ, i);
--		if (!res) {
--			dev_err(&pdev->dev, "No irq resource for %s\n",
--				dev_name(&pdev->dev));
--			return -EINVAL;
--		}
--		cqdma->pc[i]->irq = res->start;
-+		err = platform_get_irq(pdev, i);
-+		if (err < 0)
-+			return err;
-+		cqdma->pc[i]->irq = err;
- 
- 		err = devm_request_irq(&pdev->dev, cqdma->pc[i]->irq,
- 				       mtk_cqdma_irq, 0, dev_name(&pdev->dev),
--- 
-2.17.1
 
+> ---
+>   drivers/dma/ioat/sysfs.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/dma/ioat/sysfs.c b/drivers/dma/ioat/sysfs.c
+> index aa44bcd6a356..168adf28c5b1 100644
+> --- a/drivers/dma/ioat/sysfs.c
+> +++ b/drivers/dma/ioat/sysfs.c
+> @@ -158,8 +158,9 @@ static struct attribute *ioat_attrs[] = {
+>   	&intr_coalesce_attr.attr,
+>   	NULL,
+>   };
+> +ATTRIBUTE_GROUPS(ioat);
+>   
+>   struct kobj_type ioat_ktype = {
+>   	.sysfs_ops = &ioat_sysfs_ops,
+> -	.default_attrs = ioat_attrs,
+> +	.default_groups = ioat_groups,
+>   };

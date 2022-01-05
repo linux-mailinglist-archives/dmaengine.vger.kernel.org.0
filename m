@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67FBF484D21
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Jan 2022 05:38:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4FF8484DB7
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Jan 2022 06:44:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236146AbiAEEir (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 4 Jan 2022 23:38:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49496 "EHLO
+        id S237524AbiAEFoJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 5 Jan 2022 00:44:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237365AbiAEEio (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Jan 2022 23:38:44 -0500
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83186C061761
-        for <dmaengine@vger.kernel.org>; Tue,  4 Jan 2022 20:38:44 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id h6so24647140plf.6
-        for <dmaengine@vger.kernel.org>; Tue, 04 Jan 2022 20:38:44 -0800 (PST)
+        with ESMTP id S236153AbiAEFoI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Jan 2022 00:44:08 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88B8CC061761
+        for <dmaengine@vger.kernel.org>; Tue,  4 Jan 2022 21:44:08 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id l16-20020a17090a409000b001b2e9628c9cso5358534pjg.4
+        for <dmaengine@vger.kernel.org>; Tue, 04 Jan 2022 21:44:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=9aN3MVYr/eRiJOMan2AXOKnS6rXengbNHdl8ukrLg8Q=;
-        b=chEtXgMW/jgHH/5DCnTuHZPiW24an6y7pTIn6Bri/8i5+OkXl0tqt2S7a+d0oSw1E6
-         xbtlp37n8UM20bQ01v5rnPHEouHragXKMDHapP4i0yTDa+XcMQaX/775+tWkZuJJI2vg
-         swNdxC+/1am+Oc0aKKQ6fJH875639pDBDRp92+yxyLkiv0rW4npI1pkt202WC9wp0Lcr
-         8VrobxfB0h/zJnmtsKeD3YTpoCd363/I0tWhPdJfS1S6EOaAa8nwZCPWe8bUy41ieWZ4
-         zOX+8hBZbqSuZDRqgy5XTrDIJHounAjhDqXV2sWFyFTtp+1DbOlGl4QA0C7oRZm0Kj45
-         N8Fg==
+        b=Lkmpsut52RVgiDO8dUHEr7vqhZTGrLl6xV2Kkv7ydfmDDuVZcySNeXmHyiUzMPRg/K
+         om0x1PQNLhIQLAkS4r9I1OK/ihf1Nwng7WiHpe1BG4+AOgiavbr3GuL8Lcga04t8mVsh
+         vzYODZ6exNtL0M/Jh8gcS6fJXULUPyaoue3UXBFUnVqOmari00YpM+vebHiFQcjJjqcL
+         +yss+yyQuBKzYUKqRARcxyjFqkTZRpThrEfsxtDZMy4T029JfYtq5hNUgGOH2e/LjOfl
+         2J6+sIkzsJe6aCfWeIhPR34Ndl7daqgjmrTBb/fNXpwnqcPGBQmSaGQgnIpOfmFic91O
+         eGFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=9aN3MVYr/eRiJOMan2AXOKnS6rXengbNHdl8ukrLg8Q=;
-        b=w0rHI2Fh134vC5o7EOjX8chCcq7NhVbtw/+oOolrqfRmn6TtowBm9uiWhSc7XMs5FV
-         cCNkGEXXEtebZ7tRJMWdvZxjNdxoI2hP1FCu/DKHygiCOrgGmaTVuksw4bqcXPSvVJer
-         iqvxksynJjxBNsgOuz3lrKmcLpaSCzP828AbOJMsdYDYflq2NZuqQN996cLc/uW6rgop
-         fG3mgNnv1w8G6EoKPWFNZYvLIsVuflVpatY8vVAAPpnDV/g4yLoomGAPVDu5QwQ8RXDg
-         05gWNXVsLy3jbK3znxN4I5T35cq3gDM+8vG6Ui5HKiUsiRe9lvxGxhR8QyCkUDoTzuPW
-         moXQ==
-X-Gm-Message-State: AOAM530jKBGU8gVaDlW9iw1Q2ic9aA7WIXWHiA5qhPn/nkO/NiPiPEGv
-        Rw4qDW6DuYeZc4VxZt1wJqIqJg==
-X-Google-Smtp-Source: ABdhPJzFZp6NmebEnmYEZa1fqT6Z51iGeMByHFmL64WhfozHkp665fRhYI8myvlJR41cr27d3/HV2w==
-X-Received: by 2002:a17:903:11cd:b0:149:bf70:2031 with SMTP id q13-20020a17090311cd00b00149bf702031mr10495508plh.40.1641357522727;
-        Tue, 04 Jan 2022 20:38:42 -0800 (PST)
+        b=aAeoP8qj0C8BpDZ7PPXP4cyw9oXUCA795i7ZMDv8uKUbogsokQ2RJg3y40mIxTM1uY
+         nLKFxRBkNQ1QTQ1270ZXnyUhy9t+g5ahUvVehQOYcMg9SWtKVnHKVIxDpZy/9YBKPGsq
+         xKNMU1PWctX65iTRsnD2zo7vcR3qmrLaal4QSeIaVz7Pd057TBBE+xTe6NB+Oxvyg5Ta
+         l1M2ldZqeSWtn6CYubWt12cybq49ZZGoG6SP6XfDlLt1NDU+1MjeZIc2yiTEKpWTqwep
+         dThDzcnfRNN4iZN0EbdQD3kC5OjVA2RzbP9IBpQno2mfBsx4Xpw2IKqeRP/CLUPhRg/6
+         FOvA==
+X-Gm-Message-State: AOAM531TNM3v+w9bvgsPZ/Qgw+iSQIo28xCtAiUGV16JKuHCfd5Wwzkk
+        eI8lzWXuWXsaRyms5CdkwB2xqQ==
+X-Google-Smtp-Source: ABdhPJyjR5gEVjMyzPzdgCGtXpRNBEO5AKvueTEAzhFJ/eTPOk/TKJ8NA7Vd+aNVHglmeCevkEdWUA==
+X-Received: by 2002:a17:90a:2f06:: with SMTP id s6mr2229426pjd.230.1641361447984;
+        Tue, 04 Jan 2022 21:44:07 -0800 (PST)
 Received: from hsinchu16.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
-        by smtp.gmail.com with ESMTPSA id j8sm36172812pgf.21.2022.01.04.20.38.39
+        by smtp.gmail.com with ESMTPSA id cu18sm1000574pjb.53.2022.01.04.21.44.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jan 2022 20:38:42 -0800 (PST)
+        Tue, 04 Jan 2022 21:44:07 -0800 (PST)
 From:   Zong Li <zong.li@sifive.com>
 To:     robh+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
         aou@eecs.berkeley.edu, krzysztof.kozlowski@canonical.com,
@@ -56,7 +56,7 @@ To:     robh+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
         linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
 Cc:     Zong Li <zong.li@sifive.com>
 Subject: [PATCH 0/3] Determine number of DMA channels by 'dma-channels' property
-Date:   Wed,  5 Jan 2022 12:38:36 +0800
+Date:   Wed,  5 Jan 2022 13:43:57 +0800
 Message-Id: <cover.1641289490.git.zong.li@sifive.com>
 X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0

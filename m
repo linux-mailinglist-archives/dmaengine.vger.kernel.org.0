@@ -2,130 +2,78 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E59A3486194
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Jan 2022 09:44:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 323AE4869BB
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Jan 2022 19:25:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236864AbiAFIox (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 6 Jan 2022 03:44:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36152 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236860AbiAFIow (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Jan 2022 03:44:52 -0500
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6964EC061245;
-        Thu,  6 Jan 2022 00:44:52 -0800 (PST)
-Received: by mail-yb1-xb2a.google.com with SMTP id d201so5395555ybc.7;
-        Thu, 06 Jan 2022 00:44:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oh23BjoKFzAkuG9NnxICbp39CiGWdcw5gpXaXCR0gv4=;
-        b=SDoA0JU56MlWxVUqde4e+r/Qk/EhEUwnd157f6jKhWFrQhlnRaGdHmY5Hgt6HE/LtN
-         H3JR8g6ajSPTD54T1IFH25bcu/wBh2cnFsigURyxJjOF8EykEgXUvwURqZGEQpkP5QM0
-         U31VLkZU3F0DhluyoOCeFJ7wnCssDevX8PF4LVkIiIRpnUdMnrSqTA/FlGRzKi8Cu0OQ
-         MTEN2Gwz6tQJlMkoCosohaBGLn+CR6IPpfOF06D8fDH99fyZW6iK6SgCWgfPZU/O/BvU
-         PEpdfDuk+9+ctgdfP5iF1FbQuGYsNvIdgHV9DPR7YnV3eZiemvcoWvUB0K6mgIP658KD
-         lc9w==
+        id S242685AbiAFSZb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Jan 2022 13:25:31 -0500
+Received: from mail-oi1-f170.google.com ([209.85.167.170]:35630 "EHLO
+        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242733AbiAFSZa (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Jan 2022 13:25:30 -0500
+Received: by mail-oi1-f170.google.com with SMTP id s127so4942819oig.2;
+        Thu, 06 Jan 2022 10:25:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oh23BjoKFzAkuG9NnxICbp39CiGWdcw5gpXaXCR0gv4=;
-        b=Pc0gpbT+0SBhVq54faPltjArYchcyammic5YkHN/KU4ti24afpbe5SBbMqfv/YEoJ8
-         yfAoD1ndL0S9syAGT2vuFuODe4DinoTgRiQP+YEYO3OhWg946gNUQOaMq08+2CaCSEIn
-         leufiOzX0ffal0S1FVayqzNqEJNgHRZBTmofp6o8EZwJVh3U5QbJwwXOnfHW3lhOjSv4
-         ToJku4Peq2k2c0jhsPRXJfz1Y0su+S4tu06SCP0rcvtQvjS6s+qTYY5+aBNg2sC3hqGM
-         QmCdFsWdQvdYipjhaFA2J2GQ//MzcvDoo/f1sAzE+Zbguez9/Kfp+U0nYfnRO4QzQP3t
-         OWmg==
-X-Gm-Message-State: AOAM531OVFAg4Ib3j+78OGw+yfrquqNYaREoQUgqnyUfNc16huUnuD7b
-        UjTygIbR5fks2v4o3QWvKZ5ygd88ZbvdtfyqSGs=
-X-Google-Smtp-Source: ABdhPJw9vxajmAvvj3b+nKVLj9oHrVmIGPAkG7ay1+DYFjTGWUO3lmz8SjL8jkJOZNrqNJ0ZIDUOCTX4Hf4zjwdy7vQ=
-X-Received: by 2002:a25:98c4:: with SMTP id m4mr73638815ybo.613.1641458691689;
- Thu, 06 Jan 2022 00:44:51 -0800 (PST)
-MIME-Version: 1.0
-References: <20220104163519.21929-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20220104163519.21929-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <YdZ9rDvYtdu8L8Vb@matsya>
-In-Reply-To: <YdZ9rDvYtdu8L8Vb@matsya>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 6 Jan 2022 08:44:25 +0000
-Message-ID: <CA+V-a8sO0AioGJh23jdFWoN_Qx9rm_3skYcCeyrWZVAuRtuOSw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] dmaengine: mediatek: mtk-hsdma: Use
- platform_get_irq() to get the interrupt
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cF7NOXX0VCxREtaDxxcjv4QjL9Wd5MC7Ra3H6nrdF+Q=;
+        b=4GQhrBv0Vv8o31hoG2ragc4hC/myINIowC5fFJI1O/SeXjtRhkNYV9Va2ZdDRoT1ra
+         MuCHhR2pifF/Vs76eAA7qp2aK6m4BJ4jhv37PNKkwxydDsY5r9Tp2SQg8wxkhNrkDb1y
+         044SRJ2kipmNQgTRUPR/LCgbodVfJTEKJ+qNjq8yNBm2rtS/VOJQalbas989YXfHPgUy
+         UN9V+mb97In6U9TmuNJpY/9fZDZb//kmloQdEzqARYbF0EXu+bWKS48GOry+XJD8+ajA
+         mS2bgp6Kn46uAXHaIEsTOm6AItaF2xfcn7mUTFeduFAryYlb7zGDOcA/bM9R8/7b17RX
+         08Rg==
+X-Gm-Message-State: AOAM531XBCizEJNRaGwk1/3tMQFKY5WGa8Hz+9T24E4DBr29N4hKQldB
+        N9k3RYqC4Vi013zrTbMIKCzzW6nFwA==
+X-Google-Smtp-Source: ABdhPJwHKljtbw4ST1iRI0MgRmPXUWUCv2jaJpK16yDsCDmvGPMgVOe4pZe1zQTLwFkxzyBK9SArBw==
+X-Received: by 2002:aca:4385:: with SMTP id q127mr6763971oia.39.1641493529683;
+        Thu, 06 Jan 2022 10:25:29 -0800 (PST)
+Received: from xps15.herring.priv (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.googlemail.com with ESMTPSA id r13sm484949oth.21.2022.01.06.10.25.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jan 2022 10:25:29 -0800 (PST)
+From:   Rob Herring <robh@kernel.org>
 To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: dma-controller: Split interrupt fields in example
+Date:   Thu,  6 Jan 2022 12:25:10 -0600
+Message-Id: <20220106182518.1435497-2-robh@kernel.org>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vinod,
+Best practice for multi-cell property values is to bracket each multi-cell
+value.
 
-Thank you for the review.
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/dma/dma-controller.yaml | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-On Thu, Jan 6, 2022 at 5:27 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 04-01-22, 16:35, Lad Prabhakar wrote:
-> > platform_get_resource(pdev, IORESOURCE_IRQ, ..) relies on static
-> > allocation of IRQ resources in DT core code, this causes an issue
-> > when using hierarchical interrupt domains using "interrupts" property
-> > in the node as this bypasses the hierarchical setup and messes up the
-> > irq chaining.
-> >
-> > In preparation for removal of static setup of IRQ resource from DT core
-> > code use platform_get_irq().
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> > v1->v2
-> > * No change
-> > ---
-> >  drivers/dma/mediatek/mtk-hsdma.c | 11 ++++-------
-> >  1 file changed, 4 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/dma/mediatek/mtk-hsdma.c b/drivers/dma/mediatek/mtk-hsdma.c
-> > index 6ad8afbb95f2..c0fffde7fe08 100644
-> > --- a/drivers/dma/mediatek/mtk-hsdma.c
-> > +++ b/drivers/dma/mediatek/mtk-hsdma.c
-> > @@ -923,13 +923,10 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
-> >               return PTR_ERR(hsdma->clk);
-> >       }
-> >
-> > -     res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> > -     if (!res) {
-> > -             dev_err(&pdev->dev, "No irq resource for %s\n",
-> > -                     dev_name(&pdev->dev));
-> > -             return -EINVAL;
-> > -     }
-> > -     hsdma->irq = res->start;
-> > +     err = platform_get_irq(pdev, 0);
->
-> why not platform_get_irq_optional() here and 3rd patch ?
->
-For patches #2 and #3 the driver expects the IRQ to be present
-strictly, that is the reason platform_get_irq_optional() isn't used so
-that the behavior of the driver is unchanged with this patch.
+diff --git a/Documentation/devicetree/bindings/dma/dma-controller.yaml b/Documentation/devicetree/bindings/dma/dma-controller.yaml
+index 0043b91da95e..6d3727267fa8 100644
+--- a/Documentation/devicetree/bindings/dma/dma-controller.yaml
++++ b/Documentation/devicetree/bindings/dma/dma-controller.yaml
+@@ -24,10 +24,10 @@ examples:
+     dma: dma-controller@48000000 {
+         compatible = "ti,omap-sdma";
+         reg = <0x48000000 0x1000>;
+-        interrupts = <0 12 0x4
+-                      0 13 0x4
+-                      0 14 0x4
+-                      0 15 0x4>;
++        interrupts = <0 12 0x4>,
++                     <0 13 0x4>,
++                     <0 14 0x4>,
++                     <0 15 0x4>;
+         #dma-cells = <1>;
+         dma-channels = <32>;
+         dma-requests = <127>;
+-- 
+2.32.0
 
-Cheers,
-Prabhakar
-
-> > +     if (err < 0)
-> > +             return err;
-> > +     hsdma->irq = err;
-> >
-> >       refcount_set(&hsdma->pc_refcnt, 0);
-> >       spin_lock_init(&hsdma->lock);
-> > --
-> > 2.17.1
->
-> --
-> ~Vinod

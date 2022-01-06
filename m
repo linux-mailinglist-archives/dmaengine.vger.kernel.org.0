@@ -2,80 +2,100 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 197C4485F15
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Jan 2022 04:10:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B557B48604D
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Jan 2022 06:27:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229462AbiAFDKI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 5 Jan 2022 22:10:08 -0500
-Received: from smtp25.cstnet.cn ([159.226.251.25]:49778 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229456AbiAFDKH (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 5 Jan 2022 22:10:07 -0500
-Received: from localhost.localdomain (unknown [124.16.138.126])
-        by APP-05 (Coremail) with SMTP id zQCowADX3n50XdZhtLuwBQ--.53024S2;
-        Thu, 06 Jan 2022 11:09:41 +0800 (CST)
-From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
-To:     vkoul@kernel.org, geert+renesas@glider.be,
-        yoshihiro.shimoda.uh@renesas.com,
-        laurent.pinchart@ideasonboard.com,
-        wsa+renesas@sang-engineering.com, zou_wei@huawei.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiasheng Jiang <jiasheng@iscas.ac.cn>
-Subject: [PATCH] dmaengine: sh: rcar-dmac: Check for error num after setting mask
-Date:   Thu,  6 Jan 2022 11:09:39 +0800
-Message-Id: <20220106030939.2644320-1-jiasheng@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+        id S230024AbiAFF1P (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Jan 2022 00:27:15 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:47748 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229585AbiAFF1P (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Jan 2022 00:27:15 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 504C9B81E50;
+        Thu,  6 Jan 2022 05:27:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04E4AC36AE5;
+        Thu,  6 Jan 2022 05:27:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641446832;
+        bh=rPpZNR2SG7V9Wodym/Wo3u8F0vCxyZV1DllX4+kqxuk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qtNRW0SEOWqyjICFBJLPnzdpDv6r34KKwX50DdmhSIS5Osgm7Pi7vc0M+JwXkpPBC
+         h4okTODPOCg1vqR9xgWOBmUqFYPq4tSUcdyXGPy0yGPslxToQkUjxGWZ1ZL/ON0O06
+         bHi9VuD1aQCuflOFyWf0vlVC5ZjMTpPC7oIxOZvpufqjcdtEIdGnnLz6py6zbirRni
+         hpK8gz73UW3Idbn9oQa0RDJAFrLS5l2Y4AvkySDT5P9Pxf8QG98wBQwSQTiZEt2eCV
+         sQ12ZTAxm809T+IJLip8gJAiMdi8UYa++QLF+CP/QOePnYhFYiXIsacAV+gpTTOvML
+         SHYv2oilgl/6g==
+Date:   Thu, 6 Jan 2022 10:57:08 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] dmaengine: mediatek: mtk-hsdma: Use
+ platform_get_irq() to get the interrupt
+Message-ID: <YdZ9rDvYtdu8L8Vb@matsya>
+References: <20220104163519.21929-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20220104163519.21929-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: zQCowADX3n50XdZhtLuwBQ--.53024S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtr45Cw13Aw1rGFyDCrW5Awb_yoWDZwb_KF
-        n7uF1FgF98GrWDtw1UCr13Arnagr4DXrnIvFWvg3ZayFWDJFnxJr4UA3s5A3y8Za97Kry7
-        KrnrXrWfJ3y8ZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb48FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-        0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r48
-        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
-        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0E
-        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JV
-        WxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-        IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjCtC7UUUU
-        U==
-X-Originating-IP: [124.16.138.126]
-X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220104163519.21929-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Because of the possible failure of the dma_supported(), the
-dma_set_mask_and_coherent() may return error num.
-Therefore, it should be better to check it and return the error if
-fails.
+On 04-01-22, 16:35, Lad Prabhakar wrote:
+> platform_get_resource(pdev, IORESOURCE_IRQ, ..) relies on static
+> allocation of IRQ resources in DT core code, this causes an issue
+> when using hierarchical interrupt domains using "interrupts" property
+> in the node as this bypasses the hierarchical setup and messes up the
+> irq chaining.
+> 
+> In preparation for removal of static setup of IRQ resource from DT core
+> code use platform_get_irq().
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v1->v2
+> * No change
+> ---
+>  drivers/dma/mediatek/mtk-hsdma.c | 11 ++++-------
+>  1 file changed, 4 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/dma/mediatek/mtk-hsdma.c b/drivers/dma/mediatek/mtk-hsdma.c
+> index 6ad8afbb95f2..c0fffde7fe08 100644
+> --- a/drivers/dma/mediatek/mtk-hsdma.c
+> +++ b/drivers/dma/mediatek/mtk-hsdma.c
+> @@ -923,13 +923,10 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
+>  		return PTR_ERR(hsdma->clk);
+>  	}
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> -	if (!res) {
+> -		dev_err(&pdev->dev, "No irq resource for %s\n",
+> -			dev_name(&pdev->dev));
+> -		return -EINVAL;
+> -	}
+> -	hsdma->irq = res->start;
+> +	err = platform_get_irq(pdev, 0);
 
-Fixes: dc312349e875 ("dmaengine: rcar-dmac: Widen DMA mask to 40 bits")
-Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
----
- drivers/dma/sh/rcar-dmac.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+why not platform_get_irq_optional() here and 3rd patch ?
 
-diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-index 6885b3dcd7a9..79901d0e9fbf 100644
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -1869,7 +1869,9 @@ static int rcar_dmac_probe(struct platform_device *pdev)
- 	dmac->dev = &pdev->dev;
- 	platform_set_drvdata(pdev, dmac);
- 	dma_set_max_seg_size(dmac->dev, RCAR_DMATCR_MASK);
--	dma_set_mask_and_coherent(dmac->dev, DMA_BIT_MASK(40));
-+	ret = dma_set_mask_and_coherent(dmac->dev, DMA_BIT_MASK(40));
-+	if (ret)
-+		return ret;
- 
- 	ret = rcar_dmac_parse_of(&pdev->dev, dmac);
- 	if (ret < 0)
+> +	if (err < 0)
+> +		return err;
+> +	hsdma->irq = err;
+>  
+>  	refcount_set(&hsdma->pc_refcnt, 0);
+>  	spin_lock_init(&hsdma->lock);
+> -- 
+> 2.17.1
+
 -- 
-2.25.1
-
+~Vinod

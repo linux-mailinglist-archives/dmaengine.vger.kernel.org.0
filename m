@@ -2,49 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ECDFD48948A
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Jan 2022 09:59:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55D9E48949F
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Jan 2022 10:02:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242493AbiAJI7V (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 10 Jan 2022 03:59:21 -0500
-Received: from mail-vk1-f172.google.com ([209.85.221.172]:37455 "EHLO
-        mail-vk1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242566AbiAJI6F (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 10 Jan 2022 03:58:05 -0500
-Received: by mail-vk1-f172.google.com with SMTP id l68so7685417vkh.4;
-        Mon, 10 Jan 2022 00:58:04 -0800 (PST)
+        id S241626AbiAJJCD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 10 Jan 2022 04:02:03 -0500
+Received: from mail-ua1-f50.google.com ([209.85.222.50]:35669 "EHLO
+        mail-ua1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242588AbiAJJA3 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 10 Jan 2022 04:00:29 -0500
+Received: by mail-ua1-f50.google.com with SMTP id m90so6871773uam.2;
+        Mon, 10 Jan 2022 01:00:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vzvAQJe2veQdg4DaRkaqygFL5jyj5pSAthDAblQ6LsI=;
-        b=ygGulsMb4AZV9jyJCbG3UVjOkNQhjFoMIk+Pha8O9zwDymvq+YNb6kEE7tTKrlILcB
-         heAERqjG8azMDc+lV+lnwjRGQVEFGvR9SBVETLLstfxO4vMWbUkKbhmKD0hrIdSqsQKC
-         6ao4qQqxYE8jRRuD2eGig9s9BebKVsG7lDbQA9Yge7UfoVTvaLr1xVriGey+ynftWuR+
-         C0+GBUP/jRec3XhmTGs6VONryKIQz/w0QZjrlK9dfO1ry0UQUj9rd7sZKNtqycDlZRmG
-         M8cyUpcVxe7DML7m/yew9rz7tBbj5CdH3sBxm8zEjPhiIi+765EpkDS1IJLmZaF3+Ozf
-         3CLQ==
-X-Gm-Message-State: AOAM532mkdx6b8MGdpGJi6UJkeiW8yLY51NjYkLyO+hLSiPW9sCrZQsy
-        RPIT32n8oFjn9GJtokHTT/hwETQWe1Jrbw==
-X-Google-Smtp-Source: ABdhPJxsE6CWgbUAtb+8rUvw8031kWWFZ1ZdP3vEmegnNDkcrpZln+zkwVwSBRfEp0UfGDmoiPV7Mw==
-X-Received: by 2002:a1f:2ad0:: with SMTP id q199mr7134321vkq.29.1641805084009;
-        Mon, 10 Jan 2022 00:58:04 -0800 (PST)
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com. [209.85.221.182])
-        by smtp.gmail.com with ESMTPSA id o12sm3504802uae.1.2022.01.10.00.58.02
+        bh=8NhtBWzQ5apsDhjpCyjxZEW0Il7Jt/CqRkEvPo1Xwf8=;
+        b=BaEL8y1aUS20a94tbSZHSEhXO70YCxxyBHC7LdxaR1RXs9+qO6hWzW32p5SSG4zhtv
+         BeKvvFaAAzY1tLrkqEdmvIeC7umirBmkgRBCi4vRmj2AjW6uxWWgXC00Dqu9n5HaTO6X
+         NofbNkKtWwkLzhvs++ReA/trOQSU1LTNwHEPCI9AhvdT7ScUCgeezPPdSvrQnf2c22IQ
+         IKFjWuiy+LID4ELIKGW4LAps0gmdEkWClw+QhouIQ5eVojmJMSTX0l24pklDBh5kK2Xu
+         kyrrRgM1m9WaxAplETYGxyIA5pvwrai0r4rVWYZdoUxMXRf4hpLPVFKu6itsS2t/gkid
+         F67g==
+X-Gm-Message-State: AOAM532Vb6Met+qsXgysLORKQA1kbPCTSCMLv6kz21UJUoJU+cRyuxMp
+        o7ZgUC75ys45UhuH6G5ltAHEH5MOZ2zQRg==
+X-Google-Smtp-Source: ABdhPJzUqwqg7A1u/EPIdXKEQ2fkQIQtqmXnNKFqJB/1VrLAzWGxs4Uy/0Ovf9gaGgF5sf4YV2sqLg==
+X-Received: by 2002:ab0:3301:: with SMTP id r1mr24729796uao.96.1641805228239;
+        Mon, 10 Jan 2022 01:00:28 -0800 (PST)
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
+        by smtp.gmail.com with ESMTPSA id f132sm3508217vkf.18.2022.01.10.01.00.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jan 2022 00:58:03 -0800 (PST)
-Received: by mail-vk1-f182.google.com with SMTP id l68so7685388vkh.4;
-        Mon, 10 Jan 2022 00:58:02 -0800 (PST)
-X-Received: by 2002:a1f:1bd0:: with SMTP id b199mr13248764vkb.33.1641805082754;
- Mon, 10 Jan 2022 00:58:02 -0800 (PST)
+        Mon, 10 Jan 2022 01:00:27 -0800 (PST)
+Received: by mail-ua1-f54.google.com with SMTP id p37so22113110uae.8;
+        Mon, 10 Jan 2022 01:00:26 -0800 (PST)
+X-Received: by 2002:a67:e985:: with SMTP id b5mr1097590vso.77.1641805226820;
+ Mon, 10 Jan 2022 01:00:26 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1641289490.git.zong.li@sifive.com> <5a7786cff08d55d0e084cd28bc2800565fa2dce7.1641289490.git.zong.li@sifive.com>
-In-Reply-To: <5a7786cff08d55d0e084cd28bc2800565fa2dce7.1641289490.git.zong.li@sifive.com>
+References: <cover.1641289490.git.zong.li@sifive.com> <0419b2865c87f72adeb4edee9113a959e468b4a5.1641289490.git.zong.li@sifive.com>
+In-Reply-To: <0419b2865c87f72adeb4edee9113a959e468b4a5.1641289490.git.zong.li@sifive.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 10 Jan 2022 09:57:51 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdV5gbeaaXPfJ4EuYur0NChp3iurdzNzC_UOLDrGP7rZNA@mail.gmail.com>
-Message-ID: <CAMuHMdV5gbeaaXPfJ4EuYur0NChp3iurdzNzC_UOLDrGP7rZNA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dmaengine: sf-pdma: Get number of channel by device tree
+Date:   Mon, 10 Jan 2022 10:00:15 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUyYVBXAeJ8XS9OsUePpFLgpCXYT5rH_bJCvCg3eaav_w@mail.gmail.com>
+Message-ID: <CAMuHMdUyYVBXAeJ8XS9OsUePpFLgpCXYT5rH_bJCvCg3eaav_w@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: Add dma-channels for pdma device node
 To:     Zong Li <zong.li@sifive.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Paul Walmsley <paul.walmsley@sifive.com>,
@@ -66,51 +66,38 @@ X-Mailing-List: dmaengine@vger.kernel.org
 Hi Zong,
 
 On Wed, Jan 5, 2022 at 6:44 AM Zong Li <zong.li@sifive.com> wrote:
-> It currently assumes that there are four channels by default, it might
-> cause the error if there is actually less than four channels. Change
-> that by getting number of channel from device tree.
+> Add dma-channels property, then we can determine how many channels there
+> by device tree, rather than statically defines it in PDMA driver
 >
 > Signed-off-by: Zong Li <zong.li@sifive.com>
 
 Thanks for your patch!
 
-> --- a/drivers/dma/sf-pdma/sf-pdma.c
-> +++ b/drivers/dma/sf-pdma/sf-pdma.c
-> @@ -484,21 +484,24 @@ static int sf_pdma_probe(struct platform_device *pdev)
->         struct sf_pdma *pdma;
->         struct sf_pdma_chan *chan;
->         struct resource *res;
-> -       int len, chans;
-> -       int ret;
-> +       int len, ret;
->         const enum dma_slave_buswidth widths =
->                 DMA_SLAVE_BUSWIDTH_1_BYTE | DMA_SLAVE_BUSWIDTH_2_BYTES |
->                 DMA_SLAVE_BUSWIDTH_4_BYTES | DMA_SLAVE_BUSWIDTH_8_BYTES |
->                 DMA_SLAVE_BUSWIDTH_16_BYTES | DMA_SLAVE_BUSWIDTH_32_BYTES |
->                 DMA_SLAVE_BUSWIDTH_64_BYTES;
+> --- a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+> +++ b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+> @@ -34,12 +34,17 @@ properties:
+>      minItems: 1
+>      maxItems: 8
 >
-> -       chans = PDMA_NR_CH;
-> -       len = sizeof(*pdma) + sizeof(*chan) * chans;
-> +       len = sizeof(*pdma) + sizeof(*chan) * PDMA_MAX_NR_CH;
->         pdma = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
->         if (!pdma)
->                 return -ENOMEM;
->
-> -       pdma->n_chans = chans;
-> +       ret = of_property_read_u32(pdev->dev.of_node, "dma-channels",
-> +                                  &pdma->n_chans);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "failed to read dma-channels\n");
-> +               return ret;
+> +  dma-channels:
+> +    minimum: 1
+> +    maximum: 4
 
-Note that this is not backwards-compatible with existing DTBs, which
-lack the "dma-channels" property.
-Perhaps you want to fallback to a default of 4 instead?
+As per my comment on [PATCH 3/3], perhaps you want to use a default
+value of 4, and document that here, too?
 
-> +       }
+> +
+>    '#dma-cells':
+>      const: 1
 >
->         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->         pdma->membase = devm_ioremap_resource(&pdev->dev, res);
+>  required:
+>    - compatible
+>    - reg
+> +  - dma-channels
+>    - interrupts
+>    - '#dma-cells'
+>
+
 
 Gr{oetje,eeting}s,
 

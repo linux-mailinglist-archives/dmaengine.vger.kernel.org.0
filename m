@@ -2,49 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB9B148B1C5
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Jan 2022 17:15:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43DCB48B1FC
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Jan 2022 17:23:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349875AbiAKQPj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 11 Jan 2022 11:15:39 -0500
-Received: from mail-ua1-f52.google.com ([209.85.222.52]:46739 "EHLO
-        mail-ua1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349873AbiAKQPf (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Jan 2022 11:15:35 -0500
-Received: by mail-ua1-f52.google.com with SMTP id c36so30596479uae.13;
-        Tue, 11 Jan 2022 08:15:34 -0800 (PST)
+        id S1349911AbiAKQXM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 11 Jan 2022 11:23:12 -0500
+Received: from mail-vk1-f181.google.com ([209.85.221.181]:46638 "EHLO
+        mail-vk1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1343692AbiAKQXL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Jan 2022 11:23:11 -0500
+Received: by mail-vk1-f181.google.com with SMTP id bj47so5699666vkb.13;
+        Tue, 11 Jan 2022 08:23:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7z9xMv0QiQz5AATtylhKuNOpN7Zrf/MWbCMMy2DzpdQ=;
-        b=gfvmvKt0ZWEGT09Q8xSX7fRM/wOCoGlKMGnWiqSm0ATKYF4t7tQPRGAdxbtcxSA53n
-         hbc5Hg3ZerCMXsXjbJolHQADUHwHYIYFDrQQw+kgesvHa+RMfLyLTWxUXQBWRU3JbsDi
-         Lp1jQ3DDOi+1zalx2N2wCIXH0uPNZ1rm1wqkP3iE2ZBPHvO5oxD5wmSew0MpOZAheYfU
-         SQI9HvXt2MNKbg9eEv55X5Z7L/HQQSZ2DSCW6IZHUO051UAEq+Hqm3FQjSfOP07pY1OY
-         VWheXzqxm+m9NmehgA7fStfDkI2AR/go808pB5E1fTQEOiuhwMXdx9WrK8OK0dcwFsrl
-         AJ2g==
-X-Gm-Message-State: AOAM5332cbOMKR+GEFZ9JtFcnsHEzfDiSBAiLilwKUTophrSOre994LV
-        lvTnMNVL0kc4DVHQd2qAI4fmqqNEsj3PQA==
-X-Google-Smtp-Source: ABdhPJxnJv+H8evrndDcLicau41H+y6Q5pH+YhWE11kY3dhsqJ9RzTnnLECNPBfytm6Ak+uvKZFE1w==
-X-Received: by 2002:a05:6102:41a9:: with SMTP id cd41mr2514180vsb.81.1641917734102;
-        Tue, 11 Jan 2022 08:15:34 -0800 (PST)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
-        by smtp.gmail.com with ESMTPSA id t201sm3515366vkb.45.2022.01.11.08.15.32
+        bh=ibmuXY2d4QvS3H2IyD2t1BJ8+qE8/4OrKlqbySBpfZw=;
+        b=ylhhRGbEhSPbcK4ThoW9iayv006f31oxB20wWz0R9WqZozvAVnQNCqlInGnQpSCVvr
+         H4mJnUkLY0bJvNtAPyJZsib95cSPLp/gRhCnqels13DjMAyqSp4qOVfC143opebBwfGs
+         BLaEmo9dPs1hHbzWFSCmpTGGnpu31aPNRzX/eqlYLMcnHWIXnOm8T0mzwH8ys0DpUV2B
+         /8rRdrCOslHB9wtm4QZ2R/cyVE9iYjJu5oCXxBGmPYqm/YLa5OPMM/NW5dyg2gwweJKm
+         3UsNaD1d6P16cA0Qy79GMiFBXZTwST7TIJt8wWf7q0VJDewK+6oEPj0plvOySnQv2PqO
+         ZrHA==
+X-Gm-Message-State: AOAM532+NziSDCHV9kb8LHAOehVDRzRw+14YVMbtbcDrG7JiPpBsTGFt
+        +oLOscPwhm6uTmy3O1d7dCki5SvF+v7kxQ==
+X-Google-Smtp-Source: ABdhPJz6Xep7GQaFwxXXg6FUTH81husz/nDPykOeiqNGzei76rMt++y0edT5C90dPr5u5VVGvRfC5g==
+X-Received: by 2002:a05:6122:2225:: with SMTP id bb37mr2380426vkb.27.1641918190405;
+        Tue, 11 Jan 2022 08:23:10 -0800 (PST)
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
+        by smtp.gmail.com with ESMTPSA id l27sm3593845vko.17.2022.01.11.08.23.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jan 2022 08:15:33 -0800 (PST)
-Received: by mail-ua1-f48.google.com with SMTP id i5so30650694uaq.10;
-        Tue, 11 Jan 2022 08:15:32 -0800 (PST)
-X-Received: by 2002:a05:6102:2329:: with SMTP id b9mr2453059vsa.5.1641917732566;
- Tue, 11 Jan 2022 08:15:32 -0800 (PST)
+        Tue, 11 Jan 2022 08:23:09 -0800 (PST)
+Received: by mail-ua1-f50.google.com with SMTP id c36so30643243uae.13;
+        Tue, 11 Jan 2022 08:23:09 -0800 (PST)
+X-Received: by 2002:a67:e985:: with SMTP id b5mr2267085vso.77.1641918189316;
+ Tue, 11 Jan 2022 08:23:09 -0800 (PST)
 MIME-Version: 1.0
-References: <20211221094717.16187-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20211221094717.16187-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20211221094717.16187-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20211221094717.16187-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20211221094717.16187-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20211221094717.16187-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 11 Jan 2022 17:15:21 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWXwgpTkVUZB6HotQNEcr7GuMfkd7ShS-jOqFwkiobzKQ@mail.gmail.com>
-Message-ID: <CAMuHMdWXwgpTkVUZB6HotQNEcr7GuMfkd7ShS-jOqFwkiobzKQ@mail.gmail.com>
-Subject: Re: [PATCH 07/16] dt-bindings: serial: renesas,sci: Document RZ/V2L SoC
+Date:   Tue, 11 Jan 2022 17:22:58 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUB-wK_0Vqn4fmqQ0jaHWmo9OTRPT1bwWsZh76U1J729A@mail.gmail.com>
+Message-ID: <CAMuHMdUB-wK_0Vqn4fmqQ0jaHWmo9OTRPT1bwWsZh76U1J729A@mail.gmail.com>
+Subject: Re: [PATCH 06/16] dt-bindings: serial: renesas,scif: Document RZ/V2L SoC
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Magnus Damm <magnus.damm@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -71,18 +71,56 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Prabhakar,
+
 On Tue, Dec 21, 2021 at 10:48 AM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
 > From: Biju Das <biju.das.jz@bp.renesas.com>
 >
-> Add SCI binding documentation for Renesas RZ/V2L SoC. No driver changes
-> are required as generic compatible string "renesas,sci" will be used as
-> a fallback.
+> Add SCIF binding documentation for Renesas RZ/V2L SoC. SCIF block on RZ/V2L
+> is identical to one found on the RZ/G2L SoC. No driver changes are required
+> as RZ/G2L compatible string "renesas,scif-r9a07g044" will be used as a
+> fallback.
 >
 > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Thanks for your patch!
+
+> --- a/Documentation/devicetree/bindings/serial/renesas,scif.yaml
+> +++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
+> @@ -67,6 +67,12 @@ properties:
+>        - items:
+>            - enum:
+>                - renesas,scif-r9a07g044      # RZ/G2{L,LC}
+> +              - renesas,scif-r9a07g054      # RZ/V2L
+
+As the idea is to rely on the RZ/G2L fallback for matching, cfr. below,
+the above addition is not needed or wanted.
+
+> +
+> +      - items:
+> +          - enum:
+> +              - renesas,scif-r9a07g054      # RZ/V2L
+> +          - const: renesas,scif-r9a07g044   # RZ/G2{L,LC} fallback for RZ/V2L
+>
+>    reg:
+>      maxItems: 1
+> @@ -154,6 +160,7 @@ if:
+>            - renesas,rcar-gen2-scif
+>            - renesas,rcar-gen3-scif
+>            - renesas,scif-r9a07g044
+> +          - renesas,scif-r9a07g054
+
+This addition is not needed if the fallback is always present.
+
+>  then:
+>    required:
+>      - resets
+
+Given Greg already applied your patch, I think you have to send a
+follow-up patch.
+Thanks!
 
 Gr{oetje,eeting}s,
 

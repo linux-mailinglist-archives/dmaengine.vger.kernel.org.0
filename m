@@ -2,103 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2BE8489D30
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Jan 2022 17:11:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF84C48A4D3
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Jan 2022 02:13:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237039AbiAJQLU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 10 Jan 2022 11:11:20 -0500
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:54722 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236654AbiAJQLU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 10 Jan 2022 11:11:20 -0500
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 20ADo8Tj021602;
-        Mon, 10 Jan 2022 17:11:03 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=selector1;
- bh=G0yUSQsLfDcfZw5v2vGpXxdzo++cGRi64INcl+rPjA4=;
- b=QFtqsp6QQ3IVh9a/ajeAsDwe9Txg/0e1+JRjSF3obXv8sHCiF4QLXgL0ho5Geh7VDfhS
- 72YslM6blIQaSSKJKJEgbFzunW8EFfmSu9bRsqHwirUXXDXclZN4yC+kD1/LfgqGYAin
- x8/fj8btxe1g8ffS6X0jYx5KC6WGs3vAXOLT4qPTvVgkZHzPttbNQRvJ81kJ4SQp7FtY
- NKvgSJddKG+kRv+uduspI/9KzWtPf01gQONc8vpFSkNuMyaUvADJjFx7xNssE2lgpr3C
- CmMT+SlSwsBB/KmCJkQzTRGUKrXavfGOY+HxIlFVQxfO28u2kSuAWbbg/pXmP0+iY5ZJ dA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3dgh6uj1x0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Jan 2022 17:11:03 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9971110002A;
-        Mon, 10 Jan 2022 17:11:02 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag2node2.st.com [10.75.127.5])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8EA9A20757D;
-        Mon, 10 Jan 2022 17:11:02 +0100 (CET)
-Received: from lmecxl0995.lme.st.com (10.75.127.49) by SFHDAG2NODE2.st.com
- (10.75.127.5) with Microsoft SMTP Server (TLS) id 15.0.1497.26; Mon, 10 Jan
- 2022 17:11:01 +0100
-Subject: Re: [Linux-stm32] [PATCH] dmaengine: stm32-dmamux: Fix PM disable
- depth imbalance in stm32_dmamux_probe
-To:     Miaoqian Lin <linmq006@gmail.com>
-CC:     Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        <linux-kernel@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        <dmaengine@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20220108085336.11992-1-linmq006@gmail.com>
-From:   Amelie DELAUNAY <amelie.delaunay@foss.st.com>
-Message-ID: <37a66156-a616-058d-b3c0-6d2ca22a12ed@foss.st.com>
-Date:   Mon, 10 Jan 2022 17:11:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S243558AbiAKBNL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 10 Jan 2022 20:13:11 -0500
+Received: from smtp23.cstnet.cn ([159.226.251.23]:60654 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S243319AbiAKBNK (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 10 Jan 2022 20:13:10 -0500
+Received: from localhost.localdomain (unknown [124.16.138.126])
+        by APP-03 (Coremail) with SMTP id rQCowABHT1uI2dxhUnNlBQ--.51782S2;
+        Tue, 11 Jan 2022 09:12:41 +0800 (CST)
+From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
+To:     geert@linux-m68k.org
+Cc:     vkoul@kernel.org, yoshihiro.shimoda.uh@renesas.com,
+        laurent.pinchart@ideasonboard.com,
+        wsa+renesas@sang-engineering.com, zou_wei@huawei.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiasheng Jiang <jiasheng@iscas.ac.cn>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dmaengine: sh: rcar-dmac: Check for error num after dma_set_max_seg_size
+Date:   Tue, 11 Jan 2022 09:12:39 +0800
+Message-Id: <20220111011239.452837-1-jiasheng@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20220108085336.11992-1-linmq006@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG2NODE2.st.com
- (10.75.127.5)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-01-10_07,2022-01-10_02,2021-12-02_01
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: rQCowABHT1uI2dxhUnNlBQ--.51782S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jw47XFWfGr1rCF1ftw43Wrg_yoWDuwcEkr
+        17CFZYqFsxWrW7twn8Gr1Syrna9rWDXrnxWF97K3ZayrWkJFsxJ3y2yFn5Cw4rZayxGry3
+        KwnFqrWfJr4fZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbVAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
+        0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
+        8cxan2IY04v7MxkIecxEwVAFwVWkMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+        1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+        b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+        vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI
+        42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxh
+        VjvjDU0xZFpf9x0JUHpB-UUUUU=
+X-Originating-IP: [124.16.138.126]
+X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 1/8/22 9:53 AM, Miaoqian Lin wrote:
-> The pm_runtime_enable will increase power disable depth.
-> If the probe fails, we should use pm_runtime_disable() to balance
-> pm_runtime_enable().
-> 
-> Fixes: 4f3ceca254e0 ("dmaengine: stm32-dmamux: Add PM Runtime support")
-> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+As the possible failure of the dma_set_max_seg_size(), it should be
+better to check the return value of the dma_set_max_seg_size().
 
-Thanks for your patch,
+Fixes: 97d49c59e219 ("dmaengine: rcar-dmac: set scatter/gather max segment size")
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
+---
+ drivers/dma/sh/rcar-dmac.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Reviewed-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
+index 6885b3dcd7a9..63a0c8cb46b3 100644
+--- a/drivers/dma/sh/rcar-dmac.c
++++ b/drivers/dma/sh/rcar-dmac.c
+@@ -1868,7 +1868,10 @@ static int rcar_dmac_probe(struct platform_device *pdev)
+ 
+ 	dmac->dev = &pdev->dev;
+ 	platform_set_drvdata(pdev, dmac);
+-	dma_set_max_seg_size(dmac->dev, RCAR_DMATCR_MASK);
++	ret = dma_set_max_seg_size(dmac->dev, RCAR_DMATCR_MASK);
++	if (ret)
++		return ret;
++
+ 	dma_set_mask_and_coherent(dmac->dev, DMA_BIT_MASK(40));
+ 
+ 	ret = rcar_dmac_parse_of(&pdev->dev, dmac);
+-- 
+2.25.1
 
-> ---
->   drivers/dma/stm32-dmamux.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/stm32-dmamux.c b/drivers/dma/stm32-dmamux.c
-> index a42164389ebc..d5d55732adba 100644
-> --- a/drivers/dma/stm32-dmamux.c
-> +++ b/drivers/dma/stm32-dmamux.c
-> @@ -292,10 +292,12 @@ static int stm32_dmamux_probe(struct platform_device *pdev)
->   	ret = of_dma_router_register(node, stm32_dmamux_route_allocate,
->   				     &stm32_dmamux->dmarouter);
->   	if (ret)
-> -		goto err_clk;
-> +		goto pm_disable;
->   
->   	return 0;
->   
-> +pm_disable:
-> +	pm_runtime_disable(&pdev->dev);
->   err_clk:
->   	clk_disable_unprepare(stm32_dmamux->clk);
->   
-> 

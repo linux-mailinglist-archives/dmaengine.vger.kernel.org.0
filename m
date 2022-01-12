@@ -2,180 +2,170 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21DE748BC5A
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Jan 2022 02:20:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94A7A48BFDC
+	for <lists+dmaengine@lfdr.de>; Wed, 12 Jan 2022 09:28:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347506AbiALBUw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 11 Jan 2022 20:20:52 -0500
-Received: from mail-ot1-f44.google.com ([209.85.210.44]:35371 "EHLO
-        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235700AbiALBUv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Jan 2022 20:20:51 -0500
-Received: by mail-ot1-f44.google.com with SMTP id 60-20020a9d0142000000b0059103eb18d4so867700otu.2;
-        Tue, 11 Jan 2022 17:20:50 -0800 (PST)
+        id S1351591AbiALI2o (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 12 Jan 2022 03:28:44 -0500
+Received: from mail-ua1-f44.google.com ([209.85.222.44]:37413 "EHLO
+        mail-ua1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1351628AbiALI2l (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Jan 2022 03:28:41 -0500
+Received: by mail-ua1-f44.google.com with SMTP id o1so3332800uap.4;
+        Wed, 12 Jan 2022 00:28:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=39pxu9W4GStnj6dnzwd+vQy+S9j15Cor0t03y34bb+0=;
-        b=Ma+KpwgoFLMQ8lNdV9D8j+p45lqGLyBEttHdbq4cS54bO8RmnWkS8/O8wX+2XgFWVY
-         C/R/vDKVwsZLnQDaNL0U8Fi+uV99Q5XxANnegducnF9u+x669KDElPFds9yTxRFvyfQY
-         LmpctM+jhiyCNaTy8BQP7405m0RMbKuGO9esezn7bEicM+OV1r2snwhzesqD/nZq8Q+L
-         3UM3odmuKzPA/q1VQd4RteuZjI44QJmwNuP9Vz064PIJCzBPm+kkmnHXBgxYhKup1mhd
-         aXBNcmX3S3S7qzZ1lhXQppfj69fVG1plKEOPEdVfKhkWaGIo9vnUxJVacJXMX1kA+x7P
-         1v+A==
-X-Gm-Message-State: AOAM532REcpV8lQjlUz75r9BBg3jeqOw0z+/CBTq6RzWRTJee+UphoF2
-        m8UVNUeZhKNnl/isMfP7Xw==
-X-Google-Smtp-Source: ABdhPJwKVbRVa9Z+xJJQV2Zoqbju8GugslOnFTcRStaUzP01u262pTEw+JI9IsWNyzXghdTvpvlLiw==
-X-Received: by 2002:a05:6830:25c1:: with SMTP id d1mr5202110otu.240.1641950450430;
-        Tue, 11 Jan 2022 17:20:50 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id p23sm2389801otf.37.2022.01.11.17.20.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jan 2022 17:20:49 -0800 (PST)
-Received: (nullmailer pid 3855120 invoked by uid 1000);
-        Wed, 12 Jan 2022 01:20:48 -0000
-Date:   Tue, 11 Jan 2022 19:20:48 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     vkoul@kernel.org, devicetree@vger.kernel.org,
-        linux-oxnas@groups.io, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: dma: Add bindings for ox810se dma engine
-Message-ID: <Yd4s8OYf7QSryXzr@robh.at.kernel.org>
-References: <20220104145206.135524-1-narmstrong@baylibre.com>
- <20220104145206.135524-2-narmstrong@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ICGbwIc6WQlKE/ioYvNigSD06lESIz/s7WepMycFiZo=;
+        b=YhEAl30wNcHFyH1+7O1DETP3Av7qbfD+WnsLM8hO1vitAW2g9n+InwUKJoXbWadKy0
+         9JATbFKZI5jE+JefVHSqi7bPqExvVVR8tX6/YEMAwFPW9iWWTit3w6zhyhS6dP+BLoie
+         pOZVF/ykuEDkkqDcfSHpElbXJ4VIhTfVwQoyTY8S+QZEou+iiffhLl0rgDoQLQiyJ1Oi
+         qXXwzIaRG6c+AmFe5OMGKKmeawQkzk19ueZWA+jrelIk5CQoEvRp8/JDAlfaQOPhQJ48
+         u/hpfFkg2p/f1zbouAzJuiVV4SPE69+HHfUU/rydOyqadR1qAyA1QIAbN0N/1kX0maYy
+         BHFQ==
+X-Gm-Message-State: AOAM531jneUJv9YWx2zzNzN+Tum6Ky6bdGM9fcIv4bl34Wvh7Sq9Tnum
+        CXSpQcFmqdX3UBsHPbySnR6oLMEhfeA1Fg==
+X-Google-Smtp-Source: ABdhPJwRWO0gQ7dsBbyZyegdRgDMCFwxwXtWiRODwE+JyRIBB9C7UKZYyalC1z28i9qPm8qgghuvfA==
+X-Received: by 2002:a67:b807:: with SMTP id i7mr3495512vsf.52.1641976120115;
+        Wed, 12 Jan 2022 00:28:40 -0800 (PST)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id c25sm8147583vsk.32.2022.01.12.00.28.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jan 2022 00:28:39 -0800 (PST)
+Received: by mail-ua1-f51.google.com with SMTP id x33so3264101uad.12;
+        Wed, 12 Jan 2022 00:28:39 -0800 (PST)
+X-Received: by 2002:a05:6102:21dc:: with SMTP id r28mr3660457vsg.57.1641976118915;
+ Wed, 12 Jan 2022 00:28:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220104145206.135524-2-narmstrong@baylibre.com>
+References: <cover.1641890718.git.zong.li@sifive.com> <78cfa00a02cbd10202040058af22a73caa9c5ae8.1641890718.git.zong.li@sifive.com>
+In-Reply-To: <78cfa00a02cbd10202040058af22a73caa9c5ae8.1641890718.git.zong.li@sifive.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 12 Jan 2022 09:28:27 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUogbyjU=vBuvocxofGFCwzdQndk9OTnVdP+RNA8HEFZQ@mail.gmail.com>
+Message-ID: <CAMuHMdUogbyjU=vBuvocxofGFCwzdQndk9OTnVdP+RNA8HEFZQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] dmaengine: sf-pdma: Get number of channel by
+ device tree
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Bin Meng <bin.meng@windriver.com>, green.wan@sifive.com,
+        Vinod <vkoul@kernel.org>, dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Jan 04, 2022 at 03:52:03PM +0100, Neil Armstrong wrote:
-> This adds the YAML dt-bindings for the DMA engine found in the
-> Oxford Semiconductor OX810SE SoC.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../bindings/dma/oxsemi,ox810se-dma.yaml      | 97 +++++++++++++++++++
->  1 file changed, 97 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/oxsemi,ox810se-dma.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/oxsemi,ox810se-dma.yaml b/Documentation/devicetree/bindings/dma/oxsemi,ox810se-dma.yaml
-> new file mode 100644
-> index 000000000000..6efa28e8b124
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/oxsemi,ox810se-dma.yaml
-> @@ -0,0 +1,97 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/oxsemi,ox810se-dma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Oxford Semiconductor DMA Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Neil Armstrong <narmstrong@baylibre.com>
-> +
-> +allOf:
-> +  - $ref: "dma-controller.yaml#"
-> +
-> +properties:
-> +  "#dma-cells":
-> +    const: 1
-> +
-> +  compatible:
-> +    const: oxsemi,ox810se-dma
-> +
-> +  reg:
-> +    maxItems: 2
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dma
-> +      - const: sgdma
-> +
-> +  interrupts:
-> +    maxItems: 5
+Hi Zong,
 
-Need to define what each one is.
+On Tue, Jan 11, 2022 at 9:51 AM Zong Li <zong.li@sifive.com> wrote:
+> It currently assumes that there are always four channels, it would
+> cause the error if there is actually less than four channels. Change
+> that by getting number of channel from device tree.
+>
+> For backwards-compatible, it uses the default value (i.e. 4) when there
+> is no 'dma-channels' information in dts.
+>
+> Signed-off-by: Zong Li <zong.li@sifive.com>
 
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 2
-> +
-> +  reset-names:
-> +    items:
-> +      - const: dma
-> +      - const: sgdma
-> +
-> +  dma-channels: true
+Thanks for your patch!
 
-Constraints on number of channels?
+> --- a/drivers/dma/sf-pdma/sf-pdma.c
+> +++ b/drivers/dma/sf-pdma/sf-pdma.c
+> @@ -484,21 +484,24 @@ static int sf_pdma_probe(struct platform_device *pdev)
+>         struct sf_pdma *pdma;
+>         struct sf_pdma_chan *chan;
+>         struct resource *res;
+> -       int len, chans;
+> -       int ret;
+> +       int len, ret;
+>         const enum dma_slave_buswidth widths =
+>                 DMA_SLAVE_BUSWIDTH_1_BYTE | DMA_SLAVE_BUSWIDTH_2_BYTES |
+>                 DMA_SLAVE_BUSWIDTH_4_BYTES | DMA_SLAVE_BUSWIDTH_8_BYTES |
+>                 DMA_SLAVE_BUSWIDTH_16_BYTES | DMA_SLAVE_BUSWIDTH_32_BYTES |
+>                 DMA_SLAVE_BUSWIDTH_64_BYTES;
+>
+> -       chans = PDMA_NR_CH;
+> -       len = sizeof(*pdma) + sizeof(*chan) * chans;
+> +       len = sizeof(*pdma) + sizeof(*chan) * PDMA_MAX_NR_CH;
 
-> +
-> +  oxsemi,targets-types:
-> +    description:
-> +      Table with allowed memory ranges and memory type associated.
-> +    $ref: "/schemas/types.yaml#/definitions/uint32-matrix"
-> +    minItems: 4
-> +    items:
-> +      items:
-> +        - description:
-> +            The first cell defines the memory range start address
-> +        - description:
-> +            The first cell defines the memory range end address
-> +        - description:
-> +            The third cell represents memory type, 0 for SATA,
-> +            1 for DPE RX, 2 for DPE TX, 5 for AUDIO TX, 6 for AUDIO RX,
-> +            15 for DRAM MEMORY.
-> +          enum: [ 0, 1, 2, 5, 6, 15 ]
-> +
-> +required:
-> +  - "#dma-cells"
-> +  - dma-channels
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - resets
-> +  - reset-names
-> +  - oxsemi,targets-types
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    dma: dma-controller@600000 {
+Why is the last part added (yes, this is a pre-existing issue)?
+struct sf_pdma already contains space for chans[PDMA_MAX_NR_CH].
+Either drop the last part, or change sf_pdma.chans[] to a flexible
+array member.
 
-Drop unused labels.
+BTW, you can use the struct_size() or flex_array_size() helper
+to calculate len.
 
-> +        compatible = "oxsemi,ox810se-dma";
-> +        reg = <0x600000 0x100000>, <0xc00000 0x100000>;
-> +        reg-names = "dma", "sgdma";
-> +        interrupts = <13>, <14>, <15>, <16>, <20>;
-> +        clocks = <&stdclk 1>;
-> +        resets = <&reset 8>, <&reset 24>;
-> +        reset-names = "dma", "sgdma";
-> +
-> +        /* Encodes the authorized memory types */
-> +        oxsemi,targets-types =
-> +            <0x45900000 0x45a00000 0>,  /* SATA */
-> +            <0x42000000 0x43000000 0>,  /* SATA DATA */
-> +            <0x48000000 0x58000000 15>, /* DDR */
-> +            <0x58000000 0x58020000 15>; /* SRAM */
-> +
-> +        #dma-cells = <1>;
-> +        dma-channels = <5>;
-> +    };
-> +...
-> -- 
-> 2.25.1
-> 
-> 
+>         pdma = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
+>         if (!pdma)
+>                 return -ENOMEM;
+>
+> -       pdma->n_chans = chans;
+> +       ret = of_property_read_u32(pdev->dev.of_node, "dma-channels",
+> +                                  &pdma->n_chans);
+> +       if (ret) {
+> +               dev_notice(&pdev->dev, "set number of channels to default value: 4\n");
+> +               pdma->n_chans = PDMA_MAX_NR_CH;
+> +       }
+>
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>         pdma->membase = devm_ioremap_resource(&pdev->dev, res);
+> @@ -556,7 +559,7 @@ static int sf_pdma_remove(struct platform_device *pdev)
+>         struct sf_pdma_chan *ch;
+>         int i;
+>
+> -       for (i = 0; i < PDMA_NR_CH; i++) {
+> +       for (i = 0; i < pdma->n_chans; i++) {
+>                 ch = &pdma->chans[i];
+
+If dma-channels in DT > PDMA_NR_CH, this becomes an out-of-bound
+access.
+
+>
+>                 devm_free_irq(&pdev->dev, ch->txirq, ch);
+> diff --git a/drivers/dma/sf-pdma/sf-pdma.h b/drivers/dma/sf-pdma/sf-pdma.h
+> index 0c20167b097d..8127d792f639 100644
+> --- a/drivers/dma/sf-pdma/sf-pdma.h
+> +++ b/drivers/dma/sf-pdma/sf-pdma.h
+> @@ -22,11 +22,7 @@
+>  #include "../dmaengine.h"
+>  #include "../virt-dma.h"
+>
+> -#define PDMA_NR_CH                                     4
+> -
+> -#if (PDMA_NR_CH != 4)
+> -#error "Please define PDMA_NR_CH to 4"
+> -#endif
+> +#define PDMA_MAX_NR_CH                                 4
+>
+>  #define PDMA_BASE_ADDR                                 0x3000000
+>  #define PDMA_CHAN_OFFSET                               0x1000
+> @@ -118,7 +114,7 @@ struct sf_pdma {
+>         void __iomem            *membase;
+>         void __iomem            *mappedbase;
+>         u32                     n_chans;
+> -       struct sf_pdma_chan     chans[PDMA_NR_CH];
+> +       struct sf_pdma_chan     chans[PDMA_MAX_NR_CH];
+>  };
+>
+>  #endif /* _SF_PDMA_H */
+-
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds

@@ -2,133 +2,186 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F11148C90D
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Jan 2022 18:05:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8165C48D278
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Jan 2022 07:56:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355424AbiALRFT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 12 Jan 2022 12:05:19 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:49002 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349872AbiALRFR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Jan 2022 12:05:17 -0500
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id B30B2218E0;
-        Wed, 12 Jan 2022 17:05:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1642007114; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zb6mFk8u5fWvpkJoxss3VEsUi0IprcWX5qPRtsRll/s=;
-        b=qm/QkZtahI/FG2O1CtF6VHZisgqom435ISTYkpV8REehFFvDdNxTcH3bGm9HHQoj0PSrFE
-        hmp/2InAIFDQlzn8E8W9OXvlJKyuKwHVCQQaRWmHiOPPTfuas3dsrfNCNDGaK/sdHsipre
-        FF2hqq+zqCLJKusw/sbRNZ4Hwo0iyzk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1642007114;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zb6mFk8u5fWvpkJoxss3VEsUi0IprcWX5qPRtsRll/s=;
-        b=vQdR2hTPwvBAloFpCZeNHxdMIMPbEv5o250NrDWFBrw9zssinJOOudjVH8jBFH6n9FVDKy
-        5Mv2H6Hfr0HwU1Bw==
-Received: from suse.de (unknown [10.163.43.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 691B3A3B83;
-        Wed, 12 Jan 2022 17:05:14 +0000 (UTC)
-Date:   Wed, 12 Jan 2022 17:05:12 +0000
-From:   Mel Gorman <mgorman@suse.de>
-To:     Alexander Fomichev <fomichev.ru@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux@yadro.com, Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC] Scheduler: DMA Engine regression because of sched/fair
- changes
-Message-ID: <20220112170512.GO3301@suse.de>
-References: <20220112152609.gg2boujeh5vv5cns@yadro.com>
+        id S230165AbiAMGyM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 13 Jan 2022 01:54:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230162AbiAMGyM (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 13 Jan 2022 01:54:12 -0500
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E86BC061751
+        for <dmaengine@vger.kernel.org>; Wed, 12 Jan 2022 22:54:11 -0800 (PST)
+Received: by mail-lf1-x134.google.com with SMTP id m1so16245819lfq.4
+        for <dmaengine@vger.kernel.org>; Wed, 12 Jan 2022 22:54:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+/xflG/TvWV3/3iWK2yYutqh016Xap1/1t8bC2k14nw=;
+        b=B4a5Gw4Katx70iQLDcTIOZAdb8/hF/KQLUA7YMhUQkd4qqdtgRwvnBLLZyYbCt0TVC
+         4T22TMK9TfNQbfcgqZLs9zf9TqZ8g7joGToZggXtaiq2mrq1qa7Git7p0XHZEGCwpP0p
+         sDj/zInNAhAqj1Fkm510wzky2K4dihOirU4/NxGojfiFjrR1DOA3KWz96cIcaS42aWNH
+         xDUZi+C4kFx6cDhoR9N5ljg09vXECubRHjBOLCJjjJnt9yBHh6XrUUre3f1vG2WEaDqn
+         5qqkio2TXcAiFZv+8YIWrdnTtP+uYi4qU/AG+HR6DMEwwEMA7J1tFlM2Jeq78kUlPY1i
+         +H2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+/xflG/TvWV3/3iWK2yYutqh016Xap1/1t8bC2k14nw=;
+        b=IEgZpvb10sCkVmfIVWNIhjT/a1h4Ogne0PnAk2I6jTngDc7CZqYh/3XHGqkrarFEvn
+         Kly8V9b97hPqiVxKcQjFnV3cqt/Xy8MHugjaXzSXrhK4IPEgE2IqBiNuLRFBONGlXEz7
+         KTzrT6hQTQ1d0xa8iSpHeiOYgeXlXLNn2tSLFbuI/FTT0GP29FiaNfaaGPnawBspgZUw
+         qo1y58xi4Njgw3jh/1xHSp9z589Z4a9tIVewF7pwc6OvvVh/y+e4YA+99UPRPWrypU8V
+         0GbgKPq/Ect1so2oFB6wP9qM1vUz7kLR4nX9ynPAefp+MNgB8GhP/mjvII/SXmcbCieb
+         krVw==
+X-Gm-Message-State: AOAM533foyyqdldsfpnaMlm880pTFcqKhKTDur74HS3QaOqHpMTQhB3Q
+        Xrv+vaFyF3QkgQPlY8Jl+K+Wp4olNuKRhW4KV9TJJK9ZoTi195rr
+X-Google-Smtp-Source: ABdhPJzTYhl9vfK8sy2lvc56F1BQs63yY++onXm7/N0EwHT1Fj2YlJrOC/YLE0mn/OWWjY7DRlU6aKderF3ihd8gpPk=
+X-Received: by 2002:a2e:bba1:: with SMTP id y33mr2060235lje.274.1642056849691;
+ Wed, 12 Jan 2022 22:54:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20220112152609.gg2boujeh5vv5cns@yadro.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1641890718.git.zong.li@sifive.com> <78cfa00a02cbd10202040058af22a73caa9c5ae8.1641890718.git.zong.li@sifive.com>
+ <CAMuHMdUogbyjU=vBuvocxofGFCwzdQndk9OTnVdP+RNA8HEFZQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdUogbyjU=vBuvocxofGFCwzdQndk9OTnVdP+RNA8HEFZQ@mail.gmail.com>
+From:   Zong Li <zong.li@sifive.com>
+Date:   Thu, 13 Jan 2022 14:53:58 +0800
+Message-ID: <CANXhq0qpkArvELBDqOT=bnVCwvR47cxHN7oH1hYKr1Yt7zaGOQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] dmaengine: sf-pdma: Get number of channel by
+ device tree
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Bin Meng <bin.meng@windriver.com>,
+        Green Wan <green.wan@sifive.com>, Vinod <vkoul@kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Jan 12, 2022 at 06:26:09PM +0300, Alexander Fomichev wrote:
-> CC: Mel Gorman <mgorman@suse.de>
-> CC: linux@yadro.com
-> 
-> Hi all,
-> 
-> There's a huge regression found, which affects Intel Xeon's DMA Engine
-> performance between v4.14 LTS and modern kernels. In certain
-> circumstances the speed in dmatest is more than 6 times lower.
-> 
-> 	- Hardware -
-> I did testing on 2 systems:
-> 1) Intel(R) Xeon(R) Gold 6132 CPU @ 2.60GHz (Supermicro X11DAi-N)
-> 2) Intel(R) Xeon(R) Bronze 3204 CPU @ 1.90GHz (YADRO Vegman S220)
-> 
-> 	- Measurement -
-> The dmatest result speed decreases with almost any test settings.
-> Although the most significant impact is revealed with 64K transfers. The
-> following parameters were used:
-> 
-> modprobe dmatest iterations=1000 timeout=2000 test_buf_size=0x100000 transfer_size=0x10000 norandom=1
-> echo "dma0chan0" > /sys/module/dmatest/parameters/channel
-> echo 1 > /sys/module/dmatest/parameters/run
-> 
-> Every test csse was performed at least 3 times. All detailed results are
-> below.
-> 
-> 	- Analysis -
-> Bisecting revealed 2 different bad commits for those 2 systems, but both
-> change the same function/condition in the same file.
-> For the system (1) the bad commit is:
-> [7332dec055f2457c386032f7e9b2991eb05c2a0a] sched/fair: Only immediately migrate tasks due to interrupts if prev and target CPUs share cache
-> For the system (2) the bad commit is:
-> [806486c377e33ab662de6d47902e9e2a32b79368] sched/fair: Do not migrate if the prev_cpu is idle
-> 
-> 	- Additional check -
-> Attempting to revert the changes above, a dirty patch for the (current)
-> kernel v5.16.0-rc5 was tested too:
-> 
+On Wed, Jan 12, 2022 at 4:28 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Zong,
+>
+> On Tue, Jan 11, 2022 at 9:51 AM Zong Li <zong.li@sifive.com> wrote:
+> > It currently assumes that there are always four channels, it would
+> > cause the error if there is actually less than four channels. Change
+> > that by getting number of channel from device tree.
+> >
+> > For backwards-compatible, it uses the default value (i.e. 4) when there
+> > is no 'dma-channels' information in dts.
+> >
+> > Signed-off-by: Zong Li <zong.li@sifive.com>
+>
+> Thanks for your patch!
+>
+> > --- a/drivers/dma/sf-pdma/sf-pdma.c
+> > +++ b/drivers/dma/sf-pdma/sf-pdma.c
+> > @@ -484,21 +484,24 @@ static int sf_pdma_probe(struct platform_device *pdev)
+> >         struct sf_pdma *pdma;
+> >         struct sf_pdma_chan *chan;
+> >         struct resource *res;
+> > -       int len, chans;
+> > -       int ret;
+> > +       int len, ret;
+> >         const enum dma_slave_buswidth widths =
+> >                 DMA_SLAVE_BUSWIDTH_1_BYTE | DMA_SLAVE_BUSWIDTH_2_BYTES |
+> >                 DMA_SLAVE_BUSWIDTH_4_BYTES | DMA_SLAVE_BUSWIDTH_8_BYTES |
+> >                 DMA_SLAVE_BUSWIDTH_16_BYTES | DMA_SLAVE_BUSWIDTH_32_BYTES |
+> >                 DMA_SLAVE_BUSWIDTH_64_BYTES;
+> >
+> > -       chans = PDMA_NR_CH;
+> > -       len = sizeof(*pdma) + sizeof(*chan) * chans;
+> > +       len = sizeof(*pdma) + sizeof(*chan) * PDMA_MAX_NR_CH;
+>
+> Why is the last part added (yes, this is a pre-existing issue)?
+> struct sf_pdma already contains space for chans[PDMA_MAX_NR_CH].
+> Either drop the last part, or change sf_pdma.chans[] to a flexible
+> array member.
+>
+> BTW, you can use the struct_size() or flex_array_size() helper
+> to calculate len.
 
-The consequences of the patch is allowing interrupts to migrate tasks away
-from potentially cache hot data -- L1 misses if the two CPUs share LLC
-or incurring remote memory access if migrating cross-node. The secondary
-concern is that excessive migration from interrupts that round-robin CPUs
-will mean that the CPU does not increase frequency. Minimally, the RFC
-patch introduces regressions of their own. The comments cover the two
-scenarios of interest
+Thanks for your suggestions, let me fix it in the next version.
 
-+        * If this_cpu is idle, it implies the wakeup is from interrupt
-+        * context. Only allow the move if cache is shared. Otherwise an
-+        * interrupt intensive workload could force all tasks onto one
-+        * node depending on the IO topology or IRQ affinity settings.
+>
+> >         pdma = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
+> >         if (!pdma)
+> >                 return -ENOMEM;
+> >
+> > -       pdma->n_chans = chans;
+> > +       ret = of_property_read_u32(pdev->dev.of_node, "dma-channels",
+> > +                                  &pdma->n_chans);
+> > +       if (ret) {
+> > +               dev_notice(&pdev->dev, "set number of channels to default value: 4\n");
+> > +               pdma->n_chans = PDMA_MAX_NR_CH;
+> > +       }
+> >
+> >         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >         pdma->membase = devm_ioremap_resource(&pdev->dev, res);
+> > @@ -556,7 +559,7 @@ static int sf_pdma_remove(struct platform_device *pdev)
+> >         struct sf_pdma_chan *ch;
+> >         int i;
+> >
+> > -       for (i = 0; i < PDMA_NR_CH; i++) {
+> > +       for (i = 0; i < pdma->n_chans; i++) {
+> >                 ch = &pdma->chans[i];
+>
+> If dma-channels in DT > PDMA_NR_CH, this becomes an out-of-bound
+> access.
+>
 
-(This one causes remote memory accesses and potentially overutilisation
-of a subset of nodes)
+Okay, let me get the min() between pdma->chans and PDMA_MAX_NR_CH,
+please let me know if it isn't good to you.
 
-+        * If the prev_cpu is idle and cache affine then avoid a migration.
-+        * There is no guarantee that the cache hot data from an interrupt
-+        * is more important than cache hot data on the prev_cpu and from
-+        * a cpufreq perspective, it's better to have higher utilisation
-+        * on one CPU.
-
-(This one incurs L1/L2 misses due to a migration even though LLC may be
-shared)
-
-The tests don't say but what CPUs to the dmatest interrupts get
-delivered to? dmatest appears to be an exception that the *only* hot
-data of concern is also related to the interrupt as the DMA operation is
-validated.
-
-However, given that the point of a DMA engine is to transfer data without
-the host CPU being involved and the interrupt is delivered on completion,
-how realistic is it that the DMA data is immediately accessed on completion
-by normal workloads that happen to use the DMA engine? What impact does
-it have to tbe test is noverify or polling is used?
-
--- 
-Mel Gorman
-SUSE Labs
+> >
+> >                 devm_free_irq(&pdev->dev, ch->txirq, ch);
+> > diff --git a/drivers/dma/sf-pdma/sf-pdma.h b/drivers/dma/sf-pdma/sf-pdma.h
+> > index 0c20167b097d..8127d792f639 100644
+> > --- a/drivers/dma/sf-pdma/sf-pdma.h
+> > +++ b/drivers/dma/sf-pdma/sf-pdma.h
+> > @@ -22,11 +22,7 @@
+> >  #include "../dmaengine.h"
+> >  #include "../virt-dma.h"
+> >
+> > -#define PDMA_NR_CH                                     4
+> > -
+> > -#if (PDMA_NR_CH != 4)
+> > -#error "Please define PDMA_NR_CH to 4"
+> > -#endif
+> > +#define PDMA_MAX_NR_CH                                 4
+> >
+> >  #define PDMA_BASE_ADDR                                 0x3000000
+> >  #define PDMA_CHAN_OFFSET                               0x1000
+> > @@ -118,7 +114,7 @@ struct sf_pdma {
+> >         void __iomem            *membase;
+> >         void __iomem            *mappedbase;
+> >         u32                     n_chans;
+> > -       struct sf_pdma_chan     chans[PDMA_NR_CH];
+> > +       struct sf_pdma_chan     chans[PDMA_MAX_NR_CH];
+> >  };
+> >
+> >  #endif /* _SF_PDMA_H */
+> -
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds

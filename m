@@ -2,84 +2,140 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6926548E987
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Jan 2022 12:57:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3234E48F438
+	for <lists+dmaengine@lfdr.de>; Sat, 15 Jan 2022 02:46:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240917AbiANL5h (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 14 Jan 2022 06:57:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43654 "EHLO
+        id S232050AbiAOBqs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 14 Jan 2022 20:46:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229579AbiANL5h (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Jan 2022 06:57:37 -0500
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F219C061574;
-        Fri, 14 Jan 2022 03:57:36 -0800 (PST)
-Received: by mail-lf1-x133.google.com with SMTP id bu18so6469359lfb.5;
-        Fri, 14 Jan 2022 03:57:36 -0800 (PST)
+        with ESMTP id S231781AbiAOBqr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Jan 2022 20:46:47 -0500
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F54C061574;
+        Fri, 14 Jan 2022 17:46:47 -0800 (PST)
+Received: by mail-yb1-xb2d.google.com with SMTP id v186so28686783ybg.1;
+        Fri, 14 Jan 2022 17:46:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sjN7HPUH7Ug5X0NQ0OoeotHY8BGCzuFrcq6sgpHsOA4=;
-        b=AdpLYfxODBkXDQIbyp+qF14sUymbcLVGlDkPE3jNWqBCa3l1kP6oLjsbKnw4yOarVz
-         8YpU9/i3nqXBGuOfuw5z33kjebnGB4oFyX8UI2pqFltxqhoxYQ+7SGLN1JjgjanT6W74
-         GM+qBmYu/GFX8NJLhMVSNmVC3kIxhQxt8ojChQaw1sZLqHE8UVWe4Kmgfz8ChiL6UUGt
-         Usrx18Q9tUSB3LC+IVLy/6bpd3s6cKANn17j+mokwhuxnQYHvA/hZthJc7IhagnRbS82
-         ZYhCE16pVB5eQr3Ud+7ZNlTZiJZI0Sp3RUmUjBXW8yqXUDSDOql1WS5FIDTtVok7csIe
-         nAQQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tWKYqjMToQiYNKjbuCtLFgDL3xooRgPiVQeOXmHwMgs=;
+        b=nwt9fdkM8Jjyr8Qk9lQ3nikJt45z3ZIWItehvNMCq582HhZP8/Oh6b6RjDfJmYArPe
+         ieCs/E6lFaO4d6AriWHvI+bzTth+kfSwjf1RnbHxYyyUKCIpNxKoe/QHJ9Q5jzcdFpfd
+         FbGlZuzaiA44s0JyKbeHGe8aFfrl4DydWRmdRXsCOFni4zYlF/L493G0jeeKCEW+f/o2
+         shvM/YO1PgtuMiXhu5GPDb4eobmjPwBx/YQMSvNEwy99/99y3mPq1RpE+EI9V9Zyoqe+
+         I5XffLZuCwrZ2TllmVItNccGKkOw8Ve/hLX7dU2qKMm6ar7xWxxke9c9amp96VLpnUB5
+         u7ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sjN7HPUH7Ug5X0NQ0OoeotHY8BGCzuFrcq6sgpHsOA4=;
-        b=246SMfxy72+I8FYQDcQyp16otyBWgnRHIsujMgJ/ogKdbIHUyEkpt2E3uzW+BpK5ii
-         /D3dS/cKVr17mzxOaHsXZz6gbkfIqqCwINsUlI+mT+408r3otQJ1Hdd1rDK4lYj2PGAH
-         pTlB0o9/Jfx9i0R9cV28SsgfjqnvhvbvD2aZP0ynXZP8Teroz98tFwIoRhCEPTAV4Y8q
-         oI5g9Nr/dKpwrFOyBqadwazylj/CXhEzfUUAksWnEb1R29ziE9HFRSk0zSgxCKlcqgJm
-         Z86PcFbdoYdGDAEFS0rgFf20ArUP86LlaeY7x9qLBg6VoadfFEXA4XgwhVM9nMlIBqS6
-         Te2g==
-X-Gm-Message-State: AOAM530E+jZw0iDYkc0qs2C/armkSHNCM64EbuUyhJ8yWCakjuWw0d5n
-        oxVrt4t77mlssNVElAwJA5q9IjzoMQU=
-X-Google-Smtp-Source: ABdhPJwJlj0n6aU3bkhluqbsKFTna4jWn8pCe5ppGTnreW4zcFhIlJ1YkpoWecjMvDZ3RaPyRr0HaA==
-X-Received: by 2002:a2e:9c0c:: with SMTP id s12mr6057309lji.251.1642161454362;
-        Fri, 14 Jan 2022 03:57:34 -0800 (PST)
-Received: from [192.168.2.145] (46-138-227-157.dynamic.spd-mgts.ru. [46.138.227.157])
-        by smtp.googlemail.com with ESMTPSA id a35sm543435ljq.7.2022.01.14.03.57.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Jan 2022 03:57:33 -0800 (PST)
-Subject: Re: [PATCH v16 2/4] dmaengine: tegra: Add tegra gpcdma driver
-To:     Akhil R <akhilrajeev@nvidia.com>, dan.j.williams@intel.com,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        jonathanh@nvidia.com, kyarlagadda@nvidia.com, ldewangan@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        p.zabel@pengutronix.de, rgumasta@nvidia.com, robh+dt@kernel.org,
-        thierry.reding@gmail.com, vkoul@kernel.org
-Cc:     Pavan Kunapuli <pkunapuli@nvidia.com>
-References: <1641830718-23650-1-git-send-email-akhilrajeev@nvidia.com>
- <1641830718-23650-3-git-send-email-akhilrajeev@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <16c73e83-b990-7d8e-ddfd-7cbbe7e407ea@gmail.com>
-Date:   Fri, 14 Jan 2022 14:57:32 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tWKYqjMToQiYNKjbuCtLFgDL3xooRgPiVQeOXmHwMgs=;
+        b=JzZDj96o6lX7kNjMFDSNhC0z3/j9GYl/544DuqZ5NEisNAU9C5ZTcnOTudbYWOjOkw
+         dbjRaYeRAI0d2BfC4LaZAJQjWM+tazgs3JhRpvKSZyE/TEY+6dhMA8+2EwEc06pg1O5Q
+         qdnke2dQg4dmyJdUWAjjrU7nPsjN1FO6Z8l+Lw7XdVRfbYQfi481AbhgOUCfXQ2d+w5N
+         DEOiPIC+FyuKNNL1MNkIOjzNn/1PIYhSPI3wVif17g/5cOsHi/6aTOaHmi2mtn88+wot
+         Vlw+Gik8QAmR6RE5tb4QFRPIwa4M9Dv88mPacmIRrx2OV4leY8nrurIKEJ6S3yCfGHRC
+         OKoA==
+X-Gm-Message-State: AOAM531/z/2M8M8qurQz34LOI9os+2GDjkx4N0xBpOrywUlAVYgtxdMA
+        mQD2xoAPBjrQFpu6VbStbJvjAIGI9DPcUKyafaU=
+X-Google-Smtp-Source: ABdhPJwgzZLZHSnjfCYS1rIjQLZjd5tRg1w+jXNopdsIY1kj6ZrznRiU7nGR8CaxCU3f3tXLpA+HKePIHs69ZRR2jjU=
+X-Received: by 2002:a25:874a:: with SMTP id e10mr16006654ybn.422.1642211206642;
+ Fri, 14 Jan 2022 17:46:46 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1641830718-23650-3-git-send-email-akhilrajeev@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20211221094717.16187-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20211221094717.16187-7-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdUB-wK_0Vqn4fmqQ0jaHWmo9OTRPT1bwWsZh76U1J729A@mail.gmail.com>
+In-Reply-To: <CAMuHMdUB-wK_0Vqn4fmqQ0jaHWmo9OTRPT1bwWsZh76U1J729A@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Sat, 15 Jan 2022 01:46:20 +0000
+Message-ID: <CA+V-a8sMfAT8DAxQJeAM6BvGOvrBE5sqVfm6ErS4y3wqT-UwVQ@mail.gmail.com>
+Subject: Re: [PATCH 06/16] dt-bindings: serial: renesas,scif: Document RZ/V2L SoC
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-10.01.2022 19:05, Akhil R пишет:
-> +static int tegra_dma_terminate_all(struct dma_chan *dc)
-> +{
-> +	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
-> +	unsigned long flags;
-> +	LIST_HEAD(head);
-> +	int err;
-> +
-> +	if (tdc->dma_desc) {
+Hi Geert,
 
-Needs locking protection against racing with the interrupt handler.
+Thank you for the review.
+
+On Tue, Jan 11, 2022 at 4:23 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Tue, Dec 21, 2021 at 10:48 AM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > From: Biju Das <biju.das.jz@bp.renesas.com>
+> >
+> > Add SCIF binding documentation for Renesas RZ/V2L SoC. SCIF block on RZ/V2L
+> > is identical to one found on the RZ/G2L SoC. No driver changes are required
+> > as RZ/G2L compatible string "renesas,scif-r9a07g044" will be used as a
+> > fallback.
+> >
+> > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > --- a/Documentation/devicetree/bindings/serial/renesas,scif.yaml
+> > +++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
+> > @@ -67,6 +67,12 @@ properties:
+> >        - items:
+> >            - enum:
+> >                - renesas,scif-r9a07g044      # RZ/G2{L,LC}
+> > +              - renesas,scif-r9a07g054      # RZ/V2L
+>
+> As the idea is to rely on the RZ/G2L fallback for matching, cfr. below,
+> the above addition is not needed or wanted.
+>
+Agreed I will drop that.
+
+> > +
+> > +      - items:
+> > +          - enum:
+> > +              - renesas,scif-r9a07g054      # RZ/V2L
+> > +          - const: renesas,scif-r9a07g044   # RZ/G2{L,LC} fallback for RZ/V2L
+> >
+> >    reg:
+> >      maxItems: 1
+> > @@ -154,6 +160,7 @@ if:
+> >            - renesas,rcar-gen2-scif
+> >            - renesas,rcar-gen3-scif
+> >            - renesas,scif-r9a07g044
+> > +          - renesas,scif-r9a07g054
+>
+> This addition is not needed if the fallback is always present.
+>
+Ditto.
+> >  then:
+> >    required:
+> >      - resets
+>
+> Given Greg already applied your patch, I think you have to send a
+> follow-up patch.
+Will do.
+
+Cheers,
+Prabhakar

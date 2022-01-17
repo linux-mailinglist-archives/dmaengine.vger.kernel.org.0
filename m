@@ -2,171 +2,97 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95460490399
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Jan 2022 09:19:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1766D4904A8
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Jan 2022 10:18:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238019AbiAQITR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 17 Jan 2022 03:19:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231253AbiAQITR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Jan 2022 03:19:17 -0500
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1092C061574;
-        Mon, 17 Jan 2022 00:19:16 -0800 (PST)
-Received: by mail-lf1-x130.google.com with SMTP id x11so28842440lfa.2;
-        Mon, 17 Jan 2022 00:19:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CgFiE1xRseB0L65/zcK0C8WvrsrBuQCopXkVzsqfP4E=;
-        b=MIrL15KFbodb8dwAPOc2ReAWJ15S3kOthT8ICt7Rsbi6quFPKpogoZkcq+1E+2i3ZN
-         9SleM9zPMvTSG9kvV9w7CkMbyOCp5YNtsH9u+Ka2YKHQdL1HzziaC2evA3ETuexaTOJQ
-         OqYxtOxHD3TXo1FYuun10VrYN2t5R7IjPtb7a6JZF6otQEGBZ21Fd7/AqzUICjyWKUXq
-         w0YuA6WJ1DFyJnSSHzgq51qlO6tpDxtS5GhCmMBdpjtLbIhN4UjVlBLvb5SIa411+bFb
-         yWR1aCooUq+EBqchLWdDnmLNmXtZT4ZRwvlk9RWqgyOjlsOlMYjk/GMJHJV3VhtkEf4n
-         FV6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CgFiE1xRseB0L65/zcK0C8WvrsrBuQCopXkVzsqfP4E=;
-        b=k2KlEFgjGGDI7g11MMfN5ZM29w5TKNZSRh8QlJIQ/rcq+38wOh2107OHPC3xCEKK9Q
-         P5Bx4t5+BLK+USrxE/vBrG+wCuwyt65ZebHdeVMwp+9ScFgBojuQxL7KPkpmCf3mKwB5
-         r7xiReMd/0s/SoooWnOhpNSjqlc5+pEVsY+U2/UHYg6lTUToi5HLIG2GauvsE2Ju2qJL
-         +mzoqLc88AIjwydYKK/vA5kCDOm0S8mqLe1LcU3WGFkFzAMWE2k9a1X6vgper7jUlG5e
-         QfpArloqfvg2F6nYfvEJtm250PtSQhoZUBb88ThHiMdU4nu1p0J2n1+7bqX7vYpW31LY
-         ma7w==
-X-Gm-Message-State: AOAM532rnot/mEq6MwsjaQkubSnimkCTIJpSXADABrEbu3SLgJ9yOEaD
-        XieWHSKzo4wCTv9wbA2H1F6/LN10eUX3yA==
-X-Google-Smtp-Source: ABdhPJwSTMtUkjOhIAUaA8niPZVsU4ZOP/r2y93VDyf6TzIZ5d4GZUGEWNMpOZygTAOvnzLH4O2h3A==
-X-Received: by 2002:a2e:8041:: with SMTP id p1mr15023917ljg.331.1642407555032;
-        Mon, 17 Jan 2022 00:19:15 -0800 (PST)
-Received: from localhost ([46.188.51.186])
-        by smtp.gmail.com with ESMTPSA id g15sm1321967lfv.113.2022.01.17.00.19.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Jan 2022 00:19:14 -0800 (PST)
-Date:   Mon, 17 Jan 2022 11:19:05 +0300
-From:   Alexander Fomichev <fomichev.ru@gmail.com>
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux@yadro.com, Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC] Scheduler: DMA Engine regression because of sched/fair
- changes
-Message-ID: <20220117081905.a4pwglxqj7dqpyql@yadro.com>
-References: <20220112152609.gg2boujeh5vv5cns@yadro.com>
- <20220112170512.GO3301@suse.de>
+        id S235197AbiAQJSB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 17 Jan 2022 04:18:01 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:48614 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S233321AbiAQJR6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Jan 2022 04:17:58 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 20H7cUn3026280;
+        Mon, 17 Jan 2022 10:17:44 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=selector1;
+ bh=fH92PNsO8X+nTytDGMeCCrtRCxn6Df2D+woMj6i38/M=;
+ b=Y6nMLSn8xL02wxIcny9f/TIZ3XKn2amtQWcAqZ7e72RfRczkHgL5c2rzJLlzEpIgeyGu
+ Cgw0chsa8xx5fvuAcOOcxOuabNw/obuZIj3/HsuYwr3NHmfClY47ea2Ib4ejFDR5u+98
+ t6NvwR0XLhOhH29Bzlsl9oOJEXd72EkIwNy34ATZtKD2tihk12d7pP6MqG4Vw5iti353
+ xN9Gm7L7k9VDf+GjUDjrho8EHFQ1aMSG+XT1ZhdTJKdoUc7AC5k/cQFNqa0w8UJJf6gw
+ aXkNyRcxGGFfwvGuBxyfVQYXb2RrFtwm2NyCvCbvM8zrp0sGj4fIvC+E6Aa7A5toRjaa OA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3dmnse3p58-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Jan 2022 10:17:44 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 686AF100038;
+        Mon, 17 Jan 2022 10:17:43 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag2node1.st.com [10.75.127.4])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6006F20F6D3;
+        Mon, 17 Jan 2022 10:17:43 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG2NODE1.st.com (10.75.127.4)
+ with Microsoft SMTP Server (TLS) id 15.0.1497.26; Mon, 17 Jan 2022 10:17:42
+ +0100
+From:   Amelie Delaunay <amelie.delaunay@foss.st.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>
+CC:     <dmaengine@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alain Volmat <alain.volmat@foss.st.com>,
+        Amelie Delaunay <amelie.delaunay@foss.st.com>
+Subject: [PATCH] dmaengine: stm32-dma: set dma_device max_sg_burst
+Date:   Mon, 17 Jan 2022 10:17:40 +0100
+Message-ID: <20220117091740.11064-1-amelie.delaunay@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220112170512.GO3301@suse.de>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG2NODE1.st.com
+ (10.75.127.4)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2022-01-17_03,2022-01-14_01,2021-12-02_01
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Jan 12, 2022 at 05:05:12PM +0000, Mel Gorman wrote:
-> On Wed, Jan 12, 2022 at 06:26:09PM +0300, Alexander Fomichev wrote:
-> > CC: Mel Gorman <mgorman@suse.de>
-> > CC: linux@yadro.com
-> > 
-> > Hi all,
-> > 
-> > There's a huge regression found, which affects Intel Xeon's DMA Engine
-> > performance between v4.14 LTS and modern kernels. In certain
-> > circumstances the speed in dmatest is more than 6 times lower.
-> > 
-> > 	- Hardware -
-> > I did testing on 2 systems:
-> > 1) Intel(R) Xeon(R) Gold 6132 CPU @ 2.60GHz (Supermicro X11DAi-N)
-> > 2) Intel(R) Xeon(R) Bronze 3204 CPU @ 1.90GHz (YADRO Vegman S220)
-> > 
-> > 	- Measurement -
-> > The dmatest result speed decreases with almost any test settings.
-> > Although the most significant impact is revealed with 64K transfers. The
-> > following parameters were used:
-> > 
-> > modprobe dmatest iterations=1000 timeout=2000 test_buf_size=0x100000 transfer_size=0x10000 norandom=1
-> > echo "dma0chan0" > /sys/module/dmatest/parameters/channel
-> > echo 1 > /sys/module/dmatest/parameters/run
-> > 
-> > Every test csse was performed at least 3 times. All detailed results are
-> > below.
-> > 
-> > 	- Analysis -
-> > Bisecting revealed 2 different bad commits for those 2 systems, but both
-> > change the same function/condition in the same file.
-> > For the system (1) the bad commit is:
-> > [7332dec055f2457c386032f7e9b2991eb05c2a0a] sched/fair: Only immediately migrate tasks due to interrupts if prev and target CPUs share cache
-> > For the system (2) the bad commit is:
-> > [806486c377e33ab662de6d47902e9e2a32b79368] sched/fair: Do not migrate if the prev_cpu is idle
-> > 
-> > 	- Additional check -
-> > Attempting to revert the changes above, a dirty patch for the (current)
-> > kernel v5.16.0-rc5 was tested too:
-> > 
-> 
-> The consequences of the patch is allowing interrupts to migrate tasks away
-> from potentially cache hot data -- L1 misses if the two CPUs share LLC
-> or incurring remote memory access if migrating cross-node. The secondary
-> concern is that excessive migration from interrupts that round-robin CPUs
-> will mean that the CPU does not increase frequency. Minimally, the RFC
-> patch introduces regressions of their own. The comments cover the two
-> scenarios of interest
-> 
-> +        * If this_cpu is idle, it implies the wakeup is from interrupt
-> +        * context. Only allow the move if cache is shared. Otherwise an
-> +        * interrupt intensive workload could force all tasks onto one
-> +        * node depending on the IO topology or IRQ affinity settings.
-> 
-> (This one causes remote memory accesses and potentially overutilisation
-> of a subset of nodes)
-> 
-> +        * If the prev_cpu is idle and cache affine then avoid a migration.
-> +        * There is no guarantee that the cache hot data from an interrupt
-> +        * is more important than cache hot data on the prev_cpu and from
-> +        * a cpufreq perspective, it's better to have higher utilisation
-> +        * on one CPU.
-> 
-> (This one incurs L1/L2 misses due to a migration even though LLC may be
-> shared)
-> 
-> The tests don't say but what CPUs to the dmatest interrupts get
-> delivered to? dmatest appears to be an exception that the *only* hot
-> data of concern is also related to the interrupt as the DMA operation is
-> validated.
-> 
-> However, given that the point of a DMA engine is to transfer data without
-> the host CPU being involved and the interrupt is delivered on completion,
-> how realistic is it that the DMA data is immediately accessed on completion
-> by normal workloads that happen to use the DMA engine? What impact does
-> it have to tbe test is noverify or polling is used?
+Some stm32-dma consumers [1] rather use dma_get_slave_caps() to get
+max_sg_burst of their DMA channel as dma_get_max_seg_size() is specific to
+the DMA controller.
+All stm32-dma channels have the same features so, don't need to implement
+device_caps ops. Let dma_get_slave_caps() relies on dma_device
+configuration.
+That's why this patch sets dma_device max_sg_burst to the maximum segment
+size, which is the maximum of data items that can be transferred without
+software intervention.
 
-Thanks for the comment. Some additional notes regarding the issue.
+[1] https://lore.kernel.org/lkml/20220110103739.118426-1-alain.volmat@foss.st.com/
+    "media: stm32: dcmi: create a dma scatterlist based on DMA max_sg_burst value"
 
-1) You're right. When options "noverify=1" and "polling=1" are used.
-then no performance reducing occurs.
+Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+---
+ drivers/dma/stm32-dma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-2) DMA Engine on certain devices, e.g. Switchtec DMA and AMD PTDMA, is
-used particularly for off-CPU data transfer via device's NTB to a remote
-host. In NTRDMA project, which I'm involved to, DMA Engine sends data to
-remote ring buffer and on data arrival CPU processes local ring buffers.
-
-3) I checked dmatest with noverify=0 on PTDMA dirver: AMD EPYC 7313 16-Core
-Processor/ASRock ROMED8-2T. The regression occurs on this hardware too.
-
-4) Do you mean that with noverify=N and dirty patch, data verification
-is performed on cached data and thus measured performance is fake?
-
-5) What DMA Engine enabled drivers (and dmatest) should use as design
-pattern to conform migration/cache behavior? Does scheduler optimisation
-conflict to DMA Engine performance in general?
-
-6) I didn't suggest RFC patch to real world usage. It was just a test
-case to find out a low speed cause.
-
-Comments/answers/suggestions are welcome.
-
+diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+index 83a37a6955a3..d2365fab1b7a 100644
+--- a/drivers/dma/stm32-dma.c
++++ b/drivers/dma/stm32-dma.c
+@@ -1389,6 +1389,7 @@ static int stm32_dma_probe(struct platform_device *pdev)
+ 	dd->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+ 	dd->copy_align = DMAENGINE_ALIGN_32_BYTES;
+ 	dd->max_burst = STM32_DMA_MAX_BURST;
++	dd->max_sg_burst = STM32_DMA_ALIGNED_MAX_DATA_ITEMS;
+ 	dd->descriptor_reuse = true;
+ 	dd->dev = &pdev->dev;
+ 	INIT_LIST_HEAD(&dd->channels);
 -- 
-Regards,
-  Alexander
+2.25.1
+

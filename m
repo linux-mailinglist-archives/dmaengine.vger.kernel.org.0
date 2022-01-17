@@ -2,143 +2,187 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22AE94905A4
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Jan 2022 11:03:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B7944905E4
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Jan 2022 11:27:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238468AbiAQKDX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 17 Jan 2022 05:03:23 -0500
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:42602 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238473AbiAQKDU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Jan 2022 05:03:20 -0500
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 20H7ssvF007714;
-        Mon, 17 Jan 2022 11:03:01 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=selector1;
- bh=RQJJgQY1Idxf2tTyWLXLLK2DgfgnOIBmtxr9Lc7hWX8=;
- b=Qw0RY8iouxcUrfYnk1T42n6imKaX0Rp9da09yLAvJVJhe2TvKkHwa8hzVebJx8LpXMge
- hkWuNAEYIHldBRA0lWmCx9rOfOHYZzf4Sd2OiWBxcqKdgtlcH/qlSHCK9LaNCqFVQIfp
- OmC6TZ1FJE8Wv5XMIDx/yB1NzSdwaam32iiozE8ZEHpYBx/FkdbL0JihprsR/Npeevtj
- kKTxjkLeIO/Xv58BzF+4isuuejmmkn0jLNVZyPxvsqc41dUIPY2spZU1pPLHy3M+dXQN
- JAEC5Qy6symtj07dAtCk/DlWfrXWqyp9kqKW2MaZ5g5bFbS4tf1dBW42hUvNb4ZA9zuW Xw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3dmwkwj9rh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 17 Jan 2022 11:03:01 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3D487100038;
-        Mon, 17 Jan 2022 11:03:01 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag2node1.st.com [10.75.127.4])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 348FD2122EE;
-        Mon, 17 Jan 2022 11:03:01 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG2NODE1.st.com (10.75.127.4)
- with Microsoft SMTP Server (TLS) id 15.0.1497.26; Mon, 17 Jan 2022 11:03:00
- +0100
-From:   Amelie Delaunay <amelie.delaunay@foss.st.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC:     <dmaengine@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Amelie Delaunay <amelie.delaunay@foss.st.com>
-Subject: [PATCH] dmaengine: stm32-mdma: check the channel availability (secure or not)
-Date:   Mon, 17 Jan 2022 11:03:00 +0100
-Message-ID: <20220117100300.14150-1-amelie.delaunay@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+        id S233641AbiAQK1G (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 17 Jan 2022 05:27:06 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:46638 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233639AbiAQK1F (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Jan 2022 05:27:05 -0500
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 65E5A1F39A;
+        Mon, 17 Jan 2022 10:27:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1642415224; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/CGoXc6TdBH0bN7CjKV1UgncK1qcbraEH6aTbBVzIV4=;
+        b=NOinG3iTsNgumZ0HvlIXGjsJjrAdqpseUKjQDV1tkBD/eSFPW/eVPv9zgMJZuxf1onBO6I
+        YTvczIXLY9WpGcsC+toLFTUFPtRXFOlS2JjhWCX/YkfwHliw6ZxbgBJrH+Dajr9ger2LbE
+        Pf76+1F6jgJq3w8GN20Qb+NW3/qgp9Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1642415224;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/CGoXc6TdBH0bN7CjKV1UgncK1qcbraEH6aTbBVzIV4=;
+        b=Rdk5zktGAPq1E64ek+zhGTqylucDzvrd/aqLrhukN9pWqkCnRPps+6JSZa4zkAs+T57H1N
+        Vb3lVVlkf1PBgBAw==
+Received: from suse.de (unknown [10.163.43.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 13D87A3B83;
+        Mon, 17 Jan 2022 10:27:04 +0000 (UTC)
+Date:   Mon, 17 Jan 2022 10:27:01 +0000
+From:   Mel Gorman <mgorman@suse.de>
+To:     Alexander Fomichev <fomichev.ru@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux@yadro.com, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC] Scheduler: DMA Engine regression because of sched/fair
+ changes
+Message-ID: <20220117102701.GQ3301@suse.de>
+References: <20220112152609.gg2boujeh5vv5cns@yadro.com>
+ <20220112170512.GO3301@suse.de>
+ <20220117081905.a4pwglxqj7dqpyql@yadro.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG2NODE1.st.com
- (10.75.127.4)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-01-17_03,2022-01-14_01,2021-12-02_01
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20220117081905.a4pwglxqj7dqpyql@yadro.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-STM32_MDMA_CCR bit[8] is used to enable Secure Mode (SM). If this bit is
-set, it means that all the channel registers are write-protected. So the
-channel is not available for Linux use.
+On Mon, Jan 17, 2022 at 11:19:05AM +0300, Alexander Fomichev wrote:
+> On Wed, Jan 12, 2022 at 05:05:12PM +0000, Mel Gorman wrote:
+> > On Wed, Jan 12, 2022 at 06:26:09PM +0300, Alexander Fomichev wrote:
+> > > CC: Mel Gorman <mgorman@suse.de>
+> > > CC: linux@yadro.com
+> > > 
+> > > Hi all,
+> > > 
+> > > There's a huge regression found, which affects Intel Xeon's DMA Engine
+> > > performance between v4.14 LTS and modern kernels. In certain
+> > > circumstances the speed in dmatest is more than 6 times lower.
+> > > 
+> > > 	- Hardware -
+> > > I did testing on 2 systems:
+> > > 1) Intel(R) Xeon(R) Gold 6132 CPU @ 2.60GHz (Supermicro X11DAi-N)
+> > > 2) Intel(R) Xeon(R) Bronze 3204 CPU @ 1.90GHz (YADRO Vegman S220)
+> > > 
+> > > 	- Measurement -
+> > > The dmatest result speed decreases with almost any test settings.
+> > > Although the most significant impact is revealed with 64K transfers. The
+> > > following parameters were used:
+> > > 
+> > > modprobe dmatest iterations=1000 timeout=2000 test_buf_size=0x100000 transfer_size=0x10000 norandom=1
+> > > echo "dma0chan0" > /sys/module/dmatest/parameters/channel
+> > > echo 1 > /sys/module/dmatest/parameters/run
+> > > 
+> > > Every test csse was performed at least 3 times. All detailed results are
+> > > below.
+> > > 
+> > > 	- Analysis -
+> > > Bisecting revealed 2 different bad commits for those 2 systems, but both
+> > > change the same function/condition in the same file.
+> > > For the system (1) the bad commit is:
+> > > [7332dec055f2457c386032f7e9b2991eb05c2a0a] sched/fair: Only immediately migrate tasks due to interrupts if prev and target CPUs share cache
+> > > For the system (2) the bad commit is:
+> > > [806486c377e33ab662de6d47902e9e2a32b79368] sched/fair: Do not migrate if the prev_cpu is idle
+> > > 
+> > > 	- Additional check -
+> > > Attempting to revert the changes above, a dirty patch for the (current)
+> > > kernel v5.16.0-rc5 was tested too:
+> > > 
+> > 
+> > The consequences of the patch is allowing interrupts to migrate tasks away
+> > from potentially cache hot data -- L1 misses if the two CPUs share LLC
+> > or incurring remote memory access if migrating cross-node. The secondary
+> > concern is that excessive migration from interrupts that round-robin CPUs
+> > will mean that the CPU does not increase frequency. Minimally, the RFC
+> > patch introduces regressions of their own. The comments cover the two
+> > scenarios of interest
+> > 
+> > +        * If this_cpu is idle, it implies the wakeup is from interrupt
+> > +        * context. Only allow the move if cache is shared. Otherwise an
+> > +        * interrupt intensive workload could force all tasks onto one
+> > +        * node depending on the IO topology or IRQ affinity settings.
+> > 
+> > (This one causes remote memory accesses and potentially overutilisation
+> > of a subset of nodes)
+> > 
+> > +        * If the prev_cpu is idle and cache affine then avoid a migration.
+> > +        * There is no guarantee that the cache hot data from an interrupt
+> > +        * is more important than cache hot data on the prev_cpu and from
+> > +        * a cpufreq perspective, it's better to have higher utilisation
+> > +        * on one CPU.
+> > 
+> > (This one incurs L1/L2 misses due to a migration even though LLC may be
+> > shared)
+> > 
+> > The tests don't say but what CPUs to the dmatest interrupts get
+> > delivered to? dmatest appears to be an exception that the *only* hot
+> > data of concern is also related to the interrupt as the DMA operation is
+> > validated.
+> > 
+> > However, given that the point of a DMA engine is to transfer data without
+> > the host CPU being involved and the interrupt is delivered on completion,
+> > how realistic is it that the DMA data is immediately accessed on completion
+> > by normal workloads that happen to use the DMA engine? What impact does
+> > it have to tbe test is noverify or polling is used?
+> 
+> Thanks for the comment. Some additional notes regarding the issue.
+> 
+> 1) You're right. When options "noverify=1" and "polling=1" are used.
+> then no performance reducing occurs.
+> 
 
-Add stm32_mdma_filter_fn() callback filter and give it to
-__dma_request_chan (instead of dma_get_any_slave_channel()), to exclude the
-channel if it is marked Secure.
+How about just noverify=1 on its own? It's a stronger indicator that
+cache hotness is a factor.
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
----
- drivers/dma/stm32-mdma.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+> 2) DMA Engine on certain devices, e.g. Switchtec DMA and AMD PTDMA, is
+> used particularly for off-CPU data transfer via device's NTB to a remote
+> host. In NTRDMA project, which I'm involved to, DMA Engine sends data to
+> remote ring buffer and on data arrival CPU processes local ring buffers.
+> 
 
-diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
-index 6f57ff0e7b37..95e5831e490a 100644
---- a/drivers/dma/stm32-mdma.c
-+++ b/drivers/dma/stm32-mdma.c
-@@ -73,6 +73,7 @@
- #define STM32_MDMA_CCR_WEX		BIT(14)
- #define STM32_MDMA_CCR_HEX		BIT(13)
- #define STM32_MDMA_CCR_BEX		BIT(12)
-+#define STM32_MDMA_CCR_SM		BIT(8)
- #define STM32_MDMA_CCR_PL_MASK		GENMASK(7, 6)
- #define STM32_MDMA_CCR_PL(n)		FIELD_PREP(STM32_MDMA_CCR_PL_MASK, (n))
- #define STM32_MDMA_CCR_TCIE		BIT(5)
-@@ -248,6 +249,7 @@ struct stm32_mdma_device {
- 	u32 nr_channels;
- 	u32 nr_requests;
- 	u32 nr_ahb_addr_masks;
-+	u32 chan_reserved;
- 	struct stm32_mdma_chan chan[STM32_MDMA_MAX_CHANNELS];
- 	u32 ahb_addr_masks[];
- };
-@@ -1456,10 +1458,23 @@ static void stm32_mdma_free_chan_resources(struct dma_chan *c)
- 	chan->desc_pool = NULL;
- }
- 
-+static bool stm32_mdma_filter_fn(struct dma_chan *c, void *fn_param)
-+{
-+	struct stm32_mdma_chan *chan = to_stm32_mdma_chan(c);
-+	struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
-+
-+	/* Check if chan is marked Secure */
-+	if (dmadev->chan_reserved & BIT(chan->id))
-+		return false;
-+
-+	return true;
-+}
-+
- static struct dma_chan *stm32_mdma_of_xlate(struct of_phandle_args *dma_spec,
- 					    struct of_dma *ofdma)
- {
- 	struct stm32_mdma_device *dmadev = ofdma->of_dma_data;
-+	dma_cap_mask_t mask = dmadev->ddev.cap_mask;
- 	struct stm32_mdma_chan *chan;
- 	struct dma_chan *c;
- 	struct stm32_mdma_chan_config config;
-@@ -1485,7 +1500,7 @@ static struct dma_chan *stm32_mdma_of_xlate(struct of_phandle_args *dma_spec,
- 		return NULL;
- 	}
- 
--	c = dma_get_any_slave_channel(&dmadev->ddev);
-+	c = __dma_request_channel(&mask, stm32_mdma_filter_fn, &config, ofdma->of_node);
- 	if (!c) {
- 		dev_err(mdma2dev(dmadev), "No more channels available\n");
- 		return NULL;
-@@ -1615,6 +1630,10 @@ static int stm32_mdma_probe(struct platform_device *pdev)
- 	for (i = 0; i < dmadev->nr_channels; i++) {
- 		chan = &dmadev->chan[i];
- 		chan->id = i;
-+
-+		if (stm32_mdma_read(dmadev, STM32_MDMA_CCR(i)) & STM32_MDMA_CCR_SM)
-+			dmadev->chan_reserved |= BIT(i);
-+
- 		chan->vchan.desc_free = stm32_mdma_desc_free;
- 		vchan_init(&chan->vchan, dd);
- 	}
+Is there any impact of the patch in this case? Given that it's a remote
+host, the data is likely cache cold anyway.
+
+> 3) I checked dmatest with noverify=0 on PTDMA dirver: AMD EPYC 7313 16-Core
+> Processor/ASRock ROMED8-2T. The regression occurs on this hardware too.
+> 
+
+I expect it would be the same reason, the data is cache cold for the
+CPU.
+
+> 4) Do you mean that with noverify=N and dirty patch, data verification
+> is performed on cached data and thus measured performance is fake?
+> 
+
+I think it's the data verification going slower because the tasks are
+not aggressively migrating on interrupt. The flip side is other
+interrupts such as IO completion should not migrate the tasks given that
+the interrupt is not necessarily correlated with data hotness.
+
+> 5) What DMA Engine enabled drivers (and dmatest) should use as design
+> pattern to conform migration/cache behavior? Does scheduler optimisation
+> conflict to DMA Engine performance in general?
+> 
+
+I'm not familiar with DMA engine drivers but if they use wake_up
+interfaces then passing WF_SYNC or calling the wake_up_*_sync helpers
+may force the migration.
+
+> 6) I didn't suggest RFC patch to real world usage. It was just a test
+> case to find out a low speed cause.
+> 
+
+I understand but I'm relunctant to go with the dirty patch on the
+grounds it would reintroduce another class of regressions.
+
 -- 
-2.25.1
-
+Mel Gorman
+SUSE Labs

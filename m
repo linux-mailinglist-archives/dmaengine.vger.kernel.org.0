@@ -2,97 +2,169 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1766D4904A8
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Jan 2022 10:18:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 794B84904CE
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Jan 2022 10:27:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235197AbiAQJSB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 17 Jan 2022 04:18:01 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:48614 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S233321AbiAQJR6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Jan 2022 04:17:58 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 20H7cUn3026280;
-        Mon, 17 Jan 2022 10:17:44 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=selector1;
- bh=fH92PNsO8X+nTytDGMeCCrtRCxn6Df2D+woMj6i38/M=;
- b=Y6nMLSn8xL02wxIcny9f/TIZ3XKn2amtQWcAqZ7e72RfRczkHgL5c2rzJLlzEpIgeyGu
- Cgw0chsa8xx5fvuAcOOcxOuabNw/obuZIj3/HsuYwr3NHmfClY47ea2Ib4ejFDR5u+98
- t6NvwR0XLhOhH29Bzlsl9oOJEXd72EkIwNy34ATZtKD2tihk12d7pP6MqG4Vw5iti353
- xN9Gm7L7k9VDf+GjUDjrho8EHFQ1aMSG+XT1ZhdTJKdoUc7AC5k/cQFNqa0w8UJJf6gw
- aXkNyRcxGGFfwvGuBxyfVQYXb2RrFtwm2NyCvCbvM8zrp0sGj4fIvC+E6Aa7A5toRjaa OA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3dmnse3p58-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 17 Jan 2022 10:17:44 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 686AF100038;
-        Mon, 17 Jan 2022 10:17:43 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag2node1.st.com [10.75.127.4])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6006F20F6D3;
-        Mon, 17 Jan 2022 10:17:43 +0100 (CET)
-Received: from localhost (10.75.127.47) by SFHDAG2NODE1.st.com (10.75.127.4)
- with Microsoft SMTP Server (TLS) id 15.0.1497.26; Mon, 17 Jan 2022 10:17:42
- +0100
-From:   Amelie Delaunay <amelie.delaunay@foss.st.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC:     <dmaengine@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alain Volmat <alain.volmat@foss.st.com>,
-        Amelie Delaunay <amelie.delaunay@foss.st.com>
-Subject: [PATCH] dmaengine: stm32-dma: set dma_device max_sg_burst
-Date:   Mon, 17 Jan 2022 10:17:40 +0100
-Message-ID: <20220117091740.11064-1-amelie.delaunay@foss.st.com>
+        id S235648AbiAQJ1H (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 17 Jan 2022 04:27:07 -0500
+Received: from eu-smtp-delivery-197.mimecast.com ([185.58.86.197]:38706 "EHLO
+        eu-smtp-delivery-197.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232585AbiAQJ1E (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Jan 2022 04:27:04 -0500
+X-Greylist: delayed 406 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Jan 2022 04:27:04 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=camlingroup.com;
+        s=mimecast20210310; t=1642411623;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=h4bPA5hs1LxafEBUzJ27+n6czQX4qqm1veWrYGM6Z3c=;
+        b=byGuKDFJ8FHvKVYmWhz/T++D2fEPqDp9MTP/Q6tx3fQyra/18qx5mgeQUufUaBsZs6Gc/g
+        eO9zav2Udto5743QCZAzH5m8TPr3b+XtJJdCmKRmjrBeXNYv10Qi/76YKNkZ0LRaeUKMm5
+        Pm1MKU8Arx4p7d9EHheBBDncZyW40H8=
+Received: from GBR01-CWL-obe.outbound.protection.outlook.com
+ (mail-cwlgbr01lp2057.outbound.protection.outlook.com [104.47.20.57]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ uk-mta-117-IiaRZuJMNm25TufVaop_Xg-1; Mon, 17 Jan 2022 09:20:16 +0000
+X-MC-Unique: IiaRZuJMNm25TufVaop_Xg-1
+Received: from CWLP123MB5572.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:16b::6)
+ by LO2P123MB5789.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:250::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4888.11; Mon, 17 Jan
+ 2022 09:20:14 +0000
+Received: from CWLP123MB5572.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::4c56:90c1:1ed:2ea3]) by CWLP123MB5572.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::4c56:90c1:1ed:2ea3%4]) with mapi id 15.20.4888.014; Mon, 17 Jan 2022
+ 09:20:14 +0000
+From:   =?UTF-8?q?Tomasz=20Mo=C5=84?= <tomasz.mon@camlingroup.com>
+To:     dmaengine@vger.kernel.org
+CC:     Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        k.drobinski@camlintechnologies.com,
+        =?UTF-8?q?Tomasz=20Mo=C5=84?= <tomasz.mon@camlingroup.com>
+Subject: [PATCH 1/2] dmaengine: imx-sdma: restart cyclic channel if needed
+Date:   Mon, 17 Jan 2022 10:19:54 +0100
+Message-ID: <20220117091955.1038937-1-tomasz.mon@camlingroup.com>
 X-Mailer: git-send-email 2.25.1
+X-ClientProxiedBy: LO2P265CA0256.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:8a::28) To CWLP123MB5572.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:16b::6)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG2NODE1.st.com
- (10.75.127.4)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-01-17_03,2022-01-14_01,2021-12-02_01
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 35925791-f83b-4c96-d103-08d9d99a91e3
+X-MS-TrafficTypeDiagnostic: LO2P123MB5789:EE_
+X-Microsoft-Antispam-PRVS: <LO2P123MB57893639E6AB6A6737C7758D92579@LO2P123MB5789.GBRP123.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0
+X-Microsoft-Antispam-Message-Info: e1TRbN3sysD4asv+q0lAB3Tiece9kDmdiCy4nI80m3EfQSSBWrQN2g4RgSDg1Nx0RJSWBjTSnLN24hpHgRQ80UFQmMO/qTlnOABsT5SMma+vK+rNLJs1LH4ZJDTKbLa+wt7jeCe4175EHZZsHjYCodZZMW48CA/Aachoot8oVt1bPSt+25OaPtLIbVuYf2Ult+HRVlxDsPVnSLvBZzVpVwrSBMQyaj53AHoDDCsxbKn2ByHazSRXpvOWzUk5tPsDPV6NJ6XNKXXjXtGP8hDpAzexcFiAzkEHw6995EBKwGQ3qIYpALhBLcA8p0DUeLoPkKNLHr/5lfuDM23nsJYzwXHi5rtSlwfQuhI4w6NkNasF4NGyALXRjEB3zqwW1qJ/gMUyqjdpFXAUZOxJcaISgWQ7TIGEf1BlCy3EDzOekGznp0n5TaV9trmzlOhu327VYdL4uVkAqwjSTf9TTOfxaEr/sJNsgzeTMHzU1pipFSwaNWrezkwfhRvIwozs79pWaQm/4m3UiUzmWgZE0W/DWdO/dOk5mbtuevT0tvi2oTtVtIMJFU7WqQjg6nKdt7d8cHEAZEwdurI/Xpdj6QeSQzPeLgbbbN8uKjwjiBiTxCL09ZE6ZTN2Qah2RvhP+6un9PhIZMVtH2MNPenDok/Uq8EAnzem2DjKa7gvi4B/KcZcbPsOAyoqbM+e6JacAmphSK/o+Kx/GWlVM20g6fsn6A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB5572.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(366004)(54906003)(66556008)(26005)(6916009)(66476007)(107886003)(316002)(66946007)(83380400001)(6506007)(2906002)(186003)(2616005)(6512007)(4326008)(86362001)(6666004)(508600001)(52116002)(1076003)(5660300002)(8676002)(8936002)(38100700002)(38350700002)(36756003)(6486002);DIR:OUT;SFP:1101
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?kRkTRlaZtKxjD0+XOlVJh7SDXYX1CrYatTafIVbFarceTciBSZgKav9Eqm+z?=
+ =?us-ascii?Q?VHWTJiahc1NkruN3CEUoaSXXT2r1V+kTEtRkx8XsG3AsVTeqhGuEcDkYWNO4?=
+ =?us-ascii?Q?VvC/DcH84a1AVOpXtciEuRVYzJ5A1iLNHJPKUU1NDv4hsBaOIbHEeoXgOz4e?=
+ =?us-ascii?Q?1pjPVIkgFAf0ciYzXwbgwwnXZEBkoKB9+ZgnIKS4HgsrNdIAXWV+DRZTJfb8?=
+ =?us-ascii?Q?r7RJYE5g3sEV3woPwqXq8FxHic2LCgKc0OHXJ6appZr76eYXoH3vNsu8Q4dj?=
+ =?us-ascii?Q?MQEolXtEl7B4n8uPjestPV1umxdghAUOKj5BnFnc+98Ep+WMk9NZb+eLum85?=
+ =?us-ascii?Q?I0JRQ7/w2G7sHRsHlYt/83/1jIoSadn0X5sV9zbNBE9yG8KWptY+gVF2oMPd?=
+ =?us-ascii?Q?e8RGdg1yuJCJTqMtGmky7qdGu1Umi3suNo0oF6cxrqqXzRIBiNilkNj4izYp?=
+ =?us-ascii?Q?UPbW9rHjxMDTcCmTgmjLkYRI2BolFMxfPjjP6KOm5djAKABLoALpzCX4hQzJ?=
+ =?us-ascii?Q?3255JtY+ecql/44fs5na7T4Nc2bvz/vEqnCyIHAURiEZbSV/QniCdIwPtOYX?=
+ =?us-ascii?Q?+lHN/OQMKnJ5R/MIAzrXlOU4WZrzZWotVpP4bzAqNZfNmWFhG7UzT3IHDLlJ?=
+ =?us-ascii?Q?spFMQ17/fNMmcaIXWJgEoTPgybalGyiqGUvCaevrHFjNkpPPKOut6UweFu1W?=
+ =?us-ascii?Q?nkunVwrzcn7qSVFD8F8xhsWsmO4wn3h5CcizbwJJtzMA21KMR+F4PuXIcTJh?=
+ =?us-ascii?Q?b9WuQNoWGQihAfhRDDvupp8nt5PWScdE/hagWtKum89MS9wsH3FnFDKk/wf2?=
+ =?us-ascii?Q?s1j18aR5ZyPquComdzV9s//JN9ZRxrDbQ0rShLHsPmFZhuNeVz9GbXmLq6aC?=
+ =?us-ascii?Q?oiS3rlSIyyUaQiobv3RRgdPlEFc7nzZjwvBmk5kLesgAYUWv0gBDrEj0S1Mx?=
+ =?us-ascii?Q?pKbK3bVXjuTXmh2MnUYpwwJzr1jvQcHxAtmnHp6ULbQ6e3wKvqR1VfNjTlI7?=
+ =?us-ascii?Q?fkKXd6CsjJDfhTswcFQs/DoP4afqDxfa5ZsoneZyJx7xQRbMMC687d/WwORC?=
+ =?us-ascii?Q?V4dhHnLXykzTM99K4/AtrEXFQWgUAAE7kCNlxdhKVDAEo91DenxJYZs4L3F6?=
+ =?us-ascii?Q?0YjJGO5D4QWblrEeHAqCdgkK4gxjgjsgb2H3lR6RE8NhJbvKLyZX3C9/bFrX?=
+ =?us-ascii?Q?zPBdlCGE6sZjEcftTqcxgpUWsEHkGyLj54hgmFfGkuGETWuC/v+Bl8CWI4ah?=
+ =?us-ascii?Q?dlqVtiZ+dfUX0ZGA4G5Zvu6/WjPINTvJ4r9/JoLAAYbmVZH9byacpJd/gFEg?=
+ =?us-ascii?Q?HMaAeNtWN1Q8ZB61/DYx1lwZIOmFdmXHQHIVPfTFTTPNzyepSET0GrjP3k0Z?=
+ =?us-ascii?Q?BXV2XCEITE/QJ+xJ1xIbM3lxiTPeozfUQcPRVgBGv5aZmypV0he4DKFHs8Va?=
+ =?us-ascii?Q?U67sPNA5NIg7a8NH0j+Lgm8+CBOGryWaf9/NDDVRXXXMTKlO0e95t1K77sT2?=
+ =?us-ascii?Q?euBrMIrD1EH4zrCZzUi0b5khUCWJsmSDlhdRCT8q1gacPv4er2HqaUHfGGf2?=
+ =?us-ascii?Q?jarMn0UpK+w/n1vRbOHURWzW69+REIZ3xRX4STxQafQWvHf6LjTlF8HLJYlG?=
+ =?us-ascii?Q?BBiFtNhZwok41K1RHngdIidRnO3k/l35cc8GT6EybuPzGMc8W0VAujKLbUmy?=
+ =?us-ascii?Q?8BAAJQ=3D=3D?=
+X-OriginatorOrg: camlingroup.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 35925791-f83b-4c96-d103-08d9d99a91e3
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB5572.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2022 09:20:14.7171
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fd4b1729-b18d-46d2-9ba0-2717b852b252
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nYzolRpHQV6sE9jNg0g71iDFApi5YrMb2Va13kSu0IZsVQXnj6wfZd76mhvJ7+zie4y6QWaK1prIAJEleBSLqqG7XwvVMWc+GSMuXBlYdFM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO2P123MB5789
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUK97A341 smtp.mailfrom=tomasz.mon@camlingroup.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: camlingroup.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Some stm32-dma consumers [1] rather use dma_get_slave_caps() to get
-max_sg_burst of their DMA channel as dma_get_max_seg_size() is specific to
-the DMA controller.
-All stm32-dma channels have the same features so, don't need to implement
-device_caps ops. Let dma_get_slave_caps() relies on dma_device
-configuration.
-That's why this patch sets dma_device max_sg_burst to the maximum segment
-size, which is the maximum of data items that can be transferred without
-software intervention.
+Under heavy load resulting in high interrupt latencies, it is possible
+for imx UART requests to completely fill DMA buffer. When DMA channel
+is triggered and no SDMA owned buffer is available, SDMA stops. Thanks
+to the autoRTS feature, there is no data loss due to the SDMA stop if
+the UART is using hardware flow control.
 
-[1] https://lore.kernel.org/lkml/20220110103739.118426-1-alain.volmat@foss.st.com/
-    "media: stm32: dcmi: create a dma scatterlist based on DMA max_sg_burst value"
+According to DMA Engine API Guide, DMA cyclic operation is performed
+until explicitly stopped. Restart the buffer after handling channel loop
+if the channel was stopped by SDMA.
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+Signed-off-by: Tomasz Mo=C5=84 <tomasz.mon@camlingroup.com>
 ---
- drivers/dma/stm32-dma.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/imx-sdma.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index 83a37a6955a3..d2365fab1b7a 100644
---- a/drivers/dma/stm32-dma.c
-+++ b/drivers/dma/stm32-dma.c
-@@ -1389,6 +1389,7 @@ static int stm32_dma_probe(struct platform_device *pdev)
- 	dd->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
- 	dd->copy_align = DMAENGINE_ALIGN_32_BYTES;
- 	dd->max_burst = STM32_DMA_MAX_BURST;
-+	dd->max_sg_burst = STM32_DMA_ALIGNED_MAX_DATA_ITEMS;
- 	dd->descriptor_reuse = true;
- 	dd->dev = &pdev->dev;
- 	INIT_LIST_HEAD(&dd->channels);
--- 
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 75ec0754d4ad..330ff41cd614 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -701,6 +701,11 @@ static int sdma_config_ownership(struct sdma_channel *=
+sdmac,
+ =09return 0;
+ }
+=20
++static int is_sdma_channel_enabled(struct sdma_engine *sdma, int channel)
++{
++=09return !!(readl(sdma->regs + SDMA_H_STATSTOP) & BIT(channel));
++}
++
+ static void sdma_enable_channel(struct sdma_engine *sdma, int channel)
+ {
+ =09writel(BIT(channel), sdma->regs + SDMA_H_START);
+@@ -860,6 +865,15 @@ static void sdma_update_channel_loop(struct sdma_chann=
+el *sdmac)
+ =09=09if (error)
+ =09=09=09sdmac->status =3D old_status;
+ =09}
++
++=09/*
++=09 * SDMA stops cyclic channel when DMA request triggers a channel and no=
+ SDMA
++=09 * owned buffer is available (i.e. BD_DONE was set too late).
++=09 */
++=09if (!is_sdma_channel_enabled(sdmac->sdma, sdmac->channel)) {
++=09=09dev_warn(sdmac->sdma->dev, "restart cyclic channel %d\n", sdmac->cha=
+nnel);
++=09=09sdma_enable_channel(sdmac->sdma, sdmac->channel);
++=09}
+ }
+=20
+ static void mxc_sdma_handle_channel_normal(struct sdma_channel *data)
+--=20
 2.25.1
 

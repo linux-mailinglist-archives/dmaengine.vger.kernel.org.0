@@ -2,76 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A914492225
-	for <lists+dmaengine@lfdr.de>; Tue, 18 Jan 2022 10:07:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7070D492378
+	for <lists+dmaengine@lfdr.de>; Tue, 18 Jan 2022 11:07:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345255AbiARJHD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 18 Jan 2022 04:07:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345246AbiARJG7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Jan 2022 04:06:59 -0500
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F229C061756
-        for <dmaengine@vger.kernel.org>; Tue, 18 Jan 2022 01:06:58 -0800 (PST)
-Received: by mail-yb1-xb2b.google.com with SMTP id c10so53755718ybb.2
-        for <dmaengine@vger.kernel.org>; Tue, 18 Jan 2022 01:06:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=AIHedDQeQ2nfeFyhlIY6iBZ7Eo/kAlP72EhStgPHV1I=;
-        b=MwuXI9bo/bHhmwSiZow429zo8aSB+O2GLUej+IgcXI5RO/o3AqH4CSQ9NAWjmHtI2V
-         CWHWHodvspT0TuHM5gPO3+DsIPBfj5I7xK86tBODXNXUNaTSYWM44YSISAFFoUBCT0Gg
-         kUseC6gV2vHxvawS1hqRt36sr5ZHyfG2404GVbLMHZFIWJloN2l0uLLpE9xGpmX+gvFt
-         T/SKBR85N56dXCUtLtefGn/VyQ5YHcl7r/PL/CN8dJjeVXQr6S8XtfLgDxWiWVeFp/uz
-         rUPQ/vWjjy9uE0DFDcQNAXccnZrg9yq5ahPtbYdtOe2x2ilhAjqIuZxj1Am01Jk0eYRx
-         TdaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=AIHedDQeQ2nfeFyhlIY6iBZ7Eo/kAlP72EhStgPHV1I=;
-        b=mUNL/2pRC3roRBntiT2yTxlc/iPwc/NygKZQB9Jvelyz4SHPPsQVxOfwdvf9YegR7V
-         2Ftxc2hk1X6rJ8fDBGKh2NZPV4G8ASOgK+r5TF/WJ3oXIWrALO967ykQFK/vU9nBJ1Q4
-         y/3dKawV04FHFCQ6tnh23BmgvPDN26gTGnlWKaP1QyQQ+Bpt13kbrQ5QwuQy23dv/KYg
-         oO4nbiw6oL5QN6LuPKP1p8FRvohv3jAkCuNg+m9kesFa6kvwq1OYY5vslB9YGFQykJTX
-         svm/Yt63Du7F5HC7itrVuqJAlzhQQI+OO8seWgX4uEEiVb60UCRuzbCeqEBuzW/KlD1x
-         bxmA==
-X-Gm-Message-State: AOAM5314/QQia+Js+W9/wnErBSwo42vasfh34sfsbf1ZPupU1/E0EcTG
-        auBvs9Cl3+HNq2sZe17S+7JMJfhIqrGYeih2ND8=
-X-Google-Smtp-Source: ABdhPJxA0wzoWLcZT1OxNrAcI8XNQh1NLzUcYEY6tZP9fJ+XZhak2v8hM5rDGFWcpfNwqZAdykwmchO/6gc3Jodrd8o=
-X-Received: by 2002:a25:bb49:: with SMTP id b9mr31607636ybk.0.1642496817798;
- Tue, 18 Jan 2022 01:06:57 -0800 (PST)
+        id S232812AbiARKGA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 18 Jan 2022 05:06:00 -0500
+Received: from smtp-out1.suse.de ([195.135.220.28]:42922 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233461AbiARKF6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Jan 2022 05:05:58 -0500
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 2435421135;
+        Tue, 18 Jan 2022 10:05:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1642500357; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bfaPyBaXcXcaMldZv9qZyKNLa9LaQmex0/8zwqmvtO0=;
+        b=Dw3bRF4+RdIgIw/cD5GboHQ9h98YZtHNow8GllWU+NGOSWEpZFtUonpSKQxBuLcBvzLwmd
+        htNpIwJJhEKCiuKfPjg3zEapE2hU9oOOoQz+r2RloM9H46H/eryAOk03urNDYAFUcXGOPB
+        SLiWezpzmQyK9R7JDN/yzCGgXjn30dc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1642500357;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bfaPyBaXcXcaMldZv9qZyKNLa9LaQmex0/8zwqmvtO0=;
+        b=/0wtVn54vCalWxE99ldq+qTX0TgIfDWhrmQB7DEuYt1fR3S0Vr7IAKyqOR5MYfQgoMJL0/
+        Jlcp9idrJuMsUpCA==
+Received: from suse.de (unknown [10.163.32.246])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 6D459A3B83;
+        Tue, 18 Jan 2022 10:05:56 +0000 (UTC)
+Date:   Tue, 18 Jan 2022 10:05:54 +0000
+From:   Mel Gorman <mgorman@suse.de>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Alexander Fomichev <fomichev.ru@gmail.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux@yadro.com, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC] Scheduler: DMA Engine regression because of sched/fair
+ changes
+Message-ID: <20220118100553.GR3301@suse.de>
+References: <20220112152609.gg2boujeh5vv5cns@yadro.com>
+ <20220112170512.GO3301@suse.de>
+ <20220117081905.a4pwglxqj7dqpyql@yadro.com>
+ <20220117102701.GQ3301@suse.de>
+ <20220118020448.2399-1-hdanton@sina.com>
 MIME-Version: 1.0
-Received: by 2002:a05:7108:3655:0:0:0:0 with HTTP; Tue, 18 Jan 2022 01:06:57
- -0800 (PST)
-Reply-To: asil.ajwad@gmail.com
-From:   Asil Ajwad <graceyaogokamboule@gmail.com>
-Date:   Mon, 17 Jan 2022 21:06:57 -1200
-Message-ID: <CA+Yy_gCScGafLu0JmRT2o26eNt1J5S_DUo_G2xwuVh0p3r+Daw@mail.gmail.com>
-Subject: Greetings,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20220118020448.2399-1-hdanton@sina.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Tue, Jan 18, 2022 at 10:04:48AM +0800, Hillf Danton wrote:
+> > > > 5) What DMA Engine enabled drivers (and dmatest) should use as design
+> > > > pattern to conform migration/cache behavior? Does scheduler optimisation
+> > > > conflict to DMA Engine performance in general?
+> > > > 
+> > > 
+> > > I'm not familiar with DMA engine drivers but if they use wake_up
+> > > interfaces then passing WF_SYNC or calling the wake_up_*_sync helpers
+> > > may force the migration.
+> > > 
+> > 
+> > Thanks for the advice. I'll try to check if this is a solution.
+> 
+> Check if cold cache provides some room for selecting CPU.
+> 
+> Only for thoughts now.
+> 
+
+That will still favour migrating tasks between CPUs that share LLC cache
+at the expense of losing some higher level caches and cpufreq state
+(depending on the CPUfreq governor).
+
 -- 
-Greetings,
-
-I am Mr.Asil Ajwad, I work with United Bank of Africa, can you use
-an ATM Visa Card to withdraw money at, ATM Cash Machine in your
-country, if yes I want to transfer abounded fund the sum of $10.5million
-US-Dollars, to you from my country, this is part of the money that was
-abounded by our late old client a politician who unfortunately lost
-his life and was forced out of power Du to his greedy act, the bank will
-
-change the account details to your name, and apply for a Visa Card
-with your details, the Visa Card will be send to you, and you can be
-withdrawing money with it always, whatever any amount you withdraw
-daily, you will send 60% to me and you will take 40%, the Visa Card
-and the bank account will be on your name, I will be waiting for your
-response for more details, thanks to you a lot for giving me your time.
-
-regards,
-Mr.Asil Ajwad.
+Mel Gorman
+SUSE Labs

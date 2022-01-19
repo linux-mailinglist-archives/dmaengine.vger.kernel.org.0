@@ -2,155 +2,152 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18805493406
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Jan 2022 05:24:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 193434935A3
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Jan 2022 08:41:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344800AbiASEYB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 18 Jan 2022 23:24:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48780 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235242AbiASEYA (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Jan 2022 23:24:00 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3684AC061574;
-        Tue, 18 Jan 2022 20:24:00 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1352153AbiASHlI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 19 Jan 2022 02:41:08 -0500
+Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:54912
+        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1352135AbiASHlE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 19 Jan 2022 02:41:04 -0500
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D4433B818AF;
-        Wed, 19 Jan 2022 04:23:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D838C004E1;
-        Wed, 19 Jan 2022 04:23:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642566237;
-        bh=14cx5s1WHsPTvP5g/nc9FBRXmga8O2vQTNNDmJLESBM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pPOR5BkcBLDhO2H/pTZcT8+l/nAp0/0NLvWxXO9Ru4apiAdDAJlPGdOXqqyEw6ajr
-         Mc+s7rilRXqrz/3swhQ+JxlQDxEJ/kkMOD5033+d8iw/OBv6zG34pCHGXI/kjoaD0z
-         4m9cnNlRhlF2ctDrUYd0DlMKXdnjcLzBzO0/1635J9cFhnLbkido0KT+AeL+x5vBXU
-         XpwQkznM86MuLOnQGv3nEGN7qIyNG5WOiDSiMAEQGrJ6/nlspp1XVPvXcsLVbSlbsa
-         aysj3VaoiRraNo+dF0cUxk1j0+rNO8hxSfxlYGGiacfDl4G5DsGZ+zH33H0R1lZt0a
-         1YC87sQA3eCWA==
-Date:   Wed, 19 Jan 2022 09:53:52 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sanjay R Mehta <sanmehta@amd.com>
-Cc:     Sanjay R Mehta <Sanju.Mehta@amd.com>, gregkh@linuxfoundation.org,
-        dan.j.williams@intel.com, Thomas.Lendacky@amd.com, robh@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: ptdma: fix concurrency issue with multiple
- dma transfer
-Message-ID: <YeeSWEZi+BOWb3CK@matsya>
-References: <1639735118-9798-1-git-send-email-Sanju.Mehta@amd.com>
- <YdLfLc8lfOektWmi@matsya>
- <38ae8876-610a-3c32-5025-1419466167e4@amd.com>
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 90166407F5
+        for <dmaengine@vger.kernel.org>; Wed, 19 Jan 2022 07:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1642578063;
+        bh=KOwrbfmVaaY4sfUgcL8mu/NpRfAwFGVtSAETT0kqBAg=;
+        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+         In-Reply-To:Content-Type;
+        b=bF6u0UizThWnJKp9pfXokpEjorghdPKIBCyYZVG592/0jQr6gphbDQQJQFsbgd+bq
+         XGlWkWs/0SNPm9ei8uLzJWg5pMRyNXlwewTO+ZuNLtnUA2bv8NeeZGWYJ4JHsQIejC
+         4N8z2TZLdxFXEjczxTWXhU58hEYyrKcrpxxrGk5kpzLRXdRmUeJTiPx/hP2fmMZ+Ky
+         k1ioqf0B79tAKqH/WzbiVpU9y3KqDHOTwlHBlWLt76Hp8tMv336XmOIY5xiJJbNQJH
+         W4kz/FTlebmC579eNQIULhud3PymyeOGSZU0dqvA1Ev9H+WtL726WVHjsI+hMbB0/b
+         vQIv95TBHjg9Q==
+Received: by mail-wm1-f69.google.com with SMTP id n13-20020a05600c3b8d00b0034979b7e200so743572wms.4
+        for <dmaengine@vger.kernel.org>; Tue, 18 Jan 2022 23:41:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=KOwrbfmVaaY4sfUgcL8mu/NpRfAwFGVtSAETT0kqBAg=;
+        b=ocSInAfRTgJwrm3E2gckKILkWjEWJw22efwSab3rjK2dcI7ffzd8eezY4bgHCU2tn9
+         Gfj56Lf8dxq3MGwIpmOXLxQa4VMGqEwMMfW/RYjZmuyQ3IlegNlzu/PItsJELn+qVDR0
+         0TF5rzAnSL7MdRJwM7ybyr265KQqKHoKDIF65PKalmodfbZbVfNmDVd8Qu0ga14djFBd
+         0FDrPKoM2UH+jJROoCNnpt0t0zDkK7b+skPc8bMr2enu/azhhm9Y02L9zcugzTeLeQFW
+         Xz0vmNU4eEAFJSnooBFRoHVftuT5i3giWFltWZXCD3HvyO7Yx0s0rFtUwTUxs3Gj8B+b
+         VGHw==
+X-Gm-Message-State: AOAM533jN905xoWpx7/+ABI5B8epcaIs7cXYvn6CESeF20SzZnBux/wc
+        SK3J7inWiWnTS+5i7zdF7xooAQXnAqVmC/wacxCqxC3SAdcYGoRYV+2URORv9KRs1YC+W9MICsf
+        jCNxfQWgNHxdAG9DNVVQOTB6DJCUYd9ENKwpliQ==
+X-Received: by 2002:a17:907:7ea6:: with SMTP id qb38mr23673600ejc.557.1642578052255;
+        Tue, 18 Jan 2022 23:40:52 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwcC/F4TT/k1wEFa2HsX2oDgdxrLKxkyNjrLq8ReErAXQsVWpB2ePW4VmJCVcsiAdC0JWuWGg==
+X-Received: by 2002:a17:907:7ea6:: with SMTP id qb38mr23673541ejc.557.1642578052033;
+        Tue, 18 Jan 2022 23:40:52 -0800 (PST)
+Received: from [192.168.0.42] (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
+        by smtp.gmail.com with ESMTPSA id d2sm791994edy.86.2022.01.18.23.40.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Jan 2022 23:40:51 -0800 (PST)
+Message-ID: <21b72055-e158-6586-f48a-17695128b507@canonical.com>
+Date:   Wed, 19 Jan 2022 08:40:48 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <38ae8876-610a-3c32-5025-1419466167e4@amd.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.1
+Subject: Re: [PATCH] dt-bindings: Improve phandle-array schemas
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Georgi Djakov <djakov@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Kalle Valo <kvalo@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, dmaengine@vger.kernel.org,
+        linux-pm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
+        netdev@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-remoteproc@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-usb@vger.kernel.org
+References: <20220119015038.2433585-1-robh@kernel.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20220119015038.2433585-1-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 10-01-22, 13:27, Sanjay R Mehta wrote:
-> On 1/3/2022 5:04 PM, Vinod Koul wrote:
-> > On 17-12-21, 03:58, Sanjay R Mehta wrote:
-> >> From: Sanjay R Mehta <sanju.mehta@amd.com>
-> >>
-> >> The command should be submitted only if the engine is idle,
-> >> for this, the next available descriptor is checked and set the flag
-> >> to false in case the descriptor is non-empty.
-> >>
-> >> Also need to segregate the cases when DMA is complete or not.
-> >> In case if DMA is already complete there is no need to handle it
-> >> again and gracefully exit from the function.
-> >>
-> >> Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
-> >> ---
-> >>  drivers/dma/ptdma/ptdma-dmaengine.c | 24 +++++++++++++++++-------
-> >>  1 file changed, 17 insertions(+), 7 deletions(-)
-> >>
-> >> diff --git a/drivers/dma/ptdma/ptdma-dmaengine.c b/drivers/dma/ptdma/ptdma-dmaengine.c
-> >> index c9e52f6..91b93e8 100644
-> >> --- a/drivers/dma/ptdma/ptdma-dmaengine.c
-> >> +++ b/drivers/dma/ptdma/ptdma-dmaengine.c
-> >> @@ -100,12 +100,17 @@ static struct pt_dma_desc *pt_handle_active_desc(struct pt_dma_chan *chan,
-> >>  		spin_lock_irqsave(&chan->vc.lock, flags);
-> >>  
-> >>  		if (desc) {
-> >> -			if (desc->status != DMA_ERROR)
-> >> -				desc->status = DMA_COMPLETE;
-> >> -
-> >> -			dma_cookie_complete(tx_desc);
-> >> -			dma_descriptor_unmap(tx_desc);
-> >> -			list_del(&desc->vd.node);
-> >> +			if (desc->status != DMA_COMPLETE) {
-> >> +				if (desc->status != DMA_ERROR)
-> >> +					desc->status = DMA_COMPLETE;
-> >> +
-> >> +				dma_cookie_complete(tx_desc);
-> >> +				dma_descriptor_unmap(tx_desc);
-> >> +				list_del(&desc->vd.node);
-> >> +			} else {
-> >> +				/* Don't handle it twice */
-> >> +				tx_desc = NULL;
-> >> +			}
-> >>  		}
-> >>  
-> >>  		desc = pt_next_dma_desc(chan);
-> >> @@ -233,9 +238,14 @@ static void pt_issue_pending(struct dma_chan *dma_chan)
-> >>  	struct pt_dma_chan *chan = to_pt_chan(dma_chan);
-> >>  	struct pt_dma_desc *desc;
-> >>  	unsigned long flags;
-> >> +	bool engine_is_idle = true;
-> >>  
-> >>  	spin_lock_irqsave(&chan->vc.lock, flags);
-> >>  
-> >> +	desc = pt_next_dma_desc(chan);
-> >> +	if (desc)
-> >> +		engine_is_idle = false;
-> >> +
-> >>  	vchan_issue_pending(&chan->vc);
-> >>  
-> >>  	desc = pt_next_dma_desc(chan);
-> >> @@ -243,7 +253,7 @@ static void pt_issue_pending(struct dma_chan *dma_chan)
-> >>  	spin_unlock_irqrestore(&chan->vc.lock, flags);
-> >>  
-> >>  	/* If there was nothing active, start processing */
-> >> -	if (desc)
-> >> +	if (engine_is_idle)
-> > 
-> > Can you explain why do you need this flag and why desc is not
-> > sufficient..
+On 19/01/2022 02:50, Rob Herring wrote:
+> The 'phandle-array' type is a bit ambiguous. It can be either just an
+> array of phandles or an array of phandles plus args. Many schemas for
+> phandle-array properties aren't clear in the schema which case applies
+> though the description usually describes it.
 > 
-> Here it is required to know if the engine was idle or not before
-> submitting new desc to the active list (i.e, before calling
-> "vchan_issue_pending()" API). So that if there was nothing active then
-> start processing this desc otherwise later.
+> The array of phandles case boils down to needing:
 > 
-> Here desc is submitted to the engine after vchan_issue_pending() API
-> called which will actually put the desc into the active list and then if
-> I get the next desc, the condition will always be true. Therefore used
-> this flag here to solve this issue.
-
-ok
-
-
-
-
-
+> items:
+>   maxItems: 1
 > 
-> > 
-> > It also sounds like 2 patches to me...
+> The phandle plus args cases should typically take this form:
 > 
-> Once the desc is submitted to the engine that will be handled by
-> pt_handle_active_desc() function. This issue was resolved by making
-> these changes together. Hence kept into the single patch.
+> items:
+>   - items:
+>       - description: A phandle
+>       - description: 1st arg cell
+>       - description: 2nd arg cell
 > 
-> Please suggest to me, if this still needs to be split. I'll make the
-> changes accordingly.
+> With this change, some examples need updating so that the bracketing of
+> property values matches the schema.
+> 
 
-2 patches please
+Samsung and memory controller bits look good:
 
--- 
-~Vinod
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+
+
+Best regards,
+Krzysztof

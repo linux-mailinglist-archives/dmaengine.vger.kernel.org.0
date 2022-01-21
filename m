@@ -2,147 +2,191 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62DB1495F1C
-	for <lists+dmaengine@lfdr.de>; Fri, 21 Jan 2022 13:41:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA221495FEF
+	for <lists+dmaengine@lfdr.de>; Fri, 21 Jan 2022 14:46:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233043AbiAUMlE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 21 Jan 2022 07:41:04 -0500
-Received: from mail-eopbgr30071.outbound.protection.outlook.com ([40.107.3.71]:1147
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S245692AbiAUMlD (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 21 Jan 2022 07:41:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cR4O7HeS7nT/nqfSftfpFi5Tgd9xezauKT+ElfxpZT3HYMOs/lAw/e5ulEC0p2uVqnxFfDsuNFfyVsG3wnbqjuwB2YEEkuZZMyz69UhSNs5uJv0fnoa4D8uN0m3nVOVMVZHtFvlXxO0wEvD40E5dzjfBzSEsSjVFM21PUBhSMCZW9ASmGhV8nuxiU3rFfwM2We14UeAQljtQsaI9nVXSwc5zrddgck3qhnlY46O7/dujtgU1BcpganhhSv60PqweZgRPvHTyA405oh0EcEmYH9tDFBuSJNZYAYp9A0CrYcPrZTC6Uy2knwSnBLvFnwHNk8IFkp75bUHG8ik1M5esCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FKVOQjsuj7n+T55JItu+NBWD5KT1hXcoVEShR9iZxCQ=;
- b=DmmH93TNUJJuyNFHaGkSX3+lEewGli2mkQKhAk24hPM03nDjcty7ewvYhpRavqhK3dbulsbBDlYU7tPiVcRkQx+SNxAj6Yc2Zg4iw/EGq2+LgvSedg8GBrrBGs0dGdohEefFh1Z2DkgEnFRiET7fJ9graE0N+hXR5Ww5AE0Mf0MleEe3dqtZeWAbVyiT9Zxj1ZbQK0QXQHWeCeiMR/z9QRzN0+H13xvaBYZm0MmPVd82yo+YU9WeD9n5nEZQUDrLlQ57ofzRGX+0ZIDMXUtll/wnZYKd0SnVv28X+cSyvxjiVCxjbNL0QxFAt2ri9tslDDPnwu+A/jzXBxc/YrJLqg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=orolia.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FKVOQjsuj7n+T55JItu+NBWD5KT1hXcoVEShR9iZxCQ=;
- b=dTV/LuLup3Viu2kbY+C46DdloA/Xhg7j6704EU7n61i2VpyhM2D+XSn7Hyo8ZXm6Ge0HsXeBProCbbrq+/C66f+l6M6rCeg9E/AKYZN3G9V/6rEpcLTrRROCkxySAfHUGPpbGNfDy33WBCabGW1vMOqC0ib4/WHK08vwBhd8fW8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=orolia.com;
-Received: from PAXP251MB0319.EURP251.PROD.OUTLOOK.COM (2603:10a6:102:209::12)
- by AM9P251MB0206.EURP251.PROD.OUTLOOK.COM (2603:10a6:20b:3dc::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.11; Fri, 21 Jan
- 2022 12:41:01 +0000
-Received: from PAXP251MB0319.EURP251.PROD.OUTLOOK.COM
- ([fe80::3c56:fcc7:ac2e:9c76]) by PAXP251MB0319.EURP251.PROD.OUTLOOK.COM
- ([fe80::3c56:fcc7:ac2e:9c76%6]) with mapi id 15.20.4909.008; Fri, 21 Jan 2022
- 12:41:01 +0000
-Date:   Fri, 21 Jan 2022 13:40:55 +0100
-From:   Olivier Dautricourt <olivier.dautricourt@orolia.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Stefan Roese <sr@denx.de>, Vinod Koul <vkoul@kernel.org>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: altera-msgdma: Remove useless DMA-32 fallback
- configuration
-Message-ID: <YeqiPomFySvcl+FL@orolia.com>
-References: <01058ada3a0dea207212182ca7525060a204f1e1.1642232423.git.christophe.jaillet@wanadoo.fr>
+        id S1380567AbiAUNqy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 21 Jan 2022 08:46:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1380591AbiAUNqw (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 21 Jan 2022 08:46:52 -0500
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E6F6C061574;
+        Fri, 21 Jan 2022 05:46:52 -0800 (PST)
+Received: by mail-lf1-x136.google.com with SMTP id p27so34075515lfa.1;
+        Fri, 21 Jan 2022 05:46:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=CbBhtk+FwZeZiOwygU4RpebRe7o9G8cdyJXAclSwLLM=;
+        b=FNlOu2aTk58X7VLO1V57HUjxdnxJrz3XpW4USxal+A4eNLs9bDx4Suukp0bOmgrqev
+         hoDYmKpsyOberf63mUEMZxJHeZsuBCl3nEqP59+TBxNuKL5H6N4jKwb+UsGLRDBAtv8h
+         s60GnDZLpSPtiHbv4AKEGW9XGq1ibyzDUnrlet/8YqpeRY8Amwgb02plVod2yYEktd2n
+         6WgJu7QPKSPn/oMEYL+1ljNOcFNv3BXFwbJW5p7cFM0f6UBKOY5vVutuHHSi5TV0SiSq
+         PJqmAz/zcpytvli5C98+N4kHCYKW8C9t88/lf20LuAuR6tcl//UcFAQp0nfZZhVvj8Hn
+         PWXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CbBhtk+FwZeZiOwygU4RpebRe7o9G8cdyJXAclSwLLM=;
+        b=uuYJ12DD6FNg3TQDkcZiva7dPqqdRswTepF0hG227/Mrfs1xNlzeRiOu/cljhtJERM
+         Yq02C1VbYOQ3nd4/spGDIrs6zifrr53r6OwyJI0HQOOBKlnNTLnW4GgQfVQ4R/pHTyV4
+         2DHUbD+FpFuLyLqNttpn9eHKHq/qpvxo3kjEEsv8eQ1mh/Iv8qn2f3yRiA7jrS42KqLg
+         E81Vz7ZPhCDgNERBn+O9zYKLGZe1KNnSaBWfLt6IB7v2BuJ2GCuUezJrvm83joHA/AAV
+         NAnVw43M3CdZ7vB6qaDsKMFGxS6Wr6gGIzSgVOloAavT2VMIzMfmnW7pHOFLw31CKnOS
+         XohQ==
+X-Gm-Message-State: AOAM533RPzyz4xOiUcXBBd37+AUUTkyOr44WR8Vyb6nUCbOa/Ndvebwn
+        ZjufmAXPeNybihZXtjRTP5A=
+X-Google-Smtp-Source: ABdhPJxdELd84UCu9UZX5X2OOAJO7w4TJhSRCVa3eHg9e+fXNr+QYibXtTTV5U/MRkaiOf8bLkZMFQ==
+X-Received: by 2002:ac2:5e85:: with SMTP id b5mr3841501lfq.0.1642772810532;
+        Fri, 21 Jan 2022 05:46:50 -0800 (PST)
+Received: from localhost ([46.188.51.186])
+        by smtp.gmail.com with ESMTPSA id b5sm258238lft.301.2022.01.21.05.46.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jan 2022 05:46:49 -0800 (PST)
+Date:   Fri, 21 Jan 2022 16:46:40 +0300
+From:   Alexander Fomichev <fomichev.ru@gmail.com>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux@yadro.com,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC] Scheduler: DMA Engine regression because of sched/fair
+ changes
+Message-ID: <20220121134640.ghdq3wbwa5jcfplz@yadro.com>
+References: <20220112152609.gg2boujeh5vv5cns@yadro.com>
+ <20220112170512.GO3301@suse.de>
+ <20220117081905.a4pwglxqj7dqpyql@yadro.com>
+ <20220117102701.GQ3301@suse.de>
+ <20220118020448.2399-1-hdanton@sina.com>
+ <20220121101217.2849-1-hdanton@sina.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <01058ada3a0dea207212182ca7525060a204f1e1.1642232423.git.christophe.jaillet@wanadoo.fr>
-X-ClientProxiedBy: LO2P265CA0186.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a::30) To PAXP251MB0319.EURP251.PROD.OUTLOOK.COM
- (2603:10a6:102:209::12)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4bbc6d8e-ce67-4c36-0e52-08d9dcdb47bc
-X-MS-TrafficTypeDiagnostic: AM9P251MB0206:EE_
-X-Microsoft-Antispam-PRVS: <AM9P251MB0206481EE38C34F2DC5C6C998F5B9@AM9P251MB0206.EURP251.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YoJvRsvYXDhnETo1nOdxJyzZT+3mB1g+ysV+xiw7zNn8Y4J8PfBU/L7LsTdTIJXy63zEj/Y/kecAUAmTuCqFKq0clJo/o1bz4KyUQeq73dSVy/R1pBLnT5PNNglisMp03mZVJB18/oh344kH4Ixv3oZ6MBOqqWby28i8WRytwr6BMC/qlC+cZDhKKIdreyAaJ+XsnYFBz8kBoQyxElNwPHo7JAEfPOfIrgJGzhNhzF92Pb+L+18ziQN/Ukvkb/z/QOl17P6Cfsd7RLthe4MxH66F56TxIpDFQMneyyM0cQv9+d8TusF8Yv5sJZxBjpIx9MlrkfETdMaVt+HXXTsnHZojbhqdbfNway6fc7llKQ9OPJ1N45A3TbEOMtf01067SdIWna8f2M4f+ZcJUM9SyaKcgAYbAaN6AkXWK+3NMIQJ6tXKvquCliybHApeIQXMVpVjVYPVUQxHhIyOUDy45F8aEFd/67e5dem1G3O/BHTlmZ1mvSTE2okVDArB6dirc9MxQzYV+zzSXJExwEi372BAzpgT4CQv8EIUgIAzHUR0sgctXvIz4BEVLF0z+eU8DXwRFiRQczZKbIUoNkE+DUMX5trfFWWzBTXiKwlSeyLjnyvqj+4dRKeccoiGYmQtSYKaKyNR2sO+MmVCxIxt7qe6xzCTTr5umULCMU0mL2HdirLjMi4eZmCElaJbqwRI+j8MyViX5QThMbOoLtnKw3GnHqCGuZaYw50r9cINSbnAn+drXWcil5+w68100EjiDgGjJ/1QsBlkJURgkRXuIA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXP251MB0319.EURP251.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(4636009)(366004)(52116002)(66946007)(6506007)(508600001)(83380400001)(38100700002)(316002)(36756003)(966005)(4326008)(6666004)(66476007)(2616005)(54906003)(66556008)(6486002)(8676002)(6916009)(186003)(86362001)(2906002)(5660300002)(6512007)(8936002)(44832011)(67856001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?QrJtIeadhbQbDvi7fLQ8nbPn2L2Ca/GrrL06/BqERhjO/Rw8T/X1Swh+/Qr9?=
- =?us-ascii?Q?u6/93T3C6AwjmkHPmVYqrtKOt5OZ59OMpFbTIWikg6t2GpgIpdz+Gt8QizVf?=
- =?us-ascii?Q?MoHv+w8qlB2B1Fx5Jndd9yF1F/ti2kRBSBLxJ3M3UYkGCfF3d2MQqjsROYDz?=
- =?us-ascii?Q?P9TNzB2R6j5VLnsDAnPa7GGHhI8NsBxviCyjONGCltGsGDIg7ED9AS04FzCD?=
- =?us-ascii?Q?Fd7VUmSqHVMtOBcr2ZnrNDaaHQQEvfXURTX/aunAmhrzFqXQJm4TH6+JZGso?=
- =?us-ascii?Q?Pj1lrWig5zPWzS9Zqh55PkBuPnZZrxELeBIPCUhgrepsnD6VFj262nRovbhT?=
- =?us-ascii?Q?NpKdr4cyANI1ej3VATpoBkSvyj6bakvG6Y2HeXGVdW/EhZRVR34RwBLzrMy2?=
- =?us-ascii?Q?ao1dGfVtw/u9/yNuq9NbDtQu/tFVGdSaQAdr//RbuHReSqNdv5uVdB1JvLG8?=
- =?us-ascii?Q?dZsQkgozfmajhU+Q9rocz1slvmQC4L7oq5jnFBpDNtsY4dJOrFVtI9K/nKSe?=
- =?us-ascii?Q?0cnOKRklta6AkoihVh0aRkkiu572EDQLbBIerHuGziB/MVfdgZCOG0ZGWdIF?=
- =?us-ascii?Q?8NClJdZp+oelEjFJERGFPoUPQDjAWtMWewBUElUwIFBuEHRXGK6GZ4FANnQa?=
- =?us-ascii?Q?AuKNt0fGHcqDq79GKihGxiDxYTQdOYrsWCQZD05tRIDfGTDsrZxB0CGH5/DH?=
- =?us-ascii?Q?HgkNAPT3bWhBirsRRfpdhpk548nXpbyqglkyOzjR2FJDQ6Ts4hwRckQ/KB+G?=
- =?us-ascii?Q?IKzv5lVc/gGA7q7bzmrts6A+odnbB8WD17BrmEJZOdaT/JEFnUgTcbEz2WDu?=
- =?us-ascii?Q?pe7nr19LXaw7BIY5fuhnO0sc89MG6IZXMUJ59uRRYJ+gq+35S2hrD4i3YHRa?=
- =?us-ascii?Q?lkf5OK8lsjCjH//KoqmgDjvwTPtvUCb67Lj0x/dUkpiyv7k9OrwbAuyp32lC?=
- =?us-ascii?Q?w6tQKyja6ZIcUgdFJdqo8hgo3CK+O7gTassQaFy/O7/Qv3iuWIeGa1k+0zU4?=
- =?us-ascii?Q?w/38qjFuqIQ6Vb0Ih63l6N0kt8NX+hiUxsvcV7r4YUP++9JYHs6wI8lI1ug+?=
- =?us-ascii?Q?Hs0Y26BI2NH5TbeU54bz1QrqfOGwx2uFBrYnhyPBGQTRk2PMeLqzOnvFIGxk?=
- =?us-ascii?Q?qvETsc/PvjFqVz1lwDPxlAB5AohzWhhobG1w2+vBK8YYsovgd3k9u/czVDP5?=
- =?us-ascii?Q?HJHna6K2d7TD6Vyyg4RTkfu63soN2u/i7dafvVsRmlR+oWiJl7WyK28GZ5fe?=
- =?us-ascii?Q?Q5oXKd5WXioTW8kQvkuXgvDn9zdvZhbcl0sf7ydhGemdqK/6wUBb+NlRe1Qf?=
- =?us-ascii?Q?jiI/dVk/LFvmMRBggCqMZXOHaya/nJ1WGA/+5eIK70/iZ5phxzKKQYcLJctn?=
- =?us-ascii?Q?P9JweXbCc8rOixSLHulg2Nnr5VLTR1upBYTToS6Xk5HKjcFhlVwMOHbX4Ng1?=
- =?us-ascii?Q?TNmq6K9By48ibm9WDJV3rQ88UuE8FeVnNPuwHD2pRF6dmoZ8fuCwlcfu09Hb?=
- =?us-ascii?Q?Gs0B/SM9kmKnreov+sSiVMpLDU92GT5KDMsDtbO6paMc6CxysdIJXsmEtPmo?=
- =?us-ascii?Q?OgaRbpPd+VzSaYLClG0zMScJusb56oFaaCSGLN9fDbJ0OFOCvcADIWMA+DPF?=
- =?us-ascii?Q?CxMpbvrUMXGM9Wxl2IjeHnIpAMl3ysOo5EoAjpX3TlsAZvjFzeagPn7r8vpu?=
- =?us-ascii?Q?atFPFRoHQXhwV1Tuq+SsxHy4H2B4GA8LoChBRJP9cNZyykDnOEMaXvRRROja?=
- =?us-ascii?Q?DBUpbwwfxg=3D=3D?=
-X-OriginatorOrg: orolia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4bbc6d8e-ce67-4c36-0e52-08d9dcdb47bc
-X-MS-Exchange-CrossTenant-AuthSource: PAXP251MB0319.EURP251.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2022 12:41:01.0496
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a263030c-9c1b-421f-9471-1dec0b29c664
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ns7iyQ2+WsE2gIF8/fCbINDQgqhGuOOH32+FQjOvU7t7UrIGRoY8PCiDmWCYoIn8GWqfhH+8wPpkRPNqJdZv55D3mCvNr87WLTOcciZRvIU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9P251MB0206
+In-Reply-To: <20220121101217.2849-1-hdanton@sina.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The 01/15/2022 08:40, Christophe JAILLET wrote:
-> As stated in [1], dma_set_mask() with a 64-bit mask never fails if
-> dev->dma_mask is non-NULL.
-> So, if it fails, the 32 bits case will also fail for the same reason.
+On Fri, Jan 21, 2022 at 06:12:17PM +0800, Hillf Danton wrote:
+> On Wed, 19 Jan 2022 15:55:13 +0300 Alexander Fomichev wrote:
+> >On Tue, Jan 18, 2022 at 10:04:48AM +0800, Hillf Danton wrote:
+> >> On Mon, 17 Jan 2022 20:44:19 +0300 Alexander Fomichev wrote:
+> >> > On Mon, Jan 17, 2022 at 10:27:01AM +0000, Mel Gorman wrote:
+> >> > 
+> >> > -----< v5.15.8-vanilla >-----
+> >> > [17057.866760] dmatest: Added 1 threads using dma0chan0
+> >> > [17060.133880] dmatest: Started 1 threads using dma0chan0
+> >> > [17060.154343] dmatest: dma0chan0-copy0: summary 1000 tests, 0 failures 49338.85 iops 3157686 KB/s (0)
+> >> > [17063.737887] dmatest: Added 1 threads using dma0chan0
+> >> > [17065.113838] dmatest: Started 1 threads using dma0chan0
+> >> > [17065.137659] dmatest: dma0chan0-copy0: summary 1000 tests, 0 failures 42183.41 iops 2699738 KB/s (0)
+> >> > [17100.339989] dmatest: Added 1 threads using dma0chan0
+> >> > [17102.190764] dmatest: Started 1 threads using dma0chan0
+> >> > [17102.214285] dmatest: dma0chan0-copy0: summary 1000 tests, 0 failures 42844.89 iops 2742073 KB/s (0)
+> >> > -----< end >-----
+> >> > 
+> >
+> >Just to remind, used dmatest parameters:
+> >
+> >/sys/module/dmatest/parameters/iterations:1000
+> >/sys/module/dmatest/parameters/alignment:-1
+> >/sys/module/dmatest/parameters/verbose:N
+> >/sys/module/dmatest/parameters/norandom:Y
+> >/sys/module/dmatest/parameters/max_channels:0
+> >/sys/module/dmatest/parameters/dmatest:0
+> >/sys/module/dmatest/parameters/polled:N
+> >/sys/module/dmatest/parameters/threads_per_chan:1
+> >/sys/module/dmatest/parameters/noverify:Y
+> >/sys/module/dmatest/parameters/test_buf_size:1048576
+> >/sys/module/dmatest/parameters/transfer_size:65536
+> >/sys/module/dmatest/parameters/run:N
+> >/sys/module/dmatest/parameters/wait:Y
+> >/sys/module/dmatest/parameters/timeout:2000
+> >/sys/module/dmatest/parameters/xor_sources:3
+> >/sys/module/dmatest/parameters/pq_sources:3
 > 
-> Simplify code and remove some dead code accordingly.
 > 
-> [1]: https://lore.kernel.org/linux-kernel/YL3vSPK5DXTNvgdx@infradead.org/#t
+> See if tuning back down 10 degree can close the gap in iops, in the
+> assumption that the prev CPU can be ignored in case of cold cache.
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-
-Acked-by: Olivier Dautricourt <olivier.dautricourt@orolia.com>
-
-> ---
->  drivers/dma/altera-msgdma.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> Also want to see the diff in output of "cat /proc/interrupts" before
+> and after dmatest, wondering if the dma irq is bond to a CPU core of
+> dancing on several ones.
 > 
-> diff --git a/drivers/dma/altera-msgdma.c b/drivers/dma/altera-msgdma.c
-> index f5b885d69cd3..6f56dfd375e3 100644
-> --- a/drivers/dma/altera-msgdma.c
-> +++ b/drivers/dma/altera-msgdma.c
-> @@ -891,9 +891,7 @@ static int msgdma_probe(struct platform_device *pdev)
->         ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
->         if (ret) {
->                 dev_warn(&pdev->dev, "unable to set coherent mask to 64");
-> -               ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-> -               if (ret)
-> -                       goto fail;
-> +               goto fail;
->         }
+> Hillf
 > 
->         msgdma_reset(mdev);
+> +++ x/kernel/sched/fair.c
+> @@ -5888,20 +5888,10 @@ static int wake_wide(struct task_struct
+>  static int
+>  wake_affine_idle(int this_cpu, int prev_cpu, int sync)
+>  {
+> -	/*
+> -	 * If this_cpu is idle, it implies the wakeup is from interrupt
+> -	 * context. Only allow the move if cache is shared. Otherwise an
+> -	 * interrupt intensive workload could force all tasks onto one
+> -	 * node depending on the IO topology or IRQ affinity settings.
+> -	 *
+> -	 * If the prev_cpu is idle and cache affine then avoid a migration.
+> -	 * There is no guarantee that the cache hot data from an interrupt
+> -	 * is more important than cache hot data on the prev_cpu and from
+> -	 * a cpufreq perspective, it's better to have higher utilisation
+> -	 * on one CPU.
+> -	 */
+> -	if (available_idle_cpu(this_cpu) && cpus_share_cache(this_cpu, prev_cpu))
+> -		return available_idle_cpu(prev_cpu) ? prev_cpu : this_cpu;
+> +	/* select this cpu because of cold cache */
+> +	if (cpus_share_cache(this_cpu, prev_cpu))
+> +		if (available_idle_cpu(this_cpu))
+> +			return this_cpu;
+>  
+>  	if (sync && cpu_rq(this_cpu)->nr_running == 1)
+>  		return this_cpu;
 > --
-> 2.32.0
-> 
 
+Hi Hillf,
+
+Thanks for the information.
+With the recent patch (I called it patch2) the results are following:
+
+-----< 5.15.8-Hillf-Danton-patch2+ noverify=Y >-----
+[  646.568455] dmatest: Added 1 threads using dma0chan0
+[  661.127077] dmatest: Started 1 threads using dma0chan0
+[  661.147156] dmatest: dma0chan0-copy0: summary 1000 tests, 0 failures 50251.25 iops 3216080 KB/s (0)
+[  675.132323] dmatest: Added 1 threads using dma0chan0
+[  676.205829] dmatest: Started 1 threads using dma0chan0
+[  676.225991] dmatest: dma0chan0-copy0: summary 1000 tests, 0 failures 50022.50 iops 3201440 KB/s (0)
+[  703.100813] dmatest: Added 1 threads using dma0chan0
+[  704.933579] dmatest: Started 1 threads using dma0chan0
+[  704.953733] dmatest: dma0chan0-copy0: summary 1000 tests, 0 failures 49950.04 iops 3196803 KB/s (0)
+-----< end >-----
+
+Also I have re-run the test with 'noverify=N' option, just for
+illustration.
+
+-----< 5.15.8-Hillf-Danton-patch2+ noverify=N >-----
+[ 1614.739687] dmatest: Added 1 threads using dma0chan0
+[ 1620.346536] dmatest: Started 1 threads using dma0chan0
+[ 1623.254880] dmatest: dma0chan0-copy0: summary 1000 tests, 0 failures 23544.92 iops 1506875 KB/s (0)
+[ 1634.974200] dmatest: Added 1 threads using dma0chan0
+[ 1635.981532] dmatest: Started 1 threads using dma0chan0
+[ 1638.892182] dmatest: dma0chan0-copy0: summary 1000 tests, 0 failures 23703.98 iops 1517055 KB/s (0)
+[ 1652.878143] dmatest: Added 1 threads using dma0chan0
+[ 1655.235130] dmatest: Started 1 threads using dma0chan0
+[ 1658.143206] dmatest: dma0chan0-copy0: summary 1000 tests, 0 failures 23526.64 iops 1505705 KB/s (0)
+-----< end >-----
+
+/proc/interrupts changes before/after the test:
+
+-----< interrupts.diff >-----
+- 184:          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0       6000          0          0          0          0          0          0          0          0          0          0          0  IR-PCI-MSI 103813120-edge      0000:c6:00.2
++ 184:          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0          0       9000          0          0          0          0          0          0          0          0          0          0          0  IR-PCI-MSI 103813120-edge      0000:c6:00.2
+-----< end >-----
+
+It looks like the MSI handler is called on the same CPU all the time.
+
+-- 
+Regards,
+  Alexander

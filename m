@@ -2,178 +2,225 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5494496D4C
-	for <lists+dmaengine@lfdr.de>; Sat, 22 Jan 2022 19:31:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD3AA4971DC
+	for <lists+dmaengine@lfdr.de>; Sun, 23 Jan 2022 15:08:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232950AbiAVSbp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 22 Jan 2022 13:31:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231531AbiAVSbo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 22 Jan 2022 13:31:44 -0500
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DA5FC06173B;
-        Sat, 22 Jan 2022 10:31:43 -0800 (PST)
-Received: by mail-lf1-x130.google.com with SMTP id bu18so40853177lfb.5;
-        Sat, 22 Jan 2022 10:31:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=yh82ozfSM6oapqGRh4z7IM/xoIpSwq0P7Nnmuai8gxg=;
-        b=CAFwyQ77R2H6RYwpu0aR7vj2GXGa6gLhHNaq/FMOVKUwB9TSdOV1niGlNkrMDkuIDg
-         WU9BqxwnUgKILKeA6hPbuOX6TW/AXfNcT9UGGpeka8FaqEHbf0el5u8kebmCg65dulz9
-         SqpWcsrMguDTbHPpMlMc6LxC/Ua3lNuNr2yvJxp4zma6wb9fJ8FLyt3RlR83T/OutSlb
-         MnJPvr+8atYvWA/ohHEvKjqfV9xbcBX2NNEnYNNxjNjAa0p5rGNdjL0WHutWsnMpvSlQ
-         q2Tlua+vE/qx8rLjxnnFcqiuextgJHNbxdfZjFp11AtHU3NWkVwIsT5hOugAe3ZUK28u
-         G6JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=yh82ozfSM6oapqGRh4z7IM/xoIpSwq0P7Nnmuai8gxg=;
-        b=W+90WSc3Yc2sVkNrTrvtJXAcKnDXTNsfeBByz19Yt25czIdLngbahOysq2rFCzAaEB
-         HuAX/ZqkCl5SmanW5B5VOBQiotu4YS8ZbiIxX9dWV2NWkTyGXQMTDu6bM+6fBYLaverQ
-         U5ieonYfE1nxfgXVjUMoeaby9EP3gmgzTIygRTsViqb+IbhNA/OR0Dm5JvolyfPW87wm
-         BbMTqp/MGkvuAy9p3pptZJXWb8VAhs1qN6SWdhwcGsH16TNYNyAuxHrQZ2+krZ4P01dx
-         OF+DYEUdT4EMssQa5vFf8WK9WGvbLlF5liXb50eCZPPW51WXqom/pad1LWWaJnQrLEKk
-         MFWA==
-X-Gm-Message-State: AOAM532b+TxIDaYG1vB2EgP5/hAtVA4UrlojVm5VE1lcNUDukfMH4/R9
-        Bahua1FVh8ZWgR9ZpMfQhyY=
-X-Google-Smtp-Source: ABdhPJx0tROet2YXOw/bq3Yumcg02rCbq0PE56juLvkeoXb/+YoZ1Jt9J9SY8lhUIYVvmxkFAIIHIQ==
-X-Received: by 2002:a05:6512:207:: with SMTP id a7mr5440742lfo.208.1642876301886;
-        Sat, 22 Jan 2022 10:31:41 -0800 (PST)
-Received: from [192.168.2.145] (109-252-139-36.dynamic.spd-mgts.ru. [109.252.139.36])
-        by smtp.googlemail.com with ESMTPSA id q16sm631365lfg.170.2022.01.22.10.31.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Jan 2022 10:31:41 -0800 (PST)
-Message-ID: <31ba2627-65c7-1340-e6b9-7c328a485456@gmail.com>
-Date:   Sat, 22 Jan 2022 21:31:39 +0300
+        id S236679AbiAWOIW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 23 Jan 2022 09:08:22 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:49051 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236678AbiAWOIV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 23 Jan 2022 09:08:21 -0500
+Received: from [192.168.1.107] ([37.4.249.169]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M9qYn-1nEgLO1RFF-005t9W; Sun, 23 Jan 2022 15:08:03 +0100
+Subject: Re: [PATCH RFC 00/11] dmaengine: bcm2835: add BCM2711 40-bit DMA
+ support
+To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>
+Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org,
+        Phil Elwell <phil@raspberrypi.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Lukas Wunner <lukas@wunner.de>,
+        linux-rpi-kernel@lists.infradead.org
+References: <1640606743-10993-1-git-send-email-stefan.wahren@i2se.com>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tClZlcnNpb246IEdudVBHIHYy
+ CgptUUlOQkZ0NmdCTUJFQUN1Yi9wQmV2SHhidkplZnlaRzMySklObW4yYnNFUFgyNVY2ZmVq
+ bXlZd21DR0tqRnRMCi9Eb1VNRVZIRHhDSjQ3Qk1YbzM0NGZIVjFDM0FudWRnTjFCZWhMb0J0
+ TEh4bW5lQ3pnSDNLY1B0V1c3cHRqNEcKdEp2OUNRRFp5MjdTS29FUHh5YUk4Q0YweWdSeEpj
+ NzJNOUk5d21zUFo1YlVIc0x1WVdNcVE3SmNSbVBzNkQ4ZwpCa2srOC95bmdFeU5FeHd4SnBS
+ MXlsajVianhXREh5WVF2dUo1THpaS3VPOUxCM2xYVnNjNGJxWEVqYzZWRnVaCkZDQ2svc3lp
+ by9ZaHNlOE4rUXN4N01RYWd6NHdLVWtRUWJmWGcxVnFrVG5BaXZYczQyVm5Ja211NWd6SXcv
+ MHQKUkp2NTBGUmhIaHhweUtBSThCOG5oTjhRdng3TVZrUGM1dkRmZDN1R1lXNDdKUGhWUUJj
+ VXdKd05rLzQ5RjllQQp2ZzJtdE1QRm5GT1JrV1VSdlArRzZGSmZtNitDdk92N1lmUDF1ZXdB
+ aTRsbitKTzFnK2dqVklXbC9XSnB5MG5UCmlwZGZlSDlkSGtnU2lmUXVuWWN1Y2lzTXlvUmJG
+ OTU1dENna0VZOUVNRWRZMXQ4aUdEaUNnWDZzNTBMSGJpM2sKNDUzdWFjcHhmUVhTYUF3UGtz
+ bDhNa0NPc3YyZUVyNElOQ0hZUUR5WmljbEJ1dUNnOEVOYlI2QUdWdFpTUGNRYgplbnpTektS
+ Wm9POUNhcUlEK2ZhdkxpQi9kaHptSEErOWJnSWhtWGZ2WFJMRFp6ZThwbzFkeXQzRTFzaFhp
+ ZGRaClBBOE51SlZ6RUl0MmxtSTZWOHBaRHBuMjIxcmZLaml2UlFpYW9zNTRUZ1pqak1ZSTdu
+ bko3ZTZ4endBUkFRQUIKdENCVGRHVm1ZVzRnVjJGb2NtVnVJRHgzWVdoeVpXNXpkRUJuYlhn
+ dWJtVjBQb2tDTndRVEFRZ0FJUVVDWElkYwo0Z0liQXdVTENRZ0hBZ1lWQ0FrS0N3SUVGZ0lE
+ QVFJZUFRSVhnQUFLQ1JDVWdld1BFWkR5MjFPVEQvOUdpWkxkCnRSWWNteVJKZ2x0aVFRekFp
+ UWRjSUQ3OGxHb1dwL3grci92Y1U2YjZqdVl1ZVR3Z1Iwclc3djdsMklSQnlEN24KSEp4YSt0
+ SVNvUVpCZ2hvbE1JZmI5TXRoR09KTENZNzdrL1FoQWhuMzJOR1prZWp3OXR6a3MvNDBtclpT
+ VVQ4NApaeWJzUVhyTE0vSFI2VElJL0RlUEIwbktEM0ppcHBzMlVIUUQ5cUQySWpFd1NRUGxI
+ akNPckVaaDQ1UFo3bTkrClo5M0x6aVRlc1dabFlRdUxpSndzNHJLcHRIVzFkL3dSZWxzaG1t
+ NlFxY0wybDRDL2U0MGVEQjlncTRkU1poOVgKUEVZbGxpeU5RaDdhMkxTZHVtRTFyK2NTd0lq
+ RS91ZHRSdmRPOWFLb0psT2JVSzVkTmpTUEg3d0tUYndkWGRZRApHUHdEaFhkNThOQXdyK1BY
+ QmxQajB0STFMQ3ErTEJ4ZUt6aFdYK0dWcTlEb2pWanlVREV4Rk5Ga1h1b0M3ZzhtClY5VDB0
+ ZUJpdVpSbm91WEt3VjJGcHRaT0hIN0JVRVd0a0t0aGgxZXRmT1dwaWdCemtVN2JQc2ZJWVQr
+ cnk5dGIKMW9KK3Y0MVBOYXFaRW1QVXBKeHZmek5UN3Ayd01lRDdaajlmMHJ1YlJQdExBSjJR
+ R2pyRkhzdVh3QU9xcHl6ZQoxOEVidHNZazBOMHp1SEVoY2orUEJJQmZoMFlJWWQ1MW9mNkdJ
+ aU95UjlxMFhYdHBsVUo3VDIvSDF1UXFrWGxwCitnVzRWa2lmc2NJckl1eWZueFpXMTJlSXZq
+ NnlicVdMN2FZS0dZbVQ2aUxDUGJIWXlZY2F5bDRFa0ZjckNGN0UKZTBXVC9zY1ZNaE8vNVgv
+ SGFOQTVIQngvcjUycGdMY3Y0aTlNeExRbVUzUmxabUZ1SUZkaGFISmxiaUE4YzNSbApabUZ1
+ TG5kaGFISmxia0JwTW5ObExtTnZiVDZKQWpnRUV3RUNBQ0lGQWx0NmdCTUNHd01HQ3drSUJ3
+ TUNCaFVJCkFna0tDd1FXQWdNQkFoNEJBaGVBQUFvSkVKU0I3QThSa1BMYmpic1AvamdqYVNz
+ NUh0bGtBSXZXUytGcm15N2MKaG5jT0F4TFRWL0Q2UkV3SU95R0poRkt3d29pck55UTJnOXZV
+ YTNZQ1lDZjFmSjh3RWhhS09COWQwTHBNUm5MNApkRVQ4ZDgyMzhFL3BLK0hxTktpSXNKaHM2
+ SnNLOFpnalZRR3JtbWZua0dyWisxdjBIQnV4ZGljZ0duUC9XdHVBClVsOGw2Mi9BTGJheXlq
+ KzYxQ2xyc0V0UklhcU82N0xJWXdQaVBEUkkrWGlNek5pR3pIRi8xUTZHUjAyUkg2YTMKRjg5
+ ejhhUHhjSGkxWnZDdDJ5a3o2VUVjaHpQMHI1Z3FGSisvTC9VcHU4ME1YaVk0djVlSWFCNTJn
+ VlBnaXlNQQpsTDJkRHMxbUladm5yUkxSWTJ0YjNtQVlOa1Y1QjVJRFQzcGtXeTZrS281T0Nn
+ SytZZFlPUjhGTloyb04ydDhPCnJLK1ZudGFLN01NU0tIbG1ZL3NPd3RSbEVoMU9CbXJjQ3dH
+ d21wLzA1R2tSNDZmL0lzaFJWZUZPUmF3K0dBcXQKUDIrQ0ZhMkNOQS9JSG5aTm95aWtsRHpQ
+ UUhVVUdzck5wcERyaFg5Sm1oQm1nMXYyeXdIMU5YdTFpRGZQMUJBdwpLZ29rdDVmNVVhUkY5
+ c0FBNTN2V0V2YlVVTjllZXNGR0x6UFdkSkdRNWhwZC9WSDVJUXk5U0JyaC93SWNla3E1Cm4w
+ a042cGJUSHhHRTUyU2kvTVZJa05UdURaM2FwbjJqbERaNHBPdHBCWEkydlAzYlBPK05pcUJa
+ anNVM3R4TGkKV2R2MkZqeXp6NlhMUndlV1JZVkw1SGE2TER0eG9yMnZ1NlVQMDdwOXh6MXhS
+ WmFPRFczb1lsSEZ6WXBhNFc1ZwpMSGIybEVrSXVVZlNjaWNHYmpqQXRDbFRkR1ZtWVc0Z1Yy
+ Rm9jbVZ1SUR4emRHVm1ZVzR1ZDJGb2NtVnVRR2x1CkxYUmxZMmd1WTI5dFBva0NOd1FUQVFn
+ QUlRVUNYSWRlaHdJYkF3VUxDUWdIQWdZVkNBa0tDd0lFRmdJREFRSWUKQVFJWGdBQUtDUkNV
+ Z2V3UEVaRHkyeUhURC85VUY3UWxEa0d4elE3QWFDSTZOOTVpUWY4LzFvU1VhRE51Mlk2SQpL
+ K0R6UXBiMVRiVE9yM1ZKd3dZOGEzT1d6NU5MU09MTVdlVnh0K29zTW1sUUlHdWJEM09EWko4
+ aXpQbEcvSnJOCnQ1elNkbU41SUE1ZjNlc1dXUVZLdmdoWkFnVERxZHB2K1pIVzJFbXhuQUox
+ dUxGWFhlUWQzVVpjQzVyMy9nL3YKU2FNbzl4ZWszSjVtTnVEbTcxbEVXc0FzL0JBY0ZjK3lu
+ TGh4d0JXQld3c3Z3UjhiSHRKNURPTVd2YUt1RHNrcApJR0ZVZS9LYjJCK2pyYXZRM1RuNnMv
+ SHFKTTBjZXhTSHo1cGUrMHNHdlArdDlKNzIzNEJGUXdlRkV4cmlleThVCkl4T3I0WEFiYWFi
+ U3J5WW5VL3pWSDlVMWkyQUlRWk1XSkFldkN2VmdRL1UrTmVSaFh1ZGU5WVVtRE1EbzJzQjIK
+ VkFGRUFxaUYyUVVIUEEybThhN0VPM3lmTDRyTWswaUh6TElLdmg2L3JIOFFDWThpM1h4VE5M
+ OWlDTHpCV3UvTgpPbkNBYlMremx2TFphaVNNaDVFZnV4VHR2NFBsVmRFamY2MlArWkhJRDE2
+ Z1VEd0VtYXpMQU1yeDY2NmpINWt1ClVDVFZ5bWJMMFR2Qis2TDZBUmw4QU55TTRBRG1rV2tw
+ eU0yMmtDdUlTWUFFZlFSM3VXWFo5WWd4YVBNcWJWK3cKQnJoSmc0SGFONkM2eFRxR3YzcjRC
+ MmFxYjc3L0NWb1JKMVo5Y3BIQ3dpT3pJYUFtdnl6UFU2TXhDRFhaOEZnWQpsVDR2MjNHNWlt
+ SlAyemdYNXMrRjZBQ1VKOVVRUEQwdVRmK0o5RGEycitza2gvc1dPbloreWNvSE5CUXZvY1pF
+ Ck5BSFFmN2tDRFFSYmVvQVRBUkFBMkhkMGZzRFZLNzJSTFNESGJ5ME9oZ0RjRGxWQk0yTSto
+ WVlwTzNmWDFyKysKc2hpcVBLQ0hWQXNRNWJ4ZTdIbUppbUhhNEtLWXMya3YvbWx0L0NhdUNK
+ Ly9wbWN5Y0JNN0d2d25Lem11WHp1QQpHbVZUWkM2V1I1TGtha0ZydEhPelZtc0VHcE52NVJj
+ OWw2SFlGcExrYlNrVmk1U1BRWkp5K0VNZ01DRmdqclpmClZGNnlvdHdFMWFmN0hOdE1oTlBh
+ TEROMW9VS0Y1aitSeVJnNWl3SnVDRGtuSGp3QlFWNHBndzIvNXZTOEE3WlEKdjJNYlcvVExF
+ eXBLWGlmNzhJaGdBelh0RTJYck0xbi9vNlpINzFvUkZGS096NDJsRmR6ZHJTWDBZc3FYZ0hD
+ WAo1Z0l0TGZxemoxcHNNYTlvMWVpTlRFbTFkVlFyVHFueXMwbDE4b2FsUk5zd1lsUW1uWUJ3
+ cHdDa2FUSExNSHdLCmZHQmJvNWRMUEVzaHRWb3dJNm5zZ3FMVHlRSG1xSFlxVVpZSXBpZ21t
+ QzNTd0JXWTFWNmZmVUVta3FwQUFDRW4KTDQvZ1Vnbjd5US81ZDBzZXFuQXEycFNCSE1VVW9D
+ Y1R6RVFVV1ZraUR2M1JrN2hURm1oVHNNcTc4eHYyWFJzWApNUjZ5UWhTVFBGWkNZRFVFeEVs
+ RXNTbzlGV0hXcjZ6SHlZY2M4cURMRnZHOUZQaG1RdVQyczlCbHg2Z0kzMjNHCm5FcTFsd1dQ
+ SlZ6UDRqUWtKS0lBWHdGcHYrVzhDV0xxekRXT3ZkbHJEYVRhVk1zY0ZUZUg1VzZVcHJsNjVq
+ cUYKUUdNcGNSR0NzOEdDVVcxM0gwSXlPdFF0d1dYQTRueStTTDgxcHZpQW1hU1hVOGxhS2FS
+ dTkxVk9WYUY5ZjRzQQpFUUVBQVlrQ0h3UVlBUUlBQ1FVQ1czcUFFd0liREFBS0NSQ1VnZXdQ
+ RVpEeTIrb1hELzljSEhSa0JaT2ZrbVNxCjE0U3Z4MDYyUHRVMEtWNDcwVFNucC9qV29ZSm5L
+ SXczRzBtWElSZ3J0SDJkUHdwSWdWanNZeVJTVk1LbVNwdDUKWnJEZjlOdFRiTldnazhWb0xl
+ WnpZRW8rSjNvUHFGclRNczNhWVl2N2U0K0pLNjk1WW5tUSttT0Q5bmlhOTE1dApyNUFaajk1
+ VWZTVGx5VW15aWMxZDhvdnNmMWZQN1hDVVZSRmNSamZOZkRGMW9ML3BEZ01QNUdaMk93YVRl
+ am15CkN1SGpNOElSMUNpYXZCcFlEbUJuVFlrN1B0aHk2YXRXdllsMGZ5L0NxYWpUS3N4Nytw
+ OXh6aXU4WmZWWCtpS0IKQ2MrSGUrRURFZEdJRGh2TlovSVFIZk9CMlBVWFdHUytzOUZOVHhy
+ L0E2bkxHWG5BOVk2dzkzaVBkWUl3eFM3SwpYTG9LSmVlMTBEamx6c1lzUmZsRk9XMFpPaVNp
+ aElDWGlRVjF1cU02dHpGRzlndFJjaXVzNVVBdGhXYU8xT3dVClNDUW1mQ09tNGZ2TUlKSUE5
+ cnh0b1M2T3FSUWNpRjNjcm1vMHJKQ3ROMmF3WmZnaThYRWlmN2Q2aGp2MEVLTTkKWFpvaUFa
+ WVpEKy9pTG01VGFLV042b0dJdGkwVmpKdjhaWk9aT2ZDYjZ2cUZJa0pXK2FPdTRvclRMRk16
+ MjhhbwpVM1F5V3BOQzhGRm1kWXNWdWE4czZnTjFOSWE2eTNxYS9aQjhiQS9pa3k1OUFFejRp
+ RElScmdVek1FZzhBazdUCmZtMUtpWWVpVHRCRENvMjVCdlhqYnFzeXhrUUQxbmtSbTZGQVZ6
+ RXVPUEllOEp1cVcyeEQ5aXhHWXZqVTVoa1IKZ0pwM2dQNWIrY25HM0xQcXF1UTJFNmdvS1VN
+ TEFia0NEUVJiZmw5REFSQUFzRExjYStMbFAydm5mdEVHaHBjQQpCR1ZOUUVGbkdQckNhdVU2
+ SGhOODA1V3RQVHRtc1JPdUp6cWdVVDBtcHFXSWZacTZzTXd5dkhLOVRzL0tIM0paClVWYlJD
+ M3oyaDNLZmhIL0RhZjk1cGQ2bVBjL2g5dkYvT3kzK2VUV2hnR25QNmNBNWtsUitmTzFXaEc4
+ VnJpWHYKck5lUkcyMHN6emplSG9jblNJY1Q1WHVaUjB1REhPaUd4T2l6MXNNUkZUR3h6R095
+ MTlSOXJ2dTYzdGlJM2Q3dgpnYzc1T0NBZGtlQi9TZUNFbGFSdzBUZjdMWmJQampzRjI2M0JZ
+ bk1mNGtrTkVLdnFXY1UyaWNNcCtxZXpqeW5CCnB2ZXVlMHJDVFFCWUFRbG9GQ1ZUR0hyV1dB
+ NkQ0VzVPMkFmSWRJYzF1MUpDWnAyZjVMV1ZvVUZUVklyUW5RUVUKU0hDaWZyOU1aeExUdFBK
+ ZFU1Mm9TUHczZGs0aExQOGlKSUx1dnYvYXZhakNzUVlIRXR3WXNiZUZaeGl1TGdscApBN1lj
+ Sk5ObXBnQ3BNRDR3VWh2bEN0QUtOQlFXeXIyOTc2OThFUVRuNDZlQmVVNkttMkNpaFhrZ3dD
+ eWY4ZXlLCkxFM3NYZXdhcTVrZ1pXdk5xNml1NXFZSVJCOXl3K2NYYzYwZE9aRE9scTkzWDVT
+ QVJZemFvZXBrSHo0cmtMa1AKUG8rdENIeUhRUHNHblBYYzlXVDgwREM5Tm5KR2R2VWx5NXJk
+ TUk0eHBaeWdlb2tqd293VlFsUFV1Y1M2TXluNwpmOHc4Y2dmQjdDMklBSWNEeDJwUC9IendY
+ dmtDT1FOQTdtVjFsTTA4bitnVmtUcnpweGlwNURicTRDSW9ZeDJNCkpaVDhiR1JINlhqY1VE
+ S2EwOVFoeVpzQUVRRUFBWWtFUkFRWUFRZ0FEd1VDVzM1ZlF3SWJBZ1VKQThKbkFBSXAKQ1JD
+ VWdld1BFWkR5MjhGZElBUVpBUWdBQmdVQ1czNWZRd0FLQ1JCVnhETFBjVk1NamNkc0QvMFJo
+ QXN1UVlPeQpyMTNCbDNOaFhrWUFaR3AyWkZER3VrZTdPU2tWOG9qT09UZFR5ei9jT1JHQ2J5
+ ZEQrRGd2cUZ5VmRuT1hLZ08wCmxKbUd3ckdlTGRnZ0F2aDBpaHJwNU8wWVVKOWJCU1htR01t
+ UVRZSC9BbUxUR2FkYnVqQ1dqNWZGVWtDeXd4aW0KSHV5MFBiMjRwelR2UzUwR1k1WStxSDBG
+ SE5haWdka2tpV04zcnVnN0haRXUvQ3lsUFpqT1h6K0QxUVBNckV4dwo3ZC9NS2FiVis5YU5i
+ UVlabGRJajk4UXd2VUYxS1N6YThqbFVJdnBoUnEyN0FUOGZER1lHUGZERU1nMmNCT2FlCkty
+ N29uUXM0YjdhV082aWZEbHhRVHB6c3pvK0FuODA3Tk1TdFZFRmYrczNBaFZEM2U3bmY4SkJh
+ dmJWckFlMGsKb20yNm96elBubnh6K2xxVlZ0dzZVazRYTUl6dGl4L0h3SFl3dUNuY1VYWndL
+ MEkzeUFKd2pZd29vck9DaEozUwpFVWJKUVB0R3NneFJERXhWQkZlNk5MUC82MnhQOU82dGFj
+ d09kYjBNbVAxYjM5cFJBVEM3YmdkMWxkVUxpNzVaCmxKckowL1NpVkVyb3FOWXk3OXRmbWdB
+ WjJVeFptczlTckV5Nm85UVNmc24xYVh2K01QTDlKYUNHbWtQNnpiTFEKTm5kajBKY2FRbmtD
+ MHZneWRPMUJtNk11OTZQOXVmbEtaY0FTNndtTE01SWRIT3lqTDg4d0h3anVjakFPQnRjdwpw
+ MG9HVG5WT25Sc05ZU084VzhZWi9LZGJ1Nzg1ZGF6TXFKMmlOakFEdUJiZG02TjRqNUVkTW5r
+ TG4wQklmUEpwCmRnbTR2bDJVcExqd1JHci9NM3dtbTVwdnMrNnVCN2hrL0ZKaUQvNGxsRU5Q
+ NGVNMWg3U200aitWcTZOMSt6VEIKSVhKQWViSXFhc0RwNXlaUzdYcnk0STM2bjg1WEVZZkcw
+ MWx0QXlob05WMkRPOFNJUlFwdWkydHErOVJQM1JLMQpKREJ4eEVKWTJFTzVKWjhNeGFQSFEw
+ RFQwNWxSRmpLMkFsaGRFSXRqTGpwSjNmVW05c3FMeE1XeHpQNlV6M2lpCjJ1YTR1bnJ0Nk9D
+ VHFRd2lqRi8zYlRXaXd2VkFBSG5NRlVpb1hzaEhhb2hWRGNWZm5lSU1mVjBiUUNYWWkzTnAK
+ WTB2MFp3Y2lGSCtnU0M3cUQ2WE51aHBWR1NMNElpbGlGeS9TemNhSkV6QUhlTERTaFpQMkNX
+ ZG5DNHZnbDM3dApocHg4aDU1WWhKbjZIU3VVelBnaGFLdFZCMmsrajdaZXlaK1NGeHA3SXVi
+ SEN3TEhsUWhUNzVSd1EzaUF4S242CjBxajUxY1lUbnF4ZFpYVzZmSDNQa3VNellVNUdwcVIv
+ MU9sNWMvd2ZJNmc2QW04eUtXLzBFVUx0K0tuNExGc1MKbTdZM201SDV2MTJVNkpCWXZWK3Ix
+ M2paaW9zNEVFREU5M0Q1c05IMk1JeVJ6Q0RxMXpkZHQ0WHV5S0ZqUEtXMQo5aWJaRGZGVjdL
+ dUNzdnVMMjNzQmMxc0NNb3ArRTFtVC9ReE9JQTZvRFQxTVFzdHdPVnVReURDdi9PdktTZ2Z6
+ CjhGWEdMNkFQY2xqQ3FqOEFKaHhReXN4ZG9pUVA4bS92dStialdHR3Z4dzVzMWxncGlSRFRS
+ VVBnY0pKTmFHWTIKVklEclpRaTROU2lOUTBOSWkrZGp1NGZOTW1DcFFxZzh0YkMzY0FhNnl3
+ bTZvUUIxU0JobURYMmUxMWdSbGx1SQpPblRHUEUwSFRvM2w3MmxoYmc9PQo9cVpNVgotLS0t
+ LUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
+Message-ID: <d4242317-711d-23ce-c63e-7d355c8c0e41@i2se.com>
+Date:   Sun, 23 Jan 2022 15:08:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v16 2/4] dmaengine: tegra: Add tegra gpcdma driver
+In-Reply-To: <1640606743-10993-1-git-send-email-stefan.wahren@i2se.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-To:     Akhil R <akhilrajeev@nvidia.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Krishna Yarlagadda <kyarlagadda@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        Rajesh Gumasta <rgumasta@nvidia.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>
-Cc:     Pavan Kunapuli <pkunapuli@nvidia.com>
-References: <1641830718-23650-1-git-send-email-akhilrajeev@nvidia.com>
- <1641830718-23650-3-git-send-email-akhilrajeev@nvidia.com>
- <16c73e83-b990-7d8e-ddfd-7cbbe7e407ea@gmail.com>
- <DM5PR12MB1850A5F5ABA9CD5D04C37086C0579@DM5PR12MB1850.namprd12.prod.outlook.com>
- <1db14c3d-6a96-96dd-be76-b81b3a48a2b1@gmail.com>
- <DM5PR12MB1850FF1DC4DC1714E31AADB5C0589@DM5PR12MB1850.namprd12.prod.outlook.com>
- <683a71b1-049a-bddf-280d-5d5141b59686@gmail.com>
- <DM5PR12MB1850D67F9B5640943F1AEB2EC05B9@DM5PR12MB1850.namprd12.prod.outlook.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-In-Reply-To: <DM5PR12MB1850D67F9B5640943F1AEB2EC05B9@DM5PR12MB1850.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:TkOqMzqrNKylnzffM9D4F8fm9PZd+mZ26nklBgKq8Dgdi0BATM3
+ o8mF9fKeUEXD28DL3lcRqWj4hQYhWvQzJgWwjcczw1cv9giWR0AwkHE0ukhuxL0iGDI86zJ
+ UiadpS+eLrncTeBj7NleBbxMqXWOLigcdyYjX25rB4UJkiqawTWV9gRCFuMhjsqwsKSMPN5
+ 84uvWpufBEuAvbyQR+pdA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:t4EwauK7q8Y=:l5jus/mNhnUc88Cx5wxr86
+ FBfLK/piS5FQU3h151TAQLQ7VKEhTvc2ZqxYb691uy1jZPBswZyV+A3+2gLa2qIe3ajHhQ/b6
+ 1EGZhZs6k32S+8Wlyc/Z9c9cp0Gkq3/HVeNlQCJPk2CrdFNaWqf/a0PLbaKqcWNUWw5/o4Xhw
+ Iu1/Pckk4+goYnGlR/KuQTPF6L5YK3v3hI3x7nlych58pfDf/fb2P2uVWdkY93QhcC/D9Y2CH
+ /ppjVysZ2jHyRQVe6WNlkhmRzVv0OxyXqHezrOfEc/FELuCLc/14b/gZMJiEHda1QZU3KDVFU
+ p2SDIyZmHhM/oBhG4fl/9SGaHZE2ZabkF3MyKGaOLbrl4PzkchceYOgx8UaxzUu9ILniSTrds
+ WHxQwHXpysgTBYo56jkjvafXYqMV0wBuRnawB4S8na5wnd3dH5ZyEl8Apg1kV3toqE3k2rZHR
+ JjbbqZZixvoOe+mXUczl+dE+vP5mHoaDTH0YKr9iSI1MM89CKXG212zyeNkg6zmQuQzv5synF
+ yHbP6hMLFp7R604K2w0pr6pQ9/RiEn/zaweQ97zpusGtJl5EGrqK09eLxtasIfClf0F3LCtXU
+ oXBCgQK/NxGWTAgfp3eFeaj5Wof+f3w1QXYv8pnRGY+0RqnkUTS/za+JVnoJgIB8+ebD4eShR
+ +gCS/ps82wL5DP7vmaVY9+sbVjNRluGY5udohK1decgZBJFd6P8fvC04kWLYpIdgBjC86PSWB
+ AatSEnvn8ZZIYsPY
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-21.01.2022 19:24, Akhil R пишет:
->>>>>>> +static int tegra_dma_terminate_all(struct dma_chan *dc)
->>>>>>> +{
->>>>>>> +     struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
->>>>>>> +     unsigned long flags;
->>>>>>> +     LIST_HEAD(head);
->>>>>>> +     int err;
->>>>>>> +
->>>>>>> +     if (tdc->dma_desc) {
->>>>>>
->>>>>> Needs locking protection against racing with the interrupt handler.
->>>>> tegra_dma_stop_client() waits for the in-flight transfer
->>>>> to complete and prevents any additional transfer to start.
->>>>> Wouldn't it manage the race? Do you see any potential issue there?
->>>>
->>>> You should consider interrupt handler like a process running in a
->>>> parallel thread. The interrupt handler sets tdc->dma_desc to NULL, hence
->>>> you'll get NULL dereference in tegra_dma_stop_client().
->>>
->>> Is it better if I remove the below part from tegra_dma_stop_client() so
->>> that dma_desc is not accessed at all?
->>>
->>> +     wcount = tdc_read(tdc, TEGRA_GPCDMA_CHAN_XFER_COUNT);
->>> +     tdc->dma_desc->bytes_transferred +=
->>> +                     tdc->dma_desc->bytes_requested - (wcount * 4);
->>>
->>> Because I don't see a point in updating the value there. dma_desc is set
->>> to NULL in the next step in terminate_all() anyway.
->>
->> That isn't going help you much because you also can't release DMA
->> descriptor while interrupt handler still may be running and using that
->> descriptor.
-> 
-> Does the below functions look good to resolve the issue, provided
-> tegra_dma_stop_client() doesn't access dma_desc?
+Hi,
 
-Stop shall not race with the start.
-
-> +static int tegra_dma_terminate_all(struct dma_chan *dc)
-> +{
-> +       struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
-> +       unsigned long flags;
-> +       LIST_HEAD(head);
-> +       int err;
-> +
-> +       err = tegra_dma_stop_client(tdc);
-> +       if (err)
-> +               return err;
-> +
-> +       tegra_dma_stop(tdc);
-> +
-> +       spin_lock_irqsave(&tdc->vc.lock, flags);
-> +       tegra_dma_sid_free(tdc);
-> +       tdc->dma_desc = NULL;
-> +
-> +       vchan_get_all_descriptors(&tdc->vc, &head);
-> +       spin_unlock_irqrestore(&tdc->vc.lock, flags);
-> +
-> +       vchan_dma_desc_free_list(&tdc->vc, &head);
-> +
-> +       return 0;
-> +}
-> 
-> +static irqreturn_t tegra_dma_isr(int irq, void *dev_id)
-> +{
-> +       struct tegra_dma_channel *tdc = dev_id;
-> +       struct tegra_dma_desc *dma_desc = tdc->dma_desc;
-> +       struct tegra_dma_sg_req *sg_req;
-> +       u32 status;
-> +
-> +       /* Check channel error status register */
-> +       status = tdc_read(tdc, TEGRA_GPCDMA_CHAN_ERR_STATUS);
-> +       if (status) {
-> +               tegra_dma_chan_decode_error(tdc, status);
-> +               tegra_dma_dump_chan_regs(tdc);
-> +               tdc_write(tdc, TEGRA_GPCDMA_CHAN_ERR_STATUS, 0xFFFFFFFF);
-> +       }
-> +
-> +       status = tdc_read(tdc, TEGRA_GPCDMA_CHAN_STATUS);
-> +       if (!(status & TEGRA_GPCDMA_STATUS_ISE_EOC))
-> +               return IRQ_HANDLED;
-> +
-> +       tdc_write(tdc, TEGRA_GPCDMA_CHAN_STATUS,
-> +                 TEGRA_GPCDMA_STATUS_ISE_EOC);
-> +
-> +       spin_lock(&tdc->vc.lock);
-> +       if (!dma_desc)
-All checks and assignments must be done inside of critical section.
-
-
-> +               goto irq_done;
+Am 27.12.21 um 13:05 schrieb Stefan Wahren:
+> The BCM2711 has 4 DMA channels with a 40-bit address range, allowing them
+> to access the full 4GB of memory on a Pi 4. This patch series serves as a
+> basis for a discussion (just compile tested, so don't expect anything working)
+> which include the following points:
+>
+> * correct DT binding and representation for BCM2711
+>
+> According to the vendor DTS [1] the 4 DMA channels are connected to SCB.
+> I'm not sure how this is properly adapted to the mainline DT.
+>
+> * general implementation approach
+>
+> The vendor approach mapped all the BCM2835 control block bits to the BCM2711
+> layout and the rest of the differences are handled by a lot of is_40bit_channel
+> conditions. An advantage of this is the small amount of changes to the driver.
+> But on the down side the code is now much harder to understand and maintain.
+>
+> This series tries to implement this feature in a more cleaner way
+> while keeping it in the bcm2835-dma driver. Before this series the driver
+> has ~ 1000 lines and after that ~ 1500 lines.
+>
+> So the question is this approach acceptable?
+>
+> Patches 1 - 3 are just clean-ups.
+>
+> Disclaimer: my knowledge about the DMA controller is very limited
+>
+> More information:
+>
+> https://datasheets.raspberrypi.com/bcm2711/bcm2711-peripherals.pdf
+>
+> [1] - https://github.com/raspberrypi/linux/blob/561deffcf471ba0f7bd48541d06a79d5aa38d297/arch/arm/boot/dts/bcm2711-rpi-ds.dtsi#L47
+> [2] - https://github.com/raspberrypi/linux/commit/44364bd140b0bc9187c881fbdc4ee358961059d5
+would be nice to get some input aka gentle ping.

@@ -2,172 +2,161 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3368249ACAC
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Jan 2022 07:49:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8812649BC0F
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Jan 2022 20:28:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359685AbiAYGtg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 25 Jan 2022 01:49:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357821AbiAYGqn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Jan 2022 01:46:43 -0500
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6C2AC02B770
-        for <dmaengine@vger.kernel.org>; Mon, 24 Jan 2022 21:08:31 -0800 (PST)
-Received: by mail-lj1-x231.google.com with SMTP id z14so13504707ljc.13
-        for <dmaengine@vger.kernel.org>; Mon, 24 Jan 2022 21:08:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GxSSyNnOqzCbDA/E9stdLnXQVVTk0qCNicklKSphmTE=;
-        b=XEpVz6JCzRlwvzrVHSlio1hJXN0I7Jo6RUS5WdJB14stes+pFX/TT0467/drOAtV4F
-         Fafx04YchRFLS+NrdBHCAVYSrZeyfGWQJgO4yCFWZ7TNS9nRbfOEXhHc0p8bLu2j1nGx
-         DGm/hPyrHFSepZnu3ufjhHKobDXEsFymq0ySxjPE+KB27IFzhaSyGizFo5pl1Etijd0i
-         0rWi31Vci8bBF2yteqOmvuMbBsxqQQm7x6M6rLK3Q1uvUO41150UWdvM2ZTZlf2m/5oH
-         iYRqc5B2RKbZYDT2Qmx+L78jmyd89HwnG+Dkzh+HrKzMJRoZ8tp5y6Pa4i29N916vZwE
-         xvAw==
+        id S229947AbiAYT2f (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 25 Jan 2022 14:28:35 -0500
+Received: from mail-pl1-f175.google.com ([209.85.214.175]:35700 "EHLO
+        mail-pl1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229950AbiAYT2c (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Jan 2022 14:28:32 -0500
+Received: by mail-pl1-f175.google.com with SMTP id d18so7633582plg.2;
+        Tue, 25 Jan 2022 11:28:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GxSSyNnOqzCbDA/E9stdLnXQVVTk0qCNicklKSphmTE=;
-        b=0ajU0SXWQ5pgm/F8DkeUBJ+kUCaLuWqE2XsVEaFXNcsPFGDHEcEwZipHhcw3v3Fahi
-         N0+eIgx+YMU19E+1QcfVK5jFJ0WrficYM7TtLvqFZKJwbmgr1r3xr2w8JyHyLzlNsaNI
-         hWNWRkVWuBCSZzrk9wTnImaRz8ZO2toB29LK1pbWf/pR2QOS89TN3S0MNRjmATxSP19B
-         UA/Rsv2aZq/3mz87y6mWztu7msdueKIXWAn+9xePk38PizIp19wG20sONKzF41rYxd6J
-         ZNy6IYm9NdmXZj67XtOjBbd/1F+hayow39WLzqDRV6Q1JLNcDztp+QebJXijGoQcZEkj
-         cSqg==
-X-Gm-Message-State: AOAM533MF8+YmWgOe/zEQ9SKsIKxBXbALACOK+9un5W2/W6mbBAKNqBG
-        kjNQp6cc+RdMxhcOgX6qUKJZ3ady1MBMXs7AG0r1yw==
-X-Google-Smtp-Source: ABdhPJz8G5O7CyRA7YfvnePDrgsxGm48JXzLciOKTXj+4VHnx7wVcDu1IeHFxk8DtOhTpLN4KlQ+FL8pGOHi0tssC/U=
-X-Received: by 2002:a2e:3604:: with SMTP id d4mr13188020lja.52.1643087309734;
- Mon, 24 Jan 2022 21:08:29 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Rkz5i91jrZJto37j3RGSd05f/eRfvo2BCm796nin8Vs=;
+        b=XRSGOlm1VFqT3avvfzptjdr/V8D9yTVMulgMxGpZ7G7ejzNVUmBrSCSSzGdQIbyBGA
+         wLOATfMRkgFf7AKjLokOWmvQ71CTQzSyBSMu32dH9GIJwiRDS5KY51i2SYfY0XPneHL/
+         ryCWbdsIcvWIxwUcQruluk6MN1ULgD5779AyhvV50OPqRmw+gqJ494us1srnl3Ds/4Tw
+         FA+szLQkz+NTKT5gBSs8lhlo3if8ALpz98+fE8QN7vc+AWMtHB22xJKpNFyz/WEPjT5a
+         EUJbOhxxGarJRbtGkRONvQB963Qct9mbEQnP1NF+wi7cC9Cppqh/vlLxWz03d0sdhqgn
+         bGnA==
+X-Gm-Message-State: AOAM533sXRFtcUNigiJ0DQlIB32sZGa/bv9zSZa0r8EZkSOwfSQbHV9n
+        CPnYdKZ9giKc43jEewCH4OA=
+X-Google-Smtp-Source: ABdhPJyeNd/r+jQn3mMtMf9He8DTH104dq3dEwAvQtFQxWx1zXikeSDUCeamDKcdFDb0ku5F8bxZDQ==
+X-Received: by 2002:a17:902:6bc9:b0:149:fdf1:f031 with SMTP id m9-20020a1709026bc900b00149fdf1f031mr19734916plt.58.1643138906187;
+        Tue, 25 Jan 2022 11:28:26 -0800 (PST)
+Received: from localhost ([2601:647:5b00:ece0:aab:34ff:52ca:a7a5])
+        by smtp.gmail.com with ESMTPSA id qe15sm1162214pjb.47.2022.01.25.11.28.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jan 2022 11:28:25 -0800 (PST)
+Date:   Tue, 25 Jan 2022 11:28:24 -0800
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     arnd@arndb.de, hch@infradead.org, akpm@linux-foundation.org,
+        rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        davem@davemloft.net, airlied@linux.ie, vkoul@kernel.org,
+        hao.wu@intel.com, trix@redhat.com, mdf@kernel.org,
+        yilun.xu@intel.com, awalls@md.metrocast.net, mchehab@kernel.org,
+        sathya.prakash@broadcom.com, sreekanth.reddy@broadcom.com,
+        suganath-prabu.subramani@broadcom.com, mporter@kernel.crashing.org,
+        alex.bou9@gmail.com, bhelgaas@google.com,
+        linux-alpha@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        sparclinux@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-media@vger.kernel.org,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH 00/16] Remove usage of the deprecated "pci-dma-compat.h"
+ API
+Message-ID: <YfBPWB9m5TWcZuFY@epycbox.lan>
+References: <cover.1641500561.git.christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
-References: <0d0b0a3ad703f5ef50611e2dd80439675bda666a.1642383007.git.zong.li@sifive.com>
- <mhng-5b3e2596-3558-4534-9229-26885ee4cc5c@palmer-ri-x1c9>
- <CANXhq0ruGxjO0WPUipzZ7QQM1oEapyHAvb_aVQ_CMqVxbjc_BQ@mail.gmail.com>
- <CAMuHMdVh_cXpbUeOmr_1K0dOJwGHSO0Ao=W43j5mpgvOiNyV9w@mail.gmail.com> <CANXhq0oTrVMhY19odFHroJKXmW1dROdS5J5YR-osO9uwbr9GKA@mail.gmail.com>
-In-Reply-To: <CANXhq0oTrVMhY19odFHroJKXmW1dROdS5J5YR-osO9uwbr9GKA@mail.gmail.com>
-From:   Zong Li <zong.li@sifive.com>
-Date:   Tue, 25 Jan 2022 13:08:18 +0800
-Message-ID: <CANXhq0rODPACKVuUgz=7_S0JW0Rp+RGCQawPQ9ruYCQH87ZQoA@mail.gmail.com>
-Subject: Re: [PATCH v4 3/3] dmaengine: sf-pdma: Get number of channel by
- device tree
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Bin Meng <bin.meng@windriver.com>,
-        Green Wan <green.wan@sifive.com>, Vinod <vkoul@kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1641500561.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Jan 21, 2022 at 6:29 PM Zong Li <zong.li@sifive.com> wrote:
->
-> On Fri, Jan 21, 2022 at 4:33 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> >
-> > Hi Zong, Palmer,
-> >
-> > On Fri, Jan 21, 2022 at 3:21 AM Zong Li <zong.li@sifive.com> wrote:
-> > > On Fri, Jan 21, 2022 at 2:52 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
-> > > > On Sun, 16 Jan 2022 17:35:28 PST (-0800), zong.li@sifive.com wrote:
-> > > > > It currently assumes that there are always four channels, it would
-> > > > > cause the error if there is actually less than four channels. Change
-> > > > > that by getting number of channel from device tree.
-> > > > >
-> > > > > For backwards-compatible, it uses the default value (i.e. 4) when there
-> > > > > is no 'dma-channels' information in dts.
-> > > >
-> > > > Some of the same wording issues here as those I pointed out in the DT
-> > > > bindings patch.
-> > > >
-> > > > > Signed-off-by: Zong Li <zong.li@sifive.com>
-> >
-> > > > > --- a/drivers/dma/sf-pdma/sf-pdma.c
-> > > > > +++ b/drivers/dma/sf-pdma/sf-pdma.c
-> > > > > @@ -482,9 +482,7 @@ static void sf_pdma_setup_chans(struct sf_pdma *pdma)
-> > > > >  static int sf_pdma_probe(struct platform_device *pdev)
-> > > > >  {
-> > > > >       struct sf_pdma *pdma;
-> > > > > -     struct sf_pdma_chan *chan;
-> > > > >       struct resource *res;
-> > > > > -     int len, chans;
-> > > > >       int ret;
-> > > > >       const enum dma_slave_buswidth widths =
-> > > > >               DMA_SLAVE_BUSWIDTH_1_BYTE | DMA_SLAVE_BUSWIDTH_2_BYTES |
-> > > > > @@ -492,13 +490,21 @@ static int sf_pdma_probe(struct platform_device *pdev)
-> > > > >               DMA_SLAVE_BUSWIDTH_16_BYTES | DMA_SLAVE_BUSWIDTH_32_BYTES |
-> > > > >               DMA_SLAVE_BUSWIDTH_64_BYTES;
-> > > > >
-> > > > > -     chans = PDMA_NR_CH;
-> > > > > -     len = sizeof(*pdma) + sizeof(*chan) * chans;
-> > > > > -     pdma = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
-> > > > > +     pdma = devm_kzalloc(&pdev->dev, sizeof(*pdma), GFP_KERNEL);
-> > > > >       if (!pdma)
-> > > > >               return -ENOMEM;
-> > > > >
-> > > > > -     pdma->n_chans = chans;
-> > > > > +     ret = of_property_read_u32(pdev->dev.of_node, "dma-channels",
-> > > > > +                                &pdma->n_chans);
-> > > > > +     if (ret) {
-> > > > > +             dev_notice(&pdev->dev, "set number of channels to default value: 4\n");
-> > > > > +             pdma->n_chans = PDMA_MAX_NR_CH;
-> > > > > +     }
-> > > > > +
-> > > > > +     if (pdma->n_chans > PDMA_MAX_NR_CH) {
-> > > > > +             dev_err(&pdev->dev, "the number of channels exceeds the maximum\n");
-> > > > > +             return -EINVAL;
-> > > >
-> > > > Can we get away with just using only the number of channels the driver
-> > > > actually supports?  ie, just never sending an op to the channels above
-> > > > MAX_NR_CH?  That should leave us with nothing to track.
-> >
-> > In theory we can...
-> >
-> > > It might be a bit like when pdma->n_chans is bigger than the maximum,
-> > > set the pdma->chans to PDMA_MAX_NR_CH, then we could ensure that we
-> > > don't access the channels above the maximum. If I understand
-> > > correctly, I gave the similar thought in the thread of v2 patch, and
-> > > there are some discussions on that, but this way seems to lead to
-> > > hard-to-track problems.
-> >
-> > ... but that would mean that when a new variant appears that supports
-> > more channels, no error is printed, and people might not notice
-> > immediately that the higher channels are never used.
-> >
->
-> I guess people might need to follow the dt-bindings, so they couldn't
-> specify the number of channels to the value which is more than
-> maximum. But as you mentioned, if people don't notice that and specify
-> it more than maximum,  they wouldn't be aware that the higher channels
-> are never used. It seems to me that we could keep returning the error
-> there, or show a warning message and use PDMA_MAX_NR_CH in that
-> situation, both looks good to me.
->
+On Thu, Jan 06, 2022 at 10:45:13PM +0100, Christophe JAILLET wrote:
+> This serie axes all the remaining usages of the deprecated "pci-dma-compat.h"
+> API.
+> 
+> All these patches have already been posted.
+> 
+> They have been generated with a coccinelle script.
+> The tricky parts are patches that use dma_alloc_coherent() because the correct
+> GFP flag has to be used in place of the previous embedded GFP_ATOMIC.
+> 
+> Patches 1-3 are already Reviewed. References to the corresponding mail is
+> given below the ---
+> 
+> Patch 1-2,4-10 are just generated from the coccinelle script. Only too long
+> lines have been hand modified. dma_alloc_coherent() modification are NOT part
+> of these patches.
+> 
+> Patch 3 also includes some 'dma_set_mask_and_coherent()' instead of
+> 'pci_set_dma_mask()/pci_set_consistent_dma_mask()'.
+> I've left this additional modification because it was reviewed with it.
+> 
+> Patch 10-15 are the tricky parts. Explanation of which GFP flag is the right one
+> is given in each patch. It has been divided in several patches to ease review.
+> 
+> Patch 15 is the only one I'm slighly unsure with. The old code was using a
+> GFP_USER flag in the function. I'm not familiar with it.
+> I *guess*  that GFP_KERNEL is fine, but maybe it should also be GFP_USER or left
+> as GFP_ATOMIC so that nothing is changed.
+> 
+> Patch 16 is the last step that remove "pci-dma-compat.h" and its only usage.
+> 
+> 
+> All patches, exept 1-2,6 that are architecture specific, have been compile tested.
+> 
+> 
+> After all that, a few rst files, 1 or 2 strings in error messages and some
+> error branching labels should still need some attention. 
+> This is some minor issues.
+> 
+> 
+> Only the cover letter is sent to every one. Each patch is sent to the
+> corresponding maintainer(s) + Andrew Morton, Christoph Hellwig and Arnd Bergmann.
+> 
+> 
+> Best regards.
+> 
+> 
+> Christophe JAILLET (16):
+>   alpha: Remove usage of the deprecated "pci-dma-compat.h" API
+>   floppy: Remove usage of the deprecated "pci-dma-compat.h" API
+>   fpga: dfl: pci: Remove usage of the deprecated "pci-dma-compat.h" API
+>   media: Remove usage of the deprecated "pci-dma-compat.h" API
+>   agp/intel: Remove usage of the deprecated "pci-dma-compat.h" API
+>   sparc: Remove usage of the deprecated "pci-dma-compat.h" API
+>   dmaengine: pch_dma: Remove usage of the deprecated "pci-dma-compat.h"
+>     API
+>   rapidio/tsi721: Remove usage of the deprecated "pci-dma-compat.h" API
+>   media: v4l2-pci-skeleton: Remove usage of the deprecated
+>     "pci-dma-compat.h" API
+>   scsi: message: fusion: Remove usage of the deprecated
+>     "pci-dma-compat.h" API
+>   scsi: mptbase: Use dma_alloc_coherent() in 'mpt_alloc_fw_memory()'
+>   scsi: mptbase: Use dma_alloc_coherent()
+>   scsi: mptsas: Use dma_alloc_coherent() in
+>     mptsas_exp_repmanufacture_info()
+>   scsi: mptsas: Use dma_alloc_coherent()
+>   scsi: mptctl: Use dma_alloc_coherent()
+>   PCI: Remove usage of the deprecated "pci-dma-compat.h" API
+> 
+>  arch/alpha/include/asm/floppy.h     |   7 +-
+>  arch/alpha/kernel/pci_iommu.c       |  12 +--
+>  arch/powerpc/include/asm/floppy.h   |   8 +-
+>  arch/sparc/kernel/ioport.c          |   2 +-
+>  drivers/char/agp/intel-gtt.c        |  26 ++---
+>  drivers/dma/pch_dma.c               |   2 +-
+>  drivers/fpga/dfl-pci.c              |  14 +--
+>  drivers/media/pci/cx18/cx18-queue.h |   6 +-
+>  drivers/media/pci/ivtv/ivtv-queue.h |  25 +++--
+>  drivers/media/pci/ivtv/ivtv-udma.h  |   8 +-
+>  drivers/message/fusion/mptbase.c    | 149 ++++++++++++++++------------
+>  drivers/message/fusion/mptctl.c     |  82 +++++++++------
+>  drivers/message/fusion/mptlan.c     |  90 +++++++++--------
+>  drivers/message/fusion/mptsas.c     |  94 +++++++++---------
+>  drivers/rapidio/devices/tsi721.c    |   8 +-
+>  include/linux/pci-dma-compat.h      | 129 ------------------------
+>  include/linux/pci.h                 |   3 -
+>  samples/v4l/v4l2-pci-skeleton.c     |   2 +-
+>  18 files changed, 289 insertions(+), 378 deletions(-)
+>  delete mode 100644 include/linux/pci-dma-compat.h
+> 
+> -- 
+> 2.32.0
+> 
+Applied [03/16] to linux-fpga for-next.
 
-Hi all, thank you for the review, I'd like to prepare the next version
-patch, if current implementation of this part is ok to you, I will
-keep it in the next version. Please let me know if anything can be
-improved. Thanks
-
-> > Gr{oetje,eeting}s,
-> >
-> >                         Geert
-> >
-> > --
-> > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> >
-> > In personal conversations with technical people, I call myself a hacker. But
-> > when I'm talking to journalists I just say "programmer" or something like that.
-> >                                 -- Linus Torvalds
+Thanks,
+Moritz

@@ -2,47 +2,46 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2E5F4A0040
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Jan 2022 19:41:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9FCF4A0041
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Jan 2022 19:41:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235580AbiA1SlJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 28 Jan 2022 13:41:09 -0500
-Received: from mga02.intel.com ([134.134.136.20]:53454 "EHLO mga02.intel.com"
+        id S1343590AbiA1SlS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 28 Jan 2022 13:41:18 -0500
+Received: from mga06.intel.com ([134.134.136.31]:22587 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1343585AbiA1SlJ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 28 Jan 2022 13:41:09 -0500
+        id S1343585AbiA1SlS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 28 Jan 2022 13:41:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643395269; x=1674931269;
+  t=1643395278; x=1674931278;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=tFz5exw/Q8BYBVPJtqsAJmTppihvI1zL1DDjfonh8LQ=;
-  b=OdT3/+sDmjdrizRTAisTJJSirPbcV2ZxnB1c5XLY81HlXEaUM1tBeQn6
-   sqLliYClcE1BFlT15ltLzjzD3won5gEgnhv5igE4KJRaEKKnNfpf3kbQ/
-   mBmG/JS/CtJJ/wjVENwsbg5WHO1QerpK0gQZhNk45H47ikqqn7oOzsNwp
-   DigGMAZA7yJ1Zrzt8o6lGcKnlBsdS8lEGBEcqWS/f4ESeSYTyET00hUb5
-   juC7y/BpO6kv4v/HOALfXLc10FKplGi2STdt86rsSu6t1huRQ1vncPsgf
-   Y9e/0VIr8gPZJ+MAhCg+6UIwXqt6No3WoxnxK749tC0IH66g0pylbXZc9
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10240"; a="234559899"
+  bh=ye5S5Fhti5NDHBTOu0VS5+fU2jdSdbDIiMwIOSV02UY=;
+  b=Bp2ypCD1V95iuGJDXeL9Z/clRDsvzIgBx8fs2ewEIVKZQadStz4COzIb
+   qbBgyuv5SgfYkWMW0K+ZyrcdJ16hpOAfXiMrkgnWaYa0mvy+YZtKXlABY
+   fwHmxlQ//t1lTkOc5js6mS76l2O0gmKJ5Kz5r/85l7Os4MyZe9pQpEwcZ
+   QgMvKjYfKdMtzKs4qd3e7ppsGs8neW0eZcitC95sm1i3A/cxSLKmaKHYR
+   fcs7MjvTRx8HGjSBnNUQWOj/6V0PbsOeyEBXZj1hsHWO0HlfL53o+l5vR
+   Cj8tHxzbgHctg96tgfeIRG/KtuI8+YpaQE/bW39fbCcrwVcAYQIlexIzC
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10240"; a="307905172"
 X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
-   d="scan'208";a="234559899"
+   d="scan'208";a="307905172"
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 10:41:08 -0800
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 10:41:17 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
-   d="scan'208";a="618802153"
+   d="scan'208";a="618802156"
 Received: from bwalker-desk.ch.intel.com ([143.182.137.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 Jan 2022 10:41:08 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 28 Jan 2022 10:41:17 -0800
 From:   Ben Walker <benjamin.walker@intel.com>
 To:     vkoul@kernel.org
 Cc:     dmaengine@vger.kernel.org, ludovic.desroches@microchip.com,
         okaya@kernel.org, dave.jiang@intel.com,
-        Ben Walker <benjamin.walker@intel.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>
-Subject: [RFC PATCH 3/4] dmaengine: at_xdmac: In at_xdmac_prep_dma_memset, treat value as a single byte
-Date:   Fri, 28 Jan 2022 11:39:47 -0700
-Message-Id: <20220128183948.3924558-4-benjamin.walker@intel.com>
+        Ben Walker <benjamin.walker@intel.com>
+Subject: [RFC PATCH 4/4] dmaengine: hidma: In hidma_prep_dma_memset treat value as a single byte
+Date:   Fri, 28 Jan 2022 11:39:48 -0700
+Message-Id: <20220128183948.3924558-5-benjamin.walker@intel.com>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20220128183948.3924558-1-benjamin.walker@intel.com>
 References: <20220128183948.3924558-1-benjamin.walker@intel.com>
@@ -52,46 +51,48 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The value passed in to .prep_dma_memset is to be treated as a single
-byte repeating pattern.
+The value parameter is a single byte, so duplicate it to the 8 byte
+range that is used as the pattern.
 
 Signed-off-by: Ben Walker <benjamin.walker@intel.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
+Cc: Sinan Kaya <okaya@kernel.org>
 ---
- drivers/dma/at_xdmac.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/dma/qcom/hidma.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index a1da2b4b6d732..547778fc6445b 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -1202,6 +1202,7 @@ static struct at_xdmac_desc *at_xdmac_memset_create_desc(struct dma_chan *chan,
- 	unsigned long		flags;
- 	size_t			ublen;
- 	u32			dwidth;
-+	unsigned char		pattern;
- 	/*
- 	 * WARNING: The channel configuration is set here since there is no
- 	 * dmaengine_slave_config call in this case. Moreover we don't know the
-@@ -1244,10 +1245,16 @@ static struct at_xdmac_desc *at_xdmac_memset_create_desc(struct dma_chan *chan,
+diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
+index 65d054bb11aaa..d8aa6c0abe126 100644
+--- a/drivers/dma/qcom/hidma.c
++++ b/drivers/dma/qcom/hidma.c
+@@ -431,6 +431,7 @@ hidma_prep_dma_memset(struct dma_chan *dmach, dma_addr_t dest, int value,
+ 	struct hidma_desc *mdesc = NULL;
+ 	struct hidma_dev *mdma = mchan->dmadev;
+ 	unsigned long irqflags;
++	u64 pattern;
  
- 	chan_cc |= AT_XDMAC_CC_DWIDTH(dwidth);
+ 	/* Get free descriptor */
+ 	spin_lock_irqsave(&mchan->lock, irqflags);
+@@ -443,9 +444,19 @@ hidma_prep_dma_memset(struct dma_chan *dmach, dma_addr_t dest, int value,
+ 	if (!mdesc)
+ 		return NULL;
  
-+	/* Only the first byte of value is to be used according to dmaengine */
 +	pattern = (unsigned char)value;
++	pattern = (pattern << 56) |
++		  (pattern << 48) |
++		  (pattern << 40) |
++		  (pattern << 32) |
++		  (pattern << 24) |
++		  (pattern << 16) |
++		  (pattern << 8) |
++		  pattern;
 +
- 	ublen = len >> dwidth;
+ 	mdesc->desc.flags = flags;
+ 	hidma_ll_set_transfer_params(mdma->lldev, mdesc->tre_ch,
+-				     value, dest, len, flags,
++				     pattern, dest, len, flags,
+ 				     HIDMA_TRE_MEMSET);
  
- 	desc->lld.mbr_da = dst_addr;
--	desc->lld.mbr_ds = value;
-+	desc->lld.mbr_ds = (pattern << 24) |
-+			   (pattern << 16) |
-+			   (pattern << 8) |
-+			   pattern;
- 	desc->lld.mbr_ubc = AT_XDMAC_MBR_UBC_NDV3
- 		| AT_XDMAC_MBR_UBC_NDEN
- 		| AT_XDMAC_MBR_UBC_NSEN
+ 	/* Place descriptor in prepared list */
 -- 
 2.33.1
 

@@ -2,54 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 360564A3ADF
-	for <lists+dmaengine@lfdr.de>; Mon, 31 Jan 2022 00:11:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A9EA84A3AF9
+	for <lists+dmaengine@lfdr.de>; Mon, 31 Jan 2022 00:23:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233819AbiA3XLs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 30 Jan 2022 18:11:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56854 "EHLO
+        id S1356803AbiA3XXd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 30 Jan 2022 18:23:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356805AbiA3XLp (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 30 Jan 2022 18:11:45 -0500
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CB9DC061714;
-        Sun, 30 Jan 2022 15:11:44 -0800 (PST)
-Received: by mail-lf1-x134.google.com with SMTP id u6so23177493lfm.10;
-        Sun, 30 Jan 2022 15:11:44 -0800 (PST)
+        with ESMTP id S229903AbiA3XXd (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 30 Jan 2022 18:23:33 -0500
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B682C061714;
+        Sun, 30 Jan 2022 15:23:32 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id z4so23274132lft.3;
+        Sun, 30 Jan 2022 15:23:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=fBazUoManQmdCOgsGnYl8pWs8Dgsrr/yW5B1ya2FEso=;
-        b=kXcT76Ehpw97klLUe1NbiJ0Hd9PCFkTohf9mqSOw84cGUws54aaiEF93maRWcwgzkC
-         UgPjZmMTXIq96JADlDRaqJZJYwULe1UdNr4+ythUnIilnlq2BfVI7XZpvNilR2/dKBwD
-         eTvNl1uOV7H6j48EBrHsJ45xnr/mbsqfIifWds5mJ0f/HslUswKTam22TTei9lq0SROP
-         mLhD3Sl9/5p9PYaWT0v8wEPDNEH0laWRBbdMmBNqUHGXA6ssUySj/Zceoy3L2cJUsKnj
-         Oq5zzJBchhW+HRb/hS1mSi+9IpCnX162IvyBbTgsZbQ1G9jBHG4n3bn+wBSTpfKvBfI1
-         VPNg==
+        bh=hjWnQjTh+Jhn+MkeRugfJqa0o+1S0rAaZn892MQUIPc=;
+        b=ncu+RIgVZT2ZhXx6LsrAITVCvtQyLlPtl/DoIsaPqKtr+f5m6hxambvja5Wwx9i8qm
+         wyzfivyprc+E19acVfLISr1lAtAB3qxCx+FknpMcF0UsxRXh693fUnOOMN7DPLMMhptd
+         jQra0sBN2OWtu3tabkqTMOgPrAMByvIRYPMKbXJQbDNft8RHYOLOQW2ZwYTdLGaTTB8p
+         CLiC+Qt+dLt7I4LX0e0+humxArxiaSMg9IQbNlgJXpX8ol0W2bILE3wbL9R/jWZSm6Du
+         5f2SUpz2f65xe5pC5s2MXdgUMQ8HRCwSVA/WW914mEyhoDX7lmdCrzgWYjoYd4NlcjpV
+         NLBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=fBazUoManQmdCOgsGnYl8pWs8Dgsrr/yW5B1ya2FEso=;
-        b=xQBlS/IlNALV/jAqnI+sEG7rPJjWcR7lqKtb46MSsOClFHsf6QYubwnii+U6dDyFPW
-         gjYujX0ykfeO2SBWN0KpQFCr4XEYAEo+oVfIVJDa+FQXUPZokVYHQI+KAiE1MFrKkVDc
-         coamb9tUJeXCZjuEvT8r/o1mfP/WAAX9lVzVtFzD7JSMhMOqDyMebWr29ZDCVm/sINRR
-         L/SieNDpbXjpN3pxejuzJLQYKPUpXHnAZVHHJcLg6nerO1+5hsVVKHFK+adrzLKSjp1T
-         sHj/MpZ5E0FmDvncQrMhqI2+xfFsDvxX+ygOn1yRj76ii3nmXttLBLMqkB0+bvQuzQwk
-         VAnQ==
-X-Gm-Message-State: AOAM533LVqYAzBAmuBtxzkZlML+s183NmvAyhzaSIGTrBNxgP3IzWXrp
-        AWDpjE21LC35FEERpxhnYTY=
-X-Google-Smtp-Source: ABdhPJxQCslvN2wphyp5gdfJHOCkv2vF9rSTO8WVZr5H+FWJDqc4bVz/uuv9QFu4ovxDSFAhJ/iSsA==
-X-Received: by 2002:ac2:5c4d:: with SMTP id s13mr13550392lfp.324.1643584302676;
-        Sun, 30 Jan 2022 15:11:42 -0800 (PST)
+        bh=hjWnQjTh+Jhn+MkeRugfJqa0o+1S0rAaZn892MQUIPc=;
+        b=i6+E3Wd/uZsnuu381uSUhbH1zuyNFYFktgUrK0C9HTBOTWqJHBVyk6ktq23dJHTjZo
+         FRUgS8kdlCMhJAz8bsfiI0+RCciZtNV+kHG+tgPS8eWq5mLUJf5muzEj3f1XZPHf7/Ta
+         TE4ajStklqP/8uQw7Lcxan8oStvmUk1N5uXW06oW4K8gRMFLGvl/cC6RA3Zyy9HkJ0SE
+         RligYzLDP0F6tymR33qkPIUFwjbDqYgdu78VkAkR9pPqMmyh+JsR1Q7Wzx75GFjH8yBG
+         PXO7Kv/+qBaJ7vRki+6KEVKAeM9KyfIcLHJiecBCIRidP1J5BwPQLCaz5ea2nE6dQf2b
+         ZQ5A==
+X-Gm-Message-State: AOAM531XSYkZoLzujn5hucewyv7QVAFVi41wcCPTOgXnopkxGwWqyGgE
+        Hn0ShfHiY/CEw2ESoXbTTHt9NFiJUjE=
+X-Google-Smtp-Source: ABdhPJxLCye+nMEmvg/p3mBLmZKVLrjX9D/8KNbNof1jTll5aN0TEIbRPBHe4zv8TZxs9Nez564RrQ==
+X-Received: by 2002:a19:f014:: with SMTP id p20mr13780076lfc.68.1643585010268;
+        Sun, 30 Jan 2022 15:23:30 -0800 (PST)
 Received: from [192.168.2.145] (109-252-138-126.dynamic.spd-mgts.ru. [109.252.138.126])
-        by smtp.googlemail.com with ESMTPSA id d25sm1019704lfe.297.2022.01.30.15.11.41
+        by smtp.googlemail.com with ESMTPSA id u14sm577043lfo.58.2022.01.30.15.23.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Jan 2022 15:11:42 -0800 (PST)
-Message-ID: <08f6571e-af75-b6b3-443e-e86e3bdb365b@gmail.com>
-Date:   Mon, 31 Jan 2022 02:11:41 +0300
+        Sun, 30 Jan 2022 15:23:29 -0800 (PST)
+Message-ID: <f3ffb863-7a78-414c-bee2-09293b28a9da@gmail.com>
+Date:   Mon, 31 Jan 2022 02:23:28 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
@@ -72,51 +72,90 @@ Cc:     Pavan Kunapuli <pkunapuli@nvidia.com>
 References: <1643474453-32619-1-git-send-email-akhilrajeev@nvidia.com>
  <1643474453-32619-3-git-send-email-akhilrajeev@nvidia.com>
  <ba109465-d7ee-09cb-775b-9b702a3910b0@gmail.com>
- <DM5PR12MB1850D836ACDF95008EF74CC7C0249@DM5PR12MB1850.namprd12.prod.outlook.com>
+ <dcd4e4db-2999-15c9-0c82-42dd8ca1e61d@gmail.com>
+ <f32e119a-1d08-d1f9-a264-fe004960e8bf@gmail.com>
+ <DM5PR12MB1850C29D41F50FA6850C89DDC0249@DM5PR12MB1850.namprd12.prod.outlook.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-In-Reply-To: <DM5PR12MB1850D836ACDF95008EF74CC7C0249@DM5PR12MB1850.namprd12.prod.outlook.com>
+In-Reply-To: <DM5PR12MB1850C29D41F50FA6850C89DDC0249@DM5PR12MB1850.namprd12.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-30.01.2022 19:34, Akhil R пишет:
->> 29.01.2022 19:40, Akhil R пишет:
->>> +static int tegra_dma_device_pause(struct dma_chan *dc) {
->>> +     struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
->>> +     unsigned long wcount, flags;
->>> +     int ret = 0;
->>> +
->>> +     if (!tdc->tdma->chip_data->hw_support_pause)
->>> +             return 0;
+30.01.2022 19:43, Akhil R пишет:
+>> 30.01.2022 13:26, Dmitry Osipenko пишет:
+>>> 30.01.2022 13:05, Dmitry Osipenko пишет:
+>>>> Still nothing prevents interrupt handler to fire during the pause.
+>>>>
+>>>> What you actually need to do is to disable/enable interrupt. This
+>>>> will prevent the interrupt racing and then pause/resume may look like this:
+>>>
+>>> Although, seems this won't work, unfortunately. I see now that
+>>> device_pause() doesn't have might_sleep().
+>>>
 >>
->> It's wrong to return zero if pause unsupported, please see what
->> dmaengine_pause() returns.
+>> Ah, I see now that the pause/unpause is actually a separate control and doesn't
+>> conflict with "start next transfer".
 >>
->>> +
->>> +     spin_lock_irqsave(&tdc->vc.lock, flags);
->>> +     if (!tdc->dma_desc)
->>> +             goto out;
->>> +
->>> +     ret = tegra_dma_pause(tdc);
->>> +     if (ret) {
->>> +             dev_err(tdc2dev(tdc), "DMA pause timed out\n");
->>> +             goto out;
->>> +     }
->>> +
->>> +     wcount = tdc_read(tdc, TEGRA_GPCDMA_CHAN_XFER_COUNT);
->>> +     tdc->dma_desc->bytes_xfer +=
->>> +                     tdc->dma_desc->bytes_req - (wcount * 4);
+>> So you just need to set/unset the pause under lock. And don't touch
+>> tdc->dma_desc. That's it.
 >>
->> Why transfer is accumulated?
+>> static int tegra_dma_device_pause(struct dma_chan *dc) {
+>>         struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+>>         unsigned long flags;
+>>         u32 val;
 >>
->> Why do you need to update xfer size at all on pause?
+>>         if (!tdc->tdma->chip_data->hw_support_pause)
+>>                 return -ENOSYS;
+>>
+>>         spin_lock_irqsave(&tdc->vc.lock, flags);
+>>
+>>         val = tdc_read(tdc, TEGRA_GPCDMA_CHAN_CSRE);
+>>         val |= TEGRA_GPCDMA_CHAN_CSRE_PAUSE;
+>>         tdc_write(tdc, TEGRA_GPCDMA_CHAN_CSRE, val);
+>>
+>>         spin_unlock_irqrestore(&tdc->vc.lock, flags);
+>>
+>>         return 0;
+>> }
+>>
+>> static int tegra_dma_device_resume(struct dma_chan *dc) {
+>>         struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+>>         unsigned long flags;
+>>         u32 val;
+>>
+>>         if (!tdc->tdma->chip_data->hw_support_pause)
+>>                 return -ENOSYS;
+>>
+>>         spin_lock_irqsave(&tdc->vc.lock, flags);
+>>
+>>         val = tdc_read(tdc, TEGRA_GPCDMA_CHAN_CSRE);
+>>         val &= ~TEGRA_GPCDMA_CHAN_CSRE_PAUSE;
+>>         tdc_write(tdc, TEGRA_GPCDMA_CHAN_CSRE, val);
+>>
+>>         spin_unlock_irqrestore(&tdc->vc.lock, flags);
+>>
+>>         return 0;
+>> }
 > 
-> I will verify the calculation. This looks correct only for single sg transaction.
-> 
-> Updating xfer_size is added to support drivers which pause the transaction
-> and read the status before terminating. 
-> Eg. https://elixir.bootlin.com/linux/latest/source/drivers/tty/serial/amba-pl011.c
+> The reason I separated out register writes was to conveniently call those
+> in dma_start() and terminate_all(). Do you see any issue there?
+> The recommended way of terminating a transfer in between is to pause
+> it before disabling the channel.
 
-Why you couldn't update the status in tegra_dma_terminate_all()?
+This is a sample code, feel free to adjust it as needed.
+
+> dma_desc could be NULL while these functions are called. pause() or
+> resume() is unneeded if there isn't any transfer going on. Moreover,
+> if we are to calculate the xfer_size, the check would be mandatory.
+
+For now looks like it should be better to move the xfer_size updating to
+other places, like terminate_all() and tx_status().
+
+I also see now that you have
+residue_granularity=DMA_RESIDUE_GRANULARITY_BURST, while tx_status()  in
+fact uses segment granularity. This needs to be corrected.
+
+You also must add locking to tx_status(), to protect tdc->dma_desc
+pointer updates.

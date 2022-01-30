@@ -2,86 +2,70 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4DB04A35C6
-	for <lists+dmaengine@lfdr.de>; Sun, 30 Jan 2022 11:39:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 03E014A3699
+	for <lists+dmaengine@lfdr.de>; Sun, 30 Jan 2022 15:12:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232317AbiA3KjL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 30 Jan 2022 05:39:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233939AbiA3KjJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 30 Jan 2022 05:39:09 -0500
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53941C061714;
-        Sun, 30 Jan 2022 02:39:09 -0800 (PST)
-Received: by mail-lj1-x234.google.com with SMTP id t7so15391117ljc.10;
-        Sun, 30 Jan 2022 02:39:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=gtnyB8ubZiXqYBaZeGR5BpWJct2w6Or8WCdgqTrzOcg=;
-        b=YhDLZ9XN96D1M/SqK99RQPX3oJ9huqLiDu47HQURAlR1JbpNzNBlcdHTCaZHCW0DWn
-         3miFnLdLMfMaxTnsxj50irzyhAoOyz48s88RrfSpOGhixgqPFuWw3Nv5wVea39/x1r8A
-         27KWONjTkNkZcvCdxD6W+f+6JEXldgxzhsiTrvNy5kP7s5UlodDroMr86bRph+jT2ZUn
-         mR2tUHwXKmfkEzfufVdr4Ek19jEojXkq7iZKX3JOw2DfVQ5EYT9oMBbhJ0kDSE7RQzKx
-         1ehjq83NMKEbDa0heZGHfnMzIPh5WDwXgBXLTL7FQq5lqL6vocDKAa/cZLyitZb26Ano
-         Mv3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=gtnyB8ubZiXqYBaZeGR5BpWJct2w6Or8WCdgqTrzOcg=;
-        b=hOLO6N0o9wvMuvz7wjHdnlhzU66KsnHzzQR+b7EDWOYLq87myTpQUwE2hMVY2IHrJO
-         U5alwG/4dgKTTqPDWugWjRq5AGhKnwTChwtuD7ZB2Ko1qgBsZlqRfEH4cC8918qCZa94
-         QBl/2UCBkfjP9IxPn1Bp8ilhqVV4qUi7zm4LoEIEY83inyyZTrTDebSYgk5yTEGvwlxW
-         CEBz2mAvQ/7Bfs8OybX9KQgqDpFyGC2yGjaZlOQvsxAphXDMjKc61DRx6AbFtVsfIYna
-         crCSx6A3WVJrzLf2MDeeB85eAcjoCrAbrsJF50x3S/5+HZcRXd1tVZnzKJSoERGwfszO
-         /sWw==
-X-Gm-Message-State: AOAM531loDqMvqeJmdvRJP7RlPxA4JDYA2cTgjWJaP/huaqubXuBWda/
-        nSK7qK73irHa6ocVjrBKXig=
-X-Google-Smtp-Source: ABdhPJzsqk+Vhmf8zRuTlh8LTY+MW7lSEZQl/2XL/czKI9Qrqd9FECtNiuVDMn2NoebdDG39AO4+9w==
-X-Received: by 2002:a05:651c:891:: with SMTP id d17mr10794836ljq.443.1643539147768;
-        Sun, 30 Jan 2022 02:39:07 -0800 (PST)
-Received: from [192.168.2.145] (109-252-138-126.dynamic.spd-mgts.ru. [109.252.138.126])
-        by smtp.googlemail.com with ESMTPSA id g8sm3230961lfc.236.2022.01.30.02.39.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Jan 2022 02:39:07 -0800 (PST)
-Message-ID: <22aa3313-3b12-c92f-5955-3a8736cbe8f4@gmail.com>
-Date:   Sun, 30 Jan 2022 13:39:06 +0300
+        id S1354957AbiA3OMT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 30 Jan 2022 09:12:19 -0500
+Received: from smtp10.smtpout.orange.fr ([80.12.242.132]:64683 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1347147AbiA3OMS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 30 Jan 2022 09:12:18 -0500
+Received: from pop-os.home ([90.126.236.122])
+        by smtp.orange.fr with ESMTPA
+        id EAwCnru7fEuQ2EAwCnR8Qu; Sun, 30 Jan 2022 15:12:17 +0100
+X-ME-Helo: pop-os.home
+X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
+X-ME-Date: Sun, 30 Jan 2022 15:12:17 +0100
+X-ME-IP: 90.126.236.122
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     Sanjay R Mehta <sanju.mehta@amd.com>, Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH] dmaengine: ptdma: Fix the error handling path in pt_core_init()
+Date:   Sun, 30 Jan 2022 15:12:09 +0100
+Message-Id: <1b2573cf3cd077494531993239f80c08e7feb39e.1643551909.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v17 2/4] dmaengine: tegra: Add tegra gpcdma driver
-Content-Language: en-US
-To:     Akhil R <akhilrajeev@nvidia.com>, devicetree@vger.kernel.org,
-        dmaengine@vger.kernel.org, jonathanh@nvidia.com,
-        kyarlagadda@nvidia.com, ldewangan@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        p.zabel@pengutronix.de, rgumasta@nvidia.com, robh+dt@kernel.org,
-        thierry.reding@gmail.com, vkoul@kernel.org
-Cc:     Pavan Kunapuli <pkunapuli@nvidia.com>
-References: <1643474453-32619-1-git-send-email-akhilrajeev@nvidia.com>
- <1643474453-32619-3-git-send-email-akhilrajeev@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-In-Reply-To: <1643474453-32619-3-git-send-email-akhilrajeev@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-29.01.2022 19:40, Akhil R пишет:
-> +static void tegra_dma_free_chan_resources(struct dma_chan *dc)
-> +{
-> +	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
-> +
-> +	dev_dbg(tdc2dev(tdc), "Freeing channel %d\n", tdc->id);
-> +
-> +	tegra_dma_terminate_all(dc);
+In order to free resources correctly in the error handling path of
+pt_core_init(), 2 goto's have to be switched. Otherwise, some resources
+will leak and we will try to release things that have not been allocated
+yet.
 
-	synchronize_irq(tdc->irq);
+Fixes: fa5d823b16a9 ("dmaengine: ptdma: Initial driver for the AMD PTDMA")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/dma/ptdma/ptdma-dev.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> +	tasklet_kill(&tdc->vc.task);
+diff --git a/drivers/dma/ptdma/ptdma-dev.c b/drivers/dma/ptdma/ptdma-dev.c
+index 8a6bf291a73f..3fa2a6ed4b68 100644
+--- a/drivers/dma/ptdma/ptdma-dev.c
++++ b/drivers/dma/ptdma/ptdma-dev.c
+@@ -207,7 +207,7 @@ int pt_core_init(struct pt_device *pt)
+ 	if (!cmd_q->qbase) {
+ 		dev_err(dev, "unable to allocate command queue\n");
+ 		ret = -ENOMEM;
+-		goto e_dma_alloc;
++		goto e_pool;
+ 	}
+ 
+ 	cmd_q->qidx = 0;
+@@ -230,7 +230,7 @@ int pt_core_init(struct pt_device *pt)
+ 	/* Request an irq */
+ 	ret = request_irq(pt->pt_irq, pt_core_irq_handler, 0, dev_name(pt->dev), pt);
+ 	if (ret)
+-		goto e_pool;
++		goto e_dma_alloc;
+ 
+ 	/* Update the device registers with queue information. */
+ 	cmd_q->qcontrol &= ~CMD_Q_SIZE;
+-- 
+2.32.0
 

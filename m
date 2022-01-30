@@ -2,60 +2,59 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 914E04A35BB
-	for <lists+dmaengine@lfdr.de>; Sun, 30 Jan 2022 11:33:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B45B4A35C2
+	for <lists+dmaengine@lfdr.de>; Sun, 30 Jan 2022 11:39:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354610AbiA3Kdz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 30 Jan 2022 05:33:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60394 "EHLO
+        id S234123AbiA3KjB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 30 Jan 2022 05:39:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231978AbiA3Kdy (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 30 Jan 2022 05:33:54 -0500
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57AE2C061714;
-        Sun, 30 Jan 2022 02:33:54 -0800 (PST)
-Received: by mail-lf1-x130.google.com with SMTP id x23so20995045lfc.0;
-        Sun, 30 Jan 2022 02:33:54 -0800 (PST)
+        with ESMTP id S231978AbiA3KjB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 30 Jan 2022 05:39:01 -0500
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C98EDC061714;
+        Sun, 30 Jan 2022 02:39:00 -0800 (PST)
+Received: by mail-lj1-x234.google.com with SMTP id a25so15399755lji.9;
+        Sun, 30 Jan 2022 02:39:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language
-         :from:to:cc:references:in-reply-to:content-transfer-encoding;
-        bh=qogYnykCq8GPqjgSxhoKbfcFb8+hulxt7m27U6WNjps=;
-        b=cLiFhSrHn0IyGSVbqITyXEXxJchtGzRn3Nk683Q3sZ1pUaAUycOJrkdcX4LOb4vPp3
-         9WHBxHU2wJOporKYgXlP1M+qiwzCcMNyYCqdrzrjGJl/LMANVBJ+ULpA+AnHVRjwkkmr
-         QVhVCcUChLaULEQ6eEfHvMJQ7ODmFn/EoTlnwVZyOgaBKTyDCdew1xyjiZ3kwJZG+co+
-         k/l+vf7qzznf+ZvmHgGlzs4UtDkdIMLL6F8poOLjOoGw8h0S5j/CM5N8VeANRnb49qSp
-         AMl9siDlHP/OBi8/Zuyxr7UGaRObIBJFMv1jcKqh+5IGu2FYJYkRAZCXUDe81YKTIt+l
-         ceXg==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=OGsou4bITobcNoh/T8B7f3LUVtaDKYId34ZdytE10to=;
+        b=pdcHHmtt7GJhItUOIifV2/1NhInqMBc2yHvyui2IeBXkUc0BTjVCM1oFcemic15Oms
+         N7+FM5fiQ6xyZv03VHEaWo/1PcKfv7SKzQ1NCw4YCcXxh/rJEBzaKhdEbqfwvAw+qQm3
+         +ZJuVMai6J2OAvXEaxqiwaCQAh3JiG8CSehETpcc+iRpi89eBXJEXgg+sGlmVOwVLob8
+         nxXEtJty2OjtCU0MTn33/Ww5H+xL5RH/cNn//W6kxpLlRZStAI6+5mJlDM4nyuGEYaL5
+         IbswopnqZGZrG/mZfwx/6k+SZCXpUyQ9Z2elMZzaUHjRxkoQj2a72iRvUTkbYbGX46yr
+         VY2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:in-reply-to
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=qogYnykCq8GPqjgSxhoKbfcFb8+hulxt7m27U6WNjps=;
-        b=rapjS3PsXa156/bMTfM278MUsm6KvlFK+akJryNYBczIvYNQh2Ywd5sjvQAadkvHOL
-         uy217jzSBkZgJaGUu0L/W5ODiiMeeEU/w0c3FTcnNT9qX6thywa8Vw3c+AgBy9jHTDlY
-         Ev/BQ2W3wRd5PqgoMUUROgUm1hlyutUUflfw4t6sFruasWtXWXlyMHuwxdoej7OkGbk3
-         a0A9X0Mz/LB+FAdpsbf/KbyTAdQ2xZqjnPvj9Ew520vV6hWJyoKtNU8LMLoeq/uO0UQj
-         e+ACGjZSWB994j779KXfa6NQi6eRK+fwp5rBIwAGEykoMZFCzsOfeuTKGyOK3sLWiIid
-         l9Gg==
-X-Gm-Message-State: AOAM531dOKxckAnFKbidC0QLQP5di/QUMCO+gc0lJ/wjwnkexYwkwHSJ
-        qT44OLG+bNa2ZYK5HGa+RfM=
-X-Google-Smtp-Source: ABdhPJzduR146OXne0GOzLqFHOt0mkr4cvN2mvV/JXrbzijRxEzWmQwz0n5JcW4bZquOuleGEGVwyw==
-X-Received: by 2002:ac2:4118:: with SMTP id b24mr11744551lfi.64.1643538832692;
-        Sun, 30 Jan 2022 02:33:52 -0800 (PST)
+        bh=OGsou4bITobcNoh/T8B7f3LUVtaDKYId34ZdytE10to=;
+        b=y3Gd0ecJ9sBnXhqWF+m97K+DqFKJYLaOa/Fmom879OMQq/UHPANKu6+x2dq1q4ZJZJ
+         TnjjJo3avdvl8JFPXzSoxpox1WmML8pFaadyQKLsPhbkapC38JPsHwld6gn77WoYxQ86
+         ngF5IXVIuv+eOP5Te4PO6U1DZxcWY91BVcJERQVRt3JUJFWsHCSuZJoYYINgb0iS/eEo
+         8lXBlO7A8i/56xaMvHoYtsWEc1oISE2MDmfOsTymsbBP56phO2CJCQyMU348rXw5fI3H
+         vZzLcKivz3g0BnVlRKfg+/1iSeyUjUek2WCaxcJSzKOq20i1Qh3QALpHc8+ieZd80lhI
+         2zgA==
+X-Gm-Message-State: AOAM5300JircR3JN/BRY3KH8vvKKOh6Jbv8s5Ih4Agz3s/VEuBk7v8j/
+        DgY5CikwKlJgkievZSPffHw=
+X-Google-Smtp-Source: ABdhPJwSSFhJL1PtS35AqD+vk9HhxxQoB3K7jrFPRLjEGRG3ZfmV5BOQ50lKOjqZZEb8PYOjXfpoVA==
+X-Received: by 2002:a2e:9d0a:: with SMTP id t10mr10679530lji.219.1643539139197;
+        Sun, 30 Jan 2022 02:38:59 -0800 (PST)
 Received: from [192.168.2.145] (109-252-138-126.dynamic.spd-mgts.ru. [109.252.138.126])
-        by smtp.googlemail.com with ESMTPSA id bu32sm3224069lfb.287.2022.01.30.02.33.51
+        by smtp.googlemail.com with ESMTPSA id o24sm3227893lfo.146.2022.01.30.02.38.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Jan 2022 02:33:52 -0800 (PST)
-Message-ID: <f32e119a-1d08-d1f9-a264-fe004960e8bf@gmail.com>
-Date:   Sun, 30 Jan 2022 13:33:51 +0300
+        Sun, 30 Jan 2022 02:38:58 -0800 (PST)
+Message-ID: <05a48ebc-5526-f771-38df-90635e6c28fd@gmail.com>
+Date:   Sun, 30 Jan 2022 13:38:58 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
 Subject: Re: [PATCH v17 2/4] dmaengine: tegra: Add tegra gpcdma driver
 Content-Language: en-US
-From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Akhil R <akhilrajeev@nvidia.com>, devicetree@vger.kernel.org,
         dmaengine@vger.kernel.org, jonathanh@nvidia.com,
         kyarlagadda@nvidia.com, ldewangan@nvidia.com,
@@ -65,68 +64,20 @@ To:     Akhil R <akhilrajeev@nvidia.com>, devicetree@vger.kernel.org,
 Cc:     Pavan Kunapuli <pkunapuli@nvidia.com>
 References: <1643474453-32619-1-git-send-email-akhilrajeev@nvidia.com>
  <1643474453-32619-3-git-send-email-akhilrajeev@nvidia.com>
- <ba109465-d7ee-09cb-775b-9b702a3910b0@gmail.com>
- <dcd4e4db-2999-15c9-0c82-42dd8ca1e61d@gmail.com>
-In-Reply-To: <dcd4e4db-2999-15c9-0c82-42dd8ca1e61d@gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+In-Reply-To: <1643474453-32619-3-git-send-email-akhilrajeev@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-30.01.2022 13:26, Dmitry Osipenko пишет:
-> 30.01.2022 13:05, Dmitry Osipenko пишет:
->> Still nothing prevents interrupt handler to fire during the pause.
->>
->> What you actually need to do is to disable/enable interrupt. This will
->> prevent the interrupt racing and then pause/resume may look like this:
-> 
-> Although, seems this won't work, unfortunately. I see now that
-> device_pause() doesn't have might_sleep().
-> 
+29.01.2022 19:40, Akhil R пишет:
+> +static void tegra_dma_chan_synchronize(struct dma_chan *dc)
+> +{
+> +	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
 
-Ah, I see now that the pause/unpause is actually a separate control and
-doesn't conflict with "start next transfer".
+	synchronize_irq(tdc->irq);
+> +	vchan_synchronize(&tdc->vc);
+> +}
 
-So you just need to set/unset the pause under lock. And don't touch
-tdc->dma_desc. That's it.
-
-static int tegra_dma_device_pause(struct dma_chan *dc)
-{
-	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
-	unsigned long flags;
-	u32 val;
-
-	if (!tdc->tdma->chip_data->hw_support_pause)
-		return -ENOSYS;
-
-	spin_lock_irqsave(&tdc->vc.lock, flags);
-
-	val = tdc_read(tdc, TEGRA_GPCDMA_CHAN_CSRE);
-	val |= TEGRA_GPCDMA_CHAN_CSRE_PAUSE;
-	tdc_write(tdc, TEGRA_GPCDMA_CHAN_CSRE, val);
-
-	spin_unlock_irqrestore(&tdc->vc.lock, flags);
-
-	return 0;
-}
-
-static int tegra_dma_device_resume(struct dma_chan *dc)
-{
-	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
-	unsigned long flags;
-	u32 val;
-
-	if (!tdc->tdma->chip_data->hw_support_pause)
-		return -ENOSYS;
-
-	spin_lock_irqsave(&tdc->vc.lock, flags);
-
-	val = tdc_read(tdc, TEGRA_GPCDMA_CHAN_CSRE);
-	val &= ~TEGRA_GPCDMA_CHAN_CSRE_PAUSE;
-	tdc_write(tdc, TEGRA_GPCDMA_CHAN_CSRE, val);
-
-	spin_unlock_irqrestore(&tdc->vc.lock, flags);
-	
-	return 0;
-}

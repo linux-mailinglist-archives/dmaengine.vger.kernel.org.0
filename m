@@ -2,79 +2,92 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4062C4A410D
-	for <lists+dmaengine@lfdr.de>; Mon, 31 Jan 2022 12:02:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C175D4A45BA
+	for <lists+dmaengine@lfdr.de>; Mon, 31 Jan 2022 12:48:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358662AbiAaLB4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 31 Jan 2022 06:01:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42950 "EHLO
+        id S1376631AbiAaLqd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 31 Jan 2022 06:46:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358554AbiAaLA7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 31 Jan 2022 06:00:59 -0500
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08265C061783
-        for <dmaengine@vger.kernel.org>; Mon, 31 Jan 2022 02:59:47 -0800 (PST)
-Received: by mail-io1-xd42.google.com with SMTP id d188so16314575iof.7
-        for <dmaengine@vger.kernel.org>; Mon, 31 Jan 2022 02:59:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=FANIUiWvB3mdY3zLX2DODg2pUIL5eGT5wlydl6jYk40=;
-        b=OjUeAkMVzEddLMMo5PnTCjKyhCs1ageGmC5+cFdXpsSEtg6JbUDTvXCRmwfTUCSofJ
-         slj36zZmhn3J4uwPw0DJBjnv3hUS5m+nEauuYDUNcCWjc1f+d0I+yOjKIUc0Pgz+j5Ue
-         rRdRGfWkjcSXGfwT+M+UDneKFOQe0c6aLr+5TauC2FupNgb1qyGc5yiIkJ8k0NAmHZhf
-         anrjd59/OgrastnWs4ZkrvFaIDjw5pd3eh107tNZ/TuMjnW3micCxNZKM2MDkg13GKwm
-         O5Q6tfm8j18o2CLpoCl1kG865M+uxrSOQqgPJI+OJu79ECke4sTf94bEwDsB5fZLVwuG
-         tdrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=FANIUiWvB3mdY3zLX2DODg2pUIL5eGT5wlydl6jYk40=;
-        b=45HlwObaO8/cj9yIscGH1Jr0c9mxITLvqD+1jXseVJ3sH8quUXAVPML7ILcV1WUey3
-         pACH54ZwlCMec0xoWz1tBnWAEXfq9IOJ8rgJSWi6svp68lOLId3bzLtx8dk50QKJu9zW
-         hUCQdzmL4UUGGiOVQwogMTLmjsVlAmu+nPdRyV2tUu9LV7mk0C6W4y52FtRSkc/Yt3wr
-         jbhUs8HBhJkWIh/jc4SWn2MSIt5jRUzpyZnpUKtX5cjIHlD3Qhpzg6tnrl0z/NJbpZf2
-         iq9v6ObzexpVshxS49/QRlUwp1lcJBa+zw3qMslxaZB8fSJtuS9/Ribu3rW/1eX6P+1d
-         ZXpA==
-X-Gm-Message-State: AOAM530rulBwDW0MBQFLyR4nehhWwQXissY5cr2joM2hnc1pwEG4CicL
-        6Nu0flV2pGdESnqBlZMwl7SdNmmag+MeYG//B2w=
-X-Google-Smtp-Source: ABdhPJx07OLMUPeEc0ImjaiJBKF2Mcc3ZmsWTIoSvX2FNfz03c1HE0RFqesREnjvPqYHKyL/ALkhu5ugV57XI3T5t/k=
-X-Received: by 2002:a6b:441a:: with SMTP id r26mr10856124ioa.211.1643626786286;
- Mon, 31 Jan 2022 02:59:46 -0800 (PST)
+        with ESMTP id S1379780AbiAaLoO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 31 Jan 2022 06:44:14 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80AC5C034003;
+        Mon, 31 Jan 2022 03:27:59 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1643628478;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to; bh=4vunJSw+29nMhKwarhIq3XOACVtrs68uDOcnGTjBogA=;
+        b=08+adjG5kvqly9R27r6UQqPVlHuuR0wvg7AraR+yb44p1SYXk6tzK2abtw7IGSi2A3wXfI
+        6U1PBy/jkvuCM3fKrPHG2APL7p9nnSGR9rg89/6St5G9+Iod6wSzgG4//1TPbjInXUs8YN
+        AwxB3zkSRCSMca4ho01kA/XiGI4WDXwyqGA/Q1QoCwvYXEwS/NWbubISSEMuoN2RNNZk6X
+        k+mIQEs2lRbseraKMG1ylwlb9XmMSJiXrB/5Msv2UG1+iYWWGnwuZaVGTtIizxYMk1wpBk
+        7RxcI8ct1tXsnuKIrqrBOd4gsj7C5lweoLU2Rx7EKaWcOJBL6ltT48oEiUJlEw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1643628478;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to; bh=4vunJSw+29nMhKwarhIq3XOACVtrs68uDOcnGTjBogA=;
+        b=F4vMMMS/RR2647UpQl2u4kgknqNjM8y1uiJemITMdVUuEzICexEkSEXuPmcOo4kKXCPGTF
+        66aXb64gMDoB5SDg==
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Will Deacon <will@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        iommu@lists.linux-foundation.org,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Jason Gunthorpe <jgg@nvidia.com>, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org, Kevin Tian <kevin.tian@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cedric Le Goater <clg@kaod.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vinod Koul <vkoul@kernel.org>, Marc Zygnier <maz@kernel.org>,
+        dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [patch V3 28/35] PCI/MSI: Simplify pci_irq_get_affinity()
+In-Reply-To: <20220130171210.GA3545402@roeck-us.net>
+Date:   Mon, 31 Jan 2022 12:27:57 +0100
+Message-ID: <87mtjc2lhe.ffs@tglx>
 MIME-Version: 1.0
-Reply-To: daniellakyle60@gmail.com
-Sender: drdanielmorris11111@gmail.com
-Received: by 2002:a05:6638:1248:0:0:0:0 with HTTP; Mon, 31 Jan 2022 02:59:45
- -0800 (PST)
-From:   Mrs daniell akyle <daniellakyle60@gmail.com>
-Date:   Mon, 31 Jan 2022 11:59:45 +0100
-X-Google-Sender-Auth: xE_x512-NJSetLeK1z_d90RC9Q0
-Message-ID: <CAKFcj-P8h0HeDMtZZnog7Sh8cFMKV7095BN2fQnUMpCGPgmhFg@mail.gmail.com>
-Subject: Ahoj
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Pozdravy
-Jmenuji se pan=C3=AD Daniella Kyleov=C3=A1, je mi 58 let
-Filip=C3=ADny. V sou=C4=8Dasn=C3=A9 dob=C4=9B jsem hospitalizov=C3=A1n na F=
-ilip=C3=ADn=C3=A1ch, kde jsem
-podstupuje l=C3=A9=C4=8Dbu akutn=C3=ADho karcinomu j=C3=ADcnu. jsem um=C3=
-=ADraj=C3=ADc=C3=AD,
-vdova, kter=C3=A1 se rozhodla darovat =C4=8D=C3=A1st sv=C3=A9ho majetku spo=
-lehliv=C3=A9 osob=C4=9B
-kter=C3=A1 tyto pen=C3=ADze pou=C5=BEije na pomoc chud=C3=BDm a m=C3=A9n=C4=
-=9B privilegovan=C3=BDm. Chci
-poskytnout dar ve v=C3=BD=C5=A1i 3 700 000 =C2=A3 na sirotky nebo charitati=
-vn=C3=AD organizace
-ve va=C5=A1=C3=AD oblasti. Zvl=C3=A1dne=C5=A1 to? Pokud jste ochotni tuto n=
-ab=C3=ADdku p=C5=99ijmout
-a ud=C4=9Blejte p=C5=99esn=C4=9B tak, jak v=C3=A1m =C5=99=C3=ADk=C3=A1m, pa=
-k se mi vra=C5=A5te pro dal=C5=A1=C3=AD vysv=C4=9Btlen=C3=AD.
-pozdravy
-Pan=C3=AD Daniella Kyleov=C3=A1
+On Sun, Jan 30 2022 at 09:12, Guenter Roeck wrote:
+> On Fri, Dec 10, 2021 at 11:19:26PM +0100, Thomas Gleixner wrote:
+> This patch results in the following runtime warning when booting x86
+> (32 bit) nosmp images from NVME in qemu.
+>
+> [   14.825482] nvme nvme0: 1/0/0 default/read/poll queues
+> ILLOPC: ca7c6d10: 0f 0b
+> [   14.826188] ------------[ cut here ]------------
+> [   14.826307] WARNING: CPU: 0 PID: 7 at drivers/pci/msi/msi.c:1114 pci_irq_get_affinity+0x80/0x90
+
+This complains about msi_desc->affinity being NULL.
+
+> git bisect bad f48235900182d64537c6e8f8dc0932b57a1a0638
+> # first bad commit: [f48235900182d64537c6e8f8dc0932b57a1a0638] PCI/MSI: Simplify pci_irq_get_affinity()
+
+Hrm. Can you please provide dmesg and /proc/interrupts from a
+kernel before that commit?
+
+Thanks,
+
+        tglx
+

@@ -2,45 +2,45 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BBE2F4A662E
-	for <lists+dmaengine@lfdr.de>; Tue,  1 Feb 2022 21:41:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E296E4A6635
+	for <lists+dmaengine@lfdr.de>; Tue,  1 Feb 2022 21:41:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240619AbiBAUlo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 1 Feb 2022 15:41:44 -0500
-Received: from mga05.intel.com ([192.55.52.43]:16639 "EHLO mga05.intel.com"
+        id S239503AbiBAUlx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 1 Feb 2022 15:41:53 -0500
+Received: from mga05.intel.com ([192.55.52.43]:16566 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241082AbiBAUlT (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 1 Feb 2022 15:41:19 -0500
+        id S242605AbiBAUlg (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 1 Feb 2022 15:41:36 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643748078; x=1675284078;
+  t=1643748096; x=1675284096;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=yAfFe5m8N/gRRw7G+DV3d++V5N48SnE2+NjEGV4pIIA=;
-  b=beYBGmqiy2G5tmMuA5Ee8L/Y9TwkiAJRxCkEXNW0yPE1y/sfgB51TaE0
-   7voRdrQWWTtbZ9lWatoUjqmJAdaLUSoQk7DZ2ErjUrCQ5i+luEC7iLAMf
-   ichSaUDKnvXEgEggio/xFMoKFgBIFzhNlRJKELL1yjSSOHZgxtWzEH6Gx
-   Pr3Rp2KKoyfiP9KFhbJaKBf6PA/NlsV71Iof6Rs4dMNYG9ngru1rDMb+J
-   yihujSY007Dhg0TT1QBUEbVSBjxMk+/4uNsabQ0xg1KcZ9XcOJMe6EUBd
-   XHx5T5Kez0hhVeBtnfaIMgautQbwNedYSlNgen4rt5+sE5jAJ8J9Peda8
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="334143898"
+  bh=cYIMGUOGguhuK47XvSH8cnFRT5RbfH0aDKi43vCctr4=;
+  b=n/QYOUdJjdgtnWYvc6dVrmtNPnlObhU0ZOLvvM383uPzMpJ19U21Jo3+
+   Br6KdzVnV9kAV7MGA8KEcIChYcsvcrjD6ZCyXC3ihrzQkJHRZQFLrWKLS
+   0yBrWSy9fyN5tXlHGK++jPoK6/E8NI7Bp6W678FhyqXRWeKHSLaRWzIOx
+   vjsnhSddaCQGD1wDo46vKAysEFRbLwmNmun+ZE//qz0/WC+N64ILbkCwb
+   gL5+8mwK2p8xYDjIGgRoeE+WRQvy+24KcM+fxcAZ13Hty7j1WN08w4Dgg
+   QDea0OH1+zRRgJDSLOApCHZ8DIV0mUuBrEgWgQhmJlttL/NS7q4N0Uzyp
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="334143899"
 X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
-   d="scan'208";a="334143898"
+   d="scan'208";a="334143899"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 12:39:13 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 12:39:14 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
-   d="scan'208";a="479820822"
+   d="scan'208";a="479820826"
 Received: from bwalker-desk.ch.intel.com ([143.182.137.151])
   by orsmga003.jf.intel.com with ESMTP; 01 Feb 2022 12:39:13 -0800
 From:   Ben Walker <benjamin.walker@intel.com>
 To:     vkoul@kernel.org
 Cc:     dmaengine@vger.kernel.org, dave.jiang@intel.com,
         Ben Walker <benjamin.walker@intel.com>
-Subject: [RESEND 09/10] dmaengine: idxd: Support device_tx_status
-Date:   Tue,  1 Feb 2022 13:38:12 -0700
-Message-Id: <20220201203813.3951461-10-benjamin.walker@intel.com>
+Subject: [RESEND 10/10] dmaengine: Revert "cookie bypass for out of order completion"
+Date:   Tue,  1 Feb 2022 13:38:13 -0700
+Message-Id: <20220201203813.3951461-11-benjamin.walker@intel.com>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20220201203813.3951461-1-benjamin.walker@intel.com>
 References: <20220201203813.3951461-1-benjamin.walker@intel.com>
@@ -50,156 +50,117 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This can now be supported even for devices that complete operations out
-of order. Add support for directly polling transactions.
+This reverts commit 47ec7f09bc107720905c96bc37771e4ed1ff0aed.
+
+This is no longer necessary now that all assumptions about the order of
+completions have been removed from the dmaengine client API.
 
 Signed-off-by: Ben Walker <benjamin.walker@intel.com>
 ---
- drivers/dma/idxd/device.c |  1 +
- drivers/dma/idxd/dma.c    | 85 ++++++++++++++++++++++++++++++++++++++-
- drivers/dma/idxd/idxd.h   |  1 +
- 3 files changed, 85 insertions(+), 2 deletions(-)
+ .../driver-api/dmaengine/provider.rst         | 19 -------------------
+ drivers/dma/dmatest.c                         | 11 +----------
+ drivers/dma/idxd/dma.c                        |  1 -
+ include/linux/dmaengine.h                     |  2 --
+ 4 files changed, 1 insertion(+), 32 deletions(-)
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 4b29b8ff21272..e71d926cfd7a9 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -148,6 +148,7 @@ int idxd_wq_alloc_resources(struct idxd_wq *wq)
- 			desc->iax_completion = &wq->iax_compls[i];
- 		desc->compl_dma = wq->compls_addr + idxd->data->compl_size * i;
- 		desc->id = i;
-+		desc->gen = 1;
- 		desc->wq = wq;
- 		desc->cpu = -1;
- 	}
+diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
+index 7c8ace703c96f..5bb4738ece0c2 100644
+--- a/Documentation/driver-api/dmaengine/provider.rst
++++ b/Documentation/driver-api/dmaengine/provider.rst
+@@ -262,22 +262,6 @@ Currently, the types available are:
+     want to transfer a portion of uncompressed data directly to the
+     display to print it
+ 
+-- DMA_COMPLETION_NO_ORDER
+-
+-  - The device does not support in order completion.
+-
+-  - The driver should return DMA_OUT_OF_ORDER for device_tx_status if
+-    the device is setting this capability.
+-
+-  - All cookie tracking and checking API should be treated as invalid if
+-    the device exports this capability.
+-
+-  - At this point, this is incompatible with polling option for dmatest.
+-
+-  - If this cap is set, the user is recommended to provide an unique
+-    identifier for each descriptor sent to the DMA device in order to
+-    properly track the completion.
+-
+ - DMA_REPEAT
+ 
+   - The device supports repeated transfers. A repeated transfer, indicated by
+@@ -461,9 +445,6 @@ supported.
+   - In the case of a cyclic transfer, it should only take into
+     account the current period.
+ 
+-  - Should return DMA_OUT_OF_ORDER if the device does not support in order
+-    completion and is completing the operation out of order.
+-
+   - This function can be called in an interrupt context.
+ 
+ - device_config
+diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+index 0574090a80c8c..f8cbeeaf8ed03 100644
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -839,10 +839,7 @@ static int dmatest_func(void *data)
+ 			result("test timed out", total_tests, src->off, dst->off,
+ 			       len, 0);
+ 			goto error_unmap_continue;
+-		} else if (status != DMA_COMPLETE &&
+-			   !(dma_has_cap(DMA_COMPLETION_NO_ORDER,
+-					 dev->cap_mask) &&
+-			     status == DMA_OUT_OF_ORDER)) {
++		} else if (status != DMA_COMPLETE) {
+ 			result(status == DMA_ERROR ?
+ 			       "completion error status" :
+ 			       "completion busy status", total_tests, src->off,
+@@ -1020,12 +1017,6 @@ static int dmatest_add_channel(struct dmatest_info *info,
+ 	dtc->chan = chan;
+ 	INIT_LIST_HEAD(&dtc->threads);
+ 
+-	if (dma_has_cap(DMA_COMPLETION_NO_ORDER, dma_dev->cap_mask) &&
+-	    info->params.polled) {
+-		info->params.polled = false;
+-		pr_warn("DMA_COMPLETION_NO_ORDER, polled disabled\n");
+-	}
+-
+ 	if (dma_has_cap(DMA_MEMCPY, dma_dev->cap_mask)) {
+ 		if (dmatest == 0) {
+ 			cnt = dmatest_add_threads(info, dtc, DMA_MEMCPY);
 diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
-index 1b6e5f373259c..15bd87c2811e4 100644
+index 15bd87c2811e4..3400f49ca3c95 100644
 --- a/drivers/dma/idxd/dma.c
 +++ b/drivers/dma/idxd/dma.c
-@@ -12,6 +12,23 @@
- #include "registers.h"
- #include "idxd.h"
+@@ -296,7 +296,6 @@ int idxd_register_dma_device(struct idxd_device *idxd)
+ 	dma->dev = dev;
  
-+
-+#define DMA_COOKIE_BITS (sizeof(dma_cookie_t) * 8)
-+/*
-+ * The descriptor id takes the lower 16 bits of the cookie.
-+ */
-+#define DESC_ID_BITS 16
-+#define DESC_ID_MASK ((1 << DESC_ID_BITS) - 1)
-+/*
-+ * The 'generation' is in the upper half of the cookie. But dma_cookie_t
-+ * is signed, so we leave the upper-most bit for the sign. Further, we
-+ * need to flag whether a cookie corresponds to an operation that is
-+ * being completed via interrupt to avoid polling it, which takes
-+ * the second most upper bit. So we subtract two bits from the upper half.
-+ */
-+#define DESC_GEN_MAX ((1 << (DMA_COOKIE_BITS - DESC_ID_BITS - 2)) - 1)
-+#define DESC_INTERRUPT_FLAG (1 << (DMA_COOKIE_BITS - 2))
-+
- static inline struct idxd_wq *to_idxd_wq(struct dma_chan *c)
- {
- 	struct idxd_dma_chan *idxd_chan;
-@@ -158,13 +175,67 @@ static void idxd_dma_free_chan_resources(struct dma_chan *chan)
- 		idxd_wq_refcount(wq));
- }
+ 	dma_cap_set(DMA_PRIVATE, dma->cap_mask);
+-	dma_cap_set(DMA_COMPLETION_NO_ORDER, dma->cap_mask);
+ 	dma->device_release = idxd_dma_release;
  
-+
- static enum dma_status idxd_dma_tx_status(struct dma_chan *dma_chan,
- 					  dma_cookie_t cookie,
- 					  struct dma_tx_state *txstate)
- {
--	return DMA_OUT_OF_ORDER;
-+	u8 status;
-+	struct idxd_wq *wq;
-+	struct idxd_desc *desc;
-+	u32 idx;
-+
-+	memset(txstate, 0, sizeof(*txstate));
-+
-+	if (dma_submit_error(cookie))
-+		return DMA_ERROR;
-+
-+	wq = to_idxd_wq(dma_chan);
-+
-+	idx = cookie & DESC_ID_MASK;
-+	if (idx >= wq->num_descs)
-+		return DMA_ERROR;
-+
-+	desc = wq->descs[idx];
-+
-+	if (desc->txd.cookie != cookie) {
-+		/*
-+		 * The user asked about an old transaction
-+		 */
-+		return DMA_COMPLETE;
-+	}
-+
-+	/*
-+	 * For descriptors completed via interrupt, we can't go
-+	 * look at the completion status directly because it races
-+	 * with the IRQ handler recyling the descriptor. However,
-+	 * since in this case we can rely on the interrupt handler
-+	 * to invalidate the cookie when the command completes we
-+	 * know that if we get here, the command is still in
-+	 * progress.
-+	 */
-+	if ((cookie & DESC_INTERRUPT_FLAG) != 0)
-+		return DMA_IN_PROGRESS;
-+
-+	status = desc->completion->status & DSA_COMP_STATUS_MASK;
-+
-+	if (status) {
-+		/*
-+		 * Check against the original status as ABORT is software defined
-+		 * and 0xff, which DSA_COMP_STATUS_MASK can mask out.
-+		 */
-+		if (unlikely(desc->completion->status == IDXD_COMP_DESC_ABORT))
-+			idxd_dma_complete_txd(desc, IDXD_COMPLETE_ABORT, true);
-+		else
-+			idxd_dma_complete_txd(desc, IDXD_COMPLETE_NORMAL, true);
-+
-+		return DMA_COMPLETE;
-+	}
-+
-+	return DMA_IN_PROGRESS;
- }
- 
-+
- /*
-  * issue_pending() does not need to do anything since tx_submit() does the job
-  * already.
-@@ -181,7 +252,17 @@ static dma_cookie_t idxd_dma_tx_submit(struct dma_async_tx_descriptor *tx)
- 	int rc;
- 	struct idxd_desc *desc = container_of(tx, struct idxd_desc, txd);
- 
--	cookie = dma_cookie_assign(tx);
-+	cookie = (desc->gen << DESC_ID_BITS) | (desc->id & DESC_ID_MASK);
-+
-+	if ((desc->hw->flags & IDXD_OP_FLAG_RCI) != 0)
-+		cookie |= DESC_INTERRUPT_FLAG;
-+
-+	if (desc->gen == DESC_GEN_MAX)
-+		desc->gen = 1;
-+	else
-+		desc->gen++;
-+
-+	tx->cookie = cookie;
- 
- 	rc = idxd_submit_desc(wq, desc);
- 	if (rc < 0) {
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index b95299b723518..dd414930cd215 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -329,6 +329,7 @@ struct idxd_desc {
- 	struct llist_node llnode;
- 	struct list_head list;
- 	u16 id;
-+	u16 gen;
- 	int cpu;
- 	struct idxd_wq *wq;
+ 	if (idxd->hw.opcap.bits[0] & IDXD_OPCAP_MEMMOVE) {
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 3c545b42723ec..47b0f0db1ef77 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -39,7 +39,6 @@ enum dma_status {
+ 	DMA_IN_PROGRESS,
+ 	DMA_PAUSED,
+ 	DMA_ERROR,
+-	DMA_OUT_OF_ORDER,
  };
+ 
+ /**
+@@ -63,7 +62,6 @@ enum dma_transaction_type {
+ 	DMA_SLAVE,
+ 	DMA_CYCLIC,
+ 	DMA_INTERLEAVE,
+-	DMA_COMPLETION_NO_ORDER,
+ 	DMA_REPEAT,
+ 	DMA_LOAD_EOT,
+ /* last transaction type for creation of the capabilities mask */
 -- 
 2.33.1
 

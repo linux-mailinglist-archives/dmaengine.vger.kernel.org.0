@@ -2,222 +2,109 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 40CE54A6019
-	for <lists+dmaengine@lfdr.de>; Tue,  1 Feb 2022 16:28:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1380F4A6616
+	for <lists+dmaengine@lfdr.de>; Tue,  1 Feb 2022 21:39:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240462AbiBAP20 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 1 Feb 2022 10:28:26 -0500
-Received: from mail-mw2nam12on2068.outbound.protection.outlook.com ([40.107.244.68]:59329
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S240363AbiBAP2R (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 1 Feb 2022 10:28:17 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U3hVaRQGlgkUApq8zMjgm1WVxAidz4VXQooOnP9U2m1eo+oc5FLRpmDaNmv8w0+I93DPrIMYJgIkmR28H54yMNDwcnM8+plopW7F1vkyBYlIIkR67rvFbTMPoUdQwTKLN+A4FaAlj2m77//MnHgpFbNEfjsnzrmsTJ4Aoq5uA9TAVK9cbF5SuZJYXqxL62u3NdI+syzzqjQOTc+wHX+JGQx9g6Nny1IKRCsO95PZpnuPyfHxfFrOUyOwLnTUyBWKjyf9g2rdqDE6AZvYV0/7zeUs32V6IsEGYcvv+EwYMC4Cwtl7C1Y1FQGtEdWXiXXgjHk9ROGFZ45wA/ieMJVrrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TC1XLuJfxHaZgHcbMqAIOauc9UIa0v3oiZRZB7Xznl4=;
- b=Y1QlG69Sk4SThpx7sHvOr/eb1M0dhjAeNVNw8s4wVizXvE7UAMRKCp9uXnT4ebfVQ3xvnzwXYGOag39f1dM94G10w8Vn51IZmPGITIsAqTUakQZAmAlcI8lXmT+Tt7PkC+PHXb22f7HsQ4n8GHtVxj1yIg1kEXrLLYswtOaVMbWFkwCFyR+MG4qTXqQUNrwKTGsQVJYCjuZjS/nchb93PNObXDO/2rzXavwNGG8foyxW8N8fIakXFldgki+TlecwN/x3f2Lctw9juI5R1G7k9pOLDVywkS+MYZPz9mZGQ9bNPVVwK5EMLVaWGFVtJbtav2kM8rozRMIYnxYf4KMKOA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 12.22.5.236) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TC1XLuJfxHaZgHcbMqAIOauc9UIa0v3oiZRZB7Xznl4=;
- b=o/4LOSs5EdpODl5BC1BDK8Qo6Z58B4k/EYq2QwSEVM9Q0LFeF5r9tPggAqR6bFAsdTBfHLrm5mrYp7Z/sDwuEhTmFpzOx5p1Oxhn/qQrDZ2LUf+Zo5hQHnhW8Kh4JBV8awlmT92YDCiFjh+6l+A2unneM0XFGfOux9S56gVBpfL3whGXke3mGnMRxhhXgK4RE9JPpSXi3+xcZM18Z6dkjqELOTktx6a90C9zDjYNmKO+bntSTNgovtwTLgWmyNpCz+mV3ADTSau+n/UDbBbh9AVfzrAbIB6tqyYJ57wddfuUZW3Z1EUWNAX/1nCrJ5fQ4jA6gXIGh+o55UR2YJRs+Q==
-Received: from DM5PR10CA0021.namprd10.prod.outlook.com (2603:10b6:4:2::31) by
- MN2PR12MB4848.namprd12.prod.outlook.com (2603:10b6:208:1be::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.15; Tue, 1 Feb
- 2022 15:28:14 +0000
-Received: from DM6NAM11FT016.eop-nam11.prod.protection.outlook.com
- (2603:10b6:4:2:cafe::a6) by DM5PR10CA0021.outlook.office365.com
- (2603:10b6:4:2::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.20 via Frontend
- Transport; Tue, 1 Feb 2022 15:28:14 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.236)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 12.22.5.236 as permitted sender) receiver=protection.outlook.com;
- client-ip=12.22.5.236; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (12.22.5.236) by
- DM6NAM11FT016.mail.protection.outlook.com (10.13.173.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4930.15 via Frontend Transport; Tue, 1 Feb 2022 15:28:14 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by DRHQMAIL109.nvidia.com
- (10.27.9.19) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Tue, 1 Feb
- 2022 15:28:11 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.9; Tue, 1 Feb 2022
- 07:28:09 -0800
-Received: from kyarlagadda-linux.nvidia.com (10.127.8.10) by mail.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server id 15.2.986.9 via Frontend
- Transport; Tue, 1 Feb 2022 07:28:04 -0800
-From:   Akhil R <akhilrajeev@nvidia.com>
-To:     <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <jonathanh@nvidia.com>, <kyarlagadda@nvidia.com>,
-        <ldewangan@nvidia.com>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <p.zabel@pengutronix.de>,
-        <rgumasta@nvidia.com>, <robh+dt@kernel.org>,
-        <thierry.reding@gmail.com>, <vkoul@kernel.org>
-CC:     <akhilrajeev@nvidia.com>
-Subject: [PATCH v18 4/4] arm64: tegra: Add GPCDMA node for tegra186 and tegra194
-Date:   Tue, 1 Feb 2022 20:56:39 +0530
-Message-ID: <1643729199-19161-5-git-send-email-akhilrajeev@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1643729199-19161-1-git-send-email-akhilrajeev@nvidia.com>
-References: <1643729199-19161-1-git-send-email-akhilrajeev@nvidia.com>
-X-NVConfidentiality: public
+        id S242280AbiBAUjK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 1 Feb 2022 15:39:10 -0500
+Received: from mga11.intel.com ([192.55.52.93]:18579 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S242399AbiBAUif (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 1 Feb 2022 15:38:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643747916; x=1675283916;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=k1M+HlB5WGSWvZCSpYvL+GxpGPsqlGityudGO5dBAn8=;
+  b=gYHMjrREQS3yyVOysnFFt+9SIGEFZYS1gbV0ZL5jjKnFDc5NZGUn5y9z
+   uEOayfoJMoAgF8YgB2j+Pl984NeiwgFPS9Z0xgEVT7wiWs4LXBOfLlUrq
+   34RyCqmKbooWUwwytbdusVxU7uQB4/SK5l3ths2smKhS+MpBUQfgP5sS8
+   QGxdBrbmCn8aoF2niz4LJTLypf8mRHBoYTLyqA2P2UstoDF//3GRMjKsQ
+   2NBAeqK48JmBUfYAhbJcVdgF/UOlQHeJfaDPT6ZmniqssTdM+fco6Og/9
+   6k7/sccPa1Wu2JTvurv+xWOFilxYN2YslykDCy6MxjH0QzL1hxZSmp3Dr
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="245379835"
+X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
+   d="scan'208";a="245379835"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 12:38:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
+   d="scan'208";a="479820512"
+Received: from bwalker-desk.ch.intel.com ([143.182.137.151])
+  by orsmga003.jf.intel.com with ESMTP; 01 Feb 2022 12:38:34 -0800
+From:   Ben Walker <benjamin.walker@intel.com>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, dave.jiang@intel.com,
+        Ben Walker <benjamin.walker@intel.com>
+Subject: [RESEND 00/10] Support polling for out of order completions
+Date:   Tue,  1 Feb 2022 13:38:03 -0700
+Message-Id: <20220201203813.3951461-1-benjamin.walker@intel.com>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4f8aca1f-ca5c-48c1-2451-08d9e5977699
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4848:EE_
-X-Microsoft-Antispam-PRVS: <MN2PR12MB48486922D119BE0E85ADAF59C0269@MN2PR12MB4848.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1227;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4DgJhBedvSLuEn1jKwIPGIy+m1go2a+M+TMY5BPOjkWgW3zTMiZZtbG4n/U8H8gMAnzDc0DWX7jc4zhwQEMpeo15BQrEVEDfw/NuHaDX5NbElIoRNI4A4AKoXYkpFw2zpmKPO5wZeA7ig/nhPba7qEbJx764zXW0TjrjJhKGt165PQQOqIbwvOgLfzV2j510lVv0l2AbVgvmfvoWTqf4GmTovzSXfY16lVs/IRoOwdOAFAfkGmrpz0mI0m2zueByWj7degB1fPc6ojpTwzmTgoc0qzSOZ/1GS2Tfhc9Ag7MMTeXhH9oYiZGUXn1EQeUHLezB0BJ/B9EbSbjcM18C4fJHFi8dKM8ZHFnF/Dkd0EyWoBLQ6vLoTlRJqQEwHUh6ZCud/Fz+5SVR4ul2ypOy4l5FQiUIOC2fncy2J2zeSEWd2zioNf4iEUiNz03zTSItEYl4GJloZA4Imi1lc3tHKOL40b3l7Jv+pnXVA5wKP+gMWHPEhnFg8lm6fsQUK6ORrXbUE7IynPqKoenUCX4GeN8GCeZfG3PGVYIQ2BnypL9qubrtCF/iiFkEL2DfSUzem1X3PNMcnMM/gBBHrJsO5tE2hp8RviJSlxoueRtSpHIqqN8mloAfQXJysLh2wwekioJWV3eE/LzREC5zIIjTXR93wIhYVrDJXhoXkJyGQJkT1ZoP6RNQCFPV1He2Pms7oY+jGnXz+LNGj4DpaMiS0ZlW8DKr8TZ+OeYdLcXRMK8XkjpZ4ML2MpLz+eIfghRfSL5JL68ZeCXPYRC91TZuDQ==
-X-Forefront-Antispam-Report: CIP:12.22.5.236;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(13230001)(4636009)(40470700004)(46966006)(36840700001)(8936002)(47076005)(40460700003)(316002)(86362001)(4326008)(70206006)(6666004)(356005)(81166007)(8676002)(921005)(70586007)(36756003)(110136005)(508600001)(2616005)(5660300002)(26005)(186003)(426003)(7696005)(36860700001)(107886003)(2906002)(82310400004)(336012)(2101003)(83996005)(36900700001)(20210929001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2022 15:28:14.1112
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f8aca1f-ca5c-48c1-2451-08d9e5977699
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.236];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT016.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4848
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add device tree node for GPCDMA controller on Tegra186 target
-and Tegra194 target.
+This series adds support for polling async transactions for completion
+even if interrupts are disabled and transactions can complete out of
+order.
 
-Signed-off-by: Rajesh Gumasta <rgumasta@nvidia.com>
-Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra186.dtsi | 42 +++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 43 ++++++++++++++++++++++++++++++++
- 2 files changed, 85 insertions(+)
+To do this, all DMA client assumptions about the behavior of
+dma_cookie_t have to be removed. Prior to this series, dma_cookie_t was
+a monotonically increasing integer and cookies could be compared to one
+another to determine if earlier operations had completed (up until the
+cookie wraps around, then it would break).
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-index c91afff..899d7b1 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-@@ -73,6 +73,48 @@
- 		snps,rxpbl = <8>;
- 	};
- 
-+	gpcdma: dma-controller@2600000 {
-+		compatible = "nvidia,tegra186-gpcdma";
-+		reg = <0x0 0x2600000 0x0 0x210000>;
-+		resets = <&bpmp TEGRA186_RESET_GPCDMA>;
-+		reset-names = "gpcdma";
-+		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
-+		#dma-cells = <1>;
-+		iommus = <&smmu TEGRA186_SID_GPCDMA_0>;
-+		dma-coherent;
-+		status = "okay";
-+	};
-+
- 	aconnect@2900000 {
- 		compatible = "nvidia,tegra186-aconnect",
- 			     "nvidia,tegra210-aconnect";
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 2d48c37..8b58f5cb 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -115,6 +115,49 @@
- 			snps,rxpbl = <8>;
- 		};
- 
-+		gpcdma: dma-controller@2600000 {
-+			compatible = "nvidia,tegra194-gpcdma",
-+				     "nvidia,tegra186-gpcdma";
-+			reg = <0x2600000 0x210000>;
-+			resets = <&bpmp TEGRA194_RESET_GPCDMA>;
-+			reset-names = "gpcdma";
-+			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
-+			#dma-cells = <1>;
-+			iommus = <&smmu TEGRA194_SID_GPCDMA_0>;
-+			dma-coherent;
-+			status = "okay";
-+		};
-+
- 		aconnect@2900000 {
- 			compatible = "nvidia,tegra194-aconnect",
- 				     "nvidia,tegra210-aconnect";
+Fortunately, only one out of the many, many DMA clients had any
+dependency on dma_cookie_t being anything more than an opaque handle.
+This is the pxa_camera driver and it is dealt with in patch 3 of this
+series. Please take an extra critical look at that change.
+
+The series also does some API clean up and documents how dma_cookie_t
+should behave (i.e. there are no rules, it's just a handle).
+
+This closes out by adding support for .device_tx_status() to the idxd
+driver and then reverting the DMA_OUT_OF_ORDER patch that previously
+allowed idxd to opt-out of support for polling, which I think is a nice
+overall simplification to the dmaengine API.
+
+Ben Walker (10):
+  dmaengine: Remove dma_async_is_complete from client API
+  dmaengine: Move dma_set_tx_state to the provider API header
+  dmaengine: Remove the last, used parameters in
+    dma_async_is_tx_complete
+  dmaengine: Remove last, used from dma_tx_state
+  dmaengine: Providers should prefer dma_set_residue over
+    dma_set_tx_state
+  dmaengine: Remove dma_set_tx_state
+  dmaengine: Add provider documentation on cookie assignment
+  dmaengine: idxd: idxd_desc.id is now a u16
+  dmaengine: idxd: Support device_tx_status
+  dmaengine: Revert "cookie bypass for out of order completion"
+
+ Documentation/driver-api/dmaengine/client.rst | 22 ++---
+ .../driver-api/dmaengine/provider.rst         | 64 ++++++++------
+ drivers/crypto/stm32/stm32-hash.c             |  3 +-
+ drivers/dma/amba-pl08x.c                      |  1 -
+ drivers/dma/at_hdmac.c                        |  3 +-
+ drivers/dma/dmaengine.c                       |  2 +-
+ drivers/dma/dmaengine.h                       | 12 ++-
+ drivers/dma/dmatest.c                         | 14 +--
+ drivers/dma/idxd/device.c                     |  1 +
+ drivers/dma/idxd/dma.c                        | 86 ++++++++++++++++++-
+ drivers/dma/idxd/idxd.h                       |  3 +-
+ drivers/dma/imx-sdma.c                        |  3 +-
+ drivers/dma/mmp_tdma.c                        |  3 +-
+ drivers/dma/mxs-dma.c                         |  3 +-
+ drivers/media/platform/omap/omap_vout_vrfb.c  |  2 +-
+ drivers/media/platform/pxa_camera.c           | 13 ++-
+ drivers/rapidio/devices/rio_mport_cdev.c      |  3 +-
+ include/linux/dmaengine.h                     | 55 +-----------
+ 18 files changed, 160 insertions(+), 133 deletions(-)
+
 -- 
-2.7.4
+2.33.1
 

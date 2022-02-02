@@ -2,138 +2,175 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 291964A746C
-	for <lists+dmaengine@lfdr.de>; Wed,  2 Feb 2022 16:16:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 89EE34A74E0
+	for <lists+dmaengine@lfdr.de>; Wed,  2 Feb 2022 16:45:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242617AbiBBPPw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 2 Feb 2022 10:15:52 -0500
-Received: from mail-dm6nam11on2053.outbound.protection.outlook.com ([40.107.223.53]:17367
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S239404AbiBBPPv (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 2 Feb 2022 10:15:51 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OqjYOqFh8JSXQJ9Mj+Eaw6BGZ2e8RT6VYqG47WvQ/zj/qRyyGNOarfoYsKuqN1cSpELki6R1sc92q72HtVYdAuJJYi5iUxbZilH8KJ8V20cR442TxCH+VDmm7qut4egxYmEgbcyPbHIwUKxT5YVbm48w/6DOxpfejFJuBzcfbiMNhEDZ2KBMosiNmTlTOtBF+h9StRQQGJR/J/9bU+utT0UI/XkjdP+tQqrQxeW1Yd1EMwoL7EfwtA9rRTYswe3DWBjR/+LoXZcvLDEDbRB4rKvCqLzlfTQJGLZ+C3fzEY1nFFo9OV2xyHvi76kwYnc9afsb/DDtCj7MpmS2+AmEgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ICvFwPO+MqgZci5I82ZuvqG2YUix/dEwATteDntxTDE=;
- b=gF87/89RN9OMZXscvoBiqzggwRebVpLW3wQf172cAiPKIJqxCu0UDx/ixGfRGMosbB2APIkiGJqO5Ndu7AWs3Xn2+CCqpKsetnptUFkH2ItwwKH6QoYsbplteQo3DffYwhRJwX6ffxaCAY6bvNzSh8S8Q2/M3iwYATICV5xDV8tiiHmJTbxpqZ1BWwLCHTIAMiGdJ5Gymq5utObX/274O4uEMSqkHetmBRS6lOgIxTSK5Mt8im1lfvN7V45nvrIvbqF0d2yZcmGGw9DK/OsJjKrxL+/U1tMk+1wU3v9bxn45WgBT4NabvITJtqDq1pO9637FIp02f4b25SqE5dhuDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ICvFwPO+MqgZci5I82ZuvqG2YUix/dEwATteDntxTDE=;
- b=cby0a78c3i2u20sK+SyXoh1Hm5/sRuK3XAV5C1CcaWNkcuxbKvJfKcaVuU65AJuw/AqtI4d9FvwOogb6N+AWbJ3qZGkaOVg+amNfZECcxMEmBOtNmdNaAkU3cVtr5AF5P+BKxfksHkYuUy/IQI1NbnmQOfKfzF8D7ecP2SKjibU=
-Received: from MWHPR08CA0043.namprd08.prod.outlook.com (2603:10b6:300:c0::17)
- by BYAPR12MB3608.namprd12.prod.outlook.com (2603:10b6:a03:de::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.12; Wed, 2 Feb
- 2022 15:15:48 +0000
-Received: from CO1NAM11FT008.eop-nam11.prod.protection.outlook.com
- (2603:10b6:300:c0:cafe::42) by MWHPR08CA0043.outlook.office365.com
- (2603:10b6:300:c0::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.12 via Frontend
- Transport; Wed, 2 Feb 2022 15:15:48 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT008.mail.protection.outlook.com (10.13.175.191) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4951.12 via Frontend Transport; Wed, 2 Feb 2022 15:15:48 +0000
-Received: from sanjuamdntb2.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Wed, 2 Feb
- 2022 09:15:44 -0600
-From:   Sanjay R Mehta <Sanju.Mehta@amd.com>
-To:     <vkoul@kernel.org>
-CC:     <gregkh@linuxfoundation.org>, <dan.j.williams@intel.com>,
-        <Thomas.Lendacky@amd.com>, <robh@kernel.org>,
-        <mchehab+samsung@kernel.org>, <davem@davemloft.net>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        Sanjay R Mehta <sanju.mehta@amd.com>
-Subject: [PATCH v2 2/2] dmaengine: ptdma: handle the cases based on DMA is complete
-Date:   Wed, 2 Feb 2022 09:14:40 -0600
-Message-ID: <1643814880-3882-3-git-send-email-Sanju.Mehta@amd.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1643814880-3882-1-git-send-email-Sanju.Mehta@amd.com>
-References: <1643814880-3882-1-git-send-email-Sanju.Mehta@amd.com>
+        id S1345561AbiBBPpQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 2 Feb 2022 10:45:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233239AbiBBPpN (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 2 Feb 2022 10:45:13 -0500
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB585C061714;
+        Wed,  2 Feb 2022 07:45:12 -0800 (PST)
+Received: by mail-lj1-x236.google.com with SMTP id t7so29439279ljc.10;
+        Wed, 02 Feb 2022 07:45:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=z4arY+g8wX8M89ywxFO2V/rPiSArckND5pFwvaV0inI=;
+        b=dDX1WqEELcv5LJXvtiKxE9g1GertKAlmxr1c221g9sXoPxMsFCWHqy7RkqG8vZDQyd
+         gcNKwpxoN86JGI/tSNcFedjuTn7x1r+VXDI6lQVbZxKbVr716t0ehbl0DXLsymYX6rfJ
+         buIzveNaSU4ZQJbugECw7NgHNAg4xdqTtY+kAutZFw049r8SPvqdNsSsWGJqiu7HsG9i
+         YYahyPRyzm6LnuX4Rn7a6JrgYxUZ5CNc8cM8V+GxzkBTZ6xBrtnI7hAVxWpaUGgGhj4o
+         CJ+55DLGQXxG7aW4XmJrgOdiG6YyufhzXnANxNrLKEy/YXEAUeI9HDhtYmEVwhIjFaGw
+         wZDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=z4arY+g8wX8M89ywxFO2V/rPiSArckND5pFwvaV0inI=;
+        b=nE2d00tC2nEMh+iJ3uHxBFhbn+sWh7y/nDU+ZK1KLK9rjBG37BJ3VSbRQKxCd8H0YN
+         KLCgw953H8rwcW9IBOc4Srk7/ysK0MRGFt41gDrwoAZdMwpgzwNDBM+yH3OAgWMg+99C
+         yPpY8Xzye6xIVtmBs0Fy3ih9NtBGp1qrsUlM/8B0xizKQABUY0cjKRkL23MTfKnl8KO9
+         TmzAKorqoX2RsjewchSJCEsBMPlNvygB+pO3/O9A0eMI5hyPgr1SpnsjoYRA9F+cjkXu
+         9VdFn2gkWAayiKD7p+13xP29Q5hHD7RItNdb9yuGftR1yXNsREW6u60NanhzhWeDZkFq
+         D+og==
+X-Gm-Message-State: AOAM533J1SPztIEwbxVCVbENZSXD0sxCTcQMl7Wv/e7g+LY5dkJlgkMP
+        AuxsGNtgY2T8f1jFiMGZ2K0=
+X-Google-Smtp-Source: ABdhPJzaT7yeTWNK1STtK5CEEtrRe3k3RfThPGNKhym658ySPbYjl4psomBsLIDLXhg9UuACHRR3AA==
+X-Received: by 2002:a05:651c:179c:: with SMTP id bn28mr20182343ljb.4.1643816710975;
+        Wed, 02 Feb 2022 07:45:10 -0800 (PST)
+Received: from [192.168.2.145] (109-252-138-136.dynamic.spd-mgts.ru. [109.252.138.136])
+        by smtp.googlemail.com with ESMTPSA id a18sm4047834lfg.83.2022.02.02.07.45.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Feb 2022 07:45:10 -0800 (PST)
+Message-ID: <3feaa359-31bb-bb07-75d7-2a39c837a7a2@gmail.com>
+Date:   Wed, 2 Feb 2022 18:45:09 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v18 2/4] dmaengine: tegra: Add tegra gpcdma driver
+Content-Language: en-US
+To:     Akhil R <akhilrajeev@nvidia.com>, devicetree@vger.kernel.org,
+        dmaengine@vger.kernel.org, jonathanh@nvidia.com,
+        kyarlagadda@nvidia.com, ldewangan@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        p.zabel@pengutronix.de, rgumasta@nvidia.com, robh+dt@kernel.org,
+        thierry.reding@gmail.com, vkoul@kernel.org
+Cc:     Pavan Kunapuli <pkunapuli@nvidia.com>
+References: <1643729199-19161-1-git-send-email-akhilrajeev@nvidia.com>
+ <1643729199-19161-3-git-send-email-akhilrajeev@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+In-Reply-To: <1643729199-19161-3-git-send-email-akhilrajeev@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 063375ad-e584-450a-7846-08d9e65ee497
-X-MS-TrafficTypeDiagnostic: BYAPR12MB3608:EE_
-X-Microsoft-Antispam-PRVS: <BYAPR12MB3608493E27D495E6D0F06F60E5279@BYAPR12MB3608.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3044;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1Te0FxAqE7EEKGoz+whGtPoJQV2V8UT/u9Re2Y9b7M8d48vqxaA8BRUMjDzhXEhdhh/Tyj16KX5IPrTYa2SROZR9fJjpFQTLi2CBhdQvcvYHmjdX/ji/hnaf7RDsHgwEzSuasgX4o/1g1fMB12OoEoRN9yQkcXUvk86+18mdxRKNBfOo2WeXDQcH8boQ6YuqxuMuWXfnEjqw26mrUGeElDEO0Qs6pxHJfGER73gYfdZdrvJv5kbz8ZDSuuucn/WWARIydOnPIjp43OSzS31yN45M3LZ0szedA4aQpqGCnL8kKO86+un8+bjrSbDhnB3WPnItPeF9jlF2KViZvv+x1/6R9q7fsnf1WlW2EZx8kzI/rMCIjkJ0QTWfadU+V2gURM5Rx1irllHx7aI4svRWIcO94KM5yIXcaFgu5rBcInqH4K0VcqMHtfGN42SqJe2+RNRcYPhsLyXnBbp1hB/XAo8MGV06lMCDZwLMVUiYbasVMlBOEXL983LWuOlKfoQwk0h38vqqYoWQXTZRCXnKW9CFhw19eA3qjgul6EmO4HvolAuyrav/UL04/K+JqjhJYc7sz8W4snhr5HyLQguXncDYImp1dIVNMjZjOBUAufunL5xWlk8kkAt4qi5dAeeGbm3JuVKbamRSedKy0SQdNkMDwWvN4Ii+grcsje0ZQt5Lb/gSJ6wAtcLmo7v57k+CHihcXfq2hgGLdUDN/KAvRw==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(46966006)(40470700004)(81166007)(82310400004)(356005)(8676002)(2906002)(8936002)(83380400001)(7696005)(6666004)(4326008)(36860700001)(26005)(336012)(186003)(36756003)(426003)(16526019)(47076005)(70206006)(5660300002)(316002)(70586007)(40460700003)(508600001)(2616005)(6916009)(86362001)(54906003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2022 15:15:48.4363
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 063375ad-e584-450a-7846-08d9e65ee497
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT008.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3608
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Sanjay R Mehta <sanju.mehta@amd.com>
+....
+> +static int tegra_dma_pause(struct tegra_dma_channel *tdc)
+> +{
+> +	int ret;
+> +	u32 val;
+> +
+> +	val = tdc_read(tdc, TEGRA_GPCDMA_CHAN_CSRE);
+> +	val |= TEGRA_GPCDMA_CHAN_CSRE_PAUSE;
+> +	tdc_write(tdc, TEGRA_GPCDMA_CHAN_CSRE, val);
+> +
+> +	/* Wait until busy bit is de-asserted */
+> +	ret = readl_relaxed_poll_timeout_atomic(tdc->tdma->base_addr +
+> +			tdc->chan_base_offset + TEGRA_GPCDMA_CHAN_STATUS,
+> +			val,
+> +			!(val & TEGRA_GPCDMA_STATUS_BUSY),
+> +			TEGRA_GPCDMA_BURST_COMPLETE_TIME,
+> +			TEGRA_GPCDMA_BURST_COMPLETION_TIMEOUT);
+> +
+> +	return ret;
+> +}
+> +
+> +static int tegra_dma_device_pause(struct dma_chan *dc)
+> +{
+> +	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+> +	unsigned long flags;
+> +	int ret = 0;
+> +
+> +	if (!tdc->tdma->chip_data->hw_support_pause)
+> +		return -ENOSYS;
+> +
+> +	spin_lock_irqsave(&tdc->vc.lock, flags);
+> +	ret = tegra_dma_pause(tdc);
+> +	if (ret)
+> +		dev_err(tdc2dev(tdc), "DMA pause timed out\n");
 
-There is a need to segregate the cases when DMA is complete or not.
-In case if DMA is already complete there is no need to handle it
-again and gracefully exit from the function.
+Why error message shouldn't be printed by tegra_dma_terminate_all()?
 
-Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
----
- drivers/dma/ptdma/ptdma-dmaengine.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+The error message should be placed inside of tegra_dma_pause().
 
-diff --git a/drivers/dma/ptdma/ptdma-dmaengine.c b/drivers/dma/ptdma/ptdma-dmaengine.c
-index e38dca4..91b93e8 100644
---- a/drivers/dma/ptdma/ptdma-dmaengine.c
-+++ b/drivers/dma/ptdma/ptdma-dmaengine.c
-@@ -100,12 +100,17 @@ static struct pt_dma_desc *pt_handle_active_desc(struct pt_dma_chan *chan,
- 		spin_lock_irqsave(&chan->vc.lock, flags);
- 
- 		if (desc) {
--			if (desc->status != DMA_ERROR)
--				desc->status = DMA_COMPLETE;
--
--			dma_cookie_complete(tx_desc);
--			dma_descriptor_unmap(tx_desc);
--			list_del(&desc->vd.node);
-+			if (desc->status != DMA_COMPLETE) {
-+				if (desc->status != DMA_ERROR)
-+					desc->status = DMA_COMPLETE;
-+
-+				dma_cookie_complete(tx_desc);
-+				dma_descriptor_unmap(tx_desc);
-+				list_del(&desc->vd.node);
-+			} else {
-+				/* Don't handle it twice */
-+				tx_desc = NULL;
-+			}
- 		}
- 
- 		desc = pt_next_dma_desc(chan);
--- 
-2.7.4
+...
+> +static int tegra_dma_stop_client(struct tegra_dma_channel *tdc)
+> +{
+> +	int ret;
+> +	unsigned long status;
+> +	u32 csr = tdc_read(tdc, TEGRA_GPCDMA_CHAN_CSR);
+> +
+> +	/*
+> +	 * Change the client associated with the DMA channel
+> +	 * to stop DMA engine from starting any more bursts for
+> +	 * the given client and wait for in flight bursts to complete
+> +	 */
+> +	csr &= ~(TEGRA_GPCDMA_CSR_REQ_SEL_MASK);
+> +	csr |= TEGRA_GPCDMA_CSR_REQ_SEL_UNUSED;
+> +	tdc_write(tdc, TEGRA_GPCDMA_CHAN_CSR, csr);
+> +
+> +	/* Wait for in flight data transfer to finish */
+> +	udelay(TEGRA_GPCDMA_BURST_COMPLETE_TIME);
+> +
+> +	/* If TX/RX path is still active wait till it becomes
+> +	 * inactive
+> +	 */
+> +
+> +	ret = readl_relaxed_poll_timeout_atomic(tdc->tdma->base_addr +
+> +				tdc->chan_base_offset +
+> +				TEGRA_GPCDMA_CHAN_STATUS,
+> +				status,
+> +				!(status & (TEGRA_GPCDMA_STATUS_CHANNEL_TX |
+> +				TEGRA_GPCDMA_STATUS_CHANNEL_RX)),
+> +				5,
+> +				TEGRA_GPCDMA_BURST_COMPLETION_TIMEOUT);
+> +	if (ret) {
+> +		dev_err(tdc2dev(tdc), "Timeout waiting for DMA burst completion!\n");
+> +		tegra_dma_dump_chan_regs(tdc);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int tegra_dma_terminate_all(struct dma_chan *dc)
+> +{
+> +	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+> +	unsigned long flags;
+> +	LIST_HEAD(head);
+> +	int err;
+> +
+> +	spin_lock_irqsave(&tdc->vc.lock, flags);
+> +
+> +	if (tdc->dma_desc) {
+> +		err = tdc->tdma->chip_data->hw_support_pause ?
+> +		      tegra_dma_pause(tdc) :
+> +		      tegra_dma_stop_client(tdc);
 
+The canonical coding style is:
+
+if (tdc->tdma->chip_data->hw_support_pause)
+	err = tegra_dma_pause(tdc);
+else
+	err = tegra_dma_stop_client(tdc);
+
+
+But why do you need to pause at all here and can't use
+tegra_dma_stop_client() even if pause is supported?

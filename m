@@ -2,114 +2,82 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8622B4AAEA7
-	for <lists+dmaengine@lfdr.de>; Sun,  6 Feb 2022 10:47:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A2D0D4AB1EB
+	for <lists+dmaengine@lfdr.de>; Sun,  6 Feb 2022 21:08:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232694AbiBFJrx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 6 Feb 2022 04:47:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36286 "EHLO
+        id S237329AbiBFUIT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 6 Feb 2022 15:08:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232006AbiBFJrw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 6 Feb 2022 04:47:52 -0500
-Received: from smtp.smtpout.orange.fr (smtp08.smtpout.orange.fr [80.12.242.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B9BC06173B
-        for <dmaengine@vger.kernel.org>; Sun,  6 Feb 2022 01:47:51 -0800 (PST)
-Received: from pop-os.home ([90.126.236.122])
-        by smtp.orange.fr with ESMTPA
-        id Ge96nocwc41cbGe97nhcYF; Sun, 06 Feb 2022 10:47:49 +0100
-X-ME-Helo: pop-os.home
-X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
-X-ME-Date: Sun, 06 Feb 2022 10:47:49 +0100
-X-ME-IP: 90.126.236.122
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH] dmaengine: Remove a useless mutex
-Date:   Sun,  6 Feb 2022 10:47:45 +0100
-Message-Id: <7180452c1d77b039e27b6f9418e0e7d9dd33c431.1644140845.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.32.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231982AbiBFUIT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 6 Feb 2022 15:08:19 -0500
+X-Greylist: delayed 302 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 06 Feb 2022 12:08:16 PST
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E8516C06173B
+        for <dmaengine@vger.kernel.org>; Sun,  6 Feb 2022 12:08:16 -0800 (PST)
+X-IronPort-AV: E=Sophos;i="5.88,348,1635174000"; 
+   d="scan'208";a="110330710"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 07 Feb 2022 05:03:13 +0900
+Received: from localhost.localdomain (unknown [10.226.92.17])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 3382740F07D4;
+        Mon,  7 Feb 2022 05:03:11 +0900 (JST)
+From:   Biju Das <biju.das.jz@bp.renesas.com>
+To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc:     Biju Das <biju.das.jz@bp.renesas.com>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH] dt-bindings: dma: rz-dmac: Document RZ/G2UL SoC
+Date:   Sun,  6 Feb 2022 20:03:08 +0000
+Message-Id: <20220206200308.14315-1-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=1.1 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-According to lib/idr.c,
-   The IDA handles its own locking.  It is safe to call any of the IDA
-   functions without synchronisation in your code.
+Document RZ/G2UL DMAC bindings. RZ/G2UL DMAC is identical to one found
+on the RZ/G2L SoC. No driver changes are required as generic compatible
+string "renesas,rz-dmac" will be used as a fallback.
 
-so the 'chan_mutex' mutex can just be removed.
-It is here only to protect some ida_alloc()/ida_free() calls.
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
-Un-tested
+This patch depend upon [1]
+[1] https://patchwork.kernel.org/project/linux-dmaengine/patch/20220110134659.30424-9-prabhakar.mahadev-lad.rj@bp.renesas.com/
 ---
- drivers/dma/dmaengine.c   | 7 -------
- include/linux/dmaengine.h | 1 -
- 2 files changed, 8 deletions(-)
+ Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 2cfa8458b51b..e80feeea0e01 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -1053,9 +1053,7 @@ static int __dma_async_device_channel_register(struct dma_device *device,
- 	 * When the chan_id is a negative value, we are dynamically adding
- 	 * the channel. Otherwise we are static enumerating.
- 	 */
--	mutex_lock(&device->chan_mutex);
- 	chan->chan_id = ida_alloc(&device->chan_ida, GFP_KERNEL);
--	mutex_unlock(&device->chan_mutex);
- 	if (chan->chan_id < 0) {
- 		pr_err("%s: unable to alloc ida for chan: %d\n",
- 		       __func__, chan->chan_id);
-@@ -1078,9 +1076,7 @@ static int __dma_async_device_channel_register(struct dma_device *device,
- 	return 0;
+diff --git a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+index e353377084aa..1e25c5b0fb4d 100644
+--- a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
++++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+@@ -4,7 +4,7 @@
+ $id: http://devicetree.org/schemas/dma/renesas,rz-dmac.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
  
-  err_out_ida:
--	mutex_lock(&device->chan_mutex);
- 	ida_free(&device->chan_ida, chan->chan_id);
--	mutex_unlock(&device->chan_mutex);
-  err_free_dev:
- 	kfree(chan->dev);
-  err_free_local:
-@@ -1113,9 +1109,7 @@ static void __dma_async_device_channel_unregister(struct dma_device *device,
- 	device->chancnt--;
- 	chan->dev->chan = NULL;
- 	mutex_unlock(&dma_list_mutex);
--	mutex_lock(&device->chan_mutex);
- 	ida_free(&device->chan_ida, chan->chan_id);
--	mutex_unlock(&device->chan_mutex);
- 	device_unregister(&chan->dev->device);
- 	free_percpu(chan->local);
- }
-@@ -1250,7 +1244,6 @@ int dma_async_device_register(struct dma_device *device)
- 	if (rc != 0)
- 		return rc;
+-title: Renesas RZ/{G2L,V2L} DMA Controller
++title: Renesas RZ/{G2L,G2UL,V2L} DMA Controller
  
--	mutex_init(&device->chan_mutex);
- 	ida_init(&device->chan_ida);
- 
- 	/* represent channels in sysfs. Probably want devs too */
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 842d4f7ca752..6db9e03afd0b 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -870,7 +870,6 @@ struct dma_device {
- 	struct device *dev;
- 	struct module *owner;
- 	struct ida chan_ida;
--	struct mutex chan_mutex;	/* to protect chan_ida */
- 
- 	u32 src_addr_widths;
- 	u32 dst_addr_widths;
+ maintainers:
+   - Biju Das <biju.das.jz@bp.renesas.com>
+@@ -16,6 +16,7 @@ properties:
+   compatible:
+     items:
+       - enum:
++          - renesas,r9a07g043-dmac # RZ/G2UL
+           - renesas,r9a07g044-dmac # RZ/G2{L,LC}
+           - renesas,r9a07g054-dmac # RZ/V2L
+       - const: renesas,rz-dmac
 -- 
-2.32.0
+2.17.1
 

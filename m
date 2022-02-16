@@ -2,262 +2,206 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37EBC4B8C29
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Feb 2022 16:13:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF80F4B8D98
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Feb 2022 17:13:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232938AbiBPPNd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 16 Feb 2022 10:13:33 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59070 "EHLO
+        id S236169AbiBPQNt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 16 Feb 2022 11:13:49 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233779AbiBPPNc (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 16 Feb 2022 10:13:32 -0500
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C07822495C;
-        Wed, 16 Feb 2022 07:13:18 -0800 (PST)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: kholk11)
-        with ESMTPSA id 391461F4533A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1645024396;
-        bh=ZdwDreTuYZ1OApOlrsy0Ywd+1miJltDsuK0Em6Pe28w=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ciKEFCGia4x/X1pwF3ONQMHyF34tZMgVdNyrzojJU8RqlEmdet95xbeYObCPeMFo3
-         T4DmAzAYeMqDX9WNq/ivME0WwJNImP+aZOMGVmamaBlis13UG5yT9bsxIXTCPC2n1T
-         DJoA67AImYpncRvjLAltZjR1MnKJq0MK+NfPYUfCF5HLoQhko15Sl7Q6yycdaiNIsh
-         EXCIqu5+88aRa1sNfRn+YYqM6ju1fJjO6XCrzmV68tYZrlEhECBQLDPNcUELLVhnkY
-         ri6v/qD4pccDQ26Hc8EA2sJC14nK2SYnCqsAt0YNxfEHK1Q+4ZKQEgZNsIOvMKMJ31
-         ASzBBChotutCg==
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-To:     vkoul@kernel.org
-Cc:     krzysztof.kozlowski@canonical.com, robh+dt@kernel.org,
-        sean.wang@mediatek.com, matthias.bgg@gmail.com,
+        with ESMTP id S236173AbiBPQNs (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 16 Feb 2022 11:13:48 -0500
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76C2C177E5A
+        for <dmaengine@vger.kernel.org>; Wed, 16 Feb 2022 08:13:34 -0800 (PST)
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com [209.85.208.71])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 1A54840814
+        for <dmaengine@vger.kernel.org>; Wed, 16 Feb 2022 16:13:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1645028013;
+        bh=yU0JTVfqmMQPB5NQYcUc7rbuKfmUJoXTRDxBU8L652M=;
+        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+         In-Reply-To:Content-Type;
+        b=X4jlU/nI+cNJE1wqqOgDZ11Df+mkXqLETSfEVF5IDueukA5cQ4hIaucYXb6+RcF+X
+         AnKg/7yyV5cb0xfOSAqCwi6zSeUBa3dvyGnEfO+2YggqKrUNvrkuM8X9Iqkas8HSmY
+         aTM7QHT9/h799wBdsqMg/DTxesr1/jjebDMNp01ED/3NJM/CcgyQvdlCOuitau1V1j
+         3MSE4Yb44TZ5eli6T+ScVp2vOjzL6h8VxuibR2/o9FEJi5qu5thBDzx5T/AUIwy5xc
+         tYCRC1GFoNGU7XUqItG/7lFVuuBG0yZ2Uqsq1eHwrUkTEa+hsXb/Jg/GSBqZ7drLdo
+         a7ayJjXtbv1Lg==
+Received: by mail-ed1-f71.google.com with SMTP id r11-20020a508d8b000000b00410a4fa4768so1840013edh.9
+        for <dmaengine@vger.kernel.org>; Wed, 16 Feb 2022 08:13:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=yU0JTVfqmMQPB5NQYcUc7rbuKfmUJoXTRDxBU8L652M=;
+        b=cuX3ODPsTXrzmw6hdK/R2kPkTTv+vLq8gwaJ8lY7T2bNp8p6NzTCTVdTNQg/qkdeB8
+         5Zupqyc/MNE2JPyVrQtiwBY8t0EsLcbji90Q8HoLHtRMYVhwueNs/KdknDv5BmlDSCnq
+         QMSLACZ81tuBI2uai9rdd7QfnIzZDoFS/nU8/b/aJPQVsfbtBJ0jT800/gT7xbHO/pkj
+         mHkYXSF2hL/DMRX+RymkO6VgEWt29Y8QNoKrs+ZyCaa6KhILL4qEOa15yJt1uyYmCrOk
+         Q30Gv4tzF+tkLhqoNshRiHoXA8Ld3jSKSjso2TMa62/Gjrskra3rYZ1sBVa1Hy8VVXPz
+         ys6g==
+X-Gm-Message-State: AOAM533vosFYVpYflM8RjlHDUBETUAmawHpfWESaSUgRdOHs1C883bLE
+        uKJrGSiduLHnf3yd3TOhnhNUKF9EgjLQRPMmnPQ3eIPPW6Mw32lgIsaQTsvLOFPwtSYTOxthLFt
+        XllDAl75NKeeX22BnkF66p5TQeEfUN7psDirkXQ==
+X-Received: by 2002:a17:906:38d2:b0:6b7:9639:fd74 with SMTP id r18-20020a17090638d200b006b79639fd74mr2774309ejd.215.1645028011631;
+        Wed, 16 Feb 2022 08:13:31 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJymIuMoqXEhQgrqUOZ0+AFR5IMCCCY5eWHy1U9oQcUI27s9rO86CRpktTGFYrnx+rEft91rZw==
+X-Received: by 2002:a17:906:38d2:b0:6b7:9639:fd74 with SMTP id r18-20020a17090638d200b006b79639fd74mr2774299ejd.215.1645028011406;
+        Wed, 16 Feb 2022 08:13:31 -0800 (PST)
+Received: from [192.168.0.110] (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
+        by smtp.gmail.com with ESMTPSA id 18sm67785ejj.1.2022.02.16.08.13.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Feb 2022 08:13:30 -0800 (PST)
+Message-ID: <6c51427a-98e2-0bbe-8f4b-37a4d9cacec7@canonical.com>
+Date:   Wed, 16 Feb 2022 17:13:30 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v2] dt-bindings: dma: Convert mtk-uart-apdma to DT schema
+Content-Language: en-US
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>, vkoul@kernel.org
+Cc:     robh+dt@kernel.org, sean.wang@mediatek.com, matthias.bgg@gmail.com,
         long.cheng@mediatek.com, dmaengine@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Subject: [PATCH v2] dt-bindings: dma: Convert mtk-uart-apdma to DT schema
-Date:   Wed, 16 Feb 2022 16:13:09 +0100
-Message-Id: <20220216151309.289348-1-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.33.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+        linux-mediatek@lists.infradead.org
+References: <20220216151309.289348-1-angelogioacchino.delregno@collabora.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20220216151309.289348-1-angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Convert the MediaTek UART APDMA Controller binding to DT schema.
+On 16/02/2022 16:13, AngeloGioacchino Del Regno wrote:
+> Convert the MediaTek UART APDMA Controller binding to DT schema.
+> 
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> ---
+> v2: Fixed interrupt maxItems to 16, added interrupts/reg maxItems constraint
+>     to 8 when the dma-requests property is not present
+> 
+>  .../bindings/dma/mediatek,uart-dma.yaml       | 123 ++++++++++++++++++
+>  .../bindings/dma/mtk-uart-apdma.txt           |  56 --------
+>  2 files changed, 123 insertions(+), 56 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml b/Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml
+> new file mode 100644
+> index 000000000000..67dbb2fed74c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml
+> @@ -0,0 +1,123 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/mediatek,uart-dma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MediaTek UART APDMA controller
+> +
+> +maintainers:
+> +  - Long Cheng <long.cheng@mediatek.com>
+> +
+> +description: |
+> +  The MediaTek UART APDMA controller provides DMA capabilities
+> +  for the UART peripheral bus.
+> +
+> +allOf:
+> +  - $ref: "dma-controller.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - mediatek,mt2712-uart-dma
+> +              - mediatek,mt8516-uart-dma
+> +          - const: mediatek,mt6577-uart-dma
+> +      - enum:
+> +          - mediatek,mt6577-uart-dma
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 16
+> +
+> +  interrupts:
+> +    description: |
+> +      TX, RX interrupt lines for each UART APDMA channel
+> +    minItems: 1
+> +    maxItems: 16
+> +
+> +  clocks:
+> +    description: Must contain one entry for the APDMA main clock
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: apdma
+> +
+> +  "#dma-cells":
+> +    const: 1
+> +    description: |
+> +      The first cell specifies the UART APDMA channel number
+> +
+> +  dma-requests:
+> +    description: |
+> +      Number of virtual channels of the UART APDMA controller
+> +    maximum: 16
+> +
+> +  mediatek,dma-33bits:
+> +    type: boolean
+> +    description: Enable 33-bits UART APDMA support
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +if:
+> +  not:
+> +    anyOf:
 
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
-v2: Fixed interrupt maxItems to 16, added interrupts/reg maxItems constraint
-    to 8 when the dma-requests property is not present
+Thanks for the changes. This "anyOf" you can skip. It was needed in that
+example because multiple properties should trigger restriction of maxItems.
 
- .../bindings/dma/mediatek,uart-dma.yaml       | 123 ++++++++++++++++++
- .../bindings/dma/mtk-uart-apdma.txt           |  56 --------
- 2 files changed, 123 insertions(+), 56 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml
- delete mode 100644 Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
+In your case it is sufficient:
+if:
 
-diff --git a/Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml b/Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml
-new file mode 100644
-index 000000000000..67dbb2fed74c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml
-@@ -0,0 +1,123 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/mediatek,uart-dma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MediaTek UART APDMA controller
-+
-+maintainers:
-+  - Long Cheng <long.cheng@mediatek.com>
-+
-+description: |
-+  The MediaTek UART APDMA controller provides DMA capabilities
-+  for the UART peripheral bus.
-+
-+allOf:
-+  - $ref: "dma-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - mediatek,mt2712-uart-dma
-+              - mediatek,mt8516-uart-dma
-+          - const: mediatek,mt6577-uart-dma
-+      - enum:
-+          - mediatek,mt6577-uart-dma
-+
-+  reg:
-+    minItems: 1
-+    maxItems: 16
-+
-+  interrupts:
-+    description: |
-+      TX, RX interrupt lines for each UART APDMA channel
-+    minItems: 1
-+    maxItems: 16
-+
-+  clocks:
-+    description: Must contain one entry for the APDMA main clock
-+    maxItems: 1
-+
-+  clock-names:
-+    const: apdma
-+
-+  "#dma-cells":
-+    const: 1
-+    description: |
-+      The first cell specifies the UART APDMA channel number
-+
-+  dma-requests:
-+    description: |
-+      Number of virtual channels of the UART APDMA controller
-+    maximum: 16
-+
-+  mediatek,dma-33bits:
-+    type: boolean
-+    description: Enable 33-bits UART APDMA support
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+additionalProperties: false
-+
-+if:
-+  not:
-+    anyOf:
-+      - required:
-+          - dma-requests
-+then:
-+  properties:
-+    interrupts:
-+      maxItems: 8
-+    reg:
-+      maxItems: 8
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/mt2712-clk.h>
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        apdma: dma-controller@11000400 {
-+            compatible = "mediatek,mt2712-uart-dma",
-+                         "mediatek,mt6577-uart-dma";
-+            reg = <0 0x11000400 0 0x80>,
-+                  <0 0x11000480 0 0x80>,
-+                  <0 0x11000500 0 0x80>,
-+                  <0 0x11000580 0 0x80>,
-+                  <0 0x11000600 0 0x80>,
-+                  <0 0x11000680 0 0x80>,
-+                  <0 0x11000700 0 0x80>,
-+                  <0 0x11000780 0 0x80>,
-+                  <0 0x11000800 0 0x80>,
-+                  <0 0x11000880 0 0x80>,
-+                  <0 0x11000900 0 0x80>,
-+                  <0 0x11000980 0 0x80>;
-+            interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_LOW>,
-+                         <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
-+                         <GIC_SPI 105 IRQ_TYPE_LEVEL_LOW>,
-+                         <GIC_SPI 106 IRQ_TYPE_LEVEL_LOW>,
-+                         <GIC_SPI 107 IRQ_TYPE_LEVEL_LOW>,
-+                         <GIC_SPI 108 IRQ_TYPE_LEVEL_LOW>,
-+                         <GIC_SPI 109 IRQ_TYPE_LEVEL_LOW>,
-+                         <GIC_SPI 110 IRQ_TYPE_LEVEL_LOW>,
-+                         <GIC_SPI 111 IRQ_TYPE_LEVEL_LOW>,
-+                         <GIC_SPI 112 IRQ_TYPE_LEVEL_LOW>,
-+                         <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>,
-+                         <GIC_SPI 114 IRQ_TYPE_LEVEL_LOW>;
-+            dma-requests = <12>;
-+            clocks = <&pericfg CLK_PERI_AP_DMA>;
-+            clock-names = "apdma";
-+            mediatek,dma-33bits;
-+            #dma-cells = <1>;
-+        };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt b/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
-deleted file mode 100644
-index fef9c1eeb264..000000000000
---- a/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
-+++ /dev/null
-@@ -1,56 +0,0 @@
--* Mediatek UART APDMA Controller
--
--Required properties:
--- compatible should contain:
--  * "mediatek,mt2712-uart-dma" for MT2712 compatible APDMA
--  * "mediatek,mt6577-uart-dma" for MT6577 and all of the above
--  * "mediatek,mt8516-uart-dma", "mediatek,mt6577" for MT8516 SoC
--
--- reg: The base address of the APDMA register bank.
--
--- interrupts: A single interrupt specifier.
-- One interrupt per dma-requests, or 8 if no dma-requests property is present
--
--- dma-requests: The number of DMA channels
--
--- clocks : Must contain an entry for each entry in clock-names.
--  See ../clocks/clock-bindings.txt for details.
--- clock-names: The APDMA clock for register accesses
--
--- mediatek,dma-33bits: Present if the DMA requires support
--
--Examples:
--
--	apdma: dma-controller@11000400 {
--		compatible = "mediatek,mt2712-uart-dma",
--			     "mediatek,mt6577-uart-dma";
--		reg = <0 0x11000400 0 0x80>,
--		      <0 0x11000480 0 0x80>,
--		      <0 0x11000500 0 0x80>,
--		      <0 0x11000580 0 0x80>,
--		      <0 0x11000600 0 0x80>,
--		      <0 0x11000680 0 0x80>,
--		      <0 0x11000700 0 0x80>,
--		      <0 0x11000780 0 0x80>,
--		      <0 0x11000800 0 0x80>,
--		      <0 0x11000880 0 0x80>,
--		      <0 0x11000900 0 0x80>,
--		      <0 0x11000980 0 0x80>;
--		interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 105 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 106 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 107 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 108 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 109 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 110 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 111 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 112 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 114 IRQ_TYPE_LEVEL_LOW>;
--		dma-requests = <12>;
--		clocks = <&pericfg CLK_PERI_AP_DMA>;
--		clock-names = "apdma";
--		mediatek,dma-33bits;
--		#dma-cells = <1>;
--	};
--- 
-2.33.1
+  not:
 
+    required:
+
+      - dma-requests
+
+then:
+....
+
+
+Rest looks good.
+
+> +      - required:
+> +          - dma-requests
+> +then:
+> +  properties:
+> +    interrupts:
+> +      maxItems: 8
+
+
+Best regards,
+Krzysztof

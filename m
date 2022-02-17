@@ -2,206 +2,71 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF80F4B8D98
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Feb 2022 17:13:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B0354B9547
+	for <lists+dmaengine@lfdr.de>; Thu, 17 Feb 2022 02:16:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236169AbiBPQNt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 16 Feb 2022 11:13:49 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59818 "EHLO
+        id S230043AbiBQBQY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 16 Feb 2022 20:16:24 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236173AbiBPQNs (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 16 Feb 2022 11:13:48 -0500
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76C2C177E5A
-        for <dmaengine@vger.kernel.org>; Wed, 16 Feb 2022 08:13:34 -0800 (PST)
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com [209.85.208.71])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 1A54840814
-        for <dmaengine@vger.kernel.org>; Wed, 16 Feb 2022 16:13:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1645028013;
-        bh=yU0JTVfqmMQPB5NQYcUc7rbuKfmUJoXTRDxBU8L652M=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=X4jlU/nI+cNJE1wqqOgDZ11Df+mkXqLETSfEVF5IDueukA5cQ4hIaucYXb6+RcF+X
-         AnKg/7yyV5cb0xfOSAqCwi6zSeUBa3dvyGnEfO+2YggqKrUNvrkuM8X9Iqkas8HSmY
-         aTM7QHT9/h799wBdsqMg/DTxesr1/jjebDMNp01ED/3NJM/CcgyQvdlCOuitau1V1j
-         3MSE4Yb44TZ5eli6T+ScVp2vOjzL6h8VxuibR2/o9FEJi5qu5thBDzx5T/AUIwy5xc
-         tYCRC1GFoNGU7XUqItG/7lFVuuBG0yZ2Uqsq1eHwrUkTEa+hsXb/Jg/GSBqZ7drLdo
-         a7ayJjXtbv1Lg==
-Received: by mail-ed1-f71.google.com with SMTP id r11-20020a508d8b000000b00410a4fa4768so1840013edh.9
-        for <dmaengine@vger.kernel.org>; Wed, 16 Feb 2022 08:13:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=yU0JTVfqmMQPB5NQYcUc7rbuKfmUJoXTRDxBU8L652M=;
-        b=cuX3ODPsTXrzmw6hdK/R2kPkTTv+vLq8gwaJ8lY7T2bNp8p6NzTCTVdTNQg/qkdeB8
-         5Zupqyc/MNE2JPyVrQtiwBY8t0EsLcbji90Q8HoLHtRMYVhwueNs/KdknDv5BmlDSCnq
-         QMSLACZ81tuBI2uai9rdd7QfnIzZDoFS/nU8/b/aJPQVsfbtBJ0jT800/gT7xbHO/pkj
-         mHkYXSF2hL/DMRX+RymkO6VgEWt29Y8QNoKrs+ZyCaa6KhILL4qEOa15yJt1uyYmCrOk
-         Q30Gv4tzF+tkLhqoNshRiHoXA8Ld3jSKSjso2TMa62/Gjrskra3rYZ1sBVa1Hy8VVXPz
-         ys6g==
-X-Gm-Message-State: AOAM533vosFYVpYflM8RjlHDUBETUAmawHpfWESaSUgRdOHs1C883bLE
-        uKJrGSiduLHnf3yd3TOhnhNUKF9EgjLQRPMmnPQ3eIPPW6Mw32lgIsaQTsvLOFPwtSYTOxthLFt
-        XllDAl75NKeeX22BnkF66p5TQeEfUN7psDirkXQ==
-X-Received: by 2002:a17:906:38d2:b0:6b7:9639:fd74 with SMTP id r18-20020a17090638d200b006b79639fd74mr2774309ejd.215.1645028011631;
-        Wed, 16 Feb 2022 08:13:31 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJymIuMoqXEhQgrqUOZ0+AFR5IMCCCY5eWHy1U9oQcUI27s9rO86CRpktTGFYrnx+rEft91rZw==
-X-Received: by 2002:a17:906:38d2:b0:6b7:9639:fd74 with SMTP id r18-20020a17090638d200b006b79639fd74mr2774299ejd.215.1645028011406;
-        Wed, 16 Feb 2022 08:13:31 -0800 (PST)
-Received: from [192.168.0.110] (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
-        by smtp.gmail.com with ESMTPSA id 18sm67785ejj.1.2022.02.16.08.13.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Feb 2022 08:13:30 -0800 (PST)
-Message-ID: <6c51427a-98e2-0bbe-8f4b-37a4d9cacec7@canonical.com>
-Date:   Wed, 16 Feb 2022 17:13:30 +0100
+        with ESMTP id S229854AbiBQBQX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 16 Feb 2022 20:16:23 -0500
+Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDAD729B9E7;
+        Wed, 16 Feb 2022 17:16:09 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0V4fY1fA_1645060566;
+Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0V4fY1fA_1645060566)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 17 Feb 2022 09:16:06 +0800
+From:   Yang Li <yang.lee@linux.alibaba.com>
+To:     vkoul@kernel.org
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Yang Li <yang.lee@linux.alibaba.com>,
+        Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH -next] dmaengine: imx-sdma: clean up some inconsistent indenting
+Date:   Thu, 17 Feb 2022 09:16:04 +0800
+Message-Id: <20220217011604.123106-1-yang.lee@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v2] dt-bindings: dma: Convert mtk-uart-apdma to DT schema
-Content-Language: en-US
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>, vkoul@kernel.org
-Cc:     robh+dt@kernel.org, sean.wang@mediatek.com, matthias.bgg@gmail.com,
-        long.cheng@mediatek.com, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <20220216151309.289348-1-angelogioacchino.delregno@collabora.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20220216151309.289348-1-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 16/02/2022 16:13, AngeloGioacchino Del Regno wrote:
-> Convert the MediaTek UART APDMA Controller binding to DT schema.
-> 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
-> v2: Fixed interrupt maxItems to 16, added interrupts/reg maxItems constraint
->     to 8 when the dma-requests property is not present
-> 
->  .../bindings/dma/mediatek,uart-dma.yaml       | 123 ++++++++++++++++++
->  .../bindings/dma/mtk-uart-apdma.txt           |  56 --------
->  2 files changed, 123 insertions(+), 56 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml
->  delete mode 100644 Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml b/Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml
-> new file mode 100644
-> index 000000000000..67dbb2fed74c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml
-> @@ -0,0 +1,123 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/mediatek,uart-dma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek UART APDMA controller
-> +
-> +maintainers:
-> +  - Long Cheng <long.cheng@mediatek.com>
-> +
-> +description: |
-> +  The MediaTek UART APDMA controller provides DMA capabilities
-> +  for the UART peripheral bus.
-> +
-> +allOf:
-> +  - $ref: "dma-controller.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - mediatek,mt2712-uart-dma
-> +              - mediatek,mt8516-uart-dma
-> +          - const: mediatek,mt6577-uart-dma
-> +      - enum:
-> +          - mediatek,mt6577-uart-dma
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 16
-> +
-> +  interrupts:
-> +    description: |
-> +      TX, RX interrupt lines for each UART APDMA channel
-> +    minItems: 1
-> +    maxItems: 16
-> +
-> +  clocks:
-> +    description: Must contain one entry for the APDMA main clock
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: apdma
-> +
-> +  "#dma-cells":
-> +    const: 1
-> +    description: |
-> +      The first cell specifies the UART APDMA channel number
-> +
-> +  dma-requests:
-> +    description: |
-> +      Number of virtual channels of the UART APDMA controller
-> +    maximum: 16
-> +
-> +  mediatek,dma-33bits:
-> +    type: boolean
-> +    description: Enable 33-bits UART APDMA support
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +if:
-> +  not:
-> +    anyOf:
+Eliminate the following coccicheck warning:
+./drivers/dma/imx-sdma.c:896:3-16: code aligned with following code on
+line 897
 
-Thanks for the changes. This "anyOf" you can skip. It was needed in that
-example because multiple properties should trigger restriction of maxItems.
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+---
+ drivers/dma/imx-sdma.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-In your case it is sufficient:
-if:
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 8cc5103193c3..70c0aa931ddf 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -892,9 +892,9 @@ static void mxc_sdma_handle_channel_normal(struct sdma_channel *data)
+ 	for (i = 0; i < sdmac->desc->num_bd; i++) {
+ 		bd = &sdmac->desc->bd[i];
+ 
+-		 if (bd->mode.status & (BD_DONE | BD_RROR))
++		if (bd->mode.status & (BD_DONE | BD_RROR))
+ 			error = -EIO;
+-		 sdmac->desc->chn_real_count += bd->mode.count;
++		sdmac->desc->chn_real_count += bd->mode.count;
+ 	}
+ 
+ 	if (error)
+-- 
+2.20.1.7.g153144c
 
-  not:
-
-    required:
-
-      - dma-requests
-
-then:
-....
-
-
-Rest looks good.
-
-> +      - required:
-> +          - dma-requests
-> +then:
-> +  properties:
-> +    interrupts:
-> +      maxItems: 8
-
-
-Best regards,
-Krzysztof

@@ -2,104 +2,185 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E5854B9C88
-	for <lists+dmaengine@lfdr.de>; Thu, 17 Feb 2022 10:55:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C2C84BA82E
+	for <lists+dmaengine@lfdr.de>; Thu, 17 Feb 2022 19:27:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238063AbiBQJz0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 17 Feb 2022 04:55:26 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:58086 "EHLO
+        id S229513AbiBQS0Q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 17 Feb 2022 13:26:16 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229789AbiBQJzZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 17 Feb 2022 04:55:25 -0500
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE91AD4C93
-        for <dmaengine@vger.kernel.org>; Thu, 17 Feb 2022 01:55:11 -0800 (PST)
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com [209.85.218.72])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 74603405E0
-        for <dmaengine@vger.kernel.org>; Thu, 17 Feb 2022 09:55:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1645091710;
-        bh=xqg/Xc9CYuc87DkKuqIherW4tETRFmrI7ZElb+EIvLo=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=GAORvpRRPrf+vkRusRc1QHGiTjSY2YIwdOg8Bx25a6357VBpJ15+MWJvxnX5f6smz
-         f0i31p/nEyEfIjWxcH27J4JRq0G0VV2hPYzJKXe1Z6COWXZw2OxuX9ZD0d+VN624xH
-         /03upjP8G+6lJmg7nosEzLz6V+5bpYXqh4KEujTg57bEwIvShqcikNS1Bk/xrZ42W9
-         619hfaDTKYO9RoTFKUJPeC3PgEyF8AFRUiG+msaImy6JGXNRZxCU3kHNnjDtly4/Lk
-         m4BGkHUPTf26rlDQuQ7TV+8w67/vT5WqtVG0/SgOF1nA0rG0hxiMSslGqviPcD5J+s
-         A9A7s37j/kNsQ==
-Received: by mail-ej1-f72.google.com with SMTP id la22-20020a170907781600b006a7884de505so1278752ejc.7
-        for <dmaengine@vger.kernel.org>; Thu, 17 Feb 2022 01:55:10 -0800 (PST)
+        with ESMTP id S236391AbiBQS0P (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 17 Feb 2022 13:26:15 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9C9D533351
+        for <dmaengine@vger.kernel.org>; Thu, 17 Feb 2022 10:26:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645122359;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=e0k61bWKoEdgCZKiT1/ArMJBvBOZzkgfosoEUmRiXDo=;
+        b=GinFhDlWlw+j7X1ctcvC1ioDc0hH2PBzkJ48PY0LeUv5YPYB/P6fmlMAXxskmx/RbHrLaG
+        QqA4AnvVlYSTHBZ+8dISBxbkdlZ4/BsJhNmH9NzIgeVrSOjih5uTrGCXbkReRan9uS1Nzt
+        vu3Pf7gnDT51ycUamEX4zMZpb3K47vQ=
+Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
+ [209.85.210.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-161-HxjCJnRxN62ZVbWNAA7H3Q-1; Thu, 17 Feb 2022 13:25:58 -0500
+X-MC-Unique: HxjCJnRxN62ZVbWNAA7H3Q-1
+Received: by mail-ot1-f72.google.com with SMTP id h7-20020a9d5547000000b005ad0f5e4271so210619oti.19
+        for <dmaengine@vger.kernel.org>; Thu, 17 Feb 2022 10:25:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=xqg/Xc9CYuc87DkKuqIherW4tETRFmrI7ZElb+EIvLo=;
-        b=ibLybqAzhKH4sd9Wf/uIL5780dzgYokD5wpek/FUtChXdZ9DZ0d9J6RB8I61b9iLx7
-         xm3B1mS+a62zF1ZTQp8550ummYfJjyplAXfmP8sAzCWcYtturxAFMi4O1sgVuhjySKMw
-         hmmMg5iqKNf91/LOQWHE/V/HnsX7LLJoLzG9tYmz8Yrs7DC7H4UOiS4jcRXeYPOCmpY5
-         eTDxJEzB9z/fQ78m3lWNYKydIidjQoOjbEAz4eETXrUC1C8V2QPh++5DoJlHwj1FAcbJ
-         92F79exDCZb/qCSUylSxaeKsNw13TtozzAWt2O20BjHN3sIMufDvqfBKDEeNbEhVkD+A
-         /+0w==
-X-Gm-Message-State: AOAM532jeE3btizW9HhxmYRa+pkUgknTruWy2GSrcGgJ7g78qn75wLjg
-        +1KVSSs5fKDgN1QdBKOpYGaJT5+UQS1CW+tkjviksNWc6HqyrJ2nfCOXIzakBinzYYYwRly4AQD
-        EHn13MI+n1RDC2ULawrLOdkic5/JbHfdewsW6yw==
-X-Received: by 2002:a05:6402:1d51:b0:412:86c3:7580 with SMTP id dz17-20020a0564021d5100b0041286c37580mr1702415edb.353.1645091709889;
-        Thu, 17 Feb 2022 01:55:09 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyVqiLRT5dbOU5Ly6LY4l8kChFX+8DIMSGvlA48+vjFgCFmMOBcgpltkyZQ5jhMw4Nm2YxMLw==
-X-Received: by 2002:a05:6402:1d51:b0:412:86c3:7580 with SMTP id dz17-20020a0564021d5100b0041286c37580mr1702390edb.353.1645091709625;
-        Thu, 17 Feb 2022 01:55:09 -0800 (PST)
-Received: from [192.168.0.110] (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
-        by smtp.gmail.com with ESMTPSA id 1sm964379ejm.186.2022.02.17.01.55.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Feb 2022 01:55:08 -0800 (PST)
-Message-ID: <535d7d37-c2c5-d0e9-85af-ae91cbccd0d2@canonical.com>
-Date:   Thu, 17 Feb 2022 10:55:08 +0100
+        bh=e0k61bWKoEdgCZKiT1/ArMJBvBOZzkgfosoEUmRiXDo=;
+        b=xMxZaWO8TLtS05ZfPoSJqjwTVBDE+/X0beKp8nNaWA4IdNzrKWMVzn/5bM8R++Vgir
+         +ldeGlxLUGFUCCrndfsSaIMPJy6Km/SlkGoQDQONzNYdajEulBBTUazzYdtnLSluIwiY
+         qyQ8c26Apg9ldiFnmxKrltk/8+JgIsR6T01r1WETu6/St4PgeI4bjIyBLan3TJDJ8w+W
+         G393XfgDJ1EmPiTrA5NQ6EGI5UMvLqFN0wH48LH06p11z5OYmrlrbVQIBYegXoduwkdz
+         coCTIdPlWGPGEqnuUGI3NTZv+oEwkarhXwfDP+b5KAYkGfdBSgm/Mt9QnQBSi68Ifun/
+         XbtQ==
+X-Gm-Message-State: AOAM533K6Gk0WMsdlO604QoIX7QxhgP8XWyFMWykOg37aSb2+5O15MV7
+        y+DsuyFUYldW6CI9yqOJMBx8qhMSrx3PFr/YSOJghB3+JmMvOFwn6eNjsLSUTdmTlXwaV8IQTR/
+        haE+PsbjmUngWyjYnNvvy
+X-Received: by 2002:a9d:4d98:0:b0:5ac:e4ba:27a6 with SMTP id u24-20020a9d4d98000000b005ace4ba27a6mr1351161otk.334.1645122357556;
+        Thu, 17 Feb 2022 10:25:57 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyCwbZbDciz2AYCTeRHeNW502dpeRN+vDb4rWM50eiSxkFPNnA38L0B5o4I9cXETuQE3tb77g==
+X-Received: by 2002:a9d:4d98:0:b0:5ac:e4ba:27a6 with SMTP id u24-20020a9d4d98000000b005ace4ba27a6mr1351152otk.334.1645122357293;
+        Thu, 17 Feb 2022 10:25:57 -0800 (PST)
+Received: from localhost.localdomain.com (024-205-208-113.res.spectrum.com. [24.205.208.113])
+        by smtp.gmail.com with ESMTPSA id w7sm320674oiv.8.2022.02.17.10.25.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Feb 2022 10:25:56 -0800 (PST)
+From:   trix@redhat.com
+To:     vkoul@kernel.org, peter.ujfalusi@gmail.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] dma: ti: cleanup comments
+Date:   Thu, 17 Feb 2022 10:25:46 -0800
+Message-Id: <20220217182546.3266909-1-trix@redhat.com>
+X-Mailer: git-send-email 2.26.3
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v3] dt-bindings: dma: Convert mtk-uart-apdma to DT schema
-Content-Language: en-US
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>, vkoul@kernel.org
-Cc:     robh+dt@kernel.org, sean.wang@mediatek.com, matthias.bgg@gmail.com,
-        long.cheng@mediatek.com, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <20220217095242.13761-1-angelogioacchino.delregno@collabora.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20220217095242.13761-1-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 17/02/2022 10:52, AngeloGioacchino Del Regno wrote:
-> Convert the MediaTek UART APDMA Controller binding to DT schema.
-> 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
-> v3: Removed anyOf condition
-> v2: Fixed interrupt maxItems to 16, added interrupts/reg maxItems constraint
->     to 8 when the dma-requests property is not present
-> 
+From: Tom Rix <trix@redhat.com>
 
-Awesome, thanks!
+Remove the second 'the'
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Replacements
+completetion to completion
+seens to seen
+pendling to pending
+atleast to at least
+tranfer to transfer
+multibple to a multiple
+transfering to transferring
 
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/dma/ti/cppi41.c   |  6 +++---
+ drivers/dma/ti/edma.c     | 10 +++++-----
+ drivers/dma/ti/omap-dma.c |  2 +-
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/dma/ti/cppi41.c b/drivers/dma/ti/cppi41.c
+index 8c2f7ebe998c..062bd9bd4de0 100644
+--- a/drivers/dma/ti/cppi41.c
++++ b/drivers/dma/ti/cppi41.c
+@@ -315,7 +315,7 @@ static irqreturn_t cppi41_irq(int irq, void *data)
+ 		val = cppi_readl(cdd->qmgr_mem + QMGR_PEND(i));
+ 		if (i == QMGR_PENDING_SLOT_Q(first_completion_queue) && val) {
+ 			u32 mask;
+-			/* set corresponding bit for completetion Q 93 */
++			/* set corresponding bit for completion Q 93 */
+ 			mask = 1 << QMGR_PENDING_BIT_Q(first_completion_queue);
+ 			/* not set all bits for queues less than Q 93 */
+ 			mask--;
+@@ -703,7 +703,7 @@ static int cppi41_tear_down_chan(struct cppi41_channel *c)
+ 	 * transfer descriptor followed by TD descriptor. Waiting seems not to
+ 	 * cause any difference.
+ 	 * RX seems to be thrown out right away. However once the TearDown
+-	 * descriptor gets through we are done. If we have seens the transfer
++	 * descriptor gets through we are done. If we have seen the transfer
+ 	 * descriptor before the TD we fetch it from enqueue, it has to be
+ 	 * there waiting for us.
+ 	 */
+@@ -747,7 +747,7 @@ static int cppi41_stop_chan(struct dma_chan *chan)
+ 		struct cppi41_channel *cc, *_ct;
+ 
+ 		/*
+-		 * channels might still be in the pendling list if
++		 * channels might still be in the pending list if
+ 		 * cppi41_dma_issue_pending() is called after
+ 		 * cppi41_runtime_suspend() is called
+ 		 */
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index 08e47f44d325..3ea8ef7f57df 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -118,10 +118,10 @@
+ 
+ /*
+  * Max of 20 segments per channel to conserve PaRAM slots
+- * Also note that MAX_NR_SG should be atleast the no.of periods
++ * Also note that MAX_NR_SG should be at least the no.of periods
+  * that are required for ASoC, otherwise DMA prep calls will
+  * fail. Today davinci-pcm is the only user of this driver and
+- * requires atleast 17 slots, so we setup the default to 20.
++ * requires at least 17 slots, so we setup the default to 20.
+  */
+ #define MAX_NR_SG		20
+ #define EDMA_MAX_SLOTS		MAX_NR_SG
+@@ -976,7 +976,7 @@ static int edma_config_pset(struct dma_chan *chan, struct edma_pset *epset,
+ 		 * and quotient respectively of the division of:
+ 		 * (dma_length / acnt) by (SZ_64K -1). This is so
+ 		 * that in case bcnt over flows, we have ccnt to use.
+-		 * Note: In A-sync tranfer only, bcntrld is used, but it
++		 * Note: In A-sync transfer only, bcntrld is used, but it
+ 		 * only applies for sg_dma_len(sg) >= SZ_64K.
+ 		 * In this case, the best way adopted is- bccnt for the
+ 		 * first frame will be the remainder below. Then for
+@@ -1203,7 +1203,7 @@ static struct dma_async_tx_descriptor *edma_prep_dma_memcpy(
+ 		 * slot2: the remaining amount of data after slot1.
+ 		 *	  ACNT = full_length - length1, length2 = ACNT
+ 		 *
+-		 * When the full_length is multibple of 32767 one slot can be
++		 * When the full_length is a multiple of 32767 one slot can be
+ 		 * used to complete the transfer.
+ 		 */
+ 		width = array_size;
+@@ -1814,7 +1814,7 @@ static void edma_issue_pending(struct dma_chan *chan)
+  * This limit exists to avoid a possible infinite loop when waiting for proof
+  * that a particular transfer is completed. This limit can be hit if there
+  * are large bursts to/from slow devices or the CPU is never able to catch
+- * the DMA hardware idle. On an AM335x transfering 48 bytes from the UART
++ * the DMA hardware idle. On an AM335x transferring 48 bytes from the UART
+  * RX-FIFO, as many as 55 loops have been seen.
+  */
+ #define EDMA_MAX_TR_WAIT_LOOPS 1000
+diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+index 7cb577e6587b..8e52a0dc1f78 100644
+--- a/drivers/dma/ti/omap-dma.c
++++ b/drivers/dma/ti/omap-dma.c
+@@ -1442,7 +1442,7 @@ static int omap_dma_pause(struct dma_chan *chan)
+ 	 * A source-synchronised channel is one where the fetching of data is
+ 	 * under control of the device. In other words, a device-to-memory
+ 	 * transfer. So, a destination-synchronised channel (which would be a
+-	 * memory-to-device transfer) undergoes an abort if the the CCR_ENABLE
++	 * memory-to-device transfer) undergoes an abort if the CCR_ENABLE
+ 	 * bit is cleared.
+ 	 * From 16.1.4.20.4.6.2 Abort: "If an abort trigger occurs, the channel
+ 	 * aborts immediately after completion of current read/write
+-- 
+2.26.3
+

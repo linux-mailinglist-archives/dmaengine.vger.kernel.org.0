@@ -2,100 +2,114 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA4784BD13C
-	for <lists+dmaengine@lfdr.de>; Sun, 20 Feb 2022 21:15:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2712C4BD1F9
+	for <lists+dmaengine@lfdr.de>; Sun, 20 Feb 2022 22:27:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244776AbiBTUPi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 20 Feb 2022 15:15:38 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35264 "EHLO
+        id S245114AbiBTVXU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 20 Feb 2022 16:23:20 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239546AbiBTUPh (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 20 Feb 2022 15:15:37 -0500
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3651E4C42E;
-        Sun, 20 Feb 2022 12:15:15 -0800 (PST)
-Received: by mail-lj1-x230.google.com with SMTP id e17so11806497ljk.5;
-        Sun, 20 Feb 2022 12:15:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=dXOCiPEEwmti8ibCuzkAcx2DIodwzBlROl4n6OrpWLA=;
-        b=IIfYoPI0PkCdIrxYAoTKVdxPxjqqtZnRFD3KW4M2hzPNVrrkOkledY7EUk+AgpSeET
-         Y3XF9jYzYVUfCUDZsJA/Dkg5g3AgnELSo+CtGyOFABRc4sJByu6Lnj867gC5OMWfL1ib
-         fhHE8SPIztfjWVnEapo+APWjKAL47C52/hDy2OKHAmX32PrVnSSVGo0S2FE6r//riTCb
-         TR09bmLRJhslXaJ+o1y5Hvn60x8Mduhj71wMOiGMTAGV6fEezAFUZJ6gjgkuZm0a80yt
-         Mi+ZyV9SOtC5A2VOCa1dxybQviIUbehx84kuDmw5DpWaGmy6jgYTID5onH4O4OvwFBWJ
-         a/bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=dXOCiPEEwmti8ibCuzkAcx2DIodwzBlROl4n6OrpWLA=;
-        b=7BCSeLTrGmbdo1ZX70g384zFPdoPvBBx5cwRqTIk9CjISHyKu+Pk8MXINLUjwkyxLm
-         k2n4JErtCDeWXebl3pu0yF3/yf0yH20YWZn+OdD4e0YaIN1TWIpRxlTNio4GKRpdwslL
-         kzsS27OyPYZmCwWp9Rowsrl/B+VnBHeaiMpRhSHp/aZZqDXf38R2yKLnqA1+vmeNZRbe
-         3f/SOhTEBOcsjPghjCLaWYTxQ8nZOUynt12Wj3HgDi0wbBRo7JwUcjNMpKvAZcdU6CQP
-         r9fE94grUqZMYzFwAUQRXNLX7SrJetpilgOrVFAyrNJbZkf7a574nbp+VByeNaPnUhtJ
-         U+Jg==
-X-Gm-Message-State: AOAM532Gluij43LKl3vbWTFsTkG5K8Ez+hnG4xDTBq96q3ZV4gGLzcKT
-        5YNJGAz4qsgctc8L2SbPInU=
-X-Google-Smtp-Source: ABdhPJxXKceyNpOErYJDtGbFb4g2BM3td7Ivga45OGPy7O0fu/ejgZCYMzvN/GoS6Jvhp/C+t+TZHA==
-X-Received: by 2002:a2e:b533:0:b0:246:30e1:d6c9 with SMTP id z19-20020a2eb533000000b0024630e1d6c9mr5311007ljm.515.1645388113498;
-        Sun, 20 Feb 2022 12:15:13 -0800 (PST)
-Received: from [10.0.0.127] (91-153-170-164.elisa-laajakaista.fi. [91.153.170.164])
-        by smtp.gmail.com with ESMTPSA id c11sm904857lfm.32.2022.02.20.12.15.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 20 Feb 2022 12:15:13 -0800 (PST)
-Message-ID: <5c4253a7-3e11-72cf-24e4-eb75512eaaa3@gmail.com>
-Date:   Sun, 20 Feb 2022 22:16:08 +0200
+        with ESMTP id S245090AbiBTVXT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 20 Feb 2022 16:23:19 -0500
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF174377D0;
+        Sun, 20 Feb 2022 13:22:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645392177; x=1676928177;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2MWCVpu+jSUWZjvnLkEhW8kS0xqlx71w6KIQ0s+e4/A=;
+  b=go9f6plBGTbpnyU8vwHjVINFBGne8hTSfrveXqRh0fpQBgQiS5ZD5huI
+   1JVDtdw5CO65dCeNqya9hJVyqmjfqYwgIdFH7gOdG+LjP/6N/0EiHM1cA
+   sxNVdyQyEbKRFMRi6lrYKMNsplEVfeu6zCENM44O6uRkdCCpe/Vq3EJEE
+   Y/obmYX41VdWJt4ZWTUK9ujQVwsWqzOvlMeCE/PkMcAcDdz743r617I6d
+   hCebo7g0kuB/4j701ByaCwDnaE41eanzs7Uczd5If7H+GDXiouThR/9pp
+   WLsb0PHsOdl9haLZf11a6d7vZkoVxNfGDUSP6hp1nvbdktzn3eUqAdFOs
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10264"; a="312145691"
+X-IronPort-AV: E=Sophos;i="5.88,384,1635231600"; 
+   d="scan'208";a="312145691"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2022 13:22:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,384,1635231600"; 
+   d="scan'208";a="683020262"
+Received: from lkp-server01.sh.intel.com (HELO da3212ac2f54) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 20 Feb 2022 13:22:53 -0800
+Received: from kbuild by da3212ac2f54 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nLtfR-0000qC-0x; Sun, 20 Feb 2022 21:22:53 +0000
+Date:   Mon, 21 Feb 2022 05:22:44 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     kbuild-all@lists.01.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Milan Stevanovic <milan.stevanovic@se.com>,
+        Jimmy Lalande <jimmy.lalande@se.com>,
+        Laetitia MARIOTTINI <laetitia.mariottini@se.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 4/8] dma: dmamux: Introduce RZN1 DMA router support
+Message-ID: <202202210543.GR8q2zw2-lkp@intel.com>
+References: <20220218181226.431098-5-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH 0/2] dmaengine: ti: k3-udma: Add support for AM62x SoC
-Content-Language: en-US
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
-References: <20220219083220.489420-1-vigneshr@ti.com>
-From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <20220219083220.489420-1-vigneshr@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220218181226.431098-5-miquel.raynal@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vignesh,
+Hi Miquel,
 
-On 19/02/2022 10:32, Vignesh Raghavendra wrote:
-> Add AM62x SoC specific data for k3-udma driver
-> 
-> TRM: https://www.ti.com/lit/pdf/spruiv7
+I love your patch! Yet something to improve:
 
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+[auto build test ERROR on geert-renesas-devel/next]
+[also build test ERROR on geert-renesas-drivers/renesas-clk robh/for-next linus/master v5.17-rc4 next-20220217]
+[cannot apply to vkoul-dmaengine/next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-> 
-> Vignesh Raghavendra (2):
->   dmaengine: ti: k3-udma: Add AM62x DMSS support
->   dmaengine: ti: k3-psil: Add AM62x PSIL and PDMA data
-> 
->  drivers/dma/ti/Makefile       |   3 +-
->  drivers/dma/ti/k3-psil-am62.c | 186 ++++++++++++++++++++++++++++++++++
->  drivers/dma/ti/k3-psil-priv.h |   1 +
->  drivers/dma/ti/k3-psil.c      |   1 +
->  drivers/dma/ti/k3-udma.c      |   1 +
->  5 files changed, 191 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/dma/ti/k3-psil-am62.c
-> 
+url:    https://github.com/0day-ci/linux/commits/Miquel-Raynal/RZN1-DMA-support/20220220-182519
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git next
+config: microblaze-randconfig-r026-20220220 (https://download.01.org/0day-ci/archive/20220221/202202210543.GR8q2zw2-lkp@intel.com/config)
+compiler: microblaze-linux-gcc (GCC) 11.2.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/df0b7e58b46473e407c2c552f843d0628ad6875d
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Miquel-Raynal/RZN1-DMA-support/20220220-182519
+        git checkout df0b7e58b46473e407c2c552f843d0628ad6875d
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=microblaze SHELL=/bin/bash
 
--- 
-Péter
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   microblaze-linux-ld: drivers/dma/dw/dmamux.o: in function `rzn1_dmamux_init':
+>> (.text+0x45c): multiple definition of `init_module'; drivers/dma/dw/platform.o:(.init.text+0x0): first defined here
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org

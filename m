@@ -2,91 +2,136 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E62A74BCE7F
-	for <lists+dmaengine@lfdr.de>; Sun, 20 Feb 2022 13:45:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9D824BCEF4
+	for <lists+dmaengine@lfdr.de>; Sun, 20 Feb 2022 15:35:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237584AbiBTMpc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 20 Feb 2022 07:45:32 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35862 "EHLO
+        id S231806AbiBTOKt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 20 Feb 2022 09:10:49 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:58608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236307AbiBTMpc (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 20 Feb 2022 07:45:32 -0500
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8640932EF1
-        for <dmaengine@vger.kernel.org>; Sun, 20 Feb 2022 04:45:11 -0800 (PST)
-Received: by mail-wr1-x441.google.com with SMTP id i14so22366519wrc.10
-        for <dmaengine@vger.kernel.org>; Sun, 20 Feb 2022 04:45:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:from:mime-version:content-transfer-encoding
-         :content-description:subject:to:date:reply-to;
-        bh=T28r8IcApmahqshNb89Vq7Sss5daNXvHX2RvLjpVFBs=;
-        b=pKQO6JlKP1IWsu0Sgd2LGN/UNs3bUPt6TYDUM8F3CWmvV8j6+5S7MeoIiR+GDiA+BU
-         fA1FJiVbuFO1pX+qV1tDFtu8p+LPrr4bO1QNsvRtB3PtUOP5n0WyxSmyJFa2muHb0/8x
-         KpKzVPPglU7u7HbqM0FqYMhYRrzDfXoWBahELht+MGT42zY+OkrwOqLjK4ew1t0fHUEn
-         JQ3Kn2w1vb3xb1s0NpUxB57uY8hd7YbmKwHuHr9Fmvf1cVLo8kzl23cj6ykNq4R0qoiG
-         J3LYboEmsKJuzVNmDbA0FSy6O7dONQ24GhDUR4mQToMraU2qH9dinoSrMPQ2SL9NlWbw
-         1lQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:from:mime-version
-         :content-transfer-encoding:content-description:subject:to:date
-         :reply-to;
-        bh=T28r8IcApmahqshNb89Vq7Sss5daNXvHX2RvLjpVFBs=;
-        b=R/oOmKfcB4ZXCwE9XfQFPK3ra7qxuDCPiPjzGgP27aCWwkcvb6hksF2BhurhYl6Ius
-         vqcwepYPCDq3To7jyc7cOHMoWn4EPkcFLvcuN7M3ZNg6RwXdSx56yMZpe2WatT00mJH/
-         iMLQAQ3XiTOUdetVWnYPtgLu7L29K5XE8RE1YFRQLRtWi+3R8ldy/2FuV/7MUqSfV8/3
-         +b9cU14V/Zk7eaUXIuEh6vvaP2RYHyVOdw+lp266hc5ryalLB4WMt1TtKhdgvpqBgx72
-         Uz7ItfB2i2+sQ0Q+DTgO6OiKH8mFrwoKpwyN6sVEw9BOgIe2XH7I0eJOlxL3hTisXnyc
-         K/eA==
-X-Gm-Message-State: AOAM531v8/swmJvDw/AlPHcZHaD75IfgiCyhNv6K+6ZIALuKiGq8XKWW
-        Qoe34Ol6pTmnPFhOA9u7OSE=
-X-Google-Smtp-Source: ABdhPJwmoNayQgEdTQQ5iPstaPcGELur8YOjPWOi9ICtP4CUjWl/PlTzbHU1lsxKFO44HxiffvN1jg==
-X-Received: by 2002:a5d:680c:0:b0:1e4:2d98:46fe with SMTP id w12-20020a5d680c000000b001e42d9846femr12644118wru.411.1645361110095;
-        Sun, 20 Feb 2022 04:45:10 -0800 (PST)
-Received: from [192.168.0.133] ([5.193.8.34])
-        by smtp.gmail.com with ESMTPSA id d29sm12032201wra.63.2022.02.20.04.45.06
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Sun, 20 Feb 2022 04:45:09 -0800 (PST)
-Message-ID: <621237d5.1c69fb81.403ca.b065@mx.google.com>
-From:   Mrs Maria Elisabeth Schaeffler <loganethan51@gmail.com>
-X-Google-Original-From: Mrs Maria Elisabeth Schaeffler
-Content-Type: text/plain; charset="iso-8859-1"
+        with ESMTP id S243167AbiBTOKo (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 20 Feb 2022 09:10:44 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A7F84B40F;
+        Sun, 20 Feb 2022 06:10:23 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1EE6E61183;
+        Sun, 20 Feb 2022 14:10:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C805C340F1;
+        Sun, 20 Feb 2022 14:10:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645366222;
+        bh=x1e9WpSJg6pvlqSnU+CmONdE9nG45brjpDmAsA5OPIs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HSzc5C+f500FabQaLUIL9WfnxM/e0LIj8Xqt62uA8JPFLQJMO6550p9Qe8OZ0MawZ
+         bolGQTUNDSRhahq+7/rM6ZW59EZ0j7eBK5SABWUOfNoIM2+aNes+IDCg6QmvAtiPJ8
+         c4VFSrYTPZryXv9RfNsYMSb3d6WgohmspCG+W0O35+VKrTQUH68JOo7sqO/MLYNEsl
+         D8LG4oVc3G8B/Gwr6M3xJc4tQfhxgprQokGXIHwBbrq4g0mI2h9UTZ2iX2xHTuLAiw
+         EQXJsWeopiiku4YWGMeuVJCg9M5wikxBzNBYf21eflQn7MO3KzmvBmbsNvB+KYydbD
+         Q/ERIyK5QYMqw==
+Date:   Sun, 20 Feb 2022 19:40:17 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: dmaengine fixes for v5.17
+Message-ID: <YhJLyWF5PZvc242o@matsya>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Spende
-To:     Recipients <Mrs@vger.kernel.org>
-Date:   Sun, 20 Feb 2022 16:45:03 +0400
-Reply-To: mariaeisaeth001@gmail.com
-X-Spam-Status: No, score=2.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,TO_MALFORMED,T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: **
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="z++uS9hCUogcDo3u"
+Content-Disposition: inline
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hallo, =
 
+--z++uS9hCUogcDo3u
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ich bin Frau Maria Elisabeth Schaeffler, eine deutsche Wirtschaftsmagnatin,=
- Investorin und Philanthropin. Ich bin der Vorsitzende von Wipro Limited. I=
-ch habe 25 Prozent meines pers=F6nlichen Verm=F6gens f=FCr wohlt=E4tige Zwe=
-cke ausgegeben. Und ich habe auch versprochen, die restlichen 25% dieses Ja=
-hr 2022 an Einzelpersonen zu verschenken. Ich habe mich entschlossen, Ihnen=
- 1.500.000,00 Euro zu spenden. Wenn Sie an meiner Spende interessiert sind,=
- kontaktieren Sie mich bitte f=FCr weitere Informationen.
+Hello Linus,
 
-Sie k=F6nnen auch =FCber den folgenden Link mehr =FCber mich lesen
-https://en.wikipedia.org/wiki/Maria-Elisabeth_Schaeffler
+Please pull to receive updates for v5.17.
 
-Gr=FC=DFe
-Gesch=E4ftsf=FChrer Wipro Limited
-Maria-Elisabeth_Schaeffler
-E-Mail: mariaeisaeth001@gmail.com
+The following changes since commit e783362eb54cd99b2cac8b3a9aeac942e6f6ac07:
+
+  Linux 5.17-rc1 (2022-01-23 10:12:53 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dm=
+aengine-fix-5.17
+
+for you to fetch changes up to 455896c53d5b803733ddd84e1bf8a430644439b6:
+
+  dmaengine: shdma: Fix runtime PM imbalance on error (2022-02-15 11:04:16 =
++0530)
+
+----------------------------------------------------------------
+dmaengine fixes for v5.17
+
+Bunch of driver fixes for:
+ - ptdma error handling in init
+ - lock fix in at_hdmac
+ - error path and error num fix for sh dma
+ - pm balance fix for stm32
+
+----------------------------------------------------------------
+Christophe JAILLET (1):
+      dmaengine: ptdma: Fix the error handling path in pt_core_init()
+
+Jiasheng Jiang (2):
+      dmaengine: sh: rcar-dmac: Check for error num after setting mask
+      dmaengine: sh: rcar-dmac: Check for error num after dma_set_max_seg_s=
+ize
+
+Miaoqian Lin (1):
+      dmaengine: stm32-dmamux: Fix PM disable depth imbalance in stm32_dmam=
+ux_probe
+
+Yang Yingliang (1):
+      dmaengine: at_xdmac: Fix missing unlock in at_xdmac_tasklet()
+
+Yongzhi Liu (1):
+      dmaengine: shdma: Fix runtime PM imbalance on error
+
+ drivers/dma/at_xdmac.c        |  4 +++-
+ drivers/dma/ptdma/ptdma-dev.c | 17 +++++++++--------
+ drivers/dma/sh/rcar-dmac.c    |  9 +++++++--
+ drivers/dma/sh/shdma-base.c   |  4 +++-
+ drivers/dma/stm32-dmamux.c    |  4 +++-
+ 5 files changed, 25 insertions(+), 13 deletions(-)
+
+--=20
+~Vinod
+
+--z++uS9hCUogcDo3u
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAmISS8kACgkQfBQHDyUj
+g0fp3A/+PT/usHZaJ0/tT9uL4PpZnX75tDF6P/XlaGPpfN1L/EIqfQQI8+tYGHLf
+BtTsoXW1Bm1GfzMrsf4GLD+K/qk/KOsaF9qOobys0bLy6uJNnBgPSNBQDwkLgsQY
+82GO5z1rm1SQD+vHkPFStAQDIryUMFzgXcUQ3PjUnzpIk6zfvH82arReuGaSx18x
+RB87ZdeFzjv7V8QFQ7qxNRdJXbQ2oLB7skY78jvfPrBVA8w7JcRTu/eLu7UeUh7q
+THrdCYV/+a4gfYnWmW96H4j08sTgtnWiInPWWxnhAcg/2jDmgW7G9pcRXG1+gr4T
+9FYwf3BVxU9QzGBH6jr+LpVUXI2bqmQOBG589gGmMreM0i1lMNyFJ0wQCYrGwlB+
+F+t050oXaI/S+NkdVlxF+o4TeoLk6Q8e+3rSqzdfw/iUKwHtnytiN/+9Z5YvfMKL
+5nCFOYcT1qFAohJh1TLCCJpY0LTxfsUwD/6goQ9AZ9LHYW93EITKBM9emmhOkABN
+Ojb4VvY1ya+E3nae6Crhm33IrN2HidVTiuBSU29koj3s30cEyEEcNOyyaObPsAue
+gsope9rpmB4JJXALwmWddpNCWCLwRKGM9TW8+YMGNVcvpwNh4HeAZXUyBTtdDjpl
+jVNR5SDQU1MkRDjV46uGip6ZIbe/UbzkfssOi/dajhpn/hdA8JY=
+=WeYy
+-----END PGP SIGNATURE-----
+
+--z++uS9hCUogcDo3u--

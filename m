@@ -2,161 +2,91 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E73D4BCE10
-	for <lists+dmaengine@lfdr.de>; Sun, 20 Feb 2022 11:57:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E62A74BCE7F
+	for <lists+dmaengine@lfdr.de>; Sun, 20 Feb 2022 13:45:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231860AbiBTK5W (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 20 Feb 2022 05:57:22 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38874 "EHLO
+        id S237584AbiBTMpc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 20 Feb 2022 07:45:32 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229480AbiBTK5V (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 20 Feb 2022 05:57:21 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39065340C2;
-        Sun, 20 Feb 2022 02:57:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645354620; x=1676890620;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yPqPywbDC7Awr4bHvSEXFevB7s9D3RWFfXlO+8m6W44=;
-  b=grmpciZvqwbTEiQGP9hdwHFo0pb8S43722IJNdUUlq3fSPWP8My02gxc
-   7iizn46btKlUrVSwuKG2Llu0Dy3e6xfBMKhKsYukOe3Y26vRO09mKERDY
-   dQoMSsvmQIHidDUAMXH9qdtZInh/Wk9y8/nVzfnjIQgW2Cx86vyJzDOt5
-   GmQJlQ2Rgr8dt6/0fFC3kvbOchDY4Qc35wpMok+TQP2+apJAylFzX8Xjr
-   jWfARkYVaIONnZWDy84mzpNzYW/W6o6mWhvsE2zmWtUj3PP78WFzEY/wt
-   HsjnMWA2GgRKjgJu8is8RwWejhEvuVkVA9XNnJmTn/VPYm++Uvl3b1hh3
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10263"; a="275951791"
-X-IronPort-AV: E=Sophos;i="5.88,383,1635231600"; 
-   d="scan'208";a="275951791"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2022 02:56:59 -0800
-X-IronPort-AV: E=Sophos;i="5.88,383,1635231600"; 
-   d="scan'208";a="531490390"
-Received: from smile.fi.intel.com ([10.237.72.59])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2022 02:56:55 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nLjsp-006UYn-51;
-        Sun, 20 Feb 2022 12:56:03 +0200
-Date:   Sun, 20 Feb 2022 12:56:02 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Viresh Kumar <vireshk@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Milan Stevanovic <milan.stevanovic@se.com>,
-        Jimmy Lalande <jimmy.lalande@se.com>,
-        Laetitia MARIOTTINI <laetitia.mariottini@se.com>
-Subject: Re: [PATCH 4/8] dma: dmamux: Introduce RZN1 DMA router support
-Message-ID: <YhIeQlwmt/yCc8Uu@smile.fi.intel.com>
-References: <20220218181226.431098-1-miquel.raynal@bootlin.com>
- <20220218181226.431098-5-miquel.raynal@bootlin.com>
+        with ESMTP id S236307AbiBTMpc (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 20 Feb 2022 07:45:32 -0500
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8640932EF1
+        for <dmaengine@vger.kernel.org>; Sun, 20 Feb 2022 04:45:11 -0800 (PST)
+Received: by mail-wr1-x441.google.com with SMTP id i14so22366519wrc.10
+        for <dmaengine@vger.kernel.org>; Sun, 20 Feb 2022 04:45:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:from:mime-version:content-transfer-encoding
+         :content-description:subject:to:date:reply-to;
+        bh=T28r8IcApmahqshNb89Vq7Sss5daNXvHX2RvLjpVFBs=;
+        b=pKQO6JlKP1IWsu0Sgd2LGN/UNs3bUPt6TYDUM8F3CWmvV8j6+5S7MeoIiR+GDiA+BU
+         fA1FJiVbuFO1pX+qV1tDFtu8p+LPrr4bO1QNsvRtB3PtUOP5n0WyxSmyJFa2muHb0/8x
+         KpKzVPPglU7u7HbqM0FqYMhYRrzDfXoWBahELht+MGT42zY+OkrwOqLjK4ew1t0fHUEn
+         JQ3Kn2w1vb3xb1s0NpUxB57uY8hd7YbmKwHuHr9Fmvf1cVLo8kzl23cj6ykNq4R0qoiG
+         J3LYboEmsKJuzVNmDbA0FSy6O7dONQ24GhDUR4mQToMraU2qH9dinoSrMPQ2SL9NlWbw
+         1lQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:from:mime-version
+         :content-transfer-encoding:content-description:subject:to:date
+         :reply-to;
+        bh=T28r8IcApmahqshNb89Vq7Sss5daNXvHX2RvLjpVFBs=;
+        b=R/oOmKfcB4ZXCwE9XfQFPK3ra7qxuDCPiPjzGgP27aCWwkcvb6hksF2BhurhYl6Ius
+         vqcwepYPCDq3To7jyc7cOHMoWn4EPkcFLvcuN7M3ZNg6RwXdSx56yMZpe2WatT00mJH/
+         iMLQAQ3XiTOUdetVWnYPtgLu7L29K5XE8RE1YFRQLRtWi+3R8ldy/2FuV/7MUqSfV8/3
+         +b9cU14V/Zk7eaUXIuEh6vvaP2RYHyVOdw+lp266hc5ryalLB4WMt1TtKhdgvpqBgx72
+         Uz7ItfB2i2+sQ0Q+DTgO6OiKH8mFrwoKpwyN6sVEw9BOgIe2XH7I0eJOlxL3hTisXnyc
+         K/eA==
+X-Gm-Message-State: AOAM531v8/swmJvDw/AlPHcZHaD75IfgiCyhNv6K+6ZIALuKiGq8XKWW
+        Qoe34Ol6pTmnPFhOA9u7OSE=
+X-Google-Smtp-Source: ABdhPJwmoNayQgEdTQQ5iPstaPcGELur8YOjPWOi9ICtP4CUjWl/PlTzbHU1lsxKFO44HxiffvN1jg==
+X-Received: by 2002:a5d:680c:0:b0:1e4:2d98:46fe with SMTP id w12-20020a5d680c000000b001e42d9846femr12644118wru.411.1645361110095;
+        Sun, 20 Feb 2022 04:45:10 -0800 (PST)
+Received: from [192.168.0.133] ([5.193.8.34])
+        by smtp.gmail.com with ESMTPSA id d29sm12032201wra.63.2022.02.20.04.45.06
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Sun, 20 Feb 2022 04:45:09 -0800 (PST)
+Message-ID: <621237d5.1c69fb81.403ca.b065@mx.google.com>
+From:   Mrs Maria Elisabeth Schaeffler <loganethan51@gmail.com>
+X-Google-Original-From: Mrs Maria Elisabeth Schaeffler
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220218181226.431098-5-miquel.raynal@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Spende
+To:     Recipients <Mrs@vger.kernel.org>
+Date:   Sun, 20 Feb 2022 16:45:03 +0400
+Reply-To: mariaeisaeth001@gmail.com
+X-Spam-Status: No, score=2.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,TO_MALFORMED,T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Feb 18, 2022 at 07:12:22PM +0100, Miquel Raynal wrote:
-> The Renesas RZN1 DMA IP is a based on a DW core, with eg. an additional
-> dmamux register located in the system control area which can take up to
-> 32 requests (16 per DMA controller). Each DMA channel can be wired to
-> two different peripherals.
-> 
-> We need two additional information from the 'dmas' property: the channel
-> (bit in the dmamux register) that must be accessed and the value of the
-> mux for this channel.
-
-...
-
-> +dw_dmac-y			:= platform.o dmamux.o
-
-We do not need this on other platforms, please make sure we have no dangling
-code on, e.g., x86.
-
-...
-
-> +	/* The of_node_put() will be done in the core for the node */
-> +	master = map->req_idx < dmamux->dmac_requests ? 0 : 1;
-
-The opposite conditional will be better, no?`
-
-...
-
-> +	dmamux->used_chans |= BIT(map->req_idx);
-> +	ret = r9a06g032_syscon_set_dmamux(BIT(map->req_idx),
-> +					  val ? BIT(map->req_idx) : 0);
+Hallo, =
 
 
-Cleaner to do
+Ich bin Frau Maria Elisabeth Schaeffler, eine deutsche Wirtschaftsmagnatin,=
+ Investorin und Philanthropin. Ich bin der Vorsitzende von Wipro Limited. I=
+ch habe 25 Prozent meines pers=F6nlichen Verm=F6gens f=FCr wohlt=E4tige Zwe=
+cke ausgegeben. Und ich habe auch versprochen, die restlichen 25% dieses Ja=
+hr 2022 an Einzelpersonen zu verschenken. Ich habe mich entschlossen, Ihnen=
+ 1.500.000,00 Euro zu spenden. Wenn Sie an meiner Spende interessiert sind,=
+ kontaktieren Sie mich bitte f=FCr weitere Informationen.
 
-	u32 mask = BIT(...);
-	...
+Sie k=F6nnen auch =FCber den folgenden Link mehr =FCber mich lesen
+https://en.wikipedia.org/wiki/Maria-Elisabeth_Schaeffler
 
-	dmamux->used_chans |= mask;
-	ret = r9a06g032_syscon_set_dmamux(mask, val ? mask : 0);
-
-...
-
-> +static const struct of_device_id rzn1_dmac_match[] __maybe_unused = {
-> +	{ .compatible = "renesas,rzn1-dma", },
-> +	{},
-
-No comma for terminator entry.
-
-> +};
-
-...
-
-> +	if (!node)
-> +		return -ENODEV;
-
-Dup check, why not to simply try for phandle first?
-
-...
-
-> +	if (of_property_read_u32(dmac_node, "dma-requests",
-> +				 &dmamux->dmac_requests)) {
-
-One line?
-
-> +		dev_err(&pdev->dev, "Missing DMAC requests information\n");
-> +		of_node_put(dmac_node);
-> +		return -EINVAL;
-
-First put node, then simply use dev_err_probe().
-
-> +	}
-
-...
-
-> +static const struct of_device_id rzn1_dmamux_match[] = {
-> +	{ .compatible = "renesas,rzn1-dmamux", },
-> +	{},
-
-No comma.
-
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Gr=FC=DFe
+Gesch=E4ftsf=FChrer Wipro Limited
+Maria-Elisabeth_Schaeffler
+E-Mail: mariaeisaeth001@gmail.com

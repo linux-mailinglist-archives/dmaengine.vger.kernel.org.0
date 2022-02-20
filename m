@@ -2,150 +2,74 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 76CCC4BD0EF
-	for <lists+dmaengine@lfdr.de>; Sun, 20 Feb 2022 20:29:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9671C4BD11A
+	for <lists+dmaengine@lfdr.de>; Sun, 20 Feb 2022 20:50:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241913AbiBTT3R (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 20 Feb 2022 14:29:17 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:58412 "EHLO
+        id S244687AbiBTTuZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 20 Feb 2022 14:50:25 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243180AbiBTT3O (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 20 Feb 2022 14:29:14 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6436442EDA;
-        Sun, 20 Feb 2022 11:28:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645385333; x=1676921333;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=M7/i6xnRFkEXEKJukN+sGwvyQIdCKObg+1yeNQa6vvI=;
-  b=BNK/veTKDtiptWH5dxPMC5ZcvrLF5fLhtLjyP+ShFD2U0qTCZDlJJU63
-   BzPcnLU1vyekFx5rQ/HZIsvsVtBPKXzoSx4kAF+I2/RNOvIrTqf3Y/mMa
-   6heqxyTifuQSp/sKwNxHohx7HNcDn6Az3c+2XEftOZmhbtp6HA7YqoNtr
-   ZMWm8MpawNwM5BptEMLtxE65lI59gntrbXdPBERFb66UG76nGskJR/mBI
-   GILIG7kPfW7TSveyx9bZnoAonj0MtYEMgCpkdY1JBZf3wvA5nxSHeKwaj
-   uigWJ+38ReYvXQsUQqsKPZAjd71IaWGy3UnL+GtB26d9bysLRVvaxPiY1
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10264"; a="234937631"
-X-IronPort-AV: E=Sophos;i="5.88,384,1635231600"; 
-   d="scan'208";a="234937631"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2022 11:28:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,384,1635231600"; 
-   d="scan'208";a="778502463"
-Received: from lkp-server01.sh.intel.com (HELO da3212ac2f54) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Feb 2022 11:28:48 -0800
-Received: from kbuild by da3212ac2f54 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nLrt1-0000e7-Q2; Sun, 20 Feb 2022 19:28:47 +0000
-Date:   Mon, 21 Feb 2022 03:28:20 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Milan Stevanovic <milan.stevanovic@se.com>,
-        Jimmy Lalande <jimmy.lalande@se.com>,
-        Laetitia MARIOTTINI <laetitia.mariottini@se.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 3/8] soc: renesas: rzn1-sysc: Export function to set
- dmamux
-Message-ID: <202202210355.JzDJ9Lyz-lkp@intel.com>
-References: <20220218181226.431098-4-miquel.raynal@bootlin.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220218181226.431098-4-miquel.raynal@bootlin.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S244678AbiBTTuW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 20 Feb 2022 14:50:22 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28B6630F61;
+        Sun, 20 Feb 2022 11:50:01 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 65DFB60EBD;
+        Sun, 20 Feb 2022 19:50:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CF733C340E8;
+        Sun, 20 Feb 2022 19:49:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645386599;
+        bh=TK2v370atgE9fRzuR8EYA95kvqS3K2nUO253pnsf9hg=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=irDZ94xeEQRJpRDLxp8wEQKcTZ/UQaIfAwarVH1wVUaJF7hOFoLwnonaL0BcmQWXL
+         JhnoAq/hr+nFK1PmQwer/C1qOmKaUBokdAXlNS+JenM1ytc+3/agaAPIOupnMlTmuj
+         SsX4zQHU/YsQZZTYALu9vQgBAAWK9jSD9Q7AUpqeB5i7TdLFsPWqjzEDRacy5T8F7o
+         /xad5/N38Yc2m21IPFDpv1/j2J+iGRhF0XPJxx4C5B6Vm9bl3+CmQs5zzBRzWJJf53
+         SAbDIapqLB/mHBWPeIV96IIKJzeFCawk1wACzTEnvHfvPwiVp3ckEZPbqLRZ4x/ezt
+         F1J6jhSZS13ng==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id BD488E5D07D;
+        Sun, 20 Feb 2022 19:49:59 +0000 (UTC)
+Subject: Re: [GIT PULL]: dmaengine fixes for v5.17
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <YhJLyWF5PZvc242o@matsya>
+References: <YhJLyWF5PZvc242o@matsya>
+X-PR-Tracked-List-Id: <dmaengine.vger.kernel.org>
+X-PR-Tracked-Message-Id: <YhJLyWF5PZvc242o@matsya>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-fix-5.17
+X-PR-Tracked-Commit-Id: 455896c53d5b803733ddd84e1bf8a430644439b6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 77478077349f14c78e30faeac358cf1187c0f0c1
+Message-Id: <164538659976.12071.5577396106345948223.pr-tracker-bot@kernel.org>
+Date:   Sun, 20 Feb 2022 19:49:59 +0000
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Miquel,
+The pull request you sent on Sun, 20 Feb 2022 19:40:17 +0530:
 
-I love your patch! Perhaps something to improve:
+> git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-fix-5.17
 
-[auto build test WARNING on geert-renesas-devel/next]
-[also build test WARNING on geert-renesas-drivers/renesas-clk robh/for-next linus/master v5.17-rc4 next-20220217]
-[cannot apply to vkoul-dmaengine/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/77478077349f14c78e30faeac358cf1187c0f0c1
 
-url:    https://github.com/0day-ci/linux/commits/Miquel-Raynal/RZN1-DMA-support/20220220-182519
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git next
-config: arm-randconfig-r022-20220220 (https://download.01.org/0day-ci/archive/20220221/202202210355.JzDJ9Lyz-lkp@intel.com/config)
-compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project d271fc04d5b97b12e6b797c6067d3c96a8d7470e)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # install arm cross compiling tool for clang build
-        # apt-get install binutils-arm-linux-gnueabi
-        # https://github.com/0day-ci/linux/commit/ed9b880ea7f2b23b42feeed7a6ed898cd09ae2f1
-        git remote add linux-review https://github.com/0day-ci/linux
-        git fetch --no-tags linux-review Miquel-Raynal/RZN1-DMA-support/20220220-182519
-        git checkout ed9b880ea7f2b23b42feeed7a6ed898cd09ae2f1
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/clk/renesas/
+Thank you!
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
->> drivers/clk/renesas/r9a06g032-clocks.c:320:5: warning: no previous prototype for function 'r9a06g032_syscon_set_dmamux' [-Wmissing-prototypes]
-   int r9a06g032_syscon_set_dmamux(u32 mask, u32 val)
-       ^
-   drivers/clk/renesas/r9a06g032-clocks.c:320:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-   int r9a06g032_syscon_set_dmamux(u32 mask, u32 val)
-   ^
-   static 
-   1 warning generated.
-
-
-vim +/r9a06g032_syscon_set_dmamux +320 drivers/clk/renesas/r9a06g032-clocks.c
-
-   317	
-   318	/* Exported helper to access the DMAMUX register */
-   319	static struct r9a06g032_priv *syscon_priv;
- > 320	int r9a06g032_syscon_set_dmamux(u32 mask, u32 val)
-   321	{
-   322		u32 dmamux;
-   323	
-   324		if (!syscon_priv)
-   325			return -EPROBE_DEFER;
-   326	
-   327		spin_lock(&syscon_priv->lock);
-   328	
-   329		dmamux = readl(syscon_priv->reg + R9A06G032_SYSCON_DMAMUX);
-   330		dmamux &= ~mask;
-   331		dmamux |= val & mask;
-   332		writel(dmamux, syscon_priv->reg + R9A06G032_SYSCON_DMAMUX);
-   333	
-   334		spin_unlock(&syscon_priv->lock);
-   335	
-   336		return 0;
-   337	}
-   338	
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html

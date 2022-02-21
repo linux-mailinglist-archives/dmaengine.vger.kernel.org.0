@@ -2,73 +2,67 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2712C4BD1F9
-	for <lists+dmaengine@lfdr.de>; Sun, 20 Feb 2022 22:27:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FF754BD3DF
+	for <lists+dmaengine@lfdr.de>; Mon, 21 Feb 2022 03:57:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245114AbiBTVXU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 20 Feb 2022 16:23:20 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34176 "EHLO
+        id S1343927AbiBUCg6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 20 Feb 2022 21:36:58 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:48774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245090AbiBTVXT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 20 Feb 2022 16:23:19 -0500
-Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF174377D0;
-        Sun, 20 Feb 2022 13:22:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645392177; x=1676928177;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2MWCVpu+jSUWZjvnLkEhW8kS0xqlx71w6KIQ0s+e4/A=;
-  b=go9f6plBGTbpnyU8vwHjVINFBGne8hTSfrveXqRh0fpQBgQiS5ZD5huI
-   1JVDtdw5CO65dCeNqya9hJVyqmjfqYwgIdFH7gOdG+LjP/6N/0EiHM1cA
-   sxNVdyQyEbKRFMRi6lrYKMNsplEVfeu6zCENM44O6uRkdCCpe/Vq3EJEE
-   Y/obmYX41VdWJt4ZWTUK9ujQVwsWqzOvlMeCE/PkMcAcDdz743r617I6d
-   hCebo7g0kuB/4j701ByaCwDnaE41eanzs7Uczd5If7H+GDXiouThR/9pp
-   WLsb0PHsOdl9haLZf11a6d7vZkoVxNfGDUSP6hp1nvbdktzn3eUqAdFOs
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10264"; a="312145691"
-X-IronPort-AV: E=Sophos;i="5.88,384,1635231600"; 
-   d="scan'208";a="312145691"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2022 13:22:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,384,1635231600"; 
-   d="scan'208";a="683020262"
-Received: from lkp-server01.sh.intel.com (HELO da3212ac2f54) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 20 Feb 2022 13:22:53 -0800
-Received: from kbuild by da3212ac2f54 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nLtfR-0000qC-0x; Sun, 20 Feb 2022 21:22:53 +0000
-Date:   Mon, 21 Feb 2022 05:22:44 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     kbuild-all@lists.01.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        with ESMTP id S1343938AbiBUCgy (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 20 Feb 2022 21:36:54 -0500
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 989AF299;
+        Sun, 20 Feb 2022 18:36:31 -0800 (PST)
+Received: by mail-il1-f177.google.com with SMTP id p11so8992040ils.1;
+        Sun, 20 Feb 2022 18:36:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=QyX/i2/YrR/rW3J3vcQL5VJG0A8Hvyop2ZIeubiA5uY=;
+        b=31BVrDMMHkfUoZhz/E4uchbtevPAmv2DARIy4BG6ZnmCbgdiANjL8c40C2i/jz5HDM
+         4YVT6C6Nqi5eJoPVuBGppH4+QS1PU70XVltW0QNXIigSr6ah8T/qw7gXhAACwmPa86FQ
+         hKFyNYWZ0qNy0IzP95SzszTAwOm9yvTWO44betxNJd5ZGrsJJFNctuQo0WkYbuKvO1JZ
+         XrITdvo9ENscJEhe329jrqL505rYh5yIoBdJCeprqbg4dMV71wO/TzcS4I1NiHZbZDjj
+         ofgjlKu7OvgslbMF3MwPrZA2Iwg+BI4YpcmeapUIm7S2APRBbyzoD1KLtw1pWhETs0oG
+         Tlyw==
+X-Gm-Message-State: AOAM533a+05RkWvkwoe7DpYTJ0ZZfBKQawA9JFkzvZyFSG2fz4S7eFU4
+        DFX4xjRAw6jv5BGXfi3Ayg==
+X-Google-Smtp-Source: ABdhPJzdwNs2TTvMMhPurie/Z2ze3Kaj4Y2IAOi9YjrL1pMLCBZwuYrSXPXRDjt2YTX9QydWacu9Kw==
+X-Received: by 2002:a92:ca0f:0:b0:2bf:56d4:3aec with SMTP id j15-20020a92ca0f000000b002bf56d43aecmr14324732ils.220.1645410990890;
+        Sun, 20 Feb 2022 18:36:30 -0800 (PST)
+Received: from robh.at.kernel.org ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id h13sm7203330ili.28.2022.02.20.18.36.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Feb 2022 18:36:30 -0800 (PST)
+Received: (nullmailer pid 2041543 invoked by uid 1000);
+        Mon, 21 Feb 2022 02:36:09 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     linux-clk@vger.kernel.org,
         Milan Stevanovic <milan.stevanovic@se.com>,
+        Vinod Koul <vkoul@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        dmaengine@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-renesas-soc@vger.kernel.org,
         Jimmy Lalande <jimmy.lalande@se.com>,
         Laetitia MARIOTTINI <laetitia.mariottini@se.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 4/8] dma: dmamux: Introduce RZN1 DMA router support
-Message-ID: <202202210543.GR8q2zw2-lkp@intel.com>
-References: <20220218181226.431098-5-miquel.raynal@bootlin.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220218181226.431098-5-miquel.raynal@bootlin.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        devicetree@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+In-Reply-To: <20220218181226.431098-3-miquel.raynal@bootlin.com>
+References: <20220218181226.431098-1-miquel.raynal@bootlin.com> <20220218181226.431098-3-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 2/8] dt-bindings: dma: Introduce RZN1 DMA compatible
+Date:   Sun, 20 Feb 2022 20:36:09 -0600
+Message-Id: <1645410969.367667.2041542.nullmailer@robh.at.kernel.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,40 +70,47 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Miquel,
+On Fri, 18 Feb 2022 19:12:20 +0100, Miquel Raynal wrote:
+> Just like for the NAND controller that is also on this SoC, let's
+> provide a SoC generic and a more specific couple of compatibles.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  .../devicetree/bindings/dma/snps,dma-spear1340.yaml       | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
 
-I love your patch! Yet something to improve:
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-[auto build test ERROR on geert-renesas-devel/next]
-[also build test ERROR on geert-renesas-drivers/renesas-clk robh/for-next linus/master v5.17-rc4 next-20220217]
-[cannot apply to vkoul-dmaengine/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+yamllint warnings/errors:
 
-url:    https://github.com/0day-ci/linux/commits/Miquel-Raynal/RZN1-DMA-support/20220220-182519
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git next
-config: microblaze-randconfig-r026-20220220 (https://download.01.org/0day-ci/archive/20220221/202202210543.GR8q2zw2-lkp@intel.com/config)
-compiler: microblaze-linux-gcc (GCC) 11.2.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/0day-ci/linux/commit/df0b7e58b46473e407c2c552f843d0628ad6875d
-        git remote add linux-review https://github.com/0day-ci/linux
-        git fetch --no-tags linux-review Miquel-Raynal/RZN1-DMA-support/20220220-182519
-        git checkout df0b7e58b46473e407c2c552f843d0628ad6875d
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=microblaze SHELL=/bin/bash
+dtschema/dtc warnings/errors:
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/renesas-nandc.example.dt.yaml: nand-controller@40102000: '#dma-cells' is a required property
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/renesas-nandc.example.dt.yaml: nand-controller@40102000: $nodename:0: 'nand-controller@40102000' does not match '^dma-controller(@.*)?$'
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/renesas-nandc.example.dt.yaml: nand-controller@40102000: clocks: [[4294967295, 117], [4294967295, 37]] is too long
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/renesas-nandc.example.dt.yaml: nand-controller@40102000: clock-names: ['hclk', 'eclk'] is too long
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/renesas-nandc.example.dt.yaml: nand-controller@40102000: Unevaluated properties are not allowed ('clocks', 'clock-names', '#address-cells', '#size-cells' were unexpected)
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/renesas-nandc.example.dt.yaml: nand-controller@40102000: '#dma-cells' is a required property
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+doc reference errors (make refcheckdocs):
 
-All errors (new ones prefixed by >>):
+See https://patchwork.ozlabs.org/patch/1594847
 
-   microblaze-linux-ld: drivers/dma/dw/dmamux.o: in function `rzn1_dmamux_init':
->> (.text+0x45c): multiple definition of `init_module'; drivers/dma/dw/platform.o:(.init.text+0x0): first defined here
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+

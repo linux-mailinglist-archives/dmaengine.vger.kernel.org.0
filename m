@@ -2,100 +2,120 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 071764BF5AE
-	for <lists+dmaengine@lfdr.de>; Tue, 22 Feb 2022 11:25:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 62AF44BF5F4
+	for <lists+dmaengine@lfdr.de>; Tue, 22 Feb 2022 11:34:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231136AbiBVKZN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 22 Feb 2022 05:25:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51030 "EHLO
+        id S230242AbiBVKfQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 22 Feb 2022 05:35:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231147AbiBVKZJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 22 Feb 2022 05:25:09 -0500
-Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB88A159E80;
-        Tue, 22 Feb 2022 02:24:44 -0800 (PST)
-Received: by mail-qv1-xf31.google.com with SMTP id 8so4277855qvf.2;
-        Tue, 22 Feb 2022 02:24:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=ZwVsXW12gm3VwwhPmVGdM4QmytARwditCmcefz+2r74=;
-        b=Z1mQiaGgxCb9cd9lkH/PWqaC7V+yMwbi8iDmq2TQ4kPMn+Dhm9OXlqeFFF+rMvgQZE
-         8/b7D5EtYdkfjwwtrUAf7pUFKB2+NgTSsiVs2WbKyMoYVQ69FLQdzDOFEa2MghOF06jO
-         M/JBE0U0abxWVXw8mRF0MX4CV6fcS3JfA+R6qMUqmkOKLT+v+N2kt2nlDEYeaIJuu+jR
-         xJ02RjQCyzFBjewl4i3R6pRfjFHD09KEOHWd+wDAjMiBe/kvBX4tRYIMhNuHZdRCXRIm
-         703qF9SZZX+aDIspAJafIAXDPQca+8eflHkw3Uve9aGUzOgMh6foCNCgOAn9M5JKmznP
-         Y1hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
-         :subject:content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=ZwVsXW12gm3VwwhPmVGdM4QmytARwditCmcefz+2r74=;
-        b=b4DExrUS1MUbJiuB4G+axJ022v8Iw2xk4dbgJalgN7tI8EUNAL9PcoUHWk3w2Gdw5c
-         ziIxCOfFZKsvh3+cju+w7DOh7hm6n8hFGFaGFj41HcsEqkZHFqi0b6NTrmI7iOIoOxZT
-         9atS/DzJooPTHAZnJ4BRCTMgk3GkeYRFC3rJVsC3wiMBv09GwAPluopTwCcIqZnSkq5U
-         VQtrj1zC7kHjOW4ksvnAg3pPL3A+eDx+E9sV+CR8pwmajPBoM8q2lsGyX6xxbudDNVFo
-         yhrNc8cfdFpJAP72CTVx7oRcSNT3FG1tDULzf2XPEn1vrln5SMWq6zIwJgDfDyQ/ZFml
-         XCSg==
-X-Gm-Message-State: AOAM532u/rlF+L4lF92a+QBONRyk94bPwQT+GxqvmjbvUwiD+CFHROBq
-        tovKTdX+/fkML4MDumIKhiI=
-X-Google-Smtp-Source: ABdhPJwY72MpP1R5Ah7WW2R4pXSYtRWIGk0/fr7S/30d7VWzLmNB/IjZkS1+K5fOokHdqM4wX5Slow==
-X-Received: by 2002:a05:6214:4a1:b0:432:3676:f227 with SMTP id w1-20020a05621404a100b004323676f227mr2877021qvz.25.1645525483968;
-        Tue, 22 Feb 2022 02:24:43 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y18sm32215141qtj.33.2022.02.22.02.24.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Feb 2022 02:24:43 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <6534b889-41c5-dd7a-578b-27dc6668064a@roeck-us.net>
-Date:   Tue, 22 Feb 2022 02:24:40 -0800
+        with ESMTP id S229729AbiBVKfQ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 22 Feb 2022 05:35:16 -0500
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5794A159E9C;
+        Tue, 22 Feb 2022 02:34:49 -0800 (PST)
+Received: (Authenticated sender: miquel.raynal@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id 883EBFF803;
+        Tue, 22 Feb 2022 10:34:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1645526087;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ANMNWvUZfIde6jvdiaNgWqYa5EGxthYlnq/u9TekD4o=;
+        b=AA6ON+TMG69/MK06aYh93vn19X0U3Eki4jIxJMKI2oG2ZieFiR36/CgwUznO29I4Q1bRGO
+        hSvn/IW5Ujp2yvnXcfXFc6avEiVuf9w8KVPiWkAAMq4RfkzGt44MQWpkIByHnK3Ixd0a7X
+        PLcKqxXOVt/UiJOH2j+uHYQEdaVt17FFJtidb4aJhsqIbpEFM6q2eaW7ACnEN54m0SuvBp
+        3rplic5UZMPa2xQZK6+iUsBnpDSikGDb2vbw8RsHKqaoJY6D7lTv0bjLk5rQRILDlkpMyb
+        rPynAH7Y+UsbbNFHVnEK6BtgCK78RoGxbWjekuefVcCjdxdC2nWBOOtYaWWjaQ==
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Milan Stevanovic <milan.stevanovic@se.com>,
+        Jimmy Lalande <jimmy.lalande@se.com>,
+        Pascal Eberhard <pascal.eberhard@se.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v2 0/8] RZN1 DMA support
+Date:   Tue, 22 Feb 2022 11:34:29 +0100
+Message-Id: <20220222103437.194779-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH] MIPS: Remove TX39XX support
-Content-Language: en-US
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, dmaengine@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-References: <20220222090435.62571-1-tsbogend@alpha.franken.de>
-From:   Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <20220222090435.62571-1-tsbogend@alpha.franken.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 2/22/22 01:04, Thomas Bogendoerfer wrote:
-> No (active) developer owns this hardware, so let's remove Linux support.
-> 
-> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> ---
-[ ... ]
+Hello,
 
->   drivers/watchdog/Kconfig                      |   2 +-
+Here is a first series bringing DMA support to RZN1 platforms. I'm not a
+DMA expert at all so criticism is welcome.
 
-For watchdog:
+Soon a second series will come with changes made to the UART controller
+driver, in order to interact with the RZN1 DMA controller.
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+Cheers,
+Miquèl
+
+Changes in v2:
+* Clarified that the 'fix' regarding non aligned reads would only apply
+  to the DEV_TO_MEM case.
+* Fix the DMA controller compatible string (copy-paste error).
+* s/syscon/sysctrl/ as advised by Geert.
+* Disabled irqs when taking the spinlock from the clocks driver.
+* Moved the DMAMUX offset inside the driver.
+* Removed extra commas.
+* Improved the style as suggested by Andy.
+* Removed a dupplicated check against the device node presence.
+* Reduced the number of lines of code by using dev_err_probe().
+* Created a Kconfig symbol for DMAMUX to fix the two robot reports
+  received and be sure there was no useless overhead with other
+  platforms.
+
+Miquel Raynal (7):
+  dt-bindings: dma: Introduce RZN1 dmamux bindings
+  dt-bindings: dma: Introduce RZN1 DMA compatible
+  soc: renesas: rzn1-sysc: Export function to set dmamux
+  dma: dmamux: Introduce RZN1 DMA router support
+  dma: dw: Add RZN1 compatible
+  ARM: dts: r9a06g032: Add the two DMA nodes
+  ARM: dts: r9a06g032: Describe the DMA router
+
+Phil Edworthy (1):
+  dma: dw: Avoid partial transfers
+
+ .../bindings/dma/renesas,rzn1-dmamux.yaml     |  42 +++++
+ .../bindings/dma/snps,dma-spear1340.yaml      |   8 +-
+ MAINTAINERS                                   |   1 +
+ arch/arm/boot/dts/r9a06g032.dtsi              |  37 ++++
+ drivers/clk/renesas/r9a06g032-clocks.c        |  31 ++++
+ drivers/dma/dw/Kconfig                        |   8 +
+ drivers/dma/dw/Makefile                       |   2 +
+ drivers/dma/dw/core.c                         |   3 +
+ drivers/dma/dw/dmamux.c                       | 167 ++++++++++++++++++
+ drivers/dma/dw/platform.c                     |   1 +
+ include/linux/soc/renesas/r9a06g032-sysctrl.h |  11 ++
+ 11 files changed, 310 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/renesas,rzn1-dmamux.yaml
+ create mode 100644 drivers/dma/dw/dmamux.c
+ create mode 100644 include/linux/soc/renesas/r9a06g032-sysctrl.h
+
+-- 
+2.27.0
+

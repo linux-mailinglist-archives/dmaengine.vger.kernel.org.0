@@ -2,121 +2,99 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA29C4BFC9E
-	for <lists+dmaengine@lfdr.de>; Tue, 22 Feb 2022 16:31:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 388E64C01EF
+	for <lists+dmaengine@lfdr.de>; Tue, 22 Feb 2022 20:21:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230438AbiBVPbg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 22 Feb 2022 10:31:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56950 "EHLO
+        id S234004AbiBVTVj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 22 Feb 2022 14:21:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233469AbiBVPbg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 22 Feb 2022 10:31:36 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D139D16304A;
-        Tue, 22 Feb 2022 07:31:10 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8786CB81AB0;
-        Tue, 22 Feb 2022 15:31:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0B84C340E8;
-        Tue, 22 Feb 2022 15:31:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645543868;
-        bh=9i4xuAv3MAiVPzxe+5g/FOn2ai3P/TMo7VhrUW14K+E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O2IFr1uJQF5P3+BH4KDnb3lCGnQ0dO4zVDFzNwNAOsBSyd0vdUO7zOqKcw6jnU86d
-         +N/SDg0tbXP4GZNAfMsypnDtvYGLx1c/qxngV9EEEA+YC5G9XXexTXFWGgQVx53L9s
-         Ylf1QA9YmFhnLjCv5BHlCi/Qk7iGdBbBmQXpuj3GCXROcqQesURsx4THmKpjKWIpYE
-         ZzOhm0DVEm2wh9/9vDB8hrQN7xCdXuEsbJFK8Khm3XxSAzntG6ZSWLRx5fnqxmDxiJ
-         ZGVhEeTfBksBamVcq3uB/3HOztGYZ4wHbI8S37wg0nwO95p2Z3V7LuWF2kxNX3Csof
-         xe/VCRFUeJJZg==
-Date:   Tue, 22 Feb 2022 08:31:03 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Akhil R <akhilrajeev@nvidia.com>
-Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        jonathanh@nvidia.com, kyarlagadda@nvidia.com, ldewangan@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        p.zabel@pengutronix.de, rgumasta@nvidia.com, robh+dt@kernel.org,
-        thierry.reding@gmail.com, vkoul@kernel.org,
-        Pavan Kunapuli <pkunapuli@nvidia.com>
-Subject: Re: [PATCH v20 2/2] dmaengine: tegra: Add tegra gpcdma driver
-Message-ID: <YhUBt20I471s9Bhv@dev-arch.archlinux-ax161>
-References: <20220221153934.5226-1-akhilrajeev@nvidia.com>
- <20220221153934.5226-3-akhilrajeev@nvidia.com>
+        with ESMTP id S231186AbiBVTVi (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 22 Feb 2022 14:21:38 -0500
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6734BD2F4;
+        Tue, 22 Feb 2022 11:21:12 -0800 (PST)
+Received: by mail-ua1-f41.google.com with SMTP id g15so279508ual.11;
+        Tue, 22 Feb 2022 11:21:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tBvMIb8OT5TkXgxu8ndJKb1NeTk3l6YrJ/QsnvHZQzk=;
+        b=il/63vAG+7Hf0WVicAPjbJM4zGY9oaY2SMBi2rBfvBMiOr/s4W0yj6XqtRGsCaMJUK
+         3oBW/f02kXXbiw8puf7LVSAxx5e0JRU/0rHVg+O9T2WNCTKlY/kWDpRNW82pa9v4iy5B
+         cdnvsmkuIQOKbU0cc8iprOhvf6d4BQ+dUEyFezEpBy+Yvpyfad4+Wx+2jW7mSwKgMvjS
+         QUlmttxbgyMncWGO8buySj9tteV5iubEnBFmlxI49745JYyL2Z6b3mkAwYvqD0TtKDs9
+         ZZA/Ncm17rc5bSOx955NT2FCYrM6bltHVv5L3c3XMJ5W2M7sSf5/143ggp28xfKz+47z
+         EZnA==
+X-Gm-Message-State: AOAM530EzDQxqpEv1Tu83JRBRELZUEf1ZN6eaFU1igQFib4TiIOPIF1X
+        NzRLmjUJ6vwdXq6iI6zXBl7OtHzhZWhTLw==
+X-Google-Smtp-Source: ABdhPJxVkvPlAa7PgZh5bknmQbr+RahIdrUjggtcS0vhrzlUMbgfdqbk5eJ+QREdibvJO+gaU8fkeQ==
+X-Received: by 2002:a9f:3dc7:0:b0:33d:1812:15ac with SMTP id e7-20020a9f3dc7000000b0033d181215acmr10754473uaj.79.1645557671838;
+        Tue, 22 Feb 2022 11:21:11 -0800 (PST)
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
+        by smtp.gmail.com with ESMTPSA id v128sm1095757vkv.2.2022.02.22.11.21.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Feb 2022 11:21:11 -0800 (PST)
+Received: by mail-vs1-f53.google.com with SMTP id g20so668759vsb.9;
+        Tue, 22 Feb 2022 11:21:11 -0800 (PST)
+X-Received: by 2002:a67:e10e:0:b0:31b:956b:70cf with SMTP id
+ d14-20020a67e10e000000b0031b956b70cfmr10507511vsl.77.1645557670916; Tue, 22
+ Feb 2022 11:21:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220221153934.5226-3-akhilrajeev@nvidia.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220222090435.62571-1-tsbogend@alpha.franken.de>
+In-Reply-To: <20220222090435.62571-1-tsbogend@alpha.franken.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 22 Feb 2022 20:20:59 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWRHm8B8KdkgVyqrUqn3q=-8VUpikR0eZBFQD46X7YBVg@mail.gmail.com>
+Message-ID: <CAMuHMdWRHm8B8KdkgVyqrUqn3q=-8VUpikR0eZBFQD46X7YBVg@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: Remove TX39XX support
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Hauke Mehrtens <hauke@hauke-m.de>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Akhil,
+On Tue, Feb 22, 2022 at 10:50 AM Thomas Bogendoerfer
+<tsbogend@alpha.franken.de> wrote:
+> No (active) developer owns this hardware, so let's remove Linux support.
+>
+> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 
-On Mon, Feb 21, 2022 at 09:09:34PM +0530, Akhil R wrote:
-> Adding GPC DMA controller driver for Tegra. The driver supports dma
-> transfers between memory to memory, IO peripheral to memory and
-> memory to IO peripheral.
-> 
-> Co-developed-by: Pavan Kunapuli <pkunapuli@nvidia.com>
-> Signed-off-by: Pavan Kunapuli <pkunapuli@nvidia.com>
-> Co-developed-by: Rajesh Gumasta <rgumasta@nvidia.com>
-> Signed-off-by: Rajesh Gumasta <rgumasta@nvidia.com>
-> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
-> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/dma/Kconfig            |   11 +
->  drivers/dma/Makefile           |    1 +
->  drivers/dma/tegra186-gpc-dma.c | 1507 ++++++++++++++++++++++++++++++++
->  3 files changed, 1519 insertions(+)
->  create mode 100644 drivers/dma/tegra186-gpc-dma.c
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-<snip>
+My rbt4927 still works fine, so
+Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-> +static const struct __maybe_unused dev_pm_ops tegra_dma_dev_pm_ops = {
+Gr{oetje,eeting}s,
 
-The __maybe_unused cannot split the type ("struct dev_pm_ops") otherwise
-it causes a clang warning:
+                        Geert
 
-https://lore.kernel.org/r/202202221207.lQ53BwKp-lkp@intel.com/
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-static const struct dev_pm_ops tegra_dma_dev_pm_ops __maybe_unused = {
-
-would look a litle better I think. However, is this attribute even
-needed? The variable is unconditionally used below, so there should be
-no warning about it being unused?
-
-Cheers,
-Nathan
-
-> +	SET_SYSTEM_SLEEP_PM_OPS(tegra_dma_pm_suspend, tegra_dma_pm_resume)
-> +};
-> +
-> +static struct platform_driver tegra_dma_driver = {
-> +	.driver = {
-> +		.name	= "tegra-gpcdma",
-> +		.pm	= &tegra_dma_dev_pm_ops,
-> +		.of_match_table = tegra_dma_of_match,
-> +	},
-> +	.probe		= tegra_dma_probe,
-> +	.remove		= tegra_dma_remove,
-> +};
-> +
-> +module_platform_driver(tegra_dma_driver);
-> +
-> +MODULE_DESCRIPTION("NVIDIA Tegra GPC DMA Controller driver");
-> +MODULE_AUTHOR("Pavan Kunapuli <pkunapuli@nvidia.com>");
-> +MODULE_AUTHOR("Rajesh Gumasta <rgumasta@nvidia.com>");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.17.1
-> 
-> 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds

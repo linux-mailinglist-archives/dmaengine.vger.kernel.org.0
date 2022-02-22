@@ -2,99 +2,116 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 388E64C01EF
-	for <lists+dmaengine@lfdr.de>; Tue, 22 Feb 2022 20:21:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC40A4C02FD
+	for <lists+dmaengine@lfdr.de>; Tue, 22 Feb 2022 21:28:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234004AbiBVTVj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 22 Feb 2022 14:21:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54330 "EHLO
+        id S235476AbiBVU2d (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 22 Feb 2022 15:28:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231186AbiBVTVi (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 22 Feb 2022 14:21:38 -0500
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6734BD2F4;
-        Tue, 22 Feb 2022 11:21:12 -0800 (PST)
-Received: by mail-ua1-f41.google.com with SMTP id g15so279508ual.11;
-        Tue, 22 Feb 2022 11:21:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tBvMIb8OT5TkXgxu8ndJKb1NeTk3l6YrJ/QsnvHZQzk=;
-        b=il/63vAG+7Hf0WVicAPjbJM4zGY9oaY2SMBi2rBfvBMiOr/s4W0yj6XqtRGsCaMJUK
-         3oBW/f02kXXbiw8puf7LVSAxx5e0JRU/0rHVg+O9T2WNCTKlY/kWDpRNW82pa9v4iy5B
-         cdnvsmkuIQOKbU0cc8iprOhvf6d4BQ+dUEyFezEpBy+Yvpyfad4+Wx+2jW7mSwKgMvjS
-         QUlmttxbgyMncWGO8buySj9tteV5iubEnBFmlxI49745JYyL2Z6b3mkAwYvqD0TtKDs9
-         ZZA/Ncm17rc5bSOx955NT2FCYrM6bltHVv5L3c3XMJ5W2M7sSf5/143ggp28xfKz+47z
-         EZnA==
-X-Gm-Message-State: AOAM530EzDQxqpEv1Tu83JRBRELZUEf1ZN6eaFU1igQFib4TiIOPIF1X
-        NzRLmjUJ6vwdXq6iI6zXBl7OtHzhZWhTLw==
-X-Google-Smtp-Source: ABdhPJxVkvPlAa7PgZh5bknmQbr+RahIdrUjggtcS0vhrzlUMbgfdqbk5eJ+QREdibvJO+gaU8fkeQ==
-X-Received: by 2002:a9f:3dc7:0:b0:33d:1812:15ac with SMTP id e7-20020a9f3dc7000000b0033d181215acmr10754473uaj.79.1645557671838;
-        Tue, 22 Feb 2022 11:21:11 -0800 (PST)
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
-        by smtp.gmail.com with ESMTPSA id v128sm1095757vkv.2.2022.02.22.11.21.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Feb 2022 11:21:11 -0800 (PST)
-Received: by mail-vs1-f53.google.com with SMTP id g20so668759vsb.9;
-        Tue, 22 Feb 2022 11:21:11 -0800 (PST)
-X-Received: by 2002:a67:e10e:0:b0:31b:956b:70cf with SMTP id
- d14-20020a67e10e000000b0031b956b70cfmr10507511vsl.77.1645557670916; Tue, 22
- Feb 2022 11:21:10 -0800 (PST)
-MIME-Version: 1.0
-References: <20220222090435.62571-1-tsbogend@alpha.franken.de>
-In-Reply-To: <20220222090435.62571-1-tsbogend@alpha.franken.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 22 Feb 2022 20:20:59 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWRHm8B8KdkgVyqrUqn3q=-8VUpikR0eZBFQD46X7YBVg@mail.gmail.com>
-Message-ID: <CAMuHMdWRHm8B8KdkgVyqrUqn3q=-8VUpikR0eZBFQD46X7YBVg@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: Remove TX39XX support
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Hauke Mehrtens <hauke@hauke-m.de>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+        with ESMTP id S231694AbiBVU2d (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 22 Feb 2022 15:28:33 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19B9FB153A;
+        Tue, 22 Feb 2022 12:28:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645561687; x=1677097687;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4jxp5Mg8uxJI/IXPsPKFUQEHG9hiu8FZCtEBbIRMLu8=;
+  b=c1dEjXSog6SuJu8nzQ5emFHZWfa1QmaVtK7AJsNMe6QnYDyuC3O78j3F
+   2VALdVFl+b8ihtjrFVeF/+RCXPm13Szaxec4qDKOWm34QTEUtES0SqLZF
+   z4hvfQCqK2VAVuuhNo6lifH6xUkND7eT0lLbsUia3R/8V3JYt2E8Q4njn
+   yXaEN5OLqUUX3aS/A5fG0mZAtuDXf3PTKGvARaXmsxYb2zeVmqfnZVQwH
+   wSPSzKCm9ZbK1Fc45kjAUSi1UU59dGnr96+L358ivGvs9CLMUOCUHhZun
+   t/i5iFQtKDT4Gs1hPI2kjJcxXchwKgLswleh6Q0hV74fTew82huwZ3Xgs
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10266"; a="251725028"
+X-IronPort-AV: E=Sophos;i="5.88,389,1635231600"; 
+   d="scan'208";a="251725028"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2022 12:28:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,389,1635231600"; 
+   d="scan'208";a="627825309"
+Received: from lkp-server01.sh.intel.com (HELO 788b1cd46f0d) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Feb 2022 12:28:02 -0800
+Received: from kbuild by 788b1cd46f0d with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nMblR-0000bD-9X; Tue, 22 Feb 2022 20:28:01 +0000
+Date:   Wed, 23 Feb 2022 04:27:05 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Vinod Koul <vkoul@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     kbuild-all@lists.01.org, dmaengine@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Milan Stevanovic <milan.stevanovic@se.com>,
+        Jimmy Lalande <jimmy.lalande@se.com>,
+        Pascal Eberhard <pascal.eberhard@se.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 4/8] dma: dmamux: Introduce RZN1 DMA router support
+Message-ID: <202202230444.xjzzeOlo-lkp@intel.com>
+References: <20220222103437.194779-5-miquel.raynal@bootlin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220222103437.194779-5-miquel.raynal@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Feb 22, 2022 at 10:50 AM Thomas Bogendoerfer
-<tsbogend@alpha.franken.de> wrote:
-> No (active) developer owns this hardware, so let's remove Linux support.
->
-> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Hi Miquel,
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+I love your patch! Yet something to improve:
 
-My rbt4927 still works fine, so
-Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+[auto build test ERROR on geert-renesas-devel/next]
+[also build test ERROR on geert-renesas-drivers/renesas-clk robh/for-next linus/master v5.17-rc5 next-20220217]
+[cannot apply to vkoul-dmaengine/next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-Gr{oetje,eeting}s,
+url:    https://github.com/0day-ci/linux/commits/Miquel-Raynal/RZN1-DMA-support/20220222-183549
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git next
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20220223/202202230444.xjzzeOlo-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 11.2.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/b62059e893c7e3779b96e1c69ae6818260d352de
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Miquel-Raynal/RZN1-DMA-support/20220222-183549
+        git checkout b62059e893c7e3779b96e1c69ae6818260d352de
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=m68k SHELL=/bin/bash
 
-                        Geert
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+All errors (new ones prefixed by >>, old ones prefixed by <<):
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+ERROR: modpost: missing MODULE_LICENSE() in drivers/dma/dw/dmamux.o
+>> ERROR: modpost: "r9a06g032_sysctrl_set_dmamux" [drivers/dma/dw/dmamux.ko] undefined!
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org

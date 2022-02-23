@@ -2,53 +2,53 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC1354C1336
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Feb 2022 13:50:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93D9F4C1347
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Feb 2022 13:54:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231601AbiBWMu5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 23 Feb 2022 07:50:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42594 "EHLO
+        id S240646AbiBWMzB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 23 Feb 2022 07:55:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240635AbiBWMuy (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Feb 2022 07:50:54 -0500
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4231A9A6D;
-        Wed, 23 Feb 2022 04:50:23 -0800 (PST)
-Received: by mail-vk1-f169.google.com with SMTP id l42so5459218vkd.7;
-        Wed, 23 Feb 2022 04:50:23 -0800 (PST)
+        with ESMTP id S240648AbiBWMzA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Feb 2022 07:55:00 -0500
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E7DF9858D;
+        Wed, 23 Feb 2022 04:54:33 -0800 (PST)
+Received: by mail-vk1-f170.google.com with SMTP id x62so4384650vkg.6;
+        Wed, 23 Feb 2022 04:54:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gP4A6URoJKHDCwHV2sofk4nE+u+icS5Y2l1NiRYLZ6E=;
-        b=j7hR1n9oxaz9cQ2YWtLfqChO0gtZsMRFICyPrrrFkm7Wm8uBRIyhodYbm6+Ghm+f0A
-         pd7qJEPmeRfhi5x9dFyItfav/+cfnJYMTDhewwQEPY5zx/wdoidBaHtGAz0+/tfucpHw
-         SM8grg/bypr0NydIuppyi23EbBJ8whWsFh8U9GKoamhEK/uN41l3wdPfI8M6Ulplp49l
-         S55VAiRW42/yV/FYd3TZovQ6RQFbkvice3WIzBd1hl4E+WtOyXL8/SDVfeJvpuEe2E7v
-         LA8uuP8kyqF85QEK1rALuNePJ+LfrlYWDU4K0LZ+5TpxrdjxLquO9RR2lmE/BmunWngd
-         /ihg==
-X-Gm-Message-State: AOAM533KMLMzLhP5dIsWKJftzRZGfYZOqjutFK18Xy0nnDzb4RXj5Ciw
-        p0HMbf4UEJEiyejYKxzo7TCSXa9WsM28WQ==
-X-Google-Smtp-Source: ABdhPJyveY5CqfuNnZOODe2V8hZqODIlYrb/bRj0RYvPMKfJTTUEA4FOeU1x9Ydal3eEdmiolfvgiw==
-X-Received: by 2002:a05:6122:e28:b0:331:42:794d with SMTP id bk40-20020a0561220e2800b003310042794dmr11797995vkb.10.1645620622698;
-        Wed, 23 Feb 2022 04:50:22 -0800 (PST)
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
-        by smtp.gmail.com with ESMTPSA id n62sm657094vsc.28.2022.02.23.04.50.21
+        bh=j2ZMGyGypWkGWFhVkz7FZ46Wu3326iiOknUbX8FkqQc=;
+        b=1kGO+j6XIkGyzJduHrUxwiE7xPJaIY68FWw3YQYArI+Ct5I00T/jlehhrPO99c6tLz
+         l0pwhuxPCkNzUtXv6MMZRVxZmfB0MEDgAFgiYBrU7x04TSnpO8RFNc59xk4hGZw/xQU5
+         ADXkYKrjqk1ahL0bCmeG2cRBBUi5wmutaQK0e06ARHhUGVYj0gMh6KTbV/jgEFH92rY7
+         IaTkvL3QqA80gTTEdr++R8+eRfF/42Vw7G3Mwxbr+Tl46Il0pgq/TOZbww8I05ZT/OUK
+         TLDGzEBXZX6J5g2lzc3BBQb+YTbQvL5B6OMoEo9sJAqTTzb1+F3HzboFE0reATrgtQEl
+         5bZg==
+X-Gm-Message-State: AOAM533MWgjeCeAA4AZxGEygmqJXcboDTI9XVQeVeZ/05xEG4Fv86MMf
+        0okTmwqPoWGpbCHk2r/+UeCKa/F8fV6b9w==
+X-Google-Smtp-Source: ABdhPJz70u6fKHBVE1l4VulJrXlA8Oh3E59jKSdnBca6ZnSC4P+j20s20M1Qcpkt5c1FXlBBCBbeKQ==
+X-Received: by 2002:a1f:6087:0:b0:328:e94a:54b3 with SMTP id u129-20020a1f6087000000b00328e94a54b3mr12317218vkb.20.1645620872480;
+        Wed, 23 Feb 2022 04:54:32 -0800 (PST)
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
+        by smtp.gmail.com with ESMTPSA id y5sm680559vsj.11.2022.02.23.04.54.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Feb 2022 04:50:22 -0800 (PST)
-Received: by mail-vk1-f179.google.com with SMTP id j9so12173346vkj.1;
-        Wed, 23 Feb 2022 04:50:21 -0800 (PST)
-X-Received: by 2002:a05:6122:8ca:b0:332:64b4:8109 with SMTP id
- 10-20020a05612208ca00b0033264b48109mr1591282vkg.7.1645620621829; Wed, 23 Feb
- 2022 04:50:21 -0800 (PST)
+        Wed, 23 Feb 2022 04:54:32 -0800 (PST)
+Received: by mail-vs1-f43.google.com with SMTP id t22so3036748vsa.4;
+        Wed, 23 Feb 2022 04:54:32 -0800 (PST)
+X-Received: by 2002:a67:af08:0:b0:31b:9451:bc39 with SMTP id
+ v8-20020a67af08000000b0031b9451bc39mr12147208vsl.68.1645620871857; Wed, 23
+ Feb 2022 04:54:31 -0800 (PST)
 MIME-Version: 1.0
-References: <20220222103437.194779-1-miquel.raynal@bootlin.com> <20220222103437.194779-7-miquel.raynal@bootlin.com>
-In-Reply-To: <20220222103437.194779-7-miquel.raynal@bootlin.com>
+References: <20220222103437.194779-1-miquel.raynal@bootlin.com> <20220222103437.194779-8-miquel.raynal@bootlin.com>
+In-Reply-To: <20220222103437.194779-8-miquel.raynal@bootlin.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 23 Feb 2022 13:50:10 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXUKJ6O-W+9-Zf7ogNqv87rDQ1Qv4tX+4kzLhYk0w0Y3w@mail.gmail.com>
-Message-ID: <CAMuHMdXUKJ6O-W+9-Zf7ogNqv87rDQ1Qv4tX+4kzLhYk0w0Y3w@mail.gmail.com>
-Subject: Re: [PATCH v2 6/8] dma: dw: Add RZN1 compatible
+Date:   Wed, 23 Feb 2022 13:54:20 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWoH3vySMiCaRxZzT474NwtXfYRAga==SyNsKKaEpiU1Q@mail.gmail.com>
+Message-ID: <CAMuHMdWoH3vySMiCaRxZzT474NwtXfYRAga==SyNsKKaEpiU1Q@mail.gmail.com>
+Subject: Re: [PATCH v2 7/8] ARM: dts: r9a06g032: Add the two DMA nodes
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Vinod Koul <vkoul@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -82,30 +82,45 @@ Hi Miquel,
 
 On Tue, Feb 22, 2022 at 11:35 AM Miquel Raynal
 <miquel.raynal@bootlin.com> wrote:
-> The Renesas RZN1 DMA IP is very close to the original DW DMA IP, a DMA
-> routeur has been introduced to handle the wiring options that have been
-
-router
-
-> added.
+> Describe the two DMA controllers available on this SoC.
 >
 > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-LGTM, so
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Thanks for your patch!
 
-> --- a/drivers/dma/dw/platform.c
-> +++ b/drivers/dma/dw/platform.c
-> @@ -137,6 +137,7 @@ static void dw_shutdown(struct platform_device *pdev)
->  #ifdef CONFIG_OF
->  static const struct of_device_id dw_dma_of_id_table[] = {
->         { .compatible = "snps,dma-spear1340", .data = &dw_dma_chip_pdata },
-> +       { .compatible = "renesas,rzn1-dma", .data = &dw_dma_chip_pdata },
+> --- a/arch/arm/boot/dts/r9a06g032.dtsi
+> +++ b/arch/arm/boot/dts/r9a06g032.dtsi
+> @@ -184,6 +184,36 @@ nand_controller: nand-controller@40102000 {
+>                         status = "disabled";
+>                 };
+>
+> +               dma0: dma-controller@40104000 {
+> +                       compatible = "renesas,r9a06g032-dma", "renesas,rzn1-dma";
+> +                       reg = <0x40104000 0x1000>;
+> +                       interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clock-names = "hclk";
+> +                       clocks = <&sysctrl R9A06G032_HCLK_DMA0>;
 
-I don't like all these copies of dw_dma_chip_pdata, due to it being
-defined in drivers/dma/dw/internal.h, but that's a pre-existing problem.
+power-domains?
 
->         {}
+> +                       dma-channels = <8>;
+> +                       dma-requests = <16>;
+> +                       dma-masters = <1>;
+> +                       #dma-cells = <3>;
+
+<4>? The dmamux bindings say:
+
++      The first four cells are dedicated to the master DMA
+controller. The fifth
++      cell gives the DMA mux bit index that must be set starting from 0. The
++      sixth cell gives the binary value that must be written there, ie. 0 or 1.
+
+> +                       block_size = <0xfff>;
+> +                       data_width = <3>;
+> +                       status = "disabled";
+> +               };
+
+The rest LGTM.
 
 Gr{oetje,eeting}s,
 

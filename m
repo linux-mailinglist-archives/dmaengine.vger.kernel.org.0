@@ -2,75 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC40A4C02FD
-	for <lists+dmaengine@lfdr.de>; Tue, 22 Feb 2022 21:28:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B112B4C0831
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Feb 2022 03:31:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235476AbiBVU2d (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 22 Feb 2022 15:28:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36720 "EHLO
+        id S236951AbiBWCaY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 22 Feb 2022 21:30:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231694AbiBVU2d (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 22 Feb 2022 15:28:33 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19B9FB153A;
-        Tue, 22 Feb 2022 12:28:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645561687; x=1677097687;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4jxp5Mg8uxJI/IXPsPKFUQEHG9hiu8FZCtEBbIRMLu8=;
-  b=c1dEjXSog6SuJu8nzQ5emFHZWfa1QmaVtK7AJsNMe6QnYDyuC3O78j3F
-   2VALdVFl+b8ihtjrFVeF/+RCXPm13Szaxec4qDKOWm34QTEUtES0SqLZF
-   z4hvfQCqK2VAVuuhNo6lifH6xUkND7eT0lLbsUia3R/8V3JYt2E8Q4njn
-   yXaEN5OLqUUX3aS/A5fG0mZAtuDXf3PTKGvARaXmsxYb2zeVmqfnZVQwH
-   wSPSzKCm9ZbK1Fc45kjAUSi1UU59dGnr96+L358ivGvs9CLMUOCUHhZun
-   t/i5iFQtKDT4Gs1hPI2kjJcxXchwKgLswleh6Q0hV74fTew82huwZ3Xgs
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10266"; a="251725028"
-X-IronPort-AV: E=Sophos;i="5.88,389,1635231600"; 
-   d="scan'208";a="251725028"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2022 12:28:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,389,1635231600"; 
-   d="scan'208";a="627825309"
-Received: from lkp-server01.sh.intel.com (HELO 788b1cd46f0d) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 22 Feb 2022 12:28:02 -0800
-Received: from kbuild by 788b1cd46f0d with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nMblR-0000bD-9X; Tue, 22 Feb 2022 20:28:01 +0000
-Date:   Wed, 23 Feb 2022 04:27:05 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     kbuild-all@lists.01.org, dmaengine@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Milan Stevanovic <milan.stevanovic@se.com>,
-        Jimmy Lalande <jimmy.lalande@se.com>,
-        Pascal Eberhard <pascal.eberhard@se.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 4/8] dma: dmamux: Introduce RZN1 DMA router support
-Message-ID: <202202230444.xjzzeOlo-lkp@intel.com>
-References: <20220222103437.194779-5-miquel.raynal@bootlin.com>
+        with ESMTP id S237036AbiBWCaP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 22 Feb 2022 21:30:15 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2914746B1C;
+        Tue, 22 Feb 2022 18:29:16 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D3337B81E01;
+        Wed, 23 Feb 2022 02:29:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A004C340E8;
+        Wed, 23 Feb 2022 02:29:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645583353;
+        bh=3Q6HfLvnyk20c5KteC9b+hLzCTbQ2st3hb44bFNMDzQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eycplXqci1dKtID9tugJ4a6FlUMwRKEqBpraL3gJXwwLinDvVT9L8FTEnL00KSbTW
+         xuN8Z8FCTykHVjhw3bU2acjWaepUoXnOIQW+V3BcfXmp/nSlEvc4/RkUzpuBTczc9V
+         hXJrMOemapi2pt0POlNe8m7Z5EAwckRGcx5zrNXcgBn5TbB3XWKJ4OOZ0259+L5gqf
+         ahnz6joYlG2nv1xYwSP5379KqOCQxmmcqgxsuTONEjXcpWIotD8qlmxjRcw77fQpIl
+         6Bx/QFBgxbDJ7xtu6S0y8h2D1rcJbK/cTf3xud3LKrJXTtt3OPeqkv4Fhgzx9Xr3WD
+         t8x7K5a+LwlWg==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Yongzhi Liu <lyz_cs@pku.edu.cn>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, christophe.jaillet@wanadoo.fr,
+        arnd@arndb.de, laurent.pinchart@ideasonboard.com,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.16 24/30] dmaengine: shdma: Fix runtime PM imbalance on error
+Date:   Tue, 22 Feb 2022 21:28:13 -0500
+Message-Id: <20220223022820.240649-24-sashal@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220223022820.240649-1-sashal@kernel.org>
+References: <20220223022820.240649-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220222103437.194779-5-miquel.raynal@bootlin.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,40 +57,38 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Miquel,
+From: Yongzhi Liu <lyz_cs@pku.edu.cn>
 
-I love your patch! Yet something to improve:
+[ Upstream commit 455896c53d5b803733ddd84e1bf8a430644439b6 ]
 
-[auto build test ERROR on geert-renesas-devel/next]
-[also build test ERROR on geert-renesas-drivers/renesas-clk robh/for-next linus/master v5.17-rc5 next-20220217]
-[cannot apply to vkoul-dmaengine/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+pm_runtime_get_() increments the runtime PM usage counter even
+when it returns an error code, thus a matching decrement is needed on
+the error handling path to keep the counter balanced.
 
-url:    https://github.com/0day-ci/linux/commits/Miquel-Raynal/RZN1-DMA-support/20220222-183549
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-devel.git next
-config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20220223/202202230444.xjzzeOlo-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 11.2.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/0day-ci/linux/commit/b62059e893c7e3779b96e1c69ae6818260d352de
-        git remote add linux-review https://github.com/0day-ci/linux
-        git fetch --no-tags linux-review Miquel-Raynal/RZN1-DMA-support/20220222-183549
-        git checkout b62059e893c7e3779b96e1c69ae6818260d352de
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=m68k SHELL=/bin/bash
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>, old ones prefixed by <<):
-
-ERROR: modpost: missing MODULE_LICENSE() in drivers/dma/dw/dmamux.o
->> ERROR: modpost: "r9a06g032_sysctrl_set_dmamux" [drivers/dma/dw/dmamux.ko] undefined!
-
+Signed-off-by: Yongzhi Liu <lyz_cs@pku.edu.cn>
+Link: https://lore.kernel.org/r/1642311296-87020-1-git-send-email-lyz_cs@pku.edu.cn
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/dma/sh/shdma-base.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/dma/sh/shdma-base.c b/drivers/dma/sh/shdma-base.c
+index 7f72b3f4cd1ae..19ac95c0098f0 100644
+--- a/drivers/dma/sh/shdma-base.c
++++ b/drivers/dma/sh/shdma-base.c
+@@ -115,8 +115,10 @@ static dma_cookie_t shdma_tx_submit(struct dma_async_tx_descriptor *tx)
+ 		ret = pm_runtime_get(schan->dev);
+ 
+ 		spin_unlock_irq(&schan->chan_lock);
+-		if (ret < 0)
++		if (ret < 0) {
+ 			dev_err(schan->dev, "%s(): GET = %d\n", __func__, ret);
++			pm_runtime_put(schan->dev);
++		}
+ 
+ 		pm_runtime_barrier(schan->dev);
+ 
+-- 
+2.34.1
+

@@ -2,53 +2,53 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA06C4C113D
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Feb 2022 12:27:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 253D34C12AA
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Feb 2022 13:22:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239852AbiBWL14 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 23 Feb 2022 06:27:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37890 "EHLO
+        id S238643AbiBWMW3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 23 Feb 2022 07:22:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239854AbiBWL1v (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Feb 2022 06:27:51 -0500
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 342EC3CA4D;
-        Wed, 23 Feb 2022 03:27:23 -0800 (PST)
-Received: by mail-vs1-f41.google.com with SMTP id g21so2773862vsp.6;
-        Wed, 23 Feb 2022 03:27:23 -0800 (PST)
+        with ESMTP id S237783AbiBWMW1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Feb 2022 07:22:27 -0500
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 311B59AD9B;
+        Wed, 23 Feb 2022 04:22:00 -0800 (PST)
+Received: by mail-vs1-f53.google.com with SMTP id e26so2951862vso.3;
+        Wed, 23 Feb 2022 04:22:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pCNg1dsvPK2cBaOM9RaFK2fkB9AEdshhbIiM7c0UENw=;
-        b=XETiVgOxdwnbwZFx3HqyuH/fT529T4GP0nqUZSweIs4XZM1u+k7Y9icHe6wmJ47pk0
-         2yle23OhAMsKc/R4oN0k/z5wsrk/uleEoNFKkSu4EISK0W7h1doH44YziVPk2kefjEH5
-         ch4zEPyYDCfEJ3p/vbLOCFi0nrmqWFZxwg2Jj98s75HZdz2V/Ni2Ch8HX3Ov/xJbIitd
-         273r5hSLjaWfOO5T8oyfA9Rx7MA4M5dXm8IfMyMH6rp17qf1sbB4ucvsM15iVfRBa7Ry
-         /6vtNQGgpnEayTy318ynCc3Lcq1QodUPpHLk1PoxPi0oHfD3GVN0fwBFIpZo1YoC6YzF
-         QLKw==
-X-Gm-Message-State: AOAM5327w/fSulyIpaUsDdU4EsAdCuY14oli+cBrBunDbtb519tH3kjj
-        7ddQ5fO3MlnSPZG5cvcFm47eUbIjAgrvOA==
-X-Google-Smtp-Source: ABdhPJzD1xrDgXnqyaCr3y34geL6gcdufvrQQHEKhzlNeVwwl2t5LNxGaZzPrdwMWFoKp0ehM7gdFA==
-X-Received: by 2002:a67:d589:0:b0:31b:5561:b18e with SMTP id m9-20020a67d589000000b0031b5561b18emr11884394vsj.53.1645615642261;
-        Wed, 23 Feb 2022 03:27:22 -0800 (PST)
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com. [209.85.217.46])
-        by smtp.gmail.com with ESMTPSA id u6sm8521559vku.15.2022.02.23.03.27.21
+        bh=BH9kx8uglIy4IymTz3ycr2PEM2TVDcpmS0Wpy32dbbI=;
+        b=7ZL1+71pUijFszLPbokmpDzFI9Vdv+y7l55adoxsO5W3FP2Ey0HSj2INOUUZl0OcgL
+         EE1ythJiv/r5XwZCCCcwpWzwyv4OPwC9bV4EBT9rmUlYqt076lHohAumz35GpoF1Znvj
+         97M+qMdBWEdijf7Q7qwJVPuLfDwg9uS5PYIIR4eHSA+A5JfV9i1DvqY2C5kwFJusaTk/
+         BNFjbOHZ5SlSJF+uhkLl7FHy/GPTWP7H9oku0yD70dPfzznVVy13tGgYkE5prcpzfga3
+         astpFD/tmZPTA+JyFViGeLWZC5wdeXxO43I3C80JFGQs4/kwIttMr7kd9XtqlM3OmJej
+         rzDQ==
+X-Gm-Message-State: AOAM532rrsFim7cBtL7iw400q35mfvrL2tkUlNSz0cY7n6rcavxitfWY
+        EDEWIkHH0JDSBND61VhTiun971dO+rt/hw==
+X-Google-Smtp-Source: ABdhPJzbuskKnYq8oJB/4rObpZcTKXVv2SrEX++zKypPtsZe9cYXvqaaBLAgrxH2Pudvpaq209emOw==
+X-Received: by 2002:a05:6102:3116:b0:31b:f7e2:c504 with SMTP id e22-20020a056102311600b0031bf7e2c504mr11236202vsh.58.1645618919137;
+        Wed, 23 Feb 2022 04:21:59 -0800 (PST)
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
+        by smtp.gmail.com with ESMTPSA id y22sm646492vsi.25.2022.02.23.04.21.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Feb 2022 03:27:22 -0800 (PST)
-Received: by mail-vs1-f46.google.com with SMTP id d11so2767979vsm.5;
-        Wed, 23 Feb 2022 03:27:21 -0800 (PST)
+        Wed, 23 Feb 2022 04:21:58 -0800 (PST)
+Received: by mail-vs1-f43.google.com with SMTP id i27so2909504vsr.10;
+        Wed, 23 Feb 2022 04:21:58 -0800 (PST)
 X-Received: by 2002:a05:6102:4411:b0:31b:6df1:3b80 with SMTP id
- df17-20020a056102441100b0031b6df13b80mr11543425vsb.5.1645615641619; Wed, 23
- Feb 2022 03:27:21 -0800 (PST)
+ df17-20020a056102441100b0031b6df13b80mr11609191vsb.5.1645618918150; Wed, 23
+ Feb 2022 04:21:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20220222103437.194779-1-miquel.raynal@bootlin.com> <20220222103437.194779-2-miquel.raynal@bootlin.com>
-In-Reply-To: <20220222103437.194779-2-miquel.raynal@bootlin.com>
+References: <20220222103437.194779-1-miquel.raynal@bootlin.com> <20220222103437.194779-3-miquel.raynal@bootlin.com>
+In-Reply-To: <20220222103437.194779-3-miquel.raynal@bootlin.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 23 Feb 2022 12:27:10 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXJ5nNf0d2tn05HcknznK199U6oFkZSR-BrFhmurRR8HA@mail.gmail.com>
-Message-ID: <CAMuHMdXJ5nNf0d2tn05HcknznK199U6oFkZSR-BrFhmurRR8HA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/8] dt-bindings: dma: Introduce RZN1 dmamux bindings
+Date:   Wed, 23 Feb 2022 13:21:47 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVzMiBn-rZgWkp=v7VWqEf1CX9kPTF7qn0cx9va9Z9dWg@mail.gmail.com>
+Message-ID: <CAMuHMdVzMiBn-rZgWkp=v7VWqEf1CX9kPTF7qn0cx9va9Z9dWg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/8] dt-bindings: dma: Introduce RZN1 DMA compatible
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Vinod Koul <vkoul@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -78,62 +78,20 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Miquel,
-
-On Tue, Feb 22, 2022 at 11:34 AM Miquel Raynal
+On Tue, Feb 22, 2022 at 11:35 AM Miquel Raynal
 <miquel.raynal@bootlin.com> wrote:
-> The Renesas RZN1 DMA IP is a based on a DW core, with eg. an additional
-> dmamux register located in the system control area which can take up to
-> 32 requests (16 per DMA controller). Each DMA channel can be wired to
-> two different peripherals.
+> Just like for the NAND controller that is also on this SoC, let's
+> provide a SoC generic and a more specific couple of compatibles for the
+> DMA controller.
 >
 > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-Thanks for your patch!
+> +++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/renesas,rzn1-dmamux.yaml
-> @@ -0,0 +1,42 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/renesas,rzn1-dmamux.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas RZ/N1 DMA mux
-> +
-> +maintainers:
-> +  - Miquel Raynal <miquel.raynal@bootlin.com>
-> +
-> +allOf:
-> +  - $ref: "dma-router.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    const: renesas,rzn1-dmamux
+Perhaps you want to add the power-domains property?
+The RZ/N1 clock driver is also a clock-domain provider.
 
-Do we want an SoC-specific compatible value, too?
-See also my comments on the dmamux driver.
-
-> +
-> +  '#dma-cells':
-> +    const: 6
-> +    description:
-> +      The first four cells are dedicated to the master DMA controller. The fifth
-> +      cell gives the DMA mux bit index that must be set starting from 0. The
-> +      sixth cell gives the binary value that must be written there, ie. 0 or 1.
-> +
-> +  dma-masters:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  dma-requests:
-> +    const: 32
-
-Do we need this in DT? It depends on the actual dmamux hardware,
-and is (currently) the register width of the CFG_DMAMUX register.
-
-The rest LGTM (I'm no dma-router expert),so with the above clarified:
+Apart from that:
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,

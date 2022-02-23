@@ -2,53 +2,53 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 253D34C12AA
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Feb 2022 13:22:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D974E4C12B5
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Feb 2022 13:28:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238643AbiBWMW3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 23 Feb 2022 07:22:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58570 "EHLO
+        id S240380AbiBWM3Q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 23 Feb 2022 07:29:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237783AbiBWMW1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Feb 2022 07:22:27 -0500
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 311B59AD9B;
-        Wed, 23 Feb 2022 04:22:00 -0800 (PST)
-Received: by mail-vs1-f53.google.com with SMTP id e26so2951862vso.3;
-        Wed, 23 Feb 2022 04:22:00 -0800 (PST)
+        with ESMTP id S233949AbiBWM3P (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Feb 2022 07:29:15 -0500
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 574E998F4D;
+        Wed, 23 Feb 2022 04:28:48 -0800 (PST)
+Received: by mail-vs1-f54.google.com with SMTP id e26so2971179vso.3;
+        Wed, 23 Feb 2022 04:28:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BH9kx8uglIy4IymTz3ycr2PEM2TVDcpmS0Wpy32dbbI=;
-        b=7ZL1+71pUijFszLPbokmpDzFI9Vdv+y7l55adoxsO5W3FP2Ey0HSj2INOUUZl0OcgL
-         EE1ythJiv/r5XwZCCCcwpWzwyv4OPwC9bV4EBT9rmUlYqt076lHohAumz35GpoF1Znvj
-         97M+qMdBWEdijf7Q7qwJVPuLfDwg9uS5PYIIR4eHSA+A5JfV9i1DvqY2C5kwFJusaTk/
-         BNFjbOHZ5SlSJF+uhkLl7FHy/GPTWP7H9oku0yD70dPfzznVVy13tGgYkE5prcpzfga3
-         astpFD/tmZPTA+JyFViGeLWZC5wdeXxO43I3C80JFGQs4/kwIttMr7kd9XtqlM3OmJej
-         rzDQ==
-X-Gm-Message-State: AOAM532rrsFim7cBtL7iw400q35mfvrL2tkUlNSz0cY7n6rcavxitfWY
-        EDEWIkHH0JDSBND61VhTiun971dO+rt/hw==
-X-Google-Smtp-Source: ABdhPJzbuskKnYq8oJB/4rObpZcTKXVv2SrEX++zKypPtsZe9cYXvqaaBLAgrxH2Pudvpaq209emOw==
-X-Received: by 2002:a05:6102:3116:b0:31b:f7e2:c504 with SMTP id e22-20020a056102311600b0031bf7e2c504mr11236202vsh.58.1645618919137;
-        Wed, 23 Feb 2022 04:21:59 -0800 (PST)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id y22sm646492vsi.25.2022.02.23.04.21.58
+        bh=PiC7wY11OJzwJLXiv+WWU1cIwokaIJTzHuhQQ1ELyoI=;
+        b=1ve5g7aaKDOg4zFSP9P8BIiix0XqsKXOYFT1ojt/TaBw1fk14kVpytqHkLIJeB2OZp
+         8U8VekcGSnCqDyjrOH01715ybryfHkr4be1vNJslL3QMn/MuNouWAl8AUX20lvr7ixw5
+         /1RqfHJboqn2JrbdfLxEe82bzMs3zGNi/Vqy4S2ReRwA8cBvgskclZrHa6LflO+rDZX9
+         kX875XnJuGu232hTVj+u/PFPHlZDqWxkkIif0j0aQol2pW2A7napi6unGOCqGuPe94ge
+         fgcEL7AT0QsOZvjl2WY/RqjKBnGK0u7DOHLlZf6TEsnYkNGu7IuOtrYJazC7tXHDr3r/
+         7Gsw==
+X-Gm-Message-State: AOAM531L9UWq/wS6ynu1zlWtbzUhixhabgp6gJd977QyBMqQp1gshnSM
+        CpJw+izC99x6Yl1Bs9xeVX9nLMZsmGJb5A==
+X-Google-Smtp-Source: ABdhPJxt7pkcx5BUuyncyhXTijU9N2+wuwvDiQMVyyqYxxvjDexgL/djiQxvjqwbU4nDjx/TPzVSjw==
+X-Received: by 2002:a67:e005:0:b0:31b:74eb:1005 with SMTP id c5-20020a67e005000000b0031b74eb1005mr10682674vsl.50.1645619327292;
+        Wed, 23 Feb 2022 04:28:47 -0800 (PST)
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
+        by smtp.gmail.com with ESMTPSA id x144sm3242275vkx.22.2022.02.23.04.28.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Feb 2022 04:21:58 -0800 (PST)
-Received: by mail-vs1-f43.google.com with SMTP id i27so2909504vsr.10;
-        Wed, 23 Feb 2022 04:21:58 -0800 (PST)
-X-Received: by 2002:a05:6102:4411:b0:31b:6df1:3b80 with SMTP id
- df17-20020a056102441100b0031b6df13b80mr11609191vsb.5.1645618918150; Wed, 23
- Feb 2022 04:21:58 -0800 (PST)
+        Wed, 23 Feb 2022 04:28:46 -0800 (PST)
+Received: by mail-vs1-f50.google.com with SMTP id d11so2949990vsm.5;
+        Wed, 23 Feb 2022 04:28:46 -0800 (PST)
+X-Received: by 2002:a67:e113:0:b0:30e:303d:d1d6 with SMTP id
+ d19-20020a67e113000000b0030e303dd1d6mr11733631vsl.38.1645619326446; Wed, 23
+ Feb 2022 04:28:46 -0800 (PST)
 MIME-Version: 1.0
-References: <20220222103437.194779-1-miquel.raynal@bootlin.com> <20220222103437.194779-3-miquel.raynal@bootlin.com>
-In-Reply-To: <20220222103437.194779-3-miquel.raynal@bootlin.com>
+References: <20220222103437.194779-1-miquel.raynal@bootlin.com> <20220222103437.194779-4-miquel.raynal@bootlin.com>
+In-Reply-To: <20220222103437.194779-4-miquel.raynal@bootlin.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 23 Feb 2022 13:21:47 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVzMiBn-rZgWkp=v7VWqEf1CX9kPTF7qn0cx9va9Z9dWg@mail.gmail.com>
-Message-ID: <CAMuHMdVzMiBn-rZgWkp=v7VWqEf1CX9kPTF7qn0cx9va9Z9dWg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/8] dt-bindings: dma: Introduce RZN1 DMA compatible
+Date:   Wed, 23 Feb 2022 13:28:35 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXGY7ukSpqq5GzcrfysKDvFy684VVnUKO-SoCn+SJgBEw@mail.gmail.com>
+Message-ID: <CAMuHMdXGY7ukSpqq5GzcrfysKDvFy684VVnUKO-SoCn+SJgBEw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/8] soc: renesas: rzn1-sysc: Export function to set dmamux
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Vinod Koul <vkoul@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -78,21 +78,45 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Miquel,
+
 On Tue, Feb 22, 2022 at 11:35 AM Miquel Raynal
 <miquel.raynal@bootlin.com> wrote:
-> Just like for the NAND controller that is also on this SoC, let's
-> provide a SoC generic and a more specific couple of compatibles for the
-> DMA controller.
+> The dmamux register is located within the system controller.
+>
+> Without syscon, we need an extra helper in order to give write access to
+> this register to a dmamux driver.
 >
 > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-> +++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+Thanks for your patch!
 
-Perhaps you want to add the power-domains property?
-The RZ/N1 clock driver is also a clock-domain provider.
+> --- a/drivers/clk/renesas/r9a06g032-clocks.c
+> +++ b/drivers/clk/renesas/r9a06g032-clocks.c
+> @@ -922,6 +947,12 @@ static int __init r9a06g032_clocks_probe(struct platform_device *pdev)
+>         clocks->reg = of_iomap(np, 0);
+>         if (WARN_ON(!clocks->reg))
+>                 return -ENOMEM;
+> +
+> +       if (sysctrl_priv)
+> +               return -EBUSY;
 
-Apart from that:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Can this actually happen, or can the check be removed?
+
+> +
+> +       sysctrl_priv = clocks;
+
+Oh yes, it can happen, if any of the clock registrations below fail
+due to -EPROBE_DEFER. So I think the assignment to sysctrl_priv
+should be postponed until we're sure that can no longer happen.
+Then the check above can be removed, too.
+
+> +
+>         for (i = 0; i < ARRAY_SIZE(r9a06g032_clocks); ++i) {
+>                 const struct r9a06g032_clkdesc *d = &r9a06g032_clocks[i];
+>                 const char *parent_name = d->source ?
+
+The rest LGTM.
 
 Gr{oetje,eeting}s,
 

@@ -2,47 +2,47 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E5CA4C094D
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Feb 2022 03:39:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B07C4C096A
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Feb 2022 03:39:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236157AbiBWCjT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 22 Feb 2022 21:39:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35676 "EHLO
+        id S237677AbiBWCjy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 22 Feb 2022 21:39:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237674AbiBWChz (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 22 Feb 2022 21:37:55 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29AAF5BD18;
-        Tue, 22 Feb 2022 18:32:52 -0800 (PST)
+        with ESMTP id S237942AbiBWCig (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 22 Feb 2022 21:38:36 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADA22652E5;
+        Tue, 22 Feb 2022 18:33:18 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 04879615BA;
-        Wed, 23 Feb 2022 02:32:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7289FC340F0;
-        Wed, 23 Feb 2022 02:32:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8D77F614CB;
+        Wed, 23 Feb 2022 02:33:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D37DC340EB;
+        Wed, 23 Feb 2022 02:33:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645583571;
+        s=k20201202; t=1645583598;
         bh=z26jdcz8ETQiT0yMjJkEpAN2tFFILIDjhzcZj/5HSQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ce2lPLtIOqH+Joc3ksU+Jc89XRkn7pu7mGcxuthHjXFBVa2DrCQOWG7VlUW+3apdT
-         jrrz1bS1JKRv8v9BRtTr/Yed8qKrT3yMLKWLLx6S7cEuHvwmo7jNKB7WjOAXVUN7XV
-         UR1D8KttKKrodaFdTEHloml26sHKIsFhN1HlNaegD5KG2AsDWZGfVHRXVD+GSzTTx4
-         vSe4NEs0tHPQynMyOFII3aL+1KEAFdQjfrSIGBOnW/AkGckAwWKXFuRiNYoinZ78ed
-         DHv3WA3tdFjyS1E5xu/TjTVtqY+r541jyxxMxBPyYzIFNSlFdXLy3lMplZCjgFVrHJ
-         /L4F/SZbzJGsg==
+        b=vQDWmAoXEree6H9oN3kHsr8Fp+GYsBS5HnyIYSxpJZ5uSi1wWyymLaZ/R5SJNWzfX
+         qJHOnqJXnRa3rc5Qs7rUWVSU4clFfeiKBkKYvkjQ/Ef1lz1bYlBy6P5Fqy/4JSH7xb
+         BqcFB3MeTluQ6w0hgcsFOZEcREnRX1hHvPN6kOGhMV9u3pguDqiOoiAHh6mZfTmmjo
+         nZi/r/YF8DzBi7JBIVJ/A8udb6lcGJZsUIkN+kg7ku9TOqKmTDrtquNYB51h91gTo+
+         VL3S5pJBZTj2vSkeF6+GlLnq/otsxwmvRw2sj9fR3h6iLtn9abUgkda4yW7gtjimD6
+         6SvS32ikgA7aA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Yongzhi Liu <lyz_cs@pku.edu.cn>, Vinod Koul <vkoul@kernel.org>,
         Sasha Levin <sashal@kernel.org>, broonie@kernel.org,
-        christophe.jaillet@wanadoo.fr, arnd@arndb.de,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/10] dmaengine: shdma: Fix runtime PM imbalance on error
-Date:   Tue, 22 Feb 2022 21:32:30 -0500
-Message-Id: <20220223023233.242468-7-sashal@kernel.org>
+        laurent.pinchart@ideasonboard.com, christophe.jaillet@wanadoo.fr,
+        arnd@arndb.de, dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 7/9] dmaengine: shdma: Fix runtime PM imbalance on error
+Date:   Tue, 22 Feb 2022 21:32:58 -0500
+Message-Id: <20220223023300.242616-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220223023233.242468-1-sashal@kernel.org>
-References: <20220223023233.242468-1-sashal@kernel.org>
+In-Reply-To: <20220223023300.242616-1-sashal@kernel.org>
+References: <20220223023300.242616-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore

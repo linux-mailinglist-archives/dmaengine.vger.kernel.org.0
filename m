@@ -2,108 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ACB154C346D
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Feb 2022 19:16:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC9DD4C3621
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Feb 2022 20:49:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232624AbiBXSQh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 24 Feb 2022 13:16:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56700 "EHLO
+        id S234006AbiBXTtg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 24 Feb 2022 14:49:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232644AbiBXSQg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Feb 2022 13:16:36 -0500
-Received: from smtp.smtpout.orange.fr (smtp03.smtpout.orange.fr [80.12.242.125])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 577F6253179
-        for <dmaengine@vger.kernel.org>; Thu, 24 Feb 2022 10:16:02 -0800 (PST)
-Received: from [192.168.1.18] ([90.126.236.122])
-        by smtp.orange.fr with ESMTPA
-        id NIeQnn7MbrdkGNIeQnJ9oN; Thu, 24 Feb 2022 19:16:00 +0100
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
-X-ME-Date: Thu, 24 Feb 2022 19:16:00 +0100
-X-ME-IP: 90.126.236.122
-Message-ID: <b3e6a19b-caa0-f58a-1039-02b60b17ed21@wanadoo.fr>
-Date:   Thu, 24 Feb 2022 19:15:38 +0100
+        with ESMTP id S234007AbiBXTtg (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Feb 2022 14:49:36 -0500
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49CED254545;
+        Thu, 24 Feb 2022 11:49:04 -0800 (PST)
+Received: by mail-ot1-f45.google.com with SMTP id l25-20020a9d7a99000000b005af173a2875so2084529otn.2;
+        Thu, 24 Feb 2022 11:49:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vEMkaLmcYjI09xvx6jYK1M/q56ooly5OYLZnEhsDSRo=;
+        b=CSZCjHypl16wcR9w4o54hBTW82A2Qsgt9xgP8s8VLo+WsFUpHwLuUKPjohEV5y63Ci
+         AsSslVMYvQiXKf5W+qNjSYgveXkAYy6wJTC808TN7PRSiFTbRSlsIf4QPHkX8gRAnKEE
+         5QDcgvj4bj+b5/TDBrWxiBa+1ov4kMgOlWYqskbPaEePO8WcdVjlJ3bZAZWTfTk6z4y+
+         uctL9PDp51kdpXLL1bZIHb31eCoa+symkT068MZoUJz7nMzOFRm4/9Vh06FdmCfD0ya8
+         fygn4fuHzWmULh8RqTZtqCUpYavpJjp7s8I4gSIJXGy9ouBPeopJYInM507YLbeOWmPY
+         lAjw==
+X-Gm-Message-State: AOAM533bqLeHVU6yvq939qmbFmoeO+e5oNn88hm+WR65rs1ZDrXQYAeZ
+        Dlpul9dtfk0wb27s1v8cKA==
+X-Google-Smtp-Source: ABdhPJypgynPujP0cdPUrnNUKBeJNnGl3BBCJkagr3tusQSqPPDDWnHi4y3UQXDbmLAkglzENGbn9A==
+X-Received: by 2002:a4a:8507:0:b0:319:4719:27f6 with SMTP id k7-20020a4a8507000000b00319471927f6mr1532083ooh.84.1645732143607;
+        Thu, 24 Feb 2022 11:49:03 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id j25-20020a4ad199000000b003171dfeb5bfsm121557oor.15.2022.02.24.11.49.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Feb 2022 11:49:02 -0800 (PST)
+Received: (nullmailer pid 3475137 invoked by uid 1000);
+        Thu, 24 Feb 2022 19:49:01 -0000
+Date:   Thu, 24 Feb 2022 13:49:01 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Cc:     long.cheng@mediatek.com, linux-mediatek@lists.infradead.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sean.wang@mediatek.com,
+        krzysztof.kozlowski@canonical.com,
+        linux-arm-kernel@lists.infradead.org, vkoul@kernel.org,
+        matthias.bgg@gmail.com, robh+dt@kernel.org
+Subject: Re: [PATCH v3] dt-bindings: dma: Convert mtk-uart-apdma to DT schema
+Message-ID: <YhfhLWdVKLqHHFyv@robh.at.kernel.org>
+References: <20220217095242.13761-1-angelogioacchino.delregno@collabora.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 00/16] Remove usage of the deprecated "pci-dma-compat.h"
- API
-Content-Language: en-US
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        David Miller <davem@davemloft.net>,
-        David Airlie <airlied@linux.ie>, Vinod Koul <vkoul@kernel.org>,
-        hao.wu@intel.com, Tom Rix <trix@redhat.com>,
-        Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
-        awalls@md.metrocast.net,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        sreekanth.reddy@broadcom.com,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Alex Bounine <alex.bou9@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        alpha <linux-alpha@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        dmaengine@vger.kernel.org, linux-fpga@vger.kernel.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        MPT-FusionLinux.pdl@broadcom.com,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Janitors <kernel-janitors@vger.kernel.org>
-References: <cover.1641500561.git.christophe.jaillet@wanadoo.fr>
- <YhXmQwvjMFPQFPUr@infradead.org>
- <ddf6010e-417d-8da7-8e11-1b4a55f92fff@wanadoo.fr>
- <YhckzJp5/x9zW4uQ@infradead.org>
- <CAK8P3a23Pjm1Btc=mXX=vU4hkNiPqz3+o4=j0FuYKHB7KuMtPg@mail.gmail.com>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <CAK8P3a23Pjm1Btc=mXX=vU4hkNiPqz3+o4=j0FuYKHB7KuMtPg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220217095242.13761-1-angelogioacchino.delregno@collabora.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Thu, 17 Feb 2022 10:52:42 +0100, AngeloGioacchino Del Regno wrote:
+> Convert the MediaTek UART APDMA Controller binding to DT schema.
+> 
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> ---
+> v3: Removed anyOf condition
+> v2: Fixed interrupt maxItems to 16, added interrupts/reg maxItems constraint
+>     to 8 when the dma-requests property is not present
+> 
+>  .../bindings/dma/mediatek,uart-dma.yaml       | 122 ++++++++++++++++++
+>  .../bindings/dma/mtk-uart-apdma.txt           |  56 --------
+>  2 files changed, 122 insertions(+), 56 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
+> 
 
-Le 24/02/2022 à 08:07, Arnd Bergmann a écrit :
-> On Thu, Feb 24, 2022 at 7:25 AM Christoph Hellwig <hch@infradead.org> wrote:
->> On Wed, Feb 23, 2022 at 09:26:56PM +0100, Christophe JAILLET wrote:
->>> Patch 01, 04, 05, 06, 08, 09 have not reached -next yet.
->>> They all still apply cleanly.
->>>
->>> 04 has been picked it up for inclusion in the media subsystem for 5.18.
->>> The other ones all have 1 or more Reviewed-by:/Acked-by: tags.
->>>
->>> Patch 16 must be resubmitted to add "#include <linux/dma-mapping.h>" in
->>> order not to break builds.
->> So how about this:  I'll pick up 1, 5,6,8 and 9 for the dma-mapping
->> tree.  After -rc1 when presumably all other patches have reached
->> mainline your resubmit one with the added include and we finish this
->> off?
-> Sounds good to me as well.
->
->         Arnd
-
-This is fine for me.
-When all patches have reached -next, I'll re-submit the fixed 16th patch.
-
-
-Thanks for your assistance for ending this long story :)
-
-CJ
-
+Acked-by: Rob Herring <robh@kernel.org>

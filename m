@@ -2,116 +2,177 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 447FE4C2464
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Feb 2022 08:12:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CB6B4C27D1
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Feb 2022 10:15:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231160AbiBXHNT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 24 Feb 2022 02:13:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50568 "EHLO
+        id S232678AbiBXJPc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 24 Feb 2022 04:15:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230470AbiBXHNS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Feb 2022 02:13:18 -0500
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95D5918DABB;
-        Wed, 23 Feb 2022 23:12:46 -0800 (PST)
-Received: from mail-wr1-f42.google.com ([209.85.221.42]) by
- mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1MxUjv-1oBfXN0Tcn-00xqgA; Thu, 24 Feb 2022 08:07:36 +0100
-Received: by mail-wr1-f42.google.com with SMTP id p9so1435973wra.12;
-        Wed, 23 Feb 2022 23:07:35 -0800 (PST)
-X-Gm-Message-State: AOAM532EpxCpwWjKfZVO60UsPuZ8Wv6zCAHCNVaTbsH4S6A6NhRzx/Oz
-        TXaCCl9owcnbxk5pTojWFNHy8dt8v+HlZyDQblA=
-X-Google-Smtp-Source: ABdhPJwEtLpX8E/vTN5J2WTCdVQZctqam7R0+5lnIigKmPPrPVDBdQ8fk8Xp/V3xYVy+7XSB18aLEhGa4luiP7dRyR0=
-X-Received: by 2002:adf:a446:0:b0:1ed:c41b:cf13 with SMTP id
- e6-20020adfa446000000b001edc41bcf13mr1081355wra.407.1645686455629; Wed, 23
- Feb 2022 23:07:35 -0800 (PST)
+        with ESMTP id S232224AbiBXJPb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Feb 2022 04:15:31 -0500
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC94D27829F;
+        Thu, 24 Feb 2022 01:15:01 -0800 (PST)
+Received: by mail-vk1-f173.google.com with SMTP id j12so854488vkr.0;
+        Thu, 24 Feb 2022 01:15:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=szuPWhHlo/neurh+t83UwTplOjXZknKUszkWMyL4t8E=;
+        b=oSKb8s5WRAnL/wDp3ynvy4rpIZdskGTu/bwXy2v0wfQ+N8ytgfNjDg1KcCfUChIsYB
+         4RbOXL6y5fXiC/9ZAPSC7zzZUuMZuZ8LpUEGMAH/f0zI3niUrKRrJnitT/zxFfsaFmmt
+         thq3Zte2+/QDpB2C3orrsDFENnmpBjFJPFsc0AHXIjiT8zcL3WTygW7vfgw7NGrfc0l7
+         qvy3nPosvTPj1+HUVIqNbR0tIrOX/p8wh1dmQVvaOIqXQMBfR/TXWld5JRXLgm3twztk
+         a33g5xgTRKTYX6Hgb7khrSVqj7xDwoBwy4KfCo9B6+wTNhiNiYWafyB4hqlYkw3/49RQ
+         uFww==
+X-Gm-Message-State: AOAM5300xaWpTiHrSP29t16HeeX1YIG6ycWgydzqpmIX1q0WMScA/TS6
+        Ck/s2NxVjDr1OTaS0DZTuT2FKHJFt/hKUA==
+X-Google-Smtp-Source: ABdhPJyP9x28KDXOrPSp5xM0mk1eV58zO7e0zCfxkByJm7g6E68B04VKQnPa7SLNviwEKpHjdIGOYQ==
+X-Received: by 2002:a05:6122:788:b0:331:2063:3645 with SMTP id k8-20020a056122078800b0033120633645mr670147vkr.10.1645694100552;
+        Thu, 24 Feb 2022 01:15:00 -0800 (PST)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id e135sm311635vke.25.2022.02.24.01.14.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Feb 2022 01:15:00 -0800 (PST)
+Received: by mail-ua1-f49.google.com with SMTP id g18so582372uak.5;
+        Thu, 24 Feb 2022 01:14:59 -0800 (PST)
+X-Received: by 2002:ab0:6253:0:b0:341:8be9:7a1 with SMTP id
+ p19-20020ab06253000000b003418be907a1mr702769uao.114.1645694099810; Thu, 24
+ Feb 2022 01:14:59 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1641500561.git.christophe.jaillet@wanadoo.fr>
- <YhXmQwvjMFPQFPUr@infradead.org> <ddf6010e-417d-8da7-8e11-1b4a55f92fff@wanadoo.fr>
- <YhckzJp5/x9zW4uQ@infradead.org>
-In-Reply-To: <YhckzJp5/x9zW4uQ@infradead.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 24 Feb 2022 08:07:19 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a23Pjm1Btc=mXX=vU4hkNiPqz3+o4=j0FuYKHB7KuMtPg@mail.gmail.com>
-Message-ID: <CAK8P3a23Pjm1Btc=mXX=vU4hkNiPqz3+o4=j0FuYKHB7KuMtPg@mail.gmail.com>
-Subject: Re: [PATCH 00/16] Remove usage of the deprecated "pci-dma-compat.h" API
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        David Miller <davem@davemloft.net>,
-        David Airlie <airlied@linux.ie>, Vinod Koul <vkoul@kernel.org>,
-        hao.wu@intel.com, Tom Rix <trix@redhat.com>,
-        Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
-        awalls@md.metrocast.net,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        sreekanth.reddy@broadcom.com,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Alex Bounine <alex.bou9@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        alpha <linux-alpha@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        dmaengine@vger.kernel.org, linux-fpga@vger.kernel.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        MPT-FusionLinux.pdl@broadcom.com,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
+References: <20220222103437.194779-1-miquel.raynal@bootlin.com>
+ <20220222103437.194779-5-miquel.raynal@bootlin.com> <CAMuHMdWd150q63Nr-=7tn34D3EyiBkAKyuXHm35MM6wci93KZw@mail.gmail.com>
+ <20220223174902.3a9b85ea@xps13>
+In-Reply-To: <20220223174902.3a9b85ea@xps13>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 24 Feb 2022 10:14:48 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVr4tiicEn-BbBnCd-zP6ncr=zKd-eDvPYoYKNWUKsOBw@mail.gmail.com>
+Message-ID: <CAMuHMdVr4tiicEn-BbBnCd-zP6ncr=zKd-eDvPYoYKNWUKsOBw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/8] dma: dmamux: Introduce RZN1 DMA router support
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Milan Stevanovic <milan.stevanovic@se.com>,
+        Jimmy Lalande <jimmy.lalande@se.com>,
+        Pascal Eberhard <pascal.eberhard@se.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:G+proiRNKst5hya+6hR+BYBd4VRS3n2DE6IeNAozttEzt7d4cvK
- f2mKBt5y9GjYdgZl32tJLtCozayM+b+0iu0mb+a1Jy2ATjYQYdM39CF3Ix2QNs8gajVrziT
- JrSs4NPIV+pYHoSzDtBDVmlKKYey23olqCofiIVZkhYIozH6Jh7hTUOh9MPFZiyiNMVlz3s
- QjJN+PIRYwIUNErT7Po/Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mCNfRr881tI=:qp5or3CpyeODvVtkcH91Ts
- YpYmaQP8NRwfJ08tKJwL/IIdBv1yJHWNRW+foapbEcNq7Ksfe2jyeM2f79/k+b9BOsd0iMuNC
- bpwkGvv56vEsWY1afkiGSh/0/dEq8Xrfs8is0jKQlGPcL35cTnmx5im1s/hKHHY61EOTaY0pp
- vr698e4MGchUHuFbs53kNuKbzAi1vchcM3a8ZpyQNSzETvK55ymffALqOnPtgpKutx+PAPPD8
- ApGM21+JeR8ff6vK3awRfhUZ0eqB7rmFxaX+NAj15QMnEKA7o/UqhtKkS4WU7fLNeL2wXJAEJ
- 7d9dyDO8Mtt+ZKaxTZMhjcLtMGGM2mzgAgpJmvZx5yclAYhR3UKIJG/Gnti6YyF0pThtdr+0+
- zVB/1XbvTSKDY4GXEjZVKBkSIlxSb64UnfKXob2BfcySCv/tr9giyvqeXpKzsZCI4y87klPhA
- xGkOjdNcNDo2loKsbhpzh8/om+4YnQUTciYT+ZvEQ4Y7F3kJhIdu0hWmIquq2rhf8guurJabA
- dpCyX/8Ox/9HVhF84E9mKCqhUqGqENk9HUIPzABILhrG21qLvABlC1LQjji5VPRsftckB3Dt3
- 8R3K5uMe1OvszQNxMlaLlCaG6hU+9xpeUIlM+6Fu0GrnLGyR6uIMC0IjG1tcVggoe0WKOk+S6
- EITixEsJjFFZ/I4VXfOAwxe2N5k7IpUxJ6FZFz0u09OrYPwhADfStNL9XXHRCS9iG/JFAu9Iu
- QGECULqnwiafO68whyRCFYRlz2+hrMMnDpEFs/AvWtWzhrR0/26HK7MOrOuJY5d3m20rexzfH
- DILYvTn2VL1KZ6fwfAAH7hDCC8AIbbkZJD/tZgUjG/qrPxzp0Y7xyndOnNoccJD0NtsUOCdaA
- 2FhLNkRGdWVsdGZFU8w6alIutuvgf5JWOlHHUd3+QrXcUOT9Ct585q0FF2b2ifnWoO+Num27d
- RD2sOUb+FrA==
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 7:25 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Wed, Feb 23, 2022 at 09:26:56PM +0100, Christophe JAILLET wrote:
-> > Patch 01, 04, 05, 06, 08, 09 have not reached -next yet.
-> > They all still apply cleanly.
-> >
-> > 04 has been picked it up for inclusion in the media subsystem for 5.18.
-> > The other ones all have 1 or more Reviewed-by:/Acked-by: tags.
-> >
-> > Patch 16 must be resubmitted to add "#include <linux/dma-mapping.h>" in
-> > order not to break builds.
->
-> So how about this:  I'll pick up 1, 5,6,8 and 9 for the dma-mapping
-> tree.  After -rc1 when presumably all other patches have reached
-> mainline your resubmit one with the added include and we finish this
-> off?
+Hi Miquel,
 
-Sounds good to me as well.
+On Wed, Feb 23, 2022 at 5:49 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> geert@linux-m68k.org wrote on Wed, 23 Feb 2022 13:46:11 +0100:
+> > On Tue, Feb 22, 2022 at 11:35 AM Miquel Raynal
+> > <miquel.raynal@bootlin.com> wrote:
+> > > The Renesas RZN1 DMA IP is a based on a DW core, with eg. an additional
+> > > dmamux register located in the system control area which can take up to
+> > > 32 requests (16 per DMA controller). Each DMA channel can be wired to
+> > > two different peripherals.
+> > >
+> > > We need two additional information from the 'dmas' property: the channel
+> > > (bit in the dmamux register) that must be accessed and the value of the
+> > > mux for this channel.
+> > >
+> > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> >
+> > Thanks for your patch!
+> >
+> > > --- /dev/null
+> > > +++ b/drivers/dma/dw/dmamux.c
 
-       Arnd
+> > > +static int rzn1_dmamux_probe(struct platform_device *pdev)
+> > > +{
+> > > +       struct device_node *mux_node = pdev->dev.of_node;
+> > > +       const struct of_device_id *match;
+> > > +       struct device_node *dmac_node;
+> > > +       struct rzn1_dmamux_data *dmamux;
+> > > +
+> > > +       dmamux = devm_kzalloc(&pdev->dev, sizeof(*dmamux), GFP_KERNEL);
+> > > +       if (!dmamux)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       mutex_init(&dmamux->lock);
+> > > +
+> > > +       dmac_node = of_parse_phandle(mux_node, "dma-masters", 0);
+> > > +       if (!dmac_node)
+> > > +               return dev_err_probe(&pdev->dev, -ENODEV, "Can't get DMA master node\n");
+> > > +
+> > > +       match = of_match_node(rzn1_dmac_match, dmac_node);
+> > > +       if (!match) {
+> > > +               of_node_put(dmac_node);
+> > > +               return dev_err_probe(&pdev->dev, -EINVAL, "DMA master is not supported\n");
+> > > +       }
+> > > +
+> > > +       if (of_property_read_u32(dmac_node, "dma-requests", &dmamux->dmac_requests)) {
+> > > +               of_node_put(dmac_node);
+> > > +               return dev_err_probe(&pdev->dev, -EINVAL, "Missing DMAC requests information\n");
+> > > +       }
+> > > +
+> > > +       of_node_put(dmac_node);
+> >
+> > When hardcoding dmac_requests to 16, I guess the whole dmac_node
+> > handling can be removed?
+>
+> Not really, I think the following checks are still valid and fortunate,
+> and they need some of_ handling to work properly:
+> - verify that the chan requested is within the range of dmac_requests
+>   in the _route_allocate() callback
+> - ensure the dmamux is wired to a supported DMAC in the DT (this
+>   condition might be loosen in the future if needed or dropped entirely
+>   if considered useless)
+> - I would like to add a check against the number of requests supported
+>   by the dmamux and the dmac (not done yet).
+> For the record, I've taken inspiration to write these lines on the other
+> dma router driver from TI.
+>
+> Unless, and I know some people think like that, we do not try to
+> validate the DT and if the DT is wrong that is none of our business.
+>
+> >
+> > > +
+> > > +       if (of_property_read_u32(mux_node, "dma-requests", &dmamux->dmamux_requests)) {
+> >
+> > Don't obtain from DT, but fix to 32?
+>
+> I believe the answer to the previous question should give me a clue
+> about why you would prefer hardcoding than reading from the DT such
+> an information. Perhaps I should mention that all these properties are
+> already part of the bindings, and are not specific to the driver, the
+> information will be in the DT anyway.
+
+The 32 is a property of the hardware (32 bits in DMAMUX register).
+So IMHO it falls under the "differentiate by compatible value,
+not by property" rule.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds

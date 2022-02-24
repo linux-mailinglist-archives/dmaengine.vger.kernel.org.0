@@ -2,73 +2,77 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E4B604C3175
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Feb 2022 17:34:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ACB154C346D
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Feb 2022 19:16:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229804AbiBXQc6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 24 Feb 2022 11:32:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59260 "EHLO
+        id S232624AbiBXSQh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 24 Feb 2022 13:16:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230016AbiBXQcv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Feb 2022 11:32:51 -0500
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 211761E6974;
-        Thu, 24 Feb 2022 08:32:11 -0800 (PST)
-Received: by mail-lj1-x22e.google.com with SMTP id r20so3715145ljj.1;
-        Thu, 24 Feb 2022 08:32:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QxdeQ03DOR4RUC1RUGZAh5JLbtSCzS9nhA1X4N35/bw=;
-        b=KmC0LCs2Vxk9FBRyReMaUV3AKq9Rlbiqsam70nDmlZsqjW1y7j6LXnK9gFFcTDJlFa
-         Ks+Sr2Qffjmvoj18qUVEiFXgRAUE3kcgo1wFqtq4+HHKHzRDwrnm680F3AwJ7gV3JLDq
-         DN+3exlceOtVKKWiOj8ZZ0Vq7EuMw9+xyHqEXtfc/DKOJfn7/EAgqUCgNJLpMwV0IdlE
-         ApRg6eggZSPjPreGaEWY+U0axCKkz54UeUK7/+pTM+D28ifoAmrMau29U+NEy6EunAGy
-         9An76HikDYT9bTtymPfBDV8uQbGmVZ9LSkTqDhjZVMb7j6zia2jUv96pNZEgW+QG5gf5
-         X+og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QxdeQ03DOR4RUC1RUGZAh5JLbtSCzS9nhA1X4N35/bw=;
-        b=jCnGIMl9lVn1iTPVuwuuodwlT2nOM5OKAtni4bvEW6m553GeHCgVx1IL3+cF0IO75X
-         4duF0xibGDyBMuYzy04M9LL12V98xiXk07AgA6Zfg8EnmJwYkhHyk6+MFx65tYbn6eQX
-         HnfGdk5uw+KnPwyoErYLJEvX2G3X24t63llQnfbXP8w+/li6Tj1dCGxRtd92BNID/ctC
-         13kD5V0E6u/VbU0atntPXqpa0ee8VmoJru7ZcQ7+niqf7mjQ/x0Uo99soYIszXXbLwEx
-         ALZioYoJvFyNVMSoS/PYmRUdgADyAw3hITGRfjVqXGviKT2bUrimIMep/9KO8gtNExli
-         vv1Q==
-X-Gm-Message-State: AOAM532nLZkvnhn5v9Thsbf7lk7oxpHmxDwjkgeYEXJSDbI8YcCMVDV0
-        0C24QRcVB+RktFjCBNIvbn7swNXT8IY=
-X-Google-Smtp-Source: ABdhPJzGSFV9ICsyeh1MhD6IF+T1wQ5Hlmu7RGqgBZ+IBS0v6RBOWl4mje++5heJI0kcnHQt6WaXng==
-X-Received: by 2002:a2e:b014:0:b0:23c:9593:f7 with SMTP id y20-20020a2eb014000000b0023c959300f7mr2397143ljk.209.1645720328197;
-        Thu, 24 Feb 2022 08:32:08 -0800 (PST)
-Received: from orome ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id 7sm243339lft.194.2022.02.24.08.32.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 08:32:06 -0800 (PST)
-Date:   Thu, 24 Feb 2022 17:32:04 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Akhil R <akhilrajeev@nvidia.com>
-Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        jonathanh@nvidia.com, kyarlagadda@nvidia.com, ldewangan@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        p.zabel@pengutronix.de, rgumasta@nvidia.com, robh+dt@kernel.org,
-        nathan@kernel.org, vkoul@kernel.org
-Subject: Re: [PATCH v21 1/2] dt-bindings: dmaengine: Add doc for tegra gpcdma
-Message-ID: <YhezBG9tpNDG24R6@orome>
-References: <20220224123903.5020-1-akhilrajeev@nvidia.com>
- <20220224123903.5020-2-akhilrajeev@nvidia.com>
+        with ESMTP id S232644AbiBXSQg (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Feb 2022 13:16:36 -0500
+Received: from smtp.smtpout.orange.fr (smtp03.smtpout.orange.fr [80.12.242.125])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 577F6253179
+        for <dmaengine@vger.kernel.org>; Thu, 24 Feb 2022 10:16:02 -0800 (PST)
+Received: from [192.168.1.18] ([90.126.236.122])
+        by smtp.orange.fr with ESMTPA
+        id NIeQnn7MbrdkGNIeQnJ9oN; Thu, 24 Feb 2022 19:16:00 +0100
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
+X-ME-Date: Thu, 24 Feb 2022 19:16:00 +0100
+X-ME-IP: 90.126.236.122
+Message-ID: <b3e6a19b-caa0-f58a-1039-02b60b17ed21@wanadoo.fr>
+Date:   Thu, 24 Feb 2022 19:15:38 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="r/ttdRDeDVZvVJVR"
-Content-Disposition: inline
-In-Reply-To: <20220224123903.5020-2-akhilrajeev@nvidia.com>
-User-Agent: Mutt/2.2.1 (c8109e14) (2022-02-19)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH 00/16] Remove usage of the deprecated "pci-dma-compat.h"
+ API
+Content-Language: en-US
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        David Miller <davem@davemloft.net>,
+        David Airlie <airlied@linux.ie>, Vinod Koul <vkoul@kernel.org>,
+        hao.wu@intel.com, Tom Rix <trix@redhat.com>,
+        Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
+        awalls@md.metrocast.net,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        sreekanth.reddy@broadcom.com,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alex Bounine <alex.bou9@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        alpha <linux-alpha@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        dmaengine@vger.kernel.org, linux-fpga@vger.kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        MPT-FusionLinux.pdl@broadcom.com,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Janitors <kernel-janitors@vger.kernel.org>
+References: <cover.1641500561.git.christophe.jaillet@wanadoo.fr>
+ <YhXmQwvjMFPQFPUr@infradead.org>
+ <ddf6010e-417d-8da7-8e11-1b4a55f92fff@wanadoo.fr>
+ <YhckzJp5/x9zW4uQ@infradead.org>
+ <CAK8P3a23Pjm1Btc=mXX=vU4hkNiPqz3+o4=j0FuYKHB7KuMtPg@mail.gmail.com>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <CAK8P3a23Pjm1Btc=mXX=vU4hkNiPqz3+o4=j0FuYKHB7KuMtPg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -76,44 +80,30 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
---r/ttdRDeDVZvVJVR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Le 24/02/2022 à 08:07, Arnd Bergmann a écrit :
+> On Thu, Feb 24, 2022 at 7:25 AM Christoph Hellwig <hch@infradead.org> wrote:
+>> On Wed, Feb 23, 2022 at 09:26:56PM +0100, Christophe JAILLET wrote:
+>>> Patch 01, 04, 05, 06, 08, 09 have not reached -next yet.
+>>> They all still apply cleanly.
+>>>
+>>> 04 has been picked it up for inclusion in the media subsystem for 5.18.
+>>> The other ones all have 1 or more Reviewed-by:/Acked-by: tags.
+>>>
+>>> Patch 16 must be resubmitted to add "#include <linux/dma-mapping.h>" in
+>>> order not to break builds.
+>> So how about this:  I'll pick up 1, 5,6,8 and 9 for the dma-mapping
+>> tree.  After -rc1 when presumably all other patches have reached
+>> mainline your resubmit one with the added include and we finish this
+>> off?
+> Sounds good to me as well.
+>
+>         Arnd
 
-On Thu, Feb 24, 2022 at 06:09:02PM +0530, Akhil R wrote:
-> Add DT binding document for Nvidia Tegra GPCDMA controller.
->=20
-> Signed-off-by: Rajesh Gumasta <rgumasta@nvidia.com>
-> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
-> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../bindings/dma/nvidia,tegra186-gpc-dma.yaml | 110 ++++++++++++++++++
->  1 file changed, 110 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra186=
--gpc-dma.yaml
+This is fine for me.
+When all patches have reached -next, I'll re-submit the fixed 16th patch.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
 
---r/ttdRDeDVZvVJVR
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks for your assistance for ending this long story :)
 
------BEGIN PGP SIGNATURE-----
+CJ
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmIXswQACgkQ3SOs138+
-s6FH/w//X7V7oWBuRIHPW4LFa+M3TSBMgEuz3noJYqm1is6ABFrLv4sdprTm/ykI
-3dmEvSS5y0CoyW7VgnUDnmQ+UYwXzAGisFo/fIR7VjKdIkgIjQrejEF/hWNj4RY4
-Os1OejpnpNQJXq/4LRxqO7DVe7iFPMGhzO8jrHkpMuDACDHUnz5fF95FqLLwrMBo
-aJ0c0kzuCj1j3op+yfQuc900AbX07bPpYYMk2kicD5/2NhoYQUVSCo6Q7KvI6lyj
-p55v0eqtqe14gNeO4QG3lE2jtGmA2KEMs/+Yn+CQ3mnkQiC5RJR+A5IS+GdCINR7
-1wavUab7pQUGCVie80j1AcdOP616q8q7AmO23F+O2lahT80QLzPj1Rdl5rQOQS5z
-uksopvbpGNO4ACxsL8UoUZ9IGb+9NV/kEp1iDIHuLUslURtrAQJvz2cp6vWpM+Tx
-EeuO1Y0JEXdW4N1pBf73FjUut5f4lp9d2s20w9ByfMRnHfaeKyU6kPPWEWup2z9X
-IQNkCtFEKwdsBbFm8w6Ftq4dSTmcA/+hmr/vl7Q5vMuYQUAYiiIpD2uyeuquNiQy
-0nYX8VYWDQy9t53GzB5cj5gSgKqnaqdVEvSCcJ+/mg1tmw8tU+vxRbg8qQTy4xuy
-LpMxvFWSh9Fb4hG+oQ6TL13O9tigX1vIs8pFbNHs7AlLbMxCXdg=
-=7ran
------END PGP SIGNATURE-----
-
---r/ttdRDeDVZvVJVR--

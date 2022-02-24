@@ -2,152 +2,125 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 094504C3152
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Feb 2022 17:31:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 575654C317E
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Feb 2022 17:34:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229705AbiBXQbA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 24 Feb 2022 11:31:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48808 "EHLO
+        id S229954AbiBXQcc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 24 Feb 2022 11:32:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229642AbiBXQa7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Feb 2022 11:30:59 -0500
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2563E21D081;
-        Thu, 24 Feb 2022 08:30:13 -0800 (PST)
-Received: (Authenticated sender: miquel.raynal@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id CF56AFF812;
-        Thu, 24 Feb 2022 16:30:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1645720212;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=s8oCo+M22Obem+506INwTsgvqAs+7mebrwhLClGvSIU=;
-        b=HYL5g4uq90MpMjhQtZcyHDOaPVs1DqGqdeGAqpBB3vSCe4p8FyfLaamnnyEgtwzm/HlSSX
-        N/DKOMqg9a74beNIoaY+ogN7WcXvfaxK//Hf0TX1/0doggy7vAQhff5Bs7YiQYpC1Auce3
-        4ocd9YlXd6Es4iItuz1iORjLC76OU1aWUgWNE9x9gsomrya73+IrDvCXkh5fbuLWaXmcBh
-        JETcQowot2tY1HMtWKUFVxl85NFAXsBRxPLucirlyu/9UkSZiLSi+i2ZNHUxzOSDacuqQ+
-        UqWcff2k0FoKFI52X8VZg8eA39icDrHOYoRZfu0ZKu1C1qr1nDRlBWigAUha+A==
-Date:   Thu, 24 Feb 2022 17:30:09 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Milan Stevanovic <milan.stevanovic@se.com>,
-        Jimmy Lalande <jimmy.lalande@se.com>,
-        Pascal Eberhard <pascal.eberhard@se.com>
-Subject: Re: [PATCH v2 5/8] dma: dw: Avoid partial transfers
-Message-ID: <20220224173009.0d37c12e@xps13>
-In-Reply-To: <YhY4PqqOgYTLgpKr@smile.fi.intel.com>
-References: <20220222103437.194779-1-miquel.raynal@bootlin.com>
-        <20220222103437.194779-6-miquel.raynal@bootlin.com>
-        <YhY4PqqOgYTLgpKr@smile.fi.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.7 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        with ESMTP id S229899AbiBXQc3 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Feb 2022 11:32:29 -0500
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 446D21A39D5;
+        Thu, 24 Feb 2022 08:31:51 -0800 (PST)
+Received: by mail-lf1-x130.google.com with SMTP id j7so4839791lfu.6;
+        Thu, 24 Feb 2022 08:31:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5aE/iHLOxxEvHamBNnvq9wqYb701oZWMJ2F0lcAzezA=;
+        b=D2ESp2dlylmeLfUpN8f+mocgrL+BWO0a3HESFV4q9P8Wi2mS2Tpp9y66kobD4eoU7p
+         mhCw9GPXo48gIW9KmVHuWyx5QIXBOaff/8i8P/R5lUUAf4dkn51/g5QJDWt4UjTsQ2kb
+         u/j9xwP+JYOnsZeCseXIvw2QvmL9xGNK+1fg9hNAg1wqtuQjfHRFOQNHybg3eo2heGtg
+         Vzcc6jiZnLBHLvgZ68Ln5vwgtQvvOORmysdgD/seTUr4w0RUVVYCo9sWgweFQTQBBbDi
+         NGaXjOnQgAFCVP6GV8m3ajCge/LtffJOaYI1Mtj9+rTrC4jdjpAfavowG9NLDK+JdYm/
+         MP0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5aE/iHLOxxEvHamBNnvq9wqYb701oZWMJ2F0lcAzezA=;
+        b=Kb9m3axMCrV8Aq6hTDgDJcmQWpNAwnulcqejao4meqWb+4yUc+PcAgEpjjYS353j5x
+         R6u2cIwiAuPUPBrXqh/h5kt0kbKY0jyj56mEdnJqrNYlMcdNEoJ0l/MKkapreGUWd3MC
+         bICEhKkvQxFRyBz7gZcBK1V8+9863Bb2alrj+cBiUQgipJOggs/oWPncryRAxOI81Tjo
+         0SAXPyrWf5+rIUq0UlK0PLrxCehNxN854jak30/195pZgCdwJoXvYWBYHVwrzdDf6qHl
+         mUiS9h2MDgMn1c3qZemFD7ojpc8WoOqvvD0NqxMFnafXPISRBcIwSFqADNFCTB+6szzW
+         y2Tw==
+X-Gm-Message-State: AOAM5309yXz2gJRWTc3b1XXQfLVxkPJinIqsYTFV/daB+P+g971JXoxW
+        FK+lXrXWUD/VmNKQFfBQU7s=
+X-Google-Smtp-Source: ABdhPJzyfUGIeLzk9sZAZgr9pKY/N3VuKh73uLnB4XFxDC0MGPBTMXEPvemcDesRwXABt3iH9c2gYg==
+X-Received: by 2002:ac2:518e:0:b0:442:bb6f:b54b with SMTP id u14-20020ac2518e000000b00442bb6fb54bmr2383877lfi.72.1645720309430;
+        Thu, 24 Feb 2022 08:31:49 -0800 (PST)
+Received: from orome ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id bf31-20020a2eaa1f000000b0024637000209sm9065ljb.10.2022.02.24.08.31.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Feb 2022 08:31:48 -0800 (PST)
+Date:   Thu, 24 Feb 2022 17:31:45 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Akhil R <akhilrajeev@nvidia.com>
+Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        jonathanh@nvidia.com, kyarlagadda@nvidia.com, ldewangan@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        p.zabel@pengutronix.de, rgumasta@nvidia.com, robh+dt@kernel.org,
+        nathan@kernel.org, vkoul@kernel.org,
+        Pavan Kunapuli <pkunapuli@nvidia.com>
+Subject: Re: [PATCH v21 2/2] dmaengine: tegra: Add tegra gpcdma driver
+Message-ID: <Yhey8ZVhMq398lVh@orome>
+References: <20220224123903.5020-1-akhilrajeev@nvidia.com>
+ <20220224123903.5020-3-akhilrajeev@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="L+K3fn9+MFCiXEpi"
+Content-Disposition: inline
+In-Reply-To: <20220224123903.5020-3-akhilrajeev@nvidia.com>
+User-Agent: Mutt/2.2.1 (c8109e14) (2022-02-19)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Andy, Phil,
 
-andriy.shevchenko@linux.intel.com wrote on Wed, 23 Feb 2022 15:35:58
-+0200:
+--L+K3fn9+MFCiXEpi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Tue, Feb 22, 2022 at 11:34:34AM +0100, Miquel Raynal wrote:
-> > From: Phil Edworthy <phil.edworthy@renesas.com>
-> >=20
-> > Pausing a partial transfer only causes data to be written to memory that
-> > is a multiple of the memory width setting.
-> >=20
-> > However, when a DMA client driver finishes DMA early, e.g. due to UART
-> > char timeout interrupt, all data read from the device must be written to
-> > memory.
-> >=20
-> > Therefore, allow the slave to limit the memory width to ensure all data
-> > read from the device is written to memory when DMA is paused. =20
+On Thu, Feb 24, 2022 at 06:09:03PM +0530, Akhil R wrote:
+> Adding GPC DMA controller driver for Tegra. The driver supports dma
+> transfers between memory to memory, IO peripheral to memory and
+> memory to IO peripheral.
 >=20
-> (I have only 2.17d and 2.21a datasheets, so below based on the latter)
->=20
-> It seems you are referring to the chapter 7.7 "Disabling a Channel Prior
-> to Transfer Completion" of the data sheet where it stays that it does not
-> guarantee to have last burst to be completed in case of
-> SRC_TR_WIDTH < DST_TR_WIDTH and the CH_SUSP bit is high, when the FIFO_EM=
-PTY
-> is asserted.
->=20
-> Okay, in iDMA 32-bit we have a specific bit (seems like a fix) that drains
-> FIFO, but still it doesn't drain the FIFO fully (in case of misalignment)
-> and the last piece of data (which is less than TR width) is lost when cha=
-nnel
-> gets disabled.
->=20
-> Now, if we look at the implementation of the serial8250_rx_dma_flush() we
-> may see that it does
->  1. Pause channel without draining FIFO
->  2. Moves data to TTY buffer
->  3. Terminates channel.
->=20
-> During termination it does pause channel again (with draining enabled),
-> followed by disabling channel and resuming it again.
->=20
-> According to the 7.7 the resuming channel allows to finish the transfer
-> normally.
->=20
-> It seems the logic in the ->terminate_all() is broken and we actually need
-> to resume channel first (possibly conditionally, if it was suspended), th=
-en
-> pause it and disable and resume again.
->=20
-> The problem with ->terminate_all() is that it has no knowledge if it has
-> been called on paused channel (that's why it has to pause channel itself).
-> The pause on termination is required due to some issues in early steppings
-> of iDMA 32-bit hardware implementations.
->=20
-> If my theory is correct, the above change should fix the issues you see.
+> Co-developed-by: Pavan Kunapuli <pkunapuli@nvidia.com>
+> Signed-off-by: Pavan Kunapuli <pkunapuli@nvidia.com>
+> Co-developed-by: Rajesh Gumasta <rgumasta@nvidia.com>
+> Signed-off-by: Rajesh Gumasta <rgumasta@nvidia.com>
+> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/dma/Kconfig            |   11 +
+>  drivers/dma/Makefile           |    1 +
+>  drivers/dma/tegra186-gpc-dma.c | 1507 ++++++++++++++++++++++++++++++++
+>  3 files changed, 1519 insertions(+)
+>  create mode 100644 drivers/dma/tegra186-gpc-dma.c
 
-I don't have access to these datasheets so I will believe your words
-and try to apply Andy's solution. I ended up with the following fix,
-hopefully I got it right:
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index 48cdefe997f1..59822664d8ec 100644
---- a/drivers/dma/dw/core.c
-+++ b/drivers/dma/dw/core.c
-@@ -865,6 +865,10 @@ static int dwc_terminate_all(struct dma_chan *chan)
-=20
-        clear_bit(DW_DMA_IS_SOFT_LLP, &dwc->flags);
-=20
-+       /* Ensure the last byte(s) are drained before disabling the channel=
- */
-+       if (test_bit(DW_DMA_IS_PAUSED, &dwc->flags))
-+               dwc_chan_resume(dwc, true);
-+
-        dwc_chan_pause(dwc, true);
-=20
-        dwc_chan_disable(dw, dwc);
+--L+K3fn9+MFCiXEpi
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Phil, I know it's been 3 years since you investigated this issue, but
-do you still have access to the script reproducing the issue? Even
-better, do you still have the hardware to test?
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Miqu=C3=A8l
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmIXsu8ACgkQ3SOs138+
+s6E/UxAAqMZS6fydwRuQ8aFCl3ss11O+kmXVQ9V3IGYvPhJyUwOAjJxGHFxD/1VW
+vOFNeiP5rjRvrbHdR+U2qvXaFTCtBEOkb0Ql5QNdM6tUMEoJFbPeU/5xnSd6n8gf
+JI6L7Wz1IJQgoUgw2DQDjhv7C08jdNeEY8KgzAMPiI5hsZfvS5VO55tA6O+uMA89
+e2Z2Zq0khy8/beUO3bJsT6jlnxoXMR7/Ce9pGnbgDbZwe8cWFGhAV5ecWI5rO50v
+gLxroMXd4gMlYfvj+DDk+bZi5Hel3pYU8agyqoDWggC975BTIZalLHeOOVy0fGuh
+eGhs7HlUQfEx/Y+b4qHHMOcosGS0+o42cFfrtg+lOWZvTcfWMTyVf3itpgPLirqT
+izETzgp4h0j2/+hYjlIi8UdoYT7yx2xroQECffzcmfRsdUUxazSjpJ8x98dMOOwY
+jh9Tuht+XRm9an/GgjEEcZkzbhD22yV5mo65mLRchmtpfwTXvWREcsf8c2R1beTe
+j7UNNxbuOnV3tEyiVsk7bw/md67r241u5o7cYov/ceq8d5cGdRRJjl1qX4ds4bJU
+E2ddA4NRQ6n1jRFrU3h7joCqldLit+K/B4X1XrUOzrzDpO/PCXMMZe14cyQFh6rL
+y9pKH1tV7TYZzlqyWz0zg8qRIpiajGvNDIOD9Twvkpt4PsPnuVw=
+=kGd9
+-----END PGP SIGNATURE-----
+
+--L+K3fn9+MFCiXEpi--

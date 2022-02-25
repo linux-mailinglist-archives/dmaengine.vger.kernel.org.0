@@ -2,104 +2,128 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF78D4C4DC2
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Feb 2022 19:32:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3DC84C4FB4
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Feb 2022 21:33:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232430AbiBYSd1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 25 Feb 2022 13:33:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38778 "EHLO
+        id S236566AbiBYUe2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 25 Feb 2022 15:34:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231935AbiBYSd0 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Feb 2022 13:33:26 -0500
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 627CC8CDB0;
-        Fri, 25 Feb 2022 10:32:54 -0800 (PST)
-Received: by mail-ot1-f42.google.com with SMTP id a7-20020a9d5c87000000b005ad1467cb59so4206203oti.5;
-        Fri, 25 Feb 2022 10:32:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KGUUDlQkTuFaoYwHC76OGb6XCKxXWsby1E+K2fO0aZY=;
-        b=OrhRl52+Od0l5EDiYA41u7hnNCT6B1fqixqw8z6BIzcJmRy9LWITtabBgGNmfhy5zw
-         /vPVTx3UvGGXFkZg+ikm3rNAP54q6dZEa7V2btvFm68Q2Koqk7/uZvMEDWon9Dr1F6LT
-         338TEMblj5KYTf7zJGlQKXznfg+Qkv2hJTVV6ZmUx3xgqOTkxajiIjuJMOF5yKU7Rqqu
-         31FWlP+PWIEv88C/EPfkW+FbM0kL3feAYLH9yM7a/BM5cHdiYY5JiqDFOw++sRlPj0XL
-         mkr4tKST8t/3jx3/eZJ8+3An4A7zS1OFC4mqUThN1N5jq0Tn9UbQSBGV2u89a0DxQKM8
-         w6Iw==
-X-Gm-Message-State: AOAM5318jTKQo16RSuqgxl7xP0T8g/mnJe1DTka6ccr4nuplyzbHZdEl
-        uDs95mArwqFRjTIrjQYWsA==
-X-Google-Smtp-Source: ABdhPJx5ubmC03SN66sYzWE2d2kPJaaGGSRFOpiH8DcCFhFHijS4lcJ5s1Mv92tT+C9asqOGDr8j3A==
-X-Received: by 2002:a9d:65d2:0:b0:5af:3e05:680b with SMTP id z18-20020a9d65d2000000b005af3e05680bmr3335874oth.68.1645813973675;
-        Fri, 25 Feb 2022 10:32:53 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id k22-20020a056870959600b000d277c48d18sm1773914oao.3.2022.02.25.10.32.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Feb 2022 10:32:53 -0800 (PST)
-Received: (nullmailer pid 1211584 invoked by uid 1000);
-        Fri, 25 Feb 2022 18:32:51 -0000
-Date:   Fri, 25 Feb 2022 12:32:51 -0600
-From:   Rob Herring <robh@kernel.org>
+        with ESMTP id S231500AbiBYUe1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Feb 2022 15:34:27 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E3731E6E9B;
+        Fri, 25 Feb 2022 12:33:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645821234; x=1677357234;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+lvmAhCYQuyMRE2GihAairv8wMrdoP5LesBMAJZ/n5Y=;
+  b=FDkf/6iaT/P+gdf7lv0EOshl+mvF9z72aiMj3bbp5tjZPSEQq+Vhn6Aw
+   ntzX2MpfUGkF0fgDbdCQmsrFdRhZAwvQPTFFgvAoFd2tAtXvqh0xmyl2T
+   zAaUwYs3yzvmfqL8vgscYlhrCaGiSUJ8owy3ThvDR2j76F6C3O7J7m1F0
+   N0fCjJfcv2jYAHbbPU1Ae+Vk/2v22EFzothj6qUfKgvCmb7jl44BCXsZV
+   yk94WsJ8CAzLXD5KMXPK3Mw/nIIs2Ys1+TkJHaK0mPtSswH18jERkA24n
+   5ekRP2zu7tr1zg61kOZMNMRwZ+BN0G7awXTGqC0hFqIswB9TWMLBfzlhr
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10269"; a="239978678"
+X-IronPort-AV: E=Sophos;i="5.90,137,1643702400"; 
+   d="scan'208";a="239978678"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2022 12:33:53 -0800
+X-IronPort-AV: E=Sophos;i="5.90,137,1643702400"; 
+   d="scan'208";a="607870179"
+Received: from smile.fi.intel.com ([10.237.72.59])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2022 12:33:49 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nNhEj-008OLi-Fl;
+        Fri, 25 Feb 2022 22:30:45 +0200
+Date:   Fri, 25 Feb 2022 22:30:44 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
         Magnus Damm <magnus.damm@gmail.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         linux-clk@vger.kernel.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Milan Stevanovic <milan.stevanovic@se.com>,
         Jimmy Lalande <jimmy.lalande@se.com>,
-        Laetitia MARIOTTINI <laetitia.mariottini@se.com>
-Subject: Re: [PATCH 3/8] soc: renesas: rzn1-sysc: Export function to set
- dmamux
-Message-ID: <Yhkg06bqnU8bpaxe@robh.at.kernel.org>
-References: <20220218181226.431098-1-miquel.raynal@bootlin.com>
- <20220218181226.431098-4-miquel.raynal@bootlin.com>
+        Pascal Eberhard <pascal.eberhard@se.com>
+Subject: Re: [PATCH v2 5/8] dma: dw: Avoid partial transfers
+Message-ID: <Yhk8dAUuQ1OuNkqX@smile.fi.intel.com>
+References: <20220222103437.194779-1-miquel.raynal@bootlin.com>
+ <20220222103437.194779-6-miquel.raynal@bootlin.com>
+ <YhY4PqqOgYTLgpKr@smile.fi.intel.com>
+ <20220224173009.0d37c12e@xps13>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220218181226.431098-4-miquel.raynal@bootlin.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <20220224173009.0d37c12e@xps13>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Feb 18, 2022 at 07:12:21PM +0100, Miquel Raynal wrote:
-> The dmamux register is located within the system controller.
-> 
-> Without syscon, we need an extra helper in order to give write access to
-> this register to a dmamux driver.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/clk/renesas/r9a06g032-clocks.c        | 27 +++++++++++++++++++
->  include/dt-bindings/clock/r9a06g032-sysctrl.h |  2 ++
->  include/linux/soc/renesas/r9a06g032-syscon.h  | 11 ++++++++
->  3 files changed, 40 insertions(+)
->  create mode 100644 include/linux/soc/renesas/r9a06g032-syscon.h
+On Thu, Feb 24, 2022 at 05:30:09PM +0100, Miquel Raynal wrote:
+> andriy.shevchenko@linux.intel.com wrote on Wed, 23 Feb 2022 15:35:58
+> +0200:
+> > On Tue, Feb 22, 2022 at 11:34:34AM +0100, Miquel Raynal wrote:
 
-> diff --git a/include/dt-bindings/clock/r9a06g032-sysctrl.h b/include/dt-bindings/clock/r9a06g032-sysctrl.h
-> index 90c0f3dc1ba1..609e7fe8fcb1 100644
-> --- a/include/dt-bindings/clock/r9a06g032-sysctrl.h
-> +++ b/include/dt-bindings/clock/r9a06g032-sysctrl.h
-> @@ -145,4 +145,6 @@
->  #define R9A06G032_CLK_UART6		152
->  #define R9A06G032_CLK_UART7		153
+...
+
+> > It seems the logic in the ->terminate_all() is broken and we actually need
+> > to resume channel first (possibly conditionally, if it was suspended), then
+> > pause it and disable and resume again.
+> > 
+> > The problem with ->terminate_all() is that it has no knowledge if it has
+> > been called on paused channel (that's why it has to pause channel itself).
+> > The pause on termination is required due to some issues in early steppings
+> > of iDMA 32-bit hardware implementations.
+> > 
+> > If my theory is correct, the above change should fix the issues you see.
+> 
+> I don't have access to these datasheets so I will believe your words
+> and try to apply Andy's solution. I ended up with the following fix,
+> hopefully I got it right:
+> 
+> diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+> index 48cdefe997f1..59822664d8ec 100644
+> --- a/drivers/dma/dw/core.c
+> +++ b/drivers/dma/dw/core.c
+> @@ -865,6 +865,10 @@ static int dwc_terminate_all(struct dma_chan *chan)
 >  
-> +#define R9A06G032_SYSCON_DMAMUX		0xA0
-
-That looks like a register offset? We generally don't put register 
-offsets in DT.
-
+>         clear_bit(DW_DMA_IS_SOFT_LLP, &dwc->flags);
+>  
+> +       /* Ensure the last byte(s) are drained before disabling the channel */
+> +       if (test_bit(DW_DMA_IS_PAUSED, &dwc->flags))
+> +               dwc_chan_resume(dwc, true);
 > +
->  #endif /* __DT_BINDINGS_R9A06G032_SYSCTRL_H__ */
+>         dwc_chan_pause(dwc, true);
+>  
+>         dwc_chan_disable(dw, dwc);
+
+Yes, this is good enough PoC. Needs to be tested, thanks!
+
+> Phil, I know it's been 3 years since you investigated this issue, but
+> do you still have access to the script reproducing the issue? Even
+> better, do you still have the hardware to test?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+

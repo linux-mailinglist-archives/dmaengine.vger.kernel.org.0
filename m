@@ -2,128 +2,313 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3DC84C4FB4
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Feb 2022 21:33:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 478E54C511D
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Feb 2022 23:02:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236566AbiBYUe2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 25 Feb 2022 15:34:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37282 "EHLO
+        id S231312AbiBYWDT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 25 Feb 2022 17:03:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231500AbiBYUe1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Feb 2022 15:34:27 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E3731E6E9B;
-        Fri, 25 Feb 2022 12:33:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645821234; x=1677357234;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+lvmAhCYQuyMRE2GihAairv8wMrdoP5LesBMAJZ/n5Y=;
-  b=FDkf/6iaT/P+gdf7lv0EOshl+mvF9z72aiMj3bbp5tjZPSEQq+Vhn6Aw
-   ntzX2MpfUGkF0fgDbdCQmsrFdRhZAwvQPTFFgvAoFd2tAtXvqh0xmyl2T
-   zAaUwYs3yzvmfqL8vgscYlhrCaGiSUJ8owy3ThvDR2j76F6C3O7J7m1F0
-   N0fCjJfcv2jYAHbbPU1Ae+Vk/2v22EFzothj6qUfKgvCmb7jl44BCXsZV
-   yk94WsJ8CAzLXD5KMXPK3Mw/nIIs2Ys1+TkJHaK0mPtSswH18jERkA24n
-   5ekRP2zu7tr1zg61kOZMNMRwZ+BN0G7awXTGqC0hFqIswB9TWMLBfzlhr
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10269"; a="239978678"
-X-IronPort-AV: E=Sophos;i="5.90,137,1643702400"; 
-   d="scan'208";a="239978678"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2022 12:33:53 -0800
-X-IronPort-AV: E=Sophos;i="5.90,137,1643702400"; 
-   d="scan'208";a="607870179"
-Received: from smile.fi.intel.com ([10.237.72.59])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2022 12:33:49 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nNhEj-008OLi-Fl;
-        Fri, 25 Feb 2022 22:30:45 +0200
-Date:   Fri, 25 Feb 2022 22:30:44 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        with ESMTP id S230052AbiBYWDS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Feb 2022 17:03:18 -0500
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F15F869496;
+        Fri, 25 Feb 2022 14:02:41 -0800 (PST)
+Received: by mail-yb1-xb30.google.com with SMTP id g6so8454182ybe.12;
+        Fri, 25 Feb 2022 14:02:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a+b6+oake8hiYhMiw+tRXERgHNKqcFJBlff8fODarYU=;
+        b=b4M47ALchiwecpDWLWwnv+1HcycN9upAGuuvTNj65F1/nZS8fwQTdSrQbmMT/8QR4S
+         JjAXUaGls0tAFaXkp+YFrTiGMF9aQwBMK8ggI/NMVUlZgTDBYiopJOBLN8oEAckkY9/M
+         /Rq5SxH9Gnv+uzEo57VQtn5uJKe/aPfgIR+Eg9ylxXKED+z+ujN09vE5xTQ6nqRjkhMR
+         jJsT6l+6xvNv+0s5ncr5FYgjoXPsxUG4RVEPxJ8ZugExaX81qCCQFH1KNwj1SDBoaO3m
+         JPBjRJUB5u8Xce+CJdw2ejX6rXzrEGvciajQQzM+IDg+zcAZa3ZRMjpr8fDgsiQPlX9E
+         tV+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a+b6+oake8hiYhMiw+tRXERgHNKqcFJBlff8fODarYU=;
+        b=xDIDPpqu87rjaehTbOwxN1B9XeLDgHu0PJ4BZOuyIZ6kuZFGqFuLTOWMIAxLU2nsSG
+         GjErn8M3mN3E2RHi72sMEhckXcXvqbxU/YALJSe9LIX2WFJqt9fAJg0bJaM6th8terf4
+         kUapA7kSMf4LOMM0hFMRcTwvDHQf4VTa8PKZ5CieXMexWncJdo1jvy73u+hZz3YlxtGy
+         AUfmJ4alU7Uc6Fij8X5TW16mkILbsqke1/RdkDBYkpowBLJIXVsPOnJ7PLfgBBmFs5Oe
+         EKKXK8z60pYvDW57yRJFygk2aTUXgj5GWm4ShT2raDM6eJ+T+dpRopJqzwQ4ll0xEZtP
+         /1jA==
+X-Gm-Message-State: AOAM532OwGLQeZ8XR43uQAPH6l8PJnDB2ohdj0jgTrjQSVIYNSTasWnY
+        xajt7bNen4bmzfNkS3ikr+7hDmWETVRiDCnrSmU=
+X-Google-Smtp-Source: ABdhPJw6jGnheN/kSTANjDauweJTFcZxMicChKUXLQrjC/eFpvYdZIS2U26Y6hOLoX6r9gvAaTVr14qrxT0VZSiDf5A=
+X-Received: by 2002:a05:6902:4e2:b0:611:19fc:a30 with SMTP id
+ w2-20020a05690204e200b0061119fc0a30mr9085820ybs.431.1645826561146; Fri, 25
+ Feb 2022 14:02:41 -0800 (PST)
+MIME-Version: 1.0
+References: <20220225112403.505562-1-miquel.raynal@bootlin.com> <20220225112403.505562-5-miquel.raynal@bootlin.com>
+In-Reply-To: <20220225112403.505562-5-miquel.raynal@bootlin.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 25 Feb 2022 22:01:00 +0000
+Message-ID: <CA+V-a8usUF+ABZ30bQ0vkY3FQEzBR-vV0i=Z0uzz_-XySSjp=Q@mail.gmail.com>
+Subject: Re: [PATCH v3 4/7] dma: dmamux: Introduce RZN1 DMA router support
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Milan Stevanovic <milan.stevanovic@se.com>,
+        Jimmy Lalande <jimmy.lalande@se.com>,
+        Pascal Eberhard <pascal.eberhard@se.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         Magnus Damm <magnus.damm@gmail.com>,
         Gareth Williams <gareth.williams.jx@renesas.com>,
         Phil Edworthy <phil.edworthy@renesas.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Milan Stevanovic <milan.stevanovic@se.com>,
-        Jimmy Lalande <jimmy.lalande@se.com>,
-        Pascal Eberhard <pascal.eberhard@se.com>
-Subject: Re: [PATCH v2 5/8] dma: dw: Avoid partial transfers
-Message-ID: <Yhk8dAUuQ1OuNkqX@smile.fi.intel.com>
-References: <20220222103437.194779-1-miquel.raynal@bootlin.com>
- <20220222103437.194779-6-miquel.raynal@bootlin.com>
- <YhY4PqqOgYTLgpKr@smile.fi.intel.com>
- <20220224173009.0d37c12e@xps13>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220224173009.0d37c12e@xps13>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 05:30:09PM +0100, Miquel Raynal wrote:
-> andriy.shevchenko@linux.intel.com wrote on Wed, 23 Feb 2022 15:35:58
-> +0200:
-> > On Tue, Feb 22, 2022 at 11:34:34AM +0100, Miquel Raynal wrote:
+Hi Miquel,
 
-...
+Thank you for the patch.
 
-> > It seems the logic in the ->terminate_all() is broken and we actually need
-> > to resume channel first (possibly conditionally, if it was suspended), then
-> > pause it and disable and resume again.
-> > 
-> > The problem with ->terminate_all() is that it has no knowledge if it has
-> > been called on paused channel (that's why it has to pause channel itself).
-> > The pause on termination is required due to some issues in early steppings
-> > of iDMA 32-bit hardware implementations.
-> > 
-> > If my theory is correct, the above change should fix the issues you see.
-> 
-> I don't have access to these datasheets so I will believe your words
-> and try to apply Andy's solution. I ended up with the following fix,
-> hopefully I got it right:
-> 
-> diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-> index 48cdefe997f1..59822664d8ec 100644
-> --- a/drivers/dma/dw/core.c
-> +++ b/drivers/dma/dw/core.c
-> @@ -865,6 +865,10 @@ static int dwc_terminate_all(struct dma_chan *chan)
->  
->         clear_bit(DW_DMA_IS_SOFT_LLP, &dwc->flags);
->  
-> +       /* Ensure the last byte(s) are drained before disabling the channel */
-> +       if (test_bit(DW_DMA_IS_PAUSED, &dwc->flags))
-> +               dwc_chan_resume(dwc, true);
+On Fri, Feb 25, 2022 at 12:09 PM Miquel Raynal
+<miquel.raynal@bootlin.com> wrote:
+>
+> The Renesas RZN1 DMA IP is a based on a DW core, with eg. an additional
+> dmamux register located in the system control area which can take up to
+> 32 requests (16 per DMA controller). Each DMA channel can be wired to
+> two different peripherals.
+>
+> We need two additional information from the 'dmas' property: the channel
+> (bit in the dmamux register) that must be accessed and the value of the
+> mux for this channel.
+>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  drivers/dma/dw/Kconfig       |   8 ++
+>  drivers/dma/dw/Makefile      |   2 +
+>  drivers/dma/dw/rzn1-dmamux.c | 152 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 162 insertions(+)
+>  create mode 100644 drivers/dma/dw/rzn1-dmamux.c
+>
+> diff --git a/drivers/dma/dw/Kconfig b/drivers/dma/dw/Kconfig
+> index db25f9b7778c..dd53d4a9fa92 100644
+> --- a/drivers/dma/dw/Kconfig
+> +++ b/drivers/dma/dw/Kconfig
+> @@ -16,6 +16,14 @@ config DW_DMAC
+>           Support the Synopsys DesignWare AHB DMA controller. This
+>           can be integrated in chips such as the Intel Cherrytrail.
+>
+> +config RZN1_DMAMUX
+> +       tristate "Renesas RZ/N1 DMAMUX driver"
+> +       depends on DW_DMAC
+Maybe dependencies for ARCH_RZN1and COMPILE_TEST too?
+
+> +       help
+> +         Support the Renesas RZ/N1 DMAMUX which is located in front of
+> +         the Synopsys DesignWare AHB DMA controller located on Renesas
+> +         SoCs.
 > +
->         dwc_chan_pause(dwc, true);
->  
->         dwc_chan_disable(dw, dwc);
+>  config DW_DMAC_PCI
+>         tristate "Synopsys DesignWare AHB DMA PCI driver"
+>         depends on PCI
+> diff --git a/drivers/dma/dw/Makefile b/drivers/dma/dw/Makefile
+> index a6f358ad8591..8025f75e589c 100644
+> --- a/drivers/dma/dw/Makefile
+> +++ b/drivers/dma/dw/Makefile
+> @@ -7,5 +7,7 @@ obj-$(CONFIG_DW_DMAC)           += dw_dmac.o
+>  dw_dmac-y                      := platform.o
+>  dw_dmac-$(CONFIG_OF)           += of.o
+>
+> +obj-$(CONFIG_RZN1_DMAMUX)      += rzn1-dmamux.o
+> +
+>  obj-$(CONFIG_DW_DMAC_PCI)      += dw_dmac_pci.o
+>  dw_dmac_pci-y                  := pci.o
+> diff --git a/drivers/dma/dw/rzn1-dmamux.c b/drivers/dma/dw/rzn1-dmamux.c
+> new file mode 100644
+> index 000000000000..bc4e2e7c3d18
+> --- /dev/null
+> +++ b/drivers/dma/dw/rzn1-dmamux.c
+> @@ -0,0 +1,152 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2022 Schneider-Electric
+> + * Author: Miquel Raynal <miquel.raynal@bootlin.com
+> + * Based on TI crossbar driver written by Peter Ujfalusi <peter.ujfalusi@ti.com>
+> + */
+> +#include <linux/slab.h>
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/list.h>
+> +#include <linux/io.h>
+> +#include <linux/of_address.h>
+can you please check if the above four includes are really required.
 
-Yes, this is good enough PoC. Needs to be tested, thanks!
+> +#include <linux/of_device.h>
+> +#include <linux/of_dma.h>
+> +#include <linux/soc/renesas/r9a06g032-sysctrl.h>
+> +
+headers need to be sorted.
 
-> Phil, I know it's been 3 years since you investigated this issue, but
-> do you still have access to the script reproducing the issue? Even
-> better, do you still have the hardware to test?
+> +#define RZN1_DMAMUX_LINES 64
+> +#define RZN1_DMAMUX_SPLIT 16
+> +
+> +struct rzn1_dmamux_data {
+> +       struct dma_router dmarouter;
+> +       u32 used_chans;
+> +       struct mutex lock;
+> +};
+> +
+> +struct rzn1_dmamux_map {
+> +       unsigned int req_idx;
+> +};
+> +
+> +static void rzn1_dmamux_free(struct device *dev, void *route_data)
+> +{
+> +       struct rzn1_dmamux_data *dmamux = dev_get_drvdata(dev);
+> +       struct rzn1_dmamux_map *map = route_data;
+> +
+> +       dev_dbg(dev, "Unmapping DMAMUX request %u\n", map->req_idx);
+> +
+> +       mutex_lock(&dmamux->lock);
+> +       dmamux->used_chans &= ~BIT(map->req_idx);
+> +       mutex_unlock(&dmamux->lock);
+> +
+> +       kfree(map);
+> +}
+> +
+> +static void *rzn1_dmamux_route_allocate(struct of_phandle_args *dma_spec,
+> +                                       struct of_dma *ofdma)
+> +{
+> +       struct platform_device *pdev = of_find_device_by_node(ofdma->of_node);
+> +       struct rzn1_dmamux_data *dmamux = platform_get_drvdata(pdev);
+> +       struct rzn1_dmamux_map *map;
+> +       unsigned int dmac_idx, chan, val;
+> +       u32 mask;
+> +       int ret;
+> +
+> +       map = kzalloc(sizeof(*map), GFP_KERNEL);
+> +       if (!map)
+> +               return ERR_PTR(-ENOMEM);
+> +
+map needs to be freed in the error path.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> +       if (dma_spec->args_count != 6)
+> +               return ERR_PTR(-EINVAL);
+> +
+> +       chan = dma_spec->args[0];
+> +       map->req_idx = dma_spec->args[4];
+> +       val = dma_spec->args[5];
+> +       dma_spec->args_count -= 2;
+> +
+> +       if (chan >= RZN1_DMAMUX_SPLIT) {
+> +               dev_err(&pdev->dev, "Invalid DMA request line: %u\n", chan);
+> +               return ERR_PTR(-EINVAL);
+> +       }
+> +
+> +       if (map->req_idx >= RZN1_DMAMUX_LINES ||
+> +           (map->req_idx % RZN1_DMAMUX_SPLIT) != chan) {
+> +               dev_err(&pdev->dev, "Invalid MUX request line: %u\n", map->req_idx);
+> +               return ERR_PTR(-EINVAL);
+> +       }
+> +
+> +       dmac_idx = map->req_idx < RZN1_DMAMUX_SPLIT ? 0 : 1;
+> +       dma_spec->np = of_parse_phandle(ofdma->of_node, "dma-masters", dmac_idx);
+> +       if (!dma_spec->np) {
+> +               dev_err(&pdev->dev, "Can't get DMA master\n");
+> +               return ERR_PTR(-EINVAL);
+> +       }
+> +
+> +       dev_dbg(&pdev->dev, "Mapping DMAMUX request %u to DMAC%u request %u\n",
+> +               map->req_idx, dmac_idx, chan);
+> +
+> +       mask = BIT(map->req_idx);
+> +       mutex_lock(&dmamux->lock);
+> +       dmamux->used_chans |= mask;
+> +       ret = r9a06g032_sysctrl_set_dmamux(mask, val ? mask : 0);
+> +       mutex_unlock(&dmamux->lock);
+> +       if (ret) {
+> +               rzn1_dmamux_free(&pdev->dev, map);
+> +               return ERR_PTR(ret);
+> +       }
+> +
+> +       return map;
+> +}
+> +
+> +static const struct of_device_id rzn1_dmac_match[] __maybe_unused = {
+any reason for using __maybe_unused?
 
+> +       { .compatible = "renesas,rzn1-dma" },
+> +       {},
+"," not required.
 
+> +};
+> +
+> +static int rzn1_dmamux_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *mux_node = pdev->dev.of_node;
+> +       const struct of_device_id *match;
+> +       struct device_node *dmac_node;
+> +       struct rzn1_dmamux_data *dmamux;
+> +
+> +       dmamux = devm_kzalloc(&pdev->dev, sizeof(*dmamux), GFP_KERNEL);
+> +       if (!dmamux)
+> +               return -ENOMEM;
+> +
+> +       mutex_init(&dmamux->lock);
+> +
+> +       dmac_node = of_parse_phandle(mux_node, "dma-masters", 0);
+> +       if (!dmac_node)
+> +               return dev_err_probe(&pdev->dev, -ENODEV, "Can't get DMA master node\n");
+> +
+> +       match = of_match_node(rzn1_dmac_match, dmac_node);
+> +       of_node_put(dmac_node);
+> +       if (!match)
+> +               return dev_err_probe(&pdev->dev, -EINVAL, "DMA master is not supported\n");
+> +
+> +       dmamux->dmarouter.dev = &pdev->dev;
+> +       dmamux->dmarouter.route_free = rzn1_dmamux_free;
+> +
+> +       platform_set_drvdata(pdev, dmamux);
+> +
+> +       return of_dma_router_register(mux_node, rzn1_dmamux_route_allocate,
+> +                                     &dmamux->dmarouter);
+> +}
+> +
+> +static const struct of_device_id rzn1_dmamux_match[] = {
+> +       { .compatible = "renesas,rzn1-dmamux" },
+> +       {},
+"," not required.
+
+> +};
+> +
+> +static struct platform_driver rzn1_dmamux_driver = {
+> +       .driver = {
+> +               .name = "renesas,rzn1-dmamux",
+> +               .of_match_table = rzn1_dmamux_match,
+> +       },
+> +       .probe  = rzn1_dmamux_probe,
+> +};
+> +module_platform_driver(rzn1_dmamux_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Miquel Raynal <miquel.raynal@bootlin.com");
+> +MODULE_DESCRIPTION("Renesas RZ/N1 DMAMUX driver");
+> --
+> 2.27.0
+>
+
+Cheers,
+Prabhakar

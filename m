@@ -2,61 +2,58 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 544F34C3E6D
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Feb 2022 07:34:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 036F54C4342
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Feb 2022 12:24:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237853AbiBYGee (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 25 Feb 2022 01:34:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46674 "EHLO
+        id S240021AbiBYLYk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 25 Feb 2022 06:24:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231359AbiBYGed (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Feb 2022 01:34:33 -0500
-X-Greylist: delayed 497 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 24 Feb 2022 22:33:59 PST
-Received: from zg8tmty1ljiyny4xntqumjca.icoremail.net (zg8tmty1ljiyny4xntqumjca.icoremail.net [165.227.154.27])
-        by lindbergh.monkeyblade.net (Postfix) with SMTP id 0CA3F269297;
-        Thu, 24 Feb 2022 22:33:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pku.edu.cn; s=dkim; h=Received:Date:From:To:Cc:Subject:
-        In-Reply-To:References:Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-ID; bh=cd1GW93tBI2kIBPDeF9M9y9aP+q7YS9rT4uQ
-        Mk9plc8=; b=b39gchF8YXboirv8nb20yp63EnmKb1e5tDhxoA2TlR1WIhXx0c1b
-        +JecD0QAPfJ+Zkr5QOKB8bZz1yBHKiJ/eRi7RWr9D3zHvkgxdcHM2vFl7MYGwkU6
-        EcMGt3jPPIe6czOMXsZgtTb0QUbutvBQtbPitdYP1XbPhg/6eQ/2Scg=
-Received: by ajax-webmail-front01 (Coremail) ; Fri, 25 Feb 2022 14:25:10
- +0800 (GMT+08:00)
-X-Originating-IP: [10.129.19.172]
-Date:   Fri, 25 Feb 2022 14:25:10 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   =?UTF-8?B?5YiY5rC45b+X?= <lyz_cs@pku.edu.cn>
-To:     "pavel machek" <pavel@denx.de>
-Cc:     "sasha levin" <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, "vinod koul" <vkoul@kernel.org>,
-        christophe.jaillet@wanadoo.fr, arnd@arndb.de,
-        laurent.pinchart@ideasonboard.com, dmaengine@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.16 24/30] dmaengine: shdma: Fix runtime PM
- imbalance on error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.13 build 20210104(ab8c30b6)
- Copyright (c) 2002-2022 www.mailtech.cn
- mispb-1ea67e80-64e4-49d5-bd9f-3beeae24b9f2-pku.edu.cn
-In-Reply-To: <20220224223908.GA6522@duo.ucw.cz>
-References: <20220223022820.240649-1-sashal@kernel.org>
- <20220223022820.240649-24-sashal@kernel.org>
- <20220224223908.GA6522@duo.ucw.cz>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        with ESMTP id S237386AbiBYLYk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Feb 2022 06:24:40 -0500
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CC8921EBBF;
+        Fri, 25 Feb 2022 03:24:07 -0800 (PST)
+Received: (Authenticated sender: miquel.raynal@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id 92075FF80A;
+        Fri, 25 Feb 2022 11:24:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1645788245;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=BojsKi1ruriqiFypw1qe5SRshGJ6mnVKS+raZKmEv4g=;
+        b=fpyF6FVw5omwB31iIRERcbtM2pRALzfiS8UDs1nEQWzOUOUqr/0qrrzJBWvtgB/r4Efn/A
+        dUrg25JBQ415iE4uxNu1rsXZR6jmtFRrDekWtn/UiyW/Y7+iNa6G6Za6abS3OLiIl+OHrB
+        pBPsZA1A31UjN3yUa2gJn4BBKlZLvd4h5ocgh0visIFcfQ6r2S0l5On5F4kzkbF75F+51D
+        hgRDGhvtPHE/ROwD0OO6lYinqotSF7F4wcMTwM1VaelAeTRBippl8HtXFESsPdC/n0UKb8
+        6GvPqDEf5p/31GYtJd7bXOb4OA2OrrtDY6IspNe6CC/Z3RaMYqdYT+NxnxgB7w==
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org,
+        Milan Stevanovic <milan.stevanovic@se.com>,
+        Jimmy Lalande <jimmy.lalande@se.com>,
+        Pascal Eberhard <pascal.eberhard@se.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v3 0/7] RZN1 DMA support
+Date:   Fri, 25 Feb 2022 12:23:55 +0100
+Message-Id: <20220225112403.505562-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Message-ID: <12bdb8e2.89509.17f2f8e0337.Coremail.lyz_cs@pku.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: 5oFpogBXOrhGdhhiloYiAg--.1378W
-X-CM-SenderInfo: irzqijirqukmo6sn3hxhgxhubq/1tbiAwEIBlPy7uUuEAAAsY
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-        CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-        daVFxhVjvjDU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,30 +61,75 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-PiAtLS0tLeWOn+Wni+mCruS7ti0tLS0tCj4g5Y+R5Lu25Lq6OiAiUGF2ZWwgTWFjaGVrIiA8cGF2
-ZWxAZGVueC5kZT4KPiDlj5HpgIHml7bpl7Q6IDIwMjItMDItMjUgMDY6Mzk6MDggKOaYn+acn+S6
-lCkKPiDmlLbku7bkuro6ICJTYXNoYSBMZXZpbiIgPHNhc2hhbEBrZXJuZWwub3JnPgo+IOaKhOmA
-gTogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZywgc3RhYmxlQHZnZXIua2VybmVsLm9yZywg
-Illvbmd6aGkgTGl1IiA8bHl6X2NzQHBrdS5lZHUuY24+LCAiVmlub2QgS291bCIgPHZrb3VsQGtl
-cm5lbC5vcmc+LCBjaHJpc3RvcGhlLmphaWxsZXRAd2FuYWRvby5mciwgYXJuZEBhcm5kYi5kZSwg
-bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tLCBkbWFlbmdpbmVAdmdlci5rZXJuZWwu
-b3JnCj4g5Li76aKYOiBSZTogW1BBVENIIEFVVE9TRUwgNS4xNiAyNC8zMF0gZG1hZW5naW5lOiBz
-aGRtYTogRml4IHJ1bnRpbWUgUE0gaW1iYWxhbmNlIG9uIGVycm9yCj4gCj4gSGkhCj4gCj4gPiBG
-cm9tOiBZb25nemhpIExpdSA8bHl6X2NzQHBrdS5lZHUuY24+Cj4gPiAKPiA+IFsgVXBzdHJlYW0g
-Y29tbWl0IDQ1NTg5NmM1M2Q1YjgwMzczM2RkZDg0ZTFiZjhhNDMwNjQ0NDM5YjYgXQo+ID4gCj4g
-PiBwbV9ydW50aW1lX2dldF8oKSBpbmNyZW1lbnRzIHRoZSBydW50aW1lIFBNIHVzYWdlIGNvdW50
-ZXIgZXZlbgo+ID4gd2hlbiBpdCByZXR1cm5zIGFuIGVycm9yIGNvZGUsIHRodXMgYSBtYXRjaGlu
-ZyBkZWNyZW1lbnQgaXMgbmVlZGVkIG9uCj4gPiB0aGUgZXJyb3IgaGFuZGxpbmcgcGF0aCB0byBr
-ZWVwIHRoZSBjb3VudGVyIGJhbGFuY2VkLgo+IAo+IEkgZG9uJ3QgdGhpbmsgdGhhdCdzIHJpZ2h0
-Lgo+IAo+IE5vdGljZSB0aGF0IC1yZXQgaXMgaWdub3JlZCAoY2hlY2tlZCA0LjQgYW5kIDUuMTAp
-LCBzbyB3ZSBkb24ndAo+IGFjdHVhbGx5IGFib3J0L3JldHVybiBlcnJvcjsgd2UganVzdCBwcmlu
-dGsuIFdlJ2xsIGRvIHR3bwo+IHBtX3J1bnRpbWVfcHV0J3MgYWZ0ZXIgdGhlICJmaXgiLgoKVGhh
-bmsgeW91IHZlcnkgbXVjaCBmb3IgdGhlIGNvcnJlY3Rpb24uIEkgYW0gdmVyeSBzb3JyeSB0aGF0
-IEkgY2F1c2VkIHlvdSB1bm5lY2Vzc2FyeSB0cm91YmxlIGJlY2F1c2Ugb2YgbXkgY2FyZWxlc3Nu
-ZXNzLgpUaGUgcG1fcnVudGltZV9wdXQgaXMgaW5kZWVkIGNhbGxlZCBsYXRlciBpbiBfX2xkX2Ns
-ZWFudXAsIHNvIG9ubHkgcHJpbnRrIGlzIG5lZWRlZCBhdCAtcmV0IGFuZCB0aGUgcGF0Y2ggaXMg
-bm90IHJpZ2h0LgoKPiAKPiBQbGVhc2UgZHJvcCBmcm9tIC1zdGFibGUuCj4gCj4gQmVzdCByZWdh
-cmRzLAo+IAkJCQkJCQkJUGF2ZWwKPiAtLSAKPiBERU5YIFNvZnR3YXJlIEVuZ2luZWVyaW5nIEdt
-YkgsICAgICAgTWFuYWdpbmcgRGlyZWN0b3I6IFdvbGZnYW5nIERlbmsKPiBIUkIgMTY1MjM1IE11
-bmljaCwgT2ZmaWNlOiBLaXJjaGVuc3RyLjUsIEQtODIxOTQgR3JvZWJlbnplbGwsIEdlcm1hbnkK
+Hello,
+
+Here is a first series bringing DMA support to RZN1 platforms. I'm not a
+DMA expert at all so criticism is welcome.
+
+Soon a second series will come with changes made to the UART controller
+driver, in order to interact with the RZN1 DMA controller.
+
+Cheers,
+Miquèl
+
+Changes in v3:
+* Added Reviewed-by tags.
+* Exported the set_dmamux* symbol properly.
+* Dropped a useless check in the probe and moved the sysctrl_priv
+  assignation to the end of the probe.
+* Renamed the dmamux driver
+* Added a couple of missing MODULE_ macros in the dmamux driver.
+* Decided to use a regular platform init call instead of the
+  arch_initcall() initially proposed.
+* s/%d/%u/ in printk's when appropriate.
+* Used a hardcoded value instead of dmamux->dmac_requests when
+  appropriate.
+* Changed the variable name "master" to "dmac_idx" to be more
+  descriptive.
+* Dropped most of the of_* calls in favor of #define's.
+* Fixed a typo.
+* Exported two symbols from 8250_dma.c.
+
+Changes in v2:
+* Clarified that the 'fix' regarding non aligned reads would only apply
+  to the DEV_TO_MEM case.
+* Fix the DMA controller compatible string (copy-paste error).
+* s/syscon/sysctrl/ as advised by Geert.
+* Disabled irqs when taking the spinlock from the clocks driver.
+* Moved the DMAMUX offset inside the driver.
+* Removed extra commas.
+* Improved the style as suggested by Andy.
+* Removed a dupplicated check against the device node presence.
+* Reduced the number of lines of code by using dev_err_probe().
+* Created a Kconfig symbol for DMAMUX to fix the two robot reports
+  received and be sure there was no useless overhead with other
+  platforms.
+* Exported the serial8250_{tx,rx}_dma() symbols.
+
+Miquel Raynal (7):
+  dt-bindings: dma: Introduce RZN1 dmamux bindings
+  dt-bindings: dma: Introduce RZN1 DMA compatible
+  soc: renesas: rzn1-sysc: Export function to set dmamux
+  dma: dmamux: Introduce RZN1 DMA router support
+  dma: dw: Add RZN1 compatible
+  ARM: dts: r9a06g032: Add the two DMA nodes
+  ARM: dts: r9a06g032: Describe the DMA router
+
+ .../bindings/dma/renesas,rzn1-dmamux.yaml     |  42 +++++
+ .../bindings/dma/snps,dma-spear1340.yaml      |   8 +-
+ MAINTAINERS                                   |   1 +
+ arch/arm/boot/dts/r9a06g032.dtsi              |  37 +++++
+ drivers/clk/renesas/r9a06g032-clocks.c        |  35 +++-
+ drivers/dma/dw/Kconfig                        |   8 +
+ drivers/dma/dw/Makefile                       |   2 +
+ drivers/dma/dw/platform.c                     |   1 +
+ drivers/dma/dw/rzn1-dmamux.c                  | 152 ++++++++++++++++++
+ include/linux/soc/renesas/r9a06g032-sysctrl.h |  11 ++
+ 10 files changed, 295 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/renesas,rzn1-dmamux.yaml
+ create mode 100644 drivers/dma/dw/rzn1-dmamux.c
+ create mode 100644 include/linux/soc/renesas/r9a06g032-sysctrl.h
+
+-- 
+2.27.0
 

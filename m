@@ -2,65 +2,66 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E358F4C61CB
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Feb 2022 04:28:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 865CE4C6597
+	for <lists+dmaengine@lfdr.de>; Mon, 28 Feb 2022 10:23:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232858AbiB1D2m (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 27 Feb 2022 22:28:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41388 "EHLO
+        id S234134AbiB1JXn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 28 Feb 2022 04:23:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232821AbiB1D2m (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 27 Feb 2022 22:28:42 -0500
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB9914617E;
-        Sun, 27 Feb 2022 19:28:03 -0800 (PST)
-Received: by mail-lj1-x22c.google.com with SMTP id 29so15503690ljv.10;
-        Sun, 27 Feb 2022 19:28:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=h0iBLGB6HbzcC/iu5C+tQ5/tqPh9n64xyr0lLd4iYHo=;
-        b=ZF5UETI4VTidqFP9bbw3TPgD2GpLVYf4pcBw30K60JzUs/r1KdZffYG2jqnJ0paG0I
-         XfQ+dFmoC5MGJXu51Gwsficq2AAtLQqHm7mpd43crSXSxfLhthtUwFvBcArswygRk1CB
-         M9IZ4K5beNoEefHVavTCT6dKEER7KBiV0pZ3YFqXMOVY6Jgnu1zUOeU67ZEpk2mVoLBf
-         Icb7cg6P+8l9u/mIOKbT7e4kC3lliqkK0PnpkZCoQp/+Hb9uUGfwFLRTk3bI64O6Ngxf
-         5RXIB6B7UQJK0hn/jeWF1TrdsrSHO34fDdXDlUk/LdKJnPLBgC6e+wJSDStKyzW3x1PZ
-         Hiew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=h0iBLGB6HbzcC/iu5C+tQ5/tqPh9n64xyr0lLd4iYHo=;
-        b=H5FTCAPV9PAMDv85t005nU6OsZnQunBP4QwHiNoLoIgAAoQeSDxl7RZFwAacp6JxwW
-         EGsguk5isy1j0tmhgyifJvjmbIOKBfVovkbA68EfDrcLtsE66Oo9ClEOcDPfus/tGAqr
-         YXhwepFddNshc0kfwhmp5LA9lm/Dt8qfvscvhxQBtJ17taEp1cKT3znYGrFjwQchhkZc
-         WXcZGExmyLJF5ljOf12z9cCfQ+bDA5upBvAQ8NHQp5o2yOljeFRSbv8xJ7EcOY7oLC5T
-         5TJH67KSzszYXdvMYUNQ2nhY73GHL4ve3iMMJ5m0FZrD1Zr6/WjwG5t9sCpYAwyShkAB
-         NwsQ==
-X-Gm-Message-State: AOAM532pLQY/aIwjXAqXfxOTK0INe3n4/BIL08wuDoqZDj7lJMV6xPAC
-        Hwv8eJ33L+w5B3Z9LCb9tAyvn1W6+KSkXA==
-X-Google-Smtp-Source: ABdhPJz5kBegtKMzwPNC4wxduFoN72FRtYSKaw3qVAAfuvxdgp/eR+BaipHMJmlX273E2cg0BzaPxg==
-X-Received: by 2002:a2e:990e:0:b0:240:ab6:da94 with SMTP id v14-20020a2e990e000000b002400ab6da94mr12898373lji.274.1646018881856;
-        Sun, 27 Feb 2022 19:28:01 -0800 (PST)
-Received: from TebraArch.. ([81.198.32.225])
-        by smtp.gmail.com with ESMTPSA id v11-20020a2e924b000000b0024649082c0dsm1109420ljg.118.2022.02.27.19.28.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Feb 2022 19:28:01 -0800 (PST)
-From:   =?UTF-8?q?D=C4=81vis=20Mos=C4=81ns?= <davispuh@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        =?UTF-8?q?D=C4=81vis=20Mos=C4=81ns?= <davispuh@gmail.com>
-Subject: [PATCH] dmaengine: release channels on device unregister
-Date:   Mon, 28 Feb 2022 05:27:41 +0200
-Message-Id: <20220228032741.13428-1-davispuh@gmail.com>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S232390AbiB1JXn (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 28 Feb 2022 04:23:43 -0500
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B1AC33A03;
+        Mon, 28 Feb 2022 01:23:04 -0800 (PST)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 21S9MuX9024394;
+        Mon, 28 Feb 2022 03:22:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1646040176;
+        bh=0Gh/zCLG/Enf8WpLjPEkq5pcQ399FuHU48P/zaDMkGQ=;
+        h=Date:Subject:To:CC:References:From:In-Reply-To;
+        b=fIgy1xiEajmIWwKA/BXfmPuPawtQNUL7u77MSKTED/+Q4LZia1V5/BGmMztqAU/Cc
+         HG3e/4x7N1J8mUQalcbthGHjdCp1YrLGNg9kCSxEmTnAaZjNiaQ5JcE6l0zpYa77zn
+         Hb3wvQaeWwM+c4SEbKWIG5/Q9eykgX28ISdtGyz8=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 21S9MuYB045213
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 28 Feb 2022 03:22:56 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Mon, 28
+ Feb 2022 03:22:56 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
+ Frontend Transport; Mon, 28 Feb 2022 03:22:56 -0600
+Received: from [10.250.233.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 21S9MrIV120544;
+        Mon, 28 Feb 2022 03:22:54 -0600
+Message-ID: <35276e1e-e37c-f8e7-c452-799f8e778465@ti.com>
+Date:   Mon, 28 Feb 2022 14:52:23 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH] dmaengine: ti: k3-udma: Avoid false error msg on chan
+ teardown
+Content-Language: en-US
+To:     =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Jayesh Choudhary <j-choudhary@ti.com>
+References: <20220215044112.161634-1-vigneshr@ti.com>
+ <58fe0934-4853-714c-600d-9a2d86df5bc8@gmail.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+In-Reply-To: <58fe0934-4853-714c-600d-9a2d86df5bc8@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,80 +69,73 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Currently if dma_async_device_unregister is invoked while some clients
-still hold a reference to some channels it would prevent device to be released
-which would leave dangling pointers inside dma_device_list and cause crashes
-in methods that tries to use it
+Hi Peter,
 
-Fix it by force releasing channels which will allow device to be also released
+On 21/02/22 1:42 am, Péter Ujfalusi wrote:
+> Hi Vignesh,
+> 
+> On 15/02/2022 06:41, Vignesh Raghavendra wrote:
+>> In cyclic mode, there is no additional descriptor pushed to collect
+>> outstanding data on channel teardown. Therefore no need to wait for this
+>> descriptor to come back.
+>>
+>> Without this terminating aplay cmd outputs false error msg like:
+>> [  116.402800] ti-bcdma 485c0100.dma-controller: chan1 teardown timeout!
+> 
+> are you sure it is aplay? It is MEM_TO_DEV, we only use the flush
+> descriptor for DEV_TO_MEM. MEM_TO_DEV can 'disconnect' from the
+> peripheral to flush out the FIFO.
+> 
 
-BUG: kernel NULL pointer dereference, address: 0000000000000000
-PGD 0 P4D 0
-Oops: 0000 [#1] PREEMPT SMP NOPTI
-RIP: 0010:dma_issue_pending_all (drivers/dma/dmaengine.c:562)
-All code
-========
-   0:   45 20 49 8d             and    %r9b,-0x73(%r9)
-   4:   55                      push   %rbp
-   5:   20 4c 89 ed             and    %cl,-0x13(%rcx,%rcx,4)
-   9:   48 83 e8 20             sub    $0x20,%rax
-   d:   48 81 fa e0 7a 18 b2    cmp    $0xffffffffb2187ae0,%rdx
-  14:   74 52                   je     0x68
-  16:   49 89 c5                mov    %rax,%r13
-  19:   48 8b 45 48             mov    0x48(%rbp),%rax
-  1d:   f6 c4 02                test   $0x2,%ah
-  20:   75 dc                   jne    0xfffffffffffffffe
-  22:   48 8b 45 10             mov    0x10(%rbp),%rax
-  26:   4c 8d 65 10             lea    0x10(%rbp),%r12
-  2a:*  48 8b 08                mov    (%rax),%rcx              <-- trapping instruction
-  2d:   48 8d 78 c8             lea    -0x38(%rax),%rdi
-  31:   48 8d 59 c8             lea    -0x38(%rcx),%rbx
-  35:   49 39 c4                cmp    %rax,%r12
-  38:   75 05                   jne    0x3f
-  3a:   eb c2                   jmp    0xfffffffffffffffe
-  3c:   48 89 c3                mov    %rax,%rbx
-  3f:   8b                      .byte 0x8b
+Yes, this is with aplay. You are right that MEM_TO_DEV should have
+worked w/o this patch.
 
-RSP: 0018:ffff987e44a9fde0 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffff8bdc410e6e00 RCX: 0000000000000000
-RDX: ffff8bdc41700e48 RSI: ffffffffb090de19 RDI: ffff8bdc410e6e00
-RBP: ffff8bdc41700e28 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff8bdc41700e38
-R13: ffffffffffffffe0 R14: ffff8bdc4b3e5000 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8be39b380000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 000000018e1b6000 CR4: 00000000003506e0
-Call Trace:
- <TASK>
-raid5d (drivers/md/raid5.c:6563) raid456
-? rcu_read_lock_sched_held (kernel/rcu/update.c:104 kernel/rcu/update.c:123)
-md_thread (drivers/md/md.c:7923) md_mod
-? do_wait_intr (kernel/sched/wait.c:415)
-? rdev_read_only.isra.0 (drivers/md/md.c:7887) md_mod
-kthread (kernel/kthread.c:377)
-? kthread_complete_and_exit (kernel/kthread.c:332)
-ret_from_fork (arch/x86/entry/entry_64.S:301)
- </TASK>
 
-Signed-off-by: Dāvis Mosāns <davispuh@gmail.com>
----
- drivers/dma/dmaengine.c | 3 +++
- 1 file changed, 3 insertions(+)
+> I have not seen this on am654, j721e. I can not recall seeing this on
+> the capture side either.
+> 
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 2cfa8458b51be..92d4d0522694c 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -1112,6 +1112,9 @@ static void __dma_async_device_channel_unregister(struct dma_device *device,
- 	mutex_lock(&dma_list_mutex);
- 	device->chancnt--;
- 	chan->dev->chan = NULL;
-+	while (chan->client_count) {
-+		dma_chan_put(chan);
-+	}
- 	mutex_unlock(&dma_list_mutex);
- 	mutex_lock(&device->chan_mutex);
- 	ida_free(&device->chan_ida, chan->chan_id);
--- 
-2.35.1
+I dont see it either
 
+> The cyclic TR should be able to drain the DEV_TO_MEM by itself and the
+> TR should terminate.
+> 
+
+You are right. There seems to be a trobule with McASP + BCDMA on AM62
+which needs more investigation. I see
+
+ RT c0000000 peer RT 90000000
+ BCNT 5dc00, peer BCNT 46400
+
+So there is some data stuck in pipe which prevents channel from
+disabling and TDCM being signaled. My guess is McASP is no longer
+requesting more data from PDMA. Any way to look at McASP FIFO state/ DMA
+req enable state? Wondering what else can prevent draining of data.
+
+One difference is that AM62 has ti,tlv320aic3106 codec (codec is the
+master) where J7 uses PCM.
+
+Regards
+Vignesh
+
+
+> 
+>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+>> ---
+>>  drivers/dma/ti/k3-udma.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+>> index 9abb08d353ca0..c9a1b2f312603 100644
+>> --- a/drivers/dma/ti/k3-udma.c
+>> +++ b/drivers/dma/ti/k3-udma.c
+>> @@ -3924,7 +3924,7 @@ static void udma_synchronize(struct dma_chan *chan)
+>>  
+>>  	vchan_synchronize(&uc->vc);
+>>  
+>> -	if (uc->state == UDMA_CHAN_IS_TERMINATING) {
+>> +	if (uc->state == UDMA_CHAN_IS_TERMINATING && !uc->cyclic) {
+>>  		timeout = wait_for_completion_timeout(&uc->teardown_completed,
+>>  						      timeout);
+>>  		if (!timeout) {
+> 

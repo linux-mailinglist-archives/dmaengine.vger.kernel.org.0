@@ -2,147 +2,91 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BBD24C92D5
-	for <lists+dmaengine@lfdr.de>; Tue,  1 Mar 2022 19:21:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 916AA4C92FA
+	for <lists+dmaengine@lfdr.de>; Tue,  1 Mar 2022 19:26:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236905AbiCASWK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 1 Mar 2022 13:22:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57174 "EHLO
+        id S236859AbiCAS0j (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 1 Mar 2022 13:26:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236844AbiCASWI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 1 Mar 2022 13:22:08 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D6F652D8
-        for <dmaengine@vger.kernel.org>; Tue,  1 Mar 2022 10:21:25 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id iq13-20020a17090afb4d00b001bc4437df2cso2953368pjb.2
-        for <dmaengine@vger.kernel.org>; Tue, 01 Mar 2022 10:21:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fds8Vu27HO3VizdZYZX37G2L0kdPjlGJwjydpAC62lk=;
-        b=kbDptrdu0f26KgjbD0o2z38w3lkKGDPgX1iTHeFHCTnyp8GdCq5qMftyKUSBh6duUj
-         WfNj/A6u5i3SYTvNHtilrjGbJ7XPB9BN5cThiWBPQtUhCrDH1721OqL04qTC03fUauzy
-         3YHA9gzqSMuaks5H7GdDPribo7C8kJL0W2A2s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fds8Vu27HO3VizdZYZX37G2L0kdPjlGJwjydpAC62lk=;
-        b=E3x3cqgccmpTCT2esOd77x/wYlXqY4AcCo1BciOHyCu1b2pMxuEWttmGaRy89vz74q
-         nPv1jFpeqtGNnEeSMXdjLTUdo2iuUNZQYzvJ035AWhN89Q3MARudqsKVUg74Lb7pA+bg
-         wACva22sqpMqGmxH2GZgwK9bAYW0Xxi7vDDHVJEjOfRJGp1Bix7Mvsw5mCCKph511tmY
-         UsKwXP8xedjGxWE6V/5hw+6KEikPvo98zb4e84pNUV9BPnAIfheJ1wkfyZ9EOei9H9RG
-         RToxYvy/BDNztCue1EFwciIjtH1XKja0mXc4ITIZbal1Zv79Uf3qdFf76N0zSlHAccNs
-         boAw==
-X-Gm-Message-State: AOAM533Tm3ce0Dpz98Wd4KbjsBHFVJyB/4veOHs4nQ6vf2hhow5NUwyW
-        OlP0puFWYiO+yTzGMmtZAkaHNA==
-X-Google-Smtp-Source: ABdhPJxFvMPIFzTXAIIVPlg/eGuYakalp78L+LNg6VrEL06CzJLvdAz6UlqMRKRHGibjFN8E9JB6yg==
-X-Received: by 2002:a17:90b:4d86:b0:1bd:223f:6cb5 with SMTP id oj6-20020a17090b4d8600b001bd223f6cb5mr16669777pjb.151.1646158885116;
-        Tue, 01 Mar 2022 10:21:25 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id oa2-20020a17090b1bc200b001bcff056f09sm2678996pjb.13.2022.03.01.10.21.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Mar 2022 10:21:24 -0800 (PST)
-Date:   Tue, 1 Mar 2022 10:21:24 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Jakob Koschel <jakobkoschel@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        alsa-devel@alsa-project.org, linux-aspeed@lists.ozlabs.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-iio@vger.kernel.org, nouveau@lists.freedesktop.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Cristiano Giuffrida <c.giuffrida@vu.nl>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        samba-technical@lists.samba.org,
-        linux1394-devel@lists.sourceforge.net, drbd-dev@lists.linbit.com,
-        linux-arch <linux-arch@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        linux-staging@lists.linux.dev, "Bos, H.J." <h.j.bos@vu.nl>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        intel-wired-lan@lists.osuosl.org,
-        kgdb-bugreport@lists.sourceforge.net,
-        bcm-kernel-feedback-list@broadcom.com,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Arnd Bergman <arnd@arndb.de>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        Brian Johannesmeyer <bjohannesmeyer@gmail.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        v9fs-developer@lists.sourceforge.net,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-sgx@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, linux-usb@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux F2FS Dev Mailing List 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        tipc-discussion@lists.sourceforge.net,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        dma <dmaengine@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH 2/6] treewide: remove using list iterator after loop body
- as a ptr
-Message-ID: <202203011016.48A181EE50@keescook>
-References: <20220228110822.491923-1-jakobkoschel@gmail.com>
- <20220228110822.491923-3-jakobkoschel@gmail.com>
- <2e4e95d6-f6c9-a188-e1cd-b1eae465562a@amd.com>
- <CAHk-=wgQps58DPEOe4y5cTh5oE9EdNTWRLXzgMiETc+mFX7jzw@mail.gmail.com>
- <CAHk-=wj8fkosQ7=bps5K+DDazBXk=ypfn49A0sEq+7-nZnyfXA@mail.gmail.com>
- <CAHk-=wiTCvLQkHcJ3y0hpqH7FEk9D28LDvZZogC6OVLk7naBww@mail.gmail.com>
- <FC710A1A-524E-481B-A668-FC258F529A2E@gmail.com>
- <CAHk-=whLK11HyvpUtEftOjc3Gup2V77KpAQ2fycj3uai=qceHw@mail.gmail.com>
- <CEDAD0D9-56EE-4105-9107-72C2EAD940B0@gmail.com>
+        with ESMTP id S234000AbiCAS0j (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 1 Mar 2022 13:26:39 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D96C96516C
+        for <dmaengine@vger.kernel.org>; Tue,  1 Mar 2022 10:25:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646159157; x=1677695157;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CpId33HQGvmiZ18S5kyvW0m6b3k6W4TcdDFTR5B6jws=;
+  b=Tut3/v+eUWEH9W2OG00/MN3bxXDs3FLH59amFvTFcL/Ee47ulWu2yxtK
+   jS0dbl1bMIqN3zrugo8lljzJOueUIvzmUWapl9yT03JT/ei8+O00zJruA
+   9h/P1RduNKiJuZbV6XMmRqZ26SIPC78nn4v/B18rfujg97CfTPUBMELjG
+   epeoAC9/+GBl2HH7qyMWnAMk+asbMCLHdE4F7zWcEPSz7NICnlft9XvaU
+   qENPmGvr1CapZ4pZvrtMPmxaaOdbPQMfLYM41hFF9RwkKjYQPIIGbmxtg
+   ie9Gi2YjMhw6CXwj17xPxa7S1c4kTd+g33VzF3nBNJWQYbM33I2OlJBzb
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10273"; a="252940707"
+X-IronPort-AV: E=Sophos;i="5.90,146,1643702400"; 
+   d="scan'208";a="252940707"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2022 10:25:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,146,1643702400"; 
+   d="scan'208";a="630110135"
+Received: from bwalker-desk.ch.intel.com ([143.182.137.126])
+  by FMSMGA003.fm.intel.com with ESMTP; 01 Mar 2022 10:25:56 -0800
+From:   Ben Walker <benjamin.walker@intel.com>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, ludovic.desroches@microchip.com,
+        okaya@kernel.org, dave.jiang@intel.com,
+        Ben Walker <benjamin.walker@intel.com>
+Subject: [PATCH v3 0/4] dmaengine: memset clarifications and fixes
+Date:   Tue,  1 Mar 2022 11:25:47 -0700
+Message-Id: <20220301182551.883474-1-benjamin.walker@intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CEDAD0D9-56EE-4105-9107-72C2EAD940B0@gmail.com>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Mar 01, 2022 at 12:28:15PM +0100, Jakob Koschel wrote:
-> Based on the coccinelle script there are ~480 cases that need fixing
-> in total. I'll now finish all of them and then split them by
-> submodules as Greg suggested and repost a patch set per submodule.
-> Sounds good?
+The following contains a clarification for the behavior of the 'value'
+parameter in the memset operation. It is intended to be a single byte
+pattern as laid out here:
 
-To help with this splitting, see:
-https://github.com/kees/kernel-tools/blob/trunk/split-on-maintainer
+https://lore.kernel.org/dmaengine/YejrA5ZWZ3lTRO%2F1@matsya/
 
-It's not perfect, but it'll get you really close. For example, if you
-had a single big tree-wide patch applied to your tree:
+Then I'm attempting to fix all places it is currently used. But note
+that I do not have access to this hardware and cannot test it. We'll
+really need a maintainer to take a look at each of these to verify that
+the changes are correct.
 
-$ rm 0*.patch
-$ git format-patch -1 HEAD
-$ mv 0*.patch treewide.patch
-$ split-on-maintainer treewide.patch
-$ ls 0*.patch
+v3:
+ - Using signed byte for pattern everywhere
 
-If you have a build log before the patch that spits out warnings, the
---build-log argument can extract those warnings on a per-file basis, too
-(though this can be fragile).
+Ben Walker (4):
+  dmaengine: Document dmaengine_prep_dma_memset
+  dmaengine: at_hdmac: In atc_prep_dma_memset, treat value as a single
+    byte
+  dmaengine: at_xdmac: In at_xdmac_prep_dma_memset, treat value as a
+    single byte
+  dmaengine: hidma: In hidma_prep_dma_memset treat value as a single
+    byte
+
+ drivers/dma/at_hdmac.c    | 10 +++++++++-
+ drivers/dma/at_xdmac.c    |  9 ++++++++-
+ drivers/dma/qcom/hidma.c  | 13 ++++++++++++-
+ include/linux/dmaengine.h |  8 ++++++++
+ 4 files changed, 37 insertions(+), 3 deletions(-)
 
 -- 
-Kees Cook
+2.33.1
+

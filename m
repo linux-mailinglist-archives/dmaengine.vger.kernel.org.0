@@ -2,191 +2,182 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 306434C9714
-	for <lists+dmaengine@lfdr.de>; Tue,  1 Mar 2022 21:36:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 026D14C978C
+	for <lists+dmaengine@lfdr.de>; Tue,  1 Mar 2022 22:08:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235793AbiCAUh1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 1 Mar 2022 15:37:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53622 "EHLO
+        id S234477AbiCAVIw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 1 Mar 2022 16:08:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237678AbiCAUhT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 1 Mar 2022 15:37:19 -0500
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB8A53FBD9
-        for <dmaengine@vger.kernel.org>; Tue,  1 Mar 2022 12:36:36 -0800 (PST)
-Received: by mail-lj1-x22d.google.com with SMTP id l12so11591391ljh.12
-        for <dmaengine@vger.kernel.org>; Tue, 01 Mar 2022 12:36:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rAZcpGOFnijhfBt719P+IqprCBqe8sD9TF0Sez9IwiQ=;
-        b=F+7BPGYsO9QeRc6BTbvPUJxguXCTYika7fzNVLbSEfMjTVK29FjvhOtCtbBO2oalkB
-         9cweHARFFeQAeiDWhTrtcdfTzbCEOfTOrVCN9rTTV3Ek5jpvIVUt3aua8OA61CgDhA1w
-         zQABsshAfnGl6gFdFI9HcnnKU8AOre3uWnEew=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rAZcpGOFnijhfBt719P+IqprCBqe8sD9TF0Sez9IwiQ=;
-        b=XOf4RrrQVEsUqWyYyxpwlvtEZZxFMtboc9vc0/evlY/OxCpgQ0Ad0gRTY+LqD5vTyE
-         EMrLE8NdDzxy9CybiJ9DWLejm5sLN0OpVj/BSsyJvt7cANuD4fGxIMd2CJoIH8pHRgg6
-         JRyV/LMeN8gTKajuWkgXMwH/9l/nZUkmj2tDx8BpenTT3HjQ5QvtOMs1LQTBWTDTKkRv
-         UG+ynBFZyWn6eMiBRxfYzQYodJIHXuXZH8imQ1o/ptckwnUxS8HsNIP3lp3e0xKPezDF
-         Ao3ubXopkbu7vjbsMbZ4w63Q4BmWCyh7tt+HyygWzZxDJIYfHjVK1Ql00X6QAsRYSuv2
-         U51A==
-X-Gm-Message-State: AOAM533C7AYF5oKkmoSnpKTOD3JqITLWHO33OxkWpFcM1LrvBXJK37pz
-        q5Jl6RF3eduDUG/UpG2bXLkzS+FlN+PhHEkSDVA=
-X-Google-Smtp-Source: ABdhPJzhjrckNE19EuABSpGX7JkHnjEzjGlTqjDBf36OVIdeSf/Nw7z2ma1rXzeWQFcXYK0zSj2cKw==
-X-Received: by 2002:a2e:7a1a:0:b0:246:210:65cd with SMTP id v26-20020a2e7a1a000000b00246021065cdmr17987623ljc.99.1646166994227;
-        Tue, 01 Mar 2022 12:36:34 -0800 (PST)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id m15-20020a2e870f000000b00246035c591esm2160273lji.126.2022.03.01.12.36.30
-        for <dmaengine@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Mar 2022 12:36:32 -0800 (PST)
-Received: by mail-lj1-f171.google.com with SMTP id p20so23528224ljo.0
-        for <dmaengine@vger.kernel.org>; Tue, 01 Mar 2022 12:36:30 -0800 (PST)
-X-Received: by 2002:ac2:44a4:0:b0:445:8fc5:a12a with SMTP id
- c4-20020ac244a4000000b004458fc5a12amr10608648lfm.27.1646166980002; Tue, 01
- Mar 2022 12:36:20 -0800 (PST)
+        with ESMTP id S233375AbiCAVIu (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 1 Mar 2022 16:08:50 -0500
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2068.outbound.protection.outlook.com [40.107.237.68])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFCFE1D315;
+        Tue,  1 Mar 2022 13:08:08 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=R9w7dedJNv48Q65J2trYmh8B+zLT4fICLb3kY0C/sbbGrItMcv9cFNqLfDoTC4oSHYde4KlU6lJx7WghiT4rmvbmEq8rTbt2ciyiLryfh8T8knxXielsuEU91bMa5aGdvNBpQ/d9ZI/YxeRaxqDIxhqrgOqMqlL+TajYslZ2EavtNonus0Z6EidXSapiTuWhW9l5/9sP8u1cp0oayLcOMJkK0EzMZsc7+HfMTRIYR0nQpx6z4TwQrzaBGYwT2ZWHvREufFDQfxDa45LsicoIVlnvp2GsSk3JJN1V02zuUJvuY8q6IFipLdP3l7z8z3SZqUMGX1JB478l6bWSdzCwhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0zHZTxQ5SrLb7GZ2Gp8PEj3WRGyfCT0SBPDGQeMBbs0=;
+ b=kt+boPuZDjeiTdvjKzeik5c+uvxiJDFzTvDKJcKiwgVtt2SA6VaEopHTj99AMg6z1V2SOjjCVzfWXilf9AxZJCxEh1FbvvKqoF9vaYrMKtgDRzEN8uNBgWxqW2wzKuUuLqmbcxGHaprhzYWWnrIc3POEXeviCbC2AGL1O7Z2hoDYSi+1wf5bEsKGuLB6ks16aYKR/ICuyHsjEN1cGCJtHw+CD6ORNP16YaTRnfQpeFS2rmFEDZg3bMps7tNb+2FKiTPX/gMcZbsQuTU1HdpZtR4qMUr5OzaDEtw4ypAkwtjXODX06X2IyogDU3Jh6Leq7cfwkKLNQFgFZsVCb29gSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0zHZTxQ5SrLb7GZ2Gp8PEj3WRGyfCT0SBPDGQeMBbs0=;
+ b=g12E3Z9Yh3U01imqe05VBV4fgRcxABSA4zKKAJKQalfXgL01WYL6U3LcK9Z85D2R9dX6UVz8RPxIpgacvYPfn33ltiLI5WQ0lxWBSACcdv3WJeSi/G4pJz4Qc9zzspNEEIh8VJplfyRrJhf1ScO7ljJyGIZ5g+vbhv0M6klmBjI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MWHPR12MB1471.namprd12.prod.outlook.com (2603:10b6:301:e::20)
+ by BN8PR12MB3361.namprd12.prod.outlook.com (2603:10b6:408:67::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.25; Tue, 1 Mar
+ 2022 21:08:00 +0000
+Received: from MWHPR12MB1471.namprd12.prod.outlook.com
+ ([fe80::146a:ebef:a503:c2bd]) by MWHPR12MB1471.namprd12.prod.outlook.com
+ ([fe80::146a:ebef:a503:c2bd%8]) with mapi id 15.20.5017.027; Tue, 1 Mar 2022
+ 21:08:00 +0000
+Date:   Tue, 1 Mar 2022 15:07:56 -0600
+From:   John Allen <john.allen@amd.com>
+To:     =?utf-8?B?RMSBdmlzIE1vc8SBbnM=?= <davispuh@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH] ccp: ccp_dmaengine_unregister release dma channels
+Message-ID: <Yh6LLFAf+f48BBFa@dell9853host>
+References: <20220228031545.11639-1-davispuh@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220228031545.11639-1-davispuh@gmail.com>
+X-ClientProxiedBy: BL1PR13CA0421.namprd13.prod.outlook.com
+ (2603:10b6:208:2c3::6) To MWHPR12MB1471.namprd12.prod.outlook.com
+ (2603:10b6:301:e::20)
 MIME-Version: 1.0
-References: <20220228110822.491923-1-jakobkoschel@gmail.com> <20220228110822.491923-7-jakobkoschel@gmail.com>
-In-Reply-To: <20220228110822.491923-7-jakobkoschel@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 1 Mar 2022 12:36:03 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgLtKofBbn9kSXRU3MpdX7S2OxN1V5Mc679oJpFnp_VnQ@mail.gmail.com>
-Message-ID: <CAHk-=wgLtKofBbn9kSXRU3MpdX7S2OxN1V5Mc679oJpFnp_VnQ@mail.gmail.com>
-Subject: Re: [PATCH 6/6] treewide: remove check of list iterator against head
- past the loop body
-To:     Jakob Koschel <jakobkoschel@gmail.com>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergman <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Brian Johannesmeyer <bjohannesmeyer@gmail.com>,
-        Cristiano Giuffrida <c.giuffrida@vu.nl>,
-        "Bos, H.J." <h.j.bos@vu.nl>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-sgx@vger.kernel.org, drbd-dev@lists.linbit.com,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-iio@vger.kernel.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        dma <dmaengine@vger.kernel.org>,
-        linux1394-devel@lists.sourceforge.net,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        nouveau@lists.freedesktop.org,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        intel-wired-lan@lists.osuosl.org, Netdev <netdev@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-staging@lists.linux.dev, linux-usb@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org, KVM list <kvm@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical@lists.samba.org,
-        Linux F2FS Dev Mailing List 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        v9fs-developer@lists.sourceforge.net,
-        tipc-discussion@lists.sourceforge.net, alsa-devel@alsa-project.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 60e8bb29-c400-4451-f820-08d9fbc79131
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3361:EE_
+X-Microsoft-Antispam-PRVS: <BN8PR12MB33612D237ADB5207E1487D1D9A029@BN8PR12MB3361.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: wEHFOzW6bbpnXVBQBAHF51RYgzZ/bwD05J5Y+SjmYjMMbe5Rl5Kuiq/3IGJJNDE70edJVQ8UWjTSxlqN0TUaQvW2789Mx6AtiyarIzDsBL2qfyfWD3iqQsLPGVLVM/H6FpdyqzGmHrcJhrNsq4YYbikrxua//eUFeRTLbDNlZOMMP7qyoSyOKe3o07ad6729Xij83DMLfvHmJED0WKXnVAe0EizpWfGOfqo5iikpa+varJAOl3iQ8Jd2lUnfVl8Yux/oOVZIXfSLWn5FCXaudkZjgkMNugE+HGos7UePTDE9Xc31Lq3/M0MYEm/8lYlWi5y318IhUchKLD0aKcb1BcW+X93aF43S9fUeUthL1LaBFbVSXFLYI2UN6h/GiVlf9c0xA4qU8DZkt8Go2abwkYywl04oO8a+cUm1eQd8Qejds9mLA5O3OaWQxaE4BP5yCmekSl955G878DeViRMArZTXcTl+rbkvuhFxQm5WbbAouQtTZvxq4Ld+xl5SJAmDT4LxGfdSZKS8VR7yaK1PyYcRc5LrVgzS7q20gUur/QVg6t0BUFZOeQaSfOzldcZsB25XuFnhBVLwS6slhe1JWDUil7CbcJu8c6bp0R5D6tE88Sz5NV/XK31UlVwPkRkCVa84m/KDCqluZc2NeVDP+NjRt81ct0L/83E8a97kD5/mBj9tsR1eHzM2vSBaMugqS8sxkuJ4HYvleidYbRpIjA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR12MB1471.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(7916004)(4636009)(366004)(4326008)(8676002)(66556008)(66476007)(66574015)(66946007)(86362001)(9686003)(6506007)(6512007)(6486002)(508600001)(6666004)(186003)(26005)(33716001)(6916009)(316002)(38100700002)(2906002)(5660300002)(44832011)(8936002)(67856001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UXhoTnNoaDdESlcybDEvbjBOT0ttdllXaXNtWlV6cWJMdkhIQkt0Zng0a1RD?=
+ =?utf-8?B?Um8yWjVzWFVQdmY3czNFdU5GV3JLOEkwUmh2VXRzU0dJbnlTSUp3NldLWXEy?=
+ =?utf-8?B?SThSdFRvSU1wY1dBVWV0cWNGN2JUUG1mMmpDL0g5UWlBVWpWMXZTajR1ZnpG?=
+ =?utf-8?B?SE5BN2t0VVcrUHBuMVVHbFNJVGg0cG5qc0E5ZFFpaU5iZ1E4aStMWDZVVDh2?=
+ =?utf-8?B?allnOFZ6M25ZRHQ1VUhxRnlhdzVoQTFDQ2VFVVViSVhtY3JVVU5jSGN1c0cw?=
+ =?utf-8?B?U3h2REllcGo3dXJEZExIUTVuU05ZUWx5ejl0bWRVeUF5MFY0RGpnamIraEhx?=
+ =?utf-8?B?bi9IbC9UZjdtVnViTS9zZ0Fva0xMQThHZDcrbEpIVVZjaEJINlZBV1VlVEt4?=
+ =?utf-8?B?aHlsSjBCdnh4VXNjd3NoY0tSMUJDYnp1MzdBb01zbTJqWWVESFVNTjVoZVBl?=
+ =?utf-8?B?U3lqQmZ6V1RJa2xRcUNXNkZTQlVia2cwb1JNN29hd09EVWRaSlBoWHN6aEw1?=
+ =?utf-8?B?c3J0dm16TGZlRVY3QVNvaExBTlk0eFdSY2lUZ1hITTB3UEYrYVMzS2JvMHcy?=
+ =?utf-8?B?cUJQYUNoMkY5akd2YktRMzJzTTJyR0dGQkVTTHgzTWVMMjUxWGN3UU1IV1F2?=
+ =?utf-8?B?Ym0wY0I3YUlLUnVsM3EvcFZmRG1EMnZYSUZiYlZrOHV6N3dhV2hPWmdHZEJZ?=
+ =?utf-8?B?Lzg2V2tKT0xJb3dGbUpjWkY0c1ZSWk4rd250U2NyaWE1eDNneVA3SUYrQ1Fm?=
+ =?utf-8?B?bFEvWVRTRFhXOHpEbDlWamxwUjdZNEs4Y2N0K0VNT21VVTZYbWU4TjErRThv?=
+ =?utf-8?B?eXZYSjJWRUtNL3pOUmxQSFE3QnNiMWhrbGt4QWFjd0NMQWdnKzNUMWdoMTBa?=
+ =?utf-8?B?OVdtV1VyRUcyWHpoZE01d3RBMDZ0Q3QvR0dmUERqblNLMjJXem9kM0d0aGti?=
+ =?utf-8?B?MjBDQlhFc3l1TzNkSHY5RitJSi9nTzhLWnNJYVVZQ2syZmlHREkzVTNTUlJN?=
+ =?utf-8?B?N0VreHk4Sk82MWxJbDdBSC9rZHVCemVzVWlPc2hQa0hnWHNtUEFxNzBQbjYz?=
+ =?utf-8?B?Yk5hbUwza3lMdU5zcE1VdXZwd1EyWjZZOVJRMmtiaEw3MmROT21aejB1R3Ny?=
+ =?utf-8?B?eGN0UUE2S2tUaHZTN3l4QjY3TEdiL0MvZjZwTHhOKzdmUlB4QzQrR3NkNUQ4?=
+ =?utf-8?B?MkNmNVNpQ1ZWeXcrVCszTkFxMERHeFJ4ZC9BMkpJQVd2SUo2b0dkdnRXZE1B?=
+ =?utf-8?B?WmZET0tOMmh4RlZ6WVNNd2NDbm50Smk1N2VQYmRka3FxMmdKUDNaWmNpVCtT?=
+ =?utf-8?B?WGpmTDFwWTdiSVdyaVlFdHZNSXdtNTJQU2preVpDcStzRnkwQ1c1SDFzWUxN?=
+ =?utf-8?B?eU9WdjM5eGxzaWI5em5FK0JVVU1QNkhRWlRoOFlNUG0rbjZ0b0htWklRaHlC?=
+ =?utf-8?B?a1RPV2NqNmxVNVpIUGJGU3BlNWZJblk3M2ljdE9rd2I5UjYxYTJCZ1hockpV?=
+ =?utf-8?B?QTBpUGtMSW1ObVUwc1Z4YlBhOU5UbExUdWZsNXFrekZZcXVnZ3cvazBUOTVn?=
+ =?utf-8?B?RUZKR3pFb0k1djhtTzNyZEsrdDBFQlBWRm1DTmt2N0xuSDRvamE0aEkzSnAw?=
+ =?utf-8?B?RE9MYXdUaytTQnlyUFZQYnJpbG5JYWdya25xc2x4VXhtd1IvdWhPNjU4K21K?=
+ =?utf-8?B?K3gzSFkxb1U0QWxlZzNWemdUWlZnM0lKTmpFdklMMU85bGxEbnJoUVl6M3hN?=
+ =?utf-8?B?U1FMK1FISHpndWYvNWF5bjIvSExOYm44VkZUdWpadUdjYysrOEpIWUhXaEpu?=
+ =?utf-8?B?WUVVZ05CTDBPZ25mQmxiL1FWa3duMnZoazZvT2tocWxsUTNyV3d2bXhhNVpU?=
+ =?utf-8?B?Ukd2c29pczExM0FhR1lNMDJSZm5HYklITFY4VWY4bXJudDlrNUkvTERObWd5?=
+ =?utf-8?B?T0M2dXBKQ0QyWmxVL1QvQ0dHUXYyTkRBVUtRSU1vN01lQ2dkZnE4dFJVbUxx?=
+ =?utf-8?B?YkJhTldHTjNIQmVzeE5IT1ZXdlVQeS9PSmQ1TUdsWkpadlFMYzJQQzJFOUJh?=
+ =?utf-8?B?Z0hCL1VraDYxODQ2aUl4Z0V5VlBmVCtPdUl5UDhDRWRMa3hTcWF0aU5keU9u?=
+ =?utf-8?B?WDdBdi8yMkwyY2pBOFE4Q0p2NDVlOUtabWtuSlNDbFlKT1RYTDEraWhjRnRP?=
+ =?utf-8?Q?zDukMJ80noLikqaGKfR/4nI=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60e8bb29-c400-4451-f820-08d9fbc79131
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR12MB1471.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Mar 2022 21:08:00.5014
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: V5+0BPkIwsjg5hAkFmViivDEtIWoyLgWZgfldXPNlxxZD3JSjgf7gyLmtYlOTEw945nVTu3tAo79CojCj3HjZQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3361
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-So looking at this patch, I really reacted to the fact that quite
-often the "use outside the loop" case is all kinds of just plain
-unnecessary, but _used_ to be a convenience feature.
+On Mon, Feb 28, 2022 at 05:15:45AM +0200, Dāvis Mosāns wrote:
+> ccp_dmaengine_register adds dma_chan->device_node to dma_dev->channels list
+> but ccp_dmaengine_unregister didn't remove them.
+> That can cause crashes in various dmaengine methods that tries to use dma_dev->channels
+> 
+> Signed-off-by: Dāvis Mosāns <davispuh@gmail.com>
 
-I'll just quote the first chunk in it's entirely as an example - not
-because I think this chunk is particularly important, but because it's
-a good example:
+Acked-by: John Allen <john.allen@amd.com>
 
-On Mon, Feb 28, 2022 at 3:09 AM Jakob Koschel <jakobkoschel@gmail.com> wrote:
->
-> diff --git a/arch/arm/mach-mmp/sram.c b/arch/arm/mach-mmp/sram.c
-> index 6794e2db1ad5..fc47c107059b 100644
-> --- a/arch/arm/mach-mmp/sram.c
-> +++ b/arch/arm/mach-mmp/sram.c
-> @@ -39,19 +39,22 @@ static LIST_HEAD(sram_bank_list);
->  struct gen_pool *sram_get_gpool(char *pool_name)
+> ---
+>  drivers/crypto/ccp/ccp-dmaengine.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/crypto/ccp/ccp-dmaengine.c b/drivers/crypto/ccp/ccp-dmaengine.c
+> index d718db224be42..7d4b4ad1db1f3 100644
+> --- a/drivers/crypto/ccp/ccp-dmaengine.c
+> +++ b/drivers/crypto/ccp/ccp-dmaengine.c
+> @@ -632,6 +632,20 @@ static int ccp_terminate_all(struct dma_chan *dma_chan)
+>  	return 0;
+>  }
+>  
+> +static void ccp_dma_release(struct ccp_device *ccp)
+> +{
+> +	struct ccp_dma_chan *chan;
+> +	struct dma_chan *dma_chan;
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < ccp->cmd_q_count; i++) {
+> +		chan = ccp->ccp_dma_chan + i;
+> +		dma_chan = &chan->dma_chan;
+> +		tasklet_kill(&chan->cleanup_tasklet);
+> +		list_del_rcu(&dma_chan->device_node);
+> +	}
+> +}
+> +
+>  int ccp_dmaengine_register(struct ccp_device *ccp)
 >  {
->         struct sram_bank_info *info = NULL;
-> +       struct sram_bank_info *tmp;
->
->         if (!pool_name)
->                 return NULL;
->
->         mutex_lock(&sram_lock);
->
-> -       list_for_each_entry(info, &sram_bank_list, node)
-> -               if (!strcmp(pool_name, info->pool_name))
-> +       list_for_each_entry(tmp, &sram_bank_list, node)
-> +               if (!strcmp(pool_name, tmp->pool_name)) {
-> +                       info = tmp;
->                         break;
-> +               }
->
->         mutex_unlock(&sram_lock);
->
-> -       if (&info->node == &sram_bank_list)
-> +       if (!info)
->                 return NULL;
->
->         return info->gpool;
-
-I realize this was probably at least auto-generated with coccinelle,
-but maybe that script could be taught to do avoid the "use after loop"
-by simply moving the code _into_ the loop.
-
-IOW, this all would be cleaner and clear written as
-
-        if (!pool_name)
-                return NULL;
-
-        mutex_lock(&sram_lock);
-        list_for_each_entry(info, &sram_bank_list, node) {
-                if (!strcmp(pool_name, info->pool_name)) {
-                        mutex_unlock(&sram_lock);
-                        return info;
-                }
-        }
-        mutex_unlock(&sram_lock);
-        return NULL;
-
-Ta-daa - no use outside the loop, no need for new variables, just a
-simple "just do it inside the loop". Yes, we end up having that lock
-thing twice, but it looks worth it from a "make the code obvious"
-standpoint.
-
-Would it be even cleaner if the locking was done in the caller, and
-the loop was some simple helper function? It probably would. But that
-would require a bit more smarts than probably a simple coccinelle
-script would do.
-
-                Linus
+>  	struct ccp_dma_chan *chan;
+> @@ -736,6 +750,7 @@ int ccp_dmaengine_register(struct ccp_device *ccp)
+>  	return 0;
+>  
+>  err_reg:
+> +	ccp_dma_release(ccp);
+>  	kmem_cache_destroy(ccp->dma_desc_cache);
+>  
+>  err_cache:
+> @@ -752,6 +767,7 @@ void ccp_dmaengine_unregister(struct ccp_device *ccp)
+>  		return;
+>  
+>  	dma_async_device_unregister(dma_dev);
+> +	ccp_dma_release(ccp);
+>  
+>  	kmem_cache_destroy(ccp->dma_desc_cache);
+>  	kmem_cache_destroy(ccp->dma_cmd_cache);
+> -- 
+> 2.35.1
+> 

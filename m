@@ -2,195 +2,153 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 505014C99A3
-	for <lists+dmaengine@lfdr.de>; Wed,  2 Mar 2022 01:02:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 920BE4C9C07
+	for <lists+dmaengine@lfdr.de>; Wed,  2 Mar 2022 04:22:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230164AbiCBADS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 1 Mar 2022 19:03:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53030 "EHLO
+        id S239324AbiCBDWy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 1 Mar 2022 22:22:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236698AbiCBADQ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 1 Mar 2022 19:03:16 -0500
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3B666267
-        for <dmaengine@vger.kernel.org>; Tue,  1 Mar 2022 16:02:34 -0800 (PST)
-Received: by mail-ed1-x531.google.com with SMTP id g20so39362edw.6
-        for <dmaengine@vger.kernel.org>; Tue, 01 Mar 2022 16:02:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4H0hy1V+vsSL/J4iRHU98fs6Ghx9E/bawvPg5OjXQmQ=;
-        b=A1xSV6w+mnGI8KddmZFT+SVp47UhRqZlj7dZE7Ue1BgWjGw2+QCc51Zb6PIPvKiXuh
-         /TGd1P3o63R0kiFyLwVU+kzDBf6Kt9wFSZwwJYnrWAqavu9szp3nfmKm0Qe68N3l8Mdl
-         bWvesgtwBf4BWRSm4aUiCmj0pmAaHYwmzAjUs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4H0hy1V+vsSL/J4iRHU98fs6Ghx9E/bawvPg5OjXQmQ=;
-        b=yTif4ZTxBeIV1kwdOOAmt65T1L0iuUJ5VMgAmdLMYol2xPg+w3p54BjIDtVjRmj1HD
-         Z2fGDSLdArf9kfq0lsgNtinkSb2Q/5J6v6dQs3vCGNzi0Kdlz9aNbdHezFEiHQC/wbjn
-         CihKvO1prxt4RGxkkjArq1mj4F2P+XQoMrBAuSRz7Bp+uYPZJwtkTmslcn9+5xqtUFaW
-         fF6m03E7sqgAgktfg5gWLFAT1UG1cL/cjI8TJQZl3aqJinkShTF94dWy1UUpJq/ANy9L
-         fVr8gCCNka69iRa/QlF3XvLeMNNUDAsvdo87arjEW4rvNwFSCitYGenSWE9MA7luKREE
-         ydJw==
-X-Gm-Message-State: AOAM5319ILSZ6CIiSOkurdl9dFLymgClpkhRWsV9ZOsFlvRZuQEIvG7+
-        0BiBe/FPE+jryhKeFDzHzlWVU4FSMjaVz1L+TwQ=
-X-Google-Smtp-Source: ABdhPJzrq2mmoPPJeX2KuvJDI3XhZMQC7rg3AXyqOKcOnsX9oa/Q6TkPkTlCYz83Q61wfMorH6WQjA==
-X-Received: by 2002:a50:d496:0:b0:413:2cf1:efb6 with SMTP id s22-20020a50d496000000b004132cf1efb6mr26841663edi.150.1646179353152;
-        Tue, 01 Mar 2022 16:02:33 -0800 (PST)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com. [209.85.221.45])
-        by smtp.gmail.com with ESMTPSA id fy1-20020a1709069f0100b006d229ed7f30sm5916822ejc.39.2022.03.01.16.02.32
-        for <dmaengine@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Mar 2022 16:02:32 -0800 (PST)
-Received: by mail-wr1-f45.google.com with SMTP id d3so170338wrf.1
-        for <dmaengine@vger.kernel.org>; Tue, 01 Mar 2022 16:02:32 -0800 (PST)
-X-Received: by 2002:a05:6512:3042:b0:437:96f5:e68a with SMTP id
- b2-20020a056512304200b0043796f5e68amr17643498lfb.449.1646178958685; Tue, 01
- Mar 2022 15:55:58 -0800 (PST)
+        with ESMTP id S239261AbiCBDWv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 1 Mar 2022 22:22:51 -0500
+Received: from APC01-HK2-obe.outbound.protection.outlook.com (mail-eopbgr1300117.outbound.protection.outlook.com [40.107.130.117])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22FE8B0A75;
+        Tue,  1 Mar 2022 19:22:08 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JWAzgBfCAhE/doZQ8AAgLY5EMCmfSWz8QXnZlofXML/RzvYleh25SbuHd5EDxMayJtnILciXlNDZSEr5DPJw8I7LLOyUvtYBNevA8ar1xZAla6coeJn/nMEON6PnJiCXgaoxBxCMpxhKIhkN1RNsSMeQmh4xF+C2sqV7z1dTZQ4trJY0JPg7E07LHL2KsZ6hVar3v76WCi50sXNC7joHW6antnlRtLZsu1zFZn+LTdt9UPPrhGXJCPZz2kXn4hLuViESucQ78PQGiiLNgsuh2VXRrQosoHJGLI2iEKFOmgkfPhs5OahozTO/8KrSlNdbxJlS6Ka15frUU1/GS+ywtQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TW382J2mvADOQNHnGf/agml1Kz2kk2lFAG4v1eZRulQ=;
+ b=B3KUS07uFQnAC5YzR5tvm4rRNC1q5Nr6hwWOy4DQG/CTun9sOmVJyBamCGrJHl/Rv8z1NyZF0dP5umUWeAvOVsLSVjyp7USSkqMimzzLrWd45Ffyx22J6PIcjCR95XqD22Q/XsdPfL9/ayDdpvghCoj51WUGXd9hFPdqRQ/okyMTIYWHdsBN1rfLbQPVxy/jgU0CjFZlofcqY3b/H3cwgNF3pmqzzIjSLTL2CJy9ldtlaJipLJugnuKjxrGEltTKCbV3hqqsdO6GUPbKA/JYLf8nNsJKrLeqRfvjr2hCKSEDf6tPlUaoGLadW2H0NIOKtbqAqa92F+VnF1WsaaPXww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo0.onmicrosoft.com;
+ s=selector2-vivo0-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TW382J2mvADOQNHnGf/agml1Kz2kk2lFAG4v1eZRulQ=;
+ b=CjlhELw0MtJdIAcl1+DXJKLtNr+h+hUAsANb5vi0oq/dFLUJQwjS+KbsBZQna0ajpeX9+nHVF078DpTlDuTH3UoBGP+lUvo3nJjNA1XbLlJ1X3mTR9KZRqOEskiriELtKr/ApbrbLNzuwRAQJv/+xYOrYucdw+O8Fl+xikG3Bic=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from TYZPR06MB4173.apcprd06.prod.outlook.com (2603:1096:400:26::14)
+ by SG2PR06MB2924.apcprd06.prod.outlook.com (2603:1096:4:57::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.26; Wed, 2 Mar
+ 2022 03:21:59 +0000
+Received: from TYZPR06MB4173.apcprd06.prod.outlook.com
+ ([fe80::30ce:609e:c8e8:8a06]) by TYZPR06MB4173.apcprd06.prod.outlook.com
+ ([fe80::30ce:609e:c8e8:8a06%4]) with mapi id 15.20.5038.014; Wed, 2 Mar 2022
+ 03:21:59 +0000
+From:   Yihao Han <hanyihao@vivo.com>
+To:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kernel@vivo.com, Yihao Han <hanyihao@vivo.com>
+Subject: [PATCH] dmaengine: sf-pdma: fix platform_get_irq.cocci warning
+Date:   Tue,  1 Mar 2022 19:21:39 -0800
+Message-Id: <20220302032139.5416-1-hanyihao@vivo.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: HK0PR03CA0115.apcprd03.prod.outlook.com
+ (2603:1096:203:b0::31) To TYZPR06MB4173.apcprd06.prod.outlook.com
+ (2603:1096:400:26::14)
 MIME-Version: 1.0
-References: <20220228110822.491923-1-jakobkoschel@gmail.com>
- <20220228110822.491923-3-jakobkoschel@gmail.com> <2e4e95d6-f6c9-a188-e1cd-b1eae465562a@amd.com>
- <CAHk-=wgQps58DPEOe4y5cTh5oE9EdNTWRLXzgMiETc+mFX7jzw@mail.gmail.com>
- <282f0f8d-f491-26fc-6ae0-604b367a5a1a@amd.com> <b2d20961dbb7533f380827a7fcc313ff849875c1.camel@HansenPartnership.com>
- <7D0C2A5D-500E-4F38-AD0C-A76E132A390E@kernel.org> <73fa82a20910c06784be2352a655acc59e9942ea.camel@HansenPartnership.com>
- <CAHk-=wiT5HX6Kp0Qv4ZYK_rkq9t5fZ5zZ7vzvi6pub9kgp=72g@mail.gmail.com>
- <7dc860874d434d2288f36730d8ea3312@AcuMS.aculab.com> <CAHk-=whKqg89zu4T95+ctY-hocR6kDArpo2qO14-kV40Ga7ufw@mail.gmail.com>
- <0ced2b155b984882b39e895f0211037c@AcuMS.aculab.com>
-In-Reply-To: <0ced2b155b984882b39e895f0211037c@AcuMS.aculab.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 1 Mar 2022 15:55:42 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wix0HLCBs5sxAeW3uckg0YncXbTjMsE-Tv8WzmkOgLAXQ@mail.gmail.com>
-Message-ID: <CAHk-=wix0HLCBs5sxAeW3uckg0YncXbTjMsE-Tv8WzmkOgLAXQ@mail.gmail.com>
-Subject: Re: [PATCH 2/6] treewide: remove using list iterator after loop body
- as a ptr
-To:     David Laight <David.Laight@aculab.com>
-Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        KVM list <kvm@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Cristiano Giuffrida <c.giuffrida@vu.nl>,
-        "Bos, H.J." <h.j.bos@vu.nl>,
-        "linux1394-devel@lists.sourceforge.net" 
-        <linux1394-devel@lists.sourceforge.net>,
-        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        "linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "kgdb-bugreport@lists.sourceforge.net" 
-        <kgdb-bugreport@lists.sourceforge.net>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergman <arnd@arndb.de>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        Brian Johannesmeyer <bjohannesmeyer@gmail.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        dma <dmaengine@vger.kernel.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Jakob Koschel <jakobkoschel@gmail.com>,
-        "v9fs-developer@lists.sourceforge.net" 
-        <v9fs-developer@lists.sourceforge.net>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux F2FS Dev Mailing List 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Mike Rapoport <rppt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b19c6a6e-4540-47a1-ce66-08d9fbfbcfb5
+X-MS-TrafficTypeDiagnostic: SG2PR06MB2924:EE_
+X-Microsoft-Antispam-PRVS: <SG2PR06MB29243CA9BD9484887C0507EEA2039@SG2PR06MB2924.apcprd06.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4oVuoutoxC6VxVsy5ytcDf9078o8UzerDfmcdf7n7qp87JLQvP72k49oLnlngDjkgRsdqOTq4bnfDsj4Okv2JGMxnkttKTTUJsGpM2S04F148RwH9CIOP3qhSH7/TQwAWYqqiKiNjyge02KxunDakSjBhDuwztIzafoKghRneQc3FJCT9ziAqTIhiDjtsBULRqkxpXfYa0lnGs9SOSOAejzK9HbyrmMz4Tpb7hX19t2ATrYUOJmk/BQW7JULm/UCoh+RID97HwGMXriciJOPjIsICLsC8Q8le5/JTJa7Myx4UFvtMh7L1eWboaNK3UGLvzNIynXFPiPxIB5auSU2LE6fUFLMJJEDLGtJOVWF25izTRDPo0vw990aKuoYnyKI0AayBJUFAS+aeQ3l9FMLHOWadMxfnbqbvt6Fii+eLcvnGbvWZMjHM7VOplrBI26GMaOAQjM04utKwN9QJ0oY6URPszR/rO0sq5RpAY3RGovSToEofMfQBiXMdbuahdxkDZ6HvVwXqCLs0EaR3Q7ToOFOukYXOcJ12PT3F7KCZfqkhFL1UYAZFCrIWzYYwUE0ksGSR0fPwC7FMbEUchZHE7dU+Xl69GS6GVvSjusblfH44+iZ3fOe3OuchFu7rw56nvEYntH3WlCqOZBfkHayL5u2EILyrNjOPcSpmna7+dGx3M7cz5OpXFg21x6K7g5ug6R4ap5U9SIJe5Ikj/Q1hA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB4173.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(2616005)(186003)(86362001)(38350700002)(8676002)(6486002)(26005)(508600001)(38100700002)(66476007)(66556008)(1076003)(36756003)(6512007)(316002)(8936002)(107886003)(6506007)(52116002)(6666004)(83380400001)(110136005)(4326008)(2906002)(5660300002)(66946007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?caaLdbe7O0g/QgZ3zsqBpqR53sV2En7NOL3cktDxhRxIRiDsOghMeeR450jM?=
+ =?us-ascii?Q?EaSEGlyR5zwhVB7c/BeOrL49QoFqNsEQlMYhBasIPDWOF94+7XxIgAWLEk7K?=
+ =?us-ascii?Q?1P5lXuLLVjyjN3Po6CJgQcBfbBfazjfClFU5jRvlZKE78F3rv7I7Ng8Km1yQ?=
+ =?us-ascii?Q?oZyNxpeFoeR9Zxe0OhbcsLJE+p3eh1UXwM6PCI4pKqOSibTuQLSMYeBGTMqi?=
+ =?us-ascii?Q?Kezqj4apCzmitlFcTdpwI9XZqSYTQA+zUQns0C7CreBZZT29EtVYOB/4g248?=
+ =?us-ascii?Q?Ncu6i+XOOe38mmR/hjHHnd3LJmKdYbY/Ndf7NRkJl2SGLVsGkDN7GoowdgNA?=
+ =?us-ascii?Q?XQXtaq+MjW3CmrM2ZvSDHFIpxnzAoyFExs+IDzYrHdpBU1nw966oNN+cnbB3?=
+ =?us-ascii?Q?g3XE7RPnsJXLJ1GOnWr9E3MDEManSGjxCmJSDkSCOKB2EYB+tRxQkNv8sDDH?=
+ =?us-ascii?Q?rQIv/eF/s6JFhgWb/+6EAWT1/o8yZjF0VUk8pJflb9DtE34ieqaRNm8moiQ1?=
+ =?us-ascii?Q?neZJKEvcya1yd7CHIWy1SexDMBv2CAeL5O7gzNVaO2t8nyEkIeXtDZT+T2rx?=
+ =?us-ascii?Q?WrYt2mtDlB9GbIpgXRl1VrbfMe1tDYdzR3QEWb/BrfIjOJ1rEuAdPDIULFJG?=
+ =?us-ascii?Q?jjowNQbmAbPikX4VBcL7g2wQibjhsTdXHe9AwkVRSCmn6/XOCwDcmQLEvmwO?=
+ =?us-ascii?Q?FZk/nHDiOl691mP7+nFXlrRHhm1cWuXltA6pUq9g495aRfuVg5Hjacu1uhd1?=
+ =?us-ascii?Q?E16iK/WcNXymUz8K5fz/6GAfhjL+XYpOl54/CLrflR0gZ8mdWQYboFRAmwgH?=
+ =?us-ascii?Q?7VdTPVJiLndeybcXEIXil8Ea6qOOTxHPbPmmM8fJoEYqmnnDIlfgs0+EuQHZ?=
+ =?us-ascii?Q?aKsI3tBWfdw4Le3H8eIOVlx/K6kvOKS4+J1jtEXKhrAWn6nYi5R/HggRBjwQ?=
+ =?us-ascii?Q?hH4er4lv1Y5g4Mc9td2+U9ShkycGhyIUrb12pFb1cPAFtbwP7aBhFlq3C8dd?=
+ =?us-ascii?Q?avs7cAX35sIAHG2B3Lo8vwLdYUxhEmfbx3nbylHl6CB/3lRAwAimCIrJ/GwE?=
+ =?us-ascii?Q?iFhU+6qqk44GkfJrXGHABSFmRY4vBdmHgfrymm4U9nKBK8Er2lZVPJ+aB23A?=
+ =?us-ascii?Q?bzu6NIkoTcrDClnKCl4z32EQ0fwnfCEkxgdFtJUt0D/9CQM/yXfp6nNc1KCN?=
+ =?us-ascii?Q?OHOVV973jhNCbIq98Q/ls9WBn2KADScKVYylHoIXyb3t0hY36EuiGYuwE7bv?=
+ =?us-ascii?Q?xvx39ZWXLv6NeLGbJSx3sWiRKLeSBW0Dntgm0+D0e+yimuXwRYEfTPhtWWu/?=
+ =?us-ascii?Q?x3EF29FC64v82kmpcE4bUQmVFNtqKr3J/mpsqoYWtHVBipNw3TvORkTmCMha?=
+ =?us-ascii?Q?iAkBOrKUHTAazblIW1Q80G94IxGqp5Ckmspy0R4HcWIzYqTL48TkIfvYMfM4?=
+ =?us-ascii?Q?vdIVU0UcP5BqQdaJE8qDIWqdyKPNE/CL6OHJrrVkuv3tDcy/DMAGjFzmpK17?=
+ =?us-ascii?Q?9ZQmXtr08SYlPobBiyecppljmmdx6lVqXWfaNiOQmx01vn5hJ5HEDYWrHq+l?=
+ =?us-ascii?Q?By7iY33FGGMr5Tg4gwHPemeaNHfLc5BKO+pFTlop+Oq/ZlhXhF+7oz0HWWRt?=
+ =?us-ascii?Q?o+MblT6GTfWgR7PBeNbVUY8=3D?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b19c6a6e-4540-47a1-ce66-08d9fbfbcfb5
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB4173.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2022 03:21:59.1827
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ek647+J7elNidzpjLol2dZoAXof43S/ObjFikd4x247FHMSn1JHWIjQV/VfvqpczXLmiLuNXu3R8DNkGIAUT4g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR06MB2924
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Mar 1, 2022 at 3:19 PM David Laight <David.Laight@aculab.com> wrote:
->
-> Having said that there are so few users of list_entry_is_head()
-> it is reasonable to generate two new names.
+Remove dev_err() messages after platform_get_irq*() failures.
+platform_get_irq() already prints an error.
 
-Well, the problem is that the users of list_entry_is_head() may be few
-- but there are a number of _other_ ways to check "was that the HEAD
-pointer", and not all of them are necessarily correct.
+Generated by: scripts/coccinelle/api/platform_get_irq.cocci
 
-IOW, different places do different random tests for "did we walk the
-whole loop without breaking out". And many of them happen to work. In
-fact, in practice, pretty much *all* of them happen to work, and you
-have to have the right struct layout and really really bad luck to hit
-a case of "type confusion ended up causing the test to not work".
+Signed-off-by: Yihao Han <hanyihao@vivo.com>
+---
+ drivers/dma/sf-pdma/sf-pdma.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-And *THAT* is the problem here. It's not the "there are 25ish places
-that current use list_entry_is_head()".
+diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+index f12606aeff87..c2e40849f2aa 100644
+--- a/drivers/dma/sf-pdma/sf-pdma.c
++++ b/drivers/dma/sf-pdma/sf-pdma.c
+@@ -389,10 +389,8 @@ static int sf_pdma_irq_init(struct platform_device *pdev, struct sf_pdma *pdma)
+ 		chan = &pdma->chans[i];
+ 
+ 		irq = platform_get_irq(pdev, i * 2);
+-		if (irq < 0) {
+-			dev_err(&pdev->dev, "ch(%d) Can't get done irq.\n", i);
++		if (irq < 0)
+ 			return -EINVAL;
+-		}
+ 
+ 		r = devm_request_irq(&pdev->dev, irq, sf_pdma_done_isr, 0,
+ 				     dev_name(&pdev->dev), (void *)chan);
+@@ -404,10 +402,8 @@ static int sf_pdma_irq_init(struct platform_device *pdev, struct sf_pdma *pdma)
+ 		chan->txirq = irq;
+ 
+ 		irq = platform_get_irq(pdev, (i * 2) + 1);
+-		if (irq < 0) {
+-			dev_err(&pdev->dev, "ch(%d) Can't get err irq.\n", i);
++		if (irq < 0)
+ 			return -EINVAL;
+-		}
+ 
+ 		r = devm_request_irq(&pdev->dev, irq, sf_pdma_err_isr, 0,
+ 				     dev_name(&pdev->dev), (void *)chan);
+-- 
+2.17.1
 
-It's the "there are ~480 places that use the type-confused HEAD entry
-that has been cast to the wrong type".
-
-And THAT is why I think we'd be better off with that bigger change
-that simply means that you can't use the iterator variable at all
-outside the loop, and try to make it something where the compiler can
-help catch mis-uses.
-
-Now, making the list_for_each_entry() thing force the iterator to NULL
-at the end of the loop does fix the problem. The issue I have with it
-is really just that you end up getting no warning at all from the
-compiler if you mix old-style and new-style semantics. Now, you *will*
-get an oops (if using a new-style iterator with an old-style check),
-but many of these things will be in odd driver code and may happen
-only for error cases.
-
-And if you use a new-style check with an old-style iterator (ie some
-backport problem), you will probably end up getting random memory
-corruption, because you'll decide "it's not a HEAD entry", and then
-you'll actually *use* the HEAD that has the wrong type cast associated
-with it.
-
-See what my worry is?
-
-With the "don't use iterator outside the loop" approach, the exact
-same code works in both the old world order and the new world order,
-and you don't have the semantic confusion. And *if* you try to use the
-iterator outside the loop, you'll _mostly_ (*) get a compiler warning
-about it not being initialized.
-
-             Linus
-
-(*) Unless somebody initializes the iterator pointer pointlessly.
-Which clearly does happen. Thus the "mostly". It's not perfect, and
-that's most definitely not nice - but it should at least hopefully
-make it that much harder to mess up.

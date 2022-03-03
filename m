@@ -2,125 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0C4B4CB4E5
-	for <lists+dmaengine@lfdr.de>; Thu,  3 Mar 2022 03:28:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA2054CB51C
+	for <lists+dmaengine@lfdr.de>; Thu,  3 Mar 2022 03:52:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231765AbiCCC2j (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 2 Mar 2022 21:28:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41870 "EHLO
+        id S231786AbiCCCoe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 2 Mar 2022 21:44:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231743AbiCCC2i (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 2 Mar 2022 21:28:38 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B340D10FC6;
-        Wed,  2 Mar 2022 18:27:53 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id p3-20020a17090a680300b001bbfb9d760eso6464723pjj.2;
-        Wed, 02 Mar 2022 18:27:53 -0800 (PST)
+        with ESMTP id S231775AbiCCCoe (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 2 Mar 2022 21:44:34 -0500
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D4EF50070;
+        Wed,  2 Mar 2022 18:43:50 -0800 (PST)
+Received: by mail-wm1-x329.google.com with SMTP id 19so2046020wmy.3;
+        Wed, 02 Mar 2022 18:43:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=C6016/38QKZUQAyk5HMPjenTvm42Pe8sPBzTcqL5vmY=;
-        b=qBGtve+IuFrAkJa+gsN1WQjHRs2fvQkSK1D44BenBKAqsyswWIPF49CjeAw6Lc/Xiz
-         7VY9uX10GWOeYOq3Roffx9lK59MGCnSnWmLkHD6Zz3XGADMqQbIXFAspvzlfyt7tl87F
-         C44YITS/y0gKUKqqxM42VKL4jH/Xx4KasojD++jZOWXtcwkx1m//DlSoFwhQEbp4i/NS
-         eGEaCL2abI9d2Qo/vgVE47lljuFHl9RIsYb9haWI9DYl1+oIMHXMK3O9uyeK26H4D1AX
-         Jy4saNgfSyFkb5FP8pbKE6ds3BSqIpGBCoZu+qijzq/vfSl1dGYXTnehjmH9/ySByi+z
-         BIOg==
+        h=from:to:cc:subject:date:message-id;
+        bh=X4lL1PvOagfTI9D2Cq0N1Z99LjMee5r39OHywdd0uu8=;
+        b=Qw9e3RXwingIRwGEOQG1r7xPywiwHiyTC2+iiblBghPVdrEE6vs1HXQ4OVuavFolk9
+         hw33KZbgyJo+G1wgw46v2VhQzteuHiXcnS9PJ/gPUe3oigd9DTKS1fx8PXpE+opGQ3NB
+         xryT5B6EjLgCNBiRIbN30YmQpMJR+G38zxaHd7PKRSWi3pKEk7dL+mjiTpWET2P6F+G+
+         JmFksjC48cfv22Ap1DjX7ED4xq8nrRS7o1Pq5pda0H3/baQ+Wq6w3ASxWA1imAe4hsGu
+         7meFP3SDA0ea1RvurF6flgsVV1mHVIUm1ejivgQ9zNHiK4NO9mSrLcP8CIeMn36cZyk8
+         +Zng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=C6016/38QKZUQAyk5HMPjenTvm42Pe8sPBzTcqL5vmY=;
-        b=CzJtZPcuhcWcftaDgdBMfTH8+c9EoS3XmQ505LWS57kdN7/Y7hxiGiFhGCtkVhWR4n
-         9QiYMg9DgjK+2U+OgCUW8Ihc/Zsz1tArsI+VPvsbHeizYXBDN8PT/Evowom4DSVx5ZKW
-         SbKPrObrC5eMgExacIP+ZPEND4qx5Us+NJQ0WRDXPRpYk5m/o2sqMuwebEko7dN7/HEk
-         eAq5ky/UWz0+SWqk5EOcM1gkci5Yts4Pn4Ct+p/tQQvAT2EONElmTfre57WvwdfOJKPi
-         0JSo3Tr1FuDqKJWi6MM1A+v0Yqa4E2WoDAES5x9cgi/rm9pPbPuEvHVBoD12sn5e/d+j
-         6agg==
-X-Gm-Message-State: AOAM531YwoKciGKl5/xB3iguH9sB6KyY7W/Y8igN4n9GDfpUTuo8ZSvU
-        LuwF03lr62QEMLGgZKYD3hLDUsWYyg5BSQ==
-X-Google-Smtp-Source: ABdhPJwdGKGtPoJbq9KB0b78P8kOQOqlHazHAUCZQHvA6TzNHcldJErwW75BUHOqmaVxrll88UvLqQ==
-X-Received: by 2002:a17:902:ec90:b0:151:a632:7ebb with SMTP id x16-20020a170902ec9000b00151a6327ebbmr1936164plg.154.1646274473191;
-        Wed, 02 Mar 2022 18:27:53 -0800 (PST)
-Received: from ubuntu.huawei.com ([119.3.119.19])
-        by smtp.googlemail.com with ESMTPSA id d15-20020a17090ab30f00b001b8e65326b3sm359822pjr.9.2022.03.02.18.27.34
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=X4lL1PvOagfTI9D2Cq0N1Z99LjMee5r39OHywdd0uu8=;
+        b=Rv36eQ0cMf9uvnBuOvzmbLUZiZjN8suH4CbtNMKm0QaPpijE0aMobx9SkB0FbYCGrA
+         6iXs9uAAQYh499BZvXr7UayVCpdCpMrBfmDgkqNOiFbCSxPTCx4metocKh1Xv1jRhLop
+         aW3CDRLhsQJM3wqQ/oQ622e2BnxH3YC4aH74tsjOFbhE/QeH4CMpBJafySN6fVtpY+pX
+         CrHUajZQP27J70s/ewLU1JFj2kK72b6HGSSAowUYflrx2cWv5uLgdYTwx4mo8rTx9L0f
+         gMZ2o7wp1eAVPBYz5hCWuAK2HiPf5tf7IyRgcPTW6rw/54T1lr/sEfhpfTyq/JHjZ0Fz
+         mDvw==
+X-Gm-Message-State: AOAM533TOoOvdK4hLTD8oAI7Y68G08EsI3Y/cObSA2sNPm3RT/bnWeRa
+        zgcNIqZhnZVctg2MpRh+CnY=
+X-Google-Smtp-Source: ABdhPJxoj+S2W0yqu83WsZhNy6k07kS+Sq8CCCc5eOJevVcQneDb1UEN4cL4PZw8yE5BR8c4sdxIbQ==
+X-Received: by 2002:a05:600c:4182:b0:381:42:ac91 with SMTP id p2-20020a05600c418200b003810042ac91mr2055013wmh.116.1646275428817;
+        Wed, 02 Mar 2022 18:43:48 -0800 (PST)
+Received: from localhost.localdomain ([64.64.123.48])
+        by smtp.gmail.com with ESMTPSA id f22-20020a1cc916000000b00380d3e49e89sm649222wmb.22.2022.03.02.18.43.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Mar 2022 18:27:52 -0800 (PST)
-From:   Xiaomeng Tong <xiam0nd.tong@gmail.com>
-To:     david.laight@aculab.com
-Cc:     akpm@linux-foundation.org, alsa-devel@alsa-project.org,
-        amd-gfx@lists.freedesktop.org, andriy.shevchenko@linux.intel.com,
-        arnd@arndb.de, bcm-kernel-feedback-list@broadcom.com,
-        bjohannesmeyer@gmail.com, c.giuffrida@vu.nl,
-        christian.koenig@amd.com, christophe.jaillet@wanadoo.fr,
-        dan.carpenter@oracle.com, dmaengine@vger.kernel.org,
-        drbd-dev@lists.linbit.com, dri-devel@lists.freedesktop.org,
-        gustavo@embeddedor.com, h.j.bos@vu.nl,
-        intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
-        jakobkoschel@gmail.com, jgg@ziepe.ca, keescook@chromium.org,
-        kgdb-bugreport@lists.sourceforge.net, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-block@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-sgx@vger.kernel.org, linux-staging@lists.linux.dev,
-        linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org,
-        linux1394-devel@lists.sourceforge.net, linux@rasmusvillemoes.dk,
-        linuxppc-dev@lists.ozlabs.org, nathan@kernel.org,
-        netdev@vger.kernel.org, nouveau@lists.freedesktop.org,
-        rppt@kernel.org, samba-technical@lists.samba.org,
-        tglx@linutronix.de, tipc-discussion@lists.sourceforge.net,
-        torvalds@linux-foundation.org,
-        v9fs-developer@lists.sourceforge.net, xiam0nd.tong@gmail.com
-Subject: RE: [PATCH 2/6] treewide: remove using list iterator after loop body as a ptr
-Date:   Thu,  3 Mar 2022 10:27:29 +0800
-Message-Id: <20220303022729.9321-1-xiam0nd.tong@gmail.com>
+        Wed, 02 Mar 2022 18:43:48 -0800 (PST)
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+To:     vkoul@kernel.org, michal.simek@xilinx.com,
+        m.tretter@pengutronix.de, yukuai3@huawei.com, lars@metafoo.de,
+        libaokun1@huawei.com
+Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [PATCH] dma: xilinx: check the return value of dma_set_mask() in zynqmp_dma_probe()
+Date:   Wed,  2 Mar 2022 18:43:34 -0800
+Message-Id: <20220303024334.813-1-baijiaju1990@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <1077f17e50d34dc2bbfdf4e52a1cb2fd@AcuMS.aculab.com>
-References: <1077f17e50d34dc2bbfdf4e52a1cb2fd@AcuMS.aculab.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, 2 Mar 2022 14:04:06 +0000, David Laight
-<David.Laight@ACULAB.COM> wrote:
-> I think that it would be better to make any alternate loop macro
-> just set the variable to NULL on the loop exit.
-> That is easier to code for and the compiler might be persuaded to
-> not redo the test.
+The function dma_set_mask() in zynqmp_dma_probe() can fail, so its
+return value should be checked.
 
-No, that would lead to a NULL dereference.
+Fixes: b0cc417c1637 ("dmaengine: Add Xilinx zynqmp dma engine driver support")
+Reported-by: TOTE Robot <oslab@tsinghua.edu.cn>
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+---
+ drivers/dma/xilinx/zynqmp_dma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-The problem is the mis-use of iterator outside the loop on exit, and
-the iterator will be the HEAD's container_of pointer which pointers
-to a type-confused struct. Sidenote: The *mis-use* here refers to
-mistakely access to other members of the struct, instead of the
-list_head member which acutally is the valid HEAD.
+diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
+index 7aa63b652027..963fb1de93af 100644
+--- a/drivers/dma/xilinx/zynqmp_dma.c
++++ b/drivers/dma/xilinx/zynqmp_dma.c
+@@ -1050,7 +1050,8 @@ static int zynqmp_dma_probe(struct platform_device *pdev)
+ 	zdev->dev = &pdev->dev;
+ 	INIT_LIST_HEAD(&zdev->common.channels);
+ 
+-	dma_set_mask(&pdev->dev, DMA_BIT_MASK(44));
++	if (dma_set_mask(&pdev->dev, DMA_BIT_MASK(44)))
++		return -EIO;
+ 	dma_cap_set(DMA_MEMCPY, zdev->common.cap_mask);
+ 
+ 	p = &zdev->common;
+-- 
+2.17.1
 
-IOW, you would dereference a (NULL + offset_of_member) address here.
-
-Please remind me if i missed something, thanks.
-
-> OTOH there may be alternative definitions that can be used to get
-> the compiler (or other compiler-like tools) to detect broken code.
-> Even if the definition can't possibly generate a working kerrnel.
-
-The "list_for_each_entry_inside(pos, type, head, member)" way makes
-the iterator invisiable outside the loop, and would be catched by
-compiler if use-after-loop things happened.
-
-Can you share your "alternative definitions" details? thanks!
-
---
-Xiaomeng Tong

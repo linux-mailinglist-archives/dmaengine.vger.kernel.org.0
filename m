@@ -2,108 +2,113 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 897B64CD209
-	for <lists+dmaengine@lfdr.de>; Fri,  4 Mar 2022 11:07:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 255284CDF83
+	for <lists+dmaengine@lfdr.de>; Fri,  4 Mar 2022 22:10:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230013AbiCDKIP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 4 Mar 2022 05:08:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46174 "EHLO
+        id S229692AbiCDVDr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 4 Mar 2022 16:03:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239496AbiCDKH7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 4 Mar 2022 05:07:59 -0500
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E11719F457
-        for <dmaengine@vger.kernel.org>; Fri,  4 Mar 2022 02:07:10 -0800 (PST)
-Received: by mail-lf1-x12c.google.com with SMTP id g39so13255006lfv.10
-        for <dmaengine@vger.kernel.org>; Fri, 04 Mar 2022 02:07:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9N/+0wL229i7Cr0s0i/SfdtJ37Scr7qSFfPXGXOJAb8=;
-        b=B/YZnZmXk+cPE+SLnVMTvL+U2S/CtlbWn/U739600NjbYOgcXAxG8WCU2yRBjisfuC
-         +frjfu2rY/SnANWK1dLGAs/0z1xu7B6DMA4m1YJIPk6A5xYTqTdbpk1y8XsPv3rb+ga9
-         aDtun+/h+dXbSFZ/5ob3bzGHlmieDmC4xIvkXgsUOfl4qY5PqH9CQ/hvmc0f2DgjtcjD
-         6hxGudm6kdVDwI/hu7kQHrEgGbfFv0cXFp2WfCwF+sfhF1HNVMieAimy9bR8wXOvddAm
-         8iE9QbWxZfCyZBjLWHfefjQFIR7RxOBlFW50NClzGubgPOstEkzQwNEErKE0juDYUCVK
-         ck7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9N/+0wL229i7Cr0s0i/SfdtJ37Scr7qSFfPXGXOJAb8=;
-        b=IsjxbRseim/TLoeBrdXjyyFzP3ctx7oLMr3+0KxERjWA66XOu1WjFrsp4amQAZE1+i
-         WeYgI723KvYWzdjjDD+KzZ4u2RO+P0dtogDl2o0sa20qrOCgFMCYKb2Eg53RvvFXYu0X
-         4eu8TTLkW6PGsLjxOE5g2Fp5XzG67t+KzsHW6MkwE21d5Am82t9rjz9wladRFc0ZEyNO
-         iOnpjDhYiqj8fTsKEetqXvxEOx4yZD285WLfLZHa1KD8OKDBjEN6b80FJvNjZJFYtz87
-         +/SKoDaTEoUF+r/jGJcWJNVkjY2jh7r/Es0JqMMmzHtgA0zOcEMFmP2/SfI1ffGEkCJO
-         gObg==
-X-Gm-Message-State: AOAM5324CqcvJx2DewvLg4qOZDf4STqX+3Ej6/wA4678NKb7CZJGXPoX
-        XuaBE66xSH5LGAhPyutJjrhF1kd6rJkPSU+BbJevNA==
-X-Google-Smtp-Source: ABdhPJzzsckyVKUW8W1OIZWYaDHSOvqmRFodfGrIYlID4E+90v/KNHd9qlpABx0N56/55lpGFlwSygo+aAATq1UOy80=
-X-Received: by 2002:a05:6512:1510:b0:445:cbc3:a51f with SMTP id
- bq16-20020a056512151000b00445cbc3a51fmr4227577lfb.116.1646388428750; Fri, 04
- Mar 2022 02:07:08 -0800 (PST)
+        with ESMTP id S229643AbiCDVDq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 4 Mar 2022 16:03:46 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 576766D39B
+        for <dmaengine@vger.kernel.org>; Fri,  4 Mar 2022 13:02:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646427778; x=1677963778;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=nhzNjFupXuJWj8fd+YeWK+cCcO1djXdezt1YUNdS5ds=;
+  b=kr1FgqQKPy4WHxPsYQGEDt56qkGi7WONEMXr59twRSplKBYfWkzEaQX0
+   KiBclIwKCfN5EWqcEMzHBtNn9FjX67GM6Tcwj6yDcDLcqJVx5JtSQ70CJ
+   tCwmp1EquQ2R2c1D5kAHZ81YKo5BohYyUVFc7O+fu0k7D7XcGGgK9asds
+   p/FZ/UTIC0TTPLnSIPfuzGhFgxpecLvKs7QGgoav63SatVMvSuJI0wRjx
+   g4Icla6Ahh9+1nATSOxR9oS+5lWyUSa6kZCRQyWu9vbjklZNVJ+w2UW1b
+   XHSEZseRlk+1EVi4o7hKd6IidXfOIronbnFPULrY+IrFinLN2mxBLMOil
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10276"; a="278755692"
+X-IronPort-AV: E=Sophos;i="5.90,156,1643702400"; 
+   d="scan'208";a="278755692"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 13:02:58 -0800
+X-IronPort-AV: E=Sophos;i="5.90,156,1643702400"; 
+   d="scan'208";a="494445091"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 13:02:57 -0800
+Subject: [PATCH] dmaengine: idxd: move wq irq enabling to after device enable
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org
+Date:   Fri, 04 Mar 2022 14:02:57 -0700
+Message-ID: <164642777730.179702.1880317757087484299.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/1.1
 MIME-Version: 1.0
-References: <cover.1646383150.git.zong.li@sifive.com> <12cff3b68de1bd02a8915bd70999bb4edafaca1b.1646383150.git.zong.li@sifive.com>
- <1664de3d-8e33-596e-19ff-4fb174f2a178@canonical.com>
-In-Reply-To: <1664de3d-8e33-596e-19ff-4fb174f2a178@canonical.com>
-From:   Zong Li <zong.li@sifive.com>
-Date:   Fri, 4 Mar 2022 18:06:57 +0800
-Message-ID: <CANXhq0o68-_jYgZD=iVjQDrQeo-vB6iP+FR3PDTLy5bvD9QVug@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: Add dma-channels property and modify compatible
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Bin Meng <bin.meng@windriver.com>,
-        Green Wan <green.wan@sifive.com>, Vinod <vkoul@kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Palmer Dabbelt <palmer@rivosinc.com>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Mar 4, 2022 at 5:09 PM Krzysztof Kozlowski
-<krzysztof.kozlowski@canonical.com> wrote:
->
-> On 04/03/2022 09:42, Zong Li wrote:
-> > Add dma-channels property, then we can determine how many channels there
-> > by device tree, rather than statically defining it in PDMA driver.
-> > In addition, we also modify the compatible for PDMA versioning scheme.
-> >
-> > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > Suggested-by: Palmer Dabbelt <palmer@rivosinc.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Reviewed-by: Palmer Dabbelt <palmer@rivosinc.com>
-> > Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
-> > ---
-> >  .../bindings/dma/sifive,fu540-c000-pdma.yaml  | 19 +++++++++++++++++--
-> >  1 file changed, 17 insertions(+), 2 deletions(-)
-> >
->
-> Can you add subystem/driver prefix to the subject? In current form it
-> looks generic, but it is actually specific, so:
->
-> dt-bindings: dma-engine: sifive,fu540:
->
+Move the calling of request_irq() and other related irq setup code until
+after the WQ is successfully enabled. This reduces the amount of
+setup/teardown if the wq is not configured correctly and cannot be enabled.
 
-Thanks for your correction, I will send the next version to change it.
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/dma/idxd/dma.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-> Best regards,
-> Krzysztof
+diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
+index bfff59617d04..13a113ff9806 100644
+--- a/drivers/dma/idxd/dma.c
++++ b/drivers/dma/idxd/dma.c
+@@ -290,13 +290,6 @@ static int idxd_dmaengine_drv_probe(struct idxd_dev *idxd_dev)
+ 	mutex_lock(&wq->wq_lock);
+ 	wq->type = IDXD_WQT_KERNEL;
+ 
+-	rc = idxd_wq_request_irq(wq);
+-	if (rc < 0) {
+-		idxd->cmd_status = IDXD_SCMD_WQ_IRQ_ERR;
+-		dev_dbg(dev, "WQ %d irq setup failed: %d\n", wq->id, rc);
+-		goto err_irq;
+-	}
+-
+ 	rc = __drv_enable_wq(wq);
+ 	if (rc < 0) {
+ 		dev_dbg(dev, "Enable wq %d failed: %d\n", wq->id, rc);
+@@ -304,6 +297,13 @@ static int idxd_dmaengine_drv_probe(struct idxd_dev *idxd_dev)
+ 		goto err;
+ 	}
+ 
++	rc = idxd_wq_request_irq(wq);
++	if (rc < 0) {
++		idxd->cmd_status = IDXD_SCMD_WQ_IRQ_ERR;
++		dev_dbg(dev, "WQ %d irq setup failed: %d\n", wq->id, rc);
++		goto err_irq;
++	}
++
+ 	rc = idxd_wq_alloc_resources(wq);
+ 	if (rc < 0) {
+ 		idxd->cmd_status = IDXD_SCMD_WQ_RES_ALLOC_ERR;
+@@ -335,10 +335,10 @@ static int idxd_dmaengine_drv_probe(struct idxd_dev *idxd_dev)
+ err_ref:
+ 	idxd_wq_free_resources(wq);
+ err_res_alloc:
+-	__drv_disable_wq(wq);
+-err:
+ 	idxd_wq_free_irq(wq);
+ err_irq:
++	__drv_disable_wq(wq);
++err:
+ 	wq->type = IDXD_WQT_NONE;
+ 	mutex_unlock(&wq->wq_lock);
+ 	return rc;
+
+

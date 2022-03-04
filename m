@@ -2,202 +2,191 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C54D84CC732
-	for <lists+dmaengine@lfdr.de>; Thu,  3 Mar 2022 21:43:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 172C84CCE2E
+	for <lists+dmaengine@lfdr.de>; Fri,  4 Mar 2022 08:00:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236350AbiCCUnz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 3 Mar 2022 15:43:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60734 "EHLO
+        id S238596AbiCDHBN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 4 Mar 2022 02:01:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236332AbiCCUnx (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 3 Mar 2022 15:43:53 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FDA6CCC7C
-        for <dmaengine@vger.kernel.org>; Thu,  3 Mar 2022 12:43:07 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id g7-20020a17090a708700b001bb78857ccdso8871151pjk.1
-        for <dmaengine@vger.kernel.org>; Thu, 03 Mar 2022 12:43:07 -0800 (PST)
+        with ESMTP id S238446AbiCDHBM (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 4 Mar 2022 02:01:12 -0500
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8AF318E3DF;
+        Thu,  3 Mar 2022 23:00:21 -0800 (PST)
+Received: by mail-pg1-x534.google.com with SMTP id t187so2483135pgb.1;
+        Thu, 03 Mar 2022 23:00:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20210112.gappssmtp.com; s=20210112;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B07u8PwztIDT/t6XfdN5+sheHaP7KOymmsGZ6gm7cvQ=;
-        b=g35UOZ2H2BUbeBCNpKfxn2d++rHQqBdGKgSqyF9IlKxDEMjB8jqH4437yhcwo3v6DK
-         /ixM6hpQFMCxOspVS9T1nLyhrNFe64Nse3uB/kd9lmaMpglfhOZjzy6D2gpTfGw7IaRd
-         IR2HOKsex0l4U8co5RVxieOxvigwyso/QO0XcaAv0I+jKsLifYi6NH/jsnuah2oA2qE9
-         7RAt+Yv6W5MfXUL015UENVFuDxJzgGnbp613COC+mdTV0QghAy55Z1LNCsO68+YtYskv
-         WkY6tpu4MsMRSaiHjqzeri5UPzRrjRmBhiEdvn5L4Oj/BBNIbdSl/XHW2ug+rXQWoUi9
-         w5OQ==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=0a+oQu3LYTAbOOyoILb+F/zkApGIum0yjd+xPCLEHo4=;
+        b=UcHSzcmMAevEFsqxc8gimvoSIew96LrW3UYvjfgkcaeLb/Edql9668oTELTgMdhcyh
+         uwTLYgNgPfuwuQfZCbkLtuIX59UkP2xXrD0mK6eOfNdOu/KSihdjQUFHL7gwAFzgpb4Z
+         PeSQfhLMwS3uLkuXfSSL1QQyblGTA4kTyWBkcty1viz6EkWmIbbGn99xu95lY6jAsJ0c
+         CbisDo/RPFGn8gAJnKluj00ht4OQ80XaXmCEvGalnXTnvAWrV5UWFfWh6kgUBnLZJvSQ
+         W0PYU136vUwP4grvjJEIhDxHc0WM1lPQ2cysIXPjh+breTQ07tU9AM0RgZ3Jr4UsSFjT
+         NaGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=B07u8PwztIDT/t6XfdN5+sheHaP7KOymmsGZ6gm7cvQ=;
-        b=WI4ibIqsf7vizoBJ/5XBsZScCc5dXcMfbSIF453UKq1gW/XXCi8HNX+VFA3uAyWKvu
-         mtV2jXY24mkMo7UTWiZbXdHWr/pEVl6DoFXiMA9aHTlMKjP4kv33ftJ7B0DIfN6uQikq
-         dMjEvFB0RdqIB96IEXW3CR1KZFClIrJOeET0p1GFV9GZvHgMCS4r4S3NQp4L1AW7zSSc
-         lsOy9ATXEq7YaKcSwnnegj2WTNZc9xKllHb/ajlGdp1ulvNni0LftpUex1/iB1EdoJWz
-         nNCxcmHEqQNnedlyTH7OnzuANoTs1zAITpFhxE+/YUJqoS2Ukr82JsD+ZJOqKnedPpA3
-         NNhw==
-X-Gm-Message-State: AOAM533kbwxQRC2y2Wa6CNeTD/ySggQ8esfK5GLR56FgL9iDRSEMgNtZ
-        0LloAFAyPZAfSKh8FMMYoEdFXg==
-X-Google-Smtp-Source: ABdhPJzqWrdGV/V4cZ9E62uIW3uerWRtG11PeC/+Dyn1oLPg/pGjvxJCA+OYLmguFq+xUhW6gSCO9g==
-X-Received: by 2002:a17:902:dacd:b0:150:4f5:1158 with SMTP id q13-20020a170902dacd00b0015004f51158mr37292546plx.67.1646340186649;
-        Thu, 03 Mar 2022 12:43:06 -0800 (PST)
-Received: from localhost ([12.3.194.138])
-        by smtp.gmail.com with ESMTPSA id k190-20020a633dc7000000b0037c921abb5bsm268485pga.23.2022.03.03.12.43.05
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=0a+oQu3LYTAbOOyoILb+F/zkApGIum0yjd+xPCLEHo4=;
+        b=wb2esMQoam0yRdU1iiWooJMh4JC1GjnRkNWIV6OwsjoezbD+7+ifd1PhuzPjaxCPmO
+         u1fcrH6eLHtxqL4KDTLuseNeth97iCChifcBxeofjvT0Byq082mjxQBMfKUbi4/3XunZ
+         7O1vtdoC6GJQEe1jCXtEwSzf90DWRIWVtkfFAhBCXU/4JQ9/KiwbJufulDJ2q3IPax49
+         jtXkkkenH5kmYciK/w/TThMkCF+OMj+Sm8kubeVraTrTJ9SBcdzW0IJc/7q7VtLNcYPK
+         tCqru2KpLGaD7gEtqsW5aTHIjrKYId6o+E8n1FslfMQUFX2avWIb0/I/Jx8Qwp0u0z7d
+         d27Q==
+X-Gm-Message-State: AOAM532aXFpfPfPgP0BGzvfNmwbT3nDlpYgI2HlLyy0AbUqKoKxKSL90
+        x6bmOo7yTyt/Z10hh54ZEPQ=
+X-Google-Smtp-Source: ABdhPJxBFOb3A6C/RlDh1uHGrWM51HjSkR68cXfNAhNGErUbSC2hd/FilwMHkJmidt1eEHAWD7GVrA==
+X-Received: by 2002:a05:6a00:cc7:b0:4ec:c6f3:ad29 with SMTP id b7-20020a056a000cc700b004ecc6f3ad29mr41958698pfv.66.1646377221067;
+        Thu, 03 Mar 2022 23:00:21 -0800 (PST)
+Received: from ubuntu.huawei.com ([119.3.119.19])
+        by smtp.googlemail.com with ESMTPSA id f6-20020a654006000000b00346193b405fsm3665134pgp.44.2022.03.03.23.00.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Mar 2022 12:43:06 -0800 (PST)
-Date:   Thu, 03 Mar 2022 12:43:06 -0800 (PST)
-X-Google-Original-Date: Thu, 03 Mar 2022 12:39:36 PST (-0800)
-Subject:     Re: [PATCH v5 3/3] dmaengine: sf-pdma: Get number of channel by device tree
-In-Reply-To: <CANXhq0p-Jv2HMNu9NaG=03yudanoqV6MH=LhiCspHbj5nTn+GQ@mail.gmail.com>
-CC:     vkoul@kernel.org, robh+dt@kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, krzysztof.kozlowski@canonical.com,
-        conor.dooley@microchip.com, geert@linux-m68k.org,
-        bin.meng@windriver.com, green.wan@sifive.com,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     zong.li@sifive.com
-Message-ID: <mhng-956767d2-f9fc-4d96-8a05-f7a618e3a16b@palmer-ri-x1c9>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Thu, 03 Mar 2022 23:00:20 -0800 (PST)
+From:   Xiaomeng Tong <xiam0nd.tong@gmail.com>
+To:     daniel.thompson@linaro.org
+Cc:     akpm@linux-foundation.org, alsa-devel@alsa-project.org,
+        amd-gfx@lists.freedesktop.org, andriy.shevchenko@linux.intel.com,
+        arnd@arndb.de, bcm-kernel-feedback-list@broadcom.com,
+        bjohannesmeyer@gmail.com, c.giuffrida@vu.nl,
+        christian.koenig@amd.com, christophe.jaillet@wanadoo.fr,
+        dan.carpenter@oracle.com, david.laight@aculab.com,
+        dmaengine@vger.kernel.org, drbd-dev@lists.linbit.com,
+        dri-devel@lists.freedesktop.org, gustavo@embeddedor.com,
+        h.j.bos@vu.nl, intel-gfx@lists.freedesktop.org,
+        intel-wired-lan@lists.osuosl.org, jakobkoschel@gmail.com,
+        jgg@ziepe.ca, keescook@chromium.org,
+        kgdb-bugreport@lists.sourceforge.net, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-block@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-sgx@vger.kernel.org, linux-staging@lists.linux.dev,
+        linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, linux@rasmusvillemoes.dk,
+        linuxppc-dev@lists.ozlabs.org, nathan@kernel.org,
+        netdev@vger.kernel.org, nouveau@lists.freedesktop.org,
+        rppt@kernel.org, samba-technical@lists.samba.org,
+        tglx@linutronix.de, tipc-discussion@lists.sourceforge.net,
+        torvalds@linux-foundation.org,
+        v9fs-developer@lists.sourceforge.net, xiam0nd.tong@gmail.com
+Subject: Re: [PATCH 2/6] treewide: remove using list iterator after loop body as a ptr
+Date:   Fri,  4 Mar 2022 14:59:57 +0800
+Message-Id: <20220304065957.16799-1-xiam0nd.tong@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20220303121824.qdyrognluik74iph@maple.lan>
+References: <20220303121824.qdyrognluik74iph@maple.lan>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, 15 Feb 2022 22:52:14 PST (-0800), zong.li@sifive.com wrote:
-> On Tue, Feb 15, 2022 at 8:06 PM Vinod Koul <vkoul@kernel.org> wrote:
->>
->> On 07-02-22, 14:30, Zong Li wrote:
->> > It currently assumes that there are always four channels, it would
->> > cause the error if there is actually less than four channels. Change
->> > that by getting number of channel from device tree.
->> >
->> > For backwards-compatibility, it uses the default value (i.e. 4) when
->> > there is no 'dma-channels' information in dts.
->> >
->> > Signed-off-by: Zong Li <zong.li@sifive.com>
->> > ---
->> >  drivers/dma/sf-pdma/sf-pdma.c | 21 ++++++++++++++-------
->> >  drivers/dma/sf-pdma/sf-pdma.h |  8 ++------
->> >  2 files changed, 16 insertions(+), 13 deletions(-)
->> >
->> > diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
->> > index f12606aeff87..2ae10b61dfa1 100644
->> > --- a/drivers/dma/sf-pdma/sf-pdma.c
->> > +++ b/drivers/dma/sf-pdma/sf-pdma.c
->> > @@ -482,9 +482,7 @@ static void sf_pdma_setup_chans(struct sf_pdma *pdma)
->> >  static int sf_pdma_probe(struct platform_device *pdev)
->> >  {
->> >       struct sf_pdma *pdma;
->> > -     struct sf_pdma_chan *chan;
->> >       struct resource *res;
->> > -     int len, chans;
->> >       int ret;
->> >       const enum dma_slave_buswidth widths =
->> >               DMA_SLAVE_BUSWIDTH_1_BYTE | DMA_SLAVE_BUSWIDTH_2_BYTES |
->> > @@ -492,13 +490,21 @@ static int sf_pdma_probe(struct platform_device *pdev)
->> >               DMA_SLAVE_BUSWIDTH_16_BYTES | DMA_SLAVE_BUSWIDTH_32_BYTES |
->> >               DMA_SLAVE_BUSWIDTH_64_BYTES;
->> >
->> > -     chans = PDMA_NR_CH;
->> > -     len = sizeof(*pdma) + sizeof(*chan) * chans;
->> > -     pdma = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
->> > +     pdma = devm_kzalloc(&pdev->dev, sizeof(*pdma), GFP_KERNEL);
->> >       if (!pdma)
->> >               return -ENOMEM;
->> >
->> > -     pdma->n_chans = chans;
->> > +     ret = of_property_read_u32(pdev->dev.of_node, "dma-channels",
->> > +                                &pdma->n_chans);
->> > +     if (ret) {
->> > +             dev_notice(&pdev->dev, "set number of channels to default value: 4\n");
->>
->> This is useful for only debug i think, so dev_dbg perhaps
->>
->
-> Thanks for your suggestion, let me change it in the next version.
+On Thu, 3 Mar 2022 12:18:24 +0000, Daniel Thompson wrote:
+> On Thu, Mar 03, 2022 at 03:26:57PM +0800, Xiaomeng Tong wrote:
+> > On Thu, 3 Mar 2022 04:58:23 +0000, David Laight wrote:
+> > > on 3 Mar 2022 10:27:29 +0800, Xiaomeng Tong wrote:
+> > > > The problem is the mis-use of iterator outside the loop on exit, and
+> > > > the iterator will be the HEAD's container_of pointer which pointers
+> > > > to a type-confused struct. Sidenote: The *mis-use* here refers to
+> > > > mistakely access to other members of the struct, instead of the
+> > > > list_head member which acutally is the valid HEAD.
+> > >
+> > > The problem is that the HEAD's container_of pointer should never
+> > > be calculated at all.
+> > > This is what is fundamentally broken about the current definition.
+> > 
+> > Yes, the rule is "the HEAD's container_of pointer should never be
+> > calculated at all outside the loop", but how do you make sure everyone
+> > follows this rule?
+> 
+> Your formulation of the rule is correct: never run container_of() on HEAD
+> pointer.
 
-Not sure if I'm missing something, but I don't see a v6.  I'm going to 
-assume that one will be sent, but the suggested changes look minor 
-enough so 
+Actually, it is not my rule. My rule is that never access other members
+of the struct except for the list_head member after the loop, because
+this is a invalid member after loop exit, but valid for the list_head
+member which just is HEAD and the lately caculation (&pos->head) seems
+harmless.
 
-Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+I have considered the case that the HEAD's container "pos" is layouted
+across the max and the min address boundary, which means the address of
+HEAD is likely 0x60, and the address of pos is likely 0xffffffe0.
+It seems ok to caculate pos with:
+((type *)(__mptr - offsetof(type, member)));
+and it seems ok to caculate head outside the loop with:
+if (&pos->head == &HEAD)
+    return NULL;
 
-LMK if you guys were expecting this to go in via the RISC-V tree, 
-otherwise I'll assume this aimed at the dmaengine tree.  Probably best to keep
-all three together, so feel free to take the DTS updates as well -- having some
-shared tag never hurts, but the DTs don't move that much so any conflicts
-should be straight-forward to just fix at merge time.
+The only case I can think of with the rule "never run container_of()
+on HEAD" must be followed is when the first argument (which is &HEAD)
+passing to container_of() is NULL + some offset, it may lead to the
+resulting "pos->member" access being a NULL dereference. But maybe
+the caller can take the responsibility to check if it is NULL, not
+container_of() itself.
 
-Thanks!
+Please remind me if i missed somthing, thanks.
 
->> > +             pdma->n_chans = PDMA_MAX_NR_CH;
->> > +     }
->> > +
->> > +     if (pdma->n_chans > PDMA_MAX_NR_CH) {
->> > +             dev_err(&pdev->dev, "the number of channels exceeds the maximum\n");
->> > +             return -EINVAL;
->> > +     }
->> >
->> >       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> >       pdma->membase = devm_ioremap_resource(&pdev->dev, res);
->> > @@ -556,7 +562,7 @@ static int sf_pdma_remove(struct platform_device *pdev)
->> >       struct sf_pdma_chan *ch;
->> >       int i;
->> >
->> > -     for (i = 0; i < PDMA_NR_CH; i++) {
->> > +     for (i = 0; i < pdma->n_chans; i++) {
->> >               ch = &pdma->chans[i];
->> >
->> >               devm_free_irq(&pdev->dev, ch->txirq, ch);
->> > @@ -574,6 +580,7 @@ static int sf_pdma_remove(struct platform_device *pdev)
->> >
->> >  static const struct of_device_id sf_pdma_dt_ids[] = {
->> >       { .compatible = "sifive,fu540-c000-pdma" },
->> > +     { .compatible = "sifive,pdma0" },
->> >       {},
->> >  };
->> >  MODULE_DEVICE_TABLE(of, sf_pdma_dt_ids);
->> > diff --git a/drivers/dma/sf-pdma/sf-pdma.h b/drivers/dma/sf-pdma/sf-pdma.h
->> > index 0c20167b097d..8127d792f639 100644
->> > --- a/drivers/dma/sf-pdma/sf-pdma.h
->> > +++ b/drivers/dma/sf-pdma/sf-pdma.h
->> > @@ -22,11 +22,7 @@
->> >  #include "../dmaengine.h"
->> >  #include "../virt-dma.h"
->> >
->> > -#define PDMA_NR_CH                                   4
->> > -
->> > -#if (PDMA_NR_CH != 4)
->> > -#error "Please define PDMA_NR_CH to 4"
->> > -#endif
->> > +#define PDMA_MAX_NR_CH                                       4
->> >
->> >  #define PDMA_BASE_ADDR                                       0x3000000
->> >  #define PDMA_CHAN_OFFSET                             0x1000
->> > @@ -118,7 +114,7 @@ struct sf_pdma {
->> >       void __iomem            *membase;
->> >       void __iomem            *mappedbase;
->> >       u32                     n_chans;
->> > -     struct sf_pdma_chan     chans[PDMA_NR_CH];
->> > +     struct sf_pdma_chan     chans[PDMA_MAX_NR_CH];
->>
->> why waste memory allocating max, we know number of channels in probe,
->> why not allocate runtime?
->>
->
-> I kept it there because I'd like to do minimum change in this patch
-> set. You're right, let me change it in the next version.
->
->> --
->> ~Vinod
+> 
+> However the rule that is introduced by list_for_each_entry_inside() is
+> *not* this rule. The rule it introduces is: never access the iterator
+> variable outside the loop.
+
+Sorry for the confusion, indeed, that is two *different* rule.
+
+> 
+> Making the iterator NULL on loop exit does follow the rule you proposed
+> but using a different technique: do not allow HEAD to be stored in the
+> iterator variable after loop exit. This also makes it impossible to run
+> container_of() on the HEAD pointer.
+> 
+
+It does not. My rule is: never access the iterator variable outside the loop.
+The "Making the iterator NULL on loop exit" way still leak the pos with NULL
+outside the loop, may lead to a NULL deference.
+
+> 
+> > Everyone makes mistakes, but we can eliminate them all from the beginning
+> > with the help of compiler which can catch such use-after-loop things.
+> 
+> Indeed but if we introduce new interfaces then we don't have to worry
+> about existing usages and silent regressions. Code will have been
+> written knowing the loop can exit with the iterator set to NULL.
+
+Yes, it is more simple and compatible with existing interfaces. Howerver,
+you should make every developers to remember that "pos will be set NULL on
+loop exit", which is unreasonable and impossible for *every* single person.
+Otherwise the mis-use-after-loop will lead to a NULL dereference.
+But we can kill this problem by declaring iterator inside the loop and the
+complier will catch it if somebody mis-use-after-loop.
+
+> 
+> Sure it is still possible for programmers to make mistakes and
+> dereference the NULL pointer but C programmers are well training w.r.t.
+> NULL pointer checking so such mistakes are much less likely than with
+> the current list_for_each_entry() macro. This risk must be offset
+> against the way a NULLify approach can lead to more elegant code when we
+> are doing a list search.
+> 
+
+Yes, the NULLify approach is better than the current list_for_each_entry()
+macro, but i stick with that the list_for_each_entry_inside() way is best
+and perfect _technically_.
+
+Thus, my idea is *better a finger off than always aching*, let's settle this
+damn problem once and for all, with list_for_each_entry_inside().
+
+--
+Xiaomeng Tong

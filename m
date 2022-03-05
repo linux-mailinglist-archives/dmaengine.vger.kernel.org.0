@@ -2,170 +2,116 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B34944CDFB0
-	for <lists+dmaengine@lfdr.de>; Fri,  4 Mar 2022 22:22:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47F964CE3A0
+	for <lists+dmaengine@lfdr.de>; Sat,  5 Mar 2022 09:38:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229566AbiCDVWu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 4 Mar 2022 16:22:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58674 "EHLO
+        id S229480AbiCEIjK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 5 Mar 2022 03:39:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbiCDVWt (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 4 Mar 2022 16:22:49 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 184721176
-        for <dmaengine@vger.kernel.org>; Fri,  4 Mar 2022 13:22:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646428921; x=1677964921;
-  h=subject:from:to:cc:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=mTBoJ1hHI3WuSg/m0MwBX8WvroCrzqYYQeMmHWbFil8=;
-  b=Z3KXENWS59w84QQ3DFMzPZr1nxO4Gb4Q9h9Sx5OFZzhtQ2ETSw7opb+r
-   gBkrM5gCxNtwh21iy+il6p1vckUxz2zKeVATKi15hpGwmoKU79PjJC0aX
-   9OD/RugKJTM/HABVr/AvNJCGkrLC7HV3mC5yXeryymPsRwWOHs4Dhi2OK
-   CiMbDKUgfykvqeXhWcIhzS8Y2IOzAK+OGXSeNsMF02obSYUvk7avFPxae
-   f6ZB3yk4vrFRl0sckWPaSgoTB3gSU1pmWhe/xgyUxNFhQrODM3R7M2/HW
-   q2jHX2UPiAtgmI00if8GRklnJ/vWMG4HXNJasebnQSFoukyjqrtTIbea/
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10276"; a="234673209"
-X-IronPort-AV: E=Sophos;i="5.90,156,1643702400"; 
-   d="scan'208";a="234673209"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 13:22:00 -0800
-X-IronPort-AV: E=Sophos;i="5.90,156,1643702400"; 
-   d="scan'208";a="552373289"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 13:22:00 -0800
-Subject: [PATCH] dmaengine: idxd: don't load pasid config until needed
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org
-Date:   Fri, 04 Mar 2022 14:21:59 -0700
-Message-ID: <164642891995.190921.7082046343492065429.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/1.1
+        with ESMTP id S230052AbiCEIjK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 5 Mar 2022 03:39:10 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ACC8433BF;
+        Sat,  5 Mar 2022 00:38:19 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id q11so9734840pln.11;
+        Sat, 05 Mar 2022 00:38:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=4q9rupxAtgeh0z74bvSngfTH3q+iMizoxg7UH0B4T/o=;
+        b=btIKdS/FS+BX5jnCkXzHGhLWyAwM7A4CN9T3gOQW3bKxtSfv1NLvqa2oPzSDgPUIvI
+         UVLo3SWgHLbmQVWY1SH4Jl1WF3D02PyCrf05AvaTR79v8kYsgerAmHM145FhUkiEHE/0
+         pXVk7/6CjNYa1i7CjX4T5NeE0oOrgn30aP3p6pu9wcLB/MS60SzeeFqlwdD0Y/CDPivG
+         /3mgWdGeorKgmq/+zOmM9W4UBhaPGYDjwI6j3a0jpbZQrTFD1m+uWR/XBeATEQdyQre5
+         Fu6jYuTcCQZGPO3pAp5FZ+jDScDuyJLT2w1W6J/iG+rq1kTsDV7kHKNk+U6KEQ1Z5jfA
+         okgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=4q9rupxAtgeh0z74bvSngfTH3q+iMizoxg7UH0B4T/o=;
+        b=J+kzv5ZHfe8sZnjNo2vYIwCrOiQow5sVO59tvngszN53P1V807JSOM5T34GzqZaYs/
+         fzT9rHJpL8VRgkQgeVWA1u8G+vWkBu4lrsPobXmr4DhTAP29bbl8YRs2FayDXb64/Jo4
+         XfWUi+JgP2J8UdqYd2eObh/U0eFRWXSBKSqiOaU/TV9HGtZhu7fKf5rXZiHfdP1+JLrH
+         lfIZ0+A36PM2BPHG4zEbe9ypG4+XR89iD8JdXedzZhd0/uXPACHPNUMinwoRIhvh5c93
+         1gK6gsX2EpazwyBoWYiyDm4dVhwkNO/9LKC9hUhYJ3NgFcsEfdXhCNRZ7ra8b9U+ILDw
+         eIvw==
+X-Gm-Message-State: AOAM530fR6x8aaLTx+/jpBGI1CWC4DHc1VO2KAJHh/nN0sWeTQ7PdBXO
+        5yEc0+j4djtp7FR4xJo4vvw=
+X-Google-Smtp-Source: ABdhPJwrqasm/Aj96Sb/8B66of8QRPaNNoC3JjmddWhpSQd0G6BpPFgWNdhVFq3NO2IF1nkMqSouag==
+X-Received: by 2002:a17:902:ccc6:b0:14f:88e6:8040 with SMTP id z6-20020a170902ccc600b0014f88e68040mr2332802ple.13.1646469498919;
+        Sat, 05 Mar 2022 00:38:18 -0800 (PST)
+Received: from [10.107.0.6] ([64.64.123.82])
+        by smtp.gmail.com with ESMTPSA id d5-20020a17090acd0500b001b9c05b075dsm12586726pju.44.2022.03.05.00.38.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Mar 2022 00:38:18 -0800 (PST)
+Subject: Re: [PATCH] dma: xilinx: check the return value of dma_set_mask() in
+ zynqmp_dma_probe()
+To:     Michael Tretter <m.tretter@pengutronix.de>
+Cc:     vkoul@kernel.org, michal.simek@xilinx.com, yukuai3@huawei.com,
+        lars@metafoo.de, libaokun1@huawei.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de
+References: <20220303024334.813-1-baijiaju1990@gmail.com>
+ <20220304082024.GO8137@pengutronix.de>
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Message-ID: <47bca068-9bc2-73c7-dfa4-ddd5ce78618c@gmail.com>
+Date:   Sat, 5 Mar 2022 16:38:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20220304082024.GO8137@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Language: en-US
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The driver currently programs the system pasid to the WQ preemptively when
-system pasid is enabled. Given that a dwq will reprogram the pasid and
-possibly a different pasid, the programming is not necessary. The pasid_en
-bit can be set for swq as it does not need pasid pasid programming but
-needs the pasid_en bit. Remove system pasid programming on device config
-write. Add pasid programming for kernel wq type on wq driver enable. The
-char dev driver already reprograms the dwq on ->open() call so there's no
-change.
-
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/dma/idxd/device.c    |   46 ++++++++++++++++++++++++++++++++++--------
- drivers/dma/idxd/registers.h |    1 +
- 2 files changed, 38 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 573ad8b86804..b2aaf4b64a8b 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -299,16 +299,25 @@ void idxd_wqs_unmap_portal(struct idxd_device *idxd)
- 	}
- }
- 
--int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
-+static void __idxd_wq_set_priv_locked(struct idxd_wq *wq)
- {
- 	struct idxd_device *idxd = wq->idxd;
--	int rc;
- 	union wqcfg wqcfg;
- 	unsigned int offset;
- 
--	rc = idxd_wq_disable(wq, false);
--	if (rc < 0)
--		return rc;
-+	offset = WQCFG_OFFSET(idxd, wq->id, WQCFG_PRIVL_IDX);
-+	spin_lock(&idxd->dev_lock);
-+	wqcfg.bits[WQCFG_PRIVL_IDX] = ioread32(idxd->reg_base + offset);
-+	wqcfg.priv = 1;
-+	iowrite32(wqcfg.bits[WQCFG_PRIVL_IDX], idxd->reg_base + offset);
-+	spin_unlock(&idxd->dev_lock);
-+}
-+
-+static void __idxd_wq_set_pasid_locked(struct idxd_wq *wq, int pasid)
-+{
-+	struct idxd_device *idxd = wq->idxd;
-+	union wqcfg wqcfg;
-+	unsigned int offset;
- 
- 	offset = WQCFG_OFFSET(idxd, wq->id, WQCFG_PASID_IDX);
- 	spin_lock(&idxd->dev_lock);
-@@ -317,6 +326,17 @@ int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
- 	wqcfg.pasid = pasid;
- 	iowrite32(wqcfg.bits[WQCFG_PASID_IDX], idxd->reg_base + offset);
- 	spin_unlock(&idxd->dev_lock);
-+}
-+
-+int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
-+{
-+	int rc;
-+
-+	rc = idxd_wq_disable(wq, false);
-+	if (rc < 0)
-+		return rc;
-+
-+	__idxd_wq_set_pasid_locked(wq, pasid);
- 
- 	rc = idxd_wq_enable(wq);
- 	if (rc < 0)
-@@ -808,11 +828,13 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
- 	if (wq_dedicated(wq))
- 		wq->wqcfg->mode = 1;
- 
--	if (device_pasid_enabled(idxd)) {
-+	/*
-+	 * Enable this for shared WQ. swq does not need to program the pasid field,
-+	 * but pasid_en needs to be set. Programming here prevents swq needing to
-+	 * be disabled and re-enabled for reprogramming, which is something to avoid.
-+	 */
-+	if (device_pasid_enabled(idxd))
- 		wq->wqcfg->pasid_en = 1;
--		if (wq->type == IDXD_WQT_KERNEL && wq_dedicated(wq))
--			wq->wqcfg->pasid = idxd->pasid;
--	}
- 
- 	/*
- 	 * Here the priv bit is set depending on the WQ type. priv = 1 if the
-@@ -1258,6 +1280,12 @@ int __drv_enable_wq(struct idxd_wq *wq)
- 		}
- 	}
- 
-+	if (is_idxd_wq_kernel(wq)) {
-+		if (device_pasid_enabled(idxd) && wq_dedicated(wq))
-+			__idxd_wq_set_pasid_locked(wq, idxd->pasid);
-+		__idxd_wq_set_priv_locked(wq);
-+	}
-+
- 	rc = 0;
- 	spin_lock(&idxd->dev_lock);
- 	if (test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
-diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
-index aa642aecdc0b..02449aa9c454 100644
---- a/drivers/dma/idxd/registers.h
-+++ b/drivers/dma/idxd/registers.h
-@@ -353,6 +353,7 @@ union wqcfg {
- } __packed;
- 
- #define WQCFG_PASID_IDX                2
-+#define WQCFG_PRIVL_IDX		2
- #define WQCFG_OCCUP_IDX		6
- 
- #define WQCFG_OCCUP_MASK	0xffff
 
 
+On 2022/3/4 16:20, Michael Tretter wrote:
+> On Wed, 02 Mar 2022 18:43:34 -0800, Jia-Ju Bai wrote:
+>> The function dma_set_mask() in zynqmp_dma_probe() can fail, so its
+>> return value should be checked.
+>>
+>> Fixes: b0cc417c1637 ("dmaengine: Add Xilinx zynqmp dma engine driver support")
+>> Reported-by: TOTE Robot <oslab@tsinghua.edu.cn>
+>> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+>> ---
+>>   drivers/dma/xilinx/zynqmp_dma.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
+>> index 7aa63b652027..963fb1de93af 100644
+>> --- a/drivers/dma/xilinx/zynqmp_dma.c
+>> +++ b/drivers/dma/xilinx/zynqmp_dma.c
+>> @@ -1050,7 +1050,8 @@ static int zynqmp_dma_probe(struct platform_device *pdev)
+>>   	zdev->dev = &pdev->dev;
+>>   	INIT_LIST_HEAD(&zdev->common.channels);
+>>   
+>> -	dma_set_mask(&pdev->dev, DMA_BIT_MASK(44));
+>> +	if (dma_set_mask(&pdev->dev, DMA_BIT_MASK(44)))
+>> +		return -EIO;
+> Thanks.
+>
+> You may print an error message with dev_err_probe and forward the return value
+> of dma_set_mask.
+
+Hi Michael,
+
+Thanks for the advice.
+I will send a V2 patch.
+
+
+Best wishes,
+Jia-Ju Bai

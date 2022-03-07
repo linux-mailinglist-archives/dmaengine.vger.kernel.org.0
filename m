@@ -2,43 +2,43 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A67104D0B6A
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Mar 2022 23:48:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4969A4D0B6C
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Mar 2022 23:48:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343869AbiCGWtS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 7 Mar 2022 17:49:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56392 "EHLO
+        id S1343870AbiCGWtV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 7 Mar 2022 17:49:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343870AbiCGWtR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 7 Mar 2022 17:49:17 -0500
-Received: from EUR03-AM5-obe.outbound.protection.outlook.com (mail-eopbgr30049.outbound.protection.outlook.com [40.107.3.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FFB4496B9;
-        Mon,  7 Mar 2022 14:48:21 -0800 (PST)
+        with ESMTP id S1343876AbiCGWtU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 7 Mar 2022 17:49:20 -0500
+Received: from EUR02-HE1-obe.outbound.protection.outlook.com (mail-eopbgr10056.outbound.protection.outlook.com [40.107.1.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19B3CAE40;
+        Mon,  7 Mar 2022 14:48:25 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CfbVL+Z5/dXzplanOlbof0dgh2m1BciRfTb2DL195mR2GRlTqMNIrNcvkp6L+I3uwf9kTrpro8Hj5odNcPrXRjZCqE6lxepdo54zc5ss7Fju+8NhayaxpmFVn0uISRnZT2xi1Ff76lOZlF+FObCWoMc4fS1w2em3mG8qHWTvB7F+Y8XMnR3TPhp4ZjYofBlANXVb6Z0klDJVdpExUvG7qjc4i8gnQqdS6XsvIb2AUiZ+tIRXO3zj+m2wGDDHne+NEFnbppqZILo2dgfmfduToaVKnqZxd/R2ATYU2hQXfZKGZSAzb148My1IhN2xsvsRtl2lmtdLOCOz1NuvkdU0qw==
+ b=VYyEk6cMIh/fw5rxnaUaX58A1pMD+x7by5fJxvdA/wKRM3iuJNimuSUyqlHRUgO2ZDqS5enXT9qMH37eMpQH6Y0xPx9nzVpNhawaz/tCT8e66iyzgZMFU8PhWKeLfaEACss6f41YPoevD8n9pcVTZqBOch52hUZPKigpIWbIvtVcXaQ1Sknl8LC21PRVGdidIxfn9/VdKpte4p02HqKcTMCC5mY0SZLmCZCAiBs5qe+Qg4jGrFxYKZnFEuc1rkQXr7fTTgCCoUYjPPPo/Te5F/9XVtxXi+QoGTvPJbkpuYtI4SakUglagZcBY70gqRxu+O6gI0RkwrFOqmrG8+IlIQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mm5Nao0dQd84uxVyUjyUfIocDzQS3Lopu4mkKoG1/6k=;
- b=Tf01hKISM+WpExh7K4NHyr24SleyLbxYkHseKrJ0+4GDCwHR9LNV/gfHpxANUke/y7lKaRalN+pz9l/UpDn787XAH4wzvk/2fFmWdHLVnUu15GPu5Gl+N6+cxikH7CnHQrdExL9R6v9xSZgY75eFxnP/4iFnyPUEyI97klV4cvfy2tVQapX4u5CQvmdqDN4s/23Ek72djxAbUaP9jAG2kAozTEY83DR+exYODkfX4TdJ16DXmOru5OgeXibo4J31mPlMSl5s3LGVzX5IGp9kS879jcs67SQkG+iiVQqNcx9AnjjJSMCH82WBP+iohmT0uDObqAluBYmiK1C0nN/ZnA==
+ bh=OZr0kME42/GY0AQp2i5YqL9e9h+9es8joiFWTrpgRNU=;
+ b=a248+LPZvNv+Y0LsRNfcx9OmLhTWSGh4rufLLGy8Z9nlNTkMa5bhASy67v1yDblmaDEscgDDLRLV6tarMzRr2AEL3WPK6q5vhKYElRv0gqL0xQ6dIWLO+NoGFfX2/MjcJEnRigvTfhmpVDW3IwdurlAy9SkfVHTikBXTJkYwR/EPzYtuIkUSsscEJih516ERK6gc96rOWEq32jWESiYuFbJ4XpZ/VxFF9SBAnTp3z71sjGMyNMZKRQXiKu2XgayHYzHuVkpKe47+or3h/fIGnAzPkWLTsrqLdgIauSU10BtdWzUiuFVjddQLS0hj/FoE/TMMaT058q3k+1ZeBmD1Uw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mm5Nao0dQd84uxVyUjyUfIocDzQS3Lopu4mkKoG1/6k=;
- b=HfIAJb0bkDJFb1cD49YUi3ylgPYCkNoXS8mx8QYGhQy2rPfJiAVuk2sbZIQF3caSki8jP29ZxHWHH35HdZL6pfzdfnRfFYFnyAkDz9XtAz/F0I3EELSKid9rP5A78zFeuumAMS/BBdh/j1Jzn7YzrzFvcbScMjL26q7CeDlpqqE=
+ bh=OZr0kME42/GY0AQp2i5YqL9e9h+9es8joiFWTrpgRNU=;
+ b=Di/YN5myasvgfFceRU/fDNmkTBpbApAz2keyM/dr07gliPWIzupim3bUaF2zwyA1MrE3pH26I8ad/vQiCqhX8xMn9ZSOMjgh2Llgq60FufAWfDRl61FPxpiWnVJWzdGtCuW/ALuo81hpOaOfEmS9x3aDU2HQQfdZ3xESXvoxXr0=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9186.eurprd04.prod.outlook.com (2603:10a6:102:232::18)
  by AM0PR04MB4946.eurprd04.prod.outlook.com (2603:10a6:208:c0::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.17; Mon, 7 Mar
- 2022 22:48:18 +0000
+ 2022 22:48:22 +0000
 Received: from PAXPR04MB9186.eurprd04.prod.outlook.com
  ([fe80::c897:1bdf:e643:aef8]) by PAXPR04MB9186.eurprd04.prod.outlook.com
  ([fe80::c897:1bdf:e643:aef8%7]) with mapi id 15.20.5038.027; Mon, 7 Mar 2022
- 22:48:18 +0000
+ 22:48:22 +0000
 From:   Frank Li <Frank.Li@nxp.com>
 To:     gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
         l.stach@pengutronix.de, linux-imx@nxp.com,
@@ -47,9 +47,9 @@ To:     gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
 Cc:     vkoul@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
         kw@linux.com, bhelgaas@google.com, shawnguo@kernel.org,
         manivannan.sadhasivam@linaro.org
-Subject: [PATCH v3 3/6] dmaengine: dw-edma: Fix programming the source & dest addresses for ep
-Date:   Mon,  7 Mar 2022 16:47:47 -0600
-Message-Id: <20220307224750.18055-3-Frank.Li@nxp.com>
+Subject: [PATCH v3 4/6] dmaengine: dw-edma: Don't rely on the deprecated "direction" member
+Date:   Mon,  7 Mar 2022 16:47:48 -0600
+Message-Id: <20220307224750.18055-4-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.24.0.rc1
 In-Reply-To: <20220307224750.18055-1-Frank.Li@nxp.com>
 References: <20220307224750.18055-1-Frank.Li@nxp.com>
@@ -60,53 +60,53 @@ X-ClientProxiedBy: SJ0PR13CA0019.namprd13.prod.outlook.com
  (2603:10a6:102:232::18)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c94affd4-c8ef-4b42-83f2-08da008c92c4
+X-MS-Office365-Filtering-Correlation-Id: bdd930e0-2b0d-4454-4408-08da008c9525
 X-MS-TrafficTypeDiagnostic: AM0PR04MB4946:EE_
-X-Microsoft-Antispam-PRVS: <AM0PR04MB4946D6DACCD23481753EBD2B88089@AM0PR04MB4946.eurprd04.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <AM0PR04MB4946781336AE6DCD31F9373A88089@AM0PR04MB4946.eurprd04.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uyu2OS9R+XdpMYd/iBjeswNkUF5T+e3Gr7QeraKr5ojPjVrIuIk0ArE+K5y/sa+ldc0/T/w7voex7r0J0ISsNxnUaXQ9VjuW/arc4pZJhDEly6dWKqzPcE+amEzFjiOJN66sfmQ8rt8Z1X5Sv4zNaXXLpEbsslJ+ssPa2fgGWPvEfBAttToa6wtRhpd2FIcSLsq46rwWutD1OEZKbHRrnXBQ/ID+0ExrrPho+Tv7LEiM9xZPTcWSNOrajTPg4x/q/Fk4/vSFX20omJs84K3YuqIeAj2JHymFpKcTL3iZzwrIpD/3Q4mpUqn3nbdoinU8KCKFvf8qqglE/Cbjdnqk07flkjaFBbTI+yW5HVkv3lIh5zaPYSvEZ/mIWxqapUFeySRBfxoZIq/QKWm7f+XaCSkLv7+YcEsjQ6cJDXNLoW8gN2P4mKOwQUEvn2LTikLiBNQX7nDHGy/qdFpILVQmPUwEK4t4i73qCr6/KxgoWaiEGr7fUkbXKkS7P1W0NeayAUQ0cVYOi2WoQ2rFZwqRI4vrGohZ4lnTZt3aK7QjS3gXGN1QTZUDfcKXVWiH7hULuNcx59GLz747e/9GcpJvzo0QZS2scy3k6ydld4b9ZI/SUgxAg/4G9XYVBxzH+0W2T+nJzeJZv4p4825qKaRvKLTIWz1QAZbxTZ+wu1ODHjLA0Fjau0sk8TaqSe+te57gEyg3ulXg9xQLixye9RzpzA==
+X-Microsoft-Antispam-Message-Info: rmMT7pWWkc21ncygTnIzwJW7IsYDCkN29h5bCy2GHBQQULrzjJtTt1Cr3Oa/cJLjQSy9sApertA68w0g+FwNXKPP2tC6DiKYq+EUMlY2vVfziU0SQKTL4VAsGqdNeRSQ053/9YpNbp37OwjZfykzQ2ol0Hi8aioff4o+oXcXnig5al+jhe91si3XfpqovCN55haRzV7xBDKiAN8VhoRzEoCh/Jq6gj4mFrtXeNPeAey2HMEJRdJdp44ZQRF1OZ0JIbYcR3vRavo4jx+oXFj5fsVuBNtFZ0Odev38jjnHRUbhLfiVeLF3bGr3VVtaLEDszIL5JGxNF5jIG1eN2E1Mtmv6Sc0IkhispsGbx9DPeTZcYu+cSkMlZ1bb3jKrYq2sXpLMfTLUplc+VJB1hj5etH25y7KlQpc5htGvNzPMFrVASk9+9HGhaln4wCA8fyALgclzy4g9wKZgKwA03XcqTkELDTQ8uLeAd7fnQ2GCzLwbnzQPR6w+2/HoZewby09VCebAm8I7SCmlSyjNicHiTyI/EW+5E3DShWK2jx5fBidyWGqekRu6Qi6t6jDQM6Z3BLu03aU8yZzBo74PEdYR0c7SSGPP6uiQ60yAMonsb0MTDg8Ojk9boamR9CEoYUMwY+GheSNk6qxZAuW8wdLi2xDU/vt5X4Uia27tQlfP48UdSG4q8TdVbSTKRs9WOdR0kf/iFpyRU3TpC88OLiYXuQ==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(2906002)(5660300002)(86362001)(8676002)(508600001)(7416002)(66476007)(66946007)(66556008)(4326008)(6512007)(8936002)(6486002)(6666004)(6506007)(52116002)(83380400001)(38350700002)(1076003)(186003)(26005)(36756003)(316002)(2616005)(38100700002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?LxBoU50vRUYXsU/9e8979OAqi80LzV6tevL904DKh0OIc2Zb58G6m0oNX2BL?=
- =?us-ascii?Q?qzbhof6Y56dgaclIrZrdjV5BqP6pIOPezDb1R6mvlLWoKFArCMEsjONML+XN?=
- =?us-ascii?Q?LrmQv/+kIdNT7SwlynNVH7y0gWoOYtvhMtpnRBHE7Sx3RmdZzQkonGeO76nz?=
- =?us-ascii?Q?IeOahankN2sBx5AIhpTHSj9fqhTFkBxbWlhFCO1ygv0QJ7S9ar1AEVYCeEdV?=
- =?us-ascii?Q?u+s5eN14jHFoo0XboEde3Z89JnfgJKjQEb2B2LhNYvbAwpAhh2A9KjJEhKtl?=
- =?us-ascii?Q?Bef8At228qmQCFyIMqDKXcOTEJBDDyRbY4wFkm1PBexuwfjNf9b1h5oIC4mM?=
- =?us-ascii?Q?u4y2jyReByEGoIjaxHAQmOlPyAeMEccKEdMzJ3i+jl0IAiTy5K4CfdOqzK5c?=
- =?us-ascii?Q?PITmHZWDitXB2yQeEwA0+Qd8r/zsWPqNFrhKtk9dwgkbBC4X7L/4z1kzeuY7?=
- =?us-ascii?Q?wDX5y7EHoKw5PUHzZM4NaZMuKWbBSTRpNCV838V+jXu8guGBipqdFR2t7agA?=
- =?us-ascii?Q?l/6WQkiXo1eN5a8/ibqgUTxLY0t9xqMKgXGTxIb7IXpc8sOpqMP7277zfSbM?=
- =?us-ascii?Q?Yzr2CUDeKHfSq0GGx2D6XNLv8nBd/689gX4H1F8XyNP/0CklPM6np2+3dCNo?=
- =?us-ascii?Q?5UKpyIxdhbCq9+Kp1VtwYq5kHASFYDYz0VIglvljRjz3odjM52PB93R62sV1?=
- =?us-ascii?Q?xmk8p5hat9xb6KgKOxzCk47zai1XdUI8hLK0tZdCiOi1+1d9EOPh98PucyUL?=
- =?us-ascii?Q?xMzscXWXUDam8H7Ni0navB+9hW06DB0i6DeO8ah3UbkWucybtqfdC7HmFZIz?=
- =?us-ascii?Q?CXLEhAriZqb/4PeeYgquIy8lKgfNneJotE4+EhtBwrU3wAYwiz6LC9W9h7TS?=
- =?us-ascii?Q?CW5mogYjTA7hE5fjzKZ9H3qBtnYj3pxUL6PVM6fPCV6WMPCzN0K0MxqiZV7q?=
- =?us-ascii?Q?0PrDyp63p0ajZg+4kjHaxTe8PqMYQIrtYK6fOsrL5fSDNzo7COBSl5RhBUHt?=
- =?us-ascii?Q?vp2DBtRXmmfCElJcXic0PIEwn6eRS8brNILXtrYb/SOniIMFrVaeA+DroI7Q?=
- =?us-ascii?Q?eJc6jccU7dlYmxGMjBURNlSAs0ogC03e3oXmrl/P1SPsBudtAGgoO+g8T6ur?=
- =?us-ascii?Q?jv+bYerPVCuY0uZIITZmtCNWzl3bObPtytLml4/ZrFZHjnMgP6dRtJm9L1ra?=
- =?us-ascii?Q?NXUPylBrvl08cQgdMGphjtCuZpsyVV1jMdT/W5npYAMsK3BsWTVlo4TPk+sa?=
- =?us-ascii?Q?DfmFWXUn1xgdjBRHicGEPx2eLkuGO1l2HxAREvfvGa/1bB8yj39mSXp+WddE?=
- =?us-ascii?Q?iEJGs96kEDkMr+7zght8gNI0ARmvLtnxJxD8RfX235EpljVy/J8Z+eEKKy8E?=
- =?us-ascii?Q?9Mb9RRrihOuCIh0jUONtGFZ9aLtDQjacgr6ExjZUxpzYzaLnoZxoGaE7g2Ch?=
- =?us-ascii?Q?dkQ1WExwttHSouJ7M+tDnkU16gs6FOesk88JsapXMCAnYJLEZ7pxpiSLfk9f?=
- =?us-ascii?Q?GWC+S6auPcIGsZ0ojDIp4FfmkSQgk4bdkLWiOrWNPfQ2f+0H4DECLQwyBAOH?=
- =?us-ascii?Q?lRcXfUahEUaSwlz+xMU59fAWew3xZQ1W4yIfG7JjN838CBTeggK/GjgnnnvQ?=
- =?us-ascii?Q?y5mEXKdF7PbL/rx+MidgOdc=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?vVxnVPJRBytgBSEsdOBo5mwCfFrZfIOgu381dBO5r1528u9S/WvVY0mzpebj?=
+ =?us-ascii?Q?bRVPH331rvDSUokPBaVuLl3OhmP4dOf2GIz1u3yF1pVjYALbnuai+huLOfOV?=
+ =?us-ascii?Q?qKKU4zjVEIQmAHCTXB5AXbsdq4o/wR4+aqn+dOAJEj5flULCURcOGwRnHbCL?=
+ =?us-ascii?Q?3uO6Zo8Meau2OKNSnV8t7cgCLoWAQPa/gm7dfGE3xGw6h09WeRQMKbjVp3/2?=
+ =?us-ascii?Q?Wpy4bOs5XI2IdK1pTF2/Qey0bJhEeA8nPTuwpXBaaitP0uw9S8G3LFB4pPBZ?=
+ =?us-ascii?Q?3tzdLr4HmX5PBD2brmWsevePvnz8hd4ApYLLmp/HkY9lPsO1E9MdaYso9L1Y?=
+ =?us-ascii?Q?8+EhYxtnGzoRQcjGoZ/pxexUWzHujJhLeyfxb2ROV4Mh8kEN2ElB+xPl4dNW?=
+ =?us-ascii?Q?biRf7s2L+kO3uECcti5itu637OOsEkcmW+2rgapyqLlDTqpov99O5p6WTdg+?=
+ =?us-ascii?Q?GTwz40n2DH/Rhh4UI/Yu3etY5n7L6dGh+Swsu3SQ7qlVbFXW5eHB4+u3C38j?=
+ =?us-ascii?Q?hN+cvu1iDnHhzvdSpeCNJTq98kzUrwKWWXm5YSoMVPomSQo9ytqUYHUvN8ee?=
+ =?us-ascii?Q?OxSPvijmY9D+JMpI3/f8uZNJALn6IhB/6UQaXZSU11BoJdpTObsZKexP36vz?=
+ =?us-ascii?Q?NS5CMj0PPFdeapfxH51IvsgFMuTvGX3pzBj4X3gRNk3jtoaGtQLoZiC0qk3O?=
+ =?us-ascii?Q?Or4FrDlOaBWVsmAX/q2pbzR7Zh286OGamXqkf9usPW0PJ+pykRwF8YPzqXDE?=
+ =?us-ascii?Q?We/rGbUrdT3sgefLJUaZsOS0mDnXVsLBBVFmMawcG6cf1BScgq1ywRNgGl1K?=
+ =?us-ascii?Q?ae0GVIj087o+oXWmKcViNA9IGz7Gv9S26gR2yWlrn6ToNwq933sVgVGt248K?=
+ =?us-ascii?Q?17xufGpy53JpMitiN7paimKW8GRgarmiOHSfGQjwmS3af8iz6BWBRAmGVbLj?=
+ =?us-ascii?Q?fyCbVVSgZc5VM1l7O4lcj9CKxdO8aVTc1BhM92WoT6DFdpwRqjJ7uud3axjz?=
+ =?us-ascii?Q?PeAU9iLMKukY66n1cGCM5cIleg/1pHZnB4qtHmOkhwpRUe9Zhj5U4H5xP6CL?=
+ =?us-ascii?Q?nxx3YSl1oY7x6EZf4LCxyhz3TYRZDc7RI7K03M3TRJhvUcMcU+IWZt8oov7Y?=
+ =?us-ascii?Q?0Q3ubIf7T4TTEdWZHCr1vuMsq9nTZubFVTZfotxAeASeFOUv0Mc3bVWjdI/L?=
+ =?us-ascii?Q?spFbtJS0kFZI3p2N5Cn6/8FV/OSH6Vo3L/gSwtCNh+sGuXB9a4m3BsU35hah?=
+ =?us-ascii?Q?Xy7Gg87gE9Iu7wFBCnLUo2NF9xyKAAREI4h1yht9t+q9WAWbrz8aHac4LtRC?=
+ =?us-ascii?Q?XaT2Q1Ifv/X89MMEY6HEMU8m61AVn/s9G5KfVZa2EyYwsm5JwNpvgHQFkHIe?=
+ =?us-ascii?Q?hv2vET8eSyoDrpbTdqo0Jfx5sUc9E9tUrARJCegtLPhyIeMnIQKkoNSW6rJs?=
+ =?us-ascii?Q?3D0yPUc+pR6oPXkhuGVIoS+MDmnF1OhzGiFTae6T6CxlAL+G4KyuD4U034p3?=
+ =?us-ascii?Q?mddfkw0stx1c6sRWKO5q3ptdk9f6US2OylbcjJcGr+3TJmORB/zfoCjfC+6W?=
+ =?us-ascii?Q?exqFjGwiV9n+ScJyG6DbNUJwQVOljcVQulDd5HCLr4UmK4EEcvG5tHnVRcQQ?=
+ =?us-ascii?Q?2t43/LYkm2oOU4xnn905Sa4=3D?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c94affd4-c8ef-4b42-83f2-08da008c92c4
+X-MS-Exchange-CrossTenant-Network-Message-Id: bdd930e0-2b0d-4454-4408-08da008c9525
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9186.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2022 22:48:18.5838
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2022 22:48:22.5577
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Pwg/n63VriCax0aSLs8w/D4SxfaKPkl5+0vOhE6j37XB7MltWhvcOkwqa5mrC+/sg6uzg7FgFwbBAqJDP1OArw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: obikCPHB2etMIBswy4drpFypsuMR7Uvph4qQRfwkuy5nosrCm1s/9aSfqy/fV3i5RDGCqPZSSIdnHQ40IkR6Nw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4946
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -120,74 +120,54 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-When eDMA is controlled by the Endpoint (EP), the current logic incorrectly
-programs the source and destination addresses for read and write. Since the
-Root complex and Endpoint uses the opposite channels for read/write, fix the
-issue by finding out the read operation first and program the eDMA accordingly.
+The "direction" member of the "dma_slave_config" structure is deprecated.
+The clients no longer use this field to specify the direction of the slave
+channel. But in the eDMA core, this field is used to differentiate between the
+Root complex (remote) and Endpoint (local) DMA accesses.
 
-Cc: stable@vger.kernel.org
-Fixes: bd96f1b2f43a ("dmaengine: dw-edma: support local dma device transfer semantics")
-Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
+Nevertheless, we can't differentiate between local and remote accesses without
+a dedicated flag. So let's get rid of the old check and add a new check for
+verifying the DMA operation between local and remote memory instead.
+
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
 Resend added dmaengine@vger.kernel.org
 
-Change from V1-v3
- - Direct pick up from Manivannan
+Change from v1 to v3
+ - direct pick up from Manivannan
 
- drivers/dma/dw-edma/dw-edma-core.c | 32 +++++++++++++++++++++++++++++-
- 1 file changed, 31 insertions(+), 1 deletion(-)
+ drivers/dma/dw-edma/dw-edma-core.c | 17 ++---------------
+ 1 file changed, 2 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index 0cb66434f9e14..3636c48f5df15 100644
+index 3636c48f5df15..0635157d260c1 100644
 --- a/drivers/dma/dw-edma/dw-edma-core.c
 +++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -334,6 +334,7 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
- 	struct dw_edma_chunk *chunk;
- 	struct dw_edma_burst *burst;
- 	struct dw_edma_desc *desc;
-+	bool read = false;
- 	u32 cnt = 0;
- 	int i;
+@@ -341,22 +341,9 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+ 	if (!chan->configured)
+ 		return NULL;
  
-@@ -424,7 +425,36 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
- 		chunk->ll_region.sz += burst->sz;
- 		desc->alloc_sz += burst->sz;
+-	switch (chan->config.direction) {
+-	case DMA_DEV_TO_MEM: /* local DMA */
+-		if (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ)
+-			break;
+-		return NULL;
+-	case DMA_MEM_TO_DEV: /* local DMA */
+-		if (dir == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_WRITE)
+-			break;
++	/* eDMA supports only read and write between local and remote memory */
++	if (dir != DMA_DEV_TO_MEM && dir != DMA_MEM_TO_DEV)
+ 		return NULL;
+-	default: /* remote DMA */
+-		if (dir == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_READ)
+-			break;
+-		if (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE)
+-			break;
+-		return NULL;
+-	}
  
--		if (chan->dir == EDMA_DIR_WRITE) {
-+		/****************************************************************
-+		 *
-+		 *        Root Complex                           Endpoint
-+		 * +-----------------------+             +----------------------+
-+		 * |                       |    TX CH    |                      |
-+		 * |                       |             |                      |
-+		 * |      DEV_TO_MEM       <-------------+     MEM_TO_DEV       |
-+		 * |                       |             |                      |
-+		 * |                       |             |                      |
-+		 * |      MEM_TO_DEV       +------------->     DEV_TO_MEM       |
-+		 * |                       |             |                      |
-+		 * |                       |    RX CH    |                      |
-+		 * +-----------------------+             +----------------------+
-+		 *
-+		 * If eDMA is controlled by the Root complex, TX channel
-+		 * (EDMA_DIR_WRITE) is used for memory read (DEV_TO_MEM) and RX
-+		 * channel (EDMA_DIR_READ) is used for memory write (MEM_TO_DEV).
-+		 *
-+		 * If eDMA is controlled by the endpoint, RX channel
-+		 * (EDMA_DIR_READ) is used for memory read (DEV_TO_MEM) and TX
-+		 * channel (EDMA_DIR_WRITE) is used for memory write (MEM_TO_DEV).
-+		 *
-+		 ****************************************************************/
-+
-+		if ((dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ) ||
-+		    (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE))
-+			read = true;
-+
-+		/* Program the source and destination addresses for DMA read/write */
-+		if (read) {
- 			burst->sar = src_addr;
- 			if (xfer->type == EDMA_XFER_CYCLIC) {
- 				burst->dar = xfer->xfer.cyclic.paddr;
+ 	if (xfer->type == EDMA_XFER_CYCLIC) {
+ 		if (!xfer->xfer.cyclic.len || !xfer->xfer.cyclic.cnt)
 -- 
 2.24.0.rc1
 

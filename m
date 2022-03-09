@@ -2,98 +2,135 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5998F4D128D
-	for <lists+dmaengine@lfdr.de>; Tue,  8 Mar 2022 09:44:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BBAD4D2707
+	for <lists+dmaengine@lfdr.de>; Wed,  9 Mar 2022 05:06:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343514AbiCHIpl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 8 Mar 2022 03:45:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54422 "EHLO
+        id S231311AbiCICCH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 8 Mar 2022 21:02:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235249AbiCHIpl (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 8 Mar 2022 03:45:41 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F120F3DA65
-        for <dmaengine@vger.kernel.org>; Tue,  8 Mar 2022 00:44:44 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mtr@pengutronix.de>)
-        id 1nRVSD-0004uE-Rn; Tue, 08 Mar 2022 09:44:25 +0100
-Received: from mtr by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mtr@pengutronix.de>)
-        id 1nRVSC-0005PI-4E; Tue, 08 Mar 2022 09:44:24 +0100
-Date:   Tue, 8 Mar 2022 09:44:24 +0100
-From:   Michael Tretter <m.tretter@pengutronix.de>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     vkoul@kernel.org, michal.simek@xilinx.com, lars@metafoo.de,
-        libaokun1@huawei.com, yukuai3@huawei.com,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dma: xilinx: check the return value of dma_set_mask()
- in zynqmp_dma_probe()
-Message-ID: <20220308084424.GC26648@pengutronix.de>
-References: <20220305093120.28999-1-baijiaju1990@gmail.com>
+        with ESMTP id S231338AbiCICCF (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 8 Mar 2022 21:02:05 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 078FC6A044
+        for <dmaengine@vger.kernel.org>; Tue,  8 Mar 2022 18:01:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646791263;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=JMTE4NG+0qZIipp9NlTc+cagsu8XvKYHjvLHlZFdoUs=;
+        b=LoX0QPdGmzaAsY5iv99YFb+/jVZTdP94U/YVJc2kW9Ng96AeXiRZbrv2pwPxnzhGu6eIq8
+        80bFxgH8h/+q5jVxhSnSm8AwK6vZJwk3qLWHYETKqZMmxo8wcqpB3nOjD7dqKbPh15gg6t
+        qhFsPpPlJpMv507Wgsp/OYXTcqeq8vQ=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-111-tj-5l9I2N_OPTatTFYSZKQ-1; Tue, 08 Mar 2022 21:01:02 -0500
+X-MC-Unique: tj-5l9I2N_OPTatTFYSZKQ-1
+Received: by mail-il1-f200.google.com with SMTP id k5-20020a926f05000000b002be190db91cso465577ilc.11
+        for <dmaengine@vger.kernel.org>; Tue, 08 Mar 2022 18:01:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JMTE4NG+0qZIipp9NlTc+cagsu8XvKYHjvLHlZFdoUs=;
+        b=IH/ZNhC3eKZyxM/Ey77ZE0gqrAYaEwmZZAvGR9f6FQI/lHAuzrtGrYyGukTP3sMjaY
+         xIi6s8vQ1bDMsFWipRrv1SrHRAdxqmxZY9sIu5VEVooTeiuM5Jbr/9CAnM0y2lQ3h2Lj
+         HlC2QHag3ahYEtwnEv0oGLOOkc+aZcEzxh9JeBbKfatbLKVMkHCRhWuNibAmVVNPivcW
+         BX+Mii0RV8NfzHKnjqRNS49lMsnOZTQmp4tSqBBBx5RPQEW1PLPdpKKsCDjykhVDXVSc
+         nh5wqSoQbOXkPFmt+pFTsC18hgS7vQYv6D+xGracPagLix+KN9a8ARyGWrqTcIAMFHON
+         HnfA==
+X-Gm-Message-State: AOAM533HkaRZ2TCIfay0wCGI68j4wSo7d2W5aYeYE5W2giVpFEibiN8l
+        stTNqyK0pqFq65mC+HC9V7DXaYdDIeJeIPCfnADwaltDRDLkICNPS2tYXijOxBAne5hQylCDM3g
+        pxMEO0aybFhVIe+AF3oNv
+X-Received: by 2002:a5e:930c:0:b0:641:7453:fdb with SMTP id k12-20020a5e930c000000b0064174530fdbmr16773064iom.184.1646791261263;
+        Tue, 08 Mar 2022 18:01:01 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzthKQWc54tByEEnMsfVfDaa+/muodQBg0VJuzwsmDFo+Ss7zzuWIAR5tZRLURo916y5dA4bQ==
+X-Received: by 2002:a5e:930c:0:b0:641:7453:fdb with SMTP id k12-20020a5e930c000000b0064174530fdbmr16773054iom.184.1646791261003;
+        Tue, 08 Mar 2022 18:01:01 -0800 (PST)
+Received: from localhost.localdomain.com (024-205-208-113.res.spectrum.com. [24.205.208.113])
+        by smtp.gmail.com with ESMTPSA id x2-20020a056602160200b006463c1977f9sm307849iow.22.2022.03.08.18.00.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Mar 2022 18:01:00 -0800 (PST)
+From:   trix@redhat.com
+To:     Eugeniy.Paltsev@synopsys.com, vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] dmaengine: dw-axi-dmac: cleanup comments
+Date:   Tue,  8 Mar 2022 18:00:56 -0800
+Message-Id: <20220309020056.1026106-1-trix@redhat.com>
+X-Mailer: git-send-email 2.26.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20220305093120.28999-1-baijiaju1990@gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:42:40 up 87 days, 17:28, 80 users,  load average: 0.52, 0.44,
- 0.27
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: mtr@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sat, 05 Mar 2022 01:31:20 -0800, Jia-Ju Bai wrote:
-> The function dma_set_mask() in zynqmp_dma_probe() can fail, so its
-> return value should be checked.
-> 
-> Fixes: b0cc417c1637 ("dmaengine: Add Xilinx zynqmp dma engine driver support")
-> Reported-by: TOTE Robot <oslab@tsinghua.edu.cn>
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Tom Rix <trix@redhat.com>
 
-Reviewed-by: Michael Tretter <m.tretter@pengutronix.de>
+For spdx, /* */ for *.h, remove extra space
 
-> ---
-> v2:
-> * Print an error message and forward the return value of dma_set_mask().
->   Thank Michael for good advice.
-> 
-> ---
->  drivers/dma/xilinx/zynqmp_dma.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
-> index 7aa63b652027..2791e9c6a4ea 100644
-> --- a/drivers/dma/xilinx/zynqmp_dma.c
-> +++ b/drivers/dma/xilinx/zynqmp_dma.c
-> @@ -1050,7 +1050,10 @@ static int zynqmp_dma_probe(struct platform_device *pdev)
->  	zdev->dev = &pdev->dev;
->  	INIT_LIST_HEAD(&zdev->common.channels);
->  
-> -	dma_set_mask(&pdev->dev, DMA_BIT_MASK(44));
-> +	ret = dma_set_mask(&pdev->dev, DMA_BIT_MASK(44));
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret, "No usable DMA available\n");
-> +
->  	dma_cap_set(DMA_MEMCPY, zdev->common.cap_mask);
->  
->  	p = &zdev->common;
-> -- 
-> 2.17.1
-> 
-> 
+Replacements
+configurarion to configuration
+inerrupts to interrupts
+chanels to channels
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 8 ++++----
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h          | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+index 33baf1591a490..e9c9bcb1f5c20 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier:  GPL-2.0
++// SPDX-License-Identifier: GPL-2.0
+ // (C) 2017-2018 Synopsys, Inc. (www.synopsys.com)
+ 
+ /*
+@@ -35,7 +35,7 @@
+ /*
+  * The set of bus widths supported by the DMA controller. DW AXI DMAC supports
+  * master data bus width up to 512 bits (for both AXI master interfaces), but
+- * it depends on IP block configurarion.
++ * it depends on IP block configuration.
+  */
+ #define AXI_DMA_BUSWIDTHS		  \
+ 	(DMA_SLAVE_BUSWIDTH_1_BYTE	| \
+@@ -1089,10 +1089,10 @@ static irqreturn_t dw_axi_dma_interrupt(int irq, void *dev_id)
+ 
+ 	u32 status, i;
+ 
+-	/* Disable DMAC inerrupts. We'll enable them after processing chanels */
++	/* Disable DMAC interrupts. We'll enable them after processing channels */
+ 	axi_dma_irq_disable(chip);
+ 
+-	/* Poll, clear and process every chanel interrupt status */
++	/* Poll, clear and process every channel interrupt status */
+ 	for (i = 0; i < dw->hdata->nr_channels; i++) {
+ 		chan = &dw->chan[i];
+ 		status = axi_chan_irq_read(chan);
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+index be69a0b76860d..e9d5eb0fd5948 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier:  GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ // (C) 2017-2018 Synopsys, Inc. (www.synopsys.com)
+ 
+ /*
+-- 
+2.26.3
+

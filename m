@@ -2,33 +2,33 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9288F4D4DE4
-	for <lists+dmaengine@lfdr.de>; Thu, 10 Mar 2022 16:59:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55C5E4D4DCA
+	for <lists+dmaengine@lfdr.de>; Thu, 10 Mar 2022 16:59:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239408AbiCJP7N (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 10 Mar 2022 10:59:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58916 "EHLO
+        id S239293AbiCJP7Q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 10 Mar 2022 10:59:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239345AbiCJP7L (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Mar 2022 10:59:11 -0500
+        with ESMTP id S239354AbiCJP7P (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Mar 2022 10:59:15 -0500
 Received: from relay12.mail.gandi.net (relay12.mail.gandi.net [IPv6:2001:4b98:dc4:8::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E5024AE0E;
-        Thu, 10 Mar 2022 07:58:09 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B3A6D956;
+        Thu, 10 Mar 2022 07:58:12 -0800 (PST)
 Received: (Authenticated sender: miquel.raynal@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id 8851A200010;
-        Thu, 10 Mar 2022 15:58:02 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPSA id 50CC1200015;
+        Thu, 10 Mar 2022 15:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1646927884;
+        t=1646927891;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=n/exwqVSBn9GMxyX4v9iy7CTZTwOTnkcN2SvYt0CMdI=;
-        b=lCqbdEoOWMH/Icj7qhCIkRLWLWNNIiGNJ3vAz78xNiCFqlqMPkDsEMQ43CpD54wxIvjwDT
-        dlHW1LCPiA1LF3g6DeDAi4/0KxLKidBiexZ9ZdsSP13eKRRjEg5aknnD3AgPRSAJ05o0vv
-        6dX1csZ1U9hLxlxitTXUy9iFrw7f6a/E9VJY9NmJzNwiDu4pIP9RkUGeMe2oQ+XmYj2KW3
-        Lq9YNPKYC7s98o36kO6NBOpHibCiMqlzrBE5umaJuTvt+SlQhjhRgwQyZiRV7BQD3JyKhJ
-        f+QG7uvuTAz8nHy6Qqu8oj/RRu+6Z6XBN/tAKmrC5u3wmA3r2md98FhNdT4dOQ==
+        bh=psSRZJhAOXsPUtZ0dZbzo0PztnR1Q8vauZShn+Y/BqQ=;
+        b=dHKe8bdOLag8ZzOFKaE/R7ZM7mor9rELSLl7I4FEYzK+7t0/M1iT77H1GKLUPdW0kAUUvU
+        opSMEHtmeztbvdrf9+bZBUeAHkaUX2fyEcq6Z3YJWdkTtmWoOTdIdqnu8RMbsTsOWU5pUG
+        51CSahH5LxK2zAcDuEUFkuwXFT/zzKG3mK1i8PZvUgp3ukuZmkhIOFZX6fCByJeLuKBE6w
+        Sp2EL13+PXdSwMF6FAy0yzMstvV+uZhBJd6ffw8I/yH2VUf0XAwm2rwxow/bnNJXUyInSS
+        G1F5nnuEN452avMDmYpFjPt2I8RBD0yYQGLgPJcj43PTDX/VB3crKanosJvOmA==
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     linux-renesas-soc@vger.kernel.org,
         Magnus Damm <magnus.damm@gmail.com>,
@@ -47,10 +47,12 @@ Cc:     Stephen Boyd <sboyd@kernel.org>,
         Pascal Eberhard <pascal.eberhard@se.com>,
         Herve Codina <herve.codina@bootlin.com>,
         Clement Leger <clement.leger@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v4 2/9] dt-bindings: clock: r9a06g032-sysctrl: Reference the DMAMUX subnode
-Date:   Thu, 10 Mar 2022 16:57:48 +0100
-Message-Id: <20220310155755.287294-3-miquel.raynal@bootlin.com>
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v4 3/9] dt-bindings: dma: Introduce RZN1 DMA compatible
+Date:   Thu, 10 Mar 2022 16:57:49 +0100
+Message-Id: <20220310155755.287294-4-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20220310155755.287294-1-miquel.raynal@bootlin.com>
 References: <20220310155755.287294-1-miquel.raynal@bootlin.com>
@@ -67,37 +69,36 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This system controller contains several registers that have nothing to
-do with the clock handling, like the DMA mux register. Describe this
-part of the system controller as a subnode.
+Just like for the NAND controller that is also on this SoC, let's
+provide a SoC generic and a more specific couple of compatibles for the
+DMA controller.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/clock/renesas,r9a06g032-sysctrl.yaml     | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ .../devicetree/bindings/dma/snps,dma-spear1340.yaml       | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.yaml b/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.yaml
-index 25dbb0fac065..95bf485c6cec 100644
---- a/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.yaml
-+++ b/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.yaml
-@@ -39,6 +39,17 @@ properties:
-   '#power-domain-cells':
-     const: 0
+diff --git a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+index 6b35089ac017..c13649bf7f19 100644
+--- a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
++++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+@@ -15,7 +15,13 @@ allOf:
  
-+  '#address-cells':
-+    const: 1
+ properties:
+   compatible:
+-    const: snps,dma-spear1340
++    oneOf:
++      - const: snps,dma-spear1340
++      - items:
++          - enum:
++              - renesas,r9a06g032-dma
++          - const: renesas,rzn1-dma
 +
-+  '#size-cells':
-+    const: 1
-+
-+patternProperties:
-+  "^dma-router@[a-f0-9]+$":
-+    type: object
-+    $ref: "../dma/renesas,rzn1-dmamux.yaml#"
-+
- required:
-   - compatible
-   - reg
+ 
+   "#dma-cells":
+     minimum: 3
 -- 
 2.27.0
 

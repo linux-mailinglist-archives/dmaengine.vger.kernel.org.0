@@ -2,67 +2,67 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A23C4D3E90
-	for <lists+dmaengine@lfdr.de>; Thu, 10 Mar 2022 02:07:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C3EC4D3E92
+	for <lists+dmaengine@lfdr.de>; Thu, 10 Mar 2022 02:07:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239072AbiCJBIW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 9 Mar 2022 20:08:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60706 "EHLO
+        id S239082AbiCJBIX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 9 Mar 2022 20:08:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229604AbiCJBIV (ORCPT
+        with ESMTP id S236052AbiCJBIV (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Wed, 9 Mar 2022 20:08:21 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E1D121520;
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB3E5121534;
         Wed,  9 Mar 2022 17:07:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646874441; x=1678410441;
+  t=1646874442; x=1678410442;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=jezaHxZzZDCmR0O0c9KCwG+hrjjtSh7P8g2DNYqEJT0=;
-  b=IjO8VcmtD8VphCLpZgB/6E3Vzf9CZiGJj/WSVjFEtqji2z+FbWQqH+0X
-   dlrmGxB6FOyqbkM7MAqBzmQflfueTn2kQZz4PVnGfcLWCdnVWgz2rPV7J
-   4Ry/rOvbx4IsVVFM1QlaKwjfQGkF4DOWKeRxcXEBXDEEYII2ugkgynXZ8
-   MM5cKg3Ba6bnESaipWCh/AG7AFbCPH5c28U38ljAVj4k5JkjrZF+dMn4E
-   FhoXSyuoUmLTxC+WtP3SsrRNNJVmIAly+FGrjLKJxuMLrBB72Ti045quX
-   ITYygoaBJxRxAQ8isn63lFSSOyQXA6twHKAjC51dCmdmFXYTJRzQ6XMQO
+  bh=fGSNyt7jWba9WqdnHOS4UIzGPJ7XPpWz0AKT3Bmx+oY=;
+  b=RXq83Dc4z78gbFJwac1CCTGBAFM60HaQF9lU/bsoTHZLG5KgQBfC/hai
+   gKBmuti+RV4fKXOjx6ilVU/yIr4AOcU2gUHc4Mwdu5iv32xn5dKMEzg4l
+   Vw5FNSPdY1Fz6lUul7/ED+EpENwiye1SGYpC5aqYQOoEde416E92td/tn
+   d5L/P/50GGTyaM7IHZjlpDhJfSTy7dqfNWGONZ0ppeZ3rA7qZ2pxAW6iw
+   aB5UYdQcqhlypUua6Km9ae8rc180MR1aod82K3Fek+SjqjMj4H7E0m/uF
+   Ru+iGLEG1tXjjBiqn0+sSYSTTnq5t7Iio3bEcNmlc1IzW1QkFfkLyeUqa
    g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10281"; a="252699115"
+X-IronPort-AV: E=McAfee;i="6200,9189,10281"; a="242574206"
 X-IronPort-AV: E=Sophos;i="5.90,169,1643702400"; 
-   d="scan'208";a="252699115"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2022 17:07:21 -0800
+   d="scan'208";a="242574206"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2022 17:07:21 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.90,169,1643702400"; 
-   d="scan'208";a="510706070"
+   d="scan'208";a="611566901"
 Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 09 Mar 2022 17:07:16 -0800
+  by fmsmga004.fm.intel.com with ESMTP; 09 Mar 2022 17:07:16 -0800
 Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1nS7Gt-00046M-Vs; Thu, 10 Mar 2022 01:07:15 +0000
-Date:   Thu, 10 Mar 2022 09:07:01 +0800
+        id 1nS7Gu-00046O-0H; Thu, 10 Mar 2022 01:07:16 +0000
+Date:   Thu, 10 Mar 2022 09:07:06 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
         hongxing.zhu@nxp.com, l.stach@pengutronix.de, linux-imx@nxp.com,
         linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
         fancer.lancer@gmail.com, lznuaa@gmail.com
-Cc:     kbuild-all@lists.01.org, vkoul@kernel.org,
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org, vkoul@kernel.org,
         lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
         bhelgaas@google.com, shawnguo@kernel.org,
         manivannan.sadhasivam@linaro.org
 Subject: Re: [PATCH v4 7/8] dmaengine: dw-edma: add flags at struct
  dw_edma_chip
-Message-ID: <202203100843.qzRV56ko-lkp@intel.com>
+Message-ID: <202203100909.fpkA804r-lkp@intel.com>
 References: <20220309211204.26050-8-Frank.Li@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20220309211204.26050-8-Frank.Li@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -81,8 +81,8 @@ https://git-scm.com/docs/git-format-patch]
 
 url:    https://github.com/0day-ci/linux/commits/Frank-Li/Enable-designware-PCI-EP-EDMA-locally/20220310-051510
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
-config: csky-buildonly-randconfig-r004-20220309 (https://download.01.org/0day-ci/archive/20220310/202203100843.qzRV56ko-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 11.2.0
+config: i386-randconfig-a015 (https://download.01.org/0day-ci/archive/20220310/202203100909.fpkA804r-lkp@intel.com/config)
+compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 276ca87382b8f16a65bddac700202924228982f6)
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
@@ -92,26 +92,23 @@ reproduce (this is a W=1 build):
         git checkout f7947d784b0fe089bdaef2fee8e57f84e390d3f2
         # save the config file to linux build tree
         mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=csky SHELL=/bin/bash drivers/dma/dw-edma/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/dma/dw-edma/
 
 If you fix the issue, kindly add following tag as appropriate
 Reported-by: kernel test robot <lkp@intel.com>
 
 All errors (new ones prefixed by >>):
 
-   drivers/dma/dw-edma/dw-edma-v0-core.c: In function 'dw_edma_v0_core_start':
->> drivers/dma/dw-edma/dw-edma-v0-core.c:427:25: error: implicit declaration of function 'SET_CH_64'; did you mean 'SET_CH_32'? [-Werror=implicit-function-declaration]
-     427 |                         SET_CH_64(dw, chan->dir, chan->id, llp.reg,
-         |                         ^~~~~~~~~
-         |                         SET_CH_32
->> drivers/dma/dw-edma/dw-edma-v0-core.c:427:60: error: 'llp' undeclared (first use in this function)
-     427 |                         SET_CH_64(dw, chan->dir, chan->id, llp.reg,
-         |                                                            ^~~
-   drivers/dma/dw-edma/dw-edma-v0-core.c:427:60: note: each undeclared identifier is reported only once for each function it appears in
-   cc1: some warnings being treated as errors
+>> drivers/dma/dw-edma/dw-edma-v0-core.c:427:4: error: implicit declaration of function 'SET_CH_64' [-Werror,-Wimplicit-function-declaration]
+                           SET_CH_64(dw, chan->dir, chan->id, llp.reg,
+                           ^
+>> drivers/dma/dw-edma/dw-edma-v0-core.c:427:39: error: use of undeclared identifier 'llp'
+                           SET_CH_64(dw, chan->dir, chan->id, llp.reg,
+                                                              ^
+   2 errors generated.
 
 
-vim +427 drivers/dma/dw-edma/dw-edma-v0-core.c
+vim +/SET_CH_64 +427 drivers/dma/dw-edma/dw-edma-v0-core.c
 
    359	
    360	void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)

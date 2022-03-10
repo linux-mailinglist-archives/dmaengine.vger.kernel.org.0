@@ -2,112 +2,78 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C23744D524D
-	for <lists+dmaengine@lfdr.de>; Thu, 10 Mar 2022 20:44:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EEF54D51E1
+	for <lists+dmaengine@lfdr.de>; Thu, 10 Mar 2022 20:43:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343549AbiCJT04 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 10 Mar 2022 14:26:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33104 "EHLO
+        id S230512AbiCJTjH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 10 Mar 2022 14:39:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237730AbiCJT0z (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Mar 2022 14:26:55 -0500
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2049.outbound.protection.outlook.com [40.107.21.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C20D137032;
-        Thu, 10 Mar 2022 11:25:54 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZrwJe/GWCEWTRA7Jm6kJdI/jAB7ajon6EEw1shr9EHvs0nv+iMSFCZtF/LfgNtKpyL9JKdxW5F5KT0S3ezo+IHTk+cyKS3UgCEjO6RLoLJJf9Mw25/WmxSlkm5+cEF6slQcM4fgJA1gZK3wXdSKG+MhYHKlrVnAV7gIgxvGfycAD9r75IS9Q6uYTMNlSInk0Vdtlk/D+j77A+rY58DLp1yh9zgOOv9Xn6t3lsyePz8LSPPy/E1ZlzEaoHE8YQpoRi3D0UHUTy+vvNIoNJZ8ilzwy6kHzDvYk5si1KcLzFJvChn6k8Gr47N5sfjYZGrcWI/uOjFTut7QPg1xQmPUMbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0bzfzJG5ma+hOdOIf/GOHIp/ZCbgsvfSgRFHi0BBcoU=;
- b=MCnF35Sw/DqKsmusi+OznCpSjdhFKWLdLWc0vIAO++Wd6pMGTY6Fww2N8cj8Da7iG1Iev87EIDJURAXpa93yHx6KdizVj0WBRFwsKAtkUthkGrR5q0YpnsDAn0dU227xhNrVZxQfWTivV9KRRK7RmiwyyNo1GTipqKGtb8Joj6Bx93XMnH814dO/4XbWPeBCgbusUb62Lu1DuS/uFqe9XZhxw2WR5Pd8EoOxl9/t/at6mAlUwDbcetfF8DsojIbG1hrzigQrxVCSpoMe3q3Eak9+0YsIR7ha9KpUcF883E5uPBpeWzP+UkGosfzh7bX8sGDlrOWm6zGb4j0AlZrq4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0bzfzJG5ma+hOdOIf/GOHIp/ZCbgsvfSgRFHi0BBcoU=;
- b=Gfe/WrVF0hf+cCNUjJ7lwBJbfb/6dkZMOvGSmQ3dn9JTILVe5ED5czgogMznGfc7Sq+1tDZuKVv8qkSPK6D9we3BnIE4iDDkXXfzSo3Mo7rK8xkMqPE4WwLquHwCsWgdwnHJeWCAMvbaYIQ4zUb/lfUH8xUvqbCzeI03EWi5bG0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9186.eurprd04.prod.outlook.com (2603:10a6:102:232::18)
- by DB7PR04MB4858.eurprd04.prod.outlook.com (2603:10a6:10:1b::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.22; Thu, 10 Mar
- 2022 19:25:51 +0000
-Received: from PAXPR04MB9186.eurprd04.prod.outlook.com
- ([fe80::c897:1bdf:e643:aef8]) by PAXPR04MB9186.eurprd04.prod.outlook.com
- ([fe80::c897:1bdf:e643:aef8%7]) with mapi id 15.20.5038.027; Thu, 10 Mar 2022
- 19:25:51 +0000
-From:   Frank Li <Frank.Li@nxp.com>
-To:     gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
-        l.stach@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        fancer.lancer@gmail.com, lznuaa@gmail.com
-Cc:     vkoul@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        kw@linux.com, bhelgaas@google.com, shawnguo@kernel.org,
-        manivannan.sadhasivam@linaro.org
-Subject: [PATCH v5 9/9] PCI: endpoint: functions/pci-epf-test: Support PCI controller DMA
-Date:   Thu, 10 Mar 2022 13:24:57 -0600
-Message-Id: <20220310192457.3090-10-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.24.0.rc1
-In-Reply-To: <20220310192457.3090-1-Frank.Li@nxp.com>
-References: <20220310192457.3090-1-Frank.Li@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR05CA0051.namprd05.prod.outlook.com
- (2603:10b6:a03:33f::26) To PAXPR04MB9186.eurprd04.prod.outlook.com
- (2603:10a6:102:232::18)
+        with ESMTP id S230192AbiCJTjH (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Mar 2022 14:39:07 -0500
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5AADEAC95;
+        Thu, 10 Mar 2022 11:38:04 -0800 (PST)
+Received: by mail-lf1-x12b.google.com with SMTP id w12so11231463lfr.9;
+        Thu, 10 Mar 2022 11:38:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+q4NFh8M5rLEUTlZmWX48wHpQfLJseJX3YD02j5qCHU=;
+        b=euWE92alhBYNO7kBWzGAnu+lB9PODOQuTmYc6mw6mlEjRDisHwrTyV0E7YPno+A/ub
+         sLISMWuDgj0vLLacOa553fgqiV7Dcw3nUArKBzNppoB2GmRjZmL5sFxBbKYXBF4XUG2w
+         kxZFaAptt5dXJp4M5O+GOaOng6+dv3mpb/xUTBPaw4xAArRH6k9iKPicTleZZBJVHqCr
+         iay9maq/ElQenZtz+TcPklDT3T6zA1njb2UoPTX1GW13LHHiewTA/ybStjeYxL34XyQO
+         SSOf1yho/+iFyeDlncroenl31irFzyAgoHs3WI71nz2U0uEB2wgpGV9ntgb1GTT1Q6dA
+         IQiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+q4NFh8M5rLEUTlZmWX48wHpQfLJseJX3YD02j5qCHU=;
+        b=LNu+A04Cvv17aLDKzryJrBW1KHJg+F2HsZSw1URc6ogax8I44YrMSSj6jrdtoJ3kjd
+         HVXP5YCECUuTwwxFKptJGrZDVcRIsdorH8MSF6G1NK04N9lVEVzomaKvONrkzJsAx+hO
+         mJ2Qfck1j2DlBH6rH5WjdM2yRopxE5Ezg+EzC66gquh0cwcBNKYi6LT/nH62oey0lr35
+         hHuEyTuCxca09OcM5ND6FgEuYdzD4h1VvGOaP6YjBe7KnkS1QtG0P1Gqpm35ze4o+Dp0
+         67VKqgFle6fdXI9Os2LrSVwIWyrE3BRw3fiLnKFv7Cvy8StljdTShTmkqG/seHFUOdBb
+         BfSg==
+X-Gm-Message-State: AOAM531qJ66MG3QenjnHy6QmSAk6VTLUfsKB07N+X1okyUZNPvGCqgTQ
+        ZUsu0Eo4iaueJN+0zijglKg=
+X-Google-Smtp-Source: ABdhPJwX6eXbihwbHBV7T1Q14omlXCOSeA00i5JdcWTKcn3/pRXf7ZCyNsSncayef7jL2/P+Ccd5jQ==
+X-Received: by 2002:ac2:46c1:0:b0:445:c00a:bdd2 with SMTP id p1-20020ac246c1000000b00445c00abdd2mr3821092lfo.429.1646941082264;
+        Thu, 10 Mar 2022 11:38:02 -0800 (PST)
+Received: from mobilestation ([95.79.188.22])
+        by smtp.gmail.com with ESMTPSA id y16-20020a2e9d50000000b00247b105c11dsm1251276ljj.34.2022.03.10.11.38.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Mar 2022 11:38:01 -0800 (PST)
+Date:   Thu, 10 Mar 2022 22:37:59 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Zhi Li <lznuaa@gmail.com>
+Cc:     Frank Li <Frank.Li@nxp.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        Lucas Stach <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
+        dmaengine@vger.kernel.org, vkoul@kernel.org,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v4 5/8] dmaengine: dw-edma: Fix programming the source &
+ dest addresses for ep
+Message-ID: <20220310193759.lkwqz5avlvznn5w3@mobilestation>
+References: <20220309211204.26050-1-Frank.Li@nxp.com>
+ <20220309211204.26050-6-Frank.Li@nxp.com>
+ <20220310163123.h2zqdx5tkn2czmbm@mobilestation>
+ <CAHrpEqSrdEegSAKw42T8qsN_BC24LS7r5a_+jKa3ZvGu5w9W1g@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c3369698-1a78-4bd3-2d15-08da02cbc9b8
-X-MS-TrafficTypeDiagnostic: DB7PR04MB4858:EE_
-X-Microsoft-Antispam-PRVS: <DB7PR04MB485822C7F7E0882D49590F3E880B9@DB7PR04MB4858.eurprd04.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: b5T/atPdeIYi36gcE8duTVX8Sb+wusMknjx717E8HGDklZwM6HmIjcElRtlifgXBnVD69s+6jKbjy+he/tMBrH/P2NGWexKVMXKHLqsiP3F5DvviJGbm4WlguFgeUFDy1t2w5wFgEP5d8yQm18m08i4MIrNGk2+Cyql4WLWp4wfDqQes+Hh3ZRb8yQNBzYvMciiOXpCyl/BEdsaHVQuJrVBAk78HiAGU2Y8GCePBzQGY39SvpzcTWfhv5dGFK/hAc8FwYlK8ycUKJaahbUwg3c0KQrskCX/w5nn/uyQJq94q8wOstY64j4+gp4jh+l4WG6yeW9vMs+f5KpkEt+ntB3JlVOZ7xepV8fkIAGnLZ8765SkKQQelaYpQ5bmjPHQNiHTMyRwslMBpmtSYlgY4ZrUTktLJoosLJsezm+V5Ra6inv35p2/yWqi/KRQXqMDid/HdrLbZdEigFXKxQaWvj7elMYiM5ONlTJOm73F6awjDxmj6KvVgmWs57g6aF2Xy0wgHI+ID0OCVX5EYv88nmxUfoP4YS5Us1ovd2NYJpmoWJoYmWRA6QJNB8ao700F9WuT80ztUje3QhDPsHm4Bg2E/lAsVAIH6YEga+1Pg8oL2JHW9R25Sffq94L8otbh+4IL4I6dzSj6KkDzxUpPqsowN5Cdbw2BTdSzqh0fWlWEkAVU7dMEcgwgkEGieZytDAA6QIOSb/qmXCBZtLEwfIA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(1076003)(7416002)(6506007)(6512007)(36756003)(186003)(5660300002)(66476007)(52116002)(2906002)(2616005)(86362001)(4326008)(8676002)(66556008)(83380400001)(26005)(66946007)(8936002)(38350700002)(6486002)(498600001)(38100700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?7sIjDg8S3u/DPFtO2nbi5A62ZM68pkcbuibK72C4Z/ZDI65TB04ESsLPOpjb?=
- =?us-ascii?Q?v3BrXIl/uejwn57l78SEkpcA+wlHg608F1xAXVF1i9GUpyiuFu75/DK46fji?=
- =?us-ascii?Q?WtJFF17UzZgbsyXwLnlDrfmlseKU0NaaM/Vzbe7ivrHwJ0AWhAoWnQbkM8yx?=
- =?us-ascii?Q?t4BTdPi71lga6BHmjQNbiox+XNrm0SzvAXDzt2iYHSFHs6sc/ljJR/l9ltya?=
- =?us-ascii?Q?zGwvh1o3l/bfUQq5mp1qNkeTlnJZmzLqelullSygK2eUo4N3Sz2JZESxXs01?=
- =?us-ascii?Q?8pcf6xdFkFv87fl+0zjCjPcnriRgFV+aUK8FIGwA7bmldUpXP/YQelMKo6DJ?=
- =?us-ascii?Q?qL27w9cH2pXBljqDTR/vMy+oqykkoDRdG6NyM5Dyhe6Qekx+wnJgMkCMUvlL?=
- =?us-ascii?Q?zvtHOu+Ac0J1VTA5ZkqXOAfa8xJ525wYJsvEhDNNQMH/WXUATTeFxe7mboM1?=
- =?us-ascii?Q?iAtEDWvMVy7a0TFW6ZXs+ZZ3FGs4SugZaP3HH+yIX88RtrRtesbMPGZhAc+j?=
- =?us-ascii?Q?Z9icrIwothtthsZPmc378Q0rkZgD+SeVE8t8+oAwLUY+DSSlkCfOqcjBNH6w?=
- =?us-ascii?Q?S1qW/he1qDQmJdaxlIZnbIrx6eNf/dDDFWWsQlSG1nc8Eo9YuUeqfplQR1sj?=
- =?us-ascii?Q?xhLbriP/1H1naWhrATMyi2/J5+MeUfr02/bQTrECgtKLNccYXAgu30C4g1h7?=
- =?us-ascii?Q?pTrcb8yh2bjwz/2aTrmoHGEgP2uzYJh9dEjQnneUKbkxdXzCb8lQ5Rbgl/6H?=
- =?us-ascii?Q?/ccC79eXorVJh6GX56iZArxCow0PIuvwe2JLC3ySB20W4WMd4ZtkhJ5+e2nO?=
- =?us-ascii?Q?1aWfs2J3p0McJvXULrFF8dBTMVqMwsqmlTMnXSWzT8k869Ws8gcE0iNJCzZw?=
- =?us-ascii?Q?6roRvPdnKcmmGBJuYgCCm3/G1xjb9btymmzpwk6wItYqWASUSWjSFMV5lse3?=
- =?us-ascii?Q?m2Z4kRC1tC2YFs87QSajlayVtMtM2tuO71yhZk1Yeb5H05YNqA1NHze4ozVn?=
- =?us-ascii?Q?WWSRLUAtRKs3XgNNoCPCvfNTwJfyT7+8ErcBS1YVGEelaKxk13gEaidxDCfH?=
- =?us-ascii?Q?iyHX2Q08/4seVU+CSS5LuXzcV38avDOqdrr5qog8MuBOl9EnsGQnAYv8rWAA?=
- =?us-ascii?Q?/iX+YNCE/hyZtJ29gl7otGyliAet0y4G8NINTIMwlP7ZRXtFu2WYQ7OoTAJl?=
- =?us-ascii?Q?bdjs+cGqGcIpTFeEuT2J3oZaibgxOKV4r45bBypbUKp8vZcU3fsuggcqwe8C?=
- =?us-ascii?Q?her2sOctevwReuwQ1H0IHkmVLFT4tuNrSd+nhEqA3/Jhaa/M6hBwZ+IqwOuH?=
- =?us-ascii?Q?ryfCDkiIwA/7iXuc36s0tWd/3+rDHGvRiByrLiaA+FAffbtgYnccp6290+Dl?=
- =?us-ascii?Q?Zaen1tcr4MiShy/5vp5hKdRLWD577d0iY4jgA8djJ2GTOQdV0XrRhLDHTT5x?=
- =?us-ascii?Q?9+4F3Kj7xpsBI1Qat+ZDMOpI8WydApxZ?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3369698-1a78-4bd3-2d15-08da02cbc9b8
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9186.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2022 19:25:51.4913
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Z8vDUDcnNwBNT3WDzqbcfTkUt5lCaO4dfoX/Vmkgh7uEjgm8y3YHX4DvW0+Qt7LxXxWQ+s2Q623JI/sRV0Q1uQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4858
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHrpEqSrdEegSAKw42T8qsN_BC24LS7r5a_+jKa3ZvGu5w9W1g@mail.gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -115,241 +81,174 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Designware provided eDMA support in controller. This enabled use
-this eDMA controller to transfer data.
+On Thu, Mar 10, 2022 at 10:50:14AM -0600, Zhi Li wrote:
+> On Thu, Mar 10, 2022 at 10:32 AM Serge Semin <fancer.lancer@gmail.com> wrote:
+> >
+> > On Wed, Mar 09, 2022 at 03:12:01PM -0600, Frank Li wrote:
+> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > >
+> > > When eDMA is controlled by the Endpoint (EP), the current logic incorrectly
+> > > programs the source and destination addresses for read and write. Since the
+> > > Root complex and Endpoint uses the opposite channels for read/write, fix the
+> > > issue by finding out the read operation first and program the eDMA accordingly.
+> > >
+> > > Cc: stable@vger.kernel.org
+> > > Fixes: bd96f1b2f43a ("dmaengine: dw-edma: support local dma device transfer semantics")
+> > > Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > > No change between v1 to v4
+> > >
+> > >  drivers/dma/dw-edma/dw-edma-core.c | 32 +++++++++++++++++++++++++++++-
+> > >  1 file changed, 31 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > > index 66dc650577919..507f08db1aad3 100644
+> > > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > > @@ -334,6 +334,7 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+> > >       struct dw_edma_chunk *chunk;
+> > >       struct dw_edma_burst *burst;
+> > >       struct dw_edma_desc *desc;
+> > > +     bool read = false;
+> > >       u32 cnt = 0;
+> > >       int i;
+> > >
+> > > @@ -424,7 +425,36 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+> > >               chunk->ll_region.sz += burst->sz;
+> > >               desc->alloc_sz += burst->sz;
+> > >
+> > > -             if (chan->dir == EDMA_DIR_WRITE) {
+> > > +             /****************************************************************
+> > > +              *
+> >
+> > > +              *        Root Complex                           Endpoint
+> > > +              * +-----------------------+             +----------------------+
+> > > +              * |                       |    TX CH    |                      |
+> > > +              * |                       |             |                      |
+> > > +              * |      DEV_TO_MEM       <-------------+     MEM_TO_DEV       |
+> > > +              * |                       |             |                      |
+> > > +              * |                       |             |                      |
+> > > +              * |      MEM_TO_DEV       +------------->     DEV_TO_MEM       |
+> > > +              * |                       |             |                      |
+> > > +              * |                       |    RX CH    |                      |
+> > > +              * +-----------------------+             +----------------------+
+> > > +              *
+> > > +              * If eDMA is controlled by the Root complex, TX channel
+> > > +              * (EDMA_DIR_WRITE) is used for memory read (DEV_TO_MEM) and RX
+> > > +              * channel (EDMA_DIR_READ) is used for memory write (MEM_TO_DEV).
+> > > +              *
+> > > +              * If eDMA is controlled by the endpoint, RX channel
+> > > +              * (EDMA_DIR_READ) is used for memory read (DEV_TO_MEM) and TX
+> > > +              * channel (EDMA_DIR_WRITE) is used for memory write (MEM_TO_DEV).
+> >
+> > Either I have some wrong notion about this issue, or something wrong
+> > with the explanation above and with this fix below.
+> >
+> > From my understanding of the possible DW eDMA IP-core setups the
+> > scatch above and the text below it are incorrect. Here is the way the
+> > DW eDMA can be used:
+> > 1) Embedded into the DW PCIe Host/EP controller. In this case
+> > CPU/Application Memory is the memory of the CPU attached to the
+> > host/EP controller, while the remote (link partner) memory is the PCIe
+> > bus memory. In this case MEM_TO_DEV operation is supposed to be
+> > performed by the Tx/Write channels, while the DEV_TO_MEM operation -
+> > by the Rx/Read channels.
+> >
+> > Note it's applicable for both Host and End-point case, when Linux is
+> > running on the CPU-side of the eDMA controller. So if it's DW PCIe
+> > end-point, then MEM_TO_DEV means copying data from the local CPU
+> > memory into the remote memory. In general the remote memory can be
+> > either some PCIe device on the bus or the Root Complex' CPU memory,
+> > each of which is some remote device anyway from the Local CPU
+> > perspective.
+> >
+> > 2) Embedded into the PCIe EP. This case is implemented in the
+> > drivers/dma/dw-edma/dw-edma-pcie.c driver. AFAICS from the commits log
+> > and from the driver code, that device is a Synopsys PCIe EndPoint IP
+> > prototype kit. It is a normal PCIe peripheral device with eDMA
+> > embedded, which CPU/Application interface is connected to some
+> > embedded SRAM while remote (link partner) interface is directed
+> > towards the PCIe bus. At the same time the device is setup and handled
+> > by the code running on a CPU connected to the PCIe Host controller.  I
+> > think that in order to preserve the normal DMA operations semantics we
+> > still need to consider the MEM_TO_DEV/DEV_TO_MEM operations from the
+> > host CPU perspective, since that's the side the DMA controller is
+> > supposed to be setup from.  In this MEM_TO_DEV is supposed to be used
+> > to copy data from the host CPU memory into the remote device memory.
+> > It means to allocate Rx/Read channel on the eDMA controller, so one
+> > would be read data from the Local CPU memory and copied it to the PCIe
+> > device SRAM. The logic of the DEV_TO_MEM direction would be just
+> > flipped. The eDMA PCIe device shall use Tx/Write channel to copy data
+> > from it's SRAM into the Host CPU memory.
+> >
+> > Please note as I understand the case 2) describes the Synopsys PCIe
+> > EndPoint IP prototype kit, which is based on some FPGA code. It's just
+> > a test setup with no real application, while the case 1) is a real setup
+> > available on our SoC and I guess on yours.
+> 
 
-The whole flow align with standard DMA usage module
+> I think yes. But Remote EP also is a one kind of usage module. Just no one
+> writes an EP functional driver for it yet.  Even pci-epf-test was just
+> a test function.
+> I previously sent vNTB patches to implement a virtual network between
+> RC and EP,
+> you can look if you have interest.
 
-1. Using dma_request_channel() and filter function to find correct
-RX and TX Channel.
-2. dmaengine_slave_config() config remote side physcial address.
-3. using dmaengine_prep_slave_single() create transfer descriptor
-4. tx_submit();
-5. dma_async_issue_pending();
+AFAIU the remote EP case is the same as 1) anyway. The remote EP is
+handled by its own CPU, which sets up the DW PCIe EP controller
+together with eDMA synthesized into the CPU' SoC. Am I right? While
+the case 2) doesn't have any CPU attached on the PCIe EP. It's just an
+FPGA with PCIe interface and eDMA IP-core installed. In that case all
+the setups are performed by the PCIe Host CPU. That's the root problem
+that causes having all the DEV_TO_MEM/MEM_TO_DEV complications.
 
-Tested at i.MX8DXL platform.
+So to speak I would suggest for at least to have the scatch fixed in
+accordance with the logic explained in my message.
 
-root@imx8qmmek:~# /usr/bin/pcitest -d -w
-WRITE ( 102400 bytes):          OKAY
-root@imx8qmmek:~# /usr/bin/pcitest -d -r
-READ ( 102400 bytes):           OKAY
+> 
+> >
+> > So what I suggest in the framework of this patch is just to implement
+> > the case 1) only. While the case 2) as it's an artificial one can be
+> > manually handled by the DMA client drivers. BTW There aren't ones available
+> > in the kernel anyway. The only exception is an old-time attempt to get
+> > an eDMA IP test-driver mainlined into the kernel:
+> > https://patchwork.kernel.org/project/linux-pci/patch/cc195ac53839b318764c8f6502002cd6d933a923.1547230339.git.gustavo.pimentel@synopsys.com/
+> > But it was long time ago. So it's unlikely to be accepted at all.
+> >
+> > What do you think?
+> >
+> > -Sergey
+> >
+> > > +              *
+> > > +              ****************************************************************/
+> > > +
+> >
+> > > +             if ((dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ) ||
+> > > +                 (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE))
+> > > +                     read = true;
+> >
 
-WRITE => Size: 102400 bytes DMA: YES  Time: 0.000180145 seconds Rate: 555108 KB/s
-READ => Size: 102400 bytes  DMA: YES  Time: 0.000194397 seconds Rate: 514411 KB/s
+> > Seeing the driver support only two directions DMA_DEV_TO_MEM/DMA_DEV_TO_MEM
+> > and EDMA_DIR_READ/EDMA_DIR_WRITE, this conditional statement seems
+> > redundant.
 
-READ => Size: 102400 bytes  DMA: NO   Time: 0.013532597 seconds Rate: 7389 KB/s
-WRITE => Size: 102400 bytes DMA: NO   Time: 0.000857090 seconds Rate: 116673 KB/s
+Am I getting a response on this comment? In accordance with that
+conditional statement having dir == DMA_DEV_TO_MEM means performing
+read operation. If dir equals DMA_MEM_TO_DEV then a write operation
+will be performed. The code path doesn't depend on the chan->dir
+value.
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-Change from v4 to v5:
- - none
-Change from v3 to v4:
- - reverse Xmas tree order
- - local -> dma_local
- - change error message
- - IS_ERR -> IS_ERR_OR_NULL
- - check return value of dmaengine_slave_config()
-Change from v1 to v2:
- - none
+-Sergey
 
- drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++++++--
- 1 file changed, 98 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 90d84d3bc868f..f26afd02f3a86 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -52,9 +52,11 @@ struct pci_epf_test {
- 	enum pci_barno		test_reg_bar;
- 	size_t			msix_table_offset;
- 	struct delayed_work	cmd_handler;
--	struct dma_chan		*dma_chan;
-+	struct dma_chan		*dma_chan_tx;
-+	struct dma_chan		*dma_chan_rx;
- 	struct completion	transfer_complete;
- 	bool			dma_supported;
-+	bool			dma_private;
- 	const struct pci_epc_features *epc_features;
- };
- 
-@@ -105,12 +107,15 @@ static void pci_epf_test_dma_callback(void *param)
-  */
- static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
- 				      dma_addr_t dma_dst, dma_addr_t dma_src,
--				      size_t len)
-+				      size_t len, dma_addr_t dma_remote,
-+				      enum dma_transfer_direction dir)
- {
-+	struct dma_chan *chan = (dir == DMA_DEV_TO_MEM) ? epf_test->dma_chan_tx : epf_test->dma_chan_rx;
-+	dma_addr_t dma_local = (dir == DMA_MEM_TO_DEV) ? dma_src : dma_dst;
- 	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
--	struct dma_chan *chan = epf_test->dma_chan;
- 	struct pci_epf *epf = epf_test->epf;
- 	struct dma_async_tx_descriptor *tx;
-+	struct dma_slave_config sconf = {};
- 	struct device *dev = &epf->dev;
- 	dma_cookie_t cookie;
- 	int ret;
-@@ -120,7 +125,22 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
- 		return -EINVAL;
- 	}
- 
--	tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-+	if (epf_test->dma_private) {
-+		sconf.direction = dir;
-+		if (dir == DMA_MEM_TO_DEV)
-+			sconf.dst_addr = dma_remote;
-+		else
-+			sconf.src_addr = dma_remote;
-+
-+		if (dmaengine_slave_config(chan, &sconf)) {
-+			dev_err(dev, "DMA slave config fail\n");
-+			return -EIO;
-+		}
-+		tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags);
-+	} else {
-+		tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-+	}
-+
- 	if (!tx) {
- 		dev_err(dev, "Failed to prepare DMA memcpy\n");
- 		return -EIO;
-@@ -148,6 +168,23 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
- 	return 0;
- }
- 
-+struct epf_dma_filter {
-+	struct device *dev;
-+	u32 dma_mask;
-+};
-+
-+static bool epf_dma_filter_fn(struct dma_chan *chan, void *node)
-+{
-+	struct epf_dma_filter *filter = node;
-+	struct dma_slave_caps caps;
-+
-+	memset(&caps, 0, sizeof(caps));
-+	dma_get_slave_caps(chan, &caps);
-+
-+	return chan->device->dev == filter->dev
-+		&& (filter->dma_mask & caps.directions);
-+}
-+
- /**
-  * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
-  * @epf_test: the EPF test device that performs data transfer operation
-@@ -158,10 +195,44 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
- {
- 	struct pci_epf *epf = epf_test->epf;
- 	struct device *dev = &epf->dev;
-+	struct epf_dma_filter filter;
- 	struct dma_chan *dma_chan;
- 	dma_cap_mask_t mask;
- 	int ret;
- 
-+	filter.dev = epf->epc->dev.parent;
-+	filter.dma_mask = BIT(DMA_DEV_TO_MEM);
-+
-+	dma_cap_zero(mask);
-+	dma_cap_set(DMA_SLAVE, mask);
-+	dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-+	if (IS_ERR_OR_NULL(dma_chan)) {
-+		dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-+		goto fail_back_tx;
-+	}
-+
-+	epf_test->dma_chan_rx = dma_chan;
-+
-+	filter.dma_mask = BIT(DMA_MEM_TO_DEV);
-+	dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-+
-+	if (IS_ERR(dma_chan)) {
-+		dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-+		goto fail_back_rx;
-+	}
-+
-+	epf_test->dma_chan_tx = dma_chan;
-+	epf_test->dma_private = true;
-+
-+	init_completion(&epf_test->transfer_complete);
-+
-+	return 0;
-+
-+fail_back_rx:
-+	dma_release_channel(epf_test->dma_chan_rx);
-+	epf_test->dma_chan_tx = NULL;
-+
-+fail_back_tx:
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_MEMCPY, mask);
- 
-@@ -174,7 +245,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
- 	}
- 	init_completion(&epf_test->transfer_complete);
- 
--	epf_test->dma_chan = dma_chan;
-+	epf_test->dma_chan_tx = epf_test->dma_chan_rx = dma_chan;
- 
- 	return 0;
- }
-@@ -190,8 +261,17 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
- 	if (!epf_test->dma_supported)
- 		return;
- 
--	dma_release_channel(epf_test->dma_chan);
--	epf_test->dma_chan = NULL;
-+	dma_release_channel(epf_test->dma_chan_tx);
-+	if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-+		epf_test->dma_chan_tx = NULL;
-+		epf_test->dma_chan_rx = NULL;
-+		return;
-+	}
-+
-+	dma_release_channel(epf_test->dma_chan_rx);
-+	epf_test->dma_chan_rx = NULL;
-+
-+	return;
- }
- 
- static void pci_epf_test_print_rate(const char *ops, u64 size,
-@@ -280,8 +360,14 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
- 			goto err_map_addr;
- 		}
- 
-+		if (epf_test->dma_private) {
-+			dev_err(dev, "Cannot transfer data using DMA\n");
-+			ret = -EINVAL;
-+			goto err_map_addr;
-+		}
-+
- 		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
--						 src_phys_addr, reg->size);
-+						 src_phys_addr, reg->size, 0, DMA_MEM_TO_MEM);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
- 	} else {
-@@ -363,7 +449,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 
- 		ktime_get_ts64(&start);
- 		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
--						 phys_addr, reg->size);
-+						 phys_addr, reg->size,
-+						 reg->src_addr, DMA_DEV_TO_MEM);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
- 		ktime_get_ts64(&end);
-@@ -453,8 +540,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 		}
- 
- 		ktime_get_ts64(&start);
-+
- 		ret = pci_epf_test_data_transfer(epf_test, phys_addr,
--						 src_phys_addr, reg->size);
-+						 src_phys_addr, reg->size, reg->dst_addr, DMA_MEM_TO_DEV);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
- 		ktime_get_ts64(&end);
--- 
-2.24.0.rc1
-
+> >
+> > > +
+> > > +             /* Program the source and destination addresses for DMA read/write */
+> > > +             if (read) {
+> > >                       burst->sar = src_addr;
+> > >                       if (xfer->type == EDMA_XFER_CYCLIC) {
+> > >                               burst->dar = xfer->xfer.cyclic.paddr;
+> > > --
+> > > 2.24.0.rc1
+> > >

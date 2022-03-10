@@ -2,57 +2,72 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 916BA4D4E6E
-	for <lists+dmaengine@lfdr.de>; Thu, 10 Mar 2022 17:16:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 334B64D4F49
+	for <lists+dmaengine@lfdr.de>; Thu, 10 Mar 2022 17:29:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229911AbiCJQPZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 10 Mar 2022 11:15:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60456 "EHLO
+        id S239962AbiCJQ30 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 10 Mar 2022 11:29:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241115AbiCJQPX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Mar 2022 11:15:23 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F007E190C09
-        for <dmaengine@vger.kernel.org>; Thu, 10 Mar 2022 08:14:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646928862; x=1678464862;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=+PynHKHb17bCQ0o3IiE3wSBX/HQ/Ce/zs87KK3OOV+A=;
-  b=Oi8XtIZkWQ/PP/q8AKemOjFwdEo3sNee6dU7GDLxX5Crtt+V5RNMl43g
-   6VUfjjGjasnjmCPdFqyT3o9G0QRcdruFGIMneQDE8fo3TpR2wE4rrLQBl
-   M1Ycf33zNS+7k1xhGt9WSKQpEZQP2NbeJ5f4IU+Y8DKJIvlExw4Pg2Jrf
-   yLUHs19+ZdHiJPX4ZyRJ5+E8MlHYZK+5/BBJ1FuMBdMJ9ALTqisHsoOtP
-   47PTFS0uoAHZvkHGTukzp41cAyTyj5mKqV7Mj+xy02+t7IOHA6TblAh5+
-   bN+hF6Wwlbgrg3nSovwxHOinfztMh2op3o6TpcFD5qg7/Z9zEy8RXAUcp
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10282"; a="254118482"
-X-IronPort-AV: E=Sophos;i="5.90,171,1643702400"; 
-   d="scan'208";a="254118482"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2022 08:14:17 -0800
-X-IronPort-AV: E=Sophos;i="5.90,171,1643702400"; 
-   d="scan'208";a="781504731"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.60.45]) ([10.212.60.45])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2022 08:14:16 -0800
-Message-ID: <2d0ee99e-f519-0e59-08e9-019974ef8b52@intel.com>
-Date:   Thu, 10 Mar 2022 09:14:16 -0700
+        with ESMTP id S243897AbiCJQ2I (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Mar 2022 11:28:08 -0500
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F29F1EEEA;
+        Thu, 10 Mar 2022 08:27:06 -0800 (PST)
+Received: by mail-ej1-x62d.google.com with SMTP id hw13so12727404ejc.9;
+        Thu, 10 Mar 2022 08:27:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3wPJa1hUAbgZSIzeJTAud0xZ3vRUz2xuwzEonWnr3LY=;
+        b=ogOI7G/rHeETioQmcRgRFHuR+jiyuRpAGdjubNFz+ysXoWjXRC+DbSF66RZswvyfhq
+         rGCcvVMhEnlsEgX4YAlR+tTQt0/h3eSNMNKO9+HCgm1ALB422JcS8/+a1GQSVTqm2Ku3
+         GCF53ojruB3aTnJ2/+7N9RbdUPjtI1M45VeMkUHzIG1+qkwG3kyUxDi8mgKnDBmSlKEb
+         MeOgTsAUKVRTVr+NsGUpkpWlPCwukSv/TUG3YMqj34HlJWMP74Z+yvOe6I+BPE7tOOC3
+         YS8aJE171GIQG+zp0Gz/pqv1XwzGm/MLAcLRhjHi4toNtOBbD2r1Q9owplqlzWC4Rj7H
+         8Lmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3wPJa1hUAbgZSIzeJTAud0xZ3vRUz2xuwzEonWnr3LY=;
+        b=O2mH5Cj6AK7G4ctNPF0wiu2bd8wi4HFVsDkIE9Oi2worzwnQn2PyLCmbPI5GNtFNUa
+         5oPwGxrItO1DfeBE2hUo2UJSpnBSSao/ilRXJkFTdl6ZQZGj7q8xcVj7hYKPlpmnpW8o
+         u9KB1Wu6EMnWepg/AsUyk4LvWlEiqZk5ZJmwcR40UsfAH51jM6G5B7KJjyi3lJc+8ssV
+         R5zT68rXOgDBPw82HhSk5n7nbxOsvlbr8jG4wq333HfBfFG9IIWV4clDPN9y34NRyy3T
+         /pCFQVfDZQhfEoS6e2FClQNsKIZZXabHwhScliv7Sh/oTY57cZPhG4k2Uf5IU6PKIIvg
+         iLOw==
+X-Gm-Message-State: AOAM531FquPWI5OC1Y/1e5Q6U+wAPFn0uoMCk8Pr5saaybwNJ4fyBjDF
+        WQYrQe7NoB43MYdklOcUTaNdFPikMUJ/hFO1Dgo=
+X-Google-Smtp-Source: ABdhPJzY9Vs2Gxwygh0ujoXT64t5XSgNWpoxjMXMh4kuREtLO+dnFZskDmzFYD0T7XBkVvs9DfgYZOTBFDcGniLydkU=
+X-Received: by 2002:a17:906:7245:b0:6cf:d3c6:8c63 with SMTP id
+ n5-20020a170906724500b006cfd3c68c63mr4690707ejk.677.1646929624067; Thu, 10
+ Mar 2022 08:27:04 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.2
-Subject: Re: [PATCH] dmaengine: idxd: don't load pasid config until needed
-Content-Language: en-US
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org
-References: <164642891995.190921.7082046343492065429.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <164642891995.190921.7082046343492065429.stgit@djiang5-desk3.ch.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+References: <20220309211204.26050-1-Frank.Li@nxp.com> <20220309211204.26050-5-Frank.Li@nxp.com>
+ <20220310123716.z6zh72ybevze3nk2@mobilestation>
+In-Reply-To: <20220310123716.z6zh72ybevze3nk2@mobilestation>
+From:   Zhi Li <lznuaa@gmail.com>
+Date:   Thu, 10 Mar 2022 10:26:51 -0600
+Message-ID: <CAHrpEqRXx8aTMCRj3PZCJiX9UC=PPfuky8Se_-21a4H11V-WdA@mail.gmail.com>
+Subject: Re: [PATCH v4 4/8] dmaengine: dw-edma: rename wr(rd)_ch_cnt to
+ ll_wr(rd)_cnt in struct dw_edma_chip
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Frank Li <Frank.Li@nxp.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        Lucas Stach <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
+        dmaengine@vger.kernel.org, vkoul@kernel.org,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,122 +75,158 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-On 3/4/2022 2:21 PM, Dave Jiang wrote:
-> The driver currently programs the system pasid to the WQ preemptively when
-> system pasid is enabled. Given that a dwq will reprogram the pasid and
-> possibly a different pasid, the programming is not necessary. The pasid_en
-> bit can be set for swq as it does not need pasid pasid programming but
-> needs the pasid_en bit. Remove system pasid programming on device config
-> write. Add pasid programming for kernel wq type on wq driver enable. The
-> char dev driver already reprograms the dwq on ->open() call so there's no
-> change.
+On Thu, Mar 10, 2022 at 6:37 AM Serge Semin <fancer.lancer@gmail.com> wrote:
 >
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-
-Vinod, pls ignore this patch. There will be a v2.
-
-
-> ---
->   drivers/dma/idxd/device.c    |   46 ++++++++++++++++++++++++++++++++++--------
->   drivers/dma/idxd/registers.h |    1 +
->   2 files changed, 38 insertions(+), 9 deletions(-)
+> On Wed, Mar 09, 2022 at 03:12:00PM -0600, Frank Li wrote:
+> > There are same name wr(rd)_ch_cnt in struct dw_edma. EDMA driver get
+> > write(read) channel number from register, then save these into dw_edma.
+> > Old wr(rd)_ch_cnt in dw_edma_chip actuall means how many link list memory
+> > are avaiable in ll_region_wr(rd)[EDMA_MAX_WR_CH]. So rename it to
+> > ll_wr(rd)_cnt to indicate actual usage.
 >
-> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-> index 573ad8b86804..b2aaf4b64a8b 100644
-> --- a/drivers/dma/idxd/device.c
-> +++ b/drivers/dma/idxd/device.c
-> @@ -299,16 +299,25 @@ void idxd_wqs_unmap_portal(struct idxd_device *idxd)
->   	}
->   }
->   
-> -int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
-> +static void __idxd_wq_set_priv_locked(struct idxd_wq *wq)
->   {
->   	struct idxd_device *idxd = wq->idxd;
-> -	int rc;
->   	union wqcfg wqcfg;
->   	unsigned int offset;
->   
-> -	rc = idxd_wq_disable(wq, false);
-> -	if (rc < 0)
-> -		return rc;
-> +	offset = WQCFG_OFFSET(idxd, wq->id, WQCFG_PRIVL_IDX);
-> +	spin_lock(&idxd->dev_lock);
-> +	wqcfg.bits[WQCFG_PRIVL_IDX] = ioread32(idxd->reg_base + offset);
-> +	wqcfg.priv = 1;
-> +	iowrite32(wqcfg.bits[WQCFG_PRIVL_IDX], idxd->reg_base + offset);
-> +	spin_unlock(&idxd->dev_lock);
-> +}
-> +
-> +static void __idxd_wq_set_pasid_locked(struct idxd_wq *wq, int pasid)
-> +{
-> +	struct idxd_device *idxd = wq->idxd;
-> +	union wqcfg wqcfg;
-> +	unsigned int offset;
->   
->   	offset = WQCFG_OFFSET(idxd, wq->id, WQCFG_PASID_IDX);
->   	spin_lock(&idxd->dev_lock);
-> @@ -317,6 +326,17 @@ int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
->   	wqcfg.pasid = pasid;
->   	iowrite32(wqcfg.bits[WQCFG_PASID_IDX], idxd->reg_base + offset);
->   	spin_unlock(&idxd->dev_lock);
-> +}
-> +
-> +int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
-> +{
-> +	int rc;
-> +
-> +	rc = idxd_wq_disable(wq, false);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	__idxd_wq_set_pasid_locked(wq, pasid);
->   
->   	rc = idxd_wq_enable(wq);
->   	if (rc < 0)
-> @@ -808,11 +828,13 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
->   	if (wq_dedicated(wq))
->   		wq->wqcfg->mode = 1;
->   
-> -	if (device_pasid_enabled(idxd)) {
-> +	/*
-> +	 * Enable this for shared WQ. swq does not need to program the pasid field,
-> +	 * but pasid_en needs to be set. Programming here prevents swq needing to
-> +	 * be disabled and re-enabled for reprogramming, which is something to avoid.
-> +	 */
-> +	if (device_pasid_enabled(idxd))
->   		wq->wqcfg->pasid_en = 1;
-> -		if (wq->type == IDXD_WQT_KERNEL && wq_dedicated(wq))
-> -			wq->wqcfg->pasid = idxd->pasid;
-> -	}
->   
->   	/*
->   	 * Here the priv bit is set depending on the WQ type. priv = 1 if the
-> @@ -1258,6 +1280,12 @@ int __drv_enable_wq(struct idxd_wq *wq)
->   		}
->   	}
->   
-> +	if (is_idxd_wq_kernel(wq)) {
-> +		if (device_pasid_enabled(idxd) && wq_dedicated(wq))
-> +			__idxd_wq_set_pasid_locked(wq, idxd->pasid);
-> +		__idxd_wq_set_priv_locked(wq);
-> +	}
-> +
->   	rc = 0;
->   	spin_lock(&idxd->dev_lock);
->   	if (test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
-> diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
-> index aa642aecdc0b..02449aa9c454 100644
-> --- a/drivers/dma/idxd/registers.h
-> +++ b/drivers/dma/idxd/registers.h
-> @@ -353,6 +353,7 @@ union wqcfg {
->   } __packed;
->   
->   #define WQCFG_PASID_IDX                2
-> +#define WQCFG_PRIVL_IDX		2
->   #define WQCFG_OCCUP_IDX		6
->   
->   #define WQCFG_OCCUP_MASK	0xffff
+> Hmm, I am not sure you are right here. AFAICS the
+> drivers/dma/dw-edma/dw-edma-pcie.c driver either uses a statically
+> defined number or Rd/Wr channels or just gets the number from the
+> specific vsec PCIe capability. Then based on that the driver just
+> redistributes the BARs memory amongst all the detected channels in
+> accordance with the statically defined snps_edda_data structure.
+> Basically the BARs memory serves as the Local/CPU/Application memory
+> for the case if the controller is embedded into the PCIe Host/EP
+> controller. See the patches which implicitly prove that:
+> 31fb8c1ff962 ("dmaengine: dw-edma: Improve the linked list and data blocks definition")
+> da6e0dd54135 ("dmaengine: dw-edma: Change linked list and data blocks offset and sizes")
 >
+> (That's why the logic of the DEV_TO_MEM/MEM_TO_DEV is inverted for the
+> the drivers/dma/dw-edma/dw-edma-pcie.c platform.)
 >
+> So basically the wr_ch_cnt/rd_ch_cnt fields have been and is used as
+> the number of actually available channels, not linked-list. While the
+> notation suggested by you can be confusing, since the ll-memory allocated for
+> each channel can be split up and initialized with numerous linked lists
+> each of which is used one after another.
+>
+> I don't really see a well justified reason to additionally have the
+> @wr_ch_cnt and @rd_ch_cnt fields in the dw_edma_chip seeing the number
+> of channels can be auto-detected from the corresponding registers, except
+> that to workaround a bogus hardware. So we can keep it, but please no
+> renaming. It will only cause additional confusion.
+
+I agree that channel numbers can be obtained from the register.
+but Caller don't know the channel number before calling dw_edma_probe.
+
+Caller may not init all ll_region_wr[EDMA_MAX_WR_CH],
+
+That's the reason I need a field to indicate how many ll_region_w
+actually initialized.
+
+old wr_ch_cnt just plays the same role.
+
+>
+> -Sergey
+>
+> >
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> > new patch at v4
+> >
+> >  drivers/dma/dw-edma/dw-edma-core.c |  4 ++--
+> >  drivers/dma/dw-edma/dw-edma-pcie.c | 12 ++++++------
+> >  include/linux/dma/edma.h           |  8 ++++----
+> >  3 files changed, 12 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > index 1abf41d49f75b..66dc650577919 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > @@ -918,11 +918,11 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+> >       raw_spin_lock_init(&dw->lock);
+> >
+> >
+> > -     dw->wr_ch_cnt = min_t(u16, chip->wr_ch_cnt,
+> > +     dw->wr_ch_cnt = min_t(u16, chip->ll_wr_cnt,
+> >                             dw_edma_v0_core_ch_count(dw, EDMA_DIR_WRITE));
+> >       dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);
+> >
+> > -     dw->rd_ch_cnt = min_t(u16, chip->rd_ch_cnt,
+> > +     dw->rd_ch_cnt = min_t(u16, chip->ll_rd_cnt,
+> >                             dw_edma_v0_core_ch_count(dw, EDMA_DIR_READ));
+> >       dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);
+> >
+> > diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > index ae42bad24dd5a..7732537f96086 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > @@ -230,14 +230,14 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> >       chip->nr_irqs = nr_irqs;
+> >       chip->ops = &dw_edma_pcie_core_ops;
+> >
+> > -     chip->wr_ch_cnt = vsec_data.wr_ch_cnt;
+> > -     chip->rd_ch_cnt = vsec_data.rd_ch_cnt;
+> > +     chip->ll_wr_cnt = vsec_data.wr_ch_cnt;
+> > +     chip->ll_rd_cnt = vsec_data.rd_ch_cnt;
+> >
+> >       chip->reg_base = pcim_iomap_table(pdev)[vsec_data.rg.bar];
+> >       if (!chip->reg_base)
+> >               return -ENOMEM;
+> >
+> > -     for (i = 0; i < chip->wr_ch_cnt; i++) {
+> > +     for (i = 0; i < chip->ll_wr_cnt; i++) {
+> >               struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
+> >               struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
+> >               struct dw_edma_block *ll_block = &vsec_data.ll_wr[i];
+> > @@ -262,7 +262,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> >               dt_region->sz = dt_block->sz;
+> >       }
+> >
+> > -     for (i = 0; i < chip->rd_ch_cnt; i++) {
+> > +     for (i = 0; i < chip->ll_rd_cnt; i++) {
+> >               struct dw_edma_region *ll_region = &chip->ll_region_rd[i];
+> >               struct dw_edma_region *dt_region = &chip->dt_region_rd[i];
+> >               struct dw_edma_block *ll_block = &vsec_data.ll_rd[i];
+> > @@ -302,7 +302,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> >               chip->reg_base);
+> >
+> >
+> > -     for (i = 0; i < chip->wr_ch_cnt; i++) {
+> > +     for (i = 0; i < chip->ll_wr_cnt; i++) {
+> >               pci_dbg(pdev, "L. List:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+> >                       i, vsec_data.ll_wr[i].bar,
+> >                       vsec_data.ll_wr[i].off, chip->ll_region_wr[i].sz,
+> > @@ -314,7 +314,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+> >                       chip->dt_region_wr[i].vaddr, &chip->dt_region_wr[i].paddr);
+> >       }
+> >
+> > -     for (i = 0; i < chip->rd_ch_cnt; i++) {
+> > +     for (i = 0; i < chip->ll_rd_cnt; i++) {
+> >               pci_dbg(pdev, "L. List:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+> >                       i, vsec_data.ll_rd[i].bar,
+> >                       vsec_data.ll_rd[i].off, chip->ll_region_rd[i].sz,
+> > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> > index e9ce652b88233..c2039246fc08c 100644
+> > --- a/include/linux/dma/edma.h
+> > +++ b/include/linux/dma/edma.h
+> > @@ -40,8 +40,8 @@ enum dw_edma_map_format {
+> >   * @nr_irqs:          total dma irq number
+> >   * @ops                       DMA channel to IRQ number mapping
+> >   * @reg_base          DMA register base address
+> > - * @wr_ch_cnt                 DMA write channel number
+> > - * @rd_ch_cnt                 DMA read channel number
+> > + * @ll_wr_cnt                 DMA write link list number
+> > + * @ll_rd_cnt                 DMA read link list number
+> >   * @rg_region                 DMA register region
+> >   * @ll_region_wr      DMA descriptor link list memory for write channel
+> >   * @ll_region_rd      DMA descriptor link list memory for read channel
+> > @@ -56,8 +56,8 @@ struct dw_edma_chip {
+> >
+> >       void __iomem            *reg_base;
+> >
+> > -     u16                     wr_ch_cnt;
+> > -     u16                     rd_ch_cnt;
+> > +     u16                     ll_wr_cnt;
+> > +     u16                     ll_rd_cnt;
+> >       /* link list address */
+> >       struct dw_edma_region   ll_region_wr[EDMA_MAX_WR_CH];
+> >       struct dw_edma_region   ll_region_rd[EDMA_MAX_RD_CH];
+> > --
+> > 2.24.0.rc1
+> >

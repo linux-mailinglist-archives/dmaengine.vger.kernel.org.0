@@ -2,75 +2,68 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EEF54D51E1
-	for <lists+dmaengine@lfdr.de>; Thu, 10 Mar 2022 20:43:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82C2B4D5283
+	for <lists+dmaengine@lfdr.de>; Thu, 10 Mar 2022 20:47:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230512AbiCJTjH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 10 Mar 2022 14:39:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52438 "EHLO
+        id S238798AbiCJTqd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 10 Mar 2022 14:46:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230192AbiCJTjH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Mar 2022 14:39:07 -0500
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5AADEAC95;
-        Thu, 10 Mar 2022 11:38:04 -0800 (PST)
-Received: by mail-lf1-x12b.google.com with SMTP id w12so11231463lfr.9;
-        Thu, 10 Mar 2022 11:38:04 -0800 (PST)
+        with ESMTP id S233230AbiCJTq3 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Mar 2022 14:46:29 -0500
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 135E4194AA9;
+        Thu, 10 Mar 2022 11:45:28 -0800 (PST)
+Received: by mail-lj1-x234.google.com with SMTP id v28so9223759ljv.9;
+        Thu, 10 Mar 2022 11:45:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=+q4NFh8M5rLEUTlZmWX48wHpQfLJseJX3YD02j5qCHU=;
-        b=euWE92alhBYNO7kBWzGAnu+lB9PODOQuTmYc6mw6mlEjRDisHwrTyV0E7YPno+A/ub
-         sLISMWuDgj0vLLacOa553fgqiV7Dcw3nUArKBzNppoB2GmRjZmL5sFxBbKYXBF4XUG2w
-         kxZFaAptt5dXJp4M5O+GOaOng6+dv3mpb/xUTBPaw4xAArRH6k9iKPicTleZZBJVHqCr
-         iay9maq/ElQenZtz+TcPklDT3T6zA1njb2UoPTX1GW13LHHiewTA/ybStjeYxL34XyQO
-         SSOf1yho/+iFyeDlncroenl31irFzyAgoHs3WI71nz2U0uEB2wgpGV9ntgb1GTT1Q6dA
-         IQiA==
+        bh=elBDpnkZgvTqqmpB5TnahezV/zWR7nYFd2WS1+9K4n8=;
+        b=FiBlIxp7G1h+TOnQWyJpcth4syj4CxuV3z8OnrtH/ReOnFb0Qq78tuXHniUfPL9NtB
+         MqpgCRzC29GWpI34cAaZ0HU1JFNEKzMdmXVBvW+YxJsL+Cb3oQR0jlSBdH/IQ9sx2VSj
+         acdvoyz3hR+G5XqcwxQGRBXQ5CZQ9LLwFIyD3s2q96+9VEZgjY3gOXdNfv2dwWoZMwUY
+         P7UQS71txpdy6wyXq/YlI8IVl1XWfKBRZGk+o6TYpW3RkZ4qxKsQTrjvfTzt4qeNmg03
+         qZfbl5KXgdxw9YGNb+0z9kas8+K9cUMz9a9L/pjWjod5C8HIDRdhTIOcvsuFufQLITfY
+         iepQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=+q4NFh8M5rLEUTlZmWX48wHpQfLJseJX3YD02j5qCHU=;
-        b=LNu+A04Cvv17aLDKzryJrBW1KHJg+F2HsZSw1URc6ogax8I44YrMSSj6jrdtoJ3kjd
-         HVXP5YCECUuTwwxFKptJGrZDVcRIsdorH8MSF6G1NK04N9lVEVzomaKvONrkzJsAx+hO
-         mJ2Qfck1j2DlBH6rH5WjdM2yRopxE5Ezg+EzC66gquh0cwcBNKYi6LT/nH62oey0lr35
-         hHuEyTuCxca09OcM5ND6FgEuYdzD4h1VvGOaP6YjBe7KnkS1QtG0P1Gqpm35ze4o+Dp0
-         67VKqgFle6fdXI9Os2LrSVwIWyrE3BRw3fiLnKFv7Cvy8StljdTShTmkqG/seHFUOdBb
-         BfSg==
-X-Gm-Message-State: AOAM531qJ66MG3QenjnHy6QmSAk6VTLUfsKB07N+X1okyUZNPvGCqgTQ
-        ZUsu0Eo4iaueJN+0zijglKg=
-X-Google-Smtp-Source: ABdhPJwX6eXbihwbHBV7T1Q14omlXCOSeA00i5JdcWTKcn3/pRXf7ZCyNsSncayef7jL2/P+Ccd5jQ==
-X-Received: by 2002:ac2:46c1:0:b0:445:c00a:bdd2 with SMTP id p1-20020ac246c1000000b00445c00abdd2mr3821092lfo.429.1646941082264;
-        Thu, 10 Mar 2022 11:38:02 -0800 (PST)
+        bh=elBDpnkZgvTqqmpB5TnahezV/zWR7nYFd2WS1+9K4n8=;
+        b=hBYB2NpNz4FfzC7K5DwNwRdOh7tUx46ML5r4zvd5o7bEjANHvMBLbQnR7oTt4aKVH6
+         SKFN5daKVzvb5md6Vv751ExzgfQgvhTEUTmJ2gmW7McR0FRgUfIaU9RRytkrEKe5NJ8M
+         OBAeSy7wvXPE00YTyptg4uQQYlbZ4mPCJtrkStAAz3glhOcVpgrIHoarZHU9SzcEAxR+
+         8q/QE2dXotsrMCyLJS+B9kehNlV8aGlcVUgNVIUckCSmuBkbgLrFyiz+qf/Hpj0A8bZv
+         4NmUu8xqEuSHQ1jM9tpbYWjVfylX0RvVDXl9uNaJA4DSFjL1cJMzTGQnJZoZGZ+mtNve
+         c63A==
+X-Gm-Message-State: AOAM532IyG7vCaKwMcqTLT8BBUZmozMptvQb2vkzM2yS+4mbKk3Soe6X
+        qVglSyfRC3fv8jLzT1oowyk=
+X-Google-Smtp-Source: ABdhPJwvrW2TFj32PSk5S2XDLp7kBhWnqzZQm1m+qgdiaT/FwIZ7XHmyIT1ibAwEjDEJD/QVqHsslg==
+X-Received: by 2002:a05:651c:1797:b0:23a:18d7:1d39 with SMTP id bn23-20020a05651c179700b0023a18d71d39mr3946049ljb.470.1646941526389;
+        Thu, 10 Mar 2022 11:45:26 -0800 (PST)
 Received: from mobilestation ([95.79.188.22])
-        by smtp.gmail.com with ESMTPSA id y16-20020a2e9d50000000b00247b105c11dsm1251276ljj.34.2022.03.10.11.38.00
+        by smtp.gmail.com with ESMTPSA id w27-20020ac2599b000000b004481e254f08sm1142550lfn.240.2022.03.10.11.45.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Mar 2022 11:38:01 -0800 (PST)
-Date:   Thu, 10 Mar 2022 22:37:59 +0300
+        Thu, 10 Mar 2022 11:45:24 -0800 (PST)
+Date:   Thu, 10 Mar 2022 22:45:21 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Zhi Li <lznuaa@gmail.com>
-Cc:     Frank Li <Frank.Li@nxp.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
-        Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, vkoul@kernel.org,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v4 5/8] dmaengine: dw-edma: Fix programming the source &
- dest addresses for ep
-Message-ID: <20220310193759.lkwqz5avlvznn5w3@mobilestation>
-References: <20220309211204.26050-1-Frank.Li@nxp.com>
- <20220309211204.26050-6-Frank.Li@nxp.com>
- <20220310163123.h2zqdx5tkn2czmbm@mobilestation>
- <CAHrpEqSrdEegSAKw42T8qsN_BC24LS7r5a_+jKa3ZvGu5w9W1g@mail.gmail.com>
+        l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        shawnguo@kernel.org, manivannan.sadhasivam@linaro.org
+Subject: Re: [PATCH v5 0/9] Enable designware PCI EP EDMA locally
+Message-ID: <20220310194521.g6emg63bparbjic2@mobilestation>
+References: <20220310192457.3090-1-Frank.Li@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHrpEqSrdEegSAKw42T8qsN_BC24LS7r5a_+jKa3ZvGu5w9W1g@mail.gmail.com>
+In-Reply-To: <20220310192457.3090-1-Frank.Li@nxp.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -81,174 +74,70 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Mar 10, 2022 at 10:50:14AM -0600, Zhi Li wrote:
-> On Thu, Mar 10, 2022 at 10:32 AM Serge Semin <fancer.lancer@gmail.com> wrote:
-> >
-> > On Wed, Mar 09, 2022 at 03:12:01PM -0600, Frank Li wrote:
-> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > >
-> > > When eDMA is controlled by the Endpoint (EP), the current logic incorrectly
-> > > programs the source and destination addresses for read and write. Since the
-> > > Root complex and Endpoint uses the opposite channels for read/write, fix the
-> > > issue by finding out the read operation first and program the eDMA accordingly.
-> > >
-> > > Cc: stable@vger.kernel.org
-> > > Fixes: bd96f1b2f43a ("dmaengine: dw-edma: support local dma device transfer semantics")
-> > > Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > > No change between v1 to v4
-> > >
-> > >  drivers/dma/dw-edma/dw-edma-core.c | 32 +++++++++++++++++++++++++++++-
-> > >  1 file changed, 31 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> > > index 66dc650577919..507f08db1aad3 100644
-> > > --- a/drivers/dma/dw-edma/dw-edma-core.c
-> > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> > > @@ -334,6 +334,7 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
-> > >       struct dw_edma_chunk *chunk;
-> > >       struct dw_edma_burst *burst;
-> > >       struct dw_edma_desc *desc;
-> > > +     bool read = false;
-> > >       u32 cnt = 0;
-> > >       int i;
-> > >
-> > > @@ -424,7 +425,36 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
-> > >               chunk->ll_region.sz += burst->sz;
-> > >               desc->alloc_sz += burst->sz;
-> > >
-> > > -             if (chan->dir == EDMA_DIR_WRITE) {
-> > > +             /****************************************************************
-> > > +              *
-> >
-> > > +              *        Root Complex                           Endpoint
-> > > +              * +-----------------------+             +----------------------+
-> > > +              * |                       |    TX CH    |                      |
-> > > +              * |                       |             |                      |
-> > > +              * |      DEV_TO_MEM       <-------------+     MEM_TO_DEV       |
-> > > +              * |                       |             |                      |
-> > > +              * |                       |             |                      |
-> > > +              * |      MEM_TO_DEV       +------------->     DEV_TO_MEM       |
-> > > +              * |                       |             |                      |
-> > > +              * |                       |    RX CH    |                      |
-> > > +              * +-----------------------+             +----------------------+
-> > > +              *
-> > > +              * If eDMA is controlled by the Root complex, TX channel
-> > > +              * (EDMA_DIR_WRITE) is used for memory read (DEV_TO_MEM) and RX
-> > > +              * channel (EDMA_DIR_READ) is used for memory write (MEM_TO_DEV).
-> > > +              *
-> > > +              * If eDMA is controlled by the endpoint, RX channel
-> > > +              * (EDMA_DIR_READ) is used for memory read (DEV_TO_MEM) and TX
-> > > +              * channel (EDMA_DIR_WRITE) is used for memory write (MEM_TO_DEV).
-> >
-> > Either I have some wrong notion about this issue, or something wrong
-> > with the explanation above and with this fix below.
-> >
-> > From my understanding of the possible DW eDMA IP-core setups the
-> > scatch above and the text below it are incorrect. Here is the way the
-> > DW eDMA can be used:
-> > 1) Embedded into the DW PCIe Host/EP controller. In this case
-> > CPU/Application Memory is the memory of the CPU attached to the
-> > host/EP controller, while the remote (link partner) memory is the PCIe
-> > bus memory. In this case MEM_TO_DEV operation is supposed to be
-> > performed by the Tx/Write channels, while the DEV_TO_MEM operation -
-> > by the Rx/Read channels.
-> >
-> > Note it's applicable for both Host and End-point case, when Linux is
-> > running on the CPU-side of the eDMA controller. So if it's DW PCIe
-> > end-point, then MEM_TO_DEV means copying data from the local CPU
-> > memory into the remote memory. In general the remote memory can be
-> > either some PCIe device on the bus or the Root Complex' CPU memory,
-> > each of which is some remote device anyway from the Local CPU
-> > perspective.
-> >
-> > 2) Embedded into the PCIe EP. This case is implemented in the
-> > drivers/dma/dw-edma/dw-edma-pcie.c driver. AFAICS from the commits log
-> > and from the driver code, that device is a Synopsys PCIe EndPoint IP
-> > prototype kit. It is a normal PCIe peripheral device with eDMA
-> > embedded, which CPU/Application interface is connected to some
-> > embedded SRAM while remote (link partner) interface is directed
-> > towards the PCIe bus. At the same time the device is setup and handled
-> > by the code running on a CPU connected to the PCIe Host controller.  I
-> > think that in order to preserve the normal DMA operations semantics we
-> > still need to consider the MEM_TO_DEV/DEV_TO_MEM operations from the
-> > host CPU perspective, since that's the side the DMA controller is
-> > supposed to be setup from.  In this MEM_TO_DEV is supposed to be used
-> > to copy data from the host CPU memory into the remote device memory.
-> > It means to allocate Rx/Read channel on the eDMA controller, so one
-> > would be read data from the Local CPU memory and copied it to the PCIe
-> > device SRAM. The logic of the DEV_TO_MEM direction would be just
-> > flipped. The eDMA PCIe device shall use Tx/Write channel to copy data
-> > from it's SRAM into the Host CPU memory.
-> >
-> > Please note as I understand the case 2) describes the Synopsys PCIe
-> > EndPoint IP prototype kit, which is based on some FPGA code. It's just
-> > a test setup with no real application, while the case 1) is a real setup
-> > available on our SoC and I guess on yours.
-> 
+Frank,
 
-> I think yes. But Remote EP also is a one kind of usage module. Just no one
-> writes an EP functional driver for it yet.  Even pci-epf-test was just
-> a test function.
-> I previously sent vNTB patches to implement a virtual network between
-> RC and EP,
-> you can look if you have interest.
+Please don't re-send patch so quickly. We haven't finished discussing
+and reviewing v4 yet, but you've already sent out v5 with possibly some of
+the comments missed. In addition you haven't addressed all my comments
+in the v4. Please get back there and let's finish all the discussions
+first. Regarding the resibmitting procedure see [1].
 
-AFAIU the remote EP case is the same as 1) anyway. The remote EP is
-handled by its own CPU, which sets up the DW PCIe EP controller
-together with eDMA synthesized into the CPU' SoC. Am I right? While
-the case 2) doesn't have any CPU attached on the PCIe EP. It's just an
-FPGA with PCIe interface and eDMA IP-core installed. In that case all
-the setups are performed by the PCIe Host CPU. That's the root problem
-that causes having all the DEV_TO_MEM/MEM_TO_DEV complications.
-
-So to speak I would suggest for at least to have the scatch fixed in
-accordance with the logic explained in my message.
-
-> 
-> >
-> > So what I suggest in the framework of this patch is just to implement
-> > the case 1) only. While the case 2) as it's an artificial one can be
-> > manually handled by the DMA client drivers. BTW There aren't ones available
-> > in the kernel anyway. The only exception is an old-time attempt to get
-> > an eDMA IP test-driver mainlined into the kernel:
-> > https://patchwork.kernel.org/project/linux-pci/patch/cc195ac53839b318764c8f6502002cd6d933a923.1547230339.git.gustavo.pimentel@synopsys.com/
-> > But it was long time ago. So it's unlikely to be accepted at all.
-> >
-> > What do you think?
-> >
-> > -Sergey
-> >
-> > > +              *
-> > > +              ****************************************************************/
-> > > +
-> >
-> > > +             if ((dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ) ||
-> > > +                 (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE))
-> > > +                     read = true;
-> >
-
-> > Seeing the driver support only two directions DMA_DEV_TO_MEM/DMA_DEV_TO_MEM
-> > and EDMA_DIR_READ/EDMA_DIR_WRITE, this conditional statement seems
-> > redundant.
-
-Am I getting a response on this comment? In accordance with that
-conditional statement having dir == DMA_DEV_TO_MEM means performing
-read operation. If dir equals DMA_MEM_TO_DEV then a write operation
-will be performed. The code path doesn't depend on the chan->dir
-value.
+[1] Documentation/process/submitting-patches.rst: "Don't get discouraged - or impatient"
 
 -Sergey
 
-> >
-> > > +
-> > > +             /* Program the source and destination addresses for DMA read/write */
-> > > +             if (read) {
-> > >                       burst->sar = src_addr;
-> > >                       if (xfer->type == EDMA_XFER_CYCLIC) {
-> > >                               burst->dar = xfer->xfer.cyclic.paddr;
-> > > --
-> > > 2.24.0.rc1
-> > >
+On Thu, Mar 10, 2022 at 01:24:48PM -0600, Frank Li wrote:
+> Default Designware EDMA just probe remotely at host side.
+> This patch allow EDMA driver can probe at EP side.
+> 
+> 1. Clean up patch
+>    dmaengine: dw-edma: Detach the private data and chip info structures
+>    dmaengine: dw-edma: remove unused field irq in struct dw_edma_chip
+>    dmaengine: dw-edma: change rg_region to reg_base in struct
+>    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+> 
+> 2. Enhance EDMA driver to allow prode eDMA at EP side
+>    dmaengine: dw-edma: Add support for chip specific flags   
+>    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
+> 
+> 3. Bugs fix at EDMA driver when probe eDMA at EP side
+>    dmaengine: dw-edma: Fix programming the source & dest addresses for ep
+>    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
+> 
+> 4. change pci-epf-test to use EDMA driver to transfer data.
+>    PCI: endpoint: functions/pci-epf-test: Support PCI controller DMA
+> 
+> 5. Using imx8dxl to do test, but some EP functions still have not
+> upstream yet. So below patch show how probe eDMA driver at EP
+> controller driver.
+> https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
+> 
+> 
+> 
+> Frank Li (7):
+>   dmaengine: dw-edma: Detach the private data and chip info structures
+>   dmaengine: dw-edma: remove unused field irq in struct dw_edma_chip
+>   dmaengine: dw-edma: change rg_region to reg_base in struct
+>     dw_edma_chip
+>   dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+>     dw_edma_chip
+>   dmaengine: dw-edma: Add support for chip specific flags
+>   dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
+>   PCI: endpoint: functions/pci-epf-test: Support PCI controller DMA
+> 
+> Manivannan Sadhasivam (2):
+>   dmaengine: dw-edma: Fix programming the source & dest addresses for ep
+>   dmaengine: dw-edma: Don't rely on the deprecated "direction" member
+> 
+>  drivers/dma/dw-edma/dw-edma-core.c            | 131 +++++++++++-------
+>  drivers/dma/dw-edma/dw-edma-core.h            |  32 +----
+>  drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
+>  drivers/dma/dw-edma/dw-edma-v0-core.c         |  46 +++---
+>  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  10 +-
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 108 +++++++++++++--
+>  include/linux/dma/edma.h                      |  56 +++++++-
+>  7 files changed, 298 insertions(+), 168 deletions(-)
+> 
+> -- 
+> 2.24.0.rc1
+> 

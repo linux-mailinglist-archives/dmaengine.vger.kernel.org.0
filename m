@@ -2,65 +2,70 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 089644D4FDB
-	for <lists+dmaengine@lfdr.de>; Thu, 10 Mar 2022 18:00:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85C474D5088
+	for <lists+dmaengine@lfdr.de>; Thu, 10 Mar 2022 18:29:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242867AbiCJRB6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 10 Mar 2022 12:01:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46140 "EHLO
+        id S244956AbiCJRai (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 10 Mar 2022 12:30:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231642AbiCJRB5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Mar 2022 12:01:57 -0500
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 134DB177743;
-        Thu, 10 Mar 2022 09:00:56 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id t1so7599529edc.3;
-        Thu, 10 Mar 2022 09:00:55 -0800 (PST)
+        with ESMTP id S244759AbiCJRag (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Mar 2022 12:30:36 -0500
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D6CBD31FB;
+        Thu, 10 Mar 2022 09:29:35 -0800 (PST)
+Received: by mail-lf1-x130.google.com with SMTP id z11so10590586lfh.13;
+        Thu, 10 Mar 2022 09:29:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ntrxpC30yBdc3XrQj/21zte72WI3TsYRUBADPRTh3pU=;
-        b=mCBR8PysYYYABLD5iY/5XnKvyXOHkNOMNsQ6YFei1kb2obg7lDJJpA/2VK+RpKRowR
-         4KRPiwkI+hxUC5UyzkoQtYfKuhTQM7u4db96mlB7V0N2ES3hnaC03FMDuLFKRMIALuHz
-         AKYKugTUbA60SxJLY5Wy74MA1FQi5mHR2P1l6gmdkdPzN8IMiVd4loOuo9aDy54zVOS1
-         vow81jNQ7ggmdNJkfg6ZIlHBlqA81VX+lg+Cr6gAlwSbzCXSYc6yDedIPeQjjoou1wMI
-         H1uGDAGE2ioufIzpkLdoGhon/XnXv7iAfAyc4sAVfEJ293mWWNaXng2AHofUmEzS9DKx
-         gzfA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eCcJQMSaPqi5zt8beLRmZW0zLGixAnNgDgtiWNv73Rs=;
+        b=ISQq8THvz/51DUMhVJ3UFf3Ho63QuDN/kRcpTlugmvqKPEbqM1q/rMng0POdpiQH7+
+         eHWgM0UgfucUKetTOrVEjA4VheUOp3CwSu03WI1z3e8VRMUeORi80qXAHEAxWWo3HNeg
+         oF2QPEr3K7f9otkKTOMhHdq3ESlicBx3CDQorgMikF3dnWIbKsqQZ4VQLZ/gTJZNA9eO
+         nxovBAXQ5JYSh7J1FsmL9uaPNdImv4jRpIxeRbVo/Bg03xFdEvG1+CThPYrdgTMv+zFB
+         5aSa/F+djggaJR6GXqBnWuttYazanYuB1UYfNfiN4oqivTQ1sUSJ/rqXOU4+dci7cmxi
+         ZKug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ntrxpC30yBdc3XrQj/21zte72WI3TsYRUBADPRTh3pU=;
-        b=PVY/1j7bnzNkNCztMIRp/LOectivJqMRv8qvMde84sBIIlVeb/aqtTvQ/FAZ558mQE
-         E4R5OtI6MGx3qskHdf+SdHI43YFl9Zr8HbSkVMAWNjyxz7DRmyN0/BWd514p4MToocK/
-         lEgHA/c3doUpC3Oxe0NbxnECBsFTXujguR367yk1SwwaoIYY+F3cMikKuFLKurTpR+nx
-         WfoMaHv88VC1dL0OcNAhdeJS3+nrglFtEP+WUbOyyJNLdmupmcFvKdV8dhIMFyTTMKHS
-         QLdWcASgEAZUu+y3sIpkRhw1F9uZVNKsv2bzgMpqgV7GKR9HwpKS1v9lfScvbS4/qK8c
-         oLCw==
-X-Gm-Message-State: AOAM531ljvCXJWPBkWs4vILNDKnOuGLxquC0gPZqRT9r0SBIjA9CRjo9
-        smfqskomw6I6cVS9C337XuCR9WhBj+j479p50Rg=
-X-Google-Smtp-Source: ABdhPJx71WBsbptJ8epwPRbp6I8mTo9cpxomrx2TYiP/QnWCghC8rXQihQucIoRJbI4Du0U5zDyPyPJjHL0fP6z6enM=
-X-Received: by 2002:a05:6402:2750:b0:416:29dd:1d17 with SMTP id
- z16-20020a056402275000b0041629dd1d17mr5250112edd.387.1646931654356; Thu, 10
- Mar 2022 09:00:54 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eCcJQMSaPqi5zt8beLRmZW0zLGixAnNgDgtiWNv73Rs=;
+        b=VMWQwQVxQslP39x/WQgOgwbu/cQ0T4cQ4hHto1fox+Rwnv+ww+7h3HesyeibyHnwOQ
+         pUtnsXIE6He4ijeugIDJ2RkOO4hijvlTRb89WWAtIX7OAp9RsjWqSEhIe+GTsQlZ5AtT
+         u/84s2EjMtZUH+KUj+GdcckyLk1YVWbNdWJOEBhKaQsV0jJhEH9GLO4bXDus08xzWv5F
+         JYa+MBM3gAfEBltt3C6YKccOViKbPJWVR7zp/TpGRxl+kZzzqYY6kUD6v2wMFZZlEOwp
+         bfaBcj+2SUI3FLcqXa859ISf0OOuQArjoTt9J7k7hnK/la1/7og+bBpdTPx/pw11R17U
+         GhDA==
+X-Gm-Message-State: AOAM532y68NcI6Z8LdujEptwOj39OC6NBpV14tL40lh4OdvfvA3wPffI
+        pttXesLPj+juP87uZ3U5MHcm1pG2Bir0uw==
+X-Google-Smtp-Source: ABdhPJy1JXlSLyEoN59U7UXV5OXbjbLlUYc1uwaDWO3g8d3m7WcrHEIflElLRjuyqx08dJxQSxDuYQ==
+X-Received: by 2002:ac2:4c52:0:b0:448:27b1:8668 with SMTP id o18-20020ac24c52000000b0044827b18668mr3642876lfk.308.1646933373961;
+        Thu, 10 Mar 2022 09:29:33 -0800 (PST)
+Received: from mobilestation ([95.79.188.22])
+        by smtp.gmail.com with ESMTPSA id f8-20020a2eb5a8000000b00247eb1b937csm1181649ljn.127.2022.03.10.09.29.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Mar 2022 09:29:33 -0800 (PST)
+Date:   Thu, 10 Mar 2022 20:29:30 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        shawnguo@kernel.org, manivannan.sadhasivam@linaro.org
+Subject: Re: [PATCH v4 6/8] dmaengine: dw-edma: Don't rely on the deprecated
+ "direction" member
+Message-ID: <20220310172930.g7xq3txjkbwtdmbw@mobilestation>
+References: <20220309211204.26050-1-Frank.Li@nxp.com>
+ <20220309211204.26050-7-Frank.Li@nxp.com>
 MIME-Version: 1.0
-References: <20220307224750.18055-1-Frank.Li@nxp.com> <20220307224750.18055-5-Frank.Li@nxp.com>
- <20220310074400.GC4869@thinkpad>
-In-Reply-To: <20220310074400.GC4869@thinkpad>
-From:   Zhi Li <lznuaa@gmail.com>
-Date:   Thu, 10 Mar 2022 11:00:42 -0600
-Message-ID: <CAHrpEqQ7zN7xNZXH3aOnL3N13G2GzgezDAJRBusWmq3N3TR_aQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/6] dmaengine: dw-edma: add flags at struct dw_edma_chip
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, vkoul@kernel.org,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220309211204.26050-7-Frank.Li@nxp.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -71,159 +76,64 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Mar 10, 2022 at 1:44 AM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
->
-> On Mon, Mar 07, 2022 at 04:47:49PM -0600, Frank Li wrote:
-> > Allow PCI EP probe DMA locally and prevent use of remote MSI
-> > to remote PCI host.
-> >
-> > Add option to force 32bit DBI register access even on
-> > 64-bit systems. i.MX8 hardware only allowed 32bit register
-> > access.
-> >
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
-> >
-> > Resend added dmaengine@vger.kernel.org
-> >
-> > Change from v2 to v3
-> >  - rework commit message
-> >  - Change to DW_EDMA_CHIP_32BIT_DBI
-> >  - using DW_EDMA_CHIP_LOCAL control msi
-> >  - Apply Bjorn's comments,
-> >       if (!j) {
-> >                control |= DW_EDMA_V0_LIE;
-> >                if (!(chan->chip->flags & DW_EDMA_CHIP_LOCAL))
-> >                                control |= DW_EDMA_V0_RIE;
-> >         }
-> >
-> >       if ((chan->chip->flags & DW_EDMA_CHIP_REG32BIT) ||
-> >               !IS_ENABLED(CONFIG_64BIT)) {
-> >           SET_CH_32(...);
-> >           SET_CH_32(...);
-> >        } else {
-> >           SET_CH_64(...);
-> >        }
-> >
-> >
-> > Change from v1 to v2
-> > - none
-> >
-> >  drivers/dma/dw-edma/dw-edma-v0-core.c | 20 ++++++++++++--------
-> >  include/linux/dma/edma.h              |  9 +++++++++
-> >  2 files changed, 21 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > index 6e2f83e31a03a..081cd7997348d 100644
-> > --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > @@ -307,6 +307,7 @@ u32 dw_edma_v0_core_status_abort_int(struct dw_edma_chip *chip, enum dw_edma_dir
-> >  static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
-> >  {
-> >       struct dw_edma_burst *child;
-> > +     struct dw_edma_chan *chan = chunk->chan;
-> >       struct dw_edma_v0_lli __iomem *lli;
-> >       struct dw_edma_v0_llp __iomem *llp;
-> >       u32 control = 0, i = 0;
-> > @@ -320,9 +321,11 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
-> >       j = chunk->bursts_alloc;
-> >       list_for_each_entry(child, &chunk->burst->list, list) {
-> >               j--;
-> > -             if (!j)
-> > -                     control |= (DW_EDMA_V0_LIE | DW_EDMA_V0_RIE);
-> > -
-> > +             if (!j) {
-> > +                     control |= DW_EDMA_V0_LIE;
-> > +                     if (!(chan->chip->flags & DW_EDMA_CHIP_LOCAL))
-> > +                             control |= DW_EDMA_V0_RIE;
-> > +             }
-> >               /* Channel control */
-> >               SET_LL_32(&lli[i].control, control);
-> >               /* Transfer size */
-> > @@ -420,15 +423,16 @@ void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> >               SET_CH_32(chip, chan->dir, chan->id, ch_control1,
-> >                         (DW_EDMA_V0_CCS | DW_EDMA_V0_LLE));
-> >               /* Linked list */
-> > -             #ifdef CONFIG_64BIT
-> > -                     SET_CH_64(chip, chan->dir, chan->id, llp.reg,
-> > -                               chunk->ll_region.paddr);
-> > -             #else /* CONFIG_64BIT */
-> > +             if ((chan->chip->flags & DW_EDMA_CHIP_32BIT_DBI) ||
-> > +                 !IS_ENABLED(CONFIG_64BIT)) {
-> >                       SET_CH_32(chip, chan->dir, chan->id, llp.lsb,
-> >                                 lower_32_bits(chunk->ll_region.paddr));
-> >                       SET_CH_32(chip, chan->dir, chan->id, llp.msb,
-> >                                 upper_32_bits(chunk->ll_region.paddr));
-> > -             #endif /* CONFIG_64BIT */
-> > +             } else {
-> > +                     SET_CH_64(chip, chan->dir, chan->id, llp.reg,
-> > +                               chunk->ll_region.paddr);
-> > +             }
-> >       }
-> >       /* Doorbell */
-> >       SET_RW_32(chip, chan->dir, doorbell,
-> > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> > index fcfbc0f47f83d..4321f6378ef66 100644
-> > --- a/include/linux/dma/edma.h
-> > +++ b/include/linux/dma/edma.h
-> > @@ -33,6 +33,12 @@ enum dw_edma_map_format {
-> >       EDMA_MF_HDMA_COMPAT = 0x5
-> >  };
-> >
-> > +/* Probe EDMA engine locally and prevent generate MSI to host side*/
-> > +#define DW_EDMA_CHIP_LOCAL   BIT(0)
-> > +
-> > +/* Only support 32bit DBI register access */
-> > +#define DW_EDMA_CHIP_32BIT_DBI       BIT(1)
-> > +
->
-> How about using an enum for defining the flags? This would help us organize the
-> flags in a more coherent way and also will give the benefit of kdoc.
+On Wed, Mar 09, 2022 at 03:12:02PM -0600, Frank Li wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> The "direction" member of the "dma_slave_config" structure is deprecated.
+> The clients no longer use this field to specify the direction of the slave
+> channel. But in the eDMA core, this field is used to differentiate between the
+> Root complex (remote) and Endpoint (local) DMA accesses.
+> 
+> Nevertheless, we can't differentiate between local and remote accesses without
+> a dedicated flag. So let's get rid of the old check and add a new check for
+> verifying the DMA operation between local and remote memory instead.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> no chang between v1 to v4
+>  drivers/dma/dw-edma/dw-edma-core.c | 17 ++---------------
+>  1 file changed, 2 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index 507f08db1aad3..47c6a52929fcd 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -341,22 +341,9 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+>  	if (!chan->configured)
+>  		return NULL;
+>  
+> -	switch (chan->config.direction) {
+> -	case DMA_DEV_TO_MEM: /* local DMA */
+> -		if (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ)
+> -			break;
+> -		return NULL;
+> -	case DMA_MEM_TO_DEV: /* local DMA */
+> -		if (dir == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_WRITE)
+> -			break;
 
-Did you see other linux code use enum as bitmask?
-According to my understanding, enum just chooses values in a list.
+> +	/* eDMA supports only read and write between local and remote memory */
 
->
-> /**
->  * enum dw_edma_chip_flags - Flags specific to an eDMA chip
->  * @DW_EDMA_CHIP_LOCAL:         eDMA is used locally by an endpoint
->  * @DW_EDMA_CHIP_32BIT_DBI:     eDMA only supports 32bit DBI access
->  */
-> enum dw_edma_chip_flags {
->         DW_EDMA_CHIP_LOCAL = BIT(0),
->         DW_EDMA_CHIP_32BIT_DBI = BIT(1),
-> };
->
-> >  /**
-> >   * struct dw_edma_chip - representation of DesignWare eDMA controller hardware
-> >   * @dev:              struct device of the eDMA controller
-> > @@ -40,6 +46,8 @@ enum dw_edma_map_format {
-> >   * @nr_irqs:          total dma irq number
-> >   * reg64bit           if support 64bit write to register
-> >   * @ops                       DMA channel to IRQ number mapping
-> > + * @flags             - DW_EDMA_CHIP_LOCAL
-> > + *                    - DW_EDMA_CHIP_32BIT_DBI
->
-> No need to mention the flags here if you use the enum I suggested above.
->
-> >   * @wr_ch_cnt                 DMA write channel number
-> >   * @rd_ch_cnt                 DMA read channel number
-> >   * @rg_region                 DMA register region
-> > @@ -53,6 +61,7 @@ struct dw_edma_chip {
-> >       int                     id;
-> >       int                     nr_irqs;
-> >       const struct dw_edma_core_ops   *ops;
-> > +     u32                     flags;
->
->         enum dw_edma_chip_flags flags;
->
-> Thanks,
-> Mani
->
-> >
-> >       void __iomem            *reg_base;
-> >
-> > --
-> > 2.24.0.rc1
-> >
+The comment is a bit confusing because both cases are named as
+"memory" while the permitted directions contains DEV-part, which
+means "device". What I would suggest to write here is something like:
+"DW eDMA supports transferring data from/to the CPU/Application memory
+to/from the PCIe link partner device by injecting the PCIe MWr/MRd TLPs."
+
+-Sergey
+
+> +	if (dir != DMA_DEV_TO_MEM && dir != DMA_MEM_TO_DEV)
+>  		return NULL;
+> -	default: /* remote DMA */
+> -		if (dir == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_READ)
+> -			break;
+> -		if (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE)
+> -			break;
+> -		return NULL;
+> -	}
+>  
+>  	if (xfer->type == EDMA_XFER_CYCLIC) {
+>  		if (!xfer->xfer.cyclic.len || !xfer->xfer.cyclic.cnt)
+> -- 
+> 2.24.0.rc1
+> 

@@ -2,76 +2,70 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE3F34D44FF
-	for <lists+dmaengine@lfdr.de>; Thu, 10 Mar 2022 11:52:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5845C4D4720
+	for <lists+dmaengine@lfdr.de>; Thu, 10 Mar 2022 13:37:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241490AbiCJKxO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 10 Mar 2022 05:53:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48470 "EHLO
+        id S241715AbiCJMiW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 10 Mar 2022 07:38:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241443AbiCJKxD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Mar 2022 05:53:03 -0500
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B263E5D19D;
-        Thu, 10 Mar 2022 02:52:00 -0800 (PST)
-Received: by mail-lf1-x12e.google.com with SMTP id z11so8625472lfh.13;
-        Thu, 10 Mar 2022 02:52:00 -0800 (PST)
+        with ESMTP id S234943AbiCJMiW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Mar 2022 07:38:22 -0500
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA23148667;
+        Thu, 10 Mar 2022 04:37:20 -0800 (PST)
+Received: by mail-lf1-x12c.google.com with SMTP id h14so9132251lfk.11;
+        Thu, 10 Mar 2022 04:37:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=ehlxZO6HP6oBVOSeNjFQZXVFZH0PFquAat/0g6NFlug=;
-        b=nfDL2ZOnuVFVqVn1Ie12pU4naCe/KezvRV/YGrhuywsW6FzQfbZnvsgKG0dKS03Kzy
-         xhJ133SnO0EHIddk6KWQm93fAnrwWPvksWei9nDhcgO7rz6It41MYN20EN3atFHM3TPX
-         44Ko/PRXyck0z22xmaxS+sUSvoQi/fzsk8S3QUahi1aA2wrbjOwAnnSRp/UWQF70sIUs
-         TJcioA9BCJkDVltX6qGXKM0Vw0+3UbbJloVrsv7Hqv8qAcL7MnOLLJ5N38Uh+0h6v9cc
-         iYWSSQZG6uGgzWNBliCM9C3Dyzw168p7VufCsxhzh+Takz7hU91GGC9kmZxHKQZTycjX
-         uysA==
+        bh=RobMDDfWnOz5yZ1PGRtJSSc4jJfiehWVeo3eirprMYY=;
+        b=ct8mM04AZqcYsxCik7J35JjhMHpThFjyOpv7I+XBSR+hom58EvLYQ3otdLNeqa47MP
+         lKEBdnAU3ro7zBi+/HRtJyANhGw/jYLsBklwcLMj//UqIXK+DUdqE5UA0wMyYQmVaP3n
+         uXqHNPIwX3Xj4n7NCdHA3Jw4YvuWFLmXEbOqVLjiBAdN5be/hbepaUdVskHK4SdQFXOC
+         yIyby5c6PuUEGQx7E0R9KtEBN5WgRgidiIQLH+IIORkhkdcAMzt2L2tOxKInx8ES4Czo
+         /TKgl38dF+qFWY/ESKgSn3lkEoXvqL3d2HqK1JFXCrTKEHdnRbE0LEu89hKHpAD3swB7
+         lnRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ehlxZO6HP6oBVOSeNjFQZXVFZH0PFquAat/0g6NFlug=;
-        b=uNfAWN3PUR3ccoTBOLRHiVrA2mmOeKbOAhgL7itSBWuXJzNSm+H19hmCdQrdNAXfIA
-         /FOQajk0QV1AwxqNMe1fp7xcHJU7uJvmq0VvbCI7Z1MW0Uaaq5pDOV32ZBApnfKwuJTv
-         AGPVsR7I0ERpMt7Hq1DXDm8zbbamEb1AsCyZobPPtiAxCXhJc6mKZ53WpQGFwQk0p2LZ
-         wuOmL3HAdGJWxKZT350mH8kW/zE9gwJYlf35yRdIhr35JnPTB6VxErb+fWe4GIDjmwkm
-         0t7WsJ7SaKIv/poFUqLbzquu1FwBgphJN7RqA88S1iV6s09dXr9dRco+iGM4IrhzMekr
-         L7fA==
-X-Gm-Message-State: AOAM533mk/WU69MzHifSBrcwb+hS58M0oGhJIpZ+hS4cMgaRLQLUFdnN
-        PU8IN/L0/ZwP3PmStbfGe/E=
-X-Google-Smtp-Source: ABdhPJxXVjQ1cSmlC0bt14adSjyyfBVscqnpfni278dGh3cxiYp4TvOuIzCXCNthgZLuYzagIfu5hA==
-X-Received: by 2002:a05:6512:3f90:b0:446:6b95:24aa with SMTP id x16-20020a0565123f9000b004466b9524aamr2739464lfa.610.1646909518832;
-        Thu, 10 Mar 2022 02:51:58 -0800 (PST)
+        bh=RobMDDfWnOz5yZ1PGRtJSSc4jJfiehWVeo3eirprMYY=;
+        b=aTnTIkFdJBgG9BJ8EFkXhXrD2RDe2FrqyjsPt4pNf41diktC8jLuPJ0fJ84CX6GiKM
+         gCadysN5x3Tz+SWg6CLyYAX3iJOfj5r3ixbelcfH60S+Dui0LxVYlv83xJN7RaG4Upvx
+         BGCicjKTXor/abc+DAUnaLXzS7j/SeRmYBavIwXi2E8iy32XYSnabL41jUCQJkEEu8v+
+         w6BCtN5iW+bS2qIyz6WfCcuVYP/32iI0aESlmb+ZWvLy6x+RLLKIaZZDpJvvl5WFeUND
+         eD3cGh3I0vFJRzJ9W8hQgZfZ+JFbKXVv+vCJCA1cFwIY76sLYR0yXTpGJaeTyJvoFvIY
+         Jt9Q==
+X-Gm-Message-State: AOAM533mAgfMek9fL4nFFLVsYa2JihTacN9Lk+Qds1k6i6C+RFWSDo39
+        C1pNGPxPhrWKMmhGL7FxSvk=
+X-Google-Smtp-Source: ABdhPJxCodS5d3x300XwibiSnbD5ZFWN9D3hPoAyqRtPGga8kWk8xT9KIdBCp3HikQHLTI1VBpALBw==
+X-Received: by 2002:a05:6512:104a:b0:448:46f1:776c with SMTP id c10-20020a056512104a00b0044846f1776cmr2979259lfb.473.1646915839003;
+        Thu, 10 Mar 2022 04:37:19 -0800 (PST)
 Received: from mobilestation ([95.79.188.22])
-        by smtp.gmail.com with ESMTPSA id v12-20020a056512096c00b00443c40a6a4csm910810lft.134.2022.03.10.02.51.56
+        by smtp.gmail.com with ESMTPSA id y17-20020a2e95d1000000b002463d2595f0sm1036534ljh.135.2022.03.10.04.37.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Mar 2022 02:51:57 -0800 (PST)
-Date:   Thu, 10 Mar 2022 13:51:31 +0300
+        Thu, 10 Mar 2022 04:37:18 -0800 (PST)
+Date:   Thu, 10 Mar 2022 15:37:16 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Frank Li <Frank.Li@nxp.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
         l.stach@pengutronix.de, linux-imx@nxp.com,
         linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
         lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
         robh@kernel.org, kw@linux.com, bhelgaas@google.com,
-        shawnguo@kernel.org
-Subject: Re: [PATCH v3 1/6] dmaengine: dw-edma: fix dw_edma_probe() can't be
- call globally
-Message-ID: <20220310105131.3eyzyqsrhltpzcco@mobilestation>
-References: <20220307224750.18055-1-Frank.Li@nxp.com>
- <20220309133940.3le2ma24aqlhips4@mobilestation>
- <20220309181233.GC134091@thinkpad>
- <20220309190123.dnivojpqhl52o5vc@mobilestation>
- <20220310062242.GB4869@thinkpad>
- <20220310084112.2vhvvnl6pmlkfg36@mobilestation>
- <20220310085632.GE4869@thinkpad>
+        shawnguo@kernel.org, manivannan.sadhasivam@linaro.org
+Subject: Re: [PATCH v4 4/8] dmaengine: dw-edma: rename wr(rd)_ch_cnt to
+ ll_wr(rd)_cnt in struct dw_edma_chip
+Message-ID: <20220310123716.z6zh72ybevze3nk2@mobilestation>
+References: <20220309211204.26050-1-Frank.Li@nxp.com>
+ <20220309211204.26050-5-Frank.Li@nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="3zh36tssarhxvq3y"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220310085632.GE4869@thinkpad>
+In-Reply-To: <20220309211204.26050-5-Frank.Li@nxp.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -82,257 +76,145 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Wed, Mar 09, 2022 at 03:12:00PM -0600, Frank Li wrote:
+> There are same name wr(rd)_ch_cnt in struct dw_edma. EDMA driver get
+> write(read) channel number from register, then save these into dw_edma.
+> Old wr(rd)_ch_cnt in dw_edma_chip actuall means how many link list memory
+> are avaiable in ll_region_wr(rd)[EDMA_MAX_WR_CH]. So rename it to
+> ll_wr(rd)_cnt to indicate actual usage.
 
---3zh36tssarhxvq3y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hmm, I am not sure you are right here. AFAICS the
+drivers/dma/dw-edma/dw-edma-pcie.c driver either uses a statically
+defined number or Rd/Wr channels or just gets the number from the
+specific vsec PCIe capability. Then based on that the driver just
+redistributes the BARs memory amongst all the detected channels in
+accordance with the statically defined snps_edda_data structure.
+Basically the BARs memory serves as the Local/CPU/Application memory
+for the case if the controller is embedded into the PCIe Host/EP
+controller. See the patches which implicitly prove that:
+31fb8c1ff962 ("dmaengine: dw-edma: Improve the linked list and data blocks definition")
+da6e0dd54135 ("dmaengine: dw-edma: Change linked list and data blocks offset and sizes")
 
-On Thu, Mar 10, 2022 at 02:26:32PM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Mar 10, 2022 at 11:41:12AM +0300, Serge Semin wrote:
-> > On Thu, Mar 10, 2022 at 11:52:42AM +0530, Manivannan Sadhasivam wrote:
-> > > On Wed, Mar 09, 2022 at 10:01:23PM +0300, Serge Semin wrote:
-> > > 
-> > > [...]
-> > > 
-> > > > > I'm afraid that this will not work for all cases (unless I miss something). As
-> > > > > Zhi Li pointed out, there are places where only chip pointer will be passed and
-> > > > > we'd need to extract the private data (dw_edma) from it.
-> > > > > 
-> > > > > Tbh I also considered your idea but because of the above mentioned issue and
-> > > > > also referring to other implementations like gpiochip, I settled with Frank's
-> > > > > idea of copying the fields.
-> > > > 
-> > > > What places are these? I see the only obstacle is the dw_edma_remove()
-> > > > method. But it's easily fixable.
-> > > 
-> > > Yeah, right. I overlooked that part.
-> > > 
-> > > > Except that, everything else is more
-> > > > or less straightforward (just a few methods need to have prototypes
-> > > > converted to accepting dw_edma instead dw_edma_chip).
-> > > > 
-> > > > In order to make the code design more coherent, we need to split up
-> > > > private data and device/platform info. As I see it dw_edma_chip is
-> > > > nothing but a chip info data. The eDMA driver is supposed to mainly
-> > > > use and pass it's private data, not the platform info. It will greatly
-> > > > improve the code readability and maintainability. Such approach will
-> > > > also prevent a temptation of adding new private data fields into the
-> > > > dw_edma_chip structure since reaching the pointer to dw_edma will be
-> > > > much easier that getting the dw_edma_chip data. In this case
-> > > > dw_edma_chip will be something like i2c_board_info in i2c.
-> > > > 
-> > > > Ideally dw_edma_chip could be a temporarily defined device info, which
-> > > > memory after the dw_edma_probe() method invocation could be freed. But
-> > > > in order to implement that we'd need a bit more modifications
-> > > > introduced.
-> > > > 
-> > > 
-> > 
-> > > While at it, we should also consider adding an ops structure for passing the
-> > > callbacks from controller drivers. Currently the eDMA driver has the callbacks
-> > > defined in v0-core.c but it is used directly instead of as a callback.
-> > 
-> > Are you saying about DBI/Native IOs? If so seems reasonable. Though in
-> > my case it isn't required.) The only problem was a dword-aligned access,
-> > which has been created in the DW eDMA driver by default.
-> > 
-> 
-> It is not causing any problem but it doesn't look correct to me.
-> 
+(That's why the logic of the DEV_TO_MEM/MEM_TO_DEV is inverted for the
+the drivers/dma/dw-edma/dw-edma-pcie.c platform.)
 
-> Btw, do you have a patch for DWORD access? If so, please share. We are also
-> facing the problem and like to see how to are handling it.
+So basically the wr_ch_cnt/rd_ch_cnt fields have been and is used as
+the number of actually available channels, not linked-list. While the
+notation suggested by you can be confusing, since the ll-memory allocated for
+each channel can be split up and initialized with numerous linked lists
+each of which is used one after another.
 
-There are two types of accessors DW PCIe Host/EP driver defines:
-CFG-space and DBI interface. Both of them can be implemented either
-with default IO methods, or redefined by the particular platform.
-In addition to that the CFG-space IOs are split up into two types:
-host/EP own CFG-space and others (peripheral devices) CFG-spaces. In
-my case the dword-aligned access is supposed to be performed only for
-the DBI-interface and host CFG-space (which basically turns to be
-the same registers space). The driver has a bug in this matter, which
-I fixed with a patch attached to this email. After that patch is
-applied the only thing you'll need is to redefine the
-dw_pcie_ops.{read_dbi,write_dbi,write_dbi2} callbacks with the
-platform specific ones, which would make sure IOs are dword aligned.
-Like this:
-
-static int bt1_pcie_read_mmio(void __iomem *addr, int size, u32 *val)
-{       
-        unsigned int ofs = (uintptr_t)addr & 0x3;
-        
-        if (!IS_ALIGNED((uintptr_t)addr, size))
-                return PCIBIOS_BAD_REGISTER_NUMBER;
-        
-        *val = readl(addr - ofs) >> ofs * BITS_PER_BYTE;
-        if (size == 4) {
-                return PCIBIOS_SUCCESSFUL;
-        } else if (size == 2) {
-                *val &= 0xffff;
-                return PCIBIOS_SUCCESSFUL;
-        } else if (size == 1) {
-                *val &= 0xff;
-                return PCIBIOS_SUCCESSFUL;
-        }
-        
-        return PCIBIOS_BAD_REGISTER_NUMBER;
-}
-
-static int bt1_pcie_write_mmio(void __iomem *addr, int size, u32 val)
-{       
-        unsigned int ofs = (uintptr_t)addr & 0x3;
-        u32 tmp, mask;
-        
-        if (!IS_ALIGNED((uintptr_t)addr, size))
-                return PCIBIOS_BAD_REGISTER_NUMBER;
-        
-        if (size == 4) {
-                writel(val, addr);
-                return PCIBIOS_SUCCESSFUL; 
-        } else if (size == 2 || size == 1) {
-                mask = GENMASK(size * BITS_PER_BYTE - 1, 0);
-                tmp = readl(addr - ofs) & ~(mask << ofs * BITS_PER_BYTE);
-                tmp |= (val & mask) << ofs * BITS_PER_BYTE;
-                writel(tmp, addr - ofs);
-                return PCIBIOS_SUCCESSFUL;
-        }
-
-        return PCIBIOS_BAD_REGISTER_NUMBER;
-}
-
-Regarding the peripheral devices CFG-space IOs. I didn't fix it there
-since in my case there were no problems with iATU outbound windows.
-DBI slave and iATU slave interfaces works differently. The latter in
-my case permits non-dword-aligned IOs.
-
-If you are experiencing problems with all the PCIe memory accesses
-(not only DBI-space/host CFG-space, but the whole iATU outbound IOs),
-then there won't be easy solution for that other than somehow fixing the
-read{b,w,l(})/write{b,w,l}() platform-specific internals. In a way so they
-would differentiate PCIe and normal MMIO IOs and make sure all of them
-are properly aligned. Alternatively you can fix each particular
-peripheral device driver. It isn't that good option though.
-
-Regarding DW eDMA driver. It doesn't have the problem in this matter,
-since it is designed to call readl/writel methods only for the
-controller setups. They are dword-aligned.
-
-Regarding attached patch and my work. I'll send it out after Frank
-finishes his eDMA patchset review, since other than the attached patch
-I've got some more useful fixes, which need to be rebased on top of the
-Frank' work.
+I don't really see a well justified reason to additionally have the
+@wr_ch_cnt and @rd_ch_cnt fields in the dw_edma_chip seeing the number
+of channels can be auto-detected from the corresponding registers, except
+that to workaround a bogus hardware. So we can keep it, but please no
+renaming. It will only cause additional confusion.
 
 -Sergey
 
 > 
-> Thanks,
-> Mani
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> new patch at v4
 > 
-> > -Sergey
-> > 
-> > > 
-> > > This should anyway needs to be fixed when another version of the IP get's added.
-> > > 
-> > > Thanks,
-> > > Mani
-
---3zh36tssarhxvq3y
-Content-Type: text/x-patch; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0001-PCI-dwc-Don-t-use-generic-IO-ops-for-DBI-space-acces.patch"
-
-From 0262b9f32ac2626f4febfa56e6a7f9270a363713 Mon Sep 17 00:00:00 2001
-From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Date: Thu, 23 Dec 2021 14:43:54 +0300
-Subject: [PATCH] PCI: dwc: Don't use generic IO-ops for DBI-space access
-
-Commit c2b0c098fbd1 ("PCI: dwc: Use generic config accessors") replaced
-the locally defined DW PCIe host controller config-space accessors with
-the generic methods pci_generic_config_read() and
-pci_generic_config_write(). It was intended that the corresponding
-bus-mapping callback returned a correct virtual address of the passed PCI
-config-space register. The problem of the proposed solution was that it
-didn't take into account the way the host config-space is accessed on the
-DW PCIe. Depending on the DW PCIe IP-core synthesize parameters different
-interfaces can be used to access the host and peripheral config/memory
-spaces. The former one can be accessed via the DBI interface, while the
-later ones is reached via the AHB/AXI application bus. In case if the DW
-PCIe controller is configured to have a dedicated DBI interface, the way
-it is mapped into the IO-memory turns to be platform-specific. For such
-setups the DWC PCIe driver provides a set of the callbacks
-dw_pcie_ops.{read_dbi,write_dbi} so the platforms glue-drivers would be
-able to take into account the DBI bus IO peculiarities. Since commit
-c2b0c098fbd1 ("PCI: dwc: Use generic config accessors") these methods
-haven't been utilized during the generic host initialization performed by
-the PCIe subsystem code.
-
-I don't really know how come there have been no problems spotted for the
-Histb/Exynos/Kirin PCIe controllers so far, but in our case with dword
-aligned IO requirement the generic config-space accessors can't be
-utilized for the host config-space. Thus in order to make sure the host
-config-space is properly accessed via the DBI bus let's get back the
-dw_pcie_rd_own_conf() and dw_pcie_wr_own_conf() methods. They are going to
-be just wrappers around the already defined
-dw_pcie_read_dbi()/dw_pcie_write_dbi() functions with proper arguments
-conversion. These methods perform the platform-specific config-space IO if
-the DBI accessors are specified, otherwise they call normal MMIO
-operations.
-
-Fixes: c2b0c098fbd1 ("PCI: dwc: Use generic config accessors")
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
----
- .../pci/controller/dwc/pcie-designware-host.c | 34 +++++++++++++++++--
- 1 file changed, 32 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 6beccc195cab..03fb2650c825 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -527,10 +527,40 @@ void __iomem *dw_pcie_own_conf_map_bus(struct pci_bus *bus, unsigned int devfn,
- }
- EXPORT_SYMBOL_GPL(dw_pcie_own_conf_map_bus);
- 
-+static int dw_pcie_rd_own_conf(struct pci_bus *bus, unsigned int devfn,
-+			       int where, int size, u32 *val)
-+{
-+	struct pcie_port *pp = bus->sysdata;
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+
-+	if (PCI_SLOT(devfn) > 0) {
-+		*val = ~0U;
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+	}
-+
-+	*val = dw_pcie_read_dbi(pci, where, size);
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+static int dw_pcie_wr_own_conf(struct pci_bus *bus, unsigned int devfn,
-+			       int where, int size, u32 val)
-+{
-+	struct pcie_port *pp = bus->sysdata;
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+
-+	if (PCI_SLOT(devfn) > 0)
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+
-+	dw_pcie_write_dbi(pci, where, size, val);
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
- static struct pci_ops dw_pcie_ops = {
- 	.map_bus = dw_pcie_own_conf_map_bus,
--	.read = pci_generic_config_read,
--	.write = pci_generic_config_write,
-+	.read = dw_pcie_rd_own_conf,
-+	.write = dw_pcie_wr_own_conf,
- };
- 
- void dw_pcie_setup_rc(struct pcie_port *pp)
--- 
-2.35.1
-
-
---3zh36tssarhxvq3y--
+>  drivers/dma/dw-edma/dw-edma-core.c |  4 ++--
+>  drivers/dma/dw-edma/dw-edma-pcie.c | 12 ++++++------
+>  include/linux/dma/edma.h           |  8 ++++----
+>  3 files changed, 12 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index 1abf41d49f75b..66dc650577919 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -918,11 +918,11 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+>  	raw_spin_lock_init(&dw->lock);
+>  
+>  
+> -	dw->wr_ch_cnt = min_t(u16, chip->wr_ch_cnt,
+> +	dw->wr_ch_cnt = min_t(u16, chip->ll_wr_cnt,
+>  			      dw_edma_v0_core_ch_count(dw, EDMA_DIR_WRITE));
+>  	dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);
+>  
+> -	dw->rd_ch_cnt = min_t(u16, chip->rd_ch_cnt,
+> +	dw->rd_ch_cnt = min_t(u16, chip->ll_rd_cnt,
+>  			      dw_edma_v0_core_ch_count(dw, EDMA_DIR_READ));
+>  	dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);
+>  
+> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> index ae42bad24dd5a..7732537f96086 100644
+> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> @@ -230,14 +230,14 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  	chip->nr_irqs = nr_irqs;
+>  	chip->ops = &dw_edma_pcie_core_ops;
+>  
+> -	chip->wr_ch_cnt = vsec_data.wr_ch_cnt;
+> -	chip->rd_ch_cnt = vsec_data.rd_ch_cnt;
+> +	chip->ll_wr_cnt = vsec_data.wr_ch_cnt;
+> +	chip->ll_rd_cnt = vsec_data.rd_ch_cnt;
+>  
+>  	chip->reg_base = pcim_iomap_table(pdev)[vsec_data.rg.bar];
+>  	if (!chip->reg_base)
+>  		return -ENOMEM;
+>  
+> -	for (i = 0; i < chip->wr_ch_cnt; i++) {
+> +	for (i = 0; i < chip->ll_wr_cnt; i++) {
+>  		struct dw_edma_region *ll_region = &chip->ll_region_wr[i];
+>  		struct dw_edma_region *dt_region = &chip->dt_region_wr[i];
+>  		struct dw_edma_block *ll_block = &vsec_data.ll_wr[i];
+> @@ -262,7 +262,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  		dt_region->sz = dt_block->sz;
+>  	}
+>  
+> -	for (i = 0; i < chip->rd_ch_cnt; i++) {
+> +	for (i = 0; i < chip->ll_rd_cnt; i++) {
+>  		struct dw_edma_region *ll_region = &chip->ll_region_rd[i];
+>  		struct dw_edma_region *dt_region = &chip->dt_region_rd[i];
+>  		struct dw_edma_block *ll_block = &vsec_data.ll_rd[i];
+> @@ -302,7 +302,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  		chip->reg_base);
+>  
+>  
+> -	for (i = 0; i < chip->wr_ch_cnt; i++) {
+> +	for (i = 0; i < chip->ll_wr_cnt; i++) {
+>  		pci_dbg(pdev, "L. List:\tWRITE CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+>  			i, vsec_data.ll_wr[i].bar,
+>  			vsec_data.ll_wr[i].off, chip->ll_region_wr[i].sz,
+> @@ -314,7 +314,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  			chip->dt_region_wr[i].vaddr, &chip->dt_region_wr[i].paddr);
+>  	}
+>  
+> -	for (i = 0; i < chip->rd_ch_cnt; i++) {
+> +	for (i = 0; i < chip->ll_rd_cnt; i++) {
+>  		pci_dbg(pdev, "L. List:\tREAD CH%.2u, BAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+>  			i, vsec_data.ll_rd[i].bar,
+>  			vsec_data.ll_rd[i].off, chip->ll_region_rd[i].sz,
+> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> index e9ce652b88233..c2039246fc08c 100644
+> --- a/include/linux/dma/edma.h
+> +++ b/include/linux/dma/edma.h
+> @@ -40,8 +40,8 @@ enum dw_edma_map_format {
+>   * @nr_irqs:		 total dma irq number
+>   * @ops			 DMA channel to IRQ number mapping
+>   * @reg_base		 DMA register base address
+> - * @wr_ch_cnt		 DMA write channel number
+> - * @rd_ch_cnt		 DMA read channel number
+> + * @ll_wr_cnt		 DMA write link list number
+> + * @ll_rd_cnt		 DMA read link list number
+>   * @rg_region		 DMA register region
+>   * @ll_region_wr	 DMA descriptor link list memory for write channel
+>   * @ll_region_rd	 DMA descriptor link list memory for read channel
+> @@ -56,8 +56,8 @@ struct dw_edma_chip {
+>  
+>  	void __iomem		*reg_base;
+>  
+> -	u16			wr_ch_cnt;
+> -	u16			rd_ch_cnt;
+> +	u16			ll_wr_cnt;
+> +	u16			ll_rd_cnt;
+>  	/* link list address */
+>  	struct dw_edma_region	ll_region_wr[EDMA_MAX_WR_CH];
+>  	struct dw_edma_region	ll_region_rd[EDMA_MAX_RD_CH];
+> -- 
+> 2.24.0.rc1
+> 

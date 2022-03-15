@@ -2,274 +2,158 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DBE04DA1DF
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Mar 2022 19:05:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A91E54DA204
+	for <lists+dmaengine@lfdr.de>; Tue, 15 Mar 2022 19:07:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350719AbiCOSGN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 15 Mar 2022 14:06:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46378 "EHLO
+        id S1350945AbiCOSID (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 15 Mar 2022 14:08:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245048AbiCOSGN (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 15 Mar 2022 14:06:13 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39542205E8;
-        Tue, 15 Mar 2022 11:05:00 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id qx21so43187918ejb.13;
-        Tue, 15 Mar 2022 11:05:00 -0700 (PDT)
+        with ESMTP id S1350990AbiCOSIB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 15 Mar 2022 14:08:01 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 779681402F
+        for <dmaengine@vger.kernel.org>; Tue, 15 Mar 2022 11:06:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1647367606; x=1678903606;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=WbrTVvVRHCsAL7kuCymIMW0/PS2fVzZ8eeMp9jhRtuE=;
+  b=aiwY+7QERh8IWEVLOPLoWeibv80NtZ+G+JrxBBQuccPG7KxmNo+pj1mM
+   kj4QtMRJNZsfsC8WNvjhWg/DGS/uc9cmemg00KZM+oF/iDZuOR3N9qwwN
+   bWXdOrYBGcPkreFX1BBi89qNdZ9EI32Vn3SyLgh1Asp9ND/b7i04TO+aD
+   pcDlEIQ2+lVpt57IoCcxOX6jw0QyZ3ECQWjKIBjkjExy8Ayg2+nR/VWcV
+   Meo3FJU4Crn6rnPSO6PdMtQOdEoRBsUGnl3oUzX/YCXcVPIagBElkYZ+p
+   ycU//jWEDF+sscE25S3PYnrjcJn/VEBRA52CG5k6QiK5p+pNzvl5Yjqt5
+   g==;
+X-IronPort-AV: E=Sophos;i="5.90,184,1643698800"; 
+   d="scan'208";a="89019533"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Mar 2022 11:06:45 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.17; Tue, 15 Mar 2022 11:06:33 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17 via Frontend
+ Transport; Tue, 15 Mar 2022 11:06:33 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RXsnBlxtQV3IeIkgEXq3/eRQONW3OBOStl5AG9Hi9WarTsWdvw3ywwBU8gCIiBZoTAeRPhPyEFdfd2yhAba9amQwfD0CDEMEOTXw+Ys8FsFKfRgjCRhXRzS0Si0pnsiDKVxJ5WLTVAGAV/uzW/ZLwmnBlfz+e2FsNZpfLQO4QHIkW6bt9qvCn1A85CG8bOxovKCZsXEMKpMcfH/ow3u+QhbTx6XZMYw9nVqDSK/dQbJPMXEySJXChC4WqecuOgZf1AgYHbb8NZAePIoYEyHpuKvJ4dbbssCfyN1xxOiLPTJiM+mbGAJOXPboiHwzFxr0mcA4crzSx1qfrG1XftS4jw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WbrTVvVRHCsAL7kuCymIMW0/PS2fVzZ8eeMp9jhRtuE=;
+ b=ncKiBuuyZPdHq3V8XIcsqZyYSpO6TI0Vp4/LLWbVTKFSAx9u1pfyttqyEiTeLDT9xYnPVjJ4oMhP6/YGNx0YpD07iX0vhdk/uP6imFv5Lgk6q0ZuvRsVVdkjWX2RWFoM4ZFS8od+x964yPoCSJaLdYt7ZaD5RA9f6Tnw9FBwf6VGEajBOAfzZ65Wor0BwH3BTEIq5wInFI9iDBRaoh6gkcm4GE9qZjHfhzAMg8luyW5F6AJPQXZ3A1lOf4WDnAwTKwh1hAmPMNtSlm9gh435U4EjIJYbe50cwd44hpwEkDWTx6+rj6PRllBs5ZTedyYBxTKhhhd6uKGLabyT1ZT+qA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=7bpalvhMp7syEkA5bOD6m3Hiadeq1GFGR2u5DFZQUPg=;
-        b=DFsEVIcpVFZmsLrzVsuXGfCDAOQo45HphHPPHqSlOIJqflipspyIX6nDmHEdm7p5ZN
-         qStS1Me4q0ChYcco/kXFdiYP6BFh8vXOSO+RranC2vJEEDyM2cTCdEwWsBLGXaFTO3cm
-         ZrLXhRs0Zr57Jp4HWFlA6dsjObFGsCSo2ta1XqASGUjr5h2618FD/7YtapV90aJTALFH
-         26YUJTPAW2tj1bjGYJa3B53LWudxdy+KC1sO3IaOfXY9WMLiKhQeh7CYPtaRCelYukQ0
-         ykHuhInylyATUkZelWpM9ZbZh88D3lun1+FtqQDueri5iYlC11fvs52nKVwDvhxDADZb
-         itcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=7bpalvhMp7syEkA5bOD6m3Hiadeq1GFGR2u5DFZQUPg=;
-        b=yVfeJO3gp/REeXZIAbrCfnUauoMDNukzvOt+Ib7pMTueQeZnhQIdN2WBQ9/6zyb6zw
-         xNMrU8Otvg13BeDddgnh/rZ3uOpHmbwd/NBcwex85O+R+6TRZXFxNMs1j+EauSvrnuSM
-         Pm5QX6PpavKom9jkLi7WLaXVvwer5rQdBFHCX3HHf1tJXu/6wc/vaigfg1+ivlhjUcAo
-         klmFHc9KrcZP5pjj/6oPJ9/c3T1UbHd4SUTMlcn0sClHF1DQJyWIxPV/y0Zzsi6rgxy9
-         t9h/Ej0hC89MhvoJYPmA2JISLdv1gExzoaLlKpGTGnuuiC0oMDH1Hgjy5uIQWAM/4vq7
-         Zz/A==
-X-Gm-Message-State: AOAM530Clz67FnSELuQ15ggvBCzqWF1EVfqlFx1bcpwTtteZjaDKElG3
-        eXcXRw5FmpnUrIi4XirIVp0QDNBnKzvZISRXXig=
-X-Google-Smtp-Source: ABdhPJxW6+1eFC3OcTirM9mgeDfTXvBfatrTIVC6OBa4JEN+KNKCGi5wT8QrdQtnyTpzndOFbCuPp9umJm3+8HzbnXM=
-X-Received: by 2002:a17:906:4cc7:b0:6d0:7efb:49f with SMTP id
- q7-20020a1709064cc700b006d07efb049fmr23301879ejt.639.1647367498316; Tue, 15
- Mar 2022 11:04:58 -0700 (PDT)
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WbrTVvVRHCsAL7kuCymIMW0/PS2fVzZ8eeMp9jhRtuE=;
+ b=dguhz9hbXJX9qr0Nx5pmNoob870cdUWM20yBpOPRL4YOn4atz6WhZzUb247uBluadEnzqaoyIPtS0ylOCA6DHT8tBSCOIBCQFmzBLzDckp6tvye2EYxQT9Ubl+TPdzjhwc6cNwnfjJGmSsM3JTBXAQEqMciEy3WqOgq2VVUwWDA=
+Received: from SA2PR11MB4874.namprd11.prod.outlook.com (2603:10b6:806:f9::23)
+ by DM6PR11MB3435.namprd11.prod.outlook.com (2603:10b6:5:68::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.25; Tue, 15 Mar
+ 2022 18:06:32 +0000
+Received: from SA2PR11MB4874.namprd11.prod.outlook.com
+ ([fe80::dc94:3c7c:8ef8:21b9]) by SA2PR11MB4874.namprd11.prod.outlook.com
+ ([fe80::dc94:3c7c:8ef8:21b9%5]) with mapi id 15.20.5061.028; Tue, 15 Mar 2022
+ 18:06:32 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <benjamin.walker@intel.com>, <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <Ludovic.Desroches@microchip.com>,
+        <okaya@kernel.org>, <dave.jiang@intel.com>
+Subject: Re: [PATCH v3 3/4] dmaengine: at_xdmac: In at_xdmac_prep_dma_memset,
+ treat value as a single byte
+Thread-Topic: [PATCH v3 3/4] dmaengine: at_xdmac: In at_xdmac_prep_dma_memset,
+ treat value as a single byte
+Thread-Index: AQHYOJdmqKlNxH0mOUqb99ODAQDLWg==
+Date:   Tue, 15 Mar 2022 18:06:32 +0000
+Message-ID: <195385f9-73dc-6c76-a01d-918d5367ac4f@microchip.com>
+References: <20220301182551.883474-1-benjamin.walker@intel.com>
+ <20220301182551.883474-4-benjamin.walker@intel.com>
+In-Reply-To: <20220301182551.883474-4-benjamin.walker@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microchip.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0208e990-ad7c-4f71-4c23-08da06ae8934
+x-ms-traffictypediagnostic: DM6PR11MB3435:EE_
+x-microsoft-antispam-prvs: <DM6PR11MB343529920E2F7DFFBD6B9267F0109@DM6PR11MB3435.namprd11.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9GBRxNWKcqGrw54ObgUbhpj779WAmiadJKshQGjosP7HHK0GdpMjuSaVGXUSDZjwgE0SrjAqkQMAXWZWwqCw0p9T/cEtJODm9ZrMLxYWUwZHyVEJMHd/lECIq6hv724FRYPt/XNBJQIESv6l6+opIMNF0S+czLym95y4QwY+qjUdbICUAKpgeZ6C5JSxJGw8IUXcPIhreTBPAgM7VPjE1NbNEK14CYzzTmwMxmI8WLw8/W4nPgTHXn1d22MwTgF8O702qtZ/5vZXsbviKrq5NrvRL92ZYhll98LMptFFtOW+ZUmlbx+uA/i8aDkaDJlrSY6Dk81dG9H3nE5h4FS2CmWkianVRGwc79PObVEaYXqlgxnVVZxkgaX90i8P2jtob3+86rU1P6XqavBfCPg+HO5N3UhjWt7jofNIEfznE+CQUsv64E4BbmKc3FgHEQniqZ+IqSuKLFY8z4nOQoJOQfyzOZKbaSGRnaSUSswkWBdppG5GR/wTCPmlKyublmIy9hHOgLuHJeo+35lyYZaFNaqPt4rlVuccFjYh0cXBpv4AYwSiQu0aBYQIb/dYkAHRw6tHazdnoLGoJRUlI+e0hrBxB0Z8/iJ9sa06YAnEhd7gKCD2bQ3Hoa/0l5gRvEaRkvgggmz0xR2bEoNqjuEvW2Cj6qDZNPumRam16cAlgXVqomN8JVhfUf6jnpnzXXC1AbMvfrBHXi5NgcsS4egmZqNNHCOalUA6rCS+BlACFG74a5AlQzhkli5toUd0WUgKGd+gtyKlQHfMlstY2tiY/Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA2PR11MB4874.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(38100700002)(110136005)(54906003)(316002)(36756003)(26005)(31686004)(186003)(2616005)(5660300002)(2906002)(508600001)(38070700005)(8676002)(86362001)(31696002)(6486002)(6512007)(8936002)(6506007)(71200400001)(4326008)(122000001)(64756008)(66446008)(66476007)(66946007)(66556008)(76116006)(558084003)(91956017)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?TDZvM2xtbUdQN25MNnUrWVl1bFd6QmREa3FLN2l5KzQ2TUZpUklVU2pyN2xM?=
+ =?utf-8?B?WGdLUGU3eHNrM2hDejBFNkZwWTVXS0dBSVFWZDFiY2NuakhvOXF5NmY2bjhT?=
+ =?utf-8?B?bExEeWpiaWdzTkZUczI5RmRhOW5kbkJHS05qMmV3VGUxb1R5eG5iZ0x1THYv?=
+ =?utf-8?B?RHBuUHpta0p4dVhEVzB4Q2VzbFhkcDZRbGJTQ2RodXo2cTJ5ZjBFZDU1K2U1?=
+ =?utf-8?B?VENxUEFSZnROZFJqcms3SDBrYk1DeE9BaGRaSVpac3RHd3pEbHpXVUYwQ1pY?=
+ =?utf-8?B?WXd6eDUwajMwMS9lMjMzbTlTb1lCVlYxaG1iWmUyYzI3RW01SkV4MjYxRVJ4?=
+ =?utf-8?B?dFdZeFN4TGRjS2doQVR0TG5wWDFnd0xkZFgrNThvU1Nob2JkRFZ5QlBTeHZs?=
+ =?utf-8?B?Ums4QXVsS0hwb2VsTE1NNXpTN0ZsZU50Y3U5UlFGcmpWREtlbCtiNnVlUFdv?=
+ =?utf-8?B?L3dWTmoxZkl4L2FncDJPTE95d2ZlSXp0dnJpdURocXI4Y3ZodElLcEtocnNC?=
+ =?utf-8?B?amJZWEVHMHhPd0dOSVVDRlE4NlQ2NzVwZXBxdnhJUnB2cVJQL1F0cFBObndp?=
+ =?utf-8?B?VkRhT2ZlZ0NBWGtlY3RhRzFsMytSRE4rOE9TQ2t0dDJQZUQyT3lRdndsN3VL?=
+ =?utf-8?B?dW00YVhiNXkzdjM4UTVJdUI4bVg0dUJ3WUJsVmxjZlR2Q2VTVFJOYWZHbFc4?=
+ =?utf-8?B?RUd3UTVhUmVmbGE3WWd3WEllaE1SYm5INU5ZenQzeVFqSFNYR0o5NzlXRTlv?=
+ =?utf-8?B?ZWhDUGEwVXFVNHU4M1Y0Y2NjWFNCWmNhcitJVEVnR3ZmOTBFV2djNU9aK0k0?=
+ =?utf-8?B?WGZWYUp0L0ZmZTVFVWZhQktwNnZFbXI3QnN5M3pZOWM3dVdyWVVxbllTUDBq?=
+ =?utf-8?B?NHJqUnBkZWxFQlNMMzBPYU9vQ2lwUDVrb296U1ZheCtvU0NMeGdKaUR6alVK?=
+ =?utf-8?B?eStPdEJVbnV6cDRrS1lOVk9URVFEU1F0WHNQbTlHR2JFS05wSitsS25Md291?=
+ =?utf-8?B?WS8yb0hiL283Sm9Pa2U0TFRHUnlvZUx5bmZ5cmVscEhkQi94RnRZTVJXQnJh?=
+ =?utf-8?B?RlFYNkdRYWdPOWNtbDIvOHdyTXZoSUtHU1FQTGJGL1dOczFTMG1QekdTeVVC?=
+ =?utf-8?B?ZjR4LzgwaXV4UGJPU1BySzVjNGxqNWg5c0xvU2NENjY5ZTEwM0VCVTdXaGk1?=
+ =?utf-8?B?bllmZzVYVkU0NHl4YjFJb3JSdHR5dVpPQ0IyTGJISHV3SkROTHZyekE4b05u?=
+ =?utf-8?B?a1ZvQkRHdTlkNEVsZDBlbjRtTjNzSWIzUmxlZHU3dlVMRDNGT0QrWFBHSXdJ?=
+ =?utf-8?B?aWxrcHdEZDRUT2tnWkU4TTJNdE5hdHFTY212dCs1b3l2QWFqd3BiQ2N5dmc5?=
+ =?utf-8?B?SS9zK00wcjA4ZEpsdm50aEd5cURTVENCREh0NUUvU01NZXZHbC96Y1Fna0hm?=
+ =?utf-8?B?Zmhwd2x4MmFabmVwbzM5dmJwa1pRaENMVG9KaXlOQUxmd0RyVzdZTnVOamJL?=
+ =?utf-8?B?V0JoZ3ZSTGUwemlCZU1zVHVtdFloalRmbmNKVDgxTncxbE41YW5FNzhhQkJY?=
+ =?utf-8?B?aUwwNm1jWU9WWG9BNGF4VTVTdlJPdGs4aFJnZ0Q3VnFxRy93ajJPMy9WM09s?=
+ =?utf-8?B?b1hyVGdMZytsckNHY1VndHo0Q1Z2M1dqbVAxdkFzLzdtNlptZTVvM1F3dWc0?=
+ =?utf-8?B?N2tiSG1mQ2ZrQ3haZ1hsYVdNd2xrZ2JtTGd3OUNEMVcvYkxzblRKdTVMck56?=
+ =?utf-8?B?YzVlZTVDYlY0WnFKMUg0dWtBSnhLdWlVZjVFVHYzZFZBUWhuUWVUY3F6TVpR?=
+ =?utf-8?B?a1lXaGF3OFZKbitLUFlpU1ZOa3BPSUtzeUNvZklNdStRZDBuZDAzQzBTR2cw?=
+ =?utf-8?B?RUtEY3ZGQ2FaWVlSai8vcTVuUTROUWRiZ0hEeWZIelFGRTdHdllERVA0bVpk?=
+ =?utf-8?B?MWtLTkc2bThHdDJkMm1FNVd6MWZPRXhhQXBJL3hHdjlVc21Gdjc2elNabWsy?=
+ =?utf-8?B?TTNmVXI1L0J3PT0=?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <09F0D937E7DB6C4FB0E118BFA04DF3D0@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20220314141643.22184-1-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20220314141643.22184-1-u.kleine-koenig@pengutronix.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 15 Mar 2022 20:03:44 +0200
-Message-ID: <CAHp75VdH4vGr57v6tfkRuxh-3agRKO8C08+DH8dsB1HnPfnz5Q@mail.gmail.com>
-Subject: Re: [PATCH v8 00/16] clk: provide new devm helpers for prepared and
- enabled clocks
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        linux-hwmon@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Tomislav Denis <tomislav.denis@avl.com>,
-        Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        =?UTF-8?Q?Andr=C3=A9_Gustavo_Nakagomi_Lopez?= <andregnl@usp.br>,
-        Cai Huoqing <caihuoqing@baidu.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        linux-amlogic <linux-amlogic@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        Keguang Zhang <keguang.zhang@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        linux-watchdog@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-pwm@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Amireddy Mallikarjuna reddy 
-        <mallikarjunax.reddy@linux.intel.com>,
-        dmaengine <dmaengine@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA2PR11MB4874.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0208e990-ad7c-4f71-4c23-08da06ae8934
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2022 18:06:32.1859
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UlDlGAGGTjX3Mj1nnX4NprIr+z8Et4kFkqGwR7qYrO3fhC51tzifqXzPKxkMLTYEBpKXahkKBcCoBySHH5Jv6G603C2XetxrYJcZ3mQo5Pw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3435
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,T_SCC_BODY_TEXT_LINE,
+        T_SPF_PERMERROR autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Mar 14, 2022 at 5:14 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> Hello,
->
-> this is another try to convince the relevant people that
-> devm_clk_get_enabled() is a nice idea. Compared to v7 (back in May 2021) =
-this
-> series is rebased to v5.17-rc8 and converts quite some drivers that open =
-code
-> devm_clk_get_enabled() up to now (patches #3 - #11).
->
-> A concern about devm_clk_get_enabled() in v7 was that it helps people to =
-be
-> lazy and I agree that in some situations when devm_clk_get_enabled() is u=
-sed it
-> would be more efficient and sensible to care to only enable the clk when =
-really
-> needed.
->
-> On the other hand, the function is right for some users, e.g. the watchdo=
-g
-> drivers. For the others it's not so simple to judge. Given that there are=
- a
-> lot of drivers that are lazy even if doing so is some effort (i.e. callin=
-g
-> clk_prepare_enable() and devm_add_action()) convinces me, that introducin=
-g the
-> function family is sensible. (And if you want to work on these drivers,
-> grepping for devm_clk_get_enabled gives you a few candidates once the
-> series is in :-)
-
-FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-for drivers/iio
-
-Thanks for doing this!
-
-> Otherwise looking at the diffstat of this series:
->
->  48 files changed, 257 insertions(+), 851 deletions(-)
->
-> is quite convincing. Just the first two patches (which introduce the new
-> functions) account for
->
->  2 files changed, 169 insertions(+), 17 deletions(-)
->
-> . A rough third of the added lines is documentation. The rest is driver
-> updates which then has:
->
->  46 files changed, 88 insertions(+), 834 deletions(-)
->
-> which makes a really nice cleanup.
->
-> The series is build-tested on arm64, m68k, powerpc, riscv, s390, sparc64
-> and x86_64 using an allmodconfig.
->
-> Best regards
-> Uwe
->
-> Uwe Kleine-K=C3=B6nig (16):
->   clk: generalize devm_clk_get() a bit
->   clk: Provide new devm_clk helpers for prepared and enabled clocks
->   hwmon: Make use of devm_clk_get_enabled()
->   iio: Make use of devm_clk_get_enabled()
->   hwrng: meson - Don't open-code devm_clk_get_optional_enabled()
->   bus: bt1: Don't open code devm_clk_get_enabled()
->   gpio: vf610: Simplify error handling in probe
->   drm/meson: dw-hdmi: Don't open code devm_clk_get_enabled()
->   rtc: ingenic: Simplify using devm_clk_get_enabled()
->   clk: meson: axg-audio: Don't duplicate devm_clk_get_enabled()
->   watchdog: Make use of devm_clk_get_enabled()
->   pwm: atmel: Simplify using devm_clk_get_prepared()
->   rtc: at91sam9: Simplify using devm_clk_get_enabled()
->   i2c: imx: Simplify using devm_clk_get_enabled()
->   spi: davinci: Simplify using devm_clk_get_enabled()
->   dmaengine: lgm: Fix error handling
->
->  drivers/bus/bt1-apb.c                 | 23 +------
->  drivers/bus/bt1-axi.c                 | 23 +------
->  drivers/char/hw_random/meson-rng.c    | 20 +-----
->  drivers/clk/clk-devres.c              | 96 ++++++++++++++++++++++-----
->  drivers/clk/meson/axg-audio.c         | 36 ++--------
->  drivers/dma/lgm/lgm-dma.c             |  8 +--
->  drivers/gpio/gpio-vf610.c             | 45 +++----------
->  drivers/gpu/drm/meson/meson_dw_hdmi.c | 48 +++++---------
->  drivers/hwmon/axi-fan-control.c       | 15 +----
->  drivers/hwmon/ltc2947-core.c          | 17 +----
->  drivers/hwmon/mr75203.c               | 26 +-------
->  drivers/hwmon/sparx5-temp.c           | 19 +-----
->  drivers/i2c/busses/i2c-imx.c          | 12 +---
->  drivers/iio/adc/ad7124.c              | 15 +----
->  drivers/iio/adc/ad7768-1.c            | 17 +----
->  drivers/iio/adc/ad9467.c              | 17 +----
->  drivers/iio/adc/ingenic-adc.c         | 15 +----
->  drivers/iio/adc/lpc18xx_adc.c         | 18 +----
->  drivers/iio/adc/rockchip_saradc.c     | 44 +-----------
->  drivers/iio/adc/ti-ads131e08.c        | 19 +-----
->  drivers/iio/adc/xilinx-ams.c          | 15 +----
->  drivers/iio/adc/xilinx-xadc-core.c    | 18 +----
->  drivers/iio/frequency/adf4371.c       | 17 +----
->  drivers/iio/frequency/admv1013.c      | 15 +----
->  drivers/iio/frequency/adrf6780.c      | 16 +----
->  drivers/iio/imu/adis16475.c           | 15 +----
->  drivers/pwm/pwm-atmel.c               | 16 +----
->  drivers/rtc/rtc-at91sam9.c            | 22 ++----
->  drivers/rtc/rtc-jz4740.c              | 21 +-----
->  drivers/spi/spi-davinci.c             | 11 +--
->  drivers/watchdog/cadence_wdt.c        | 17 +----
->  drivers/watchdog/davinci_wdt.c        | 18 +----
->  drivers/watchdog/imgpdc_wdt.c         | 31 +--------
->  drivers/watchdog/imx2_wdt.c           | 15 +----
->  drivers/watchdog/imx7ulp_wdt.c        | 15 +----
->  drivers/watchdog/loongson1_wdt.c      | 17 +----
->  drivers/watchdog/lpc18xx_wdt.c        | 30 +--------
->  drivers/watchdog/meson_gxbb_wdt.c     | 16 +----
->  drivers/watchdog/of_xilinx_wdt.c      | 16 +----
->  drivers/watchdog/pic32-dmt.c          | 15 +----
->  drivers/watchdog/pic32-wdt.c          | 17 +----
->  drivers/watchdog/pnx4008_wdt.c        | 15 +----
->  drivers/watchdog/qcom-wdt.c           | 16 +----
->  drivers/watchdog/rtd119x_wdt.c        | 16 +----
->  drivers/watchdog/st_lpc_wdt.c         | 16 +----
->  drivers/watchdog/stm32_iwdg.c         | 31 +--------
->  drivers/watchdog/visconti_wdt.c       | 18 +----
->  include/linux/clk.h                   | 90 ++++++++++++++++++++++++-
->  48 files changed, 257 insertions(+), 851 deletions(-)
->
->
-> base-commit: 09688c0166e76ce2fb85e86b9d99be8b0084cdf9
-> --
-> 2.35.1
->
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+U29ycnkgZm9yIHRoZSBkZWxheS4NCkp1c3Qgd2FudGVkIHRvIGluZm9ybSB5b3UgdGhhdCBJIHBs
+YW4gdG8gdGVzdCB0aGlzIHBhdGNoIHNldCB0aGlzIHdlZWsuDQoNCkNoZWVycywNCnRhDQo=

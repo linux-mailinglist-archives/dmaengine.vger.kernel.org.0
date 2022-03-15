@@ -2,32 +2,33 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18EBB4DA307
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Mar 2022 20:13:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D59F4DA30C
+	for <lists+dmaengine@lfdr.de>; Tue, 15 Mar 2022 20:13:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240212AbiCOTOU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 15 Mar 2022 15:14:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45962 "EHLO
+        id S1348394AbiCOTOV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 15 Mar 2022 15:14:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245232AbiCOTOT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 15 Mar 2022 15:14:19 -0400
+        with ESMTP id S245232AbiCOTOU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 15 Mar 2022 15:14:20 -0400
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACCC4C78;
-        Tue, 15 Mar 2022 12:13:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53BC7CF0;
+        Tue, 15 Mar 2022 12:13:03 -0700 (PDT)
 Received: (Authenticated sender: miquel.raynal@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id E1059C0003;
-        Tue, 15 Mar 2022 19:12:56 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPSA id C9B99C0005;
+        Tue, 15 Mar 2022 19:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1647371579;
+        t=1647371582;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=u/D6SPGhBpyZWC2aFb7aJ6eFgcFPSvIErLak7uOUgJw=;
-        b=i36aWtw+u0tKkOfg00+abz853z0qOK6sKfT3Vlcw7y24U5AO6XehDFkk2y+Yu0gwqMvk30
-        6+AXFGV7xre+YUd0GUMrfOx2BUAFO0cRXy9m5io2AXDNh57WCQhTf98zD/YC7vBatyJz5t
-        Opz2abLPnaPJsKekuFEHQHDSSc7ZHFa8cFwlr3Q7Ow/SKOgq/8C+upbuuL0rHqPtnzLUaW
-        mi6YzGb8wysMtHu/axGKMkMW91/J6Ueo0jYfrQ9oONkuYQ1MMcyT+dyRA/6opAzI0r7RRZ
-        6K/9jawK+WrlUM26GrDWXlKVKj/49kEUmQPmQ7Z7mLytacYygq7KeTfqikTinQ==
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dGdZ3v/UIIN/shvZ1IhmcrAqm0j6EVMRXCucqy7b3F8=;
+        b=SO0l0tBMaIZ4tH4cajEEw2HV8TxkjQPVwzHD7JcbTZnwe+E1c8RohjUfZ3HOr9qRsVqxRg
+        906LdlmYHqF7D/n+vlGq7EnFEKgJIME1Qh3OjppRLxJ8YG10gQi57AD8j5M16+/6mc/jZ+
+        /anVyUVCL7J+I2gAOG+kfu4arp6EQnrMAqVxqdi1B6ofCZBtA/uJC3yN6qWnjYMC5SYUwV
+        BBqLgBZGuB0aK+AuEgGC8fLf1yX6OStzelVwIKyrrWcgF8oQN56q3dxS1/9ANxCGEzpiDL
+        rOsPaFEwK90a6sn1RZy+/N+o5YP2LWMwR0+++NXRYuiUwhnZ0xazO83PjPEkgQ==
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     linux-renesas-soc@vger.kernel.org,
         Magnus Damm <magnus.damm@gmail.com>,
@@ -46,11 +47,15 @@ Cc:     Milan Stevanovic <milan.stevanovic@se.com>,
         Clement Leger <clement.leger@bootlin.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Viresh Kumar <vireshk@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v5 0/8] RZN1 DMA support
-Date:   Tue, 15 Mar 2022 20:12:47 +0100
-Message-Id: <20220315191255.221473-1-miquel.raynal@bootlin.com>
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v5 1/8] dt-bindings: dmaengine: Introduce RZN1 dmamux bindings
+Date:   Tue, 15 Mar 2022 20:12:48 +0100
+Message-Id: <20220315191255.221473-2-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20220315191255.221473-1-miquel.raynal@bootlin.com>
+References: <20220315191255.221473-1-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -64,95 +69,89 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello,
+The Renesas RZN1 DMA IP is based on a DW core, with eg. an additional
+dmamux register located in the system control area which can take up to
+32 requests (16 per DMA controller). Each DMA channel can be wired to
+two different peripherals.
 
-Here is a first series bringing DMA support to RZN1 platforms. Soon a
-second series will come with changes made to the UART controller
-driver, in order to interact with the RZN1 DMA controller.
-
-Cheers,
-Miquèl
-
-Changes in v5:
-* Used gotos in rzn1_dmamux_route_allocate().
-* Changed the prefix to "dmaengine:".
-* Dropped the partial transfers fix.
-* Added Rob's acks.
-
-Changes in v4:
-* Freed "map" in the error path of the dmamux driver.
-* Improved a bit the style as requested by Prabhakar.
-* Dropped a __maybe_unused.
-* Reorder the includes.
-* Added a dependency on ARCH_RZN1.
-* Added Rob's Ack.
-* Added a reg property to the dmamux binding file.
-* Referenced the dmamux binding from the system controller file.
-* Called of_platform_populate from the end of the system controller
-  (clock) driver probe in order to probe the dmamux if it was
-  populated.
-* Added DMA properties to all the relevant UARTs.
-
-Changes in v3:
-* Added Reviewed-by tags.
-* Exported the set_dmamux* symbol properly.
-* Dropped a useless check in the probe and moved the sysctrl_priv
-  assignation to the end of the probe.
-* Renamed the dmamux driver
-* Added a couple of missing MODULE_ macros in the dmamux driver.
-* Decided to use a regular platform init call instead of the
-  arch_initcall() initially proposed.
-* s/%d/%u/ in printk's when appropriate.
-* Used a hardcoded value instead of dmamux->dmac_requests when
-  appropriate.
-* Changed the variable name "master" to "dmac_idx" to be more
-  descriptive.
-* Dropped most of the of_* calls in favor of #define's.
-* Fixed a typo.
-* Exported two symbols from 8250_dma.c.
-
-Changes in v2:
-* Clarified that the 'fix' regarding non aligned reads would only apply
-  to the DEV_TO_MEM case.
-* Fix the DMA controller compatible string (copy-paste error).
-* s/syscon/sysctrl/ as advised by Geert.
-* Disabled irqs when taking the spinlock from the clocks driver.
-* Moved the DMAMUX offset inside the driver.
-* Removed extra commas.
-* Improved the style as suggested by Andy.
-* Removed a dupplicated check against the device node presence.
-* Reduced the number of lines of code by using dev_err_probe().
-* Created a Kconfig symbol for DMAMUX to fix the two robot reports
-  received and be sure there was no useless overhead with other
-  platforms.
-* Exported the serial8250_{tx,rx}_dma() symbols.
-
-Miquel Raynal (8):
-  dt-bindings: dmaengine: Introduce RZN1 dmamux bindings
-  dt-bindings: clock: r9a06g032-sysctrl: Reference the DMAMUX subnode
-  dt-bindings: dmaengine: Introduce RZN1 DMA compatible
-  soc: renesas: rzn1-sysc: Export function to set dmamux
-  dmaengine: dw: dmamux: Introduce RZN1 DMA router support
-  dmaengine: dw: Add RZN1 compatible
-  ARM: dts: r9a06g032: Add the two DMA nodes
-  ARM: dts: r9a06g032: Describe the DMA router
-
- .../clock/renesas,r9a06g032-sysctrl.yaml      |  11 ++
- .../bindings/dma/renesas,rzn1-dmamux.yaml     |  51 ++++++
- .../bindings/dma/snps,dma-spear1340.yaml      |   8 +-
- MAINTAINERS                                   |   1 +
- arch/arm/boot/dts/r9a06g032.dtsi              |  40 +++++
- drivers/clk/renesas/r9a06g032-clocks.c        |  36 +++-
- drivers/dma/dw/Kconfig                        |   9 +
- drivers/dma/dw/Makefile                       |   2 +
- drivers/dma/dw/platform.c                     |   1 +
- drivers/dma/dw/rzn1-dmamux.c                  | 157 ++++++++++++++++++
- include/linux/soc/renesas/r9a06g032-sysctrl.h |  11 ++
- 11 files changed, 325 insertions(+), 2 deletions(-)
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/dma/renesas,rzn1-dmamux.yaml     | 51 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 52 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/dma/renesas,rzn1-dmamux.yaml
- create mode 100644 drivers/dma/dw/rzn1-dmamux.c
- create mode 100644 include/linux/soc/renesas/r9a06g032-sysctrl.h
 
+diff --git a/Documentation/devicetree/bindings/dma/renesas,rzn1-dmamux.yaml b/Documentation/devicetree/bindings/dma/renesas,rzn1-dmamux.yaml
+new file mode 100644
+index 000000000000..d83013b0dd74
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/renesas,rzn1-dmamux.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/renesas,rzn1-dmamux.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas RZ/N1 DMA mux
++
++maintainers:
++  - Miquel Raynal <miquel.raynal@bootlin.com>
++
++allOf:
++  - $ref: "dma-router.yaml#"
++
++properties:
++  compatible:
++    const: renesas,rzn1-dmamux
++
++  reg:
++    maxItems: 1
++    description: DMA mux first register offset within the system control parent.
++
++  '#dma-cells':
++    const: 6
++    description:
++      The first four cells are dedicated to the master DMA controller. The fifth
++      cell gives the DMA mux bit index that must be set starting from 0. The
++      sixth cell gives the binary value that must be written there, ie. 0 or 1.
++
++  dma-masters:
++    minItems: 1
++    maxItems: 2
++
++  dma-requests:
++    const: 32
++
++required:
++  - reg
++  - dma-requests
++
++additionalProperties: false
++
++examples:
++  - |
++    dma-router@a0 {
++      compatible = "renesas,rzn1-dmamux";
++      reg = <0xa0 4>;
++      #dma-cells = <6>;
++      dma-masters = <&dma0 &dma1>;
++      dma-requests = <32>;
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ea3e6c914384..c70c9c39a2f3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18636,6 +18636,7 @@ SYNOPSYS DESIGNWARE DMAC DRIVER
+ M:	Viresh Kumar <vireshk@kernel.org>
+ R:	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+ S:	Maintained
++F:	Documentation/devicetree/bindings/dma/renesas,rzn1-dmamux.yaml
+ F:	Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+ F:	drivers/dma/dw/
+ F:	include/dt-bindings/dma/dw-dmac.h
 -- 
 2.27.0
 

@@ -2,158 +2,157 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A91E54DA204
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Mar 2022 19:07:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 18EBB4DA307
+	for <lists+dmaengine@lfdr.de>; Tue, 15 Mar 2022 20:13:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350945AbiCOSID (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 15 Mar 2022 14:08:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51066 "EHLO
+        id S240212AbiCOTOU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 15 Mar 2022 15:14:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350990AbiCOSIB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 15 Mar 2022 14:08:01 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 779681402F
-        for <dmaengine@vger.kernel.org>; Tue, 15 Mar 2022 11:06:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1647367606; x=1678903606;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=WbrTVvVRHCsAL7kuCymIMW0/PS2fVzZ8eeMp9jhRtuE=;
-  b=aiwY+7QERh8IWEVLOPLoWeibv80NtZ+G+JrxBBQuccPG7KxmNo+pj1mM
-   kj4QtMRJNZsfsC8WNvjhWg/DGS/uc9cmemg00KZM+oF/iDZuOR3N9qwwN
-   bWXdOrYBGcPkreFX1BBi89qNdZ9EI32Vn3SyLgh1Asp9ND/b7i04TO+aD
-   pcDlEIQ2+lVpt57IoCcxOX6jw0QyZ3ECQWjKIBjkjExy8Ayg2+nR/VWcV
-   Meo3FJU4Crn6rnPSO6PdMtQOdEoRBsUGnl3oUzX/YCXcVPIagBElkYZ+p
-   ycU//jWEDF+sscE25S3PYnrjcJn/VEBRA52CG5k6QiK5p+pNzvl5Yjqt5
-   g==;
-X-IronPort-AV: E=Sophos;i="5.90,184,1643698800"; 
-   d="scan'208";a="89019533"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Mar 2022 11:06:45 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Tue, 15 Mar 2022 11:06:33 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17 via Frontend
- Transport; Tue, 15 Mar 2022 11:06:33 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RXsnBlxtQV3IeIkgEXq3/eRQONW3OBOStl5AG9Hi9WarTsWdvw3ywwBU8gCIiBZoTAeRPhPyEFdfd2yhAba9amQwfD0CDEMEOTXw+Ys8FsFKfRgjCRhXRzS0Si0pnsiDKVxJ5WLTVAGAV/uzW/ZLwmnBlfz+e2FsNZpfLQO4QHIkW6bt9qvCn1A85CG8bOxovKCZsXEMKpMcfH/ow3u+QhbTx6XZMYw9nVqDSK/dQbJPMXEySJXChC4WqecuOgZf1AgYHbb8NZAePIoYEyHpuKvJ4dbbssCfyN1xxOiLPTJiM+mbGAJOXPboiHwzFxr0mcA4crzSx1qfrG1XftS4jw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WbrTVvVRHCsAL7kuCymIMW0/PS2fVzZ8eeMp9jhRtuE=;
- b=ncKiBuuyZPdHq3V8XIcsqZyYSpO6TI0Vp4/LLWbVTKFSAx9u1pfyttqyEiTeLDT9xYnPVjJ4oMhP6/YGNx0YpD07iX0vhdk/uP6imFv5Lgk6q0ZuvRsVVdkjWX2RWFoM4ZFS8od+x964yPoCSJaLdYt7ZaD5RA9f6Tnw9FBwf6VGEajBOAfzZ65Wor0BwH3BTEIq5wInFI9iDBRaoh6gkcm4GE9qZjHfhzAMg8luyW5F6AJPQXZ3A1lOf4WDnAwTKwh1hAmPMNtSlm9gh435U4EjIJYbe50cwd44hpwEkDWTx6+rj6PRllBs5ZTedyYBxTKhhhd6uKGLabyT1ZT+qA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WbrTVvVRHCsAL7kuCymIMW0/PS2fVzZ8eeMp9jhRtuE=;
- b=dguhz9hbXJX9qr0Nx5pmNoob870cdUWM20yBpOPRL4YOn4atz6WhZzUb247uBluadEnzqaoyIPtS0ylOCA6DHT8tBSCOIBCQFmzBLzDckp6tvye2EYxQT9Ubl+TPdzjhwc6cNwnfjJGmSsM3JTBXAQEqMciEy3WqOgq2VVUwWDA=
-Received: from SA2PR11MB4874.namprd11.prod.outlook.com (2603:10b6:806:f9::23)
- by DM6PR11MB3435.namprd11.prod.outlook.com (2603:10b6:5:68::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.25; Tue, 15 Mar
- 2022 18:06:32 +0000
-Received: from SA2PR11MB4874.namprd11.prod.outlook.com
- ([fe80::dc94:3c7c:8ef8:21b9]) by SA2PR11MB4874.namprd11.prod.outlook.com
- ([fe80::dc94:3c7c:8ef8:21b9%5]) with mapi id 15.20.5061.028; Tue, 15 Mar 2022
- 18:06:32 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <benjamin.walker@intel.com>, <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <Ludovic.Desroches@microchip.com>,
-        <okaya@kernel.org>, <dave.jiang@intel.com>
-Subject: Re: [PATCH v3 3/4] dmaengine: at_xdmac: In at_xdmac_prep_dma_memset,
- treat value as a single byte
-Thread-Topic: [PATCH v3 3/4] dmaengine: at_xdmac: In at_xdmac_prep_dma_memset,
- treat value as a single byte
-Thread-Index: AQHYOJdmqKlNxH0mOUqb99ODAQDLWg==
-Date:   Tue, 15 Mar 2022 18:06:32 +0000
-Message-ID: <195385f9-73dc-6c76-a01d-918d5367ac4f@microchip.com>
-References: <20220301182551.883474-1-benjamin.walker@intel.com>
- <20220301182551.883474-4-benjamin.walker@intel.com>
-In-Reply-To: <20220301182551.883474-4-benjamin.walker@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0208e990-ad7c-4f71-4c23-08da06ae8934
-x-ms-traffictypediagnostic: DM6PR11MB3435:EE_
-x-microsoft-antispam-prvs: <DM6PR11MB343529920E2F7DFFBD6B9267F0109@DM6PR11MB3435.namprd11.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9GBRxNWKcqGrw54ObgUbhpj779WAmiadJKshQGjosP7HHK0GdpMjuSaVGXUSDZjwgE0SrjAqkQMAXWZWwqCw0p9T/cEtJODm9ZrMLxYWUwZHyVEJMHd/lECIq6hv724FRYPt/XNBJQIESv6l6+opIMNF0S+czLym95y4QwY+qjUdbICUAKpgeZ6C5JSxJGw8IUXcPIhreTBPAgM7VPjE1NbNEK14CYzzTmwMxmI8WLw8/W4nPgTHXn1d22MwTgF8O702qtZ/5vZXsbviKrq5NrvRL92ZYhll98LMptFFtOW+ZUmlbx+uA/i8aDkaDJlrSY6Dk81dG9H3nE5h4FS2CmWkianVRGwc79PObVEaYXqlgxnVVZxkgaX90i8P2jtob3+86rU1P6XqavBfCPg+HO5N3UhjWt7jofNIEfznE+CQUsv64E4BbmKc3FgHEQniqZ+IqSuKLFY8z4nOQoJOQfyzOZKbaSGRnaSUSswkWBdppG5GR/wTCPmlKyublmIy9hHOgLuHJeo+35lyYZaFNaqPt4rlVuccFjYh0cXBpv4AYwSiQu0aBYQIb/dYkAHRw6tHazdnoLGoJRUlI+e0hrBxB0Z8/iJ9sa06YAnEhd7gKCD2bQ3Hoa/0l5gRvEaRkvgggmz0xR2bEoNqjuEvW2Cj6qDZNPumRam16cAlgXVqomN8JVhfUf6jnpnzXXC1AbMvfrBHXi5NgcsS4egmZqNNHCOalUA6rCS+BlACFG74a5AlQzhkli5toUd0WUgKGd+gtyKlQHfMlstY2tiY/Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA2PR11MB4874.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(38100700002)(110136005)(54906003)(316002)(36756003)(26005)(31686004)(186003)(2616005)(5660300002)(2906002)(508600001)(38070700005)(8676002)(86362001)(31696002)(6486002)(6512007)(8936002)(6506007)(71200400001)(4326008)(122000001)(64756008)(66446008)(66476007)(66946007)(66556008)(76116006)(558084003)(91956017)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?TDZvM2xtbUdQN25MNnUrWVl1bFd6QmREa3FLN2l5KzQ2TUZpUklVU2pyN2xM?=
- =?utf-8?B?WGdLUGU3eHNrM2hDejBFNkZwWTVXS0dBSVFWZDFiY2NuakhvOXF5NmY2bjhT?=
- =?utf-8?B?bExEeWpiaWdzTkZUczI5RmRhOW5kbkJHS05qMmV3VGUxb1R5eG5iZ0x1THYv?=
- =?utf-8?B?RHBuUHpta0p4dVhEVzB4Q2VzbFhkcDZRbGJTQ2RodXo2cTJ5ZjBFZDU1K2U1?=
- =?utf-8?B?VENxUEFSZnROZFJqcms3SDBrYk1DeE9BaGRaSVpac3RHd3pEbHpXVUYwQ1pY?=
- =?utf-8?B?WXd6eDUwajMwMS9lMjMzbTlTb1lCVlYxaG1iWmUyYzI3RW01SkV4MjYxRVJ4?=
- =?utf-8?B?dFdZeFN4TGRjS2doQVR0TG5wWDFnd0xkZFgrNThvU1Nob2JkRFZ5QlBTeHZs?=
- =?utf-8?B?Ums4QXVsS0hwb2VsTE1NNXpTN0ZsZU50Y3U5UlFGcmpWREtlbCtiNnVlUFdv?=
- =?utf-8?B?L3dWTmoxZkl4L2FncDJPTE95d2ZlSXp0dnJpdURocXI4Y3ZodElLcEtocnNC?=
- =?utf-8?B?amJZWEVHMHhPd0dOSVVDRlE4NlQ2NzVwZXBxdnhJUnB2cVJQL1F0cFBObndp?=
- =?utf-8?B?VkRhT2ZlZ0NBWGtlY3RhRzFsMytSRE4rOE9TQ2t0dDJQZUQyT3lRdndsN3VL?=
- =?utf-8?B?dW00YVhiNXkzdjM4UTVJdUI4bVg0dUJ3WUJsVmxjZlR2Q2VTVFJOYWZHbFc4?=
- =?utf-8?B?RUd3UTVhUmVmbGE3WWd3WEllaE1SYm5INU5ZenQzeVFqSFNYR0o5NzlXRTlv?=
- =?utf-8?B?ZWhDUGEwVXFVNHU4M1Y0Y2NjWFNCWmNhcitJVEVnR3ZmOTBFV2djNU9aK0k0?=
- =?utf-8?B?WGZWYUp0L0ZmZTVFVWZhQktwNnZFbXI3QnN5M3pZOWM3dVdyWVVxbllTUDBq?=
- =?utf-8?B?NHJqUnBkZWxFQlNMMzBPYU9vQ2lwUDVrb296U1ZheCtvU0NMeGdKaUR6alVK?=
- =?utf-8?B?eStPdEJVbnV6cDRrS1lOVk9URVFEU1F0WHNQbTlHR2JFS05wSitsS25Md291?=
- =?utf-8?B?WS8yb0hiL283Sm9Pa2U0TFRHUnlvZUx5bmZ5cmVscEhkQi94RnRZTVJXQnJh?=
- =?utf-8?B?RlFYNkdRYWdPOWNtbDIvOHdyTXZoSUtHU1FQTGJGL1dOczFTMG1QekdTeVVC?=
- =?utf-8?B?ZjR4LzgwaXV4UGJPU1BySzVjNGxqNWg5c0xvU2NENjY5ZTEwM0VCVTdXaGk1?=
- =?utf-8?B?bllmZzVYVkU0NHl4YjFJb3JSdHR5dVpPQ0IyTGJISHV3SkROTHZyekE4b05u?=
- =?utf-8?B?a1ZvQkRHdTlkNEVsZDBlbjRtTjNzSWIzUmxlZHU3dlVMRDNGT0QrWFBHSXdJ?=
- =?utf-8?B?aWxrcHdEZDRUT2tnWkU4TTJNdE5hdHFTY212dCs1b3l2QWFqd3BiQ2N5dmc5?=
- =?utf-8?B?SS9zK00wcjA4ZEpsdm50aEd5cURTVENCREh0NUUvU01NZXZHbC96Y1Fna0hm?=
- =?utf-8?B?Zmhwd2x4MmFabmVwbzM5dmJwa1pRaENMVG9KaXlOQUxmd0RyVzdZTnVOamJL?=
- =?utf-8?B?V0JoZ3ZSTGUwemlCZU1zVHVtdFloalRmbmNKVDgxTncxbE41YW5FNzhhQkJY?=
- =?utf-8?B?aUwwNm1jWU9WWG9BNGF4VTVTdlJPdGs4aFJnZ0Q3VnFxRy93ajJPMy9WM09s?=
- =?utf-8?B?b1hyVGdMZytsckNHY1VndHo0Q1Z2M1dqbVAxdkFzLzdtNlptZTVvM1F3dWc0?=
- =?utf-8?B?N2tiSG1mQ2ZrQ3haZ1hsYVdNd2xrZ2JtTGd3OUNEMVcvYkxzblRKdTVMck56?=
- =?utf-8?B?YzVlZTVDYlY0WnFKMUg0dWtBSnhLdWlVZjVFVHYzZFZBUWhuUWVUY3F6TVpR?=
- =?utf-8?B?a1lXaGF3OFZKbitLUFlpU1ZOa3BPSUtzeUNvZklNdStRZDBuZDAzQzBTR2cw?=
- =?utf-8?B?RUtEY3ZGQ2FaWVlSai8vcTVuUTROUWRiZ0hEeWZIelFGRTdHdllERVA0bVpk?=
- =?utf-8?B?MWtLTkc2bThHdDJkMm1FNVd6MWZPRXhhQXBJL3hHdjlVc21Gdjc2elNabWsy?=
- =?utf-8?B?TTNmVXI1L0J3PT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <09F0D937E7DB6C4FB0E118BFA04DF3D0@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        with ESMTP id S245232AbiCOTOT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 15 Mar 2022 15:14:19 -0400
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::226])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACCC4C78;
+        Tue, 15 Mar 2022 12:13:00 -0700 (PDT)
+Received: (Authenticated sender: miquel.raynal@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id E1059C0003;
+        Tue, 15 Mar 2022 19:12:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1647371579;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=u/D6SPGhBpyZWC2aFb7aJ6eFgcFPSvIErLak7uOUgJw=;
+        b=i36aWtw+u0tKkOfg00+abz853z0qOK6sKfT3Vlcw7y24U5AO6XehDFkk2y+Yu0gwqMvk30
+        6+AXFGV7xre+YUd0GUMrfOx2BUAFO0cRXy9m5io2AXDNh57WCQhTf98zD/YC7vBatyJz5t
+        Opz2abLPnaPJsKekuFEHQHDSSc7ZHFa8cFwlr3Q7Ow/SKOgq/8C+upbuuL0rHqPtnzLUaW
+        mi6YzGb8wysMtHu/axGKMkMW91/J6Ueo0jYfrQ9oONkuYQ1MMcyT+dyRA/6opAzI0r7RRZ
+        6K/9jawK+WrlUM26GrDWXlKVKj/49kEUmQPmQ7Z7mLytacYygq7KeTfqikTinQ==
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     linux-renesas-soc@vger.kernel.org,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        dmaengine@vger.kernel.org
+Cc:     Milan Stevanovic <milan.stevanovic@se.com>,
+        Jimmy Lalande <jimmy.lalande@se.com>,
+        Pascal Eberhard <pascal.eberhard@se.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Herve Codina <herve.codina@bootlin.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v5 0/8] RZN1 DMA support
+Date:   Tue, 15 Mar 2022 20:12:47 +0100
+Message-Id: <20220315191255.221473-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA2PR11MB4874.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0208e990-ad7c-4f71-4c23-08da06ae8934
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2022 18:06:32.1859
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UlDlGAGGTjX3Mj1nnX4NprIr+z8Et4kFkqGwR7qYrO3fhC51tzifqXzPKxkMLTYEBpKXahkKBcCoBySHH5Jv6G603C2XetxrYJcZ3mQo5Pw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3435
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,T_SCC_BODY_TEXT_LINE,
-        T_SPF_PERMERROR autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-U29ycnkgZm9yIHRoZSBkZWxheS4NCkp1c3Qgd2FudGVkIHRvIGluZm9ybSB5b3UgdGhhdCBJIHBs
-YW4gdG8gdGVzdCB0aGlzIHBhdGNoIHNldCB0aGlzIHdlZWsuDQoNCkNoZWVycywNCnRhDQo=
+Hello,
+
+Here is a first series bringing DMA support to RZN1 platforms. Soon a
+second series will come with changes made to the UART controller
+driver, in order to interact with the RZN1 DMA controller.
+
+Cheers,
+Miquèl
+
+Changes in v5:
+* Used gotos in rzn1_dmamux_route_allocate().
+* Changed the prefix to "dmaengine:".
+* Dropped the partial transfers fix.
+* Added Rob's acks.
+
+Changes in v4:
+* Freed "map" in the error path of the dmamux driver.
+* Improved a bit the style as requested by Prabhakar.
+* Dropped a __maybe_unused.
+* Reorder the includes.
+* Added a dependency on ARCH_RZN1.
+* Added Rob's Ack.
+* Added a reg property to the dmamux binding file.
+* Referenced the dmamux binding from the system controller file.
+* Called of_platform_populate from the end of the system controller
+  (clock) driver probe in order to probe the dmamux if it was
+  populated.
+* Added DMA properties to all the relevant UARTs.
+
+Changes in v3:
+* Added Reviewed-by tags.
+* Exported the set_dmamux* symbol properly.
+* Dropped a useless check in the probe and moved the sysctrl_priv
+  assignation to the end of the probe.
+* Renamed the dmamux driver
+* Added a couple of missing MODULE_ macros in the dmamux driver.
+* Decided to use a regular platform init call instead of the
+  arch_initcall() initially proposed.
+* s/%d/%u/ in printk's when appropriate.
+* Used a hardcoded value instead of dmamux->dmac_requests when
+  appropriate.
+* Changed the variable name "master" to "dmac_idx" to be more
+  descriptive.
+* Dropped most of the of_* calls in favor of #define's.
+* Fixed a typo.
+* Exported two symbols from 8250_dma.c.
+
+Changes in v2:
+* Clarified that the 'fix' regarding non aligned reads would only apply
+  to the DEV_TO_MEM case.
+* Fix the DMA controller compatible string (copy-paste error).
+* s/syscon/sysctrl/ as advised by Geert.
+* Disabled irqs when taking the spinlock from the clocks driver.
+* Moved the DMAMUX offset inside the driver.
+* Removed extra commas.
+* Improved the style as suggested by Andy.
+* Removed a dupplicated check against the device node presence.
+* Reduced the number of lines of code by using dev_err_probe().
+* Created a Kconfig symbol for DMAMUX to fix the two robot reports
+  received and be sure there was no useless overhead with other
+  platforms.
+* Exported the serial8250_{tx,rx}_dma() symbols.
+
+Miquel Raynal (8):
+  dt-bindings: dmaengine: Introduce RZN1 dmamux bindings
+  dt-bindings: clock: r9a06g032-sysctrl: Reference the DMAMUX subnode
+  dt-bindings: dmaengine: Introduce RZN1 DMA compatible
+  soc: renesas: rzn1-sysc: Export function to set dmamux
+  dmaengine: dw: dmamux: Introduce RZN1 DMA router support
+  dmaengine: dw: Add RZN1 compatible
+  ARM: dts: r9a06g032: Add the two DMA nodes
+  ARM: dts: r9a06g032: Describe the DMA router
+
+ .../clock/renesas,r9a06g032-sysctrl.yaml      |  11 ++
+ .../bindings/dma/renesas,rzn1-dmamux.yaml     |  51 ++++++
+ .../bindings/dma/snps,dma-spear1340.yaml      |   8 +-
+ MAINTAINERS                                   |   1 +
+ arch/arm/boot/dts/r9a06g032.dtsi              |  40 +++++
+ drivers/clk/renesas/r9a06g032-clocks.c        |  36 +++-
+ drivers/dma/dw/Kconfig                        |   9 +
+ drivers/dma/dw/Makefile                       |   2 +
+ drivers/dma/dw/platform.c                     |   1 +
+ drivers/dma/dw/rzn1-dmamux.c                  | 157 ++++++++++++++++++
+ include/linux/soc/renesas/r9a06g032-sysctrl.h |  11 ++
+ 11 files changed, 325 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/renesas,rzn1-dmamux.yaml
+ create mode 100644 drivers/dma/dw/rzn1-dmamux.c
+ create mode 100644 include/linux/soc/renesas/r9a06g032-sysctrl.h
+
+-- 
+2.27.0
+

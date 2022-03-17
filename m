@@ -2,296 +2,138 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BF6F4DCC07
-	for <lists+dmaengine@lfdr.de>; Thu, 17 Mar 2022 18:07:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75F1D4DCD05
+	for <lists+dmaengine@lfdr.de>; Thu, 17 Mar 2022 18:57:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236028AbiCQRIh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 17 Mar 2022 13:08:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40454 "EHLO
+        id S236143AbiCQR6r (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 17 Mar 2022 13:58:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231339AbiCQRIh (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 17 Mar 2022 13:08:37 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4757D210443
-        for <dmaengine@vger.kernel.org>; Thu, 17 Mar 2022 10:07:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647536840; x=1679072840;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VZ58v0WTL2meOOEup/oWXrFITYD+4zaBx8N2UFysGuM=;
-  b=h7vxPeLktcwHS8zFoZ0O2GjBt9GdfGa2HFbA4Ct+MaYNnIdAY1YquMtd
-   lpryo7l7u2HiJbDs1egleQRVGet+oPdIFeGKr/vR7ViL7g3fl9veI9l/X
-   Psm5cgMPMnaKBmfag36dcg+ZDRTeEZ5pxy7Gxhr/nAskbrmOkJMxTl5aq
-   4Q3Szt8LhfbHYGf+yVI12IiSvxfcCPncWdb3UVkkFOMz2KpSJi2FP9YZB
-   Da3Q3pmyDMwszfDIrG95wOdyFprvDLWKyN4VtsPxA2AyqJZJp7yRgvRcC
-   Hwh7JRhk0xNPKs6INvDVwMu7oT14S6ttTyZdGlYxn2/u5094QMFdmUml7
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10289"; a="237535276"
-X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; 
-   d="scan'208";a="237535276"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2022 10:06:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,188,1643702400"; 
-   d="scan'208";a="715111924"
-Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 17 Mar 2022 10:06:23 -0700
-Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nUtZu-000DrJ-Dw; Thu, 17 Mar 2022 17:06:22 +0000
-Date:   Fri, 18 Mar 2022 01:06:01 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Sascha Hauer <s.hauer@pengutronix.de>, alsa-devel@alsa-project.org
-Cc:     kbuild-all@lists.01.org, Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shengjiu Wang <shengjiu.wang@gmail.com>, kernel@pengutronix.de,
-        Vinod Koul <vkoul@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dmaengine@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 05/19] ASoC: fsl_micfil: use GENMASK to define register
- bit fields
-Message-ID: <202203180058.UK8cEQvk-lkp@intel.com>
-References: <20220317082818.503143-6-s.hauer@pengutronix.de>
+        with ESMTP id S232658AbiCQR6q (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 17 Mar 2022 13:58:46 -0400
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com (mail-eopbgr30041.outbound.protection.outlook.com [40.107.3.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40FC621C04D;
+        Thu, 17 Mar 2022 10:57:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dw+DEMKuCzzrMQsSH6Jv+bwDT7QgdEBvg2gMlhS3vHUAJwZ5Hi5likhLjIx+DX8njXIe4ZM+ghjnq8+65nDCk04lG1x5hyjYEiJxD62Tu6eCd5HkjsX1DqTlFrSaju4GgwV7fPL5fZdmIwElssnuF7Fh4vZ63uysnWeKvAtxWzdi6psleDU0tVfU4IYc3BREtjbP6CrnLqrHWarhX0Tn4R05HwHZ8m06u4wY2THEUJB4PnByEbff+IHJ6/MtyyjuUBr5VIdLdAMNJ7ZSTqBUio50OT4CQ+3dFg3NPeKHiZtvRLBxZ8xOxCIjLxSjvd5DVP8o6a9hIrSoILBjsdJKpw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3mnJeg77szbF/dXsBZhJmY/ndOf9sj8d1RoHZuLbOVw=;
+ b=CcbqQdK3WH2amqrfzpquGrZ3y3s2KPhGiX3DfSxZGdXf5oS/9Z6chI2EK2TbJDCVG+xrJQmdweLyDGYPMtDRTbkbGN/Zzj2nhbrlBlczVSsf6DL5Sk+hekWSaUqaZgk5sXLMaJpWP1UToAh5t7vadmywjWt32qlTt4X5F2P8lhpjX4kYqgtvZijprNiPYcsT4ux3KDgV7R/hkpldW/Me5hPe3z5VEPvATEe/Ta6aUY/2zCvDc848KMP0RDmhKCxVXf+7SJza3Iius+rmKWEQbHAmdBxe2Q6iuxpKRv1JgngcCoV+CKs58m1rKzu7rwzppfaonnxHe7pJHkAoDCJ6qw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=orolia.com; dmarc=pass action=none header.from=orolia.com;
+ dkim=pass header.d=orolia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=orolia.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3mnJeg77szbF/dXsBZhJmY/ndOf9sj8d1RoHZuLbOVw=;
+ b=A8pPvM5udFUPcp8pHsDnANkr2OWTgFy+dJ4pRT8wcKXlwZSCQ/nAcW8k3zvzL6eqNpujBVdk6ki0wpT6OPNHCX7sn3cIzX+5iqixwiZ8I+6uLgQf2cN4RcnYhTSSLWRH7+5+h+3BwSC/Y9/1W082mwBlrVd8gvxORhekBmoMZJQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=orolia.com;
+Received: from DB9P251MB0306.EURP251.PROD.OUTLOOK.COM (2603:10a6:10:2c8::20)
+ by DB9P251MB0171.EURP251.PROD.OUTLOOK.COM (2603:10a6:10:2c9::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5081.17; Thu, 17 Mar
+ 2022 17:57:26 +0000
+Received: from DB9P251MB0306.EURP251.PROD.OUTLOOK.COM
+ ([fe80::8c51:a5d7:5136:9930]) by DB9P251MB0306.EURP251.PROD.OUTLOOK.COM
+ ([fe80::8c51:a5d7:5136:9930%9]) with mapi id 15.20.5081.017; Thu, 17 Mar 2022
+ 17:57:26 +0000
+From:   Olivier Dautricourt <olivier.dautricourt@orolia.com>
+To:     Stefan Roese <sr@denx.de>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Olivier Dautricourt <olivier.dautricourt@orolia.com>
+Subject: [PATCH 1/2] MAINTAINERS: update my email address
+Date:   Thu, 17 Mar 2022 18:56:55 +0100
+Message-Id: <85c4174fa162bd946ccf3e08dcfc9b83cfe69b5c.1647539776.git.olivier.dautricourt@orolia.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: PR0P264CA0096.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:18::36) To DB9P251MB0306.EURP251.PROD.OUTLOOK.COM
+ (2603:10a6:10:2c8::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220317082818.503143-6-s.hauer@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d7469381-3d82-4a49-183d-08da083f9881
+X-MS-TrafficTypeDiagnostic: DB9P251MB0171:EE_
+X-Microsoft-Antispam-PRVS: <DB9P251MB0171C77FC961EB2DBEA22CDA8F129@DB9P251MB0171.EURP251.PROD.OUTLOOK.COM>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +XK8qGnZs9bbDgPOuqU+yFa/n4/pwponZYnu1HmZhzfbih+Tghq8JF18pwzI1oqvGXiZCEDH5BYOnhtoFehJxU30+pLZiRUeGozllD9epu4dE66Jux6amzH8km0ObahWQdww/84HzqislhO8WDykE7+cC5WxMWRCrOTdkDwm+Dk53+VtL1s6ZoLnRJ28OcxsORTz4J8G4ak1owgm8ba/ZVXdTpnjfb7kM9sSp19kTcRuYoX/VNvbfl6SkGUOzXXCXNQxgzC0rkWTOTZLv+2ccRtns6JAFcU2bdoLMbMIUdewnKrl1eLwNKuUy24WzFGKUAsndWY66Lcds7PmlE5ZvAmDpycDdKTcQFJY2Lbb5qrGUVfxBjDkevSFRdsYfKRDwfLgEgpN3xaBCuxd+xgaklRDlnIssijpiZ+RP8pqT3BDvbODjRY3vhkxuklpQY52HX7iUllK3yb/K4Ls4rm9Rfr2B7HeCL5HI0HcS4ko6+w7sTo3XuGXuI5DLGg97D+RZQftdqTM5FyKGaWf4HAIJdkfiewntOYEI7NuztqacbY71UJWBZxVHVPnb9KakSeGrVj/pFW4F9Cop6koaXOtlCKU7EJqsFadaeCrMpU/kK5tfIkrTDLprYQPcXsp9Cgt1e1X1UZrcSm8fY1CMOG+0A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9P251MB0306.EURP251.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(6512007)(52116002)(86362001)(15650500001)(2906002)(508600001)(6666004)(6486002)(316002)(6506007)(110136005)(186003)(107886003)(2616005)(36756003)(83380400001)(4326008)(8676002)(66476007)(66946007)(66556008)(38100700002)(44832011)(5660300002)(4744005)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?UQJHgZqXGe6LR5GWKCpfjzlVKVMP//JCJYzfaCigDb4ufWEu1Uc4/cugG2LQ?=
+ =?us-ascii?Q?Jf8xVLeMp7RRdmYMowqzuNDMmWOHqAvkVsROho8NH0GU/MY/kNvzaNDBb69S?=
+ =?us-ascii?Q?7Rs44ILh2fZ+flNVdJO81vXdHw3z0aVYw7w2qrVCilbRPsoYOR0MWd3h4YK0?=
+ =?us-ascii?Q?sQCs6ksLlMvqflLzLABp8cn0EitsDSuNVmbCMpxBBIqWVaHaRi3oBMOgwV/Y?=
+ =?us-ascii?Q?IaVNXns+HnZAgD86sv6eP+yw5H5x0IJUOjuCskxP/STwt+fjfTInO//V3J4F?=
+ =?us-ascii?Q?W4++cNt7wC1W8UrUHufs10EALQTj9T3IvYdC5Jv2U3lcWj1r8xa+2BWXF3nI?=
+ =?us-ascii?Q?T7fmacwjwoNh9tOvz1MLGhYn+aqpbHuw3YwFtqNRqaYiJRbODWe6zJMKBOaW?=
+ =?us-ascii?Q?GWnf8Fe3sEG8rsJUHpIkKK9asifacU9IAOe51sRc27seWJGNP+mjrC45GhS3?=
+ =?us-ascii?Q?BfFoKZAZWvRRxzVLlNELlZ5KmjnXWiI+UuqBxgOZFDbBCW0tzPGjCvNtEzTR?=
+ =?us-ascii?Q?p27bwn4wspoKjFx2SyysjgixmH1WYn+zSNnPXkGyu0CU2nuXN/e1rAqyEGa4?=
+ =?us-ascii?Q?0TNaaMUbpnBDpSaICHNLC4VZscr7eXtN8Lr734Orzck71SM8RL1dZLL1CriV?=
+ =?us-ascii?Q?0st02kFIjkSysBseczYjiUuw3fhPJAJJ0Gu+O2RvRHe1pak0gopPbXdw2dwB?=
+ =?us-ascii?Q?9WAoyJzIJekIaocyo/SSzmMjCEhg5x13BdDA9NisYVY9awPSNtl7IL2G/Wn1?=
+ =?us-ascii?Q?nSSnqgvgjheq4fUMEqIS1+7BZnbRI60gR6d2vt2rRcHSnMhALVsYXW4NhRze?=
+ =?us-ascii?Q?PvuoQ9jHc9BLT4IAGX4evbo6XBXR5YjrVcv4AWylpQ3EUXw/NLo2qqALc2xp?=
+ =?us-ascii?Q?zbzc57vtWJfGsjbakAe22+JYONuPxBj5ChXsFhgp7fP3Ucy8/vQEp8sCSdTK?=
+ =?us-ascii?Q?tIFzA3xfI4BUIOvMowN5+SmNbWDLdHmPUqoSw3/fAdGSC3rlqYmdPjeCTGd8?=
+ =?us-ascii?Q?cBb7nJ410D9dRkJgF6byDFaxd3XNfoeEeSvXRitYBYocLyKKHEBG48m0B5kk?=
+ =?us-ascii?Q?c2X65kSSzJSLmdn5vQvsM/U0vkXZOIEPl0nm5Cgx1hpzL/NFFyCCbJjicL8S?=
+ =?us-ascii?Q?QMQBIO4RNLIf3Lnb/0slmtha4rQUaUcIqQDW370pPd/h949JBP0Y1JNyy3tV?=
+ =?us-ascii?Q?+6Iy56bKLxAsWOI4HbPrGK4A6PtEASHZzkNY0RdSFph2PPTt+OIHFEZ2qBjh?=
+ =?us-ascii?Q?te87V/sh4/F9yqE2QluJpyKOKF12+MekyXclBp1ui86D9GbAftBrsek4bDXF?=
+ =?us-ascii?Q?RJl/hwxs38fZcmN2grT8ccyixYFqIvkeUj90iytLByTZl2+lS2uxVI/ePvLv?=
+ =?us-ascii?Q?F+dkC8Gz/BTth0oIjq83AvOk7HjA+32uFANc8x7wjgWlggEe9fcZjuRumpzM?=
+ =?us-ascii?Q?hKCFPCx8a8mPfyKy39GjbDxg41kTVwMEuiUWsD4slU7r8OKxcKHZiDXFNF61?=
+ =?us-ascii?Q?LueuMjwwt3grPROoFEiD3A5t7wYGQU5tr+7JZ9FqQRhs2tI9JdXL8uioOiNC?=
+ =?us-ascii?Q?8nj8/88yW3TK7Cx0Xcs=3D?=
+X-OriginatorOrg: orolia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7469381-3d82-4a49-183d-08da083f9881
+X-MS-Exchange-CrossTenant-AuthSource: DB9P251MB0306.EURP251.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2022 17:57:26.2468
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a263030c-9c1b-421f-9471-1dec0b29c664
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ktfbEfWzqOH78/z2EWLKymCCzrN9q7Kdm2QIlx83AV3NmMIP7//ccm8o9869oreKzTuAOq+mIbmu/sW4trRm0ZKiGRZUr00JTTiVtYdhZ3Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9P251MB0171
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Sascha,
+This email should now be used to contact me.
 
-I love your patch! Yet something to improve:
-
-[auto build test ERROR on broonie-sound/for-next]
-[also build test ERROR on shawnguo/for-next vkoul-dmaengine/next v5.17-rc8]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
-
-url:    https://github.com/0day-ci/linux/commits/Sascha-Hauer/ASoC-fsl_micfil-Driver-updates/20220317-163034
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-config: nds32-randconfig-r026-20220317 (https://download.01.org/0day-ci/archive/20220318/202203180058.UK8cEQvk-lkp@intel.com/config)
-compiler: nds32le-linux-gcc (GCC) 11.2.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/0day-ci/linux/commit/efbc0b5535c7612d0e3ac5473c86e66c7d0bd7a6
-        git remote add linux-review https://github.com/0day-ci/linux
-        git fetch --no-tags linux-review Sascha-Hauer/ASoC-fsl_micfil-Driver-updates/20220317-163034
-        git checkout efbc0b5535c7612d0e3ac5473c86e66c7d0bd7a6
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=nds32 SHELL=/bin/bash sound/soc/fsl/
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
-   sound/soc/fsl/fsl_micfil.c: In function 'get_pdm_clk':
->> sound/soc/fsl/fsl_micfil.c:119:20: error: implicit declaration of function 'FIELD_GET'; did you mean 'FOLL_GET'? [-Werror=implicit-function-declaration]
-     119 |         osr = 16 - FIELD_GET(MICFIL_CTRL2_CICOSR, ctrl2_reg);
-         |                    ^~~~~~~~~
-         |                    FOLL_GET
-   sound/soc/fsl/fsl_micfil.c: In function 'fsl_micfil_trigger':
->> sound/soc/fsl/fsl_micfil.c:247:33: error: implicit declaration of function 'FIELD_PREP' [-Werror=implicit-function-declaration]
-     247 |                                 FIELD_PREP(MICFIL_CTRL1_DISEL, MICFIL_CTRL1_DISEL_DMA));
-         |                                 ^~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +119 sound/soc/fsl/fsl_micfil.c
-
-   110	
-   111	static inline int get_pdm_clk(struct fsl_micfil *micfil,
-   112				      unsigned int rate)
-   113	{
-   114		u32 ctrl2_reg;
-   115		int qsel, osr;
-   116		int bclk;
-   117	
-   118		regmap_read(micfil->regmap, REG_MICFIL_CTRL2, &ctrl2_reg);
- > 119		osr = 16 - FIELD_GET(MICFIL_CTRL2_CICOSR, ctrl2_reg);
-   120		qsel = FIELD_GET(MICFIL_CTRL2_QSEL, ctrl2_reg);
-   121	
-   122		switch (qsel) {
-   123		case MICFIL_QSEL_HIGH_QUALITY:
-   124			bclk = rate * 8 * osr / 2; /* kfactor = 0.5 */
-   125			break;
-   126		case MICFIL_QSEL_MEDIUM_QUALITY:
-   127		case MICFIL_QSEL_VLOW0_QUALITY:
-   128			bclk = rate * 4 * osr * 1; /* kfactor = 1 */
-   129			break;
-   130		case MICFIL_QSEL_LOW_QUALITY:
-   131		case MICFIL_QSEL_VLOW1_QUALITY:
-   132			bclk = rate * 2 * osr * 2; /* kfactor = 2 */
-   133			break;
-   134		case MICFIL_QSEL_VLOW2_QUALITY:
-   135			bclk = rate * osr * 4; /* kfactor = 4 */
-   136			break;
-   137		default:
-   138			dev_err(&micfil->pdev->dev,
-   139				"Please make sure you select a valid quality.\n");
-   140			bclk = -1;
-   141			break;
-   142		}
-   143	
-   144		return bclk;
-   145	}
-   146	
-   147	static inline int get_clk_div(struct fsl_micfil *micfil,
-   148				      unsigned int rate)
-   149	{
-   150		long mclk_rate;
-   151		int clk_div;
-   152	
-   153		mclk_rate = clk_get_rate(micfil->mclk);
-   154	
-   155		clk_div = mclk_rate / (get_pdm_clk(micfil, rate) * 2);
-   156	
-   157		return clk_div;
-   158	}
-   159	
-   160	/* The SRES is a self-negated bit which provides the CPU with the
-   161	 * capability to initialize the PDM Interface module through the
-   162	 * slave-bus interface. This bit always reads as zero, and this
-   163	 * bit is only effective when MDIS is cleared
-   164	 */
-   165	static int fsl_micfil_reset(struct device *dev)
-   166	{
-   167		struct fsl_micfil *micfil = dev_get_drvdata(dev);
-   168		int ret;
-   169	
-   170		ret = regmap_update_bits(micfil->regmap,
-   171					 REG_MICFIL_CTRL1,
-   172					 MICFIL_CTRL1_MDIS,
-   173					 0);
-   174		if (ret) {
-   175			dev_err(dev, "failed to clear MDIS bit %d\n", ret);
-   176			return ret;
-   177		}
-   178	
-   179		ret = regmap_update_bits(micfil->regmap,
-   180					 REG_MICFIL_CTRL1,
-   181					 MICFIL_CTRL1_SRES,
-   182					 MICFIL_CTRL1_SRES);
-   183		if (ret) {
-   184			dev_err(dev, "failed to reset MICFIL: %d\n", ret);
-   185			return ret;
-   186		}
-   187	
-   188		return 0;
-   189	}
-   190	
-   191	static int fsl_micfil_set_mclk_rate(struct fsl_micfil *micfil,
-   192					    unsigned int freq)
-   193	{
-   194		struct device *dev = &micfil->pdev->dev;
-   195		int ret;
-   196	
-   197		clk_disable_unprepare(micfil->mclk);
-   198	
-   199		ret = clk_set_rate(micfil->mclk, freq * 1024);
-   200		if (ret)
-   201			dev_warn(dev, "failed to set rate (%u): %d\n",
-   202				 freq * 1024, ret);
-   203	
-   204		clk_prepare_enable(micfil->mclk);
-   205	
-   206		return ret;
-   207	}
-   208	
-   209	static int fsl_micfil_startup(struct snd_pcm_substream *substream,
-   210				      struct snd_soc_dai *dai)
-   211	{
-   212		struct fsl_micfil *micfil = snd_soc_dai_get_drvdata(dai);
-   213	
-   214		if (!micfil) {
-   215			dev_err(dai->dev, "micfil dai priv_data not set\n");
-   216			return -EINVAL;
-   217		}
-   218	
-   219		return 0;
-   220	}
-   221	
-   222	static int fsl_micfil_trigger(struct snd_pcm_substream *substream, int cmd,
-   223				      struct snd_soc_dai *dai)
-   224	{
-   225		struct fsl_micfil *micfil = snd_soc_dai_get_drvdata(dai);
-   226		struct device *dev = &micfil->pdev->dev;
-   227		int ret;
-   228	
-   229		switch (cmd) {
-   230		case SNDRV_PCM_TRIGGER_START:
-   231		case SNDRV_PCM_TRIGGER_RESUME:
-   232		case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-   233			ret = fsl_micfil_reset(dev);
-   234			if (ret) {
-   235				dev_err(dev, "failed to soft reset\n");
-   236				return ret;
-   237			}
-   238	
-   239			/* DMA Interrupt Selection - DISEL bits
-   240			 * 00 - DMA and IRQ disabled
-   241			 * 01 - DMA req enabled
-   242			 * 10 - IRQ enabled
-   243			 * 11 - reserved
-   244			 */
-   245			ret = regmap_update_bits(micfil->regmap, REG_MICFIL_CTRL1,
-   246					MICFIL_CTRL1_DISEL,
- > 247					FIELD_PREP(MICFIL_CTRL1_DISEL, MICFIL_CTRL1_DISEL_DMA));
-   248			if (ret) {
-   249				dev_err(dev, "failed to update DISEL bits\n");
-   250				return ret;
-   251			}
-   252	
-   253			/* Enable the module */
-   254			ret = regmap_update_bits(micfil->regmap, REG_MICFIL_CTRL1,
-   255						 MICFIL_CTRL1_PDMIEN,
-   256						 MICFIL_CTRL1_PDMIEN);
-   257			if (ret) {
-   258				dev_err(dev, "failed to enable the module\n");
-   259				return ret;
-   260			}
-   261	
-   262			break;
-   263		case SNDRV_PCM_TRIGGER_STOP:
-   264		case SNDRV_PCM_TRIGGER_SUSPEND:
-   265		case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-   266			/* Disable the module */
-   267			ret = regmap_update_bits(micfil->regmap, REG_MICFIL_CTRL1,
-   268						 MICFIL_CTRL1_PDMIEN,
-   269						 0);
-   270			if (ret) {
-   271				dev_err(dev, "failed to enable the module\n");
-   272				return ret;
-   273			}
-   274	
-   275			ret = regmap_update_bits(micfil->regmap, REG_MICFIL_CTRL1,
-   276					MICFIL_CTRL1_DISEL,
-   277					FIELD_PREP(MICFIL_CTRL1_DISEL, MICFIL_CTRL1_DISEL_DISABLE));
-   278			if (ret) {
-   279				dev_err(dev, "failed to update DISEL bits\n");
-   280				return ret;
-   281			}
-   282			break;
-   283		default:
-   284			return -EINVAL;
-   285		}
-   286		return 0;
-   287	}
-   288	
-
+Signed-off-by: Olivier Dautricourt <olivier.dautricourt@orolia.com>
 ---
-0-DAY CI Kernel Test Service
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e127c2fb08a7..4732ca997aca 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -811,7 +811,7 @@ S:	Maintained
+ F:	drivers/mailbox/mailbox-altera.c
+ 
+ ALTERA MSGDMA IP CORE DRIVER
+-M:	Olivier Dautricourt <olivier.dautricourt@orolia.com>
++M:	Olivier Dautricourt <olivierdautricourt@gmail.com>
+ R:	Stefan Roese <sr@denx.de>
+ L:	dmaengine@vger.kernel.org
+ S:	Odd Fixes
+-- 
+2.25.1
+

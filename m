@@ -2,26 +2,26 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D8374DC11C
-	for <lists+dmaengine@lfdr.de>; Thu, 17 Mar 2022 09:28:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC3034DC12A
+	for <lists+dmaengine@lfdr.de>; Thu, 17 Mar 2022 09:29:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230472AbiCQIaA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 17 Mar 2022 04:30:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55526 "EHLO
+        id S230271AbiCQIa3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 17 Mar 2022 04:30:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbiCQI36 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 17 Mar 2022 04:29:58 -0400
+        with ESMTP id S229854AbiCQIa0 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 17 Mar 2022 04:30:26 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 639DED3734
-        for <dmaengine@vger.kernel.org>; Thu, 17 Mar 2022 01:28:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B5E5E019
+        for <dmaengine@vger.kernel.org>; Thu, 17 Mar 2022 01:29:11 -0700 (PDT)
 Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <sha@pengutronix.de>)
-        id 1nUlUo-00068r-7p; Thu, 17 Mar 2022 09:28:34 +0100
+        id 1nUlUo-00068s-7n; Thu, 17 Mar 2022 09:28:34 +0100
 Received: from sha by dude02.hi.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <sha@pengutronix.de>)
-        id 1nUlUm-0027Tc-OB; Thu, 17 Mar 2022 09:28:32 +0100
+        id 1nUlUm-0027Tf-Op; Thu, 17 Mar 2022 09:28:32 +0100
 From:   Sascha Hauer <s.hauer@pengutronix.de>
 To:     alsa-devel@alsa-project.org
 Cc:     Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
@@ -29,9 +29,9 @@ Cc:     Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
         Vinod Koul <vkoul@kernel.org>,
         NXP Linux Team <linux-imx@nxp.com>,
         dmaengine@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH 01/19] ASoC: fsl_micfil: Drop unnecessary register read
-Date:   Thu, 17 Mar 2022 09:28:00 +0100
-Message-Id: <20220317082818.503143-2-s.hauer@pengutronix.de>
+Subject: [PATCH 02/19] ASoC: fsl_micfil: Drop unused register read
+Date:   Thu, 17 Mar 2022 09:28:01 +0100
+Message-Id: <20220317082818.503143-3-s.hauer@pengutronix.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220317082818.503143-1-s.hauer@pengutronix.de>
 References: <20220317082818.503143-1-s.hauer@pengutronix.de>
@@ -50,26 +50,31 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-in get_pdm_clk() REG_MICFIL_CTRL2 is read twice. Drop second read.
+In get_pdm_clk() REG_MICFIL_CTRL2 is read, but the result is never used.
+Drop the unused code.
 
 Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 ---
- sound/soc/fsl/fsl_micfil.c | 2 --
- 1 file changed, 2 deletions(-)
+ sound/soc/fsl/fsl_micfil.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/sound/soc/fsl/fsl_micfil.c b/sound/soc/fsl/fsl_micfil.c
-index 9f90989ac59a6..64019d003784b 100644
+index 64019d003784b..cf10c212d770d 100644
 --- a/sound/soc/fsl/fsl_micfil.c
 +++ b/sound/soc/fsl/fsl_micfil.c
-@@ -118,8 +118,6 @@ static inline int get_pdm_clk(struct fsl_micfil *micfil,
- 	regmap_read(micfil->regmap, REG_MICFIL_CTRL2, &ctrl2_reg);
- 	osr = 16 - ((ctrl2_reg & MICFIL_CTRL2_CICOSR_MASK)
- 		    >> MICFIL_CTRL2_CICOSR_SHIFT);
--
--	regmap_read(micfil->regmap, REG_MICFIL_CTRL2, &ctrl2_reg);
- 	qsel = ctrl2_reg & MICFIL_CTRL2_QSEL_MASK;
+@@ -148,12 +148,9 @@ static inline int get_pdm_clk(struct fsl_micfil *micfil,
+ static inline int get_clk_div(struct fsl_micfil *micfil,
+ 			      unsigned int rate)
+ {
+-	u32 ctrl2_reg;
+ 	long mclk_rate;
+ 	int clk_div;
  
- 	switch (qsel) {
+-	regmap_read(micfil->regmap, REG_MICFIL_CTRL2, &ctrl2_reg);
+-
+ 	mclk_rate = clk_get_rate(micfil->mclk);
+ 
+ 	clk_div = mclk_rate / (get_pdm_clk(micfil, rate) * 2);
 -- 
 2.30.2
 

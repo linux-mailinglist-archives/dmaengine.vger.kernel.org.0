@@ -2,59 +2,60 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A4E04DDEDD
-	for <lists+dmaengine@lfdr.de>; Fri, 18 Mar 2022 17:25:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BDEE4DDEDF
+	for <lists+dmaengine@lfdr.de>; Fri, 18 Mar 2022 17:25:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236566AbiCRQZa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 18 Mar 2022 12:25:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56752 "EHLO
+        id S235651AbiCRQZl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 18 Mar 2022 12:25:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238953AbiCRQZY (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 18 Mar 2022 12:25:24 -0400
+        with ESMTP id S238912AbiCRQZZ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 18 Mar 2022 12:25:25 -0400
 Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FE9D2DE7A6
-        for <dmaengine@vger.kernel.org>; Fri, 18 Mar 2022 09:21:26 -0700 (PDT)
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com [209.85.208.198])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB0922F24C3
+        for <dmaengine@vger.kernel.org>; Fri, 18 Mar 2022 09:21:28 -0700 (PDT)
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com [209.85.167.69])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id AE2733F607
-        for <dmaengine@vger.kernel.org>; Fri, 18 Mar 2022 16:21:24 +0000 (UTC)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 348DE3F4BC
+        for <dmaengine@vger.kernel.org>; Fri, 18 Mar 2022 16:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1647620484;
-        bh=O5YEItFojELUQ2ZVAdFWmd7QnNJFa0nT8LdWFM6nccM=;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-        b=TtU6BB6Q3vLFAT+oK6RtC2Is1oRUFWAa+T4SIfl2ahSD/YFSbfW3OWEOEgPMOBueT
-         1Nm6LV1aUqzMiJ0nfrIiVcl1pESt2bhN121xZAeOvSWfA9907OTbiCTJ7TF89Y0AEV
-         PnVugt/0txuAv/VIO5+D2xaJTY3qgmGOVn1omw/CU0U54zs/qPyqnMpkg1cbumYQZi
-         +f9gs/9u+966e3JcMzjTDeDy/asVDpYfugL1eB7giYktjNYzIZqgykQtZyd3NTxzFq
-         c+aTr6kXr9HLAvEUXTY+x9qGciMIvXwXs0AoLqLTZeIeCQARtiFC+d2EMOqJ+OApHC
-         ruPv0evmpMwIQ==
-Received: by mail-lj1-f198.google.com with SMTP id 67-20020a2e0946000000b002493a3be913so3586724ljj.15
-        for <dmaengine@vger.kernel.org>; Fri, 18 Mar 2022 09:21:24 -0700 (PDT)
+        s=20210705; t=1647620487;
+        bh=2W0HN5RRkNZ3VABX+Cwv7ixmrYLder+VG35wSKi/d+A=;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+         MIME-Version;
+        b=YzcYOhhBwmL2p+sV7dl6hai2vx3reehNuryDItOPh9AF7LuS2WgBkjOqmOWcjyH32
+         PpIRoDfVkeKH6/vxFk3nCueKzm4UzqJRSFx2CVUazpDG5fK1HutpxdpJ2p1EOQW9kH
+         c6P834c3wh1dXcPiz40yc7smS16H/E3Hx36WLf3sMfOzZ4FISi046SmccV5X5iHGlG
+         7DSpB1bG03wlRQXxv7RFNPjHyiTnsVJt7F98+fCqjDeHPyFRHGlAiYSvmoFGbln98z
+         YjHq/WsCWtxC314A4eWGPc9KA4Ozo1v9QxjtxAf53U4XDEmsdA+4HRZTCCwASwqMmQ
+         5Qmqs2WSAXUIQ==
+Received: by mail-lf1-f69.google.com with SMTP id w13-20020ac25d4d000000b004488cf80eb1so2726113lfd.23
+        for <dmaengine@vger.kernel.org>; Fri, 18 Mar 2022 09:21:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=O5YEItFojELUQ2ZVAdFWmd7QnNJFa0nT8LdWFM6nccM=;
-        b=4FrGqNOAPHPciwu6LLx9rV13ARF7q+xrJNALcczw0AUusqsuJV78cprq9HvHKG4Swm
-         lX7cJcizhvTY1J4hGUj0T0SIZgmKI40anRjsd77P2pZgDFDG5Ojdfmn8LjygC4tMWID8
-         YGqMd1Cgo9ut5akXv/ih3MLHVI36iNvNxDU4F+5KdEvkosf2FDbUvXcN4rtzKMuwTXrS
-         Gb+fRvpkfKGUCGvDdodkh5/f9Xwk5KBbsres/J40gVfW/vkSVidPMlbSzmsCmCmMWhC0
-         pQ9vL4XBHjQfR/BK4Wj+j3Npw/b9Zlhk1enQ0Fy7w4GD1NlPNiUy8V03jUYPSvLzSsC4
-         DHMw==
-X-Gm-Message-State: AOAM531gGN3rtwpQtwL888MWkd8iu9zu14nqu4yVWzkYHx9a62VYb/i3
-        wFdQIz7rygAxa2zrKyLXYArgXrwsXPP7exgQZdpfIb1ATWgO47Vm6wO/qJBVZgj6SCIPVJSXo4r
-        /5O0bZQuQb57rgMFve6vqIjyphsfTzSmQW6fD7g==
-X-Received: by 2002:a05:6512:6c1:b0:448:6291:f135 with SMTP id u1-20020a05651206c100b004486291f135mr6405486lff.451.1647620483033;
-        Fri, 18 Mar 2022 09:21:23 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz7IhRjpip8ZxqWpdk/rNDzwPEQOlG6V0utFUzBi0pEzxIv6O5tJhNXTUklIfs5QHZNcJq1TQ==
-X-Received: by 2002:a05:6512:6c1:b0:448:6291:f135 with SMTP id u1-20020a05651206c100b004486291f135mr6405475lff.451.1647620482814;
-        Fri, 18 Mar 2022 09:21:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2W0HN5RRkNZ3VABX+Cwv7ixmrYLder+VG35wSKi/d+A=;
+        b=WueReiaYMDqbmHJ9SHs/o462MxO94gIzP8aTK/MPVlYwYiqcx6pKFiB65tevWrfYBx
+         3F09BXvj14gqkFhW3na+U0THdPtQkLHirk0VmfUMib2s99JLPEmA/PLvoX7UxYZRJdih
+         m/lv3b4wzipx7uIc+UYVralVJ84n7F6LeH2vih7LHHKlSJ4IRpgEFR5htiQR7sHQIFpG
+         6IshMK5ifRoncFxLIJE9xGse0KlKLPyF9UnpIHFjSwEMmoCb7GPAbbGf6TVS+4P7Ccti
+         +VuEG5dUzk8t+tIEG7tiIbTbmXvJuKx29ef5YKP7AnEAFndFFX9H22Md3Bat1bDNEcvi
+         SIOg==
+X-Gm-Message-State: AOAM5319pi4EGFfERW5iR2adzb8KIZlMRR6Tl52MIznk3IM4PFT6Dgqg
+        D39AmM+w7/DJL4TfuXF61P9bglN5LYTfMKG7aWO826HavtUlVtLq4LG6rXBpTlRZX6mAQsP2+g+
+        zPj7MB42qVlLfBIP55phyNmsZVoguiV2a/obaew==
+X-Received: by 2002:ac2:44a5:0:b0:448:27fb:f11b with SMTP id c5-20020ac244a5000000b0044827fbf11bmr6761048lfm.72.1647620485591;
+        Fri, 18 Mar 2022 09:21:25 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxxYnFRtdU22BR20+/ugHHxzULrSzy0BJHNZ4eqdyKUJs4Bzk00wOL775ew90uRhXAX1YOExQ==
+X-Received: by 2002:ac2:44a5:0:b0:448:27fb:f11b with SMTP id c5-20020ac244a5000000b0044827fbf11bmr6761036lfm.72.1647620485407;
+        Fri, 18 Mar 2022 09:21:25 -0700 (PDT)
 Received: from localhost.localdomain (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id h5-20020a197005000000b00448287d1275sm906913lfc.298.2022.03.18.09.21.20
+        by smtp.gmail.com with ESMTPSA id h5-20020a197005000000b00448287d1275sm906913lfc.298.2022.03.18.09.21.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Mar 2022 09:21:22 -0700 (PDT)
+        Fri, 18 Mar 2022 09:21:24 -0700 (PDT)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 To:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -68,10 +69,12 @@ To:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
         devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Subject: [PATCH 1/2] dt-bindings: dmaengine: sifive,fu540-c000: include generic schema
-Date:   Fri, 18 Mar 2022 17:20:43 +0100
-Message-Id: <20220318162044.169350-1-krzysztof.kozlowski@canonical.com>
+Subject: [PATCH 2/2] riscv: dts: sifive: fu540-c000: align dma node name with dtschema
+Date:   Fri, 18 Mar 2022 17:20:44 +0100
+Message-Id: <20220318162044.169350-2-krzysztof.kozlowski@canonical.com>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220318162044.169350-1-krzysztof.kozlowski@canonical.com>
+References: <20220318162044.169350-1-krzysztof.kozlowski@canonical.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -84,44 +87,28 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Include generic dma-controller.yaml schema, which enforces node naming
-and other generic properties.
+Fixes dtbs_check warnings like:
+
+  dma@3000000: $nodename:0: 'dma@3000000' does not match '^dma-controller(@.*)?$'
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 ---
- .../devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml   | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-index 75ad898c59bc..47c46af25536 100644
---- a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-+++ b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-@@ -22,6 +22,9 @@ description: |
- 
-   https://static.dev.sifive.com/FU540-C000-v1.0.pdf
- 
-+allOf:
-+  - $ref: "dma-controller.yaml#"
-+
- properties:
-   compatible:
-     items:
-@@ -41,13 +44,12 @@ required:
-   - compatible
-   - reg
-   - interrupts
--  - '#dma-cells'
- 
--additionalProperties: false
-+unevaluatedProperties: false
- 
- examples:
-   - |
--    dma@3000000 {
-+    dma-controller@3000000 {
-       compatible = "sifive,fu540-c000-pdma";
-       reg = <0x3000000 0x8000>;
-       interrupts = <23>, <24>, <25>, <26>, <27>, <28>, <29>, <30>;
+diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+index 3eef52b1a59b..fd93fdadd28c 100644
+--- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
++++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+@@ -167,7 +167,7 @@ uart0: serial@10010000 {
+ 			clocks = <&prci PRCI_CLK_TLCLK>;
+ 			status = "disabled";
+ 		};
+-		dma: dma@3000000 {
++		dma: dma-controller@3000000 {
+ 			compatible = "sifive,fu540-c000-pdma";
+ 			reg = <0x0 0x3000000 0x0 0x8000>;
+ 			interrupt-parent = <&plic0>;
 -- 
 2.32.0
 

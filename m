@@ -2,206 +2,186 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2910B4E1E3A
-	for <lists+dmaengine@lfdr.de>; Mon, 21 Mar 2022 00:16:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B13264E2157
+	for <lists+dmaengine@lfdr.de>; Mon, 21 Mar 2022 08:25:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243578AbiCTXSI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 20 Mar 2022 19:18:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43746 "EHLO
+        id S1344845AbiCUHZ6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 21 Mar 2022 03:25:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237876AbiCTXSH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 20 Mar 2022 19:18:07 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0344F329C;
-        Sun, 20 Mar 2022 16:16:43 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id w27so22125408lfa.5;
-        Sun, 20 Mar 2022 16:16:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3qf4U37WdvGH1xot8tLXiIVPtYvjsXskqDgkPybObY8=;
-        b=ZES6Oh5q8WZ83K+9K0ggVX7E5epnJd79t3/QuYINzbk1S8g5yX7J6F6BAYPT3a6DzF
-         pfBlzfDZeaG7f3h+yq5nox6/ET71uRDHQrq7+M/trhbtcX4P/aeBvxxN21rq8BB+cinH
-         S+GUx6Wjl9B+m3+YSGiUFhczbRTLYX884l2zOI+pPKRwc015KL6yIvJ8tjQXWVTLskMH
-         ngUGXKJqxZ6iqFPvqAbWR4wRg5gXOdEPb8qxwX8fTVZL9G4+qqubn/s3TfNDayEVJcCN
-         y+0CasJz4u4zrNiwDGtPhLhG5hRFL8Bzt4ThO9JyyDrXtmMBBTlGKXR3SQlmdmf38tRB
-         pMLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3qf4U37WdvGH1xot8tLXiIVPtYvjsXskqDgkPybObY8=;
-        b=iMoIapO3CHqxE1weCXdN6h7NGeUAlE1YVitjlMzNVCTAlDksXObMcNtNRECDy/Pe9w
-         N5MuzwXW6P+jlRff2rxxjJPyI0JHBcnNS4pYZyqOZs1dA+JTJ7dtu+JCf0Npnf/SnBMT
-         ZKNyGLFZmid+Ih7fOSK99xCSaWJrIueIHgSPxjBo52f6m1PqRe1cHqMfOIh5fhaoJ3yt
-         +kJBOcU6bf1c85leJOlDMf/6zQSCR+eCX8eW+pTU1vhpWYaOCvOw6WzS+aFhte2h0AS3
-         j6yO712A+Swvqm5KXMmjI2p6/8auqbvc94i3sVKJP+a+uerksPTte5VlwukyGs0S/HVB
-         e2MQ==
-X-Gm-Message-State: AOAM531o56rKaQoZZMALHLzqj6aoUq5weJXnt1r3W2b3B28VCZwFih/X
-        W6sf7C8jUkWkKUGRRee5fs6Su5QHebNcfA==
-X-Google-Smtp-Source: ABdhPJyvEhODkaO2Nn4vQltCYU9EVNLvK0feR2ihXEV6/87cRQ9nP96upKUHvLNLOnW1SgxDKzO5YA==
-X-Received: by 2002:a05:6512:a88:b0:445:ce77:33d1 with SMTP id m8-20020a0565120a8800b00445ce7733d1mr12507438lfu.389.1647818201674;
-        Sun, 20 Mar 2022 16:16:41 -0700 (PDT)
-Received: from mobilestation ([95.79.188.22])
-        by smtp.gmail.com with ESMTPSA id m24-20020a197118000000b00448bb0df9ffsm1598365lfc.140.2022.03.20.16.16.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Mar 2022 16:16:41 -0700 (PDT)
-Date:   Mon, 21 Mar 2022 02:16:39 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
-        hongxing.zhu@nxp.com, l.stach@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        lznuaa@gmail.com, vkoul@kernel.org, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
-        shawnguo@kernel.org
-Subject: Re: [PATCH v4 5/8] dmaengine: dw-edma: Fix programming the source &
- dest addresses for ep
-Message-ID: <20220320231639.ymfdhy2pkjy7jmbq@mobilestation>
-References: <20220309211204.26050-1-Frank.Li@nxp.com>
- <20220309211204.26050-6-Frank.Li@nxp.com>
- <20220310163123.h2zqdx5tkn2czmbm@mobilestation>
- <20220311174134.GA3966@thinkpad>
- <20220311190147.pvjp6v7whjgyeuey@mobilestation>
- <20220312053720.GA4356@thinkpad>
- <20220314083340.244dfwo4v3uuhkkm@mobilestation>
- <20220318180605.GB4922@thinkpad>
- <20220318181911.7dujoioqc7iqwtsz@mobilestation>
+        with ESMTP id S1344914AbiCUHZx (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 21 Mar 2022 03:25:53 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B31A54693
+        for <dmaengine@vger.kernel.org>; Mon, 21 Mar 2022 00:24:17 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nWCND-0006et-Tt; Mon, 21 Mar 2022 08:22:39 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nWCMp-0021t4-Og; Mon, 21 Mar 2022 08:22:16 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nWCMp-00AcZn-OA; Mon, 21 Mar 2022 08:22:15 +0100
+Date:   Mon, 21 Mar 2022 08:22:15 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Alexandru Ardelean <aardelean@deviqon.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Tomislav Denis <tomislav.denis@avl.com>,
+        =?utf-8?B?QW5kcsOp?= Gustavo Nakagomi Lopez <andregnl@usp.br>,
+        Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-i2c@vger.kernel.org,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-rtc@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-pwm@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        linux-iio@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Michal Simek <michal.simek@xilinx.com>, kernel@pengutronix.de,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
+        Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>,
+        Vladimir Zapolskiy <vz@mleia.com>, linux-gpio@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        Fabio Estevam <festevam@gmail.com>,
+        Matt Mackall <mpm@selenic.com>,
+        linux-amlogic@lists.infradead.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        linux-hwmon@vger.kernel.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-watchdog@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        UNGLinuxDriver@microchip.com, Vinod Koul <vkoul@kernel.org>,
+        Cai Huoqing <caihuoqing@baidu.com>,
+        linux-crypto@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+        dmaengine@vger.kernel.org,
+        Amireddy Mallikarjuna reddy 
+        <mallikarjunax.reddy@linux.intel.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>
+Subject: Re: [PATCH v8 02/16] clk: Provide new devm_clk helpers for prepared
+ and enabled clocks
+Message-ID: <20220321072215.5lffm7qtpvg5ofk4@pengutronix.de>
+References: <20220314141643.22184-1-u.kleine-koenig@pengutronix.de>
+ <20220314141643.22184-3-u.kleine-koenig@pengutronix.de>
+ <20220319182936.06d75742@jic23-huawei>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oterd73bfcoy35ck"
 Content-Disposition: inline
-In-Reply-To: <20220318181911.7dujoioqc7iqwtsz@mobilestation>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220319182936.06d75742@jic23-huawei>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Mar 18, 2022 at 09:19:13PM +0300, Serge Semin wrote:
-> On Fri, Mar 18, 2022 at 11:36:05PM +0530, Manivannan Sadhasivam wrote:
-> > On Mon, Mar 14, 2022 at 11:33:40AM +0300, Serge Semin wrote:
-> > > On Sat, Mar 12, 2022 at 11:07:20AM +0530, Manivannan Sadhasivam wrote:
-> > > > On Fri, Mar 11, 2022 at 10:01:47PM +0300, Serge Semin wrote:
-> > > > > On Fri, Mar 11, 2022 at 11:11:34PM +0530, Manivannan Sadhasivam wrote:
-> > > 
-> > > [nip]
-> > > 
-> > > > > 
-> > > > > > As per my understanding, the eDMA is solely used in the PCIe endpoint. And the
-> > > > > > access to it happens over PCIe bus or by the local CPU.
-> > > > > 
-> > > > > Not fully correct. Root Ports can also have eDMA embedded. In that
-> > > > > case the eDMA can be only accessible from the local CPU. At the same
-> > > > > time the DW PCIe End-point case is the IP-core synthesize parameters
-> > > > > specific. It's always possible to access the eDMA CSRs from local
-> > > > > CPU, but a particular End-point BAR can be pre-synthesize to map
-> > > > > either Port Logic, or eDMA or iATU CSRs. Thus a PCIe root port can
-> > > > > perform a full End-point configuration. Anyway the case if the eDMA
-> > > > > functionality being accessible over the PCIe wire doesn't really make
-> > > > > much sense with no info regarding the application logic hidden behind
-> > > > > the PCIe End-point interface since SAR/DAR LLP is supposed to be
-> > > > > initialized with an address from the local (application) memory space.
-> > > > > 
-> > > > 
-> > > > Thanks for the explanation, it clarifies my doubt. I got misleaded by the
-> > > > earlier commits...
-> > > > 
-> > > > > So AFAICS the main usecase of the controller is 1) - when eDMA is a
-> > > > > part of the Root Port/End-point and only local CPU is supposed to have
-> > > > > it accessed and configured.
-> > > > > 
-> > > > > I can resend this patch with my fix to the problem. What do you think?
-> > > > > 
-> > > > 
-> > > 
-> > > > Yes, please do.
-> > > 
-> > > Ok. I'll be AFK today, but will send my patches tomorrow.  @Frank,
-> > > Could you please hold on with respinning the series for a few days?
-> > > I'll send out some of my patches then with a note which one of them
-> > > could be picked up by you and merged into this series.
-> > > 
-> > 
-> 
 
-> > Any update on your patches?
-> 
-> No worries. The patches are ready. But since Frank was on vacation I
-> decided to rebase all of my work on top of his series. I'll finish it
-> up shortly and send out my patchset till Monday for review. Then Frank
-> will be able to pick up two patches from there so to close up his
-> patchset (I'll give a note which one of them is of Frank' interes).
-> My series will be able to be merged in after Frank's series is reviewed
-> and accepted.
+--oterd73bfcoy35ck
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Folks, couldn't make it this weekend. Too much sidework to do. Terribly
-sorry about that. Will send out the series tomorrow or at most in a day
-after tomorrow. Sorry for the inconvenience.
+On Sat, Mar 19, 2022 at 06:29:36PM +0000, Jonathan Cameron wrote:
+> On Mon, 14 Mar 2022 15:16:29 +0100
+> Uwe Kleine-K=F6nig         <u.kleine-koenig@pengutronix.de> wrote:
+>=20
+> > When a driver keeps a clock prepared (or enabled) during the whole
+> > lifetime of the driver, these helpers allow to simplify the drivers.
+> >=20
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Reviewed-by: Alexandru Ardelean <aardelean@deviqon.com>
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+>=20
+> One trivial thing below.
+>=20
+> > ---
+> >  drivers/clk/clk-devres.c | 31 ++++++++++++++
+> >  include/linux/clk.h      | 90 +++++++++++++++++++++++++++++++++++++++-
+> >  2 files changed, 120 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c
+> > index fb7761888b30..4707fe718f0b 100644
+> > --- a/drivers/clk/clk-devres.c
+> > +++ b/drivers/clk/clk-devres.c
+> > @@ -67,12 +67,43 @@ struct clk *devm_clk_get(struct device *dev, const =
+char *id)
+> >  }
+> >  EXPORT_SYMBOL(devm_clk_get);
+> > =20
+> > +struct clk *devm_clk_get_prepared(struct device *dev, const char *id)
+> > +{
+> > +	return __devm_clk_get(dev, id, clk_get, clk_prepare, clk_unprepare);
+>=20
+> Nitpick but this spacing before } in functions is rather unusual and not
+> in keeping with the existing code in this file.
+>=20
+> > +
+> > +}
 
--Sergey
+ack, I fixed that in my tree, so this will be part of an v9. I won't
+send it just for this change, though. I fixed three further functions
+that had a similar empty line, too.
 
-> 
-> > 
-> > Btw, my colleage worked on merging the two dma devices used by the eDMA core
-> > for read & write channels into one. Initially I thought that was not needed as
-> > he did that for devicetree integration, but looking deeply I think that patch is
-> > necessary irrespective of DT.
-> > 
-> > One standout problem is, we can't register debugfs directory under "dmaengine"
-> > properly because, both read and write dma devices share the same parent
-> > chip->dev.
-> 
-> Right, my series fixes that and some other problems too. So please be
-> patient for a few more days.
-> 
-> -Sergey
-> 
-> > 
-> > Thanks,
-> > Mani
-> > 
-> > > -Sergey
-> > > 
-> > > > 
-> > > > Thanks,
-> > > > Mani
-> > > > 
-> > > > > -Sergey
-> > > > > 
-> > > > > > 
-> > > > > > The commit from Alan Mikhak is what I took as a reference since the patch was
-> > > > > > already merged:
-> > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/dma/dw-edma?id=bd96f1b2f43a39310cc576bb4faf2ea24317a4c9
-> > > > > > 
-> > > > > > Thanks,
-> > > > > > Mani
-> > > > > > 
-> > > > > > > -Sergey
-> > > > > > > 
-> > > > > > > > +		 *
-> > > > > > > > +		 ****************************************************************/
-> > > > > > > > +
-> > > > > > > 
-> > > > > > > > +		if ((dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ) ||
-> > > > > > > > +		    (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE))
-> > > > > > > > +			read = true;
-> > > > > > > 
-> > > > > > > Seeing the driver support only two directions DMA_DEV_TO_MEM/DMA_DEV_TO_MEM
-> > > > > > > and EDMA_DIR_READ/EDMA_DIR_WRITE, this conditional statement seems
-> > > > > > > redundant.
-> > > > > > > 
-> > > > > > > > +
-> > > > > > > > +		/* Program the source and destination addresses for DMA read/write */
-> > > > > > > > +		if (read) {
-> > > > > > > >  			burst->sar = src_addr;
-> > > > > > > >  			if (xfer->type == EDMA_XFER_CYCLIC) {
-> > > > > > > >  				burst->dar = xfer->xfer.cyclic.paddr;
-> > > > > > > > -- 
-> > > > > > > > 2.24.0.rc1
-> > > > > > > > 
+Thanks for looking
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--oterd73bfcoy35ck
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmI4J6MACgkQwfwUeK3K
+7Ak5sAf/aG3oVD1FgzqJLWD3uSmF0uX0/3lky1l56go3LpRjDym8tlGglXT4z7Hl
+Z3q8YXru6LSihHT/n6V4EUdpV6f49dxPfrr9hu9OFU+UY0Cd7NgisKr+0Wi61dbS
+d8IVGHwcCPqBZanHdAEjhle7d7WdWhfukR1oLljd8B2XM6qP2jQgjFWzrSJfZ+hd
+qd6k9TcfIHjy8n8xBtyIYSvYZbywqfa+wJeU54fe4fp4NNPVTmxGtzHFNDipSZGL
+uF+yg7qDqSezst7wO3dNeblEvpVZfG9TZAXvGMCZQLn9x4b35iSmZtLVPN+HZZM4
+WBr/EA6mCSOr4iHXCKfNr4UegGV4/w==
+=gON5
+-----END PGP SIGNATURE-----
+
+--oterd73bfcoy35ck--

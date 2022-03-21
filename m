@@ -2,83 +2,97 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F5964E304A
-	for <lists+dmaengine@lfdr.de>; Mon, 21 Mar 2022 19:55:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 423414E31F9
+	for <lists+dmaengine@lfdr.de>; Mon, 21 Mar 2022 21:40:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345238AbiCUS4s (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 21 Mar 2022 14:56:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45094 "EHLO
+        id S1345887AbiCUUmS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 21 Mar 2022 16:42:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245481AbiCUS4r (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 21 Mar 2022 14:56:47 -0400
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C014630F6C;
-        Mon, 21 Mar 2022 11:55:21 -0700 (PDT)
-Received: by mail-oo1-f53.google.com with SMTP id w3-20020a4ac183000000b0031d806bbd7eso20227997oop.13;
-        Mon, 21 Mar 2022 11:55:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7gYimi7IXaGh1o6TmiU/YwpmZl88VAlShoDJCgXTGA4=;
-        b=5raOEuxgFXfh3ngyrFz9mFOIAnUR2KknaHTlWCs7OJIgn3WvpG43zTG5TRLuy+9sNs
-         hTHYpn6MqlBKcfODkA+IPFuYon7lwAbxbFw6RqZlO4DvG+I0C9IeJitRMx3VyJZDg3oa
-         O/6OvI2IAOmN6QBWlKrGzUjae9LD+4TXNfy/4GEFwVVdnSb6+Qt1NaNyu9VHO8l9SMXD
-         WhARp8A1Ndtd1XF6JKHP7ndr+EcU6DUJB5mZ7TLT+fGJ7NQbeLbHKTeViXH9Bd+5Jyrh
-         Le2s0ZYuo+aMnacNNoxcxSkpjx528YZfuvR/2ONuF0Jq1GFXnLYnKrsdgtqH3xYLillX
-         1v4Q==
-X-Gm-Message-State: AOAM532otnXG77iXU3UexEd1WuwMv8eoSzvJac1aexnXmoruuZF/2/xg
-        YGygglhxM7pEPDBO5pk9rA==
-X-Google-Smtp-Source: ABdhPJw1MRcil7h8zdAWMFtY/6TL02ehb+MaL8EpGrGIMuov9NUrElMt1E9LSjlNbJgNtXYHt1C1ig==
-X-Received: by 2002:a05:6870:d348:b0:db:12b5:d6a with SMTP id h8-20020a056870d34800b000db12b50d6amr224887oag.183.1647888920545;
-        Mon, 21 Mar 2022 11:55:20 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id gk6-20020a0568703c0600b000de4880b357sm83241oab.50.2022.03.21.11.55.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Mar 2022 11:55:19 -0700 (PDT)
-Received: (nullmailer pid 362706 invoked by uid 1000);
-        Mon, 21 Mar 2022 18:55:18 -0000
-Date:   Mon, 21 Mar 2022 13:55:18 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, linux-riscv@lists.infradead.org,
-        Alexandre Ghiti <alexandre.ghiti@canonical.com>,
-        Palmer Debbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Green Wan <green.wan@sifive.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: sifive,fu540-c000: include
- generic schema
-Message-ID: <YjjKFvNZ1BVn/zaB@robh.at.kernel.org>
-References: <20220318162044.169350-1-krzysztof.kozlowski@canonical.com>
+        with ESMTP id S1345385AbiCUUmR (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 21 Mar 2022 16:42:17 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC99F4F46D
+        for <dmaengine@vger.kernel.org>; Mon, 21 Mar 2022 13:40:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647895251; x=1679431251;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=RVIOdI5IXTfwiCw0dAqspH/u9A9zZz6BhKao8DXE/Xc=;
+  b=Z7mW2Trt7WTJjpdkQlytlqfRwopXyB/1x0L4eQLcyu48hvBinnm5BUt0
+   ciZjneDiZZULUT+3zDa7XrH/LNH1nvPhD2PgnIkJvJs8gS0yWCuc7ekWp
+   vTTzBk1I2OMhhlCtRk0cFN8E5xChxV1Z07+g7yf7wH0j9Itv2Q1aslhRC
+   hkQs+rQnRB0wfQ3zWt5pSkqd/I3JwG4N8CR1O4wGnno+SBOb3V2Xzxy3B
+   Gpolao00MC47w7XX5oB5HRbZnSnQPNpLLVRm5864QMSCAFL4uZ8HOjOQX
+   5eJr5Vp5Geu6iUMtl9IZx73tUCl4ZnnQsB18s0HhUHuBvk+6gBAs7VJSO
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10293"; a="237586275"
+X-IronPort-AV: E=Sophos;i="5.90,199,1643702400"; 
+   d="scan'208";a="237586275"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2022 13:40:51 -0700
+X-IronPort-AV: E=Sophos;i="5.90,199,1643702400"; 
+   d="scan'208";a="785120389"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2022 13:40:51 -0700
+Subject: [PATCH] dmaengine: idxd: remove trailing white space on input str for
+ wq name
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org
+Date:   Mon, 21 Mar 2022 13:40:51 -0700
+Message-ID: <164789525123.2799661.13795829125221129132.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220318162044.169350-1-krzysztof.kozlowski@canonical.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, 18 Mar 2022 17:20:43 +0100, Krzysztof Kozlowski wrote:
-> Include generic dma-controller.yaml schema, which enforces node naming
-> and other generic properties.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-> ---
->  .../devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml   | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
+Add string processing with strim() in order to remove trailing white spaces
+that may be input by user for the wq->name.
 
-Applied, thanks!
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/dma/idxd/sysfs.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+index dbc7f9af11d3..08ceee801e4b 100644
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -832,6 +832,7 @@ static ssize_t wq_name_store(struct device *dev,
+ 			     size_t count)
+ {
+ 	struct idxd_wq *wq = confdev_to_wq(dev);
++	char *input, *pos;
+ 
+ 	if (wq->state != IDXD_WQ_DISABLED)
+ 		return -EPERM;
+@@ -846,9 +847,14 @@ static ssize_t wq_name_store(struct device *dev,
+ 	if (wq->type == IDXD_WQT_KERNEL && device_pasid_enabled(wq->idxd))
+ 		return -EOPNOTSUPP;
+ 
++	input = kstrndup(buf, count, GFP_KERNEL);
++	if (!input)
++		return -ENOMEM;
++
++	pos = strim(input);
+ 	memset(wq->name, 0, WQ_NAME_SIZE + 1);
+-	strncpy(wq->name, buf, WQ_NAME_SIZE);
+-	strreplace(wq->name, '\n', '\0');
++	sprintf(wq->name, "%s", pos);
++	kfree(input);
+ 	return count;
+ }
+ 
+
+

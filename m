@@ -2,31 +2,31 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A7934E9C79
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Mar 2022 18:44:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C01C4E9C81
+	for <lists+dmaengine@lfdr.de>; Mon, 28 Mar 2022 18:44:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243207AbiC1QqL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 28 Mar 2022 12:46:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45256 "EHLO
+        id S243073AbiC1QqG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 28 Mar 2022 12:46:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242678AbiC1QqD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 28 Mar 2022 12:46:03 -0400
+        with ESMTP id S242615AbiC1QqC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 28 Mar 2022 12:46:02 -0400
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E8C1B21E3D;
-        Mon, 28 Mar 2022 09:44:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 563AE21805;
+        Mon, 28 Mar 2022 09:44:13 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id D0F2F1E494B;
-        Thu, 24 Mar 2022 04:48:46 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru D0F2F1E494B
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 7E3AD1E494C;
+        Thu, 24 Mar 2022 04:48:47 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 7E3AD1E494C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1648086526;
-        bh=FMSz5zMuaHmaqav0lPq43UKO/Chw55VmoyBGraCce7Y=;
+        d=baikalelectronics.ru; s=mail; t=1648086527;
+        bh=wLAPyaPtsPRVa1ND8kCXVeUvvhDUzzXQxRocrklWVbI=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=SL7h4pN9/6SGpVGqlT2MNtGklqb8g9EhQkzhNeIDpY9DiSkeIfsvD607yftsx9xEx
-         aecc2asohi/6Ax+JhWfEjwGOjajMbsh9+LtHuQ967ClZeM6anpj/K8/s142RN2/Yf+
-         yXHojAAlsXyMKoKHJ9+DKRtQalu3D887FcXybi00=
+        b=SY5I10w9NqJKooJI363WfAJDvIovar1ONLR0t/lJmRrbsiUtAAss9LhXJQzUrtzUj
+         t3ZwDq/JLlpGUpmiqk4Kh7KIWpEt7dlE04UOJViyJNmaKVgirWT00nJoKbBZBNFWzP
+         eczJWfhbEgyBtBX+owrnd93ZJiB7kyXURB5G4zVo=
 Received: from localhost (192.168.168.10) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Mar 2022 04:48:46 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Mar 2022 04:48:47 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -42,11 +42,10 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [PATCH 12/25] dmaengine: dw-edma: Fix DebugFS reg entry type
-Date:   Thu, 24 Mar 2022 04:48:23 +0300
-Message-ID: <20220324014836.19149-13-Sergey.Semin@baikalelectronics.ru>
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 13/25] dmaengine: dw-edma: Stop checking debugfs_create_*() return value
+Date:   Thu, 24 Mar 2022 04:48:24 +0300
+Message-ID: <20220324014836.19149-14-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -62,51 +61,104 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-debugfs_entries structure declared in the dw-edma-v0-debugfs.c module
-contains the DebugFS node' register address. The address is declared as
-dma_addr_t type, but first it's assigned with virtual CPU IOMEM address
-and then it's cast back to the virtual address. Even though the castes
-sandwich will unlikely cause any problem since normally DMA address is at
-least of the same size as the CPU virtual address, it's at the very least
-redundant if not to say logically incorrect. Let's fix it by just stop
-casting the pointer back and worth and just preserve the address as a
-pointer to void with __iomem qualifier.
+First of all they never return NULL. So checking their return value for
+being not NULL just pointless. Secondly the DebugFS subsystem is designed
+in a way to be used as simple as possible. So if one of the
+debugfs_create_*() method in a hierarchy fails, the following methods will
+just silently return the passed erroneous parental dentry. Finally the
+code is supposed to be working no matter whether anything DebugFS-related
+fails. So in order to make code simpler and DebugFS-independent let's drop
+the debugfs_create_*() methods return value checking in the same way as
+the most of the kernel drivers do.
 
-Fixes: 305aebeff879 ("dmaengine: Add Synopsys eDMA IP version 0 debugfs support")
+Note in order to preserve some memory space we suggest to skip the DebugFS
+nodes initialization if the file system in unavailable.
+
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 ---
- drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 20 +++++---------------
+ 1 file changed, 5 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-index 3a899f7f4e8d..12845a2dc016 100644
+index 12845a2dc016..808eed212be8 100644
 --- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
 +++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-@@ -14,7 +14,7 @@
- #include "dw-edma-core.h"
+@@ -100,9 +100,8 @@ static void dw_edma_debugfs_create_x32(const struct debugfs_entries entries[],
+ 	int i;
  
- #define REGS_ADDR(name) \
--	((void __force *)&regs->name)
-+	((void __iomem *)&regs->name)
- #define REGISTER(name) \
- 	{ #name, REGS_ADDR(name) }
+ 	for (i = 0; i < nr_entries; i++) {
+-		if (!debugfs_create_file_unsafe(entries[i].name, 0444, dir,
+-						entries[i].reg,	&fops_x32))
+-			break;
++		debugfs_create_file_unsafe(entries[i].name, 0444, dir,
++					   entries[i].reg, &fops_x32);
+ 	}
+ }
  
-@@ -48,12 +48,13 @@ static struct {
+@@ -168,8 +167,6 @@ static void dw_edma_debugfs_regs_wr(struct dentry *dir)
+ 	char name[16];
  
- struct debugfs_entries {
- 	const char				*name;
--	dma_addr_t				*reg;
-+	void __iomem				*reg;
- };
+ 	regs_dir = debugfs_create_dir(WRITE_STR, dir);
+-	if (!regs_dir)
+-		return;
  
- static int dw_edma_debugfs_u32_get(void *data, u64 *val)
+ 	nr_entries = ARRAY_SIZE(debugfs_regs);
+ 	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, regs_dir);
+@@ -184,8 +181,6 @@ static void dw_edma_debugfs_regs_wr(struct dentry *dir)
+ 		snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
+ 
+ 		ch_dir = debugfs_create_dir(name, regs_dir);
+-		if (!ch_dir)
+-			return;
+ 
+ 		dw_edma_debugfs_regs_ch(&regs->type.unroll.ch[i].wr, ch_dir);
+ 
+@@ -237,8 +232,6 @@ static void dw_edma_debugfs_regs_rd(struct dentry *dir)
+ 	char name[16];
+ 
+ 	regs_dir = debugfs_create_dir(READ_STR, dir);
+-	if (!regs_dir)
+-		return;
+ 
+ 	nr_entries = ARRAY_SIZE(debugfs_regs);
+ 	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, regs_dir);
+@@ -253,8 +246,6 @@ static void dw_edma_debugfs_regs_rd(struct dentry *dir)
+ 		snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
+ 
+ 		ch_dir = debugfs_create_dir(name, regs_dir);
+-		if (!ch_dir)
+-			return;
+ 
+ 		dw_edma_debugfs_regs_ch(&regs->type.unroll.ch[i].rd, ch_dir);
+ 
+@@ -273,8 +264,6 @@ static void dw_edma_debugfs_regs(void)
+ 	int nr_entries;
+ 
+ 	regs_dir = debugfs_create_dir(REGISTERS_STR, dw->debugfs);
+-	if (!regs_dir)
+-		return;
+ 
+ 	nr_entries = ARRAY_SIZE(debugfs_regs);
+ 	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, regs_dir);
+@@ -285,6 +274,9 @@ static void dw_edma_debugfs_regs(void)
+ 
+ void dw_edma_v0_debugfs_on(struct dw_edma_chip *chip)
  {
--	void __iomem *reg = (void __force __iomem *)data;
-+	void __iomem *reg = data;
++	if (!debugfs_initialized())
++		return;
 +
- 	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY &&
- 	    reg >= (void __iomem *)&regs->type.legacy.ch) {
- 		void __iomem *ptr = &regs->type.legacy.ch;
+ 	dw = chip->dw;
+ 	if (!dw)
+ 		return;
+@@ -294,8 +286,6 @@ void dw_edma_v0_debugfs_on(struct dw_edma_chip *chip)
+ 		return;
+ 
+ 	dw->debugfs = debugfs_create_dir(dw->name, NULL);
+-	if (!dw->debugfs)
+-		return;
+ 
+ 	debugfs_create_u32("mf", 0444, dw->debugfs, &dw->chip->mf);
+ 	debugfs_create_u16("wr_ch_cnt", 0444, dw->debugfs, &dw->wr_ch_cnt);
 -- 
 2.35.1
 

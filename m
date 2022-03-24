@@ -2,31 +2,31 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F7874E9CA5
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Mar 2022 18:45:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A64064E9CC0
+	for <lists+dmaengine@lfdr.de>; Mon, 28 Mar 2022 18:52:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243025AbiC1QqI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 28 Mar 2022 12:46:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45142 "EHLO
+        id S243367AbiC1QqR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 28 Mar 2022 12:46:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242683AbiC1QqC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 28 Mar 2022 12:46:02 -0400
+        with ESMTP id S242935AbiC1QqE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 28 Mar 2022 12:46:04 -0400
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4DAA721801;
-        Mon, 28 Mar 2022 09:44:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 76B17222A1;
+        Mon, 28 Mar 2022 09:44:17 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id BD16D1E493C;
-        Thu, 24 Mar 2022 04:48:39 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru BD16D1E493C
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8C8691E493D;
+        Thu, 24 Mar 2022 04:48:40 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 8C8691E493D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1648086519;
-        bh=phRjSo/+vSNUHm7b1Z6XFMjq89kQ6ugKnVFCikCw3QQ=;
+        d=baikalelectronics.ru; s=mail; t=1648086520;
+        bh=AYgCGlj6XCp3KD2/KUlHJg+55HiFo50ys5cdSY8nwOc=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=WAML5i00dGv6ed5aqgZNQzibC7nU9u0igzV/9ydKlxS2zEPL8LEk1YnTKr4vTrLDK
-         5jL3+s2kmlL8fcq/2HNXP0lMLt3MyrC71kLQ+gwczxtqHstvcFCflGW8a1GQaA0AEW
-         xC8cYDgexTm5eKvClSM8I0zfyOCcfbom8akvTGxY=
+        b=Gdpk4DVTE1MY+dgZ0kGVMp67RyX8d1SyCg2QO2NJHj25IYEGxOxb8VC4cSyQcFRx4
+         sxb20q0ugu4aEjTmpg69ImHd3ruWyaaxda/H8iMTCWfSg/qZlBV6hI7F5qPAIl5pvM
+         TH40nEUw788A0bI+6t728iRMW+6lqKWGI7yOKtds=
 Received: from localhost (192.168.168.10) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Mar 2022 04:48:39 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Mar 2022 04:48:40 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -34,7 +34,10 @@ To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Frank Li <Frank.Li@nxp.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Alan Mikhak <alan.mikhak@sifive.com>
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -43,10 +46,10 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 02/25] dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction semantics
-Date:   Thu, 24 Mar 2022 04:48:13 +0300
-Message-ID: <20220324014836.19149-3-Sergey.Semin@baikalelectronics.ru>
+        <linux-kernel@vger.kernel.org>, <iommu@lists.linux-foundation.org>
+Subject: [PATCH 03/25] dma-direct: take dma-ranges/offsets into account in resource mapping
+Date:   Thu, 24 Mar 2022 04:48:14 +0300
+Message-ID: <20220324014836.19149-4-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -62,89 +65,40 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-In accordance with [1, 2] the DW eDMA controller has been created to be
-part of the DW PCIe Root Port and DW PCIe End-point controllers and to
-offload the transferring of large blocks of data between application and
-remote PCIe domains leaving the system CPU free for other tasks. In the
-first case (eDMA being part of DW PCIe Root Port) the eDMA controller is
-always accessible via the CPU DBI interface and never over the PCIe wire.
-The later case is more complex. Depending on the DW PCIe End-Point IP-core
-synthesize parameters it's possible to have the eDMA registers accessible
-not only from the application CPU side, but also via mapping the eDMA CSRs
-over a dedicated end-point BAR. So based on the specifics denoted above
-the eDMA driver is supposed to support two types of the DMA controller
-setups:
-1) eDMA embedded into the DW PCIe Root Port/End-point and accessible over
-the local CPU from the application side.
-2) eDMA embedded into the DW PCIe End-point and accessible via the PCIe
-wire with MWr/MRd TLPs generated by the CPU PCIe host controller.
-Since the CPU memory resides different sides in these cases the semantics
-of the MEM_TO_DEV and DEV_TO_MEM operations is flipped with respect to the
-Tx and Rx DMA channels. So MEM_TO_DEV/DEV_TO_MEM corresponds to the Tx/Rx
-channels in setup 1) and to the Rx/Tx channels in case of setup 2).
+A basic device-specific linear memory mapping was introduced back in
+commit ("dma: Take into account dma_pfn_offset") as a single-valued offset
+preserved in the device.dma_pfn_offset field, which was initialized for
+instance by means of the "dma-ranges" DT property. Afterwards the
+functionality was extended to support more than one device-specific region
+defined in the device.dma_range_map list of maps. But all of these
+improvements concerned a single pointer, page or sg DMA-mapping methods,
+while the system resource mapping function turned to miss the
+corresponding modification. Thus the dma_direct_map_resource() method now
+just casts the CPU physical address to the device DMA address with no
+dma-ranges-based mapping taking into account, which is obviously wrong.
+Let's fix it by using the phys_to_dma_direct() method to get the
+device-specific bus address from the passed memory resource for the case
+of the directly mapped DMA.
 
-The DW eDMA driver has supported the case 2) since the initial
-commit e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver") in the
-framework of the drivers/dma/dw-edma/dw-edma-pcie.c driver. The case 1)
-support was added a bit later in commit bd96f1b2f43a ("dmaengine: dw-edma:
-support local dma device transfer semantics"). Afterwards the driver was
-supposed to cover the both possible eDMA setups, but the later commit
-turned to be not fully correct. The problem was that the commit together
-with the new functionality support also changed the channel direction
-semantics in a way so the eDMA Read-channel (corresponding to the
-DMA_DEV_TO_MEM direction for the case 1.) now uses the sgl/cyclic base
-addresses as the Source addresses of the DMA-transfers and
-dma_slave_config.dst_addr as the Destination address of the DMA-transfers.
-Similarly the eDMA Write-channel (corresponding to the DMA_MEM_TO_DEV
-direction for case 1.) now utilizes dma_slave_config.src_addr as a source
-address of the DMA-transfers and sgl/cyclic base address as the
-Destination address of the DMA-transfers. This contradicts to the logic of
-the DMA-interface, which implies that DEV side is supposed to belong to
-the PCIe device memory and MEM - to the CPU/Application memory. Indeed it
-seems irrational to have the SG-list defined in the PCIe bus space, while
-expecting a contiguous buffer allocated in the CPU memory. Moreover the
-passed SG-list and cyclic DMA buffers are supposed to be mapped in a way
-so to be seen by the DW eDMA Application (CPU) interface. So in order to
-have the correct DW eDMA interface we need to invert the eDMA
-Rd/Wr-channels and DMA-slave directions semantics by selecting the src/dst
-addresses based on the DMA transfer direction instead of using the channel
-direction capability.
-
-[1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-v.5.40a, March 2019, p.1092
-[2] DesignWare Cores PCI Express Controller Databook - DWC PCIe Endpoint,
-v.5.40a, March 2019, p.1189
-
-Fixes: bd96f1b2f43a ("dmaengine: dw-edma: support local dma device transfer semantics")
-Co-developed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Fixes: 25f1e1887088 ("dma: Take into account dma_pfn_offset")
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-
 ---
-
-In accordance with agreement with Frank and Manivannan this patch is
-supposed to be moved to the series:
-Link: https://lore.kernel.org/dmaengine/20220310192457.3090-1-Frank.Li@nxp.com/
-in place of the patch:
-[PATCH v5 5/9] dmaengine: dw-edma: Fix programming the source & dest addresses for ep
-Link: https://lore.kernel.org/dmaengine/20220310192457.3090-6-Frank.Li@nxp.com/
----
- drivers/dma/dw-edma/dw-edma-core.c | 2 +-
+ kernel/dma/direct.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index e9e32ed74aa9..519d4b3c9fa0 100644
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -442,7 +442,7 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
- 		chunk->ll_region.sz += burst->sz;
- 		desc->alloc_sz += burst->sz;
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index 50f48e9e4598..9ce8192b29ab 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -497,7 +497,7 @@ int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+ dma_addr_t dma_direct_map_resource(struct device *dev, phys_addr_t paddr,
+ 		size_t size, enum dma_data_direction dir, unsigned long attrs)
+ {
+-	dma_addr_t dma_addr = paddr;
++	dma_addr_t dma_addr = phys_to_dma_direct(dev, paddr);
  
--		if (chan->dir == EDMA_DIR_WRITE) {
-+		if (dir == DMA_DEV_TO_MEM) {
- 			burst->sar = src_addr;
- 			if (xfer->type == EDMA_XFER_CYCLIC) {
- 				burst->dar = xfer->xfer.cyclic.paddr;
+ 	if (unlikely(!dma_capable(dev, dma_addr, size, false))) {
+ 		dev_err_once(dev,
 -- 
 2.35.1
 

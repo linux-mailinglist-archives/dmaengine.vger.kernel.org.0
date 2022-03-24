@@ -2,29 +2,29 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B832E4E9C7F
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Mar 2022 18:44:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A7934E9C79
+	for <lists+dmaengine@lfdr.de>; Mon, 28 Mar 2022 18:44:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243187AbiC1QqK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 28 Mar 2022 12:46:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45142 "EHLO
+        id S243207AbiC1QqL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 28 Mar 2022 12:46:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242662AbiC1QqC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 28 Mar 2022 12:46:02 -0400
+        with ESMTP id S242678AbiC1QqD (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 28 Mar 2022 12:46:03 -0400
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4383521E17;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E8C1B21E3D;
         Mon, 28 Mar 2022 09:44:16 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 275821E4949;
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id D0F2F1E494B;
         Thu, 24 Mar 2022 04:48:46 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 275821E4949
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru D0F2F1E494B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baikalelectronics.ru; s=mail; t=1648086526;
-        bh=TYvNf8iu0bXsZA6qu5zNMBzjycLwgfx75RSoOb+pG9s=;
+        bh=FMSz5zMuaHmaqav0lPq43UKO/Chw55VmoyBGraCce7Y=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=X0DRTFhIp88+Rl/fRL+cl0sVwNtPkQ/rDwFSt+EiAtPbh5x1IH0yXxxav+igAaSlm
-         uqiy6gN1ozKAHMJOHOAtRsC4Lk4axYxTjPmTvkdW+OWWVhD9af5EYkt+iGjm9dNi/S
-         U7g9sUpoB78N1xanEKysQEt0xsz5n4PyGdeHI0rI=
+        b=SL7h4pN9/6SGpVGqlT2MNtGklqb8g9EhQkzhNeIDpY9DiSkeIfsvD607yftsx9xEx
+         aecc2asohi/6Ax+JhWfEjwGOjajMbsh9+LtHuQ967ClZeM6anpj/K8/s142RN2/Yf+
+         yXHojAAlsXyMKoKHJ9+DKRtQalu3D887FcXybi00=
 Received: from localhost (192.168.168.10) by mail (192.168.51.25) with
  Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Mar 2022 04:48:46 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
@@ -44,9 +44,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [PATCH 11/25] dmaengine: dw-edma: Drop chancnt initialization
-Date:   Thu, 24 Mar 2022 04:48:22 +0300
-Message-ID: <20220324014836.19149-12-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH 12/25] dmaengine: dw-edma: Fix DebugFS reg entry type
+Date:   Thu, 24 Mar 2022 04:48:23 +0300
+Message-ID: <20220324014836.19149-13-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -62,29 +62,51 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-DMA device drivers aren't supposed to initialize the dma_device.chancnt
-field. It will be done by the DMA-engine core in accordance with number of
-added virtual DMA-channels. Pre-initializing it with some value causes
-having a wrong number of channels printed in the device summary.
+debugfs_entries structure declared in the dw-edma-v0-debugfs.c module
+contains the DebugFS node' register address. The address is declared as
+dma_addr_t type, but first it's assigned with virtual CPU IOMEM address
+and then it's cast back to the virtual address. Even though the castes
+sandwich will unlikely cause any problem since normally DMA address is at
+least of the same size as the CPU virtual address, it's at the very least
+redundant if not to say logically incorrect. Let's fix it by just stop
+casting the pointer back and worth and just preserve the address as a
+pointer to void with __iomem qualifier.
 
-Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
+Fixes: 305aebeff879 ("dmaengine: Add Synopsys eDMA IP version 0 debugfs support")
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 ---
- drivers/dma/dw-edma/dw-edma-core.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index 418b201fef67..cefa73412bf7 100644
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -823,7 +823,6 @@ static int dw_edma_channel_setup(struct dw_edma_chip *chip, bool write,
- 	dma->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
- 	dma->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
- 	dma->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
--	dma->chancnt = cnt;
+diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+index 3a899f7f4e8d..12845a2dc016 100644
+--- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
++++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+@@ -14,7 +14,7 @@
+ #include "dw-edma-core.h"
  
- 	/* Set DMA channel callbacks */
- 	dma->dev = chip->dev;
+ #define REGS_ADDR(name) \
+-	((void __force *)&regs->name)
++	((void __iomem *)&regs->name)
+ #define REGISTER(name) \
+ 	{ #name, REGS_ADDR(name) }
+ 
+@@ -48,12 +48,13 @@ static struct {
+ 
+ struct debugfs_entries {
+ 	const char				*name;
+-	dma_addr_t				*reg;
++	void __iomem				*reg;
+ };
+ 
+ static int dw_edma_debugfs_u32_get(void *data, u64 *val)
+ {
+-	void __iomem *reg = (void __force __iomem *)data;
++	void __iomem *reg = data;
++
+ 	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY &&
+ 	    reg >= (void __iomem *)&regs->type.legacy.ch) {
+ 		void __iomem *ptr = &regs->type.legacy.ch;
 -- 
 2.35.1
 

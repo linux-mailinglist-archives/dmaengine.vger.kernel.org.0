@@ -2,314 +2,186 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6494B4E655D
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Mar 2022 15:35:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 058A44E66E6
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Mar 2022 17:23:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351059AbiCXOhS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 24 Mar 2022 10:37:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53530 "EHLO
+        id S1345014AbiCXQYs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 24 Mar 2022 12:24:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351053AbiCXOhR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Mar 2022 10:37:17 -0400
-Received: from EUR02-VE1-obe.outbound.protection.outlook.com (mail-eopbgr20045.outbound.protection.outlook.com [40.107.2.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06540B5F;
-        Thu, 24 Mar 2022 07:35:45 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F6QTwJgVwnFqnAor2wJgnKdGcduSzGEY28YPF3TNJf1p9Pfn5zhui25SZe5bl9+VdLrC/HmP9YkbI9lNmrWuEAtjZ/bVI36mY0cRPnBhVq5G03NjTzdKs2HCLVdoiQYjlpnNyubf+H6XnDN4HBX5t4B5hMG5ehFLEAmMEPm3gxySsOHuXIsy0KYB+8zFN7ii/XbnxAgAVxyNfG0acRIjisvIjinxm6tLKXJ4ZmS3a8gcuqzusnspAnY4W2QgxGzt8d4Aw6UtnFwqLC6QM/rkGPQKnb6eLALERbfprd1zl7zsn2MmXHY+ZlLwsVb1o7uSSsbYVDrt4ygKSeSlwKX94g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AJ2sEWB74BPqbeT5jvXs+01zKssANX2LSoP2T1W0iSk=;
- b=XLl52QDuVBIU4QhzKVc+3gPJjb0SZ1fuvqTbh9cpmymMTwsCTFfJbkJoGe0aDbfoabZNV/KcMrjr6VcBh7QDyf0P34SWDcDW6Co4/3BAf/1IWKRhZNUKQlcd9IlApbS74k5SNQtOWX7z5XOhr24rEM/pfAwSQ/21f45LEtDUa9qvURlAD32vTHUnqioJGfHeTn2jwUqH0zhLXhRY4IAxUrojDMHvnIyu9kZUkq+EIJ672J7Hs2xiybcMLenVjncWEWzCijcmAj4dNao0BjDnDzPq6iADD35EGXuMxs/iEPVVxTK5nYcpXXLyqFU2/v1+NmjlZ03ldWDTwECCUyoX7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AJ2sEWB74BPqbeT5jvXs+01zKssANX2LSoP2T1W0iSk=;
- b=FTUxBjAbKDH4tj+XY9xXPXp1viP7ayL1UsVAYUw3GLJd9FGM6dWOrk4VuLRy5o84sD9hMvn4lscGToWHTimU4mllOqkfveo/VC6UynJvFnsASlPPJSOIaqXdQmqhJRcjO6ny5IkiCWkMSrN2myOmeSVPD/4xAKFrmZqtsrdJAfI=
-Received: from PAXPR04MB9186.eurprd04.prod.outlook.com (2603:10a6:102:232::18)
- by AM0PR0402MB3764.eurprd04.prod.outlook.com (2603:10a6:208:9::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5102.18; Thu, 24 Mar
- 2022 14:35:42 +0000
-Received: from PAXPR04MB9186.eurprd04.prod.outlook.com
- ([fe80::bcbf:f029:4f34:1be1]) by PAXPR04MB9186.eurprd04.prod.outlook.com
- ([fe80::bcbf:f029:4f34:1be1%6]) with mapi id 15.20.5102.016; Thu, 24 Mar 2022
- 14:35:42 +0000
-From:   Frank Li <frank.li@nxp.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        with ESMTP id S1348403AbiCXQYq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Mar 2022 12:24:46 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D27E205E9
+        for <dmaengine@vger.kernel.org>; Thu, 24 Mar 2022 09:23:11 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id c23so5275154plo.0
+        for <dmaengine@vger.kernel.org>; Thu, 24 Mar 2022 09:23:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jN0efcoohqKl1PIpdMiTp80DLtECdVuZLnKEeBNGgVg=;
+        b=ZW86nxdZcCjZpI1mIYCcyifjWGAFZD70ZLNCch9jH9xEBkIFeX4juAT04Q84jf/2Se
+         Y0aFQHp1ve+Di+Y4IAD0tKvXlZLJnImBXFlk/VujOyTQCLmH9+lA6d2NtJrRFQz7txm3
+         zZVGSQ/dYIdvrul1xg2ReGtce20c2+UJ/8cP8MGlhuz8+7ggf+c5Gtk83nzVkPiM3o3N
+         oNslPCBp0dh0Xb2tj5QBS//7fY73aXB+PVE3jiIygjEXhVzErvtCBMmViSrkFdud3fvr
+         7d687YmlDV0sOpQTzYKPHFwAEMafzLzDlCS+CnSn7O+ZlDY0PKjmCEwJbYFRA+BaXCEB
+         Xsqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jN0efcoohqKl1PIpdMiTp80DLtECdVuZLnKEeBNGgVg=;
+        b=x6gQYl8CNKTcWWfkkmsrNN6XQ+oXDts+5tnR7dxzBLryyxAQwG7Xds6lJcIW7T/JIe
+         qAaZIr9MK7CgQ5jmT6JIp0hIKxt4gllMHmcbVgwMG1yOAcWwxvnzDjl01tW7QvdRmTgn
+         +sxWDYr4hlA1XyZnRli6rUwLVFpDC5NdsKwyI53RV1L9RDOspUtj9l2/vbpRyjz+drB4
+         UXw3eySC7hiZJWEOY3FjEEZAdojy7+eGxlIzzvQLEDmpS1VeGqEX6gD2zIMtkaUJ5Par
+         PdqYESO6MOgf5gRgjKTjSVbLrY4MtsiwquLe4mzoEcxRO1TAqNGkDdcx8LQhy2PnZ8YY
+         WVgQ==
+X-Gm-Message-State: AOAM532fuX9zANeERiiL+lmNbyfvyuP+KW3LLlR0WBikGfMZpK8Q7CJL
+        qx4kpEXfxpTLywOZ9GRi8Yp9
+X-Google-Smtp-Source: ABdhPJyCpECIXEL11rXKn1XKFCDSnPX48KjkZQCzRcWGR9PQbrX7SJNHzhSoBkkkppG59q6FnXKHRg==
+X-Received: by 2002:a17:902:d504:b0:154:172:3677 with SMTP id b4-20020a170902d50400b0015401723677mr6800285plg.147.1648138990872;
+        Thu, 24 Mar 2022 09:23:10 -0700 (PDT)
+Received: from thinkpad ([27.111.75.5])
+        by smtp.gmail.com with ESMTPSA id g12-20020a63b14c000000b00384332d9026sm2983645pgp.23.2022.03.24.09.23.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Mar 2022 09:23:10 -0700 (PDT)
+Date:   Thu, 24 Mar 2022 21:53:04 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>,
         Jingoo Han <jingoohan1@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 01/25] dmaengine: dw-edma: Drop dma_slave_config.direction
- field usage
-Thread-Topic: [PATCH 01/25] dmaengine: dw-edma: Drop
- dma_slave_config.direction field usage
-Thread-Index: Adg/jC7s1tot06cvQ3KYPrTBiXTrlg==
-Date:   Thu, 24 Mar 2022 14:35:42 +0000
-Message-ID: <PAXPR04MB9186A02D1A0753A6E1000A0188199@PAXPR04MB9186.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6a48e2ab-8154-4496-9f30-08da0da39303
-x-ms-traffictypediagnostic: AM0PR0402MB3764:EE_
-x-microsoft-antispam-prvs: <AM0PR0402MB3764DA75393E4CE0671912D188199@AM0PR0402MB3764.eurprd04.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eF3qbKuq9L9kdbPIfget8FGcQigKWXv1NKhLU7pjd5tsL8EThvNNda5wX4i14X2paIftOjUcj4Ky7TH2V1ZDsIu2H53serv9JFTKnJGTJwI7RFXypEsc5OMZXNa9fHlLEulLJlLlmiInN0W3QmQ0evsdSTN8uKB4/nZDywRJwp7GIz93PYCyssQI5qCYubMT8Jcsp49Q+JI3iovuvrrS93znSjY4dU0MfzF6c7c4GN+5iF5t0CXPi4cDameTMQ9e6kt1Z/zNVUT5delTVyXeqPAE/mbunWWeWA9VA2SHRq9mksSEgZCbIBIaSZPIPFSLNhhdEgmUG24S4aHI3n894im69HOs8mMa58drrqU2stZabRh1ayrqdAd4ckVVOwOEg3Buehk0PMOc4M3cbdUGjV9tGvt0efvjLcK9YND550LNkL+boL+0ng6/oGG1kuD0O2ZVPiqNz13C/dlYJvCX04qTiBtS4MkFNyLq+dc3YSolU6Mm94ezymL8JQOYyjNkTgSk8agcjUUXgbuoewtuFzgcQcIWhoTkSk9rOMr05JjrR6PWub+IU0h7R+lh37VPYvXBFymx+kQ43xW4Oh43ywQPmtbyVlflp6ug6JWKWXhIlkbFJUym0Od5h9UHeAwXE8qOGWFpdNXgzUw0DXt4kElbp9sNXYinNlTuVQ5BoTYCJ1cBYwaHNdALmkYKJ7+Uk5Ds2NLf/S8RKrVlJVlsyAV3fZMGJ5cw6C6QO+b2F2pAuTcLZRdKDqZguMzMblil30GXp8gdqeoqxPr03qCz/ptQyzA1nmmyA9VhCFlZunA=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(7696005)(66574015)(6506007)(186003)(55236004)(53546011)(9686003)(26005)(83380400001)(4326008)(5660300002)(8676002)(52536014)(7416002)(44832011)(8936002)(2906002)(966005)(71200400001)(45080400002)(508600001)(110136005)(76116006)(64756008)(66476007)(55016003)(66556008)(66446008)(66946007)(54906003)(122000001)(316002)(38100700002)(86362001)(38070700005)(33656002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?9P9Jlc5KTQnj1pLa+HnfWYQY3tLAP9J1Y28xBCpsdR/C6pazOcorzYlUIe?=
- =?iso-8859-2?Q?eSZUp0y5OimS+kH0/BKrwp2o3kSTk6phYhZH1a15IU4Yxx0LaUeHlyP2to?=
- =?iso-8859-2?Q?07EqzbWYFG/PFUPiMvdy5fNfOXVlLDZYh7D0OV1hOx/AfTWL+e+RSSxDMY?=
- =?iso-8859-2?Q?pQThGXh0p79mMqr4QEzOKFNd/nkADDjbrqB1+Gkdf28zxx51PMtulc3wNi?=
- =?iso-8859-2?Q?OQt9Qar179+/xvtdGP5bnA6fKxOHJ+Z6495a53U2YEdi4mUA6YKssLcs7u?=
- =?iso-8859-2?Q?eEmnJ/NpXB0dVXSTInj2AjLE/+pOb5OMJMdJV0Sa0ITjsX8cSn2ffUZuaU?=
- =?iso-8859-2?Q?cdUUG/6ZWmnYv+kOoqBKDkR0efrLd6mV+4BsDKDN1ZPO7repL812ZOP8qy?=
- =?iso-8859-2?Q?sGkzPeBqmFMG62U8Mq/RswTQ1ywgMPHTsK0RfnxNsiqOxWz1AbkoBIGEvD?=
- =?iso-8859-2?Q?s1+0lnCvGR/pxXOxREVffbwoNpND1zt9s6NPS7eW+xcvQt2cx0E4k0bfrS?=
- =?iso-8859-2?Q?ZO3NhoP5Uck3rjkaJGIUUFaRDkRkewstV/hp42/zJYrFzpnr5ef/jneEQO?=
- =?iso-8859-2?Q?+BuJTHoU9VXiYzinPV+u2XcaEVrpiqsqcIe9uyW/vjCZjRtE314jn+6t3p?=
- =?iso-8859-2?Q?LjhdrbYcF4gbK0gewV3TklbpI6+Rk3965M3C6IHqLNpQSU2myaRr3JISPD?=
- =?iso-8859-2?Q?IlQ6BaFKb4pIsZQopV1aqXdgFFt8mRQDJY78/mFWMoKCgrzKr5wtSH7t5B?=
- =?iso-8859-2?Q?0dOZBrE0xDE8mGxHCkjIxOqj9tatblueHUkPLC+935NwDV+6pVk387mfJF?=
- =?iso-8859-2?Q?gE6IbtT0lQ1uNsZ7wW8eTjekB1eo7+xNrLyK2kB1nGvbZJU+EoFKOzg/Hg?=
- =?iso-8859-2?Q?rle7jyT1jCVUrYyoEjUe6svtAX3TFTn5PK6ctETBxA7OjQj8p33a1nDjUh?=
- =?iso-8859-2?Q?XrB9BZdFfdozYHDWhNhx4/HjPUKvP/QmzV7QfLq8287dzrGrs5llUtXkA0?=
- =?iso-8859-2?Q?ZaxXp+tVE39x6xWzhLTj+a5MYHPDsoacOBf47FDSQZ0oYhGJ7wt7prh8G5?=
- =?iso-8859-2?Q?A9dD0Ub20yBikvWG2+s+R7cVWlHEEU+WDHRfP/RC3FRf6TcwPdsUzuvtyJ?=
- =?iso-8859-2?Q?JtXh4hd/MC7Qq1cr51PU2hAbv9I8Qc3ZxehmxlQnS3YnCHRb+peRjZmAgo?=
- =?iso-8859-2?Q?9JhV4mS2G18STrIynPiyMtNbSFQQj7OpkXgO7bUJy4NSmput0JaNQX1qKV?=
- =?iso-8859-2?Q?QsXPZjOWWuZbC1oQSQsvzvHKHH5z6mjRtz0yOrg5dKNomeGQj4kCt4i1/n?=
- =?iso-8859-2?Q?JmtoNNaCVUlD0yUC3Qa4uH5L04KGv4wss3oshlqWGIbVzSPD/+1tdrDVWQ?=
- =?iso-8859-2?Q?E2CYSQNmf0Q1xok0Ys8/y279trgivEsfhfRKdaad2+Yn04yOwsgghcVWHF?=
- =?iso-8859-2?Q?zcV5k6Agm/2LJ3o7s326OTCL+b6gVPNhno/GkkEO6oJchhbZ4XnvGGTVjp?=
- =?iso-8859-2?Q?wM8rXx3E9GKLoA0dwNIhn/0eNedr/xmrXslQ7P1sunts8o7DXtt2QDACFQ?=
- =?iso-8859-2?Q?+FseUWcC/66OyIK/fQvsHYltcgElzwqkvNhPRS3fiLjIJG5dY6zy9mwsA9?=
- =?iso-8859-2?Q?vxhnVw9FGbZ8SxaBFcZKSFduLAciyei9iuRjlBSXOw9/IDktn5k2uu6BMt?=
- =?iso-8859-2?Q?jIhalrmwRI8BxvavxlLB+o62jp32mPiHrSUy9Xgd+sH0S2/5MoHFqFaUR0?=
- =?iso-8859-2?Q?6NUmq6zrjdVnSNrYbQVH53hKkGQ7vYDZ97ehZcHtNjfwYfQnNUwOLd+VXL?=
- =?iso-8859-2?Q?/OmkuJ3Tyg=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/25] dmaengine: dw-edma: Convert ll/dt phys-address to
+ PCIe bus/DMA address
+Message-ID: <20220324162304.GO2854@thinkpad>
+References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
+ <20220324014836.19149-6-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9186.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a48e2ab-8154-4496-9f30-08da0da39303
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2022 14:35:42.2727
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mveSLIR7JbFklfPrFd29Jr4cjlgGb6h1SKyVnz7XXnJFlkgUtWQqGl9aBkalEblqRfPIh6wT11NMDCqNbsP9qg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3764
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220324014836.19149-6-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Sent: Wednesday, March 23, 2022 8:48 PM
-> To: Gustavo Pimentel <gustavo.pimentel@synopsys.com>; Vinod Koul
-> <vkoul@kernel.org>; Jingoo Han <jingoohan1@gmail.com>; Bjorn Helgaas
-> <bhelgaas@google.com>; Frank Li <frank.li@nxp.com>; Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org>
-> Cc: Serge Semin <Sergey.Semin@baikalelectronics.ru>; Serge Semin
-> <fancer.lancer@gmail.com>; Alexey Malahov
-> <Alexey.Malahov@baikalelectronics.ru>; Pavel Parkhomenko
-> <Pavel.Parkhomenko@baikalelectronics.ru>; Lorenzo Pieralisi
-> <lorenzo.pieralisi@arm.com>; Rob Herring <robh@kernel.org>; Krzysztof
-> Wilczy=F1ski <kw@linux.com>; linux-pci@vger.kernel.org;
-> dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: [EXT] [PATCH 01/25] dmaengine: dw-edma: Drop
-> dma_slave_config.direction field usage
->=20
-> Caution: EXT Email
->=20
-> The dma_slave_config.direction field usage in the DW eDMA driver has been
-> introduced in the commit bd96f1b2f43a ("dmaengine: dw-edma: support local
-> dma device transfer semantics"). Mainly the change introduced there was
-> correct (indeed DEV_TO_MEM means using RD-channel and MEM_TO_DEV -
-> WR-channel for the case of having eDMA accessed locally from
-> CPU/Application side), but providing an additional
-> MEM_TO_MEM/DEV_TO_DEV-based semantics was quite redundant if not to say
-> potentially harmful (when it comes to removing the denoted field). First
-> of all since the dma_slave_config.direction field has been marked as
-> obsolete (see [1] and the structure dc [2]) and will be discarded in
-> future, using it especially in a non-standard way is discouraged. Secondl=
-y
-> in accordance with the commit denoted above the default
-> dw_edma_device_transfer() semantics has been changed despite what it's
-> message said. So claiming that the method was left backward compatible wa=
-s
-> wrong.
->=20
-> Anyway let's fix the problems denoted above and simplify the
-> dw_edma_device_transfer() method by dropping the parsing of the
-> DMA-channel direction field. Instead of having that implicit
-> dma_slave_config.direction field semantic we can use the recently added
-> DW_EDMA_CHIP_LOCAL flag to distinguish between the local and remote DW
-> eDMA setups thus preserving both cases support. In addition to that an
-> ASCII-figure has been added to clarify the complication out.
->=20
-> [1] Documentation/driver-api/dmaengine/provider.rst
-> [2] include/linux/dmaengine.h: dma_slave_config.direction
->=20
-> Co-developed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On Thu, Mar 24, 2022 at 04:48:16AM +0300, Serge Semin wrote:
+> In accordance with the dw_edma_region.paddr field semantics it is supposed
+> to be initialized with a memory base address visible by the DW eDMA
+> controller. If the DMA engine is embedded into the DW PCIe Host/EP
+> controller, then the address should belong to the Local CPU/Application
+> memory. If eDMA is remotely accessible across the PCIe bus via the PCIe
+> memory IOs, then the address needs to be a part of the PCIe bus memory
+> space. The later case hasn't been well covered in the corresponding
+> glue-driver. Since in general the PCIe memory space doesn't have to match
+> the CPU memory space and the pci_dev.resource[] arrays contain the
+> resources defined in the CPU memory space, a proper conversion needs to be
+> performed, otherwise either the driver won't properly work or much worse
+> the memory corruption will happen. The conversion can be done by means of
+> the pci_bus_address() method. Let's use it to retrieve the LL, DT and CSRs
+> PCIe memory ranges.
+> 
+> Note in addition to that we need to extend the dw_edma_region.paddr field
+> size. The field normally contains a memory range base address to be set in
+> the DW eDMA Linked-List pointer register or as a base address of the
+> Linked-List data buffer. In accordance with [1] the LL range is supposed
+> to be created in the Local CPU/Application memory, but depending on the DW
+> eDMA utilization the memory can be created as a part of the PCIe bus
+> address space (as in the case of the DW PCIe EP prototype kit). Thus in
+> the former case the dw_edma_region.paddr field should have the dma_addr_t
+> type, while in the later one - pci_bus_addr_t. Seeing the corresponding
+> CSRs are always 64-bits wide let's convert the dw_edma_region.paddr field
+> type to be u64 and let the client code logic to make sure it has a valid
+> address visible by the DW eDMA controller. For instance the DW eDMA PCIe
+> glue-driver initializes the field with the addresses from the PCIe bus
+> memory space.
+> 
+> [1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
+>     v.5.40a, March 2019, p.1103
+> 
+> Fixes: 41aaff2a2ac0 ("dmaengine: Add Synopsys eDMA IP PCIe glue-logic")
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
->=20
+
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+Thanks,
+Mani
+
 > ---
->=20
-> In accordance with agreement with Frank and Manivannan this patch is
-> supposed to be moved to the series:
-> Link:
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
-kern
-> el.org%2Fdmaengine%2F20220310192457.3090-1-
-> Frank.Li%40nxp.com%2F&amp;data=3D04%7C01%7CFrank.Li%40nxp.com%7C4918ae854=
-5e94
-> ab137dc08da0d386b3f%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63783683=
-32
-> 30354384%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJB=
-Ti
-> I6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=3DejkihPy4A5spPj%2BcCgZgheZXdWd=
-nvRQ
-> 52SOE0wtDqMI%3D&amp;reserved=3D0
-> in place of the patch:
-> [PATCH v5 6/9] dmaengine: dw-edma: Don't rely on the deprecated "directio=
-n"
-> member
-> Link:
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
-kern
-> el.org%2Fdmaengine%2F20220310192457.3090-7-
-> Frank.Li%40nxp.com%2F&amp;data=3D04%7C01%7CFrank.Li%40nxp.com%7C4918ae854=
-5e94
-> ab137dc08da0d386b3f%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63783683=
-32
-> 30354384%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJB=
-Ti
-> I6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=3DqedpXrMGAR9frJWydd9Q63hZDHTYf=
-%2BE
-> ScsHfIx9019M%3D&amp;reserved=3D0
-> ---
-
-Did you have extern git, so I can pull patch from it. Our Email server
-change patch's format, which cause git am failure and https://patchwork.ker=
-nel.org/ still
-have not this patches yet, or send two patches as attachment to me .=20
-
-Best regards
-Frank Li
-
->  drivers/dma/dw-edma/dw-edma-core.c | 49 +++++++++++++++++++++---------
->  1 file changed, 34 insertions(+), 15 deletions(-)
->=20
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-
-> edma-core.c
-> index 5be8a5944714..e9e32ed74aa9 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -339,21 +339,40 @@ dw_edma_device_transfer(struct dw_edma_transfer *xf=
-er)
->         if (!chan->configured)
->                 return NULL;
->=20
-> -       switch (chan->config.direction) {
-> -       case DMA_DEV_TO_MEM: /* local DMA */
-> -               if (dir =3D=3D DMA_DEV_TO_MEM && chan->dir =3D=3D EDMA_DI=
-R_READ)
-> -                       break;
-> -               return NULL;
-> -       case DMA_MEM_TO_DEV: /* local DMA */
-> -               if (dir =3D=3D DMA_MEM_TO_DEV && chan->dir =3D=3D EDMA_DI=
-R_WRITE)
-> -                       break;
-> -               return NULL;
-> -       default: /* remote DMA */
-> -               if (dir =3D=3D DMA_MEM_TO_DEV && chan->dir =3D=3D EDMA_DI=
-R_READ)
-> -                       break;
-> -               if (dir =3D=3D DMA_DEV_TO_MEM && chan->dir =3D=3D EDMA_DI=
-R_WRITE)
-> -                       break;
-> -               return NULL;
-> +       /*
-> +        * Local Root Port/End-point              Remote End-point
-> +        * +-----------------------+ PCIe bus +----------------------+
-> +        * |                       |    +-+   |                      |
-> +        * |    DEV_TO_MEM   Rx Ch <----+ +---+ Tx Ch  DEV_TO_MEM    |
-> +        * |                       |    | |   |                      |
-> +        * |    MEM_TO_DEV   Tx Ch +----+ +---> Rx Ch  MEM_TO_DEV    |
-> +        * |                       |    +-+   |                      |
-> +        * +-----------------------+          +----------------------+
-> +        *
-> +        * 1. Normal logic:
-> +        * If eDMA is embedded into the DW PCIe RP/EP and controlled from
-> the
-> +        * CPU/Application side, the Rx channel (EDMA_DIR_READ) will be
-> used
-> +        * for the device read operations (DEV_TO_MEM) and the Tx channel
-> +        * (EDMA_DIR_WRITE) - for the write operations (MEM_TO_DEV).
-> +        *
-> +        * 2. Inverted logic:
-> +        * If eDMA is embedded into a Remote PCIe EP and is controlled by
-> the
-> +        * MWr/MRd TLPs sent from the CPU's PCIe host controller, the Tx
-> +        * channel (EDMA_DIR_WRITE) will be used for the device read
-> operations
-> +        * (DEV_TO_MEM) and the Rx channel (EDMA_DIR_READ) - for the writ=
-e
-> +        * operations (MEM_TO_DEV).
-> +        *
-> +        * It is the client driver responsibility to choose a proper
-> channel
-> +        * for the DMA transfers.
-> +        */
-> +       if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
-> +               if ((chan->dir =3D=3D EDMA_DIR_READ && dir !=3D DMA_DEV_T=
-O_MEM)
-> ||
-> +                   (chan->dir =3D=3D EDMA_DIR_WRITE && dir !=3D DMA_MEM_=
-TO_DEV))
-> +                       return NULL;
-> +       } else {
-> +               if ((chan->dir =3D=3D EDMA_DIR_WRITE && dir !=3D DMA_DEV_=
-TO_MEM)
-> ||
-> +                   (chan->dir =3D=3D EDMA_DIR_READ && dir !=3D DMA_MEM_T=
-O_DEV))
-> +                       return NULL;
->         }
->=20
->         if (xfer->type =3D=3D EDMA_XFER_CYCLIC) {
-> --
+>  drivers/dma/dw-edma/dw-edma-pcie.c | 8 ++++----
+>  include/linux/dma/edma.h           | 2 +-
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> index d6b5e2463884..04c95cba1244 100644
+> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> @@ -231,7 +231,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  			return -ENOMEM;
+>  
+>  		ll_region->vaddr += ll_block->off;
+> -		ll_region->paddr = pdev->resource[ll_block->bar].start;
+> +		ll_region->paddr = pci_bus_address(pdev, ll_block->bar);
+>  		ll_region->paddr += ll_block->off;
+>  		ll_region->sz = ll_block->sz;
+>  
+> @@ -240,7 +240,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  			return -ENOMEM;
+>  
+>  		dt_region->vaddr += dt_block->off;
+> -		dt_region->paddr = pdev->resource[dt_block->bar].start;
+> +		dt_region->paddr = pci_bus_address(pdev, dt_block->bar);
+>  		dt_region->paddr += dt_block->off;
+>  		dt_region->sz = dt_block->sz;
+>  	}
+> @@ -256,7 +256,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  			return -ENOMEM;
+>  
+>  		ll_region->vaddr += ll_block->off;
+> -		ll_region->paddr = pdev->resource[ll_block->bar].start;
+> +		ll_region->paddr = pci_bus_address(pdev, ll_block->bar);
+>  		ll_region->paddr += ll_block->off;
+>  		ll_region->sz = ll_block->sz;
+>  
+> @@ -265,7 +265,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  			return -ENOMEM;
+>  
+>  		dt_region->vaddr += dt_block->off;
+> -		dt_region->paddr = pdev->resource[dt_block->bar].start;
+> +		dt_region->paddr = pci_bus_address(pdev, dt_block->bar);
+>  		dt_region->paddr += dt_block->off;
+>  		dt_region->sz = dt_block->sz;
+>  	}
+> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> index 8897f8a79b52..5abac9640a4e 100644
+> --- a/include/linux/dma/edma.h
+> +++ b/include/linux/dma/edma.h
+> @@ -18,7 +18,7 @@
+>  struct dw_edma;
+>  
+>  struct dw_edma_region {
+> -	phys_addr_t	paddr;
+> +	u64		paddr;
+>  	void __iomem	*vaddr;
+>  	size_t		sz;
+>  };
+> -- 
 > 2.35.1
-
+> 

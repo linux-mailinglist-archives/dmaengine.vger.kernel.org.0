@@ -2,52 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C4454E67F4
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Mar 2022 18:41:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E5134E67F9
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Mar 2022 18:42:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352340AbiCXRnN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 24 Mar 2022 13:43:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57230 "EHLO
+        id S1352361AbiCXRnz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 24 Mar 2022 13:43:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347299AbiCXRnM (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Mar 2022 13:43:12 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F9FBB244B
-        for <dmaengine@vger.kernel.org>; Thu, 24 Mar 2022 10:41:40 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id y10so1187020pfa.7
-        for <dmaengine@vger.kernel.org>; Thu, 24 Mar 2022 10:41:40 -0700 (PDT)
+        with ESMTP id S1352357AbiCXRnz (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Mar 2022 13:43:55 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6F7BB244B
+        for <dmaengine@vger.kernel.org>; Thu, 24 Mar 2022 10:42:22 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id b13so2653598pfv.0
+        for <dmaengine@vger.kernel.org>; Thu, 24 Mar 2022 10:42:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=dZ1u1Ug2jTMoLajJKgKdgwxi2OU0FG22PDfBsq85ol0=;
-        b=KBI1Vr3z/V2JK/heCNXmXFF9DZ5RjZirNQPJMWZZniiaB3f3eAkC4yCk0VcPUJnqUo
-         8xk5LIfABdUKpnTCEiNVE58SETv6i3BGqec9w8bWXgVZv6u2HFhBO5HzaUDDQ752rjt+
-         ls1yUT+FciwCWEF9Fb7SfABjXt53ChjaxosXJtdejWbKId/jXhM4mldx1UTKb3ij5w5E
-         874AToUWjPRBKAP3dJQ6/kiW54PuPYbEpHgNu2G541JtQYnfDUIA5xVlA9kRfTb/gek9
-         hTBP2TxTe1Q0oRuG8AURDA2v6JqvGqkH5wLYoG0WLv8LqJiFD24jyXhFoTQ/pIXqqL5C
-         EYGA==
+        bh=Ix5HG5X7RmrL9dqKstRw1McRJWsiK0E5jqwyDOBzbuM=;
+        b=xfj3Sf7SWDJmay18REWrHUEbMiiizgTKly7sMrGNxPPdCYvY9Ch3QjLZJI4gktckpC
+         UDBq7zZ/egwEHGSl9U16/DCC6mSzPcTxLERGrPNReQcGP8KwbpwxkE9ctyL+6m7kCRUp
+         ojEPFW+1z5qtCZ6SKfr1kkMYaMTb2VBGXEyUWXqCk0CzzkebLk351MDTAJIN6dE5p8NO
+         NtWuj6Sx+VHZrNtuQo+AXq2ja/yKDt7sJAo5uVJupZmS/an+vjp7WpTgu6SlgMxt/qBm
+         H8XOXfcY+dvnFgniIZPq+VYitCyD3WPgLzuKaGA5JyP8TFt+nrVfftGM57173hD94PMi
+         Jt5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=dZ1u1Ug2jTMoLajJKgKdgwxi2OU0FG22PDfBsq85ol0=;
-        b=Rfj44atK14c7Lj+sH6Z1hogWccqTIfdjsR7HODwtRZvAMPzS6RhtXFVHuxuO5vwMuU
-         JoM/Nyv5n6B2bN6a45HaMQLYclOrOJXWIUUx48jEgASTUraWBnjJudj18s+U26OPs/RF
-         9fERQzn7FWWhMl/ygtr9MYsKgbu+4TpFKcZBKLoWWtqZ8wNAFzkhY+x0BPcwtN8Q5He+
-         8yH+CYMmEey/dNZTFsv2UA/hqdlvRcs+E4D68tDaBgPayfUy4WrIs+j8deOwLdonpQy/
-         hXoi6Z5E/UejMHTm5tuQGoGao1wcwKQ8vriC8rjYQxGStYxTGIEDWWvUMhLFgCu/3wr5
-         ivwQ==
-X-Gm-Message-State: AOAM533mGCZ94cFifkQ5xipMq45EQf1FMCZp53hYwLUi/NN3xN1+YJ0Z
-        JxsvTMTrqPr544Ky/eU4+8dk
-X-Google-Smtp-Source: ABdhPJzGHUWdPrP3WcR1fluY7c1jSSIbJNvoNafacszk1Kt+//P+z7493Hs0TPdrepU3A8+TWyx5Ng==
-X-Received: by 2002:a65:61ad:0:b0:378:8f01:7674 with SMTP id i13-20020a6561ad000000b003788f017674mr4694544pgv.314.1648143699920;
-        Thu, 24 Mar 2022 10:41:39 -0700 (PDT)
+        bh=Ix5HG5X7RmrL9dqKstRw1McRJWsiK0E5jqwyDOBzbuM=;
+        b=Uz5jdnq/7ixHTiUgxy3Hc90zJWyfjIOqHkec011kTBgX4hDVCEazLAAFwo4sahNkNR
+         y9OT3Y8BGYjaZKAsrQE7MtuUK3yJrSKh9Qsqt1eLvWsS1XKoUlRBm03YJAunwbMZYkvx
+         9fVohovGimlD4Ge6AyEmGmLhzXbHQeAe9thVJVkwawYX7lfXist6XHdWVQLzpZkjSB/9
+         0Si92IbQCp4qCoJYTGXnMvQ3gaN6O0lVtDk/+TQ1QIklu7aRswuxOcxl9SMOYPNxdO6f
+         0tN+hzBD/iGx6BgZ8/I6+3etQJqHTv+vq/k5YQyOTsTYt4ADwn2hBqnhXbTV99ksPfYK
+         76/Q==
+X-Gm-Message-State: AOAM530EA1/MbtA+3gGcs05aoaIH4EtYh/Ij+xv3Kw4Cv4TCA/sU8ww/
+        wy5OVkAXD+3o85HQkAH66vlr
+X-Google-Smtp-Source: ABdhPJxiQ+OgZfcH81lzbRsE3Ak3wQ3W1on0G5tEEVL+3WsF550yVWf0drsfblSExo8Ivg5S5Q8nfw==
+X-Received: by 2002:a65:6a4a:0:b0:380:fd52:1677 with SMTP id o10-20020a656a4a000000b00380fd521677mr4731957pgu.597.1648143742395;
+        Thu, 24 Mar 2022 10:42:22 -0700 (PDT)
 Received: from thinkpad ([27.111.75.218])
-        by smtp.gmail.com with ESMTPSA id 73-20020a62194c000000b004fab3b767ccsm4436980pfz.216.2022.03.24.10.41.34
+        by smtp.gmail.com with ESMTPSA id u37-20020a056a0009a500b004f820de3dcdsm4353788pfg.9.2022.03.24.10.42.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Mar 2022 10:41:39 -0700 (PDT)
-Date:   Thu, 24 Mar 2022 23:11:32 +0530
+        Thu, 24 Mar 2022 10:42:22 -0700 (PDT)
+Date:   Thu, 24 Mar 2022 23:12:15 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
@@ -63,18 +63,17 @@ Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/25] dmaengine: dw-edma: Add PCIe bus address getter to
- the remote EP glue-driver
-Message-ID: <20220324174132.GS2854@thinkpad>
+Subject: Re: [PATCH 11/25] dmaengine: dw-edma: Drop chancnt initialization
+Message-ID: <20220324174215.GT2854@thinkpad>
 References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
- <20220324014836.19149-11-Sergey.Semin@baikalelectronics.ru>
+ <20220324014836.19149-12-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220324014836.19149-11-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20220324014836.19149-12-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,21 +81,14 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Mar 24, 2022 at 04:48:21AM +0300, Serge Semin wrote:
-> In general the Synopsys PCIe EndPoint IP prototype kit can be attached to
-> a PCIe bus with any PCIe Host controller including to the one with
-> distinctive from CPU address space. Due to that we need to make sure that
-> the source and destination addresses of the DMA-slave devices are properly
-> converted to the PCIe bus address space, otherwise the DMA transaction
-> will not only work as expected, but may cause the memory corruption with
-> subsequent system crash. Let's do that by introducing a new
-> dw_edma_pcie_address() method defined in the dw-edma-pcie.c, which will
-> perform the denoted translation by using the pcibios_resource_to_bus()
-> method.
+On Thu, Mar 24, 2022 at 04:48:22AM +0300, Serge Semin wrote:
+> DMA device drivers aren't supposed to initialize the dma_device.chancnt
+> field. It will be done by the DMA-engine core in accordance with number of
+> added virtual DMA-channels. Pre-initializing it with some value causes
+> having a wrong number of channels printed in the device summary.
 > 
-> Fixes: 41aaff2a2ac0 ("dmaengine: Add Synopsys eDMA IP PCIe glue-logic")
+> Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
 
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
@@ -104,41 +96,21 @@ Thanks,
 Mani
 
 > ---
+>  drivers/dma/dw-edma/dw-edma-core.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> Note this patch depends on the patch "dmaengine: dw-edma: Add CPU to PCIe
-> bus address translation" from this series.
-> ---
->  drivers/dma/dw-edma/dw-edma-pcie.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> index 04c95cba1244..f530bacfd716 100644
-> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> @@ -95,8 +95,23 @@ static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
->  	return pci_irq_vector(to_pci_dev(dev), nr);
->  }
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index 418b201fef67..cefa73412bf7 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -823,7 +823,6 @@ static int dw_edma_channel_setup(struct dw_edma_chip *chip, bool write,
+>  	dma->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+>  	dma->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+>  	dma->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
+> -	dma->chancnt = cnt;
 >  
-> +static u64 dw_edma_pcie_address(struct device *dev, phys_addr_t cpu_addr)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	struct pci_bus_region region;
-> +	struct resource res = {
-> +		.flags = IORESOURCE_MEM,
-> +		.start = cpu_addr,
-> +		.end = cpu_addr,
-> +	};
-> +
-> +	pcibios_resource_to_bus(pdev->bus, &region, &res);
-> +	return region.start;
-> +}
-> +
->  static const struct dw_edma_core_ops dw_edma_pcie_core_ops = {
->  	.irq_vector = dw_edma_pcie_irq_vector,
-> +	.pci_address = dw_edma_pcie_address,
->  };
->  
->  static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
+>  	/* Set DMA channel callbacks */
+>  	dma->dev = chip->dev;
 > -- 
 > 2.35.1
 > 

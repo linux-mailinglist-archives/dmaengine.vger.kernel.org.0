@@ -2,38 +2,39 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A70D4E9CBF
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Mar 2022 18:52:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F7874E9CA5
+	for <lists+dmaengine@lfdr.de>; Mon, 28 Mar 2022 18:45:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243410AbiC1QqS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 28 Mar 2022 12:46:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45174 "EHLO
+        id S243025AbiC1QqI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 28 Mar 2022 12:46:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242943AbiC1QqE (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 28 Mar 2022 12:46:04 -0400
+        with ESMTP id S242683AbiC1QqC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 28 Mar 2022 12:46:02 -0400
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7AF962251A;
-        Mon, 28 Mar 2022 09:44:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4DAA721801;
+        Mon, 28 Mar 2022 09:44:13 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 15FF11E493B;
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id BD16D1E493C;
         Thu, 24 Mar 2022 04:48:39 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 15FF11E493B
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru BD16D1E493C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baikalelectronics.ru; s=mail; t=1648086519;
-        bh=qeD0LQB5yz0tEnI7peM/retOGT3xKLiWnq9l84RaXtg=;
+        bh=phRjSo/+vSNUHm7b1Z6XFMjq89kQ6ugKnVFCikCw3QQ=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=pxMDwJ2d7YWS6glR8disDs7jCpmDaCgVA+5xJkDkOkmGxoz2qgRmveWL/Gu+8h+DS
-         PVLhOsTKdCB/8/sfAGRbN9vLfWr0naiLFzI3GpZSKHllo1KcseFSI0z5btzIEztT5D
-         3qHlEjo6fE/SDvrCCK2B9sNCaHfz1Y1UkXRXDum8=
+        b=WAML5i00dGv6ed5aqgZNQzibC7nU9u0igzV/9ydKlxS2zEPL8LEk1YnTKr4vTrLDK
+         5jL3+s2kmlL8fcq/2HNXP0lMLt3MyrC71kLQ+gwczxtqHstvcFCflGW8a1GQaA0AEW
+         xC8cYDgexTm5eKvClSM8I0zfyOCcfbom8akvTGxY=
 Received: from localhost (192.168.168.10) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Mar 2022 04:48:38 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 24 Mar 2022 04:48:39 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>,
         Jingoo Han <jingoohan1@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Alan Mikhak <alan.mikhak@sifive.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -43,9 +44,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH 01/25] dmaengine: dw-edma: Drop dma_slave_config.direction field usage
-Date:   Thu, 24 Mar 2022 04:48:12 +0300
-Message-ID: <20220324014836.19149-2-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH 02/25] dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction semantics
+Date:   Thu, 24 Mar 2022 04:48:13 +0300
+Message-ID: <20220324014836.19149-3-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -61,33 +62,60 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The dma_slave_config.direction field usage in the DW eDMA driver has been
-introduced in the commit bd96f1b2f43a ("dmaengine: dw-edma: support local
-dma device transfer semantics"). Mainly the change introduced there was
-correct (indeed DEV_TO_MEM means using RD-channel and MEM_TO_DEV -
-WR-channel for the case of having eDMA accessed locally from
-CPU/Application side), but providing an additional
-MEM_TO_MEM/DEV_TO_DEV-based semantics was quite redundant if not to say
-potentially harmful (when it comes to removing the denoted field). First
-of all since the dma_slave_config.direction field has been marked as
-obsolete (see [1] and the structure dc [2]) and will be discarded in
-future, using it especially in a non-standard way is discouraged. Secondly
-in accordance with the commit denoted above the default
-dw_edma_device_transfer() semantics has been changed despite what it's
-message said. So claiming that the method was left backward compatible was
-wrong.
+In accordance with [1, 2] the DW eDMA controller has been created to be
+part of the DW PCIe Root Port and DW PCIe End-point controllers and to
+offload the transferring of large blocks of data between application and
+remote PCIe domains leaving the system CPU free for other tasks. In the
+first case (eDMA being part of DW PCIe Root Port) the eDMA controller is
+always accessible via the CPU DBI interface and never over the PCIe wire.
+The later case is more complex. Depending on the DW PCIe End-Point IP-core
+synthesize parameters it's possible to have the eDMA registers accessible
+not only from the application CPU side, but also via mapping the eDMA CSRs
+over a dedicated end-point BAR. So based on the specifics denoted above
+the eDMA driver is supposed to support two types of the DMA controller
+setups:
+1) eDMA embedded into the DW PCIe Root Port/End-point and accessible over
+the local CPU from the application side.
+2) eDMA embedded into the DW PCIe End-point and accessible via the PCIe
+wire with MWr/MRd TLPs generated by the CPU PCIe host controller.
+Since the CPU memory resides different sides in these cases the semantics
+of the MEM_TO_DEV and DEV_TO_MEM operations is flipped with respect to the
+Tx and Rx DMA channels. So MEM_TO_DEV/DEV_TO_MEM corresponds to the Tx/Rx
+channels in setup 1) and to the Rx/Tx channels in case of setup 2).
 
-Anyway let's fix the problems denoted above and simplify the
-dw_edma_device_transfer() method by dropping the parsing of the
-DMA-channel direction field. Instead of having that implicit
-dma_slave_config.direction field semantic we can use the recently added
-DW_EDMA_CHIP_LOCAL flag to distinguish between the local and remote DW
-eDMA setups thus preserving both cases support. In addition to that an
-ASCII-figure has been added to clarify the complication out.
+The DW eDMA driver has supported the case 2) since the initial
+commit e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver") in the
+framework of the drivers/dma/dw-edma/dw-edma-pcie.c driver. The case 1)
+support was added a bit later in commit bd96f1b2f43a ("dmaengine: dw-edma:
+support local dma device transfer semantics"). Afterwards the driver was
+supposed to cover the both possible eDMA setups, but the later commit
+turned to be not fully correct. The problem was that the commit together
+with the new functionality support also changed the channel direction
+semantics in a way so the eDMA Read-channel (corresponding to the
+DMA_DEV_TO_MEM direction for the case 1.) now uses the sgl/cyclic base
+addresses as the Source addresses of the DMA-transfers and
+dma_slave_config.dst_addr as the Destination address of the DMA-transfers.
+Similarly the eDMA Write-channel (corresponding to the DMA_MEM_TO_DEV
+direction for case 1.) now utilizes dma_slave_config.src_addr as a source
+address of the DMA-transfers and sgl/cyclic base address as the
+Destination address of the DMA-transfers. This contradicts to the logic of
+the DMA-interface, which implies that DEV side is supposed to belong to
+the PCIe device memory and MEM - to the CPU/Application memory. Indeed it
+seems irrational to have the SG-list defined in the PCIe bus space, while
+expecting a contiguous buffer allocated in the CPU memory. Moreover the
+passed SG-list and cyclic DMA buffers are supposed to be mapped in a way
+so to be seen by the DW eDMA Application (CPU) interface. So in order to
+have the correct DW eDMA interface we need to invert the eDMA
+Rd/Wr-channels and DMA-slave directions semantics by selecting the src/dst
+addresses based on the DMA transfer direction instead of using the channel
+direction capability.
 
-[1] Documentation/driver-api/dmaengine/provider.rst
-[2] include/linux/dmaengine.h: dma_slave_config.direction
+[1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
+v.5.40a, March 2019, p.1092
+[2] DesignWare Cores PCI Express Controller Databook - DWC PCIe Endpoint,
+v.5.40a, March 2019, p.1189
 
+Fixes: bd96f1b2f43a ("dmaengine: dw-edma: support local dma device transfer semantics")
 Co-developed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
@@ -98,72 +126,25 @@ In accordance with agreement with Frank and Manivannan this patch is
 supposed to be moved to the series:
 Link: https://lore.kernel.org/dmaengine/20220310192457.3090-1-Frank.Li@nxp.com/
 in place of the patch:
-[PATCH v5 6/9] dmaengine: dw-edma: Don't rely on the deprecated "direction" member
-Link: https://lore.kernel.org/dmaengine/20220310192457.3090-7-Frank.Li@nxp.com/
+[PATCH v5 5/9] dmaengine: dw-edma: Fix programming the source & dest addresses for ep
+Link: https://lore.kernel.org/dmaengine/20220310192457.3090-6-Frank.Li@nxp.com/
 ---
- drivers/dma/dw-edma/dw-edma-core.c | 49 +++++++++++++++++++++---------
- 1 file changed, 34 insertions(+), 15 deletions(-)
+ drivers/dma/dw-edma/dw-edma-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index 5be8a5944714..e9e32ed74aa9 100644
+index e9e32ed74aa9..519d4b3c9fa0 100644
 --- a/drivers/dma/dw-edma/dw-edma-core.c
 +++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -339,21 +339,40 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
- 	if (!chan->configured)
- 		return NULL;
+@@ -442,7 +442,7 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+ 		chunk->ll_region.sz += burst->sz;
+ 		desc->alloc_sz += burst->sz;
  
--	switch (chan->config.direction) {
--	case DMA_DEV_TO_MEM: /* local DMA */
--		if (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ)
--			break;
--		return NULL;
--	case DMA_MEM_TO_DEV: /* local DMA */
--		if (dir == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_WRITE)
--			break;
--		return NULL;
--	default: /* remote DMA */
--		if (dir == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_READ)
--			break;
--		if (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE)
--			break;
--		return NULL;
-+	/*
-+	 * Local Root Port/End-point              Remote End-point
-+	 * +-----------------------+ PCIe bus +----------------------+
-+	 * |                       |    +-+   |                      |
-+	 * |    DEV_TO_MEM   Rx Ch <----+ +---+ Tx Ch  DEV_TO_MEM    |
-+	 * |                       |    | |   |                      |
-+	 * |    MEM_TO_DEV   Tx Ch +----+ +---> Rx Ch  MEM_TO_DEV    |
-+	 * |                       |    +-+   |                      |
-+	 * +-----------------------+          +----------------------+
-+	 *
-+	 * 1. Normal logic:
-+	 * If eDMA is embedded into the DW PCIe RP/EP and controlled from the
-+	 * CPU/Application side, the Rx channel (EDMA_DIR_READ) will be used
-+	 * for the device read operations (DEV_TO_MEM) and the Tx channel
-+	 * (EDMA_DIR_WRITE) - for the write operations (MEM_TO_DEV).
-+	 *
-+	 * 2. Inverted logic:
-+	 * If eDMA is embedded into a Remote PCIe EP and is controlled by the
-+	 * MWr/MRd TLPs sent from the CPU's PCIe host controller, the Tx
-+	 * channel (EDMA_DIR_WRITE) will be used for the device read operations
-+	 * (DEV_TO_MEM) and the Rx channel (EDMA_DIR_READ) - for the write
-+	 * operations (MEM_TO_DEV).
-+	 *
-+	 * It is the client driver responsibility to choose a proper channel
-+	 * for the DMA transfers.
-+	 */
-+	if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
-+		if ((chan->dir == EDMA_DIR_READ && dir != DMA_DEV_TO_MEM) ||
-+		    (chan->dir == EDMA_DIR_WRITE && dir != DMA_MEM_TO_DEV))
-+			return NULL;
-+	} else {
-+		if ((chan->dir == EDMA_DIR_WRITE && dir != DMA_DEV_TO_MEM) ||
-+		    (chan->dir == EDMA_DIR_READ && dir != DMA_MEM_TO_DEV))
-+			return NULL;
- 	}
- 
- 	if (xfer->type == EDMA_XFER_CYCLIC) {
+-		if (chan->dir == EDMA_DIR_WRITE) {
++		if (dir == DMA_DEV_TO_MEM) {
+ 			burst->sar = src_addr;
+ 			if (xfer->type == EDMA_XFER_CYCLIC) {
+ 				burst->dar = xfer->xfer.cyclic.paddr;
 -- 
 2.35.1
 

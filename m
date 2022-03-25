@@ -2,52 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 674BF4E6F15
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Mar 2022 08:41:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A5064E6F6A
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Mar 2022 09:28:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243575AbiCYHnM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 25 Mar 2022 03:43:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57790 "EHLO
+        id S1354443AbiCYIaX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 25 Mar 2022 04:30:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355277AbiCYHnI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Mar 2022 03:43:08 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D93CDCA0C7
-        for <dmaengine@vger.kernel.org>; Fri, 25 Mar 2022 00:41:34 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id s8so5798845pfk.12
-        for <dmaengine@vger.kernel.org>; Fri, 25 Mar 2022 00:41:34 -0700 (PDT)
+        with ESMTP id S1354356AbiCYIaW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Mar 2022 04:30:22 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5EC315A38
+        for <dmaengine@vger.kernel.org>; Fri, 25 Mar 2022 01:28:47 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id c11so5853995pgu.11
+        for <dmaengine@vger.kernel.org>; Fri, 25 Mar 2022 01:28:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=z6svh2R4vFwE8Zw/glJswc4sMNhq4MHc9rrhwP+u20A=;
-        b=HamqelnytmFJzve82M+8uzqIZAM8/ypZ/hSqWrJM2D3H8gYeDJdy8z5rQjruVmCkg4
-         o35a4qpR1MvMCJ7dund2tOT5luyG5Bv7oJNntU19A3Z9rXyO0ByTLG8rEdWZXt0ID8s0
-         7S+VeDNZwR/Mjudz2xb2EdKfEtM10RWevSf6J1q8xUWm3Af4zGrMPuOuCHG8aVTpKyC1
-         /DS7d5Z2zFT4fFxsgASZj9S0Lak4YC9rzbtLad4oBGmqNodJbxSGhg4bR1fWOFGOP5XC
-         FiuMMTMu2NcDuTzHxK2SG7vqRKAGIMddPJP6s8hMQlDDKfhbWchzoCVfzMlLtVk4xrjb
-         PN3g==
+        bh=QnCTPLNWY2CE85GSrCxeXZhpb0Hof6FDkcRGjoXPIbg=;
+        b=XJc7cg2F9E8+S/WMSrBMsV5kJJbpF2AdbacOusAT/GVUEZnlqv2vCWMowPbrX/pFGZ
+         4ylxb+3ynQUkR9qKF2qrulcImYyJaB9pYJWU67ouX3ldU++NvyhoaZB5whYF8M/BXrSX
+         GNTZUWTYc55W+2Bh0Uls4HhNpz6uwrLhLxSh4n1hwYNmEpgSVbhj8Reg0Nu80ReI2IBU
+         iwALEkWjTHAB2wfcZ9yzUr2BIEohukCjkMYFKI4BfzJrFdUNgln5rNJQVEwIeSy1dSD/
+         z10/hebnmAP4ha5vxOMtXyoJAhtpXFUw+7CwXTe9uY+QkOK+dqTLNN2cJUFcq++GR0mg
+         wnwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=z6svh2R4vFwE8Zw/glJswc4sMNhq4MHc9rrhwP+u20A=;
-        b=At1L7+XJkgfkopFLeY4IWEDqZidD/CEAgBYfwVCh+knR7/UDPYX8pPH+w5r0f4PUwu
-         vPK3Vu16tmmMMUbUnhCg1fj6c/M9DQHr4w2EqYzTJtod0wbPlnvbNA/oQKWQvaRaGxDj
-         2wgvmZbG2uCIYHhmf72FQYiZo9kvlURdrZxbY0+ceNWzczm5ozZDWjns0wkCawZqu97v
-         21Was0SXc1lxtLH8tt7AY/krowtcLuaR9GaV/UGWsvXvVec9mWsUA1RB8RskQksaGWmq
-         tiQlQgdNtIvXVquT1Ftu311qSyJ8uVI9jMlF/hJ11JQyRLBUvQ/E8wdwOmJZLBRfPcde
-         pLpQ==
-X-Gm-Message-State: AOAM533KQ1IroN1nVYgzFdUyCLCOcADx2+0m9mIykixFOKbLXhw241Ul
-        uMNYemI8A6IwwAx2yxVUOZza
-X-Google-Smtp-Source: ABdhPJzvYGPL98D0FkGBYcmVjS9mreEr/lPGokYsim9pd8Gtt78QQ3171eeifStmY6CKvGw1/vymyw==
-X-Received: by 2002:a63:801:0:b0:382:a089:59d3 with SMTP id 1-20020a630801000000b00382a08959d3mr6990246pgi.350.1648194094355;
-        Fri, 25 Mar 2022 00:41:34 -0700 (PDT)
+        bh=QnCTPLNWY2CE85GSrCxeXZhpb0Hof6FDkcRGjoXPIbg=;
+        b=0JbmtvBCWVoyQI5S9ZfWFLyAIjAOJ3uaivaCsCubA4pwds9eGQNqWPJ8RR/UsFZdk2
+         zvsxPsIQvhY+z+fHWKUKOuApxCEaaKQnf5Fv8HAMrwdFPsFgLQLBt33HwgVo1a5+DM7+
+         YpTq0QRGbPgqAdTRwUUvZxemq6AUaOuaPIc/zSb4GppDKHriSXWghFY0hW0UNZiEK/jv
+         I2fUpQgJrfZFxzPHEC1kS3QPfctMJEs5S0aNQ/zOww5p2tPfN+YkLxt4Zy9EJm6Puekd
+         hgLOMOFY7/N8795rbchO290seWMjJnCwU1KJii1tgkoxj/yizRJPovARyWES3aXHU6rN
+         WjFQ==
+X-Gm-Message-State: AOAM531PuxyEsQfxr7PtEQbip7DpeP2Pyd6Y0lp9Pd1/YM3EqRwMRjzE
+        jdlCEmECxuj00aKztFURPP0Q
+X-Google-Smtp-Source: ABdhPJw6/aHo2KgPyGlIO4oys1ILiHW2aeWOmTwIIsB7j25OdjYT49hvBYfAiL4SjbE33qCCbAwliw==
+X-Received: by 2002:aa7:9110:0:b0:4fa:e388:af57 with SMTP id 16-20020aa79110000000b004fae388af57mr8776301pfh.1.1648196927297;
+        Fri, 25 Mar 2022 01:28:47 -0700 (PDT)
 Received: from thinkpad ([27.111.75.218])
-        by smtp.gmail.com with ESMTPSA id b1-20020a17090aa58100b001bcb7bad374sm11585015pjq.17.2022.03.25.00.41.28
+        by smtp.gmail.com with ESMTPSA id o14-20020a056a0015ce00b004fab49cd65csm6398165pfu.205.2022.03.25.01.28.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Mar 2022 00:41:34 -0700 (PDT)
-Date:   Fri, 25 Mar 2022 13:11:26 +0530
+        Fri, 25 Mar 2022 01:28:46 -0700 (PDT)
+Date:   Fri, 25 Mar 2022 13:58:40 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
@@ -63,15 +63,14 @@ Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 19/25] dmaengine: dw-edma: Use DMA-engine device DebugFS
- subdirectory
-Message-ID: <20220325074126.GG4675@thinkpad>
+Subject: Re: [PATCH 20/25] dmaengine: dw-edma: Use non-atomic io-64 methods
+Message-ID: <20220325082840.GH4675@thinkpad>
 References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
- <20220324014836.19149-20-Sergey.Semin@baikalelectronics.ru>
+ <20220324014836.19149-21-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220324014836.19149-20-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20220324014836.19149-21-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
@@ -82,137 +81,197 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Mar 24, 2022 at 04:48:30AM +0300, Serge Semin wrote:
-> Since all DW eDMA read and write channels are now installed in a framework
-> of a single DMA-engine device, we can freely move all the DW eDMA-specific
-> DebugFS nodes into a ready-to-use DMA-engine DebugFS subdirectory. It's
-> created during the DMA-device registration and can be found in the
-> dma_device.dbg_dev_root field.
+On Thu, Mar 24, 2022 at 04:48:31AM +0300, Serge Semin wrote:
+> Instead of splitting the 64-bits IOs up into two 32-bits ones it's
+> possible to use an available set of the non-atomic readq/writeq methods
+> implemented exactly for such cases. They are defined in the dedicated
+> header files io-64-nonatomic-lo-hi.h/io-64-nonatomic-hi-lo.h. So in case
+> if the 64-bits readq/writeq methods are unavailable on some platforms at
+> consideration, the corresponding drivers can have any of these headers
+> included and stop locally re-implementing the 64-bits IO accessors taking
+> into account the non-atomic nature of the included methods. Let's do that
+> in the DW eDMA driver too. Note by doing so we can discard the
+> CONFIG_64BIT config ifdefs from the code. Also note that if a platform
+> doesn't support 64-bit DBI IOs then the corresponding accessors will just
+> directly call the lo_hi_readq()/lo_hi_writeq() methods.
 > 
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> ---
+>  drivers/dma/dw-edma/dw-edma-v0-core.c | 71 +++++++++------------------
+>  1 file changed, 24 insertions(+), 47 deletions(-)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> index 6b303d5a6b2a..ebb860e19c75 100644
+> --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> @@ -8,6 +8,8 @@
+>  
+>  #include <linux/bitfield.h>
+>  
+> +#include <linux/io-64-nonatomic-lo-hi.h>
+> +
+>  #include "dw-edma-core.h"
+>  #include "dw-edma-v0-core.h"
+>  #include "dw-edma-v0-regs.h"
+> @@ -53,8 +55,6 @@ static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
+>  		SET_32(dw, rd_##name, value);		\
+>  	} while (0)
+>  
+> -#ifdef CONFIG_64BIT
+> -
+>  #define SET_64(dw, name, value)				\
+>  	writeq(value, &(__dw_regs(dw)->name))
+>  
+> @@ -80,8 +80,6 @@ static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
+>  		SET_64(dw, rd_##name, value);		\
+>  	} while (0)
+>  
+> -#endif /* CONFIG_64BIT */
+> -
+>  #define SET_COMPAT(dw, name, value)			\
+>  	writel(value, &(__dw_regs(dw)->type.unroll.name))
+>  
+> @@ -164,14 +162,13 @@ static inline u32 readl_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+>  #define SET_LL_32(ll, value) \
+>  	writel(value, ll)
+>  
+> -#ifdef CONFIG_64BIT
+> -
+>  static inline void writeq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+>  			     u64 value, void __iomem *addr)
+>  {
+> +	unsigned long flags;
+> +
+>  	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY) {
+>  		u32 viewport_sel;
+> -		unsigned long flags;
+>  
+>  		raw_spin_lock_irqsave(&dw->lock, flags);
+>  
+> @@ -181,22 +178,25 @@ static inline void writeq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+>  
+>  		writel(viewport_sel,
+>  		       &(__dw_regs(dw)->type.legacy.viewport_sel));
+> +	}
+> +
+> +	if (dw->chip->flags & DW_EDMA_CHIP_32BIT_DBI)
+> +		lo_hi_writeq(value, addr);
+> +	else
+>  		writeq(value, addr);
+>  
+> +	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY)
+>  		raw_spin_unlock_irqrestore(&dw->lock, flags);
+> -	} else {
+> -		writeq(value, addr);
+> -	}
+>  }
+>  
+>  static inline u64 readq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+>  			   const void __iomem *addr)
+>  {
+> -	u32 value;
+> +	unsigned long flags;
+> +	u64 value;
+>  
+>  	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY) {
+>  		u32 viewport_sel;
+> -		unsigned long flags;
+>  
+>  		raw_spin_lock_irqsave(&dw->lock, flags);
+>  
+> @@ -206,12 +206,15 @@ static inline u64 readq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+>  
+>  		writel(viewport_sel,
+>  		       &(__dw_regs(dw)->type.legacy.viewport_sel));
+> +	}
+> +
+> +	if (dw->chip->flags & DW_EDMA_CHIP_32BIT_DBI)
+> +		value = lo_hi_readq(addr);
+> +	else
+>  		value = readq(addr);
+>  
+> +	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY)
+>  		raw_spin_unlock_irqrestore(&dw->lock, flags);
+> -	} else {
+> -		value = readq(addr);
+> -	}
+>  
+>  	return value;
+>  }
+> @@ -225,8 +228,6 @@ static inline u64 readq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+>  #define SET_LL_64(ll, value) \
+>  	writeq(value, ll)
+>  
+> -#endif /* CONFIG_64BIT */
+> -
+>  /* eDMA management callbacks */
+>  void dw_edma_v0_core_off(struct dw_edma *dw)
+>  {
+> @@ -325,19 +326,10 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
+>  		/* Transfer size */
+>  		SET_LL_32(&lli[i].transfer_size, child->sz);
+>  		/* SAR */
+> -		#ifdef CONFIG_64BIT
+> -			SET_LL_64(&lli[i].sar.reg, child->sar);
+> -		#else /* CONFIG_64BIT */
+> -			SET_LL_32(&lli[i].sar.lsb, lower_32_bits(child->sar));
+> -			SET_LL_32(&lli[i].sar.msb, upper_32_bits(child->sar));
+> -		#endif /* CONFIG_64BIT */
+> +		SET_LL_64(&lli[i].sar.reg, child->sar);
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+This macro still uses writeq(), that's not available on 32bit platforms.
+Am I missing anything?
 
 Thanks,
 Mani
 
-> ---
->  drivers/dma/dw-edma/dw-edma-core.c       |  3 ---
->  drivers/dma/dw-edma/dw-edma-core.h       |  3 ---
->  drivers/dma/dw-edma/dw-edma-v0-core.c    |  5 -----
->  drivers/dma/dw-edma/dw-edma-v0-core.h    |  1 -
->  drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 18 ++++--------------
->  drivers/dma/dw-edma/dw-edma-v0-debugfs.h |  5 -----
->  6 files changed, 4 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> index a391e44da039..bc530f0a2468 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -1045,9 +1045,6 @@ int dw_edma_remove(struct dw_edma_chip *chip)
->  		list_del(&chan->vc.chan.device_node);
+>  		/* DAR */
+> -		#ifdef CONFIG_64BIT
+> -			SET_LL_64(&lli[i].dar.reg, child->dar);
+> -		#else /* CONFIG_64BIT */
+> -			SET_LL_32(&lli[i].dar.lsb, lower_32_bits(child->dar));
+> -			SET_LL_32(&lli[i].dar.msb, upper_32_bits(child->dar));
+> -		#endif /* CONFIG_64BIT */
+> +		SET_LL_64(&lli[i].dar.reg, child->dar);
+> +
+>  		i++;
 >  	}
 >  
-> -	/* Turn debugfs off */
-> -	dw_edma_v0_core_debugfs_off(chip);
-> -
->  	return 0;
+> @@ -349,12 +341,7 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
+>  	/* Channel control */
+>  	SET_LL_32(&llp->control, control);
+>  	/* Linked list */
+> -	#ifdef CONFIG_64BIT
+> -		SET_LL_64(&llp->llp.reg, chunk->ll_region.paddr);
+> -	#else /* CONFIG_64BIT */
+> -		SET_LL_32(&llp->llp.lsb, lower_32_bits(chunk->ll_region.paddr));
+> -		SET_LL_32(&llp->llp.msb, upper_32_bits(chunk->ll_region.paddr));
+> -	#endif /* CONFIG_64BIT */
+> +	SET_LL_64(&llp->llp.reg, chunk->ll_region.paddr);
 >  }
->  EXPORT_SYMBOL_GPL(dw_edma_remove);
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-> index ec9f84a857d1..980adb079182 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.h
-> +++ b/drivers/dma/dw-edma/dw-edma-core.h
-> @@ -110,9 +110,6 @@ struct dw_edma {
->  	raw_spinlock_t			lock;		/* Only for legacy */
 >  
->  	struct dw_edma_chip             *chip;
-> -#ifdef CONFIG_DEBUG_FS
-> -	struct dentry			*debugfs;
-> -#endif /* CONFIG_DEBUG_FS */
->  };
->  
->  struct dw_edma_sg {
-> diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> index 013d9a9cb991..6b303d5a6b2a 100644
-> --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> @@ -511,8 +511,3 @@ void dw_edma_v0_core_debugfs_on(struct dw_edma_chip *chip)
->  {
->  	dw_edma_v0_debugfs_on(chip);
->  }
-> -
-> -void dw_edma_v0_core_debugfs_off(struct dw_edma_chip *chip)
-> -{
-> -	dw_edma_v0_debugfs_off(chip);
-> -}
-> diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.h b/drivers/dma/dw-edma/dw-edma-v0-core.h
-> index 2afa626b8300..43e01844375a 100644
-> --- a/drivers/dma/dw-edma/dw-edma-v0-core.h
-> +++ b/drivers/dma/dw-edma/dw-edma-v0-core.h
-> @@ -23,6 +23,5 @@ void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first);
->  int dw_edma_v0_core_device_config(struct dw_edma_chan *chan);
->  /* eDMA debug fs callbacks */
->  void dw_edma_v0_core_debugfs_on(struct dw_edma_chip *chip);
-> -void dw_edma_v0_core_debugfs_off(struct dw_edma_chip *chip);
->  
->  #endif /* _DW_EDMA_V0_CORE_H */
-> diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> index 353269a3680b..319a3c790dc4 100644
-> --- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> +++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> @@ -268,7 +268,7 @@ static void dw_edma_debugfs_regs(struct dw_edma *dw)
->  	struct dentry *regs_dir;
->  	int nr_entries;
->  
-> -	regs_dir = debugfs_create_dir(REGISTERS_STR, dw->debugfs);
-> +	regs_dir = debugfs_create_dir(REGISTERS_STR, dw->dma.dbg_dev_root);
->  
->  	nr_entries = ARRAY_SIZE(debugfs_regs);
->  	dw_edma_debugfs_create_x32(dw, debugfs_regs, nr_entries, regs_dir);
-> @@ -284,19 +284,9 @@ void dw_edma_v0_debugfs_on(struct dw_edma_chip *chip)
->  	if (!debugfs_initialized())
->  		return;
->  
-> -	dw->debugfs = debugfs_create_dir(dw->name, NULL);
-> -
-> -	debugfs_create_u32("mf", 0444, dw->debugfs, &dw->chip->mf);
-> -	debugfs_create_u16("wr_ch_cnt", 0444, dw->debugfs, &dw->wr_ch_cnt);
-> -	debugfs_create_u16("rd_ch_cnt", 0444, dw->debugfs, &dw->rd_ch_cnt);
-> +	debugfs_create_u32("mf", 0444, dw->dma.dbg_dev_root, &dw->chip->mf);
-> +	debugfs_create_u16("wr_ch_cnt", 0444, dw->dma.dbg_dev_root, &dw->wr_ch_cnt);
-> +	debugfs_create_u16("rd_ch_cnt", 0444, dw->dma.dbg_dev_root, &dw->rd_ch_cnt);
->  
->  	dw_edma_debugfs_regs(dw);
->  }
-> -
-> -void dw_edma_v0_debugfs_off(struct dw_edma_chip *chip)
-> -{
-> -	struct dw_edma *dw = chip->dw;
-> -
-> -	debugfs_remove_recursive(dw->debugfs);
-> -	dw->debugfs = NULL;
-> -}
-> diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.h b/drivers/dma/dw-edma/dw-edma-v0-debugfs.h
-> index d0ff25a9ea5c..eb11802c2b76 100644
-> --- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.h
-> +++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.h
-> @@ -13,15 +13,10 @@
->  
->  #ifdef CONFIG_DEBUG_FS
->  void dw_edma_v0_debugfs_on(struct dw_edma_chip *chip);
-> -void dw_edma_v0_debugfs_off(struct dw_edma_chip *chip);
->  #else
->  static inline void dw_edma_v0_debugfs_on(struct dw_edma_chip *chip)
->  {
->  }
-> -
-> -static inline void dw_edma_v0_debugfs_off(struct dw_edma_chip *chip)
-> -{
-> -}
->  #endif /* CONFIG_DEBUG_FS */
->  
->  #endif /* _DW_EDMA_V0_DEBUG_FS_H */
+>  void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+> @@ -417,18 +404,8 @@ void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+>  		SET_CH_32(dw, chan->dir, chan->id, ch_control1,
+>  			  (DW_EDMA_V0_CCS | DW_EDMA_V0_LLE));
+>  		/* Linked list */
+> -		if ((chan->dw->chip->flags & DW_EDMA_CHIP_32BIT_DBI) ||
+> -		    !IS_ENABLED(CONFIG_64BIT)) {
+> -			SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
+> -				  lower_32_bits(chunk->ll_region.paddr));
+> -			SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+> -				  upper_32_bits(chunk->ll_region.paddr));
+> -		} else {
+> -		#ifdef CONFIG_64BIT
+> -			SET_CH_64(dw, chan->dir, chan->id, llp.reg,
+> -				  chunk->ll_region.paddr);
+> -		#endif
+> -		}
+> +		SET_CH_64(dw, chan->dir, chan->id, llp.reg,
+> +			  chunk->ll_region.paddr);
+>  	}
+>  	/* Doorbell */
+>  	SET_RW_32(dw, chan->dir, doorbell,
 > -- 
 > 2.35.1
 > 

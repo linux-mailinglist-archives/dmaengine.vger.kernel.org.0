@@ -2,79 +2,60 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 850E94E7C19
-	for <lists+dmaengine@lfdr.de>; Sat, 26 Mar 2022 01:21:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D361D4E7D1F
+	for <lists+dmaengine@lfdr.de>; Sat, 26 Mar 2022 01:22:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230430AbiCYTka (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 25 Mar 2022 15:40:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44420 "EHLO
+        id S233259AbiCYVMj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 25 Mar 2022 17:12:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232774AbiCYTj0 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Mar 2022 15:39:26 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3CB93F9D7F
-        for <dmaengine@vger.kernel.org>; Fri, 25 Mar 2022 12:18:43 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id o3-20020a17090a3d4300b001c6bc749227so9186170pjf.1
-        for <dmaengine@vger.kernel.org>; Fri, 25 Mar 2022 12:18:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9q8qzRGX/I6ULeWXUH1e7URpHS7xgWEpM1Dcqq2f2Xg=;
-        b=VIV6EOoGovRECd7Q8Je2FHkHsxmfxfcDtmMxPiDEasKoLYO96QTKdfBLwUgp4vZCNZ
-         2SwHSNRvJ8kCbAb8QKH2mdUGcl8pmxq6nJe3NtKvRP1XtIBVd9I+vzOFlWHlMTDzexZs
-         LHTZEy8FMgc/LTFQG6+yzNPO7/dTk4b6tEMy2tUaYYpvbfKVyozycGNF14F458ciO/qA
-         Hudl/qVK/l+/4P+MuE06vNQPOew6KZHRy2ftPiWVgbCx06l0nPLFNpXrKkM6yB52h/G4
-         FzEW45C6V2FPjEzULfGPQeAOihyjCLvEd8wB05ntr660JJyqTjERwUpgDwQogNUEvHho
-         ICTA==
+        with ESMTP id S231745AbiCYVMi (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Mar 2022 17:12:38 -0400
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AD731FF412;
+        Fri, 25 Mar 2022 14:11:03 -0700 (PDT)
+Received: by mail-oi1-f174.google.com with SMTP id w127so9487607oig.10;
+        Fri, 25 Mar 2022 14:11:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=9q8qzRGX/I6ULeWXUH1e7URpHS7xgWEpM1Dcqq2f2Xg=;
-        b=1LJRqknZZ2Zhg82vwA3jNmO5eEvrRaRJ/oske4x/h2ZVbIkF8IIm7KL7LenL2esXf8
-         bUHEK7mzKwSsQb5WdPUGc/VKLjN3OR2ffhPxjyNLnkDCT/jGexq9/tZiBiY0YR9/pxrY
-         0mDE9tRiN8vHw48xjBAcgP0sD5YlgqklIVXLJSrFWgK0a349uLH/rMqJDFJ5DovXagOV
-         DKKJLnllTNZDDq+WT1Y/WzLZnHndvF912EhFKXsxz7p/eUY1VnDU2bpVJ4kVGx3Yc/gb
-         sX1FfcMqJYml4Z71XOCRn1jDDTUBsDDcMWuuirwYW22GsTwovLiTA+Fe0CXZC67oo4w/
-         ajKQ==
-X-Gm-Message-State: AOAM530jFsVHH/Feobb2S6rBiUDuFav1tkPwqfZBTY4sjUStkSzL9L04
-        ztmj9cipa+jbt2wmCRLMZafx09olMtb2
-X-Google-Smtp-Source: ABdhPJyjChuXch/nm5TN/atOUvcKrkFix1U4yQq6fMXElZzZXO0h/H5Tjb6RR0rnZEKwEglcxb4Jhg==
-X-Received: by 2002:a17:902:ea04:b0:154:54f0:172b with SMTP id s4-20020a170902ea0400b0015454f0172bmr13097636plg.149.1648232110725;
-        Fri, 25 Mar 2022 11:15:10 -0700 (PDT)
-Received: from thinkpad ([117.193.209.11])
-        by smtp.gmail.com with ESMTPSA id v8-20020a056a00148800b004fa9bd7ddc9sm7674093pfu.113.2022.03.25.11.15.05
+        bh=wXvBLN2YPI/f+mwgNpVUSPw3vc7vaslW8j6BkDAkPkw=;
+        b=5yVFPYFVS/tIzDi0a9ZxGo5qJfpMOsEpodTqe7HVQb77GpyQCti0jT0NIGDNA6LoHQ
+         dFxli7rK6VXnwjqNRNpg3zv9vACIdfHArhvWNPVqzkmTwQ73au+ylEfD8om8qsbnHK1e
+         cWYXuMzNMn9dIy2kceK1oEKCUrfI3ms9KfHkkERZa/1/jit65VYQxOI6mIgukZYxg4A4
+         m+DFGPEvPpSPDjCf0jwoMdd8ytTrbQ3a2IPgOsifuv+pDSx92qPLZtwlaGVb/v+2gpCm
+         mD/PFOkeUvHKJS5AcwgyA7JL0M92TfScdHrbqUUnkQcBUgjXAsOpot69l1dg80bpHyq9
+         815g==
+X-Gm-Message-State: AOAM533lqbX31IXv5s0k3N2/ktd4BN8dUKh90tQhnh3SkBsWq4XoBLf3
+        u6nz2qIeuer8z7SChl1oow==
+X-Google-Smtp-Source: ABdhPJz/WMdnAOINviqJND5zDMeL1o27zVTXARwz/Cw5GDE6nIi94HXm4B8MMoxqz03bNIsAqu/rNQ==
+X-Received: by 2002:a05:6808:9b9:b0:2ef:7562:1586 with SMTP id e25-20020a05680809b900b002ef75621586mr6372651oig.261.1648242662763;
+        Fri, 25 Mar 2022 14:11:02 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id c26-20020a4ae25a000000b0031c268c5436sm3028104oot.16.2022.03.25.14.11.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Mar 2022 11:15:10 -0700 (PDT)
-Date:   Fri, 25 Mar 2022 23:45:03 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 24/25] dmaengine: dw-edma: Skip cleanup procedure if no
- private data found
-Message-ID: <20220325181503.GB12218@thinkpad>
-References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
- <20220324014836.19149-25-Sergey.Semin@baikalelectronics.ru>
+        Fri, 25 Mar 2022 14:11:01 -0700 (PDT)
+Received: (nullmailer pid 460214 invoked by uid 1000);
+        Fri, 25 Mar 2022 21:11:01 -0000
+Date:   Fri, 25 Mar 2022 16:11:01 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Olivier Dautricourt <olivier.dautricourt@orolia.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stefan Roese <sr@denx.de>
+Subject: Re: [PATCH 2/2] dt-bindings: altr,msgdma: update my email address
+Message-ID: <Yj4v5c3nTdOhgyU7@robh.at.kernel.org>
+References: <85c4174fa162bd946ccf3e08dcfc9b83cfe69b5c.1647539776.git.olivier.dautricourt@orolia.com>
+ <dc3decf1dae172c688017bd3ada2ad2b7d060c1e.1647539776.git.olivier.dautricourt@orolia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220324014836.19149-25-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+In-Reply-To: <dc3decf1dae172c688017bd3ada2ad2b7d060c1e.1647539776.git.olivier.dautricourt@orolia.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,40 +63,13 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Mar 24, 2022 at 04:48:35AM +0300, Serge Semin wrote:
-> DW eDMA driver private data is preserved in the passed DW eDMA chip info
-> structure. If either probe procedure failed or for some reason the passed
-> info object doesn't have private data pointer initialized we need to halt
-> the DMA device cleanup procedure in order to prevent possible system
-> crashes.
+On Thu, 17 Mar 2022 18:56:56 +0100, Olivier Dautricourt wrote:
+> This email should now be used to contact me.
 > 
-
-How come remove() could happen when probe() failed? If you hit this issue then
-something else is utterly going wrong.
-
-Thanks,
-Mani
-
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Signed-off-by: Olivier Dautricourt <olivier.dautricourt@orolia.com>
 > ---
->  drivers/dma/dw-edma/dw-edma-core.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  Documentation/devicetree/bindings/dma/altr,msgdma.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> index ca5cd7c99571..b932682a8ba8 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -1030,6 +1030,10 @@ int dw_edma_remove(struct dw_edma_chip *chip)
->  	struct dw_edma *dw = chip->dw;
->  	int i;
->  
-> +	/* Skip removal if no private data found */
-> +	if (!dw)
-> +		return -ENODEV;
-> +
->  	/* Disable eDMA */
->  	dw_edma_v0_core_off(dw);
->  
-> -- 
-> 2.35.1
-> 
+
+Acked-by: Rob Herring <robh@kernel.org>

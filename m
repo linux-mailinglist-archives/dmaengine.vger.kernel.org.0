@@ -2,30 +2,30 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E3BC4E9559
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Mar 2022 13:40:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8A554E9564
+	for <lists+dmaengine@lfdr.de>; Mon, 28 Mar 2022 13:40:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241900AbiC1Ll0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 28 Mar 2022 07:41:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56056 "EHLO
+        id S241748AbiC1Lll (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 28 Mar 2022 07:41:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243489AbiC1Lge (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 28 Mar 2022 07:36:34 -0400
+        with ESMTP id S243517AbiC1Lgg (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 28 Mar 2022 07:36:36 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B45DF6A
-        for <dmaengine@vger.kernel.org>; Mon, 28 Mar 2022 04:28:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6F3B60E3
+        for <dmaengine@vger.kernel.org>; Mon, 28 Mar 2022 04:28:21 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <sha@pengutronix.de>)
-        id 1nYnXi-0003SM-Gx; Mon, 28 Mar 2022 13:28:14 +0200
+        id 1nYnXj-0003Ta-6O; Mon, 28 Mar 2022 13:28:15 +0200
 Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <sha@pengutronix.de>)
-        id 1nYnXe-003ZlU-Ia; Mon, 28 Mar 2022 13:28:13 +0200
+        id 1nYnXf-003Zlu-Bo; Mon, 28 Mar 2022 13:28:14 +0200
 Received: from sha by dude02.red.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <sha@pengutronix.de>)
-        id 1nYnXd-006bz0-MV; Mon, 28 Mar 2022 13:28:09 +0200
+        id 1nYnXd-006bz3-N0; Mon, 28 Mar 2022 13:28:09 +0200
 From:   Sascha Hauer <s.hauer@pengutronix.de>
 To:     alsa-devel@alsa-project.org
 Cc:     Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
@@ -33,9 +33,9 @@ Cc:     Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
         Vinod Koul <vkoul@kernel.org>,
         NXP Linux Team <linux-imx@nxp.com>,
         dmaengine@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH v2 16/19] ASoC: fsl_micfil: drop unused include
-Date:   Mon, 28 Mar 2022 13:27:41 +0200
-Message-Id: <20220328112744.1575631-17-s.hauer@pengutronix.de>
+Subject: [PATCH v2 17/19] ASoC: fsl_micfil: drop only once used defines
+Date:   Mon, 28 Mar 2022 13:27:42 +0200
+Message-Id: <20220328112744.1575631-18-s.hauer@pengutronix.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220328112744.1575631-1-s.hauer@pengutronix.de>
 References: <20220328112744.1575631-1-s.hauer@pengutronix.de>
@@ -54,26 +54,40 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The micfil driver doesn't use anything from imx-pcm.h. Drop its
-inclusion.
+FSL_MICFIL_RATES and FSL_MICFIL_FORMATS is only used once. Drop
+the unnecesary indirection and use SNDRV_PCM_RATE_8000_48000 and
+SNDRV_PCM_FMTBIT_S16_LE directly.
 
 Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 ---
- sound/soc/fsl/fsl_micfil.c | 1 -
- 1 file changed, 1 deletion(-)
+ sound/soc/fsl/fsl_micfil.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/sound/soc/fsl/fsl_micfil.c b/sound/soc/fsl/fsl_micfil.c
-index e28a2e2ba5c97..f7742a6e6c204 100644
+index f7742a6e6c204..f536ea2db89db 100644
 --- a/sound/soc/fsl/fsl_micfil.c
 +++ b/sound/soc/fsl/fsl_micfil.c
-@@ -24,7 +24,6 @@
- #include <sound/core.h>
+@@ -25,9 +25,6 @@
  
  #include "fsl_micfil.h"
--#include "imx-pcm.h"
  
- #define FSL_MICFIL_RATES		SNDRV_PCM_RATE_8000_48000
- #define FSL_MICFIL_FORMATS		(SNDRV_PCM_FMTBIT_S16_LE)
+-#define FSL_MICFIL_RATES		SNDRV_PCM_RATE_8000_48000
+-#define FSL_MICFIL_FORMATS		(SNDRV_PCM_FMTBIT_S16_LE)
+-
+ #define MICFIL_OSR_DEFAULT	16
+ 
+ enum quality {
+@@ -349,8 +346,8 @@ static struct snd_soc_dai_driver fsl_micfil_dai = {
+ 		.stream_name = "CPU-Capture",
+ 		.channels_min = 1,
+ 		.channels_max = 8,
+-		.rates = FSL_MICFIL_RATES,
+-		.formats = FSL_MICFIL_FORMATS,
++		.rates = SNDRV_PCM_RATE_8000_48000,
++		.formats = SNDRV_PCM_FMTBIT_S16_LE,
+ 	},
+ 	.ops = &fsl_micfil_dai_ops,
+ };
 -- 
 2.30.2
 

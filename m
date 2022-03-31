@@ -2,137 +2,169 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 14E894ED4AA
-	for <lists+dmaengine@lfdr.de>; Thu, 31 Mar 2022 09:16:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2304C4ED518
+	for <lists+dmaengine@lfdr.de>; Thu, 31 Mar 2022 09:58:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232180AbiCaHR0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 31 Mar 2022 03:17:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40592 "EHLO
+        id S232422AbiCaIAf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 31 Mar 2022 04:00:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232046AbiCaHRK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 31 Mar 2022 03:17:10 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2A796A06C;
-        Thu, 31 Mar 2022 00:13:47 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id bu29so39940136lfb.0;
-        Thu, 31 Mar 2022 00:13:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bu41Rz10DBgZx7YMhpBXa2DPWaILQcc2cwXyhQeaZPI=;
-        b=dm9ovATINTFEQuu8muUZYcluLEhGeGxlop3UrgvkqiDsJMLIcHyHQRtW+CpFJ+EZmC
-         3Vox+RKR1gkSszrRmiO6vMsGIjoqavvdVVDgWq38q1FbzjtkQTMowpYlc2b/n7hSpRoY
-         HklvRpKHkNuP/RObcDECUcxN6aFMcnFrZ7PN2/cZmC/lswS2htyI1nfRwHyQ9x6jmcQd
-         AN5Ten3nY+7hJ8M79BBXniDJmFYLwexg9h8xxBSvpDlXFPU01hMewr9MJU2Qcg88b1tV
-         VyVvphw3CnY9IVkWtQ8xE71ul5lMSuV1Roe4kHYXubhCM+rPUH9hxxSsp/tdkbXPFcET
-         4quw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bu41Rz10DBgZx7YMhpBXa2DPWaILQcc2cwXyhQeaZPI=;
-        b=3BFPlfRndM392HIHarLmyx4UvpswnqtE4wtiT7SDfgVEoSIQPqvmKspnAl8z0gd7zB
-         CX2188pd3kD8d2cw/FvlxoVCSucn5k3qb9TCbIk6E2WJEDiiij/lR9EXbPfN8E4eCYOc
-         i31eSUrpLS0uP0YTn97H+FA3lq4HCjaJWDjQe+5nX74MwF6f4dAy+w4gjiEBkMywBC79
-         PE0ozErtUZ+ViIEZnuLJoC+T6pXU0IpB48g34eyA/j8F3K7EXC5+30gNBD5m3UhNOwQP
-         GoJE4oV8x+iORFdpkkmcrsIbHYfseu+skgbhv6hG8Crfw+WqdssZYC3kV0x9O/6lBdvs
-         R4sg==
-X-Gm-Message-State: AOAM530vZlJMBn/8vb7NHKSIVuuxbwcenjxNb41wEiTaSzSyBaIyjinS
-        RciIH5UyZUBSO9duyL/ro/o=
-X-Google-Smtp-Source: ABdhPJyqJ4tu5mxNEuPt/j9KI45P3PT/pT1Ws74on+AAfjcf4OxagYaehoYG4WaBWExwJW0hNoTGRQ==
-X-Received: by 2002:a05:6512:ba8:b0:44a:3444:4698 with SMTP id b40-20020a0565120ba800b0044a34444698mr9805437lfv.203.1648710825704;
-        Thu, 31 Mar 2022 00:13:45 -0700 (PDT)
-Received: from mobilestation ([95.79.227.109])
-        by smtp.gmail.com with ESMTPSA id k18-20020a192d12000000b0044a5ddcf5fcsm2533191lfj.226.2022.03.31.00.13.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Mar 2022 00:13:45 -0700 (PDT)
-Date:   Thu, 31 Mar 2022 10:13:43 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
+        with ESMTP id S232454AbiCaIAZ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 31 Mar 2022 04:00:25 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3EBE13F67
+        for <dmaengine@vger.kernel.org>; Thu, 31 Mar 2022 00:58:38 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1nZphN-00023m-KG; Thu, 31 Mar 2022 09:58:29 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1nZphM-0005tY-Dr; Thu, 31 Mar 2022 09:58:28 +0200
+Date:   Thu, 31 Mar 2022 09:58:28 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
 To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/25] dmaengine: Fix dma_slave_config.dst_addr
- description
-Message-ID: <20220331071343.eitijsfuzufh6blc@mobilestation>
-References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
- <20220324014836.19149-5-Sergey.Semin@baikalelectronics.ru>
- <20220324140806.GN2854@thinkpad>
- <YkU+PupmoR/zkHxn@matsya>
+Cc:     alsa-devel@alsa-project.org, Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>, kernel@pengutronix.de,
+        NXP Linux Team <linux-imx@nxp.com>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v2 10/19] dma: imx-sdma: Add multi fifo support
+Message-ID: <20220331075828.GE4012@pengutronix.de>
+References: <20220328112744.1575631-1-s.hauer@pengutronix.de>
+ <20220328112744.1575631-11-s.hauer@pengutronix.de>
+ <YkU7cYhZUuGyWbob@matsya>
+ <20220331064903.GC4012@pengutronix.de>
+ <YkVQNhTpeIT7qO/7@matsya>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YkU+PupmoR/zkHxn@matsya>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <YkVQNhTpeIT7qO/7@matsya>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:06:33 up 19:36, 39 users,  load average: 0.28, 0.28, 0.24
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Mar 31, 2022 at 11:08:06AM +0530, Vinod Koul wrote:
-> On 24-03-22, 19:38, Manivannan Sadhasivam wrote:
-> > On Thu, Mar 24, 2022 at 04:48:15AM +0300, Serge Semin wrote:
-> > > Most likely due to a copy-paste mistake the dst_addr member of the
-> > > dma_slave_config structure has been marked as ignored if the !source!
-> > > address belong to the memory. That is relevant to the src_addr field of
-> > > the structure while the dst_addr field as containing a destination device
-> > > address is supposed to be ignored if the destination is the CPU memory.
-> > > Let's fix the field description accordingly.
+On Thu, Mar 31, 2022 at 12:24:46PM +0530, Vinod Koul wrote:
+> On 31-03-22, 08:49, Sascha Hauer wrote:
+> > On Thu, Mar 31, 2022 at 10:56:09AM +0530, Vinod Koul wrote:
+> > > On 28-03-22, 13:27, Sascha Hauer wrote:
+> > > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 > > > 
-> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > it is dmaengine: xxx
 > > 
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Ok.
 > > 
-> > One suggestion below.
-> > 
-> > > ---
-> > >  include/linux/dmaengine.h | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
 > > > 
-> > > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> > > index 842d4f7ca752..f204ea16ac1c 100644
-> > > --- a/include/linux/dmaengine.h
-> > > +++ b/include/linux/dmaengine.h
-> > > @@ -395,7 +395,7 @@ enum dma_slave_buswidth {
-> > >   * should be read (RX), if the source is memory this argument is
-> > >   * ignored.
-> > >   * @dst_addr: this is the physical address where DMA slave data
-> > > - * should be written (TX), if the source is memory this argument
-> > > + * should be written (TX), if the destination is memory this argument
-> >
- 
-> > Should we rename "memory" to "local memory" or something similar?
+> > > Also is this patch dependent on rest of the series, if not consider
+> > > sending separately
+> > 
+> > The rest of this series indeed depends on this patch.
+> > 
+> > > 
+> > > > diff --git a/include/linux/platform_data/dma-imx.h b/include/linux/platform_data/dma-imx.h
+> > > > index 281adbb26e6bd..4a43a048e1b4d 100644
+> > > > --- a/include/linux/platform_data/dma-imx.h
+> > > > +++ b/include/linux/platform_data/dma-imx.h
+> > > > @@ -39,6 +39,7 @@ enum sdma_peripheral_type {
+> > > >  	IMX_DMATYPE_SSI_DUAL,	/* SSI Dual FIFO */
+> > > >  	IMX_DMATYPE_ASRC_SP,	/* Shared ASRC */
+> > > >  	IMX_DMATYPE_SAI,	/* SAI */
+> > > > +	IMX_DMATYPE_MULTI_SAI,	/* MULTI FIFOs For Audio */
+> > > >  };
+> > > >  
+> > > >  enum imx_dma_prio {
+> > > > @@ -65,4 +66,10 @@ static inline int imx_dma_is_general_purpose(struct dma_chan *chan)
+> > > >  		!strcmp(chan->device->dev->driver->name, "imx-dma");
+> > > >  }
+> > > >  
+> > > > +struct sdma_peripheral_config {
+> > > > +	int n_fifos_src;
+> > > > +	int n_fifos_dst;
+> > > > +	bool sw_done;
+> > > > +};
+> > > 
+> > > Not more platform data :(
+> > 
+> > I'm not sure what you are referring to as platform_data. This is not the
+> > classical platform_data that is attached to a platform_device to
+> > configure behaviour of that device. It is rather data that needs to be
+> > communicated from the clients of the SDMA engine to the SDMA engine.
+> > 
+> > I have put this into include/linux/platform_data/dma-imx.h because
+> > that's the only existing include file that is available. I could move
+> > this to a new file if you like that better.
 > 
-> what do you mean by local memory :)
+> Lets move to include/linux/dma/
 
-Most likely Manivannan just confused the whole eDMA device specifics
-with this patch purpose. This commit has nothing to do with "local"
-and "remote" device memory. Such definitions are relevant to the DW
-eDMA setups (whether device is integrated into the PCIe Host/End-point
-controller then the CPU memory is a local memory for it, or it's a
-remote PCI End-point, then the CPU memory is a remote memory for it).
-
-Guys. Regarding the patchsets review procedure. I notice all the
-comments. Just didn't have time to respond so far. Will do that till
-the end of the week.
-
--Sergey
+Ok.
 
 > 
-> -- 
-> ~Vinod
+> > 
+> > > 
+> > > Can you explain this structure and why this is required? What do these
+> > > fields refer to..?
+> > 
+> > The reasoning for this structure is described in the commit message that
+> > I have forgotten:
+> > 
+> >     The i.MX SDMA engine can read from / write to multiple successive
+> >     hardware FIFO registers, referred to as "Multi FIFO support". This is
+> >     needed for the micfil driver and certain configurations of the SAI
+> >     driver. This patch adds support for this feature.
+> > 
+> >     The number of FIFOs to read from / write to must be communicated from
+> >     the client driver to the SDMA engine. For this the struct
+> >     dma_slave_config::peripheral_config field is used.
+> > 
+> > I can describe the individual fields of struct sdma_peripheral_config in
+> > the header file if that's your point.
+> 
+> So you need to know the number of fifo right, what does sw_done imply?
+
+Honestly I don't know. Setting sw_done results in the DONE_SEL0 bit in
+the SDMA engine being set. This is described in the reference manual
+as:
+
+DONE_SEL0 Select Done from SW or HW for channel 0
+          0 HW
+          1 SW
+
+I can only assume that the signaling when a channel has transferred
+enough data (the generation of the channel done interrupt?) can either
+be done in hardware or in software in the SDMA engine. What I can tell
+for sure is that I need this bit set ;)
+
+> 
+> Also if this is hardware information, why not use dma-cells for this?
+
+The information is not static. For the micfil the number of fifos equals
+the number of channels that are recorded, see next patch:
+
++       micfil->dma_params_rx.peripheral_config = &micfil->sdmacfg;
++       micfil->dma_params_rx.peripheral_size = sizeof(micfil->sdmacfg);
++       micfil->sdmacfg.n_fifos_src = channels;
++       micfil->sdmacfg.sw_done = true;
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |

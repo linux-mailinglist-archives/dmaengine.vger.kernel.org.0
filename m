@@ -2,70 +2,111 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 608804F0970
-	for <lists+dmaengine@lfdr.de>; Sun,  3 Apr 2022 14:35:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 074574F1548
+	for <lists+dmaengine@lfdr.de>; Mon,  4 Apr 2022 14:55:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237664AbiDCMhD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 3 Apr 2022 08:37:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53280 "EHLO
+        id S1343812AbiDDM5U (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 4 Apr 2022 08:57:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236325AbiDCMhC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 3 Apr 2022 08:37:02 -0400
-X-Greylist: delayed 182 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 03 Apr 2022 05:35:02 PDT
-Received: from cmccmta3.chinamobile.com (cmccmta3.chinamobile.com [221.176.66.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C5A1D12ACC
-        for <dmaengine@vger.kernel.org>; Sun,  3 Apr 2022 05:35:02 -0700 (PDT)
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.3])
-        by rmmx-syy-dmz-app11-12011 (RichMail) with SMTP id 2eeb624993bcb75-fb97d;
-        Sun, 03 Apr 2022 20:31:58 +0800 (CST)
-X-RM-TRANSID: 2eeb624993bcb75-fb97d
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from 192.168.125.128 (unknown[112.22.3.63])
-        by rmsmtp-syy-appsvr02-12002 (RichMail) with SMTP id 2ee2624993b80a5-f0d37;
-        Sun, 03 Apr 2022 20:31:57 +0800 (CST)
-X-RM-TRANSID: 2ee2624993b80a5-f0d37
-From:   jianchunfu <jianchunfu@cmss.chinamobile.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org,
-        jianchunfu <jianchunfu@cmss.chinamobile.com>
-Subject: [PATCH] dmaengine: ep93xx: Remove redundant word in comment
-Date:   Sun,  3 Apr 2022 20:31:20 +0800
-Message-Id: <20220403123120.7794-1-jianchunfu@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.18.4
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S1348187AbiDDM5U (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 4 Apr 2022 08:57:20 -0400
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA8F0329B6;
+        Mon,  4 Apr 2022 05:55:23 -0700 (PDT)
+Received: (Authenticated sender: miquel.raynal@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id 05C2F1BF206;
+        Mon,  4 Apr 2022 12:55:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1649076922;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/x1VrTRzYIeZXgFI1aJWoH7XuJ4OZsM8zjk30JyCJy0=;
+        b=BLzDPpcPhbH/jJwxz5q1L6uTHagwDAz9k8cHN52HkpLjzIIqbnp9YvzjPNiEfYH+Yo/iUE
+        Sas6CLUXoQVza5LWBaH73TPSPXIBJcySlz8m8u9761f2CVZUu+tK1KTI0mdWSmUar3S2SV
+        vUXrTp6z7GoqctRlDajLP6EW+iB156kjGrDxfGGYJGW3/mZBTjdkBHbp4X0BjbjRT6ZFIT
+        +g6aiMc17Q2emuDNPmJ5XTVYKilY/ki+lf1jDmE0Vjg3ap0G7dHsCFw0uil5p139BZZv0q
+        fjt0cjIIFkANFunSalO+dnkHmFYNAjuCbgKp6SpofvcJgEqVS8CI34dlW+Pbbw==
+Date:   Mon, 4 Apr 2022 14:55:18 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     linux-renesas-soc@vger.kernel.org,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        dmaengine@vger.kernel.org
+Cc:     Milan Stevanovic <milan.stevanovic@se.com>,
+        Jimmy Lalande <jimmy.lalande@se.com>,
+        Pascal Eberhard <pascal.eberhard@se.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Herve Codina <herve.codina@bootlin.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <vireshk@kernel.org>
+Subject: Re: [PATCH v5 4/8] soc: renesas: rzn1-sysc: Export function to set
+ dmamux
+Message-ID: <20220404145518.6b427356@xps13>
+In-Reply-To: <20220315191255.221473-5-miquel.raynal@bootlin.com>
+References: <20220315191255.221473-1-miquel.raynal@bootlin.com>
+        <20220315191255.221473-5-miquel.raynal@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.7 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Remove the second 'to' which is repeated.
+Hello,
 
-Signed-off-by: jianchunfu <jianchunfu@cmss.chinamobile.com>
----
- drivers/dma/ep93xx_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+miquel.raynal@bootlin.com wrote on Tue, 15 Mar 2022 20:12:51 +0100:
 
-diff --git a/drivers/dma/ep93xx_dma.c b/drivers/dma/ep93xx_dma.c
-index 98f9ee703..971ff5f9a 100644
---- a/drivers/dma/ep93xx_dma.c
-+++ b/drivers/dma/ep93xx_dma.c
-@@ -132,7 +132,7 @@ struct ep93xx_dma_desc {
- /**
-  * struct ep93xx_dma_chan - an EP93xx DMA M2P/M2M channel
-  * @chan: dmaengine API channel
-- * @edma: pointer to to the engine device
-+ * @edma: pointer to the engine device
-  * @regs: memory mapped registers
-  * @irq: interrupt number of the channel
-  * @clk: clock used by this channel
--- 
-2.18.4
+> The dmamux register is located within the system controller.
+>=20
+> Without syscon, we need an extra helper in order to give write access to
+> this register to a dmamux driver.
+>=20
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  drivers/clk/renesas/r9a06g032-clocks.c        | 35 ++++++++++++++++++-
+>  include/linux/soc/renesas/r9a06g032-sysctrl.h | 11 ++++++
+>  2 files changed, 45 insertions(+), 1 deletion(-)
+>  create mode 100644 include/linux/soc/renesas/r9a06g032-sysctrl.h
+>=20
 
+[...]
 
+>  /* register/bit pairs are encoded as an uint16_t */
+>  static void
+>  clk_rdesc_set(struct r9a06g032_priv *clocks,
+> @@ -922,6 +948,7 @@ static int __init r9a06g032_clocks_probe(struct platf=
+orm_device *pdev)
+>  	clocks->reg =3D of_iomap(np, 0);
+>  	if (WARN_ON(!clocks->reg))
+>  		return -ENOMEM;
+> +
 
+As we are post -rc1 I will repost this series as a v6 after rebasing.
+
+While at it I'll get rid of this extra new line but that's basically
+all what I plan to change.
+
+As this series brings the basics for more RZN1 support (because of
+this specific sysctrl patch), it is kind of a base for more
+contributions which are in the pipe (UART, USB, RTC, Switch, etc) so
+hopefully it is now ready to be accepted.
+
+Thanks,
+Miqu=C3=A8l

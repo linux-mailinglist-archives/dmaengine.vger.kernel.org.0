@@ -2,41 +2,50 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6A1F4F162E
-	for <lists+dmaengine@lfdr.de>; Mon,  4 Apr 2022 15:39:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59B874F16B3
+	for <lists+dmaengine@lfdr.de>; Mon,  4 Apr 2022 16:03:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356102AbiDDNlf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 4 Apr 2022 09:41:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57210 "EHLO
+        id S1376810AbiDDOFi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 4 Apr 2022 10:05:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356089AbiDDNle (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 4 Apr 2022 09:41:34 -0400
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::224])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C2FDBC3D;
-        Mon,  4 Apr 2022 06:39:33 -0700 (PDT)
-Received: (Authenticated sender: miquel.raynal@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id 6E5D7E0013;
-        Mon,  4 Apr 2022 13:39:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1649079571;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gDMgEYZK2TXVp0tig+qscRTbrixY++njrNcYKAKseyE=;
-        b=IRPf2nGCYdvJVhSZQ4HDpztoxrWWdI6r3Bx1z5x2da3UXGBr4Y4B8dbz3dXE4IuYcCCr3O
-        wELpPwkO8e328SLrhE3Gf7fGd7wiGUeferpDlwS7Wh3P8eDL+OBhksWbU8h/Pyp8D/cbwL
-        xy76hOGkcLkVld8JI+RLITcI+t1WFgZNCMkTZ5dwrwCjXGckyEfFOxBggE2snHL9ODM5yy
-        1HaA6bFMC3a2NtTYUW5dHEdrji3v5yh2B28qBXXMOPRU5+flPRKW3twcUduwebLfTR2tqA
-        WexDQEZlsmcjwjvKOthehDvfqvgmotnWLyCeutW/X5RuI6H9u0KvSNCd8ySVVg==
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     linux-renesas-soc@vger.kernel.org,
+        with ESMTP id S1376801AbiDDOFh (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 4 Apr 2022 10:05:37 -0400
+Received: from mga06.intel.com (mga06.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC7ADB7F3;
+        Mon,  4 Apr 2022 07:03:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649081019; x=1680617019;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=bruD2yzg13xcbKVOTCZnA41MnbPSNmOTaTc2Ahx/lY8=;
+  b=A1DQKxWthHG0NpLcjOdQtEFBdBf8TnRKvBa8yxGWq68Qt7mUdUYJG0nn
+   xwj654ZFwCthAPphGQI/kSAt+jrhFkuN7P/RCioukFRbLBRnzfgtJpl8O
+   SjZ3CN8HQrViy4iMFmqJzc+9orSflLlpmTX1vMhQytnLI0O6Evt+0OHl5
+   dhVd8TPYchVh4KGNh56sN6IJBhuuTpkdInyHX+g6/W/hrCjcoo/XiDvYX
+   5eWCPTkXPdDEC3K7nCm89VaTBv/vjtk60ceRNp03lALdoByGExZtsdrE/
+   bHmyW8cYvtLZU74Y7OnSkHUBqQEiPAy4D0NiHFKJZKupUwCARb8vNtGJm
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10306"; a="321215284"
+X-IronPort-AV: E=Sophos;i="5.90,234,1643702400"; 
+   d="scan'208";a="321215284"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2022 07:03:39 -0700
+X-IronPort-AV: E=Sophos;i="5.90,234,1643702400"; 
+   d="scan'208";a="569396717"
+Received: from rhamza-mobl.ger.corp.intel.com ([10.251.211.126])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2022 07:03:34 -0700
+Date:   Mon, 4 Apr 2022 17:03:28 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+cc:     linux-renesas-soc@vger.kernel.org,
         Magnus Damm <magnus.damm@gmail.com>,
         Gareth Williams <gareth.williams.jx@renesas.com>,
         Phil Edworthy <phil.edworthy@renesas.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Cc:     Milan Stevanovic <milan.stevanovic@se.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Milan Stevanovic <milan.stevanovic@se.com>,
         Jimmy Lalande <jimmy.lalande@se.com>,
         Pascal Eberhard <pascal.eberhard@se.com>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
@@ -45,56 +54,115 @@ Cc:     Milan Stevanovic <milan.stevanovic@se.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
         linux-clk@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v6 8/8] ARM: dts: r9a06g032: Describe the DMA router
-Date:   Mon,  4 Apr 2022 15:39:04 +0200
-Message-Id: <20220404133904.1296258-9-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20220404133904.1296258-1-miquel.raynal@bootlin.com>
-References: <20220404133904.1296258-1-miquel.raynal@bootlin.com>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v6 5/8] dmaengine: dw: dmamux: Introduce RZN1 DMA router
+ support
+In-Reply-To: <20220404133904.1296258-6-miquel.raynal@bootlin.com>
+Message-ID: <f76c2e68-2a4a-381a-3c40-eb369a08550@linux.intel.com>
+References: <20220404133904.1296258-1-miquel.raynal@bootlin.com> <20220404133904.1296258-6-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-There is a dmamux on this SoC which allows picking two different sources
-for a single DMA request.
+On Mon, 4 Apr 2022, Miquel Raynal wrote:
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- arch/arm/boot/dts/r9a06g032.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+> The Renesas RZN1 DMA IP is based on a DW core, with eg. an additional
+> dmamux register located in the system control area which can take up to
+> 32 requests (16 per DMA controller). Each DMA channel can be wired to
+> two different peripherals.
+> 
+> We need two additional information from the 'dmas' property: the channel
+> (bit in the dmamux register) that must be accessed and the value of the
+> mux for this channel.
+> 
+> Aside from the driver introduction, as these devices are described as
+> subnodes of the system controller, we also need the system controller
+> (clock) driver to populate its children manually. Starting from now on,
+> one child can be the dmamux.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
 
-diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a06g032.dtsi
-index 839580ec21ee..c854aa4cfa77 100644
---- a/arch/arm/boot/dts/r9a06g032.dtsi
-+++ b/arch/arm/boot/dts/r9a06g032.dtsi
-@@ -91,6 +91,16 @@ sysctrl: system-controller@4000c000 {
- 			clocks = <&ext_mclk>, <&ext_rtc_clk>,
- 					<&ext_jtag_clk>, <&ext_rgmii_ref>;
- 			clock-names = "mclk", "rtc", "jtag", "rgmii_ref_ext";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			dmamux: dma-router@a0 {
-+				compatible = "renesas,rzn1-dmamux";
-+				reg = <0xa0 4>;
-+				#dma-cells = <6>;
-+				dma-requests = <32>;
-+				dma-masters = <&dma0 &dma1>;
-+			};
- 		};
- 
- 		uart0: serial@40060000 {
+> +static void *rzn1_dmamux_route_allocate(struct of_phandle_args *dma_spec,
+> +					struct of_dma *ofdma)
+> +{
+> +	struct platform_device *pdev = of_find_device_by_node(ofdma->of_node);
+> +	struct rzn1_dmamux_data *dmamux = platform_get_drvdata(pdev);
+> +	struct rzn1_dmamux_map *map;
+> +	unsigned int dmac_idx, chan, val;
+> +	u32 mask;
+> +	int ret;
+> +
+> +	if (dma_spec->args_count != 6)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	map = kzalloc(sizeof(*map), GFP_KERNEL);
+> +	if (!map)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	chan = dma_spec->args[0];
+> +	map->req_idx = dma_spec->args[4];
+> +	val = dma_spec->args[5];
+> +	dma_spec->args_count -= 2;
+> +
+> +	if (chan >= RZN1_DMAMUX_SPLIT) {
+> +		dev_err(&pdev->dev, "Invalid DMA request line: %u\n", chan);
+> +		ret = -EINVAL;
+> +		goto free_map;
+> +	}
+> +
+> +	if (map->req_idx >= RZN1_DMAMUX_LINES ||
+> +	    (map->req_idx % RZN1_DMAMUX_SPLIT) != chan) {
+> +		dev_err(&pdev->dev, "Invalid MUX request line: %u\n", map->req_idx);
+> +		ret = -EINVAL;
+> +		goto free_map;
+> +	}
+> +
+> +	dmac_idx = map->req_idx < RZN1_DMAMUX_SPLIT ? 0 : 1;
+> +	dma_spec->np = of_parse_phandle(ofdma->of_node, "dma-masters", dmac_idx);
+> +	if (!dma_spec->np) {
+> +		dev_err(&pdev->dev, "Can't get DMA master\n");
+> +		ret = -EINVAL;
+> +		goto free_map;
+> +	}
+> +
+> +	dev_dbg(&pdev->dev, "Mapping DMAMUX request %u to DMAC%u request %u\n",
+> +		map->req_idx, dmac_idx, chan);
+> +
+> +	mask = BIT(map->req_idx);
+> +	mutex_lock(&dmamux->lock);
+> +	dmamux->used_chans |= mask;
+> +	ret = r9a06g032_sysctrl_set_dmamux(mask, val ? mask : 0);
+> +	mutex_unlock(&dmamux->lock);
+> +	if (ret)
+> +		goto free_mux;
+
+Move this check before the unlock. Then free_mux path doesn't need to do
+(re)lock as the mutex is still held. You might also want to consider 
+renaming the label e.g. to chan_release_and_unlock.
+
+> +
+> +	return map;
+> +
+> +free_mux:
+> +	mutex_lock(&dmamux->lock);
+> +	dmamux->used_chans &= ~mask;
+> +	mutex_unlock(&dmamux->lock);
+> +free_map:
+> +	kfree(map);
+> +
+> +	return ERR_PTR(ret);
+> +}
+
+
 -- 
-2.27.0
+ i.
 

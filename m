@@ -2,30 +2,30 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F28E4F26DF
-	for <lists+dmaengine@lfdr.de>; Tue,  5 Apr 2022 10:05:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13B0C4F2716
+	for <lists+dmaengine@lfdr.de>; Tue,  5 Apr 2022 10:06:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233039AbiDEIF6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 5 Apr 2022 04:05:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54290 "EHLO
+        id S233083AbiDEIFy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 5 Apr 2022 04:05:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236401AbiDEICL (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 5 Apr 2022 04:02:11 -0400
+        with ESMTP id S236451AbiDEICR (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 5 Apr 2022 04:02:17 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90FFA4B438
-        for <dmaengine@vger.kernel.org>; Tue,  5 Apr 2022 01:00:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F1544DF57
+        for <dmaengine@vger.kernel.org>; Tue,  5 Apr 2022 01:00:20 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <sha@pengutronix.de>)
-        id 1nbe6h-0003f4-5P; Tue, 05 Apr 2022 10:00:07 +0200
+        id 1nbe6g-0003dA-RF; Tue, 05 Apr 2022 10:00:06 +0200
 Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <sha@pengutronix.de>)
-        id 1nbe6g-001BHa-NE; Tue, 05 Apr 2022 10:00:05 +0200
+        id 1nbe6g-001BHL-Bg; Tue, 05 Apr 2022 10:00:04 +0200
 Received: from sha by dude02.red.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <sha@pengutronix.de>)
-        id 1nbe6b-00BXaE-4T; Tue, 05 Apr 2022 10:00:01 +0200
+        id 1nbe6b-00BXaH-59; Tue, 05 Apr 2022 10:00:01 +0200
 From:   Sascha Hauer <s.hauer@pengutronix.de>
 To:     alsa-devel@alsa-project.org
 Cc:     Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
@@ -33,9 +33,9 @@ Cc:     Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
         Vinod Koul <vkoul@kernel.org>,
         NXP Linux Team <linux-imx@nxp.com>,
         dmaengine@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH v3 13/20] ASoC: fsl_micfil: use define for OSR default value
-Date:   Tue,  5 Apr 2022 09:59:52 +0200
-Message-Id: <20220405075959.2744803-14-s.hauer@pengutronix.de>
+Subject: [PATCH v3 14/20] ASoC: fsl_micfil: Drop get_pdm_clk()
+Date:   Tue,  5 Apr 2022 09:59:53 +0200
+Message-Id: <20220405075959.2744803-15-s.hauer@pengutronix.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220405075959.2744803-1-s.hauer@pengutronix.de>
 References: <20220405075959.2744803-1-s.hauer@pengutronix.de>
@@ -54,81 +54,72 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The OSR (OverSampling Rate) setting is set once to the default value
-and never changed throughout the driver. Nevertheless the value is
-read back from the register for further calculations. Just use the
-default value because we know what we have written.
+get_pdm_clk() calculates the PDM clock based on the quality setting,
+but really the PDM clock is independent of the quality, it's always
+rate * 4 * micfil->osr. Just drop the function and do the calculation
+in the caller.
 
 Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 ---
- sound/soc/fsl/fsl_micfil.c | 10 ++++++----
- sound/soc/fsl/fsl_micfil.h |  1 -
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ sound/soc/fsl/fsl_micfil.c | 38 +-------------------------------------
+ 1 file changed, 1 insertion(+), 37 deletions(-)
 
 diff --git a/sound/soc/fsl/fsl_micfil.c b/sound/soc/fsl/fsl_micfil.c
-index fe3e1319b35fd..4b4b7fbbf5c4f 100644
+index 4b4b7fbbf5c4f..8335646a84d17 100644
 --- a/sound/soc/fsl/fsl_micfil.c
 +++ b/sound/soc/fsl/fsl_micfil.c
-@@ -29,6 +29,8 @@
- #define FSL_MICFIL_RATES		SNDRV_PCM_RATE_8000_48000
- #define FSL_MICFIL_FORMATS		(SNDRV_PCM_FMTBIT_S16_LE)
- 
-+#define MICFIL_OSR_DEFAULT	16
-+
- struct fsl_micfil {
- 	struct platform_device *pdev;
- 	struct regmap *regmap;
-@@ -41,6 +43,7 @@ struct fsl_micfil {
- 	char name[32];
- 	int irq[MICFIL_IRQ_LINES];
- 	int quality;	/*QUALITY 2-0 bits */
-+	unsigned int osr;
+@@ -111,42 +111,6 @@ static const struct snd_kcontrol_new fsl_micfil_snd_controls[] = {
+ 		     snd_soc_get_enum_double, snd_soc_put_enum_double),
  };
  
- struct fsl_micfil_soc_data {
-@@ -112,11 +115,11 @@ static inline int get_pdm_clk(struct fsl_micfil *micfil,
+-static inline int get_pdm_clk(struct fsl_micfil *micfil,
+-			      unsigned int rate)
+-{
+-	u32 ctrl2_reg;
+-	int qsel;
+-	int bclk;
+-	int osr = MICFIL_OSR_DEFAULT;
+-
+-	regmap_read(micfil->regmap, REG_MICFIL_CTRL2, &ctrl2_reg);
+-	qsel = FIELD_GET(MICFIL_CTRL2_QSEL, ctrl2_reg);
+-
+-	switch (qsel) {
+-	case MICFIL_QSEL_HIGH_QUALITY:
+-		bclk = rate * 8 * osr / 2; /* kfactor = 0.5 */
+-		break;
+-	case MICFIL_QSEL_MEDIUM_QUALITY:
+-	case MICFIL_QSEL_VLOW0_QUALITY:
+-		bclk = rate * 4 * osr * 1; /* kfactor = 1 */
+-		break;
+-	case MICFIL_QSEL_LOW_QUALITY:
+-	case MICFIL_QSEL_VLOW1_QUALITY:
+-		bclk = rate * 2 * osr * 2; /* kfactor = 2 */
+-		break;
+-	case MICFIL_QSEL_VLOW2_QUALITY:
+-		bclk = rate * osr * 4; /* kfactor = 4 */
+-		break;
+-	default:
+-		dev_err(&micfil->pdev->dev,
+-			"Please make sure you select a valid quality.\n");
+-		bclk = -1;
+-		break;
+-	}
+-
+-	return bclk;
+-}
+-
+ static inline int get_clk_div(struct fsl_micfil *micfil,
  			      unsigned int rate)
  {
- 	u32 ctrl2_reg;
--	int qsel, osr;
-+	int qsel;
- 	int bclk;
-+	int osr = MICFIL_OSR_DEFAULT;
+@@ -155,7 +119,7 @@ static inline int get_clk_div(struct fsl_micfil *micfil,
  
- 	regmap_read(micfil->regmap, REG_MICFIL_CTRL2, &ctrl2_reg);
--	osr = 16 - FIELD_GET(MICFIL_CTRL2_CICOSR, ctrl2_reg);
- 	qsel = FIELD_GET(MICFIL_CTRL2_QSEL, ctrl2_reg);
+ 	mclk_rate = clk_get_rate(micfil->mclk);
  
- 	switch (qsel) {
-@@ -282,7 +285,7 @@ static int fsl_set_clock_params(struct device *dev, unsigned int rate)
- 	/* set CICOSR */
- 	ret = regmap_update_bits(micfil->regmap, REG_MICFIL_CTRL2,
- 				 MICFIL_CTRL2_CICOSR,
--				 FIELD_PREP(MICFIL_CTRL2_CICOSR, MICFIL_CTRL2_CICOSR_DEFAULT));
-+				 FIELD_PREP(MICFIL_CTRL2_CICOSR, 16 - MICFIL_OSR_DEFAULT));
- 	if (ret)
- 		return ret;
+-	clk_div = mclk_rate / (get_pdm_clk(micfil, rate) * 2);
++	clk_div = mclk_rate / (rate * micfil->osr * 8);
  
-@@ -673,7 +676,6 @@ static int fsl_micfil_probe(struct platform_device *pdev)
- 	micfil->dma_params_rx.addr = res->start + REG_MICFIL_DATACH0;
- 	micfil->dma_params_rx.maxburst = MICFIL_DMA_MAXBURST_RX;
- 
--
- 	platform_set_drvdata(pdev, micfil);
- 
- 	pm_runtime_enable(&pdev->dev);
-diff --git a/sound/soc/fsl/fsl_micfil.h b/sound/soc/fsl/fsl_micfil.h
-index 5cecae2519795..08901827047db 100644
---- a/sound/soc/fsl/fsl_micfil.h
-+++ b/sound/soc/fsl/fsl_micfil.h
-@@ -58,7 +58,6 @@
- #define MICFIL_QSEL_VLOW2_QUALITY	4
- 
- #define MICFIL_CTRL2_CICOSR		GENMASK(19, 16)
--#define MICFIL_CTRL2_CICOSR_DEFAULT	0
- #define MICFIL_CTRL2_CLKDIV		GENMASK(7, 0)
- 
- /* MICFIL Status Register -- REG_MICFIL_STAT 0x08 */
+ 	return clk_div;
+ }
 -- 
 2.30.2
 

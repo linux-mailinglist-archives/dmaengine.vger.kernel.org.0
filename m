@@ -2,30 +2,30 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F2AFD4F26FF
-	for <lists+dmaengine@lfdr.de>; Tue,  5 Apr 2022 10:06:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F28E4F26DF
+	for <lists+dmaengine@lfdr.de>; Tue,  5 Apr 2022 10:05:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233256AbiDEIFi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 5 Apr 2022 04:05:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54488 "EHLO
+        id S233039AbiDEIF6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 5 Apr 2022 04:05:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236432AbiDEICP (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 5 Apr 2022 04:02:15 -0400
+        with ESMTP id S236401AbiDEICL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 5 Apr 2022 04:02:11 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 261B84C7B9
-        for <dmaengine@vger.kernel.org>; Tue,  5 Apr 2022 01:00:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90FFA4B438
+        for <dmaengine@vger.kernel.org>; Tue,  5 Apr 2022 01:00:12 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <sha@pengutronix.de>)
-        id 1nbe6g-0003e3-GL; Tue, 05 Apr 2022 10:00:06 +0200
+        id 1nbe6h-0003f4-5P; Tue, 05 Apr 2022 10:00:07 +0200
 Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <sha@pengutronix.de>)
-        id 1nbe6g-001BHS-HS; Tue, 05 Apr 2022 10:00:05 +0200
+        id 1nbe6g-001BHa-NE; Tue, 05 Apr 2022 10:00:05 +0200
 Received: from sha by dude02.red.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <sha@pengutronix.de>)
-        id 1nbe6b-00BXaB-3s; Tue, 05 Apr 2022 10:00:01 +0200
+        id 1nbe6b-00BXaE-4T; Tue, 05 Apr 2022 10:00:01 +0200
 From:   Sascha Hauer <s.hauer@pengutronix.de>
 To:     alsa-devel@alsa-project.org
 Cc:     Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
@@ -33,9 +33,9 @@ Cc:     Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
         Vinod Koul <vkoul@kernel.org>,
         NXP Linux Team <linux-imx@nxp.com>,
         dmaengine@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH v3 12/20] ASoC: fsl_micfil: add multi fifo support
-Date:   Tue,  5 Apr 2022 09:59:51 +0200
-Message-Id: <20220405075959.2744803-13-s.hauer@pengutronix.de>
+Subject: [PATCH v3 13/20] ASoC: fsl_micfil: use define for OSR default value
+Date:   Tue,  5 Apr 2022 09:59:52 +0200
+Message-Id: <20220405075959.2744803-14-s.hauer@pengutronix.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220405075959.2744803-1-s.hauer@pengutronix.de>
 References: <20220405075959.2744803-1-s.hauer@pengutronix.de>
@@ -54,53 +54,81 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The micfil hardware provides the microphone data on multiple successive
-FIFO registers, one register per stereo pair. Also to work properly the
-SDMA_DONE0_CONFIG_DONE_SEL bit in the SDMA engines SDMA_DONE0_CONFIG
-register must be set. This patch provides the necessary information to
-the SDMA engine driver.
+The OSR (OverSampling Rate) setting is set once to the default value
+and never changed throughout the driver. Nevertheless the value is
+read back from the register for further calculations. Just use the
+default value because we know what we have written.
 
 Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 ---
-
-Notes:
-    Changes since v2:
-    - Add forgotten commit message
-
- sound/soc/fsl/fsl_micfil.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ sound/soc/fsl/fsl_micfil.c | 10 ++++++----
+ sound/soc/fsl/fsl_micfil.h |  1 -
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/sound/soc/fsl/fsl_micfil.c b/sound/soc/fsl/fsl_micfil.c
-index ffca56d72562d..fe3e1319b35fd 100644
+index fe3e1319b35fd..4b4b7fbbf5c4f 100644
 --- a/sound/soc/fsl/fsl_micfil.c
 +++ b/sound/soc/fsl/fsl_micfil.c
-@@ -16,6 +16,7 @@
- #include <linux/regmap.h>
- #include <linux/sysfs.h>
- #include <linux/types.h>
-+#include <linux/platform_data/dma-imx.h>
- #include <sound/dmaengine_pcm.h>
- #include <sound/pcm.h>
- #include <sound/soc.h>
-@@ -35,6 +36,7 @@ struct fsl_micfil {
- 	struct clk *busclk;
- 	struct clk *mclk;
- 	struct snd_dmaengine_dai_dma_data dma_params_rx;
-+	struct sdma_peripheral_config sdmacfg;
- 	unsigned int dataline;
+@@ -29,6 +29,8 @@
+ #define FSL_MICFIL_RATES		SNDRV_PCM_RATE_8000_48000
+ #define FSL_MICFIL_FORMATS		(SNDRV_PCM_FMTBIT_S16_LE)
+ 
++#define MICFIL_OSR_DEFAULT	16
++
+ struct fsl_micfil {
+ 	struct platform_device *pdev;
+ 	struct regmap *regmap;
+@@ -41,6 +43,7 @@ struct fsl_micfil {
  	char name[32];
  	int irq[MICFIL_IRQ_LINES];
-@@ -324,6 +326,10 @@ static int fsl_micfil_hw_params(struct snd_pcm_substream *substream,
+ 	int quality;	/*QUALITY 2-0 bits */
++	unsigned int osr;
+ };
+ 
+ struct fsl_micfil_soc_data {
+@@ -112,11 +115,11 @@ static inline int get_pdm_clk(struct fsl_micfil *micfil,
+ 			      unsigned int rate)
+ {
+ 	u32 ctrl2_reg;
+-	int qsel, osr;
++	int qsel;
+ 	int bclk;
++	int osr = MICFIL_OSR_DEFAULT;
+ 
+ 	regmap_read(micfil->regmap, REG_MICFIL_CTRL2, &ctrl2_reg);
+-	osr = 16 - FIELD_GET(MICFIL_CTRL2_CICOSR, ctrl2_reg);
+ 	qsel = FIELD_GET(MICFIL_CTRL2_QSEL, ctrl2_reg);
+ 
+ 	switch (qsel) {
+@@ -282,7 +285,7 @@ static int fsl_set_clock_params(struct device *dev, unsigned int rate)
+ 	/* set CICOSR */
+ 	ret = regmap_update_bits(micfil->regmap, REG_MICFIL_CTRL2,
+ 				 MICFIL_CTRL2_CICOSR,
+-				 FIELD_PREP(MICFIL_CTRL2_CICOSR, MICFIL_CTRL2_CICOSR_DEFAULT));
++				 FIELD_PREP(MICFIL_CTRL2_CICOSR, 16 - MICFIL_OSR_DEFAULT));
+ 	if (ret)
  		return ret;
- 	}
  
-+	micfil->dma_params_rx.peripheral_config = &micfil->sdmacfg;
-+	micfil->dma_params_rx.peripheral_size = sizeof(micfil->sdmacfg);
-+	micfil->sdmacfg.n_fifos_src = channels;
-+	micfil->sdmacfg.sw_done = true;
- 	micfil->dma_params_rx.maxburst = channels * MICFIL_DMA_MAXBURST_RX;
+@@ -673,7 +676,6 @@ static int fsl_micfil_probe(struct platform_device *pdev)
+ 	micfil->dma_params_rx.addr = res->start + REG_MICFIL_DATACH0;
+ 	micfil->dma_params_rx.maxburst = MICFIL_DMA_MAXBURST_RX;
  
- 	return 0;
+-
+ 	platform_set_drvdata(pdev, micfil);
+ 
+ 	pm_runtime_enable(&pdev->dev);
+diff --git a/sound/soc/fsl/fsl_micfil.h b/sound/soc/fsl/fsl_micfil.h
+index 5cecae2519795..08901827047db 100644
+--- a/sound/soc/fsl/fsl_micfil.h
++++ b/sound/soc/fsl/fsl_micfil.h
+@@ -58,7 +58,6 @@
+ #define MICFIL_QSEL_VLOW2_QUALITY	4
+ 
+ #define MICFIL_CTRL2_CICOSR		GENMASK(19, 16)
+-#define MICFIL_CTRL2_CICOSR_DEFAULT	0
+ #define MICFIL_CTRL2_CLKDIV		GENMASK(7, 0)
+ 
+ /* MICFIL Status Register -- REG_MICFIL_STAT 0x08 */
 -- 
 2.30.2
 

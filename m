@@ -2,104 +2,97 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FDFA4F4F88
-	for <lists+dmaengine@lfdr.de>; Wed,  6 Apr 2022 04:07:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66ABB4F4F83
+	for <lists+dmaengine@lfdr.de>; Wed,  6 Apr 2022 04:03:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242799AbiDFAw0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 5 Apr 2022 20:52:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53218 "EHLO
+        id S240368AbiDFAwY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 5 Apr 2022 20:52:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1573189AbiDESOb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 5 Apr 2022 14:14:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C759386E3A;
-        Tue,  5 Apr 2022 11:12:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6208A618D5;
-        Tue,  5 Apr 2022 18:12:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD4B6C385A8;
-        Tue,  5 Apr 2022 18:12:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649182351;
-        bh=RtSQnyTH2bGhJA1/9COYZ3axzbF+DTRbMhYJaQmigK4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bJXWYYG/tvvtzQ7mynkQmNmp4oWLRn5127jXucil0ZLUP2QwdSLkBd5VLlbiifoVL
-         MgsLY/BryAsTAHBk3L3Sqwke8Hs7z/Svxr1W1nPprI2+t4529BS7r4CQ986LY8AC/d
-         VpHb41kMYECay1Rhodz0/QvluhQC2I2d67+dYNNz5M3Bw5D7vYXNb7J74ah5beA2Qd
-         HJxJL8u8zj7a/ifUwE8hM3YLLOZdrQVuBi35vMjU9a+8qFX/bOR5RGWKdXyo0mvx5v
-         L9StbjsctvN910jBX2Ls6y7Yk7VsE7ZW9DZcknWApQcyYPsTfQV5pkAHKkvVzTRnc+
-         19d6NNVu+8Sjg==
-Received: by mail-il1-f180.google.com with SMTP id x9so170651ilc.3;
-        Tue, 05 Apr 2022 11:12:31 -0700 (PDT)
-X-Gm-Message-State: AOAM531rrObIDBJhGG5oxmBRGK90USUAfsY5v8di4WSmnM0rjVVxPVuG
-        GVqLF4VLPTT89asBePniNrzoC9YV6JQ9uCG42w==
-X-Google-Smtp-Source: ABdhPJxl778BPyM18iwKU9BBEuG8FWmDp6WxR6Z3mTcc8vTqYUBuaCKKMi20g9YQGtWiXGmB8EkjpVPbfq9ItDZJ7Uc=
-X-Received: by 2002:a05:6e02:2183:b0:2c7:fe42:7b07 with SMTP id
- j3-20020a056e02218300b002c7fe427b07mr2249890ila.302.1649182350732; Tue, 05
- Apr 2022 11:12:30 -0700 (PDT)
+        with ESMTP id S1579953AbiDEXd1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 5 Apr 2022 19:33:27 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D670C1081B6
+        for <dmaengine@vger.kernel.org>; Tue,  5 Apr 2022 14:53:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649195619; x=1680731619;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=SN7XYbG7HQgv/a75FIgQW3YvGavpk4iSVd80uDvCrGo=;
+  b=gq8n1YF4UVBqNoJpqB7wq8XcqaTewV9pJ+ymFXCKcmNkXChpe6ewtEhP
+   pN/nM35CAeGvUQaVunh2feGGjFHeq/1RJifmF8Ngfn5tsDxsvjD1Chf0x
+   56ZFprgxnTFSaDDzEBGu3sg/mCvH1Q7AAyO9D65JiXLp7uthOJpHgjhK2
+   0sXCb22vFxn68WRrkOoRbh6v4/wNTmFIOqDI3X8jMJnXVhg/7dPDpPoyg
+   HTfap/ttrbmq3YgDiSm1OnNuf9E8i1nQVYTf60j3nV1q55ks83N4sCPMt
+   Zl9dSr+1edHe13ayi2lJiqcqlv1bF/6tB90rssUcf6+LMDvAxzzPvZjTr
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10308"; a="243012466"
+X-IronPort-AV: E=Sophos;i="5.90,238,1643702400"; 
+   d="scan'208";a="243012466"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 14:53:39 -0700
+X-IronPort-AV: E=Sophos;i="5.90,238,1643702400"; 
+   d="scan'208";a="524177026"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2022 14:53:39 -0700
+Subject: [PATCH] dmaengine: idxd: fix device cleanup on disable
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     Tony Zhu <tony.zhu@intel.com>, Tony Zhu <tony.zhu@intel.com>,
+        dmaengine@vger.kernel.org
+Date:   Tue, 05 Apr 2022 14:53:39 -0700
+Message-ID: <164919561905.1455025.13542366389944678346.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/1.1
 MIME-Version: 1.0
-References: <20220405081911.1349563-1-miquel.raynal@bootlin.com> <20220405081911.1349563-2-miquel.raynal@bootlin.com>
-In-Reply-To: <20220405081911.1349563-2-miquel.raynal@bootlin.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 5 Apr 2022 13:12:19 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqK3VJ=5VxF5DgZh58zkmWkaAHu9TL9dYOAeTw5nry1Xrg@mail.gmail.com>
-Message-ID: <CAL_JsqK3VJ=5VxF5DgZh58zkmWkaAHu9TL9dYOAeTw5nry1Xrg@mail.gmail.com>
-Subject: Re: [PATCH v7 1/9] dt-bindings: dmaengine: Introduce RZN1 dmamux bindings
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        Milan Stevanovic <milan.stevanovic@se.com>,
-        Jimmy Lalande <jimmy.lalande@se.com>,
-        Pascal Eberhard <pascal.eberhard@se.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Herve Codina <herve.codina@bootlin.com>,
-        Clement Leger <clement.leger@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Apr 5, 2022 at 3:19 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
->
-> The Renesas RZN1 DMA IP is based on a DW core, with eg. an additional
-> dmamux register located in the system control area which can take up to
-> 32 requests (16 per DMA controller). Each DMA channel can be wired to
-> two different peripherals.
->
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../bindings/dma/renesas,rzn1-dmamux.yaml     | 51 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/renesas,rzn1-dmamux.yaml
+There are certain parts of WQ that needs to be cleaned up even after WQ is
+disabled during the device disable. Those are the unchangeable parts for a
+WQ when the device is still enabled. Move the cleanup outside of WQ state
+check. Remove idxd_wq_disable_cleanup() inside idxd_wq_device_reset_cleanup()
+since only the unchangeable parts need to be cleared.
 
-Please send to the DT list so checks run. I've already reviewed this,
-but what passes does change over time. Such as RiscV cpuidle patches
-that were picked up after 2 months on Thurs and sent to Linus on
-Fri... :(
+Fixes: 0f225705cf65 ("dmaengine: idxd: fix wq settings post wq disable")
+Reported-by: Tony Zhu <tony.zhu@intel.com>
+Tested-by: Tony Zhu <tony.zhu@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/dma/idxd/device.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Rob
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index 3061fe857d69..5a0535a0f850 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -373,7 +373,6 @@ static void idxd_wq_device_reset_cleanup(struct idxd_wq *wq)
+ {
+ 	lockdep_assert_held(&wq->wq_lock);
+ 
+-	idxd_wq_disable_cleanup(wq);
+ 	wq->size = 0;
+ 	wq->group = NULL;
+ }
+@@ -701,9 +700,9 @@ static void idxd_device_wqs_clear_state(struct idxd_device *idxd)
+ 
+ 		if (wq->state == IDXD_WQ_ENABLED) {
+ 			idxd_wq_disable_cleanup(wq);
+-			idxd_wq_device_reset_cleanup(wq);
+ 			wq->state = IDXD_WQ_DISABLED;
+ 		}
++		idxd_wq_device_reset_cleanup(wq);
+ 	}
+ }
+ 
+
+

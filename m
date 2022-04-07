@@ -2,96 +2,217 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 845884F7790
-	for <lists+dmaengine@lfdr.de>; Thu,  7 Apr 2022 09:33:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D54664F77CA
+	for <lists+dmaengine@lfdr.de>; Thu,  7 Apr 2022 09:39:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241801AbiDGHeu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 7 Apr 2022 03:34:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40584 "EHLO
+        id S241957AbiDGHlK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 7 Apr 2022 03:41:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240588AbiDGHet (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 7 Apr 2022 03:34:49 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89405177D3A
-        for <dmaengine@vger.kernel.org>; Thu,  7 Apr 2022 00:32:49 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id b15so5376204edn.4
-        for <dmaengine@vger.kernel.org>; Thu, 07 Apr 2022 00:32:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=+EUKtGXqpzIiuM97OU9EnfIBqXUuugdodntp3RmpB2g=;
-        b=MLD6Pa+acykChUKYnfN5TlyaI2DFI3571kmJ0xwMHyfkfJkDEmnAFhXVSgHmKhSdUU
-         CZQ1lyks55pzyVktHVoYFbNKKG8kXahI6EhIs8eGSfn1O9f3ntDxN5C6Y/zTn90o+YQ8
-         EhWiMs6RJVWYj0ehCvlPSAWsXpJ9W0C3Nw5DvvPo0IdrQvYQyWS0yh/3cKz7SAE5VvtF
-         3CeyNI4eGh3tkj20VQ95XOGK8FZFWFF3B6WEUxCxFGdxVPMnAW9+8iZdoBEKMk7ogPHa
-         92G465mJCWogofCCre/3YYA+mwoaqVb026bmzJ/K6K8lcgj+t+xx5V3ZEDCeftNXbHDo
-         wlag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=+EUKtGXqpzIiuM97OU9EnfIBqXUuugdodntp3RmpB2g=;
-        b=IM3TdWF0G7LhswT3S5E+t8j4PeywixjyRHY6GK6Vd8bXVbkIV2CpyxGI2nGSzVADsc
-         4nbzBdbt8h87Di9j+XWnKmjw+Y2kLVsr0WckXOqRVn5Z4WW9V0ZaNlGxwO8x3Hyrq6Kj
-         dcEr2FLr1+DNz/qArlZOesoKaoWcpoq8NzwNlP1O9e+R8I/EnRKtJ6xcm5JX/9gju+2u
-         HeJsUlyO5yyQrPm7Rpx4XQ2kcIvM5a2uXbgWyq/PIJbPClxxLTm1Kqj951ugtueCUEKo
-         18ETKl/gGoV+QlokG0mGZI5/lgM8Xmndg44U4Ns8VfUM9NpllCGMyFQ1nWIRAzu3qPRS
-         Ef7A==
-X-Gm-Message-State: AOAM531ULwDzN2skW/repxRxZIr6LhlXDtbrMrBXfmGltr8WznpxEl0z
-        xPoOZkr1qnmLbyiwS5TmfEe13g==
-X-Google-Smtp-Source: ABdhPJyIpHoo5CyU+omZm76Ir2AEajIb5A/rhFDOmn6KNjdwWWGCZXA1IvhboAVJ40Su1x4Bx+KhiQ==
-X-Received: by 2002:a50:f106:0:b0:41c:d793:3ae5 with SMTP id w6-20020a50f106000000b0041cd7933ae5mr12892876edl.390.1649316768155;
-        Thu, 07 Apr 2022 00:32:48 -0700 (PDT)
-Received: from [192.168.0.185] (xdsl-188-155-201-27.adslplus.ch. [188.155.201.27])
-        by smtp.gmail.com with ESMTPSA id lj11-20020a170906f9cb00b006e8402c3379sm32496ejb.58.2022.04.07.00.32.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Apr 2022 00:32:47 -0700 (PDT)
-Message-ID: <f3f5c297-a94b-9544-5673-3da3188623f9@linaro.org>
-Date:   Thu, 7 Apr 2022 09:32:46 +0200
+        with ESMTP id S241979AbiDGHlJ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 7 Apr 2022 03:41:09 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E2C7E5A5
+        for <dmaengine@vger.kernel.org>; Thu,  7 Apr 2022 00:39:07 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1ncMjN-0008Ay-8r; Thu, 07 Apr 2022 09:39:01 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1ncMjL-0005lq-5S; Thu, 07 Apr 2022 09:38:59 +0200
+Date:   Thu, 7 Apr 2022 09:38:59 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc:     alsa-devel@alsa-project.org, Xiubo Li <Xiubo.Lee@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        dmaengine@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2 05/19] ASoC: fsl_micfil: use GENMASK to define
+ register bit fields
+Message-ID: <20220407073859.GB4012@pengutronix.de>
+References: <20220328112744.1575631-1-s.hauer@pengutronix.de>
+ <20220328112744.1575631-6-s.hauer@pengutronix.de>
+ <CAA+D8APTMSLSCb386XvN3bu+uq3F1VK9NopJYpgumDF=TCCgEw@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH 2/3] dt-bindings: dmaengine: qcom: gpi: add compatible for
- sm8350/sm8350
-Content-Language: en-US
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        devicetree@vger.kernel.org
-References: <20220406132508.1029348-1-vkoul@kernel.org>
- <20220406132508.1029348-2-vkoul@kernel.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220406132508.1029348-2-vkoul@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAA+D8APTMSLSCb386XvN3bu+uq3F1VK9NopJYpgumDF=TCCgEw@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:28:01 up 7 days, 19:57, 63 users,  load average: 0.14, 0.16, 0.18
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 06/04/2022 15:25, Vinod Koul wrote:
-> Add the compatible for newer qcom socs with gpi dma i.e qcom sm8350 and
-> sm8450.
+On Thu, Apr 07, 2022 at 10:08:38AM +0800, Shengjiu Wang wrote:
+>    On Mon, Mar 28, 2022 at 7:28 PM Sascha Hauer <[1]s.hauer@pengutronix.de>
+>    wrote:
 > 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+>      Use GENMASK along with FIELD_PREP and FIELD_GET to access bitfields in
+>      registers to straighten register access and to drop a lot of defines.
 > 
+>      Signed-off-by: Sascha Hauer <[2]s.hauer@pengutronix.de>
+>      ---
+> 
+>      Notes:
+>          Changes since v1:
+>          - add missing include linux/bitfield.h
+> 
+>       sound/soc/fsl/fsl_micfil.c |  52 ++++++-------
+>       sound/soc/fsl/fsl_micfil.h | 147 ++++++++-----------------------------
+>       2 files changed, 58 insertions(+), 141 deletions(-)
+> 
+>      diff --git a/sound/soc/fsl/fsl_micfil.c b/sound/soc/fsl/fsl_micfil.c
+>      index 878d24fde3581..cfa8af668d921 100644
+>      --- a/sound/soc/fsl/fsl_micfil.c
+>      +++ b/sound/soc/fsl/fsl_micfil.c
+>      @@ -1,6 +1,7 @@
+>       // SPDX-License-Identifier: GPL-2.0
+>       // Copyright 2018 NXP
+> 
+>      +#include <linux/bitfield.h>
+>       #include <linux/clk.h>
+>       #include <linux/device.h>
+>       #include <linux/interrupt.h>
+>      @@ -116,23 +117,22 @@ static inline int get_pdm_clk(struct fsl_micfil
+>      *micfil,
+>              int bclk;
+> 
+>              regmap_read(micfil->regmap, REG_MICFIL_CTRL2, &ctrl2_reg);
+>      -       osr = 16 - ((ctrl2_reg & MICFIL_CTRL2_CICOSR_MASK)
+>      -                   >> MICFIL_CTRL2_CICOSR_SHIFT);
+>      -       qsel = ctrl2_reg & MICFIL_CTRL2_QSEL_MASK;
+>      +       osr = 16 - FIELD_GET(MICFIL_CTRL2_CICOSR, ctrl2_reg);
+>      +       qsel = FIELD_GET(MICFIL_CTRL2_QSEL, ctrl2_reg);
+> 
+>              switch (qsel) {
+>      -       case MICFIL_HIGH_QUALITY:
+>      +       case MICFIL_QSEL_HIGH_QUALITY:
+>                      bclk = rate * 8 * osr / 2; /* kfactor = 0.5 */
+>                      break;
+>      -       case MICFIL_MEDIUM_QUALITY:
+>      -       case MICFIL_VLOW0_QUALITY:
+>      +       case MICFIL_QSEL_MEDIUM_QUALITY:
+>      +       case MICFIL_QSEL_VLOW0_QUALITY:
+>                      bclk = rate * 4 * osr * 1; /* kfactor = 1 */
+>                      break;
+>      -       case MICFIL_LOW_QUALITY:
+>      -       case MICFIL_VLOW1_QUALITY:
+>      +       case MICFIL_QSEL_LOW_QUALITY:
+>      +       case MICFIL_QSEL_VLOW1_QUALITY:
+>                      bclk = rate * 2 * osr * 2; /* kfactor = 2 */
+>                      break;
+>      -       case MICFIL_VLOW2_QUALITY:
+>      +       case MICFIL_QSEL_VLOW2_QUALITY:
+>                      bclk = rate * osr * 4; /* kfactor = 4 */
+>                      break;
+>              default:
+>      @@ -244,8 +244,8 @@ static int fsl_micfil_trigger(struct
+>      snd_pcm_substream *substream, int cmd,
+>                       * 11 - reserved
+>                       */
+>                      ret = regmap_update_bits(micfil->regmap,
+>      REG_MICFIL_CTRL1,
+>      -                                        MICFIL_CTRL1_DISEL_MASK,
+>      -                                        (1 <<
+>      MICFIL_CTRL1_DISEL_SHIFT));
+>      +                               MICFIL_CTRL1_DISEL,
+>      +                               FIELD_PREP(MICFIL_CTRL1_DISEL,
+>      MICFIL_CTRL1_DISEL_DMA));
+> 
+>    Alignment should match open parenthesis?
 
+Generally yes, but in this case this would introduce an additional
+linebreak inside the FIELD_PREP macro which reduces readability:
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Instead of:
 
+	ret = regmap_update_bits(micfil->regmap, REG_MICFIL_CTRL1,
+			MICFIL_CTRL1_DISEL,
+			FIELD_PREP(MICFIL_CTRL1_DISEL, MICFIL_CTRL1_DISEL_DMA));
 
-Best regards,
-Krzysztof
+We would have:
+
+	ret = regmap_update_bits(micfil->regmap, REG_MICFIL_CTRL1,
+				 MICFIL_CTRL1_DISEL,
+				 FIELD_PREP(MICFIL_CTRL1_DISEL,
+				 MICFIL_CTRL1_DISEL_DMA));
+
+> 
+>                      ret = regmap_update_bits(micfil->regmap,
+>      REG_MICFIL_CTRL1,
+>      -                                        MICFIL_CTRL1_DISEL_MASK,
+>      -                                        (0 <<
+>      MICFIL_CTRL1_DISEL_SHIFT));
+>      +                               MICFIL_CTRL1_DISEL,
+>      +                               FIELD_PREP(MICFIL_CTRL1_DISEL,
+>      MICFIL_CTRL1_DISEL_DISABLE));
+> 
+>    Alignment should match open parenthesis? 
+
+Same here.
+
+>     
+> 
+>                      if (ret) {
+>                              dev_err(dev, "failed to update DISEL bits\n");
+>                              return ret;
+>      @@ -300,8 +300,8 @@ static int fsl_set_clock_params(struct device *dev,
+>      unsigned int rate)
+> 
+>              /* set CICOSR */
+>              ret |= regmap_update_bits(micfil->regmap, REG_MICFIL_CTRL2,
+>      -                                MICFIL_CTRL2_CICOSR_MASK,
+>      -                                MICFIL_CTRL2_OSR_DEFAULT);
+>      +                                MICFIL_CTRL2_CICOSR,
+>      +                                FIELD_PREP(MICFIL_CTRL2_CICOSR,
+>      MICFIL_CTRL2_CICOSR_DEFAULT));
+> 
+>     Alignment should match open parenthesis? 
+
+This is fixed in one of the next patches where the '|=' is replaced with '='.
+It reduces the number of lines changed in that patch, so I think this is ok
+here.
+
+> 
+>              if (ret)
+>                      dev_err(dev, "failed to set CICOSR in reg 0x%X\n",
+>                              REG_MICFIL_CTRL2);
+>      @@ -312,7 +312,8 @@ static int fsl_set_clock_params(struct device *dev,
+>      unsigned int rate)
+>                      ret = -EINVAL;
+> 
+>              ret |= regmap_update_bits(micfil->regmap, REG_MICFIL_CTRL2,
+>      -                                MICFIL_CTRL2_CLKDIV_MASK, clk_div);
+>      +                                MICFIL_CTRL2_CLKDIV,
+>      +                                FIELD_PREP(MICFIL_CTRL2_CLKDIV,
+>      clk_div));
+> 
+>    Alignment should match open parenthesis?
+
+Ditto.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |

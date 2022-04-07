@@ -2,30 +2,30 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C5554F7A55
-	for <lists+dmaengine@lfdr.de>; Thu,  7 Apr 2022 10:50:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B9A04F7A4F
+	for <lists+dmaengine@lfdr.de>; Thu,  7 Apr 2022 10:50:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243428AbiDGIwC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 7 Apr 2022 04:52:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36372 "EHLO
+        id S243425AbiDGIv5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 7 Apr 2022 04:51:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243430AbiDGIvx (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 7 Apr 2022 04:51:53 -0400
+        with ESMTP id S243408AbiDGIvw (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 7 Apr 2022 04:51:52 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78A301C1ED0
-        for <dmaengine@vger.kernel.org>; Thu,  7 Apr 2022 01:49:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2B1BDAFF4
+        for <dmaengine@vger.kernel.org>; Thu,  7 Apr 2022 01:49:52 -0700 (PDT)
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <sha@pengutronix.de>)
-        id 1ncNpp-0003ct-Sk; Thu, 07 Apr 2022 10:49:45 +0200
+        id 1ncNpr-0003gC-Ra; Thu, 07 Apr 2022 10:49:47 +0200
 Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
         by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
         (envelope-from <sha@pengutronix.de>)
-        id 1ncNpp-001Zql-Vy; Thu, 07 Apr 2022 10:49:44 +0200
+        id 1ncNps-001Zrf-37; Thu, 07 Apr 2022 10:49:46 +0200
 Received: from sha by dude02.red.stw.pengutronix.de with local (Exim 4.94.2)
         (envelope-from <sha@pengutronix.de>)
-        id 1ncNpm-000w4p-Tj; Thu, 07 Apr 2022 10:49:42 +0200
+        id 1ncNpm-000w4s-UN; Thu, 07 Apr 2022 10:49:42 +0200
 From:   Sascha Hauer <s.hauer@pengutronix.de>
 To:     alsa-devel@alsa-project.org
 Cc:     Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
@@ -33,9 +33,9 @@ Cc:     Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
         Vinod Koul <vkoul@kernel.org>,
         NXP Linux Team <linux-imx@nxp.com>,
         dmaengine@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH v4 18/21] ASoC: fsl_micfil: drop only once used defines
-Date:   Thu,  7 Apr 2022 10:49:33 +0200
-Message-Id: <20220407084936.223075-19-s.hauer@pengutronix.de>
+Subject: [PATCH v4 19/21] ASoC: fsl_micfil: drop support for undocumented property
+Date:   Thu,  7 Apr 2022 10:49:34 +0200
+Message-Id: <20220407084936.223075-20-s.hauer@pengutronix.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220407084936.223075-1-s.hauer@pengutronix.de>
 References: <20220407084936.223075-1-s.hauer@pengutronix.de>
@@ -54,41 +54,50 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-FSL_MICFIL_RATES and FSL_MICFIL_FORMATS is only used once. Drop
-the unnecesary indirection and use SNDRV_PCM_RATE_8000_48000 and
-SNDRV_PCM_FMTBIT_S16_LE directly.
+The "fsl,shared-interrupt" property is undocumented and unnecessary.
+Just pass IRQF_SHARED unconditionally.
 
 Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 Acked-by: Shengjiu Wang <shengjiu.wang@gmail.com>
 ---
- sound/soc/fsl/fsl_micfil.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ sound/soc/fsl/fsl_micfil.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
 diff --git a/sound/soc/fsl/fsl_micfil.c b/sound/soc/fsl/fsl_micfil.c
-index bde516586f80c..3a88e38d3fb6f 100644
+index 3a88e38d3fb6f..7afe6ea42b817 100644
 --- a/sound/soc/fsl/fsl_micfil.c
 +++ b/sound/soc/fsl/fsl_micfil.c
-@@ -25,9 +25,6 @@
+@@ -554,7 +554,6 @@ static int fsl_micfil_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	void __iomem *regs;
+ 	int ret, i;
+-	unsigned long irqflag = 0;
  
- #include "fsl_micfil.h"
+ 	micfil = devm_kzalloc(&pdev->dev, sizeof(*micfil), GFP_KERNEL);
+ 	if (!micfil)
+@@ -618,12 +617,9 @@ static int fsl_micfil_probe(struct platform_device *pdev)
+ 			return micfil->irq[i];
+ 	}
  
--#define FSL_MICFIL_RATES		SNDRV_PCM_RATE_8000_48000
--#define FSL_MICFIL_FORMATS		(SNDRV_PCM_FMTBIT_S16_LE)
+-	if (of_property_read_bool(np, "fsl,shared-interrupt"))
+-		irqflag = IRQF_SHARED;
 -
- #define MICFIL_OSR_DEFAULT	16
+ 	/* Digital Microphone interface interrupt */
+ 	ret = devm_request_irq(&pdev->dev, micfil->irq[0],
+-			       micfil_isr, irqflag,
++			       micfil_isr, IRQF_SHARED,
+ 			       micfil->name, micfil);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to claim mic interface irq %u\n",
+@@ -633,7 +629,7 @@ static int fsl_micfil_probe(struct platform_device *pdev)
  
- enum quality {
-@@ -350,8 +347,8 @@ static struct snd_soc_dai_driver fsl_micfil_dai = {
- 		.stream_name = "CPU-Capture",
- 		.channels_min = 1,
- 		.channels_max = 8,
--		.rates = FSL_MICFIL_RATES,
--		.formats = FSL_MICFIL_FORMATS,
-+		.rates = SNDRV_PCM_RATE_8000_48000,
-+		.formats = SNDRV_PCM_FMTBIT_S16_LE,
- 	},
- 	.ops = &fsl_micfil_dai_ops,
- };
+ 	/* Digital Microphone interface error interrupt */
+ 	ret = devm_request_irq(&pdev->dev, micfil->irq[1],
+-			       micfil_err_isr, irqflag,
++			       micfil_err_isr, IRQF_SHARED,
+ 			       micfil->name, micfil);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to claim mic interface error irq %u\n",
 -- 
 2.30.2
 

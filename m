@@ -2,69 +2,57 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B64EA4F7254
-	for <lists+dmaengine@lfdr.de>; Thu,  7 Apr 2022 04:53:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 171784F76C2
+	for <lists+dmaengine@lfdr.de>; Thu,  7 Apr 2022 09:05:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231625AbiDGCzL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 6 Apr 2022 22:55:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48518 "EHLO
+        id S233537AbiDGHHA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 7 Apr 2022 03:07:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbiDGCzK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Apr 2022 22:55:10 -0400
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 763D83B022;
-        Wed,  6 Apr 2022 19:53:12 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id f38so7346958ybi.3;
-        Wed, 06 Apr 2022 19:53:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hOqVy6gRmDIPKGJRDzX2KezvYez3k9c+5+AVEHVzz40=;
-        b=P+y3+ScFd24nfq3pBIZYA+8O6FxPw+aM0oWT3No1p4/eJWXp4tSN7e7pplFy2odInW
-         k+Y2CG87GauHiaQn82wzVPVzC8JhMnCTn/Rhwfyf1Eu2E3i91TOlHB75JZw3Gho3aGRI
-         FWFTneC/EN+zh2FWeG2rXGRHUvg+rKk11H+iThCnjEvk24X/tPXdpimt3x3qRQgGVeEZ
-         WwF9R/lV3Fkn1DkohWLc6zI9S9LjiK3uaZvwsL9GhdSQ0QlZMRDemK/kfDSiABkldMGm
-         FnIFehGAF/fwgBt2JjT+Yu8pJ/KXBS4aGrD9nYE5s4xU+70XAEnUq2RzN3XPfKNyhcO1
-         rcMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hOqVy6gRmDIPKGJRDzX2KezvYez3k9c+5+AVEHVzz40=;
-        b=d+2Dn3JFyblJRaZ2RGp+mCetmulz/+5QyMypcbL0MncLpRJAV7NZA6CGjL56jNX73W
-         MbE3JNRLtv1wKLdFBMBhF7woQH3/WI9IBxhtdFERav6C3uQ1qdnZX02d1jF/HdFxg3y9
-         0A3Tc0PO94WOKLqBh2dr38pViAyHTziFkI5XRVF5QD+SSOBVan+hWJiUE3PG7r63AKf+
-         LxiG7zoVlYH2ZUeIEP2b39xdVh56vpccNXI/fyH7I1hS98qGOPNpjU6exwWj9GuAv9Q9
-         nxSs/PNXQps+YF5c1RaQxzvOGgaChEr2o6X9ZyR0iHVYPg1h74dPE6uzkerFWV0AJgS3
-         S3CA==
-X-Gm-Message-State: AOAM533bEJriNnZ33s1bmGhR/eYJduPYUvSIKGlOnsdo+XbdRN8sDgcP
-        TdCQiSz0xaDZ4iLlxUPpbbliDQjOWs21BBWzIpI=
-X-Google-Smtp-Source: ABdhPJyfmfZEIsyG6RM9aPwpCdyCsqYhqtBZg/XU9g0EImsIbaZJa4T9PtaA/s6KvzGLSkuXzN89+rCyWiE2pyGr4Fo=
-X-Received: by 2002:a25:e0d3:0:b0:63d:c615:afb8 with SMTP id
- x202-20020a25e0d3000000b0063dc615afb8mr8436525ybg.182.1649299991734; Wed, 06
- Apr 2022 19:53:11 -0700 (PDT)
+        with ESMTP id S240330AbiDGHG7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 7 Apr 2022 03:06:59 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8896524B5CF
+        for <dmaengine@vger.kernel.org>; Thu,  7 Apr 2022 00:05:00 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1ncMCK-0002PS-Os; Thu, 07 Apr 2022 09:04:52 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1ncMCK-00043z-0E; Thu, 07 Apr 2022 09:04:52 +0200
+Date:   Thu, 7 Apr 2022 09:04:51 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc:     alsa-devel@alsa-project.org, Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Vinod Koul <vkoul@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v3 14/20] ASoC: fsl_micfil: Drop get_pdm_clk()
+Message-ID: <20220407070451.GY4012@pengutronix.de>
+References: <20220405075959.2744803-1-s.hauer@pengutronix.de>
+ <20220405075959.2744803-15-s.hauer@pengutronix.de>
+ <CAA+D8AMMDF1eL_sdE_zF-52ZoaxyWjAtCOQyOZ71+ozzfqf1qg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20220404155557.27316-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20220404155557.27316-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 7 Apr 2022 03:52:45 +0100
-Message-ID: <CA+V-a8tM3EiZkNSCG+CtrOnfGBc5WSaac__FBsRn72zrsjQ2ew@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] dmaengine: Use platform_get_irq*() variants to
- fetch IRQ's
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Sean Wang <sean.wang@mediatek.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAA+D8AMMDF1eL_sdE_zF-52ZoaxyWjAtCOQyOZ71+ozzfqf1qg@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:04:04 up 7 days, 19:33, 61 users,  load average: 0.26, 0.73, 0.52
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,48 +60,85 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vinod,
+On Thu, Apr 07, 2022 at 11:41:52AM +0800, Shengjiu Wang wrote:
+>    On Tue, Apr 5, 2022 at 4:00 PM Sascha Hauer <[1]s.hauer@pengutronix.de>
+>    wrote:
+> 
+>      get_pdm_clk() calculates the PDM clock based on the quality setting,
+>      but really the PDM clock is independent of the quality, it's always
+>      rate * 4 * micfil->osr. Just drop the function and do the calculation
+>      in the caller.
+> 
+>      Signed-off-by: Sascha Hauer <[2]s.hauer@pengutronix.de>
+>      ---
+>       sound/soc/fsl/fsl_micfil.c | 38 +-------------------------------------
+>       1 file changed, 1 insertion(+), 37 deletions(-)
+> 
+>      diff --git a/sound/soc/fsl/fsl_micfil.c b/sound/soc/fsl/fsl_micfil.c
+>      index 4b4b7fbbf5c4f..8335646a84d17 100644
+>      --- a/sound/soc/fsl/fsl_micfil.c
+>      +++ b/sound/soc/fsl/fsl_micfil.c
+>      @@ -111,42 +111,6 @@ static const struct snd_kcontrol_new
+>      fsl_micfil_snd_controls[] = {
+>                           snd_soc_get_enum_double, snd_soc_put_enum_double),
+>       };
+> 
+>      -static inline int get_pdm_clk(struct fsl_micfil *micfil,
+>      -                             unsigned int rate)
+>      -{
+>      -       u32 ctrl2_reg;
+>      -       int qsel;
+>      -       int bclk;
+>      -       int osr = MICFIL_OSR_DEFAULT;
+>      -
+>      -       regmap_read(micfil->regmap, REG_MICFIL_CTRL2, &ctrl2_reg);
+>      -       qsel = FIELD_GET(MICFIL_CTRL2_QSEL, ctrl2_reg);
+>      -
+>      -       switch (qsel) {
+>      -       case MICFIL_QSEL_HIGH_QUALITY:
+>      -               bclk = rate * 8 * osr / 2; /* kfactor = 0.5 */
+>      -               break;
+>      -       case MICFIL_QSEL_MEDIUM_QUALITY:
+>      -       case MICFIL_QSEL_VLOW0_QUALITY:
+>      -               bclk = rate * 4 * osr * 1; /* kfactor = 1 */
+>      -               break;
+>      -       case MICFIL_QSEL_LOW_QUALITY:
+>      -       case MICFIL_QSEL_VLOW1_QUALITY:
+>      -               bclk = rate * 2 * osr * 2; /* kfactor = 2 */
+>      -               break;
+>      -       case MICFIL_QSEL_VLOW2_QUALITY:
+>      -               bclk = rate * osr * 4; /* kfactor = 4 */
+>      -               break;
+>      -       default:
+>      -               dev_err(&micfil->pdev->dev,
+>      -                       "Please make sure you select a valid
+>      quality.\n");
+>      -               bclk = -1;
+>      -               break;
+>      -       }
+>      -
+>      -       return bclk;
+>      -}
+>      -
+>       static inline int get_clk_div(struct fsl_micfil *micfil,
+>                                    unsigned int rate)
+>       {
+>      @@ -155,7 +119,7 @@ static inline int get_clk_div(struct fsl_micfil
+>      *micfil,
+> 
+>              mclk_rate = clk_get_rate(micfil->mclk);
+> 
+>      -       clk_div = mclk_rate / (get_pdm_clk(micfil, rate) * 2);
+>      +       clk_div = mclk_rate / (rate * micfil->osr * 8);
+> 
+>    Where is micfil->osr assigned a value?
 
-On Mon, Apr 4, 2022 at 4:56 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> Hi All,
->
-> This patch series aims to drop using platform_get_resource() for IRQ types
-> in preparation for removal of static setup of IRQ resource from DT core
-> code.
->
-Fyi.. the OF core changes have landed into -next [0].
+Should be MICFIL_OSR_DEFAULT instead.
 
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20220406&id=a1a2b7125e1079cfcc13a116aa3af3df2f9e002b
+Sascha
 
-Cheers,
-Prabhakar
-
-> Dropping usage of platform_get_resource() was agreed based on
-> the discussion [0].
->
-> [0] https://patchwork.kernel.org/project/linux-renesas-soc/
-> patch/20211209001056.29774-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
->
-> Changes for v3:
-> * Included Ack from Andy.
->
-> Cheers,
-> Prabhakar
->
-> Lad Prabhakar (3):
->   dmaengine: nbpfaxi: Use platform_get_irq_optional() to get the
->     interrupt
->   dmaengine: mediatek: mtk-hsdma: Use platform_get_irq() to get the
->     interrupt
->   dmaengine: mediatek-cqdma: Use platform_get_irq() to get the interrupt
->
->  drivers/dma/mediatek/mtk-cqdma.c | 12 ++++--------
->  drivers/dma/mediatek/mtk-hsdma.c | 11 ++++-------
->  drivers/dma/nbpfaxi.c            | 14 ++++++--------
->  3 files changed, 14 insertions(+), 23 deletions(-)
->
-> --
-> 2.17.1
->
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |

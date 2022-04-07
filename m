@@ -2,88 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ED234F77E3
-	for <lists+dmaengine@lfdr.de>; Thu,  7 Apr 2022 09:42:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78D574F7802
+	for <lists+dmaengine@lfdr.de>; Thu,  7 Apr 2022 09:46:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242032AbiDGHnk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 7 Apr 2022 03:43:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48282 "EHLO
+        id S231344AbiDGHr2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 7 Apr 2022 03:47:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242018AbiDGHnf (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 7 Apr 2022 03:43:35 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 346A11929A
-        for <dmaengine@vger.kernel.org>; Thu,  7 Apr 2022 00:41:35 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1ncMll-0000GK-LM; Thu, 07 Apr 2022 09:41:29 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1ncMll-0005uT-7e; Thu, 07 Apr 2022 09:41:29 +0200
-Date:   Thu, 7 Apr 2022 09:41:29 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, Xiubo Li <Xiubo.Lee@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shengjiu Wang <shengjiu.wang@gmail.com>, kernel@pengutronix.de,
-        NXP Linux Team <linux-imx@nxp.com>, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v2 10/19] dma: imx-sdma: Add multi fifo support
-Message-ID: <20220407074129.GC4012@pengutronix.de>
-References: <20220328112744.1575631-1-s.hauer@pengutronix.de>
- <20220328112744.1575631-11-s.hauer@pengutronix.de>
- <YkU7cYhZUuGyWbob@matsya>
- <20220331064903.GC4012@pengutronix.de>
- <YkVQNhTpeIT7qO/7@matsya>
- <20220401120137.GK4012@pengutronix.de>
- <Yk6RV2xEVqYOjhZN@matsya>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yk6RV2xEVqYOjhZN@matsya>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:40:02 up 7 days, 20:09, 63 users,  load average: 0.56, 0.51, 0.34
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S242110AbiDGHrZ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 7 Apr 2022 03:47:25 -0400
+X-Greylist: delayed 63 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 07 Apr 2022 00:45:19 PDT
+Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 445831B29D5
+        for <dmaengine@vger.kernel.org>; Thu,  7 Apr 2022 00:45:19 -0700 (PDT)
+Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 07 Apr 2022 16:44:15 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id 48D242058443;
+        Thu,  7 Apr 2022 16:44:15 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 7 Apr 2022 16:44:15 +0900
+Received: from plum.e01.socionext.com (unknown [10.212.243.119])
+        by kinkan2.css.socionext.com (Postfix) with ESMTP id C0DBCB62B7;
+        Thu,  7 Apr 2022 16:44:14 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH] dt-bindings: dma: uniphier: Use unevaluatedProperties
+Date:   Thu,  7 Apr 2022 16:44:07 +0900
+Message-Id: <1649317447-20996-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Apr 07, 2022 at 12:53:03PM +0530, Vinod Koul wrote:
-> On 01-04-22, 14:01, Sascha Hauer wrote:
-> > On Thu, Mar 31, 2022 at 12:24:46PM +0530, Vinod Koul wrote:
-> 
-> > > > I have put this into include/linux/platform_data/dma-imx.h because
-> > > > that's the only existing include file that is available. I could move
-> > > > this to a new file if you like that better.
-> > > 
-> > > Lets move to include/linux/dma/
-> > 
-> > What about the other stuff in include/linux/platform_data/dma-imx.h,
-> > should this go to include/linux/dma/ as well? There is nothing in it
-> > that is platform_data at all.
-> 
-> Move that as well please, perhaps a move patch and then the new addition
+This refers common bindings, so this is preferred for
+unevaluatedProperties instead of additionalProperties.
 
-Did so already in v3 I sent on Tuesday ;)
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
+ .../devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml    | 2 +-
+ .../devicetree/bindings/dma/socionext,uniphier-xdmac.yaml       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Sascha
-
+diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
+index e7bf6dd7da29..b40f247e07be 100644
+--- a/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
++++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
+@@ -45,7 +45,7 @@ required:
+   - clocks
+   - '#dma-cells'
+ 
+-additionalProperties: false
++unevaluatedProperties: false
+ 
+ examples:
+   - |
+diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+index 371f18773198..b2bd21cbeb7f 100644
+--- a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
++++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+@@ -40,7 +40,7 @@ properties:
+     minimum: 1
+     maximum: 16
+ 
+-additionalProperties: false
++unevaluatedProperties: false
+ 
+ required:
+   - compatible
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.25.1
+

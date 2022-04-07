@@ -2,51 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D54664F77CA
-	for <lists+dmaengine@lfdr.de>; Thu,  7 Apr 2022 09:39:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4ED234F77E3
+	for <lists+dmaengine@lfdr.de>; Thu,  7 Apr 2022 09:42:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241957AbiDGHlK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 7 Apr 2022 03:41:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39266 "EHLO
+        id S242032AbiDGHnk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 7 Apr 2022 03:43:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241979AbiDGHlJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 7 Apr 2022 03:41:09 -0400
+        with ESMTP id S242018AbiDGHnf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 7 Apr 2022 03:43:35 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E2C7E5A5
-        for <dmaengine@vger.kernel.org>; Thu,  7 Apr 2022 00:39:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 346A11929A
+        for <dmaengine@vger.kernel.org>; Thu,  7 Apr 2022 00:41:35 -0700 (PDT)
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <sha@pengutronix.de>)
-        id 1ncMjN-0008Ay-8r; Thu, 07 Apr 2022 09:39:01 +0200
+        id 1ncMll-0000GK-LM; Thu, 07 Apr 2022 09:41:29 +0200
 Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <sha@pengutronix.de>)
-        id 1ncMjL-0005lq-5S; Thu, 07 Apr 2022 09:38:59 +0200
-Date:   Thu, 7 Apr 2022 09:38:59 +0200
+        id 1ncMll-0005uT-7e; Thu, 07 Apr 2022 09:41:29 +0200
+Date:   Thu, 7 Apr 2022 09:41:29 +0200
 From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Shengjiu Wang <shengjiu.wang@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>
 Cc:     alsa-devel@alsa-project.org, Xiubo Li <Xiubo.Lee@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        dmaengine@vger.kernel.org, Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2 05/19] ASoC: fsl_micfil: use GENMASK to define
- register bit fields
-Message-ID: <20220407073859.GB4012@pengutronix.de>
+        Fabio Estevam <festevam@gmail.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>, kernel@pengutronix.de,
+        NXP Linux Team <linux-imx@nxp.com>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v2 10/19] dma: imx-sdma: Add multi fifo support
+Message-ID: <20220407074129.GC4012@pengutronix.de>
 References: <20220328112744.1575631-1-s.hauer@pengutronix.de>
- <20220328112744.1575631-6-s.hauer@pengutronix.de>
- <CAA+D8APTMSLSCb386XvN3bu+uq3F1VK9NopJYpgumDF=TCCgEw@mail.gmail.com>
+ <20220328112744.1575631-11-s.hauer@pengutronix.de>
+ <YkU7cYhZUuGyWbob@matsya>
+ <20220331064903.GC4012@pengutronix.de>
+ <YkVQNhTpeIT7qO/7@matsya>
+ <20220401120137.GK4012@pengutronix.de>
+ <Yk6RV2xEVqYOjhZN@matsya>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAA+D8APTMSLSCb386XvN3bu+uq3F1VK9NopJYpgumDF=TCCgEw@mail.gmail.com>
+In-Reply-To: <Yk6RV2xEVqYOjhZN@matsya>
 X-Sent-From: Pengutronix Hildesheim
 X-URL:  http://www.pengutronix.de/
 X-IRC:  #ptxdist @freenode
 X-Accept-Language: de,en
 X-Accept-Content-Type: text/plain
-X-Uptime: 09:28:01 up 7 days, 19:57, 63 users,  load average: 0.14, 0.16, 0.18
+X-Uptime: 09:40:02 up 7 days, 20:09, 63 users,  load average: 0.56, 0.51, 0.34
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
 X-SA-Exim-Mail-From: sha@pengutronix.de
@@ -61,153 +62,23 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Apr 07, 2022 at 10:08:38AM +0800, Shengjiu Wang wrote:
->    On Mon, Mar 28, 2022 at 7:28 PM Sascha Hauer <[1]s.hauer@pengutronix.de>
->    wrote:
+On Thu, Apr 07, 2022 at 12:53:03PM +0530, Vinod Koul wrote:
+> On 01-04-22, 14:01, Sascha Hauer wrote:
+> > On Thu, Mar 31, 2022 at 12:24:46PM +0530, Vinod Koul wrote:
 > 
->      Use GENMASK along with FIELD_PREP and FIELD_GET to access bitfields in
->      registers to straighten register access and to drop a lot of defines.
+> > > > I have put this into include/linux/platform_data/dma-imx.h because
+> > > > that's the only existing include file that is available. I could move
+> > > > this to a new file if you like that better.
+> > > 
+> > > Lets move to include/linux/dma/
+> > 
+> > What about the other stuff in include/linux/platform_data/dma-imx.h,
+> > should this go to include/linux/dma/ as well? There is nothing in it
+> > that is platform_data at all.
 > 
->      Signed-off-by: Sascha Hauer <[2]s.hauer@pengutronix.de>
->      ---
-> 
->      Notes:
->          Changes since v1:
->          - add missing include linux/bitfield.h
-> 
->       sound/soc/fsl/fsl_micfil.c |  52 ++++++-------
->       sound/soc/fsl/fsl_micfil.h | 147 ++++++++-----------------------------
->       2 files changed, 58 insertions(+), 141 deletions(-)
-> 
->      diff --git a/sound/soc/fsl/fsl_micfil.c b/sound/soc/fsl/fsl_micfil.c
->      index 878d24fde3581..cfa8af668d921 100644
->      --- a/sound/soc/fsl/fsl_micfil.c
->      +++ b/sound/soc/fsl/fsl_micfil.c
->      @@ -1,6 +1,7 @@
->       // SPDX-License-Identifier: GPL-2.0
->       // Copyright 2018 NXP
-> 
->      +#include <linux/bitfield.h>
->       #include <linux/clk.h>
->       #include <linux/device.h>
->       #include <linux/interrupt.h>
->      @@ -116,23 +117,22 @@ static inline int get_pdm_clk(struct fsl_micfil
->      *micfil,
->              int bclk;
-> 
->              regmap_read(micfil->regmap, REG_MICFIL_CTRL2, &ctrl2_reg);
->      -       osr = 16 - ((ctrl2_reg & MICFIL_CTRL2_CICOSR_MASK)
->      -                   >> MICFIL_CTRL2_CICOSR_SHIFT);
->      -       qsel = ctrl2_reg & MICFIL_CTRL2_QSEL_MASK;
->      +       osr = 16 - FIELD_GET(MICFIL_CTRL2_CICOSR, ctrl2_reg);
->      +       qsel = FIELD_GET(MICFIL_CTRL2_QSEL, ctrl2_reg);
-> 
->              switch (qsel) {
->      -       case MICFIL_HIGH_QUALITY:
->      +       case MICFIL_QSEL_HIGH_QUALITY:
->                      bclk = rate * 8 * osr / 2; /* kfactor = 0.5 */
->                      break;
->      -       case MICFIL_MEDIUM_QUALITY:
->      -       case MICFIL_VLOW0_QUALITY:
->      +       case MICFIL_QSEL_MEDIUM_QUALITY:
->      +       case MICFIL_QSEL_VLOW0_QUALITY:
->                      bclk = rate * 4 * osr * 1; /* kfactor = 1 */
->                      break;
->      -       case MICFIL_LOW_QUALITY:
->      -       case MICFIL_VLOW1_QUALITY:
->      +       case MICFIL_QSEL_LOW_QUALITY:
->      +       case MICFIL_QSEL_VLOW1_QUALITY:
->                      bclk = rate * 2 * osr * 2; /* kfactor = 2 */
->                      break;
->      -       case MICFIL_VLOW2_QUALITY:
->      +       case MICFIL_QSEL_VLOW2_QUALITY:
->                      bclk = rate * osr * 4; /* kfactor = 4 */
->                      break;
->              default:
->      @@ -244,8 +244,8 @@ static int fsl_micfil_trigger(struct
->      snd_pcm_substream *substream, int cmd,
->                       * 11 - reserved
->                       */
->                      ret = regmap_update_bits(micfil->regmap,
->      REG_MICFIL_CTRL1,
->      -                                        MICFIL_CTRL1_DISEL_MASK,
->      -                                        (1 <<
->      MICFIL_CTRL1_DISEL_SHIFT));
->      +                               MICFIL_CTRL1_DISEL,
->      +                               FIELD_PREP(MICFIL_CTRL1_DISEL,
->      MICFIL_CTRL1_DISEL_DMA));
-> 
->    Alignment should match open parenthesis?
+> Move that as well please, perhaps a move patch and then the new addition
 
-Generally yes, but in this case this would introduce an additional
-linebreak inside the FIELD_PREP macro which reduces readability:
-
-Instead of:
-
-	ret = regmap_update_bits(micfil->regmap, REG_MICFIL_CTRL1,
-			MICFIL_CTRL1_DISEL,
-			FIELD_PREP(MICFIL_CTRL1_DISEL, MICFIL_CTRL1_DISEL_DMA));
-
-We would have:
-
-	ret = regmap_update_bits(micfil->regmap, REG_MICFIL_CTRL1,
-				 MICFIL_CTRL1_DISEL,
-				 FIELD_PREP(MICFIL_CTRL1_DISEL,
-				 MICFIL_CTRL1_DISEL_DMA));
-
-> 
->                      ret = regmap_update_bits(micfil->regmap,
->      REG_MICFIL_CTRL1,
->      -                                        MICFIL_CTRL1_DISEL_MASK,
->      -                                        (0 <<
->      MICFIL_CTRL1_DISEL_SHIFT));
->      +                               MICFIL_CTRL1_DISEL,
->      +                               FIELD_PREP(MICFIL_CTRL1_DISEL,
->      MICFIL_CTRL1_DISEL_DISABLE));
-> 
->    Alignment should match open parenthesis? 
-
-Same here.
-
->     
-> 
->                      if (ret) {
->                              dev_err(dev, "failed to update DISEL bits\n");
->                              return ret;
->      @@ -300,8 +300,8 @@ static int fsl_set_clock_params(struct device *dev,
->      unsigned int rate)
-> 
->              /* set CICOSR */
->              ret |= regmap_update_bits(micfil->regmap, REG_MICFIL_CTRL2,
->      -                                MICFIL_CTRL2_CICOSR_MASK,
->      -                                MICFIL_CTRL2_OSR_DEFAULT);
->      +                                MICFIL_CTRL2_CICOSR,
->      +                                FIELD_PREP(MICFIL_CTRL2_CICOSR,
->      MICFIL_CTRL2_CICOSR_DEFAULT));
-> 
->     Alignment should match open parenthesis? 
-
-This is fixed in one of the next patches where the '|=' is replaced with '='.
-It reduces the number of lines changed in that patch, so I think this is ok
-here.
-
-> 
->              if (ret)
->                      dev_err(dev, "failed to set CICOSR in reg 0x%X\n",
->                              REG_MICFIL_CTRL2);
->      @@ -312,7 +312,8 @@ static int fsl_set_clock_params(struct device *dev,
->      unsigned int rate)
->                      ret = -EINVAL;
-> 
->              ret |= regmap_update_bits(micfil->regmap, REG_MICFIL_CTRL2,
->      -                                MICFIL_CTRL2_CLKDIV_MASK, clk_div);
->      +                                MICFIL_CTRL2_CLKDIV,
->      +                                FIELD_PREP(MICFIL_CTRL2_CLKDIV,
->      clk_div));
-> 
->    Alignment should match open parenthesis?
-
-Ditto.
+Did so already in v3 I sent on Tuesday ;)
 
 Sascha
 

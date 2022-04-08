@@ -2,50 +2,46 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A26274F9C04
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Apr 2022 19:52:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B3254F9C1B
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Apr 2022 19:57:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229490AbiDHRyk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 8 Apr 2022 13:54:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42264 "EHLO
+        id S237611AbiDHR7m (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 8 Apr 2022 13:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbiDHRyj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 8 Apr 2022 13:54:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E3F9E6F;
-        Fri,  8 Apr 2022 10:52:35 -0700 (PDT)
+        with ESMTP id S238447AbiDHR7j (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 8 Apr 2022 13:59:39 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54DB113C730
+        for <dmaengine@vger.kernel.org>; Fri,  8 Apr 2022 10:57:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B0FC8621CA;
-        Fri,  8 Apr 2022 17:52:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DC5DC385A1;
-        Fri,  8 Apr 2022 17:52:33 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0F58BB82CC7
+        for <dmaengine@vger.kernel.org>; Fri,  8 Apr 2022 17:57:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3040CC385A3;
+        Fri,  8 Apr 2022 17:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649440354;
-        bh=B57/5xtwGjtQQwX7LcGe4TUx9pFhis7TbAC9KQ0jxsU=;
+        s=k20201202; t=1649440649;
+        bh=K3GZSvBjcFi78ocYOTBtgsoc3V/9nhVRa6y2KLxPda8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UrMHsxIK7qPI8bzuz7H3meT/pExAoM9aRFtS3aCgbwddoDfCsHVAFas0BA5tl6Kc3
-         OG7WPPA/8wmm3mfY1Y8BEvhCsE1Y9PytGPM/y0N5oZQMn8ri2IE0MoLMPMMnjx7//P
-         YzLGe/UR8okxrztBaV3Xsd2NEx0N8KmugNnWyFD70jIWsre9PgHw6O0fGZyC52wJPp
-         t0ywYY6P2jyFnu7SLywjlppjT81VUeIfQzeaalIRsXxAb6082T4qfhcvc1kgHSsxd6
-         MJR/y/NYxETbVcT0n8RyQ8LzcMxlVg9k5D8/zutOF/WEc1aeDkh3EF6GqKJnG3iqf2
-         1IeyyJ7LASLng==
-Date:   Fri, 8 Apr 2022 23:22:29 +0530
+        b=aUnuS5z7eWZ5qCKtmKf1Pmhmq53LuM/uEt7PODoNyDrG0AntS22QHIfwA3f9b+FUR
+         M+ZcUR37qpb+aElxN+W8TYMTamBGaUtG/tB1pIX6k0tzaWRvCsnVDDIQSkd0CEi/VL
+         a+Iz+Jcr7ESKibSLhKFb5Dv2kQMLrRBYJUKAn0ILecyl5h3fLxuFR3qIobdxVY5m/W
+         YGd7Mcq6uqeq3cq6HqM50ec373VUeIroNsMvNcrXzm6+2QggmiVL5Z0JgDSkoCaCpZ
+         NRl3g/OzFKDbt0fyTJCnrWFwe51gBc0fH5bFORzHGY+iqovTtBPO++rfrZRt7mrWX0
+         XzIEY0i5X4vuw==
+Date:   Fri, 8 Apr 2022 23:27:25 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-renesas-soc@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH] dmaengine: sh: Kconfig: Make RZ_DMAC depend on ARCH_RZG2L
-Message-ID: <YlB2XVYCHtZ/NnLe@matsya>
-References: <20220406080417.14593-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     Tony Zhu <tony.zhu@intel.com>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: idxd: fix device cleanup on disable
+Message-ID: <YlB3hZUi2gvJ+IHP@matsya>
+References: <164919561905.1455025.13542366389944678346.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220406080417.14593-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <164919561905.1455025.13542366389944678346.stgit@djiang5-desk3.ch.intel.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -56,11 +52,12 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 06-04-22, 09:04, Lad Prabhakar wrote:
-> The DMAC block is identical on Renesas RZ/G2L, RZ/G2UL and RZ/V2L SoC's, so
-> instead of adding dependency for each SoC's add dependency on ARCH_RZG2L.
-> The ARCH_RZG2L config option is already selected by ARCH_R9A07G043,
-> ARCH_R9A07G044 and ARCH_R9A07G054.
+On 05-04-22, 14:53, Dave Jiang wrote:
+> There are certain parts of WQ that needs to be cleaned up even after WQ is
+> disabled during the device disable. Those are the unchangeable parts for a
+> WQ when the device is still enabled. Move the cleanup outside of WQ state
+> check. Remove idxd_wq_disable_cleanup() inside idxd_wq_device_reset_cleanup()
+> since only the unchangeable parts need to be cleared.
 
 Applied, thanks
 

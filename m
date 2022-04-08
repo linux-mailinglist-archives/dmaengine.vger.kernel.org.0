@@ -2,168 +2,133 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4859D4F9254
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Apr 2022 11:56:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B9084F940F
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Apr 2022 13:29:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233858AbiDHJ6I (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 8 Apr 2022 05:58:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59852 "EHLO
+        id S234460AbiDHLby (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 8 Apr 2022 07:31:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233841AbiDHJ6H (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 8 Apr 2022 05:58:07 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54A581D59CA;
-        Fri,  8 Apr 2022 02:56:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1649411760; x=1680947760;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=VFW5ooso+q6hlaQnz7e4gtHdL3Ba8aSrKhhWGKZ5rUQ=;
-  b=k4cEr2LOiHEG/NGGiHN9gS31kq/aD/edsFdayOMNLL82J421wDnfAD9I
-   92YNF+DNUgTYmzwKPpxI5vmmoOiniCuYAoOyqhrWdtoSefklJWtkdLAxY
-   Dh6hfbm3PAhqH9WLOok+fWLtpU+91MwV2qlL4Pz0TgFNCfx2xakR/To/F
-   QJfCYxx6EoLVdLT2GD5tWDD/HVgQYMDfjURPN4BeA10SxG9c+Ep9cb8fF
-   wAPCjGzs7/9z/q4/VMY38DWcYqer4f5J13gewnJyiz30ObJSXEfjXfH5c
-   EP3GIZKnmrZFQVNiEKxMXKciEp1YImKeaVyttpXfxuzbTmzS6z3lnQnnt
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10310"; a="260391197"
-X-IronPort-AV: E=Sophos;i="5.90,244,1643702400"; 
-   d="scan'208";a="260391197"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2022 02:56:00 -0700
-X-IronPort-AV: E=Sophos;i="5.90,244,1643702400"; 
-   d="scan'208";a="571433908"
-Received: from aecajiao-mobl.amr.corp.intel.com ([10.252.48.54])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2022 02:55:54 -0700
-Date:   Fri, 8 Apr 2022 12:55:47 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+        with ESMTP id S234812AbiDHLbu (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 8 Apr 2022 07:31:50 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D0A1777D3
+        for <dmaengine@vger.kernel.org>; Fri,  8 Apr 2022 04:29:46 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1ncmo8-0004wV-9Q; Fri, 08 Apr 2022 13:29:40 +0200
+Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <sha@pengutronix.de>)
+        id 1ncmo8-001n6p-HT; Fri, 08 Apr 2022 13:29:39 +0200
+Received: from sha by dude02.red.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <sha@pengutronix.de>)
+        id 1ncmo2-005ZAg-Mz; Fri, 08 Apr 2022 13:29:34 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     alsa-devel@alsa-project.org
+Cc:     Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>, kernel@pengutronix.de,
         Vinod Koul <vkoul@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, dmaengine@vger.kernel.org,
-        Milan Stevanovic <milan.stevanovic@se.com>,
-        Jimmy Lalande <jimmy.lalande@se.com>,
-        Pascal Eberhard <pascal.eberhard@se.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Herve Codina <herve.codina@bootlin.com>,
-        Clement Leger <clement.leger@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v8 5/9] dmaengine: dw: dmamux: Introduce RZN1 DMA router
- support
-In-Reply-To: <20220406161856.1669069-6-miquel.raynal@bootlin.com>
-Message-ID: <6fbeebe2-9693-f91-78bd-451480f7a6dd@linux.intel.com>
-References: <20220406161856.1669069-1-miquel.raynal@bootlin.com> <20220406161856.1669069-6-miquel.raynal@bootlin.com>
+        NXP Linux Team <linux-imx@nxp.com>,
+        dmaengine@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH v5 00/21] ASoC: fsl_micfil: Driver updates
+Date:   Fri,  8 Apr 2022 13:29:07 +0200
+Message-Id: <20220408112928.1326755-1-s.hauer@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1766008063-1649411759=:1643"
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+This series has a bunch of cleanups for the FSL MICFIL driver. There is
+not much chance for regressions in this series as the driver currently
+can't work at all. The MICFIL needs multififo support in the i.MX SDMA
+engine which is added with this series, see 11/20.
 
---8323329-1766008063-1649411759=:1643
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+The multififo support is selected in the dma phandle arguments in the
+device tree, the transfer type must be '25' aka IMX_DMATYPE_MULTI_SAI.
+This is set already to 25 in the upstream i.MX8M[NM] dtsi files, but the
+SDMA driver silently ignores unsupported values instead of throwing an
+error. This is fixed in this series and multififo support is added.
 
-On Wed, 6 Apr 2022, Miquel Raynal wrote:
+The dmaengine patches have acks from Vinod, so the series is free to
+go through the ASoC tree.
 
-> The Renesas RZN1 DMA IP is based on a DW core, with eg. an additional
-> dmamux register located in the system control area which can take up to
-> 32 requests (16 per DMA controller). Each DMA channel can be wired to
-> two different peripherals.
-> 
-> We need two additional information from the 'dmas' property: the channel
-> (bit in the dmamux register) that must be accessed and the value of the
-> mux for this channel.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
+Changes since v4:
+- collect more acks
+- whitespace cleanup in 16/21
 
-> +static void *rzn1_dmamux_route_allocate(struct of_phandle_args *dma_spec,
-> +					struct of_dma *ofdma)
-> +{
-> +	struct platform_device *pdev = of_find_device_by_node(ofdma->of_node);
-> +	struct rzn1_dmamux_data *dmamux = platform_get_drvdata(pdev);
-> +	struct rzn1_dmamux_map *map;
-> +	unsigned int dmac_idx, chan, val;
-> +	u32 mask;
-> +	int ret;
-> +
-> +	if (dma_spec->args_count != 6)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	map = kzalloc(sizeof(*map), GFP_KERNEL);
-> +	if (!map)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	chan = dma_spec->args[0];
-> +	map->req_idx = dma_spec->args[4];
-> +	val = dma_spec->args[5];
-> +	dma_spec->args_count -= 2;
-> +
-> +	if (chan >= RZN1_DMAMUX_MAX_LINES) {
-> +		dev_err(&pdev->dev, "Invalid DMA request line: %u\n", chan);
-> +		ret = -EINVAL;
-> +		goto free_map;
-> +	}
-> +
-> +	if (map->req_idx >= RZN1_DMAMUX_LINES ||
-> +	    (map->req_idx % RZN1_DMAMUX_MAX_LINES) != chan) {
-> +		dev_err(&pdev->dev, "Invalid MUX request line: %u\n", map->req_idx);
-> +		ret = -EINVAL;
-> +		goto free_map;
-> +	}
-> +
-> +	dmac_idx = map->req_idx >= RZN1_DMAMUX_MAX_LINES ? 1 : 0;
-> +	dma_spec->np = of_parse_phandle(ofdma->of_node, "dma-masters", dmac_idx);
-> +	if (!dma_spec->np) {
-> +		dev_err(&pdev->dev, "Can't get DMA master\n");
-> +		ret = -EINVAL;
-> +		goto free_map;
-> +	}
-> +
-> +	dev_dbg(&pdev->dev, "Mapping DMAMUX request %u to DMAC%u request %u\n",
-> +		map->req_idx, dmac_idx, chan);
-> +
-> +	mask = BIT(map->req_idx);
-> +	mutex_lock(&dmamux->lock);
-> +	dmamux->used_chans |= mask;
-> +	ret = r9a06g032_sysctrl_set_dmamux(mask, val ? mask : 0);
-> +	if (ret)
-> +		goto release_chan_and_unlock;
-> +
-> +	mutex_unlock(&dmamux->lock);
-> +
-> +	return map;
-> +
-> +release_chan_and_unlock:
-> +	dmamux->used_chans &= ~mask;
+Changes since v3:
+- Add commit log to "ASoC: fsl_micfil: drop unused variables"
+- Fix include name in "ASoC: fsl_micfil: add multi fifo support"
+- Drop unnecessary temporary adding of struct fsl_micfil::osr
+- Leave default quality setting at 'medium'
+- Drop debugging message printed at error level
+- collect acks from Shengjiu Wang and Vinod Koul
 
-Now that I check this again, I'm not sure why dmamux->used_chans |= mask; 
-couldn't be done after r9a06g032_sysctrl_set_dmamux() call so this 
-rollback of it wouldn't be necessary.
+Changes since v2:
+- Add forgotten commit log to dmaengine patches
+- Add patch to move include/linux/platform_data/dma-imx.h to include/linux/dma/imx-dma.h
+- Use prefix dmaengine: for dma patches
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Changes since v1:
+- Drop unused variable sw_done_sel
+- Evaluate sdmac->direction directly instead of storing value in n_fifos
+- add missing include linux/bitfield.h
 
+Sascha Hauer (21):
+  ASoC: fsl_micfil: Drop unnecessary register read
+  ASoC: fsl_micfil: Drop unused register read
+  ASoC: fsl_micfil: drop fsl_micfil_set_mclk_rate()
+  ASoC: fsl_micfil: do not define SHIFT/MASK for single bits
+  ASoC: fsl_micfil: use GENMASK to define register bit fields
+  ASoC: fsl_micfil: use clear/set bits
+  ASoC: fsl_micfil: drop error messages from failed register accesses
+  ASoC: fsl_micfil: drop unused variables
+  dmaengine: imx: Move header to include/dma/
+  dmaengine: imx-sdma: error out on unsupported transfer types
+  dmaengine: imx-sdma: Add multi fifo support
+  ASoC: fsl_micfil: add multi fifo support
+  ASoC: fsl_micfil: use define for OSR default value
+  ASoC: fsl_micfil: Drop get_pdm_clk()
+  ASoC: fsl_micfil: simplify clock setting
+  ASoC: fsl_micfil: rework quality setting
+  ASoC: fsl_micfil: drop unused include
+  ASoC: fsl_micfil: drop only once used defines
+  ASoC: fsl_micfil: drop support for undocumented property
+  ASoC: fsl_micfil: fold fsl_set_clock_params() into its only user
+  ASoC: fsl_micfil: Remove debug message
 
+ drivers/dma/imx-dma.c                         |   2 +-
+ drivers/dma/imx-sdma.c                        |  76 +++-
+ drivers/mmc/host/mxcmmc.c                     |   2 +-
+ drivers/spi/spi-fsl-lpspi.c                   |   2 +-
+ drivers/spi/spi-imx.c                         |   2 +-
+ drivers/tty/serial/imx.c                      |   2 +-
+ drivers/video/fbdev/mx3fb.c                   |   2 +-
+ .../dma-imx.h => dma/imx-dma.h}               |  26 +-
+ sound/soc/fsl/fsl_asrc.c                      |   2 +-
+ sound/soc/fsl/fsl_asrc_dma.c                  |   2 +-
+ sound/soc/fsl/fsl_easrc.h                     |   2 +-
+ sound/soc/fsl/fsl_micfil.c                    | 369 +++++++-----------
+ sound/soc/fsl/fsl_micfil.h                    | 269 +++----------
+ sound/soc/fsl/imx-pcm.h                       |   2 +-
+ sound/soc/fsl/imx-ssi.h                       |   2 +-
+ 15 files changed, 297 insertions(+), 465 deletions(-)
+ rename include/linux/{platform_data/dma-imx.h => dma/imx-dma.h} (67%)
 
 -- 
- i.
+2.30.2
 
---8323329-1766008063-1649411759=:1643--

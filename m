@@ -2,114 +2,97 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B45B74F878F
-	for <lists+dmaengine@lfdr.de>; Thu,  7 Apr 2022 20:59:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1C564F8CCD
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Apr 2022 05:27:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233674AbiDGTBI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 7 Apr 2022 15:01:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58042 "EHLO
+        id S233385AbiDHBZT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 7 Apr 2022 21:25:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344697AbiDGTBH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 7 Apr 2022 15:01:07 -0400
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 056EC22C6CE;
-        Thu,  7 Apr 2022 11:59:06 -0700 (PDT)
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-dacc470e03so7376113fac.5;
-        Thu, 07 Apr 2022 11:59:05 -0700 (PDT)
+        with ESMTP id S233384AbiDHBZT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 7 Apr 2022 21:25:19 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A29BB1560B4;
+        Thu,  7 Apr 2022 18:23:17 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id g20so8396185edw.6;
+        Thu, 07 Apr 2022 18:23:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q6GIjfl38828TDx/Er/l1ydNAbsDZX6DyamisKv9xlI=;
+        b=O8z6RVsDroCjPfHv/rRZ7ILks4hW8GgdUuvtwRzcLa7aaepbm3bE6m+mpb2Tik4RCh
+         b/0ka341wHE+Mpxj72S95ZIxb7gnMPbKDSVercfbkn6nKVJ3QnSzXuiZ45s4C9/AraOA
+         YFrDlA0bUoxTRDAVDZ38CkhO7TD8ROjmnFYTVT5y7ur8q+49njhBxooxb29brEqcVjrH
+         zM45MKYK+MTJ41h0BznFCDIpl74lZ4qqVaB3iSLoDr6CT18gNXWMTA+f9WzZhRaiVXv2
+         0JdvTHfmtLcxifq6sBUpXFdo97AkszWt2pTn/8ITXzulkiogiZLj8Rq+PLZg/6uy+vDG
+         ZFMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=afrFLzt1gRoFoVRMojGGVgBPp/vAdD+p5A9V+fiaSKw=;
-        b=6r9fkr5C27LSai/tqOR8G+fynQmwoqUjpHjhMiq4cJhIc9wCLTmW4asUi18wMe01PU
-         1sSdbn6CTlWGchdmrvZ6HWrxTA7uGKRhmNAH07gYXBOVpJtuGK3PoG8jM+481dj6sutJ
-         n0ZwiluwdY2rkpfBQti2yL3KmPnK24C/L1JiZDtX0M5cQh4zwpM2rk/N1PJmXLHZat8d
-         sOSo17FQaT4jNT0iAP+01txVJJ5yAd5cN3VFIvQYX7d0RsIMxpwHoqlKlxoe74e03hz8
-         e2xcyswuKlLtOrPto60rZc2HJEVu7KmBAfIs9Fv1d+VM97nmd6iNAOr0bw9cuRzP6PRr
-         ElrQ==
-X-Gm-Message-State: AOAM532Sl/K9OYXpjvkwCRKDKMtTRXjQXfuXD1cvqS0fx4QKyPyteOqg
-        YP59k4tCXrqLDhUkg8Nllw==
-X-Google-Smtp-Source: ABdhPJxNUG2HZcl4skpjdoCUqh+tz6W3QDAPX323irG1n56LqoDXcyZehrhf7pPhSiaz6mtTAfvVUw==
-X-Received: by 2002:a05:6870:5584:b0:e1:e254:141d with SMTP id n4-20020a056870558400b000e1e254141dmr7201344oao.95.1649357945276;
-        Thu, 07 Apr 2022 11:59:05 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id q12-20020a4ad54c000000b003245ac0a745sm7568561oos.22.2022.04.07.11.59.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Apr 2022 11:59:04 -0700 (PDT)
-Received: (nullmailer pid 1783762 invoked by uid 1000);
-        Thu, 07 Apr 2022 18:59:04 -0000
-Date:   Thu, 7 Apr 2022 13:59:04 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: dma: uniphier: Use unevaluatedProperties
-Message-ID: <Yk80eFKwDVnU67p/@robh.at.kernel.org>
-References: <1649317447-20996-1-git-send-email-hayashi.kunihiko@socionext.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q6GIjfl38828TDx/Er/l1ydNAbsDZX6DyamisKv9xlI=;
+        b=yjI1JglrfmrXrTl5aeNIxS62oEjLK6ZaZbg4j1Ydyi+iGuqseY8nTJpjGdIG/9OFR7
+         BxaLB4iIri4sR+zknApqzSfnlLIIS/gy4OLUxr+4mEP4+mUobsX+KjkDSzJkRB86QSuE
+         GZmS0aOzMi3pdXxlUupkvK6zfdaOCWnEzM42MGWnDJQwqVvaeESKws4XQ3jc1iXaKMbp
+         QNqBXGkuG95QImCRpVD7UggbkNIlFfLvrjC8BdTKcbdN65HaT2khF2Yabjjmqgp6jKxu
+         pwUge+RoM2tJZxF1pz2/zQniGCgWRi1iAW3GrTGM2L2faJuzK4La/qj2tv1rVEIMH098
+         eE5A==
+X-Gm-Message-State: AOAM533jd9R4mAII6p0yyP+e1jnXgtMcKs+hNYMK0KbFGsD614FqDacf
+        aWfVw6Wr6Uol13ZEO9FrY1Y6tqQMrSylwodHOSw=
+X-Google-Smtp-Source: ABdhPJxz/9ig7zQdygj91MyAfQi9EI8Vsso7YJ4STSYEAI15UX+5nGgqlSfnECcaXfW9w6++A479MAK1M3k/ugQkZt8=
+X-Received: by 2002:a05:6402:190d:b0:41b:a70d:1367 with SMTP id
+ e13-20020a056402190d00b0041ba70d1367mr16907289edz.155.1649380996125; Thu, 07
+ Apr 2022 18:23:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1649317447-20996-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+References: <20220406224809.29197-1-kgroeneveld@lenbrook.com>
+In-Reply-To: <20220406224809.29197-1-kgroeneveld@lenbrook.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 7 Apr 2022 22:23:03 -0300
+Message-ID: <CAOMZO5CbTUTkoFCKwrpT5h7CfHxbLtci1qAtMwkAi_LD_5yeyQ@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: imx-sdma: fix regression with uart scripts
+To:     Kevin Groeneveld <kgroeneveld@lenbrook.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Robin Gong <yibin.gong@nxp.com>, dmaengine@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Apr 07, 2022 at 04:44:07PM +0900, Kunihiko Hayashi wrote:
-> This refers common bindings, so this is preferred for
-> unevaluatedProperties instead of additionalProperties.
+Hi Kevin,
 
-Yes and no. If you want to define specific common properties are used 
-(and not used), then listing them in the specific schema with 
-'additionalProperties' is the right way to do that. If all properties in 
-the referenced schema are valid, then unevaluatedProperties is correct.
+On Wed, Apr 6, 2022 at 7:48 PM Kevin Groeneveld
+<kgroeneveld@lenbrook.com> wrote:
+>
+> Commit b98ce2f4e32b ("dmaengine: imx-sdma: add uart rom script") broke
+> uart rx on imx5 when using sdma firmware from older Freescale 2.6.35
+> kernel. In this case reading addr->uartXX_2_mcu_addr was going out of
+> bounds of the firmware memory and corrupting the uart script addresses.
+>
+> Simply adding a bounds check before accessing addr->uartXX_2_mcu_addr
+> does not work as the uartXX_2_mcu_addr members are now beyond the size
+> of the older firmware and the uart addresses would never be populated
+> in that case. There are other ways to fix this but overall the logic
+> seems clearer to me to revert the uartXX_2_mcu_ram_addr structure
+> entries back to uartXX_2_mcu_addr, change the newer entries to
+> uartXX_2_mcu_rom_addr and update the logic accordingly.
+>
+> Fixes: b98ce2f4e32b ("dmaengine: imx-sdma: add uart rom script")
+> Signed-off-by: Kevin Groeneveld <kgroeneveld@lenbrook.com>
 
-If we wanted using unevaluatedProperties to be a hard rule, we could 
-make the meta-schema enforce that.
+Thanks for the fix:
 
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  .../devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml    | 2 +-
->  .../devicetree/bindings/dma/socionext,uniphier-xdmac.yaml       | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
-> index e7bf6dd7da29..b40f247e07be 100644
-> --- a/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
-> +++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
-> @@ -45,7 +45,7 @@ required:
->    - clocks
->    - '#dma-cells'
->  
-> -additionalProperties: false
-> +unevaluatedProperties: false
->  
->  examples:
->    - |
-> diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
-> index 371f18773198..b2bd21cbeb7f 100644
-> --- a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
-> +++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
-> @@ -40,7 +40,7 @@ properties:
->      minimum: 1
->      maximum: 16
->  
-> -additionalProperties: false
-> +unevaluatedProperties: false
->  
->  required:
->    - compatible
-> -- 
-> 2.25.1
-> 
-> 
+Reviewed-by: Fabio Estevam <festevam@gmail.com>

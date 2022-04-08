@@ -2,51 +2,79 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF2154F941B
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Apr 2022 13:29:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 900CD4F9475
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Apr 2022 13:49:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234716AbiDHLcA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 8 Apr 2022 07:32:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48308 "EHLO
+        id S235131AbiDHLvp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 8 Apr 2022 07:51:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234826AbiDHLbw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 8 Apr 2022 07:31:52 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B6F516BF5C
-        for <dmaengine@vger.kernel.org>; Fri,  8 Apr 2022 04:29:48 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1ncmo9-0004xn-Rh; Fri, 08 Apr 2022 13:29:41 +0200
-Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <sha@pengutronix.de>)
-        id 1ncmo9-001n77-1J; Fri, 08 Apr 2022 13:29:39 +0200
-Received: from sha by dude02.red.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <sha@pengutronix.de>)
-        id 1ncmo3-005ZBg-6W; Fri, 08 Apr 2022 13:29:35 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     alsa-devel@alsa-project.org
-Cc:     Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
-        Shengjiu Wang <shengjiu.wang@gmail.com>, kernel@pengutronix.de,
+        with ESMTP id S235126AbiDHLvl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 8 Apr 2022 07:51:41 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0608824314E;
+        Fri,  8 Apr 2022 04:49:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649418578; x=1680954578;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=0h8qDCJbgj5JnaE7KMtlcmvlSc/sxYVlAQJlYRyN6Pc=;
+  b=Ebx/NYa5WPIGkNjSfw1IiTUQJdLHqfkvamxi3NWypBhVje3Jh92i/u4H
+   +KhK2Te2dtoO1kr30Wj9AMUP1t0cE9uMeJmug/3a5qDkiV829eKJPDwgB
+   WfkCcLoloys9IGDpwHD8Lw4vYcYucF17KfGqzaKpGfCZoinyvBB269uUu
+   Px5Y1Hjpx/ON85HJeYIScfjda3v6OMf8HIrHSCeKEkkUhXZ017ETHt/86
+   3tDfDdEnYLjJYG2lid0G2bwAx70FNqiqds0fTxNav9Lyw2R5yFgBecjTc
+   t/1hBegqHlfjb5GoVx51cjAFiOVXKwIOkNLxuEmAVHk8WKv/BwnhTSWAp
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10310"; a="260408763"
+X-IronPort-AV: E=Sophos;i="5.90,244,1643702400"; 
+   d="scan'208";a="260408763"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2022 04:49:37 -0700
+X-IronPort-AV: E=Sophos;i="5.90,244,1643702400"; 
+   d="scan'208";a="524750342"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2022 04:49:32 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ncn3m-000H0a-HS;
+        Fri, 08 Apr 2022 14:45:50 +0300
+Date:   Fri, 8 Apr 2022 14:45:50 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         Vinod Koul <vkoul@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dmaengine@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH v5 21/21] ASoC: fsl_micfil: Remove debug message
-Date:   Fri,  8 Apr 2022 13:29:28 +0200
-Message-Id: <20220408112928.1326755-22-s.hauer@pengutronix.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220408112928.1326755-1-s.hauer@pengutronix.de>
-References: <20220408112928.1326755-1-s.hauer@pengutronix.de>
+        linux-renesas-soc@vger.kernel.org, dmaengine@vger.kernel.org,
+        Milan Stevanovic <milan.stevanovic@se.com>,
+        Jimmy Lalande <jimmy.lalande@se.com>,
+        Pascal Eberhard <pascal.eberhard@se.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Herve Codina <herve.codina@bootlin.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v8 5/9] dmaengine: dw: dmamux: Introduce RZN1 DMA router
+ support
+Message-ID: <YlAgbh2AFevBktxd@smile.fi.intel.com>
+References: <20220406161856.1669069-1-miquel.raynal@bootlin.com>
+ <20220406161856.1669069-6-miquel.raynal@bootlin.com>
+ <6fbeebe2-9693-f91-78bd-451480f7a6dd@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <6fbeebe2-9693-f91-78bd-451480f7a6dd@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,32 +82,58 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The micfil driver prints out the IRQ numbers for each interrupt at error
-level. This information is useful for debugging at best, remove it.
+On Fri, Apr 08, 2022 at 12:55:47PM +0300, Ilpo Järvinen wrote:
+> On Wed, 6 Apr 2022, Miquel Raynal wrote:
+> 
+> > The Renesas RZN1 DMA IP is based on a DW core, with eg. an additional
+> > dmamux register located in the system control area which can take up to
+> > 32 requests (16 per DMA controller). Each DMA channel can be wired to
+> > two different peripherals.
+> > 
+> > We need two additional information from the 'dmas' property: the channel
+> > (bit in the dmamux register) that must be accessed and the value of the
+> > mux for this channel.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Acked-by: Shengjiu Wang <shengjiu.wang@gmail.com>
----
+> > +	mask = BIT(map->req_idx);
+> > +	mutex_lock(&dmamux->lock);
+> > +	dmamux->used_chans |= mask;
+> > +	ret = r9a06g032_sysctrl_set_dmamux(mask, val ? mask : 0);
+> > +	if (ret)
+> > +		goto release_chan_and_unlock;
+> > +
+> > +	mutex_unlock(&dmamux->lock);
+> > +
+> > +	return map;
+> > +
+> > +release_chan_and_unlock:
+> > +	dmamux->used_chans &= ~mask;
+> 
+> Now that I check this again, I'm not sure why dmamux->used_chans |= mask; 
+> couldn't be done after r9a06g032_sysctrl_set_dmamux() call so this 
+> rollback of it wouldn't be necessary.
 
-Notes:
-    Changes since v3:
-    - new patch
+I would still need the mutex unlock which I believe is down path there under
+some other label. Hence you are proposing something like
 
- sound/soc/fsl/fsl_micfil.c | 1 -
- 1 file changed, 1 deletion(-)
+	mask = BIT(map->req_idx);
 
-diff --git a/sound/soc/fsl/fsl_micfil.c b/sound/soc/fsl/fsl_micfil.c
-index 8c7b15dbd1d45..cd85c8714f970 100644
---- a/sound/soc/fsl/fsl_micfil.c
-+++ b/sound/soc/fsl/fsl_micfil.c
-@@ -597,7 +597,6 @@ static int fsl_micfil_probe(struct platform_device *pdev)
- 	/* get IRQs */
- 	for (i = 0; i < MICFIL_IRQ_LINES; i++) {
- 		micfil->irq[i] = platform_get_irq(pdev, i);
--		dev_err(&pdev->dev, "GET IRQ: %d\n", micfil->irq[i]);
- 		if (micfil->irq[i] < 0)
- 			return micfil->irq[i];
- 	}
+	mutex_lock(&dmamux->lock);
+	ret = r9a06g032_sysctrl_set_dmamux(mask, val ? mask : 0);
+	if (ret)
+		goto err_unlock; // or whatever label is
+
+	dmamux->used_chans |= mask;
+	mutex_unlock(&dmamux->lock);
+
+	return map;
+
+Is that correct? If so, I don't see impediments either.
+
+> Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+
+
 -- 
-2.30.2
+With Best Regards,
+Andy Shevchenko
+
 

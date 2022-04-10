@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 046A64FAA4F
-	for <lists+dmaengine@lfdr.de>; Sat,  9 Apr 2022 20:44:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 732414FAF68
+	for <lists+dmaengine@lfdr.de>; Sun, 10 Apr 2022 19:52:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243031AbiDISoF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 9 Apr 2022 14:44:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52830 "EHLO
+        id S243806AbiDJRxi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 10 Apr 2022 13:53:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243116AbiDISoA (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 9 Apr 2022 14:44:00 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 143981EA282;
-        Sat,  9 Apr 2022 11:41:47 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id bx5so11495401pjb.3;
-        Sat, 09 Apr 2022 11:41:47 -0700 (PDT)
+        with ESMTP id S243809AbiDJRxe (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 10 Apr 2022 13:53:34 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92D5361A02;
+        Sun, 10 Apr 2022 10:51:22 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id mm4-20020a17090b358400b001cb93d8b137so851091pjb.2;
+        Sun, 10 Apr 2022 10:51:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nr/u+ZwKEd/3qo8bgunaAebE8NIooSpd7ML7VX6zww8=;
-        b=ORpVOFSr646Ql7vJ1+XFDYPaH7B//S/QTQFt2peAcDjG8NTWuujcwc1XQh/ZJyHCKz
-         EUJRYfrNFf6tHJmfDfjZL3jv/5U49PsmpvVMe5nrtETSRks4zvmTV/95yk2ULrSWCmkd
-         K7nd/Fs46vk6zjdJ100C3ebD++EdHwGhcryCGEG4BB1TNSjv9owxDPBYrKkoqKZ3mBVZ
-         +9td/QosqwkFE/TiPULqnyhgD413YYaae9eqgaK3a3KoPqeyk3xJUP7HGC/WgEMeORHp
-         42YGws9DymTA2NJfNFHbp62fqPy/8ASoeEvllCoZAYmKxJPbk5MMaa+MAmwVGEhQL+LJ
-         iCGw==
+        bh=QKoymIM/fv7AleuSvT3RBW6zEuHK660DiNK/eKFXaF0=;
+        b=QHVNydOQkI6aJW7lLFWCnArJGaCLIt5Pk+1OiDKlhZw4sN2hOJEUQxhnH7Mbm9YF8P
+         umsoGfEp8khqN3ofctT97x1oxHn9n5LS8LFGAgjPQ4AlgJKHLiet8U/tj3eo+933pYbC
+         jAfKUX0xSWlS8VRRgXM7f1N9olvFDKtHNhynv3Z6v5THDmRrGU3F5Webb2/pd/dqpOYF
+         NJiq7orFaEYKzrddfVbT4xRRTmLljdMeOpG/r72eZ1UqaF0c1R20N6D2+WQo4inBR/uf
+         nRhMED/vknuQWe/1qlS00NbVIZYFXCkI61m6G9YikUucWqQ3NRvhLOKqfvPqXNOyxaa2
+         TdLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nr/u+ZwKEd/3qo8bgunaAebE8NIooSpd7ML7VX6zww8=;
-        b=aEPjvV5S62/OBCB5pdNrZr1fQjjlHUD0clLuruA6kn5MycJMkw6Hq4rRPOst6CAjAO
-         OpBkIuQqrUy5Hp2zjoD5QcAHfM6m9TMyAhYAfZWTSeZcXNCE6UDRrTC71DOUNWSOu0Th
-         AjRdAixXccQ8nT15LPwwNbekSPAEXZBWSFm3OyT/Aqpt4OLjFaAs0v0BGfZ4L2OVwK3i
-         ivOmNbJSW7DHocWRoK21gIGdkmwbPGdO2AzFUW9Xf2lqqnkkpSc79Oby8yFMC+0fVTgi
-         SzJOb9yKo8u8pqx82YolJbODkfOfV90Lu0Ju2YDSjEZDOPbRrU79p5wKM+qv+CsBaNo1
-         oKjw==
-X-Gm-Message-State: AOAM531QFAn5pksilvkcthP+X5TQNHw+3oQflxXOjmvQgk7B7LHRoPpV
-        78OYntHSz9bJ8aAl/HZPRnVeTEDMvqk=
-X-Google-Smtp-Source: ABdhPJzja9LrsRzXqXNp8RFic/Yugyg703WRs0+shieU7z82s7cnwbYCZ+zAH6Ag6ZFgtTHNmgz4vQ==
-X-Received: by 2002:a17:90b:1b4d:b0:1c6:bd9e:a63d with SMTP id nv13-20020a17090b1b4d00b001c6bd9ea63dmr28264713pjb.56.1649529706232;
-        Sat, 09 Apr 2022 11:41:46 -0700 (PDT)
+        bh=QKoymIM/fv7AleuSvT3RBW6zEuHK660DiNK/eKFXaF0=;
+        b=KtZPDvBAgEq7bKf83jDmh8aE+BLISdB5HFncVuqIkOWbSeBPKUq49jvi4LYaw+PIMG
+         W65wTxqnxxDpjYR5ccAETc0+PH/FiyZpdd5DvnO+9UqB7UQKaKZ879byhDXg0Ldwhu3d
+         gUPjK3SiLwxl08NLsbxhKPEXIHmDuRtxX0EGiOr296hLyK1Wl78l1osdhyf4S+Lj0I2R
+         v0IKHfyiuraeTWFGuuAe8NX7Vrl6ruVKUOH5w447eP6iJ4rYTePFnQNl0nSiZvRdFhd6
+         vv3j9zUslAIG8iptz4xLeZaYoCJtlA3DF/4xafQPNJWjt5pXurlkCUhXDMGF1W8cZWbv
+         J1EA==
+X-Gm-Message-State: AOAM533ZmwRvZeYq0IWx8RyymPwX+bEASoC/e+JsVxW2BRJ62szdAu6x
+        vPgks7XuGNMJh17demJm2ScNEfK7CDA=
+X-Google-Smtp-Source: ABdhPJwobXiEtfPGnmEmn8BhKBHcBuSI84rTe8ZQjsNKE7W3yi5x3sUfAYGc6BYv0Ei9kdBclowQWg==
+X-Received: by 2002:a17:90b:4a4b:b0:1c6:4398:523c with SMTP id lb11-20020a17090b4a4b00b001c64398523cmr32397815pjb.50.1649613081672;
+        Sun, 10 Apr 2022 10:51:21 -0700 (PDT)
 Received: from localhost.localdomain ([122.161.51.18])
-        by smtp.gmail.com with ESMTPSA id g3-20020a63ad03000000b003821d0f0ef4sm25813933pgf.71.2022.04.09.11.41.42
+        by smtp.gmail.com with ESMTPSA id l4-20020a056a0016c400b004f79504ef9csm32283286pfc.3.2022.04.10.10.51.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Apr 2022 11:41:45 -0700 (PDT)
+        Sun, 10 Apr 2022 10:51:21 -0700 (PDT)
 From:   Kuldeep Singh <singh.kuldeep87k@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -54,14 +54,13 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Vinod Koul <vkoul@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Kuldeep Singh <singh.kuldeep87k@gmail.com>,
         linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: [PATCH 6/6] dt-bindings: dma: Convert Qualcomm BAM DMA binding to json format
-Date:   Sun, 10 Apr 2022 00:11:15 +0530
-Message-Id: <20220409184115.15612-7-singh.kuldeep87k@gmail.com>
+Subject: [PATCH v2 6/6] dt-bindings: dma: Convert Qualcomm BAM DMA binding to json format
+Date:   Sun, 10 Apr 2022 23:20:56 +0530
+Message-Id: <20220410175056.79330-7-singh.kuldeep87k@gmail.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220409184115.15612-1-singh.kuldeep87k@gmail.com>
-References: <20220409184115.15612-1-singh.kuldeep87k@gmail.com>
+In-Reply-To: <20220410175056.79330-1-singh.kuldeep87k@gmail.com>
+References: <20220410175056.79330-1-singh.kuldeep87k@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -79,18 +78,18 @@ json schema.
 
 Signed-off-by: Kuldeep Singh <singh.kuldeep87k@gmail.com>
 ---
- .../devicetree/bindings/dma/qcom,bam-dma.yaml | 90 +++++++++++++++++++
- .../devicetree/bindings/dma/qcom_bam_dma.txt  | 52 -----------
- 2 files changed, 90 insertions(+), 52 deletions(-)
+ .../devicetree/bindings/dma/qcom,bam-dma.yaml | 94 +++++++++++++++++++
+ .../devicetree/bindings/dma/qcom_bam_dma.txt  | 52 ----------
+ 2 files changed, 94 insertions(+), 52 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
  delete mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
 
 diff --git a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
 new file mode 100644
-index 000000000000..606c19f83db3
+index 000000000000..b32175d54dca
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
-@@ -0,0 +1,90 @@
+@@ -0,0 +1,94 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
@@ -104,7 +103,7 @@ index 000000000000..606c19f83db3
 +  - Bjorn Andersson <bjorn.andersson@linaro.org>
 +
 +allOf:
-+  - $ref: dma-controller.yaml#
++  - $ref: "dma-controller.yaml#"
 +
 +properties:
 +  compatible:
@@ -119,6 +118,9 @@ index 000000000000..606c19f83db3
 +  clock-names:
 +    items:
 +      - const: bam_clk
++
++  "#dma-cells":
++    const: 1
 +
 +  interrupts:
 +    maxItems: 1
@@ -161,10 +163,11 @@ index 000000000000..606c19f83db3
 +
 +required:
 +  - compatible
++  - "#dma-cells"
 +  - interrupts
 +  - reg
 +
-+unevaluatedProperties: false
++additionalProperties: false
 +
 +examples:
 +  - |

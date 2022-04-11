@@ -2,65 +2,137 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 41D054FBE40
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Apr 2022 16:03:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8971F4FBE47
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Apr 2022 16:05:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346882AbiDKOEx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 11 Apr 2022 10:04:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43204 "EHLO
+        id S1346885AbiDKOGn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 11 Apr 2022 10:06:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346877AbiDKOEw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Apr 2022 10:04:52 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7B6C32059;
-        Mon, 11 Apr 2022 07:02:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7084361261;
-        Mon, 11 Apr 2022 14:02:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4651EC385A5;
-        Mon, 11 Apr 2022 14:02:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649685757;
-        bh=07v+3z10ECX0r1m3v8M8SiEwG2zIj0iVaYdwykpznMs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JlA5SCAWYzQbSMHBj/qK5KVN3+Q+ZHhtCKmkBoLfvrTT6CR8ID+SNwq9B6ddfozrx
-         MXaUI4kRm+NZHeByktiT+TjlnYes5kxyBJKa1/+Vsangc0YwzELM3FSYeHvzX17I38
-         IrYUcTvUIwz8ZtTMLySJiRVsC02nl3Dmke220ftbbo0Tz4/W24+uWfAO4gmPhwL8tJ
-         OV5AuiCY+Hk243rtFPJl5aXeN4mJJ+z6Uokd7O9WAnrmtL31ZxyMmaMRWQjEpNL6UH
-         Jyxuv7DnpKDcRLKjdbfiD55c2zOIhZYPf+ykUVRz6JCVeBVw3WG2ciMmTCGd4FDv9H
-         g9pM4XL08wUzg==
-Date:   Mon, 11 Apr 2022 19:32:33 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Akhil R <akhilrajeev@nvidia.com>
-Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        jonathanh@nvidia.com, kyarlagadda@nvidia.com, ldewangan@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        p.zabel@pengutronix.de, rgumasta@nvidia.com, robh+dt@kernel.org,
-        thierry.reding@gmail.com, nathan@kernel.org
-Subject: Re: [PATCH v22 0/2] Add NVIDIA Tegra GPC-DMA driver
-Message-ID: <YlQ0+fMIaoWJoi6p@matsya>
-References: <20220225132044.14478-1-akhilrajeev@nvidia.com>
+        with ESMTP id S1346892AbiDKOGm (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Apr 2022 10:06:42 -0400
+Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 497EB326F7;
+        Mon, 11 Apr 2022 07:04:26 -0700 (PDT)
+Received: by mail-io1-xd34.google.com with SMTP id q11so18779669iod.6;
+        Mon, 11 Apr 2022 07:04:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1B3YrGoPCoufe/mBnsPTr430tDZM1EFQW77g/ziRyJ4=;
+        b=nmca+QVhs+M1EdUnH34aYk1Klp9c+hu5uqCQnCqkXA0VPGZMJM8cf1zrTWCC+72Kzg
+         8DenjKQy9WLuDqGQIT/uD+GmRqes7vdOVt3L+mlMxWRWuWfTenHYKwFOpzM+yhuzZlJa
+         LrtR25KWWVgQZ0eNDlQy3mfA0Kze4zE8is3rgXFpD49GnE9nVEMti4zypcZKkYbSKugJ
+         MXlyNGj05RYz9cPKURdsy6zDLNJ0n0+gIbcQTyda0b88PXmYq4hvsNdS/FoJJjHaupte
+         mqHgKgOSNRElaS22lt87i3PLA3mcFRtW6QVo2vYnP0kt88pW8icRRHG9k70t6NnIaWGe
+         zLFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1B3YrGoPCoufe/mBnsPTr430tDZM1EFQW77g/ziRyJ4=;
+        b=JIv2GqO2mr5qyVSbpB60wJ2eAnqggvBtUDPqcSI4ucx2YiEEwV98BU+fkZwz29l83I
+         oHfbwttAgwjxZwkMvcG3sre87YErbcAyUGFGU1ln0Jk4628ct1HHONAuf9lIiq52Reyg
+         xkQuCwYJbfytDejlYrSo48SHFTmNn8xAnfjQEP718PXqEtioDaGr/Sq0kjx13Euhfo4b
+         fXSTHtWvRhgTXOPsID8WHrL4iS9ZdfBbtoj91LB91RkFKF3AU9j9TkJVK0tBHVz2GPwT
+         JKS5fiMnFYEEUUbnisQb+T2wG3m0T2tEdFoP7xAKl2rI3ZJwsI/GRfIB8gH+vppVWStm
+         NRLw==
+X-Gm-Message-State: AOAM532UvZZc3xrjOF+zyYBBtrRCbPCEUVAiW0XLPdV4rYXn62rS6ZF+
+        TWvBuQVQ6iOIf8X/GZ869Y6YmJtiAMoohw==
+X-Google-Smtp-Source: ABdhPJzvdlqpTKyIrYl7Y298HfDIM0/64C8m+JaKg1l+WlrcxEPy58kclVBOkk6w3EY3oAZqX8IWPA==
+X-Received: by 2002:a05:6638:3043:b0:314:7ce2:4a6e with SMTP id u3-20020a056638304300b003147ce24a6emr15686074jak.258.1649685866130;
+        Mon, 11 Apr 2022 07:04:26 -0700 (PDT)
+Received: from nick-desktop.milestone.local (67-4-43-98.sxfl.qwest.net. [67.4.43.98])
+        by smtp.gmail.com with ESMTPSA id a3-20020a5ec303000000b006496b4dd21csm19835785iok.5.2022.04.11.07.04.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Apr 2022 07:04:25 -0700 (PDT)
+From:   Nicholas Graumann <nick.graumann@gmail.com>
+To:     Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>,
+        Harini Katakam <harini.katakam@xilinx.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Kedareswara rao Appana <appanad@xilinx.com>
+Cc:     Nicholas Graumann <nick.graumann@gmail.com>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] dmaengine: xilinx_dma: Free descriptor lists in order
+Date:   Mon, 11 Apr 2022 09:03:48 -0500
+Message-Id: <20220411140348.30252-1-nick.graumann@gmail.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220225132044.14478-1-akhilrajeev@nvidia.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 25-02-22, 18:50, Akhil R wrote:
-> Add support for NVIDIA Tegra general purpose DMA driver for
-> Tegra186 and Tegra194 platform.
+If xilinx_dma_terminate_all is called while the AXI DMA is active, the
+following error messages might be seen upon restarting the DMA:
 
-Applied, thanks
+[   72.556254] xilinx_dma_irq_handler: Channel d053cb5b has errors 10, cdr 2c049f80 tdr 2c04a000
+[   72.557370] xilinx_dma_irq_handler: Channel d053cb5b has errors 100, cdr 2c049f80 tdr 2c049f80
 
+From then on the AXI DMA won't process any more descriptors until the
+DMA channel is released and requested again.
+
+The following sequence of events is what causes this to happen:
+
+1. Some descriptors are prepared with xilinx_dma_tx_submit (so they get
+   added to pending_list).
+2. The DMA is kicked off via call to xilinx_dma_tx_submit (the
+   descriptors are moved to active_list).
+3. While the transfer is active, another descriptor is prepared with
+   xilinx_dma_tx_submit (so it goes onto the pending_list)
+4. Before the transfers complete, xilinx_dma_terminate_all is called.
+   That function resets the channel then calls
+   xilinx_dma_free_descriptors to free the descriptors.
+
+At that point, pending_list contains a descriptor that is newer (and
+thus farther down the chain of descriptors) than the descriptors
+prepared in (1). However, it gets placed onto the free_seg_list before
+the older descriptors. From then on, the next pointers are no longer
+valid because the order of the descriptors in free_seg_list does not
+match the order in which the descriptors were allocated.
+
+To remedy this, the descriptor lists need to be freed in order from
+oldest to newest, otherwise segments could be added to the free segment
+list in a different order than they were created. This is not an issue
+for VDMA nor CDMA because the driver does not maintain a list of
+descriptors to free.
+
+Fixes: c0bba3a99f07 ("dmaengine: vdma: Add Support for Xilinx AXI Direct Memory Access Engine")
+Signed-off-by: Nicholas Graumann <nick.graumann@gmail.com>
+Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+---
+ drivers/dma/xilinx/xilinx_dma.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index 3ff9fa3d8cd5..3b435449cd0c 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -884,9 +884,13 @@ static void xilinx_dma_free_descriptors(struct xilinx_dma_chan *chan)
+ 
+ 	spin_lock_irqsave(&chan->lock, flags);
+ 
+-	xilinx_dma_free_desc_list(chan, &chan->pending_list);
++	/*
++	 * Descriptor lists must be freed from oldest to newest so that the
++	 * order of free_seg_list is maintained.
++	 */
+ 	xilinx_dma_free_desc_list(chan, &chan->done_list);
+ 	xilinx_dma_free_desc_list(chan, &chan->active_list);
++	xilinx_dma_free_desc_list(chan, &chan->pending_list);
+ 
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+ }
 -- 
-~Vinod
+2.35.1
+

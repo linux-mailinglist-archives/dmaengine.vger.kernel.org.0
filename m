@@ -2,131 +2,100 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20ABC4FB30B
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Apr 2022 06:47:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA9764FB362
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Apr 2022 07:59:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244664AbiDKEtI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 11 Apr 2022 00:49:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49532 "EHLO
+        id S229637AbiDKGBp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 11 Apr 2022 02:01:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244624AbiDKEtC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Apr 2022 00:49:02 -0400
-Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 386F835DD8;
-        Sun, 10 Apr 2022 21:46:49 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id D65D93200EE0;
-        Mon, 11 Apr 2022 00:46:47 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Mon, 11 Apr 2022 00:46:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1649652407; x=1649738807; bh=ZP
-        5rt6ptJXp+J3FSVn6SSTBlioBq49HeROquJ1oQ8ZE=; b=VVLaE0wwY3jVr6pHAn
-        86xiTa+pLBsFpdprReDzrD0528rKtGwt40LTZyCo8+oQM12q2GMS/J4IrpiQZD3P
-        qBaZnTC2eAzYewxlTMlQvEo+6lletQ/ZWymFrUi3gSf7UIA3AMDbO44MyfxMt2Kv
-        D5c7etiujMEd5APGnpah+EcKp8y/vnN13JGKpoNJuniXmdA7oc+kvCXX/Hgol4RX
-        kFD8AmXg5s9q262Cs3IafHInidFSlAfDNSUIRJpmYR2q4krxjyQmXEXrBUhjmhVX
-        hDJeJhMZHBCpL1P80/m/myVVYlP5OCnGHHoqenaLeDboCswEmr2yNflkjEDfRK+b
-        sdKw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-        1649652407; x=1649738807; bh=ZP5rt6ptJXp+J3FSVn6SSTBlioBq49HeROq
-        uJ1oQ8ZE=; b=BkJyetYmAuD9u99LUzTowTwkBc6ZfabIBBcFxMDlGWfljctFEWR
-        i/bbIH+RCXJTscvjvdyLfRwBB6wHlV7SNNzaDZdzL/bUnnd0LQGHPa9TwOqQtXww
-        t/Z/jIG/Ja4/kUzxISGhUIb/HvpKWtiSG6KP3bRIPJ0D8kp38KwhzvnOU8sr6G/J
-        n2CvUHQfz0u+7Z+thT2rbjrqDwti/wen4EcJ5O37IiJD8DPnx2RmPDVDvP9W6ab9
-        qocNRt18CoLI1AzwN8GHFx6ShQHbm9nSrenrl4nz0RCWU+wrYXbiCnPIAkVp5Q0B
-        1FZAHb0LpymIGjvXVIIG3SJ79rl0jdCLQgg==
-X-ME-Sender: <xms:t7JTYhJEGiKL4d-gmY7AqoVflLGrxA6l88TNNJUfUKvoipWRQnSnAQ>
-    <xme:t7JTYtJD5cL2g0jspK4cvf8sdL2tLMYsWDLp5UVJUNUXrHnNbsWLlG5ZzOZmeqnjH
-    sy_TTi2EwD_L6LqfQ>
-X-ME-Received: <xmr:t7JTYpvkhI8AAkMcXVjgnwQyCCuBhIyi4GaT6GTWFlsKwvvwJjHYTnDHV9OTeMpvGTusJCVmefsvjvQdXN21ulxlYazcH_0zHTx3CLwbfJxe8h1y49aB0nEGCEA7H4ZudV-NMA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrudekhedgkeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtf
-    frrghtthgvrhhnpeduhfejfedvhffgfeehtefghfeiiefgfeehgfdvvdevfeegjeehjedv
-    gfejheeuieenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:t7JTYiYEwO6SEhHTtzD1DJuPxnHPGrzymmkANYjhMTtPNGGyb7vpyA>
-    <xmx:t7JTYoasxy4LwrqRheXUDcjUtRHjwsjAci9W-Ky8rO7qs3d6BfHHsQ>
-    <xmx:t7JTYmB1cxAr785eEedPbF_sWM1DbDskrfVMUmlHT1jjpj8Gg5UvoA>
-    <xmx:t7JTYiCgUYJXSUpBKfTtugSS5pSp7VFpPb_f1qNftBf7Y74UOxWc2Q>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 11 Apr 2022 00:46:46 -0400 (EDT)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Cc:     Samuel Holland <samuel@sholland.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@lists.linux.dev, Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v2 4/4] dmaengine: sun6i: Add support for the D1 variant
-Date:   Sun, 10 Apr 2022 23:46:32 -0500
-Message-Id: <20220411044633.39014-5-samuel@sholland.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220411044633.39014-1-samuel@sholland.org>
-References: <20220411044633.39014-1-samuel@sholland.org>
+        with ESMTP id S234613AbiDKGBo (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Apr 2022 02:01:44 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E86E033E0A;
+        Sun, 10 Apr 2022 22:59:30 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 97AE4B810AF;
+        Mon, 11 Apr 2022 05:59:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58A5EC385A4;
+        Mon, 11 Apr 2022 05:59:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649656768;
+        bh=posnk2MGL5jSyg7ws/UMg2E9iKZJKC+HBbNrKFgg1UA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sjm2AlD8pIoZcZeI4wyth8x8a1dw5xZnHN55R9f33a9cw2nPquHAYoSPPEZ3A1T0a
+         2ENybh9Wp6sM72i1dODZKFSnKZM7faKo1v+GE5GFUkobec/8BCyLIUKiidexKiS5E2
+         1bZaDZ9vMaAhbMfq5k+Q2kkJqX+mkbo0rjQ+B4kqbs32S6FMRsf4EJD8vqcaY6XUVR
+         ssa7TWRYIVc8tKjujvPFnUNA0DfW6JJoYGgIO6xz6wTlPbOoAliZoyV8ampna3Gk9W
+         4tunNYVu+sUZ0RLRKWcBsukl8rNxAYsgGVMmBisXLUH30SPKOlNBNReI8kmGZPyIhG
+         jfQqwpzi9MbbQ==
+Date:   Mon, 11 Apr 2022 11:29:23 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Kevin Groeneveld <kgroeneveld@lenbrook.com>,
+        "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Robin Gong <yibin.gong@nxp.com>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: imx-sdma: fix regression with uart scripts
+Message-ID: <YlPDu3lu0rHJztNQ@matsya>
+References: <20220406224809.29197-1-kgroeneveld@lenbrook.com>
+ <YlBzQpWEqMHz/HsU@matsya>
+ <3b26a4e2-93a8-8b3f-20c3-c1593ea0d48b@lenbrook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3b26a4e2-93a8-8b3f-20c3-c1593ea0d48b@lenbrook.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-So far it appears to match the configuration of the A100 variant.
+Hi Kevin,
 
-Since D1 is a RISC-V chip, it does not meet any of the existing
-dependencies for this driver, so relax the dependency somewhat.
+On 10-04-22, 18:28, Kevin Groeneveld wrote:
+> On 2022-04-08 13:39, Vinod Koul wrote:
+> > 1. Patch title should reflect the change introduced, so the title is not
+> > apt, pls revise
+> 
+> In hindsight the title was not very descriptive. I will update and send a
+> v2. Maybe something like:
+> 
+> dmaengine: imx-sdma: fix init of uart scripts
+> 
+> > 2. Is this in response to rmk's report, if so, please add reported-by
+> 
+> No. I am not even aware of any report on this issue. I discovered the issue
+> on my own and found the problem commit by doing a bisect.
 
-Acked-by: Maxime Ripard <maxime@cerno.tech>
-Signed-off-by: Samuel Holland <samuel@sholland.org>
----
+Okay I am adding Russell here to see if this fixes his issue as well..
 
-(no changes since v1)
+> > 3. Lastly, I would like to see some tested by for this patch..
+> 
+> I have tested on imx5, imx6 and imx8 systems. I will add some brief details
+> of this to the commit message in the v2 patch. I am not sure if I as the
+> author should include a Tested-by tag.
+> 
+> > > Fixes: b98ce2f4e32b ("dmaengine: imx-sdma: add uart rom script")
+> > 
+> > cc: stable ?
+> 
+> That sounds reasonable. I am relatively new to submitting kernel patches and
+> that thought never crossed by mind.
 
- drivers/dma/Kconfig     | 2 +-
- drivers/dma/sun6i-dma.c | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+No worries, fixes should be backport to stable kernels, refer Documentation/process/stable-kernel-rules.rst
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index d5de3f77d3aa..b6845303cf7e 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -163,7 +163,7 @@ config DMA_SUN4I
- 
- config DMA_SUN6I
- 	tristate "Allwinner A31 SoCs DMA support"
--	depends on MACH_SUN6I || MACH_SUN8I || (ARM64 && ARCH_SUNXI) || COMPILE_TEST
-+	depends on ARCH_SUNXI || COMPILE_TEST
- 	depends on RESET_CONTROLLER
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
-diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index bd5958185ed1..1b95e93c14ee 100644
---- a/drivers/dma/sun6i-dma.c
-+++ b/drivers/dma/sun6i-dma.c
-@@ -1277,6 +1277,7 @@ static const struct of_device_id sun6i_dma_match[] = {
- 	{ .compatible = "allwinner,sun8i-a83t-dma", .data = &sun8i_a83t_dma_cfg },
- 	{ .compatible = "allwinner,sun8i-h3-dma", .data = &sun8i_h3_dma_cfg },
- 	{ .compatible = "allwinner,sun8i-v3s-dma", .data = &sun8i_v3s_dma_cfg },
-+	{ .compatible = "allwinner,sun20i-d1-dma", .data = &sun50i_a100_dma_cfg },
- 	{ .compatible = "allwinner,sun50i-a64-dma", .data = &sun50i_a64_dma_cfg },
- 	{ .compatible = "allwinner,sun50i-a100-dma", .data = &sun50i_a100_dma_cfg },
- 	{ .compatible = "allwinner,sun50i-h6-dma", .data = &sun50i_h6_dma_cfg },
+Thanks
 -- 
-2.35.1
-
+~Vinod

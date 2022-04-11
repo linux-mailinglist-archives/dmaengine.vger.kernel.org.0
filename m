@@ -2,63 +2,64 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3953E4FB306
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Apr 2022 06:46:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBE594FB30A
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Apr 2022 06:47:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237851AbiDKEsu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 11 Apr 2022 00:48:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48760 "EHLO
+        id S242773AbiDKEsz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 11 Apr 2022 00:48:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229938AbiDKEst (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Apr 2022 00:48:49 -0400
+        with ESMTP id S241741AbiDKEsw (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Apr 2022 00:48:52 -0400
 Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DE381FA55;
-        Sun, 10 Apr 2022 21:46:36 -0700 (PDT)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 29DA23200EAD;
-        Mon, 11 Apr 2022 00:46:35 -0400 (EDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F28AC1FA55;
+        Sun, 10 Apr 2022 21:46:39 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id 99FF13200EAD;
+        Mon, 11 Apr 2022 00:46:38 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Mon, 11 Apr 2022 00:46:36 -0400
+  by compute5.internal (MEProxy); Mon, 11 Apr 2022 00:46:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
-        :message-id:mime-version:reply-to:sender:subject:subject:to:to;
-         s=fm2; t=1649652394; x=1649738794; bh=o8/btCfUanwlG9sLCfsKkCh5b
-        CVDjWKu+ESIlPdD1uc=; b=G7T15Zi6Xi1QY1QvxNYjpWVTvbidno5Zcn9KpVI//
-        AmbdxU7s5mYUkmsWpPODhsWeWBysKMOytuYeuqunG1KJD8OZN8ETu70mDdnR1+tQ
-        /ZjIL+DUburiv50zkfLd9EJuB/aX02csaUCmMxVWntGwjuyhMuwxRHm94kQSmCtF
-        zayxA9O9+EA2EFB1EH6i4x66p0uuWg7zRgAKxdQzlWAM2pJQX+D0jcWoxQGJxnG2
-        AEFZ/ibA+cbom6PwDeWvLCo2YnOdA1GD+SJZkT+PaHJyoXpAT6gV+RWrwVFw7hTn
-        kfbVwGLyb0l9akvV4jxcZsIL/U08YbPGcWKCsWfE7owbg==
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm2; t=1649652398; x=1649738798; bh=gL
+        LJXvPow1EyaPPDjH9fdOoNOR+1/wWYRGyiSoUxs+o=; b=uWTJmjUG7vENZM/afU
+        2cf4iOilAoGPRqbcBRu9ALpyB+eHsRT3ogDmEs8uFt7BDGU2xC47oUSztbuatPOD
+        +3lP+SeSp/iJAiE3dHlBMRNuNdj3K3ZXRZ+D6ziSx4m0zqmjrCzzZYT1PG/ukEg4
+        CxAIJSq8RqRih8ookNt1kSdZHZxzmWQi+nFKgDIIW3uMBhBHfTsvVXsaRpxLo/SZ
+        MASlC3srIL7d7P0T/CxW6cfKJwJ6D1hR75FHx3K+TeKBlmhgsKXb1hDzh1eSTAaZ
+        bK2JH6v0RUETxf3phCNA3D9JaJLPcFBy8TCvIh7fk+qooACm3UcqTCAoizfX+cNq
+        G8iQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-        :from:from:in-reply-to:message-id:mime-version:reply-to:sender
-        :subject:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender
-        :x-me-sender:x-sasl-enc; s=fm3; t=1649652394; x=1649738794; bh=o
-        8/btCfUanwlG9sLCfsKkCh5bCVDjWKu+ESIlPdD1uc=; b=QZqLp9+vqwsxvowaz
-        PCNZbg44QJrUndDwvFy5/ftfGR4VOUSRuaoVI5/ihRwUfo4/boSGTVPKtOMJzdqA
-        qTgbNvUWSp13daFPPYnR5A7g5+BysjI2Tes3ye3p8DBghJhPFSvRYrR/5olwGlGJ
-        /oFakR4HDoyF5iyRn41xJLWkR95LxPvfEgtgZsx3ADNtt9wt914bjGxPnDzNl/d3
-        NLIev7jdMnDX+AS11/Tw4zo0iMX9q2BTAeSvdoQ6owk5pkH0yvShjWT64aCZT8i7
-        YHSuxBE+SdDEgR/kC7C/KpMmjMlOY/+Mb8uNKtogbH9dX25XYSk4+8/LPw7cd5UN
-        W2ozA==
-X-ME-Sender: <xms:qrJTYjZpms1DN9cNrigMEWgz1o3_sGnultGLJXfx3YVD2cfbg54BIA>
-    <xme:qrJTYiZsA1_p09Ppj9WB9xqTE1b382jGQ4TelnTYQ38Bw8A-zwjqP3rxQ4JSpPZSf
-    DeDk2yOzJJCo5m5-g>
-X-ME-Received: <xmr:qrJTYl-IByY8hb5UtSSLhDDlPnm4duL_8k0oU1p-Tp4V6heL6lpaa3MD-jUhH65b5Y2tF4PkVAl89-pxw2BOAcZCWpGpUZKCk4iH7Usmvmn33m-tChrUuxSjoPbuGzbg6yYzsA>
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+        1649652398; x=1649738798; bh=gLLJXvPow1EyaPPDjH9fdOoNOR+1/wWYRGy
+        iSoUxs+o=; b=TOgUOZFimHb6KQFyoo1Lux1Vg5FMdsusJtXa0PUvaUs2Zx5xwXx
+        wme4enkIaFsIM2ytdb1D1SliqBw8yhx76ryP3rnSvY1VTwYi6hZsnAsR+iWrywQ4
+        CBKP486DUZV9xE8P+wTF4DtAAXPmaTQ9q7VHltEczNQw5XMJqJlOgvqDyEqa2IIM
+        Nfz0aoAbAOO0hCDx5WKQ2Vt+k4TyjXe+70mzEtovRHP18PThRO2XXjzq7Da85Te3
+        prXbvlh/AaGmRU246Z9Ns3GgKE6twHKthNNRnHZgLFVuap281okkC/cU1E3fKde0
+        XVbohtlgj1m3qjhK9rdurYHKejLtUNAUUUw==
+X-ME-Sender: <xms:rbJTYuOVNngPOvLhQiy1VkyUKJfhfxDjU7d-aiThWWEB0IqxmLzWMg>
+    <xme:rbJTYs_fIYmSFT1KzXiazmShjuNKdxhyvMpUm8Sc1O4Ef6AxrgKOT11IJ6GFhdMds
+    I8EWmkpI-WyqW3BOg>
+X-ME-Received: <xmr:rbJTYlSdtJ4Q4qN_FYdSykTLSNSfvm74gDE1RX2YCWKBvZv47VBee1KTuKCn712bVoDEF7k6oHSrJqInu-lqTRVoE_Ue-Pgu-_Y0UbcA5N5dwSUDoPfyWuQrMOmA4fU0pZTx2w>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrudekhedgkeduucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgvlhcu
-    jfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtffrrg
-    htthgvrhhnpeeiteekhfehuddugfeltddufeejjeefgeevheekueffhffhjeekheeiffdt
-    vedtveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    hsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
-X-ME-Proxy: <xmx:qrJTYprWMVS_ORTZn2Q2xzO3fuBqG-idvx1wINfCS7cw1YhtmG9hMw>
-    <xmx:qrJTYup_Qj5YWt-XtL2zWdsJO5g9_97_Zc2D9uiJhAze5pcqN0SENA>
-    <xmx:qrJTYvRO25l-VkwJXygBkbrpy7OqKWUNhZrCI4KupVjlQnXk6xYHtg>
-    <xmx:qrJTYrjgUJrYwH0h2kRMkDQf3mN1wPR1AMbSW5MR06WqEbwYU8w5WA>
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
+    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtf
+    frrghtthgvrhhnpeduhfejfedvhffgfeehtefghfeiiefgfeehgfdvvdevfeegjeehjedv
+    gfejheeuieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
+X-ME-Proxy: <xmx:rbJTYuvgk_7Bw0ZotA3Q1lVJlihQklqz6CJa20u6kDryTqHZb_VUug>
+    <xmx:rbJTYmeq8Z-aWtlRpLSwmj_LOuSl_49yNlzFRpxbhRPjb3phLFsf1A>
+    <xmx:rbJTYi202CK-qAgG-9PyzNvdGH9WiHcxEILwQYVUzGJ-tZ-TCCb5VQ>
+    <xmx:rrJTYs3AUTWwGY_4hxwbJD3OKRP5D-Yegd_b31NZuzJCU-WfxnmsEg>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 11 Apr 2022 00:46:34 -0400 (EDT)
+ 11 Apr 2022 00:46:37 -0400 (EDT)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
 Cc:     Samuel Holland <samuel@sholland.org>, Chen-Yu Tsai <wens@csie.org>,
@@ -67,11 +68,14 @@ Cc:     Samuel Holland <samuel@sholland.org>, Chen-Yu Tsai <wens@csie.org>,
         Maxime Ripard <mripard@kernel.org>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@lists.linux.dev
-Subject: [PATCH v2 0/4] dmaengine: sun6i: Allwinner D1 support
-Date:   Sun, 10 Apr 2022 23:46:28 -0500
-Message-Id: <20220411044633.39014-1-samuel@sholland.org>
+        linux-sunxi@lists.linux.dev, Rob Herring <robh@kernel.org>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH v2 1/4] dt-bindings: dma: sun50i-a64: Add compatible for D1
+Date:   Sun, 10 Apr 2022 23:46:29 -0500
+Message-Id: <20220411044633.39014-2-samuel@sholland.org>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220411044633.39014-1-samuel@sholland.org>
+References: <20220411044633.39014-1-samuel@sholland.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -84,25 +88,47 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-D1 is a new RISC-V SoC that uses mostly the same peripherals as
-existing ARM-based sunxi SoCs. This series adds dmaengine support for
-D1, after fixing an issue where the driver depended on architecture-
-specific behavior (patch 2) and resolving a TODO item (patch 3).
+D1 has a DMA controller similar to the one in other Allwinner SoCs.
+Add its compatible, and include it in the list of variants with a
+separate MBUS clock gate.
 
-Changes in v2:
- - Fix `checkpatch.pl --strict` style issues (missing spaces)
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+---
 
-Samuel Holland (4):
-  dt-bindings: dma: sun50i-a64: Add compatible for D1
-  dmaengine: sun6i: Do not use virt_to_phys
-  dmaengine: sun6i: Add support for 34-bit physical addresses
-  dmaengine: sun6i: Add support for the D1 variant
+(no changes since v1)
 
- .../dma/allwinner,sun50i-a64-dma.yaml         |  9 ++-
- drivers/dma/Kconfig                           |  2 +-
- drivers/dma/sun6i-dma.c                       | 78 +++++++++++++------
- 3 files changed, 61 insertions(+), 28 deletions(-)
+ .../bindings/dma/allwinner,sun50i-a64-dma.yaml           | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml b/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
+index b6e1ebfaf366..ff0a5c58d78c 100644
+--- a/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
++++ b/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
+@@ -20,9 +20,11 @@ properties:
+ 
+   compatible:
+     oneOf:
+-      - const: allwinner,sun50i-a64-dma
+-      - const: allwinner,sun50i-a100-dma
+-      - const: allwinner,sun50i-h6-dma
++      - enum:
++          - allwinner,sun20i-d1-dma
++          - allwinner,sun50i-a64-dma
++          - allwinner,sun50i-a100-dma
++          - allwinner,sun50i-h6-dma
+       - items:
+           - const: allwinner,sun8i-r40-dma
+           - const: allwinner,sun50i-a64-dma
+@@ -58,6 +60,7 @@ if:
+   properties:
+     compatible:
+       enum:
++        - allwinner,sun20i-d1-dma
+         - allwinner,sun50i-a100-dma
+         - allwinner,sun50i-h6-dma
+ 
 -- 
 2.35.1
 

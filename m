@@ -2,47 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BD564FBEF8
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Apr 2022 16:23:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 596FF4FBF03
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Apr 2022 16:24:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242086AbiDKOZP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 11 Apr 2022 10:25:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45020 "EHLO
+        id S1347172AbiDKO1A (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 11 Apr 2022 10:27:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243554AbiDKOZI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Apr 2022 10:25:08 -0400
+        with ESMTP id S1347258AbiDKO05 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Apr 2022 10:26:57 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAED937002;
-        Mon, 11 Apr 2022 07:22:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5C70377E5;
+        Mon, 11 Apr 2022 07:24:41 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A1594B815E0;
-        Mon, 11 Apr 2022 14:22:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CA37C385A3;
-        Mon, 11 Apr 2022 14:22:51 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6BB8DB81643;
+        Mon, 11 Apr 2022 14:24:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72DA1C385A3;
+        Mon, 11 Apr 2022 14:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649686972;
-        bh=/M3dzgiYPsOBvJvml9NopDHsF9Dgp7f55YskJvFJqLA=;
+        s=k20201202; t=1649687079;
+        bh=3f8x8UDpZU8LjXOQXVkQWefAyi7CRWXDrUMWog7e55w=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S2F1oZ1fjfWrzrneid259jlbR35FVo4a2PDP4YqAgR9pTgeUmkjiMy4kV9TXiToV1
-         I2oIU8LITs/fZ5YxvDGY6DyY6PW5KgFijms2pkOTs1BI6K6Ozmv47yHOT9cfOf5Bf6
-         WLgGsZk0JI9zDsU54jU1c8Hudeh8ch5APfJu/dQDJWoGeIv0fZFDnqACkbtlAFImoE
-         OOPwndO06F7L3gflqoT/9/iKVDVKa5q+8ldQfpSn/JQmnCFHl/bF9PLnOnwJAvbecw
-         MFQM65vzsPCtBVAwPFryeLOx0OkQCDpERQFFPfS833SgNdWft1FeSroQhGPd1LPaOm
-         /A69AMLetF0Kw==
-Date:   Mon, 11 Apr 2022 19:52:48 +0530
+        b=T3b8gddofu7jH+t2PiWiNv3DnQsIJZ3wx+uxKFc/Plx9Hyi1xtyRtH8/Ia/JWnqLN
+         Fti4jlIU8dMLW7w4r56KwcfZeK5MXlnvnstbu1wXfubacMow3fNP1vuxSJpBSYuV6F
+         tkVlCn0M2WHxw9MZsvTuv8O44D8mVhvIVTF7vtxkFtHs7VBmg7dcSHOf2wT90kIfLP
+         4NmRXI5loQKobwrbbsOZiROzGLhBbxQpPLeWkN3U3UB/flC0iZVCQ1NjEqjpLZ8u3p
+         7q3N2a0dMnSC2cxyYdXa9MiRjVzj2j0U7GJQ1Jv26tTU+Q9v6I59WDRPM1iWmjdW03
+         O8vQO8PMFvrog==
+Date:   Mon, 11 Apr 2022 19:54:35 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: Remove a useless mutex
-Message-ID: <YlQ5uOk4WPXAfV0V@matsya>
-References: <7180452c1d77b039e27b6f9418e0e7d9dd33c431.1644140845.git.christophe.jaillet@wanadoo.fr>
+To:     Herve Codina <herve.codina@bootlin.com>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 1/1] dmaengine: dw-edma: Fix unaligned 64bit access
+Message-ID: <YlQ6I3ZzMDpU0Sjd@matsya>
+References: <20220225120252.309404-1-herve.codina@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7180452c1d77b039e27b6f9418e0e7d9dd33c431.1644140845.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20220225120252.309404-1-herve.codina@bootlin.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -53,13 +54,27 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 06-02-22, 10:47, Christophe JAILLET wrote:
-> According to lib/idr.c,
->    The IDA handles its own locking.  It is safe to call any of the IDA
->    functions without synchronisation in your code.
+On 25-02-22, 13:02, Herve Codina wrote:
+> On some arch (ie aarch64 iMX8MM) unaligned PCIe accesses are
+> not allowed and lead to a kernel Oops.
+>   [ 1911.668835] Unable to handle kernel paging request at virtual address ffff80001bc00a8c
+>   [ 1911.668841] Mem abort info:
+>   [ 1911.668844]   ESR = 0x96000061
+>   [ 1911.668847]   EC = 0x25: DABT (current EL), IL = 32 bits
+>   [ 1911.668850]   SET = 0, FnV = 0
+>   [ 1911.668852]   EA = 0, S1PTW = 0
+>   [ 1911.668853] Data abort info:
+>   [ 1911.668855]   ISV = 0, ISS = 0x00000061
+>   [ 1911.668857]   CM = 0, WnR = 1
+>   [ 1911.668861] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000040ff4000
+>   [ 1911.668864] [ffff80001bc00a8c] pgd=00000000bffff003, pud=00000000bfffe003, pmd=0068000018400705
+>   [ 1911.668872] Internal error: Oops: 96000061 [#1] PREEMPT SMP
+>   ...
 > 
-> so the 'chan_mutex' mutex can just be removed.
-> It is here only to protect some ida_alloc()/ida_free() calls.
+> The llp register present in the channel group registers is not
+> aligned on 64bit.
+> 
+> Fix unaligned 64bit access using two 32bit accesses
 
 Applied, thanks
 

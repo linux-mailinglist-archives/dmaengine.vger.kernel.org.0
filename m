@@ -2,47 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65EFD4FBBD0
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Apr 2022 14:13:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A0D24FBD0C
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Apr 2022 15:28:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243386AbiDKMPr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 11 Apr 2022 08:15:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44184 "EHLO
+        id S244137AbiDKNav (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 11 Apr 2022 09:30:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232585AbiDKMPq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Apr 2022 08:15:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A18F40A05;
-        Mon, 11 Apr 2022 05:13:33 -0700 (PDT)
+        with ESMTP id S233050AbiDKNau (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Apr 2022 09:30:50 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01843A18F;
+        Mon, 11 Apr 2022 06:28:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 120486160E;
-        Mon, 11 Apr 2022 12:13:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4C31C385A3;
-        Mon, 11 Apr 2022 12:13:31 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B05A8B815E9;
+        Mon, 11 Apr 2022 13:28:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCE23C385A3;
+        Mon, 11 Apr 2022 13:28:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649679212;
-        bh=BtDcqZfnlp8Xkcj5jZLl04TlgfDxDdLMfrvNcg808r4=;
+        s=k20201202; t=1649683714;
+        bh=wY2kkpkdJta5VZ4YNiEH8OvoR3YdYHuwo0F1OuTyYj8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o60TzXSOaE1PRWWE/lj3alD1vYrBX6RKYZHXuP5Fq4zwsU0ZwCuVaNyN9cPf0UB1W
-         oNt6/19vl58YrDnH+TuAaMdkNTxldbAujcizDskfxfAzHhaw2Ebqzn8hRI9WtnjCUp
-         5j4H92+JVUJ40IZAExDizDA4+TeS5j5p+yUfYW+jTbW9v2LBK+vVGV39/2T+kY7znG
-         1fvwL3nIbJEZcrj0YJncNuiRs64h0iWOuuPiSVLTmfcuYYpfljmMkspa/0BwAY10X2
-         f0fHlUx2CxMNuAn6nIcZOKl3ZMnFrOkN7t2rEYt8iejTOMW7yfz9A2h7la7dYNKMUB
-         hJqlFK3ySrDWw==
-Date:   Mon, 11 Apr 2022 17:43:28 +0530
+        b=IvvY1WzzHSzYXvYnOKCFUjS4UgpB0CDgJmIrACaNIhTZY3PhF79b3OVRp1LoGpM/S
+         VfI6g2m25yIelLafewradRDZlul1qbeZi2n1gHeCxqVv0iI/j4m4tDna18EzJzZt1N
+         oiL73LjDk9SZ3rq9bC850P0LNimGAlYr8l8IXMPb1k7Mu/ePKVusAM8SE8THQXtH6y
+         PGrK8cpM4ZRpqQsqjP8bLqhX2SLgorBNfJMpF9D4l0FM9Qw2O4/aU684TuO3s8aRwj
+         x2InZKP4gHKMtgNPOmZYhiTKuOlfPs0tAOKNNumVUZlDVeIz5TDikSjo4m7KR3flqr
+         3TwceEzvkDKsA==
+Date:   Mon, 11 Apr 2022 18:58:30 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: bestcomm: Prepare cleanup of powerpc's
- asm/prom.h
-Message-ID: <YlQbaM8Rz8GF4WyC@matsya>
-References: <f98acba303489bdf003e7256460696225b00702e.1648833428.git.christophe.leroy@csgroup.eu>
+To:     Amelie Delaunay <amelie.delaunay@foss.st.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: stm32-mdma: check the channel availability
+ (secure or not)
+Message-ID: <YlQs/rPFnRWP6W6D@matsya>
+References: <20220330103645.99969-1-amelie.delaunay@foss.st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f98acba303489bdf003e7256460696225b00702e.1648833428.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <20220330103645.99969-1-amelie.delaunay@foss.st.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -53,12 +57,14 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 02-04-22, 11:54, Christophe Leroy wrote:
-> powerpc's asm/prom.h brings some headers that it doesn't
-> need itself.
+On 30-03-22, 12:36, Amelie Delaunay wrote:
+> STM32_MDMA_CCR bit[8] is used to enable Secure Mode (SM). If this bit is
+> set, it means that all the channel registers are write-protected. So the
+> channel is not available for Linux use.
 > 
-> In order to clean it up, first add missing headers in
-> users of asm/prom.h
+> Add stm32_mdma_filter_fn() callback filter and give it to
+> __dma_request_chan (instead of dma_get_any_slave_channel()), to exclude the
+> channel if it is marked Secure.
 
 Applied, thanks
 

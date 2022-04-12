@@ -2,33 +2,33 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E33934FDE0C
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Apr 2022 13:43:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66E284FDDBE
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Apr 2022 13:43:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234717AbiDLLoG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 12 Apr 2022 07:44:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55240 "EHLO
+        id S244528AbiDLLoc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 12 Apr 2022 07:44:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234303AbiDLLlc (ORCPT
+        with ESMTP id S1350057AbiDLLlc (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Tue, 12 Apr 2022 07:41:32 -0400
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8848506CD;
-        Tue, 12 Apr 2022 03:22:09 -0700 (PDT)
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA34D50B12;
+        Tue, 12 Apr 2022 03:22:13 -0700 (PDT)
 Received: (Authenticated sender: miquel.raynal@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id E2967FF80D;
-        Tue, 12 Apr 2022 10:22:04 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPSA id 8EEDFFF815;
+        Tue, 12 Apr 2022 10:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1649758928;
+        t=1649758932;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zIaJzlhcitEDdJTHuh7eIv4TamuZ7pCdIgFe1rezCFs=;
-        b=lmo588VWu8kuCbUAmbiayiMKdhqKMww2OqHar2dH2cpL7dSNICHQ7XK2G9y0pwcgc1w9LU
-        yho8kwhpxqNMnhzUI8m27ZAnUI0VKXTvWf+3k2Qd0HNXFnJxKmmLNsopa7EOzHaa9ngID2
-        Od92pD2cFj+5Zgrld5nvVVd5M9eBEE1NDLbQg3akeECyaWh9t3nR2Da0TEMOqRtUcf//X2
-        VmuAIpxyh+ouxTmTo/PlGgdNk49M62UUVNJLnQdlXrerUuL0L8FCRUFJxq2aSDevQnpKwD
-        yfZ9ZHwJwc6o1tF/rpeYH0Wr+qNO4nzgH1WdAST47LftKNzwTWEBsNeTdkpa3w==
+        bh=Ge58NimhaKWCxwe0+hrNu+VcWrBPIvnbMynidvFnOMc=;
+        b=pZMaF/uKTrC23DnCtgrAjD+YUPJkElik3WV7CQS5tnWXUXPjTQvz5qGx5LDNHlQqS7VNGW
+        Q9eulm+EE2nGvU2KRx2v25wPtlk2sJ1GerbF24uDDQa0UF/csbTurfeFPMUjN7odHrkNNC
+        jTK9IzPIyGvRKl8zjLxLdrHDkJXZHWew1Z1ZICl2+m1DZ69DL8yv+edimEznJpHq13VgP4
+        oBh19BOKXhP7k5ONyKqFs/nGV4rRKvzF1LUgrl4pvXAAbrUuDihxFKoERqRFTu3R6twZi4
+        4/LP7eC0eStuB/wucmCW+xkblsge39X0Nr3aYT9zD5BrvxQ+U61mL3apsv6t2g==
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Magnus Damm <magnus.damm@gmail.com>,
         Gareth Williams <gareth.williams.jx@renesas.com>,
@@ -50,9 +50,9 @@ Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
         Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v9 7/9] dmaengine: dw: Add RZN1 compatible
-Date:   Tue, 12 Apr 2022 12:21:36 +0200
-Message-Id: <20220412102138.45975-8-miquel.raynal@bootlin.com>
+Subject: [PATCH v9 8/9] ARM: dts: r9a06g032: Add the two DMA nodes
+Date:   Tue, 12 Apr 2022 12:21:37 +0200
+Message-Id: <20220412102138.45975-9-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20220412102138.45975-1-miquel.raynal@bootlin.com>
 References: <20220412102138.45975-1-miquel.raynal@bootlin.com>
@@ -69,29 +69,55 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The Renesas RZN1 DMA IP is very close to the original DW DMA IP, a DMA
-router has been introduced to handle the wiring options that have been
-added.
+Describe the two DMA controllers available on this SoC.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/dma/dw/platform.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/r9a06g032.dtsi | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
-index 246118955877..47f2292dba98 100644
---- a/drivers/dma/dw/platform.c
-+++ b/drivers/dma/dw/platform.c
-@@ -137,6 +137,7 @@ static void dw_shutdown(struct platform_device *pdev)
- #ifdef CONFIG_OF
- static const struct of_device_id dw_dma_of_id_table[] = {
- 	{ .compatible = "snps,dma-spear1340", .data = &dw_dma_chip_pdata },
-+	{ .compatible = "renesas,rzn1-dma", .data = &dw_dma_chip_pdata },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, dw_dma_of_id_table);
+diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a06g032.dtsi
+index 636a6ab31c58..839580ec21ee 100644
+--- a/arch/arm/boot/dts/r9a06g032.dtsi
++++ b/arch/arm/boot/dts/r9a06g032.dtsi
+@@ -200,6 +200,36 @@ nand_controller: nand-controller@40102000 {
+ 			status = "disabled";
+ 		};
+ 
++		dma0: dma-controller@40104000 {
++			compatible = "renesas,r9a06g032-dma", "renesas,rzn1-dma";
++			reg = <0x40104000 0x1000>;
++			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "hclk";
++			clocks = <&sysctrl R9A06G032_HCLK_DMA0>;
++			dma-channels = <8>;
++			dma-requests = <16>;
++			dma-masters = <1>;
++			#dma-cells = <3>;
++			block_size = <0xfff>;
++			data_width = <3>;
++			status = "disabled";
++		};
++
++		dma1: dma-controller@40105000 {
++			compatible = "renesas,r9a06g032-dma", "renesas,rzn1-dma";
++			reg = <0x40105000 0x1000>;
++			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "hclk";
++			clocks = <&sysctrl R9A06G032_HCLK_DMA1>;
++			dma-channels = <8>;
++			dma-requests = <16>;
++			dma-masters = <1>;
++			#dma-cells = <3>;
++			block_size = <0xfff>;
++			data_width = <3>;
++			status = "disabled";
++		};
++
+ 		gic: interrupt-controller@44101000 {
+ 			compatible = "arm,gic-400", "arm,cortex-a7-gic";
+ 			interrupt-controller;
 -- 
 2.27.0
 

@@ -2,36 +2,36 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB05E4FE0F3
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Apr 2022 14:52:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1C884FE10E
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Apr 2022 14:52:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351574AbiDLMue (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 12 Apr 2022 08:50:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57438 "EHLO
+        id S1353698AbiDLMub (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 12 Apr 2022 08:50:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354991AbiDLMr6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 Apr 2022 08:47:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6E256565;
-        Tue, 12 Apr 2022 05:14:12 -0700 (PDT)
+        with ESMTP id S1355259AbiDLMsJ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 Apr 2022 08:48:09 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 027FC1E3F0;
+        Tue, 12 Apr 2022 05:15:34 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7DED16169F;
-        Tue, 12 Apr 2022 12:14:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BB61C385A6;
-        Tue, 12 Apr 2022 12:14:11 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BA53DB818BB;
+        Tue, 12 Apr 2022 12:15:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B343EC385A1;
+        Tue, 12 Apr 2022 12:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649765651;
-        bh=Nz2SivOgqlG94fI51wSS3/fqaxpQqqMbgq6mFjBnfhc=;
+        s=k20201202; t=1649765731;
+        bh=PHuuUHC1EMHAlVwrozyUlRYMOXmSm9Pzxt5VCBTOWmM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Qrh9ykgZpyWAFIO88oxLto2fn19HoGfiBaiZ4cOtod3cwS0HeWyAuYPltV2ykS/qv
-         YWPIHwjlXZLQDQHc2bClxbX1qByGJL4QIdqwDIrxpuhepmaXv4N451rs6QxjrQ8VfS
-         /ehFtlVC+zvJyMU/knr9RD/App7sp5y9yx8n+BXP/p5QPoelTg+seujwvJU6D0la5k
-         Lhqe9FQOnIfXc7CLV4bDuhytXb99MQxH9A9HCozngcRPkq0lRUHYRtkzp12Xcam00w
-         +0F4bqyigCrV0YQV2YriTIgLQcw8N3lMKZ4mpTTm8huKnea4Zc09jq1Ce+8dg7q6UK
-         EaT3vUvBgXznw==
-Date:   Tue, 12 Apr 2022 17:44:07 +0530
+        b=k+XL+J8cL2GEnPcYUjnOGXX7Nojg40gDn+QLCqzX3hwl8hk0pjp/d9Hw1AyBHMDS7
+         e0ob8h+0Cnflc1SriggOMJQqKm1oTb/6LEY7dFEEFTUqFHy7Vh3/UJ67+arVXwwNul
+         bFtnKa3govPw44pf2H9B7A9iUXvusQyh06psCr3Yldynq2oaVHZbr2CL3JmfWMS7Lt
+         anyds2yxOjpzwXkmQiDI9uCjah7KuDSmz7fSN8OdlCyOLsaPBBFipqHNUXBQUrl3FP
+         lXf3x0VpzxYFJCIl5rrlO+nXQbEQwLVzbYG5yeN9X2H/CIXehCfFCtrzlioUZFzwt+
+         FnEo7Xhn598TQ==
+Date:   Tue, 12 Apr 2022 17:45:27 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Magnus Damm <magnus.damm@gmail.com>,
@@ -52,15 +52,14 @@ Cc:     Magnus Damm <magnus.damm@gmail.com>,
         Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
         Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH v9 3/9] dt-bindings: dmaengine: Introduce RZN1 DMA
- compatible
-Message-ID: <YlVtD8hHMrG60bU8@matsya>
+Subject: Re: [PATCH v9 7/9] dmaengine: dw: Add RZN1 compatible
+Message-ID: <YlVtX2Lkvaj0Lehv@matsya>
 References: <20220412102138.45975-1-miquel.raynal@bootlin.com>
- <20220412102138.45975-4-miquel.raynal@bootlin.com>
+ <20220412102138.45975-8-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220412102138.45975-4-miquel.raynal@bootlin.com>
+In-Reply-To: <20220412102138.45975-8-miquel.raynal@bootlin.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -72,9 +71,9 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 On 12-04-22, 12:21, Miquel Raynal wrote:
-> Just like for the NAND controller that is also on this SoC, let's
-> provide a SoC generic and a more specific couple of compatibles for the
-> DMA controller.
+> The Renesas RZN1 DMA IP is very close to the original DW DMA IP, a DMA
+> router has been introduced to handle the wiring options that have been
+> added.
 
 Acked-By: Vinod Koul <vkoul@kernel.org>
 

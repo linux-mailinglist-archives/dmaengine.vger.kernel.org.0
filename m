@@ -2,106 +2,103 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56C084FE78E
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Apr 2022 20:02:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8CEB4FE7A5
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Apr 2022 20:09:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244634AbiDLSE0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 12 Apr 2022 14:04:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46694 "EHLO
+        id S1345409AbiDLSMN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 12 Apr 2022 14:12:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232756AbiDLSEY (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 Apr 2022 14:04:24 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 080395A15D;
-        Tue, 12 Apr 2022 11:02:06 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id nt14-20020a17090b248e00b001ca601046a4so3790076pjb.0;
-        Tue, 12 Apr 2022 11:02:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KD3zlhA4cnu+F8Ye3bhSZQoi9dOhZ7oX6Of6NoxUUuk=;
-        b=iCV26r+EyhOpvQyEn8WdLCWBOQ4OpaL8UodOn8ua4BC/Q/QHEOiVx5lPx/ZLNmhkr3
-         z+juAfN3JLD9T5FhqgJRBwEqc0LKZnjU2fSzjGEFGDJMEbOJd4jtE9YPC0w5FnNiGMvk
-         4RkbVGo09yl2USiIoe/oMQfhxY1Pef+eCmp8tDE5vDiLu2q0U2/QZazh/ayjMJj47/UL
-         UtCBr0ROq5yagnvTt4xiLC4Ut52nYyab2dCgb8921SBD/ydYeP/+8ltyei70aJ6ZNSe0
-         eBbYeU89jNImPvSLIDF4JIUuluccMh43n13h0XJaomdvq0nDzlONJZ6S/87nRRCr/eud
-         Iz8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KD3zlhA4cnu+F8Ye3bhSZQoi9dOhZ7oX6Of6NoxUUuk=;
-        b=tjdXmagNocT1UQHBKiyC1rO3DvCyQkGrf1PPCHw/csTZg3hynpTCg1Zii3HYYFIlKb
-         xb42WrDNYvrOByCPY20eP88k2eJoZJLol8y32WWWYu6jLYfHIVfd7bK68CGSubat2sqB
-         WWYf7smkl8Y0713SkHNGntnKMHuD2ICPIReH6N268xifTFXQkcNy4ZtQ1qn8t94G1bID
-         0KP+ZO4lZpgpuFpvO+tXoGs3nwxdi91kVcepuBg+p+j7CUqWqntzQGTDLwyqyU+fAeTh
-         jC3UNktXwlHzawTTAE+OkBNYV0Qkv/f69jADyLegP1cxQDbeFF7CaAwgRVoNM8qkzQz4
-         9sgg==
-X-Gm-Message-State: AOAM530yqT/8PR8t8ke+LKSxY4dfmFYo7umLg9JTpsOqyCmmsGU5jk3G
-        NLvVwAHXSaBhhziXyWizvp97y2/fDBI=
-X-Google-Smtp-Source: ABdhPJza/agHmGrmFLgonFL7VOBBA4SS8lMXCPSs9MfxWwOxa5kiBqig+Iy0FNNkQutRNULcGytwDw==
-X-Received: by 2002:a17:90a:d584:b0:1bc:e520:91f2 with SMTP id v4-20020a17090ad58400b001bce52091f2mr6402022pju.192.1649786525466;
-        Tue, 12 Apr 2022 11:02:05 -0700 (PDT)
-Received: from 9a2d8922b8f1 ([122.161.51.18])
-        by smtp.gmail.com with ESMTPSA id m13-20020a62a20d000000b004fe0ce6d7a1sm30027607pff.193.2022.04.12.11.02.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Apr 2022 11:02:05 -0700 (PDT)
-Date:   Tue, 12 Apr 2022 23:31:59 +0530
-From:   Kuldeep Singh <singh.kuldeep87k@gmail.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] dt-bindings: dma: Convert Qualcomm BAM DMA
- binding to json format
-Message-ID: <20220412180159.GA29479@9a2d8922b8f1>
-References: <20220410175056.79330-1-singh.kuldeep87k@gmail.com>
- <20220410175056.79330-7-singh.kuldeep87k@gmail.com>
- <14ecb746-56f0-2d3b-2f93-1af9407de4b7@linaro.org>
- <20220411105810.GB33220@9a2d8922b8f1>
- <50defa36-3d91-80ea-e303-abaade1c1f7e@linaro.org>
- <20220412061953.GA95928@9a2d8922b8f1>
- <8ff07720-3c52-99e6-8046-501f4ae28518@linaro.org>
+        with ESMTP id S233266AbiDLSMM (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 Apr 2022 14:12:12 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70AE82714F
+        for <dmaengine@vger.kernel.org>; Tue, 12 Apr 2022 11:09:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1649786994; x=1681322994;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=QAYE7DLErcZRkwsTKhBGQm53zzDRercy7J40a30NITU=;
+  b=cx1Nm7AEOQmzdP8FSO9WYSUcPUjAA+g8D3s0cb5x5aLhSoQBHHyOtO2u
+   yWs1CfUbl0Z51HLG34MiI4SEvZ689av2hBxJ3K6vPAnNWsmBo7y4Ydi5s
+   2MBtVLpX97xLWMp03o9PUKVMbPM0dC7zQ2F0J+BGSEEiyW+rxDsO1SCRW
+   BuP8gsWb58LbOKhzaE8aEa5JVDRQhEtgwcONFkBKRXH1jS3YcxSDXq4Hv
+   dosJGDW4mIzGJedxuLm50ECxnYzWxh7o6KaiVnpZ3EKie1w8iKfYYgWwh
+   hDkHpD8JyLcY7buIzyRheCFMa07JTqAOvcJnVEUkcQ5uktKnlO3kfzsHC
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10315"; a="262646107"
+X-IronPort-AV: E=Sophos;i="5.90,254,1643702400"; 
+   d="scan'208";a="262646107"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2022 11:06:33 -0700
+X-IronPort-AV: E=Sophos;i="5.90,254,1643702400"; 
+   d="scan'208";a="559439816"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2022 11:06:32 -0700
+Subject: [PATCH] dmaengine: add verification of DMA_INTERRUPT capability for
+ dmatest
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org
+Date:   Tue, 12 Apr 2022 11:06:32 -0700
+Message-ID: <164978679251.2361020.5856734256126725993.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8ff07720-3c52-99e6-8046-501f4ae28518@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-> > Which example schema are you talking about?
-> 
-> There is only one example-schema.
-> $ find ./linux -name 'example-schema*'
+Looks like I forgot to add DMA_INTERRUPT cap setting to the idxd driver and
+dmatest is still working regardless of this mistake. Add an explicit check
+of DMA_INTERRUPT capability for dmatest to make sure the DMA device being used
+actually supports interrupt before the test is launched and also that the
+driver is programmed correctly.
 
-Example seems good to me. I will change to boolean.
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/dma/dmatest.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-> > Anyway Krzysztof, can you confirm the same as you have been actively
-> > contributing to Qcom peripherals. I will add credit in follow-up
-> > submission.
-> 
-> Honestly not now, because I don't have access to related datasheets (I
-> am working on this).
+diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+index f696246f57fd..0a2168a4ccb0 100644
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -675,10 +675,16 @@ static int dmatest_func(void *data)
+ 	/*
+ 	 * src and dst buffers are freed by ourselves below
+ 	 */
+-	if (params->polled)
++	if (params->polled) {
+ 		flags = DMA_CTRL_ACK;
+-	else
+-		flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
++	} else {
++		if (dma_has_cap(DMA_INTERRUPT, dev->cap_mask)) {
++			flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
++		} else {
++			pr_err("Channel does not support interrupt!\n");
++			goto err_pq_array;
++		}
++	}
+ 
+ 	ktime = ktime_get();
+ 	while (!(kthread_should_stop() ||
+@@ -906,6 +912,7 @@ static int dmatest_func(void *data)
+ 	runtime = ktime_to_us(ktime);
+ 
+ 	ret = 0;
++err_pq_array:
+ 	kfree(dma_pq);
+ err_srcs_array:
+ 	kfree(srcs);
 
-Yes definitely and you also must be having bunch of items in your todo list.
-Actually, I also don't have access to datasheets that's why was looking
-for inputs.
 
-> You can though try to look at original (vendor) sources:
-> https://git.codelinaro.org/clo/la/kernel/msm-4.19 (sdm845)
-> https://git.codelinaro.org/clo/la/kernel/msm-3.18 (msm8996)
-
-Great. I'll see if I can make most out of it.

@@ -2,236 +2,180 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BA964FF604
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Apr 2022 13:47:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8807C4FF61A
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Apr 2022 13:53:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230254AbiDMLtd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 13 Apr 2022 07:49:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45588 "EHLO
+        id S231635AbiDMLz7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 13 Apr 2022 07:55:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229726AbiDMLtc (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 Apr 2022 07:49:32 -0400
-X-Greylist: delayed 566 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 13 Apr 2022 04:47:11 PDT
-Received: from mta-01.yadro.com (mta-02.yadro.com [89.207.88.252])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E0C853B42;
-        Wed, 13 Apr 2022 04:47:11 -0700 (PDT)
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 1FA2F454CF;
-        Wed, 13 Apr 2022 11:37:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :x-mailer:message-id:date:date:subject:subject:from:from
-        :received:received:received; s=mta-01; t=1649849861; x=
-        1651664262; bh=nt+H8nVF77Sn8FWBw2z4vHK5Yf8N/vEddSQZADOz7cI=; b=g
-        wSfw8944Ohmpty+OhSWeCRQ00owtwkGboucBHqPVydB2BEGYwfi/nhj1j9GxFPTE
-        m53YgW3+0BH3ZivTH8WxxC/1Y7wiQsvxBby0vZt696ZWrT0UfB0dIAv4T5DYgsmg
-        mDcSSNURm6C4T3U/n6aPfdcfh3x5K2gBNuiInR66jQ=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id WC27he5aZ9y8; Wed, 13 Apr 2022 14:37:41 +0300 (MSK)
-Received: from T-EXCH-04.corp.yadro.com (t-exch-04.corp.yadro.com [172.17.100.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 3B3E645490;
-        Wed, 13 Apr 2022 14:37:41 +0300 (MSK)
-Received: from ubuntu.yadro.com (10.199.0.41) by T-EXCH-04.corp.yadro.com
- (172.17.100.104) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Wed, 13
- Apr 2022 14:37:39 +0300
-From:   <i.m.novikov@yadro.com>
-To:     <sanju.mehta@amd.com>
-CC:     <i.m.novikov@yadro.com>, <vkoul@kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux@yadro.com>
-Subject: [PATCH] dmaengine: PTDMA: support polled mode
-Date:   Wed, 13 Apr 2022 14:37:33 +0300
-Message-ID: <20220413113733.59041-1-i.m.novikov@yadro.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S230072AbiDMLz7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 Apr 2022 07:55:59 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D04672DA96;
+        Wed, 13 Apr 2022 04:53:37 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id bq30so3062713lfb.3;
+        Wed, 13 Apr 2022 04:53:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dk5auBCWugUMx+wNUzpQYBvP/argsfGCd5qKpmD6z4U=;
+        b=ABta0IUM2lxij+E/bvj7bKxQyXy4aHV/3JgS7tBITrzOrJJmRADvzE7cWSBC51L9Lm
+         NCb6Xct6SgKjbzLNa5sX2Yb5i6hp8DU/n0ZTircS30BLKZi6b6uPiIEdpOXJlTGlzFdk
+         EzuY3Uv1f3rDoO8RVyiMZFqqPN4JrLdpH5sRDmGsBFgU9/pdpDR0d4ojcZ9v6eqW54QG
+         UkBC/48b2hgnACuW+YTTJRltUSUAE5V73CSILIscO5WFjsBFwNGNTISaI3AjwCJXvCdL
+         s4B7UGsIT53I8vFTJNyPFQqyUR3hdi5KDQimEgQ/UnMh3bwddCVBfzpGenJrw7WWdl01
+         +cHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dk5auBCWugUMx+wNUzpQYBvP/argsfGCd5qKpmD6z4U=;
+        b=ywadLHcKbXs2X5ngw6DhtJyf1AyrWefcYAOSKidwCbyxHFLUyWNz9hwJ2AUyoH62OM
+         KDezx6JjRjm+zmw3RgGcof9Gry+M0slOnAp5nMFiUPAL/Cm7f2nUiajFGjJhTeuJMY7x
+         gYch2GL+3HlQUDJsRy/KqTFN3PdEIuISgdrw+CQee1uQkfK/hmUKV+aPPczqa+XeYf0/
+         DEScYX0Abs0hmwK/uoLQbhUr7Rfa3OXMMlP0tHxPoTyE9SWvaCywNKF3gHW5ZG+W0nZj
+         mo7FKohdM1GJW1vJR/RnwqBy/cpiK9MmyUJuJa0lyLkIzD6kGcWz0q1541wU/adg0Nwt
+         6GLQ==
+X-Gm-Message-State: AOAM532hKW/eBepsX84Vx2nVZ9vOfvNLvckhK2NmyDp9KHktMlY7Duk4
+        rZnz7vILaXNe0QLGlgxrkGt2FwvIkUvGew==
+X-Google-Smtp-Source: ABdhPJzjXr6wNWDz5s/VL2yNUpjf7wzIpomsIZwKvlkwiy7xfu3UcOhinX1a8I6DeyLti+qEc/ZFqw==
+X-Received: by 2002:a05:6512:10cc:b0:44a:24da:f621 with SMTP id k12-20020a05651210cc00b0044a24daf621mr27850223lfg.7.1649850815919;
+        Wed, 13 Apr 2022 04:53:35 -0700 (PDT)
+Received: from mobilestation ([95.79.134.149])
+        by smtp.gmail.com with ESMTPSA id e2-20020ac25ca2000000b00464f83782efsm2069913lfq.116.2022.04.13.04.53.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Apr 2022 04:53:35 -0700 (PDT)
+Date:   Wed, 13 Apr 2022 14:53:33 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Frank Li <Frank.Li@nxp.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        lznuaa@gmail.com, helgaas@kernel.org, vkoul@kernel.org,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com
+Subject: Re: [PATCH v6 7/9] dmaengine: dw-edma: Add support for chip specific
+ flags
+Message-ID: <20220413115333.bc5g5vaxdygnbcuc@mobilestation>
+References: <20220406152347.85908-1-Frank.Li@nxp.com>
+ <20220406152347.85908-8-Frank.Li@nxp.com>
+ <20220413091837.an75fiqazjhpapf4@mobilestation>
+ <20220413092808.GF2015@thinkpad>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.199.0.41]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-04.corp.yadro.com (172.17.100.104)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220413092808.GF2015@thinkpad>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Ilya Novikov <i.m.novikov@yadro.com>
+On Wed, Apr 13, 2022 at 02:58:08PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Apr 13, 2022 at 12:18:37PM +0300, Serge Semin wrote:
+> > On Wed, Apr 06, 2022 at 10:23:45AM -0500, Frank Li wrote:
+> > > Add a "flags" field to the "struct dw_edma_chip" so that the controller
+> > > drivers can pass flags that are relevant to the platform.
+> > > 
+> > > DW_EDMA_CHIP_LOCAL - Used by the controller drivers accessing eDMA
+> > > locally. Local eDMA access doesn't require generating MSIs to the remote.
+> > > 
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > 
+> > > Change from v5 to v6
+> > >  - use enum instead of define
+> > 
+> > Hm, why have you decided to do that? I don't see a well justified
+> > reason to use the enumeration here, but see my next comment for
+> > details.
+> 
+> It was me who suggested using the enums for flags instead of defines.
+> Enums helps with kdoc and it also provides a neat way to group flags together.
+> 
+> > 
+> > > 
+> > > Change from v4 to v5
+> > >  - split two two patch
+> > >  - rework commit message
+> > > Change from v3 to v4
+> > > none
+> > > Change from v2 to v3
+> > >  - rework commit message
+> > >  - Change to DW_EDMA_CHIP_32BIT_DBI
+> > >  - using DW_EDMA_CHIP_LOCAL control msi
+> > >  - Apply Bjorn's comments,
+> > >         if (!j) {
+> > >                control |= DW_EDMA_V0_LIE;
+> > >                if (!(chan->chip->flags & DW_EDMA_CHIP_LOCAL))
+> > >                                control |= DW_EDMA_V0_RIE;
+> > >         }
+> > > 
+> > >         if ((chan->chip->flags & DW_EDMA_CHIP_REG32BIT) ||
+> > >               !IS_ENABLED(CONFIG_64BIT)) {
+> > >           SET_CH_32(...);
+> > >           SET_CH_32(...);
+> > >        } else {
+> > >           SET_CH_64(...);
+> > >        }
+> > > 
+> > > 
+> > > Change from v1 to v2
+> > > - none
+> > > 
+> > >  drivers/dma/dw-edma/dw-edma-v0-core.c | 9 ++++++---
+> > >  include/linux/dma/edma.h              | 9 +++++++++
+> > >  2 files changed, 15 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > > index 8ddc537d11fd6..30f8bfe6e5712 100644
+> > > --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > > +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> 
+> [...]
+> 
 
-If the DMA_PREP_INTERRUPT flag is not provided, run in polled mode,
-which significantly improves IOPS: more than twice on chunks < 4K.
+> > > +	enum dw_edma_chip_flags	flags;
+> > 
+> > There is no point in having the named enumeration here since the flags
+> > field semantics is actually a bitfield rather than a single value. If
+> > you want to stick to the enumerated flags, then please use the
+> > anonymous enum like this:
+> 
+> I agree with using u32 for flags field but I don't agree with anonymous enums.
+> Enums with a name conveys information of what the enumerated types represent.
+> If you just look at your example below, it is difficult to guess the purpose of
+> this enum.
 
-Signed-off-by: Ilya Novikov <i.m.novikov@yadro.com>
----
- drivers/dma/ptdma/ptdma-dev.c       | 36 +++++++++++++++--------------
- drivers/dma/ptdma/ptdma-dmaengine.c | 16 ++++++++++++-
- drivers/dma/ptdma/ptdma.h           | 13 +++++++++++
- 3 files changed, 47 insertions(+), 18 deletions(-)
+I see your point. Ok, no anonymization then.) @Frank could you please update
+the field type to unsigned int or u32 then? Personally I prefer having
+"unsigned int" here, since that's the type used by the compiler if no
+negative values is enumerated. Though u32 would be ok too.
 
-diff --git a/drivers/dma/ptdma/ptdma-dev.c b/drivers/dma/ptdma/ptdma-dev.c
-index daafea5bc35d..377da23012ac 100644
---- a/drivers/dma/ptdma/ptdma-dev.c
-+++ b/drivers/dma/ptdma/ptdma-dev.c
-@@ -100,6 +100,7 @@ int pt_core_perform_passthru(struct pt_cmd_queue *cmd_q,
- 			     struct pt_passthru_engine *pt_engine)
- {
- 	struct ptdma_desc desc;
-+	struct pt_device *pt = container_of(cmd_q, struct pt_device, cmd_q);
- 
- 	cmd_q->cmd_error = 0;
- 	cmd_q->total_pt_ops++;
-@@ -111,17 +112,12 @@ int pt_core_perform_passthru(struct pt_cmd_queue *cmd_q,
- 	desc.dst_lo = lower_32_bits(pt_engine->dst_dma);
- 	desc.dw5.dst_hi = upper_32_bits(pt_engine->dst_dma);
- 
--	return pt_core_execute_cmd(&desc, cmd_q);
--}
--
--static inline void pt_core_disable_queue_interrupts(struct pt_device *pt)
--{
--	iowrite32(0, pt->cmd_q.reg_control + 0x000C);
--}
-+	if (cmd_q->int_en)
-+		pt_core_enable_queue_interrupts(pt);
-+	else
-+		pt_core_disable_queue_interrupts(pt);
- 
--static inline void pt_core_enable_queue_interrupts(struct pt_device *pt)
--{
--	iowrite32(SUPPORTED_INTERRUPTS, pt->cmd_q.reg_control + 0x000C);
-+	return pt_core_execute_cmd(&desc, cmd_q);
- }
- 
- static void pt_do_cmd_complete(unsigned long data)
-@@ -144,14 +140,10 @@ static void pt_do_cmd_complete(unsigned long data)
- 	cmd->pt_cmd_callback(cmd->data, cmd->ret);
- }
- 
--static irqreturn_t pt_core_irq_handler(int irq, void *data)
-+void pt_check_status_trans(struct pt_device *pt, struct pt_cmd_queue *cmd_q)
- {
--	struct pt_device *pt = data;
--	struct pt_cmd_queue *cmd_q = &pt->cmd_q;
- 	u32 status;
- 
--	pt_core_disable_queue_interrupts(pt);
--	pt->total_interrupts++;
- 	status = ioread32(cmd_q->reg_control + 0x0010);
- 	if (status) {
- 		cmd_q->int_status = status;
-@@ -162,11 +154,21 @@ static irqreturn_t pt_core_irq_handler(int irq, void *data)
- 		if ((status & INT_ERROR) && !cmd_q->cmd_error)
- 			cmd_q->cmd_error = CMD_Q_ERROR(cmd_q->q_status);
- 
--		/* Acknowledge the interrupt */
-+		/* Acknowledge the completion */
- 		iowrite32(status, cmd_q->reg_control + 0x0010);
--		pt_core_enable_queue_interrupts(pt);
- 		pt_do_cmd_complete((ulong)&pt->tdata);
- 	}
-+}
-+
-+static irqreturn_t pt_core_irq_handler(int irq, void *data)
-+{
-+	struct pt_device *pt = data;
-+	struct pt_cmd_queue *cmd_q = &pt->cmd_q;
-+
-+	pt_core_disable_queue_interrupts(pt);
-+	pt->total_interrupts++;
-+	pt_check_status_trans(pt, cmd_q);
-+	pt_core_enable_queue_interrupts(pt);
- 	return IRQ_HANDLED;
- }
- 
-diff --git a/drivers/dma/ptdma/ptdma-dmaengine.c b/drivers/dma/ptdma/ptdma-dmaengine.c
-index 91b93e8d9779..ea07cc42f4d0 100644
---- a/drivers/dma/ptdma/ptdma-dmaengine.c
-+++ b/drivers/dma/ptdma/ptdma-dmaengine.c
-@@ -171,6 +171,7 @@ static struct pt_dma_desc *pt_alloc_dma_desc(struct pt_dma_chan *chan,
- 	vchan_tx_prep(&chan->vc, &desc->vd, flags);
- 
- 	desc->pt = chan->pt;
-+	desc->pt->cmd_q.int_en = !!(flags & DMA_PREP_INTERRUPT);
- 	desc->issued_to_hw = 0;
- 	desc->status = DMA_IN_PROGRESS;
- 
-@@ -257,6 +258,17 @@ static void pt_issue_pending(struct dma_chan *dma_chan)
- 		pt_cmd_callback(desc, 0);
- }
- 
-+enum dma_status
-+pt_tx_status(struct dma_chan *c, dma_cookie_t cookie,
-+		struct dma_tx_state *txstate)
-+{
-+	struct pt_device *pt = to_pt_chan(c)->pt;
-+	struct pt_cmd_queue *cmd_q = &pt->cmd_q;
-+
-+	pt_check_status_trans(pt, cmd_q);
-+	return dma_cookie_status(c, cookie, txstate);
-+}
-+
- static int pt_pause(struct dma_chan *dma_chan)
- {
- 	struct pt_dma_chan *chan = to_pt_chan(dma_chan);
-@@ -291,8 +303,10 @@ static int pt_terminate_all(struct dma_chan *dma_chan)
- {
- 	struct pt_dma_chan *chan = to_pt_chan(dma_chan);
- 	unsigned long flags;
-+	struct pt_cmd_queue *cmd_q = &chan->pt->cmd_q;
- 	LIST_HEAD(head);
- 
-+	iowrite32(SUPPORTED_INTERRUPTS, cmd_q->reg_control + 0x0010);
- 	spin_lock_irqsave(&chan->vc.lock, flags);
- 	vchan_get_all_descriptors(&chan->vc, &head);
- 	spin_unlock_irqrestore(&chan->vc.lock, flags);
-@@ -362,7 +376,7 @@ int pt_dmaengine_register(struct pt_device *pt)
- 	dma_dev->device_prep_dma_memcpy = pt_prep_dma_memcpy;
- 	dma_dev->device_prep_dma_interrupt = pt_prep_dma_interrupt;
- 	dma_dev->device_issue_pending = pt_issue_pending;
--	dma_dev->device_tx_status = dma_cookie_status;
-+	dma_dev->device_tx_status = pt_tx_status;
- 	dma_dev->device_pause = pt_pause;
- 	dma_dev->device_resume = pt_resume;
- 	dma_dev->device_terminate_all = pt_terminate_all;
-diff --git a/drivers/dma/ptdma/ptdma.h b/drivers/dma/ptdma/ptdma.h
-index afbf192c9230..d093c43b7d13 100644
---- a/drivers/dma/ptdma/ptdma.h
-+++ b/drivers/dma/ptdma/ptdma.h
-@@ -206,6 +206,9 @@ struct pt_cmd_queue {
- 	unsigned int active;
- 	unsigned int suspended;
- 
-+	/* Interrupt flag */
-+	bool int_en;
-+
- 	/* Register addresses for queue */
- 	void __iomem *reg_control;
- 	u32 qcontrol; /* Cached control register */
-@@ -318,7 +321,17 @@ void pt_core_destroy(struct pt_device *pt);
- int pt_core_perform_passthru(struct pt_cmd_queue *cmd_q,
- 			     struct pt_passthru_engine *pt_engine);
- 
-+void pt_check_status_trans(struct pt_device *pt, struct pt_cmd_queue *cmd_q);
- void pt_start_queue(struct pt_cmd_queue *cmd_q);
- void pt_stop_queue(struct pt_cmd_queue *cmd_q);
- 
-+static inline void pt_core_disable_queue_interrupts(struct pt_device *pt)
-+{
-+	iowrite32(0, pt->cmd_q.reg_control + 0x000C);
-+}
-+
-+static inline void pt_core_enable_queue_interrupts(struct pt_device *pt)
-+{
-+	iowrite32(SUPPORTED_INTERRUPTS, pt->cmd_q.reg_control + 0x000C);
-+}
- #endif
--- 
-2.25.1
+-Serget
 
+> 
+> Thanks,
+> Mani
+> 
+> > +enum {
+> > +	DW_EDMA_CHIP_LOCAL	= BIT(0),
+> > +};
+> > and explicit unsigned int type of the flags field.
+> > 
+> > -Sergey
+> > 
+> > >  
+> > >  	void __iomem		*reg_base;
+> > >  
+> > > -- 
+> > > 2.35.1
+> > > 

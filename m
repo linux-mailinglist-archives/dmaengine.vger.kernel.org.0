@@ -2,118 +2,94 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10FB25008DF
-	for <lists+dmaengine@lfdr.de>; Thu, 14 Apr 2022 10:52:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 605A6500B08
+	for <lists+dmaengine@lfdr.de>; Thu, 14 Apr 2022 12:25:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241229AbiDNIzR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 14 Apr 2022 04:55:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58398 "EHLO
+        id S229626AbiDNK2Q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 14 Apr 2022 06:28:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241252AbiDNIyw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 14 Apr 2022 04:54:52 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EFEB66238;
-        Thu, 14 Apr 2022 01:52:14 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id 32so4230442pgl.4;
-        Thu, 14 Apr 2022 01:52:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pDWGdxJhFsxcNNUteEWhKVijX9qVkGiF7WeSXdTWmXI=;
-        b=LKt+dQAa1ppfZi/SzA3+Alnlf7kW1nzl/w8YG98sUCn1sR645pItyBn0vX1vmguEyE
-         NfKb1CY4sv41k0kGquCOk7rIahMhoTOJugyQCzXhey9HMkHfgLZNh3JHzPrtqPa6oYgW
-         RK0YnW0x8cGMSeQTVasigahOHx0X/L73KuS1uKWbXKyLVgoPFhbeoguyjH5+1x4q8znr
-         Alpxnc8tp1jEYiXAWWd1hJQBHa61Jx9mJYBZh5JeudT3lMM+b9ic2Zdj1yIL3Z6nlaXj
-         pNmkOmiwMlfjjnc/DQL8RyQ4o1ZJ6aElnUe0vFapNtM7KKthqgi9mhf3L9B/sKbTO6Vm
-         HMQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pDWGdxJhFsxcNNUteEWhKVijX9qVkGiF7WeSXdTWmXI=;
-        b=oGsJbHPScY/SlFE7IXv+GSvjEtS2x4pXznpikiGVxkGZZC/W3UQ344loDH+eoaUYHT
-         26Y5Dd0iDd2zYKSmOEgMiLDF3ssD6JYWKWQ5zfclZd97M2j6SWKZJ34TX3fY3eASyUsl
-         m7rNRS9IlHr6Hfb8YPqePVPGL/TYfMZq0erOWJ7p5UGkIQqdw+Qrk8rmsA0Cw9pZlqSx
-         nqdFTnvw7+F4+m4u2Kg7wYKCGcGngtx9KYk0AoEHTBl60Vv/J2Bj376jKJZFLBrijZeJ
-         lrqigH4pMLHt/8tF3ktJtdibZ1EspXd08GEWhHYCyJVqvmrw6zU+t20T7jdutjWVyvV4
-         FliA==
-X-Gm-Message-State: AOAM530UXCSNubZBwudZ7w2W0fCLmqoO3hs43YgVaEZY5tKQE9Y7Sl4b
-        pEQZBEcZcK6iQsEk5Dytzt0UmANsXTI=
-X-Google-Smtp-Source: ABdhPJyrrGwYvaw+Ko1XagjxjEwBjCMFJu7TrWZ7k6E1EzMLljruP968lnhC0Qf9+4bL8nsvSEA65w==
-X-Received: by 2002:a63:5409:0:b0:382:7e1:db0c with SMTP id i9-20020a635409000000b0038207e1db0cmr1478101pgb.204.1649926333321;
-        Thu, 14 Apr 2022 01:52:13 -0700 (PDT)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id a67-20020a621a46000000b005060c73ef43sm1428315pfa.195.2022.04.14.01.52.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Apr 2022 01:52:12 -0700 (PDT)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: chi.minghao@zte.com.cn
-To:     vkoul@kernel.org
-Cc:     rdunlap@infradead.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Minghao Chi <chi.minghao@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-Subject: [PATCH] dmaengine: cppi41: using pm_runtime_resume_and_get instead of pm_runtime_get_sync
-Date:   Thu, 14 Apr 2022 08:52:09 +0000
-Message-Id: <20220414085209.2541420-1-chi.minghao@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S242268AbiDNK1j (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 14 Apr 2022 06:27:39 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52BFC6C94D;
+        Thu, 14 Apr 2022 03:25:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 12164B82893;
+        Thu, 14 Apr 2022 10:25:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1574BC385A5;
+        Thu, 14 Apr 2022 10:25:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649931911;
+        bh=ng1Q70SgjCwX1SpN3Nel10OKN/RIdygk7E6v7+91XKY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XoDrMFCmgB05vL1RkeyygBoyUreaPJaBwTlXdODyGe2QGsgJDWxXGhBRZIZbZM9Qx
+         +WwGjIluBjWWNsqUwiS+nf7cyYL9DkF5MZUuACtOR5BcsILqBbjyfXdQj4zjXuNZfX
+         l3aUGNs+xU7Ep94iluERMqtRD24mP24FtPbaozFO70n5TSQwU0y6B+DlTS8NeRMwaa
+         spgUHMF0xDRhcRE34JLtogtxV98EMsJFWMPogYWWfvQO01nmyIX8ivQX0afxjv2e0F
+         plj2S9BpDf9Xxtwndv6HnkTQaVZ4RNq1Pz8Uz+FetcHU3G8UNoO8zmWwz7N7NCU60B
+         d/Zc5bI06YIAw==
+Date:   Thu, 14 Apr 2022 15:55:06 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: dmaengine: qcom: gpi: Add minItems for
+ interrupts
+Message-ID: <Ylf2gsJ+Ks0wz6i3@matsya>
+References: <20220414064235.1182195-1-vkoul@kernel.org>
+ <0598d1bb-cd7c-1414-910c-ae6bedc8295d@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0598d1bb-cd7c-1414-910c-ae6bedc8295d@linaro.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Minghao Chi <chi.minghao@zte.com.cn>
+On 14-04-22, 09:36, Krzysztof Kozlowski wrote:
+> On 14/04/2022 08:42, Vinod Koul wrote:
+> > Add the minItems for interrupts property as well. In the absence of
+> > this, we get warning if interrupts are less than 13
+> > 
+> > arch/arm64/boot/dts/qcom/qrb5165-rb5.dtb:
+> > dma-controller@800000: interrupts: [[0, 588, 4], [0, 589, 4], [0, 590,
+> > 4], [0, 591, 4], [0, 592, 4], [0, 593, 4], [0, 594, 4], [0, 595, 4], [0,
+> >   596, 4], [0, 597, 4]] is too short
+> > 
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+> > index 8a790ffbdaac..7d2fc4eb5530 100644
+> > --- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+> > +++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+> > @@ -32,6 +32,7 @@ properties:
+> >    interrupts:
+> >      description:
+> >        Interrupt lines for each GPI instance
+> > +    minItems: 1
+> 
+> This should be some real case minimum, not just 1. Unless really only
+> one interrupt is also possible in existing variations?
 
-Using pm_runtime_resume_and_get() to replace pm_runtime_get_sync and
-pm_runtime_put_noidle. This change is just to simplify the code, no
-actual functional changes.
+So that depends on the channels available to use which can be worst case
+of 1. Maximum is 13.. Most of the controllers are between 12-13, but we
+dont want to change binding in future if controller has lesser channels
+right?
 
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: Minghao Chi <chi.minghao@zte.com.cn>
----
- drivers/dma/ti/cppi41.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/dma/ti/cppi41.c b/drivers/dma/ti/cppi41.c
-index 062bd9bd4de0..44363a731409 100644
---- a/drivers/dma/ti/cppi41.c
-+++ b/drivers/dma/ti/cppi41.c
-@@ -374,11 +374,10 @@ static int cppi41_dma_alloc_chan_resources(struct dma_chan *chan)
- 	struct cppi41_dd *cdd = c->cdd;
- 	int error;
- 
--	error = pm_runtime_get_sync(cdd->ddev.dev);
-+	error = pm_runtime_resume_and_get(cdd->ddev.dev);
- 	if (error < 0) {
- 		dev_err(cdd->ddev.dev, "%s pm runtime get: %i\n",
- 			__func__, error);
--		pm_runtime_put_noidle(cdd->ddev.dev);
- 
- 		return error;
- 	}
-@@ -402,12 +401,9 @@ static void cppi41_dma_free_chan_resources(struct dma_chan *chan)
- 	struct cppi41_dd *cdd = c->cdd;
- 	int error;
- 
--	error = pm_runtime_get_sync(cdd->ddev.dev);
--	if (error < 0) {
--		pm_runtime_put_noidle(cdd->ddev.dev);
--
-+	error = pm_runtime_resume_and_get(cdd->ddev.dev);
-+	if (error < 0)
- 		return;
--	}
- 
- 	WARN_ON(!list_empty(&cdd->pending));
- 
 -- 
-2.25.1
-
-
+~Vinod

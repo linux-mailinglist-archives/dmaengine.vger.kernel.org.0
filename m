@@ -2,83 +2,102 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46C0850064B
-	for <lists+dmaengine@lfdr.de>; Thu, 14 Apr 2022 08:42:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA6195006F6
+	for <lists+dmaengine@lfdr.de>; Thu, 14 Apr 2022 09:35:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234496AbiDNGpN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 14 Apr 2022 02:45:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45130 "EHLO
+        id S239510AbiDNHiP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 14 Apr 2022 03:38:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240105AbiDNGpL (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 14 Apr 2022 02:45:11 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D5B4EA24;
-        Wed, 13 Apr 2022 23:42:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F2516B8285B;
-        Thu, 14 Apr 2022 06:42:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B872C385A1;
-        Thu, 14 Apr 2022 06:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649918565;
-        bh=VpJImhcEYXAW31uW7ZX0+Pzc0Tu+aD5u1Obi0+xzHvw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=NouI7JrN5qTC97ZV4jEAV3Xk9xnuapfy3yxRjUt44T/lh8lGBRw4vDWw3OLdjHF0f
-         SkPoHxTTRPjvh8guGVxp8lsD9kW4rmwYDaK+a7uxA9U0GkDyhD1sogUBC9km6wDdK1
-         9lS9dMQvs6HXsBwZwtJiWWpQj4jl7kQzt+4C3LHjLKCCJ6MtyyvVRlBtSAGTylzRrE
-         wUzrChhsGp3revoLS2K+g9INN7py95bE5nLbHoDCxWAgVb6p6YHmWguqxGheopMAxc
-         pU3JORmGzN/urhdHoGny6UmhLx36DzGSznW1EOCZ3TmrEt7uQAWv1Kth+SER6vYiAG
-         aYjpLt+54rkEw==
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: dmaengine: qcom: gpi: Add minItems for interrupts
-Date:   Thu, 14 Apr 2022 12:12:35 +0530
-Message-Id: <20220414064235.1182195-1-vkoul@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S234473AbiDNHiN (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 14 Apr 2022 03:38:13 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50C191C901
+        for <dmaengine@vger.kernel.org>; Thu, 14 Apr 2022 00:35:49 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id e21so5685310wrc.8
+        for <dmaengine@vger.kernel.org>; Thu, 14 Apr 2022 00:35:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=OYaKi6gFUvm0HSQM6TiZOaHDoschffAMhDgmT0pX3OaoWcKrcWew1x0phF9UPop6j3
+         I82jwcANCV0X1kE8qYNrXj6CzQq6lIrkyE0waTUt7j8jBYqDFiQfLJK2aAe9KgoxclXc
+         /hOfTpNOMfrXIjvnYtBHEEzgmMcxpHLRMKNdx8omnua8D9gCdq6L0cjae0LO/EvukxRQ
+         v5EtRUes24b4DlzuSLbWbppMatxNPqkSB/rqqe4NWjC94ya6bUMJ3SEGRc6bzMVOEm68
+         BbMV8lg/EO5IfNJNLs+PbcFXoRY1nVueoOfTjhaV7kWF/D69tQlRSe6mOYX2XigPqaeW
+         /A4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=lh6mbcIWGeHnDHPxhJQU8+jd7i3np9veCZUfG54R7nifBvwc6azpBNrhiaGskindxH
+         mtGEEYe3JcwG4AGJp3aFwNz6WwRcy9JjfauUeJs/KA2BkAXOGX29NH9OpUkM+F1+V01Y
+         Byrhsvb57fB5CgUSP8HkBS+Q+X0+t9VcEXOUfCC+WVoVirwP8mnqIRlUzlsn5XZDkVXV
+         dRy5k5SJsytZCUzz6NenMLkfDGSHrE4i7boFoE07sPI6RymBob3Sw5cA2Q0Fds/Uur9m
+         P1krbXZ3FB/03Z7KR93VYy/XlkO7HOkYj09Fs5sZ1+TL4KAy9iOrObkPv0nxUmrXzmWV
+         vekA==
+X-Gm-Message-State: AOAM531izanJtQe4PHn7CONQ1wXkSpyiJTZJL2WRSaAK0xz061ScDVVA
+        u/IjUvx42kxvIipzd2l3WM8qf2dS8wwWw0nMLQ==
+X-Google-Smtp-Source: ABdhPJyECEmkoXt7lgbKYslHRXS9xVvfkd4892WzYTfT4cg8n/OjafMXwzDpJQ3l5BBl+IV8DBPLVXDRdHGoX+IoBS0=
+X-Received: by 2002:a5d:5690:0:b0:203:f727:362 with SMTP id
+ f16-20020a5d5690000000b00203f7270362mr1056087wrv.717.1649921747468; Thu, 14
+ Apr 2022 00:35:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a5d:64cb:0:0:0:0:0 with HTTP; Thu, 14 Apr 2022 00:35:46
+ -0700 (PDT)
+Reply-To: danielseyba@yahoo.com
+From:   Seyba Daniel <ouedraogoissa.bf@gmail.com>
+Date:   Thu, 14 Apr 2022 09:35:46 +0200
+Message-ID: <CAPdK0paBVRB2S2eHUh0A3myzsPaZY=afiTzgnft+AVZ8Wk2Dwg@mail.gmail.com>
+Subject: Hello,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.3 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:443 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [ouedraogoissa.bf[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add the minItems for interrupts property as well. In the absence of
-this, we get warning if interrupts are less than 13
+Hello,
 
-arch/arm64/boot/dts/qcom/qrb5165-rb5.dtb:
-dma-controller@800000: interrupts: [[0, 588, 4], [0, 589, 4], [0, 590,
-4], [0, 591, 4], [0, 592, 4], [0, 593, 4], [0, 594, 4], [0, 595, 4], [0,
-  596, 4], [0, 597, 4]] is too short
+I am so sorry contacting you in this means especially when we have never
+met before. I urgently seek your service to represent me in investing in
+your region / country and you will be rewarded for your service without
+affecting your present job with very little time invested in it.
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
- 1 file changed, 1 insertion(+)
+My interest is in buying real estate, private schools or companies with
+potentials for rapid growth in long terms.
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-index 8a790ffbdaac..7d2fc4eb5530 100644
---- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-+++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-@@ -32,6 +32,7 @@ properties:
-   interrupts:
-     description:
-       Interrupt lines for each GPI instance
-+    minItems: 1
-     maxItems: 13
- 
-   "#dma-cells":
--- 
-2.34.1
+So please confirm interest by responding back.
 
+My dearest regards
+
+Seyba Daniel

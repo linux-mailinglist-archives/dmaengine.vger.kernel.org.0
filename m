@@ -2,74 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC912500709
-	for <lists+dmaengine@lfdr.de>; Thu, 14 Apr 2022 09:36:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BFE4500792
+	for <lists+dmaengine@lfdr.de>; Thu, 14 Apr 2022 09:51:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240435AbiDNHjI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 14 Apr 2022 03:39:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54844 "EHLO
+        id S240414AbiDNHxy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 14 Apr 2022 03:53:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240461AbiDNHjE (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 14 Apr 2022 03:39:04 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12AC56C15
-        for <dmaengine@vger.kernel.org>; Thu, 14 Apr 2022 00:36:39 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id v15so5220106edb.12
-        for <dmaengine@vger.kernel.org>; Thu, 14 Apr 2022 00:36:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=gy7AkBu7bAXBU0y3wAkFQ5PlduSnOoydEHQ9dHG0xqU=;
-        b=zBKde8JUkVKVlpgHIy6ft1h9KyiEPQ8x3AXpkjobSHYAeGM6icbkw3E6IJ1RH6dqmM
-         3KH6n20js6DSceg0j8p74wH7vBnBBOOPIZ29lWuNsWblzEdgYYFgW8WWqEJ7eISN9/z/
-         ZNN1dLcvHHLV/cUhush3kMfQD/DqN/h1GsdB6f0mFFDPVNVh+yHYdl+Gifg2owlbDZ/l
-         FiMC88SMJ8AyjGlVrPi77bCa8VKocDQ6I/n9+FbXZM/TepmI2WEIG1Tl+OZsdD8d/cTQ
-         9YuFRB4IdpJ0gYAoXG6G8zGJ24xVlIrm/w2Od6J8laEpvkVhBYghr3EA7yRwIXftchCS
-         U5gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=gy7AkBu7bAXBU0y3wAkFQ5PlduSnOoydEHQ9dHG0xqU=;
-        b=xcqzfuA/MfTwVwl36NpZkTdETkVvLbr30TVRAlGSQsvVVc6y59QlX6t7stMKYRJkb8
-         4ufctfp1lqucpdhBzMAICGBnmWC9RC2PetUCcoDiRozq+h3o+JOvsBrNdISDdoKifiAc
-         3zzQ+8gDWFwQi750LCGrwGbURYvLnX7pLNt+JKt9TptWltXR+5zX5lKM/twFc+KzWldt
-         kayB0c1J8grjcuHeHzQqlkJ+Hs8Aly2A/gIpMR7iV3+8H47BTFkJfBH41oVTEwllc7BB
-         BXOH0fRdqTo1MG6Uzplv19UDkt0DB+/a8kuwE9/Uc3B/fuqa0Q2zqWYQcCueruk6ymLG
-         RoGQ==
-X-Gm-Message-State: AOAM532Vaxo/4xgPcIt1VKOrFeCa3ztOWDyDiUhb6wCpeR3tY4qFPoxI
-        UOSzKdAi2WRSwvNttTjnWSA79g==
-X-Google-Smtp-Source: ABdhPJxVkieNFrCUgPtdH8sa6eUkB8QCY/095ocDDMYsh57rFUNDZ8O3DDoHtABO6gVaXsAwHX4/fA==
-X-Received: by 2002:a50:cc82:0:b0:41d:5fca:10c3 with SMTP id q2-20020a50cc82000000b0041d5fca10c3mr1563726edi.373.1649921798496;
-        Thu, 14 Apr 2022 00:36:38 -0700 (PDT)
-Received: from [192.168.0.209] (xdsl-188-155-201-27.adslplus.ch. [188.155.201.27])
-        by smtp.gmail.com with ESMTPSA id k22-20020a508ad6000000b00420bd71e06bsm653456edk.79.2022.04.14.00.36.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Apr 2022 00:36:38 -0700 (PDT)
-Message-ID: <34a14968-e939-3e22-9385-e31be1a96bbd@linaro.org>
-Date:   Thu, 14 Apr 2022 09:36:37 +0200
+        with ESMTP id S240327AbiDNHxy (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 14 Apr 2022 03:53:54 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B97436B76
+        for <dmaengine@vger.kernel.org>; Thu, 14 Apr 2022 00:51:25 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1neuG4-0003M7-Ga; Thu, 14 Apr 2022 09:51:16 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1neuG2-0000k3-Oi; Thu, 14 Apr 2022 09:51:14 +0200
+Date:   Thu, 14 Apr 2022 09:51:14 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     alsa-devel@alsa-project.org, Xiubo Li <Xiubo.Lee@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>, kernel@pengutronix.de,
+        Vinod Koul <vkoul@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v5 00/21] ASoC: fsl_micfil: Driver updates
+Message-ID: <20220414075114.GC2387@pengutronix.de>
+References: <20220408112928.1326755-1-s.hauer@pengutronix.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH] dt-bindings: dmaengine: qcom: gpi: add compatible for
- sc7280
-Content-Language: en-US
-To:     Vinod Koul <vkoul@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220414064216.1182177-1-vkoul@kernel.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220414064216.1182177-1-vkoul@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220408112928.1326755-1-s.hauer@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:49:24 up 14 days, 20:19, 59 users,  load average: 0.07, 0.11,
+ 0.09
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,17 +58,98 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 14/04/2022 08:42, Vinod Koul wrote:
-> Document the compatible for GPI DMA controller on SC7280 SoC
+Hi Mark,
+
+Ok to apply this series? I just realized that I missed to Cc: you on
+this series. Let me know if I should resend.
+
+Sascha
+
+On Fri, Apr 08, 2022 at 01:29:07PM +0200, Sascha Hauer wrote:
+> This series has a bunch of cleanups for the FSL MICFIL driver. There is
+> not much chance for regressions in this series as the driver currently
+> can't work at all. The MICFIL needs multififo support in the i.MX SDMA
+> engine which is added with this series, see 11/20.
 > 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> The multififo support is selected in the dma phandle arguments in the
+> device tree, the transfer type must be '25' aka IMX_DMATYPE_MULTI_SAI.
+> This is set already to 25 in the upstream i.MX8M[NM] dtsi files, but the
+> SDMA driver silently ignores unsupported values instead of throwing an
+> error. This is fixed in this series and multififo support is added.
+> 
+> The dmaengine patches have acks from Vinod, so the series is free to
+> go through the ASoC tree.
+> 
+> Changes since v4:
+> - collect more acks
+> - whitespace cleanup in 16/21
+> 
+> Changes since v3:
+> - Add commit log to "ASoC: fsl_micfil: drop unused variables"
+> - Fix include name in "ASoC: fsl_micfil: add multi fifo support"
+> - Drop unnecessary temporary adding of struct fsl_micfil::osr
+> - Leave default quality setting at 'medium'
+> - Drop debugging message printed at error level
+> - collect acks from Shengjiu Wang and Vinod Koul
+> 
+> Changes since v2:
+> - Add forgotten commit log to dmaengine patches
+> - Add patch to move include/linux/platform_data/dma-imx.h to include/linux/dma/imx-dma.h
+> - Use prefix dmaengine: for dma patches
+> 
+> Changes since v1:
+> - Drop unused variable sw_done_sel
+> - Evaluate sdmac->direction directly instead of storing value in n_fifos
+> - add missing include linux/bitfield.h
+> 
+> Sascha Hauer (21):
+>   ASoC: fsl_micfil: Drop unnecessary register read
+>   ASoC: fsl_micfil: Drop unused register read
+>   ASoC: fsl_micfil: drop fsl_micfil_set_mclk_rate()
+>   ASoC: fsl_micfil: do not define SHIFT/MASK for single bits
+>   ASoC: fsl_micfil: use GENMASK to define register bit fields
+>   ASoC: fsl_micfil: use clear/set bits
+>   ASoC: fsl_micfil: drop error messages from failed register accesses
+>   ASoC: fsl_micfil: drop unused variables
+>   dmaengine: imx: Move header to include/dma/
+>   dmaengine: imx-sdma: error out on unsupported transfer types
+>   dmaengine: imx-sdma: Add multi fifo support
+>   ASoC: fsl_micfil: add multi fifo support
+>   ASoC: fsl_micfil: use define for OSR default value
+>   ASoC: fsl_micfil: Drop get_pdm_clk()
+>   ASoC: fsl_micfil: simplify clock setting
+>   ASoC: fsl_micfil: rework quality setting
+>   ASoC: fsl_micfil: drop unused include
+>   ASoC: fsl_micfil: drop only once used defines
+>   ASoC: fsl_micfil: drop support for undocumented property
+>   ASoC: fsl_micfil: fold fsl_set_clock_params() into its only user
+>   ASoC: fsl_micfil: Remove debug message
+> 
+>  drivers/dma/imx-dma.c                         |   2 +-
+>  drivers/dma/imx-sdma.c                        |  76 +++-
+>  drivers/mmc/host/mxcmmc.c                     |   2 +-
+>  drivers/spi/spi-fsl-lpspi.c                   |   2 +-
+>  drivers/spi/spi-imx.c                         |   2 +-
+>  drivers/tty/serial/imx.c                      |   2 +-
+>  drivers/video/fbdev/mx3fb.c                   |   2 +-
+>  .../dma-imx.h => dma/imx-dma.h}               |  26 +-
+>  sound/soc/fsl/fsl_asrc.c                      |   2 +-
+>  sound/soc/fsl/fsl_asrc_dma.c                  |   2 +-
+>  sound/soc/fsl/fsl_easrc.h                     |   2 +-
+>  sound/soc/fsl/fsl_micfil.c                    | 369 +++++++-----------
+>  sound/soc/fsl/fsl_micfil.h                    | 269 +++----------
+>  sound/soc/fsl/imx-pcm.h                       |   2 +-
+>  sound/soc/fsl/imx-ssi.h                       |   2 +-
+>  15 files changed, 297 insertions(+), 465 deletions(-)
+>  rename include/linux/{platform_data/dma-imx.h => dma/imx-dma.h} (67%)
+> 
+> -- 
+> 2.30.2
+> 
+> 
 
-
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-
-Best regards,
-Krzysztof
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |

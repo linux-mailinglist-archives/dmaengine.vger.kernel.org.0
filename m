@@ -2,52 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8296504DB4
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Apr 2022 10:23:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B587504F67
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Apr 2022 13:37:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233788AbiDRI0a (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 18 Apr 2022 04:26:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49740 "EHLO
+        id S234599AbiDRLkA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 18 Apr 2022 07:40:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229636AbiDRI0a (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 18 Apr 2022 04:26:30 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F0FE193C4;
-        Mon, 18 Apr 2022 01:23:51 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id v13so9925466ljg.10;
-        Mon, 18 Apr 2022 01:23:51 -0700 (PDT)
+        with ESMTP id S231890AbiDRLj7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 18 Apr 2022 07:39:59 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EB991901B;
+        Mon, 18 Apr 2022 04:37:20 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id x17so23720127lfa.10;
+        Mon, 18 Apr 2022 04:37:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=G6AF+9hlERHrw76zEVM9NwkuOr0vNN/w5ET+tDKaEFk=;
-        b=oYmSvggd5keR+6ToHDVw+N7g+Qaad9zGxyT6iacXVJ5Nhb7F2GYqLIfdh2VgL6dRWE
-         R+TjjxBwIw1n9NsfgrbPGXsA8EmeEDr7JsU+XIkzYcVihRi9Wr0Pjmf/ZGkF/IUmGIeI
-         vlkHkdzdfvq92fxf/KGRnCcoL9usnHGoPZ+7xkj4vf58UYDsVR5f6CBMhkZG0p2QOb7I
-         mqFhfzkFv+QjtI8iiZxOvGOrBy/IJzb2YXIgiFWOzkQoDAra5QQ/BVpQWpuaNmzefFGl
-         hhMR+OTESY5yK1RY/6k+DcF+iRTcBdvNrZKx+s0tkDIRKCaLSG8kguRZYM3VYQeFOkdi
-         fvYQ==
+        bh=GwbdUJvNA5J7T0TOO8uErKoo51uQpGpYKXikXOcSBy0=;
+        b=CmNbCck93oWdcKbsUSIBh9gXujj7jzuAujEmbcF4gHmy4NIsybxLCSNaVi+aIsG6LC
+         c/GnGvHT0b+3iiXYk+uZ3yAxGCvHSnnS6HyMJHb+M9tKKfniaP6SuejhLg25Gmo1GsWP
+         F+9+eYFthxbc5baIdKeHT75cyOF0iFxYjX2JjJgh05CEx0xWT1Up378X9Ql6Hh41n92j
+         cBzNOOkDmilWtMfgUJP2LIX1U5cXVw0oHFmUnb00+uZ4T7Y5QPERivwRLOCHc95clOsA
+         /GaKlZAHl4kxPxa6YsORUAOx45pO8cOZK0eaWlzwV0QT+/IsfcgTWNn31WsGSmCI4VmH
+         RMAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=G6AF+9hlERHrw76zEVM9NwkuOr0vNN/w5ET+tDKaEFk=;
-        b=RtVza6002w8oy8iqeq1/3k8TjE5V9wewgcQbzL0WN01hqllcY+9LyitIba84Wol6vM
-         +YtB+q/NGWMcn+47fN13TXstMq5MqzM1cWm4U02e8Y6zM5NXqH+jIjTiVnvhgbPNb6XQ
-         MxnmD0zojJPANFcjhTRwi7fiZ7JGv+obIXhUI37JMz5I5aNlUHUem1u5LRldbV/y0f10
-         9qBIRXpwG8qBFJbpNwUnEhGJRI2X/ZDICu3ao2g+SRZB3HW2jY9W8XzRhLvZ1WSE/fi3
-         4nQPdSe2G/1O6EMp90ImKeNJQuO9uH2PiB+i3EwBe5puo0s/Hn6IRCSpykMEvEiTPTZ0
-         +brw==
-X-Gm-Message-State: AOAM531OuxUSz/QGByWemZA9Xk9v1v8wO5s9Wija8bkeX/VRDUuHxFhr
-        bcBK9lG9WS55EQq3gciyxh4=
-X-Google-Smtp-Source: ABdhPJw/aA9sCYdwt1mi+WUyz/bcOugDluNbZHeEB3xl9qQT2V6o6y8pRVMGlKoLDTZY+HCZx1kKYw==
-X-Received: by 2002:a2e:a585:0:b0:24b:70d2:249b with SMTP id m5-20020a2ea585000000b0024b70d2249bmr6834855ljp.78.1650270229421;
-        Mon, 18 Apr 2022 01:23:49 -0700 (PDT)
-Received: from mobilestation (ip1.ibrae.ac.ru. [91.238.191.1])
-        by smtp.gmail.com with ESMTPSA id k19-20020a056512331300b0046d178d4fd8sm1146686lfe.29.2022.04.18.01.23.47
+        bh=GwbdUJvNA5J7T0TOO8uErKoo51uQpGpYKXikXOcSBy0=;
+        b=tLz6I/LGBzsFV2c+UQaYDgNVMcDAGzpGmp6e0v3RTm3pu+78a21sgBN07RET03j66q
+         xyCJssCJnyztyh0uKlmnSGzM7JCLVQirLlwmBmrGJD74hYNWddPluQuVEe9+641J4kcc
+         gDjQNtcQSDo4Yc3REo8jVRW7htGdJQFqWy5uPqjPCAb7XC1x2Y1DzhCAjTsQs9lBjwto
+         0GAVMqVXLmC22XlLNCTygGR/GrSHnFtRBFw9YmhZtldehCF9bcnh8p9up0+ZHPExtc7n
+         oDW4JMyg5ncgMEsm611CyNMViT2AwfCzmJN0gRNrTxiQWDxZFZ4b7fca0ZdIs0fEhmji
+         PyBA==
+X-Gm-Message-State: AOAM530tpuMrQbzOQ5+N+WFLlZgvj5dcgjtpN2cGw0x5lH9Ef9A3eQbo
+        oQnpCJK9+N5qr/zVzALXuqY=
+X-Google-Smtp-Source: ABdhPJzcIspXqFwXv7tiyq3z/I8gZv/qLIzdZ91WDuXd3Gc6kgY4Xu0ABR+dv6IvOpBJUQRPyQ/GbA==
+X-Received: by 2002:a05:6512:15a6:b0:471:a0e1:7430 with SMTP id bp38-20020a05651215a600b00471a0e17430mr994017lfb.183.1650281838353;
+        Mon, 18 Apr 2022 04:37:18 -0700 (PDT)
+Received: from mobilestation ([95.79.134.149])
+        by smtp.gmail.com with ESMTPSA id x14-20020a056512046e00b0046d0d9bb454sm1190963lfd.41.2022.04.18.04.37.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Apr 2022 01:23:48 -0700 (PDT)
-Date:   Mon, 18 Apr 2022 11:23:45 +0300
+        Mon, 18 Apr 2022 04:37:15 -0700 (PDT)
+Date:   Mon, 18 Apr 2022 14:37:13 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
@@ -63,16 +63,15 @@ Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 16/25] dmaengine: dw-edma: Simplify the DebugFS context
- CSRs init procedure
-Message-ID: <20220418082345.nqi3nfgenksesjoz@mobilestation>
+Subject: Re: [PATCH 20/25] dmaengine: dw-edma: Use non-atomic io-64 methods
+Message-ID: <20220418113713.65xtr4ed2c4gjddl@mobilestation>
 References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
- <20220324014836.19149-17-Sergey.Semin@baikalelectronics.ru>
- <20220325062708.GB4675@thinkpad>
+ <20220324014836.19149-21-Sergey.Semin@baikalelectronics.ru>
+ <20220325082840.GH4675@thinkpad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220325062708.GB4675@thinkpad>
+In-Reply-To: <20220325082840.GH4675@thinkpad>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -83,151 +82,154 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Mar 25, 2022 at 11:57:08AM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Mar 24, 2022 at 04:48:27AM +0300, Serge Semin wrote:
-> > DW eDMA v4.70a and older have the read and write channels context CSRs
-> > indirectly accessible. It means the CSRs like Channel Control, Xfer size,
-> > SAR, DAR and LLP address are accessed over at a fixed MMIO address, but
-> > their reference to the corresponding channel is determined by the Viewport
-> > CSR. In order to have a coherent access to these registers the CSR IOs are
-> > supposed to be protected with a spin-lock. DW eDMA v4.80a and newer
-> > normally have unrolled Read/Write channel context registers. That is all
-> > CSRs denoted before are directly mapped in the controller MMIO space.
-> > 
-> > Since both normal and viewport-based registers are exposed via the DebugFS
-> > nodes, the original code author decided to implement an algorithm based on
-> > the unrolled CSRs mapping with the viewport addresses recalculation if
-> > it's required. The problem is that such implementation turned to be first
-> > unscalable (supports a platform with only single eDMA available since a
-> > base address statically preserved) and second needlessly overcomplicated
-> > (it loops over all Rd/Wr context addresses and re-calculates the viewport
-> > base address on each DebugFS node access). The algorithm can be greatly
-> > simplified just by adding the channel ID and it's direction fields in the
-> > eDMA DebugFS node descriptor. These new parameters can be used to find a
-> > CSR offset within the corresponding channel registers space. The DW eDMA
-> > DebugFS node getter afterwards will also use them in order to activate the
-> > respective context CSRs viewport before reading data from the specified
-> > register. In case of the unrolled version of the CSRs mapping there won't
-> > be any spin-lock taken/released, no viewport activation as before this
-> > modification.
-> > 
-> > Note this modification fixes the REGISTER() macros using an externally
-> > defined local variable. The same problem with the rest of the macro will
-> > be fixed in the next commit.
+On Fri, Mar 25, 2022 at 01:58:40PM +0530, Manivannan Sadhasivam wrote:
+> On Thu, Mar 24, 2022 at 04:48:31AM +0300, Serge Semin wrote:
+> > Instead of splitting the 64-bits IOs up into two 32-bits ones it's
+> > possible to use an available set of the non-atomic readq/writeq methods
+> > implemented exactly for such cases. They are defined in the dedicated
+> > header files io-64-nonatomic-lo-hi.h/io-64-nonatomic-hi-lo.h. So in case
+> > if the 64-bits readq/writeq methods are unavailable on some platforms at
+> > consideration, the corresponding drivers can have any of these headers
+> > included and stop locally re-implementing the 64-bits IO accessors taking
+> > into account the non-atomic nature of the included methods. Let's do that
+> > in the DW eDMA driver too. Note by doing so we can discard the
+> > CONFIG_64BIT config ifdefs from the code. Also note that if a platform
+> > doesn't support 64-bit DBI IOs then the corresponding accessors will just
+> > directly call the lo_hi_readq()/lo_hi_writeq() methods.
 > > 
 > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > > ---
-> >  drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 84 +++++++++++-------------
-> >  1 file changed, 38 insertions(+), 46 deletions(-)
+> >  drivers/dma/dw-edma/dw-edma-v0-core.c | 71 +++++++++------------------
+> >  1 file changed, 24 insertions(+), 47 deletions(-)
 > > 
-> > diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> > index 7eb0147912fa..b34a68964232 100644
-> > --- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> > +++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-> > @@ -15,9 +15,27 @@
+> > diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > index 6b303d5a6b2a..ebb860e19c75 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > @@ -8,6 +8,8 @@
 > >  
-> >  #define REGS_ADDR(name) \
-> >  	((void __iomem *)&regs->name)
+> >  #include <linux/bitfield.h>
+> >  
+> > +#include <linux/io-64-nonatomic-lo-hi.h>
 > > +
-> > +#define REGS_CH_ADDR(name, _dir, _ch)						\
-> > +	({									\
-> > +		struct dw_edma_v0_ch_regs __iomem *__ch_regs;			\
-> > +										\
-> > +		if ((dw)->chip->mf == EDMA_MF_EDMA_LEGACY)			\
-> > +			__ch_regs = &regs->type.legacy.ch;			\
-> > +		else if (_dir == EDMA_DIR_READ)					\
-> > +			__ch_regs = &regs->type.unroll.ch[_ch].rd;		\
-> > +		else								\
-> > +			__ch_regs = &regs->type.unroll.ch[_ch].wr;		\
-> > +										\
-> > +		(void __iomem *)&__ch_regs->name;				\
-> > +	})
+> >  #include "dw-edma-core.h"
+> >  #include "dw-edma-v0-core.h"
+> >  #include "dw-edma-v0-regs.h"
+> > @@ -53,8 +55,6 @@ static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
+> >  		SET_32(dw, rd_##name, value);		\
+> >  	} while (0)
+> >  
+> > -#ifdef CONFIG_64BIT
+> > -
+> >  #define SET_64(dw, name, value)				\
+> >  	writeq(value, &(__dw_regs(dw)->name))
+> >  
+> > @@ -80,8 +80,6 @@ static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
+> >  		SET_64(dw, rd_##name, value);		\
+> >  	} while (0)
+> >  
+> > -#endif /* CONFIG_64BIT */
+> > -
+> >  #define SET_COMPAT(dw, name, value)			\
+> >  	writel(value, &(__dw_regs(dw)->type.unroll.name))
+> >  
+> > @@ -164,14 +162,13 @@ static inline u32 readl_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+> >  #define SET_LL_32(ll, value) \
+> >  	writel(value, ll)
+> >  
+> > -#ifdef CONFIG_64BIT
+> > -
+> >  static inline void writeq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+> >  			     u64 value, void __iomem *addr)
+> >  {
+> > +	unsigned long flags;
 > > +
-> >  #define REGISTER(name) \
-> >  	{ #name, REGS_ADDR(name) }
-> >  
-> > +#define CTX_REGISTER(name, dir, ch) \
-> > +	{ #name, REGS_CH_ADDR(name, dir, ch), dir, ch }
-> 
-> What is the need of "dir, ch" at the end?
-> 
-> > +
-> >  #define WR_REGISTER(name) \
-> >  	{ #name, REGS_ADDR(wr_##name) }
-> >  #define RD_REGISTER(name) \
-> > @@ -41,14 +59,11 @@
-> >  static struct dw_edma				*dw;
-> >  static struct dw_edma_v0_regs			__iomem *regs;
-> >  
-> > -static struct {
-> > -	void					__iomem *start;
-> > -	void					__iomem *end;
-> > -} lim[2][EDMA_V0_MAX_NR_CH];
-> > -
-> >  struct dw_edma_debugfs_entry {
-> >  	const char				*name;
-> >  	void __iomem				*reg;
-> > +	enum dw_edma_dir			dir;
-> > +	u16					ch;
-> >  };
-> >  
-> >  static int dw_edma_debugfs_u32_get(void *data, u64 *val)
-> > @@ -58,33 +73,16 @@ static int dw_edma_debugfs_u32_get(void *data, u64 *val)
-> >  
-> >  	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY &&
-> >  	    reg >= (void __iomem *)&regs->type.legacy.ch) {
-> > -		void __iomem *ptr = &regs->type.legacy.ch;
-> > -		u32 viewport_sel = 0;
-> >  		unsigned long flags;
-> > -		u16 ch;
-> > -
-> > -		for (ch = 0; ch < dw->wr_ch_cnt; ch++)
-> > -			if (lim[0][ch].start >= reg && reg < lim[0][ch].end) {
-> > -				ptr += (reg - lim[0][ch].start);
-> > -				goto legacy_sel_wr;
-> > -			}
-> > -
-> > -		for (ch = 0; ch < dw->rd_ch_cnt; ch++)
-> > -			if (lim[1][ch].start >= reg && reg < lim[1][ch].end) {
-> > -				ptr += (reg - lim[1][ch].start);
-> > -				goto legacy_sel_rd;
-> > -			}
-> > -
-> > -		return 0;
-> > -legacy_sel_rd:
-> > -		viewport_sel = BIT(31);
-> > -legacy_sel_wr:
-> > -		viewport_sel |= FIELD_PREP(EDMA_V0_VIEWPORT_MASK, ch);
-> > +		u32 viewport_sel;
-> > +
-> > +		viewport_sel = entry->dir == EDMA_DIR_READ ? BIT(31) : 0;
-> > +		viewport_sel |= FIELD_PREP(EDMA_V0_VIEWPORT_MASK, entry->ch);
+> >  	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY) {
+> >  		u32 viewport_sel;
+> > -		unsigned long flags;
 > >  
 > >  		raw_spin_lock_irqsave(&dw->lock, flags);
 > >  
-> >  		writel(viewport_sel, &regs->type.legacy.viewport_sel);
-> > -		*val = readl(ptr);
-> > +		*val = readl(reg);
+> > @@ -181,22 +178,25 @@ static inline void writeq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
 > >  
+> >  		writel(viewport_sel,
+> >  		       &(__dw_regs(dw)->type.legacy.viewport_sel));
+> > +	}
+> > +
+> > +	if (dw->chip->flags & DW_EDMA_CHIP_32BIT_DBI)
+> > +		lo_hi_writeq(value, addr);
+> > +	else
+> >  		writeq(value, addr);
+> >  
+> > +	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY)
 > >  		raw_spin_unlock_irqrestore(&dw->lock, flags);
-> >  	} else {
-> > @@ -114,19 +112,19 @@ static void dw_edma_debugfs_create_x32(const struct dw_edma_debugfs_entry ini[],
-> >  	}
+> > -	} else {
+> > -		writeq(value, addr);
+> > -	}
 > >  }
 > >  
-> > -static void dw_edma_debugfs_regs_ch(struct dw_edma_v0_ch_regs __iomem *regs,
-> > +static void dw_edma_debugfs_regs_ch(enum dw_edma_dir edma_dir, u16 ch,
-> >  				    struct dentry *dir)
+> >  static inline u64 readq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+> >  			   const void __iomem *addr)
+> >  {
+> > -	u32 value;
+> > +	unsigned long flags;
+> > +	u64 value;
+> >  
+> >  	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY) {
+> >  		u32 viewport_sel;
+> > -		unsigned long flags;
+> >  
+> >  		raw_spin_lock_irqsave(&dw->lock, flags);
+> >  
+> > @@ -206,12 +206,15 @@ static inline u64 readq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+> >  
+> >  		writel(viewport_sel,
+> >  		       &(__dw_regs(dw)->type.legacy.viewport_sel));
+> > +	}
+> > +
+> > +	if (dw->chip->flags & DW_EDMA_CHIP_32BIT_DBI)
+> > +		value = lo_hi_readq(addr);
+> > +	else
+> >  		value = readq(addr);
+> >  
+> > +	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY)
+> >  		raw_spin_unlock_irqrestore(&dw->lock, flags);
+> > -	} else {
+> > -		value = readq(addr);
+> > -	}
+> >  
+> >  	return value;
+> >  }
+> > @@ -225,8 +228,6 @@ static inline u64 readq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+> >  #define SET_LL_64(ll, value) \
+> >  	writeq(value, ll)
+> >  
+> > -#endif /* CONFIG_64BIT */
+> > -
+> >  /* eDMA management callbacks */
+> >  void dw_edma_v0_core_off(struct dw_edma *dw)
+> >  {
+> > @@ -325,19 +326,10 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
+> >  		/* Transfer size */
+> >  		SET_LL_32(&lli[i].transfer_size, child->sz);
+> >  		/* SAR */
+> > -		#ifdef CONFIG_64BIT
+> > -			SET_LL_64(&lli[i].sar.reg, child->sar);
+> > -		#else /* CONFIG_64BIT */
+> > -			SET_LL_32(&lli[i].sar.lsb, lower_32_bits(child->sar));
+> > -			SET_LL_32(&lli[i].sar.msb, upper_32_bits(child->sar));
+> > -		#endif /* CONFIG_64BIT */
+> > +		SET_LL_64(&lli[i].sar.reg, child->sar);
 > 
 
-> Using "dir" for directory would be confusing since it could also refer
-> direction. I'd suggest to use "dentry".
+> This macro still uses writeq(), that's not available on 32bit platforms.
+> Am I missing anything?
 
-Agreed, but for the sake of consistency this needs to be done for the
-whole file. Due to that in some context using "dentry" isn't that
-suitable since makes the variables name a bit too long. I'll use
-'dent' instead. The change will be submitted as a separate patch in
-this series.
+Yes, the writeq/readq macro are defined in the
+include/linux/{io-64-nonatomic-lo-hi.h,io-64-nonatomic-hi-lo.h} files.
+If the platform doesn't provide its own 64-bit IOs implementation
+these macro are used and are unwrapped with the two writel/readl
+methods.
 
 -Sergey
 
@@ -235,54 +237,53 @@ this series.
 > Thanks,
 > Mani
 > 
-> >  {
-> > -	const struct dw_edma_debugfs_entry debugfs_regs[] = {
-> > -		REGISTER(ch_control1),
-> > -		REGISTER(ch_control2),
-> > -		REGISTER(transfer_size),
-> > -		REGISTER(sar.lsb),
-> > -		REGISTER(sar.msb),
-> > -		REGISTER(dar.lsb),
-> > -		REGISTER(dar.msb),
-> > -		REGISTER(llp.lsb),
-> > -		REGISTER(llp.msb),
-> > +	struct dw_edma_debugfs_entry debugfs_regs[] = {
-> > +		CTX_REGISTER(ch_control1, edma_dir, ch),
-> > +		CTX_REGISTER(ch_control2, edma_dir, ch),
-> > +		CTX_REGISTER(transfer_size, edma_dir, ch),
-> > +		CTX_REGISTER(sar.lsb, edma_dir, ch),
-> > +		CTX_REGISTER(sar.msb, edma_dir, ch),
-> > +		CTX_REGISTER(dar.lsb, edma_dir, ch),
-> > +		CTX_REGISTER(dar.msb, edma_dir, ch),
-> > +		CTX_REGISTER(llp.lsb, edma_dir, ch),
-> > +		CTX_REGISTER(llp.msb, edma_dir, ch),
-> >  	};
-> >  	int nr_entries;
-> >  
-> > @@ -191,10 +189,7 @@ static void dw_edma_debugfs_regs_wr(struct dentry *dir)
-> >  
-> >  		ch_dir = debugfs_create_dir(name, regs_dir);
-> >  
-> > -		dw_edma_debugfs_regs_ch(&regs->type.unroll.ch[i].wr, ch_dir);
-> > -
-> > -		lim[0][i].start = &regs->type.unroll.ch[i].wr;
-> > -		lim[0][i].end = &regs->type.unroll.ch[i].padding_1[0];
-> > +		dw_edma_debugfs_regs_ch(EDMA_DIR_WRITE, i, ch_dir);
+> >  		/* DAR */
+> > -		#ifdef CONFIG_64BIT
+> > -			SET_LL_64(&lli[i].dar.reg, child->dar);
+> > -		#else /* CONFIG_64BIT */
+> > -			SET_LL_32(&lli[i].dar.lsb, lower_32_bits(child->dar));
+> > -			SET_LL_32(&lli[i].dar.msb, upper_32_bits(child->dar));
+> > -		#endif /* CONFIG_64BIT */
+> > +		SET_LL_64(&lli[i].dar.reg, child->dar);
+> > +
+> >  		i++;
 > >  	}
+> >  
+> > @@ -349,12 +341,7 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
+> >  	/* Channel control */
+> >  	SET_LL_32(&llp->control, control);
+> >  	/* Linked list */
+> > -	#ifdef CONFIG_64BIT
+> > -		SET_LL_64(&llp->llp.reg, chunk->ll_region.paddr);
+> > -	#else /* CONFIG_64BIT */
+> > -		SET_LL_32(&llp->llp.lsb, lower_32_bits(chunk->ll_region.paddr));
+> > -		SET_LL_32(&llp->llp.msb, upper_32_bits(chunk->ll_region.paddr));
+> > -	#endif /* CONFIG_64BIT */
+> > +	SET_LL_64(&llp->llp.reg, chunk->ll_region.paddr);
 > >  }
 > >  
-> > @@ -256,10 +251,7 @@ static void dw_edma_debugfs_regs_rd(struct dentry *dir)
-> >  
-> >  		ch_dir = debugfs_create_dir(name, regs_dir);
-> >  
-> > -		dw_edma_debugfs_regs_ch(&regs->type.unroll.ch[i].rd, ch_dir);
-> > -
-> > -		lim[1][i].start = &regs->type.unroll.ch[i].rd;
-> > -		lim[1][i].end = &regs->type.unroll.ch[i].padding_2[0];
-> > +		dw_edma_debugfs_regs_ch(EDMA_DIR_READ, i, ch_dir);
+> >  void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+> > @@ -417,18 +404,8 @@ void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+> >  		SET_CH_32(dw, chan->dir, chan->id, ch_control1,
+> >  			  (DW_EDMA_V0_CCS | DW_EDMA_V0_LLE));
+> >  		/* Linked list */
+> > -		if ((chan->dw->chip->flags & DW_EDMA_CHIP_32BIT_DBI) ||
+> > -		    !IS_ENABLED(CONFIG_64BIT)) {
+> > -			SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
+> > -				  lower_32_bits(chunk->ll_region.paddr));
+> > -			SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+> > -				  upper_32_bits(chunk->ll_region.paddr));
+> > -		} else {
+> > -		#ifdef CONFIG_64BIT
+> > -			SET_CH_64(dw, chan->dir, chan->id, llp.reg,
+> > -				  chunk->ll_region.paddr);
+> > -		#endif
+> > -		}
+> > +		SET_CH_64(dw, chan->dir, chan->id, llp.reg,
+> > +			  chunk->ll_region.paddr);
 > >  	}
-> >  }
-> >  
+> >  	/* Doorbell */
+> >  	SET_RW_32(dw, chan->dir, doorbell,
 > > -- 
 > > 2.35.1
 > > 

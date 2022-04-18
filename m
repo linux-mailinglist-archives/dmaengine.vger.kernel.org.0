@@ -2,52 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0766C505029
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Apr 2022 14:19:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42924505A41
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Apr 2022 16:47:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238434AbiDRMWJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 18 Apr 2022 08:22:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49692 "EHLO
+        id S1345016AbiDROt2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 18 Apr 2022 10:49:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237370AbiDRMVb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 18 Apr 2022 08:21:31 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C591E1D0DB;
-        Mon, 18 Apr 2022 05:17:32 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id bj36so10709323ljb.13;
-        Mon, 18 Apr 2022 05:17:32 -0700 (PDT)
+        with ESMTP id S1345367AbiDROtA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 18 Apr 2022 10:49:00 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1FF92654E;
+        Mon, 18 Apr 2022 06:36:18 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id g19so10337999lfv.2;
+        Mon, 18 Apr 2022 06:36:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=kHnbLPTYEwVnYoF1eArZeQYH5Pj76/3G5SiYikVll9w=;
-        b=jbpqdZoqwR4D4r4fMKzxzhrBt/Wqgr2sbvztY0dWatowOIRCrjg9R3NdU/WmdFuziD
-         EPV8lzAk1E91kiXFQSwW4A/8TaarCt2a7rLv3RRjIQNIjCZRxx0pLMpiRPQ49PYad7Ft
-         vdrzmozuDZNDm4wzbIudn/1Fv//fsqBxwSUezyrXVHyRRtwkT/Jdd7L4ZBqphvkQTFXk
-         qHGfsfnj9nfgqICnTlQwSg0LpVjTnLSciMjKxjOEhARZvQnps2FuOy6Wx91cL07D0sMy
-         lCYDkrLxsSzt4g3tvr8cHW2sATtwaGZYxCtByDEc8vAD0tCq79JWPLgOmeNhJXAks+j1
-         meHA==
+        bh=ctahVpxYVe7pa97C6ZwRQ8zFh/8uy2grZsYwheAauuE=;
+        b=NxMyNxmv7McG7vfliC1sRp0myrwa6Wv7BfcUYKikzQmk5Mt510X3E+12/xtEyYLMfe
+         GNuYAaVLux+ypQXaJJzRunyq+wC5RbMjsyTrCqfGs+c2oWrVJzmWqZRSpz11s9ix67hK
+         u7cE+aTPuABrOJuDDLPbZAlpW17f4t1G6wDveD93J3bBsLVnE3Hjkgd0IR7hjog2ExRz
+         Tx9s7Q6kk5FDd80+FIeyAGQA2tOgLViV1EGqlt+dV0SSLKv2+Izl9pbBq+xVxkqgRfTy
+         nNJIPGlQ5DlotePRLQQLkox40caEv55Slmb+wQuQWdyMnnN6M7pRkLmEVPd7ePXhOCTn
+         Jf+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=kHnbLPTYEwVnYoF1eArZeQYH5Pj76/3G5SiYikVll9w=;
-        b=KJW8k1QWdgjsq6wwtlon2V+Fhi/yzjdQvRgP+a7YYDrVAnbYq/7bvV+JhbxJW2SeKD
-         lB2ycLi3xPdj4s0SwSwMsAumcswESL7zHBGL3wVv6+dA4I78/XtogQ5OkHXQR5cJfp/1
-         KGOcH6XtmcP5QdC73eSCPAHRJUZaWPKCkYmKKNNKTMO8M+9WrOkMok6neuV4QjhKHsRB
-         42ec0iB1WHBpcnV10+Zh5kju7zR29ChMMVty2+eq2wrL9IG0WfTN1OkaRMBKFp6/IHzR
-         wOZXQdOAu3kbbtYMFigCMz9q2/MgkaheSP9zm+EUu2i7kIs16PgCbpO6AZQ0Hfc5c2Bb
-         d4Hw==
-X-Gm-Message-State: AOAM533W/AcQzeB2lFwyAkINPNza8LJ4Mrenj90RlZo6MggXb6P0j2j9
-        xaFLYvOkhdHG0vIzGt7d9Lk=
-X-Google-Smtp-Source: ABdhPJwFqvtH3vF5qgEO8VCRMK6W6mZpdiK3/Fns3+bt9EuI/0T5o4DWUcvmcWh5lCU6fMV6W8YuIw==
-X-Received: by 2002:a2e:302:0:b0:24a:c997:d34c with SMTP id 2-20020a2e0302000000b0024ac997d34cmr7107060ljd.445.1650284250575;
-        Mon, 18 Apr 2022 05:17:30 -0700 (PDT)
+        bh=ctahVpxYVe7pa97C6ZwRQ8zFh/8uy2grZsYwheAauuE=;
+        b=4QydTPEl6l70aCX4yi09fLCIQ5lVvjm/vKlsuCOdIbBtQlvdQXoQ3x1+AenjeAtsSW
+         n7IPa6Up/aeIu2zpse3Ahmbj/L6G84KCtZe5dpeMB9WS1ggEA4Ahtf3tO7ouRI3l4vEs
+         DFbd4URriLcErmFblqs8Px5oRC6r3J+Hb0hUSKXrW3BNZI8vvGyZZ/rWvwRqGOyvEQMP
+         ktudUaZyvjLvefuX1z9/NHTbf5PWDQmulQw/5R5e4CTpiG9qO39nlRGZ4O2vx28GcUmp
+         dNEYI+7w7olijtjEIIj7EC0AtiL5XsIstbRa2QSnq6WzzMfIuOkYKHe4BHwlH2lb27YK
+         JWRA==
+X-Gm-Message-State: AOAM531v1/lEDuXVd3aBRbc/nj5RS1W7ZR2f2846tVCRAucm2aFRBytA
+        Yo4eQmLZXRqex0yO0AdeGNIn8vs+azv0GQ==
+X-Google-Smtp-Source: ABdhPJxqojB+379Aoz4aRU9p0SqnQukj3Oda4tTeABagBaaNG6KqN67puNwm0y9Ptz+xYXNKnB7few==
+X-Received: by 2002:a19:6046:0:b0:46e:e5c5:12c2 with SMTP id p6-20020a196046000000b0046ee5c512c2mr7826936lfk.625.1650288976716;
+        Mon, 18 Apr 2022 06:36:16 -0700 (PDT)
 Received: from mobilestation ([95.79.134.149])
-        by smtp.gmail.com with ESMTPSA id u19-20020a197913000000b00448a1f20261sm1199338lfc.34.2022.04.18.05.17.28
+        by smtp.gmail.com with ESMTPSA id m17-20020a197111000000b0046d0f737777sm1221369lfc.178.2022.04.18.06.36.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Apr 2022 05:17:29 -0700 (PDT)
-Date:   Mon, 18 Apr 2022 15:17:27 +0300
+        Mon, 18 Apr 2022 06:36:16 -0700 (PDT)
+Date:   Mon, 18 Apr 2022 16:36:14 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
@@ -63,16 +63,16 @@ Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 22/25] dmaengine: dw-edma: Replace chip ID number with
- device name
-Message-ID: <20220418121727.ct6pyx6jdq46uvq7@mobilestation>
+Subject: Re: [PATCH 23/25] dmaengine: dw-edma: Bypass dma-ranges mapping for
+ the local setup
+Message-ID: <20220418133614.atbndfymcn45i3id@mobilestation>
 References: <20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru>
- <20220324014836.19149-23-Sergey.Semin@baikalelectronics.ru>
- <20220325100204.GJ4675@thinkpad>
+ <20220324014836.19149-24-Sergey.Semin@baikalelectronics.ru>
+ <20220325181042.GA12218@thinkpad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220325100204.GJ4675@thinkpad>
+In-Reply-To: <20220325181042.GA12218@thinkpad>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -83,101 +83,91 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Mar 25, 2022 at 03:32:04PM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Mar 24, 2022 at 04:48:33AM +0300, Serge Semin wrote:
-> > Using some abstract number as the DW eDMA chip identifier isn't really
-> > practical. First of all there can be more than one DW eDMA controller on
-> > the platform some of them can be detected as the PCIe end-points, some of
-> > them can be embedded into the DW PCIe Root Port/End-point controllers.
-> > Seeing some abstract number in for instance IRQ handlers list doesn't give
-> > a notion regarding their reference to the particular DMA controller.
-> > Secondly current DW eDMA chip id implementation doesn't provide the
-> > multi-eDMA platforms support for same reason of possibly having eDMA
-> > detected on different system buses. At the same time re-implementing
-> > something ida-based won't give much benefits especially seeing the DW eDMA
-> > chip ID is only used in the IRQ request procedure. So to speak in order to
-> > preserve the code simplicity and get to have the multi-eDMA platforms
-> > support let's just use the parental device name to create the DW eDMA
-> > controller name.
+On Fri, Mar 25, 2022 at 11:40:42PM +0530, Manivannan Sadhasivam wrote:
+> On Thu, Mar 24, 2022 at 04:48:34AM +0300, Serge Semin wrote:
+> > DW eDMA doesn't perform any translation of the traffic generated on the
+> > CPU/Application side. It just generates read/write AXI-bus requests with
+> > the specified addresses. But in case if the dma-ranges DT-property is
+> > specified for a platform device node, Linux will use it to map the CPU
+> > memory regions into the DMAable bus ranges. This isn't what we want for
+> > the eDMA embedded into the locally accessed DW PCIe Root Port and
+> > End-point. In order to work that around let's set the chan_dma_dev flag
+> > for each DW eDMA channel thus forcing the client drivers to getting a
+> > custom dma-ranges-less parental device for the mappings.
+> > 
+> > Note it will only work for the client drivers using the
+> > dmaengine_get_dma_device() method to get the parental DMA device.
 > > 
 > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > > ---
-> >  drivers/dma/dw-edma/dw-edma-core.c | 3 ++-
-> >  drivers/dma/dw-edma/dw-edma-core.h | 2 +-
-> >  drivers/dma/dw-edma/dw-edma-pcie.c | 1 -
-> >  include/linux/dma/edma.h           | 1 -
-> >  4 files changed, 3 insertions(+), 4 deletions(-)
+> >  drivers/dma/dw-edma/dw-edma-core.c | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
 > > 
 > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> > index dbe1119fd1d2..72a51970bfba 100644
+> > index 72a51970bfba..ca5cd7c99571 100644
 > > --- a/drivers/dma/dw-edma/dw-edma-core.c
 > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> > @@ -970,7 +970,8 @@ int dw_edma_probe(struct dw_edma_chip *chip)
-> >  	if (!dw->chan)
-> >  		return -ENOMEM;
+> > @@ -716,6 +716,21 @@ static int dw_edma_alloc_chan_resources(struct dma_chan *dchan)
+> >  	if (chan->status != EDMA_ST_IDLE)
+> >  		return -EBUSY;
 > >  
-> > -	snprintf(dw->name, sizeof(dw->name), "dw-edma-core:%d", chip->id);
-> > +	snprintf(dw->name, sizeof(dw->name), "dw-edma-core:%s",
-> > +		 dev_name(chip->dev));
-> >  
-> >  	/* Disable eDMA, only to establish the ideal initial conditions */
-> >  	dw_edma_v0_core_off(dw);
-> > diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-> > index 980adb079182..dc25798d4ba9 100644
-> > --- a/drivers/dma/dw-edma/dw-edma-core.h
-> > +++ b/drivers/dma/dw-edma/dw-edma-core.h
-> > @@ -96,7 +96,7 @@ struct dw_edma_irq {
-> >  };
-> >  
-> >  struct dw_edma {
-> > -	char				name[20];
-> > +	char				name[30];
+> > +	/* Bypass the dma-ranges based memory regions mapping since the
+> > +	 * inbound iATU only affects the traffic incoming from the
+> > +	 * PCIe bus.
+> > +	 */
 > 
 
-> I'm not sure if this length is sufficient. Other than this,
-> 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Bypass the dma-ranges based memory regions mapping since eDMA doesn't do any
+> address translation for the CPU address?
 
-My calculations were based on the prefix+pci-device-name length. For
-instance, for the case of the remote eDMA the name length would be
-strlen("dw-edma-core:0000:00:00.0") = 25 + 1 (for '\0'). There's even
-some room left. Seeing the prefix is always used in the string there
-will be at most 16 chars for the unique part of the name. If you
-predict it to be greater than that I'll extend the length as you say.
+Seems reasonable. I'll fix the comment to being clearer.
+
+BTW since we omit setting the DMA_BYPASS flag of the outbound iATU
+windows, the DMA address is actually affected by the DW PCIe
+controller but in a bit of a sophisticated way. AFAIU if no DMA_BYPASS
+flag specified and the resultant TLP address falls into any outbound
+iATU window, the address will be translated in accordance with that
+window translation rule. So happen the chains like this:
++ DMA write:
+CPU memory <-,-> eDMA LLi:SAR(CPU address, data) -> eDMA LLi:DAR(DMA address, data) ->
+Outbound iATU TLP MWr(PCIe address, data) -> PCIe memory.
++ DMA read:
+eDMA SAR(DMA address, ?) -> Outbound iATU TLP MRd(PCIe address, ?) ->
+PCIe memory -> Outbound iATU TLP MRd(PCIe address, data) -> eDMA
+SAR(DMA address, data) -> eDMA DAR(CPU address, data) -> CPU memory
+
+Due to that handy feature we don't need to search for the PCIe bus
+memory range matching the passed source and destination DMA addresses
+of the SG-lists. It is done by the Outbound iATU engine automatically.
+If the DMA_BYPASS flag was set, all the Outbound iATU-related stages
+would have been omitted from the diagram above and the DMA<->PCIe
+translations would have needed to be performed in the eDMA driver
+code.
 
 -Sergey
 
 > 
+> Other than this,
+> 
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
 > Thanks,
 > Mani
 > 
+> > +	if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
+> > +		dchan->dev->chan_dma_dev = true;
+> > +
+> > +		dchan->dev->device.dma_coherent = chan->dw->chip->dev->dma_coherent;
+> > +		dma_coerce_mask_and_coherent(&dchan->dev->device,
+> > +					     dma_get_mask(chan->dw->chip->dev));
+> > +		dchan->dev->device.dma_parms = chan->dw->chip->dev->dma_parms;
+> > +	} else {
+> > +		dchan->dev->chan_dma_dev = false;
+> > +	}
+> > +
+> >  	pm_runtime_get(chan->dw->chip->dev);
 > >  
-> >  	struct dma_device		dma;
-> >  
-> > diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> > index f530bacfd716..3f9dadc73854 100644
-> > --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> > +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> > @@ -222,7 +222,6 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> >  
-> >  	/* Data structure initialization */
-> >  	chip->dev = dev;
-> > -	chip->id = pdev->devfn;
-> >  
-> >  	chip->mf = vsec_data.mf;
-> >  	chip->nr_irqs = nr_irqs;
-> > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> > index 5cc87cfdd685..241c5a97ddf4 100644
-> > --- a/include/linux/dma/edma.h
-> > +++ b/include/linux/dma/edma.h
-> > @@ -73,7 +73,6 @@ enum dw_edma_map_format {
-> >   */
-> >  struct dw_edma_chip {
-> >  	struct device		*dev;
-> > -	int			id;
-> >  	int			nr_irqs;
-> >  	const struct dw_edma_core_ops   *ops;
-> >  	u32			flags;
+> >  	return 0;
 > > -- 
 > > 2.35.1
 > > 

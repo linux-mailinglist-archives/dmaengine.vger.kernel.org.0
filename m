@@ -2,247 +2,257 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FF62504B7C
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Apr 2022 06:06:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA951504C4A
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Apr 2022 07:28:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236325AbiDREJd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 18 Apr 2022 00:09:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52372 "EHLO
+        id S229478AbiDRFaq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 18 Apr 2022 01:30:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236319AbiDREJb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 18 Apr 2022 00:09:31 -0400
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-eopbgr80080.outbound.protection.outlook.com [40.107.8.80])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9187F18B37;
-        Sun, 17 Apr 2022 21:06:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q2cy/bG3HvZ6bmRUPHyhQPMGdMKZMywI3+sBmmhI+OT3xEv1ZEf8Jvj+k6UpyloK8WW6/HgofI6oNGiihptjYg07BzuDQve9sOd8FtlK/5ZHuMELVDM76QzE2liWgXVjvo+RVZKEYIHTVgOEfMdp8ovSWEjoLFS/SDw99/siankfPj12tr4Ajl1Ulrc4kOoZj5x7WEGKC5G987SNA2VADkDzVf7DMYTDt2rESaK9ECk5RrNTJfcLSMVGCXnJTOYQaDsVn1AoImK/vA+3jO76aGQmGf7ODG/t+vlGvhEM2cgzGdYqPCN55/1LBWTJ9byrlyR8ibRWng/4s6J4SgWa8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Rz5vilmtX763lk2QHT8biuMqdQv1RhGi3WABe+4TDFQ=;
- b=mj/WL30MRBAGOK7gOCLPuVil9POU1J/0XN2D0/icohs+jA8YGz9WuGi+7WhdbVZknk64P24rpbbK3Ua4mlHyhlMUiUtbEzY3JBN2324WbIgm7l2CiawwLz6TmB+gR7wJLP8LNVB7t/utWC7dOt0HJKi+Z2oV4XHK3u6Gduv2qBIj/iVH5G/ouJCoWAbNrVINDypj44RREP9wrM0RB++uX+nlE028XorJCMQRwjaFGb9Bj3OYwRYJdOjvKgq2OpL2OkePAcQ7cUMr91SZpXlc1Ub8V4YRiPUQilK4zyrzwlB8xafILUieZv1+dxeDejGj7COCSpIMPRDLYY+c7LLSXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rz5vilmtX763lk2QHT8biuMqdQv1RhGi3WABe+4TDFQ=;
- b=GYWdZ1sFm2lq060TlCnO5/zfh0y8rwuQ8l7bBnhCtzhUpSLd9gfREvMxwUO1l+kIyefX/+Nr1lMmpKMYViJCHBvvPlkGy62pTUDsMg/meTQdC7glslzBXy6YijDxStdUxgqT1me5cEktRv0Du1KkMWwXelnrl57FmQZ0CsR2rc8=
-Received: from AM9PR04MB8875.eurprd04.prod.outlook.com (2603:10a6:20b:40a::6)
- by AM9PR04MB8618.eurprd04.prod.outlook.com (2603:10a6:20b:439::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5164.25; Mon, 18 Apr
- 2022 04:06:51 +0000
-Received: from AM9PR04MB8875.eurprd04.prod.outlook.com
- ([fe80::34fe:c84e:e763:3131]) by AM9PR04MB8875.eurprd04.prod.outlook.com
- ([fe80::34fe:c84e:e763:3131%9]) with mapi id 15.20.5164.025; Mon, 18 Apr 2022
- 04:06:50 +0000
-From:   Joy Zou <joy.zou@nxp.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH 2/2] dmaengine: imx-sdma: support hdmi audio
-Thread-Topic: [EXT] Re: [PATCH 2/2] dmaengine: imx-sdma: support hdmi audio
-Thread-Index: AQHXxjriSlv/1ppQykKghYS2natqHqvjKY+AgQz4OuA=
-Date:   Mon, 18 Apr 2022 04:06:50 +0000
-Message-ID: <AM9PR04MB88757229F10CBB693F90E486E1F39@AM9PR04MB8875.eurprd04.prod.outlook.com>
-References: <20211021051611.3155385-1-joy.zou@nxp.com>
- <YXY2M0td08eDCi+9@matsya>
-In-Reply-To: <YXY2M0td08eDCi+9@matsya>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 39291d7d-54ea-49c6-e082-08da20f0dda2
-x-ms-traffictypediagnostic: AM9PR04MB8618:EE_
-x-microsoft-antispam-prvs: <AM9PR04MB8618EBAF4A5E1615C9B7CAB6E1F39@AM9PR04MB8618.eurprd04.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WkiKQkfuWTHPYnt2vgE/TnRUiUKFhuk1hL4vbIXOa/t8jI1Aq0SHec3aJqyUvbn3tOz+acldMRhtGwVVvcjrHf2Wgm3NjW6xmAyZ4lMdNyeKGV0WNVRmjgfYTwW65D2DAkTba7qHrmqqXrJ4doUcVkplnruzPg8dQkoh0zD7Mhzqa34p55fAgXprtprGeFH74m7fG/Cy/NMe3DZMcjTCiczGDO+DLj4SfW1O4RQeM5vZlyhEXFe3zBBeQxGehUXNOq2bxfmGjaiUHfHu5ozqpYOKhr/480bb/ss2uib2ZBS9lgWjwMc3oI4KqTj68CB68tVoB/4h7kUaeGqth2Q2wSarlaWBp6QoNNCPjqqqlPQ/ImzdXmFZc3q2vxO1l1lEcgS5ghfBP9Vwd2ZmJgG+iGDfcFYJt9ezaNsED/8uPhvjRZBpzOtVLGOa81BalV+W1mQ+baTQLqMOajtTugqTozuK0mjqktTvn5oy4LrZ+lhlcDRaWGRJPrMfDNuCDgmKagyG3Ep/OqLk+YFxTkKBLBoh0l5T9ViHl1navU8FnHLahq4XzJWYw7lSFSUKfVC5YDI8zTkJI2Rw2PZZ0/m7qoiJiCMCQNYhncf/rKTkORLAkuURf2tedL2zYBlwz/KNb2QLe0NOT86SWeth1US9dOKfbAAT9ivouS+Dn8/AljZiWKAMv0ZDAxo1OT0b5Gqo4nN1cEeAwZprlxZMiNw6KQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8875.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(7696005)(54906003)(6916009)(6506007)(2906002)(66446008)(8676002)(83380400001)(64756008)(66476007)(4326008)(66556008)(66946007)(52536014)(71200400001)(8936002)(55016003)(44832011)(33656002)(122000001)(9686003)(86362001)(38070700005)(38100700002)(316002)(26005)(53546011)(5660300002)(508600001)(186003)(76116006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?gb2312?B?alY5bUUrc2lMVHB3NWZZVSs2NUxrdWhjbENIeVZxUU1JUVdhbGU3Y3owRnhR?=
- =?gb2312?B?K01RZXRwdnErWEJYQXo2NkpwZUx6Z01JSFl2aGgwYzdTUTBRT0lwTmtYUUsr?=
- =?gb2312?B?eVJJek9OQmN4MDhCS3g4anRFa3dhbzY0MnAwaG9sWW5LRHVVVGJHdWRJWHZT?=
- =?gb2312?B?Sis2aXVLRlhvSmVCZ3NnSGNqTTY0S21pT1lNU2duR1hFYXlaakRBcmI2Ni8y?=
- =?gb2312?B?RGdqNGNNaFJXckFwNGZsdmx5YTErd2hUOU5iSkg1REFJLzhINGJKN0NFN3JE?=
- =?gb2312?B?ZEVBSTZFYWhOQlo1WmpEY25BNSt6UE9GTWVTdE5MRmR5ZzZrS0d5UklKbDYy?=
- =?gb2312?B?MnpzVGJTSFpqQlFudUZXS21VUHNmUUgxS01sOGd2cW9WVGJ1Zyt4WXlwK3k2?=
- =?gb2312?B?RWJkNWF6UW9TbHg2WVFxcmRSNERLWjRZNlVvNlVMVFg2YU1NL29tSmgwS1Qw?=
- =?gb2312?B?ZWFtL3N0VnJQRmlvVWlCdW9RaWJDMUdkbENFNExtNkcwMUloRk9sYk43dFJD?=
- =?gb2312?B?K2ZnSmd4cVBDMGdxbnF1cWVpYzhWTXRhejJ4bWtUUnV4QU5idjgxWEFTdmpC?=
- =?gb2312?B?TWFJekVkdDYvc2xaRkp2UVd2bzY5YnRkL3BzRlpxaXhRV2Q3d1lKT3RqZUFj?=
- =?gb2312?B?U1JIUlpqTzZJTGRrd0JIZExMdFVmK3NONWlBbTdOdzdJQ3lhMkpQZGNDNElk?=
- =?gb2312?B?dU03Rm1BMnc1T2ZXVmVEVlprVUIyWEU4ay9nV1NNUTdwcGVMNWU5bTI5WmEr?=
- =?gb2312?B?WEJJeisrSURWL2p6ZEZGZXJCckQ2YndVQ2tWQVJQa0VPRHBSZkxxbGdZNWZx?=
- =?gb2312?B?ekZkd3pOcTIwTXVzVnVHSnNxc1RMVDVVLzR2SGpuWExNdnlhMnIyeEVEZXRX?=
- =?gb2312?B?TWRZNWxMb0xkclRLclVpSDcybFVycTYvZGtJRFNHQitweStxWW4xNXZxZ1FQ?=
- =?gb2312?B?Q0prMm92R1Z4bFY2aWV6eE53Y1dBcG5iNEc5ZFpYUXRmSDlzaHA4cG85NnRu?=
- =?gb2312?B?TnRzbFNBbExMaGJ0WTlpUW93MTdYbmw2UXpGUFkxdUJPeEdPci9aVEJIT1hv?=
- =?gb2312?B?d3FzMEZuekdxenRpODZkZDJZUTJIRldROWp1VGZ4Q21xNk5pcDhZSEk2RDl6?=
- =?gb2312?B?THcwaG1NWTJjeDJJQjZoYTdjNFNTcytyUllSSXI5bUROdFdodkZQdk1LeEFI?=
- =?gb2312?B?SlFJOWVITG1OTHFPMTFwUkdMcmxXSjJRRkdkWnpUbk8wVVkrdnpaSUsvMSs5?=
- =?gb2312?B?SzBxSDczNHpuY2s4Q210UnZZYnZDbUs3eUxTVElyMzM3VE1DZlg3a2VlSjlp?=
- =?gb2312?B?ZWhMZ2xHRVgxcDVhYi9OZ09ZM095bmc2UjdNbWd1cCs1S0pITTVUTDBhbjhs?=
- =?gb2312?B?aDFScGRORmpPaEcxVFpoNnJhR1FHL0VIV0twaHFuWHp4WmFEaHFMWnZhbHpF?=
- =?gb2312?B?T1lRL3lCREdKblpTbm5CbGdsRU5xYTFjSVZTZjAyeTk0VDliZTBRY0phK2Fn?=
- =?gb2312?B?MWdGOCszTUoyOWZJM0pIZVoyUy9mMW02ckNvV0lUWWJncTZMakMzVWNDY2Yy?=
- =?gb2312?B?S1RuRDNSM2FCanZrMmU0eitmaWtjekZQQnVObExNYnpBbmRFWUhIY3BGc1Vx?=
- =?gb2312?B?dVZiaDJVY1pLZkxvc1ZvaEg4S01QVTI1SHBSTDc1dkVIVk91eEFUbzRXU0FJ?=
- =?gb2312?B?R0pLekhSbHJhUlR0ajdlcGlCOXJLTkk0dkhtdkZ2R09iU3Via0lrL0hEK0pO?=
- =?gb2312?B?MjZOWmlvU0NQcktWbVRzaTBmYXVUeXJkcHBaUTR2WkRZTE9pTTZUbjlMTVM5?=
- =?gb2312?B?dUsrY055M3UycVBkV2xhSkpDUVpseU05aktyMWM2MzlZRmpueURMa3dncWZ1?=
- =?gb2312?B?VXdlNkZWc2xUZDJUbi9sODRteE1XTTNkTm9pK29mUU9vL29xN3Qrak83Mmls?=
- =?gb2312?B?eTVNQzVQZ2RnWkxlbG5lTXJjMXBwS3JjSkQwb1BJRFUzYTlTeExzWjBzM1lK?=
- =?gb2312?B?cFVmSXVuR2F3L05jT25Fam1lVFZ3TVBXQjA2eXpwRmcreHB1VG5TWGpsMEdq?=
- =?gb2312?B?RDFGYloyVURKVjhMTFZRRlprQ3JwKyt6eFpid0xyeFUvL2xYNmtmdm9NOUdT?=
- =?gb2312?B?dDdQdU93VUIxblp3MnQ5d29yRUovRnIwcmwva3Q1UEc4RGx4NWw3SWJFMnVo?=
- =?gb2312?B?YWp3UUxXL21ybHlwZVBCWHE3aC9kVFlQcHQxaTdOTnFiUjhJL282Sm1PZzZT?=
- =?gb2312?B?QWQrWWlXc1liRk9FRnRyZU5aNjlxMU5RVzNaRytQSncxcGZjeDFxREJXanFt?=
- =?gb2312?Q?N84YPh7epNJ/Mh1BRh?=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        with ESMTP id S232542AbiDRFaq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 18 Apr 2022 01:30:46 -0400
+Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B8CF12ABA
+        for <dmaengine@vger.kernel.org>; Sun, 17 Apr 2022 22:28:07 -0700 (PDT)
+Received: by mail-oi1-x233.google.com with SMTP id r8so13839885oib.5
+        for <dmaengine@vger.kernel.org>; Sun, 17 Apr 2022 22:28:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7DgzO/pa67nPfiBA+VFEyWTBNJsOUG34PB2hcnwbIoc=;
+        b=bd7K3fqHtTpDsDgDTYOvqsmdjMsec5ObOtdaj9zcjM8jz8dlxHRaRZSPjXBwSgWLNv
+         nMLNffxgLORyfwQQefNwCqVdVg+BtluJuRHb23NbrtkL1sooIT80tL2rKo/iE8UOubXE
+         A05na/OraG4ZhFZFQLXB8RrRvsCtdp6X2YPJARca0eTAoe/tLZYJpaM/xLSZBw6h9kr6
+         uV0Crwx44CIClY/QIxPlvgp6m0G71jWNas+dZimSPynCJ5ZMGoCva3enZO07QjJmQrhS
+         xqxMOKoW2wB8U5M50EPh6qsWF5CQcsbWPGz1rR9YwTQYHMqZ3SPuFch6weG4Lkwpv821
+         KGbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7DgzO/pa67nPfiBA+VFEyWTBNJsOUG34PB2hcnwbIoc=;
+        b=gBBQckxFE9WMNZIPFaEDUCeav8eb77ZHJSuQdogGvbqbXBfL5M892sQP2C+AvGJtGl
+         CKvDBgOblvqQOEWNKTTYA2wrmfyhFDMc37s/kC3NZvgh+Qlotjy1/5FvNDvXx6z8xWlH
+         q5zqdV5pYaPZ00ywfe+MsBZkVHzBFkZD3btR2CTGaGlBnFupxdxjCQp5QI1VuPj3XOSQ
+         2Uiaci1C9IanoOtj7VksnAGridyibQcrIc21csDTqwsrfEVEFOa0Ll+0IqqyMUftG5O1
+         g3CCBl5HtMPyT8DS3MtSJMd0ZLPCZJ+p0mHLQ51TW1MA1zNQrMsZdEFWpU8gcdQdF8o9
+         qSlg==
+X-Gm-Message-State: AOAM530FXlVrHg5LkpN5wYgmx7F3c/egcNwFFlLLeMGOvtDywBRmYmH4
+        X/9jEFaKtithJmy0wIDfBVLo2yy8icySYtWn1zC/bw==
+X-Google-Smtp-Source: ABdhPJwTmeemQ1FlD7kIucZJFielIhrz/iqz0jntpX5/XzAFZlSiCfDlDHE/Kfrf67Mxbfm59seuG3cv3yukIX8Cbwg=
+X-Received: by 2002:a05:6808:1287:b0:2da:5cea:fb11 with SMTP id
+ a7-20020a056808128700b002da5ceafb11mr4227916oiw.147.1650259686315; Sun, 17
+ Apr 2022 22:28:06 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8875.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 39291d7d-54ea-49c6-e082-08da20f0dda2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Apr 2022 04:06:50.8088
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hWQdOnCF/Q1EaeUFiVPl951jmQ2lrZ6ZZrnMd73D15Jqd+TqrhNv2tLv7aiDHDla
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8618
+References: <20220410175056.79330-1-singh.kuldeep87k@gmail.com> <20220410175056.79330-7-singh.kuldeep87k@gmail.com>
+In-Reply-To: <20220410175056.79330-7-singh.kuldeep87k@gmail.com>
+From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
+Date:   Mon, 18 Apr 2022 10:57:55 +0530
+Message-ID: <CAH=2Ntx1D8C6xu+RysO0o5OkG5kPMMJ-Xr+B-udLtizY+4HiaQ@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] dt-bindings: dma: Convert Qualcomm BAM DMA binding
+ to json format
+To:     Kuldeep Singh <singh.kuldeep87k@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dmaengine@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-SGkgVmlub2QsDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBWaW5vZCBLb3Vs
-IDx2a291bEBrZXJuZWwub3JnPiANClNlbnQ6IDIwMjHE6jEw1MIyNcjVIDEyOjQ1DQpUbzogSm95
-IFpvdSA8am95LnpvdUBueHAuY29tPg0KQ2M6IFJvYmluIEdvbmcgPHlpYmluLmdvbmdAbnhwLmNv
-bT47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGtlcm5lbEBw
-ZW5ndXRyb25peC5kZTsgZmVzdGV2YW1AZ21haWwuY29tOyBkbC1saW51eC1pbXggPGxpbnV4LWlt
-eEBueHAuY29tPjsgZG1hZW5naW5lQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpTdWJqZWN0
-OiBbRVhUXSBSZTogW1BBVENIIDIvMl0gZG1hZW5naW5lOiBpbXgtc2RtYTogc3VwcG9ydCBoZG1p
-IGF1ZGlvDQoNCkNhdXRpb246IEVYVCBFbWFpbA0KDQpPbiAyMS0xMC0yMSwgMTM6MTYsIEpveSBa
-b3Ugd3JvdGU6DQo+IEFkZCBoZG1pIGF1ZGlvIHN1cHBvcnQgaW4gc2RtYS4NCg0KUGxzIHNlbmQg
-YSBzZXJpZXMgdG9nZXRoZXIgYW5kIGNoYWluZWQuIFRoZXkgYXBwZWFyIGhlcmUgYXMgZGlzam9p
-bnQgcGF0Y2hlcw0KDQpUaGUgYXVkaW8gYW5kIGRtYSBwYXRjaGVzIGFsd2F5cyBhcmUgc2VwYXJh
-dGUuIFRoZSBhdWRpbyBkcml2ZXIgb3duZXIgd2lsbCBzZW5kIGF1ZGlvIHBhdGNoZXMNCmFmdGVy
-IHRoZSBkbWEgcGF0Y2hlcyBhcmUgYWNjZXB0ZWQuICANCg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBK
-b3kgWm91IDxqb3kuem91QG54cC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9kbWEvaW14LXNkbWEu
-YyAgICAgICAgICAgICAgICB8IDM4ICsrKysrKysrKysrKysrKysrKysrKy0tLS0tLQ0KPiAgaW5j
-bHVkZS9saW51eC9wbGF0Zm9ybV9kYXRhL2RtYS1pbXguaCB8ICAxICsNCj4gIDIgZmlsZXMgY2hh
-bmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkNCj4NCj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZG1hL2lteC1zZG1hLmMgYi9kcml2ZXJzL2RtYS9pbXgtc2RtYS5jIGluZGV4IA0K
-PiBjYWNjNzI1Y2E1NDUuLjNhMGU0MDhmNzc0MSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9kbWEv
-aW14LXNkbWEuYw0KPiArKysgYi9kcml2ZXJzL2RtYS9pbXgtc2RtYS5jDQo+IEBAIC05MDcsNyAr
-OTA3LDEwIEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBzZG1hX2ludF9oYW5kbGVyKGludCBpcnEsIHZv
-aWQgKmRldl9pZCkNCj4gICAgICAgICAgICAgICBkZXNjID0gc2RtYWMtPmRlc2M7DQo+ICAgICAg
-ICAgICAgICAgaWYgKGRlc2MpIHsNCj4gICAgICAgICAgICAgICAgICAgICAgIGlmIChzZG1hYy0+
-ZmxhZ3MgJiBJTVhfRE1BX1NHX0xPT1ApIHsNCj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgc2RtYV91cGRhdGVfY2hhbm5lbF9sb29wKHNkbWFjKTsNCj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgaWYgKHNkbWFjLT5wZXJpcGhlcmFsX3R5cGUgIT0gSU1YX0RNQVRZUEVfSERN
-SSkNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzZG1hX3VwZGF0ZV9j
-aGFubmVsX2xvb3Aoc2RtYWMpOw0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBlbHNl
-DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgDQo+ICsgdmNoYW5fY3lj
-bGljX2NhbGxiYWNrKCZkZXNjLT52ZCk7DQo+ICAgICAgICAgICAgICAgICAgICAgICB9IGVsc2Ug
-ew0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBteGNfc2RtYV9oYW5kbGVfY2hhbm5l
-bF9ub3JtYWwoc2RtYWMpOw0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2Y2hhbl9j
-b29raWVfY29tcGxldGUoJmRlc2MtPnZkKTsgQEAgDQo+IC0xMDIzLDYgKzEwMjYsMTAgQEAgc3Rh
-dGljIHZvaWQgc2RtYV9nZXRfcGMoc3RydWN0IHNkbWFfY2hhbm5lbCAqc2RtYWMsDQo+ICAgICAg
-IGNhc2UgSU1YX0RNQVRZUEVfSVBVX01FTU9SWToNCj4gICAgICAgICAgICAgICBlbWlfMl9wZXIg
-PSBzZG1hLT5zY3JpcHRfYWRkcnMtPmV4dF9tZW1fMl9pcHVfYWRkcjsNCj4gICAgICAgICAgICAg
-ICBicmVhazsNCj4gKyAgICAgY2FzZSBJTVhfRE1BVFlQRV9IRE1JOg0KPiArICAgICAgICAgICAg
-IGVtaV8yX3BlciA9IHNkbWEtPnNjcmlwdF9hZGRycy0+aGRtaV9kbWFfYWRkcjsNCj4gKyAgICAg
-ICAgICAgICBzZG1hYy0+aXNfcmFtX3NjcmlwdCA9IHRydWU7DQo+ICsgICAgICAgICAgICAgYnJl
-YWs7DQo+ICAgICAgIGRlZmF1bHQ6DQo+ICAgICAgICAgICAgICAgYnJlYWs7DQo+ICAgICAgIH0N
-Cj4gQEAgLTEwNzAsMTEgKzEwNzcsMTYgQEAgc3RhdGljIGludCBzZG1hX2xvYWRfY29udGV4dChz
-dHJ1Y3Qgc2RtYV9jaGFubmVsICpzZG1hYykNCj4gICAgICAgLyogU2VuZCBieSBjb250ZXh0IHRo
-ZSBldmVudCBtYXNrLGJhc2UgYWRkcmVzcyBmb3IgcGVyaXBoZXJhbA0KPiAgICAgICAgKiBhbmQg
-d2F0ZXJtYXJrIGxldmVsDQo+ICAgICAgICAqLw0KPiAtICAgICBjb250ZXh0LT5nUmVnWzBdID0g
-c2RtYWMtPmV2ZW50X21hc2tbMV07DQo+IC0gICAgIGNvbnRleHQtPmdSZWdbMV0gPSBzZG1hYy0+
-ZXZlbnRfbWFza1swXTsNCj4gLSAgICAgY29udGV4dC0+Z1JlZ1syXSA9IHNkbWFjLT5wZXJfYWRk
-cjsNCj4gLSAgICAgY29udGV4dC0+Z1JlZ1s2XSA9IHNkbWFjLT5zaHBfYWRkcjsNCj4gLSAgICAg
-Y29udGV4dC0+Z1JlZ1s3XSA9IHNkbWFjLT53YXRlcm1hcmtfbGV2ZWw7DQo+ICsgICAgIGlmIChz
-ZG1hYy0+cGVyaXBoZXJhbF90eXBlID09IElNWF9ETUFUWVBFX0hETUkpIHsNCj4gKyAgICAgICAg
-ICAgICBjb250ZXh0LT5nUmVnWzRdID0gc2RtYWMtPnBlcl9hZGRyOw0KPiArICAgICAgICAgICAg
-IGNvbnRleHQtPmdSZWdbNl0gPSBzZG1hYy0+c2hwX2FkZHI7DQo+ICsgICAgIH0gZWxzZSB7DQo+
-ICsgICAgICAgICAgICAgY29udGV4dC0+Z1JlZ1swXSA9IHNkbWFjLT5ldmVudF9tYXNrWzFdOw0K
-PiArICAgICAgICAgICAgIGNvbnRleHQtPmdSZWdbMV0gPSBzZG1hYy0+ZXZlbnRfbWFza1swXTsN
-Cj4gKyAgICAgICAgICAgICBjb250ZXh0LT5nUmVnWzJdID0gc2RtYWMtPnBlcl9hZGRyOw0KPiAr
-ICAgICAgICAgICAgIGNvbnRleHQtPmdSZWdbNl0gPSBzZG1hYy0+c2hwX2FkZHI7DQo+ICsgICAg
-ICAgICAgICAgY29udGV4dC0+Z1JlZ1s3XSA9IHNkbWFjLT53YXRlcm1hcmtfbGV2ZWw7DQo+ICsg
-ICAgIH0NCj4NCj4gICAgICAgYmQwLT5tb2RlLmNvbW1hbmQgPSBDMF9TRVRETTsNCj4gICAgICAg
-YmQwLT5tb2RlLnN0YXR1cyA9IEJEX0RPTkUgfCBCRF9XUkFQIHwgQkRfRVhURDsgQEAgLTE0MjAs
-NyANCj4gKzE0MzIsNyBAQCBzdGF0aWMgc3RydWN0IHNkbWFfZGVzYyAqc2RtYV90cmFuc2Zlcl9p
-bml0KHN0cnVjdCBzZG1hX2NoYW5uZWwgKnNkbWFjLA0KPiAgICAgICBkZXNjLT5zZG1hYyA9IHNk
-bWFjOw0KPiAgICAgICBkZXNjLT5udW1fYmQgPSBiZHM7DQo+DQo+IC0gICAgIGlmIChzZG1hX2Fs
-bG9jX2JkKGRlc2MpKQ0KPiArICAgICBpZiAoYmRzICYmIHNkbWFfYWxsb2NfYmQoZGVzYykpDQo+
-ICAgICAgICAgICAgICAgZ290byBlcnJfZGVzY19vdXQ7DQo+DQo+ICAgICAgIC8qIE5vIHNsYXZl
-X2NvbmZpZyBjYWxsZWQgaW4gTUVNQ1BZIGNhc2UsIHNvIGRvIGhlcmUgKi8gQEAgDQo+IC0xNTg1
-LDEzICsxNTk3LDE2IEBAIHN0YXRpYyBzdHJ1Y3QgZG1hX2FzeW5jX3R4X2Rlc2NyaXB0b3IgDQo+
-ICpzZG1hX3ByZXBfZG1hX2N5Y2xpYyggIHsNCj4gICAgICAgc3RydWN0IHNkbWFfY2hhbm5lbCAq
-c2RtYWMgPSB0b19zZG1hX2NoYW4oY2hhbik7DQo+ICAgICAgIHN0cnVjdCBzZG1hX2VuZ2luZSAq
-c2RtYSA9IHNkbWFjLT5zZG1hOw0KPiAtICAgICBpbnQgbnVtX3BlcmlvZHMgPSBidWZfbGVuIC8g
-cGVyaW9kX2xlbjsNCj4gKyAgICAgaW50IG51bV9wZXJpb2RzID0gMDsNCj4gICAgICAgaW50IGNo
-YW5uZWwgPSBzZG1hYy0+Y2hhbm5lbDsNCj4gICAgICAgaW50IGkgPSAwLCBidWYgPSAwOw0KPiAg
-ICAgICBzdHJ1Y3Qgc2RtYV9kZXNjICpkZXNjOw0KPg0KPiAgICAgICBkZXZfZGJnKHNkbWEtPmRl
-diwgIiVzIGNoYW5uZWw6ICVkXG4iLCBfX2Z1bmNfXywgY2hhbm5lbCk7DQo+DQo+ICsgICAgIGlm
-IChzZG1hYy0+cGVyaXBoZXJhbF90eXBlICE9IElNWF9ETUFUWVBFX0hETUkpDQo+ICsgICAgICAg
-ICAgICAgbnVtX3BlcmlvZHMgPSBidWZfbGVuIC8gcGVyaW9kX2xlbjsNCj4gKw0KPiAgICAgICBz
-ZG1hX2NvbmZpZ193cml0ZShjaGFuLCAmc2RtYWMtPnNsYXZlX2NvbmZpZywgZGlyZWN0aW9uKTsN
-Cj4NCj4gICAgICAgZGVzYyA9IHNkbWFfdHJhbnNmZXJfaW5pdChzZG1hYywgZGlyZWN0aW9uLCBu
-dW1fcGVyaW9kcyk7IEBAIA0KPiAtMTYwOCw2ICsxNjIzLDkgQEAgc3RhdGljIHN0cnVjdCBkbWFf
-YXN5bmNfdHhfZGVzY3JpcHRvciAqc2RtYV9wcmVwX2RtYV9jeWNsaWMoDQo+ICAgICAgICAgICAg
-ICAgZ290byBlcnJfYmRfb3V0Ow0KPiAgICAgICB9DQo+DQo+ICsgICAgIGlmIChzZG1hYy0+cGVy
-aXBoZXJhbF90eXBlID09IElNWF9ETUFUWVBFX0hETUkpDQo+ICsgICAgICAgICAgICAgcmV0dXJu
-IHZjaGFuX3R4X3ByZXAoJnNkbWFjLT52YywgJmRlc2MtPnZkLCBmbGFncyk7DQo+ICsNCj4gICAg
-ICAgd2hpbGUgKGJ1ZiA8IGJ1Zl9sZW4pIHsNCj4gICAgICAgICAgICAgICBzdHJ1Y3Qgc2RtYV9i
-dWZmZXJfZGVzY3JpcHRvciAqYmQgPSAmZGVzYy0+YmRbaV07DQo+ICAgICAgICAgICAgICAgaW50
-IHBhcmFtOw0KPiBAQCAtMTY2OCw2ICsxNjg2LDEwIEBAIHN0YXRpYyBpbnQgc2RtYV9jb25maWdf
-d3JpdGUoc3RydWN0IGRtYV9jaGFuICpjaGFuLA0KPiAgICAgICAgICAgICAgIHNkbWFjLT53YXRl
-cm1hcmtfbGV2ZWwgfD0gKGRtYWVuZ2luZV9jZmctPmRzdF9tYXhidXJzdCA8PCAxNikgJg0KPiAg
-ICAgICAgICAgICAgICAgICAgICAgU0RNQV9XQVRFUk1BUktfTEVWRUxfSFdNTDsNCj4gICAgICAg
-ICAgICAgICBzZG1hYy0+d29yZF9zaXplID0gZG1hZW5naW5lX2NmZy0+ZHN0X2FkZHJfd2lkdGg7
-DQo+ICsgICAgIH0gZWxzZSBpZiAoc2RtYWMtPnBlcmlwaGVyYWxfdHlwZSA9PSBJTVhfRE1BVFlQ
-RV9IRE1JKSB7DQo+ICsgICAgICAgICAgICAgc2RtYWMtPnBlcl9hZGRyZXNzID0gZG1hZW5naW5l
-X2NmZy0+ZHN0X2FkZHI7DQo+ICsgICAgICAgICAgICAgc2RtYWMtPnBlcl9hZGRyZXNzMiA9IGRt
-YWVuZ2luZV9jZmctPnNyY19hZGRyOw0KPiArICAgICAgICAgICAgIHNkbWFjLT53YXRlcm1hcmtf
-bGV2ZWwgPSAwOw0KPiAgICAgICB9IGVsc2Ugew0KPiAgICAgICAgICAgICAgIHNkbWFjLT5wZXJf
-YWRkcmVzcyA9IGRtYWVuZ2luZV9jZmctPmRzdF9hZGRyOw0KPiAgICAgICAgICAgICAgIHNkbWFj
-LT53YXRlcm1hcmtfbGV2ZWwgPSBkbWFlbmdpbmVfY2ZnLT5kc3RfbWF4YnVyc3QgKg0KDQpZb3Ug
-bWlzc2VkIGFkZGluZyBjeWNsaWMgY2FwYWJpbGl0eSwgcGxzIGFkZCB0aGF0DQoNClRoZSBkZXNp
-Z24gb2YgaGRtaSBzY3JpcHQgYWNoaWV2ZXMgdGhlIGN5Y2xpYyBjYXBhYmlsaXR5IGFuZCBpcyBk
-aWZmZXJlbnQgZnJvbSBjb21tb24gc2NyaXB0Lg0KDQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xp
-bnV4L3BsYXRmb3JtX2RhdGEvZG1hLWlteC5oIA0KPiBiL2luY2x1ZGUvbGludXgvcGxhdGZvcm1f
-ZGF0YS9kbWEtaW14LmgNCj4gaW5kZXggMjgxYWRiYjI2ZTZiLi4yOWFjMjFkNDBmMjggMTAwNjQ0
-DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvcGxhdGZvcm1fZGF0YS9kbWEtaW14LmgNCj4gKysrIGIv
-aW5jbHVkZS9saW51eC9wbGF0Zm9ybV9kYXRhL2RtYS1pbXguaA0KPiBAQCAtMzksNiArMzksNyBA
-QCBlbnVtIHNkbWFfcGVyaXBoZXJhbF90eXBlIHsNCj4gICAgICAgSU1YX0RNQVRZUEVfU1NJX0RV
-QUwsICAgLyogU1NJIER1YWwgRklGTyAqLw0KPiAgICAgICBJTVhfRE1BVFlQRV9BU1JDX1NQLCAg
-ICAvKiBTaGFyZWQgQVNSQyAqLw0KPiAgICAgICBJTVhfRE1BVFlQRV9TQUksICAgICAgICAvKiBT
-QUkgKi8NCj4gKyAgICAgSU1YX0RNQVRZUEVfSERNSSwgICAgICAgLyogSERNSSBBdWRpbyAqLw0K
-DQpXaHkgaXMgdGhpcyBpbiBsYXRmb3JtX2RhdGEsIHRoZXNlIHNob3VsZCBiZSBtb3ZlZCB0byBp
-bmNsdWRlL2R0LWJpbmRpbmdzDQoNCkp1c3QgZm9sbG93IHRoZSBwcmV2aW91cyB3YXkuIEl0IGNh
-biBiZSBtb3ZlZCB0byBpbmNsdWRlL2R0LWJpbmRpbmdzLCBidXQgaXQgbWF5IGFmZmVjdCB0aGUg
-b2xkDQppbXggcGxhdGZvcm0uDQoNClRoYW5rc6OhDQpCUg0KSm95IFpvdQ0KLS0NCn5WaW5vZA0K
+Hi Kuldeep,
+
+On Sun, 10 Apr 2022 at 23:21, Kuldeep Singh <singh.kuldeep87k@gmail.com> wrote:
+>
+> Convert Qualcomm BAM DMA controller binding to DT schema format using
+> json schema.
+
+Please see <https://lore.kernel.org/lkml/20220211214941.f55q5yksittut3ep@amazon.com/T/#m6700c2695ee78e79060ac338d208ffd08ac39592>,
+I already have an effort ongoing for converting qcom bam DMA bindings
+to YAML format.
+
+I will send a new version of the same shortly. Please try and use the same.
+
+Thanks,
+Bhupesh
+
+> Signed-off-by: Kuldeep Singh <singh.kuldeep87k@gmail.com>
+> ---
+>  .../devicetree/bindings/dma/qcom,bam-dma.yaml | 94 +++++++++++++++++++
+>  .../devicetree/bindings/dma/qcom_bam_dma.txt  | 52 ----------
+>  2 files changed, 94 insertions(+), 52 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+>
+> diff --git a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+> new file mode 100644
+> index 000000000000..b32175d54dca
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+> @@ -0,0 +1,94 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/qcom,bam-dma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies Inc BAM DMA controller
+> +
+> +maintainers:
+> +  - Andy Gross <agross@kernel.org>
+> +  - Bjorn Andersson <bjorn.andersson@linaro.org>
+> +
+> +allOf:
+> +  - $ref: "dma-controller.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,bam-v1.3.0
+> +      - qcom,bam-v1.4.0
+> +      - qcom,bam-v1.7.0
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: bam_clk
+> +
+> +  "#dma-cells":
+> +    const: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  iommus:
+> +    minItems: 1
+> +    maxItems: 4
+> +
+> +  num-channels:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Indicates supported number of DMA channels in a remotely controlled bam.
+> +
+> +  qcom,controlled-remotely:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description:
+> +      Indicates that the bam is controlled by remote proccessor i.e. execution
+> +      environment.
+> +
+> +  qcom,ee:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Indicates the active Execution Environment identifier (0-7) used in the
+> +      secure world.
+> +
+> +  qcom,num-ees:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Indicates supported number of Execution Environments in a remotely
+> +      controlled bam.
+> +
+> +  qcom,powered-remotely:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description:
+> +      Indicates that the bam is powered up by a remote processor but must be
+> +      initialized by the local processor.
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - "#dma-cells"
+> +  - interrupts
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/qcom,gcc-msm8974.h>
+> +
+> +    dma-controller@f9944000 {
+> +        compatible = "qcom,bam-v1.4.0";
+> +        reg = <0xf9944000 0x15000>;
+> +        interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+> +        clocks = <&gcc GCC_BLSP2_AHB_CLK>;
+> +        clock-names = "bam_clk";
+> +        #dma-cells = <1>;
+> +        qcom,ee = <0>;
+> +    };
+> +...
+> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+> deleted file mode 100644
+> index 6e9a5497b3f2..000000000000
+> --- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+> +++ /dev/null
+> @@ -1,52 +0,0 @@
+> -QCOM BAM DMA controller
+> -
+> -Required properties:
+> -- compatible: must be one of the following:
+> - * "qcom,bam-v1.4.0" for MSM8974, APQ8074 and APQ8084
+> - * "qcom,bam-v1.3.0" for APQ8064, IPQ8064 and MSM8960
+> - * "qcom,bam-v1.7.0" for MSM8916
+> -- reg: Address range for DMA registers
+> -- interrupts: Should contain the one interrupt shared by all channels
+> -- #dma-cells: must be <1>, the cell in the dmas property of the client device
+> -  represents the channel number
+> -- clocks: required clock
+> -- clock-names: must contain "bam_clk" entry
+> -- qcom,ee : indicates the active Execution Environment identifier (0-7) used in
+> -  the secure world.
+> -- qcom,controlled-remotely : optional, indicates that the bam is controlled by
+> -  remote proccessor i.e. execution environment.
+> -- qcom,powered-remotely : optional, indicates that the bam is powered up by
+> -  a remote processor but must be initialized by the local processor.
+> -- num-channels : optional, indicates supported number of DMA channels in a
+> -  remotely controlled bam.
+> -- qcom,num-ees : optional, indicates supported number of Execution Environments
+> -  in a remotely controlled bam.
+> -
+> -Example:
+> -
+> -       uart-bam: dma@f9984000 = {
+> -               compatible = "qcom,bam-v1.4.0";
+> -               reg = <0xf9984000 0x15000>;
+> -               interrupts = <0 94 0>;
+> -               clocks = <&gcc GCC_BAM_DMA_AHB_CLK>;
+> -               clock-names = "bam_clk";
+> -               #dma-cells = <1>;
+> -               qcom,ee = <0>;
+> -       };
+> -
+> -DMA clients must use the format described in the dma.txt file, using a two cell
+> -specifier for each channel.
+> -
+> -Example:
+> -       serial@f991e000 {
+> -               compatible = "qcom,msm-uart";
+> -               reg = <0xf991e000 0x1000>
+> -                       <0xf9944000 0x19000>;
+> -               interrupts = <0 108 0>;
+> -               clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
+> -                       <&gcc GCC_BLSP1_AHB_CLK>;
+> -               clock-names = "core", "iface";
+> -
+> -               dmas = <&uart-bam 0>, <&uart-bam 1>;
+> -               dma-names = "rx", "tx";
+> -       };
+> --
+> 2.25.1
+>

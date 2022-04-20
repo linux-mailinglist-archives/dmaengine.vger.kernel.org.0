@@ -2,151 +2,130 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A3F45089A7
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Apr 2022 15:46:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85309508ABE
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Apr 2022 16:26:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379144AbiDTNtP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 Apr 2022 09:49:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39234 "EHLO
+        id S1379609AbiDTO2z (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 20 Apr 2022 10:28:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379139AbiDTNtJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Apr 2022 09:49:09 -0400
-Received: from meesny.iki.fi (meesny.iki.fi [IPv6:2001:67c:2b0:1c1::201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2575A21E0D;
-        Wed, 20 Apr 2022 06:46:22 -0700 (PDT)
-Received: from darkstar.musicnaut.iki.fi (85-76-69-216-nat.elisa-mobile.fi [85.76.69.216])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S1351242AbiDTO2z (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Apr 2022 10:28:55 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE4E443DC;
+        Wed, 20 Apr 2022 07:26:06 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: aaro.koskinen)
-        by meesny.iki.fi (Postfix) with ESMTPSA id AD3B7205A6;
-        Wed, 20 Apr 2022 16:46:17 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
-        t=1650462379;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hPdeBaZ6eVr/qRTevscI2sSHgl9RZPmaXc8iV1TPOYQ=;
-        b=TWxI7Ho2RtsaPS6MDuk2M+E+sq1KJYxSGS4DmJDZp6BP1taIQkAU15m6enkHBtGqJiUXvp
-        lXQHG+v4JXQrypyUiMgoBHrh9vRs0uJa78N5cmw1Dkb39AobNvcLF22yj6OlonUngPVdl9
-        hg/zZ4gRXP0aP/DTuM9FEXSAfDl6JAk=
-Date:   Wed, 20 Apr 2022 16:46:15 +0300
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     linux-omap@vger.kernel.org, tony@atomide.com, jmkrzyszt@gmail.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Walmsley <paul@pwsan.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Mark Brown <broonie@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Helge Deller <deller@gmx.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-serial@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH 26/41] ARM: omap1: relocate static I/O mapping
-Message-ID: <20220420134615.GA1947@darkstar.musicnaut.iki.fi>
-References: <20220419133723.1394715-1-arnd@kernel.org>
- <20220419133723.1394715-27-arnd@kernel.org>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 559F96174E;
+        Wed, 20 Apr 2022 14:26:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB225C385A4;
+        Wed, 20 Apr 2022 14:26:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650464765;
+        bh=VBenOZQnhKSaKTDnmTU7YPn2Kk85+5G1iSKwpEyGiww=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=m7rZBwv9aWdNJd6Loy0eH5cEhgp+IzTLxDZNPLz2lHP3oHFa5kNcf6/YxolvF1KxG
+         z7U/uiM2NQS1fZGGrbOAnLb1vts3dQpamCubqiMxPflwZAUrQ4ecKNnnZ7ysQJTnFh
+         KmjPa7Ev/p/Q1/A5nrP+oMpyC41Suc8EDjKknK2oqNfcWcUAmbXEC2wl1ygieoWE7w
+         eES15iHNN/CLXTq66bL2zyCiR5So+Zz0H2UjqvItPYVIPWxmFjv9jkPYDwM0JFk6qe
+         Ccu+jIsxbEp37nootcADrepZ2FZsh82W4B+EpGpKmfMt1OTSWwj94cJKKGZ7HzX2S5
+         pIw0f4X2L8SCQ==
+Received: by mail-pg1-f173.google.com with SMTP id x191so1766889pgd.4;
+        Wed, 20 Apr 2022 07:26:05 -0700 (PDT)
+X-Gm-Message-State: AOAM532vvoR29z1zZYVTpGP8s0sq+Il4eG9zG7Vl3GRG0oMP5attE+JR
+        MW65VgdtSEQhQo9VXBLn9FLUj2xp+5Sc7poqLw==
+X-Google-Smtp-Source: ABdhPJxoI0QtEfC8n4+Ln+gp0b3QXWDDvTicJkjQ1klYrRPpw4OnJYVmtCTwaMTxb74RYk3qNMBwj0W1ciQ/08DtuWU=
+X-Received: by 2002:a63:e70e:0:b0:3a9:eb7f:96c9 with SMTP id
+ b14-20020a63e70e000000b003a9eb7f96c9mr15011577pgi.85.1650464765346; Wed, 20
+ Apr 2022 07:26:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220419133723.1394715-27-arnd@kernel.org>
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-        s=meesny; t=1650462379;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hPdeBaZ6eVr/qRTevscI2sSHgl9RZPmaXc8iV1TPOYQ=;
-        b=H/ymb4ClmH02P6z9wJPj5hwDvA4ML4CAqvyTrTXpyzakXMrwIF7fhncpTt2p+tyb+n415S
-        rXswuQZfImMNpPXfbjLG2A2bYft152C7y10qe9zeKLi8GlOcXPiCV9y/0Eijq+J6KgXV6K
-        JExPxjG2F+njcVYYdJlNrzaNBE0jppU=
-ARC-Authentication-Results: i=1;
-        ORIGINATING;
-        auth=pass smtp.auth=aaro.koskinen smtp.mailfrom=aaro.koskinen@iki.fi
-ARC-Seal: i=1; s=meesny; d=iki.fi; t=1650462379; a=rsa-sha256; cv=none;
-        b=CVy72ecIkI6wF0iqwa+Xy91DJU3aDMoxGNfzuIx9Vt1gzOxFw+Q04asMI9whLP3P8s501X
-        P2eVWVYDpVAr6tfbV1PJEm52Z8VQMrb77N573CgDjOg+UHf97HnYPA9FH0wGgHHkmeXpu6
-        wtihpIfPU1zC4kkQJy4ZZuJBXIgiXlA=
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <CANXhq0r15Z9NZj+xr7K_2Tt5VbK2r4+f7Fpg-f9BY98ufgKxcw@mail.gmail.com>
+ <mhng-75e55594-c878-4fad-9ffc-dc552111208e@palmer-ri-x1c9>
+In-Reply-To: <mhng-75e55594-c878-4fad-9ffc-dc552111208e@palmer-ri-x1c9>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 20 Apr 2022 09:25:53 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+5TbfFxD3p4ckvNw=jFweuvjQPRQfjmvPqZJga25o0pA@mail.gmail.com>
+Message-ID: <CAL_Jsq+5TbfFxD3p4ckvNw=jFweuvjQPRQfjmvPqZJga25o0pA@mail.gmail.com>
+Subject: Re: [PATCH v8 0/4] Determine the number of DMA channels by
+ 'dma-channels' property
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Zong Li <zong.li@sifive.com>, Vinod <vkoul@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Bin Meng <bin.meng@windriver.com>,
+        Green Wan <green.wan@sifive.com>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,
+On Tue, Apr 19, 2022 at 7:18 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+>
+> On Mon, 11 Apr 2022 04:43:35 PDT (-0700), zong.li@sifive.com wrote:
+> > On Mon, Apr 11, 2022 at 6:48 PM Vinod Koul <vkoul@kernel.org> wrote:
+> >>
+> >> On 11-04-22, 10:51, Zong Li wrote:
+> >> > On Fri, Apr 8, 2022 at 9:13 PM Vinod Koul <vkoul@kernel.org> wrote:
+> >> > >
+> >> > > On 28-03-22, 17:52, Zong Li wrote:
+> >> > > > The PDMA driver currently assumes there are four channels by default, it
+> >> > > > might cause the error if there is actually less than four channels.
+> >> > > > Change that by getting number of channel dynamically from device tree.
+> >> > > > For backwards-compatible, it uses the default value (i.e. 4) when there
+> >> > > > is no 'dma-channels' information in dts.
+> >> > >
+> >> > > Applied patch 1 & 4 to dmaengine-next, thanks
+> >> >
+> >> > Hi Vinod,
+> >> > Thanks for your help and review. For patch 2 and 3, does it mean that
+> >> > we should go through the riscv tree?
+> >>
+> >> Yes
+> >>
+> >
+> > Hi Palmer,
+> > Could you please help me to pick up the patch 2 and 3. Thanks :)
+>
+> Sorry about that, I forgot about this one.  I just put them on for-next,
+> there was a minor merge conflict but it looks pretty simple.
 
-On Tue, Apr 19, 2022 at 03:37:08PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The address range 0xfee00000-0xfeffffff is used for PCI and
-> PCMCIA I/O port mappings, but OMAP1 has its static mappings
-> there as well.
-> 
-> Move the OMAP1 addresses a little higher to avoid crashing
-> at boot.
+Looks like you applied patch 1 too which Vinod already applied to the
+dmaengine tree. And you changed the 1st line removing the "# " before
+the SPDX tag which results in:
 
-This has the same problem I reported in 2019, with earlyprintk the
-system no longer boots:
+make[1]: *** Deleting file
+'Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.example.dts'
+Traceback (most recent call last):
+  File "/usr/local/bin/dt-extract-example", line 52, in <module>
+    binding = yaml.load(open(args.yamlfile, encoding='utf-8').read())
+  File "/usr/local/lib/python3.8/dist-packages/ruamel/yaml/main.py",
+line 434, in load
+    return constructor.get_single_data()
+  File "/usr/local/lib/python3.8/dist-packages/ruamel/yaml/constructor.py",
+line 119, in get_single_data
+    node = self.composer.get_single_node()
+  File "_ruamel_yaml.pyx", line 718, in _ruamel_yaml.CParser.get_single_node
+ruamel.yaml.composer.ComposerError: expected a single document in the stream
+  in "<unicode string>", line 1, column 1
+but found another document
+  in "<unicode string>", line 2, column 1
+make[1]: *** [Documentation/devicetree/bindings/Makefile:26:
+Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.example.dts]
+Error 1
+./Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml:1:1:
+[error] missing document start "---" (document-start)
 
-	https://marc.info/?t=156530014200005&r=1&w=2
 
-Tested on OSK and SX1/qemu.
-
-A.
-
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/arm/Kconfig.debug                      | 6 +++---
->  arch/arm/mach-omap1/include/mach/hardware.h | 2 +-
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-> index 0c9497d549e3..f57b449000f7 100644
-> --- a/arch/arm/Kconfig.debug
-> +++ b/arch/arm/Kconfig.debug
-> @@ -1837,9 +1837,9 @@ config DEBUG_UART_VIRT
->  	default 0xfec00000 if ARCH_IXP4XX && !CPU_BIG_ENDIAN
->  	default 0xfec00003 if ARCH_IXP4XX && CPU_BIG_ENDIAN
->  	default 0xfef36000 if DEBUG_HIGHBANK_UART
-> -	default 0xfefb0000 if DEBUG_OMAP1UART1 || DEBUG_OMAP7XXUART1
-> -	default 0xfefb0800 if DEBUG_OMAP1UART2 || DEBUG_OMAP7XXUART2
-> -	default 0xfefb9800 if DEBUG_OMAP1UART3 || DEBUG_OMAP7XXUART3
-> +	default 0xff000000 if DEBUG_OMAP1UART1 || DEBUG_OMAP7XXUART1
-> +	default 0xff000800 if DEBUG_OMAP1UART2 || DEBUG_OMAP7XXUART2
-> +	default 0xff009800 if DEBUG_OMAP1UART3 || DEBUG_OMAP7XXUART3
->  	default 0xffd01000 if DEBUG_HIP01_UART
->  	default DEBUG_UART_PHYS if !MMU
->  	depends on DEBUG_LL_UART_8250 || DEBUG_LL_UART_PL01X || \
-> diff --git a/arch/arm/mach-omap1/include/mach/hardware.h b/arch/arm/mach-omap1/include/mach/hardware.h
-> index 05c5cd3e95f4..e3522e601ccd 100644
-> --- a/arch/arm/mach-omap1/include/mach/hardware.h
-> +++ b/arch/arm/mach-omap1/include/mach/hardware.h
-> @@ -63,7 +63,7 @@ static inline u32 omap_cs3_phys(void)
->  
->  #endif	/* ifndef __ASSEMBLER__ */
->  
-> -#define OMAP1_IO_OFFSET		0x01000000	/* Virtual IO = 0xfefb0000 */
-> +#define OMAP1_IO_OFFSET		0x00fb0000	/* Virtual IO = 0xff000000 */
->  #define OMAP1_IO_ADDRESS(pa)	IOMEM((pa) - OMAP1_IO_OFFSET)
->  
->  #include <mach/serial.h>
-> -- 
-> 2.29.2
-> 
+Rob

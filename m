@@ -2,47 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 549705085FB
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Apr 2022 12:34:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 731A850860D
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Apr 2022 12:36:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238517AbiDTKhR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 Apr 2022 06:37:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34158 "EHLO
+        id S230287AbiDTKiy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 20 Apr 2022 06:38:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236192AbiDTKhQ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Apr 2022 06:37:16 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59B4E3FBD5
-        for <dmaengine@vger.kernel.org>; Wed, 20 Apr 2022 03:34:31 -0700 (PDT)
+        with ESMTP id S1377720AbiDTKix (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Apr 2022 06:38:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB0083FBD6;
+        Wed, 20 Apr 2022 03:36:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 179D4B81E89
-        for <dmaengine@vger.kernel.org>; Wed, 20 Apr 2022 10:34:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31572C385A1;
-        Wed, 20 Apr 2022 10:34:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 596BD617CC;
+        Wed, 20 Apr 2022 10:36:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 029CDC385A0;
+        Wed, 20 Apr 2022 10:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650450868;
-        bh=pquKFaaTgugTuTmGmgO7f1Ux+Cfe9WSpCStmCv7xcWg=;
+        s=k20201202; t=1650450966;
+        bh=fTs96CqjvphFVKpX75orr/aEaWullDZzBRJGRDTh33s=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JelM5WPOklYPu9g/TRqJj9QuI6voxnzW64dDITxtJYACdwBAU1wvUfhNnFwkhwjM1
-         BgUuykvfrNC/gO06A80be6oxw5Lc2V1yDiHPMwZrEZSfPsgVyGjhUQpB05Zz6Xzjkt
-         Bm6WvUxQ548T/acIV9ItuTY8BSVryFnZFhZJnLTZVtJ294+jKEa6JJM7tIDuAcwpbw
-         Bds6hN0DoIBL708KB/mtH8VQjzlYn1DoUCrgZq+nD89wz0mG864bBn6swKYRCwWFUN
-         RxgqxVH8yN+pKFpC3qYEXCjK1I15mftwX7XH5qRPsViDi08w2iQABst74tpivyhFNk
-         ftvV8d0Z6DiFg==
-Date:   Wed, 20 Apr 2022 16:04:24 +0530
+        b=asPD7GobM/w/uudIAIu8VzMwwEIoHsYwLLYYgCYAn1FwVfD1UucQdocoyxItb/pbs
+         +YSHC+0N2mmebNHxTuq2+OeBi3bLJvdASN8taaeYRrSzjSXemLwJVyYp9jKvgaAU4d
+         nSMcxvWwgL551aMxyp4Fgng92MOmrItgoNNC4Gqj+p0wEiFSsmjLKRoZdqDOE3/GJZ
+         fo3IYHoyVkiRerR5vg1HDzviQf/oGslXvGQR5SpPmfNwpiDi3ZPbuKICJY6GycTahi
+         n0DV5xsB6Oq0oEdDSyk0NmezfE/k0W8eUaDnQ5mtbulXKNLVhAAruhOczpOVlyJBzk
+         ySn3oHojwZKaw==
+Date:   Wed, 20 Apr 2022 16:06:02 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>, dmaengine@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: idxd: fix retry value to be constant for
- duration of function call
-Message-ID: <Yl/hsHJWYguaAx/L@matsya>
-References: <165031760154.3658664.1983547716619266558.stgit@djiang5-desk3.ch.intel.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: dmaengine: qcom: gpi: Add minItems for
+ interrupts
+Message-ID: <Yl/iElIfHhmoOYOU@matsya>
+References: <20220414064235.1182195-1-vkoul@kernel.org>
+ <0598d1bb-cd7c-1414-910c-ae6bedc8295d@linaro.org>
+ <Ylf2gsJ+Ks0wz6i3@matsya>
+ <9d35e76e-5d98-b2d8-a22c-293adcbaadf0@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <165031760154.3658664.1983547716619266558.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <9d35e76e-5d98-b2d8-a22c-293adcbaadf0@linaro.org>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -52,13 +59,27 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 18-04-22, 14:33, Dave Jiang wrote:
-> When retries is compared to wq->enqcmds_retries each loop of idxd_enqcmds(),
-> wq->enqcmds_retries can potentially changed by user. Assign the value
-> of retries to wq->enqcmds_retries during initialization so it is the
-> original value set when entering the function.
+On 14-04-22, 13:44, Krzysztof Kozlowski wrote:
+> On 14/04/2022 12:25, Vinod Koul wrote:
+> >>>        Interrupt lines for each GPI instance
+> >>> +    minItems: 1
+> >>
+> >> This should be some real case minimum, not just 1. Unless really only
+> >> one interrupt is also possible in existing variations?
+> > 
+> > So that depends on the channels available to use which can be worst case
+> > of 1. Maximum is 13.. Most of the controllers are between 12-13, but we
+> > dont want to change binding in future if controller has lesser channels
+> > right?
+> 
+> If the choice is per SoC-controller, then the best would be to limit in
+> allOf:if:then. However maybe the number of channels depends also on
+> other factor (e.g. secure world configuration)?
 
-Applied, thanks
+That is quite right. So we wont know how many channels are made
+available..
+
+So is min 1 acceptable or do you have an alternate ?
 
 -- 
 ~Vinod

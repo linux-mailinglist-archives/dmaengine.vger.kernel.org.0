@@ -2,25 +2,25 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD1C6509001
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Apr 2022 21:09:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA432509003
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Apr 2022 21:09:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354757AbiDTTLy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        id S1381663AbiDTTLy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
         Wed, 20 Apr 2022 15:11:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54912 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351381AbiDTTLx (ORCPT
+        with ESMTP id S1345755AbiDTTLx (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Apr 2022 15:11:53 -0400
 Received: from hutie.ust.cz (unknown [IPv6:2a03:3b40:fe:f0::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7582424AE;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B30E4093E;
         Wed, 20 Apr 2022 12:09:03 -0700 (PDT)
 From:   =?UTF-8?q?Martin=20Povi=C5=A1er?= <povik+lin@cutebit.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cutebit.org; s=mail;
-        t=1650481740; bh=2rmj+wmfZSnjCFeUKvJuxbNQ7c6I46bc3UeTdcboskE=;
-        h=From:To:Cc:Subject:Date;
-        b=RSDpgvPqCblpwwaRVu/YhZuUCEyMK8iiba3QK6gsPmzlt2Eff37ZbVbBBOZxtLi+b
-         A5rjlWW4qc1XSaCA80+sto9kb+rPIdMMByj8kcc/T16xfFGM3HhDLZyY1YFrGjybOs
-         rX8snslgAm8y8DWb2MR2CFGb0GN2wCyTogwtyw0Q=
+        t=1650481741; bh=WLCIlxSm+6HZPp+Lk7ZxfdPzXTPGBGvfuCUxsxsFRgQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=AcRTv0XQg9PbiJfjLbg8cdSfl18R5taSOM+39xgQkc92HqnK96aiKYtXmauMSyF66
+         cOxDXhLLP/UCTww4YXtHSOu5lHm3akRWsNdXIhdzJQVlxyvioQrzYLw+AtGptsQ6TM
+         6ZnWMWK9012z8Me1v6qRKnqMLPs7I9F9cDEsZFqI=
 To:     Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
         Vinod Koul <vkoul@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -30,9 +30,11 @@ Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Mark Kettenis <kettenis@openbsd.org>,
         =?UTF-8?q?Martin=20Povi=C5=A1er?= <povik+lin@cutebit.org>
-Subject: [PATCH v3 0/2] Apple ADMAC driver
-Date:   Wed, 20 Apr 2022 21:07:53 +0200
-Message-Id: <20220420190755.76617-1-povik+lin@cutebit.org>
+Subject: [PATCH v3 1/2] dt-bindings: dma: Add Apple ADMAC
+Date:   Wed, 20 Apr 2022 21:07:54 +0200
+Message-Id: <20220420190755.76617-2-povik+lin@cutebit.org>
+In-Reply-To: <20220420190755.76617-1-povik+lin@cutebit.org>
+References: <20220420190755.76617-1-povik+lin@cutebit.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -45,44 +47,96 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi all,
+Apple's Audio DMA Controller (ADMAC) is used to fetch and store audio
+samples on SoCs from the "Apple Silicon" family.
 
-this is v3 of driver for Audio DMA Controller on recent Apple SoCs.
-
-Changes since v3:
-(link: https://lore.kernel.org/dmaengine/20220411222204.96860-1-povik+lin@cutebit.org/ )
- - in binding, make 'interrupts' fixed length and add a comment
- - do not use devm allocation on descriptors
- - use platform_get_irq_optional to not log errors in the course of looking for
-   an usable interrupt
- - make channel no. unsigned
-
-Changes since v1:
-(link: https://lore.kernel.org/dmaengine/20220330164458.93055-1-povik+lin@cutebit.org/ )
- - in binding, drop 'apple,internal-irq-destination' in favor of
-   prepending entries to 'interrupts'
- - drop admac_peek/poke helpers
- - use special versions of dev_err/WARN_ON where desirable, fix %pad
-   formatter invocation
- - bring implementation of terminate_all up to dmaengine spec, add
-   device_synchronize
- - minor fixes (comments, formatting)
-
-Thanks,
-Martin
-
-Martin Povišer (2):
-  dt-bindings: dma: Add Apple ADMAC
-  dmaengine: apple-admac: Add Apple ADMAC driver
-
- .../devicetree/bindings/dma/apple,admac.yaml  |  75 ++
- MAINTAINERS                                   |   2 +
- drivers/dma/Kconfig                           |   8 +
- drivers/dma/Makefile                          |   1 +
- drivers/dma/apple-admac.c                     | 818 ++++++++++++++++++
- 5 files changed, 904 insertions(+)
+Signed-off-by: Martin Povišer <povik+lin@cutebit.org>
+---
+ .../devicetree/bindings/dma/apple,admac.yaml  | 75 +++++++++++++++++++
+ 1 file changed, 75 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/dma/apple,admac.yaml
- create mode 100644 drivers/dma/apple-admac.c
 
+diff --git a/Documentation/devicetree/bindings/dma/apple,admac.yaml b/Documentation/devicetree/bindings/dma/apple,admac.yaml
+new file mode 100644
+index 000000000000..ab8a4ec7779f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/apple,admac.yaml
+@@ -0,0 +1,75 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/apple,admac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Apple Audio DMA Controller (ADMAC)
++
++description: |
++  Apple's Audio DMA Controller (ADMAC) is used to fetch and store audio samples
++  on SoCs from the "Apple Silicon" family.
++
++  The controller has been seen with up to 24 channels. Even-numbered channels
++  are TX-only, odd-numbered are RX-only. Individual channels are coupled to
++  fixed device endpoints.
++
++maintainers:
++  - Martin Povišer <povik+lin@cutebit.org>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - apple,t6000-admac
++          - apple,t8103-admac
++      - const: apple,admac
++
++  reg:
++    maxItems: 1
++
++  '#dma-cells':
++    const: 1
++    description:
++      Clients specify a single cell with channel number.
++
++  dma-channels:
++    maximum: 24
++
++  interrupts:
++    minItems: 4
++    maxItems: 4
++    description:
++      Interrupts that correspond to the 4 IRQ outputs of the controller. Usually
++      only one of the controller outputs will be connected as an usable interrupt
++      source. The remaining interrupts will be left without a valid value, e.g.
++      in an interrupts-extended list the disconnected positions will contain
++      an empty phandle reference <0>.
++
++required:
++  - compatible
++  - reg
++  - '#dma-cells'
++  - dma-channels
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/apple-aic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    admac: dma-controller@238200000 {
++      compatible = "apple,t8103-admac", "apple,admac";
++      reg = <0x38200000 0x34000>;
++      dma-channels = <24>;
++      interrupts-extended = <0>,
++                            <&aic AIC_IRQ 626 IRQ_TYPE_LEVEL_HIGH>,
++                            <0>,
++                            <0>;
++      #dma-cells = <1>;
++    };
 -- 
 2.33.0
+

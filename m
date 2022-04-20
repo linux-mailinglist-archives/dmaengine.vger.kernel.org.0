@@ -2,95 +2,128 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BB205086BA
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Apr 2022 13:12:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C18E508714
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Apr 2022 13:32:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352523AbiDTLOo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 Apr 2022 07:14:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53030 "EHLO
+        id S1378157AbiDTLfV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 20 Apr 2022 07:35:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352597AbiDTLOn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Apr 2022 07:14:43 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B72AD41611
-        for <dmaengine@vger.kernel.org>; Wed, 20 Apr 2022 04:11:57 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id u18so1820466eda.3
-        for <dmaengine@vger.kernel.org>; Wed, 20 Apr 2022 04:11:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=dd68attu6wu8SnkuJQL45TqfDMtpPSRWGhXsotp4fTY=;
-        b=lEJ8p5ElATv5tyFZAbGsc745hOouC6LTxXrw9Bkb6v+j3URODF22aXFXhG0dmZOnoc
-         xcMHtdlUaMadbQ/J25dUNYqM2fNIkTQrGq8CcT/N0qdiv4dSUSdSuVtC09352RKkQndt
-         RdDPDX+kGDgldVfnXnoKtpkoZ40JA9Thp+nhrPHdiyildt36YwnDEmGxDTBGrdKH3l7G
-         bnfrN0Auidp/galrNajKjI+u5XlZXs+jbq35cvIXSJB1146d0+yXgGCSV98n67lreBnY
-         vQoHy0fQa47z+y8SEVVb+Q0v8W0OYKa7HzLbLYm4/rEFPuS6hB0JfBORr7y7NNYmy9/k
-         DD6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=dd68attu6wu8SnkuJQL45TqfDMtpPSRWGhXsotp4fTY=;
-        b=O76e0dL6QbwuWJWm+ppZODFE26ZKKUzhkqViVw0sGOGLtgtU/YbIz+1HH+WiDErzci
-         vG35eiYHUk2mw0MYFNVOsqDUB95NSKOIC800Mv0B92X24H04oASB7L57fOqaQ2rKGkGP
-         +PvlCaC2KIL41h8C0YCglAB08YbnRyvu3ynKPoIucZ4c3aThPlDkTkxjSnt9IhDEj4/E
-         cA4F7SRtOWGsS9Lj16mtazxc4JLnDrY/6U6oYwnekBia2jhA1kjamKsEbGn+o0BA+diT
-         gMJ+7SJUunkrePQJr/B0Y+Wkw6x6YkPojQB3lTKAxlUgIqo7IvqKfuO4iyA/QaEqDkUt
-         KtHw==
-X-Gm-Message-State: AOAM5302EEST+/PKbgpSD8njoL/JcBnCEs0OfyUGFtUxjNz7lpPM94SA
-        FxAEAS/OmXmjs+sdEABpXzz8oA==
-X-Google-Smtp-Source: ABdhPJxY1Yx1+CTh4SZOnb1fxoaQucy1q7RvAqB3GBbl9vKfDQMW6ddMc084uEsY/jIiGh/MJqYQew==
-X-Received: by 2002:a05:6402:d4c:b0:410:a415:fd95 with SMTP id ec12-20020a0564020d4c00b00410a415fd95mr22513317edb.288.1650453116311;
-        Wed, 20 Apr 2022 04:11:56 -0700 (PDT)
-Received: from [192.168.0.225] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id lo15-20020a170906fa0f00b006e8a81cb623sm6637533ejb.224.2022.04.20.04.11.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Apr 2022 04:11:55 -0700 (PDT)
-Message-ID: <e08a8f96-54a7-60be-0bd4-7a74fdcd627e@linaro.org>
-Date:   Wed, 20 Apr 2022 13:11:54 +0200
+        with ESMTP id S1378151AbiDTLfU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Apr 2022 07:35:20 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DA4F419A3;
+        Wed, 20 Apr 2022 04:32:34 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id D8E4FCE1D78;
+        Wed, 20 Apr 2022 11:32:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EAF9C385AC;
+        Wed, 20 Apr 2022 11:32:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650454351;
+        bh=SVJ1k2v3tWdUGg+iydyQsi4Bq8zjjEYtWiKbWgwFaLw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=sQ6L9Sz7HsTeFplAqNVVqZ6QvDLXO7taCfdy4bCI083iKPBu4Tu1W3tAjRXjBMJP+
+         vEnLCGH51YORxEsFGOcZi/zoMsoYQoogO656Bx3dJCN3iokeUHMcZ/sRdJXG/FEfPy
+         OVbCsNPPUvMBA4ygYO3ABwIPljbcDkM69w6wy8bq4hi0dZRIAMv8YMoKSdGB49RoPV
+         7T06gmGwLx2hqcDTbF36X1GFj0Gux2+ukzAt7yv7JaGdNy5Qv43jNDhgQacW6a+5lC
+         7ziU5CwWVIqq9dL54xJaRWmMjZZOJMF8J98DaHAPKZKsUB+PqhqrA4wPmQhlfKvBIW
+         qSWfkWYIEhJww==
+Received: by mail-wr1-f42.google.com with SMTP id x18so1882237wrc.0;
+        Wed, 20 Apr 2022 04:32:31 -0700 (PDT)
+X-Gm-Message-State: AOAM530NWB0Xph9prkK8MhpzZZvtjev6lzNibywcjlBDFqkXONBxzEmC
+        BAB2nVGC+z7kHjbSFQYnKjVNHwqTkjcmslDX/Zg=
+X-Google-Smtp-Source: ABdhPJyiDPtmjdTUE7gVl98mXVlPUP43tSlAHIUMCCxTRsYmEILlWV1BOcaVw3t9k0Uq80bvmC166gAUNNWM192dlCo=
+X-Received: by 2002:a5d:64a3:0:b0:20a:7931:5b84 with SMTP id
+ m3-20020a5d64a3000000b0020a79315b84mr15873027wrp.407.1650454349319; Wed, 20
+ Apr 2022 04:32:29 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH] dt-bindings: dmaengine: qcom: gpi: Add minItems for
- interrupts
-Content-Language: en-US
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220414064235.1182195-1-vkoul@kernel.org>
- <0598d1bb-cd7c-1414-910c-ae6bedc8295d@linaro.org> <Ylf2gsJ+Ks0wz6i3@matsya>
- <9d35e76e-5d98-b2d8-a22c-293adcbaadf0@linaro.org> <Yl/iElIfHhmoOYOU@matsya>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <Yl/iElIfHhmoOYOU@matsya>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20220419133723.1394715-1-arnd@kernel.org> <20220419133723.1394715-2-arnd@kernel.org>
+ <ddaf112d-f997-84b7-2c57-bab3d0cca382@gmail.com>
+In-Reply-To: <ddaf112d-f997-84b7-2c57-bab3d0cca382@gmail.com>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Wed, 20 Apr 2022 13:32:13 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3+5p5i2Nxy6AxH5qDsVqqxwSR_5ufjoYCALProSLNspg@mail.gmail.com>
+Message-ID: <CAK8P3a3+5p5i2Nxy6AxH5qDsVqqxwSR_5ufjoYCALProSLNspg@mail.gmail.com>
+Subject: Re: [PATCH 01/41] video: fbdev: omapfb: lcd_ams_delta: fix unused
+ variable warning
+To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Cc:     linux-omap <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Walmsley <paul@pwsan.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Mark Brown <broonie@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Helge Deller <deller@gmx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        dmaengine@vger.kernel.org,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 20/04/2022 12:36, Vinod Koul wrote:
->> If the choice is per SoC-controller, then the best would be to limit in
->> allOf:if:then. However maybe the number of channels depends also on
->> other factor (e.g. secure world configuration)?
-> 
-> That is quite right. So we wont know how many channels are made
-> available..
-> 
-> So is min 1 acceptable or do you have an alternate ?
+On Wed, Apr 20, 2022 at 11:24 AM Sergei Shtylyov
+<sergei.shtylyov@gmail.com> wrote:
+> On 4/19/22 4:36 PM, Arnd Bergmann wrote:
+>
+> > From: Arnd Bergmann <arnd@arndb.de>
+> >
+> > A recent cleanup patch removed the only reference to a local variable
+> > in some configurations.
+> >
+> > Move the variable into the one block it is still used in, inside
+> > of an #ifdef, to avoid this warning.
+> >
+> > Fixes: 9d773f103b89 ("video: fbdev: omapfb: lcd_ams_delta: Make use of the helper function dev_err_probe()")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  drivers/video/fbdev/omap/lcd_ams_delta.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/video/fbdev/omap/lcd_ams_delta.c b/drivers/video/fbdev/omap/lcd_ams_delta.c
+> > index bbf871f9d862..01944ce46aa1 100644
+> > --- a/drivers/video/fbdev/omap/lcd_ams_delta.c
+> > +++ b/drivers/video/fbdev/omap/lcd_ams_delta.c
+> [...]
+> > @@ -145,7 +144,7 @@ static int ams_delta_panel_probe(struct platform_device *pdev)
+> >                                               &ams_delta_lcd_ops);
+> >
+> >       if (IS_ERR(lcd_device)) {
+> > -             ret = PTR_ERR(lcd_device);
+> > +             int ret = PTR_ERR(lcd_device);
+>
+>    How about inserting an empty line after declaration?
 
-minItems:1 is ok.
+Ok, done.
 
-
-Best regards,
-Krzysztof
+        Arnd

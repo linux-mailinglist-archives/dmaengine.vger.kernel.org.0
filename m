@@ -2,50 +2,47 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0872F50876B
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Apr 2022 13:53:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6446C508785
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Apr 2022 13:56:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378055AbiDTL4F (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 Apr 2022 07:56:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59922 "EHLO
+        id S235652AbiDTL7C (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 20 Apr 2022 07:59:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378306AbiDTL4D (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Apr 2022 07:56:03 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DDCF424BB;
-        Wed, 20 Apr 2022 04:53:14 -0700 (PDT)
+        with ESMTP id S1378384AbiDTL7A (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Apr 2022 07:59:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38A3B1C90B
+        for <dmaengine@vger.kernel.org>; Wed, 20 Apr 2022 04:55:54 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E1E68B81DAB;
-        Wed, 20 Apr 2022 11:53:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 063F3C385A1;
-        Wed, 20 Apr 2022 11:53:10 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C8D956195B
+        for <dmaengine@vger.kernel.org>; Wed, 20 Apr 2022 11:55:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B287CC385A0;
+        Wed, 20 Apr 2022 11:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650455591;
-        bh=QYlKOJ+DmYe6vbnj1QajFS51R78ZBn3p5g948vKctbw=;
+        s=k20201202; t=1650455753;
+        bh=k7n/5Sb1CcLhdoAmZcILa2LNwTh5YXyRRLyrvckye1E=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gNEWrkJ/yix+sTTMWMoeYbftbREFjK0jpXadX9j75PaUEWBp7lwe2+RfsxLPlwSRV
-         QXqUOmfu6VyRTuPyjLBfXQyfSt6J6rYP7p7gLjA+3ga3WsUDnk+TFw/FG9Bg3/ehta
-         RIMwWF0pgQMf7H0lSuP0ML+wPPhJ8Y3kj0623pECLwqgikRTq89dnoMlG5RrFxAdZL
-         myexqvaOAjjuoc17OP/1tejf5gJP5glsC5x4MBGIiUuhYx+vkWW9ffhA/KBAXHgcab
-         JbhKucnAh8d2NTvLIFFp26epJ1wzjbHCBq6nIu3Ph5xeycxTvB1FUPSBaG/ge1CV9T
-         6DZGwgRD7Nv1A==
-Date:   Wed, 20 Apr 2022 17:23:07 +0530
+        b=len1Wj2lYjNktrInHexJAXGa/IxEAFoOOnHJ6E+yxqsAf0gR/hslLT/NvksriiGsc
+         mCVt3Q7R6k4KJ09U60eqGI8Umro4mD7dJtTpifqk5T0gm7f+UkkvfGQlHnnlvCZlNC
+         boaXNHqeb8LEMePt6/xG9YVxnOcbhOOQEzA9do6ZytF2GMG1I5FGw1oqbwQ8b/GUEd
+         LH+U+Oj8vl9P1e35unC1iDk1DzXpPn/+oMpH26w2mnZ/cDqxBDZ4/8e6F7eS1vkBDk
+         y5twUpNL1rJc5GNXDgSYL8JY+Iq2c7y96x4S1GK4Tx8edSxR82nloss6qeb+39mLHe
+         wVkzG6PuDmC2Q==
+Date:   Wed, 20 Apr 2022 17:25:49 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Cc:     ldewangan@nvidia.com, jonathanh@nvidia.com,
-        thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Abaci Robot <abaci@linux.alibaba.com>
-Subject: Re: [PATCH] dmaengine: tegra: Remove unused including
- <linux/version.h>
-Message-ID: <Yl/0I1E02Pi8ime9@matsya>
-References: <20220413083842.69845-1-jiapeng.chong@linux.alibaba.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     dmaengine@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: idxd: move wq irq enabling to after device
+ enable
+Message-ID: <Yl/0xU9oGFGNbtld@matsya>
+References: <164642777730.179702.1880317757087484299.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220413083842.69845-1-jiapeng.chong@linux.alibaba.com>
+In-Reply-To: <164642777730.179702.1880317757087484299.stgit@djiang5-desk3.ch.intel.com>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -55,34 +52,12 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 13-04-22, 16:38, Jiapeng Chong wrote:
-> Eliminate the follow versioncheck warning:
-> 
-> ./drivers/dma/tegra186-gpc-dma.c: 21 linux/version.h not needed.
+On 04-03-22, 14:02, Dave Jiang wrote:
+> Move the calling of request_irq() and other related irq setup code until
+> after the WQ is successfully enabled. This reduces the amount of
+> setup/teardown if the wq is not configured correctly and cannot be enabled.
 
 Applied, thanks
-
-> 
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-> ---
->  drivers/dma/tegra186-gpc-dma.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-dma.c
-> index f12327732041..97fe0e9e9b83 100644
-> --- a/drivers/dma/tegra186-gpc-dma.c
-> +++ b/drivers/dma/tegra186-gpc-dma.c
-> @@ -18,7 +18,6 @@
->  #include <linux/platform_device.h>
->  #include <linux/reset.h>
->  #include <linux/slab.h>
-> -#include <linux/version.h>
->  #include <dt-bindings/memory/tegra186-mc.h>
->  #include "virt-dma.h"
->  
-> -- 
-> 2.20.1.7.g153144c
 
 -- 
 ~Vinod

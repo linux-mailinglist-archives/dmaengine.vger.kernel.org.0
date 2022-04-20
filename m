@@ -2,100 +2,122 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F2C150903C
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Apr 2022 21:17:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A312F50904F
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Apr 2022 21:21:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381694AbiDTTUK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 Apr 2022 15:20:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40612 "EHLO
+        id S234251AbiDTTXx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 20 Apr 2022 15:23:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356538AbiDTTUE (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Apr 2022 15:20:04 -0400
-Received: from mail-oa1-x2a.google.com (mail-oa1-x2a.google.com [IPv6:2001:4860:4864:20::2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F34A2BF54
-        for <dmaengine@vger.kernel.org>; Wed, 20 Apr 2022 12:17:16 -0700 (PDT)
-Received: by mail-oa1-x2a.google.com with SMTP id 586e51a60fabf-deb9295679so3014945fac.6
-        for <dmaengine@vger.kernel.org>; Wed, 20 Apr 2022 12:17:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1TCOhglIGNgOTRPzEMPv22iNf7fy3Rv4APS9ZnU1ZjQ=;
-        b=Y7PF7PZmbKiZEOcuh53wZ5s5U4XZvi4C9SUp9uAOPuM9Nd3jxF0g6Wn1C6g7udlzzJ
-         5mZoXebGfzee8t6mClwtLEmfeE3q7cO7ZoHgMA7kxQqApBf9KX97hNEIuLJuWOtsmukv
-         cqGtGT4I2CIlAZN7WGGA/okNy/9GTaEAUnf06nf4opWJV6e4knXQ5KirfJak5PrgZI3/
-         ikum6xC/i9L8xTOgaLuHOCAtOdVPoKihz5IRhuWeqC1/SNlGw5hekFmaiEMbRzyxdyl4
-         jJwBZXqN87mTp5C0lctA4FRMhxrKnIcj/FUfh9F1L2Cv4alF5XxkgIMfdKXC5lq3aWB6
-         VMRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1TCOhglIGNgOTRPzEMPv22iNf7fy3Rv4APS9ZnU1ZjQ=;
-        b=1+QQ5wsaVzV2wlHGRd9P3pqQP5RxGTeCnyfPNm2yp+snWK8Uhc2fRG8twPV6OcWvG/
-         9UawROlVHVLE3zFZUvfk3/1SUGX6F/4UnLQHTUmgzKIebmQhfwydmiGxWIZU+mpWL8Jv
-         GTJYFzsfOlfipGaVwTtymXYdxYorhY1kXmjBX9wlUY3g3E5aUURREa1CY903szF1AdoU
-         piXADaibGUhTPzUp0Gd/qMgw0zlpErfQ0L2Ptc1tuhCwtTZO4EY7opnzwOBzLV17R+nY
-         WKEJnty+diQHr/tWs/ZCPJ6npfzuTf8EwwboaQh8S/K+orIU0RnkIlce7VRfrA8kStE9
-         ZiRA==
-X-Gm-Message-State: AOAM533weEXH6hq2g66iRYSZHqgZwxTo9eAaL6IBAI8SbI2eZYMCzzj9
-        UCGVhoZDu9d7LvrKYwpayW0QeofzkodjD415zsH/pg==
-X-Google-Smtp-Source: ABdhPJyjiEM+F7UrwLUCs8qvqdo9Zmqdb6JokHc7sEV/Yazs36hKuO9v8MlsW9+iYXtnbXtJeKjY84S9iXLG3vhl7wE=
-X-Received: by 2002:a05:6870:2156:b0:e5:bb8d:f6e3 with SMTP id
- g22-20020a056870215600b000e5bb8df6e3mr2280187oae.48.1650482236169; Wed, 20
- Apr 2022 12:17:16 -0700 (PDT)
+        with ESMTP id S230233AbiDTTXw (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Apr 2022 15:23:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA1ED13FBB;
+        Wed, 20 Apr 2022 12:21:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 64F6161647;
+        Wed, 20 Apr 2022 19:21:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C350EC385A8;
+        Wed, 20 Apr 2022 19:21:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650482464;
+        bh=+PgOfT87QXZRKpM2v9ZNowWskAsreLZEe6RAZERVuxs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LWkg8+P3Xly8sjIxoqjEgUnQ8BqoLngtqGiQEPZggl4dkK1DiOpgHHwSwn56ifoYf
+         0jYMBC2y9oudEQNk98zILpE9CQilgE7tkJqFfirwGiPaSzGz60rXyG7LagSrWPhQem
+         gbXXIArHrbaEUbVwFKFsMGfZw+kiVhQTkNWJBmFatyWcBtF+i4qgINtXXuldo7Vx0G
+         RpToCuYAP6mrwt+aiH/IjOOBsTv71f5Oi3+i5AJ3tiOTaMEh/815Em+H9EnYveGtMX
+         wgIyjIS3nQS3pxspnrQ1f27FpB7+Y6rOGSmBE7zDDiBd809M2ZhAxpsXP8A+8SQw2R
+         w9+fnlrAhUS+g==
+Received: by mail-wr1-f47.google.com with SMTP id m14so3602817wrb.6;
+        Wed, 20 Apr 2022 12:21:04 -0700 (PDT)
+X-Gm-Message-State: AOAM531HBf5PvIpNJOJDMxIoRo2xda1qDyp1WenSvo6XtyrM6cHHhQeu
+        u4iC9XS8SJYNsKkRkMm7dhmZ0zBzHXaHtBvuABs=
+X-Google-Smtp-Source: ABdhPJznf39uJYDI3N62QzlkS6buptTPqwk86KhjNzbLbHyB/jaRCmYyra2UZ9f1wUtI0joZyTmyxGE4xOIYt2PeYqA=
+X-Received: by 2002:a5d:64a3:0:b0:20a:7931:5b84 with SMTP id
+ m3-20020a5d64a3000000b0020a79315b84mr17397786wrp.407.1650482462896; Wed, 20
+ Apr 2022 12:21:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220410175056.79330-1-singh.kuldeep87k@gmail.com>
- <20220410175056.79330-7-singh.kuldeep87k@gmail.com> <CAH=2Ntx1D8C6xu+RysO0o5OkG5kPMMJ-Xr+B-udLtizY+4HiaQ@mail.gmail.com>
- <20220418192012.GA6868@9a2d8922b8f1> <1965ed9f-0258-cd28-f1c3-ef87272f6c03@linaro.org>
- <20220420132955.GA63070@9a2d8922b8f1> <20220420153316.GA63129@9a2d8922b8f1>
-In-Reply-To: <20220420153316.GA63129@9a2d8922b8f1>
-From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Date:   Thu, 21 Apr 2022 00:47:04 +0530
-Message-ID: <CAH=2NtwxX5Gj9bD3ymN0bJcqNnwi-pr2sDkm1s8iBOaMFJRvWQ@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] dt-bindings: dma: Convert Qualcomm BAM DMA binding
- to json format
-To:     Kuldeep Singh <singh.kuldeep87k@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dmaengine@vger.kernel.org
+References: <20220419133723.1394715-1-arnd@kernel.org> <20220419133723.1394715-27-arnd@kernel.org>
+ <20220420134615.GA1947@darkstar.musicnaut.iki.fi>
+In-Reply-To: <20220420134615.GA1947@darkstar.musicnaut.iki.fi>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Wed, 20 Apr 2022 21:20:46 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a00DgKYdzTZFiBfKDF_zwaJjL6Duw8aOOJ-gVkz4L1ZwQ@mail.gmail.com>
+Message-ID: <CAK8P3a00DgKYdzTZFiBfKDF_zwaJjL6Duw8aOOJ-gVkz4L1ZwQ@mail.gmail.com>
+Subject: Re: [PATCH 26/41] ARM: omap1: relocate static I/O mapping
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc:     linux-omap <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Walmsley <paul@pwsan.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Mark Brown <broonie@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Helge Deller <deller@gmx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        dmaengine@vger.kernel.org,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, 20 Apr 2022 at 21:03, Kuldeep Singh <singh.kuldeep87k@gmail.com> wrote:
+On Wed, Apr 20, 2022 at 3:46 PM Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
 >
-> On Wed, Apr 20, 2022 at 06:59:55PM +0530, Kuldeep Singh wrote:
-> > > I appreciate your work Kuldeep, it is important and valuable
-> > > contribution. It is sad to see duplicated effort, I don't like it for my
-> > > own patches either. In general, I believe the FIFO approach should be
-> > > applied, so in this case Bhupesh patches.
-> >
-> > Yep, I also agree with FIFO approach w.r.t contributions. But one thing
-> > daunts me here is the waiting time with latest revision, it's too high.
-> >
-> > Anyway, Bhupesh had more than BAM changes and was already on v5, I can
-> > give benefit of doubt to him and won't argue much here.
-> >
-> > Bhupesh, feel free to include my armv7 based dts patches in your series
-> > otherwise you might stumble DT checks warnings.
+> Hi,
 >
-> Or do you want me to keep my changes separate? Sorry for spam.
+> On Tue, Apr 19, 2022 at 03:37:08PM +0200, Arnd Bergmann wrote:
+> > From: Arnd Bergmann <arnd@arndb.de>
+> >
+> > The address range 0xfee00000-0xfeffffff is used for PCI and
+> > PCMCIA I/O port mappings, but OMAP1 has its static mappings
+> > there as well.
+> >
+> > Move the OMAP1 addresses a little higher to avoid crashing
+> > at boot.
+>
+> This has the same problem I reported in 2019, with earlyprintk the
+> system no longer boots:
+>
+>         https://marc.info/?t=156530014200005&r=1&w=2
+>
+> Tested on OSK and SX1/qemu.
 
-Please send your changes separately, as my patchset already exceeds 25
-patches or so in the current form.
+Thanks a lot for testing!
 
-Thanks,
-Bhupesh
+I managed to get to the bottom of this after just a few hours, and
+it turned out to be a simple math error on my end, as I got
+the alignment wrong, the offset has to be 0x00f00000
+instead of 0x00fb0000 be section aligned. I made sure the
+kernel boots up (to the point of missing a rootfs) and uploaded
+the fixed branch.
+
+      Arnd

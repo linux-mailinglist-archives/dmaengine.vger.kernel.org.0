@@ -2,122 +2,110 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 60E6F50947F
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Apr 2022 03:08:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B3859509528
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Apr 2022 04:49:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1383544AbiDUBLC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 Apr 2022 21:11:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40190 "EHLO
+        id S1383825AbiDUCwS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 20 Apr 2022 22:52:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356549AbiDUBLB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Apr 2022 21:11:01 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D65D5CC0
-        for <dmaengine@vger.kernel.org>; Wed, 20 Apr 2022 18:08:12 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id y32so5988595lfa.6
-        for <dmaengine@vger.kernel.org>; Wed, 20 Apr 2022 18:08:12 -0700 (PDT)
+        with ESMTP id S1383822AbiDUCwR (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Apr 2022 22:52:17 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41D94BF55
+        for <dmaengine@vger.kernel.org>; Wed, 20 Apr 2022 19:49:28 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id s17so3533442plg.9
+        for <dmaengine@vger.kernel.org>; Wed, 20 Apr 2022 19:49:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PaUnbNt+lm1u9yE5wisBRk3m4mxTkfso+o7EcsoYb9U=;
-        b=mMgyk5nz/Y8n1Lj6vrQUNd5iJAn2E+0233wITVfUWqbApNDLFv2P7b27+6eSzJoWDL
-         t0nahvOc6wJ15MiIpsKeWs0NrqXR9RXJkkBDs3+5092owdZdTLhhNj+VLA8H1rGYQhNB
-         lXc9cpxs8m5Z3IuIVwneY0LQqDwM8QSs17KSD3OaJ5Hkkhve7Yzrv8XLkplj9scNw0Mh
-         op+UpykXWdb3gRwDuvNZCqSStJBVDMmlmxRoZdim+0kJtGzaUFQ7AOdKSmt9q22xGyfy
-         hzxcH+ZtySQMf/xAuovtiEg2lwqVUhpujH0WofcH75OafGIP6rnLjPmoGN7EKHwffPF2
-         oQ/g==
+        d=dabbelt-com.20210112.gappssmtp.com; s=20210112;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=P94H50ZarQqSfjwX6qGlCq6elP0Tf7lTSu8KGyKb+rY=;
+        b=NmTYbo6mbyC85rDGus5JqFccbJXfd2GmU3Z5l9EJZY3ikIpv8qzK4CJI1biwBjog68
+         uKCnx3g23B7HGglBH11l1vwC6RKGBI76JMUE6V3VmgwGsTvN/d3gM+Vrt2xbYbYfS0mA
+         BOnEhCGcIxGV03jm/ELUziu49+6lf6Yev49wJcKMYtMD7pBcoITrNctKx77+8XMpqn8o
+         EouXOnWTMnnI8frgbpNBP0F5xc6Uaof23VNi30CipucmraQ/6rbr6rtawk8L5exHiULk
+         Bwrvr+QiZUbbUN9YUTsS5Y+LsQ5PyL5H+yztSyURyY/djpYFFEmyal8lzb13zRm6dMFa
+         /PXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PaUnbNt+lm1u9yE5wisBRk3m4mxTkfso+o7EcsoYb9U=;
-        b=racLurqBUs6ng19egqdxfxO7Tac8Z6VQsxcYJrECmDIRakA965EcenS0SS89OBSeGN
-         falAaNnt+Ji6z7u7pJKCuqigYWgd8h/1WkIY5NPwFMnjTzHA/QDDybERsGjV8ASGQ00X
-         IpYxg+sxTDc3L/Pwqp2+1enUyfJB9stq6MoJYu16eBqx+/LSj2YHLI67x3vjIOwod9Jy
-         dvP1rTVXpSTJ60URWIU8CPU7mtSPXXM8QUzQexWdpyfqs0u6OjiMSKhaviyOHymFqDLu
-         Bhd69ulE9Nwvf8xmvFCLRQFLcEYnUlIpM5ILurfACcNacMsV3kykipeKQkgW17/QlYWQ
-         KEhA==
-X-Gm-Message-State: AOAM532yly9Lm+7U7Er0/fa8fKPWBzAbTQeoTQEhlvCphoqVKyXJsieO
-        mIvLWdXmA5XeDNmWKWtJ+x/hqLt8wgtnxxPoIQQb5A==
-X-Google-Smtp-Source: ABdhPJxhKAUyCkkPAjGWEELWh3qbbbzQYB5MSQk5Ht/V6TTVpoiQIzNDZ4iAXo0PDGcIqt8h6lJKcUanUp/MHHUasws=
-X-Received: by 2002:a05:6512:1155:b0:471:4c94:97c with SMTP id
- m21-20020a056512115500b004714c94097cmr13816995lfg.338.1650503291055; Wed, 20
- Apr 2022 18:08:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <CANXhq0r15Z9NZj+xr7K_2Tt5VbK2r4+f7Fpg-f9BY98ufgKxcw@mail.gmail.com>
- <mhng-75e55594-c878-4fad-9ffc-dc552111208e@palmer-ri-x1c9> <CAL_Jsq+5TbfFxD3p4ckvNw=jFweuvjQPRQfjmvPqZJga25o0pA@mail.gmail.com>
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=P94H50ZarQqSfjwX6qGlCq6elP0Tf7lTSu8KGyKb+rY=;
+        b=J5HRqqKemXLL1rhY3zcFo5ujwZUpn1toBqtvw2c7tJ2wihb7eJdyE3YfwbvTtDAMYL
+         PhjVDnDDw8nUjv2D14ZyGOMxcH4o158d9X1Oe41hBsLa8i2Uhv686+MoS9+5DlLA8Pze
+         nSaaRS5QVFhAbQ3Kz90oHFfn85wOGtFNlimHy5DqXPYrasu09WK4BtpOS0dMDSiIgh10
+         GftwEwT7xsrpJEQORSDWXpDLyKnMlsHWe9FAVqXpAqEuwiS2vupIfv7HhlSC8bf5YbEH
+         a9uboIYDKhwH9YD4BCN6IwgmIPhflpEMq3fLeuVUrpAmUISJ4tmwcP9cQ1zMBMs5g3KI
+         Xbmg==
+X-Gm-Message-State: AOAM532mxW6HKzX+X+9jw/EgoDeQ0LxT/vUeWLmkaqp7lR6556oy6Sgk
+        5nEq+HQVYISFJ1KEHd9Hm18Zrw==
+X-Google-Smtp-Source: ABdhPJzYf8MazJedjnUo1QmWR9gJch9FCr1/4uhLrPs8Uz9WPO7vyXlCpgNvcS+TLPR64gKmBq0U6g==
+X-Received: by 2002:a17:902:d303:b0:158:e38d:ca18 with SMTP id b3-20020a170902d30300b00158e38dca18mr22977358plc.167.1650509367634;
+        Wed, 20 Apr 2022 19:49:27 -0700 (PDT)
+Received: from localhost ([12.3.194.138])
+        by smtp.gmail.com with ESMTPSA id m13-20020a62a20d000000b004fe0ce6d7a1sm21685124pff.193.2022.04.20.19.49.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Apr 2022 19:49:27 -0700 (PDT)
+Date:   Wed, 20 Apr 2022 19:49:27 -0700 (PDT)
+X-Google-Original-Date: Wed, 20 Apr 2022 19:49:25 PDT (-0700)
+Subject:     Re: [PATCH v8 0/4] Determine the number of DMA channels by 'dma-channels' property
 In-Reply-To: <CAL_Jsq+5TbfFxD3p4ckvNw=jFweuvjQPRQfjmvPqZJga25o0pA@mail.gmail.com>
-From:   Zong Li <zong.li@sifive.com>
-Date:   Thu, 21 Apr 2022 09:07:59 +0800
-Message-ID: <CANXhq0rYBCQyGK-zfKdU51y03dSD9XsPwtCqg8a7xvxYV3LL+A@mail.gmail.com>
-Subject: Re: [PATCH v8 0/4] Determine the number of DMA channels by
- 'dma-channels' property
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>, Vinod <vkoul@kernel.org>,
+CC:     zong.li@sifive.com, vkoul@kernel.org,
         Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Bin Meng <bin.meng@windriver.com>,
-        Green Wan <green.wan@sifive.com>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        aou@eecs.berkeley.edu, conor.dooley@microchip.com,
+        geert@linux-m68k.org, bin.meng@windriver.com, green.wan@sifive.com,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     robh+dt@kernel.org
+Message-ID: <mhng-aab8c429-f5cc-42a7-b281-02f4a389e0e3@palmer-ri-x1c9>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Apr 20, 2022 at 10:26 PM Rob Herring <robh+dt@kernel.org> wrote:
->
+On Wed, 20 Apr 2022 07:25:53 PDT (-0700), robh+dt@kernel.org wrote:
 > On Tue, Apr 19, 2022 at 7:18 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
-> >
-> > On Mon, 11 Apr 2022 04:43:35 PDT (-0700), zong.li@sifive.com wrote:
-> > > On Mon, Apr 11, 2022 at 6:48 PM Vinod Koul <vkoul@kernel.org> wrote:
-> > >>
-> > >> On 11-04-22, 10:51, Zong Li wrote:
-> > >> > On Fri, Apr 8, 2022 at 9:13 PM Vinod Koul <vkoul@kernel.org> wrote:
-> > >> > >
-> > >> > > On 28-03-22, 17:52, Zong Li wrote:
-> > >> > > > The PDMA driver currently assumes there are four channels by default, it
-> > >> > > > might cause the error if there is actually less than four channels.
-> > >> > > > Change that by getting number of channel dynamically from device tree.
-> > >> > > > For backwards-compatible, it uses the default value (i.e. 4) when there
-> > >> > > > is no 'dma-channels' information in dts.
-> > >> > >
-> > >> > > Applied patch 1 & 4 to dmaengine-next, thanks
-> > >> >
-> > >> > Hi Vinod,
-> > >> > Thanks for your help and review. For patch 2 and 3, does it mean that
-> > >> > we should go through the riscv tree?
-> > >>
-> > >> Yes
-> > >>
-> > >
-> > > Hi Palmer,
-> > > Could you please help me to pick up the patch 2 and 3. Thanks :)
-> >
-> > Sorry about that, I forgot about this one.  I just put them on for-next,
-> > there was a minor merge conflict but it looks pretty simple.
+>>
+>> On Mon, 11 Apr 2022 04:43:35 PDT (-0700), zong.li@sifive.com wrote:
+>> > On Mon, Apr 11, 2022 at 6:48 PM Vinod Koul <vkoul@kernel.org> wrote:
+>> >>
+>> >> On 11-04-22, 10:51, Zong Li wrote:
+>> >> > On Fri, Apr 8, 2022 at 9:13 PM Vinod Koul <vkoul@kernel.org> wrote:
+>> >> > >
+>> >> > > On 28-03-22, 17:52, Zong Li wrote:
+>> >> > > > The PDMA driver currently assumes there are four channels by default, it
+>> >> > > > might cause the error if there is actually less than four channels.
+>> >> > > > Change that by getting number of channel dynamically from device tree.
+>> >> > > > For backwards-compatible, it uses the default value (i.e. 4) when there
+>> >> > > > is no 'dma-channels' information in dts.
+>> >> > >
+>> >> > > Applied patch 1 & 4 to dmaengine-next, thanks
+>> >> >
+>> >> > Hi Vinod,
+>> >> > Thanks for your help and review. For patch 2 and 3, does it mean that
+>> >> > we should go through the riscv tree?
+>> >>
+>> >> Yes
+>> >>
+>> >
+>> > Hi Palmer,
+>> > Could you please help me to pick up the patch 2 and 3. Thanks :)
+>>
+>> Sorry about that, I forgot about this one.  I just put them on for-next,
+>> there was a minor merge conflict but it looks pretty simple.
 >
 > Looks like you applied patch 1 too which Vinod already applied to the
 > dmaengine tree. And you changed the 1st line removing the "# " before
 > the SPDX tag which results in:
-
-Hi Palmer,
-Many thanks for helping me to pick them into riscv-tree, It seems like
-we need to pick patch 2 and 3 in riscv tree, instead of patch 1 and 2.
-:)
-
 >
 > make[1]: *** Deleting file
 > 'Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.example.dts'
@@ -140,6 +128,10 @@ we need to pick patch 2 and 3 in riscv tree, instead of patch 1 and 2.
 > Error 1
 > ./Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml:1:1:
 > [error] missing document start "---" (document-start)
->
->
-> Rob
+
+Sorry about that, I cherry-picked them from my working repo which I 
+assumed was the same but I guess had some nastiness (including the patch 
+reordering).  Then I also ran check in the wrong working repo, so I 
+didn't notice the mess.
+
+This should all be fixed.

@@ -2,65 +2,59 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F8C9509B48
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Apr 2022 10:55:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26083509C07
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Apr 2022 11:22:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1386997AbiDUIyb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 21 Apr 2022 04:54:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35682 "EHLO
+        id S1377263AbiDUJYx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 21 Apr 2022 05:24:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1386992AbiDUIyb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 Apr 2022 04:54:31 -0400
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC3F01DA68;
-        Thu, 21 Apr 2022 01:51:41 -0700 (PDT)
-Received: (Authenticated sender: miquel.raynal@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id C26FC60009;
-        Thu, 21 Apr 2022 08:51:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1650531100;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gDMgEYZK2TXVp0tig+qscRTbrixY++njrNcYKAKseyE=;
-        b=VvXM4GyXA9oNq6vStm5eW97MjVxU6wHfXIL3BaIteHnrp2ppjgyO0BYLWc88Xb1/zpPXUH
-        F4G5WkoxCw7KXWLefi6Y169fl/TyG4gYB5nfFgDUsfpDMsMtopR7ixIYnv/lVr99q6giOp
-        kE1q3NM+YGXbYIV4uKwGUHhjjd17RmAKhVF4WaZ/NiaMpqPyKGJ27SaYnYnsF+i7remOoe
-        q2nJFY3tpuEfwg3mdqAzit1Fv08s95VMzOAKIuOuDniUb4E3+65o6jpSgw2f/RnsYRVfQ4
-        bAHOKYVHB6kAJCDeZijdCOkEIT056G8GULj3ImhGmOixcNyz/yO3QRGL/v5vwg==
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Magnus Damm <magnus.damm@gmail.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-renesas-soc@vger.kernel.org, dmaengine@vger.kernel.org,
-        Milan Stevanovic <milan.stevanovic@se.com>,
-        Jimmy Lalande <jimmy.lalande@se.com>,
-        Pascal Eberhard <pascal.eberhard@se.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Herve Codina <herve.codina@bootlin.com>,
-        Clement Leger <clement.leger@bootlin.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v11 9/9] ARM: dts: r9a06g032: Describe the DMA router
-Date:   Thu, 21 Apr 2022 10:51:12 +0200
-Message-Id: <20220421085112.78858-10-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20220421085112.78858-1-miquel.raynal@bootlin.com>
-References: <20220421085112.78858-1-miquel.raynal@bootlin.com>
+        with ESMTP id S1357478AbiDUJYu (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 Apr 2022 05:24:50 -0400
+Received: from mta-01.yadro.com (mta-02.yadro.com [89.207.88.252])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FA4C26559;
+        Thu, 21 Apr 2022 02:22:00 -0700 (PDT)
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 71A5244E78;
+        Thu, 21 Apr 2022 09:21:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received; s=mta-01; t=1650532918; x=
+        1652347319; bh=rOJ0XVAQ/xdObrmr4EZjjsd3fyHJyaGnzJz9olY/nj8=; b=B
+        LOW7iLCyXXf4kW08cBsOrLbITN4KIaWXm09TtJlf9jfcrxM9xV1jkFVFh9+QfTi5
+        AAM8mdyAA+rbpvCzA+zi21h/4N2qI+Fxg4/362jdwcswxUncFb4jgj69Y4GYvDpw
+        zOBDa//OMCVSLvcQrJFrz7r3mNtmv8e3KKXEKVVb0Q=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 0h_BWXo10m-n; Thu, 21 Apr 2022 12:21:58 +0300 (MSK)
+Received: from T-EXCH-04.corp.yadro.com (t-exch-04.corp.yadro.com [172.17.100.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id D4BD644E3C;
+        Thu, 21 Apr 2022 12:21:50 +0300 (MSK)
+Received: from ubuntu.yadro.com (10.199.0.136) by T-EXCH-04.corp.yadro.com
+ (172.17.100.104) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Thu, 21
+ Apr 2022 12:21:50 +0300
+From:   <i.m.novikov@yadro.com>
+To:     <vkoul@kernel.org>
+CC:     <i.m.novikov@yadro.com>, <sanju.mehta@amd.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux@yadro.com>, kernel test robot <lkp@intel.com>
+Subject: [PATCH] dmaengine: PTDMA: statify pt_tx_status
+Date:   Thu, 21 Apr 2022 12:21:43 +0300
+Message-ID: <20220421092143.18281-1-i.m.novikov@yadro.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+Content-Type: text/plain
+X-Originating-IP: [10.199.0.136]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-04.corp.yadro.com (172.17.100.104)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,35 +62,32 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-There is a dmamux on this SoC which allows picking two different sources
-for a single DMA request.
+From: Ilya Novikov <i.m.novikov@yadro.com>
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+LKP bot reports a new warning:
+Warning:
+drivers/dma/ptdma/ptdma-dmaengine.c:262:1: warning: no previous
+prototype for 'pt_tx_status' [-Wmissing-prototypes]
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Ilya Novikov <i.m.novikov@yadro.com>
 ---
- arch/arm/boot/dts/r9a06g032.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/dma/ptdma/ptdma-dmaengine.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a06g032.dtsi
-index 839580ec21ee..c854aa4cfa77 100644
---- a/arch/arm/boot/dts/r9a06g032.dtsi
-+++ b/arch/arm/boot/dts/r9a06g032.dtsi
-@@ -91,6 +91,16 @@ sysctrl: system-controller@4000c000 {
- 			clocks = <&ext_mclk>, <&ext_rtc_clk>,
- 					<&ext_jtag_clk>, <&ext_rgmii_ref>;
- 			clock-names = "mclk", "rtc", "jtag", "rgmii_ref_ext";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			dmamux: dma-router@a0 {
-+				compatible = "renesas,rzn1-dmamux";
-+				reg = <0xa0 4>;
-+				#dma-cells = <6>;
-+				dma-requests = <32>;
-+				dma-masters = <&dma0 &dma1>;
-+			};
- 		};
+diff --git a/drivers/dma/ptdma/ptdma-dmaengine.c b/drivers/dma/ptdma/ptdma-dmaengine.c
+index ea07cc42f4d0..cc22d162ce25 100644
+--- a/drivers/dma/ptdma/ptdma-dmaengine.c
++++ b/drivers/dma/ptdma/ptdma-dmaengine.c
+@@ -258,7 +258,7 @@ static void pt_issue_pending(struct dma_chan *dma_chan)
+ 		pt_cmd_callback(desc, 0);
+ }
  
- 		uart0: serial@40060000 {
+-enum dma_status
++static enum dma_status
+ pt_tx_status(struct dma_chan *c, dma_cookie_t cookie,
+ 		struct dma_tx_state *txstate)
+ {
 -- 
-2.27.0
+2.25.1
 

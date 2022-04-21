@@ -2,50 +2,74 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89633509232
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Apr 2022 23:41:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60E6F50947F
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Apr 2022 03:08:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382590AbiDTVnr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 Apr 2022 17:43:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58498 "EHLO
+        id S1383544AbiDUBLC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 20 Apr 2022 21:11:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382577AbiDTVnl (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Apr 2022 17:43:41 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB98438D9A
-        for <dmaengine@vger.kernel.org>; Wed, 20 Apr 2022 14:40:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 13C9BCE1FC2
-        for <dmaengine@vger.kernel.org>; Wed, 20 Apr 2022 21:40:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80299C385A0;
-        Wed, 20 Apr 2022 21:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650490850;
-        bh=gvn5BSmC9Jsd1/qMym3y+oaL74DaveOcfZLSgIjczxs=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=cif8fJwXIv+c+0lzRiwin91dbAUesYiiL3gDZCK6bJttroQMK6hwk/okrzEpqfk7a
-         QQKxFs/2a9mqroRCMrkXKCEN6Y/uC2Kh0xLL39zhvr2CJf/qUhd5diAUtuuonu0xnP
-         9FfMZZL+TUTT1/xx7JPjM8vtl5LK/LgCE4X2xYAMVeu2AYCj/nlrgEMVT2ijYJ8gDF
-         WH/pGVgE9nKct/GlBXw6jyXs50LCfUlSS3CNUex9XY9GKcWECiO3rfk/ZH0s53Ev6t
-         YsSXTPSLhFmqYcvJt4GKFGBzrIktgwvEfUFbNimZE3EfWnFToRnyVKs1lVnlNalOWJ
-         pOY6Wl16WC/dA==
-From:   Mark Brown <broonie@kernel.org>
-To:     Sascha Hauer <s.hauer@pengutronix.de>, alsa-devel@alsa-project.org
-Cc:     shengjiu.wang@gmail.com, Xiubo.Lee@gmail.com, vkoul@kernel.org,
-        linux-imx@nxp.com, kernel@pengutronix.de,
-        dmaengine@vger.kernel.org, festevam@gmail.com
-In-Reply-To: <20220414162249.3934543-1-s.hauer@pengutronix.de>
-References: <20220414162249.3934543-1-s.hauer@pengutronix.de>
-Subject: Re: [PATCH v6 00/21] ASoC: fsl_micfil: Driver updates
-Message-Id: <165049084823.138067.11607241649692641258.b4-ty@kernel.org>
-Date:   Wed, 20 Apr 2022 22:40:48 +0100
+        with ESMTP id S1356549AbiDUBLB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Apr 2022 21:11:01 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D65D5CC0
+        for <dmaengine@vger.kernel.org>; Wed, 20 Apr 2022 18:08:12 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id y32so5988595lfa.6
+        for <dmaengine@vger.kernel.org>; Wed, 20 Apr 2022 18:08:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PaUnbNt+lm1u9yE5wisBRk3m4mxTkfso+o7EcsoYb9U=;
+        b=mMgyk5nz/Y8n1Lj6vrQUNd5iJAn2E+0233wITVfUWqbApNDLFv2P7b27+6eSzJoWDL
+         t0nahvOc6wJ15MiIpsKeWs0NrqXR9RXJkkBDs3+5092owdZdTLhhNj+VLA8H1rGYQhNB
+         lXc9cpxs8m5Z3IuIVwneY0LQqDwM8QSs17KSD3OaJ5Hkkhve7Yzrv8XLkplj9scNw0Mh
+         op+UpykXWdb3gRwDuvNZCqSStJBVDMmlmxRoZdim+0kJtGzaUFQ7AOdKSmt9q22xGyfy
+         hzxcH+ZtySQMf/xAuovtiEg2lwqVUhpujH0WofcH75OafGIP6rnLjPmoGN7EKHwffPF2
+         oQ/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PaUnbNt+lm1u9yE5wisBRk3m4mxTkfso+o7EcsoYb9U=;
+        b=racLurqBUs6ng19egqdxfxO7Tac8Z6VQsxcYJrECmDIRakA965EcenS0SS89OBSeGN
+         falAaNnt+Ji6z7u7pJKCuqigYWgd8h/1WkIY5NPwFMnjTzHA/QDDybERsGjV8ASGQ00X
+         IpYxg+sxTDc3L/Pwqp2+1enUyfJB9stq6MoJYu16eBqx+/LSj2YHLI67x3vjIOwod9Jy
+         dvP1rTVXpSTJ60URWIU8CPU7mtSPXXM8QUzQexWdpyfqs0u6OjiMSKhaviyOHymFqDLu
+         Bhd69ulE9Nwvf8xmvFCLRQFLcEYnUlIpM5ILurfACcNacMsV3kykipeKQkgW17/QlYWQ
+         KEhA==
+X-Gm-Message-State: AOAM532yly9Lm+7U7Er0/fa8fKPWBzAbTQeoTQEhlvCphoqVKyXJsieO
+        mIvLWdXmA5XeDNmWKWtJ+x/hqLt8wgtnxxPoIQQb5A==
+X-Google-Smtp-Source: ABdhPJxhKAUyCkkPAjGWEELWh3qbbbzQYB5MSQk5Ht/V6TTVpoiQIzNDZ4iAXo0PDGcIqt8h6lJKcUanUp/MHHUasws=
+X-Received: by 2002:a05:6512:1155:b0:471:4c94:97c with SMTP id
+ m21-20020a056512115500b004714c94097cmr13816995lfg.338.1650503291055; Wed, 20
+ Apr 2022 18:08:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+References: <CANXhq0r15Z9NZj+xr7K_2Tt5VbK2r4+f7Fpg-f9BY98ufgKxcw@mail.gmail.com>
+ <mhng-75e55594-c878-4fad-9ffc-dc552111208e@palmer-ri-x1c9> <CAL_Jsq+5TbfFxD3p4ckvNw=jFweuvjQPRQfjmvPqZJga25o0pA@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+5TbfFxD3p4ckvNw=jFweuvjQPRQfjmvPqZJga25o0pA@mail.gmail.com>
+From:   Zong Li <zong.li@sifive.com>
+Date:   Thu, 21 Apr 2022 09:07:59 +0800
+Message-ID: <CANXhq0rYBCQyGK-zfKdU51y03dSD9XsPwtCqg8a7xvxYV3LL+A@mail.gmail.com>
+Subject: Re: [PATCH v8 0/4] Determine the number of DMA channels by
+ 'dma-channels' property
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>, Vinod <vkoul@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Bin Meng <bin.meng@windriver.com>,
+        Green Wan <green.wan@sifive.com>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,81 +77,69 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, 14 Apr 2022 18:22:28 +0200, Sascha Hauer wrote:
-> I added one more ack from Shengjiu Wang, but other than that it's just a
-> resend with +Cc: Mark Brown
-> 
-> Sascha
-> 
-> Changes since v5:
-> - Add one more ack from Shengjiu Wang
-> 
-> [...]
+On Wed, Apr 20, 2022 at 10:26 PM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Tue, Apr 19, 2022 at 7:18 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+> >
+> > On Mon, 11 Apr 2022 04:43:35 PDT (-0700), zong.li@sifive.com wrote:
+> > > On Mon, Apr 11, 2022 at 6:48 PM Vinod Koul <vkoul@kernel.org> wrote:
+> > >>
+> > >> On 11-04-22, 10:51, Zong Li wrote:
+> > >> > On Fri, Apr 8, 2022 at 9:13 PM Vinod Koul <vkoul@kernel.org> wrote:
+> > >> > >
+> > >> > > On 28-03-22, 17:52, Zong Li wrote:
+> > >> > > > The PDMA driver currently assumes there are four channels by default, it
+> > >> > > > might cause the error if there is actually less than four channels.
+> > >> > > > Change that by getting number of channel dynamically from device tree.
+> > >> > > > For backwards-compatible, it uses the default value (i.e. 4) when there
+> > >> > > > is no 'dma-channels' information in dts.
+> > >> > >
+> > >> > > Applied patch 1 & 4 to dmaengine-next, thanks
+> > >> >
+> > >> > Hi Vinod,
+> > >> > Thanks for your help and review. For patch 2 and 3, does it mean that
+> > >> > we should go through the riscv tree?
+> > >>
+> > >> Yes
+> > >>
+> > >
+> > > Hi Palmer,
+> > > Could you please help me to pick up the patch 2 and 3. Thanks :)
+> >
+> > Sorry about that, I forgot about this one.  I just put them on for-next,
+> > there was a minor merge conflict but it looks pretty simple.
+>
+> Looks like you applied patch 1 too which Vinod already applied to the
+> dmaengine tree. And you changed the 1st line removing the "# " before
+> the SPDX tag which results in:
 
-Applied to
+Hi Palmer,
+Many thanks for helping me to pick them into riscv-tree, It seems like
+we need to pick patch 2 and 3 in riscv tree, instead of patch 1 and 2.
+:)
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-
-Thanks!
-
-[01/21] ASoC: fsl_micfil: Drop unnecessary register read
-        commit: c808e277bcdfce37aed80a443be305ac1aec1623
-[02/21] ASoC: fsl_micfil: Drop unused register read
-        commit: 384672e3b7af65aaebb794a6d1a77bb975a10678
-[03/21] ASoC: fsl_micfil: drop fsl_micfil_set_mclk_rate()
-        commit: 3ff84e3dd180c368981b2d58ed50f17a47471828
-[04/21] ASoC: fsl_micfil: do not define SHIFT/MASK for single bits
-        commit: bd2cffd10d79eb9280cb8f5b7cb441f206c1e6ac
-[05/21] ASoC: fsl_micfil: use GENMASK to define register bit fields
-        commit: 17f2142bae4b6f2e27f19ce57d79fc42ba5ef659
-[06/21] ASoC: fsl_micfil: use clear/set bits
-        commit: d46c2127ae8e10378213f71abe4fe88adb17549c
-[07/21] ASoC: fsl_micfil: drop error messages from failed register accesses
-        commit: 2c602c7ef9ef08835f2e3e0c438d10b7142d6959
-[08/21] ASoC: fsl_micfil: drop unused variables
-        commit: 819dc38b93e7e0606d71dde80896c139afe7ce48
-[09/21] dmaengine: imx: Move header to include/dma/
-        commit: c6547c2ed0e1487c91983faccad841611ab6a783
-[10/21] dmaengine: imx-sdma: error out on unsupported transfer types
-        commit: 625d8936c3378016ec8c480a00432034bcb813c9
-[11/21] dmaengine: imx-sdma: Add multi fifo support
-        commit: 824a0a02cd74776461aaa30d792b1ed9111c9aa5
-[12/21] ASoC: fsl_micfil: add multi fifo support
-        commit: 2495ba26e838176c3b572b2b1592d75b4b963692
-[13/21] ASoC: fsl_micfil: use define for OSR default value
-        commit: fb855b8d46a17c9bb5562e315158de52b18b7e62
-[14/21] ASoC: fsl_micfil: Drop get_pdm_clk()
-        commit: be6aeee2eb82e5ae57f8cc613c0b6cc3e8d33664
-[15/21] ASoC: fsl_micfil: simplify clock setting
-        commit: e8936f6925c1174242e643e0aa0646359c192fe2
-[16/21] ASoC: fsl_micfil: rework quality setting
-        commit: bea1d61d5892083551f92818e964801baabd95a9
-[17/21] ASoC: fsl_micfil: drop unused include
-        commit: dcc4301584abcf692fbe4836b01303c4b4cdef46
-[18/21] ASoC: fsl_micfil: drop only once used defines
-        commit: 99c08cdb6d51347ef3a56b8c8ec03e2d855b10c3
-[19/21] ASoC: fsl_micfil: drop support for undocumented property
-        commit: cbd090fa1fbf021e286f83d602e01ff3f0b726fd
-[20/21] ASoC: fsl_micfil: fold fsl_set_clock_params() into its only user
-        commit: cc5ef57d130d78c8c30062eef140c01ee47f346e
-[21/21] ASoC: fsl_micfil: Remove debug message
-        commit: a69d7f1bd373205bf539b9762423c8d526b9b9cb
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+>
+> make[1]: *** Deleting file
+> 'Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.example.dts'
+> Traceback (most recent call last):
+>   File "/usr/local/bin/dt-extract-example", line 52, in <module>
+>     binding = yaml.load(open(args.yamlfile, encoding='utf-8').read())
+>   File "/usr/local/lib/python3.8/dist-packages/ruamel/yaml/main.py",
+> line 434, in load
+>     return constructor.get_single_data()
+>   File "/usr/local/lib/python3.8/dist-packages/ruamel/yaml/constructor.py",
+> line 119, in get_single_data
+>     node = self.composer.get_single_node()
+>   File "_ruamel_yaml.pyx", line 718, in _ruamel_yaml.CParser.get_single_node
+> ruamel.yaml.composer.ComposerError: expected a single document in the stream
+>   in "<unicode string>", line 1, column 1
+> but found another document
+>   in "<unicode string>", line 2, column 1
+> make[1]: *** [Documentation/devicetree/bindings/Makefile:26:
+> Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.example.dts]
+> Error 1
+> ./Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml:1:1:
+> [error] missing document start "---" (document-start)
+>
+>
+> Rob

@@ -2,62 +2,60 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E60350A3CF
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Apr 2022 17:16:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53AD550A46C
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Apr 2022 17:38:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1389959AbiDUPSe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 21 Apr 2022 11:18:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51290 "EHLO
+        id S1390188AbiDUPkm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 21 Apr 2022 11:40:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230247AbiDUPSd (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 Apr 2022 11:18:33 -0400
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDCF535A86;
-        Thu, 21 Apr 2022 08:15:43 -0700 (PDT)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 23LFFekn096130;
-        Thu, 21 Apr 2022 10:15:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1650554140;
-        bh=BSmVKrWhv52kLUAhA2dwa8QvQEt8yIyAabglUhHYYvc=;
-        h=Date:Subject:To:CC:References:From:In-Reply-To;
-        b=X+i6UeSQVuzFnhmu/Jyx1BNXESg04Pe0GryT/tpDDAg1D4jMpMcN4Xs57IWhOp64r
-         kkJNqG2GDLfJCNj3cve4oRDhImsqgVPVzcGTy/JOqMN9ZTrTKEONio7G/uvTVW8JXY
-         PfH5Vyz97SGY2lh/VdMyxEn7HTqK8I7S74Z7tb0U=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 23LFFeSn013596
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 Apr 2022 10:15:40 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Thu, 21
- Apr 2022 10:15:39 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Thu, 21 Apr 2022 10:15:39 -0500
-Received: from [10.250.235.115] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 23LFFaQl121385;
-        Thu, 21 Apr 2022 10:15:37 -0500
-Message-ID: <7993bc10-fff1-bacb-d0c5-929b14f35244@ti.com>
-Date:   Thu, 21 Apr 2022 20:45:36 +0530
+        with ESMTP id S1351142AbiDUPkj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 Apr 2022 11:40:39 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFEE3473B8;
+        Thu, 21 Apr 2022 08:37:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1650555470; x=1682091470;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=pvlInBpDXmfZpNmV6tJBOiPX6jvMjdSbFEbI3I82ysM=;
+  b=ZHt4rJnzAKon83HKxE7mOVau/Ve+faT8NpFeymbFdZSJYpKnOCmP8p7a
+   5Z/FebXJ6AQYsgZfLwh6Z25l0+9Fj2bdRfdgQt6w794ZXvHD9Chsp8N6e
+   YA8SH+eSzO1hKwGn5tOVz3HbvonV2LKjMUC9qtD7h94kyBYw/0mlfuL1n
+   sdy2weP5hTailY8/ALxdIAIBlhuzw06bb/Lr0o1Mzq3KLEJZbCSgUM8Pr
+   uSz4E8829FNPUd82XdotGCpyN6roZS0ioqyhPNORLcGlzoZscLpPnyL45
+   uKI6xBy21Wd0RDCExwwHtYTxO1rAdUB+HWW712HU4/aoZ+4Yl4xL0alLJ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10324"; a="327297266"
+X-IronPort-AV: E=Sophos;i="5.90,279,1643702400"; 
+   d="scan'208";a="327297266"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 08:34:20 -0700
+X-IronPort-AV: E=Sophos;i="5.90,279,1643702400"; 
+   d="scan'208";a="533353357"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.94.100]) ([10.212.94.100])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2022 08:34:20 -0700
+Message-ID: <f3261912-dc13-46ed-471f-046ba314365d@intel.com>
+Date:   Thu, 21 Apr 2022 08:34:19 -0700
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.1
-Subject: Re: [PATCH] dmaengine: ti: k3-psil-am62: Update PSIL thread for saul.
+Subject: Re: [PATCH] dmaengine: idxd: Fix the error handling path in
+ idxd_cdev_register()
 Content-Language: en-US
-To:     Jayesh Choudhary <j-choudhary@ti.com>, <dmaengine@vger.kernel.org>
-CC:     <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20220421065323.16378-1-j-choudhary@ti.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-In-Reply-To: <20220421065323.16378-1-j-choudhary@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        dmaengine@vger.kernel.org
+References: <1b5033dcc87b5f2a953c413f0306e883e6114542.1650521591.git.christophe.jaillet@wanadoo.fr>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <1b5033dcc87b5f2a953c413f0306e883e6114542.1650521591.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 X-Spam-Status: No, score=-8.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,51 +63,43 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Jayesh,
 
-On 21/04/22 12:23 pm, Jayesh Choudhary wrote:
-> Correct the RX PSIL thread for sa3ul.
-> 
+On 4/20/2022 11:13 PM, Christophe JAILLET wrote:
+> If a call to alloc_chrdev_region() fails, the already allocated resources
+> are leaking.
+>
+> Add the needed error handling path to fix the leak.
+>
+> Fixes: 42d279f9137a ("dmaengine: idxd: add char driver to expose submission portal to userland")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Commit message needs more info:
-Threads are not wrong but, the first 4 threads are reserved
-for secure side usage and the rest is available to be paired with main pktdma.
+Acked-by: Dave Jiang <dave.jiang@intel.com>
 
-Also, add fixes tag:
+Thanks!
 
-Fixes: 5ac6bfb587772 ("dmaengine: ti: k3-psil: Add AM62x PSIL and PDMA data")
-
-
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
 > ---
-> 
-> The new updated PSIL threads have been tested on local am62x board.
-> Log is available here:
-> <https://gist.github.com/Jayesh2000/b0316190de3d9dbb8e98337106ebe24a>
-> 
->  drivers/dma/ti/k3-psil-am62.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/dma/ti/k3-psil-am62.c b/drivers/dma/ti/k3-psil-am62.c
-> index d431e2033237..2b6fd6e37c61 100644
-> --- a/drivers/dma/ti/k3-psil-am62.c
-> +++ b/drivers/dma/ti/k3-psil-am62.c
-> @@ -70,10 +70,10 @@
->  /* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
->  static struct psil_ep am62_src_ep_map[] = {
->  	/* SAUL */
-> -	PSIL_SAUL(0x7500, 20, 35, 8, 35, 0),
-> -	PSIL_SAUL(0x7501, 21, 35, 8, 36, 0),
-> -	PSIL_SAUL(0x7502, 22, 43, 8, 43, 0),
-> -	PSIL_SAUL(0x7503, 23, 43, 8, 44, 0),
-> +	PSIL_SAUL(0x7504, 20, 35, 8, 35, 0),
-> +	PSIL_SAUL(0x7505, 21, 35, 8, 36, 0),
-> +	PSIL_SAUL(0x7506, 22, 43, 8, 43, 0),
-> +	PSIL_SAUL(0x7507, 23, 43, 8, 44, 0),
->  	/* PDMA_MAIN0 - SPI0-3 */
->  	PSIL_PDMA_XY_PKT(0x4302),
->  	PSIL_PDMA_XY_PKT(0x4303),
-
-
-Regards
-Vignesh
+>   drivers/dma/idxd/cdev.c | 8 +++++++-
+>   1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+> index b9b2b4a4124e..033df43db0ce 100644
+> --- a/drivers/dma/idxd/cdev.c
+> +++ b/drivers/dma/idxd/cdev.c
+> @@ -369,10 +369,16 @@ int idxd_cdev_register(void)
+>   		rc = alloc_chrdev_region(&ictx[i].devt, 0, MINORMASK,
+>   					 ictx[i].name);
+>   		if (rc)
+> -			return rc;
+> +			goto err_free_chrdev_region;
+>   	}
+>   
+>   	return 0;
+> +
+> +err_free_chrdev_region:
+> +	for (i--; i >= 0; i--)
+> +		unregister_chrdev_region(ictx[i].devt, MINORMASK);
+> +
+> +	return rc;
+>   }
+>   
+>   void idxd_cdev_remove(void)

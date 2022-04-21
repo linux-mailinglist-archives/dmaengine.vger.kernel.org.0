@@ -2,74 +2,106 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D458450952A
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Apr 2022 04:49:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BC43509695
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Apr 2022 07:21:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1383840AbiDUCwm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 Apr 2022 22:52:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47498 "EHLO
+        id S1384402AbiDUFWp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 21 Apr 2022 01:22:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1383832AbiDUCwm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Apr 2022 22:52:42 -0400
-Received: from mail.meizu.com (edge05.meizu.com [157.122.146.251])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9A3DDEB7;
-        Wed, 20 Apr 2022 19:49:53 -0700 (PDT)
-Received: from IT-EXMB-1-125.meizu.com (172.16.1.125) by mz-mail12.meizu.com
- (172.16.1.108) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 21 Apr
- 2022 10:49:54 +0800
-Received: from meizu.meizu.com (172.16.137.70) by IT-EXMB-1-125.meizu.com
- (172.16.1.125) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.14; Thu, 21 Apr
- 2022 10:49:51 +0800
-From:   Haowen Bai <baihaowen@meizu.com>
-To:     Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        "Sascha Hauer" <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-CC:     Haowen Bai <baihaowen@meizu.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] dmaengine: imx-sdma: Remove useless null check before call of_node_put()
-Date:   Thu, 21 Apr 2022 10:49:50 +0800
-Message-ID: <1650509390-26877-1-git-send-email-baihaowen@meizu.com>
-X-Mailer: git-send-email 2.7.4
+        with ESMTP id S1384344AbiDUFWg (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 Apr 2022 01:22:36 -0400
+Received: from muru.com (muru.com [72.249.23.125])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B83CBC7C;
+        Wed, 20 Apr 2022 22:19:47 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 2EAAD811B;
+        Thu, 21 Apr 2022 05:16:56 +0000 (UTC)
+Date:   Thu, 21 Apr 2022 08:19:45 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Walmsley <paul@pwsan.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Mark Brown <broonie@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Helge Deller <deller@gmx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        dmaengine@vger.kernel.org,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>
+Subject: Re: [PATCH 26/41] ARM: omap1: relocate static I/O mapping
+Message-ID: <YmDpcXoafouaDL7s@atomide.com>
+References: <20220419133723.1394715-1-arnd@kernel.org>
+ <20220419133723.1394715-27-arnd@kernel.org>
+ <20220420134615.GA1947@darkstar.musicnaut.iki.fi>
+ <CAK8P3a00DgKYdzTZFiBfKDF_zwaJjL6Duw8aOOJ-gVkz4L1ZwQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.16.137.70]
-X-ClientProxiedBy: IT-EXMB-1-126.meizu.com (172.16.1.126) To
- IT-EXMB-1-125.meizu.com (172.16.1.125)
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a00DgKYdzTZFiBfKDF_zwaJjL6Duw8aOOJ-gVkz4L1ZwQ@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-No need to add null check before call of_node_put(), since the
-implementation of of_node_put() has done it.
+* Arnd Bergmann <arnd@kernel.org> [220420 19:18]:
+> On Wed, Apr 20, 2022 at 3:46 PM Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
+> >
+> > Hi,
+> >
+> > On Tue, Apr 19, 2022 at 03:37:08PM +0200, Arnd Bergmann wrote:
+> > > From: Arnd Bergmann <arnd@arndb.de>
+> > >
+> > > The address range 0xfee00000-0xfeffffff is used for PCI and
+> > > PCMCIA I/O port mappings, but OMAP1 has its static mappings
+> > > there as well.
+> > >
+> > > Move the OMAP1 addresses a little higher to avoid crashing
+> > > at boot.
+> >
+> > This has the same problem I reported in 2019, with earlyprintk the
+> > system no longer boots:
+> >
+> >         https://marc.info/?t=156530014200005&r=1&w=2
+> >
+> > Tested on OSK and SX1/qemu.
+> 
+> Thanks a lot for testing!
+> 
+> I managed to get to the bottom of this after just a few hours, and
+> it turned out to be a simple math error on my end, as I got
+> the alignment wrong, the offset has to be 0x00f00000
+> instead of 0x00fb0000 be section aligned. I made sure the
+> kernel boots up (to the point of missing a rootfs) and uploaded
+> the fixed branch.
 
-Signed-off-by: Haowen Bai <baihaowen@meizu.com>
----
- drivers/dma/imx-sdma.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Good to hear this got sorted out :)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 6196a7b3956b..b8a1299b93f0 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1933,8 +1933,7 @@ static int sdma_event_remap(struct sdma_engine *sdma)
- 	}
- 
- out:
--	if (gpr_np)
--		of_node_put(gpr_np);
-+	of_node_put(gpr_np);
- 
- 	return ret;
- }
--- 
-2.7.4
+Regards,
 
+Tony

@@ -2,154 +2,137 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65AD3509FF4
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Apr 2022 14:47:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D0C950A0E4
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Apr 2022 15:34:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1385577AbiDUMuI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 21 Apr 2022 08:50:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48586 "EHLO
+        id S1386668AbiDUNhm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 21 Apr 2022 09:37:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1385569AbiDUMuH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 Apr 2022 08:50:07 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18E2D32059;
-        Thu, 21 Apr 2022 05:47:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S230271AbiDUNhb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 Apr 2022 09:37:31 -0400
+Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [IPv6:2a0b:5c81:1c1::37])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AFD12ED69;
+        Thu, 21 Apr 2022 06:34:41 -0700 (PDT)
+Received: from darkstar.musicnaut.iki.fi (85-76-47-192-nat.elisa-mobile.fi [85.76.47.192])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CAFAEB82293;
-        Thu, 21 Apr 2022 12:47:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E266EC385A5;
-        Thu, 21 Apr 2022 12:47:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1650545235;
-        bh=UcQO2s3LFwB24HB203UWRaa916KVKDAPA2bum0jrpc4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=R7beJJ2o0zop79DQR1f+UbtCD11yR8gBGKvpCJLoJE/nMNl0GlhnVeDWDeonVDuOF
-         yke27azpRE3Ub9kmnzUxrZAjKBUoLEgWILu/wgXgOW3ND0+0MUe6YEBrvWxQ09kP1u
-         q8tr63py9kKxJTOXaR19kT+7WhpTyRfxDBzEkFxyZiMRez3tMqmA8Mh6Q2u9VNRECv
-         IOkCQdSvairDgghDeGbgwKCilr5T1vICYdH/0716vfI7kftADKY9D3EpLEswKEvv4B
-         3ORpcMSvMM2lZ/WZF48+hN4CKg5RJDcArz1Njk+SDAfQJ/cj8zgyuVRQtD1QwyujhM
-         DvZytEy+g7c8Q==
-Date:   Thu, 21 Apr 2022 18:17:11 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL]: dmaengine updates for v5.18
-Message-ID: <YmFST5F0AdoaM7om@matsya>
+        (Authenticated sender: aaro.koskinen)
+        by lahtoruutu.iki.fi (Postfix) with ESMTPSA id 047811B00252;
+        Thu, 21 Apr 2022 16:34:32 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
+        t=1650548074;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oVFIWam2OH5Kq5QzsfblzUEMIMiatzAi7D5irCcCglk=;
+        b=Xk3qyrppSMBB4y+4boXcQF3oQ0tJICSyEousvelDBkd8/PVx55tQbJieAi/Q0KQa0aNG+G
+        Gh88Z+pM8E36JmzxlWSVvjXm3PFhBwLXYL2LZOWOsctt2/ybfngzEzXevKqVRqqsk+dHOX
+        5L1WRR3RN0Tc57TLDGaoxQzs/vTRLS73kqV8NQ7Pr+rYaKPhEVw6YpbHAi1CUcgHmT/iJb
+        sSsFTNRKlLJoxWjnYPJUSCoDtMuNfYAqp6Y4933cAcgTAbeGBst/0aU+ZHi8x118KnYG/L
+        TTEMpWSI21eBdlKccjScwxNSRB5ywON2ldVT1bI/+m9vyrFPnxxWxtiiOfNC6w==
+Date:   Thu, 21 Apr 2022 16:34:31 +0300
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     linux-omap <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Walmsley <paul@pwsan.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Mark Brown <broonie@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Helge Deller <deller@gmx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        dmaengine@vger.kernel.org,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>
+Subject: Re: [PATCH 00/41] OMAP1 full multiplatform conversion
+Message-ID: <20220421133431.GE1947@darkstar.musicnaut.iki.fi>
+References: <20220419133723.1394715-1-arnd@kernel.org>
+ <20220420170836.GB1947@darkstar.musicnaut.iki.fi>
+ <CAK8P3a1+sOrn8BWPVc7f+QFZ5=7fE6=MLsMYV9t+HJcG2aRCXA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="j9vAgKPCw9M1b6nK"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CAK8P3a1+sOrn8BWPVc7f+QFZ5=7fE6=MLsMYV9t+HJcG2aRCXA@mail.gmail.com>
+ARC-Seal: i=1; s=lahtoruutu; d=iki.fi; t=1650548074; a=rsa-sha256;
+        cv=none;
+        b=ENXGTtwbaVogGy0K8rD23cjHmjO1KDBpZYPSWyAXiJ0/g3DluUJMMqXizYyXV1sh/1O56S
+        hChw4SwQwbKFg4HYlY2SOiU8koj4G0UA6uGgTWSMxSwgySv+tbXfSR2Tt70pNgc6FN/vqj
+        fDExRVdSPenGd/ZTQhfjmyvSX3P7pooRbwh0WQDjEhItMOJyG5yZgN9teFQT3NBHXEEZkO
+        lTJHNaVgxdVFvqiak5FfjdiYOvwW5qr/IFspdks2sOUviaT7JpvKaacUapRAwuXFYtOguN
+        JXEZ3bM5xviSbbt9Tw3xErBDkB9cnwUXXzqGZHNp79d0+eb+sY0cVMOQI8ss7A==
+ARC-Authentication-Results: i=1;
+        ORIGINATING;
+        auth=pass smtp.auth=aaro.koskinen smtp.mailfrom=aaro.koskinen@iki.fi
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
+        s=lahtoruutu; t=1650548074;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oVFIWam2OH5Kq5QzsfblzUEMIMiatzAi7D5irCcCglk=;
+        b=Eu1uUO0EKvbhrdQZfCpIhRELzJA5jQZA+tye8R+aaTvgG9DkVEsXKYWX2Sby3kmhYmBCFx
+        570Cbs63dCqUFZqQdnWOK5t2vzZfwXPpwZynEikAKA3hi3QfuIi/BoBmae0xNSLey+fMmB
+        6AN1xF39YRJln008whjTgBohIBALbd/JXyh+rxwe1mx9rmT55Z+64rbOepQpAj7WZ0ttFr
+        jnTgxti7i7/9Pg4jNgskYWOOvKpXwrgTWzEQwA6H3TD1Jh0kJTMK2AunGS+FmvtC90A9Rp
+        r/9gYERVC+5BvSqEpSaGtYy+3htyiKaREqUWXaB7dxpxJqJYBA33p4txWzgVSw==
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi,
 
---j9vAgKPCw9M1b6nK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 20, 2022 at 10:00:13PM +0200, Arnd Bergmann wrote:
+> On Wed, Apr 20, 2022 at 7:08 PM Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
+> > On Tue, Apr 19, 2022 at 03:36:42PM +0200, Arnd Bergmann wrote:
+> > > From: Arnd Bergmann <arnd@arndb.de>
+> > >
+> > > This is the full series for converting OMAP1 to multiplatform, rebased
+> > > from my 2019 attempt to do the same thing. The soc tree contains simpler
+> > > patches to do the same for iop32x, ixp4xx, ep93xx and s3c24xx, which
+> > > means we are getting closer to completing this for all ARMv5 platforms
+> > > (I have patches for PXA, which is the last one remaining).
+> > >
+> > > Janusz already tested the branch separately and did the missing work
+> > > for the common-clk conversion after my previous approach was broken.
+> >
+> > I tested the full series on the following OMAP1 boards: ams-delta,
+> > nokia770, osk, palmte and sx1 (QEMU only).
+> >
+> > Apart from the earlyprintk breakage, everything seemed to work OK.
+> 
+> Nice, thanks a lot for testing!
 
-Hello Linus,
+With the updated patch 26 also earlyprintk now works, so if you still
+update the patches, feel free to add for the whole series:
 
-Please pull to receive the dmanegine fixes for v5.18. This contains
-bunch of driver fixes.
+Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
 
-The following changes since commit 3123109284176b1532874591f7c81f3837bbdc17:
+Thanks,
 
-  Linux 5.18-rc1 (2022-04-03 14:08:21 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dm=
-aengine-fix-5.18
-
-for you to fetch changes up to 7495a5bbf89f68c8880757c112fd0994f5dba309:
-
-  dt-bindings: dmaengine: qcom: gpi: Add minItems for interrupts (2022-04-2=
-0 18:11:20 +0530)
-
-----------------------------------------------------------------
-dmaengine fixes for v5.17
-
-Bunch of driver fixes for:
- - idxd device RO checks and device cleanup
- - dw-edma unaligned access and alignment
- - qcom: missing minItems in binding
- - mediatek pm usage fix
- - imx init script
-
-----------------------------------------------------------------
-Dave Jiang (6):
-      dmaengine: idxd: fix device cleanup on disable
-      dmaengine: idxd: match type for retries var in idxd_enqcmds()
-      dmaengine: idxd: fix retry value to be constant for duration of funct=
-ion call
-      dmaengine: idxd: add RO check for wq max_batch_size write
-      dmaengine: idxd: add RO check for wq max_transfer_size write
-      dmaengine: idxd: skip clearing device context when device is read-only
-
-Herve Codina (1):
-      dmaengine: dw-edma: Fix unaligned 64bit access
-
-Jiapeng Chong (1):
-      dmaengine: dw-edma: Fix inconsistent indenting
-
-Kevin Groeneveld (1):
-      dmaengine: imx-sdma: fix init of uart scripts
-
-Miaoqian Lin (1):
-      dmaengine: imx-sdma: Fix error checking in sdma_event_remap
-
-Vinod Koul (1):
-      dt-bindings: dmaengine: qcom: gpi: Add minItems for interrupts
-
-Xiaomeng Tong (1):
-      dma: at_xdmac: fix a missing check on list iterator
-
-zhangqilong (1):
-      dmaengine: mediatek:Fix PM usage reference leak of mtk_uart_apdma_all=
-oc_chan_resources
-
- .../devicetree/bindings/dma/qcom,gpi.yaml          |  1 +
- drivers/dma/at_xdmac.c                             | 12 ++++----
- drivers/dma/dw-edma/dw-edma-v0-core.c              | 16 +++++++----
- drivers/dma/idxd/device.c                          |  6 ++--
- drivers/dma/idxd/submit.c                          |  5 ++--
- drivers/dma/idxd/sysfs.c                           |  6 ++++
- drivers/dma/imx-sdma.c                             | 32 +++++++++++-------=
-----
- drivers/dma/mediatek/mtk-uart-apdma.c              |  9 ++++--
- 8 files changed, 53 insertions(+), 34 deletions(-)
-
---=20
-~Vinod
-
---j9vAgKPCw9M1b6nK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAmJhUk4ACgkQfBQHDyUj
-g0ejww//Z7azCwLVGY4hQ8uzjaD+T3SBidzeVMyNBzVarx61OUycGfb6c4Jikno9
-HaE6vWKfDz7fVEYqHUFVn3N4ic59dCJ1VZtAYGfDb2W8wHVVJNmYkR/YyQglHTgt
-3sdrh45nGlzS788ygXczFSUxQI2tIyOVsG0pDMLcdqDZD4ttI+TY/xVVvXP2kfe6
-0ZmlYkckJFAErnHwB2VFzv+tdNuCz7QIXXPo1iySl84IoIZOuhyctp0+Qsgxw7RT
-GV99Dge55WB+ro7nqtvi02IA4KVRQ230Libbxxr2yALo4Lsnt60TTVfHCY9uuzLi
-2Sp2EsDVRtTDGY0h56rf/T2dR0Uaf+jrJl8fZ7MGu5iz76ZfIzUAGBJ3w4P0bHdL
-0qA5pDa/q6i8YnTWMn2uD3wI/z6L+gRRmVMZpqT12BenDPRuk6DAnfW5cq+QuDEV
-jWPzzaIbU9dEycAmJrGuEwCKHdGfahd+P66QMHk/jrTpAVxXWQUiFipSU+VuVYD0
-ZQ9VeaE5RmubDBDff1SUAn/B+UDmo0GxZPQrfF9ACaXDfrx1rmrfMNcmu/ARJdAv
-PK+TmVhoaU/r94pJcu0/IwyUETlR1d0BNKXrqzz1hiBuIy0kEewGT69fkHYKxyzl
-YEb8rR6440aIRE6Srbo4bqO5JQbzGaHbp+/4oirNMV8ATMWF5Wc=
-=1GRt
------END PGP SIGNATURE-----
-
---j9vAgKPCw9M1b6nK--
+A.

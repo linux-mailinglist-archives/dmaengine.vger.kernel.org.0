@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82CC550D3F9
-	for <lists+dmaengine@lfdr.de>; Sun, 24 Apr 2022 19:29:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EBF050D3F5
+	for <lists+dmaengine@lfdr.de>; Sun, 24 Apr 2022 19:29:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236142AbiDXRbG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 24 Apr 2022 13:31:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33098 "EHLO
+        id S236605AbiDXRbI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 24 Apr 2022 13:31:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229914AbiDXRbF (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 24 Apr 2022 13:31:05 -0400
+        with ESMTP id S236540AbiDXRbG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 24 Apr 2022 13:31:06 -0400
 Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0819A14AAEB;
-        Sun, 24 Apr 2022 10:28:04 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 66C2F5C017D;
-        Sun, 24 Apr 2022 13:28:03 -0400 (EDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D65E114AADC;
+        Sun, 24 Apr 2022 10:28:05 -0700 (PDT)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 463995C00FF;
+        Sun, 24 Apr 2022 13:28:05 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Sun, 24 Apr 2022 13:28:03 -0400
+  by compute1.internal (MEProxy); Sun, 24 Apr 2022 13:28:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
         :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1650821283; x=1650907683; bh=gL
-        LJXvPow1EyaPPDjH9fdOoNOR+1/wWYRGyiSoUxs+o=; b=FBiV7wxx+kBiVJhw2U
-        0nRo8+CDjUOHCyi5GqiRsWvwOig/uYHw1SlQBbZX/iXWCKJKPI2yRxePjoRjiFb8
-        AuCykvcWThzH0gCEts2FzQj7rR9JFMmqSj7T/GEL2GVelwztcc/+q5Z1xCWVGLNo
-        e0idrdtcZi11zWn++NIGIPPijXKKJDX55pcux2oLXK511IhlipsnDJjn8DZSqQLh
-        mYdF8Y2ldSE6LYE1fnS2+XbUztwulNXvbH5mgMhuG6LfFoWcK/VuFbaCojfK8meD
-        ckIFqiP9vntIpKcVvpoy6Ko+uKloWFyuJIVH9VXOskhi7pNvz+De+4fpdVmUHdw5
-        6kYw==
+        :subject:subject:to:to; s=fm2; t=1650821285; x=1650907685; bh=pI
+        0+xczgj9HddQyvNbQNgf/Wfc3FJNTjyj7iSZol1+M=; b=llu6M6Fn/i/c82i7lR
+        Qa7p1yspcKaLcuDmMDHAuNG0uUZGTgzHA6NuvOODCqtFbIpLLOubmwnqC/YEe/RW
+        j8MdG3R/G4OGCajnmCaO9vJZnUcW0103PAWXHNVKfzSD09tIa/q1vsr2wat8qsSM
+        S++f9d2bq/dI7NzQemlHn1oQj/jNbflVr6S+7+961Z9za1KT2+2jVuUdPt/Sf41h
+        9OIxlESn6T7Rg88Tt2UtYUwJMXb0/GgByjnrY+W/cw1rlI82m384s76nKzIwIUqA
+        yR/jbvqa+M6yxiszs+MZEhAr3bS42AZl8muVmiDfP8Pkrpev6toMAc0qURzfQSO3
+        /Eig==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
         :from:from:in-reply-to:in-reply-to:message-id:mime-version
         :references:reply-to:sender:subject:subject:to:to:x-me-proxy
         :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-        1650821283; x=1650907683; bh=gLLJXvPow1EyaPPDjH9fdOoNOR+1/wWYRGy
-        iSoUxs+o=; b=pOuiUpJw2LCW2hxJZeEPCCiZskRIeJvHr8tHUqpFVMCXzoOPk+p
-        qd7VA6xlZHvsI5ubofpt4YX/5MerC/hMV7J0tsw6Hf8UHHB+qd1hu1q4gqp6nUxv
-        E9nQpN3nWntW9rsysxl5ale3AoBGmh7TZjLoixtubltRZ5C4KLK0ltOZQJFWmCFw
-        BulYuOLhE5kuV8POEG9/obxDFHW1mYA66KsWOyTbEyeRLlMoHL53rH4Hu1Aiilib
-        eeu1Kh6W/c8f4WHX5EiV9wyNg1DSEt+0tfsErjWqHEnVpXsb2H1ZlpB9dykPAKdJ
-        BEGFDzX/vpptylkiq/i0za2IfYJsrUnGcgg==
-X-ME-Sender: <xms:oohlYjm0MocGpVmkbYd06wxk9qVdm0thxZqjQ1tLJGxIzmkboUXbKQ>
-    <xme:oohlYm0OBPlyamLWlxVS7OBqCPbl5YwDhARC5SsFZQpV8CIBPM0u5z72KtxxJ1vdf
-    xk1UZutf8K3KolOIA>
-X-ME-Received: <xmr:oohlYppqjHWut4gijbd6LZk6c1VfhC0dlv7pgE9r2Iu_MyNd15qH6-lQ471-nXUVvZwwSG46LrUtw9dSwmUUcJV9STBYcH78PMN7zFe8uq-zVYW-Uv0ZbpbcRCzLsb27ctFQXg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrtdelgdduudegucetufdoteggodetrfdotf
+        1650821285; x=1650907685; bh=pI0+xczgj9HddQyvNbQNgf/Wfc3FJNTjyj7
+        iSZol1+M=; b=j+0Qg41KoUB3K9eML1A26l6UXCykrN2VzUJZEJVoU01V3jGvDva
+        Tfr5c3qebt+ygWliuKJf+ReCwuaR+5XMlqnqOEXYdxvB0ox5QMIww51X0i+BZPvd
+        opESplhvlUL9Ms/gCNcTINtslwwzK7yEL96NauiQn94W5EHetaaK4/ASRBhgpMLn
+        TV1ykqkP1gJpMUUcpbpAz66vx1mmuQRvtO88/YZD8TM18KKgRpYrC2ZamivYHnyR
+        vcSxY/o6tNbf7c2PKz8s/jXIOEGUnlCog2QtJ9BUAEj3EIhfiBpU2dMUeMm21SlM
+        lwutUWFeGjPJtEGRODDHGyWvBlEOGHmBk1w==
+X-ME-Sender: <xms:pYhlYuA8g_l4DHfYMw9qulzLE78R12dHvW7AmoQaFPKgKt-oHx_oKQ>
+    <xme:pYhlYohHCMyZctUFR-MVLqquSMJxfLzc5JlVrjSKbjHrDXAmmppNDvESZm6P7UjBw
+    TxQw6qaqj-UdyjKPw>
+X-ME-Received: <xmr:pYhlYhn9iijFj62H1lcRQoR-6Bmtjqgrq-qe543TEKZeLIdedOOLF1DyF9NIOHyNQ5XPtP68BvKS0wF6C5RM2w0WstcuIpSpvaE_2xFT2XYXbujl0LyeJTjfAmkUkA5eK7b5EA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrtdelgdduudehucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgrmhhu
@@ -54,12 +54,12 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrtdelgdduudegucetufdoteggod
     ftrfgrthhtvghrnhepudekteeuudehtdelteevgfduvddvjefhfedulefgudevgeeghefg
     udefiedtveetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
     homhepshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
-X-ME-Proxy: <xmx:oohlYrkra0vBcOMaF4YDhnCoRkwCN-Dts-qaba8rtMNBUCr0cfmjog>
-    <xmx:oohlYh2YuV533KevEednzvOOw-tZLuiB8gJ3tSBQPxC7mQzsjqxbfg>
-    <xmx:oohlYqtuUvXZu5gTcMTDYnaYHoSa7oS4kNHWBn62Uyl4I0AKVgwuDg>
-    <xmx:o4hlYvORsR1KXIgaT6IrxpfoUyVu4TDVq96ajbhreip-j1JH0op_Dw>
+X-ME-Proxy: <xmx:pYhlYsylgWg-VoCZ2H0YUo45HIvaGaKIl49voCbc-MJVtO3fb1-HkQ>
+    <xmx:pYhlYjSkfPZIvKX0dYZIH-eI7wBU1xv8uFfNR6IUky8ZrLvUqBKvaw>
+    <xmx:pYhlYnY-b-dvZmc3eVwbq255GA3KjgO4K-0qnJNE6zor_lrzpPCrNw>
+    <xmx:pYhlYrbayW1SxJxlACvqfPhKqeLYXAgvNchqRakR0czi_cMytfM4TQ>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 24 Apr 2022 13:28:02 -0400 (EDT)
+ 24 Apr 2022 13:28:04 -0400 (EDT)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
 Cc:     Samuel Holland <samuel@sholland.org>, Chen-Yu Tsai <wens@csie.org>,
@@ -68,11 +68,10 @@ Cc:     Samuel Holland <samuel@sholland.org>, Chen-Yu Tsai <wens@csie.org>,
         Maxime Ripard <mripard@kernel.org>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@lists.linux.dev, Rob Herring <robh@kernel.org>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v3 1/4] dt-bindings: dma: sun50i-a64: Add compatible for D1
-Date:   Sun, 24 Apr 2022 12:27:55 -0500
-Message-Id: <20220424172759.33383-2-samuel@sholland.org>
+        linux-sunxi@lists.linux.dev, Maxime Ripard <maxime@cerno.tech>
+Subject: [PATCH v3 2/4] dmaengine: sun6i: Do not use virt_to_phys
+Date:   Sun, 24 Apr 2022 12:27:56 -0500
+Message-Id: <20220424172759.33383-3-samuel@sholland.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220424172759.33383-1-samuel@sholland.org>
 References: <20220424172759.33383-1-samuel@sholland.org>
@@ -88,47 +87,119 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-D1 has a DMA controller similar to the one in other Allwinner SoCs.
-Add its compatible, and include it in the list of variants with a
-separate MBUS clock gate.
+This breaks on RISC-V, because dma_pool_alloc returns addresses which
+are not in the linear map. Instead, plumb through the physical address
+which is already known anyway.
 
-Acked-by: Rob Herring <robh@kernel.org>
 Acked-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
 
-(no changes since v1)
+Changes in v3:
+ - Fix format warnings
 
- .../bindings/dma/allwinner,sun50i-a64-dma.yaml           | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/dma/sun6i-dma.c | 38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml b/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
-index b6e1ebfaf366..ff0a5c58d78c 100644
---- a/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
-+++ b/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml
-@@ -20,9 +20,11 @@ properties:
+diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+index 5cadd4d2b824..4436fbd70445 100644
+--- a/drivers/dma/sun6i-dma.c
++++ b/drivers/dma/sun6i-dma.c
+@@ -241,9 +241,7 @@ static inline void sun6i_dma_dump_com_regs(struct sun6i_dma_dev *sdev)
+ static inline void sun6i_dma_dump_chan_regs(struct sun6i_dma_dev *sdev,
+ 					    struct sun6i_pchan *pchan)
+ {
+-	phys_addr_t reg = virt_to_phys(pchan->base);
+-
+-	dev_dbg(sdev->slave.dev, "Chan %d reg: %pa\n"
++	dev_dbg(sdev->slave.dev, "Chan %d reg:\n"
+ 		"\t___en(%04x): \t0x%08x\n"
+ 		"\tpause(%04x): \t0x%08x\n"
+ 		"\tstart(%04x): \t0x%08x\n"
+@@ -252,7 +250,7 @@ static inline void sun6i_dma_dump_chan_regs(struct sun6i_dma_dev *sdev,
+ 		"\t__dst(%04x): \t0x%08x\n"
+ 		"\tcount(%04x): \t0x%08x\n"
+ 		"\t_para(%04x): \t0x%08x\n\n",
+-		pchan->idx, &reg,
++		pchan->idx,
+ 		DMA_CHAN_ENABLE,
+ 		readl(pchan->base + DMA_CHAN_ENABLE),
+ 		DMA_CHAN_PAUSE,
+@@ -385,17 +383,16 @@ static void *sun6i_dma_lli_add(struct sun6i_dma_lli *prev,
+ }
  
-   compatible:
-     oneOf:
--      - const: allwinner,sun50i-a64-dma
--      - const: allwinner,sun50i-a100-dma
--      - const: allwinner,sun50i-h6-dma
-+      - enum:
-+          - allwinner,sun20i-d1-dma
-+          - allwinner,sun50i-a64-dma
-+          - allwinner,sun50i-a100-dma
-+          - allwinner,sun50i-h6-dma
-       - items:
-           - const: allwinner,sun8i-r40-dma
-           - const: allwinner,sun50i-a64-dma
-@@ -58,6 +60,7 @@ if:
-   properties:
-     compatible:
-       enum:
-+        - allwinner,sun20i-d1-dma
-         - allwinner,sun50i-a100-dma
-         - allwinner,sun50i-h6-dma
+ static inline void sun6i_dma_dump_lli(struct sun6i_vchan *vchan,
+-				      struct sun6i_dma_lli *lli)
++				      struct sun6i_dma_lli *v_lli,
++				      dma_addr_t p_lli)
+ {
+-	phys_addr_t p_lli = virt_to_phys(lli);
+-
+ 	dev_dbg(chan2dev(&vchan->vc.chan),
+-		"\n\tdesc:   p - %pa v - 0x%p\n"
++		"\n\tdesc:\tp - %pad v - 0x%p\n"
+ 		"\t\tc - 0x%08x s - 0x%08x d - 0x%08x\n"
+ 		"\t\tl - 0x%08x p - 0x%08x n - 0x%08x\n",
+-		&p_lli, lli,
+-		lli->cfg, lli->src, lli->dst,
+-		lli->len, lli->para, lli->p_lli_next);
++		&p_lli, v_lli,
++		v_lli->cfg, v_lli->src, v_lli->dst,
++		v_lli->len, v_lli->para, v_lli->p_lli_next);
+ }
  
+ static void sun6i_dma_free_desc(struct virt_dma_desc *vd)
+@@ -445,7 +442,7 @@ static int sun6i_dma_start_desc(struct sun6i_vchan *vchan)
+ 	pchan->desc = to_sun6i_desc(&desc->tx);
+ 	pchan->done = NULL;
+ 
+-	sun6i_dma_dump_lli(vchan, pchan->desc->v_lli);
++	sun6i_dma_dump_lli(vchan, pchan->desc->v_lli, pchan->desc->p_lli);
+ 
+ 	irq_reg = pchan->idx / DMA_IRQ_CHAN_NR;
+ 	irq_offset = pchan->idx % DMA_IRQ_CHAN_NR;
+@@ -670,7 +667,7 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_memcpy(
+ 
+ 	sun6i_dma_lli_add(NULL, v_lli, p_lli, txd);
+ 
+-	sun6i_dma_dump_lli(vchan, v_lli);
++	sun6i_dma_dump_lli(vchan, v_lli, p_lli);
+ 
+ 	return vchan_tx_prep(&vchan->vc, &txd->vd, flags);
+ 
+@@ -746,14 +743,16 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_slave_sg(
+ 	}
+ 
+ 	dev_dbg(chan2dev(chan), "First: %pad\n", &txd->p_lli);
+-	for (prev = txd->v_lli; prev; prev = prev->v_lli_next)
+-		sun6i_dma_dump_lli(vchan, prev);
++	for (p_lli = txd->p_lli, v_lli = txd->v_lli; v_lli;
++	     p_lli = v_lli->p_lli_next, v_lli = v_lli->v_lli_next)
++		sun6i_dma_dump_lli(vchan, v_lli, p_lli);
+ 
+ 	return vchan_tx_prep(&vchan->vc, &txd->vd, flags);
+ 
+ err_lli_free:
+-	for (prev = txd->v_lli; prev; prev = prev->v_lli_next)
+-		dma_pool_free(sdev->pool, prev, virt_to_phys(prev));
++	for (p_lli = txd->p_lli, v_lli = txd->v_lli; v_lli;
++	     p_lli = v_lli->p_lli_next, v_lli = v_lli->v_lli_next)
++		dma_pool_free(sdev->pool, v_lli, p_lli);
+ 	kfree(txd);
+ 	return NULL;
+ }
+@@ -820,8 +819,9 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_cyclic(
+ 	return vchan_tx_prep(&vchan->vc, &txd->vd, flags);
+ 
+ err_lli_free:
+-	for (prev = txd->v_lli; prev; prev = prev->v_lli_next)
+-		dma_pool_free(sdev->pool, prev, virt_to_phys(prev));
++	for (p_lli = txd->p_lli, v_lli = txd->v_lli; v_lli;
++	     p_lli = v_lli->p_lli_next, v_lli = v_lli->v_lli_next)
++		dma_pool_free(sdev->pool, v_lli, p_lli);
+ 	kfree(txd);
+ 	return NULL;
+ }
 -- 
 2.35.1
 

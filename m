@@ -2,53 +2,53 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68D4250E570
-	for <lists+dmaengine@lfdr.de>; Mon, 25 Apr 2022 18:18:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5A7250E5DA
+	for <lists+dmaengine@lfdr.de>; Mon, 25 Apr 2022 18:30:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234574AbiDYQVr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 25 Apr 2022 12:21:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43544 "EHLO
+        id S229761AbiDYQdU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 25 Apr 2022 12:33:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235135AbiDYQVq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 25 Apr 2022 12:21:46 -0400
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAE485C845;
-        Mon, 25 Apr 2022 09:18:41 -0700 (PDT)
-Received: by mail-qk1-f174.google.com with SMTP id d19so11141997qko.3;
-        Mon, 25 Apr 2022 09:18:41 -0700 (PDT)
+        with ESMTP id S243382AbiDYQdR (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 25 Apr 2022 12:33:17 -0400
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 035FC1D33B;
+        Mon, 25 Apr 2022 09:30:12 -0700 (PDT)
+Received: by mail-qt1-f177.google.com with SMTP id x21so1230908qtr.12;
+        Mon, 25 Apr 2022 09:30:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WmopMEhO5sJFa6N97UeuS8xj6v439U2xJGJI9H+fOkk=;
-        b=DxX5Ty4jmUn0D5FNwwBv8ooLxTYpmWIUGhJWQHyWn/Gu8xpyCAf4ypFNeUDgv9c9Mw
-         6zj1ti+x60e9rgU28CEFTRPJRfItC4IBhZtnQixRfUj43uUsmrSIMkhcQUcOFTwFvITK
-         Ll4eHdb0yWsKXVxN2ch75luSIi2ZxwlHFLMohNSK+SqJOaSqFVP1bQ9Do+SnqKDQ2up/
-         jWI6eXGyHgsG17ZMdoEacrNtWNi3EMxarvQFTZkU6e1ZkkctcInQEOpkoga3p4mNP/R1
-         3ihZ1zlp9WW4iIMbxDK3vKbXbgS9HtXFEqcTvJzqpJhXwLJ6R0att11pyTo07S01Tcjk
-         N0Vg==
-X-Gm-Message-State: AOAM533Y2TWMuGUGLRSMCWugUaraqXTy9X4Fs79Jwioksfb+hLKrmgIJ
-        0XFImG2jS/6HLkpTmQQUKH+kLtAnN5SGTg==
-X-Google-Smtp-Source: ABdhPJxTWChXVzYuuLjx4uora+ov5MmoM4yvCSzOIhk+JG+tW4wFW6PgktnEbFI55VZoLa0olNSaaA==
-X-Received: by 2002:a05:620a:4611:b0:69f:6a64:e694 with SMTP id br17-20020a05620a461100b0069f6a64e694mr1633421qkb.36.1650903520803;
-        Mon, 25 Apr 2022 09:18:40 -0700 (PDT)
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
-        by smtp.gmail.com with ESMTPSA id d15-20020ac84e2f000000b002f36938f259sm1873797qtw.91.2022.04.25.09.18.40
+        bh=HkzV/+2M9zHmKkv5bNxhza8d87qIgaSeR4/CvCviOfQ=;
+        b=2Kk6rDeuTgB4OrDnSqGU3Za1myqVwD/dWhfhnv3Qky8mZkdwIvDQwy9/abzn5TAT77
+         wLgTHFGVaOosAYmBKywI1xQ4CKfx3jpPYx/wMPbSE1hLJCl/bSK/pvraNtllSWCbdTBq
+         bA73ckq3//sLcUslOBIhS+1GEF6xreoE5Djao/RWj2Rug29jMepyXCqhFu5VqaX0c5/b
+         apd8qDi7HfoglCtxayg7DyRvrEjjkApyQdZEHnGOvMZBsapmv7sPfTOcWv8yuZv48kt0
+         vEt4q0rHmfoGk/61Xq0YkNd+Gl+Zm7FcibX0ekHNh+wh/HwP9CH6M9xd6O57U+F5c4v0
+         LgaQ==
+X-Gm-Message-State: AOAM533o/2gSDGeXjqyfL2b8sZABIYgffHYTHAAww7XEmwYVZxZiuzhT
+        /Ezqbb+bxltfwtIvdpqEIK4SC/9AvgH5ZQ==
+X-Google-Smtp-Source: ABdhPJx5eEvGk96GMcwbmzSBKCM3cv3JYfyXrnImWf2JSreFhhCPWgoj92dYFLtMxcA+AqLl8Th7wg==
+X-Received: by 2002:ac8:1191:0:b0:2ed:bb6:ab07 with SMTP id d17-20020ac81191000000b002ed0bb6ab07mr12525257qtj.418.1650904210793;
+        Mon, 25 Apr 2022 09:30:10 -0700 (PDT)
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com. [209.85.128.181])
+        by smtp.gmail.com with ESMTPSA id f39-20020a05622a1a2700b002f367d7a7a5sm2265190qtb.23.2022.04.25.09.30.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Apr 2022 09:18:40 -0700 (PDT)
-Received: by mail-yb1-f175.google.com with SMTP id r189so27977419ybr.6;
-        Mon, 25 Apr 2022 09:18:40 -0700 (PDT)
-X-Received: by 2002:a25:8087:0:b0:641:dd06:577d with SMTP id
- n7-20020a258087000000b00641dd06577dmr16564168ybk.207.1650903519962; Mon, 25
- Apr 2022 09:18:39 -0700 (PDT)
+        Mon, 25 Apr 2022 09:30:10 -0700 (PDT)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-2ef5380669cso154297037b3.9;
+        Mon, 25 Apr 2022 09:30:09 -0700 (PDT)
+X-Received: by 2002:a81:1cd5:0:b0:2f4:c3fc:2174 with SMTP id
+ c204-20020a811cd5000000b002f4c3fc2174mr17984532ywc.512.1650904209650; Mon, 25
+ Apr 2022 09:30:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220421085112.78858-1-miquel.raynal@bootlin.com> <20220421085112.78858-7-miquel.raynal@bootlin.com>
-In-Reply-To: <20220421085112.78858-7-miquel.raynal@bootlin.com>
+References: <20220421085112.78858-1-miquel.raynal@bootlin.com> <20220421085112.78858-9-miquel.raynal@bootlin.com>
+In-Reply-To: <20220421085112.78858-9-miquel.raynal@bootlin.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 25 Apr 2022 18:18:28 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWaViDYRnwdpD+m73ZisDSMKESfcGbanf6qXR1M2167EQ@mail.gmail.com>
-Message-ID: <CAMuHMdWaViDYRnwdpD+m73ZisDSMKESfcGbanf6qXR1M2167EQ@mail.gmail.com>
-Subject: Re: [PATCH v11 6/9] clk: renesas: r9a06g032: Probe possible children
+Date:   Mon, 25 Apr 2022 18:29:58 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXkrdjETcgN9yruL_J_mL3q7OEMj2DbY36ppwg1eDU5SA@mail.gmail.com>
+Message-ID: <CAMuHMdXkrdjETcgN9yruL_J_mL3q7OEMj2DbY36ppwg1eDU5SA@mail.gmail.com>
+Subject: Re: [PATCH v11 8/9] ARM: dts: r9a06g032: Add the two DMA nodes
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Magnus Damm <magnus.damm@gmail.com>,
         Gareth Williams <gareth.williams.jx@renesas.com>,
@@ -70,12 +70,13 @@ Cc:     Magnus Damm <magnus.damm@gmail.com>,
         Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
         Rob Herring <robh@kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+        <devicetree@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -86,42 +87,39 @@ Hi Miquel,
 
 On Thu, Apr 21, 2022 at 10:51 AM Miquel Raynal
 <miquel.raynal@bootlin.com> wrote:
-> The clock controller device on r9a06g032 takes all the memory range that
-> is described as being a system controller. This range contains many
-> different (unrelated?) registers besides the ones belonging to the clock
-> controller, that can necessitate to be accessed from other peripherals.
->
-> For instance, the dmamux registers are there. The dmamux "device" will
-> be described as a child node of the clock/system controller node, which
-> means we need the top device driver (the clock controller driver in this
-> case) to populate its children manually.
+> Describe the two DMA controllers available on this SoC.
 >
 > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> Acked-by: Stephen Boyd <sboyd@kernel.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Thanks for your patch!
+Still, a few comments below, valid for both instances...
 
-> --- a/drivers/clk/renesas/r9a06g032-clocks.c
-> +++ b/drivers/clk/renesas/r9a06g032-clocks.c
-> @@ -996,7 +997,7 @@ static int __init r9a06g032_clocks_probe(struct platform_device *pdev)
+> --- a/arch/arm/boot/dts/r9a06g032.dtsi
+> +++ b/arch/arm/boot/dts/r9a06g032.dtsi
+> @@ -200,6 +200,36 @@ nand_controller: nand-controller@40102000 {
+>                         status = "disabled";
+>                 };
 >
->         sysctrl_priv = clocks;
->
-> -       return 0;
-> +       return of_platform_populate(np, NULL, NULL, dev);
+> +               dma0: dma-controller@40104000 {
+> +                       compatible = "renesas,r9a06g032-dma", "renesas,rzn1-dma";
+> +                       reg = <0x40104000 0x1000>;
+> +                       interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clock-names = "hclk";
+> +                       clocks = <&sysctrl R9A06G032_HCLK_DMA0>;
+> +                       dma-channels = <8>;
+> +                       dma-requests = <16>;
+> +                       dma-masters = <1>;
+> +                       #dma-cells = <3>;
+> +                       block_size = <0xfff>;
+> +                       data_width = <3>;
 
-This is a bit dangerous: in the (very unlikely) case that
-of_platform_populate() fails, the clock driver will fail to probe,
-and all managed cleanup will be done (not everything will be cleant
-up, though), while sysctrl_priv will still point to the now-freed
-r9a06g032_priv structure.
+This property is deprecated, in favor of "dma-width".
 
-So I think you just want to ignore the failure from
-of_platform_populate(), and return zero anyway.
+> +                       status = "disabled";
 
->  }
->
->  static const struct of_device_id r9a06g032_match[] = {
+Why not keep it enabled?
+
+> +               };
 
 Gr{oetje,eeting}s,
 

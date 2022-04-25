@@ -2,53 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 042C250E521
-	for <lists+dmaengine@lfdr.de>; Mon, 25 Apr 2022 18:05:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E00B50E533
+	for <lists+dmaengine@lfdr.de>; Mon, 25 Apr 2022 18:08:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235796AbiDYQIw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 25 Apr 2022 12:08:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50110 "EHLO
+        id S243189AbiDYQLi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 25 Apr 2022 12:11:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235505AbiDYQIv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 25 Apr 2022 12:08:51 -0400
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D0E93D490;
-        Mon, 25 Apr 2022 09:05:47 -0700 (PDT)
-Received: by mail-qv1-f53.google.com with SMTP id e17so12096911qvj.11;
-        Mon, 25 Apr 2022 09:05:47 -0700 (PDT)
+        with ESMTP id S236274AbiDYQLh (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 25 Apr 2022 12:11:37 -0400
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473C73D4A7;
+        Mon, 25 Apr 2022 09:08:33 -0700 (PDT)
+Received: by mail-qk1-f180.google.com with SMTP id y129so11106981qkb.2;
+        Mon, 25 Apr 2022 09:08:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WBB3hJAHggg/Ymff4O89TctaqpmLz5c/VRSvQSPD6EU=;
-        b=Parj+JdMS+7P/atDGKVlzVylPEIdEQeItI0RPe4FKg/lcrpLysFz7UIoFTp9vCdMHu
-         pqQBb/XjKSK5qctQxA6Bo4o2LskF55SYQn5YBkySGAq2NAAUZLZanRe3xWib6oCBG4IS
-         ijMMG9jQWUx9+kbQC4LdUq9jEGt1VS+pD+V6Nh7l+Pa6JqI2v2VuXmst5yfSQAI4hIUx
-         U/lfUSOf6p7Tjso4Jm0rS2RKrvXvM6L76bROgYOZJ/PU3YMAxVOoRvO6XVy8LXqcOZQy
-         97fIRxJDW5Kf/dBAzDJF9ootnOYCECjIRLmNgI9W8Eei6HyK4CAwcCwtCPEhNuM3CG4P
-         HC/g==
-X-Gm-Message-State: AOAM531qm6Z6ixXBfCin138O/dUPvOSdO/3sGsN8UQrwXPXWzsHlGyp/
-        xwCkP2h/td/ql5Kr1ZX644K2abfdjGaaQQ==
-X-Google-Smtp-Source: ABdhPJzgvTjHlgO41b046TZZXPUlZ1cbIJMoPrw3ADSVutUEaYSOUrknjJdHiD6A2ezNJuVoAGuPqg==
-X-Received: by 2002:a05:6214:e64:b0:446:3d57:d320 with SMTP id jz4-20020a0562140e6400b004463d57d320mr13034649qvb.87.1650902745825;
-        Mon, 25 Apr 2022 09:05:45 -0700 (PDT)
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
-        by smtp.gmail.com with ESMTPSA id 2-20020a05620a06c200b0069ea498aec7sm5176862qky.16.2022.04.25.09.05.45
+        bh=IHmbubdOPtstEpBS9UZl1HKEMRRPaARjRH3/+Y7nuDA=;
+        b=0q/H5HL3VyLkJQIqMrioindzHbe6HeEO8/J8zsncprNT8Ku6+VJtD+VmuLa9mbDRHg
+         CsEQtxvohi7qaOWsVsOcKTkvLNU5YHJXart7NljB3iIzeSUmqyimiI8lRb4IV14LhPyn
+         uPRIWFMN8CODyN2jlbJSU+j9ePYx3H3e1RGSXjroV6gmEpFUkvU/wz6ramuPRGi7KW1W
+         BysWn971sTvfUljB/YV27Y41c5x/KmXdE1A/GGYB0K9x5kJDvsDUnHxMl+RYp5AcszLp
+         Drom3EZHkDDNNHKjmKqCUfF9oXaEx1D1aRzwcCXljbS95OzK5zXuGhcEWayTkHh2Jcjr
+         +sAA==
+X-Gm-Message-State: AOAM533MnagFbFB2eNdacruzX1QaBy8nwg1cwLuIUVBzQMM8EaBnWELh
+        EWN78KUEmRA4cga+KsHi2VjyFtclmce40w==
+X-Google-Smtp-Source: ABdhPJysuem3fOkHdzpHFmHLqr1hCi43sUvtPcqnxUtmmh+RKUQRH1RZNtch9vXg3aXTmxSSXUmRGQ==
+X-Received: by 2002:a05:620a:4483:b0:69f:3647:b559 with SMTP id x3-20020a05620a448300b0069f3647b559mr5770129qkp.270.1650902911807;
+        Mon, 25 Apr 2022 09:08:31 -0700 (PDT)
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
+        by smtp.gmail.com with ESMTPSA id t22-20020a05620a451600b0069f4d952f8esm2320364qkp.0.2022.04.25.09.08.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Apr 2022 09:05:45 -0700 (PDT)
-Received: by mail-yb1-f173.google.com with SMTP id r189so27907232ybr.6;
-        Mon, 25 Apr 2022 09:05:45 -0700 (PDT)
+        Mon, 25 Apr 2022 09:08:31 -0700 (PDT)
+Received: by mail-yb1-f169.google.com with SMTP id w187so18517921ybe.2;
+        Mon, 25 Apr 2022 09:08:31 -0700 (PDT)
 X-Received: by 2002:a5b:24e:0:b0:63d:cba0:3d55 with SMTP id
- g14-20020a5b024e000000b0063dcba03d55mr16307751ybp.613.1650902745080; Mon, 25
- Apr 2022 09:05:45 -0700 (PDT)
+ g14-20020a5b024e000000b0063dcba03d55mr16322354ybp.613.1650902910982; Mon, 25
+ Apr 2022 09:08:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220421085112.78858-1-miquel.raynal@bootlin.com>
-In-Reply-To: <20220421085112.78858-1-miquel.raynal@bootlin.com>
+References: <20220421085112.78858-1-miquel.raynal@bootlin.com> <20220421085112.78858-3-miquel.raynal@bootlin.com>
+In-Reply-To: <20220421085112.78858-3-miquel.raynal@bootlin.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 25 Apr 2022 18:05:34 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU6Mb9k_g7yBCknmL9DMjUSzk=W_5wiMNDMsTN6RpkcLg@mail.gmail.com>
-Message-ID: <CAMuHMdU6Mb9k_g7yBCknmL9DMjUSzk=W_5wiMNDMsTN6RpkcLg@mail.gmail.com>
-Subject: Re: [PATCH v11 0/9] RZN1 DMA support
+Date:   Mon, 25 Apr 2022 18:08:19 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWgLhhc3po6EqSnKQrtKW4v+cDcT+iDg_i_KP0iL-XF3Q@mail.gmail.com>
+Message-ID: <CAMuHMdWgLhhc3po6EqSnKQrtKW4v+cDcT+iDg_i_KP0iL-XF3Q@mail.gmail.com>
+Subject: Re: [PATCH v11 2/9] dt-bindings: clock: r9a06g032-sysctrl: Reference
+ the DMAMUX subnode
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Magnus Damm <magnus.damm@gmail.com>,
         Gareth Williams <gareth.williams.jx@renesas.com>,
@@ -82,39 +83,41 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Miquel,
-
 On Thu, Apr 21, 2022 at 10:51 AM Miquel Raynal
 <miquel.raynal@bootlin.com> wrote:
-> This is the series bringing DMA support to RZN1 platforms.
-> Other series follow with eg. UART and RTC support as well.
-
-Thanks for your series!
-
-> There is no other conflicting dependency with the other series, so this
-> series can now entirely be merged in the dmaengine tree I believe.
+> This system controller contains several registers that have nothing to
+> do with the clock handling, like the DMA mux register. Describe this
+> part of the system controller as a subnode.
 >
-> Changes in v11:
-> * Renamed two defines.
-> * Changed the way the bitmap is declared.
-> * Updated the cover letter: this series can now go in through the
->   dmaengine tree.
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Acked-by: Stephen Boyd <sboyd@kernel.org>
 
-/me confused
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> Miquel Raynal (9):
->   dt-bindings: dmaengine: Introduce RZN1 dmamux bindings
->   dt-bindings: clock: r9a06g032-sysctrl: Reference the DMAMUX subnode
->   dt-bindings: dmaengine: Introduce RZN1 DMA compatible
->   soc: renesas: rzn1-sysc: Export function to set dmamux
->   dmaengine: dw: dmamux: Introduce RZN1 DMA router support
->   clk: renesas: r9a06g032: Probe possible children
->   dmaengine: dw: Add RZN1 compatible
->   ARM: dts: r9a06g032: Add the two DMA nodes
->   ARM: dts: r9a06g032: Describe the DMA router
+> --- a/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.yaml
+> +++ b/Documentation/devicetree/bindings/clock/renesas,r9a06g032-sysctrl.yaml
+> @@ -39,6 +39,17 @@ properties:
+>    '#power-domain-cells':
+>      const: 0
+>
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 1
+> +
+> +patternProperties:
+> +  "^dma-router@[a-f0-9]+$":
 
-The last two DTS parts have to go in through the renesas-arm-dt and
-soc trees.
+For now this must be @a0, right?
+
+> +    type: object
+> +    $ref: "../dma/renesas,rzn1-dmamux.yaml#"
+> +
+>  required:
+>    - compatible
+>    - reg
 
 Gr{oetje,eeting}s,
 

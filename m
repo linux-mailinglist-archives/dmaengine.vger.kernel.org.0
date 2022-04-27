@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 73694511DA6
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Apr 2022 20:35:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EBBA511F80
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Apr 2022 20:38:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242411AbiD0QRX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 27 Apr 2022 12:17:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43534 "EHLO
+        id S242548AbiD0QRb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 27 Apr 2022 12:17:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242401AbiD0QRE (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Apr 2022 12:17:04 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAA434ECDF
-        for <dmaengine@vger.kernel.org>; Wed, 27 Apr 2022 09:13:31 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id y21so2541195edo.2
-        for <dmaengine@vger.kernel.org>; Wed, 27 Apr 2022 09:13:31 -0700 (PDT)
+        with ESMTP id S242468AbiD0QRI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Apr 2022 12:17:08 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F596887B6
+        for <dmaengine@vger.kernel.org>; Wed, 27 Apr 2022 09:13:33 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id m20so4363054ejj.10
+        for <dmaengine@vger.kernel.org>; Wed, 27 Apr 2022 09:13:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CJ0Q0VIVseR/Xb4PlIow7xAWcCO8wMqCFaxsrqIqI0E=;
-        b=z36uwV2biMuX7aEOYbj+qX86qD6s9FGt0SQ37STxHrtt4/vndOieapuTz7F7UCWZAW
-         aiwA6CYM5/L0ZrALS2ikzoY2VbWvevf7pcQB9Jm0//GioGOqRtZH6zP29/BT9dvzuD52
-         D3jNBi60NuVf30cZBAEIpS9Z/geexHVdwE4af7qnjwziiMnCGBAW2xJPx4RkjZSxfEX9
-         T3cy7syL04bfGoPPIOIZz7hds3otV7gzlMEtSH7Q9wcbLUSeXsY2Gm61PIN8E+g4p2lL
-         khBtS+fkTqh/o7EwWcaTD/tqYtsC6foBHUXUaDE0GpoXuwK2Uzowv6jKIAnBp/gisIuM
-         UZ6A==
+        bh=7ILgIEY7wMcCopOsdlDifUioNzWZT1dVF0DliY6j2xA=;
+        b=aIRUrWNUAkLkKyCC66gt5pLcQDgoAUTdfKXeiO38cltao7py5UUmLVpJW2tNRpUE0D
+         J+dVbGxVwviCWKm1GP7hRS2MRdonCbEEzgwnz9GMEGxkvLPTigFDmvsjIzjMca5wcRT7
+         Ft9SFx6/iVm/fzNy1woKLM9uTpF289KptlTwC07P5LaG1hYm/hUDOXWcObH0JluHcchH
+         hZ289HYXtnwop32bGsjH7SXdKfNpPb6Dv2er5BnTAFIGRqxTQ3edKlMSLb/vzsybWv3I
+         Zji4X2nzxdA2T6ygP/7XYyHiGLcBoquC2t5a3U4wWYIojsZ2GZnXbO9Y4GE4g4/c0h+a
+         QBeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CJ0Q0VIVseR/Xb4PlIow7xAWcCO8wMqCFaxsrqIqI0E=;
-        b=Y3dfsmfuNevOWUQSMOddnughLjwIey5lNwQjry0OSLF5WbPXNkhAS4P+7J+fJd48zF
-         bgk6Wp6ByjUfaNVuuOROLj0e48dGWvSgEAbJ83btl2CjWoaF1tBKeysGYTS3iP97b96k
-         Ov8Ffj073jTaYga4mbPvjSH6cMOTPyypdfaywhCc8mUzb3XdzPYjECrew/pUhZ+Wl9SG
-         X9wh+Q6C409NDM5PFbAGOpb/bEvazZbKzeddeqq3LaUuNFKkmJac5P7uqZt9wG1HmnAc
-         lVxEdiK4B4r/JFEEO7Ld6RcnIujoIlopR6/iedyAkRKONXX/cZ3ahfu1sOSXV3O1Al7K
-         2zMQ==
-X-Gm-Message-State: AOAM531VveziwqZPm7odBkWJ2gzyMY4ZfIMKCppe+3k/wZU5JLXaYpZr
-        U8+c67wUQhLPIAhPt4bcSEO0mQ==
-X-Google-Smtp-Source: ABdhPJzSn0FYas1QV4SMn40wPscL93D8P1JanFGmr+WWiNVuEvgQMnwABPrQW4yIKtaPwlnhry7ubw==
-X-Received: by 2002:a05:6402:34cd:b0:424:793:9f65 with SMTP id w13-20020a05640234cd00b0042407939f65mr31284723edc.88.1651076005315;
-        Wed, 27 Apr 2022 09:13:25 -0700 (PDT)
+        bh=7ILgIEY7wMcCopOsdlDifUioNzWZT1dVF0DliY6j2xA=;
+        b=n6VVElqYOBPRTa4pPGxTvcdPeXs4m7LqIwY0pyzjP+g2RHOh5ou+0hc35FvCfE3TXo
+         WgqydWzlQN45Ekbec9mX3+z9ThJ9Rc4QI9/+vqU/NkZb7Jh3AMh0sNy2DB0bwJENXTxe
+         4y5XSiaGSzLDEHpGm3eOAt42E3kgzuFGBAziC5/W/xthVbtokPIAQJQ0wq8WH0SJJxFw
+         3/UnzPC14xZBKNQsPKkKbjuiJB4xGyL0NRyRylz7LDNmTsxK1/fyZzKnNL4Ey3KgclHc
+         ixOK7NWKmd0MUNcocC9Ss/zx/VMObz1WqDXQcEeh/VzlUpO8Bhfw9PpDwZUPxXUoY4Wm
+         IH4w==
+X-Gm-Message-State: AOAM533YnoOhh6Og24Y1NC2Q5KWm1MPqCKZD3pPlAi2PcIoX/MeVeKrD
+        Yf+wvSOW1A2tReTQoGyT2O/7Fg==
+X-Google-Smtp-Source: ABdhPJxyYdTqOLTvKkm/hVt8i19D/M2C638flWnCVKtx8surt5LeV7HAhzrc1Ww5KjpHznVXTZKHWg==
+X-Received: by 2002:a17:906:5d11:b0:6f3:722a:1fee with SMTP id g17-20020a1709065d1100b006f3722a1feemr21315677ejt.9.1651076006737;
+        Wed, 27 Apr 2022 09:13:26 -0700 (PDT)
 Received: from localhost.localdomain (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id n5-20020a170906378500b006efb4ab6f59sm6991197ejc.86.2022.04.27.09.13.23
+        by smtp.gmail.com with ESMTPSA id n5-20020a170906378500b006efb4ab6f59sm6991197ejc.86.2022.04.27.09.13.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Apr 2022 09:13:24 -0700 (PDT)
+        Wed, 27 Apr 2022 09:13:25 -0700 (PDT)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -59,9 +59,9 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         dmaengine@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 5/6] ARM: dts: da850: use new 'dma-channels' property
-Date:   Wed, 27 Apr 2022 18:13:18 +0200
-Message-Id: <20220427161319.647342-1-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 6/6] ARM: dts: dm81xx: use new 'dma-channels/requests' properties
+Date:   Wed, 27 Apr 2022 18:13:19 +0200
+Message-Id: <20220427161319.647342-2-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220427161126.647073-1-krzysztof.kozlowski@linaro.org>
 References: <20220427161126.647073-1-krzysztof.kozlowski@linaro.org>
@@ -77,27 +77,45 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The '#dma-channels' property was deprecated in favor of one defined by
-generic dma-common DT bindings.
+The '#dma-channels' and '#dma-requests' properties were deprecated in
+favor of these defined by generic dma-common DT bindings.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- arch/arm/boot/dts/da850.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/dm814x.dtsi | 4 ++--
+ arch/arm/boot/dts/dm816x.dtsi | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index c3942b4e82ad..0e8b42a95ba4 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -679,7 +679,7 @@ cppi41dma: dma-controller@201000 {
- 					    "scheduler", "queuemgr";
- 				interrupts = <58>;
+diff --git a/arch/arm/boot/dts/dm814x.dtsi b/arch/arm/boot/dts/dm814x.dtsi
+index 7702e048e110..ab2572482ba9 100644
+--- a/arch/arm/boot/dts/dm814x.dtsi
++++ b/arch/arm/boot/dts/dm814x.dtsi
+@@ -167,8 +167,8 @@ cppi41dma: dma-controller@47402000 {
+ 				interrupts = <17>;
+ 				interrupt-names = "glue";
  				#dma-cells = <2>;
--				#dma-channels = <4>;
-+				dma-channels = <4>;
- 				power-domains = <&psc1 1>;
- 				status = "okay";
+-				#dma-channels = <30>;
+-				#dma-requests = <256>;
++				dma-channels = <30>;
++				dma-requests = <256>;
  			};
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/dm816x.dtsi b/arch/arm/boot/dts/dm816x.dtsi
+index a9e7274806f4..317b7c74e32c 100644
+--- a/arch/arm/boot/dts/dm816x.dtsi
++++ b/arch/arm/boot/dts/dm816x.dtsi
+@@ -655,8 +655,8 @@ cppi41dma: dma-controller@47402000 {
+ 				interrupts = <17>;
+ 				interrupt-names = "glue";
+ 				#dma-cells = <2>;
+-				#dma-channels = <30>;
+-				#dma-requests = <256>;
++				dma-channels = <30>;
++				dma-requests = <256>;
+ 			};
+ 		};
+ 
 -- 
 2.32.0
 

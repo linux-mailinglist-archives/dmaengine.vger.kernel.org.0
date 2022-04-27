@@ -2,53 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27C42511B6E
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Apr 2022 16:58:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA174511B19
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Apr 2022 16:57:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234734AbiD0Mwu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 27 Apr 2022 08:52:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45068 "EHLO
+        id S235050AbiD0MyI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 27 Apr 2022 08:54:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234796AbiD0Mwt (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Apr 2022 08:52:49 -0400
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAE162BFC3A;
-        Wed, 27 Apr 2022 05:49:38 -0700 (PDT)
-Received: by mail-qk1-f169.google.com with SMTP id c1so1136584qkf.13;
-        Wed, 27 Apr 2022 05:49:38 -0700 (PDT)
+        with ESMTP id S235034AbiD0MyH (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Apr 2022 08:54:07 -0400
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 974FF2C259B;
+        Wed, 27 Apr 2022 05:50:56 -0700 (PDT)
+Received: by mail-qt1-f170.google.com with SMTP id o11so988246qtp.13;
+        Wed, 27 Apr 2022 05:50:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7Jp0v9pbUM9yFGwsPlv8tqGi+Rr3prTWvALgldiDZ9E=;
-        b=ImDGihnXJzBoGI8pOtwMosYFg9+Y/WMo86CYRIRgueq+7Ndn+AJvC6MgqG0+s2ngus
-         CblUiZsWN7JJB0OEmmRS5iR4juD/mtU2ZQpjGb7uxSlL1wIDC+Cp8QqIfZBFiqDUjjws
-         VVZ4KJFel9xVvBChyZRD9pwnFBfKepsAQzUfUFJJW2n/dCw8QsmuSymjvwep96qdPAyO
-         8aMpa8cgwKuQDBU4H6TKJt5/CTVxeQ5fIWFaNYV9CVWJH3lPBRCFoJWRREhG2lZ+BMmU
-         apynLPHuON569efhIwv3Jjr00RHXy5FNPYyWutLcrB5K86EEcHVNbDMZlxOfMj1E87gT
-         dgKg==
-X-Gm-Message-State: AOAM530ZeKDvEiREn9zEi6kbYIDx/Qavv19mgs5TYEKwg6ikANsMC4MW
-        b7C5sI8pxt26iWrZn7bT7GOLGcjjWrWS0g==
-X-Google-Smtp-Source: ABdhPJy3njATvfBvr7/xBSa61sriY5+cQjdtujuypVrImMthLXmn/CHiBPdjXkzE9YNdB3J05eDyew==
-X-Received: by 2002:a37:ad0e:0:b0:69e:d516:21 with SMTP id f14-20020a37ad0e000000b0069ed5160021mr16145839qkm.474.1651063777429;
-        Wed, 27 Apr 2022 05:49:37 -0700 (PDT)
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
-        by smtp.gmail.com with ESMTPSA id d71-20020a37684a000000b0069f9b166a09sm99522qkc.90.2022.04.27.05.49.36
+        bh=+FsGG6ML55JyWb07rb2rElQSAfjQo5KUMUNvexzkcfc=;
+        b=BKb032CNfel3jYjjsvtHSaZ/N5MKS4AxClULav9+4w0NXcNAbC+9Ig5jqyVhmeNxB7
+         cN8FNPeY35l4z27Zaqq2TTmQDcluvd6WIMMYsyX3OG18YXNEQjfByjK+s+26JUg8eHHV
+         pjCT05JtDoG5YXZ+xbNqT4hmHMgNvouw2tjPZnXTqkxQhkVOBWTE707vmrkn3iO+/eU5
+         YzkjuFs6KTzN8VYtXCZKwDDaLI4ihcxeN2NrjJCBg2s0ILZmfyJk27a34U2lU7KOi87S
+         K/nuWk1/AJU62U35PloWbydOFTDavkEegUa9S5NqyJxlBIE+335zVmRIGL/vcDead+zG
+         DzMw==
+X-Gm-Message-State: AOAM532vLQSq8fT8KNtS/GzRyNZRMSQ/YA8Sz0Ctk+T5YnDqVOTbiTst
+        prfwImzcyVjVYKNx/mDW0PmxrldK984ntg==
+X-Google-Smtp-Source: ABdhPJyFv5F603bAwFi5VI4ecbk46qlf8/nNDtcedW4E7Qq3+1TCcpw88I3sJD71BGg3gtuxfk1K/A==
+X-Received: by 2002:a05:622a:c3:b0:2f3:66ce:251d with SMTP id p3-20020a05622a00c300b002f366ce251dmr10587121qtw.157.1651063855243;
+        Wed, 27 Apr 2022 05:50:55 -0700 (PDT)
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
+        by smtp.gmail.com with ESMTPSA id v23-20020ae9e317000000b0069ea555b54dsm7816680qkf.128.2022.04.27.05.50.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Apr 2022 05:49:36 -0700 (PDT)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-2f7d7e3b5bfso17239957b3.5;
-        Wed, 27 Apr 2022 05:49:36 -0700 (PDT)
-X-Received: by 2002:a81:1cd5:0:b0:2f4:c3fc:2174 with SMTP id
- c204-20020a811cd5000000b002f4c3fc2174mr27573015ywc.512.1651063776385; Wed, 27
- Apr 2022 05:49:36 -0700 (PDT)
+        Wed, 27 Apr 2022 05:50:54 -0700 (PDT)
+Received: by mail-yb1-f182.google.com with SMTP id w187so3198277ybe.2;
+        Wed, 27 Apr 2022 05:50:54 -0700 (PDT)
+X-Received: by 2002:a25:8087:0:b0:641:dd06:577d with SMTP id
+ n7-20020a258087000000b00641dd06577dmr25319803ybk.207.1651063854230; Wed, 27
+ Apr 2022 05:50:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220427095653.91804-1-miquel.raynal@bootlin.com> <20220427095653.91804-5-miquel.raynal@bootlin.com>
-In-Reply-To: <20220427095653.91804-5-miquel.raynal@bootlin.com>
+References: <20220421085112.78858-1-miquel.raynal@bootlin.com>
+ <CAMuHMdU6Mb9k_g7yBCknmL9DMjUSzk=W_5wiMNDMsTN6RpkcLg@mail.gmail.com> <20220426093232.350ed9f4@xps13>
+In-Reply-To: <20220426093232.350ed9f4@xps13>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 27 Apr 2022 14:49:25 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdV+JfPu_w=0YAGGAhpDHh=8e6hO2hcDVMfo9BHgJqgRzA@mail.gmail.com>
-Message-ID: <CAMuHMdV+JfPu_w=0YAGGAhpDHh=8e6hO2hcDVMfo9BHgJqgRzA@mail.gmail.com>
-Subject: Re: [PATCH v12 4/9] clk: renesas: r9a06g032: Export function to set dmamux
+Date:   Wed, 27 Apr 2022 14:50:43 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUvD3xsObMJwhUtHVqPpAL-ehW8+sx0Ru8-zm18yWQVKA@mail.gmail.com>
+Message-ID: <CAMuHMdUvD3xsObMJwhUtHVqPpAL-ehW8+sx0Ru8-zm18yWQVKA@mail.gmail.com>
+Subject: Re: [PATCH v11 0/9] RZN1 DMA support
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Magnus Damm <magnus.damm@gmail.com>,
         Gareth Williams <gareth.williams.jx@renesas.com>,
@@ -70,31 +71,64 @@ Cc:     Magnus Damm <magnus.damm@gmail.com>,
         Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
         Rob Herring <robh@kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Apr 27, 2022 at 11:57 AM Miquel Raynal
-<miquel.raynal@bootlin.com> wrote:
-> The dmamux register is located within the system controller.
->
-> Without syscon, we need an extra helper in order to give write access to
-> this register to a dmamux driver.
->
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> Acked-by: Stephen Boyd <sboyd@kernel.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Hi Miquel,
 
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Tue, Apr 26, 2022 at 9:32 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> geert@linux-m68k.org wrote on Mon, 25 Apr 2022 18:05:34 +0200:
+> > On Thu, Apr 21, 2022 at 10:51 AM Miquel Raynal
+> > <miquel.raynal@bootlin.com> wrote:
+> > > This is the series bringing DMA support to RZN1 platforms.
+> > > Other series follow with eg. UART and RTC support as well.
+> >
+> > Thanks for your series!
+> >
+> > > There is no other conflicting dependency with the other series, so this
+> > > series can now entirely be merged in the dmaengine tree I believe.
+> > >
+> > > Changes in v11:
+> > > * Renamed two defines.
+> > > * Changed the way the bitmap is declared.
+> > > * Updated the cover letter: this series can now go in through the
+> > >   dmaengine tree.
+> >
+> > /me confused
+> >
+> > > Miquel Raynal (9):
+> > >   dt-bindings: dmaengine: Introduce RZN1 dmamux bindings
+> > >   dt-bindings: clock: r9a06g032-sysctrl: Reference the DMAMUX subnode
+> > >   dt-bindings: dmaengine: Introduce RZN1 DMA compatible
+> > >   soc: renesas: rzn1-sysc: Export function to set dmamux
+> > >   dmaengine: dw: dmamux: Introduce RZN1 DMA router support
+> > >   clk: renesas: r9a06g032: Probe possible children
+> > >   dmaengine: dw: Add RZN1 compatible
+> > >   ARM: dts: r9a06g032: Add the two DMA nodes
+> > >   ARM: dts: r9a06g032: Describe the DMA router
+> >
+> > The last two DTS parts have to go in through the renesas-arm-dt and
+> > soc trees.
+>
+> Yes, DT usually never go in through subsystem trees anyway, of
+> course they should be taken in through the Renesas tree. For the other
+> patches I think its simpler if everything goes through the dmaengine
+> tree, but I'm fine either way, I'll let you discuss this with the DMA
+> folks if you disagree.
+
+Fine for me.  I've acked the renesas-clk related patches, so they
+can go in through the dmaengine tree.
+
+Thanks!
 
 Gr{oetje,eeting}s,
 

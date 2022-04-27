@@ -2,54 +2,53 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51DFB511A43
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Apr 2022 16:56:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27C42511B6E
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Apr 2022 16:58:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234688AbiD0MwN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 27 Apr 2022 08:52:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42110 "EHLO
+        id S234734AbiD0Mwu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 27 Apr 2022 08:52:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234698AbiD0MwM (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Apr 2022 08:52:12 -0400
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E5EE2BD004;
-        Wed, 27 Apr 2022 05:49:01 -0700 (PDT)
-Received: by mail-qt1-f170.google.com with SMTP id y3so995468qtn.8;
-        Wed, 27 Apr 2022 05:49:01 -0700 (PDT)
+        with ESMTP id S234796AbiD0Mwt (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Apr 2022 08:52:49 -0400
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAE162BFC3A;
+        Wed, 27 Apr 2022 05:49:38 -0700 (PDT)
+Received: by mail-qk1-f169.google.com with SMTP id c1so1136584qkf.13;
+        Wed, 27 Apr 2022 05:49:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WFUJPZyPa9jMX7ykKlKZoQbCP5YOPmzPXfT2p0KFBPE=;
-        b=k8Ez6K8RUWcU4bx2QX3wcSVv6oOPCJn3a2uPw04OFoTLctf23HeG2YW4othPi4pPqf
-         mT7RlRW0MK2jY1Sa7TxzL1J1JKo4bmiLYgpU8rPkBrQ+KlFVKni4p/uQsBh83khjmhwA
-         9bHGhTVJQRCqU9w8s43OePXVU3HcCNihvSvJ4/acFJ0+IEpqTjv3g7rq2NJ95mjYsf73
-         C1WuHvIPRbb2EyFf3/H4PMA2znnENEUtpT3ZFP1aN+t6VP59H+qJ5Zahn/WM9+az8oM7
-         M6A1Q2Zkp2xe/lQcuEA6BVAvHY6NtWtqKjny3TlTYPzKyxR3RXaGRBvZ3VK2m6jEwQBL
-         JHcg==
-X-Gm-Message-State: AOAM530kfhdTY15br4arE+YAwX7Z7gWIeK1HtTEKYNQopD7f6vDF9NvD
-        oMdKvPzGnkVvhcUpxvNXXUdzsUMa6sYR5g==
-X-Google-Smtp-Source: ABdhPJwcfFaRxVSdLx0cIC41PNuM+zRikrE0GGcgEeLiqICv++Ke37bBlEgBd9LM3FKSEy287CZKoA==
-X-Received: by 2002:ac8:5f8d:0:b0:2f3:3f9a:d5bb with SMTP id j13-20020ac85f8d000000b002f33f9ad5bbmr18756730qta.314.1651063740304;
-        Wed, 27 Apr 2022 05:49:00 -0700 (PDT)
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
-        by smtp.gmail.com with ESMTPSA id h14-20020a05620a21ce00b0069e8c2d2bd9sm7703108qka.42.2022.04.27.05.48.59
+        bh=7Jp0v9pbUM9yFGwsPlv8tqGi+Rr3prTWvALgldiDZ9E=;
+        b=ImDGihnXJzBoGI8pOtwMosYFg9+Y/WMo86CYRIRgueq+7Ndn+AJvC6MgqG0+s2ngus
+         CblUiZsWN7JJB0OEmmRS5iR4juD/mtU2ZQpjGb7uxSlL1wIDC+Cp8QqIfZBFiqDUjjws
+         VVZ4KJFel9xVvBChyZRD9pwnFBfKepsAQzUfUFJJW2n/dCw8QsmuSymjvwep96qdPAyO
+         8aMpa8cgwKuQDBU4H6TKJt5/CTVxeQ5fIWFaNYV9CVWJH3lPBRCFoJWRREhG2lZ+BMmU
+         apynLPHuON569efhIwv3Jjr00RHXy5FNPYyWutLcrB5K86EEcHVNbDMZlxOfMj1E87gT
+         dgKg==
+X-Gm-Message-State: AOAM530ZeKDvEiREn9zEi6kbYIDx/Qavv19mgs5TYEKwg6ikANsMC4MW
+        b7C5sI8pxt26iWrZn7bT7GOLGcjjWrWS0g==
+X-Google-Smtp-Source: ABdhPJy3njATvfBvr7/xBSa61sriY5+cQjdtujuypVrImMthLXmn/CHiBPdjXkzE9YNdB3J05eDyew==
+X-Received: by 2002:a37:ad0e:0:b0:69e:d516:21 with SMTP id f14-20020a37ad0e000000b0069ed5160021mr16145839qkm.474.1651063777429;
+        Wed, 27 Apr 2022 05:49:37 -0700 (PDT)
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
+        by smtp.gmail.com with ESMTPSA id d71-20020a37684a000000b0069f9b166a09sm99522qkc.90.2022.04.27.05.49.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Apr 2022 05:49:00 -0700 (PDT)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-2f83983782fso17177167b3.6;
-        Wed, 27 Apr 2022 05:48:59 -0700 (PDT)
-X-Received: by 2002:a81:e10d:0:b0:2f7:bb2a:6529 with SMTP id
- w13-20020a81e10d000000b002f7bb2a6529mr23587238ywh.62.1651063739499; Wed, 27
- Apr 2022 05:48:59 -0700 (PDT)
+        Wed, 27 Apr 2022 05:49:36 -0700 (PDT)
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-2f7d7e3b5bfso17239957b3.5;
+        Wed, 27 Apr 2022 05:49:36 -0700 (PDT)
+X-Received: by 2002:a81:1cd5:0:b0:2f4:c3fc:2174 with SMTP id
+ c204-20020a811cd5000000b002f4c3fc2174mr27573015ywc.512.1651063776385; Wed, 27
+ Apr 2022 05:49:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220427095653.91804-1-miquel.raynal@bootlin.com> <20220427095653.91804-3-miquel.raynal@bootlin.com>
-In-Reply-To: <20220427095653.91804-3-miquel.raynal@bootlin.com>
+References: <20220427095653.91804-1-miquel.raynal@bootlin.com> <20220427095653.91804-5-miquel.raynal@bootlin.com>
+In-Reply-To: <20220427095653.91804-5-miquel.raynal@bootlin.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 27 Apr 2022 14:48:48 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUJOXwsFYTsMv9K+0MnJRnB5q7z4T52=yP_BVS8om6CBQ@mail.gmail.com>
-Message-ID: <CAMuHMdUJOXwsFYTsMv9K+0MnJRnB5q7z4T52=yP_BVS8om6CBQ@mail.gmail.com>
-Subject: Re: [PATCH v12 2/9] dt-bindings: clock: r9a06g032-sysctrl: Reference
- the DMAMUX subnode
+Date:   Wed, 27 Apr 2022 14:49:25 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV+JfPu_w=0YAGGAhpDHh=8e6hO2hcDVMfo9BHgJqgRzA@mail.gmail.com>
+Message-ID: <CAMuHMdV+JfPu_w=0YAGGAhpDHh=8e6hO2hcDVMfo9BHgJqgRzA@mail.gmail.com>
+Subject: Re: [PATCH v12 4/9] clk: renesas: r9a06g032: Export function to set dmamux
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Magnus Damm <magnus.damm@gmail.com>,
         Gareth Williams <gareth.williams.jx@renesas.com>,
@@ -76,8 +75,8 @@ Cc:     Magnus Damm <magnus.damm@gmail.com>,
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -86,12 +85,12 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 On Wed, Apr 27, 2022 at 11:57 AM Miquel Raynal
 <miquel.raynal@bootlin.com> wrote:
-> This system controller contains several registers that have nothing to
-> do with the clock handling, like the DMA mux register. Describe this
-> part of the system controller as a subnode.
+> The dmamux register is located within the system controller.
+>
+> Without syscon, we need an extra helper in order to give write access to
+> this register to a dmamux driver.
 >
 > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 > Acked-by: Stephen Boyd <sboyd@kernel.org>
 > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 

@@ -2,36 +2,36 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13ABF511626
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Apr 2022 13:33:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97A3E51155B
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Apr 2022 13:32:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232093AbiD0LCm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 27 Apr 2022 07:02:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39288 "EHLO
+        id S231736AbiD0LCw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 27 Apr 2022 07:02:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232036AbiD0LCY (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Apr 2022 07:02:24 -0400
+        with ESMTP id S231844AbiD0LCj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Apr 2022 07:02:39 -0400
 Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F8463E3854;
-        Wed, 27 Apr 2022 03:40:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97ED63F1E3A;
+        Wed, 27 Apr 2022 03:41:09 -0700 (PDT)
 Received: from relay12.mail.gandi.net (unknown [217.70.178.232])
-        by mslow1.mail.gandi.net (Postfix) with ESMTP id E9356CC4FE;
-        Wed, 27 Apr 2022 09:57:49 +0000 (UTC)
+        by mslow1.mail.gandi.net (Postfix) with ESMTP id 27A69CC462;
+        Wed, 27 Apr 2022 09:57:52 +0000 (UTC)
 Received: (Authenticated sender: miquel.raynal@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id C3909200003;
-        Wed, 27 Apr 2022 09:57:07 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPSA id 02EDB200012;
+        Wed, 27 Apr 2022 09:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1651053429;
+        t=1651053431;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=0OljYX8T7FsVZPSXMLNUJCohapQMxVrJMDIq7e2J5A4=;
-        b=FTv55tITzCMYcQLjzkavslm8rXVNjPrhdKy9Gj5jCHzpJo6UjjgqtdcRRRrp2BCZq3IjqQ
-        5ZHGPqtYPBVrzv+cTdFR77MA1ndlr5Tm2Hd8TueDhz+6eE8TDPOLn1pvToUtCtytWoEQ63
-        nHDC7AFgm3vymRE/qRYs6jGtIbxusg6D0YWweXPqlZ5WH+McatODhp1NJiYWS00ODn6KXg
-        H+A7pm3fiwVNrSnBeI80cKX+kb0LJZE2b8NNqlY/yHJJZJcwoWFoYOHrjwo/rQLym5KDOh
-        Et/OZsSlbsCxMsCsGDRyRLlYSQC+Nn1ASU2d0vbx4abd1YA3pkD7p8r7LEEV0Q==
+        bh=Wvra6RNRuCu2P8jLSDcUUkmJcWIau45cFl07/k1NsZM=;
+        b=X+YkpuI+mjKJDFukyw5iXjHr6x806XvTaDO2Vz0//c3tDV8zkCn1PS14GIHbc5xT+K5bEr
+        Y6ZQLQsoZNqkcP7SxflW0sE3p3KYPDtsVDWB8rqQSOb+J2a6Fa3lUUGdGPzIYYV3dhQlfb
+        IpZ/jtPHrlMbylmz2mRQyEv4n29Q6wWGiIaQn5NVNYOGJGKPJWFnQlZxDtgnzbIXIqExQc
+        nFI6g6Y4ZV1NGPQQWGywppCed+ZdJh58wjuyVfgHkAQLI9GwdI/MGIoPqQXLYsJFrBSMCJ
+        z4UFRmlEsVg+YLlGJdOTCeYrxHFzig+GZemywSXwRAD3xCDi7V3zpQKoEMCHAw==
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     Magnus Damm <magnus.damm@gmail.com>,
         Gareth Williams <gareth.williams.jx@renesas.com>,
@@ -51,10 +51,11 @@ Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
         linux-clk@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v12 6/9] clk: renesas: r9a06g032: Probe possible children
-Date:   Wed, 27 Apr 2022 11:56:50 +0200
-Message-Id: <20220427095653.91804-7-miquel.raynal@bootlin.com>
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v12 7/9] dmaengine: dw: Add RZN1 compatible
+Date:   Wed, 27 Apr 2022 11:56:51 +0200
+Message-Id: <20220427095653.91804-8-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20220427095653.91804-1-miquel.raynal@bootlin.com>
 References: <20220427095653.91804-1-miquel.raynal@bootlin.com>
@@ -70,47 +71,30 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The clock controller device on r9a06g032 takes all the memory range that
-is described as being a system controller. This range contains many
-different (unrelated?) registers besides the ones belonging to the clock
-controller, that can necessitate to be accessed from other peripherals.
-
-For instance, the dmamux registers are there. The dmamux "device" will
-be described as a child node of the clock/system controller node, which
-means we need the top device driver (the clock controller driver in this
-case) to populate its children manually. In case of error when
-populating the children, we do not fail the probe on purpose to keep the
-clk driver up and running.
+The Renesas RZN1 DMA IP is very close to the original DW DMA IP, a DMA
+router has been introduced to handle the wiring options that have been
+added.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-By: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/clk/renesas/r9a06g032-clocks.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/dma/dw/platform.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/renesas/r9a06g032-clocks.c b/drivers/clk/renesas/r9a06g032-clocks.c
-index 052d99059981..69c0eb0eabd1 100644
---- a/drivers/clk/renesas/r9a06g032-clocks.c
-+++ b/drivers/clk/renesas/r9a06g032-clocks.c
-@@ -16,6 +16,7 @@
- #include <linux/math64.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/pm_clock.h>
- #include <linux/pm_domain.h>
-@@ -996,6 +997,10 @@ static int __init r9a06g032_clocks_probe(struct platform_device *pdev)
- 
- 	sysctrl_priv = clocks;
- 
-+	error = of_platform_populate(np, NULL, NULL, dev);
-+	if (error)
-+		dev_err(dev, "Failed to populate children (%d)\n", error);
-+
- 	return 0;
- }
- 
+diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
+index 246118955877..47f2292dba98 100644
+--- a/drivers/dma/dw/platform.c
++++ b/drivers/dma/dw/platform.c
+@@ -137,6 +137,7 @@ static void dw_shutdown(struct platform_device *pdev)
+ #ifdef CONFIG_OF
+ static const struct of_device_id dw_dma_of_id_table[] = {
+ 	{ .compatible = "snps,dma-spear1340", .data = &dw_dma_chip_pdata },
++	{ .compatible = "renesas,rzn1-dma", .data = &dw_dma_chip_pdata },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, dw_dma_of_id_table);
 -- 
 2.27.0
 

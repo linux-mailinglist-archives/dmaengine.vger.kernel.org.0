@@ -2,45 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8702B51302D
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Apr 2022 11:48:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1240D512FF2
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Apr 2022 11:48:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231724AbiD1Jtv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 28 Apr 2022 05:49:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45722 "EHLO
+        id S231819AbiD1Jty (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 28 Apr 2022 05:49:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346151AbiD1JWT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Apr 2022 05:22:19 -0400
-X-Greylist: delayed 610 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 28 Apr 2022 02:19:03 PDT
-Received: from router.aksignal.cz (router.aksignal.cz [62.44.4.214])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B95616D1B9
-        for <dmaengine@vger.kernel.org>; Thu, 28 Apr 2022 02:19:03 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by router.aksignal.cz (Postfix) with ESMTP id 8ED4243F7B;
-        Thu, 28 Apr 2022 11:08:50 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at router.aksignal.cz
-Received: from router.aksignal.cz ([127.0.0.1])
-        by localhost (router.aksignal.cz [127.0.0.1]) (amavisd-new, port 10026)
-        with LMTP id PanPl9nclkCA; Thu, 28 Apr 2022 11:08:50 +0200 (CEST)
-Received: from [172.25.161.48] (unknown [83.240.30.185])
-        (Authenticated sender: jiri.prchal@aksignal.cz)
-        by router.aksignal.cz (Postfix) with ESMTPSA id 9FC5443F79;
-        Thu, 28 Apr 2022 11:08:49 +0200 (CEST)
-Message-ID: <611a4f8c-917e-a0ba-c5d9-25651afa2a04@aksignal.cz>
-Date:   Thu, 28 Apr 2022 11:08:49 +0200
+        with ESMTP id S1347517AbiD1Jcy (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Apr 2022 05:32:54 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E5467CDD9;
+        Thu, 28 Apr 2022 02:29:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651138180; x=1682674180;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7BV5PZE7OVogZ8OnZ8XL8xlxDzHseF6zynr6xKJK83U=;
+  b=CXo5QWa5l1k4oNzpWYHHVdYZmM5SQ2Rwh+K9/eoBFGhEAqHjTOPmHNrE
+   MtspgnbxHp7v+X2YRzXePdKr71JeWjY5zWkXYlwk8poQrM1Zif8hYa0Gv
+   YWRAd0bcSEdLy/oRtYcyK53Uuy9a8PLWvC6DmTPZqPUDyjeY7VGNWr+Z0
+   h5qDqG0XOFCeSzmzSZx1j5nbpcAY+KN6Jup/iNnICVtJHtBT3JVOnkzc7
+   m1BCtoeidSa7sb93/4yIAoL0NAEt4PbgvIg49K5LTajaxD2rSKOcLT080
+   X3qK4kEmd5P+qbryzskbXk2rBfg66GUIRvvtoeWR47pobeU80E3meGxgB
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10330"; a="246139709"
+X-IronPort-AV: E=Sophos;i="5.90,295,1643702400"; 
+   d="scan'208";a="246139709"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 02:29:39 -0700
+X-IronPort-AV: E=Sophos;i="5.90,295,1643702400"; 
+   d="scan'208";a="618047838"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2022 02:29:29 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nk0Si-009ERe-Hp;
+        Thu, 28 Apr 2022 12:29:24 +0300
+Date:   Thu, 28 Apr 2022 12:29:24 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Allen Pais <apais@linux.microsoft.com>,
+        olivier.dautricourt@orolia.com, sr@denx.de, vkoul@kernel.org,
+        keescook@chromium.org, linux-hardening@vger.kernel.org,
+        ludovic.desroches@microchip.com, tudor.ambarus@microchip.com,
+        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, nsaenz@kernel.org,
+        paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com,
+        gustavo.pimentel@synopsys.com, vireshk@kernel.org,
+        leoyang.li@nxp.com, zw@zh-kernel.org, wangzhou1@hisilicon.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        sean.wang@mediatek.com, matthias.bgg@gmail.com, afaerber@suse.de,
+        mani@kernel.org, logang@deltatee.com, sanju.mehta@amd.com,
+        daniel@zonque.org, haojian.zhuang@gmail.com,
+        robert.jarzmik@free.fr, agross@kernel.org,
+        bjorn.andersson@linaro.org, krzysztof.kozlowski@linaro.org,
+        green.wan@sifive.com, orsonzhai@gmail.com, baolin.wang7@gmail.com,
+        zhang.lyra@gmail.com, patrice.chotard@foss.st.com,
+        linus.walleij@linaro.org, wens@csie.org, jernej.skrabec@gmail.com,
+        samuel@sholland.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
+Message-ID: <YmpedDjzZXz2t6NS@smile.fi.intel.com>
+References: <20220419211658.11403-1-apais@linux.microsoft.com>
+ <20220419211658.11403-2-apais@linux.microsoft.com>
+ <353023ba-d506-5d45-be68-df2025074ed6@kernel.org>
+ <3ee366a7-e61f-e513-aa2f-12e8d5316f3c@embeddedor.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-From:   =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal@aksignal.cz>
-Subject: atmel usart and dma tx
-To:     ludovic.desroches@microchip.com, tudor.ambarus@microchip.com,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
-References: <0f560987-151f-b844-e5b4-a3a10c8d46a8@aksignal.cz>
-Content-Language: en-US
-In-Reply-To: <0f560987-151f-b844-e5b4-a3a10c8d46a8@aksignal.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3ee366a7-e61f-e513-aa2f-12e8d5316f3c@embeddedor.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
         SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -48,72 +84,24 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi everybody,
-with kernel 5.17, at91sam9g25 running at 400MHz I discovered drop outs 
-while I write data (64 to 128B) to ttyS by one call of write(). At speed 
-230400 or 115200 Baud. It is not transmitted at once, there are random 
-spaces long 200us to 1ms. It should use DMA so I think it could be 
-transmitted at once.
-Is there everything OK with DMA or some special setting needed?
+On Mon, Apr 25, 2022 at 02:55:22PM -0500, Gustavo A. R. Silva wrote:
+> On 4/25/22 10:56, Krzysztof Kozlowski wrote:
+> > On 19/04/2022 23:16, Allen Pais wrote:
 
-dmesg:
-[    1.636666] bus: 'platform': __driver_probe_device: matched device 
-f801c000.serial with driver at91_usart_mode
-[    1.636666] bus: 'platform': really_probe: probing driver 
-at91_usart_mode with device f801c000.serial
-[    1.636666] pinctrl-at91 ahb:apb:pinctrl@fffff400: usart0-0: 2 0:0
-[    1.636666] pinctrl-at91 ahb:apb:pinctrl@fffff400: maps: function 
-usart0 group usart0-0 num 3
-[    1.636666] pinctrl-at91 ahb:apb:pinctrl@fffff400: usart0_rts-0: 1 0:2
-[    1.636666] pinctrl-at91 ahb:apb:pinctrl@fffff400: maps: function 
-usart0 group usart0_rts-0 num 2
-[    1.636666] pinctrl-at91 ahb:apb:pinctrl@fffff400: found group 
-selector 4 for usart0-0
-[    1.636666] pinctrl-at91 ahb:apb:pinctrl@fffff400: found group 
-selector 5 for usart0_rts-0
-[    1.636666] at91_usart_mode f801c000.serial: no init pinctrl state
-[    1.636666] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable function 
-usart0 group usart0-0
-[    1.636666] pinctrl-at91 ahb:apb:pinctrl@fffff400: enable function 
-usart0 group usart0_rts-0
-[    1.639999] at91_usart_mode f801c000.serial: no sleep pinctrl state
-[    1.643333] at91_usart_mode f801c000.serial: no idle pinctrl state
-[    1.643333] Registering platform device 'atmel_usart_serial.1.auto'. 
-Parent at f801c000.serial
-[    1.643333] device: 'atmel_usart_serial.1.auto': device_add
-[    1.643333] bus: 'platform': add device atmel_usart_serial.1.auto
-[    1.643333] bus: 'platform': __driver_probe_device: matched device 
-atmel_usart_serial.1.auto with driver atmel_usart_serial
-[    1.643333] bus: 'platform': really_probe: probing driver 
-atmel_usart_serial with device atmel_usart_serial.1.auto
-[    1.643333] atmel_usart_serial atmel_usart_serial.1.auto: no of_node; 
-not parsing pinctrl DT
-[    1.643333] atmel_usart_serial atmel_usart_serial.1.auto: no default 
-pinctrl state
-[    1.643333] atmel_usart_serial atmel_usart_serial.1.auto: GPIO lookup 
-for consumer rs485-term
-[    1.643333] atmel_usart_serial atmel_usart_serial.1.auto: using 
-device tree for GPIO lookup
-[    1.646666] atmel_usart_serial atmel_usart_serial.1.auto: using 
-lookup tables for GPIO lookup
-[    1.646666] atmel_usart_serial atmel_usart_serial.1.auto: No GPIO 
-consumer rs485-term found
-[    1.649999] atmel_usart_serial.1.auto: ttyS2 at MMIO 0xf801c000 (irq 
-= 24, base_baud = 8333333) is a ATMEL_SERIAL
-[    1.656666] driver: 'atmel_usart_serial': driver_bound: bound to 
-device 'atmel_usart_serial.1.auto'
-[    1.656666] bus: 'platform': really_probe: bound device 
-atmel_usart_serial.1.auto to driver atmel_usart_serial
-[    1.656666] driver: 'at91_usart_mode': driver_bound: bound to device 
-'f801c000.serial'
-[    1.656666] bus: 'platform': really_probe: bound device 
-f801c000.serial to driver at91_usart_mode
+...
 
-[   41.606666] atmel_usart_serial atmel_usart_serial.1.auto: using 
-dma0chan6 for rx DMA transfers
-[   41.613333] atmel_usart_serial atmel_usart_serial.1.auto: using 
-dma0chan7 for tx DMA transfers
+> > > Github: https://github.com/KSPP/linux/issues/94
+> > 
+> > 3. No external references to some issue management systems, change-ids
+> > etc. Lore link could work, but it's not relevant here, I guess.
+> 
+> I think the link to the KSPP issue tracker should stay. If something,
+> just changing 'Github:' to 'Link:'
 
-With kernel 4.5 spaces are there too, but shorter and less frequent.
-Thanks for any help,
-Jiri
+BugLink: would be more explicit.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+

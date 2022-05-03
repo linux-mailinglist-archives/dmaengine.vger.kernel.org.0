@@ -2,50 +2,50 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 988ED518E10
-	for <lists+dmaengine@lfdr.de>; Tue,  3 May 2022 22:08:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 994BA518E11
+	for <lists+dmaengine@lfdr.de>; Tue,  3 May 2022 22:09:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242165AbiECUM2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 3 May 2022 16:12:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45698 "EHLO
+        id S240795AbiECUMa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 3 May 2022 16:12:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242212AbiECUMV (ORCPT
+        with ESMTP id S242253AbiECUMV (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Tue, 3 May 2022 16:12:21 -0400
 Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED80B4093F
-        for <dmaengine@vger.kernel.org>; Tue,  3 May 2022 13:08:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9AD40938
+        for <dmaengine@vger.kernel.org>; Tue,  3 May 2022 13:08:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651608503; x=1683144503;
+  t=1651608508; x=1683144508;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=EnJ5Su7RR3jjj7To4p4p1aGGCrzCsNhKtD7qZhiBzvo=;
-  b=iRWN7xeMTdOnrb6jpT2W/WwaGw83veYD2yM4pwof3sY0dGkeJs+hhxdn
-   CHQ2ep+DpS2yYc5wYji77DagM1FTAh6kUhgYybYyl8vX3ziYAW1ULfZI5
-   jEcQDH2tLdx0Lc1H/KKWzdxwcc8zaXThoRBo9XXUvGtP0jQr2MU+PA5Zz
-   H3yzwV8O50EY75jWm87WymsBo7RYQD3FHF8Bc5B5TPhSh+t88G4D/SpXu
-   lhai+UBE3ohMeF2SOuEzKf6qg8o82gPJ7p8CaX4uVLQ/J7aT1iyKR0SQ1
-   q6fdYZLf0sXZhgjrvpmNs7uZ+Sla0Gdhc3kGqtXt/LNLBOsPYiQbIhxGq
+  bh=AbCtiizXn7mtWsj4iItd1wCayDjqPN6a2w8lSyAntQQ=;
+  b=UEZhKjTc+cHeiXLbqLJuDjglv+SxAzMQOaIw7mIQedVc2MGLPjE+nI13
+   WQEOQcP4QLQI9+1K7THMM9LZX6vq9uIx5C766+wy27uMCNl+HIqy7ckb4
+   /joWbXzLBEKAJmLxgIAqpNtLmmRD4rhm8isZD+Fmu9KQ+6yDrv4UfTq95
+   1YY8Syg/xTkPCxr2GkxDbEoP2bHT1Xf32kmGPtU0GL3SQgmBp7tBQzXUM
+   jtcFIC17ORcvuUC4YvmZUGDqECQzfWiyVaBZcBPTtaqQhaNgt7ziKMSvO
+   8vDINbVMKQMX++NdDM5q1iI9h9GrklGAh4MsZKclcJivplUeEPTDJklq2
    A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10336"; a="248118243"
+X-IronPort-AV: E=McAfee;i="6400,9594,10336"; a="248118258"
 X-IronPort-AV: E=Sophos;i="5.91,196,1647327600"; 
-   d="scan'208";a="248118243"
+   d="scan'208";a="248118258"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2022 13:08:23 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2022 13:08:28 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.91,196,1647327600"; 
-   d="scan'208";a="516705365"
+   d="scan'208";a="516705376"
 Received: from bwalker-desk.ch.intel.com ([143.182.136.162])
-  by orsmga003.jf.intel.com with ESMTP; 03 May 2022 13:08:23 -0700
+  by orsmga003.jf.intel.com with ESMTP; 03 May 2022 13:08:27 -0700
 From:   Ben Walker <benjamin.walker@intel.com>
 To:     vkoul@kernel.org
 Cc:     dmaengine@vger.kernel.org, herbert@gondor.apana.org.au,
         davem@davemloft.net, mchehab@kernel.org,
         mporter@kernel.crashing.org, alex.bou9@gmail.com,
         Ben Walker <benjamin.walker@intel.com>
-Subject: [PATCH v2 11/15] dmaengine: Remove dma_set_tx_state
-Date:   Tue,  3 May 2022 13:07:24 -0700
-Message-Id: <20220503200728.2321188-12-benjamin.walker@intel.com>
+Subject: [PATCH v2 12/15] dmaengine: Add provider documentation on cookie assignment
+Date:   Tue,  3 May 2022 13:07:25 -0700
+Message-Id: <20220503200728.2321188-13-benjamin.walker@intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220503200728.2321188-1-benjamin.walker@intel.com>
 References: <20220503200728.2321188-1-benjamin.walker@intel.com>
@@ -61,33 +61,83 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Nothing calls this anymore.
+Clarify the rules on assigning cookies to DMA transactions.
 
 Signed-off-by: Ben Walker <benjamin.walker@intel.com>
 ---
- drivers/dma/dmaengine.h | 9 ---------
- 1 file changed, 9 deletions(-)
+ .../driver-api/dmaengine/provider.rst         | 45 +++++++++++++++----
+ 1 file changed, 37 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/dma/dmaengine.h b/drivers/dma/dmaengine.h
-index 08c7bd7cfc229..7a5203175e6a8 100644
---- a/drivers/dma/dmaengine.h
-+++ b/drivers/dma/dmaengine.h
-@@ -88,15 +88,6 @@ static inline enum dma_status dma_cookie_status(struct dma_chan *chan,
- 	return DMA_IN_PROGRESS;
- }
+diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
+index e9e9de18d6b02..7c8ace703c96f 100644
+--- a/Documentation/driver-api/dmaengine/provider.rst
++++ b/Documentation/driver-api/dmaengine/provider.rst
+@@ -421,7 +421,9 @@ supported.
  
--static inline void dma_set_tx_state(struct dma_tx_state *st,
--	dma_cookie_t last, dma_cookie_t used, u32 residue)
--{
--	if (!st)
--		return;
+     - tx_submit: A pointer to a function you have to implement,
+       that is supposed to push the current transaction descriptor to a
+-      pending queue, waiting for issue_pending to be called.
++      pending queue, waiting for issue_pending to be called. Each
++      descriptor is given a cookie to identify it. See the section
++      "Cookie Management" below.
+ 
+   - In this structure the function pointer callback_result can be
+     initialized in order for the submitter to be notified that a
+@@ -526,6 +528,40 @@ supported.
+ 
+   - May sleep.
+ 
++Cookie Management
++------------------
++
++When a transaction is queued for submission via tx_submit(), the provider
++must assign that transaction a cookie (dma_cookie_t) to uniquely identify it.
++The provider is allowed to perform this assignment however it wants, but for
++convenience the following utility functions are available to create
++monotonically increasing cookies
++
++  .. code-block:: c
++
++    void dma_cookie_init(struct dma_chan *chan);
++
++  Called once at channel creation
++
++  .. code-block:: c
++
++    dma_cookie_t dma_cookie_assign(struct dma_async_tx_descriptor *tx);
++
++  Assign a cookie to the given descriptor
++
++  .. code-block:: c
++
++    void dma_cookie_complete(struct dma_async_tx_descriptor *tx);
++
++  Mark the descriptor as complete and invalidate the cookie
++
++  .. code-block:: c
++
++    enum dma_status dma_cookie_status(struct dma_chan *chan,
++      dma_cookie_t cookie, struct dma_tx_state *state);
++
++  Report the status of the cookie and filling in state, if not NULL.
++
+ 
+ Misc notes
+ ==========
+@@ -541,13 +577,6 @@ where to put them)
+ - Makes sure that dependent operations are run before marking it
+   as complete.
+ 
+-dma_cookie_t
 -
--	st->residue = residue;
--}
+-- it's a DMA transaction ID.
 -
- static inline void dma_set_residue(struct dma_tx_state *state, u32 residue)
- {
- 	if (state)
+-- The value can be chosen by the provider, or use the helper APIs
+-  such as dma_cookie_assign() and dma_cookie_complete().
+-
+ DMA_CTRL_ACK
+ 
+ - If clear, the descriptor cannot be reused by provider until the
 -- 
 2.35.1
 

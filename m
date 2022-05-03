@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AF66517DB3
-	for <lists+dmaengine@lfdr.de>; Tue,  3 May 2022 08:54:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB2E3517DDC
+	for <lists+dmaengine@lfdr.de>; Tue,  3 May 2022 08:54:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230400AbiECG4g (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 3 May 2022 02:56:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45986 "EHLO
+        id S230338AbiECG5J (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 3 May 2022 02:57:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230360AbiECG4L (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 May 2022 02:56:11 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FE4F193CA
-        for <dmaengine@vger.kernel.org>; Mon,  2 May 2022 23:52:06 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id g23so18804973edy.13
-        for <dmaengine@vger.kernel.org>; Mon, 02 May 2022 23:52:06 -0700 (PDT)
+        with ESMTP id S230413AbiECG4P (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 May 2022 02:56:15 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76E20193FD
+        for <dmaengine@vger.kernel.org>; Mon,  2 May 2022 23:52:08 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id a21so18827197edb.1
+        for <dmaengine@vger.kernel.org>; Mon, 02 May 2022 23:52:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Wp5ik2GdEev2NmO5gs/P/79zTEq06l4C05o8sV/RNnI=;
-        b=dwc1l5uUjBpcBzeNqqV6uPUcG4Rh6r22xGKSU5WrYVIcJ6QnV299Vc9+cWU43uuRBT
-         rYHTWBWAfo2Exan37L7y04t5y/vV7OlaIyvYMcb+eiYWUnjOs7wvUBhnl5xprzPqAGZw
-         qYw8YfTlTjzCDRy8RaVr5P/zIdWt5OzlXhFv4yJ3LUn61g9ZarmFkxGydCPqQGAq5XXX
-         AaeN82Ma3kB4wFZiHpgYON4ehgZpPVIFmNAdMl2WwpaoD01GcRpn/Rj6SGIqC1gVe9+s
-         o40pU3AgHSBB28jIguo5zZPcBuz3Jbp+bZ5TnnXTcorPHub5axHY6NxqPGqAq90qma0X
-         hgcw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=sVwYpRv6A4+S1bhstcYmZjP3ooQB2ceztq/bgoKx4Y0=;
+        b=m+UMq9HjFGL1pawSHWXNJXY44LbxRl3b3jZvFdOr24LdN7cVAsl0Yc71DBJ/7+Errp
+         SnNqwB6EnkY9DVlJXEW2Xv4nWFaVNGVJ0vTRZj3aMNR6UgDW1CPJKmEUG95memNdbie1
+         v06aoP4J842g6uQ+MwMldH5MnXWRA5K88BqSPnV8fXbKGcyps6jxcJSoHGDQ1GmbbPUy
+         bNjktXdRRKrdZWa6sINABtOr2Vu3rNQiwCgn2G36ZgNY5awGpYOY2IiMCGYKkQdXLBE1
+         HXoYaNb2ZSUtqBpX8+pUHe4G4am33WQOfTMXcxwZeJF+sslF2nrSE1AWzoj44Mrxv85X
+         xjlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Wp5ik2GdEev2NmO5gs/P/79zTEq06l4C05o8sV/RNnI=;
-        b=51EuJUmXRjsT6qn8aSgcDuNt8/Yqn7xVqqKB4r6Ot2xX7O5K2N+PZbkKrq8eg48M0m
-         Tty0cxpWAjGQWJzN6u+lSw0+30Mc1wWw1XTpJzdk3saaIjdWIWldIFrqT4fDxxRXEKng
-         OIH6hM1DS+Zb93NH4pHRrxtgHdfL9CF280Xuyr4Sk0oIxNp3Tw86OP0y436/ZJj+BvSF
-         VCuDR1j3JwqeMaH3r568YZkP2X/ds9+pwkX7owVHrQpCQpm9ypLZgI6vl2qatO9rJ6l0
-         RV/Ia62tSUAlXXynzlrF1fwhFEBHfu3hmaPGulCnybRwAGKPsi4mLgkw9mTZpLTH4knP
-         XqjQ==
-X-Gm-Message-State: AOAM533sG0T07TvJII8+UJrsD5BqHeSsHCKbHOn40JU7bETnAKy2sQ6J
-        ID6laTSPb+xD4RDKL523GDV2Ag==
-X-Google-Smtp-Source: ABdhPJxzaCAaSP3LdqlHPSEj2BHrm34n5Vg2UqJQXsTFeyj/wLsLrky2XRmSW1F6r5amjsyfRLtmAQ==
-X-Received: by 2002:a50:9f06:0:b0:425:c1ba:5037 with SMTP id b6-20020a509f06000000b00425c1ba5037mr16909166edf.285.1651560725209;
-        Mon, 02 May 2022 23:52:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sVwYpRv6A4+S1bhstcYmZjP3ooQB2ceztq/bgoKx4Y0=;
+        b=O9bcJzs3YMPNH868k/D0ocKYYll4NSTCqLrCApeGeyR1t8fav5FW7oDWJW2YjuNqLI
+         cgwSdzjBFUza9cx4Xy6UmVqnPN/ECQwOclN1LQz9LJNPkpWO6Wj3dO3W66ZVrxlvpnPW
+         zOmo+fmJU7mUewuNP/B4hZ9nXv5PAbQmBzjrb+169NKmf8HXpVGm9Q33rIqqeGcylJMR
+         wDJo+eS7K2K86OH9L/zVdYwYy9n9bW6+QvILJV+gzTp6voJUKGVyaD5qi3fl34kQi6aD
+         RTdMEi3eYwZjPHHETa8QdpX5vvr1dg8aXYoThqnomMdbo267kqzcH1c08hNsdq4TdY18
+         O1sQ==
+X-Gm-Message-State: AOAM531drl3aqOUFQ3/lxlI1tGPIMTRPB0elzqAxG9MQ10fP0xx7rR/V
+        vrZPLQh8JDY3+wf9uNWU3qeaBA==
+X-Google-Smtp-Source: ABdhPJxX41ad42ohDONU2inC36SvNn3yJ8FVybQJC23jj81KFEG0aHFRSNIgZA4e/OODJOxCriEyJg==
+X-Received: by 2002:aa7:c04e:0:b0:400:4daf:bab1 with SMTP id k14-20020aa7c04e000000b004004dafbab1mr16455194edo.101.1651560726854;
+        Mon, 02 May 2022 23:52:06 -0700 (PDT)
 Received: from localhost.localdomain (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id hf27-20020a1709072c5b00b006f3ef214e2fsm4382915ejc.149.2022.05.02.23.52.04
+        by smtp.gmail.com with ESMTPSA id hf27-20020a1709072c5b00b006f3ef214e2fsm4382915ejc.149.2022.05.02.23.52.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 May 2022 23:52:04 -0700 (PDT)
+        Mon, 02 May 2022 23:52:06 -0700 (PDT)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -58,12 +58,16 @@ To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         dmaengine@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v3 0/6] dmaengine/ARM: ti/am33xx: use proper 'dma-channels/requests' properties
-Date:   Tue,  3 May 2022 08:51:55 +0200
-Message-Id: <20220503065201.51818-1-krzysztof.kozlowski@linaro.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 1/6] dt-bindings: usb: am33xx-usb: deprecate '#dma-channels'
+Date:   Tue,  3 May 2022 08:51:56 +0200
+Message-Id: <20220503065201.51818-2-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220503065201.51818-1-krzysztof.kozlowski@linaro.org>
+References: <20220503065201.51818-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -75,49 +79,40 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,
+The generic property, used in most of the drivers and defined in generic
+dma-common DT bindings, is 'dma-channels'.
 
-The core DT schema defines generic 'dma-channels' and 'dma-requests'
-properties, so in preparation to moving bindings to DT schema, convert
-existing users of '#dma-channels' and '#dma-requests' to the generic
-variant.
-
-Not tested on hardware.
-
-The patchset is bisectable - please pick up through independent trees.
-
-Changes since v2
-================
-1. Keep old properties, so the patchset is bisectable.
-2. Add review tags.
-
-Changes since v1
-================
-1. Add missing TI patches.
-
-See also:
-[1] https://lore.kernel.org/linux-devicetree/fedb56be-f275-aabb-cdf5-dbd394b8a7bd@linaro.org/T/#m6235f451045c337d70a62dc65eab9a716618550b
-
-Best regards,
-Krzysztof
-
-Krzysztof Kozlowski (6):
-  dt-bindings: usb: am33xx-usb: deprecate '#dma-channels'
-  dt-bindings: usb: da8xx-usb: deprecate '#dma-channels'
-  dmaengine: ti: deprecate '#dma-channels'
-  ARM: dts: am33xx: use new 'dma-channels/requests' properties
-  ARM: dts: da850: use new 'dma-channels' property
-  ARM: dts: dm81xx: use new 'dma-channels/requests' properties
-
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
  Documentation/devicetree/bindings/usb/am33xx-usb.txt | 7 ++++---
- Documentation/devicetree/bindings/usb/da8xx-usb.txt  | 5 +++--
- arch/arm/boot/dts/am33xx.dtsi                        | 3 +++
- arch/arm/boot/dts/da850.dtsi                         | 2 ++
- arch/arm/boot/dts/dm814x.dtsi                        | 3 +++
- arch/arm/boot/dts/dm816x.dtsi                        | 3 +++
- drivers/dma/ti/cppi41.c                              | 6 +++++-
- 7 files changed, 23 insertions(+), 6 deletions(-)
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/usb/am33xx-usb.txt b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
+index 7a198a30408a..654ffc62d013 100644
+--- a/Documentation/devicetree/bindings/usb/am33xx-usb.txt
++++ b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
+@@ -61,8 +61,9 @@ DMA
+   endpoint number (0 … 14 for endpoints 1 … 15 on instance 0 and 15 … 29
+   for endpoints 1 … 15 on instance 1). The second number is 0 for RX and
+   1 for TX transfers.
+-- #dma-channels: should be set to 30 representing the 15 endpoints for
++- dma-channels: should be set to 30 representing the 15 endpoints for
+   each USB instance.
++- #dma-channels: deprecated
+ 
+ Example:
+ ~~~~~~~~
+@@ -193,7 +194,7 @@ usb: usb@47400000 {
+ 		interrupts = <17>;
+ 		interrupt-names = "glue";
+ 		#dma-cells = <2>;
+-		#dma-channels = <30>;
+-		#dma-requests = <256>;
++		dma-channels = <30>;
++		dma-requests = <256>;
+ 	};
+ };
 -- 
 2.32.0
 

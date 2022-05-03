@@ -2,31 +2,31 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33606519210
-	for <lists+dmaengine@lfdr.de>; Wed,  4 May 2022 01:01:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FBFF51920D
+	for <lists+dmaengine@lfdr.de>; Wed,  4 May 2022 01:01:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243627AbiECXFB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 3 May 2022 19:05:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51652 "EHLO
+        id S232653AbiECXFA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 3 May 2022 19:05:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244164AbiECXEL (ORCPT
+        with ESMTP id S244173AbiECXEL (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Tue, 3 May 2022 19:04:11 -0400
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D7147E0E3
-        for <dmaengine@vger.kernel.org>; Tue,  3 May 2022 16:00:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2891612776
+        for <dmaengine@vger.kernel.org>; Tue,  3 May 2022 16:00:36 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9A4E116DF;
-        Wed,  4 May 2022 01:51:55 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 9A4E116DF
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id A64761DFF8;
+        Wed,  4 May 2022 01:51:56 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru A64761DFF8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1651618315;
-        bh=CxoAdowEQDKRV6pC1a3/C5AAZGbzGbkUpy0O4rpKU64=;
+        d=baikalelectronics.ru; s=mail; t=1651618316;
+        bh=2MYB16qpdIVrYxsByKyJJ05Sct/CcoC6KsAd6/vjIys=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=qeIoQT8ZF33f1dlcjKsrIXi5Z5jvqYn+ikyGvUj8kTrPeQpzfCmUA2Ykn1nSxmZgj
-         qH9WSMbJCQsUYoTRpOhEGbGv8rCiP8qKNaggtTv02CJm9hMa+kp93FKx1FtEZdOzj+
-         8RXaXm+k2EOYpPpHCLYgwEEq4Pc0aftdWohUV7tQ=
+        b=PDtLnmz1COmF8TSpSclu10F+ABKq5MTVExFJLBwY29ddKhcJVAFLkVJ2JKw+FV4lS
+         dhWJrD4ukL+zx8zWdobnHNIHTkFRUwg+3qXPYW7PN8Xz8moNcQlDopo9N2fRJLEo6j
+         ZNpGO38pQbF1B/daunsG0p1ZHh5rKZZwl2FvnZRw=
 Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 01:51:21 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 01:51:22 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -44,9 +44,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [PATCH v2 09/26] dmaengine: dw-edma: Add PCIe bus address getter to the remote EP glue-driver
-Date:   Wed, 4 May 2022 01:50:47 +0300
-Message-ID: <20220503225104.12108-10-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v2 10/26] dmaengine: dw-edma: Drop chancnt initialization
+Date:   Wed, 4 May 2022 01:50:48 +0300
+Message-ID: <20220503225104.12108-11-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -63,57 +63,30 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-In general the Synopsys PCIe EndPoint IP prototype kit can be attached to
-a PCIe bus with any PCIe Host controller including to the one with
-distinctive from CPU address space. Due to that we need to make sure that
-the source and destination addresses of the DMA-slave devices are properly
-converted to the PCIe bus address space, otherwise the DMA transaction
-will not only work as expected, but may cause the memory corruption with
-subsequent system crash. Let's do that by introducing a new
-dw_edma_pcie_address() method defined in the dw-edma-pcie.c, which will
-perform the denoted translation by using the pcibios_resource_to_bus()
-method.
+DMA device drivers aren't supposed to initialize the dma_device.chancnt
+field. It will be done by the DMA-engine core in accordance with number of
+added virtual DMA-channels. Pre-initializing it with some value causes
+having a wrong number of channels printed in the device summary.
 
-Fixes: 41aaff2a2ac0 ("dmaengine: Add Synopsys eDMA IP PCIe glue-logic")
+Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
 ---
+ drivers/dma/dw-edma/dw-edma-core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Note this patch depends on the patch "dmaengine: dw-edma: Add CPU to PCIe
-bus address translation" from this series.
----
- drivers/dma/dw-edma/dw-edma-pcie.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index 04c95cba1244..f530bacfd716 100644
---- a/drivers/dma/dw-edma/dw-edma-pcie.c
-+++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -95,8 +95,23 @@ static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
- 	return pci_irq_vector(to_pci_dev(dev), nr);
- }
+diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+index be466b781376..e9cb3056b6b7 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.c
++++ b/drivers/dma/dw-edma/dw-edma-core.c
+@@ -823,7 +823,6 @@ static int dw_edma_channel_setup(struct dw_edma *dw, bool write,
+ 	dma->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+ 	dma->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+ 	dma->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
+-	dma->chancnt = cnt;
  
-+static u64 dw_edma_pcie_address(struct device *dev, phys_addr_t cpu_addr)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct pci_bus_region region;
-+	struct resource res = {
-+		.flags = IORESOURCE_MEM,
-+		.start = cpu_addr,
-+		.end = cpu_addr,
-+	};
-+
-+	pcibios_resource_to_bus(pdev->bus, &region, &res);
-+	return region.start;
-+}
-+
- static const struct dw_edma_core_ops dw_edma_pcie_core_ops = {
- 	.irq_vector = dw_edma_pcie_irq_vector,
-+	.pci_address = dw_edma_pcie_address,
- };
- 
- static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
+ 	/* Set DMA channel callbacks */
+ 	dma->dev = chip->dev;
 -- 
 2.35.1
 

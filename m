@@ -2,50 +2,50 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BFEC1518E01
-	for <lists+dmaengine@lfdr.de>; Tue,  3 May 2022 22:08:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FF28518E17
+	for <lists+dmaengine@lfdr.de>; Tue,  3 May 2022 22:09:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235028AbiECUMY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 3 May 2022 16:12:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45910 "EHLO
+        id S237151AbiECUMe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 3 May 2022 16:12:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238249AbiECUMO (ORCPT
+        with ESMTP id S242244AbiECUMO (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Tue, 3 May 2022 16:12:14 -0400
 Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7161840A33
-        for <dmaengine@vger.kernel.org>; Tue,  3 May 2022 13:08:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97D5C40A34
+        for <dmaengine@vger.kernel.org>; Tue,  3 May 2022 13:08:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651608489; x=1683144489;
+  t=1651608490; x=1683144490;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=xyHbfLI8a8CgyYpiH8fYGNSYJmN0GXzH1CH937wfWH8=;
-  b=evNARNBfHyHkrAgzhMA33kYIRmYmyeSB1wd5Ej2nzMGM2gjYzM2dGtnr
-   LHR3DrREm8h/1wODAJS/qCUliVtVvam2jH9jAUCX1Q3pCZT4CuW1qHYm2
-   MtIMi/5XN+KOS9QWBdrZLdCVy08PUnejvegj+lafIOGLhMw9Un6LE8LuA
-   ORV+2nxnrlpQc04YM8E5ebk4hUg4AkIZW98jjx29ruMT4n3p27YYHcEF9
-   ir9chQQZ/EAIl/yHIf9yo00ljg+nHI3NhW8Zs6atng2MAYB6HdP4O8lAV
-   vPVbtJerTFmCtzVqsCLfyOg4yOW6Gc8BMlwmI3LbU3xhnNZQQfKW5Gftv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10336"; a="248118185"
+  bh=X9OIsEa+Ng5SJEUvwml16YClX2VsWtViESe/ytijsDQ=;
+  b=Wt2fluMbo6ljL4/STBjyjDQcxXP8YhNLElmbB/5a8wbx22iaEIWivjC+
+   89lkwQc8yBErtVjnA7EeZFvcQ8LB58KVmjwn9sL/MV/AeFPP4bnMPDrzh
+   2WUfA0ykJiagXXVP/1ZFjJrVtWRbfTFp1dfxuVeIKabOY6SUeTL7YNLey
+   wkmPntxBdZ0tMEIaHLQjjMqqEZDlnQ6AUhAfInlKu+oxoTofWFlq6VRid
+   PhTugeasVatJQqyYwSmVAJ/J2EJ2S/ub+zE3Pu1XrAcX9ZXMt3Ger19LD
+   xsT2ahgNFxqUrG2tQ6ElqX+q+woGRxjE+bfMRINUX7fLtW7e0StGB5wCu
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10336"; a="248118194"
 X-IronPort-AV: E=Sophos;i="5.91,196,1647327600"; 
-   d="scan'208";a="248118185"
+   d="scan'208";a="248118194"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2022 13:08:09 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2022 13:08:10 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.91,196,1647327600"; 
-   d="scan'208";a="516705260"
+   d="scan'208";a="516705277"
 Received: from bwalker-desk.ch.intel.com ([143.182.136.162])
-  by orsmga003.jf.intel.com with ESMTP; 03 May 2022 13:08:08 -0700
+  by orsmga003.jf.intel.com with ESMTP; 03 May 2022 13:08:09 -0700
 From:   Ben Walker <benjamin.walker@intel.com>
 To:     vkoul@kernel.org
 Cc:     dmaengine@vger.kernel.org, herbert@gondor.apana.org.au,
         davem@davemloft.net, mchehab@kernel.org,
         mporter@kernel.crashing.org, alex.bou9@gmail.com,
         Ben Walker <benjamin.walker@intel.com>
-Subject: [PATCH v2 06/15] rapidio: Use dmaengine_async_is_tx_complete
-Date:   Tue,  3 May 2022 13:07:19 -0700
-Message-Id: <20220503200728.2321188-7-benjamin.walker@intel.com>
+Subject: [PATCH v2 07/15] media: pxa_camera: Use dmaengine_async_is_tx_complete
+Date:   Tue,  3 May 2022 13:07:20 -0700
+Message-Id: <20220503200728.2321188-8-benjamin.walker@intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220503200728.2321188-1-benjamin.walker@intel.com>
 References: <20220503200728.2321188-1-benjamin.walker@intel.com>
@@ -62,27 +62,39 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 Replace dma_async_is_tx_complete with dmaengine_async_is_tx_complete.
-The previous API will be removed in favor of the new one.
+The previous PAI will be removed in favor of the new one.
 
 Signed-off-by: Ben Walker <benjamin.walker@intel.com>
 ---
- drivers/rapidio/devices/rio_mport_cdev.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/media/platform/pxa_camera.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
-index 7df466e222820..ca66dbfef9c59 100644
---- a/drivers/rapidio/devices/rio_mport_cdev.c
-+++ b/drivers/rapidio/devices/rio_mport_cdev.c
-@@ -597,8 +597,7 @@ static void dma_xfer_callback(void *param)
- 	struct mport_dma_req *req = (struct mport_dma_req *)param;
- 	struct mport_cdev_priv *priv = req->priv;
- 
--	req->status = dma_async_is_tx_complete(priv->dmach, req->cookie,
--					       NULL, NULL);
-+	req->status = dmaengine_async_is_tx_complete(priv->dmach, req->cookie);
- 	complete(&req->req_comp);
- 	kref_put(&req->refcount, dma_req_free);
- }
+diff --git a/drivers/media/platform/pxa_camera.c b/drivers/media/platform/pxa_camera.c
+index 3ba00b0f93200..29406b4c77406 100644
+--- a/drivers/media/platform/pxa_camera.c
++++ b/drivers/media/platform/pxa_camera.c
+@@ -1048,9 +1048,18 @@ static void pxa_camera_dma_irq(struct pxa_camera_dev *pcdev,
+ 	}
+ 	last_buf = list_entry(pcdev->capture.prev,
+ 			      struct pxa_buffer, queue);
+-	last_status = dma_async_is_tx_complete(pcdev->dma_chans[chan],
+-					       last_buf->cookie[chan],
+-					       NULL, &last_issued);
++	last_status = dmaengine_async_is_tx_complete(pcdev->dma_chans[chan],
++					       last_buf->cookie[chan]);
++	/*
++	 * Peek into the channel and read the last cookie that was issued.
++	 * This is a layering violation - the dmaengine API does not officially
++	 * provide this information. Since this camera driver is tightly coupled
++	 * with a specific DMA device we know exactly how this cookie value will
++	 * behave. Otherwise, this wouldn't be safe.
++	 */
++	last_issued = pcdev->dma_chans[chan]->cookie;
++	barrier();
++
+ 	if (camera_status & overrun &&
+ 	    last_status != DMA_COMPLETE) {
+ 		dev_dbg(pcdev_to_dev(pcdev), "FIFO overrun! CISR: %x\n",
 -- 
 2.35.1
 

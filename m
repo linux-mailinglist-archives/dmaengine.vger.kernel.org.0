@@ -2,50 +2,50 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C30A4518DFF
-	for <lists+dmaengine@lfdr.de>; Tue,  3 May 2022 22:08:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48D13518E00
+	for <lists+dmaengine@lfdr.de>; Tue,  3 May 2022 22:08:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240991AbiECUMW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 3 May 2022 16:12:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46486 "EHLO
+        id S242183AbiECUMX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 3 May 2022 16:12:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242229AbiECULq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 May 2022 16:11:46 -0400
+        with ESMTP id S242203AbiECULr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 May 2022 16:11:47 -0400
 Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9128A40A17
-        for <dmaengine@vger.kernel.org>; Tue,  3 May 2022 13:07:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 269EE40A22
+        for <dmaengine@vger.kernel.org>; Tue,  3 May 2022 13:08:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1651608478; x=1683144478;
+  t=1651608482; x=1683144482;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=prwrS1jSAxwYJXS6zrdVXKa0GwZvymzpmn7Mdh5vPkw=;
-  b=CfTT/crKlKXyqx/vUfsmw2mBpolSKUhsOBrVL0ko2tsrf7mLMpns0Szy
-   0JYi0I+toibEWysaD03dHb2KFxWy9A3duANjyrQXhR9t41TaZx3i/AOCz
-   nAvRcO1r63eb8X61Hme6fJbw+Co2htWmPtUQIkRyoxJ0EmcNXnQWac4ly
-   KiMg8CM0LmHb5HN9OQFKUxMdHIzTH0vka/T7cc+vFXKllwBbPgjKQ0nG4
-   skQbSU+HX/YYrJ4XkKDNM9o9A66Gxl3qbMr61Z8zET9P4Uq2vOB/U1LpL
-   xscmAoITGGNdP5AEyQ9bBVBaOMT/ZjrSibeqPucm4KARKEHeBDXy1fDdQ
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10336"; a="328116024"
+  bh=ish3zyb3wTve90XvFtu1kIGKvniKF9Xm9CuOEXgIDNE=;
+  b=Nv5qu3iz6fB8PT3IASL6KRGIYlcPqNUJicntgG02ZnnlaYEi7msUY3vV
+   NQVdiKGJWGawmJ3m1Q1lxaBGNckY/bo10x38aQsFS9iyVopRZZo7PZotB
+   LiY+ESjDZcS31uXy0PuuOvEpeHODrPPPcI0vI+g9TRI3SBBDO3vafj8U0
+   iI5b8QTTWiHSdlLJbPyc1GTNjUPLZl2YY31WGF7+MHKBcxDedmB7MSBx8
+   qrzjXbQSZkhpBncrksob16pBnIafR7LDH75yxXU2cLN0vVzw5nCTLjXdh
+   mNYI46EFjzeRy31Qfe223BpW3H4Q2aerD9HXUooF2fFuhQLw8GdP23Jrj
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10336"; a="328116032"
 X-IronPort-AV: E=Sophos;i="5.91,196,1647327600"; 
-   d="scan'208";a="328116024"
+   d="scan'208";a="328116032"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2022 13:07:58 -0700
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2022 13:08:02 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.91,196,1647327600"; 
-   d="scan'208";a="516705169"
+   d="scan'208";a="516705197"
 Received: from bwalker-desk.ch.intel.com ([143.182.136.162])
-  by orsmga003.jf.intel.com with ESMTP; 03 May 2022 13:07:58 -0700
+  by orsmga003.jf.intel.com with ESMTP; 03 May 2022 13:08:01 -0700
 From:   Ben Walker <benjamin.walker@intel.com>
 To:     vkoul@kernel.org
 Cc:     dmaengine@vger.kernel.org, herbert@gondor.apana.org.au,
         davem@davemloft.net, mchehab@kernel.org,
         mporter@kernel.crashing.org, alex.bou9@gmail.com,
         Ben Walker <benjamin.walker@intel.com>
-Subject: [PATCH v2 04/15] crypto: stm32/hash: Use dmaengine_async_is_tx_complete
-Date:   Tue,  3 May 2022 13:07:17 -0700
-Message-Id: <20220503200728.2321188-5-benjamin.walker@intel.com>
+Subject: [PATCH v2 05/15] media: omap_vout: Use dmaengine_async_is_tx_complete
+Date:   Tue,  3 May 2022 13:07:18 -0700
+Message-Id: <20220503200728.2321188-6-benjamin.walker@intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220503200728.2321188-1-benjamin.walker@intel.com>
 References: <20220503200728.2321188-1-benjamin.walker@intel.com>
@@ -66,23 +66,22 @@ The previous API will be removed in favor of the new one.
 
 Signed-off-by: Ben Walker <benjamin.walker@intel.com>
 ---
- drivers/crypto/stm32/stm32-hash.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/media/platform/omap/omap_vout_vrfb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/stm32/stm32-hash.c b/drivers/crypto/stm32/stm32-hash.c
-index d33006d43f761..aef447847c499 100644
---- a/drivers/crypto/stm32/stm32-hash.c
-+++ b/drivers/crypto/stm32/stm32-hash.c
-@@ -453,8 +453,7 @@ static int stm32_hash_xmit_dma(struct stm32_hash_dev *hdev,
- 					 msecs_to_jiffies(100)))
- 		err = -ETIMEDOUT;
+diff --git a/drivers/media/platform/omap/omap_vout_vrfb.c b/drivers/media/platform/omap/omap_vout_vrfb.c
+index 0cfa0169875f0..b9d252d5ced7a 100644
+--- a/drivers/media/platform/omap/omap_vout_vrfb.c
++++ b/drivers/media/platform/omap/omap_vout_vrfb.c
+@@ -289,7 +289,7 @@ int omap_vout_prepare_vrfb(struct omap_vout_device *vout,
+ 					 vout->vrfb_dma_tx.tx_status == 1,
+ 					 VRFB_TX_TIMEOUT);
  
--	if (dma_async_is_tx_complete(hdev->dma_lch, cookie,
--				     NULL, NULL) != DMA_COMPLETE)
-+	if (dmaengine_async_is_tx_complete(hdev->dma_lch, cookie) != DMA_COMPLETE)
- 		err = -ETIMEDOUT;
+-	status = dma_async_is_tx_complete(chan, cookie, NULL, NULL);
++	status = dmaengine_async_is_tx_complete(chan, cookie);
  
- 	if (err) {
+ 	if (vout->vrfb_dma_tx.tx_status == 0) {
+ 		pr_err("%s: Timeout while waiting for DMA\n", __func__);
 -- 
 2.35.1
 

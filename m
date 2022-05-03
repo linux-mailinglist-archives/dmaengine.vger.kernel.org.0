@@ -2,476 +2,159 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E11B519216
-	for <lists+dmaengine@lfdr.de>; Wed,  4 May 2022 01:01:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0DDD519239
+	for <lists+dmaengine@lfdr.de>; Wed,  4 May 2022 01:18:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243930AbiECXFG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 3 May 2022 19:05:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51572 "EHLO
+        id S244190AbiECXVs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 3 May 2022 19:21:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244108AbiECXEL (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 May 2022 19:04:11 -0400
-Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C1D3DB840
-        for <dmaengine@vger.kernel.org>; Tue,  3 May 2022 16:00:32 -0700 (PDT)
-Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 1D1FEC0E;
-        Wed,  4 May 2022 01:52:14 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 1D1FEC0E
+        with ESMTP id S237650AbiECXVq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 May 2022 19:21:46 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 090AA1D0F2;
+        Tue,  3 May 2022 16:18:11 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id 16so23822401lju.13;
+        Tue, 03 May 2022 16:18:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1651618334;
-        bh=Xf5TTVV8o12m3XVpFeXWY0JpLQE6zkgjlmXy5aj1J0g=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=UJZYtuuw/AiIYMWEPiPJvg8HxsIuWu2kQgaI20J+zkEheyIfUCKBwh7V7xC5vAuE4
-         a+BmdT2kSHqz1byKRjqRGIyRxE4hvVZDFEZ71MOUCT3h8mwtsrqDBKxwkIL4b897zN
-         c+VnnC7HAAAWH/nz9uGB9JMFBG9qlGxYCI+l9vyI=
-Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 01:51:40 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Sazi1GWbBcvd2uDJmEHfszuDK6b1MmS8tlFa5Xmh6/U=;
+        b=aTU6wLIjsbC5mmW1HMpR0bYpeAIYmq3k5hURzh+JmvgElYWVOE2L3ylkvKyQ+O0c53
+         XQn67NbvPrmBUgHZnqoZTzeQ9h+3OhtG9LYhvJKCnPRcsSBi4xvzOVh9bJbSaOLcJA/5
+         O1oYL2BldBoy6kgXqIcn5FXIFUM909j5DqUS8ag4HlmfMqDzEX4hrKWi+ONAlcqrVGO2
+         Bn2hkFeWHcEk9puSdfB/zjy9M6x/nAx4l2ushIw2k1Ed4MKCsJWBbAHaUQ2htHRhBzuy
+         sQBCDVWoFA2DjAAe+tjVXZveOpR1OkibJ/K6Oo64AlPgRaV7CU/wIRavTf0U6x9QIIR2
+         qS0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Sazi1GWbBcvd2uDJmEHfszuDK6b1MmS8tlFa5Xmh6/U=;
+        b=PJ65Mm2K5KIyGUX1Vzg1PQrVGWYF0Va5A7d5WV/U3ccdg7+LlLX7IQrFJ/al3MGggr
+         BEJX5yFFtCYs2ryvOyCWZprVK0bxvQGFUJh1zxTF8ngdMQOtVcbO7IjBy7E6WaHXRsjI
+         akLkA+gw1AHppsIpIdiFpA2VhZzTRwnYvcNehgNis7npF6ChZZGO2FiXgs9+HPAabBB+
+         pc4LxVfIY4L/7zubst0QFElrkk5XZJVGNUl3j6ivUKc6u1DpzfFuC7o0aRG3JE03xLhJ
+         w/PGX8FUeOp/Q1cD6A3tnyoajvmx5nU8NXG2oEvkjouAYnWg14fEzh1BwNx3VRn2eSHb
+         LRZw==
+X-Gm-Message-State: AOAM530Y4nXqE0ivDmivE4mnTrzklE3EvK3o/J4ZCW5TiHCaTj45bPXX
+        N3wcPYodud0oPnXWBduGQ2s=
+X-Google-Smtp-Source: ABdhPJxgY6OP0GGmdTRtJUCiWlhQAxc8VfhCCZjkDYtn1uUzlY8UmBb1LChAE+UzuTVBDP2rEE1+Lg==
+X-Received: by 2002:a2e:b0fc:0:b0:24f:1050:ff61 with SMTP id h28-20020a2eb0fc000000b0024f1050ff61mr11277471ljl.290.1651619889081;
+        Tue, 03 May 2022 16:18:09 -0700 (PDT)
+Received: from mobilestation ([95.79.189.214])
+        by smtp.gmail.com with ESMTPSA id s15-20020ac25fef000000b0047255d2115esm1053854lfg.141.2022.05.03.16.18.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 May 2022 16:18:08 -0700 (PDT)
+Date:   Wed, 4 May 2022 02:18:06 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Frank Li <Frank.Li@nxp.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 26/26] PCI: dwc: Add DW eDMA engine support
-Date:   Wed, 4 May 2022 01:51:04 +0300
-Message-ID: <20220503225104.12108-27-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
-References: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
+        Rob Herring <robh@kernel.org>, Vinod Koul <vkoul@kernel.org>
+Cc:     gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
+        l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        lznuaa@gmail.com, helgaas@kernel.org, kw@linux.com,
+        bhelgaas@google.com, manivannan.sadhasivam@linaro.org,
+        Sergey.Semin@baikalelectronics.ru
+Subject: Re: [PATCH v10 0/9] Enable designware PCI EP EDMA locally
+Message-ID: <20220503231806.w2x4o2b3xymbwn74@mobilestation>
+References: <20220503005801.1714345-1-Frank.Li@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220503005801.1714345-1-Frank.Li@nxp.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Since the DW eDMA driver now supports eDMA controllers embedded into the
-locally accessible DW PCIe Root Ports and End-points, we can use the
-updated interface to register DW eDMA as DMA engine device if it's
-available. In order to successfully do that the DW PCIe core driver need
-to perform some preparations first. First of all it needs to find out the
-eDMA controller CSRs base address, whether they are accessible over the
-Port Logic or iATU unrolled space. Afterwards it can try to auto-detect
-the eDMA controller availability and number of it's read/write channels.
-If none was found the procedure will just silently halt with no error
-returned. Secondly the platform is supposed to provide either combined or
-per-channel IRQ signals. If no valid IRQs set is found the procedure will
-also halt with no error returned so to be backward compatible with
-platforms where DW PCIe controllers have eDMA embedded but lack of the
-IRQs defined for them. Finally before actually probing the eDMA device we
-need to allocate LLP items buffers. After that the DW eDMA can be
-registered. If registration is successful the info-message regarding the
-number of detected Read/Write eDMA channels will be printed to the system
-log in the same way as it's done for iATU settings.
+On Mon, May 02, 2022 at 07:57:52PM -0500, Frank Li wrote:
+> Default Designware EDMA just probe remotely at host side.
+> This patch allow EDMA driver can probe at EP side.
+> 
+> 1. Clean up patch
+>    dmaengine: dw-edma: Detach the private data and chip info structures
+>    dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
+>    dmaengine: dw-edma: Change rg_region to reg_base in struct
+>    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+> 
+> 2. Enhance EDMA driver to allow prode eDMA at EP side
+>    dmaengine: dw-edma: Add support for chip specific flags
+>    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
+> 
+> 3. Bugs fix at EDMA driver when probe eDMA at EP side
+>    dmaengine: dw-edma: Fix programming the source & dest addresses for ep
+>    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
+> 
+> 4. change pci-epf-test to use EDMA driver to transfer data.
+>    PCI: endpoint: Add embedded DMA controller test
+> 
+> 5. Using imx8dxl to do test, but some EP functions still have not
+> upstream yet. So below patch show how probe eDMA driver at EP
+> controller driver.
+> https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+As I have already said in my comment to v9, @Lorenzo, @Rob, @Vinod,
+my patchset:
+Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru
+is based on this one. In its turn my series depends on the other
+patchsets:
+[PATCH v3 0/4] clk: Baikal-T1 DDR/PCIe resets and some xGMAC fixes
+Link: https://lore.kernel.org/linux-pci/20220503205722.24755-1-Sergey.Semin@baikalelectronics.ru/
+[PATCH v2 00/13] PCI: dwc: Various fixes and cleanups
+Link: https://lore.kernel.org/linux-pci/20220503212300.30105-1-Sergey.Semin@baikalelectronics.ru/
+[PATCH v2 00/17] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support
+Link: https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
+which are currently on review. I am very much eager to get my patches
+merged in before the next merge windows. But in order to preserve the
+consistency of the corresponding repo with my patchsets the repo needs
+to have the @Frank' patches. Seeing aside with @Frank's series my changes
+depend on the changes in the clk and pci subsystems, could you please
+consider choosing a single repository for merging all my and @Frank
+patches in? Since the changes mostly concern the DW PCIe controller I
+suggest to use the 'pci/dwc' branch of the
+'kernel/git/lpieralisi/pci.git' repository. What do you think?
+@Lorenzo?
 
----
+-Sergey
 
-Changelog v2:
-- Don't fail eDMA detection procedure if the DW eDMA driver couldn't probe
-  device. That happens if the driver is disabled. (@Manivannan)
-- Add "dma" registers resource mapping procedure. (@Manivannan)
-- Move the eDMA CSRs space detection into the dw_pcie_map_detect() method.
-- Remove eDMA on the dw_pcie_ep_init() internal errors. (@Manivannan)
-- Remove eDMA in the dw_pcie_ep_exit() method.
-- Move the dw_pcie_edma_detect() method execution to the tail of the
-  dw_pcie_ep_init() function.
----
- .../pci/controller/dwc/pcie-designware-ep.c   |  12 +-
- .../pci/controller/dwc/pcie-designware-host.c |  13 +-
- drivers/pci/controller/dwc/pcie-designware.c  | 187 ++++++++++++++++++
- drivers/pci/controller/dwc/pcie-designware.h  |  20 ++
- 4 files changed, 229 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 6cfcfa34e587..a3f3fa15ebe5 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -610,8 +610,11 @@ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
- 
- void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
- {
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
- 	struct pci_epc *epc = ep->epc;
- 
-+	dw_pcie_edma_remove(pci);
-+
- 	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
- 			      epc->mem->window.page_size);
- 
-@@ -791,6 +794,10 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 		goto err_exit_epc_mem;
- 	}
- 
-+	ret = dw_pcie_edma_detect(pci);
-+	if (ret)
-+		goto err_free_epc_mem;
-+
- 	if (ep->ops->get_features) {
- 		epc_features = ep->ops->get_features(ep);
- 		if (epc_features->core_init_notifier)
-@@ -799,10 +806,13 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 
- 	ret = dw_pcie_ep_init_complete(ep);
- 	if (ret)
--		goto err_free_epc_mem;
-+		goto err_remove_edma;
- 
- 	return 0;
- 
-+err_remove_edma:
-+	dw_pcie_edma_remove(pci);
-+
- err_free_epc_mem:
- 	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
- 			      epc->mem->window.page_size);
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 3cd5b096a427..0ffef8526d54 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -415,14 +415,18 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 
- 	dw_pcie_iatu_detect(pci);
- 
--	ret = dw_pcie_setup_rc(pp);
-+	ret = dw_pcie_edma_detect(pci);
- 	if (ret)
- 		goto err_free_msi;
- 
-+	ret = dw_pcie_setup_rc(pp);
-+	if (ret)
-+		goto err_remove_edma;
-+
- 	if (!dw_pcie_link_up(pci) && pci->ops && pci->ops->start_link) {
- 		ret = pci->ops->start_link(pci);
- 		if (ret)
--			goto err_free_msi;
-+			goto err_remove_edma;
- 	}
- 
- 	/* Ignore errors, the link may come up later */
-@@ -440,6 +444,9 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (pci->ops && pci->ops->stop_link)
- 		pci->ops->stop_link(pci);
- 
-+err_remove_edma:
-+	dw_pcie_edma_remove(pci);
-+
- err_free_msi:
- 	if (pp->has_msi_ctrl)
- 		dw_pcie_free_msi(pp);
-@@ -462,6 +469,8 @@ void dw_pcie_host_deinit(struct pcie_port *pp)
- 	if (pci->ops && pci->ops->stop_link)
- 		pci->ops->stop_link(pci);
- 
-+	dw_pcie_edma_remove(pci);
-+
- 	if (pp->has_msi_ctrl)
- 		dw_pcie_free_msi(pp);
- 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 68bd3fc66fd7..aae8b03757f5 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -11,6 +11,7 @@
- #include <linux/align.h>
- #include <linux/bitops.h>
- #include <linux/delay.h>
-+#include <linux/dma/edma.h>
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/sizes.h>
-@@ -595,6 +596,8 @@ int dw_pcie_map_detect(struct dw_pcie *pci)
- 		pci->atu_base = pci->dbi_base + PCIE_ATU_VIEWPORT_BASE;
- 		pci->atu_size = PCIE_ATU_VIEWPORT_SIZE;
- 
-+	        pci->edma.reg_base = pci->dbi_base + PCIE_DMA_VIEWPORT_BASE;
-+
- 		dev_info(pci->dev, "iATU/DMA unroll: disabled\n");
- 
- 		return 0;
-@@ -617,6 +620,17 @@ int dw_pcie_map_detect(struct dw_pcie *pci)
- 	if (!pci->atu_size)
- 		pci->atu_size = SZ_4K;
- 
-+	if (!pci->edma.reg_base) {
-+		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dma");
-+		if (res) {
-+			pci->edma.reg_base = devm_ioremap_resource(pci->dev, res);
-+			if (IS_ERR(pci->edma.reg_base))
-+				return PTR_ERR(pci->edma.reg_base);
-+		} else if (pci->atu_size >= 2 * DEFAULT_DBI_DMA_OFFSET) {
-+			pci->edma.reg_base = pci->atu_base + DEFAULT_DBI_DMA_OFFSET;
-+		}
-+	}
-+
- 	dev_info(pci->dev, "iATU/DMA unroll: enabled\n");
- 
- 	return 0;
-@@ -678,6 +692,179 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
- 		 pci->region_align / SZ_1K, (pci->region_limit + 1) / SZ_1G);
- }
- 
-+static u32 dw_pcie_readl_dma(struct dw_pcie *pci, u32 reg)
-+{
-+	u32 val = 0;
-+	int ret;
-+
-+	if (pci->ops && pci->ops->read_dbi)
-+		return pci->ops->read_dbi(pci, pci->edma.reg_base, reg, 4);
-+
-+	ret = dw_pcie_read(pci->edma.reg_base + reg, 4, &val);
-+	if (ret)
-+		dev_err(pci->dev, "Read DMA address failed\n");
-+
-+	return val;
-+}
-+
-+static int dw_pcie_edma_irq_vector(struct device *dev, unsigned int nr)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	char name[6];
-+	int ret;
-+
-+	if (nr >= EDMA_MAX_WR_CH + EDMA_MAX_RD_CH)
-+		return -EINVAL;
-+
-+	ret = platform_get_irq_byname_optional(pdev, "dma");
-+	if (ret > 0)
-+		return ret;
-+
-+	snprintf(name, sizeof(name), "dma%u", nr);
-+
-+	return platform_get_irq_byname_optional(pdev, name);
-+}
-+
-+static struct dw_edma_core_ops dw_pcie_edma_ops = {
-+	.irq_vector = dw_pcie_edma_irq_vector,
-+};
-+
-+static int dw_pcie_edma_detect_channels(struct dw_pcie *pci)
-+{
-+	u32 val;
-+
-+	val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
-+	if (!val || val == 0xffffffff)
-+		return 0;
-+
-+	pci->edma.ll_wr_cnt = FIELD_GET(PCIE_DMA_NUM_WR_CHAN, val);
-+	pci->edma.ll_rd_cnt = FIELD_GET(PCIE_DMA_NUM_RD_CHAN, val);
-+
-+	if (pci->edma.ll_wr_cnt > EDMA_MAX_WR_CH ||
-+	    pci->edma.ll_rd_cnt > EDMA_MAX_RD_CH)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int dw_pcie_edma_irq_verify(struct dw_pcie *pci)
-+{
-+	struct platform_device *pdev = to_platform_device(pci->dev);
-+	u16 ch_cnt = pci->edma.ll_wr_cnt + pci->edma.ll_rd_cnt;
-+	char name[6];
-+	int ret;
-+
-+	if (pci->edma.nr_irqs == 1)
-+		return 0;
-+	else if (pci->edma.nr_irqs > 1)
-+		return pci->edma.nr_irqs != ch_cnt ? -EINVAL : 0;
-+
-+	ret = platform_get_irq_byname_optional(pdev, "dma");
-+	if (ret > 0) {
-+		pci->edma.nr_irqs = 1;
-+		return 0;
-+	}
-+
-+	for (; pci->edma.nr_irqs < ch_cnt; pci->edma.nr_irqs++) {
-+		snprintf(name, sizeof(name), "dma%d", pci->edma.nr_irqs);
-+
-+		ret = platform_get_irq_byname_optional(pdev, name);
-+		if (ret <= 0)
-+			return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int dw_pcie_edma_ll_alloc(struct dw_pcie *pci)
-+{
-+	struct dw_edma_region *ll;
-+	dma_addr_t paddr;
-+	int i;
-+
-+	for (i = 0; i < pci->edma.ll_wr_cnt; i++) {
-+		ll = &pci->edma.ll_region_wr[i];
-+		ll->sz = DMA_LLP_MEM_SIZE;
-+		ll->vaddr = dmam_alloc_coherent(pci->dev, ll->sz,
-+						&paddr, GFP_KERNEL);
-+		if (!ll->vaddr)
-+			return -ENOMEM;
-+
-+		ll->paddr = paddr;
-+	}
-+
-+	for (i = 0; i < pci->edma.ll_rd_cnt; i++) {
-+		ll = &pci->edma.ll_region_rd[i];
-+		ll->sz = DMA_LLP_MEM_SIZE;
-+		ll->vaddr = dmam_alloc_coherent(pci->dev, ll->sz,
-+						&paddr, GFP_KERNEL);
-+		if (!ll->vaddr)
-+			return -ENOMEM;
-+
-+		ll->paddr = paddr;
-+	}
-+
-+	return 0;
-+}
-+
-+int dw_pcie_edma_detect(struct dw_pcie *pci)
-+{
-+	int ret;
-+
-+	if (!pci->edma.reg_base)
-+		return 0;
-+
-+	pci->edma.dev = pci->dev;
-+	if (!pci->edma.ops)
-+		pci->edma.ops = &dw_pcie_edma_ops;
-+	pci->edma.flags |= DW_EDMA_CHIP_LOCAL;
-+
-+	if (pci->iatu_dma_unrolled)
-+		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
-+	else
-+		pci->edma.mf = EDMA_MF_EDMA_LEGACY;
-+
-+	ret = dw_pcie_edma_detect_channels(pci);
-+	if (ret) {
-+		dev_err(pci->dev, "Unexpected NoF eDMA channels found\n");
-+		return ret;
-+	}
-+
-+	/* Skip any further initialization if no eDMA found */
-+	if (!pci->edma.ll_wr_cnt && !pci->edma.ll_rd_cnt)
-+		return 0;
-+
-+	/* Don't fail on the IRQs verification for the backward compatibility */
-+	ret = dw_pcie_edma_irq_verify(pci);
-+	if (ret) {
-+		dev_err(pci->dev, "Invalid eDMA IRQs found\n");
-+		return 0;
-+	}
-+
-+	ret = dw_pcie_edma_ll_alloc(pci);
-+	if (ret) {
-+		dev_err(pci->dev, "Couldn't allocate LLP memory\n");
-+		return ret;
-+	}
-+
-+	/* Don't fail if the DW eDMA driver can't find the device */
-+	ret = dw_edma_probe(&pci->edma);
-+	if (ret && ret != -ENODEV) {
-+		dev_err(pci->dev, "Couldn't register eDMA device\n");
-+		return ret;
-+	}
-+
-+	dev_info(pci->dev, "eDMA channels: %hu wr, %hu rd\n",
-+		 pci->edma.ll_wr_cnt, pci->edma.ll_rd_cnt);
-+
-+	return 0;
-+}
-+
-+void dw_pcie_edma_remove(struct dw_pcie *pci)
-+{
-+	dw_edma_remove(&pci->edma);
-+}
-+
- void dw_pcie_setup(struct dw_pcie *pci)
- {
- 	u32 val;
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index e10647b96c68..87add1920f0d 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -13,6 +13,7 @@
- 
- #include <linux/bitfield.h>
- #include <linux/dma-mapping.h>
-+#include <linux/dma/edma.h>
- #include <linux/irq.h>
- #include <linux/msi.h>
- #include <linux/pci.h>
-@@ -145,6 +146,18 @@
- #define PCIE_MSIX_DOORBELL		0x948
- #define PCIE_MSIX_DOORBELL_PF_SHIFT	24
- 
-+/*
-+ * eDMA CSRs. DW PCIe IP-core v4.70a and older had the eDMA registers accessible
-+ * over the Port Logic registers space. Afterwords the unrolled mapping was
-+ * introduced so eDMA and iATU could be accessed via a dedicated registers
-+ * space.
-+ */
-+#define PCIE_DMA_VIEWPORT_BASE		0x970
-+#define PCIE_DMA_UNROLL_BASE		0x80000
-+#define PCIE_DMA_CTRL			0x008
-+#define PCIE_DMA_NUM_WR_CHAN		GENMASK(3, 0)
-+#define PCIE_DMA_NUM_RD_CHAN		GENMASK(19, 16)
-+
- #define PCIE_PL_CHK_REG_CONTROL_STATUS			0xB20
- #define PCIE_PL_CHK_REG_CHK_REG_START			BIT(0)
- #define PCIE_PL_CHK_REG_CHK_REG_CONTINUOUS		BIT(1)
-@@ -161,6 +174,7 @@
-  * this offset, if atu_base not set.
-  */
- #define DEFAULT_DBI_ATU_OFFSET (0x3 << 20)
-+#define DEFAULT_DBI_DMA_OFFSET (0x1 << 19)
- 
- #define MAX_MSI_IRQS			256
- #define MAX_MSI_IRQS_PER_CTRL		32
-@@ -172,6 +186,9 @@
- #define MAX_IATU_IN			256
- #define MAX_IATU_OUT			256
- 
-+/* Default eDMA LLP memory size */
-+#define DMA_LLP_MEM_SIZE		PAGE_SIZE
-+
- struct pcie_port;
- struct dw_pcie;
- struct dw_pcie_ep;
-@@ -310,6 +327,7 @@ struct dw_pcie {
- 	int			num_lanes;
- 	int			link_gen;
- 	u8			n_fts[2];
-+	struct dw_edma_chip	edma;
- 	bool			iatu_dma_unrolled: 1;
- 	bool			io_cfg_atu_shared: 1;
- };
-@@ -345,6 +363,8 @@ void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index);
- void dw_pcie_setup(struct dw_pcie *pci);
- int dw_pcie_map_detect(struct dw_pcie *pci);
- void dw_pcie_iatu_detect(struct dw_pcie *pci);
-+int dw_pcie_edma_detect(struct dw_pcie *pci);
-+void dw_pcie_edma_remove(struct dw_pcie *pci);
- 
- static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
- {
--- 
-2.35.1
-
+> 
+> 
+> Frank Li (7):
+>   dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
+>   dmaengine: dw-edma: Detach the private data and chip info structures
+>   dmaengine: dw-edma: Change rg_region to reg_base in struct
+>     dw_edma_chip
+>   dmaengine: dw-edma: Rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+>     dw_edma_chip
+>   dmaengine: dw-edma: Add support for chip specific flags
+>   dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
+>   PCI: endpoint: Enable DMA controller tests for endpoints with DMA
+>     capabilities
+> 
+> Serge Semin (2):
+>   dmaengine: dw-edma: Drop dma_slave_config.direction field usage
+>   dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
+>     semantics
+> 
+>  drivers/dma/dw-edma/dw-edma-core.c            | 141 +++++++++++-------
+>  drivers/dma/dw-edma/dw-edma-core.h            |  31 +---
+>  drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
+>  drivers/dma/dw-edma/dw-edma-v0-core.c         |  54 ++++---
+>  drivers/dma/dw-edma/dw-edma-v0-core.h         |   4 +-
+>  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  18 +--
+>  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   8 +-
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++--
+>  include/linux/dma/edma.h                      |  61 +++++++-
+>  9 files changed, 323 insertions(+), 185 deletions(-)
+> 
+> -- 
+> 2.35.1
+> 

@@ -2,31 +2,31 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B29E1519200
-	for <lists+dmaengine@lfdr.de>; Wed,  4 May 2022 01:01:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08990519201
+	for <lists+dmaengine@lfdr.de>; Wed,  4 May 2022 01:01:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239078AbiECXEv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 3 May 2022 19:04:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50768 "EHLO
+        id S243841AbiECXEx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 3 May 2022 19:04:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242196AbiECXEC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 May 2022 19:04:02 -0400
+        with ESMTP id S243987AbiECXEI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 May 2022 19:04:08 -0400
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 73F706417
-        for <dmaengine@vger.kernel.org>; Tue,  3 May 2022 16:00:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C06567649
+        for <dmaengine@vger.kernel.org>; Tue,  3 May 2022 16:00:30 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 607ED16D6;
-        Wed,  4 May 2022 01:51:48 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 607ED16D6
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5636016D7;
+        Wed,  4 May 2022 01:51:49 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 5636016D7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1651618308;
-        bh=45B91bTRPDAiVVFXTWFyOKTO4rQMMJ7SJOEIZd4mBWc=;
+        d=baikalelectronics.ru; s=mail; t=1651618309;
+        bh=dHnrw4Yo3Al5iA5h1bR5VD8xJ9NUF0bPsnyiAWzrWUw=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=hW6NN3XmaclC1NQBB5+yrm7tUDzI+V27l6nwbpKGVaAhzL9Gmm384L5/JhYDCO0IA
-         HI54mSmbK44lqKbjFhJk6VOhdNGe2g75bXIxogQvHQtBrXwc6tU2ZMiQ4GpY/C85VW
-         E2Si5ykW3/FLLJ2dUVG/3tu8Ivx0RQDhArbjjAMk=
+        b=SPRK52L6rdgQhI+1MkBl7WUlb4Qadn5O30YG/R6wBSUpdgn90SGy+wChwcLNtejqr
+         szoC/b/KLqAqfAIQMpYL0K+NSeR3LLxXPT5aORrlucAFInEUNrrB1wDp3bj84fq/l6
+         mRumf8VzycfyyMJxDtKqtMpXyZrzVFHIaVgpfEV8=
 Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 01:51:14 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 01:51:15 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -42,10 +42,11 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 02/26] dmaengine: Fix dma_slave_config.dst_addr description
-Date:   Wed, 4 May 2022 01:50:40 +0300
-Message-ID: <20220503225104.12108-3-Sergey.Semin@baikalelectronics.ru>
+        <linux-kernel@vger.kernel.org>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Subject: [PATCH v2 03/26] dmaengine: dw-edma: Release requested IRQs on failure
+Date:   Wed, 4 May 2022 01:50:41 +0300
+Message-ID: <20220503225104.12108-4-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -62,31 +63,57 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Most likely due to a copy-paste mistake the dst_addr member of the
-dma_slave_config structure has been marked as ignored if the !source!
-address belong to the memory. That is relevant to the src_addr field of
-the structure while the dst_addr field as containing a destination device
-address is supposed to be ignored if the destination is the CPU memory.
-Let's fix the field description accordingly.
+From very beginning of the DW eDMA driver live in the kernel the method
+dw_edma_irq_request() hasn't been designed quite correct. In case if the
+request_irq() method fails to initialize the IRQ handler at some point the
+previously requested IRQs will be left initialized. It's prune to errors
+up to the system crash. Let's fix that by releasing the previously
+requested IRQs in the cleanup-on-error path of the dw_edma_irq_request()
+function.
 
+Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
----
- include/linux/dmaengine.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 842d4f7ca752..f204ea16ac1c 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -395,7 +395,7 @@ enum dma_slave_buswidth {
-  * should be read (RX), if the source is memory this argument is
-  * ignored.
-  * @dst_addr: this is the physical address where DMA slave data
-- * should be written (TX), if the source is memory this argument
-+ * should be written (TX), if the destination is memory this argument
-  * is ignored.
-  * @src_addr_width: this is the width in bytes of the source (RX)
-  * register where DMA data shall be read. If the source
+---
+
+Changelog v2:
+- This is a new patch added in v2 iteration of the series.
+---
+ drivers/dma/dw-edma/dw-edma-core.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+index 07f756479663..04efcb16d13d 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.c
++++ b/drivers/dma/dw-edma/dw-edma-core.c
+@@ -899,10 +899,8 @@ static int dw_edma_irq_request(struct dw_edma *dw,
+ 						dw_edma_interrupt_read,
+ 					  IRQF_SHARED, dw->name,
+ 					  &dw->irq[i]);
+-			if (err) {
+-				dw->nr_irqs = i;
+-				return err;
+-			}
++			if (err)
++				goto err_irq_free;
+ 
+ 			if (irq_get_msi_desc(irq))
+ 				get_cached_msi_msg(irq, &dw->irq[i].msi);
+@@ -911,6 +909,14 @@ static int dw_edma_irq_request(struct dw_edma *dw,
+ 		dw->nr_irqs = i;
+ 	}
+ 
++	return 0;
++
++err_irq_free:
++	for  (i--; i >= 0; i--) {
++		irq = chip->ops->irq_vector(dev, i);
++		free_irq(irq, &dw->irq[i]);
++	}
++
+ 	return err;
+ }
+ 
 -- 
 2.35.1
 

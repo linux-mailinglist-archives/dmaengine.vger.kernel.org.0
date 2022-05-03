@@ -2,31 +2,31 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 52329519203
-	for <lists+dmaengine@lfdr.de>; Wed,  4 May 2022 01:01:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7518C519207
+	for <lists+dmaengine@lfdr.de>; Wed,  4 May 2022 01:01:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243742AbiECXEx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 3 May 2022 19:04:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51348 "EHLO
+        id S237685AbiECXEz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 3 May 2022 19:04:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243995AbiECXEJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 May 2022 19:04:09 -0400
+        with ESMTP id S243940AbiECXEH (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 May 2022 19:04:07 -0400
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C18BE764C
-        for <dmaengine@vger.kernel.org>; Tue,  3 May 2022 16:00:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B16B0659E
+        for <dmaengine@vger.kernel.org>; Tue,  3 May 2022 16:00:31 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 7ED2816A9;
-        Wed,  4 May 2022 01:51:46 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 7ED2816A9
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5C76C16D1;
+        Wed,  4 May 2022 01:51:47 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 5C76C16D1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baikalelectronics.ru; s=mail; t=1651618307;
-        bh=JPtlov/R26iaJoGYLE65h7R26Fa4fW15sVpsEpMYVE0=;
-        h=From:To:CC:Subject:Date:From;
-        b=sB2vwT0GZyd6haIudkMbBYmtvZK6jPS6DaM6B3lV45IzO6cfRSl5Po8sAsyWksWLF
-         XAB+IsIqiaWMuoPOmwQyn7rn9//O0wJTpHCuKTxXPXGd5kzFEq6YmvraPX+8qfEKnv
-         U3Llmf6TmfclwIu1xOu8E3Z+WbH3zKYd9kUWJgnE=
+        bh=mO431tI1SNQWLBayZin6EOk4nSImyeG4ZAo0sqrxslA=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+        b=KJQDLWp4uw+MV/pE08eMUEm3STzjE1jPymvmHWLFZHnRcsKxDCAKVrShxLpr4XSHX
+         ByCbxSCfuRqxhXFeBVmDbPqZWTzvaJKYw9h0jnjtQ0WUpebjgd8vLnR+6beBC2OeoR
+         rv0hbs7+TbZ3nV0C9iCK5bRkYiXBTgpWm5mNODJk=
 Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 01:51:12 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 01:51:13 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -34,7 +34,11 @@ To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -42,13 +46,15 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 00/26] dmaengine: dw-edma: Add RP/EP local DMA controllers support
-Date:   Wed, 4 May 2022 01:50:38 +0300
-Message-ID: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
+        <linux-kernel@vger.kernel.org>, <iommu@lists.linux-foundation.org>
+Subject: [PATCH v2 01/26] dma-direct: take dma-ranges/offsets into account in resource mapping
+Date:   Wed, 4 May 2022 01:50:39 +0300
+Message-ID: <20220503225104.12108-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
+References: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
@@ -60,142 +66,40 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This is a final patchset in the series created in the framework of
-my Baikal-T1 PCIe/eDMA-related work:
+A basic device-specific linear memory mapping was introduced back in
+commit ("dma: Take into account dma_pfn_offset") as a single-valued offset
+preserved in the device.dma_pfn_offset field, which was initialized for
+instance by means of the "dma-ranges" DT property. Afterwards the
+functionality was extended to support more than one device-specific region
+defined in the device.dma_range_map list of maps. But all of these
+improvements concerned a single pointer, page or sg DMA-mapping methods,
+while the system resource mapping function turned to miss the
+corresponding modification. Thus the dma_direct_map_resource() method now
+just casts the CPU physical address to the device DMA address with no
+dma-ranges-based mapping taking into account, which is obviously wrong.
+Let's fix it by using the phys_to_dma_direct() method to get the
+device-specific bus address from the passed memory resource for the case
+of the directly mapped DMA.
 
-[1: In-progress v3] clk: Baikal-T1 DDR/PCIe resets and some xGMAC fixes
-Link: https://lore.kernel.org/linux-pci/20220503205722.24755-1-Sergey.Semin@baikalelectronics.ru/
-[2: In-progress v2] PCI: dwc: Various fixes and cleanups
-Link: https://lore.kernel.org/linux-pci/20220503212300.30105-1-Sergey.Semin@baikalelectronics.ru/
-[3: In-progress v2] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support
-Link: https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
-[4: In-progress v2] dmaengine: dw-edma: Add RP/EP local DMA controllers support
-Link: --you are looking at it--
-
-Note it is recommended to merge this patchset after the former ones in
-order to prevent merge conflicts. @Lorenzo could you merge in this
-patchset through your PCIe repo? After getting all the ack'es of course
-and after merging in the @Frank' series? (See the next paragraph for more
-details.)
-
-Please note originally this series was self content, but due to Frank
-being a bit faster in his work submission I had to rebase my patchset onto
-his one. So now this patchset turns to be dependent on the Frank' work:
-Link: https://lore.kernel.org/linux-pci/20220503005801.1714345-1-Frank.Li@nxp.com/
-So please merge Frank' series first before applying this one.
-
-Here is a short summary regarding this patchset. The series starts with
-fixes patches. The very first patch fixes the dma_direct_map_resource()
-method, which turned out to be not working correctly for the case of
-having devive.dma_range_map being non-empty (non-empty dma-ranges DT
-property). Then we discovered that the dw-edma-pcie.c driver incorrectly
-initializes the LL/DT base addresses for the platforms with not matching
-CPU and PCIe memory spaces. It is fixed by using the pci_bus_address()
-method to get a correct base address. After that you can find a series of
-the interleaved xfers fixes. It turned out the interleaved transfers
-implementation didn't work quite correctly from the very beginning for
-instance missing src/dst addresses initialization, etc. In the framework
-of the next two patches we suggest to add a new platform-specific
-callback - pci_address() and use it to convert the CPU address to the PCIe
-space address. It is at least required for the DW eDMA remote End-point
-setup on the platforms with not-matching CPU/PCIe address spaces. In case
-of the DW eDMA local RP/EP setup the conversion will be done automatically
-by the outbound iATU (if no DMA-bypass flag is specified for the
-corresponding iATU window). Then we introduce a set of the patches to make
-the DebugFS part of the code supporting the multi-eDMA controllers
-platforms. It starts with several cleanup patches and is closed joining
-the Read/Write channels into a single DMA-device as they originally should
-have been. After that you can find the patches with adding the non-atomic
-io-64 methods usage, dropping DT-region descriptors allocation, replacing
-chip IDs with the device name. In addition to that in order to have the
-eDMA embedded into the DW PCIe RP/EP supported we need to bypass the
-dma-ranges-based memory ranges mapping since in case of the root port DT
-node it's applicable for the peripheral PCIe devices only. Finally at the
-series closure we introduce a generic DW eDMA controller support being
-available in the DW PCIe Host/End-point driver.
-
-Link: https://lore.kernel.org/linux-pci/20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru/
-Changelog v2:
-- Drop the patches:
-  [PATCH 1/25] dmaengine: dw-edma: Drop dma_slave_config.direction field usage
-  [PATCH 2/25] dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction semantics
-  since they are going to be merged in in the framework of the
-  Frank's patchset.
-- Add a new patch: "dmaengine: dw-edma: Release requested IRQs on
-  failure."
-- Drop __iomem qualifier from the struct dw_edma_debugfs_entry instance
-  definition in the dw_edma_debugfs_u32_get() method. (@Manivannan)
-- Add a new patch: "dmaengine: dw-edma: Rename DebugFS dentry variables to
-  'dent'." (@Manivannan)
-- Slightly extend the eDMA name array size. (@Manivannan)
-- Change the specific DMA mapping comment a bit to being
-  clearer. (@Manivannan)
-- Add a new patch: "PCI: dwc: Add generic iATU/eDMA CSRs space detection
-  method."
-- Don't fail eDMA detection procedure if the DW eDMA driver couldn't probe
-  device. That happens if the driver is disabled. (@Manivannan)
-- Add "dma" registers resource mapping procedure. (@Manivannan)
-- Move the eDMA CSRs space detection into the dw_pcie_map_detect() method.
-- Remove eDMA on the dw_pcie_ep_init() internal errors. (@Manivannan)
-- Remove eDMA in the dw_pcie_ep_exit() method.
-- Move the dw_pcie_edma_detect() method execution to the tail of the
-  dw_pcie_ep_init() function.
-
+Fixes: 25f1e1887088 ("dma: Take into account dma_pfn_offset")
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-Cc: Rob Herring <robh@kernel.org>
-Cc: "Krzysztof Wilczyński" <kw@linux.com>
-Cc: linux-pci@vger.kernel.org
-Cc: dmaengine@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+---
+ kernel/dma/direct.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Serge Semin (26):
-  dma-direct: take dma-ranges/offsets into account in resource mapping
-  dmaengine: Fix dma_slave_config.dst_addr description
-  dmaengine: dw-edma: Release requested IRQs on failure
-  dmaengine: dw-edma: Convert ll/dt phys-address to PCIe bus/DMA address
-  dmaengine: dw-edma: Fix missing src/dst address of the interleaved
-    xfers
-  dmaengine: dw-edma: Don't permit non-inc interleaved xfers
-  dmaengine: dw-edma: Fix invalid interleaved xfers semantics
-  dmaengine: dw-edma: Add CPU to PCIe bus address translation
-  dmaengine: dw-edma: Add PCIe bus address getter to the remote EP
-    glue-driver
-  dmaengine: dw-edma: Drop chancnt initialization
-  dmaengine: dw-edma: Fix DebugFS reg entry type
-  dmaengine: dw-edma: Stop checking debugfs_create_*() return value
-  dmaengine: dw-edma: Add dw_edma prefix to the DebugFS nodes descriptor
-  dmaengine: dw-edma: Convert DebugFS descs to being kz-allocated
-  dmaengine: dw-edma: Rename DebugFS dentry variables to 'dent'
-  dmaengine: dw-edma: Simplify the DebugFS context CSRs init procedure
-  dmaengine: dw-edma: Move eDMA data pointer to DebugFS node descriptor
-  dmaengine: dw-edma: Join Write/Read channels into a single device
-  dmaengine: dw-edma: Use DMA-engine device DebugFS subdirectory
-  dmaengine: dw-edma: Use non-atomic io-64 methods
-  dmaengine: dw-edma: Drop DT-region allocation
-  dmaengine: dw-edma: Replace chip ID number with device name
-  dmaengine: dw-edma: Bypass dma-ranges mapping for the local setup
-  dmaengine: dw-edma: Skip cleanup procedure if no private data found
-  PCI: dwc: Add generic iATU/eDMA CSRs space detection method
-  PCI: dwc: Add DW eDMA engine support
-
- drivers/dma/dw-edma/dw-edma-core.c            | 211 +++++-----
- drivers/dma/dw-edma/dw-edma-core.h            |  10 +-
- drivers/dma/dw-edma/dw-edma-pcie.c            |  24 +-
- drivers/dma/dw-edma/dw-edma-v0-core.c         |  76 ++--
- drivers/dma/dw-edma/dw-edma-v0-core.h         |   1 -
- drivers/dma/dw-edma/dw-edma-v0-debugfs.c      | 372 ++++++++----------
- drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   5 -
- .../pci/controller/dwc/pcie-designware-ep.c   |  16 +-
- .../pci/controller/dwc/pcie-designware-host.c |  17 +-
- drivers/pci/controller/dwc/pcie-designware.c  | 251 ++++++++++--
- drivers/pci/controller/dwc/pcie-designware.h  |  23 +-
- include/linux/dma/edma.h                      |  18 +-
- include/linux/dmaengine.h                     |   2 +-
- kernel/dma/direct.c                           |   2 +-
- 14 files changed, 628 insertions(+), 400 deletions(-)
-
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index 9743c6ccce1a..bc06db74dfdb 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -497,7 +497,7 @@ int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
+ dma_addr_t dma_direct_map_resource(struct device *dev, phys_addr_t paddr,
+ 		size_t size, enum dma_data_direction dir, unsigned long attrs)
+ {
+-	dma_addr_t dma_addr = paddr;
++	dma_addr_t dma_addr = phys_to_dma_direct(dev, paddr);
+ 
+ 	if (unlikely(!dma_capable(dev, dma_addr, size, false))) {
+ 		dev_err_once(dev,
 -- 
 2.35.1
 

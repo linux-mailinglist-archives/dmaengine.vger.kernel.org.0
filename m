@@ -2,31 +2,31 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7518C519207
-	for <lists+dmaengine@lfdr.de>; Wed,  4 May 2022 01:01:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B29E1519200
+	for <lists+dmaengine@lfdr.de>; Wed,  4 May 2022 01:01:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237685AbiECXEz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 3 May 2022 19:04:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51152 "EHLO
+        id S239078AbiECXEv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 3 May 2022 19:04:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243940AbiECXEH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 May 2022 19:04:07 -0400
+        with ESMTP id S242196AbiECXEC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 May 2022 19:04:02 -0400
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B16B0659E
-        for <dmaengine@vger.kernel.org>; Tue,  3 May 2022 16:00:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 73F706417
+        for <dmaengine@vger.kernel.org>; Tue,  3 May 2022 16:00:25 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5C76C16D1;
-        Wed,  4 May 2022 01:51:47 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 5C76C16D1
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 607ED16D6;
+        Wed,  4 May 2022 01:51:48 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 607ED16D6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1651618307;
-        bh=mO431tI1SNQWLBayZin6EOk4nSImyeG4ZAo0sqrxslA=;
+        d=baikalelectronics.ru; s=mail; t=1651618308;
+        bh=45B91bTRPDAiVVFXTWFyOKTO4rQMMJ7SJOEIZd4mBWc=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=KJQDLWp4uw+MV/pE08eMUEm3STzjE1jPymvmHWLFZHnRcsKxDCAKVrShxLpr4XSHX
-         ByCbxSCfuRqxhXFeBVmDbPqZWTzvaJKYw9h0jnjtQ0WUpebjgd8vLnR+6beBC2OeoR
-         rv0hbs7+TbZ3nV0C9iCK5bRkYiXBTgpWm5mNODJk=
+        b=hW6NN3XmaclC1NQBB5+yrm7tUDzI+V27l6nwbpKGVaAhzL9Gmm384L5/JhYDCO0IA
+         HI54mSmbK44lqKbjFhJk6VOhdNGe2g75bXIxogQvHQtBrXwc6tU2ZMiQ4GpY/C85VW
+         E2Si5ykW3/FLLJ2dUVG/3tu8Ivx0RQDhArbjjAMk=
 Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 01:51:13 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 01:51:14 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -34,11 +34,7 @@ To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -46,10 +42,10 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <iommu@lists.linux-foundation.org>
-Subject: [PATCH v2 01/26] dma-direct: take dma-ranges/offsets into account in resource mapping
-Date:   Wed, 4 May 2022 01:50:39 +0300
-Message-ID: <20220503225104.12108-2-Sergey.Semin@baikalelectronics.ru>
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 02/26] dmaengine: Fix dma_slave_config.dst_addr description
+Date:   Wed, 4 May 2022 01:50:40 +0300
+Message-ID: <20220503225104.12108-3-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -66,40 +62,31 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-A basic device-specific linear memory mapping was introduced back in
-commit ("dma: Take into account dma_pfn_offset") as a single-valued offset
-preserved in the device.dma_pfn_offset field, which was initialized for
-instance by means of the "dma-ranges" DT property. Afterwards the
-functionality was extended to support more than one device-specific region
-defined in the device.dma_range_map list of maps. But all of these
-improvements concerned a single pointer, page or sg DMA-mapping methods,
-while the system resource mapping function turned to miss the
-corresponding modification. Thus the dma_direct_map_resource() method now
-just casts the CPU physical address to the device DMA address with no
-dma-ranges-based mapping taking into account, which is obviously wrong.
-Let's fix it by using the phys_to_dma_direct() method to get the
-device-specific bus address from the passed memory resource for the case
-of the directly mapped DMA.
+Most likely due to a copy-paste mistake the dst_addr member of the
+dma_slave_config structure has been marked as ignored if the !source!
+address belong to the memory. That is relevant to the src_addr field of
+the structure while the dst_addr field as containing a destination device
+address is supposed to be ignored if the destination is the CPU memory.
+Let's fix the field description accordingly.
 
-Fixes: 25f1e1887088 ("dma: Take into account dma_pfn_offset")
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 ---
- kernel/dma/direct.c | 2 +-
+ include/linux/dmaengine.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 9743c6ccce1a..bc06db74dfdb 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -497,7 +497,7 @@ int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
- dma_addr_t dma_direct_map_resource(struct device *dev, phys_addr_t paddr,
- 		size_t size, enum dma_data_direction dir, unsigned long attrs)
- {
--	dma_addr_t dma_addr = paddr;
-+	dma_addr_t dma_addr = phys_to_dma_direct(dev, paddr);
- 
- 	if (unlikely(!dma_capable(dev, dma_addr, size, false))) {
- 		dev_err_once(dev,
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 842d4f7ca752..f204ea16ac1c 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -395,7 +395,7 @@ enum dma_slave_buswidth {
+  * should be read (RX), if the source is memory this argument is
+  * ignored.
+  * @dst_addr: this is the physical address where DMA slave data
+- * should be written (TX), if the source is memory this argument
++ * should be written (TX), if the destination is memory this argument
+  * is ignored.
+  * @src_addr_width: this is the width in bytes of the source (RX)
+  * register where DMA data shall be read. If the source
 -- 
 2.35.1
 

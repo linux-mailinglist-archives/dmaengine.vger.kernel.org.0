@@ -2,31 +2,31 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6945C519217
-	for <lists+dmaengine@lfdr.de>; Wed,  4 May 2022 01:02:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69079519205
+	for <lists+dmaengine@lfdr.de>; Wed,  4 May 2022 01:01:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234635AbiECXFh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 3 May 2022 19:05:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51640 "EHLO
+        id S240614AbiECXEy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 3 May 2022 19:04:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244131AbiECXEL (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 May 2022 19:04:11 -0400
+        with ESMTP id S243966AbiECXEI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 May 2022 19:04:08 -0400
 Received: from mail.baikalelectronics.ru (mail.baikalelectronics.com [87.245.175.226])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5D083DF75
-        for <dmaengine@vger.kernel.org>; Tue,  3 May 2022 16:00:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AE97765FA
+        for <dmaengine@vger.kernel.org>; Tue,  3 May 2022 16:00:31 -0700 (PDT)
 Received: from mail.baikalelectronics.ru (unknown [192.168.51.25])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 70B4716DA;
-        Wed,  4 May 2022 01:51:51 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 70B4716DA
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8552916DC;
+        Wed,  4 May 2022 01:51:52 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.ru 8552916DC
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1651618311;
-        bh=4e9cmuHuBiDIdato7BKqLnVJnuF18fszm+JCzcVUJxA=;
+        d=baikalelectronics.ru; s=mail; t=1651618312;
+        bh=yyJl4C86rRjJF12iu156z23kD5CNtiThc1HugtLxv5M=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=MyoRhtLEKLiQcThP0ksI8GV23pqf74RrlitQkdhwDGtLCyxpz7SWdAcfMKeVnL15I
-         JN0U0zcniuhtdAKyCYQCl6GntH9JhprBHg6vRMXw4sgHSkQ0WgWt0SJDSSlmPjS62w
-         Wxno8Z0JLqEhGkrRWw55S0L/Xp/2KCiIV2h+ONIg=
+        b=hW1V6makBQur5HqxprJhu5mniGdGM/xOA77SIwjKxW9npom9xRTCMKP7ksxwto87r
+         CyXXF+4idAPVfEKaKLsoUzOB885ETmnD8+d1ssAv5Db6gkZ6JiRJU0kcVeQDg7t02v
+         mJ/+iPefHk1EivVtS/Wp7d5wEBPP9lN/R3Ejg+9E=
 Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 01:51:17 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 May 2022 01:51:18 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -44,9 +44,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [PATCH v2 05/26] dmaengine: dw-edma: Fix missing src/dst address of the interleaved xfers
-Date:   Wed, 4 May 2022 01:50:43 +0300
-Message-ID: <20220503225104.12108-6-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v2 06/26] dmaengine: dw-edma: Don't permit non-inc interleaved xfers
+Date:   Wed, 4 May 2022 01:50:44 +0300
+Message-ID: <20220503225104.12108-7-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -63,45 +63,52 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The interleaved DMA transfers support was added in the commit 85e7518f42c8
-("dmaengine: dw-edma: Add device_prep_interleave_dma() support"). It
-seems like the support was broken from the very beginning. Depending on
-the selected channel either source or destination address are left
-uninitialized which was obviously wrong. I don't really know how come the
-original modification was working for the commit author. Anyway let's fix
-it by initializing the destination address of the eDMA burst descriptors
-for the DEV_TO_MEM interleaved operations and by initializing the source
-address of the eDMA burst descriptors for the MEM_TO_DEV interleaved
-operations.
+DW eDMA controller always increments both source and destination
+addresses. Permitting DMA interleaved transfers with no src_inc/dst_inc
+flags set may lead to unexpected behaviour for the device users. Let's fix
+that by terminating the interleaved transfers if at least one of the
+dma_interleaved_template.{src_inc,dst_inc} flag is initialized with false
+value. Note in addition to that we need to increase the source and
+destination addresses accordingly after each iteration.
 
 Fixes: 85e7518f42c8 ("dmaengine: dw-edma: Add device_prep_interleave_dma() support")
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/dma/dw-edma/dw-edma-core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/dma/dw-edma/dw-edma-core.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index 04efcb16d13d..f0ef87d75ea9 100644
+index f0ef87d75ea9..225eab58acb7 100644
 --- a/drivers/dma/dw-edma/dw-edma-core.c
 +++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -456,6 +456,8 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
- 				 * and destination addresses are increased
- 				 * by the same portion (data length)
- 				 */
-+			} else if (xfer->type == EDMA_XFER_INTERLEAVED) {
-+				burst->dar = dst_addr;
- 			}
- 		} else {
- 			burst->dar = dst_addr;
-@@ -471,6 +473,8 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
- 				 * and destination addresses are increased
- 				 * by the same portion (data length)
- 				 */
-+			}  else if (xfer->type == EDMA_XFER_INTERLEAVED) {
-+				burst->sar = src_addr;
- 			}
+@@ -386,6 +386,8 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+ 			return NULL;
+ 		if (xfer->xfer.il->numf > 0 && xfer->xfer.il->frame_size > 0)
+ 			return NULL;
++		if (!xfer->xfer.il->src_inc || !xfer->xfer.il->dst_inc)
++			return NULL;
+ 	} else {
+ 		return NULL;
+ 	}
+@@ -485,15 +487,13 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+ 			struct dma_interleaved_template *il = xfer->xfer.il;
+ 			struct data_chunk *dc = &il->sgl[i];
+ 
+-			if (il->src_sgl) {
+-				src_addr += burst->sz;
++			src_addr += burst->sz;
++			if (il->src_sgl)
+ 				src_addr += dmaengine_get_src_icg(il, dc);
+-			}
+ 
+-			if (il->dst_sgl) {
+-				dst_addr += burst->sz;
++			dst_addr += burst->sz;
++			if (il->dst_sgl)
+ 				dst_addr += dmaengine_get_dst_icg(il, dc);
+-			}
  		}
+ 	}
  
 -- 
 2.35.1

@@ -2,71 +2,64 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D423052233C
-	for <lists+dmaengine@lfdr.de>; Tue, 10 May 2022 20:03:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75D4B522604
+	for <lists+dmaengine@lfdr.de>; Tue, 10 May 2022 23:03:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245121AbiEJSHJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 10 May 2022 14:07:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37672 "EHLO
+        id S233424AbiEJVDX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 10 May 2022 17:03:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234017AbiEJSHH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 10 May 2022 14:07:07 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C9A5FF1;
-        Tue, 10 May 2022 11:03:10 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id c11so17406329plg.13;
-        Tue, 10 May 2022 11:03:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=henuGRivP0qW8juYvQlbKQyNxZ/ZaU8p9MZf2KSFaxc=;
-        b=D4uYNZ7VyfLuT0wfZfipTbmgCZ4SchKHu5vt3x8ArDRO9j+C/ifCxMXp0VE4VRSse7
-         cVTczaktaNgm2yiBcrfBV51RQmWAj9zaB9vU6EdNPkEC0W/f5K8eeCJquxjoknCLZuRi
-         DWJZHCxmSRxTjAmsjMMHyKbgcVrhQMc3MpvaO81iJsj2VL3u87WMAKxm4mm1DHMh6jMb
-         zG7XXz5IoYICRMX+umw0bWlfFqtox8oj/aP7ElYxmT2EPg0/UtkU3SfE1d0WF/1RIMrM
-         UXBYK1tB59xJaBEO3K29qrjQmzmrqbpm0VvV/5pBXLNBppkCHoICPuuq/jmyXz+DBW7t
-         1QIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=henuGRivP0qW8juYvQlbKQyNxZ/ZaU8p9MZf2KSFaxc=;
-        b=RspbddSUv9/MNI4K7oJysI8x0UBfi8jz2mhTPCqBgGQrwnGcGh9phROFufbl6/jVSM
-         wSmaOh3/MddmZx4esVwviiAr5OtlcVljhmjzQS9cgbNagqnF6TPMZYzEbWoynPz/jSAc
-         TyCO0QlJDzlh5kafKu3Hmln5TOt3J1X1nAYhAxmoDTG+O7XkcawVqBLF95pKSSJ3H3rO
-         GS88YJLxeoRbVa2NN7be5cfe55klAc557ovkYegEoHQ4XPnqgOh6KGjUUgEOrvFuHoxj
-         sTq76Wk5YhHTWwudFVKo6rH3L1iO4+yqIIPBAJFHytuR3Ot1VAKtf8l4/RfNJLXXED3D
-         uUJw==
-X-Gm-Message-State: AOAM531uaCIo9G+BtzHHmeQKQ72U9cZz8ZkSan/PnjF1XoR+ygyv4Eys
-        yENIdN5KmcBcy3dvxuae8OqbocKAH3Ujsgb1IHs=
-X-Google-Smtp-Source: ABdhPJwlpQ/w1VZPoTgh8+oYdrMztwnLexVLrtWCYlcfDmJoGuYjkzgfpUKd3s3Lt5YxmlbdkDUBCBF8oVWH1oBC2zg=
-X-Received: by 2002:a17:903:32c2:b0:15e:c1cc:2410 with SMTP id
- i2-20020a17090332c200b0015ec1cc2410mr22179151plr.127.1652205789439; Tue, 10
- May 2022 11:03:09 -0700 (PDT)
+        with ESMTP id S230000AbiEJVDV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 10 May 2022 17:03:21 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 986B1122B7E;
+        Tue, 10 May 2022 14:03:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652216600; x=1683752600;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=T2RqD8DycZnIZwNsICjtUhI+ydkb5hVA3rlyqO1BIDA=;
+  b=oHc/Uib9ePahYFgU02q8P1ye7wE0US8Six/kPXNZ3FoMM7MOtzkJqYyx
+   N2vJHvaydkMgCDzWrNvx9hDHl7uv/DTsw8gU7wqnU5ilpS2y2sTpPF2Nh
+   VuLPfHwN8ySnmNHmvu930S/A7O+9TnsZmh8Z86NCn3do86ebvODuqTOiW
+   b1S6Iv56pWQkGVmxgYSdf3e0qCpU7JYKziMiWcx7GPADaSLhewRKSK6EN
+   LgcTBFfeshdl4j3SgArS+Ok2qHrOXBXYsZQbsw7LtV7pa/qn+yqxjtnXc
+   r9aF/o7bfEP1erCw2e3UbxVNI9A6NZfrxjwf3mm/I5COpvCGueg0IINHU
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10343"; a="332538547"
+X-IronPort-AV: E=Sophos;i="5.91,215,1647327600"; 
+   d="scan'208";a="332538547"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2022 14:03:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,215,1647327600"; 
+   d="scan'208";a="553017093"
+Received: from otc-wp-03.jf.intel.com (HELO jacob-builder.jf.intel.com) ([10.54.39.79])
+  by orsmga002.jf.intel.com with ESMTP; 10 May 2022 14:03:19 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>, vkoul@kernel.org,
+        robin.murphy@arm.com, will@kernel.org
+Cc:     Yi Liu <yi.l.liu@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v3 0/4] Enable PASID for DMA API users
+Date:   Tue, 10 May 2022 14:07:00 -0700
+Message-Id: <20220510210704.3539577-1-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220503005801.1714345-1-Frank.Li@nxp.com> <20220503231806.w2x4o2b3xymbwn74@mobilestation>
- <YnqlRShJzvma2SKM@lpieralisi>
-In-Reply-To: <YnqlRShJzvma2SKM@lpieralisi>
-From:   Zhi Li <lznuaa@gmail.com>
-Date:   Tue, 10 May 2022 13:02:58 -0500
-Message-ID: <CAHrpEqRspZKtiwxBBu7qWmdv9N_5tC_7BwZx-EdOs1Y6+QJVEw@mail.gmail.com>
-Subject: Re: [PATCH v10 0/9] Enable designware PCI EP EDMA locally
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Serge Semin <fancer.lancer@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Rob Herring <robh@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,115 +67,90 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, May 10, 2022 at 12:47 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Wed, May 04, 2022 at 02:18:06AM +0300, Serge Semin wrote:
-> > On Mon, May 02, 2022 at 07:57:52PM -0500, Frank Li wrote:
-> > > Default Designware EDMA just probe remotely at host side.
-> > > This patch allow EDMA driver can probe at EP side.
-> > >
-> > > 1. Clean up patch
-> > >    dmaengine: dw-edma: Detach the private data and chip info structures
-> > >    dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
-> > >    dmaengine: dw-edma: Change rg_region to reg_base in struct
-> > >    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> > >
-> > > 2. Enhance EDMA driver to allow prode eDMA at EP side
-> > >    dmaengine: dw-edma: Add support for chip specific flags
-> > >    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
-> > >
-> > > 3. Bugs fix at EDMA driver when probe eDMA at EP side
-> > >    dmaengine: dw-edma: Fix programming the source & dest addresses for ep
-> > >    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
-> > >
-> > > 4. change pci-epf-test to use EDMA driver to transfer data.
-> > >    PCI: endpoint: Add embedded DMA controller test
-> > >
-> > > 5. Using imx8dxl to do test, but some EP functions still have not
-> > > upstream yet. So below patch show how probe eDMA driver at EP
-> > > controller driver.
-> > > https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
-> >
-> > As I have already said in my comment to v9, @Lorenzo, @Rob, @Vinod,
-> > my patchset:
-> > Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru
-> > is based on this one. In its turn my series depends on the other
-> > patchsets:
-> > [PATCH v3 0/4] clk: Baikal-T1 DDR/PCIe resets and some xGMAC fixes
-> > Link: https://lore.kernel.org/linux-pci/20220503205722.24755-1-Sergey.Semin@baikalelectronics.ru/
-> > [PATCH v2 00/13] PCI: dwc: Various fixes and cleanups
-> > Link: https://lore.kernel.org/linux-pci/20220503212300.30105-1-Sergey.Semin@baikalelectronics.ru/
-> > [PATCH v2 00/17] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support
-> > Link: https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
-> > which are currently on review. I am very much eager to get my patches
-> > merged in before the next merge windows. But in order to preserve the
-> > consistency of the corresponding repo with my patchsets the repo needs
-> > to have the @Frank' patches. Seeing aside with @Frank's series my changes
-> > depend on the changes in the clk and pci subsystems, could you please
-> > consider choosing a single repository for merging all my and @Frank
-> > patches in? Since the changes mostly concern the DW PCIe controller I
-> > suggest to use the 'pci/dwc' branch of the
-> > 'kernel/git/lpieralisi/pci.git' repository. What do you think?
-> > @Lorenzo?
-> >
->
-> Sorry for the delay in replying. I think @Frank's series will
-> go via the DMA engine tree,
+Some modern accelerators such as Intel's Data Streaming Accelerator (DSA)
+require PASID in DMA requests to be operational. Specifically, the work
+submissions with ENQCMD on shared work queues require PASIDs. The use cases
+include both user DMA with shared virtual addressing (SVA) and in-kernel
+DMA similar to legacy DMA w/o PASID. Here we address the latter.
 
-Thanks. I think that except for the last one patch "PCI: endpoint: Add
-embedded DMA controller test" needs
-go through the pci tree.  The good thing is that it is totally independent.
+DMA mapping API is the de facto standard for in-kernel DMA. However, it
+operates on a per device or Requester ID(RID) basis which is not
+PASID-aware. To leverage DMA API for devices relies on PASIDs, this
+patchset introduces the following APIs
 
-best regards
-Frank Li
+1. A driver facing API that enables DMA API PASID usage:
+iommu_enable_pasid_dma(struct device *dev, ioasid_t &pasid);
 
->I will do my best to review your
-> DWC changes:
->
-> [PATCH v2 00/13] PCI: dwc: Various fixes and cleanups
-> Link: https://lore.kernel.org/linux-pci/20220503212300.30105-1-Sergey.Semin@baikalelectronics.ru/
->
-> but I can't guarantee they will make v5.19 and after that I will
-> be AFK for two months, which is not good either, I will coordinate
-> with Bjorn to see what can we do on this, I am sorry but that's
-> all I have to offer at this stage.
->
-> Thanks,
-> Lorenzo
->
-> > -Sergey
-> >
-> > >
-> > >
-> > > Frank Li (7):
-> > >   dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
-> > >   dmaengine: dw-edma: Detach the private data and chip info structures
-> > >   dmaengine: dw-edma: Change rg_region to reg_base in struct
-> > >     dw_edma_chip
-> > >   dmaengine: dw-edma: Rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> > >     dw_edma_chip
-> > >   dmaengine: dw-edma: Add support for chip specific flags
-> > >   dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
-> > >   PCI: endpoint: Enable DMA controller tests for endpoints with DMA
-> > >     capabilities
-> > >
-> > > Serge Semin (2):
-> > >   dmaengine: dw-edma: Drop dma_slave_config.direction field usage
-> > >   dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
-> > >     semantics
-> > >
-> > >  drivers/dma/dw-edma/dw-edma-core.c            | 141 +++++++++++-------
-> > >  drivers/dma/dw-edma/dw-edma-core.h            |  31 +---
-> > >  drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
-> > >  drivers/dma/dw-edma/dw-edma-v0-core.c         |  54 ++++---
-> > >  drivers/dma/dw-edma/dw-edma-v0-core.h         |   4 +-
-> > >  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  18 +--
-> > >  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   8 +-
-> > >  drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++--
-> > >  include/linux/dma/edma.h                      |  61 +++++++-
-> > >  9 files changed, 323 insertions(+), 185 deletions(-)
-> > >
-> > > --
-> > > 2.35.1
-> > >
+2. An IOMMU op that allows attaching device-domain-PASID generically (will
+be used beyond DMA API PASID support)
+
+Once PASID DMA is enabled and attached to the appropriate IOMMU domain,
+device drivers can continue to use DMA APIs as-is. There is no difference
+in terms of mapping in dma_handle between without PASID and with PASID.
+The DMA mapping performed by IOMMU will be identical for both requests, let
+it be IOVA or PA in case of pass-through.
+
+In addition, this set converts DSA driver in-kernel DMA with PASID from SVA
+lib to DMA API. There have been security and functional issues with the
+kernel SVA approach:
+(https://lore.kernel.org/linux-iommu/20210511194726.GP1002214@nvidia.com/)
+The highlights are as the following:
+ - The lack of IOTLB synchronization upon kernel page table updates.
+   (vmalloc, module/BPF loading, CONFIG_DEBUG_PAGEALLOC etc.)
+ - Other than slight more protection, using kernel virtual address (KVA)
+has little advantage over physical address. There are also no use cases yet
+where DMA engines need kernel virtual addresses for in-kernel DMA.
+
+Subsequently, cleanup is done around the usage of sva_bind_device() for
+in-kernel DMA. Removing special casing code in VT-d driver and tightening
+SVA lib API.
+
+This work and idea behind it is a collaboration with many people, many
+thanks to Baolu Lu, Jason Gunthorpe, Dave Jiang, and others.
+
+
+ChangeLog:
+v3
+	- Rebased on "Baolu's SVA and IOPF refactoring" series v5.
+	(https://github.com/LuBaolu/intel-iommu/commits/iommu-sva-refactoring-v5)
+	This version is significantly simplified by leveraging IOMMU domain
+	ops, attach_dev_pasid() op is implemented differently on a DMA domain
+	than on a SVA domain.
+	We currently have no need to support multiple PASIDs per DMA domain.
+	(https://lore.kernel.org/lkml/20220315142216.GV11336@nvidia.com/).
+	Removed PASID-device list from V2, a PASID field is introduced to
+	struct iommu_domain instead. It is intended for DMA requests with
+	PASID by all devices attached to the domain.
+
+v2
+	- Do not reserve a special PASID for DMA API usage. Use IOASID
+	  allocation instead.
+	- Introduced a generic device-pasid-domain attachment IOMMU op.
+	  Replaced the DMA API only IOMMU op.
+	- Removed supervisor SVA support in VT-d
+	- Removed unused sva_bind_device parameters
+	- Use IOMMU specific data instead of struct device to store PASID
+	  info
+
+
+Jacob Pan (4):
+  iommu/vt-d: Implement domain ops for attach_dev_pasid
+  iommu: Add PASID support for DMA mapping API users
+  dmaengine: idxd: Use DMA API for in-kernel DMA with PASID
+  iommu/vt-d: Delete unused SVM flag
+
+ drivers/dma/idxd/idxd.h     |   1 -
+ drivers/dma/idxd/init.c     |  34 +++---------
+ drivers/dma/idxd/sysfs.c    |   7 ---
+ drivers/iommu/dma-iommu.c   | 107 ++++++++++++++++++++++++++++++++++++
+ drivers/iommu/intel/iommu.c |  81 ++++++++++++++++++++++++++-
+ drivers/iommu/intel/svm.c   |   2 +-
+ include/linux/dma-iommu.h   |   3 +
+ include/linux/intel-iommu.h |   1 +
+ include/linux/intel-svm.h   |  13 -----
+ include/linux/iommu.h       |   2 +
+ 10 files changed, 202 insertions(+), 49 deletions(-)
+
+-- 
+2.25.1
+

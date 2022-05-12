@@ -2,196 +2,132 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8252D5248D4
-	for <lists+dmaengine@lfdr.de>; Thu, 12 May 2022 11:23:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BD6E524A7C
+	for <lists+dmaengine@lfdr.de>; Thu, 12 May 2022 12:40:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351968AbiELJXW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 12 May 2022 05:23:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39728 "EHLO
+        id S1347482AbiELKkC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 12 May 2022 06:40:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351949AbiELJWl (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 12 May 2022 05:22:41 -0400
-X-Greylist: delayed 504 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 12 May 2022 02:22:28 PDT
-Received: from mta-01.yadro.com (mta-02.yadro.com [89.207.88.252])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE95D52E5A;
-        Thu, 12 May 2022 02:22:28 -0700 (PDT)
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id EBDDD41263;
-        Thu, 12 May 2022 09:14:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :x-mailer:message-id:date:date:subject:subject:from:from
-        :received:received:received:received; s=mta-01; t=1652346841; x=
-        1654161242; bh=6CKUUGiEfJJY6nOsVYJXO5jvAWuz+fxsRrRh0XO1fNg=; b=V
-        X+Jz3UAq7V11zajUqpOBhdlUIfASwYAih5jXFp7KQU1aViL9ltB3LsqgW38qKkvh
-        /2Ei6QBc9grESkv96yB6jCKL/dP9jyoHzq8bMBB+B6ItkiNPadwbES2cxJsVRb/6
-        mZYfZNZ+TYR8FPBHAhxZyf1kgWZgILeJiCmUayzYFA=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SpVT0JrDacfB; Thu, 12 May 2022 12:14:01 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 4F6C74125E;
-        Thu, 12 May 2022 12:14:01 +0300 (MSK)
-Received: from T-Exch-05.corp.yadro.com (172.17.10.109) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Thu, 12 May 2022 12:14:01 +0300
-Received: from v.yadro.com (10.199.17.194) by T-Exch-05.corp.yadro.com
- (172.17.10.109) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3; Thu, 12 May 2022
- 12:14:00 +0300
-From:   Viacheslav Mitrofanov <v.v.mitrofanov@yadro.com>
-To:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <david.abdurachmanov@sifive.com>, <linux@yadro.com>,
-        Viacheslav Mitrofanov <v.v.mitrofanov@yadro.com>
-Subject: [PATCH] dmaengine: sf-pdma: Add multithread support for a DMA channel
-Date:   Thu, 12 May 2022 12:13:27 +0300
-Message-ID: <20220512091327.349563-1-v.v.mitrofanov@yadro.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229554AbiELKkC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 12 May 2022 06:40:02 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A4A15EDDF;
+        Thu, 12 May 2022 03:40:00 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id 4so5915339ljw.11;
+        Thu, 12 May 2022 03:40:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Wzyr02LBMhdQTusCnd1t3WsMuC5rvPxv7Sz+P69gyT8=;
+        b=PWTwmij20E3Mx8kkcN6UdjugtIl0wEDuYlA5F658FkTar2PMXMqP+YesyMptZYicJu
+         g4Ljgi6Jv+sdLvdOVGM46CQKxPXA8J6YIn4y0PbbbaLiYhYEtuz7RvkUBdQ+proIUlcP
+         F++7e+Pv29niDsIPpEBe35M7iLmeN1wcaEQgPtsm6O1fCtZTUzhwCpf6Oq6RKEPNMmdQ
+         WSi+o+YFYVHCBBocnPS1guewxtjmg7ovaZSOFF7DJ8Dw9oe4n1sYaRV6wmbSi3Qe85VZ
+         AweZ7HjY1vNRzcGMLJD9lUmw+UZnHT52DKBRvPuYSt2u0juIrY7RDM1wCBPtoee+6hrU
+         SBzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Wzyr02LBMhdQTusCnd1t3WsMuC5rvPxv7Sz+P69gyT8=;
+        b=dEm7WEGOuw0kntPmPHE5xKVFxa3bzqPumux+HL5qzjufld8oibQXQAcToHN7GEqZ1f
+         lM3GMu6eqdrxT70YG1UD0+9SBC91OazEkLRo8DECJwWnaSE+Tl6H2gxB41xKibSUXIL7
+         CGsdwfzQRC6n+KgFEYSvpFGhvy6vlgtbBOaeazOquyMG4cAblm3uhWcndQws8XEfvboN
+         IIcSU1jwNQvBIpQMzw2HKTQfvAoVEq/UZ2NY/OXLGKKtt2DW3x87732nR68mTdDNrNNq
+         k1Bm363Qx7mV8MMrn5AKpsgD6mrjgqIah/bveGDJr7QWeNQm+RM6WYisa1I2t1GkPLQk
+         uj3A==
+X-Gm-Message-State: AOAM530/jfe3coj/ENAOKJgXoAwarFK1LbjVFkxTi2U4WDfE2Pm4qW+O
+        wMLXAOfzVTzlHaiRdEck4QXdE0uCfnjGFg==
+X-Google-Smtp-Source: ABdhPJwkJNGIfXjYmaDvHSqQtwOxoCRn8Ovhnhsa7HeK1ShpaVly4CF8TTokFz3Cv20eexjHM+Nhjg==
+X-Received: by 2002:a2e:b895:0:b0:250:6797:9e07 with SMTP id r21-20020a2eb895000000b0025067979e07mr20457510ljp.306.1652351998394;
+        Thu, 12 May 2022 03:39:58 -0700 (PDT)
+Received: from mobilestation ([95.79.189.214])
+        by smtp.gmail.com with ESMTPSA id 76-20020a2e054f000000b0024f3d1dae98sm824665ljf.32.2022.05.12.03.39.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 May 2022 03:39:57 -0700 (PDT)
+Date:   Thu, 12 May 2022 13:39:55 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Ruiqi Li <guywithanaxe42@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        gustavo.pimentel@synopsys.com, vkoul@kernel.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] dmaengine: dw-edma: Removed redundant #ifdef check
+ for 64-bit
+Message-ID: <20220512103955.abihluliakytznae@mobilestation>
+References: <20220510163117.1761625-1-guywithanaxe42@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.199.17.194]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-Exch-05.corp.yadro.com (172.17.10.109)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220510163117.1761625-1-guywithanaxe42@gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-When we get a DMA channel and try to use it in multiple threads it
-will cause oops and hanging the system.
+Hello Ruiqu
 
-% echo 64 > /sys/module/dmatest/parameters/threads_per_chan
-% echo 10000 > /sys/module/dmatest/parameters/iterations
-% echo 1 > /sys/module/dmatest/parameters/run
-[   89.480664] Unable to handle kernel NULL pointer dereference at virtual
-               address 00000000000000a0
-[   89.488725] Oops [#1]
-[   89.494708] CPU: 2 PID: 1008 Comm: dma0chan0-copy0 Not tainted
-               5.17.0-rc5
-[   89.509385] epc : vchan_find_desc+0x32/0x46
-[   89.513553]  ra : sf_pdma_tx_status+0xca/0xd6
+On Tue, May 10, 2022 at 11:31:17AM -0500, Ruiqi Li wrote:
+> Commit at 8fc5133d fixed unaligned memory access, which caused both 32
+> and 64 bit to be the same.
+> 
+>     #ifdef CONFIG_64BIT
+>     /* llp is not aligned on 64bit -> keep 32bit accesses */
+>     SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
+>               lower_32_bits(chunk->ll_region.paddr));
+>     SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+>               upper_32_bits(chunk->ll_region.paddr));
+>     #else /* CONFIG_64BIT */
+>     SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
+>               lower_32_bits(chunk->ll_region.paddr));
+>     SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+>               upper_32_bits(chunk->ll_region.paddr));
+>     #endif /* CONFIG_64BIT */
+> 
+> This patch removes redundant preprocessor check for 64 bit.
 
-This happens because of data race. Each thread rewrite channels's
-descriptor as soon as device_prep_dma_memcpy() is called. It leads to the
-situation when the driver thinks that it uses right descriptor that
-actually is freed or substituted for other one.
+A similar fix but with another reasoning has already been submitted:
+Link: https://lore.kernel.org/linux-pci/20220503225104.12108-21-Sergey.Semin@baikalelectronics.ru/
+So not only the denoted but all 64BIT-ifdef's will be dropped from the
+driver.
 
-With current fixes a descriptor changes it's value only when it has
-been used. A new descriptor is acquired from vc->desc_issued queue that
-is already filled with descriptors that are ready to be sent. Threads
-have no direct access to DMA channel descriptor, now it is just possible
-to queue a descriptor for further processing.
+-Sergey
 
-Fixes: 6973886ad58e ("dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00")
-Signed-off-by: Viacheslav Mitrofanov <v.v.mitrofanov@yadro.com>
----
- drivers/dma/sf-pdma/sf-pdma.c | 44 ++++++++++++++++++++++++-----------
- 1 file changed, 30 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
-index f12606aeff87..70bb032c59c2 100644
---- a/drivers/dma/sf-pdma/sf-pdma.c
-+++ b/drivers/dma/sf-pdma/sf-pdma.c
-@@ -52,16 +52,6 @@ static inline struct sf_pdma_desc *to_sf_pdma_desc(struct virt_dma_desc *vd)
- static struct sf_pdma_desc *sf_pdma_alloc_desc(struct sf_pdma_chan *chan)
- {
- 	struct sf_pdma_desc *desc;
--	unsigned long flags;
--
--	spin_lock_irqsave(&chan->lock, flags);
--
--	if (chan->desc && !chan->desc->in_use) {
--		spin_unlock_irqrestore(&chan->lock, flags);
--		return chan->desc;
--	}
--
--	spin_unlock_irqrestore(&chan->lock, flags);
- 
- 	desc = kzalloc(sizeof(*desc), GFP_NOWAIT);
- 	if (!desc)
-@@ -111,7 +101,6 @@ sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,	dma_addr_t dest, dma_addr_t src,
- 	desc->async_tx = vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
- 
- 	spin_lock_irqsave(&chan->vchan.lock, iflags);
--	chan->desc = desc;
- 	sf_pdma_fill_desc(desc, dest, src, len);
- 	spin_unlock_irqrestore(&chan->vchan.lock, iflags);
- 
-@@ -170,11 +159,17 @@ static size_t sf_pdma_desc_residue(struct sf_pdma_chan *chan,
- 	unsigned long flags;
- 	u64 residue = 0;
- 	struct sf_pdma_desc *desc;
--	struct dma_async_tx_descriptor *tx;
-+	struct dma_async_tx_descriptor *tx = NULL;
- 
- 	spin_lock_irqsave(&chan->vchan.lock, flags);
- 
--	tx = &chan->desc->vdesc.tx;
-+	list_for_each_entry(vd, &chan->vchan.desc_submitted, node)
-+		if (vd->tx.cookie == cookie)
-+			tx = &vd->tx;
-+
-+	if (!tx)
-+		goto out;
-+
- 	if (cookie == tx->chan->completed_cookie)
- 		goto out;
- 
-@@ -241,6 +236,19 @@ static void sf_pdma_enable_request(struct sf_pdma_chan *chan)
- 	writel(v, regs->ctrl);
- }
- 
-+static struct sf_pdma_desc *sf_pdma_get_first_pending_desc(struct sf_pdma_chan *chan)
-+{
-+	struct virt_dma_chan *vchan = &chan->vchan;
-+	struct virt_dma_desc *vdesc;
-+
-+	if (list_empty(&vchan->desc_issued))
-+		return NULL;
-+
-+	vdesc = list_first_entry(&vchan->desc_issued, struct virt_dma_desc, node);
-+
-+	return container_of(vdesc, struct sf_pdma_desc, vdesc);
-+}
-+
- static void sf_pdma_xfer_desc(struct sf_pdma_chan *chan)
- {
- 	struct sf_pdma_desc *desc = chan->desc;
-@@ -268,8 +276,11 @@ static void sf_pdma_issue_pending(struct dma_chan *dchan)
- 
- 	spin_lock_irqsave(&chan->vchan.lock, flags);
- 
--	if (vchan_issue_pending(&chan->vchan) && chan->desc)
-+	if ((chan->desc == NULL) && vchan_issue_pending(&chan->vchan)) {
-+		/* vchan_issue_pending has made a check that desc in not NULL */
-+		chan->desc = sf_pdma_get_first_pending_desc(chan);
- 		sf_pdma_xfer_desc(chan);
-+	}
- 
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- }
-@@ -298,6 +309,11 @@ static void sf_pdma_donebh_tasklet(struct tasklet_struct *t)
- 	spin_lock_irqsave(&chan->vchan.lock, flags);
- 	list_del(&chan->desc->vdesc.node);
- 	vchan_cookie_complete(&chan->desc->vdesc);
-+
-+	chan->desc = sf_pdma_get_first_pending_desc(chan);
-+	if (chan->desc)
-+		sf_pdma_xfer_desc(chan);
-+
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- }
- 
--- 
-2.25.1
-
+> 
+> Signed-off-by: Ruiqi Li <guywithanaxe42@gmail.com>
+> ---
+>  drivers/dma/dw-edma/dw-edma-v0-core.c | 7 -------
+>  1 file changed, 7 deletions(-)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> index 33bc1e6c4cf2..d34f344a094b 100644
+> --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> @@ -415,18 +415,11 @@ void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+>  			  (DW_EDMA_V0_CCS | DW_EDMA_V0_LLE));
+>  		/* Linked list */
+>  
+> -		#ifdef CONFIG_64BIT
+>  		/* llp is not aligned on 64bit -> keep 32bit accesses */
+>  		SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
+>  			  lower_32_bits(chunk->ll_region.paddr));
+>  		SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+>  			  upper_32_bits(chunk->ll_region.paddr));
+> -		#else /* CONFIG_64BIT */
+> -		SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
+> -			  lower_32_bits(chunk->ll_region.paddr));
+> -		SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+> -			  upper_32_bits(chunk->ll_region.paddr));
+> -		#endif /* CONFIG_64BIT */
+>  	}
+>  	/* Doorbell */
+>  	SET_RW_32(dw, chan->dir, doorbell,
+> -- 
+> 2.36.1
+> 

@@ -2,53 +2,53 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 569D2524FCA
-	for <lists+dmaengine@lfdr.de>; Thu, 12 May 2022 16:18:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84A7C52504B
+	for <lists+dmaengine@lfdr.de>; Thu, 12 May 2022 16:39:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345728AbiELOSd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 12 May 2022 10:18:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52560 "EHLO
+        id S1355439AbiELOjK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 12 May 2022 10:39:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355228AbiELOST (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 12 May 2022 10:18:19 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6794673576
-        for <dmaengine@vger.kernel.org>; Thu, 12 May 2022 07:18:14 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id fv2so5281016pjb.4
-        for <dmaengine@vger.kernel.org>; Thu, 12 May 2022 07:18:14 -0700 (PDT)
+        with ESMTP id S1355435AbiELOjJ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 12 May 2022 10:39:09 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1CF42532CE
+        for <dmaengine@vger.kernel.org>; Thu, 12 May 2022 07:39:08 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id j14so5069703plx.3
+        for <dmaengine@vger.kernel.org>; Thu, 12 May 2022 07:39:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=7iZZodcw2kcYl7DcsgXoMrjWgWmUo2hoVmfbC2enldQ=;
-        b=f0iav4TX9MWlsCmY6kc9xgrGJbCfS5isN6BM1Z6iWUxV5R949SvxIHYuhyNXGq/LbV
-         iAVEe/k5sttQeWMaw8UJeNzTt7nM8mgs/GC29uCwzVviZ9UmUBlRI+Yz4RUEq3Dnpjdu
-         2s0PTjvqcKHLtt7RtJpqsNMesXKMwyhVVaDQmx0ZS2gv/W14tS7b3di51NdIdSkN/LgV
-         XzQIgrd3IqcQpA9t8nnDLybJ7SAHI7TXsGvLN72OpLgWmloZOd2HbrLfE11Ys9oztA22
-         585mp7uatbKavu7kiketYuGxOhssXwkcveNeYR6yEJEx5D8busxanwG2Ez59YvnJLBGT
-         vRRg==
+        bh=RpvA14mopi2wM/0/4s7P6t9yjcv8sVd/ys9twTz6XHs=;
+        b=IwjrKmELqe++qDbcjrB0VrUfg6crocNU1xe5lMxp6nWDAzOL5RWRRt8saVMkiGySTi
+         oFhpr/l7d61NIYvJG9xPdiXKeej6OyIZFHq7456kaCwqyz0g5bKVMdETsAH1TBVFFayr
+         rlNG/yc6J6myUNMWB6CFQ8qjTTUSzLwGSQTawUMIPH1LQ1wIQ39pAcWNRk4Wy4HpF9Q5
+         1GqUU7aWjlfmKZtqOwn+axFPpEsVq+5jqEMW2ZvjYj4y421WNHqCgfnk7QPDI/12rh7C
+         QNy2f3yAt3shWmOImGNjA8N37MhIMQs0iwYguP2rDjiZtaWS4/AE0VDsyJqe0dlJnArm
+         Ptvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=7iZZodcw2kcYl7DcsgXoMrjWgWmUo2hoVmfbC2enldQ=;
-        b=L8YUgFTGQmMF9NNvMAF+/1cNXVFMHvPvGvD8fm4d1s8Dc0HtNxOOaVV1vnGMinSKps
-         7Svu/UngKWbxenrWg82Brd7j3ubIgiFPMuHc+t513zM9pCsWn3TN/DS8Umpz+8+32t3U
-         feOWMOt5EPQKL9TU2bCSveCdJmS0bRbo8yxaTAo8O158xo7XZuGgIlDfvTx/21Q0og1K
-         0xUQ+iJYm/e6hTNQBsaqeLyAuQkosD9oG0v5b5c5Ot7ZWVPEHoq5AuGNF/6iKaQy7lGb
-         0cXzVtQXiP0I2JCg0AfQH7eNlhLr4Q21p36Tf9CPcaobT0oEQnW4A9SVSR8c5h4LTTG7
-         mYGQ==
-X-Gm-Message-State: AOAM531ULh9dZ8e/DKnrK/dYXJSV3yqaPdzr4SEEDqDcg1xVoUhph+dF
-        3S9KpYAWhJZHDRcmZBL09Zx5
-X-Google-Smtp-Source: ABdhPJy0b5z0NMw6JCWSQ6xCOd3R5EJ290CTQnJbuWRxW4kXTEznCyVtk2LbYi8JPVi2vsroZVZbrg==
-X-Received: by 2002:a17:90a:170c:b0:1dc:20c4:6354 with SMTP id z12-20020a17090a170c00b001dc20c46354mr11089713pjd.113.1652365093661;
-        Thu, 12 May 2022 07:18:13 -0700 (PDT)
+        bh=RpvA14mopi2wM/0/4s7P6t9yjcv8sVd/ys9twTz6XHs=;
+        b=zi0wGxjty1HQ4SAc0ZkwW0TySlH9xSCI5LbDAjH2fPsQ9jvQGCdFhGkqlbyV7dd0UG
+         7XoTboWAQRhXJfLkXqLlFhWaE2WDYMenNC65NOEb8HET9at6zBdYyCba66HXtaCPSlMK
+         UGKTlRDSgvEWRzU/UEGe/lUNj05naNbov0OU8QgBg89Za7jazKj3lGPawTkHOn83xzJG
+         dH8XjfGwx+EXP0+rLwePmubopYi/DgQ8KcUnqP4YcEJbuIBrC/25eyKyK02TcIAug+XN
+         OaAZ9KfbX7TgdqTOiWBDpuZb0W/gvoIvkatIfNa8oV2qZbrZFNjFCJr3grDDsQeZmT39
+         xG2Q==
+X-Gm-Message-State: AOAM530sAjsDdhNr+malBkPeh35WqnBnn1YCqInsDjVO8/A3hkCVd217
+        zbEjG8RaT2GjwUNBzkOuxiFJ
+X-Google-Smtp-Source: ABdhPJzGX4QVR+Nu2JITJr/b8RNE+XCcktTJ7Bx+sADcWNFJ0GnMQN2f39XlXIhEaWDxYRZWAK1HHw==
+X-Received: by 2002:a17:902:f710:b0:15f:165f:b50b with SMTP id h16-20020a170902f71000b0015f165fb50bmr276822plo.158.1652366348217;
+        Thu, 12 May 2022 07:39:08 -0700 (PDT)
 Received: from thinkpad ([117.202.184.202])
-        by smtp.gmail.com with ESMTPSA id u1-20020a170903124100b0015e8d4eb1f2sm3997428plh.60.2022.05.12.07.18.08
+        by smtp.gmail.com with ESMTPSA id 72-20020a62154b000000b0050dc762816bsm3852511pfv.69.2022.05.12.07.39.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 May 2022 07:18:13 -0700 (PDT)
-Date:   Thu, 12 May 2022 19:48:06 +0530
+        Thu, 12 May 2022 07:39:07 -0700 (PDT)
+Date:   Thu, 12 May 2022 20:09:00 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
@@ -64,16 +64,16 @@ Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/26] dmaengine: Fix dma_slave_config.dst_addr
- description
-Message-ID: <20220512141806.GG35848@thinkpad>
+Subject: Re: [PATCH v2 03/26] dmaengine: dw-edma: Release requested IRQs on
+ failure
+Message-ID: <20220512143900.GH35848@thinkpad>
 References: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
- <20220503225104.12108-3-Sergey.Semin@baikalelectronics.ru>
+ <20220503225104.12108-4-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220503225104.12108-3-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20220503225104.12108-4-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -84,14 +84,16 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, May 04, 2022 at 01:50:40AM +0300, Serge Semin wrote:
-> Most likely due to a copy-paste mistake the dst_addr member of the
-> dma_slave_config structure has been marked as ignored if the !source!
-> address belong to the memory. That is relevant to the src_addr field of
-> the structure while the dst_addr field as containing a destination device
-> address is supposed to be ignored if the destination is the CPU memory.
-> Let's fix the field description accordingly.
+On Wed, May 04, 2022 at 01:50:41AM +0300, Serge Semin wrote:
+> From very beginning of the DW eDMA driver live in the kernel the method
+> dw_edma_irq_request() hasn't been designed quite correct. In case if the
+> request_irq() method fails to initialize the IRQ handler at some point the
+> previously requested IRQs will be left initialized. It's prune to errors
+> up to the system crash. Let's fix that by releasing the previously
+> requested IRQs in the cleanup-on-error path of the dw_edma_irq_request()
+> function.
 > 
+> Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
@@ -99,23 +101,47 @@ Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Thanks,
 Mani
 
-> ---
->  include/linux/dmaengine.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index 842d4f7ca752..f204ea16ac1c 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -395,7 +395,7 @@ enum dma_slave_buswidth {
->   * should be read (RX), if the source is memory this argument is
->   * ignored.
->   * @dst_addr: this is the physical address where DMA slave data
-> - * should be written (TX), if the source is memory this argument
-> + * should be written (TX), if the destination is memory this argument
->   * is ignored.
->   * @src_addr_width: this is the width in bytes of the source (RX)
->   * register where DMA data shall be read. If the source
+> ---
+> 
+> Changelog v2:
+> - This is a new patch added in v2 iteration of the series.
+> ---
+>  drivers/dma/dw-edma/dw-edma-core.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index 07f756479663..04efcb16d13d 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -899,10 +899,8 @@ static int dw_edma_irq_request(struct dw_edma *dw,
+>  						dw_edma_interrupt_read,
+>  					  IRQF_SHARED, dw->name,
+>  					  &dw->irq[i]);
+> -			if (err) {
+> -				dw->nr_irqs = i;
+> -				return err;
+> -			}
+> +			if (err)
+> +				goto err_irq_free;
+>  
+>  			if (irq_get_msi_desc(irq))
+>  				get_cached_msi_msg(irq, &dw->irq[i].msi);
+> @@ -911,6 +909,14 @@ static int dw_edma_irq_request(struct dw_edma *dw,
+>  		dw->nr_irqs = i;
+>  	}
+>  
+> +	return 0;
+> +
+> +err_irq_free:
+> +	for  (i--; i >= 0; i--) {
+> +		irq = chip->ops->irq_vector(dev, i);
+> +		free_irq(irq, &dw->irq[i]);
+> +	}
+> +
+>  	return err;
+>  }
+>  
 > -- 
 > 2.35.1
 > 

@@ -2,102 +2,106 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F078D525770
-	for <lists+dmaengine@lfdr.de>; Thu, 12 May 2022 23:54:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B31452583F
+	for <lists+dmaengine@lfdr.de>; Fri, 13 May 2022 01:28:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358911AbiELVyw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 12 May 2022 17:54:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53298 "EHLO
+        id S1359455AbiELX2T (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 12 May 2022 19:28:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359000AbiELVyh (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 12 May 2022 17:54:37 -0400
-Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCDEC5839A
-        for <dmaengine@vger.kernel.org>; Thu, 12 May 2022 14:54:36 -0700 (PDT)
-Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-2f83983782fso72140277b3.6
-        for <dmaengine@vger.kernel.org>; Thu, 12 May 2022 14:54:36 -0700 (PDT)
+        with ESMTP id S1354671AbiELX2S (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 12 May 2022 19:28:18 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1726D31907;
+        Thu, 12 May 2022 16:28:17 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id c24so2206697lfv.11;
+        Thu, 12 May 2022 16:28:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K1VU58MHQqP+/7H+d1w/E+L2ZvFeIXOvlm41/oypmL0=;
-        b=sOYt/Gx0hkqvhlgblLEO/HYJxZTdK226ravqNQqKOZQ4UJ5y4ThWbN3ehEwwngDlYf
-         11tzgbu0WDOYcy1r8mukQ0ovGT+JvnNid4hvM/mwJSBL9p6kxhhMPl1VxGiE1H/Brvx6
-         sapouRkIaz3YQWLwT6VqH4XBSxiLo/uPAiRrSo/Sc0ntI2pRCWlzprmHwvostLXD2a1k
-         qhLlOWMG5cY3OqsqNkLjwCh4XSsVHyjdQAiYDfTxJxahxf6nPPoJvTrjufeZHC9GpGfR
-         af8bi9WIHNWL/KF5rHUcdbfZUiKC9vjY0PXp3N2S78bHVYiW6GXw6Cvfpo82kcxnTVm/
-         Ec4w==
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cpfA97nDV4SiW2VW+i5FVHsx+t3FCKmVLBmZii44FdE=;
+        b=kqBM6iNykm6TWh3OPtN3KNUqyw5Azl0zC+bz2Ms66O6sKoN0kw9HPHK7MEl25ZBQ9L
+         L8CRer3B1+tD6pZKaure8nj8d0GueAO/QsDzbrjXRLcTmLmZTA1q+V0aLQk4KJVG5V1J
+         VfF3Pir7FBeGVLVVt8JElNUM90239qH+if7wVSg3Gm9GlDnI1bNPHPIw6cDrL7dFVjqd
+         9apTJ1uVsRpixTJaPz8daNI4kRjjhvNTPUuANFkQ4jVRfrKNwdF+Dp3mvgugQDaovRW+
+         Hge5USiWx0kOowRq0KnkLp2ADdbQo8qW9kMAg2OtQJUw1oSA5LiBIhlft1FDabsbL6Ce
+         L78A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K1VU58MHQqP+/7H+d1w/E+L2ZvFeIXOvlm41/oypmL0=;
-        b=SnFnilFMTqqVQedwGUUCrhtVu/AJoHkHONJsV8Hnlj+tH7v3lb1DS6zySF1iIy4tYb
-         elpPt+Lf21eKQ2KPT5lNcvGKjVd4adAVgMD0Y2GFyp6/fPmekJbJfUXKVBIt9CfSkMhr
-         Wq0V/pwlkos6VDQ4ZwK53Gzp/e3NAcnepYW9HGXgvhjx+ekpuOkND7pUZtm69pyqYQ8y
-         xraLCxqUj6U6q1ILjUzhKekA2siGhMEq2fA+N1FRE8l2DPCWtOtgiXGp2BcxQzbwpIcC
-         p/UHZJzIW9d5lJUXT6twBQhnbPyL/oxxtne2Drv17eHqmrIbDqp2zm6EXCr4/VuWkq70
-         NE2A==
-X-Gm-Message-State: AOAM530uREoG7Or7di9FNPn2pEci8rKfCi4Oc5MrMc9i9ORprQLHIyLF
-        TvHHvOgSrpgVj/xPjfDJTXLC8AmA0s5WV/GRj7F7pg==
-X-Google-Smtp-Source: ABdhPJzvEO0jiVxrIG+1xE2X6cZ/BJG2CWgwTmUY1c9wQnpnOTd/I357N8dayLCf00VtX03B0P1jTijf3GPai6A5/ak=
-X-Received: by 2002:a81:1d48:0:b0:2f1:8ebf:25f3 with SMTP id
- d69-20020a811d48000000b002f18ebf25f3mr2377894ywd.118.1652392475988; Thu, 12
- May 2022 14:54:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220419211658.11403-1-apais@linux.microsoft.com>
- <20220419211658.11403-2-apais@linux.microsoft.com> <353023ba-d506-5d45-be68-df2025074ed6@kernel.org>
- <3ee366a7-e61f-e513-aa2f-12e8d5316f3c@embeddedor.com> <YmpedDjzZXz2t6NS@smile.fi.intel.com>
- <DA101ED8-F99F-4DCB-9CB7-370A62C44B65@linux.microsoft.com>
-In-Reply-To: <DA101ED8-F99F-4DCB-9CB7-370A62C44B65@linux.microsoft.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 May 2022 23:54:23 +0200
-Message-ID: <CACRpkdadjPn82G4TMKyyQtkju=oA4EX=GNxs8KRtrQ7CcqVOog@mail.gmail.com>
-Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
-To:     Allen Pais <apais@linux.microsoft.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        olivier.dautricourt@orolia.com, sr@denx.de,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cpfA97nDV4SiW2VW+i5FVHsx+t3FCKmVLBmZii44FdE=;
+        b=URQqQMvQLOjhkcxiYp7834yB/qL5ksdNQ5t4ucfq60oSD/7MhjmUeChusMWdMnYqSB
+         qKn7lellySLGSD/BNHw4Uc9wYO/j3uURuW++DMkEdYaP66kyIldsYEjxuUaTt0CmVGTz
+         XaIzi3mjQuVFTJ3rxLGW0jPMPpVOh1hcw2Rm8SJTp7UG+vkGUogYrzTjLdRAOSc2LeK2
+         HWtyvyWV6XqyFQCjLGxAajCkrGfp929lU1XAnmZK8XQFDgMv5r2TyZOOmDHTFIVSl3wk
+         MaPScQTUcqdPPn2S5n+CPNLn9rH1+7TExHF/Tmnn6RXFxrscNvIMUsf9LP3yXKphPBsW
+         TvDA==
+X-Gm-Message-State: AOAM530zLwccaQI6ICk0YKW7U+YHw73xNyhBJlIXXvXdYOdlUr+VPvRf
+        kWzpB3eNiYsw/zTgeeMMbvM=
+X-Google-Smtp-Source: ABdhPJwmqcj7YqvF8NValKykWtMU500lUt5tUdBLW712+Zaujy4N8cbSQS3/q4FBv9Z1peRo/Q5rXw==
+X-Received: by 2002:a19:4f55:0:b0:472:1f2b:6d12 with SMTP id a21-20020a194f55000000b004721f2b6d12mr1434763lfk.388.1652398095274;
+        Thu, 12 May 2022 16:28:15 -0700 (PDT)
+Received: from mobilestation ([95.79.189.214])
+        by smtp.gmail.com with ESMTPSA id r18-20020ac24d12000000b0047255d2111csm131806lfi.75.2022.05.12.16.28.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 May 2022 16:28:14 -0700 (PDT)
+Date:   Fri, 13 May 2022 02:28:11 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, ludovic.desroches@microchip.com,
-        tudor.ambarus@microchip.com, f.fainelli@gmail.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, nsaenz@kernel.org,
-        paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com,
-        gustavo.pimentel@synopsys.com, vireshk@kernel.org,
-        leoyang.li@nxp.com, zw@zh-kernel.org, wangzhou1@hisilicon.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de,
-        sean.wang@mediatek.com, matthias.bgg@gmail.com, afaerber@suse.de,
-        mani@kernel.org, logang@deltatee.com, sanju.mehta@amd.com,
-        daniel@zonque.org, haojian.zhuang@gmail.com,
-        robert.jarzmik@free.fr, agross@kernel.org,
-        bjorn.andersson@linaro.org, krzysztof.kozlowski@linaro.org,
-        green.wan@sifive.com, orsonzhai@gmail.com, baolin.wang7@gmail.com,
-        zhang.lyra@gmail.com, patrice.chotard@foss.st.com, wens@csie.org,
-        jernej.skrabec@gmail.com, samuel@sholland.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v2 01/26] dma-direct: take dma-ranges/offsets into
+ account in resource mapping
+Message-ID: <20220512232811.6epllnb3ivb7vegq@mobilestation>
+References: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
+ <20220503225104.12108-2-Sergey.Semin@baikalelectronics.ru>
+ <20220509061552.GA17190@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220509061552.GA17190@lst.de>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, May 6, 2022 at 7:43 PM Allen Pais <apais@linux.microsoft.com> wrote:
+On Mon, May 09, 2022 at 08:15:52AM +0200, Christoph Hellwig wrote:
+> So I think the big problem pointed out by Robin is that existing DTs
+> might not take this into account. 
 
->  - Concerns regarding throughput, would workqueues be as efficient as tasklets (Vinod)
+I'd say that the biggest problem isn't in the DT part but in the
+drivers using the dma_map_resource() method since they don't expect
+the non-uniform DMA-direct mapping can be available.
 
-You need to ask the scheduler people about this.
+> So I think we need to do a little
+> research and at least Cc all maintainers and lists for relevant in-tree
+> DTs for drivers that use dma_map_resource to discuss this.
 
-The workqueues goes deep into the scheduler and I can't make
-out how they are prioritized, but they are certainly not treated
-like any other task.
+Right. I'll send the next patchset revision out with all possibly
+interested maintainers and lists in Cc of this patch.
 
-Yours,
-Linus Walleij
+-Sergey
+
+> 

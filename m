@@ -2,75 +2,61 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA03052515D
-	for <lists+dmaengine@lfdr.de>; Thu, 12 May 2022 17:37:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85B16525333
+	for <lists+dmaengine@lfdr.de>; Thu, 12 May 2022 19:06:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356010AbiELPhB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 12 May 2022 11:37:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44828 "EHLO
+        id S244743AbiELRGf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 12 May 2022 13:06:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356011AbiELPhA (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 12 May 2022 11:37:00 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6AC525C28B;
-        Thu, 12 May 2022 08:36:59 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id n10so5502063pjh.5;
-        Thu, 12 May 2022 08:36:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=krf3sQjkUcZDwoyOKRbmq1UjBHY+kqEwczeutGD/sfQ=;
-        b=R4bI0lTia785dsPngPupP+1+dxEn5OhB9XPHbwzuPdwj952iQePg4hqSBN5LJf+jL0
-         gojHwGIM446SgurBfKNFZhhp/TkkFnQjFKsMhdZGtf3f3rUlDr/H6pg28VnYBwatVcOu
-         Orn1Bngbz5+uJQDwHOqYa0l016rrYKbZWmPq1/KiWKU8tGHmcpIFhnb9Q/+G/begBSMR
-         RDb3lSk8ZDTvUYRQFJmBmKe9onPY1lVMhQnckbajVPIGrxzwMpk4nnZiGLerLGK4JqzM
-         Bo2Ji89s4V3+EPM5x+QKRfAlgu6Zns8RoNx144eQ4PsXTPTMVFnlQHiBqK3MKq5X8TQY
-         2i0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=krf3sQjkUcZDwoyOKRbmq1UjBHY+kqEwczeutGD/sfQ=;
-        b=JehfvZsNsJcxQbM5P+C61UFc3rI6GKXJ4vxy9Fi7Dy10XNDUN0IH7fE8L9GGdwjTbX
-         ZSe0jMfxjjahQd+uHlHeA2WlN4QFHtvxo7eYW8MAVA9hofbRprjfN19zdH8RvSrdhzbL
-         emZO85bHZNzdbGy7fZ86zez1eFhdmV2TXzsLIIg2hIb8/XYhCFehM182i/UY12obLrgp
-         H0LEr/cdrhJvZdG2zscWKmQybeTjlGtVq9AxNYsIpZTwuWxpjkykA3UtRKKZBD/NQ647
-         3cRn8JFJQVd+OFIMllQR+5KX7sI9hb9JFJPMLSSo2SKH+OKM1Xz7rTR2+VIAXX6Cll+7
-         2dbg==
-X-Gm-Message-State: AOAM531BkBhnvnxjWwzO3VTCw6LAgfpjqHl4gy+zF1mN4Q/Hj/6ifDAJ
-        g1kXUNK2tTqAG3QTXsBK1+dWu/tKpLmMKSkpJTc=
-X-Google-Smtp-Source: ABdhPJz3qhA6ZNx2QhdgTz/UfLedOta3RZFIOSIYK7Xoz85/OLaCcsyaf8yHKUsbJvLiOc7YFOtxETJja4D5M8W6BjI=
-X-Received: by 2002:a17:90b:3d0b:b0:1dc:1953:462d with SMTP id
- pt11-20020a17090b3d0b00b001dc1953462dmr185919pjb.122.1652369819247; Thu, 12
- May 2022 08:36:59 -0700 (PDT)
+        with ESMTP id S1347317AbiELRGe (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 12 May 2022 13:06:34 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE37448E72;
+        Thu, 12 May 2022 10:06:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652375192; x=1683911192;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/ybuHoHzAtRBoXiWgwax+YcGH4jG6oU63lubaSD8RYc=;
+  b=V+zaATBievH2a1mXSjlWFfkJcYR6dLCH5/tYP5xfrUIorsorLWxakWoo
+   zVzaD4F9jRVcy+adqQzfyg3ZICGUi7QiaQnwCaMmGneq3M5Y5kmGwAAGF
+   P/TqH8idoY6jECf2K5yKy/+Wxpkfq76sTIH29wd5RTN8Unwe1Y+6HPzWw
+   x3myy1h9uiRhAqdRIGTDwYTkyvybCDSn8Dd8ZVLVwLNkzE3kiIe50NWV/
+   9bnK8RnZSiq1d6g64C20SQZVYzd6OE0PDs4I9gIb6fJQz7SxqAtZc0FKm
+   rgKoJsgMsoII5cyN/sx2skqDwep4kejHtQWaa9qR2R5bcvRkATqOfnLjb
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10345"; a="270006497"
+X-IronPort-AV: E=Sophos;i="5.91,220,1647327600"; 
+   d="scan'208";a="270006497"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 10:01:37 -0700
+X-IronPort-AV: E=Sophos;i="5.91,220,1647327600"; 
+   d="scan'208";a="521037693"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.68.97]) ([10.212.68.97])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 10:01:37 -0700
+Message-ID: <cb3d6542-10a8-22d7-ce09-2956449c02eb@intel.com>
+Date:   Thu, 12 May 2022 10:01:36 -0700
 MIME-Version: 1.0
-References: <20220503005801.1714345-1-Frank.Li@nxp.com> <20220503005801.1714345-10-Frank.Li@nxp.com>
- <b2961b3e-ad0e-5b8f-8d6f-221aead9992f@ti.com>
-In-Reply-To: <b2961b3e-ad0e-5b8f-8d6f-221aead9992f@ti.com>
-From:   Zhi Li <lznuaa@gmail.com>
-Date:   Thu, 12 May 2022 10:36:47 -0500
-Message-ID: <CAHrpEqT4hZ3G1YBxYdjHVDrPGZoZEpd_C==yK+CNE-ZOtk2nCA@mail.gmail.com>
-Subject: Re: [PATCH v10 9/9] PCI: endpoint: Enable DMA controller tests for
- endpoints with DMA capabilities
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Frank Li <Frank.Li@nxp.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH] dmaengine: sf-pdma: Add multithread support for a DMA
+ channel
+Content-Language: en-US
+To:     Viacheslav Mitrofanov <v.v.mitrofanov@yadro.com>,
+        Green Wan <green.wan@sifive.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     david.abdurachmanov@sifive.com, linux@yadro.com
+References: <20220512091327.349563-1-v.v.mitrofanov@yadro.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20220512091327.349563-1-v.v.mitrofanov@yadro.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,248 +64,141 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, May 12, 2022 at 8:52 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Hi Frank,
->
-> On 03/05/22 06:28, Frank Li wrote:
-> > Some Endpoints controllers have DMA capabilities.  This DMA controller has
-> > more efficiency then a general external DMA controller.  And this DMA
-> > controller can bypass outbound memory address translation unit.
-> >
-> > The whole flow use standard DMA usage module
-> >
-> >  1. Using dma_request_channel() and filter function to find correct
-> >     RX and TX Channel. if not exist,  fallback to try allocate
-> >     general DMA controller channel.
-> >  2. dmaengine_slave_config() config remote side physcial address.
-> >  3. using dmaengine_prep_slave_single() create transfer descriptor.
-> >  4. tx_submit();
-> >  5. dma_async_issue_pending();
-> >
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->
-> The patch looks good to me (other than Lorenzo's comment on the
-> description). Did you also verify DMA_MEMCPY just to make sure, the old
-> path continues to work?
 
-Not yet, our hardware platform has not memory to memory DMA.
-
-best regards
-Frank Li
-
+On 5/12/2022 2:13 AM, Viacheslav Mitrofanov wrote:
+> When we get a DMA channel and try to use it in multiple threads it
+> will cause oops and hanging the system.
 >
-> Regards,
-> Kishon
-> > ---
-> > Change from v9 to v10:
-> >  - rewrite commit message
-> > Change from v4 to v9:
-> >  - none
-> > Change from v3 to v4:
-> >  - reverse Xmas tree order
-> >  - local -> dma_local
-> >  - change error message
-> >  - IS_ERR -> IS_ERR_OR_NULL
-> >  - check return value of dmaengine_slave_config()
-> > Change from v1 to v2:
-> >  - none
-> >
-> >  drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++++++--
-> >  1 file changed, 98 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > index 90d84d3bc868f..f26afd02f3a86 100644
-> > --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> > +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> > @@ -52,9 +52,11 @@ struct pci_epf_test {
-> >       enum pci_barno          test_reg_bar;
-> >       size_t                  msix_table_offset;
-> >       struct delayed_work     cmd_handler;
-> > -     struct dma_chan         *dma_chan;
-> > +     struct dma_chan         *dma_chan_tx;
-> > +     struct dma_chan         *dma_chan_rx;
-> >       struct completion       transfer_complete;
-> >       bool                    dma_supported;
-> > +     bool                    dma_private;
-> >       const struct pci_epc_features *epc_features;
-> >  };
-> >
-> > @@ -105,12 +107,15 @@ static void pci_epf_test_dma_callback(void *param)
-> >   */
-> >  static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
-> >                                     dma_addr_t dma_dst, dma_addr_t dma_src,
-> > -                                   size_t len)
-> > +                                   size_t len, dma_addr_t dma_remote,
-> > +                                   enum dma_transfer_direction dir)
-> >  {
-> > +     struct dma_chan *chan = (dir == DMA_DEV_TO_MEM) ? epf_test->dma_chan_tx : epf_test->dma_chan_rx;
-> > +     dma_addr_t dma_local = (dir == DMA_MEM_TO_DEV) ? dma_src : dma_dst;
-> >       enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-> > -     struct dma_chan *chan = epf_test->dma_chan;
-> >       struct pci_epf *epf = epf_test->epf;
-> >       struct dma_async_tx_descriptor *tx;
-> > +     struct dma_slave_config sconf = {};
-> >       struct device *dev = &epf->dev;
-> >       dma_cookie_t cookie;
-> >       int ret;
-> > @@ -120,7 +125,22 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
-> >               return -EINVAL;
-> >       }
-> >
-> > -     tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> > +     if (epf_test->dma_private) {
-> > +             sconf.direction = dir;
-> > +             if (dir == DMA_MEM_TO_DEV)
-> > +                     sconf.dst_addr = dma_remote;
-> > +             else
-> > +                     sconf.src_addr = dma_remote;
-> > +
-> > +             if (dmaengine_slave_config(chan, &sconf)) {
-> > +                     dev_err(dev, "DMA slave config fail\n");
-> > +                     return -EIO;
-> > +             }
-> > +             tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags);
-> > +     } else {
-> > +             tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> > +     }
-> > +
-> >       if (!tx) {
-> >               dev_err(dev, "Failed to prepare DMA memcpy\n");
-> >               return -EIO;
-> > @@ -148,6 +168,23 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
-> >       return 0;
-> >  }
-> >
-> > +struct epf_dma_filter {
-> > +     struct device *dev;
-> > +     u32 dma_mask;
-> > +};
-> > +
-> > +static bool epf_dma_filter_fn(struct dma_chan *chan, void *node)
-> > +{
-> > +     struct epf_dma_filter *filter = node;
-> > +     struct dma_slave_caps caps;
-> > +
-> > +     memset(&caps, 0, sizeof(caps));
-> > +     dma_get_slave_caps(chan, &caps);
-> > +
-> > +     return chan->device->dev == filter->dev
-> > +             && (filter->dma_mask & caps.directions);
-> > +}
-> > +
-> >  /**
-> >   * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
-> >   * @epf_test: the EPF test device that performs data transfer operation
-> > @@ -158,10 +195,44 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
-> >  {
-> >       struct pci_epf *epf = epf_test->epf;
-> >       struct device *dev = &epf->dev;
-> > +     struct epf_dma_filter filter;
-> >       struct dma_chan *dma_chan;
-> >       dma_cap_mask_t mask;
-> >       int ret;
-> >
-> > +     filter.dev = epf->epc->dev.parent;
-> > +     filter.dma_mask = BIT(DMA_DEV_TO_MEM);
-> > +
-> > +     dma_cap_zero(mask);
-> > +     dma_cap_set(DMA_SLAVE, mask);
-> > +     dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> > +     if (IS_ERR_OR_NULL(dma_chan)) {
-> > +             dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> > +             goto fail_back_tx;
-> > +     }
-> > +
-> > +     epf_test->dma_chan_rx = dma_chan;
-> > +
-> > +     filter.dma_mask = BIT(DMA_MEM_TO_DEV);
-> > +     dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> > +
-> > +     if (IS_ERR(dma_chan)) {
-> > +             dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> > +             goto fail_back_rx;
-> > +     }
-> > +
-> > +     epf_test->dma_chan_tx = dma_chan;
-> > +     epf_test->dma_private = true;
-> > +
-> > +     init_completion(&epf_test->transfer_complete);
-> > +
-> > +     return 0;
-> > +
-> > +fail_back_rx:
-> > +     dma_release_channel(epf_test->dma_chan_rx);
-> > +     epf_test->dma_chan_tx = NULL;
-> > +
-> > +fail_back_tx:
-> >       dma_cap_zero(mask);
-> >       dma_cap_set(DMA_MEMCPY, mask);
-> >
-> > @@ -174,7 +245,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
-> >       }
-> >       init_completion(&epf_test->transfer_complete);
-> >
-> > -     epf_test->dma_chan = dma_chan;
-> > +     epf_test->dma_chan_tx = epf_test->dma_chan_rx = dma_chan;
-> >
-> >       return 0;
-> >  }
-> > @@ -190,8 +261,17 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
-> >       if (!epf_test->dma_supported)
-> >               return;
-> >
-> > -     dma_release_channel(epf_test->dma_chan);
-> > -     epf_test->dma_chan = NULL;
-> > +     dma_release_channel(epf_test->dma_chan_tx);
-> > +     if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-> > +             epf_test->dma_chan_tx = NULL;
-> > +             epf_test->dma_chan_rx = NULL;
-> > +             return;
-> > +     }
-> > +
-> > +     dma_release_channel(epf_test->dma_chan_rx);
-> > +     epf_test->dma_chan_rx = NULL;
-> > +
-> > +     return;
-> >  }
-> >
-> >  static void pci_epf_test_print_rate(const char *ops, u64 size,
-> > @@ -280,8 +360,14 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
-> >                       goto err_map_addr;
-> >               }
-> >
-> > +             if (epf_test->dma_private) {
-> > +                     dev_err(dev, "Cannot transfer data using DMA\n");
-> > +                     ret = -EINVAL;
-> > +                     goto err_map_addr;
-> > +             }
-> > +
-> >               ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> > -                                              src_phys_addr, reg->size);
-> > +                                              src_phys_addr, reg->size, 0, DMA_MEM_TO_MEM);
-> >               if (ret)
-> >                       dev_err(dev, "Data transfer failed\n");
-> >       } else {
-> > @@ -363,7 +449,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
-> >
-> >               ktime_get_ts64(&start);
-> >               ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> > -                                              phys_addr, reg->size);
-> > +                                              phys_addr, reg->size,
-> > +                                              reg->src_addr, DMA_DEV_TO_MEM);
-> >               if (ret)
-> >                       dev_err(dev, "Data transfer failed\n");
-> >               ktime_get_ts64(&end);
-> > @@ -453,8 +540,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
-> >               }
-> >
-> >               ktime_get_ts64(&start);
-> > +
-> >               ret = pci_epf_test_data_transfer(epf_test, phys_addr,
-> > -                                              src_phys_addr, reg->size);
-> > +                                              src_phys_addr, reg->size, reg->dst_addr, DMA_MEM_TO_DEV);
-> >               if (ret)
-> >                       dev_err(dev, "Data transfer failed\n");
-> >               ktime_get_ts64(&end);
+> % echo 64 > /sys/module/dmatest/parameters/threads_per_chan
+> % echo 10000 > /sys/module/dmatest/parameters/iterations
+> % echo 1 > /sys/module/dmatest/parameters/run
+> [   89.480664] Unable to handle kernel NULL pointer dereference at virtual
+>                 address 00000000000000a0
+> [   89.488725] Oops [#1]
+> [   89.494708] CPU: 2 PID: 1008 Comm: dma0chan0-copy0 Not tainted
+>                 5.17.0-rc5
+> [   89.509385] epc : vchan_find_desc+0x32/0x46
+> [   89.513553]  ra : sf_pdma_tx_status+0xca/0xd6
+>
+> This happens because of data race. Each thread rewrite channels's
+> descriptor as soon as device_prep_dma_memcpy() is called. It leads to the
+> situation when the driver thinks that it uses right descriptor that
+> actually is freed or substituted for other one.
+>
+> With current fixes a descriptor changes it's value only when it has
+
+With the current fix a descriptor ...
+
+s/it's/its/
+
+
+> been used. A new descriptor is acquired from vc->desc_issued queue that
+> is already filled with descriptors that are ready to be sent. Threads
+> have no direct access to DMA channel descriptor, now it is just possible
+
+I suggest a '.' here instead of ','
+
+DJ
+
+> to queue a descriptor for further processing.
+>
+> Fixes: 6973886ad58e ("dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00")
+> Signed-off-by: Viacheslav Mitrofanov <v.v.mitrofanov@yadro.com>
+> ---
+>   drivers/dma/sf-pdma/sf-pdma.c | 44 ++++++++++++++++++++++++-----------
+>   1 file changed, 30 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+> index f12606aeff87..70bb032c59c2 100644
+> --- a/drivers/dma/sf-pdma/sf-pdma.c
+> +++ b/drivers/dma/sf-pdma/sf-pdma.c
+> @@ -52,16 +52,6 @@ static inline struct sf_pdma_desc *to_sf_pdma_desc(struct virt_dma_desc *vd)
+>   static struct sf_pdma_desc *sf_pdma_alloc_desc(struct sf_pdma_chan *chan)
+>   {
+>   	struct sf_pdma_desc *desc;
+> -	unsigned long flags;
+> -
+> -	spin_lock_irqsave(&chan->lock, flags);
+> -
+> -	if (chan->desc && !chan->desc->in_use) {
+> -		spin_unlock_irqrestore(&chan->lock, flags);
+> -		return chan->desc;
+> -	}
+> -
+> -	spin_unlock_irqrestore(&chan->lock, flags);
+>   
+>   	desc = kzalloc(sizeof(*desc), GFP_NOWAIT);
+>   	if (!desc)
+> @@ -111,7 +101,6 @@ sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,	dma_addr_t dest, dma_addr_t src,
+>   	desc->async_tx = vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
+>   
+>   	spin_lock_irqsave(&chan->vchan.lock, iflags);
+> -	chan->desc = desc;
+>   	sf_pdma_fill_desc(desc, dest, src, len);
+>   	spin_unlock_irqrestore(&chan->vchan.lock, iflags);
+>   
+> @@ -170,11 +159,17 @@ static size_t sf_pdma_desc_residue(struct sf_pdma_chan *chan,
+>   	unsigned long flags;
+>   	u64 residue = 0;
+>   	struct sf_pdma_desc *desc;
+> -	struct dma_async_tx_descriptor *tx;
+> +	struct dma_async_tx_descriptor *tx = NULL;
+>   
+>   	spin_lock_irqsave(&chan->vchan.lock, flags);
+>   
+> -	tx = &chan->desc->vdesc.tx;
+> +	list_for_each_entry(vd, &chan->vchan.desc_submitted, node)
+> +		if (vd->tx.cookie == cookie)
+> +			tx = &vd->tx;
+> +
+> +	if (!tx)
+> +		goto out;
+> +
+>   	if (cookie == tx->chan->completed_cookie)
+>   		goto out;
+>   
+> @@ -241,6 +236,19 @@ static void sf_pdma_enable_request(struct sf_pdma_chan *chan)
+>   	writel(v, regs->ctrl);
+>   }
+>   
+> +static struct sf_pdma_desc *sf_pdma_get_first_pending_desc(struct sf_pdma_chan *chan)
+> +{
+> +	struct virt_dma_chan *vchan = &chan->vchan;
+> +	struct virt_dma_desc *vdesc;
+> +
+> +	if (list_empty(&vchan->desc_issued))
+> +		return NULL;
+> +
+> +	vdesc = list_first_entry(&vchan->desc_issued, struct virt_dma_desc, node);
+> +
+> +	return container_of(vdesc, struct sf_pdma_desc, vdesc);
+> +}
+> +
+>   static void sf_pdma_xfer_desc(struct sf_pdma_chan *chan)
+>   {
+>   	struct sf_pdma_desc *desc = chan->desc;
+> @@ -268,8 +276,11 @@ static void sf_pdma_issue_pending(struct dma_chan *dchan)
+>   
+>   	spin_lock_irqsave(&chan->vchan.lock, flags);
+>   
+> -	if (vchan_issue_pending(&chan->vchan) && chan->desc)
+> +	if ((chan->desc == NULL) && vchan_issue_pending(&chan->vchan)) {
+> +		/* vchan_issue_pending has made a check that desc in not NULL */
+> +		chan->desc = sf_pdma_get_first_pending_desc(chan);
+>   		sf_pdma_xfer_desc(chan);
+> +	}
+>   
+>   	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+>   }
+> @@ -298,6 +309,11 @@ static void sf_pdma_donebh_tasklet(struct tasklet_struct *t)
+>   	spin_lock_irqsave(&chan->vchan.lock, flags);
+>   	list_del(&chan->desc->vdesc.node);
+>   	vchan_cookie_complete(&chan->desc->vdesc);
+> +
+> +	chan->desc = sf_pdma_get_first_pending_desc(chan);
+> +	if (chan->desc)
+> +		sf_pdma_xfer_desc(chan);
+> +
+>   	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+>   }
+>   

@@ -2,62 +2,62 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85B16525333
-	for <lists+dmaengine@lfdr.de>; Thu, 12 May 2022 19:06:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 096A152532C
+	for <lists+dmaengine@lfdr.de>; Thu, 12 May 2022 19:05:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244743AbiELRGf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 12 May 2022 13:06:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44592 "EHLO
+        id S242193AbiELRFZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 12 May 2022 13:05:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347317AbiELRGe (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 12 May 2022 13:06:34 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE37448E72;
-        Thu, 12 May 2022 10:06:31 -0700 (PDT)
+        with ESMTP id S1356824AbiELRFY (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 12 May 2022 13:05:24 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07114269EE4;
+        Thu, 12 May 2022 10:05:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652375192; x=1683911192;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/ybuHoHzAtRBoXiWgwax+YcGH4jG6oU63lubaSD8RYc=;
-  b=V+zaATBievH2a1mXSjlWFfkJcYR6dLCH5/tYP5xfrUIorsorLWxakWoo
-   zVzaD4F9jRVcy+adqQzfyg3ZICGUi7QiaQnwCaMmGneq3M5Y5kmGwAAGF
-   P/TqH8idoY6jECf2K5yKy/+Wxpkfq76sTIH29wd5RTN8Unwe1Y+6HPzWw
-   x3myy1h9uiRhAqdRIGTDwYTkyvybCDSn8Dd8ZVLVwLNkzE3kiIe50NWV/
-   9bnK8RnZSiq1d6g64C20SQZVYzd6OE0PDs4I9gIb6fJQz7SxqAtZc0FKm
-   rgKoJsgMsoII5cyN/sx2skqDwep4kejHtQWaa9qR2R5bcvRkATqOfnLjb
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10345"; a="270006497"
+  t=1652375122; x=1683911122;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=6xFxG7MLoudi9o64Lr4POIQA3LoUtodJPfElK3mM7f0=;
+  b=mFy0kQCYN9R4A9RXFXzact5Pzvtnzdrld6Av2LQAItp1TJf0qNMjvetP
+   9DLjb+ZKKEUWxjt0UHSOkfjXCmaOp0ZvJNX0PwBCt1iYWtdi1rbaNz1dD
+   VDB2XnDkRbL5xezV9LxxGDuwxdJ558UJPgjHvKQxf9dVxv9f/Fh7PV24J
+   QbHQzvRDbtuzL/L+25ucaOne7AJGsVoHXpGrrQzHvi4A0fTVzqN8qlGjJ
+   HVCwLKOHNTGSMOkhlGS6+k7Si8XVZGGZXk/0R7OlIDv5gBFSo2ZJHcUdi
+   9iXaFGJfSTNp3AwQdFJbaouCWK0LXHlZQglS08v4IotYBl0TSkGaLLPOc
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10345"; a="269741443"
 X-IronPort-AV: E=Sophos;i="5.91,220,1647327600"; 
-   d="scan'208";a="270006497"
+   d="scan'208";a="269741443"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 10:01:37 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 10:03:48 -0700
 X-IronPort-AV: E=Sophos;i="5.91,220,1647327600"; 
-   d="scan'208";a="521037693"
+   d="scan'208";a="521038993"
 Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.68.97]) ([10.212.68.97])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 10:01:37 -0700
-Message-ID: <cb3d6542-10a8-22d7-ce09-2956449c02eb@intel.com>
-Date:   Thu, 12 May 2022 10:01:36 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2022 10:03:48 -0700
+Message-ID: <d1017a7a-4f3d-4218-13da-71f89cf81c81@intel.com>
+Date:   Thu, 12 May 2022 10:03:48 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.0
-Subject: Re: [PATCH] dmaengine: sf-pdma: Add multithread support for a DMA
- channel
+Subject: Re: [PATCH] dmaengine: ti: Fix refcount leak in
+ ti_dra7_xbar_route_allocate
 Content-Language: en-US
-To:     Viacheslav Mitrofanov <v.v.mitrofanov@yadro.com>,
-        Green Wan <green.wan@sifive.com>,
+To:     Miaoqian Lin <linmq006@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
         Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     david.abdurachmanov@sifive.com, linux@yadro.com
-References: <20220512091327.349563-1-v.v.mitrofanov@yadro.com>
+References: <20220512051815.11946-1-linmq006@gmail.com>
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20220512091327.349563-1-v.v.mitrofanov@yadro.com>
+In-Reply-To: <20220512051815.11946-1-linmq006@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-7.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -65,140 +65,56 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On 5/12/2022 2:13 AM, Viacheslav Mitrofanov wrote:
-> When we get a DMA channel and try to use it in multiple threads it
-> will cause oops and hanging the system.
+On 5/11/2022 10:18 PM, Miaoqian Lin wrote:
+> 1. of_find_device_by_node() takes reference, we should use put_device()
+> to release it when not need anymore.
+> 2. of_parse_phandle() returns a node pointer with refcount
+> incremented, we should use of_node_put() on it when not needed anymore.
 >
-> % echo 64 > /sys/module/dmatest/parameters/threads_per_chan
-> % echo 10000 > /sys/module/dmatest/parameters/iterations
-> % echo 1 > /sys/module/dmatest/parameters/run
-> [   89.480664] Unable to handle kernel NULL pointer dereference at virtual
->                 address 00000000000000a0
-> [   89.488725] Oops [#1]
-> [   89.494708] CPU: 2 PID: 1008 Comm: dma0chan0-copy0 Not tainted
->                 5.17.0-rc5
-> [   89.509385] epc : vchan_find_desc+0x32/0x46
-> [   89.513553]  ra : sf_pdma_tx_status+0xca/0xd6
+> Add put_device() and of_node_put() in some error paths to fix.
+Sounds like you need 2 patches for this? One just for the put_device() 
+and the other for the of_node_put()?
 >
-> This happens because of data race. Each thread rewrite channels's
-> descriptor as soon as device_prep_dma_memcpy() is called. It leads to the
-> situation when the driver thinks that it uses right descriptor that
-> actually is freed or substituted for other one.
->
-> With current fixes a descriptor changes it's value only when it has
-
-With the current fix a descriptor ...
-
-s/it's/its/
-
-
-> been used. A new descriptor is acquired from vc->desc_issued queue that
-> is already filled with descriptors that are ready to be sent. Threads
-> have no direct access to DMA channel descriptor, now it is just possible
-
-I suggest a '.' here instead of ','
-
-DJ
-
-> to queue a descriptor for further processing.
->
-> Fixes: 6973886ad58e ("dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00")
-> Signed-off-by: Viacheslav Mitrofanov <v.v.mitrofanov@yadro.com>
+> Fixes: ec9bfa1e1a79 ("dmaengine: ti-dma-crossbar: dra7: Use bitops instead of idr")
+> Fixes: a074ae38f859 ("dmaengine: Add driver for TI DMA crossbar on DRA7x")
+> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
 > ---
->   drivers/dma/sf-pdma/sf-pdma.c | 44 ++++++++++++++++++++++++-----------
->   1 file changed, 30 insertions(+), 14 deletions(-)
+>   drivers/dma/ti/dma-crossbar.c | 5 +++++
+>   1 file changed, 5 insertions(+)
 >
-> diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
-> index f12606aeff87..70bb032c59c2 100644
-> --- a/drivers/dma/sf-pdma/sf-pdma.c
-> +++ b/drivers/dma/sf-pdma/sf-pdma.c
-> @@ -52,16 +52,6 @@ static inline struct sf_pdma_desc *to_sf_pdma_desc(struct virt_dma_desc *vd)
->   static struct sf_pdma_desc *sf_pdma_alloc_desc(struct sf_pdma_chan *chan)
->   {
->   	struct sf_pdma_desc *desc;
-> -	unsigned long flags;
-> -
-> -	spin_lock_irqsave(&chan->lock, flags);
-> -
-> -	if (chan->desc && !chan->desc->in_use) {
-> -		spin_unlock_irqrestore(&chan->lock, flags);
-> -		return chan->desc;
-> -	}
-> -
-> -	spin_unlock_irqrestore(&chan->lock, flags);
+> diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
+> index 71d24fc07c00..f744ddbbbad7 100644
+> --- a/drivers/dma/ti/dma-crossbar.c
+> +++ b/drivers/dma/ti/dma-crossbar.c
+> @@ -245,6 +245,7 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
+>   	if (dma_spec->args[0] >= xbar->xbar_requests) {
+>   		dev_err(&pdev->dev, "Invalid XBAR request number: %d\n",
+>   			dma_spec->args[0]);
+> +		put_device(&pdev->dev);
+>   		return ERR_PTR(-EINVAL);
+>   	}
 >   
->   	desc = kzalloc(sizeof(*desc), GFP_NOWAIT);
->   	if (!desc)
-> @@ -111,7 +101,6 @@ sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,	dma_addr_t dest, dma_addr_t src,
->   	desc->async_tx = vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
+> @@ -252,12 +253,14 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
+>   	dma_spec->np = of_parse_phandle(ofdma->of_node, "dma-masters", 0);
+>   	if (!dma_spec->np) {
+>   		dev_err(&pdev->dev, "Can't get DMA master\n");
+> +		put_device(&pdev->dev);
+>   		return ERR_PTR(-EINVAL);
+>   	}
 >   
->   	spin_lock_irqsave(&chan->vchan.lock, iflags);
-> -	chan->desc = desc;
->   	sf_pdma_fill_desc(desc, dest, src, len);
->   	spin_unlock_irqrestore(&chan->vchan.lock, iflags);
+>   	map = kzalloc(sizeof(*map), GFP_KERNEL);
+>   	if (!map) {
+>   		of_node_put(dma_spec->np);
+> +		put_device(&pdev->dev);
+>   		return ERR_PTR(-ENOMEM);
+>   	}
 >   
-> @@ -170,11 +159,17 @@ static size_t sf_pdma_desc_residue(struct sf_pdma_chan *chan,
->   	unsigned long flags;
->   	u64 residue = 0;
->   	struct sf_pdma_desc *desc;
-> -	struct dma_async_tx_descriptor *tx;
-> +	struct dma_async_tx_descriptor *tx = NULL;
->   
->   	spin_lock_irqsave(&chan->vchan.lock, flags);
->   
-> -	tx = &chan->desc->vdesc.tx;
-> +	list_for_each_entry(vd, &chan->vchan.desc_submitted, node)
-> +		if (vd->tx.cookie == cookie)
-> +			tx = &vd->tx;
-> +
-> +	if (!tx)
-> +		goto out;
-> +
->   	if (cookie == tx->chan->completed_cookie)
->   		goto out;
->   
-> @@ -241,6 +236,19 @@ static void sf_pdma_enable_request(struct sf_pdma_chan *chan)
->   	writel(v, regs->ctrl);
->   }
->   
-> +static struct sf_pdma_desc *sf_pdma_get_first_pending_desc(struct sf_pdma_chan *chan)
-> +{
-> +	struct virt_dma_chan *vchan = &chan->vchan;
-> +	struct virt_dma_desc *vdesc;
-> +
-> +	if (list_empty(&vchan->desc_issued))
-> +		return NULL;
-> +
-> +	vdesc = list_first_entry(&vchan->desc_issued, struct virt_dma_desc, node);
-> +
-> +	return container_of(vdesc, struct sf_pdma_desc, vdesc);
-> +}
-> +
->   static void sf_pdma_xfer_desc(struct sf_pdma_chan *chan)
->   {
->   	struct sf_pdma_desc *desc = chan->desc;
-> @@ -268,8 +276,11 @@ static void sf_pdma_issue_pending(struct dma_chan *dchan)
->   
->   	spin_lock_irqsave(&chan->vchan.lock, flags);
->   
-> -	if (vchan_issue_pending(&chan->vchan) && chan->desc)
-> +	if ((chan->desc == NULL) && vchan_issue_pending(&chan->vchan)) {
-> +		/* vchan_issue_pending has made a check that desc in not NULL */
-> +		chan->desc = sf_pdma_get_first_pending_desc(chan);
->   		sf_pdma_xfer_desc(chan);
-> +	}
->   
->   	spin_unlock_irqrestore(&chan->vchan.lock, flags);
->   }
-> @@ -298,6 +309,11 @@ static void sf_pdma_donebh_tasklet(struct tasklet_struct *t)
->   	spin_lock_irqsave(&chan->vchan.lock, flags);
->   	list_del(&chan->desc->vdesc.node);
->   	vchan_cookie_complete(&chan->desc->vdesc);
-> +
-> +	chan->desc = sf_pdma_get_first_pending_desc(chan);
-> +	if (chan->desc)
-> +		sf_pdma_xfer_desc(chan);
-> +
->   	spin_unlock_irqrestore(&chan->vchan.lock, flags);
->   }
->   
+> @@ -268,6 +271,8 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
+>   		mutex_unlock(&xbar->mutex);
+>   		dev_err(&pdev->dev, "Run out of free DMA requests\n");
+>   		kfree(map);
+> +		of_node_put(dma_spec->np);
+> +		put_device(&pdev->dev);
+>   		return ERR_PTR(-ENOMEM);
+>   	}
+>   	set_bit(map->xbar_out, xbar->dma_inuse);

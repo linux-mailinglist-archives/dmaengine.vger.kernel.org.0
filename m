@@ -2,198 +2,237 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BA7E524154
-	for <lists+dmaengine@lfdr.de>; Thu, 12 May 2022 02:04:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12DF0524164
+	for <lists+dmaengine@lfdr.de>; Thu, 12 May 2022 02:12:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349530AbiELAEo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 11 May 2022 20:04:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41778 "EHLO
+        id S1349569AbiELAMN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 11 May 2022 20:12:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349559AbiELAEk (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 11 May 2022 20:04:40 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5DC3149DA3;
-        Wed, 11 May 2022 17:04:33 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id t25so6237127lfg.7;
-        Wed, 11 May 2022 17:04:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=a4aVwSWkYy1C0gIKEBKLoRYmnXav+Hg29JZ01oz3U0o=;
-        b=OQAdLXrZ4GFmFGQN3tAqQTYp/DmDkhHs3AMl5NCXIq/jHODdh7m1DgVkJ2x+rHvFOs
-         NYFJ0+rW3eJbyHV6tZmzPfBNUECozkC/TC1Ki71LDzkXd3A5I5y6nqz/VvtGx5l/n1j9
-         PGMW9w8Rf56nDrIbUciupajLwIm8pi1UobY6ZS8ZY2AJNkhDmRO1X3Tgqrj2VOje7MGP
-         rSkbIt7eT4vEE6kNHVM28gCda83B9Rkj16WFMIDU0yRmolcaZLwmkWoT0kQlUpCFpUxO
-         bMHziw1ik9Y8VZVhFrq2w+Mlkfthy9Hq6U0+L5bKe2jrBM8e3yos0yFrGC4cbdQ0S5yi
-         UJpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=a4aVwSWkYy1C0gIKEBKLoRYmnXav+Hg29JZ01oz3U0o=;
-        b=uIvcVtmQkhksU27RQtx5js8RV3hArA8PS8JNf0yms2PaOFNMy0hgTcStStKo+l8rWK
-         cRBrJfr+ZlvSmKyD8LwWGPafViH8AqzCCrEVYPtSeNg+SEUq17H7LYaO6z/2MIHKjMBs
-         y5h4zNPsP1py5ff1hVbtTiuGWc69EOTDLXgtOmNp1jE7cx2y1FttXAq1hUk9RAJx04yl
-         JuDYIS3Gf+fZtAWcKZnVDfMoPscby7EvRrrNOwubf8OBlIXTKMQpeeQX1W38ja0Kp/wn
-         /bKzy7YxdqjamgoxhJIeNVfQHhAsDvmIf2rW5zC2GYeCZ8+k/5nJ+UDXcURD5GPIk4kD
-         rBWQ==
-X-Gm-Message-State: AOAM532pDtmLw2xxcgJyQANeuBmhVUF/9/3wbKI0zqsIeOfXCM7TH4KN
-        P+SXXOw+KnfJog6L5CE0bGo=
-X-Google-Smtp-Source: ABdhPJxUrfrGNyVFr6gtRvtDIxHKCoi35eoxiTdHB60fISye/q43qEvaB2XxIs8DHm0ETUobNEBvOw==
-X-Received: by 2002:a05:6512:3087:b0:473:fe9b:ec8d with SMTP id z7-20020a056512308700b00473fe9bec8dmr20392784lfd.167.1652313871908;
-        Wed, 11 May 2022 17:04:31 -0700 (PDT)
-Received: from mobilestation ([95.79.189.214])
-        by smtp.gmail.com with ESMTPSA id n17-20020ac242d1000000b0047255d21108sm508261lfl.55.2022.05.11.17.04.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 May 2022 17:04:31 -0700 (PDT)
-Date:   Thu, 12 May 2022 03:04:29 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Frank Li <Frank.Li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
-        l.stach@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        lznuaa@gmail.com, kw@linux.com, manivannan.sadhasivam@linaro.org
-Subject: Re: [PATCH v10 0/9] Enable designware PCI EP EDMA locally
-Message-ID: <20220512000429.rpl4agwcjpjuzv5m@mobilestation>
-References: <20220503005801.1714345-1-Frank.Li@nxp.com>
- <20220503231806.w2x4o2b3xymbwn74@mobilestation>
- <YnqlRShJzvma2SKM@lpieralisi>
+        with ESMTP id S1349554AbiELAML (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 11 May 2022 20:12:11 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC4E087A2A
+        for <dmaengine@vger.kernel.org>; Wed, 11 May 2022 17:11:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652314318; x=1683850318;
+  h=subject:from:to:cc:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=je842DzU7tJ5GlvnJuAlxAbGJM2L0ay2mCoKKhVSfRU=;
+  b=Bu5jeyGfh4NFI0ZIJk1VyxhMCW84pDxhde0qxAi1FkcNt6H5Co0BSctI
+   nyMafv+wrd4SiybvPtYR/df7K5S4joErjcs/8DCREhKphXVKB86os1L6S
+   4RBj8OwljVjwlV+7VQtLPMda8oa6ochJ/5dFOX7m61K4YpOWladxWETJ8
+   xL4q+WvExU7hdKSRyc6wRv8ZGolXTObFafLJAqePq5ricZyf6z4D96lN0
+   C0WVDCioAYuUluRaWGLXAjOWQ7X82SjD2JEgUsoFJtGM3K2nrHZoTZPLt
+   NSOQTqcyJyH/O6OtbJZ6QyAs4y5aWmpkS4cujQGlymO+B2kxckbsCTpwR
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10344"; a="249741700"
+X-IronPort-AV: E=Sophos;i="5.91,218,1647327600"; 
+   d="scan'208";a="249741700"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 17:11:58 -0700
+X-IronPort-AV: E=Sophos;i="5.91,218,1647327600"; 
+   d="scan'208";a="697797888"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2022 17:11:57 -0700
+Subject: [PATCH] dmaengine: idxd: Separate user and kernel pasid enabling
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, jacob.jun.pan@linux.intel.com,
+        baolu.lu@intel.com
+Date:   Wed, 11 May 2022 17:11:57 -0700
+Message-ID: <165231431746.986466.5666862038354800551.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YnqlRShJzvma2SKM@lpieralisi>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello Lorenzo
+The idxd driver always gated the pasid enabling under a single knob and
+this assumption is incorrect. The pasid used for kernel operation can be
+independently toggled and has no dependency on the user pasid (and vice
+versa). Split the two so they are independent "enabled" flags.
 
-On Tue, May 10, 2022 at 06:47:49PM +0100, Lorenzo Pieralisi wrote:
-> On Wed, May 04, 2022 at 02:18:06AM +0300, Serge Semin wrote:
-> > On Mon, May 02, 2022 at 07:57:52PM -0500, Frank Li wrote:
-> > > Default Designware EDMA just probe remotely at host side.
-> > > This patch allow EDMA driver can probe at EP side.
-> > > 
-> > > 1. Clean up patch
-> > >    dmaengine: dw-edma: Detach the private data and chip info structures
-> > >    dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
-> > >    dmaengine: dw-edma: Change rg_region to reg_base in struct
-> > >    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> > > 
-> > > 2. Enhance EDMA driver to allow prode eDMA at EP side
-> > >    dmaengine: dw-edma: Add support for chip specific flags
-> > >    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
-> > > 
-> > > 3. Bugs fix at EDMA driver when probe eDMA at EP side
-> > >    dmaengine: dw-edma: Fix programming the source & dest addresses for ep
-> > >    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
-> > > 
-> > > 4. change pci-epf-test to use EDMA driver to transfer data.
-> > >    PCI: endpoint: Add embedded DMA controller test
-> > > 
-> > > 5. Using imx8dxl to do test, but some EP functions still have not
-> > > upstream yet. So below patch show how probe eDMA driver at EP
-> > > controller driver.
-> > > https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
-> > 
-> > As I have already said in my comment to v9, @Lorenzo, @Rob, @Vinod,
-> > my patchset:
-> > Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru
-> > is based on this one. In its turn my series depends on the other
-> > patchsets:
-> > [PATCH v3 0/4] clk: Baikal-T1 DDR/PCIe resets and some xGMAC fixes
-> > Link: https://lore.kernel.org/linux-pci/20220503205722.24755-1-Sergey.Semin@baikalelectronics.ru/
-> > [PATCH v2 00/13] PCI: dwc: Various fixes and cleanups
-> > Link: https://lore.kernel.org/linux-pci/20220503212300.30105-1-Sergey.Semin@baikalelectronics.ru/
-> > [PATCH v2 00/17] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support
-> > Link: https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
-> > which are currently on review. I am very much eager to get my patches
-> > merged in before the next merge windows. But in order to preserve the
-> > consistency of the corresponding repo with my patchsets the repo needs
-> > to have the @Frank' patches. Seeing aside with @Frank's series my changes
-> > depend on the changes in the clk and pci subsystems, could you please
-> > consider choosing a single repository for merging all my and @Frank
-> > patches in? Since the changes mostly concern the DW PCIe controller I
-> > suggest to use the 'pci/dwc' branch of the
-> > 'kernel/git/lpieralisi/pci.git' repository. What do you think?
-> > @Lorenzo?
-> > 
-> 
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/dma/idxd/cdev.c   |    4 ++--
+ drivers/dma/idxd/device.c |    6 +++---
+ drivers/dma/idxd/idxd.h   |   16 ++++++++++++++--
+ drivers/dma/idxd/init.c   |   30 +++++++++++++++---------------
+ drivers/dma/idxd/sysfs.c  |    2 +-
+ 5 files changed, 35 insertions(+), 23 deletions(-)
 
-> Sorry for the delay in replying. I think @Frank's series will
-> go via the DMA engine tree, I will do my best to review your
-> DWC changes:
-> 
-> [PATCH v2 00/13] PCI: dwc: Various fixes and cleanups
-> Link: https://lore.kernel.org/linux-pci/20220503212300.30105-1-Sergey.Semin@baikalelectronics.ru/
-> 
-> but I can't guarantee they will make v5.19 and after that I will
-> be AFK for two months, which is not good either, I will coordinate
-> with Bjorn to see what can we do on this, I am sorry but that's
-> all I have to offer at this stage.
+diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+index b670b75885ad..28796df62ea6 100644
+--- a/drivers/dma/idxd/cdev.c
++++ b/drivers/dma/idxd/cdev.c
+@@ -99,7 +99,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
+ 	ctx->wq = wq;
+ 	filp->private_data = ctx;
+ 
+-	if (device_pasid_enabled(idxd)) {
++	if (device_user_pasid_enabled(idxd)) {
+ 		sva = iommu_sva_bind_device(dev, current->mm, NULL);
+ 		if (IS_ERR(sva)) {
+ 			rc = PTR_ERR(sva);
+@@ -152,7 +152,7 @@ static int idxd_cdev_release(struct inode *node, struct file *filep)
+ 	if (wq_shared(wq)) {
+ 		idxd_device_drain_pasid(idxd, ctx->pasid);
+ 	} else {
+-		if (device_pasid_enabled(idxd)) {
++		if (device_user_pasid_enabled(idxd)) {
+ 			/* The wq disable in the disable pasid function will drain the wq */
+ 			rc = idxd_wq_disable_pasid(wq);
+ 			if (rc < 0)
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index d1dba2a3af5d..d576268374d0 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -965,7 +965,7 @@ static int idxd_wqs_setup(struct idxd_device *idxd)
+ 		if (!wq->group)
+ 			continue;
+ 
+-		if (wq_shared(wq) && !device_swq_supported(idxd)) {
++		if (wq_shared(wq) && !wq_shared_supported(wq)) {
+ 			idxd->cmd_status = IDXD_SCMD_WQ_NO_SWQ_SUPPORT;
+ 			dev_warn(dev, "No shared wq support but configured.\n");
+ 			return -EINVAL;
+@@ -1266,7 +1266,7 @@ int drv_enable_wq(struct idxd_wq *wq)
+ 
+ 	/* Shared WQ checks */
+ 	if (wq_shared(wq)) {
+-		if (!device_swq_supported(idxd)) {
++		if (!wq_shared_supported(wq)) {
+ 			idxd->cmd_status = IDXD_SCMD_WQ_NO_SVM;
+ 			dev_dbg(dev, "PASID not enabled and shared wq.\n");
+ 			goto err;
+@@ -1296,7 +1296,7 @@ int drv_enable_wq(struct idxd_wq *wq)
+ 	if (test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags)) {
+ 		int priv = 0;
+ 
+-		if (device_pasid_enabled(idxd)) {
++		if (wq_pasid_enabled(wq)) {
+ 			if (is_idxd_wq_kernel(wq) || wq_shared(wq)) {
+ 				u32 pasid = wq_dedicated(wq) ? idxd->pasid : 0;
+ 
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index 24e6a0824c64..fed0dfc1eaa8 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -239,6 +239,7 @@ enum idxd_device_flag {
+ 	IDXD_FLAG_CONFIGURABLE = 0,
+ 	IDXD_FLAG_CMD_RUNNING,
+ 	IDXD_FLAG_PASID_ENABLED,
++	IDXD_FLAG_USER_PASID_ENABLED,
+ };
+ 
+ struct idxd_dma_dev {
+@@ -469,9 +470,20 @@ static inline bool device_pasid_enabled(struct idxd_device *idxd)
+ 	return test_bit(IDXD_FLAG_PASID_ENABLED, &idxd->flags);
+ }
+ 
+-static inline bool device_swq_supported(struct idxd_device *idxd)
++static inline bool device_user_pasid_enabled(struct idxd_device *idxd)
+ {
+-	return (support_enqcmd && device_pasid_enabled(idxd));
++	return test_bit(IDXD_FLAG_USER_PASID_ENABLED, &idxd->flags);
++}
++
++static inline bool wq_pasid_enabled(struct idxd_wq *wq)
++{
++	return (is_idxd_wq_kernel(wq) && device_pasid_enabled(wq->idxd)) ||
++	       (is_idxd_wq_user(wq) && device_user_pasid_enabled(wq->idxd));
++}
++
++static inline bool wq_shared_supported(struct idxd_wq *wq)
++{
++	return (support_enqcmd && wq_pasid_enabled(wq));
+ }
+ 
+ enum idxd_portal_prot {
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 993a5dcca24f..355fb3ef4cbf 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -512,18 +512,15 @@ static int idxd_probe(struct idxd_device *idxd)
+ 	dev_dbg(dev, "IDXD reset complete\n");
+ 
+ 	if (IS_ENABLED(CONFIG_INTEL_IDXD_SVM) && sva) {
+-		rc = iommu_dev_enable_feature(dev, IOMMU_DEV_FEAT_SVA);
+-		if (rc == 0) {
+-			rc = idxd_enable_system_pasid(idxd);
+-			if (rc < 0) {
+-				iommu_dev_disable_feature(dev, IOMMU_DEV_FEAT_SVA);
+-				dev_warn(dev, "Failed to enable PASID. No SVA support: %d\n", rc);
+-			} else {
+-				set_bit(IDXD_FLAG_PASID_ENABLED, &idxd->flags);
+-			}
+-		} else {
+-			dev_warn(dev, "Unable to turn on SVA feature.\n");
+-		}
++		if (iommu_dev_enable_feature(dev, IOMMU_DEV_FEAT_SVA))
++			dev_warn(dev, "Unable to turn on user SVA feature.\n");
++		else
++			set_bit(IDXD_FLAG_USER_PASID_ENABLED, &idxd->flags);
++
++		if (idxd_enable_system_pasid(idxd))
++			dev_warn(dev, "No in-kernel DMA with PASID.\n");
++		else
++			set_bit(IDXD_FLAG_PASID_ENABLED, &idxd->flags);
+ 	} else if (!sva) {
+ 		dev_warn(dev, "User forced SVA off via module param.\n");
+ 	}
+@@ -561,7 +558,8 @@ static int idxd_probe(struct idxd_device *idxd)
+  err:
+ 	if (device_pasid_enabled(idxd))
+ 		idxd_disable_system_pasid(idxd);
+-	iommu_dev_disable_feature(dev, IOMMU_DEV_FEAT_SVA);
++	if (device_user_pasid_enabled(idxd))
++		iommu_dev_disable_feature(dev, IOMMU_DEV_FEAT_SVA);
+ 	return rc;
+ }
+ 
+@@ -574,7 +572,8 @@ static void idxd_cleanup(struct idxd_device *idxd)
+ 	idxd_cleanup_internals(idxd);
+ 	if (device_pasid_enabled(idxd))
+ 		idxd_disable_system_pasid(idxd);
+-	iommu_dev_disable_feature(dev, IOMMU_DEV_FEAT_SVA);
++	if (device_user_pasid_enabled(idxd))
++		iommu_dev_disable_feature(dev, IOMMU_DEV_FEAT_SVA);
+ }
+ 
+ static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+@@ -691,7 +690,8 @@ static void idxd_remove(struct pci_dev *pdev)
+ 	free_irq(irq_entry->vector, irq_entry);
+ 	pci_free_irq_vectors(pdev);
+ 	pci_iounmap(pdev, idxd->reg_base);
+-	iommu_dev_disable_feature(&pdev->dev, IOMMU_DEV_FEAT_SVA);
++	if (device_user_pasid_enabled(idxd))
++		iommu_dev_disable_feature(&pdev->dev, IOMMU_DEV_FEAT_SVA);
+ 	pci_disable_device(pdev);
+ 	destroy_workqueue(idxd->wq);
+ 	perfmon_pmu_remove(idxd);
+diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+index 7e628e31ce24..d482e708f0fa 100644
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -588,7 +588,7 @@ static ssize_t wq_mode_store(struct device *dev,
+ 	if (sysfs_streq(buf, "dedicated")) {
+ 		set_bit(WQ_FLAG_DEDICATED, &wq->flags);
+ 		wq->threshold = 0;
+-	} else if (sysfs_streq(buf, "shared") && device_swq_supported(idxd)) {
++	} else if (sysfs_streq(buf, "shared")) {
+ 		clear_bit(WQ_FLAG_DEDICATED, &wq->flags);
+ 	} else {
+ 		return -EINVAL;
 
-This isn't good. Especially the part with leaving the subsystem
-unattended for two more months seeing Kishon and Krzysztof haven't
-been participating in the review procedure neither.
 
-@Bjorn could you please join the review process of my series and if
-they're ok, merge them in together with the @Frank'es patchset through
-your repo? As you can see mainly the patchsets have already been
-reviewed by @Manivannan. At least the DW PCIe and eDMA parts. There
-are still patches waiting for the @Rob ackes though.
-
-Seeing the native PCIe host subsystem will be left unattended for some
-time I can help with looking for the DWC PCIe part of it:
-drivers/pci/controller/dwc/*. If nobody minds.
-
--Sergey
-
-> 
-> Thanks,
-> Lorenzo
-> 
-> > -Sergey
-> > 
-> > > 
-> > > 
-> > > Frank Li (7):
-> > >   dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
-> > >   dmaengine: dw-edma: Detach the private data and chip info structures
-> > >   dmaengine: dw-edma: Change rg_region to reg_base in struct
-> > >     dw_edma_chip
-> > >   dmaengine: dw-edma: Rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> > >     dw_edma_chip
-> > >   dmaengine: dw-edma: Add support for chip specific flags
-> > >   dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
-> > >   PCI: endpoint: Enable DMA controller tests for endpoints with DMA
-> > >     capabilities
-> > > 
-> > > Serge Semin (2):
-> > >   dmaengine: dw-edma: Drop dma_slave_config.direction field usage
-> > >   dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
-> > >     semantics
-> > > 
-> > >  drivers/dma/dw-edma/dw-edma-core.c            | 141 +++++++++++-------
-> > >  drivers/dma/dw-edma/dw-edma-core.h            |  31 +---
-> > >  drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
-> > >  drivers/dma/dw-edma/dw-edma-v0-core.c         |  54 ++++---
-> > >  drivers/dma/dw-edma/dw-edma-v0-core.h         |   4 +-
-> > >  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  18 +--
-> > >  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   8 +-
-> > >  drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++--
-> > >  include/linux/dma/edma.h                      |  61 +++++++-
-> > >  9 files changed, 323 insertions(+), 185 deletions(-)
-> > > 
-> > > -- 
-> > > 2.35.1
-> > > 

@@ -2,70 +2,78 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 67A9C524FA2
-	for <lists+dmaengine@lfdr.de>; Thu, 12 May 2022 16:14:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 569D2524FCA
+	for <lists+dmaengine@lfdr.de>; Thu, 12 May 2022 16:18:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353672AbiELOO3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 12 May 2022 10:14:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39620 "EHLO
+        id S1345728AbiELOSd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 12 May 2022 10:18:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344018AbiELOO2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 12 May 2022 10:14:28 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2FC724EA01
-        for <dmaengine@vger.kernel.org>; Thu, 12 May 2022 07:14:26 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id l20-20020a17090a409400b001dd2a9d555bso5048541pjg.0
-        for <dmaengine@vger.kernel.org>; Thu, 12 May 2022 07:14:26 -0700 (PDT)
+        with ESMTP id S1355228AbiELOST (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 12 May 2022 10:18:19 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6794673576
+        for <dmaengine@vger.kernel.org>; Thu, 12 May 2022 07:18:14 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id fv2so5281016pjb.4
+        for <dmaengine@vger.kernel.org>; Thu, 12 May 2022 07:18:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=855eDGLf46dk2I/7iZtXjVz1AoTrOAqreqM5iGfMOk4=;
-        b=Lvdn3txiHxnaCtzOKdJulNIQEjT2sfYMExRSkNDxLgNnLdkoYcQIxNifde1KWh7k8b
-         o2VdMrw4/sGCOwE0YP88pyuZPjGdMxfuO5Wm5/qORIkIGqBdYiCzZdaDt0L+yPVE4FC5
-         m9fsTtWHWkl8d9CCZaJdEeWN4JPireHLB+7RvCzvLVBZDGorSBBu+Wh2Vg9a1iwhuonH
-         yCyDHmORCElgKnWBz+x46MJS1R5Cxs+RShRaDIER8LJewMiu84nzTxuB6uT/lfKFxLGG
-         ZVHf6NaiZb99FBJwVRcHKynmSAGsIihQejmIipsvZX1/I/yVcp613nEa6nRYLG4meVYL
-         luEg==
+        bh=7iZZodcw2kcYl7DcsgXoMrjWgWmUo2hoVmfbC2enldQ=;
+        b=f0iav4TX9MWlsCmY6kc9xgrGJbCfS5isN6BM1Z6iWUxV5R949SvxIHYuhyNXGq/LbV
+         iAVEe/k5sttQeWMaw8UJeNzTt7nM8mgs/GC29uCwzVviZ9UmUBlRI+Yz4RUEq3Dnpjdu
+         2s0PTjvqcKHLtt7RtJpqsNMesXKMwyhVVaDQmx0ZS2gv/W14tS7b3di51NdIdSkN/LgV
+         XzQIgrd3IqcQpA9t8nnDLybJ7SAHI7TXsGvLN72OpLgWmloZOd2HbrLfE11Ys9oztA22
+         585mp7uatbKavu7kiketYuGxOhssXwkcveNeYR6yEJEx5D8busxanwG2Ez59YvnJLBGT
+         vRRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=855eDGLf46dk2I/7iZtXjVz1AoTrOAqreqM5iGfMOk4=;
-        b=75wUc5pWpwG2T+QRHTBy6Jm6/QX9WVUTdMItHHltOdx6voKT+I6ZZMXfuBrKYAi/Hh
-         tzGqS6ZK5sSBb4xVcpLpQWuM+77rbR+/cFljtc/uqjFat3ORnUAv0eTGfah8kKJ952s+
-         +akPbLFHKKUxAMMm4kJ2lJzP6v/bmVF25B+RYAu1sWEWuaGjEZkOlrk523PJuWFzX3Fg
-         NFtQNGb0WAs9AFzJ4U1U3haeus6Ar3XkIYPgcC0iNP1PltMhAsEui3slnIgNBWU4DusQ
-         8KTj2KleJ8k7HKGBq+AwjXjnTwE3sFHfPcg9xQPOSJ/Jf0o5YTgWuMkinwdF7HyRdveN
-         wu9Q==
-X-Gm-Message-State: AOAM532vuFdVPfXl16cPM9XRgfbWFUx/ZjJCnSL+q7g814RnKffQEKKq
-        DJmzvUTU/hkZcZHC5Ke31Pgn
-X-Google-Smtp-Source: ABdhPJyl+d6P0bQLR5sG5lI33UWoVqR705r+74cxaGYxgMWDrkSINBBxzjyznv60jcLaOJoPdAzi9g==
-X-Received: by 2002:a17:902:7798:b0:158:ee95:f45b with SMTP id o24-20020a170902779800b00158ee95f45bmr30824571pll.97.1652364866131;
-        Thu, 12 May 2022 07:14:26 -0700 (PDT)
+        bh=7iZZodcw2kcYl7DcsgXoMrjWgWmUo2hoVmfbC2enldQ=;
+        b=L8YUgFTGQmMF9NNvMAF+/1cNXVFMHvPvGvD8fm4d1s8Dc0HtNxOOaVV1vnGMinSKps
+         7Svu/UngKWbxenrWg82Brd7j3ubIgiFPMuHc+t513zM9pCsWn3TN/DS8Umpz+8+32t3U
+         feOWMOt5EPQKL9TU2bCSveCdJmS0bRbo8yxaTAo8O158xo7XZuGgIlDfvTx/21Q0og1K
+         0xUQ+iJYm/e6hTNQBsaqeLyAuQkosD9oG0v5b5c5Ot7ZWVPEHoq5AuGNF/6iKaQy7lGb
+         0cXzVtQXiP0I2JCg0AfQH7eNlhLr4Q21p36Tf9CPcaobT0oEQnW4A9SVSR8c5h4LTTG7
+         mYGQ==
+X-Gm-Message-State: AOAM531ULh9dZ8e/DKnrK/dYXJSV3yqaPdzr4SEEDqDcg1xVoUhph+dF
+        3S9KpYAWhJZHDRcmZBL09Zx5
+X-Google-Smtp-Source: ABdhPJy0b5z0NMw6JCWSQ6xCOd3R5EJ290CTQnJbuWRxW4kXTEznCyVtk2LbYi8JPVi2vsroZVZbrg==
+X-Received: by 2002:a17:90a:170c:b0:1dc:20c4:6354 with SMTP id z12-20020a17090a170c00b001dc20c46354mr11089713pjd.113.1652365093661;
+        Thu, 12 May 2022 07:18:13 -0700 (PDT)
 Received: from thinkpad ([117.202.184.202])
-        by smtp.gmail.com with ESMTPSA id 204-20020a6302d5000000b003c619f3d086sm2033296pgc.2.2022.05.12.07.14.20
+        by smtp.gmail.com with ESMTPSA id u1-20020a170903124100b0015e8d4eb1f2sm3997428plh.60.2022.05.12.07.18.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 May 2022 07:14:25 -0700 (PDT)
-Date:   Thu, 12 May 2022 19:44:18 +0530
+        Thu, 12 May 2022 07:18:13 -0700 (PDT)
+Date:   Thu, 12 May 2022 19:48:06 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
-        l.stach@pengutronix.de, linux-imx@nxp.com,
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        fancer.lancer@gmail.com, lznuaa@gmail.com, helgaas@kernel.org,
-        vkoul@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        kw@linux.com, bhelgaas@google.com,
-        Sergey.Semin@baikalelectronics.ru
-Subject: Re: [PATCH v10 0/9] Enable designware PCI EP EDMA locally
-Message-ID: <20220512141418.GF35848@thinkpad>
-References: <20220503005801.1714345-1-Frank.Li@nxp.com>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/26] dmaengine: Fix dma_slave_config.dst_addr
+ description
+Message-ID: <20220512141806.GG35848@thinkpad>
+References: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
+ <20220503225104.12108-3-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220503005801.1714345-1-Frank.Li@nxp.com>
+In-Reply-To: <20220503225104.12108-3-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -76,72 +84,38 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, May 02, 2022 at 07:57:52PM -0500, Frank Li wrote:
-> Default Designware EDMA just probe remotely at host side.
-> This patch allow EDMA driver can probe at EP side.
+On Wed, May 04, 2022 at 01:50:40AM +0300, Serge Semin wrote:
+> Most likely due to a copy-paste mistake the dst_addr member of the
+> dma_slave_config structure has been marked as ignored if the !source!
+> address belong to the memory. That is relevant to the src_addr field of
+> the structure while the dst_addr field as containing a destination device
+> address is supposed to be ignored if the destination is the CPU memory.
+> Let's fix the field description accordingly.
 > 
-> 1. Clean up patch
->    dmaengine: dw-edma: Detach the private data and chip info structures
->    dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
->    dmaengine: dw-edma: Change rg_region to reg_base in struct
->    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> 
-> 2. Enhance EDMA driver to allow prode eDMA at EP side
->    dmaengine: dw-edma: Add support for chip specific flags
->    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
-> 
-> 3. Bugs fix at EDMA driver when probe eDMA at EP side
->    dmaengine: dw-edma: Fix programming the source & dest addresses for ep
->    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
-> 
-> 4. change pci-epf-test to use EDMA driver to transfer data.
->    PCI: endpoint: Add embedded DMA controller test
-> 
-> 5. Using imx8dxl to do test, but some EP functions still have not
-> upstream yet. So below patch show how probe eDMA driver at EP
-> controller driver.
-> https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-I've now tested the eDMA patches on top of Serge's patches plus some Qcom
-specific changes. So feel free to add my Tested-by tag for eDMA patches.
-
-Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-I can't test pci-epf-test on my platform, so intentionally left it out.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 Thanks,
 Mani
 
+> ---
+>  include/linux/dmaengine.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> 
-> Frank Li (7):
->   dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
->   dmaengine: dw-edma: Detach the private data and chip info structures
->   dmaengine: dw-edma: Change rg_region to reg_base in struct
->     dw_edma_chip
->   dmaengine: dw-edma: Rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
->     dw_edma_chip
->   dmaengine: dw-edma: Add support for chip specific flags
->   dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific flags
->   PCI: endpoint: Enable DMA controller tests for endpoints with DMA
->     capabilities
-> 
-> Serge Semin (2):
->   dmaengine: dw-edma: Drop dma_slave_config.direction field usage
->   dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
->     semantics
-> 
->  drivers/dma/dw-edma/dw-edma-core.c            | 141 +++++++++++-------
->  drivers/dma/dw-edma/dw-edma-core.h            |  31 +---
->  drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
->  drivers/dma/dw-edma/dw-edma-v0-core.c         |  54 ++++---
->  drivers/dma/dw-edma/dw-edma-v0-core.h         |   4 +-
->  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  18 +--
->  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   8 +-
->  drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++--
->  include/linux/dma/edma.h                      |  61 +++++++-
->  9 files changed, 323 insertions(+), 185 deletions(-)
-> 
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index 842d4f7ca752..f204ea16ac1c 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -395,7 +395,7 @@ enum dma_slave_buswidth {
+>   * should be read (RX), if the source is memory this argument is
+>   * ignored.
+>   * @dst_addr: this is the physical address where DMA slave data
+> - * should be written (TX), if the source is memory this argument
+> + * should be written (TX), if the destination is memory this argument
+>   * is ignored.
+>   * @src_addr_width: this is the width in bytes of the source (RX)
+>   * register where DMA data shall be read. If the source
 > -- 
 > 2.35.1
 > 

@@ -2,62 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A47D1528340
-	for <lists+dmaengine@lfdr.de>; Mon, 16 May 2022 13:31:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC8A5528350
+	for <lists+dmaengine@lfdr.de>; Mon, 16 May 2022 13:33:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243153AbiEPLba (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 16 May 2022 07:31:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58628 "EHLO
+        id S231955AbiEPLdI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 16 May 2022 07:33:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243193AbiEPLbK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 May 2022 07:31:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04B88270E;
-        Mon, 16 May 2022 04:31:09 -0700 (PDT)
+        with ESMTP id S243176AbiEPLdB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 May 2022 07:33:01 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C09E938D9B;
+        Mon, 16 May 2022 04:32:59 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9AB2660FEB;
-        Mon, 16 May 2022 11:31:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FD1DC385B8;
-        Mon, 16 May 2022 11:31:07 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 662E0B810DC;
+        Mon, 16 May 2022 11:32:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5215C385B8;
+        Mon, 16 May 2022 11:32:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652700668;
-        bh=ZUEmliErSd51RiMCP41XFunKKxEzgbyR6TU1VDmqeFg=;
+        s=k20201202; t=1652700777;
+        bh=J35KBiLWm9yx0BOYLnTJk7rVxmulK79qiZiILuB4w7k=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OwHwwzsfSzLP0Uce40JHWVOXb60biukmdN90zMYRkS5G9tzrnmYjYUW7T9kRkPIAI
-         vE2lIUrrlFNJBG4JrjnEs55gi5D5ycBEEl7YRix30Qqlkn23RtPftT0VwGey/IeNfm
-         6eF2mgsVxQNwdNmLgkUGQiqhOVJHKmuLiX5pOE39dh3A6GVdOluffWB8cQ4ouVoRvu
-         AEOtc5EOeJMvYJRv1hts3L6KpcRf8bvFSkhQSMRN2Qyb12RUUmQyB1YXEd1UpULbe6
-         XV4wn3zHRRFRRhw4WaNrUhlB5Z4NhDLcL4mQe4tCWp2TCLvbS8IXNVfOsws8kkTZis
-         L66BD/UsAC+jw==
-Date:   Mon, 16 May 2022 17:01:04 +0530
+        b=kMKcB0R+c500+oR6qABXuSCXVrIbnUak6NCFWtM5aHlhxqCAiwXypcX9XDUprR+JO
+         hXlvFSmLXs7Bt+iAGGZIhcB7QOArbT2q6lzSc/l+7WEscTBh+WkdjFHQB6RAB12jam
+         fRMFsXbWsDD7O2urjxR32bxfAIjRliYPpHo/gfdCb99FsUJPXNhx81XBzZO5Y9taLr
+         xDQnBxJMXe1hKiTyEmAoLznn1PsWhp8+/RY8QjbcacKGV9SDD5VB4e4mHoDghD9Ys6
+         vkSzJu4b3HgXfmeUwXUkZj3d2cJbuE4ts3W1zbEM1Dkhab25cI5DTD+VOiBEIgFJdz
+         hDv/CeINXRrrw==
+Date:   Mon, 16 May 2022 17:02:53 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH 4/7] dt-bindings: renesas,rcar-dmac: R-Car V3U is R-Car
- Gen4
-Message-ID: <YoI1+HDb9Sr4mWmB@matsya>
-References: <cover.1651497024.git.geert+renesas@glider.be>
- <e6e4cf701f3a43b061b9c3f7f0adc4d6addd4722.1651497024.git.geert+renesas@glider.be>
+To:     cgel.zte@gmail.com
+Cc:     dave.jiang@intel.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Minghao Chi <chi.minghao@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+Subject: Re: [PATCH] dmaengine: idxd: Remove unnecessary synchronize_irq()
+ before free_irq()
+Message-ID: <YoI2ZRm3irWmqZDg@matsya>
+References: <20220513081622.1631073-1-chi.minghao@zte.com.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e6e4cf701f3a43b061b9c3f7f0adc4d6addd4722.1651497024.git.geert+renesas@glider.be>
+In-Reply-To: <20220513081622.1631073-1-chi.minghao@zte.com.cn>
 X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -68,11 +55,38 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 02-05-22, 15:34, Geert Uytterhoeven wrote:
-> Despite the name, R-Car V3U is the first member of the R-Car Gen4
-> family.  Hence move its compatible value to the R-Car Gen4 section.
+On 13-05-22, 08:16, cgel.zte@gmail.com wrote:
+> From: Minghao Chi <chi.minghao@zte.com.cn>
+> 
+> Calling synchronize_irq() right before free_irq() is quite useless. On one
+> hand the IRQ can easily fire again before free_irq() is entered, on the
+> other hand free_irq() itself calls synchronize_irq() internally (in a race
+> condition free way) before any state associated with the IRQ is freed.
+> 
+> Reported-by: Zeal Robot <zealci@zte.com.cn>
 
-Applied, thanks
+where is this report...?
+
+> Signed-off-by: Minghao Chi <chi.minghao@zte.com.cn>
+> ---
+>  drivers/dma/idxd/device.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+> index 5363fb9218f2..9dd8e6bb21e6 100644
+> --- a/drivers/dma/idxd/device.c
+> +++ b/drivers/dma/idxd/device.c
+> @@ -1179,7 +1179,6 @@ void idxd_wq_free_irq(struct idxd_wq *wq)
+>  	struct idxd_device *idxd = wq->idxd;
+>  	struct idxd_irq_entry *ie = &wq->ie;
+>  
+> -	synchronize_irq(ie->vector);
+>  	free_irq(ie->vector, ie);
+>  	idxd_flush_pending_descs(ie);
+>  	if (idxd->request_int_handles)
+> --
+> 2.25.1
+> 
 
 -- 
 ~Vinod

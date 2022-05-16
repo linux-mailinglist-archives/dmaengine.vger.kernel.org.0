@@ -2,134 +2,134 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 04C3A527D3B
-	for <lists+dmaengine@lfdr.de>; Mon, 16 May 2022 07:56:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06893527FE1
+	for <lists+dmaengine@lfdr.de>; Mon, 16 May 2022 10:42:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232864AbiEPF4v (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 16 May 2022 01:56:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58458 "EHLO
+        id S231756AbiEPIm2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 16 May 2022 04:42:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232736AbiEPF4v (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 May 2022 01:56:51 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95E4AB86D;
-        Sun, 15 May 2022 22:56:48 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id h186so10495116pgc.3;
-        Sun, 15 May 2022 22:56:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=Pwpzkyg77kk5VIp6vnvsVEKNPdGamfy1+A/pVOWozEo=;
-        b=Jk2vNxB4sP9tleDrsu/ul6d1rZruz8DjlZfh8DZoItv8Exyw5PgKRV2jx3UM4EYpmS
-         AKL2xNAejWYXaFz5G/hqczXQBwx0G+BG0R63CQv6x+Cgaph2Z6kSTmYGu2ed+MTf+t7L
-         dSzgJ99PNaz7xQJvD+m5gisD3oWJHd3W6kO7+veftGp2yUEyJ5GBSUA0Gxu2kx15r+8+
-         s1jeN3PNm9jjjYkiaFFnH9jHsxvGxGy8zLWYapv5nIeetsR/LqKBZ0eTdSjYdbn3DKa+
-         b+zTyTM1+/XMjMnLB1SbUkbRa6CM3mgtHbLBQ9NI9MA9UEo7FlkFxQYmukZwwpeso8HP
-         TBtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=Pwpzkyg77kk5VIp6vnvsVEKNPdGamfy1+A/pVOWozEo=;
-        b=uTOFYk25LLsOmqf+pNE7mg88aT/PL8/+DR06dFkwkCqpsAX5FOAfZcaDYoDVuusFd1
-         jAR7EArgJN1dO8+kZ9yXY3tdFrrSD/X8JOSNfF0XodCi6Me+1o/TblKNQwQGjt+NnXWb
-         Yb4M8vw6DPJy2xbMXdwxr6gX4zwHr+m10/UQyrXE51I/r56cQ408LsdSC4J0AR3jaga7
-         UCFxiFV41l6rJnnqiS4OXxWSooCScpwn8uV2mmR5ayx6CwTCqfLIfS41sN9I9THT0v02
-         FlDxsw29Ig3Rqlk+/ktE8W5NUPe+bIo2uXOTMeQcCaEmRJ/NWWIbg4pRgGwQsM5gSiNJ
-         V94g==
-X-Gm-Message-State: AOAM53363XRF04Yj5mbBQ0oz5foa+/ekHFaE3EUHCJAU/sLYUmPFKBKC
-        PEKWDByf/9d4BxvMRkKyuSU=
-X-Google-Smtp-Source: ABdhPJw5eg5a50VutqqwvkEAmuKtFjouViHMxzDmbCqdE2G1lbPuIm7B3ySqs2ZRUQZCWittsNON+Q==
-X-Received: by 2002:aa7:8757:0:b0:50d:48a9:f021 with SMTP id g23-20020aa78757000000b0050d48a9f021mr15866354pfo.24.1652680607401;
-        Sun, 15 May 2022 22:56:47 -0700 (PDT)
-Received: from [172.16.10.243] ([106.39.150.71])
-        by smtp.gmail.com with ESMTPSA id n11-20020a170902f60b00b0015ec71f72d6sm6047182plg.253.2022.05.15.22.56.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 May 2022 22:56:47 -0700 (PDT)
-Message-ID: <b659bba8-0de9-4159-4311-bb13036bef05@gmail.com>
-Date:   Mon, 16 May 2022 13:56:39 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH] dmaengine: ti: Fix refcount leak in
- ti_dra7_xbar_route_allocate
-Content-Language: en-US
-To:     Dave Jiang <dave.jiang@intel.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220512051815.11946-1-linmq006@gmail.com>
- <d1017a7a-4f3d-4218-13da-71f89cf81c81@intel.com>
-From:   Miaoqian Lin <linmq006@gmail.com>
-In-Reply-To: <d1017a7a-4f3d-4218-13da-71f89cf81c81@intel.com>
-Content-Type: text/plain; charset=UTF-8
+        with ESMTP id S239517AbiEPIm0 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 May 2022 04:42:26 -0400
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2104.outbound.protection.outlook.com [40.107.215.104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DA1E7648;
+        Mon, 16 May 2022 01:42:25 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KmvhwUyeBX6LTIyKUBKDuMhwCDZ8hyL8ecP6qS5EdPtA+iJuIjUX72qxw62Az8/uD/i7aEHsk+lP1/qRa8Su+nKBX+RQS1sYBL1FSZU4JSJ25OkZa6KbiAt1kk2PdcmZsOK0LMwoi8Qp3/Pm4Qn5yYlZr1CTlrVX11Q9JVX+ciXnQUKVGep9vGTgDkZm7QNJSpPR6EzBgVLn+3ml89gFwjzOlrKcHVi+oEySYdhlqcKNgLqPET602vDiW/0dyLDemHU0YoYC1GfcYXaj8pCOyMJ6flLk1iBIr5c52oYQtIhWNJLna8v9+GBdV6uBTNedEIokH3BhZkisHuQGsZMCtg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Zu1ZmmM8VbD5e/QYDVXA0vEgsmVCoSk1dQlKzmJXEG4=;
+ b=kDGfJPEoLkOkO+zh7NFRnQBjdq3LnPwUj7CE/hFXDecdiHAV106IylHMivnyZsrkC24WaPEuKud20KFa09h3a/ORoD5KVPWBiW0BRTa0gQJR8EHefSp3GbsXRdAdbN8IHYlx8J9oVPq9BILJM+0fQRpkIiAk+sS6/Ex/wqFOYhoSePu0ZFIbC1DR6C2uBF7srRo+kZhBJ2uh+OqtoMkIGDqVCLS2LD34LAJRGC2K0ifXvlW0JnoxvGfH/gZQx/M23zqNY6sVPLrhI/uo073fYJDmo3trtBxRuNYgGaj2CTd+H2pb308+OAexYtNuRkT6PR/d/upOSODmVv0ERg/bmQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo0.onmicrosoft.com;
+ s=selector2-vivo0-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zu1ZmmM8VbD5e/QYDVXA0vEgsmVCoSk1dQlKzmJXEG4=;
+ b=aSekGfgVWxNKq+bTO/sOI2J+0sfBXb+lxx/QfMBogabOTtJLkE8glKIFuXnsfsEaMRErS7g8+WJ03rLNG25saAwWTa+NnoeI8Ay9Fw1+W8AaGBCktC4DdLjW+xe89EWYPZzFQeaf1h8Bju2nMCR4Z85BDNAve5NveLoIZF2+flM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SG2PR06MB3367.apcprd06.prod.outlook.com (2603:1096:4:78::19) by
+ HK0PR06MB2977.apcprd06.prod.outlook.com (2603:1096:203:88::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5250.18; Mon, 16 May 2022 08:42:22 +0000
+Received: from SG2PR06MB3367.apcprd06.prod.outlook.com
+ ([fe80::ccb7:f612:80b2:64d5]) by SG2PR06MB3367.apcprd06.prod.outlook.com
+ ([fe80::ccb7:f612:80b2:64d5%4]) with mapi id 15.20.5250.018; Mon, 16 May 2022
+ 08:42:22 +0000
+From:   Wan Jiabing <wanjiabing@vivo.com>
+To:     Vinod Koul <vkoul@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Wan Jiabing <wanjiabing@vivo.com>
+Subject: [PATCH 0/4] dmaengine: Remove unneeded ERROR checks before clk_xxx
+Date:   Mon, 16 May 2022 16:41:35 +0800
+Message-Id: <20220516084139.8864-1-wanjiabing@vivo.com>
+X-Mailer: git-send-email 2.36.1
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+Content-Type: text/plain
+X-ClientProxiedBy: HK2PR02CA0143.apcprd02.prod.outlook.com
+ (2603:1096:202:16::27) To SG2PR06MB3367.apcprd06.prod.outlook.com
+ (2603:1096:4:78::19)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d3727522-ad98-4b7e-99b9-08da3717fe6e
+X-MS-TrafficTypeDiagnostic: HK0PR06MB2977:EE_
+X-Microsoft-Antispam-PRVS: <HK0PR06MB29770C3E13A3B5E8D7D5DB4EABCF9@HK0PR06MB2977.apcprd06.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /yO7YQuklG485JGBY8pAzGmyQGJKSnKP37OXsfQP0EO2S604w9QBFq+cbvx331vRoT4mSXkti56G+ib0IafTqxtyrawIrGgfCiKzfdZgnJx8opPOZTYj7GATYGgKuH2L3gB8JfzTz8kYSu7VKBTglG7u6VGmo6GgerA9LGu/qeVCvnpqrYIBY1IgTgX8ms7SP9H02RUpJVVsAKYHGLnhnazJDEPRqmXUJOVolq5gatviJkCm19XaIqPoAowQqp91JQ/jufDcnXCWqiNREbDd88MU0yjvv2sCAEmousL4HK1sdsj6pz45N3577htC35f38gtj01z8cgU1+tCM6CKgthVQlgPyXj5/p/CHv3bpv7lP/B1s2fX5ZFd4HWiY2fpwaUt6h3Ni0KH3nVyG4Vbwft5c7p/PA016Ok9FLHgNif8G7yR6N5dI/g7ba4P1mCkw+enmgcBrR6CN2RdrjSdzvSMFzf9VEuZFIfvwOCKLkmaGOW+EdqP23cDftjmqgm12uoyZaPktJCXat72Q19sQot3UibV4YJYetVUnrpFb5znub4fs5D++Gv67ubjnPGXFIJrncMQg+r6+YObRGZzg/sffaFpdnG1Z2+WvNCQ5jA9UqnAM9jN/4QwYOM3BWMFXw1k6TsCvPx9EzYa7lhpj5vMHjhLihboU30y9LRhDJ6IG4rwg+gXMqLFBYzbSDdNjI3ze7UOsZieZELdjYc6ea5qrZpX1xNX86Rc3OBw9SMU=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2PR06MB3367.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(6666004)(2906002)(38350700002)(38100700002)(83380400001)(316002)(110136005)(52116002)(6512007)(66946007)(1076003)(186003)(6486002)(66556008)(66476007)(4326008)(8676002)(4744005)(5660300002)(508600001)(8936002)(26005)(6506007)(86362001)(36756003)(2616005)(107886003)(21314003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?pYZKFo4vfMlMnBZldE3OBnkXt6a8qvK5DqotmEDlj8jI043cMRYqRbHXicNw?=
+ =?us-ascii?Q?OAY4dBzEweZf8Q3svcO+66KahxAnY86hVcyM61J/xKhwoGo2QSAHDFJ1mCtE?=
+ =?us-ascii?Q?jSO7q5VMUnvIRnL9+rcaiIZnkzGJOHOYNoIZx+Vxzk33shFpr4CjtesI+qyY?=
+ =?us-ascii?Q?6/dtrTB76ZZq9tErzCOUA/J/4BmB31s22Nsn+Ydcu+dh5WbD4hRnN+6vhvAa?=
+ =?us-ascii?Q?TbXeU9/U5HmMU2lgMbu3BzjKR22GZ2uE8FfzY3xJ63ULur3XAC6YXSBGfjqX?=
+ =?us-ascii?Q?n83bnnU7jy4AFjDPUa6gZJAMRkSNLTeXO6aCIHjq4BXji4kmg6gioicgNOYw?=
+ =?us-ascii?Q?TOWUn16KfZLMVUvAiWqVE7oe0+5sE8caH1MLze/zmDy/x5leGFnCunM0IpxM?=
+ =?us-ascii?Q?n6A2WRQBMFsVjWTM3Fep1KLjx1kyYPLMXD3yhyQnk2uQ5ZcGtNh2YbzJXza4?=
+ =?us-ascii?Q?KS2YoDlvBN7eDI9ASL7g24xYka4VUghcusQEq5PGfNR2S+MpdsYSCpD4asdl?=
+ =?us-ascii?Q?VcqTlvyGcq1dVeIu26KZdDIwER7s8UsR1JsgB5eFsT9wrW7BmBbF7Cc5nAW8?=
+ =?us-ascii?Q?1gMCCJSdF79yxFwHPKgzs+s4LfgSzWU78ioq2sPqXoLmb6s65sLDchfXFN1v?=
+ =?us-ascii?Q?URPouITK+/EJfygZ8X3KoRcPlDCKUF8OpO+uhjcUaBtREjEO6s3XntE3UkKj?=
+ =?us-ascii?Q?ROGolSCAh/RAfHOy2xGRTmFrJc+AOykjGOyiuNoU6t5axhvCoQuUTqrJRhUd?=
+ =?us-ascii?Q?ZeF6g2O5XfV8ObWcbsLIO4fxLVERAN96k1D0G+GVZ5/e7wpgII65WgIoKDai?=
+ =?us-ascii?Q?kP1gVQm9k4yM/qRi9SS/ez3/199ErU7AWhcwNBnZz/5o3gXKOWrO9eRIlZhN?=
+ =?us-ascii?Q?ovZNhnzdvUDa7sADTJhX8gfIbjlC3r+MTShPIORbH1+d1Np2ujSy1JplQ7yN?=
+ =?us-ascii?Q?KCI1aQMLkC48mwf7NzwPrMZXJUlRMlY32amYyDJ0wFbmrurr2TLQEb8L4Am+?=
+ =?us-ascii?Q?uv1voBfUHf1YUyHu/3Wrr2cElZ0SHV/K0VD3SBukN2g4eLy5YurUHMlL0yM1?=
+ =?us-ascii?Q?0Gj3444TI0j0d7Q7PMAl6c5hxGSM/ogevc0+tRcpylcwV7vGMXb1aleaMEbJ?=
+ =?us-ascii?Q?PZeplbjFTPIzQDU2grQyVzjs44K4Riv28beMulGBhKa4Xwhtub8BpQFIxeaM?=
+ =?us-ascii?Q?WI11eaA+9cMOituq/qufOTV0y1uKW5h3gY/yHIP4KCrevYhWbE4PYt8H4NpF?=
+ =?us-ascii?Q?vPzOGZhL1Y/fSfeNEWqHaobm3i6XyehbMKrFy22DQAJT5/TbFb5W4/rhXZ7D?=
+ =?us-ascii?Q?Vdd4sj1exDrl7I3UQzPHHPtttjhmmZG8VrZTCR56ooi0Wx/dsIB/mc9zQOYe?=
+ =?us-ascii?Q?Pm+qF1O7V3iFD52/ILA0iZOCJCjifkVT8vzUTu5v6jo+holJa8F6Ah/LG0dB?=
+ =?us-ascii?Q?HDeStq290GwNJFpFRu7vLgUjFywPCbFx2HFRFX03/Nkn7nUY9EWWKKgA7K6/?=
+ =?us-ascii?Q?BamLJB19kpkHBdIMa5J54Qky5BtXemazCBfM0OMI0TDO4ihOxm3pNeVgn0U9?=
+ =?us-ascii?Q?cxydNYWZfVIrwLwx88MTzotf6erpYqtM+JXIvXo2G4yCAB+woPn1wkeG/VYc?=
+ =?us-ascii?Q?WKCdiXehBNNT3nkrDcFWFirVMhvrhaCFtbV2lRlukJb1OfAfBXCdti5E0JX3?=
+ =?us-ascii?Q?seh4/Llj1A1lEctBPGtXRrWUvZUitDWCDlNfRGUK6ukitW+moIjbbxOJmh/7?=
+ =?us-ascii?Q?AKU2iJPmfA=3D=3D?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3727522-ad98-4b7e-99b9-08da3717fe6e
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3367.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2022 08:42:22.1282
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YUyiaExFEE+WEZJuvlrZQWvoKoIS8UoDjKIX34CQZS7Znlg1sPtlEP4ozymKYZMd1+0OqnkfGfGoHw399h/SNQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0PR06MB2977
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi, Dave
+This patch set tries to remove unneeded ERROR check before clk_xxx.
+clk_put() already uses !clk and IS_ERR(clk) to check ERROR or NULL.
+clk_disable_unprepare() already checks ERROR by using IS_ERR_OR_NULL.
 
-On 2022/5/13 1:03, Dave Jiang wrote:
->
-> On 5/11/2022 10:18 PM, Miaoqian Lin wrote:
->> 1. of_find_device_by_node() takes reference, we should use put_device()
->> to release it when not need anymore.
->> 2. of_parse_phandle() returns a node pointer with refcount
->> incremented, we should use of_node_put() on it when not needed anymore.
->>
->> Add put_device() and of_node_put() in some error paths to fix.
-> Sounds like you need 2 patches for this? One just for the put_device() and the other for the of_node_put()?
+Remove unneeded ERROR or NULL check before them.
 
-Thanks for your response, I will split it into 2 patches.
+Wan Jiabing (4):
+  dmaengine: ep93xx_dma: Remove unneeded ERROR check before clk_put
+  dmaengine: sprd-dma: Remove unneeded ERROR check before clk_disable_unprepare
+  dmaengine: ste_dma40: Remove unneeded ERROR and NULL check in ste_dma40
+  dmaengine: xgene-dma: Remove unneeded ERROR check before clk_disable_unprepare
 
+ drivers/dma/ep93xx_dma.c |  3 +--
+ drivers/dma/sprd-dma.c   |  7 +------
+ drivers/dma/ste_dma40.c  | 10 ++++------
+ drivers/dma/xgene-dma.c  |  6 ++----
+ 4 files changed, 8 insertions(+), 18 deletions(-)
 
->>
->> Fixes: ec9bfa1e1a79 ("dmaengine: ti-dma-crossbar: dra7: Use bitops instead of idr")
->> Fixes: a074ae38f859 ("dmaengine: Add driver for TI DMA crossbar on DRA7x")
->> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
->> ---
->>   drivers/dma/ti/dma-crossbar.c | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
->> index 71d24fc07c00..f744ddbbbad7 100644
->> --- a/drivers/dma/ti/dma-crossbar.c
->> +++ b/drivers/dma/ti/dma-crossbar.c
->> @@ -245,6 +245,7 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
->>       if (dma_spec->args[0] >= xbar->xbar_requests) {
->>           dev_err(&pdev->dev, "Invalid XBAR request number: %d\n",
->>               dma_spec->args[0]);
->> +        put_device(&pdev->dev);
->>           return ERR_PTR(-EINVAL);
->>       }
->>   @@ -252,12 +253,14 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
->>       dma_spec->np = of_parse_phandle(ofdma->of_node, "dma-masters", 0);
->>       if (!dma_spec->np) {
->>           dev_err(&pdev->dev, "Can't get DMA master\n");
->> +        put_device(&pdev->dev);
->>           return ERR_PTR(-EINVAL);
->>       }
->>         map = kzalloc(sizeof(*map), GFP_KERNEL);
->>       if (!map) {
->>           of_node_put(dma_spec->np);
->> +        put_device(&pdev->dev);
->>           return ERR_PTR(-ENOMEM);
->>       }
->>   @@ -268,6 +271,8 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
->>           mutex_unlock(&xbar->mutex);
->>           dev_err(&pdev->dev, "Run out of free DMA requests\n");
->>           kfree(map);
->> +        of_node_put(dma_spec->np);
->> +        put_device(&pdev->dev);
->>           return ERR_PTR(-ENOMEM);
->>       }
->>       set_bit(map->xbar_out, xbar->dma_inuse);
+-- 
+2.36.1
+

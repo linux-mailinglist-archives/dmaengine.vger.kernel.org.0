@@ -2,118 +2,134 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 47A795271C1
-	for <lists+dmaengine@lfdr.de>; Sat, 14 May 2022 16:15:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04C3A527D3B
+	for <lists+dmaengine@lfdr.de>; Mon, 16 May 2022 07:56:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232764AbiENOPk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 14 May 2022 10:15:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52608 "EHLO
+        id S232864AbiEPF4v (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 16 May 2022 01:56:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231569AbiENOPk (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 14 May 2022 10:15:40 -0400
-Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81E7E140F3;
-        Sat, 14 May 2022 07:15:38 -0700 (PDT)
-Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-edf9ddb312so13977046fac.8;
-        Sat, 14 May 2022 07:15:38 -0700 (PDT)
+        with ESMTP id S232736AbiEPF4v (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 May 2022 01:56:51 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95E4AB86D;
+        Sun, 15 May 2022 22:56:48 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id h186so10495116pgc.3;
+        Sun, 15 May 2022 22:56:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=V0UWMw+8IC5/blrDj2MNiuz1nnIEdolub0ud2xnX3wc=;
-        b=dkxvJMEFx6NNgw1tH/UOFEVkB83/cvgCoN2PlMfOTAvFF3YrqCpWz24cv5z8xQwuP7
-         BcwvEsuFTuyE8yjru1Pi9Q9cgXnx/x9R5X1crekVv9DRnAcrnELwo3xV1+gyUaEzYXqH
-         2VUhW79PlCNlREYwLWgPacsLZpLg/SR1rbTxCrHKruvIDmJ15NRQ1aWlUpvb1oblcA6c
-         U16dqcZxJxDVmmhhEtOaqJlvLnZm618xa4XDWfp31YWmyoDpO6YqqvqeDNcXATzvnLdr
-         AjTjqn6W2vguXwB/Unl/2mEHV4UkX8F6g+4VT6wc7OouhdHE7n3go4ycJIu1c2LG90Js
-         AvrQ==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=Pwpzkyg77kk5VIp6vnvsVEKNPdGamfy1+A/pVOWozEo=;
+        b=Jk2vNxB4sP9tleDrsu/ul6d1rZruz8DjlZfh8DZoItv8Exyw5PgKRV2jx3UM4EYpmS
+         AKL2xNAejWYXaFz5G/hqczXQBwx0G+BG0R63CQv6x+Cgaph2Z6kSTmYGu2ed+MTf+t7L
+         dSzgJ99PNaz7xQJvD+m5gisD3oWJHd3W6kO7+veftGp2yUEyJ5GBSUA0Gxu2kx15r+8+
+         s1jeN3PNm9jjjYkiaFFnH9jHsxvGxGy8zLWYapv5nIeetsR/LqKBZ0eTdSjYdbn3DKa+
+         b+zTyTM1+/XMjMnLB1SbUkbRa6CM3mgtHbLBQ9NI9MA9UEo7FlkFxQYmukZwwpeso8HP
+         TBtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=V0UWMw+8IC5/blrDj2MNiuz1nnIEdolub0ud2xnX3wc=;
-        b=hGphlE7Rgn1gf5CsnBJig/mnyhXZ3VW4J+zm+gomQpfQRi6dfJJIhO81cky131Xe16
-         Q0ccY/oF6P6SneoN6d8kYZmjMu0aSsQqcJzgzQ9xowirQmW8lB2dj4XLcNTF07/Ckg5T
-         6qyvJberBhE1UsxjC/a8LPhAH7An8kYjvVOtXShlVX3yanziM6roiB1Bk/w3FxMDTjqs
-         S+uQ9LxErrTm33yMzUFUYAezdUkn0Im1wIUnq7LFGAGw7/DEJ8jEpxlVN+30XD7JBUFh
-         7I3yGPcyouCoiBzlQSlJKkLy8CB93k03tigstXnTtUTHsx4nRYZ6GSvbAdkBsoNWoKgI
-         Zclw==
-X-Gm-Message-State: AOAM532ZeNNmWIhinyChocr2Ti4cd40IOguG2fOha8JmcXtKXUcGBWJM
-        gDKA9QJvTRyIMUV9mAX/ur3Q9lOarnQm6w==
-X-Google-Smtp-Source: ABdhPJxIh4A6RDGJLkqD3wI+SAa3lP6jsUbrzhaqHnQbP/kqqs6hM/AP18eGNJmYYJxAgVXlsnJ15A==
-X-Received: by 2002:a05:6871:70c:b0:ed:e6c2:e599 with SMTP id f12-20020a056871070c00b000ede6c2e599mr5088966oap.70.1652537737907;
-        Sat, 14 May 2022 07:15:37 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id n39-20020a05687055a700b000e686d1389dsm2401199oao.55.2022.05.14.07.15.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 May 2022 07:15:37 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Sat, 14 May 2022 07:15:36 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH 7/7] dt-bindings: watchdog: renesas,wdt: R-Car V3U is
- R-Car Gen4
-Message-ID: <20220514141536.GA1319284@roeck-us.net>
-References: <cover.1651497024.git.geert+renesas@glider.be>
- <2882a6de3905a57ae62d91060d27521af43c4068.1651497024.git.geert+renesas@glider.be>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Pwpzkyg77kk5VIp6vnvsVEKNPdGamfy1+A/pVOWozEo=;
+        b=uTOFYk25LLsOmqf+pNE7mg88aT/PL8/+DR06dFkwkCqpsAX5FOAfZcaDYoDVuusFd1
+         jAR7EArgJN1dO8+kZ9yXY3tdFrrSD/X8JOSNfF0XodCi6Me+1o/TblKNQwQGjt+NnXWb
+         Yb4M8vw6DPJy2xbMXdwxr6gX4zwHr+m10/UQyrXE51I/r56cQ408LsdSC4J0AR3jaga7
+         UCFxiFV41l6rJnnqiS4OXxWSooCScpwn8uV2mmR5ayx6CwTCqfLIfS41sN9I9THT0v02
+         FlDxsw29Ig3Rqlk+/ktE8W5NUPe+bIo2uXOTMeQcCaEmRJ/NWWIbg4pRgGwQsM5gSiNJ
+         V94g==
+X-Gm-Message-State: AOAM53363XRF04Yj5mbBQ0oz5foa+/ekHFaE3EUHCJAU/sLYUmPFKBKC
+        PEKWDByf/9d4BxvMRkKyuSU=
+X-Google-Smtp-Source: ABdhPJw5eg5a50VutqqwvkEAmuKtFjouViHMxzDmbCqdE2G1lbPuIm7B3ySqs2ZRUQZCWittsNON+Q==
+X-Received: by 2002:aa7:8757:0:b0:50d:48a9:f021 with SMTP id g23-20020aa78757000000b0050d48a9f021mr15866354pfo.24.1652680607401;
+        Sun, 15 May 2022 22:56:47 -0700 (PDT)
+Received: from [172.16.10.243] ([106.39.150.71])
+        by smtp.gmail.com with ESMTPSA id n11-20020a170902f60b00b0015ec71f72d6sm6047182plg.253.2022.05.15.22.56.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 May 2022 22:56:47 -0700 (PDT)
+Message-ID: <b659bba8-0de9-4159-4311-bb13036bef05@gmail.com>
+Date:   Mon, 16 May 2022 13:56:39 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2882a6de3905a57ae62d91060d27521af43c4068.1651497024.git.geert+renesas@glider.be>
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH] dmaengine: ti: Fix refcount leak in
+ ti_dra7_xbar_route_allocate
+Content-Language: en-US
+To:     Dave Jiang <dave.jiang@intel.com>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220512051815.11946-1-linmq006@gmail.com>
+ <d1017a7a-4f3d-4218-13da-71f89cf81c81@intel.com>
+From:   Miaoqian Lin <linmq006@gmail.com>
+In-Reply-To: <d1017a7a-4f3d-4218-13da-71f89cf81c81@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, May 02, 2022 at 03:34:59PM +0200, Geert Uytterhoeven wrote:
-> Despite the name, R-Car V3U is the first member of the R-Car Gen4
-> family.  Hence move its compatible value to the R-Car Gen4 section.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Hi, Dave
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+On 2022/5/13 1:03, Dave Jiang wrote:
+>
+> On 5/11/2022 10:18 PM, Miaoqian Lin wrote:
+>> 1. of_find_device_by_node() takes reference, we should use put_device()
+>> to release it when not need anymore.
+>> 2. of_parse_phandle() returns a node pointer with refcount
+>> incremented, we should use of_node_put() on it when not needed anymore.
+>>
+>> Add put_device() and of_node_put() in some error paths to fix.
+> Sounds like you need 2 patches for this? One just for the put_device() and the other for the of_node_put()?
 
-> ---
->  Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml b/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-> index 77ee7c4b8067f506..1fa243052327bffe 100644
-> --- a/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-> +++ b/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-> @@ -59,11 +59,11 @@ properties:
->                - renesas,r8a77980-wdt     # R-Car V3H
->                - renesas,r8a77990-wdt     # R-Car E3
->                - renesas,r8a77995-wdt     # R-Car D3
-> -              - renesas,r8a779a0-wdt     # R-Car V3U
->            - const: renesas,rcar-gen3-wdt # R-Car Gen3 and RZ/G2
->  
->        - items:
->            - enum:
-> +              - renesas,r8a779a0-wdt     # R-Car V3U
->                - renesas,r8a779f0-wdt     # R-Car S4-8
->            - const: renesas,rcar-gen4-wdt # R-Car Gen4
->  
+Thanks for your response, I will split it into 2 patches.
+
+
+>>
+>> Fixes: ec9bfa1e1a79 ("dmaengine: ti-dma-crossbar: dra7: Use bitops instead of idr")
+>> Fixes: a074ae38f859 ("dmaengine: Add driver for TI DMA crossbar on DRA7x")
+>> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+>> ---
+>>   drivers/dma/ti/dma-crossbar.c | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
+>> index 71d24fc07c00..f744ddbbbad7 100644
+>> --- a/drivers/dma/ti/dma-crossbar.c
+>> +++ b/drivers/dma/ti/dma-crossbar.c
+>> @@ -245,6 +245,7 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
+>>       if (dma_spec->args[0] >= xbar->xbar_requests) {
+>>           dev_err(&pdev->dev, "Invalid XBAR request number: %d\n",
+>>               dma_spec->args[0]);
+>> +        put_device(&pdev->dev);
+>>           return ERR_PTR(-EINVAL);
+>>       }
+>>   @@ -252,12 +253,14 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
+>>       dma_spec->np = of_parse_phandle(ofdma->of_node, "dma-masters", 0);
+>>       if (!dma_spec->np) {
+>>           dev_err(&pdev->dev, "Can't get DMA master\n");
+>> +        put_device(&pdev->dev);
+>>           return ERR_PTR(-EINVAL);
+>>       }
+>>         map = kzalloc(sizeof(*map), GFP_KERNEL);
+>>       if (!map) {
+>>           of_node_put(dma_spec->np);
+>> +        put_device(&pdev->dev);
+>>           return ERR_PTR(-ENOMEM);
+>>       }
+>>   @@ -268,6 +271,8 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
+>>           mutex_unlock(&xbar->mutex);
+>>           dev_err(&pdev->dev, "Run out of free DMA requests\n");
+>>           kfree(map);
+>> +        of_node_put(dma_spec->np);
+>> +        put_device(&pdev->dev);
+>>           return ERR_PTR(-ENOMEM);
+>>       }
+>>       set_bit(map->xbar_out, xbar->dma_inuse);

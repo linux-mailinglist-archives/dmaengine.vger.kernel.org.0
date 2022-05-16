@@ -2,101 +2,123 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F31585284EA
-	for <lists+dmaengine@lfdr.de>; Mon, 16 May 2022 15:05:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E069E528B80
+	for <lists+dmaengine@lfdr.de>; Mon, 16 May 2022 19:02:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238870AbiEPNF1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 16 May 2022 09:05:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38988 "EHLO
+        id S236413AbiEPRCx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 16 May 2022 13:02:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229895AbiEPNFZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 May 2022 09:05:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D0EE39B8B;
-        Mon, 16 May 2022 06:05:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F2950612CF;
-        Mon, 16 May 2022 13:05:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92BFFC385B8;
-        Mon, 16 May 2022 13:05:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652706323;
-        bh=eq1rcuLPkdu0+ErdkB7P6X9b1HszMe8ou3QsV1dHQYY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DTafzldvGKdyljfANYw13cE2sQ874aht66TSnNi3zI1IHuVNCf93AChAvR1Dl2nUj
-         gWhVODf/m2KPPWfSpS9YE3XUXr8Bc8CGcLJIyV8E34fe92IhLDo1y6VRdHcyDXWGKi
-         Z1pt62ABpXZcuVVPwIKjmntko61Imx4YTmSRAmoLv2ggR/rEd4yLlAiTMYnRwMP7LV
-         mpIB0AI9dmv3y0+coRonGrsebuSSqaPz+IEim6VJzbmx4IJsxpSyc5vuRe4kat4ycy
-         GgsnolHu/lXohA/fbHu69WV44JrIxGqr2h3f1rlhvSNvvb8oO7qZftl7i6tBt+f4p5
-         QKtZMoW2bAO5Q==
-Date:   Mon, 16 May 2022 18:35:19 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] dmaengine/ARM: sprd: use proper
- 'dma-channels/requests' properties
-Message-ID: <YoJMD5+jcSHEA3tR@matsya>
-References: <20220503065147.51728-1-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S231260AbiEPRCv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 May 2022 13:02:51 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 132D91FA64
+        for <dmaengine@vger.kernel.org>; Mon, 16 May 2022 10:02:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1652720571; x=1684256571;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=7ryH+nbKNneIzUKgszusREAGHwed7n2oBq4OG9TapOM=;
+  b=I7wk4MWQc3oOgucyTP5+CUx/sBeZ5rQfvQYCgxbou+kbZm9FXrkG8SQI
+   vTfFITHIXZZs1YoABZPgriJnAFsmNTsIEPtOfjcM7PMYGdb2h33Er+6Gg
+   HjZZHWVsNoFojcj6Q/qf5b12VqLNPgQwgL8MqlKVHSi8z369OiTNfifCJ
+   Xhq14WdPEF2lzuxMIdPBz/89VH9Lf4/+i3x9g+awtKJebIjI48Uh9LnhS
+   nu6MpwMJzr4kpJK8Us2HVIs9DoqLpJx9SmHtPOoG9zKcy0DKprc0PfoH5
+   uE5iKUl11hFXc/uUJJefCfoCjNp/4NtlQ5AtklfLi4ijfdrNt5O+QU19e
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10349"; a="296167342"
+X-IronPort-AV: E=Sophos;i="5.91,230,1647327600"; 
+   d="scan'208";a="296167342"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2022 10:02:08 -0700
+X-IronPort-AV: E=Sophos;i="5.91,230,1647327600"; 
+   d="scan'208";a="626031463"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.19.181]) ([10.212.19.181])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2022 10:02:02 -0700
+Message-ID: <8da7b5af-4536-6c9e-378a-e4313a6171f9@intel.com>
+Date:   Mon, 16 May 2022 10:02:01 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220503065147.51728-1-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.9.0
+Subject: Re: [PATCH] dmaengine: idxd: add missing callback function to support
+ DMA_INTERRUPT
+Content-Language: en-US
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org
+References: <165101232637.3951447.15765792791591763119.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <165101232637.3951447.15765792791591763119.stgit@djiang5-desk3.ch.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 03-05-22, 08:51, Krzysztof Kozlowski wrote:
-> Hi,
-> 
-> The core DT schema defines generic 'dma-channels' and 'dma-requests'
-> properties, so in preparation to moving bindings to DT schema, convert
-> existing users of '#dma-channels' and '#dma-requests' to the generic
-> variant.
 
-Applied 1-2 to dmaengine tree, thanks
+On 4/26/2022 3:32 PM, Dave Jiang wrote:
+> When setting DMA_INTERRUPT capability, a callback function
+> dma->device_prep_dma_interrupt() is needed to support this capability.
+> Without setting the callback, dma_async_device_register() will fail dma
+> capability check.
+>
+> Fixes: 4e5a4eb20393 ("dmaengine: idxd: set DMA_INTERRUPT cap bit")
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-> 
-> Not tested on hardware.
-> 
-> The patchset is bisectable - please pick up through independent trees.
-> 
-> Changes since v2
-> ================
-> 1. Keep old properties, so the patchset is bisectable.
-> 2. Add review tags.
-> 
-> See also:
-> [1] https://lore.kernel.org/linux-devicetree/fedb56be-f275-aabb-cdf5-dbd394b8a7bd@linaro.org/T/#m6235f451045c337d70a62dc65eab9a716618550b
-> 
-> Best regards,
-> Krzysztof
-> 
-> Krzysztof Kozlowski (3):
->   dt-bindings: dmaengine: sprd: deprecate '#dma-channels'
->   dmaengine: sprd: deprecate '#dma-channels'
->   arm64: dts: sprd: use new 'dma-channels' property
-> 
->  Documentation/devicetree/bindings/dma/sprd-dma.txt | 7 +++++--
->  arch/arm64/boot/dts/sprd/whale2.dtsi               | 4 ++++
->  drivers/dma/sprd-dma.c                             | 6 +++++-
->  3 files changed, 14 insertions(+), 3 deletions(-)
-> 
-> -- 
-> 2.32.0
 
--- 
-~Vinod
+Hi Vinod, can you please make sure this patch goes into the merge 
+window? It fixes the patch that's in the dmaengine/next. Thanks!
+
+> ---
+>   drivers/dma/idxd/dma.c |   22 ++++++++++++++++++++++
+>   1 file changed, 22 insertions(+)
+>
+> diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
+> index 950f06c8aad5..d66cef5a918e 100644
+> --- a/drivers/dma/idxd/dma.c
+> +++ b/drivers/dma/idxd/dma.c
+> @@ -87,6 +87,27 @@ static inline void idxd_prep_desc_common(struct idxd_wq *wq,
+>   	hw->completion_addr = compl;
+>   }
+>   
+> +static struct dma_async_tx_descriptor *
+> +idxd_dma_prep_interrupt(struct dma_chan *c, unsigned long flags)
+> +{
+> +	struct idxd_wq *wq = to_idxd_wq(c);
+> +	u32 desc_flags;
+> +	struct idxd_desc *desc;
+> +
+> +	if (wq->state != IDXD_WQ_ENABLED)
+> +		return NULL;
+> +
+> +	op_flag_setup(flags, &desc_flags);
+> +	desc = idxd_alloc_desc(wq, IDXD_OP_BLOCK);
+> +	if (IS_ERR(desc))
+> +		return NULL;
+> +
+> +	idxd_prep_desc_common(wq, desc->hw, DSA_OPCODE_NOOP,
+> +			      0, 0, 0, desc->compl_dma, desc_flags);
+> +	desc->txd.flags = flags;
+> +	return &desc->txd;
+> +}
+> +
+>   static struct dma_async_tx_descriptor *
+>   idxd_dma_submit_memcpy(struct dma_chan *c, dma_addr_t dma_dest,
+>   		       dma_addr_t dma_src, size_t len, unsigned long flags)
+> @@ -198,6 +219,7 @@ int idxd_register_dma_device(struct idxd_device *idxd)
+>   	dma_cap_set(DMA_COMPLETION_NO_ORDER, dma->cap_mask);
+>   	dma->device_release = idxd_dma_release;
+>   
+> +	dma->device_prep_dma_interrupt = idxd_dma_prep_interrupt;
+>   	if (idxd->hw.opcap.bits[0] & IDXD_OPCAP_MEMMOVE) {
+>   		dma_cap_set(DMA_MEMCPY, dma->cap_mask);
+>   		dma->device_prep_dma_memcpy = idxd_dma_submit_memcpy;
+>
+>

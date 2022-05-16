@@ -2,49 +2,74 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC8A5528350
-	for <lists+dmaengine@lfdr.de>; Mon, 16 May 2022 13:33:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E44F528369
+	for <lists+dmaengine@lfdr.de>; Mon, 16 May 2022 13:40:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231955AbiEPLdI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 16 May 2022 07:33:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35026 "EHLO
+        id S243262AbiEPLkb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 16 May 2022 07:40:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243176AbiEPLdB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 May 2022 07:33:01 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C09E938D9B;
-        Mon, 16 May 2022 04:32:59 -0700 (PDT)
+        with ESMTP id S236194AbiEPLka (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 May 2022 07:40:30 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB23DF55;
+        Mon, 16 May 2022 04:40:30 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 662E0B810DC;
-        Mon, 16 May 2022 11:32:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5215C385B8;
-        Mon, 16 May 2022 11:32:56 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 06F43B80B55;
+        Mon, 16 May 2022 11:40:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE1A2C385AA;
+        Mon, 16 May 2022 11:40:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652700777;
-        bh=J35KBiLWm9yx0BOYLnTJk7rVxmulK79qiZiILuB4w7k=;
+        s=k20201202; t=1652701227;
+        bh=L5E5J6zzQA1xwUAGYCTKpj4tRtQkKMREW7HnJ9e3CWE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kMKcB0R+c500+oR6qABXuSCXVrIbnUak6NCFWtM5aHlhxqCAiwXypcX9XDUprR+JO
-         hXlvFSmLXs7Bt+iAGGZIhcB7QOArbT2q6lzSc/l+7WEscTBh+WkdjFHQB6RAB12jam
-         fRMFsXbWsDD7O2urjxR32bxfAIjRliYPpHo/gfdCb99FsUJPXNhx81XBzZO5Y9taLr
-         xDQnBxJMXe1hKiTyEmAoLznn1PsWhp8+/RY8QjbcacKGV9SDD5VB4e4mHoDghD9Ys6
-         vkSzJu4b3HgXfmeUwXUkZj3d2cJbuE4ts3W1zbEM1Dkhab25cI5DTD+VOiBEIgFJdz
-         hDv/CeINXRrrw==
-Date:   Mon, 16 May 2022 17:02:53 +0530
+        b=Mfyad4iBN0LffO3Y5W8vZRV64qx1ZV1gUE1laCe8MTfHN8aw6yGD40pgYvagw8JHp
+         RkUxOXMrkJ8ICuW66vpBXQ4uS7FNCe8q7UUmhQL3KibuZajpAQe2IsOFfeah4lTarl
+         Bny6DtzYmcBzwB4VcNiofzmCxQtt93mvY3qLgwsnYKpGGjdOO3SJs6PcgcKVgpI+Hs
+         vPEJM5J3WeoWFGSDCf8ZkuZ9N/wXclWb+7daC6UC6wNCjsxgeqc1j3P7A5g0NYtMVb
+         FHdyB2TIiOxhJajbX49C5xCOxXAfqie/WW1eVp/kpvNf8O5z0bZ5KBztTmK48PVdB5
+         8alU8QOJC0J/w==
+Date:   Mon, 16 May 2022 17:10:23 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     cgel.zte@gmail.com
-Cc:     dave.jiang@intel.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Minghao Chi <chi.minghao@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-Subject: Re: [PATCH] dmaengine: idxd: Remove unnecessary synchronize_irq()
- before free_irq()
-Message-ID: <YoI2ZRm3irWmqZDg@matsya>
-References: <20220513081622.1631073-1-chi.minghao@zte.com.cn>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Allen Pais <apais@linux.microsoft.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        olivier.dautricourt@orolia.com, sr@denx.de,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org, ludovic.desroches@microchip.com,
+        tudor.ambarus@microchip.com, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, nsaenz@kernel.org,
+        paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com,
+        gustavo.pimentel@synopsys.com, vireshk@kernel.org,
+        leoyang.li@nxp.com, zw@zh-kernel.org, wangzhou1@hisilicon.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        sean.wang@mediatek.com, matthias.bgg@gmail.com, afaerber@suse.de,
+        mani@kernel.org, logang@deltatee.com, sanju.mehta@amd.com,
+        daniel@zonque.org, haojian.zhuang@gmail.com,
+        robert.jarzmik@free.fr, agross@kernel.org,
+        bjorn.andersson@linaro.org, krzysztof.kozlowski@linaro.org,
+        green.wan@sifive.com, orsonzhai@gmail.com, baolin.wang7@gmail.com,
+        zhang.lyra@gmail.com, patrice.chotard@foss.st.com, wens@csie.org,
+        jernej.skrabec@gmail.com, samuel@sholland.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
+Message-ID: <YoI4J8taHehMpjFj@matsya>
+References: <20220419211658.11403-1-apais@linux.microsoft.com>
+ <20220419211658.11403-2-apais@linux.microsoft.com>
+ <353023ba-d506-5d45-be68-df2025074ed6@kernel.org>
+ <3ee366a7-e61f-e513-aa2f-12e8d5316f3c@embeddedor.com>
+ <YmpedDjzZXz2t6NS@smile.fi.intel.com>
+ <DA101ED8-F99F-4DCB-9CB7-370A62C44B65@linux.microsoft.com>
+ <CACRpkdadjPn82G4TMKyyQtkju=oA4EX=GNxs8KRtrQ7CcqVOog@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220513081622.1631073-1-chi.minghao@zte.com.cn>
+In-Reply-To: <CACRpkdadjPn82G4TMKyyQtkju=oA4EX=GNxs8KRtrQ7CcqVOog@mail.gmail.com>
 X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -55,38 +80,18 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 13-05-22, 08:16, cgel.zte@gmail.com wrote:
-> From: Minghao Chi <chi.minghao@zte.com.cn>
+On 12-05-22, 23:54, Linus Walleij wrote:
+> On Fri, May 6, 2022 at 7:43 PM Allen Pais <apais@linux.microsoft.com> wrote:
 > 
-> Calling synchronize_irq() right before free_irq() is quite useless. On one
-> hand the IRQ can easily fire again before free_irq() is entered, on the
-> other hand free_irq() itself calls synchronize_irq() internally (in a race
-> condition free way) before any state associated with the IRQ is freed.
+> >  - Concerns regarding throughput, would workqueues be as efficient as tasklets (Vinod)
 > 
-> Reported-by: Zeal Robot <zealci@zte.com.cn>
+> You need to ask the scheduler people about this.
+> 
+> The workqueues goes deep into the scheduler and I can't make
+> out how they are prioritized, but they are certainly not treated
+> like any other task.
 
-where is this report...?
-
-> Signed-off-by: Minghao Chi <chi.minghao@zte.com.cn>
-> ---
->  drivers/dma/idxd/device.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-> index 5363fb9218f2..9dd8e6bb21e6 100644
-> --- a/drivers/dma/idxd/device.c
-> +++ b/drivers/dma/idxd/device.c
-> @@ -1179,7 +1179,6 @@ void idxd_wq_free_irq(struct idxd_wq *wq)
->  	struct idxd_device *idxd = wq->idxd;
->  	struct idxd_irq_entry *ie = &wq->ie;
->  
-> -	synchronize_irq(ie->vector);
->  	free_irq(ie->vector, ie);
->  	idxd_flush_pending_descs(ie);
->  	if (idxd->request_int_handles)
-> --
-> 2.25.1
-> 
++1
 
 -- 
 ~Vinod

@@ -2,39 +2,39 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A52252C209
-	for <lists+dmaengine@lfdr.de>; Wed, 18 May 2022 20:27:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5828652C224
+	for <lists+dmaengine@lfdr.de>; Wed, 18 May 2022 20:27:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241349AbiERSRk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 18 May 2022 14:17:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50410 "EHLO
+        id S241337AbiERSRi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 18 May 2022 14:17:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241344AbiERSRj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 18 May 2022 14:17:39 -0400
+        with ESMTP id S241316AbiERSRh (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 18 May 2022 14:17:37 -0400
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1894E185412;
-        Wed, 18 May 2022 11:17:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E552617EC38;
+        Wed, 18 May 2022 11:17:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652897858; x=1684433858;
+  t=1652897856; x=1684433856;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Bzje02YdvCwfEdXd4VLSz7VQ2pQZoJC0EJfVFm1lN80=;
-  b=K9oLTWBYi/4hg6aJ8MivRJbc99JN3Pk/MYYPtsKpk3a7cROmqLtq2ITm
-   mBW0E8arwCbNKI/Cdvkoe8YNRg9FmAVVoNg+2v0RxHYef8woiWS5KIT4f
-   qRM21Wj1XsIy+hDYFUhuv9JpoGBAHEY9pbL7NtDljPc+8X8FFQxYU64gZ
-   XRgXdjfnErXG7GxZnS0p0F2VyXsOBHBV7VNWufFsiKKySSfrYPSasfzpp
-   SyjZlJqtTKkB/v7coLLyySl5lU/dxkGJu+Yn3Q65cdU8mxcc5uVlHJcLe
-   R6CGGBHxq/Y/eklu8/dViscFOO7lYg2i+338H1/lX4csP5NJYjaPjXsHt
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10351"; a="270648744"
+  bh=4MoEi9eIAsQEEnYGbn1gdDfBYv7oO8G4INN9f64CdNo=;
+  b=amBX8b8TQ9JF5jwFJItSzPmoZ2Mv+DnqXkSb+3iW0dj5NZdyIcKntb8S
+   LHoYjBtJaZ0NTvC1SUXabdnr/83nz3VItqfY8C1l2jeD4VWTJ89y5JK+R
+   GzknF1eb1ND9bXbu2DfUHbjvEhU0rCBdXc+OQAEJYsFjO7B/NsgMwm2Zl
+   e9cuI3f+XUwy2wTGSWDjS4m/3pPFkntpXU6FI8pKJgHdCBXgnJ4FRYmtP
+   OVZpk8YKQuV7x2wSbbCLXRzzV6Uom6imSfnDilpMuxvPmJA4Vae1iHQBP
+   AjvQaI7NmgDZ6p+ok8ll44myBIcqbbVk0Q9NAEpiWlJp+dpUpv/dtB8XB
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10351"; a="270648746"
 X-IronPort-AV: E=Sophos;i="5.91,235,1647327600"; 
-   d="scan'208";a="270648744"
+   d="scan'208";a="270648746"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 11:17:33 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 11:17:34 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.91,235,1647327600"; 
-   d="scan'208";a="639405505"
+   d="scan'208";a="639405510"
 Received: from otc-wp-03.jf.intel.com (HELO jacob-builder.jf.intel.com) ([10.54.39.79])
   by fmsmga004.fm.intel.com with ESMTP; 18 May 2022 11:17:33 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -52,13 +52,14 @@ Cc:     Yi Liu <yi.l.liu@intel.com>, Dave Jiang <dave.jiang@intel.com>,
         Raj Ashok <ashok.raj@intel.com>,
         Eric Auger <eric.auger@redhat.com>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v4 5/6] dmaengine: idxd: Use DMA API for in-kernel DMA with PASID
-Date:   Wed, 18 May 2022 11:21:19 -0700
-Message-Id: <20220518182120.1136715-6-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v4 6/6] iommu/vt-d: Delete unused SVM flag
+Date:   Wed, 18 May 2022 11:21:20 -0700
+Message-Id: <20220518182120.1136715-7-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220518182120.1136715-1-jacob.jun.pan@linux.intel.com>
 References: <20220518182120.1136715-1-jacob.jun.pan@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
@@ -70,121 +71,50 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The current in-kernel supervisor PASID support is based on the SVM/SVA
-machinery in SVA lib. The binding between a kernel PASID and kernel
-mapping has many flaws. See discussions in the link below.
+Supervisor PASID for SVA/SVM is no longer supported, delete the unused
+flag.
 
-This patch enables in-kernel DMA by switching from SVA lib to the
-standard DMA mapping APIs. Since both DMA requests with and without
-PASIDs are mapped identically, there is no change to how DMA APIs are
-used after the kernel PASID is enabled.
-
-Link: https://lore.kernel.org/linux-iommu/20210511194726.GP1002214@nvidia.com/
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
- drivers/dma/idxd/idxd.h  |  1 -
- drivers/dma/idxd/init.c  | 34 +++++++++-------------------------
- drivers/dma/idxd/sysfs.c |  7 -------
- 3 files changed, 9 insertions(+), 33 deletions(-)
+ drivers/iommu/intel/svm.c |  2 +-
+ include/linux/intel-svm.h | 13 -------------
+ 2 files changed, 1 insertion(+), 14 deletions(-)
 
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index ccbefd0be617..190b08bd7c08 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -277,7 +277,6 @@ struct idxd_device {
- 	struct idxd_wq **wqs;
- 	struct idxd_engine **engines;
- 
--	struct iommu_sva *sva;
- 	unsigned int pasid;
- 
- 	int num_groups;
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index e1b5d1e4a949..e2e1c0eae6d6 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -16,6 +16,7 @@
- #include <linux/idr.h>
- #include <linux/intel-svm.h>
- #include <linux/iommu.h>
-+#include <linux/dma-iommu.h>
- #include <uapi/linux/idxd.h>
- #include <linux/dmaengine.h>
- #include "../dmaengine.h"
-@@ -466,36 +467,22 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
- 
- static int idxd_enable_system_pasid(struct idxd_device *idxd)
- {
--	int flags;
--	unsigned int pasid;
--	struct iommu_sva *sva;
-+	u32 pasid;
-+	int ret;
- 
--	flags = SVM_FLAG_SUPERVISOR_MODE;
--
--	sva = iommu_sva_bind_device(&idxd->pdev->dev, NULL, &flags);
--	if (IS_ERR(sva)) {
--		dev_warn(&idxd->pdev->dev,
--			 "iommu sva bind failed: %ld\n", PTR_ERR(sva));
--		return PTR_ERR(sva);
--	}
--
--	pasid = iommu_sva_get_pasid(sva);
--	if (pasid == IOMMU_PASID_INVALID) {
--		iommu_sva_unbind_device(sva);
--		return -ENODEV;
-+	ret = iommu_attach_dma_pasid(&idxd->pdev->dev, &pasid);
-+	if (ret) {
-+		dev_err(&idxd->pdev->dev, "No DMA PASID %d\n", ret);
-+		return ret;
- 	}
--
--	idxd->sva = sva;
- 	idxd->pasid = pasid;
--	dev_dbg(&idxd->pdev->dev, "system pasid: %u\n", pasid);
-+
- 	return 0;
- }
- 
- static void idxd_disable_system_pasid(struct idxd_device *idxd)
- {
--
--	iommu_sva_unbind_device(idxd->sva);
--	idxd->sva = NULL;
-+	iommu_detach_dma_pasid(&idxd->pdev->dev);
- }
- 
- static int idxd_probe(struct idxd_device *idxd)
-@@ -527,10 +514,7 @@ static int idxd_probe(struct idxd_device *idxd)
- 			else
- 				set_bit(IDXD_FLAG_PASID_ENABLED, &idxd->flags);
+diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+index 44331db060e4..5b220d464218 100644
+--- a/drivers/iommu/intel/svm.c
++++ b/drivers/iommu/intel/svm.c
+@@ -750,7 +750,7 @@ static irqreturn_t prq_event_thread(int irq, void *d)
+ 			 * to unbind the mm while any page faults are outstanding.
+ 			 */
+ 			svm = pasid_private_find(req->pasid);
+-			if (IS_ERR_OR_NULL(svm) || (svm->flags & SVM_FLAG_SUPERVISOR_MODE))
++			if (IS_ERR_OR_NULL(svm))
+ 				goto bad_req;
  		}
--	} else if (!sva) {
--		dev_warn(dev, "User forced SVA off via module param.\n");
- 	}
--
- 	idxd_read_caps(idxd);
- 	idxd_read_table_offsets(idxd);
  
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index dfd549685c46..a48928973bd4 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -839,13 +839,6 @@ static ssize_t wq_name_store(struct device *dev,
- 	if (strlen(buf) > WQ_NAME_SIZE || strlen(buf) == 0)
- 		return -EINVAL;
+diff --git a/include/linux/intel-svm.h b/include/linux/intel-svm.h
+index b3b125b332aa..6835a665c195 100644
+--- a/include/linux/intel-svm.h
++++ b/include/linux/intel-svm.h
+@@ -13,17 +13,4 @@
+ #define PRQ_RING_MASK	((0x1000 << PRQ_ORDER) - 0x20)
+ #define PRQ_DEPTH	((0x1000 << PRQ_ORDER) >> 5)
  
--	/*
--	 * This is temporarily placed here until we have SVM support for
--	 * dmaengine.
--	 */
--	if (wq->type == IDXD_WQT_KERNEL && device_pasid_enabled(wq->idxd))
--		return -EOPNOTSUPP;
+-/*
+- * The SVM_FLAG_SUPERVISOR_MODE flag requests a PASID which can be used only
+- * for access to kernel addresses. No IOTLB flushes are automatically done
+- * for kernel mappings; it is valid only for access to the kernel's static
+- * 1:1 mapping of physical memory — not to vmalloc or even module mappings.
+- * A future API addition may permit the use of such ranges, by means of an
+- * explicit IOTLB flush call (akin to the DMA API's unmap method).
+- *
+- * It is unlikely that we will ever hook into flush_tlb_kernel_range() to
+- * do such IOTLB flushes automatically.
+- */
+-#define SVM_FLAG_SUPERVISOR_MODE	BIT(0)
 -
- 	memset(wq->name, 0, WQ_NAME_SIZE + 1);
- 	strncpy(wq->name, buf, WQ_NAME_SIZE);
- 	strreplace(wq->name, '\n', '\0');
+ #endif /* __INTEL_SVM_H__ */
 -- 
 2.25.1
 

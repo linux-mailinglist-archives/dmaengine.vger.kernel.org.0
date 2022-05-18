@@ -2,67 +2,77 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5828652C224
-	for <lists+dmaengine@lfdr.de>; Wed, 18 May 2022 20:27:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 413CE52C27B
+	for <lists+dmaengine@lfdr.de>; Wed, 18 May 2022 20:45:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241337AbiERSRi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 18 May 2022 14:17:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50268 "EHLO
+        id S234057AbiERSj7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 18 May 2022 14:39:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241316AbiERSRh (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 18 May 2022 14:17:37 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E552617EC38;
-        Wed, 18 May 2022 11:17:36 -0700 (PDT)
+        with ESMTP id S241280AbiERSj6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 18 May 2022 14:39:58 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15B641DB588;
+        Wed, 18 May 2022 11:39:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1652897856; x=1684433856;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
+  t=1652899197; x=1684435197;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=4MoEi9eIAsQEEnYGbn1gdDfBYv7oO8G4INN9f64CdNo=;
-  b=amBX8b8TQ9JF5jwFJItSzPmoZ2Mv+DnqXkSb+3iW0dj5NZdyIcKntb8S
-   LHoYjBtJaZ0NTvC1SUXabdnr/83nz3VItqfY8C1l2jeD4VWTJ89y5JK+R
-   GzknF1eb1ND9bXbu2DfUHbjvEhU0rCBdXc+OQAEJYsFjO7B/NsgMwm2Zl
-   e9cuI3f+XUwy2wTGSWDjS4m/3pPFkntpXU6FI8pKJgHdCBXgnJ4FRYmtP
-   OVZpk8YKQuV7x2wSbbCLXRzzV6Uom6imSfnDilpMuxvPmJA4Vae1iHQBP
-   AjvQaI7NmgDZ6p+ok8ll44myBIcqbbVk0Q9NAEpiWlJp+dpUpv/dtB8XB
+  bh=M/oKhYTcnY4myTpFoegzGHopmAVVEEzgyLwyapl7tQQ=;
+  b=gjifRWwVI7atM6NqpjKQjmIIKSpRRAvJjla4cCLFkc5/c5LeqQwiOPmq
+   KraYXLAeeWMDecMyFyPbwEQmu6QVzhfBD4Hd4SB08h24jDQYLaRJLuxx7
+   pjF7eRU/yHmf59EaRXYMnU/rPUSBRa4MX9HccnwP6e0fyZfpvttn1MxNX
+   wsT4o+PKpfOs/kDGJwK7KvG9kE3pe3tj9IL21ilIWyXUDj82f3hAkVyOv
+   FoLIc49hjSoHw+0zgbbwnHXDI2/dseCwKpZMheoqbvy+0sSrLVbq4Q7Jd
+   aoB2iW2VBrHyQVI1D40EAELe/wapHYj7LJYfbfUmg35oiJeXyUNI+eKym
    Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10351"; a="270648746"
+X-IronPort-AV: E=McAfee;i="6400,9594,10351"; a="269425271"
 X-IronPort-AV: E=Sophos;i="5.91,235,1647327600"; 
-   d="scan'208";a="270648746"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 11:17:34 -0700
-X-ExtLoop1: 1
+   d="scan'208";a="269425271"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 11:38:14 -0700
 X-IronPort-AV: E=Sophos;i="5.91,235,1647327600"; 
-   d="scan'208";a="639405510"
-Received: from otc-wp-03.jf.intel.com (HELO jacob-builder.jf.intel.com) ([10.54.39.79])
-  by fmsmga004.fm.intel.com with ESMTP; 18 May 2022 11:17:33 -0700
+   d="scan'208";a="569686074"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.198.157])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2022 11:38:14 -0700
+Date:   Wed, 18 May 2022 11:42:04 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     iommu@lists.linux-foundation.org,
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     iommu@lists.linux-foundation.org,
         LKML <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org,
         Joerg Roedel <joro@8bytes.org>,
         David Woodhouse <dwmw2@infradead.org>,
         Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "Christoph Hellwig" <hch@infradead.org>, vkoul@kernel.org,
-        robin.murphy@arm.com, will@kernel.org
-Cc:     Yi Liu <yi.l.liu@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>, vkoul@kernel.org,
+        robin.murphy@arm.com, will@kernel.org, Yi Liu <yi.l.liu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
         "Tian, Kevin" <kevin.tian@intel.com>,
         Raj Ashok <ashok.raj@intel.com>,
         Eric Auger <eric.auger@redhat.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v4 6/6] iommu/vt-d: Delete unused SVM flag
-Date:   Wed, 18 May 2022 11:21:20 -0700
-Message-Id: <20220518182120.1136715-7-jacob.jun.pan@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220518182120.1136715-1-jacob.jun.pan@linux.intel.com>
-References: <20220518182120.1136715-1-jacob.jun.pan@linux.intel.com>
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v3 1/4] iommu/vt-d: Implement domain ops for
+ attach_dev_pasid
+Message-ID: <20220518114204.4d251b41@jacob-builder>
+In-Reply-To: <20220511182908.GK49344@nvidia.com>
+References: <20220510210704.3539577-1-jacob.jun.pan@linux.intel.com>
+        <20220510210704.3539577-2-jacob.jun.pan@linux.intel.com>
+        <20220510232121.GP49344@nvidia.com>
+        <20220510172309.3c4e7512@jacob-builder>
+        <20220511115427.GU49344@nvidia.com>
+        <20220511082958.79d5d8ee@jacob-builder>
+        <20220511161237.GB49344@nvidia.com>
+        <20220511100216.7615e288@jacob-builder>
+        <20220511170025.GF49344@nvidia.com>
+        <20220511102521.6b7c578c@jacob-builder>
+        <20220511182908.GK49344@nvidia.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -71,50 +81,60 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Supervisor PASID for SVA/SVM is no longer supported, delete the unused
-flag.
+Hi Jason,
 
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
- drivers/iommu/intel/svm.c |  2 +-
- include/linux/intel-svm.h | 13 -------------
- 2 files changed, 1 insertion(+), 14 deletions(-)
+On Wed, 11 May 2022 15:29:08 -0300, Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index 44331db060e4..5b220d464218 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -750,7 +750,7 @@ static irqreturn_t prq_event_thread(int irq, void *d)
- 			 * to unbind the mm while any page faults are outstanding.
- 			 */
- 			svm = pasid_private_find(req->pasid);
--			if (IS_ERR_OR_NULL(svm) || (svm->flags & SVM_FLAG_SUPERVISOR_MODE))
-+			if (IS_ERR_OR_NULL(svm))
- 				goto bad_req;
- 		}
- 
-diff --git a/include/linux/intel-svm.h b/include/linux/intel-svm.h
-index b3b125b332aa..6835a665c195 100644
---- a/include/linux/intel-svm.h
-+++ b/include/linux/intel-svm.h
-@@ -13,17 +13,4 @@
- #define PRQ_RING_MASK	((0x1000 << PRQ_ORDER) - 0x20)
- #define PRQ_DEPTH	((0x1000 << PRQ_ORDER) >> 5)
- 
--/*
-- * The SVM_FLAG_SUPERVISOR_MODE flag requests a PASID which can be used only
-- * for access to kernel addresses. No IOTLB flushes are automatically done
-- * for kernel mappings; it is valid only for access to the kernel's static
-- * 1:1 mapping of physical memory — not to vmalloc or even module mappings.
-- * A future API addition may permit the use of such ranges, by means of an
-- * explicit IOTLB flush call (akin to the DMA API's unmap method).
-- *
-- * It is unlikely that we will ever hook into flush_tlb_kernel_range() to
-- * do such IOTLB flushes automatically.
-- */
--#define SVM_FLAG_SUPERVISOR_MODE	BIT(0)
--
- #endif /* __INTEL_SVM_H__ */
--- 
-2.25.1
+> On Wed, May 11, 2022 at 10:25:21AM -0700, Jacob Pan wrote:
+> > Hi Jason,
+> > 
+> > On Wed, 11 May 2022 14:00:25 -0300, Jason Gunthorpe <jgg@nvidia.com>
+> > wrote: 
+> > > On Wed, May 11, 2022 at 10:02:16AM -0700, Jacob Pan wrote:  
+> > > > > > If not global, perhaps we could have a list of pasids (e.g.
+> > > > > > xarray) attached to the device_domain_info. The TLB flush logic
+> > > > > > would just go through the list w/o caring what the PASIDs are
+> > > > > > for. Does it make sense to you?      
+> > > > > 
+> > > > > Sort of, but we shouldn't duplicate xarrays - the group already
+> > > > > has this xarray - need to find some way to allow access to it
+> > > > > from the driver.
+> > > > >     
+> > > > I am not following,  here are the PASIDs for devTLB flush which is
+> > > > per device. Why group?    
+> > > 
+> > > Because group is where the core code stores it.  
+> > I see, with singleton group. I guess I can let dma-iommu code call
+> > 
+> > iommu_attach_dma_pasid {
+> > 	iommu_attach_device_pasid();
+> > Then the PASID will be stored in the group xa.  
+> 
+> Yes, again, the dma-iommu should not be any different from the normal
+> unmanaged path. At this point there is no longer any difference, we
+> should not invent new ones.
+> 
+> > The flush code can retrieve PASIDs from device_domain_info.device ->
+> > group -> pasid_array.  Thanks for pointing it out, I missed the new
+> > pasid_array.  
+> 
+> Yes.. It seems inefficient to iterate over that xarray multiple times
+> on the flush hot path, but maybe there is little choice. Try to use
+> use the xas iterators under the xa_lock spinlock..
+> 
+xas_for_each takes a max range, here we don't really have one. So I posted
+v4 w/o using the xas advanced API. Please let me know if you have
+suggestions.
+xa_for_each takes RCU read lock, it should be fast for tlb flush, right? The
+worst case maybe over flush when we have stale data but should be very rare.
 
+> The challenge will be accessing the group xa in the first place, but
+> maybe the core code can gain a function call to return a pointer to
+> that XA or something..
+> 
+I added a helper function to find the matching DMA API PASID in v4.
+
+
+Thanks,
+
+Jacob

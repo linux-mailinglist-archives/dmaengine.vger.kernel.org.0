@@ -2,45 +2,65 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2797D52D3A1
-	for <lists+dmaengine@lfdr.de>; Thu, 19 May 2022 15:11:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95E6F52DAD0
+	for <lists+dmaengine@lfdr.de>; Thu, 19 May 2022 19:06:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238401AbiESNLP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 19 May 2022 09:11:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40690 "EHLO
+        id S242339AbiESRFQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 19 May 2022 13:05:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238383AbiESNLO (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 19 May 2022 09:11:14 -0400
-X-Greylist: delayed 184 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 19 May 2022 06:11:12 PDT
-Received: from cmccmta2.chinamobile.com (cmccmta2.chinamobile.com [221.176.66.80])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EB48C286EA
-        for <dmaengine@vger.kernel.org>; Thu, 19 May 2022 06:11:10 -0700 (PDT)
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.9])
-        by rmmx-syy-dmz-app05-12005 (RichMail) with SMTP id 2ee56286413123c-a8463;
-        Thu, 19 May 2022 21:08:03 +0800 (CST)
-X-RM-TRANSID: 2ee56286413123c-a8463
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[223.108.79.99])
-        by rmsmtp-syy-appsvr05-12005 (RichMail) with SMTP id 2ee56286412f650-e91c1;
-        Thu, 19 May 2022 21:08:02 +0800 (CST)
-X-RM-TRANSID: 2ee56286412f650-e91c1
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     hyun.kwon@xilinx.com, laurent.pinchart@ideasonboard.com,
-        vkoul@kernel.org, michal.simek@xilinx.com
-Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Subject: [PATCH] dmaengine: xilinx_dpdma: Omit superfluous error message in xilinx_dpdma_probe()
-Date:   Thu, 19 May 2022 21:08:55 +0800
-Message-Id: <20220519130855.7664-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        with ESMTP id S233921AbiESRFK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 19 May 2022 13:05:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 643F262A20;
+        Thu, 19 May 2022 10:05:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0169D60FEF;
+        Thu, 19 May 2022 17:05:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A327CC34100;
+        Thu, 19 May 2022 17:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652979908;
+        bh=j9qmBV0eEQKTQ7zizSQEVzqT008ay3RQiyJibiJAyck=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DDWWrNPw+qBVrcDqcKVcXJC3HNf3pClu9iT6Cnyvi7ak07eyJ+zc4O5J2Ko6da8ZZ
+         AxSRaoIPwIvqef1jss2aVYwMGA3t0lWuYlnjcxbDaRTMtNM+onqE/0ylma3KlVuR35
+         cxcrFi9387h7e2sq278ZSCsmagysRlkbKXhlaNcHDnr+azXetIOdwbnysx0yAqj686
+         kW/7pNwhyCjj8NKxiAjp5xVauxRZGDEurOGIEEHFOQx4KbmAWtnaNKwQy69BCPmMea
+         toPTqTLp5uha+BKOmQt2dS1Gf8IX4c9yzagTN3pmFZTBw1PRz1Idrzl65hkulRRqRr
+         b+DMYzoUwOYPw==
+Date:   Thu, 19 May 2022 22:35:04 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-renesas-soc@vger.kernel.org, dmaengine@vger.kernel.org,
+        Milan Stevanovic <milan.stevanovic@se.com>,
+        Jimmy Lalande <jimmy.lalande@se.com>,
+        Pascal Eberhard <pascal.eberhard@se.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Herve Codina <herve.codina@bootlin.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v12 0/9] RZN1 DMA support
+Message-ID: <YoZ4wNCxdJ6REp13@matsya>
+References: <20220427095653.91804-1-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220427095653.91804-1-miquel.raynal@bootlin.com>
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -48,33 +68,17 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-In the function xilinx_dpdma_probe(), when get irq failed,
-the function platform_get_irq() logs an error message,
-so remove redundant message here.
+On 27-04-22, 11:56, Miquel Raynal wrote:
+> Hello,
+> 
+> This is the series bringing DMA support to RZN1 platforms.
+> The UART changes regarding DMA support has been merged into tty-next
+> already.
+> 
+> There is no other conflicting dependency with the other series, so these
+> patches (all but DTS) can go though the dmaengine tree I believe.
 
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
----
- drivers/dma/xilinx/xilinx_dpdma.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Applied 1-7, thanks
 
-diff --git a/drivers/dma/xilinx/xilinx_dpdma.c b/drivers/dma/xilinx/xilinx_dpdma.c
-index b0f4948b0..f708808d7 100644
---- a/drivers/dma/xilinx/xilinx_dpdma.c
-+++ b/drivers/dma/xilinx/xilinx_dpdma.c
-@@ -1652,10 +1652,8 @@ static int xilinx_dpdma_probe(struct platform_device *pdev)
- 	dpdma_hw_init(xdev);
- 
- 	xdev->irq = platform_get_irq(pdev, 0);
--	if (xdev->irq < 0) {
--		dev_err(xdev->dev, "failed to get platform irq\n");
-+	if (xdev->irq < 0)
- 		return xdev->irq;
--	}
- 
- 	ret = request_irq(xdev->irq, xilinx_dpdma_irq_handler, IRQF_SHARED,
- 			  dev_name(xdev->dev), xdev);
 -- 
-2.20.1.windows.1
-
-
-
+~Vinod

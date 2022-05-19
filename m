@@ -2,64 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3B1D52DC29
-	for <lists+dmaengine@lfdr.de>; Thu, 19 May 2022 19:59:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21CCC52DC2F
+	for <lists+dmaengine@lfdr.de>; Thu, 19 May 2022 20:02:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234458AbiESR6i (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 19 May 2022 13:58:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42622 "EHLO
+        id S243622AbiESSBg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 19 May 2022 14:01:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242864AbiESR6h (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 19 May 2022 13:58:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95CDDD02BD;
-        Thu, 19 May 2022 10:58:36 -0700 (PDT)
+        with ESMTP id S243486AbiESSA7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 19 May 2022 14:00:59 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52A2DA1BD;
+        Thu, 19 May 2022 11:00:57 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 30815619CF;
-        Thu, 19 May 2022 17:58:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D2DFC385AA;
-        Thu, 19 May 2022 17:58:34 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 36185B824A1;
+        Thu, 19 May 2022 18:00:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5540FC385AA;
+        Thu, 19 May 2022 18:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652983115;
-        bh=qPSL3nOy4ors8i7I3XUDymDpFTxUdxPWn9rsFvTq4IU=;
+        s=k20201202; t=1652983254;
+        bh=tMwvvcFd7Pc3TDADnKu1IpLVMpBVRu1prfu10GKvoVQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z0B6c12RB7rnU3d3fbpR59AQwMBiYIHh01cWkCVFWoFxG4S/5WQslaQxF6a2ndlaT
-         SS9SbflaP4pIgkWayhUQVBIGeGX24a5SGPnYCvyhxaqImBQq7zRl2lPettkBow1Y9u
-         BFOpWBdSpUXBEsA9RZp5inbVjsq2ATV62zYtK8E2arym0VFrfChrfTH9vzdu9wDgW9
-         FNiUNiJf/5StVBcsWkvpyOsRYIzO5YoPX47FtapAKwFRlJjnMVsfDT0XtOl7hNa/hq
-         3bF55LsX9RF+l7PNlMiCks5Kxp6YukONvO7HhczXJ1szKkvlRkCRa9Gz0fsv2ugsqN
-         XD3AjDZ/T+/4w==
-Date:   Thu, 19 May 2022 23:28:31 +0530
+        b=TWIl28N9vBe+Kbo5ix6DGCxrW3rbrzUeJgHQN5Xz5xWmTOcJTRXjMf7CT5J08iuFE
+         B4zaW/Fnn8X7I97NlUxtAFkBx7itzrexLh5vnMa2eBTPHJn3pHnR2i/UF+x9iFFoIm
+         E/MpB7p/lirlqoqkK68qt3j9uHSDsc5J2AS06tsa3WDsSV9IKFprclElB8QtZXqe+Y
+         Rx49V2RAcgWWw5BZQ2HCboxG5GcWUMbirDdnBZTIKjUWahMzdTtLLLWrGVWDM/nFeF
+         bXxCgt8P2s1S+9ku6SmwtQK1FKqpWCMQa2Z9wjSEA8xHhCPFDZ3moCSzq7YXtIsifc
+         VH5/8wpGKBsHA==
+Date:   Thu, 19 May 2022 23:30:50 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "sean.nyekjaer@prevas.dk" <sean.nyekjaer@prevas.dk>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH v1 03/15] Revert "dmaengine: imx-sdma: refine to load
- context only once"
-Message-ID: <YoaFR/Nd9fv0xbKA@matsya>
-References: <1556027045-5269-1-git-send-email-yibin.gong@nxp.com>
- <1556027045-5269-4-git-send-email-yibin.gong@nxp.com>
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Cc:     sean.wang@mediatek.com, matthias.bgg@gmail.com,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com, nfraprado@collabora.com
+Subject: Re: [PATCH v2 1/2] dmaengine: mediatek-cqdma: Add SoC-specific match
+ data
+Message-ID: <YoaF0mOudZ7zll/7@matsya>
+References: <20220503140624.117213-1-angelogioacchino.delregno@collabora.com>
+ <20220503140624.117213-2-angelogioacchino.delregno@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556027045-5269-4-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <20220503140624.117213-2-angelogioacchino.delregno@collabora.com>
 X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -70,64 +58,120 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 23-04-19, 13:50, Robin Gong wrote:
-> This reverts commit ad0d92d7ba6aecbe2705907c38ff8d8be4da1e9c, because
-
-Please fix this as well
-
-> in spi-imx case, burst length may be changed dynamically.
-
-So what is the solution to handle different burst lengths, pls
-explain...
-
+On 03-05-22, 16:06, AngeloGioacchino Del Regno wrote:
+> On some SoCs the DST2 and SRC2 registers may be at a different offset:
+> add a match data structure and assign it to mt6765 as a preparation
+> for adding support for more SoCs.
 > 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 > ---
->  drivers/dma/imx-sdma.c | 7 -------
->  1 file changed, 7 deletions(-)
+>  drivers/dma/mediatek/mtk-cqdma.c | 35 +++++++++++++++++++++++++-------
+>  1 file changed, 28 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> index 99d9f43..407a56e 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -377,7 +377,6 @@ struct sdma_channel {
->  	unsigned long			watermark_level;
->  	u32				shp_addr, per_addr;
->  	enum dma_status			status;
-> -	bool				context_loaded;
->  	struct imx_dma_data		data;
->  	struct work_struct		terminate_worker;
+> diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
+> index f8847c48ba03..a2fb538d9483 100644
+> --- a/drivers/dma/mediatek/mtk-cqdma.c
+> +++ b/drivers/dma/mediatek/mtk-cqdma.c
+> @@ -48,8 +48,6 @@
+>  #define MTK_CQDMA_DST			0x20
+>  #define MTK_CQDMA_LEN1			0x24
+>  #define MTK_CQDMA_LEN2			0x28
+> -#define MTK_CQDMA_SRC2			0x60
+> -#define MTK_CQDMA_DST2			0x64
+>  
+>  /* Registers setting */
+>  #define MTK_CQDMA_EN_BIT		BIT(0)
+> @@ -126,9 +124,20 @@ struct mtk_cqdma_vchan {
+>  	bool issue_synchronize;
 >  };
-> @@ -988,9 +987,6 @@ static int sdma_load_context(struct sdma_channel *sdmac)
->  	int ret;
->  	unsigned long flags;
 >  
-> -	if (sdmac->context_loaded)
-> -		return 0;
-> -
->  	if (sdmac->direction == DMA_DEV_TO_MEM)
->  		load_address = sdmac->pc_from_device;
->  	else if (sdmac->direction == DMA_DEV_TO_DEV)
-> @@ -1033,8 +1029,6 @@ static int sdma_load_context(struct sdma_channel *sdmac)
+> +/**
+> + * struct mtk_cqdma_plat_data - SoC specific parameters
+> + * @reg_dst2:               dst2 register offset
+> + * @reg_src2:               src2 register offset
+> + */
+> +struct mtk_cqdma_plat_data {
+> +	u8 reg_src2;
+> +	u8 reg_dst2;
+> +};
+> +
+>  /**
+>   * struct mtk_cqdma_device - The struct holding info describing CQDMA
+>   *                          device
+> + * @plat:                   SoC-specific platform data
+>   * @ddev:                   An instance for struct dma_device
+>   * @clk:                    The clock that device internal is using
+>   * @dma_requests:           The number of VCs the device supports to
+> @@ -137,6 +146,7 @@ struct mtk_cqdma_vchan {
+>   * @pc:                     The pointer to all the underlying PCs
+>   */
+>  struct mtk_cqdma_device {
+> +	const struct mtk_cqdma_plat_data *plat;
+>  	struct dma_device ddev;
+>  	struct clk *clk;
 >  
->  	spin_unlock_irqrestore(&sdma->channel_0_lock, flags);
+> @@ -231,6 +241,8 @@ static int mtk_cqdma_hard_reset(struct mtk_cqdma_pchan *pc)
+>  static void mtk_cqdma_start(struct mtk_cqdma_pchan *pc,
+>  			    struct mtk_cqdma_vdesc *cvd)
+>  {
+> +	struct mtk_cqdma_device *cqdma = to_cqdma_dev(cvd->ch);
+> +
+>  	/* wait for the previous transaction done */
+>  	if (mtk_cqdma_poll_engine_done(pc, true) < 0)
+>  		dev_err(cqdma2dev(to_cqdma_dev(cvd->ch)), "cqdma wait transaction timeout\n");
+> @@ -243,17 +255,17 @@ static void mtk_cqdma_start(struct mtk_cqdma_pchan *pc,
+>  	/* setup the source */
+>  	mtk_dma_set(pc, MTK_CQDMA_SRC, cvd->src & MTK_CQDMA_ADDR_LIMIT);
+>  #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
+> -	mtk_dma_set(pc, MTK_CQDMA_SRC2, cvd->src >> MTK_CQDMA_ADDR2_SHFIT);
+> +	mtk_dma_set(pc, cqdma->plat->reg_src2, cvd->src >> MTK_CQDMA_ADDR2_SHFIT);
+>  #else
+> -	mtk_dma_set(pc, MTK_CQDMA_SRC2, 0);
+> +	mtk_dma_set(pc, cqdma->plat->reg_src2, 0);
+>  #endif
 >  
-> -	sdmac->context_loaded = true;
-> -
->  	return ret;
+>  	/* setup the destination */
+>  	mtk_dma_set(pc, MTK_CQDMA_DST, cvd->dest & MTK_CQDMA_ADDR_LIMIT);
+>  #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
+> -	mtk_dma_set(pc, MTK_CQDMA_DST2, cvd->dest >> MTK_CQDMA_ADDR2_SHFIT);
+> +	mtk_dma_set(pc, cqdma->plat->reg_dst2, cvd->dest >> MTK_CQDMA_ADDR2_SHFIT);
+>  #else
+> -	mtk_dma_set(pc, MTK_CQDMA_DST2, 0);
+> +	mtk_dma_set(pc, cqdma->plat->reg_dst2, 0);
+>  #endif
+>  
+>  	/* setup the length */
+> @@ -740,8 +752,13 @@ static void mtk_cqdma_hw_deinit(struct mtk_cqdma_device *cqdma)
+>  	pm_runtime_disable(cqdma2dev(cqdma));
 >  }
 >  
-> @@ -1074,7 +1068,6 @@ static void sdma_channel_terminate_work(struct work_struct *work)
->  	sdmac->desc = NULL;
->  	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
->  	vchan_dma_desc_free_list(&sdmac->vc, &head);
-> -	sdmac->context_loaded = false;
->  }
+> +static const struct mtk_cqdma_plat_data cqdma_mt6765 = {
+> +	.reg_dst2 = 0x64,
+> +	.reg_src2 = 0x60,
+
+Please use the macros instead of magic numbers here
+
+> +};
+> +
+>  static const struct of_device_id mtk_cqdma_match[] = {
+> -	{ .compatible = "mediatek,mt6765-cqdma" },
+> +	{ .compatible = "mediatek,mt6765-cqdma", .data = &cqdma_mt6765 },
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, mtk_cqdma_match);
+> @@ -758,6 +775,10 @@ static int mtk_cqdma_probe(struct platform_device *pdev)
+>  	if (!cqdma)
+>  		return -ENOMEM;
 >  
->  static int sdma_disable_channel_async(struct dma_chan *chan)
+> +	cqdma->plat = device_get_match_data(&pdev->dev);
+> +	if (cqdma->plat)
+> +		return -EINVAL;
+> +
+>  	dd = &cqdma->ddev;
+>  
+>  	cqdma->clk = devm_clk_get(&pdev->dev, "cqdma");
 > -- 
-> 2.7.4
-> 
+> 2.35.1
 
 -- 
 ~Vinod

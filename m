@@ -2,41 +2,41 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2483852FB17
-	for <lists+dmaengine@lfdr.de>; Sat, 21 May 2022 13:13:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12D8B52FB5F
+	for <lists+dmaengine@lfdr.de>; Sat, 21 May 2022 13:14:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354949AbiEULM7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 21 May 2022 07:12:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48542 "EHLO
+        id S1354989AbiEULN7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 21 May 2022 07:13:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354858AbiEULMp (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 21 May 2022 07:12:45 -0400
+        with ESMTP id S1354898AbiEULMt (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 21 May 2022 07:12:49 -0400
 Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35C252B18B;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C184F9C2;
         Sat, 21 May 2022 04:12:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=inria.fr; s=dc;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=FijcdnWeNJHGkmGIXKvwmM4MTGHZdgWDIgV1eJ838sw=;
-  b=HLWioN3D7KOIrKtH4lHd6OUnJLBBrp1vadDwRoGPWJKu9oUED85+q9kV
-   tqgb0tuy46WU1Sr+AjRpPA4ZHAv1GnsdabNFfHAmxScFuF7d7ngXm8nuE
-   A5k29y821XahNM3iJceVcTKt47A6DFvA5OAsqNYVgW2kN0ThF/5AnojrD
-   8=;
+  bh=gzpQJI/4l4hMaFVZeeSTL4mFsKH6STSl0UKXBUWewJE=;
+  b=oHGj8diLmpgthet+7zwIdUD8xrcky8GS0VRlcE0kb53O5GiQ/+221HBv
+   iyVAXhfwlnF3NZBo1UwYBsxHjWHzDwH4feJUCYDqA9aSrKOA23MWRtdCY
+   hvivKaSc+X4Ln2ilomXm0Ik7/LFyufqnzXXvzA/d0nF+NdclN/hKuAzqX
+   U=;
 Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
 X-IronPort-AV: E=Sophos;i="5.91,242,1647298800"; 
-   d="scan'208";a="14727966"
+   d="scan'208";a="14727967"
 Received: from i80.paris.inria.fr (HELO i80.paris.inria.fr.) ([128.93.90.48])
   by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2022 13:12:03 +0200
 From:   Julia Lawall <Julia.Lawall@inria.fr>
-To:     Sean Wang <sean.wang@mediatek.com>
-Cc:     kernel-janitors@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: mediatek-cqdma: fix typo in comment
-Date:   Sat, 21 May 2022 13:11:11 +0200
-Message-Id: <20220521111145.81697-61-Julia.Lawall@inria.fr>
+To:     Andy Gross <agross@kernel.org>
+Cc:     kernel-janitors@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: qcom: fix typo in comment
+Date:   Sat, 21 May 2022 13:11:12 +0200
+Message-Id: <20220521111145.81697-62-Julia.Lawall@inria.fr>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -56,20 +56,20 @@ Detected with the help of Coccinelle.
 Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
 ---
- drivers/dma/mediatek/mtk-cqdma.c |    2 +-
+ include/linux/dma/qcom-gpi-dma.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
-index f8847c48ba03..9ae92b8940ef 100644
---- a/drivers/dma/mediatek/mtk-cqdma.c
-+++ b/drivers/dma/mediatek/mtk-cqdma.c
-@@ -373,7 +373,7 @@ static void mtk_cqdma_tasklet_cb(struct tasklet_struct *t)
- 
- 		/*
- 		 * free child CVD after completion.
--		 * the parent CVD would be freeed with desc_free by user.
-+		 * the parent CVD would be freed with desc_free by user.
- 		 */
- 		if (cvd->parent != cvd)
- 			kfree(cvd);
+diff --git a/include/linux/dma/qcom-gpi-dma.h b/include/linux/dma/qcom-gpi-dma.h
+index f46dc3372f11..6680dd1a43c6 100644
+--- a/include/linux/dma/qcom-gpi-dma.h
++++ b/include/linux/dma/qcom-gpi-dma.h
+@@ -26,7 +26,7 @@ enum spi_transfer_cmd {
+  * @clk_div: source clock divider
+  * @clk_src: serial clock
+  * @cmd: spi cmd
+- * @fragmentation: keep CS assserted at end of sequence
++ * @fragmentation: keep CS asserted at end of sequence
+  * @cs: chip select toggle
+  * @set_config: set peripheral config
+  * @rx_len: receive length for buffer
 

@@ -2,90 +2,78 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9262252FD1A
-	for <lists+dmaengine@lfdr.de>; Sat, 21 May 2022 16:06:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E09C52FE8B
+	for <lists+dmaengine@lfdr.de>; Sat, 21 May 2022 19:26:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353497AbiEUOGz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 21 May 2022 10:06:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40402 "EHLO
+        id S1344115AbiEUR0a (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 21 May 2022 13:26:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229600AbiEUOGy (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 21 May 2022 10:06:54 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7926959318
-        for <dmaengine@vger.kernel.org>; Sat, 21 May 2022 07:06:53 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id v8so16679315lfd.8
-        for <dmaengine@vger.kernel.org>; Sat, 21 May 2022 07:06:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=G/JiRdkydlLW6miQGBKIde5cpkPs5X1Fjry1L1VttZ8=;
-        b=kyB5ACp5DuAfVmlH0VGXRH77XLo8B/mgLfzsfy8jooXJhmFYVW81Oja6/l3xtcOTa8
-         MM0A/6I5qcbB+I3JU/nsraWIB5cYHPZa3iw13NBrxS67gV3dFCghgpj9i2xuahlWbrIC
-         gBKWxBLL6aoVwoIFDpahsY+rTT5ek7sLMfMZ3wZ7zuz+EXgcXVV56rzw3sGAHiUjJCk6
-         gEy+UDsYF77Gig16w/+57VmWd+zpmiPQCXU9OlH7mqPLRGBoswRYE92/sB3+4oExf2kF
-         TfvkcF37exSKXoC0e6xeaBrloQmxW8z2u42+XhGtadIPZH1hnteqxxZWAOPgWiwrc5al
-         VzcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=G/JiRdkydlLW6miQGBKIde5cpkPs5X1Fjry1L1VttZ8=;
-        b=V+nz7alvIVAWJdEaxOqhHEQ05SD8dn2fd0ugChC/gbPQY0xiemh5lt1f7y9qaAx52r
-         77gLGhyyW2m6mlJOhJUr+LKG2LkNy89GIDzEvoGAwUvgrxk05OMCXJ25h4hzx0Lq4jUy
-         Q3//W25Hr38rYGynoutVeR5furbtDl5iIRo2FMShchQhPawKPb4k4ggjeMM+PLze5IKB
-         uW2wk+dF8roSUoiFBSt4ilRbJvZRzhXqpFsWVOMEqcxYrC6hPZFlefIqDoF+ljfklTjy
-         azZy8jU10ASliNjL+ZVxHVXZ9U5MgOW0n+tW/SSWrtloBdSEIhiyvQmo5QqwSnJN1L8R
-         wwJg==
-X-Gm-Message-State: AOAM532ygaFVF838St13M0aQrIFbRataIhHs7ApFn91DcHtNmQIuynEk
-        1bU1/7Sd4BwWKyPaEQRwUSk+Ug==
-X-Google-Smtp-Source: ABdhPJwXkIO/E6VJ/I8iMFuOXFk5pyRswYiniF2BoI2fFc5koe9Rg/H/T076e7mIyPPEs68Svxv3eg==
-X-Received: by 2002:a05:6512:b83:b0:44a:9fb7:784b with SMTP id b3-20020a0565120b8300b0044a9fb7784bmr10379431lfv.547.1653142011456;
-        Sat, 21 May 2022 07:06:51 -0700 (PDT)
-Received: from [192.168.0.17] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id o28-20020ac2495c000000b0047255d211c4sm1065940lfi.243.2022.05.21.07.06.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 May 2022 07:06:50 -0700 (PDT)
-Message-ID: <4db8d4df-9cab-a53e-ddd4-84479af46ba8@linaro.org>
-Date:   Sat, 21 May 2022 16:06:49 +0200
+        with ESMTP id S233987AbiEUR00 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 21 May 2022 13:26:26 -0400
+Received: from smtp.smtpout.orange.fr (smtp09.smtpout.orange.fr [80.12.242.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C46982182C
+        for <dmaengine@vger.kernel.org>; Sat, 21 May 2022 10:26:21 -0700 (PDT)
+Received: from pop-os.home ([86.243.180.246])
+        by smtp.orange.fr with ESMTPA
+        id sSrpnEgTlOXCysSrpnRCQC; Sat, 21 May 2022 19:26:19 +0200
+X-ME-Helo: pop-os.home
+X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
+X-ME-Date: Sat, 21 May 2022 19:26:19 +0200
+X-ME-IP: 86.243.180.246
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     dan.carpenter@oracle.com,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Joel Fernandes <joelf@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH] dmaengine: ti: Fix a potential under memory allocation issue in edma_setup_from_hw()
+Date:   Sat, 21 May 2022 19:26:15 +0200
+Message-Id: <8c95c485be294e64457606089a2a56e68e2ebd1a.1653153959.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH] dmaengine: s3c24xx: fix typo in comment
-Content-Language: en-US
-To:     Julia Lawall <Julia.Lawall@inria.fr>
-Cc:     kernel-janitors@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220521111145.81697-46-Julia.Lawall@inria.fr>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220521111145.81697-46-Julia.Lawall@inria.fr>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 21/05/2022 13:10, Julia Lawall wrote:
-> Spelling mistake (triple letters) in comment.
-> Detected with the help of Coccinelle.
-> 
-> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+If the 'queue_priority_mapping' is not provided, we need to allocate the
+correct amount of memory. Each entry takes 2 s8, so actually less memory
+than needed is allocated.
 
+Update the size of each entry when the memory is devm_kcalloc'ed.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Fixes: 6d10c3950bf4 ("ARM: edma: Get IP configuration from HW (number of channels, tc, etc)")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Note that the devm_kcalloc() in edma_xbar_event_map() looks also spurious.
+However, this looks fine to me because of the 'nelm >>= 1;' before the
+'for' loop.
+---
+ drivers/dma/ti/edma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index 3ea8ef7f57df..f313e2cf542c 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -2121,7 +2121,7 @@ static int edma_setup_from_hw(struct device *dev, struct edma_soc_info *pdata,
+ 	 * priority. So Q0 is the highest priority queue and the last queue has
+ 	 * the lowest priority.
+ 	 */
+-	queue_priority_map = devm_kcalloc(dev, ecc->num_tc + 1, sizeof(s8),
++	queue_priority_map = devm_kcalloc(dev, ecc->num_tc + 1, sizeof(s8) * 2,
+ 					  GFP_KERNEL);
+ 	if (!queue_priority_map)
+ 		return -ENOMEM;
+-- 
+2.34.1
 
-Best regards,
-Krzysztof

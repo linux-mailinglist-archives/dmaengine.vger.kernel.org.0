@@ -2,43 +2,39 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA05E52FB2E
-	for <lists+dmaengine@lfdr.de>; Sat, 21 May 2022 13:14:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90CA252FB13
+	for <lists+dmaengine@lfdr.de>; Sat, 21 May 2022 13:13:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354956AbiEULNR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 21 May 2022 07:13:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47808 "EHLO
+        id S1354812AbiEULM4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 21 May 2022 07:12:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354719AbiEULMj (ORCPT
+        with ESMTP id S1354815AbiEULMj (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Sat, 21 May 2022 07:12:39 -0400
 Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71A273054B;
-        Sat, 21 May 2022 04:12:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED18436E24;
+        Sat, 21 May 2022 04:12:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=inria.fr; s=dc;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=xWadsLJC4l7Q7/MBaFIQaJdl6vNOYxEGLL1gzjFKb6E=;
-  b=rbkfxHx2gIoHDam6N2zZnDd0wX+1jXkG/Bqc20W3hORHj5mHYIaDec/c
-   r0xPPcBClinK+FeWx0846x21DbClqoPHCvng9V5W5maX/WcDSsCjDqhm3
-   xRi5l3QqKk/+MuRbUhz+w897k7hRjga0X0eAKYtt4pIcIHU/lA37apNrq
-   4=;
+  bh=oeoGIolh+B9ZKlRkght98N+Q1Q4N0R0ACfahDR8k8E0=;
+  b=t0WGoZZkithIR0lsLcF5kJUvFhQjWfgtfuiQPWCqIflq8HdSPL49Uwkm
+   wkKmfhZ2K6fU29BPSBtNxVriFfumR5zXL+SH4zK/6Sdrd3HgHzAwf7R5c
+   8O62uz80+GW8lYMfVBAa1akYtNaR5lCXrE7JZe+gk3R2e+Y13ZsJM7xnm
+   Y=;
 Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=Julia.Lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
 X-IronPort-AV: E=Sophos;i="5.91,242,1647298800"; 
-   d="scan'208";a="14727943"
+   d="scan'208";a="14727953"
 Received: from i80.paris.inria.fr (HELO i80.paris.inria.fr.) ([128.93.90.48])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2022 13:12:00 +0200
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2022 13:12:01 +0200
 From:   Julia Lawall <Julia.Lawall@inria.fr>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     kernel-janitors@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, dmaengine@vger.kernel.org,
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     kernel-janitors@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: s3c24xx: fix typo in comment
-Date:   Sat, 21 May 2022 13:10:56 +0200
-Message-Id: <20220521111145.81697-46-Julia.Lawall@inria.fr>
+Subject: [PATCH] dmaengine: fix typos in comments
+Date:   Sat, 21 May 2022 13:11:01 +0200
+Message-Id: <20220521111145.81697-51-Julia.Lawall@inria.fr>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -52,26 +48,40 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Spelling mistake (triple letters) in comment.
+Spelling mistakes (triple letters) in comments.
 Detected with the help of Coccinelle.
 
 Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
 ---
- drivers/dma/s3c24xx-dma.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/amba-pl08x.c |    2 +-
+ drivers/dma/mv_xor_v2.c  |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/s3c24xx-dma.c b/drivers/dma/s3c24xx-dma.c
-index 8e14c72d03f0..f6ed7e889781 100644
---- a/drivers/dma/s3c24xx-dma.c
-+++ b/drivers/dma/s3c24xx-dma.c
-@@ -202,7 +202,7 @@ struct s3c24xx_dma_phy {
-  * struct s3c24xx_dma_chan - this structure wraps a DMA ENGINE channel
-  * @id: the id of the channel
-  * @name: name of the channel
+diff --git a/drivers/dma/amba-pl08x.c b/drivers/dma/amba-pl08x.c
+index a4a794e62ac2..487a01aa207d 100644
+--- a/drivers/dma/amba-pl08x.c
++++ b/drivers/dma/amba-pl08x.c
+@@ -231,7 +231,7 @@ enum pl08x_dma_chan_state {
+ 
+ /**
+  * struct pl08x_dma_chan - this structure wraps a DMA ENGINE channel
 - * @vc: wrappped virtual channel
 + * @vc: wrapped virtual channel
-  * @phy: the physical channel utilized by this channel, if there is one
-  * @runtime_addr: address for RX/TX according to the runtime config
-  * @at: active transaction on this channel
+  * @phychan: the physical channel utilized by this channel, if there is one
+  * @name: name of channel
+  * @cd: channel platform data
+diff --git a/drivers/dma/mv_xor_v2.c b/drivers/dma/mv_xor_v2.c
+index f10b29034da1..f629ef6fd3c2 100644
+--- a/drivers/dma/mv_xor_v2.c
++++ b/drivers/dma/mv_xor_v2.c
+@@ -313,7 +313,7 @@ mv_xor_v2_tx_submit(struct dma_async_tx_descriptor *tx)
+ 		"%s sw_desc %p: async_tx %p\n",
+ 		__func__, sw_desc, &sw_desc->async_tx);
+ 
+-	/* assign coookie */
++	/* assign cookie */
+ 	spin_lock_bh(&xor_dev->lock);
+ 	cookie = dma_cookie_assign(tx);
+ 
 

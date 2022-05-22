@@ -2,78 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E09C52FE8B
-	for <lists+dmaengine@lfdr.de>; Sat, 21 May 2022 19:26:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DBEB530219
+	for <lists+dmaengine@lfdr.de>; Sun, 22 May 2022 11:38:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344115AbiEUR0a (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 21 May 2022 13:26:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51698 "EHLO
+        id S236928AbiEVJiz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 22 May 2022 05:38:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233987AbiEUR00 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 21 May 2022 13:26:26 -0400
-Received: from smtp.smtpout.orange.fr (smtp09.smtpout.orange.fr [80.12.242.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C46982182C
-        for <dmaengine@vger.kernel.org>; Sat, 21 May 2022 10:26:21 -0700 (PDT)
-Received: from pop-os.home ([86.243.180.246])
-        by smtp.orange.fr with ESMTPA
-        id sSrpnEgTlOXCysSrpnRCQC; Sat, 21 May 2022 19:26:19 +0200
-X-ME-Helo: pop-os.home
-X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
-X-ME-Date: Sat, 21 May 2022 19:26:19 +0200
-X-ME-IP: 86.243.180.246
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     dan.carpenter@oracle.com,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Joel Fernandes <joelf@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH] dmaengine: ti: Fix a potential under memory allocation issue in edma_setup_from_hw()
-Date:   Sat, 21 May 2022 19:26:15 +0200
-Message-Id: <8c95c485be294e64457606089a2a56e68e2ebd1a.1653153959.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S236843AbiEVJiz (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 22 May 2022 05:38:55 -0400
+Received: from aposti.net (aposti.net [89.234.176.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECAAD3B3C9;
+        Sun, 22 May 2022 02:38:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1653212330; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hqD/oZcjT9FRYsqGzFInG5WgvxzOftyg0RKNFC2ww7o=;
+        b=FVSK1Pm7oLYN4Wygr8ewEmceAFkGgywZlcIA5rYPRgcOqvVobezKziIRP+8oU6I21fMzJ+
+        e5xUZi4NU6pLs0TdZwDKNxSpX5+I6QnnjY7iWEGooa+9Hop9/35vL00vPqwQPytPSAod+y
+        1qfQH1dR9utKidirmQMyikHPURajoD8=
+Date:   Sun, 22 May 2022 10:38:41 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] dmaengine: jz4780: fix typo in comment
+To:     Julia Lawall <Julia.Lawall@inria.fr>
+Cc:     kernel-janitors@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <HS2ACR.CGG9DJPX3OD31@crapouillou.net>
+In-Reply-To: <20220521111145.81697-20-Julia.Lawall@inria.fr>
+References: <20220521111145.81697-20-Julia.Lawall@inria.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-If the 'queue_priority_mapping' is not provided, we need to allocate the
-correct amount of memory. Each entry takes 2 s8, so actually less memory
-than needed is allocated.
+Hi Julia,
 
-Update the size of each entry when the memory is devm_kcalloc'ed.
+Le sam., mai 21 2022 at 13:10:30 +0200, Julia Lawall=20
+<Julia.Lawall@inria.fr> a =E9crit :
+> Spelling mistake (triple letters) in comment.
+> Detected with the help of Coccinelle.
+>=20
+> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 
-Fixes: 6d10c3950bf4 ("ARM: edma: Get IP configuration from HW (number of channels, tc, etc)")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Note that the devm_kcalloc() in edma_xbar_event_map() looks also spurious.
-However, this looks fine to me because of the 'nelm >>= 1;' before the
-'for' loop.
----
- drivers/dma/ti/edma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Paul Cercueil <paul@crapouillou.net>
 
-diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-index 3ea8ef7f57df..f313e2cf542c 100644
---- a/drivers/dma/ti/edma.c
-+++ b/drivers/dma/ti/edma.c
-@@ -2121,7 +2121,7 @@ static int edma_setup_from_hw(struct device *dev, struct edma_soc_info *pdata,
- 	 * priority. So Q0 is the highest priority queue and the last queue has
- 	 * the lowest priority.
- 	 */
--	queue_priority_map = devm_kcalloc(dev, ecc->num_tc + 1, sizeof(s8),
-+	queue_priority_map = devm_kcalloc(dev, ecc->num_tc + 1, sizeof(s8) * 2,
- 					  GFP_KERNEL);
- 	if (!queue_priority_map)
- 		return -ENOMEM;
--- 
-2.34.1
+Thanks!
+-Paul
+
+>=20
+> ---
+>  drivers/dma/dma-jz4780.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+> index e2ec540e6519..2a483802d9ee 100644
+> --- a/drivers/dma/dma-jz4780.c
+> +++ b/drivers/dma/dma-jz4780.c
+> @@ -388,7 +388,7 @@ static struct dma_async_tx_descriptor=20
+> *jz4780_dma_prep_slave_sg(
+>=20
+>  		if (i !=3D (sg_len - 1) &&
+>  		    !(jzdma->soc_data->flags & JZ_SOC_DATA_BREAK_LINKS)) {
+> -			/* Automatically proceeed to the next descriptor. */
+> +			/* Automatically proceed to the next descriptor. */
+>  			desc->desc[i].dcm |=3D JZ_DMA_DCM_LINK;
+>=20
+>  			/*
+>=20
+
 

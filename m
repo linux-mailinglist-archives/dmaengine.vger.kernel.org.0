@@ -2,83 +2,82 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DBEB530219
-	for <lists+dmaengine@lfdr.de>; Sun, 22 May 2022 11:38:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D48DC5304FC
+	for <lists+dmaengine@lfdr.de>; Sun, 22 May 2022 19:41:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236928AbiEVJiz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 22 May 2022 05:38:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52778 "EHLO
+        id S1350038AbiEVRlY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 22 May 2022 13:41:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236843AbiEVJiz (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 22 May 2022 05:38:55 -0400
-Received: from aposti.net (aposti.net [89.234.176.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECAAD3B3C9;
-        Sun, 22 May 2022 02:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1653212330; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hqD/oZcjT9FRYsqGzFInG5WgvxzOftyg0RKNFC2ww7o=;
-        b=FVSK1Pm7oLYN4Wygr8ewEmceAFkGgywZlcIA5rYPRgcOqvVobezKziIRP+8oU6I21fMzJ+
-        e5xUZi4NU6pLs0TdZwDKNxSpX5+I6QnnjY7iWEGooa+9Hop9/35vL00vPqwQPytPSAod+y
-        1qfQH1dR9utKidirmQMyikHPURajoD8=
-Date:   Sun, 22 May 2022 10:38:41 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] dmaengine: jz4780: fix typo in comment
-To:     Julia Lawall <Julia.Lawall@inria.fr>
-Cc:     kernel-janitors@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <HS2ACR.CGG9DJPX3OD31@crapouillou.net>
-In-Reply-To: <20220521111145.81697-20-Julia.Lawall@inria.fr>
-References: <20220521111145.81697-20-Julia.Lawall@inria.fr>
+        with ESMTP id S1349974AbiEVRlQ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 22 May 2022 13:41:16 -0400
+Received: from smtp.smtpout.orange.fr (smtp08.smtpout.orange.fr [80.12.242.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6322D167DC
+        for <dmaengine@vger.kernel.org>; Sun, 22 May 2022 10:41:13 -0700 (PDT)
+Received: from pop-os.home ([86.243.180.246])
+        by smtp.orange.fr with ESMTPA
+        id spZjnWR0UgNxBspZjnfQ7n; Sun, 22 May 2022 19:41:11 +0200
+X-ME-Helo: pop-os.home
+X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
+X-ME-Date: Sun, 22 May 2022 19:41:11 +0200
+X-ME-IP: 86.243.180.246
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Amireddy Mallikarjuna reddy 
+        <mallikarjunax.reddy@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH] dmaengine: lgm: Fix an error handling path in intel_ldma_probe()
+Date:   Sun, 22 May 2022 19:41:05 +0200
+Message-Id: <18504549bc4d2b62a72a02cb22a2e4d8e6a58720.1653241224.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Julia,
+ldma_clk_disable() calls both:
+	clk_disable_unprepare(d->core_clk);
+	reset_control_assert(d->rst);
 
-Le sam., mai 21 2022 at 13:10:30 +0200, Julia Lawall=20
-<Julia.Lawall@inria.fr> a =E9crit :
-> Spelling mistake (triple letters) in comment.
-> Detected with the help of Coccinelle.
->=20
-> Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+So, should devm_reset_control_get_optional() fail, core_clk should not
+be prepare_enable'd before it, otherwise it will never be
+disable_unprepare'd.
 
-Acked-by: Paul Cercueil <paul@crapouillou.net>
+Reorder the code to handle the error handling path as expected.
 
-Thanks!
--Paul
+Fixes: 32d31c79a1a4 ("dmaengine: Add Intel LGM SoC DMA support.")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/dma/lgm/lgm-dma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
->=20
-> ---
->  drivers/dma/dma-jz4780.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-> index e2ec540e6519..2a483802d9ee 100644
-> --- a/drivers/dma/dma-jz4780.c
-> +++ b/drivers/dma/dma-jz4780.c
-> @@ -388,7 +388,7 @@ static struct dma_async_tx_descriptor=20
-> *jz4780_dma_prep_slave_sg(
->=20
->  		if (i !=3D (sg_len - 1) &&
->  		    !(jzdma->soc_data->flags & JZ_SOC_DATA_BREAK_LINKS)) {
-> -			/* Automatically proceeed to the next descriptor. */
-> +			/* Automatically proceed to the next descriptor. */
->  			desc->desc[i].dcm |=3D JZ_DMA_DCM_LINK;
->=20
->  			/*
->=20
-
+diff --git a/drivers/dma/lgm/lgm-dma.c b/drivers/dma/lgm/lgm-dma.c
+index efe8bd3a0e2a..9b9184f964be 100644
+--- a/drivers/dma/lgm/lgm-dma.c
++++ b/drivers/dma/lgm/lgm-dma.c
+@@ -1593,11 +1593,12 @@ static int intel_ldma_probe(struct platform_device *pdev)
+ 	d->core_clk = devm_clk_get_optional(dev, NULL);
+ 	if (IS_ERR(d->core_clk))
+ 		return PTR_ERR(d->core_clk);
+-	clk_prepare_enable(d->core_clk);
+ 
+ 	d->rst = devm_reset_control_get_optional(dev, NULL);
+ 	if (IS_ERR(d->rst))
+ 		return PTR_ERR(d->rst);
++
++	clk_prepare_enable(d->core_clk);
+ 	reset_control_deassert(d->rst);
+ 
+ 	ret = devm_add_action_or_reset(dev, ldma_clk_disable, d);
+-- 
+2.34.1
 

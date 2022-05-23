@@ -2,129 +2,276 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3BFE53130C
-	for <lists+dmaengine@lfdr.de>; Mon, 23 May 2022 18:23:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E698531323
+	for <lists+dmaengine@lfdr.de>; Mon, 23 May 2022 18:23:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236091AbiEWNXJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 23 May 2022 09:23:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43908 "EHLO
+        id S237652AbiEWPUJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 23 May 2022 11:20:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236135AbiEWNXF (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 23 May 2022 09:23:05 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65CB33057A
-        for <dmaengine@vger.kernel.org>; Mon, 23 May 2022 06:22:53 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id j4so14681769edq.6
-        for <dmaengine@vger.kernel.org>; Mon, 23 May 2022 06:22:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=r8WAmC01JdwEuRA91bKXEDq+9uWVDhRFE7DDNgirVT8=;
-        b=W4OGyqHL2ZKqiPmC+Hr840hwTtdA9uiv+Onp5DpklXJb0lXyIYeJM41tvTV/1gafHV
-         VB4Pptl9/AB1PutTxxwALFx6e9yR8tQ9dhA//i04ErhKBRAd2wdY7Guk+uMn85eVN4AA
-         aK3ofPTdLy1pgcJQgFawl51XYJcZXnlp0KaMA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=r8WAmC01JdwEuRA91bKXEDq+9uWVDhRFE7DDNgirVT8=;
-        b=lSvYgHrAh+sHOdIASSzzuezGqG9wSZfSHMp0p/V3H8XEArzsH8EYoF6V+FIVYbd/2q
-         n47dRVcEKlRmQgK2ykl5jvgDuNR9T0JKWKId73mxUImwRkyZb7LaDeqNF7fA07WBQ009
-         OybKIJr9X+obcK+yjLrLPXF8CwsBw4tznnNi66kzfv1MIj/AEmAFuvhNW2xvX6aFXBXa
-         1gIZ9RqhGgHfbXZhMDBbrSraP8wwSyxQcX0W+xlrQhqYyBGfCQhD8lFfn8Wux93YlbTz
-         56H5LFrIWBvIN/5jdNRovqGua7+d9Z1UcT6iVWOXrEUljJT4j63a2lBnSzJb7shAXFil
-         z1LA==
-X-Gm-Message-State: AOAM5327T6cY4WP8X5Jn08WTI4LX8/0iTloik+eb/0tAB6Aiwea1ft4r
-        5QDl3IxwtxqsQgeXYyK3p8geew==
-X-Google-Smtp-Source: ABdhPJyzCB3wSJCVIQ8lxcYGLb927QLmAjOhNbuxRB+//y0X8LXl4qCJl+xQS+M9DHvE4XqlF/tGcw==
-X-Received: by 2002:a05:6402:368b:b0:42b:42c7:f63f with SMTP id ej11-20020a056402368b00b0042b42c7f63fmr11364450edb.409.1653312171880;
-        Mon, 23 May 2022 06:22:51 -0700 (PDT)
-Received: from dario-ThinkPad-T14s-Gen-2i.pdxnet.pdxeng.ch (host-80-116-90-174.retail.telecomitalia.it. [80.116.90.174])
-        by smtp.gmail.com with ESMTPSA id cw12-20020a170906c78c00b006fec3b388edsm2249351ejb.95.2022.05.23.06.22.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 May 2022 06:22:51 -0700 (PDT)
-From:   Dario Binacchi <dario.binacchi@amarulasolutions.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-amarula@amarulasolutions.com,
-        Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2] dmaengine: mxs: fix driver registering
-Date:   Mon, 23 May 2022 15:22:47 +0200
-Message-Id: <20220523132247.1429321-1-dario.binacchi@amarulasolutions.com>
-X-Mailer: git-send-email 2.32.0
+        with ESMTP id S237573AbiEWPUI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 23 May 2022 11:20:08 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDAA75DA69;
+        Mon, 23 May 2022 08:20:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1653319207; x=1684855207;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=PbNyLowZXXyeR9OxM1xpX367cO5XzR8kGQzWfh6uwwU=;
+  b=W/YY8/PECOJKL7iU21kDnCHLTzwA63tY8w9AnEEjlvuOlfPksgCzTXkS
+   A9BSyrpx8E5VyYsRhzBNmEyJ90Xd60hb7wMz5RfxTFsGwH4q9AeyGPCLH
+   7IsGxLK7wSH+vgwhXDhD2chjE2CNiFT7Ht5syXExJetPtdmOfh/eGvwg+
+   RHs4eJN8cxBqBWHOixVXWNHww+lG3EbIuxOLclqAnoSoMf3lj862hI94y
+   FtDhCTA7MvWbs8jbWR3YOUkrSMKUnSe7PqAxVHhk8LP6VkOODiZ7Z916m
+   O0nSZHIWqDbTlGp02xYcP486prLneYcj+KH/E5M4sXUr280miuS5uqH57
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10356"; a="333897855"
+X-IronPort-AV: E=Sophos;i="5.91,246,1647327600"; 
+   d="scan'208";a="333897855"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 08:20:07 -0700
+X-IronPort-AV: E=Sophos;i="5.91,246,1647327600"; 
+   d="scan'208";a="548021388"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.198.157])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2022 08:20:07 -0700
+Date:   Mon, 23 May 2022 08:23:59 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v4 4/6] iommu: Add PASID support for DMA mapping API
+ users
+Message-ID: <20220523082359.74fb435b@jacob-builder>
+In-Reply-To: <BL1PR11MB5271E995E160E0C6A6C0C89A8CD49@BL1PR11MB5271.namprd11.prod.outlook.com>
+References: <20220518182120.1136715-1-jacob.jun.pan@linux.intel.com>
+        <20220518182120.1136715-5-jacob.jun.pan@linux.intel.com>
+        <BL1PR11MB5271E995E160E0C6A6C0C89A8CD49@BL1PR11MB5271.namprd11.prod.outlook.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Driver registration fails on SOC imx8mn as its supplier, the clock
-control module, is not ready. Since platform_driver_probe(), as
-reported by its description, is incompatible with deferred probing,
-we have to use platform_driver_register().
+Hi Kevin,
 
-Fixes: a580b8c5429a ("dmaengine: mxs-dma: add dma support for i.MX23/28")
-Co-developed-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Cc: stable@vger.kernel.org
+On Mon, 23 May 2022 08:25:33 +0000, "Tian, Kevin" <kevin.tian@intel.com>
+wrote:
 
----
+> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Sent: Thursday, May 19, 2022 2:21 AM
+> > 
+> > DMA mapping API is the de facto standard for in-kernel DMA. It operates
+> > on a per device/RID basis which is not PASID-aware.
+> > 
+> > Some modern devices such as Intel Data Streaming Accelerator, PASID is
+> > required for certain work submissions. To allow such devices use DMA
+> > mapping API, we need the following functionalities:
+> > 1. Provide device a way to retrieve a PASID for work submission within
+> > the kernel
+> > 2. Enable the kernel PASID on the IOMMU for the device
+> > 3. Attach the kernel PASID to the device's default DMA domain, let it
+> > be IOVA or physical address in case of pass-through.
+> > 
+> > This patch introduces a driver facing API that enables DMA API
+> > PASID usage. Once enabled, device drivers can continue to use DMA APIs
+> > as is. There is no difference in dma_handle between without PASID and
+> > with PASID.
+> > 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >  drivers/iommu/dma-iommu.c | 114
+> > ++++++++++++++++++++++++++++++++++++++
+> >  include/linux/dma-iommu.h |   3 +
+> >  2 files changed, 117 insertions(+)
+> > 
+> > diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> > index 1ca85d37eeab..6ad7ba619ef0 100644
+> > --- a/drivers/iommu/dma-iommu.c
+> > +++ b/drivers/iommu/dma-iommu.c
+> > @@ -34,6 +34,8 @@ struct iommu_dma_msi_page {
+> >  	phys_addr_t		phys;
+> >  };
+> > 
+> > +static DECLARE_IOASID_SET(iommu_dma_pasid);
+> > +
+> >  enum iommu_dma_cookie_type {
+> >  	IOMMU_DMA_IOVA_COOKIE,
+> >  	IOMMU_DMA_MSI_COOKIE,
+> > @@ -370,6 +372,118 @@ void iommu_put_dma_cookie(struct
+> > iommu_domain *domain)
+> >  	domain->iova_cookie = NULL;
+> >  }
+> > 
+> > +/* Protect iommu_domain DMA PASID data */
+> > +static DEFINE_MUTEX(dma_pasid_lock);
+> > +/**
+> > + * iommu_attach_dma_pasid --Attach a PASID for in-kernel DMA. Use the
+> > device's
+> > + * DMA domain.
+> > + * @dev: Device to be enabled
+> > + * @pasid: The returned kernel PASID to be used for DMA
+> > + *
+> > + * DMA request with PASID will be mapped the same way as the legacy
+> > DMA.
+> > + * If the device is in pass-through, PASID will also pass-through. If
+> > the
+> > + * device is in IOVA, the PASID will point to the same IOVA page table.
+> > + *
+> > + * @return err code or 0 on success
+> > + */
+> > +int iommu_attach_dma_pasid(struct device *dev, ioasid_t *pasid)  
+> 
+> iommu_attach_dma_domain_pasid? 'dma_pasid' is too broad from
+> a API p.o.v.
+> 
+I agree dma_pasid is too broad, technically it is dma_api_pasid but seems
+too long.
+My concern with dma_domain_pasid is that the pasid can also be used for
+identity domain.
 
-Changes in v2:
-- Add the tag "Cc: stable@vger.kernel.org" in the sign-off area.
+> > +{
+> > +	struct iommu_domain *dom;
+> > +	ioasid_t id, max;
+> > +	int ret = 0;
+> > +
+> > +	dom = iommu_get_domain_for_dev(dev);
+> > +	if (!dom || !dom->ops || !dom->ops->attach_dev_pasid)
+> > +		return -ENODEV;
+> > +
+> > +	/* Only support domain types that DMA API can be used */
+> > +	if (dom->type == IOMMU_DOMAIN_UNMANAGED ||
+> > +	    dom->type == IOMMU_DOMAIN_BLOCKED) {
+> > +		dev_warn(dev, "Invalid domain type %d", dom->type);
+> > +		return -EPERM;
+> > +	}  
+> 
+> WARN_ON.
+> 
+> and probably we can just check whether domain is default domain here.
+> 
+good point, I will just use
+struct iommu_domain *def_domain = iommu_get_dma_domain(dev);
 
- drivers/dma/mxs-dma.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+> > +
+> > +	mutex_lock(&dma_pasid_lock);
+> > +	id = dom->dma_pasid;
+> > +	if (!id) {
+> > +		/*
+> > +		 * First device to use PASID in its DMA domain,
+> > allocate
+> > +		 * a single PASID per DMA domain is all we need, it is
+> > also
+> > +		 * good for performance when it comes down to IOTLB
+> > flush.
+> > +		 */
+> > +		max = 1U << dev->iommu->pasid_bits;
+> > +		if (!max) {
+> > +			ret = -EINVAL;
+> > +			goto done_unlock;
+> > +		}
+> > +
+> > +		id = ioasid_alloc(&iommu_dma_pasid, 1, max, dev);
+> > +		if (id == INVALID_IOASID) {
+> > +			ret = -ENOMEM;
+> > +			goto done_unlock;
+> > +		}
+> > +
+> > +		dom->dma_pasid = id;
+> > +		atomic_set(&dom->dma_pasid_users, 1);  
+> 
+> this is always accessed with lock held hence no need to be atomic.
+> 
+good catch, will fix
 
-diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
-index 994fc4d2aca4..b8a3e692330d 100644
---- a/drivers/dma/mxs-dma.c
-+++ b/drivers/dma/mxs-dma.c
-@@ -670,7 +670,7 @@ static enum dma_status mxs_dma_tx_status(struct dma_chan *chan,
- 	return mxs_chan->status;
- }
- 
--static int __init mxs_dma_init(struct mxs_dma_engine *mxs_dma)
-+static int mxs_dma_init(struct mxs_dma_engine *mxs_dma)
- {
- 	int ret;
- 
-@@ -741,7 +741,7 @@ static struct dma_chan *mxs_dma_xlate(struct of_phandle_args *dma_spec,
- 				     ofdma->of_node);
- }
- 
--static int __init mxs_dma_probe(struct platform_device *pdev)
-+static int mxs_dma_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
- 	const struct mxs_dma_type *dma_type;
-@@ -839,10 +839,7 @@ static struct platform_driver mxs_dma_driver = {
- 		.name	= "mxs-dma",
- 		.of_match_table = mxs_dma_dt_ids,
- 	},
-+	.probe = mxs_dma_probe,
- };
- 
--static int __init mxs_dma_module_init(void)
--{
--	return platform_driver_probe(&mxs_dma_driver, mxs_dma_probe);
--}
--subsys_initcall(mxs_dma_module_init);
-+module_platform_driver(mxs_dma_driver);
--- 
-2.32.0
+> > +	}
+> > +
+> > +	ret = iommu_attach_device_pasid(dom, dev, id);
+> > +	if (!ret) {
+> > +		*pasid = id;
+> > +		atomic_inc(&dom->dma_pasid_users);
+> > +		goto done_unlock;
+> > +	}
+> > +
+> > +	if (atomic_dec_and_test(&dom->dma_pasid_users)) {
+> > +		ioasid_free(id);
+> > +		dom->dma_pasid = 0;
+> > +	}
+> > +done_unlock:
+> > +	mutex_unlock(&dma_pasid_lock);
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL(iommu_attach_dma_pasid);
+> > +
+> > +/**
+> > + * iommu_detach_dma_pasid --Disable in-kernel DMA request with PASID
+> > + * @dev:	Device's PASID DMA to be disabled
+> > + *
+> > + * It is the device driver's responsibility to ensure no more incoming
+> > DMA
+> > + * requests with the kernel PASID before calling this function. IOMMU
+> > driver
+> > + * ensures PASID cache, IOTLBs related to the kernel PASID are cleared
+> > and
+> > + * drained.
+> > + *
+> > + */
+> > +void iommu_detach_dma_pasid(struct device *dev)
+> > +{
+> > +	struct iommu_domain *dom;
+> > +	ioasid_t pasid;
+> > +
+> > +	dom = iommu_get_domain_for_dev(dev);
+> > +	if (WARN_ON(!dom || !dom->ops || !dom->ops->detach_dev_pasid))
+> > +		return;
+> > +
+> > +	/* Only support DMA API managed domain type */
+> > +	if (WARN_ON(dom->type == IOMMU_DOMAIN_UNMANAGED ||
+> > +		    dom->type == IOMMU_DOMAIN_BLOCKED))
+> > +		return;
+> > +
+> > +	mutex_lock(&dma_pasid_lock);
+> > +	pasid = iommu_get_pasid_from_domain(dev, dom);
+> > +	if (!pasid || pasid == INVALID_IOASID) {
+> > +		dev_err(dev, "No valid DMA PASID attached\n");
+> > +		mutex_unlock(&dma_pasid_lock);
+> > +		return;
+> > +	}  
+> 
+> here just use dom->dma_pasid and let iommu driver to figure out
+> underlying whether this device has been attached to the domain
+> with the said pasid.
+> 
+Yeah, I am checking the pasid matching in the iommu driver. My thinking is
+that here is a quick sanity check in the common code to rule out invalid value.
 
+
+Thanks a lot!
+
+
+Jacob

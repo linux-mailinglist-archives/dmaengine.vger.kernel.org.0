@@ -2,124 +2,112 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B42EE532D1D
-	for <lists+dmaengine@lfdr.de>; Tue, 24 May 2022 17:16:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D510532D09
+	for <lists+dmaengine@lfdr.de>; Tue, 24 May 2022 17:13:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237536AbiEXPQH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 24 May 2022 11:16:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54812 "EHLO
+        id S233654AbiEXPNg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 24 May 2022 11:13:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238788AbiEXPP4 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 24 May 2022 11:15:56 -0400
-Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 876128CB06;
-        Tue, 24 May 2022 08:15:54 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: marcan@marcan.st)
-        by mail.marcansoft.com (Postfix) with ESMTPSA id B4D8541F7F;
-        Tue, 24 May 2022 15:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
-        t=1653405352; bh=8w50wHvXurvq4YfaNzGeMc56fIBXMny4Y1siuUuA7wc=;
-        h=Date:To:Cc:References:From:Subject:In-Reply-To;
-        b=RuptRBPB3SgPdj8ms00Sgjc+EYhIJjpL7X10gQwKfD5Zomsg6GuarremEvZWVL66d
-         LqgrVKm5afhO2xR+7cbevOnhD7jTblq4i0MGyiQNYuQBxUPdImrfyGvgkv68FLEAcZ
-         VYYwu5VTQDBzeAnNMl77ptr4lxm5dNQmZc4p77+WvY7SxZPoO6KJbtoybpFrrC30Zd
-         U6P9dPlpnXXb6iYmEAa3V3O6wghDlOH6FYrcswyvpkhhzJz81nbXCTVkrQLS1MVtDf
-         QaXmeBb8RGg6rGPWDKV65q0pVzZCU8N8nVueLfR8a4LwUJYSfa+87XybwcaX5IxxCr
-         JE/lko42WgYtQ==
-Message-ID: <8d20b41e-c529-a7f9-11f2-350fa14c9f98@marcan.st>
-Date:   Wed, 25 May 2022 00:15:45 +0900
+        with ESMTP id S237703AbiEXPNf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 24 May 2022 11:13:35 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 189868AE48;
+        Tue, 24 May 2022 08:13:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1653405215; x=1684941215;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Tk27iwpVLwZhrAdYRAP9PXSjtSwimSeDsovqZPPM1B0=;
+  b=L6HbKekScTgGHuCNnisNh58guVMP+bOQgs52UBY7ucjDS97M+A46Zwkg
+   R8aIolMyGd5k9UV5xuDRGIqhCQWisyIQrM+D1BO7Z7OzzFjDXlAG/MpiZ
+   JhZpALRFSqs7EfULAx0smGLnBZ2sdRxWLZ8a2oyuBkmhGih2C2KcSm2e4
+   WgZNinVlUcRghPfwIhFMlthweWZ120SEDaXrM7eKUUo14AfQwFbu3Rj+g
+   uachqsJ5ErIiYDukg7wnr72bBUsBIV414IUjTnSr5+ajWbt1C3O6aIM1A
+   THj8WOPMH3TZDfJikCQ/5qp5TbLyjdpON1DkV9i09N3iStGBDTHmnvKt1
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10357"; a="298878888"
+X-IronPort-AV: E=Sophos;i="5.91,248,1647327600"; 
+   d="scan'208";a="298878888"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2022 08:13:34 -0700
+X-IronPort-AV: E=Sophos;i="5.91,248,1647327600"; 
+   d="scan'208";a="572702343"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.198.157])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2022 08:13:34 -0700
+Date:   Tue, 24 May 2022 08:17:27 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Christoph Hellwig <hch@infradead.org>, vkoul@kernel.org,
+        robin.murphy@arm.com, will@kernel.org, Yi Liu <yi.l.liu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v4 1/6] iommu: Add a per domain PASID for DMA API
+Message-ID: <20220524081727.19c2dd6d@jacob-builder>
+In-Reply-To: <20220524135034.GU1343366@nvidia.com>
+References: <20220518182120.1136715-1-jacob.jun.pan@linux.intel.com>
+        <20220518182120.1136715-2-jacob.jun.pan@linux.intel.com>
+        <20220524135034.GU1343366@nvidia.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Content-Language: en-US
-To:     jassisinghbrar@gmail.com
-Cc:     Anup Patel <anup.patel@broadcom.com>,
-        Vinod Koul <vkoul@kernel.org>, Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
-References: <20220502090225.26478-1-marcan@marcan.st>
- <20220524145540.363553-1-jassisinghbrar@gmail.com>
-From:   Hector Martin <marcan@marcan.st>
-Subject: Re: [PATCH 0/7] mailbox: apple: peek_data cleanup and implementation
-In-Reply-To: <20220524145540.363553-1-jassisinghbrar@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 24/05/2022 23.55, jassisinghbrar@gmail.com wrote:
-> From: Jassi Brar <jassisinghbrar@gmail.com>
->> The mailbox API has a `peek_data` operation. Its intent and
->> documentation is rather ambiguous; at first glance and based on the
->> name, it seems like it should only check for whether data is currently
->> pending in the controller, without actually delivering it to the
->> consumer. However, this interpretation is not useful for anything: the
->> function can be called from atomic context, but without a way to
->> actually *poll* for data from atomic context, there is no use in just
->> checking for whether data is available.
->>
-> Not exactly... the 'peek_data' is a means for client driver to hint the
-> controller driver that some data might have arrived (for controllers that
-> don't have anything like RX-Irq). The controller is then expected to dispatch
-> data after "not necessarily atomic" read.
+Hi Jason,
 
-If that was the intent, there are no in-kernel users with the "hint"
-intent... I am having a hard time imagining a use case for those semantics.
+On Tue, 24 May 2022 10:50:34 -0300, Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-Are there any controllers without an RX IRQ? What do they do, poll
-constantly? Or just assume all requests are req/response and have
-drivers poll via this function when a request is pending? And in that
-case wouldn't reading be atomic too anyway?
+> On Wed, May 18, 2022 at 11:21:15AM -0700, Jacob Pan wrote:
+> > DMA requests tagged with PASID can target individual IOMMU domains.
+> > Introduce a domain-wide PASID for DMA API, it will be used on the same
+> > mapping as legacy DMA without PASID. Let it be IOVA or PA in case of
+> > identity domain.  
+> 
+> Huh? I can't understand what this is trying to say or why this patch
+> makes sense.
+> 
+> We really should not have pasid's like this attached to the domains..
+> 
+This is the same "DMA API global PASID" you reviewed in v3, I just
+singled it out as a standalone patch and renamed it. Here is your previous
+review comment.
 
->   For example, a quick look at some bit may tell there is data available,
-> but actually reading the data from buffer may be non-atomic.
+> +++ b/include/linux/iommu.h
+> @@ -105,6 +105,8 @@ struct iommu_domain {
+>  	enum iommu_page_response_code (*iopf_handler)(struct iommu_fault *fault,
+>  						      void *data);
+>  	void *fault_data;
+> +	ioasid_t pasid;		/* Used for DMA requests with PASID */
+> +	atomic_t pasid_users;  
 
-Are there any examples of mailbox drivers that have this constraint?
+These are poorly named, this is really the DMA API global PASID and
+shouldn't be used for other things.
 
->   In your case, you could already implement the patch-7/7 by simply calling it
-> peek_data() instead of poll_data(). Its ok to call mbox_chan_received_data()
-> from peek_data() because your data-read can be atomic.
 
-So some mailboxes may implement peek_data in a way that guarantees
-atomic/synchronous data arrival, and some may not, and consumers are
-expected to just know how their particular mailbox behaves?
 
-That doesn't sound like a very good API design...
+Perhaps I misunderstood, do you mind explaining more?
 
-> Also some platforms may not have users of peek_data upstream (yet), so
-> simply weeding them out may not be right.
 
-That's why everyone involved is CCed :)
+Thanks,
 
-I'm going to be honest though: I'm finding the entire mailbox
-abstraction to be very frustrating. It's trying to cater to a bunch of
-rather disparate hardware used as a low-level channel for very tightly
-coupled drivers and, in the end, fails to be a useful abstraction since
-it can't abstract those differences away. It would've taken us less code
-to open-code the mailbox part of our driver into its only consumer,
-would've saved a bunch of debugging and headaches, and would perform
-better, and wouldn't lose any generality since we only have one consumer
-anyway (and if we had more it'd still take less code to roll our own API
-rather than using mailbox...).
-
--- 
-Hector Martin (marcan@marcan.st)
-Public Key: https://mrcn.st/pub
+Jacob

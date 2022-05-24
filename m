@@ -2,196 +2,154 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21FFD53229E
-	for <lists+dmaengine@lfdr.de>; Tue, 24 May 2022 07:49:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CE67532460
+	for <lists+dmaengine@lfdr.de>; Tue, 24 May 2022 09:49:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234579AbiEXFs7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 24 May 2022 01:48:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40214 "EHLO
+        id S235227AbiEXHtW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 24 May 2022 03:49:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234584AbiEXFs6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 24 May 2022 01:48:58 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78F12939E5;
-        Mon, 23 May 2022 22:48:56 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id l13so22356835lfp.11;
-        Mon, 23 May 2022 22:48:56 -0700 (PDT)
+        with ESMTP id S229451AbiEXHtV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 24 May 2022 03:49:21 -0400
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam08on2069.outbound.protection.outlook.com [40.107.101.69])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24EBB986F4;
+        Tue, 24 May 2022 00:49:20 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XxQs0XuONK9N98nx0Qc0tXWiQMIl/kUS/s/23/EnYkmTOOc4YVIdNp+lUb8PtSX+b3HtvYXG29CsQilGc6p30WBRvZO2tSDAbY0gXI5W8uJu3S3VAGuL0dPvpnyEBty/daycjr1KCuvSAotWz9c/X7/TaMRjiDXkwHhBY4Yok8WxU3fLF6LlJrWb+5I1+kZ8T0Xc6dTAx7eH9FQGAsw5swJ5jOSIvkw+m0lIPKWM3TWp//5Sz+G3RM/Mcu2dqEDCfB2ocjC6JeeExQ3tSyDgcibL8QzB3ztrNOaEul6lJOev4/fwkkF4SHd748uOv/QcE0J1kHqNdjG1ot4P7tdb2w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JGLGsYGN9UdlhCwzhKs6vNlQj92cRhVcArkvCrs8bbs=;
+ b=iHO4ztMjsD/lTQb4kBF3+LlVqEMwgXJDPO1tNmoOB3tuztnuxlztd2EWa8EvwjEpCdknJdN+wLx/s1fg4SKvwsZwlp5Ut3k9Z9pxwy98MUujk0XgCJSLgHlBESu+8RuRRXoCI6wmi61quRK2PU9RwxJ8HSFqmLpW868jCcHG6B9ZAgFAJKfpAu3JIK+Q1ZZlrFVc8UxKBQg3p9/+AfZv2DCE0vKsXld8yuAny/L3WtRCkE4hB6y36af0/TLPUV/U1OcnnqRkk++tNayHNq7GgL9dzPvV6XzPk5pEq073klO2mzo+zLwYn/x6gPxLk+fVqOC8ed50tvHwRBhX3ZdOpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=amd.com smtp.mailfrom=xilinx.com;
+ dmarc=fail (p=quarantine sp=quarantine pct=100) action=quarantine
+ header.from=amd.com; dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=H18/diuQsn2SRstWPJPGfq5VlI/RQJTDhHU4jrNBf84=;
-        b=i5cg1d9WjX/nSo2tyvAbHSwH88Zgr1sjlSriU4zGDEhDHawS19JxonpWgNXEqIvET/
-         5PwXaUiuYKUSNO1JNO8pJmJWU8okAnOGR0/7tO8HKVGYNUtyVawX+Wt2RWd9sEmBBRa2
-         lfdtAsvi24+kZuHby4L2pSaIg7yC/pZVyFljuwqp6Fisqg+JWaxrtJcqIzyC4ygVUJSy
-         FazI7vbhMmR3m45z3o4E5/xq29J1X3fC8Mv/id/XQF6wlxDeV7Ln8nMvGbQtape+TU7n
-         6L3SEfRbt2yPjsNwSCqQQxTQphQ3v7IcuJPWeVlZGFVUi/xXJuLKy66DFDCkJwsoMt/i
-         b2lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=H18/diuQsn2SRstWPJPGfq5VlI/RQJTDhHU4jrNBf84=;
-        b=w8q9ADBgAXJdTowlJp/pfpKwfjcV1VV6VfuZYSlYvuC64u/5RPRAmnkdGyiLK8So/Q
-         7DT4V+qa5JRrBG2AZrWZocSGAnXHGzxWcxeOiTM8+6lGVZdI78anh4c3EdkasDzoadan
-         g/Pqqw2Tf3xtnTarP5ESiTaEqr6NORcUZzY09g4olAcaKiUoqKpCTM92R29cweain98a
-         jC8gdRU81qLMwidSKzdFuaMEtJjeR8KGimSrZFQfgJQN/Zl0eBv9R5VuEyJxX9WGXRq2
-         HbW0i4bduxM0gCOUaY7MJcas0aVqc65PjiqfvkmhUSEkuIb/tR5Cj/w52AJzI/Pjqxh3
-         FVUg==
-X-Gm-Message-State: AOAM530DaEmOEYbfKs7Zg3c8bHsYpWLv4olaQ38asZkJ7iH9IhLXUZr5
-        QHRck3RAWXAV8XAg8bH2Qc8=
-X-Google-Smtp-Source: ABdhPJw9WfQDAQjPx96j0UbjRTHOgXLJAEoLKsFumpwYvKQtV30qhJezY7jgXph3RzIYEK8jVZBN0Q==
-X-Received: by 2002:a05:6512:2205:b0:478:53d5:bdb1 with SMTP id h5-20020a056512220500b0047853d5bdb1mr13618801lfu.561.1653371334538;
-        Mon, 23 May 2022 22:48:54 -0700 (PDT)
-Received: from mobilestation ([95.79.189.214])
-        by smtp.gmail.com with ESMTPSA id n12-20020ac242cc000000b00473e8c88b92sm2341977lfl.117.2022.05.23.22.48.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 May 2022 22:48:53 -0700 (PDT)
-Date:   Tue, 24 May 2022 08:48:50 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Zhi Li <lznuaa@gmail.com>, Vinod Koul <vkoul@kernel.org>,
-        Frank Li <Frank.Li@nxp.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: Re: [PATCH v11 0/8] Enable designware PCI EP EDMA locally
-Message-ID: <20220524054850.vrchh6icwfriszhn@mobilestation>
-References: <CAHrpEqR9dXg-4pRFA89ggv4CHXXwU-pWeTb082YRdCzmOTUjVQ@mail.gmail.com>
- <20220523221256.GA221421@bhelgaas>
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JGLGsYGN9UdlhCwzhKs6vNlQj92cRhVcArkvCrs8bbs=;
+ b=qFMfbm6forPvQlmHeoFeAbQ+3DCcIONAHwZQDbAXlw/fzGE05aPf+Z3bzU2QTnuUjGRPz6ewY/NK7NZPX51dUv0Eu+uFSIaItdTUcwXLBh7YOxnt6NEknMm37gDQPUAi+ROrR85B+4V28Mgaers/0jynJalj2VyiFwM64Aq75BA=
+Received: from SN6PR16CA0039.namprd16.prod.outlook.com (2603:10b6:805:ca::16)
+ by SJ0PR02MB8626.namprd02.prod.outlook.com (2603:10b6:a03:3fb::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.16; Tue, 24 May
+ 2022 07:49:18 +0000
+Received: from SN1NAM02FT0025.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:805:ca:cafe::b) by SN6PR16CA0039.outlook.office365.com
+ (2603:10b6:805:ca::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.23 via Frontend
+ Transport; Tue, 24 May 2022 07:49:18 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=quarantine header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com; pr=C
+Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
+ SN1NAM02FT0025.mail.protection.outlook.com (10.97.5.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5273.14 via Frontend Transport; Tue, 24 May 2022 07:49:18 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Tue, 24 May 2022 00:49:16 -0700
+Received: from smtp.xilinx.com (172.19.127.95) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.2176.14 via Frontend Transport; Tue, 24 May 2022 00:49:16 -0700
+Envelope-to: git@amd.com,
+ radhey.shyam.pandey@amd.com,
+ vkoul@kernel.org,
+ m.tretter@pengutronix.de,
+ dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Received: from [172.23.64.4] (port=55505 helo=xhdvnc104.xilinx.com)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <radhey.shyam.pandey@xilinx.com>)
+        id 1ntPI4-000EHV-Gp; Tue, 24 May 2022 00:49:16 -0700
+Received: by xhdvnc104.xilinx.com (Postfix, from userid 13245)
+        id AF5EA120500; Tue, 24 May 2022 13:19:15 +0530 (IST)
+From:   Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+To:     <vkoul@kernel.org>, <michal.simek@xilinx.com>,
+        <m.tretter@pengutronix.de>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <git@amd.com>, Shravya Kumbham <shravya.kumbham@xilinx.com>,
+        Harini Katakam <harini.katakam@xilinx.com>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Subject: [PATCH] dmaengine: zynqmp_dma: Typecast with enum to fix the coverity warning
+Date:   Tue, 24 May 2022 13:19:13 +0530
+Message-ID: <1653378553-28548-1-git-send-email-radhey.shyam.pandey@amd.com>
+X-Mailer: git-send-email 2.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220523221256.GA221421@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4416ab30-fba3-45f7-7b27-08da3d59e839
+X-MS-TrafficTypeDiagnostic: SJ0PR02MB8626:EE_
+X-Microsoft-Antispam-PRVS: <SJ0PR02MB862675D320B3B10D0D310520C7D79@SJ0PR02MB8626.namprd02.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 0
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: txAdCHcAEYHs5IjAAKJSUqbZ8icXgrt2008VwinSNn4Na1EQJHSFNjWezngDlgwr6SWKcO8BwTT+BpQIKjkHN0wmAdx0DdKuX6HxDgpcxN2+emwsn7oIKu/4xn2RsXytyyupgz1Bhq8nCKPplL0WlWDlWcZEyVmMMUGeUelqrGfUauYdIeG6uOX31Y9XKlw5GsEgzZnWtHDaqqbjdu4+h+PanHkD/nlmLIfDpHaxiL+FcOmLESEo2ZhGNANFcKG1go1JQsXf0hMCZ+lXbS6oqobCP6TY81BYyaKLm31n45NEmY6CIpeqNlowNgsxEMRnCUsijtStXHkqQvWu/zLXyz5z9ZwFZHNq8GNgt+n/FAEb4miFOQ/qE9xiuEiqeZsjBWmN8QILK0vpir640Gv7fGmtUlDVag4JDvMu7YcaxSDUGfg6FabHkUBOHysDYXpa74fx6xbkGTUambsFy/UWLQT410E9mdprz6KqSOvCGg1fY72kEC3Dlbug8a9++Fv9LZCrI96hte3z66JZKWjize7J3ZYSkgO5xXvBX1rewHERJUZC7bMnGIDyKRXAF50p+1U7VlCmYbQtbnNirxqFozITCoZ32nSDvbe4DQx5VrGxD34a1WrkIgpr9IY+fEiHr5KLgZoJ+/pOWWBCwXDU6X+9Z0PfNn1s9+WKDufrz3clIDULUbK7MuES6NgFw/0R+BGOSDbQBVJeuD3tXi7nL6i4nj+pZEJTUdDFNTJSYpmA1PwmS6jKcJQdRAgMNdMd3bb48Yjqvk5hjmdnJM4G3yVjcwK6HpERCIiXKovCT6fxNhUEONXElJdJviSVGU7s
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230001)(4636009)(46966006)(36840700001)(40470700004)(54906003)(8676002)(316002)(47076005)(186003)(2906002)(70586007)(4326008)(83170400001)(42882007)(82310400005)(36756003)(70206006)(110136005)(36860700001)(42186006)(356005)(336012)(8936002)(5660300002)(7636003)(26005)(6266002)(40460700003)(966005)(508600001)(2616005)(83380400001)(102446001)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2022 07:49:18.3030
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4416ab30-fba3-45f7-7b27-08da3d59e839
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0025.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR02MB8626
+X-Spam-Status: No, score=1.3 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Bjorn
+From: Shravya Kumbham <shravya.kumbham@xilinx.com>
 
-On Mon, May 23, 2022 at 05:12:56PM -0500, Bjorn Helgaas wrote:
-> On Mon, May 23, 2022 at 01:41:48PM -0500, Zhi Li wrote:
-> > On Mon, May 23, 2022 at 1:02 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Mon, May 23, 2022 at 02:06:47PM +0300, Serge Semin wrote:
-> > > > Hello Vinod,
-> > > >
-> > > > On Tue, May 17, 2022 at 10:19:07AM -0500, Frank Li wrote:
-> > > > > Default Designware EDMA just probe remotely at host side.
-> > > > > This patch allow EDMA driver can probe at EP side.
-> > > > >
-> > > > > 1. Clean up patch
-> > > > >    dmaengine: dw-edma: Detach the private data and chip info structures
-> > > > >    dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
-> > > > >    dmaengine: dw-edma: Change rg_region to reg_base in struct
-> > > > >    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> > > > >
-> > > > > 2. Enhance EDMA driver to allow prode eDMA at EP side
-> > > > >    dmaengine: dw-edma: Add support for chip specific flags
-> > > > >    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific
-> > > > > flags (this patch removed at v11 because dma tree already have fixed
-> > > > > patch)
-> > > > >
-> > > > > 3. Bugs fix at EDMA driver when probe eDMA at EP side
-> > > > >    dmaengine: dw-edma: Fix programming the source & dest addresses for
-> > > > > ep
-> > > > >    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
-> > > > >
-> > > > > 4. change pci-epf-test to use EDMA driver to transfer data.
-> > > > >    PCI: endpoint: Add embedded DMA controller test
-> > > > >
-> > > > > 5. Using imx8dxl to do test, but some EP functions still have not
-> > > > > upstream yet. So below patch show how probe eDMA driver at EP
-> > > > > controller driver.
-> > > > > https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
-> > > >
-> > > > The series has been hanging out on review for over three months now.
-> > > > It has got to v11 and has been tested on at least two platforms. The
-> > > > original driver maintainer has been silent for all that time (most
-> > > > likely Gustavo dropped the driver maintaining role). Could you please
-> > > > merge it in seeing no comments have been posted for the last several
-> > > > weeks? The PCI Host/EP controller drivers maintainer suggested to get
-> > > > this series via the DMA-engine tree:
-> > > > https://lore.kernel.org/linux-pci/YnqlRShJzvma2SKM@lpieralisi/
-> > > > which is obviously right seeing it mainly concerns the DW eDMA driver.
-> > > > Though after that Lorenzo disappeared as quickly as popped up.)
-> > > >
-> > > > There is one more series depending on the changes in this
-> > > > patchset:
-> > > > https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
-> > > > Me and Frank already settled all the conflicts and inter-dependencies,
-> > > > so at least his series is more than ready to be merged in into the
-> > > > kernel repo. It would be very good to get it accepted on this merge
-> > > > window so to have the kernel v5.19 with all this changes available.
-> > >
+Typecast the flags variable with (enum dma_ctrl_flags) in
+zynqmp_dma_prep_memcpy function to fix the coverity warning.
 
-> > > Since the v5.19 merge window is already open, it seems doubtful that
-> > > anybody would merge this so late in the cycle.
+Addresses-Coverity: Event mixed_enum_type.
+Signed-off-by: Shravya Kumbham <shravya.kumbham@xilinx.com>
+Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
+Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+---
+NOTE- This patch was sent to dmaengine mailing list[1] and
+there was a suggestion from Michael Tretter to change the
+signature of the dmaengine_prep_dma_memcpy() engine to accept
+"enum dma_ctrl_flags flags" instead of "unsigned long flags".
 
-In this case it would be safer to merge this whole series through your
-repo. See my series:
-"[PATCH v2 00/26] dmaengine: dw-edma: Add RP/EP local DMA controllers support"
-https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
-depends in the Frank' patchset. Meanwhile my patchset is also based on the
-DW PCIe modifications introduced in the set of the series:
-"[PATCH v2 00/17] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support"
-https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
-and
-"[PATCH v3 00/13] PCI: dwc: Various fixes and cleanups"
-https://lore.kernel.org/linux-pci/20220517125058.18488-1-Sergey.Semin@baikalelectronics.ru/
+All device_prep_dma_* API variants have ulong flags argument.
+So this is a wider question if we want to change these APIs?
+Also there are existing users of these public APIs.
 
-So to speak in order to have more coherent repos with least merge,
-logical problems the next order of the merging would be preferable:
-1) Frank's patchset (ready to be merged in):
-[PATCH v11 0/8] Enable designware PCI EP EDMA locally
-https://lore.kernel.org/linux-pci/20220517151915.2212838-1-Frank.Li@nxp.com
-2) My series (ready to be merged in):
-[PATCH v3 00/13] PCI: dwc: Various fixes and cleanups
-https://lore.kernel.org/linux-pci/20220517125058.18488-1-Sergey.Semin@baikalelectronics.ru/
-3) My series (still in review, I need to fix some Rob' and Manivannan' notes)
-[PATCH v2 00/17] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support
-https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
-4) Me series (ready to be merged in, but depends on the prev patchsets):
-https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
+[1]: https://lore.kernel.org/linux-arm-kernel/20210914082817.22311-2-harini.katakam@xilinx.com/t/#m1d1bc959f500b04fa1470caa31239a95c73fd45d
+---
+ drivers/dma/xilinx/zynqmp_dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Seeing the Frank patches won't make it into the mainline repo on
-this merge window, it would be great to collect all the changes in a
-single repository. Seeing Lorenzo disappeared as fast as popped up
-your repo is the best candidate since the DW eDMA block is a part of
-the DW PCIe controller.
+diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
+index dc299ab36818..3f4ee3954384 100644
+--- a/drivers/dma/xilinx/zynqmp_dma.c
++++ b/drivers/dma/xilinx/zynqmp_dma.c
+@@ -849,7 +849,7 @@ static struct dma_async_tx_descriptor *zynqmp_dma_prep_memcpy(
+ 
+ 	zynqmp_dma_desc_config_eod(chan, desc);
+ 	async_tx_ack(&first->async_tx);
+-	first->async_tx.flags = flags;
++	first->async_tx.flags = (enum dma_ctrl_flags)flags;
+ 	return &first->async_tx;
+ }
+ 
+-- 
+2.25.1
 
-> > >
-> > > If Gustavo isn't available or willing to merge it, it looks like Vinod
-> > > (maintainer of drivers/dma) would be the next logical candidate.
-> > 
-> > I think the last patch should not block other patches from merging.
-> > The last patch about pci-epf-test.c is totally independent from other patches.
-> > 
-> > I prefer to merge all the dma patches first.
-> 
-> Absolutely.  
-> 
-
-> Given an ack from Kishon, it would make sense for Vinod to merge them
-> all together since they're logically related, but I have no objection
-> to merging any of the drivers/dma patches separately.
-
-Please see my comment above.
-
-Thanks
--Sergey
-
-> 
-> Bjorn

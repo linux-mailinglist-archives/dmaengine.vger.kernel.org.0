@@ -2,70 +2,77 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A082532258
-	for <lists+dmaengine@lfdr.de>; Tue, 24 May 2022 07:09:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21FFD53229E
+	for <lists+dmaengine@lfdr.de>; Tue, 24 May 2022 07:49:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232227AbiEXFJp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 24 May 2022 01:09:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60548 "EHLO
+        id S234579AbiEXFs7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 24 May 2022 01:48:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbiEXFJo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 24 May 2022 01:09:44 -0400
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C93852534;
-        Mon, 23 May 2022 22:09:41 -0700 (PDT)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 24O59IKt088535;
-        Tue, 24 May 2022 00:09:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1653368958;
-        bh=T/I4NBWnX8Y94wG/RtdZ+UaXlx+hF+/+ndDDsS8wdOk=;
-        h=Date:Subject:To:CC:References:From:In-Reply-To;
-        b=UhA6T1hoP7vSZ60RyrFOQfUsIl5+EpEjcF6OIuJU58IqavS/+wksfU1YfOeqvLerc
-         cNM7QzRruH0jLzRFMgYt7aNgpW10Iupe66J8VWEdAAdWnHyHL9vkDmtvwDc0OCYrwb
-         W/90YMefIonROiT6Vvb/HN0oVjLlk7pOR3XRqeQY=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 24O59IUq032321
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 24 May 2022 00:09:18 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Tue, 24
- May 2022 00:09:17 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Tue, 24 May 2022 00:09:17 -0500
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 24O59Cqr124293;
-        Tue, 24 May 2022 00:09:13 -0500
-Message-ID: <59cf4d0b-67ab-913a-3e09-ff09eae4a253@ti.com>
-Date:   Tue, 24 May 2022 10:39:11 +0530
+        with ESMTP id S234584AbiEXFs6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 24 May 2022 01:48:58 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78F12939E5;
+        Mon, 23 May 2022 22:48:56 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id l13so22356835lfp.11;
+        Mon, 23 May 2022 22:48:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=H18/diuQsn2SRstWPJPGfq5VlI/RQJTDhHU4jrNBf84=;
+        b=i5cg1d9WjX/nSo2tyvAbHSwH88Zgr1sjlSriU4zGDEhDHawS19JxonpWgNXEqIvET/
+         5PwXaUiuYKUSNO1JNO8pJmJWU8okAnOGR0/7tO8HKVGYNUtyVawX+Wt2RWd9sEmBBRa2
+         lfdtAsvi24+kZuHby4L2pSaIg7yC/pZVyFljuwqp6Fisqg+JWaxrtJcqIzyC4ygVUJSy
+         FazI7vbhMmR3m45z3o4E5/xq29J1X3fC8Mv/id/XQF6wlxDeV7Ln8nMvGbQtape+TU7n
+         6L3SEfRbt2yPjsNwSCqQQxTQphQ3v7IcuJPWeVlZGFVUi/xXJuLKy66DFDCkJwsoMt/i
+         b2lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=H18/diuQsn2SRstWPJPGfq5VlI/RQJTDhHU4jrNBf84=;
+        b=w8q9ADBgAXJdTowlJp/pfpKwfjcV1VV6VfuZYSlYvuC64u/5RPRAmnkdGyiLK8So/Q
+         7DT4V+qa5JRrBG2AZrWZocSGAnXHGzxWcxeOiTM8+6lGVZdI78anh4c3EdkasDzoadan
+         g/Pqqw2Tf3xtnTarP5ESiTaEqr6NORcUZzY09g4olAcaKiUoqKpCTM92R29cweain98a
+         jC8gdRU81qLMwidSKzdFuaMEtJjeR8KGimSrZFQfgJQN/Zl0eBv9R5VuEyJxX9WGXRq2
+         HbW0i4bduxM0gCOUaY7MJcas0aVqc65PjiqfvkmhUSEkuIb/tR5Cj/w52AJzI/Pjqxh3
+         FVUg==
+X-Gm-Message-State: AOAM530DaEmOEYbfKs7Zg3c8bHsYpWLv4olaQ38asZkJ7iH9IhLXUZr5
+        QHRck3RAWXAV8XAg8bH2Qc8=
+X-Google-Smtp-Source: ABdhPJw9WfQDAQjPx96j0UbjRTHOgXLJAEoLKsFumpwYvKQtV30qhJezY7jgXph3RzIYEK8jVZBN0Q==
+X-Received: by 2002:a05:6512:2205:b0:478:53d5:bdb1 with SMTP id h5-20020a056512220500b0047853d5bdb1mr13618801lfu.561.1653371334538;
+        Mon, 23 May 2022 22:48:54 -0700 (PDT)
+Received: from mobilestation ([95.79.189.214])
+        by smtp.gmail.com with ESMTPSA id n12-20020ac242cc000000b00473e8c88b92sm2341977lfl.117.2022.05.23.22.48.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 May 2022 22:48:53 -0700 (PDT)
+Date:   Tue, 24 May 2022 08:48:50 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Zhi Li <lznuaa@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+        Frank Li <Frank.Li@nxp.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
+        dmaengine@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v11 0/8] Enable designware PCI EP EDMA locally
+Message-ID: <20220524054850.vrchh6icwfriszhn@mobilestation>
+References: <CAHrpEqR9dXg-4pRFA89ggv4CHXXwU-pWeTb082YRdCzmOTUjVQ@mail.gmail.com>
+ <20220523221256.GA221421@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH v11 8/8] PCI: endpoint: Enable DMA tests for endpoints
- with DMA capabilities
-Content-Language: en-US
-To:     Frank Li <Frank.Li@nxp.com>, <gustavo.pimentel@synopsys.com>,
-        <hongxing.zhu@nxp.com>, <l.stach@pengutronix.de>,
-        <linux-imx@nxp.com>, <linux-pci@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <fancer.lancer@gmail.com>,
-        <lznuaa@gmail.com>, <helgaas@kernel.org>
-CC:     <vkoul@kernel.org>, <lorenzo.pieralisi@arm.com>, <robh@kernel.org>,
-        <kw@linux.com>, <bhelgaas@google.com>,
-        <manivannan.sadhasivam@linaro.org>,
-        <Sergey.Semin@baikalelectronics.ru>
-References: <20220517151915.2212838-1-Frank.Li@nxp.com>
- <20220517151915.2212838-9-Frank.Li@nxp.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-In-Reply-To: <20220517151915.2212838-9-Frank.Li@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-8.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220523221256.GA221421@bhelgaas>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,255 +80,118 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Bjorn
 
+On Mon, May 23, 2022 at 05:12:56PM -0500, Bjorn Helgaas wrote:
+> On Mon, May 23, 2022 at 01:41:48PM -0500, Zhi Li wrote:
+> > On Mon, May 23, 2022 at 1:02 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Mon, May 23, 2022 at 02:06:47PM +0300, Serge Semin wrote:
+> > > > Hello Vinod,
+> > > >
+> > > > On Tue, May 17, 2022 at 10:19:07AM -0500, Frank Li wrote:
+> > > > > Default Designware EDMA just probe remotely at host side.
+> > > > > This patch allow EDMA driver can probe at EP side.
+> > > > >
+> > > > > 1. Clean up patch
+> > > > >    dmaengine: dw-edma: Detach the private data and chip info structures
+> > > > >    dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
+> > > > >    dmaengine: dw-edma: Change rg_region to reg_base in struct
+> > > > >    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+> > > > >
+> > > > > 2. Enhance EDMA driver to allow prode eDMA at EP side
+> > > > >    dmaengine: dw-edma: Add support for chip specific flags
+> > > > >    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific
+> > > > > flags (this patch removed at v11 because dma tree already have fixed
+> > > > > patch)
+> > > > >
+> > > > > 3. Bugs fix at EDMA driver when probe eDMA at EP side
+> > > > >    dmaengine: dw-edma: Fix programming the source & dest addresses for
+> > > > > ep
+> > > > >    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
+> > > > >
+> > > > > 4. change pci-epf-test to use EDMA driver to transfer data.
+> > > > >    PCI: endpoint: Add embedded DMA controller test
+> > > > >
+> > > > > 5. Using imx8dxl to do test, but some EP functions still have not
+> > > > > upstream yet. So below patch show how probe eDMA driver at EP
+> > > > > controller driver.
+> > > > > https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
+> > > >
+> > > > The series has been hanging out on review for over three months now.
+> > > > It has got to v11 and has been tested on at least two platforms. The
+> > > > original driver maintainer has been silent for all that time (most
+> > > > likely Gustavo dropped the driver maintaining role). Could you please
+> > > > merge it in seeing no comments have been posted for the last several
+> > > > weeks? The PCI Host/EP controller drivers maintainer suggested to get
+> > > > this series via the DMA-engine tree:
+> > > > https://lore.kernel.org/linux-pci/YnqlRShJzvma2SKM@lpieralisi/
+> > > > which is obviously right seeing it mainly concerns the DW eDMA driver.
+> > > > Though after that Lorenzo disappeared as quickly as popped up.)
+> > > >
+> > > > There is one more series depending on the changes in this
+> > > > patchset:
+> > > > https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
+> > > > Me and Frank already settled all the conflicts and inter-dependencies,
+> > > > so at least his series is more than ready to be merged in into the
+> > > > kernel repo. It would be very good to get it accepted on this merge
+> > > > window so to have the kernel v5.19 with all this changes available.
+> > >
 
-On 17/05/22 20:49, Frank Li wrote:
-> Some PCI Endpoints controllers integrate an eDMA (embedded DMA).
-> eDMA only sends once a bus read/write command to complete once
-> data transfer. eDMA can bypass the outbound memory address translation
-> unit to access all RC memory space.
-> 
-> Add DMA support for pci-epf-test.
-> 
-> EPF test can use, depending on HW availability, eDMA or general system
-> DMA controllers to perform DMA. The test probes the EPF DMA channel
-> capabilities.
-> 
-> Separate dma_chan to dma_chan_tx and dma_chan_rx. eDMA channels have
-> higher priority than general DMA channels. If general memory to memory
-> DMA hannels are used, dma_chan_rx = dma_chan_tx.
-> 
-> Add dma_addr_t dma_remote in function pci_epf_test_data_transfer()
-> because eDMA using remote RC physical address directly
-> 
-> Add enum dma_transfer_direction dir in function pci_epf_test_data_transfer()
-> because eDMA chooses the correct RX/TX channel by dir.
-> 
-> The overall steps are
-> 
-> 1. Execute dma_request_channel() and filter function to find correct eDMA
-> RX and TX Channel. If a channel does not exist,  fallback to try to allocate
-> general memory to memory DMA  channel.
-> 2. Execute dmaengine_slave_config() to configure remote side physical address.
-> 3. Execute dmaengine_prep_slave_single() to create transfer descriptor.
-> 4. Execute tx_submit().
-> 5. Execute dma_async_issue_pending()
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > Since the v5.19 merge window is already open, it seems doubtful that
+> > > anybody would merge this so late in the cycle.
 
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+In this case it would be safer to merge this whole series through your
+repo. See my series:
+"[PATCH v2 00/26] dmaengine: dw-edma: Add RP/EP local DMA controllers support"
+https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
+depends in the Frank' patchset. Meanwhile my patchset is also based on the
+DW PCIe modifications introduced in the set of the series:
+"[PATCH v2 00/17] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support"
+https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
+and
+"[PATCH v3 00/13] PCI: dwc: Various fixes and cleanups"
+https://lore.kernel.org/linux-pci/20220517125058.18488-1-Sergey.Semin@baikalelectronics.ru/
 
-> ---
-> Change from v10 to v11:
->  - rewrite commit message
-> Change from v9 to v10:
->  - rewrite commit message
-> Change from v4 to v9:
->  - none
-> Change from v3 to v4:
->  - reverse Xmas tree order
->  - local -> dma_local
->  - change error message
->  - IS_ERR -> IS_ERR_OR_NULL
->  - check return value of dmaengine_slave_config()
-> Change from v1 to v2:
->  - none
+So to speak in order to have more coherent repos with least merge,
+logical problems the next order of the merging would be preferable:
+1) Frank's patchset (ready to be merged in):
+[PATCH v11 0/8] Enable designware PCI EP EDMA locally
+https://lore.kernel.org/linux-pci/20220517151915.2212838-1-Frank.Li@nxp.com
+2) My series (ready to be merged in):
+[PATCH v3 00/13] PCI: dwc: Various fixes and cleanups
+https://lore.kernel.org/linux-pci/20220517125058.18488-1-Sergey.Semin@baikalelectronics.ru/
+3) My series (still in review, I need to fix some Rob' and Manivannan' notes)
+[PATCH v2 00/17] PCI: dwc: Add dma-ranges/YAML-schema/Baikal-T1 support
+https://lore.kernel.org/linux-pci/20220503214638.1895-1-Sergey.Semin@baikalelectronics.ru/
+4) Me series (ready to be merged in, but depends on the prev patchsets):
+https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
+
+Seeing the Frank patches won't make it into the mainline repo on
+this merge window, it would be great to collect all the changes in a
+single repository. Seeing Lorenzo disappeared as fast as popped up
+your repo is the best candidate since the DW eDMA block is a part of
+the DW PCIe controller.
+
+> > >
+> > > If Gustavo isn't available or willing to merge it, it looks like Vinod
+> > > (maintainer of drivers/dma) would be the next logical candidate.
+> > 
+> > I think the last patch should not block other patches from merging.
+> > The last patch about pci-epf-test.c is totally independent from other patches.
+> > 
+> > I prefer to merge all the dma patches first.
 > 
->  drivers/pci/endpoint/functions/pci-epf-test.c | 108 ++++++++++++++++--
->  1 file changed, 98 insertions(+), 10 deletions(-)
+> Absolutely.  
 > 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 90d84d3bc868f..f26afd02f3a86 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -52,9 +52,11 @@ struct pci_epf_test {
->  	enum pci_barno		test_reg_bar;
->  	size_t			msix_table_offset;
->  	struct delayed_work	cmd_handler;
-> -	struct dma_chan		*dma_chan;
-> +	struct dma_chan		*dma_chan_tx;
-> +	struct dma_chan		*dma_chan_rx;
->  	struct completion	transfer_complete;
->  	bool			dma_supported;
-> +	bool			dma_private;
->  	const struct pci_epc_features *epc_features;
->  };
->  
-> @@ -105,12 +107,15 @@ static void pci_epf_test_dma_callback(void *param)
->   */
->  static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->  				      dma_addr_t dma_dst, dma_addr_t dma_src,
-> -				      size_t len)
-> +				      size_t len, dma_addr_t dma_remote,
-> +				      enum dma_transfer_direction dir)
->  {
-> +	struct dma_chan *chan = (dir == DMA_DEV_TO_MEM) ? epf_test->dma_chan_tx : epf_test->dma_chan_rx;
-> +	dma_addr_t dma_local = (dir == DMA_MEM_TO_DEV) ? dma_src : dma_dst;
->  	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-> -	struct dma_chan *chan = epf_test->dma_chan;
->  	struct pci_epf *epf = epf_test->epf;
->  	struct dma_async_tx_descriptor *tx;
-> +	struct dma_slave_config sconf = {};
->  	struct device *dev = &epf->dev;
->  	dma_cookie_t cookie;
->  	int ret;
-> @@ -120,7 +125,22 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->  		return -EINVAL;
->  	}
->  
-> -	tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> +	if (epf_test->dma_private) {
-> +		sconf.direction = dir;
-> +		if (dir == DMA_MEM_TO_DEV)
-> +			sconf.dst_addr = dma_remote;
-> +		else
-> +			sconf.src_addr = dma_remote;
-> +
-> +		if (dmaengine_slave_config(chan, &sconf)) {
-> +			dev_err(dev, "DMA slave config fail\n");
-> +			return -EIO;
-> +		}
-> +		tx = dmaengine_prep_slave_single(chan, dma_local, len, dir, flags);
-> +	} else {
-> +		tx = dmaengine_prep_dma_memcpy(chan, dma_dst, dma_src, len, flags);
-> +	}
-> +
->  	if (!tx) {
->  		dev_err(dev, "Failed to prepare DMA memcpy\n");
->  		return -EIO;
-> @@ -148,6 +168,23 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->  	return 0;
->  }
->  
-> +struct epf_dma_filter {
-> +	struct device *dev;
-> +	u32 dma_mask;
-> +};
-> +
-> +static bool epf_dma_filter_fn(struct dma_chan *chan, void *node)
-> +{
-> +	struct epf_dma_filter *filter = node;
-> +	struct dma_slave_caps caps;
-> +
-> +	memset(&caps, 0, sizeof(caps));
-> +	dma_get_slave_caps(chan, &caps);
-> +
-> +	return chan->device->dev == filter->dev
-> +		&& (filter->dma_mask & caps.directions);
-> +}
-> +
->  /**
->   * pci_epf_test_init_dma_chan() - Function to initialize EPF test DMA channel
->   * @epf_test: the EPF test device that performs data transfer operation
-> @@ -158,10 +195,44 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
->  {
->  	struct pci_epf *epf = epf_test->epf;
->  	struct device *dev = &epf->dev;
-> +	struct epf_dma_filter filter;
->  	struct dma_chan *dma_chan;
->  	dma_cap_mask_t mask;
->  	int ret;
->  
-> +	filter.dev = epf->epc->dev.parent;
-> +	filter.dma_mask = BIT(DMA_DEV_TO_MEM);
-> +
-> +	dma_cap_zero(mask);
-> +	dma_cap_set(DMA_SLAVE, mask);
-> +	dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> +	if (IS_ERR_OR_NULL(dma_chan)) {
-> +		dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> +		goto fail_back_tx;
-> +	}
-> +
-> +	epf_test->dma_chan_rx = dma_chan;
-> +
-> +	filter.dma_mask = BIT(DMA_MEM_TO_DEV);
-> +	dma_chan = dma_request_channel(mask, epf_dma_filter_fn, &filter);
-> +
-> +	if (IS_ERR(dma_chan)) {
-> +		dev_info(dev, "Failed to get private DMA channel. Falling back to generic one\n");
-> +		goto fail_back_rx;
-> +	}
-> +
-> +	epf_test->dma_chan_tx = dma_chan;
-> +	epf_test->dma_private = true;
-> +
-> +	init_completion(&epf_test->transfer_complete);
-> +
-> +	return 0;
-> +
-> +fail_back_rx:
-> +	dma_release_channel(epf_test->dma_chan_rx);
-> +	epf_test->dma_chan_tx = NULL;
-> +
-> +fail_back_tx:
->  	dma_cap_zero(mask);
->  	dma_cap_set(DMA_MEMCPY, mask);
->  
-> @@ -174,7 +245,7 @@ static int pci_epf_test_init_dma_chan(struct pci_epf_test *epf_test)
->  	}
->  	init_completion(&epf_test->transfer_complete);
->  
-> -	epf_test->dma_chan = dma_chan;
-> +	epf_test->dma_chan_tx = epf_test->dma_chan_rx = dma_chan;
->  
->  	return 0;
->  }
-> @@ -190,8 +261,17 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
->  	if (!epf_test->dma_supported)
->  		return;
->  
-> -	dma_release_channel(epf_test->dma_chan);
-> -	epf_test->dma_chan = NULL;
-> +	dma_release_channel(epf_test->dma_chan_tx);
-> +	if (epf_test->dma_chan_tx == epf_test->dma_chan_rx) {
-> +		epf_test->dma_chan_tx = NULL;
-> +		epf_test->dma_chan_rx = NULL;
-> +		return;
-> +	}
-> +
-> +	dma_release_channel(epf_test->dma_chan_rx);
-> +	epf_test->dma_chan_rx = NULL;
-> +
-> +	return;
->  }
->  
->  static void pci_epf_test_print_rate(const char *ops, u64 size,
-> @@ -280,8 +360,14 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
->  			goto err_map_addr;
->  		}
->  
-> +		if (epf_test->dma_private) {
-> +			dev_err(dev, "Cannot transfer data using DMA\n");
-> +			ret = -EINVAL;
-> +			goto err_map_addr;
-> +		}
-> +
->  		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> -						 src_phys_addr, reg->size);
-> +						 src_phys_addr, reg->size, 0, DMA_MEM_TO_MEM);
->  		if (ret)
->  			dev_err(dev, "Data transfer failed\n");
->  	} else {
-> @@ -363,7 +449,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
->  
->  		ktime_get_ts64(&start);
->  		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
-> -						 phys_addr, reg->size);
-> +						 phys_addr, reg->size,
-> +						 reg->src_addr, DMA_DEV_TO_MEM);
->  		if (ret)
->  			dev_err(dev, "Data transfer failed\n");
->  		ktime_get_ts64(&end);
-> @@ -453,8 +540,9 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
->  		}
->  
->  		ktime_get_ts64(&start);
-> +
->  		ret = pci_epf_test_data_transfer(epf_test, phys_addr,
-> -						 src_phys_addr, reg->size);
-> +						 src_phys_addr, reg->size, reg->dst_addr, DMA_MEM_TO_DEV);
->  		if (ret)
->  			dev_err(dev, "Data transfer failed\n");
->  		ktime_get_ts64(&end);
+
+> Given an ack from Kishon, it would make sense for Vinod to merge them
+> all together since they're logically related, but I have no objection
+> to merging any of the drivers/dma patches separately.
+
+Please see my comment above.
+
+Thanks
+-Sergey
+
+> 
+> Bjorn

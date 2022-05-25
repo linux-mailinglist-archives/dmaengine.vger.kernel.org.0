@@ -2,153 +2,105 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC1095342A4
-	for <lists+dmaengine@lfdr.de>; Wed, 25 May 2022 20:04:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2527C53453F
+	for <lists+dmaengine@lfdr.de>; Wed, 25 May 2022 22:48:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343621AbiEYSEQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 25 May 2022 14:04:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40104 "EHLO
+        id S242983AbiEYUsb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 25 May 2022 16:48:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343622AbiEYSEP (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 May 2022 14:04:15 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 33E279CF43;
-        Wed, 25 May 2022 11:04:14 -0700 (PDT)
-Received: from smtpclient.apple (d66-183-91-182.bchsia.telus.net [66.183.91.182])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 676BE20B71D5;
-        Wed, 25 May 2022 11:04:12 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 676BE20B71D5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1653501853;
-        bh=AIZAMiCEajIHhQ0xzFaRPG9svaWeXfFXVXfyfZDYgF8=;
-        h=Subject:From:In-Reply-To:Date:Cc:References:To:From;
-        b=qkPq7ZxKLUX+Js2XTpprB3QG78Q+FVPrOwQe4D4uDbsxi4xBnu1SohxxB30+ZmQYa
-         vH5+kwVx+y32vqBI4OjdS/hhilI25YmpsA3nweMp+1Tl2JQcYd/mpLkjV/QuvUwFGz
-         yBllJU5p5jUsgst9RiU/mkvW0F4DnJwkJyQrECg0=
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.80.82.1.1\))
-Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
-From:   Allen Pais <apais@linux.microsoft.com>
-In-Reply-To: <CAK8P3a0mOEMW3N7HB7zTAbqKJMu_RusivjxwuU7_E+O1vGHOEw@mail.gmail.com>
-Date:   Wed, 25 May 2022 11:04:11 -0700
-Cc:     David Laight <David.Laight@aculab.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "olivier.dautricourt@orolia.com" <olivier.dautricourt@orolia.com>,
-        Stefan Roese <sr@denx.de>, Vinod Koul <vkoul@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "zw@zh-kernel.org" <zw@zh-kernel.org>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Sanjay R Mehta <sanju.mehta@amd.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        "green.wan@sifive.com" <green.wan@sifive.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Lyra Zhang <zhang.lyra@gmail.com>,
-        Patrice CHOTARD <patrice.chotard@foss.st.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        =?utf-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        with ESMTP id S240971AbiEYUsa (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 May 2022 16:48:30 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53D54B8BC5
+        for <dmaengine@vger.kernel.org>; Wed, 25 May 2022 13:48:23 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id s14so10931858ybc.10
+        for <dmaengine@vger.kernel.org>; Wed, 25 May 2022 13:48:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=+uyh4vUIYntN7Mid2B5fbgguOxBR2RiHnKBh7A4r37I=;
+        b=MIznAoP29XHGMZwK2XaORcuFYY4KHU3SiD37YZr3IksbwEszYFwRGI6NMOaIsgw3Rc
+         MNWUak9e2Pk5zm0JPp6szTBpWptBOFEsDKaXw1mzZOTFcRGcvyjOwqdtF8UB9EvyuuJZ
+         fMICjT1+KZ7bxeE9NTTU8LESXRGeqFThSri55TjzyU4r+qSYB8KRkbeHsWYNf08X2bEy
+         pryupL2ykuBV+sygnkk+fqajrVN1/45XJT6UIDBI/J4JIiO7GZW4kaISjbo9xtOnIbu3
+         /lAT2wlHOnLDqj2MsvwscUqPgxRkbuhwflLse0VSR01xDxZYapbGb527uMRlqnyfWWDn
+         3l8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=+uyh4vUIYntN7Mid2B5fbgguOxBR2RiHnKBh7A4r37I=;
+        b=6WL2MeNasPDPybtvTN+L0I1XGTNaGt6xDwrK2+bvwD8vsypTEEbP7YhpozSw4fhX32
+         S7cEWW6tVswr9YzouesRNjZA8wot0JIL3ck21LIpAaS+yzSHDO1E85xNqRY/GYGtJmLu
+         bWvDaAdEOJumh8eJhoOdsQk/EeVItlrBT7PLklmj8ToJfm8itf+jbpd9nvzPU9V8lPXn
+         UcDglevqCwsvxdvBtjxc+Smg1cA54dRi+3T9VSSC8W3LdO68hvrFOtYnUG8swAWHTz3I
+         ecfajdKrpIdmuEILW85xwg6CgaEFzzRdNCT4hCeho6Y9OZxnFN7PLQAwZCb1swOizlA5
+         rVDQ==
+X-Gm-Message-State: AOAM5318CsuJqqebiyIFWEj58tDf3GLF5PCDMCMlDB0PfqCs3af6Id1v
+        4REodULs4DRY1AeETsQ1Qt1DDNDMG0oBiqpLjmM=
+X-Google-Smtp-Source: ABdhPJygDnPWuNyLLxTk2B3Kv8LEKih1+m2wVtTUpsrNi1Bs8nM6GPylqvWzkD99kDlHZJJaie6GrPKCBIwCtXokpK8=
+X-Received: by 2002:a05:6902:1023:b0:64f:39e7:ef05 with SMTP id
+ x3-20020a056902102300b0064f39e7ef05mr31533397ybt.126.1653511701867; Wed, 25
+ May 2022 13:48:21 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:a05:7110:3682:b0:17b:2b7b:c035 with HTTP; Wed, 25 May 2022
+ 13:48:21 -0700 (PDT)
+From:   Colina Fernando <colinafernando724@gmail.com>
+Date:   Wed, 25 May 2022 22:48:21 +0200
+Message-ID: <CAP7Hh1-EL6tqrQsO0De_QJ1avJao_roXNeVStyzCoPtO9q14fg@mail.gmail.com>
+Subject: Bitte kontaktaufnahme Erforderlich !!! Please Contact Required !!!
+To:     contact@firstdiamondbk.com
+Cc:     info@firstdiamondbk.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <45597969-0419-4CEE-B80C-4D2917943837@linux.microsoft.com>
-References: <20220419211658.11403-1-apais@linux.microsoft.com>
- <20220419211658.11403-2-apais@linux.microsoft.com>
- <CACRpkdZ2DFZRPHS1x0=M3_8zYvU-jpCG5Tm3863dXv51EhY+BA@mail.gmail.com>
- <CAK8P3a0j_rziihsgHnG5bHMxmPbOkAhT6_+CCE4iFZy7HzQrLw@mail.gmail.com>
- <9947cfa64667406996de191f07b9e8b9@AcuMS.aculab.com>
- <6E248F41-6687-4F2B-B847-DB5459BA1344@linux.microsoft.com>
- <CAK8P3a0mOEMW3N7HB7zTAbqKJMu_RusivjxwuU7_E+O1vGHOEw@mail.gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-X-Mailer: Apple Mail (2.3696.80.82.1.1)
-X-Spam-Status: No, score=-19.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=0.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Guten Tag,
 
->>=20
->> Thank you Linus, Arnd, Vincent and David for the feedback.
->>=20
->> This is a lot more than a just conversion of API=E2=80=99s. I am in =
-the process
->> Of replacing tasklets with threaded irq=E2=80=99s and hopefully that =
-should be
->> A better solution than using workqueues.
->=20
-> I don't think that is much better for the case of the DMA engine
-> callbacks than the work queue, the problem I pointed out here
-> is scheduling into task context, which may be too expensive
-> in some cases, but whether it is or not depends on the slave
-> driver, not the dmaengine driver.
+Ich habe mich nur gefragt, ob Sie meine vorherige E-Mail bekommen
 
-Fair point. Deferring all callbacks to task context is not the ideal
-Way forward. I will work on the approach you shared,
+haben ?
 
+Ich habe versucht, Sie per E-Mail zu erreichen.
 
->1. add helper functions to call the callback functions from a
->tasklet locally defined in drivers/dma/dmaengine.c to allow
->deferring it from hardirq context
+Kommen Sie bitte schnell zu mir zur=C3=BCck, es ist sehr wichtig.
 
->2. Change all tasklets that are not part of the callback
->mechanism to work queue functions, I only see
->xilinx_dpdma_chan_err_task in the patch, but there
->may be more
+Danke
 
->3. change all drivers to move their custom tasklets back into
->hardirq context and instead call the new helper for deferring
->the callback.
+Fernando Colina
 
->4. Extend the dmaengine callback API to let slave drivers
->pick hardirq, tasklet or task context for the callback.
->task context can mean either a workqueue, or a threaded
->IRQ here, with the default remaining the tasklet version.
-
->5. Change slave drivers to pick either hardirq or task context
->depending on their requirements
-
->6. Remove the tasklet version.
-
-Thanks.
-
->=20
-> Even if all the slave drivers are better off using task context
-> (threaded irq or workqueue), you need to look at the slave
-> drivers first before you can convert the dmaengine drivers.
->=20
+colinafernando724@gmail.com
 
 
 
+
+----------------------------------
+
+
+
+
+Good Afternoon,
+
+I was just wondering if you got my Previous E-mail
+have ?
+
+I tried to reach you by E-mail.
+
+Please come back to me quickly, it is very Important.
+
+Thanks
+
+Fernando Colina
+
+colinafernando724@gmail.com

@@ -2,153 +2,108 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 669975339DA
-	for <lists+dmaengine@lfdr.de>; Wed, 25 May 2022 11:23:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 574265339DE
+	for <lists+dmaengine@lfdr.de>; Wed, 25 May 2022 11:25:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229780AbiEYJXN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 25 May 2022 05:23:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39334 "EHLO
+        id S235655AbiEYJZG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 25 May 2022 05:25:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229684AbiEYJXM (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 May 2022 05:23:12 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 610268A302;
-        Wed, 25 May 2022 02:23:11 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id l13so28381332lfp.11;
-        Wed, 25 May 2022 02:23:11 -0700 (PDT)
+        with ESMTP id S235047AbiEYJZB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 May 2022 05:25:01 -0400
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE3888A302
+        for <dmaengine@vger.kernel.org>; Wed, 25 May 2022 02:24:59 -0700 (PDT)
+Received: by mail-yb1-xb2b.google.com with SMTP id q184so6374163ybg.11
+        for <dmaengine@vger.kernel.org>; Wed, 25 May 2022 02:24:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4RxfjJGzZIGlTYKUTNPy7iJJf13WJP4M7ctgJzA/Pz8=;
-        b=FSnZgxNEKP8qzxhKhKrktDCmD29VXv5ub9L3amMtvRuQrNImuF4YXPa2QzYB/A9Tca
-         ciSQw1CvX89DqYoEilJ8PGDANx44v0ffdC2LW/oumuNMO8sxnOcv90A7Hgy6ibgOvgU3
-         ixrKQEH14h6Fa9OH/Lwy4liy6NHnPCXw3lM9vZUYQ3vwdIYvzvGq3ahKgzOoXu0iKhWB
-         OWEpqFlxPgFwTsBEKiy0EYv/l1FkN1n+wg0khCHgr83+xBbm9Hy9on5BixwTLIGP9r0R
-         sD8yNX2yG1j2+mXL30z6XuGPzfGTVA7j5nWvIXMcHYRRr/RFK2cOv3yFDlX8dIS0yKAB
-         6DCg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8v8NJ0a8V56vtqLR+SMp9QvjOrvgB+9HAIgTvz0fNJo=;
+        b=dYJhLfBDjkkwdtL7D9ZCvH/HwdunUkHDymiQT/6fOkGfUlgVU79wfDNeKi1FmvO01+
+         sYziFA2LOGAfhRqoHeA2iY+WYLDKijMRBXtk7C9/myzGSV/1yBTPtk6tY5yr6aZknMvq
+         iLgkfAtv9jdC0BFti5DSakNtV6dFv7VSLlkUS50I4bWqisejUClMiEswT8RJnSp4VZ+c
+         2e9Ew7kGjVu2lxGwPu5u5kCugna04xaGgXoBapEPsQM2HR7+zNeTZgGbmlfgei/SwXVk
+         N9y954AfWXnR9J/RQcoJWVcEZsWkqX5qXN+67MuuLLVyBMM5P2KSSCGz8fI/ZDbWqiAr
+         CxTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4RxfjJGzZIGlTYKUTNPy7iJJf13WJP4M7ctgJzA/Pz8=;
-        b=tksoXZUp02MZRg14MCi5IywKqZjZvBtzRNVqrLXNhHGjjvPFf557bodsgrYSKJ2HF6
-         KWnAiqnJnZ/G3fcF+gmDgg+gZuaxnw+/nVm25hgBisGqWxoVdLyv/FaaoJvxjU0zBIDA
-         RKJQ8w8sXmq3JQwbHdTaW6RQHiDeoB7w0tsg+RimgiAnN+1EizGWnI5n6iaIyVIOuzKM
-         xwOGF7/OHgFuDFMzqiHGUvesCyfhFQvQBWci7S3ZNSxLCf00K19Ak9D0mnwYNTTCkMzM
-         mu/rgiiS/P/0lPGdXMVPEtPPTaqncQdR7VGNOWFDFkAm0Two7u5IGuROyX57je4mPVHw
-         82nw==
-X-Gm-Message-State: AOAM533Wx7J9M6CSFsvg8FM+5+SM0gxOooV3Tr7HlT4MkGXC7sLBxoQ0
-        DnZVNGmwYY4Gv9gmcBLfAWI=
-X-Google-Smtp-Source: ABdhPJxfqi2D8oKI3+5MaHV+wcdwj/5RYoa8OhD6XqA3WbNZuui11onhhFEN+S8L6yTpuh4VNiydDQ==
-X-Received: by 2002:a05:6512:398e:b0:477:bcc6:f45d with SMTP id j14-20020a056512398e00b00477bcc6f45dmr10392095lfu.216.1653470589729;
-        Wed, 25 May 2022 02:23:09 -0700 (PDT)
-Received: from mobilestation ([95.79.189.214])
-        by smtp.gmail.com with ESMTPSA id a4-20020ac25e64000000b00477ccad3dcfsm2764792lfr.287.2022.05.25.02.23.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 May 2022 02:23:08 -0700 (PDT)
-Date:   Wed, 25 May 2022 12:23:06 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        gustavo.pimentel@synopsys.com, hongxing.zhu@nxp.com,
-        l.stach@pengutronix.de, linux-imx@nxp.com,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        lznuaa@gmail.com, helgaas@kernel.org, kishon@ti.com,
-        vkoul@kernel.org, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        kw@linux.com, bhelgaas@google.com, manivannan.sadhasivam@linaro.org
-Subject: Re: [PATCH v12 0/8] Enable designware PCI EP EDMA locally
-Message-ID: <20220525092306.wuansog6fe2ika3b@mobilestation>
-References: <20220524152159.2370739-1-Frank.Li@nxp.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8v8NJ0a8V56vtqLR+SMp9QvjOrvgB+9HAIgTvz0fNJo=;
+        b=QoL4idP214wfgVZvVCadIHJxQj1k68yXVIJARDtqnDfXIDgeWM96yIIGlBcl28wJ1h
+         IeUzbNTcGydFeBdMMOKqF6yJ2NbLjiZxhlK+KKpsi3tyn41+naw0/xjC7t7fggfAFkye
+         WN39o/ooT4w00kZmuZwLAhfsWIYW80dRVgC5YwRtfGl1KwHsnJhV88K9fS/1YKWj4p3U
+         YR+1k/seFX+D6I8yZ8ShmnWQH1Lz4lkK4z6Gzb1We29dBCs6PlMGzdXMtLEUR7wakj38
+         SKIvOeV/bPYLvcKBVRQ40otBYaU0LrQVrjXtR3kKbvrTgk2k5vCxqVRN2sYiG7RC7fyi
+         JGIA==
+X-Gm-Message-State: AOAM533SmZT7+RbfxSHvVAX2iSeQkgsOdFO2wkumFOe/VSR6U5NanlK7
+        RS3k7tvDsp/xFPCNh2+ZAJT4rHix5UmvimlimbTIpw==
+X-Google-Smtp-Source: ABdhPJyTI8yw+M0YzU0THJ1vYh5OzrMdzgHpVAzvdG4RReWcEDTXHjPdRmztzhwlqmxghfm1UKDV/wUEiUYjP8kA62g=
+X-Received: by 2002:a25:420e:0:b0:655:8817:e6ba with SMTP id
+ p14-20020a25420e000000b006558817e6bamr3360166yba.369.1653470698888; Wed, 25
+ May 2022 02:24:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220524152159.2370739-1-Frank.Li@nxp.com>
+References: <20220419211658.11403-1-apais@linux.microsoft.com> <20220419211658.11403-2-apais@linux.microsoft.com>
+In-Reply-To: <20220419211658.11403-2-apais@linux.microsoft.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 25 May 2022 11:24:46 +0200
+Message-ID: <CACRpkdZ2DFZRPHS1x0=M3_8zYvU-jpCG5Tm3863dXv51EhY+BA@mail.gmail.com>
+Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
+To:     Allen Pais <apais@linux.microsoft.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     olivier.dautricourt@orolia.com, sr@denx.de, vkoul@kernel.org,
+        keescook@chromium.org, linux-hardening@vger.kernel.org,
+        ludovic.desroches@microchip.com, tudor.ambarus@microchip.com,
+        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, nsaenz@kernel.org,
+        paul@crapouillou.net, Eugeniy.Paltsev@synopsys.com,
+        gustavo.pimentel@synopsys.com, vireshk@kernel.org,
+        andriy.shevchenko@linux.intel.com, leoyang.li@nxp.com,
+        zw@zh-kernel.org, wangzhou1@hisilicon.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, sean.wang@mediatek.com,
+        matthias.bgg@gmail.com, afaerber@suse.de, mani@kernel.org,
+        logang@deltatee.com, sanju.mehta@amd.com, daniel@zonque.org,
+        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        krzysztof.kozlowski@linaro.org, green.wan@sifive.com,
+        orsonzhai@gmail.com, baolin.wang7@gmail.com, zhang.lyra@gmail.com,
+        patrice.chotard@foss.st.com, wens@csie.org,
+        jernej.skrabec@gmail.com, samuel@sholland.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello Vinod
+On Tue, Apr 19, 2022 at 11:17 PM Allen Pais <apais@linux.microsoft.com> wrote:
 
-On Tue, May 24, 2022 at 10:21:51AM -0500, Frank Li wrote:
-> Default Designware EDMA just probe remotely at host side.
-> This patch allow EDMA driver can probe at EP side.
-> 
-> 1. Clean up patch
->    dmaengine: dw-edma: Detach the private data and chip info structures
->    dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
->    dmaengine: dw-edma: Change rg_region to reg_base in struct
->    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> 
-> 2. Enhance EDMA driver to allow prode eDMA at EP side
->    dmaengine: dw-edma: Add support for chip specific flags
->    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific
-> flags (this patch removed at v11 because dma tree already have fixed
-> patch)
-> 
-> 3. Bugs fix at EDMA driver when probe eDMA at EP side
->    dmaengine: dw-edma: Fix programming the source & dest addresses for
-> ep
->    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
-> 
-> 4. change pci-epf-test to use EDMA driver to transfer data.
->    PCI: endpoint: Add embedded DMA controller test
-> 
-> 5. Using imx8dxl to do test, but some EP functions still have not
-> upstream yet. So below patch show how probe eDMA driver at EP
-> controller driver.
-> https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
+> The tasklet is an old API which will be deprecated, workqueue API
+> cab be used instead of them.
+>
+> This patch replaces the tasklet usage in drivers/dma/* with a
+> simple work.
+>
+> Github: https://github.com/KSPP/linux/issues/94
+>
+> Signed-off-by: Allen Pais <apais@linux.microsoft.com>
 
-This series has been on review for over three months now. It has got
-several acks, rb and tb tags from me, Manivannan and Kishon (the last
-patch in the series). Seeing Gustavo hasn't been active for all that time
-at all and hasn't performed any review for more than a year the
-probability of getting his attention soon enough is almost zero. Thus
-could you please give your acks if you are ok with the series content. Due
-to having several more patchsets dependent on this one, Bjorn has agreed
-to merge this series in through the PCI tree:
-https://lore.kernel.org/linux-pci/20220524155201.GA247821@bhelgaas/
-So the only thing we need is your ack tags.
+Paging Vincent Guittot and Arnd Bergmann on the following question
+on this patch set:
 
-@Frank. Should there be a new patchset revision could you please add a
-request to merge the series in to the PCI tree? I am a bit tired repeating
-the same messages each time the new mailing review lap.)
+- Will replacing tasklets with workque like this negatively impact the
+  performance on DMA engine bottom halves?
 
--Sergey
+For reference:
+https://lore.kernel.org/dmaengine/YoI4J8taHehMpjFj@matsya/
 
-> 
-> Frank Li (6):
->   dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
->   dmaengine: dw-edma: Detach the private data and chip info structures
->   dmaengine: dw-edma: Change rg_region to reg_base in struct
->     dw_edma_chip
->   dmaengine: dw-edma: Rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
->     dw_edma_chip
->   dmaengine: dw-edma: Add support for chip specific flags
->   PCI: endpoint: Enable DMA tests for endpoints with DMA capabilities
-> 
-> Serge Semin (2):
->   dmaengine: dw-edma: Drop dma_slave_config.direction field usage
->   dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
->     semantics
-> 
->  drivers/dma/dw-edma/dw-edma-core.c            | 141 +++++++++++-------
->  drivers/dma/dw-edma/dw-edma-core.h            |  31 +---
->  drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
->  drivers/dma/dw-edma/dw-edma-v0-core.c         |  41 ++---
->  drivers/dma/dw-edma/dw-edma-v0-core.h         |   4 +-
->  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  18 +--
->  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   8 +-
->  drivers/pci/endpoint/functions/pci-epf-test.c | 112 ++++++++++++--
->  include/linux/dma/edma.h                      |  59 +++++++-
->  9 files changed, 317 insertions(+), 180 deletions(-)
-> 
-> -- 
-> 2.35.1
-> 
+Yours,
+Linus Walleij

@@ -2,150 +2,157 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FB755332D8
-	for <lists+dmaengine@lfdr.de>; Tue, 24 May 2022 23:10:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF36F5338E3
+	for <lists+dmaengine@lfdr.de>; Wed, 25 May 2022 10:56:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241833AbiEXVKb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 24 May 2022 17:10:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60066 "EHLO
+        id S231163AbiEYI43 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 25 May 2022 04:56:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231971AbiEXVK2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 24 May 2022 17:10:28 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2054.outbound.protection.outlook.com [40.107.244.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AF203ED1B;
-        Tue, 24 May 2022 14:10:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e8X7lFSVDH2Ovk6l3UfcL4aeQSrhHC0t8s4lF85R3k92ywqP1sqLxeOUMOcFaWx7Tfql9roExFE+aaSF+nBjXjhN7b95QUtlKYa3UJ42p5o8azd9pV6tCA/vWe3hyrSGbZYrcJSTtP2i/vn99N0c6/xoLQg5JyCQzGup6+1axAnz46UTK3ZK5lpqwzSlqi9Zd/1oHyrlSQZynwAoJ0ywWE0ib9UxjYZg2yoQ0YU80fa+T8wki7ZO0ZVyOmRbj8CtAKO0hzqk7zcINoI84gERlIzJzZEEXCCRSVvbPXTQrmHAq/egtJr5V6W9SxeEGI6SYu+LX9OSHWmPxtWqAl7F9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uoND3vR1tlx2CwWTWHHuWIeR9mvgpYy8RMmF01/18dw=;
- b=CLLOL2wP02N/BsMeW96DNJyZs3iHgTJz6jKZ69K8tq9kivs8rs7RJ8FKZy10o5u0L9nBVqdkbUWeqae6quuPe1uDPiC85rPB93Fw7NLHTQOr9dU5eg3v+XGxiZTuG0ZBqK3CglZSH5hMgO20XYsp69IPfvnEn8fd957KSdoKtIP9buoSkm+qr6XIQgijYiNuK1ED98WpLsOxSs2MzFUrLB6/kbLz503vempqeeiTir2n4XbAe35cv0ESZxNBarAONdf518XGIG3rNmeIBKw/qeYvfS/O7ZAH8UjMqhMedVsEYCUsU/Vy8TM4c2bEax/TCJqwFZ8cGOhbCvUEiXhmAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uoND3vR1tlx2CwWTWHHuWIeR9mvgpYy8RMmF01/18dw=;
- b=TUqUZ2La0etA4WaCZsbWw74UCEZHTCje8LslumL7Q32gNoKuq2jb1G/WnFonnIcinnbzZCmVmRBRRIOYtdJKUS74qkPBZYrRAEaWc8s1eSzjlOSMIB5TgOxNP3SENGl3QQzU6MlCLLJsrb75+Hnbb9jgBWFvTmsTQfH1/PXA5Qzr2mRV5gQ9UEP+ad4x14Q2mIvPWPPdQDRc9kJgT7wMX3kbufPuH7miwgkFnwLJf84y/uODGEKCBtRXN7Fd7jfUACmI82VnNE34rMl3TKvAuCIdEHOY4/P9iWdqBtko+qfSSRWGeOGHTbt8OODsMOg9vprAX+KEZ9V53vCVVf4toA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
- by DM4PR12MB6160.namprd12.prod.outlook.com (2603:10b6:8:a7::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.22; Tue, 24 May
- 2022 21:10:26 +0000
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::2484:51da:d56f:f1a5]) by MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::2484:51da:d56f:f1a5%7]) with mapi id 15.20.5293.013; Tue, 24 May 2022
- 21:10:25 +0000
-Date:   Tue, 24 May 2022 18:10:24 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Christoph Hellwig <hch@infradead.org>, vkoul@kernel.org,
-        robin.murphy@arm.com, will@kernel.org, Yi Liu <yi.l.liu@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH v4 3/6] iommu/vt-d: Implement domain ops for
- attach_dev_pasid
-Message-ID: <20220524211024.GC1343366@nvidia.com>
-References: <20220518182120.1136715-1-jacob.jun.pan@linux.intel.com>
- <20220518182120.1136715-4-jacob.jun.pan@linux.intel.com>
- <20220524135135.GV1343366@nvidia.com>
- <20220524091235.6dddfab4@jacob-builder>
- <20220524180241.GY1343366@nvidia.com>
- <20220524134526.409519ac@jacob-builder>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220524134526.409519ac@jacob-builder>
-X-ClientProxiedBy: BL0PR02CA0125.namprd02.prod.outlook.com
- (2603:10b6:208:35::30) To MN2PR12MB4192.namprd12.prod.outlook.com
- (2603:10b6:208:1d5::15)
+        with ESMTP id S229546AbiEYI42 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 May 2022 04:56:28 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42FE3F67;
+        Wed, 25 May 2022 01:56:27 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id h10so2395811ljb.6;
+        Wed, 25 May 2022 01:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=80aPqe+7Pw6vDZHIq4vmZmpzPyTskcXhhyN+lLUN030=;
+        b=lnCZ97/1gpYTqqBwOO5aCiGlgYpDFzAdVm9dP47LqKGSWmHFYo6f0TOyKFjrjqFG3t
+         VmfUNv5i9FRtx4jcSDF8cUOhNmZ+6evNl6L66zpOFreqtnJVe016NTy0IUDaZJgpZfnv
+         tEDK19nwOkEaMFMF13lgoP0vYtLP9LH+Tz4u+5UERF+fGrUTbDqShxON803ze+X8V+MA
+         k2Tj1Y7lg+bDFA9aKo8KCuI4GhpWvcGuoSOilNXaVS6ICQljhamzLhIQqDLzp1dfbcv/
+         lCQ6gRWjqW1mZf96GC4Icn9J8FqsF77iwKMdWQ7qNPv3CUEXr/qa2ZwqAV57X03PG8+K
+         n4qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=80aPqe+7Pw6vDZHIq4vmZmpzPyTskcXhhyN+lLUN030=;
+        b=uBOnARVIZljwNvV4KHAQqAIS1dEASyWNKUaWh8BPoTbmk8UmcZvAkGmuv0S/Nq0epP
+         qpxu0yukKy32zFJc1WQYgiBomO72I/lNjgY1yOr0HPm8FTu4vPK60U5J2UAt7GywZMdN
+         6kdaQvNySqusfa+2IBujcpoaRaKGk+FhgwC48LSbDRTZ4XeuZN2RNlJmgB2pbzXcj9lX
+         msHuRRixve0D8iqeyH0C9m7+rG08LUqWh/jBaEVI3uJfJhBYTBjuXpxa9O6X3WyzBLoG
+         cSzf2tFq7YqnYhWOzuGuD0Q/Fsow+38JGB+X+gRbJNIUHiH9bijsI5QmBc0vlkLfg3W9
+         AK7g==
+X-Gm-Message-State: AOAM533ElzIoX95qANKoDUvLfFY+LenWPGrehzUhHZ7OEJFLzPFLUVCM
+        GF6H2Cl9gqp4SxV0AWYZFbU=
+X-Google-Smtp-Source: ABdhPJxLVekLSEbQ5D9mfU6jcjvQKQZmERaUxmy/PahOXSMioMIo0S9I4CeYSQs6pkEjLyLBIGpx0g==
+X-Received: by 2002:a05:651c:510:b0:254:11c:8376 with SMTP id o16-20020a05651c051000b00254011c8376mr2997413ljp.45.1653468985455;
+        Wed, 25 May 2022 01:56:25 -0700 (PDT)
+Received: from mobilestation ([95.79.189.214])
+        by smtp.gmail.com with ESMTPSA id w9-20020a05651c102900b002509783c8f8sm2996277ljm.83.2022.05.25.01.56.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 May 2022 01:56:24 -0700 (PDT)
+Date:   Wed, 25 May 2022 11:56:21 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 23/26] dmaengine: dw-edma: Bypass dma-ranges mapping
+ for the local setup
+Message-ID: <20220525085621.xvxnbvsddp6uqwpm@mobilestation>
+References: <20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru>
+ <20220503225104.12108-24-Sergey.Semin@baikalelectronics.ru>
+ <20220524131959.GA5745@thinkpad>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8f8d0641-3a07-4e84-a5cb-08da3dc9d283
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6160:EE_
-X-Microsoft-Antispam-PRVS: <DM4PR12MB61606417AC340CCE17F19529C2D79@DM4PR12MB6160.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1ap+tRr2Uu3l7ADFPsRN+RcDF5xvozgCx6S53uWCIZakzy/jrZE5yicHuTVJPtfjOwht0q7QkR7QAJ/UAzekE/XoQh6HHymJj6ekrlOUozKQ/NXpYT2+kmqIbDa/gFvCl027exL07z+kktXgiNzSt1tvg3hnTYkDeroScUSE1w/RulyQPnC2wu0QWpQjmzdseZuQmtivf6iskyOqM/j/8XqKoVqstIpAEpkFq4cYT1EBTa8Qp86N5aspXDDDNjWWK5pT1BLXv5SWbFZdlueO7YX7pvfuRYnX3rP0cj98z740EMO5akC1bo7nAXyWI+YEEaHfj+mDXvOsIV2hx4khYUgyDQbeBZ3ydAS8l3J0iGUdMQHAcFUeCfA6dB4X8qWzCC37jNnVXwIbZj6BGZ+p0JjoK7M84VUFWDHPwvzoasFVLOwBb++WL2hvs2e/60PBfF+AKXD7fGnyqCbDF1RxGi7ZJWQyG1hTJd1zT5/gOO1KTxFwGm1wFR1ctBe0E9puOzaLrZiQMDsVn4EZJV9arahpdNl4kjHjB4B4+T/sYcBJbuXTfGvLBIEST/TNQAxaIRgAuuXGnF9DQd+Zk70DiDkoQH3BJzFDVFLdbfSnMjD21+KoD6sf0GtglM0jEMmIPEurwVlSYecbP5xsCMCNYg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(508600001)(36756003)(6506007)(4326008)(6486002)(5660300002)(8936002)(2906002)(33656002)(2616005)(66946007)(186003)(8676002)(66556008)(38100700002)(1076003)(86362001)(6512007)(26005)(6916009)(54906003)(66476007)(316002)(4744005)(7416002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Zx26vZXawVyb8s/ajm9gjsPBn7cDxG9+CH7FAjQZ0EgIy2rL8INyTeSnsCVT?=
- =?us-ascii?Q?SRoyUcQ4sl2e5kAR5RFo7uKD46v4M4ttXXq9LSoJxNL8XmCEvEpotMNRsCS7?=
- =?us-ascii?Q?ZxZKjdfYxAZ5wG6Mo5rfADaNknnUlQHXbhN6ODQ4teVcUrJTiLFopd3Odo/S?=
- =?us-ascii?Q?xrujivH4Kyg9Zlnj++H8I79EBaEHwJChUiBitpUIXynM7Ue+J2Q0j5fgSpLb?=
- =?us-ascii?Q?GtrY1oLLHjqcZArF1VMH3RU4SVrBGVhueVQRP5IoB8Cd/5ccKcGqoZcVb+g4?=
- =?us-ascii?Q?wtVWJP4yfYnBNu92Zhnut85h1klpzgrLB9GFqoOU/FRSwleJ0QMaebRohY1j?=
- =?us-ascii?Q?ISq9ZWc86WAf/eF5ih18WgPuwZH2Ba1nCseQKeeP/J3xEGPNpleBLWRmg9mN?=
- =?us-ascii?Q?4suuJz0Qudp2r5r6sMj9UeO8eHMALKgaZ/Mkxh/9EgUORpoQ/8h/K1KPRvwo?=
- =?us-ascii?Q?rCv7O9GIy9yISaJRop5YNdmwCzLfvY1AdqyGxmtQ+vWxT8HtyFGmDiRmzFbc?=
- =?us-ascii?Q?U0q2XDbuNrKtttfXqaJdOmtnKrCC+plwBAABSCvEqOm9ipEg9FSPAAHvTICq?=
- =?us-ascii?Q?tFpMdZthmFx9BP0m8KPg9dOhOfAVP2sNznkENB28j0p7/SaUtWi4J6KPQBQt?=
- =?us-ascii?Q?CGtcSc53v+Cpl0AQFDm6MyTxb3fWJQMVpAkECm4xCPE5hQGITpTHNzJDbA4o?=
- =?us-ascii?Q?Qli7SU+T89VH7tmhuCuivQuNbC3x+sbKUG4ZMh8fffGUoNs+DihkrYY9S1e0?=
- =?us-ascii?Q?h18xJnk9GJuJoUhRWb3dz6zUWmFAqzf3tq2ACvaF2sBkHc8hDLGX3B7dXJfQ?=
- =?us-ascii?Q?gyywIHbiJiZ3rMPLwGfZdPRW5eMAF+3+/6Aq9LLgyBjWYfaLidfiQUc/2GqQ?=
- =?us-ascii?Q?nzgurFRpqV1L2/Bk8J8Rhvi67JRMkiWOOaG6W2K7xWIoB+LudJPqjiwg1VgZ?=
- =?us-ascii?Q?Zc32DLPkUpB4wjw48uzrtH8q2cXJ67xNQw3NPunMBLxDvldSWHXw91OVyab2?=
- =?us-ascii?Q?VCMj6HXvm3tvOOVr0aZcMyhkO0K6cIa6N0x49K5VNyl6v+Td5t1h6k3qpyGn?=
- =?us-ascii?Q?tOrEer8GH3CRLS/zktSwg6t61Fp6Phil/C+VDNEehHO6wwe2nJrULdjtz5sO?=
- =?us-ascii?Q?Znuk9O/KFimrLBIZ4XUrAWU5KFIzxMmNCScd7K/BNC47+pDefEqr9j2/IZr5?=
- =?us-ascii?Q?1TBIr/t58zE8xTVCV1g0qhwiuZSneUPraAJ8AML57m+XT2Qe2fol8lRZXmpS?=
- =?us-ascii?Q?r1Xl+PTmxAXNIHckQYXqhKEtM2rzULt6mppv5xiX8KP3oAR/HXywlykRJlp+?=
- =?us-ascii?Q?FzVlZtRhwBdGP78kme9KvQkQYoap0XlJWgC8CBwI/jOy1HNmqfnQp7LmxK5E?=
- =?us-ascii?Q?oQnDL0bChYaKut0ISRjRxZzb4KowflS2fwAj67Hlod4NWwZkf+UYEhkgSARX?=
- =?us-ascii?Q?8TzzcG7uLew4CPNmzQwBAKlPKE4x1sbAHeg0Wh6/YQjNuSreFMWbGaE4KXO+?=
- =?us-ascii?Q?0r+Nqup3LRnF3t5nxptyrBI3CukHytdvPgEJBLCyVKT0cVMV1S1iIzKhtDdK?=
- =?us-ascii?Q?EhrxULzssB/GMYsD681aPqXyjKjR/ODBaYlfKSgEguaAu4fOF92LKSMs2Zum?=
- =?us-ascii?Q?tb+xIs2+jVKNgYw5lHliLOKKW7Bo2bNWLaCxGBpc9RJTBPCExaH3enxqFMRj?=
- =?us-ascii?Q?CM3teMfivt9dh/k/OreLCA+6m3SQL3NO0RAR71Z52rD4HdcKmZKvnEbJbVSz?=
- =?us-ascii?Q?IYHKxd8nsw=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f8d0641-3a07-4e84-a5cb-08da3dc9d283
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2022 21:10:25.7317
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +iIsfLbgRcMqZ+cQ8aqCh59P8V0eAQ3xJr1GaGTWl//PgmPRikn2j/9ZDNbzNhbu
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6160
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220524131959.GA5745@thinkpad>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, May 24, 2022 at 01:45:26PM -0700, Jacob Pan wrote:
-
-> > The idea that there is only one PASID per domain per device is not
-> > right.
+On Tue, May 24, 2022 at 06:49:59PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, May 04, 2022 at 01:51:01AM +0300, Serge Semin wrote:
+> > DW eDMA doesn't perform any translation of the traffic generated on the
+> > CPU/Application side. It just generates read/write AXI-bus requests with
+> > the specified addresses. But in case if the dma-ranges DT-property is
+> > specified for a platform device node, Linux will use it to map the CPU
+> > memory regions into the DMAable bus ranges. This isn't what we want for
+> > the eDMA embedded into the locally accessed DW PCIe Root Port and
+> > End-point. In order to work that around let's set the chan_dma_dev flag
+> > for each DW eDMA channel thus forcing the client drivers to getting a
+> > custom dma-ranges-less parental device for the mappings.
 > > 
-> Got you, I was under the impression that there is no use case yet for
-> multiple PASIDs per device-domain based on our early discussion.
+> > Note it will only work for the client drivers using the
+> > dmaengine_get_dma_device() method to get the parental DMA device.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > ---
+> > 
+> > Changelog v2:
+> > - Fix the comment a bit to being clearer. (@Manivannan)
+> > ---
+> >  drivers/dma/dw-edma/dw-edma-core.c | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> > 
+> > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> > index 6a8282eaebaf..908607785401 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> > @@ -716,6 +716,21 @@ static int dw_edma_alloc_chan_resources(struct dma_chan *dchan)
+> >  	if (chan->status != EDMA_ST_IDLE)
+> >  		return -EBUSY;
+> >  
+> > +	/* Bypass the dma-ranges based memory regions mapping for the eDMA
+> > +	 * controlled from the CPU/Application side since in that case
+> > +	 * the local memory address is left untranslated.
+> > +	 */
+> > +	if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
+> > +		dchan->dev->chan_dma_dev = true;
+> > +
+> > +		dchan->dev->device.dma_coherent = chan->dw->chip->dev->dma_coherent;
+> 
 
-The key word there is "in-kernel" and "DMA API" - iommufd userspace
-will do whatever it likes.
+> I happen to test this series on Qcom ARM32 machine and it errors out during the
+> compilation due to "dma_coherent" not available on !SWIOTLB ARM32 configs.
 
-I wish you guys would organize your work so adding generic PASID
-support to IOMMU was its own series with its own purpose so everything
-stops becoming confused with SVA and DMA API ideas that are not
-general.
+Nice catch! Thanks. I'll fix it in the next patchset version.
 
-Jason
+-Sergey
+
+> 
+> Thanks,
+> Mani
+> 
+> > +		dma_coerce_mask_and_coherent(&dchan->dev->device,
+> > +					     dma_get_mask(chan->dw->chip->dev));
+> > +		dchan->dev->device.dma_parms = chan->dw->chip->dev->dma_parms;
+> > +	} else {
+> > +		dchan->dev->chan_dma_dev = false;
+> > +	}
+> > +
+> >  	pm_runtime_get(chan->dw->chip->dev);
+> >  
+> >  	return 0;
+> > -- 
+> > 2.35.1
+> > 
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்

@@ -2,163 +2,142 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC8B1533F63
-	for <lists+dmaengine@lfdr.de>; Wed, 25 May 2022 16:41:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89DEA534023
+	for <lists+dmaengine@lfdr.de>; Wed, 25 May 2022 17:15:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242904AbiEYOlR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 25 May 2022 10:41:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48640 "EHLO
+        id S240953AbiEYPPG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 25 May 2022 11:15:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232246AbiEYOlR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 May 2022 10:41:17 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EF612C665;
-        Wed, 25 May 2022 07:41:16 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id 202so12409247pfu.0;
-        Wed, 25 May 2022 07:41:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qqyWCcuw6resJt3dcFv8smtgAfhH3RRn9K5xICLuJIs=;
-        b=YYzOJd5WsdmRXSVKxp2N5jKtSJyJyDcgLW27+7R4tABBBM0nSvFvZCl6NUwNZGQ4aW
-         ApcOuM+8vaa3jSTRFTTGYBewIv5bJxbR/baPKPv5a5ciVTaULzlITt1fynbCIhVm1vJf
-         pboEeN55ngZcqNFtmtHlPxeeJvdP9X9ktTv2m1FDww7QavyC6sC6XDGHd76Hzk97HlYM
-         u8nvgWzrVXmQdNLouh2FuCQ3f3X7NywUCLk5+t7rng5Z57JUrPGvBquuU7HDOi51I0UW
-         bWt1ce4o+VvzWNmuiulh9i6zPz2UoeeMt6OMNZGkOp+Rwb9Xp6ZYhtOlqtPGxvP+vDz9
-         jI3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qqyWCcuw6resJt3dcFv8smtgAfhH3RRn9K5xICLuJIs=;
-        b=hDjuqRO63MThnfJGPjZ6KTryiNjTuKBMZnpkssxnwlZhTP71NG1iocD960qgQDG7a2
-         eByB/gPg68hG33Ix1EOqzIYDiQ9w2N8yglXadnydBR4A6H1lYacnQ4y0gm0a3adY0gHy
-         gWdt33NQ89grnkax3LUSCw/ADa80A3INP3R31jFVwixXxgj6tedlIJTHrRBI0p1wLsyj
-         SlP93kY0RE+5Bj9OuISmJIVn/kxRQaS3dKq275gLb78H5MZjYpvQXg1QpgqHuD3oRZzs
-         mQ8YnWd5o3Izi++b9PafpYODH1J9z5/QFW6c1ZrJzPjhpl9D/5yhIT3nQHJlttS6VwR/
-         FLNA==
-X-Gm-Message-State: AOAM530D00O9vKX7IerSy4cqoMjn3Y4Q71xEt4FCZurxjRv2u5pRSFZC
-        bVaL3KJgyFxK6oWcCxXUryRvVEwVTjvPRCM9A6k=
-X-Google-Smtp-Source: ABdhPJySy9jnDTIo1EhsJGZgSUNIPGPdFe1qEmwBRlGi1vzg5cKDbDc4N78b0y8LKpFiWCMHVUSyPzS4LyLN/2958aM=
-X-Received: by 2002:a63:8f51:0:b0:3f6:2298:eaf3 with SMTP id
- r17-20020a638f51000000b003f62298eaf3mr28389400pgn.402.1653489675624; Wed, 25
- May 2022 07:41:15 -0700 (PDT)
+        with ESMTP id S245153AbiEYPPE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 May 2022 11:15:04 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6F5B2AFAE1
+        for <dmaengine@vger.kernel.org>; Wed, 25 May 2022 08:15:00 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-139-Xco2DS7JNnqZ9dGANxt50w-1; Wed, 25 May 2022 16:14:57 +0100
+X-MC-Unique: Xco2DS7JNnqZ9dGANxt50w-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.36; Wed, 25 May 2022 16:14:55 +0100
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.036; Wed, 25 May 2022 16:14:55 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Arnd Bergmann' <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     Allen Pais <apais@linux.microsoft.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "olivier.dautricourt@orolia.com" <olivier.dautricourt@orolia.com>,
+        Stefan Roese <sr@denx.de>, Vinod Koul <vkoul@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "Ludovic Desroches" <ludovic.desroches@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "Ray Jui" <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "Nicolas Saenz Julienne" <nsaenz@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>,
+        "Gustavo Pimentel" <gustavo.pimentel@synopsys.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        "zw@zh-kernel.org" <zw@zh-kernel.org>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sean Wang <sean.wang@mediatek.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Sanjay R Mehta <sanju.mehta@amd.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        "Robert Jarzmik" <robert.jarzmik@free.fr>,
+        Andy Gross <agross@kernel.org>,
+        "Bjorn Andersson" <bjorn.andersson@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        "green.wan@sifive.com" <green.wan@sifive.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Patrice CHOTARD <patrice.chotard@foss.st.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        =?utf-8?B?SmVybmVqIMWga3JhYmVj?= <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
+Thread-Topic: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
+Thread-Index: AQHYcCfd7aGmAIzi9kCYuZw9gbAMOK0vsf4g
+Date:   Wed, 25 May 2022 15:14:55 +0000
+Message-ID: <9947cfa64667406996de191f07b9e8b9@AcuMS.aculab.com>
+References: <20220419211658.11403-1-apais@linux.microsoft.com>
+ <20220419211658.11403-2-apais@linux.microsoft.com>
+ <CACRpkdZ2DFZRPHS1x0=M3_8zYvU-jpCG5Tm3863dXv51EhY+BA@mail.gmail.com>
+ <CAK8P3a0j_rziihsgHnG5bHMxmPbOkAhT6_+CCE4iFZy7HzQrLw@mail.gmail.com>
+In-Reply-To: <CAK8P3a0j_rziihsgHnG5bHMxmPbOkAhT6_+CCE4iFZy7HzQrLw@mail.gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <20220524152159.2370739-1-Frank.Li@nxp.com> <20220525092306.wuansog6fe2ika3b@mobilestation>
-In-Reply-To: <20220525092306.wuansog6fe2ika3b@mobilestation>
-From:   Zhi Li <lznuaa@gmail.com>
-Date:   Wed, 25 May 2022 09:41:04 -0500
-Message-ID: <CAHrpEqSa1JM8sm0QShCSXi++y9gVo9q5TmxPqwWiDADCrptrJw@mail.gmail.com>
-Subject: Re: [PATCH v12 0/8] Enable designware PCI EP EDMA locally
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Frank Li <Frank.Li@nxp.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, May 25, 2022 at 4:23 AM Serge Semin <fancer.lancer@gmail.com> wrote:
->
-> Hello Vinod
->
-> On Tue, May 24, 2022 at 10:21:51AM -0500, Frank Li wrote:
-> > Default Designware EDMA just probe remotely at host side.
-> > This patch allow EDMA driver can probe at EP side.
-> >
-> > 1. Clean up patch
-> >    dmaengine: dw-edma: Detach the private data and chip info structures
-> >    dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
-> >    dmaengine: dw-edma: Change rg_region to reg_base in struct
-> >    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> >
-> > 2. Enhance EDMA driver to allow prode eDMA at EP side
-> >    dmaengine: dw-edma: Add support for chip specific flags
-> >    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific
-> > flags (this patch removed at v11 because dma tree already have fixed
-> > patch)
-> >
-> > 3. Bugs fix at EDMA driver when probe eDMA at EP side
-> >    dmaengine: dw-edma: Fix programming the source & dest addresses for
-> > ep
-> >    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
-> >
-> > 4. change pci-epf-test to use EDMA driver to transfer data.
-> >    PCI: endpoint: Add embedded DMA controller test
-> >
-> > 5. Using imx8dxl to do test, but some EP functions still have not
-> > upstream yet. So below patch show how probe eDMA driver at EP
-> > controller driver.
-> > https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
->
-> This series has been on review for over three months now. It has got
-> several acks, rb and tb tags from me, Manivannan and Kishon (the last
-> patch in the series). Seeing Gustavo hasn't been active for all that time
-> at all and hasn't performed any review for more than a year the
-> probability of getting his attention soon enough is almost zero. Thus
-> could you please give your acks if you are ok with the series content. Due
-> to having several more patchsets dependent on this one, Bjorn has agreed
-> to merge this series in through the PCI tree:
-> https://lore.kernel.org/linux-pci/20220524155201.GA247821@bhelgaas/
-> So the only thing we need is your ack tags.
->
-> @Frank. Should there be a new patchset revision could you please add a
-> request to merge the series in to the PCI tree? I am a bit tired repeating
-> the same messages each time the new mailing review lap.)
+RnJvbTogQXJuZCBCZXJnbWFubg0KPiBTZW50OiAyNSBNYXkgMjAyMiAxMjowNA0KPiANCj4gT24g
+V2VkLCBNYXkgMjUsIDIwMjIgYXQgMTE6MjQgQU0gTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVp
+akBsaW5hcm8ub3JnPiB3cm90ZToNCj4gPiBPbiBUdWUsIEFwciAxOSwgMjAyMiBhdCAxMToxNyBQ
+TSBBbGxlbiBQYWlzIDxhcGFpc0BsaW51eC5taWNyb3NvZnQuY29tPiB3cm90ZToNCj4gPg0KPiA+
+ID4gVGhlIHRhc2tsZXQgaXMgYW4gb2xkIEFQSSB3aGljaCB3aWxsIGJlIGRlcHJlY2F0ZWQsIHdv
+cmtxdWV1ZSBBUEkNCj4gPiA+IGNhYiBiZSB1c2VkIGluc3RlYWQgb2YgdGhlbS4NCj4gPiA+DQo+
+ID4gPiBUaGlzIHBhdGNoIHJlcGxhY2VzIHRoZSB0YXNrbGV0IHVzYWdlIGluIGRyaXZlcnMvZG1h
+Lyogd2l0aCBhDQo+ID4gPiBzaW1wbGUgd29yay4NCj4gPiA+DQo+ID4gPiBHaXRodWI6IGh0dHBz
+Oi8vZ2l0aHViLmNvbS9LU1BQL2xpbnV4L2lzc3Vlcy85NA0KPiA+ID4NCj4gPiA+IFNpZ25lZC1v
+ZmYtYnk6IEFsbGVuIFBhaXMgPGFwYWlzQGxpbnV4Lm1pY3Jvc29mdC5jb20+DQo+ID4NCj4gPiBQ
+YWdpbmcgVmluY2VudCBHdWl0dG90IGFuZCBBcm5kIEJlcmdtYW5uIG9uIHRoZSBmb2xsb3dpbmcg
+cXVlc3Rpb24NCj4gPiBvbiB0aGlzIHBhdGNoIHNldDoNCj4gPg0KPiA+IC0gV2lsbCByZXBsYWNp
+bmcgdGFza2xldHMgd2l0aCB3b3JrcXVlIGxpa2UgdGhpcyBuZWdhdGl2ZWx5IGltcGFjdCB0aGUN
+Cj4gPiAgIHBlcmZvcm1hbmNlIG9uIERNQSBlbmdpbmUgYm90dG9tIGhhbHZlcz8NCj4gDQo+IEkg
+dGhpbmsgaXQgd2lsbCBpbiBzb21lIGNhc2VzIGJ1dCBub3Qgb3RoZXJzLiBUaGUgcHJvYmxlbSBJ
+IHNlZSBpcyB0aGF0DQo+IHRoZSBzaG9ydCBwYXRjaCBkZXNjcmlwdGlvbiBtYWtlcyBpdCBzb3Vu
+ZCBsaWtlIGEgdHJpdmlhbCBjb252ZXJzaW9uIG9mIGENCj4gc2luZ2xlIHN1YnN5c3RlbSwgYnV0
+IGluIHJlYWxpdHkgdGhpcyBpbnRlcmFjdHMgd2l0aCBhbGwgdGhlIGRyaXZlcnMgdXNpbmcNCj4g
+RE1BIGVuZ2luZXMsIGluY2x1ZGluZyB0dHkvc2VyaWFsLCBzb3VuZCwgbW1jIGFuZCBzcGkuDQo+
+IA0KPiBJbiBtYW55IGNhc2VzLCB0aGUgY2hhbmdlIGlzIGFuIGltcHJvdmVtZW50LCBidXQgSSBj
+YW4gc2VlIGEgbnVtYmVyDQo+IG9mIHdheXMgdGhpcyBtaWdodCBnbyB3cm9uZzoNCg0KSWYgdGhl
+ICd0YXNrbGV0JyBBUEkgaXMgYmFzZWQgb24gdGhlIHNvZnRpbnQgKG9yIHNpbWlsYXIpDQp0aGVu
+IGNoYW5naW5nIHRvIHdvcmtxdWV1ZSB3aWxsIGNhdXNlIHNlcmlvdXMgZ3JpZWYgaW4gbWFueSBj
+YXNlcw0KdW5sZXNzIHRoZSB3b3JrcXVldWUgcHJvY2VzcyBydW5zIGF0IGEgaGlnaCBwcmlvcml0
+eS4NCg0KQ3VycmVudGx5IHNvZnRpbnQgY2FsbGJhY2tzIGFyZSB1c3VhbGx5IGhpZ2hlciBwcmlv
+cml0eSB0aGFuDQphbnkgdGFzay9wcm9jZXNzLg0KU28gb24gYSBidXN5IHN5c3RlbSB0aGV5IGFs
+bW9zdCBhbHdheXMgcnVuLg0KKFRoZXkgY2FuIGdldCBjYXVnaHQgb3V0IGJ5IGEgbmVlZF9yZXNj
+aGVkKCkgY2FsbCBhbmQgc3VkZGVubHkNCmJlIGZpZ2h0aW5nIHdpdGggbm9ybWFsIHVzZXIgcHJv
+Y2Vzc2VzIGZvciBjcHUgdGltZS4pDQoNCkFzIGFybmQgc2FpZCwgSSBzdXNwZWN0IHRoaXMgd2ls
+bCBicmVhayBhbnl0aGluZyB1c2luZyB0YXNrbGV0cw0KdG8gY2hhaW4gdG9nZXRoZXIgYXVkaW8g
+b3IgdmlkZW8gYnVmZmVycy4NCkFueSBwcm9jZXNzIGNvZGUgZG9pbmcgdGhhdCB3b3VsZCBuZWVk
+IHByb2JiYWx5IHRvIHJ1biBhdCBhDQonbWlkZGxpbmcnIFJUIHByaW9yaXR5Lg0KDQoJRGF2aWQN
+Cg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZh
+cm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYg
+KFdhbGVzKQ0K
 
-The key is to need Vinod to say something
-
-Best regards
-Frank Li.
-
->
-> -Sergey
->
-> >
-> > Frank Li (6):
-> >   dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
-> >   dmaengine: dw-edma: Detach the private data and chip info structures
-> >   dmaengine: dw-edma: Change rg_region to reg_base in struct
-> >     dw_edma_chip
-> >   dmaengine: dw-edma: Rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> >     dw_edma_chip
-> >   dmaengine: dw-edma: Add support for chip specific flags
-> >   PCI: endpoint: Enable DMA tests for endpoints with DMA capabilities
-> >
-> > Serge Semin (2):
-> >   dmaengine: dw-edma: Drop dma_slave_config.direction field usage
-> >   dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
-> >     semantics
-> >
-> >  drivers/dma/dw-edma/dw-edma-core.c            | 141 +++++++++++-------
-> >  drivers/dma/dw-edma/dw-edma-core.h            |  31 +---
-> >  drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
-> >  drivers/dma/dw-edma/dw-edma-v0-core.c         |  41 ++---
-> >  drivers/dma/dw-edma/dw-edma-v0-core.h         |   4 +-
-> >  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  18 +--
-> >  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   8 +-
-> >  drivers/pci/endpoint/functions/pci-epf-test.c | 112 ++++++++++++--
-> >  include/linux/dma/edma.h                      |  59 +++++++-
-> >  9 files changed, 317 insertions(+), 180 deletions(-)
-> >
-> > --
-> > 2.35.1
-> >

@@ -2,54 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E41D536BEA
-	for <lists+dmaengine@lfdr.de>; Sat, 28 May 2022 11:27:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A547536BF1
+	for <lists+dmaengine@lfdr.de>; Sat, 28 May 2022 11:32:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232772AbiE1J1p (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 28 May 2022 05:27:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53680 "EHLO
+        id S232774AbiE1Jcg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 28 May 2022 05:32:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232774AbiE1J1k (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 28 May 2022 05:27:40 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 951DD28721;
-        Sat, 28 May 2022 02:27:39 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id v9so7106691lja.12;
-        Sat, 28 May 2022 02:27:39 -0700 (PDT)
+        with ESMTP id S229525AbiE1Jcg (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 28 May 2022 05:32:36 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C024AEAD;
+        Sat, 28 May 2022 02:32:33 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id g18so63486ljd.0;
+        Sat, 28 May 2022 02:32:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=xvrSiB4pj3MHmuSBOutVdLdl/gUFdwjp1RjV9E5xjHA=;
-        b=LhNdRcsIQVqY4OEOoVjSqa5PExlZc2sT6sti/p7IGZPk7ISRfTN5v69aARBEXOZXnb
-         Ekpye5mMo1cW2z7faSztdJqKQx16njUTBGet862Qt7IFt2loNMq28X62SVCUxpVeDpb0
-         tjYxBavD8N45YyNjnOsoT8fL85mdO/g7iK1viqHwh+jXdti2BS+vgVYDhMbolanMFKtl
-         7xClvJTdPi979NvVvMjg+C/gkJf2Pi8wrFyp+Y7sJ6rLmca0THAbFiiIMdLwapT3NL2R
-         PWgm/gVUT/tqeBHRuA2rSWHW8PKk6Hl6n+W8FtGeu++u2D8IsChb5fndngIkW3cH0mBr
-         2iWg==
+        bh=jqsnSDEFUx4RGESxiA8fNaws5K3TFUXqX5aOXhweVqY=;
+        b=OXJzUQkhHmNbkMrpV5tlj6Kza7rPOQMVCho+Z1VImTEaS5x5/txUufQg17rsyDQOD/
+         n5ZYzcy5DX000GLoVm1QpP4bapXsxgNxFBS/f76in84hozldype6wq95QjmbYUefB1BH
+         0yPD77OXeQAt1T55Xs7Upmocu/vgJW4EZheEgn7b7d/FN3R+Hp4mq4AMajztmPK7hdYe
+         F6Q17yqz1N5QEqYsi4M/hrwRfLUrSADKR6UT6YOrTFBmcb392XUkS8AYaFrQVzSA0k8X
+         9BXAUgkDSepAr4HUq29p+BhFhq4OjNJVI12cT0rzcSWSOLTv3KdTFhkv+MJAkuz30IWj
+         1cBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=xvrSiB4pj3MHmuSBOutVdLdl/gUFdwjp1RjV9E5xjHA=;
-        b=LQ1N9pIqPlI2f9Nd7kj/uWEHEyrSKidFcriJuwcHHPOnel2Hi3+rA0gqB9AguC8F/2
-         K6pFkgAf5uvU9Vk+CGazkTIPMLEWr4+pr3H3A5yfh+of/+z8bOulQsK9qfQlVBKDaGIf
-         K0aoI7i9h92Ly6JQQQoKdVnaFjGH8SUhgu9zTtCAZbujpDMKb+ooXE0Ii+iy6tZMUAKH
-         nDhL9v++porznhEVi66KtCfJyE9NJwehTpkD5i7OMYsMOhNMaPcO/8o/tmu9Nz5mBJOa
-         7tfQspMZ1M8PpV2KnRjfVsQ6HFmSz4RylPrw/df+JiFr+QCgH6M37HZECNMlViWq8wpx
-         qsug==
-X-Gm-Message-State: AOAM53141TrYFo0XWfB7U19+OgIttE1H3l6udysJcLJJqJkxJMMBAvCR
-        8zqxuHxvNQbQj+yvAjZdby8=
-X-Google-Smtp-Source: ABdhPJwAZEm4uQgSgG2FHkD4/g4oal0KQxI6Q5xbNJnso+HjYczVMgU+7dozg6xJgHampz1i5qC0kQ==
-X-Received: by 2002:a2e:9e11:0:b0:24c:5677:8b20 with SMTP id e17-20020a2e9e11000000b0024c56778b20mr27745577ljk.430.1653730057936;
-        Sat, 28 May 2022 02:27:37 -0700 (PDT)
+        bh=jqsnSDEFUx4RGESxiA8fNaws5K3TFUXqX5aOXhweVqY=;
+        b=c20Cc5EHimOCmEZ03CsmcHrrplbDAvWumamhBYlAzjVcaQjX/Foj8riq6opzlwgZEK
+         xvU54HIkI3apyEaMjDPnUrj7L8FcLerA6tgB6DDsBjqEzNfXFEGkbYHy9yhTyaMJFyzG
+         xJ1hFX93QYhnVlYvyF0XQZR4ivjTbP1uBqO2yzxnyAvHdGOvKHC8IKiA9YElSAYsWf9v
+         DKO2uGPar5cDEGMj9+JPQvxUKmocnj19CWHifA7zs7bUGIc3/uw3m5lxusafw2SKOekM
+         3B01JwNzq6xsjrW+UzXQGrr5MmUbWj6fZ5lIco4qxvf5hoCAolSy8GltdG79fbGGQ6GY
+         R0vQ==
+X-Gm-Message-State: AOAM532z/THXoiALcsWLUdL+IhVQIMrZIhW/K/X/Se79mPb0FmKK3UYK
+        GdO1cRspGCw3M5wjq+Vwhjw=
+X-Google-Smtp-Source: ABdhPJxAcpY15g7jjyskmgu4GUMwaqF1m0VjEIHzsCeONFiO4rt++dRza6i54U8k58ldRmAiN7QnWQ==
+X-Received: by 2002:a2e:9b4c:0:b0:253:e2e8:2c10 with SMTP id o12-20020a2e9b4c000000b00253e2e82c10mr20988561ljj.228.1653730352144;
+        Sat, 28 May 2022 02:32:32 -0700 (PDT)
 Received: from [10.0.0.127] (91-159-150-230.elisa-laajakaista.fi. [91.159.150.230])
-        by smtp.gmail.com with ESMTPSA id v10-20020ac2558a000000b0047255d211e1sm1241515lfg.272.2022.05.28.02.27.37
+        by smtp.gmail.com with ESMTPSA id s3-20020a197703000000b004789bfa539fsm1252858lfc.90.2022.05.28.02.32.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 28 May 2022 02:27:37 -0700 (PDT)
-Message-ID: <1f7277fc-8634-94ff-0fe6-6fd087d8e588@gmail.com>
-Date:   Sat, 28 May 2022 12:28:50 +0300
+        Sat, 28 May 2022 02:32:31 -0700 (PDT)
+Message-ID: <6e750770-fcda-d157-21d1-872a611c3bf2@gmail.com>
+Date:   Sat, 28 May 2022 12:33:44 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.1
@@ -85,11 +85,6 @@ On 21/05/2022 20:26, Christophe JAILLET wrote:
 > than needed is allocated.
 > 
 > Update the size of each entry when the memory is devm_kcalloc'ed.
-
-Good catch, obviously this has not been hit for almost a decade :o
-
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-
 > 
 > Fixes: 6d10c3950bf4 ("ARM: edma: Get IP configuration from HW (number of channels, tc, etc)")
 > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
@@ -97,6 +92,11 @@ Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
 > Note that the devm_kcalloc() in edma_xbar_event_map() looks also spurious.
 > However, this looks fine to me because of the 'nelm >>= 1;' before the
 > 'for' loop.
+
+This has been deprecated ever since we have moved to dma router to
+handle the xbar for various TI platforms, but by the looks it kida looks
+bogus in a same way.
+
 > ---
 >  drivers/dma/ti/edma.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)

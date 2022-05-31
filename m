@@ -2,52 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F8FF538AD8
-	for <lists+dmaengine@lfdr.de>; Tue, 31 May 2022 07:24:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FF48538BA0
+	for <lists+dmaengine@lfdr.de>; Tue, 31 May 2022 08:56:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234002AbiEaFYH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 31 May 2022 01:24:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60036 "EHLO
+        id S244355AbiEaG4q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 31 May 2022 02:56:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243975AbiEaFYH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 31 May 2022 01:24:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E29989155B;
-        Mon, 30 May 2022 22:24:05 -0700 (PDT)
+        with ESMTP id S232460AbiEaG4q (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 31 May 2022 02:56:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BDAF10FDE;
+        Mon, 30 May 2022 23:56:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 68E0861186;
-        Tue, 31 May 2022 05:24:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A69FC385A9;
-        Tue, 31 May 2022 05:24:04 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2F8D9611EA;
+        Tue, 31 May 2022 06:56:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B29ACC3411D;
+        Tue, 31 May 2022 06:56:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653974644;
-        bh=K25t52uoCNYvpbrLQpbyibAodXjFdV5vwswnYCvnAS0=;
+        s=k20201202; t=1653980203;
+        bh=2UQ3qgaNPc369GMhUN6AfskhbVIaavXK++b0jOePdlY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CbfNNbDisfkjIlr5el8eLItHfExKRxouOzQFTz3IXOPK5GxLJ/7y42vhbJ540tT7z
-         ECvyb3tU88oyGuzT2uQXjilZJkYgxWoHHL9d7iRavTTqfq3w32fKXbhZJGzVC7hedC
-         zfSM/eokCABKe0sUG8NWiqaqNiGpmijT1TeOKpEj5gtYGAs/Wcq1gEyfX/Ha90AyAt
-         vYEKUDI1Aqcahh6wTtreeLtROTqh1TQDftikVx/wa8Wl6X3q024QYhzYe7R44fm0nc
-         B60RLQp7trDb9lo2rsc9heRaqHESHWQDtP4TCKji+6qkaBtjx6uXsdQGw8W93ASWe5
-         SEqO4WzP7XDfA==
-Date:   Tue, 31 May 2022 10:54:00 +0530
+        b=LhWWZIm9XMv1vuCvkIGBV0DV7cR+pkMSRulKThrzkuWQ1Sxm8tfQ0w0nvYVYAuYD5
+         Y09diPZ2qPlRPyV6noGyHR03G11+FhLdySnGMFTcl0PPvtW8zoytLWxwFpG/3HsRZA
+         JF2vxluM0PV/KGPpArPYJ1oxhKiq0AVkvtSfeletmpLehx+tfFgQ+jD5wspqIEvPNY
+         l/QU+acm0n85/wPBGhRlvRLbuxvhZECNli/2unqW4AE05jJ4nfR5X3DGBo7wCKWCdx
+         SnzHNTbXgnpSIA63+5M6zypPBdATj4ALy2gZQdIXQWNBZF/3kkhBFIJcAPtaNWkPbS
+         iftq7/oqZtInA==
+Date:   Tue, 31 May 2022 12:26:39 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Dave Jiang <dave.jiang@intel.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Allen Pais <apais@linux.microsoft.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        olivier.dautricourt@orolia.com, Stefan Roese <sr@denx.de>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Eugeniy.Paltsev@synopsys.com,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Leo Li <leoyang.li@nxp.com>, zw@zh-kernel.org,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Sanjay R Mehta <sanju.mehta@amd.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        green.wan@sifive.com, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Patrice CHOTARD <patrice.chotard@foss.st.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        dmaengine@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dmaengine: add verification of DMA_INTERRUPT capability
- for dmatest
-Message-ID: <YpWmcHtGzrv4oP5L@matsya>
-References: <164978679251.2361020.5856734256126725993.stgit@djiang5-desk3.ch.intel.com>
- <CAMuHMdVjDTAW-84c9Fh21f_GWOhnD4+VW2nqSTQ6EK-m+KG=vQ@mail.gmail.com>
+Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
+Message-ID: <YpW8J40hKwc7jwQh@matsya>
+References: <20220419211658.11403-1-apais@linux.microsoft.com>
+ <20220419211658.11403-2-apais@linux.microsoft.com>
+ <CACRpkdZ2DFZRPHS1x0=M3_8zYvU-jpCG5Tm3863dXv51EhY+BA@mail.gmail.com>
+ <CAK8P3a0j_rziihsgHnG5bHMxmPbOkAhT6_+CCE4iFZy7HzQrLw@mail.gmail.com>
+ <YpCGePbo9B/Z7slV@matsya>
+ <CAK8P3a2wD7=hgvqyS14X5p-eP+7Ajk4dFJOXgbOo8Z0r5UNYmg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVjDTAW-84c9Fh21f_GWOhnD4+VW2nqSTQ6EK-m+KG=vQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a2wD7=hgvqyS14X5p-eP+7Ajk4dFJOXgbOo8Z0r5UNYmg@mail.gmail.com>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -58,80 +99,86 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 30-05-22, 10:06, Geert Uytterhoeven wrote:
-> Hi Dave, Vinod,
-
-Hi Geert,
-
-> 
-> On Wed, Apr 13, 2022 at 12:58 AM Dave Jiang <dave.jiang@intel.com> wrote:
-> > Looks like I forgot to add DMA_INTERRUPT cap setting to the idxd driver and
-> > dmatest is still working regardless of this mistake. Add an explicit check
-> > of DMA_INTERRUPT capability for dmatest to make sure the DMA device being used
-> > actually supports interrupt before the test is launched and also that the
-> > driver is programmed correctly.
+On 27-05-22, 12:59, Arnd Bergmann wrote:
+> On Fri, May 27, 2022 at 10:06 AM Vinod Koul <vkoul@kernel.org> wrote:
+> > On 25-05-22, 13:03, Arnd Bergmann wrote:
+> > > What might work better in the case of the dmaengine API would
+> > > be an approach like:
+> > >
+> > > 1. add helper functions to call the callback functions from a
+> > >     tasklet locally defined in drivers/dma/dmaengine.c to allow
+> > >     deferring it from hardirq context
+> > >
+> > > 2. Change all  tasklets that are not part of the callback
+> > >     mechanism to work queue functions, I only see
+> > >     xilinx_dpdma_chan_err_task in the patch, but there
+> > >     may be more
+> > >
+> > > 3. change all drivers to move their custom tasklets back into
+> > >     hardirq context and instead call the new helper for deferring
+> > >     the callback.
+> > >
+> > > 4. Extend the dmaengine callback API to let slave drivers
+> > >     pick hardirq, tasklet or task context for the callback.
+> > >     task context can mean either a workqueue, or a threaded
+> > >     IRQ here, with the default remaining the tasklet version.
 > >
-> > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> > That does sound a good idea, but I dont know who will use the workqueue
+> > or a threaded context here, it might be that most would default to
+> > hardirq or tasklet context for obvious reasons...
 > 
-> Thanks for your patch, which is now commit a8facc7b988599f8
-> ("dmaengine: add verification of DMA_INTERRUPT capability for
-> dmatest") upstream.
+> If the idea is to remove tasklets from the kernel for good, then the
+> choice is only between workqueue and hardirq at this point. The
+> workqueue version is the one that would make sense for any driver
+> that just defers execution from the callback down into task context.
+> If that gets called in task context already, the driver can be simpler.
 > 
-> > --- a/drivers/dma/dmatest.c
-> > +++ b/drivers/dma/dmatest.c
-> > @@ -675,10 +675,16 @@ static int dmatest_func(void *data)
-> >         /*
-> >          * src and dst buffers are freed by ourselves below
-> >          */
-> > -       if (params->polled)
-> > +       if (params->polled) {
-> >                 flags = DMA_CTRL_ACK;
-> > -       else
-> > -               flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-> > +       } else {
-> > +               if (dma_has_cap(DMA_INTERRUPT, dev->cap_mask)) {
-> > +                       flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-> > +               } else {
-> > +                       pr_err("Channel does not support interrupt!\n");
-> > +                       goto err_pq_array;
-> > +               }
-> > +       }
-> >
-> >         ktime = ktime_get();
-> >         while (!(kthread_should_stop() ||
-> > @@ -906,6 +912,7 @@ static int dmatest_func(void *data)
+> I took a brief look at the roughly 150 slave drivers, and it does
+> seem like very few of them actually want task context:
 > 
-> Shimoda-san reports that this commit breaks dmatest on rcar-dmac.
-> Like most DMA engine drivers, rcar-dmac does not set the DMA_INTERRUPT
-> capability flag, hence dmatest now fails to start:
+> * Over Half the drivers just do a complete(), which could
+>   probably be pulled into the dmaengine layer and done from
+>   hardirq, avoiding the callback entirely
 > 
->     dmatest: Channel does not support interrupt!
+> * A lot of the remaining drivers have interrupts disabled for
+>   the entire callback, which means they might as well use
+>   hardirqs, regardless of what they want
 > 
-> To me, it looks like the new check is bogus, as I believe it confuses
-> two different concepts:
+> * drivers/crypto/* and drivers/mmc/* tend to call another tasklet
+>   to do the real work.
 > 
->   1. Documentation/driver-api/dmaengine/provider.rst says:
+> * drivers/ata/sata_dwc_460ex.c and drivers/ntb/ntb_transport.c
+>    probably want task context
 > 
->        - DMA_INTERRUPT
+> * Some drivers like sound/soc/sh/siu_pcm.c start a new DMA
+>   from the callback. Is that allowed from hardirq?
 > 
->          - The device is able to trigger a dummy transfer that will
->            generate periodic interrupts
-> 
->   2. In non-polled mode, dmatest sets DMA_PREP_INTERRUPT.
->      include/linux/dmaengine.h says:
-> 
->        * @DMA_PREP_INTERRUPT - trigger an interrupt (callback) upon
-> completion of
->        *  this transaction
-> 
-> As dmatest uses real transfers, I think it does not depend on
-> the ability to use interrupts from dummy transfers.
+> If we do the first three steps above, and then add a 'struct
+> completion' pointer to dma_async_tx_descriptor as an alternative
+> to the callback, that would already reduce the number of drivers
+> that end up in a tasklet significantly and should be completely
+> safe.
 
-Yes this does not look right to me. DMA_INTERRUPT is for a specific
-capability which is linked to dma_prep_interrupt() which dmatest does
-not use so i think it is not correct for dmatest to use this...
+That is a good idea, lot of drivers are waiting for completion which can
+be signalled from hardirq, this would also reduce the hops we have and
+help improve latency a bit. On the downside, some controllers provide
+error information, which would need to be dealt with.
 
-I can revert this patch... Dave?
+I will prototype this on Qcom boards I have...
+
+> 
+> Unfortunately we can't just move the rest into hardirq
+> context because that breaks anything using spin_lock_bh
+> to protect against concurrent execution of the tasklet.
+> 
+> A possible alternative might be to then replace the global
+> dmaengine tasklet with a custom softirq. Obviously those
+> are not so hot either,  but dmaengine could be considered
+> special enough to fit in the same category as net_rx/tx
+> and block with their global softirqs.
+
+Yes that would be a very reasonable mechanism, thanks for the
+suggestions.
 
 -- 
 ~Vinod

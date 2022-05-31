@@ -2,700 +2,175 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D93FB5392AE
-	for <lists+dmaengine@lfdr.de>; Tue, 31 May 2022 15:53:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 353435392E8
+	for <lists+dmaengine@lfdr.de>; Tue, 31 May 2022 16:02:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345119AbiEaNwq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 31 May 2022 09:52:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43626 "EHLO
+        id S241048AbiEaOC4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 31 May 2022 10:02:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345146AbiEaNwA (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 31 May 2022 09:52:00 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 538549A9AD
-        for <dmaengine@vger.kernel.org>; Tue, 31 May 2022 06:51:12 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id d26so13180933wrb.13
-        for <dmaengine@vger.kernel.org>; Tue, 31 May 2022 06:51:12 -0700 (PDT)
+        with ESMTP id S238994AbiEaOCz (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 31 May 2022 10:02:55 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9759C5DE4B;
+        Tue, 31 May 2022 07:02:54 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id e24so5127291pjt.0;
+        Tue, 31 May 2022 07:02:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Mxap1WEwdByjvPC0mpGlD9RkZLO1nqQEbYm1KO0qpGw=;
-        b=Z9AaZe+YN+9Y/DvkBQCGoi5C4fe9XwkJsBqz0DUpj73OvfDgpM3DE7NK/2uva3ubaZ
-         f2ZA/2Y6ysdvsGSYtsX/pGbzO2O7FqeY//RQLhQpTdNLVOlhO6fqj59Fcm8LXaXfFk0Y
-         g+MVKfQ+no7vwNWgYSkmWaZij9tKQ1fDwhDSNkITHwlkXrmNoow4akG8Q3kb7ATYotH5
-         0zEsilKFjPM+joe5D9qFDSJTTUfQjTfYnvi5ZtUXHidu/KT8stZ2ckPNzez1qhmM+LWw
-         EYhGP6mq+1CzbAhWtpbV9DbiDpsV8QCgYDRKslfW4flDCQW3XYGe+qAl18djucj/hFGs
-         IS4g==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q0Hh7aCIsbmWJUeM91f0XG111LTI0m02XSIDQdP3p8o=;
+        b=qIdddx20RRVQsqi2bBon4e5xP53QUVXYAcKla4mKOICMRHf9/YvdsIdxp33VcbGRiw
+         sh9QgZfTxntO4UktBd/cdCHjqIGnDtpboKNUJpjtHzJbA+RdudatPcsvIKi5iVQdgvpy
+         C5hImeVpMvccnNwwBDyehkIWcWQ6L8QaBRczL8tB0MqbsJy1GNeMAwJXPOpffzjnYAlt
+         G7qr7qvEj3OO0wfs7j14zbzWAus4DesU3wcMrtdwnFh2R+b+8itWDftZ+wfUVtnyJCiD
+         l0cVftYnizzrpln5/JF0rQVrk9f9/bvbvTbVEnnhkLXr7tB2mymbzGy48K66TydEI/5I
+         dQWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Mxap1WEwdByjvPC0mpGlD9RkZLO1nqQEbYm1KO0qpGw=;
-        b=B808h9rz1Irtw+DI9jXAbjc5btDhGM0GPbNiPqqpyKnIITT1vXqCWDmpAv/wBGtLVb
-         KryI82lazb/FRI6ejFDVGk3fc8vyNIeFL3luLYpMuA6eyOZTI+pIcOGdGObPb2tft0w2
-         Kp/1MrPlUIULyWiPVIVmA8Df8OROcpCuRK4e/+/DAsZYBhmX+D+U3MEdHfsCB/Wwflhd
-         dtN4P7/EC5gq0GyJ/pBjS1Az7E2I9prs5PFJ2PmBbvF8wsU+MfFPgnFfnXtigUQzEyZJ
-         OcPGoJngfAYewEpV01zC3DycT7G00ibPMxid2u6w4R+/6uNy/TPcxoki4ooLAVKVTGOG
-         ux7g==
-X-Gm-Message-State: AOAM533TtY2Em5csKK9fxyFqe/hBOhD0AtH91dEsL5Bo5pp+ux5eeu/h
-        0Vm2WhdjbkgyMil2QugZke7Pxw==
-X-Google-Smtp-Source: ABdhPJyXl0DdP2e9n/QxwXICD+w+MV38jIzwdGj4vIoq26OkXHJf3AfQ2K5zFBto6WtGSVWccVFl0A==
-X-Received: by 2002:a5d:5145:0:b0:210:55c:4790 with SMTP id u5-20020a5d5145000000b00210055c4790mr23043579wrt.714.1654005071847;
-        Tue, 31 May 2022 06:51:11 -0700 (PDT)
-Received: from localhost.localdomain ([88.160.162.107])
-        by smtp.gmail.com with ESMTPSA id l11-20020a05600c1d0b00b00394351e35edsm2404806wms.26.2022.05.31.06.51.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 May 2022 06:51:11 -0700 (PDT)
-From:   Fabien Parent <fparent@baylibre.com>
-To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        vkoul@kernel.org, qii.wang@mediatek.com, matthias.bgg@gmail.com,
-        jic23@kernel.org, chaotian.jing@mediatek.com,
-        ulf.hansson@linaro.org, srinivas.kandagatla@linaro.org,
-        chunfeng.yun@mediatek.com, broonie@kernel.org,
-        wim@linux-watchdog.org, linux@roeck-us.net
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-iio@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Fabien Parent <fparent@baylibre.com>
-Subject: [PATCH 17/17] arm64: dts: mediatek: add mt8365-evk board device-tree
-Date:   Tue, 31 May 2022 15:50:26 +0200
-Message-Id: <20220531135026.238475-18-fparent@baylibre.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220531135026.238475-1-fparent@baylibre.com>
-References: <20220531135026.238475-1-fparent@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q0Hh7aCIsbmWJUeM91f0XG111LTI0m02XSIDQdP3p8o=;
+        b=eRTRlX8Gqd4uOQ4hYggl0OKrc64wXwVz9kyNu+kcvxAl8QZNwFJ5O0VS7xhicznDf9
+         cXxI3uh4GX+oDZC+vtqErJTsgHwXxhAHBWUP3TmKSEjpOOEntIvHSACdU6BGJ4fzB95L
+         wdtQZIp7uMMPcrohiZLSnZwMbTskCO9XvRaNIWsJapeIXHLieehECo4xeM28AldCwU7l
+         ym4towSYhiKBxMt0a6M8nkPae3Bhg45+1DRY1el/LyaUa1A5VoPSUB5B3KVhuZQjnzvv
+         rDmwTz9ineRyTAuSwFx8lPS7C/4SlkrVh3Ltn0vWaYDWVnHxKAHmgoNcNJ5NrcZvF7Y9
+         Vk5g==
+X-Gm-Message-State: AOAM530+CLqUIOXC7J+pkFMMahohq0MWzMNmEoUugDBRlr8Y/Eb74kdj
+        JRFajNlsMV7mCN+/l2Frosxz+6BOwsakTt8iTrU=
+X-Google-Smtp-Source: ABdhPJyc7OKAhKtBgVceW2S6K5uMqrZZMd7/HcJeOJVW5Jr5QwyQMKFeAyO86lhFCnP21nhfEE8oYp+242DlouIAVK0=
+X-Received: by 2002:a17:90b:17c6:b0:1e0:28bf:d429 with SMTP id
+ me6-20020a17090b17c600b001e028bfd429mr29302482pjb.239.1654005773933; Tue, 31
+ May 2022 07:02:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20220524152159.2370739-1-Frank.Li@nxp.com> <20220525092306.wuansog6fe2ika3b@mobilestation>
+ <CAHrpEqSa1JM8sm0QShCSXi++y9gVo9q5TmxPqwWiDADCrptrJw@mail.gmail.com>
+In-Reply-To: <CAHrpEqSa1JM8sm0QShCSXi++y9gVo9q5TmxPqwWiDADCrptrJw@mail.gmail.com>
+From:   Zhi Li <lznuaa@gmail.com>
+Date:   Tue, 31 May 2022 09:02:42 -0500
+Message-ID: <CAHrpEqRMpq+-H97Jm2F0c=0ey_3NsqgCvbTiBDA=vz2p4K+uZQ@mail.gmail.com>
+Subject: Re: [PATCH v12 0/8] Enable designware PCI EP EDMA locally
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Frank Li <Frank.Li@nxp.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
+        dmaengine@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add device-tree for the MT8365-EVK board. The MT8365 EVK board
-has the following IOs:
-* DPI <-> HDMI bridge and HDMI connector.
-* 2 audio jack
-* 1 USB Type-A Host port
-* 2 UART to USB port
-* 1 battery connector
-* 1 eMMC
-* 1 SD card
-* 2 camera connectors
-* 1 M.2 slot for connectivity
-* 1 DSI connector + touchscreen connector
-* RPI compatible header
-* 1 Ethernet port
+On Wed, May 25, 2022 at 9:41 AM Zhi Li <lznuaa@gmail.com> wrote:
+>
+> On Wed, May 25, 2022 at 4:23 AM Serge Semin <fancer.lancer@gmail.com> wrote:
+> >
+> > Hello Vinod
+> >
+> > On Tue, May 24, 2022 at 10:21:51AM -0500, Frank Li wrote:
+> > > Default Designware EDMA just probe remotely at host side.
+> > > This patch allow EDMA driver can probe at EP side.
+> > >
+> > > 1. Clean up patch
+> > >    dmaengine: dw-edma: Detach the private data and chip info structures
+> > >    dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
+> > >    dmaengine: dw-edma: Change rg_region to reg_base in struct
+> > >    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+> > >
+> > > 2. Enhance EDMA driver to allow prode eDMA at EP side
+> > >    dmaengine: dw-edma: Add support for chip specific flags
+> > >    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific
+> > > flags (this patch removed at v11 because dma tree already have fixed
+> > > patch)
+> > >
+> > > 3. Bugs fix at EDMA driver when probe eDMA at EP side
+> > >    dmaengine: dw-edma: Fix programming the source & dest addresses for
+> > > ep
+> > >    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
+> > >
+> > > 4. change pci-epf-test to use EDMA driver to transfer data.
+> > >    PCI: endpoint: Add embedded DMA controller test
+> > >
+> > > 5. Using imx8dxl to do test, but some EP functions still have not
+> > > upstream yet. So below patch show how probe eDMA driver at EP
+> > > controller driver.
+> > > https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
+> >
+> > This series has been on review for over three months now. It has got
+> > several acks, rb and tb tags from me, Manivannan and Kishon (the last
+> > patch in the series). Seeing Gustavo hasn't been active for all that time
+> > at all and hasn't performed any review for more than a year the
+> > probability of getting his attention soon enough is almost zero. Thus
+> > could you please give your acks if you are ok with the series content. Due
+> > to having several more patchsets dependent on this one, Bjorn has agreed
+> > to merge this series in through the PCI tree:
+> > https://lore.kernel.org/linux-pci/20220524155201.GA247821@bhelgaas/
+> > So the only thing we need is your ack tags.
+> >
+> > @Frank. Should there be a new patchset revision could you please add a
+> > request to merge the series in to the PCI tree? I am a bit tired repeating
+> > the same messages each time the new mailing review lap.)
+>
+> The key is to need Vinod to say something
+>
+> Best regards
+> Frank Li.
 
-Signed-off-by: Fabien Parent <fparent@baylibre.com>
----
- arch/arm64/boot/dts/mediatek/Makefile       |   1 +
- arch/arm64/boot/dts/mediatek/mt8365-evk.dts | 578 ++++++++++++++++++++
- 2 files changed, 579 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8365-evk.dts
+@Vinod Kou:
+       These patches were well reviewed by Serge Semin,  Bjorn,
+Manivannan Sadhasivam, Kishon Vijay Abraham and tested on 3 platforms.
+       Pending on your opinion because it touch file under /driver/dma/dw_edma/*
 
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index c7d4636a2cb7..02a9f784358e 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -40,4 +40,5 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-pumpkin.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8192-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-demo.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-evb.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt8365-evk.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8516-pumpkin.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
-new file mode 100644
-index 000000000000..8f472caa06a3
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
-@@ -0,0 +1,578 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2021 BayLibre, SAS.
-+ * Author: Fabien Parent <fparent@baylibre.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/pinctrl/mt8365-pinfunc.h>
-+#include "mt8365.dtsi"
-+#include "mt6357.dtsi"
-+
-+/ {
-+	model = "MediaTek MT8365 Open Platform EVK";
-+	compatible = "mediatek,mt8365-evk", "mediatek,mt8365";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:921600n8";
-+	};
-+
-+	connector {
-+		compatible = "hdmi-connector";
-+		label = "hdmi";
-+		type = "a";
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_connector_out>;
-+			};
-+		};
-+	};
-+
-+	firmware {
-+		optee {
-+			compatible = "linaro,optee-tz";
-+			method = "smc";
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		input-name = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpio_keys>;
-+
-+		volume-up {
-+			gpios = <&pio 24 GPIO_ACTIVE_LOW>;
-+			label = "volume_up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			wakeup-source;
-+			debounce-interval = <15>;
-+		};
-+	};
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0 0x40000000 0 0xc0000000>;
-+	};
-+
-+	usb_otg_vbus: regulator-2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "otg_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&pio 16 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/* 12 MiB reserved for OP-TEE (BL32)
-+		 * +-----------------------+ 0x43e0_0000
-+		 * |      SHMEM 2MiB       |
-+		 * +-----------------------+ 0x43c0_0000
-+		 * |        | TA_RAM  8MiB |
-+		 * + TZDRAM +--------------+ 0x4340_0000
-+		 * |        | TEE_RAM 2MiB |
-+		 * +-----------------------+ 0x4320_0000
-+		 */
-+		optee_reserved: optee@43200000 {
-+			no-map;
-+			reg = <0 0x43200000 0 0x00c00000>;
-+		};
-+	};
-+};
-+
-+&cpu0 {
-+	proc-supply = <&mt6357_vproc_reg>;
-+	sram-supply = <&mt6357_vsram_proc_reg>;
-+};
-+
-+&cpu1 {
-+	proc-supply = <&mt6357_vproc_reg>;
-+	sram-supply = <&mt6357_vsram_proc_reg>;
-+};
-+
-+&cpu2 {
-+	proc-supply = <&mt6357_vproc_reg>;
-+	sram-supply = <&mt6357_vsram_proc_reg>;
-+};
-+
-+&cpu3 {
-+	proc-supply = <&mt6357_vproc_reg>;
-+	sram-supply = <&mt6357_vsram_proc_reg>;
-+};
-+
-+&dpi0 {
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&dpi_func_pins>;
-+	pinctrl-1 = <&dpi_idle_pins>;
-+	assigned-clocks = <&topckgen CLK_TOP_DPI0_SEL>;
-+	assigned-clock-parents = <&topckgen CLK_TOP_LVDSPLL_D4>;
-+
-+	/*
-+	 * Ethernet and HDMI are sharing pins.
-+	 * Only one can be enabled at a time and require the physical switch
-+	 * SW2101 to be set on DPI position
-+	 */
-+	status = "okay";
-+
-+	port {
-+		dpi_out: endpoint {
-+			remote-endpoint = <&it66121_in>;
-+		};
-+	};
-+};
-+
-+&ethernet {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ethernet_pins>;
-+	phy-handle = <&eth_phy>;
-+	phy-mode = "rmii";
-+	mac-address = [00 00 00 00 00 00];
-+
-+	/*
-+	 * Ethernet and HDMI are sharing pins.
-+	 * Only one can be enabled at a time and require the physical switch
-+	 * SW2101 to be set on LAN position
-+	 */
-+	status = "disabled";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		eth_phy: ethernet-phy@0 {
-+			reg = <0>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+	clock-frequency = <100000>;
-+	status = "okay";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	it66121hdmitx: hdmi@4c {
-+		compatible = "ite,it66121";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&ite_pins>;
-+		vcn33-supply = <&mt6357_vibr_reg>;
-+		vcn18-supply = <&mt6357_vsim2_reg>;
-+		vrf12-supply = <&mt6357_vrf12_reg>;
-+		reset-gpios = <&pio 69 GPIO_ACTIVE_LOW>;
-+		interrupts-extended = <&pio 68 IRQ_TYPE_LEVEL_LOW>;
-+		#sound-dai-cells = <0>;
-+		reg = <0x4c>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				it66121_in: endpoint {
-+					bus-width = <12>;
-+					remote-endpoint = <&dpi_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				hdmi_connector_out: endpoint {
-+					remote-endpoint = <&hdmi_connector_in>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&mmc0 {
-+	status = "okay";
-+	pinctrl-names = "default", "state_uhs";
-+	pinctrl-0 = <&mmc0_pins_default>;
-+	pinctrl-1 = <&mmc0_pins_uhs>;
-+	bus-width = <8>;
-+	max-frequency = <200000000>;
-+	cap-mmc-highspeed;
-+	mmc-hs200-1_8v;
-+	mmc-hs400-1_8v;
-+	cap-mmc-hw-reset;
-+	no-sdio;
-+	no-sd;
-+	hs400-ds-delay = <0x12012>;
-+	vmmc-supply = <&mt6357_vemc_reg>;
-+	vqmmc-supply = <&mt6357_vio18_reg>;
-+	assigned-clocks = <&topckgen CLK_TOP_MSDC50_0_SEL>;
-+	assigned-clock-parents = <&topckgen CLK_TOP_MSDCPLL>;
-+	non-removable;
-+};
-+
-+&mmc1 {
-+	pinctrl-names = "default", "state_uhs";
-+	pinctrl-0 = <&mmc1_pins_default>;
-+	pinctrl-1 = <&mmc1_pins_uhs>;
-+	cd-gpios = <&pio 76 GPIO_ACTIVE_LOW>;
-+	bus-width = <4>;
-+	max-frequency = <200000000>;
-+	cap-sd-highspeed;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr104;
-+	vmmc-supply = <&mt6357_vmch_reg>;
-+	vqmmc-supply = <&mt6357_vio18_reg>;
-+	status = "okay";
-+};
-+
-+&mt6357_pmic {
-+	interrupt-parent = <&pio>;
-+	interrupts = <145 IRQ_TYPE_LEVEL_HIGH>;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+};
-+
-+&mt6357_vibr_reg {
-+	regulator-always-on;
-+};
-+
-+/* Needed by MSDC1 */
-+&mt6357_vmc_reg {
-+	regulator-always-on;
-+};
-+
-+&mt6357_vrf12_reg {
-+	regulator-always-on;
-+};
-+
-+&mt6357_vsim2_reg {
-+	regulator-always-on;
-+};
-+
-+&mt6357keys {
-+	power-key {
-+		label = "power";
-+		linux,keycodes = <KEY_POWER>;
-+		wakeup-source;
-+	};
-+
-+	volume-down {
-+		label = "volume_down";
-+		linux,keycodes = <KEY_VOLUMEDOWN>;
-+		wakeup-source;
-+	};
-+};
-+
-+&pio {
-+	dpi_func_pins: dpi-func-pins {
-+		pins {
-+			pinmux = <MT8365_PIN_0_GPIO0__FUNC_DPI_D0>,
-+				 <MT8365_PIN_1_GPIO1__FUNC_DPI_D1>,
-+				 <MT8365_PIN_2_GPIO2__FUNC_DPI_D2>,
-+				 <MT8365_PIN_3_GPIO3__FUNC_DPI_D3>,
-+				 <MT8365_PIN_4_GPIO4__FUNC_DPI_D4>,
-+				 <MT8365_PIN_5_GPIO5__FUNC_DPI_D5>,
-+				 <MT8365_PIN_6_GPIO6__FUNC_DPI_D6>,
-+				 <MT8365_PIN_7_GPIO7__FUNC_DPI_D7>,
-+				 <MT8365_PIN_8_GPIO8__FUNC_DPI_D8>,
-+				 <MT8365_PIN_9_GPIO9__FUNC_DPI_D9>,
-+				 <MT8365_PIN_10_GPIO10__FUNC_DPI_D10>,
-+				 <MT8365_PIN_11_GPIO11__FUNC_DPI_D11>,
-+				 <MT8365_PIN_12_GPIO12__FUNC_DPI_DE>,
-+				 <MT8365_PIN_13_GPIO13__FUNC_DPI_VSYNC>,
-+				 <MT8365_PIN_14_GPIO14__FUNC_DPI_CK>,
-+				 <MT8365_PIN_15_GPIO15__FUNC_DPI_HSYNC>;
-+			drive-strength = <MTK_DRIVE_4mA>;
-+		};
-+	};
-+
-+	dpi_idle_pins: dpi-idle-pins {
-+		pins {
-+			pinmux = <MT8365_PIN_0_GPIO0__FUNC_GPIO0>,
-+				 <MT8365_PIN_1_GPIO1__FUNC_GPIO1>,
-+				 <MT8365_PIN_2_GPIO2__FUNC_GPIO2>,
-+				 <MT8365_PIN_3_GPIO3__FUNC_GPIO3>,
-+				 <MT8365_PIN_4_GPIO4__FUNC_GPIO4>,
-+				 <MT8365_PIN_5_GPIO5__FUNC_GPIO5>,
-+				 <MT8365_PIN_6_GPIO6__FUNC_GPIO6>,
-+				 <MT8365_PIN_7_GPIO7__FUNC_GPIO7>,
-+				 <MT8365_PIN_8_GPIO8__FUNC_GPIO8>,
-+				 <MT8365_PIN_9_GPIO9__FUNC_GPIO9>,
-+				 <MT8365_PIN_10_GPIO10__FUNC_GPIO10>,
-+				 <MT8365_PIN_11_GPIO11__FUNC_GPIO11>,
-+				 <MT8365_PIN_12_GPIO12__FUNC_GPIO12>,
-+				 <MT8365_PIN_13_GPIO13__FUNC_GPIO13>,
-+				 <MT8365_PIN_14_GPIO14__FUNC_GPIO14>,
-+				 <MT8365_PIN_15_GPIO15__FUNC_GPIO15>;
-+		};
-+	};
-+
-+	ethernet_pins: ethernet-pins {
-+		pins-ethernet {
-+			pinmux = <MT8365_PIN_0_GPIO0__FUNC_EXT_TXD0>,
-+				 <MT8365_PIN_1_GPIO1__FUNC_EXT_TXD1>,
-+				 <MT8365_PIN_2_GPIO2__FUNC_EXT_TXD2>,
-+				 <MT8365_PIN_3_GPIO3__FUNC_EXT_TXD3>,
-+				 <MT8365_PIN_4_GPIO4__FUNC_EXT_TXC>,
-+				 <MT8365_PIN_5_GPIO5__FUNC_EXT_RXER>,
-+				 <MT8365_PIN_6_GPIO6__FUNC_EXT_RXC>,
-+				 <MT8365_PIN_7_GPIO7__FUNC_EXT_RXDV>,
-+				 <MT8365_PIN_8_GPIO8__FUNC_EXT_RXD0>,
-+				 <MT8365_PIN_9_GPIO9__FUNC_EXT_RXD1>,
-+				 <MT8365_PIN_10_GPIO10__FUNC_EXT_RXD2>,
-+				 <MT8365_PIN_11_GPIO11__FUNC_EXT_RXD3>,
-+				 <MT8365_PIN_12_GPIO12__FUNC_EXT_TXEN>,
-+				 <MT8365_PIN_13_GPIO13__FUNC_EXT_COL>,
-+				 <MT8365_PIN_14_GPIO14__FUNC_EXT_MDIO>,
-+				 <MT8365_PIN_15_GPIO15__FUNC_EXT_MDC>;
-+		};
-+
-+		pins-phy-reset {
-+			pinmux = <MT8365_PIN_133_TDM_TX_DATA1__FUNC_GPIO133>;
-+		};
-+	};
-+
-+	gpio_keys: gpio-keys-pins {
-+		pins {
-+			pinmux = <MT8365_PIN_24_KPCOL0__FUNC_KPCOL0>;
-+			bias-pull-up;
-+			input-enable;
-+		};
-+	};
-+
-+	i2c1_pins: i2c1-pins {
-+		pins {
-+			pinmux = <MT8365_PIN_59_SDA1__FUNC_SDA1_0>,
-+				 <MT8365_PIN_60_SCL1__FUNC_SCL1_0>;
-+			mediatek,pull-up-adv = <3>;
-+			mediatek,drive-strength-adv = <00>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	ite_pins: ite-pins {
-+		pins-rst-ite {
-+			pinmux = <MT8365_PIN_69_CMDAT1__FUNC_GPIO69>;
-+			output-high;
-+		};
-+
-+		pins-irq-ite {
-+			pinmux = <MT8365_PIN_68_CMDAT0__FUNC_GPIO68>;
-+			input-enable;
-+			bias-pull-up;
-+		};
-+
-+		pins-pwr {
-+			pinmux = <MT8365_PIN_70_CMDAT2__FUNC_GPIO70>,
-+				 <MT8365_PIN_71_CMDAT3__FUNC_GPIO71>;
-+			output-high;
-+		};
-+	};
-+
-+	mmc0_pins_default: mmc0-default-pins {
-+		pins-clk {
-+			pinmux = <MT8365_PIN_99_MSDC0_CLK__FUNC_MSDC0_CLK>;
-+			bias-pull-down;
-+		};
-+
-+		pins-cmd-dat {
-+			pinmux = <MT8365_PIN_103_MSDC0_DAT0__FUNC_MSDC0_DAT0>,
-+				 <MT8365_PIN_102_MSDC0_DAT1__FUNC_MSDC0_DAT1>,
-+				 <MT8365_PIN_101_MSDC0_DAT2__FUNC_MSDC0_DAT2>,
-+				 <MT8365_PIN_100_MSDC0_DAT3__FUNC_MSDC0_DAT3>,
-+				 <MT8365_PIN_96_MSDC0_DAT4__FUNC_MSDC0_DAT4>,
-+				 <MT8365_PIN_95_MSDC0_DAT5__FUNC_MSDC0_DAT5>,
-+				 <MT8365_PIN_94_MSDC0_DAT6__FUNC_MSDC0_DAT6>,
-+				 <MT8365_PIN_93_MSDC0_DAT7__FUNC_MSDC0_DAT7>,
-+				 <MT8365_PIN_98_MSDC0_CMD__FUNC_MSDC0_CMD>;
-+			input-enable;
-+			bias-pull-up;
-+		};
-+
-+		pins-rst {
-+			pinmux = <MT8365_PIN_97_MSDC0_RSTB__FUNC_MSDC0_RSTB>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	mmc0_pins_uhs: mmc0-uhs-pins {
-+		pins-clk {
-+			pinmux = <MT8365_PIN_99_MSDC0_CLK__FUNC_MSDC0_CLK>;
-+			drive-strength = <MTK_DRIVE_10mA>;
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
-+		};
-+
-+		pins-cmd-dat {
-+			pinmux = <MT8365_PIN_103_MSDC0_DAT0__FUNC_MSDC0_DAT0>,
-+				 <MT8365_PIN_102_MSDC0_DAT1__FUNC_MSDC0_DAT1>,
-+				 <MT8365_PIN_101_MSDC0_DAT2__FUNC_MSDC0_DAT2>,
-+				 <MT8365_PIN_100_MSDC0_DAT3__FUNC_MSDC0_DAT3>,
-+				 <MT8365_PIN_96_MSDC0_DAT4__FUNC_MSDC0_DAT4>,
-+				 <MT8365_PIN_95_MSDC0_DAT5__FUNC_MSDC0_DAT5>,
-+				 <MT8365_PIN_94_MSDC0_DAT6__FUNC_MSDC0_DAT6>,
-+				 <MT8365_PIN_93_MSDC0_DAT7__FUNC_MSDC0_DAT7>,
-+				 <MT8365_PIN_98_MSDC0_CMD__FUNC_MSDC0_CMD>;
-+			input-enable;
-+			drive-strength = <MTK_DRIVE_10mA>;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
-+		};
-+
-+		pins-ds {
-+			pinmux = <MT8365_PIN_104_MSDC0_DSL__FUNC_MSDC0_DSL>;
-+			drive-strength = <MTK_DRIVE_10mA>;
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
-+		};
-+
-+		pins-rst {
-+			pinmux = <MT8365_PIN_97_MSDC0_RSTB__FUNC_MSDC0_RSTB>;
-+			drive-strength = <MTK_DRIVE_10mA>;
-+			bias-pull-up;
-+		};
-+	};
-+
-+	mmc1_pins_default: mmc1-default-pins {
-+		pins-cd {
-+			pinmux = <MT8365_PIN_76_CMDAT8__FUNC_GPIO76>;
-+			bias-pull-up;
-+		};
-+
-+		pins-clk {
-+			pinmux = <MT8365_PIN_88_MSDC1_CLK__FUNC_MSDC1_CLK>;
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
-+		};
-+
-+		pins-cmd-dat {
-+			pinmux = <MT8365_PIN_89_MSDC1_DAT0__FUNC_MSDC1_DAT0>,
-+				 <MT8365_PIN_90_MSDC1_DAT1__FUNC_MSDC1_DAT1>,
-+				 <MT8365_PIN_91_MSDC1_DAT2__FUNC_MSDC1_DAT2>,
-+				 <MT8365_PIN_92_MSDC1_DAT3__FUNC_MSDC1_DAT3>,
-+				 <MT8365_PIN_87_MSDC1_CMD__FUNC_MSDC1_CMD>;
-+			input-enable;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
-+		};
-+	};
-+
-+	mmc1_pins_uhs: mmc1-uhs-pins {
-+		pins-clk {
-+			pinmux = <MT8365_PIN_88_MSDC1_CLK__FUNC_MSDC1_CLK>;
-+			drive-strength = <MTK_DRIVE_8mA>;
-+			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
-+		};
-+
-+		pins-cmd-dat {
-+			pinmux = <MT8365_PIN_89_MSDC1_DAT0__FUNC_MSDC1_DAT0>,
-+				 <MT8365_PIN_90_MSDC1_DAT1__FUNC_MSDC1_DAT1>,
-+				 <MT8365_PIN_91_MSDC1_DAT2__FUNC_MSDC1_DAT2>,
-+				 <MT8365_PIN_92_MSDC1_DAT3__FUNC_MSDC1_DAT3>,
-+				 <MT8365_PIN_87_MSDC1_CMD__FUNC_MSDC1_CMD>;
-+			input-enable;
-+			drive-strength = <MTK_DRIVE_6mA>;
-+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
-+		};
-+	};
-+
-+	uart0_pins: uart0-pins {
-+		pins {
-+			pinmux = <MT8365_PIN_35_URXD0__FUNC_URXD0>,
-+				 <MT8365_PIN_36_UTXD0__FUNC_UTXD0>;
-+		};
-+	};
-+
-+	uart1_pins: uart1-pins {
-+		pins {
-+			pinmux = <MT8365_PIN_37_URXD1__FUNC_URXD1>,
-+				 <MT8365_PIN_38_UTXD1__FUNC_UTXD1>;
-+		};
-+	};
-+
-+	uart2_pins: uart2-pins {
-+		pins {
-+			pinmux = <MT8365_PIN_39_URXD2__FUNC_URXD2>,
-+				 <MT8365_PIN_40_UTXD2__FUNC_UTXD2>;
-+		};
-+	};
-+
-+	usb_pins: usb-pins {
-+		pins-id {
-+			pinmux = <MT8365_PIN_17_GPIO17__FUNC_GPIO17>;
-+			input-enable;
-+			bias-pull-up;
-+		};
-+
-+		pins-usb0-vbus {
-+			pinmux = <MT8365_PIN_16_GPIO16__FUNC_USB_DRVVBUS>;
-+			output-high;
-+		};
-+
-+		pin-usb1-vbus {
-+			pinmux = <MT8365_PIN_18_GPIO18__FUNC_GPIO18>;
-+			output-high;
-+		};
-+	};
-+
-+	pwm_pins: pwm-pins {
-+		pins {
-+			pinmux = <MT8365_PIN_19_DISP_PWM__FUNC_PWM_A>,
-+				 <MT8365_PIN_116_I2S_BCK__FUNC_PWM_C>;
-+		};
-+	};
-+};
-+
-+&pwm {
-+	pinctrl-0 = <&pwm_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&ssusb {
-+	pinctrl-0 = <&usb_pins>;
-+	pinctrl-names = "default";
-+	maximum-speed = "high-speed";
-+	usb-role-switch;
-+	dr_mode = "otg";
-+	vusb33-supply = <&mt6357_vusb33_reg>;
-+	status = "okay";
-+
-+	connector {
-+		compatible = "gpio-usb-b-connector", "usb-b-connector";
-+		type = "micro";
-+		id-gpios = <&pio 17 GPIO_ACTIVE_HIGH>;
-+		vbus-supply = <&usb_otg_vbus>;
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-0 = <&uart0_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-0 = <&uart1_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-0 = <&uart2_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
-+&usb_host {
-+	vusb33-supply = <&mt6357_vusb33_reg>;
-+	status = "okay";
-+};
--- 
-2.36.1
+best regards
+Frank Li
 
+>
+> >
+> > -Sergey
+> >
+> > >
+> > > Frank Li (6):
+> > >   dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
+> > >   dmaengine: dw-edma: Detach the private data and chip info structures
+> > >   dmaengine: dw-edma: Change rg_region to reg_base in struct
+> > >     dw_edma_chip
+> > >   dmaengine: dw-edma: Rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+> > >     dw_edma_chip
+> > >   dmaengine: dw-edma: Add support for chip specific flags
+> > >   PCI: endpoint: Enable DMA tests for endpoints with DMA capabilities
+> > >
+> > > Serge Semin (2):
+> > >   dmaengine: dw-edma: Drop dma_slave_config.direction field usage
+> > >   dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
+> > >     semantics
+> > >
+> > >  drivers/dma/dw-edma/dw-edma-core.c            | 141 +++++++++++-------
+> > >  drivers/dma/dw-edma/dw-edma-core.h            |  31 +---
+> > >  drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
+> > >  drivers/dma/dw-edma/dw-edma-v0-core.c         |  41 ++---
+> > >  drivers/dma/dw-edma/dw-edma-v0-core.h         |   4 +-
+> > >  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  18 +--
+> > >  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   8 +-
+> > >  drivers/pci/endpoint/functions/pci-epf-test.c | 112 ++++++++++++--
+> > >  include/linux/dma/edma.h                      |  59 +++++++-
+> > >  9 files changed, 317 insertions(+), 180 deletions(-)
+> > >
+> > > --
+> > > 2.35.1
+> > >

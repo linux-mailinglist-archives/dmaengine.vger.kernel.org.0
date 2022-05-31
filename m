@@ -2,151 +2,142 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A174C5390FB
-	for <lists+dmaengine@lfdr.de>; Tue, 31 May 2022 14:45:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A1FE539203
+	for <lists+dmaengine@lfdr.de>; Tue, 31 May 2022 15:50:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242495AbiEaMpf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 31 May 2022 08:45:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45330 "EHLO
+        id S1344881AbiEaNuo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 31 May 2022 09:50:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239853AbiEaMpf (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 31 May 2022 08:45:35 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F376EB22;
-        Tue, 31 May 2022 05:45:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654001134; x=1685537134;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=E2ntfHjCIkuUyHhmuXAzUVCFkINVleA6ROwALxGHnvM=;
-  b=CVtistdmUYgQ9RoNZ3kivk1aSK2dMRCMwsd5IccMq6lOCCTVOL2zUWhQ
-   LaFnTl+QowXxRa8+3dozV2OTxSF418Sio47Je/DtJLHNfrr3XbH6eyxGu
-   +xlXhMeuDPVICGMkq53oWxOVXuO7KSgn9AmIOEByepvP1V41mBm1+nKmn
-   2ZC4+XHqGUXlOWwPDayEC2ESyJQ3jy2nYQ2ohkgYLrLFk2S1O2DGwPtmh
-   6xuYxMNK2g+DHfr5nJyc0COPi2dqoaqMeZmtKx/k6xgc2elNm3Lk7H3og
-   Lm0Dci8Ce+CCbCUHtqeCp91MtpvreFDrdz0E0pfTckkY/Jh+Nb72zBGlu
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10363"; a="275246180"
-X-IronPort-AV: E=Sophos;i="5.91,265,1647327600"; 
-   d="scan'208";a="275246180"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 05:45:33 -0700
-X-IronPort-AV: E=Sophos;i="5.91,265,1647327600"; 
-   d="scan'208";a="706557881"
-Received: from xingzhen-mobl.ccr.corp.intel.com (HELO [10.249.170.74]) ([10.249.170.74])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 05:45:30 -0700
-Message-ID: <628aa885-dd12-8bcd-bfc6-446345bf69ed@linux.intel.com>
-Date:   Tue, 31 May 2022 20:45:28 +0800
+        with ESMTP id S1344867AbiEaNul (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 31 May 2022 09:50:41 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D183544E0
+        for <dmaengine@vger.kernel.org>; Tue, 31 May 2022 06:50:38 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id e25so8160580wra.11
+        for <dmaengine@vger.kernel.org>; Tue, 31 May 2022 06:50:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ks9vTtzXL1NzJuLhvcv/lBf9sH/I8oroEcUXJQecJiY=;
+        b=xtZHSA3K85YeP1R8TqJTezh1l7AboO67QnJbxmUxYsSKR3b9HMFsTp1QD4TVZvKYD1
+         HykwJkz0IW4fwjPH1Z0l9xH3Oif1Qyz4EObPsiwZXnAXo/kCZCKI8eI5xsuJ7HgXtaXN
+         igvkGmpchkyuuMO2tdAR159F7tqSL4KCQk76eOzZ0gnvace+L6L/D7RGtYizyiAxNH/H
+         U1OOXHiLwvj0PnjQ9PmyWuR1utFiONwi7NGx9h2FLtpNKsKkOyd7zUg6Z7fPPuvzo2+J
+         OzV184qkC3Q1grDw1sZEiE1et3kV/ow2A5Uy2HR/6AQuE2OaglwYGrTIwCVgkLMJpI+J
+         hYNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ks9vTtzXL1NzJuLhvcv/lBf9sH/I8oroEcUXJQecJiY=;
+        b=pRZpAu3UFNsQ/OQJBaBI9SEHODkVAlQEmU7xJwRcU7wmJCF7kOBNAUgDsqahp3Csub
+         uXbxJb/JTjLrkoWrXm524ilBWaJamETC1Xlg3wt5y9pXRQ5H/eLaY4aXCTF6uPVLQA6i
+         CW5VV7YnNytHDk9j1YAAJDN2NBePn1L10s+o09xaQzY9kVeS/7jYnmB8+OtjU4hbnUzJ
+         FXuyBEwupe8jyNUc2hZXyWJHDHOnUn2wZLERKaxwwseK8A5u22FjOEZza/iSy72ZG0fK
+         mkCT9NcE2ibebSnaeB1WpTGZqvLp4TZ4ftDRl0tCeEiRJHiTYkyOp71Zm+WQeQ2ey5rJ
+         w9/w==
+X-Gm-Message-State: AOAM530MwnIVfkPB+gCuUPWMpGIwq0wG9VqIlhcnKilhTWcfDatJDQze
+        yf08D473JuiYL+8oQo6XGq/VLw==
+X-Google-Smtp-Source: ABdhPJzh0ABvRvzeW4VNDfDT+jgXlefhQRDjukiBBkCf5v7KqylLxZRg6Qya21tyLqyBuT1Kzn3OQA==
+X-Received: by 2002:a5d:6f1d:0:b0:20f:ff40:263f with SMTP id ay29-20020a5d6f1d000000b0020fff40263fmr25172992wrb.626.1654005037132;
+        Tue, 31 May 2022 06:50:37 -0700 (PDT)
+Received: from localhost.localdomain ([88.160.162.107])
+        by smtp.gmail.com with ESMTPSA id l11-20020a05600c1d0b00b00394351e35edsm2404806wms.26.2022.05.31.06.50.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 May 2022 06:50:36 -0700 (PDT)
+From:   Fabien Parent <fparent@baylibre.com>
+To:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        vkoul@kernel.org, qii.wang@mediatek.com, matthias.bgg@gmail.com,
+        jic23@kernel.org, chaotian.jing@mediatek.com,
+        ulf.hansson@linaro.org, srinivas.kandagatla@linaro.org,
+        chunfeng.yun@mediatek.com, broonie@kernel.org,
+        wim@linux-watchdog.org, linux@roeck-us.net
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-iio@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Fabien Parent <fparent@baylibre.com>
+Subject: [PATCH 00/17] Add support for MT8365 EVK board
+Date:   Tue, 31 May 2022 15:50:09 +0200
+Message-Id: <20220531135026.238475-1-fparent@baylibre.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Cc:     baolu.lu@linux.intel.com,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH v4 1/6] iommu: Add a per domain PASID for DMA API
-Content-Language: en-US
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-References: <20220518182120.1136715-1-jacob.jun.pan@linux.intel.com>
- <20220518182120.1136715-2-jacob.jun.pan@linux.intel.com>
- <20220524135034.GU1343366@nvidia.com> <20220524081727.19c2dd6d@jacob-builder>
- <20220530122247.GY1343366@nvidia.com>
- <BN9PR11MB52768105FC4FB959298F8A188CDC9@BN9PR11MB5276.namprd11.prod.outlook.com>
-From:   Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <BN9PR11MB52768105FC4FB959298F8A188CDC9@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 2022/5/31 18:12, Tian, Kevin wrote:
->>>> +++ b/include/linux/iommu.h
->>>> @@ -105,6 +105,8 @@ struct iommu_domain {
->>>>   	enum iommu_page_response_code (*iopf_handler)(struct
->> iommu_fault *fault,
->>>>   						      void *data);
->>>>   	void *fault_data;
->>>> +	ioasid_t pasid;		/* Used for DMA requests with PASID */
->>>> +	atomic_t pasid_users;
->>> These are poorly named, this is really the DMA API global PASID and
->>> shouldn't be used for other things.
->>>
->>>
->>>
->>> Perhaps I misunderstood, do you mind explaining more?
->> You still haven't really explained what this is for in this patch,
->> maybe it just needs a better commit message, or maybe something is
->> wrong.
->>
->> I keep saying the DMA API usage is not special, so why do we need to
->> create a new global pasid and refcount? Realistically this is only
->> going to be used by IDXD, why can't we just allocate a PASID and
->> return it to the driver every time a driver asks for DMA API on PASI
->> mode? Why does the core need to do anything special?
->>
-> Agree. I guess it was a mistake caused by treating ENQCMD as the
-> only user although the actual semantics of the invented interfaces
-> have already evolved to be quite general.
-> 
-> This is very similar to what we have been discussing for iommufd.
-> a PASID is just an additional routing info when attaching a device
-> to an I/O address space (DMA API in this context) and by default
-> it should be a per-device resource except when ENQCMD is
-> explicitly opt in.
-> 
-> Hence it's right time for us to develop common facility working
-> for both this DMA API usage and iommufd, i.e.:
-> 
-> for normal PASID attach to a domain, driver:
-> 
-> 	allocates a local pasid from device local space;
-> 	attaches the local pasid to a domain;
-> 
-> for PASID attach in particular for ENQCMD, driver:
-> 
-> 	allocates a global pasid in system-wide;
-> 	attaches the global pasid to a domain;
-> 	set the global pasid in PASID_MSR;
-> 
-> In both cases the pasid is stored in the attach data instead of the
-> domain.
-> 
-> DMA API pasid is no special from above except it needs to allow
-> one device attached to the same domain twice (one with RID
-> and the other with RID+PASID).
-> 
-> for iommufd those operations are initiated by userspace via
-> iommufd uAPI.
+This patch series adds support for the MT8365 EVK board.
 
-My understanding is that device driver owns its PASID policy. If ENQCMD
-is supported on the device, the PASIDs should be allocated through
-ioasid_alloc(). Otherwise, the whole PASID pool is managed by the device
-driver.
+This series has dependencies on the following series:
+https://patchwork.kernel.org/project/linux-mediatek/list/?series=646256
+https://patchwork.kernel.org/project/linux-mediatek/list/?series=646091
+https://patchwork.kernel.org/project/linux-mediatek/list/?series=646083
+https://patchwork.kernel.org/project/linux-mediatek/list/?series=646081
+https://patchwork.kernel.org/project/linux-mediatek/list/?series=646076
+https://patchwork.kernel.org/project/linux-mediatek/list/?series=646068
+https://patchwork.kernel.org/project/linux-mediatek/list/?series=646020
+https://patchwork.kernel.org/project/linux-mediatek/list/?series=646052
+https://lore.kernel.org/r/20220504091923.2219-2-rex-bc.chen@mediatek.com 
+https://lore.kernel.org/r/20220512062622.31484-2-chunfeng.yun@mediatek.com 
+https://lore.kernel.org/r/20220512062622.31484-1-chunfeng.yun@mediatek.com
+https://lore.kernel.org/r/20220524115019.97246-1-angelogioacchino.delregno@collabora.com
+https://lore.kernel.org/all/20220127015857.9868-1-biao.huang@mediatek.com/
 
-For kernel DMA w/ PASID, after the driver has a PASID for this purpose,
-it can just set the default domain to the PASID on device. There's no
-need for enable/disable() interfaces.
+Fabien Parent (17):
+  dt-bindings: i2c: i2c-mt65xx: add binding for MT8365 SoC
+  dt-bindings: memory: add mt8365 SoC binding documentation
+  dt-bindings: mmc: mtk-sd: add bindings for MT8365 SoC
+  dt-bindings: arm: mediatek: Add binding for mt8365-evk board
+  dt-bindings: dma: mediatek,uart-dma: add MT8365 bindings
+  dt-bindings: iio: adc: mediatek: add MT8365 SoC bindings
+  dt-bindings: nvmem: mediatek,efuse: add MT8365 bindings
+  dt-bindings: watchdog: mtk-wdt: Add MT8365 SoC bindings
+  dt-bindings: spi: mt65xx: add MT8365 SoC bindings
+  dt-bindings: serial: mediatek: add MT8365 bindings
+  dt-bindings: phy: mediatek,dsi-phy: Add MT8365 SoC bindings
+  dt-bindings: phy: mediatek,tphy: add MT8365 SoC bindings
+  dt-bindings: usb: mediatek,mtu3: add MT8365 SoC bindings
+  dt-bindings: usb: mediatek,mtk-xhci: add MT8365 SoC bindings
+  arm64: dts: mediatek: add mt6357 device-tree
+  arm64: dts: mediatek: add mt8365 device-tree
+  arm64: dts: mediatek: add mt8365-evk board device-tree
 
-Best regards,
-baolu
+ .../devicetree/bindings/arm/mediatek.yaml     |    4 +
+ .../bindings/dma/mediatek,uart-dma.yaml       |    1 +
+ .../devicetree/bindings/i2c/i2c-mt65xx.yaml   |    4 +
+ .../iio/adc/mediatek,mt2701-auxadc.yaml       |    1 +
+ .../mediatek,smi-common.yaml                  |    6 +
+ .../memory-controllers/mediatek,smi-larb.yaml |    6 +
+ .../devicetree/bindings/mmc/mtk-sd.yaml       |    3 +
+ .../bindings/nvmem/mediatek,efuse.yaml        |    1 +
+ .../bindings/phy/mediatek,dsi-phy.yaml        |    4 +
+ .../bindings/phy/mediatek,tphy.yaml           |    1 +
+ .../bindings/serial/mediatek,uart.yaml        |    1 +
+ .../bindings/spi/mediatek,spi-mt65xx.yaml     |    1 +
+ .../bindings/usb/mediatek,mtk-xhci.yaml       |    1 +
+ .../bindings/usb/mediatek,mtu3.yaml           |    1 +
+ .../devicetree/bindings/watchdog/mtk-wdt.txt  |    1 +
+ arch/arm64/boot/dts/mediatek/Makefile         |    1 +
+ arch/arm64/boot/dts/mediatek/mt6357.dtsi      |  272 +++++
+ arch/arm64/boot/dts/mediatek/mt8365-evk.dts   |  578 +++++++++
+ arch/arm64/boot/dts/mediatek/mt8365.dtsi      | 1047 +++++++++++++++++
+ 19 files changed, 1934 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6357.dtsi
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8365-evk.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8365.dtsi
+
+-- 
+2.36.1
+

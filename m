@@ -2,153 +2,137 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE9015396BA
-	for <lists+dmaengine@lfdr.de>; Tue, 31 May 2022 21:05:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A386F5396FC
+	for <lists+dmaengine@lfdr.de>; Tue, 31 May 2022 21:27:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234487AbiEaTFz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 31 May 2022 15:05:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44512 "EHLO
+        id S1346538AbiEaT16 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 31 May 2022 15:27:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231464AbiEaTFy (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 31 May 2022 15:05:54 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2059.outbound.protection.outlook.com [40.107.94.59])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4737B6D85B;
-        Tue, 31 May 2022 12:05:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R5+lK8Iifkz7m/GnNlQ328SLhBon79k6iybGvMSFX6guK65PenhiGa4N/39V9nbn3UGCIcwCMrxaYoK4TiDsApRmtbLsHh4fEcgv5b+/m0unfHidTWKmiBho/23XtDV2zv4a0Q0JPOg/2h91NdI4SaoSIOzSQ14AXDy+Hny2J9cf8hYSatisDmIvpQVcPAktUx0Yjn1+d39tqVVQyRrNvUGO0HQKntSxz/TdRkRTTv0KtgxYEhOTLnKHTnJdFcp8h6rxfJfM1+cqMnI0XTApKdjaaiSON4UGZCv2HGKtwM1aZ4xWuK+w2vhFQuToTuQ4lwz1lyEKIBV5W086w6k8ww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Cgjj1+Psv56IlxBf1IX8HBDI7NnMz02Pb3TeAtoaFNw=;
- b=P0Ievcf7crlNeyfaqOMvWX8LqZ4WPZm+EFmcxj+5thP9rDg3T+ZM/tMBGZbCphZv4VLWx83BeVsohbBAxZtr8jep9Kegb+25BsFYUnlbrIXClxZKIegYQn0OUny45MqyoPI+wqCsMcyzoSJAHys0CZCodOvi958INUd2E6V9jyTk2GbyXJ4cmUaMRmdY+z9RYJB6tbi8Jmf7Vie0setLuno8Ty3RfkcKl0qqDSmTskEbmPG/4RU8kJIscfvbQTXhhBAlQgkmvyVwuvI6jVxI9T2DQSjVOH9UlPlHdUvHLHjZO0b3LRcHsqdsKT8QdgJItOd79BYEdmVOGOc91Ap2pA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Cgjj1+Psv56IlxBf1IX8HBDI7NnMz02Pb3TeAtoaFNw=;
- b=fB5LoMmVGDS3eHLHcMPZfRI02kcGHPPhumjEHMBVynT/hYdQWdqxael9oxWfs/Ghj0sASmlZHd8+u9ACtN1eDL6Q5RaeAuX7tAYYEg3PtuRD9PUr9XJQiianzW/T0pzpCNHnoiX/PkfQT01zXwqmQkH7DC6PKhOm5Sm014E5zO5/BCjYYAU6EAfQCBvGmcNC/DQ1GXZ3baxiWy+PHaYkjfNiASRNHPCmDIlCqmeWQWYBzzfWxYnAxVjRrJagrFekOhbpthQMF972Gk80GhHGxK0bBCjsHJWtP8pBjK2UL5iGzGQi4A4SIL7Hgth2nTRUb9Ky7OCwp6y9c/bSbUTISA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
- by MWHPR12MB1582.namprd12.prod.outlook.com (2603:10b6:301:10::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.15; Tue, 31 May
- 2022 19:05:51 +0000
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::2484:51da:d56f:f1a5]) by MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::2484:51da:d56f:f1a5%9]) with mapi id 15.20.5314.012; Tue, 31 May 2022
- 19:05:51 +0000
-Date:   Tue, 31 May 2022 16:05:50 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     Baolu Lu <baolu.lu@linux.intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH v4 1/6] iommu: Add a per domain PASID for DMA API
-Message-ID: <20220531190550.GK1343366@nvidia.com>
-References: <20220518182120.1136715-1-jacob.jun.pan@linux.intel.com>
- <20220518182120.1136715-2-jacob.jun.pan@linux.intel.com>
- <20220524135034.GU1343366@nvidia.com>
- <20220524081727.19c2dd6d@jacob-builder>
- <20220530122247.GY1343366@nvidia.com>
- <BN9PR11MB52768105FC4FB959298F8A188CDC9@BN9PR11MB5276.namprd11.prod.outlook.com>
- <628aa885-dd12-8bcd-bfc6-446345bf69ed@linux.intel.com>
- <20220531102955.6618b540@jacob-builder>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220531102955.6618b540@jacob-builder>
-X-ClientProxiedBy: BL1PR13CA0419.namprd13.prod.outlook.com
- (2603:10b6:208:2c2::34) To MN2PR12MB4192.namprd12.prod.outlook.com
- (2603:10b6:208:1d5::15)
+        with ESMTP id S231594AbiEaT15 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 31 May 2022 15:27:57 -0400
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F077548E4A;
+        Tue, 31 May 2022 12:27:55 -0700 (PDT)
+Received: from mail-yb1-f174.google.com ([209.85.219.174]) by
+ mrelayeu.kundenserver.de (mreue009 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MWzXd-1oKV5n0CHh-00XJVd; Tue, 31 May 2022 21:27:54 +0200
+Received: by mail-yb1-f174.google.com with SMTP id p13so14076781ybm.1;
+        Tue, 31 May 2022 12:27:53 -0700 (PDT)
+X-Gm-Message-State: AOAM532f4dg8HULohbX6nQcM4xAEDG8av11mec3SxxLIq1EMnmBgGVrh
+        SKJI7TDrIIrP+5s+889lTGQuaJ0ndxxsZQupSUA=
+X-Google-Smtp-Source: ABdhPJxyk421E9RkuQAkYxSldlpP0Sx5xvw/SZmoip5B1Zf2Fbf21hH68zXh6tR8O7vabTnD3t2ya1dr8dbyv7ZmpwY=
+X-Received: by 2002:a25:1209:0:b0:65d:63f9:e10a with SMTP id
+ 9-20020a251209000000b0065d63f9e10amr2750286ybs.480.1654025272658; Tue, 31 May
+ 2022 12:27:52 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ef5d9e1d-19dc-42b1-ad9c-08da4338947f
-X-MS-TrafficTypeDiagnostic: MWHPR12MB1582:EE_
-X-Microsoft-Antispam-PRVS: <MWHPR12MB1582102352F9F069221B4D7AC2DC9@MWHPR12MB1582.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YMwSkXqHwcBWZhGwZDmXwQMhp98Hnw0XIAEJOxRdPaeI4SL5akq3xuhAMva/jKxG1gCZnOFx4I9Fs3fFTcfe1JuzSgzTi7dMuvY09Bmi27QlXrxN4A5i2Gb+iDZBdAjYIIkZBCsgAy1D96R/Rn5DZ8zQE+VDF1bPliI9a1gcpBJ+w8eCecuNBY/YW1pazJFx4LG6zR99+/gyjuBm3ZoVN/cYpH/niIf870+7jQZPj0KDcDddxq3lgHvhhFtymCER4twE2zKfWxxEv1QGCqoVdPv3IwqeIh4wN7eY/yREXOkZPWlRyd9UvTCEu/5TIehIYSOMtqBQZh714UaetCUgJxYcXhXZu0IcrDcdCkmK6dOZbV5B4oOar+5gRSozVWdpqs0PNNLFgW4LJge3r3q1yTuAwmuajd9ZstyOt2+tI37XDFgYzaS85MBTuowaCJ/4QFoADuF/zmGeP6naDB7TEL+YOADbpthx0L5PYXfniF6ddvi8rr+Z6/URtuJi33+5gy6z7RvGTpSzSsIQp+WUw2MmAuvx/3b5wec2FxqOVZNFbm40TtEQ/t12DCQBf+vCko4brrGY58Nip7iQZxfEoWd7bCEJzi65XKET0iTfwMegnWp2yD55YH7ybputlhgX6EWpPekdsHEgH/dGJX0H+w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(33656002)(316002)(7416002)(86362001)(6916009)(5660300002)(4744005)(2906002)(54906003)(4326008)(8676002)(66946007)(66556008)(66476007)(38100700002)(1076003)(2616005)(186003)(8936002)(508600001)(6486002)(36756003)(6506007)(6512007)(26005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?d6LRLyGvc99mcOwnFvYbdvm2AiJCcvwIohk2pTz1QGO59jQMS+wLX4kYISQ+?=
- =?us-ascii?Q?CEByxZzqapyL4eiHlcdJ3Ew+enjhLJGx2p0ETUDDqUv1N7ZNft+LadWdNM2H?=
- =?us-ascii?Q?pez9HftvibFyH3/6hbXWSW9mTcCnINUia3CMNRlUmR3Kz9dQJ7JCv83NjFSL?=
- =?us-ascii?Q?H7B6fL/kKudKP2dzDRG6c4sEDEBVjPu+fhwcEe1PEEfHrwc3PrS/8ww8L+OQ?=
- =?us-ascii?Q?sgf5ocIEDx9v5Txy7DbPtjMHOZC2sIysTZDhDJA9COcQRWgNTkOqJw2PH0wZ?=
- =?us-ascii?Q?/a0m6OzN6DaDY8yXied7EnXElPEH3HK6t9f1ceJ0TeHA7ZdrS51sATF7uR6X?=
- =?us-ascii?Q?pyyStENFdFo7pyGZL2+cqZvnI2R5UgYliolOAd0rfCYOgK1iiTgW/08Xlr1I?=
- =?us-ascii?Q?45lg7kqI97e+iTd87lD2e5JZP1pkdDg1Xg71/RuHjbDvmf4L4QZyikUGBa6F?=
- =?us-ascii?Q?nGL4T2ku0QnVQao4wS29QGsm0iCvM50S1WJhu4w9Gbo04Y9JaTknQ94sURCQ?=
- =?us-ascii?Q?eUF1pxKTK6GISZ7is/aMfnJiNqI180EooCwZaAJFwVr68ENkCNav/blNc9a9?=
- =?us-ascii?Q?GbpwVTbOMmIqDMaTIu0o8wCAKEaOlkZsCf8Ot3NRxLyzOY4a5qh5Dh1MKzlw?=
- =?us-ascii?Q?GeNs3h4rt6ePDvfkDxGFY9YLn9FMHRr+aUnRE73zXnYwcRzt4CJKoF/AabFc?=
- =?us-ascii?Q?ghqaqAoG2CX3ECQgATQcXEFRy8ZhM93gLFZxWw0KzYtnPElkkKyZrZeLHPmV?=
- =?us-ascii?Q?+9iI0dergnsS2kgHsTyxUtui2xgZHmQpkT8J6p6gdVaZMqdo5gVnwSnaRmnl?=
- =?us-ascii?Q?V+Q9DLutb+u4O6hKC5TPhFO+iAVTHPm3HGFXDSfCVl0/ouA3SJz22ivgyChi?=
- =?us-ascii?Q?PHqiUE590dgbVGAMAtY9/75+NjDmxOSVwZkQpC256lfKfmBYTB0nPv0wfw7o?=
- =?us-ascii?Q?iUDlMWLZjRZz47rUC1TsfXheja5Ri7LwMoGs7zOeFanyNGGYRPs1b9LMkgut?=
- =?us-ascii?Q?QVulxHFC6ew9HMZg30SepTFpmQ43VS+V5bCwtTCaAcvuveaJB5XVYkn9jza6?=
- =?us-ascii?Q?7ucTtVpn8lAMBy9z1nSQUvR/zBe00CnSa8Sxw2/ePt7M0li0CBVpoXayYqgx?=
- =?us-ascii?Q?uQkHX/Ps36SaH4xlNdMfHnMd+g1oPgAgV3+gRVes4mcgJJLbZhvQnfBP11B5?=
- =?us-ascii?Q?kRp9TZB4bkXq2GXK8evuMEmit+hFW04qh3qH5GmNSFuYfwd37iEC6hXilaUZ?=
- =?us-ascii?Q?KbhrMDLNL29AJKwe0T3cBqqnEcaOxVtohFq/2nykz9jKk8BaB8yrTS6okumS?=
- =?us-ascii?Q?+mognbHS5yAAUntms8BIxbZoEnDYg9Ir1/ZIieLpabPTC1k6Y0G+2ETXShCG?=
- =?us-ascii?Q?q+Ia4rS60jByzvtSYp8So95c+6J0O6xOEz+4Igwg4/cMHSB7WnXBW7WZPPm9?=
- =?us-ascii?Q?sntRvWT0GsUrkZOoKkel8ZNBrgJztn6d84YdpWkFBrsSzIgh4MT1M5ArcWiN?=
- =?us-ascii?Q?9x6Ql1TXLV3AXxFf21FfXASDuWtc1+EsiGKGD8j4Y6b7PfDu9ThIwnmh3tjx?=
- =?us-ascii?Q?bSVyHhW4BqTqoIWyGoKL7OOjeee2NvsxkGxaxOkjK7vGmXO/QFoxKEiG0M4y?=
- =?us-ascii?Q?tyLIz8f9rnkbNuSFzxREBZhHcdnlodqCcoYqVLOfQZg4RhyUtCmztY8SsrUI?=
- =?us-ascii?Q?2K9eNLEpObK+k38czdIQGKNSM1Pnfrec10acEPRHZbY/svOEWhe01Yjq//5B?=
- =?us-ascii?Q?yW2e5zg4xg=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef5d9e1d-19dc-42b1-ad9c-08da4338947f
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2022 19:05:51.7154
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VbzWCmpUtq6fXTfZjL/NlCPnE2A+LUYdzJ4J9RmXBiLU1K2yKp6UU3VjwkZAm0qq
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1582
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+References: <20220419211658.11403-1-apais@linux.microsoft.com>
+ <20220419211658.11403-2-apais@linux.microsoft.com> <CACRpkdZ2DFZRPHS1x0=M3_8zYvU-jpCG5Tm3863dXv51EhY+BA@mail.gmail.com>
+ <CAK8P3a0j_rziihsgHnG5bHMxmPbOkAhT6_+CCE4iFZy7HzQrLw@mail.gmail.com>
+ <YpCGePbo9B/Z7slV@matsya> <CAK8P3a2wD7=hgvqyS14X5p-eP+7Ajk4dFJOXgbOo8Z0r5UNYmg@mail.gmail.com>
+ <YpW8J40hKwc7jwQh@matsya> <0A9EDEDC-9E6C-47F8-89C0-48DCDD3F9DE3@linux.microsoft.com>
+ <CAK8P3a3vf_huJ5ysBvFDV=11E-=OxFGiDQ9ND04YKug8g6jV_A@mail.gmail.com> <708F627F-0F7D-477F-BDF7-274424501DA0@linux.microsoft.com>
+In-Reply-To: <708F627F-0F7D-477F-BDF7-274424501DA0@linux.microsoft.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 31 May 2022 21:27:35 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a314SxhTNy6psYr_MzarOPmkjv1_KKGdeVUPpBjVkC5nA@mail.gmail.com>
+Message-ID: <CAK8P3a314SxhTNy6psYr_MzarOPmkjv1_KKGdeVUPpBjVkC5nA@mail.gmail.com>
+Subject: Re: [RFC 1/1] drivers/dma/*: replace tasklets with workqueue
+To:     Allen Pais <apais@linux.microsoft.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        olivier.dautricourt@orolia.com, Stefan Roese <sr@denx.de>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Eugeniy.Paltsev@synopsys.com,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Leo Li <leoyang.li@nxp.com>, zw@zh-kernel.org,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Sanjay R Mehta <sanju.mehta@amd.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        green.wan@sifive.com, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>,
+        Patrice CHOTARD <patrice.chotard@foss.st.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        dmaengine@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:B22oMGCygCRXUXUiRid2wa6+BPuoeRZrXYWJD0/ExzKDN6lwySO
+ xH8HbHRxnH1IlxNnE6ciDtBoQgfNtFTTGS72Pk666yGlIvC/wTZZXUc88QAqizrZ+9YsB+N
+ 1D+8hYbJxL7Umn93m51z6RurGdsgjA55XZcdFezzKurxbCBhT3/YRvHY2ku35E8C4tyhspf
+ FiDbX0/aJOhDOtD8eom5g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:aDK9dosKDUI=:qDjs0bR0Xz30Gn2NaW7Yrc
+ CW9vStNFFTN452LbNgA88uS2TixpgufC4Lvc421s0a/s1PM85Ba0a/eRunYQHQ56cuudv2qDK
+ MxkS1qqGUEyee/oBkXRYTSgM/A7CNVJgrUELiAR9hm8OW8fthTq8LqlqVR4i+yEhL1wR2M/G0
+ TaiYXU6PpLKkRBFFegR1fvNVI9mtrhkFs2+F8Sckeh/sT/25BR/uGMEVpIYCzTwidf++pHO8U
+ XnjKdgZMkLg7Fdmf5BgT2+WC7gdBuC4IIypurcdqx+rjJdeQ4Ho02hO+dVlKQmFbjfG7OSbIb
+ PDms623pJzX70HggVXajBASwiNMGktAbJjt2kvFalOLm1k7rCno77UnKY68zg/HL9q76GYD+j
+ Up5tYU6pUx1z/cuYMnTEO8Uigp2K6zS7HxgeuMojl7yKs3REqWws5nxY+tAj5IjYyfv0160xs
+ u/DbAdxY8MpXeKNKE6g6JPpk8qFPGk7uDkETHGA7NK0FdrOLalYp0gdczaW8zCTMQGb1W4Nji
+ RsqDvZmEaCPO2TusMI9bMNvkW77+O6qn3zY9oQvWAeygooAiQu4s0i3H6gt6GzNNiSu+K3bcF
+ nQ1xnGB3Jd43MTOKKxV5S92Yqp3vTccBCh8i2esC7Jo8ni4FbALwdXn3gCdYjNHmDBLDMJsYR
+ MLS301I8EFrAletx0HLKpf8ARqMIc31nT4kYaaheFZrPMhQKAVh8/Gh0bVUi4I4fEC7FvnQnB
+ ZNsJ9Plr8/S9uB6k4sfR6jiFOmt7njjUQJUwqKd7c8BK9S85XZ+OdxG+14yQguAo9G3kFFqhz
+ oD91QO6zS4Ln7SUpp9XTEiFxjDtrSZNUMwWJjnM/XJRT7V4t0ZG4GDKywjqJocQRtPb1NGp/O
+ 08/AR1B0XHi7XYPnGrsQ==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, May 31, 2022 at 10:29:55AM -0700, Jacob Pan wrote:
+On Tue, May 31, 2022 at 8:19 PM Allen Pais <apais@linux.microsoft.com> wrote:
+> >>> That is a good idea, lot of drivers are waiting for completion which can
+> >>> be signalled from hardirq, this would also reduce the hops we have and
+> >>> help improve latency a bit. On the downside, some controllers provide
+> >>> error information, which would need to be dealt with.
+> >>
+> >>
+> >>   I am not an expert in dma subsystem, but by using completion from
+> >> Hardirq context be a concern? Especially with latency.
+> >
+> > I don't see how: to the task waiting for the completion, there should
+> > be no difference, and for the irq handler sending it, it just avoids
+> > a few cycles going into softirq context.
+>
+>   Thanks for clarification.
+>
+>   If I have understood it correctly, your suggestion is to move the current
+> Callback mechanism out to dmaengine as a generic helper function
+> And introduce completion in dma_async_tx_descriptor to handle what
+> Tasklets currently do.
 
-> The reason why I store PASID at IOMMU domain is for IOTLB flush within the
-> domain. Device driver is not aware of domain level IOTLB flush. We also
-> have iova_cookie for each domain which essentially is for RIDPASID.
+Right: around half the callbacks are a trivial version that does nothing
+other than calling complete(), so these will benefit from skipping the
+softirq, while the others still need the callback.
 
-You need to make the PASID stuff work generically.
-
-The domain needs to hold a list of all the places it needs to flush
-and that list needs to be maintained during attach/detach.
-
-A single PASID on the domain is obviously never going to work
-generically.
-
-Jason
+       Arnd

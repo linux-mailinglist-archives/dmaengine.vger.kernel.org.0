@@ -2,58 +2,58 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE8E853A239
-	for <lists+dmaengine@lfdr.de>; Wed,  1 Jun 2022 12:13:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EA9B53A23D
+	for <lists+dmaengine@lfdr.de>; Wed,  1 Jun 2022 12:13:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351537AbiFAKNU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 1 Jun 2022 06:13:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49184 "EHLO
+        id S1351945AbiFAKNx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 1 Jun 2022 06:13:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351898AbiFAKNQ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 1 Jun 2022 06:13:16 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CAA44475E
-        for <dmaengine@vger.kernel.org>; Wed,  1 Jun 2022 03:13:13 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id u12so2711638eja.8
-        for <dmaengine@vger.kernel.org>; Wed, 01 Jun 2022 03:13:13 -0700 (PDT)
+        with ESMTP id S1351898AbiFAKNt (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 1 Jun 2022 06:13:49 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EEFD4C790
+        for <dmaengine@vger.kernel.org>; Wed,  1 Jun 2022 03:13:47 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id w27so1483870edl.7
+        for <dmaengine@vger.kernel.org>; Wed, 01 Jun 2022 03:13:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=Z9kPEnmi8rJKpB3/e/9VBnwIHSYiTOXGx6udirKdD3M=;
-        b=AgWZPwEKZaFLn8RqKLc2KNNc5Ox5awSlJ1Eo3iFQUpbH54qkNKGdSA/oYmRwN7jNeK
-         UHHTIWONRqxe62sbo+bKj8ofX1yCVF+sZoXI2RmEEHsHeACpURK0tSI7rJrAfo3nvkCu
-         1hzevQKrNh/cy4d+o9QNlxatZi8oxvhsb5M/pZ9wTacDiFLJ0w8w/do6y29F0n3ezP7f
-         PusoBRPPTModJOvPw79D0hlUfXJ8/xbQXLFE15SzI/+az0xO7/RPWMItwnxXktCevnSx
-         OLNaLpn5TqbBhnQUYchiuK2sM+9xl0TOHE2TOnTJxsHBl/jlsI1TsEGmERigH774u85v
-         /Szg==
+        bh=AlvALx0zMnGDVnEapBQ7KHJlm9HnZCeBAZQY2Z7YIfQ=;
+        b=MyCjNSjG2AHbNB2hBMdKLs7JyeIE2MU21L7NxYzqYkgJshTjTAEE3mD+wxlpLMSZa1
+         6kCgUApP3XMk/l0RKFbqTKkRmn+B8M5eZoQ9wj6leLnRPShsmt0NiHxg5OAui/Wjj4iJ
+         i4vfSEUecvq6/DBHNM7UiaodK0JQQ7g3UoEYaWKtumlj0/PvIpngsENEmCTNfzM89Tb9
+         QkF+JF2c2z/S4FXGch+hlLzAcJGTiwGowPWEiaeRIqEt7wYuCN7+DXZTH5/EvCioiExI
+         p4j/Ly9/9+f7IV1cf8EFCHLLNIAVtSW+2Z8+zxv26svn+bQyu09y+iFILQTj/RvG+YQl
+         /OJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=Z9kPEnmi8rJKpB3/e/9VBnwIHSYiTOXGx6udirKdD3M=;
-        b=qd8uGJ8QcLe+9EQbIZ+ZnJ3M2bPXY9rOCpEJfd1o7sgrG1ImTc6YB16LmHwvnH7vX+
-         CUV5RHyFecnSKoV1F8Fy4d4n+Wi6W6jYKJYQgvP/oFGdiH1ac3l+6L5JHFRr1+tkR6BY
-         Mhz+FZ1gMCVLYgRHX6S9SuEd7uWuh698d/unkOmVJ6+SKe4MEtDUXyldgROgQJMgUvXg
-         disX/ZUdvyDp7K0G7yigUU+LB0u7X+tC/NL2bpNgqrmN6V1NovOfqqO0JzXTPsTFeodK
-         Ci1AJBgxYtMq1UE4fCbjCvYRkSXpZt8WCtsbfWDW28u17FupdBXYOVF1LX/IBw7rNiEj
-         rFCw==
-X-Gm-Message-State: AOAM530qdwQgQ4+8YAWkwne7AQaU7Eq1Jlnq0nZwbml14B2/m8+K6q5G
-        c70Tuu04nFuzE2pmHs/qH6JVjg==
-X-Google-Smtp-Source: ABdhPJwTzfmxEZcB2H8kpKINmFdrBQHA4UJBWrYbb8yNl9INvi7rhzKhj+8nTc3PJwiLlFid6G5pUQ==
-X-Received: by 2002:a17:907:a0c8:b0:6f6:d3e4:49a5 with SMTP id hw8-20020a170907a0c800b006f6d3e449a5mr57330364ejc.644.1654078391803;
-        Wed, 01 Jun 2022 03:13:11 -0700 (PDT)
+        bh=AlvALx0zMnGDVnEapBQ7KHJlm9HnZCeBAZQY2Z7YIfQ=;
+        b=BM9/JEFUyUZsOfx/O9j2cJ6GfMSdEKAW2DYSLhyGpoCFxGfDZ5u/l9vH6kTRObn/01
+         vsOHR5O1g/vfaQeCrWgdsVuplb59Rr64IwLEAziGDcaaW8ggExD2jp4QlppXGTGu6u4r
+         t/w7gehXOjL1TPUoKCBpldcLB4Af8fD3or098VPaV+fo22JovKuxowO+taevPiA73uuj
+         btOMXl3mmp5cTr3a3+FhisvuON033ms63rdyglfA+GUF5K90FTVxnjXHYVWUM6YKTJMa
+         eXGSMg+q7t+Ap0U21Qk79wmrHXu5uhUnqqC6C8u4iXh+q/PHeMuz4XGZUBwNHWpyRptD
+         jw3g==
+X-Gm-Message-State: AOAM531szXfk7YU4laWzgWY7Y2CGE3X2j6up/16NJRVVwzKBpoxiQp4h
+        KFEF2ip4Ed9Z6r2ypqrcv9gOaQ==
+X-Google-Smtp-Source: ABdhPJx/6T0uvLJqvrWkeIA6nNBw+V6b78iDiCeD1eckOus4w0IQXWKCNYVm2nBgb3y+6PpRaLcMOw==
+X-Received: by 2002:a05:6402:51c9:b0:42b:63c2:6657 with SMTP id r9-20020a05640251c900b0042b63c26657mr51960414edd.255.1654078425689;
+        Wed, 01 Jun 2022 03:13:45 -0700 (PDT)
 Received: from [192.168.0.179] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id bk2-20020a170906b0c200b006fef557bb7asm523130ejb.80.2022.06.01.03.13.09
+        by smtp.gmail.com with ESMTPSA id p5-20020aa7cc85000000b0042bb1e2e2f7sm716587edt.8.2022.06.01.03.13.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jun 2022 03:13:10 -0700 (PDT)
-Message-ID: <b7eb2f9f-9604-3f05-59c3-e4c790068967@linaro.org>
-Date:   Wed, 1 Jun 2022 12:13:09 +0200
+        Wed, 01 Jun 2022 03:13:44 -0700 (PDT)
+Message-ID: <44798b51-1410-d1db-3c53-0a90beb714ea@linaro.org>
+Date:   Wed, 1 Jun 2022 12:13:43 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.1
-Subject: Re: [PATCH 11/17] dt-bindings: phy: mediatek,dsi-phy: Add MT8365 SoC
+Subject: Re: [PATCH 12/17] dt-bindings: phy: mediatek,tphy: add MT8365 SoC
  bindings
 Content-Language: en-US
 To:     Fabien Parent <fparent@baylibre.com>, robh+dt@kernel.org,
@@ -62,9 +62,7 @@ To:     Fabien Parent <fparent@baylibre.com>, robh+dt@kernel.org,
         chaotian.jing@mediatek.com, ulf.hansson@linaro.org,
         srinivas.kandagatla@linaro.org, chunfeng.yun@mediatek.com,
         broonie@kernel.org, wim@linux-watchdog.org, linux@roeck-us.net,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
+        Kishon Vijay Abraham I <kishon@ti.com>
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
@@ -73,9 +71,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
         linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org
 References: <20220531135026.238475-1-fparent@baylibre.com>
- <20220531135026.238475-12-fparent@baylibre.com>
+ <20220531135026.238475-13-fparent@baylibre.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220531135026.238475-12-fparent@baylibre.com>
+In-Reply-To: <20220531135026.238475-13-fparent@baylibre.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -93,8 +91,6 @@ On 31/05/2022 15:50, Fabien Parent wrote:
 > 
 > Signed-off-by: Fabien Parent <fparent@baylibre.com>
 > ---
->  Documentation/devicetree/bindings/phy/mediatek,dsi-phy.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
 
 
 Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>

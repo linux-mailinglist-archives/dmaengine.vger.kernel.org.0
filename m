@@ -2,422 +2,98 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71EFE53A2DA
-	for <lists+dmaengine@lfdr.de>; Wed,  1 Jun 2022 12:41:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7F5953A34D
+	for <lists+dmaengine@lfdr.de>; Wed,  1 Jun 2022 12:56:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352156AbiFAKlL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 1 Jun 2022 06:41:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45556 "EHLO
+        id S1352235AbiFAK4B (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 1 Jun 2022 06:56:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352127AbiFAKlK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 1 Jun 2022 06:41:10 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 632AA7DE01
-        for <dmaengine@vger.kernel.org>; Wed,  1 Jun 2022 03:41:06 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id gi33so2879623ejc.3
-        for <dmaengine@vger.kernel.org>; Wed, 01 Jun 2022 03:41:06 -0700 (PDT)
+        with ESMTP id S1352202AbiFAK4A (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 1 Jun 2022 06:56:00 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27CF546AD;
+        Wed,  1 Jun 2022 03:55:59 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id l20-20020a17090a409400b001dd2a9d555bso1743380pjg.0;
+        Wed, 01 Jun 2022 03:55:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=YnwlxkEskig5qSEZkf1OUJFDCbLfIauiQR7owBPAAo8=;
-        b=o3oy882DW5XoM121QxgLAIqDZmLSK6/PrEQb4XvQeRV0EbxfAnEYajgac3QLI9FcMp
-         4SF5C5oNQogqHKHnGl1RjMphuthUgorSKRQaD3mLQrEnRwutFisd/3XW2m/RJCzJ0+1v
-         tkp0rArEAuR2Tk4/dlGSFfTxR/sxOC1Cdk3lvFAiSzaUJCoeqQvk34iQ3YtoEwYP9jQC
-         vqMMi5q+lDHqZkOawknPynNZ7RJd/5GHehRkUcT7oK0EPZ21LSkvWGONymsEa+4JEP7i
-         qjK82e59DvTe0ppOR5EgGlx6B82dcRv5j9w7gCLxi/yDXx5qJ39cTI5FpLvoPg4bTzNf
-         MbMw==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cQYlXoGDywk+3GdfKjepz9XHgwe5hFSMlVKeZfjQrNE=;
+        b=hTQgEKWKGjIVhZCCo2lCFCkMpMrcK+x/YoAhVD6QE7lAop6icY0EQq1dOWZnG1mXV5
+         fKGPzRcEvXeryt4fWSXWWRZC+bL2qf67zW1M0ETZ5qagUu+/Y+1YmWtkqtLfuNzkgXRx
+         k4AyUYGau5T0ig9rTHdNkvpfwTwJgytG+UFSJs643ZZCN7wHnWHNseai7ZbMyAlUBn1R
+         LMso3hSfGcg8/jy2PcTsDluW8BOeE9eUxsKiYRLzuGizl8KyoodcRK8qbf1YjGE/6BlZ
+         fuyvJDig73OFMG2iYCTMEYmrk1/kRMlrg5uLza7BOZg4pCHz5qHZL0jad7YBbDur8z5T
+         ykMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=YnwlxkEskig5qSEZkf1OUJFDCbLfIauiQR7owBPAAo8=;
-        b=UBvWfC2M6xyAQwtPSoXFNBjSyLdV/8JlgqXOZg59+rdrxV8AFD10XGMjbKK5goAwUC
-         RfIy0LLbTWzqUPf8WnirPxwkpJpdlRTuiZt71s7Va6eWCKBlYWq3A3DK9yCyZPVN54k2
-         ke5rVQQq65eOPjrsGT5MiC5JoA6IdqBdK7ROZTQCuef+jtzSr9Cn58+x2S6m8j7fSlD2
-         fVSTfsIMH7VEiRY29UpsX8CapfwaIukjBw0qovDZreHjKgVh4TYfqzUAKre7E/5WnNrh
-         kPiCIhek9XSB9uYhd0EXzkc/9IY33ThnmHYASyHK/B8ftoLakrpeU9njhu+MVcfT6r7h
-         537g==
-X-Gm-Message-State: AOAM531BVfdQg9maDjaPkz6UXl8R158X3Ue5U+Nh1ysZgE3wnO//maed
-        fee94lT7Ra4eXoek/5aBfQaSjw==
-X-Google-Smtp-Source: ABdhPJyobmFzrAd7aGPFPzNizVmWKEMaqJL/SVLVJ4JJ7gg9SZs/2Gv6F8acA22LJi7CFkPE62rb6g==
-X-Received: by 2002:a17:907:9805:b0:6f4:fe0e:5547 with SMTP id ji5-20020a170907980500b006f4fe0e5547mr56262621ejc.426.1654080064935;
-        Wed, 01 Jun 2022 03:41:04 -0700 (PDT)
-Received: from [192.168.0.179] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id b17-20020a50e791000000b0042ac2705444sm774652edn.58.2022.06.01.03.41.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Jun 2022 03:41:04 -0700 (PDT)
-Message-ID: <72329bd9-3d8d-a18c-236d-8a84e5dcc455@linaro.org>
-Date:   Wed, 1 Jun 2022 12:41:03 +0200
+        bh=cQYlXoGDywk+3GdfKjepz9XHgwe5hFSMlVKeZfjQrNE=;
+        b=JqddhPnyXMIaD5bZWG4v74skYlM/w7Pq2GJeu5uXXlQZNbHHcvAC/2mcYhZSK8b8F4
+         yTJltq2cWP7nYwBSk0X1Sl1jBHu5D3sJ4MF8MlueQ0XLeOhy63xrBT9fcNphDmcJK73s
+         /yQZV+DEhfU4L56sGjFv51ikJXqmpQYlyVcbdPQ8XwL98st4CZI8E27c4H7BAY6DgVvB
+         9QbXYMayoafrtZOXaQcL85Z5kKnscczKSSt78iCf+0FKLfJ7au1CM1u2+xL3oNH/ONVJ
+         hHOJk1NiQnuNo6ULj6VVUWE2UwSNi1dhRPUCNtiUolDkaxxL9TRfmrKr7Oqqo88Pwyqa
+         +Fpw==
+X-Gm-Message-State: AOAM533GEUB6gTBC/JyMfYWRnbo8qOZ8uPruXbQ3RSrg/BEkcc0FWzP4
+        QgfJaqGJPnO2G5CM0WKZ858=
+X-Google-Smtp-Source: ABdhPJym1X3sQfx6g0N+7PgV1oBquYAy8tkYdP4yj0xMzPVDty8AZe+/sHkSTzU65Y386lntfJbcWw==
+X-Received: by 2002:a17:902:f686:b0:163:d8c9:18f3 with SMTP id l6-20020a170902f68600b00163d8c918f3mr15466340plg.64.1654080959295;
+        Wed, 01 Jun 2022 03:55:59 -0700 (PDT)
+Received: from localhost.localdomain ([202.120.234.246])
+        by smtp.googlemail.com with ESMTPSA id l12-20020a170903004c00b00161929fb1adsm1235268pla.54.2022.06.01.03.55.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jun 2022 03:55:58 -0700 (PDT)
+From:   Miaoqian Lin <linmq006@gmail.com>
+To:     dave.jiang@intel.com, Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     linmq006@gmail.com
+Subject: [PATCH v2] dmaengine: ti: Fix refcount leak in ti_dra7_xbar_route_allocate
+Date:   Wed,  1 Jun 2022 14:55:46 +0400
+Message-Id: <20220601105546.53068-1-linmq006@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH 17/17] arm64: dts: mediatek: add mt8365-evk board
- device-tree
-Content-Language: en-US
-To:     Fabien Parent <fparent@baylibre.com>, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, vkoul@kernel.org,
-        qii.wang@mediatek.com, matthias.bgg@gmail.com, jic23@kernel.org,
-        chaotian.jing@mediatek.com, ulf.hansson@linaro.org,
-        srinivas.kandagatla@linaro.org, chunfeng.yun@mediatek.com,
-        broonie@kernel.org, wim@linux-watchdog.org, linux@roeck-us.net
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-iio@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20220531135026.238475-1-fparent@baylibre.com>
- <20220531135026.238475-18-fparent@baylibre.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220531135026.238475-18-fparent@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 31/05/2022 15:50, Fabien Parent wrote:
-> Add device-tree for the MT8365-EVK board. The MT8365 EVK board
-> has the following IOs:
-> * DPI <-> HDMI bridge and HDMI connector.
-> * 2 audio jack
-> * 1 USB Type-A Host port
-> * 2 UART to USB port
-> * 1 battery connector
-> * 1 eMMC
-> * 1 SD card
-> * 2 camera connectors
-> * 1 M.2 slot for connectivity
-> * 1 DSI connector + touchscreen connector
-> * RPI compatible header
-> * 1 Ethernet port
+of_parse_phandle() returns a node pointer with refcount
+incremented, we should use of_node_put() on it when not needed anymore.
 
-Thank you for your patch. There is something to discuss/improve.
+Add missing of_node_put() in to fix this.
 
-> 
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
-> ---
->  arch/arm64/boot/dts/mediatek/Makefile       |   1 +
->  arch/arm64/boot/dts/mediatek/mt8365-evk.dts | 578 ++++++++++++++++++++
->  2 files changed, 579 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt8365-evk.dts
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-> index c7d4636a2cb7..02a9f784358e 100644
-> --- a/arch/arm64/boot/dts/mediatek/Makefile
-> +++ b/arch/arm64/boot/dts/mediatek/Makefile
-> @@ -40,4 +40,5 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-pumpkin.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8192-evb.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-demo.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-evb.dtb
-> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt8365-evk.dtb
->  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8516-pumpkin.dtb
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
-> new file mode 100644
-> index 000000000000..8f472caa06a3
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
-> @@ -0,0 +1,578 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2021 BayLibre, SAS.
-> + * Author: Fabien Parent <fparent@baylibre.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/pinctrl/mt8365-pinfunc.h>
-> +#include "mt8365.dtsi"
-> +#include "mt6357.dtsi"
-> +
-> +/ {
-> +	model = "MediaTek MT8365 Open Platform EVK";
-> +	compatible = "mediatek,mt8365-evk", "mediatek,mt8365";
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:921600n8";
-> +	};
-> +
-> +	connector {
-> +		compatible = "hdmi-connector";
-> +		label = "hdmi";
-> +		type = "a";
-> +
-> +		port {
-> +			hdmi_connector_in: endpoint {
-> +				remote-endpoint = <&hdmi_connector_out>;
-> +			};
-> +		};
-> +	};
-> +
-> +	firmware {
-> +		optee {
-> +			compatible = "linaro,optee-tz";
-> +			method = "smc";
-> +		};
-> +	};
-> +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +		input-name = "gpio-keys";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&gpio_keys>;
-> +
-> +		volume-up {
+Fixes: ec9bfa1e1a79 ("dmaengine: ti-dma-crossbar: dra7: Use bitops instead of idr")
+Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+---
+- split v1 into two patches.
+v1 link: https://lore.kernel.org/r/20220512051815.11946-1-linmq006@gmail.com
+---
+ drivers/dma/ti/dma-crossbar.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-key-volume-up, volume-up-key or key-0
+diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
+index 71d24fc07c00..e34cfb50d241 100644
+--- a/drivers/dma/ti/dma-crossbar.c
++++ b/drivers/dma/ti/dma-crossbar.c
+@@ -268,6 +268,7 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
+ 		mutex_unlock(&xbar->mutex);
+ 		dev_err(&pdev->dev, "Run out of free DMA requests\n");
+ 		kfree(map);
++		of_node_put(dma_spec->np);
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 	set_bit(map->xbar_out, xbar->dma_inuse);
+-- 
+2.25.1
 
-> +			gpios = <&pio 24 GPIO_ACTIVE_LOW>;
-> +			label = "volume_up";
-> +			linux,code = <KEY_VOLUMEUP>;
-> +			wakeup-source;
-> +			debounce-interval = <15>;
-> +		};
-> +	};
-> +
-> +	memory@40000000 {
-> +		device_type = "memory";
-> +		reg = <0 0x40000000 0 0xc0000000>;
-> +	};
-> +
-> +	usb_otg_vbus: regulator-2 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "otg_vbus";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		gpio = <&pio 16 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		/* 12 MiB reserved for OP-TEE (BL32)
-> +		 * +-----------------------+ 0x43e0_0000
-> +		 * |      SHMEM 2MiB       |
-> +		 * +-----------------------+ 0x43c0_0000
-> +		 * |        | TA_RAM  8MiB |
-> +		 * + TZDRAM +--------------+ 0x4340_0000
-> +		 * |        | TEE_RAM 2MiB |
-> +		 * +-----------------------+ 0x4320_0000
-> +		 */
-> +		optee_reserved: optee@43200000 {
-> +			no-map;
-> +			reg = <0 0x43200000 0 0x00c00000>;
-> +		};
-> +	};
-> +};
-> +
-> +&cpu0 {
-> +	proc-supply = <&mt6357_vproc_reg>;
-> +	sram-supply = <&mt6357_vsram_proc_reg>;
-> +};
-> +
-> +&cpu1 {
-> +	proc-supply = <&mt6357_vproc_reg>;
-> +	sram-supply = <&mt6357_vsram_proc_reg>;
-> +};
-> +
-> +&cpu2 {
-> +	proc-supply = <&mt6357_vproc_reg>;
-> +	sram-supply = <&mt6357_vsram_proc_reg>;
-> +};
-> +
-> +&cpu3 {
-> +	proc-supply = <&mt6357_vproc_reg>;
-> +	sram-supply = <&mt6357_vsram_proc_reg>;
-> +};
-> +
-> +&dpi0 {
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-0 = <&dpi_func_pins>;
-> +	pinctrl-1 = <&dpi_idle_pins>;
-> +	assigned-clocks = <&topckgen CLK_TOP_DPI0_SEL>;
-> +	assigned-clock-parents = <&topckgen CLK_TOP_LVDSPLL_D4>;
-> +
-> +	/*
-> +	 * Ethernet and HDMI are sharing pins.
-> +	 * Only one can be enabled at a time and require the physical switch
-> +	 * SW2101 to be set on DPI position
-> +	 */
-> +	status = "okay";
-> +
-> +	port {
-> +		dpi_out: endpoint {
-> +			remote-endpoint = <&it66121_in>;
-> +		};
-> +	};
-> +};
-> +
-> +&ethernet {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&ethernet_pins>;
-> +	phy-handle = <&eth_phy>;
-> +	phy-mode = "rmii";
-> +	mac-address = [00 00 00 00 00 00];
-> +
-> +	/*
-> +	 * Ethernet and HDMI are sharing pins.
-> +	 * Only one can be enabled at a time and require the physical switch
-> +	 * SW2101 to be set on LAN position
-> +	 */
-> +	status = "disabled";
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		eth_phy: ethernet-phy@0 {
-> +			reg = <0>;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c1_pins>;
-> +	clock-frequency = <100000>;
-> +	status = "okay";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-
-You defined address/size in DTSI.
-
-> +
-> +	it66121hdmitx: hdmi@4c {
-> +		compatible = "ite,it66121";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&ite_pins>;
-> +		vcn33-supply = <&mt6357_vibr_reg>;
-> +		vcn18-supply = <&mt6357_vsim2_reg>;
-> +		vrf12-supply = <&mt6357_vrf12_reg>;
-> +		reset-gpios = <&pio 69 GPIO_ACTIVE_LOW>;
-> +		interrupts-extended = <&pio 68 IRQ_TYPE_LEVEL_LOW>;
-> +		#sound-dai-cells = <0>;
-> +		reg = <0x4c>;
-
-Put reg after compatible.
-
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +
-> +				it66121_in: endpoint {
-> +					bus-width = <12>;
-> +					remote-endpoint = <&dpi_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +
-> +				hdmi_connector_out: endpoint {
-> +					remote-endpoint = <&hdmi_connector_in>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&mmc0 {
-> +	status = "okay";
-
-Status okay goes to the end. In some nodes you keep that style, in some
-not. Confusing.
-
-> +	pinctrl-names = "default", "state_uhs";
-> +	pinctrl-0 = <&mmc0_pins_default>;
-> +	pinctrl-1 = <&mmc0_pins_uhs>;
-> +	bus-width = <8>;
-> +	max-frequency = <200000000>;
-> +	cap-mmc-highspeed;
-> +	mmc-hs200-1_8v;
-> +	mmc-hs400-1_8v;
-> +	cap-mmc-hw-reset;
-> +	no-sdio;
-> +	no-sd;
-> +	hs400-ds-delay = <0x12012>;
-> +	vmmc-supply = <&mt6357_vemc_reg>;
-> +	vqmmc-supply = <&mt6357_vio18_reg>;
-> +	assigned-clocks = <&topckgen CLK_TOP_MSDC50_0_SEL>;
-> +	assigned-clock-parents = <&topckgen CLK_TOP_MSDCPLL>;
-> +	non-removable;
-> +};
-> +
-> +&mmc1 {
-> +	pinctrl-names = "default", "state_uhs";
-> +	pinctrl-0 = <&mmc1_pins_default>;
-> +	pinctrl-1 = <&mmc1_pins_uhs>;
-> +	cd-gpios = <&pio 76 GPIO_ACTIVE_LOW>;
-> +	bus-width = <4>;
-> +	max-frequency = <200000000>;
-> +	cap-sd-highspeed;
-> +	sd-uhs-sdr50;
-> +	sd-uhs-sdr104;
-> +	vmmc-supply = <&mt6357_vmch_reg>;
-> +	vqmmc-supply = <&mt6357_vio18_reg>;
-> +	status = "okay";
-> +};
-> +
-> +&mt6357_pmic {
-> +	interrupt-parent = <&pio>;
-> +	interrupts = <145 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupt-controller;
-> +	#interrupt-cells = <2>;
-> +};
-> +
-> +&mt6357_vibr_reg {
-> +	regulator-always-on;
-> +};
-> +
-> +/* Needed by MSDC1 */
-> +&mt6357_vmc_reg {
-> +	regulator-always-on;
-> +};
-> +
-> +&mt6357_vrf12_reg {
-> +	regulator-always-on;
-> +};
-> +
-> +&mt6357_vsim2_reg {
-> +	regulator-always-on;
-> +};
-> +
-> +&mt6357keys {
-> +	power-key {
-> +		label = "power";
-> +		linux,keycodes = <KEY_POWER>;
-> +		wakeup-source;
-> +	};
-> +
-> +	volume-down {
-
-volume-down-key
-
-> +		label = "volume_down";
-> +		linux,keycodes = <KEY_VOLUMEDOWN>;
-
-
-Best regards,
-Krzysztof

@@ -2,66 +2,66 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 471FD53D887
-	for <lists+dmaengine@lfdr.de>; Sat,  4 Jun 2022 22:48:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1380E53D88F
+	for <lists+dmaengine@lfdr.de>; Sat,  4 Jun 2022 22:57:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241239AbiFDUsS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 4 Jun 2022 16:48:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33688 "EHLO
+        id S239024AbiFDU5q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 4 Jun 2022 16:57:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241131AbiFDUsR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 4 Jun 2022 16:48:17 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F12128E00;
-        Sat,  4 Jun 2022 13:48:16 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id 1so11918646ljp.8;
-        Sat, 04 Jun 2022 13:48:16 -0700 (PDT)
+        with ESMTP id S231502AbiFDU5q (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 4 Jun 2022 16:57:46 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5C711408B;
+        Sat,  4 Jun 2022 13:57:44 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id y29so11922053ljd.7;
+        Sat, 04 Jun 2022 13:57:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=T2AlePpmVJKryWFICiGoqGtnMHiCvzRvJMnyAaH0SZs=;
-        b=WyRI0B3ZKrotgayJkSKlHqSiAGBmp4UbKK7TgNBinPYcZsw4kHmEwlvmaPMJ6Tjnno
-         dkjSNnDmS3/TI9jwD+udGLyl2QcE0g47hCAZxfn7ierVmLRXu+k+cxlBzC70C4CIXPIZ
-         f9c7rcbDo7PBnEoW6oXRj7Cx8DHumqqE27j48u/OrgFh9CZQAF0Jb5aS3qwaZrGWSLu/
-         aPFM/xPonuErUfRqs8JqmJCSXykNOEUgk+iYGTn7tT3Lp0OMV/m4vhIYg01KVBTAxTrZ
-         FRD1mzgC4GYntlZGQelH0XyFyMyOwE3LXdQVhznpMQufBv454nC6hgjoJgXDQtBFZL+Z
-         oeAA==
+        h=message-id:date:mime-version:user-agent:content-language:to
+         :references:from:subject:in-reply-to:content-transfer-encoding;
+        bh=Mjaa1gmx+OGviIUuZZFZ8twv+6L+3H6yheyEOcviWp4=;
+        b=NCONz+xeNP9xsKjr6JeYhXC+M/FcZ/aCzBLntTyLtwpdKBrweqrDS51emhQX1shQKA
+         0E8kkKJRjyxOXmGrkLTdXwynpI4aNrEmhSMvqEEg/T4bflHAu4zpdwGap3wPBBX3GCwg
+         nPCssSi/bfiOpk8FURXhBV/w6tvQkHh+XA+YAZB2rR0zeT6dBVveyc8k7M97Kkzdvsbw
+         dqGgoXoovhPU+QCutNaJtdxFMYtjE0tVcEUUATRiK5SzTpNTbBSREOxbvOJt+JEi7FkF
+         gV+NuQx8/TxprQyLMi3kW83Sm1o/2JbQNr6pxCIbq0noTP/Z0UOIdQ0lEky1va8RDoPU
+         IjAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:references:from:subject:in-reply-to
          :content-transfer-encoding;
-        bh=T2AlePpmVJKryWFICiGoqGtnMHiCvzRvJMnyAaH0SZs=;
-        b=JN94famca1fRWH1/NN5o7io95wF0QgJi09gRCPWaOD1opcSvOx4aB92cdmlwXYViJ6
-         6K/h2YG02+jUSgu+cIpKLOWLHkbrDUosOX//N6W9uOMnPI1lphMn+IocP7ajDTusxCxN
-         5rXdq5WA8bnDFmEEvN324j9KPmAGONXI7Ulau8lTD68x0P639UQ57/8mS4lGJgN8jc19
-         p3twFeaSR542VyWLszAMZHUjE7FC/SjHUzkpSNniIoLXhJt7enNJGCAKV30R6FI1bmJE
-         N4AqusHgE3zOTYJzY2DawGWJYStddpxMTgshJnr8uuHmORGJSrIdZl8k92CUi6DeVy+f
-         RxBw==
-X-Gm-Message-State: AOAM531FELQmrlQlGUGqAY+1b5sKeddhucttsN21WV2DfLSiV8Gn/fp+
-        D9vFG9ViNnw9BbO8/CXN71s=
-X-Google-Smtp-Source: ABdhPJw+IA0ZUPXlym07jPgpV3ExuXyLQnyrbO+QsJdbsp63ZNvWOe9hxhhyWHOH2UBFkpf6u5N2gg==
-X-Received: by 2002:a2e:9e88:0:b0:250:654a:847c with SMTP id f8-20020a2e9e88000000b00250654a847cmr47329620ljk.214.1654375694526;
-        Sat, 04 Jun 2022 13:48:14 -0700 (PDT)
+        bh=Mjaa1gmx+OGviIUuZZFZ8twv+6L+3H6yheyEOcviWp4=;
+        b=Y2AuxQJEqTEn1iQ4TXaGl1fKH6YJ6QPmPziAUVdH3iXGihx5LUVs7d6t2UQ1JrPQag
+         20XFSzm28iVLIdOJmaFqQv99H9JDl+9fGLvGV/a2xveNhxUdyjJe9YMpdHR6mjYoiqcl
+         q1iF7xlZfjsmpzliUtW5t9pT9Gg8cmJ2Grg+qdxyLbO4VDJwRXYC3u+Bt7D1xCWrxGje
+         t3bSf0co77BlA/XG92Xi/5eDZvPy8V8sDaiuQZoahfuSiJSO9XdvMpVfvrFRI3yuVJaK
+         aR/xvUvh1OFy9OUQAta6CsBLMfNEE6S3JMBhITyh82lm7lTUZGxImp5aMyBc+6ZDgO5v
+         Eaww==
+X-Gm-Message-State: AOAM5303HFz363o5oDQvxzltyU9PFwSjwcEJMvmcav5FXV4MXu4HSkyU
+        YqK5GCa/y7lWWbYnwP3OqDU=
+X-Google-Smtp-Source: ABdhPJw3/kwLRVwOi4fb5ytfXb6Nt+ODldVUt3ffDj0jfNdYm9CGAy5xJ61snt90MKXBO04UoYDUTw==
+X-Received: by 2002:a2e:8081:0:b0:253:ce61:3c66 with SMTP id i1-20020a2e8081000000b00253ce613c66mr48707841ljg.98.1654376263155;
+        Sat, 04 Jun 2022 13:57:43 -0700 (PDT)
 Received: from [10.0.0.127] (91-159-150-230.elisa-laajakaista.fi. [91.159.150.230])
-        by smtp.gmail.com with ESMTPSA id a25-20020a05651c031900b0024f3d1daea0sm1949376ljp.40.2022.06.04.13.48.13
+        by smtp.gmail.com with ESMTPSA id k18-20020a192d12000000b0047920d89606sm614250lfj.187.2022.06.04.13.57.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Jun 2022 13:48:13 -0700 (PDT)
-Message-ID: <b43ae2ad-4eb7-5376-6e3a-0a8310acc34a@gmail.com>
-Date:   Sat, 4 Jun 2022 23:49:33 +0300
+        Sat, 04 Jun 2022 13:57:42 -0700 (PDT)
+Message-ID: <a3a99b6a-70c7-5b6b-718f-44c4d957cdda@gmail.com>
+Date:   Sat, 4 Jun 2022 23:59:02 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.1
-Subject: Re: [PATCH v2] dmaengine: ti: Fix refcount leak in
- ti_dra7_xbar_route_allocate
 Content-Language: en-US
 To:     Miaoqian Lin <linmq006@gmail.com>, dave.jiang@intel.com,
         Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20220601105546.53068-1-linmq006@gmail.com>
+References: <20220601110013.55366-1-linmq006@gmail.com>
 From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <20220601105546.53068-1-linmq006@gmail.com>
+Subject: Re: [PATCH v2] dmaengine: ti: Add missing put_device in
+ ti_dra7_xbar_route_allocate
+In-Reply-To: <20220601110013.55366-1-linmq006@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -76,33 +76,62 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 
 
-On 01/06/2022 13:55, Miaoqian Lin wrote:
-> of_parse_phandle() returns a node pointer with refcount
-> incremented, we should use of_node_put() on it when not needed anymore.
-> 
-> Add missing of_node_put() in to fix this.
+On 01/06/2022 14:00, Miaoqian Lin wrote:
+> of_find_device_by_node() takes reference, we should use put_device()
+> to release it when not need anymore.
 
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+adding a new label and using goto would be another option or even better?
 
-> 
-> Fixes: ec9bfa1e1a79 ("dmaengine: ti-dma-crossbar: dra7: Use bitops instead of idr")
+> Fixes: a074ae38f859 ("dmaengine: Add driver for TI DMA crossbar on DRA7x")
 > Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
 > ---
+> changes in v2:
 > - split v1 into two patches.
-> v1 link: https://lore.kernel.org/r/20220512051815.11946-1-linmq006@gmail.com
+> v1 link:
+> https://lore.kernel.org/r/20220512051815.11946-1-linmq006@gmail.com
 > ---
->  drivers/dma/ti/dma-crossbar.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/dma/ti/dma-crossbar.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 > diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
-> index 71d24fc07c00..e34cfb50d241 100644
+> index 71d24fc07c00..06da13b18a7b 100644
 > --- a/drivers/dma/ti/dma-crossbar.c
 > +++ b/drivers/dma/ti/dma-crossbar.c
-> @@ -268,6 +268,7 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
+> @@ -245,6 +245,7 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
+>  	if (dma_spec->args[0] >= xbar->xbar_requests) {
+>  		dev_err(&pdev->dev, "Invalid XBAR request number: %d\n",
+>  			dma_spec->args[0]);
+> +		put_device(&pdev->dev);
+>  		return ERR_PTR(-EINVAL);
+>  	}
+>  
+> @@ -252,12 +253,14 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
+>  	dma_spec->np = of_parse_phandle(ofdma->of_node, "dma-masters", 0);
+>  	if (!dma_spec->np) {
+>  		dev_err(&pdev->dev, "Can't get DMA master\n");
+> +		put_device(&pdev->dev);
+>  		return ERR_PTR(-EINVAL);
+>  	}
+>  
+>  	map = kzalloc(sizeof(*map), GFP_KERNEL);
+>  	if (!map) {
+>  		of_node_put(dma_spec->np);
+> +		put_device(&pdev->dev);
+>  		return ERR_PTR(-ENOMEM);
+>  	}
+>  
+> @@ -268,6 +271,7 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
 >  		mutex_unlock(&xbar->mutex);
 >  		dev_err(&pdev->dev, "Run out of free DMA requests\n");
 >  		kfree(map);
-> +		of_node_put(dma_spec->np);
+> +		put_device(&pdev->dev);
+
+this will not apply with the other patch going separately...
+Can you send a two patch series?
+While there, I would check if labels+goto would look better?
+
+Thanks for finding these and fixing it!
+
 >  		return ERR_PTR(-ENOMEM);
 >  	}
 >  	set_bit(map->xbar_out, xbar->dma_inuse);

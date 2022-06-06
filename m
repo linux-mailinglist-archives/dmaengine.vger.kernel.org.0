@@ -2,95 +2,97 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 105D253EC5E
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Jun 2022 19:10:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59DFC53ED2C
+	for <lists+dmaengine@lfdr.de>; Mon,  6 Jun 2022 19:49:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241477AbiFFQQ5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 6 Jun 2022 12:16:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41028 "EHLO
+        id S229961AbiFFRtV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 6 Jun 2022 13:49:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241442AbiFFQQv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Jun 2022 12:16:51 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90BC4194BEC;
-        Mon,  6 Jun 2022 09:16:49 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id h23so18843696ejj.12;
-        Mon, 06 Jun 2022 09:16:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3Tk+N75tJTI9hi8uqQs5f8Gf5UITpmFcXsge4oITgtY=;
-        b=WZ9q5Yynon/OxkUjbDytKQS/aaGa7C6tLJzyYpcUeXIjiLZFG+LyCU8tCfzwhcGNJ+
-         T5opZTpuTOcgeEb+/Y8CX2CJDujwZbWB3bwcvvQkz2NrHV8zDe//JGMeIxSXkeANYGzd
-         qq6FNSP/9Okz3SD0Nc32VXNtVuRakknTGy3K1r90779dH4dGJOdluDjHLA+CkxnM/vpz
-         yPtV/lgnq645+hh7ejU7zOFCanCzqizRab6L0LyHzVVmuwjBkVPgousIC3qfxWUE6AZs
-         jdTzqiA2T5HHYMa5+iXnKuHRx1sDaS/7Pccvpw35lzd3HW0wFN4j7Kf9C+qfYWMLQaat
-         quDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3Tk+N75tJTI9hi8uqQs5f8Gf5UITpmFcXsge4oITgtY=;
-        b=VBjnklfhbpsIzNacA2iCoFkCk0oS1KuBJEEdRWuO3I+yz9z0N9bln2iR7bzx6Lk0W2
-         gQ/ols5ZESseWVOArIJrgVmr7tzY8jmdeddsF/af4V+MER7r7ZjV1manECdEmGje49El
-         R7YU4iPwVu9twyI4cQumJwtZEs1vR8ayKDZ8nlmSUHZnqzuXc0x5JYqCWaTUaN2lFV1s
-         EFgZGzB06VRosuMpp49moGTO9jx4lEI0Sk6/poyuJIWy9fK+j8ce4YVy0zLg6VhMsRfI
-         c6pkv7MFKgB1KlNLlR+oeCqB1sDvqPNUK1swWsJjIu6c9pULqL7WHsDXbfBB35+RGS8q
-         /wGw==
-X-Gm-Message-State: AOAM531OgDZtin8wNe+BAZDNCQm8ZbeSGuK76PSeAMA1KefdRM59htb7
-        ymSpbrpso3RGoQPGQnylraaY1ySDXVD8tTevhTA=
-X-Google-Smtp-Source: ABdhPJy49qSaivBNWiVFdGFFktt149nyneP9NO7NehgaIrw85A3oecc50WzlR/J8gZ0wgimt3lGOkpQdZfp6h89Mtio=
-X-Received: by 2002:a17:907:2d8d:b0:711:d1bd:d738 with SMTP id
- gt13-20020a1709072d8d00b00711d1bdd738mr4474784ejc.658.1654532207455; Mon, 06
- Jun 2022 09:16:47 -0700 (PDT)
+        with ESMTP id S230089AbiFFRtV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Jun 2022 13:49:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D43C6B7D4
+        for <dmaengine@vger.kernel.org>; Mon,  6 Jun 2022 10:49:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 09F1C61237
+        for <dmaengine@vger.kernel.org>; Mon,  6 Jun 2022 17:49:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D926C385A9;
+        Mon,  6 Jun 2022 17:49:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654537759;
+        bh=XESz0V62p2Tw3llJ7XikMWR70E1Nv+baXOSgoK0/eCM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PXlc8UILPIdtvukkt94zD8uEEb/LQL+ONY/ceF9BJYT9DKg3ZQZOux4zkuKsSCeNF
+         tcmoOxe+3viCwZgGP6TXtBK70fAZB9XiRS1rQcoYS889Xo5ueSx5Uew7rDTJ/5uwT0
+         EtdilZoVcjcc8EyRsLmgy7TqhipqXmQ5O+ih2i74Av9as15+0MpO8ohArL8IoJ0X4U
+         i4qUFXT+kHcQgUD+IyJV8XgvR7kRO26Aig6Ok5ay6lXcneF+BfL9NezZm9heDXbeO0
+         6xRiSk7lnsRiz7UvrU6jle4QYMhQLlAu6eiM5DhAkmvPAlrAcBSkqCf9+Pp3hIeMcR
+         vTbrf4nhk+zWA==
+From:   Vinod Koul <vkoul@kernel.org>
+To:     dmaengine@vger.kernel.org
+Cc:     Vinod Koul <vkoul@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] dmaengine: Revert "dmaengine: add verification of DMA_INTERRUPT capability for dmatest"
+Date:   Mon,  6 Jun 2022 23:19:06 +0530
+Message-Id: <20220606174906.3979283-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.34.3
 MIME-Version: 1.0
-References: <20220606161034.3544803-1-pbrobinson@gmail.com>
-In-Reply-To: <20220606161034.3544803-1-pbrobinson@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 6 Jun 2022 13:16:38 -0300
-Message-ID: <CAOMZO5DYpWGYuDF_04NBRwO093McDy9oOjQdy24K4TKjBNQ6Hw@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: imx-sdma: Allow imx8m for imx7 FW revs
-To:     Peter Robinson <pbrobinson@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        dmaengine@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Jun 6, 2022 at 1:10 PM Peter Robinson <pbrobinson@gmail.com> wrote:
->
-> The revision of the imx-sdma IP that is in the i.MX8M series is the
-> same is that as that in the i.MX7 series but the imx7d MODULE_FIRMWARE
-> directive is wrapped in a condiditional which means it's not defined
-> when built for aarch64 SOC_IMX8M platforms and hence you get the
-> following errors when the driver loads on imx8m devices:
->
-> imx-sdma 302c0000.dma-controller: Direct firmware load for imx/sdma/sdma-imx7d.bin failed with error -2
-> imx-sdma 302c0000.dma-controller: external firmware not found, using ROM firmware
->
-> Add the SOC_IMX8M into the check so the firmware can load on i.MX8.
->
-> Fixes: 1474d48bd639 ("arm64: dts: imx8mq: Add SDMA nodes")
-> Fixes: 941acd566b18 ("dmaengine: imx-sdma: Only check ratio on parts that support 1:1")
-> Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
-> Cc: stable@vger.kernel.org   # v5.2+
+This reverts commit a8facc7b9885 ("dmaengine: add verification of
+DMA_INTERRUPT capability for dmatest") as it causes regression due to
+the fact that DMA_INTERRUPT in linked to dma_prep_interrupt() so
+checking that is incorrect here
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ drivers/dma/dmatest.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+index 0a2168a4ccb0..f696246f57fd 100644
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -675,16 +675,10 @@ static int dmatest_func(void *data)
+ 	/*
+ 	 * src and dst buffers are freed by ourselves below
+ 	 */
+-	if (params->polled) {
++	if (params->polled)
+ 		flags = DMA_CTRL_ACK;
+-	} else {
+-		if (dma_has_cap(DMA_INTERRUPT, dev->cap_mask)) {
+-			flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+-		} else {
+-			pr_err("Channel does not support interrupt!\n");
+-			goto err_pq_array;
+-		}
+-	}
++	else
++		flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+ 
+ 	ktime = ktime_get();
+ 	while (!(kthread_should_stop() ||
+@@ -912,7 +906,6 @@ static int dmatest_func(void *data)
+ 	runtime = ktime_to_us(ktime);
+ 
+ 	ret = 0;
+-err_pq_array:
+ 	kfree(dma_pq);
+ err_srcs_array:
+ 	kfree(srcs);
+-- 
+2.34.3
+

@@ -2,308 +2,74 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EE6C53ED48
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Jun 2022 19:53:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 278C753EDC4
+	for <lists+dmaengine@lfdr.de>; Mon,  6 Jun 2022 20:21:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230295AbiFFRxy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 6 Jun 2022 13:53:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57718 "EHLO
+        id S231277AbiFFSV5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 6 Jun 2022 14:21:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230273AbiFFRxv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Jun 2022 13:53:51 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D3FA1451F9;
-        Mon,  6 Jun 2022 10:53:49 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D1266B81ADB;
-        Mon,  6 Jun 2022 17:53:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB1B0C3411D;
-        Mon,  6 Jun 2022 17:53:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654538026;
-        bh=DGE8Mck1GUzTVk95tt4AGC/pt98Wt7eq/BFt99CV9YY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M+QVHkjSnzztDiyezYuNv7GQTdvhceLrD1aj84PTTJQR7S0/RylGTzYmvJHhVZ3br
-         kz2j+05ovhNHioAw+eN9n+UQ98VNUPd2ZAjIwgu7Fn2TmivqKSONwxAVwLTmxFq+LF
-         Jc2kTbKxMdjiI/PoODaNuVAOwD7paqOCZeBpRB5xy9wY2qhC/Rn3AnJ6BXbFQFEc9C
-         idajw7HzI/GzOf39wM8KnrjrcU215oAFEhWZuWD5iWxBwSShCaTnh47f51BJ3fY2yJ
-         8HZbFM3fdiBXLFBlth/9oo01onHtB2W6lieIuyud3Al2zzwz76/+ugYBO0pZD2A+0K
-         V6vYdlgzKuNXA==
-Date:   Mon, 6 Jun 2022 23:23:41 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     michal.simek@xilinx.com, adrianml@alumnos.upm.es,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] dmaengine: remove DMA_MEMCPY_SG once again
-Message-ID: <Yp4/JW4P12s4siRz@matsya>
-References: <20220606074733.622616-1-hch@lst.de>
+        with ESMTP id S231191AbiFFSV4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Jun 2022 14:21:56 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 428DC149D96
+        for <dmaengine@vger.kernel.org>; Mon,  6 Jun 2022 11:21:55 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id fd25so19958520edb.3
+        for <dmaengine@vger.kernel.org>; Mon, 06 Jun 2022 11:21:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=yzRfyLB6KFPr25aQi3R1gg75wEKKaYYdiGN/KVcBALg=;
+        b=EwelDmK+gElrdYWTp/PoO/n4j5/LPKsMETVx7n5UdzUQsBTi+QU02uUMC/QLYLR7t+
+         zIKTAfE5bju0Yrt/biBjc73sv0CCDeWq2uxMKNUsyZl9i7Sh6CVricrDlUoDDGa+I4YI
+         NNwiHRhrn6aZc9GcO993LtEiy+19NuUxdWZknAmuBNOSDmVEGZKTWjFmj/myNqUkNMEN
+         5kZYmaXVBYVBkirxpAfMRBMUP3YnLdFSaEjBxkr+3fx6+TDfm7QM23gk4qGadmCjay1s
+         8ykDp+WUxRlUjo1fYAcOYO6Rpzuu+HWx+l+yGRehknex6gOfiQqDvrUTXXGKgLlSlBvy
+         swXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=yzRfyLB6KFPr25aQi3R1gg75wEKKaYYdiGN/KVcBALg=;
+        b=D4GSF9Vp8RJ+IZJz0QoYluHpskJOK8sgvlL/RZEGj48gJxexRw+9vIeZqOv+ZjcT0a
+         mrQM4zV7SN3KH0z+63tJmpyHsH6CnTS/zrPdnhhJFgxHyaMr5+A9qBZjU37O/WnF5ijL
+         RCiOC7riuFQvEzl9XaKTFNniI4KQDGiRlIUNsTjtRIzreVrjqiYmUjTOFma+R9/iiqbZ
+         54m3652VFo8nBMHnUUARj83E3LLwY+iUBHXmOGPAKNlOHfcffKCPhGikeAktRWfwDNB0
+         Je/vYmNMSAyVlwBMnVrLz0nn8giOA65sB2bHVXuhSKh7f0AmyeBu2ZGn8aiHMptc96Sm
+         NMxw==
+X-Gm-Message-State: AOAM531blv9ljqvmw6EDggB+UC81mh98dpYKRLHIPQLDyy8iI3zgoEhy
+        nqW7Owa+pc10v54gpttrP6PG9uAuqJhmgshkF2Y=
+X-Google-Smtp-Source: ABdhPJwVv0fSSFJhsdgwxZmLpgjLGjxBdiPe3Ets4bqD4/Dw0TV6eGPpCScInN5OtIl77huugzCrAud8Tp78MeIlMTw=
+X-Received: by 2002:aa7:c306:0:b0:42d:d4cc:c606 with SMTP id
+ l6-20020aa7c306000000b0042dd4ccc606mr28727856edq.341.1654539713611; Mon, 06
+ Jun 2022 11:21:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220606074733.622616-1-hch@lst.de>
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:6402:440d:0:0:0:0 with HTTP; Mon, 6 Jun 2022 11:21:52
+ -0700 (PDT)
+Reply-To: avamedicinemed3@gmail.com
+From:   Dr Ava Smith <tracywilliamusa@gmail.com>
+Date:   Mon, 6 Jun 2022 11:21:52 -0700
+Message-ID: <CAKU4NYntb3abGWL9DbiYCDrXUgBQuremN7=oKYexc=x_sR2_XQ@mail.gmail.com>
+Subject: From Dr Ava Smith from United States
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 06-06-22, 09:47, Christoph Hellwig wrote:
-> This was removed before due to the complete lack of users, but
-> 3218910fd585 ("dmaengine: Add core function and capability check for
-> DMA_MEMCPY_SG") and 29cf37fa6dd9 ("dmaengine: Add consumer for the new
-> DMA_MEMCPY_SG API function.") added it back despite still not having
-> any users whatsoever.
-> 
-> Fixes: 3218910fd585 ("dmaengine: Add core function and capability check for DMA_MEMCPY_SG")
-> Fixes: 29cf37fa6dd9 ("dmaengine: Add consumer for the new DMA_MEMCPY_SG API function.")
-
-This is consumer of the driver API and it was bought back with the
-premise that user will also come...
-
-Adrianm, Michal any reason why user is not mainline yet..?
-
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  .../driver-api/dmaengine/provider.rst         |  10 --
->  drivers/dma/dmaengine.c                       |   7 -
->  drivers/dma/xilinx/xilinx_dma.c               | 122 ------------------
->  include/linux/dmaengine.h                     |  20 ---
->  4 files changed, 159 deletions(-)
-> 
-> diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
-> index 1e0f1f85d10e5..ceac2a300e328 100644
-> --- a/Documentation/driver-api/dmaengine/provider.rst
-> +++ b/Documentation/driver-api/dmaengine/provider.rst
-> @@ -162,16 +162,6 @@ Currently, the types available are:
->  
->    - The device is able to do memory to memory copies
->  
-> -- - DMA_MEMCPY_SG
-> -
-> -  - The device supports memory to memory scatter-gather transfers.
-> -
-> -  - Even though a plain memcpy can look like a particular case of a
-> -    scatter-gather transfer, with a single chunk to copy, it's a distinct
-> -    transaction type in the mem2mem transfer case. This is because some very
-> -    simple devices might be able to do contiguous single-chunk memory copies,
-> -    but have no support for more complex SG transfers.
-> -
->    - No matter what the overall size of the combined chunks for source and
->      destination is, only as many bytes as the smallest of the two will be
->      transmitted. That means the number and size of the scatter-gather buffers in
-> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> index e80feeea0e018..c741b6431958c 100644
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -1153,13 +1153,6 @@ int dma_async_device_register(struct dma_device *device)
->  		return -EIO;
->  	}
->  
-> -	if (dma_has_cap(DMA_MEMCPY_SG, device->cap_mask) && !device->device_prep_dma_memcpy_sg) {
-> -		dev_err(device->dev,
-> -			"Device claims capability %s, but op is not defined\n",
-> -			"DMA_MEMCPY_SG");
-> -		return -EIO;
-> -	}
-> -
->  	if (dma_has_cap(DMA_XOR, device->cap_mask) && !device->device_prep_dma_xor) {
->  		dev_err(device->dev,
->  			"Device claims capability %s, but op is not defined\n",
-> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-> index cd62bbb50e8b4..6276934d4d2be 100644
-> --- a/drivers/dma/xilinx/xilinx_dma.c
-> +++ b/drivers/dma/xilinx/xilinx_dma.c
-> @@ -2127,126 +2127,6 @@ xilinx_cdma_prep_memcpy(struct dma_chan *dchan, dma_addr_t dma_dst,
->  	return NULL;
->  }
->  
-> -/**
-> - * xilinx_cdma_prep_memcpy_sg - prepare descriptors for a memcpy_sg transaction
-> - * @dchan: DMA channel
-> - * @dst_sg: Destination scatter list
-> - * @dst_sg_len: Number of entries in destination scatter list
-> - * @src_sg: Source scatter list
-> - * @src_sg_len: Number of entries in source scatter list
-> - * @flags: transfer ack flags
-> - *
-> - * Return: Async transaction descriptor on success and NULL on failure
-> - */
-> -static struct dma_async_tx_descriptor *xilinx_cdma_prep_memcpy_sg(
-> -			struct dma_chan *dchan, struct scatterlist *dst_sg,
-> -			unsigned int dst_sg_len, struct scatterlist *src_sg,
-> -			unsigned int src_sg_len, unsigned long flags)
-> -{
-> -	struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
-> -	struct xilinx_dma_tx_descriptor *desc;
-> -	struct xilinx_cdma_tx_segment *segment, *prev = NULL;
-> -	struct xilinx_cdma_desc_hw *hw;
-> -	size_t len, dst_avail, src_avail;
-> -	dma_addr_t dma_dst, dma_src;
-> -
-> -	if (unlikely(dst_sg_len == 0 || src_sg_len == 0))
-> -		return NULL;
-> -
-> -	if (unlikely(!dst_sg  || !src_sg))
-> -		return NULL;
-> -
-> -	desc = xilinx_dma_alloc_tx_descriptor(chan);
-> -	if (!desc)
-> -		return NULL;
-> -
-> -	dma_async_tx_descriptor_init(&desc->async_tx, &chan->common);
-> -	desc->async_tx.tx_submit = xilinx_dma_tx_submit;
-> -
-> -	dst_avail = sg_dma_len(dst_sg);
-> -	src_avail = sg_dma_len(src_sg);
-> -	/*
-> -	 * loop until there is either no more source or no more destination
-> -	 * scatterlist entry
-> -	 */
-> -	while (true) {
-> -		len = min_t(size_t, src_avail, dst_avail);
-> -		len = min_t(size_t, len, chan->xdev->max_buffer_len);
-> -		if (len == 0)
-> -			goto fetch;
-> -
-> -		/* Allocate the link descriptor from DMA pool */
-> -		segment = xilinx_cdma_alloc_tx_segment(chan);
-> -		if (!segment)
-> -			goto error;
-> -
-> -		dma_dst = sg_dma_address(dst_sg) + sg_dma_len(dst_sg) -
-> -			dst_avail;
-> -		dma_src = sg_dma_address(src_sg) + sg_dma_len(src_sg) -
-> -			src_avail;
-> -		hw = &segment->hw;
-> -		hw->control = len;
-> -		hw->src_addr = dma_src;
-> -		hw->dest_addr = dma_dst;
-> -		if (chan->ext_addr) {
-> -			hw->src_addr_msb = upper_32_bits(dma_src);
-> -			hw->dest_addr_msb = upper_32_bits(dma_dst);
-> -		}
-> -
-> -		if (prev) {
-> -			prev->hw.next_desc = segment->phys;
-> -			if (chan->ext_addr)
-> -				prev->hw.next_desc_msb =
-> -					upper_32_bits(segment->phys);
-> -		}
-> -
-> -		prev = segment;
-> -		dst_avail -= len;
-> -		src_avail -= len;
-> -		list_add_tail(&segment->node, &desc->segments);
-> -
-> -fetch:
-> -		/* Fetch the next dst scatterlist entry */
-> -		if (dst_avail == 0) {
-> -			if (dst_sg_len == 0)
-> -				break;
-> -			dst_sg = sg_next(dst_sg);
-> -			if (dst_sg == NULL)
-> -				break;
-> -			dst_sg_len--;
-> -			dst_avail = sg_dma_len(dst_sg);
-> -		}
-> -		/* Fetch the next src scatterlist entry */
-> -		if (src_avail == 0) {
-> -			if (src_sg_len == 0)
-> -				break;
-> -			src_sg = sg_next(src_sg);
-> -			if (src_sg == NULL)
-> -				break;
-> -			src_sg_len--;
-> -			src_avail = sg_dma_len(src_sg);
-> -		}
-> -	}
-> -
-> -	if (list_empty(&desc->segments)) {
-> -		dev_err(chan->xdev->dev,
-> -			"%s: Zero-size SG transfer requested\n", __func__);
-> -		goto error;
-> -	}
-> -
-> -	/* Link the last hardware descriptor with the first. */
-> -	segment = list_first_entry(&desc->segments,
-> -				struct xilinx_cdma_tx_segment, node);
-> -	desc->async_tx.phys = segment->phys;
-> -	prev->hw.next_desc = segment->phys;
-> -
-> -	return &desc->async_tx;
-> -
-> -error:
-> -	xilinx_dma_free_tx_descriptor(chan, desc);
-> -	return NULL;
-> -}
-> -
->  /**
->   * xilinx_dma_prep_slave_sg - prepare descriptors for a DMA_SLAVE transaction
->   * @dchan: DMA channel
-> @@ -3240,9 +3120,7 @@ static int xilinx_dma_probe(struct platform_device *pdev)
->  					  DMA_RESIDUE_GRANULARITY_SEGMENT;
->  	} else if (xdev->dma_config->dmatype == XDMA_TYPE_CDMA) {
->  		dma_cap_set(DMA_MEMCPY, xdev->common.cap_mask);
-> -		dma_cap_set(DMA_MEMCPY_SG, xdev->common.cap_mask);
->  		xdev->common.device_prep_dma_memcpy = xilinx_cdma_prep_memcpy;
-> -		xdev->common.device_prep_dma_memcpy_sg = xilinx_cdma_prep_memcpy_sg;
->  		/* Residue calculation is supported by only AXI DMA and CDMA */
->  		xdev->common.residue_granularity =
->  					  DMA_RESIDUE_GRANULARITY_SEGMENT;
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index b46b88e6aa0d1..c923f4e60f240 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -50,7 +50,6 @@ enum dma_status {
->   */
->  enum dma_transaction_type {
->  	DMA_MEMCPY,
-> -	DMA_MEMCPY_SG,
->  	DMA_XOR,
->  	DMA_PQ,
->  	DMA_XOR_VAL,
-> @@ -887,11 +886,6 @@ struct dma_device {
->  	struct dma_async_tx_descriptor *(*device_prep_dma_memcpy)(
->  		struct dma_chan *chan, dma_addr_t dst, dma_addr_t src,
->  		size_t len, unsigned long flags);
-> -	struct dma_async_tx_descriptor *(*device_prep_dma_memcpy_sg)(
-> -		struct dma_chan *chan,
-> -		struct scatterlist *dst_sg, unsigned int dst_nents,
-> -		struct scatterlist *src_sg, unsigned int src_nents,
-> -		unsigned long flags);
->  	struct dma_async_tx_descriptor *(*device_prep_dma_xor)(
->  		struct dma_chan *chan, dma_addr_t dst, dma_addr_t *src,
->  		unsigned int src_cnt, size_t len, unsigned long flags);
-> @@ -1060,20 +1054,6 @@ static inline struct dma_async_tx_descriptor *dmaengine_prep_dma_memcpy(
->  						    len, flags);
->  }
->  
-> -static inline struct dma_async_tx_descriptor *dmaengine_prep_dma_memcpy_sg(
-> -		struct dma_chan *chan,
-> -		struct scatterlist *dst_sg, unsigned int dst_nents,
-> -		struct scatterlist *src_sg, unsigned int src_nents,
-> -		unsigned long flags)
-> -{
-> -	if (!chan || !chan->device || !chan->device->device_prep_dma_memcpy_sg)
-> -		return NULL;
-> -
-> -	return chan->device->device_prep_dma_memcpy_sg(chan, dst_sg, dst_nents,
-> -						       src_sg, src_nents,
-> -						       flags);
-> -}
-> -
->  static inline bool dmaengine_is_metadata_mode_supported(struct dma_chan *chan,
->  		enum dma_desc_metadata_mode mode)
->  {
-> -- 
-> 2.30.2
-
 -- 
-~Vinod
+
+Hello Dear,
+how are you today
+My name is Dr Ava Smith,Am English and French
+I will share pictures and more details about me as soon as i hear from you
+Thanks
+Ava

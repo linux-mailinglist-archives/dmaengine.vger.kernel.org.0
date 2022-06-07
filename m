@@ -2,67 +2,59 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0280A53FAA3
-	for <lists+dmaengine@lfdr.de>; Tue,  7 Jun 2022 11:59:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D7B553FBEF
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Jun 2022 12:48:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240387AbiFGJ6z (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 7 Jun 2022 05:58:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45894 "EHLO
+        id S241726AbiFGKsP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 7 Jun 2022 06:48:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240488AbiFGJ6s (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Jun 2022 05:58:48 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EAA7EAD18
-        for <dmaengine@vger.kernel.org>; Tue,  7 Jun 2022 02:58:40 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id u3so23401536wrg.3
-        for <dmaengine@vger.kernel.org>; Tue, 07 Jun 2022 02:58:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=r8WAmC01JdwEuRA91bKXEDq+9uWVDhRFE7DDNgirVT8=;
-        b=E7D78HbCN6AmI9t71qky707VuevSEMGvFMRyGOrT2ImNwmNaQ4RY1xL17EaNrhKQCJ
-         aoAQacZuFFKkG7Y0697B3F7i5+7Y7X2b3cQAbOg6/KUCIbWsBNODN+gmTCPElHtj7Bxj
-         DBwviyJLIDP/4xY+k1pEQ9wdAlTXKURDuH4Xo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=r8WAmC01JdwEuRA91bKXEDq+9uWVDhRFE7DDNgirVT8=;
-        b=h0n8IR1ThnfHInRsIIkPWeIeWHcqL8vzMdyktyJ8CFHVaupLdEsH80OI2fwkDxMgNs
-         7gC+QtIs5eD3eeFfKjqu88XDjLfv0ORE+RZVhJw8mxlDW+2WfyZGWYcY/VAy04imUTJ3
-         80EmCAxgrZPDfonyP1t7TSBS8kswKZL7sV4HVkMOMMNA/2gNxLW1VXI7MypnSuqHoHzs
-         D62Thap1gruUxV+zelKsOsmruDPNjGeTkvJThCdkyejzTmU6YJfi4j8Nr5NWIWmZJL9h
-         6f1KOnebKsSACFRHPuBVEVS3c/izfUwf4fpk4dIVeXDV2ahwaGvGLA2vUR9iyNQHNqK9
-         PIew==
-X-Gm-Message-State: AOAM532Husi+mFs6aeDefykxUEkL7zOUy/Q/ornU7XDiQoB/oErp9Ii1
-        N+yyC9BIrugGOZ/yg5HJq2+XWg==
-X-Google-Smtp-Source: ABdhPJy1vrfKTI+2dpohRIslhCweHyfE/FNWgeeTlATJcEIYD0SERXLXG3AX+PCAyNSeIy60+DiDlw==
-X-Received: by 2002:a05:6000:1d86:b0:218:3cfc:4ca2 with SMTP id bk6-20020a0560001d8600b002183cfc4ca2mr10765322wrb.133.1654595918844;
-        Tue, 07 Jun 2022 02:58:38 -0700 (PDT)
-Received: from dario-ThinkPad-T14s-Gen-2i.pdxnet.pdxeng.ch (mob-5-90-137-51.net.vodafone.it. [5.90.137.51])
-        by smtp.gmail.com with ESMTPSA id c186-20020a1c35c3000000b0039bc95cf4b2sm19958382wma.11.2022.06.07.02.58.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jun 2022 02:58:38 -0700 (PDT)
-From:   Dario Binacchi <dario.binacchi@amarulasolutions.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Amarula patchwork <linux-amarula@amarulasolutions.com>,
-        michael@amarulasolutions.com,
-        Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [RESEND PATCH v2] dmaengine: mxs: fix driver registering
-Date:   Tue,  7 Jun 2022 11:58:29 +0200
-Message-Id: <20220607095829.1035903-1-dario.binacchi@amarulasolutions.com>
-X-Mailer: git-send-email 2.32.0
+        with ESMTP id S241695AbiFGKr4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Jun 2022 06:47:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CADAFED7A9;
+        Tue,  7 Jun 2022 03:46:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6177B61577;
+        Tue,  7 Jun 2022 10:46:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D994EC34119;
+        Tue,  7 Jun 2022 10:46:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654598813;
+        bh=hlj2Yw+EG0pWKoO3cXlRjHbXss4PXj721LR0qzOjcRQ=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=lLjZE/ozDwyHnNNLv6KyRqV2xvU5uJJz9u7TCauhLkOPhBG38x6MdtEwI+8UIDQGw
+         uwtQiaJiwSNPU3upK6sgPC39kbtNdgB+CJfvt4RS1u1WkKKQpLeo6s5YlC3hEycLWK
+         DZ8Pjgv0h7TbVz5Vt1jDWfcTuWpK/D09EzsT4BVhx4hbG2e1VCKQHVGbNkyCNRk8sg
+         k6i/de3UcYlJTd5vP0lgvg+Z56k+nzRjJukId3zcOJcHo7YFPUDXs4S3klIjdIoaFE
+         QhfEG8FvKM9beX57uQhEHDZQEfg+6mZSxo/qgqEJSsXBAY9yR2jt850+wpSUTN7I+A
+         ZsaWxiF+LqPiw==
+From:   Mark Brown <broonie@kernel.org>
+To:     linux@roeck-us.net, robh+dt@kernel.org, vkoul@kernel.org,
+        matthias.bgg@gmail.com, jic23@kernel.org,
+        srinivas.kandagatla@linaro.org, krzysztof.kozlowski+dt@linaro.org,
+        chunfeng.yun@mediatek.com, fparent@baylibre.com,
+        ulf.hansson@linaro.org, wim@linux-watchdog.org,
+        qii.wang@mediatek.com, chaotian.jing@mediatek.com
+Cc:     linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-phy@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org
+In-Reply-To: <20220531135026.238475-1-fparent@baylibre.com>
+References: <20220531135026.238475-1-fparent@baylibre.com>
+Subject: Re: (subset) [PATCH 00/17] Add support for MT8365 EVK board
+Message-Id: <165459880859.302078.17715085151206065145.b4-ty@kernel.org>
+Date:   Tue, 07 Jun 2022 11:46:48 +0100
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -71,60 +63,50 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Driver registration fails on SOC imx8mn as its supplier, the clock
-control module, is not ready. Since platform_driver_probe(), as
-reported by its description, is incompatible with deferred probing,
-we have to use platform_driver_register().
+On Tue, 31 May 2022 15:50:09 +0200, Fabien Parent wrote:
+> This patch series adds support for the MT8365 EVK board.
+> 
+> This series has dependencies on the following series:
+> https://patchwork.kernel.org/project/linux-mediatek/list/?series=646256
+> https://patchwork.kernel.org/project/linux-mediatek/list/?series=646091
+> https://patchwork.kernel.org/project/linux-mediatek/list/?series=646083
+> https://patchwork.kernel.org/project/linux-mediatek/list/?series=646081
+> https://patchwork.kernel.org/project/linux-mediatek/list/?series=646076
+> https://patchwork.kernel.org/project/linux-mediatek/list/?series=646068
+> https://patchwork.kernel.org/project/linux-mediatek/list/?series=646020
+> https://patchwork.kernel.org/project/linux-mediatek/list/?series=646052
+> https://lore.kernel.org/r/20220504091923.2219-2-rex-bc.chen@mediatek.com
+> https://lore.kernel.org/r/20220512062622.31484-2-chunfeng.yun@mediatek.com
+> https://lore.kernel.org/r/20220512062622.31484-1-chunfeng.yun@mediatek.com
+> https://lore.kernel.org/r/20220524115019.97246-1-angelogioacchino.delregno@collabora.com
+> https://lore.kernel.org/all/20220127015857.9868-1-biao.huang@mediatek.com/
+> 
+> [...]
 
-Fixes: a580b8c5429a ("dmaengine: mxs-dma: add dma support for i.MX23/28")
-Co-developed-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Cc: stable@vger.kernel.org
+Applied to
 
----
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-Changes in v2:
-- Add the tag "Cc: stable@vger.kernel.org" in the sign-off area.
+Thanks!
 
- drivers/dma/mxs-dma.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+[09/17] dt-bindings: spi: mt65xx: add MT8365 SoC bindings
+        commit: 901fc8e8079e401f3240006cab6629e65579701c
 
-diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
-index 994fc4d2aca4..b8a3e692330d 100644
---- a/drivers/dma/mxs-dma.c
-+++ b/drivers/dma/mxs-dma.c
-@@ -670,7 +670,7 @@ static enum dma_status mxs_dma_tx_status(struct dma_chan *chan,
- 	return mxs_chan->status;
- }
- 
--static int __init mxs_dma_init(struct mxs_dma_engine *mxs_dma)
-+static int mxs_dma_init(struct mxs_dma_engine *mxs_dma)
- {
- 	int ret;
- 
-@@ -741,7 +741,7 @@ static struct dma_chan *mxs_dma_xlate(struct of_phandle_args *dma_spec,
- 				     ofdma->of_node);
- }
- 
--static int __init mxs_dma_probe(struct platform_device *pdev)
-+static int mxs_dma_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
- 	const struct mxs_dma_type *dma_type;
-@@ -839,10 +839,7 @@ static struct platform_driver mxs_dma_driver = {
- 		.name	= "mxs-dma",
- 		.of_match_table = mxs_dma_dt_ids,
- 	},
-+	.probe = mxs_dma_probe,
- };
- 
--static int __init mxs_dma_module_init(void)
--{
--	return platform_driver_probe(&mxs_dma_driver, mxs_dma_probe);
--}
--subsys_initcall(mxs_dma_module_init);
-+module_platform_driver(mxs_dma_driver);
--- 
-2.32.0
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark

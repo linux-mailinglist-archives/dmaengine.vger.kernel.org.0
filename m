@@ -2,158 +2,139 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23EB75437C3
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Jun 2022 17:43:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB95A543BB3
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Jun 2022 20:46:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244539AbiFHPnE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 8 Jun 2022 11:43:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43702 "EHLO
+        id S229496AbiFHSqM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 8 Jun 2022 14:46:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244521AbiFHPnD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 8 Jun 2022 11:43:03 -0400
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8B031E0AFD
-        for <dmaengine@vger.kernel.org>; Wed,  8 Jun 2022 08:43:01 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed30:243a:e14b:d107:1f56])
-        by andre.telenet-ops.be with bizsmtp
-        id gfj02700J1qF9lr01fj0PT; Wed, 08 Jun 2022 17:43:00 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1nyxpj-003E22-Vf; Wed, 08 Jun 2022 17:42:59 +0200
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1nyxpj-008kRu-H9; Wed, 08 Jun 2022 17:42:59 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dmaengine: dmatest: Replace symbolic permissions by octal permissions
-Date:   Wed,  8 Jun 2022 17:42:58 +0200
-Message-Id: <a745b883288f95e999b71fac677bbc2daa13c22d.1654702928.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S230226AbiFHSqH (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 8 Jun 2022 14:46:07 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7E35544F7;
+        Wed,  8 Jun 2022 11:46:03 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id v9so23693423lja.12;
+        Wed, 08 Jun 2022 11:46:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=gGnCAeAprc8+7XJKCHpSYZzbdEKjjYjwEVeB/dDQCS4=;
+        b=kfnDxkgAnsbiS6mgtZuhu2N1DcqgY6zP8hyQWDUsTrr9FPyh0MZmmxPWmTLxiLO4x/
+         9liYv2mn5A7/dDbriOAnF0/s2onaWpSgBDpxT6dekrX81DO9g4VHIzAl+p4sdUgiL4oN
+         TvneENMJnFy9FCGx9nYckfwMsKsVp+dHIT7TeLHNLjuxUCa8aBD7smEfea6Qyo40a3VX
+         eW0Bm8lw64jYgQefGIZZLnbKzBNrUSLoFsRoPSB7bgj4vWBwSAknyZ7GpnzYtm3BlGn7
+         plJGkHsrSzlUcPGIbHF7V8Q4wuvz6ICt+Xoq1ki/WwG9iQc2ysBPdm6Mtz9y6y4ibXMU
+         J4Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=gGnCAeAprc8+7XJKCHpSYZzbdEKjjYjwEVeB/dDQCS4=;
+        b=UDhoeHHszPI6hAOhhLQ0rdWq5kDeiG5Ks8hvrE7Gbm7+vY6Y5Z6Oubuiz5fRRQac7h
+         KBdvY28wvMwQ7FOoAH4fIdMF3JBPi2qtwFV3WQEd7f/xNGMsHA8cDMdkiopLGG9bp2x3
+         nWTxGdveOQ8YDKQcPJCDM4JxCHBwUc01jaEtoA7Jpqyx58Lco25ef5nCV0HaQukg+IZk
+         88jNnRHGwNEkpqtwPA3J23yuKfoRIV2TAAFaxZ6b85jirZ+5Jr4iU5uf9NwhBoZ2d7/n
+         HGU4hIqF8pTGadFroqygGyfJ8zJQLMQqWMRrog1zrwTEgHqryHaeIEv6MUAmpb4h+H+l
+         JBVw==
+X-Gm-Message-State: AOAM532dvtUOpS3NkaTumG6KE5oLab94Uxrgoa6HNa1zgm6dLFdPjm0f
+        l+9tRir0HQqxc3kPBqtAaIc=
+X-Google-Smtp-Source: ABdhPJwiDWTLNMMZWgfy3KVOejVOa3okm04gI4o2Nk9WNbmY56Tpkx3JATBXM5522Uo8zlTsytz2Tg==
+X-Received: by 2002:a2e:a552:0:b0:255:a378:72db with SMTP id e18-20020a2ea552000000b00255a37872dbmr7268175ljn.504.1654713962018;
+        Wed, 08 Jun 2022 11:46:02 -0700 (PDT)
+Received: from [10.0.0.127] (91-159-150-230.elisa-laajakaista.fi. [91.159.150.230])
+        by smtp.gmail.com with ESMTPSA id x15-20020ac25dcf000000b0047255d210dbsm3847271lfq.10.2022.06.08.11.46.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jun 2022 11:46:01 -0700 (PDT)
+Message-ID: <df2333e1-fae0-3e9a-2b47-3ac26c583876@gmail.com>
+Date:   Wed, 8 Jun 2022 21:47:24 +0300
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v3 2/2] dmaengine: ti: Add missing put_device in
+ ti_dra7_xbar_route_allocate
+Content-Language: en-US
+To:     Miaoqian Lin <linmq006@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220605042723.17668-1-linmq006@gmail.com>
+From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+In-Reply-To: <20220605042723.17668-1-linmq006@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Octal permissions are easier to read.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/dma/dmatest.c | 29 ++++++++++++++---------------
- 1 file changed, 14 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index 8ad8e7011d0be913..3253d1da2b3a5fc6 100644
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -22,51 +22,50 @@
- #include <linux/wait.h>
- 
- static unsigned int test_buf_size = 16384;
--module_param(test_buf_size, uint, S_IRUGO | S_IWUSR);
-+module_param(test_buf_size, uint, 0644);
- MODULE_PARM_DESC(test_buf_size, "Size of the memcpy test buffer");
- 
- static char test_device[32];
--module_param_string(device, test_device, sizeof(test_device),
--		S_IRUGO | S_IWUSR);
-+module_param_string(device, test_device, sizeof(test_device), 0644);
- MODULE_PARM_DESC(device, "Bus ID of the DMA Engine to test (default: any)");
- 
- static unsigned int threads_per_chan = 1;
--module_param(threads_per_chan, uint, S_IRUGO | S_IWUSR);
-+module_param(threads_per_chan, uint, 0644);
- MODULE_PARM_DESC(threads_per_chan,
- 		"Number of threads to start per channel (default: 1)");
- 
- static unsigned int max_channels;
--module_param(max_channels, uint, S_IRUGO | S_IWUSR);
-+module_param(max_channels, uint, 0644);
- MODULE_PARM_DESC(max_channels,
- 		"Maximum number of channels to use (default: all)");
- 
- static unsigned int iterations;
--module_param(iterations, uint, S_IRUGO | S_IWUSR);
-+module_param(iterations, uint, 0644);
- MODULE_PARM_DESC(iterations,
- 		"Iterations before stopping test (default: infinite)");
- 
- static unsigned int dmatest;
--module_param(dmatest, uint, S_IRUGO | S_IWUSR);
-+module_param(dmatest, uint, 0644);
- MODULE_PARM_DESC(dmatest,
- 		"dmatest 0-memcpy 1-memset (default: 0)");
- 
- static unsigned int xor_sources = 3;
--module_param(xor_sources, uint, S_IRUGO | S_IWUSR);
-+module_param(xor_sources, uint, 0644);
- MODULE_PARM_DESC(xor_sources,
- 		"Number of xor source buffers (default: 3)");
- 
- static unsigned int pq_sources = 3;
--module_param(pq_sources, uint, S_IRUGO | S_IWUSR);
-+module_param(pq_sources, uint, 0644);
- MODULE_PARM_DESC(pq_sources,
- 		"Number of p+q source buffers (default: 3)");
- 
- static int timeout = 3000;
--module_param(timeout, int, S_IRUGO | S_IWUSR);
-+module_param(timeout, int, 0644);
- MODULE_PARM_DESC(timeout, "Transfer Timeout in msec (default: 3000), "
- 		 "Pass -1 for infinite timeout");
- 
- static bool noverify;
--module_param(noverify, bool, S_IRUGO | S_IWUSR);
-+module_param(noverify, bool, 0644);
- MODULE_PARM_DESC(noverify, "Disable data verification (default: verify)");
- 
- static bool norandom;
-@@ -74,7 +73,7 @@ module_param(norandom, bool, 0644);
- MODULE_PARM_DESC(norandom, "Disable random offset setup (default: random)");
- 
- static bool verbose;
--module_param(verbose, bool, S_IRUGO | S_IWUSR);
-+module_param(verbose, bool, 0644);
- MODULE_PARM_DESC(verbose, "Enable \"success\" result messages (default: off)");
- 
- static int alignment = -1;
-@@ -86,7 +85,7 @@ module_param(transfer_size, uint, 0644);
- MODULE_PARM_DESC(transfer_size, "Optional custom transfer size in bytes (default: not used (0))");
- 
- static bool polled;
--module_param(polled, bool, S_IRUGO | S_IWUSR);
-+module_param(polled, bool, 0644);
- MODULE_PARM_DESC(polled, "Use polling for completion instead of interrupts");
- 
- /**
-@@ -154,7 +153,7 @@ static const struct kernel_param_ops run_ops = {
- 	.get = dmatest_run_get,
- };
- static bool dmatest_run;
--module_param_cb(run, &run_ops, &dmatest_run, S_IRUGO | S_IWUSR);
-+module_param_cb(run, &run_ops, &dmatest_run, 0644);
- MODULE_PARM_DESC(run, "Run the test (default: false)");
- 
- static int dmatest_chan_set(const char *val, const struct kernel_param *kp);
-@@ -290,7 +289,7 @@ static const struct kernel_param_ops wait_ops = {
- 	.get = dmatest_wait_get,
- 	.set = param_set_bool,
- };
--module_param_cb(wait, &wait_ops, &wait, S_IRUGO);
-+module_param_cb(wait, &wait_ops, &wait, 0444);
- MODULE_PARM_DESC(wait, "Wait for tests to complete (default: false)");
- 
- static bool dmatest_match_channel(struct dmatest_params *params,
+On 05/06/2022 07:27, Miaoqian Lin wrote:
+> of_find_device_by_node() takes reference, we should use put_device()
+> to release it when not need anymore.
+
+Thank you for the update!
+
+For both:
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+
+> 
+> Fixes: a074ae38f859 ("dmaengine: Add driver for TI DMA crossbar on DRA7x")
+> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+> ---
+> changes in v3:
+> - rebase so it can apply with the other patch
+> changes in v2:
+> - split v1 into two patches.
+> v1 link:
+> https://lore.kernel.org/r/20220512051815.11946-1-linmq006@gmail.com
+> v2 link:
+> https://lore.kernel.org/r/20220601110013.55366-1-linmq006@gmail.com/
+> ---
+>  drivers/dma/ti/dma-crossbar.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
+> index e34cfb50d241..f744ddbbbad7 100644
+> --- a/drivers/dma/ti/dma-crossbar.c
+> +++ b/drivers/dma/ti/dma-crossbar.c
+> @@ -245,6 +245,7 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
+>  	if (dma_spec->args[0] >= xbar->xbar_requests) {
+>  		dev_err(&pdev->dev, "Invalid XBAR request number: %d\n",
+>  			dma_spec->args[0]);
+> +		put_device(&pdev->dev);
+>  		return ERR_PTR(-EINVAL);
+>  	}
+>  
+> @@ -252,12 +253,14 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
+>  	dma_spec->np = of_parse_phandle(ofdma->of_node, "dma-masters", 0);
+>  	if (!dma_spec->np) {
+>  		dev_err(&pdev->dev, "Can't get DMA master\n");
+> +		put_device(&pdev->dev);
+>  		return ERR_PTR(-EINVAL);
+>  	}
+>  
+>  	map = kzalloc(sizeof(*map), GFP_KERNEL);
+>  	if (!map) {
+>  		of_node_put(dma_spec->np);
+> +		put_device(&pdev->dev);
+>  		return ERR_PTR(-ENOMEM);
+>  	}
+>  
+> @@ -269,6 +272,7 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
+>  		dev_err(&pdev->dev, "Run out of free DMA requests\n");
+>  		kfree(map);
+>  		of_node_put(dma_spec->np);
+> +		put_device(&pdev->dev);
+>  		return ERR_PTR(-ENOMEM);
+>  	}
+>  	set_bit(map->xbar_out, xbar->dma_inuse);
+
 -- 
-2.25.1
-
+Péter

@@ -2,54 +2,60 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7847954434D
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Jun 2022 07:48:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F298544368
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Jun 2022 07:57:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232508AbiFIFsW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 9 Jun 2022 01:48:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41924 "EHLO
+        id S238687AbiFIF5L (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 9 Jun 2022 01:57:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231158AbiFIFsV (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Jun 2022 01:48:21 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88CE723B70A;
-        Wed,  8 Jun 2022 22:48:20 -0700 (PDT)
+        with ESMTP id S238569AbiFIF5C (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Jun 2022 01:57:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC7EE2DA8D;
+        Wed,  8 Jun 2022 22:57:00 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D51A1B82C20;
-        Thu,  9 Jun 2022 05:48:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80C35C34114;
-        Thu,  9 Jun 2022 05:48:16 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 59BA661D58;
+        Thu,  9 Jun 2022 05:57:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFC28C34114;
+        Thu,  9 Jun 2022 05:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654753697;
-        bh=srvycSML/3DtXuGTOU81tu/ONwTrX8FWExQdjZdpSHk=;
+        s=k20201202; t=1654754219;
+        bh=Lk9VcDtnAmCoMRcuenCeRZs/rDxjxHcun+H8Vl2ka0g=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PpU8+4R5/EkFK7UvLyHRVyIZ8XCh8GpzDaIeagtOUeiI4TpXM1CfKmuss5/zoDqsg
-         8QoXCaAlyJqBSB7sBXLYpo4N7iv71diwLmmxUCnUcPdGzDm9JTwfER1LOQgajba8d6
-         00Y5qiZY/F34QkvvUDJHm6RdrQYT85L20QXje5VuPUi5XfInM4m5PUol30TjD1HNY8
-         tkhV3b1moxJAW+a+/y5Gpsql5phAM1DL/3iSbCif6wLEZ3gbZugCydsA7fJLCPHAkO
-         gTgp23USO6LkjmbXiuPbWI28cx4cASf4FPdCMWk6NDHILxR/AL9jxDE1pafnCtAndb
-         7FrojzZRPyajw==
-Date:   Thu, 9 Jun 2022 11:18:12 +0530
+        b=G8DsCVOvrbUU3PHnU9OPtRCyArNV8i7UbH9DNGl7TQTrqQ4QI7VQ5i95Stk/stCgr
+         YYAmxAxiLsrvk1cIGG0run+4Ybvh/EToyMRuDLma6Cmb1lDLk5QhonRFQ4sG/OYGAE
+         NGVw+25bVGzor8s8SnzbogYrxcfOjmVgLwdAj5WuJhkIEbpvjEbeOoKPh3mAdmL2hA
+         AK65I65XkoVohj15Fh3+kfSy/Ztc+1NcGEvSKtko3BqWRiyIU+Vd0BrlihMeOsAyxp
+         OFr1SUy/HsJLwXTE6fVsRjmBgTmzESxWO0PkIYFv4lcb1WjgbDfiJolR85nSV0pEM0
+         NrbOxi/3MTnSA==
+Date:   Thu, 9 Jun 2022 11:26:55 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Amarula patchwork <linux-amarula@amarulasolutions.com>,
-        michael@amarulasolutions.com, stable@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RESEND PATCH v2] dmaengine: mxs: fix driver registering
-Message-ID: <YqGJnORzbp2xiEU3@matsya>
-References: <20220607095829.1035903-1-dario.binacchi@amarulasolutions.com>
+To:     Fabien Parent <fparent@baylibre.com>
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        qii.wang@mediatek.com, matthias.bgg@gmail.com, jic23@kernel.org,
+        chaotian.jing@mediatek.com, ulf.hansson@linaro.org,
+        srinivas.kandagatla@linaro.org, chunfeng.yun@mediatek.com,
+        broonie@kernel.org, wim@linux-watchdog.org, linux@roeck-us.net,
+        Long Cheng <long.cheng@mediatek.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-iio@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH 05/17] dt-bindings: dma: mediatek,uart-dma: add MT8365
+ bindings
+Message-ID: <YqGLpyWUgBJQXG9K@matsya>
+References: <20220531135026.238475-1-fparent@baylibre.com>
+ <20220531135026.238475-6-fparent@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220607095829.1035903-1-dario.binacchi@amarulasolutions.com>
+In-Reply-To: <20220531135026.238475-6-fparent@baylibre.com>
 X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -60,67 +66,31 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 07-06-22, 11:58, Dario Binacchi wrote:
-> Driver registration fails on SOC imx8mn as its supplier, the clock
-> control module, is not ready. Since platform_driver_probe(), as
-> reported by its description, is incompatible with deferred probing,
-> we have to use platform_driver_register().
+On 31-05-22, 15:50, Fabien Parent wrote:
+> Add binding documentation in order to support the MT8365 SoC.
+
+Applied to dmaengine-next, thanks
+
 > 
-> Fixes: a580b8c5429a ("dmaengine: mxs-dma: add dma support for i.MX23/28")
-> Co-developed-by: Michael Trimarchi <michael@amarulasolutions.com>
-> Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-> Cc: stable@vger.kernel.org
-> 
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
 > ---
+>  Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Changes in v2:
-> - Add the tag "Cc: stable@vger.kernel.org" in the sign-off area.
-> 
->  drivers/dma/mxs-dma.c | 11 ++++-------
->  1 file changed, 4 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
-> index 994fc4d2aca4..b8a3e692330d 100644
-> --- a/drivers/dma/mxs-dma.c
-> +++ b/drivers/dma/mxs-dma.c
-> @@ -670,7 +670,7 @@ static enum dma_status mxs_dma_tx_status(struct dma_chan *chan,
->  	return mxs_chan->status;
->  }
->  
-> -static int __init mxs_dma_init(struct mxs_dma_engine *mxs_dma)
-> +static int mxs_dma_init(struct mxs_dma_engine *mxs_dma)
-
-why drop __init for these...?
-
->  {
->  	int ret;
->  
-> @@ -741,7 +741,7 @@ static struct dma_chan *mxs_dma_xlate(struct of_phandle_args *dma_spec,
->  				     ofdma->of_node);
->  }
->  
-> -static int __init mxs_dma_probe(struct platform_device *pdev)
-> +static int mxs_dma_probe(struct platform_device *pdev)
->  {
->  	struct device_node *np = pdev->dev.of_node;
->  	const struct mxs_dma_type *dma_type;
-> @@ -839,10 +839,7 @@ static struct platform_driver mxs_dma_driver = {
->  		.name	= "mxs-dma",
->  		.of_match_table = mxs_dma_dt_ids,
->  	},
-> +	.probe = mxs_dma_probe,
->  };
->  
-> -static int __init mxs_dma_module_init(void)
-> -{
-> -	return platform_driver_probe(&mxs_dma_driver, mxs_dma_probe);
-> -}
-
-> -subsys_initcall(mxs_dma_module_init);
-> +module_platform_driver(mxs_dma_driver);
+> diff --git a/Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml b/Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml
+> index 54d68fc688b5..19ea8dcbcbce 100644
+> --- a/Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml
+> +++ b/Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml
+> @@ -22,6 +22,7 @@ properties:
+>        - items:
+>            - enum:
+>                - mediatek,mt2712-uart-dma
+> +              - mediatek,mt8365-uart-dma
+>                - mediatek,mt8516-uart-dma
+>            - const: mediatek,mt6577-uart-dma
+>        - enum:
 > -- 
-> 2.32.0
+> 2.36.1
 
 -- 
 ~Vinod

@@ -2,139 +2,125 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB95A543BB3
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Jun 2022 20:46:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7847954434D
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Jun 2022 07:48:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229496AbiFHSqM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 8 Jun 2022 14:46:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36116 "EHLO
+        id S232508AbiFIFsW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 9 Jun 2022 01:48:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230226AbiFHSqH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 8 Jun 2022 14:46:07 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7E35544F7;
-        Wed,  8 Jun 2022 11:46:03 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id v9so23693423lja.12;
-        Wed, 08 Jun 2022 11:46:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=gGnCAeAprc8+7XJKCHpSYZzbdEKjjYjwEVeB/dDQCS4=;
-        b=kfnDxkgAnsbiS6mgtZuhu2N1DcqgY6zP8hyQWDUsTrr9FPyh0MZmmxPWmTLxiLO4x/
-         9liYv2mn5A7/dDbriOAnF0/s2onaWpSgBDpxT6dekrX81DO9g4VHIzAl+p4sdUgiL4oN
-         TvneENMJnFy9FCGx9nYckfwMsKsVp+dHIT7TeLHNLjuxUCa8aBD7smEfea6Qyo40a3VX
-         eW0Bm8lw64jYgQefGIZZLnbKzBNrUSLoFsRoPSB7bgj4vWBwSAknyZ7GpnzYtm3BlGn7
-         plJGkHsrSzlUcPGIbHF7V8Q4wuvz6ICt+Xoq1ki/WwG9iQc2ysBPdm6Mtz9y6y4ibXMU
-         J4Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=gGnCAeAprc8+7XJKCHpSYZzbdEKjjYjwEVeB/dDQCS4=;
-        b=UDhoeHHszPI6hAOhhLQ0rdWq5kDeiG5Ks8hvrE7Gbm7+vY6Y5Z6Oubuiz5fRRQac7h
-         KBdvY28wvMwQ7FOoAH4fIdMF3JBPi2qtwFV3WQEd7f/xNGMsHA8cDMdkiopLGG9bp2x3
-         nWTxGdveOQ8YDKQcPJCDM4JxCHBwUc01jaEtoA7Jpqyx58Lco25ef5nCV0HaQukg+IZk
-         88jNnRHGwNEkpqtwPA3J23yuKfoRIV2TAAFaxZ6b85jirZ+5Jr4iU5uf9NwhBoZ2d7/n
-         HGU4hIqF8pTGadFroqygGyfJ8zJQLMQqWMRrog1zrwTEgHqryHaeIEv6MUAmpb4h+H+l
-         JBVw==
-X-Gm-Message-State: AOAM532dvtUOpS3NkaTumG6KE5oLab94Uxrgoa6HNa1zgm6dLFdPjm0f
-        l+9tRir0HQqxc3kPBqtAaIc=
-X-Google-Smtp-Source: ABdhPJwiDWTLNMMZWgfy3KVOejVOa3okm04gI4o2Nk9WNbmY56Tpkx3JATBXM5522Uo8zlTsytz2Tg==
-X-Received: by 2002:a2e:a552:0:b0:255:a378:72db with SMTP id e18-20020a2ea552000000b00255a37872dbmr7268175ljn.504.1654713962018;
-        Wed, 08 Jun 2022 11:46:02 -0700 (PDT)
-Received: from [10.0.0.127] (91-159-150-230.elisa-laajakaista.fi. [91.159.150.230])
-        by smtp.gmail.com with ESMTPSA id x15-20020ac25dcf000000b0047255d210dbsm3847271lfq.10.2022.06.08.11.46.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jun 2022 11:46:01 -0700 (PDT)
-Message-ID: <df2333e1-fae0-3e9a-2b47-3ac26c583876@gmail.com>
-Date:   Wed, 8 Jun 2022 21:47:24 +0300
+        with ESMTP id S231158AbiFIFsV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Jun 2022 01:48:21 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88CE723B70A;
+        Wed,  8 Jun 2022 22:48:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D51A1B82C20;
+        Thu,  9 Jun 2022 05:48:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80C35C34114;
+        Thu,  9 Jun 2022 05:48:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654753697;
+        bh=srvycSML/3DtXuGTOU81tu/ONwTrX8FWExQdjZdpSHk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PpU8+4R5/EkFK7UvLyHRVyIZ8XCh8GpzDaIeagtOUeiI4TpXM1CfKmuss5/zoDqsg
+         8QoXCaAlyJqBSB7sBXLYpo4N7iv71diwLmmxUCnUcPdGzDm9JTwfER1LOQgajba8d6
+         00Y5qiZY/F34QkvvUDJHm6RdrQYT85L20QXje5VuPUi5XfInM4m5PUol30TjD1HNY8
+         tkhV3b1moxJAW+a+/y5Gpsql5phAM1DL/3iSbCif6wLEZ3gbZugCydsA7fJLCPHAkO
+         gTgp23USO6LkjmbXiuPbWI28cx4cASf4FPdCMWk6NDHILxR/AL9jxDE1pafnCtAndb
+         7FrojzZRPyajw==
+Date:   Thu, 9 Jun 2022 11:18:12 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Amarula patchwork <linux-amarula@amarulasolutions.com>,
+        michael@amarulasolutions.com, stable@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RESEND PATCH v2] dmaengine: mxs: fix driver registering
+Message-ID: <YqGJnORzbp2xiEU3@matsya>
+References: <20220607095829.1035903-1-dario.binacchi@amarulasolutions.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v3 2/2] dmaengine: ti: Add missing put_device in
- ti_dra7_xbar_route_allocate
-Content-Language: en-US
-To:     Miaoqian Lin <linmq006@gmail.com>, Vinod Koul <vkoul@kernel.org>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220605042723.17668-1-linmq006@gmail.com>
-From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <20220605042723.17668-1-linmq006@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220607095829.1035903-1-dario.binacchi@amarulasolutions.com>
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 05/06/2022 07:27, Miaoqian Lin wrote:
-> of_find_device_by_node() takes reference, we should use put_device()
-> to release it when not need anymore.
-
-Thank you for the update!
-
-For both:
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-
+On 07-06-22, 11:58, Dario Binacchi wrote:
+> Driver registration fails on SOC imx8mn as its supplier, the clock
+> control module, is not ready. Since platform_driver_probe(), as
+> reported by its description, is incompatible with deferred probing,
+> we have to use platform_driver_register().
 > 
-> Fixes: a074ae38f859 ("dmaengine: Add driver for TI DMA crossbar on DRA7x")
-> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
-> ---
-> changes in v3:
-> - rebase so it can apply with the other patch
-> changes in v2:
-> - split v1 into two patches.
-> v1 link:
-> https://lore.kernel.org/r/20220512051815.11946-1-linmq006@gmail.com
-> v2 link:
-> https://lore.kernel.org/r/20220601110013.55366-1-linmq006@gmail.com/
-> ---
->  drivers/dma/ti/dma-crossbar.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> Fixes: a580b8c5429a ("dmaengine: mxs-dma: add dma support for i.MX23/28")
+> Co-developed-by: Michael Trimarchi <michael@amarulasolutions.com>
+> Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> Cc: stable@vger.kernel.org
 > 
-> diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
-> index e34cfb50d241..f744ddbbbad7 100644
-> --- a/drivers/dma/ti/dma-crossbar.c
-> +++ b/drivers/dma/ti/dma-crossbar.c
-> @@ -245,6 +245,7 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
->  	if (dma_spec->args[0] >= xbar->xbar_requests) {
->  		dev_err(&pdev->dev, "Invalid XBAR request number: %d\n",
->  			dma_spec->args[0]);
-> +		put_device(&pdev->dev);
->  		return ERR_PTR(-EINVAL);
->  	}
+> ---
+> 
+> Changes in v2:
+> - Add the tag "Cc: stable@vger.kernel.org" in the sign-off area.
+> 
+>  drivers/dma/mxs-dma.c | 11 ++++-------
+>  1 file changed, 4 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
+> index 994fc4d2aca4..b8a3e692330d 100644
+> --- a/drivers/dma/mxs-dma.c
+> +++ b/drivers/dma/mxs-dma.c
+> @@ -670,7 +670,7 @@ static enum dma_status mxs_dma_tx_status(struct dma_chan *chan,
+>  	return mxs_chan->status;
+>  }
 >  
-> @@ -252,12 +253,14 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
->  	dma_spec->np = of_parse_phandle(ofdma->of_node, "dma-masters", 0);
->  	if (!dma_spec->np) {
->  		dev_err(&pdev->dev, "Can't get DMA master\n");
-> +		put_device(&pdev->dev);
->  		return ERR_PTR(-EINVAL);
->  	}
+> -static int __init mxs_dma_init(struct mxs_dma_engine *mxs_dma)
+> +static int mxs_dma_init(struct mxs_dma_engine *mxs_dma)
+
+why drop __init for these...?
+
+>  {
+>  	int ret;
 >  
->  	map = kzalloc(sizeof(*map), GFP_KERNEL);
->  	if (!map) {
->  		of_node_put(dma_spec->np);
-> +		put_device(&pdev->dev);
->  		return ERR_PTR(-ENOMEM);
->  	}
+> @@ -741,7 +741,7 @@ static struct dma_chan *mxs_dma_xlate(struct of_phandle_args *dma_spec,
+>  				     ofdma->of_node);
+>  }
 >  
-> @@ -269,6 +272,7 @@ static void *ti_dra7_xbar_route_allocate(struct of_phandle_args *dma_spec,
->  		dev_err(&pdev->dev, "Run out of free DMA requests\n");
->  		kfree(map);
->  		of_node_put(dma_spec->np);
-> +		put_device(&pdev->dev);
->  		return ERR_PTR(-ENOMEM);
->  	}
->  	set_bit(map->xbar_out, xbar->dma_inuse);
+> -static int __init mxs_dma_probe(struct platform_device *pdev)
+> +static int mxs_dma_probe(struct platform_device *pdev)
+>  {
+>  	struct device_node *np = pdev->dev.of_node;
+>  	const struct mxs_dma_type *dma_type;
+> @@ -839,10 +839,7 @@ static struct platform_driver mxs_dma_driver = {
+>  		.name	= "mxs-dma",
+>  		.of_match_table = mxs_dma_dt_ids,
+>  	},
+> +	.probe = mxs_dma_probe,
+>  };
+>  
+> -static int __init mxs_dma_module_init(void)
+> -{
+> -	return platform_driver_probe(&mxs_dma_driver, mxs_dma_probe);
+> -}
+
+> -subsys_initcall(mxs_dma_module_init);
+> +module_platform_driver(mxs_dma_driver);
+> -- 
+> 2.32.0
 
 -- 
-Péter
+~Vinod

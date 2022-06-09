@@ -2,123 +2,76 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8812B545172
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Jun 2022 17:59:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06904545453
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Jun 2022 20:43:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236702AbiFIP7P (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 9 Jun 2022 11:59:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38880 "EHLO
+        id S233584AbiFISnJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 9 Jun 2022 14:43:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236527AbiFIP7O (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Jun 2022 11:59:14 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF8D1EA87E
-        for <dmaengine@vger.kernel.org>; Thu,  9 Jun 2022 08:59:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654790352; x=1686326352;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5Ta0Mb+lhR2SZvITBApJW2yMsnoPPqFduVONCIqnMN4=;
-  b=giWGRdNlskV99aJop3c95RzpFXNeakN4bGl33nv3p221oV2rg5Z8wYrs
-   wETfV97VX0SfbzSPcGC3LYzEdeWoWoYyz68VqOeOWeDrW1WHGf99f8fr5
-   tgJZ6G89tz4gj8vP6QaPWhUgUGawoHtv5yImggUuiujOFH4zBuYnhORWl
-   +lEFMvua5vVNch3D+RmKBzUtwDuckDEhRDIhUr63A7k0UszpISWIWkHBa
-   3wcUTGGov2s9ZbtJZ37arq3U43xE0GiC8AgpaDgwIRR76O5uj8mc74kxz
-   +T4d0qjWhlkG/Z6Jusmm3HNRVpUcVT7Q+cyYOD9oknIM3yEtKn7kv3vB5
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10373"; a="274851298"
-X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
-   d="scan'208";a="274851298"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2022 08:59:12 -0700
-X-IronPort-AV: E=Sophos;i="5.91,287,1647327600"; 
-   d="scan'208";a="724495396"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2022 08:59:09 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nzKYs-000Y0n-8w;
-        Thu, 09 Jun 2022 18:59:06 +0300
-Date:   Thu, 9 Jun 2022 18:59:06 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Milan Stevanovic <milan.stevanovic@se.com>,
-        Jimmy Lalande <jimmy.lalande@se.com>,
-        Pascal Eberhard <pascal.eberhard@se.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Herve Codina <herve.codina@bootlin.com>,
-        Clement Leger <clement.leger@bootlin.com>,
-        ilpo.jarvinen@linux.intel.com, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v3 2/2] dmaengine: dw: dmamux: Fix build without CONFIG_OF
-Message-ID: <YqIYyrf0S5p+YmMY@smile.fi.intel.com>
-References: <20220609141455.300879-1-miquel.raynal@bootlin.com>
- <20220609141455.300879-2-miquel.raynal@bootlin.com>
+        with ESMTP id S233502AbiFISnJ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Jun 2022 14:43:09 -0400
+Received: from hutie.ust.cz (hutie.ust.cz [185.8.165.127])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C61D21E7AF8;
+        Thu,  9 Jun 2022 11:43:04 -0700 (PDT)
+From:   =?UTF-8?q?Martin=20Povi=C5=A1er?= <povik+lin@cutebit.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cutebit.org; s=mail;
+        t=1654800181; bh=8ZEDC9HewScHp00W0Vw5klKniAEYKDjKhKDVNSK6OOU=;
+        h=From:To:Cc:Subject:Date;
+        b=px6qoy7FiskG+Z3anl7TxNFwGF7UnJqjxDERfyPLa+fTPdkDH8JfmC+vIye5H6rTA
+         +1m+jcZxGTjemXB7pbrLxQJ23S7F86hlk265VE3UEM32dudovgOOKaxzy7uYJQvGtf
+         W3x5Pnu3Uwz2RiqajIpkAEy0dIdvAzl1dLZd0mzo=
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, asahi@lists.linux.dev,
+        =?UTF-8?q?Martin=20Povi=C5=A1er?= <povik+lin@cutebit.org>
+Subject: [PATCH] dmaengine: apple-admac: Fix compile warning
+Date:   Thu,  9 Jun 2022 20:43:01 +0200
+Message-Id: <20220609184301.8242-1-povik+lin@cutebit.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220609141455.300879-2-miquel.raynal@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-8.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Jun 09, 2022 at 04:14:55PM +0200, Miquel Raynal wrote:
-> When built without OF support, of_match_node() expands to NULL, which
-> produces the following output:
-> >> drivers/dma/dw/rzn1-dmamux.c:105:34: warning: unused variable 'rzn1_dmac_match' [-Wunused-const-variable]
->    static const struct of_device_id rzn1_dmac_match[] = {
-> 
-> One way to silence the warning is to enclose the structure definition
-> with an #ifdef CONFIG_OF/#endif block.
+Fix a warning of bad format specifier:
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+  drivers/dma/apple-admac.c: In function 'admac_cyclic_write_one_desc':
+  drivers/dma/apple-admac.c:209:26: warning: format '%x' expects argument of type 'unsigned int', but argument 7 has type 'long unsigned int' [-Wformat=]
+      209 |         dev_dbg(ad->dev, "ch%d descriptor: addr=0x%pad len=0x%zx flags=0x%x\n",
 
-> Fixes: 134d9c52fca2 ("dmaengine: dw: dmamux: Introduce RZN1 DMA router support")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
-> 
-> Changes in v3:
-> * Did not extend the change to the second match table as requested by Andy.
-> * Added a Fixes tag.
-> 
-> Changes in v2:
-> * Used the #ifdef solution rather than the __maybe_unused keyword.
-> 
->  drivers/dma/dw/rzn1-dmamux.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/dma/dw/rzn1-dmamux.c b/drivers/dma/dw/rzn1-dmamux.c
-> index 0ce4fb58185e..f9912c3dd4d7 100644
-> --- a/drivers/dma/dw/rzn1-dmamux.c
-> +++ b/drivers/dma/dw/rzn1-dmamux.c
-> @@ -102,10 +102,12 @@ static void *rzn1_dmamux_route_allocate(struct of_phandle_args *dma_spec,
->  	return ERR_PTR(ret);
->  }
->  
-> +#ifdef CONFIG_OF
->  static const struct of_device_id rzn1_dmac_match[] = {
->  	{ .compatible = "renesas,rzn1-dma" },
->  	{}
->  };
-> +#endif
->  
->  static int rzn1_dmamux_probe(struct platform_device *pdev)
->  {
-> -- 
-> 2.34.1
-> 
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Martin Povišer <povik+lin@cutebit.org>
+---
 
+Follow-up to the recent ADMAC series, feel free to squash:
+https://lore.kernel.org/asahi/20220531213615.7822-1-povik+lin@cutebit.org/T/#t
+
+ drivers/dma/apple-admac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/dma/apple-admac.c b/drivers/dma/apple-admac.c
+index 2425069c186d..c502f8c3aca7 100644
+--- a/drivers/dma/apple-admac.c
++++ b/drivers/dma/apple-admac.c
+@@ -206,7 +206,7 @@ static void admac_cyclic_write_one_desc(struct admac_data *ad, int channo,
+ 	/* If happens means we have buggy code */
+ 	WARN_ON_ONCE(addr + tx->period_len > tx->buf_end);
+ 
+-	dev_dbg(ad->dev, "ch%d descriptor: addr=0x%pad len=0x%zx flags=0x%x\n",
++	dev_dbg(ad->dev, "ch%d descriptor: addr=0x%pad len=0x%zx flags=0x%lx\n",
+ 		channo, &addr, tx->period_len, FLAG_DESC_NOTIFY);
+ 
+ 	writel_relaxed(addr,             ad->base + REG_DESC_WRITE(channo));
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.33.0
 

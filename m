@@ -2,148 +2,178 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86AFF54552A
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Jun 2022 21:51:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13769545B3C
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jun 2022 06:43:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235606AbiFITvO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 9 Jun 2022 15:51:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35688 "EHLO
+        id S234358AbiFJEm7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 10 Jun 2022 00:42:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240029AbiFITvN (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Jun 2022 15:51:13 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BD1622DF8D
-        for <dmaengine@vger.kernel.org>; Thu,  9 Jun 2022 12:51:12 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id n10so49544638ejk.5
-        for <dmaengine@vger.kernel.org>; Thu, 09 Jun 2022 12:51:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aabekdX1Xu6nGH+V0mihMdec0zOM722rNngzJgCXDQ4=;
-        b=XTrue6mqPn+8RMjHht0tYm8c3g3Vcu0E4RvBDSWuAqxiHKqjV8KaaWrz+yBgD5FFgo
-         hJ6p4kAsHBSIQlIXpku5l++l0jrcGB9ykN4J1qV1IQRCLaXnfMexL2YbvN42uzE1J0Cn
-         Sf81tEYXivntzyNmDigF0bELfC7Ot8YXMFUhEqeZ9PMX1Ds4z3C4DvUgim9NaM8KRyw+
-         GPuQ9dhIb9LJGZnkiKDliJWJBF4yNvICcQAEMN9099haY3bka4ZyYHEJfOyIsJPUMrQv
-         62KPa/GRUXErixIbCW6VG1e7s8utVtIqZxoxUZBNu0h2CrJFEeXmnRiF7FFHY4NaVN2f
-         jgaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aabekdX1Xu6nGH+V0mihMdec0zOM722rNngzJgCXDQ4=;
-        b=cBDlMnjqIDiDz4argBCl03h6brgZdu+4ozqIdJlo/M60acjL93YZh1un0ozThDlTZL
-         yhyDPNzJ2+Ye10lR2/gDAbx4EnJIp130wMLxO66sTx0OgqR1T64wtzB4szzqVF5qRBnW
-         0pCcVHJR7qurdbW/0MmGfYh3eZz3rzBD0w4RFi5VeQORpOgiHdpPlGE4/YHxjQuG1auP
-         VmPf7l7cVwuENrD7Sry8NOPBQU08rtlscCGgxIWAKHHEw61omGzVckw6syK+punDH4+/
-         ApGKlDLAvYtDBgQxWFrzQKVyWemZu9/xzoaattLzzyUuDolxdF0NBGpb511s55DsvWZl
-         pOKQ==
-X-Gm-Message-State: AOAM533XFIdAG854dl1lLaqS8o1sqSgHgGgGpAuWm2GpMvu35m/TYI7i
-        52agrN4DIVBRmczVxUZXs01ZTA==
-X-Google-Smtp-Source: ABdhPJxjZoPjPeZa5kkKqcWtwV5tyv/jwJjKvbDfrpxpoAuMGYNKBrKyvIafMQYtBaBbq1IlB38Z9Q==
-X-Received: by 2002:a17:906:d8b8:b0:711:c73e:906b with SMTP id qc24-20020a170906d8b800b00711c73e906bmr23370395ejb.225.1654804270799;
-        Thu, 09 Jun 2022 12:51:10 -0700 (PDT)
-Received: from localhost.localdomain (cpc78119-cwma10-2-0-cust590.7-3.cable.virginm.net. [81.96.50.79])
-        by smtp.gmail.com with ESMTPSA id x14-20020a170906b08e00b006ff52dfccf3sm10977550ejy.211.2022.06.09.12.51.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jun 2022 12:51:10 -0700 (PDT)
-From:   Caleb Connolly <caleb.connolly@linaro.org>
-To:     caleb.connolly@linaro.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: qcom: bam_dma: fix runtime PM underflow
-Date:   Thu,  9 Jun 2022 20:50:43 +0100
-Message-Id: <20220609195043.1544625-1-caleb.connolly@linaro.org>
-X-Mailer: git-send-email 2.36.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        with ESMTP id S232425AbiFJEm6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Jun 2022 00:42:58 -0400
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C2021D01CA;
+        Thu,  9 Jun 2022 21:42:57 -0700 (PDT)
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E4C551A0A73;
+        Fri, 10 Jun 2022 06:42:55 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 613ED1A0A6F;
+        Fri, 10 Jun 2022 06:42:55 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id ADC901802201;
+        Fri, 10 Jun 2022 12:42:53 +0800 (+08)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     vkoul@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, shengjiu.wang@gmail.com,
+        joy.zou@nxp.com, linux-imx@nxp.com, dmaengine@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] dmaengine: imx-sdma: Add FIFO stride support for multi FIFO script
+Date:   Fri, 10 Jun 2022 12:29:16 +0800
+Message-Id: <1654835356-6825-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-When PM runtime is disabled, pm_runtime_get() isn't called, but
-pm_runtime_put() still is. Fix this by creating a matching wrapper
-on pm_runtime_put_autosuspend().
+The peripheral may have several FIFOs, but some case just select
+some FIFOs from them for data transfer, which means FIFO0 and FIFO2
+may be selected. So add FIFO address stride support, 0 means all FIFOs
+are continuous, 1 means 1 word stride between FIFOs. All stride between
+FIFOs should be same.
 
-Fixes: dbad41e7bb5f ("dmaengine: qcom: bam_dma: check if the runtime pm enabled")
-Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
+Another option words_per_fifo means how many audio channel data copied
+to one FIFO one time, 1 means one channel per FIFO, 2 means 2 channels
+per FIFO.
+
+If 'n_fifos_src =  4' and 'words_per_fifo = 2', it means the first two
+words(channels) fetch from FIFO0 and then jump to FIFO1 for next two words,
+and so on after the last FIFO3 fetched, roll back to FIFO0.
+
+Signed-off-by: Joy Zou <joy.zou@nxp.com>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 ---
- drivers/dma/qcom/bam_dma.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+changes in v2
+- change offset to stride for naming and description
+- fix description for words_per_fifo
+- update subsystem tag to be dmaengine
 
-diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index 87f6ca1541cf..a36dedee262e 100644
---- a/drivers/dma/qcom/bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -566,6 +566,14 @@ static int bam_pm_runtime_get_sync(struct device *dev)
- 	return 0;
- }
+
+ drivers/dma/imx-sdma.c      | 26 ++++++++++++++++++++++++--
+ include/linux/dma/imx-dma.h | 13 +++++++++++++
+ 2 files changed, 37 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 39d70ef1caf0..d3c478131824 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -183,6 +183,8 @@
+ 				 BIT(DMA_DEV_TO_DEV))
  
-+static int bam_pm_runtime_put_autosuspend(struct device *dev)
-+{
-+	if (pm_runtime_enabled(dev))
-+		return pm_runtime_put_autosuspend(dev);
+ #define SDMA_WATERMARK_LEVEL_N_FIFOS	GENMASK(15, 12)
++#define SDMA_WATERMARK_LEVEL_OFF_FIFOS  GENMASK(19, 16)
++#define SDMA_WATERMARK_LEVEL_WORDS_PER_FIFO   GENMASK(31, 28)
+ #define SDMA_WATERMARK_LEVEL_SW_DONE	BIT(23)
+ 
+ #define SDMA_DONE0_CONFIG_DONE_SEL	BIT(7)
+@@ -429,6 +431,9 @@ struct sdma_desc {
+  * @n_fifos_src:	number of source device fifos
+  * @n_fifos_dst:	number of destination device fifos
+  * @sw_done:		software done flag
++ * @stride_fifos_src:	stride for source device FIFOs
++ * @stride_fifos_dst:	stride for destination device FIFOs
++ * @words_per_fifo:	copy number of words one time for one FIFO
+  */
+ struct sdma_channel {
+ 	struct virt_dma_chan		vc;
+@@ -456,6 +461,9 @@ struct sdma_channel {
+ 	bool				is_ram_script;
+ 	unsigned int			n_fifos_src;
+ 	unsigned int			n_fifos_dst;
++	unsigned int			stride_fifos_src;
++	unsigned int			stride_fifos_dst;
++	unsigned int			words_per_fifo;
+ 	bool				sw_done;
+ };
+ 
+@@ -1245,17 +1253,28 @@ static void sdma_set_watermarklevel_for_p2p(struct sdma_channel *sdmac)
+ static void sdma_set_watermarklevel_for_sais(struct sdma_channel *sdmac)
+ {
+ 	unsigned int n_fifos;
++	unsigned int stride_fifos;
++	unsigned int words_per_fifo;
+ 
+ 	if (sdmac->sw_done)
+ 		sdmac->watermark_level |= SDMA_WATERMARK_LEVEL_SW_DONE;
+ 
+-	if (sdmac->direction == DMA_DEV_TO_MEM)
++	if (sdmac->direction == DMA_DEV_TO_MEM) {
+ 		n_fifos = sdmac->n_fifos_src;
+-	else
++		stride_fifos = sdmac->stride_fifos_src;
++	} else {
+ 		n_fifos = sdmac->n_fifos_dst;
++		stride_fifos = sdmac->stride_fifos_dst;
++	}
 +
-+	return 0;
-+}
-+
- /**
-  * bam_free_chan - Frees dma resources associated with specific channel
-  * @chan: specified channel
-@@ -617,7 +625,7 @@ static void bam_free_chan(struct dma_chan *chan)
++	words_per_fifo = sdmac->words_per_fifo;
  
- err:
- 	pm_runtime_mark_last_busy(bdev->dev);
--	pm_runtime_put_autosuspend(bdev->dev);
-+	bam_pm_runtime_put_autosuspend(bdev->dev);
+ 	sdmac->watermark_level |=
+ 			FIELD_PREP(SDMA_WATERMARK_LEVEL_N_FIFOS, n_fifos);
++	sdmac->watermark_level |=
++			FIELD_PREP(SDMA_WATERMARK_LEVEL_OFF_FIFOS, stride_fifos);
++	sdmac->watermark_level |=
++			FIELD_PREP(SDMA_WATERMARK_LEVEL_WORDS_PER_FIFO, (words_per_fifo - 1));
  }
  
- /**
-@@ -793,7 +801,7 @@ static int bam_pause(struct dma_chan *chan)
- 	bchan->paused = 1;
- 	spin_unlock_irqrestore(&bchan->vc.lock, flag);
- 	pm_runtime_mark_last_busy(bdev->dev);
--	pm_runtime_put_autosuspend(bdev->dev);
-+	bam_pm_runtime_put_autosuspend(bdev->dev);
- 
- 	return 0;
- }
-@@ -819,7 +827,7 @@ static int bam_resume(struct dma_chan *chan)
- 	bchan->paused = 0;
- 	spin_unlock_irqrestore(&bchan->vc.lock, flag);
- 	pm_runtime_mark_last_busy(bdev->dev);
--	pm_runtime_put_autosuspend(bdev->dev);
-+	bam_pm_runtime_put_autosuspend(bdev->dev);
- 
- 	return 0;
- }
-@@ -936,7 +944,7 @@ static irqreturn_t bam_dma_irq(int irq, void *data)
+ static int sdma_config_channel(struct dma_chan *chan)
+@@ -1769,6 +1788,9 @@ static int sdma_config(struct dma_chan *chan,
+ 		}
+ 		sdmac->n_fifos_src = sdmacfg->n_fifos_src;
+ 		sdmac->n_fifos_dst = sdmacfg->n_fifos_dst;
++		sdmac->stride_fifos_src = sdmacfg->stride_fifos_src;
++		sdmac->stride_fifos_dst = sdmacfg->stride_fifos_dst;
++		sdmac->words_per_fifo = sdmacfg->words_per_fifo;
+ 		sdmac->sw_done = sdmacfg->sw_done;
  	}
  
- 	pm_runtime_mark_last_busy(bdev->dev);
--	pm_runtime_put_autosuspend(bdev->dev);
-+	bam_pm_runtime_put_autosuspend(bdev->dev);
+diff --git a/include/linux/dma/imx-dma.h b/include/linux/dma/imx-dma.h
+index 8887762360d4..f487a4fa103a 100644
+--- a/include/linux/dma/imx-dma.h
++++ b/include/linux/dma/imx-dma.h
+@@ -70,6 +70,16 @@ static inline int imx_dma_is_general_purpose(struct dma_chan *chan)
+  * struct sdma_peripheral_config - SDMA config for audio
+  * @n_fifos_src: Number of FIFOs for recording
+  * @n_fifos_dst: Number of FIFOs for playback
++ * @stride_fifos_src: FIFO address stride for recording, 0 means all FIFOs are
++ *                    continuous, 1 means 1 word stride between FIFOs. All stride
++ *                    between FIFOs should be same.
++ * @stride_fifos_dst: FIFO address stride for playback
++ * @words_per_fifo: numbers of words per FIFO fetch/fill, 1 means
++ *                  one channel per FIFO, 2 means 2 channels per FIFO..
++ *                  If 'n_fifos_src =  4' and 'words_per_fifo = 2', it
++ *                  means the first two words(channels) fetch from FIFO0
++ *                  and then jump to FIFO1 for next two words, and so on
++ *                  after the last FIFO3 fetched, roll back to FIFO0.
+  * @sw_done: Use software done. Needed for PDM (micfil)
+  *
+  * Some i.MX Audio devices (SAI, micfil) have multiple successive FIFO
+@@ -82,6 +92,9 @@ static inline int imx_dma_is_general_purpose(struct dma_chan *chan)
+ struct sdma_peripheral_config {
+ 	int n_fifos_src;
+ 	int n_fifos_dst;
++	int stride_fifos_src;
++	int stride_fifos_dst;
++	int words_per_fifo;
+ 	bool sw_done;
+ };
  
- 	return IRQ_HANDLED;
- }
-@@ -1111,7 +1119,7 @@ static void bam_start_dma(struct bam_chan *bchan)
- 			bam_addr(bdev, bchan->id, BAM_P_EVNT_REG));
- 
- 	pm_runtime_mark_last_busy(bdev->dev);
--	pm_runtime_put_autosuspend(bdev->dev);
-+	bam_pm_runtime_put_autosuspend(bdev->dev);
- }
- 
- /**
 -- 
-2.36.1
+2.17.1
 

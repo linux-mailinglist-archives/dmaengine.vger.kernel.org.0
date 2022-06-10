@@ -2,178 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13769545B3C
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jun 2022 06:43:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BC40545B1E
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jun 2022 06:31:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234358AbiFJEm7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 10 Jun 2022 00:42:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40794 "EHLO
+        id S233537AbiFJEb2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 10 Jun 2022 00:31:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232425AbiFJEm6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Jun 2022 00:42:58 -0400
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C2021D01CA;
-        Thu,  9 Jun 2022 21:42:57 -0700 (PDT)
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E4C551A0A73;
-        Fri, 10 Jun 2022 06:42:55 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 613ED1A0A6F;
-        Fri, 10 Jun 2022 06:42:55 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id ADC901802201;
-        Fri, 10 Jun 2022 12:42:53 +0800 (+08)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     vkoul@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, shengjiu.wang@gmail.com,
-        joy.zou@nxp.com, linux-imx@nxp.com, dmaengine@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dmaengine: imx-sdma: Add FIFO stride support for multi FIFO script
-Date:   Fri, 10 Jun 2022 12:29:16 +0800
-Message-Id: <1654835356-6825-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S230083AbiFJEb0 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Jun 2022 00:31:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C15B4AE34
+        for <dmaengine@vger.kernel.org>; Thu,  9 Jun 2022 21:31:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2CC2261DD6
+        for <dmaengine@vger.kernel.org>; Fri, 10 Jun 2022 04:31:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2402C34114;
+        Fri, 10 Jun 2022 04:31:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654835484;
+        bh=wmiZ1Ha7XV5IHqE9qH49++1HOR84D51Msi+lnzAMyB8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Nn3zFP0jpm24uw2z18BC82B8mg8kRv5uTxTTbzYsDzwK5zyXFmvts/9yYwmOREn1G
+         RDjpslZ1S/yhfdQjwQNdw1YmNuTROg8ju0wwZvsDBoSy2vSAyLQdW8aRPrFKfXzh1v
+         Ojej7eMNR9gZvnkqUc0lEYTTucXqm4mKXxepIqw3LxaDxk1epNB1ogqbixRr/+NTtX
+         EKlhdkVJajMG84KBNHiZbWozcC7XR6zviHisHCryZSgqDNY/gt1SDR+zIe7YlL5KB6
+         oSFXVeKbWM1CQYt+tpulPLCjUsMPeGK3H9RmFTjISgVq2qX/XURGJRZ0U7Qhdw0wj0
+         pw9/3ReLp7IXQ==
+From:   Vinod Koul <vkoul@kernel.org>
+To:     dmaengine@vger.kernel.org,
+        =?UTF-8?q?Martin=20Povi=C5=A1er?= <povik+lin@cutebit.org>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH] dmaengine: apple-admac: Fix print format
+Date:   Fri, 10 Jun 2022 10:01:17 +0530
+Message-Id: <20220610043117.39337-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.34.3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The peripheral may have several FIFOs, but some case just select
-some FIFOs from them for data transfer, which means FIFO0 and FIFO2
-may be selected. So add FIFO address stride support, 0 means all FIFOs
-are continuous, 1 means 1 word stride between FIFOs. All stride between
-FIFOs should be same.
+We get a warning (treated as error now)
+drivers/dma/apple-admac.c: In function 'admac_cyclic_write_one_desc':
+drivers/dma/apple-admac.c:209:26: error: format '%x' expects argument of type 'unsigned int', but argument 7 has type 'long unsigned int' [-Werror=format=]
+  209 |         dev_dbg(ad->dev, "ch%d descriptor: addr=0x%pad len=0x%zx flags=0x%x\n",
 
-Another option words_per_fifo means how many audio channel data copied
-to one FIFO one time, 1 means one channel per FIFO, 2 means 2 channels
-per FIFO.
+Use %lx for priniting the flag
 
-If 'n_fifos_src =  4' and 'words_per_fifo = 2', it means the first two
-words(channels) fetch from FIFO0 and then jump to FIFO1 for next two words,
-and so on after the last FIFO3 fetched, roll back to FIFO0.
-
-Signed-off-by: Joy Zou <joy.zou@nxp.com>
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Fixes: b127315d9a78 ("dmaengine: apple-admac: Add Apple ADMAC driver")
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
-changes in v2
-- change offset to stride for naming and description
-- fix description for words_per_fifo
-- update subsystem tag to be dmaengine
+ drivers/dma/apple-admac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
- drivers/dma/imx-sdma.c      | 26 ++++++++++++++++++++++++--
- include/linux/dma/imx-dma.h | 13 +++++++++++++
- 2 files changed, 37 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 39d70ef1caf0..d3c478131824 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -183,6 +183,8 @@
- 				 BIT(DMA_DEV_TO_DEV))
+diff --git a/drivers/dma/apple-admac.c b/drivers/dma/apple-admac.c
+index 2425069c186d..c502f8c3aca7 100644
+--- a/drivers/dma/apple-admac.c
++++ b/drivers/dma/apple-admac.c
+@@ -206,7 +206,7 @@ static void admac_cyclic_write_one_desc(struct admac_data *ad, int channo,
+ 	/* If happens means we have buggy code */
+ 	WARN_ON_ONCE(addr + tx->period_len > tx->buf_end);
  
- #define SDMA_WATERMARK_LEVEL_N_FIFOS	GENMASK(15, 12)
-+#define SDMA_WATERMARK_LEVEL_OFF_FIFOS  GENMASK(19, 16)
-+#define SDMA_WATERMARK_LEVEL_WORDS_PER_FIFO   GENMASK(31, 28)
- #define SDMA_WATERMARK_LEVEL_SW_DONE	BIT(23)
+-	dev_dbg(ad->dev, "ch%d descriptor: addr=0x%pad len=0x%zx flags=0x%x\n",
++	dev_dbg(ad->dev, "ch%d descriptor: addr=0x%pad len=0x%zx flags=0x%lx\n",
+ 		channo, &addr, tx->period_len, FLAG_DESC_NOTIFY);
  
- #define SDMA_DONE0_CONFIG_DONE_SEL	BIT(7)
-@@ -429,6 +431,9 @@ struct sdma_desc {
-  * @n_fifos_src:	number of source device fifos
-  * @n_fifos_dst:	number of destination device fifos
-  * @sw_done:		software done flag
-+ * @stride_fifos_src:	stride for source device FIFOs
-+ * @stride_fifos_dst:	stride for destination device FIFOs
-+ * @words_per_fifo:	copy number of words one time for one FIFO
-  */
- struct sdma_channel {
- 	struct virt_dma_chan		vc;
-@@ -456,6 +461,9 @@ struct sdma_channel {
- 	bool				is_ram_script;
- 	unsigned int			n_fifos_src;
- 	unsigned int			n_fifos_dst;
-+	unsigned int			stride_fifos_src;
-+	unsigned int			stride_fifos_dst;
-+	unsigned int			words_per_fifo;
- 	bool				sw_done;
- };
- 
-@@ -1245,17 +1253,28 @@ static void sdma_set_watermarklevel_for_p2p(struct sdma_channel *sdmac)
- static void sdma_set_watermarklevel_for_sais(struct sdma_channel *sdmac)
- {
- 	unsigned int n_fifos;
-+	unsigned int stride_fifos;
-+	unsigned int words_per_fifo;
- 
- 	if (sdmac->sw_done)
- 		sdmac->watermark_level |= SDMA_WATERMARK_LEVEL_SW_DONE;
- 
--	if (sdmac->direction == DMA_DEV_TO_MEM)
-+	if (sdmac->direction == DMA_DEV_TO_MEM) {
- 		n_fifos = sdmac->n_fifos_src;
--	else
-+		stride_fifos = sdmac->stride_fifos_src;
-+	} else {
- 		n_fifos = sdmac->n_fifos_dst;
-+		stride_fifos = sdmac->stride_fifos_dst;
-+	}
-+
-+	words_per_fifo = sdmac->words_per_fifo;
- 
- 	sdmac->watermark_level |=
- 			FIELD_PREP(SDMA_WATERMARK_LEVEL_N_FIFOS, n_fifos);
-+	sdmac->watermark_level |=
-+			FIELD_PREP(SDMA_WATERMARK_LEVEL_OFF_FIFOS, stride_fifos);
-+	sdmac->watermark_level |=
-+			FIELD_PREP(SDMA_WATERMARK_LEVEL_WORDS_PER_FIFO, (words_per_fifo - 1));
- }
- 
- static int sdma_config_channel(struct dma_chan *chan)
-@@ -1769,6 +1788,9 @@ static int sdma_config(struct dma_chan *chan,
- 		}
- 		sdmac->n_fifos_src = sdmacfg->n_fifos_src;
- 		sdmac->n_fifos_dst = sdmacfg->n_fifos_dst;
-+		sdmac->stride_fifos_src = sdmacfg->stride_fifos_src;
-+		sdmac->stride_fifos_dst = sdmacfg->stride_fifos_dst;
-+		sdmac->words_per_fifo = sdmacfg->words_per_fifo;
- 		sdmac->sw_done = sdmacfg->sw_done;
- 	}
- 
-diff --git a/include/linux/dma/imx-dma.h b/include/linux/dma/imx-dma.h
-index 8887762360d4..f487a4fa103a 100644
---- a/include/linux/dma/imx-dma.h
-+++ b/include/linux/dma/imx-dma.h
-@@ -70,6 +70,16 @@ static inline int imx_dma_is_general_purpose(struct dma_chan *chan)
-  * struct sdma_peripheral_config - SDMA config for audio
-  * @n_fifos_src: Number of FIFOs for recording
-  * @n_fifos_dst: Number of FIFOs for playback
-+ * @stride_fifos_src: FIFO address stride for recording, 0 means all FIFOs are
-+ *                    continuous, 1 means 1 word stride between FIFOs. All stride
-+ *                    between FIFOs should be same.
-+ * @stride_fifos_dst: FIFO address stride for playback
-+ * @words_per_fifo: numbers of words per FIFO fetch/fill, 1 means
-+ *                  one channel per FIFO, 2 means 2 channels per FIFO..
-+ *                  If 'n_fifos_src =  4' and 'words_per_fifo = 2', it
-+ *                  means the first two words(channels) fetch from FIFO0
-+ *                  and then jump to FIFO1 for next two words, and so on
-+ *                  after the last FIFO3 fetched, roll back to FIFO0.
-  * @sw_done: Use software done. Needed for PDM (micfil)
-  *
-  * Some i.MX Audio devices (SAI, micfil) have multiple successive FIFO
-@@ -82,6 +92,9 @@ static inline int imx_dma_is_general_purpose(struct dma_chan *chan)
- struct sdma_peripheral_config {
- 	int n_fifos_src;
- 	int n_fifos_dst;
-+	int stride_fifos_src;
-+	int stride_fifos_dst;
-+	int words_per_fifo;
- 	bool sw_done;
- };
- 
+ 	writel_relaxed(addr,             ad->base + REG_DESC_WRITE(channo));
 -- 
-2.17.1
+2.34.3
 

@@ -2,190 +2,162 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46A3454689F
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jun 2022 16:44:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49E3E54771A
+	for <lists+dmaengine@lfdr.de>; Sat, 11 Jun 2022 20:19:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239476AbiFJOof (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 10 Jun 2022 10:44:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41742 "EHLO
+        id S229951AbiFKSTg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 11 Jun 2022 14:19:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348201AbiFJOo2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Jun 2022 10:44:28 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D49E31E6F88
-        for <dmaengine@vger.kernel.org>; Fri, 10 Jun 2022 07:44:22 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id 187so24020512pfu.9
-        for <dmaengine@vger.kernel.org>; Fri, 10 Jun 2022 07:44:22 -0700 (PDT)
+        with ESMTP id S229898AbiFKSTg (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 11 Jun 2022 14:19:36 -0400
+Received: from mail-oa1-x30.google.com (mail-oa1-x30.google.com [IPv6:2001:4860:4864:20::30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0F7320F4F
+        for <dmaengine@vger.kernel.org>; Sat, 11 Jun 2022 11:19:34 -0700 (PDT)
+Received: by mail-oa1-x30.google.com with SMTP id 586e51a60fabf-e93bbb54f9so3213013fac.12
+        for <dmaengine@vger.kernel.org>; Sat, 11 Jun 2022 11:19:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gGXmxiPiq/H1UclMpVPv5/Qgfv06wSp3ksL9v9oLJgc=;
-        b=bZRdzxBN7gMLZi4+/x+OVWdO8Cd8DRvRKJ3ZFBiiUVqxmiW3fmbankCJjLDq9LfF+8
-         ci0xANErpGOXSnk7DpMOACO5MlDA+/N5gtJshZaSvKD2YStHViDZli1vrxT4b/uhcXgf
-         Ml3wTvLKSptzRQEr442XA36K95P8i+p2i1EAw=
+        d=kali.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=r17snX+1CJhT3VmJw3mp5dS1V2P55fF3SOw7ALhy79o=;
+        b=Wm0Buxc1kpff5ZqSS5cNUYXQv33z8vgTxHCWjEm264FoGRHl7IufZbtu6B7zYx2cGa
+         r5L6ypdpMXTZfVJpyUYBiuMpkJD6gLQ6j2YApWr9uY9fBlbgyLhF2L+2CR3OO5UpiRWP
+         PcxZiX7SlnyyFrG/aqyNQuYlWDS8x6PQ5s5cA4GCSIOpWiUrQte6G5mC8Q0Yq1aG0o2C
+         PnBYnHbvco8hrrqjLURKvWb6kc7BDcxbSvJ5ClCgwsk+Zkf/g9V/gRaag0lbXxWmqyaP
+         VduAC8DpVUI7P5PLcBdTXj9AF1s0o+M7WKVwqV1XRzM3W+zM7biTsTvFWndHMtM3ijYp
+         5Kaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gGXmxiPiq/H1UclMpVPv5/Qgfv06wSp3ksL9v9oLJgc=;
-        b=zDKnwtyPm14Po6XrdpGXvi1DWRYaCTtows5DWqsnoe8h05WIgVvR7GFCG4aB3+t3E5
-         JLO+KQfDykOapMf6VSsRKBa/uTpodtcAininHTHOOxesUYALAb7vkIngsBO3CgDf00Oa
-         /OTLtAjVWCX42cv5TyOQjSsfPLW/tRldgg0wKUmSsCxkwigWCNrQazWqHEtyRqtyeq85
-         6yAW0lHK5l1L9iHSnmtXKKQ/IHwOtFGlijGeR7C5jbSIBwc8ZD1rX7uH1aaeN22cWNmb
-         agaotFuV4W9O/DEyBxCvayvUeyKFCS1VbHVk9iFsTFiAmBzzpihWuErl4drELc6RC/RR
-         KJTQ==
-X-Gm-Message-State: AOAM532CNIM/cNWSwXTfnbxsM6Xv1fqhRsKpOuc4WDbuq/fz3HIPVyPL
-        NKYFJ2TRe8iaSfmnwMjVl52VovqrsjVn8/5gzDnxMTy726o=
-X-Google-Smtp-Source: ABdhPJw4wcjZSOMWeVevnGECplKcQZYTs22PVBsIbmPSyjOHqhMtqvvKvcsYCz1Wm3UM/2xfLr8+s/JQ/74QhCOoSgU=
-X-Received: by 2002:a05:6a00:2402:b0:4e1:3df2:5373 with SMTP id
- z2-20020a056a00240200b004e13df25373mr113238475pfh.40.1654872262293; Fri, 10
- Jun 2022 07:44:22 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=r17snX+1CJhT3VmJw3mp5dS1V2P55fF3SOw7ALhy79o=;
+        b=0IibR2M6bVF3r+0iPw0AJTXtNzBbPa8QUq8Eg8PIN4jFxOi1h4kAGoENUiv0WPO606
+         fj9vbwmFQMlD8W1CzXKbC4Zn74ZUHE0GSezkvj52Zj/Cc6wAf5l41iAZdkFJtZdrx1bN
+         tvkSMSywKEKQTbywtOCWKXol7Vk4wekEvlNeFkMxCQF7QtkXk6C4oNwybVHs0huEayo6
+         tlBPSr3iNGM8SaG2YBOWTKpLN4giTtrkauB4ms+jIueMu3CL9R43Z/NeYShJZmBbm3iT
+         p/1uyou6UiZzorf6UEVRnZICNivZrrmO4a5xId/d0adITwV+ey80aL9SRhF3wDXZTJbF
+         nW5A==
+X-Gm-Message-State: AOAM533It9lxF7t/jPOAJ2U7tT/PIK9k6cxWYnr5gsfbXm9zQz5ZES9K
+        FMMF3h3HVoGih+d0nDUP5aFjVw==
+X-Google-Smtp-Source: ABdhPJw9wW0v+7X7Ti52yfdwpcIcu2d7tm+laTtRoHNn9hqddgAfa+6is/cZbU1XYjRlUedi2U3EjA==
+X-Received: by 2002:a05:6870:e2cc:b0:f5:dca0:95dc with SMTP id w12-20020a056870e2cc00b000f5dca095dcmr3235200oad.160.1654971573965;
+        Sat, 11 Jun 2022 11:19:33 -0700 (PDT)
+Received: from [192.168.11.16] (cpe-173-173-107-246.satx.res.rr.com. [173.173.107.246])
+        by smtp.gmail.com with ESMTPSA id bx36-20020a0568081b2400b00325cda1ffa6sm1209993oib.37.2022.06.11.11.19.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 11 Jun 2022 11:19:30 -0700 (PDT)
+Message-ID: <03923830-c3ae-6ef8-890a-361341c18e95@kali.org>
+Date:   Sat, 11 Jun 2022 13:19:27 -0500
 MIME-Version: 1.0
-References: <20220607095829.1035903-1-dario.binacchi@amarulasolutions.com>
- <YqGJnORzbp2xiEU3@matsya> <CAOf5uwkxit8kAAmwWGgTqR57m_SRmAxere10rCucOuBHU5+8fw@mail.gmail.com>
- <YqGODNACHfKKHBOf@matsya> <CAOf5uw=8j1F3tLE9fLAjFGhVt4WXsU7GJdCkEhPtAAxvzM2fyg@mail.gmail.com>
- <YqNLmixdb3fv7Cgs@matsya>
-In-Reply-To: <YqNLmixdb3fv7Cgs@matsya>
-From:   Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Date:   Fri, 10 Jun 2022 16:44:10 +0200
-Message-ID: <CAOf5uwmYCi0EfOL7M5yKpN8U5Hidn8uTpGwh_dZMHu8ZNioGEw@mail.gmail.com>
-Subject: Re: [RESEND PATCH v2] dmaengine: mxs: fix driver registering
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-        linux-kernel@vger.kernel.org,
-        Amarula patchwork <linux-amarula@amarulasolutions.com>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.10.0
+Subject: Re: [PATCH] dmaengine: qcom: bam_dma: fix runtime PM underflow
+Content-Language: en-US
+To:     Caleb Connolly <caleb.connolly@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220609195043.1544625-1-caleb.connolly@linaro.org>
+From:   Steev Klimaszewski <steev@kali.org>
+In-Reply-To: <20220609195043.1544625-1-caleb.connolly@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-HI
+Hi Caleb,
 
-On Fri, Jun 10, 2022 at 3:48 PM Vinod Koul <vkoul@kernel.org> wrote:
+On 6/9/22 2:50 PM, Caleb Connolly wrote:
+> When PM runtime is disabled, pm_runtime_get() isn't called, but
+> pm_runtime_put() still is. Fix this by creating a matching wrapper
+> on pm_runtime_put_autosuspend().
 >
-> On 09-06-22, 08:18, Michael Nazzareno Trimarchi wrote:
-> > Hi Vinod
-> >
-> > On Thu, Jun 9, 2022 at 8:07 AM Vinod Koul <vkoul@kernel.org> wrote:
-> > >
-> > > On 09-06-22, 08:01, Michael Nazzareno Trimarchi wrote:
-> > > > Hi
-> > > >
-> > > > On Thu, Jun 9, 2022 at 7:48 AM Vinod Koul <vkoul@kernel.org> wrote:
-> > > > >
-> > > > > On 07-06-22, 11:58, Dario Binacchi wrote:
-> > > > > > Driver registration fails on SOC imx8mn as its supplier, the clock
-> > > > > > control module, is not ready. Since platform_driver_probe(), as
-> > > > > > reported by its description, is incompatible with deferred probing,
-> > > > > > we have to use platform_driver_register().
-> > > > > >
-> > > > > > Fixes: a580b8c5429a ("dmaengine: mxs-dma: add dma support for i.MX23/28")
-> > > > > > Co-developed-by: Michael Trimarchi <michael@amarulasolutions.com>
-> > > > > > Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-> > > > > > Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-> > > > > > Cc: stable@vger.kernel.org
-> > > > > >
-> > > > > > ---
-> > > > > >
-> > > > > > Changes in v2:
-> > > > > > - Add the tag "Cc: stable@vger.kernel.org" in the sign-off area.
-> > > > > >
-> > > > > >  drivers/dma/mxs-dma.c | 11 ++++-------
-> > > > > >  1 file changed, 4 insertions(+), 7 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
-> > > > > > index 994fc4d2aca4..b8a3e692330d 100644
-> > > > > > --- a/drivers/dma/mxs-dma.c
-> > > > > > +++ b/drivers/dma/mxs-dma.c
-> > > > > > @@ -670,7 +670,7 @@ static enum dma_status mxs_dma_tx_status(struct dma_chan *chan,
-> > > > > >       return mxs_chan->status;
-> > > > > >  }
-> > > > > >
-> > > > > > -static int __init mxs_dma_init(struct mxs_dma_engine *mxs_dma)
-> > > > > > +static int mxs_dma_init(struct mxs_dma_engine *mxs_dma)
-> > > > >
-> > > > > why drop __init for these...?
-> > > > >
-> > > >
-> > > > I think that you refer to the fact that it can not be compiled as a
-> > > > module, am I right?
-> > >
-> > > It is still declared as a module_platform_driver... From changelog I can
-> > > understand that you are changing init level from subsys to module (in
-> > > fact clocks should be moved up as arch level and dmaengine users as
-> > > module) ...
-> >
-> > The way the driver was using to register was:
-> > platform_driver_probe(&driver, driver_probe);
-> >
-> > The function try to register the driver, one time and if the
-> > dependences is not satisfied,
-> > then there will not a next try, so the driver initialized that way can
-> > not depends to anything
-> > apart himself, or all the dependencies should be ready at the time the
-> > driver_probe is called
+> Fixes: dbad41e7bb5f ("dmaengine: qcom: bam_dma: check if the runtime pm enabled")
+> Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
+> ---
+>   drivers/dma/qcom/bam_dma.c | 18 +++++++++++++-----
+>   1 file changed, 13 insertions(+), 5 deletions(-)
 >
-> There are two ways to solve this, you lowered the init level of this
-> driver but your consumers are going to have same issue...
->
+> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+> index 87f6ca1541cf..a36dedee262e 100644
+> --- a/drivers/dma/qcom/bam_dma.c
+> +++ b/drivers/dma/qcom/bam_dma.c
+> @@ -566,6 +566,14 @@ static int bam_pm_runtime_get_sync(struct device *dev)
+>   	return 0;
+>   }
+>   
+> +static int bam_pm_runtime_put_autosuspend(struct device *dev)
+> +{
+> +	if (pm_runtime_enabled(dev))
+> +		return pm_runtime_put_autosuspend(dev);
+> +
+> +	return 0;
+> +}
+> +
+>   /**
+>    * bam_free_chan - Frees dma resources associated with specific channel
+>    * @chan: specified channel
+> @@ -617,7 +625,7 @@ static void bam_free_chan(struct dma_chan *chan)
+>   
+>   err:
+>   	pm_runtime_mark_last_busy(bdev->dev);
+> -	pm_runtime_put_autosuspend(bdev->dev);
+> +	bam_pm_runtime_put_autosuspend(bdev->dev);
+>   }
+>   
+>   /**
+> @@ -793,7 +801,7 @@ static int bam_pause(struct dma_chan *chan)
+>   	bchan->paused = 1;
+>   	spin_unlock_irqrestore(&bchan->vc.lock, flag);
+>   	pm_runtime_mark_last_busy(bdev->dev);
+> -	pm_runtime_put_autosuspend(bdev->dev);
+> +	bam_pm_runtime_put_autosuspend(bdev->dev);
+>   
+>   	return 0;
+>   }
+> @@ -819,7 +827,7 @@ static int bam_resume(struct dma_chan *chan)
+>   	bchan->paused = 0;
+>   	spin_unlock_irqrestore(&bchan->vc.lock, flag);
+>   	pm_runtime_mark_last_busy(bdev->dev);
+> -	pm_runtime_put_autosuspend(bdev->dev);
+> +	bam_pm_runtime_put_autosuspend(bdev->dev);
+>   
+>   	return 0;
+>   }
+> @@ -936,7 +944,7 @@ static irqreturn_t bam_dma_irq(int irq, void *data)
+>   	}
+>   
+>   	pm_runtime_mark_last_busy(bdev->dev);
+> -	pm_runtime_put_autosuspend(bdev->dev);
+> +	bam_pm_runtime_put_autosuspend(bdev->dev);
+>   
+>   	return IRQ_HANDLED;
+>   }
+> @@ -1111,7 +1119,7 @@ static void bam_start_dma(struct bam_chan *bchan)
+>   			bam_addr(bdev, bchan->id, BAM_P_EVNT_REG));
+>   
+>   	pm_runtime_mark_last_busy(bdev->dev);
+> -	pm_runtime_put_autosuspend(bdev->dev);
+> +	bam_pm_runtime_put_autosuspend(bdev->dev);
+>   }
+>   
+>   /**
 
-Consumers are platform drivers that support -EPROBE_DEFER. Is a problem
-this approach?
-
-> >
-> > >
-> > > But why remove __init declaration from these? Whatever purpose that may
-> > > solve needs to be documented in changelog and perhaps a different patch
-> > >
-> >
-> > I was thinking that driver can be compiled as module as other driver
-> > but is bool and not tristate
->
-> Ok, but why drop __init()
-
-Was a mistake. Things marked as __init are dropped in the init
-section. As I said this driver
-can not be a .ko and must be in the kernel image, the __init can stay
-there. Now I don't remember
-how init section are used when a part of the kernel is compiled as
-module, but anyway this driver
-as only one initialization time
-
-Sorry Vinod, but if you are not happy with the answer, I have the
-feeling that you need to give more large
-lesson on this topic
-
-Michael
+I've tested this patch here and no longer see the logs filling up with 
+messages about Runtime PM underflows.  Tested on the Lenovo Yoga C630.
 
 
->
-> --
-> ~Vinod
+Tested-by: Steev Klimaszewski <steev@kali.org>
 
-
-
--- 
-Michael Nazzareno Trimarchi
-Co-Founder & Chief Executive Officer
-M. +39 347 913 2170
-michael@amarulasolutions.com
-__________________________________
-
-Amarula Solutions BV
-Joop Geesinkweg 125, 1114 AB, Amsterdam, NL
-T. +31 (0)85 111 9172
-info@amarulasolutions.com
-www.amarulasolutions.com

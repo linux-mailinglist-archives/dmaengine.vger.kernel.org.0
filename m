@@ -2,70 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BC5F547CC0
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Jun 2022 00:24:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99DFB5496FE
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Jun 2022 18:35:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237640AbiFLWYj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 12 Jun 2022 18:24:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40524 "EHLO
+        id S1350671AbiFMMZd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 13 Jun 2022 08:25:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237179AbiFLWYa (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 12 Jun 2022 18:24:30 -0400
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ACC52603;
-        Sun, 12 Jun 2022 15:24:28 -0700 (PDT)
-Received: from hednb3.intra.ispras.ru (unknown [109.252.137.140])
-        by mail.ispras.ru (Postfix) with ESMTPSA id 1E71A40D403E;
-        Sun, 12 Jun 2022 22:24:15 +0000 (UTC)
-From:   Alexey Khoroshilov <khoroshilov@ispras.ru>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org, ldv-project@linuxtesting.org
-Subject: [PATCH] dmaengine: stm32-mdma: Remove dead code in stm32_mdma_irq_handler()
-Date:   Mon, 13 Jun 2022 01:23:58 +0300
-Message-Id: <1655072638-9103-1-git-send-email-khoroshilov@ispras.ru>
-X-Mailer: git-send-email 2.7.4
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S1352058AbiFMMXR (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Jun 2022 08:23:17 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82B9857B2C;
+        Mon, 13 Jun 2022 04:03:35 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id v1so10361577ejg.13;
+        Mon, 13 Jun 2022 04:03:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=nv9GoUVVH7uRngOuTp8r8JipwSDkMSqF8EwMKb+wLjQ=;
+        b=lweX4JOSNaCRO5akyTwcDXVA1trQpJ8i34ZEq//MqQludDHkLoAcUsFfNktCjrL36n
+         DlMlsw71gE6bD4QA98ucWCDTp7TpJBjCRr2odbvNUJNXsBWMV+mJ3Mk6JRMtVYS8Nesb
+         VDhl9nH0jH5lWd8uaCfJTzwOkKWUtbHL2DH7BbbGGuY5pYqvByfwsP9q8ypUMMCUQNVM
+         d5eEFH3oXFx0Z9HtF7SSBdvBhi/oGL4wvyt137LHiQyViFivBy6rsBxDS9164VrNNl+f
+         DiUire1aWv9MtGN+SM6xufyO0HNOzLXdEUOOe6ABJtwqgtO7uqFbligoHR7RbLLgtcLE
+         FdDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nv9GoUVVH7uRngOuTp8r8JipwSDkMSqF8EwMKb+wLjQ=;
+        b=K5HhGJ1xnr8fg8D3aKFh8TwZdzNcA5VwhDhXhpo+lSxCpZ44rPBc6MchQaRcoCGMOy
+         y7o9bo8oyaylr75WqAohyKLh23MXusXoHVW1iiwF38EgIb8/W12OOW0rzQCyV5+iSrKJ
+         H3s7371/lcRFQ/mrvCmzbvK6q6PpODGF6kg14OLOsIyuZyLN11TRoApQDdhoEPqSxyqE
+         aj+872pkLRyKrqumWXFslvH2um4TkOezuJZ6X7a8nZ3sOwTFpOSjVG1GQLjnfuq2FgzA
+         Wtu9so+glPuBVsMf/UYe2sBxNJh4guC4b/34fVIrdNSyd69ndyBhTCgd9QUPD0qucsZ8
+         tsYw==
+X-Gm-Message-State: AOAM532QoV1VdJ57Ku5+osrJuEsDRGV8gQKXpE1GCQfxhtnKLU43+gsk
+        pMLJCaq7S9PxXREiUyQ4VUPb1YdbvxI=
+X-Google-Smtp-Source: ABdhPJyXoqR/cTKe5JJi789/bBIvh5hbOg5YgsB7TVy/RWs76LGLvkgiAs1muSzKlmw1BJjamCkPrA==
+X-Received: by 2002:a17:906:ca91:b0:70d:52ca:7e7d with SMTP id js17-20020a170906ca9100b0070d52ca7e7dmr46766653ejb.552.1655118214288;
+        Mon, 13 Jun 2022 04:03:34 -0700 (PDT)
+Received: from felia.fritz.box (200116b8260df50089ef6db2443adc92.dip.versatel-1u1.de. [2001:16b8:260d:f500:89ef:6db2:443a:dc92])
+        by smtp.gmail.com with ESMTPSA id o1-20020a1709064f8100b006f3ef214de7sm3721575eju.77.2022.06.13.04.03.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jun 2022 04:03:33 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: add include/dt-bindings/dma to DMA GENERIC OFFLOAD ENGINE SUBSYSTEM
+Date:   Mon, 13 Jun 2022 13:03:26 +0200
+Message-Id: <20220613110326.18126-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Local variable chan is initialized by an address of element of chan array
-that is part of stm32_mdma_device struct, so it does not make sense to
-compare chan with NULL.
+Maintainers of the directory Documentation/devicetree/bindings/dma
+are also the maintainers of the corresponding directory
+include/dt-bindings/dma.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+Add the file entry for include/dt-bindings/dma to the appropriate
+section in MAINTAINERS.
 
-Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
-Fixes: a4ffb13c8946 ("dmaengine: Add STM32 MDMA driver")
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 ---
- drivers/dma/stm32-mdma.c | 5 -----
- 1 file changed, 5 deletions(-)
+Vinod, please pick this MAINTAINERS addition to your section.
 
-diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
-index caf0cce8f528..b11927ed4367 100644
---- a/drivers/dma/stm32-mdma.c
-+++ b/drivers/dma/stm32-mdma.c
-@@ -1328,12 +1328,7 @@ static irqreturn_t stm32_mdma_irq_handler(int irq, void *devid)
- 		return IRQ_NONE;
- 	}
- 	id = __ffs(status);
--
- 	chan = &dmadev->chan[id];
--	if (!chan) {
--		dev_warn(mdma2dev(dmadev), "MDMA channel not initialized\n");
--		return IRQ_NONE;
--	}
- 
- 	/* Handle interrupt for the channel */
- 	spin_lock(&chan->vchan.lock);
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a8d243668992..1adf8767422b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5966,6 +5966,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git
+ F:	Documentation/devicetree/bindings/dma/
+ F:	Documentation/driver-api/dmaengine/
+ F:	drivers/dma/
++F:	include/dt-bindings/dma/
+ F:	include/linux/dma/
+ F:	include/linux/dmaengine.h
+ F:	include/linux/of_dma.h
 -- 
-2.7.4
+2.17.1
 

@@ -2,93 +2,194 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99DFB5496FE
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Jun 2022 18:35:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 581BD54AC0E
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jun 2022 10:41:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350671AbiFMMZd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 13 Jun 2022 08:25:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54732 "EHLO
+        id S1355697AbiFNIlT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 14 Jun 2022 04:41:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352058AbiFMMXR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Jun 2022 08:23:17 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82B9857B2C;
-        Mon, 13 Jun 2022 04:03:35 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id v1so10361577ejg.13;
-        Mon, 13 Jun 2022 04:03:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=nv9GoUVVH7uRngOuTp8r8JipwSDkMSqF8EwMKb+wLjQ=;
-        b=lweX4JOSNaCRO5akyTwcDXVA1trQpJ8i34ZEq//MqQludDHkLoAcUsFfNktCjrL36n
-         DlMlsw71gE6bD4QA98ucWCDTp7TpJBjCRr2odbvNUJNXsBWMV+mJ3Mk6JRMtVYS8Nesb
-         VDhl9nH0jH5lWd8uaCfJTzwOkKWUtbHL2DH7BbbGGuY5pYqvByfwsP9q8ypUMMCUQNVM
-         d5eEFH3oXFx0Z9HtF7SSBdvBhi/oGL4wvyt137LHiQyViFivBy6rsBxDS9164VrNNl+f
-         DiUire1aWv9MtGN+SM6xufyO0HNOzLXdEUOOe6ABJtwqgtO7uqFbligoHR7RbLLgtcLE
-         FdDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nv9GoUVVH7uRngOuTp8r8JipwSDkMSqF8EwMKb+wLjQ=;
-        b=K5HhGJ1xnr8fg8D3aKFh8TwZdzNcA5VwhDhXhpo+lSxCpZ44rPBc6MchQaRcoCGMOy
-         y7o9bo8oyaylr75WqAohyKLh23MXusXoHVW1iiwF38EgIb8/W12OOW0rzQCyV5+iSrKJ
-         H3s7371/lcRFQ/mrvCmzbvK6q6PpODGF6kg14OLOsIyuZyLN11TRoApQDdhoEPqSxyqE
-         aj+872pkLRyKrqumWXFslvH2um4TkOezuJZ6X7a8nZ3sOwTFpOSjVG1GQLjnfuq2FgzA
-         Wtu9so+glPuBVsMf/UYe2sBxNJh4guC4b/34fVIrdNSyd69ndyBhTCgd9QUPD0qucsZ8
-         tsYw==
-X-Gm-Message-State: AOAM532QoV1VdJ57Ku5+osrJuEsDRGV8gQKXpE1GCQfxhtnKLU43+gsk
-        pMLJCaq7S9PxXREiUyQ4VUPb1YdbvxI=
-X-Google-Smtp-Source: ABdhPJyXoqR/cTKe5JJi789/bBIvh5hbOg5YgsB7TVy/RWs76LGLvkgiAs1muSzKlmw1BJjamCkPrA==
-X-Received: by 2002:a17:906:ca91:b0:70d:52ca:7e7d with SMTP id js17-20020a170906ca9100b0070d52ca7e7dmr46766653ejb.552.1655118214288;
-        Mon, 13 Jun 2022 04:03:34 -0700 (PDT)
-Received: from felia.fritz.box (200116b8260df50089ef6db2443adc92.dip.versatel-1u1.de. [2001:16b8:260d:f500:89ef:6db2:443a:dc92])
-        by smtp.gmail.com with ESMTPSA id o1-20020a1709064f8100b006f3ef214de7sm3721575eju.77.2022.06.13.04.03.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jun 2022 04:03:33 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: add include/dt-bindings/dma to DMA GENERIC OFFLOAD ENGINE SUBSYSTEM
-Date:   Mon, 13 Jun 2022 13:03:26 +0200
-Message-Id: <20220613110326.18126-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S1353729AbiFNIlA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Jun 2022 04:41:00 -0400
+Received: from mta-01.yadro.com (mta-02.yadro.com [89.207.88.252])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C16632A0
+        for <dmaengine@vger.kernel.org>; Tue, 14 Jun 2022 01:40:32 -0700 (PDT)
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 94FA842486
+        for <dmaengine@vger.kernel.org>; Tue, 14 Jun 2022 08:40:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received:received; s=mta-01; t=1655196029; x=
+        1657010430; bh=pOWO5hgc75axpRyBMjnOfOPevFW7nwL569aKMrIMaf8=; b=i
+        C517OhY76ihqgm9sgYzeSCWAxXu5pTCCLOxOPj/1VMNXMJR1zv8UvaR0s4wGVaU6
+        waMEY0NyAumDw8EpHGipqqvi+a2t8j1BMDrgoPDdBxzmJtzl3SbI+nipeV/b00ic
+        E/6J9hRWtxffA5C1YHyHxSCRaWrofcTh5+PD2M+2E8=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Vz1eP23V5-y5 for <dmaengine@vger.kernel.org>;
+        Tue, 14 Jun 2022 11:40:29 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 403CF421C2
+        for <dmaengine@vger.kernel.org>; Tue, 14 Jun 2022 11:40:29 +0300 (MSK)
+Received: from T-Exch-05.corp.yadro.com (172.17.10.109) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Tue, 14 Jun 2022 11:40:29 +0300
+Received: from v.yadro.com (10.178.114.10) by T-Exch-05.corp.yadro.com
+ (172.17.10.109) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3; Tue, 14 Jun 2022
+ 11:40:28 +0300
+From:   Viacheslav Mitrofanov <v.v.mitrofanov@yadro.com>
+To:     <dmaengine@vger.kernel.org>
+CC:     <linux@yadro.com>, Viacheslav Mitrofanov <v.v.mitrofanov@yadro.com>
+Subject: [PATCH RESEND] dmaengine: sf-pdma: Add multithread support for a DMA channel
+Date:   Tue, 14 Jun 2022 11:40:09 +0300
+Message-ID: <20220614084009.70694-1-v.v.mitrofanov@yadro.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.178.114.10]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-Exch-05.corp.yadro.com (172.17.10.109)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Maintainers of the directory Documentation/devicetree/bindings/dma
-are also the maintainers of the corresponding directory
-include/dt-bindings/dma.
+When we get a DMA channel and try to use it in multiple threads it
+will cause oops and hanging the system.
 
-Add the file entry for include/dt-bindings/dma to the appropriate
-section in MAINTAINERS.
+% echo 64 > /sys/module/dmatest/parameters/threads_per_chan
+% echo 10000 > /sys/module/dmatest/parameters/iterations
+% echo 1 > /sys/module/dmatest/parameters/run
+[   89.480664] Unable to handle kernel NULL pointer dereference at virtual
+               address 00000000000000a0
+[   89.488725] Oops [#1]
+[   89.494708] CPU: 2 PID: 1008 Comm: dma0chan0-copy0 Not tainted
+               5.17.0-rc5
+[   89.509385] epc : vchan_find_desc+0x32/0x46
+[   89.513553]  ra : sf_pdma_tx_status+0xca/0xd6
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+This happens because of data race. Each thread rewrite channels's
+descriptor as soon as device_prep_dma_memcpy() is called. It leads to the
+situation when the driver thinks that it uses right descriptor that
+actually is freed or substituted for other one.
+
+With current fixes a descriptor changes its value only when it has
+been used. A new descriptor is acquired from vc->desc_issued queue that
+is already filled with descriptors that are ready to be sent. Threads
+have no direct access to DMA channel descriptor. Now it is just possible
+to queue a descriptor for further processing.
+
+Fixes: 6973886ad58e ("dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00")
+Signed-off-by: Viacheslav Mitrofanov <v.v.mitrofanov@yadro.com>
 ---
-Vinod, please pick this MAINTAINERS addition to your section.
+ drivers/dma/sf-pdma/sf-pdma.c | 44 ++++++++++++++++++++++++-----------
+ 1 file changed, 30 insertions(+), 14 deletions(-)
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a8d243668992..1adf8767422b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5966,6 +5966,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git
- F:	Documentation/devicetree/bindings/dma/
- F:	Documentation/driver-api/dmaengine/
- F:	drivers/dma/
-+F:	include/dt-bindings/dma/
- F:	include/linux/dma/
- F:	include/linux/dmaengine.h
- F:	include/linux/of_dma.h
+diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+index f12606aeff87..70bb032c59c2 100644
+--- a/drivers/dma/sf-pdma/sf-pdma.c
++++ b/drivers/dma/sf-pdma/sf-pdma.c
+@@ -52,16 +52,6 @@ static inline struct sf_pdma_desc *to_sf_pdma_desc(struct virt_dma_desc *vd)
+ static struct sf_pdma_desc *sf_pdma_alloc_desc(struct sf_pdma_chan *chan)
+ {
+ 	struct sf_pdma_desc *desc;
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&chan->lock, flags);
+-
+-	if (chan->desc && !chan->desc->in_use) {
+-		spin_unlock_irqrestore(&chan->lock, flags);
+-		return chan->desc;
+-	}
+-
+-	spin_unlock_irqrestore(&chan->lock, flags);
+ 
+ 	desc = kzalloc(sizeof(*desc), GFP_NOWAIT);
+ 	if (!desc)
+@@ -111,7 +101,6 @@ sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,	dma_addr_t dest, dma_addr_t src,
+ 	desc->async_tx = vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
+ 
+ 	spin_lock_irqsave(&chan->vchan.lock, iflags);
+-	chan->desc = desc;
+ 	sf_pdma_fill_desc(desc, dest, src, len);
+ 	spin_unlock_irqrestore(&chan->vchan.lock, iflags);
+ 
+@@ -170,11 +159,17 @@ static size_t sf_pdma_desc_residue(struct sf_pdma_chan *chan,
+ 	unsigned long flags;
+ 	u64 residue = 0;
+ 	struct sf_pdma_desc *desc;
+-	struct dma_async_tx_descriptor *tx;
++	struct dma_async_tx_descriptor *tx = NULL;
+ 
+ 	spin_lock_irqsave(&chan->vchan.lock, flags);
+ 
+-	tx = &chan->desc->vdesc.tx;
++	list_for_each_entry(vd, &chan->vchan.desc_submitted, node)
++		if (vd->tx.cookie == cookie)
++			tx = &vd->tx;
++
++	if (!tx)
++		goto out;
++
+ 	if (cookie == tx->chan->completed_cookie)
+ 		goto out;
+ 
+@@ -241,6 +236,19 @@ static void sf_pdma_enable_request(struct sf_pdma_chan *chan)
+ 	writel(v, regs->ctrl);
+ }
+ 
++static struct sf_pdma_desc *sf_pdma_get_first_pending_desc(struct sf_pdma_chan *chan)
++{
++	struct virt_dma_chan *vchan = &chan->vchan;
++	struct virt_dma_desc *vdesc;
++
++	if (list_empty(&vchan->desc_issued))
++		return NULL;
++
++	vdesc = list_first_entry(&vchan->desc_issued, struct virt_dma_desc, node);
++
++	return container_of(vdesc, struct sf_pdma_desc, vdesc);
++}
++
+ static void sf_pdma_xfer_desc(struct sf_pdma_chan *chan)
+ {
+ 	struct sf_pdma_desc *desc = chan->desc;
+@@ -268,8 +276,11 @@ static void sf_pdma_issue_pending(struct dma_chan *dchan)
+ 
+ 	spin_lock_irqsave(&chan->vchan.lock, flags);
+ 
+-	if (vchan_issue_pending(&chan->vchan) && chan->desc)
++	if ((chan->desc == NULL) && vchan_issue_pending(&chan->vchan)) {
++		/* vchan_issue_pending has made a check that desc in not NULL */
++		chan->desc = sf_pdma_get_first_pending_desc(chan);
+ 		sf_pdma_xfer_desc(chan);
++	}
+ 
+ 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+ }
+@@ -298,6 +309,11 @@ static void sf_pdma_donebh_tasklet(struct tasklet_struct *t)
+ 	spin_lock_irqsave(&chan->vchan.lock, flags);
+ 	list_del(&chan->desc->vdesc.node);
+ 	vchan_cookie_complete(&chan->desc->vdesc);
++
++	chan->desc = sf_pdma_get_first_pending_desc(chan);
++	if (chan->desc)
++		sf_pdma_xfer_desc(chan);
++
+ 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+ }
+ 
 -- 
-2.17.1
+2.25.1
 

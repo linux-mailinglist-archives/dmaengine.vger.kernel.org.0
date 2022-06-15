@@ -2,181 +2,126 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D9F554D271
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Jun 2022 22:23:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3195B54D346
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Jun 2022 23:05:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236585AbiFOUXt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 15 Jun 2022 16:23:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48254 "EHLO
+        id S1345108AbiFOVFS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 15 Jun 2022 17:05:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231317AbiFOUXs (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Jun 2022 16:23:48 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4F814FC45;
-        Wed, 15 Jun 2022 13:23:47 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id d13so11317573plh.13;
-        Wed, 15 Jun 2022 13:23:47 -0700 (PDT)
+        with ESMTP id S1347669AbiFOVFQ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Jun 2022 17:05:16 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B34FB2E9F8
+        for <dmaengine@vger.kernel.org>; Wed, 15 Jun 2022 14:05:15 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id k5-20020a17090a404500b001e8875e6242so3144203pjg.5
+        for <dmaengine@vger.kernel.org>; Wed, 15 Jun 2022 14:05:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p8R5wkbZD5wZONN+h5D0aBjo4LSrB4lxzGhWSHOloRM=;
-        b=dS58LuwnCBY84xcngeX1qBATP+ApeouKJOm/qDXgFfp2B93n34gH94kQC7vljQbiC3
-         dEY7q27TDvxHZCb8flJ9S3obqQJ7bXOaL2I48dGiSPXZOeXdWlgBl9EKKTQF7+Rv3O4B
-         cdfzKZrxEjEXwdRtSfq7mDGj8F6RKKMRLA8DD/ztMrQWFYFCI9vRn8P68bY/8VtO8kVs
-         1NDhpCFmxs/e1GNYOXDG6mD3M/ZnXW1mBnuda8ijgTCfLG8Jetfb5OFs6bFH49+tz8J8
-         wTdxSO5mtlrN5T4VCd0XgEhtn0HNWVfG5F8B/sYk813Bbc3Dj6Vo8fUflb6XHvIOGFB5
-         vPeA==
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=nSPGzfTdZ9LfoOSqIU6EOVEMTSn+8rXd/OcMmHhdRhA=;
+        b=SOMOfzNOEUkBuuBnOrR5RTa6rJffV6+Ngvrq9Yo+bQvLfiiuKPusw6MyqE2JjFK791
+         cu/E/2IDmPD/mfDAsU0A+uJvql58unDxr1ovqwFEfTHzBoULxjdbACa2fl0KBjXJVZP8
+         1wiGEJRBTny54swVMGmUotUJuI6S2TnDHt4lRZvq1V77GQoPYQD6iRdiPLvtMGoQSHUO
+         jC5BCI5T+P+2UwY5eBkJnOTZKmp8UaiZ/0mn1Fjp6JkJT98uQIG+pXXcejb4Od6y1+Q2
+         W4ZK+y7h+roufFwASTDkiZPldmpc9fW3WmW0v31OUBYpSvLixEdF80nsWaQUmwdGe/VC
+         C1JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p8R5wkbZD5wZONN+h5D0aBjo4LSrB4lxzGhWSHOloRM=;
-        b=NNPL+V6cfdfnwdFRFgnlxw1nwV66IiMhDfL0NgT3dM7cDzYXI2uBjuLtUSl0hgOMx/
-         0nbhMsVHMj26TI2U556P9c8FeNgs6Gi2zs+SLmBDKkVD+EGnaTEowI+ZvntMbIAbd9Tn
-         McXex9naOOrBsxcjR48+gGdoidPJ/gXY7iAR8/cHjYShX+xYWMUghxz9qFcmssgEZTWT
-         yE2VeTJpbKjIXy9DjGdh0iRNxD3K9a7n6r3umuvfw+7/gQLCLTRW88LF5UYFpkMHDZls
-         VSzszhtnrKt6cnfEsubIQhRwPvpcQ9yHprqG9tpzhXDZuanGF28qit3xphCZyXhEFfw6
-         DFVw==
-X-Gm-Message-State: AJIora/pj9AMC5j9mmNwnKYx0LySxJHfwzAaojPfmGGbtdyub2kSyIoj
-        kjSX5OYNxxSzj6DH0yE6hHzE1iy1oV44aUbEg6g=
-X-Google-Smtp-Source: AGRyM1vP5vP5DaQBNyi/UoS78+PNNUPHfdApS1HLqVaZov4JkRrQCkAscCX4mkcI2aQNoH49DCQBhibPI7/UcAYpqT0=
-X-Received: by 2002:a17:903:22d0:b0:164:ec0:178c with SMTP id
- y16-20020a17090322d000b001640ec0178cmr1330595plg.127.1655324627035; Wed, 15
- Jun 2022 13:23:47 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=nSPGzfTdZ9LfoOSqIU6EOVEMTSn+8rXd/OcMmHhdRhA=;
+        b=udZ5qqNG3f7wIb0/lyeUTQjtgmc4rYyA0q0UdkKK6gHndP4Qkusb1Axy69OT0mxC04
+         rK8WOIrcHMyVyMCdJgXH5Mf+q5C+s+GlWfaKvJhGTmIt83A86MzmSVecGToP6WqdvIbo
+         l0Afirq2cLOcJa60PUdtjnIgFKxoFJTLP24/Cr9v+QJo4iFfIzsLQtYBZc5ShYQzcNg7
+         SpDf7OC/TkY14laAwl+FyfqMa26AopsCjkTqvnMSivmIVskomQRiKPWjc9dhGyw+/x9E
+         KDPeEDWUlEjOETsPa9TT2FJcrJgGzJMwSjiWeUZoQOWUmD5B83xnBKnJSRlWFUJSEabe
+         /6+A==
+X-Gm-Message-State: AJIora/ZmTtH0keCGXAvCky4fo2bacY/3LLpv9qC4/3SzqikR/vUoyTG
+        7R7IP1aoCj/cjDSc6S3TBImO+Q==
+X-Google-Smtp-Source: AGRyM1toehBrqqaMQr374mrNlBFnfbhQiBAgvhLstQXz4lea94d8XdLlbwxJ4Mn+NBAsGnu054oJHA==
+X-Received: by 2002:a17:902:d2c9:b0:167:1195:3a41 with SMTP id n9-20020a170902d2c900b0016711953a41mr1424179plc.126.1655327115240;
+        Wed, 15 Jun 2022 14:05:15 -0700 (PDT)
+Received: from [172.22.33.138] ([192.77.111.2])
+        by smtp.gmail.com with ESMTPSA id w9-20020a17090a780900b001ead46e77e2sm39944pjk.13.2022.06.15.14.05.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jun 2022 14:05:14 -0700 (PDT)
+Message-ID: <7cc9c5d2-0c42-f24f-1611-0190b24504be@linaro.org>
+Date:   Wed, 15 Jun 2022 14:05:14 -0700
 MIME-Version: 1.0
-References: <20220524152159.2370739-1-Frank.Li@nxp.com> <20220525092306.wuansog6fe2ika3b@mobilestation>
- <CAHrpEqSa1JM8sm0QShCSXi++y9gVo9q5TmxPqwWiDADCrptrJw@mail.gmail.com> <CAHrpEqRMpq+-H97Jm2F0c=0ey_3NsqgCvbTiBDA=vz2p4K+uZQ@mail.gmail.com>
-In-Reply-To: <CAHrpEqRMpq+-H97Jm2F0c=0ey_3NsqgCvbTiBDA=vz2p4K+uZQ@mail.gmail.com>
-From:   Zhi Li <lznuaa@gmail.com>
-Date:   Wed, 15 Jun 2022 15:23:36 -0500
-Message-ID: <CAHrpEqTpo8FS9NmOUQ3Lknr4QO0vgDFxTY-R4vn_gL4KM8_-OQ@mail.gmail.com>
-Subject: Re: [PATCH v12 0/8] Enable designware PCI EP EDMA locally
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Frank Li <Frank.Li@nxp.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        hongxing.zhu@nxp.com, Lucas Stach <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH] dt-bindings: dma: rework qcom,adm Documentation to yaml
+ schema
+Content-Language: en-US
+To:     Christian 'Ansuel' Marangi <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Vinod Koul <vkoul@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220615175043.20166-1-ansuelsmth@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220615175043.20166-1-ansuelsmth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, May 31, 2022 at 9:02 AM Zhi Li <lznuaa@gmail.com> wrote:
->
-> On Wed, May 25, 2022 at 9:41 AM Zhi Li <lznuaa@gmail.com> wrote:
-> >
-> > On Wed, May 25, 2022 at 4:23 AM Serge Semin <fancer.lancer@gmail.com> wrote:
-> > >
-> > > Hello Vinod
-> > >
-> > > On Tue, May 24, 2022 at 10:21:51AM -0500, Frank Li wrote:
-> > > > Default Designware EDMA just probe remotely at host side.
-> > > > This patch allow EDMA driver can probe at EP side.
-> > > >
-> > > > 1. Clean up patch
-> > > >    dmaengine: dw-edma: Detach the private data and chip info structures
-> > > >    dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
-> > > >    dmaengine: dw-edma: Change rg_region to reg_base in struct
-> > > >    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> > > >
-> > > > 2. Enhance EDMA driver to allow prode eDMA at EP side
-> > > >    dmaengine: dw-edma: Add support for chip specific flags
-> > > >    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific
-> > > > flags (this patch removed at v11 because dma tree already have fixed
-> > > > patch)
-> > > >
-> > > > 3. Bugs fix at EDMA driver when probe eDMA at EP side
-> > > >    dmaengine: dw-edma: Fix programming the source & dest addresses for
-> > > > ep
-> > > >    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
-> > > >
-> > > > 4. change pci-epf-test to use EDMA driver to transfer data.
-> > > >    PCI: endpoint: Add embedded DMA controller test
-> > > >
-> > > > 5. Using imx8dxl to do test, but some EP functions still have not
-> > > > upstream yet. So below patch show how probe eDMA driver at EP
-> > > > controller driver.
-> > > > https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
-> > >
-> > > This series has been on review for over three months now. It has got
-> > > several acks, rb and tb tags from me, Manivannan and Kishon (the last
-> > > patch in the series). Seeing Gustavo hasn't been active for all that time
-> > > at all and hasn't performed any review for more than a year the
-> > > probability of getting his attention soon enough is almost zero. Thus
-> > > could you please give your acks if you are ok with the series content. Due
-> > > to having several more patchsets dependent on this one, Bjorn has agreed
-> > > to merge this series in through the PCI tree:
-> > > https://lore.kernel.org/linux-pci/20220524155201.GA247821@bhelgaas/
-> > > So the only thing we need is your ack tags.
-> > >
-> > > @Frank. Should there be a new patchset revision could you please add a
-> > > request to merge the series in to the PCI tree? I am a bit tired repeating
-> > > the same messages each time the new mailing review lap.)
-> >
-> > The key is to need Vinod to say something
-> >
-> > Best regards
-> > Frank Li.
->
-> @Vinod Kou:
->        These patches were well reviewed by Serge Semin,  Bjorn,
-> Manivannan Sadhasivam, Kishon Vijay Abraham and tested on 3 platforms.
->        Pending on your opinion because it touch file under /driver/dma/dw_edma/*
+On 15/06/2022 10:50, Christian 'Ansuel' Marangi wrote:
+> Rework the qcom,adm Documentation to yaml schema.
+> This is not a pure conversion since originally the driver has changed
+> implementation for the #dma-cells and was wrong from the start.
+> Also the driver now handles the common DMA clients implementation with
+> the first cell that denotes the channel number and nothing else since
+> the client will have to provide the crci information via other means.
+> 
+> Signed-off-by: Christian 'Ansuel' Marangi <ansuelsmth@gmail.com>
 
-@vinod kou:
-      friendly ping.
+Drop the quotes please.
 
->
-> best regards
-> Frank Li
->
-> >
-> > >
-> > > -Sergey
-> > >
-> > > >
-> > > > Frank Li (6):
-> > > >   dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
-> > > >   dmaengine: dw-edma: Detach the private data and chip info structures
-> > > >   dmaengine: dw-edma: Change rg_region to reg_base in struct
-> > > >     dw_edma_chip
-> > > >   dmaengine: dw-edma: Rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
-> > > >     dw_edma_chip
-> > > >   dmaengine: dw-edma: Add support for chip specific flags
-> > > >   PCI: endpoint: Enable DMA tests for endpoints with DMA capabilities
-> > > >
-> > > > Serge Semin (2):
-> > > >   dmaengine: dw-edma: Drop dma_slave_config.direction field usage
-> > > >   dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction
-> > > >     semantics
-> > > >
-> > > >  drivers/dma/dw-edma/dw-edma-core.c            | 141 +++++++++++-------
-> > > >  drivers/dma/dw-edma/dw-edma-core.h            |  31 +---
-> > > >  drivers/dma/dw-edma/dw-edma-pcie.c            |  83 +++++------
-> > > >  drivers/dma/dw-edma/dw-edma-v0-core.c         |  41 ++---
-> > > >  drivers/dma/dw-edma/dw-edma-v0-core.h         |   4 +-
-> > > >  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      |  18 +--
-> > > >  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   8 +-
-> > > >  drivers/pci/endpoint/functions/pci-epf-test.c | 112 ++++++++++++--
-> > > >  include/linux/dma/edma.h                      |  59 +++++++-
-> > > >  9 files changed, 317 insertions(+), 180 deletions(-)
-> > > >
-> > > > --
-> > > > 2.35.1
-> > > >
+As discussed in other patch - trust for me is broken and I have no clue
+which identity is real.
+
+> ---
+>  .../devicetree/bindings/dma/qcom,adm.yaml     | 95 +++++++++++++++++++
+>  .../devicetree/bindings/dma/qcom_adm.txt      | 61 ------------
+>  2 files changed, 95 insertions(+), 61 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/qcom,adm.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/dma/qcom_adm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/qcom,adm.yaml b/Documentation/devicetree/bindings/dma/qcom,adm.yaml
+> new file mode 100644
+> index 000000000000..77096a7c9405
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/qcom,adm.yaml
+> @@ -0,0 +1,95 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/qcom,adm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm ADM DMA Controller
+> +
+> +maintainers:
+> +  - Christian 'Ansuel' Marangi <ansuelsmth@gmail.com>
+
+Add Bjorn here.
+
+> +
+
+
+Best regards,
+Krzysztof

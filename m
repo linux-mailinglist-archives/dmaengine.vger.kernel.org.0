@@ -2,52 +2,56 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 226AD54E32C
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Jun 2022 16:17:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AC2954E36C
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Jun 2022 16:30:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376985AbiFPORK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Jun 2022 10:17:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54414 "EHLO
+        id S233798AbiFPOa1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 16 Jun 2022 10:30:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233436AbiFPORJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Jun 2022 10:17:09 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09DD3344C6;
-        Thu, 16 Jun 2022 07:17:09 -0700 (PDT)
+        with ESMTP id S233439AbiFPOa1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Jun 2022 10:30:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E4EE12D37;
+        Thu, 16 Jun 2022 07:30:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AD619B8216D;
-        Thu, 16 Jun 2022 14:17:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC2E2C34114;
-        Thu, 16 Jun 2022 14:17:05 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F234F61DBE;
+        Thu, 16 Jun 2022 14:30:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D5B3C3411A;
+        Thu, 16 Jun 2022 14:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655389026;
-        bh=4N0hBtR+SyS25pTqTpY1XXhf0OdTDS8HRBE+v+SkUaU=;
+        s=k20201202; t=1655389824;
+        bh=A/lQ0Yx89n2HEiSHLL64szIEZKxnSxO5J1hh1VcewWE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VU2a/TXPByQwnAX7hH2naRcQHMYUTMhF1YLcALCrrLHhovVp/GLqM+6+b7gwLFRDA
-         /pTXQE4B8T3waGUgshRjaEIZK0l0z0GUJTVhHq7Yq+qbljhu5d+Bm0ujVqOw8MoubK
-         4GVKzdCQ65tCJ4+bsH3uc/JSJ4yZe2d7Tz+5+GPc6ObWb8Ii0yAjXRB5UASFPyg6nx
-         CbQOnSQCmi0NcWY9PNbilmjeFNZad4M1AvNal16z8T83TZFSJyThfml1Usthi9B/Gy
-         a+yasFWIttcRUy4NKt+aGl8NUMegAXBkEHZ2/zoaluHy9NrAjcz5ov15x8tKMgkUAG
-         +DpEU4Pu5zAXg==
-Date:   Thu, 16 Jun 2022 07:17:05 -0700
+        b=T/0NoEAIMqEP258x0JsV14Qoz9E7J5Ugw0wvyqQ04+O8HVJvCFrLxMlJju1Laq82n
+         epUQ1jjXVhiLAWKr0oP+D7zn+lOj0Lg3L8muhazoHbjRHoTlfNTQS//VhZBncQguvE
+         rcxQ9fzSjfWORtWm8xYc77w21q+gg7zWzsupIxlhq8gCgtErWgdilLwoOubx0jeX05
+         nQiOb8M8gLJ1D4rpJ7gKD2c4Ix16tOUttY3y46oi02jWPWvI+NC0I4LCKdQFhy01gW
+         Qq5MMzWBHC2Fw77Rm75mji/OSr66zfLy2itWb+MzupoJ+PtFGYdzXGDlzlZ8EjrsQS
+         UbX/upVXO0Hng==
+Date:   Thu, 16 Jun 2022 07:30:23 -0700
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dmaengine: apple-admac: Use {low,upp}er_32_bits() to
- split 64-bit address
-Message-ID: <Yqs7YSR12L42zFL5@matsya>
-References: <20220616141312.1953819-1-geert@linux-m68k.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Frank Li <Frank.Li@nxp.com>, gustavo.pimentel@synopsys.com,
+        hongxing.zhu@nxp.com, l.stach@pengutronix.de, linux-imx@nxp.com,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        lznuaa@gmail.com, helgaas@kernel.org, kishon@ti.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, manivannan.sadhasivam@linaro.org,
+        Sergey.Semin@baikalelectronics.ru
+Subject: Re: [PATCH v12 0/8] Enable designware PCI EP EDMA locally
+Message-ID: <Yqs+f7siPc5hJRm5@matsya>
+References: <20220524152159.2370739-1-Frank.Li@nxp.com>
+ <Yqs1e4RMpc6ynVDN@matsya>
+ <20220616135413.a4jmljwgzgpkp2uc@mobilestation>
+ <20220616140157.dghcapsf7i7ccyo2@mobilestation>
+ <20220616140314.nyr4owq2m2z4xtcm@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220616141312.1953819-1-geert@linux-m68k.org>
+In-Reply-To: <20220616140314.nyr4owq2m2z4xtcm@mobilestation>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -58,18 +62,61 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 16-06-22, 16:13, Geert Uytterhoeven wrote:
-> If CONFIG_PHYS_ADDR_T_64BIT is not set:
+On 16-06-22, 17:03, Serge Semin wrote:
+> On Thu, Jun 16, 2022 at 05:02:00PM +0300, Serge Semin wrote:
+> > On Thu, Jun 16, 2022 at 04:54:13PM +0300, Serge Semin wrote:
+> > > On Thu, Jun 16, 2022 at 06:51:55AM -0700, Vinod Koul wrote:
+> > > > On 24-05-22, 10:21, Frank Li wrote:
+> > > > > Default Designware EDMA just probe remotely at host side.
+> > > > > This patch allow EDMA driver can probe at EP side.
+> > > > > 
+> > > > > 1. Clean up patch
+> > > > >    dmaengine: dw-edma: Detach the private data and chip info structures
+> > > > >    dmaengine: dw-edma: Remove unused field irq in struct dw_edma_chip
+> > > > >    dmaengine: dw-edma: Change rg_region to reg_base in struct
+> > > > >    dmaengine: dw-edma: rename wr(rd)_ch_cnt to ll_wr(rd)_cnt in struct
+> > > > > 
+> > > > > 2. Enhance EDMA driver to allow prode eDMA at EP side
+> > > > >    dmaengine: dw-edma: Add support for chip specific flags
+> > > > >    dmaengine: dw-edma: Add DW_EDMA_CHIP_32BIT_DBI for chip specific
+> > > > > flags (this patch removed at v11 because dma tree already have fixed
+> > > > > patch)
+> > > > > 
+> > > > > 3. Bugs fix at EDMA driver when probe eDMA at EP side
+> > > > >    dmaengine: dw-edma: Fix programming the source & dest addresses for
+> > > > > ep
+> > > > >    dmaengine: dw-edma: Don't rely on the deprecated "direction" member
+> > > > > 
+> > > > > 4. change pci-epf-test to use EDMA driver to transfer data.
+> > > > >    PCI: endpoint: Add embedded DMA controller test
+> > > > > 
+> > > > > 5. Using imx8dxl to do test, but some EP functions still have not
+> > > > > upstream yet. So below patch show how probe eDMA driver at EP
+> > > > > controller driver.
+> > > > > https://lore.kernel.org/linux-pci/20220309120149.GB134091@thinkpad/T/#m979eb506c73ab3cfca2e7a43635ecdaec18d8097
+> > > > 
+> > > 
+> > > > Applied to dmaengine-next, thanks
+> > > 
+> > 
+> > > Vinod, this was supposed to be merged in through PCIe repo.( I asked
+> > > many times of that. Bjorn also agreed to merge it in. Could drop it
+> > > from yout repo?
+> > 
 > 
->     drivers/dma/apple-admac.c: In function ‘admac_cyclic_write_one_desc’:
->     drivers/dma/apple-admac.c:213:22: error: right shift count >= width of type [-Werror=shift-count-overflow]
->       213 |  writel_relaxed(addr >> 32,       ad->base + REG_DESC_WRITE(channo));
->           |                      ^~
+> > I asked it several time including in the framework of this thread:
+> > https://lore.kernel.org/dmaengine/20220525092306.wuansog6fe2ika3b@mobilestation/
+> > There are dependencies of my patchsets from this one. Please consider
+> > dropping it from your dmaengine-next repo while it's still possible
+> > since taking DW eDMA and PCie patches through the PCie repo would be
+> > more natural.
 > 
-> Fix this by using the {low,upp}er_32_bits() helper macros to obtain the
-> address parts.
+> The only thing we were waiting for was you ack tag...
 
-Applied, thanks
+Is there any dependency, since this has many dmaengine patches and one
+pcie patch which was acked by Kishon, so can go thru dmaengine tree...
+
+I can drop if that suits all...
 
 -- 
 ~Vinod

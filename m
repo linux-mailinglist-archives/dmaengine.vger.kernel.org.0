@@ -2,124 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A587E54EFCA
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Jun 2022 05:42:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 958D454F702
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Jun 2022 13:50:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230032AbiFQDmO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Jun 2022 23:42:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40494 "EHLO
+        id S1382041AbiFQLut (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 17 Jun 2022 07:50:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbiFQDmM (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Jun 2022 23:42:12 -0400
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF4BA64D13;
-        Thu, 16 Jun 2022 20:42:11 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 56BD75C00CC;
-        Thu, 16 Jun 2022 23:42:11 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Thu, 16 Jun 2022 23:42:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
-        :message-id:mime-version:reply-to:sender:subject:subject:to:to;
-         s=fm3; t=1655437331; x=1655523731; bh=t1gILM+a5sDOSWsDsWFr57f86
-        QLkg7frBwJzEs01CII=; b=tCHDJakn7Bd+IibM5flhnH8eTvqERDp7Q0WHcwfaI
-        Viz6NyrT1g/A/aS0nfAQEXZ90DpfzkW+yDxU5kxzLLlGR5+lozlNX0i5cv8NGOZ0
-        HYH24QNKgkZQSeUNkFU88TXA6x4WVL0CaVkj3Bg0SolrAwF7BqTqJHGuRl/yNQz5
-        PQkjNYrpFR8jgTRS5ecTCfkXC4Bn4UPy/CtbxRFHMqXnxujPonVkVLAu5Q1Qz+TI
-        IkEHOhKkRyXZdJVNIC930L4b44zNluYHgahG8168X9O8ePrxK+QRiMlAvQ4e2eOM
-        KSH7dr8zClp2pHO8iyHLSjD3rgMKV3kahRU6waCsqhS1w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:message-id
-        :mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-        1655437331; x=1655523731; bh=t1gILM+a5sDOSWsDsWFr57f86QLkg7frBwJ
-        zEs01CII=; b=N7rNsjHy0bTYY8ZUQZ4OvCpJ7GbNfju+daNgvWf+eFgHxINNjo/
-        3WbyJXCOPDVys53CL7PXwfhm3n0USpkVtiUTmbfRMXXhZMs2eJUxIozu4HXwC8H9
-        0c8GpP2guJ8A/ckqpaSzhHZflv7m2voYCf/MzlqfFJ11lMDISOUwqtKQHtYKG2K4
-        mmoButoCsU/dFk4h7eGu4VJBvMa25YVYbmfjnuU9KGiNMPRICLukBnsnQgXEi1rc
-        7+fPpH0l2UkqWFYBLejx6hdg1BfZtdVZOeuV+smum6ouYfvt70JAPgAeeXa+LXIN
-        FvKHssRRYii0MtAHrwtqb9VYzo7Oc1oU9nQ==
-X-ME-Sender: <xms:E_irYpP_RbQfwzdSeK_XKR3VPBfmRkQ9weKOxh4scTh3YVOT7vR4Ow>
-    <xme:E_irYr__5QKofzrmFf0E28r5VjAvpUD8vWm8MJfvNpoihEjgaAPSLQRhiKCVsiQtb
-    UG2yE7FOPYUF0PHkw>
-X-ME-Received: <xmr:E_irYoTWJz1wSOh4p6l0zIeDdqm89WAGJKPLWxtoqakQYF_FWudcbU3Ih1AOpKNai2uo1NQPNILBxjJmIAJYhgH5aLq4RuiVGjQo7RsrhO9toyh4okHlx4oLiY4RBEsShT_fCg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedruddvgedgjeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
-    ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecuggftrf
-    grthhtvghrnhepkeevlefhjeeuleeltedvjedvfeefteegleehueejffehgffffeekhefh
-    hfekkeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    epshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
-X-ME-Proxy: <xmx:E_irYltaRFM9IsopLzXPHjDMYoUEn21epauftX5KAZOjBFG_cOHX8A>
-    <xmx:E_irYhf_b0-0nbzygD6sprHgPHZjnzophRwko1KOgYyBnrTjB_JlLg>
-    <xmx:E_irYh3j-A07RogbevLC3qu2J8IMFV84hi8rhjWcWK9em_itv6W9uw>
-    <xmx:E_irYpRvzuvalDXJN4xG0PM45InMrLj--f3fD60bTsmsPdBR4x8n0A>
-Feedback-ID: i0ad843c9:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 16 Jun 2022 23:42:10 -0400 (EDT)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     Samuel Holland <samuel@sholland.org>, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@lists.linux.dev
-Subject: [PATCH] dmaengine: sun6i: Set the maximum segment size
-Date:   Thu, 16 Jun 2022 22:42:09 -0500
-Message-Id: <20220617034209.57337-1-samuel@sholland.org>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S1382044AbiFQLut (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Jun 2022 07:50:49 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5378B6CF63
+        for <dmaengine@vger.kernel.org>; Fri, 17 Jun 2022 04:50:48 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1o2AUv-0007VZ-HO; Fri, 17 Jun 2022 13:50:45 +0200
+Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <sha@pengutronix.de>)
+        id 1o2AUt-00131d-65; Fri, 17 Jun 2022 13:50:44 +0200
+Received: from sha by dude02.red.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <sha@pengutronix.de>)
+        id 1o2AUu-00GneX-13; Fri, 17 Jun 2022 13:50:44 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     dmaengine@vger.kernel.org
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>, stable@vger.kernel.org
+Subject: [PATCH] dmaengine: imx-sdma: only restart cyclic channel when enabled
+Date:   Fri, 17 Jun 2022 13:50:42 +0200
+Message-Id: <20220617115042.4004062-1-s.hauer@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The sun6i DMA engine supports segment sizes up to 2^25-1 bytes. This is
-explicitly stated in newer SoC documentation (H6, D1), and it is implied
-in older documentation by the 25-bit width of the "bytes left in the
-current segment" register field.
+An interrupt for a channel might be pending even after struct
+dma_device::device_terminate_all has been called. In that case the
+recently introduced warning message "restart cyclic channel..." triggers
+and the channel will be restarted. This is not desired as the channel
+has just been stopped. Only restart the channel when we still have a
+descriptor set for it (which will be set to NULL in
+sdma_terminate_all()).
 
-Exposing the real segment size limit (instead of the 64k default)
-reduces the number of SG list segments needed for a transaction.
-
-Signed-off-by: Samuel Holland <samuel@sholland.org>
+Fixes: 5b215c28b9235 ("dmaengine: imx-sdma: restart cyclic channel if needed")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 ---
-Tested on A64, verified that the maximum ALSA PCM period increased, and
-that audio playback still worked.
+ drivers/dma/imx-sdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/dma/sun6i-dma.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index b7557f437936..1425f87d97b7 100644
---- a/drivers/dma/sun6i-dma.c
-+++ b/drivers/dma/sun6i-dma.c
-@@ -9,6 +9,7 @@
- 
- #include <linux/clk.h>
- #include <linux/delay.h>
-+#include <linux/dma-mapping.h>
- #include <linux/dmaengine.h>
- #include <linux/dmapool.h>
- #include <linux/interrupt.h>
-@@ -1334,6 +1335,8 @@ static int sun6i_dma_probe(struct platform_device *pdev)
- 	INIT_LIST_HEAD(&sdc->pending);
- 	spin_lock_init(&sdc->lock);
- 
-+	dma_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(25));
-+
- 	dma_cap_set(DMA_PRIVATE, sdc->slave.cap_mask);
- 	dma_cap_set(DMA_MEMCPY, sdc->slave.cap_mask);
- 	dma_cap_set(DMA_SLAVE, sdc->slave.cap_mask);
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 8535018ee7a2e..5356cce41bffc 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -891,7 +891,7 @@ static void sdma_update_channel_loop(struct sdma_channel *sdmac)
+ 	 * SDMA stops cyclic channel when DMA request triggers a channel and no SDMA
+ 	 * owned buffer is available (i.e. BD_DONE was set too late).
+ 	 */
+-	if (!is_sdma_channel_enabled(sdmac->sdma, sdmac->channel)) {
++	if (sdmac->desc && !is_sdma_channel_enabled(sdmac->sdma, sdmac->channel)) {
+ 		dev_warn(sdmac->sdma->dev, "restart cyclic channel %d\n", sdmac->channel);
+ 		sdma_enable_channel(sdmac->sdma, sdmac->channel);
+ 	}
 -- 
-2.35.1
+2.30.2
 

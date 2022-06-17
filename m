@@ -2,153 +2,124 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8645B54EF7B
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Jun 2022 05:39:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A587E54EFCA
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Jun 2022 05:42:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231591AbiFQCsl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Jun 2022 22:48:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60076 "EHLO
+        id S230032AbiFQDmO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 16 Jun 2022 23:42:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbiFQCsk (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Jun 2022 22:48:40 -0400
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4521464D0B
-        for <dmaengine@vger.kernel.org>; Thu, 16 Jun 2022 19:48:39 -0700 (PDT)
-Received: from [192.168.0.109] (unknown [123.112.64.211])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 1DA2C41624;
-        Fri, 17 Jun 2022 02:48:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1655434118;
-        bh=HTqXHz6GkB+YtCHIR+HMjRtZVlZiBa7737VLdNNigwU=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=Lmm24YBJwdRqwFXm0v5id3bTYuI/JNQXbLjbfCn903uG+CFM/AteWg7NSUDbzZD4P
-         XBdhTcF30dHdbUH51S+mRZtdzVTuvk/n4uxVA2+AeEcOWtlb9AjZMg67Uo/u58FrLl
-         SzwNYVagV8IqeAFIXW66tHSHSkfcbKhYx+lfhDXljZq2W9E2pdI5fIdM+69UDULJiy
-         17qGADDjmkwqt1a5jTfKXH/XMox/2Ex5PwG9KCj5RitnqxlL5SbodoS5MjMZq2aPyY
-         WYwjuuUOZl/4Zn+ZibuJPQlVqEXecvs/2FZy99B/uje9ruqIDOJmE7dx9umm+j3C7K
-         TQ/pMH2zWMUpQ==
-Message-ID: <48b9ef4e-fba1-58b0-d022-f52aa5993eab@canonical.com>
-Date:   Fri, 17 Jun 2022 10:48:33 +0800
+        with ESMTP id S229454AbiFQDmM (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Jun 2022 23:42:12 -0400
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF4BA64D13;
+        Thu, 16 Jun 2022 20:42:11 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 56BD75C00CC;
+        Thu, 16 Jun 2022 23:42:11 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Thu, 16 Jun 2022 23:42:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
+        :message-id:mime-version:reply-to:sender:subject:subject:to:to;
+         s=fm3; t=1655437331; x=1655523731; bh=t1gILM+a5sDOSWsDsWFr57f86
+        QLkg7frBwJzEs01CII=; b=tCHDJakn7Bd+IibM5flhnH8eTvqERDp7Q0WHcwfaI
+        Viz6NyrT1g/A/aS0nfAQEXZ90DpfzkW+yDxU5kxzLLlGR5+lozlNX0i5cv8NGOZ0
+        HYH24QNKgkZQSeUNkFU88TXA6x4WVL0CaVkj3Bg0SolrAwF7BqTqJHGuRl/yNQz5
+        PQkjNYrpFR8jgTRS5ecTCfkXC4Bn4UPy/CtbxRFHMqXnxujPonVkVLAu5Q1Qz+TI
+        IkEHOhKkRyXZdJVNIC930L4b44zNluYHgahG8168X9O8ePrxK+QRiMlAvQ4e2eOM
+        KSH7dr8zClp2pHO8iyHLSjD3rgMKV3kahRU6waCsqhS1w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:message-id
+        :mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+        1655437331; x=1655523731; bh=t1gILM+a5sDOSWsDsWFr57f86QLkg7frBwJ
+        zEs01CII=; b=N7rNsjHy0bTYY8ZUQZ4OvCpJ7GbNfju+daNgvWf+eFgHxINNjo/
+        3WbyJXCOPDVys53CL7PXwfhm3n0USpkVtiUTmbfRMXXhZMs2eJUxIozu4HXwC8H9
+        0c8GpP2guJ8A/ckqpaSzhHZflv7m2voYCf/MzlqfFJ11lMDISOUwqtKQHtYKG2K4
+        mmoButoCsU/dFk4h7eGu4VJBvMa25YVYbmfjnuU9KGiNMPRICLukBnsnQgXEi1rc
+        7+fPpH0l2UkqWFYBLejx6hdg1BfZtdVZOeuV+smum6ouYfvt70JAPgAeeXa+LXIN
+        FvKHssRRYii0MtAHrwtqb9VYzo7Oc1oU9nQ==
+X-ME-Sender: <xms:E_irYpP_RbQfwzdSeK_XKR3VPBfmRkQ9weKOxh4scTh3YVOT7vR4Ow>
+    <xme:E_irYr__5QKofzrmFf0E28r5VjAvpUD8vWm8MJfvNpoihEjgaAPSLQRhiKCVsiQtb
+    UG2yE7FOPYUF0PHkw>
+X-ME-Received: <xmr:E_irYoTWJz1wSOh4p6l0zIeDdqm89WAGJKPLWxtoqakQYF_FWudcbU3Ih1AOpKNai2uo1NQPNILBxjJmIAJYhgH5aLq4RuiVGjQo7RsrhO9toyh4okHlx4oLiY4RBEsShT_fCg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedruddvgedgjeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
+    ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecuggftrf
+    grthhtvghrnhepkeevlefhjeeuleeltedvjedvfeefteegleehueejffehgffffeekhefh
+    hfekkeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
+X-ME-Proxy: <xmx:E_irYltaRFM9IsopLzXPHjDMYoUEn21epauftX5KAZOjBFG_cOHX8A>
+    <xmx:E_irYhf_b0-0nbzygD6sprHgPHZjnzophRwko1KOgYyBnrTjB_JlLg>
+    <xmx:E_irYh3j-A07RogbevLC3qu2J8IMFV84hi8rhjWcWK9em_itv6W9uw>
+    <xmx:E_irYpRvzuvalDXJN4xG0PM45InMrLj--f3fD60bTsmsPdBR4x8n0A>
+Feedback-ID: i0ad843c9:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 16 Jun 2022 23:42:10 -0400 (EDT)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     Samuel Holland <samuel@sholland.org>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@lists.linux.dev
+Subject: [PATCH] dmaengine: sun6i: Set the maximum segment size
+Date:   Thu, 16 Jun 2022 22:42:09 -0500
+Message-Id: <20220617034209.57337-1-samuel@sholland.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH] dmaengine: imx-sdma: Setting DMA_PRIVATE capability
- during the probe
-Content-Language: en-US
-To:     dmaengine@vger.kernel.org, vkoul@kernel.org
-Cc:     s.hauer@pengutronix.de, shawnguo@kernel.org, hui.wang@canonical.com
-References: <20220524074933.38413-1-hui.wang@canonical.com>
-From:   Hui Wang <hui.wang@canonical.com>
-In-Reply-To: <20220524074933.38413-1-hui.wang@canonical.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Sorry, re-send the mail since the previous one contains the 
-html-subparts, it is banned by dmaengine mailist.
+The sun6i DMA engine supports segment sizes up to 2^25-1 bytes. This is
+explicitly stated in newer SoC documentation (H6, D1), and it is implied
+in older documentation by the 25-bit width of the "bytes left in the
+current segment" register field.
 
+Exposing the real segment size limit (instead of the 64k default)
+reduces the number of SG list segments needed for a transaction.
 
-Hi vkoul, hauer and shawnguo,
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+---
+Tested on A64, verified that the maximum ALSA PCM period increased, and
+that audio playback still worked.
 
-Could you take a look at this patch and the problem the patch plans to fix?
+ drivers/dma/sun6i-dma.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-It is easy to reproduce the problem on i.mx platforms, just enabling the 
-IMX_SDMA, ASYNC_CORE and ASYNC_TX_DMA as below:
+diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+index b7557f437936..1425f87d97b7 100644
+--- a/drivers/dma/sun6i-dma.c
++++ b/drivers/dma/sun6i-dma.c
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/clk.h>
+ #include <linux/delay.h>
++#include <linux/dma-mapping.h>
+ #include <linux/dmaengine.h>
+ #include <linux/dmapool.h>
+ #include <linux/interrupt.h>
+@@ -1334,6 +1335,8 @@ static int sun6i_dma_probe(struct platform_device *pdev)
+ 	INIT_LIST_HEAD(&sdc->pending);
+ 	spin_lock_init(&sdc->lock);
+ 
++	dma_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(25));
++
+ 	dma_cap_set(DMA_PRIVATE, sdc->slave.cap_mask);
+ 	dma_cap_set(DMA_MEMCPY, sdc->slave.cap_mask);
+ 	dma_cap_set(DMA_SLAVE, sdc->slave.cap_mask);
+-- 
+2.35.1
 
-CONFIG_MD=y
-CONFIG_BLK_DEV_MD=y
-CONFIG_MD_AUTODETECT=y
-CONFIG_MD_RAID456=y
-
-CONFIG_IMX_SDMA=y
-
-CONFIG_ASYNC_TX_DMA=y
-CONFIG_DMATEST=m
-CONFIG_DMA_ENGINE_RAID=y
-
-CONFIG_XOR_BLOCKS=y
-CONFIG_ASYNC_CORE=y
-CONFIG_ASYNC_MEMCPY=y
-CONFIG_ASYNC_XOR=y
-CONFIG_ASYNC_PQ=y
-CONFIG_ASYNC_RAID6_RECOV=y
-CONFIG_CRYPTO=y
-
-And this is the .config of the kernel which could reproduce the problem:
-
-https://pastebin.ubuntu.com/p/5Pb3JzrWJZ/
-
-
-And this is the dmesg of v5.19-rc2 on an i.mx6 platform, we could see 
-audio driver fails because of dma allocation:
-
-https://pastebin.ubuntu.com/p/rz7jsXgyJJ/
-
-[    5.779584] fsl-ssi-dai 202c000.ssi: Missing dma channel for stream: 0
-[    5.779601] fsl-ssi-dai 202c000.ssi: ASoC: error at 
-snd_soc_pcm_component_new on 202c000.ssi: -22
-[    5.779616] fsl-asoc-card sound-nau8822: ASoC: can't create pcm HiFi :-22
-[    5.784479] fsl-asoc-card sound-nau8822: error -EINVAL: 
-snd_soc_register_card failed
-[    5.784501] fsl-asoc-card: probe of sound-nau8822 failed with error -22
-
-And this problem also could be reproduced on i.mx8 platforms, If needing 
-me to provide log for i.mx8, let me know.
-
-Thanks,
-
-On 5/24/22 15:49, Hui Wang wrote:
-> We have an imx6sx EVB, the audio driver fails to get a valid dma chan
-> and the audio can't work at all on this board, below is the error log:
->   fsl-ssi-dai 202c000.ssi: Missing dma channel for stream: 0
->   202c000.ssi-nau8822-hifi: ASoC: pcm constructor failed: -22
->   asoc-simple-card sound: ASoC: can't create pcm 202c000.ssi-nau8822-hifi :-22
->
-> Then I checked the usage_count of each dma chan through sysfs, all
-> channels are occupied as below:
-> ubuntu@ubuntu:cd /sys/devices/platform/soc/2000000.bus/20ec000.sdma/dma
-> ubuntu@ubuntu:find . -iname in_use | xargs cat
-> 2
-> 2
-> 2
-> ...
->
-> Through debugging, we found the root cause, the
-> crypo/async_tx/async_tx.c calls the dmaengine_get() ahead of
-> registration of dma_device from imx-sdma.c. In the dmaengine_get(), the
-> dmaengine_ref_count will be increased, then in the
-> dma_async_device_register(), the client_count of each chan will be
-> increased.
->
-> To fix this issue, we could set DMA_PRIVATE to the dma_deivce before
-> registration.
->
-> Signed-off-by: Hui Wang <hui.wang@canonical.com>
-> ---
->   drivers/dma/imx-sdma.c | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> index 95367a8a81a5..aabe8a8069fb 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -2201,6 +2201,7 @@ static int sdma_probe(struct platform_device *pdev)
->   	for (i = 0; i < sizeof(*sdma->script_addrs) / sizeof(s32); i++)
->   		saddr_arr[i] = -EINVAL;
->   
-> +	dma_cap_set(DMA_PRIVATE, sdma->dma_device.cap_mask);
->   	dma_cap_set(DMA_SLAVE, sdma->dma_device.cap_mask);
->   	dma_cap_set(DMA_CYCLIC, sdma->dma_device.cap_mask);
->   	dma_cap_set(DMA_MEMCPY, sdma->dma_device.cap_mask);

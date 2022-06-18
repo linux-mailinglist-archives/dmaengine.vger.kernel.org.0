@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 379DD550492
-	for <lists+dmaengine@lfdr.de>; Sat, 18 Jun 2022 14:32:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 928F3550494
+	for <lists+dmaengine@lfdr.de>; Sat, 18 Jun 2022 14:32:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234630AbiFRMcM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 18 Jun 2022 08:32:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52638 "EHLO
+        id S234973AbiFRMcS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 18 Jun 2022 08:32:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232215AbiFRMcJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 18 Jun 2022 08:32:09 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C14E1D30B
-        for <dmaengine@vger.kernel.org>; Sat, 18 Jun 2022 05:32:08 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id c21so8820565wrb.1
-        for <dmaengine@vger.kernel.org>; Sat, 18 Jun 2022 05:32:08 -0700 (PDT)
+        with ESMTP id S234708AbiFRMcL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 18 Jun 2022 08:32:11 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66C271DA53
+        for <dmaengine@vger.kernel.org>; Sat, 18 Jun 2022 05:32:10 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id v14so8802310wra.5
+        for <dmaengine@vger.kernel.org>; Sat, 18 Jun 2022 05:32:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=conchuod.ie; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MzCNuZqg5sJhSSZ4d8it+v4YJ89K4kJOhMYbzqau3T0=;
-        b=Q/DW33pApkzDugaxPE3P0mBkLxqeHFjsQF8z1VV2ne8TRKuN2bIqDfzxsSTkLEjBrA
-         wpdDJgUWP+1wDHdQ9JS4O1x4Gq88lL49JAWRWB4H62ef/kDIyGqiJWklnIhvj7t3gOgQ
-         m1btN41fR+l8tqU5xRyuBWhlJfRunVaRxbUCkNPjxFxCR7fgJ76b5iLyDoxgvaEFgta2
-         Y7jzvGqyxY8ynrhbm2wsHOUw8jsjq4R2c+1hs16sLw8LkR/A8wnX+Rcz+CEvY4HTn+12
-         wA1hi5h2lS6EglrFG2mc1iaWo2T8RWK90k4OmUe37mNSSxwVnWaTmTTERIaDVuiKnqg6
-         uvGQ==
+        bh=Xc3yLaPJl3fJMhU7mLPNTXUDP5YmMspTrPH6skgYH5k=;
+        b=WWI5aigpx63NXABwWobIVtxzeWyDWABcTlqhEd7p5galGx1leb4l0QUX6DRW4V7R2/
+         7tCNkKvAuMxDi861SOauKvR8OiOrKRFQWKbf/UOyK4ZoNWlOxvSKeVmw3Pjw/ViKSDBb
+         bJGQhxOX2sak4JARX2cUY3oHghGpdM5DQO1bngmpG9k9r1Q9YO+8El+G/rDrBCypfz88
+         jYj4Hwbu5WXw7XC7sEypXuV849AqQEAwqdgU0LsiCYfp++8WMxNxdrDQLMOhAiSs1NIp
+         AxnI+k8juFNCyik85P9Aotl91uS4CXhVavQDoNI3Z5E9qqRGU5RemiTnsiZNhX6+GfbW
+         +y3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MzCNuZqg5sJhSSZ4d8it+v4YJ89K4kJOhMYbzqau3T0=;
-        b=NlR5NKio8HezxuwoYWzvnW6XRajEF3s6utEMTlC5gaK7+UUjr0vIBZn4a2pr9IZSYl
-         dBFvBFW0bslOZDLakOQCrInlQsbMSwUsU/pGe2qrL3yGGnO9IjL84xjIsOoMBQrRwJv+
-         FLCz3X6St9ym4Gb4fP7JSqxrMoaZ5UMFNFenkmZCAZhUcEwDaNEO1ZWuZj4UqhPDLo4j
-         TqbPryP4N5tsR0jQUVnbNWrvcaoGZi8AislUaGw74HvwJegL6o3xv5k8tiUi153yREIH
-         OEU8oPZRcmcX/kqWmGxvIxgwThjQayRrQdL1FK0G6Jj6srfjUXG/GzDIzJelVw+bAKN2
-         rBeA==
-X-Gm-Message-State: AJIora/VFvHgwnBMQT0cE5JFaBtYjTtRe1U7sTI8R+tTBx+N2TLebCem
-        esKAsmq5AUco+glWyUxIrp4pfA==
-X-Google-Smtp-Source: AGRyM1sSSQqHjZc3Rjokw1+aDQhZh51cPdEwrDgxvVJw3mbh+xunRoRwhQyu4jAgaA6W5FK27IHXAg==
-X-Received: by 2002:a5d:598e:0:b0:219:ea16:5a2a with SMTP id n14-20020a5d598e000000b00219ea165a2amr13955140wri.343.1655555528086;
-        Sat, 18 Jun 2022 05:32:08 -0700 (PDT)
+        bh=Xc3yLaPJl3fJMhU7mLPNTXUDP5YmMspTrPH6skgYH5k=;
+        b=7gYma4ZK2hvjxuoAjimQ9PHFi4kZ9Q98WsVZp3oov1nV5hyqcKFT7uQRBPC6uu+9Km
+         aOzWztAdYdEyNFdqO2fieF103aAtu/iY7XYk1ovpb9/CnhKc/DUiLQELEv/H5Y/3MKBO
+         2dQ/TShnyYPnSexDp8mVWIqQ4lrrBkSTjgZgjcOO0j/bedfrpz9bNZ9+Dx4FTMESfz/n
+         BqOKSMjFFzuxtJl4fk73iUYKPe5OK8tkMfIW+AYWIivyGzVtp6A9LrLgmvu380i8wsba
+         Sx3TArLN/MUnlZFcdUjmML/hKC+m5yDkST2ie7Mm1xH1pwF5embanwpKKxExtuTT7c3o
+         edXw==
+X-Gm-Message-State: AJIora+7XpDm5Htisp7NjC/CMJpM1InoI0IVCXfbHNGhyX3dsg0xIrO4
+        wT+sIEpoRWolFz7KSgnrHvGr0A==
+X-Google-Smtp-Source: AGRyM1vjUOgV8azxYb57OQztWrqMQYhc0lprasxXMnlkIZhmfHP3nu/9sasVI2/ycyhjwJt5Z7ma0Q==
+X-Received: by 2002:a05:6000:1789:b0:219:2aa8:7159 with SMTP id e9-20020a056000178900b002192aa87159mr13617696wrg.474.1655555529797;
+        Sat, 18 Jun 2022 05:32:09 -0700 (PDT)
 Received: from henark71.. ([51.37.234.167])
-        by smtp.gmail.com with ESMTPSA id az10-20020adfe18a000000b00210396b2eaesm9292305wrb.45.2022.06.18.05.32.06
+        by smtp.gmail.com with ESMTPSA id az10-20020adfe18a000000b00210396b2eaesm9292305wrb.45.2022.06.18.05.32.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Jun 2022 05:32:07 -0700 (PDT)
+        Sat, 18 Jun 2022 05:32:09 -0700 (PDT)
 From:   Conor Dooley <mail@conchuod.ie>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
@@ -76,9 +76,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
         linux-riscv@lists.infradead.org
-Subject: [PATCH 05/14] dt-bindings: timer: add Canaan k210 to Synopsys DesignWare timer
-Date:   Sat, 18 Jun 2022 13:30:27 +0100
-Message-Id: <20220618123035.563070-6-mail@conchuod.ie>
+Subject: [PATCH 06/14] spi: dt-bindings: dw-apb-ssi: update spi-{r,t}x-bus-width for dwc-ssi
+Date:   Sat, 18 Jun 2022 13:30:28 +0100
+Message-Id: <20220618123035.563070-7-mail@conchuod.ie>
 X-Mailer: git-send-email 2.36.1
 In-Reply-To: <20220618123035.563070-1-mail@conchuod.ie>
 References: <20220618123035.563070-1-mail@conchuod.ie>
@@ -96,78 +96,74 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Conor Dooley <conor.dooley@microchip.com>
 
-The Canaan k210 apparently has a Sysnopsys Designware timer but
-according to the documentation & devicetree it has 2 interrupts rather
-than the standard one. Add a custom compatible that supports the 2
-interrupt configuration and falls back to the standard binding (which
-is currently the one in use in the devicetree entry).
+snps,dwc-ssi-1.01a has a single user - the Canaan k210, which uses a
+width of 4 for spi-{r,t}x-bus-width. Update the binding to reflect
+this.
 
-Link: https://canaan-creative.com/wp-content/uploads/2020/03/kendryte_standalone_programming_guide_20190311144158_en.pdf #Page 58
 Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- .../bindings/timer/snps,dw-apb-timer.yaml     | 28 +++++++++++++++----
- 1 file changed, 22 insertions(+), 6 deletions(-)
+ .../bindings/spi/snps,dw-apb-ssi.yaml         | 48 ++++++++++++++-----
+ 1 file changed, 35 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/snps,dw-apb-timer.yaml b/Documentation/devicetree/bindings/timer/snps,dw-apb-timer.yaml
-index d33c9205a909..9a76acc7a66f 100644
---- a/Documentation/devicetree/bindings/timer/snps,dw-apb-timer.yaml
-+++ b/Documentation/devicetree/bindings/timer/snps,dw-apb-timer.yaml
-@@ -12,6 +12,9 @@ maintainers:
- properties:
-   compatible:
-     oneOf:
-+      - items:
-+          - const: canaan,k210-apb-timer
-+          - const: snps,dw-apb-timer
-       - const: snps,dw-apb-timer
-       - enum:
-           - snps,dw-apb-timer-sp
-@@ -21,9 +24,6 @@ properties:
-   reg:
-     maxItems: 1
+diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+index e25d44c218f2..f2b9e3f062cd 100644
+--- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
++++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+@@ -135,19 +135,41 @@ properties:
+       of the designware controller, and the upper limit is also subject to
+       controller configuration.
  
--  interrupts:
--    maxItems: 1
+-patternProperties:
+-  "^.*@[0-9a-f]+$":
+-    type: object
+-    properties:
+-      reg:
+-        minimum: 0
+-        maximum: 3
 -
-   resets:
-     maxItems: 1
- 
-@@ -41,7 +41,23 @@ properties:
- 
-   clock-frequency: true
- 
--additionalProperties: false
-+unevaluatedProperties: false
-+
+-      spi-rx-bus-width:
+-        const: 1
+-
+-      spi-tx-bus-width:
+-        const: 1
 +if:
 +  properties:
 +    compatible:
 +      contains:
-+        const: canaan,k210-apb-timer
++        const: snps,dwc-ssi-1.01a
 +
 +then:
-+  properties:
-+    interrupts:
-+      maxItems: 2
++  patternProperties:
++    "^.*@[0-9a-f]+$":
++      type: object
++      properties:
++        reg:
++          minimum: 0
++          maximum: 3
++
++        spi-rx-bus-width:
++          const: 4
++
++        spi-tx-bus-width:
++          const: 4
 +
 +else:
-+  properties:
-+    interrupts:
-+      maxItems: 1
++  patternProperties:
++    "^.*@[0-9a-f]+$":
++      type: object
++      properties:
++        reg:
++          minimum: 0
++          maximum: 3
++
++        spi-rx-bus-width:
++          const: 1
++
++        spi-tx-bus-width:
++          const: 1
  
- required:
-   - compatible
-@@ -60,8 +76,8 @@ oneOf:
- examples:
-   - |
-     timer@ffe00000 {
--      compatible = "snps,dw-apb-timer";
--      interrupts = <0 170 4>;
-+      compatible = "canaan,k210-apb-timer", "snps,dw-apb-timer";
-+      interrupts = <0 170 4>, <0 170 4>;
-       reg = <0xffe00000 0x1000>;
-       clocks = <&timer_clk>, <&timer_pclk>;
-       clock-names = "timer", "pclk";
+ unevaluatedProperties: false
+ 
 -- 
 2.36.1
 

@@ -2,169 +2,108 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA2A4550DB0
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Jun 2022 01:54:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81AD5550DCF
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Jun 2022 02:26:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236345AbiFSXyI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 19 Jun 2022 19:54:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51620 "EHLO
+        id S237016AbiFTAZv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 19 Jun 2022 20:25:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231539AbiFSXyH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 19 Jun 2022 19:54:07 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F90FA1A3;
-        Sun, 19 Jun 2022 16:54:04 -0700 (PDT)
+        with ESMTP id S236560AbiFTAZt (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 19 Jun 2022 20:25:49 -0400
+Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84688AE4C
+        for <dmaengine@vger.kernel.org>; Sun, 19 Jun 2022 17:25:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1655682844; x=1687218844;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=X0E5/e+BA22zMfK7GPDN+OLAJ1IVDcoPqGOBUxZjQWY=;
-  b=EaX7WJ1UUeBHXRe0ogJ7J0goiL9LnB1eN7j22MOM7s2KUvL4JF+VXjKk
-   6hO6H88/n04z2PvEzDSubVVKvXl9QO+kB/BDmTinasx+vpyJxTsoPStkA
-   cZ8RZQAW4hbt45/E2etj8CraAafrF1bSRRbMxvmT5A4gmUrng7z6pUkeH
-   KvRmy2D7kh9OG/jYxlp28Qpdmio9x7aKzBrGBUvwsaUq1FQeUUsHNWS3+
-   tkQJJQXkRLbyPwaXOzHy/qea83zGdZ3YOmP5mhhwYy+j0f7/96XQZWd5x
-   wLzzzCt99XayQRowxRrAup1k8tJMu97CM7cbgAlWlP0jgRGF510cXPyhM
-   w==;
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="100738154"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 Jun 2022 16:54:02 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Sun, 19 Jun 2022 16:54:02 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17 via Frontend Transport; Sun, 19 Jun 2022 16:54:02 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a8GcTKG/Hkw6X5fqDznmGV2u8T879aPb3DhGxBB9cm9xncbe6mm7JjkOpUvXpFBz+M+yrs2F7Mum41sncl2B1SiH46lJNjrCHQuifUptIWWR2YaoqaQomn+foXn4lyZsO8UdRyEwYHDbGTVtMXzCUiKk61M2Ttv/UWxfa0sPPuEOzExzNjkRM/D5egud/scwa3E9g6yiGF8bEhVDLhBAQxD2LubbLbJUvZpux2kC5AgJ891u4VEw8xQDQ3leTYeuNCYS3tWd0oRVOCgsNEjRtqPgyyy0WtDnEXjmv4B9WJQ/YWc2xJqhmz3cvugLO9BE2Dzb/Zr3M3CLYSfnlzSzeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=X0E5/e+BA22zMfK7GPDN+OLAJ1IVDcoPqGOBUxZjQWY=;
- b=NTq2uhz2CaANDvKfLF/6PPkaC59ORldrfMwUpGqrTGaO5sS9FXBmhCjJyhTLw3IL5OC9CCTDx0Z9c5KGGuShywTwpxYM/bt7Sl0mhmt5OFRKsxiLlvSH4lq8hNykGId9ajf5mwg+Rt0Fo5ErL4zXpfoPDfOvJNQVyyxDAQ1NI8VdXpAr5kcV8jM0ECeQLN57GR1UHO+F7U2/yvjAAFbmyQKmvkNfKpf4elav9YtWAsksfUY6+UXckmeOnUdH1W9AU+WqAD3KS4spSBaS0AQT7AWRrzKFvueASOxBu4FWwIc5Chu/Y8Wsi37MPZWOkuwsO53xMEc50EopgYOJFbVkoA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X0E5/e+BA22zMfK7GPDN+OLAJ1IVDcoPqGOBUxZjQWY=;
- b=apK8QV+EO2f0NqXAIcFtuvk755oPB7Dk9O46MaAotfmLmMznypA6n/w2SgdxpFmBz49A0WJaRMOQSkCtiKaR8bf4pDonJbxNS9aAn2CytvgtTNK2Tlaa6kE/3G0pAUSWhJD8GKvSbczcfpJGEx3gkBYewN8zDTIqD/3DNxswbJU=
-Received: from CO1PR11MB5154.namprd11.prod.outlook.com (2603:10b6:303:99::15)
- by BN9PR11MB5418.namprd11.prod.outlook.com (2603:10b6:408:11f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.15; Sun, 19 Jun
- 2022 23:54:00 +0000
-Received: from CO1PR11MB5154.namprd11.prod.outlook.com
- ([fe80::699b:5c23:de4f:2bfa]) by CO1PR11MB5154.namprd11.prod.outlook.com
- ([fe80::699b:5c23:de4f:2bfa%4]) with mapi id 15.20.5353.020; Sun, 19 Jun 2022
- 23:54:00 +0000
-From:   <Conor.Dooley@microchip.com>
-To:     <damien.lemoal@opensource.wdc.com>, <mail@conchuod.ie>,
-        <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <thierry.reding@gmail.com>,
-        <sam@ravnborg.org>, <Eugeniy.Paltsev@synopsys.com>,
-        <vkoul@kernel.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <fancer.lancer@gmail.com>, <daniel.lezcano@linaro.org>,
-        <palmer@dabbelt.com>, <palmer@rivosinc.com>
-CC:     <tglx@linutronix.de>, <paul.walmsley@sifive.com>,
-        <aou@eecs.berkeley.edu>, <masahiroy@kernel.org>,
-        <geert@linux-m68k.org>, <niklas.cassel@wdc.com>,
-        <dillon.minfei@gmail.com>, <jee.heng.sia@intel.com>,
-        <joabreu@synopsys.com>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-spi@vger.kernel.org>, <linux-riscv@lists.infradead.org>
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1655684748; x=1687220748;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=H0ulQrMBtA6pu622Zq7Ff/HeEgzOhbo0ZUSX4iWBZhA=;
+  b=bfIYx02+58JUqR+Lv5qP1Y3SDZ+1DbCdErqHT98/09I2vVdvSpoSiK4b
+   2sfUk/yqYm7E0o0ku+DKnXa3mVK7e8oqE6/DqjsLFClMw8HqAG02U4j9O
+   6SPgXeSeKAKwEW4dzzaNU1sk7n/twWt0nDUDG5qLaRp2mkOvUq2e65WC9
+   ge1IhU7b2z9Lri5B3eNfKcLe40jOgwCuR33FthGDRvdbhapAXh7uOC6bg
+   G3mqTlXfvXWIuqxIJsYUkn2bbkFyKgvifBhgafttZnremlKAWXN6MUCC3
+   3bGY05qG7LMveBnXF7xferzSTMOuC7G+ug98MXYvv8Nl7sC39EyRge+9L
+   A==;
+X-IronPort-AV: E=Sophos;i="5.92,306,1650902400"; 
+   d="scan'208";a="315672133"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 20 Jun 2022 08:25:47 +0800
+IronPort-SDR: pMmkeeyN37i6AGbO7X+Jhmw/CFW4mpRpUU8ZgJwbXn9O/jQjsRa4yV8sMkvfwKMNdJpg3REYyh
+ FLXOlFPkHT0Y1ckglTPGqhXPd3IYcE+hsDUu3M3snStrKrGmtc9SgMnbuXcQZsGGCzFzFxtg7F
+ VOnVD2h8rRbmFohXoLl+nR+TaRwAMm7uaYpk3uDh/7Upx6qFVwRgQVFnX/nxTWjFWflC0rGd8w
+ KL5Ce2GwrDvMlbXI8SMab75zfXUHIliDoq9hzaqJhNkMS5MlMK9mqUIxW1xQoluegFUirlLtq0
+ BIHI+/m1s+wPSPKM4NfL5i+U
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 19 Jun 2022 16:43:56 -0700
+IronPort-SDR: LdganiwAC2sRlKTJtI2XwUe3NPe1UWXjZdeMKR10XEfI/E8JMsVMW3OUbE1C/qnfzXZfjrLASX
+ bIcd8dSCzS89r7Qz+pQnAEveUT83DmJts67TnkIFSIQzhyZ8X8o1m0tJWnFZr4SBDjvdNKlaYl
+ dCy30h+9W7/QriHjHpElQaz6JZbyjWC9Thnk1cmlHQP/NAj9uOa3NV2XN8xQ883gpCIo3+O3ka
+ WnBNPc/BX5jTWSFH+lsMjn+C+MWwJOMOS9bD3ncNWRxni9m7h9AqWuWwF4tOBS58bioVp+6+NR
+ KLw=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 19 Jun 2022 17:25:47 -0700
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4LR9RG2hsZz1SVp4
+        for <dmaengine@vger.kernel.org>; Sun, 19 Jun 2022 17:25:46 -0700 (PDT)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)"
+        header.d=opensource.wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+        opensource.wdc.com; h=content-transfer-encoding:content-type
+        :in-reply-to:organization:from:references:to:content-language
+        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
+        1655684745; x=1658276746; bh=H0ulQrMBtA6pu622Zq7Ff/HeEgzOhbo0ZUS
+        X4iWBZhA=; b=jiZLlvSxMCZ6FyKEwxTD9KC+yR9WRhcg+KBamtfquRBI7vS8pGJ
+        mBX0zoQMpTkJaMFFdVJnj3t13KHqhbLZ0wxv4yH09WD5zap1Onl7UiZRRPdtTT8q
+        lRpIKFHnIHS6ATDMIB1EBmgVvIKlGPRbTBmO5z1aEaR53EnGopmn8GW5MfYpr+wV
+        dW8obWKceDCrsqysJgrYGk90jld2x82pjjO7GVot8iccx/JpoOjI3x1vD3Avo5Tq
+        8Z0iZwu+SbCnAqDIHlTu4eXzBK/+zo527aefCY9ZzO+FsC511gbTaO4E5/c48io7
+        0JzIK6++acSKredsKoDjpGQoBzQrwNc1phQ==
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id BSZ2u-ZOKesl for <dmaengine@vger.kernel.org>;
+        Sun, 19 Jun 2022 17:25:45 -0700 (PDT)
+Received: from [10.225.163.87] (unknown [10.225.163.87])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4LR9R75cZsz1Rvlc;
+        Sun, 19 Jun 2022 17:25:39 -0700 (PDT)
+Message-ID: <891cf74c-ac0a-b380-1d5f-dd7ce5aeda9d@opensource.wdc.com>
+Date:   Mon, 20 Jun 2022 09:25:38 +0900
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
 Subject: Re: [PATCH 07/14] riscv: dts: canaan: fix the k210's memory node
-Thread-Topic: [PATCH 07/14] riscv: dts: canaan: fix the k210's memory node
-Thread-Index: AQHYgw905RVeuSLdkUCudsZPOTg0Ga1XZVUAgAAEPQA=
-Date:   Sun, 19 Jun 2022 23:54:00 +0000
-Message-ID: <e1fbf363-d057-1000-a846-3df524801f15@microchip.com>
+Content-Language: en-US
+To:     Conor.Dooley@microchip.com, mail@conchuod.ie, airlied@linux.ie,
+        daniel@ffwll.ch, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, thierry.reding@gmail.com,
+        sam@ravnborg.org, Eugeniy.Paltsev@synopsys.com, vkoul@kernel.org,
+        lgirdwood@gmail.com, broonie@kernel.org, fancer.lancer@gmail.com,
+        daniel.lezcano@linaro.org, palmer@dabbelt.com, palmer@rivosinc.com
+Cc:     tglx@linutronix.de, paul.walmsley@sifive.com,
+        aou@eecs.berkeley.edu, masahiroy@kernel.org, geert@linux-m68k.org,
+        niklas.cassel@wdc.com, dillon.minfei@gmail.com,
+        jee.heng.sia@intel.com, joabreu@synopsys.com,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        linux-riscv@lists.infradead.org
 References: <20220618123035.563070-1-mail@conchuod.ie>
  <20220618123035.563070-8-mail@conchuod.ie>
  <9cd60b3b-44fe-62ac-9874-80ae2223d078@opensource.wdc.com>
-In-Reply-To: <9cd60b3b-44fe-62ac-9874-80ae2223d078@opensource.wdc.com>
-Accept-Language: en-IE, en-US
-Content-Language: en-IE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8a56271c-0e1a-4438-3f06-08da524efb73
-x-ms-traffictypediagnostic: BN9PR11MB5418:EE_
-x-microsoft-antispam-prvs: <BN9PR11MB5418159C0537B3922E8052D998B19@BN9PR11MB5418.namprd11.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Of+4KpQabc6hDh1IdRHDUtNdFeNxOVzlvNnWzw/nT6bFS6z4qyIgmniE0aE0JgDWYLZfVsJX42dtbScPd5eMtQl+Ig/xayLMJawxObMzjBJ0IYhwN3ahWlSSoXFNdmGd14Gm+XbabgZszDu99rXodq1tUkVI22NrFsgHD11o6mYCE5o63JGJ420OX7yU9kl7NlUP7nMkPn3BmEKcqZNpDOVZ52HxfD6m3guGJftJfvrVvxlch1qDPoItQ16Gx12hVvz4xJwy0d26J4A6TMj2RA5CZWPnWy35mNMfDLY4CTqO1A8lVdqg2BVf/Cgwi92u61OzcKj8I3agPJSUYfP6/X9BZrMdMyh1nHsT09jDJ58VNGQfP5iuhPmhl10xJCUEBMT5pkXyZmKmQ/BhjTF4kljDMG74KsojW3SK3CaMMwppaQ+0OJuFEqGedz051d07En294fno5tGsL58H71AhcA2HVzidAPr5PGtBVgM5vawUBgeGgPZwrtdbIjPJpx5lwa9HFqzEgGPy0pqkaQyBYvuR8bRTtvPOcASUQTP/N+fBzToptyZTqJzTCwMrmexjD6hjcw2ednNK+DKfnUYQqZrQvoRnhZu9hbhStgRISIA72lCGqqtwPbcDycS5DTclBNAevnqO2mkjJyF4hI8iFUIN8Gw2TfQlfp+FqgIrJXgDw84JyfTbCDuqG6A2tZY3liBjQ179yp6Qx3b7LaJZBKApUkvJZ9p/kocwjpFZACFdBd8RXHCZC6Zk5Upk4y8wK6nj2xc0n2UlErJe8ISZwCmmgb51kIEOGN9gdmSKEcQ=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5154.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(38070700005)(71200400001)(31696002)(8676002)(91956017)(498600001)(83380400001)(76116006)(66556008)(66946007)(6486002)(64756008)(921005)(66446008)(4326008)(110136005)(316002)(122000001)(66476007)(86362001)(186003)(54906003)(53546011)(2616005)(6506007)(6512007)(38100700002)(26005)(8936002)(36756003)(2906002)(5660300002)(31686004)(7416002)(7406005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?UWtyQWhMVjlpbTNXVGIzSDBTRUlhM21IZUJPU3c3U1BlY0Z6VUNoMDVXRGEw?=
- =?utf-8?B?ZWhEZjIrODZPSitmOVdOZ3pDZENVVDJLRWtVb3A2NzdvU1lxaEJPVVVxUFhk?=
- =?utf-8?B?a2pXYWphY2RCa3NqRWxKM1BaQlMwS1ZvU3NBczRCSW0xRkFCYkZ2ZHh6WlNZ?=
- =?utf-8?B?VTJocWxOM0FjYjQwZ2xLcW1vbUtxUkUwUTF2VEloK1JIdU9TVkMzcVFCZW9a?=
- =?utf-8?B?dHN4cXhKNmFLU1U2THdPRnowL0hpbDNDVTBYSDlLVjdQRzM5YnE4cTdLYUJa?=
- =?utf-8?B?Tk1sRFlXYUlDdTNoc2puaklPK3BMRndPUXRlbFlSTC95WldBN3UxSXNOMzJC?=
- =?utf-8?B?VWtqdWlNSVFNN2NBenJaVEFFUHZMTnh5UzNOSlliR3pJV1BCa1dFaWZCRVpm?=
- =?utf-8?B?Vk1aU3BUYW1BNWZBUElHWkc3UWVBb3ZmK2FvazBmQkhka3RlTXdJMVVQQlFu?=
- =?utf-8?B?d1Bsa3FWWklHdXpIRklkYm9wNmM2d1RXekFidCtURi80YlVBQzJoQ1Y0a1dp?=
- =?utf-8?B?dWxwMElGc1FUM0hVSHRrVFB6NkhlcGtEOXE2OHhINStXbUhnOXZCd3VUTXhT?=
- =?utf-8?B?TUI0VWlacmlQNitCbHZZSUtoUTdGK0pUbm53b1pFa1VSeWszTjU2Vm15YlQw?=
- =?utf-8?B?WDhqWnFsR3pyUWdMMTdZYmVOVmVvZ1I0SGZMeXU4Y1BMMTM3ZUFROWJEUEhr?=
- =?utf-8?B?VGhkZnE1Z0gxTzBHckJvaU9Cd1VGZmJtMzNDRU9NdzhMR3Zkdm1XVXlMYVkz?=
- =?utf-8?B?N2tkTDFXYjdhMGxTTjhGc1VDVWZCdXowS3RvVFVuMVNicEhtVDRhQUtEWkhq?=
- =?utf-8?B?T3FRZUVOZjFwSmZZdG56bmtyZDNBVnNmYXNwTm1keW8wSTVvZksySjN6SkNw?=
- =?utf-8?B?V2lLSWVucG9IbTNKazJabUtHVFZWNk9ac2Rhc1B4VmVYK1lPZ1FWWFNNRFBM?=
- =?utf-8?B?by9BTzlzNFlrME12VzVZbXl6M3FWV3BDS0JOTFpMbTgrRnJaUjZtYk9hWHd2?=
- =?utf-8?B?bDFwdnJMTVBIZnUyUzlFYmpvYWQ1dFlOcGo5MC8zTkJSallleFNvNlJ6Um5w?=
- =?utf-8?B?UFVXVHZSSDZ0dTNTa095ZTNoUFNRV20zWHpEdWtPcHJPMzIxVi9zOFBaQ1hX?=
- =?utf-8?B?OUozRmI5Z2I3akk3ZVVwQlZ2bjdQTnJ4MHo4SnVxamZqRzc2a2wrUFlub2JF?=
- =?utf-8?B?UUtXWSs0d1IyMjRIM2RaUXBtR1lnSUNCbTBaQU80U1JDK0VwRi9mckJMZFBN?=
- =?utf-8?B?eHk0OUtpL3Vjc1RoQ2VKUUNkMUdiaUYzdHczbjRkSGIzd0cxYnpCRldPV0xS?=
- =?utf-8?B?cUpza01Gdms5ZU5ONjByTExpQXJEcFppNy9CWWJUYzlRdVl6WGhOb2FkclVP?=
- =?utf-8?B?VE1MWTBWVU8zcDd5UjlnZC96WWZNdnE4Nkp5ODBBNVRVY0VtSlVsYVM5c2VK?=
- =?utf-8?B?TGw0cWZmekRpVUk3OWxsR2RuZXR3YkdtKzFLYVZpU2RLRTBBSXJ6STA0Z2kx?=
- =?utf-8?B?emlwOHE4cm5JOVp4dStRbkR5RGRxV1dsa09TSlhXZnRwY2U0bTgzMGdIU1pQ?=
- =?utf-8?B?Vzh3TkdTLzArM2craTRpSEtZOXV1SkZTWGZIYmJLWTJkM0V0YmNHcDZTTHJ0?=
- =?utf-8?B?N1kwQ28yOWFjUE9oZGQvUUVNMU14RFFqWStVcktxTTdyWUNMSWEram1wNnJB?=
- =?utf-8?B?U0ZpWnZXVE1mNm8xTkRGOXZPNnNtbWVpcmdRTVlWUks1b2huZXU2Rzh5VWFl?=
- =?utf-8?B?Y3VYYURxTTdkN3Njb0QzU2xCMm13akNQcG04d2xEZmNScWtEeGlpTjAwM1Iv?=
- =?utf-8?B?ZXMyS1QxaUkwNEdta2c3WGd4eWljdEUxREQ1bmdhMFlYcUpOa3VSSDR3Z3Nt?=
- =?utf-8?B?QmFkRnNyd1JIWWJLU2I0NTFRdjAwRnFJTkc4Qng3N1dPY21uMFVzbHNBNHIz?=
- =?utf-8?B?SFF6Z2pDMTFzUU9LOU9QK2ZhTXR4bEVPZ2tnVGlQMXRkaXdXN2JGWEw2bkh2?=
- =?utf-8?B?RjN1Y3ZpRGxyRFV3aitXc1lSbGQyZTF2Ukw4cmIvNmFLUjR6YUx2b2xuaUFN?=
- =?utf-8?B?UkNKNXRXQTB2UGlaWDlHeEZKaldsWHdMZzA3TUVHbStPWm1lV3RhdkJMV3Ux?=
- =?utf-8?B?bmtWd3g0TytFMit0Qm53WXM0V1YxS01XaXhCQ2JTeitMUWdQZWM4R29Xb0pr?=
- =?utf-8?B?emVVRmEveUF6YWFTcHhtWmVpeTVHeWRSZXYwWjJ1VmpUOVZsU1Y0RCtuQVZo?=
- =?utf-8?B?eEw1NXZVUDhpaTUyNVUxdm52bjNZd3A3aDB4My9OM2dLN3BvazcvK3Z6WUhF?=
- =?utf-8?B?R3EvTXJkUnNHQUkranJjYmFVcS9Id1VveTZhZXlDU0xueVZRelZtZURNNVd4?=
- =?utf-8?Q?1BdcoYpRIKQluQWY=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AF34058018383E4DA3BF723FA6380DB0@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5154.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a56271c-0e1a-4438-3f06-08da524efb73
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2022 23:54:00.5594
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vntB/oyBqw7ypJC25Ro+uqYvSRzI93Sqej8Wn6JzswyMymAT/zP9M6vszeFc1xDbi/cyw6OwuCCopW+tS6kAcNmfp7r93Pf2+epAKsU7Mkc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5418
+ <e1fbf363-d057-1000-a846-3df524801f15@microchip.com>
+From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Organization: Western Digital Research
+In-Reply-To: <e1fbf363-d057-1000-a846-3df524801f15@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -172,38 +111,64 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-T24gMjAvMDYvMjAyMiAwMDozOCwgRGFtaWVuIExlIE1vYWwgd3JvdGU6DQo+IEVYVEVSTkFMIEVN
-QUlMOiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IGtu
-b3cgdGhlIGNvbnRlbnQgaXMgc2FmZQ0KPiANCj4gT24gNi8xOC8yMiAyMTozMCwgQ29ub3IgRG9v
-bGV5IHdyb3RlOg0KPj4gRnJvbTogQ29ub3IgRG9vbGV5IDxjb25vci5kb29sZXlAbWljcm9jaGlw
-LmNvbT4NCj4+DQo+PiBUaGUgazIxMCBtZW1vcnkgbm9kZSBoYXMgYSBjb21wYXRpYmxlIHN0cmlu
-ZyB0aGF0IGRvZXMgbm90IG1hdGNoIHdpdGgNCj4+IGFueSBkcml2ZXIgb3IgZHQtYmluZGluZyAm
-IGhhcyBzZXZlcmFsIG5vbiBzdGFuZGFyZCBwcm9wZXJ0aWVzLg0KPj4gUmVwbGFjZSB0aGUgcmVn
-IG5hbWVzIHdpdGggYSBjb21tZW50IGFuZCBkZWxldGUgdGhlIHJlc3QuDQo+Pg0KPj4gU2lnbmVk
-LW9mZi1ieTogQ29ub3IgRG9vbGV5IDxjb25vci5kb29sZXlAbWljcm9jaGlwLmNvbT4NCj4+IC0t
-LQ0KPj4gLS0tDQo+PiAgYXJjaC9yaXNjdi9ib290L2R0cy9jYW5hYW4vazIxMC5kdHNpIHwgNiAt
-LS0tLS0NCj4+ICAxIGZpbGUgY2hhbmdlZCwgNiBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0t
-Z2l0IGEvYXJjaC9yaXNjdi9ib290L2R0cy9jYW5hYW4vazIxMC5kdHNpIGIvYXJjaC9yaXNjdi9i
-b290L2R0cy9jYW5hYW4vazIxMC5kdHNpDQo+PiBpbmRleCA0NGQzMzg1MTQ3NjEuLjI4N2VhNmVl
-YmU0NyAxMDA2NDQNCj4+IC0tLSBhL2FyY2gvcmlzY3YvYm9vdC9kdHMvY2FuYWFuL2syMTAuZHRz
-aQ0KPj4gKysrIGIvYXJjaC9yaXNjdi9ib290L2R0cy9jYW5hYW4vazIxMC5kdHNpDQo+PiBAQCAt
-NjksMTUgKzY5LDkgQEAgY3B1MV9pbnRjOiBpbnRlcnJ1cHQtY29udHJvbGxlciB7DQo+Pg0KPj4g
-ICAgICAgc3JhbTogbWVtb3J5QDgwMDAwMDAwIHsNCj4+ICAgICAgICAgICAgICAgZGV2aWNlX3R5
-cGUgPSAibWVtb3J5IjsNCj4+IC0gICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJjYW5hYW4sazIx
-MC1zcmFtIjsNCj4+ICAgICAgICAgICAgICAgcmVnID0gPDB4ODAwMDAwMDAgMHg0MDAwMDA+LA0K
-Pj4gICAgICAgICAgICAgICAgICAgICA8MHg4MDQwMDAwMCAweDIwMDAwMD4sDQo+PiAgICAgICAg
-ICAgICAgICAgICAgIDwweDgwNjAwMDAwIDB4MjAwMDAwPjsNCj4+IC0gICAgICAgICAgICAgcmVn
-LW5hbWVzID0gInNyYW0wIiwgInNyYW0xIiwgImFpc3JhbSI7DQo+PiAtICAgICAgICAgICAgIGNs
-b2NrcyA9IDwmc3lzY2xrIEsyMTBfQ0xLX1NSQU0wPiwNCj4+IC0gICAgICAgICAgICAgICAgICAg
-ICAgPCZzeXNjbGsgSzIxMF9DTEtfU1JBTTE+LA0KPj4gLSAgICAgICAgICAgICAgICAgICAgICA8
-JnN5c2NsayBLMjEwX0NMS19BST47DQo+PiAtICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gInNy
-YW0wIiwgInNyYW0xIiwgImFpc3JhbSI7DQo+PiAgICAgICB9Ow0KPiANCj4gVGhlc2UgYXJlIHVz
-ZWQgYnkgdS1ib290IHRvIHNldHVwIHRoZSBtZW1vcnkgY2xvY2tzIGFuZCBpbml0aWFsaXplIHRo
-ZQ0KPiBhaXNyYW0uIFN1cmUgdGhlIGtlcm5lbCBhY3R1YWxseSBkb2VzIG5vdCB1c2UgdGhpcywg
-YnV0IHRvIGJlIGluIHN5bmMgd2l0aA0KPiB1LWJvb3QgRFQsIEkgd291bGQgcHJlZmVyIGtlZXBp
-bmcgdGhpcyBhcyBpcy4gUmlnaHQgbm93LCB1LWJvb3QgKmFuZCogdGhlDQo+IGtlcm5lbCB3b3Jr
-IGZpbmUgd2l0aCBib3RoIHUtYm9vdCBpbnRlcm5hbCBEVCBhbmQgdGhlIGtlcm5lbCBEVC4NCg0K
-UmlnaHQsIGJ1dCB1bmZvcnR1bmF0ZWx5IHRoYXQgZGVzaXJlIGFsb25lIGRvZXNuJ3QgZG8gYW55
-dGhpbmcgYWJvdXQNCnRoZSBkdGJzX2NoZWNrIGNvbXBsYWludHMuDQoNCkkgZ3Vlc3MgdGhlIGFs
-dGVybmF0aXZlIGFwcHJvYWNoIG9mIGFjdHVhbGx5IGRvY3VtZW50aW5nIHRoZSBjb21wYXRpYmxl
-DQp3b3VsZCBiZSBtb3JlIHBhbGF0YWJsZT8NCg0KVGhhbmtzLA0KQ29ub3IuDQoNCg0KDQo=
+On 6/20/22 08:54, Conor.Dooley@microchip.com wrote:
+> On 20/06/2022 00:38, Damien Le Moal wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>>
+>> On 6/18/22 21:30, Conor Dooley wrote:
+>>> From: Conor Dooley <conor.dooley@microchip.com>
+>>>
+>>> The k210 memory node has a compatible string that does not match with
+>>> any driver or dt-binding & has several non standard properties.
+>>> Replace the reg names with a comment and delete the rest.
+>>>
+>>> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+>>> ---
+>>> ---
+>>>  arch/riscv/boot/dts/canaan/k210.dtsi | 6 ------
+>>>  1 file changed, 6 deletions(-)
+>>>
+>>> diff --git a/arch/riscv/boot/dts/canaan/k210.dtsi b/arch/riscv/boot/dts/canaan/k210.dtsi
+>>> index 44d338514761..287ea6eebe47 100644
+>>> --- a/arch/riscv/boot/dts/canaan/k210.dtsi
+>>> +++ b/arch/riscv/boot/dts/canaan/k210.dtsi
+>>> @@ -69,15 +69,9 @@ cpu1_intc: interrupt-controller {
+>>>
+>>>       sram: memory@80000000 {
+>>>               device_type = "memory";
+>>> -             compatible = "canaan,k210-sram";
+>>>               reg = <0x80000000 0x400000>,
+>>>                     <0x80400000 0x200000>,
+>>>                     <0x80600000 0x200000>;
+>>> -             reg-names = "sram0", "sram1", "aisram";
+>>> -             clocks = <&sysclk K210_CLK_SRAM0>,
+>>> -                      <&sysclk K210_CLK_SRAM1>,
+>>> -                      <&sysclk K210_CLK_AI>;
+>>> -             clock-names = "sram0", "sram1", "aisram";
+>>>       };
+>>
+>> These are used by u-boot to setup the memory clocks and initialize the
+>> aisram. Sure the kernel actually does not use this, but to be in sync with
+>> u-boot DT, I would prefer keeping this as is. Right now, u-boot *and* the
+>> kernel work fine with both u-boot internal DT and the kernel DT.
+> 
+> Right, but unfortunately that desire alone doesn't do anything about
+> the dtbs_check complaints.
+> 
+> I guess the alternative approach of actually documenting the compatible
+> would be more palatable?
+
+Yes, I think so. That would allow keeping the fields without the DTB build
+warnings.
+
+> 
+> Thanks,
+> Conor.
+> 
+> 
+> 
+
+
+-- 
+Damien Le Moal
+Western Digital Research

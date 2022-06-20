@@ -2,174 +2,112 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1988D55120F
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Jun 2022 10:02:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8328D5512DE
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Jun 2022 10:33:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239745AbiFTICW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 20 Jun 2022 04:02:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54912 "EHLO
+        id S239842AbiFTIdO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 20 Jun 2022 04:33:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239731AbiFTICV (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 Jun 2022 04:02:21 -0400
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 271C31145D;
-        Mon, 20 Jun 2022 01:02:20 -0700 (PDT)
-Received: by mail-qv1-f51.google.com with SMTP id c1so14516545qvi.11;
-        Mon, 20 Jun 2022 01:02:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U6iOgcYMqJ9zOwx1P0bKGX4G545U6AIxu9kHxZeyUd0=;
-        b=J3htXg1EPv1BalqywQs3Ybn4KQ+idKLCI1sqx15OBE6cn6qnP0H6CeCGhARK4Md01b
-         QPmOnK6+OdCTdpKftctxpvXg64MonaqNOdOoQnN+1vVSioiNIkK26N3SAQfG2W6Q0APA
-         BA/euf01jTM0PpO90YxA9W3vnXTES/HIQt6OqHZqmChe6/jJ2NCzPP5IcmOIR5y8Zngv
-         Gv09K8KdzYVxjEF/n4MbtNr4djM4pZgeydVPo2w6SYbMw71LmJeQ+Ss+k8b1n2BMeumt
-         pnq3qQVbivlh/vO6+bDzyz2TB2k3adouB5zd2sgdU//O378xNqKMTNhbOo9isNkiOd97
-         UI1Q==
-X-Gm-Message-State: AJIora9wJzcoVZFdarqMgw0xfmetd8DtxF8b+JgTEohnUBTvpPxCnyWy
-        jM85VA1R7lCSZRnWJjTTR4ggQVWYT7K6qA==
-X-Google-Smtp-Source: AGRyM1vHgp9LHpiJ7Aqcns08PZ2ZNxRyprRpMxnZujRmGz0+s8hIYBEFAdOJpUPgoyLj15Y+Hk0hoQ==
-X-Received: by 2002:ac8:5915:0:b0:304:f2f8:f254 with SMTP id 21-20020ac85915000000b00304f2f8f254mr18791942qty.303.1655712139119;
-        Mon, 20 Jun 2022 01:02:19 -0700 (PDT)
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id j17-20020a05620a289100b006a6d7c3a82esm11798285qkp.15.2022.06.20.01.02.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Jun 2022 01:02:17 -0700 (PDT)
-Received: by mail-yb1-f176.google.com with SMTP id v81so17621539ybe.0;
-        Mon, 20 Jun 2022 01:02:17 -0700 (PDT)
-X-Received: by 2002:a25:bd41:0:b0:668:c259:f6c2 with SMTP id
- p1-20020a25bd41000000b00668c259f6c2mr15091616ybm.365.1655712136748; Mon, 20
- Jun 2022 01:02:16 -0700 (PDT)
+        with ESMTP id S239818AbiFTIdO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 Jun 2022 04:33:14 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E38B312AA6
+        for <dmaengine@vger.kernel.org>; Mon, 20 Jun 2022 01:33:12 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1o3CqN-00044u-EH; Mon, 20 Jun 2022 10:33:11 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1o3CqM-0002ka-Re; Mon, 20 Jun 2022 10:33:10 +0200
+Date:   Mon, 20 Jun 2022 10:33:10 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Hui Wang <hui.wang@canonical.com>
+Cc:     dmaengine@vger.kernel.org, vkoul@kernel.org, shawnguo@kernel.org,
+        yibin.gong@nxp.com
+Subject: Re: [PATCH] dmaengine: imx-sdma: Setting DMA_PRIVATE capability
+ during the probe
+Message-ID: <20220620083310.GV2387@pengutronix.de>
+References: <20220524074933.38413-1-hui.wang@canonical.com>
 MIME-Version: 1.0
-References: <20220618123035.563070-1-mail@conchuod.ie> <20220618123035.563070-7-mail@conchuod.ie>
-In-Reply-To: <20220618123035.563070-7-mail@conchuod.ie>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 20 Jun 2022 10:02:05 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXtjZVvy-gGTksVRYa+dS7-1ngQf9_kfp6k29nkfizKbA@mail.gmail.com>
-Message-ID: <CAMuHMdXtjZVvy-gGTksVRYa+dS7-1ngQf9_kfp6k29nkfizKbA@mail.gmail.com>
-Subject: Re: [PATCH 06/14] spi: dt-bindings: dw-apb-ssi: update
- spi-{r,t}x-bus-width for dwc-ssi
-To:     Conor Dooley <mail@conchuod.ie>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Palmer Dabbelt <palmer@rivosinc.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Niklas Cassel <niklas.cassel@wdc.com>,
-        Dillon Min <dillon.minfei@gmail.com>,
-        Heng Sia <jee.heng.sia@intel.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220524074933.38413-1-hui.wang@canonical.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:28:04 up 81 days, 20:57, 81 users,  load average: 0.20, 0.35,
+ 0.38
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Conor,
+On Tue, May 24, 2022 at 03:49:33PM +0800, Hui Wang wrote:
+> We have an imx6sx EVB, the audio driver fails to get a valid dma chan
+> and the audio can't work at all on this board, below is the error log:
+>  fsl-ssi-dai 202c000.ssi: Missing dma channel for stream: 0
+>  202c000.ssi-nau8822-hifi: ASoC: pcm constructor failed: -22
+>  asoc-simple-card sound: ASoC: can't create pcm 202c000.ssi-nau8822-hifi :-22
+> 
+> Then I checked the usage_count of each dma chan through sysfs, all
+> channels are occupied as below:
+> ubuntu@ubuntu:cd /sys/devices/platform/soc/2000000.bus/20ec000.sdma/dma
+> ubuntu@ubuntu:find . -iname in_use | xargs cat
+> 2
+> 2
+> 2
+> ...
+> 
+> Through debugging, we found the root cause, the
+> crypo/async_tx/async_tx.c calls the dmaengine_get() ahead of
+> registration of dma_device from imx-sdma.c. In the dmaengine_get(), the
+> dmaengine_ref_count will be increased, then in the
+> dma_async_device_register(), the client_count of each chan will be
+> increased.
+> 
+> To fix this issue, we could set DMA_PRIVATE to the dma_deivce before
+> registration.
+> 
+> Signed-off-by: Hui Wang <hui.wang@canonical.com>
+> ---
+>  drivers/dma/imx-sdma.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index 95367a8a81a5..aabe8a8069fb 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -2201,6 +2201,7 @@ static int sdma_probe(struct platform_device *pdev)
+>  	for (i = 0; i < sizeof(*sdma->script_addrs) / sizeof(s32); i++)
+>  		saddr_arr[i] = -EINVAL;
+>  
+> +	dma_cap_set(DMA_PRIVATE, sdma->dma_device.cap_mask);
 
-On Sat, Jun 18, 2022 at 2:32 PM Conor Dooley <mail@conchuod.ie> wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
->
-> snps,dwc-ssi-1.01a has a single user - the Canaan k210, which uses a
-> width of 4 for spi-{r,t}x-bus-width. Update the binding to reflect
-> this.
->
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+I am not sure about the impacts on the memcpy capability of the SDMA
+driver when setting this flag. It looks like this flag influences the
+way suitable channels are picked for memcpy, but I don't understand
+the code just by looking at it. I see that several other drivers
+providing memcpy set this flag as well, so I guess it's ok to set it,
+but it would be good to hear a word from Vinod about it.
 
-Thanks for your patch!
+Sascha
 
-> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> @@ -135,19 +135,41 @@ properties:
->        of the designware controller, and the upper limit is also subject to
->        controller configuration.
->
-> -patternProperties:
-> -  "^.*@[0-9a-f]+$":
-> -    type: object
-> -    properties:
-> -      reg:
-> -        minimum: 0
-> -        maximum: 3
-> -
-> -      spi-rx-bus-width:
-> -        const: 1
-> -
-> -      spi-tx-bus-width:
-> -        const: 1
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: snps,dwc-ssi-1.01a
-> +
-> +then:
-> +  patternProperties:
-> +    "^.*@[0-9a-f]+$":
-> +      type: object
-> +      properties:
-> +        reg:
-> +          minimum: 0
-> +          maximum: 3
-> +
-> +        spi-rx-bus-width:
-> +          const: 4
-> +
-> +        spi-tx-bus-width:
-> +          const: 4
-
-These two also depend on the board (SPI device + wiring).
-So all of [1, 2, 4] are valid values.
-
-> +
-> +else:
-> +  patternProperties:
-> +    "^.*@[0-9a-f]+$":
-> +      type: object
-> +      properties:
-> +        reg:
-> +          minimum: 0
-> +          maximum: 3
-> +
-> +        spi-rx-bus-width:
-> +          const: 1
-> +
-> +        spi-tx-bus-width:
-> +          const: 1
->
->  unevaluatedProperties: false
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |

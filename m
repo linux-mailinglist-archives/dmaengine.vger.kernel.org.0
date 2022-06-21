@@ -2,195 +2,386 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9335553740
-	for <lists+dmaengine@lfdr.de>; Tue, 21 Jun 2022 18:06:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C28D553AEF
+	for <lists+dmaengine@lfdr.de>; Tue, 21 Jun 2022 21:57:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352817AbiFUQGh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 21 Jun 2022 12:06:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53508 "EHLO
+        id S1343675AbiFUT5Z (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 21 Jun 2022 15:57:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353326AbiFUQGg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 21 Jun 2022 12:06:36 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC8AA6372;
-        Tue, 21 Jun 2022 09:06:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1655827588; x=1687363588;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=KgHjrlPAUGdlFajed8XBAMx2mJ0fc6m9M6rfrnrsG24=;
-  b=P8njc6nIeLgKH2KjSZCh+aR+JoHGA00+6lwIyvV0YHdKPmnIO0BTyVrN
-   RDH2Nfij32tvBZxBp5jDAxYVAXbf4kL2ljvcpAOYw73p6gmO7eC3blTdZ
-   E28eZzBd/yPLFacWRroc5pBcWpbEx2bvtHzEFid2acaFJWk9GQZc3o9AS
-   bOxLSEAuo1gAZF0Y5ue5CsQ2oSAio7Pbei5MiZvhhPMXFZ+bnqx1xwlko
-   wPEL3kUOu3+5lJ1KJAJfICgx3Iyue3CV9xtPJepwyZENF98JV9pncZpLd
-   w8KQHqUhokzN9XJyLYxQ9f9PEIi94CTHCYMUKNJv+zFjyfmDDZrsl4oLP
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.92,209,1650956400"; 
-   d="scan'208";a="169313018"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Jun 2022 09:06:27 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Tue, 21 Jun 2022 09:06:26 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17 via Frontend
- Transport; Tue, 21 Jun 2022 09:06:26 -0700
+        with ESMTP id S233189AbiFUT5Y (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 21 Jun 2022 15:57:24 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2084.outbound.protection.outlook.com [40.107.223.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE674289AC;
+        Tue, 21 Jun 2022 12:57:22 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HxSCDo0RH1+aEJ/PYQZk1sdyzjOMpSgNMErGmfxKsyQY6277kfBakAT95fzpwsCiw0jTpQ5c3oqA3xeShu/1MCeRq7myStGcfi3ll+Jhah2SAQmHo22Dhc/Zo+8ibblOZQAcJOJj9tUKBN5QbXRP/40YlPO+H3uALLn3DZW0e3tRw0/cpja+VDda+ZUkQ6aHAVkvzpnlXkfzKEZr8O1YzOoPmqH0qKxAC4+Vd1GsFziWjZKhb9pBhXWOzdH5hEU8sknGZcSXs2GfRVzIhO+MPn2l7COkUYCbbaDHBy/rv99O9eaEZp6p3i2HKKdeW8fXnxjk8r6MLZ84Z0c5h8Imcg==
+ b=dBC+BcGMgsdN0lqFIZJvehIvYKkWlvizKufKGS199wFi7f+sSPQ/TQ6bd3FDqjaGmwGtK5N5rfnlSVIneE+aCa61tY2JN3aVrKFSCU6PHFoxs69p9YFiZo4YS1+4whO4YgVyy9zTeOXhdK+hC2/MU0sWBvfdafalS3jqokk/z3hCdB9vnq758eQ9e5n0ln8k09nrQ1Np8PFCqNKqeZegIuNFchsKno694cXwgdCyTzLgl2veMzpv1UGq3e2rzF0vJ8GyM5xUoby5wswnJqmB80PD4lpqtimEP4AUsOvyF/uD7UeWL0oPKLwVZE9qka1brHJi3e1LAugSZwTn8iVIqg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KgHjrlPAUGdlFajed8XBAMx2mJ0fc6m9M6rfrnrsG24=;
- b=lQ4MD2EoTRHl4HFFNVdrl7XmfEfYFVydGcG2LGIasjPtRpubOleashkz+fnPUS1dyWNYft7b3GTYlMGU4eHrTtu5qKufRQoAU0rgLn5cgHC8Q8AXPVb3LirmVY3Qt4WVmIJgHNXGTdmRvNOd81vYXBeRqxRR86BIIeraCYeLntdeW5dhyyTprhmHkYxO5j2yY6HMN6TR5J4g1brFJczZIsSzwIfSrQuGKLK/06cooyQ5kwA57vWb1EKaHouqnkCVDxe0+BTwYOp1E1YKKz0rWlWz+ghmywioC49bTX8dMxo0U8fPBV1ZCdJXVSFiGInUYEzmGDkGyOCGoZ4zF1zCxg==
+ bh=3oZRoTt05MQ7arT2D81+PWOby02esOSL11Vk3uorcGI=;
+ b=fExceUOIoXNc4dyKAm5p02z4GqLOtvcTOVmbDbknVyNDdp0i0hP7rLluDQC+gdQko+DKj73ytpi11rQDQw6mQrVkddPT0AYRTByNbNLCVskHy0Sq/ZIE2qqcShSkMa9hJBswap2scepxrNPs6QmQIIKLgZHDR5Nka9dPxTaquM17dydZFmKxSRrd8YDQeJx0muhQlxESa3vSX28mFO8a/j2gWMq4MIZOQA56DgNsPr6zQsVV4tLQR/135uwczqbmjVBntHem+CTbFGSr7uKl3224h1GWl31Tb+D1Tl+OanNVrOt76DLlH/hhutACRYNSt1qs8Sr2zxrxArJMRtYSMA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KgHjrlPAUGdlFajed8XBAMx2mJ0fc6m9M6rfrnrsG24=;
- b=PlcQh6Z0WdGQ7HtR0t/Y62j2Ulc7NSz2r/A8L5K6fWIzlgpkjJYmid722EM9h35TyhrhOsh1WQYYk+DlxCRWTlMBYI3J+NPwHwD4KPvcr0AJ/UyT+PgUgqpShE/P7WgU3Ul2JE+mqCoj9/fKSlIMmGNlmpEaYay40GFVRmZIWvQ=
-Received: from CO1PR11MB5154.namprd11.prod.outlook.com (2603:10b6:303:99::15)
- by BY5PR11MB4242.namprd11.prod.outlook.com (2603:10b6:a03:1c1::28) with
+ bh=3oZRoTt05MQ7arT2D81+PWOby02esOSL11Vk3uorcGI=;
+ b=gSBC0N1jWkrMpGPv9zWDTakYuy554zWXWfn++i79T9xMfQnWKqg7EDVrwBgH6iGNwn9PhnjiQKARLYiULhP1wvG+FY1xn5oHLvhysKwCylGMaWdAhFqy8H5WmrmMXFjleD2jEyvSJan7IntHgtmvZLLIpfJRFJz2eLbA1WgxiV3mc8AabuSGdBjVeYtd15ZGt4rdX6TROryTAgJ7WwjFr+v5fmzH53wMk7B+NPg0wrOv7J9gzLFWJT63G0kTIU6VUjPY3R6xX9OqIgIl/U8WjBx0Cv8E5K2nbjwDFJKPpMwUD9CBn5EToWZApuOHhinrAsjd5TnULHaAKs1mT4tYew==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CO6PR12MB5444.namprd12.prod.outlook.com (2603:10b6:5:35e::8) by
+ MW4PR12MB5667.namprd12.prod.outlook.com (2603:10b6:303:18a::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.15; Tue, 21 Jun
- 2022 16:06:21 +0000
-Received: from CO1PR11MB5154.namprd11.prod.outlook.com
- ([fe80::699b:5c23:de4f:2bfa]) by CO1PR11MB5154.namprd11.prod.outlook.com
- ([fe80::699b:5c23:de4f:2bfa%4]) with mapi id 15.20.5353.022; Tue, 21 Jun 2022
- 16:06:21 +0000
-From:   <Conor.Dooley@microchip.com>
-To:     <damien.lemoal@opensource.wdc.com>, <mail@conchuod.ie>,
-        <fancer.lancer@gmail.com>
-CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <thierry.reding@gmail.com>,
-        <sam@ravnborg.org>, <Eugeniy.Paltsev@synopsys.com>,
-        <vkoul@kernel.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <daniel.lezcano@linaro.org>, <palmer@dabbelt.com>,
-        <palmer@rivosinc.com>, <tglx@linutronix.de>,
-        <paul.walmsley@sifive.com>, <aou@eecs.berkeley.edu>,
-        <masahiroy@kernel.org>, <geert@linux-m68k.org>,
-        <niklas.cassel@wdc.com>, <dillon.minfei@gmail.com>,
-        <jee.heng.sia@intel.com>, <joabreu@synopsys.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <linux-spi@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH 06/14] spi: dt-bindings: dw-apb-ssi: update
- spi-{r,t}x-bus-width for dwc-ssi
-Thread-Topic: [PATCH 06/14] spi: dt-bindings: dw-apb-ssi: update
- spi-{r,t}x-bus-width for dwc-ssi
-Thread-Index: AQHYgw+Pu1Tn+/2s8EmHi9NhXNIv361YymsAgAACs4CAABvqAIAAALeAgAAH6QCAARnpAA==
-Date:   Tue, 21 Jun 2022 16:06:21 +0000
-Message-ID: <bd2547f8-e069-60a2-a223-9f694457636d@microchip.com>
-References: <20220618123035.563070-1-mail@conchuod.ie>
- <20220618123035.563070-7-mail@conchuod.ie>
- <20220620205654.g7fyipwytbww5757@mobilestation>
- <61b0fb86-078d-0262-b142-df2984ce0f97@microchip.com>
- <9a1fcb40-9267-d8e6-b3b6-3b03fd789822@opensource.wdc.com>
- <a2d85598-76d1-c9dc-d50d-e5aa815997cf@conchuod.ie>
- <c272728f-f610-77df-bd9b-c9fee6b727f8@opensource.wdc.com>
-In-Reply-To: <c272728f-f610-77df-bd9b-c9fee6b727f8@opensource.wdc.com>
-Accept-Language: en-IE, en-US
-Content-Language: en-IE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.17; Tue, 21 Jun
+ 2022 19:57:21 +0000
+Received: from CO6PR12MB5444.namprd12.prod.outlook.com
+ ([fe80::f954:6840:ce82:c54f]) by CO6PR12MB5444.namprd12.prod.outlook.com
+ ([fe80::f954:6840:ce82:c54f%4]) with mapi id 15.20.5353.022; Tue, 21 Jun 2022
+ 19:57:21 +0000
+Message-ID: <d6b890c8-bfb5-cfa5-c6d8-ee245701c077@nvidia.com>
+Date:   Tue, 21 Jun 2022 20:57:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.1
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 12fc03b6-a694-4609-57fe-08da539ffb89
-x-ms-traffictypediagnostic: BY5PR11MB4242:EE_
-x-microsoft-antispam-prvs: <BY5PR11MB4242993E3A228AF7E262A0CE98B39@BY5PR11MB4242.namprd11.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5DHQcHXwT9FeCsHNXwKjMIgpP/0kHhn6+qEryaXVKxiSY/VOwJjcFulciDVvNhJalKdtZkYZnPpakNz9SS/mjWKtpDhVYRc6KWKdld8PS6UFWid31ISDmPu2oWowZixdQxsrk3FFccia52UaFcLjAog4wLl4yzgZ4gu2KmzGzdXNzd4wryTw1y4tvDfNvbOwG2j0d0BmLRShCdTRF4dTamPBWIgCxbYbQXi5IFHA/cqIuMJ4i571AHRUdfae8LeYNOySwbmP02oV+ehOUKLnd1iKpuHMp6w2/knDLDRh742/+iVUXkkTI0s6cLGGCkOBKpmcEmSG+t+vfvWO0Tmv9UEOXXpUkNDexVKsKWz3GqovunRDmRueC3OGDZeE+5JqZJOotmWBqzMscVDrUODdGGrIihmEuNBG6xmTR1sxgAV8acBI1pV9EaZtt3AfAfyEWninQqdo8JwZrSW0pc7oDtsE2SpdaFpt9m5zRal9WoTFhX8jiI/Beeg6WA5xpkAMp/JFYfrryFQt2RUXRM/AZNJGMma1kpmuKNL+aIJ2GZ3W/q3IlI+kTn0OxXq+RsHoRY5vjbe160cwgpNT0UL2q1HoK1rXK5dJqEEMDmV8ThsZzsEZNAkyIsa43BM8rCfV3uI9CLVQn7U95AtQRyPGAkKe7McAo3PWdkLoaoXmWXbotMQFJaDRhgxiROqc0d9vsLPGjJ9CF/7xluJSbTZm/WEQztWPRt1NQaNbhK/bTsAbekk0hlOwBjSGRhuplF8jvtVr3+iAw8fS84OVKNLkKLcKpuTvsGcop1TXwVinwxz2Nv57tG7rnTw7kD7NcXYY/nrumS4VxzTnz+SrXmgnmjhWtv5dVKznrfyCODLzjTA=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5154.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(136003)(366004)(39860400002)(396003)(376002)(4744005)(84970400001)(7416002)(71200400001)(7406005)(8936002)(122000001)(5660300002)(6486002)(186003)(41300700001)(478600001)(2616005)(6512007)(2906002)(38070700005)(316002)(31696002)(26005)(6506007)(86362001)(53546011)(110136005)(91956017)(31686004)(76116006)(54906003)(4326008)(8676002)(66476007)(66446008)(64756008)(66556008)(66946007)(38100700002)(36756003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?K2tNbkZVc21OdFdMOHhsN1Ztb05rdUJWaUY2ZTRZcmVYd1BuVk1zV0N4OTht?=
- =?utf-8?B?WGxTWnNPSUFOaTc1Umc2VFMwOW5uQlR2c3JlTndqY211NytoMWpubE1oTUlD?=
- =?utf-8?B?RytaMXFPR3dqdkliLzZBUmI5SXFjUjJNVnpLRDZBTjY4MDkxMUxMQjV6T2h5?=
- =?utf-8?B?a2xMVjZKc2VXZytlQzhBVW9RbGIzc2NGMngyQmY2dFVkOHg4ZWJsbDU4YlBB?=
- =?utf-8?B?dEk4LzN0S0FrMHlVbEtSQWVrcWEzMk43czF6bGR4MVJuNlNWb2ZaazJxNnlX?=
- =?utf-8?B?N01wRFlTQis4anV5TzlVcktUcG9KZzlpQkR5Skh6Qmh1N3d2SXYwSnBFUG9K?=
- =?utf-8?B?bjZFNWF1cWI4MW04SzVOTXJ0UFVqREE5Y1JDVWRUQ2FueVV6c0hzT2ZhdjlI?=
- =?utf-8?B?dXIzL0diZzJSckdsaVlTQ2sxMnc1TFhIOG5PTTZvSWkzaG01T0IwVk9tV01r?=
- =?utf-8?B?MzJhRC9yeStOY1hmSjYrOENlRmEvamw2aVl2SExSNThBUTlNbU8reVE1YjAr?=
- =?utf-8?B?TnFZODkwcEFjNWFVM2RjRWVpRmY2dWdqQktUNSszYzE4V3lqWVpkOG95Wjg5?=
- =?utf-8?B?cXlYRlU2UmxsNDd6VlUyTk9OcmlYOGoxOU5lUC9OQlY4eElFV25JQkJCWnVv?=
- =?utf-8?B?aUZRSEdsWlVYbW5GdE44aEZGYjBhVnVxazYyTjBZZ3dXY0ZmdDdLQXdzeHhh?=
- =?utf-8?B?ak9EVFdrakFvb3FuYkJtVERVME43U2pJTTViY2lISllvQlpwcGl6aVc2REdS?=
- =?utf-8?B?Y3duT3RkejZOZitKMHRYVnZaOU9MK2RYSUY4UFFtb2RaMHgwUEhrbVV1eEQv?=
- =?utf-8?B?V1R4N2FrVmJJdVpLK0RCUEZrVWNrNWZNYmtwdHpOeG9oZC8zak9SU1l6QXZE?=
- =?utf-8?B?U3dXT0g5d3RPM2trWG1iQ2dlcG56TkR1WkpZQlhvaHUwOGllcEFmUEJhdTF1?=
- =?utf-8?B?UjRMSjNiTkxQdCt4R04rblB2bjl1M1c2SEk1SGJYdERIc0RDbE1icXIyd3Vk?=
- =?utf-8?B?ekdKT1pheXJOZ2g1ekQrTDZrSCtiRjUzVCtmT1hRam5jQUQ5QWxBb1RsMTF4?=
- =?utf-8?B?ZDV0VnQ1ZVNSbW5jK1NoWDhaeTFyTFZUUlZkeStCTWQvQlVDWjZYLzNJWW9X?=
- =?utf-8?B?MDJ6RUNPOU1SSHF2czRaTTFzSkkrWFJOWGRJWVJEWDRjVHJXNmJaZTFpRm9G?=
- =?utf-8?B?WGVFZE9IUW11QjJUWGRSMnpTWklSYVBERzRmV0U0ZC8yMXk0WWlFNG5sM2Mr?=
- =?utf-8?B?bExHRThtaGN5U3puZDgvQVg1S2Nsa2o5QitncG83ZVAvQ3VSdTZtSWlaYnFv?=
- =?utf-8?B?c2Fyc0RaL21VZ1RmbEpRV052ZlR1SjBDSW51R0pHRk9nSk1BK2NVUVcxZThJ?=
- =?utf-8?B?RHRNWmllZEZmajhDaFc2UlNSL0tSV1kzU04yWHlXYUVHdW5BYVBmakc3MzAx?=
- =?utf-8?B?ck9GL2l0VjkrYWhvWjNiNVc4bnFBTlVHRjk1QjZnUlJvQVBaVHVnaDdPTkJU?=
- =?utf-8?B?blA1MTcwSjFhTzlOZTgwRlhVOTdMYmsxeDhEUlZxdUFiU3VoUnlaaStWeDF5?=
- =?utf-8?B?M1lnU2JJMmZ4Qyt2MlFQSnpXZ0dLRnVpSnc1NUQ2Zk1lV2I5VU5Qc00yTmhs?=
- =?utf-8?B?T25MM0lmaUxMcHdYNFJpNHFuVFBzL0xUc29rcmlzbDNjc0MwYnpBTmFSUk5G?=
- =?utf-8?B?RytQQktGMFREUS9aR1JXS1VwTWxmZmJYTW4rU0FvQ09lSnZGajl6a0Vyb0lT?=
- =?utf-8?B?a1dkVWlvWmtaYzhHNTBXbDVHTzFqcUZ3OHBrbGdqdmsydEtXS2VqbDZyMlYx?=
- =?utf-8?B?OThPNGQzRWRZQWtqV2dpOEZteGphSUZ2VkRIRDVKRHAyL0Fmak80YXpNMUhy?=
- =?utf-8?B?NnZieTBNSnE2ZE9UTUFlWlUvTEJIQmdaWEZhaTgwQjUvb0tqYSsvajVWcDVh?=
- =?utf-8?B?Ulp4MkkyTSsvUGsrRlF3dHY0d0VpNjZpLzFORFY1ZzZLSGVsc0JDdVE2NGRV?=
- =?utf-8?B?U0xUT2pMZDFXTVk0MVAyQTJ2cERDL1k3UmVybWVoaUxjVjNjT0Vhekh4QmF1?=
- =?utf-8?B?NVBQVGVVY3hUVHhOS1QrNUJUb2ZxdkdFaHBRU1dNMktmMmVOUmV2ZG1VUy9X?=
- =?utf-8?B?WVppUmNQYm1nbnNpdGt6QlhVQkFqMGRvaXozeG9qTmhqUVk4emFaWWJJaWJC?=
- =?utf-8?B?dTJIbm1BNS9GOVRZdFBSbWtlbExLalFyU21ZUGkwVjJDakI4bzBwdTFhVGh1?=
- =?utf-8?B?ajhEbENBQVdxRktCcEpBVDkzMzFNd3N2MHdaSHRXODBTd0hkRHozdStrcXZJ?=
- =?utf-8?B?aEh3L3Z5TDl1Z0ZyUUd3V1dSOENUcExlNlBPM2k0eGJ3YXNTeHBmcG1xcjFI?=
- =?utf-8?Q?Lyzue7vQRO8MRYwI=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <11303A5E58A1CA41800B019DF849D12B@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Subject: Re: [PATCH v8 01/16] clk: generalize devm_clk_get() a bit
+Content-Language: en-US
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        =?UTF-8?Q?Nuno_S=c3=a1?= <nuno.sa@analog.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        UNGLinuxDriver@microchip.com, linux-hwmon@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>
+Cc:     linux-clk@vger.kernel.org, kernel@pengutronix.de,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Tomislav Denis <tomislav.denis@avl.com>,
+        Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        =?UTF-8?Q?Andr=c3=a9_Gustavo_Nakagomi_Lopez?= <andregnl@usp.br>,
+        Cai Huoqing <caihuoqing@baidu.com>, linux-iio@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mips@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        linux-watchdog@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-pwm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        Amireddy Mallikarjuna reddy 
+        <mallikarjunax.reddy@linux.intel.com>, dmaengine@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alexandru Ardelean <aardelean@deviqon.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <20220314141643.22184-1-u.kleine-koenig@pengutronix.de>
+ <20220314141643.22184-2-u.kleine-koenig@pengutronix.de>
+From:   Jon Hunter <jonathanh@nvidia.com>
+In-Reply-To: <20220314141643.22184-2-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AS9PR06CA0072.eurprd06.prod.outlook.com
+ (2603:10a6:20b:464::10) To CO6PR12MB5444.namprd12.prod.outlook.com
+ (2603:10b6:5:35e::8)
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f4df4ac9-468f-461f-45c7-08da53c0406b
+X-MS-TrafficTypeDiagnostic: MW4PR12MB5667:EE_
+X-Microsoft-Antispam-PRVS: <MW4PR12MB5667B5F9C7A2A89F161F3BB6D9B39@MW4PR12MB5667.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: G+oxFppXKRifZMTYz4pwUVZ5DDZFz5JZmSOVislurHy2hCr0H0J2ApxS9ZyOykzZJIMORhX55V1zJRKjxutbESQE65b3KKSVd5Od5mHFbJoebjSL71KG2acWpgL9HAH1jM9f7SD99cA2VZD6A7VGEXTvadLsqP1qYxjjPlvweJB4O1dHJ7cH5h1gQhhbyoMOO/EubjJfwBcLdAdYLsHul9BjAy58+g/t+/VcSjb5FPm4HkLxnNM6j2PA7wAE1WMjZv/3Toi20k2sl7X527zuITbEsKIHWA+A872H3A69ui9Mgn5fqtS/7ASnW4NCzBbsOeiiZ4Q6EEsWHGpVJZp6rOvtoWJMTDKvxEzBcHl2viYiZcv+fYSLuCT3NPYf2JWH9WXMh49KeYi8QOJCJAcIQdQA0iRptAa/mfIjfZpL0RCc0oHmCBJHYVt5H8gSZLyDcArgyu4R6ym0hCpmz8cFe39Y/VQpuySGtfrbcYWMzZHhTC7gZpnggHUkFTPZuC7OAA4/5w8CKSCO6Sk1l6xhOddSPvZlfz2A5OPG56YXZ246BvQDwOtqQpgFplSYWRV2pCMOLNqP3L99Lun24wmXwRFLffA4jy3xy2stPE5d3JvG7Ror75yZBBwiOpGKGve4E0w/YdvqYL9yTlzovtJyJNCk+kKAlL7iBRVrT+fR9wFutosj5fs2fCqk4lQASbT2vF8WBGo4avdxPjdONtt4qQ4v71nP7MSQwy+yu5wVAps0gn36uHwoKwbAlKni4WGr
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5444.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(39860400002)(376002)(346002)(136003)(366004)(26005)(6486002)(36756003)(6512007)(31686004)(7416002)(41300700001)(7406005)(8936002)(86362001)(5660300002)(478600001)(8676002)(66946007)(4326008)(31696002)(7366002)(186003)(6506007)(316002)(2906002)(6666004)(921005)(45080400002)(83380400001)(66556008)(66476007)(54906003)(38100700002)(110136005)(55236004)(2616005)(53546011)(66574015)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Sm5mbnVZV1NqTFBWV3hoNW41WVpoU3g4K3AvN2JWbnY4L1loWkxOaFp3RDZ6?=
+ =?utf-8?B?R2h1OU0rcU5lc2hiT3lXR2l0UDR6QWFMMk1RVXV4TU9JZHJHMmJ1SmVETnht?=
+ =?utf-8?B?cXRyNzEraFhNSmxYZVoraytRTllKM1RiYU9TMFlpelcwQW9NQk9HdkdQUEpO?=
+ =?utf-8?B?ZzU4R1RDOS8zOEVJUmFTSzZiVGliVlFJQXJwSzQrV09PUGgrMVVjRDJkZlNl?=
+ =?utf-8?B?cWVnR3VXNUYxOTQ2cyswT0JXcE1WQVFCY1FFZFdKbTlVcDhIYVFPTU12c1lI?=
+ =?utf-8?B?dGNhem12YVF3RXN3NjQzQ1FOZXlxc2tTTktISUJ3SllSNDhvSXE1L0Zxc1VU?=
+ =?utf-8?B?UVNnRGY0dUpMR3o1eGo5Yy9sdHRnM0daMmhZMUpOVUp1NW03N0NRTVpjN2x1?=
+ =?utf-8?B?V1F1ZjlKY2xIOVFLOXlXNGh2WnlFK0dlTDBCc1hpa2p2Z2pQc1k0TFo5N0xV?=
+ =?utf-8?B?MC9BZjYzT3BBeW1DVkNURldncDJ3bGZSbUQrRnE0Y3lCZlA0cHF4WWhFUWQx?=
+ =?utf-8?B?SXhBMTBHWURLWjBUVHR0WTQya2paZGRFb1ZrUTNMVHl2bVFnaWZqZzA3Nkp2?=
+ =?utf-8?B?MHZDUjNxWEZhS2k2dnhQU0pFb0JBVHNsSnI0eC9WUTBCbjRYMnNmYjRkSUdQ?=
+ =?utf-8?B?a1dnM3dEWmUxSm5mSDBJaUJqL1oxbzF1Mml4UE5iSVBHbzQzajdIcGdYMHNH?=
+ =?utf-8?B?VkNZR0NnbmQ4TkhEQ2FnZjM1b1ZaL0YrUXZEQlVzcjNZYnhYVTBlZUplNk5K?=
+ =?utf-8?B?anpORjBwbDVIa0JCcU03bUxYeTN2WUFNZWswYXYrankyZkVMeWgxalprUU5m?=
+ =?utf-8?B?T1lsckFaTEV1UVFlRnU0WWVNcVp4dm1CV01GSzdZL1RVSzUxVW9wZkR2LzAw?=
+ =?utf-8?B?Rys4dVBYTUQ4VEZHZGVCaWhta3pxYi84MGptMXErQU9uZmp1elBMQnRyWnZy?=
+ =?utf-8?B?dzZMMmo5QXhhNVdwUEtMNmpsMHVMUkRTRmxvcHNBd0JVSGFFUERMSXBNcTB1?=
+ =?utf-8?B?MDI2dGdySkxqZUhoOFNjYTJLZ3lYejBkeGxETUZpekU4cFJQeG80bmlUc0pR?=
+ =?utf-8?B?MVM5K2dvZm5BK05QWTJlcVZkTU4vT3pSTzRhbUhiV1VXRjNFYURzNGxDWUV4?=
+ =?utf-8?B?cHdweFhheEQ3NEhPME00SHBXZjg1T0JvdTlDRDJpRmtaNndUT2N5SGFYREJT?=
+ =?utf-8?B?UVNpWUttOU9xQXdjZUJCMUlvdEJlN2JIelZ3RG9Jb3g1ZWxuZlB0WTUyZzgw?=
+ =?utf-8?B?eE9jQlZaTEQvREh4NnNSSGhOSHFpakQ0MHZER29nNWgwaHdnSGFlbFpuMzBZ?=
+ =?utf-8?B?R3N6SEJKclZiWFBwbjMzUlg4dmpwanB3SWI2R3ZoS2w4TFFTK2p0dnZveURT?=
+ =?utf-8?B?UHBwd3VSa213dEJGZDVCRGw2aVJVUnFJYW5Eb3NHTlA5cS9wRFFwZTErVCtL?=
+ =?utf-8?B?S1hPWTRKMHU4R1A2UHpGdlFIUldHMVhzLzJaKzFlVHRweWRudk5BWERqVWUy?=
+ =?utf-8?B?NDkwR0htMzY3QUU5QkVMcHArcEFtakhrYzQ5LytMbk43MWhUM0EySmkrRHhH?=
+ =?utf-8?B?aXVzbFZSY0tTRTBJN2oxZjdRL28zYU1PWktSTWFxRlhSMHR0eTNMMGdBVXoz?=
+ =?utf-8?B?UUVncVY1a3BENlROODdCZWVKZjRHR1BBbldjMWJ0WlpVck5TTzRheWlqaE5G?=
+ =?utf-8?B?ZVc4V01YZldQRFo3eFlqU0FLaGhhazd5NHhXSktwbysvR29HcHdGVERFUmUw?=
+ =?utf-8?B?MkZNbFgzTFEyZk5mK2pINHJVemZuSVgzVHBwazJYRFVMSUczdTZaY3V3Wmlx?=
+ =?utf-8?B?MmJEVlh0NCtxYytmNkxjd3NLb212bFNMd1BpdzlUMU1mZ1Ztc2x6N2wraXNl?=
+ =?utf-8?B?MlIwV0p2YytsRXUvZW9FdG9JY01xU2FMNFBRMWozRDdUWXVHajdxbkNiZTVj?=
+ =?utf-8?B?U1RZUzFDam9iVFpTM0dvdXozdVM5c2tKZVJYWU41NmF5Vm9jY2hON1B6Qmd4?=
+ =?utf-8?B?Z1diM1RkSzBLNGROL2hWZHNDVEx1OUFyMXFaaVd5UU1EQ2hwenJNTm9QNkU3?=
+ =?utf-8?B?a3hvTUJzbStNWGNDYlI2S3lPNktDZGlhbEw1Rlk2ZDVCVENUdEEyMTRaWFdM?=
+ =?utf-8?B?cHRuNUgweTAvdGd4MmR6cisrams2ZVdGN2sxeGtLMC8xb0pmbXdtdzRDY1dt?=
+ =?utf-8?B?a2wxeW15am8xdkZySVFnWkF2c1NqTHhnbE9YT3V2bFFQRVl4K1BGQ0NJbklW?=
+ =?utf-8?B?bXdYblJRMnJaMUlWbFA5OUwxa01mRlN4NXorMU5KcmhCNmExQU9wbVZBc0U0?=
+ =?utf-8?B?cDNhQVAvL1BtbUdCSXY0N1RSMjdGZ1N6aDluQUp5M3pzOHR5Z3p3R3AybnVo?=
+ =?utf-8?Q?99Y0w/HU52o/zH2o=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4df4ac9-468f-461f-45c7-08da53c0406b
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5444.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5154.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12fc03b6-a694-4609-57fe-08da539ffb89
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2022 16:06:21.1021
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2022 19:57:20.8615
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PFfFd4IIEyrIwGs3DmUy3+VU4Y7wp6+mFZTg1yZK5S8A3P/qtg8XfggzrpdEJNonz/qTEcM+0l5s5svLfK/P3wkKmxkBIbegpARnJ9KtB/M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4242
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vXs+bOjH+4fOcuUWH70+RIveqnT0/Pq+8iyEigO8EvDRqJuyQL3UfJlXcd7Jw3A0Y26l6aYWfs6KfHQHmotPlQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB5667
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-T24gMjEvMDYvMjAyMiAwMDoxNywgRGFtaWVuIExlIE1vYWwgd3JvdGU6DQo+IEVYVEVSTkFMIEVN
-QUlMOiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IGtu
-b3cgdGhlIGNvbnRlbnQgaXMgc2FmZQ0KPiANCj4gT24gNi8yMS8yMiAwNzo0OSwgQ29ub3IgRG9v
-bGV5IHdyb3RlOg0KPj4NCi0tLTg8LS0tDQo+Pj4+DQo+Pj4+IGhtbSwgd2VsbCBJJ2xsIGxlYXZl
-IHRoYXQgdXAgdG8gcGVvcGxlIHRoYXQgaGF2ZSBDYW5hYW4gaGFyZHdhcmUhDQo+Pj4NCj4+PiBJ
-IHdpbGwgdGVzdCB0aGlzIHNlcmllcy4NCj4+Pg0KPj4NCj4+IENvb2wsIHRoYW5rcy4NCj4+IEkn
-bGwgdHJ5IHRvIGdldCBhIHJlc3BpbiBvdXQgdG9tb3Jyb3cgdy8gdGhlIG1lbW9yeSBub2RlICJ1
-bmZpeGVkIi4NCj4gDQo+IE9LLiBJIHdpbGwgdGVzdCB0aGF0IHRoZW4gOikNCg0KU2luY2UgdGhl
-IG1lbW9yeSBub2RlIGhpdCB0aGF0IGR0LXNjaGVtYSBzbmFnLCBJIGhhdmUgbm90IHNlbnQgYSB2
-Mi4NCkdvaW5nIHRvIGJlIEFGSyBmb3IgYSBmZXcgZGF5cywgc28gSSBkcm9wcGVkIHRoZSBtZW1v
-cnkgbm9kZSBjaGFuZ2UsDQpjaGFuZ2VkIHRoZSBzcGkgYmluZGluZyAmIHB1dCB0aGUgc2VyaWVz
-IG9uOg0KZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2Nvbm9yL2xpbnV4
-LmdpdC8gY2FuYWFuDQoNCklmIHlvdSBnZXQgYSBjaGFuY2UgdG8gbG9vayBhdCBpdCBncmVhdCwg
-aWYgbm90IEknbGwgc2VuZCBhIHYyIG9uY2UNCnRoZSBtZW1vcnkgbm9kZSBpcyBmaWd1cmVkIG91
-dC4NCg0KVGhhbmtzLA0KQ29ub3IuDQoNCg==
+Hi Uwe,
+
+On 14/03/2022 14:16, Uwe Kleine-König wrote:
+> Allow to add an exit hook to devm managed clocks. Also use
+> clk_get_optional() in devm_clk_get_optional instead of open coding it.
+> The generalisation will be used in the next commit to add some more
+> devm_clk helpers.
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Alexandru Ardelean <aardelean@deviqon.com>
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
+>   drivers/clk/clk-devres.c | 67 ++++++++++++++++++++++++++++++----------
+>   1 file changed, 50 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c
+> index f9d5b7334341..fb7761888b30 100644
+> --- a/drivers/clk/clk-devres.c
+> +++ b/drivers/clk/clk-devres.c
+> @@ -4,39 +4,72 @@
+>   #include <linux/export.h>
+>   #include <linux/gfp.h>
+>   
+> +struct devm_clk_state {
+> +	struct clk *clk;
+> +	void (*exit)(struct clk *clk);
+> +};
+> +
+>   static void devm_clk_release(struct device *dev, void *res)
+>   {
+> -	clk_put(*(struct clk **)res);
+> +	struct devm_clk_state *state = *(struct devm_clk_state **)res;
+> +
+> +	if (state->exit)
+> +		state->exit(state->clk);
+> +
+> +	clk_put(state->clk);
+>   }
+>   
+> -struct clk *devm_clk_get(struct device *dev, const char *id)
+> +static struct clk *__devm_clk_get(struct device *dev, const char *id,
+> +				  struct clk *(*get)(struct device *dev, const char *id),
+> +				  int (*init)(struct clk *clk),
+> +				  void (*exit)(struct clk *clk))
+>   {
+> -	struct clk **ptr, *clk;
+> +	struct devm_clk_state *state;
+> +	struct clk *clk;
+> +	int ret;
+>   
+> -	ptr = devres_alloc(devm_clk_release, sizeof(*ptr), GFP_KERNEL);
+> -	if (!ptr)
+> +	state = devres_alloc(devm_clk_release, sizeof(*state), GFP_KERNEL);
+> +	if (!state)
+>   		return ERR_PTR(-ENOMEM);
+>   
+> -	clk = clk_get(dev, id);
+> -	if (!IS_ERR(clk)) {
+> -		*ptr = clk;
+> -		devres_add(dev, ptr);
+> -	} else {
+> -		devres_free(ptr);
+> +	clk = get(dev, id);
+> +	if (IS_ERR(clk)) {
+> +		ret = PTR_ERR(clk);
+> +		goto err_clk_get;
+>   	}
+>   
+> +	if (init) {
+> +		ret = init(clk);
+> +		if (ret)
+> +			goto err_clk_init;
+> +	}
+> +
+> +	state->clk = clk;
+> +	state->exit = exit;
+> +
+> +	devres_add(dev, state);
+> +
+>   	return clk;
+> +
+> +err_clk_init:
+> +
+> +	clk_put(clk);
+> +err_clk_get:
+> +
+> +	devres_free(state);
+> +	return ERR_PTR(ret);
+>   }
+> -EXPORT_SYMBOL(devm_clk_get);
+>   
+> -struct clk *devm_clk_get_optional(struct device *dev, const char *id)
+> +struct clk *devm_clk_get(struct device *dev, const char *id)
+>   {
+> -	struct clk *clk = devm_clk_get(dev, id);
+> +	return __devm_clk_get(dev, id, clk_get, NULL, NULL);
+>   
+> -	if (clk == ERR_PTR(-ENOENT))
+> -		return NULL;
+> +}
+> +EXPORT_SYMBOL(devm_clk_get);
+>   
+> -	return clk;
+> +struct clk *devm_clk_get_optional(struct device *dev, const char *id)
+> +{
+> +	return __devm_clk_get(dev, id, clk_get_optional, NULL, NULL);
+>   }
+>   EXPORT_SYMBOL(devm_clk_get_optional);
+>   
+
+
+Some of our Tegra boards are not booting with the current -next and
+bisect is pointing to this commit. Looking at the boot log I am
+seeing the following panic ...
+
+[    2.097048] 8<--- cut here ---
+[    2.097053] Unable to handle kernel paging request at virtual address c216c810
+[    2.097060] [c216c810] *pgd=0201141e(bad)
+[    2.097079] Internal error: Oops: 8000000d [#1] SMP ARM
+[    2.097088] Modules linked in:
+[    2.097097] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.19.0-rc3-next-20220621-g34d1d36073ea #1
+[    2.097107] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+[    2.097113] PC is at 0xc216c810
+[    2.097123] LR is at devm_clk_release+0x18/0x24
+[    2.097150] pc : [<c216c810>]    lr : [<c088cb04>]    psr: a0000013
+[    2.097155] sp : f080dde8  ip : 000006cf  fp : c18d4854
+[    2.097161] r10: c1501850  r9 : c1a04d10  r8 : c1c4efa0
+[    2.097166] r7 : c216c810  r6 : f080de1c  r5 : c2737680  r4 : c26a9680
+[    2.097172] r3 : c216c810  r2 : 00000000  r1 : c2737840  r0 : c2082840
+[    2.097179] Flags: NzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+[    2.097187] Control: 10c5387d  Table: 0020404a  DAC: 00000051
+[    2.097191] Register r0 information: slab kmalloc-192 start c2082840 pointer offset 0 size 192
+[    2.097216] Register r1 information: slab kmalloc-128 start c2737800 pointer offset 64 size 128
+[    2.097236] Register r2 information: NULL pointer
+[    2.097244] Register r3 information: slab kmalloc-1k start c216c800 pointer offset 16 size 1024
+[    2.097263] Register r4 information: slab kmalloc-64 start c26a9680 pointer offset 0 size 64
+[    2.097282] Register r5 information: slab kmalloc-128 start c2737680 pointer offset 0 size 128
+[    2.097301] Register r6 information: 2-page vmalloc region starting at 0xf080c000 allocated at kernel_clone+0xb4/0x3e8
+[    2.097321] Register r7 information: slab kmalloc-1k start c216c800 pointer offset 16 size 1024
+[    2.097341] Register r8 information: non-slab/vmalloc memory
+[    2.097348] Register r9 information: non-slab/vmalloc memory
+[    2.097355] Register r10 information: non-slab/vmalloc memory
+[    2.097362] Register r11 information: non-slab/vmalloc memory
+[    2.097369] Register r12 information: non-paged memory
+[    2.097375] Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
+[    2.097384] Stack: (0xf080dde8 to 0xf080e000)
+[    2.097394] dde0:                   c2737800 c0a72d38 c18d4854 c0530490 c216c810 f080de1c
+[    2.097404] de00: c2120000 00000005 c216c9c0 80000013 0000017e c0a73d68 00000008 c2629e00
+[    2.097413] de20: c2737880 5640e141 c216c810 c216c810 00000205 c1c09dd4 00000000 c27375b8
+[    2.097422] de40: c2091700 c0a6e9a0 c216c810 c0a6f288 c216c810 c1c09dd4 c216c810 00000000
+[    2.097430] de60: c27375b8 c0a6f3c0 c1caa8e0 c216c810 c216c810 c0a6f450 00000000 c216c810
+[    2.097439] de80: c1c09dd4 c2120000 c27375b8 c0a6f850 00000000 c1c09dd4 c0a6f7c4 c0a6d4c0
+[    2.097447] dea0: 00000000 c2091458 c2286434 5640e141 c1be7f08 c1c09dd4 c2737580 c1be7f08
+[    2.097455] dec0: 00000000 c0a6e484 c1615714 c1be7c50 c1c09dd4 c2120000 c189a99c 00000000
+[    2.097464] dee0: c2120000 c0a701a0 c1c494e0 c2120000 c189a99c c0302144 0000017d c0364438
+[    2.097472] df00: c16da8bc c1626700 00000000 00000006 00000006 c16554c8 00000000 c2120000
+[    2.097480] df20: c15105bc c14f9778 c2091700 c20917d9 00000000 5640e141 c1a88930 c16da8bc
+[    2.097488] df40: c1c59000 5640e141 c16da8bc c1c59000 c1953b4c c18d4834 00000007 c1801340
+[    2.097497] df60: 00000006 00000006 00000000 c18004dc c2120000 c18004dc f080df74 c1a04cc0
+[    2.097505] df80: c106bbf0 00000000 00000000 00000000 00000000 00000000 00000000 c106bc08
+[    2.097513] dfa0: 00000000 c106bbf0 00000000 c03001a8 00000000 00000000 00000000 00000000
+[    2.097520] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    2.097528] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
+[    2.097542]  devm_clk_release from release_nodes+0x58/0xc0
+[    2.097575]  release_nodes from devres_release_all+0x7c/0xc0
+[    2.097596]  devres_release_all from device_unbind_cleanup+0xc/0x60
+[    2.097626]  device_unbind_cleanup from really_probe+0x1f4/0x2a8
+[    2.097650]  really_probe from __driver_probe_device+0x84/0xe4
+[    2.097673]  __driver_probe_device from driver_probe_device+0x30/0xd0
+[    2.097696]  driver_probe_device from __driver_attach+0x8c/0xf0
+[    2.097713]  __driver_attach from bus_for_each_dev+0x70/0xb0
+[    2.097729]  bus_for_each_dev from bus_add_driver+0x168/0x1f4
+[    2.097749]  bus_add_driver from driver_register+0x7c/0x118
+[    2.097766]  driver_register from do_one_initcall+0x44/0x1ec
+[    2.097784]  do_one_initcall from kernel_init_freeable+0x1d4/0x224
+[    2.097803]  kernel_init_freeable from kernel_init+0x18/0x12c
+[    2.097820]  kernel_init from ret_from_fork+0x14/0x2c
+[    2.097831] Exception stack(0xf080dfb0 to 0xf080dff8)
+[    2.097839] dfa0:                                     00000000 00000000 00000000 00000000
+[    2.097847] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    2.097854] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[    2.097862] Code: c2288680 ffffffff 00000000 00000000 (c2288680)
+[    2.097872] ---[ end trace 0000000000000000 ]---
+
+
+Let me know if you have any thoughts.
+
+Cheers
+Jon
+
+-- 
+nvpublic

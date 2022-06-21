@@ -2,110 +2,85 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB273552844
-	for <lists+dmaengine@lfdr.de>; Tue, 21 Jun 2022 01:24:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFD85552896
+	for <lists+dmaengine@lfdr.de>; Tue, 21 Jun 2022 02:20:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346958AbiFTXWq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 20 Jun 2022 19:22:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44766 "EHLO
+        id S230172AbiFUAUV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 20 Jun 2022 20:20:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347412AbiFTXW1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 Jun 2022 19:22:27 -0400
-Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D84B622502
-        for <dmaengine@vger.kernel.org>; Mon, 20 Jun 2022 16:17:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1655767048; x=1687303048;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8Iz6YFZtbcFYcwcjopjjArKVT0IuGvxeSilsHzUbATU=;
-  b=cUQyC8v4SCRLlJsMvP5niOL+bbyR5ZK2Tm10SHH+4H5FN1bmd8SB+LOj
-   2xfXbm18qDNFpKVUz9tBJC1I6hOgiAVwYXV8zbr+xTkP0BSN2o36UKFfa
-   Z766qsot88AyKqBOE1uellK3b17SaD80vNvmK+RConfIxn0KUSwex9Kqv
-   VgRGNB49trbmwpIO9vf6E7U5gGgwFvT1RMg4vgCXlmp8h42N656bebjbK
-   xcN0FXIrpcXT0VwTpRaA7zZdGFQCk4aqa51DRq50RLcKbF1ewc7O0k59N
-   W8LvimhkQYxo8B61HC5VAvFd3EnhCuIRyGGaXtDFkHlE1BCLIRNTagpSS
-   g==;
-X-IronPort-AV: E=Sophos;i="5.92,207,1650902400"; 
-   d="scan'208";a="208521890"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 21 Jun 2022 07:17:28 +0800
-IronPort-SDR: nl0a8o/z8azQPlWpSA3niCa80Q1h79ZGYSyx9Dc4A2OsMTfLj2Qv1kg7Qoye5wvNvjGGdayi2v
- yt1XE3nDHA6KzPnFN7qvhj7Qv6GyE7ct+Ra8Js21U122dRndpFxC7RQv6N2RD0m0Iesi6PgO8s
- jyQR5WkAb7l6g6WkFFNtP0CZG+mHF41ML5cBcrfr0Knb3OPQoGzFWm+h1m034mjs6kh7OMVAq4
- DQdKH/27svqgvwm34oeyuUYLmY8qUD4uEqA71ho1lbM4mYPFaw8B1HfS4SaW05a1+adQRGf4X0
- ztmQVIsjHgy7QpYO8epLLgex
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 20 Jun 2022 15:39:59 -0700
-IronPort-SDR: A/FLooiRXEH/KVDCugQdvY6/1ZU2vSVTpdroH74I2yEPrnwUrTWYTsZwxpHFa2aNCUZ/IXc73w
- RKt1COlp+Rb9pO0zPzVmABQLEwFqVwxvZ+xfPKrBGFoIPlobh0r/g/LhRMFF8MjS/1grX1/btG
- HZvZsCIIG70WZ2h49obYBgWf4oO/vxy8XkWuwRJMQu4qpyLLW6Vzc6u6Svsr/mSNYEQ/AN70/J
- 28QyDRlWNysZGzE76z3B7IGTz3p5Ffyf6piU7M+q5njUR8SZkynnbdAHRyFUxWu6LBYupCW4Xb
- Kv8=
-WDCIronportException: Internal
-Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 20 Jun 2022 16:17:28 -0700
-Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4LRlsz5llfz1SVp3
-        for <dmaengine@vger.kernel.org>; Mon, 20 Jun 2022 16:17:27 -0700 (PDT)
-Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)"
-        header.d=opensource.wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        opensource.wdc.com; h=content-transfer-encoding:content-type
-        :in-reply-to:organization:from:references:to:content-language
-        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
-        1655767046; x=1658359047; bh=8Iz6YFZtbcFYcwcjopjjArKVT0IuGvxeSil
-        sHzUbATU=; b=IIz0tfLvEcN1B2Jkb3lPD4RxNBWLqq4N1VPYpVwejCZ45TFDPT5
-        vj9tEpsH7AJcEfcDJ1EbX0nn96+dD5U/qdQtJdQKkNkipcexJs9t1i+JMw/jjdks
-        9VwH9MxppJ4DGmMbopxfjZFBsMS3fgF/h7XuMjBJTlcEzwkMGDrUX3n4FUVz1M5i
-        1tmGXLYebpRmWNIB0Oypk2CW5DwRtn84Uiac2avIDW0uRos3IMbt1W2WlscT90Nc
-        vRuyXi9Mk4qsQ9U+D1FWJh2ScxBzLFRPxcMNq12cFYUldKuROiFA3i+5zloQwMhV
-        OzAunPB+YTz3Y4CoRBH4QfEhhgGR9hjvA6w==
-X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
-Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
-        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id yAFB_3NiJDB5 for <dmaengine@vger.kernel.org>;
-        Mon, 20 Jun 2022 16:17:26 -0700 (PDT)
-Received: from [10.225.163.87] (unknown [10.225.163.87])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4LRlss3Tsdz1Rvlc;
-        Mon, 20 Jun 2022 16:17:21 -0700 (PDT)
-Message-ID: <c272728f-f610-77df-bd9b-c9fee6b727f8@opensource.wdc.com>
-Date:   Tue, 21 Jun 2022 08:17:20 +0900
+        with ESMTP id S236389AbiFUAUT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 Jun 2022 20:20:19 -0400
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 282DB1BE9B;
+        Mon, 20 Jun 2022 17:20:18 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 5CAA33200993;
+        Mon, 20 Jun 2022 20:20:14 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 20 Jun 2022 20:20:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        cc:cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm3; t=1655770813; x=
+        1655857213; bh=vW0Q8UBusbFNOQTYDIkgMBtPXU57mzxz1Jy7DV8VqXM=; b=g
+        Z2v+FeIl/R179S49hPK7ezv0qkGxo3x3g384vICa8jdyY9vOI80guXH3QQp8LCDz
+        BuSo/Ysh6LmttnTMgJx9zHC0Gz54BK8Arnw0fzsSr1dSZSp2VjAJyp9xgOivqVHB
+        ygbqtTyMtCtMReVxfwhHCWaSIZHhQX1uu2P3caDPd2CTamt2ZgYqBhC2Wlk3oYzZ
+        UrbpBEeHWS1Slt2I8d+1pvUQ2iHrzpRQ2xHkPSk6AtKB1IOFBBeDGp/v+VkK/3KW
+        UlELy2kMfpyNoTmnpTn8vjOn/1m+nReKunJLyLzVOGNYmWimViLYI8AsWzD6BckZ
+        eOa6jLyaqC3c6ZMT8vkPQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1655770813; x=
+        1655857213; bh=vW0Q8UBusbFNOQTYDIkgMBtPXU57mzxz1Jy7DV8VqXM=; b=Y
+        d5bj5fN3EcyKCmlXVADWmtgdl3X9bx4bkapdJXL6bNBmoKT8D7NEQM2bnZOMbQeP
+        gsqic+8V7GKvrWzU/Zn3yrWTU5WmdYkmCa/a7mBNlQxvbzsXwg7M89Hd+36ZHAZE
+        Vm0nGl66m/r0C+3+OjCFNrpPOweCvzEhJ1+8FFAUln/a3gH+0qUCvQh9F/GqHxas
+        zh3UD3K2263CgBRL/mhadQcUwgDm69kMYVLNWVQjpbU0QeCNQ9owwGmKFn/ZEnD1
+        03/9P7ADqCTab0IldtFdUXZlH3a91h7p9xSxhJOxNXgL4mXSu4C7NrCHUCv12jGl
+        l9oIEyGlmhHGP8Y7WF9sQ==
+X-ME-Sender: <xms:vA6xYk0lZZmfDyoDRcHlLobupJgD2IChFPbtqoeWN0Z-_bMQ5-UCLQ>
+    <xme:vA6xYvErhqCs88Q-1Cz3v9amsjPo1fZs9XxYv6BhrcwxItPJNbODoMmMaq0BmOVLI
+    MD0GWWLsAonTF1StA>
+X-ME-Received: <xmr:vA6xYs6TJ1wruMeVPxSs3YLzc4AGbHtHrYGm2PQ59Yf8b5Ht5e8q5LhHS_o4sSfmQYVc6UXwBypRok50cY8jT1uEe4t03sv1j2KkO503BzfmRAHDFfd-w3QBSw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrudefvddgvdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepuffvvehfhffkffgfgggjtgfgsehtkeertddtfeejnecuhfhrohhmpefurghm
+    uhgvlhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenuc
+    ggtffrrghtthgvrhhnpedtvefhheehgfdvkeetffeludeuudehudeuvddtveelleekvedv
+    uedviefhkeeuheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
+X-ME-Proxy: <xmx:vQ6xYt1ucPZEn-qArIj4S5h5zMu_p2I5OKEaRrOR5zYWOOfPhugSow>
+    <xmx:vQ6xYnGGeQdxmqeSCZWt_hKhFiPJ7RZMSgcPZx8Zhg3LBsZ7bVvgTQ>
+    <xmx:vQ6xYm9gmszPTGtrWP2TbWT8N5hQKjPUNw3NJOvuBkb_CYneWiSpIQ>
+    <xmx:vQ6xYoM5iBdf-o23s6zlNO1FWPDNuf5SpLKpfBH9zp-zKTBQVes2UQ>
+Feedback-ID: i0ad843c9:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 20 Jun 2022 20:20:12 -0400 (EDT)
+Subject: Re: [PATCH] dmaengine: sun6i: Set the maximum segment size
+To:     =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>, Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev
+References: <20220617034209.57337-1-samuel@sholland.org>
+ <3494277.R56niFO833@kista>
+From:   Samuel Holland <samuel@sholland.org>
+Message-ID: <c0c27494-99ea-969d-ff6c-a21f110ed3e8@sholland.org>
+Date:   Mon, 20 Jun 2022 19:20:11 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH 06/14] spi: dt-bindings: dw-apb-ssi: update
- spi-{r,t}x-bus-width for dwc-ssi
+In-Reply-To: <3494277.R56niFO833@kista>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-To:     Conor Dooley <mail@conchuod.ie>, Conor.Dooley@microchip.com,
-        fancer.lancer@gmail.com
-Cc:     airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, thierry.reding@gmail.com,
-        sam@ravnborg.org, Eugeniy.Paltsev@synopsys.com, vkoul@kernel.org,
-        lgirdwood@gmail.com, broonie@kernel.org, daniel.lezcano@linaro.org,
-        palmer@dabbelt.com, palmer@rivosinc.com, tglx@linutronix.de,
-        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
-        masahiroy@kernel.org, geert@linux-m68k.org, niklas.cassel@wdc.com,
-        dillon.minfei@gmail.com, jee.heng.sia@intel.com,
-        joabreu@synopsys.com, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-spi@vger.kernel.org, linux-riscv@lists.infradead.org
-References: <20220618123035.563070-1-mail@conchuod.ie>
- <20220618123035.563070-7-mail@conchuod.ie>
- <20220620205654.g7fyipwytbww5757@mobilestation>
- <61b0fb86-078d-0262-b142-df2984ce0f97@microchip.com>
- <9a1fcb40-9267-d8e6-b3b6-3b03fd789822@opensource.wdc.com>
- <a2d85598-76d1-c9dc-d50d-e5aa815997cf@conchuod.ie>
-From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Organization: Western Digital Research
-In-Reply-To: <a2d85598-76d1-c9dc-d50d-e5aa815997cf@conchuod.ie>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
         SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -114,135 +89,68 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 6/21/22 07:49, Conor Dooley wrote:
-> 
-> 
-> On 20/06/2022 23:46, Damien Le Moal wrote:
->> On 6/21/22 06:06, Conor.Dooley@microchip.com wrote:
->>> On 20/06/2022 21:56, Serge Semin wrote:
->>>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->>>>
->>>> On Sat, Jun 18, 2022 at 01:30:28PM +0100, Conor Dooley wrote:
->>>>> From: Conor Dooley <conor.dooley@microchip.com>
->>>>>
->>>>> snps,dwc-ssi-1.01a has a single user - the Canaan k210, which uses a
->>>>> width of 4 for spi-{r,t}x-bus-width. Update the binding to reflect
->>>>> this.
->>>>>
->>>>> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
->>>>> ---
->>>>>  .../bindings/spi/snps,dw-apb-ssi.yaml         | 48 ++++++++++++++-----
->>>>>  1 file changed, 35 insertions(+), 13 deletions(-)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
->>>>> index e25d44c218f2..f2b9e3f062cd 100644
->>>>> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
->>>>> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
->>>>> @@ -135,19 +135,41 @@ properties:
->>>>>        of the designware controller, and the upper limit is also subject to
->>>>>        controller configuration.
->>>>>
->>>>> -patternProperties:
->>>>> -  "^.*@[0-9a-f]+$":
->>>>> -    type: object
->>>>> -    properties:
->>>>> -      reg:
->>>>> -        minimum: 0
->>>>> -        maximum: 3
->>>>> -
->>>>> -      spi-rx-bus-width:
->>>>> -        const: 1
->>>>> -
->>>>> -      spi-tx-bus-width:
->>>>> -        const: 1
->>>>> +if:
->>>>> +  properties:
->>>>> +    compatible:
->>>>> +      contains:
->>>>> +        const: snps,dwc-ssi-1.01a
->>>>> +
->>>>> +then:
->>>>> +  patternProperties:
->>>>> +    "^.*@[0-9a-f]+$":
->>>>> +      type: object
->>>>> +      properties:
->>>>> +        reg:
->>>>> +          minimum: 0
->>>>> +          maximum: 3
->>>>> +
->>>>> +        spi-rx-bus-width:
->>>>> +          const: 4
->>>>> +
->>>>> +        spi-tx-bus-width:
->>>>> +          const: 4
->>>>> +
->>>>> +else:
->>>>> +  patternProperties:
->>>>> +    "^.*@[0-9a-f]+$":
->>>>> +      type: object
->>>>> +      properties:
->>>>> +        reg:
->>>>> +          minimum: 0
->>>>> +          maximum: 3
->>>>> +
->>>>> +        spi-rx-bus-width:
->>>>> +          const: 1
->>>>> +
->>>>> +        spi-tx-bus-width:
->>>>> +          const: 1
->>>>
->>>> You can just use a more relaxed constraint "enum: [1 2 4 8]" here
->>>
->>> 8 too? sure.
->>>
->>>> irrespective from the compatible string. The modern DW APB SSI
->>>> controllers of v.4.* and newer also support the enhanced SPI Modes too
->>>> (Dual, Quad and Octal). Since the IP-core version is auto-detected at
->>>> run-time there is no way to create a DT-schema correctly constraining
->>>> the Rx/Tx SPI bus widths. So let's keep the
->>>> compatible-string-independent "patternProperties" here but just extend
->>>> the set of acceptable "spi-rx-bus-width" and "spi-tx-bus-width"
->>>> properties values.
->>>
->>> SGTM!
->>>
->>>>
->>>> Note the DW APB SSI/AHB SSI driver currently doesn't support the
->>>> enhanced SPI modes. So I am not sure whether the multi-lines Rx/Tx SPI
->>>> bus indeed works for Canaan K210 AHB SSI controller. AFAICS from the
->>>> DW APB SSI v4.01a manual the Enhanced SPI mode needs to be properly
->>>> activated by means of the corresponding CSR. So most likely the DW AHB
->>>> SSI controllers need some specific setups too.
->>>
->>> hmm, well I'll leave that up to people that have Canaan hardware!
->>
->> I will test this series.
->>
-> 
-> Cool, thanks.
-> I'll try to get a respin out tomorrow w/ the memory node "unfixed".
+Hi Jernej,
 
-OK. I will test that then :)
-
-> Conor.
+On 6/20/22 1:28 PM, Jernej Škrabec wrote:
+> Dne petek, 17. junij 2022 ob 05:42:09 CEST je Samuel Holland napisal(a):
+>> The sun6i DMA engine supports segment sizes up to 2^25-1 bytes. This is
+>> explicitly stated in newer SoC documentation (H6, D1), and it is implied
+>> in older documentation by the 25-bit width of the "bytes left in the
+>> current segment" register field.
 > 
->>> Thanks,
->>> Conor.
->>>
->>>>
->>>> -Sergey
->>>>
->>>>>
->>>>>  unevaluatedProperties: false
->>>>>
->>>>> --
->>>>> 2.36.1
->>>>>
->>>
+> At least A10 user manual says 128k max in description for Byte Counter 
+> register (0x100+N*0x20+0xC), although field size is defined as 23:0, but that's 
+> still less than 2^25-1. A20 supports only 128k too according to manual. New 
+> quirk should be introduced for this.
+
+Thanks for checking this. A10 and A20 use a separate driver (sun4i-dma). That
+driver will also benefit from setting the max segment size, so I will send a
+patch for it.
+
+I think all of the variants supported by sun6i-dma have the same segment size
+capability, so no quirk is needed here.
+
+Regards,
+Samuel
+
+>>
+>> Exposing the real segment size limit (instead of the 64k default)
+>> reduces the number of SG list segments needed for a transaction.
+>>
+>> Signed-off-by: Samuel Holland <samuel@sholland.org>
+>> ---
+>> Tested on A64, verified that the maximum ALSA PCM period increased, and
+>> that audio playback still worked.
+>>
+>>  drivers/dma/sun6i-dma.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+>> index b7557f437936..1425f87d97b7 100644
+>> --- a/drivers/dma/sun6i-dma.c
+>> +++ b/drivers/dma/sun6i-dma.c
+>> @@ -9,6 +9,7 @@
+>>  
+>>  #include <linux/clk.h>
+>>  #include <linux/delay.h>
+>> +#include <linux/dma-mapping.h>
+>>  #include <linux/dmaengine.h>
+>>  #include <linux/dmapool.h>
+>>  #include <linux/interrupt.h>
+>> @@ -1334,6 +1335,8 @@ static int sun6i_dma_probe(struct platform_device 
+> *pdev)
+>>  	INIT_LIST_HEAD(&sdc->pending);
+>>  	spin_lock_init(&sdc->lock);
+>>  
+>> +	dma_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(25));
+>> +
+>>  	dma_cap_set(DMA_PRIVATE, sdc->slave.cap_mask);
+>>  	dma_cap_set(DMA_MEMCPY, sdc->slave.cap_mask);
+>>  	dma_cap_set(DMA_SLAVE, sdc->slave.cap_mask);
+>> -- 
+>> 2.35.1
 >>
 >>
+> 
+> 
 
-
--- 
-Damien Le Moal
-Western Digital Research

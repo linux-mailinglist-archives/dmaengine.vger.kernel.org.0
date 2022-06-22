@@ -2,47 +2,47 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5626D5554C2
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Jun 2022 21:41:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65AD45554BA
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Jun 2022 21:41:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358574AbiFVTjG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 22 Jun 2022 15:39:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47874 "EHLO
+        id S1359139AbiFVTjF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 22 Jun 2022 15:39:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359790AbiFVTig (ORCPT
+        with ESMTP id S1359791AbiFVTig (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Jun 2022 15:38:36 -0400
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06A3D3FD96;
-        Wed, 22 Jun 2022 12:38:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B4863FD9C;
+        Wed, 22 Jun 2022 12:38:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655926711; x=1687462711;
+  t=1655926712; x=1687462712;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=x05dcZfiGIHrcQ8Qy7jUQiCF+0Y+ROMG13iEPHFLY5o=;
-  b=H58pvu2Pi62gDKtyr17Heh/ntRROsFbfiu4Uk7SF2+J3k6M3dhzkOujQ
-   sKpDYwSxL7aKqEH3bHctV62MzFrIffOsKLGDb201oXN3A94lwA076ie04
-   cFVjGxnME5RjLodKVbJB9IZ1bqCw6EtixupFvAYMXpFiYtkIRPL19xILl
-   dv+bBPEiJrm0VCq5SLY8g/wLdrBqf4bv643ZI6SFaYvwch6fcm7evQqHL
-   UqIYpxZsgzamO31mz6UjghRkH5LTFBtc0R4T7ZG83uJuBAN6YDn2zlpOl
-   1CN71aSdAMJLBNKMRYHp81nnTVVJ2eh6CXyWP/zQe1oN7PPsCzwT4RWDT
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10386"; a="305983105"
+  bh=EnJ5Su7RR3jjj7To4p4p1aGGCrzCsNhKtD7qZhiBzvo=;
+  b=Sjze+mQBQsh2D+dsaQwdj8Ddsp+xiVrKOrGsEY49cxito6hnpeHb4R/u
+   cnAZdByUX6o0oJmgeCEoqKKKuwwOilNrmNDT3TAQNc5wSqrrpq1xYRkE7
+   PBgdwuvTkxJDOjIyjw6UeQjTACMu9JkVTVvc1FJLAzOAiIpfIJrjDVZP0
+   FcdeqedqrzgsDFVuVlne/Lpcw5xLt9YJzjvwJMdt4KU17ldsQplPHWO5q
+   kiM+O9vUmj6As/1HC8iCcUk19QwqbUEtGkjKs8pykMc1cFO2Ej+1UT3o9
+   QKt7MWAWgCN++HPS2pCBZ2Dkyag+qedAN7LWaE3r6d0Zunp9xfBZk60de
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10386"; a="305983108"
 X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
-   d="scan'208";a="305983105"
+   d="scan'208";a="305983108"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2022 12:38:30 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2022 12:38:31 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
-   d="scan'208";a="715542101"
+   d="scan'208";a="715542102"
 Received: from bwalker-desk.ch.intel.com ([143.182.136.162])
-  by orsmga004.jf.intel.com with ESMTP; 22 Jun 2022 12:38:30 -0700
+  by orsmga004.jf.intel.com with ESMTP; 22 Jun 2022 12:38:31 -0700
 From:   Ben Walker <benjamin.walker@intel.com>
 To:     vkoul@kernel.org
 Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 10/15] dmaengine: Providers should prefer dma_set_residue over dma_set_tx_state
-Date:   Wed, 22 Jun 2022 12:37:48 -0700
-Message-Id: <20220622193753.3044206-11-benjamin.walker@intel.com>
+Subject: [PATCH v4 11/15] dmaengine: Remove dma_set_tx_state
+Date:   Wed, 22 Jun 2022 12:37:49 -0700
+Message-Id: <20220622193753.3044206-12-benjamin.walker@intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220622193753.3044206-1-benjamin.walker@intel.com>
 References: <20220503200728.2321188-1-benjamin.walker@intel.com>
@@ -59,58 +59,33 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The dma_set_tx_state function will go away shortly. The two functions
-are functionally equivalent.
+Nothing calls this anymore.
 
 Signed-off-by: Ben Walker <benjamin.walker@intel.com>
 ---
- drivers/dma/imx-sdma.c | 3 +--
- drivers/dma/mmp_tdma.c | 3 +--
- drivers/dma/mxs-dma.c  | 3 +--
- 3 files changed, 3 insertions(+), 6 deletions(-)
+ drivers/dma/dmaengine.h | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 8535018ee7a2e..f2de1836dbd34 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1816,8 +1816,7 @@ static enum dma_status sdma_tx_status(struct dma_chan *chan,
- 
- 	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
- 
--	dma_set_tx_state(txstate, chan->completed_cookie, chan->cookie,
--			 residue);
-+	dma_set_residue(txstate, residue);
- 
- 	return sdmac->status;
+diff --git a/drivers/dma/dmaengine.h b/drivers/dma/dmaengine.h
+index 08c7bd7cfc229..7a5203175e6a8 100644
+--- a/drivers/dma/dmaengine.h
++++ b/drivers/dma/dmaengine.h
+@@ -88,15 +88,6 @@ static inline enum dma_status dma_cookie_status(struct dma_chan *chan,
+ 	return DMA_IN_PROGRESS;
  }
-diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
-index a262e0eb4cc94..753b431ca206b 100644
---- a/drivers/dma/mmp_tdma.c
-+++ b/drivers/dma/mmp_tdma.c
-@@ -539,8 +539,7 @@ static enum dma_status mmp_tdma_tx_status(struct dma_chan *chan,
- 	struct mmp_tdma_chan *tdmac = to_mmp_tdma_chan(chan);
  
- 	tdmac->pos = mmp_tdma_get_pos(tdmac);
--	dma_set_tx_state(txstate, chan->completed_cookie, chan->cookie,
--			 tdmac->buf_len - tdmac->pos);
-+	dma_set_residue(txstate, tdmac->buf_len - tdmac->pos);
- 
- 	return tdmac->status;
- }
-diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
-index 994fc4d2aca42..ab9eca6d682dc 100644
---- a/drivers/dma/mxs-dma.c
-+++ b/drivers/dma/mxs-dma.c
-@@ -664,8 +664,7 @@ static enum dma_status mxs_dma_tx_status(struct dma_chan *chan,
- 		residue -= bar;
- 	}
- 
--	dma_set_tx_state(txstate, chan->completed_cookie, chan->cookie,
--			residue);
-+	dma_set_residue(txstate, residue);
- 
- 	return mxs_chan->status;
- }
+-static inline void dma_set_tx_state(struct dma_tx_state *st,
+-	dma_cookie_t last, dma_cookie_t used, u32 residue)
+-{
+-	if (!st)
+-		return;
+-
+-	st->residue = residue;
+-}
+-
+ static inline void dma_set_residue(struct dma_tx_state *state, u32 residue)
+ {
+ 	if (state)
 -- 
 2.35.1
 

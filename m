@@ -2,151 +2,161 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32DEE554334
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Jun 2022 09:04:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA60B55490A
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Jun 2022 14:16:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232834AbiFVGaH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 22 Jun 2022 02:30:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45910 "EHLO
+        id S1355237AbiFVKg4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 22 Jun 2022 06:36:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229698AbiFVGaG (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Jun 2022 02:30:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B05B52F64A
-        for <dmaengine@vger.kernel.org>; Tue, 21 Jun 2022 23:30:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4A78461425
-        for <dmaengine@vger.kernel.org>; Wed, 22 Jun 2022 06:30:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96BF8C34114;
-        Wed, 22 Jun 2022 06:30:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655879404;
-        bh=h3Vv9qNgq4HzMgNZ/jgHRU49Sdukfg5M6MdpehJH23M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QaAzmbwUCnh1C0IdLDlPkFTgMOfulOmZvz9HzXD58rQb5/4M/zKTmaDYW8ZSAnyxx
-         j3g3lcXt12kRacsWjWeaIh3i84twzoxhQSxPOeYVbezqHSZWnTt0ZX3pxZUiR+5eCG
-         irRAT80PJVW1U9RLoE6BOjLO+PVa8GH9QwOdgn2tdkNDj/0D9S8iSS4u7uNoQDljnB
-         u71RznxiF1YHrA4lX8kwHZieJQGL6ZgNNecTqetPN1D+7R5MVXQd54DGhMPjpP1H/s
-         jxhZ6yqN49s9XWCCtIarpH/0IL07Ifgpib1wOZBFHxpqNtqTP0E43tM7OWNt3JyADy
-         60+DJt2lnI6Ng==
-Date:   Wed, 22 Jun 2022 07:29:58 +0100
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Ben Walker <benjamin.walker@intel.com>, dmaengine@vger.kernel.org,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        mporter@kernel.crashing.org, alex.bou9@gmail.com
-Subject: Re: [PATCH v2 00/15] dmaengine: Support polling for out of order
- completions
-Message-ID: <20220622072918.03ecda4c@sal.lan>
-In-Reply-To: <YqGY0fIvuIS88XGl@matsya>
-References: <20220503200728.2321188-1-benjamin.walker@intel.com>
-        <YqGY0fIvuIS88XGl@matsya>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-redhat-linux-gnu)
+        with ESMTP id S1355402AbiFVKgx (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Jun 2022 06:36:53 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5FE13BA7D;
+        Wed, 22 Jun 2022 03:36:49 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id o10so23263128edi.1;
+        Wed, 22 Jun 2022 03:36:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=YFwi1vxkzrvgsqoCKPo5AQXebahZiMS5qtbuazVoioY=;
+        b=C60jruRIr3l7H20jbT6Re8q4TAOBzwgoJniFeCwP9jUCkCeFfZSyKWDXzuiR3+WsFk
+         iug9mCtL5f/362puhR37XxfXjPTn+feFC8tv5f+bUCGxDr5RecoUaz5WL/iKgw40h3f5
+         nRLlZkcl+Cgcr2kX9I7VZkqGcpVV39vi0d4feUx7Mg7xkPeRevq2RrFsFeI4kgEh2RbO
+         1N8lkUgvGsbvP6nJ0yewhGBY+YbTQLHkQCH0wrxztTUCL3jR2tFJCgJ4iW4RmvFKBM5x
+         9Wx0qhacGBBsF/oQxleSmTbsTojFMMwK1Y3Znaa7mITTI9ctZr+bJEAD7fH9uR2Py1m/
+         LCwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YFwi1vxkzrvgsqoCKPo5AQXebahZiMS5qtbuazVoioY=;
+        b=JUQkFuw/LJT3Zo+3RWVoPZFiD2r+ZQg17eyslr5kTL99ME8uvUy2BSEWuIUEBpx+Ju
+         5lgkWlveEWsfYs147upTOC8HupaMjHP3uTE3A4wji8AeY3atS3UnXWMtbGJP8uO7+aZI
+         b74tRwChr9xVkcZsQIyX39BXUzK2/Jy9rVSj5IpEa/fgr7U+sqNWqNJmOMpTaZ5BuT4y
+         kf+tGjg1l3SmsN2QleI70t7hF5P555BGdBlhsSaC8ui0NzV+WrdzsUFdihe0DEmvVdkK
+         tv8DMP+r6szL0EAIqsbNaYcUJjHK0VqEzfvQU5AySASWzRKDye8DpG51ZK8E1G+Tb9AJ
+         PIgg==
+X-Gm-Message-State: AJIora/JbIdlBFYOpg7Dm/7Z1IHgTL1xejn62ZJ6PGGBQCvMFfI1S14t
+        YVorYM/L8RLtE96StQo1Et71XIdRB3bDUjKODnQ=
+X-Google-Smtp-Source: AGRyM1tnnFr1LC7h/zRLo+HkB47D6IcosyajAFO4R/Wl+PPHAqyQruG56xeyLIJB7dGNj2Z8gyVtab2tS/XsOjguV9k=
+X-Received: by 2002:a05:6402:5002:b0:435:1ff1:99ee with SMTP id
+ p2-20020a056402500200b004351ff199eemr3312157eda.230.1655894208315; Wed, 22
+ Jun 2022 03:36:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220314141643.22184-1-u.kleine-koenig@pengutronix.de>
+ <20220314141643.22184-2-u.kleine-koenig@pengutronix.de> <d6b890c8-bfb5-cfa5-c6d8-ee245701c077@nvidia.com>
+ <20220621204914.byokkrxiznvod7vq@pengutronix.de>
+In-Reply-To: <20220621204914.byokkrxiznvod7vq@pengutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 22 Jun 2022 12:36:11 +0200
+Message-ID: <CAHp75VcBEpLo+pYy+RG3O2BbePJbGEQ89jxi-oG1W6=+2hgXrQ@mail.gmail.com>
+Subject: Re: [PATCH v8 01/16] clk: generalize devm_clk_get() a bit
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Jon Hunter <jonathanh@nvidia.com>, Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        linux-hwmon@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Tomislav Denis <tomislav.denis@avl.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Andy Gross <agross@kernel.org>,
+        Alexandru Ardelean <aardelean@deviqon.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        linux-pwm@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        =?UTF-8?Q?Andr=C3=A9_Gustavo_Nakagomi_Lopez?= <andregnl@usp.br>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        linux-amlogic <linux-amlogic@lists.infradead.org>,
+        Amireddy Mallikarjuna reddy 
+        <mallikarjunax.reddy@linux.intel.com>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Cai Huoqing <caihuoqing@baidu.com>,
+        linux-crypto <linux-crypto@vger.kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        dmaengine <dmaengine@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Em Thu, 9 Jun 2022 12:23:05 +0530
-Vinod Koul <vkoul@kernel.org> escreveu:
+On Tue, Jun 21, 2022 at 11:01 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Tue, Jun 21, 2022 at 08:57:00PM +0100, Jon Hunter wrote:
 
-> On 03-05-22, 13:07, Ben Walker wrote:
-> > This series adds support for polling async transactions for completion
-> > even if interrupts are disabled and trasactions can complete out of
-> > order.
-> > 
-> > To do this, all DMA client assumptions about the behavior of
-> > dma_cookie_t have to be removed. Prior to this series, dma_cookie_t was
-> > a monotonically increasing integer and cookies could be compared to one
-> > another to determine if earlier operations had completed (up until the
-> > cookie wraps around, then it would break).
-> > 
-> > Fortunately, only one out of the many, many DMA clients had any
-> > dependency on dma_cookie_t being anything more than an opaque handle.
-> > This is the pxa_camera driver and it is dealt with in patch 7 of this
-> > series.
-> > 
-> > The series also does some API clean up and documents how dma_cookie_t
-> > should behave (i.e. there are no rules, it's just a handle).
-> > 
-> > This closes out by adding support for .device_tx_status() to the idxd
-> > driver and then reverting the DMA_OUT_OF_ORDER patch that previously
-> > allowed idxd to opt-out of support for polling, which I think is a nice
-> > overall simplification to the damengine API.
-> > 
-> > Herbert, David - Need an ack on patch 4.
-> > 
-> > Mauro - Need an ack on patches 5 and 7.
-> > 
-> > Matt, Alexandre - Need an ack on patch 6.  
-> 
-> Can you rebase and resend this, hopefully folks can ack the change...
+...
 
-The mailing lists for each subsystem should also be c/c, in order to
-allow usual reviewers to take a look at the patches. In case of
-patches 5 and 7, they both should be c/c to linux-media@vger.kernel.org.
+> (Pro tipp: The commit in next has a Link: footer. If you follow the
+> link, you find the thread that was actually applied (i.e. v9) and where
+> the fix is also contained.)
 
-It also makes sense to c/c LKML, in case some of the reviewers want to
-see the full patch series.
+Even easier, you may take a message-id from the Link and supply to `b4`:
 
-Regards,
-Mauro
+  b4 mbox ${message-id}
+  mutt -f ${message-id}.mbx # or whatever MUA that handles mboxes
 
-> 
-> > 
-> > Changes since version 1:
-> >  - Broke up the change to remove dma_async_is_tx_complete into a single
-> >    patch for each driver
-> >  - Renamed dma_async_is_tx_complete to dmaengine_async_is_tx_complete.
-> > 
-> > Ben Walker (15):
-> >   dmaengine: Remove dma_async_is_complete from client API
-> >   dmaengine: Move dma_set_tx_state to the provider API header
-> >   dmaengine: Add dmaengine_async_is_tx_complete
-> >   crypto: stm32/hash: Use dmaengine_async_is_tx_complete
-> >   media: omap_vout: Use dmaengine_async_is_tx_complete
-> >   rapidio: Use dmaengine_async_is_tx_complete
-> >   media: pxa_camera: Use dmaengine_async_is_tx_complete
-> >   dmaengine: Remove dma_async_is_tx_complete
-> >   dmaengine: Remove last, used from dma_tx_state
-> >   dmaengine: Providers should prefer dma_set_residue over
-> >     dma_set_tx_state
-> >   dmaengine: Remove dma_set_tx_state
-> >   dmaengine: Add provider documentation on cookie assignment
-> >   dmaengine: idxd: idxd_desc.id is now a u16
-> >   dmaengine: idxd: Support device_tx_status
-> >   dmaengine: Revert "cookie bypass for out of order completion"
-> > 
-> >  Documentation/driver-api/dmaengine/client.rst | 24 ++----
-> >  .../driver-api/dmaengine/provider.rst         | 64 ++++++++------
-> >  drivers/crypto/stm32/stm32-hash.c             |  3 +-
-> >  drivers/dma/amba-pl08x.c                      |  1 -
-> >  drivers/dma/at_hdmac.c                        |  3 +-
-> >  drivers/dma/dmaengine.c                       |  2 +-
-> >  drivers/dma/dmaengine.h                       | 12 ++-
-> >  drivers/dma/dmatest.c                         | 14 +--
-> >  drivers/dma/idxd/device.c                     |  1 +
-> >  drivers/dma/idxd/dma.c                        | 86 ++++++++++++++++++-
-> >  drivers/dma/idxd/idxd.h                       |  3 +-
-> >  drivers/dma/imx-sdma.c                        |  3 +-
-> >  drivers/dma/mmp_tdma.c                        |  3 +-
-> >  drivers/dma/mxs-dma.c                         |  3 +-
-> >  drivers/media/platform/omap/omap_vout_vrfb.c  |  2 +-
-> >  drivers/media/platform/pxa_camera.c           | 15 +++-
-> >  drivers/rapidio/devices/rio_mport_cdev.c      |  3 +-
-> >  include/linux/dmaengine.h                     | 58 +------------
-> >  18 files changed, 164 insertions(+), 136 deletions(-)
-> > 
-> > -- 
-> > 2.35.1  
-> 
+
+Dunno if `b4` has capability to parse Link instead of message-id.
+
+--=20
+With Best Regards,
+Andy Shevchenko

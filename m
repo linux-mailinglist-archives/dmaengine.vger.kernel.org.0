@@ -2,98 +2,129 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D766C557A61
-	for <lists+dmaengine@lfdr.de>; Thu, 23 Jun 2022 14:34:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A303A557A7D
+	for <lists+dmaengine@lfdr.de>; Thu, 23 Jun 2022 14:41:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229721AbiFWMeD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 23 Jun 2022 08:34:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47582 "EHLO
+        id S231678AbiFWMlZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 23 Jun 2022 08:41:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230047AbiFWMeD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 23 Jun 2022 08:34:03 -0400
-Received: from mail-ot1-x336.google.com (mail-ot1-x336.google.com [IPv6:2607:f8b0:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D66BD41338
-        for <dmaengine@vger.kernel.org>; Thu, 23 Jun 2022 05:34:02 -0700 (PDT)
-Received: by mail-ot1-x336.google.com with SMTP id l24-20020a0568301d7800b0060c1ebc6438so15223783oti.9
-        for <dmaengine@vger.kernel.org>; Thu, 23 Jun 2022 05:34:02 -0700 (PDT)
+        with ESMTP id S231158AbiFWMlY (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 23 Jun 2022 08:41:24 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE46449918
+        for <dmaengine@vger.kernel.org>; Thu, 23 Jun 2022 05:41:22 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id a10so10953339wmj.5
+        for <dmaengine@vger.kernel.org>; Thu, 23 Jun 2022 05:41:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7lh7wGIijm5Qy/7/1nvu2I6k52J07wCjQDIVmBhkyv4=;
-        b=dbMq+CREpIHjXqUEehGbtixHFAOAd4368iz5/0x1dGld3utckQOTbhkCQyOtKtW7qS
-         R9Yk5kWTFs824NcKNQZs3LKsh3TOrXjVp2xNoEyy3v/VxrxewlcAU4CCbP15ELJG6HrC
-         6FdMj91nO1ZO2QVVTAIjM87/lQr/5LPAle8MZICnBQ/mG6RR2YFKeo8Ib4xUa2yDOpk1
-         La2PSb96JTG2opldhVU/kd4SaqbcLJLRvyLiZzGVIkuvaLEligTeENiSCS5HMSAktP2+
-         pIBD/7iKxp8YZ/cDtSIYn1hU/P1mFs94P33ClGmEX23EaDLU0tm63aCcnOyitGEFBIb6
-         tQGA==
+        d=conchuod.ie; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=YKuhlfeie/APuzN1zX50F9wlajDVarix+gW9JqPWiT0=;
+        b=UMP6RCyZP4CD6hOpGQbkX9Cj3bPk1ibYJbn4nsdNdndZTqQfI3/vZ8bIRLgJSIms8u
+         CPePjkJfaFGkLpAH9WY7iFv9pbNYvYe5jqqSz8sj+2Qf4GfYVFiKObOiaJ7J+qH1bGvP
+         VbLXbFzeDNL3kV5xpFgi8EPl9utzHo/yeUTmYj0EJVSqHBEOLi9N+dZTEkBtSiT1ZYoV
+         E4fQE+A+R2BHBwNPUeWkzfyaoJLLBH+EMoSWnr4Qer7+DC8yHJI0iUtL7cob5S1ocket
+         H2qCHNsne4oMOwFRLI9UMKSLvjNlpdi8dU2fdlh1bFht6a2RH8lnI13E785t9rZnNwvq
+         L5OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=7lh7wGIijm5Qy/7/1nvu2I6k52J07wCjQDIVmBhkyv4=;
-        b=6K/OaiaR/PMAVma9Uho5qQIzIqNxJr61IN21nLlEMFStLFKAmnn7G1FlNX46txXwWu
-         E0pdPuEzlFccuM+jrNSLdvwUAGH1+w2FTVWa00iVmKtu6x9ycww7hP3/iPoJ9SgO7BAy
-         hycheGZI0TTP+IgJ8UP7eSShgYaXBKhcHbdgqbWD5XzYI70dRkBCxoqvWrOSN5s9UBh2
-         Xvw/SIzkrr7KWHKc3OgnObjNmM71Dt98q+oKq85+DlP+hvkxqHA1hbWxdkmHODiuBRUN
-         9DRRwF9Z4KA0OY16MdnFu7EvpkKiXIChJmILRf8UZ9xJFQuf3yUF2foSYWND7Fq80pfN
-         e2yg==
-X-Gm-Message-State: AJIora/u7MgcokdWLB49RmrqOCo+p8IZWx62PTcTfuqoOnqsG/fxXkai
-        27F7D/NckgxpzbWbqKNRJIQIb5zH73xmWg==
-X-Google-Smtp-Source: AGRyM1u5q582SJNlBfJ+dO01qx9WC8icoSBujdSO1QBa5bJZ2N5xl+Qd5VVA/DsAkGnOXSupl4XTLA==
-X-Received: by 2002:a9d:6a57:0:b0:616:9957:35c4 with SMTP id h23-20020a9d6a57000000b00616995735c4mr856875otn.63.1655987642100;
-        Thu, 23 Jun 2022 05:34:02 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14c:485:4b69:26de:50ac:e17b:4c8e])
-        by smtp.gmail.com with ESMTPSA id f21-20020a05680814d500b0032f2ccdafc9sm13182608oiw.3.2022.06.23.05.34.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jun 2022 05:34:01 -0700 (PDT)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, Fabio Estevam <festevam@denx.de>
-Subject: [PATCH] dmaengine: imx-sdma: Improve the SDMA irq name
-Date:   Thu, 23 Jun 2022 09:33:53 -0300
-Message-Id: <20220623123353.2570410-1-festevam@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        bh=YKuhlfeie/APuzN1zX50F9wlajDVarix+gW9JqPWiT0=;
+        b=rjBcmL+djQTLoE7l4odD5v2qggJj0olQs4THtCQvaDuWXEar1oNSdW86wv4RblPErN
+         iORUkudZwy35TbWi4Pc9k5ZRRdow1+IZKXxxrSTNwhBiyZzb3Lil96OtP6EZk66hpc6E
+         KAqe32XKr3gL24gKNaonEYqsPlTsN4XESzJaLuOCTee+n/RWSDkxCeBGdCvGhoJpZPbI
+         24UN+C1qteX9uAciM95ZfDfcSjoHL/040OKUBRNcxqwkI8r9NtXO3bor0lWDWHlYTlVF
+         1dHkqw4cAmKj/1B2GgW4cbWUtfzAaMHQ2IBLo7DtqxaZj5V7CPNHHh32ObVp1YFaJBw+
+         pFMg==
+X-Gm-Message-State: AJIora+fB/KZ5POIrCZXTwJOSTfvCOqWHKQ1gZ2P9kaAEY5KOfAYHf7u
+        WcCTarkwYqTP4fM7ueUX0wtY9w==
+X-Google-Smtp-Source: AGRyM1sX86vrrjVPPP1yUcwx/sZIRbQprpzXl44FYJKuAjsvw6TD5Ua2hBw6xE35bd62RibFYqBp1g==
+X-Received: by 2002:a05:600c:2c46:b0:39c:55a0:9533 with SMTP id r6-20020a05600c2c4600b0039c55a09533mr4015082wmg.104.1655988081094;
+        Thu, 23 Jun 2022 05:41:21 -0700 (PDT)
+Received: from [192.168.149.129] ([80.233.63.220])
+        by smtp.gmail.com with ESMTPSA id n1-20020a5d4201000000b0021a36955493sm23104159wrq.74.2022.06.23.05.41.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Jun 2022 05:41:20 -0700 (PDT)
+Message-ID: <4a76c7aa-62e8-385c-15a0-9992ec566de5@conchuod.ie>
+Date:   Thu, 23 Jun 2022 13:41:15 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH 06/14] spi: dt-bindings: dw-apb-ssi: update
+ spi-{r,t}x-bus-width for dwc-ssi
+Content-Language: en-US
+To:     Serge Semin <fancer.lancer@gmail.com>, Conor.Dooley@microchip.com
+Cc:     damien.lemoal@opensource.wdc.com, airlied@linux.ie,
+        daniel@ffwll.ch, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, thierry.reding@gmail.com,
+        sam@ravnborg.org, Eugeniy.Paltsev@synopsys.com, vkoul@kernel.org,
+        lgirdwood@gmail.com, broonie@kernel.org, daniel.lezcano@linaro.org,
+        palmer@dabbelt.com, palmer@rivosinc.com, tglx@linutronix.de,
+        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
+        masahiroy@kernel.org, geert@linux-m68k.org, niklas.cassel@wdc.com,
+        dillon.minfei@gmail.com, jee.heng.sia@intel.com,
+        joabreu@synopsys.com, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-spi@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <20220618123035.563070-1-mail@conchuod.ie>
+ <20220618123035.563070-7-mail@conchuod.ie>
+ <20220620205654.g7fyipwytbww5757@mobilestation>
+ <61b0fb86-078d-0262-b142-df2984ce0f97@microchip.com>
+ <9a1fcb40-9267-d8e6-b3b6-3b03fd789822@opensource.wdc.com>
+ <a2d85598-76d1-c9dc-d50d-e5aa815997cf@conchuod.ie>
+ <c272728f-f610-77df-bd9b-c9fee6b727f8@opensource.wdc.com>
+ <bd2547f8-e069-60a2-a223-9f694457636d@microchip.com>
+ <20220623102502.jiksqr3m6y733haq@mobilestation>
+From:   Conor Dooley <mail@conchuod.ie>
+In-Reply-To: <20220623102502.jiksqr3m6y733haq@mobilestation>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Fabio Estevam <festevam@denx.de>
 
-On SoCs with several SDMA instances, such as i.MX8M for example,
-all the SDMA related interrupts appear with the same "sdma" name.
 
-Improve the SDMA irq name by associating it with the SDMA instance
-via dev_name(), so that the SDMA irq names can be unique.
+On 23/06/2022 11:25, Serge Semin wrote:
+> On Tue, Jun 21, 2022 at 04:06:21PM +0000, Conor.Dooley@microchip.com wrote:
+>> On 21/06/2022 00:17, Damien Le Moal wrote:
+>>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>>>
+>>> On 6/21/22 07:49, Conor Dooley wrote:
+>>>>
+>> ---8<---
+>>>>>>
+>>>>>> hmm, well I'll leave that up to people that have Canaan hardware!
+>>>>>
+>>>>> I will test this series.
+>>>>>
+>>>>
+>>>> Cool, thanks.
+>>>> I'll try to get a respin out tomorrow w/ the memory node "unfixed".
+>>>
+>>> OK. I will test that then :)
+>>
+>> Since the memory node hit that dt-schema snag, I have not sent a v2.
+>> Going to be AFK for a few days, so I dropped the memory node change,
+>> changed the spi binding & put the series on:
+>> git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/ canaan
+>>
+> 
+>> If you get a chance to look at it great, if not I'll send a v2 once
+>> the memory node is figured out.
+> 
+> commit 84df6ca0f277 ("spi: dt-bindings: dw-apb-ssi: update
+> spi-{r,t}x-bus-width") looks good to me. Feel free to add my ack tag
+> to v2 of that patch.
 
-Signed-off-by: Fabio Estevam <festevam@denx.de>
----
- drivers/dma/imx-sdma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 900cafdaf359..9710b2ba5978 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -2183,8 +2183,8 @@ static int sdma_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_clk;
- 
--	ret = devm_request_irq(&pdev->dev, irq, sdma_int_handler, 0, "sdma",
--			       sdma);
-+	ret = devm_request_irq(&pdev->dev, irq, sdma_int_handler, 0,
-+				dev_name(&pdev->dev), sdma);
- 	if (ret)
- 		goto err_irq;
- 
--- 
-2.25.1
-
+Sure, thanks!

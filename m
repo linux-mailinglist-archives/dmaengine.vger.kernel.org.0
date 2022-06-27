@@ -2,53 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EC6255DBBB
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Jun 2022 15:25:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE8A455D629
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Jun 2022 15:16:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240505AbiF0TmG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 27 Jun 2022 15:42:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54932 "EHLO
+        id S239034AbiF0UV6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 27 Jun 2022 16:21:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240588AbiF0Tlq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 27 Jun 2022 15:41:46 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 245BE17066
-        for <dmaengine@vger.kernel.org>; Mon, 27 Jun 2022 12:41:45 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id e28so9326921wra.0
-        for <dmaengine@vger.kernel.org>; Mon, 27 Jun 2022 12:41:45 -0700 (PDT)
+        with ESMTP id S239122AbiF0UV4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 27 Jun 2022 16:21:56 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 601F31EC62;
+        Mon, 27 Jun 2022 13:21:55 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id z13so18483555lfj.13;
+        Mon, 27 Jun 2022 13:21:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=conchuod.ie; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZPnaNl2N6OCS49bYwYg25LRRooD0U5t+6njnQfYqn3w=;
-        b=MOohgr19HljbByTvyNxJnTzuFRc+80XEY83slSBV3T38pJReWc/r2vS/nOk5tM3fgh
-         o0PeEHbIXwdYX8w8o/2Z+tOWI/pblKRMqN6cWcuVmoSgQJcUM4k7o3KZ8Bga/IW3cMxn
-         htf5vt82qgwz2AdmKcvtLew4WTHJpzSLNlFEtSdw1lUDBPfmzQ6VPma4Ihqx416iMO9q
-         OjG2BfW5Fb/pMNNGTa0W3lzf/5Uj3IdmCXYm0bDti+q5Vvni3wozuVRvHSs4b2osYT2/
-         INsrbelKnz8FWtbN/E4RVTXkbha41T/RhTGSoWBux0TT5r20qWoUKgEs96eGFAOTBcM3
-         SHKA==
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aEWNCuKRy84iEbBoB1dMIfYVeUetfldA1vTgDU/ZzpE=;
+        b=geDEG3yd1mYJXt6c1aZqzKWP/aSMvf/tfBT02vnFiFO+9ETRIt4umK1PW+NPrV4xAH
+         IPwGcjymmEkEzhhk9+XfpXmXGl1Hw9JVqezOplwRathZX7199rU+Z7wL341nIIuFtkZf
+         rX2nPa+o+ldHMvBiVu03vmITAtU3+Jlc/PAYiJ2mr2uSfK25+/LYPfwM6msaBK3V5YU+
+         /HKZtnsRBNWbAUETnWCFuG2fuIB/wg1zNavS4iltt3gKSZOGaTwwTY6EMCMZedVNKp41
+         XYAPLMzh0ibM9cjqHXGiaOyXJy6HDQQZ/imNX5A24xcPor78JRMcqOv2q4TJSZyyxRKh
+         dSnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZPnaNl2N6OCS49bYwYg25LRRooD0U5t+6njnQfYqn3w=;
-        b=lWwj7g6xtkorf5mQhBnst6Ifnl7Sxuvo2avPmLxH3vEx6YjCpuJTrB36P3qaHoeRvL
-         nrRwen5q/iVEPpEuH37LMMpNJRfbRTpr3WS2B0r8LIUdRCwlI34X4FEMB6Rxs1dU+lfe
-         WO3DbpffDctBCGxdNBPISwnjVgfIrgFsnYHEfDvnCDvYh+wWNDxRQM+cugXxSZAgPSnY
-         Whz+WcKlMg36lMAzwta9gndmcJYVHlhpw4ItV3uDcozmURwtoAx32cZRZHJJbKalLqbu
-         YdODfrJ4rnPQTNR4TBpyfKfwUKtjGzhpIz7rixYyIySEjjgVE7zrZd3N+CK1EA5TlhmJ
-         FVHQ==
-X-Gm-Message-State: AJIora9kGacG/v6s6eZdlbdOmwc2FJreSmS6dcWf0h20a3MUc0fGdEdK
-        HaUWNRpOoHQ06wzzEolg3Nqggw==
-X-Google-Smtp-Source: AGRyM1tRVPClRCoBOM+0dnNBF8Xh0WBUSfTyTPIl0mjH8CFu3Jd18gFLSGXlP3EBu9PNI15KlSes5w==
-X-Received: by 2002:a5d:500a:0:b0:21b:8274:9ddc with SMTP id e10-20020a5d500a000000b0021b82749ddcmr14053574wrt.251.1656358904731;
-        Mon, 27 Jun 2022 12:41:44 -0700 (PDT)
-Received: from henark71.. ([51.37.234.167])
-        by smtp.gmail.com with ESMTPSA id e9-20020a5d4e89000000b0021a3a87fda9sm11428047wru.47.2022.06.27.12.41.43
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aEWNCuKRy84iEbBoB1dMIfYVeUetfldA1vTgDU/ZzpE=;
+        b=G5n+ibalo6kWzvu9biI9vVVdqC/sCltrUBOma2Ozo7U+cefhIjt9Bq8fXaeAVMweX1
+         CXYRWQGCnP5oSVDpPni7lL4DtIl+u88a/y4dJ21ayaIUEkKGNiBkWH8lXGvqo5T54e0o
+         iN3SWBLWesFhLG5mA/Y6qdOJXPAaT/gga8jUKvWG6La7tSXijcraNXokC9fxaXKL2wrN
+         7dJ2nfEa8FtOxl5vUyHITIBrqTC3b5lChYm+FJ8K+/vxzFZgvt9jjNKwdv5xx0F8AEwK
+         dWB8ryUomKAgkPNpu/TJE9tSrnO8V658gQbAiCrXlmfFrvH2Zk92Mvd5Yd4ARD4VezUD
+         8uNQ==
+X-Gm-Message-State: AJIora/iVPLuBt0qRlLn2xAY4G4DJzJOIaNq6kvOOS0ajqrOj2h5HNz0
+        HfCsyRGcq1mmnRom2PQLHS0=
+X-Google-Smtp-Source: AGRyM1va63TpZ/BKlBrasRzo3hQuwImYd1Viwhj3pBKVD/eIotL0NPskkSjb7q5nOJbI3zAauoeozw==
+X-Received: by 2002:a05:6512:3d8f:b0:47f:a083:a989 with SMTP id k15-20020a0565123d8f00b0047fa083a989mr9505126lfv.646.1656361313593;
+        Mon, 27 Jun 2022 13:21:53 -0700 (PDT)
+Received: from mobilestation ([95.79.140.178])
+        by smtp.gmail.com with ESMTPSA id q4-20020a0565123a8400b004796e1555eesm1917694lfu.199.2022.06.27.13.21.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jun 2022 12:41:44 -0700 (PDT)
-From:   Conor Dooley <mail@conchuod.ie>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mon, 27 Jun 2022 13:21:52 -0700 (PDT)
+Date:   Mon, 27 Jun 2022 23:21:49 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Conor Dooley <mail@conchuod.ie>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -57,11 +59,10 @@ To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Vinod Koul <vkoul@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Palmer Dabbelt <palmer@dabbelt.com>,
-        Palmer Dabbelt <palmer@rivosinc.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Palmer Dabbelt <palmer@rivosinc.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
         Conor Dooley <conor.dooley@microchip.com>,
@@ -76,53 +77,86 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
         linux-riscv@lists.infradead.org
-Subject: [PATCH v2 16/16] riscv: dts: canaan: build all devicetress if SOC_CANAAN
-Date:   Mon, 27 Jun 2022 20:40:04 +0100
-Message-Id: <20220627194003.2395484-17-mail@conchuod.ie>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220627194003.2395484-1-mail@conchuod.ie>
+Subject: Re: [PATCH v2 04/16] spi: dt-bindings: dw-apb-ssi: update
+ spi-{r,t}x-bus-width
+Message-ID: <20220627202149.624eu7w2gzw7jchd@mobilestation>
 References: <20220627194003.2395484-1-mail@conchuod.ie>
+ <20220627194003.2395484-5-mail@conchuod.ie>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220627194003.2395484-5-mail@conchuod.ie>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Conor Dooley <conor.dooley@microchip.com>
+On Mon, Jun 27, 2022 at 08:39:52PM +0100, Conor Dooley wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+> 
+> Most users of dw-apb-ssi use spi-{r,t}x-bus-width of 1, however the
+> Canaan k210 is wired up for a width of 4.
+> Quoting Serge:
+> The modern DW APB SSI controllers of v.4.* and newer also support the
+> enhanced SPI Modes too (Dual, Quad and Octal). Since the IP-core
+> version is auto-detected at run-time there is no way to create a
+> DT-schema correctly constraining the Rx/Tx SPI bus widths.
+> /endquote
+> 
+> As such, drop the restriction on only supporting a bus width of 1.
+> 
+> Link: https://lore.kernel.org/all/20220620205654.g7fyipwytbww5757@mobilestation/
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+> Serge, I dropped your R-b when I swapped to the default
+> property since it changed the enum.
+> ---
+>  Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+> index e25d44c218f2..0a43d6e0ef91 100644
+> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+> @@ -143,12 +143,6 @@ patternProperties:
+>          minimum: 0
+>          maximum: 3
+>  
 
-Testing & checking the Canaan devicetrees is inconvenient as only the
-devicetree corresponding to SOC_CANAAN_K210_DTB_BUILTIN will be built.
-Change the Makefile so that all devicetrees are built by default if
-SOC_CANAAN but only the one specified by SOC_CANAAN_K210_DTB_BUILTIN
-gets built as an object.
+> -      spi-rx-bus-width:
+> -        const: 1
+> -
+> -      spi-tx-bus-width:
+> -        const: 1
+> -
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
- arch/riscv/boot/dts/canaan/Makefile | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+My comment was:
+> > > You can just use a more relaxed constraint "enum: [1 2 4 8]" here
+> >
+> > 8 too? sure.
+Then Rob said:
+> Then no constraints needed because the common definition already has
+> this presumably.
 
-diff --git a/arch/riscv/boot/dts/canaan/Makefile b/arch/riscv/boot/dts/canaan/Makefile
-index c61b08ac8554..befe4eb7527b 100644
---- a/arch/riscv/boot/dts/canaan/Makefile
-+++ b/arch/riscv/boot/dts/canaan/Makefile
-@@ -1,3 +1,9 @@
- # SPDX-License-Identifier: GPL-2.0
--dtb-$(CONFIG_SOC_CANAAN_K210_DTB_BUILTIN) += $(addsuffix .dtb, $(CONFIG_SOC_CANAAN_K210_DTB_SOURCE))
--obj-$(CONFIG_SOC_CANAAN_K210_DTB_BUILTIN) += $(addsuffix .o, $(dtb-y))
-+dtb-$(CONFIG_SOC_CANAAN) += canaan_kd233.dtb
-+dtb-$(CONFIG_SOC_CANAAN) += k210_generic.dtb
-+dtb-$(CONFIG_SOC_CANAAN) += sipeed_maix_bit.dtb
-+dtb-$(CONFIG_SOC_CANAAN) += sipeed_maix_dock.dtb
-+dtb-$(CONFIG_SOC_CANAAN) += sipeed_maix_go.dtb
-+dtb-$(CONFIG_SOC_CANAAN) += sipeed_maixduino.dtb
-+
-+obj-$(CONFIG_SOC_CANAAN_K210_DTB_BUILTIN) += $(addsuffix .dtb.o, $(CONFIG_SOC_CANAAN_K210_DTB_SOURCE))
--- 
-2.36.1
+IMO preserving the device-specific constraints even if they match the
+generic ones has some maintainability benefits. What if you get to
+discover a new HW which supports Hexal mode? Then you would have
+needed to update the common schema constraints. But that would have
+caused permitting the unsupported bus-mode for all the schemas, which
+isn't correct. So as I see it the explicit bus-width enumeration would
+be ok to have here. But I'll leave it for Rob to make a final
+decision.
 
+Rob
+
+>  unevaluatedProperties: false
+>  
+>  required:
+> -- 
+> 2.36.1
+> 

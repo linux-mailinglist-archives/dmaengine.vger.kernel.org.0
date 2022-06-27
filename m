@@ -2,28 +2,28 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F0E855C333
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Jun 2022 14:48:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6729955CF12
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Jun 2022 15:06:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231831AbiF0Gzc convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Mon, 27 Jun 2022 02:55:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46180 "EHLO
+        id S229749AbiF0Gzq convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Mon, 27 Jun 2022 02:55:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232083AbiF0Gza (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 27 Jun 2022 02:55:30 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 902095599;
-        Sun, 26 Jun 2022 23:55:29 -0700 (PDT)
-Received: from canpemm100007.china.huawei.com (unknown [172.30.72.54])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4LWdj47064z1L8Zs;
-        Mon, 27 Jun 2022 14:53:12 +0800 (CST)
+        with ESMTP id S229668AbiF0Gzp (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 27 Jun 2022 02:55:45 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E99C559B;
+        Sun, 26 Jun 2022 23:55:43 -0700 (PDT)
+Received: from canpemm100008.china.huawei.com (unknown [172.30.72.56])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4LWdlB0WLTz9sx5;
+        Mon, 27 Jun 2022 14:55:02 +0800 (CST)
 Received: from kwepemm600007.china.huawei.com (7.193.23.208) by
- canpemm100007.china.huawei.com (7.192.105.181) with Microsoft SMTP Server
+ canpemm100008.china.huawei.com (7.192.104.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 27 Jun 2022 14:55:26 +0800
+ 15.1.2375.24; Mon, 27 Jun 2022 14:55:40 +0800
 Received: from kwepemm600007.china.huawei.com ([7.193.23.208]) by
  kwepemm600007.china.huawei.com ([7.193.23.208]) with mapi id 15.01.2375.024;
- Mon, 27 Jun 2022 14:55:26 +0800
+ Mon, 27 Jun 2022 14:55:40 +0800
 From:   haijie <haijie1@huawei.com>
 To:     kernel test robot <lkp@intel.com>,
         "vkoul@kernel.org" <vkoul@kernel.org>,
@@ -31,16 +31,14 @@ To:     kernel test robot <lkp@intel.com>,
 CC:     "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
         "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 6/8] dmaengine: hisilicon: Add dfx feature for hisi dma
- driver
-Thread-Topic: [PATCH 6/8] dmaengine: hisilicon: Add dfx feature for hisi dma
- driver
-Thread-Index: AQHYiGePl3qe1bnD2EmWvPQXM3aZFK1fVy6AgAN9IYA=
-Date:   Mon, 27 Jun 2022 06:55:25 +0000
-Message-ID: <3c9f48ded5214615af662f3e7351eb40@huawei.com>
-References: <20220625074422.3479591-7-haijie1@huawei.com>
- <202206251706.xUdAPcyU-lkp@intel.com>
-In-Reply-To: <202206251706.xUdAPcyU-lkp@intel.com>
+Subject: RE: [PATCH 2/8] dmaengine: hisilicon: Fix CQ head update
+Thread-Topic: [PATCH 2/8] dmaengine: hisilicon: Fix CQ head update
+Thread-Index: AQHYiGfM3YbFHDZNZ0e0XQ9uDDsCpq1hLPWAgAGn48A=
+Date:   Mon, 27 Jun 2022 06:55:40 +0000
+Message-ID: <25b3ee4b9c574856aee9ed9c5293d43f@huawei.com>
+References: <20220625074422.3479591-3-haijie1@huawei.com>
+ <202206262132.9GLS9dHC-lkp@intel.com>
+In-Reply-To: <202206262132.9GLS9dHC-lkp@intel.com>
 Accept-Language: zh-CN, en-US
 Content-Language: zh-CN
 X-MS-Has-Attach: 
@@ -65,58 +63,86 @@ Thanks and this will be corrected in the next version.
 
 -----Original Message-----
 From: kernel test robot [mailto:lkp@intel.com] 
-Sent: Saturday, June 25, 2022 5:37 PM
+Sent: Sunday, June 26, 2022 9:38 PM
 To: haijie <haijie1@huawei.com>; vkoul@kernel.org; Wangzhou (B) <wangzhou1@hisilicon.com>
 Cc: kbuild-all@lists.01.org; dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/8] dmaengine: hisilicon: Add dfx feature for hisi dma driver
+Subject: Re: [PATCH 2/8] dmaengine: hisilicon: Fix CQ head update
 
 Hi Jie,
 
-Thank you for the patch! Perhaps something to improve:
+Thank you for the patch! Yet something to improve:
 
-[auto build test WARNING on vkoul-dmaengine/next] [also build test WARNING on linus/master v5.19-rc3 next-20220624] [If your patch is applied to the wrong git tree, kindly drop us a note.
+[auto build test ERROR on vkoul-dmaengine/next] [also build test ERROR on linus/master v5.19-rc3 next-20220624] [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in https://git-scm.com/docs/git-format-patch]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/Jie-Hai/dmaengine-hisilicon-Add-support-for-hisi-dma-driver/20220625-154524
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
-config: microblaze-randconfig-r022-20220625
-compiler: microblaze-linux-gcc (GCC) 11.3.0 reproduce (this is a W=1 build):
+config: arc-allyesconfig
+compiler: arceb-elf-gcc (GCC) 11.3.0
+reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/ffaa89af83c2321f12a2b4d87711c9e7f7e37134
+        # https://github.com/intel-lab-lkp/linux/commit/4a79d13d35e4f95c88bc0dfb44923dbd030bb126
         git remote add linux-review https://github.com/intel-lab-lkp/linux
         git fetch --no-tags linux-review Jie-Hai/dmaengine-hisilicon-Add-support-for-hisi-dma-driver/20220625-154524
-        git checkout ffaa89af83c2321f12a2b4d87711c9e7f7e37134
+        git checkout 4a79d13d35e4f95c88bc0dfb44923dbd030bb126
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=microblaze SHELL=/bin/bash drivers/dma/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=arc SHELL=/bin/bash
 
 If you fix the issue, kindly add following tag where applicable
 Reported-by: kernel test robot <lkp@intel.com>
 
-All warnings (new ones prefixed by >>):
+Note: the linux-review/Jie-Hai/dmaengine-hisilicon-Add-support-for-hisi-dma-driver/20220625-154524 HEAD e823cc5940ad1d20993113591a7ba26946ae0840 builds fine.
+      It only hurts bisectability.
 
->> drivers/dma/hisi_dma.c:87: warning: This comment starts with '/**', 
->> but isn't a kernel-doc comment. Refer 
->> Documentation/doc-guide/kernel-doc.rst
-    * The HIP08B(HiSilicon IP08) and HIP09A(HiSilicon IP09) are DMA iEPs, they
+All errors (new ones prefixed by >>):
+
+   drivers/dma/hisi_dma.c: In function 'hisi_dma_irq':
+>> drivers/dma/hisi_dma.c:441:37: error: 'q_base' undeclared (first use 
+>> in this function)
+     441 |                 hisi_dma_chan_write(q_base, HISI_DMA_Q_CQ_HEAD_PTR,
+         |                                     ^~~~~~
+   drivers/dma/hisi_dma.c:441:37: note: each undeclared identifier is reported only once for each function it appears in
+>> drivers/dma/hisi_dma.c:441:45: error: 'HISI_DMA_Q_CQ_HEAD_PTR' undeclared (first use in this function); did you mean 'HISI_DMA_CQ_HEAD_PTR'?
+     441 |                 hisi_dma_chan_write(q_base, HISI_DMA_Q_CQ_HEAD_PTR,
+         |                                             ^~~~~~~~~~~~~~~~~~~~~~
+         |                                             HISI_DMA_CQ_HEAD_PTR
 
 
-vim +87 drivers/dma/hisi_dma.c
+vim +/q_base +441 drivers/dma/hisi_dma.c
 
-ffaa89af83c232 Jie Hai 2022-06-25  85
-ae8a14d7255c1e Jie Hai 2022-06-25  86  /**
-ae8a14d7255c1e Jie Hai 2022-06-25 @87   * The HIP08B(HiSilicon IP08) and HIP09A(HiSilicon IP09) are DMA iEPs, they
-ae8a14d7255c1e Jie Hai 2022-06-25  88   * have the same pci device id but different pci revision.
-ae8a14d7255c1e Jie Hai 2022-06-25  89   * Unfortunately, they have different register layouts, so two layout
-ae8a14d7255c1e Jie Hai 2022-06-25  90   * enumerations are defined.
-ae8a14d7255c1e Jie Hai 2022-06-25  91   */
-ae8a14d7255c1e Jie Hai 2022-06-25  92  enum hisi_dma_reg_layout {
-ae8a14d7255c1e Jie Hai 2022-06-25  93  	HISI_DMA_REG_LAYOUT_INVALID = 0,
-ae8a14d7255c1e Jie Hai 2022-06-25  94  	HISI_DMA_REG_LAYOUT_HIP08,
-ae8a14d7255c1e Jie Hai 2022-06-25  95  	HISI_DMA_REG_LAYOUT_HIP09
-ae8a14d7255c1e Jie Hai 2022-06-25  96  };
-7ddbde084de590 Jie Hai 2022-06-25  97  
+   426	
+   427	static irqreturn_t hisi_dma_irq(int irq, void *data)
+   428	{
+   429		struct hisi_dma_chan *chan = data;
+   430		struct hisi_dma_dev *hdma_dev = chan->hdma_dev;
+   431		struct hisi_dma_desc *desc;
+   432		struct hisi_dma_cqe *cqe;
+   433	
+   434		spin_lock(&chan->vc.lock);
+   435	
+   436		desc = chan->desc;
+   437		cqe = chan->cq + chan->cq_head;
+   438		if (desc) {
+   439			chan->cq_head = (chan->cq_head + 1) %
+   440					hdma_dev->chan_depth;
+ > 441			hisi_dma_chan_write(q_base, HISI_DMA_Q_CQ_HEAD_PTR,
+   442					    chan->qp_num, chan->cq_head);
+   443			if (FIELD_GET(STATUS_MASK, cqe->w0) == STATUS_SUCC) {
+   444				vchan_cookie_complete(&desc->vd);
+   445			} else {
+   446				dev_err(&hdma_dev->pdev->dev, "task error!\n");
+   447			}
+   448	
+   449			chan->desc = NULL;
+   450		}
+   451	
+   452		spin_unlock(&chan->vc.lock);
+   453	
+   454		return IRQ_HANDLED;
+   455	}
+   456	
 
 --
 0-DAY CI Kernel Test Service

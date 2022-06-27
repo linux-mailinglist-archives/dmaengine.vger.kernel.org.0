@@ -2,54 +2,61 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 066CC55D107
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Jun 2022 15:08:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00D8D55DAFC
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Jun 2022 15:24:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237906AbiF0VNV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 27 Jun 2022 17:13:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55060 "EHLO
+        id S241141AbiF0VSQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 27 Jun 2022 17:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234920AbiF0VNU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 27 Jun 2022 17:13:20 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFBBD167C7;
-        Mon, 27 Jun 2022 14:13:18 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id by38so12468809ljb.10;
-        Mon, 27 Jun 2022 14:13:18 -0700 (PDT)
+        with ESMTP id S241107AbiF0VSN (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 27 Jun 2022 17:18:13 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A6CD18B21
+        for <dmaengine@vger.kernel.org>; Mon, 27 Jun 2022 14:18:11 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id o4so10837850wrh.3
+        for <dmaengine@vger.kernel.org>; Mon, 27 Jun 2022 14:18:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Apd1Cl8iWlr7VPj1iuOe666SC1Q2pQo9qEBUCr9vf6Q=;
-        b=ilyEOtv07N3ArdjBB7bMKwAqjb/e0wlxydgdur1zOwDRqzH4IPqX2FlQxVaGAXw6Kc
-         Gc0VmznO21rzcUs44XvprgCJ41kZL5S9X1gx6kQ+guwTI6uiSc4zItEWOnsDW3kNAVlF
-         sfGw15jYmTuWW1FxW/Lb57dg0O1NF3p/fPa5o15TUnzZIQmB98u2AvQRL0iesgljp0tc
-         xc9//5AKa4Iw3dQz5Ksx+KmaP7act61c7ia75qFkgn5dlsfLCparb572EaPCLMdTHnjX
-         0Dp5EEprtNhtw/ZXAV6oYcWZi6HDJptcetDIzhKexpPO7ZBBmv8UMK0X2PqLjPdeMC7b
-         JSUg==
+        d=conchuod.ie; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=7fqf134knRgs1GXmfgOSjMnBIhN/vd4XYE5cKns7XrQ=;
+        b=HXbtK2wb/8k7BKwx03O3vJd+frVE8kbRJOxAidgzWU3+M46idUPj4JY/ji2or61qN6
+         iFQfdI2q9HbabuCUzIKyuCuZZP+svfWOurR7utrBBG8lxHgf64RUya9tYBYoq/IZnb3/
+         vASCFCOveG3OPw4M9ElkzqOYoiWkSkXpjjzjUUkhiJcB7Uovli7STe8/BYj4orSkm5AF
+         LTlyYI4wyNCu+hgP9xZwpFMXRxL0suMMMq/Wud/F2UCWdoxIQljh+9HLdF+xzDphLUPc
+         JhfNdVvIWSYHIRmsF16qeXPK1XW0ExS6lCFXaFznUtqNyynV9EM41UOdeXzlroAzAzkv
+         hWjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Apd1Cl8iWlr7VPj1iuOe666SC1Q2pQo9qEBUCr9vf6Q=;
-        b=mejYong5MDR9uk8cJkLhT9piKk/avBZg1NnjCyyJLI1w8IqYqtuZXdmFKTGpFnUE9L
-         6wpzwHvuQHobi2lKX5psMS5rd9sqwdikDtaVC4mzhRPMYGVpz/mBwH5xunDxZ7mJevXt
-         31OXPmaOD+zfRIuYsupecxqirhsSe8TYDzWpqekcg3Ehr5Lab8uwtELugCNaph06LKRn
-         XmNFQLDuG2xa3HjSTN5dwwPYFaVhMnpv3o/EGJ5hO/uGyaEoNZn2vB1GZfXWBvNx0hQC
-         L0c2vea+rNYYBe93efkQ03+VhxG0LraqvfPMk2XP68GnXCSvSzpgX0D7WFW8aU+ikot2
-         3MUQ==
-X-Gm-Message-State: AJIora9cx/8Rx4rvJkmOdWvHW2YfW1998uzcAwHZCZpoIMfuX6CiOWoQ
-        tLyU9mtRRpDfN6WLf3V4g6M=
-X-Google-Smtp-Source: AGRyM1t9VxFwTJAlhP264dX7IvF0c94LGOWuU36vJO57G/WRfCPD7iXEUNRYkA0yEtu/rvZ1Rje57Q==
-X-Received: by 2002:a2e:9191:0:b0:25a:8858:f60d with SMTP id f17-20020a2e9191000000b0025a8858f60dmr7495670ljg.423.1656364397334;
-        Mon, 27 Jun 2022 14:13:17 -0700 (PDT)
-Received: from mobilestation ([95.79.140.178])
-        by smtp.gmail.com with ESMTPSA id z9-20020a2eb529000000b0025bc79181b4sm358400ljm.36.2022.06.27.14.13.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jun 2022 14:13:16 -0700 (PDT)
-Date:   Tue, 28 Jun 2022 00:13:14 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Conor Dooley <mail@conchuod.ie>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=7fqf134knRgs1GXmfgOSjMnBIhN/vd4XYE5cKns7XrQ=;
+        b=tOhiIoyZoySBzjy03KkgndKkAQnjGPVD0lfD3cP6a7OTrWy0m/7wQ3eK5ex/xodo3Y
+         ovjmD0jeVRpB+OPsheKjRnrNNJWYOQVmljjrCIDxQL9khy9Wu9NMjvVU7cvsPnsUiTIv
+         ympHk7CtX9jYDK5MlTVEy+2aUtYa313B2xcaq4iplKo7WAIm0PuxkDS7uDrD78eYDVJp
+         ON9RT5LFwO06w+afk+entwbbK0Waw3ZDuHdIarZRPwsfhiP+DqHQBaeMQN5l7SW/DXnM
+         w/zY8zUaL7qnSdGQV5ygJY2JUUd/MwgnJS9aibruQVSrA1pGsiMLIZoDjhQqq9WjT8RE
+         zdvA==
+X-Gm-Message-State: AJIora99eWYVCIZ2nuvYeTR/GFmRxoUQcq7seK/0T4XLw+Ms8kHXbJ6x
+        HX/KLxOxUz58Z6ZZKhqmGJrISQ==
+X-Google-Smtp-Source: AGRyM1v3rnjEGEokBmIwXs+uwnFrAQV1ikK8BVpbbLHWxG5jXedwQJfIfb9jsTWa7DY6Tagub7QPEA==
+X-Received: by 2002:adf:d1ed:0:b0:21b:c74b:594 with SMTP id g13-20020adfd1ed000000b0021bc74b0594mr8958606wrd.221.1656364689777;
+        Mon, 27 Jun 2022 14:18:09 -0700 (PDT)
+Received: from [192.168.2.222] ([51.37.234.167])
+        by smtp.gmail.com with ESMTPSA id az14-20020a05600c600e00b003a04c74efd1sm3048630wmb.21.2022.06.27.14.18.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jun 2022 14:18:09 -0700 (PDT)
+Message-ID: <ed893417-2c5e-c019-04c6-c7c7ee138ef1@conchuod.ie>
+Date:   Mon, 27 Jun 2022 22:18:07 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v2 06/16] dt-bindings: timer: add Canaan k210 to Synopsys
+ DesignWare timer
+Content-Language: en-US
+To:     Serge Semin <fancer.lancer@gmail.com>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -77,124 +84,59 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
         linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 06/16] dt-bindings: timer: add Canaan k210 to Synopsys
- DesignWare timer
-Message-ID: <20220627211314.dc2hempelyl5ayjg@mobilestation>
 References: <20220627194003.2395484-1-mail@conchuod.ie>
  <20220627194003.2395484-7-mail@conchuod.ie>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220627194003.2395484-7-mail@conchuod.ie>
+ <20220627211314.dc2hempelyl5ayjg@mobilestation>
+From:   Conor Dooley <mail@conchuod.ie>
+In-Reply-To: <20220627211314.dc2hempelyl5ayjg@mobilestation>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Jun 27, 2022 at 08:39:54PM +0100, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
+On 27/06/2022 22:13, Serge Semin wrote:
+> On Mon, Jun 27, 2022 at 08:39:54PM +0100, Conor Dooley wrote:
+>> From: Conor Dooley <conor.dooley@microchip.com>
+>>
+>> The Canaan k210 apparently has a Sysnopsys Designware timer but
+>> according to the documentation & devicetree it has 2 interrupts rather
+>> than the standard one. Add a custom compatible that supports the 2
+>> interrupt configuration and falls back to the standard binding (which
+>> is currently the one in use in the devicetree entry).
+>>
 > 
-> The Canaan k210 apparently has a Sysnopsys Designware timer but
-> according to the documentation & devicetree it has 2 interrupts rather
-> than the standard one. Add a custom compatible that supports the 2
-> interrupt configuration and falls back to the standard binding (which
-> is currently the one in use in the devicetree entry).
+>> Link: https://canaan-creative.com/wp-content/uploads/2020/03/kendryte_standalone_programming_guide_20190311144158_en.pdf #Page 58
 > 
+> Firstly, it's page 51 in the framework of the document pages
+> enumeration.
 
-> Link: https://canaan-creative.com/wp-content/uploads/2020/03/kendryte_standalone_programming_guide_20190311144158_en.pdf #Page 58
+Ah yes, sorry about that.
 
-Firstly, it's page 51 in the framework of the document pages
-enumeration.
-
-Judging by the comment in the document above and what the HW reference
-manual says regarding the IRQ signals, what you really have on K210 is
-the DW APB Timer IP-cores each configured with two embedded timers.
-It's done by the IP-core synthesize parameter NUM_TIMERS={1..8}, which
-in your case equals to 2. A similar situation is on our SoC and, for
-instance, here:
-
-arch/arm/boot/dts/berlin2q.dtsi
-arch/arm/boot/dts/berlin2.dtsi
-arch/arm/boot/dts/berlin2cd.dtsi
-(Though the Berlin2 APB Timer have been configured with 8 timers.)
-
-So the correct modification would be:
-1. Split up the nodes into two ones with one IRQ per each node.
-2. Make sure I was right by testing the new dts out.
-3. Update the DT-node only and leave the DT-bindings as is.
-
--Sergey
-
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  .../bindings/timer/snps,dw-apb-timer.yaml     | 28 +++++++++++++++----
->  1 file changed, 22 insertions(+), 6 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/timer/snps,dw-apb-timer.yaml b/Documentation/devicetree/bindings/timer/snps,dw-apb-timer.yaml
-> index d33c9205a909..9a76acc7a66f 100644
-> --- a/Documentation/devicetree/bindings/timer/snps,dw-apb-timer.yaml
-> +++ b/Documentation/devicetree/bindings/timer/snps,dw-apb-timer.yaml
-> @@ -12,6 +12,9 @@ maintainers:
->  properties:
->    compatible:
->      oneOf:
-> +      - items:
-> +          - const: canaan,k210-apb-timer
-> +          - const: snps,dw-apb-timer
->        - const: snps,dw-apb-timer
->        - enum:
->            - snps,dw-apb-timer-sp
-> @@ -21,9 +24,6 @@ properties:
->    reg:
->      maxItems: 1
->  
-> -  interrupts:
-> -    maxItems: 1
-> -
->    resets:
->      maxItems: 1
->  
-> @@ -41,7 +41,23 @@ properties:
->  
->    clock-frequency: true
->  
-> -additionalProperties: false
-> +unevaluatedProperties: false
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: canaan,k210-apb-timer
-> +
-> +then:
-> +  properties:
-> +    interrupts:
-> +      maxItems: 2
-> +
-> +else:
-> +  properties:
-> +    interrupts:
-> +      maxItems: 1
->  
->  required:
->    - compatible
-> @@ -60,8 +76,8 @@ oneOf:
->  examples:
->    - |
->      timer@ffe00000 {
-> -      compatible = "snps,dw-apb-timer";
-> -      interrupts = <0 170 4>;
-> +      compatible = "canaan,k210-apb-timer", "snps,dw-apb-timer";
-> +      interrupts = <0 170 4>, <0 170 4>;
->        reg = <0xffe00000 0x1000>;
->        clocks = <&timer_clk>, <&timer_pclk>;
->        clock-names = "timer", "pclk";
-> -- 
-> 2.36.1
+> Judging by the comment in the document above and what the HW reference
+> manual says regarding the IRQ signals, what you really have on K210 is
+> the DW APB Timer IP-cores each configured with two embedded timers.
+> It's done by the IP-core synthesize parameter NUM_TIMERS={1..8}, which
+> in your case equals to 2. A similar situation is on our SoC and, for
+> instance, here:
 > 
+> arch/arm/boot/dts/berlin2q.dtsi
+> arch/arm/boot/dts/berlin2.dtsi
+> arch/arm/boot/dts/berlin2cd.dtsi
+> (Though the Berlin2 APB Timer have been configured with 8 timers.)
+> 
+> So the correct modification would be:
+> 1. Split up the nodes into two ones with one IRQ per each node.
+> 2. Make sure I was right by testing the new dts out.
+> 3. Update the DT-node only and leave the DT-bindings as is.
+
+Hmm, sounds good. Will give that a whirl tomorrow.
+Thanks for the info/suggestions Sergey.
+

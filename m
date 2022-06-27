@@ -2,86 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF1E855DCB7
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Jun 2022 15:26:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F0E855C333
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Jun 2022 14:48:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232345AbiF0Gz0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 27 Jun 2022 02:55:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46064 "EHLO
+        id S231831AbiF0Gzc convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Mon, 27 Jun 2022 02:55:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230155AbiF0GzZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 27 Jun 2022 02:55:25 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D20E2DE0
-        for <dmaengine@vger.kernel.org>; Sun, 26 Jun 2022 23:55:24 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id q6so16958069eji.13
-        for <dmaengine@vger.kernel.org>; Sun, 26 Jun 2022 23:55:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=l8DLyJeTvw1xggLYIHIAs8lG/FP9YwAC/H3QcrJQQbM=;
-        b=lfgBG6BcegbTxn3oISBf4RsaDUKM1nhVWAfcGq0zhvN4IJqH7WSK7JFr5tCQyT4LhR
-         d3gzqK1269FOcBTTQRj6VW3qzmmFI2wXSc64Nt2UxGUePVjixulD3AFbREgmAsN+lFeL
-         HwiLI3JD9ln4Ucm/7OFwUSa0edTyKBYwXARd8flIWAl5vo19z4kdrlu7947/py5QeJYl
-         5geBx1o7hjeEa6/y+BjqBlLbb00NtPWXQVfDgYXenyBSH+m2KPcW22e8FAmdWrrzn1Kk
-         jK5n1XfVEc+py+OgSpy6lqVFDccn0L+WAbGo6nrf6yeJtVi6tgZY/qojyRLDyAWyox7c
-         /g5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=l8DLyJeTvw1xggLYIHIAs8lG/FP9YwAC/H3QcrJQQbM=;
-        b=fZRQ/WmVZ86Be1CLcQrib9BZ+oXGkEE0S0f/XstPdwqM3xc7KKZLwjfktbZ1LTuLyI
-         2FTebPGfC0VICuaj5D2wBVUqt/slwB3YeF18zuf6/Z55wUeDijki2u32QS09iTndfQ3C
-         E+hXu3XEn0Zd/CRzLqlaWTdN/dYRdFusf5MuuHcz/9YREsqIm3nR8pNL7XnzYcj20+hb
-         /5TrwNj4U+q+0QjKza0TKkAuhuRT+EBnulI5K4WCn1r0xUrfFnRaiNBHtqWlmhRn+9xt
-         B/RNWxBPfHVa3+MM0ns6qQt28f4sgNUz6EB0FsShDt6ZqaQ4HlfxEQoI2Te7qIUrAMsH
-         rRag==
-X-Gm-Message-State: AJIora9P5axhqPwzR48V/xBtLeL2MwK9fxwzXDDpb/XL3ugoIeD0xas5
-        Ag/sJyAFt3J3jnyF40zYbeUIgA==
-X-Google-Smtp-Source: AGRyM1uOrGGFKIKFwX1OUL+TaKzbf/DR/DTxjj1a56xgid+qPv5S8NCnwy6OhwV1/zW1L8jkeok5qg==
-X-Received: by 2002:a17:907:60d2:b0:725:5611:cea6 with SMTP id hv18-20020a17090760d200b007255611cea6mr11136755ejc.60.1656312922947;
-        Sun, 26 Jun 2022 23:55:22 -0700 (PDT)
-Received: from [192.168.0.246] (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
-        by smtp.gmail.com with ESMTPSA id e17-20020a170906505100b006fece722508sm4615390ejk.135.2022.06.26.23.55.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Jun 2022 23:55:22 -0700 (PDT)
-Message-ID: <70cd0066-9aa7-ca41-ad61-898d491328aa@linaro.org>
-Date:   Mon, 27 Jun 2022 08:55:20 +0200
+        with ESMTP id S232083AbiF0Gza (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 27 Jun 2022 02:55:30 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 902095599;
+        Sun, 26 Jun 2022 23:55:29 -0700 (PDT)
+Received: from canpemm100007.china.huawei.com (unknown [172.30.72.54])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4LWdj47064z1L8Zs;
+        Mon, 27 Jun 2022 14:53:12 +0800 (CST)
+Received: from kwepemm600007.china.huawei.com (7.193.23.208) by
+ canpemm100007.china.huawei.com (7.192.105.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 27 Jun 2022 14:55:26 +0800
+Received: from kwepemm600007.china.huawei.com ([7.193.23.208]) by
+ kwepemm600007.china.huawei.com ([7.193.23.208]) with mapi id 15.01.2375.024;
+ Mon, 27 Jun 2022 14:55:26 +0800
+From:   haijie <haijie1@huawei.com>
+To:     kernel test robot <lkp@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Wangzhou (B)" <wangzhou1@hisilicon.com>
+CC:     "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 6/8] dmaengine: hisilicon: Add dfx feature for hisi dma
+ driver
+Thread-Topic: [PATCH 6/8] dmaengine: hisilicon: Add dfx feature for hisi dma
+ driver
+Thread-Index: AQHYiGePl3qe1bnD2EmWvPQXM3aZFK1fVy6AgAN9IYA=
+Date:   Mon, 27 Jun 2022 06:55:25 +0000
+Message-ID: <3c9f48ded5214615af662f3e7351eb40@huawei.com>
+References: <20220625074422.3479591-7-haijie1@huawei.com>
+ <202206251706.xUdAPcyU-lkp@intel.com>
+In-Reply-To: <202206251706.xUdAPcyU-lkp@intel.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.67.102.167]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH 07/14] riscv: dts: canaan: fix the k210's memory node
-Content-Language: en-US
-To:     Conor.Dooley@microchip.com, damien.lemoal@opensource.wdc.com,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org
-Cc:     fancer.lancer@gmail.com, tglx@linutronix.de, sam@ravnborg.org,
-        mail@conchuod.ie, Eugeniy.Paltsev@synopsys.com,
-        daniel.lezcano@linaro.org, paul.walmsley@sifive.com,
-        aou@eecs.berkeley.edu, masahiroy@kernel.org, geert@linux-m68k.org,
-        lgirdwood@gmail.com, niklas.cassel@wdc.com,
-        dillon.minfei@gmail.com, jee.heng.sia@intel.com,
-        thierry.reding@gmail.com, joabreu@synopsys.com,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        airlied@linux.ie, linux-kernel@vger.kernel.org, vkoul@kernel.org,
-        palmer@dabbelt.com, broonie@kernel.org, dmaengine@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-riscv@lists.infradead.org, palmer@rivosinc.com,
-        daniel@ffwll.ch
-References: <20220618123035.563070-1-mail@conchuod.ie>
- <20220618123035.563070-8-mail@conchuod.ie>
- <9cd60b3b-44fe-62ac-9874-80ae2223d078@opensource.wdc.com>
- <e1fbf363-d057-1000-a846-3df524801f15@microchip.com>
- <891cf74c-ac0a-b380-1d5f-dd7ce5aeda9d@opensource.wdc.com>
- <6c9de242-6ccf-49a2-8422-e6949c5169ff@microchip.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <6c9de242-6ccf-49a2-8422-e6949c5169ff@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -90,71 +59,65 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 21/06/2022 11:49, Conor.Dooley@microchip.com wrote:
-> On 20/06/2022 01:25, Damien Le Moal wrote:
->> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->>
->> On 6/20/22 08:54, Conor.Dooley@microchip.com wrote:
->>> On 20/06/2022 00:38, Damien Le Moal wrote:
->>>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->>>>
->>>> On 6/18/22 21:30, Conor Dooley wrote:
->>>>> From: Conor Dooley <conor.dooley@microchip.com>
->>>>>
->>>>> The k210 memory node has a compatible string that does not match with
->>>>> any driver or dt-binding & has several non standard properties.
->>>>> Replace the reg names with a comment and delete the rest.
->>>>>
->>>>> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
->>>>> ---
->>>>> ---
->>>>>   arch/riscv/boot/dts/canaan/k210.dtsi | 6 ------
->>>>>   1 file changed, 6 deletions(-)
->>>>>
->>>>> diff --git a/arch/riscv/boot/dts/canaan/k210.dtsi b/arch/riscv/boot/dts/canaan/k210.dtsi
->>>>> index 44d338514761..287ea6eebe47 100644
->>>>> --- a/arch/riscv/boot/dts/canaan/k210.dtsi
->>>>> +++ b/arch/riscv/boot/dts/canaan/k210.dtsi
->>>>> @@ -69,15 +69,9 @@ cpu1_intc: interrupt-controller {
->>>>>
->>>>>        sram: memory@80000000 {
->>>>>                device_type = "memory";
->>>>> -             compatible = "canaan,k210-sram";
->>>>>                reg = <0x80000000 0x400000>,
->>>>>                      <0x80400000 0x200000>,
->>>>>                      <0x80600000 0x200000>;
->>>>> -             reg-names = "sram0", "sram1", "aisram";
->>>>> -             clocks = <&sysclk K210_CLK_SRAM0>,
->>>>> -                      <&sysclk K210_CLK_SRAM1>,
->>>>> -                      <&sysclk K210_CLK_AI>;
->>>>> -             clock-names = "sram0", "sram1", "aisram";
->>>>>        };
->>>>
->>>> These are used by u-boot to setup the memory clocks and initialize the
->>>> aisram. Sure the kernel actually does not use this, but to be in sync with
->>>> u-boot DT, I would prefer keeping this as is. Right now, u-boot *and* the
->>>> kernel work fine with both u-boot internal DT and the kernel DT.
->>>
->>> Right, but unfortunately that desire alone doesn't do anything about
->>> the dtbs_check complaints.
->>>
->>> I guess the alternative approach of actually documenting the compatible
->>> would be more palatable?
->>
->> Yes, I think so. That would allow keeping the fields without the DTB build
->> warnings.
-> 
-> Hmm looks like that approach contradicts the dt-schema;
-> https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/memory.yaml
-> 
-> @Rob,Krzysztof what is one meant to do here?
+Hi, kernel test robot,
 
-Why do you think it contradict bindings? Bindings for memory allow
-additional properties, so you just need to create binding for this one.
-And make it a correct binding, IOW, be sure that these clocks are real etc.
+Thanks and this will be corrected in the next version.
 
-Although usually we had separate bindings (and device drivers) for
-memory controllers, instead of including them in the "memory" node.
+-----Original Message-----
+From: kernel test robot [mailto:lkp@intel.com] 
+Sent: Saturday, June 25, 2022 5:37 PM
+To: haijie <haijie1@huawei.com>; vkoul@kernel.org; Wangzhou (B) <wangzhou1@hisilicon.com>
+Cc: kbuild-all@lists.01.org; dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/8] dmaengine: hisilicon: Add dfx feature for hisi dma driver
 
-Best regards,
-Krzysztof
+Hi Jie,
+
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on vkoul-dmaengine/next] [also build test WARNING on linus/master v5.19-rc3 next-20220624] [If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in https://git-scm.com/docs/git-format-patch]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Jie-Hai/dmaengine-hisilicon-Add-support-for-hisi-dma-driver/20220625-154524
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
+config: microblaze-randconfig-r022-20220625
+compiler: microblaze-linux-gcc (GCC) 11.3.0 reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/ffaa89af83c2321f12a2b4d87711c9e7f7e37134
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Jie-Hai/dmaengine-hisilicon-Add-support-for-hisi-dma-driver/20220625-154524
+        git checkout ffaa89af83c2321f12a2b4d87711c9e7f7e37134
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=microblaze SHELL=/bin/bash drivers/dma/
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/dma/hisi_dma.c:87: warning: This comment starts with '/**', 
+>> but isn't a kernel-doc comment. Refer 
+>> Documentation/doc-guide/kernel-doc.rst
+    * The HIP08B(HiSilicon IP08) and HIP09A(HiSilicon IP09) are DMA iEPs, they
+
+
+vim +87 drivers/dma/hisi_dma.c
+
+ffaa89af83c232 Jie Hai 2022-06-25  85
+ae8a14d7255c1e Jie Hai 2022-06-25  86  /**
+ae8a14d7255c1e Jie Hai 2022-06-25 @87   * The HIP08B(HiSilicon IP08) and HIP09A(HiSilicon IP09) are DMA iEPs, they
+ae8a14d7255c1e Jie Hai 2022-06-25  88   * have the same pci device id but different pci revision.
+ae8a14d7255c1e Jie Hai 2022-06-25  89   * Unfortunately, they have different register layouts, so two layout
+ae8a14d7255c1e Jie Hai 2022-06-25  90   * enumerations are defined.
+ae8a14d7255c1e Jie Hai 2022-06-25  91   */
+ae8a14d7255c1e Jie Hai 2022-06-25  92  enum hisi_dma_reg_layout {
+ae8a14d7255c1e Jie Hai 2022-06-25  93  	HISI_DMA_REG_LAYOUT_INVALID = 0,
+ae8a14d7255c1e Jie Hai 2022-06-25  94  	HISI_DMA_REG_LAYOUT_HIP08,
+ae8a14d7255c1e Jie Hai 2022-06-25  95  	HISI_DMA_REG_LAYOUT_HIP09
+ae8a14d7255c1e Jie Hai 2022-06-25  96  };
+7ddbde084de590 Jie Hai 2022-06-25  97  
+
+--
+0-DAY CI Kernel Test Service
+https://01.org/lkp

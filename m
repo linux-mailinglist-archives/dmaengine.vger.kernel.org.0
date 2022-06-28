@@ -2,74 +2,63 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FFD155E281
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Jun 2022 15:35:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 356AC55E86A
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Jun 2022 18:35:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231671AbiF1MIr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 28 Jun 2022 08:08:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38432 "EHLO
+        id S1347309AbiF1PBe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 28 Jun 2022 11:01:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231223AbiF1MIq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jun 2022 08:08:46 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 886E633349
-        for <dmaengine@vger.kernel.org>; Tue, 28 Jun 2022 05:08:45 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id eq6so17228425edb.6
-        for <dmaengine@vger.kernel.org>; Tue, 28 Jun 2022 05:08:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=3XA6dQx2okYJlav+7EBcRXTzZuGUDtxOanRBdKGs0BY=;
-        b=SXKEXVwV1LXjuUVs4Grljr7qurz7/UMqbt1kPD6WOCog/OUfNetmO279XsQQ+MC4wA
-         ywSLYTwl7UaleD8jnS80jxMkLOA8GGgr8inMKWBgf9Aytr6nx4pttcrB3vYcU4OeAvqM
-         8Q0FqOX0MaUxqwEDBxSxFlSU1M4ca3cjjeX4NAsVhUAbkhPFXgWVcWPbJGoh1D0EeoMh
-         AZpzV/LkdRANyEnweW1WJMwM8NyhgXY/QKsBy4wDew068v6WGBPCTac9GRARakGHvg6z
-         NR+jSjWAU3kaFLy3qMc0eR5tT01eJvBCELfK7d99IH4E1CdhH4sU2CBy9JM3puE4kxmR
-         SpHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=3XA6dQx2okYJlav+7EBcRXTzZuGUDtxOanRBdKGs0BY=;
-        b=KB65YMGzQHJj/v1qvqcy3+1RL80QBphDhFrO9+Tp+Oar1cvNJ9+gLlFu70ABeN81wc
-         hiyeFRUfGGFSuWwF+Uy4rgaaRetI86x3ragD6vosEm/HQdYhWAX9v6fj+6xMjgsMQvMt
-         WKqraA112V3YUzuKhUHeV5ep51R9YD9O7bM5wGXqUcpDRUQ9bMMLNrzIdlC+4nPesYfx
-         Fx3+LBP2QIeIywODmSZzgpP3Mvcysw5Wz1FFpQRIX25WgywJftwChF7pQeoIpfZuRsC6
-         bAodz8vAsn2pLTPt+y+tAYnvkbuSYBpeDMDtbfkqNtU++Z6OPLIA50EoCvKmkF0J5iDb
-         iUfw==
-X-Gm-Message-State: AJIora9o6dfRNmHwpvdZZDLbLkAJ8Z4ky1bCqURa1mEFY9k+UvbS5dDY
-        jh34YUlkkPM9CS0SoROIH5Z/Ig==
-X-Google-Smtp-Source: AGRyM1vUdPv1z7krju/JzGlkrdZAX/ui0fe0v7Wt3M0AUy4HrRMyYxZ0SlKj7VUtKzy9mMRE2Wi0+w==
-X-Received: by 2002:a05:6402:1e93:b0:435:7f3f:407f with SMTP id f19-20020a0564021e9300b004357f3f407fmr23061634edf.173.1656418124118;
-        Tue, 28 Jun 2022 05:08:44 -0700 (PDT)
-Received: from [192.168.1.12] (88-107-17-60.dynamic.dsl.as9105.com. [88.107.17.60])
-        by smtp.gmail.com with ESMTPSA id w20-20020aa7dcd4000000b0042dc882c823sm9322319edu.70.2022.06.28.05.08.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jun 2022 05:08:43 -0700 (PDT)
-Message-ID: <408cb630-9ded-0e47-5dcd-6fc8feec79e0@linaro.org>
-Date:   Tue, 28 Jun 2022 13:08:42 +0100
+        with ESMTP id S1346312AbiF1PBd (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jun 2022 11:01:33 -0400
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09CBE2F64E;
+        Tue, 28 Jun 2022 08:01:30 -0700 (PDT)
+Received: from ip5b412258.dynamic.kabel-deutschland.de ([91.65.34.88] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <heiko@sntech.de>)
+        id 1o6Ci1-0005Gn-Sy; Tue, 28 Jun 2022 17:00:57 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Palmer Dabbelt <palmer@rivosinc.com>,
+        linux-riscv@lists.infradead.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Niklas Cassel <niklas.cassel@wdc.com>,
+        Dillon Min <dillon.minfei@gmail.com>,
+        Heng Sia <jee.heng.sia@intel.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        linux-riscv@lists.infradead.org, Conor Dooley <mail@conchuod.ie>
+Subject: Re: [PATCH v2 01/16] dt-bindings: display: convert ilitek,ili9341.txt to dt-schema
+Date:   Tue, 28 Jun 2022 17:00:56 +0200
+Message-ID: <3361801.QJadu78ljV@diego>
+In-Reply-To: <20220627194003.2395484-2-mail@conchuod.ie>
+References: <20220627194003.2395484-1-mail@conchuod.ie> <20220627194003.2395484-2-mail@conchuod.ie>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH] dmaengine: qcom: bam_dma: fix runtime PM underflow
-Content-Language: en-US
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220609195043.1544625-1-caleb.connolly@linaro.org>
- <Yqs3bypHiAgkg4dp@matsya>
-From:   Caleb Connolly <caleb.connolly@linaro.org>
-In-Reply-To: <Yqs3bypHiAgkg4dp@matsya>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,100 +66,155 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Conor,
 
-
-On 16/06/2022 15:00, Vinod Koul wrote:
-> On 09-06-22, 20:50, Caleb Connolly wrote:
->> When PM runtime is disabled, pm_runtime_get() isn't called, but
->> pm_runtime_put() still is. Fix this by creating a matching wrapper
->> on pm_runtime_put_autosuspend().
->>
->> Fixes: dbad41e7bb5f ("dmaengine: qcom: bam_dma: check if the runtime pm enabled")
->> Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
->> ---
->>   drivers/dma/qcom/bam_dma.c | 18 +++++++++++++-----
->>   1 file changed, 13 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
->> index 87f6ca1541cf..a36dedee262e 100644
->> --- a/drivers/dma/qcom/bam_dma.c
->> +++ b/drivers/dma/qcom/bam_dma.c
->> @@ -566,6 +566,14 @@ static int bam_pm_runtime_get_sync(struct device *dev)
->>   	return 0;
->>   }
->>   
->> +static int bam_pm_runtime_put_autosuspend(struct device *dev)
->> +{
->> +	if (pm_runtime_enabled(dev))
->> +		return pm_runtime_put_autosuspend(dev);
->> +
->> +	return 0;
->> +}
+Am Montag, 27. Juni 2022, 21:39:49 CEST schrieb Conor Dooley:
+> From: Conor Dooley <conor.dooley@microchip.com>
 > 
-> should we really do a wrapper to fix this ;-) I would think dropping the
-> get wrapper and calling pm_runtime_get() unconditionally would be
-> better..?
-The original pm_runtime_get() wrapper was added because _get() returns -EACCES 
-if PM is disabled for the device, I've read through some of the pm_runtime docs 
-and I don't see any way to handle this nicely in the framework. I think the real 
-fix will have to be in pm_runtime.
-
-I can rework this to explicitly check for -EACCES on every _get() call, but we 
-still need to check if pm_runtime is enabled before calling _put().
+> A dt-schema binding for the Ilitek ili9341 was created as
+> panel/ilitek,ili9341.yaml but the txt binding was ignored in the
+> process. Move the remaining items in the txt binding to the yaml one &
+> delete it.
 > 
->> +
->>   /**
->>    * bam_free_chan - Frees dma resources associated with specific channel
->>    * @chan: specified channel
->> @@ -617,7 +625,7 @@ static void bam_free_chan(struct dma_chan *chan)
->>   
->>   err:
->>   	pm_runtime_mark_last_busy(bdev->dev);
->> -	pm_runtime_put_autosuspend(bdev->dev);
->> +	bam_pm_runtime_put_autosuspend(bdev->dev);
->>   }
->>   
->>   /**
->> @@ -793,7 +801,7 @@ static int bam_pause(struct dma_chan *chan)
->>   	bchan->paused = 1;
->>   	spin_unlock_irqrestore(&bchan->vc.lock, flag);
->>   	pm_runtime_mark_last_busy(bdev->dev);
->> -	pm_runtime_put_autosuspend(bdev->dev);
->> +	bam_pm_runtime_put_autosuspend(bdev->dev);
->>   
->>   	return 0;
->>   }
->> @@ -819,7 +827,7 @@ static int bam_resume(struct dma_chan *chan)
->>   	bchan->paused = 0;
->>   	spin_unlock_irqrestore(&bchan->vc.lock, flag);
->>   	pm_runtime_mark_last_busy(bdev->dev);
->> -	pm_runtime_put_autosuspend(bdev->dev);
->> +	bam_pm_runtime_put_autosuspend(bdev->dev);
->>   
->>   	return 0;
->>   }
->> @@ -936,7 +944,7 @@ static irqreturn_t bam_dma_irq(int irq, void *data)
->>   	}
->>   
->>   	pm_runtime_mark_last_busy(bdev->dev);
->> -	pm_runtime_put_autosuspend(bdev->dev);
->> +	bam_pm_runtime_put_autosuspend(bdev->dev);
->>   
->>   	return IRQ_HANDLED;
->>   }
->> @@ -1111,7 +1119,7 @@ static void bam_start_dma(struct bam_chan *bchan)
->>   			bam_addr(bdev, bchan->id, BAM_P_EVNT_REG));
->>   
->>   	pm_runtime_mark_last_busy(bdev->dev);
->> -	pm_runtime_put_autosuspend(bdev->dev);
->> +	bam_pm_runtime_put_autosuspend(bdev->dev);
->>   }
->>   
->>   /**
->> -- 
->> 2.36.1
+> The example in the txt binding has a spi-max-frequency which disagrees
+> with the yaml replacement (and its own documentation) so change that to
+> conform with the binding. There are no users in tree of the Adafruit
+> yx240qv29 to check against.
+> 
+> Link: https://cdn-learn.adafruit.com/assets/assets/000/046/879/original/SPEC-YX240QV29-T_Rev.A__1_.pdf
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+
+in your v1 you already got a [0]
+Reviewed-by: Rob Herring <robh@kernel.org>
+for this patch
+
+Looking at the diffstat, which didn't change, you should
+include such tags in followup revisions, to prevent
+reviewers from double efforts.
+
+Heiko
+
+
+[0] https://lore.kernel.org/r/20220627232054.GA3155668-robh@kernel.org
+
+> ---
+>  .../bindings/display/ilitek,ili9341.txt       | 27 -----------
+>  .../display/panel/ilitek,ili9341.yaml         | 48 +++++++++++++------
+>  2 files changed, 34 insertions(+), 41 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/ilitek,ili9341.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ilitek,ili9341.txt b/Documentation/devicetree/bindings/display/ilitek,ili9341.txt
+> deleted file mode 100644
+> index 169b32e4ee4e..000000000000
+> --- a/Documentation/devicetree/bindings/display/ilitek,ili9341.txt
+> +++ /dev/null
+> @@ -1,27 +0,0 @@
+> -Ilitek ILI9341 display panels
+> -
+> -This binding is for display panels using an Ilitek ILI9341 controller in SPI
+> -mode.
+> -
+> -Required properties:
+> -- compatible:	"adafruit,yx240qv29", "ilitek,ili9341"
+> -- dc-gpios:	D/C pin
+> -- reset-gpios:	Reset pin
+> -
+> -The node for this driver must be a child node of a SPI controller, hence
+> -all mandatory properties described in ../spi/spi-bus.txt must be specified.
+> -
+> -Optional properties:
+> -- rotation:	panel rotation in degrees counter clockwise (0,90,180,270)
+> -- backlight:	phandle of the backlight device attached to the panel
+> -
+> -Example:
+> -	display@0{
+> -		compatible = "adafruit,yx240qv29", "ilitek,ili9341";
+> -		reg = <0>;
+> -		spi-max-frequency = <32000000>;
+> -		dc-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
+> -		reset-gpios = <&gpio0 8 GPIO_ACTIVE_HIGH>;
+> -		rotation = <270>;
+> -		backlight = <&backlight>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml b/Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
+> index 6058948a9764..94ca92878434 100644
+> --- a/Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
+> +++ b/Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
+> @@ -23,6 +23,7 @@ properties:
+>        - enum:
+>            # ili9341 240*320 Color on stm32f429-disco board
+>            - st,sf-tc240t-9370-t
+> +          - adafruit,yx240qv29
+>        - const: ilitek,ili9341
+>  
+>    reg: true
+> @@ -47,31 +48,50 @@ properties:
+>    vddi-led-supply:
+>      description: Voltage supply for the LED driver (1.65 .. 3.3 V)
+>  
+> -additionalProperties: false
+> +unevaluatedProperties: false
+>  
+>  required:
+>    - compatible
+>    - reg
+>    - dc-gpios
+> -  - port
+> +
+> +if:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - st,sf-tc240t-9370-t
+> +then:
+> +  required:
+> +    - port
+>  
+>  examples:
+>    - |+
+> +    #include <dt-bindings/gpio/gpio.h>
+>      spi {
+>          #address-cells = <1>;
+>          #size-cells = <0>;
+>          panel: display@0 {
+> -                 compatible = "st,sf-tc240t-9370-t",
+> -                              "ilitek,ili9341";
+> -                 reg = <0>;
+> -                 spi-3wire;
+> -                 spi-max-frequency = <10000000>;
+> -                 dc-gpios = <&gpiod 13 0>;
+> -                 port {
+> -                         panel_in: endpoint {
+> -                           remote-endpoint = <&display_out>;
+> -                      };
+> -                 };
+> -             };
+> +            compatible = "st,sf-tc240t-9370-t",
+> +                         "ilitek,ili9341";
+> +            reg = <0>;
+> +            spi-3wire;
+> +            spi-max-frequency = <10000000>;
+> +            dc-gpios = <&gpiod 13 0>;
+> +            port {
+> +                panel_in: endpoint {
+> +                    remote-endpoint = <&display_out>;
+> +                };
+> +            };
+> +        };
+> +        display@1{
+> +            compatible = "adafruit,yx240qv29", "ilitek,ili9341";
+> +            reg = <1>;
+> +            spi-max-frequency = <10000000>;
+> +            dc-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
+> +            reset-gpios = <&gpio0 8 GPIO_ACTIVE_HIGH>;
+> +            rotation = <270>;
+> +            backlight = <&backlight>;
+>          };
+> +    };
+>  ...
 > 
 
--- 
-Kind Regards,
-Caleb (they/he)
+
+
+

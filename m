@@ -2,26 +2,47 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5401555E961
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Jun 2022 18:41:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 424E355E7F6
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Jun 2022 18:34:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347761AbiF1PEw convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Tue, 28 Jun 2022 11:04:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41164 "EHLO
+        id S1346552AbiF1P0H (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 28 Jun 2022 11:26:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347757AbiF1PEv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jun 2022 11:04:51 -0400
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E988024942;
-        Tue, 28 Jun 2022 08:04:48 -0700 (PDT)
-Received: from ip5b412258.dynamic.kabel-deutschland.de ([91.65.34.88] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <heiko@sntech.de>)
-        id 1o6ClP-0005Ih-K7; Tue, 28 Jun 2022 17:04:27 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S230499AbiF1P0G (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jun 2022 11:26:06 -0400
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09B742DA9D;
+        Tue, 28 Jun 2022 08:26:06 -0700 (PDT)
+Received: by mail-io1-f45.google.com with SMTP id u20so13204462iob.8;
+        Tue, 28 Jun 2022 08:26:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wVoUetZ5S/GqO2CHeSuZD5HjqLM10h5uZxs1HR13hfg=;
+        b=hllCHjeYk/PZ7+/WyqC1MfqxXQ9ewqwhA6ZXUBM+25j5duk2wN0pXwb2EveaHJ2ALI
+         MZm08Rq7GqNUcBN31vHPEbeAYcHATm3d1p58cgIfRlfB2hLWrYf8lcyPSnq3KSfXrqcR
+         rHBlanjcYDd+gImPiIdivVXXuUeNj8WGzNOQBte+qLxcUQlIi67ESRoblUzaQMMHq4iW
+         pqvSJLzlK0LSd0p34TpDNt5hgppfws8LRgrJP+GhfZ+OXfY0IkOyYAFZU4yfGGchZtnf
+         yD2BiupWhxVhEsnRy/lrtOiMeCO0DGNMLFzaLETZyR35GcfUupSKp14Jbtyurt2u5I8y
+         m2uw==
+X-Gm-Message-State: AJIora8vjwLcQRxm33+vSw9jjsDpnCCfPLP7wceI4R2UhvDR/3WMiSke
+        ZozJohOZiabnmUOMnYumBA==
+X-Google-Smtp-Source: AGRyM1u30z6rjSQP/yfjddK3j5eb9UHQa30g9hrzhKsueFxERdQlxns3zeN/rJtosCIDlaE+/J+6ew==
+X-Received: by 2002:a05:6638:14c3:b0:331:8153:e5b with SMTP id l3-20020a05663814c300b0033181530e5bmr11835574jak.114.1656429965253;
+        Tue, 28 Jun 2022 08:26:05 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id y20-20020a6bd814000000b006751347e61bsm5482552iob.27.2022.06.28.08.26.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jun 2022 08:26:04 -0700 (PDT)
+Received: (nullmailer pid 491422 invoked by uid 1000);
+        Tue, 28 Jun 2022 15:26:01 -0000
+Date:   Tue, 28 Jun 2022 09:26:01 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Conor Dooley <mail@conchuod.ie>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -29,12 +50,10 @@ To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Vinod Koul <vkoul@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Palmer Dabbelt <palmer@rivosinc.com>,
-        linux-riscv@lists.infradead.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
         Conor Dooley <conor.dooley@microchip.com>,
@@ -48,17 +67,21 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-riscv@lists.infradead.org, Conor Dooley <mail@conchuod.ie>
-Subject: Re: [PATCH v2 01/16] dt-bindings: display: convert ilitek,ili9341.txt to dt-schema
-Date:   Tue, 28 Jun 2022 17:04:26 +0200
-Message-ID: <22692709.6Emhk5qWAg@diego>
-In-Reply-To: <3361801.QJadu78ljV@diego>
-References: <20220627194003.2395484-1-mail@conchuod.ie> <20220627194003.2395484-2-mail@conchuod.ie> <3361801.QJadu78ljV@diego>
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 04/16] spi: dt-bindings: dw-apb-ssi: update
+ spi-{r,t}x-bus-width
+Message-ID: <20220628152601.GA465684-robh@kernel.org>
+References: <20220627194003.2395484-1-mail@conchuod.ie>
+ <20220627194003.2395484-5-mail@conchuod.ie>
+ <20220627202149.624eu7w2gzw7jchd@mobilestation>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220627202149.624eu7w2gzw7jchd@mobilestation>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,158 +89,76 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Am Dienstag, 28. Juni 2022, 17:00:56 CEST schrieb Heiko Stübner:
-> Hi Conor,
-> 
-> Am Montag, 27. Juni 2022, 21:39:49 CEST schrieb Conor Dooley:
+On Mon, Jun 27, 2022 at 11:21:49PM +0300, Serge Semin wrote:
+> On Mon, Jun 27, 2022 at 08:39:52PM +0100, Conor Dooley wrote:
 > > From: Conor Dooley <conor.dooley@microchip.com>
 > > 
-> > A dt-schema binding for the Ilitek ili9341 was created as
-> > panel/ilitek,ili9341.yaml but the txt binding was ignored in the
-> > process. Move the remaining items in the txt binding to the yaml one &
-> > delete it.
+> > Most users of dw-apb-ssi use spi-{r,t}x-bus-width of 1, however the
+> > Canaan k210 is wired up for a width of 4.
+> > Quoting Serge:
+> > The modern DW APB SSI controllers of v.4.* and newer also support the
+> > enhanced SPI Modes too (Dual, Quad and Octal). Since the IP-core
+> > version is auto-detected at run-time there is no way to create a
+> > DT-schema correctly constraining the Rx/Tx SPI bus widths.
+> > /endquote
 > > 
-> > The example in the txt binding has a spi-max-frequency which disagrees
-> > with the yaml replacement (and its own documentation) so change that to
-> > conform with the binding. There are no users in tree of the Adafruit
-> > yx240qv29 to check against.
+> > As such, drop the restriction on only supporting a bus width of 1.
 > > 
-> > Link: https://cdn-learn.adafruit.com/assets/assets/000/046/879/original/SPEC-YX240QV29-T_Rev.A__1_.pdf
+> > Link: https://lore.kernel.org/all/20220620205654.g7fyipwytbww5757@mobilestation/
 > > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> 
-> in your v1 you already got a [0]
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> for this patch
-> 
-> Looking at the diffstat, which didn't change, you should
-> include such tags in followup revisions, to prevent
-> reviewers from double efforts.
-
-and now I see that the review actually happened _after_ v2 was send ;-)
-
-
-> [0] https://lore.kernel.org/r/20220627232054.GA3155668-robh@kernel.org
-> 
 > > ---
-> >  .../bindings/display/ilitek,ili9341.txt       | 27 -----------
-> >  .../display/panel/ilitek,ili9341.yaml         | 48 +++++++++++++------
-> >  2 files changed, 34 insertions(+), 41 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/display/ilitek,ili9341.txt
+> > Serge, I dropped your R-b when I swapped to the default
+> > property since it changed the enum.
+> > ---
+> >  Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml | 6 ------
+> >  1 file changed, 6 deletions(-)
 > > 
-> > diff --git a/Documentation/devicetree/bindings/display/ilitek,ili9341.txt b/Documentation/devicetree/bindings/display/ilitek,ili9341.txt
-> > deleted file mode 100644
-> > index 169b32e4ee4e..000000000000
-> > --- a/Documentation/devicetree/bindings/display/ilitek,ili9341.txt
-> > +++ /dev/null
-> > @@ -1,27 +0,0 @@
-> > -Ilitek ILI9341 display panels
-> > -
-> > -This binding is for display panels using an Ilitek ILI9341 controller in SPI
-> > -mode.
-> > -
-> > -Required properties:
-> > -- compatible:	"adafruit,yx240qv29", "ilitek,ili9341"
-> > -- dc-gpios:	D/C pin
-> > -- reset-gpios:	Reset pin
-> > -
-> > -The node for this driver must be a child node of a SPI controller, hence
-> > -all mandatory properties described in ../spi/spi-bus.txt must be specified.
-> > -
-> > -Optional properties:
-> > -- rotation:	panel rotation in degrees counter clockwise (0,90,180,270)
-> > -- backlight:	phandle of the backlight device attached to the panel
-> > -
-> > -Example:
-> > -	display@0{
-> > -		compatible = "adafruit,yx240qv29", "ilitek,ili9341";
-> > -		reg = <0>;
-> > -		spi-max-frequency = <32000000>;
-> > -		dc-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
-> > -		reset-gpios = <&gpio0 8 GPIO_ACTIVE_HIGH>;
-> > -		rotation = <270>;
-> > -		backlight = <&backlight>;
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml b/Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
-> > index 6058948a9764..94ca92878434 100644
-> > --- a/Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
-> > +++ b/Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
-> > @@ -23,6 +23,7 @@ properties:
-> >        - enum:
-> >            # ili9341 240*320 Color on stm32f429-disco board
-> >            - st,sf-tc240t-9370-t
-> > +          - adafruit,yx240qv29
-> >        - const: ilitek,ili9341
+> > diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+> > index e25d44c218f2..0a43d6e0ef91 100644
+> > --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+> > +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
+> > @@ -143,12 +143,6 @@ patternProperties:
+> >          minimum: 0
+> >          maximum: 3
 > >  
-> >    reg: true
-> > @@ -47,31 +48,50 @@ properties:
-> >    vddi-led-supply:
-> >      description: Voltage supply for the LED driver (1.65 .. 3.3 V)
-> >  
-> > -additionalProperties: false
-> > +unevaluatedProperties: false
-> >  
-> >  required:
-> >    - compatible
-> >    - reg
-> >    - dc-gpios
-> > -  - port
-> > +
-> > +if:
-> > +  properties:
-> > +    compatible:
-> > +      contains:
-> > +        enum:
-> > +          - st,sf-tc240t-9370-t
-> > +then:
-> > +  required:
-> > +    - port
-> >  
-> >  examples:
-> >    - |+
-> > +    #include <dt-bindings/gpio/gpio.h>
-> >      spi {
-> >          #address-cells = <1>;
-> >          #size-cells = <0>;
-> >          panel: display@0 {
-> > -                 compatible = "st,sf-tc240t-9370-t",
-> > -                              "ilitek,ili9341";
-> > -                 reg = <0>;
-> > -                 spi-3wire;
-> > -                 spi-max-frequency = <10000000>;
-> > -                 dc-gpios = <&gpiod 13 0>;
-> > -                 port {
-> > -                         panel_in: endpoint {
-> > -                           remote-endpoint = <&display_out>;
-> > -                      };
-> > -                 };
-> > -             };
-> > +            compatible = "st,sf-tc240t-9370-t",
-> > +                         "ilitek,ili9341";
-> > +            reg = <0>;
-> > +            spi-3wire;
-> > +            spi-max-frequency = <10000000>;
-> > +            dc-gpios = <&gpiod 13 0>;
-> > +            port {
-> > +                panel_in: endpoint {
-> > +                    remote-endpoint = <&display_out>;
-> > +                };
-> > +            };
-> > +        };
-> > +        display@1{
-> > +            compatible = "adafruit,yx240qv29", "ilitek,ili9341";
-> > +            reg = <1>;
-> > +            spi-max-frequency = <10000000>;
-> > +            dc-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
-> > +            reset-gpios = <&gpio0 8 GPIO_ACTIVE_HIGH>;
-> > +            rotation = <270>;
-> > +            backlight = <&backlight>;
-> >          };
-> > +    };
-> >  ...
-> > 
 > 
+> > -      spi-rx-bus-width:
+> > -        const: 1
+> > -
+> > -      spi-tx-bus-width:
+> > -        const: 1
+> > -
 > 
+> My comment was:
+> > > > You can just use a more relaxed constraint "enum: [1 2 4 8]" here
+> > >
+> > > 8 too? sure.
+> Then Rob said:
+> > Then no constraints needed because the common definition already has
+> > this presumably.
+> 
+> IMO preserving the device-specific constraints even if they match the
+> generic ones has some maintainability benefits. What if you get to
+> discover a new HW which supports Hexal mode? 
 
+x16? Wouldn't we be back to parallel NOR and the problems with parallel 
+buses?
 
+> Then you would have
+> needed to update the common schema constraints. But that would have
+> caused permitting the unsupported bus-mode for all the schemas, which
+> isn't correct. So as I see it the explicit bus-width enumeration would
+> be ok to have here. But I'll leave it for Rob to make a final
+> decision.
 
+Assuming a new width does appear, it's just a matter of time before the 
+DW block has a new rev supporting it too, so there's 2 places to update. 
+Also, a given platform may pinout less than the block supports, so you 
+can't ever be 100% sure an out of range value is in a DT.
 
+But either way is okay with me. If you do keep constraints, you only 
+need 'maximum: 8'.
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+Rob

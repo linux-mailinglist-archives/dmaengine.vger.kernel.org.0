@@ -2,125 +2,192 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C4C4F55D19D
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Jun 2022 15:09:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F133655C352
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Jun 2022 14:48:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241113AbiF1HR5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 28 Jun 2022 03:17:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49490 "EHLO
+        id S234361AbiF1HOH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 28 Jun 2022 03:14:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241457AbiF1HRE (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jun 2022 03:17:04 -0400
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C2152CC9D;
-        Tue, 28 Jun 2022 00:17:03 -0700 (PDT)
-Received: by mail-qk1-f176.google.com with SMTP id k10so8963910qke.9;
-        Tue, 28 Jun 2022 00:17:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lScN3gMa3B+jKKFR5EiTq6EuQY+/4GeckwwsLv10h1E=;
-        b=QE0pc2zeChfEDxVnKRkJBjz3VZ7bWY9LydtaozYealGUU2ymtweq0I8hlSjlLeL3Q2
-         WxHH5inHFEfBBc2miduLiK1ghpIuVCLTWVYb9uSqvXH0zAYxqr3Nq56MJWRV1dfmYdpV
-         dBBST/FIIVs6Xb60EVBL5Dast+42AyrsecLGdJm7YTEiGr96rFpOQMkr+eo8ZiJbcsAy
-         3aeP/kEhnDnLEC5UKOQCNNClTOV0nJGW7NmeBFbtLjfCaAYNvnZzHTYfygVwH6QzzHHB
-         Uruq4L+4i3dvPAMDCO+ET9YhNR1JzAqMBxJ/3HS744eBA7Bc/kQg77dQJ/8e2kWDSECc
-         sCug==
-X-Gm-Message-State: AJIora+Q8XXFQhxUsE+B6B8JM2eGJZGkba6JSEtBn8TcsewmDekhJwi0
-        q3/SHyoiHQeH+FbAw4YYx5e7yDFFV7C4YQ==
-X-Google-Smtp-Source: AGRyM1vF9difKlJTm7QB8p8O2XdAcXWEMOXqFF2o8I0962X2xe3E65lJZXb36CLa77C9j0zxGkEXwA==
-X-Received: by 2002:a05:620a:2901:b0:6af:ca8:3f9f with SMTP id m1-20020a05620a290100b006af0ca83f9fmr10171411qkp.578.1656400622300;
-        Tue, 28 Jun 2022 00:17:02 -0700 (PDT)
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
-        by smtp.gmail.com with ESMTPSA id t12-20020a05620a450c00b006a746826feesm11112486qkp.120.2022.06.28.00.17.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jun 2022 00:17:02 -0700 (PDT)
-Received: by mail-yb1-f181.google.com with SMTP id i15so20788017ybp.1;
-        Tue, 28 Jun 2022 00:17:01 -0700 (PDT)
-X-Received: by 2002:a05:6902:120e:b0:634:6f29:6b84 with SMTP id
- s14-20020a056902120e00b006346f296b84mr17966996ybu.604.1656400124939; Tue, 28
- Jun 2022 00:08:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220618123035.563070-1-mail@conchuod.ie> <20220618123035.563070-5-mail@conchuod.ie>
- <20220627232919.GA3158390-robh@kernel.org> <40d76866-34e3-baef-c3fe-8836cd2430f6@microchip.com>
-In-Reply-To: <40d76866-34e3-baef-c3fe-8836cd2430f6@microchip.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 28 Jun 2022 09:08:32 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXjXGBi8S+bTG105q63zZw2ScQb9nXBSp2baiLNWKQAkg@mail.gmail.com>
-Message-ID: <CAMuHMdXjXGBi8S+bTG105q63zZw2ScQb9nXBSp2baiLNWKQAkg@mail.gmail.com>
+        with ESMTP id S229794AbiF1HOE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jun 2022 03:14:04 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE1DC2A949;
+        Tue, 28 Jun 2022 00:14:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1656400442; x=1687936442;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=wNKTA5hH7f4OaxxJZYVO+xweOYGITLosZ1WkX/gxAOg=;
+  b=YDpUZlbXW/yBIZ65GbyGLl9clt14azTaj0Fa++QnZH41QuNv58nxrHJG
+   ql+ravg9j1GDCq78+QEx9JtpvJPpUzM+4mK5T8MimecN3rIzStYok8f2g
+   x5Qhp7MQUOk7IsT/4quXAxKHte2btnlwBGtfVXzceSygNHddVPMmgnVV+
+   2S2g6sgtzOp6WOMwssj4lIdF6t8gwjOxQ5e6fhO1CRZHNl1WcLb/qXLfG
+   n+tizQM6gT6B9Lz78d7ndNBbTYhWM+yOGO8PU2+LRixVRi6gmlfaYivPA
+   Vatx//U5ELcMcOTS1vvP7hlcwMEki+Ep+pHcxyBxCgwyy4i69ivBHieJC
+   A==;
+X-IronPort-AV: E=Sophos;i="5.92,227,1650956400"; 
+   d="scan'208";a="179795308"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Jun 2022 00:14:01 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.17; Tue, 28 Jun 2022 00:13:54 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17 via Frontend
+ Transport; Tue, 28 Jun 2022 00:13:54 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YRz2sJX+dDalvx3dImz8hMB8UJ3vRpCYYnP6JOfecKQhnpAe4rR6xnGLPlWnqmcJfwxR8eL8qu6isnwKTGQaDK0pmevx/sWPsDAqvMU2yO24XUA74yi2X5Qhegvdq2Bhx/sXHANnB/ZscYaQ4Z5KUstdbw4ZXJLWHqTrergCkVqFNe52HoRpb5bUjunrRA2YxxbSQ2/TBYM0HQlEfDw7943v8Zv0ioUsiEsC/xTk6i2YOEHsaHiwGPCOMHot5DP68brjMMbvaE/MWHcOPEZMV09XYnGnHLy3j7zapCBud+BlLcwH3XL4cYY831gAG8+A1TKG4P2rOL661uYgnvmQPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wNKTA5hH7f4OaxxJZYVO+xweOYGITLosZ1WkX/gxAOg=;
+ b=F7zg7r5v8ynqxQE9quR9PQ5RHEJ+hZ2C1nRNGe6reZHeu0C6shWsCIriW+4yLbftD9+mul5scePGFihz998B8Xie9a8An5pBgL1sK4wJakX/csPK9TJN/Y/UfMAg3A7oblFZ2Ku6+qBvl52ytNTHHCXeL+NBABrJzYcw7QGoD3QPedCU7r5/S+8nAAMFU4C956/vAW/FQyUANQABak1PVRahyyk0SXzK29jhtwcZKfv9FbNZcoaVt7RXKifKwUStrpFELjO5LphA71U4IS2gBlihLhjrf45nGszs8n5N0MmNQL2nBNHWU6Jahhxynh+UTNFAPXkm6J9UUNF5+uay7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wNKTA5hH7f4OaxxJZYVO+xweOYGITLosZ1WkX/gxAOg=;
+ b=KDxrMQWh5OJ32w5zmyX1vIJJKSVW2xn8TaDgYIOwaM4D3aiu9vZ6m1eh92QMragFQrfs8PA4C8fQRLz9tGV+Dy+zlW0o9Db6Jgh2CdC1mO4BObkddz67k70Q9WzD7H1tpj6pcHkW46Zd+ZCIiuOrDp1krj0bhNj0DcYWnuNRFHQ=
+Received: from CO1PR11MB5154.namprd11.prod.outlook.com (2603:10b6:303:99::15)
+ by BN6PR1101MB2113.namprd11.prod.outlook.com (2603:10b6:405:51::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.17; Tue, 28 Jun
+ 2022 07:13:44 +0000
+Received: from CO1PR11MB5154.namprd11.prod.outlook.com
+ ([fe80::699b:5c23:de4f:2bfa]) by CO1PR11MB5154.namprd11.prod.outlook.com
+ ([fe80::699b:5c23:de4f:2bfa%4]) with mapi id 15.20.5373.018; Tue, 28 Jun 2022
+ 07:13:43 +0000
+From:   <Conor.Dooley@microchip.com>
+To:     <geert@linux-m68k.org>
+CC:     <robh@kernel.org>, <mail@conchuod.ie>, <airlied@linux.ie>,
+        <daniel@ffwll.ch>, <krzysztof.kozlowski+dt@linaro.org>,
+        <thierry.reding@gmail.com>, <sam@ravnborg.org>,
+        <Eugeniy.Paltsev@synopsys.com>, <vkoul@kernel.org>,
+        <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <fancer.lancer@gmail.com>, <daniel.lezcano@linaro.org>,
+        <palmer@dabbelt.com>, <palmer@rivosinc.com>, <tglx@linutronix.de>,
+        <paul.walmsley@sifive.com>, <aou@eecs.berkeley.edu>,
+        <masahiroy@kernel.org>, <damien.lemoal@opensource.wdc.com>,
+        <niklas.cassel@wdc.com>, <dillon.minfei@gmail.com>,
+        <jee.heng.sia@intel.com>, <joabreu@synopsys.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>, <linux-spi@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>
 Subject: Re: [PATCH 04/14] dt-bindings: dma: add Canaan k210 to Synopsys
  DesignWare DMA
-To:     Conor Dooley <Conor.Dooley@microchip.com>
-Cc:     Rob Herring <robh@kernel.org>, Conor Dooley <mail@conchuod.ie>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vinod <vkoul@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Palmer Dabbelt <palmer@rivosinc.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Niklas Cassel <niklas.cassel@wdc.com>,
-        Dillon Min <dillon.minfei@gmail.com>,
-        Heng Sia <jee.heng.sia@intel.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Thread-Topic: [PATCH 04/14] dt-bindings: dma: add Canaan k210 to Synopsys
+ DesignWare DMA
+Thread-Index: AQHYgw9+LDzD+WbZ2Eu77tOt94oRs61j9VOAgAB1sYCAAAqdAIAAAWuA
+Date:   Tue, 28 Jun 2022 07:13:43 +0000
+Message-ID: <1c8da6c5-bf42-0112-3828-0f86d9b8665b@microchip.com>
+References: <20220618123035.563070-1-mail@conchuod.ie>
+ <20220618123035.563070-5-mail@conchuod.ie>
+ <20220627232919.GA3158390-robh@kernel.org>
+ <40d76866-34e3-baef-c3fe-8836cd2430f6@microchip.com>
+ <CAMuHMdXjXGBi8S+bTG105q63zZw2ScQb9nXBSp2baiLNWKQAkg@mail.gmail.com>
+In-Reply-To: <CAMuHMdXjXGBi8S+bTG105q63zZw2ScQb9nXBSp2baiLNWKQAkg@mail.gmail.com>
+Accept-Language: en-IE, en-US
+Content-Language: en-IE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microchip.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d64017b9-6551-4044-f4d6-08da58d5bc6c
+x-ms-traffictypediagnostic: BN6PR1101MB2113:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lb5q4e1umrKV8yYzGNnKjiBErjlK9WvyAWOVkeoJuXHQxDa2jsWXXCP0+fmARXg8emPDeU+Se4hypX9PkGqgKLjuUY8d9UIq2EqVagByQbyY2N9tebhD37vxoT3QC79NotQudna7XK2FtyjHRoGcGbcFN2ug3m0O+5+0B9D4acszZPsXGSDctw87YVqyNPegWlrjph9PE6Ye10VR7M/m7r+sx9GMvOAtF6SWDalaZ2IDDUpuHfAHFGmuv4aSIoZmwK9sgKhZGEF885uvVxaoSOXDLoKO1qVsg5K3tUdveIsbk9eASvijU0zgaiEW5vWQTff8q+T6iWuMACHlP5Ou4Tyr/4DfgS9RhcPs36RBw/KyBthV9/4ePbXCjPfH2t8oy0e5sij0zXg8aLTdBYoe2+zWlWSMKbN0EzX2vYx8VJbF6y+VXP2b4ku9jxPnL2SaNV87vicfe6hhHdPwdvj1IZ2jnvEUyQ3am3e2EmUOvHBbqNtmzhu5JRrPmmiIFAK2arpWRuZBrehZvgpMkpnSbZUYjxCzEWJNprPQuXDhPQ4Z739XsAVFYALykITKjsBkr0eHD2QP8sQqCyfg/7Pja/b7YSzDDQ4gwI5bhN5kh3/Wi9PJ+nmNC1wA69qgWHxy8Xw7CG5mIEV77oaKjOY5qYmo1ac373g+DLYhJOuvCjS0nwwf+gKvSLY/c48n5UV6dYFKIHBNuM9thh8KsxgS5eF9g1MeOJjfS/0b2YZAlj1oWMBhWG+uihRH3xjnh15BVxILhGMId8nd5GQ84FPBx0AoHYQ8J1sdcVCBgxewL0hHqD7hcE72TyepWbGv9MVwhMK7q8yIRKMyLqU67HhMmHmEdYZHOOib6H1MhMQoXpQ=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5154.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(136003)(346002)(39860400002)(396003)(376002)(366004)(54906003)(2906002)(6512007)(4326008)(38100700002)(64756008)(8676002)(7406005)(6916009)(316002)(66556008)(66476007)(38070700005)(8936002)(5660300002)(86362001)(7416002)(122000001)(66946007)(66446008)(91956017)(6506007)(26005)(53546011)(478600001)(71200400001)(4744005)(76116006)(31686004)(6486002)(36756003)(186003)(2616005)(41300700001)(31696002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?N0lXdVBFVE9NN21QKzg5cnROc2xieUNncTJEdUVneVlIejdHc0NsMGVORlpG?=
+ =?utf-8?B?ZWlCVXNFUzBCa2p4OU90T0NCajlZR2UveE9mNWNOTEJsZjA0WWNJSmxtRmlI?=
+ =?utf-8?B?WXFkS2xVeWIxQ3pZSEJPV2FvakZDckN3L1l1dVJnWGJtdGtRNE5hRXFoWTdP?=
+ =?utf-8?B?NGFvbnBaT2RGUkljdzFXekNPS3FvZ0JMSnM4am5UUmdpeGhSREF6YlNIcGpS?=
+ =?utf-8?B?SiswcTRlRzFPYWZZTmQrYUtoNjJ0eFpkOWltejBwN3JTQ3lyK1lNM2Y2RGhN?=
+ =?utf-8?B?cm1EYXpiVE5McFI0WlZRQ1poZENxaUtQR3FUb2lRUG84eVpZRUM4aXlOSFBm?=
+ =?utf-8?B?cFZSNFdkanZYZFd0ZFhodUMzd2JUaktqeVlIU0tyVlRTeTlkSlhHYzJHaVUx?=
+ =?utf-8?B?bDlyL1NIbDBkTnp2R1J4cGdENUMvd2krVXpWaEl3WTZWa2oyeEtvNEYyU1Fh?=
+ =?utf-8?B?S3FjLzdYQysrZVRhL3FHcmtQOE1GTFJ5Rm9UUVFYQlJtSy9HazRlb2xBMTJY?=
+ =?utf-8?B?VU5yZG9Nczlib1NzWHZ2MnR3VEdKU0pnNmdFdVlTdGhCK1JGTmJjRmx4VElD?=
+ =?utf-8?B?dkJaeC9LZFJxSVA4Q1ZXeWNjd09EREg1M01GN3djK0dac0pQOU05VURIbUxw?=
+ =?utf-8?B?Q3B0RTJTVlQxL3V1WldUZmVwbFppaUU2THBEZVV5VG1pYVIvQXF0ampwR21K?=
+ =?utf-8?B?QmF1WWZEVHBUS3I1Yk50SVJvVTVuOU5pOXo5MDlEckVKb1Jya1FzY2lxalRw?=
+ =?utf-8?B?UmhDNEhzc0JnSjVQZmc3UU81ZkEzdE1WSDR0NXdyK3VwOXN2WjZWUzRyUlJm?=
+ =?utf-8?B?L1RlUnN3SjVRaTQ2VFBUbGpGdHRNK0FHNEJIa2ozbVFYQmNFU2doV2gwOCtM?=
+ =?utf-8?B?bmZCa3VEY3RDMk1GcDc4cUh4ak9meUExOWt4ZFZ5ZlRGcFJuTVdzSnZMM005?=
+ =?utf-8?B?Z1JCTFJ1MlVLVkR1K2s0QmlVRml5NHhQZkg3Wm5ybTZubHphMkx5V2hEbmc3?=
+ =?utf-8?B?emdoRWZUTHIvSlhnYUxIOE1RaEZ4eG14SWJFNzRuc2drVDlDek1PVUppcEFY?=
+ =?utf-8?B?cVJSR2xmZ2F6TEFuV2lza3FNMWdMZXE0dXA4S3dOdW9pVEpWOG1MblI4VDNn?=
+ =?utf-8?B?N2pTUnNVeUgrQk1HU1FNQitGUjBDQjRQcEZGUnJSMkttQ3JRMVJUeWhCQXZC?=
+ =?utf-8?B?Z005OEtEdVFrc3dyM3crOStUMmYyc3VyZ1FBSkpDOTc3TElJTFFhR2xWd0sz?=
+ =?utf-8?B?bEg5L0dZMWh3dUVEOE1WcGlLRFhia3Q1elFqd2xsdmRBR3FvYTllZGhCZ3pX?=
+ =?utf-8?B?ZWlveU9kYW15M0RlVGVzZlN6VmgvQjVidzZpdWloYUlEQjlVV1lXK3FVUzZn?=
+ =?utf-8?B?aXFDQzYvN3c1YVNQYWw4K2UxeU10Sk14cnJOMFY5TmZBMkZGL2pObW5SWUEv?=
+ =?utf-8?B?MXBrMEFhMnpQZWp4b08rNlZqQ25XNGNoNVI0L2hvTkNkNzJEaGx3TVpPV3oz?=
+ =?utf-8?B?WTNqdFo0Y0ZMcHNnNUtMZklzZnBvQVNxeHNDZUVvYjRxZzNUTXVuQm85ZFNo?=
+ =?utf-8?B?Tm0zazFYbnQvakN5VFdtNmlnaUhZT3A4SEZpdEZjVTZIN3Z2VVQxQmJZVXFp?=
+ =?utf-8?B?aFNhdEtDZ2EwYjg5Y3k2c1NiRUhHU1k0NVJaK2tYRUR6YVZENEovalFtRzhT?=
+ =?utf-8?B?WDhYdXFHQmxjU28yMFA1YXg1RTNqR2U2K28vKzRIOURNczY5MFJ0aE5xTGxD?=
+ =?utf-8?B?aGpRY20zS0lVOFMvM29sYnc0Y0pVdmpKVkFKZUxEaEhUbG54SEJQRS83eFJv?=
+ =?utf-8?B?bzNMNGdEdk5HNFZjcGxaMW4xQnhYVEQ3cm5heG1pMkxTeTQyblRoTjVYeVRJ?=
+ =?utf-8?B?WnpXN2FYa0FKVUN0ZXM1NEVTVDNoVHEwcXFkdmU4L2lYNHZaa2pTelIxT2pX?=
+ =?utf-8?B?cENWN2NNYVJLWXFhcVNCRDBjWW9DdGd0WkRpR0dvdjFqb3Q3V0JFM2VYWjZE?=
+ =?utf-8?B?NmRQT0Exb3gwQW5jQVl0RmsrUzh1VHV0d1BiRStHcjY1TW9obFBKV1F1UkNX?=
+ =?utf-8?B?N0dQREpnell5ZGxqcnFxS2RqK2RscUFTM1o5U0kwbkF0d0hXanE4cXhKOVN6?=
+ =?utf-8?Q?GBdPX52rF+WoDkVroHfj2wHBn?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6DF0F8F9F1744748ADF32B9C8282441B@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5154.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d64017b9-6551-4044-f4d6-08da58d5bc6c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jun 2022 07:13:43.8257
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qfK9CrPIFHGom7uaxWc3DjvTb2D60eNWZ7NLpB/QBJx/8N5i5j1NQtoQY6wjy9vX7Ufj8Cbsygw+IszFqmFjYfXFcTub8MY2yh5LXm2nm0Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1101MB2113
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Conor,
-
-On Tue, Jun 28, 2022 at 8:30 AM <Conor.Dooley@microchip.com> wrote:
-> On 28/06/2022 00:29, Rob Herring wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> >
-> > On Sat, Jun 18, 2022 at 01:30:26PM +0100, Conor Dooley wrote:
-> >> From: Conor Dooley <conor.dooley@microchip.com>
-> >>
-> >> The Canaan k210 apparently has a Sysnopsys Designware AXI DMA
-> >> controller, but according to the documentation & devicetree it has 6
-> >> interrupts rather than the standard one. Add a custom compatible that
-> >> supports the 6 interrupt configuration which falls back to the standard
-> >> binding which is currently the one in use in the devicetree entry.
-> >
-> > But it works with only 1 interrupt?
->
-> Seemingly...
-
-The Linux driver uses the only first interrupt.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+T24gMjgvMDYvMjAyMiAwODowOCwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KPiBFWFRFUk5B
+TCBFTUFJTDogRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNzIHlv
+dSBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUNCj4gDQo+IEhpIENvbm9yLA0KPiANCj4gT24gVHVl
+LCBKdW4gMjgsIDIwMjIgYXQgODozMCBBTSA8Q29ub3IuRG9vbGV5QG1pY3JvY2hpcC5jb20+IHdy
+b3RlOg0KPj4gT24gMjgvMDYvMjAyMiAwMDoyOSwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+Pj4gRVhU
+RVJOQUwgRU1BSUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVz
+cyB5b3Uga25vdyB0aGUgY29udGVudCBpcyBzYWZlDQo+Pj4NCj4+PiBPbiBTYXQsIEp1biAxOCwg
+MjAyMiBhdCAwMTozMDoyNlBNICswMTAwLCBDb25vciBEb29sZXkgd3JvdGU6DQo+Pj4+IEZyb206
+IENvbm9yIERvb2xleSA8Y29ub3IuZG9vbGV5QG1pY3JvY2hpcC5jb20+DQo+Pj4+DQo+Pj4+IFRo
+ZSBDYW5hYW4gazIxMCBhcHBhcmVudGx5IGhhcyBhIFN5c25vcHN5cyBEZXNpZ253YXJlIEFYSSBE
+TUENCj4+Pj4gY29udHJvbGxlciwgYnV0IGFjY29yZGluZyB0byB0aGUgZG9jdW1lbnRhdGlvbiAm
+IGRldmljZXRyZWUgaXQgaGFzIDYNCj4+Pj4gaW50ZXJydXB0cyByYXRoZXIgdGhhbiB0aGUgc3Rh
+bmRhcmQgb25lLiBBZGQgYSBjdXN0b20gY29tcGF0aWJsZSB0aGF0DQo+Pj4+IHN1cHBvcnRzIHRo
+ZSA2IGludGVycnVwdCBjb25maWd1cmF0aW9uIHdoaWNoIGZhbGxzIGJhY2sgdG8gdGhlIHN0YW5k
+YXJkDQo+Pj4+IGJpbmRpbmcgd2hpY2ggaXMgY3VycmVudGx5IHRoZSBvbmUgaW4gdXNlIGluIHRo
+ZSBkZXZpY2V0cmVlIGVudHJ5Lg0KPj4+DQo+Pj4gQnV0IGl0IHdvcmtzIHdpdGggb25seSAxIGlu
+dGVycnVwdD8NCj4+DQo+PiBTZWVtaW5nbHkuLi4NCj4gDQo+IFRoZSBMaW51eCBkcml2ZXIgdXNl
+cyB0aGUgb25seSBmaXJzdCBpbnRlcnJ1cHQuDQoNCkF5ZSwgdGhhdCB3YXMgbXkgYmFzaXMgZm9y
+IHRoZSBzZWVtaW5nbHkgOykNCg0K

@@ -2,48 +2,34 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10B3B55F4C8
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Jun 2022 06:03:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 185CD55FC09
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Jun 2022 11:31:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231145AbiF2D6b (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 28 Jun 2022 23:58:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47964 "EHLO
+        id S232869AbiF2Jaa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 29 Jun 2022 05:30:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230472AbiF2D62 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jun 2022 23:58:28 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF0971A065;
-        Tue, 28 Jun 2022 20:58:25 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LXnhK0RDqzkWfm;
-        Wed, 29 Jun 2022 11:56:33 +0800 (CST)
-Received: from kwepemm600007.china.huawei.com (7.193.23.208) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 29 Jun 2022 11:58:22 +0800
-Received: from localhost.localdomain (10.69.192.56) by
- kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 29 Jun 2022 11:58:22 +0800
-From:   Jie Hai <haijie1@huawei.com>
-To:     <vkoul@kernel.org>, <wangzhou1@hisilicon.com>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 7/7] MAINTAINERS: Add myself as maintainer for hisi_dma
-Date:   Wed, 29 Jun 2022 11:55:49 +0800
-Message-ID: <20220629035549.44181-8-haijie1@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20220629035549.44181-1-haijie1@huawei.com>
-References: <20220625074422.3479591-1-haijie1@huawei.com>
- <20220629035549.44181-1-haijie1@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.69.192.56]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600007.china.huawei.com (7.193.23.208)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        with ESMTP id S232883AbiF2JaT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Jun 2022 05:30:19 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 606133A187;
+        Wed, 29 Jun 2022 02:30:16 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 678C91477;
+        Wed, 29 Jun 2022 02:30:16 -0700 (PDT)
+Received: from usa.arm.com (unknown [10.162.16.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7E4C23F792;
+        Wed, 29 Jun 2022 02:30:14 -0700 (PDT)
+From:   Vivek Gautam <vivek.gautam@arm.com>
+To:     dmaengine@vger.kernel.org, vkoul@kernel.org
+Cc:     linux-kernel@vger.kernel.org, robin.murphy@arm.com,
+        Vivek Gautam <vivek.gautam@arm.com>
+Subject: [PATCH] dmaengine: pl330: Set DMA_INTERRUPT capability and add related callback
+Date:   Wed, 29 Jun 2022 15:00:03 +0530
+Message-Id: <20220629093003.19440-1-vivek.gautam@arm.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,25 +37,65 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add myself as a maintainer for hisi_dma.
+With the verification for DMA_INTERRUPT capability added to the dmatest
+module, the dmatest fails to start for various channels of pl330 dma
+controller. So, set the DMA_INTERRUPT capability and add the required
+callback method to set the transaction descriptor flags.
 
-Signed-off-by: Jie Hai <haijie1@huawei.com>
+Signed-off-by: Vivek Gautam <vivek.gautam@arm.com>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/pl330.c | 24 ++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cb5aaeb84ac4..e85cdb8f2903 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8899,6 +8899,7 @@ F:	net/dsa/tag_hellcreek.c
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 858400e42ec0..b80e48f0970b 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -2757,6 +2757,28 @@ static struct dma_async_tx_descriptor *pl330_prep_dma_cyclic(
+ 	return &desc->txd;
+ }
  
- HISILICON DMA DRIVER
- M:	Zhou Wang <wangzhou1@hisilicon.com>
-+M:	Jie Hai <haijie1@hisilicon.com>
- L:	dmaengine@vger.kernel.org
- S:	Maintained
- F:	drivers/dma/hisi_dma.c
++static struct dma_async_tx_descriptor *
++pl330_dma_prep_interrupt(struct dma_chan *chan, unsigned long flags)
++{
++	struct dma_pl330_chan *pch = to_pchan(chan);
++	struct dma_pl330_desc *desc;
++
++	if (unlikely(!pch))
++		return NULL;
++
++	desc = pl330_get_desc(pch);
++	if (!desc) {
++		dev_err(pch->dmac->ddma.dev, "%s:%d Unable to fetch desc\n",
++			__func__, __LINE__);
++		return NULL;
++	}
++
++	/* Set the flags that are passed downstream */
++	desc->txd.flags = flags;
++
++	return &desc->txd;
++}
++
+ static struct dma_async_tx_descriptor *
+ pl330_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
+ 		dma_addr_t src, size_t len, unsigned long flags)
+@@ -3111,6 +3133,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+ 	}
+ 
+ 	dma_cap_set(DMA_MEMCPY, pd->cap_mask);
++	dma_cap_set(DMA_INTERRUPT, pd->cap_mask);
+ 	if (pcfg->num_peri) {
+ 		dma_cap_set(DMA_SLAVE, pd->cap_mask);
+ 		dma_cap_set(DMA_CYCLIC, pd->cap_mask);
+@@ -3121,6 +3144,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+ 	pd->device_free_chan_resources = pl330_free_chan_resources;
+ 	pd->device_prep_dma_memcpy = pl330_prep_dma_memcpy;
+ 	pd->device_prep_dma_cyclic = pl330_prep_dma_cyclic;
++	pd->device_prep_dma_interrupt = pl330_dma_prep_interrupt;
+ 	pd->device_tx_status = pl330_tx_status;
+ 	pd->device_prep_slave_sg = pl330_prep_slave_sg;
+ 	pd->device_config = pl330_config;
 -- 
-2.33.0
+2.17.1
 

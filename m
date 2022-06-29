@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3041F560210
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Jun 2022 16:07:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A4A95601E2
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Jun 2022 16:07:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233483AbiF2ODs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 29 Jun 2022 10:03:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59724 "EHLO
+        id S233883AbiF2OGh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 29 Jun 2022 10:06:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233758AbiF2ODl (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Jun 2022 10:03:41 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EAEC29CA2
-        for <dmaengine@vger.kernel.org>; Wed, 29 Jun 2022 07:03:38 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id c65so22369514edf.4
-        for <dmaengine@vger.kernel.org>; Wed, 29 Jun 2022 07:03:38 -0700 (PDT)
+        with ESMTP id S233922AbiF2OGb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Jun 2022 10:06:31 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C2502AC56
+        for <dmaengine@vger.kernel.org>; Wed, 29 Jun 2022 07:06:22 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id c13so22347410eds.10
+        for <dmaengine@vger.kernel.org>; Wed, 29 Jun 2022 07:06:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=3Fm2QBWRMAcf2SqfXkovtfoitzjHh0Xu8DtDfFRKdko=;
-        b=WE0ux5jIlaFg4gsQbxItLzp5FFtBXMzl1rQaeggZCsOcNFK23ToF4N5Ahxi1xs4fsB
-         kvw6CyeG0YngZ7zEsWP0n/K2Jxul0VCPriuQmqpaBoVpzAO6ed7VHpwPIQEzm8rWIZWz
-         rR4v8PJIrak1HHpJ0coFqXZcjR7950OBwvXjAheWWzbyunZlyz1hxJiBOskN8OESjB65
-         tv1ml8dXftsGEpEO13BXu7FVqjbmrxa1uHSBr1kFvaovTyNFg1HMYsTdPCloCXCQbfKH
-         1tsNgvHKJ7eSDjb6zKTiMlYNdeRSgNBNJZrFxKOUk6KQWKmwFQoWbIqssAB6/dsue/RC
-         OfPA==
+        bh=8gQtQDtF9rQyU7X0tNXzxPfN8SpiY1745/Rsl4X+28U=;
+        b=HPU/V4L85ukA/kUj9eblBzBqXaCHtN56ga2ZN/juC2Mn4FMoY2AmQRWlymboSh6KhC
+         e0FOl2ip7AcigNt6bACVzqRS/0chmRDWXSmPJSz2QVyJZeyJq9Vg4lGSkCliRp8SqbV8
+         gaZp31BGBj5ktqifxA/KljmyCXWWEwSm1cu07yo9Hhtwm7t338++0t2H+67mMvItNkH3
+         DudLJhsIfq4gzM4egnC5HIRnQBrjsx1MTATnFqzP2qh0ZgglAgybYWPj2uHDYp01u62y
+         EkrKQpGwlcUCQj2gkBOcprPOptKVwGr7Y+cuMX1Qzl0vwESLKwR5wHDV5l6dCEvuc8Ub
+         +GRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=3Fm2QBWRMAcf2SqfXkovtfoitzjHh0Xu8DtDfFRKdko=;
-        b=l7BIJOXdjVo55LPE2bQbxtRwwafZgj9icJjL8E6wAMB+dCx3QDERegJANZChFepKEr
-         x2/mcpPf/51qrZppOHAtj9AS5HD0KFZI7cHbJqvBn9Z5nbM+ols/HIbsGQEG12sMCqZA
-         t0wppQWsOgOcHRMAfoqamO1JLFTm84JiS3zoDX+Y3NWmwMEqHYrVBInYwEk0RkFUvEaB
-         j2k+im4pyuecDCyGzVJr4YztSjRoXA/lnDDE3fbfOOgBz7d2ekQf0qnFpbM8/f0dRUPx
-         G/X/OUBSRZc6WeaZNOyEeintwFEAwUyqkCavtpXbYwH3YdbuqWVyB/x8WfWXAfsaHzln
-         wU0g==
-X-Gm-Message-State: AJIora+Ui2xgcDT7dnL7FcM3ejzahJcXVdXW403Ns5zNDBks3Nvy8ZTO
-        1h+vJ9dd1WNYCReiHZrRAoyDZA==
-X-Google-Smtp-Source: AGRyM1sXo01E7PomYrFjczxvDI2c1Y8J1q7hLBW6UtX+TBb9e4omxuFhlvhkJIPJF8FB43noub0UnQ==
-X-Received: by 2002:a05:6402:501d:b0:437:e000:a898 with SMTP id p29-20020a056402501d00b00437e000a898mr1307482eda.265.1656511416959;
-        Wed, 29 Jun 2022 07:03:36 -0700 (PDT)
+        bh=8gQtQDtF9rQyU7X0tNXzxPfN8SpiY1745/Rsl4X+28U=;
+        b=eYSlhFsVhYU2dHcQU48PshvgfIS2jYbpL63/tzFvIkPOXXHnMiMFQsppawmr07AqYJ
+         WXWt+NvBjLSWxSrVfuk+4I5yOMUcOHPMLACrPMjldnhh2xB2rHHYZsRdNSivCyD4ybrL
+         YvhUkD/ES2sMnWdem9jYbYD3IuKGTwQgb7zkQRWpqHbgfJQIiIPtXc6XdXg3c21Ewdeu
+         D1AD+k+xt5IPeXqmsrFb7N6mmbCgXCABJQwbMEwdI+JIrEmzwcgkRN1QZMI4DrJ6nYbY
+         Id1CSIPHMb9xmlOTB0/8aFhUChAcJ0rM/jSLZf0onG7Mn7DHj+E6OuzPDb2OI1/CoDvc
+         16tQ==
+X-Gm-Message-State: AJIora+LI4PoOBpyyZR+ndfrVO9Jiq2HGnpW1TlN+F/DYL6G1g1+5tf1
+        0XhS5s6sBFl8HiBuIa3Xv99eAw==
+X-Google-Smtp-Source: AGRyM1thK2elgrL51IMTUq/OOq4qxDO1WFANzNE8ltsuFrL8hQvjYOLDM/DN4c+hhQRudbAm+Bqy6A==
+X-Received: by 2002:aa7:d685:0:b0:435:7910:f110 with SMTP id d5-20020aa7d685000000b004357910f110mr4412132edr.247.1656511580882;
+        Wed, 29 Jun 2022 07:06:20 -0700 (PDT)
 Received: from localhost.localdomain (88-107-17-60.dynamic.dsl.as9105.com. [88.107.17.60])
-        by smtp.gmail.com with ESMTPSA id x2-20020aa7d382000000b00435640c141esm11377343edq.93.2022.06.29.07.03.35
+        by smtp.gmail.com with ESMTPSA id p19-20020aa7cc93000000b0042bdb6a3602sm11238951edt.69.2022.06.29.07.06.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jun 2022 07:03:36 -0700 (PDT)
+        Wed, 29 Jun 2022 07:06:19 -0700 (PDT)
 From:   Caleb Connolly <caleb.connolly@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -56,15 +56,15 @@ To:     Andy Gross <agross@kernel.org>,
         linux-kernel@vger.kernel.org
 Cc:     Caleb Connolly <caleb.connolly@linaro.org>,
         Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH v2] dmaengine: qcom: bam_dma: fix runtime PM underflow
-Date:   Wed, 29 Jun 2022 15:03:23 +0100
-Message-Id: <20220629140323.116981-1-caleb.connolly@linaro.org>
+Subject: [RESEND PATCH v2] dmaengine: qcom: bam_dma: fix runtime PM underflow
+Date:   Wed, 29 Jun 2022 15:06:00 +0100
+Message-Id: <20220629140559.118537-1-caleb.connolly@linaro.org>
 X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,7 +75,7 @@ X-Mailing-List: dmaengine@vger.kernel.org
 Commit dbad41e7bb5f ("dmaengine: qcom: bam_dma: check if the runtime pm enabled")
 caused unbalanced pm_runtime_get/put() calls when the bam is
 controlled remotely. This commit reverts it and just enables pm_runtime
-in all cases, the clk_* functions already just nop the clock is NULL.
+in all cases, the clk_* functions already just nop when the clock is NULL.
 
 Also clean up a bit by removing unnecessary bamclk null checks.
 
@@ -84,12 +84,13 @@ Fixes: dbad41e7bb5f ("dmaengine: qcom: bam_dma: check if the runtime pm enabled"
 Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
 ---
 
+Resend to fix wording
+
 Boot tested on a OnePlus 6
 
 v1 can be found here:
 https://lore.kernel.org/linux-arm-msm/20220609195043.1544625-1-caleb.connolly@linaro.org/
-
- drivers/dma/qcom/bam_dma.c | 39 +++++++++++---------------------------
+drivers/dma/qcom/bam_dma.c | 39 +++++++++++---------------------------
  1 file changed, 11 insertions(+), 28 deletions(-)
 
 diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c

@@ -2,63 +2,82 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A4A95601E2
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Jun 2022 16:07:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80706560954
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Jun 2022 20:44:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233883AbiF2OGh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 29 Jun 2022 10:06:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34484 "EHLO
+        id S230326AbiF2Sok (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 29 Jun 2022 14:44:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233922AbiF2OGb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Jun 2022 10:06:31 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C2502AC56
-        for <dmaengine@vger.kernel.org>; Wed, 29 Jun 2022 07:06:22 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id c13so22347410eds.10
-        for <dmaengine@vger.kernel.org>; Wed, 29 Jun 2022 07:06:22 -0700 (PDT)
+        with ESMTP id S229480AbiF2Soj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Jun 2022 14:44:39 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C966824BF9
+        for <dmaengine@vger.kernel.org>; Wed, 29 Jun 2022 11:44:37 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id be14-20020a05600c1e8e00b003a04a458c54so179145wmb.3
+        for <dmaengine@vger.kernel.org>; Wed, 29 Jun 2022 11:44:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=conchuod.ie; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=8gQtQDtF9rQyU7X0tNXzxPfN8SpiY1745/Rsl4X+28U=;
-        b=HPU/V4L85ukA/kUj9eblBzBqXaCHtN56ga2ZN/juC2Mn4FMoY2AmQRWlymboSh6KhC
-         e0FOl2ip7AcigNt6bACVzqRS/0chmRDWXSmPJSz2QVyJZeyJq9Vg4lGSkCliRp8SqbV8
-         gaZp31BGBj5ktqifxA/KljmyCXWWEwSm1cu07yo9Hhtwm7t338++0t2H+67mMvItNkH3
-         DudLJhsIfq4gzM4egnC5HIRnQBrjsx1MTATnFqzP2qh0ZgglAgybYWPj2uHDYp01u62y
-         EkrKQpGwlcUCQj2gkBOcprPOptKVwGr7Y+cuMX1Qzl0vwESLKwR5wHDV5l6dCEvuc8Ub
-         +GRA==
+        bh=ujlFidKBYN3+gnt+1Wkvol7kmUwt+TJSsn/V9xvehgY=;
+        b=FOsaCOs4FhntcBVLVzvRAs2gDZxoyx3YHWEOhRh45yswt/+jKUwE/J0wNxaZ37V6Uc
+         zuxSruVBSYWJDtgARcDoe5RocT823Ey0njk5JlleU3d0qYwcgqh6fodDsvAnnvbvV7Rm
+         PY3MlPeU1iH3j3/ZPjhi8DaO/OfWsUbzBea7z+PFQC921e9IBleQBh66fo7u2hKhyarj
+         5uvUGrXTVCRqFYQUTptcKkWgRxYwWQNU4qoXt5ehOXJMh8e1gGppyJaQ2eRKydUR+3Ht
+         l5p4BtxvL9zi+7zSv32N5RRgYtbMdTeb2fbubnUmSY4CPVXLHJ7NbZqjxV/soVbvVz+r
+         yCJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=8gQtQDtF9rQyU7X0tNXzxPfN8SpiY1745/Rsl4X+28U=;
-        b=eYSlhFsVhYU2dHcQU48PshvgfIS2jYbpL63/tzFvIkPOXXHnMiMFQsppawmr07AqYJ
-         WXWt+NvBjLSWxSrVfuk+4I5yOMUcOHPMLACrPMjldnhh2xB2rHHYZsRdNSivCyD4ybrL
-         YvhUkD/ES2sMnWdem9jYbYD3IuKGTwQgb7zkQRWpqHbgfJQIiIPtXc6XdXg3c21Ewdeu
-         D1AD+k+xt5IPeXqmsrFb7N6mmbCgXCABJQwbMEwdI+JIrEmzwcgkRN1QZMI4DrJ6nYbY
-         Id1CSIPHMb9xmlOTB0/8aFhUChAcJ0rM/jSLZf0onG7Mn7DHj+E6OuzPDb2OI1/CoDvc
-         16tQ==
-X-Gm-Message-State: AJIora+LI4PoOBpyyZR+ndfrVO9Jiq2HGnpW1TlN+F/DYL6G1g1+5tf1
-        0XhS5s6sBFl8HiBuIa3Xv99eAw==
-X-Google-Smtp-Source: AGRyM1thK2elgrL51IMTUq/OOq4qxDO1WFANzNE8ltsuFrL8hQvjYOLDM/DN4c+hhQRudbAm+Bqy6A==
-X-Received: by 2002:aa7:d685:0:b0:435:7910:f110 with SMTP id d5-20020aa7d685000000b004357910f110mr4412132edr.247.1656511580882;
-        Wed, 29 Jun 2022 07:06:20 -0700 (PDT)
-Received: from localhost.localdomain (88-107-17-60.dynamic.dsl.as9105.com. [88.107.17.60])
-        by smtp.gmail.com with ESMTPSA id p19-20020aa7cc93000000b0042bdb6a3602sm11238951edt.69.2022.06.29.07.06.19
+        bh=ujlFidKBYN3+gnt+1Wkvol7kmUwt+TJSsn/V9xvehgY=;
+        b=lCdvChRBiHZhl6zYtGYuYLW7OtiXDYrnOXJxqUbcCk+FoOoidGBAZi/syIpjyjrGrP
+         doRtCCdLmzO4bBzWzkWXOu3cd4aq7TLUEKsP6j2TVu8Uq+pVWNEBHfreloW1QQA94egq
+         BMZFerittgemInNu+weP8WvqplWMWDls+tro7DxebHso75UVCZRkUOPaIQPfwe3MQw+v
+         6oXEtNoW+nVdvXMoYb1MJzU5iM4esSqRBGDXh7z5aIM1KrQwBtEYtSHqZcHdn4YxUK7o
+         ANItDEb6PhZbQRlnn8Px85b1P5AWLcSU0KDUlovHGe5plvJjam+QqX3BXQw551sKLy+2
+         TA/w==
+X-Gm-Message-State: AJIora/fip8CudRppHdcL2P+3G4/Z2qRRZ5cHOs0FbA1oWWlKTEvl9US
+        bAeov1t/mBCvztf8Zvs2gioBZQ==
+X-Google-Smtp-Source: AGRyM1vkI72xwUrVzdm01K07LqtX2m50dz3LRYbM6zcBvoybVSkmTwAhtiBUgec39zvaIkLF0EZJrg==
+X-Received: by 2002:a05:600c:3516:b0:39c:8091:31b6 with SMTP id h22-20020a05600c351600b0039c809131b6mr7587210wmq.164.1656528276189;
+        Wed, 29 Jun 2022 11:44:36 -0700 (PDT)
+Received: from henark71.. ([51.37.234.167])
+        by smtp.gmail.com with ESMTPSA id u23-20020a7bcb17000000b0039aef592ca0sm3834371wmj.35.2022.06.29.11.44.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jun 2022 07:06:19 -0700 (PDT)
-From:   Caleb Connolly <caleb.connolly@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Wed, 29 Jun 2022 11:44:35 -0700 (PDT)
+From:   Conor Dooley <mail@conchuod.ie>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Caleb Connolly <caleb.connolly@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: [RESEND PATCH v2] dmaengine: qcom: bam_dma: fix runtime PM underflow
-Date:   Wed, 29 Jun 2022 15:06:00 +0100
-Message-Id: <20220629140559.118537-1-caleb.connolly@linaro.org>
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Palmer Dabbelt <palmer@rivosinc.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Niklas Cassel <niklas.cassel@wdc.com>,
+        Dillon Min <dillon.minfei@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH v3 00/15] Canaan devicetree fixes
+Date:   Wed, 29 Jun 2022 19:43:29 +0100
+Message-Id: <20220629184343.3438856-1-mail@conchuod.ie>
 X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -72,134 +91,76 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Commit dbad41e7bb5f ("dmaengine: qcom: bam_dma: check if the runtime pm enabled")
-caused unbalanced pm_runtime_get/put() calls when the bam is
-controlled remotely. This commit reverts it and just enables pm_runtime
-in all cases, the clk_* functions already just nop when the clock is NULL.
+From: Conor Dooley <conor.dooley@microchip.com>
 
-Also clean up a bit by removing unnecessary bamclk null checks.
+Hey all,
+This series should rid us of dtbs_check errors for the RISC-V Canaan k210
+based boards. To make keeping it that way a little easier, I changed the
+Canaan devicetree Makefile so that it would build all of the devicetrees
+in the directory if SOC_CANAAN.
 
-Suggested-by: Stephan Gerhold <stephan@gerhold.net>
-Fixes: dbad41e7bb5f ("dmaengine: qcom: bam_dma: check if the runtime pm enabled")
-Signed-off-by: Caleb Connolly <caleb.connolly@linaro.org>
----
+I *DO NOT* have any Canaan hardware so I have not tested any of this in
+action. Since I sent v1, I tried to buy some since it's cheap - but could
+out of the limited stockists none seemed to want to deliver to Ireland :(
+I based the series on next-20220617.
 
-Resend to fix wording
+Thanks,
+Conor.
 
-Boot tested on a OnePlus 6
+Changes since v2:
+- i2s: added clocks maxItems
+- dma: unconditionally extended the interrupts & dropped canaan
+  compatible
+- timer: as per Sergey, split the timer dts nodes in 2 & drop the
+  binding patch
+- ili9341: add a canaan specific compatible to the binding and dts
 
-v1 can be found here:
-https://lore.kernel.org/linux-arm-msm/20220609195043.1544625-1-caleb.connolly@linaro.org/
-drivers/dma/qcom/bam_dma.c | 39 +++++++++++---------------------------
- 1 file changed, 11 insertions(+), 28 deletions(-)
+Changes since v1:
+- I added a new dt node & compatible for the SRAM memory controller due
+  Damien's wish to preserve the inter-op with U-Boot.
+- The dw-apb-ssi binding now uses the default rx/tx widths
+- A new patch fixes bus {ranges,reg} warnings
+- Rearranged the patches in a slightly more logical order
 
-diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index 87f6ca1541cf..2ff787df513e 100644
---- a/drivers/dma/qcom/bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -558,14 +558,6 @@ static int bam_alloc_chan(struct dma_chan *chan)
- 	return 0;
- }
- 
--static int bam_pm_runtime_get_sync(struct device *dev)
--{
--	if (pm_runtime_enabled(dev))
--		return pm_runtime_get_sync(dev);
--
--	return 0;
--}
--
- /**
-  * bam_free_chan - Frees dma resources associated with specific channel
-  * @chan: specified channel
-@@ -581,7 +573,7 @@ static void bam_free_chan(struct dma_chan *chan)
- 	unsigned long flags;
- 	int ret;
- 
--	ret = bam_pm_runtime_get_sync(bdev->dev);
-+	ret = pm_runtime_get_sync(bdev->dev);
- 	if (ret < 0)
- 		return;
- 
-@@ -784,7 +776,7 @@ static int bam_pause(struct dma_chan *chan)
- 	unsigned long flag;
- 	int ret;
- 
--	ret = bam_pm_runtime_get_sync(bdev->dev);
-+	ret = pm_runtime_get_sync(bdev->dev);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -810,7 +802,7 @@ static int bam_resume(struct dma_chan *chan)
- 	unsigned long flag;
- 	int ret;
- 
--	ret = bam_pm_runtime_get_sync(bdev->dev);
-+	ret = pm_runtime_get_sync(bdev->dev);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -919,7 +911,7 @@ static irqreturn_t bam_dma_irq(int irq, void *data)
- 	if (srcs & P_IRQ)
- 		tasklet_schedule(&bdev->task);
- 
--	ret = bam_pm_runtime_get_sync(bdev->dev);
-+	ret = pm_runtime_get_sync(bdev->dev);
- 	if (ret < 0)
- 		return IRQ_NONE;
- 
-@@ -1037,7 +1029,7 @@ static void bam_start_dma(struct bam_chan *bchan)
- 	if (!vd)
- 		return;
- 
--	ret = bam_pm_runtime_get_sync(bdev->dev);
-+	ret = pm_runtime_get_sync(bdev->dev);
- 	if (ret < 0)
- 		return;
- 
-@@ -1374,11 +1366,6 @@ static int bam_dma_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_unregister_dma;
- 
--	if (!bdev->bamclk) {
--		pm_runtime_disable(&pdev->dev);
--		return 0;
--	}
--
- 	pm_runtime_irq_safe(&pdev->dev);
- 	pm_runtime_set_autosuspend_delay(&pdev->dev, BAM_DMA_AUTOSUSPEND_DELAY);
- 	pm_runtime_use_autosuspend(&pdev->dev);
-@@ -1462,10 +1449,8 @@ static int __maybe_unused bam_dma_suspend(struct device *dev)
- {
- 	struct bam_device *bdev = dev_get_drvdata(dev);
- 
--	if (bdev->bamclk) {
--		pm_runtime_force_suspend(dev);
--		clk_unprepare(bdev->bamclk);
--	}
-+	pm_runtime_force_suspend(dev);
-+	clk_unprepare(bdev->bamclk);
- 
- 	return 0;
- }
-@@ -1475,13 +1460,11 @@ static int __maybe_unused bam_dma_resume(struct device *dev)
- 	struct bam_device *bdev = dev_get_drvdata(dev);
- 	int ret;
- 
--	if (bdev->bamclk) {
--		ret = clk_prepare(bdev->bamclk);
--		if (ret)
--			return ret;
-+	ret = clk_prepare(bdev->bamclk);
-+	if (ret)
-+		return ret;
- 
--		pm_runtime_force_resume(dev);
--	}
-+	pm_runtime_force_resume(dev);
- 
- 	return 0;
- }
+Conor Dooley (15):
+  dt-bindings: display: convert ilitek,ili9341.txt to dt-schema
+  dt-bindings: display: ili9341: document canaan kd233's lcd
+  ASoC: dt-bindings: convert designware-i2s to dt-schema
+  spi: dt-bindings: dw-apb-ssi: update spi-{r,t}x-bus-width
+  dt-bindings: dma: dw-axi-dmac: extend the number of interrupts
+  dt-bindings: memory-controllers: add canaan k210 sram controller
+  riscv: dts: canaan: fix the k210's memory node
+  riscv: dts: canaan: fix the k210's timer nodes
+  riscv: dts: canaan: fix mmc node names
+  riscv: dts: canaan: fix kd233 display spi frequency
+  riscv: dts: canaan: use custom compatible for k210 i2s
+  riscv: dts: canaan: remove spi-max-frequency from controllers
+  riscv: dts: canaan: fix bus {ranges,reg} warnings
+  riscv: dts: canaan: add specific compatible for kd233's LCD
+  riscv: dts: canaan: build all devicetress if SOC_CANAAN
+
+ .../bindings/display/ilitek,ili9341.txt       | 27 ------
+ .../display/panel/ilitek,ili9341.yaml         | 49 +++++++---
+ .../bindings/dma/snps,dw-axi-dmac.yaml        |  4 +-
+ .../memory-controllers/canaan,k210-sram.yaml  | 52 ++++++++++
+ .../bindings/sound/designware-i2s.txt         | 35 -------
+ .../bindings/sound/snps,designware-i2s.yaml   | 94 +++++++++++++++++++
+ .../bindings/spi/snps,dw-apb-ssi.yaml         |  6 --
+ arch/riscv/boot/dts/canaan/Makefile           | 10 +-
+ arch/riscv/boot/dts/canaan/canaan_kd233.dts   |  6 +-
+ arch/riscv/boot/dts/canaan/k210.dtsi          | 76 ++++++++++-----
+ .../riscv/boot/dts/canaan/sipeed_maix_bit.dts |  2 +-
+ .../boot/dts/canaan/sipeed_maix_dock.dts      |  2 +-
+ arch/riscv/boot/dts/canaan/sipeed_maix_go.dts |  2 +-
+ .../boot/dts/canaan/sipeed_maixduino.dts      |  2 +-
+ 14 files changed, 253 insertions(+), 114 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/ilitek,ili9341.txt
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/canaan,k210-sram.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/designware-i2s.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/snps,designware-i2s.yaml
+
+
+base-commit: 07dc787be2316e243a16a33d0a9b734cd9365bd3
 -- 
 2.36.1
 

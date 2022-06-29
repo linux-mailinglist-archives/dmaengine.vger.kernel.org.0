@@ -2,113 +2,202 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D08155F1B7
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Jun 2022 01:01:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ED7B55F442
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Jun 2022 05:44:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229804AbiF1XBH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 28 Jun 2022 19:01:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57194 "EHLO
+        id S229541AbiF2DoM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 28 Jun 2022 23:44:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230439AbiF1XBH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jun 2022 19:01:07 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E43E377EF;
-        Tue, 28 Jun 2022 16:01:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1656457265; x=1687993265;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=YbIMgifgTky3rQPY8xXXhQKS50D+F5p42BBTLZSxVLU=;
-  b=A0zzDB+Kvw+vfylBQEjWJ+Hn+HijO7KsfMSHcnegC2eP2gtWv6UoINQt
-   8Hu+xo9FHBhZ2fSKjSDM0+/w938V8TB/vnoAr3RNB8BcUCx2JBKrvAD2K
-   CnFFChK3GLX1+GUXztVoZ7ZexcSpfaTK39E0TCJUxX07TX5FyRke5oFs5
-   g7t3ixXdm9yapSjpJIjKaIHyca1JDeyw3EB00wdlJgySDTWcHJTeqGIZf
-   VYzioLJ0vJEKSu/KxyC7WlzM8YuDb1jVeCpiMoOmCy0kxC0p3pVvbNSfu
-   znOvaGhC/TAz8rHPOBow6ssZy/WoMQ0zJtZxgKIa04C0EVIXRlDkKmW9S
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10392"; a="343559113"
-X-IronPort-AV: E=Sophos;i="5.92,230,1650956400"; 
-   d="scan'208";a="343559113"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 16:01:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,230,1650956400"; 
-   d="scan'208";a="693313974"
-Received: from fyu1.sc.intel.com ([172.25.103.126])
-  by fmsmga002.fm.intel.com with ESMTP; 28 Jun 2022 16:01:04 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     "Vinod Koul" <vkoul@kernel.org>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        "Tony Zhu" <tony.zhu@intel.com>, dmaengine@vger.kernel.org,
-        "linux-kernel" <linux-kernel@vger.kernel.org>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v3] dmaengine: idxd: force wq context cleanup on device disable path
-Date:   Tue, 28 Jun 2022 16:00:56 -0700
-Message-Id: <20220628230056.2527816-1-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.32.0
+        with ESMTP id S229511AbiF2DoL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jun 2022 23:44:11 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 794A0167E9;
+        Tue, 28 Jun 2022 20:44:09 -0700 (PDT)
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LXnKw61s2zTgDY;
+        Wed, 29 Jun 2022 11:40:36 +0800 (CST)
+Received: from kwepemm600007.china.huawei.com (7.193.23.208) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 29 Jun 2022 11:44:06 +0800
+Received: from [10.67.102.167] (10.67.102.167) by
+ kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 29 Jun 2022 11:44:06 +0800
+Message-ID: <928f9cf6-f6ef-cbf6-2c03-6c852bd76f6c@huawei.com>
+Date:   Wed, 29 Jun 2022 11:44:05 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH 3/8] dmaengine: hisilicon: Add multi-thread support for a
+ DMA channel
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <wangzhou1@hisilicon.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20220625074422.3479591-1-haijie1@huawei.com>
+ <20220625074422.3479591-4-haijie1@huawei.com> <YrlMaasl+ORdDJaN@matsya>
+From:   Jie Hai <haijie1@huawei.com>
+In-Reply-To: <YrlMaasl+ORdDJaN@matsya>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.167]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600007.china.huawei.com (7.193.23.208)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Dave Jiang <dave.jiang@intel.com>
+Hi, Vkoul,
 
-Testing shown that when a wq mode is setup to be dedicated and then torn
-down and reconfigured to shared, the wq configured end up being dedicated
-anyays. The root cause is when idxd_device_wqs_clear_state() gets called
-during idxd_driver removal, idxd_wq_disable_cleanup() does not get called
-vs when the wq driver is removed first. The check of wq state being
-"enabled" causes the cleanup to be bypassed. However, idxd_driver->remove()
-releases all wq drivers. So the wqs goes to "disabled" state and will never
-be "enabled". By that point, the driver has no idea if the wq was
-previously configured or clean. So force call idxd_wq_disable_cleanup() on
-all wqs always to make sure everything gets cleaned up.
+Thank you very much for your review. For a detailed explanation, see below.
 
-Reported-by: Tony Zhu <tony.zhu@intel.com>
-Tested-by: Tony Zhu <tony.zhu@intel.com>
-Fixes: 0dcfe41e9a4c ("dmanegine: idxd: cleanup all device related bits after disabling device")
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
----
-Change Log:
-v3:
-- Add Co-developed-by: and Signed-off-by: Fenghua Yu
+On 27-06-22, 14:21, Vinod Koulwrote:
+> On 25-06-22, 15:44, Jie Hai wrote:
+>> When we get a DMA channel and try to use it in multiple threads it
+>> will cause oops and hanging the system.
+>>
+>> % echo 100 > /sys/module/dmatest/parameters/threads_per_chan
+>> % echo 100 > /sys/module/dmatest/parameters/iterations
+>> % echo 1 > /sys/module/dmatest/parameters/run
+>> [383493.327077] Unable to handle kernel paging request at virtual
+>> 		address dead000000000108
+>> [383493.335103] Mem abort info:
+>> [383493.335103]   ESR = 0x96000044
+>> [383493.335105]   EC = 0x25: DABT (current EL), IL = 32 bits
+>> [383493.335107]   SET = 0, FnV = 0
+>> [383493.335108]   EA = 0, S1PTW = 0
+>> [383493.335109]   FSC = 0x04: level 0 translation fault
+>> [383493.335110] Data abort info:
+>> [383493.335111]   ISV = 0, ISS = 0x00000044
+>> [383493.364739]   CM = 0, WnR = 1
+>> [383493.367793] [dead000000000108] address between user and kernel
+>> 		address ranges
+>> [383493.375021] Internal error: Oops: 96000044 [#1] PREEMPT SMP
+>> [383493.437574] CPU: 63 PID: 27895 Comm: dma0chan0-copy2 Kdump:
+>> 		loaded Tainted: GO 5.17.0-rc4+ #2
+>> [383493.457851] pstate: 204000c9 (nzCv daIF +PAN -UAO -TCO -DIT
+>> 		-SSBS BTYPE=--)
+>> [383493.465331] pc : vchan_tx_submit+0x64/0xa0
+>> [383493.469957] lr : vchan_tx_submit+0x34/0xa0
+>>
+>> This happens because of data race. Each thread rewrite channels's
+>> descriptor as soon as device_issue_pending is called. It leads to
+>> the situation that the driver thinks that it uses the right
+>> descriptor in interrupt handler while channels's descriptor has
+>> been changed by other thread.
+>>
+>> With current fixes channels's descriptor changes it's value only
+>> when it has been used. A new descriptor is acquired from
+>> vc->desc_issued queue that is already filled with descriptors
+>> that are ready to be sent. Threads have no direct access to DMA
+>> channel descriptor. Now it is just possible to queue a descriptor
+>> for further processing.
+>>
+>> Fixes: e9f08b65250d ("dmaengine: hisilicon: Add Kunpeng DMA engine support")
+>> Signed-off-by: Jie Hai <haijie1@huawei.com>
+>> ---
+>>   drivers/dma/hisi_dma.c | 6 ++----
+>>   1 file changed, 2 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/dma/hisi_dma.c b/drivers/dma/hisi_dma.c
+>> index 0a0f8a4d168a..0385419be8d5 100644
+>> --- a/drivers/dma/hisi_dma.c
+>> +++ b/drivers/dma/hisi_dma.c
+>> @@ -271,7 +271,6 @@ static void hisi_dma_start_transfer(struct hisi_dma_chan *chan)
+>>   
+>>   	vd = vchan_next_desc(&chan->vc);
+>>   	if (!vd) {
+>> -		dev_err(&hdma_dev->pdev->dev, "no issued task!\n");
+> 
+> how is this a fix?
+> 
 
-v2:
-- Re-based to 5.19-rc2 so that it can be applied cleanly. No functionality
-  change.
+Consider that only one deccriptor is in progress, and it is submitted to
+hardware successfully in hisi_dma_issue_pending. When hisi_dma_irq calls
+hisi_dma_start_transfer, vd is absolutely NULL. This also occurs in
+multi-descriptor transfers. It's not abnormal that vd is NULL. So it's
+reasonable to delete the error reporting.
 
-v1:
-https://patchwork.kernel.org/project/linux-dmaengine/patch/165090959239.1376825.18183942742142655091.stgit@djiang5-desk3.ch.intel.com/
+>>   		chan->desc = NULL;
+>>   		return;
+>>   	}
+>> @@ -303,7 +302,7 @@ static void hisi_dma_issue_pending(struct dma_chan *c)
+>>   
+>>   	spin_lock_irqsave(&chan->vc.lock, flags);
+>>   
+>> -	if (vchan_issue_pending(&chan->vc))
+>> +	if (vchan_issue_pending(&chan->vc) && !chan->desc)
+> 
+> This looks good
+> 
+>>   		hisi_dma_start_transfer(chan);
+>>   
+>>   	spin_unlock_irqrestore(&chan->vc.lock, flags);
+>> @@ -442,11 +441,10 @@ static irqreturn_t hisi_dma_irq(int irq, void *data)
+>>   				    chan->qp_num, chan->cq_head);
+>>   		if (FIELD_GET(STATUS_MASK, cqe->w0) == STATUS_SUCC) {
+>>   			vchan_cookie_complete(&desc->vd);
+>> +			hisi_dma_start_transfer(chan);
+> 
+> Why should this fix the error reported?
+> 
 
- drivers/dma/idxd/device.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+With current fix in hisi_dma_issue_pending, if chan->desc is not NULL,
+this submission to hardware is invalid and it will try again when
+chan->desc is completed, which ensures that all descriptors are submitted
+to hardware.
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index ff0ea60051f0..5a8cc52c1abf 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -716,10 +716,7 @@ static void idxd_device_wqs_clear_state(struct idxd_device *idxd)
- 		struct idxd_wq *wq = idxd->wqs[i];
- 
- 		mutex_lock(&wq->wq_lock);
--		if (wq->state == IDXD_WQ_ENABLED) {
--			idxd_wq_disable_cleanup(wq);
--			wq->state = IDXD_WQ_DISABLED;
--		}
-+		idxd_wq_disable_cleanup(wq);
- 		idxd_wq_device_reset_cleanup(wq);
- 		mutex_unlock(&wq->wq_lock);
- 	}
--- 
-2.32.0
+As to the error reported,  it is transfering timeout that causes the error
+handling branch in dmatest, then the error reported. The overwritten of
+chan->desc in multi-thread lead to that some descriptors are not be
+processed by hisi_dma_irq, not to mention their callback. This fixes
+timeout problem of hisi_dma and does not enter the error handling branch
+of dmatest.
 
+Dmatest uses dmaengine_terminate_sync to handle abnomal situation. It
+calles device_terminate_all, most drivers implement this function with
+vchan_get_all_descriptors and a temporary list head. It gets all descriptors
+the channel holds in lists desc_* and adds them to head, deletions and
+releases of these descriptors are performed on head without lock.
+
+In the multi-thread scenario, a descriptor A which has not been submitted
+by tx_submit may be in the following situations:
+a). desc_A is in the desc_allocated list.
+b). desc_A is in the head list of thread t2.
+c). desc_A has been deleted from the head list by t2 but has not been freed.
+d). desc_A has been deleted from the head list and freed by t2.
+
+If there is a thread t1 attempting to call tx_submit for desc_A
+on the preceding conditions, no error will be reported for a) and b), and
+d) will cause use-after-free. Now consider c), s2 and c) are all involved
+in removing nodes from the list. When a node is deleted from the list by
+__list_del_entry, the previous and next node are assigned the constant
+pointer LIST_POISON1 and LIST_POISON2, respectively. Accessing the two
+addresses will cause an error. Therefore, if you perform __list_del_entry
+on a node twice consecutively, an error will report. This is the case of
+c). The preceding calltrace is caused by this.
+
+I don't think it's wise for dmatest to use dmaengine_terminate_sync
+to handle errors, but we do have problems with our driver. This patch is
+to fix hisi_dma.
+
+>>   		} else {
+>>   			dev_err(&hdma_dev->pdev->dev, "task error!\n");
+>>   		}
+>> -
+>> -		chan->desc = NULL;
+>>   	}
+>>   
+>>   	spin_unlock(&chan->vc.lock);
+>> -- 
+>> 2.33.0
+> 
+Thanks,
+Jie Hai.

@@ -2,166 +2,123 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5870C562330
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Jun 2022 21:31:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F4175624F5
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Jun 2022 23:16:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236881AbiF3Tbl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 30 Jun 2022 15:31:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33438 "EHLO
+        id S237387AbiF3VQ1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 30 Jun 2022 17:16:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236635AbiF3Tbg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Jun 2022 15:31:36 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8DEA433BF;
-        Thu, 30 Jun 2022 12:31:34 -0700 (PDT)
+        with ESMTP id S237379AbiF3VQZ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Jun 2022 17:16:25 -0400
+Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EFB432041
+        for <dmaengine@vger.kernel.org>; Thu, 30 Jun 2022 14:16:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1656617494; x=1688153494;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=kDkag0PntXR/C/RzP9V4Kihj0tlSowfhs16lhQGjrEs=;
-  b=KGDNd3SUeXvjQL/4Y0m0cjOLgU/uDh5nmNe7s91QZkrpWCjTEU7lfTaR
-   +BLiAQKV8KD2Iyd9c9bBxx7chZ3DOhLAIjdGJlnJGxugMS6y9gOCKbpGQ
-   7q8HDz3UKdIJShbNpopdxCsRWbMsFDrnXygLJuii3KAA2ILXUhCgncRZx
-   7sB/PSIFHWorc8QQ3EncQ2l9ZJrz89G41+WIemcNausdd1u+3zrOkrHmN
-   F+3mmBuzi/WW3mc9Xu550MsC1iLbhtxtHYnIMJAIHY4OUaQGgs7inPBgd
-   AGDTceiem+bQUSMOhB9Zkv9rXUmJxD0SFnWxqo0IlcYva0d79MHZgNL/V
-   w==;
-X-IronPort-AV: E=Sophos;i="5.92,235,1650956400"; 
-   d="scan'208";a="165902969"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 Jun 2022 12:31:33 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Thu, 30 Jun 2022 12:31:25 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17 via Frontend Transport; Thu, 30 Jun 2022 12:31:25 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Oh7l2nNGGRjR+QDS+yUpd1JhvWce4Lgws0DL+E7dmSXIQNrrF9v9C2W16VLKNf5ufeO/2gC1OvfJREJJFeVyahOoJAcNt4I6cI/1WbYYnXK96STldleNq8xvWlziAJTVzIDp+nRqnxxvcndniUFZ3nMXQNfAAFgTSWi9M6yDWLvjSaWeqmTFtFCrjF3Pjogqc/IhPgaeSG6LbxniBGAJe8CfrsGqvn2tTyRhrkJRfpk53M9k6sNMj5/6az3bomkuf15xQ3FyuyVndBWFeBX5Oz14B2HPLzIr4gha8XIfyMvEuL8q+iFsXHttgka3Y1PZLVSnlkh2rjduwu1p/BqodQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kDkag0PntXR/C/RzP9V4Kihj0tlSowfhs16lhQGjrEs=;
- b=Kh+trpHv7rOLoNbL49Ad96UZnZVllCVfJCS5tkILtt6/k+16TnsR4HoaNz+yB5NhSEkXDIz9svz5uWMU/Wzr4Cc6+2Dn6YYAmpYrk+st/tdP8D25is9BqMD5HwVfkqds5j22OXN5SGa28sIy9GMcsiBy3vgIxZV/zyp/kgz3nwUNkMLMRcAjEjPH1YtZreahFBrLrAE0id+rnOmAZ8CxvmCii+++G1ZME52o0Eb48QKSPmZfxAZN75VD9IV+awAmYKFu3OlvwYIFPR4ccEzZ7+/q76DTn3/NOGGIUQ/VmFwqP+1Wh7CzgDBmfik1Flzk2EvCD5Pt83Cxy8znf/ylpQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kDkag0PntXR/C/RzP9V4Kihj0tlSowfhs16lhQGjrEs=;
- b=axYXhzdX8BLW+UkzrHU3MqxuRiy4IfmY7XCUoXAJeMtYQ1XxXpsrc+kWmRUT01qFioMKawyS2QQdnk3Sql/yjSgB7xx+w36PhPLk+f7KvDv8HB2OtXLrIMjnrM7GWL5F/7Epy7ecey5/zOESGMyDyTBp40auK5QHsx/+ZP3KRvc=
-Received: from CO1PR11MB5154.namprd11.prod.outlook.com (2603:10b6:303:99::15)
- by DM6PR11MB3708.namprd11.prod.outlook.com (2603:10b6:5:146::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.18; Thu, 30 Jun
- 2022 19:31:20 +0000
-Received: from CO1PR11MB5154.namprd11.prod.outlook.com
- ([fe80::699b:5c23:de4f:2bfa]) by CO1PR11MB5154.namprd11.prod.outlook.com
- ([fe80::699b:5c23:de4f:2bfa%4]) with mapi id 15.20.5373.022; Thu, 30 Jun 2022
- 19:31:20 +0000
-From:   <Conor.Dooley@microchip.com>
-To:     <Niklas.Cassel@wdc.com>
-CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <thierry.reding@gmail.com>,
-        <sam@ravnborg.org>, <Eugeniy.Paltsev@synopsys.com>,
-        <vkoul@kernel.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <fancer.lancer@gmail.com>, <daniel.lezcano@linaro.org>,
-        <palmer@dabbelt.com>, <palmer@rivosinc.com>, <tglx@linutronix.de>,
-        <paul.walmsley@sifive.com>, <aou@eecs.berkeley.edu>,
-        <masahiroy@kernel.org>, <damien.lemoal@opensource.wdc.com>,
-        <geert@linux-m68k.org>, <dillon.minfei@gmail.com>,
-        <joabreu@synopsys.com>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-spi@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v3 13/15] riscv: dts: canaan: fix bus {ranges,reg}
- warnings
-Thread-Topic: [PATCH v3 13/15] riscv: dts: canaan: fix bus {ranges,reg}
- warnings
-Thread-Index: AQHYi+h3hoTHjH1NZU+cAhsP+cEeWa1oKv0AgAADh4CAACmcgA==
-Date:   Thu, 30 Jun 2022 19:31:20 +0000
-Message-ID: <026527d3-ef75-92aa-36ab-32da47cca418@microchip.com>
-References: <20220629184343.3438856-1-mail@conchuod.ie>
- <20220629184343.3438856-14-mail@conchuod.ie> <Yr3UKQ/772oFyvc6@x1-carbon>
- <3fec7542-c5f9-8812-732a-d624b0506ca9@microchip.com>
-In-Reply-To: <3fec7542-c5f9-8812-732a-d624b0506ca9@microchip.com>
-Accept-Language: en-IE, en-US
-Content-Language: en-IE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7f8bc0e1-7c02-46fc-41a7-08da5acf1c2b
-x-ms-traffictypediagnostic: DM6PR11MB3708:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GAi38OHTfyarF3upjWlsko2aDgnygYYE68pq1Fb9EtFTLJBBYspTUrD2/+StcKiur/dx+ZAC3kmSGEKmgdxdekZNy4/ki4UhQkvppYvzsKMRaUnB0GtM4fdBwxZbpzHho1824zKtnc35dOxDlVH2SqTp3g3vLwsKW6MOfIDDi8HH9q3jKhyg0b915qHDt2uRakfucrEMwvzGp0hyB7OwiLywydLHOeaX8pXGwClN1ojlIOSm8PxwVov5EQSSg+onAL+++p9WwWmKv0KH+iq8slKQlXwEqNjVT1sTOMeC4O/wDVJpniTnuKsEoD7Qa1KN/Ws728xMHU0DOIFfkLVPc7ph1gnlEXOpXqOYN4JLZ7AHnnAcv/7D6+0Bwg249iDL6YK2bZnUlrAmT8VVb577wrxF7pF37qzAERDBU5pC13dnPkqAWyq9ZRgeU0OBSOp+QDkNS0CFZ5rthYeAyevYZFHooB2Bg3DJY4BEM33SK3TL1xYBQ3YPgb+LvxzVURCXHBe20hErC8Uhr1xjInWQ98VeyGjl8QmobPm3DhqQ+BpW4qdEhOx5RH4/aHpzOsgoMl0lvesR+FwDM4iwFdwcvO4eraTnla7UPQQ2V7m/ZVPTmG2W7eY6CvOMXXtuKl7GBFpnv4iyQKXwQieS+axrVX9huUzZXwxMxSrGSP8283wbBOd5i93j3Gr5rqzruKZO8uh4B333VSH1aIVxh4O8jDxp1I1agYo52Wc/kTQ9OEhosjzuSI9sl8u5GEQqh46UO2GsxaQU2qwXmyrE1c4OoQETvoTDJ9m35TxSieOpWBRXf2V3229YR3AeUkms9+imzewlFTG2i6Jvn+He6JuMT5HZSistMlWPzorhQz0KOZ1d3tCkZBm1cIxDZ6rcVUv2
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5154.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(366004)(396003)(136003)(39860400002)(376002)(6916009)(186003)(31686004)(38100700002)(2906002)(71200400001)(91956017)(54906003)(316002)(6486002)(36756003)(478600001)(7406005)(7416002)(2616005)(76116006)(6512007)(66446008)(122000001)(64756008)(5660300002)(86362001)(31696002)(8936002)(8676002)(38070700005)(83380400001)(66946007)(4326008)(66476007)(41300700001)(26005)(6506007)(53546011)(66556008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ZVYzZVBJa1pJZlp6VEg0bzRNbWR4azZEa1VSNXpHck9raDVqcW12TzVqZ2hr?=
- =?utf-8?B?dkVWejRLSXhTNWZqRk9yK2p0WjNzV3gydGF3NXdwNTdQMzFMRWQwSzVxWlhT?=
- =?utf-8?B?WkhHaDdWY2R2T2trRFNGaHNHOWU0S0xwMytJK21kVUtyazlCYzdITTBjODFB?=
- =?utf-8?B?SjNlVGUrcitUTVFJR2VETHpldFpQWm9tRHNJemVsckQyQk1iSkdjNXhCcjBR?=
- =?utf-8?B?dzhRMk5lbVNsc2tBL3l2UnJLY0s1TU5BNWlsUEMvQ0l0Ky9rajg5OUZUeHQz?=
- =?utf-8?B?cUdPWW9kRFd3ZE9SRVBVZEp2TGJqRjJpdktRdDNPZy9hNlRER0hlNmg5Y2V0?=
- =?utf-8?B?WVJyWGwrMzROV0crVktXZFFFeXhwUkpQcG4ySE5uMEkwc0pxTHhaQnloWEE4?=
- =?utf-8?B?KytPVmJrUmluU2FxVU4yUVN0azNOMWxzZTlPZGlXSmtRdjBmWDJFY3MrdGh6?=
- =?utf-8?B?Z2xXS3VFK3pXRTZNSi84Z0Noc2ZkQkQxUmEvUy9PaUxXRk5OM2hzc1l6MWlh?=
- =?utf-8?B?bUtseURPU01NYjg4enNvSERoay9rTHU5bHFQSGI1TlRwamgwNjUwY0pKTWVF?=
- =?utf-8?B?TFY0VEVuUUZVd29XbHlXUUgzQTlNYUMrbFpVQTV5em9TdkF6Nmd3MkVleUVQ?=
- =?utf-8?B?d2RPN0s3MVpnby94WVc1ZnRObUdTS3E5SjF4WGdpcXZaU3FPaTVDeHVyRGJn?=
- =?utf-8?B?SWRwMDlFWVAvQk5MWm9yb1hoRWllbDdzMkhYOXh1UjUrV2pZaHRuWnlkUHlS?=
- =?utf-8?B?eFBmRjRXd3VCVk9KRkRIdnRqQmFMYzd3ZUhNczZXNHBURHNKbDEzajhZVjZl?=
- =?utf-8?B?anFqdEhXZEsxNEhLWUF1Y0JjcFhRSmRIcXJvUlVuSThuNzJ5WHRKcnFkLzRO?=
- =?utf-8?B?d0hhem5DRkdOOFlQRTM1bFJLNlpSeU56aFVUWlh5QWVrcXlGSHUvc09EKzBM?=
- =?utf-8?B?cWFad2dHYjhweUphZThtRDV2OVg1VDRLTHAwZ2JJRVBuVEptc1dmTXFWWVR1?=
- =?utf-8?B?YkZvVVh4dThMa2xxMCs5Z1BXZU9OdDE4UStlQXB6U25qTzNDU0dOUFJ6T3Zi?=
- =?utf-8?B?UFlYUC94NUZkVWNOZktUbjRTaHBITkpXQlRDK3VXL3RNcVN0SHlKbVFQejhB?=
- =?utf-8?B?VjZST2xCckZ4UDJ0TE5uWTFXcWNIVjUvd2tXTEVON250V0E4SFpiNnZDa2dp?=
- =?utf-8?B?K0ZpY0kveWFCK3B6aCsrWkU5UnBENlpCUkVMNzVlM0cvQXByTXBhNTN6TVg1?=
- =?utf-8?B?V0JjakMySFphUFFmNURDTmFjNTBtTmF1bnl1MFZrb2NPeWRKc0hKcEI1NnNQ?=
- =?utf-8?B?bFpZWmFwSTdDNzNUUFUrMzBUUWZnNzhDVHIzbGZHV1ZNTklnVVYya2Rabjht?=
- =?utf-8?B?bERwRzNKMm1Za2ZnUTNPcldZdkpPdXhmRVpkVStlYTlOQzlqQWhiTlNicDE4?=
- =?utf-8?B?Ry9sK1FrVTlXMUQ3SisybmR0NkJuTFp1OU13OWFPSHUzQWhnODVxT2M4YS9x?=
- =?utf-8?B?UUNnM3R5QzNnZVloMzhURElEb0tjVXVLelhESFl0b09jQy9pZE1JKzcxaGVC?=
- =?utf-8?B?T1JhN09hMk53bk9ubHdQNkZXZGdrV01ycVdhblJqR29JVkd0aHEzTm1NK3ky?=
- =?utf-8?B?NXZJc0FLdlpWdjJhN2RGTDZWc1ZSVkdpRlZjZDRlT0NnbzhEY0hUYzlaNlNw?=
- =?utf-8?B?L3NsRDgvYzlPNWU4cnpnRXNyOW1qQ21aV0tNN2NNaXMydTNKMmhjdXB6SitN?=
- =?utf-8?B?Kyswbzh5blg1TUQvY2JsVmNzWmdiVUdpNW1hME9VUyt6dzRjQU1kY3NObmNj?=
- =?utf-8?B?aHRhdytjanBxN0JPdGppM1FndTA2Nmk5NXFWczMxMFFwcWlXQUZkb055c3dK?=
- =?utf-8?B?cC9Ia0k4SUh4L2plMk92TnYwL1Y5anM2TkdsN2JMOXZLWm45dXpmMnJZS0pO?=
- =?utf-8?B?Y1IzTkFqWCszK2JRaW9qS0NjT0dVTnFHUnB2bzdoVFhEcGhjVGJkdFo4aCtQ?=
- =?utf-8?B?eGRmblQ1SHZTVVUrZm9XdmtHK3Yyd25LL1lVMjNVSGNvUmZsRFkrNlY3U1M3?=
- =?utf-8?B?Sk9VVjdLOWlyMnNQY2NtbHQrYjZJc0o4YklvdFF6RWpBd0tGOFdqZVBOTTBE?=
- =?utf-8?B?eUFPREFQV252d0JucWRWMis3OFV6RVp3TVRtN3YycVFhM05vWUR2ZEpoV2d0?=
- =?utf-8?B?a3c9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0339CCE983E86E43A80182C384703A2C@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1656623782; x=1688159782;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=S3lpds+Dm08bh0wmuZJxD7UtITL3wTfX27aPen8VTS4=;
+  b=VdGsqYxmOHegYGr5ynSJcGXCElDV2jSdZNlgR02XP6RwyCGN6lwfHUdb
+   6KqJx3Wa6aXJVJUMm+aW5n7lIXAm9vjnVfx6ICWzKvX9QkDGLz9BZ7IxO
+   o7z9LrCZhFPiuDBf9VoXxZqQYUAFjPx6tRMXxrmaSCc3txZysKsg0DLX9
+   ovHuKQSyEUc0qAeQtTqXgKaiUg8UYZ0yPKuIMlqBpc/1ND5Vm5GVzk/Vb
+   tZZsqzMNb65m/q0MhFDDu5XLXtx4ld7o1+PcSiZ5S9hrKOmOsQs8O3OpB
+   Y8FSgGdpOfjw4M42d3ij2kM8z0i4C0kG1jiv+17usvZG/1KwAOOdUDDIc
+   g==;
+X-IronPort-AV: E=Sophos;i="5.92,235,1650902400"; 
+   d="scan'208";a="209407241"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 01 Jul 2022 05:16:21 +0800
+IronPort-SDR: T4NMKAecBt/5PjnAXds6U9U+RcV2vsyjaKVAZ7K5gpKo7HLBhK6QogPXpDrQIqaFz8jvHDdHu1
+ yEXy32wbuRTTCjZHy9gANgqPjiURZpjX/Qwu483iwKvFNwSvoFhbMErS4vOH8whjHTeNWjMsgp
+ 08O4O6EDNW2Wg0Ns0Knzw6rmJVqIYZ0nFPm9Yph6ZEfMBgzj94kaWAv2JLnw8u+GlLxTmeyZmO
+ HN7pvX/1214LYJHDTJ6hWONzOLPBBE1K4Ni7aevPfo6Pkf82Foi8OF8ml+cUvxkK6vh8YVEvdV
+ pnjesOKmCnCnhyo1aQzocGLF
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 30 Jun 2022 13:38:35 -0700
+IronPort-SDR: u5mNScqMRKV9LoujE6j60XrAEcHaU5Cqfmk//aSsJ7C5CzlllsTWfPS4wSeis+o5qjs6nlUDQo
+ 9SghauU/WIKEtYB02xm1yHV8xYDsCXliiLL86MbYtDC+i13RpdECCr/c2JiIxdQm168fB+5Nce
+ YU4VemtN9gHTglOkeh5srvJC6b/Rm81pk6zvtq2/sFSrCO2d6PbAew9JZOqIADM6wvi0HZJ3Bn
+ Yl3ShxhGfi3o9oAh+XscHO6SByFIkGkvSlaH8BbUzOTJL9olxWzgpKWqN8zGtq5I9QKUYrEfMm
+ 8HI=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 30 Jun 2022 14:16:24 -0700
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4LYrjf2xsWz1Rws4
+        for <dmaengine@vger.kernel.org>; Thu, 30 Jun 2022 14:16:22 -0700 (PDT)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)"
+        header.d=opensource.wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+        opensource.wdc.com; h=content-transfer-encoding:content-type
+        :in-reply-to:organization:from:references:to:content-language
+        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
+        1656623781; x=1659215782; bh=S3lpds+Dm08bh0wmuZJxD7UtITL3wTfX27a
+        Pen8VTS4=; b=Zv6Mnk5EbWMx+llj8qJU8aBOizcZtGxsux4YRgT/p/ff+YddkCe
+        9YVKoHzbIir/H0fnTayYjpqqZKzpZmwf8/JmV+x2HGK0OJbxeyWPowvwoCbOgf6b
+        hDXYRdfhJsYM8O5XBQetyYO5ITVdKfOBisvEiYA1ScpiS4ZaepvTK5syZaX0Xc07
+        odZgk6A0B0wcFNMaUSZ/CslIlzsMpM0q8joScup+JSn2MkdjdVwPzg/mAmNzS6EB
+        kj9evFhgFjor7EXMKSoR8K0vRGAWTqI5NU+/1RRHqkUygH40iW/Ud/+E2ba/nLRi
+        qEYhnoJu8DhosGyMkfT7BM8CPxRJxR6qKVw==
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id xD4QnFfVl2Av for <dmaengine@vger.kernel.org>;
+        Thu, 30 Jun 2022 14:16:21 -0700 (PDT)
+Received: from [10.225.163.102] (unknown [10.225.163.102])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4LYrjX18xMz1RtVk;
+        Thu, 30 Jun 2022 14:16:15 -0700 (PDT)
+Message-ID: <f228057b-7c17-e536-ce6f-6597e263f06d@opensource.wdc.com>
+Date:   Fri, 1 Jul 2022 06:16:14 +0900
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5154.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7f8bc0e1-7c02-46fc-41a7-08da5acf1c2b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2022 19:31:20.3361
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Q4Valr6G64GePKiFPmh/BygqdqPASjfUFxHwdU104u58SUzQt5VlLhiMMqLbgOv34t7IauW+Ryjwd62sctWqYf/4MAGWwFxcLAQZTDDBcFQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3708
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v3 00/15] Canaan devicetree fixes
+Content-Language: en-US
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        Niklas Cassel <Niklas.Cassel@wdc.com>
+Cc:     Conor Dooley <mail@conchuod.ie>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Palmer Dabbelt <palmer@rivosinc.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Dillon Min <dillon.minfei@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+References: <20220629184343.3438856-1-mail@conchuod.ie>
+ <Yr3PKR0Uj1bE5Y6O@x1-carbon> <20220630175318.g2zmu6ek7l5iakve@bogus>
+From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Organization: Western Digital Research
+In-Reply-To: <20220630175318.g2zmu6ek7l5iakve@bogus>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -169,35 +126,60 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-T24gMzAvMDYvMjAyMiAxODowMiwgQ29ub3IgRG9vbGV5IHdyb3RlOg0KPiANCj4gDQo+IE9uIDMw
-LzA2LzIwMjIgMTc6NDksIE5pa2xhcyBDYXNzZWwgd3JvdGU6DQo+PiBPbiBXZWQsIEp1biAyOSwg
-MjAyMiBhdCAwNzo0Mzo0MlBNICswMTAwLCBDb25vciBEb29sZXkgd3JvdGU6DQo+Pj4gRnJvbTog
-Q29ub3IgRG9vbGV5IDxjb25vci5kb29sZXlAbWljcm9jaGlwLmNvbT4NCj4+Pg0KPj4+IFRoZSBr
-MjEwIGRldmljZXRyZWVzIHdhcm4gYWJvdXQgbWlzc2luZy9lbXB0eSByZWcgYW5kL29yIHJhbmdl
-cw0KPj4+IHByb3BlcnRpZXM6DQo+Pj4gYXJjaC9yaXNjdi9ib290L2R0cy9jYW5hYW4vazIxMC5k
-dHNpOjQwOC4yMi00NjAuNTogV2FybmluZyAodW5pdF9hZGRyZXNzX3ZzX3JlZyk6IC9zb2MvYnVz
-QDUyMDAwMDAwOiBub2RlIGhhcyBhIHVuaXQgbmFtZSwgYnV0IG5vIHJlZyBvciByYW5nZXMgcHJv
-cGVydHkNCj4+PiBhcmNoL3Jpc2N2L2Jvb3QvZHRzL2NhbmFhbi9rMjEwLmR0c2k6MzUyLjIyLTQw
-Ni41OiBXYXJuaW5nIChzaW1wbGVfYnVzX3JlZyk6IC9zb2MvYnVzQDUwNDAwMDAwOiBtaXNzaW5n
-IG9yIGVtcHR5IHJlZy9yYW5nZXMgcHJvcGVydHkNCj4+Pg0KPj4+IEFkZCByZWcgYW5kIHJhbmdl
-cyBwcm9wZXJ0aWVzIHRoYXQgbmFpdmVseSBjYXAgdGhlIGJ1c2VzIGFmdGVyIHRoZQ0KPj4+IGFs
-bG9jYXRpb24gb2YgdGhlaXIgbGFzdCBkZXZpY2VzLg0KPj4+DQo+Pj4gU2lnbmVkLW9mZi1ieTog
-Q29ub3IgRG9vbGV5IDxjb25vci5kb29sZXlAbWljcm9jaGlwLmNvbT4NCj4+PiAtLS0NCj4+PiAg
-YXJjaC9yaXNjdi9ib290L2R0cy9jYW5hYW4vazIxMC5kdHNpIHwgOSArKysrKystLS0NCj4+PiAg
-MSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4+Pg0KPj4+
-IGRpZmYgLS1naXQgYS9hcmNoL3Jpc2N2L2Jvb3QvZHRzL2NhbmFhbi9rMjEwLmR0c2kgYi9hcmNo
-L3Jpc2N2L2Jvb3QvZHRzL2NhbmFhbi9rMjEwLmR0c2kNCj4+PiBpbmRleCA5NDhkYzIzNWUzOWQu
-LjZhMzRkYzRmM2U1MSAxMDA2NDQNCj4+PiAtLS0gYS9hcmNoL3Jpc2N2L2Jvb3QvZHRzL2NhbmFh
-bi9rMjEwLmR0c2kNCj4+PiArKysgYi9hcmNoL3Jpc2N2L2Jvb3QvZHRzL2NhbmFhbi9rMjEwLmR0
-c2kNCj4+PiBAQCAtMTYzLDcgKzE2Myw4IEBAIGFwYjA6IGJ1c0A1MDIwMDAwMCB7DQo+Pj4gIAkJ
-CSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPj4+ICAJCQkjc2l6ZS1jZWxscyA9IDwxPjsNCj4+PiAg
-CQkJY29tcGF0aWJsZSA9ICJzaW1wbGUtcG0tYnVzIjsNCj4+PiAtCQkJcmFuZ2VzOw0KPj4+ICsJ
-CQlyZWdzID0gPDB4NTAyMDAwMDAgMHgyMDAwMDA+Ow0KPj4+ICsJCQlyYW5nZXMgPSA8MHg1MDIw
-MDAwMCAweDUwMjAwMDAwIDB4MjAwMDAwPjsNCj4+DQo+PiBUaGlzIGxvb2tzIHdyb25nLg0KPj4N
-Cj4+IFRoZSBwcm9wZXJ0eSBpcyBjYWxsZWQgInJlZyIgbm90ICJyZWdzIi4NCj4gDQo+IFllYWgu
-Li4NCj4gDQo+Pg0KPj4gQW5kIEkgZG9uJ3QgdGhpbmsgdGhhdCB5b3Ugc2hvdWxkIHByb3ZpZGUg
-InJlZyIgYXQgYWxsLA0KPj4gc2ltcGx5IHN1cHBseWluZyAicmFuZ2VzIiBzaG91bGQgYmUgc3Vm
-ZmljaWVudCwgbm8/DQo+IA0KPiBJIGRvbid0IHJlY2FsbCB3aHkgSSBwdXQgdGhlIHJlZ3MgaW4s
-IEknbGwgZHJvcCBpdCBpZg0KPiBwb3NzaWJsZSAmIHJlc3BvbmQgaWYgSSBjYW4ndC4NCj4gSUlS
-QywgaXQgZGlkIGFjdHVhbGx5IGNvbXBsYWluLg0KDQpJdCBkb2VzIG5vdCBjb21wbGFpbi4gR29v
-ZCBzcG90LCB0aGFua3MuDQpJJ2xsIGRyb3AgInJlZ3MiIGZvciB2NC4NCkNvbm9yLg0KDQo=
+On 7/1/22 02:53, Sudeep Holla wrote:
+> On Thu, Jun 30, 2022 at 04:28:26PM +0000, Niklas Cassel wrote:
+>> On Wed, Jun 29, 2022 at 07:43:29PM +0100, Conor Dooley wrote:
+>>> From: Conor Dooley <conor.dooley@microchip.com>
+>>>
+>>> Hey all,
+>>> This series should rid us of dtbs_check errors for the RISC-V Canaan k210
+>>> based boards. To make keeping it that way a little easier, I changed the
+>>> Canaan devicetree Makefile so that it would build all of the devicetrees
+>>> in the directory if SOC_CANAAN.
+>>>
+>>> I *DO NOT* have any Canaan hardware so I have not tested any of this in
+>>> action. Since I sent v1, I tried to buy some since it's cheap - but could
+>>> out of the limited stockists none seemed to want to deliver to Ireland :(
+>>> I based the series on next-20220617.
+>>>
+>>
+>> I first tried to apply your series on top of next-20220630,
+>> but was greeted by a bunch of different warnings on boot,
+>> including endless RCU stall warnings.
+>> However, even when booting next-20220630 without your patches,
+>> I got the same warnings and RCU stall.
+>>
+> 
+> Is it possible to share the boot logs please ?
+> Conor is having issues with my arch_topology/cacheinfo updates in -next.
+> I would like to know if your issue is related to that or not ?
+
+FYI, I see rcu warnings on boot on my dual-socket 8-cores Xeon system, but
+the same kernel does not have the rcu warnings with an AMD Epyc single
+socket 16-cores box.
+
+> 
+>> So I tested your series on top of v5.19-rc4 +
+>> commit 0397d50f4cad ("spi: dt-bindings: Move 'rx-sample-delay-ns' to
+>> spi-peripheral-props.yaml") cherry-picked,
+>> (in order to avoid conflicts when applying your series,)
+>> and the board was working as intended, no warnings or RCU stalls.
+>>
+> 
+> If possible can you give this branch[1] a try where my changes are and doesn't
+> have any other changes from -next. Sorry to bother you.
+> 
+> Conor seem to have issue with this commit[2], so if you get issues try to
+> check if [3] works.
+> 
+> Regards,
+> Sudeep
+> 
+> [1] https://git.kernel.org/sudeep.holla/c/ae85abf284e7
+> [2] https://git.kernel.org/sudeep.holla/c/155bd845d17b
+> [3] https://git.kernel.org/sudeep.holla/c/009297d29faa
+
+
+-- 
+Damien Le Moal
+Western Digital Research

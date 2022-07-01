@@ -2,49 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2325563805
-	for <lists+dmaengine@lfdr.de>; Fri,  1 Jul 2022 18:35:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBCCF563807
+	for <lists+dmaengine@lfdr.de>; Fri,  1 Jul 2022 18:36:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231534AbiGAQfI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 1 Jul 2022 12:35:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58040 "EHLO
+        id S231357AbiGAQfu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 1 Jul 2022 12:35:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232327AbiGAQfH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 1 Jul 2022 12:35:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3515944740
-        for <dmaengine@vger.kernel.org>; Fri,  1 Jul 2022 09:35:04 -0700 (PDT)
+        with ESMTP id S229845AbiGAQft (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 1 Jul 2022 12:35:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 248F03FBC7;
+        Fri,  1 Jul 2022 09:35:49 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B8C9E62571
-        for <dmaengine@vger.kernel.org>; Fri,  1 Jul 2022 16:35:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92FEAC3411E;
-        Fri,  1 Jul 2022 16:35:02 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B66B76257C;
+        Fri,  1 Jul 2022 16:35:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4649BC3411E;
+        Fri,  1 Jul 2022 16:35:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656693303;
-        bh=mO+mindoKUsL46KCUFp28ERV1gyZf/Vvuhqlxz02zgc=;
+        s=k20201202; t=1656693348;
+        bh=TZguSwspOIt4L4Wa6O3+ebRs84Ga2Xv/b+fie/Hie2s=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pgelOjRU3lfx1fPCUPXPm01iw+fUINLsaOUrgFvlzkXXV+0yQR3JPLJE7pc8TNyQu
-         q5GtqtYYwS1VZR4+8NvZ1bXlKQjhiYYgaX9mav5j1KiFP15eJUrQBzF4su7RJkXjS1
-         lyXr6zLjYd9DJsd7H19lGepmy4CqXI6qGXc0BT4a+N65FjInY4ocujj/aE6+JhmWBN
-         v6x/GUeUNjemNdJ265fYw1PPdXTMLiA55leutJ67q2D9lVLrsc1HykQ9RxW4MsQ5Wr
-         w9Tpr7e7iW5sLWDRZ2TBsTVbW9lCX/vE+rDVAV74Gf8gGTcJnKQp1HdtQkMRq/IEt0
-         3piZcrkLDc7xg==
-Date:   Fri, 1 Jul 2022 22:04:58 +0530
+        b=jcvK0Ldow7LDexUk8ieNY0llvi2exbIYdrUpM78qMbmzstn6SAW+ViMy/zzwMOuOa
+         N1bK3FIBpRiyftr9KKHg9mINAMuFf4CGBF0/BJPJ7JgyZo8DueQV9Kr03cTZc8gea3
+         ZCBOuWobVfY0ngl5lrpJd18uR4nxQhat0S9F2+/0cOHfX98PUpElWYiNAmkUXZ3Gdd
+         LhxrBaaUxGYnLxskaEYsj9hzFWDGrjNcmf9PpUxOP7ZmkzndmyRCauSehsHbTKRwRf
+         twHfomBcSc/cSnxUKUQGnmlMR5CRR60wq0ZDWDVxtOR6gxPmt/iODYTLYo/BjRLiTe
+         ekyR5X6EftWYg==
+Date:   Fri, 1 Jul 2022 22:05:42 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Hui Wang <hui.wang@canonical.com>, dmaengine@vger.kernel.org,
-        shawnguo@kernel.org, yibin.gong@nxp.com
-Subject: Re: [PATCH] dmaengine: imx-sdma: Setting DMA_PRIVATE capability
- during the probe
-Message-ID: <Yr8iMkBNMowEG+uF@matsya>
-References: <20220524074933.38413-1-hui.wang@canonical.com>
- <20220620083310.GV2387@pengutronix.de>
+To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc:     dmaengine@vger.kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joy.zou@nxp.com,
+        Peng Fan <peng.fan@nxp.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH V4] dt-bindings: dma: fsl-edma: Convert to DT schema
+Message-ID: <Yr8iXjJ6vuFub9Gy@matsya>
+References: <20220620020002.3966343-1-peng.fan@oss.nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220620083310.GV2387@pengutronix.de>
+In-Reply-To: <20220620020002.3966343-1-peng.fan@oss.nxp.com>
 X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -55,21 +57,12 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 20-06-22, 10:33, Sascha Hauer wrote:
-> On Tue, May 24, 2022 at 03:49:33PM +0800, Hui Wang wrote:
-
-> > +	dma_cap_set(DMA_PRIVATE, sdma->dma_device.cap_mask);
+On 20-06-22, 10:00, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> I am not sure about the impacts on the memcpy capability of the SDMA
-> driver when setting this flag. It looks like this flag influences the
-> way suitable channels are picked for memcpy, but I don't understand
-> the code just by looking at it. I see that several other drivers
-> providing memcpy set this flag as well, so I guess it's ok to set it,
-> but it would be good to hear a word from Vinod about it.
+> Convert the eDMA controller binding to DT schema.
 
-So DMA_PRIVATE is used to make channel not available for general dma
-allocation. So yes it would impact dma memcpy which is about allocating
-generically.
+Applied, thanks
 
 -- 
 ~Vinod

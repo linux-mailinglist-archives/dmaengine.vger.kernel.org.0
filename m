@@ -2,75 +2,70 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C3AAF5638C0
-	for <lists+dmaengine@lfdr.de>; Fri,  1 Jul 2022 19:53:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33BF85639D8
+	for <lists+dmaengine@lfdr.de>; Fri,  1 Jul 2022 21:29:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231196AbiGARwj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 1 Jul 2022 13:52:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55124 "EHLO
+        id S229570AbiGATXk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 1 Jul 2022 15:23:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230212AbiGARwj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 1 Jul 2022 13:52:39 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CCCB23AA51
-        for <dmaengine@vger.kernel.org>; Fri,  1 Jul 2022 10:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656697956;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=67MJyXaDqImTHwnOnH/GBMo2aZ3gIWFmeSkeeeT9284=;
-        b=dE6AyjtiQ1L2nPRgOgMpJ7gZgGSEKtloGwYpabyLng7ZFVSMWfRKqOGTlNSbkPnOB2677w
-        OfsbfzHjdJKCl4INLNYX1a0/yN+oTG/ewvQVL2YwY8P5T6xEUe26e94qqI2wBhzhzB/wiT
-        3BwuqbQGdJsbB0KS/PoqPel0UOHY6G8=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-177--0GLrMDWPe-uefw86cOw0w-1; Fri, 01 Jul 2022 13:52:35 -0400
-X-MC-Unique: -0GLrMDWPe-uefw86cOw0w-1
-Received: by mail-pl1-f198.google.com with SMTP id o9-20020a170902d4c900b0016a629e2f1bso1739262plg.20
-        for <dmaengine@vger.kernel.org>; Fri, 01 Jul 2022 10:52:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=67MJyXaDqImTHwnOnH/GBMo2aZ3gIWFmeSkeeeT9284=;
-        b=bzwcx1JwnEaMeXNTcxX8AtQofi6/9xYy+v7bmxpoAjq1wpeC/pXk2a70J6MMHc941v
-         xJjef/ijP3YumEadHOoQYiphbJ83OHfCu+sl7V4Rfa1ti58sr0cr7Vl9pSs3EvJ90Lv/
-         rSKWj0h1xueTWHc3PtIPZF63yLHIMu1S3EAsJDBInlnBHnVWBpSMIfTyx7wToEgXIjjr
-         pYP4orUmA+XzJsNEZwJXavot5BC8se4h+DBlq6Tmvd05EhZQ3vzamMb7Xf0WrO+wbF7d
-         pJlTIdracSAFJUAcxPnfimixb4F7pB5tuyDG51oBCqpcNI5y/tr6IkFYK4CoGP8FH4C8
-         EWNw==
-X-Gm-Message-State: AJIora8dFhUj7qbzDUCp/2IBm5Hnq3tA268r7ia6Mb4zeLIE2rXSY7qw
-        a7Ui4BWqyr20+dUB+2sKxIyMZe7z1EPEFxzbNDhmHRNwO7zXj4800VGeEExCzyGmdsx1vLN4X8D
-        Eea2ByMpEBrcaVpO4qxhD
-X-Received: by 2002:a63:1809:0:b0:408:417a:6fa5 with SMTP id y9-20020a631809000000b00408417a6fa5mr13486187pgl.228.1656697954699;
-        Fri, 01 Jul 2022 10:52:34 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1tiyDKemehCIPbCYtSalbzT9O2Eo+2uaZrA4LQQS6N4cxzBFgMrJZFlFqYmEd/iyq0Cd64CEA==
-X-Received: by 2002:a63:1809:0:b0:408:417a:6fa5 with SMTP id y9-20020a631809000000b00408417a6fa5mr13486167pgl.228.1656697954439;
-        Fri, 01 Jul 2022 10:52:34 -0700 (PDT)
-Received: from localhost (ip98-179-76-75.ph.ph.cox.net. [98.179.76.75])
-        by smtp.gmail.com with ESMTPSA id p5-20020a1709026b8500b00163fbb1eec5sm15712052plk.229.2022.07.01.10.52.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Jul 2022 10:52:33 -0700 (PDT)
-Date:   Fri, 1 Jul 2022 10:52:32 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
-        linux-kernel@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v3] dmaengine: idxd: Only call idxd_enable_system_pasid()
- if succeeded in enabling SVA feature
-Message-ID: <20220701175232.e27zznvohnkzvjdq@cantor>
-References: <20220625221333.214589-1-jsnitsel@redhat.com>
- <20220626051648.14249-1-jsnitsel@redhat.com>
- <YrfwaC06wZfUTHjH@fyu1.sc.intel.com>
+        with ESMTP id S229534AbiGATXk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 1 Jul 2022 15:23:40 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F53D13F61;
+        Fri,  1 Jul 2022 12:23:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 53647CE34E4;
+        Fri,  1 Jul 2022 19:23:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E296C3411E;
+        Fri,  1 Jul 2022 19:23:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656703415;
+        bh=1bpO1iUTJJ3kstbZPucPenalfy/kzfO3W/0wHPIy6SE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=L80dVd7DLxVj0PBdm4QrguFAY5Dka9xMqyiKuVhhxISMH28ztUmvV676wTasz/GGE
+         93fD1Ywn8nHe7VIZ0brY7idrgj8PGh43uwUHH3cPHT9qejrldyiONBwZziOt/wXrg2
+         9gq7suTL5oS7ZZROPB+H3xxzde/iiqIM83VP3pubs0Zpg4y/Hln1mdKbp6sskj2H23
+         XWV6TBiC4/jAnRq49vGTsdgIh9Sz7zVocUiFd9liYu09bAy8wDLWcMqKk260ZSYM/5
+         bYOYh3wR+zxti3VdhBFfQok7lwZo28PHObt50NLSNXID1uhtb2SVl/CsHwqYSDUmu+
+         3MDm/1i2KDwIQ==
+From:   Conor Dooley <conor@kernel.org>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Palmer Dabbelt <palmer@rivosinc.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Niklas Cassel <niklas.cassel@wdc.com>,
+        Dillon Min <dillon.minfei@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-riscv@lists.infradead.org
+Subject: [PATCH v4 00/14] Canaan devicetree fixes
+Date:   Fri,  1 Jul 2022 20:22:46 +0100
+Message-Id: <20220701192300.2293643-1-conor@kernel.org>
+X-Mailer: git-send-email 2.37.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YrfwaC06wZfUTHjH@fyu1.sc.intel.com>
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,22 +73,83 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sat, Jun 25, 2022 at 10:36:40PM -0700, Fenghua Yu wrote:
-> On Sat, Jun 25, 2022 at 10:16:48PM -0700, Jerry Snitselaar wrote:
-> > On a Sapphire Rapids system if boot without intel_iommu=on, the IDXD
-> > driver will crash during probe in iommu_sva_bind_device().
-> > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> 
-> Acked-by: Fenghua Yu <fenghua.yu@intel.com>
-> 
-> Thanks.
-> 
-> -Fenghua
+From: Conor Dooley <conor.dooley@microchip.com>
 
-Hi Vinod,
+Hey all,
+This series should rid us of dtbs_check errors for the RISC-V Canaan k210
+based boards. To make keeping it that way a little easier, I changed the
+Canaan devicetree Makefile so that it would build all of the devicetrees
+in the directory if SOC_CANAAN.
 
-Should this get pulled into your fixes branch?
+I *DO NOT* have any Canaan hardware so I have not tested any of this in
+action. Since I sent v1, I tried to buy some since it's cheap - but could
+out of the limited stockists none seemed to want to deliver to Ireland :(
+I based the series on next-20220617.
 
-Regards,
-Jerry
+Thanks,
+Conor.
+
+Changes since v3:
+- dts: drop the bogus "regs" property pointed out by Niklas
+- dma/timer: add Serge's reviews (and expand on the dma interrupt
+  description)
+- dts: add Niklas' T-b where I felt it was suitable. lmk if you think it
+  applies more broadly
+- spi: drop the applied spi dt-binding change. Thanks Mark.
+
+Changes since v2:
+- i2s: added clocks maxItems
+- dma: unconditionally extended the interrupts & dropped canaan
+  compatible
+- timer: as per Sergey, split the timer dts nodes in 2 & drop the
+  binding patch
+- ili9341: add a canaan specific compatible to the binding and dts
+
+Changes since v1:
+- I added a new dt node & compatible for the SRAM memory controller due
+  Damien's wish to preserve the inter-op with U-Boot.
+- The dw-apb-ssi binding now uses the default rx/tx widths
+- A new patch fixes bus {ranges,reg} warnings
+- Rearranged the patches in a slightly more logical order
+
+
+Conor Dooley (14):
+  dt-bindings: display: convert ilitek,ili9341.txt to dt-schema
+  dt-bindings: display: ili9341: document canaan kd233's lcd
+  ASoC: dt-bindings: convert designware-i2s to dt-schema
+  dt-bindings: dma: dw-axi-dmac: extend the number of interrupts
+  dt-bindings: memory-controllers: add canaan k210 sram controller
+  riscv: dts: canaan: fix the k210's memory node
+  riscv: dts: canaan: fix the k210's timer nodes
+  riscv: dts: canaan: fix mmc node names
+  riscv: dts: canaan: fix kd233 display spi frequency
+  riscv: dts: canaan: use custom compatible for k210 i2s
+  riscv: dts: canaan: remove spi-max-frequency from controllers
+  riscv: dts: canaan: fix bus {ranges,reg} warnings
+  riscv: dts: canaan: add specific compatible for kd233's LCD
+  riscv: dts: canaan: build all devicetress if SOC_CANAAN
+
+ .../bindings/display/ilitek,ili9341.txt       | 27 ------
+ .../display/panel/ilitek,ili9341.yaml         | 49 +++++++---
+ .../bindings/dma/snps,dw-axi-dmac.yaml        |  7 +-
+ .../memory-controllers/canaan,k210-sram.yaml  | 52 ++++++++++
+ .../bindings/sound/designware-i2s.txt         | 35 -------
+ .../bindings/sound/snps,designware-i2s.yaml   | 94 +++++++++++++++++++
+ arch/riscv/boot/dts/canaan/Makefile           | 10 +-
+ arch/riscv/boot/dts/canaan/canaan_kd233.dts   |  6 +-
+ arch/riscv/boot/dts/canaan/k210.dtsi          | 73 +++++++++-----
+ .../riscv/boot/dts/canaan/sipeed_maix_bit.dts |  2 +-
+ .../boot/dts/canaan/sipeed_maix_dock.dts      |  2 +-
+ arch/riscv/boot/dts/canaan/sipeed_maix_go.dts |  2 +-
+ .../boot/dts/canaan/sipeed_maixduino.dts      |  2 +-
+ 13 files changed, 253 insertions(+), 108 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/ilitek,ili9341.txt
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/canaan,k210-sram.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/designware-i2s.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/snps,designware-i2s.yaml
+
+
+base-commit: 6cc11d2a1759275b856e464265823d94aabd5eaf
+-- 
+2.37.0
 

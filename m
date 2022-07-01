@@ -2,200 +2,103 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DC5C562E49
-	for <lists+dmaengine@lfdr.de>; Fri,  1 Jul 2022 10:31:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 830F7563165
+	for <lists+dmaengine@lfdr.de>; Fri,  1 Jul 2022 12:31:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232374AbiGAIbN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 1 Jul 2022 04:31:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36750 "EHLO
+        id S233444AbiGAKbZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 1 Jul 2022 06:31:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229680AbiGAIbM (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 1 Jul 2022 04:31:12 -0400
-Received: from mta-01.yadro.com (mta-02.yadro.com [89.207.88.252])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C41CE1263A
-        for <dmaengine@vger.kernel.org>; Fri,  1 Jul 2022 01:31:11 -0700 (PDT)
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 68A0D40884;
-        Fri,  1 Jul 2022 08:31:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:date:subject
-        :subject:from:from:received:received:received:received; s=
-        mta-01; t=1656664269; x=1658478670; bh=oF8eqXf4bOgJgC9XRe/oTswU2
-        et7YIkp0bdEsHKbct4=; b=Uv1LKIu69RMTXQxR1152+OtlVudmD0Kdsjg9qrdTk
-        yzC5q1DLaxdlAXqextGWgV6sl0CpzDqL3yTR4kfS8rJ/bwAw1aturQzyCf8u//x/
-        av7ugimlCldBcs0tAlPhdyiX/hUXxRegBEW4G1NbSnEs4anwZU+CXS8DPKzecOTd
-        ik=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id K6ftZzsKZOjO; Fri,  1 Jul 2022 11:31:09 +0300 (MSK)
-Received: from T-EXCH-01.corp.yadro.com (t-exch-01.corp.yadro.com [172.17.10.101])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        with ESMTP id S232328AbiGAKbY (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 1 Jul 2022 06:31:24 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E715C76942;
+        Fri,  1 Jul 2022 03:31:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id E527E404CD;
-        Fri,  1 Jul 2022 11:31:08 +0300 (MSK)
-Received: from T-EXCH-06.corp.yadro.com (172.17.10.110) by
- T-EXCH-01.corp.yadro.com (172.17.10.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Fri, 1 Jul 2022 11:31:08 +0300
-Received: from v.yadro.com (10.178.114.10) by T-EXCH-06.corp.yadro.com
- (172.17.10.110) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1118.9; Fri, 1 Jul 2022
- 11:31:07 +0300
-From:   Viacheslav Mitrofanov <v.v.mitrofanov@yadro.com>
-CC:     <dmaengine@vger.kernel.org>, <linux@yadro.com>, <vkoul@kernel.org>,
-        Viacheslav Mitrofanov <v.v.mitrofanov@yadro.com>
-Subject: [PATCH v2] dmaengine: sf-pdma: Add multithread support for a DMA channel
-Date:   Fri, 1 Jul 2022 11:29:42 +0300
-Message-ID: <20220701082942.12835-1-v.v.mitrofanov@yadro.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <Yqs5DrfTMyxoE6+K@matsya>
-References: <Yqs5DrfTMyxoE6+K@matsya>
+        by ams.source.kernel.org (Postfix) with ESMTPS id 906FEB82F4D;
+        Fri,  1 Jul 2022 10:31:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58122C3411E;
+        Fri,  1 Jul 2022 10:31:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1656671480;
+        bh=PzSQe20vyGgKjj7bh4FY+eUYxZ15YBI0Skb7DjyLz/8=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=kwBlRyc/+7zHK/+D1Orop4T33zg2uPrmUjsGkNZAU52FjlKmpsb++xU1wPmV1Sdrw
+         k4lB1lGBPqolSXmaVZcNAGFjgST13USJwcNorRHO0OGx/hzi0VABG7ZTo8N7/TuHE2
+         HxaECpn986NnZFTn1yzoeBsf+ZI4OSJnoey0UsvUno7oDZ+pMXkeNnXKR1PwQQv7H/
+         N9kuWrxo5c2iCitQqKmW068YiY9uPx4FEOea91RPuRZGwW8oY4qU7G4DXYqbe8FC8m
+         c/Z3X/cBEeVfPh/ZqshT/s0Jav6xLxcoMGxNTeEs/B5Wuklqf7C6n5RtWyUg6RAJla
+         6Gx1v1dJgB63g==
+From:   Mark Brown <broonie@kernel.org>
+To:     mail@conchuod.ie, palmer@dabbelt.com, palmer@rivosinc.com,
+        lgirdwood@gmail.com, thierry.reding@gmail.com,
+        fancer.lancer@gmail.com, daniel.lezcano@linaro.org,
+        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
+        daniel@ffwll.ch, sam@ravnborg.org, vkoul@kernel.org,
+        airlied@linux.ie, Eugeniy.Paltsev@synopsys.com
+Cc:     conor.dooley@microchip.com, paul.walmsley@sifive.com,
+        linux-riscv@lists.infradead.org, linux-spi@vger.kernel.org,
+        niklas.cassel@wdc.com, linux-kernel@vger.kernel.org,
+        damien.lemoal@opensource.wdc.com, dmaengine@vger.kernel.org,
+        aou@eecs.berkeley.edu, joabreu@synopsys.com, tglx@linutronix.de,
+        dillon.minfei@gmail.com, alsa-devel@alsa-project.org,
+        geert@linux-m68k.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, masahiroy@kernel.org
+In-Reply-To: <20220629184343.3438856-1-mail@conchuod.ie>
+References: <20220629184343.3438856-1-mail@conchuod.ie>
+Subject: Re: (subset) [PATCH v3 00/15] Canaan devicetree fixes
+Message-Id: <165667147407.1756128.12037224598634241859.b4-ty@kernel.org>
+Date:   Fri, 01 Jul 2022 11:31:14 +0100
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.178.114.10]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-06.corp.yadro.com (172.17.10.110)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-When we get a DMA channel and try to use it in multiple threads it
-will cause oops and hanging the system.
+On Wed, 29 Jun 2022 19:43:29 +0100, Conor Dooley wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+> 
+> Hey all,
+> This series should rid us of dtbs_check errors for the RISC-V Canaan k210
+> based boards. To make keeping it that way a little easier, I changed the
+> Canaan devicetree Makefile so that it would build all of the devicetrees
+> in the directory if SOC_CANAAN.
+> 
+> [...]
 
-% echo 64 > /sys/module/dmatest/parameters/threads_per_chan
-% echo 10000 > /sys/module/dmatest/parameters/iterations
-% echo 1 > /sys/module/dmatest/parameters/run
-[   89.480664] Unable to handle kernel NULL pointer dereference at virtual
-               address 00000000000000a0
-[   89.488725] Oops [#1]
-[   89.494708] CPU: 2 PID: 1008 Comm: dma0chan0-copy0 Not tainted
-               5.17.0-rc5
-[   89.509385] epc : vchan_find_desc+0x32/0x46
-[   89.513553]  ra : sf_pdma_tx_status+0xca/0xd6
+Applied to
 
-This happens because of data race. Each thread rewrite channels's
-descriptor as soon as device_prep_dma_memcpy() is called. It leads to the
-situation when the driver thinks that it uses right descriptor that
-actually is freed or substituted for other one.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-With current fixes a descriptor changes its value only when it has
-been used. A new descriptor is acquired from vc->desc_issued queue that
-is already filled with descriptors that are ready to be sent. Threads
-have no direct access to DMA channel descriptor. Now it is just possible
-to queue a descriptor for further processing.
+Thanks!
 
-Fixes: 6973886ad58e ("dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00")
-Signed-off-by: Viacheslav Mitrofanov <v.v.mitrofanov@yadro.com>
----
-Changes in v2:
- - Remove pointer check through comparison with NULL
- 
- drivers/dma/sf-pdma/sf-pdma.c | 44 ++++++++++++++++++++++++-----------
- 1 file changed, 30 insertions(+), 14 deletions(-)
+[04/15] spi: dt-bindings: dw-apb-ssi: update spi-{r,t}x-bus-width
+        commit: 8b037cabc4966b010c44a76e05a43d276318bc49
 
-diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
-index f12606aeff87..ab0ad7a2f201 100644
---- a/drivers/dma/sf-pdma/sf-pdma.c
-+++ b/drivers/dma/sf-pdma/sf-pdma.c
-@@ -52,16 +52,6 @@ static inline struct sf_pdma_desc *to_sf_pdma_desc(struct virt_dma_desc *vd)
- static struct sf_pdma_desc *sf_pdma_alloc_desc(struct sf_pdma_chan *chan)
- {
- 	struct sf_pdma_desc *desc;
--	unsigned long flags;
--
--	spin_lock_irqsave(&chan->lock, flags);
--
--	if (chan->desc && !chan->desc->in_use) {
--		spin_unlock_irqrestore(&chan->lock, flags);
--		return chan->desc;
--	}
--
--	spin_unlock_irqrestore(&chan->lock, flags);
- 
- 	desc = kzalloc(sizeof(*desc), GFP_NOWAIT);
- 	if (!desc)
-@@ -111,7 +101,6 @@ sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,	dma_addr_t dest, dma_addr_t src,
- 	desc->async_tx = vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
- 
- 	spin_lock_irqsave(&chan->vchan.lock, iflags);
--	chan->desc = desc;
- 	sf_pdma_fill_desc(desc, dest, src, len);
- 	spin_unlock_irqrestore(&chan->vchan.lock, iflags);
- 
-@@ -170,11 +159,17 @@ static size_t sf_pdma_desc_residue(struct sf_pdma_chan *chan,
- 	unsigned long flags;
- 	u64 residue = 0;
- 	struct sf_pdma_desc *desc;
--	struct dma_async_tx_descriptor *tx;
-+	struct dma_async_tx_descriptor *tx = NULL;
- 
- 	spin_lock_irqsave(&chan->vchan.lock, flags);
- 
--	tx = &chan->desc->vdesc.tx;
-+	list_for_each_entry(vd, &chan->vchan.desc_submitted, node)
-+		if (vd->tx.cookie == cookie)
-+			tx = &vd->tx;
-+
-+	if (!tx)
-+		goto out;
-+
- 	if (cookie == tx->chan->completed_cookie)
- 		goto out;
- 
-@@ -241,6 +236,19 @@ static void sf_pdma_enable_request(struct sf_pdma_chan *chan)
- 	writel(v, regs->ctrl);
- }
- 
-+static struct sf_pdma_desc *sf_pdma_get_first_pending_desc(struct sf_pdma_chan *chan)
-+{
-+	struct virt_dma_chan *vchan = &chan->vchan;
-+	struct virt_dma_desc *vdesc;
-+
-+	if (list_empty(&vchan->desc_issued))
-+		return NULL;
-+
-+	vdesc = list_first_entry(&vchan->desc_issued, struct virt_dma_desc, node);
-+
-+	return container_of(vdesc, struct sf_pdma_desc, vdesc);
-+}
-+
- static void sf_pdma_xfer_desc(struct sf_pdma_chan *chan)
- {
- 	struct sf_pdma_desc *desc = chan->desc;
-@@ -268,8 +276,11 @@ static void sf_pdma_issue_pending(struct dma_chan *dchan)
- 
- 	spin_lock_irqsave(&chan->vchan.lock, flags);
- 
--	if (vchan_issue_pending(&chan->vchan) && chan->desc)
-+	if (!chan->desc && vchan_issue_pending(&chan->vchan)) {
-+		/* vchan_issue_pending has made a check that desc in not NULL */
-+		chan->desc = sf_pdma_get_first_pending_desc(chan);
- 		sf_pdma_xfer_desc(chan);
-+	}
- 
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- }
-@@ -298,6 +309,11 @@ static void sf_pdma_donebh_tasklet(struct tasklet_struct *t)
- 	spin_lock_irqsave(&chan->vchan.lock, flags);
- 	list_del(&chan->desc->vdesc.node);
- 	vchan_cookie_complete(&chan->desc->vdesc);
-+
-+	chan->desc = sf_pdma_get_first_pending_desc(chan);
-+	if (chan->desc)
-+		sf_pdma_xfer_desc(chan);
-+
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- }
- 
--- 
-2.25.1
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark

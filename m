@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D917C56799C
-	for <lists+dmaengine@lfdr.de>; Tue,  5 Jul 2022 23:52:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C663956799E
+	for <lists+dmaengine@lfdr.de>; Tue,  5 Jul 2022 23:52:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232187AbiGEVwe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 5 Jul 2022 17:52:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39420 "EHLO
+        id S232335AbiGEVwf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 5 Jul 2022 17:52:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232606AbiGEVwd (ORCPT
+        with ESMTP id S232620AbiGEVwd (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Tue, 5 Jul 2022 17:52:33 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8227C14D03
-        for <dmaengine@vger.kernel.org>; Tue,  5 Jul 2022 14:52:31 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id r14so13594329wrg.1
-        for <dmaengine@vger.kernel.org>; Tue, 05 Jul 2022 14:52:31 -0700 (PDT)
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C922718E1E
+        for <dmaengine@vger.kernel.org>; Tue,  5 Jul 2022 14:52:32 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id d16so13066032wrv.10
+        for <dmaengine@vger.kernel.org>; Tue, 05 Jul 2022 14:52:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=conchuod.ie; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=RIjyo+v4SVWXgjNDfjVuAJAWZ8Bxe92vN1FxyPqfbiA=;
-        b=HqLk5zcJWf6yjk0sm6LnL2fNfSHxlMYcx2NwuUldwgNT7LBQbNK8U+CHNU22ohSZfX
-         jfsOHnehMji+CkgBY81zgji8jbKG0uw9RDIRgMLentiuJYYOTmn4nVjRS8OlckRy5WTc
-         aX7ZxCMNVzNmvoEFSO/1DsXl9LYItNkpj43Am1GvNm/28n8AUqF+L4SddAB0dE0UISfW
-         OTEm1sYYtkE0SainnUlBfSPT2PNzJ8nj5JUUbWlj2bCJAtBeTjiQXgsP840dxXt/sT4U
-         VAXXJ1jT0os0tnSlMnOAkFvKzIeMM2ToW1M5kBy5hxQ8nGJ29djq+DavH3lQBSjizXUT
-         gUYQ==
+        bh=oqL0tHq3yutxZ8W44fi30XmUjbkhUDTMtwglXCEjHME=;
+        b=TUD6u63i7P5kQA0tnLQjnxdzGdOqtSUW2eq4KqCx6pcbCMXUPWKNUj6YsetPT7YpfH
+         /lKPlH2c+aILPHcMN+I7U2pkHsahJeoNYsD8BHnczcTzFzn1rBKqCJJ1sHZVQKckdOUV
+         C1vMht16NUB2XhkbGAIgF560SO+H5q+u2ITntpWIcEuYmFqJUYeCZylaQkNH0DfdMH8o
+         l4JU7weKZOktwSkx0fr1qsLtna94Sezgdu3IielxiXD2b6tY+l2rIT2sICejdRztjM75
+         7hcOt9iqgxnp9PCshmE6ZwAvCe5LTKMI+sgYK/F/ex3c7FbCUOJ15AfA67GwkIiem2bF
+         0qvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RIjyo+v4SVWXgjNDfjVuAJAWZ8Bxe92vN1FxyPqfbiA=;
-        b=ekWdxX7gXamRpm530ypJM23IVc4WUdeNao2JFveEFshtkLwaZvMZO3OxpVyBCEO+rP
-         FTD7AleIxUaJvhIp1oBh/P/YXtKOxpwQ2Nf9Xbol6slC6TalTMUr3LxNSbqcWFv45vPp
-         2jQxFutkGgJCHQZ/rQIC9SxUi1+UbZWRTxI4XKA03rzcFoQqW+TbC7PWpKMAWWtJjV1e
-         qWrIgc9NjTKoYKhGpDBlrbG/UqPI7qq0pNLj0Pf8CSX3+fTssctVjDdBTBEd9nbIwHk5
-         RkXZYJLx0F8GlP2Zr8H0meLdlOP8CfRfgiSJ8mscUIyk0L0mghbFjje7aAjjLWEL+pu/
-         YwUg==
-X-Gm-Message-State: AJIora/eJJk7Rt5u5Saouspn3MIhuPqbJ44iU4to8ftcKE0lJLcioyqm
-        +zm1XIQVvyb3ZBsgeEnKYXFjEg==
-X-Google-Smtp-Source: AGRyM1vJjQMyrNGX7U/FSTka+YYEasXPf4fPHcSV9Pyiex5jqMICTkfId8wmcqmwizt28warzAehaQ==
-X-Received: by 2002:a05:6000:1acc:b0:21c:439c:7074 with SMTP id i12-20020a0560001acc00b0021c439c7074mr32321649wry.686.1657057950904;
-        Tue, 05 Jul 2022 14:52:30 -0700 (PDT)
+        bh=oqL0tHq3yutxZ8W44fi30XmUjbkhUDTMtwglXCEjHME=;
+        b=5enjUIRyHn4UiiC+k+2afBzvR3fPKOKlxVQA1F9eTzolXgyLXsU99qVAO0ECYpcNnY
+         LQ6gPL1+iA6Hhx3oaje+LPow76p9R7Sj693iFNTjdZg4nDLM7E0dJJWWtJrS0NNMUfvT
+         74Ezyary80ACxhSEzuL4BaUg+4L83Cy3lpZFZnvWwHwVsLLQzbbVNmV6zjbnpTWgeqZr
+         EWyx4vx+l1u4ykEyoSdHcp8tVd4lGO8rYfqNPVfD0dBy+Zi7VDY7hERoN36r2FnzHkZU
+         qtymEEIQOdZl8tL4+l7l27woyzb+vVm9hA9j+VlQB+wX/erxf3qwKffVMreaN0SdBkgN
+         1zHA==
+X-Gm-Message-State: AJIora+5zM0U8jY9Em7KFkg/FuaWoW/bfRUSubyr976XUyA4IOtiwdLl
+        QkU5Eg+HQsQIkSPCX1/RTlYPNg==
+X-Google-Smtp-Source: AGRyM1t75bZl88GDvO4WahOzUUxgWngI0hl2R4SCexxJGzyeHIswkpPqzcGl4w65l4Bi7Mmu9kKLHA==
+X-Received: by 2002:a05:6000:1701:b0:21b:bfd5:c910 with SMTP id n1-20020a056000170100b0021bbfd5c910mr34193799wrc.363.1657057952380;
+        Tue, 05 Jul 2022 14:52:32 -0700 (PDT)
 Received: from henark71.. ([51.37.234.167])
-        by smtp.gmail.com with ESMTPSA id g34-20020a05600c4ca200b0039c7dbafa7asm18353920wmp.19.2022.07.05.14.52.29
+        by smtp.gmail.com with ESMTPSA id g34-20020a05600c4ca200b0039c7dbafa7asm18353920wmp.19.2022.07.05.14.52.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Jul 2022 14:52:30 -0700 (PDT)
+        Tue, 05 Jul 2022 14:52:31 -0700 (PDT)
 From:   Conor Dooley <mail@conchuod.ie>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
@@ -70,9 +70,9 @@ Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-riscv@lists.infradead.org
-Subject: [PATCH v5 05/13] riscv: dts: canaan: fix the k210's memory node
-Date:   Tue,  5 Jul 2022 22:52:06 +0100
-Message-Id: <20220705215213.1802496-6-mail@conchuod.ie>
+Subject: [PATCH v5 06/13] riscv: dts: canaan: fix the k210's timer nodes
+Date:   Tue,  5 Jul 2022 22:52:07 +0100
+Message-Id: <20220705215213.1802496-7-mail@conchuod.ie>
 X-Mailer: git-send-email 2.37.0
 In-Reply-To: <20220705215213.1802496-1-mail@conchuod.ie>
 References: <20220705215213.1802496-1-mail@conchuod.ie>
@@ -90,40 +90,92 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Conor Dooley <conor.dooley@microchip.com>
 
-The k210 U-Boot port has been using the clocks defined in the
-devicetree to bring up the board's SRAM, but this violates the
-dt-schema. As such, move the clocks to a dedicated node with
-the same compatible string. The regs property does not fit in
-either node, so is replaced by comments.
+The timers on the k210 have non standard interrupt configurations,
+which leads to dtbs_check warnings:
 
-Tested-by: Niklas Cassel <niklas.cassel@wdc.com>
+k210_generic.dtb: timer@502d0000: interrupts: [[14], [15]] is too long
+From schema: Documentation/devicetree/bindings/timer/snps,dw-apb-timer.yaml
+
+Split the timer nodes in two, so that the second timer in the IP block
+can actually be accessed & in the process solve the dtbs_check warning.
+
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- arch/riscv/boot/dts/canaan/k210.dtsi | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/riscv/boot/dts/canaan/k210.dtsi | 46 +++++++++++++++++++++++-----
+ 1 file changed, 38 insertions(+), 8 deletions(-)
 
 diff --git a/arch/riscv/boot/dts/canaan/k210.dtsi b/arch/riscv/boot/dts/canaan/k210.dtsi
-index 44d338514761..cd4eae82d8b2 100644
+index cd4eae82d8b2..72f70128d751 100644
 --- a/arch/riscv/boot/dts/canaan/k210.dtsi
 +++ b/arch/riscv/boot/dts/canaan/k210.dtsi
-@@ -69,11 +69,13 @@ cpu1_intc: interrupt-controller {
+@@ -319,28 +319,58 @@ fpioa: pinmux@502b0000 {
  
- 	sram: memory@80000000 {
- 		device_type = "memory";
-+		reg = <0x80000000 0x400000>, /* sram0 4 MiB */
-+		      <0x80400000 0x200000>, /* sram1 2 MiB */
-+		      <0x80600000 0x200000>; /* aisram 2 MiB */
-+	};
+ 			timer0: timer@502d0000 {
+ 				compatible = "snps,dw-apb-timer";
+-				reg = <0x502D0000 0x100>;
+-				interrupts = <14>, <15>;
++				reg = <0x502D0000 0x14>;
++				interrupts = <14>;
+ 				clocks = <&sysclk K210_CLK_TIMER0>,
+ 					 <&sysclk K210_CLK_APB0>;
+ 				clock-names = "timer", "pclk";
+ 				resets = <&sysrst K210_RST_TIMER0>;
+ 			};
+ 
+-			timer1: timer@502e0000 {
++			timer1: timer@502d0014 {
+ 				compatible = "snps,dw-apb-timer";
+-				reg = <0x502E0000 0x100>;
+-				interrupts = <16>, <17>;
++				reg = <0x502D0014 0x14>;
++				interrupts = <15>;
++				clocks = <&sysclk K210_CLK_TIMER0>,
++					 <&sysclk K210_CLK_APB0>;
++				clock-names = "timer", "pclk";
++				resets = <&sysrst K210_RST_TIMER0>;
++			};
 +
-+	sram_controller: memory-controller {
- 		compatible = "canaan,k210-sram";
--		reg = <0x80000000 0x400000>,
--		      <0x80400000 0x200000>,
--		      <0x80600000 0x200000>;
--		reg-names = "sram0", "sram1", "aisram";
- 		clocks = <&sysclk K210_CLK_SRAM0>,
- 			 <&sysclk K210_CLK_SRAM1>,
- 			 <&sysclk K210_CLK_AI>;
++			timer2: timer@502e0000 {
++				compatible = "snps,dw-apb-timer";
++				reg = <0x502E0000 0x14>;
++				interrupts = <16>;
+ 				clocks = <&sysclk K210_CLK_TIMER1>,
+ 					 <&sysclk K210_CLK_APB0>;
+ 				clock-names = "timer", "pclk";
+ 				resets = <&sysrst K210_RST_TIMER1>;
+ 			};
+ 
+-			timer2: timer@502f0000 {
++			timer3: timer@502e0014 {
++				compatible = "snps,dw-apb-timer";
++				reg = <0x502E0014 0x114>;
++				interrupts = <17>;
++				clocks = <&sysclk K210_CLK_TIMER1>,
++					 <&sysclk K210_CLK_APB0>;
++				clock-names = "timer", "pclk";
++				resets = <&sysrst K210_RST_TIMER1>;
++			};
++
++			timer4: timer@502f0000 {
++				compatible = "snps,dw-apb-timer";
++				reg = <0x502F0000 0x14>;
++				interrupts = <18>;
++				clocks = <&sysclk K210_CLK_TIMER2>,
++					 <&sysclk K210_CLK_APB0>;
++				clock-names = "timer", "pclk";
++				resets = <&sysrst K210_RST_TIMER2>;
++			};
++
++			timer5: timer@502f0014 {
+ 				compatible = "snps,dw-apb-timer";
+-				reg = <0x502F0000 0x100>;
+-				interrupts = <18>, <19>;
++				reg = <0x502F0014 0x14>;
++				interrupts = <19>;
+ 				clocks = <&sysclk K210_CLK_TIMER2>,
+ 					 <&sysclk K210_CLK_APB0>;
+ 				clock-names = "timer", "pclk";
 -- 
 2.37.0
 

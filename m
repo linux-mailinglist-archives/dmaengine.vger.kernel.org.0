@@ -2,59 +2,71 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DFC1565A7B
-	for <lists+dmaengine@lfdr.de>; Mon,  4 Jul 2022 17:57:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43ACB566F22
+	for <lists+dmaengine@lfdr.de>; Tue,  5 Jul 2022 15:23:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234584AbiGDP5t (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 4 Jul 2022 11:57:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41006 "EHLO
+        id S229727AbiGENXZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 5 Jul 2022 09:23:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234470AbiGDP5t (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 4 Jul 2022 11:57:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79B24E03C;
-        Mon,  4 Jul 2022 08:57:48 -0700 (PDT)
+        with ESMTP id S233419AbiGENWt (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 5 Jul 2022 09:22:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 975EB1F2DB;
+        Tue,  5 Jul 2022 05:46:08 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DFB7A60C02;
-        Mon,  4 Jul 2022 15:57:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B532FC3411E;
-        Mon,  4 Jul 2022 15:57:41 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3241560BC0;
+        Tue,  5 Jul 2022 12:46:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9A7BC341CB;
+        Tue,  5 Jul 2022 12:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656950267;
-        bh=U8MDGOj5FFXPmmfgfJbJQRYIZ1IcA2PZQe3iwee1+MU=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=CPXLe+X/cFRMSPP98YaMuV5SxF1tYOewYdWdS3Z9akQyKIiuD4X14jAUlYmYy5frl
-         Y3Ws72Q8d/WckikWAUlbJ4SVBIFZErMmfmvwiHM+lL+7cEj2qf8KKnZpo7iZRshfs9
-         ydGuO0wkShAk9EXR7u8hreywhMnhu4gYERfvl+9RBgJeQW2x3wqMKv/koJFrgLtYPW
-         9L8RLGgTfk+v0mVf59chXtXh3m3C62obqYBOE69XTK3mevWOZh4CJTSiWz0CgaQ1PH
-         0QpB/9GfQeG1V8c+T43I3bYMKInZIYCOoKKRWKDeb2h4h6zh6tEtW0Bop4R8sfvd0x
-         itszqJeo+sDgA==
-From:   Mark Brown <broonie@kernel.org>
-To:     robh+dt@kernel.org, Thierry Reding <thierry.reding@gmail.com>,
-        airlied@linux.ie, Eugeniy.Paltsev@synopsys.com,
-        krzysztof.kozlowski+dt@linaro.org, sam@ravnborg.org,
-        Liam Girdwood <lgirdwood@gmail.com>, daniel@ffwll.ch,
-        palmer@dabbelt.com, palmer@rivosinc.com, conor@kernel.org,
-        daniel.lezcano@linaro.org, vkoul@kernel.org,
-        fancer.lancer@gmail.com
-Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        dillon.minfei@gmail.com, geert@linux-m68k.org,
-        conor.dooley@microchip.com, niklas.cassel@wdc.com,
-        alsa-devel@alsa-project.org, dmaengine@vger.kernel.org,
-        paul.walmsley@sifive.com, damien.lemoal@opensource.wdc.com,
-        joabreu@synopsys.com, aou@eecs.berkeley.edu,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        masahiroy@kernel.org
-In-Reply-To: <20220701192300.2293643-1-conor@kernel.org>
+        s=k20201202; t=1657025167;
+        bh=wAEDIpJKEpqow07OA5pbiA0C6VtRvMKO1qtrFbDdCFY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F1zWy3llLirCMHGf9oUncrDC/YFjZyTLRq8g3aGTJpZatIfnJET0NC0gnzAOEdr2n
+         LBKUBdh5gaukjcT6H01UyFyR1g3lElraTjEWOXwlu3L+XH1FqHxwkoz84MEHbDLZZS
+         eZ7WTHq7q/c3I0uPyb7wS7aieCwKK84nmRl7LaVwFRCiR7/fpeSy+ezZvVLR5oazeo
+         +8rDVpEmi2KIs/N5QTg7RoE7sDKNODVpStI+T1WWd9jlCgJ2LwPqsLi629VFCOdZNa
+         34Q7G2rXUbrzbjGnEGGG6k9533cawbC447VyAxsPMu9Lq8RQf5jfsUjcD80ZuDWNNB
+         mQCzFe7dd4CQQ==
+Date:   Tue, 5 Jul 2022 18:16:03 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Conor Dooley <conor@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Palmer Dabbelt <palmer@rivosinc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Niklas Cassel <niklas.cassel@wdc.com>,
+        Dillon Min <dillon.minfei@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 04/14] dt-bindings: dma: dw-axi-dmac: extend the
+ number of interrupts
+Message-ID: <YsQyi3Mx99m8fnGu@matsya>
 References: <20220701192300.2293643-1-conor@kernel.org>
-Subject: Re: (subset) [PATCH v4 00/14] Canaan devicetree fixes
-Message-Id: <165695026144.481068.15330746749392879216.b4-ty@kernel.org>
-Date:   Mon, 04 Jul 2022 16:57:41 +0100
+ <20220701192300.2293643-5-conor@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220701192300.2293643-5-conor@kernel.org>
 X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -65,41 +77,47 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, 1 Jul 2022 20:22:46 +0100, Conor Dooley wrote:
+On 01-07-22, 20:22, Conor Dooley wrote:
 > From: Conor Dooley <conor.dooley@microchip.com>
 > 
-> Hey all,
-> This series should rid us of dtbs_check errors for the RISC-V Canaan k210
-> based boards. To make keeping it that way a little easier, I changed the
-> Canaan devicetree Makefile so that it would build all of the devicetrees
-> in the directory if SOC_CANAAN.
+> The Canaan k210 apparently has a Sysnopsys Designware AXI DMA
+> controller, but according to the documentation & devicetree it has 6
+> interrupts rather than the standard one. Support the 6 interrupt
+> configuration by unconditionally extending the binding to a maximum of
+> 8 per-channel interrupts thereby matching the number of possible
+> channels.
 > 
-> [...]
+> Link: https://canaan-creative.com/wp-content/uploads/2020/03/kendryte_standalone_programming_guide_20190311144158_en.pdf #Page 51
+> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  .../devicetree/bindings/dma/snps,dw-axi-dmac.yaml          | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> index 4324a94b26b2..98c2ab18d04f 100644
+> --- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> +++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> @@ -34,7 +34,12 @@ properties:
+>        - const: axidma_apb_regs
+>  
+>    interrupts:
+> -    maxItems: 1
+> +    description: |
 
-Applied to
+rob asked you to drop this in last patch, pls fix that and send with his
+ack
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> +      If the IP-core synthesis parameter DMAX_INTR_IO_TYPE is set to 1, this
+> +      will be per-channel interrupts. Otherwise, this is a single combined IRQ
+> +      for all channels.
+> +    minItems: 1
+> +    maxItems: 8
+>  
+>    clocks:
+>      items:
+> -- 
+> 2.37.0
 
-Thanks!
-
-[03/14] ASoC: dt-bindings: convert designware-i2s to dt-schema
-        commit: bc4c9d85179ca90679c8bb046cf7aad16fb88076
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+-- 
+~Vinod

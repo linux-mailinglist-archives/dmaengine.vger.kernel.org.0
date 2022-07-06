@@ -2,52 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 103F95680B6
-	for <lists+dmaengine@lfdr.de>; Wed,  6 Jul 2022 10:03:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 347C25680E3
+	for <lists+dmaengine@lfdr.de>; Wed,  6 Jul 2022 10:16:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231728AbiGFIDh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 6 Jul 2022 04:03:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47782 "EHLO
+        id S229599AbiGFIQD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 6 Jul 2022 04:16:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231192AbiGFIDg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Jul 2022 04:03:36 -0400
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40607112D;
-        Wed,  6 Jul 2022 01:03:35 -0700 (PDT)
-Received: by mail-qk1-f182.google.com with SMTP id z12so10495320qki.3;
-        Wed, 06 Jul 2022 01:03:35 -0700 (PDT)
+        with ESMTP id S229592AbiGFIQB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Jul 2022 04:16:01 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D701DA6D;
+        Wed,  6 Jul 2022 01:16:00 -0700 (PDT)
+Received: by mail-vs1-f54.google.com with SMTP id o185so1866456vsc.7;
+        Wed, 06 Jul 2022 01:16:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dm7RnST85MIDJNN+2iaSBOhoswr2qSrezycwHqjqOec=;
-        b=fcrhL3OiHlR9dOFNNY+eaTjH8iKVfWBno9MkBZa32r/KMZsXIDfKlP9boKY2jdi7Gv
-         Gil6sFKTWG1i8/lwgkkC2kHcEYeUoiuRwoS13+uEd0qskHPXPL0IjSSABGW8kdxUztkV
-         /WLqRGSS5IW57IKFgPQJhnh9SnWGS1Q21zLLP+9sa4zkxc3w4eX4YwKsMtheqVGHzHLe
-         eY+mK0bz6Gj3LnCWV4vpUk2cxiLF4kg7dz3/u+cigqRQZD7uRZQyq3KXRDnFRNSVnmpE
-         Jyb4OKsfHX0QaX0mBP8OGVE5aXeOAfwrFcqg1oofn2yUYziJS1xQ8xI3FWf8EhfQROW3
-         pA8g==
-X-Gm-Message-State: AJIora8t7vTkN4slON78vOIDYUjt591WypbA75zmMQjapQStxaiqvU3K
-        uSS1xqo3k7DFkFToZ2lYMlzL8yUvXDbYsQ==
-X-Google-Smtp-Source: AGRyM1sZUa78MrahEXAR7bJTtWbKG5S3y9s8JnJHXQzOQ5pzAu2NlZr/77IrtSVFVjytfLtRBQlgaQ==
-X-Received: by 2002:a05:620a:4055:b0:6b0:151f:7281 with SMTP id i21-20020a05620a405500b006b0151f7281mr25804652qko.601.1657094614268;
-        Wed, 06 Jul 2022 01:03:34 -0700 (PDT)
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
-        by smtp.gmail.com with ESMTPSA id t17-20020a05620a005100b006af20edff0csm22694447qkt.58.2022.07.06.01.03.33
+        bh=pNNZ2G3zXs1oo3JcBfsTX3whovGatUAPfm1YVK9uZPI=;
+        b=oldjN0zReoqhuAgGlziquy7fZz+ZOD7S1CBQq9AJHwlq/vBMztVIggYJT/Vknzpert
+         Tp2JhRo2kDjKe4sQ5AIaHfDo0AiW+ngvBa8G/yZ8wuurOK1/pJ8XxBMMtmo7P2Y4xQCD
+         ZHHdeUN27Vgmi0nmirrJjHcAytCJIVuIfGtJzx/9WCMv38f3H071fEmD1GGo4cbMXGB+
+         S84FmnrvosZsG/tkRnL9SGmzRZa0tdzZ/QM+llZowljOql8qK9rVl6QfwtUgOOFY8gdb
+         8aB+dFFpP9RkdEglH70rWiPinbWZ+OCybmMgKX1Zr1QPoqfAEegg3Aiw0LmH1H/fSoxB
+         vIkg==
+X-Gm-Message-State: AJIora91RCx/UZVOcj7mWGchHZ+M8d263JpjSqUaNb+ijVDuT25MZRBT
+        AGxwuRv60/4K8kWBScwns9zwwiI/TjAJ0A==
+X-Google-Smtp-Source: AGRyM1uVzuPT53m8JitCqfLOzvOk/8XU7TAOhKz3cNKhgvVKMBZTFBqWrSAu5c3cJkQHBbfm2wk2wQ==
+X-Received: by 2002:a05:6102:23f1:b0:356:97b0:29bf with SMTP id p17-20020a05610223f100b0035697b029bfmr14487158vsc.87.1657095359702;
+        Wed, 06 Jul 2022 01:15:59 -0700 (PDT)
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
+        by smtp.gmail.com with ESMTPSA id s7-20020a1f4507000000b0036bf47b519asm9587768vka.54.2022.07.06.01.15.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Jul 2022 01:03:33 -0700 (PDT)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-31c86fe1dddso84448447b3.1;
-        Wed, 06 Jul 2022 01:03:33 -0700 (PDT)
-X-Received: by 2002:a81:5404:0:b0:31c:c24d:94b0 with SMTP id
- i4-20020a815404000000b0031cc24d94b0mr9659273ywb.502.1657094613015; Wed, 06
- Jul 2022 01:03:33 -0700 (PDT)
+        Wed, 06 Jul 2022 01:15:59 -0700 (PDT)
+Received: by mail-ua1-f45.google.com with SMTP id n3so2926546uak.13;
+        Wed, 06 Jul 2022 01:15:59 -0700 (PDT)
+X-Received: by 2002:a25:be49:0:b0:64a:2089:f487 with SMTP id
+ d9-20020a25be49000000b0064a2089f487mr27921915ybm.202.1657094998024; Wed, 06
+ Jul 2022 01:09:58 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220705215213.1802496-1-mail@conchuod.ie>
 In-Reply-To: <20220705215213.1802496-1-mail@conchuod.ie>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 6 Jul 2022 10:03:21 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVOK+iHeTfRLDeMF1mwZoeH1KH_GHuCY72YnhQibGqhwA@mail.gmail.com>
-Message-ID: <CAMuHMdVOK+iHeTfRLDeMF1mwZoeH1KH_GHuCY72YnhQibGqhwA@mail.gmail.com>
+Date:   Wed, 6 Jul 2022 10:09:46 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXrVsvYRth+edCs6_bdDTWDacxegMDmgy9HeaKPRaWfkg@mail.gmail.com>
+Message-ID: <CAMuHMdXrVsvYRth+edCs6_bdDTWDacxegMDmgy9HeaKPRaWfkg@mail.gmail.com>
 Subject: Re: [PATCH v5 00/13] Canaan devicetree fixes
 To:     Conor Dooley <mail@conchuod.ie>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
@@ -88,14 +88,18 @@ X-Mailing-List: dmaengine@vger.kernel.org
 Hi Conor,
 
 On Tue, Jul 5, 2022 at 11:52 PM Conor Dooley <mail@conchuod.ie> wrote:
+> This series should rid us of dtbs_check errors for the RISC-V Canaan k210
+> based boards. To make keeping it that way a little easier, I changed the
+> Canaan devicetree Makefile so that it would build all of the devicetrees
+> in the directory if SOC_CANAAN.
+>
 > I *DO NOT* have any Canaan hardware so I have not tested any of this in
 > action. Since I sent v1, I tried to buy some since it's cheap - but could
 > out of the limited stockists none seemed to want to deliver to Ireland :(
 > I based the series on next-20220617.
 
-Digi-Key does not want to ship to IRL?
-The plain MAiX BiT is out-of-stock, but the kit incl. a display is
-available (97 in stock).
+Boots fine on SiPEED MAiX BiT, so
+Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
 Gr{oetje,eeting}s,
 

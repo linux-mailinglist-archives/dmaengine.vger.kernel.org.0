@@ -2,58 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE585568F2C
-	for <lists+dmaengine@lfdr.de>; Wed,  6 Jul 2022 18:29:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF651568F31
+	for <lists+dmaengine@lfdr.de>; Wed,  6 Jul 2022 18:30:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231205AbiGFQ32 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 6 Jul 2022 12:29:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55596 "EHLO
+        id S232907AbiGFQaV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 6 Jul 2022 12:30:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232907AbiGFQ31 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Jul 2022 12:29:27 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA3025E87;
-        Wed,  6 Jul 2022 09:29:27 -0700 (PDT)
+        with ESMTP id S232241AbiGFQaU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Jul 2022 12:30:20 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 780BB22BCB;
+        Wed,  6 Jul 2022 09:30:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C9027B81A99;
-        Wed,  6 Jul 2022 16:29:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2A78C341C8;
-        Wed,  6 Jul 2022 16:29:23 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 217D6B81E03;
+        Wed,  6 Jul 2022 16:30:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 470BEC3411C;
+        Wed,  6 Jul 2022 16:30:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657124964;
-        bh=cBCkLP2gTzX/q2OVTaImug7BGSJxWDD8OrsOwWBIJVA=;
+        s=k20201202; t=1657125016;
+        bh=wpL0VpuulEkxBMYGMFoXZ3Z1ijIaNjwBi/XMXl6efi4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TKQuwAR6/1+JPXRfI1Qv7oZd1ULgQDO/kOL/EFfTgCRCxcQSARXrhKH6Tvg2fzMh2
-         IZ5wf/7h9v30tS+oqsJX87liFihTZcmZHxZ8MPAcZne4LqEuX4tXQ5wgOPpepqfUlK
-         QmP468Q20PlQeA+Qq4PBEBUnblKBmIhmnqgtOl3FkgIz+BSHFwK3ZnuvlrAwu99VYI
-         GkRIVRIx45aVQeeftJkGlp2XmTf8oXjYuECfCbLl8XGEmnW9F+UpW5kGIWXAgnIein
-         nVcL6GSE7q4xtfL2o2buY0/TYaJA0TKVojK1X7PfUwGbZqVoWPAw36sPjimOkXJdnH
-         qlPy3XAxcJ8DA==
-Date:   Wed, 6 Jul 2022 21:59:20 +0530
+        b=Pc0ux1gTFqfqCMvM+42XLAyo8QhJ557q1V/vmN9xbzHMlOaq4U4pe0TROwE6B6Bk7
+         taSkjDARnVTbpcYbjhpiqI8Q24XI5Lb2lWlKMHubOeDOPcdSC9jkPP8k044ZLTXGZj
+         E8ABe1GD8YYpzb/uuE9JzR8lF1TOS/nqVAY7IyCSGv5G+a3h9vkUFr4mFZ4CjI2yh9
+         YIKZmP2chYrj1rg9moNg7CQToTcweX9XgaTiu4mTWDOmad0M7NYIJN7yeR11/xZoqA
+         1phq4trYIpzmWvwqZvmPDQ3chPSGw2SGsJwpPDyVAZB8NQLsd6Wc0ZHJ0Qh/P1Ft4t
+         ObtsqX9/JbCtw==
+Date:   Wed, 6 Jul 2022 22:00:13 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>, joy.zou@nxp.com,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dmaengine@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] dmaengine: imx-sdma: Add FIFO stride support for
- multi FIFO script
-Message-ID: <YsW4YHL9+HkQndva@matsya>
-References: <1655782566-21386-1-git-send-email-shengjiu.wang@nxp.com>
- <YsUlESAPklVFxpzy@matsya>
- <CAA+D8AOST1wK0G=65ufrhPrH8AQ0w-r1pMF5DOnqBauQtx7AOg@mail.gmail.com>
+To:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc:     olivierdautricourt@gmail.com, sr@denx.de,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] dmaengine: altera-msgdma: Fixed some inconsistent
+ function name descriptions
+Message-ID: <YsW4lXE/6IqcQrKk@matsya>
+References: <20220706082605.114907-1-jiapeng.chong@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAA+D8AOST1wK0G=65ufrhPrH8AQ0w-r1pMF5DOnqBauQtx7AOg@mail.gmail.com>
+In-Reply-To: <20220706082605.114907-1-jiapeng.chong@linux.alibaba.com>
 X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -64,33 +54,17 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 06-07-22, 14:54, Shengjiu Wang wrote:
-> On Wed, Jul 6, 2022 at 2:00 PM Vinod Koul <vkoul@kernel.org> wrote:
+On 06-07-22, 16:26, Jiapeng Chong wrote:
+> Inconsistent function names describing msgdma_chan_remove() and
+> msgdma_dma_remove are modified to msgdma_dev_remove() and msgdma_remove().
 > 
-> > On 21-06-22, 11:36, Shengjiu Wang wrote:
-> > > The peripheral may have several FIFOs, but some case just select
-> > > some FIFOs from them for data transfer, which means FIFO0 and FIFO2
-> > > may be selected. So add FIFO address stride support, 0 means all FIFOs
-> > > are continuous, 1 means 1 word stride between FIFOs. All stride between
-> > > FIFOs should be same.
-> > >
-> > > Another option words_per_fifo means how many audio channel data copied
-> > > to one FIFO one time, 1 means one channel per FIFO, 2 means 2 channels
-> > > per FIFO.
-> > >
-> > > If 'n_fifos_src =  4' and 'words_per_fifo = 2', it means the first two
-> > > words(channels) fetch from FIFO0 and then jump to FIFO1 for next two
-> > words,
-> > > and so on after the last FIFO3 fetched, roll back to FIFO0.
-> >
-> > this fails to apply for me, pls rebase on dmaengine/next and revise
-> >
-> >
-> > it based on my another commit, the one that fixes the struct documentation
-> should I send them together?
+> Remove some warnings found by running scripts/kernel-doc, which is caused
+> by using 'make W=1'.
+> 
+> drivers/dma/altera-msgdma.c:927: warning: expecting prototype for msgdma_dma_remove(). Prototype was for msgdma_remove() instead.
+> drivers/dma/altera-msgdma.c:758: warning: expecting prototype for msgdma_chan_remove(). Prototype was for msgdma_dev_remove() instead.
 
-Pls mention that in patch title.. I have applied that, so rebase and
-resend please
+Applied, thanks
 
 -- 
 ~Vinod

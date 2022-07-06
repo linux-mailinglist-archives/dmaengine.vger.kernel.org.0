@@ -2,84 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF6285679BD
-	for <lists+dmaengine@lfdr.de>; Tue,  5 Jul 2022 23:53:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C7AC567DA2
+	for <lists+dmaengine@lfdr.de>; Wed,  6 Jul 2022 07:17:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233013AbiGEVxV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 5 Jul 2022 17:53:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41214 "EHLO
+        id S229598AbiGFFRU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 6 Jul 2022 01:17:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232782AbiGEVxN (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 5 Jul 2022 17:53:13 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B61791A39A
-        for <dmaengine@vger.kernel.org>; Tue,  5 Jul 2022 14:52:42 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id q9so19383819wrd.8
-        for <dmaengine@vger.kernel.org>; Tue, 05 Jul 2022 14:52:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=conchuod.ie; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lj8lQBl+rzKhHnZ+Xd+ZIX70dBba4zQ87/hMtZKztKo=;
-        b=SWBLyNd34TD/mZu6n2FRfmU1HE1CDonJi13qsFyhAyqnSyEQ/KmdR1UWXQSWh8Lc4S
-         wboztDYyEl0cB6dNxkPhLH8Vut8eQklDlAzLAba8wD+ncpM0c/ss1G9HZw6iwywvQYDc
-         Wp4EiJ8gFj2NtEhHkoHzq6BO5iZJQV8yqDNi/hV+TI3EdwxWa8PyiRtclVAhofmrQMv1
-         O4MgZCyDw4sYc3gDgn4HyTIQC0OgktoApwqj7hpRysjTLfmxTwmhIL9038u47rfi3QnR
-         TEsjdMTU0aXj0ZC25wthUzJnFtFa+8G8sy0GbjfRv+uUUgqNTVhurKapbgEb8iTWOR1w
-         qZPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lj8lQBl+rzKhHnZ+Xd+ZIX70dBba4zQ87/hMtZKztKo=;
-        b=OmnXHRWvG5+NCzeN6pEM3MDC3jJa2t/VOEgAhiJ8JQiH64hW5sp+lX42V8am+VZCsf
-         JCBnP74E7AGwqf8bV9fjzQw/BzfQ+tXya69urDVzUYAfwjIknG0GLoCaJUN/oJHiRftD
-         BvAET4UMHrAG6cjMo1Y2dd+KhvhtSlYOCBEU1+gkF1LI0HM++DHrQPJ+t+Q0BqE+nLwy
-         xU3qMbZWVigz6/qi0CvhD2vHRkH0i+oQI7qcd2EN8F+caBiM1aE39yQEBroXzx5QJCbt
-         R7emp41b+Zka70WCpD+K4QLGefgB2mcVmKL6JdxeKnz4ABqwKn6CyoQEPTjA1wjAjDnN
-         dF/Q==
-X-Gm-Message-State: AJIora8vjLKcJwucmqvO+H2M+KzjvUym3AO3x6pqbQnejYy6Ybw9BCuL
-        QantuDNaVutUh67oKiIJ0vEtdw==
-X-Google-Smtp-Source: AGRyM1tr0mSvjiKuETZ7gcWxREDHaUXAsNoHFiE497jvmcwKxLKMvl+jTlZGzJe6mijwSzLjNBUwQQ==
-X-Received: by 2002:a5d:64aa:0:b0:21b:c38b:bb81 with SMTP id m10-20020a5d64aa000000b0021bc38bbb81mr33626354wrp.666.1657057962100;
-        Tue, 05 Jul 2022 14:52:42 -0700 (PDT)
-Received: from henark71.. ([51.37.234.167])
-        by smtp.gmail.com with ESMTPSA id g34-20020a05600c4ca200b0039c7dbafa7asm18353920wmp.19.2022.07.05.14.52.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Jul 2022 14:52:41 -0700 (PDT)
-From:   Conor Dooley <mail@conchuod.ie>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Palmer Dabbelt <palmer@rivosinc.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Niklas Cassel <niklas.cassel@wdc.com>,
-        Dillon Min <dillon.minfei@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH v5 13/13] riscv: dts: canaan: build all devicetress if SOC_CANAAN
-Date:   Tue,  5 Jul 2022 22:52:14 +0100
-Message-Id: <20220705215213.1802496-14-mail@conchuod.ie>
-X-Mailer: git-send-email 2.37.0
-In-Reply-To: <20220705215213.1802496-1-mail@conchuod.ie>
-References: <20220705215213.1802496-1-mail@conchuod.ie>
+        with ESMTP id S229579AbiGFFRT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Jul 2022 01:17:19 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4808A1F632;
+        Tue,  5 Jul 2022 22:17:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0A615B818BD;
+        Wed,  6 Jul 2022 05:17:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBA6EC3411C;
+        Wed,  6 Jul 2022 05:17:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657084635;
+        bh=OFpHh/l0JfYEWjjOkBu7G0I8TgRj2RIKDJ6hwTnDB4c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Mb9WgisFnRbb27wZ++aPJVbXMd1ftcbhxbI0V/J4diGfrf/TguPxSYm4QeUDOHpRr
+         jQsxMmbbr5cf54KvfOk1Fks992+OaK1F9C0VmpLkDUZ6b5B+ZxXXz+gk/xb9D+UAIr
+         RuDDWt7+NFdl1RWcPdH5LfITDJyZGFi0BkVdDamvViZ4+j0r5iXIMXrVSmCOv89cJJ
+         lx5S7rdmEwanFxjqQZNwXKExqUmwPrBFeB45oEegaoSgnhvs6ZVMUjm3BSY4E7Fh5z
+         C3IhCKJzyVSaWwRLtswTsvdAPb7gMfvTBaDnkDxba1TQHCorvXsH44zlReFZ7jnNtm
+         J6YOI0lh0kRVw==
+Date:   Wed, 6 Jul 2022 10:47:10 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: imx-sdma: Fix compile warning 'Function
+ parameter not described'
+Message-ID: <YsUa1qwIb2LzrUjW@matsya>
+References: <1652858507-12628-1-git-send-email-shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1652858507-12628-1-git-send-email-shengjiu.wang@nxp.com>
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -88,35 +55,51 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Conor Dooley <conor.dooley@microchip.com>
+On 18-05-22, 15:21, Shengjiu Wang wrote:
+> Fix compile warning that 'Function parameter or member not described'
+> with 'W=1' option:
+> 
+> There is no description for struct sdma_script_start_addrs, so use /*
+> instead of /**
+> 
+> Add missed description for struct sdma_desc
 
-Testing & checking the Canaan devicetrees is inconvenient as only the
-devicetree corresponding to SOC_CANAAN_K210_DTB_BUILTIN will be built.
-Change the Makefile so that all devicetrees are built by default if
-SOC_CANAAN but only the one specified by SOC_CANAAN_K210_DTB_BUILTIN
-gets built as an object.
+Patch title should describe the change, so add struct documentation etc
+would be apt. Pls revise
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
- arch/riscv/boot/dts/canaan/Makefile | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> ---
+>  drivers/dma/imx-sdma.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index 95367a8a81a5..111beb7138e0 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -188,7 +188,7 @@
+>  #define SDMA_DONE0_CONFIG_DONE_SEL	BIT(7)
+>  #define SDMA_DONE0_CONFIG_DONE_DIS	BIT(6)
+>  
+> -/**
+> +/*
+>   * struct sdma_script_start_addrs - SDMA script start pointers
+>   *
+>   * start addresses of the different functions in the physical
+> @@ -424,6 +424,11 @@ struct sdma_desc {
+>   * @data:		specific sdma interface structure
+>   * @bd_pool:		dma_pool for bd
+>   * @terminate_worker:	used to call back into terminate work function
+> + * @terminated:		terminated list
+> + * @is_ram_script:	flag for script in ram
+> + * @n_fifos_src:	number of source device fifos
+> + * @n_fifos_dst:	number of destination device fifos
+> + * @sw_done:		software done flag
+>   */
+>  struct sdma_channel {
+>  	struct virt_dma_chan		vc;
+> -- 
+> 2.17.1
 
-diff --git a/arch/riscv/boot/dts/canaan/Makefile b/arch/riscv/boot/dts/canaan/Makefile
-index c61b08ac8554..befe4eb7527b 100644
---- a/arch/riscv/boot/dts/canaan/Makefile
-+++ b/arch/riscv/boot/dts/canaan/Makefile
-@@ -1,3 +1,9 @@
- # SPDX-License-Identifier: GPL-2.0
--dtb-$(CONFIG_SOC_CANAAN_K210_DTB_BUILTIN) += $(addsuffix .dtb, $(CONFIG_SOC_CANAAN_K210_DTB_SOURCE))
--obj-$(CONFIG_SOC_CANAAN_K210_DTB_BUILTIN) += $(addsuffix .o, $(dtb-y))
-+dtb-$(CONFIG_SOC_CANAAN) += canaan_kd233.dtb
-+dtb-$(CONFIG_SOC_CANAAN) += k210_generic.dtb
-+dtb-$(CONFIG_SOC_CANAAN) += sipeed_maix_bit.dtb
-+dtb-$(CONFIG_SOC_CANAAN) += sipeed_maix_dock.dtb
-+dtb-$(CONFIG_SOC_CANAAN) += sipeed_maix_go.dtb
-+dtb-$(CONFIG_SOC_CANAAN) += sipeed_maixduino.dtb
-+
-+obj-$(CONFIG_SOC_CANAAN_K210_DTB_BUILTIN) += $(addsuffix .dtb.o, $(CONFIG_SOC_CANAAN_K210_DTB_SOURCE))
 -- 
-2.37.0
-
+~Vinod

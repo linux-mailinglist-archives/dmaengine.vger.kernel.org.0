@@ -2,79 +2,56 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C37AC568B9F
-	for <lists+dmaengine@lfdr.de>; Wed,  6 Jul 2022 16:48:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7621568F1A
+	for <lists+dmaengine@lfdr.de>; Wed,  6 Jul 2022 18:27:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232211AbiGFOsf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 6 Jul 2022 10:48:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38190 "EHLO
+        id S233716AbiGFQ1f (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 6 Jul 2022 12:27:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233150AbiGFOsc (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Jul 2022 10:48:32 -0400
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB22815A0D;
-        Wed,  6 Jul 2022 07:48:31 -0700 (PDT)
-Received: by mail-il1-f180.google.com with SMTP id k1so4751462ilu.1;
-        Wed, 06 Jul 2022 07:48:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Wrq2JNxdSNjz+AtYT/VK5cdxeQSjmsW3VIzTuH5qvso=;
-        b=Bz8MtfXbNZF7X98JS3LTjBT2T1nvOIfACd70HC+T/0VzrHT6DCAONsIeslYb/rmqTV
-         7U4hbDAfWUTEVwwjzEPY923WDXxOQFiv/ruuwtGJsBwVqaqVYUwHoGxR3yRbtmLowbkB
-         ZbhfBs8lq9AHx/temzI1iHW/DiZ4B3DCCvBJwsR8fzrcoXTNFgh81A8FNrl0QJAN6Gwr
-         Fw70agJzMzzU8Pv5R7y+Rn9Z6kUqVrhCU/x5m2Vnh+KylDYoAKzmUjo1cmIwJ98YZXdU
-         8+hMLdotBK9ZpxKDtDpw3geh2XZAR943QuBeLzR/ajtyZ7cQScfmu5VGjjxFHwoC8v51
-         kAVg==
-X-Gm-Message-State: AJIora/In85zDywFd4RJunYGcGtrk1vcs1JIufdC5xNAUhNYez2tQJa0
-        zObZmJDblRNV4xQPfII05A==
-X-Google-Smtp-Source: AGRyM1sb5HmhX0XgK9jcKFeRefRiVrF9p1b4SQg8YeeZGNu7klKkXRLtLFt3S05zijGKW8PJyzkj/Q==
-X-Received: by 2002:a92:d946:0:b0:2d8:e271:79c2 with SMTP id l6-20020a92d946000000b002d8e27179c2mr24307561ilq.240.1657118911231;
-        Wed, 06 Jul 2022 07:48:31 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id a21-20020a027355000000b0033ebd47834fsm5173779jae.128.2022.07.06.07.48.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Jul 2022 07:48:30 -0700 (PDT)
-Received: (nullmailer pid 21846 invoked by uid 1000);
-        Wed, 06 Jul 2022 14:48:28 -0000
-Date:   Wed, 6 Jul 2022 08:48:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Conor Dooley <mail@conchuod.ie>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@rivosinc.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        dmaengine@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-riscv@lists.infradead.org,
-        Niklas Cassel <niklas.cassel@wdc.com>,
+        with ESMTP id S231685AbiGFQ1Y (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Jul 2022 12:27:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A5CE27CCE;
+        Wed,  6 Jul 2022 09:27:23 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 065B361CAA;
+        Wed,  6 Jul 2022 16:27:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1DE8C3411C;
+        Wed,  6 Jul 2022 16:27:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657124842;
+        bh=4aItf/nscQZL1SybsK3P9rnGm4HeS4pp4DKgi8jCtAs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=amYVJ1/X6HSUPvDWF6hQJQoY8s0krw9Tvu+ST+qZK13iyxPNf4YQ7E0288lvv7rfC
+         XQE93Dif4iub11kK6q7sOr9Mb826hXizt7sxN2TEYqnoxv0lj0pgkLkEBY+vR/mRct
+         6rx6CGC7lQwrTHYPicck/Q8v8Xxdcmzg7EkFgL71R4DMPmW3mZ5El9EJ4zsmrEylr6
+         bR8owydhEkI41Ga5fb7SJ3jppXfaq6kkLJdNgF2/EHGaFLwqs2ih20B6O3lR7Yfbtp
+         LKeXtw5hSgzS3IC+ZBDIPK2TcHlqoTQwpa2dmoXkZRM2WHoHcZPHDXyhpdpH72mnH1
+         l8hvQmEwLAqxQ==
+Date:   Wed, 6 Jul 2022 21:57:17 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Sam Ravnborg <sam@ravnborg.org>, devicetree@vger.kernel.org,
-        Dillon Min <dillon.minfei@gmail.com>
-Subject: Re: [PATCH v5 04/13] dt-bindings: memory-controllers: add canaan
- k210 sram controller
-Message-ID: <20220706144828.GA21787-robh@kernel.org>
-References: <20220705215213.1802496-1-mail@conchuod.ie>
- <20220705215213.1802496-5-mail@conchuod.ie>
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH] dt-bindings: dma: allwinner,sun50i-a64-dma: Fix min/max
+ typo
+Message-ID: <YsW35YxGAA3XdmK9@matsya>
+References: <20220702031903.21703-1-samuel@sholland.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220705215213.1802496-5-mail@conchuod.ie>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+In-Reply-To: <20220702031903.21703-1-samuel@sholland.org>
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,19 +59,12 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, 05 Jul 2022 22:52:05 +0100, Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
-> 
-> The k210 U-Boot port has been using the clocks defined in the
-> devicetree to bring up the board's SRAM, but this violates the
-> dt-schema. As such, move the clocks to a dedicated node with
-> the same compatible string & document it.
-> 
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  .../memory-controllers/canaan,k210-sram.yaml  | 52 +++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/canaan,k210-sram.yaml
-> 
+On 01-07-22, 22:19, Samuel Holland wrote:
+> The conditional block for variants with a second clock should have set
+> minItems, not maxItems, which was already 2. Since clock-names requires
+> two items, this typo should not have caused any problems.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied, thanks
+
+-- 
+~Vinod

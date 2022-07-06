@@ -2,189 +2,293 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D51B55687A3
-	for <lists+dmaengine@lfdr.de>; Wed,  6 Jul 2022 14:03:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 778C7568B2E
+	for <lists+dmaengine@lfdr.de>; Wed,  6 Jul 2022 16:28:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233333AbiGFMBv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 6 Jul 2022 08:01:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35020 "EHLO
+        id S232469AbiGFO2q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 6 Jul 2022 10:28:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233473AbiGFMBi (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Jul 2022 08:01:38 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69D6D29C8D;
-        Wed,  6 Jul 2022 05:01:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1657108897; x=1688644897;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=HXkN/7XoUCAroVk2bf6Zbwst2cmW+uwWQr5FlSchxh8=;
-  b=gF1PVRTQJwkHOX/Z2Q+x94e5lkNE4Gq4zXH3VLf7dnmxQCBli95B8rqF
-   BKN4tJJnbTnwN5cIyjpINrrNlTanojHZT5MO0CXNM1ty3vnWj4tCb0ln8
-   ffq265tauZhA0oPDZZpSw/WDqsdivo2tf2HJUYnmNNN0y3OMgUAQOT8pf
-   uqmZ0FTSXPY8M8xyTfULUzdBze6pczwqf4TULhYPsp2HjvSbheF/MemME
-   i4ezIqpKb2uAQe/DolgBReUaNLmM9DWVaR3sjxiFHMnQMCJSoQj/FqWFm
-   2cj9FRg4P6Qsk79am12M0aiCNXBDDxqaYzzD1JqYZf9qvX+B/R/MPIyPQ
-   w==;
-X-IronPort-AV: E=Sophos;i="5.92,249,1650956400"; 
-   d="scan'208";a="166605809"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Jul 2022 05:01:36 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Wed, 6 Jul 2022 05:01:32 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17 via Frontend
- Transport; Wed, 6 Jul 2022 05:01:32 -0700
+        with ESMTP id S232320AbiGFO2p (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Jul 2022 10:28:45 -0400
+Received: from EUR02-VE1-obe.outbound.protection.outlook.com (mail-eopbgr20071.outbound.protection.outlook.com [40.107.2.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF821AF09;
+        Wed,  6 Jul 2022 07:28:43 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jYm17Dxug4sB9hCGb2Ev/lHPbKI9IlnpYLo8kv3A0f7yycU1/ZwYxNX4TKys+PnUoYQjAT379pq4F4GTZ1cda6jprSH+VrXZN51aUyyt40/bdvYhisVDJHrvs4Yu43YtgrdagCzFGLLTN6hDLHAjETV4hBt1Q2LRdTAILy5mcXFFXFfCUBRLLZqQ2aTcuQhSre9C/HSTfyZYd4FLpbbwoAh4Exic6Y1FS4ar5nQ1vEk1WH3yV68vK1gLrW2zRrTixD2HbtC2dFRyDjVoLCFJ1Ph1ZZWv23IaUV8cd2iEqrjE1sIVsqnz4DggjSwNy9vKsRtVEb1kTos3NoUZodKmAg==
+ b=ikrjjBOC4CqF+RG84djj1jMpJUflMsgnJhd3eVURdy/zLyT9eIeSgQx2HWR0fQG+Sg80gw0dByerbiOM3agruVWCfl4BSni4zC8ytmnAmIumlgZB+noWhgEmo8QEUMRQ9CfhzNuzXQB1pddOz4oU37XgML5cB8qS+WzRwl17la+1uMGvebhcjRJsIUHR5CMpZRS0yz/8L1FikafvnH04j6TfK9sjsoHuX4bz+4BmUwiZiBFgNvcN6h3DhzpmJaVszQKxMJJuVdppeXfuZdv55E0XaSsxrlo6UMvfRGJKYo2ud8WiELQ9Y4xqCcufe95CHeI7SG/LQFUAsJV/gKYkhw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HXkN/7XoUCAroVk2bf6Zbwst2cmW+uwWQr5FlSchxh8=;
- b=BYgSL3zBQqulrWM+Q5wiIQrGJxE/cW9BaoWzsCRwfn79cwHtzu4z8in+NJnA0CxFASIxDb1VHaKB0HOE2+xQtwZdRA5g9xlmO22rxnQ0fgeV8Srj1ZOpaiEa+c5txjXCPGwtURkLLnng+0qesnaUu5hkZXB5IST229kwXNHIEbqZfqVODgQbd37yMJBkOxV9DQLLBNWBMZIWqcLkBs56x9fXTfBraHWBgikMxr8Y5lJ5AqFSxGVTqjfi6GUCpmxnZjdykipYnj0cKvuKgEyXxONYHE8a902pXPrA5daYrHV8nhYo8WLz32z7xMO/VFEnordI+E4c0q32xyOtTnjjsQ==
+ bh=msEwO44cn3whtKQM1E8KdGnU90Mk1lt0i1k0U4E+2xI=;
+ b=KnboCiLH5DDsIx9dkS0LJHy7Pvbkk6AVuDYXbwtSUj+fbmnyP53KAyB90TFnAXf/8poX7eRFZjSYy0xHbP8wpPnTfH5Ud3jjxdF/69PIDMr2IiQ7uyBcO0TPdYnQ5uxGDqfV/aWz9r5vdJiM6kGAPpCK4jLlh8SL4gLxMUnYqjQ9o9xuj1F6Hp71xFDbaOSAKCjxeGN8Tf7vd7IxwY3GcEfGgsD6dJx1JLF5LPWx71h45lY7znUJ/WK2LcifDIdbTUAC20E4WjhHjSWul5braPXh2Vm4ewDfNiKw96hnkKtWUvzWchKUoH4PaSJ9s5m/3yWhi7nsSFOdoaREew5eQQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HXkN/7XoUCAroVk2bf6Zbwst2cmW+uwWQr5FlSchxh8=;
- b=ca3hVDFSkR2WybcSo0jvDvLitlOedBgUzajNKhCcysf256tmWSuX40w+pe71fV255wfmOW4o+8WXvxjWL8+FIsy0yxNZkJkxW0gSmsaSkdqJmBjUNw0VhRWP7ZZsIi/2ILNuZbl89Sox7KTEJVEtRUQxeHzvSXJpHuXFlhwKh6w=
-Received: from PH0PR11MB5160.namprd11.prod.outlook.com (2603:10b6:510:3e::8)
- by BYAPR11MB2600.namprd11.prod.outlook.com (2603:10b6:a02:c8::15) with
+ bh=msEwO44cn3whtKQM1E8KdGnU90Mk1lt0i1k0U4E+2xI=;
+ b=nSFrM/waaahGn3tjGWZWC/cQUr5EB4ous5j58Nwm1BEcOyP0Pk66OhlbUihEAvMje+0kkwlyGt9Kulll59NxEt/gmZy7QzHpXxmSHj9P4lsN6Tqqebl7oqxj+Nck0KTSFFzZwrJdILt3M/y5mkiXNfdJNteOobZPSO2G25Jl6vA=
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com (2603:10a6:102:232::18)
+ by AM9PR04MB8842.eurprd04.prod.outlook.com (2603:10a6:20b:409::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.14; Wed, 6 Jul
- 2022 12:01:29 +0000
-Received: from PH0PR11MB5160.namprd11.prod.outlook.com
- ([fe80::6090:db2c:283b:fe69]) by PH0PR11MB5160.namprd11.prod.outlook.com
- ([fe80::6090:db2c:283b:fe69%8]) with mapi id 15.20.5395.021; Wed, 6 Jul 2022
- 12:01:28 +0000
-From:   <Conor.Dooley@microchip.com>
-To:     <damien.lemoal@opensource.wdc.com>, <geert@linux-m68k.org>
-CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <thierry.reding@gmail.com>,
-        <sam@ravnborg.org>, <Eugeniy.Paltsev@synopsys.com>,
-        <vkoul@kernel.org>, <fancer.lancer@gmail.com>,
-        <daniel.lezcano@linaro.org>, <palmer@dabbelt.com>,
-        <palmer@rivosinc.com>, <paul.walmsley@sifive.com>,
-        <aou@eecs.berkeley.edu>, <Conor.Dooley@microchip.com>,
-        <masahiroy@kernel.org>, <niklas.cassel@wdc.com>,
-        <dillon.minfei@gmail.com>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v5 00/13] Canaan devicetree fixes
-Thread-Topic: [PATCH v5 00/13] Canaan devicetree fixes
-Thread-Index: AQHYkLmL7CYc+NRsR0eTQHc1KpCiaq1w/ESAgABAyICAAAHEAA==
-Date:   Wed, 6 Jul 2022 12:01:28 +0000
-Message-ID: <7da1bf67-3f19-ba04-d3fc-75e6a2c0da0b@microchip.com>
-References: <20220705215213.1802496-1-mail@conchuod.ie>
- <CAMuHMdVOK+iHeTfRLDeMF1mwZoeH1KH_GHuCY72YnhQibGqhwA@mail.gmail.com>
- <160267df-2f3f-02f7-4a4d-21baf60c4a44@opensource.wdc.com>
-In-Reply-To: <160267df-2f3f-02f7-4a4d-21baf60c4a44@opensource.wdc.com>
-Accept-Language: en-IE, en-US
-Content-Language: en-IE
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.21; Wed, 6 Jul
+ 2022 14:28:41 +0000
+Received: from PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::e945:8bde:54e5:d83e]) by PAXPR04MB9186.eurprd04.prod.outlook.com
+ ([fe80::e945:8bde:54e5:d83e%6]) with mapi id 15.20.5395.020; Wed, 6 Jul 2022
+ 14:28:41 +0000
+From:   Frank Li <frank.li@nxp.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: RE: [EXT] RE: [PATCH v3 19/24] dmaengine: dw-edma: Use non-atomic
+ io-64 methods
+Thread-Topic: [EXT] RE: [PATCH v3 19/24] dmaengine: dw-edma: Use non-atomic
+ io-64 methods
+Thread-Index: AQHYkPsz73Q9AgK9WEOSKJkbSlXaTK1xZxtg
+Date:   Wed, 6 Jul 2022 14:28:41 +0000
+Message-ID: <PAXPR04MB9186551C4A12F747C35784B288809@PAXPR04MB9186.eurprd04.prod.outlook.com>
+References: <20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru>
+ <20220610091459.17612-20-Sergey.Semin@baikalelectronics.ru>
+ <TYBPR01MB53418C1BC8791CB6D068A177D8809@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYBPR01MB53418C1BC8791CB6D068A177D8809@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
 authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
+ header.d=none;dmarc=none action=none header.from=nxp.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2ab115f7-a06e-49aa-f418-08da5f47427e
-x-ms-traffictypediagnostic: BYAPR11MB2600:EE_
+x-ms-office365-filtering-correlation-id: e7af5c55-83f7-4060-3429-08da5f5bd2fc
+x-ms-traffictypediagnostic: AM9PR04MB8842:EE_
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: C7e+JhPDugTB4x2mtVAyDPs+fKbJshjQ7WhN6K3ychpBtMrRv1geLXegvqCxftvpKOj8rHarqs9lrrdRRzjtm3KXQ0M3bUBk2bEEH2B5r/xlIqhqOJ2Wxnp4pOJr0WVz2N8iDfY/kyynvSC/a91FRD5gJPdYvnfGU+i/KjDr1vKrSoeN5kLYVsDX1c+lNOUt0VK+X5Cw8//vpP/F1Z9i0hnv5puLnZbfGa94kM82dDzsfD7AaA0NHsSUmz2QzMZN8r471VABAz5orkY4q20Gi2mOnhJvyqxXSy23v9cN7Vm2uWMg7pksMW0cW9lWoZg22EpLSOvkc0PwS3KbCKZQkloiByarm+Ak06Ood+7Z/O9lxjk0NLJV6BACFaE/MEIhdmfkgECXq+Tw2rWnV4sKeK/CbU+CbWv79xCy5lh/MgxXefsbxZAGpBZ66Mu0q5AhabO/MILSzPGS+jEZ4JuIhdTy0OOFplkvnWeRBH8ICeEOfH6fJ9BSID+0ZHcJwIl1K8NXh4sH3wOlSJVgeKG4zDBQZNihm43vBnBI1l8yIorY6cngFom7X1e0qfUOo/xm0sqlqXRWx52OLYyonCI4PkiyKT1e91Kujkip0mFf7P2KRJlfAoG+uBH+a1M8NBCSF48h+JIBM7OhsvPX9XBzOdQS1sOaCdiJpYRKpTFIH9YR2fwEFenWAjgtQX82PMTInToULmTQikpVhIaen+QiHa0sURTDBUFHHSKahVpi2be6uimfCeavr1uQ6Db3Bj6TMlvfgyGxFXmbE82XVasCemrzK5hC0YfhWKQ4M3MF4yD0u0qSC+NGz/+HjP+XCdixnU6Zcv5eVFwzkJh/QThMYdLE6FGfTUL99PaaBzHFvqLPeYDMdMFNLV/EV2S5Nir6M/K4rwBzaKx49VPfZbLb16+dB1n1HgvUZkROdVZKvkePyxU5irYyMQGLdW7jNSXt
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5160.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(136003)(396003)(346002)(39860400002)(376002)(366004)(66476007)(4326008)(8676002)(66556008)(2616005)(66446008)(64756008)(66946007)(31686004)(91956017)(186003)(38100700002)(6506007)(83380400001)(2906002)(36756003)(76116006)(7416002)(26005)(6512007)(6486002)(966005)(54906003)(110136005)(478600001)(41300700001)(5660300002)(31696002)(38070700005)(86362001)(71200400001)(53546011)(316002)(122000001)(8936002)(90184004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: S89dy0knfJcVQJyMZSGOeqyCqW9mJ2pSDSAIo59SUSz5tuA02OHgnVUooKjPq40aznikBgB93MCt8QdFGbqLGsgESDnV1wMEPm6Wp0Cio+Mx8lucCzfMruOqDbs+4WszCpeO4B2ZB27PgGHqogh30Np1Twmb/oGIQBHPf3YR213Q1+3mDnuU9tqLV5qLA+XIYb24fVWzlPcGwuCei6YP2Gu3NuJniAC8+Q/d2EkLFEyxSHudKs5GuoGY+En4Y6PFOU0xjlqIz8dbhMy9HBJfgGK0cix7eayK+DP/1j5O4h2Kz/3gZWAFi+sapAPpc3KzfvXhoNKQIM0KvfLXKm8R4eYBVsYBv/bgAQunRa10bS0KcXU/j0ddFUbkA0v76WAAyu0xMvQefGRWRG648ToUl4tJbd7Cmu1HebpUoXuEsB/3puqtAGBpKxDNPGAQETad2d6urhy/i0Rz0bPWA5DmxJcHWFiD/m3viXNgaR07uc+oi2qlMXyfYz41kSG/3rCsrGmLuJ1V/4aJzJ7QrBJnAZ8TLPrmHz5zrKJHDSYOfwHa6EDdVeU9ulq3IWKNCPQX3Uq2vcr2i6yWVO26VlSV8Ms/Is+ziDP6AUhgUU0x9hYySwCHhfqIUuD784y9MBE8lv3icFg3MKSIenPovPOM/tO1c7GAfYJEVcH18cI8Q8q6O4MzHnfbw0Kv673Hsd142pgCaIPP5Mjob0zrt9nGI6esU2ogmyk2KHYTTo0VZ/ywj+hmBBqR1iM/DBWPagJ0PXiQS5UdCCDCRn3OAVSF9uTwZiuSst/AycW8F+PeyZrWqE25BSna/jNZLF4Lt1W4S7VTbr/12S0vzEe4tL/8qw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9186.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(366004)(376002)(136003)(396003)(39860400002)(110136005)(316002)(54906003)(122000001)(38070700005)(86362001)(4326008)(7416002)(44832011)(52536014)(5660300002)(55016003)(8936002)(38100700002)(64756008)(66446008)(66476007)(76116006)(66556008)(66946007)(8676002)(66574015)(6506007)(7696005)(83380400001)(53546011)(186003)(41300700001)(2906002)(9686003)(33656002)(26005)(45080400002)(478600001)(966005)(71200400001);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NlhwRm1EVlc4UlljZkxhdTdhL0JTSHkrMG1zMyswM1VFNnN0d0NDd1hIeFBa?=
- =?utf-8?B?NXJzNnJieENWYXozL2FDUDBtY1JZQytGbUVBMzN2K3dVMlNJVU9Vb05BVUpG?=
- =?utf-8?B?c3pHWWI4QjM4eXl5ODIwSUhqWnRtdXlXa2IxeVEwQ1ZHQ0pvSlZNM2lMT3kw?=
- =?utf-8?B?anlyMXdxczc1WTZGMHdjbjJKY1F5dDFlYTY2VDZsalp2eHBPM1hBaFlwakJa?=
- =?utf-8?B?QTlJaDhuWXhQWG5OTnJiSC93aGR3Zm9kbUhVSGRRcjhlcXFPQ05OcU1NK3Bw?=
- =?utf-8?B?cEl4RDhGV1daRVoyK1FWbmVFL0MrQnpPeVA0VEpTTUxsS3AyS3Q2RmpvNC9h?=
- =?utf-8?B?T1JoR3ZLQzdSUnM3aXdUVGFRcEZnakEyMFFkeTh1OXgrVnhzYnRZcjFwbTZz?=
- =?utf-8?B?SXN2b1RSY1VFblhDdG1ibmhmeitxbzNzMWVidmlxdlp4NStmS1JyNmpENEJI?=
- =?utf-8?B?VVVwNUE0NHkycmR2ZUtVVHB1M3BzNnFwakdzR2htSUdMOUlBMExhZmt1cENC?=
- =?utf-8?B?eW1jK3lHeUdnTzIzMHAwME9IMU5LRmJLMzBHMXZsN3dpcnJIamZZQUxDc0F3?=
- =?utf-8?B?VkNLMFhKWGNNa0NPUTMwc2lGUjJROENCMk1QdlM2SVQwNTZndFNsTWFEcWVZ?=
- =?utf-8?B?bVdBRHlySUc1dU5JQW5ncjVTWjlRbzRRaEQ5RDRQbGtpdE1senFHT3daYnF5?=
- =?utf-8?B?ems2WCtBdjVyR0ZvUjZmMlQycUdHNFlNOTBZZWlpVkN0UWJCVGU5VmZXdGx0?=
- =?utf-8?B?WnJsTDdPRXhtNFkwc21sT1pRNG9DZ3FGL29VN0NrcTdrTFl1cXdnczZUbm52?=
- =?utf-8?B?d0pLTDRJbGd0MTliQzNxWjVzakRQNGNpaEZ5c1BtYVMwUGdzZXlCdXEwUkRz?=
- =?utf-8?B?U3BCOWtkYnVvOU5BbVd0bk44eXZOTzlMelFhYWlGZ3BVYWtHSXZzdFpWeFdv?=
- =?utf-8?B?MWEySmU3WWxJd1JJdUVzTkpSYkg1cU9zY2U5R0tFRERYNmlDb3hWbDVZVUZV?=
- =?utf-8?B?NlRSUHdtZkRUdjcwSU1zdm4zR2xLRWZwWGFZby80ZnRuSWR6OFd3U0Vpbmxs?=
- =?utf-8?B?SGM4eUk0VXFscGF2UHE3dmcvL2Ivb1p6ZXM3WnVSa0FvdzdHSmg1MTZsN2ZH?=
- =?utf-8?B?c0hSdk9iL0tXMXN1ODM2ZndjWDhYbXRIeVNRSmd2eExRZVh3NEU4TUJBeG9p?=
- =?utf-8?B?YnZKU3Z2dG1pdFpmNlVBUWtQOUVqTVVNVmUxWDN5bUxOeEhwNk90clYwMEZO?=
- =?utf-8?B?Q0FJdGQ4THZxQnE5YlZYbUdlT2Uwdmc2NUtjYUN3SWpxdTgvOEs3ZGUzWFdw?=
- =?utf-8?B?MzFhbjJxbGZDY094dDNvb2lRamd1d2dmRGtSakdzbjcrVzBUUy9VeHdXZkJH?=
- =?utf-8?B?K3hPLzVoMHJsclFFYlkzV29Gd1JNMjdvbUgwbGJGdFFWMFlBaHFhYXVBaXhO?=
- =?utf-8?B?NXVOSUFGOHF5ZkRmeC9SeXJ5STgzSEpZOFNrZXNWT2phUXVSb2lpMVBIa1Rx?=
- =?utf-8?B?OGRrQ0Q3S0JoY1dsbUtFVlp2ekpveTBRVkM3QVZNOFprSVY4ditXMnRiYi9M?=
- =?utf-8?B?dVpKLzZ0QUYwS1hHMzZUZi83dkJkbHIreEdCYm1rNjRxb2NXZDZGYTZXY3RH?=
- =?utf-8?B?OWRtTEVGQzNtVmdYaWQxbjdvNzk1QTVnK2pWUVFIOVprcy91TnVrMEdhQ2dm?=
- =?utf-8?B?VTdxcURLV3BReVBUTHF5Z0JGblZaY1NVaHRveDhjOG5NblB2UHBwTXZseGw2?=
- =?utf-8?B?c0kwWGRmQUJ6Y210MlF4VnJUSy92Q0dVMmYweU0rUGp4V3d4Uy9TTlR1Vks4?=
- =?utf-8?B?K3h4V1NJaHg2dGxYL0hqazhTY3dKTTNNMDlqQnZtUFdrZnVGWkVPMDdZZkR5?=
- =?utf-8?B?aWdHYVlRbUdxYnB2cWtBazNUTEdxSm5nbENMNHA2dUY0MXJESHZOY25xUUs0?=
- =?utf-8?B?RS9xeUJXTmpVbDByUThGUEFJcW1RS3ptbXpVY1c5d2w1dFJQTEg2bnU5WXR6?=
- =?utf-8?B?ZGY1bEFFWUtiQlQxZDM2ZkYxUkR2cXYreURVd3REdHZxdzZ0RTdZZXpLVUJs?=
- =?utf-8?B?M2pQb3NtOGhKV2ZlWVk4dWJPUkxkeThFODhTa1JoQU1nTDVxeXVodklwUmoy?=
- =?utf-8?Q?CGnSnNYXPp1FUCU2nSVpWGk7z?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E721053C4D78AD48A90C8615FB6C0799@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?nJQIrIbADy1jqVjHEMa++0OGUxO5z/JoSBC7U8xG22vtJettJUWT86KnKt?=
+ =?iso-8859-2?Q?B0125cUMlO01nxB9rjaWudz8eRi/pGBtdj0Izf6TttSPRtTmbRFKyxzdhp?=
+ =?iso-8859-2?Q?UCE0xL6p0wvWx7tETLDD6zRqiC5fFHe9WtITQQVLxQCr+n4maxr7zmx7gX?=
+ =?iso-8859-2?Q?rx/5pdqPJym88cF5uq2x/nb7oGUu2aTXb8eSeQlxuHLwhDhWr+QWt/ZYDL?=
+ =?iso-8859-2?Q?nKEwPlBGw8BVOvRNG3xZDbK3X899QPuNVLD5z85E0GS7PGN5ExWImJteVe?=
+ =?iso-8859-2?Q?bSqPpRXsriTuSYlZVZucA7Ns3+v7PavJHodO6xN683TTEU+tP0yFlGK/vk?=
+ =?iso-8859-2?Q?G/HFpa71RFKIlaaqLWuUq1zJjavUn+eLnw+32UfoEFQqImKAp5HcEALqP9?=
+ =?iso-8859-2?Q?w9PLHeWvFuotM4t+1vB99lacwSrhUFv0EFSg3yiI0wbLC/FxYCkiDz+p9K?=
+ =?iso-8859-2?Q?or07A8Zwux+KFAT+O5m5iXGY1kKh775UZfEEo7dlL/U9MI1dqcaUGAdD83?=
+ =?iso-8859-2?Q?MdItaZSjqTx91dM+Nu9SpGgM7UdB2Mk/oUEHADlqvGroYD0dalP/NfCus7?=
+ =?iso-8859-2?Q?KIlXkBO7msKkbnnB1Pxgkzm4GEMm9OlnpAWeYMAtgKe9ZHXbT1PkAC22Hf?=
+ =?iso-8859-2?Q?lVMu/h+AputIG6MZFblUpiqAsidwt9bz8YqEMeftCGncDywXZoJNHTcMx5?=
+ =?iso-8859-2?Q?lmV8TAhZp63JwwphdnwCpx+Ij3kHD4NqJHVJ7LSdPDwlH+JRLTuuZqehdC?=
+ =?iso-8859-2?Q?cWbpPJ5XfuuiUdKPwAjbmkzx2UXr63gH/FyQu8JcHZnqspuHtGbbXqsOf/?=
+ =?iso-8859-2?Q?MvM37huXUIE52upT1s2JPKSOiODHTGgAPxgJVUN+iuRgPjHzItCNreV0P9?=
+ =?iso-8859-2?Q?H78fRokkp3/lQltlHATpeGDikaMi1TGPLO94Xu9bUftgQ0vF0ZUQNzTNa/?=
+ =?iso-8859-2?Q?ubrKu5XfliO5bvI2MB6x5FhOxQ38vVPyRKhP5YV6Rx2XHILUpFGvY+AmZG?=
+ =?iso-8859-2?Q?r2P4DfwtIuqbdXfjVBLfo+LHEmnHPDQ5gn9U7fbA6j8a7awSmt32ocz2J5?=
+ =?iso-8859-2?Q?UtwQDLhlSBKAtKdP9BAcwwv+YhDH524+YaZn+nvEKrNyEFX5tApkJm2VTr?=
+ =?iso-8859-2?Q?miOPyyDoALcuB2ODqW8L47KIIYChal/qXbduXkiNQNIktLD8AQdKw+4OoD?=
+ =?iso-8859-2?Q?RYeieginT6x4GwY9JPlaopYw+jhdaZ4N3GQ1HcMACbufWZCZ05ZuYIFcd4?=
+ =?iso-8859-2?Q?VkFIiyWdImAZkmB7Wt3gFl95WBdfmBWNu5Ml68AOv3GUHOvKX6Tso4bN3l?=
+ =?iso-8859-2?Q?k5ynH2KfiQ5nUf87pl8F/U6IXVtQ42ezW5R6VvSG+tcYP20/Uo4g0d8g/g?=
+ =?iso-8859-2?Q?nV7HSLSEzJdMGCxHEYQBZtjmt9EtxDJz2eDsUWlzf0cHnNCQe43DQyCaWP?=
+ =?iso-8859-2?Q?hdgsQwdEtGxqFAmbXAalXx7XhcI66UrwQfCXKzXZi8zi3mnI7H5sZYZlxi?=
+ =?iso-8859-2?Q?L74eK/2efJKRuE4Ee39bNyyNHElPX12aJyEGToxNB5KDuxkni9+Pp611GS?=
+ =?iso-8859-2?Q?0wV5rPUP1uEF4RxKD4kteBd6b35EHBBnJ6i3BfaQkLeRnNKipr3a5oCe93?=
+ =?iso-8859-2?Q?12Cfh1jadWwTY=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5160.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ab115f7-a06e-49aa-f418-08da5f47427e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2022 12:01:28.8803
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9186.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7af5c55-83f7-4060-3429-08da5f5bd2fc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2022 14:28:41.2596
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dD71QgE4m/mdnvDVHd2Bvgs4t5I0BpUmb6Q6D2Famj9IejgCK9IuyJF2alV/12yENIMoGwu9f0nZh/vej+RpFT3rLMEI/u/uyyvFoq2tVRc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2600
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-userprincipalname: oD6sRY4+v8i3KHq17Tkl2Bhsms3ghcOBAdgheVVU4cDLFEY2/W17S9XLH7QgA26MLGkfFl0ZIfmK6MbpuSVYPg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8842
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,PDS_BTC_ID,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-T24gMDYvMDcvMjAyMiAxMjo1NSwgRGFtaWVuIExlIE1vYWwgd3JvdGU6DQo+IE9uIDcvNi8yMiAx
-NzowMywgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KPj4gSGkgQ29ub3IsDQo+Pg0KPj4gT24g
-VHVlLCBKdWwgNSwgMjAyMiBhdCAxMTo1MiBQTSBDb25vciBEb29sZXkgPG1haWxAY29uY2h1b2Qu
-aWU+IHdyb3RlOg0KPj4+IEkgKkRPIE5PVCogaGF2ZSBhbnkgQ2FuYWFuIGhhcmR3YXJlIHNvIEkg
-aGF2ZSBub3QgdGVzdGVkIGFueSBvZiB0aGlzIGluDQo+Pj4gYWN0aW9uLiBTaW5jZSBJIHNlbnQg
-djEsIEkgdHJpZWQgdG8gYnV5IHNvbWUgc2luY2UgaXQncyBjaGVhcCAtIGJ1dCBjb3VsZA0KPj4+
-IG91dCBvZiB0aGUgbGltaXRlZCBzdG9ja2lzdHMgbm9uZSBzZWVtZWQgdG8gd2FudCB0byBkZWxp
-dmVyIHRvIElyZWxhbmQgOigNCj4+PiBJIGJhc2VkIHRoZSBzZXJpZXMgb24gbmV4dC0yMDIyMDYx
-Ny4NCj4+DQo+PiBEaWdpLUtleSBkb2VzIG5vdCB3YW50IHRvIHNoaXAgdG8gSVJMPw0KPj4gVGhl
-IHBsYWluIE1BaVggQmlUIGlzIG91dC1vZi1zdG9jaywgYnV0IHRoZSBraXQgaW5jbC4gYSBkaXNw
-bGF5IGlzDQo+PiBhdmFpbGFibGUgKDk3IGluIHN0b2NrKS4NCj4gDQo+IFNlZWRzdHVkaW8gaXMg
-b3V0IG9mIHN0b2NrIG9uIHRoZSBNQUlYIGJpdCwgYnV0IHRoZXkgaGF2ZSBtYWl4ZHVpbm8sIHdo
-aWNoDQo+IGlzIHRoZSBzYW1lLCBhbG1vc3QgKHBpbiB3aXJpbmcgZGlmZmVycywgZXZlcnl0aGlu
-ZyBlbHNlIGlzIHRoZSBzYW1lKS4NCg0KSSBwaWNrZWQgb25lIHVwIGZyb20gRGlnaUtleSB0aGlz
-IG1vcm5pbmcuIFdvdWxkYSBiZWVuIG5pY2UgaWYgdGhleQ0KdXNlZCBzb21lIG9mIHRoZSBrMjEw
-IHJlbGF0ZWQgd29yZHMgaW4gdGhlIGRlc2NyaXB0aW9ucyBmb3IgdGhlIHNha2UNCm9mIHRoZWly
-IHNlYXJjaCBlbmdpbmUhDQoNCj4gaHR0cHM6Ly93d3cuc2VlZWRzdHVkaW8uY29tL1NpcGVlZC1N
-YWl4ZHVpbm8tS2l0LWZvci1SSVNDLVYtQUktSW9ULXAtNDA0Ny5odG1sDQoNClRoaXMgd2FzIGFj
-dHVhbGx5IG91dCBvZiBzdG9jayB3aGVuIEkgbG9va2VkLg0KICANCj4gQW5kIHlvdSBjYW4gc3Rp
-bGwgZmluZCBwbGVudHkgb2YgTUFJWCBiaXQgb24gQWxpZXhwcmVzcyB0b28uDQoNCkkgZHVubm8g
-aG93IGl0IGlzIGZvciB5b3UsIGJ1dCBJIGZpbmQgdGhhdCBzb21ldGltZXMgb24gQWxpIHRoZXkN
-CmRpc2xpa2UgbXkgYWRkcmVzcyBhbmQgdGhhdCB3YXMgdGhlIGNhc2UgZm9yIHRoZSBib2FyZHMg
-SSBjaGVja2VkDQpvbiBBbGkuDQoNCkVpdGhlciB3YXksIGl0J3MgQWxpIGFuZCBhIG1lcmdlIHdp
-bmRvdyB3b3VsZCBjb21lIGFuZCBnbyBiZWZvcmUNCkknZCBnZXQgaXQhDQoNCg==
+
+
+> -----Original Message-----
+> From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Sent: Wednesday, July 6, 2022 12:43 AM
+> To: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Serge Semin <fancer.lancer@gmail.com>; Alexey Malahov
+> <Alexey.Malahov@baikalelectronics.ru>; Pavel Parkhomenko
+> <Pavel.Parkhomenko@baikalelectronics.ru>; Krzysztof Wilczy=F1ski
+> <kw@linux.com>; linux-pci@vger.kernel.org; dmaengine@vger.kernel.org;
+> linux-kernel@vger.kernel.org; Gustavo Pimentel
+> <gustavo.pimentel@synopsys.com>; Vinod Koul <vkoul@kernel.org>; Rob
+> Herring <robh@kernel.org>; Bjorn Helgaas <bhelgaas@google.com>; Lorenzo
+> Pieralisi <lorenzo.pieralisi@arm.com>; Jingoo Han <jingoohan1@gmail.com>;
+> Frank Li <frank.li@nxp.com>; Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org>
+> Subject: [EXT] RE: [PATCH v3 19/24] dmaengine: dw-edma: Use non-atomic
+> io-64 methods
+>=20
+> Caution: EXT Email
+>=20
+> Hi,
+>=20
+> > From: Serge Semin, Sent: Friday, June 10, 2022 6:15 PM
+> >
+> > Instead of splitting the 64-bits IOs up into two 32-bits ones it's
+> > possible to use an available set of the non-atomic readq/writeq methods
+> > implemented exactly for such cases. They are defined in the dedicated
+> > header files io-64-nonatomic-lo-hi.h/io-64-nonatomic-hi-lo.h. So in cas=
+e
+> > if the 64-bits readq/writeq methods are unavailable on some platforms a=
+t
+> > consideration, the corresponding drivers can have any of these headers
+> > included and stop locally re-implementing the 64-bits IO accessors taki=
+ng
+> > into account the non-atomic nature of the included methods. Let's do th=
+at
+> > in the DW eDMA driver too. Note by doing so we can discard the
+> > CONFIG_64BIT config ifdefs from the code. Also note that if a platform
+> > doesn't support 64-bit DBI IOs then the corresponding accessors will ju=
+st
+> > directly call the lo_hi_readq()/lo_hi_writeq() methods.
+> >
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Reviewed-by: Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org>
+> > Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/dma/dw-edma/dw-edma-v0-core.c | 71 +++++++++------------------
+> >  1 file changed, 24 insertions(+), 47 deletions(-)
+> >
+> > diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-
+> edma/dw-edma-v0-core.c
+> > index e6d611176891..4348d2323125 100644
+> > --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> <snip>
+> > @@ -417,18 +404,8 @@ void dw_edma_v0_core_start(struct
+> dw_edma_chunk *chunk, bool first)
+> >               SET_CH_32(dw, chan->dir, chan->id, ch_control1,
+> >                         (DW_EDMA_V0_CCS | DW_EDMA_V0_LLE));
+> >               /* Linked list */
+> > -             if ((chan->dw->chip->flags & DW_EDMA_CHIP_32BIT_DBI) ||
+>=20
+> I'm trying to use this patch series, but I could not apply this patch.
+> I investigated why, and then IIUC the DW_EDMA_CHIP_32BIT_DBI flag
+> doesn't
+> exist on the following based patches:
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpatch
+> work.kernel.org%2Fproject%2Flinux-pci%2Fcover%2F20220624143947.8991-
+> 1-
+> Sergey.Semin%40baikalelectronics.ru%2F&amp;data=3D05%7C01%7CFrank.Li%
+> 40nxp.com%7C44fc7f7d7f844fb10b4a08da5f125456%7C686ea1d3bc2b4c6fa
+> 92cd99c5c301635%7C0%7C0%7C637926829585015681%7CUnknown%7CTWF
+> pbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXV
+> CI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=3DnwJEnsQoej4RzpY9ZTDfOwh
+> on%2BzjXz48Xx5Yz5WAR2w%3D&amp;reserved=3D0
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpatch
+> work.kernel.org%2Fproject%2Flinux-
+> dmaengine%2Fcover%2F20220524152159.2370739-1-
+> Frank.Li%40nxp.com%2F&amp;data=3D05%7C01%7CFrank.Li%40nxp.com%7C4
+> 4fc7f7d7f844fb10b4a08da5f125456%7C686ea1d3bc2b4c6fa92cd99c5c301635
+> %7C0%7C0%7C637926829585015681%7CUnknown%7CTWFpbGZsb3d8eyJWI
+> joiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3
+> 000%7C%7C%7C&amp;sdata=3DrNV74hncfbxxb4crPA2PGfkeIW68GBOiv58Q1yC
+> heUo%3D&amp;reserved=3D0
+>=20
+> According to the comment from Zhi Li [1], the flag can be skipped by the =
+fixed
+> patch [2].
+> That's why the flag doesn't exist on the based patches.
+>=20
+> [1]
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpatch
+> work.kernel.org%2Fproject%2Flinux-
+> dmaengine%2Fpatch%2F20220503005801.1714345-9-
+> Frank.Li%40nxp.com%2F%2324844332&amp;data=3D05%7C01%7CFrank.Li%40
+> nxp.com%7C44fc7f7d7f844fb10b4a08da5f125456%7C686ea1d3bc2b4c6fa92c
+> d99c5c301635%7C0%7C0%7C637926829585015681%7CUnknown%7CTWFpb
+> GZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6
+> Mn0%3D%7C3000%7C%7C%7C&amp;sdata=3DQ%2Bx5IxIaQyS1oVZEoNXEL2X4
+> SAB0ffO2NjMrUT3MGho%3D&amp;reserved=3D0
+> [2]
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit.k=
+er
+> nel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fvkoul%2Fdmaengine.git
+> %2Fcommit%2F%3Fh%3Dfixes%26id%3D8fc5133d6d4da65cad6b73152fc714a
+> d3d7f91c1&amp;data=3D05%7C01%7CFrank.Li%40nxp.com%7C44fc7f7d7f844f
+> b10b4a08da5f125456%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7
+> C637926829585015681%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAw
+> MDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C
+> %7C&amp;sdata=3DnGZetYm3da8Vj4adPAXZV7Rr0kXvcliW%2B0PlwOmsnsg%3
+> D&amp;reserved=3D0
+>=20
+> Since both codes in #ifdef and #else are the same, we can just remove cod=
+e
+> of the #else part.
+> But, what do you think?
+> -----
+>                 #ifdef CONFIG_64BIT
+>                 /* llp is not aligned on 64bit -> keep 32bit accesses */
+>                 SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
+>                           lower_32_bits(chunk->ll_region.paddr));
+>                 SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+>                           upper_32_bits(chunk->ll_region.paddr));
+>                 #else /* CONFIG_64BIT */
+>                 SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
+>                           lower_32_bits(chunk->ll_region.paddr));
+>                 SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+>                           upper_32_bits(chunk->ll_region.paddr));
+>                 #endif /* CONFIG_64BIT */
+> -----
+>=20
+
+Latest Linux-next code have removed CONFIG_64BIT.=20
+
+Best regards
+Frank Li
+
+> Best regards,
+> Yoshihiro Shimoda
+>=20
+> > -                 !IS_ENABLED(CONFIG_64BIT)) {
+> > -                     SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
+> > -                               lower_32_bits(chunk->ll_region.paddr));
+> > -                     SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+> > -                               upper_32_bits(chunk->ll_region.paddr));
+> > -             } else {
+> > -             #ifdef CONFIG_64BIT
+> > -                     SET_CH_64(dw, chan->dir, chan->id, llp.reg,
+> > -                               chunk->ll_region.paddr);
+> > -             #endif
+> > -             }
+> > +             SET_CH_64(dw, chan->dir, chan->id, llp.reg,
+> > +                       chunk->ll_region.paddr);
+> >       }
+> >       /* Doorbell */
+> >       SET_RW_32(dw, chan->dir, doorbell,
+> > --
+> > 2.35.1
+

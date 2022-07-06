@@ -2,139 +2,136 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0292567E04
-	for <lists+dmaengine@lfdr.de>; Wed,  6 Jul 2022 07:51:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F22C567E16
+	for <lists+dmaengine@lfdr.de>; Wed,  6 Jul 2022 07:58:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230078AbiGFFvY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 6 Jul 2022 01:51:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37418 "EHLO
+        id S229809AbiGFF60 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 6 Jul 2022 01:58:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230320AbiGFFvW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Jul 2022 01:51:22 -0400
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-eopbgr70084.outbound.protection.outlook.com [40.107.7.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D36422287;
-        Tue,  5 Jul 2022 22:51:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=giDBg6ExWLsFux0Ao14HjXXDltJGhfsEGdRMW12ewkrYDshaS9rqKukc6c+qK9wUYealUp0vi2QXnnZCqCKsMitOJQyIah2BJenKj6XbAVEYZIweV6Oo/JnxMMDkapSGleqd3WId78j7mA0YBxvUzSWs2pkgItkCSxXScimGJPR8b4XsSrsICPWlX1E6+ullGoBSeu/nRsEueXkG0Gi78xgQR3Xw+PoX7ypg2zugSG92hzvZ3FgBZHl5EXRAFTQZvX2oH+ET7Ev46xAWRAnFp/esQQAYVblQwybzZZ+UWxWOOWZhCpUqL7vctq/7PP3Qrd2hew+Cucy7JgnVhwBMKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JAZbX+jexagy0SM/k2K+24QhV+7AtzHFiaWSBseadM8=;
- b=UKEjPFtg6ggV23WcNF230qRO6aIg+Kk5880XT4xQAKDM6PxYh0lZNgUodsFWlKq8Pi3JZP+OaDZL8nC7JxwsaUEinAwO2psB6F/OHfDJSLS83utFLG4+tFidGuWFEhCp2xlU0InD2/Hl81m0NahKeaLkls9nr5QHfbnrBvnznpklSL/Md0wTKe4T/NDF2nWROoDoqb3QYGaTrXNMbhY068iSEMlNnS7Qwk3BYWnY9zB5uSsLKRHKHmJqNYtDcJZDPrigJ5Wqw5RbY0qV5uAM8CBgdzC8ACLMhtZh8f8VKC5ClRNfj1pyg6IRpMFMa3NwZv3NCmC1LyqUtIu9KUT4yw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JAZbX+jexagy0SM/k2K+24QhV+7AtzHFiaWSBseadM8=;
- b=ESDCLBeMR18DhzDp39vwPIyWZoqaVvINgWdpXUMDNuIoPnPsqEFDOgVGzW0nfr/DqK185uVYYtLWmhyWn2VavFx4TLFl/xiKf2Xlor1u8WB6HZTDL15lcsODvxDXg1F636hTQ+JmG53bpwVRL5teoOjU3oWxqghw7hIYtuqe+WA=
-Received: from PAXPR04MB9089.eurprd04.prod.outlook.com (2603:10a6:102:225::22)
- by PAXPR04MB8349.eurprd04.prod.outlook.com (2603:10a6:102:1bd::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.21; Wed, 6 Jul
- 2022 05:51:18 +0000
-Received: from PAXPR04MB9089.eurprd04.prod.outlook.com
- ([fe80::81e8:14b3:6b82:a027]) by PAXPR04MB9089.eurprd04.prod.outlook.com
- ([fe80::81e8:14b3:6b82:a027%2]) with mapi id 15.20.5395.019; Wed, 6 Jul 2022
- 05:51:18 +0000
-From:   "S.J. Wang" <shengjiu.wang@nxp.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dmaengine: imx-sdma: Fix compile warning 'Function
- parameter not described'
-Thread-Topic: [PATCH] dmaengine: imx-sdma: Fix compile warning 'Function
- parameter not described'
-Thread-Index: AdiQ/GfzadBrtjBZQdOQwU8pe0FBTw==
-Date:   Wed, 6 Jul 2022 05:51:18 +0000
-Message-ID: <PAXPR04MB90898349568E2DC555036951E3809@PAXPR04MB9089.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7bab707d-7fd1-438b-5448-08da5f138bff
-x-ms-traffictypediagnostic: PAXPR04MB8349:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GyCHUH1KMNNOkQ5hdzccvTWUh5zMEm0HPionHO8mBrcvzOPuzMuMC9h4Pulme5NGuyW3WL1vLFWq8mUz7CY8i7bvp2/a9fhB/yBZNFDvD/PfWcAiQv/awXaF2rJ0HWayZBlAR0Nz/O0wa0r/rwi+4G9Z4QUbdZJTdq4XtqXY69GWsjfoujsZjT5AyUm0fIvL38HcIaeFgJH3R92FoYOb+QV2UUxMzEcIH8ZZvdVDY3q31z3wQ/h1reARd7Yq1PzlQAstS3bS+omWotf+yjreeEVWgBN4JdZRpaKIVzKQ5t/Z5PngrlcpWIedaHgV0OTPfd5jxyRxiIEgJ0gAxWccg/+JDL0gYcf7w79yuecFCRVfECt17o7a/XfC2cFhz5mUztwl0hFbKOIZPt+4X0DLk44HqDN66MPL/CHPyScTYkocA+OQgi9pBvcne5Vz5GR1+/4+oKyPLTBmCTlAM9hcl3DV6iFAUAxg5oe9Gm/uhp83cuhjk2TxnvPEE9b75H8RDE5O6jmEhEkOl8jJ7ZP4b5d3ie9eK4MZR8FHwdE9QIgF66Ns5vYydMGTbwMhx5U4VZesKjbuoE4dx5UgjvaHAmK4h9Tr41vfCSb2b6Ty0EdopjLLYXmqIHBoTHbQhzK1EHSNRLJ16HFH4bkIaq2+YF2ZjByQelZ7DqbNfxKs5rebuorvgIg08Oi+GCYtBF3rMJZnA8xNmS6Qbk3DdeZg3QWc4b6OigC+hsqWowJNj1IvDCHJxMiBMNWWoDNAFa3HVOwrzUvJYXm/j5bo3K2j0+60ZY5JgwITrJ8Xjzdonu5E8lLr7cEPLNltIj6XWo5E
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9089.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(346002)(39860400002)(396003)(136003)(366004)(2906002)(66556008)(66446008)(64756008)(76116006)(66946007)(4326008)(33656002)(8676002)(4744005)(71200400001)(52536014)(66476007)(8936002)(83380400001)(55016003)(86362001)(5660300002)(41300700001)(26005)(9686003)(7696005)(186003)(38070700005)(478600001)(122000001)(6506007)(38100700002)(316002)(54906003)(6916009)(53546011);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?XUcAVbn25m+tQ5H+IAk6TvD3HLf93zJ6ul6iP8ZZO3wRRW8ekyqFCvGDtJaM?=
- =?us-ascii?Q?JgP7ics+8PQRmEUg11SAc9Uyq3+qc4AWczl8rSW1uCQVolXF1y7/rD6STR8c?=
- =?us-ascii?Q?Lr1tsZUWw35iRiUtkLPUq0xWa7cRn/ujjSkGP2X3GsEh0KnPHXftlAoCogxF?=
- =?us-ascii?Q?WbWRD9GhJOzWmwY/xtETwHAPsZV8nVYrBhdeRsgCh1SQ5vEZWxX0h9afD7uI?=
- =?us-ascii?Q?vdLWtQvDea+kPjrRYJaQCPW08uVArQuPfA6z0chgs9VJP82nXZO1GHJQ+8QU?=
- =?us-ascii?Q?jtk1xCZ7ayzenfJj5XLgTnzs0e3PQRlS1+bZZxzH1YBXtRVv1Q5h2JPR9q72?=
- =?us-ascii?Q?6Gjh1IHsLaIT6qXOdQxiwe/y2nEmrhmWnE9tYfBb8113d1mcr0pcjcx76bpb?=
- =?us-ascii?Q?i/wE1mPvi4cACf/4RHa20hGQz+T/UkvyqXsn5X6kYXlXHj0SYVAfim6hQ4Zd?=
- =?us-ascii?Q?ff4yb4GHBc8bYwtY7bn6m8VxXAAH6utCoSCVEm1A4VlxSW4uWXIOxrvp8938?=
- =?us-ascii?Q?4wdkl0Rgym+Kpu7budkmCLf5hE6kHMBNqGfa2F8WYO+P2E+e8TIjlslMX2Ka?=
- =?us-ascii?Q?3fihs3k2LGHFfy+BbAXIUViP4ACmsYg1PsWUTChSAZKFSTlnmTwHqRdSDS4m?=
- =?us-ascii?Q?0gONNnmmC8Fxe28D2QvITuqyULOxmgWSB12EqlzwYsB57VmN1fnxycbbkIa+?=
- =?us-ascii?Q?RMj/GbT69jKwCiHw1mMhj0ND2YVpVLXIK/Bw+C2UEiSwBgLHSGCoW0VdTX9G?=
- =?us-ascii?Q?GWwdw/1C8YQiNHJTrY1ai1SqTmNwBjQLpyERvcrtKnnRH+FUR2BHyFCCnrrx?=
- =?us-ascii?Q?jKZAuKDgit5krF2hVesqjgXAzsxNEzmdy0Uxm5TLjYL/c1xKaHZJKEzXv0iC?=
- =?us-ascii?Q?oZw1aYhrDi24fOPx2FyfOQU28JhtsVBVtKuxm9cutKuuL7rPNlvDi+vgLOl5?=
- =?us-ascii?Q?Gs2chtj3Rf3pjV8kmHoMtWN1s+lr+GN75yr5Ep260oFEk01924vZcts+BPOG?=
- =?us-ascii?Q?HkMhwC9eZu/T+mNv19280lOfrzHz3mJmlgJJ7XCRdJGqZrFQ1zAe6/4MseJQ?=
- =?us-ascii?Q?qXDavEFYd9Leh/trL/aP/64zDPRz63WFnWyFz2eiSR+Nw7s6SkBGPamUZoRe?=
- =?us-ascii?Q?IvXY/I2idHZVKTqpDXFujmTe7IOMA94hD3d1BvTNFyWWkBTPvreytIDlgnUK?=
- =?us-ascii?Q?MWot9qm5JaeCU98bndjIA7lCVt/i0YqceDkRe+wNpg/ePfS9kW8R/l37+zCK?=
- =?us-ascii?Q?o+H3VHL7mISd2wescs75mdcZYZDDB5DSao2WEnVTLXRA7Il4lHhAIQLPDQgU?=
- =?us-ascii?Q?3xGMvNfHEOe0bPAzBOlWRBzHud7tyBpwV4GowkiZCURBZMnyBeTkx6Fv5gGA?=
- =?us-ascii?Q?hfuoshRrhf8azNnNAQ0fpp4itnYACYpIcfAEYY4j6Vg5UhaAA0AevL25NKrD?=
- =?us-ascii?Q?qSIJJ9cco032JWkp4Wx35vggAKabQqs7dhEckV009GoeutuqWC0Um/rieQZV?=
- =?us-ascii?Q?PY6PSHDqQuNMryxP6lVCKe318eKUXUBvn3irQ8GyfojfAmnkefoLW2EXN64u?=
- =?us-ascii?Q?PSvlUAm8PsW8zpM7B7rSmR0OdA0Igf2QU4ZE6odb?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S230189AbiGFF6X (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Jul 2022 01:58:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0FAA2E5;
+        Tue,  5 Jul 2022 22:58:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 57F8B61CEE;
+        Wed,  6 Jul 2022 05:58:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0D38C341C0;
+        Wed,  6 Jul 2022 05:58:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657087101;
+        bh=x5rdNaA7jxDXFflwQxwmKDOgRnnU8SdteU9MiDOP+mU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GONWvW/bUf+5bM/x3TOItlAGDjJl/YXD0eLmvYki8dcUsPtkZoQNa+ipnArq3v4l/
+         XJRGDjrU1FlEk/sHspRfADeLSEs3C4sLK9Il612wZQ9/YXY2eiEupFfepElS2Ud5eU
+         iT4qwIKKvZgBjETDft+CcNwo7plf1nKwoDcn8RGYN5nWCkB/60KnlFH9axFNnznsQO
+         xan8uKsDz9kkXu4n1WmM2Z6b+5c86K/2TL4RxedrTrxpV5E0SPo10iV18BPVuobT/q
+         io0DSgoq1+lBnIwPt1Re+avRaCVMST2FSN7mKy2tPaxsO9vTznzis/qmtLw3ISo/k/
+         aM+2//10G/iXQ==
+Date:   Wed, 6 Jul 2022 11:28:17 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Cc:     linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4] dmaengine: mxs: fix driver registering
+Message-ID: <YsUkeWXkZhrOrc8h@matsya>
+References: <20220621123659.1329854-1-dario.binacchi@amarulasolutions.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9089.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7bab707d-7fd1-438b-5448-08da5f138bff
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2022 05:51:18.3505
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /PSCSV44LOl3AtcKQ33nhDiXMO7B0pRS4Uzp9PtmzyDhUwlfkdWAts8QaEYALwMVgWEcrKQBY3jnHP/av6hF1A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8349
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220621123659.1329854-1-dario.binacchi@amarulasolutions.com>
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
->=20
-> On 18-05-22, 15:21, Shengjiu Wang wrote:
-> > Fix compile warning that 'Function parameter or member not described'
-> > with 'W=3D1' option:
-> >
-> > There is no description for struct sdma_script_start_addrs, so use /*
-> > instead of /**
-> >
-> > Add missed description for struct sdma_desc
->=20
-> Patch title should describe the change, so add struct documentation etc
-> would be apt. Pls revise
->=20
-Ok,  will update it v2.
+On 21-06-22, 14:36, Dario Binacchi wrote:
+> Driver registration fails on SOC imx8mn as its supplier, the clock
+> control module, is not ready. Since platform_driver_probe(), as
+> reported by its description, is incompatible with deferred probing,
+> we have to use platform_driver_register().
 
-Best regards
-Wang Shengjiu
+Pls revise title to reflect the changes added and not the effect
+
+Btw lots of driver work like this, they use platform_driver_probe() but
+make the clk and other resources do earlier init levels. This change is
+fine too...
+
+> The addition of the `_probe' suffix to the `mxs_dma_driver' variable was
+> suggested by the following modpost warning:
+> 
+> WARNING: modpost: vmlinux.o(.data+0xa3900): Section mismatch in reference from the variable mxs_dma_driver to the function .init.text:mxs_dma_probe()
+> The variable mxs_dma_driver references
+> the function __init mxs_dma_probe()
+> If the reference is valid then annotate the
+> variable with __init* or __refdata (see linux/init.h) or name the variable:
+> *_template, *_timer, *_sht, *_ops, *_probe, *_probe_one, *_console
+
+that should be always a separate patch
+
+> 
+> Fixes: a580b8c5429a ("dmaengine: mxs-dma: add dma support for i.MX23/28")
+> Co-developed-by: Michael Trimarchi <michael@amarulasolutions.com>
+> Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> Cc: stable@vger.kernel.org
+> 
+> ---
+> 
+> Changes in v4:
+> - Restore __init in front of mxs_dma_probe() definition.
+> - Rename the mxs_dma_driver variable to mxs_dma_driver_probe.
+> - Update the commit message.
+> - Use builtin_platform_driver() instead of module_platform_driver().
+> 
+> Changes in v3:
+> - Restore __init in front of mxs_dma_init() definition.
+> 
+> Changes in v2:
+> - Add the tag "Cc: stable@vger.kernel.org" in the sign-off area.
+> 
+>  drivers/dma/mxs-dma.c | 10 +++-------
+>  1 file changed, 3 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
+> index 994fc4d2aca4..4c878bf1e092 100644
+> --- a/drivers/dma/mxs-dma.c
+> +++ b/drivers/dma/mxs-dma.c
+> @@ -834,15 +834,11 @@ static int __init mxs_dma_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -static struct platform_driver mxs_dma_driver = {
+> +static struct platform_driver mxs_dma_driver_probe = {
+>  	.driver		= {
+>  		.name	= "mxs-dma",
+>  		.of_match_table = mxs_dma_dt_ids,
+>  	},
+> +	.probe = mxs_dma_probe,
+>  };
+> -
+> -static int __init mxs_dma_module_init(void)
+> -{
+> -	return platform_driver_probe(&mxs_dma_driver, mxs_dma_probe);
+> -}
+> -subsys_initcall(mxs_dma_module_init);
+> +builtin_platform_driver(mxs_dma_driver_probe);
+> -- 
+> 2.32.0
+
+-- 
+~Vinod

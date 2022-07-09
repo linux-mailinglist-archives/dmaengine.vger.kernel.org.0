@@ -2,197 +2,156 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A505856C77B
-	for <lists+dmaengine@lfdr.de>; Sat,  9 Jul 2022 08:12:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 032BE56C80C
+	for <lists+dmaengine@lfdr.de>; Sat,  9 Jul 2022 10:31:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229460AbiGIGMu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 9 Jul 2022 02:12:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55472 "EHLO
+        id S229491AbiGIIbd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 9 Jul 2022 04:31:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbiGIGMt (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 9 Jul 2022 02:12:49 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A374666AEF;
-        Fri,  8 Jul 2022 23:12:47 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id e12so950183lfr.6;
-        Fri, 08 Jul 2022 23:12:47 -0700 (PDT)
+        with ESMTP id S229460AbiGIIbd (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 9 Jul 2022 04:31:33 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F9C4528A1
+        for <dmaengine@vger.kernel.org>; Sat,  9 Jul 2022 01:31:32 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id fz10so919677pjb.2
+        for <dmaengine@vger.kernel.org>; Sat, 09 Jul 2022 01:31:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:content-language:to:cc
-         :references:from:subject:in-reply-to:content-transfer-encoding;
-        bh=CAr6PXij8tLxjGYasxbxW8UJNAWj4rRkL9bczqgvOqs=;
-        b=ahvq0jFq/8eIsZfH5uDHlzOEH6ghI7wpdydBnQQoiLM+4CzYBQJxc1e7RuXa5sfLHJ
-         m7tIi2V5kYGjmcWZ3SeD9b5FMElTRcrt5Ea/v3LT5euggeG7K+2W4+E7gbXd78JJfFAl
-         R0eepQwCQ0pEI1ngZluHW2ndELCqtv+gubYEKSxLnjlleZYWPWpkYBRKTfISHtsUNQyf
-         OrSwnIJqNjaUxUxrKadA50bWkjGTdlwqK3HDFiWwp5xpqcQXRKKeM37Ohl/QNbSuT2XV
-         PYNkCpW5jk/Zeyh/qvpw4vd2QTQfPy46OuzNdPgvdgkgJ2wHd8qzx9jQ7dos6SKXFLCV
-         ttkA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=R138oFD5OXPog61ZjjUULV7qM4LmxY5ZWnBjLCIhJ3A=;
+        b=eo6k0oi0O9tY1GVEX+jXGlhjdRjvJ/p3qJNJfLKICJkl1STJbHQr0n8Nm0MNQAif6D
+         Bs7A9C3KNCrgmnzbHmIYtH+cU3XEvJzPJSe9/m/XaUY4eu40DX05ocNjVQ2+zhXRGQ2W
+         Z1duOXCCRYUZNG5XPufQWwyIk6rjgsZlesO3LesvMvjgRoRvdh1ak4AhUX3XBRBKcV7s
+         I/7n9FylgYxV/yK3LIh8W5EH57gKFC1x9TX2/qHahEexU4MD5jNMaLN6VaeLkzNGzx1h
+         AOf7X3fEh3lgC0w7ww3tA73W+lrBKxIsPmIpWQvXg005AdBUSGE//nGm8QISRobaprYa
+         jZmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent
-         :content-language:to:cc:references:from:subject:in-reply-to
-         :content-transfer-encoding;
-        bh=CAr6PXij8tLxjGYasxbxW8UJNAWj4rRkL9bczqgvOqs=;
-        b=OfvFmjyt8OKHbOwE5w1Y/PKpXI1mNgKUigAm73WNntEvloZbQoXwzWkMQUkGPwNe8E
-         eCzk2G/wYx9yMFG7nbT3wuTnY1CSMwEVc3sioQHmxEYHkLAKGFmUtL+QUUCsxCc4FLib
-         //472pl17BGUZvdc0zK7/FdmjbOZdHc8A2IgrANC6xfrWPlTtNhPlaRCMJKZZKcTKJ/c
-         3+qynLlEJGmoP+LABEg3mJBoSrEiZqXLzWmtmKv59wX9yWJZJgZlEZ3DO30dg2HEJYsc
-         WuK3N++aZaUV7HFShi/bD4IpTYnCgGtn6e698jNsi3ZHLbnpFbfjTGZibZiHU4St+gBC
-         W52w==
-X-Gm-Message-State: AJIora9onrx9j2W03sDIo+uHycmo+1r7cl7SRsIqua9HnR14Oht8dfaN
-        hBO86MX9f12Rl5iS9J9okuI=
-X-Google-Smtp-Source: AGRyM1svFzWjmMkXTXQEktUmWBsz5LVBDPW5MKsxg52vP38p/uxv4xt/DwthtJhv1yrdkiEV056YLA==
-X-Received: by 2002:a05:6512:688:b0:488:f7de:6e3 with SMTP id t8-20020a056512068800b00488f7de06e3mr4580130lfe.495.1657347165825;
-        Fri, 08 Jul 2022 23:12:45 -0700 (PDT)
-Received: from [10.0.0.42] (91-159-150-230.elisa-laajakaista.fi. [91.159.150.230])
-        by smtp.gmail.com with ESMTPSA id b40-20020a0565120ba800b004785b66a9a4sm211984lfv.126.2022.07.08.23.12.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Jul 2022 23:12:45 -0700 (PDT)
-Message-ID: <ad6dcdb8-8d4d-6f8b-38de-be2756a39028@gmail.com>
-Date:   Sat, 9 Jul 2022 09:20:29 +0300
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=R138oFD5OXPog61ZjjUULV7qM4LmxY5ZWnBjLCIhJ3A=;
+        b=X55mq0wZglcleWoYmg9SMKv8/Ncs5DoPsiDk9p1S1IT36Qg9ocireCnOYedRaDL7T3
+         vxFByHPxb9ETBX/SjbXipnF/NrLrnQVbJIn21kio/I9IIiO0+yS7wLJvHodonGIDMlnd
+         hOVkJX2yZAWNrAUSC+9xFQt9DORtJqVHpFudQoAw6rbMly8GZZ9+sKcHs426dE3hDSSx
+         y/qzeIlDNyLhhUAEKtwQNhOvNLg4cE/GdGFf55Gp/qP7KZ4TKJMlpY2wjdKAfs8VXblW
+         +EQw0mcakcHQdYan4MSGxeycGAUXdPuqOcGvpRXuYtxHHmIjTlrJId2rS29rAuOZuDCa
+         hgEA==
+X-Gm-Message-State: AJIora/PyI5U/kUYc1BAmiVXhAQ2Tt9hkMw4pkoFs7DjawjgIBTSmI7R
+        rxHPQqtNYZr2JJgaZysFSGIP
+X-Google-Smtp-Source: AGRyM1u6MLWsD3OzMYBdC5Q0lI5mvhbGGTX65Il1VYUH+N1jXPz5K+gmp9+DRdeO2/6t/RcH3rHN9A==
+X-Received: by 2002:a17:90a:408f:b0:1e3:23a:2370 with SMTP id l15-20020a17090a408f00b001e3023a2370mr4700263pjg.84.1657355491510;
+        Sat, 09 Jul 2022 01:31:31 -0700 (PDT)
+Received: from thinkpad ([117.207.26.140])
+        by smtp.gmail.com with ESMTPSA id q6-20020aa78426000000b00525714c3e07sm930353pfn.48.2022.07.09.01.31.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Jul 2022 01:31:31 -0700 (PDT)
+Date:   Sat, 9 Jul 2022 14:01:22 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 22/24] dmaengine: dw-edma: Bypass dma-ranges mapping
+ for the local setup
+Message-ID: <20220709083122.GQ5063@thinkpad>
+References: <20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru>
+ <20220610091459.17612-23-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Content-Language: en-US
-To:     Vaishnav Achath <vaishnav.a@ti.com>, vkoul@kernel.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     nm@ti.com, vigneshr@ti.com, p.yadav@ti.com, j-keerthy@ti.com,
-        m-khayami@ti.com, stanley_liu@ti.com
-References: <20220704111325.636-1-vaishnav.a@ti.com>
-From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-Subject: Re: [PATCH] dma: ti: k3-udma: Reset UDMA_CHAN_RT byte counters to
- prevent overflow
-In-Reply-To: <20220704111325.636-1-vaishnav.a@ti.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220610091459.17612-23-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 7/4/22 14:13, Vaishnav Achath wrote:
-> UDMA_CHAN_RT_*BCNT_REG stores the real-time channel bytecount statistics.
-> These registers are 32-bit hardware counters and the driver uses these
-> counters to monitor the operational progress status for a channel, when
-> transferring more than 4GB of data it was observed that these counters
-> overflow and completion calculation of a operation gets affected and the
-> transfer hangs indefinitely.
+On Fri, Jun 10, 2022 at 12:14:57PM +0300, Serge Semin wrote:
+> DW eDMA doesn't perform any translation of the traffic generated on the
+> CPU/Application side. It just generates read/write AXI-bus requests with
+> the specified addresses. But in case if the dma-ranges DT-property is
+> specified for a platform device node, Linux will use it to map the CPU
+> memory regions into the DMAable bus ranges. This isn't what we want for
+> the eDMA embedded into the locally accessed DW PCIe Root Port and
+> End-point. In order to work that around let's set the chan_dma_dev flag
+> for each DW eDMA channel thus forcing the client drivers to getting a
+> custom dma-ranges-less parental device for the mappings.
 > 
-> This commit adds changes to decrease the byte count for every complete
-> transaction so that these registers never overflow and the proper byte
-> count statistics is maintained for ongoing transaction by the RT counters.
+> Note it will only work for the client drivers using the
+> dmaengine_get_dma_device() method to get the parental DMA device.
 > 
-> Earlier uc->bcnt used to maintain a count of the completed bytes at driver
-> side, since the RT counters maintain the statistics of current transaction
-> now, the maintenance of uc->bcnt is not necessary.
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-Thanks for the patch,
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
+Thanks,
+Mani
+
+> 
 > ---
->  drivers/dma/ti/k3-udma.c | 27 +++++++++++++++++++--------
->  1 file changed, 19 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-> index 2f0d2c68c93c..0f91a3e47c19 100644
-> --- a/drivers/dma/ti/k3-udma.c
-> +++ b/drivers/dma/ti/k3-udma.c
-> @@ -300,8 +300,6 @@ struct udma_chan {
+> Changelog v2:
+> - Fix the comment a bit to being clearer. (@Manivannan)
+> 
+> Changelog v3:
+> - Conditionally set dchan->dev->device.dma_coherent field since it can
+>   be missing on some platforms. (@Manivannan)
+> - Remove Manivannan' rb and tb tags since the patch content has been
+>   changed.
+> ---
+>  drivers/dma/dw-edma/dw-edma-core.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index 6a8282eaebaf..4f56149dc8d8 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -716,6 +716,26 @@ static int dw_edma_alloc_chan_resources(struct dma_chan *dchan)
+>  	if (chan->status != EDMA_ST_IDLE)
+>  		return -EBUSY;
 >  
->  	struct udma_tx_drain tx_drain;
->  
-> -	u32 bcnt; /* number of bytes completed since the start of the channel */
-> -
->  	/* Channel configuration parameters */
->  	struct udma_chan_config config;
->  
-> @@ -757,6 +755,22 @@ static void udma_reset_rings(struct udma_chan *uc)
->  	}
->  }
->  
-> +static void udma_decrement_byte_counters(struct udma_chan *uc, u32 val)
-> +{
-> +	if (uc->tchan) {
-> +		udma_tchanrt_write(uc, UDMA_CHAN_RT_BCNT_REG, val);
-> +		udma_tchanrt_write(uc, UDMA_CHAN_RT_SBCNT_REG, val);
-> +		if (!uc->bchan)
-> +			udma_tchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
+> +	/* Bypass the dma-ranges based memory regions mapping for the eDMA
+> +	 * controlled from the CPU/Application side since in that case
+> +	 * the local memory address is left untranslated.
+> +	 */
+> +	if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
+> +		dchan->dev->chan_dma_dev = true;
+> +
+> +#if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
+> +    defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
+> +    defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
+> +		dchan->dev->device.dma_coherent = chan->dw->chip->dev->dma_coherent;
+> +#endif
+> +
+> +		dma_coerce_mask_and_coherent(&dchan->dev->device,
+> +					     dma_get_mask(chan->dw->chip->dev));
+> +		dchan->dev->device.dma_parms = chan->dw->chip->dev->dma_parms;
+> +	} else {
+> +		dchan->dev->chan_dma_dev = false;
 > +	}
 > +
-> +	if (uc->rchan) {
-> +		udma_rchanrt_write(uc, UDMA_CHAN_RT_BCNT_REG, val);
-> +		udma_rchanrt_write(uc, UDMA_CHAN_RT_SBCNT_REG, val);
-> +		udma_rchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
-> +	}
-
-In case of MEM_TO_MEM (or the not implemented DEV_TO_DEV) we use the
-tchan's counter for position tracking, but we have the pair anyways (UDMA).
-if ((uc->desc->dir == DMA_DEV_TO_MEM)
-	rchan bcnt reset
-else
-	tchan bcnt reset
-
-> +}
-> +
->  static void udma_reset_counters(struct udma_chan *uc)
->  {
->  	u32 val;
-> @@ -790,8 +804,6 @@ static void udma_reset_counters(struct udma_chan *uc)
->  		val = udma_rchanrt_read(uc, UDMA_CHAN_RT_PEER_BCNT_REG);
->  		udma_rchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
->  	}
-> -
-> -	uc->bcnt = 0;
->  }
+>  	pm_runtime_get(chan->dw->chip->dev);
 >  
->  static int udma_reset_chan(struct udma_chan *uc, bool hard)
-> @@ -1115,8 +1127,8 @@ static void udma_check_tx_completion(struct work_struct *work)
->  		if (uc->desc) {
->  			struct udma_desc *d = uc->desc;
->  
-> -			uc->bcnt += d->residue;
->  			udma_start(uc);
-> +			udma_decrement_byte_counters(uc, d->residue);
-
-Why not before udma_start()?
-
->  			vchan_cookie_complete(&d->vd);
->  			break;
->  		}
-> @@ -1168,8 +1180,8 @@ static irqreturn_t udma_ring_irq_handler(int irq, void *data)
->  				vchan_cyclic_callback(&d->vd);
->  			} else {
->  				if (udma_is_desc_really_done(uc, d)) {
-> -					uc->bcnt += d->residue;
->  					udma_start(uc);
-> +					udma_decrement_byte_counters(uc, d->residue);
->  					vchan_cookie_complete(&d->vd);
->  				} else {
->  					schedule_delayed_work(&uc->tx_drain.work,
-> @@ -1204,7 +1216,7 @@ static irqreturn_t udma_udma_irq_handler(int irq, void *data)
->  			vchan_cyclic_callback(&d->vd);
->  		} else {
->  			/* TODO: figure out the real amount of data */
-> -			uc->bcnt += d->residue;
-> +			udma_decrement_byte_counters(uc, d->residue);
->  			udma_start(uc);
->  			vchan_cookie_complete(&d->vd);
->  		}
-> @@ -3809,7 +3821,6 @@ static enum dma_status udma_tx_status(struct dma_chan *chan,
->  			bcnt = udma_tchanrt_read(uc, UDMA_CHAN_RT_BCNT_REG);
->  		}
->  
-> -		bcnt -= uc->bcnt;
->  		if (bcnt && !(bcnt % uc->desc->residue))
->  			residue = 0;
->  		else
+>  	return 0;
+> -- 
+> 2.35.1
+> 
 
 -- 
-Péter
+மணிவண்ணன் சதாசிவம்

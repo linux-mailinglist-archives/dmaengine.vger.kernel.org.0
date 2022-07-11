@@ -2,264 +2,157 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0927557061F
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Jul 2022 16:49:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C49775706B3
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Jul 2022 17:11:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229832AbiGKOta (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 11 Jul 2022 10:49:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43240 "EHLO
+        id S229645AbiGKPLa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 11 Jul 2022 11:11:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231812AbiGKOtN (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Jul 2022 10:49:13 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95BEA1B794
-        for <dmaengine@vger.kernel.org>; Mon, 11 Jul 2022 07:49:11 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id y9so4943168pff.12
-        for <dmaengine@vger.kernel.org>; Mon, 11 Jul 2022 07:49:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=2oP3T6c8OpT+jPKMLUEc9deKD2a+lLCkI+dr67TTYwo=;
-        b=ZICQhKxTE/AbBfYgMsZz7KcdulqKDANLGdb04sKxtxz/TrCHbPpzfL/sOwT3GRXGJy
-         MAY+h4gvpEgKuf7samwmBG1GwFmvGuPoBzMrna/7VItibnWVPruMUsk0T9bR0zV18XH2
-         MBEZ3WehzP6JfXIyMFxUEwwLB7iqh4jV1Gcdd8KVVBYO5zOhNAnlAoNaoRMxf//fDj94
-         mnLbZLRdqLTu0H4v344mgsFHUOLpYsulbIZSbtIO0FMexDZ/8TB1xZqVarPuL9uw0Zw+
-         W11sIojqscGxYeaTbQoIT/FzXvd1BbAaVAD7af1V3mvWokQHEpe0v0nKw++RynAdoDi1
-         PO7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=2oP3T6c8OpT+jPKMLUEc9deKD2a+lLCkI+dr67TTYwo=;
-        b=KizEckBwclkFiXL8Ut2l8EC6WPcNoG666gu6rIpihvTtnFg3I5SX97sp5dr/nsfCI6
-         nxQhVe1KXKQjLNN4W8Q7mC+BfHXhm2ARgTrQdKmSsaRqDu2OV7DlNKuFf5zsABI3X2+D
-         sa47saTMHbu4In7KLjSJHRtXlLrn9wc2XNeDivWp5aA+6wwE5iJGfhRokdUdF0pYlbvj
-         TUZb4mBsnSSSNmPG4TfYC/bhwo08rvFODVvTKMjhnkmOovyTD71L7oIlwo52RoigmDBV
-         nSKNomkKVrIggovvsIp1e4hCUgUyb0+TDbTbvFX2YbV5lDP+WFBOvT3onnC+YmTILOeI
-         wRng==
-X-Gm-Message-State: AJIora8Izkg2X8wA6fxoAqHtktidKerqu/EwooiQ+mwF+/AC/jV9ywFc
-        81hrcfThlFQqIAVw9hujvTYK
-X-Google-Smtp-Source: AGRyM1v3TK5Vbpo67oR7pAlvIP0+PUdOk31RICXvVEiPfRHQ8XQJRRwK9MmOGkPlm1n97IUQcwingQ==
-X-Received: by 2002:a65:4501:0:b0:3fc:4895:283b with SMTP id n1-20020a654501000000b003fc4895283bmr16621998pgq.231.1657550950982;
-        Mon, 11 Jul 2022 07:49:10 -0700 (PDT)
-Received: from thinkpad ([117.207.27.92])
-        by smtp.gmail.com with ESMTPSA id y64-20020a626443000000b005289e190956sm4967534pfb.177.2022.07.11.07.49.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Jul 2022 07:49:10 -0700 (PDT)
-Date:   Mon, 11 Jul 2022 20:19:03 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/24] dmaengine: dw-edma: Add RP/EP local DMA
- controllers support
-Message-ID: <20220711144903.GB3830@thinkpad>
-References: <20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru>
- <20220610092133.uhsu5gphhvjhe2jm@mobilestation>
- <20220711144533.GA3830@thinkpad>
+        with ESMTP id S232077AbiGKPLa (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Jul 2022 11:11:30 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6EF05A2E2;
+        Mon, 11 Jul 2022 08:11:28 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:281:8300:73::5f6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 0D5272DC;
+        Mon, 11 Jul 2022 15:11:28 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 0D5272DC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+        t=1657552288; bh=hSeU9FXMoITez72aytKTs7KEhJYRCmp8Bx8U2+pCzbI=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=V2AmnJYfF9ZWxEnWfd1sgkIJ6uzTaV240/uLdk1LNrvHOg1VW/nRW+QrYVkBW0GHe
+         8V6u8tijpGygd+4R1Gf8gFTjKAQH2AnRUdG/ON/NTwlOOFp6EtH/QafxT+E3Rho+Py
+         SAYJjO/yo8WbiwkIScQfSkNOSMuSwv1Vs84YPwlDs/W8y1s7o1njjQBTNS1TycmSTQ
+         HQ9l+ZTIgtFiDpzzEsD+2qSxDyQzOqD+62hl3oaMryaPjFc34gnDtYoK0NmpIVlDCo
+         pmPbEDLDULYENcpDQ9e7mvjLyQscjNb3FOjPg/cG2B+ExDkCfGmf1ts2lAjr6yWPyB
+         cm93bj6KL4Npg==
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Amelie Delaunay <amelie.delaunay@foss.st.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc:     linux-doc@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Marek Vasut <marex@denx.de>,
+        Amelie Delaunay <amelie.delaunay@foss.st.com>
+Subject: Re: [PATCH 1/4] docs: arm: stm32: introduce STM32 DMA-MDMA chaining
+ feature
+In-Reply-To: <20220711084703.268481-2-amelie.delaunay@foss.st.com>
+References: <20220711084703.268481-1-amelie.delaunay@foss.st.com>
+ <20220711084703.268481-2-amelie.delaunay@foss.st.com>
+Date:   Mon, 11 Jul 2022 09:11:27 -0600
+Message-ID: <87a69ffzvk.fsf@meer.lwn.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220711144533.GA3830@thinkpad>
+Content-Type: text/plain
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Jul 11, 2022 at 08:15:41PM +0530, Manivannan Sadhasivam wrote:
-> On Fri, Jun 10, 2022 at 12:21:33PM +0300, Serge Semin wrote:
-> > On Fri, Jun 10, 2022 at 12:14:35PM +0300, Serge Semin wrote:
-> > > This is a final patchset in the series created in the framework of
-> > > my Baikal-T1 PCIe/eDMA-related work:
-> > > 
-> > > [1: In-progress v4] PCI: dwc: Various fixes and cleanups
-> > > Link: https://lore.kernel.org/linux-pci/20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru/
-> > > [2: In-progress v3] PCI: dwc: Add hw version and dma-ranges support
-> > > Link: https://lore.kernel.org/linux-pci/20220610084444.14549-1-Sergey.Semin@baikalelectronics.ru/
-> > > [3: In-progress v3] PCI: dwc: Add generic resources and Baikal-T1 support
-> > > Link: https://lore.kernel.org/linux-pci/20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru/
-> > > [4: In-progress v3] dmaengine: dw-edma: Add RP/EP local DMA support
-> > > Link: ---you are looking at it---
-> > > 
-> > > Note it is very recommended to merge the patchsets in the same order as
-> > > they are listed in the set above in order to have them applied smoothly.
-> > > Nothing prevents them from being reviewed synchronously though.
-> > > 
-> > > Please note originally this series was self content, but due to Frank
-> > > being a bit faster in his work submission I had to rebase my patchset onto
-> > > his one. So now this patchset turns to be dependent on the Frank' work:
-> > > 
-> > > Link: https://lore.kernel.org/linux-pci/20220524152159.2370739-1-Frank.Li@nxp.com/
-> > > 
-> > > So please merge Frank' series first before applying this one.
-> > > 
-> > > Here is a short summary regarding this patchset. The series starts with
-> > > fixes patches. We discovered that the dw-edma-pcie.c driver incorrectly
-> > > initializes the LL/DT base addresses for the platforms with not matching
-> > > CPU and PCIe memory spaces. It is fixed by using the pci_bus_address()
-> > > method to get a correct base address. After that you can find a series of
-> > > the interleaved xfers fixes. It turned out the interleaved transfers
-> > > implementation didn't work quite correctly from the very beginning for
-> > > instance missing src/dst addresses initialization, etc. In the framework
-> > > of the next two patches we suggest to add a new platform-specific
-> > > callback - pci_address() and use it to convert the CPU address to the PCIe
-> > > space address. It is at least required for the DW eDMA remote End-point
-> > > setup on the platforms with not-matching CPU/PCIe address spaces. In case
-> > > of the DW eDMA local RP/EP setup the conversion will be done automatically
-> > > by the outbound iATU (if no DMA-bypass flag is specified for the
-> > > corresponding iATU window). Then we introduce a set of the patches to make
-> > > the DebugFS part of the code supporting the multi-eDMA controllers
-> > > platforms. It starts with several cleanup patches and is closed joining
-> > > the Read/Write channels into a single DMA-device as they originally should
-> > > have been. After that you can find the patches with adding the non-atomic
-> > > io-64 methods usage, dropping DT-region descriptors allocation, replacing
-> > > chip IDs with the device name. In addition to that in order to have the
-> > > eDMA embedded into the DW PCIe RP/EP supported we need to bypass the
-> > > dma-ranges-based memory ranges mapping since in case of the root port DT
-> > > node it's applicable for the peripheral PCIe devices only. Finally at the
-> > > series closure we introduce a generic DW eDMA controller support being
-> > > available in the DW PCIe Root Port/Endpoint driver.
-> > > 
-> > > Link: https://lore.kernel.org/linux-pci/20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru/
-> > > Changelog v2:
-> > > - Drop the patches:
-> > >   [PATCH 1/25] dmaengine: dw-edma: Drop dma_slave_config.direction field usage
-> > >   [PATCH 2/25] dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction semantics
-> > >   since they are going to be merged in in the framework of the
-> > >   Frank's patchset.
-> > > - Add a new patch: "dmaengine: dw-edma: Release requested IRQs on
-> > >   failure."
-> > > - Drop __iomem qualifier from the struct dw_edma_debugfs_entry instance
-> > >   definition in the dw_edma_debugfs_u32_get() method. (@Manivannan)
-> > > - Add a new patch: "dmaengine: dw-edma: Rename DebugFS dentry variables to
-> > >   'dent'." (@Manivannan)
-> > > - Slightly extend the eDMA name array size. (@Manivannan)
-> > > - Change the specific DMA mapping comment a bit to being
-> > >   clearer. (@Manivannan)
-> > > - Add a new patch: "PCI: dwc: Add generic iATU/eDMA CSRs space detection
-> > >   method."
-> > > - Don't fail eDMA detection procedure if the DW eDMA driver couldn't probe
-> > >   device. That happens if the driver is disabled. (@Manivannan)
-> > > - Add "dma" registers resource mapping procedure. (@Manivannan)
-> > > - Move the eDMA CSRs space detection into the dw_pcie_map_detect() method.
-> > > - Remove eDMA on the dw_pcie_ep_init() internal errors. (@Manivannan)
-> > > - Remove eDMA in the dw_pcie_ep_exit() method.
-> > > - Move the dw_pcie_edma_detect() method execution to the tail of the
-> > >   dw_pcie_ep_init() function.
-> > > 
-> > > Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
-> > > Changelog v3:
-> > 
-> > > - Conditionally set dchan->dev->device.dma_coherent field since it can
-> > >   be missing on some platforms. (@Manivannan)
-> > > - Drop the patch: "PCI: dwc: Add generic iATU/eDMA CSRs space detection
-> > >   method". A similar modification has been done in another patchset.
-> > > - Add more comprehensive and less regression prune eDMA block detection
-> > >   procedure.
-> > > - Drop the patch: "dma-direct: take dma-ranges/offsets into account in
-> > >   resource mapping". It will be separately reviewed.
-> > > - Remove Manivannan tb tag from the modified patches.
-> > 
-> > @Mani, several patches have been changed. Could you have a look at the
-> > series one more time?
-> > 
-> 
-> Reviewed all patches in this series. I believe this will still work on my
-> hardware once I test it. But even if it doesn't work, we can fix it in
-> 5.20-rc's as it supposed to be. So definitely not a show stopper.
-> 
-> Vinod: Could you please merge this one for 5.20?
-> 
+Amelie Delaunay <amelie.delaunay@foss.st.com> writes:
 
-Hmm, maybe this can go through pci tree as Bjorn merged earlier edma series as
-well. In that case Vinod's ack is sufficient.
+> STM32 DMA-MDMA chaining feature is available on STM32 SoCs which embed
+> STM32 DMAMUX, DMA and MDMA controllers. It is the case on STM32MP1 SoCs but
+> also on STM32H7 SoCs. But focus is on STM32MP1 SoCs, using DDR.
+> This documentation aims to explain how to use STM32 DMA-MDMA chaining
+> feature in drivers of STM32 peripheral having request lines on STM32 DMA.
+>
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+> ---
+>  .../arm/stm32/stm32-dma-mdma-chaining.rst     | 365 ++++++++++++++++++
+>  1 file changed, 365 insertions(+)
+>  create mode 100644 Documentation/arm/stm32/stm32-dma-mdma-chaining.rst
 
-But I'll leave it up to Bjorn and Vinod.
+When you add a new RST file you also need to add it to index.rst
+somewhere so that it becomes part of the docs build.
+
+> diff --git a/Documentation/arm/stm32/stm32-dma-mdma-chaining.rst b/Documentation/arm/stm32/stm32-dma-mdma-chaining.rst
+> new file mode 100644
+> index 000000000000..bfbbadc45aa7
+> --- /dev/null
+> +++ b/Documentation/arm/stm32/stm32-dma-mdma-chaining.rst
+> @@ -0,0 +1,365 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=======================
+> +STM32 DMA-MDMA chaining
+> +=======================
+> +
+> +
+> +Introduction
+> +------------
+> +
+> +  This document describes the STM32 DMA-MDMA chaining feature. But before going further, let's
+> +  introduce the peripherals involved.
+
+Please keep to the 80-column limit for documentation, it makes it easier
+to read.
+
+> +  To offload data transfers from the CPU, STM32 microprocessors (MPUs) embed direct memory access
+> +  controllers (DMA).
+> +
+> +  STM32MP1 SoCs embed both STM32 DMA and STM32 MDMA controllers. STM32 DMA request routing
+> +  capabilities are enhanced by a DMA request multiplexer (STM32 DMAMUX).
+> +
+> +  **STM32 DMAMUX**
+> +
+> +  STM32 DMAMUX routes any DMA request from a given peripheral to any STM32 DMA controller (STM32MP1
+> +  counts two STM32 DMA controllers) channels.
+> +
+> +  **STM32 DMA**
+> +
+> +  STM32 DMA is mainly used to implement central data buffer storage (usually in the system SRAM) for
+> +  different peripheral. It can access external RAMs but without the ability to generate convenient
+> +  burst transfer ensuring the best load of the AXI.
+> +
+> +  **STM32 MDMA**
+> +
+> +  STM32 MDMA (Master DMA) is mainly used to manage direct data transfers between RAM data buffers
+> +  without CPU intervention. It can also be used in a hierarchical structure that uses STM32 DMA as
+> +  first level data buffer interfaces for AHB peripherals, while the STM32 MDMA acts as a second
+> +  level DMA with better performance. As a AXI/AHB master, STM32 MDMA can take control of the AXI/AHB
+> +  bus.
+> +
+> +
+> +Principles
+> +----------
+> +
+> +  STM32 DMA-MDMA chaining feature relies on the strengths of STM32 DMA and STM32 MDMA controllers.
+> +
+> +  STM32 DMA has a circular Double Buffer Mode (DBM). At each end of transaction (when DMA data
+> +  counter - DMA_SxNDTR - reaches 0), the memory pointers (configured with DMA_SxSM0AR and
+> +  DMA_SxM1AR) are swapped and the DMA data counter is automatically reloaded. This allows the SW or
+> +  the STM32 MDMA to process one memory area while the second memory area is being filled/used by the
+> +  STM32 DMA transfer.
+> +
+> +  With STM32 MDMA linked-list mode, a single request initiates the data array (collection of nodes)
+> +  to be transferred until the linked-list pointer for the channel is null. The channel transfer
+> +  complete of the last node is the end of transfer, unless first and last nodes are linked to each
+> +  other, in such a case, the linked-list loops on to create a circular MDMA transfer.
+> +
+> +  STM32 MDMA has direct connections with STM32 DMA. This enables autonomous communication and
+> +  synchronization between peripherals, thus saving CPU resources and bus congestion. Transfer
+> +  Complete signal of STM32 DMA channel can triggers STM32 MDMA transfer. STM32 MDMA can clear the
+> +  request generated by the STM32 DMA by writing to its Interrupt Clear register (whose address is
+> +  stored in MDMA_CxMAR, and bit mask in MDMA_CxMDR).
+> +
+> +  .. csv-table:: STM32 MDMA interconnect table with STM32 DMA
+> +        :header: "STM32 DMAMUX channels", "STM32 DMA controllers channels",
+> +                 "STM32 DMA Transfer Complete signal", "STM32 MDMA request"
+
+If at all possible, please use simple tables; that makes the plain text
+documentation much easier to read.
+
+[...]
 
 Thanks,
-Mani
 
-> Thanks,
-> Mani
-> 
-> > -Sergey
-> > 
-> > > - Rebase onto the kernel v5.18.
-> > > 
-> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > > Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> > > Cc: "Krzysztof Wilczyński" <kw@linux.com>
-> > > Cc: linux-pci@vger.kernel.org
-> > > Cc: dmaengine@vger.kernel.org
-> > > Cc: linux-kernel@vger.kernel.org
-> > > 
-> > > Serge Semin (24):
-> > >   dmaengine: Fix dma_slave_config.dst_addr description
-> > >   dmaengine: dw-edma: Release requested IRQs on failure
-> > >   dmaengine: dw-edma: Convert ll/dt phys-address to PCIe bus/DMA address
-> > >   dmaengine: dw-edma: Fix missing src/dst address of the interleaved
-> > >     xfers
-> > >   dmaengine: dw-edma: Don't permit non-inc interleaved xfers
-> > >   dmaengine: dw-edma: Fix invalid interleaved xfers semantics
-> > >   dmaengine: dw-edma: Add CPU to PCIe bus address translation
-> > >   dmaengine: dw-edma: Add PCIe bus address getter to the remote EP
-> > >     glue-driver
-> > >   dmaengine: dw-edma: Drop chancnt initialization
-> > >   dmaengine: dw-edma: Fix DebugFS reg entry type
-> > >   dmaengine: dw-edma: Stop checking debugfs_create_*() return value
-> > >   dmaengine: dw-edma: Add dw_edma prefix to the DebugFS nodes descriptor
-> > >   dmaengine: dw-edma: Convert DebugFS descs to being kz-allocated
-> > >   dmaengine: dw-edma: Rename DebugFS dentry variables to 'dent'
-> > >   dmaengine: dw-edma: Simplify the DebugFS context CSRs init procedure
-> > >   dmaengine: dw-edma: Move eDMA data pointer to DebugFS node descriptor
-> > >   dmaengine: dw-edma: Join Write/Read channels into a single device
-> > >   dmaengine: dw-edma: Use DMA-engine device DebugFS subdirectory
-> > >   dmaengine: dw-edma: Use non-atomic io-64 methods
-> > >   dmaengine: dw-edma: Drop DT-region allocation
-> > >   dmaengine: dw-edma: Replace chip ID number with device name
-> > >   dmaengine: dw-edma: Bypass dma-ranges mapping for the local setup
-> > >   dmaengine: dw-edma: Skip cleanup procedure if no private data found
-> > >   PCI: dwc: Add DW eDMA engine support
-> > > 
-> > >  drivers/dma/dw-edma/dw-edma-core.c            | 216 +++++-----
-> > >  drivers/dma/dw-edma/dw-edma-core.h            |  10 +-
-> > >  drivers/dma/dw-edma/dw-edma-pcie.c            |  24 +-
-> > >  drivers/dma/dw-edma/dw-edma-v0-core.c         |  76 ++--
-> > >  drivers/dma/dw-edma/dw-edma-v0-core.h         |   1 -
-> > >  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      | 372 ++++++++----------
-> > >  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   5 -
-> > >  .../pci/controller/dwc/pcie-designware-ep.c   |  12 +-
-> > >  .../pci/controller/dwc/pcie-designware-host.c |  13 +-
-> > >  drivers/pci/controller/dwc/pcie-designware.c  | 186 +++++++++
-> > >  drivers/pci/controller/dwc/pcie-designware.h  |  20 +
-> > >  include/linux/dma/edma.h                      |  18 +-
-> > >  include/linux/dmaengine.h                     |   2 +-
-> > >  13 files changed, 589 insertions(+), 366 deletions(-)
-> > > 
-> > > -- 
-> > > 2.35.1
-> > > 
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
-
--- 
-மணிவண்ணன் சதாசிவம்
+jon

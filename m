@@ -2,162 +2,104 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9837E573BEA
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Jul 2022 19:22:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7403B573E36
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Jul 2022 22:52:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235854AbiGMRWf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 13 Jul 2022 13:22:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48506 "EHLO
+        id S237281AbiGMUwu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 13 Jul 2022 16:52:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234753AbiGMRWd (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 Jul 2022 13:22:33 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B5643B2;
-        Wed, 13 Jul 2022 10:22:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1657732952; x=1689268952;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=1jAH0JC2h59ZDuy2BkbW4V+e7vzjrMyqWlxPevPebtc=;
-  b=LQbJm1g6ie4neAru6we3O1qYFay2spjn170YbssRFxa2E36Defok7xcX
-   NBGZWTHcz62Otr23U2ekU4pJUApDVPTXPOyNr6FqjxpXoRUjRbmXhHgF1
-   NQ98Dj5eyCSLwxmurbfvp6IBeuQduBK8iZwPyTuxh9gSA6XueGycBRAkc
-   z7YjW6VklWK1NX6H4WxE9aHqYqsbCToz6xYjFObHxmeEmxCZhsFwAjblt
-   MGDuNvhi3IQd4fmi3OH/Zoa7RPOH8/2dhJ0iWHCrkdUuadWErpZy4cqe3
-   SOhgivbdjiHxFkBQ0MEIVj2wjmlh7c++TVblmblmkbWEQNBkbxxCFZ6Hp
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10407"; a="349262519"
-X-IronPort-AV: E=Sophos;i="5.92,267,1650956400"; 
-   d="scan'208";a="349262519"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2022 10:22:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,267,1650956400"; 
-   d="scan'208";a="698507453"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 13 Jul 2022 10:22:30 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 569DF366; Wed, 13 Jul 2022 20:22:38 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v1 4/4] dmaengine: hsu: Include headers we are direct user of
-Date:   Wed, 13 Jul 2022 20:22:35 +0300
-Message-Id: <20220713172235.22611-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220713172235.22611-1-andriy.shevchenko@linux.intel.com>
-References: <20220713172235.22611-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S237256AbiGMUwp (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 Jul 2022 16:52:45 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77A3F3138E
+        for <dmaengine@vger.kernel.org>; Wed, 13 Jul 2022 13:52:44 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id o31-20020a17090a0a2200b001ef7bd037bbso132665pjo.0
+        for <dmaengine@vger.kernel.org>; Wed, 13 Jul 2022 13:52:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=h0ZslgqQ94UM3iGDYCZGEx8ZwvbYHY5ZrQARiO/Kpbc=;
+        b=qtDzge8NR6GryD1E5KAuTjCPpy4A13nBq1VK8aOGTL5hVyz5lwEWFzfV7G5VJiCo3P
+         2hdUzz0n7G76Ujt+Wes5UvfX/TjgHuE0udA5/7YmG17HV1IMnfjnqQJM6N9OkvGoitr1
+         XSSyCf92HxyPIG8OkEWq+WE3fL9XIjFBChUycJ6AXPXb0JAB2C0UFHg2czgJgTfv58Dc
+         2PyhLGkde5ITtYhTeAEUg+X4/kXwctqaLDL7P6kaXvKlWFe6YxLHTJf5+1iSjqlexlRt
+         oAmyRvK4fxn471al8fsnD70ecEr/yw5osG0c8p8yH8VyElbELNupMfrgLdCSi+WGde+N
+         ZiFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=h0ZslgqQ94UM3iGDYCZGEx8ZwvbYHY5ZrQARiO/Kpbc=;
+        b=nQhaqRGGFLGvac5PR75Ql2+4ZkmgBkqzxhGUBoJA3Ku+vyDPlgzINKkKAOBQN+Zs+/
+         IsEcO7WVCsqGzC7zmWucZCcQ0Uzka3i5k10X/Q/6Ejnw2bK0Z63xLl8II0GORk5OqWtZ
+         WKi8iCGK0F+x8Twk2RUwiX0EjZpVzBick8+QL60Y1O/kWH8Ghf8vfH79jyO+hAATqaAg
+         FZo+gVIvCjtaEGmw9z6EyR8JMj/Losi8stOhdlSkH8kr9U0qw74KGKf4ZXyqQDXC1nty
+         6oyiMnpwwBItBSAd5LNg90fvEW2KuhUJ3fAdo4TrzaPpICTSfLPiyfsiZzVWEbxmN8iW
+         Qw+g==
+X-Gm-Message-State: AJIora+A/qgdOvRhs6DCbHyRhoM6ZNS+sFGes8sBzdRhG+Bjs0/2hUDP
+        ta7safL7/9HDUb9duTYtMOGY4ENcSTofPg/YwmE=
+X-Google-Smtp-Source: AGRyM1uUs9uoBdK5TbSHQ2ZSxVV2z+yhuCpoHODlUYVXfpjpldrZBJnwvyqHJCE2uCRrRyXRQD+7KX49fE2SQiAyE58=
+X-Received: by 2002:a17:902:8a8e:b0:16c:66bf:1734 with SMTP id
+ p14-20020a1709028a8e00b0016c66bf1734mr4909218plo.161.1657745563668; Wed, 13
+ Jul 2022 13:52:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+Received: by 2002:a05:7022:626:b0:42:c3cf:981a with HTTP; Wed, 13 Jul 2022
+ 13:52:42 -0700 (PDT)
+Reply-To: lilywilliam989@gmail.com
+From:   Lily William <savadogoidrissaboursouma@gmail.com>
+Date:   Wed, 13 Jul 2022 12:52:42 -0800
+Message-ID: <CAA6zzomhPkaeLxYwpkL_aRL9zxjYziE==Pu1tT2UcUtTtq0ewQ@mail.gmail.com>
+Subject: Hi Dear,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
         version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:1044 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [savadogoidrissaboursouma[at]gmail.com]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [lilywilliam989[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.2 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-For the sake of integrity, include headers we are direct user of.
+Hi Dear,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/dma/hsu/hsu.c                 | 8 ++++++++
- drivers/dma/hsu/hsu.h                 | 5 ++++-
- drivers/dma/hsu/pci.c                 | 1 +
- include/linux/dma/hsu.h               | 6 ++++--
- include/linux/platform_data/dma-hsu.h | 2 +-
- 5 files changed, 18 insertions(+), 4 deletions(-)
+My name is Dr Lily William from the United States.I am a French and
+American nationality (dual) living in the U.S and sometimes in France
+for Work Purpose.
 
-diff --git a/drivers/dma/hsu/hsu.c b/drivers/dma/hsu/hsu.c
-index 92caae55aece..af5a2e252c25 100644
---- a/drivers/dma/hsu/hsu.c
-+++ b/drivers/dma/hsu/hsu.c
-@@ -16,12 +16,20 @@
-  *    port 3, and so on.
-  */
- 
-+#include <linux/bits.h>
- #include <linux/delay.h>
-+#include <linux/device.h>
- #include <linux/dmaengine.h>
- #include <linux/dma-mapping.h>
- #include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/list.h>
- #include <linux/module.h>
-+#include <linux/percpu-defs.h>
-+#include <linux/scatterlist.h>
- #include <linux/slab.h>
-+#include <linux/string.h>
-+#include <linux/spinlock.h>
- 
- #include "hsu.h"
- 
-diff --git a/drivers/dma/hsu/hsu.h b/drivers/dma/hsu/hsu.h
-index 1c1195709c2f..3bca577b98a1 100644
---- a/drivers/dma/hsu/hsu.h
-+++ b/drivers/dma/hsu/hsu.h
-@@ -11,7 +11,10 @@
- #define __DMA_HSU_H__
- 
- #include <linux/bits.h>
--#include <linux/spinlock.h>
-+#include <linux/container_of.h>
-+#include <linux/io.h>
-+#include <linux/types.h>
-+
- #include <linux/dma/hsu.h>
- 
- #include "../virt-dma.h"
-diff --git a/drivers/dma/hsu/pci.c b/drivers/dma/hsu/pci.c
-index 8cdf715a7e9e..0fcc0c0c22fc 100644
---- a/drivers/dma/hsu/pci.c
-+++ b/drivers/dma/hsu/pci.c
-@@ -10,6 +10,7 @@
- 
- #include <linux/bitops.h>
- #include <linux/device.h>
-+#include <linux/interrupt.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- 
-diff --git a/include/linux/dma/hsu.h b/include/linux/dma/hsu.h
-index a6b7bc707356..77ea602c287c 100644
---- a/include/linux/dma/hsu.h
-+++ b/include/linux/dma/hsu.h
-@@ -8,11 +8,13 @@
- #ifndef _DMA_HSU_H
- #define _DMA_HSU_H
- 
--#include <linux/device.h>
--#include <linux/interrupt.h>
-+#include <linux/errno.h>
-+#include <linux/kconfig.h>
-+#include <linux/types.h>
- 
- #include <linux/platform_data/dma-hsu.h>
- 
-+struct device;
- struct hsu_dma;
- 
- /**
-diff --git a/include/linux/platform_data/dma-hsu.h b/include/linux/platform_data/dma-hsu.h
-index c65b412b2b33..611bae193c1c 100644
---- a/include/linux/platform_data/dma-hsu.h
-+++ b/include/linux/platform_data/dma-hsu.h
-@@ -8,7 +8,7 @@
- #ifndef _PLATFORM_DATA_DMA_HSU_H
- #define _PLATFORM_DATA_DMA_HSU_H
- 
--#include <linux/device.h>
-+struct device;
- 
- struct hsu_dma_slave {
- 	struct device	*dma_dev;
--- 
-2.35.1
+I hope you consider my friend request. I will share some of my pics
+and more details about myself when I get your response.
 
+Thanks
+
+With love
+Lily

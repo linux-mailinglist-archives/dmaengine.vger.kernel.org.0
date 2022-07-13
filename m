@@ -2,173 +2,116 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A47705731A3
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Jul 2022 10:56:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9324E5738A5
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Jul 2022 16:22:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234489AbiGMI4D (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 13 Jul 2022 04:56:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36816 "EHLO
+        id S235251AbiGMOWU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 13 Jul 2022 10:22:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235127AbiGMI4B (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 Jul 2022 04:56:01 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AF75A58D1
-        for <dmaengine@vger.kernel.org>; Wed, 13 Jul 2022 01:56:00 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1oBY9z-0006jp-Mi; Wed, 13 Jul 2022 10:55:55 +0200
-Received: from mfe by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1oBY9x-0006Bp-PA; Wed, 13 Jul 2022 10:55:53 +0200
-Date:   Wed, 13 Jul 2022 10:55:53 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula@amarulasolutions.com,
-        Sascha Hauer <s.hauer@pengutronix.de>, stable@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        dmaengine@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 1/2] dmaengine: mxs: use platform_driver_register
-Message-ID: <20220713085553.yunfuvh6a4gn2phj@pengutronix.de>
-References: <20220712160909.2054141-1-dario.binacchi@amarulasolutions.com>
- <20220713084036.ipcd6bhcdb574w7h@pengutronix.de>
- <CABGWkvpJ5Hc8pQ-Rzu8z6Y_Cfa2pEC0C2ABT_FGp6r9Vyz-Gmw@mail.gmail.com>
+        with ESMTP id S231129AbiGMOWS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 Jul 2022 10:22:18 -0400
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E57FC32ED2;
+        Wed, 13 Jul 2022 07:22:15 -0700 (PDT)
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26DCwFt2023204;
+        Wed, 13 Jul 2022 16:21:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=selector1;
+ bh=8StrFdxqKvIx4QP9Pz3BRbHaQVEul95a7IIOW+3FDyE=;
+ b=mbd8/DRWSAHB9fs2osy45tUAP9aL1EgVM8p4JRWkOHnMse5S8fPVRE+mEBZDnozs/4Hk
+ 2ZTjabVz4IC6PX3in8W4UJF0wXXrcebeeU8wCTjEaDr0d661vcY5zSXdcMLQ/L4bePDL
+ Rir995zjFoUrIkZ0GOZxdkr2E6V8sJFBe98QCj401h5+kc/QyrWL5w4J8R5xBGmbXYQx
+ qCKNSDgZUuZ1UfizPzbImlpKO5D7kwAgcZbV5z7G0hxYH8homz4W72ZCohXmKMfd1yng
+ mgdj/Ah8dMv7U59G0hQu7bY1LztQlM8DkhW02WJL7D7dJAveqPHIK9IhnhvjvR6k0M0j GA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3h94guhnam-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 Jul 2022 16:21:56 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CEF9410002A;
+        Wed, 13 Jul 2022 16:21:55 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C1BD3226FC5;
+        Wed, 13 Jul 2022 16:21:55 +0200 (CEST)
+Received: from localhost (10.75.127.45) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.20; Wed, 13 Jul
+ 2022 16:21:54 +0200
+From:   Amelie Delaunay <amelie.delaunay@foss.st.com>
+To:     Jonathan Corbet <corbet@lwn.net>, Vinod Koul <vkoul@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>
+CC:     <linux-doc@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Marek Vasut <marex@denx.de>,
+        Amelie Delaunay <amelie.delaunay@foss.st.com>
+Subject: [PATCH v2 0/4] STM32 DMA-MDMA chaining feature
+Date:   Wed, 13 Jul 2022 16:21:44 +0200
+Message-ID: <20220713142148.239253-1-amelie.delaunay@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABGWkvpJ5Hc8pQ-Rzu8z6Y_Cfa2pEC0C2ABT_FGp6r9Vyz-Gmw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-07-13_03,2022-07-13_03,2022-06-22_01
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 22-07-13, Dario Binacchi wrote:
-> Hi Marco,
-> 
-> On Wed, Jul 13, 2022 at 10:40 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> >
-> > Hi Dario,
-> >
-> > On 22-07-12, Dario Binacchi wrote:
-> > > Driver registration fails on SOC imx8mn as its supplier, the clock
-> > > control module, is probed later than subsys initcall level. This driver
-> > > uses platform_driver_probe which is not compatible with deferred probing
-> > > and won't be probed again later if probe function fails due to clock not
-> > > being available at that time.
-> > >
-> > > This patch replaces the use of platform_driver_probe with
-> > > platform_driver_register which will allow probing the driver later again
-> > > when the clock control module will be available.
-> > >
-> > > Fixes: a580b8c5429a ("dmaengine: mxs-dma: add dma support for i.MX23/28")
-> > > Co-developed-by: Michael Trimarchi <michael@amarulasolutions.com>
-> > > Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-> > > Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-> > > Cc: stable@vger.kernel.org
-> > >
-> > > ---
-> > >
-> > > Changes in v5:
-> > > - Update the commit message.
-> > > - Create a new patch to remove the warning generated by this patch.
-> >
-> > Please squash this new patch into this patch since you introduce the
-> > warning with this patch.
-> 
-> In version 4 I had only one patch, but Vinod told me to separate the
-> patches like
-> this. I also think like you, but I did what Vinod asked me to do.
-> So, can you agree and actually tell me what to do?
+This patchset (re)introduces STM32 DMA-MDMA chaining feature.
 
-Sorry, I didn't wanted to step in here just saw the patch and it is a
-bit strange to fix something by a 2nd patch we introduce by the 1st
-patch within the same series. This also increase the probability that
-the 2nd patch isn't ported to stable. Anyway, if Vinod is fine with this
-as maintainer than it is fine.
+As the DMA is not able to generate convenient burst transfer on the DDR,
+it penalises the AXI bus when accessing the DDR. While it accesses
+optimally the SRAM. The DMA-MDMA chaining then consists in having an SRAM
+buffer between DMA and MDMA, so the DMA deals with peripheral and SRAM,
+and the MDMA with SRAM and DDR.
 
-Regards,
-  Marco
+The feature relies on the fact that DMA channel Transfer Complete signal
+can trigger a MDMA channel transfer and MDMA can clear the DMA request by
+writing to DMA Interrupt Clear register.
 
-> Thanks and regards,
-> Dario
-> 
-> >
-> > Regards,
-> >   Marco
-> >
-> > > Changes in v4:
-> > > - Restore __init in front of mxs_dma_probe() definition.
-> > > - Rename the mxs_dma_driver variable to mxs_dma_driver_probe.
-> > > - Update the commit message.
-> > > - Use builtin_platform_driver() instead of module_platform_driver().
-> > >
-> > > Changes in v3:
-> > > - Restore __init in front of mxs_dma_init() definition.
-> > >
-> > > Changes in v2:
-> > > - Add the tag "Cc: stable@vger.kernel.org" in the sign-off area.
-> > >
-> > >  drivers/dma/mxs-dma.c | 8 ++------
-> > >  1 file changed, 2 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
-> > > index 994fc4d2aca4..18f8154b859b 100644
-> > > --- a/drivers/dma/mxs-dma.c
-> > > +++ b/drivers/dma/mxs-dma.c
-> > > @@ -839,10 +839,6 @@ static struct platform_driver mxs_dma_driver = {
-> > >               .name   = "mxs-dma",
-> > >               .of_match_table = mxs_dma_dt_ids,
-> > >       },
-> > > +     .probe = mxs_dma_probe,
-> > >  };
-> > > -
-> > > -static int __init mxs_dma_module_init(void)
-> > > -{
-> > > -     return platform_driver_probe(&mxs_dma_driver, mxs_dma_probe);
-> > > -}
-> > > -subsys_initcall(mxs_dma_module_init);
-> > > +builtin_platform_driver(mxs_dma_driver);
-> > > --
-> > > 2.32.0
-> > >
-> > >
-> > >
-> 
-> 
-> 
-> -- 
-> 
-> Dario Binacchi
-> 
-> Embedded Linux Developer
-> 
-> dario.binacchi@amarulasolutions.com
-> 
-> __________________________________
-> 
-> 
-> Amarula Solutions SRL
-> 
-> Via Le Canevare 30, 31100 Treviso, Veneto, IT
-> 
-> T. +39 042 243 5310
-> info@amarulasolutions.com
-> 
-> www.amarulasolutions.com
-> 
+A deeper introduction can be found in patch 1.
+
+Previous implementation [1] has been dropped as nacked.
+Unlike this previous implementation (where all the stuff was embedded in
+stm32-dma driver), the user (in peripheral drivers using dma) has now to
+configure the MDMA channel.
+
+[1] https://lore.kernel.org/lkml/1538139715-24406-1-git-send-email-pierre-yves.mordret@st.com/
+
+Changes in v2:
+- wrap to 80-column limit for documentation
+- add an entry for this documentation in index.rst
+- use simple table instead of csv-table in documentation
+
+Amelie Delaunay (4):
+  docs: arm: stm32: introduce STM32 DMA-MDMA chaining feature
+  dmaengine: stm32-dmamux: set dmamux channel id in dma features
+    bitfield
+  dmaengine: stm32-dma: add support to trigger STM32 MDMA
+  dmaengine: stm32-mdma: add support to be triggered by STM32 DMA
+
+ Documentation/arm/index.rst                   |   1 +
+ .../arm/stm32/stm32-dma-mdma-chaining.rst     | 415 ++++++++++++++++++
+ drivers/dma/stm32-dma.c                       |  56 ++-
+ drivers/dma/stm32-dmamux.c                    |   2 +-
+ drivers/dma/stm32-mdma.c                      |  70 ++-
+ 5 files changed, 541 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/arm/stm32/stm32-dma-mdma-chaining.rst
+
+-- 
+2.25.1
+

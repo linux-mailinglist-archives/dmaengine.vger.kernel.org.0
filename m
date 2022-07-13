@@ -2,274 +2,163 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57BE05738AA
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Jul 2022 16:22:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 052015739F4
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Jul 2022 17:22:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230466AbiGMOWW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 13 Jul 2022 10:22:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55060 "EHLO
+        id S236893AbiGMPVx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 13 Jul 2022 11:21:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233522AbiGMOWS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 Jul 2022 10:22:18 -0400
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B01EB21837;
-        Wed, 13 Jul 2022 07:22:16 -0700 (PDT)
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26DAvvP8027808;
-        Wed, 13 Jul 2022 16:22:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=selector1;
- bh=1yq2Yj3av/xck7CRGsE0rpzpEDqbHGiuQyirKTHs8Z4=;
- b=4CayR4CkQOL9GqjQUNS1g22zJlu9hrELk1ibfhRHYJguCZOvJ7vNuvyQyRVlfrnSZDV0
- PCUDzt3FILfkpwcOQGC6bRaB09lvYwf5eZWkIlomBjfVlJ95SBrPi8jLoiOnvHGpiu1p
- gLZsLmVDXCupaXQJtYSTs8G5p5fKt0nM+hqsUXvRLBuwL8FVZclLySTBU7ejq2vTtb0U
- tlByaTCmUhwuK6I28U6BOG0v5Gc4Px67GBkRN0xuMYAo0dAxm+JSOVJBxf3xgxwaIbD+
- LD9LkZWZst5IAhFOwfuKSI3W3CjgeD/8R9jone0Iks/4V0OeUPRCltzCycf50ZVUw4FX tA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3h93cwj2hb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 Jul 2022 16:22:01 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 30BF710002A;
-        Wed, 13 Jul 2022 16:22:01 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2B7C3226FC7;
-        Wed, 13 Jul 2022 16:22:01 +0200 (CEST)
-Received: from localhost (10.75.127.46) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.20; Wed, 13 Jul
- 2022 16:22:00 +0200
-From:   Amelie Delaunay <amelie.delaunay@foss.st.com>
-To:     Jonathan Corbet <corbet@lwn.net>, Vinod Koul <vkoul@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC:     <linux-doc@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Marek Vasut <marex@denx.de>,
-        Amelie Delaunay <amelie.delaunay@foss.st.com>
-Subject: [PATCH v2 4/4] dmaengine: stm32-mdma: add support to be triggered by STM32 DMA
-Date:   Wed, 13 Jul 2022 16:21:48 +0200
-Message-ID: <20220713142148.239253-5-amelie.delaunay@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220713142148.239253-1-amelie.delaunay@foss.st.com>
-References: <20220713142148.239253-1-amelie.delaunay@foss.st.com>
+        with ESMTP id S229887AbiGMPVq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 Jul 2022 11:21:46 -0400
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1anam02on2086.outbound.protection.outlook.com [40.107.96.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4292945F43;
+        Wed, 13 Jul 2022 08:21:45 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HNdUu0JckvvGul+nhPosKouFVqsdeH8xkPFsqq0veqSDmU4QyrKRwE/jJmeXS0h9/sN8ssyQ2olVm3fKD5NRFyxEHJC6DSfxb6EwMv090TL8YUtqI4PK+28vYGfVaIzTDQzriBjQUhUau8jMO2QJrgZqG0d/DnAM8x6R5ejUlBdkXQhiNxsr6JX7tY5s8Ggkv2JbzFdV6j/40ZSYwh2LfkhzcJ47C/wqO5pLO+PxP8lgXOQ7HrfT38PRpLEbrqwYoQXpkHY7rMtx93sTc6EtW7z+6YBMr1pMOhxnDUxyNAt9GLmbOqE+OWUg6dlKWK8ZVb5LrdjiRgr1WxsnAV8kSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1UKKmZYlrtQiHfNrWV5hnmkYbe2hwcY6ber8EvDtFP4=;
+ b=cAdTCS/7veAXjSgGwZjz3ShQxMfYPM+q0CVwnQhZbOFvehpUVA9Dp9O/4rUIfQ4z9glFuSLvezpsww0m3Gy3wLekHx2xn0AlA2MSLi06u0flH+3hKaCKasibpHeofF938uVUH2UJlSVDHWbOO0qSnjcRTvgCLavpulPP6TXV7mXsL9GuIkKviCHH0tRmL2PSqc2Uj2i76BUCy/YkS2wZxVuep1TMl2CM+0xhHhPOzQUr4elHocfyx4uNjgWGsbpSywo36JvXiOxANa8bw0RpQL9UXzCWS3kdu7EAQPxbxXXHbRuYnTwzrFrku+InE/xdQARf2OY9Zu6yJqqwhK8esQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1UKKmZYlrtQiHfNrWV5hnmkYbe2hwcY6ber8EvDtFP4=;
+ b=nUemiwkvH/OeBJViax5sCiKA0UIYSVFxnYvqtfvWIyxfRKJBrRwkq90UCPGGXoX6MS7gCY3RVkCdpV0vd9XwIEZmIDJg+GyRyMA3+5yig4K+EFRzXVo5vL+lBmWHnzmuIWxK9IDXnh/WNwMrHC41GOl6K5Kh7aWDxzP+Y7jb7f8KT4Qao6o6oML+Y+vQdCcz+lp1vUHBMzC76UGC6zo8O1r2TWMXZ+O9ISUtfTqh1ShnstOW/Evi7YSJLe5cMq/aJ1GzMDq6I7U8jo49IykQxeiYRd76GPNscBxxQUgdV0HpR0G+fugEAwUG2OJ2ay9xYN9N8lRJ/4GBFoGP339Gig==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CO6PR12MB5444.namprd12.prod.outlook.com (2603:10b6:5:35e::8) by
+ DM6PR12MB4314.namprd12.prod.outlook.com (2603:10b6:5:211::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5417.21; Wed, 13 Jul 2022 15:21:43 +0000
+Received: from CO6PR12MB5444.namprd12.prod.outlook.com
+ ([fe80::b148:f3bb:5247:a55d]) by CO6PR12MB5444.namprd12.prod.outlook.com
+ ([fe80::b148:f3bb:5247:a55d%2]) with mapi id 15.20.5417.026; Wed, 13 Jul 2022
+ 15:21:43 +0000
+Message-ID: <6bc92c59-dfa1-aef7-f41b-befab216f87d@nvidia.com>
+Date:   Wed, 13 Jul 2022 16:21:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH v3 1/3] dt-bindings: dmaengine: Add compatible for
+ Tegra234
+Content-Language: en-US
+To:     Akhil R <akhilrajeev@nvidia.com>, dmaengine@vger.kernel.org,
+        ldewangan@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, p.zabel@pengutronix.de,
+        thierry.reding@gmail.com, vkoul@kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <20220711154536.41736-1-akhilrajeev@nvidia.com>
+ <20220711154536.41736-2-akhilrajeev@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+In-Reply-To: <20220711154536.41736-2-akhilrajeev@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO2P123CA0016.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:a6::28) To CO6PR12MB5444.namprd12.prod.outlook.com
+ (2603:10b6:5:35e::8)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-13_03,2022-07-13_03,2022-06-22_01
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4c20a643-aa13-4a7b-7a50-08da64e3647a
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4314:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: j2v1ZZ2aqoVYy4pKLNTNdlOecrSG+B8Zl8f/Kv3GEn1f5E8nq9R1i8ryg2Y+1WMkfZYK1qzt7VFrMMT+HW2jQBsN7ZdKOGleOrh4ClqIMGGU94i7Gx4xlqoZRmfajT/Gks+Eq2Mkys7DJtCmF81VApqjUnjSgbADVLnv7klKOxWav36L7xfxHKG/K6x7uEhHEpmMy5+Rw2dOTlJi+QMj1qCEPQB95n3fQI9ImJ0riTF7WXVHtaon2HI0yvbhEPMrmwW9/20ZJWMfpcv2SakY/1mt/a1TdS80Bq0w9RdnF2drEvxkA1sJXd9yk2Ufh3LpjFNEI+oQNUmSk7BUTx+JWzQlQGnS40uMWbktZiTGAwgssIOvRM56ik+suLW7KTTXw2cHJpp+5sKdMEgCsTS/8Cj40A/bCknmk+AzQ60a0h7iFeupVOHZMEv7I/r5cLfXo6qOh1qUvI97xDSWtPkzV1pgnzkTUwR3g+wOP2fw6ZFQKtRkwlmONklmHynvnTvhSetZAmkbNdoBPkea7wXi7Ri5ypdbXSlokZuSEgMYgwgjUcr+gTz+ec1gBN6gQHfGgfpYL/qqiyt2XN7e6joVUjbMUcmj09lQsSdpPaPdlMfKgmjnJa1H3Xi7Rs5sYvV9S0JO6I/ZkPBfkqWYx1diSZzwHCDuvplB/BrT0Af5+UF8TzcZHIwUMAd9VHXNnlB9TaQMUKcbarnXmRaRRmCrof7AnkFp9KoLblhVksMDP8PfIJ4DJwIzAS0bR6+K/nGGvnwcYbFiVEBZlvV2Txh3L0KADy0X6brJXVc8H5lyPU6b5kDt8L01l/7AVCwRKbkvMCkwfi2DF6YXtGLPF+dL8u92bqxXlij0Rj6B/OPBV5XAb9GwBwHyagvPLysqlFj2
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5444.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(136003)(346002)(366004)(376002)(39860400002)(396003)(6506007)(6666004)(8936002)(53546011)(26005)(2906002)(31696002)(86362001)(6486002)(6512007)(41300700001)(316002)(478600001)(2616005)(4744005)(55236004)(66946007)(31686004)(38100700002)(186003)(66476007)(36756003)(66556008)(8676002)(5660300002)(921005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YjdudWU1d1UrZGg0VHBsMHU1STRIWndsZXpnMGpxZGhmOEhaSlpKSmxEWjk1?=
+ =?utf-8?B?SHpIaU5McXJuM0ZhU2ZkbG54OGtvWFlCM3N2K0R6K29DTkVUWU16VWlmRnJN?=
+ =?utf-8?B?Yno0TE1nemZaVCtSWXFldlBsSEdWak1NcWtaKzNqWXJnL2UxbHF4K2hqWWp3?=
+ =?utf-8?B?NXJFSGhEZXlZM2VNMGZhU1BKZ0Z3d214UzJPVWFPODQ1UVI2UytoTkkxd080?=
+ =?utf-8?B?ZzJYc0swaEZHKy8wVjRuQUMxclRtWWpSS0lBMi9NREkySU5CQjBqQWpEbzN3?=
+ =?utf-8?B?QXZnYkZzSkRCU3VDbVh5WVNTTmpPRitYdVYzN2J6dUx6bTlDQWVVekYyMWxa?=
+ =?utf-8?B?aHpBMFJqTVlxU0t1elU0VmY0d2hGZy9CMS9UcnlyUytQc2RhOFV5REZ6VENq?=
+ =?utf-8?B?R1RuNEZnQmxNVHl3eUtvRWZtQkpjYVJ0MWhDNVVhK0hrb0t5aG4zTUZtUmM5?=
+ =?utf-8?B?aWVPRmdObXFWUzlYaFN3MSt5NzdQT05pemZBVTB4cG13MWoreE9zSUQ3TnJ2?=
+ =?utf-8?B?RjZrdEZ5VHptOXVPcGtjSHJCR1VsOVJYbVE1aWI1UnNaMm03TER6bEo4ZldL?=
+ =?utf-8?B?QkRUN2ZHV3lqMldWeXZ5SEhCUHUxYmc2SFVuL0JJcHN5bG5UN0JCNDcyTzdE?=
+ =?utf-8?B?YktuK1VyL0h0WmxzeHpPNzM1dFdTa1dlbzVlZS84NGNlSXBqUUVXZEZOdFpN?=
+ =?utf-8?B?MGlIZHhEZEJiUWpYRXo5VlFnZGZLZGJaL2g1Y243Ujk5UDVtNE5yU2hab2hZ?=
+ =?utf-8?B?QnNCMHh2bHRyU0pQOTFCZ3dwRzBYZ1VGL0tPaTk3SG9pOUJTRDFBNFFxazQ5?=
+ =?utf-8?B?bGFsNHhqNGk1OVp0cDVwU3A3UzFYMEtDd3VDQWhpMWprZDFBSHZnbHJLVTdX?=
+ =?utf-8?B?bjh4SUEyVmxSQXk4bC9pZ01IMDFJVWlHM3V4cEtjK2JZYVMwTEk2c2t2bE9h?=
+ =?utf-8?B?T2ZIcWMwakE3dkpPdWZuc0ZXYlpISXRVdUxwQTk3OU8rK0pkV0hYQm5MRlZH?=
+ =?utf-8?B?M3IyaysyWEJZSkxDSW4wb1BySkRLWS9CZ3EvQm44VGcvRlZEOThDMi9md1pZ?=
+ =?utf-8?B?Y1A0ajFydGUrNEdmdzBSL2hhVVBTckRDa3E5b2JwRCsvdXBJSUxLU0xQcklw?=
+ =?utf-8?B?ZVdLMS8vMDRSN2lsTnZ5TjVUZlhXZHFHTFhndVlHV0VoaXh4ZENPQ0JFeVU3?=
+ =?utf-8?B?Ym5ia29QVUV5aDBDOXBvT0EweHdJTzJBZzI5THJNT1Z2MzVHK0Fic0E5cVBv?=
+ =?utf-8?B?Yi84bGtSd2h2dXpJNEJvSlRnNTY4Z25HWEhaQ1RJbWJoMEN2cDhjOFYyTTBs?=
+ =?utf-8?B?MkpFMHQ5S3hmL3dKVXZ6bzJqK2tvbS95b3FpenJYTHFvTERNU1MrMis4b1g2?=
+ =?utf-8?B?SGJFUkpTVlFLY1VEcHZ4eDFmcm83ZHQwWmp2UXJFbzF4eDVZL2hZKytBMnc2?=
+ =?utf-8?B?SmpvbkVJNEtaZENudFhlekdYbmk0eTYvVmc4VkNZK3BMVDQ3Q0kwU0hPdVky?=
+ =?utf-8?B?TzZjME82dlNDelpWaFhxb0hjRkF3NkNaRTFPc2FRVUtTdGplUjZyME9tNEUx?=
+ =?utf-8?B?dUltL0tSRmEwTjJ3TWlDbTcyOGR3MlRIb0ZzSG9YT28vMHBrVlVFV3R2eXZp?=
+ =?utf-8?B?bHp6WHRzZkdiOVU2QnRQdzF6RExvbjlWWlJ1N2NiVFZOREhNbWxaK25SNHpH?=
+ =?utf-8?B?cFFrektwcm96Ky8raXdWYXJDaDlVcGlUNXZ0TE9aUkZoUnllUHRyUXpMRGw4?=
+ =?utf-8?B?VEE1QU1LU0U2TDZtN2NsUmpmd1dVcjA1Q25XVTF2YS9idDdCdGpwbkRRbklu?=
+ =?utf-8?B?cnR3aFNyYmVvcnM3Tnd1cUZCT0Q1RGxnVmlIK1h1VDVnNU5hNVZuWVQwbkdn?=
+ =?utf-8?B?UlA1dVVqNTAzMVpCMEFwNTB0bUFqL0Q0dFlQNHMyYkQwektNYkpjVmJoWVZV?=
+ =?utf-8?B?QWFtcU5iZU1BQVp2Ujk4ZklYT0dKb3UyVHRIYUliQ1VlMTMzbzBKM3pGOG9V?=
+ =?utf-8?B?VGRPN3Q1ZlJIM21ZZnNsdkFEQUQvZUh0WGZtbXhaVFlXd3FZaFdyWW9RNWNB?=
+ =?utf-8?B?ZFBoN3JvNHFwODBDSjMyR25Nck45Vys4aUNTemZQQmJrYkcxLzUrcU9ta3pR?=
+ =?utf-8?B?TEFoS2RZOEZqcUUybUJqZkR6WW1Yc0NMZ1Z2dWtkQXNHOVBlajlXZkhjQmRI?=
+ =?utf-8?B?Y3c9PQ==?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c20a643-aa13-4a7b-7a50-08da64e3647a
+X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5444.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2022 15:21:43.5088
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qcqr407V1zRiZ0XGgL7l1cX4aN8Cr/1luGGkc7oBwjIIqyvPmfkxERUNYRu5dTXyXpzZbc8fAD64Rfle5ejaYA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4314
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-STM32 MDMA can be triggered by STM32 DMA channels transfer complete.
 
-In case of non-null struct dma_slave_config .peripheral_size, it means the
-DMA client wants the DMA to trigger the MDMA.
+On 11/07/2022 16:45, Akhil R wrote:
+> Document the compatible string used by GPCDMA controller for Tegra234.
+> 
+> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+> ---
+>   .../devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml      | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml b/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml
+> index 9dd1476d1849..399edcd5cecf 100644
+> --- a/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml
+> +++ b/Documentation/devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml
+> @@ -26,6 +26,10 @@ properties:
+>             - const: nvidia,tegra194-gpcdma
+>             - const: nvidia,tegra186-gpcdma
+>   
+> +      - items:
+> +          - const: nvidia,tegra234-gpcdma
+> +          - const: nvidia,tegra186-gpcdma
+> +
+>     "#dma-cells":
+>       const: 1
+>   
 
-stm32-mdma driver gets the request id, the mask_addr, and the mask_data in
-struct stm32_mdma_dma_config passed by DMA with struct dma_slave_config
-.peripheral_config/.peripheral_size.
 
-Then, as DMA is configured in Double-Buffer mode, and MDMA channel will
-transfer data from/to SRAM to/from DDR, then bursts are optimized.
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
----
-No changes in v2.
----
- drivers/dma/stm32-mdma.c | 70 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 69 insertions(+), 1 deletion(-)
+Cheers
+Jon
 
-diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
-index b11927ed4367..e28acbcb53f4 100644
---- a/drivers/dma/stm32-mdma.c
-+++ b/drivers/dma/stm32-mdma.c
-@@ -199,6 +199,7 @@ struct stm32_mdma_chan_config {
- 	u32 transfer_config;
- 	u32 mask_addr;
- 	u32 mask_data;
-+	bool m2m_hw; /* True when MDMA is triggered by STM32 DMA */
- };
- 
- struct stm32_mdma_hwdesc {
-@@ -227,6 +228,12 @@ struct stm32_mdma_desc {
- 	struct stm32_mdma_desc_node node[];
- };
- 
-+struct stm32_mdma_dma_config {
-+	u32 request;	/* STM32 DMA channel stream id, triggering MDMA */
-+	u32 cmar;	/* STM32 DMA interrupt flag clear register address */
-+	u32 cmdr;	/* STM32 DMA Transfer Complete flag */
-+};
-+
- struct stm32_mdma_chan {
- 	struct virt_dma_chan vchan;
- 	struct dma_pool *desc_pool;
-@@ -539,13 +546,23 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
- 		dst_addr = chan->dma_config.dst_addr;
- 
- 		/* Set device data size */
-+		if (chan_config->m2m_hw)
-+			dst_addr_width = stm32_mdma_get_max_width(dst_addr, buf_len,
-+								  STM32_MDMA_MAX_BUF_LEN);
- 		dst_bus_width = stm32_mdma_get_width(chan, dst_addr_width);
- 		if (dst_bus_width < 0)
- 			return dst_bus_width;
- 		ctcr &= ~STM32_MDMA_CTCR_DSIZE_MASK;
- 		ctcr |= STM32_MDMA_CTCR_DSIZE(dst_bus_width);
-+		if (chan_config->m2m_hw) {
-+			ctcr &= ~STM32_MDMA_CTCR_DINCOS_MASK;
-+			ctcr |= STM32_MDMA_CTCR_DINCOS(dst_bus_width);
-+		}
- 
- 		/* Set device burst value */
-+		if (chan_config->m2m_hw)
-+			dst_maxburst = STM32_MDMA_MAX_BUF_LEN / dst_addr_width;
-+
- 		dst_best_burst = stm32_mdma_get_best_burst(buf_len, tlen,
- 							   dst_maxburst,
- 							   dst_addr_width);
-@@ -588,13 +605,24 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
- 		src_addr = chan->dma_config.src_addr;
- 
- 		/* Set device data size */
-+		if (chan_config->m2m_hw)
-+			src_addr_width = stm32_mdma_get_max_width(src_addr, buf_len,
-+								  STM32_MDMA_MAX_BUF_LEN);
-+
- 		src_bus_width = stm32_mdma_get_width(chan, src_addr_width);
- 		if (src_bus_width < 0)
- 			return src_bus_width;
- 		ctcr &= ~STM32_MDMA_CTCR_SSIZE_MASK;
- 		ctcr |= STM32_MDMA_CTCR_SSIZE(src_bus_width);
-+		if (chan_config->m2m_hw) {
-+			ctcr &= ~STM32_MDMA_CTCR_SINCOS_MASK;
-+			ctcr |= STM32_MDMA_CTCR_SINCOS(src_bus_width);
-+		}
- 
- 		/* Set device burst value */
-+		if (chan_config->m2m_hw)
-+			src_maxburst = STM32_MDMA_MAX_BUF_LEN / src_addr_width;
-+
- 		src_best_burst = stm32_mdma_get_best_burst(buf_len, tlen,
- 							   src_maxburst,
- 							   src_addr_width);
-@@ -702,11 +730,15 @@ static int stm32_mdma_setup_xfer(struct stm32_mdma_chan *chan,
- {
- 	struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
- 	struct dma_slave_config *dma_config = &chan->dma_config;
-+	struct stm32_mdma_chan_config *chan_config = &chan->chan_config;
- 	struct scatterlist *sg;
- 	dma_addr_t src_addr, dst_addr;
--	u32 ccr, ctcr, ctbr;
-+	u32 m2m_hw_period, ccr, ctcr, ctbr;
- 	int i, ret = 0;
- 
-+	if (chan_config->m2m_hw)
-+		m2m_hw_period = sg_dma_len(sgl);
-+
- 	for_each_sg(sgl, sg, sg_len, i) {
- 		if (sg_dma_len(sg) > STM32_MDMA_MAX_BLOCK_LEN) {
- 			dev_err(chan2dev(chan), "Invalid block len\n");
-@@ -716,6 +748,8 @@ static int stm32_mdma_setup_xfer(struct stm32_mdma_chan *chan,
- 		if (direction == DMA_MEM_TO_DEV) {
- 			src_addr = sg_dma_address(sg);
- 			dst_addr = dma_config->dst_addr;
-+			if (chan_config->m2m_hw && (i & 1))
-+				dst_addr += m2m_hw_period;
- 			ret = stm32_mdma_set_xfer_param(chan, direction, &ccr,
- 							&ctcr, &ctbr, src_addr,
- 							sg_dma_len(sg));
-@@ -723,6 +757,8 @@ static int stm32_mdma_setup_xfer(struct stm32_mdma_chan *chan,
- 					   src_addr);
- 		} else {
- 			src_addr = dma_config->src_addr;
-+			if (chan_config->m2m_hw && (i & 1))
-+				src_addr += m2m_hw_period;
- 			dst_addr = sg_dma_address(sg);
- 			ret = stm32_mdma_set_xfer_param(chan, direction, &ccr,
- 							&ctcr, &ctbr, dst_addr,
-@@ -755,6 +791,7 @@ stm32_mdma_prep_slave_sg(struct dma_chan *c, struct scatterlist *sgl,
- 			 unsigned long flags, void *context)
- {
- 	struct stm32_mdma_chan *chan = to_stm32_mdma_chan(c);
-+	struct stm32_mdma_chan_config *chan_config = &chan->chan_config;
- 	struct stm32_mdma_desc *desc;
- 	int i, ret;
- 
-@@ -777,6 +814,21 @@ stm32_mdma_prep_slave_sg(struct dma_chan *c, struct scatterlist *sgl,
- 	if (ret < 0)
- 		goto xfer_setup_err;
- 
-+	/*
-+	 * In case of M2M HW transfer triggered by STM32 DMA, we do not have to clear the
-+	 * transfer complete flag by hardware in order to let the CPU rearm the STM32 DMA
-+	 * with the next sg element and update some data in dmaengine framework.
-+	 */
-+	if (chan_config->m2m_hw && direction == DMA_MEM_TO_DEV) {
-+		struct stm32_mdma_hwdesc *hwdesc;
-+
-+		for (i = 0; i < sg_len; i++) {
-+			hwdesc = desc->node[i].hwdesc;
-+			hwdesc->cmar = 0;
-+			hwdesc->cmdr = 0;
-+		}
-+	}
-+
- 	desc->cyclic = false;
- 
- 	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
-@@ -798,6 +850,7 @@ stm32_mdma_prep_dma_cyclic(struct dma_chan *c, dma_addr_t buf_addr,
- 	struct stm32_mdma_chan *chan = to_stm32_mdma_chan(c);
- 	struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
- 	struct dma_slave_config *dma_config = &chan->dma_config;
-+	struct stm32_mdma_chan_config *chan_config = &chan->chan_config;
- 	struct stm32_mdma_desc *desc;
- 	dma_addr_t src_addr, dst_addr;
- 	u32 ccr, ctcr, ctbr, count;
-@@ -858,8 +911,12 @@ stm32_mdma_prep_dma_cyclic(struct dma_chan *c, dma_addr_t buf_addr,
- 		if (direction == DMA_MEM_TO_DEV) {
- 			src_addr = buf_addr + i * period_len;
- 			dst_addr = dma_config->dst_addr;
-+			if (chan_config->m2m_hw && (i & 1))
-+				dst_addr += period_len;
- 		} else {
- 			src_addr = dma_config->src_addr;
-+			if (chan_config->m2m_hw && (i & 1))
-+				src_addr += period_len;
- 			dst_addr = buf_addr + i * period_len;
- 		}
- 
-@@ -1244,6 +1301,17 @@ static int stm32_mdma_slave_config(struct dma_chan *c,
- 
- 	memcpy(&chan->dma_config, config, sizeof(*config));
- 
-+	/* Check if user is requesting STM32 DMA to trigger MDMA */
-+	if (config->peripheral_size) {
-+		struct stm32_mdma_dma_config *mdma_config;
-+
-+		mdma_config = (struct stm32_mdma_dma_config *)chan->dma_config.peripheral_config;
-+		chan->chan_config.request = mdma_config->request;
-+		chan->chan_config.mask_addr = mdma_config->cmar;
-+		chan->chan_config.mask_data = mdma_config->cmdr;
-+		chan->chan_config.m2m_hw = true;
-+	}
-+
- 	return 0;
- }
- 
 -- 
-2.25.1
-
+nvpublic

@@ -2,44 +2,44 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BBA105738A8
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Jul 2022 16:22:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57BE05738AA
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Jul 2022 16:22:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235872AbiGMOWV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 13 Jul 2022 10:22:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55054 "EHLO
+        id S230466AbiGMOWW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 13 Jul 2022 10:22:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231411AbiGMOWS (ORCPT
+        with ESMTP id S233522AbiGMOWS (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Wed, 13 Jul 2022 10:22:18 -0400
 Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B06A432EC3;
-        Wed, 13 Jul 2022 07:22:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B01EB21837;
+        Wed, 13 Jul 2022 07:22:16 -0700 (PDT)
 Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26DAo2xD027405;
-        Wed, 13 Jul 2022 16:22:02 +0200
+        by mx07-00178001.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26DAvvP8027808;
+        Wed, 13 Jul 2022 16:22:01 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=selector1;
- bh=0ZMUbJ/1SL91UVIoNI9XgPROTl7HewjwynVROHXPNZ8=;
- b=Ogt4W74xvtM3tBkmLTr5YdnHvES0HHeSTsK/tLQnJNJDi4dwKmo9goCOCxXfCe9976+4
- MPiqKDn/98c319u0TiBjDCqbTAtO0UdEiCUSL+Dptcbe8ucJuf5KGKdTYn86g1IbaZ6F
- 38UyBM/b+JkHckbWW3y10zDJA4qJwG8u/5eL2es6HFO7Jx0pTk2Q0pah1AcVTDxVzpSa
- 2AoXhq4lgyfbjC/O8BxJWpIVqHo54Em9JaX42EoVivshVu9uYuCwjYrgJvR5/Mb1ncHC
- 9hSle8roGjKD6aiyN0Nj4LWTr9fE66VLcZoE6CJSYVnOmom6HjcBS4j9u5FUoWUh3LAO lA== 
+ bh=1yq2Yj3av/xck7CRGsE0rpzpEDqbHGiuQyirKTHs8Z4=;
+ b=4CayR4CkQOL9GqjQUNS1g22zJlu9hrELk1ibfhRHYJguCZOvJ7vNuvyQyRVlfrnSZDV0
+ PCUDzt3FILfkpwcOQGC6bRaB09lvYwf5eZWkIlomBjfVlJ95SBrPi8jLoiOnvHGpiu1p
+ gLZsLmVDXCupaXQJtYSTs8G5p5fKt0nM+hqsUXvRLBuwL8FVZclLySTBU7ejq2vTtb0U
+ tlByaTCmUhwuK6I28U6BOG0v5Gc4Px67GBkRN0xuMYAo0dAxm+JSOVJBxf3xgxwaIbD+
+ LD9LkZWZst5IAhFOwfuKSI3W3CjgeD/8R9jone0Iks/4V0OeUPRCltzCycf50ZVUw4FX tA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3h93cwj2he-1
+        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3h93cwj2hb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 Jul 2022 16:22:02 +0200
+        Wed, 13 Jul 2022 16:22:01 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1111B10002A;
-        Wed, 13 Jul 2022 16:22:02 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 30BF710002A;
+        Wed, 13 Jul 2022 16:22:01 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0C687226FC7;
-        Wed, 13 Jul 2022 16:22:02 +0200 (CEST)
-Received: from localhost (10.75.127.47) by SHFDAG1NODE2.st.com (10.75.129.70)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2B7C3226FC7;
+        Wed, 13 Jul 2022 16:22:01 +0200 (CEST)
+Received: from localhost (10.75.127.46) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.20; Wed, 13 Jul
- 2022 16:21:58 +0200
+ 2022 16:22:00 +0200
 From:   Amelie Delaunay <amelie.delaunay@foss.st.com>
 To:     Jonathan Corbet <corbet@lwn.net>, Vinod Koul <vkoul@kernel.org>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
@@ -49,16 +49,16 @@ CC:     <linux-doc@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, Marek Vasut <marex@denx.de>,
         Amelie Delaunay <amelie.delaunay@foss.st.com>
-Subject: [PATCH v2 3/4] dmaengine: stm32-dma: add support to trigger STM32 MDMA
-Date:   Wed, 13 Jul 2022 16:21:47 +0200
-Message-ID: <20220713142148.239253-4-amelie.delaunay@foss.st.com>
+Subject: [PATCH v2 4/4] dmaengine: stm32-mdma: add support to be triggered by STM32 DMA
+Date:   Wed, 13 Jul 2022 16:21:48 +0200
+Message-ID: <20220713142148.239253-5-amelie.delaunay@foss.st.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220713142148.239253-1-amelie.delaunay@foss.st.com>
 References: <20220713142148.239253-1-amelie.delaunay@foss.st.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
+X-Originating-IP: [10.75.127.46]
 X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SHFDAG1NODE2.st.com
  (10.75.129.70)
 X-Proofpoint-Virus-Version: vendor=baseguard
@@ -74,157 +74,202 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 STM32 MDMA can be triggered by STM32 DMA channels transfer complete.
-The "request line number" triggering STM32 MDMA is the STM32 DMAMUX channel
-id set by stm32-dmamux driver in dma_spec->args[3].
 
-stm32-dma driver fills the struct stm32_dma_mdma_config used to configure
-the MDMA with struct dma_slave_config .peripheral_config/.peripheral_size.
+In case of non-null struct dma_slave_config .peripheral_size, it means the
+DMA client wants the DMA to trigger the MDMA.
+
+stm32-mdma driver gets the request id, the mask_addr, and the mask_data in
+struct stm32_mdma_dma_config passed by DMA with struct dma_slave_config
+.peripheral_config/.peripheral_size.
+
+Then, as DMA is configured in Double-Buffer mode, and MDMA channel will
+transfer data from/to SRAM to/from DDR, then bursts are optimized.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
 ---
 No changes in v2.
 ---
- drivers/dma/stm32-dma.c | 56 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 55 insertions(+), 1 deletion(-)
+ drivers/dma/stm32-mdma.c | 70 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 69 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index adb25a11c70f..3916295fe154 100644
---- a/drivers/dma/stm32-dma.c
-+++ b/drivers/dma/stm32-dma.c
-@@ -142,6 +142,8 @@
- #define STM32_DMA_DIRECT_MODE_GET(n)	(((n) & STM32_DMA_DIRECT_MODE_MASK) >> 2)
- #define STM32_DMA_ALT_ACK_MODE_MASK	BIT(4)
- #define STM32_DMA_ALT_ACK_MODE_GET(n)	(((n) & STM32_DMA_ALT_ACK_MODE_MASK) >> 4)
-+#define STM32_DMA_MDMA_STREAM_ID_MASK	GENMASK(19, 16)
-+#define STM32_DMA_MDMA_STREAM_ID_GET(n) (((n) & STM32_DMA_MDMA_STREAM_ID_MASK) >> 16)
- 
- enum stm32_dma_width {
- 	STM32_DMA_BYTE,
-@@ -195,6 +197,19 @@ struct stm32_dma_desc {
- 	struct stm32_dma_sg_req sg_req[];
+diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
+index b11927ed4367..e28acbcb53f4 100644
+--- a/drivers/dma/stm32-mdma.c
++++ b/drivers/dma/stm32-mdma.c
+@@ -199,6 +199,7 @@ struct stm32_mdma_chan_config {
+ 	u32 transfer_config;
+ 	u32 mask_addr;
+ 	u32 mask_data;
++	bool m2m_hw; /* True when MDMA is triggered by STM32 DMA */
  };
  
-+/**
-+ * struct stm32_dma_mdma_cfg - STM32 DMA MDMA configuration
-+ * @stream_id: DMA request to trigger STM32 MDMA transfer
-+ * @ifcr: DMA interrupt flag clear register address,
-+ *        used by STM32 MDMA to clear DMA Transfer Complete flag
-+ * @tcf: DMA Transfer Complete flag
-+ */
-+struct stm32_dma_mdma_config {
-+	u32 stream_id;
-+	u32 ifcr;
-+	u32 tcf;
+ struct stm32_mdma_hwdesc {
+@@ -227,6 +228,12 @@ struct stm32_mdma_desc {
+ 	struct stm32_mdma_desc_node node[];
+ };
+ 
++struct stm32_mdma_dma_config {
++	u32 request;	/* STM32 DMA channel stream id, triggering MDMA */
++	u32 cmar;	/* STM32 DMA interrupt flag clear register address */
++	u32 cmdr;	/* STM32 DMA Transfer Complete flag */
 +};
 +
- struct stm32_dma_chan {
+ struct stm32_mdma_chan {
  	struct virt_dma_chan vchan;
- 	bool config_init;
-@@ -209,6 +224,8 @@ struct stm32_dma_chan {
- 	u32 mem_burst;
- 	u32 mem_width;
- 	enum dma_status status;
-+	bool trig_mdma;
-+	struct stm32_dma_mdma_config mdma_config;
- };
+ 	struct dma_pool *desc_pool;
+@@ -539,13 +546,23 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
+ 		dst_addr = chan->dma_config.dst_addr;
  
- struct stm32_dma_device {
-@@ -388,6 +405,13 @@ static int stm32_dma_slave_config(struct dma_chan *c,
+ 		/* Set device data size */
++		if (chan_config->m2m_hw)
++			dst_addr_width = stm32_mdma_get_max_width(dst_addr, buf_len,
++								  STM32_MDMA_MAX_BUF_LEN);
+ 		dst_bus_width = stm32_mdma_get_width(chan, dst_addr_width);
+ 		if (dst_bus_width < 0)
+ 			return dst_bus_width;
+ 		ctcr &= ~STM32_MDMA_CTCR_DSIZE_MASK;
+ 		ctcr |= STM32_MDMA_CTCR_DSIZE(dst_bus_width);
++		if (chan_config->m2m_hw) {
++			ctcr &= ~STM32_MDMA_CTCR_DINCOS_MASK;
++			ctcr |= STM32_MDMA_CTCR_DINCOS(dst_bus_width);
++		}
  
- 	memcpy(&chan->dma_sconfig, config, sizeof(*config));
- 
-+	/* Check if user is requesting DMA to trigger STM32 MDMA */
-+	if (config->peripheral_size) {
-+		config->peripheral_config = &chan->mdma_config;
-+		config->peripheral_size = sizeof(chan->mdma_config);
-+		chan->trig_mdma = true;
-+	}
+ 		/* Set device burst value */
++		if (chan_config->m2m_hw)
++			dst_maxburst = STM32_MDMA_MAX_BUF_LEN / dst_addr_width;
 +
- 	chan->config_init = true;
+ 		dst_best_burst = stm32_mdma_get_best_burst(buf_len, tlen,
+ 							   dst_maxburst,
+ 							   dst_addr_width);
+@@ -588,13 +605,24 @@ static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
+ 		src_addr = chan->dma_config.src_addr;
  
- 	return 0;
-@@ -576,6 +600,10 @@ static void stm32_dma_start_transfer(struct stm32_dma_chan *chan)
- 	sg_req = &chan->desc->sg_req[chan->next_sg];
- 	reg = &sg_req->chan_reg;
- 
-+	/* When DMA triggers STM32 MDMA, DMA Transfer Complete is managed by STM32 MDMA */
-+	if (chan->trig_mdma && chan->dma_sconfig.direction != DMA_MEM_TO_DEV)
-+		reg->dma_scr &= ~STM32_DMA_SCR_TCIE;
+ 		/* Set device data size */
++		if (chan_config->m2m_hw)
++			src_addr_width = stm32_mdma_get_max_width(src_addr, buf_len,
++								  STM32_MDMA_MAX_BUF_LEN);
 +
- 	reg->dma_scr &= ~STM32_DMA_SCR_EN;
- 	stm32_dma_write(dmadev, STM32_DMA_SCR(chan->id), reg->dma_scr);
- 	stm32_dma_write(dmadev, STM32_DMA_SPAR(chan->id), reg->dma_spar);
-@@ -725,6 +753,8 @@ static void stm32_dma_handle_chan_done(struct stm32_dma_chan *chan, u32 scr)
+ 		src_bus_width = stm32_mdma_get_width(chan, src_addr_width);
+ 		if (src_bus_width < 0)
+ 			return src_bus_width;
+ 		ctcr &= ~STM32_MDMA_CTCR_SSIZE_MASK;
+ 		ctcr |= STM32_MDMA_CTCR_SSIZE(src_bus_width);
++		if (chan_config->m2m_hw) {
++			ctcr &= ~STM32_MDMA_CTCR_SINCOS_MASK;
++			ctcr |= STM32_MDMA_CTCR_SINCOS(src_bus_width);
++		}
  
- 	if (chan->desc->cyclic) {
- 		vchan_cyclic_callback(&chan->desc->vdesc);
-+		if (chan->trig_mdma)
-+			return;
- 		stm32_dma_sg_inc(chan);
- 		/* cyclic while CIRC/DBM disable => post resume reconfiguration needed */
- 		if (!(scr & (STM32_DMA_SCR_CIRC | STM32_DMA_SCR_DBM)))
-@@ -1099,6 +1129,10 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_slave_sg(
- 	else
- 		chan->chan_reg.dma_scr &= ~STM32_DMA_SCR_PFCTRL;
+ 		/* Set device burst value */
++		if (chan_config->m2m_hw)
++			src_maxburst = STM32_MDMA_MAX_BUF_LEN / src_addr_width;
++
+ 		src_best_burst = stm32_mdma_get_best_burst(buf_len, tlen,
+ 							   src_maxburst,
+ 							   src_addr_width);
+@@ -702,11 +730,15 @@ static int stm32_mdma_setup_xfer(struct stm32_mdma_chan *chan,
+ {
+ 	struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
+ 	struct dma_slave_config *dma_config = &chan->dma_config;
++	struct stm32_mdma_chan_config *chan_config = &chan->chan_config;
+ 	struct scatterlist *sg;
+ 	dma_addr_t src_addr, dst_addr;
+-	u32 ccr, ctcr, ctbr;
++	u32 m2m_hw_period, ccr, ctcr, ctbr;
+ 	int i, ret = 0;
  
-+	/* Activate Double Buffer Mode if DMA triggers STM32 MDMA and more than 1 sg */
-+	if (chan->trig_mdma && sg_len > 1)
-+		chan->chan_reg.dma_scr |= STM32_DMA_SCR_DBM;
++	if (chan_config->m2m_hw)
++		m2m_hw_period = sg_dma_len(sgl);
 +
  	for_each_sg(sgl, sg, sg_len, i) {
- 		ret = stm32_dma_set_xfer_param(chan, direction, &buswidth,
- 					       sg_dma_len(sg),
-@@ -1120,6 +1154,8 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_slave_sg(
- 		desc->sg_req[i].chan_reg.dma_spar = chan->chan_reg.dma_spar;
- 		desc->sg_req[i].chan_reg.dma_sm0ar = sg_dma_address(sg);
- 		desc->sg_req[i].chan_reg.dma_sm1ar = sg_dma_address(sg);
-+		if (chan->trig_mdma)
-+			desc->sg_req[i].chan_reg.dma_sm1ar += sg_dma_len(sg);
- 		desc->sg_req[i].chan_reg.dma_sndtr = nb_data_items;
- 	}
+ 		if (sg_dma_len(sg) > STM32_MDMA_MAX_BLOCK_LEN) {
+ 			dev_err(chan2dev(chan), "Invalid block len\n");
+@@ -716,6 +748,8 @@ static int stm32_mdma_setup_xfer(struct stm32_mdma_chan *chan,
+ 		if (direction == DMA_MEM_TO_DEV) {
+ 			src_addr = sg_dma_address(sg);
+ 			dst_addr = dma_config->dst_addr;
++			if (chan_config->m2m_hw && (i & 1))
++				dst_addr += m2m_hw_period;
+ 			ret = stm32_mdma_set_xfer_param(chan, direction, &ccr,
+ 							&ctcr, &ctbr, src_addr,
+ 							sg_dma_len(sg));
+@@ -723,6 +757,8 @@ static int stm32_mdma_setup_xfer(struct stm32_mdma_chan *chan,
+ 					   src_addr);
+ 		} else {
+ 			src_addr = dma_config->src_addr;
++			if (chan_config->m2m_hw && (i & 1))
++				src_addr += m2m_hw_period;
+ 			dst_addr = sg_dma_address(sg);
+ 			ret = stm32_mdma_set_xfer_param(chan, direction, &ccr,
+ 							&ctcr, &ctbr, dst_addr,
+@@ -755,6 +791,7 @@ stm32_mdma_prep_slave_sg(struct dma_chan *c, struct scatterlist *sgl,
+ 			 unsigned long flags, void *context)
+ {
+ 	struct stm32_mdma_chan *chan = to_stm32_mdma_chan(c);
++	struct stm32_mdma_chan_config *chan_config = &chan->chan_config;
+ 	struct stm32_mdma_desc *desc;
+ 	int i, ret;
  
-@@ -1207,8 +1243,11 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_dma_cyclic(
- 		desc->sg_req[i].chan_reg.dma_spar = chan->chan_reg.dma_spar;
- 		desc->sg_req[i].chan_reg.dma_sm0ar = buf_addr;
- 		desc->sg_req[i].chan_reg.dma_sm1ar = buf_addr;
-+		if (chan->trig_mdma)
-+			desc->sg_req[i].chan_reg.dma_sm1ar += period_len;
- 		desc->sg_req[i].chan_reg.dma_sndtr = nb_data_items;
--		buf_addr += period_len;
-+		if (!chan->trig_mdma)
-+			buf_addr += period_len;
- 	}
+@@ -777,6 +814,21 @@ stm32_mdma_prep_slave_sg(struct dma_chan *c, struct scatterlist *sgl,
+ 	if (ret < 0)
+ 		goto xfer_setup_err;
  
- 	desc->num_sgs = num_periods;
-@@ -1491,6 +1530,7 @@ static void stm32_dma_set_config(struct stm32_dma_chan *chan,
- 		chan->threshold = STM32_DMA_FIFO_THRESHOLD_NONE;
- 	if (STM32_DMA_ALT_ACK_MODE_GET(cfg->features))
- 		chan->chan_reg.dma_scr |= STM32_DMA_SCR_TRBUFF;
-+	chan->mdma_config.stream_id = STM32_DMA_MDMA_STREAM_ID_GET(cfg->features);
++	/*
++	 * In case of M2M HW transfer triggered by STM32 DMA, we do not have to clear the
++	 * transfer complete flag by hardware in order to let the CPU rearm the STM32 DMA
++	 * with the next sg element and update some data in dmaengine framework.
++	 */
++	if (chan_config->m2m_hw && direction == DMA_MEM_TO_DEV) {
++		struct stm32_mdma_hwdesc *hwdesc;
++
++		for (i = 0; i < sg_len; i++) {
++			hwdesc = desc->node[i].hwdesc;
++			hwdesc->cmar = 0;
++			hwdesc->cmdr = 0;
++		}
++	}
++
+ 	desc->cyclic = false;
+ 
+ 	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
+@@ -798,6 +850,7 @@ stm32_mdma_prep_dma_cyclic(struct dma_chan *c, dma_addr_t buf_addr,
+ 	struct stm32_mdma_chan *chan = to_stm32_mdma_chan(c);
+ 	struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
+ 	struct dma_slave_config *dma_config = &chan->dma_config;
++	struct stm32_mdma_chan_config *chan_config = &chan->chan_config;
+ 	struct stm32_mdma_desc *desc;
+ 	dma_addr_t src_addr, dst_addr;
+ 	u32 ccr, ctcr, ctbr, count;
+@@ -858,8 +911,12 @@ stm32_mdma_prep_dma_cyclic(struct dma_chan *c, dma_addr_t buf_addr,
+ 		if (direction == DMA_MEM_TO_DEV) {
+ 			src_addr = buf_addr + i * period_len;
+ 			dst_addr = dma_config->dst_addr;
++			if (chan_config->m2m_hw && (i & 1))
++				dst_addr += period_len;
+ 		} else {
+ 			src_addr = dma_config->src_addr;
++			if (chan_config->m2m_hw && (i & 1))
++				src_addr += period_len;
+ 			dst_addr = buf_addr + i * period_len;
+ 		}
+ 
+@@ -1244,6 +1301,17 @@ static int stm32_mdma_slave_config(struct dma_chan *c,
+ 
+ 	memcpy(&chan->dma_config, config, sizeof(*config));
+ 
++	/* Check if user is requesting STM32 DMA to trigger MDMA */
++	if (config->peripheral_size) {
++		struct stm32_mdma_dma_config *mdma_config;
++
++		mdma_config = (struct stm32_mdma_dma_config *)chan->dma_config.peripheral_config;
++		chan->chan_config.request = mdma_config->request;
++		chan->chan_config.mask_addr = mdma_config->cmar;
++		chan->chan_config.mask_data = mdma_config->cmdr;
++		chan->chan_config.m2m_hw = true;
++	}
++
+ 	return 0;
  }
  
- static struct dma_chan *stm32_dma_of_xlate(struct of_phandle_args *dma_spec,
-@@ -1630,6 +1670,20 @@ static int stm32_dma_probe(struct platform_device *pdev)
- 		chan->id = i;
- 		chan->vchan.desc_free = stm32_dma_desc_free;
- 		vchan_init(&chan->vchan, dd);
-+
-+		chan->mdma_config.ifcr = res->start;
-+		chan->mdma_config.ifcr += (chan->id & 4) ? STM32_DMA_HIFCR : STM32_DMA_LIFCR;
-+
-+		chan->mdma_config.tcf = STM32_DMA_TCI;
-+		/*
-+		 * bit0 of chan->id represents the need to left shift by 6
-+		 * bit1 of chan->id represents the need to extra left shift by 16
-+		 * TCIF0, chan->id = b0000; TCIF4, chan->id = b0100: left shift by 0*6 + 0*16
-+		 * TCIF1, chan->id = b0001; TCIF5, chan->id = b0101: left shift by 1*6 + 0*16
-+		 * TCIF2, chan->id = b0010; TCIF6, chan->id = b0110: left shift by 0*6 + 1*16
-+		 * TCIF3, chan->id = b0011; TCIF7, chan->id = b0111: left shift by 1*6 + 1*16
-+		 */
-+		chan->mdma_config.tcf <<= (6 * (chan->id & 0x1) + 16 * ((chan->id & 0x2) >> 1));
- 	}
- 
- 	ret = dma_async_device_register(dd);
 -- 
 2.25.1
 

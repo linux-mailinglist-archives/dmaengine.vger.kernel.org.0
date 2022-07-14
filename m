@@ -2,107 +2,165 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07D08575593
-	for <lists+dmaengine@lfdr.de>; Thu, 14 Jul 2022 21:02:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9405B575758
+	for <lists+dmaengine@lfdr.de>; Fri, 15 Jul 2022 00:04:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232131AbiGNTCN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 14 Jul 2022 15:02:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45080 "EHLO
+        id S241025AbiGNWEM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 14 Jul 2022 18:04:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbiGNTCM (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 14 Jul 2022 15:02:12 -0400
-Received: from phobos.denx.de (phobos.denx.de [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D90FB47B9A;
-        Thu, 14 Jul 2022 12:02:07 -0700 (PDT)
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: marex@denx.de)
-        by phobos.denx.de (Postfix) with ESMTPSA id CD5F082068;
-        Thu, 14 Jul 2022 21:02:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-        s=phobos-20191101; t=1657825324;
-        bh=aHmjHaJxJBZMe6BIMPN1PX2HZAmaQsSLKb6ocrjbf3c=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=Yl0WFHSWcyzjqkYmmGxvcYT9IkqHlCFo/Vzp8L1XW6DvWMLiuD3nvagHfsLKNApH6
-         AZai81nV1jWaSP4M97fg9V3nA2VSBRUym6mn9YgycnoSLQQrwo5nwmrzN4ohS8skfw
-         lfwTvGxOgG1FYCHi1gWc22+N/Q5Mv+LiVbVWmAgb/vp+6y1mO0fvvjNY/tneSkYQ0n
-         eByjnH8O0A/AFM0T5TL32MpGM45uNAEpEMtXOikPOAfjcqWECj//PByJokGRgSs0S0
-         x41m6qKyCndwEwip16B2S4FH1p5esMAz8ijeIvaPMbNHr0kWhy5v71TvxV3I6FfhbD
-         z9+NyyXCvocng==
-Message-ID: <e1fbf7cf-1bb7-6583-3713-7dbd58a4898e@denx.de>
-Date:   Thu, 14 Jul 2022 21:02:03 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v2 3/4] dmaengine: stm32-dma: add support to trigger STM32
- MDMA
-Content-Language: en-US
-To:     Amelie Delaunay <amelie.delaunay@foss.st.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Vinod Koul <vkoul@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc:     linux-doc@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20220713142148.239253-1-amelie.delaunay@foss.st.com>
- <20220713142148.239253-4-amelie.delaunay@foss.st.com>
-From:   Marek Vasut <marex@denx.de>
-In-Reply-To: <20220713142148.239253-4-amelie.delaunay@foss.st.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
-X-Virus-Status: Clean
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S241015AbiGNWEK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 14 Jul 2022 18:04:10 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCAA043E71
+        for <dmaengine@vger.kernel.org>; Thu, 14 Jul 2022 15:04:08 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id bf13so2762615pgb.11
+        for <dmaengine@vger.kernel.org>; Thu, 14 Jul 2022 15:04:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20210112.gappssmtp.com; s=20210112;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8PAchEXjU/hpKREmMLz/eNhHJ5OIRwF0hugCxV08cb8=;
+        b=jvbJ4JpBQsHmD4/EIg81fsqcAB85ED0GPvthGUEz8yEFX3y/GzdRGeLqbl80N410j4
+         taurkoZFYu+OyFw0WlUzU4PQjp0mizVPNPuL+Lx2bw6aAE6frJ+tKOUPh59CiYVBCveQ
+         UKadKyjkBsaggdv/7xVNFktE5PFWF06kcqSo2JQIeJ0lNXana4QZIpZIhPbmR4b9HzKW
+         t5o1wx3DW7pbA/RO1ybpmnosuzneJnshWaJ/oRt7jGe5eVIwoZWqvHlSjLadZCVjXBcz
+         b0CvjBdIZd0slBHZ9m1bsPqM8BFJuGuE8unE5L+mr84Niu9gKe6xCStd3Y7mFhCQS5mO
+         PtyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=8PAchEXjU/hpKREmMLz/eNhHJ5OIRwF0hugCxV08cb8=;
+        b=JeYZml7/pNSheOzOuVbb4eNEY0iremKC/2uTzYMnxPL431G0bhkZ87Jka2H1kWqzQP
+         1p8KW0FYE0uZRmQspX8tkWLV5ujHvg7Z2XW0Ph45XqlVZlzf4dKJSL/JO006T7nTIqmF
+         2Y3KuSnzWNCXxy0hcfAsIOIg2J5UImKnkSmRSGfrQPHQ8vGcFkQe1Q+dr3NZ0csEQFUY
+         wpeYmopeRGJeAEPOwLC5++yxhfZj+ttkH1/+Xm/fnIypD6i7tZoih4yVeKk0gOMUYw+w
+         wW0uR6recgZEd44vWiVkkb2xFQgVfWFk3RYiyh6Vrv0pv234aeKlhVoca3XlSUhiLDI/
+         AytA==
+X-Gm-Message-State: AJIora/ZC3z50EXQJQj6qGlnKvfoMiZQmVGv60UBLXAKm3V5qL2RFZpf
+        t1wHaAPC/8FDUfMBsaLvSehlfg==
+X-Google-Smtp-Source: AGRyM1t7Xans7iI60RVbBY+W2WdNd4P9acnFda4kCQfiulDuJ6jzcy+AALghFtn/Vk8z0eOi6QXisA==
+X-Received: by 2002:a63:ff66:0:b0:412:6f4c:1e11 with SMTP id s38-20020a63ff66000000b004126f4c1e11mr9323094pgk.396.1657836248087;
+        Thu, 14 Jul 2022 15:04:08 -0700 (PDT)
+Received: from localhost ([50.221.140.186])
+        by smtp.gmail.com with ESMTPSA id c4-20020a170902d48400b0016ca0fe6df5sm1957872plg.273.2022.07.14.15.04.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Jul 2022 15:04:07 -0700 (PDT)
+Date:   Thu, 14 Jul 2022 15:04:07 -0700 (PDT)
+X-Google-Original-Date: Thu, 14 Jul 2022 15:01:38 PDT (-0700)
+Subject:     Re: [PATCH v5 00/13] Canaan devicetree fixes
+In-Reply-To: <20220705215213.1802496-1-mail@conchuod.ie>
+CC:     airlied@linux.ie, daniel@ffwll.ch, thierry.reding@gmail.com,
+        sam@ravnborg.org, Eugeniy.Paltsev@synopsys.com,
+        fancer.lancer@gmail.com, daniel.lezcano@linaro.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, conor.dooley@microchip.com,
+        masahiroy@kernel.org, damien.lemoal@opensource.wdc.com,
+        geert@linux-m68k.org, niklas.cassel@wdc.com,
+        dillon.minfei@gmail.com, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-riscv@lists.infradead.org
+From:   Palmer Dabbelt <palmer@rivosinc.com>
+To:     mail@conchuod.ie, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, vkoul@kernel.org
+Message-ID: <mhng-85044754-c361-40bc-a6a2-7082f35930bb@palmer-ri-x1c9>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 7/13/22 16:21, Amelie Delaunay wrote:
+On Tue, 05 Jul 2022 14:52:01 PDT (-0700), mail@conchuod.ie wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+>
+> Hey all,
+> This series should rid us of dtbs_check errors for the RISC-V Canaan k210
+> based boards. To make keeping it that way a little easier, I changed the
+> Canaan devicetree Makefile so that it would build all of the devicetrees
+> in the directory if SOC_CANAAN.
+>
+> I *DO NOT* have any Canaan hardware so I have not tested any of this in
+> action. Since I sent v1, I tried to buy some since it's cheap - but could
+> out of the limited stockists none seemed to want to deliver to Ireland :(
+> I based the series on next-20220617.
+>
+> Thanks,
+> Conor.
+>
+> Changes since v4:
+> - add Rob's tags from v3
+> - sram: rephrase the binding description
+> - ASoC: dropped the applied binding
+>
+> Changes since v3:
+> - dts: drop the bogus "regs" property pointed out by Niklas
+> - dma/timer: add Serge's reviews (and expand on the dma interrupt
+>   description)
+> - dts: add Niklas' T-b where I felt it was suitable. lmk if you think it
+>   applies more broadly
+> - spi: drop the applied spi dt-binding change. Thanks Mark.
+>
+> Changes since v2:
+> - i2s: added clocks maxItems
+> - dma: unconditionally extended the interrupts & dropped canaan
+>   compatible
+> - timer: as per Sergey, split the timer dts nodes in 2 & drop the
+>   binding patch
+> - ili9341: add a canaan specific compatible to the binding and dts
+>
+> Changes since v1:
+> - I added a new dt node & compatible for the SRAM memory controller due
+>   Damien's wish to preserve the inter-op with U-Boot.
+> - The dw-apb-ssi binding now uses the default rx/tx widths
+> - A new patch fixes bus {ranges,reg} warnings
+> - Rearranged the patches in a slightly more logical order
+>
+> Conor Dooley (13):
+>   dt-bindings: display: convert ilitek,ili9341.txt to dt-schema
+>   dt-bindings: display: ili9341: document canaan kd233's lcd
+>   dt-bindings: dma: dw-axi-dmac: extend the number of interrupts
+>   dt-bindings: memory-controllers: add canaan k210 sram controller
+>   riscv: dts: canaan: fix the k210's memory node
+>   riscv: dts: canaan: fix the k210's timer nodes
+>   riscv: dts: canaan: fix mmc node names
+>   riscv: dts: canaan: fix kd233 display spi frequency
+>   riscv: dts: canaan: use custom compatible for k210 i2s
+>   riscv: dts: canaan: remove spi-max-frequency from controllers
+>   riscv: dts: canaan: fix bus {ranges,reg} warnings
+>   riscv: dts: canaan: add specific compatible for kd233's LCD
+>   riscv: dts: canaan: build all devicetress if SOC_CANAAN
+>
+>  .../bindings/display/ilitek,ili9341.txt       | 27 -------
+>  .../display/panel/ilitek,ili9341.yaml         | 49 +++++++++----
+>  .../bindings/dma/snps,dw-axi-dmac.yaml        |  7 +-
+>  .../memory-controllers/canaan,k210-sram.yaml  | 52 +++++++++++++
+>  arch/riscv/boot/dts/canaan/Makefile           | 10 ++-
+>  arch/riscv/boot/dts/canaan/canaan_kd233.dts   |  6 +-
+>  arch/riscv/boot/dts/canaan/k210.dtsi          | 73 +++++++++++++------
+>  .../riscv/boot/dts/canaan/sipeed_maix_bit.dts |  2 +-
+>  .../boot/dts/canaan/sipeed_maix_dock.dts      |  2 +-
+>  arch/riscv/boot/dts/canaan/sipeed_maix_go.dts |  2 +-
+>  .../boot/dts/canaan/sipeed_maixduino.dts      |  2 +-
+>  11 files changed, 159 insertions(+), 73 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/ilitek,ili9341.txt
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/canaan,k210-sram.yaml
 
-[...]
+I'm trying to sort out how to merge this one.  I'm not opposed to taking 
+it through the RISC-V tree as Rob's reviewed/acked the bindings, but 
+just figured I'd say something before putting anything on for-next to 
+try and minimize confusion.
 
-> diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-> index adb25a11c70f..3916295fe154 100644
-> --- a/drivers/dma/stm32-dma.c
-> +++ b/drivers/dma/stm32-dma.c
-> @@ -142,6 +142,8 @@
->   #define STM32_DMA_DIRECT_MODE_GET(n)	(((n) & STM32_DMA_DIRECT_MODE_MASK) >> 2)
->   #define STM32_DMA_ALT_ACK_MODE_MASK	BIT(4)
->   #define STM32_DMA_ALT_ACK_MODE_GET(n)	(((n) & STM32_DMA_ALT_ACK_MODE_MASK) >> 4)
-> +#define STM32_DMA_MDMA_STREAM_ID_MASK	GENMASK(19, 16)
-> +#define STM32_DMA_MDMA_STREAM_ID_GET(n) (((n) & STM32_DMA_MDMA_STREAM_ID_MASK) >> 16)
+Unless I'm missing something it's just patch 3 that's been taken so far, 
+via Vinod's tree.  I've dropped that one and put the rest on 
+palmer/riscv-canaan_dt_schema, if that looks good then I'll take it into 
+riscv/for-next when this loops back to the top of my queue.
 
-Try FIELD_GET() from include/linux/bitfield.h
-
-[...]
-
-> @@ -1630,6 +1670,20 @@ static int stm32_dma_probe(struct platform_device *pdev)
->   		chan->id = i;
->   		chan->vchan.desc_free = stm32_dma_desc_free;
->   		vchan_init(&chan->vchan, dd);
-> +
-> +		chan->mdma_config.ifcr = res->start;
-> +		chan->mdma_config.ifcr += (chan->id & 4) ? STM32_DMA_HIFCR : STM32_DMA_LIFCR;
-> +
-> +		chan->mdma_config.tcf = STM32_DMA_TCI;
-> +		/*
-> +		 * bit0 of chan->id represents the need to left shift by 6
-> +		 * bit1 of chan->id represents the need to extra left shift by 16
-> +		 * TCIF0, chan->id = b0000; TCIF4, chan->id = b0100: left shift by 0*6 + 0*16
-> +		 * TCIF1, chan->id = b0001; TCIF5, chan->id = b0101: left shift by 1*6 + 0*16
-> +		 * TCIF2, chan->id = b0010; TCIF6, chan->id = b0110: left shift by 0*6 + 1*16
-> +		 * TCIF3, chan->id = b0011; TCIF7, chan->id = b0111: left shift by 1*6 + 1*16
-> +		 */
-> +		chan->mdma_config.tcf <<= (6 * (chan->id & 0x1) + 16 * ((chan->id & 0x2) >> 1));
-
-Some sort of symbolic macros instead of open-coded constants could help 
-readability here.
-
-[...]
+Thanks!

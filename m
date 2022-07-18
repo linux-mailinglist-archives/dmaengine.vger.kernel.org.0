@@ -2,94 +2,80 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5200576C9F
-	for <lists+dmaengine@lfdr.de>; Sat, 16 Jul 2022 10:47:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB35D577D1A
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Jul 2022 10:05:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229776AbiGPIrB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 16 Jul 2022 04:47:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60510 "EHLO
+        id S233534AbiGRIFW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 18 Jul 2022 04:05:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229571AbiGPIrA (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 16 Jul 2022 04:47:00 -0400
-Received: from m15111.mail.126.com (m15111.mail.126.com [220.181.15.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C39732AC51
-        for <dmaengine@vger.kernel.org>; Sat, 16 Jul 2022 01:46:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Ze23J
-        HIq0PY4GotmMCcpSUtTGrzVji/CTlj2NzaUdec=; b=ohBBTWh5yJmEKi72zUEOC
-        9LUNR5eyhx5OBLWRYy5jFwXhoHR4d17BSK32trVVQhRObMOPtt7aMPLhpxHpDKXb
-        zwuDgUx1gS0ljj5Unl6zzSD9WTGy+ddB9MAOSWUgJRF3ryTZcockzRSl5UUYH+de
-        7m77d0a853n8pG/ITRSozM=
-Received: from localhost.localdomain (unknown [124.16.139.61])
-        by smtp1 (Coremail) with SMTP id C8mowAAHNyfzetJidnNXGw--.2003S2;
-        Sat, 16 Jul 2022 16:46:44 +0800 (CST)
-From:   Liang He <windhl@126.com>
-To:     peter.ujfalusi@gmail.com, vkoul@kernel.org,
-        dmaengine@vger.kernel.org, windhl@126.com
-Subject: [PATCH] dmaengine: ti: k3-udma-private: Fix refcount leak bug in of_xudma_dev_get()
-Date:   Sat, 16 Jul 2022 16:46:42 +0800
-Message-Id: <20220716084642.701268-1-windhl@126.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S233519AbiGRIFV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 18 Jul 2022 04:05:21 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12AB065BD
+        for <dmaengine@vger.kernel.org>; Mon, 18 Jul 2022 01:05:20 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id d12so17966001lfq.12
+        for <dmaengine@vger.kernel.org>; Mon, 18 Jul 2022 01:05:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=satlab.com; s=google;
+        h=references:user-agent:from:to:cc:subject:date:in-reply-to
+         :message-id:mime-version;
+        bh=lI2pF+MyAfTvAZEEpQaoOz9tN/rdvUajJ/N5Ua+djXM=;
+        b=unH59UMNefrVHuM3ShJeWVlM3TyX6udGdV1J04nUzsrhMs1VgZZKZbKrSqs79VFirF
+         5CiXRuWhzm6JBT/10yLu6/yK+Xe2WWARGTk43mIX+wLDeWgKiO1qx/rucQubP346BO6X
+         21CUiDvoERUrwzY64ALSGSG9+BNpPgET/wHYMmGVz7GduK4o2uYPsD7Y1HbRRJZXK8I/
+         6g06TnKf2/wL/0REfnAOXQL+NI4x4+b8uxw/11GMGUMrYEXKDtDRV6iY8SfFNliE8r0f
+         FYUxk4MBDwNyIcSaRWx4ZW/ZuGFJxxsAh9E+aShZpG/eswMe3GSdjcZNKghZPBHGZy6f
+         XILg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject:date
+         :in-reply-to:message-id:mime-version;
+        bh=lI2pF+MyAfTvAZEEpQaoOz9tN/rdvUajJ/N5Ua+djXM=;
+        b=DzCy0SOPKTDOC+LqPJe/UhHyH+MahUYCGn0aOWuSB0DGRru1w9exxOHjnBVgJxu6ys
+         ZWrxO6WtMAz/BMCjLvhgj7j2Usn16NYDw6JKsreBZJ1fVbPdalHjkgvt/SxXqy4V96wR
+         9pYT/uU5Ax6HcREG8KRBr0nL9d+8eNvX0iL53SuqzlcPu+ZuOGjeSLPbM96+cDy415Y8
+         5/nQcGQPIry7iTXoUDYaIzIy8cNUnJgA6wz9WrsbqN+2ti0vdPYLkQus8PTB3jQK65WX
+         EQ7q7xPTfIhsstuytfN6yEQ+m0sBrW5AcKgbnyZG2RupGhH9Kg9bevHVQtDAqzQdx6hl
+         ND6Q==
+X-Gm-Message-State: AJIora+M9QKfy8hLJN3znPa/lT8k03f7Cg0r4pJtD8Vea9ezPPCq9+ab
+        WHSSZogEdfRCtIbhoHRH380c5hkuLlE6Dy3W
+X-Google-Smtp-Source: AGRyM1uHWM35ulh182BYTbk+Rvg7n+SjMdmJS1aEmDojP+1yLFa6kWMzZKAIGQU7e2Os7ngdJGXmWw==
+X-Received: by 2002:a05:6512:2527:b0:48a:3175:d647 with SMTP id be39-20020a056512252700b0048a3175d647mr5453709lfb.326.1658131518377;
+        Mon, 18 Jul 2022 01:05:18 -0700 (PDT)
+Received: from tausen-desktop.satlab.com ([77.243.61.235])
+        by smtp.gmail.com with ESMTPSA id i10-20020a2ea22a000000b0025d9552fcafsm1975037ljm.97.2022.07.18.01.05.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Jul 2022 01:05:17 -0700 (PDT)
+References: <20220714110644.2849191-1-mta@satlab.com>
+ <PH0PR03MB6786D02B3DDFAD0B13A975DB998B9@PH0PR03MB6786.namprd03.prod.outlook.com>
+User-agent: mu4e 1.6.10; emacs 28.1
+From:   Mathias Tausen <mta@satlab.com>
+To:     "Sa, Nuno" <Nuno.Sa@analog.com>
+Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH] dmaengine: axi-dmac: check cache coherency register
+Date:   Mon, 18 Jul 2022 09:31:35 +0200
+In-reply-to: <PH0PR03MB6786D02B3DDFAD0B13A975DB998B9@PH0PR03MB6786.namprd03.prod.outlook.com>
+Message-ID: <8735eyj176.fsf@satlab.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: C8mowAAHNyfzetJidnNXGw--.2003S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7KFW3XrWkWFyrtr15Ar1rtFb_yoW8Xr4rpF
-        95C34S9rWkKr4jkr10va48Z343tw1xtrWYga97A39xZrnxXw1DXr4UXry5urZ8AryrtFW3
-        tw1UtFyFkFy8AaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zi4rWxUUUUU=
-X-Originating-IP: [124.16.139.61]
-X-CM-SenderInfo: hzlqvxbo6rjloofrz/xtbBGhRAF1-HZgl4QgAAsU
+Content-Type: text/plain
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-We should call of_node_put() for the reference returned by
-of_parse_phandle() in fail path or when it is not used anymore.
-Here we only need to move the of_node_put() before the check.
+> BTW, Mathias you should +cc the maintainers... Take a look at
+>
+> scripts/get_maintainer.pl
 
-Fixes: d70241913413 ("dmaengine: ti: k3-udma: Add glue layer for non DMAengine users")
-Signed-off-by: Liang He <windhl@126.com>
----
+Thanks, Nuno.
 
-I cannot find the 'k3-udma-private.c' comiple item in drivers/dma/ti/Makefile, 
-I wonder if the author has forgotten the compile item and the
-k3-udma-private.c has not been compiled before.
++CC: Vinod
 
-I have tried to add k3-udma-private.o in the Makefile, but there are lots of
-compile errors.  
-Please check it carefully and if possbile please teach me how to compile it, thanks.
-
-
- drivers/dma/ti/k3-udma-private.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/dma/ti/k3-udma-private.c b/drivers/dma/ti/k3-udma-private.c
-index d4f1e4e9603a..ec274ef7d5ea 100644
---- a/drivers/dma/ti/k3-udma-private.c
-+++ b/drivers/dma/ti/k3-udma-private.c
-@@ -31,14 +31,13 @@ struct udma_dev *of_xudma_dev_get(struct device_node *np, const char *property)
- 	}
- 
- 	pdev = of_find_device_by_node(udma_node);
-+	if (np != udma_node)
-+		of_node_put(udma_node);
- 	if (!pdev) {
- 		pr_debug("UDMA device not found\n");
- 		return ERR_PTR(-EPROBE_DEFER);
- 	}
- 
--	if (np != udma_node)
--		of_node_put(udma_node);
--
- 	ud = platform_get_drvdata(pdev);
- 	if (!ud) {
- 		pr_debug("UDMA has not been probed\n");
--- 
-2.25.1
-
+- Tausen

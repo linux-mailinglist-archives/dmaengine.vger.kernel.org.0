@@ -2,44 +2,44 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A20E57A320
-	for <lists+dmaengine@lfdr.de>; Tue, 19 Jul 2022 17:31:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C7A057A318
+	for <lists+dmaengine@lfdr.de>; Tue, 19 Jul 2022 17:31:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235926AbiGSPbm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 19 Jul 2022 11:31:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34666 "EHLO
+        id S230249AbiGSPbl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 19 Jul 2022 11:31:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230146AbiGSPbl (ORCPT
+        with ESMTP id S229676AbiGSPbl (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Tue, 19 Jul 2022 11:31:41 -0400
 Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82DF258866;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 829A05885F;
         Tue, 19 Jul 2022 08:31:39 -0700 (PDT)
 Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26JF0bHX006815;
-        Tue, 19 Jul 2022 17:31:28 +0200
+        by mx07-00178001.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26JF0bHW006815;
+        Tue, 19 Jul 2022 17:31:27 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=selector1;
- bh=agcaLyf9kTtMbLkC1PuPB3aViViREA9KZ4jkslZJ50E=;
- b=OEB7XkDqWLK3Aeprus2WAHe11QzSTMcchuGKAc2trLT73JFW30EQ59FGByoslo4yCnAB
- vlt1bs0aLCJ3mpZaV9NNzDK66ZDmfroDJF6oAb8271h9+4P7RsaSnxZuaFACf5Gy36ho
- eGN2xm+LFuitqRfOKGOAQrcnPzsXVD+EkaeNQe3fG8H28xwPYipQuQhEMzbj3z4UuHo5
- 9ou031DTztXvFsLsyssPxl/gotGTuHetUT/nkZJL6XSHehNveQ/hrgEKBRYrytDgAANY
- /aJxPZIv/d5VUcC7MCLiBQ2TrgAWWYKS8gpgXxp57b7/pkFRQAcd9IkZrLaP+gfUi7fP QA== 
+ bh=ArTNB40jS2q3XwAq9ybuCp3eEvWoemMYUdHELO8qvCw=;
+ b=atGIG4J4dnzpBEmxLtbRBNZghvhWrNKd9K9dAouyTZJes+PhQn3N7E6IlbJQbbTl9tsE
+ zGXdoOqqOA/hAaHcHPpvSq85E4I7BONq8anD0LDMzW9joKE75QYlaaYhD6RXAQBWDzR1
+ 9HCeuHTZJQ2ueA5K082eAnU3Z0OJvlXC0Vd5YjEUtbRJ3SsWG1azbDchYJWICyCNXVlN
+ u8P6b09PO2UmK8ViO0S1/aV+0CvtEVk3J6Mr+CMukfvklNFn14/o+6ykwlsupiikqhnp
+ wk8cL0pPCy7Dx/AncMCZPJk8JmEa44VGcvnaBgjG9/MAhJtZzuMZOdf7fjr8gajQAay3 Pg== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3hbnp60n03-1
+        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3hbnp60n00-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Jul 2022 17:31:28 +0200
+        Tue, 19 Jul 2022 17:31:27 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CC4BE10002A;
-        Tue, 19 Jul 2022 17:31:27 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EF8C0100034;
+        Tue, 19 Jul 2022 17:31:26 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C7B4F22AFE6;
-        Tue, 19 Jul 2022 17:31:27 +0200 (CEST)
-Received: from localhost (10.75.127.47) by SHFDAG1NODE2.st.com (10.75.129.70)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EB26222AFE6;
+        Tue, 19 Jul 2022 17:31:26 +0200 (CEST)
+Received: from localhost (10.75.127.45) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.20; Tue, 19 Jul
- 2022 17:31:25 +0200
+ 2022 17:31:26 +0200
 From:   Amelie Delaunay <amelie.delaunay@foss.st.com>
 To:     Jonathan Corbet <corbet@lwn.net>, Vinod Koul <vkoul@kernel.org>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
@@ -49,16 +49,16 @@ CC:     <linux-doc@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, Marek Vasut <marex@denx.de>,
         Amelie Delaunay <amelie.delaunay@foss.st.com>
-Subject: [PATCH v3 1/6] dmaengine: stm32-dma: introduce 3 helpers to address channel flags
-Date:   Tue, 19 Jul 2022 17:31:17 +0200
-Message-ID: <20220719153122.620730-2-amelie.delaunay@foss.st.com>
+Subject: [PATCH v3 2/6] dmaengine: stm32-dma: use bitfield helpers
+Date:   Tue, 19 Jul 2022 17:31:18 +0200
+Message-ID: <20220719153122.620730-3-amelie.delaunay@foss.st.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220719153122.620730-1-amelie.delaunay@foss.st.com>
 References: <20220719153122.620730-1-amelie.delaunay@foss.st.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
+X-Originating-IP: [10.75.127.45]
 X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SHFDAG1NODE2.st.com
  (10.75.129.70)
 X-Proofpoint-Virus-Version: vendor=baseguard
@@ -73,95 +73,176 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Channels 0 to 3 flags are described in DMA_LISR and DMA_LIFCR (L as Low).
-Channels 4 to 7 flags are described in DMA_HISR and DMA_HIFCR (H as High).
-Macro STM32_DMA_ISR(n) returns the interrupt status register offset for the
-channel id (n).
-Macro STM32_DMA_IFCR(n) returns the interrupt flag clear register offset
-for the channel id (n).
-
-If chan->id % 4 = 2 or 3, then its flags are left-shifted by 16 bits.
-If chan->id % 4 = 1 or 3, then its flags are additionally left-shifted by 6
-bits.
-If chan->id % 4 = 0, then its flags are not shifted.
-Macro STM32_DMA_FLAGS_SHIFT(n) returns the required shift to get or set the
-channel flags mask.
+Use the FIELD_{GET,PREP}() helpers, instead of defining custom macros
+implementing the same operations.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
 ---
 Introduced in patchset v3 to ease readibility of code.
 ---
- drivers/dma/stm32-dma.c | 29 ++++++++++++-----------------
- 1 file changed, 12 insertions(+), 17 deletions(-)
+ drivers/dma/stm32-dma.c | 60 +++++++++++++++++------------------------
+ 1 file changed, 25 insertions(+), 35 deletions(-)
 
 diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index adb25a11c70f..5d67e168aaee 100644
+index 5d67e168aaee..6aa281561f38 100644
 --- a/drivers/dma/stm32-dma.c
 +++ b/drivers/dma/stm32-dma.c
-@@ -32,8 +32,10 @@
+@@ -9,6 +9,7 @@
+  *         Pierre-Yves Mordret <pierre-yves.mordret@st.com>
+  */
  
- #define STM32_DMA_LISR			0x0000 /* DMA Low Int Status Reg */
- #define STM32_DMA_HISR			0x0004 /* DMA High Int Status Reg */
-+#define STM32_DMA_ISR(n)		(((n) & 4) ? STM32_DMA_HISR : STM32_DMA_LISR)
- #define STM32_DMA_LIFCR			0x0008 /* DMA Low Int Flag Clear Reg */
- #define STM32_DMA_HIFCR			0x000c /* DMA High Int Flag Clear Reg */
-+#define STM32_DMA_IFCR(n)		(((n) & 4) ? STM32_DMA_HIFCR : STM32_DMA_LIFCR)
- #define STM32_DMA_TCI			BIT(5) /* Transfer Complete Interrupt */
- #define STM32_DMA_HTI			BIT(4) /* Half Transfer Interrupt */
- #define STM32_DMA_TEI			BIT(3) /* Transfer Error Interrupt */
-@@ -43,6 +45,12 @@
- 					 | STM32_DMA_TEI \
- 					 | STM32_DMA_DMEI \
- 					 | STM32_DMA_FEI)
-+/*
-+ * If (chan->id % 4) is 2 or 3, left shift the mask by 16 bits;
-+ * if (ch % 4) is 1 or 3, additionally left shift the mask by 6 bits.
-+ */
-+#define STM32_DMA_FLAGS_SHIFT(n)	({ typeof(n) (_n) = (n); \
-+					   (((_n) & 2) << 3) | (((_n) & 1) * 6); })
++#include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/dmaengine.h>
+@@ -54,20 +55,13 @@
  
  /* DMA Stream x Configuration Register */
  #define STM32_DMA_SCR(x)		(0x0010 + 0x18 * (x)) /* x = 0..7 */
-@@ -401,17 +409,10 @@ static u32 stm32_dma_irq_status(struct stm32_dma_chan *chan)
- 	/*
- 	 * Read "flags" from DMA_xISR register corresponding to the selected
- 	 * DMA channel at the correct bit offset inside that register.
--	 *
--	 * If (ch % 4) is 2 or 3, left shift the mask by 16 bits.
--	 * If (ch % 4) is 1 or 3, additionally left shift the mask by 6 bits.
- 	 */
+-#define STM32_DMA_SCR_REQ(n)		((n & 0x7) << 25)
++#define STM32_DMA_SCR_REQ_MASK		GENMASK(27, 25)
+ #define STM32_DMA_SCR_MBURST_MASK	GENMASK(24, 23)
+-#define STM32_DMA_SCR_MBURST(n)	        ((n & 0x3) << 23)
+ #define STM32_DMA_SCR_PBURST_MASK	GENMASK(22, 21)
+-#define STM32_DMA_SCR_PBURST(n)	        ((n & 0x3) << 21)
+ #define STM32_DMA_SCR_PL_MASK		GENMASK(17, 16)
+-#define STM32_DMA_SCR_PL(n)		((n & 0x3) << 16)
+ #define STM32_DMA_SCR_MSIZE_MASK	GENMASK(14, 13)
+-#define STM32_DMA_SCR_MSIZE(n)		((n & 0x3) << 13)
+ #define STM32_DMA_SCR_PSIZE_MASK	GENMASK(12, 11)
+-#define STM32_DMA_SCR_PSIZE(n)		((n & 0x3) << 11)
+-#define STM32_DMA_SCR_PSIZE_GET(n)	((n & STM32_DMA_SCR_PSIZE_MASK) >> 11)
+ #define STM32_DMA_SCR_DIR_MASK		GENMASK(7, 6)
+-#define STM32_DMA_SCR_DIR(n)		((n & 0x3) << 6)
+ #define STM32_DMA_SCR_TRBUFF		BIT(20) /* Bufferable transfer for USART/UART */
+ #define STM32_DMA_SCR_CT		BIT(19) /* Target in double buffer */
+ #define STM32_DMA_SCR_DBM		BIT(18) /* Double Buffer Mode */
+@@ -104,7 +98,6 @@
+ /* DMA stream x FIFO control register */
+ #define STM32_DMA_SFCR(x)		(0x0024 + 0x18 * (x))
+ #define STM32_DMA_SFCR_FTH_MASK		GENMASK(1, 0)
+-#define STM32_DMA_SFCR_FTH(n)		(n & STM32_DMA_SFCR_FTH_MASK)
+ #define STM32_DMA_SFCR_FEIE		BIT(7) /* FIFO error interrupt enable */
+ #define STM32_DMA_SFCR_DMDIS		BIT(2) /* Direct mode disable */
+ #define STM32_DMA_SFCR_MASK		(STM32_DMA_SFCR_FEIE \
+@@ -145,11 +138,8 @@
  
--	if (chan->id & 4)
--		dma_isr = stm32_dma_read(dmadev, STM32_DMA_HISR);
--	else
--		dma_isr = stm32_dma_read(dmadev, STM32_DMA_LISR);
--
--	flags = dma_isr >> (((chan->id & 2) << 3) | ((chan->id & 1) * 6));
-+	dma_isr = stm32_dma_read(dmadev, STM32_DMA_ISR(chan->id));
-+	flags = dma_isr >> STM32_DMA_FLAGS_SHIFT(chan->id);
+ /* DMA Features */
+ #define STM32_DMA_THRESHOLD_FTR_MASK	GENMASK(1, 0)
+-#define STM32_DMA_THRESHOLD_FTR_GET(n)	((n) & STM32_DMA_THRESHOLD_FTR_MASK)
+ #define STM32_DMA_DIRECT_MODE_MASK	BIT(2)
+-#define STM32_DMA_DIRECT_MODE_GET(n)	(((n) & STM32_DMA_DIRECT_MODE_MASK) >> 2)
+ #define STM32_DMA_ALT_ACK_MODE_MASK	BIT(4)
+-#define STM32_DMA_ALT_ACK_MODE_GET(n)	(((n) & STM32_DMA_ALT_ACK_MODE_MASK) >> 4)
  
- 	return flags & STM32_DMA_MASKI;
+ enum stm32_dma_width {
+ 	STM32_DMA_BYTE,
+@@ -856,7 +846,8 @@ static int stm32_dma_resume(struct dma_chan *c)
+ 		sg_req = &chan->desc->sg_req[chan->next_sg - 1];
+ 
+ 	ndtr = sg_req->chan_reg.dma_sndtr;
+-	offset = (ndtr - chan_reg.dma_sndtr) << STM32_DMA_SCR_PSIZE_GET(chan_reg.dma_scr);
++	offset = (ndtr - chan_reg.dma_sndtr);
++	offset <<= FIELD_GET(STM32_DMA_SCR_PSIZE_MASK, chan_reg.dma_scr);
+ 	spar = sg_req->chan_reg.dma_spar;
+ 	sm0ar = sg_req->chan_reg.dma_sm0ar;
+ 	sm1ar = sg_req->chan_reg.dma_sm1ar;
+@@ -968,16 +959,16 @@ static int stm32_dma_set_xfer_param(struct stm32_dma_chan *chan,
+ 		if (src_burst_size < 0)
+ 			return src_burst_size;
+ 
+-		dma_scr = STM32_DMA_SCR_DIR(STM32_DMA_MEM_TO_DEV) |
+-			STM32_DMA_SCR_PSIZE(dst_bus_width) |
+-			STM32_DMA_SCR_MSIZE(src_bus_width) |
+-			STM32_DMA_SCR_PBURST(dst_burst_size) |
+-			STM32_DMA_SCR_MBURST(src_burst_size);
++		dma_scr = FIELD_PREP(STM32_DMA_SCR_DIR_MASK, STM32_DMA_MEM_TO_DEV) |
++			FIELD_PREP(STM32_DMA_SCR_PSIZE_MASK, dst_bus_width) |
++			FIELD_PREP(STM32_DMA_SCR_MSIZE_MASK, src_bus_width) |
++			FIELD_PREP(STM32_DMA_SCR_PBURST_MASK, dst_burst_size) |
++			FIELD_PREP(STM32_DMA_SCR_MBURST_MASK, src_burst_size);
+ 
+ 		/* Set FIFO threshold */
+ 		chan->chan_reg.dma_sfcr &= ~STM32_DMA_SFCR_FTH_MASK;
+ 		if (fifoth != STM32_DMA_FIFO_THRESHOLD_NONE)
+-			chan->chan_reg.dma_sfcr |= STM32_DMA_SFCR_FTH(fifoth);
++			chan->chan_reg.dma_sfcr |= FIELD_PREP(STM32_DMA_SFCR_FTH_MASK, fifoth);
+ 
+ 		/* Set peripheral address */
+ 		chan->chan_reg.dma_spar = chan->dma_sconfig.dst_addr;
+@@ -1025,16 +1016,16 @@ static int stm32_dma_set_xfer_param(struct stm32_dma_chan *chan,
+ 		if (dst_burst_size < 0)
+ 			return dst_burst_size;
+ 
+-		dma_scr = STM32_DMA_SCR_DIR(STM32_DMA_DEV_TO_MEM) |
+-			STM32_DMA_SCR_PSIZE(src_bus_width) |
+-			STM32_DMA_SCR_MSIZE(dst_bus_width) |
+-			STM32_DMA_SCR_PBURST(src_burst_size) |
+-			STM32_DMA_SCR_MBURST(dst_burst_size);
++		dma_scr = FIELD_PREP(STM32_DMA_SCR_DIR_MASK, STM32_DMA_DEV_TO_MEM) |
++			FIELD_PREP(STM32_DMA_SCR_PSIZE_MASK, src_bus_width) |
++			FIELD_PREP(STM32_DMA_SCR_MSIZE_MASK, dst_bus_width) |
++			FIELD_PREP(STM32_DMA_SCR_PBURST_MASK, src_burst_size) |
++			FIELD_PREP(STM32_DMA_SCR_MBURST_MASK, dst_burst_size);
+ 
+ 		/* Set FIFO threshold */
+ 		chan->chan_reg.dma_sfcr &= ~STM32_DMA_SFCR_FTH_MASK;
+ 		if (fifoth != STM32_DMA_FIFO_THRESHOLD_NONE)
+-			chan->chan_reg.dma_sfcr |= STM32_DMA_SFCR_FTH(fifoth);
++			chan->chan_reg.dma_sfcr |= FIELD_PREP(STM32_DMA_SFCR_FTH_MASK, fifoth);
+ 
+ 		/* Set peripheral address */
+ 		chan->chan_reg.dma_spar = chan->dma_sconfig.src_addr;
+@@ -1242,16 +1233,15 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_dma_memcpy(
+ 
+ 		stm32_dma_clear_reg(&desc->sg_req[i].chan_reg);
+ 		desc->sg_req[i].chan_reg.dma_scr =
+-			STM32_DMA_SCR_DIR(STM32_DMA_MEM_TO_MEM) |
+-			STM32_DMA_SCR_PBURST(dma_burst) |
+-			STM32_DMA_SCR_MBURST(dma_burst) |
++			FIELD_PREP(STM32_DMA_SCR_DIR_MASK, STM32_DMA_MEM_TO_MEM) |
++			FIELD_PREP(STM32_DMA_SCR_PBURST_MASK, dma_burst) |
++			FIELD_PREP(STM32_DMA_SCR_MBURST_MASK, dma_burst) |
+ 			STM32_DMA_SCR_MINC |
+ 			STM32_DMA_SCR_PINC |
+ 			STM32_DMA_SCR_TCIE |
+ 			STM32_DMA_SCR_TEIE;
+ 		desc->sg_req[i].chan_reg.dma_sfcr |= STM32_DMA_SFCR_MASK;
+-		desc->sg_req[i].chan_reg.dma_sfcr |=
+-			STM32_DMA_SFCR_FTH(threshold);
++		desc->sg_req[i].chan_reg.dma_sfcr |= FIELD_PREP(STM32_DMA_SFCR_FTH_MASK, threshold);
+ 		desc->sg_req[i].chan_reg.dma_spar = src + offset;
+ 		desc->sg_req[i].chan_reg.dma_sm0ar = dest + offset;
+ 		desc->sg_req[i].chan_reg.dma_sndtr = xfer_count;
+@@ -1270,7 +1260,7 @@ static u32 stm32_dma_get_remaining_bytes(struct stm32_dma_chan *chan)
+ 	struct stm32_dma_device *dmadev = stm32_dma_get_dev(chan);
+ 
+ 	dma_scr = stm32_dma_read(dmadev, STM32_DMA_SCR(chan->id));
+-	width = STM32_DMA_SCR_PSIZE_GET(dma_scr);
++	width = FIELD_GET(STM32_DMA_SCR_PSIZE_MASK, dma_scr);
+ 	ndtr = stm32_dma_read(dmadev, STM32_DMA_SNDTR(chan->id));
+ 
+ 	return ndtr << width;
+@@ -1476,15 +1466,15 @@ static void stm32_dma_set_config(struct stm32_dma_chan *chan,
+ 	stm32_dma_clear_reg(&chan->chan_reg);
+ 
+ 	chan->chan_reg.dma_scr = cfg->stream_config & STM32_DMA_SCR_CFG_MASK;
+-	chan->chan_reg.dma_scr |= STM32_DMA_SCR_REQ(cfg->request_line);
++	chan->chan_reg.dma_scr |= FIELD_PREP(STM32_DMA_SCR_REQ_MASK, cfg->request_line);
+ 
+ 	/* Enable Interrupts  */
+ 	chan->chan_reg.dma_scr |= STM32_DMA_SCR_TEIE | STM32_DMA_SCR_TCIE;
+ 
+-	chan->threshold = STM32_DMA_THRESHOLD_FTR_GET(cfg->features);
+-	if (STM32_DMA_DIRECT_MODE_GET(cfg->features))
++	chan->threshold = FIELD_GET(STM32_DMA_THRESHOLD_FTR_MASK, cfg->features);
++	if (FIELD_GET(STM32_DMA_DIRECT_MODE_MASK, cfg->features))
+ 		chan->threshold = STM32_DMA_FIFO_THRESHOLD_NONE;
+-	if (STM32_DMA_ALT_ACK_MODE_GET(cfg->features))
++	if (FIELD_GET(STM32_DMA_ALT_ACK_MODE_MASK, cfg->features))
+ 		chan->chan_reg.dma_scr |= STM32_DMA_SCR_TRBUFF;
  }
-@@ -424,17 +425,11 @@ static void stm32_dma_irq_clear(struct stm32_dma_chan *chan, u32 flags)
- 	/*
- 	 * Write "flags" to the DMA_xIFCR register corresponding to the selected
- 	 * DMA channel at the correct bit offset inside that register.
--	 *
--	 * If (ch % 4) is 2 or 3, left shift the mask by 16 bits.
--	 * If (ch % 4) is 1 or 3, additionally left shift the mask by 6 bits.
- 	 */
- 	flags &= STM32_DMA_MASKI;
--	dma_ifcr = flags << (((chan->id & 2) << 3) | ((chan->id & 1) * 6));
-+	dma_ifcr = flags << STM32_DMA_FLAGS_SHIFT(chan->id);
  
--	if (chan->id & 4)
--		stm32_dma_write(dmadev, STM32_DMA_HIFCR, dma_ifcr);
--	else
--		stm32_dma_write(dmadev, STM32_DMA_LIFCR, dma_ifcr);
-+	stm32_dma_write(dmadev, STM32_DMA_IFCR(chan->id), dma_ifcr);
- }
- 
- static int stm32_dma_disable_chan(struct stm32_dma_chan *chan)
 -- 
 2.25.1
 

@@ -2,126 +2,141 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6730457A3A2
-	for <lists+dmaengine@lfdr.de>; Tue, 19 Jul 2022 17:49:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C916357B12B
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Jul 2022 08:38:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239260AbiGSPtV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 19 Jul 2022 11:49:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50870 "EHLO
+        id S229689AbiGTGiC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 20 Jul 2022 02:38:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239143AbiGSPtV (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 19 Jul 2022 11:49:21 -0400
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D837A599DA;
-        Tue, 19 Jul 2022 08:49:19 -0700 (PDT)
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26JF18n2006836;
-        Tue, 19 Jul 2022 17:49:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=selector1;
- bh=xNJ4ErN3u9jkwMCarC2DByfr3qT4TwK9Imt9o2bL5z0=;
- b=GBgzepkdJdsFAckF9I/WRy8sXMFk7VCCjo7Y7HRdF1F76W5b6gsikNP3c+7PLlUGZoQP
- DgKLybIfd/dd/XzIrk7sodntJHPa/do2UvuMDiPJHd/9cI4cUdBQIMYAqv1i+sQE0rSM
- 3ViMAILa5kcIyZmUn6VvAB2B0EzexNri17aJD3gV0DtHvylzakv8JM92s1oXpCSr8aS9
- EAcEtUe5fybPg1YAt6w/dO1PR9nT/rC3OQUoLIlKBhJoa6LatC/j341H4yooZDIksZTz
- 72/e/3Qoq0bcwb8kne9yJdBvA/dj3BJa9ovKz/CWwa4zepmuyuSK3Ikh5/T38E++IslD 9w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3hbnp60r8v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Jul 2022 17:49:08 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 09E6610002A;
-        Tue, 19 Jul 2022 17:49:08 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0502522D17D;
-        Tue, 19 Jul 2022 17:49:08 +0200 (CEST)
-Received: from [10.201.20.208] (10.75.127.44) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2308.20; Tue, 19 Jul
- 2022 17:49:04 +0200
-Message-ID: <011c1254-f3e9-f363-52a5-c71f7b5a2805@foss.st.com>
-Date:   Tue, 19 Jul 2022 17:49:03 +0200
+        with ESMTP id S229607AbiGTGiB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 Jul 2022 02:38:01 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 399A05C9C6
+        for <dmaengine@vger.kernel.org>; Tue, 19 Jul 2022 23:38:00 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id p6so19990462ljc.8
+        for <dmaengine@vger.kernel.org>; Tue, 19 Jul 2022 23:38:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:content-language:to
+         :references:from:subject:in-reply-to:content-transfer-encoding;
+        bh=tftu4FrhP/bwM435Qh4R85JnUGfC7rrzMunPlnrs48w=;
+        b=U4eLkMJ0JvhFS0RGNjSOGm/BIVrP2IRZXmY+leZ1+prD+ip5tWDh71Bjb4GDesn9fJ
+         PoUunqMCdF3d3eHvYnlP5pqOcTqTtdwsHtM9bOfhoGmXaIeRSmnDmtyBtgoulkElPYsk
+         AislNeCj9VvBuJMneEHirHazPNQYzm+GwuTYNf2ueYj1eTldIKTKi7KUIaRiNMaM6Ove
+         QJ9P/Z3b3GjqybkUPtVDoIQWYSw65D/OOaxP++0RONTyczpms1TZzPGJa2tXjKCFfnAO
+         rZCXG9GO6b0pa7HhIE+Ij/Dn8Woh6F2PNiZk5oOqVWdpBTBImhGn73ECdKHQXtDf/O4L
+         HTIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:references:from:subject:in-reply-to
+         :content-transfer-encoding;
+        bh=tftu4FrhP/bwM435Qh4R85JnUGfC7rrzMunPlnrs48w=;
+        b=ho1RQsqIEhZsi0Dn8HAHfAvZrWps7OOg2BcCmMAYSChEQtTK+1N4Nqx6Xx9J8n/xu0
+         53NbtXN71sCA8Sj1NFJQRfMsGam7womZJEM5CXvfQEf4IwA4dKxwP+szpAGZSWchBxY4
+         UFZhJPhlTmq4GCU/0hx3r/j+IQH8gfEv44ygXWcXDOFOfI8XEETF6reHUpdRc7uVUdoF
+         rNrZps1fSWPThE54OGSTJp0GK0oJCIcUaY3+qEK1qCtjFX0/5sz94VkxHjD0M/vPSjFu
+         YrQfXNOzgRULsGXOP/oF2jqS6RZfZIsjvYF+uc2jvEXPOlc4IueqzCtdu37WVJo2flGf
+         Tv3Q==
+X-Gm-Message-State: AJIora+RS3UZs2GzEIwRdLsKG9YtUS10bu6vWDJa3JPeIRfiBCu+QiHj
+        hlIAO80dnJ2rhvEnubdqrGv4VVM4Lek=
+X-Google-Smtp-Source: AGRyM1tMzOxrGi7g5drwQbjOYiYVt1TiXMxqKvRQgmnIgzBGk8V3ehJ9NQVN2hq+0LQezkwWNIlfqw==
+X-Received: by 2002:a2e:9f16:0:b0:25d:48a9:4f2a with SMTP id u22-20020a2e9f16000000b0025d48a94f2amr16522764ljk.454.1658299078375;
+        Tue, 19 Jul 2022 23:37:58 -0700 (PDT)
+Received: from [10.0.0.127] (91-159-150-230.elisa-laajakaista.fi. [91.159.150.230])
+        by smtp.gmail.com with ESMTPSA id y17-20020a05651c107100b0025bd022ffebsm3047689ljm.50.2022.07.19.23.37.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Jul 2022 23:37:57 -0700 (PDT)
+Message-ID: <fec32664-3f7a-aaa7-489b-10916544ce33@gmail.com>
+Date:   Wed, 20 Jul 2022 09:39:56 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v3 0/6] STM32 DMA-MDMA chaining feature
+ Thunderbird/91.11.0
 Content-Language: en-US
-To:     Jonathan Corbet <corbet@lwn.net>, Vinod Koul <vkoul@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>
-CC:     <linux-doc@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Marek Vasut <marex@denx.de>
-References: <20220719153122.620730-1-amelie.delaunay@foss.st.com>
-From:   Amelie Delaunay <amelie.delaunay@foss.st.com>
-In-Reply-To: <20220719153122.620730-1-amelie.delaunay@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-19_04,2022-07-19_01,2022-06-22_01
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+To:     Liang He <windhl@126.com>, vkoul@kernel.org,
+        dmaengine@vger.kernel.org
+References: <20220716084642.701268-1-windhl@126.com>
+From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+Subject: Re: [PATCH] dmaengine: ti: k3-udma-private: Fix refcount leak bug in
+ of_xudma_dev_get()
+In-Reply-To: <20220716084642.701268-1-windhl@126.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Please drop this malformed patchset, I'll send a new one.
+Hi,
 
-On 7/19/22 17:31, Amelie Delaunay wrote:
-> This patchset (re)introduces STM32 DMA-MDMA chaining feature.
+On 16/07/2022 11:46, Liang He wrote:
+> We should call of_node_put() for the reference returned by
+> of_parse_phandle() in fail path or when it is not used anymore.
+> Here we only need to move the of_node_put() before the check.
+
+Thank you for the analysis, yes, this is a bug.
+
+If you add the missing blank line, you can attach my:
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+
+> Fixes: d70241913413 ("dmaengine: ti: k3-udma: Add glue layer for non DMAengine users")
+> Signed-off-by: Liang He <windhl@126.com>
+> ---
 > 
-> As the DMA is not able to generate convenient burst transfer on the DDR,
-> it penalises the AXI bus when accessing the DDR. While it accesses
-> optimally the SRAM. The DMA-MDMA chaining then consists in having an SRAM
-> buffer between DMA and MDMA, so the DMA deals with peripheral and SRAM,
-> and the MDMA with SRAM and DDR.
+> I cannot find the 'k3-udma-private.c' comiple item in drivers/dma/ti/Makefile, 
+> I wonder if the author has forgotten the compile item and the
+> k3-udma-private.c has not been compiled before.
 > 
-> The feature relies on the fact that DMA channel Transfer Complete signal
-> can trigger a MDMA channel transfer and MDMA can clear the DMA request by
-> writing to DMA Interrupt Clear register.
+> I have tried to add k3-udma-private.o in the Makefile, but there are lots of
+> compile errors.  
+> Please check it carefully and if possbile please teach me how to compile it, thanks.
+
+the k3-udma-private.c is included in to k3-udma.c (see end of file).
+When the UDMA stack was introduced we needed to have a glue layer to
+service the networking users due to the lack of infrastructure via
+DMAengine.
+The glue layer needs to tap in to the DMAengine driver, but I did not
+wanted to expose low level interfaces, structs, ops in order to be able
+to get rid of the glue layer when we have all the needed features in
+DMAengine.
+
+The k3-udma-private.c is part of the k3-udma.c but kept as separate file
+to make it explicit that it is suppose to go away and to not mix it with
+the DMAengine driver.
+
+>  drivers/dma/ti/k3-udma-private.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
-> A deeper introduction can be found in patch 1.
-> 
-> Previous implementation [1] has been dropped as nacked.
-> Unlike this previous implementation (where all the stuff was embedded in
-> stm32-dma driver), the user (in peripheral drivers using dma) has now to
-> configure the MDMA channel.
-> 
-> [1] https://lore.kernel.org/lkml/1538139715-24406-1-git-send-email-pierre-yves.mordret@st.com/
-> 
-> Changes in v3:
-> - introduce two prior patches to help readibility
-> - fix stm32-dma struct stm32_dma_mdma_config documentation
-> 
-> Changes in v2:
-> - wrap to 80-column limit for documentation
-> - add an entry for this documentation in index.rst
-> - use simple table instead of csv-table in documentation
-> 
-> 
-> Amelie Delaunay (6):
->    dmaengine: stm32-dma: introduce 3 helpers to address channel flags
->    dmaengine: stm32-dma: use bitfield helpers
->    docs: arm: stm32: introduce STM32 DMA-MDMA chaining feature
->    dmaengine: stm32-dmamux: set dmamux channel id in dma features
->      bitfield
->    dmaengine: stm32-dma: add support to trigger STM32 MDMA
->    dmaengine: stm32-mdma: add support to be triggered by STM32 DMA
-> 
->   Documentation/arm/index.rst                   |   1 +
->   .../arm/stm32/stm32-dma-mdma-chaining.rst     | 415 ++++++++++++++++++
->   drivers/dma/stm32-dma.c                       | 136 +++---
->   drivers/dma/stm32-dmamux.c                    |   2 +-
->   drivers/dma/stm32-mdma.c                      |  70 ++-
->   5 files changed, 569 insertions(+), 55 deletions(-)
->   create mode 100644 Documentation/arm/stm32/stm32-dma-mdma-chaining.rst
-> 
+> diff --git a/drivers/dma/ti/k3-udma-private.c b/drivers/dma/ti/k3-udma-private.c
+> index d4f1e4e9603a..ec274ef7d5ea 100644
+> --- a/drivers/dma/ti/k3-udma-private.c
+> +++ b/drivers/dma/ti/k3-udma-private.c
+> @@ -31,14 +31,13 @@ struct udma_dev *of_xudma_dev_get(struct device_node *np, const char *property)
+>  	}
+>  
+>  	pdev = of_find_device_by_node(udma_node);
+> +	if (np != udma_node)
+> +		of_node_put(udma_node);
+
+Can you add a blank line here for readability?
+
+>  	if (!pdev) {
+>  		pr_debug("UDMA device not found\n");
+>  		return ERR_PTR(-EPROBE_DEFER);
+>  	}
+>  
+> -	if (np != udma_node)
+> -		of_node_put(udma_node);
+> -
+>  	ud = platform_get_drvdata(pdev);
+>  	if (!ud) {
+>  		pr_debug("UDMA has not been probed\n");
+
+-- 
+Péter

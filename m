@@ -2,96 +2,90 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5381357D463
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Jul 2022 21:52:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DA3F57D4EE
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Jul 2022 22:41:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230518AbiGUTwX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 21 Jul 2022 15:52:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60522 "EHLO
+        id S232636AbiGUUln (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 21 Jul 2022 16:41:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229844AbiGUTwT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 Jul 2022 15:52:19 -0400
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96BB02183F;
-        Thu, 21 Jul 2022 12:52:18 -0700 (PDT)
-Received: by mail-io1-f51.google.com with SMTP id e69so2184014iof.5;
-        Thu, 21 Jul 2022 12:52:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9qU3lShC423RO9jUaFHy+GEk0cB+opAvk6TkHNpI+xU=;
-        b=KZKB2m3WSJUG9LKZ3sR/Ie2L87r6w4ZcHTj8yX5RmEiL/4vaK/GAgwut5NWyA7+u3h
-         r1RTluXKFrge5WeeCZ1TWN4RTzcgZXCDum4A3Td8g6W4YQL/DvxFFGxX0NTJgAAopJ09
-         2yqBmXipH4d+ZExhZOiN9DI4dL46XG1w5yS+2WZsfQuAQYfRr3tlf1tS8KkggaLZ/xu8
-         hkIpLUEjutp5j8tIrbm9JY/MHAZmQTCM5YbdSZHlI0hxU6CK97NluYiWW0dBkY7KV1Dy
-         /7I3vYJMbyNpvwQf6L9WaloxgBAUDHg684rafOoMCVkiB5Itp+/sBbo+dRt6+Jd2GQRZ
-         Wmbg==
-X-Gm-Message-State: AJIora96+mn46UR7GdPCgzXzO0sE5rkYQAYd774kcUe+01Mlp4uqpwP0
-        aPzpWfQJ1/qBlGDqhCB/+g==
-X-Google-Smtp-Source: AGRyM1vtb/Pgq6vsjHn+wt+hYE2q0Nb6Yn4IDlr2B93dVsctunQcYCRjbeahSAuZpzfSUQBA5UXtzQ==
-X-Received: by 2002:a05:6638:3881:b0:33c:c785:37d1 with SMTP id b1-20020a056638388100b0033cc78537d1mr98828jav.40.1658433137724;
-        Thu, 21 Jul 2022 12:52:17 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id y6-20020a92d206000000b002dc10fd4b88sm1026857ily.29.2022.07.21.12.52.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Jul 2022 12:52:17 -0700 (PDT)
-Received: (nullmailer pid 1821727 invoked by uid 1000);
-        Thu, 21 Jul 2022 19:52:15 -0000
-Date:   Thu, 21 Jul 2022 13:52:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kuldeep Singh <singh.kuldeep87k@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 6/6] dt-bindings: dma: Convert Qualcomm BAM DMA
- binding to json format
-Message-ID: <20220721195215.GA1817266-robh@kernel.org>
-References: <20220417210436.6203-1-singh.kuldeep87k@gmail.com>
- <20220417210436.6203-7-singh.kuldeep87k@gmail.com>
+        with ESMTP id S233203AbiGUUlh (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 Jul 2022 16:41:37 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2B728F523
+        for <dmaengine@vger.kernel.org>; Thu, 21 Jul 2022 13:41:34 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oEczC-0007IS-4I; Thu, 21 Jul 2022 22:41:30 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oEczB-002Nlr-2n; Thu, 21 Jul 2022 22:41:29 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oEczA-006et5-Cg; Thu, 21 Jul 2022 22:41:28 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Vinod Koul <vkoul@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     dmaengine@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH] dmaengine: sprd: Cleanup in .remove() after pm_runtime_get_sync() failed
+Date:   Thu, 21 Jul 2022 22:40:54 +0200
+Message-Id: <20220721204054.323602-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220417210436.6203-7-singh.kuldeep87k@gmail.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1164; h=from:subject; bh=8OOSRHptsgr+PxYpeULT7zbnXLuwE7vq2iVr7EWS09A=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBi2bnRt8Sk72T3JrO6m/rMNAKFB4d7IDkDH27ysLFj QdHy6CmJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYtm50QAKCRDB/BR4rcrsCSf7B/ sFYAlfjSf6pKh/AwYq7++BMQvdHhm0yhgDOi4FDf/idjHebQoOzucqhHwZRSob+Zxf8c0k3vahVa1y AkxwSD8VpudyUBrP6CvcMMvIV92Dd/FztFtsZe83dsfoBVoRmmYTJHG9UtdpFqb698LQXERraEkeQ9 NzTAbifbq6U7gjSHhy71lHnTgNHoAFvNE6s6T129fwhsrgIQbz7NspxAV+n+0LZtMfnBcx4Pj6dfPA Tjy9i2DaaLuyRqHszX3kDDN+SuR/Nb/scXYUjusUN2Cr8qw49qu0wajBQDOffK+ZuUiow08hC8IWoO m3ztIN2W5LJ7ea2x/rCXsFH8NtdIxJ
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, 18 Apr 2022 02:34:36 +0530, Kuldeep Singh wrote:
-> Convert Qualcomm BAM DMA controller binding to DT schema format using
-> json schema.
-> 
-> Signed-off-by: Kuldeep Singh <singh.kuldeep87k@gmail.com>
-> ---
-> v3:
-> - Address Krzysztof Comments
-> - qcom,ee as required property
-> - Use boolean type instead of flag
-> - Add min/max to qcom,ee
-> - skip clocks, as it's users are not fixed
-> ---
-> v2:
-> - Use dma-cells
-> - Set additionalProperties to false
-> ---
->  .../devicetree/bindings/dma/qcom,bam-dma.yaml | 97 +++++++++++++++++++
->  .../devicetree/bindings/dma/qcom_bam_dma.txt  | 52 ----------
->  2 files changed, 97 insertions(+), 52 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
->  delete mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> 
+It's not allowed to quit remove early without cleaning up completely.
+Otherwise this results in resource leaks that probably yield graver
+problems later. Here for example some tasklets might survive the lifetime
+of the sprd-dma device and access sdev which is freed after .remove()
+returns.
 
-This is the 11th most warned on (168 warnings) for missing a schema, so 
-I've implemented my only comment and applied. It seems neither this one 
-or the other attempt at converting are getting respun.
+As none of the device freeing requires an active device, just ignore the
+return value of pm_runtime_get_sync().
 
-Rob
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/dma/sprd-dma.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+index 2138b80435ab..474d3ba8ec9f 100644
+--- a/drivers/dma/sprd-dma.c
++++ b/drivers/dma/sprd-dma.c
+@@ -1237,11 +1237,8 @@ static int sprd_dma_remove(struct platform_device *pdev)
+ {
+ 	struct sprd_dma_dev *sdev = platform_get_drvdata(pdev);
+ 	struct sprd_dma_chn *c, *cn;
+-	int ret;
+ 
+-	ret = pm_runtime_get_sync(&pdev->dev);
+-	if (ret < 0)
+-		return ret;
++	pm_runtime_get_sync(&pdev->dev);
+ 
+ 	/* explicitly free the irq */
+ 	if (sdev->irq > 0)
+
+base-commit: f2906aa863381afb0015a9eb7fefad885d4e5a56
+-- 
+2.36.1
+

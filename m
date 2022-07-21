@@ -2,58 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFD7757CA81
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Jul 2022 14:16:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A31857CAA4
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Jul 2022 14:30:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233071AbiGUMQT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 21 Jul 2022 08:16:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57236 "EHLO
+        id S232314AbiGUMal (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 21 Jul 2022 08:30:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229497AbiGUMQT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 Jul 2022 08:16:19 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6074C501A9;
-        Thu, 21 Jul 2022 05:16:18 -0700 (PDT)
+        with ESMTP id S231470AbiGUMal (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 Jul 2022 08:30:41 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FC3C14D22;
+        Thu, 21 Jul 2022 05:30:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1CE53B82348;
-        Thu, 21 Jul 2022 12:16:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9F6FC3411E;
-        Thu, 21 Jul 2022 12:16:14 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DB15261D98;
+        Thu, 21 Jul 2022 12:30:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4191C3411E;
+        Thu, 21 Jul 2022 12:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658405775;
-        bh=s8ppiCf7fhbpmh6vKsurmBVf6gQCtK8vCzH2kjhT5Wc=;
+        s=k20201202; t=1658406639;
+        bh=dFRiU4koNQsq+vUuGsVDzGLGakrGxvr8LNada/b39kA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GXKNxoGDTKXsZnbkMn3FRJ0gnUhtzkCB0qKD1O+0eC642q2Ezzu+8tVG6a08YXeg/
-         7nJ0J02Rl3LpTpUgwYTj5vSdG+xcUuS+19KgveVN4fU8cjRr0qblOCik7IgdN/RZvO
-         lYkTiED8TH7KHZKF7Fy2hl4jrl7TwQDPUvj6yf7lz8v3BHW6OjXAzWraRbn7xtezVf
-         zh17LvbGJ7MeQjYid1JAlixn7aNXtptb8qpXT1AfqbiXtVkEYxfB9T5SW+Wv3lFibO
-         zSTIZk/8oFIpcU+WP5mwK8Dw78OiqKuKg/DYi5RqLPI/oDZKc8FXH1QDEvpimPIReE
-         g6w0fFJaryirg==
-Date:   Thu, 21 Jul 2022 17:46:10 +0530
+        b=M9ofnqip/ahIlM7ZD1DavDXskZosh/aXVOyYZ82hU+XBsSL/zNoEtU4YxwY6Dkw8J
+         63aSghHs5Wz0TdWmVk0pPSH1VS105AUTZ6JVQnl9RqZdyOrOSvQ2pJiF09VJF4iuI6
+         /xqQue8XXLLBP6X2zRZ5MrMug8pKUAbQi/coUDhIJN387MmX7JbfDdiU+neoLShZ16
+         4/Cdy+NJsO/INqvy8q3ACgKkBzgj8nczyBeNqNVdWWUxKxwjgK2a3r6GRnNC9ERQve
+         K82KLY/b+qtGHl6qMNFQ+4CepaDBHUrgQqrUVbkFTs/2fAiGM4cJcMoiweY9fgPzg/
+         dJYTpH9nln+SQ==
+Date:   Thu, 21 Jul 2022 18:00:34 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/24] dmaengine: dw-edma: Add RP/EP local DMA
- controllers support
-Message-ID: <YtlDivjaXfSEK1Xg@matsya>
-References: <20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru>
+To:     Ben Dooks <ben.dooks@sifive.com>
+Cc:     dmaengine@vger.kernel.org, Eugeniy.Paltsev@synopsys.com,
+        linux-kernel@vger.kernel.org,
+        Sudip Mukherjee <sudip.mukherjee@sifive.com>,
+        Jude Onyenegecha <jude.onyenegecha@sifive.com>
+Subject: Re: [PATCH 1/3] dmaengine: dw-axi-dmac: dump channel registers on
+ error
+Message-ID: <YtlG6hdTJPIDBk9Y@matsya>
+References: <20220708170153.269991-1-ben.dooks@sifive.com>
+ <20220708170153.269991-2-ben.dooks@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20220708170153.269991-2-ben.dooks@sifive.com>
 X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -63,59 +56,74 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 10-06-22, 12:14, Serge Semin wrote:
-> This is a final patchset in the series created in the framework of
-> my Baikal-T1 PCIe/eDMA-related work:
+On 08-07-22, 18:01, Ben Dooks wrote:
+> On channel error, dump the channel register state before
+> the channel's LLI entries to see what the controller was
+> actually doing when the error happend.
 > 
-> [1: In-progress v4] PCI: dwc: Various fixes and cleanups
-> Link: https://lore.kernel.org/linux-pci/20220610082535.12802-1-Sergey.Semin@baikalelectronics.ru/
-> [2: In-progress v3] PCI: dwc: Add hw version and dma-ranges support
-> Link: https://lore.kernel.org/linux-pci/20220610084444.14549-1-Sergey.Semin@baikalelectronics.ru/
-> [3: In-progress v3] PCI: dwc: Add generic resources and Baikal-T1 support
-> Link: https://lore.kernel.org/linux-pci/20220610085706.15741-1-Sergey.Semin@baikalelectronics.ru/
-> [4: In-progress v3] dmaengine: dw-edma: Add RP/EP local DMA support
-> Link: ---you are looking at it---
+> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
+> ---
+>  .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 > 
-> Note it is very recommended to merge the patchsets in the same order as
-> they are listed in the set above in order to have them applied smoothly.
-> Nothing prevents them from being reviewed synchronously though.
-> 
-> Please note originally this series was self content, but due to Frank
-> being a bit faster in his work submission I had to rebase my patchset onto
-> his one. So now this patchset turns to be dependent on the Frank' work:
-> 
-> Link: https://lore.kernel.org/linux-pci/20220524152159.2370739-1-Frank.Li@nxp.com/
-> 
-> So please merge Frank' series first before applying this one.
-> 
-> Here is a short summary regarding this patchset. The series starts with
-> fixes patches. We discovered that the dw-edma-pcie.c driver incorrectly
-> initializes the LL/DT base addresses for the platforms with not matching
-> CPU and PCIe memory spaces. It is fixed by using the pci_bus_address()
-> method to get a correct base address. After that you can find a series of
-> the interleaved xfers fixes. It turned out the interleaved transfers
-> implementation didn't work quite correctly from the very beginning for
-> instance missing src/dst addresses initialization, etc. In the framework
-> of the next two patches we suggest to add a new platform-specific
-> callback - pci_address() and use it to convert the CPU address to the PCIe
-> space address. It is at least required for the DW eDMA remote End-point
-> setup on the platforms with not-matching CPU/PCIe address spaces. In case
-> of the DW eDMA local RP/EP setup the conversion will be done automatically
-> by the outbound iATU (if no DMA-bypass flag is specified for the
-> corresponding iATU window). Then we introduce a set of the patches to make
-> the DebugFS part of the code supporting the multi-eDMA controllers
-> platforms. It starts with several cleanup patches and is closed joining
-> the Read/Write channels into a single DMA-device as they originally should
-> have been. After that you can find the patches with adding the non-atomic
-> io-64 methods usage, dropping DT-region descriptors allocation, replacing
-> chip IDs with the device name. In addition to that in order to have the
-> eDMA embedded into the DW PCIe RP/EP supported we need to bypass the
-> dma-ranges-based memory ranges mapping since in case of the root port DT
-> node it's applicable for the peripheral PCIe devices only. Finally at the
-> series closure we introduce a generic DW eDMA controller support being
-> available in the DW PCIe Root Port/Endpoint driver.
+> diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> index e9c9bcb1f5c2..75c537153e92 100644
+> --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> @@ -79,6 +79,20 @@ axi_chan_iowrite64(struct axi_dma_chan *chan, u32 reg, u64 val)
+>  	iowrite32(upper_32_bits(val), chan->chan_regs + reg + 4);
+>  }
+>  
+> +static inline u64
+> +axi_chan_ioread64(struct axi_dma_chan *chan, u32 reg)
+> +{
+> +	u32 high, low;
+> +	u64 result;
+> +
+> +	low = ioread32(chan->chan_regs + reg);
+> +	high = ioread32(chan->chan_regs + reg + 4);
+> +
+> +	result = low;
+> +	result |= (u64)high << 32;
+> +	return result;
+> +}
 
-Acked-By: Vinod Koul <vkoul@kernel.org>
+Better to use helpers like lo_hi_readq()?
+
+> +
+>  static inline void axi_chan_config_write(struct axi_dma_chan *chan,
+>  					 struct axi_dma_chan_config *config)
+>  {
+> @@ -979,6 +993,18 @@ static int dw_axi_dma_chan_slave_config(struct dma_chan *dchan,
+>  	return 0;
+>  }
+>  
+> +static void axi_chan_dump_regs(struct axi_dma_chan *chan)
+> +{
+> +	dev_err(dchan2dev(&chan->vc.chan),
+> +		"R: SAR: 0x%llx DAR: 0x%llx LLP: 0x%llx BTS 0x%x CTL: 0x%x:%08x\n",
+> +		axi_chan_ioread64(chan, CH_SAR),
+> +		axi_chan_ioread64(chan, CH_DAR),
+> +		axi_chan_ioread64(chan, CH_LLP),
+> +		axi_chan_ioread32(chan, CH_BLOCK_TS),
+> +		axi_chan_ioread32(chan, CH_CTL_H),
+> +		axi_chan_ioread32(chan, CH_CTL_L));
+> +}
+> +
+>  static void axi_chan_dump_lli(struct axi_dma_chan *chan,
+>  			      struct axi_dma_hw_desc *desc)
+>  {
+> @@ -1020,6 +1046,8 @@ static noinline void axi_chan_handle_err(struct axi_dma_chan *chan, u32 status)
+>  	dev_err(chan2dev(chan),
+>  		"Bad descriptor submitted for %s, cookie: %d, irq: 0x%08x\n",
+>  		axi_chan_name(chan), vd->tx.cookie, status);
+> +
+> +	axi_chan_dump_regs(chan);
+>  	axi_chan_list_dump_lli(chan, vd_to_axi_desc(vd));
+>  
+>  	vchan_cookie_complete(vd);
+> -- 
+> 2.35.1
 
 -- 
 ~Vinod

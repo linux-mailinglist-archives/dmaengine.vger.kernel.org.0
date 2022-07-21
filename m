@@ -2,51 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AAD957CAAE
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Jul 2022 14:34:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93EB957CABD
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Jul 2022 14:39:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233637AbiGUMeA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 21 Jul 2022 08:34:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40436 "EHLO
+        id S232314AbiGUMi7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 21 Jul 2022 08:38:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233628AbiGUMd7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 Jul 2022 08:33:59 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F398474CC7;
-        Thu, 21 Jul 2022 05:33:58 -0700 (PDT)
+        with ESMTP id S232164AbiGUMi6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 Jul 2022 08:38:58 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F2C67538E
+        for <dmaengine@vger.kernel.org>; Thu, 21 Jul 2022 05:38:58 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AD6C1B8245B;
-        Thu, 21 Jul 2022 12:33:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98705C3411E;
-        Thu, 21 Jul 2022 12:33:55 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1CA3561DB9
+        for <dmaengine@vger.kernel.org>; Thu, 21 Jul 2022 12:38:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E73F2C3411E;
+        Thu, 21 Jul 2022 12:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658406836;
-        bh=PGV+noUBcZqBx15ZnN684+CnULiOuHKNRWDlzeezA1Y=;
+        s=k20201202; t=1658407137;
+        bh=wLUqTMYCq0OJ6Sgz6zPJmyxlCEE3tip9kaE3XUSKUW8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rBf6IwdijioubyLK+bZRncAj4nNTUCZyWYVaVX8jaPrlnjG2ZX3JHzHb8Alc3q1ht
-         /bk3Tf95H5nwl6rOG9vocT9lN5ovkBfCpU5XjNqKB/3kxTc+/kdUntcZzeSY4Tf9Rg
-         1fIbd6cp+kmjuEnC6BNNzjrvz5D5s+SiftLI/+zritRUO3h1GoDBKnxcDHdyBOGdeX
-         +bzzBUiNWeixcUa/BRYuWRp1qeBjx392k2ocxe81WfCNWzvi230wrITQ9PNqWW6Fiy
-         Z1VrGr9WbJj9+Wg1ldYfrrT50wCdky4POkSfxn7NmRcpaEVMUuKKw81Xls/W3525T3
-         lkrGYigfSB8YQ==
-Date:   Thu, 21 Jul 2022 18:03:51 +0530
+        b=hB4njbose2neSUyFnUsApeQezAGgzUmnXHZbRbjZPdABJUmkELb95IZn5CVraUAiI
+         rH8KOcGJCgWbfX8I1IikBw+o/7nyEjCBfSRIT44eAqajLPQv17gfES5xvWONKOSIkB
+         a5RBXrDaKbTnD+8AtGk1JIG8g1nY8Hbv3IQpKXwXz8u4wKhEcpX2GZcn4tytWesDk1
+         nuS0YFyONhyD4xhI2TmAeWapy6mm4LtmTnvdNX/dd9UPvhZ9VHbo8YB/ZqSCZcR0U7
+         g7Y8+I3wm+Mnr0XhxaWFIHE0Q0XxTpcAMTg6tsfDA07HSOV7N3XzCH7rmthHLdSw9V
+         vvf7Z75N1kDGg==
+Date:   Thu, 21 Jul 2022 18:08:53 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Ben Dooks <ben.dooks@sifive.com>
-Cc:     dmaengine@vger.kernel.org, Eugeniy.Paltsev@synopsys.com,
-        linux-kernel@vger.kernel.org,
-        Sudip Mukherjee <sudip.mukherjee@sifive.com>,
-        Jude Onyenegecha <jude.onyenegecha@sifive.com>
-Subject: Re: [PATCH 3/3] dmaengine: dw-axi-dmac: ignore interrupt if no
- descriptor
-Message-ID: <YtlHr2gZQQg5mago@matsya>
-References: <20220708170153.269991-1-ben.dooks@sifive.com>
- <20220708170153.269991-4-ben.dooks@sifive.com>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     dmaengine@vger.kernel.org, Fabio Estevam <festevam@denx.de>,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v2] dmaengine: imx-dma: Cast of_device_get_match_data()
+ with (uintptr_t)
+Message-ID: <YtlI3Vp0HpegHSki@matsya>
+References: <20220706111327.940764-1-festevam@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220708170153.269991-4-ben.dooks@sifive.com>
+In-Reply-To: <20220706111327.940764-1-festevam@gmail.com>
 X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -56,45 +53,13 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 08-07-22, 18:01, Ben Dooks wrote:
-> If the channel has no descriptor and the interrupt is raised then the
-> kernel will OOPS. Check the result of vchan_next_desc() in the handler
-> axi_chan_block_xfer_complete() to avoid the error happening.
+On 06-07-22, 08:13, Fabio Estevam wrote:
+> From: Fabio Estevam <festevam@denx.de>
+> 
+> Change the of_device_get_match_data() cast to (uintptr_t)
+> to silence the following clang warning:
 
 Applied, thanks
-
-> 
-> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
-> ---
->  drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> index d6ef5f49f281..1fedf4376678 100644
-> --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> @@ -1082,6 +1082,11 @@ static void axi_chan_block_xfer_complete(struct axi_dma_chan *chan)
->  
->  	/* The completed descriptor currently is in the head of vc list */
->  	vd = vchan_next_desc(&chan->vc);
-> +	if (!vd) {
-> +		dev_err(chan2dev(chan), "BUG: %s, IRQ with no descriptors\n",
-> +			axi_chan_name(chan));
-> +		goto out;
-> +	}
->  
->  	if (chan->cyclic) {
->  		desc = vd_to_axi_desc(vd);
-> @@ -1111,6 +1116,7 @@ static void axi_chan_block_xfer_complete(struct axi_dma_chan *chan)
->  		axi_chan_start_first_queued(chan);
->  	}
->  
-> +out:
->  	spin_unlock_irqrestore(&chan->vc.lock, flags);
->  }
->  
-> -- 
-> 2.35.1
 
 -- 
 ~Vinod

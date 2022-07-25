@@ -2,73 +2,63 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB61957E593
-	for <lists+dmaengine@lfdr.de>; Fri, 22 Jul 2022 19:32:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A008580747
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Jul 2022 00:23:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230443AbiGVRcA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 22 Jul 2022 13:32:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52786 "EHLO
+        id S237218AbiGYWXE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 25 Jul 2022 18:23:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229667AbiGVRb7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 22 Jul 2022 13:31:59 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADC5687F58;
-        Fri, 22 Jul 2022 10:31:58 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id n10-20020a17090a670a00b001f22ebae50aso4783016pjj.3;
-        Fri, 22 Jul 2022 10:31:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ThQlVicPs1rWFVsyGw86UI+Xw2uWwAxd1Fpjx4xaCns=;
-        b=UEsBag87mGWy5BVFAdUXkdk1qCdUs2lOxfmigRvBLhdNgdqYBneUn0atXOS+eQR4IM
-         6sHV41s76ygcnA0g4U0PIhhTQSp/icVkckXBJOtOKU/KBb8UYmIZ6kgXiiBTh9ASEuQE
-         FRnxfAxWVvVk/3dARMgqQYPFzAduNrwCT67rR4WAok6Ld2NqmRtzKx62vuf7VMtDU1xU
-         BKjflmwuAZLUav13K7J/sgHTXP4Pyan/eLgIR8/JeCTouevC77O//rOVekJrjWcgZt12
-         nWWte9PC3FoPJCgsJ7qoIU6cKZU6BU7BZZGsNnlUbLj96QB6rwu9iovQvp65x2ESCE2o
-         Xmaw==
+        with ESMTP id S236925AbiGYWXD (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 25 Jul 2022 18:23:03 -0400
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34E44255AD;
+        Mon, 25 Jul 2022 15:23:02 -0700 (PDT)
+Received: by mail-ot1-f51.google.com with SMTP id c20-20020a9d4814000000b0061cecd22af4so5200008otf.12;
+        Mon, 25 Jul 2022 15:23:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ThQlVicPs1rWFVsyGw86UI+Xw2uWwAxd1Fpjx4xaCns=;
-        b=LP0ag3SxVcb8GV+eNq2CjGEAEnbJ7aVjfwJYFKTEMzQ393wgo+iNLRReLOtcKvg6gP
-         4Fah2oFFdAkAliIPIsjM4gpwlJsehv9A9IR/1+JzAHtJewOYby5eo5QpECthTXAtAQVK
-         H2pqqEWra53L02zyUC44U+RwHTaxIlE2zp9iEkVkWmHee3EeCyQfzzVIrJZp87Pulhtc
-         XZ/vKV1vwoNw+q43tFRZLjtrUka2DLaCr3inK8I0qLFS9dEyg7Im20u2a08Q/vNrRnTT
-         EhDXNNhncBRrhaJ8BzxtUpFiXbbvHJguephVp6ukh33atOsAW9pa1okp1MBZvjwiVviN
-         RyRg==
-X-Gm-Message-State: AJIora+Uhf28RWO+VmgFkj4D1Is/hNckJub9hOQnY6kn16RtpIH4qmvA
-        TGpnX7pNCDAACSjCWyFHjVc=
-X-Google-Smtp-Source: AGRyM1vKQxvXfAZ5zbgWjOJAsSYiM30LcNcKWPMY9QnHFGqydzpTE5Lb5lNKPDScqfQFMMIF3bwNvg==
-X-Received: by 2002:a17:90b:188a:b0:1f2:3570:5f9f with SMTP id mn10-20020a17090b188a00b001f235705f9fmr720721pjb.75.1658511118005;
-        Fri, 22 Jul 2022 10:31:58 -0700 (PDT)
-Received: from 9a2d8922b8f1 ([115.98.179.206])
-        by smtp.gmail.com with ESMTPSA id x21-20020aa79ad5000000b00528a097aeffsm4174567pfp.118.2022.07.22.10.31.54
+        bh=OHlKzImoqJ8ryDBHo0H/tsoDf9If2oX+2899I72Q0FQ=;
+        b=KBFb+sudIXe7fao7vVG1C4q4qe4kOXaBKsAPyAj7mz6txMw6v+4BDDBwKVpr0mqNzH
+         /6Q2GQX4j6G55bU06lQqr0qL7MQEYk1qTlfXFCHMo5dYJeVRLbDf7W+0AvV0lkqlPEct
+         CqPy5mCv5Hn260hyLOlqMX/b6H+Yp/tTMNA6FuehiJlt8iHIHPOogEtoEfpJk/FBTfY9
+         HBzLRDCTg0bjsMyVrB+UifCiA9lm5IPblhRrDd8MMoLiLNllgJYBqVlSuo2rTsROlEqN
+         dmLtQcT7tRayGSPoPOQEbiPJ4M8+rYKfjjFh69MJ946sC/JPHrEag7bKb1SeZGIBB/L1
+         gdSA==
+X-Gm-Message-State: AJIora+gPqjuQp+hEPqitUFV3cb6bDGboMq38PsMZ3Npdn+0gyRANjwV
+        nkuYKzZtto6YzPkIYpimZlIp1k7rqg==
+X-Google-Smtp-Source: AGRyM1uCpCHuxy88D3vJcMdAZ8HrUBG0z3bFj4cTqY2fT0xZmOqbQUQbPpjQco2kG3oyo/XoniWmvw==
+X-Received: by 2002:a05:6830:129a:b0:61c:80f9:eefc with SMTP id z26-20020a056830129a00b0061c80f9eefcmr5533404otp.72.1658787781442;
+        Mon, 25 Jul 2022 15:23:01 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id c10-20020a056830314a00b0061c564a83ebsm5524261ots.19.2022.07.25.15.22.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Jul 2022 10:31:57 -0700 (PDT)
-Date:   Fri, 22 Jul 2022 23:01:52 +0530
-From:   Kuldeep Singh <singh.kuldeep87k@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 6/6] dt-bindings: dma: Convert Qualcomm BAM DMA
- binding to json format
-Message-ID: <20220722173152.GA54768@9a2d8922b8f1>
-References: <20220417210436.6203-1-singh.kuldeep87k@gmail.com>
- <20220417210436.6203-7-singh.kuldeep87k@gmail.com>
- <20220721195215.GA1817266-robh@kernel.org>
+        Mon, 25 Jul 2022 15:23:01 -0700 (PDT)
+Received: (nullmailer pid 2850010 invoked by uid 1000);
+        Mon, 25 Jul 2022 22:22:59 -0000
+Date:   Mon, 25 Jul 2022 16:22:59 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Akhil R <akhilrajeev@nvidia.com>
+Cc:     vkoul@kernel.org, thierry.reding@gmail.com,
+        dmaengine@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jonathanh@nvidia.com, ldewangan@nvidia.com,
+        linux-tegra@vger.kernel.org, p.zabel@pengutronix.de
+Subject: Re: [PATCH v4 1/3] dt-bindings: dmaengine: Add compatible for
+ Tegra234
+Message-ID: <20220725222259.GA2849977-robh@kernel.org>
+References: <20220720104045.16099-1-akhilrajeev@nvidia.com>
+ <20220720104045.16099-2-akhilrajeev@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220721195215.GA1817266-robh@kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+In-Reply-To: <20220720104045.16099-2-akhilrajeev@nvidia.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,15 +66,14 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-> This is the 11th most warned on (168 warnings) for missing a schema, so 
-> I've implemented my only comment and applied. It seems neither this one 
-> or the other attempt at converting are getting respun.
+On Wed, 20 Jul 2022 16:10:43 +0530, Akhil R wrote:
+> Document the compatible string used by GPCDMA controller for Tegra234.
+> 
+> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  .../devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml      | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
 
-I didn't respin because Bhupesh mentioned he will send his v5 and then I
-couldn't followup.
-
-I realized I should have anyway respin my patch.
-Thanks for incorporating the changes.
-
-Regards
-Kuldeep
+Acked-by: Rob Herring <robh@kernel.org>

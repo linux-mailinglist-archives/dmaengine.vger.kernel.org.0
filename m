@@ -2,36 +2,36 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDDA1580915
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Jul 2022 03:38:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFCA258091E
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Jul 2022 03:38:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237230AbiGZBiJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 25 Jul 2022 21:38:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35138 "EHLO
+        id S237303AbiGZBiy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 25 Jul 2022 21:38:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237259AbiGZBiI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 25 Jul 2022 21:38:08 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25EA12611E;
-        Mon, 25 Jul 2022 18:38:06 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4LsKGm6ZwKz1M8M8;
-        Tue, 26 Jul 2022 09:35:12 +0800 (CST)
+        with ESMTP id S237396AbiGZBiv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 25 Jul 2022 21:38:51 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32EA428721;
+        Mon, 25 Jul 2022 18:38:50 -0700 (PDT)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4LsKKb2XJkz9sv4;
+        Tue, 26 Jul 2022 09:37:39 +0800 (CST)
 Received: from kwepemm600007.china.huawei.com (7.193.23.208) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 26 Jul 2022 09:38:04 +0800
+ 15.1.2375.24; Tue, 26 Jul 2022 09:38:08 +0800
 Received: from localhost.localdomain (10.69.192.56) by
  kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 26 Jul 2022 09:38:03 +0800
+ 15.1.2375.24; Tue, 26 Jul 2022 09:38:08 +0800
 From:   Jie Hai <haijie1@huawei.com>
 To:     <vkoul@kernel.org>, <wangzhou1@hisilicon.com>
 CC:     <haijie1@huawei.com>, <liudongdong3@huawei.com>,
         <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 3/7] dmaengine: hisilicon: Add multi-thread support for a DMA channel
-Date:   Tue, 26 Jul 2022 09:35:21 +0800
-Message-ID: <20220726013525.13059-4-haijie1@huawei.com>
+Subject: [PATCH v3 4/7] dmaengine: hisilicon: Use macros instead of magic number
+Date:   Tue, 26 Jul 2022 09:35:22 +0800
+Message-ID: <20220726013525.13059-5-haijie1@huawei.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20220726013525.13059-1-haijie1@huawei.com>
 References: <20220625074422.3479591-1-haijie1@huawei.com>
@@ -51,92 +51,68 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-When we get a DMA channel and try to use it in multiple threads it
-will cause oops and hanging the system.
+readl_relaxed_poll_timeout() uses magic numbers 10 and 1000, which
+indicate maximum time to sleep between reads in us and timeout in us,
+respectively.
 
-% echo 100 > /sys/module/dmatest/parameters/threads_per_chan
-% echo 100 > /sys/module/dmatest/parameters/iterations
-% echo 1 > /sys/module/dmatest/parameters/run
-[383493.327077] Unable to handle kernel paging request at virtual
-		address dead000000000108
-[383493.335103] Mem abort info:
-[383493.335103]   ESR = 0x96000044
-[383493.335105]   EC = 0x25: DABT (current EL), IL = 32 bits
-[383493.335107]   SET = 0, FnV = 0
-[383493.335108]   EA = 0, S1PTW = 0
-[383493.335109]   FSC = 0x04: level 0 translation fault
-[383493.335110] Data abort info:
-[383493.335111]   ISV = 0, ISS = 0x00000044
-[383493.364739]   CM = 0, WnR = 1
-[383493.367793] [dead000000000108] address between user and kernel
-		address ranges
-[383493.375021] Internal error: Oops: 96000044 [#1] PREEMPT SMP
-[383493.437574] CPU: 63 PID: 27895 Comm: dma0chan0-copy2 Kdump:
-		loaded Tainted: GO 5.17.0-rc4+ #2
-[383493.457851] pstate: 204000c9 (nzCv daIF +PAN -UAO -TCO -DIT
-		-SSBS BTYPE=--)
-[383493.465331] pc : vchan_tx_submit+0x64/0xa0
-[383493.469957] lr : vchan_tx_submit+0x34/0xa0
+Use macros HISI_DMA_POLL_Q_STS_DELAY_US and
+HISI_DMA_POLL_Q_STS_TIME_OUT_US instead of these two numbers.
 
-This occurs because the transmission timed out, and that's due
-to data race. Each thread rewrite channels's descriptor as soon as
-device_issue_pending is called. It leads to the situation that
-the driver thinks that it uses the right descriptor in interrupt
-handler while channels's descriptor has been changed by other
-thread. The descriptor which in fact reported interrupt will not
-be handled any more, as well as its tx->callback.
-That's why timeout reports.
-
-With current fixes channels' descriptor changes it's value only
-when it has been used. A new descriptor is acquired from
-vc->desc_issued queue that is already filled with descriptors
-that are ready to be sent. Threads have no direct access to DMA
-channel descriptor. In case of channel's descriptor is busy, try
-to submit to HW again when a descriptor is completed. In this case,
-vc->desc_issued may be empty when hisi_dma_start_transfer is called,
-so delete error reporting on this. Now it is just possible to queue
-a descriptor for further processing.
-
-Fixes: e9f08b65250d ("dmaengine: hisilicon: Add Kunpeng DMA engine support")
 Signed-off-by: Jie Hai <haijie1@huawei.com>
 ---
- drivers/dma/hisi_dma.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/dma/hisi_dma.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/dma/hisi_dma.c b/drivers/dma/hisi_dma.c
-index 837f7e4adfa6..0233b42143c7 100644
+index 0233b42143c7..5d62fe62ba00 100644
 --- a/drivers/dma/hisi_dma.c
 +++ b/drivers/dma/hisi_dma.c
-@@ -271,7 +271,6 @@ static void hisi_dma_start_transfer(struct hisi_dma_chan *chan)
+@@ -36,6 +36,9 @@
  
- 	vd = vchan_next_desc(&chan->vc);
- 	if (!vd) {
--		dev_err(&hdma_dev->pdev->dev, "no issued task!\n");
- 		chan->desc = NULL;
- 		return;
+ #define PCI_BAR_2			2
+ 
++#define HISI_DMA_POLL_Q_STS_DELAY_US	10
++#define HISI_DMA_POLL_Q_STS_TIME_OUT_US	1000
++
+ enum hisi_dma_mode {
+ 	EP = 0,
+ 	RC,
+@@ -185,15 +188,19 @@ static void hisi_dma_reset_or_disable_hw_chan(struct hisi_dma_chan *chan,
+ {
+ 	struct hisi_dma_dev *hdma_dev = chan->hdma_dev;
+ 	u32 index = chan->qp_num, tmp;
++	void __iomem *addr;
+ 	int ret;
+ 
+ 	hisi_dma_pause_dma(hdma_dev, index, true);
+ 	hisi_dma_enable_dma(hdma_dev, index, false);
+ 	hisi_dma_mask_irq(hdma_dev, index);
+ 
+-	ret = readl_relaxed_poll_timeout(hdma_dev->base +
+-		HISI_DMA_Q_FSM_STS + index * HISI_DMA_OFFSET, tmp,
+-		FIELD_GET(HISI_DMA_FSM_STS_MASK, tmp) != RUN, 10, 1000);
++	addr = hdma_dev->base +
++	       HISI_DMA_Q_FSM_STS + index * HISI_DMA_OFFSET;
++
++	ret = readl_relaxed_poll_timeout(addr, tmp,
++		FIELD_GET(HISI_DMA_FSM_STS_MASK, tmp) != RUN,
++		HISI_DMA_POLL_Q_STS_DELAY_US, HISI_DMA_POLL_Q_STS_TIME_OUT_US);
+ 	if (ret) {
+ 		dev_err(&hdma_dev->pdev->dev, "disable channel timeout!\n");
+ 		WARN_ON(1);
+@@ -208,9 +215,9 @@ static void hisi_dma_reset_or_disable_hw_chan(struct hisi_dma_chan *chan,
+ 		hisi_dma_unmask_irq(hdma_dev, index);
  	}
-@@ -303,7 +302,7 @@ static void hisi_dma_issue_pending(struct dma_chan *c)
  
- 	spin_lock_irqsave(&chan->vc.lock, flags);
- 
--	if (vchan_issue_pending(&chan->vc))
-+	if (vchan_issue_pending(&chan->vc) && !chan->desc)
- 		hisi_dma_start_transfer(chan);
- 
- 	spin_unlock_irqrestore(&chan->vc.lock, flags);
-@@ -441,11 +440,10 @@ static irqreturn_t hisi_dma_irq(int irq, void *data)
- 				    chan->qp_num, chan->cq_head);
- 		if (FIELD_GET(STATUS_MASK, cqe->w0) == STATUS_SUCC) {
- 			vchan_cookie_complete(&desc->vd);
-+			hisi_dma_start_transfer(chan);
- 		} else {
- 			dev_err(&hdma_dev->pdev->dev, "task error!\n");
- 		}
--
--		chan->desc = NULL;
- 	}
- 
- 	spin_unlock(&chan->vc.lock);
+-	ret = readl_relaxed_poll_timeout(hdma_dev->base +
+-		HISI_DMA_Q_FSM_STS + index * HISI_DMA_OFFSET, tmp,
+-		FIELD_GET(HISI_DMA_FSM_STS_MASK, tmp) == IDLE, 10, 1000);
++	ret = readl_relaxed_poll_timeout(addr, tmp,
++		FIELD_GET(HISI_DMA_FSM_STS_MASK, tmp) == IDLE,
++		HISI_DMA_POLL_Q_STS_DELAY_US, HISI_DMA_POLL_Q_STS_TIME_OUT_US);
+ 	if (ret) {
+ 		dev_err(&hdma_dev->pdev->dev, "reset channel timeout!\n");
+ 		WARN_ON(1);
 -- 
 2.33.0
 

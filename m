@@ -2,311 +2,160 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0C2F58102C
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Jul 2022 11:43:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE035581079
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Jul 2022 11:58:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238294AbiGZJng (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 26 Jul 2022 05:43:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45762 "EHLO
+        id S238688AbiGZJ5r (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 26 Jul 2022 05:57:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238332AbiGZJnf (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 26 Jul 2022 05:43:35 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D6272F000
-        for <dmaengine@vger.kernel.org>; Tue, 26 Jul 2022 02:43:33 -0700 (PDT)
-Received: from sobremesa.fritz.box (82-69-11-11.dsl.in-addr.zen.co.uk [82.69.11.11])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: alarumbe)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id EBD6D6601B1C;
-        Tue, 26 Jul 2022 10:43:31 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1658828612;
-        bh=Dg8alkD4q0OgYhzYLCOCxhgMYizKr5CjlNXM+FnBFCA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=f+y9B9+VanKVB4KfmsK3j0G/jaq3EJUiUvn6RedSmDGS3BVbjXYTV+N38RZAV2rse
-         3vP/dhMhoDG6b3J6OCoREU9yRl9t/lhPmMG26piOtQ2tqWzKNh5JvGpAX7+aJ7ynrk
-         pWVLHMvcPnnfxhrhkb8nEdsaSUGEHnP5/cknOujZpY2spsxiHn8W+qSCY731UTEaE5
-         9m6w5MvxB67KJIrTxEx3AYt75btdq9mF1P1D+TWQf0UjqNX4obGhxB9xiECEUuKc1F
-         YoUivL8TNqjG3q1aiPVKzcvlDgFd9H4VGSvpzLDkvkGdQAFQ8ucWgeHA/moGLgzOz4
-         so+Cjml3U9dtA==
-From:   Adrian Larumbe <adrian.larumbe@collabora.com>
-To:     vkoul@kernel.org, dmaengine@vger.kernel.org
-Cc:     Adrian Larumbe <adrian.larumbe@collabora.com>
-Subject: [PATCH] dmaengine: Remove DMA_MEMCPY_SG operation as it has no consumers
-Date:   Tue, 26 Jul 2022 10:43:23 +0100
-Message-Id: <20220726094323.566140-1-adrian.larumbe@collabora.com>
-X-Mailer: git-send-email 2.37.0
+        with ESMTP id S232355AbiGZJ5o (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 26 Jul 2022 05:57:44 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C02A31DD7
+        for <dmaengine@vger.kernel.org>; Tue, 26 Jul 2022 02:57:15 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id v17so470657wrr.10
+        for <dmaengine@vger.kernel.org>; Tue, 26 Jul 2022 02:57:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=iUicZLyBaZmjv2lqx7fW4HMBGqk7G7eOOVk/ONJ/4PI=;
+        b=a9jshOAIwiw5ztp0+n80iX49X5uP9g1fIPLWAKA0Oebli99rLSK1JSwbKX/TWSIEKD
+         O8RAu6x1EuYGsc6oXUYHrmfMJXvk5iAAbsgDFp3wtW13E5HsTmbU8dXiDaDJtMrBEKfo
+         BtLocFdB4gelyGOYkHzTosErUmhiDP8/zjswgy3RH2fFxA6Xdh3CA/yI5iTiW9jbWJ9K
+         oN+oMjKZdsMTijOKOP2BcUYtUHprOqVqAeK+KFkaDem1o5Ff7dUDZtyl1X5TpjYEAD8P
+         dBkE0hdxwnSaGXsfATXn6MSzu2tBqE1Ie2s0Wxg+NyX5ban32/phra4XzX8bj2k4iDT4
+         H/tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=iUicZLyBaZmjv2lqx7fW4HMBGqk7G7eOOVk/ONJ/4PI=;
+        b=gV09JmwaNIJS0qmbUE4oLGQATjW/bBp6ri7KI/F78w4jnG4+smrXUcredrE+LQmA+2
+         fBosdJaNxR/vR0MKRl29vbuBfrshWj0EB8z8hRhS0QQmrhyVV+BU4nCQoSZPHWrGaZjx
+         FqhCFphpum21kxlLiI1ANdBh2SdYYXbFa/usuv2IavZGX3xxRYPk7jdbuQsSyvWAQHJP
+         rQyjoOpBjHDInT1CuduZsNjxV7PnzpMYYnqmFNC3GMMRzZgSUArsiAIbIcmV0UamJeaf
+         kzmA+wj1ktUXzyvxL2tR3ZRGVBsgUgpcNJ8AiRXXl8AiTm/OjKPtLPc5wF03FgBeOiog
+         ks3g==
+X-Gm-Message-State: AJIora+uG9vaWyVL9aUg9bC+Uzog9BYFNBzCiQRXzCj2cux8c970o0Et
+        A0PJSL3eU5sSc2AwA5o+ZUp5LA==
+X-Google-Smtp-Source: AGRyM1vaVzTyQ5b+nn+RlJ42faxYO14TpuNlzllTL+nY6z4bb/G0nOBbFTz5DJTxQxp7SwpuN92A3g==
+X-Received: by 2002:adf:e84b:0:b0:21e:61cd:647e with SMTP id d11-20020adfe84b000000b0021e61cd647emr10370152wrn.715.1658829433726;
+        Tue, 26 Jul 2022 02:57:13 -0700 (PDT)
+Received: from localhost.localdomain (210.145.15.109.rev.sfr.net. [109.15.145.210])
+        by smtp.googlemail.com with ESMTPSA id t3-20020a1c4603000000b003a2d87aea57sm21170873wma.10.2022.07.26.02.57.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Jul 2022 02:57:12 -0700 (PDT)
+From:   Amjad Ouled-Ameur <aouledameur@baylibre.com>
+To:     fparent@baylibre.com
+Cc:     broonie@kernel.org, chaotian.jing@mediatek.com,
+        chunfeng.yun@mediatek.com, devicetree@vger.kernel.org,
+        dmaengine@vger.kernel.org, jic23@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-phy@lists.infradead.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux@roeck-us.net,
+        matthias.bgg@gmail.com, qii.wang@mediatek.com, robh+dt@kernel.org,
+        srinivas.kandagatla@linaro.org, ulf.hansson@linaro.org,
+        vkoul@kernel.org, wim@linux-watchdog.org
+Subject: Re: [PATCH 16/17] arm64: dts: mediatek: add mt8365 device-tree
+Date:   Tue, 26 Jul 2022 11:57:11 +0200
+Message-Id: <20220726095711.708310-1-aouledameur@baylibre.com>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20220531135026.238475-17-fparent@baylibre.com>
+References: <20220531135026.238475-17-fparent@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-There are no in kernel consumers for DMA_MEMCPY_SG. Remove operation and
-Xilinx CDMA driver code which implemented it.
+Hi Fabien,
 
-This reverts the following commits:
+Could you please add CPUIDLE support:
 
-- commit 58fe10766048 ("dmaengine: Add documentation for new memcpy
-scatter-gather function")
-- commit 3218910fd585 ("dmaengine: Add core function and capability check
-for DMA_MEMCPY_SG")
-- commit 29cf37fa6dd9 ("dmaengine: Add consumer for the new DMA_MEMCPY_SG
-API function.")
+diff --git a/arch/arm64/boot/dts/mediatek/mt8365.dtsi b/arch/arm64/boot/dts/mediatek/mt8365.dtsi
+index 323c814c10cc..1df4075db58f 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8365.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8365.dtsi
+@@ -59,6 +59,7 @@ cpu0: cpu@0 {
+ 			clocks = <&mcucfg CLK_MCU_BUS_SEL>,
+ 				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+ 			clock-names = "cpu", "intermediate";
++			cpu-idle-states = <&MCDI_CPU &MCDI_CLUSTER &DPIDLE>;
+ 			operating-points-v2 = <&cluster0_opp>;
+ 			#cooling-cells = <2>;
+ 			enable-method = "psci";
+@@ -72,6 +73,7 @@ cpu1: cpu@1 {
+ 			clocks = <&mcucfg CLK_MCU_BUS_SEL>,
+ 				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+ 			clock-names = "cpu", "intermediate", "armpll";
++			cpu-idle-states = <&MCDI_CPU &MCDI_CLUSTER &DPIDLE>;
+ 			operating-points-v2 = <&cluster0_opp>;
+ 			#cooling-cells = <2>;
+ 			enable-method = "psci";
+@@ -85,6 +87,7 @@ cpu2: cpu@2 {
+ 			clocks = <&mcucfg CLK_MCU_BUS_SEL>,
+ 				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+ 			clock-names = "cpu", "intermediate", "armpll";
++			cpu-idle-states = <&MCDI_CPU &MCDI_CLUSTER &DPIDLE>;
+ 			operating-points-v2 = <&cluster0_opp>;
+ 			#cooling-cells = <2>;
+ 			enable-method = "psci";
+@@ -98,10 +101,42 @@ cpu3: cpu@3 {
+ 			clocks = <&mcucfg CLK_MCU_BUS_SEL>,
+ 				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+ 			clock-names = "cpu", "intermediate", "armpll";
++			cpu-idle-states = <&MCDI_CPU &MCDI_CLUSTER &DPIDLE>;
+ 			operating-points-v2 = <&cluster0_opp>;
+ 			#cooling-cells = <2>;
+ 			enable-method = "psci";
+ 		};
++
++		idle-states {
++			entry-method = "psci";
++
++			MCDI_CPU: mcdi-cpu {
++				compatible = "arm,idle-state";
++				local-timer-stop;
++				arm,psci-suspend-param = <0x00010001>;
++				entry-latency-us = <300>;
++				exit-latency-us = <200>;
++				min-residency-us = <1000>;
++			};
++
++			MCDI_CLUSTER: mcdi-cluster {
++				compatible = "arm,idle-state";
++				local-timer-stop;
++				arm,psci-suspend-param = <0x01010001>;
++				entry-latency-us = <350>;
++				exit-latency-us = <250>;
++				min-residency-us = <1200>;
++			};
++
++			DPIDLE: dpidle {
++				compatible = "arm,idle-state";
++				local-timer-stop;
++				arm,psci-suspend-param = <0x01010004>;
++				entry-latency-us = <300>;
++				exit-latency-us = <800>;
++				min-residency-us = <3300>;
++			};
++		};
+ 	};
+ 
+ 	cluster0_opp: opp-table-0 {
 
-Signed-off-by: Adrian Larumbe <adrian.larumbe@collabora.com>
----
- .../driver-api/dmaengine/provider.rst         |  23 ----
- drivers/dma/dmaengine.c                       |   7 -
- drivers/dma/xilinx/xilinx_dma.c               | 122 ------------------
- include/linux/dmaengine.h                     |  20 ---
- 4 files changed, 172 deletions(-)
+I have tested it on i350 evk and each idle state is used properly.
 
-diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
-index 1e0f1f85d10e..8cf704332bb4 100644
---- a/Documentation/driver-api/dmaengine/provider.rst
-+++ b/Documentation/driver-api/dmaengine/provider.rst
-@@ -162,29 +162,6 @@ Currently, the types available are:
- 
-   - The device is able to do memory to memory copies
- 
--- - DMA_MEMCPY_SG
--
--  - The device supports memory to memory scatter-gather transfers.
--
--  - Even though a plain memcpy can look like a particular case of a
--    scatter-gather transfer, with a single chunk to copy, it's a distinct
--    transaction type in the mem2mem transfer case. This is because some very
--    simple devices might be able to do contiguous single-chunk memory copies,
--    but have no support for more complex SG transfers.
--
--  - No matter what the overall size of the combined chunks for source and
--    destination is, only as many bytes as the smallest of the two will be
--    transmitted. That means the number and size of the scatter-gather buffers in
--    both lists need not be the same, and that the operation functionally is
--    equivalent to a ``strncpy`` where the ``count`` argument equals the smallest
--    total size of the two scatter-gather list buffers.
--
--  - It's usually used for copying pixel data between host memory and
--    memory-mapped GPU device memory, such as found on modern PCI video graphics
--    cards. The most immediate example is the OpenGL API function
--    ``glReadPielx()``, which might require a verbatim copy of a huge framebuffer
--    from local device memory onto host memory.
--
- - DMA_XOR
- 
-   - The device is able to perform XOR operations on memory areas
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index e80feeea0e01..c741b6431958 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -1153,13 +1153,6 @@ int dma_async_device_register(struct dma_device *device)
- 		return -EIO;
- 	}
- 
--	if (dma_has_cap(DMA_MEMCPY_SG, device->cap_mask) && !device->device_prep_dma_memcpy_sg) {
--		dev_err(device->dev,
--			"Device claims capability %s, but op is not defined\n",
--			"DMA_MEMCPY_SG");
--		return -EIO;
--	}
--
- 	if (dma_has_cap(DMA_XOR, device->cap_mask) && !device->device_prep_dma_xor) {
- 		dev_err(device->dev,
- 			"Device claims capability %s, but op is not defined\n",
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index cd62bbb50e8b..6276934d4d2b 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -2127,126 +2127,6 @@ xilinx_cdma_prep_memcpy(struct dma_chan *dchan, dma_addr_t dma_dst,
- 	return NULL;
- }
- 
--/**
-- * xilinx_cdma_prep_memcpy_sg - prepare descriptors for a memcpy_sg transaction
-- * @dchan: DMA channel
-- * @dst_sg: Destination scatter list
-- * @dst_sg_len: Number of entries in destination scatter list
-- * @src_sg: Source scatter list
-- * @src_sg_len: Number of entries in source scatter list
-- * @flags: transfer ack flags
-- *
-- * Return: Async transaction descriptor on success and NULL on failure
-- */
--static struct dma_async_tx_descriptor *xilinx_cdma_prep_memcpy_sg(
--			struct dma_chan *dchan, struct scatterlist *dst_sg,
--			unsigned int dst_sg_len, struct scatterlist *src_sg,
--			unsigned int src_sg_len, unsigned long flags)
--{
--	struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
--	struct xilinx_dma_tx_descriptor *desc;
--	struct xilinx_cdma_tx_segment *segment, *prev = NULL;
--	struct xilinx_cdma_desc_hw *hw;
--	size_t len, dst_avail, src_avail;
--	dma_addr_t dma_dst, dma_src;
--
--	if (unlikely(dst_sg_len == 0 || src_sg_len == 0))
--		return NULL;
--
--	if (unlikely(!dst_sg  || !src_sg))
--		return NULL;
--
--	desc = xilinx_dma_alloc_tx_descriptor(chan);
--	if (!desc)
--		return NULL;
--
--	dma_async_tx_descriptor_init(&desc->async_tx, &chan->common);
--	desc->async_tx.tx_submit = xilinx_dma_tx_submit;
--
--	dst_avail = sg_dma_len(dst_sg);
--	src_avail = sg_dma_len(src_sg);
--	/*
--	 * loop until there is either no more source or no more destination
--	 * scatterlist entry
--	 */
--	while (true) {
--		len = min_t(size_t, src_avail, dst_avail);
--		len = min_t(size_t, len, chan->xdev->max_buffer_len);
--		if (len == 0)
--			goto fetch;
--
--		/* Allocate the link descriptor from DMA pool */
--		segment = xilinx_cdma_alloc_tx_segment(chan);
--		if (!segment)
--			goto error;
--
--		dma_dst = sg_dma_address(dst_sg) + sg_dma_len(dst_sg) -
--			dst_avail;
--		dma_src = sg_dma_address(src_sg) + sg_dma_len(src_sg) -
--			src_avail;
--		hw = &segment->hw;
--		hw->control = len;
--		hw->src_addr = dma_src;
--		hw->dest_addr = dma_dst;
--		if (chan->ext_addr) {
--			hw->src_addr_msb = upper_32_bits(dma_src);
--			hw->dest_addr_msb = upper_32_bits(dma_dst);
--		}
--
--		if (prev) {
--			prev->hw.next_desc = segment->phys;
--			if (chan->ext_addr)
--				prev->hw.next_desc_msb =
--					upper_32_bits(segment->phys);
--		}
--
--		prev = segment;
--		dst_avail -= len;
--		src_avail -= len;
--		list_add_tail(&segment->node, &desc->segments);
--
--fetch:
--		/* Fetch the next dst scatterlist entry */
--		if (dst_avail == 0) {
--			if (dst_sg_len == 0)
--				break;
--			dst_sg = sg_next(dst_sg);
--			if (dst_sg == NULL)
--				break;
--			dst_sg_len--;
--			dst_avail = sg_dma_len(dst_sg);
--		}
--		/* Fetch the next src scatterlist entry */
--		if (src_avail == 0) {
--			if (src_sg_len == 0)
--				break;
--			src_sg = sg_next(src_sg);
--			if (src_sg == NULL)
--				break;
--			src_sg_len--;
--			src_avail = sg_dma_len(src_sg);
--		}
--	}
--
--	if (list_empty(&desc->segments)) {
--		dev_err(chan->xdev->dev,
--			"%s: Zero-size SG transfer requested\n", __func__);
--		goto error;
--	}
--
--	/* Link the last hardware descriptor with the first. */
--	segment = list_first_entry(&desc->segments,
--				struct xilinx_cdma_tx_segment, node);
--	desc->async_tx.phys = segment->phys;
--	prev->hw.next_desc = segment->phys;
--
--	return &desc->async_tx;
--
--error:
--	xilinx_dma_free_tx_descriptor(chan, desc);
--	return NULL;
--}
--
- /**
-  * xilinx_dma_prep_slave_sg - prepare descriptors for a DMA_SLAVE transaction
-  * @dchan: DMA channel
-@@ -3240,9 +3120,7 @@ static int xilinx_dma_probe(struct platform_device *pdev)
- 					  DMA_RESIDUE_GRANULARITY_SEGMENT;
- 	} else if (xdev->dma_config->dmatype == XDMA_TYPE_CDMA) {
- 		dma_cap_set(DMA_MEMCPY, xdev->common.cap_mask);
--		dma_cap_set(DMA_MEMCPY_SG, xdev->common.cap_mask);
- 		xdev->common.device_prep_dma_memcpy = xilinx_cdma_prep_memcpy;
--		xdev->common.device_prep_dma_memcpy_sg = xilinx_cdma_prep_memcpy_sg;
- 		/* Residue calculation is supported by only AXI DMA and CDMA */
- 		xdev->common.residue_granularity =
- 					  DMA_RESIDUE_GRANULARITY_SEGMENT;
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index b46b88e6aa0d..c923f4e60f24 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -50,7 +50,6 @@ enum dma_status {
-  */
- enum dma_transaction_type {
- 	DMA_MEMCPY,
--	DMA_MEMCPY_SG,
- 	DMA_XOR,
- 	DMA_PQ,
- 	DMA_XOR_VAL,
-@@ -887,11 +886,6 @@ struct dma_device {
- 	struct dma_async_tx_descriptor *(*device_prep_dma_memcpy)(
- 		struct dma_chan *chan, dma_addr_t dst, dma_addr_t src,
- 		size_t len, unsigned long flags);
--	struct dma_async_tx_descriptor *(*device_prep_dma_memcpy_sg)(
--		struct dma_chan *chan,
--		struct scatterlist *dst_sg, unsigned int dst_nents,
--		struct scatterlist *src_sg, unsigned int src_nents,
--		unsigned long flags);
- 	struct dma_async_tx_descriptor *(*device_prep_dma_xor)(
- 		struct dma_chan *chan, dma_addr_t dst, dma_addr_t *src,
- 		unsigned int src_cnt, size_t len, unsigned long flags);
-@@ -1060,20 +1054,6 @@ static inline struct dma_async_tx_descriptor *dmaengine_prep_dma_memcpy(
- 						    len, flags);
- }
- 
--static inline struct dma_async_tx_descriptor *dmaengine_prep_dma_memcpy_sg(
--		struct dma_chan *chan,
--		struct scatterlist *dst_sg, unsigned int dst_nents,
--		struct scatterlist *src_sg, unsigned int src_nents,
--		unsigned long flags)
--{
--	if (!chan || !chan->device || !chan->device->device_prep_dma_memcpy_sg)
--		return NULL;
--
--	return chan->device->device_prep_dma_memcpy_sg(chan, dst_sg, dst_nents,
--						       src_sg, src_nents,
--						       flags);
--}
--
- static inline bool dmaengine_is_metadata_mode_supported(struct dma_chan *chan,
- 		enum dma_desc_metadata_mode mode)
- {
--- 
-2.37.0
-
+Regards,
+Amjad

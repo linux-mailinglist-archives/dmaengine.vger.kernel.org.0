@@ -2,199 +2,129 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DC1B5828E5
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Jul 2022 16:47:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 404E65838AF
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Jul 2022 08:24:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233343AbiG0Oq7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 27 Jul 2022 10:46:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35426 "EHLO
+        id S229936AbiG1GTJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 28 Jul 2022 02:19:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234127AbiG0Oqz (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Jul 2022 10:46:55 -0400
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC607B864;
-        Wed, 27 Jul 2022 07:46:52 -0700 (PDT)
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 26REkloG060208;
-        Wed, 27 Jul 2022 09:46:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1658933207;
-        bh=HH6/A4QoVI8XrsWuyUxunANjj1kmDchZTOuwiRXvt28=;
-        h=Date:Subject:To:CC:References:From:In-Reply-To;
-        b=C1SmbkDzzwGA99K2o2okRLj5ajVawdFRhYCdCepWsYspmqgfOFAiz/T9DtlSouHYg
-         g/q7use3savg0toOu4QdSTzTUproUv7wDv3DRkvZ3uC5PQ0rmrUd3phzMCmWBwspR0
-         jmT7nNYXUZfyqj49CS/8v0SkB79HWKnHEyF9QXvg=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 26REkl60069165
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 Jul 2022 09:46:47 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Wed, 27
- Jul 2022 09:46:47 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Wed, 27 Jul 2022 09:46:47 -0500
-Received: from [10.24.69.12] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 26REkfdN035172;
-        Wed, 27 Jul 2022 09:46:42 -0500
-Message-ID: <df8b6249-93af-a323-3518-a1e0106b5c03@ti.com>
-Date:   Wed, 27 Jul 2022 20:16:39 +0530
+        with ESMTP id S233781AbiG1GTH (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Jul 2022 02:19:07 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B465726E
+        for <dmaengine@vger.kernel.org>; Wed, 27 Jul 2022 23:19:06 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id bp15so1406957ejb.6
+        for <dmaengine@vger.kernel.org>; Wed, 27 Jul 2022 23:19:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=C3neU1AtxmqWdDSuYqkB7lF7A3shUmwSCsbgD00NRVo=;
+        b=JbjP0JxIPi4T11YXcnH4HfzVt3B9IfnonC2lFIPLzS/wmOUb7lhpdzdYvT4RKIgN1s
+         +fllYg1aF6mDvF+BzTc6y2eUkbdIIT+mir7T0+tHeml2NqWAzQ7NwFEWVxbKafGJdQYr
+         QfcK0ns+1kHqIN7wPBPR+/tZaFEMkZuqLNs6A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=C3neU1AtxmqWdDSuYqkB7lF7A3shUmwSCsbgD00NRVo=;
+        b=KDJ6qZLyLfb+CQQGLLWt0YV1GRJY2DYVQhiaNgg9erPytsb0OLn/sn8ieQpMlJb4WY
+         sBVMyoLrvSHqNhvMH2TwflSyJPVKev+1zo4aqaKQnLOX4iOJygpTzO5FeJ4viKV3JaLU
+         VdGZhYYRe9N9zwi8N1aADpR9WNPYpXGEg/8GduM31gVNiWJnrcs5fmE6o6cz5GEcGBGz
+         QehBrClt+E+eaia5f/2hhQOF/EJ+53hFRC93bFAIa4wmnmX8sraFkh/syX6R/hM05Q1N
+         dVztLxXghi4ZjHKOD3TLActc17WRk1ki18M0S3OL/tGH/X9FaiisGq0tXuNnfJamcu4q
+         jDng==
+X-Gm-Message-State: AJIora+xngbJMZjbPN/h9H65FXf9MFtVNnaFKFbSecpGM/uoIWsH2FT1
+        KL3WVkL9/nXT0OgWMChrnmk5JA==
+X-Google-Smtp-Source: AGRyM1vRSnP3N6GPEflp6ikLzS+9t4V10CZ7mlxxZuvGRyYifP+MCFcmCR166eNhGSGUlfm9VPhAfw==
+X-Received: by 2002:a17:907:6818:b0:72b:5bac:c3a3 with SMTP id qz24-20020a170907681800b0072b5bacc3a3mr19390245ejc.139.1658989144713;
+        Wed, 27 Jul 2022 23:19:04 -0700 (PDT)
+Received: from dario-ThinkPad-T14s-Gen-2i.homenet.telecomitalia.it (host-79-31-31-9.retail.telecomitalia.it. [79.31.31.9])
+        by smtp.gmail.com with ESMTPSA id d6-20020aa7ce06000000b0043ba24a26casm105469edv.23.2022.07.27.23.19.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Jul 2022 23:19:04 -0700 (PDT)
+From:   Dario Binacchi <dario.binacchi@amarulasolutions.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula@amarulasolutions.com,
+        Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [RESEND PATCH v5 1/2] dmaengine: mxs: use platform_driver_register
+Date:   Thu, 28 Jul 2022 08:18:51 +0200
+Message-Id: <20220728061852.209938-1-dario.binacchi@amarulasolutions.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] dma: ti: k3-udma: Reset UDMA_CHAN_RT byte counters to
- prevent overflow
-Content-Language: en-US
-To:     =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>,
-        <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <nm@ti.com>, <vigneshr@ti.com>, <p.yadav@ti.com>,
-        <j-keerthy@ti.com>, <m-khayami@ti.com>, <stanley_liu@ti.com>
-References: <20220704111325.636-1-vaishnav.a@ti.com>
- <ad6dcdb8-8d4d-6f8b-38de-be2756a39028@gmail.com>
-From:   Vaishnav Achath <vaishnav.a@ti.com>
-In-Reply-To: <ad6dcdb8-8d4d-6f8b-38de-be2756a39028@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Peter, Vinod,
+Driver registration fails on SOC imx8mn as its supplier, the clock
+control module, is probed later than subsys initcall level. This driver
+uses platform_driver_probe which is not compatible with deferred probing
+and won't be probed again later if probe function fails due to clock not
+being available at that time.
 
-On 09/07/22 11:50, Péter Ujfalusi wrote:
-> 
-> 
-> On 7/4/22 14:13, Vaishnav Achath wrote:
->> UDMA_CHAN_RT_*BCNT_REG stores the real-time channel bytecount statistics.
->> These registers are 32-bit hardware counters and the driver uses these
->> counters to monitor the operational progress status for a channel, when
->> transferring more than 4GB of data it was observed that these counters
->> overflow and completion calculation of a operation gets affected and the
->> transfer hangs indefinitely.
->>
->> This commit adds changes to decrease the byte count for every complete
->> transaction so that these registers never overflow and the proper byte
->> count statistics is maintained for ongoing transaction by the RT counters.
->>
->> Earlier uc->bcnt used to maintain a count of the completed bytes at driver
->> side, since the RT counters maintain the statistics of current transaction
->> now, the maintenance of uc->bcnt is not necessary.
-> 
-> Thanks for the patch,
-> 
->> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
->> ---
->>   drivers/dma/ti/k3-udma.c | 27 +++++++++++++++++++--------
->>   1 file changed, 19 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
->> index 2f0d2c68c93c..0f91a3e47c19 100644
->> --- a/drivers/dma/ti/k3-udma.c
->> +++ b/drivers/dma/ti/k3-udma.c
->> @@ -300,8 +300,6 @@ struct udma_chan {
->>   
->>   	struct udma_tx_drain tx_drain;
->>   
->> -	u32 bcnt; /* number of bytes completed since the start of the channel */
->> -
->>   	/* Channel configuration parameters */
->>   	struct udma_chan_config config;
->>   
->> @@ -757,6 +755,22 @@ static void udma_reset_rings(struct udma_chan *uc)
->>   	}
->>   }
->>   
->> +static void udma_decrement_byte_counters(struct udma_chan *uc, u32 val)
->> +{
->> +	if (uc->tchan) {
->> +		udma_tchanrt_write(uc, UDMA_CHAN_RT_BCNT_REG, val);
->> +		udma_tchanrt_write(uc, UDMA_CHAN_RT_SBCNT_REG, val);
->> +		if (!uc->bchan)
->> +			udma_tchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
->> +	}
->> +
->> +	if (uc->rchan) {
->> +		udma_rchanrt_write(uc, UDMA_CHAN_RT_BCNT_REG, val);
->> +		udma_rchanrt_write(uc, UDMA_CHAN_RT_SBCNT_REG, val);
->> +		udma_rchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
->> +	}
-> 
-> In case of MEM_TO_MEM (or the not implemented DEV_TO_DEV) we use the
-> tchan's counter for position tracking, but we have the pair anyways (UDMA).
-> if ((uc->desc->dir == DMA_DEV_TO_MEM)
-> 	rchan bcnt reset
-> else
-> 	tchan bcnt reset
-> 
->> +}
->> +
->>   static void udma_reset_counters(struct udma_chan *uc)
->>   {
->>   	u32 val;
->> @@ -790,8 +804,6 @@ static void udma_reset_counters(struct udma_chan *uc)
->>   		val = udma_rchanrt_read(uc, UDMA_CHAN_RT_PEER_BCNT_REG);
->>   		udma_rchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
->>   	}
->> -
->> -	uc->bcnt = 0;
->>   }
->>   
->>   static int udma_reset_chan(struct udma_chan *uc, bool hard)
->> @@ -1115,8 +1127,8 @@ static void udma_check_tx_completion(struct work_struct *work)
->>   		if (uc->desc) {
->>   			struct udma_desc *d = uc->desc;
->>   
->> -			uc->bcnt += d->residue;
->>   			udma_start(uc);
->> +			udma_decrement_byte_counters(uc, d->residue);
-> 
-> Why not before udma_start()?
-Thank you for your review and feedback, I have updated the addressed items in
-V2, Sorry for the delay in responding.
-V2: https://patchwork.kernel.org/project/linux-dmaengine/patch/20220727140837.25877-1-vaishnav.a@ti.com/
-> 
->>   			vchan_cookie_complete(&d->vd);
->>   			break;
->>   		}
->> @@ -1168,8 +1180,8 @@ static irqreturn_t udma_ring_irq_handler(int irq, void *data)
->>   				vchan_cyclic_callback(&d->vd);
->>   			} else {
->>   				if (udma_is_desc_really_done(uc, d)) {
->> -					uc->bcnt += d->residue;
->>   					udma_start(uc);
->> +					udma_decrement_byte_counters(uc, d->residue);
->>   					vchan_cookie_complete(&d->vd);
->>   				} else {
->>   					schedule_delayed_work(&uc->tx_drain.work,
->> @@ -1204,7 +1216,7 @@ static irqreturn_t udma_udma_irq_handler(int irq, void *data)
->>   			vchan_cyclic_callback(&d->vd);
->>   		} else {
->>   			/* TODO: figure out the real amount of data */
->> -			uc->bcnt += d->residue;
->> +			udma_decrement_byte_counters(uc, d->residue);
->>   			udma_start(uc);
->>   			vchan_cookie_complete(&d->vd);
->>   		}
->> @@ -3809,7 +3821,6 @@ static enum dma_status udma_tx_status(struct dma_chan *chan,
->>   			bcnt = udma_tchanrt_read(uc, UDMA_CHAN_RT_BCNT_REG);
->>   		}
->>   
->> -		bcnt -= uc->bcnt;
->>   		if (bcnt && !(bcnt % uc->desc->residue))
->>   			residue = 0;
->>   		else
-> 
+This patch replaces the use of platform_driver_probe with
+platform_driver_register which will allow probing the driver later again
+when the clock control module will be available.
 
+Fixes: a580b8c5429a ("dmaengine: mxs-dma: add dma support for i.MX23/28")
+Co-developed-by: Michael Trimarchi <michael@amarulasolutions.com>
+Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Cc: stable@vger.kernel.org
+
+---
+
+Changes in v5:
+- Update the commit message.
+- Add the patch "dmaengine: mxs: fix section mismatch" to remove the
+  warning raised by this patch.
+
+Changes in v4:
+- Restore __init in front of mxs_dma_probe() definition.
+- Rename the mxs_dma_driver variable to mxs_dma_driver_probe.
+- Update the commit message.
+- Use builtin_platform_driver() instead of module_platform_driver().
+
+Changes in v3:
+- Restore __init in front of mxs_dma_init() definition.
+
+Changes in v2:
+- Add the tag "Cc: stable@vger.kernel.org" in the sign-off area.
+
+ drivers/dma/mxs-dma.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
+index 994fc4d2aca4..18f8154b859b 100644
+--- a/drivers/dma/mxs-dma.c
++++ b/drivers/dma/mxs-dma.c
+@@ -839,10 +839,6 @@ static struct platform_driver mxs_dma_driver = {
+ 		.name	= "mxs-dma",
+ 		.of_match_table = mxs_dma_dt_ids,
+ 	},
++	.probe = mxs_dma_probe,
+ };
+-
+-static int __init mxs_dma_module_init(void)
+-{
+-	return platform_driver_probe(&mxs_dma_driver, mxs_dma_probe);
+-}
+-subsys_initcall(mxs_dma_module_init);
++builtin_platform_driver(mxs_dma_driver);
 -- 
-Thanks and Regards,
-Vaishnav
+2.32.0
+

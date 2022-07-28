@@ -2,31 +2,31 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68EA95841D3
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Jul 2022 16:37:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97DE75841AD
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Jul 2022 16:36:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232917AbiG1Og1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 28 Jul 2022 10:36:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38114 "EHLO
+        id S232204AbiG1OgQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 28 Jul 2022 10:36:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230371AbiG1OfQ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Jul 2022 10:35:16 -0400
+        with ESMTP id S232736AbiG1OfN (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Jul 2022 10:35:13 -0400
 Received: from mail.baikalelectronics.com (unknown [87.245.175.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 31D5548C9A
-        for <dmaengine@vger.kernel.org>; Thu, 28 Jul 2022 07:34:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8258A2ED7D
+        for <dmaengine@vger.kernel.org>; Thu, 28 Jul 2022 07:34:30 -0700 (PDT)
 Received: from mail (mail.baikal.int [192.168.51.25])
-        by mail.baikalelectronics.com (Postfix) with ESMTP id C00F85F86;
-        Thu, 28 Jul 2022 17:31:29 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com C00F85F86
+        by mail.baikalelectronics.com (Postfix) with ESMTP id 30F9A5F87;
+        Thu, 28 Jul 2022 17:31:31 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.baikalelectronics.com 30F9A5F87
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baikalelectronics.ru; s=mail; t=1659018689;
-        bh=n7/eCBY+3otMjcR2vj/1GqFEVzdZEejjsBhPqaiBFow=;
+        d=baikalelectronics.ru; s=mail; t=1659018691;
+        bh=sW1bi9Dn23WINPlP07lFXXlGMfXggkaMtF/1LQqhwLk=;
         h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=DpqB9ec946CzAso21BR3rQ2fO2/4ZiAFp3J1u0gx3aDJgH1XKaV4Pq3o1IhmI5Ny8
-         zeW2ksDnWeLITPsspt1TyN25rpno34/4ZGnyUomcKVwXQ03oCVhVOx74eJhN13xh1B
-         ocPOKChaj7wGSCK6LKePP6oeXthFHpxgiFxH06Cw=
+        b=pdryVsPiGpzZQ6jSY9hXEPuQxh0bN03t4FT9+wR3mPGQID0aO9NaEI7bJoF1xDRUj
+         MrnnvfdFQcrw+zaL1Af/8v5lX9qKxtw0ufcGsNaYjB+ZZeaAFbMd/ePWzaJnldIJVz
+         ZAjiaYRXI4kPZc/XxUWMMt8gXEhtaGP4kUveJ7IU=
 Received: from localhost (192.168.53.207) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 28 Jul 2022 17:29:04 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 28 Jul 2022 17:29:06 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -41,9 +41,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 20/24] dmaengine: dw-edma: Drop DT-region allocation
-Date:   Thu, 28 Jul 2022 17:28:37 +0300
-Message-ID: <20220728142841.12305-21-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v4 21/24] dmaengine: dw-edma: Replace chip ID number with device name
+Date:   Thu, 28 Jul 2022 17:28:38 +0300
+Message-ID: <20220728142841.12305-22-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20220728142841.12305-1-Sergey.Semin@baikalelectronics.ru>
 References: <20220728142841.12305-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -59,71 +59,88 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-There is no point in allocating an additional memory for the data target
-regions passed then to the client drivers. Just use the already available
-structures defined in the dw_edma_chip instance.
-
-Note these regions are unused in normal circumstances since they are
-specific to the case of eDMA being embedded into the DW PCIe End-point and
-having it's CSRs accessible over a End-point' BAR. This case is only known
-to be implemented as a part of the Synopsys PCIe EndPoint IP prototype
-kit.
+Using some abstract number as the DW eDMA chip identifier isn't really
+practical. First of all there can be more than one DW eDMA controller on
+the platform some of them can be detected as the PCIe end-points, some of
+them can be embedded into the DW PCIe Root Port/End-point controllers.
+Seeing some abstract number in for instance IRQ handlers list doesn't give
+a notion regarding their reference to the particular DMA controller.
+Secondly current DW eDMA chip id implementation doesn't provide the
+multi-eDMA platforms support for same reason of possibly having eDMA
+detected on different system buses. At the same time re-implementing
+something ida-based won't give much benefits especially seeing the DW eDMA
+chip ID is only used in the IRQ request procedure. So to speak in order to
+preserve the code simplicity and get to have the multi-eDMA platforms
+support let's just use the parental device name to create the DW eDMA
+controller name.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Acked-By: Vinod Koul <vkoul@kernel.org>
+
 ---
- drivers/dma/dw-edma/dw-edma-core.c | 21 ++++-----------------
- 1 file changed, 4 insertions(+), 17 deletions(-)
+
+Changelog v2:
+- Slightly extend the eDMA name array. (@Manivannan)
+---
+ drivers/dma/dw-edma/dw-edma-core.c | 3 ++-
+ drivers/dma/dw-edma/dw-edma-core.h | 2 +-
+ drivers/dma/dw-edma/dw-edma-pcie.c | 1 -
+ include/linux/dma/edma.h           | 1 -
+ 4 files changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index 7ba3b60c960c..98a94a66fb82 100644
+index 98a94a66fb82..6a8282eaebaf 100644
 --- a/drivers/dma/dw-edma/dw-edma-core.c
 +++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -744,7 +744,6 @@ static void dw_edma_free_chan_resources(struct dma_chan *dchan)
- static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
- {
- 	struct dw_edma_chip *chip = dw->chip;
--	struct dw_edma_region *dt_region;
- 	struct device *dev = chip->dev;
- 	struct dw_edma_chan *chan;
- 	struct dw_edma_irq *irq;
-@@ -760,12 +759,6 @@ static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
- 	for (i = 0; i < ch_cnt; i++) {
- 		chan = &dw->chan[i];
+@@ -979,7 +979,8 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+ 	if (!dw->chan)
+ 		return -ENOMEM;
  
--		dt_region = devm_kzalloc(dev, sizeof(*dt_region), GFP_KERNEL);
--		if (!dt_region)
--			return -ENOMEM;
--
--		chan->vc.chan.private = dt_region;
--
- 		chan->dw = dw;
+-	snprintf(dw->name, sizeof(dw->name), "dw-edma-core:%d", chip->id);
++	snprintf(dw->name, sizeof(dw->name), "dw-edma-core:%s",
++		 dev_name(chip->dev));
  
- 		if (i < dw->wr_ch_cnt) {
-@@ -813,17 +806,11 @@ static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
- 			 chan->msi.data);
+ 	/* Disable eDMA, only to establish the ideal initial conditions */
+ 	dw_edma_v0_core_off(dw);
+diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
+index e3ad3e372b55..0ab2b6dba880 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.h
++++ b/drivers/dma/dw-edma/dw-edma-core.h
+@@ -96,7 +96,7 @@ struct dw_edma_irq {
+ };
  
- 		chan->vc.desc_free = vchan_free_desc;
--		vchan_init(&chan->vc, dma);
-+		chan->vc.chan.private = chan->dir == EDMA_DIR_WRITE ?
-+					&dw->chip->dt_region_wr[chan->id] :
-+					&dw->chip->dt_region_rd[chan->id];
+ struct dw_edma {
+-	char				name[20];
++	char				name[32];
  
--		if (chan->dir == EDMA_DIR_WRITE) {
--			dt_region->paddr = chip->dt_region_wr[chan->id].paddr;
--			dt_region->vaddr = chip->dt_region_wr[chan->id].vaddr;
--			dt_region->sz = chip->dt_region_wr[chan->id].sz;
--		} else {
--			dt_region->paddr = chip->dt_region_rd[chan->id].paddr;
--			dt_region->vaddr = chip->dt_region_rd[chan->id].vaddr;
--			dt_region->sz = chip->dt_region_rd[chan->id].sz;
--		}
-+		vchan_init(&chan->vc, dma);
+ 	struct dma_device		dma;
  
- 		dw_edma_v0_core_device_config(chan);
- 	}
+diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+index f530bacfd716..3f9dadc73854 100644
+--- a/drivers/dma/dw-edma/dw-edma-pcie.c
++++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+@@ -222,7 +222,6 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 
+ 	/* Data structure initialization */
+ 	chip->dev = dev;
+-	chip->id = pdev->devfn;
+ 
+ 	chip->mf = vsec_data.mf;
+ 	chip->nr_irqs = nr_irqs;
+diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+index 52046b74c0a0..979a83a08378 100644
+--- a/include/linux/dma/edma.h
++++ b/include/linux/dma/edma.h
+@@ -76,7 +76,6 @@ enum dw_edma_chip_flags {
+  */
+ struct dw_edma_chip {
+ 	struct device		*dev;
+-	int			id;
+ 	int			nr_irqs;
+ 	const struct dw_edma_core_ops   *ops;
+ 	u32			flags;
 -- 
 2.35.1
 

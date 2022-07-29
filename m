@@ -2,98 +2,101 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B4EB5847D8
-	for <lists+dmaengine@lfdr.de>; Thu, 28 Jul 2022 23:50:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F094584F06
+	for <lists+dmaengine@lfdr.de>; Fri, 29 Jul 2022 12:45:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230462AbiG1Vun (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 28 Jul 2022 17:50:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37962 "EHLO
+        id S235352AbiG2Ko6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 29 Jul 2022 06:44:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230332AbiG1Vul (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Jul 2022 17:50:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24DF01F629;
-        Thu, 28 Jul 2022 14:50:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S231218AbiG2Ko5 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 29 Jul 2022 06:44:57 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4A1883211;
+        Fri, 29 Jul 2022 03:44:53 -0700 (PDT)
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 903A361AC7;
-        Thu, 28 Jul 2022 21:50:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1600C433D6;
-        Thu, 28 Jul 2022 21:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659045040;
-        bh=TIOCNvw+17eRmNBfMFABH6VkBMWnuv6D1qn6yCQMJrw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YBHZYgsKrAuDGDNxgcUIVjuVNislrbcEKsfe/xHrKkvXsKbsnBm0l7C12G3Oa27q8
-         PlIDnNyVuOSJwbT5Tji2DrzAkwZrc7HNnhNGn3hnDQppcEIXDFS18u0aW3hlVT4faS
-         BixsHF3y5wiguEnyPr1Qjeqob4YsQfoQoYjcA2YwSE8Sfoo06FHJFVTEi068Uyen5r
-         ziANQly7ihmRuTQObzk0XUjy4fvNHaykq0bFtfMvNNtVcLhN69mrWl30UFI35gbBpY
-         ObP2ygENYWaoQHDMCJyzZisRqkcfs++QU6Eod7c+qpNHrwaLu8Ia2lE3tqMKI4vDs3
-         PF1oFXvnSirvw==
-Received: by mail-vk1-f178.google.com with SMTP id b2so1445361vkg.2;
-        Thu, 28 Jul 2022 14:50:39 -0700 (PDT)
-X-Gm-Message-State: AJIora8ApiSScivdsEJbgBiWjU+0/Fs9/d2CT7dRLiFUy++vjgroT6VL
-        gdJq8V5oKVIc5X+7Y95wsABumUYdWAZp4x76HQ==
-X-Google-Smtp-Source: AGRyM1ummHcv4YmBzQF2UjMZlRgMn8EgYxyFbY/AxWBSezepPmZZ6gULxdnDc+jSowPTBq4nLYPRsyqBX5nG9adIf9Q=
-X-Received: by 2002:ac5:c916:0:b0:376:f130:808f with SMTP id
- t22-20020ac5c916000000b00376f130808fmr245211vkl.19.1659045038884; Thu, 28 Jul
- 2022 14:50:38 -0700 (PDT)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id AC0A96601B51;
+        Fri, 29 Jul 2022 11:44:50 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1659091491;
+        bh=AQdqE1GO0V3rreFgAXtrSDeQLlxnOolBtnCZSijQhOM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ejPq8DpUJ8FijUY0HCE1hwqrRnGZkQmBiPhNJ55XL1sQXbHsVMgjGe1BCdP+qI76Y
+         ewXDYk3rAZk5Wvt3URjsXZ527wjn580VKlMj0Cs1nvepNKKXM2MqtWDQyjkKuBvvnQ
+         fePyS983PRiJNWfYwEntuI/T3T5SKEf6UbP1aK2GyDz6hfoY9YpEhlt9K5s10T99fm
+         eXYPUHUdo2yrzYHNodmG/i+SbKZVmShsbXNYfXV+DOCI24usdP7esV8m+7qaDLB1LF
+         mQMUuJ1Hn2RgwUs9pGHW9aAYphmUDslW2I1i2AXz2G1d113krfwj6pWw+pbNdYYHxj
+         nYAo9akqERQxg==
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+To:     robh+dt@kernel.org
+Cc:     krzysztof.kozlowski+dt@linaro.org, vkoul@kernel.org,
+        chaotian.jing@mediatek.com, ulf.hansson@linaro.org,
+        matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
+        hsinyi@chromium.org, nfraprado@collabora.com,
+        allen-kh.cheng@mediatek.com, fparent@baylibre.com,
+        sam.shih@mediatek.com, sean.wang@mediatek.com,
+        long.cheng@mediatek.com, wenbin.mei@mediatek.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, phone-devel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: [PATCH 0/8] MT6795 Devicetrees and Sony Xperia M5
+Date:   Fri, 29 Jul 2022 12:44:32 +0200
+Message-Id: <20220729104441.39177-1-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-References: <20220728185512.1270964-1-robh@kernel.org>
-In-Reply-To: <20220728185512.1270964-1-robh@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 28 Jul 2022 15:50:27 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKGmL7BTibEJM0NWRmazOJBsNDLAWFtvth=oBOQQmn_VQ@mail.gmail.com>
-Message-ID: <CAL_JsqKGmL7BTibEJM0NWRmazOJBsNDLAWFtvth=oBOQQmn_VQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: dma: arm,pl330: Add missing 'iommus' property
-To:     Vinod Koul <vkoul@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Jul 28, 2022 at 12:55 PM Rob Herring <robh@kernel.org> wrote:
->
-> The pl330 can be behind an IOMMU which is the case for Arm Juno board.
-> Add the 'iommus' property allowing for 1 IOMMU per channel.
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/dma/arm,pl330.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/dma/arm,pl330.yaml b/Documentation/devicetree/bindings/dma/arm,pl330.yaml
-> index 2bec69b308f8..b9c4bee178ae 100644
-> --- a/Documentation/devicetree/bindings/dma/arm,pl330.yaml
-> +++ b/Documentation/devicetree/bindings/dma/arm,pl330.yaml
-> @@ -55,6 +55,11 @@ properties:
->
->    dma-coherent: true
->
-> +  iommus:
-> +    minItems: 1
-> +    maxItems: 8
+This series brings some more support for the MT6795 SoC, as it
+adds support for basic clock controllers (and resets) and all
+of the mtk-sd mmc controllers.
 
-Off by 1. Juno has 9 entries. I think it's 8 entries for write the
-read side has 1 entry. The TRM isn't too clear.
+While at it, since now it's possible to get the "first signs of
+life" out of a MT6795 smartphone platform, add a basic devicetree
+for the Sony Xperia M5 (codename "Holly") device as to start
+preparing the ground for a gradual bringup.
 
-Rob
+This series depends on [1] my mt6795 clocks series.
 
-> +    description: Up to 1 IOMMU per DMA channel
-> +
->    power-domains:
->      maxItems: 1
->
-> --
-> 2.34.1
->
+P.S.: Thumbs up for the first MediaTek-powered ARM64 smartphone
+      going upstream! :-) :-) :-)
+
+[1]: https://patchwork.kernel.org/project/linux-mediatek/list/?series=662165
+
+AngeloGioacchino Del Regno (8):
+  dt-bindings: dma: mediatek,uart-dma: Add binding for MT6795 SoC
+  dt-bindings: mmc: Add compatible for MT6795 Helio X10 SoC
+  arm64: dts: mediatek: mt6795: Add topckgen, infra, peri clocks/resets
+  arm64: dts: mediatek: mt6795: Replace UART dummy clocks with pericfg
+  arm64: dts: mediatek: mt6795: Add support for APDMA and wire up UART
+    DMAs
+  arm64: dts: mediatek: mt6795: Add support for eMMC/SD/SDIO controllers
+  dt-bindings: arm: mediatek: Add compatible for MT6795 Sony Xperia M5
+  arm64: dts: mediatek: Add support for MT6795 Sony Xperia M5 smartphone
+
+ .../devicetree/bindings/arm/mediatek.yaml     |   1 +
+ .../bindings/dma/mediatek,uart-dma.yaml       |   1 +
+ .../devicetree/bindings/mmc/mtk-sd.yaml       |   1 +
+ arch/arm64/boot/dts/mediatek/Makefile         |   1 +
+ .../dts/mediatek/mt6795-sony-xperia-m5.dts    |  90 +++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt6795.dtsi      | 107 +++++++++++++++++-
+ 6 files changed, 197 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dts
+
+-- 
+2.35.1
+

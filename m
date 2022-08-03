@@ -2,54 +2,63 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F353588482
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Aug 2022 00:44:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2B28588751
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Aug 2022 08:25:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230471AbiHBWom (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 2 Aug 2022 18:44:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40484 "EHLO
+        id S237052AbiHCGZF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 3 Aug 2022 02:25:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229556AbiHBWol (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 2 Aug 2022 18:44:41 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88F8F54ACE;
-        Tue,  2 Aug 2022 15:44:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3045BB8213F;
-        Tue,  2 Aug 2022 22:44:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D466BC433D7;
-        Tue,  2 Aug 2022 22:44:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659480277;
-        bh=V9bk76GSzx33fU+JZ+1Bdf90KJc+ck5Yqw/pwb8oRxg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Gadaajw8M9DDiWhT/k6J+yzz4p8PpUvtrllO7Mi2ekfYWHFi89NQ3meznMyUXIdCs
-         h/K46ThUWYOYukOyHkoHz62W+/mIO949x6zwztX1cVRIwyjOXkuepfrgKne3QGN/10
-         tm4+vvGM73gCvKfnUXQ4lO9CF/ghduBYOtYIidD1V7JIlZYCaxcLdPNB/DjQLDIV1G
-         0HvOIVAjivVuqIyUXcj4/0uFQAa9gUvRSNreJfwPis8qgQeLBMYtDLGTpyDaIccNSw
-         Y4nAQ08fOUoR9zUO40PLExqokEjlCgQojAMc90VGcUtq7r4VaRVJc/5oPPehyQwXYT
-         0mvLHxllP70Lw==
-Received: by mail-pj1-f46.google.com with SMTP id d65-20020a17090a6f4700b001f303a97b14so203754pjk.1;
-        Tue, 02 Aug 2022 15:44:37 -0700 (PDT)
-X-Gm-Message-State: ACgBeo3R0kq8Pzw/bPShw6QVZH2sfTgULy6T8brAW9IGLeZzoJDUPg+5
-        tycwmju1Vnfp8uwj2aoAZmzehZsWdKK+/Rq6yg==
-X-Google-Smtp-Source: AA6agR4yGn4dNgN1F5VZu/eS4OHwaG9ojj3g7zAcnkZGjF9yIXh6RCdJOQOCU4N9lVwJ2tW4qCHsr0tWdDEMjgyVL4Q=
-X-Received: by 2002:a17:903:328e:b0:16e:fa5f:37ae with SMTP id
- jh14-20020a170903328e00b0016efa5f37aemr8392334plb.148.1659480277466; Tue, 02
- Aug 2022 15:44:37 -0700 (PDT)
+        with ESMTP id S236655AbiHCGZE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 3 Aug 2022 02:25:04 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 818C35071E
+        for <dmaengine@vger.kernel.org>; Tue,  2 Aug 2022 23:25:02 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id c17so6504834lfb.3
+        for <dmaengine@vger.kernel.org>; Tue, 02 Aug 2022 23:25:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=3K6h/YOYCCWw9kAlWjAOBOB6ZuuzFpv4znwzHvvtW4w=;
+        b=fVtRciBIn58GN8cGxH5kyQfk6enef1alabis1DCnj/wCSa7sVD4y+UUdeWEORYizoC
+         +n+LTvYNgNTH9n2DD+qjJjzC0eTnV1ako23N+wpfq9wC3bKvfFYpVgGnfn+6MPYyqbpO
+         1a5GtYgj9mZKk6dWvgNAtXgYdxDxqG6my8grPBeBwQdHpbTf7wNJ0fjm/vsmkfJ7lXx6
+         +xCYev+c/0s8WZsXGS6NRW6GplulluNf0FSFZywX+Nv3Q8KsQYlZZGtG9wSsZTJiHf5n
+         3G26OMgG8VeYoZ6VhgboXwf1tuLN0ECZTt+dh2HdURlRcvftjPgz4pc9/atd4B3s6/sA
+         uVIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=3K6h/YOYCCWw9kAlWjAOBOB6ZuuzFpv4znwzHvvtW4w=;
+        b=KVm7zeDdL4WYMN2lPmYGRvg7DEmii/j2flsDti9+5XqtXWejcxs4fpAIYD5dKs4MmB
+         fZQLh1VifSIsGQ2lKeZ/dm23PTzsjAUZldhXGhlbz7UTvNrf22dHCEO7ioz1Plp5CWy8
+         gYtRLuPHewAKROtqKfItcETBzH1SkNLlRIjmuqpIq1kq8QCNcO1drHj44RWpZtfZnw7a
+         YHbnMd7bpgMbKU9BpE1lZwVQKqoVBI5JRUM6itWkvlvzXGkHFwfGH3/D2cGYgMLYrVXt
+         5x7u/BMt4t287Xnd0DuanRt/9LBwlHejDsCqKqOHPeuIcB91rnnxmzWJ8Hlo+ru+tGhf
+         va+g==
+X-Gm-Message-State: ACgBeo3mN9S1qgiT0WUHTpq9xTbMMam62FfCBwNci0d23pRP10TFh4re
+        AMMnkbybeZIawFl3tUpG+JSKKA==
+X-Google-Smtp-Source: AA6agR4WeafjdprO3HCDuzZ13w+TlqcfYBSqcnjO5bmjDsudRBFKMrhsanZ7tktSRgTI2JJ7uxSkQg==
+X-Received: by 2002:a05:6512:200f:b0:48a:ee15:929b with SMTP id a15-20020a056512200f00b0048aee15929bmr6779135lfb.614.1659507900854;
+        Tue, 02 Aug 2022 23:25:00 -0700 (PDT)
+Received: from [192.168.1.6] ([213.161.169.44])
+        by smtp.gmail.com with ESMTPSA id o14-20020a2e944e000000b0025dde220a94sm2118102ljh.109.2022.08.02.23.24.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Aug 2022 23:24:59 -0700 (PDT)
+Message-ID: <7f999d5e-ed95-65d1-f748-d14d8caf36f6@linaro.org>
+Date:   Wed, 3 Aug 2022 08:24:57 +0200
 MIME-Version: 1.0
-References: <20220524080337.1322240-1-joy.zou@nxp.com> <AM6PR04MB592501ABD3A369F913137E1FE19D9@AM6PR04MB5925.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB592501ABD3A369F913137E1FE19D9@AM6PR04MB5925.eurprd04.prod.outlook.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 2 Aug 2022 16:44:25 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJWvLrC91=MvVUiCyC3txEbK7tvja1SpZ7wsUktPMNoeA@mail.gmail.com>
-Message-ID: <CAL_JsqJWvLrC91=MvVUiCyC3txEbK7tvja1SpZ7wsUktPMNoeA@mail.gmail.com>
-Subject: Re: FW: [PATCH V2 1/2] bindings: fsl-imx-sdma: Document 'HDMI Audio' transfer
-To:     Joy Zou <joy.zou@nxp.com>
-Cc:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "S.J. Wang" <shengjiu.wang@nxp.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: FW: [PATCH V2 1/2] bindings: fsl-imx-sdma: Document 'HDMI Audio'
+ transfer
+Content-Language: en-US
+To:     Joy Zou <joy.zou@nxp.com>, "vkoul@kernel.org" <vkoul@kernel.org>
+Cc:     "S.J. Wang" <shengjiu.wang@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "krzysztof.kozlowski+dt@linaro.org" 
         <krzysztof.kozlowski+dt@linaro.org>,
         "shawnguo@kernel.org" <shawnguo@kernel.org>,
@@ -62,9 +71,14 @@ Cc:     "vkoul@kernel.org" <vkoul@kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+References: <20220524080337.1322240-1-joy.zou@nxp.com>
+ <AM6PR04MB592501ABD3A369F913137E1FE19D9@AM6PR04MB5925.eurprd04.prod.outlook.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <AM6PR04MB592501ABD3A369F913137E1FE19D9@AM6PR04MB5925.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,13 +86,11 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Aug 1, 2022 at 9:58 PM Joy Zou <joy.zou@nxp.com> wrote:
->
+On 02/08/2022 05:58, Joy Zou wrote:
 > Gentle ping...
 
-For what? Krzysztof commented less than 2 hours after you sent v2. And
-dtbs_check shows a ton of warnings as reported. I suspect you need to
-update the schema to fix some of those unless you think they are all
-.dts file fixes.
+You already got review, 1 hour after you sent the patch. Long time ago.
+Instead of pinging, please implement all the changes I asked in review.
 
-Rob
+Best regards,
+Krzysztof

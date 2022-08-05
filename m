@@ -2,21 +2,21 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10FE658A815
+	by mail.lfdr.de (Postfix) with ESMTP id 5F71E58A816
 	for <lists+dmaengine@lfdr.de>; Fri,  5 Aug 2022 10:34:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240286AbiHEIer (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        id S240334AbiHEIer (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
         Fri, 5 Aug 2022 04:34:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51800 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240185AbiHEIeq (ORCPT
+        with ESMTP id S229676AbiHEIeq (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Fri, 5 Aug 2022 04:34:46 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8510018362;
-        Fri,  5 Aug 2022 01:34:45 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Lzf4d5fvxzTgWS;
-        Fri,  5 Aug 2022 16:33:21 +0800 (CST)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0116F18345;
+        Fri,  5 Aug 2022 01:34:44 -0700 (PDT)
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Lzf3t578ZzgYwh;
+        Fri,  5 Aug 2022 16:32:42 +0800 (CST)
 Received: from kwepemm600007.china.huawei.com (7.193.23.208) by
  dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
@@ -24,17 +24,18 @@ Received: from kwepemm600007.china.huawei.com (7.193.23.208) by
 Received: from localhost.localdomain (10.69.192.56) by
  kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Fri, 5 Aug 2022 16:34:40 +0800
+ 15.1.2375.24; Fri, 5 Aug 2022 16:34:41 +0800
 From:   Jie Hai <haijie1@huawei.com>
 To:     <vkoul@kernel.org>, <wangzhou1@hisilicon.com>
 CC:     <haijie1@huawei.com>, <liudongdong3@huawei.com>,
         <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 0/7] dmaengine: hisilicon: Add support for hisi dma driver
-Date:   Fri, 5 Aug 2022 16:25:29 +0800
-Message-ID: <20220805082536.41145-1-haijie1@huawei.com>
+Subject: [PATCH v5 1/7] dmaengine: hisilicon: Disable channels when unregister hisi_dma
+Date:   Fri, 5 Aug 2022 16:25:30 +0800
+Message-ID: <20220805082536.41145-2-haijie1@huawei.com>
 X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20220625074422.3479591-1-haijie1@huawei.com>
+In-Reply-To: <20220805082536.41145-1-haijie1@huawei.com>
 References: <20220625074422.3479591-1-haijie1@huawei.com>
+ <20220805082536.41145-1-haijie1@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -50,52 +51,63 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The HiSilicon IP08 and HiSilicon IP09 are DMA iEPs, they share the
-same pci device id but different pci revision and register layouts.
+When hisi_dma is unloaded or unbinded, all of channels should be
+disabled. This patch disables DMA channels when driver is unloaded
+or unbinded.
 
-The original version supports HiSilicon IP08 but not HiSilicon IP09.
-This series support DMA driver for HIP08 and HIP09:
-1. Fix bugs for HIP08 DMA driver
-	- Disable hardware channels when driver detached
-	- Update cq_head whenever accessed it
-	- Support multi-thread for one DMA channel
-2. Use macros instead of magic number
-3. Add support for HIP09 DMA driver
-4. Add debugfs for HIP08 and HIP09 DMA driver
-5. Add myself as maintainer of hisi_dma.c
+Fixes: e9f08b65250d ("dmaengine: hisilicon: Add Kunpeng DMA engine support")
+Signed-off-by: Jie Hai <haijie1@huawei.com>
+Acked-by: Zhou Wang <wangzhou1@hisilicon.com>
+---
+ drivers/dma/hisi_dma.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-Changes since version 4:
- - Fix hdma_dev->base to hdma_dev->queue_base in hisi_dma_reset_or_disable_hw_chan
-
-Changes since version 3:
- - remove reduldant braces
- - add "Acked-by: Zhou Wang <wangzhou1@hisilicon.com>" in commit log
-
-Changes since version 2:
- - fix unnecessary line breaks
- - fix register bit with BIT/GENMASK and adjust hisi_dma_update_bit to it
- - remove "Reported-by" in commit message
- - use dmaengine root instead of hisi_dma root
- - ignore errors for creating debugfs
-
-Changes since version 1:
- - remove error changes casuse compile failure
- - remove reduldant "*" in comment
- - remove debugfs-hisi-dma doc and path in MAINTAINERS
-
-Jie Hai (7):
-  dmaengine: hisilicon: Disable channels when unregister hisi_dma
-  dmaengine: hisilicon: Fix CQ head update
-  dmaengine: hisilicon: Add multi-thread support for a DMA channel
-  dmaengine: hisilicon: Use macros instead of magic number
-  dmaengine: hisilicon: Adapt DMA driver to HiSilicon IP09
-  dmaengine: hisilicon: Dump regs to debugfs
-  MAINTAINERS: Add myself as maintainer for hisi_dma
-
- MAINTAINERS            |   1 +
- drivers/dma/hisi_dma.c | 650 +++++++++++++++++++++++++++++++++++------
- 2 files changed, 555 insertions(+), 96 deletions(-)
-
+diff --git a/drivers/dma/hisi_dma.c b/drivers/dma/hisi_dma.c
+index 43817ced3a3e..98bc488893cc 100644
+--- a/drivers/dma/hisi_dma.c
++++ b/drivers/dma/hisi_dma.c
+@@ -180,7 +180,8 @@ static void hisi_dma_reset_qp_point(struct hisi_dma_dev *hdma_dev, u32 index)
+ 	hisi_dma_chan_write(hdma_dev->base, HISI_DMA_CQ_HEAD_PTR, index, 0);
+ }
+ 
+-static void hisi_dma_reset_hw_chan(struct hisi_dma_chan *chan)
++static void hisi_dma_reset_or_disable_hw_chan(struct hisi_dma_chan *chan,
++					      bool disable)
+ {
+ 	struct hisi_dma_dev *hdma_dev = chan->hdma_dev;
+ 	u32 index = chan->qp_num, tmp;
+@@ -201,8 +202,11 @@ static void hisi_dma_reset_hw_chan(struct hisi_dma_chan *chan)
+ 	hisi_dma_do_reset(hdma_dev, index);
+ 	hisi_dma_reset_qp_point(hdma_dev, index);
+ 	hisi_dma_pause_dma(hdma_dev, index, false);
+-	hisi_dma_enable_dma(hdma_dev, index, true);
+-	hisi_dma_unmask_irq(hdma_dev, index);
++
++	if (!disable) {
++		hisi_dma_enable_dma(hdma_dev, index, true);
++		hisi_dma_unmask_irq(hdma_dev, index);
++	}
+ 
+ 	ret = readl_relaxed_poll_timeout(hdma_dev->base +
+ 		HISI_DMA_Q_FSM_STS + index * HISI_DMA_OFFSET, tmp,
+@@ -218,7 +222,7 @@ static void hisi_dma_free_chan_resources(struct dma_chan *c)
+ 	struct hisi_dma_chan *chan = to_hisi_dma_chan(c);
+ 	struct hisi_dma_dev *hdma_dev = chan->hdma_dev;
+ 
+-	hisi_dma_reset_hw_chan(chan);
++	hisi_dma_reset_or_disable_hw_chan(chan, false);
+ 	vchan_free_chan_resources(&chan->vc);
+ 
+ 	memset(chan->sq, 0, sizeof(struct hisi_dma_sqe) * hdma_dev->chan_depth);
+@@ -394,7 +398,7 @@ static void hisi_dma_enable_qp(struct hisi_dma_dev *hdma_dev, u32 qp_index)
+ 
+ static void hisi_dma_disable_qp(struct hisi_dma_dev *hdma_dev, u32 qp_index)
+ {
+-	hisi_dma_reset_hw_chan(&hdma_dev->chan[qp_index]);
++	hisi_dma_reset_or_disable_hw_chan(&hdma_dev->chan[qp_index], true);
+ }
+ 
+ static void hisi_dma_enable_qps(struct hisi_dma_dev *hdma_dev)
 -- 
 2.33.0
 

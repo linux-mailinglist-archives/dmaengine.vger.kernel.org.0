@@ -2,168 +2,201 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C1D558C19F
-	for <lists+dmaengine@lfdr.de>; Mon,  8 Aug 2022 04:28:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C27B458C4FC
+	for <lists+dmaengine@lfdr.de>; Mon,  8 Aug 2022 10:40:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242346AbiHHC2o (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 7 Aug 2022 22:28:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53762 "EHLO
+        id S230127AbiHHIkk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 8 Aug 2022 04:40:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243889AbiHHC2V (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 7 Aug 2022 22:28:21 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39377FFA
-        for <dmaengine@vger.kernel.org>; Sun,  7 Aug 2022 19:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1659925651; x=1691461651;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=ve2XDTFKGQi5n8byEJl0i0T++O6SUb8NfKnj3Fcywy0=;
-  b=TqDrzQWxoDfCZTawP1s7QfOoV2vudm0KRu+sTufSVdp6T5rabhyn6zL0
-   z/J4mY+QxzwBNlm7cyrwG+f2xweW13iyuAXfLODd3lYmSe8Zlt8wiLdj/
-   vG8fzy/5QXKQtpBYnB4xFVpOGnDbgXwCA1lq+nDWUeoumVlgrEM/zJo8J
-   Mg/BOwg9md25xheXaOJBmgAQDVzp4hybMGgxgfnTCWtIVib2lRm8qafa/
-   B1ovMuJUXlLDqPHVoEK0SIQAFMJare7FiMchXS8tgUKQy0N1Is4HNj5x5
-   e9ub2T9vsDhk3XKJumGIDV0dHwdd6vZ9U2rpih+Q/Z/NVZij1WeDw4iwh
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10432"; a="290494618"
-X-IronPort-AV: E=Sophos;i="5.93,221,1654585200"; 
-   d="scan'208";a="290494618"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2022 19:27:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,221,1654585200"; 
-   d="scan'208";a="663734212"
-Received: from xshen14-linux.bj.intel.com ([10.238.155.105])
-  by fmsmga008.fm.intel.com with ESMTP; 07 Aug 2022 19:27:11 -0700
-From:   Xiaochen Shen <xiaochen.shen@intel.com>
-To:     vkoul@kernel.org, fenghua.yu@intel.com, dave.jiang@intel.com,
-        dmaengine@vger.kernel.org
-Cc:     ramesh.thomas@intel.com, tony.luck@intel.com, tony.zhu@intel.com,
-        pei.p.jia@intel.com, xiaochen.shen@intel.com
-Subject: [PATCH 2/2] dmaengine: idxd: Make max batch size attributes in sysfs invisible for Intel IAA
-Date:   Mon,  8 Aug 2022 11:19:22 +0800
-Message-Id: <20220808031922.29751-3-xiaochen.shen@intel.com>
-X-Mailer: git-send-email 2.18.4
-In-Reply-To: <20220808031922.29751-1-xiaochen.shen@intel.com>
-References: <20220808031922.29751-1-xiaochen.shen@intel.com>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S234435AbiHHIkj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 8 Aug 2022 04:40:39 -0400
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1B87267C;
+        Mon,  8 Aug 2022 01:40:37 -0700 (PDT)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2788eRfp093056;
+        Mon, 8 Aug 2022 03:40:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1659948027;
+        bh=ZDN5pWvpFd1ZKont31DiANjrdFZeZQ5xckMN+0lwhKg=;
+        h=Date:Subject:To:CC:References:From:In-Reply-To;
+        b=uE5+3lQKm5llo60P04BRPey0wgXzi27yXKV8hyDG3tsipxu96YmVYdBnKehf2+oTc
+         OjKQ2rHREvvKkcW/gMJTCC4yk74dE+5xe5dGeoCZnerB1EOWJYiFuJDOmVU8IWty7b
+         9RMtSC9bC/TXWQFM4ln0SCsvUhIXJLqP/9rG1k1U=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2788eRoq115152
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 8 Aug 2022 03:40:27 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Mon, 8
+ Aug 2022 03:40:26 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
+ Frontend Transport; Mon, 8 Aug 2022 03:40:26 -0500
+Received: from [10.24.69.12] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2788eN2k116855;
+        Mon, 8 Aug 2022 03:40:24 -0500
+Message-ID: <9a60942c-50ab-a8bf-b398-fd31fc607c1d@ti.com>
+Date:   Mon, 8 Aug 2022 14:10:23 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v3] dmaengine: ti: k3-udma: Reset UDMA_CHAN_RT byte
+ counters to prevent overflow
+Content-Language: en-US
+To:     =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>,
+        <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <nm@ti.com>, <vigneshr@ti.com>, <j-keerthy@ti.com>,
+        <m-khayami@ti.com>, <stanley_liu@ti.com>
+References: <20220802054835.19482-1-vaishnav.a@ti.com>
+ <0fa5fdeb-b633-c543-3e98-1f5e1f064c34@gmail.com>
+From:   Vaishnav Achath <vaishnav.a@ti.com>
+In-Reply-To: <0fa5fdeb-b633-c543-3e98-1f5e1f064c34@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-In current code, dev.max_batch_size and wq.max_batch_size attributes in
-sysfs are exposed to user to show or update the values.
 
-From Intel IAA spec [1], Intel IAA does not support batch processing. So
-these sysfs attributes should not be supported on IAA device.
 
-Fix this issue by making the attributes of max_batch_size invisible in
-sysfs through is_visible() filter when the device is IAA.
+On 03/08/22 13:38, Péter Ujfalusi wrote:
+> 
+> 
+> On 02/08/2022 08:48, Vaishnav Achath wrote:
+>> UDMA_CHAN_RT_*BCNT_REG stores the real-time channel bytecount statistics.
+>> These registers are 32-bit hardware counters and the driver uses these
+>> counters to monitor the operational progress status for a channel, when
+>> transferring more than 4GB of data it was observed that these counters
+>> overflow and completion calculation of a operation gets affected and the
+>> transfer hangs indefinitely.
+>>
+>> This commit adds changes to decrease the byte count for every complete
+>> transaction so that these registers never overflow and the proper byte
+>> count statistics is maintained for ongoing transaction by the RT counters.
+>>
+>> Earlier uc->bcnt used to maintain a count of the completed bytes at driver
+>> side, since the RT counters maintain the statistics of current transaction
+>> now, the maintenance of uc->bcnt is not necessary.
+> 
+> Thanks for the updates:
+> 
+> Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+> 
+> btw: did you encountered issues with cyclic (audio, ADC) regarding to
+> wrapping of the counters? S16_LE, stereo, 48KHz should wrap around
+> 22.369 hours.
+> It is a bit trickier as we might be running without interrupts, so we
+> can not rely on the same trick.
+> 
+We did not see this issue yet with Audio, but will try this longer test
+case to confirm, this was originally observed during long duration MCSPI
+transfer tests.
+>>
+>> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
+>> ---
+>> V2->V3 :
+>> 		* Remove unnecessary checks for uc->tchan and uc->rchan in
+>> 		udma_decrement_byte_counters()
+>> V1->V2 :
+>> 		* Update bcnt reset based on uc->desc->dir
+>> 		* change order of udma_decrement_byte_counters() to before udma_start()
+>> 		* update subsystem tag
+>>
+>>   drivers/dma/ti/k3-udma.c | 25 +++++++++++++++++--------
+>>   1 file changed, 17 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+>> index 2f0d2c68c93c..fcfcde947b30 100644
+>> --- a/drivers/dma/ti/k3-udma.c
+>> +++ b/drivers/dma/ti/k3-udma.c
+>> @@ -300,8 +300,6 @@ struct udma_chan {
+>>   
+>>   	struct udma_tx_drain tx_drain;
+>>   
+>> -	u32 bcnt; /* number of bytes completed since the start of the channel */
+>> -
+>>   	/* Channel configuration parameters */
+>>   	struct udma_chan_config config;
+>>   
+>> @@ -757,6 +755,20 @@ static void udma_reset_rings(struct udma_chan *uc)
+>>   	}
+>>   }
+>>   
+>> +static void udma_decrement_byte_counters(struct udma_chan *uc, u32 val)
+>> +{
+>> +	if (uc->desc->dir == DMA_DEV_TO_MEM) {
+>> +		udma_rchanrt_write(uc, UDMA_CHAN_RT_BCNT_REG, val);
+>> +		udma_rchanrt_write(uc, UDMA_CHAN_RT_SBCNT_REG, val);
+>> +		udma_rchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
+>> +	} else {
+>> +		udma_tchanrt_write(uc, UDMA_CHAN_RT_BCNT_REG, val);
+>> +		udma_tchanrt_write(uc, UDMA_CHAN_RT_SBCNT_REG, val);
+>> +		if (!uc->bchan)
+>> +			udma_tchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
+>> +	}
+>> +}
+>> +
+>>   static void udma_reset_counters(struct udma_chan *uc)
+>>   {
+>>   	u32 val;
+>> @@ -790,8 +802,6 @@ static void udma_reset_counters(struct udma_chan *uc)
+>>   		val = udma_rchanrt_read(uc, UDMA_CHAN_RT_PEER_BCNT_REG);
+>>   		udma_rchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
+>>   	}
+>> -
+>> -	uc->bcnt = 0;
+>>   }
+>>   
+>>   static int udma_reset_chan(struct udma_chan *uc, bool hard)
+>> @@ -1115,7 +1125,7 @@ static void udma_check_tx_completion(struct work_struct *work)
+>>   		if (uc->desc) {
+>>   			struct udma_desc *d = uc->desc;
+>>   
+>> -			uc->bcnt += d->residue;
+>> +			udma_decrement_byte_counters(uc, d->residue);
+>>   			udma_start(uc);
+>>   			vchan_cookie_complete(&d->vd);
+>>   			break;
+>> @@ -1168,7 +1178,7 @@ static irqreturn_t udma_ring_irq_handler(int irq, void *data)
+>>   				vchan_cyclic_callback(&d->vd);
+>>   			} else {
+>>   				if (udma_is_desc_really_done(uc, d)) {
+>> -					uc->bcnt += d->residue;
+>> +					udma_decrement_byte_counters(uc, d->residue);
+>>   					udma_start(uc);
+>>   					vchan_cookie_complete(&d->vd);
+>>   				} else {
+>> @@ -1204,7 +1214,7 @@ static irqreturn_t udma_udma_irq_handler(int irq, void *data)
+>>   			vchan_cyclic_callback(&d->vd);
+>>   		} else {
+>>   			/* TODO: figure out the real amount of data */
+>> -			uc->bcnt += d->residue;
+>> +			udma_decrement_byte_counters(uc, d->residue);
+>>   			udma_start(uc);
+>>   			vchan_cookie_complete(&d->vd);
+>>   		}
+>> @@ -3809,7 +3819,6 @@ static enum dma_status udma_tx_status(struct dma_chan *chan,
+>>   			bcnt = udma_tchanrt_read(uc, UDMA_CHAN_RT_BCNT_REG);
+>>   		}
+>>   
+>> -		bcnt -= uc->bcnt;
+>>   		if (bcnt && !(bcnt % uc->desc->residue))
+>>   			residue = 0;
+>>   		else
+> 
 
-Add description in the ABI documentation to mention that the attributes
-are not visible when the device does not support batch.
-
-[1]: https://cdrdv2.intel.com/v1/dl/getContent/721858
-
-Fixes: e7184b159dd3 ("dmaengine: idxd: add support for configurable max wq batch size")
-Fixes: c52ca478233c ("dmaengine: idxd: add configuration component of driver")
-Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
----
- .../ABI/stable/sysfs-driver-dma-idxd          |  2 ++
- drivers/dma/idxd/sysfs.c                      | 30 +++++++++++++++++++
- 2 files changed, 32 insertions(+)
-
-diff --git a/Documentation/ABI/stable/sysfs-driver-dma-idxd b/Documentation/ABI/stable/sysfs-driver-dma-idxd
-index 0c2b613f2373..da3f6d01e0bd 100644
---- a/Documentation/ABI/stable/sysfs-driver-dma-idxd
-+++ b/Documentation/ABI/stable/sysfs-driver-dma-idxd
-@@ -22,6 +22,7 @@ Date:           Oct 25, 2019
- KernelVersion:  5.6.0
- Contact:        dmaengine@vger.kernel.org
- Description:    The largest number of work descriptors in a batch.
-+		It's not visible when the device does not support batch.
- 
- What:           /sys/bus/dsa/devices/dsa<m>/max_work_queues_size
- Date:           Oct 25, 2019
-@@ -205,6 +206,7 @@ KernelVersion:	5.10.0
- Contact:	dmaengine@vger.kernel.org
- Description:	The max batch size for this workqueue. Cannot exceed device
- 		max batch size. Configurable parameter.
-+		It's not visible when the device does not support batch.
- 
- What:		/sys/bus/dsa/devices/wq<m>.<n>/ats_disable
- Date:		Nov 13, 2020
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index fa729fac4b97..b13a8cc4d24f 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -1055,6 +1055,20 @@ static ssize_t wq_enqcmds_retries_store(struct device *dev, struct device_attrib
- static struct device_attribute dev_attr_wq_enqcmds_retries =
- 		__ATTR(enqcmds_retries, 0644, wq_enqcmds_retries_show, wq_enqcmds_retries_store);
- 
-+static umode_t idxd_wq_visible(struct kobject *kobj,
-+			       struct attribute *attr, int n)
-+{
-+	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct idxd_wq *wq = confdev_to_wq(dev);
-+
-+	/* Intel IAA does not support batch processing, make it invisible */
-+	if (attr == &dev_attr_wq_max_batch_size.attr &&
-+			wq->idxd->data->type == IDXD_TYPE_IAX)
-+		return 0;
-+
-+	return attr->mode;
-+}
-+
- static struct attribute *idxd_wq_attributes[] = {
- 	&dev_attr_wq_clients.attr,
- 	&dev_attr_wq_state.attr,
-@@ -1077,6 +1091,7 @@ static struct attribute *idxd_wq_attributes[] = {
- 
- static const struct attribute_group idxd_wq_attribute_group = {
- 	.attrs = idxd_wq_attributes,
-+	.is_visible = idxd_wq_visible,
- };
- 
- static const struct attribute_group *idxd_wq_attribute_groups[] = {
-@@ -1366,6 +1381,20 @@ static ssize_t cmd_status_store(struct device *dev, struct device_attribute *att
- }
- static DEVICE_ATTR_RW(cmd_status);
- 
-+static umode_t idxd_device_visible(struct kobject *kobj,
-+				   struct attribute *attr, int n)
-+{
-+	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct idxd_device *idxd = confdev_to_idxd(dev);
-+
-+	/* Intel IAA does not support batch processing, make it invisible */
-+	if (attr == &dev_attr_max_batch_size.attr &&
-+			idxd->data->type == IDXD_TYPE_IAX)
-+		return 0;
-+
-+	return attr->mode;
-+}
-+
- static struct attribute *idxd_device_attributes[] = {
- 	&dev_attr_version.attr,
- 	&dev_attr_max_groups.attr,
-@@ -1393,6 +1422,7 @@ static struct attribute *idxd_device_attributes[] = {
- 
- static const struct attribute_group idxd_device_attribute_group = {
- 	.attrs = idxd_device_attributes,
-+	.is_visible = idxd_device_visible,
- };
- 
- static const struct attribute_group *idxd_attribute_groups[] = {
 -- 
-2.18.4
-
+Thanks and Regards,
+Vaishnav

@@ -2,66 +2,97 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C27B458C4FC
-	for <lists+dmaengine@lfdr.de>; Mon,  8 Aug 2022 10:40:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E259058DCA3
+	for <lists+dmaengine@lfdr.de>; Tue,  9 Aug 2022 19:00:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230127AbiHHIkk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 8 Aug 2022 04:40:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58078 "EHLO
+        id S245194AbiHIRAy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 9 Aug 2022 13:00:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234435AbiHHIkj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 8 Aug 2022 04:40:39 -0400
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1B87267C;
-        Mon,  8 Aug 2022 01:40:37 -0700 (PDT)
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2788eRfp093056;
-        Mon, 8 Aug 2022 03:40:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1659948027;
-        bh=ZDN5pWvpFd1ZKont31DiANjrdFZeZQ5xckMN+0lwhKg=;
-        h=Date:Subject:To:CC:References:From:In-Reply-To;
-        b=uE5+3lQKm5llo60P04BRPey0wgXzi27yXKV8hyDG3tsipxu96YmVYdBnKehf2+oTc
-         OjKQ2rHREvvKkcW/gMJTCC4yk74dE+5xe5dGeoCZnerB1EOWJYiFuJDOmVU8IWty7b
-         9RMtSC9bC/TXWQFM4ln0SCsvUhIXJLqP/9rG1k1U=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2788eRoq115152
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 8 Aug 2022 03:40:27 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Mon, 8
- Aug 2022 03:40:26 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Mon, 8 Aug 2022 03:40:26 -0500
-Received: from [10.24.69.12] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2788eN2k116855;
-        Mon, 8 Aug 2022 03:40:24 -0500
-Message-ID: <9a60942c-50ab-a8bf-b398-fd31fc607c1d@ti.com>
-Date:   Mon, 8 Aug 2022 14:10:23 +0530
+        with ESMTP id S245216AbiHIRA2 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 9 Aug 2022 13:00:28 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2049.outbound.protection.outlook.com [40.107.93.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B37FC1125;
+        Tue,  9 Aug 2022 10:00:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mkRb+WMVgjj9am/t4Am3XexZKJpJbDLSDeC55k5ItQNuX5RumwZrjGYgdiXRY1qNBcLf99d39zjhGwlP7dsZlnWy7Hom/qUTiMs6svjKs/S/BjSiO6pbC/ozuoOdL8wLB88HnfXrj3TnrNa2lwMLQ/1xXDI1Q0xxAnJAg4uJSwjicofsUU7wqMuxieMRAWazJmnCkazvcLMvG2wLo/WSsAIp0/r+J7q36sRbQU+4JiwZtrfB3mMEfQDUaM4jt3bag5BRHgbkqhyVwt14ev6aKyX8d+ifsPP3Ri1IBVzp/6VmoRUpeqRLp4rO75Ogy8DGNXAK/Rv/EOXlGC4s4b1ANg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YhTzjV0OT2QBKYciT2OwT6DLaWD4orz8uCq+fmwBLOw=;
+ b=LUbCepTC9S6SPeEeW2QrX0SwjMW26E4DxXYpYZjwFwSQSnkZnIajaGFiiCUCn8yU8G3Tp0MXJG50WQrzgzqgEWIpGTk+0wdT7WHyIkFmF7O3T6fH7uh35Gig5ijbNbKXY1OU095YLgna6muhkBl7O7O4OGcoGsALGINsOH76XHkUGqAo87hqtSiczrqIVvcnqqANpfeWdrDQjVQQOr6wHFGkC0YrYKcZy5neppJjfxlkkcurAazavyY19Y8MR/zylhYU6WuE9zjEKbUG6HyCIfJxbzS6bpTf0b+xFiux04vol6Mh2PwgJ/pGiFO6INgrZzo2IcGILudvJeDS8IHaeg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YhTzjV0OT2QBKYciT2OwT6DLaWD4orz8uCq+fmwBLOw=;
+ b=nmFwG8Vd5Ry9lp9RFn3N/ReVs7tizysMSoz4pkqkoSvidzSzT3emr43YAbYOXAqJ52bRG6XN0Vjq4tK1Gfaz2mXRCBmZWgU0KIh0MwYFydI11YHC5pCuyJ/A/RLfrMvrst/P/7IydvIbODbDxNNrS025WOsNdkklbl3+nRkTFqo=
+Received: from BN9P221CA0010.NAMP221.PROD.OUTLOOK.COM (2603:10b6:408:10a::13)
+ by BN8PR12MB3265.namprd12.prod.outlook.com (2603:10b6:408:6a::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5525.10; Tue, 9 Aug
+ 2022 17:00:01 +0000
+Received: from BN8NAM11FT056.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:10a:cafe::53) by BN9P221CA0010.outlook.office365.com
+ (2603:10b6:408:10a::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.15 via Frontend
+ Transport; Tue, 9 Aug 2022 17:00:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT056.mail.protection.outlook.com (10.13.177.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5525.11 via Frontend Transport; Tue, 9 Aug 2022 17:00:01 +0000
+Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Tue, 9 Aug
+ 2022 12:00:00 -0500
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB08.amd.com
+ (10.181.40.132) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Tue, 9 Aug
+ 2022 10:00:00 -0700
+Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2375.28 via Frontend
+ Transport; Tue, 9 Aug 2022 11:59:59 -0500
+From:   Lizhi Hou <lizhi.hou@amd.com>
+To:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <trix@redhat.com>
+CC:     Lizhi Hou <lizhi.hou@amd.com>, <max.zhen@amd.com>,
+        <sonal.santan@amd.com>, <larry.liu@amd.com>, <brian.xu@amd.com>
+Subject: [PATCH V1 XDMA 0/1] xilinx XDMA driver
+Date:   Tue, 9 Aug 2022 09:59:57 -0700
+Message-ID: <1660064398-55898-1-git-send-email-lizhi.hou@amd.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v3] dmaengine: ti: k3-udma: Reset UDMA_CHAN_RT byte
- counters to prevent overflow
-Content-Language: en-US
-To:     =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>,
-        <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <nm@ti.com>, <vigneshr@ti.com>, <j-keerthy@ti.com>,
-        <m-khayami@ti.com>, <stanley_liu@ti.com>
-References: <20220802054835.19482-1-vaishnav.a@ti.com>
- <0fa5fdeb-b633-c543-3e98-1f5e1f064c34@gmail.com>
-From:   Vaishnav Achath <vaishnav.a@ti.com>
-In-Reply-To: <0fa5fdeb-b633-c543-3e98-1f5e1f064c34@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9ffc9538-2f59-4409-6541-08da7a28992f
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3265:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hUU3NkFkdfT5jjLbMpUVCX1/x9rAWvm31fK5NiQZ+vHdjcEcp1BP6/8P9gaTVi1GL+zSdpOG3I7ioEpm6kuVyqpKTeXRHk0kymIJWZpV6aBVZ91iXvcAcie8kLr0wgnfE5iFs8679CYIAYPS9vKKcyNTCpRYDdLNWD2Ae+z/Ddm5XhlEnF4ktNYHCbx0aCrqikgkXi+AII0EkiTyOu1dmMfmbUERxJTb5047hHcb5jsi5mih+JX9NJ733nnjZ8zR8Rg8QVn41ZvXn7WT2YHF2gSV6jGzFR9ZdhCApzk7KMOIv9UXrHqVZ5OkQoNJpVk3quFdFMIzfusd/MhXvqxfIkAYX6dDZlJKAA8wBTBIQ88P6Tv8jLR8vtTieXrs9//zNPqmACL9onkpS0I405/TEuCrshLs0HwsBrXBfSFRnfZtvumAKFXGfIneDE7coGQ5Vg1hSeDz9WoSOU+EmmD5VnfZ4WD9a4eEKd8oPKnVxVR5emwKlRNVGaF7xzMeUyPuVp19Qh4GDDWnfTqSRTUZdC9xTafjECtE3I6fZgJ/fGchcsmwsQX5x22Ar97VIipvuIErXD72HpfpVGzjr7KAiG7IspOzrSICqgJK40mW1Tpm0+8jKEFKbUQSuXirO+6q16Hfz/Um98cyDvxGHLrcMcrotY8tGD0jpLXk5mt5XEJqOkqGeBD6Flce01wS9N8jGjNzMuE9Vgep51H3e3bNlDi8gxXFh81s7V53JenRVh4PMMgYP4im/hoU0uP7tPnUeaGz+mHUJGIO/Sj2HVfJIr8Mn5BeM9PYkfOCi42ARhjTuUGqKbiFpRlZ6riEj3PFznbQRbW8WI076I53IIW7eUXxwUREH6RjdY6Y8PWRqzBtN3/St7JMZQsKb510JW/tilWDcnuRYlqg+CTfBvI01g==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(396003)(376002)(39860400002)(136003)(346002)(36840700001)(46966006)(40470700004)(5660300002)(8936002)(40480700001)(36860700001)(2616005)(86362001)(966005)(41300700001)(83380400001)(478600001)(44832011)(2906002)(336012)(186003)(40460700003)(47076005)(426003)(26005)(82740400003)(81166007)(82310400005)(356005)(316002)(54906003)(36756003)(4326008)(70586007)(70206006)(8676002)(110136005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2022 17:00:01.3022
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ffc9538-2f59-4409-6541-08da7a28992f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT056.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3265
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,134 +100,44 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hello,
 
+This V1 of patch series is to provide the platform driver to support the
+Xilinx XDMA subsystem. The XDMA subsystem is used in conjunction with the
+PCI Express IP block to provide high performance data transfer between host
+memory and the card's DMA subsystem. It also provides up to 16 user
+interrupt wires to user logic that generate interrupts to the host.
 
-On 03/08/22 13:38, Péter Ujfalusi wrote:
-> 
-> 
-> On 02/08/2022 08:48, Vaishnav Achath wrote:
->> UDMA_CHAN_RT_*BCNT_REG stores the real-time channel bytecount statistics.
->> These registers are 32-bit hardware counters and the driver uses these
->> counters to monitor the operational progress status for a channel, when
->> transferring more than 4GB of data it was observed that these counters
->> overflow and completion calculation of a operation gets affected and the
->> transfer hangs indefinitely.
->>
->> This commit adds changes to decrease the byte count for every complete
->> transaction so that these registers never overflow and the proper byte
->> count statistics is maintained for ongoing transaction by the RT counters.
->>
->> Earlier uc->bcnt used to maintain a count of the completed bytes at driver
->> side, since the RT counters maintain the statistics of current transaction
->> now, the maintenance of uc->bcnt is not necessary.
-> 
-> Thanks for the updates:
-> 
-> Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-> 
-> btw: did you encountered issues with cyclic (audio, ADC) regarding to
-> wrapping of the counters? S16_LE, stereo, 48KHz should wrap around
-> 22.369 hours.
-> It is a bit trickier as we might be running without interrupts, so we
-> can not rely on the same trick.
-> 
-We did not see this issue yet with Audio, but will try this longer test
-case to confirm, this was originally observed during long duration MCSPI
-transfer tests.
->>
->> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
->> ---
->> V2->V3 :
->> 		* Remove unnecessary checks for uc->tchan and uc->rchan in
->> 		udma_decrement_byte_counters()
->> V1->V2 :
->> 		* Update bcnt reset based on uc->desc->dir
->> 		* change order of udma_decrement_byte_counters() to before udma_start()
->> 		* update subsystem tag
->>
->>   drivers/dma/ti/k3-udma.c | 25 +++++++++++++++++--------
->>   1 file changed, 17 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
->> index 2f0d2c68c93c..fcfcde947b30 100644
->> --- a/drivers/dma/ti/k3-udma.c
->> +++ b/drivers/dma/ti/k3-udma.c
->> @@ -300,8 +300,6 @@ struct udma_chan {
->>   
->>   	struct udma_tx_drain tx_drain;
->>   
->> -	u32 bcnt; /* number of bytes completed since the start of the channel */
->> -
->>   	/* Channel configuration parameters */
->>   	struct udma_chan_config config;
->>   
->> @@ -757,6 +755,20 @@ static void udma_reset_rings(struct udma_chan *uc)
->>   	}
->>   }
->>   
->> +static void udma_decrement_byte_counters(struct udma_chan *uc, u32 val)
->> +{
->> +	if (uc->desc->dir == DMA_DEV_TO_MEM) {
->> +		udma_rchanrt_write(uc, UDMA_CHAN_RT_BCNT_REG, val);
->> +		udma_rchanrt_write(uc, UDMA_CHAN_RT_SBCNT_REG, val);
->> +		udma_rchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
->> +	} else {
->> +		udma_tchanrt_write(uc, UDMA_CHAN_RT_BCNT_REG, val);
->> +		udma_tchanrt_write(uc, UDMA_CHAN_RT_SBCNT_REG, val);
->> +		if (!uc->bchan)
->> +			udma_tchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
->> +	}
->> +}
->> +
->>   static void udma_reset_counters(struct udma_chan *uc)
->>   {
->>   	u32 val;
->> @@ -790,8 +802,6 @@ static void udma_reset_counters(struct udma_chan *uc)
->>   		val = udma_rchanrt_read(uc, UDMA_CHAN_RT_PEER_BCNT_REG);
->>   		udma_rchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
->>   	}
->> -
->> -	uc->bcnt = 0;
->>   }
->>   
->>   static int udma_reset_chan(struct udma_chan *uc, bool hard)
->> @@ -1115,7 +1125,7 @@ static void udma_check_tx_completion(struct work_struct *work)
->>   		if (uc->desc) {
->>   			struct udma_desc *d = uc->desc;
->>   
->> -			uc->bcnt += d->residue;
->> +			udma_decrement_byte_counters(uc, d->residue);
->>   			udma_start(uc);
->>   			vchan_cookie_complete(&d->vd);
->>   			break;
->> @@ -1168,7 +1178,7 @@ static irqreturn_t udma_ring_irq_handler(int irq, void *data)
->>   				vchan_cyclic_callback(&d->vd);
->>   			} else {
->>   				if (udma_is_desc_really_done(uc, d)) {
->> -					uc->bcnt += d->residue;
->> +					udma_decrement_byte_counters(uc, d->residue);
->>   					udma_start(uc);
->>   					vchan_cookie_complete(&d->vd);
->>   				} else {
->> @@ -1204,7 +1214,7 @@ static irqreturn_t udma_udma_irq_handler(int irq, void *data)
->>   			vchan_cyclic_callback(&d->vd);
->>   		} else {
->>   			/* TODO: figure out the real amount of data */
->> -			uc->bcnt += d->residue;
->> +			udma_decrement_byte_counters(uc, d->residue);
->>   			udma_start(uc);
->>   			vchan_cookie_complete(&d->vd);
->>   		}
->> @@ -3809,7 +3819,6 @@ static enum dma_status udma_tx_status(struct dma_chan *chan,
->>   			bcnt = udma_tchanrt_read(uc, UDMA_CHAN_RT_BCNT_REG);
->>   		}
->>   
->> -		bcnt -= uc->bcnt;
->>   		if (bcnt && !(bcnt % uc->desc->residue))
->>   			residue = 0;
->>   		else
-> 
+            +-------+       +-------+       +-----------+
+   PCIe     |       |       |       |       |           |
+   Tx/Rx    |       |       |       |  AXI  |           |
+ <=======>  | PCIE  | <===> | XDMA  | <====>| User Logic|
+            |       |       |       |       |           |
+            +-------+       +-------+       +-----------+
+
+The XDMA has been used for Xilinx Alveo PCIe devices.
+And it is also integrated into Versal ACAP DMA and Bridge Subsystem.
+    https://www.xilinx.com/products/boards-and-kits/alveo.html
+    https://docs.xilinx.com/r/en-US/pg344-pcie-dma-versal/Introduction-to-the-DMA-and-Bridge-Subsystems
+
+The device driver for any FPGA based PCIe device which leverages XDMA can
+call the standard dmaengine APIs to discover and use the XDMA subsystem
+without duplicating the XDMA driver code in its own driver.
+
+Lizhi Hou (1):
+  dmaengine: xilinx: xdma: add xilinx xdma driver
+
+ MAINTAINERS                            |  10 +
+ drivers/dma/Kconfig                    |  13 +
+ drivers/dma/xilinx/Makefile            |   1 +
+ drivers/dma/xilinx/xdma-regs.h         | 179 +++++
+ drivers/dma/xilinx/xdma.c              | 952 +++++++++++++++++++++++++
+ include/linux/platform_data/amd_xdma.h |  34 +
+ 6 files changed, 1189 insertions(+)
+ create mode 100644 drivers/dma/xilinx/xdma-regs.h
+ create mode 100644 drivers/dma/xilinx/xdma.c
+ create mode 100644 include/linux/platform_data/amd_xdma.h
 
 -- 
-Thanks and Regards,
-Vaishnav
+2.27.0
+

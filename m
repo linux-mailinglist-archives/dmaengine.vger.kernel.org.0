@@ -2,120 +2,101 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BBB6158E74B
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Aug 2022 08:25:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF98158F412
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Aug 2022 00:01:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230119AbiHJGZk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 10 Aug 2022 02:25:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60912 "EHLO
+        id S230006AbiHJWBs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 10 Aug 2022 18:01:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231402AbiHJGZi (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 10 Aug 2022 02:25:38 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E216580C
-        for <dmaengine@vger.kernel.org>; Tue,  9 Aug 2022 23:25:37 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id p18so13379821plr.8
-        for <dmaengine@vger.kernel.org>; Tue, 09 Aug 2022 23:25:37 -0700 (PDT)
+        with ESMTP id S233150AbiHJWBm (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 10 Aug 2022 18:01:42 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B91148277A
+        for <dmaengine@vger.kernel.org>; Wed, 10 Aug 2022 15:01:41 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id 13so13975288plo.12
+        for <dmaengine@vger.kernel.org>; Wed, 10 Aug 2022 15:01:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc;
-        bh=sUpsNHANFcShn0HQeXyxkRhGNXAAKdB8GlTRa9756ww=;
-        b=cD/Akxf8gMrdZtq2GbG0V3VmDJcVVsnvzOND8/sTuzCFhkrhk2mS7aYzFuFhe2QNq4
-         FmlINk9LOESsm7XLBQ3VCctg6dInKlEk/H2KZtQFdS5CbWrpPbgh5+xD8dlJCPyoe8gN
-         9120GeWmebPblMNEzOAZNBTYM7g+3Ul6zw0pUYKiGNDYMxqhLC1tT7hkF0co7VpIUP1K
-         Ow0fKP7rRl9EsvCKJnmk/WGC6k8aYfGiYB594rvSSUDLmGfMmuIkXP05NqzBvfIdStg3
-         jkszGhMtmdcerf6ZKtyHyW5kSRCWqLfREsmy2lQFSAQQjaahmATLJNKtbHzlfaGGC0pW
-         IDPQ==
+        d=rivosinc-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc;
+        bh=jp9l0Ro/JdxDhmDJRS2kwEBWz37R0gfYtLWESZmTTdo=;
+        b=pR/Uz73diROtKoK45pSsnr9gDkyqdToZ6bxo/wDiwdfGMSRghz3CDbk46kMtQwAFO3
+         x22iXNjmkw6auGPluUNkD2GpzL9z734QfkCy9bn0Gv+2AgX5bsK1CBg+TTz2q4Lb8a0u
+         3T6PRK5CoElkC2XrFW0em//AvrYpm+7+C4IJZVYZJR71jicazAfVHoEokRhkpuEu2OiY
+         CCXQUmnc6fWyvGdzopEWFni24vLVkD1UncUMn+2pHen8sb5PGlGazWUWsWvcPabpO10+
+         F1qMKGxOoXI3JW1qYA6ANnXZml7AHYP11NQa0uG/wg33C4hNlUfavJ68c6gZ3kNZaK36
+         SQug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc;
-        bh=sUpsNHANFcShn0HQeXyxkRhGNXAAKdB8GlTRa9756ww=;
-        b=g8EDfmTlPOci6uPh0FMuTAR+moMC9Dwu2KvsEGEDpbs6b4ZnV+isIS3sZWHvRXaABB
-         4THPDlow3aKM0k38whjiuZeWOwitzm5ZwLH8zZAhNauM3hjxK1Xl4eSDlyUEUxiiV1OE
-         jqHDtoM6cKh92uvA3j1EliedwXDGhUx9qPRJD45gJ+hF6+XARMkAKZvaTT0cU/DxF/M7
-         82nPWXozFKYKLfvtZD2hawVcRwiTluOJalCov7+3rK/3NWTtCFqhSgfJtbesqrRx0wsE
-         be58RFSp9Iew3qczYZlV9iP9lG0g9VNUSuGu7BIoiWsOU/YdaNatHwF37u1wE0lcp5jX
-         CTyw==
-X-Gm-Message-State: ACgBeo0BScXqXIv2dHSBeIxrA6KD33hugZP98gruzNvu9srD+wpDw8tU
-        xUiThZaDFqRoWd9KDstJUraqMvh9WKs=
-X-Google-Smtp-Source: AA6agR6MJ7fb75HacoXOGREwXweyE7cwmZ6GpYVIeslKp+8l3dWl9nEoSxQYjoY4+OWzYbGkffdlcQ==
-X-Received: by 2002:a17:90b:4c8d:b0:1f5:29ef:4a36 with SMTP id my13-20020a17090b4c8d00b001f529ef4a36mr2137025pjb.127.1660112736673;
-        Tue, 09 Aug 2022 23:25:36 -0700 (PDT)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id u12-20020a170902e80c00b0015e8d4eb26esm12032216plg.184.2022.08.09.23.25.35
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc;
+        bh=jp9l0Ro/JdxDhmDJRS2kwEBWz37R0gfYtLWESZmTTdo=;
+        b=RMPmUuM7g6xRgW73WRKieS5mnszxRYdd9/3qGm2Kb1KvCw8lzLtpH/z54ino5n9g4f
+         MpqiPmwxZyZAjly0D+TXcVtZvn80wYwUNR9SREQ60GPEkMEWaAPjHgJwzhaBS83akU7T
+         X5oOZ1nSeuud0atpkulA53zrl0KQVJ/v7OJ7C0tF4KaxwR5b5QzWsa8qZCABgDxUezb0
+         H2M1RCn0vPepkE/gz+YHfQFz0PO8RlcTiECpiKtJ254H+SnwyiH3Qi9wHj02iOoV1olf
+         a3gyQNJ7RFQ4JZUc/3kZ3JBBLFWYnuZZZHoJiIlhc0lII6xPpI3U4fMN7c1D2viA9VTp
+         SzXA==
+X-Gm-Message-State: ACgBeo2Qs+6CvUT+DPLYBZb43y6lL+unjLs+K2bUoNPnaV1Eo8zmqUMn
+        xq48NrSOKdJYkmqpPNS0EV7/lg==
+X-Google-Smtp-Source: AA6agR7JMJRtaF35vTSx4M/wwukmZAy0p6XS3yEu9BKdT7sblcvfXr74D3tJ4lir0IU2VY1RyB2MJQ==
+X-Received: by 2002:a17:902:dac7:b0:16f:13c6:938d with SMTP id q7-20020a170902dac700b0016f13c6938dmr29705635plx.11.1660168900898;
+        Wed, 10 Aug 2022 15:01:40 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id j6-20020a170902da8600b001618b70dcc9sm13779572plx.101.2022.08.10.15.01.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Aug 2022 23:25:36 -0700 (PDT)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: ye.xingchen@zte.com.cn
-To:     vkoul@kernel.org
-Cc:     green.wan@sifive.com, dmaengine@vger.kernel.org,
-        ye xingchen <ye.xingchen@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-Subject: [PATCH linux-next] dmaengine: sf-pdma:Remove the print function dev_err()
-Date:   Wed, 10 Aug 2022 06:25:32 +0000
-Message-Id: <20220810062532.13425-1-ye.xingchen@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
+        Wed, 10 Aug 2022 15:01:40 -0700 (PDT)
+Date:   Wed, 10 Aug 2022 15:01:40 -0700 (PDT)
+X-Google-Original-Date: Wed, 10 Aug 2022 14:38:28 PDT (-0700)
+Subject:     Re: [PATCH v5 00/13] Canaan devicetree fixes
+In-Reply-To: <338e4fd5-9d6d-6f83-30fb-3ab3ed0ead31@microchip.com>
+CC:     airlied@linux.ie, robh+dt@kernel.org, vkoul@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, daniel@ffwll.ch,
+        thierry.reding@gmail.com, sam@ravnborg.org,
+        Eugeniy.Paltsev@synopsys.com, fancer.lancer@gmail.com,
+        daniel.lezcano@linaro.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, masahiroy@kernel.org,
+        damien.lemoal@opensource.wdc.com, geert@linux-m68k.org,
+        niklas.cassel@wdc.com, dillon.minfei@gmail.com,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+From:   Palmer Dabbelt <palmer@rivosinc.com>
+To:     Conor.Dooley@microchip.com
+Message-ID: <mhng-1373d9c2-ae29-488e-b2c1-032ab2cd52ba@palmer-mbp2014>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: ye xingchen <ye.xingchen@zte.com.cn>
+On Fri, 05 Aug 2022 10:51:00 PDT (-0700), Conor.Dooley@microchip.com wrote:
+> On 14/07/2022 23:11, Conor Dooley - M52691 wrote:
+>> On 14/07/2022 23:04, Palmer Dabbelt wrote:
+>>> I'm trying to sort out how to merge this one.  I'm not opposed to taking it through the RISC-V tree as Rob's reviewed/acked the bindings, but just figured I'd say something before putting anything on for-next to try and minimize confusion.
+>>>
+>>> Unless I'm missing something it's just patch 3 that's been taken so far, via Vinod's tree.  I've dropped that one and put the rest on palmer/riscv-canaan_dt_schema, if that looks good then I'll take it into riscv/for-next when this loops back to the top of my queue.
+>>>
+>>> Thanks!
+>> 
+>> Patches 1 & 2 never got review from the DRM side and patch 12
+>> depends on those. If it comes to it, you could drop those three
+>> (and patch 3 that Vinod took). The only other one is patch 4,
+>> which has Krzysztof's ack as memory-controller maintainer, so
+>> that one should be okay.
+> 
+> Hey Palmer,
+> These fixes have been sitting on palmer/riscv-canaan_dt_schema for
+> a few weeks now, without an autobuilder complaint etc. Could you
+> move it onto for-next?
 
-From the coccinelle check:
-
-./drivers/dma/sf-pdma/sf-pdma.c
-Error:line 409 is redundant because platform_get_irq() already prints an
-error
-
-./drivers/dma/sf-pdma/sf-pdma.c
-Error:line 424 is redundant because platform_get_irq() already prints an
-error
-
-So,remove the unnecessary print function dev_err()
-
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
----
- drivers/dma/sf-pdma/sf-pdma.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
-index 4f8b8498c5c6..6b524eb6bcf3 100644
---- a/drivers/dma/sf-pdma/sf-pdma.c
-+++ b/drivers/dma/sf-pdma/sf-pdma.c
-@@ -405,10 +405,8 @@ static int sf_pdma_irq_init(struct platform_device *pdev, struct sf_pdma *pdma)
- 		chan = &pdma->chans[i];
- 
- 		irq = platform_get_irq(pdev, i * 2);
--		if (irq < 0) {
--			dev_err(&pdev->dev, "ch(%d) Can't get done irq.\n", i);
-+		if (irq < 0)
- 			return -EINVAL;
--		}
- 
- 		r = devm_request_irq(&pdev->dev, irq, sf_pdma_done_isr, 0,
- 				     dev_name(&pdev->dev), (void *)chan);
-@@ -420,10 +418,8 @@ static int sf_pdma_irq_init(struct platform_device *pdev, struct sf_pdma *pdma)
- 		chan->txirq = irq;
- 
- 		irq = platform_get_irq(pdev, (i * 2) + 1);
--		if (irq < 0) {
--			dev_err(&pdev->dev, "ch(%d) Can't get err irq.\n", i);
-+		if (irq < 0)
- 			return -EINVAL;
--		}
- 
- 		r = devm_request_irq(&pdev->dev, irq, sf_pdma_err_isr, 0,
- 				     dev_name(&pdev->dev), (void *)chan);
--- 
-2.25.1
+These are on for-next.

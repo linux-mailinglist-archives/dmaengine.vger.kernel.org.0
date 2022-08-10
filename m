@@ -2,101 +2,143 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF98158F412
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Aug 2022 00:01:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4D5F58F47E
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Aug 2022 00:45:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230006AbiHJWBs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 10 Aug 2022 18:01:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35392 "EHLO
+        id S230251AbiHJWpi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 10 Aug 2022 18:45:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233150AbiHJWBm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 10 Aug 2022 18:01:42 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B91148277A
-        for <dmaengine@vger.kernel.org>; Wed, 10 Aug 2022 15:01:41 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id 13so13975288plo.12
-        for <dmaengine@vger.kernel.org>; Wed, 10 Aug 2022 15:01:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc;
-        bh=jp9l0Ro/JdxDhmDJRS2kwEBWz37R0gfYtLWESZmTTdo=;
-        b=pR/Uz73diROtKoK45pSsnr9gDkyqdToZ6bxo/wDiwdfGMSRghz3CDbk46kMtQwAFO3
-         x22iXNjmkw6auGPluUNkD2GpzL9z734QfkCy9bn0Gv+2AgX5bsK1CBg+TTz2q4Lb8a0u
-         3T6PRK5CoElkC2XrFW0em//AvrYpm+7+C4IJZVYZJR71jicazAfVHoEokRhkpuEu2OiY
-         CCXQUmnc6fWyvGdzopEWFni24vLVkD1UncUMn+2pHen8sb5PGlGazWUWsWvcPabpO10+
-         F1qMKGxOoXI3JW1qYA6ANnXZml7AHYP11NQa0uG/wg33C4hNlUfavJ68c6gZ3kNZaK36
-         SQug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc;
-        bh=jp9l0Ro/JdxDhmDJRS2kwEBWz37R0gfYtLWESZmTTdo=;
-        b=RMPmUuM7g6xRgW73WRKieS5mnszxRYdd9/3qGm2Kb1KvCw8lzLtpH/z54ino5n9g4f
-         MpqiPmwxZyZAjly0D+TXcVtZvn80wYwUNR9SREQ60GPEkMEWaAPjHgJwzhaBS83akU7T
-         X5oOZ1nSeuud0atpkulA53zrl0KQVJ/v7OJ7C0tF4KaxwR5b5QzWsa8qZCABgDxUezb0
-         H2M1RCn0vPepkE/gz+YHfQFz0PO8RlcTiECpiKtJ254H+SnwyiH3Qi9wHj02iOoV1olf
-         a3gyQNJ7RFQ4JZUc/3kZ3JBBLFWYnuZZZHoJiIlhc0lII6xPpI3U4fMN7c1D2viA9VTp
-         SzXA==
-X-Gm-Message-State: ACgBeo2Qs+6CvUT+DPLYBZb43y6lL+unjLs+K2bUoNPnaV1Eo8zmqUMn
-        xq48NrSOKdJYkmqpPNS0EV7/lg==
-X-Google-Smtp-Source: AA6agR7JMJRtaF35vTSx4M/wwukmZAy0p6XS3yEu9BKdT7sblcvfXr74D3tJ4lir0IU2VY1RyB2MJQ==
-X-Received: by 2002:a17:902:dac7:b0:16f:13c6:938d with SMTP id q7-20020a170902dac700b0016f13c6938dmr29705635plx.11.1660168900898;
-        Wed, 10 Aug 2022 15:01:40 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id j6-20020a170902da8600b001618b70dcc9sm13779572plx.101.2022.08.10.15.01.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Aug 2022 15:01:40 -0700 (PDT)
-Date:   Wed, 10 Aug 2022 15:01:40 -0700 (PDT)
-X-Google-Original-Date: Wed, 10 Aug 2022 14:38:28 PDT (-0700)
-Subject:     Re: [PATCH v5 00/13] Canaan devicetree fixes
-In-Reply-To: <338e4fd5-9d6d-6f83-30fb-3ab3ed0ead31@microchip.com>
-CC:     airlied@linux.ie, robh+dt@kernel.org, vkoul@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, daniel@ffwll.ch,
-        thierry.reding@gmail.com, sam@ravnborg.org,
-        Eugeniy.Paltsev@synopsys.com, fancer.lancer@gmail.com,
-        daniel.lezcano@linaro.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, masahiroy@kernel.org,
-        damien.lemoal@opensource.wdc.com, geert@linux-m68k.org,
-        niklas.cassel@wdc.com, dillon.minfei@gmail.com,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-From:   Palmer Dabbelt <palmer@rivosinc.com>
-To:     Conor.Dooley@microchip.com
-Message-ID: <mhng-1373d9c2-ae29-488e-b2c1-032ab2cd52ba@palmer-mbp2014>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        with ESMTP id S233595AbiHJWpg (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 10 Aug 2022 18:45:36 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2052.outbound.protection.outlook.com [40.107.244.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A120326106;
+        Wed, 10 Aug 2022 15:45:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fAyfv8F1TtVmraOJZMgzsNXZ6egY8CRTIL+qARapE1mo4Wj8KXfGOH5WLItev3qsx6XL24/vzB9nZGuBOpU2AuAQlH7gC3IwVtNoyBQIV83oUW+4Xgt69mfpKNxGeIzMSivZalfntl4mGCJ6bbk9mHIHi1sTxsfR7v97CuOiHTLXwwjCU3M3G9JjuUUDiROggM2UJDmd9B9py/zu33nkCMG144nwnrAUl9t/dM+1hyFx6fKf7aTuSy+wcJEeLHUQOooM3Qgf/3IVhMUm0FY7AYri7zYfIDwYYnkfFfwE5qZflO4kM+1B5yaTlG9SejGZyq6B2cVBr/E+FP+X787ADg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YhTzjV0OT2QBKYciT2OwT6DLaWD4orz8uCq+fmwBLOw=;
+ b=g74hAB+ijsKZifAbdDShaWsogDXNuYK78/26qphIttbCoCEgx5goS9pTvXrtej+tTmI+hSgEeTBGyXYnBGbUEtRnUyNHw3REbzixr56mPqejKwiR7x0ps3+rjz7OEp2YnHulaHdibSK4br7Z1j2Mo1J9wWAaHgaP3UEKap4iJmxkI0CpZExXfQ2IPcKWkiWs3woMRkHEtoAvnL0OjrAqnJBRYiVssqJpeCk8Wmntbq+vX7+SNyPt/vW4njfD23MBat03ymw1TwUTp75DxXZqc7NTtikvyVYUizam5vYiay1LIi2xdHOjzskJFLaN58Bco5qsVydJV858AgV6A3orQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YhTzjV0OT2QBKYciT2OwT6DLaWD4orz8uCq+fmwBLOw=;
+ b=Z2X9/+4G056tvIaYRIB/nHjSgJ5sl//ZG9JlwKCB/VAVc6FklZ/838Qk07hCp7He/00mfiaGfVu90WmAbl+mB6qh7/wTB3gPg/kJaVWhhP807WSzf1hpoK88uc1dbjgmR6RlK627MnksMGMhh+wwvvREdTKUSIbGbShR281kgjI=
+Received: from MW4PR03CA0205.namprd03.prod.outlook.com (2603:10b6:303:b8::30)
+ by MN2PR12MB3024.namprd12.prod.outlook.com (2603:10b6:208:cb::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5525.11; Wed, 10 Aug
+ 2022 22:45:32 +0000
+Received: from CO1NAM11FT058.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:b8:cafe::f7) by MW4PR03CA0205.outlook.office365.com
+ (2603:10b6:303:b8::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.20 via Frontend
+ Transport; Wed, 10 Aug 2022 22:45:32 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT058.mail.protection.outlook.com (10.13.174.164) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5525.11 via Frontend Transport; Wed, 10 Aug 2022 22:45:31 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Wed, 10 Aug
+ 2022 17:45:30 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Wed, 10 Aug
+ 2022 17:45:30 -0500
+Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2375.28 via Frontend
+ Transport; Wed, 10 Aug 2022 17:45:29 -0500
+From:   Lizhi Hou <lizhi.hou@amd.com>
+To:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Lizhi Hou <lizhi.hou@amd.com>, <max.zhen@amd.com>,
+        <sonal.santan@amd.com>, <larry.liu@amd.com>, <brian.xu@amd.com>,
+        <trix@redhat.com>
+Subject: [RESEND PATCH V1 XDMA 0/1] xilinx XDMA driver
+Date:   Wed, 10 Aug 2022 15:45:21 -0700
+Message-ID: <1660171522-64983-1-git-send-email-lizhi.hou@amd.com>
+X-Mailer: git-send-email 1.8.3.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0f5ab596-4abc-4f1c-da6c-08da7b2207fc
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3024:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GU2tAF9IUP6BQlFdZs2RMVn1Odfif25YkfuirJ6ytknMZhh0OwOQXdLzrgLA11ONYZz5BXhpxkLRbYGK3DoHVcymwDaoBw28u5RPKdnlTmu0emPOsPIRocTuqvjqXLwTGI9qljlN4ZehhLFjA9g3OXF2oKn5CiL54a7S7Vd5DqqEpNLGD6WuehCg91QSlHkbJY7ApqfZpBI0Rttesv7f7685l5OIAEqUN9Vvo+hXGTaOF63qsBQSHoQqfULmw8AzZSNa8M3xUw9xMIE1eK9zW7XLUMe3lYPN7zp0vSkr58e3ORGfA7/JcvPDlsVjEjp+eZpIO0xpJkDnUb9p6Lt32pOACfGgD1+bN6fmmWtQj1Q6y8+OLZRy7KKUxNdhIJL41WyRu65V8330R9CveXMBI7/gYw6uIs+MYHGnQJ/51JRtzE7xvDnVdQKzJl2Mw48yZbm9BqkxauS67sBvvq21Nv1m7qkmV1y+BBr7/MneaRi5e9Uo86+/IWvRuLmI4xLiMA13oOH+/PZyq3UxNqh4xRoOj6tjmjgDFMERBrGn2lj6s1TB4ObyU3T3YCxAnS6eW7GkWHOfIPMsjjq+EUAjhD7Nq+tF+BfSJJB6eiXB5+bpBi3hMcelcHlXtdJO6WCG0eXJZ3QEX+M/VMIpxmCQ0SfJ0QSuBQEj0y/2fIgx6bd2euZ3dia226xae+LV1NxXJp+rQZkb5oSRXVJlZs9fLmmek+/muKDrRAjchMlRoq1+cYL6LCvZ8G/wzFzbkNLjQA8QbBRb0Y29LIzY7N0V3lkuALRKfbUG3Qnorx8R5imQLFxCR4vxoulEyNXy0OCh5aOIOh27ui7HvB9SZYWgzZBYFUagEjnEn4cbCEmyxPmvvqZHElpi/ftoNWdg7mSw1e97opljCgsIoaronF4eTA==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(376002)(396003)(136003)(346002)(39860400002)(36840700001)(40470700004)(46966006)(8936002)(36756003)(44832011)(82310400005)(36860700001)(82740400003)(26005)(478600001)(2906002)(5660300002)(47076005)(8676002)(70586007)(336012)(426003)(186003)(83380400001)(86362001)(4326008)(316002)(70206006)(2616005)(110136005)(54906003)(6666004)(40480700001)(81166007)(40460700003)(966005)(41300700001)(356005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2022 22:45:31.7743
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f5ab596-4abc-4f1c-da6c-08da7b2207fc
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT058.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3024
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, 05 Aug 2022 10:51:00 PDT (-0700), Conor.Dooley@microchip.com wrote:
-> On 14/07/2022 23:11, Conor Dooley - M52691 wrote:
->> On 14/07/2022 23:04, Palmer Dabbelt wrote:
->>> I'm trying to sort out how to merge this one.  I'm not opposed to taking it through the RISC-V tree as Rob's reviewed/acked the bindings, but just figured I'd say something before putting anything on for-next to try and minimize confusion.
->>>
->>> Unless I'm missing something it's just patch 3 that's been taken so far, via Vinod's tree.  I've dropped that one and put the rest on palmer/riscv-canaan_dt_schema, if that looks good then I'll take it into riscv/for-next when this loops back to the top of my queue.
->>>
->>> Thanks!
->> 
->> Patches 1 & 2 never got review from the DRM side and patch 12
->> depends on those. If it comes to it, you could drop those three
->> (and patch 3 that Vinod took). The only other one is patch 4,
->> which has Krzysztof's ack as memory-controller maintainer, so
->> that one should be okay.
-> 
-> Hey Palmer,
-> These fixes have been sitting on palmer/riscv-canaan_dt_schema for
-> a few weeks now, without an autobuilder complaint etc. Could you
-> move it onto for-next?
+Hello,
 
-These are on for-next.
+This V1 of patch series is to provide the platform driver to support the
+Xilinx XDMA subsystem. The XDMA subsystem is used in conjunction with the
+PCI Express IP block to provide high performance data transfer between host
+memory and the card's DMA subsystem. It also provides up to 16 user
+interrupt wires to user logic that generate interrupts to the host.
+
+            +-------+       +-------+       +-----------+
+   PCIe     |       |       |       |       |           |
+   Tx/Rx    |       |       |       |  AXI  |           |
+ <=======>  | PCIE  | <===> | XDMA  | <====>| User Logic|
+            |       |       |       |       |           |
+            +-------+       +-------+       +-----------+
+
+The XDMA has been used for Xilinx Alveo PCIe devices.
+And it is also integrated into Versal ACAP DMA and Bridge Subsystem.
+    https://www.xilinx.com/products/boards-and-kits/alveo.html
+    https://docs.xilinx.com/r/en-US/pg344-pcie-dma-versal/Introduction-to-the-DMA-and-Bridge-Subsystems
+
+The device driver for any FPGA based PCIe device which leverages XDMA can
+call the standard dmaengine APIs to discover and use the XDMA subsystem
+without duplicating the XDMA driver code in its own driver.
+
+Lizhi Hou (1):
+  dmaengine: xilinx: xdma: add xilinx xdma driver
+
+ MAINTAINERS                            |  10 +
+ drivers/dma/Kconfig                    |  13 +
+ drivers/dma/xilinx/Makefile            |   1 +
+ drivers/dma/xilinx/xdma-regs.h         | 179 +++++
+ drivers/dma/xilinx/xdma.c              | 952 +++++++++++++++++++++++++
+ include/linux/platform_data/amd_xdma.h |  34 +
+ 6 files changed, 1189 insertions(+)
+ create mode 100644 drivers/dma/xilinx/xdma-regs.h
+ create mode 100644 drivers/dma/xilinx/xdma.c
+ create mode 100644 include/linux/platform_data/amd_xdma.h
+
+-- 
+2.27.0
+

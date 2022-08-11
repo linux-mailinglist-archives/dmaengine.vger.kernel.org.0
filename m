@@ -2,64 +2,75 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E21F358F8DF
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Aug 2022 10:13:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A453458FBEE
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Aug 2022 14:10:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234386AbiHKINo convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Thu, 11 Aug 2022 04:13:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49512 "EHLO
+        id S235173AbiHKMKV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 11 Aug 2022 08:10:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234273AbiHKINn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 11 Aug 2022 04:13:43 -0400
-X-Greylist: delayed 4077 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 11 Aug 2022 01:13:40 PDT
-Received: from mail.munisanisidro.gob.pe (mail.munisanisidro.gob.pe [200.123.25.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 931FD901AB
-        for <dmaengine@vger.kernel.org>; Thu, 11 Aug 2022 01:13:40 -0700 (PDT)
-Received: from [216.250.253.182] (unknown [216.250.253.182])
-        (Authenticated sender: Gustavo.hernandez@munisanisidro.gob.pe)
-        by mail.munisanisidro.gob.pe (Postfix) with ESMTPSA id 361D257E8241;
-        Thu, 11 Aug 2022 01:39:09 -0500 (-05)
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S234658AbiHKMKU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 11 Aug 2022 08:10:20 -0400
+Received: from bg5.exmail.qq.com (bg4.exmail.qq.com [43.154.54.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B99AB5466C;
+        Thu, 11 Aug 2022 05:10:18 -0700 (PDT)
+X-QQ-mid: bizesmtp84t1660219808t257rave
+Received: from localhost.localdomain ( [182.148.14.53])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Thu, 11 Aug 2022 20:10:06 +0800 (CST)
+X-QQ-SSF: 01000000002000G0V000B00A0000020
+X-QQ-FEAT: BlCEEhbwceZ42iDDS+I2K7ro8/+dFD8sE1sTUHBVmhgwuWhcj0cbasPVVbJor
+        Qs3xKyCCpBzHh/keBR+fbW5nZvbZaXWuLzsfkY2uPvw7W3SeDA5sFdG5jxS002eCS+yLIfB
+        p2vQWb9UNzrga+EJzXNcH+7ypDa/Y1ATrVWHVBo2fctEYIxjrks5t68Y7a97MAl+KNeCr/d
+        8Tm0AfswwCu19trE4ZHVO/jylTiESaBv2vV5Z397ZUV6yPZ9wwGW3rY2mJRg/r1+l51NTXe
+        P+znsBJa1dY9pwTCRZUUg+PMDAKV1l09HrNxXwJdol25pw5JRcQHW4iN2rcWY23gc1yv07h
+        MkKlKrcTjf2z/cOHYX013yXgTGqKW8jDkNj65e59WrYo0G01z5eEbYs4xk9PSrsPEZLPaFK
+        RbmmTn4KOlE=
+X-QQ-GoodBg: 0
+From:   Jason Wang <wangborong@cdjrlc.com>
+To:     mcoquelin.stm32@gmail.com
+Cc:     vkoul@kernel.org, alexandre.torgue@foss.st.com,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jason Wang <wangborong@cdjrlc.com>
+Subject: [PATCH] dmaengine: stm32-dmamux: Fix comment typo
+Date:   Thu, 11 Aug 2022 20:09:59 +0800
+Message-Id: <20220811120959.18752-1-wangborong@cdjrlc.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: Hrs.West
-To:     Recipients <Gustavo.hernandez@munisanisidro.gob.pe>
-From:   lerynne West <Gustavo.hernandez@munisanisidro.gob.pe>
-Date:   Thu, 11 Aug 2022 01:39:04 -0500
-Reply-To: lerynnewest5412@gmail.com
-Message-Id: <20220811063909.361D257E8241@mail.munisanisidro.gob.pe>
-X-MSI-MailScanner-Information: Please contact the ISP for more information
-X-MSI-MailScanner-ID: 361D257E8241.A0824
-X-MSI-MailScanner: Found to be clean
-X-MSI-MailScanner-From: gustavo.hernandez@munisanisidro.gob.pe
-X-Spam-Status: Yes, score=7.0 required=5.0 tests=BAYES_99,BAYES_999,
-        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        REPTO_419_FRAUD_GM_LOOSE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: *  0.2 BAYES_999 BODY: Bayes spam probability is 99.9 to 100%
-        *      [score: 0.9999]
-        *  3.5 BAYES_99 BODY: Bayes spam probability is 99 to 100%
-        *      [score: 0.9999]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [lerynnewest5412[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  1.0 REPTO_419_FRAUD_GM_LOOSE Ends-in-digits Reply-To is similar to
-        *      known advance fee fraud collector mailbox
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
-X-Spam-Level: *******
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:cdjrlc.com:qybglogicsvr:qybglogicsvr6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Is this email address active? We sent you a message earlier regarding
-the claiming of your €2.8 million donation. Please confirm your email
-and contact us by email
+The double `end' is duplicated in the comment, remove one.
 
-Best Regard
-Mrs. Lerynne West
+Signed-off-by: Jason Wang <wangborong@cdjrlc.com>
+---
+ drivers/dma/stm32-dmamux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/dma/stm32-dmamux.c b/drivers/dma/stm32-dmamux.c
+index eee0c5aa5fb5..ca18dee3ccc0 100644
+--- a/drivers/dma/stm32-dmamux.c
++++ b/drivers/dma/stm32-dmamux.c
+@@ -45,7 +45,7 @@ struct stm32_dmamux_data {
+ 						 */
+ 	u32 dma_reqs[]; /* Number of DMA Request per DMA masters.
+ 			 *  [0] holds number of DMA Masters.
+-			 *  To be kept at very end end of this structure
++			 *  To be kept at very end of this structure
+ 			 */
+ };
+ 
+-- 
+2.36.1
+

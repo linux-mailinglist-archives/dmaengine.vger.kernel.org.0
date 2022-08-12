@@ -2,71 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EFDF590D5C
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Aug 2022 10:28:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30213590EAA
+	for <lists+dmaengine@lfdr.de>; Fri, 12 Aug 2022 12:06:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237446AbiHLI2J (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 12 Aug 2022 04:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39184 "EHLO
+        id S237726AbiHLKF6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 12 Aug 2022 06:05:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237391AbiHLI2H (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 Aug 2022 04:28:07 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBA02A833E
-        for <dmaengine@vger.kernel.org>; Fri, 12 Aug 2022 01:28:04 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id tl27so825778ejc.1
-        for <dmaengine@vger.kernel.org>; Fri, 12 Aug 2022 01:28:04 -0700 (PDT)
+        with ESMTP id S230160AbiHLKF5 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 Aug 2022 06:05:57 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96A45326FC
+        for <dmaengine@vger.kernel.org>; Fri, 12 Aug 2022 03:05:56 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id u1so701189lfq.4
+        for <dmaengine@vger.kernel.org>; Fri, 12 Aug 2022 03:05:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=rbiT8abHpNIVTow1zJdQqE2vgvQ7Yb359Ee+AMPsAQA=;
-        b=lT8dpsaErdbLV0K3ZLzhZfFSixtAMLiRDp5mJ9NboNobp+7usMGwPwJjB4q0aMakyU
-         ry4SVlSx6L47BPSr3EOTiNVpI5nIHRsjcRaOIw0aPjt2W8iIfPrbrP1byYck1cI8S6UK
-         ttHZlcJX6ky9FwZpdrwYKsRFhdxne3r5gqzXYQqhXtm+LgCXmylYP7BECHMUv00W7V12
-         g0TUmU1Z+LO/lQyFU8mM6ruYKDBEkkCb1SjP7mbvdzUnkCUnoItGZS3sFj+D/1NF5KnQ
-         044jD/Sh04ceAPHi7ad21iNLQCiytOQMrFoiIdjaGfcUrxocCpeCiIFwb6TDsE8iqfE9
-         UQ2A==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc;
+        bh=IO7so1201LCfMcIFny+9ruzvEPMZiRRert/i7tnBZi8=;
+        b=hGkEc8OoOo4q8ohhtTgulAqSMGWFmQV7Kp+Hqhe5r9kdgSYD+x5QgyuJ89ZvNjtMYY
+         7N/SGx8r4gdeAABgtKSfLvL13ubXlOqDPe/fIOL6QycTjezx4Q53UkWT8rMpoGRVDBlx
+         tJlKtSfkN4qEhkCM7P+p/ZHu9i5w36/blNVKZWfaGz+HriLRW/fdLOP4szer9hJsrMPe
+         Y7mcrCizGa5j4m4/gXJU3zNpH/mBa+U8bMzN7yn34LgaAjGetvgkfYa8TfsuxhEGJHxC
+         QCdAX1PGrkPtz7iWCXPMbWf8FLSzSsdku9tbl3/rt13s9K7GrOwkx2SeV1idImXvE+lr
+         ++0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=rbiT8abHpNIVTow1zJdQqE2vgvQ7Yb359Ee+AMPsAQA=;
-        b=MrcfGWuFKQXZoQAjM3JQrFCBUjsT4x5SYECZGaDXuSAMEOWY1O06iKAGgijTG6YN93
-         Jqc4DeQavxmeNiGeJU4vwjUKzEvz0N4QnRI3uTaTMfbZJylfQ0rHn6FUN/5h3ltBL+2C
-         g+5zCHD7RZDQuNxkANrDCGrgCSJmEx4nthKRV6CaMPaQId4Mtd9zBGMbI9BRkX587xnS
-         BcyIIJ6x63QzOGufToDtgMI+NuQ1OFaf1JvzeNUmECnjPheqDP0sKt67txPi3i3L3Ipb
-         klyVCFPKkuT/dXvb6dk/vsJFgG8kAh3cZI8A4YY7mOL4/T/BLnkcqXzLBYNTeV/vcOyR
-         Jprg==
-X-Gm-Message-State: ACgBeo36n5nWwezUezYwn1Wb4sWykIxReB3PJ8JGbJo+IF5DendQrJY7
-        zTWpeRILBOxp7VZcfwKijEeZww==
-X-Google-Smtp-Source: AA6agR4bCiFo6JQMxH4zL9Zl3l53OrKzev/JZxdFlwlvYbnIqEoTGJCeg6rFgWv9ULxwxa5Ng6IBng==
-X-Received: by 2002:a17:906:228a:b0:731:3a33:326 with SMTP id p10-20020a170906228a00b007313a330326mr1931777eja.253.1660292883160;
-        Fri, 12 Aug 2022 01:28:03 -0700 (PDT)
-Received: from otso.arnhem.chello.nl (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id y6-20020a056402134600b0043cf1c6bb10sm971326edw.25.2022.08.12.01.28.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Aug 2022 01:28:02 -0700 (PDT)
-From:   Luca Weiss <luca.weiss@fairphone.com>
-To:     linux-arm-msm@vger.kernel.org
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=IO7so1201LCfMcIFny+9ruzvEPMZiRRert/i7tnBZi8=;
+        b=PGufLiV5o9z7AepVAaGtXo0DePI7Xs+PLe9d6MqCOrD53PU7bMn9GIu7jO0ASr7qMU
+         9vO8OoDtSli+KsMCUqo+K2kGoD+vmWn80S+7TT2WCBQGrRjw5VzC5Wek6cHTqRVCDtDP
+         k/M0JEeySnCn42ThUgTs3fNouX2HefjOUR4DJ7C+KrkjlvUH6lL1flBAIGMkqHkEDzHA
+         uf+/BUYOqsOsAZ2aiXBJNuyZsDOi3HYxAf0JMP3YSrpglFZkffGpdNL4PqY8OfPUS41X
+         jnPUcXqqYoSzE25OIri8Mo3TY1NqBYC58ZjaLSUfHOgkZ9B/9ZNV6Tp5VVTeU9YFmfij
+         MgLQ==
+X-Gm-Message-State: ACgBeo14pelnKYYFd1mmFol0cOKe2KDladreOnySyKBkGMRb98gp5XRf
+        rAhAC2hDD8Pbgk4Vmlphqq4XZQ==
+X-Google-Smtp-Source: AA6agR6fzUskvP6InRv+oxetqHdNsHTS4o7mioyPTv9TSP3493LiUEJKces/OsoPzUKEazRp8tWuow==
+X-Received: by 2002:a05:6512:260e:b0:47d:ae43:62b3 with SMTP id bt14-20020a056512260e00b0047dae4362b3mr1170146lfb.77.1660298754958;
+        Fri, 12 Aug 2022 03:05:54 -0700 (PDT)
+Received: from [192.168.1.39] ([83.146.140.105])
+        by smtp.gmail.com with ESMTPSA id x27-20020a0565123f9b00b0048a77a2c4b2sm158340lfa.158.2022.08.12.03.05.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Aug 2022 03:05:54 -0700 (PDT)
+Message-ID: <2ee101f8-7466-c437-76f0-ae480b921cff@linaro.org>
+Date:   Fri, 12 Aug 2022 13:05:28 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: qcom: gpi: add compatible for
+ SM6350
+Content-Language: en-US
+To:     Luca Weiss <luca.weiss@fairphone.com>,
+        linux-arm-msm@vger.kernel.org
 Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        Luca Weiss <luca.weiss@fairphone.com>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] dmaengine: qcom: gpi: Add SM6350 support
-Date:   Fri, 12 Aug 2022 10:27:20 +0200
-Message-Id: <20220812082721.1125759-3-luca.weiss@fairphone.com>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20220812082721.1125759-1-luca.weiss@fairphone.com>
 References: <20220812082721.1125759-1-luca.weiss@fairphone.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+ <20220812082721.1125759-2-luca.weiss@fairphone.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220812082721.1125759-2-luca.weiss@fairphone.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,26 +84,17 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The Qualcomm SM6350 platform does, like the SM8450, provide a set of GPI
-controllers with an ee-offset of 0x10000. Add this to the driver.
+On 12/08/2022 11:27, Luca Weiss wrote:
+> Document the compatible for GPI DMA controller on SM6350 SoC.
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+>  Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
----
- drivers/dma/qcom/gpi.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-index 8f0c9c4e2efd..89839864b4ec 100644
---- a/drivers/dma/qcom/gpi.c
-+++ b/drivers/dma/qcom/gpi.c
-@@ -2288,6 +2288,7 @@ static int gpi_probe(struct platform_device *pdev)
- static const struct of_device_id gpi_of_match[] = {
- 	{ .compatible = "qcom,sc7280-gpi-dma", .data = (void *)0x10000 },
- 	{ .compatible = "qcom,sdm845-gpi-dma", .data = (void *)0x0 },
-+	{ .compatible = "qcom,sm6350-gpi-dma", .data = (void *)0x10000 },
- 	{ .compatible = "qcom,sm8150-gpi-dma", .data = (void *)0x0 },
- 	{ .compatible = "qcom,sm8250-gpi-dma", .data = (void *)0x0 },
- 	{ .compatible = "qcom,sm8350-gpi-dma", .data = (void *)0x10000 },
--- 
-2.37.1
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
+
+Best regards,
+Krzysztof

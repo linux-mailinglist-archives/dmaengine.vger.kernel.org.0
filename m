@@ -2,43 +2,45 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CE7E5920EA
-	for <lists+dmaengine@lfdr.de>; Sun, 14 Aug 2022 17:32:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 165E4592106
+	for <lists+dmaengine@lfdr.de>; Sun, 14 Aug 2022 17:33:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240609AbiHNPcN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 14 Aug 2022 11:32:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39448 "EHLO
+        id S240666AbiHNPcy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 14 Aug 2022 11:32:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231731AbiHNPbg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 14 Aug 2022 11:31:36 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99FDF1ADBF;
-        Sun, 14 Aug 2022 08:29:45 -0700 (PDT)
+        with ESMTP id S239597AbiHNPcK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 14 Aug 2022 11:32:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1E7F1ADA4;
+        Sun, 14 Aug 2022 08:29:55 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9BA5DB80B7E;
-        Sun, 14 Aug 2022 15:29:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97664C43142;
-        Sun, 14 Aug 2022 15:29:41 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B58DD60C0B;
+        Sun, 14 Aug 2022 15:29:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15C38C433C1;
+        Sun, 14 Aug 2022 15:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660490982;
-        bh=Hz4IDQ1JODRnQj2XRHBXSjJFvRrsRauABgljRV7KOqM=;
+        s=k20201202; t=1660490994;
+        bh=/EAzLTw2LDeTTq+gH0iIZMFAkA3J3B3MG6b3v5PKd8Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UPK2418E/KuMH2gtRrux649RXk29tzU8xUnfu9VmhH3sBzRLkJZ4xQgFNd74BnxUY
-         GW1lZBusHuFItxhPoAiFweMIFVM8h9iOEN4PunOHyIDOkCJegjyhkqJAHAmQE/b4aS
-         DEn+Ypfi5CsWREU4i6F6hNb9SeT4Zt8DKQXQ1m04431i3lPQ/j2k7obwi/mxr1Zi6M
-         SZhJEqbjp360zAIh44BRx+47LRI5/Ck/c48Dz5hlLetzKSLklVmVCofRNFwj5Soq0J
-         CLflJ6njQfVGYkVojOrGQIO1XI3W/0e7I5lds24+lzcPXsMD5yTEzngmkAHTl6ownN
-         Fxxflznapekhw==
+        b=r63qp95N/c4gsRykwxvp9MnvQXPGzaZ63CdzEaiJ05gsN4QFdynGywpQ1s8CiNtlj
+         aApf3tbve+J6QHEEWcMMzCC6GzkwRilGxIkZyU8p1YG4ni5wB9jLnhguFIhj9+nTyb
+         QcSFSbDmrtP7NRlx6uTtBusJT3fktPMv4MWjg1cBjNy4+gYDaAvGxcmtTRIOM1NegI
+         10JD/l5K9QLgY+TZ2q64lQYq4VEJT/1O/H7HonpnNITt2Gi+V25GxDlslM1ViSjnt6
+         H82h+9jmplrINaHAnTnWAadfRNRHv3mTc4b4/FGCeXCoUYblDtzdOqiMidcXewkxZ8
+         JGQcfSaa5WL+w==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Dooks <ben.dooks@sifive.com>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, Eugeniy.Paltsev@synopsys.com,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.19 45/64] dmaengine: dw-axi-dmac: ignore interrupt if no descriptor
-Date:   Sun, 14 Aug 2022 11:24:18 -0400
-Message-Id: <20220814152437.2374207-45-sashal@kernel.org>
+Cc:     Akhil R <akhilrajeev@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        ldewangan@nvidia.com, thierry.reding@gmail.com,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.19 51/64] dmaengine: tegra: Add terminate() for Tegra234
+Date:   Sun, 14 Aug 2022 11:24:24 -0400
+Message-Id: <20220814152437.2374207-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220814152437.2374207-1-sashal@kernel.org>
 References: <20220814152437.2374207-1-sashal@kernel.org>
@@ -56,46 +58,89 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Ben Dooks <ben.dooks@sifive.com>
+From: Akhil R <akhilrajeev@nvidia.com>
 
-[ Upstream commit 820f5ce999d2f99961e88c16d65cd26764df0590 ]
+[ Upstream commit 36834c67016794b8fa03d7672a5b7f2cc4529298 ]
 
-If the channel has no descriptor and the interrupt is raised then the
-kernel will OOPS. Check the result of vchan_next_desc() in the handler
-axi_chan_block_xfer_complete() to avoid the error happening.
+In certain cases where the DMA client bus gets corrupted or if the
+end device ceases to send/receive data, DMA can wait indefinitely
+for the data to be received/sent. Attempting to terminate the transfer
+will put the DMA in pause flush mode and it remains there.
 
-Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
-Link: https://lore.kernel.org/r/20220708170153.269991-4-ben.dooks@sifive.com
+The channel is irrecoverable once this pause times out in Tegra194 and
+earlier chips. Whereas, from Tegra234, it can be recovered by disabling
+the channel and reprograming it.
+
+Hence add a new terminate() function that ignores the outcome of
+dma_pause() so that terminate_all() can proceed to disable the channel.
+
+Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Link: https://lore.kernel.org/r/20220720104045.16099-3-akhilrajeev@nvidia.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/dma/tegra186-gpc-dma.c | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index 41583f01a360..a183d93bd7e2 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -1054,6 +1054,11 @@ static void axi_chan_block_xfer_complete(struct axi_dma_chan *chan)
+diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-dma.c
+index 05cd451f541d..fa9bda4a2bc6 100644
+--- a/drivers/dma/tegra186-gpc-dma.c
++++ b/drivers/dma/tegra186-gpc-dma.c
+@@ -157,8 +157,8 @@
+  * If any burst is in flight and DMA paused then this is the time to complete
+  * on-flight burst and update DMA status register.
+  */
+-#define TEGRA_GPCDMA_BURST_COMPLETE_TIME	20
+-#define TEGRA_GPCDMA_BURST_COMPLETION_TIMEOUT	100
++#define TEGRA_GPCDMA_BURST_COMPLETE_TIME	10
++#define TEGRA_GPCDMA_BURST_COMPLETION_TIMEOUT	5000 /* 5 msec */
  
- 	/* The completed descriptor currently is in the head of vc list */
- 	vd = vchan_next_desc(&chan->vc);
-+	if (!vd) {
-+		dev_err(chan2dev(chan), "BUG: %s, IRQ with no descriptors\n",
-+			axi_chan_name(chan));
-+		goto out;
-+	}
- 
- 	if (chan->cyclic) {
- 		desc = vd_to_axi_desc(vd);
-@@ -1083,6 +1088,7 @@ static void axi_chan_block_xfer_complete(struct axi_dma_chan *chan)
- 		axi_chan_start_first_queued(chan);
- 	}
- 
-+out:
- 	spin_unlock_irqrestore(&chan->vc.lock, flags);
+ /* Channel base address offset from GPCDMA base address */
+ #define TEGRA_GPCDMA_CHANNEL_BASE_ADD_OFFSET	0x20000
+@@ -432,6 +432,17 @@ static int tegra_dma_device_resume(struct dma_chan *dc)
+ 	return 0;
  }
  
++static inline int tegra_dma_pause_noerr(struct tegra_dma_channel *tdc)
++{
++	/* Return 0 irrespective of PAUSE status.
++	 * This is useful to recover channels that can exit out of flush
++	 * state when the channel is disabled.
++	 */
++
++	tegra_dma_pause(tdc);
++	return 0;
++}
++
+ static void tegra_dma_disable(struct tegra_dma_channel *tdc)
+ {
+ 	u32 csr, status;
+@@ -1292,6 +1303,14 @@ static const struct tegra_dma_chip_data tegra194_dma_chip_data = {
+ 	.terminate = tegra_dma_pause,
+ };
+ 
++static const struct tegra_dma_chip_data tegra234_dma_chip_data = {
++	.nr_channels = 31,
++	.channel_reg_size = SZ_64K,
++	.max_dma_count = SZ_1G,
++	.hw_support_pause = true,
++	.terminate = tegra_dma_pause_noerr,
++};
++
+ static const struct of_device_id tegra_dma_of_match[] = {
+ 	{
+ 		.compatible = "nvidia,tegra186-gpcdma",
+@@ -1299,6 +1318,9 @@ static const struct of_device_id tegra_dma_of_match[] = {
+ 	}, {
+ 		.compatible = "nvidia,tegra194-gpcdma",
+ 		.data = &tegra194_dma_chip_data,
++	}, {
++		.compatible = "nvidia,tegra234-gpcdma",
++		.data = &tegra234_dma_chip_data,
+ 	}, {
+ 	},
+ };
 -- 
 2.35.1
 

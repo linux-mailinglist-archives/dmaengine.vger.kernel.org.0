@@ -2,51 +2,47 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F33515921C6
-	for <lists+dmaengine@lfdr.de>; Sun, 14 Aug 2022 17:40:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64C1A592234
+	for <lists+dmaengine@lfdr.de>; Sun, 14 Aug 2022 17:47:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241115AbiHNPj0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 14 Aug 2022 11:39:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53588 "EHLO
+        id S241117AbiHNPrF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 14 Aug 2022 11:47:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240745AbiHNPh3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 14 Aug 2022 11:37:29 -0400
+        with ESMTP id S241452AbiHNPoj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 14 Aug 2022 11:44:39 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C57420F4D;
-        Sun, 14 Aug 2022 08:32:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51AE6273E;
+        Sun, 14 Aug 2022 08:34:03 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A83D8B80B4D;
-        Sun, 14 Aug 2022 15:32:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76DB3C43141;
-        Sun, 14 Aug 2022 15:32:21 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 06954B80B56;
+        Sun, 14 Aug 2022 15:34:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07BC6C43470;
+        Sun, 14 Aug 2022 15:33:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660491142;
-        bh=3Ju9VbGV6I1/r0QTNy2axkLR0oPolV6Y+H6HWcrkt4E=;
+        s=k20201202; t=1660491239;
+        bh=mTC0kP17e1XCi3YiZ/Si/p45n4hJH4RH53+7e7trTvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sF5GBF00uzwQUEZmevW1jwuhFc5ooOVFuoJY/9CrFYQWmW0VJ3U0ZRi5+fTwZ6pXb
-         SlkJnGcMQ7yC6tkPLUmtcFAJSXT6nkPQYuOoj78q1Rgyb4RvBvt4/sdJB5yFODxiI7
-         csB9PJ1MVwvRlZQ9GiYh31sVszWlVreJVYlZoBdcvMPtaDeTsMG+u2JSODkAam7O9e
-         S5zbYtYJTVBfHEkI2uBV+35qUAneHMzUR2ZhzbEv2RiwKDxICwFdY9JvDciIaVbgiS
-         yM+alo9kYtyb++u6acjRUMKvncJBmQCcSLMWPiZEQ3Nv1ppV5qEZ3zmuM4pHGUo0JV
-         I6QULbeThgdeQ==
+        b=hsTEGvF1i0CUC88DYSMlRfZNW3XJBhPm5tRLPLiRxGIk60Fv53E/u3qe/IjCwXUBz
+         qajPfMnONpRxWUxncqRSJonKtpQlnlxQJjrtKukMXh3eMcANelKyLFroGOovnbbEIE
+         /q0wBGqG4tibggBnAMs/AQ4228z1JLbTvKRPqKskixrMPmAHSbXtff/FgH2kXE0Cn5
+         dJtblt0vXgl5G1dsyyDVKYgcCMbMaQM7D5CvYoxlFRGmEi+kPBv37miApT2deh0HsT
+         A6ZSo6ae9xNRBeK82cL7qxQx00FguaexNuvRUlTeY3Dwnk/UYliDsc8yxlGpFmbcy+
+         DG2x3KldLeSsQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        orsonzhai@gmail.com, zhang.lyra@gmail.com,
+Cc:     Ben Dooks <ben.dooks@sifive.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, Eugeniy.Paltsev@synopsys.com,
         dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.18 45/56] dmaengine: sprd: Cleanup in .remove() after pm_runtime_get_sync() failed
-Date:   Sun, 14 Aug 2022 11:30:15 -0400
-Message-Id: <20220814153026.2377377-45-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 32/46] dmaengine: dw-axi-dmac: do not print NULL LLI during error
+Date:   Sun, 14 Aug 2022 11:32:33 -0400
+Message-Id: <20220814153247.2378312-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220814153026.2377377-1-sashal@kernel.org>
-References: <20220814153026.2377377-1-sashal@kernel.org>
+In-Reply-To: <20220814153247.2378312-1-sashal@kernel.org>
+References: <20220814153247.2378312-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,45 +56,39 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Ben Dooks <ben.dooks@sifive.com>
 
-[ Upstream commit 1e42f82cbec7b2cc4873751e7791e6611901c5fc ]
+[ Upstream commit 86cb0defe0e275453bc39e856bb523eb425a6537 ]
 
-It's not allowed to quit remove early without cleaning up completely.
-Otherwise this results in resource leaks that probably yield graver
-problems later. Here for example some tasklets might survive the lifetime
-of the sprd-dma device and access sdev which is freed after .remove()
-returns.
+During debugging we have seen an issue where axi_chan_dump_lli()
+is passed a NULL LLI pointer which ends up causing an OOPS due
+to trying to get fields from it. Simply print NULL LLI and exit
+to avoid this.
 
-As none of the device freeing requires an active device, just ignore the
-return value of pm_runtime_get_sync().
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
-Link: https://lore.kernel.org/r/20220721204054.323602-1-u.kleine-koenig@pengutronix.de
+Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
+Link: https://lore.kernel.org/r/20220708170153.269991-3-ben.dooks@sifive.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sprd-dma.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index 7f158ef5672d..e5c8b274c76a 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -1233,11 +1233,8 @@ static int sprd_dma_remove(struct platform_device *pdev)
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+index 35993ab92154..8f765e2d7c72 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+@@ -944,6 +944,11 @@ static int dw_axi_dma_chan_slave_config(struct dma_chan *dchan,
+ static void axi_chan_dump_lli(struct axi_dma_chan *chan,
+ 			      struct axi_dma_hw_desc *desc)
  {
- 	struct sprd_dma_dev *sdev = platform_get_drvdata(pdev);
- 	struct sprd_dma_chn *c, *cn;
--	int ret;
- 
--	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
--		return ret;
-+	pm_runtime_get_sync(&pdev->dev);
- 
- 	/* explicitly free the irq */
- 	if (sdev->irq > 0)
++	if (!desc->lli) {
++		dev_err(dchan2dev(&chan->vc.chan), "NULL LLI\n");
++		return;
++	}
++
+ 	dev_err(dchan2dev(&chan->vc.chan),
+ 		"SAR: 0x%llx DAR: 0x%llx LLP: 0x%llx BTS 0x%x CTL: 0x%x:%08x",
+ 		le64_to_cpu(desc->lli->sar),
 -- 
 2.35.1
 

@@ -2,100 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 730DD591FDB
-	for <lists+dmaengine@lfdr.de>; Sun, 14 Aug 2022 15:13:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AB9E5920E8
+	for <lists+dmaengine@lfdr.de>; Sun, 14 Aug 2022 17:32:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230368AbiHNNNz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 14 Aug 2022 09:13:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43766 "EHLO
+        id S240606AbiHNPcM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 14 Aug 2022 11:32:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229634AbiHNNNy (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 14 Aug 2022 09:13:54 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA9310FEE;
-        Sun, 14 Aug 2022 06:13:52 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id gp7so4889172pjb.4;
-        Sun, 14 Aug 2022 06:13:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:subject:cc:to:from:from:to:cc;
-        bh=fGiLdsou0tZYmT4+zIed2ZYLs4AlYvI3OzZQVfmavwc=;
-        b=X1lEK3uFD84c6GDeRXOQttvfrQ0tWvRd4WfHp1QTHLg0xIbZPpv2hhmDUJ7sYTf4Fe
-         gsxpamKzt9Md74IPQpW2gfLOl0TN2jpOIjy6ZnJPk3AonNyT+CBqeB95goBih5/2cjiI
-         YtHcR8/ZqdI6QqTpzfrPIJS3p4+WZxCW8fXsM2yIOSsVnp/ogs1WurksOb/CfzN/00UB
-         rXMSOgCBywgH8sIgqo+8r1tl3xkmlsLtJGvme9KvwOuVBBsdLLFAsqU/GqSdHW18mppE
-         lrhJsMxrFzb8Zt+i4kZCMnxmiklAMIsGgIwdV/igLId8Fi1xHLiY1dpw4jh5npK/YUyQ
-         rhmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=fGiLdsou0tZYmT4+zIed2ZYLs4AlYvI3OzZQVfmavwc=;
-        b=aLqnCepZVKAlf3++v3/CIsIC/RZu6pYewyyB0fXvFarzDOWgUxOliBc7X3wvxZb8T1
-         Mh6og0e5w5GetmlgxR3y/RGeT4avjnu1HRmrGIUJ95nopypuwtvUFJiHYUlnavcefH6y
-         y1GtMyZnFF88jatoszIaqj03SUCzqPoP9BkXKrtF+upWfTeX7y0ay4iYkUFXgUO6GpVj
-         WTXUaZ2MqDoCZYz6I//MvDV6nRMN5vSxqvwoiZp2XnPJoGIC9h6ET+tZXkg2xIy/yPvb
-         sWEZD6T5sBwxhUVGRmnUY4LgdvPZmy9pR2NCXyR+XKJD0x1oA2y1UAY8Q6saBnsCy7wX
-         YtmA==
-X-Gm-Message-State: ACgBeo0KjA13I+z8Egt6G3OCaaaUVZ3SsYJzRBMmpdG7OsSy6EYyUTnq
-        sAgHeOWkskl2OaR2K+OZdN0=
-X-Google-Smtp-Source: AA6agR56XymXCOBcunnS9iI0VLrdpJ5JeEHde8WRADkXS81AKHnFnWEQGiPhfm+UOR3byye5XCHAxQ==
-X-Received: by 2002:a17:902:e80d:b0:16e:f7bf:34a7 with SMTP id u13-20020a170902e80d00b0016ef7bf34a7mr12565939plg.112.1660482831758;
-        Sun, 14 Aug 2022 06:13:51 -0700 (PDT)
-Received: from localhost.localdomain ([182.160.5.243])
-        by smtp.gmail.com with ESMTPSA id x10-20020a170902ec8a00b0016cf195eb16sm5381359plg.185.2022.08.14.06.13.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Aug 2022 06:13:51 -0700 (PDT)
-From:   Tuo Cao <91tuocao@gmail.com>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, vkoul@kernel.org
-Cc:     konrad.dybcio@somainline.org, linux-arm-msm@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        91tuocao@gmail.com
-Subject: [PATCH] dmaengine: qcom: gpi: move read_lock_bh to read_lock in tasklet
-Date:   Sun, 14 Aug 2022 21:13:23 +0800
-Message-Id: <20220814131323.7029-1-91tuocao@gmail.com>
-X-Mailer: git-send-email 2.17.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S240554AbiHNPbf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 14 Aug 2022 11:31:35 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E57031ADB7;
+        Sun, 14 Aug 2022 08:29:43 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6BA98B80B7C;
+        Sun, 14 Aug 2022 15:29:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67430C433D6;
+        Sun, 14 Aug 2022 15:29:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660490981;
+        bh=Wk2EN4oWzCNZy1fjsGB+gIos7yTqSgZhVXSohy2ODQE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Z5ITyE4xTEwwb1Un26icuUT8GUYvzz5q3bsiK46KcXkYAAL7XMdbAIouj9wECJTNE
+         GgclXY9KHIwkj5YN4zxEkEuCVTIFGhepxVB/KwR1dZf0mbOUSw8RtZ4tof79ZpTWLZ
+         8kEK77Ekxs+HF7gdUpA2p1jQZt0WTEYTVcvMHZGHHkGi/cQMBhvUogAvaRoxOWLbcc
+         pOxrVmaS8oYVVax71zIpcSuTOIPzWBdhz5e4fQMC+niwFXeOEywVngPNrk2EQCWYpY
+         7tlv5YdzfaPDgj6uk0cTMGBp3O39cr/fRhKJ0JYqb2FUuzLYn717qxYh1Ti2dUXyHn
+         SGTUpAYPBlegA==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ben Dooks <ben.dooks@sifive.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, Eugeniy.Paltsev@synopsys.com,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.19 44/64] dmaengine: dw-axi-dmac: do not print NULL LLI during error
+Date:   Sun, 14 Aug 2022 11:24:17 -0400
+Message-Id: <20220814152437.2374207-44-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220814152437.2374207-1-sashal@kernel.org>
+References: <20220814152437.2374207-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-it is unnecessary to call read_lock_bh in a tasklet.
+From: Ben Dooks <ben.dooks@sifive.com>
 
-Signed-off-by: Tuo Cao <91tuocao@gmail.com>
+[ Upstream commit 86cb0defe0e275453bc39e856bb523eb425a6537 ]
+
+During debugging we have seen an issue where axi_chan_dump_lli()
+is passed a NULL LLI pointer which ends up causing an OOPS due
+to trying to get fields from it. Simply print NULL LLI and exit
+to avoid this.
+
+Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
+Link: https://lore.kernel.org/r/20220708170153.269991-3-ben.dooks@sifive.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/qcom/gpi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-index 8f0c9c4e2efd..236005f7dd30 100644
---- a/drivers/dma/qcom/gpi.c
-+++ b/drivers/dma/qcom/gpi.c
-@@ -1150,9 +1150,9 @@ static void gpi_ev_tasklet(unsigned long data)
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+index c741da02b67e..41583f01a360 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+@@ -982,6 +982,11 @@ static int dw_axi_dma_chan_slave_config(struct dma_chan *dchan,
+ static void axi_chan_dump_lli(struct axi_dma_chan *chan,
+ 			      struct axi_dma_hw_desc *desc)
  {
- 	struct gpii *gpii = (struct gpii *)data;
- 
--	read_lock_bh(&gpii->pm_lock);
-+	read_lock(&gpii->pm_lock);
- 	if (!REG_ACCESS_VALID(gpii->pm_state)) {
--		read_unlock_bh(&gpii->pm_lock);
-+		read_unlock(&gpii->pm_lock);
- 		dev_err(gpii->gpi_dev->dev, "not processing any events, pm_state:%s\n",
- 			TO_GPI_PM_STR(gpii->pm_state));
- 		return;
-@@ -1163,7 +1163,7 @@ static void gpi_ev_tasklet(unsigned long data)
- 
- 	/* enable IEOB, switching back to interrupts */
- 	gpi_config_interrupts(gpii, MASK_IEOB_SETTINGS, 1);
--	read_unlock_bh(&gpii->pm_lock);
-+	read_unlock(&gpii->pm_lock);
- }
- 
- /* marks all pending events for the channel as stale */
++	if (!desc->lli) {
++		dev_err(dchan2dev(&chan->vc.chan), "NULL LLI\n");
++		return;
++	}
++
+ 	dev_err(dchan2dev(&chan->vc.chan),
+ 		"SAR: 0x%llx DAR: 0x%llx LLP: 0x%llx BTS 0x%x CTL: 0x%x:%08x",
+ 		le64_to_cpu(desc->lli->sar),
 -- 
-2.17.1
+2.35.1
 

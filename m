@@ -2,35 +2,35 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 25A0A5922FF
-	for <lists+dmaengine@lfdr.de>; Sun, 14 Aug 2022 17:53:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67260592304
+	for <lists+dmaengine@lfdr.de>; Sun, 14 Aug 2022 17:53:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241958AbiHNPwp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 14 Aug 2022 11:52:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39790 "EHLO
+        id S242001AbiHNPwq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 14 Aug 2022 11:52:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241911AbiHNPuj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 14 Aug 2022 11:50:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2B961CB3E;
-        Sun, 14 Aug 2022 08:36:01 -0700 (PDT)
+        with ESMTP id S242019AbiHNPu4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 14 Aug 2022 11:50:56 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EA4919283;
+        Sun, 14 Aug 2022 08:36:31 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 42BA960DDA;
-        Sun, 14 Aug 2022 15:36:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C34C7C43470;
-        Sun, 14 Aug 2022 15:35:59 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C6C8FB80B56;
+        Sun, 14 Aug 2022 15:36:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 769F3C43470;
+        Sun, 14 Aug 2022 15:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660491360;
-        bh=VkRn4+8ydRrl8kgh6G1pqsFQTBK7tf6FFq8d3e6si44=;
+        s=k20201202; t=1660491388;
+        bh=zCjPwheLub6dsDGmASzjdfqqFdiCv1VVXqIVLu32/tE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EiN31sUjgCFNpPyCbmlEBXWybwI+d10lamVwj6txptJNjNp1GmOpN4bBeloWEiNmk
-         TZiVIGf9M7yXKRzqDSY0/CaZ9Uq2K4T5D1LE3ByI9nC8EXRDmsUfXpCaya0h585i7+
-         yf7fQLtIhKaYGR3AFq9YpYx5G4ONHjDsitXcLrizhUyEDgGyujMqb14asdVjgc3FSJ
-         oZ9XbVRd8LpABu/JEurYkMPB+3mZFYUjNW0SfUN3jxuukfkmL4XrE7lRciw8HWYDEr
-         BQmMkmLe4zMXTp/XZt6sy846nGPCfYvTZHnPb20zuiIF/A38c9aGyBcUlyWTY4Eqkz
-         dq6+pHIYi5xsw==
+        b=OAHHfXDORCNgCqsoQhfOfhoajoe2bUxjbF4Uqpipq8IAmXGTPPhpZq0/2ihsGGWhu
+         Haosb6EzM38MWW7fb2L8Ylw+eds8zwFRX+FF7kYwhypcTXEoKhNIo/FK+1OYFAPLjl
+         w1BRC48AYnaJ0XzlU3y9wD/FBfvk8VABMovL9dk/VXgil3UALLtVg2ReGxfmcQTKSu
+         0uBoh3EEkXFzF5FaZ4rpQZzR7uMfFC7bk6ZyejtTulvtIjMhGdCPkuvPb46hEwTyB1
+         XnLIbaS062bL4jq4tQE/l/16z1e0uIzDCJEKDibZBxlkcda0FuQbvhDrE/C3czlC2h
+         vPx68wdTuZYNg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -39,12 +39,12 @@ Cc:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
         orsonzhai@gmail.com, zhang.lyra@gmail.com,
         dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 16/21] dmaengine: sprd: Cleanup in .remove() after pm_runtime_get_sync() failed
-Date:   Sun, 14 Aug 2022 11:35:26 -0400
-Message-Id: <20220814153531.2379705-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 09/13] dmaengine: sprd: Cleanup in .remove() after pm_runtime_get_sync() failed
+Date:   Sun, 14 Aug 2022 11:36:06 -0400
+Message-Id: <20220814153610.2380234-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220814153531.2379705-1-sashal@kernel.org>
-References: <20220814153531.2379705-1-sashal@kernel.org>
+In-Reply-To: <20220814153610.2380234-1-sashal@kernel.org>
+References: <20220814153610.2380234-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -83,10 +83,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index b966115bfad1..4f0c50106321 100644
+index 0fadf6a08494..4ec9a924a338 100644
 --- a/drivers/dma/sprd-dma.c
 +++ b/drivers/dma/sprd-dma.c
-@@ -1201,11 +1201,8 @@ static int sprd_dma_remove(struct platform_device *pdev)
+@@ -987,11 +987,8 @@ static int sprd_dma_remove(struct platform_device *pdev)
  {
  	struct sprd_dma_dev *sdev = platform_get_drvdata(pdev);
  	struct sprd_dma_chn *c, *cn;

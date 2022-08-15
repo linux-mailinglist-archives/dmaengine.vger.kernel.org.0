@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E75CA592D44
-	for <lists+dmaengine@lfdr.de>; Mon, 15 Aug 2022 12:52:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFF0E592C81
+	for <lists+dmaengine@lfdr.de>; Mon, 15 Aug 2022 12:51:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241583AbiHOKMz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 15 Aug 2022 06:12:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60194 "EHLO
+        id S241795AbiHOKM4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 15 Aug 2022 06:12:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231140AbiHOKMj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 15 Aug 2022 06:12:39 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47C8520F43;
-        Mon, 15 Aug 2022 03:12:34 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id z6so10005899lfu.9;
-        Mon, 15 Aug 2022 03:12:34 -0700 (PDT)
+        with ESMTP id S242390AbiHOKMl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 15 Aug 2022 06:12:41 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF70714D36;
+        Mon, 15 Aug 2022 03:12:37 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id y23so7153023ljh.12;
+        Mon, 15 Aug 2022 03:12:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=XFDcvvTwcmcM0SO0UVivfLd048EZbiPv12fEaB32GFw=;
-        b=o+OXd0Wy23lss/jW6hPBvLsnqzCFBUKtzdGSITp2WzaIPHwI0NGfJgR/kI1/E53hbI
-         34CjzmO0kyqXPFYarSNmRoqudHUIsRIctGZmGyLMTfCy7LHHX81NTRfiwfWOTMFjPoZs
-         gYjNbnAAyYHCqZw3Mv+lMgYjRgWCeLHEojwrRhv0gNOWWb7ByxDoN9ivg0U0kUXZyfAp
-         y1NbMbtwd0PybE0zHxx1uguT92fqTIRcf2uIRmttvp4JIJfLmW1QABXX4jc5WbMVv4cX
-         o2qHkxBWF1Jkr7xpwOScU9ecMPo9bXScRqRuUTEERcY+QDX45AAJ1bmKiU3iZDRkLjiF
-         2Ajw==
+        bh=fYQsm9UdRD9rnFhcYGRNbb5PGnoO8X04eE31X6T9EuY=;
+        b=VD2DdiifLjGal1AJ5jTkkihLDv9UxDue4ZQIRS7YAxyyXc0QZkA7QUbtVsIS/7/R+f
+         FFxJzx4S+AfRDlqTHdSo6++qHa/FK751Vj0yYY3IC255+Fes+aytf9Oz0ff6uCyBScYp
+         r87nIamuWoyNFm6I91B7ji73uhy0/I9ScU3vSiAEA+OqfYbXLqoZLPoOGAL7MN4+0dGk
+         +wDaiXmS/OmJX4YtrXP+9wfxVrFsSEE1REIaR4+uXpmik8Uf/zCX7gg6l7+T29POIV+f
+         hkEJ9EMl2QJmSiIgBPKzzOuf7GUv4igoZyBfq4i0pfn3t9J8h0MTxj8IxW71FOvhdueh
+         wJ1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=XFDcvvTwcmcM0SO0UVivfLd048EZbiPv12fEaB32GFw=;
-        b=HxCJW8yw1ysI6tlta8Hmrf8gNG+PXkTv/lp4wwhKq7JsphOzlgb1ngEfXl++s2W98F
-         QHnUIV/fY6N5K9ahcR3+iJbHwPJoMCG9okA7sylgCYRvP4G8xbjiyRrzMMnv4KxmULCy
-         B4imEUWpe7lK+g9I1CP7Lz9vNOz8s9GyTWQ21mRxvX953Z+Iw+KrcuqqY09KH+ikVQUO
-         u+uni3fKfbxtyEY6dTM76gxaS/C6C6UssrjWXBr7StKZiZ1sVpmFrOUGRmvp3Dz2U8+N
-         B5S2xZ2i3aXjC/PjK1qnl2NhtCdZsuMk4sjXnwXFelIgAPN/aI3jZ6l07Kjatjq5FnYO
-         a22g==
-X-Gm-Message-State: ACgBeo1BeI/fzYfSQ5nQodmL6Fdafdoo3gbVSmxlkzu6haYj6Jd+xqjt
-        RTUeP2Ln1zQA071ljIA7aaKdVj+ACTc=
-X-Google-Smtp-Source: AA6agR5xdRZD5HfsRYV+hNt3a82Ms4B8JDZGHDd7e4DeGWYbF5JNn7TG5ajAnBGBqGuv6mEhTpy9Mw==
-X-Received: by 2002:a05:6512:3d18:b0:48d:244d:2120 with SMTP id d24-20020a0565123d1800b0048d244d2120mr5149783lfv.387.1660558352372;
-        Mon, 15 Aug 2022 03:12:32 -0700 (PDT)
+        bh=fYQsm9UdRD9rnFhcYGRNbb5PGnoO8X04eE31X6T9EuY=;
+        b=1Fzr+/6S6neBlxV9OXySvoho5cMHJhKweEE42kchPj0jsXKnnj20ETNXsA0a63DVx8
+         T13s4QoomXQcfRdRTT0YvmYuHbX03oakUU1AtXNhE43LOUUwZimnO9KyFSNGv8pCgp6B
+         cWBmXw4GjWYZ+Toww0X9dAJoe/W05e3KU/tltqozzHplBbSmgyGY2i3qbYhrG2WC+wLY
+         /cJSixhhjtaN25A6QlIZseYXwremt8pb8QZKb6izYb4s7q1ENrTCxsXDHJMMZwnC+KeV
+         fUkL7EMeIPMVpQv75MZbEXomDhSmKmcgo0SAIlpBiOhh/OwYPm6IlS/0F5xxbqz72a81
+         NQIA==
+X-Gm-Message-State: ACgBeo2fBJDwp/nSZUUYMu4ywTQ/SpBTXM5FN79RLHw698jc/7k0oTcA
+        2Spo4YwxqX+aqAA/k+gEjppvp0thDGU=
+X-Google-Smtp-Source: AA6agR7w0kwVxCBmcmTnLXYnt44uoSZ39GekewNXMNQ2SP1VnQiEqRTXU/4xvIbJ7zFBAO3sq8xJLQ==
+X-Received: by 2002:a2e:8954:0:b0:25e:42f7:5ba6 with SMTP id b20-20020a2e8954000000b0025e42f75ba6mr4765880ljk.213.1660558356089;
+        Mon, 15 Aug 2022 03:12:36 -0700 (PDT)
 Received: from localhost.localdomain (admv234.neoplus.adsl.tpnet.pl. [79.185.51.234])
-        by smtp.gmail.com with ESMTPSA id 18-20020ac25f52000000b0048b1ba4d2a4sm1047264lfz.265.2022.08.15.03.12.30
+        by smtp.gmail.com with ESMTPSA id 18-20020ac25f52000000b0048b1ba4d2a4sm1047264lfz.265.2022.08.15.03.12.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Aug 2022 03:12:32 -0700 (PDT)
+        Mon, 15 Aug 2022 03:12:35 -0700 (PDT)
 From:   Adam Skladowski <a39.skl@gmail.com>
 Cc:     phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
         Adam Skladowski <a39.skl@gmail.com>,
@@ -71,10 +71,11 @@ Cc:     phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
         linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: [PATCH 2/7] dmaengine: qcom: gpi: Add SM6115 support
-Date:   Mon, 15 Aug 2022 12:09:40 +0200
-Message-Id: <20220815100952.23795-3-a39.skl@gmail.com>
+        Stephen Boyd <swboyd@chromium.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH 3/7] dt-bindings: mmc: sdhci-msm: Document the SM6115 compatible
+Date:   Mon, 15 Aug 2022 12:09:41 +0200
+Message-Id: <20220815100952.23795-4-a39.skl@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220815100952.23795-1-a39.skl@gmail.com>
 References: <20220815100952.23795-1-a39.skl@gmail.com>
@@ -91,25 +92,25 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add GPI compatible for SM6115 ee-offset is set to 0x10000 on downstream.
+Document the compatible for SDHCI on SM6115.
 
 Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
 ---
- drivers/dma/qcom/gpi.c | 1 +
+ Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-index 8f0c9c4e2efd..b7fc6e0168f3 100644
---- a/drivers/dma/qcom/gpi.c
-+++ b/drivers/dma/qcom/gpi.c
-@@ -2288,6 +2288,7 @@ static int gpi_probe(struct platform_device *pdev)
- static const struct of_device_id gpi_of_match[] = {
- 	{ .compatible = "qcom,sc7280-gpi-dma", .data = (void *)0x10000 },
- 	{ .compatible = "qcom,sdm845-gpi-dma", .data = (void *)0x0 },
-+	{ .compatible = "qcom,sm6115-gpi-dma", .data = (void *)0x10000 },
- 	{ .compatible = "qcom,sm8150-gpi-dma", .data = (void *)0x0 },
- 	{ .compatible = "qcom,sm8250-gpi-dma", .data = (void *)0x0 },
- 	{ .compatible = "qcom,sm8350-gpi-dma", .data = (void *)0x10000 },
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+index fc0e81c2066c..a792fa5574a0 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
++++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
+@@ -41,6 +41,7 @@ properties:
+               - qcom,sdm845-sdhci
+               - qcom,sdx55-sdhci
+               - qcom,sdx65-sdhci
++              - qcom,sm6115-sdhci
+               - qcom,sm6125-sdhci
+               - qcom,sm6350-sdhci
+               - qcom,sm8150-sdhci
 -- 
 2.25.1
 

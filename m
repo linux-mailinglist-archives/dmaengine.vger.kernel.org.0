@@ -2,103 +2,119 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26F6C594D2B
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Aug 2022 03:34:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91CB8595460
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Aug 2022 10:02:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243755AbiHPA7i (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 15 Aug 2022 20:59:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46144 "EHLO
+        id S232023AbiHPICB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 16 Aug 2022 04:02:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343538AbiHPA4J (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 15 Aug 2022 20:56:09 -0400
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12E13B4A1
-        for <dmaengine@vger.kernel.org>; Mon, 15 Aug 2022 13:48:09 -0700 (PDT)
-Received: by mail-qt1-x836.google.com with SMTP id h21so6460025qta.3
-        for <dmaengine@vger.kernel.org>; Mon, 15 Aug 2022 13:48:09 -0700 (PDT)
+        with ESMTP id S230030AbiHPIBl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 16 Aug 2022 04:01:41 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A167765249
+        for <dmaengine@vger.kernel.org>; Mon, 15 Aug 2022 22:21:05 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id jl18so426364plb.1
+        for <dmaengine@vger.kernel.org>; Mon, 15 Aug 2022 22:21:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc;
-        bh=ej3T27wdcOl5hgxFKEEvscpLUDARFbq7IX1O4+1Fbq8=;
-        b=ZxcSrGOioSe9xEdDMedGhRHHFc6tlm5gmwbwnGdo3casqfVaqtrbKnFwDkaAWAV6Yu
-         kdv8TFSxpO5c+r4VyaA2O+OUP1eGPTPY7nGyLn+BvVvMc3643hJ3axNoDrbe1ChWvIG/
-         bCUNK0qmOmUTQOlxGEzpuwayfISfdBhuLkMf90MPn/1UwtCAOehV3r+1vxYzJnYzAzCF
-         9rwPHzi8GsjJV1bqJw3pJtpTMC9Y1+DM6MgVSWIjZjNF5QUjDJyAEbLE/rQ4CSbKe1rx
-         PKikAM4oBPczOYWC6R4VFvYaQfU92wvKqgp3UFJolMi3pybf2smWoYrRSOoq+CmARILv
-         7nGw==
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc;
+        bh=0p+K0qLqxOzyQ3M+oE6bJ773iu7oRhxO3HE/oVHQgeI=;
+        b=Q84XFhLhci9sMypF2Qq1P+Ztgp7ErAQco5AR0ZLZ1SEHo124YaVRL+lvNOVVysf9P/
+         ZGF/F5dvUD2T0R9cWO2XGG+02LCY2H7kF8FIzLRGPbSlG9R2C505ZbCwcn5DzkLOWjRL
+         3p1X5J1tWUwurowbXOZLG3WRTdUFHeZfr8rkV2xAa+bMYYpcETYi2cC+WhxeuOXxew5G
+         baoTzvF5eOCA5H7vq/9nWJ9QOHqw7sAisXUVflIRBcW8FLd/SXkDdnfT4QxoNueaj7NU
+         VFVpGTw8IzYb2C+1KFeKd4zgF08vW3uA4pb/QYznp9Wbo13qfYrlhpzdMr7wkwq8wOHt
+         fAYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc;
-        bh=ej3T27wdcOl5hgxFKEEvscpLUDARFbq7IX1O4+1Fbq8=;
-        b=wIxdF3ouu43zjFCjSeAWIASyd3M2YpFz04z9h/WARll5d7lAYA+ua5Au0VTK/5h3J7
-         AL8V0Z2GizOVgxZL7JIijvIIyQVOrUDd047PiI42n2YtQ37j6/kQ65Uf2go7Qq/kjncH
-         we7MF7jnfndkPKT/f5ZamLiq038WdPC0mM2DnsT+SJKtZG8Jn9esFJbEFrmaQm7Bo/0v
-         JOj0nCq4+pB9rKtosV/RMqFGeNeLrEEVS7ebFgw24QKnYxaPClyp163Q7RORJXhk8BMy
-         Vt0EzJOyUbusySsH7mNRoLs6WUAbop/z5umMc0PobbNQaN4CD3vbEwV4vAGD5VMnKiKz
-         1L7w==
-X-Gm-Message-State: ACgBeo1OFEqY3shnRCUq+HLYXESfDIxInhR/dnUvosSx1rag68ea8B47
-        1wbvO9cBzlC0fkur6YDnCgtiljBq88rpvKVRqWE=
-X-Google-Smtp-Source: AA6agR5tQcE8NmliUI1dffBcVFPxpqbw9oV1LsCsncgLnox1abDAx8jfksXuwiQ6U0fzZ+SwIYCnpWRlgbqz8/VyfWo=
-X-Received: by 2002:a05:622a:116:b0:343:7d5:e674 with SMTP id
- u22-20020a05622a011600b0034307d5e674mr15977915qtw.317.1660596488582; Mon, 15
- Aug 2022 13:48:08 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
+        bh=0p+K0qLqxOzyQ3M+oE6bJ773iu7oRhxO3HE/oVHQgeI=;
+        b=G0M5cAn1VusdOjUTulzvLXYy4KZGUSJauZavUodvTQL3TIPv/Bi7t5rpCepI7JzKa3
+         9UMsZWVxb5XJtMFTxgda7jNoyjknStN+QptC5Iu3gMB5YoEXvVZU3K38z5+anABewRaZ
+         QAEU6XcYMRw0YjCK035fiSwk/ZwPN0OqDo1BMQiRaYJZGXuQS3wJ7tPoM1PImnpJzQOA
+         vsQ6pHgBKL5shVW784GDgkL5enniVBT4bCYCYz34Ywe1WfpjEocPjXNP4hPnK6JdC8qH
+         j2SMTvEZlOFZLHUsz56WzYjleI1IXwMAZ/lnlqX1WXPXcIO54MhsyKhcynDHA+V0OkM8
+         3gJw==
+X-Gm-Message-State: ACgBeo1791wasUF1QeFWzNayJiwfiDoAVcLl9AsRLnJek/iJc8awI1eM
+        SLYBE4Fvn6GG/Up+H0Tlmasy0A==
+X-Google-Smtp-Source: AA6agR6chfmdgtWHQp2MitjNlKme1+yXKlKet9gzMaudy3FfMj/Cbfy8IiOC63TSrhs1532tAhnnBQ==
+X-Received: by 2002:a17:90b:1b49:b0:1f5:4203:2e4e with SMTP id nv9-20020a17090b1b4900b001f542032e4emr31106602pjb.143.1660627265141;
+        Mon, 15 Aug 2022 22:21:05 -0700 (PDT)
+Received: from localhost ([122.171.18.80])
+        by smtp.gmail.com with ESMTPSA id x12-20020a170902ec8c00b0016eecdf8978sm8012796plg.106.2022.08.15.22.21.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Aug 2022 22:21:04 -0700 (PDT)
+Date:   Tue, 16 Aug 2022 10:51:02 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Adam Skladowski <a39.skl@gmail.com>
+Cc:     phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Sai Prakash Ranjan <quic_saipraka@quicinc.com>,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Emma Anholt <emma@anholt.net>,
+        Rob Clark <robdclark@chromium.org>,
+        Bhupesh Sharma <bhupesh.sharma@linaro.org>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+        linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Adam Skladowski <a_skl39@protonmail.com>
+Subject: Re: [PATCH 4/7] cpufreq: Add SM6115 to cpufreq-dt-platdev blocklist
+Message-ID: <20220816052102.jdonvyxkix5n34u5@vireshk-i7>
+References: <20220815100952.23795-1-a39.skl@gmail.com>
+ <20220815100952.23795-5-a39.skl@gmail.com>
 MIME-Version: 1.0
-Received: by 2002:ab3:ef88:0:b0:46d:3a61:256e with HTTP; Mon, 15 Aug 2022
- 13:48:07 -0700 (PDT)
-Reply-To: wijh555@gmail.com
-From:   "Prof. Chin Guang" <dmitrybogdanv07@gmail.com>
-Date:   Mon, 15 Aug 2022 13:48:07 -0700
-Message-ID: <CAPi14yL3H81sTbs5Hku9nr1oS_Zyq0ek31JmkL+GVKZpZ=4STQ@mail.gmail.com>
-Subject: Greetings,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5005]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [wijh555[at]gmail.com]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [dmitrybogdanv07[at]gmail.com]
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [dmitrybogdanv07[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:836 listed in]
-        [list.dnswl.org]
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220815100952.23795-5-a39.skl@gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
--- 
-Hello,
-We the Board Directors believe you are in good health, doing great and
-with the hope that this mail will meet you in good condition, We are
-privileged and delighted to reach you via email" And we are urgently
-waiting to hear from you. and again your number is not connecting.
+On 15-08-22, 12:09, Adam Skladowski wrote:
+> The Qualcomm SM6115 platform uses the
+> qcom-cpufreq-hw driver, so add it to the cpufreq-dt-platdev driver's
+> blocklist.
+> 
+> Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
+> ---
+>  drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+> index 2c96de3f2d83..6ac3800db450 100644
+> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
+> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+> @@ -146,6 +146,7 @@ static const struct of_device_id blocklist[] __initconst = {
+>  	{ .compatible = "qcom,sc8180x", },
+>  	{ .compatible = "qcom,sc8280xp", },
+>  	{ .compatible = "qcom,sdm845", },
+> +	{ .compatible = "qcom,sm6115", },
+>  	{ .compatible = "qcom,sm6350", },
+>  	{ .compatible = "qcom,sm8150", },
+>  	{ .compatible = "qcom,sm8250", },
 
-Sincerely,
-Prof. Chin Guang
+Applied. Thanks.
+
+-- 
+viresh

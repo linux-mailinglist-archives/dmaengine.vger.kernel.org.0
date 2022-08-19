@@ -2,118 +2,178 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8A19598F9F
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Aug 2022 23:37:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8500C5997E0
+	for <lists+dmaengine@lfdr.de>; Fri, 19 Aug 2022 10:50:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346102AbiHRVeh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 18 Aug 2022 17:34:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51292 "EHLO
+        id S1346949AbiHSIkz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 19 Aug 2022 04:40:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344516AbiHRVeg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 18 Aug 2022 17:34:36 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3941DB99DE
-        for <dmaengine@vger.kernel.org>; Thu, 18 Aug 2022 14:34:34 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id x25so2882684ljm.5
-        for <dmaengine@vger.kernel.org>; Thu, 18 Aug 2022 14:34:34 -0700 (PDT)
+        with ESMTP id S1347488AbiHSIk1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 19 Aug 2022 04:40:27 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F5745E666
+        for <dmaengine@vger.kernel.org>; Fri, 19 Aug 2022 01:40:26 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id o5-20020a17090a3d4500b001ef76490983so4226285pjf.2
+        for <dmaengine@vger.kernel.org>; Fri, 19 Aug 2022 01:40:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=57R1i97Exb7jiv3R+C+sLGgx2BChX5wJqOqueGuOy8o=;
-        b=BpRf1j8XsCn/7ww8tOLJtJpEEyVf9B0Nkp8dZSfI90CLV5ieBJ3CDZMbPVxru2yVXz
-         1l55Td1/RKqMyoMByybvH6bmTKczz2GHoaAtHV3VWUl3Y00PEJ8XFZO2YaqWKSmIgtUO
-         q0beRrI68dYUftzgYBU/HmlW5n9hFBxIYlEfcaydSVpzwzwllso/sppoPR7KJBMe+EZu
-         sd1gzVfaHnCD4gk5nvR/JfMkFXwk0yspHGUUoH7MJf/iiQzWqV+kFVBxVoPioup37F4u
-         +uk0PDEXhbotpzeLvczvh3m7KQm6I+UvCmXb5OPqZ20iZ6mmdKFkbICd257afSvtVG5c
-         3vyQ==
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc;
+        bh=yZ9KEPPp+zyTi17uXLywUGwN8O1r6Yq3WCQgacgN3f8=;
+        b=jYLTXXqCvupptFRljjdD9lIX+0ijg34vedLd4a2yQLtjaxIkNuZYa1zT6WhIjsJDF1
+         pAQcRljNbdZY1P1ufK1G3i/ctnh/Xn1qx1neAXQXMVkIGHwPjOtnn4gVv5xag3a9gw/h
+         iS3HyYYaVqEyWDetM1EtZPSTrfVrx6hqy5MFENIwbGSTBB42yRMWfSaEVM2vQypz9ptz
+         QYD/UkZhhawGX8o+quSvMPOq+spr6OQ2mPT9+irn54ANq0HWlI8+WvFX30Bx+Llb+vs8
+         tQdwblu05WzuzM+qBTx4u/xINDqSGTPqQUThJsCttlwOzM79CQdguCVOg6ABq5Cwpjzm
+         TnEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=57R1i97Exb7jiv3R+C+sLGgx2BChX5wJqOqueGuOy8o=;
-        b=v08pDP7ySjeC9FuN8JgNwW0tdir6f+2L7DbqNYA2wqFcpkqk617jD4zCrEJ4RRduoJ
-         LxAZpMCQkgoqPCYbpdHMutZLdiuaZXH+9S+iCXq2t6x6mhzal/6RBdHGpfE3JpNtq8Zg
-         LYCt5r8x7kmexg0vpbtz8HiVL1fH9OVZoWzGbiVHBVkLvlbbXqB4WpD7jjBMYfzmbAAW
-         1pp50aWJSfu86sGTLp+jL93jdP4Mh6LY5U4y9TaBmHKFIjM1lOwuTeTRgc7E4oRRVgPM
-         eXMZ3g9nvUQNwY6Vign9gsbiRGyie3NH7TBPSe+a3gcD3vEv+BqabewS8Q32irmdqkw+
-         2Xwg==
-X-Gm-Message-State: ACgBeo0klE97mFfXoX8PBaQ36W6imdaB68brve9rOqG55ZsWR/AD3NEi
-        +O291AnVadd+XHIV5TvxXtAp0Y0YhARzSDevrpqdpA==
-X-Google-Smtp-Source: AA6agR6GJXPp5/z0JTiP0q9mPDVCKJiO4ywyVq/9cFPr4MM0zelM0e/lZlpgvN0Odpiov3nkO1VEAYbE8La/yBkG2AA=
-X-Received: by 2002:a05:651c:1718:b0:261:8700:25f4 with SMTP id
- be24-20020a05651c171800b00261870025f4mr1333316ljb.229.1660858472545; Thu, 18
- Aug 2022 14:34:32 -0700 (PDT)
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc;
+        bh=yZ9KEPPp+zyTi17uXLywUGwN8O1r6Yq3WCQgacgN3f8=;
+        b=mXzAmjH9pNq80Neq7WGokhaqWTCflH4hdaIaSI//4dbNW9iZo5gpJ9pzjFkWaJZTP5
+         dIcXQaRapaWjFvULBMx2bSF5Xjs4tG6dgLvjOu5hY2Vje726dycuYyP8vNvB23b2rVVu
+         kudRpDxAHLgSDBpgSPuW1zFwSjWa15c3ALlY8Jh3q6D8mculokd9ymwE9BXFOWtP69r4
+         oRI0zhAVcghgj5h1j5II8kOVO7JhJiyvFIHQ4O8I8YsSwdIPz8KrNoFfuHfpQruGrJTl
+         FEreA12xboXLs5a6UGAQBcy69VaSF/kM8abBLLVcKwaniq7x+wIKjTkdp5yOsAXGn7Gu
+         fZrw==
+X-Gm-Message-State: ACgBeo33uM2rcybgCa+i7T76dNNdqASqPi1vThdI+oBBQrr1vBpHvBre
+        f5TT9WAvLsQ6kpwGvwHAHXRR
+X-Google-Smtp-Source: AA6agR4Y/iiuIIVJqJPqIKrwLq7nkPyzl3NFCMKqEXV3Tz1SeaAaBxsNZDSaGFlflNxYU6boDbdk1A==
+X-Received: by 2002:a17:90a:df02:b0:1fa:ba39:ec49 with SMTP id gp2-20020a17090adf0200b001faba39ec49mr11149307pjb.129.1660898425814;
+        Fri, 19 Aug 2022 01:40:25 -0700 (PDT)
+Received: from thinkpad ([117.193.212.74])
+        by smtp.gmail.com with ESMTPSA id p4-20020a17090a2c4400b001eafa265869sm4781595pjm.56.2022.08.19.01.40.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Aug 2022 01:40:25 -0700 (PDT)
+Date:   Fri, 19 Aug 2022 14:10:18 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     gustavo.pimentel@synopsys.com, vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH] dmaengine: dw-edma: Remove runtime PM support
+Message-ID: <20220819084018.GC215264@thinkpad>
+References: <20220512083612.122824-1-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-References: <20220815100952.23795-1-a39.skl@gmail.com> <20220815100952.23795-4-a39.skl@gmail.com>
-In-Reply-To: <20220815100952.23795-4-a39.skl@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 18 Aug 2022 23:33:56 +0200
-Message-ID: <CAPDyKFrc5aneqqC=uGKeQ0ROx69eMJhQ1pFA3GN8d5NpXHGEEQ@mail.gmail.com>
-Subject: Re: [PATCH 3/7] dt-bindings: mmc: sdhci-msm: Document the SM6115 compatible
-To:     Adam Skladowski <a39.skl@gmail.com>
-Cc:     phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Sai Prakash Ranjan <quic_saipraka@quicinc.com>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Emma Anholt <emma@anholt.net>,
-        Rob Clark <robdclark@chromium.org>,
-        Bhupesh Sharma <bhupesh.sharma@linaro.org>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-        linux-mmc@vger.kernel.org, linux-pm@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220512083612.122824-1-manivannan.sadhasivam@linaro.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, 15 Aug 2022 at 12:12, Adam Skladowski <a39.skl@gmail.com> wrote:
->
-> Document the compatible for SDHCI on SM6115.
->
-> Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
+On Thu, May 12, 2022 at 02:06:12PM +0530, Manivannan Sadhasivam wrote:
+> Currently, the dw-edma driver enables the runtime_pm for parent device
+> (chip->dev) and increments/decrements the refcount during alloc/free
+> chan resources callbacks.
+> 
+> This leads to a problem when the eDMA driver has been probed, but the
+> channels were not used. This scenario can happen when the DW PCIe driver
+> probes eDMA driver successfully, but the PCI EPF driver decides not to
+> use eDMA channels and use iATU instead for PCI transfers.
+> 
+> In this case, the underlying device would be runtime suspended due to
+> pm_runtime_enable() in dw_edma_probe() and the PCI EPF driver would have
+> no knowledge of it.
+> 
+> Ideally, the eDMA driver should not be the one doing the runtime PM of
+> the parent device. The responsibility should instead belong to the client
+> drivers like PCI EPF.
+> 
+> So let's remove the runtime PM support from eDMA driver.
+> 
+> Cc: Serge Semin <fancer.lancer@gmail.com>
+> Cc: Frank Li <Frank.Li@nxp.com>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Applied for next, thanks!
+Looks like this one missed 6.0. Vinod, can you please merge this now?
 
-Kind regards
-Uffe
-
+Thanks,
+Mani
 
 > ---
->  Documentation/devicetree/bindings/mmc/sdhci-msm.yaml | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> index fc0e81c2066c..a792fa5574a0 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.yaml
-> @@ -41,6 +41,7 @@ properties:
->                - qcom,sdm845-sdhci
->                - qcom,sdx55-sdhci
->                - qcom,sdx65-sdhci
-> +              - qcom,sm6115-sdhci
->                - qcom,sm6125-sdhci
->                - qcom,sm6350-sdhci
->                - qcom,sm8150-sdhci
-> --
+> 
+> Note: This patch is made on top of Frank and Serge's edma work, but should
+> be applicable independently also.
+> 
+> [PATCH v10 0/9] Enable designware PCI EP EDMA locally
+> [PATCH v2 00/26] dmaengine: dw-edma: Add RP/EP local DMA controllers support
+> 
+>  drivers/dma/dw-edma/dw-edma-core.c | 12 ------------
+>  1 file changed, 12 deletions(-)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index 561686b51915..b2b5077d380b 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -9,7 +9,6 @@
+>  #include <linux/module.h>
+>  #include <linux/device.h>
+>  #include <linux/kernel.h>
+> -#include <linux/pm_runtime.h>
+>  #include <linux/dmaengine.h>
+>  #include <linux/err.h>
+>  #include <linux/interrupt.h>
+> @@ -731,15 +730,12 @@ static int dw_edma_alloc_chan_resources(struct dma_chan *dchan)
+>  		dchan->dev->chan_dma_dev = false;
+>  	}
+>  
+> -	pm_runtime_get(chan->dw->chip->dev);
+> -
+>  	return 0;
+>  }
+>  
+>  static void dw_edma_free_chan_resources(struct dma_chan *dchan)
+>  {
+>  	unsigned long timeout = jiffies + msecs_to_jiffies(5000);
+> -	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
+>  	int ret;
+>  
+>  	while (time_before(jiffies, timeout)) {
+> @@ -752,8 +748,6 @@ static void dw_edma_free_chan_resources(struct dma_chan *dchan)
+>  
+>  		cpu_relax();
+>  	}
+> -
+> -	pm_runtime_put(chan->dw->chip->dev);
+>  }
+>  
+>  static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
+> @@ -1010,9 +1004,6 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+>  	if (err)
+>  		goto err_irq_free;
+>  
+> -	/* Power management */
+> -	pm_runtime_enable(dev);
+> -
+>  	/* Turn debugfs on */
+>  	dw_edma_v0_core_debugfs_on(dw);
+>  
+> @@ -1046,9 +1037,6 @@ int dw_edma_remove(struct dw_edma_chip *chip)
+>  	for (i = (dw->nr_irqs - 1); i >= 0; i--)
+>  		free_irq(chip->ops->irq_vector(dev, i), &dw->irq[i]);
+>  
+> -	/* Power management */
+> -	pm_runtime_disable(dev);
+> -
+>  	/* Deregister eDMA device */
+>  	dma_async_device_unregister(&dw->dma);
+>  	list_for_each_entry_safe(chan, _chan, &dw->dma.channels,
+> -- 
 > 2.25.1
->
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்

@@ -2,42 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A405259AE19
+	by mail.lfdr.de (Postfix) with ESMTP id 5C6A359AE18
 	for <lists+dmaengine@lfdr.de>; Sat, 20 Aug 2022 15:02:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346514AbiHTM5t (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 20 Aug 2022 08:57:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60522 "EHLO
+        id S1346558AbiHTM6Q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 20 Aug 2022 08:58:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346501AbiHTM5o (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 20 Aug 2022 08:57:44 -0400
+        with ESMTP id S1346536AbiHTM6H (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 20 Aug 2022 08:58:07 -0400
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1A657330B;
-        Sat, 20 Aug 2022 05:57:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AC6372848;
+        Sat, 20 Aug 2022 05:57:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1661000264; x=1692536264;
+  t=1661000272; x=1692536272;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=dTTi1bl8hDEHuPm5ibXS4s2heL+9TD/juZdMY07cfKw=;
-  b=0qX7dTbIyFp03v08m4Hl18LbczLZe9hZ9BihFIptzRds2L5TAAavulJx
-   hwWGUIFhoDJbWHsKUtXvDBRLKpw3NP+twJPY4lEJub6cV8t8J7tX3U+bG
-   OaFrUe/kLypu6qzmqzFQ1CrcJnYuXlyMAal0VqHuibyfp+Cm/qgg5if2n
-   QUt+37FItzK5rlAaZpjaswi/rF1cK7iXH6Vh0RQDpdD53v8Lfe5xHYJHE
-   GZSwbvknUWfMdbOWwXN/tlbXGsg4VOdU1joa+Xvq/tzr8Lk+vEK8DiPYh
-   PGge0yIwY80MqhKRmWFHbaSq7bnGJVBy9dyZTjEyJS4GPPCSp38GwphE7
-   w==;
+  bh=DANL4aKJSy65svgCcuzEytfERDJ+TNEuh4HmxezDpJ8=;
+  b=nWKPnQZdHdEW2QBTHpbq7bWz/YOSWJ4A8kLET5jvxnPTeQ5xFXqdPaRv
+   e76WAH823sz5dFtyU18D40DK9UZWX0Cfl+ViZyvnsHDVbRPoKCPlw1TYZ
+   r0EbRZy3btFYPhPt3L+8p7i70koHPd3pFgNrooXlonvIkUL979ZNzUcOv
+   EZQo87RakDa6tKNYpbkwr0eYrQj/d6fntjw1SgmJHRiOax60Bb03jvypl
+   vvQRwf6VoKwZa5FA4XBHWS6/EwUixHVmHFhlAnfDmTMp67CqtqDZLg+GT
+   6MCD2jcgYbRejSkt03bNvByjLFoBnPrI7O2ewSTmIccqndw/2xaPXIlyb
+   Q==;
 X-IronPort-AV: E=Sophos;i="5.93,251,1654585200"; 
-   d="scan'208";a="177042710"
+   d="scan'208";a="187325452"
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Aug 2022 05:57:44 -0700
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Aug 2022 05:57:46 -0700
 Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Sat, 20 Aug 2022 05:57:42 -0700
+ 15.1.2507.12; Sat, 20 Aug 2022 05:57:46 -0700
 Received: from ROB-ULT-M18064N.mchp-main.com (10.10.115.15) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.12 via Frontend Transport; Sat, 20 Aug 2022 05:57:39 -0700
+ 15.1.2507.12 via Frontend Transport; Sat, 20 Aug 2022 05:57:43 -0700
 From:   Tudor Ambarus <tudor.ambarus@microchip.com>
 To:     <vkoul@kernel.org>, <peda@axentia.se>, <du@axentia.se>,
         <regressions@leemhuis.info>
@@ -45,10 +45,13 @@ CC:     <ludovic.desroches@microchip.com>, <maciej.sosnowski@intel.com>,
         <tudor.ambarus@microchip.com>, <dan.j.williams@intel.com>,
         <nicolas.ferre@microchip.com>, <mripard@kernel.org>,
         <torfl6749@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH 06/33] dmaengine: at_hdmac: Return dma_cookie_status()'s ret code when txstate is NULL
-Date:   Sat, 20 Aug 2022 15:56:50 +0300
-Message-ID: <20220820125717.588722-7-tudor.ambarus@microchip.com>
+        <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Tudor Ambarus <tudor.ambarus@gmail.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH 07/33] dmaengine: at_hdmac: Fix at_lli struct definition
+Date:   Sat, 20 Aug 2022 15:56:51 +0300
+Message-ID: <20220820125717.588722-8-tudor.ambarus@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220820125717.588722-1-tudor.ambarus@microchip.com>
 References: <20220820125717.588722-1-tudor.ambarus@microchip.com>
@@ -65,36 +68,42 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-txstate is an optional parameter used to get a struct with auxilary
-transfer status information. When not provided the call to
-device_tx_status() should return the status of the dma cookie. Return the
-status of dma cookie when the txstate optional parameter is not provided.
+From: Tudor Ambarus <tudor.ambarus@gmail.com>
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Those hardware registers are all of 32 bits, while dma_addr_t ca be of
+type u64 or u32 depending on CONFIG_ARCH_DMA_ADDR_T_64BIT. Force u32 to
+comply with what the hardware expects.
+
+Fixes: dc78baa2b90b ("dmaengine: at_hdmac: new driver for the Atmel AHB DMA Controller")
+Signed-off-by: Tudor Ambarus <tudor.ambarus@gmail.com>
+Cc: stable@vger.kernel.org
 ---
- drivers/dma/at_hdmac.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/dma/at_hdmac.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-index 085a990f8d5d..91e53a590d5f 100644
+index 91e53a590d5f..e89facf14fab 100644
 --- a/drivers/dma/at_hdmac.c
 +++ b/drivers/dma/at_hdmac.c
-@@ -1947,14 +1947,8 @@ atc_tx_status(struct dma_chan *chan,
- 	int bytes = 0;
+@@ -187,13 +187,13 @@
+ /* LLI == Linked List Item; aka DMA buffer descriptor */
+ struct at_lli {
+ 	/* values that are not changed by hardware */
+-	dma_addr_t	saddr;
+-	dma_addr_t	daddr;
++	u32 saddr;
++	u32 daddr;
+ 	/* value that may get written back: */
+-	u32		ctrla;
++	u32 ctrla;
+ 	/* more values that are not changed by hardware */
+-	u32		ctrlb;
+-	dma_addr_t	dscr;	/* chain to next lli */
++	u32 ctrlb;
++	u32 dscr;	/* chain to next lli */
+ };
  
- 	ret = dma_cookie_status(chan, cookie, txstate);
--	if (ret == DMA_COMPLETE)
-+	if (ret == DMA_COMPLETE || !txstate)
- 		return ret;
--	/*
--	 * There's no point calculating the residue if there's
--	 * no txstate to store the value.
--	 */
--	if (!txstate)
--		return DMA_ERROR;
- 
- 	spin_lock_irqsave(&atchan->lock, flags);
- 
+ /**
 -- 
 2.25.1
 

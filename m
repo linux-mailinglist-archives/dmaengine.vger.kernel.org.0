@@ -2,42 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7909059AE48
-	for <lists+dmaengine@lfdr.de>; Sat, 20 Aug 2022 15:02:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA6FF59AE40
+	for <lists+dmaengine@lfdr.de>; Sat, 20 Aug 2022 15:02:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346133AbiHTM5b (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 20 Aug 2022 08:57:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60414 "EHLO
+        id S1346403AbiHTM5d (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 20 Aug 2022 08:57:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229605AbiHTM5a (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 20 Aug 2022 08:57:30 -0400
+        with ESMTP id S1346251AbiHTM5c (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 20 Aug 2022 08:57:32 -0400
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57CCC70E48;
-        Sat, 20 Aug 2022 05:57:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DD2372842;
+        Sat, 20 Aug 2022 05:57:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1661000247; x=1692536247;
+  t=1661000250; x=1692536250;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=R9tE1z+i9SvoNlLfGVVWpHZytfKzeYN2m9fqdKUQPdE=;
-  b=sLsCrVuhoSrA1hzFRetF8d+y3aEkkONwLwxTDoLt1YE1i6/iX8fFfsjt
-   xbWbbieCOYtRZxIt1tZMWnlMOpr7OEiw2gBdQkS90tYp1+Q5+K/xbBAZR
-   GQE65e7AYL0EzBq/BqjZjvkjhDb+R5511WevevjxubLs9DUz3kT3lQ5hI
-   OQe7xvKJR/Zx2wwUUYaHxiVODnyQzD0YokVavAxr09q+dLZcqdb9PqOMi
-   emZWNd0dGDs7YByon+Rpf5nY2XoAsLcGYsC97tTSwsOIlWvrGCe7F52qA
-   MRZLOir8sCdQ25AoIuYqLDcJpV+GhARC+zh8gYpCdf15AEm+IP3uSdIGG
-   w==;
+  bh=Li3LKGdFdfRC9qr5jyH/IFlVtE8isOnPLK+S7zI4Nps=;
+  b=upl09OSvlIEp0ncSmmErDYF3pLGYHH5iNw2cpum3xpg3SyX5OUDCqBGS
+   jRk0cztbMURIU7/fy6yijxCzwW2bNKfoCZhVKFMCt+Fg46rR1FqnE/mpJ
+   zo/ishw8frMgAo//y3FqoODvoXMUbkfot2LAZQMJZpvk4QGoB9mLC3pnk
+   jXcjzaOoe6cxRAbCT2Uz/7c/wgr/8//bZIC6kHeztbP9nSEVpXOQaln62
+   SlLwds4ey8bwhJ1Jzy4NjKzk2CahJSIkRIYW05lf6dLPJjoNXW1khMh9X
+   dPnRK5P8x/aZk7/HoWQ3Go0hqkjbB/dR2scBmw4v8BOqoABfttp70LBxC
+   g==;
 X-IronPort-AV: E=Sophos;i="5.93,251,1654585200"; 
-   d="scan'208";a="170148765"
+   d="scan'208";a="170148804"
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Aug 2022 05:57:26 -0700
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Aug 2022 05:57:30 -0700
 Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Sat, 20 Aug 2022 05:57:25 -0700
+ 15.1.2507.12; Sat, 20 Aug 2022 05:57:29 -0700
 Received: from ROB-ULT-M18064N.mchp-main.com (10.10.115.15) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.12 via Frontend Transport; Sat, 20 Aug 2022 05:57:23 -0700
+ 15.1.2507.12 via Frontend Transport; Sat, 20 Aug 2022 05:57:26 -0700
 From:   Tudor Ambarus <tudor.ambarus@microchip.com>
 To:     <vkoul@kernel.org>, <peda@axentia.se>, <du@axentia.se>,
         <regressions@leemhuis.info>
@@ -46,9 +46,9 @@ CC:     <ludovic.desroches@microchip.com>, <maciej.sosnowski@intel.com>,
         <nicolas.ferre@microchip.com>, <mripard@kernel.org>,
         <torfl6749@gmail.com>, <linux-kernel@vger.kernel.org>,
         <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH 01/33] dmaengine: at_hdmac: Keep register definitions and structures private to at_hdmac.c
-Date:   Sat, 20 Aug 2022 15:56:45 +0300
-Message-ID: <20220820125717.588722-2-tudor.ambarus@microchip.com>
+Subject: [PATCH 02/33] dmaengine: at_hdmac: Use bitfield access macros
+Date:   Sat, 20 Aug 2022 15:56:46 +0300
+Message-ID: <20220820125717.588722-3-tudor.ambarus@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220820125717.588722-1-tudor.ambarus@microchip.com>
 References: <20220820125717.588722-1-tudor.ambarus@microchip.com>
@@ -65,552 +65,80 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Do not expose register definitions, structures and helpers via a .h file
-because there are used only by at_hdmac.c. Since there are no other users,
-remove the ambiguity and move all the .h contents to the .c file.
-
-One may notice some checkpatch warnings and errors with this move. The move
-was done "as it was", checkpatch complaints can be fixed in a further
-patch.
+Use the bitfield access macros in order to clean and to make the driver
+easier to read. One will see some "line length exceeds 100 columns"
+checkpatch warnings. I chose to not introduce new lines for regs
+descriptions in order to preserve the style of the comments throughout
+the definitions. Style can be fixed in a further patch.
 
 Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 ---
- MAINTAINERS                 |   1 -
- drivers/dma/at_hdmac.c      | 457 +++++++++++++++++++++++++++++++++-
- drivers/dma/at_hdmac_regs.h | 478 ------------------------------------
- 3 files changed, 456 insertions(+), 480 deletions(-)
- delete mode 100644 drivers/dma/at_hdmac_regs.h
+ drivers/dma/at_hdmac.c | 406 ++++++++++++++++++++---------------------
+ 1 file changed, 198 insertions(+), 208 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7f21b890187a..17765d5c04ca 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13092,7 +13092,6 @@ L:	dmaengine@vger.kernel.org
- S:	Supported
- F:	Documentation/devicetree/bindings/dma/atmel-dma.txt
- F:	drivers/dma/at_hdmac.c
--F:	drivers/dma/at_hdmac_regs.h
- F:	drivers/dma/at_xdmac.c
- F:	include/dt-bindings/dma/at91.h
- 
 diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-index 5a50423b7378..bcd67e12ca31 100644
+index bcd67e12ca31..d798e3443298 100644
 --- a/drivers/dma/at_hdmac.c
 +++ b/drivers/dma/at_hdmac.c
-@@ -22,7 +22,6 @@
- #include <linux/of_device.h>
- #include <linux/of_dma.h>
- 
--#include "at_hdmac_regs.h"
- #include "dmaengine.h"
- 
- /*
-@@ -34,6 +33,462 @@
-  * atc_	/ atchan	: ATmel DMA Channel entity related
+@@ -10,6 +10,7 @@
   */
  
-+#define	AT_DMA_MAX_NR_CHANNELS	8
-+
-+#define	AT_DMA_GCFG	0x00	/* Global Configuration Register */
-+#define		AT_DMA_IF_BIGEND(i)	(0x1 << (i))	/* AHB-Lite Interface i in Big-endian mode */
-+#define		AT_DMA_ARB_CFG	(0x1 << 4)	/* Arbiter mode. */
-+#define			AT_DMA_ARB_CFG_FIXED		(0x0 << 4)
-+#define			AT_DMA_ARB_CFG_ROUND_ROBIN	(0x1 << 4)
-+
-+#define	AT_DMA_EN	0x04	/* Controller Enable Register */
-+#define		AT_DMA_ENABLE	(0x1 << 0)
-+
-+#define	AT_DMA_SREQ	0x08	/* Software Single Request Register */
-+#define		AT_DMA_SSREQ(x)	(0x1 << ((x) << 1))		/* Request a source single transfer on channel x */
-+#define		AT_DMA_DSREQ(x)	(0x1 << (1 + ((x) << 1)))	/* Request a destination single transfer on channel x */
-+
-+#define	AT_DMA_CREQ	0x0C	/* Software Chunk Transfer Request Register */
-+#define		AT_DMA_SCREQ(x)	(0x1 << ((x) << 1))		/* Request a source chunk transfer on channel x */
-+#define		AT_DMA_DCREQ(x)	(0x1 << (1 + ((x) << 1)))	/* Request a destination chunk transfer on channel x */
-+
-+#define	AT_DMA_LAST	0x10	/* Software Last Transfer Flag Register */
-+#define		AT_DMA_SLAST(x)	(0x1 << ((x) << 1))		/* This src rq is last tx of buffer on channel x */
-+#define		AT_DMA_DLAST(x)	(0x1 << (1 + ((x) << 1)))	/* This dst rq is last tx of buffer on channel x */
-+
-+#define	AT_DMA_SYNC	0x14	/* Request Synchronization Register */
-+#define		AT_DMA_SYR(h)	(0x1 << (h))			/* Synchronize handshake line h */
-+
-+/* Error, Chained Buffer transfer completed and Buffer transfer completed Interrupt registers */
-+#define	AT_DMA_EBCIER	0x18	/* Enable register */
-+#define	AT_DMA_EBCIDR	0x1C	/* Disable register */
-+#define	AT_DMA_EBCIMR	0x20	/* Mask Register */
-+#define	AT_DMA_EBCISR	0x24	/* Status Register */
-+#define		AT_DMA_CBTC_OFFSET	8
-+#define		AT_DMA_ERR_OFFSET	16
-+#define		AT_DMA_BTC(x)	(0x1 << (x))
-+#define		AT_DMA_CBTC(x)	(0x1 << (AT_DMA_CBTC_OFFSET + (x)))
-+#define		AT_DMA_ERR(x)	(0x1 << (AT_DMA_ERR_OFFSET + (x)))
-+
-+#define	AT_DMA_CHER	0x28	/* Channel Handler Enable Register */
-+#define		AT_DMA_ENA(x)	(0x1 << (x))
-+#define		AT_DMA_SUSP(x)	(0x1 << ( 8 + (x)))
-+#define		AT_DMA_KEEP(x)	(0x1 << (24 + (x)))
-+
-+#define	AT_DMA_CHDR	0x2C	/* Channel Handler Disable Register */
-+#define		AT_DMA_DIS(x)	(0x1 << (x))
-+#define		AT_DMA_RES(x)	(0x1 << ( 8 + (x)))
-+
-+#define	AT_DMA_CHSR	0x30	/* Channel Handler Status Register */
-+#define		AT_DMA_EMPT(x)	(0x1 << (16 + (x)))
-+#define		AT_DMA_STAL(x)	(0x1 << (24 + (x)))
-+
-+#define	AT_DMA_CH_REGS_BASE	0x3C	/* Channel registers base address */
-+#define	ch_regs(x)	(AT_DMA_CH_REGS_BASE + (x) * 0x28) /* Channel x base addr */
-+
-+/* Hardware register offset for each channel */
-+#define	ATC_SADDR_OFFSET	0x00	/* Source Address Register */
-+#define	ATC_DADDR_OFFSET	0x04	/* Destination Address Register */
-+#define	ATC_DSCR_OFFSET		0x08	/* Descriptor Address Register */
-+#define	ATC_CTRLA_OFFSET	0x0C	/* Control A Register */
-+#define	ATC_CTRLB_OFFSET	0x10	/* Control B Register */
-+#define	ATC_CFG_OFFSET		0x14	/* Configuration Register */
-+#define	ATC_SPIP_OFFSET		0x18	/* Src PIP Configuration Register */
-+#define	ATC_DPIP_OFFSET		0x1C	/* Dst PIP Configuration Register */
-+
-+/* Bitfield definitions */
-+/* Bitfields in DSCR */
-+#define	ATC_DSCR_IF(i)		(0x3 & (i))	/* Dsc feched via AHB-Lite Interface i */
-+
-+/* Bitfields in CTRLA */
-+#define	ATC_BTSIZE_MAX		0xFFFFUL	/* Maximum Buffer Transfer Size */
-+#define	ATC_BTSIZE(x)		(ATC_BTSIZE_MAX & (x)) /* Buffer Transfer Size */
-+#define	ATC_SCSIZE_MASK		(0x7 << 16)	/* Source Chunk Transfer Size */
-+#define		ATC_SCSIZE(x)		(ATC_SCSIZE_MASK & ((x) << 16))
-+#define		ATC_SCSIZE_1		(0x0 << 16)
-+#define		ATC_SCSIZE_4		(0x1 << 16)
-+#define		ATC_SCSIZE_8		(0x2 << 16)
-+#define		ATC_SCSIZE_16		(0x3 << 16)
-+#define		ATC_SCSIZE_32		(0x4 << 16)
-+#define		ATC_SCSIZE_64		(0x5 << 16)
-+#define		ATC_SCSIZE_128		(0x6 << 16)
-+#define		ATC_SCSIZE_256		(0x7 << 16)
-+#define	ATC_DCSIZE_MASK		(0x7 << 20)	/* Destination Chunk Transfer Size */
-+#define		ATC_DCSIZE(x)		(ATC_DCSIZE_MASK & ((x) << 20))
-+#define		ATC_DCSIZE_1		(0x0 << 20)
-+#define		ATC_DCSIZE_4		(0x1 << 20)
-+#define		ATC_DCSIZE_8		(0x2 << 20)
-+#define		ATC_DCSIZE_16		(0x3 << 20)
-+#define		ATC_DCSIZE_32		(0x4 << 20)
-+#define		ATC_DCSIZE_64		(0x5 << 20)
-+#define		ATC_DCSIZE_128		(0x6 << 20)
-+#define		ATC_DCSIZE_256		(0x7 << 20)
-+#define	ATC_SRC_WIDTH_MASK	(0x3 << 24)	/* Source Single Transfer Size */
-+#define		ATC_SRC_WIDTH(x)	((x) << 24)
-+#define		ATC_SRC_WIDTH_BYTE	(0x0 << 24)
-+#define		ATC_SRC_WIDTH_HALFWORD	(0x1 << 24)
-+#define		ATC_SRC_WIDTH_WORD	(0x2 << 24)
-+#define		ATC_REG_TO_SRC_WIDTH(r)	(((r) >> 24) & 0x3)
-+#define	ATC_DST_WIDTH_MASK	(0x3 << 28)	/* Destination Single Transfer Size */
-+#define		ATC_DST_WIDTH(x)	((x) << 28)
-+#define		ATC_DST_WIDTH_BYTE	(0x0 << 28)
-+#define		ATC_DST_WIDTH_HALFWORD	(0x1 << 28)
-+#define		ATC_DST_WIDTH_WORD	(0x2 << 28)
-+#define	ATC_DONE		(0x1 << 31)	/* Tx Done (only written back in descriptor) */
-+
-+/* Bitfields in CTRLB */
-+#define	ATC_SIF(i)		(0x3 & (i))	/* Src tx done via AHB-Lite Interface i */
-+#define	ATC_DIF(i)		((0x3 & (i)) <<  4)	/* Dst tx done via AHB-Lite Interface i */
-+				  /* Specify AHB interfaces */
-+#define AT_DMA_MEM_IF		0 /* interface 0 as memory interface */
-+#define AT_DMA_PER_IF		1 /* interface 1 as peripheral interface */
-+
-+#define	ATC_SRC_PIP		(0x1 <<  8)	/* Source Picture-in-Picture enabled */
-+#define	ATC_DST_PIP		(0x1 << 12)	/* Destination Picture-in-Picture enabled */
-+#define	ATC_SRC_DSCR_DIS	(0x1 << 16)	/* Src Descriptor fetch disable */
-+#define	ATC_DST_DSCR_DIS	(0x1 << 20)	/* Dst Descriptor fetch disable */
-+#define	ATC_FC_MASK		(0x7 << 21)	/* Choose Flow Controller */
-+#define		ATC_FC_MEM2MEM		(0x0 << 21)	/* Mem-to-Mem (DMA) */
-+#define		ATC_FC_MEM2PER		(0x1 << 21)	/* Mem-to-Periph (DMA) */
-+#define		ATC_FC_PER2MEM		(0x2 << 21)	/* Periph-to-Mem (DMA) */
-+#define		ATC_FC_PER2PER		(0x3 << 21)	/* Periph-to-Periph (DMA) */
-+#define		ATC_FC_PER2MEM_PER	(0x4 << 21)	/* Periph-to-Mem (Peripheral) */
-+#define		ATC_FC_MEM2PER_PER	(0x5 << 21)	/* Mem-to-Periph (Peripheral) */
-+#define		ATC_FC_PER2PER_SRCPER	(0x6 << 21)	/* Periph-to-Periph (Src Peripheral) */
-+#define		ATC_FC_PER2PER_DSTPER	(0x7 << 21)	/* Periph-to-Periph (Dst Peripheral) */
-+#define	ATC_SRC_ADDR_MODE_MASK	(0x3 << 24)
-+#define		ATC_SRC_ADDR_MODE_INCR	(0x0 << 24)	/* Incrementing Mode */
-+#define		ATC_SRC_ADDR_MODE_DECR	(0x1 << 24)	/* Decrementing Mode */
-+#define		ATC_SRC_ADDR_MODE_FIXED	(0x2 << 24)	/* Fixed Mode */
-+#define	ATC_DST_ADDR_MODE_MASK	(0x3 << 28)
-+#define		ATC_DST_ADDR_MODE_INCR	(0x0 << 28)	/* Incrementing Mode */
-+#define		ATC_DST_ADDR_MODE_DECR	(0x1 << 28)	/* Decrementing Mode */
-+#define		ATC_DST_ADDR_MODE_FIXED	(0x2 << 28)	/* Fixed Mode */
-+#define	ATC_IEN			(0x1 << 30)	/* BTC interrupt enable (active low) */
-+#define	ATC_AUTO		(0x1 << 31)	/* Auto multiple buffer tx enable */
-+
-+/* Bitfields in CFG */
-+#define ATC_PER_MSB(h)	((0x30U & (h)) >> 4)	/* Extract most significant bits of a handshaking identifier */
-+
-+#define	ATC_SRC_PER(h)		(0xFU & (h))	/* Channel src rq associated with periph handshaking ifc h */
-+#define	ATC_DST_PER(h)		((0xFU & (h)) <<  4)	/* Channel dst rq associated with periph handshaking ifc h */
-+#define	ATC_SRC_REP		(0x1 <<  8)	/* Source Replay Mod */
-+#define	ATC_SRC_H2SEL		(0x1 <<  9)	/* Source Handshaking Mod */
-+#define		ATC_SRC_H2SEL_SW	(0x0 <<  9)
-+#define		ATC_SRC_H2SEL_HW	(0x1 <<  9)
-+#define	ATC_SRC_PER_MSB(h)	(ATC_PER_MSB(h) << 10)	/* Channel src rq (most significant bits) */
-+#define	ATC_DST_REP		(0x1 << 12)	/* Destination Replay Mod */
-+#define	ATC_DST_H2SEL		(0x1 << 13)	/* Destination Handshaking Mod */
-+#define		ATC_DST_H2SEL_SW	(0x0 << 13)
-+#define		ATC_DST_H2SEL_HW	(0x1 << 13)
-+#define	ATC_DST_PER_MSB(h)	(ATC_PER_MSB(h) << 14)	/* Channel dst rq (most significant bits) */
-+#define	ATC_SOD			(0x1 << 16)	/* Stop On Done */
-+#define	ATC_LOCK_IF		(0x1 << 20)	/* Interface Lock */
-+#define	ATC_LOCK_B		(0x1 << 21)	/* AHB Bus Lock */
-+#define	ATC_LOCK_IF_L		(0x1 << 22)	/* Master Interface Arbiter Lock */
-+#define		ATC_LOCK_IF_L_CHUNK	(0x0 << 22)
-+#define		ATC_LOCK_IF_L_BUFFER	(0x1 << 22)
-+#define	ATC_AHB_PROT_MASK	(0x7 << 24)	/* AHB Protection */
-+#define	ATC_FIFOCFG_MASK	(0x3 << 28)	/* FIFO Request Configuration */
-+#define		ATC_FIFOCFG_LARGESTBURST	(0x0 << 28)
-+#define		ATC_FIFOCFG_HALFFIFO		(0x1 << 28)
-+#define		ATC_FIFOCFG_ENOUGHSPACE		(0x2 << 28)
-+
-+/* Bitfields in SPIP */
-+#define	ATC_SPIP_HOLE(x)	(0xFFFFU & (x))
-+#define	ATC_SPIP_BOUNDARY(x)	((0x3FF & (x)) << 16)
-+
-+/* Bitfields in DPIP */
-+#define	ATC_DPIP_HOLE(x)	(0xFFFFU & (x))
-+#define	ATC_DPIP_BOUNDARY(x)	((0x3FF & (x)) << 16)
-+
-+/*--  descriptors  -----------------------------------------------------*/
-+
-+/* LLI == Linked List Item; aka DMA buffer descriptor */
-+struct at_lli {
-+	/* values that are not changed by hardware */
-+	dma_addr_t	saddr;
-+	dma_addr_t	daddr;
-+	/* value that may get written back: */
-+	u32		ctrla;
-+	/* more values that are not changed by hardware */
-+	u32		ctrlb;
-+	dma_addr_t	dscr;	/* chain to next lli */
-+};
-+
-+/**
-+ * struct at_desc - software descriptor
-+ * @at_lli: hardware lli structure
-+ * @txd: support for the async_tx api
-+ * @desc_node: node on the channed descriptors list
-+ * @len: descriptor byte count
-+ * @total_len: total transaction byte count
-+ */
-+struct at_desc {
-+	/* FIRST values the hardware uses */
-+	struct at_lli			lli;
-+
-+	/* THEN values for driver housekeeping */
-+	struct list_head		tx_list;
-+	struct dma_async_tx_descriptor	txd;
-+	struct list_head		desc_node;
-+	size_t				len;
-+	size_t				total_len;
-+
-+	/* Interleaved data */
-+	size_t				boundary;
-+	size_t				dst_hole;
-+	size_t				src_hole;
-+
-+	/* Memset temporary buffer */
-+	bool				memset_buffer;
-+	dma_addr_t			memset_paddr;
-+	int				*memset_vaddr;
-+};
-+
-+static inline struct at_desc *
-+txd_to_at_desc(struct dma_async_tx_descriptor *txd)
-+{
-+	return container_of(txd, struct at_desc, txd);
-+}
-+
-+/*--  Channels  --------------------------------------------------------*/
-+/**
-+ * atc_status - information bits stored in channel status flag
-+ *
-+ * Manipulated with atomic operations.
-+ */
-+enum atc_status {
-+	ATC_IS_ERROR = 0,
-+	ATC_IS_PAUSED = 1,
-+	ATC_IS_CYCLIC = 24,
-+};
-+
-+/**
-+ * struct at_dma_chan - internal representation of an Atmel HDMAC channel
-+ * @chan_common: common dmaengine channel object members
-+ * @device: parent device
-+ * @ch_regs: memory mapped register base
-+ * @mask: channel index in a mask
-+ * @per_if: peripheral interface
-+ * @mem_if: memory interface
-+ * @status: transmit status information from irq/prep* functions
-+ *                to tasklet (use atomic operations)
-+ * @tasklet: bottom half to finish transaction work
-+ * @save_cfg: configuration register that is saved on suspend/resume cycle
-+ * @save_dscr: for cyclic operations, preserve next descriptor address in
-+ *             the cyclic list on suspend/resume cycle
-+ * @dma_sconfig: configuration for slave transfers, passed via
-+ * .device_config
-+ * @lock: serializes enqueue/dequeue operations to descriptors lists
-+ * @active_list: list of descriptors dmaengine is being running on
-+ * @queue: list of descriptors ready to be submitted to engine
-+ * @free_list: list of descriptors usable by the channel
-+ */
-+struct at_dma_chan {
-+	struct dma_chan		chan_common;
-+	struct at_dma		*device;
-+	void __iomem		*ch_regs;
-+	u8			mask;
-+	u8			per_if;
-+	u8			mem_if;
-+	unsigned long		status;
-+	struct tasklet_struct	tasklet;
-+	u32			save_cfg;
-+	u32			save_dscr;
-+	struct dma_slave_config dma_sconfig;
-+
-+	spinlock_t		lock;
-+
-+	/* these other elements are all protected by lock */
-+	struct list_head	active_list;
-+	struct list_head	queue;
-+	struct list_head	free_list;
-+};
-+
-+#define	channel_readl(atchan, name) \
-+	__raw_readl((atchan)->ch_regs + ATC_##name##_OFFSET)
-+
-+#define	channel_writel(atchan, name, val) \
-+	__raw_writel((val), (atchan)->ch_regs + ATC_##name##_OFFSET)
-+
-+static inline struct at_dma_chan *to_at_dma_chan(struct dma_chan *dchan)
-+{
-+	return container_of(dchan, struct at_dma_chan, chan_common);
-+}
-+
-+/*
-+ * Fix sconfig's burst size according to at_hdmac. We need to convert them as:
-+ * 1 -> 0, 4 -> 1, 8 -> 2, 16 -> 3, 32 -> 4, 64 -> 5, 128 -> 6, 256 -> 7.
-+ *
-+ * This can be done by finding most significant bit set.
-+ */
-+static inline void convert_burst(u32 *maxburst)
-+{
-+	if (*maxburst > 1)
-+		*maxburst = fls(*maxburst) - 2;
-+	else
-+		*maxburst = 0;
-+}
-+
-+/*
-+ * Fix sconfig's bus width according to at_hdmac.
-+ * 1 byte -> 0, 2 bytes -> 1, 4 bytes -> 2.
-+ */
-+static inline u8 convert_buswidth(enum dma_slave_buswidth addr_width)
-+{
-+	switch (addr_width) {
-+	case DMA_SLAVE_BUSWIDTH_2_BYTES:
-+		return 1;
-+	case DMA_SLAVE_BUSWIDTH_4_BYTES:
-+		return 2;
-+	default:
-+		/* For 1 byte width or fallback */
-+		return 0;
-+	}
-+}
-+
-+/*--  Controller  ------------------------------------------------------*/
-+/**
-+ * struct at_dma - internal representation of an Atmel HDMA Controller
-+ * @chan_common: common dmaengine dma_device object members
-+ * @atdma_devtype: identifier of DMA controller compatibility
-+ * @ch_regs: memory mapped register base
-+ * @clk: dma controller clock
-+ * @save_imr: interrupt mask register that is saved on suspend/resume cycle
-+ * @all_chan_mask: all channels availlable in a mask
-+ * @dma_desc_pool: base of DMA descriptor region (DMA address)
-+ * @chan: channels table to store at_dma_chan structures
-+ */
-+struct at_dma {
-+	struct dma_device	dma_common;
-+	void __iomem		*regs;
-+	struct clk		*clk;
-+	u32			save_imr;
-+
-+	u8			all_chan_mask;
-+
-+	struct dma_pool		*dma_desc_pool;
-+	struct dma_pool		*memset_pool;
-+	/* AT THE END channels table */
-+	struct at_dma_chan	chan[];
-+};
-+
-+#define	dma_readl(atdma, name) \
-+	__raw_readl((atdma)->regs + AT_DMA_##name)
-+#define	dma_writel(atdma, name, val) \
-+	__raw_writel((val), (atdma)->regs + AT_DMA_##name)
-+
-+static inline struct at_dma *to_at_dma(struct dma_device *ddev)
-+{
-+	return container_of(ddev, struct at_dma, dma_common);
-+}
-+
-+/*--  Helper functions  ------------------------------------------------*/
-+static struct device *chan2dev(struct dma_chan *chan)
-+{
-+	return &chan->dev->device;
-+}
-+
-+#if defined(VERBOSE_DEBUG)
-+static void vdbg_dump_regs(struct at_dma_chan *atchan)
-+{
-+	struct at_dma	*atdma = to_at_dma(atchan->chan_common.device);
-+
-+	dev_err(chan2dev(&atchan->chan_common),
-+		"  channel %d : imr = 0x%x, chsr = 0x%x\n",
-+		atchan->chan_common.chan_id,
-+		dma_readl(atdma, EBCIMR),
-+		dma_readl(atdma, CHSR));
-+
-+	dev_err(chan2dev(&atchan->chan_common),
-+		"  channel: s0x%x d0x%x ctrl0x%x:0x%x cfg0x%x l0x%x\n",
-+		channel_readl(atchan, SADDR),
-+		channel_readl(atchan, DADDR),
-+		channel_readl(atchan, CTRLA),
-+		channel_readl(atchan, CTRLB),
-+		channel_readl(atchan, CFG),
-+		channel_readl(atchan, DSCR));
-+}
-+#else
-+static void vdbg_dump_regs(struct at_dma_chan *atchan) {}
-+#endif
-+
-+static void atc_dump_lli(struct at_dma_chan *atchan, struct at_lli *lli)
-+{
-+	dev_crit(chan2dev(&atchan->chan_common),
-+		 "desc: s%pad d%pad ctrl0x%x:0x%x l%pad\n",
-+		 &lli->saddr, &lli->daddr,
-+		 lli->ctrla, lli->ctrlb, &lli->dscr);
-+}
-+
-+static void atc_setup_irq(struct at_dma *atdma, int chan_id, int on)
-+{
-+	u32 ebci;
-+
-+	/* enable interrupts on buffer transfer completion & error */
-+	ebci =    AT_DMA_BTC(chan_id)
-+		| AT_DMA_ERR(chan_id);
-+	if (on)
-+		dma_writel(atdma, EBCIER, ebci);
-+	else
-+		dma_writel(atdma, EBCIDR, ebci);
-+}
-+
-+static void atc_enable_chan_irq(struct at_dma *atdma, int chan_id)
-+{
-+	atc_setup_irq(atdma, chan_id, 1);
-+}
-+
-+static void atc_disable_chan_irq(struct at_dma *atdma, int chan_id)
-+{
-+	atc_setup_irq(atdma, chan_id, 0);
-+}
-+
-+/**
-+ * atc_chan_is_enabled - test if given channel is enabled
-+ * @atchan: channel we want to test status
-+ */
-+static inline int atc_chan_is_enabled(struct at_dma_chan *atchan)
-+{
-+	struct at_dma	*atdma = to_at_dma(atchan->chan_common.device);
-+
-+	return !!(dma_readl(atdma, CHSR) & atchan->mask);
-+}
-+
-+/**
-+ * atc_chan_is_paused - test channel pause/resume status
-+ * @atchan: channel we want to test status
-+ */
-+static inline int atc_chan_is_paused(struct at_dma_chan *atchan)
-+{
-+	return test_bit(ATC_IS_PAUSED, &atchan->status);
-+}
-+
-+/**
-+ * atc_chan_is_cyclic - test if given channel has cyclic property set
-+ * @atchan: channel we want to test status
-+ */
-+static inline int atc_chan_is_cyclic(struct at_dma_chan *atchan)
-+{
-+	return test_bit(ATC_IS_CYCLIC, &atchan->status);
-+}
-+
-+/**
-+ * set_desc_eol - set end-of-link to descriptor so it will end transfer
-+ * @desc: descriptor, signle or at the end of a chain, to end chain on
-+ */
-+static void set_desc_eol(struct at_desc *desc)
-+{
-+	u32 ctrlb = desc->lli.ctrlb;
-+
-+	ctrlb &= ~ATC_IEN;
-+	ctrlb |= ATC_SRC_DSCR_DIS | ATC_DST_DSCR_DIS;
-+
-+	desc->lli.ctrlb = ctrlb;
-+	desc->lli.dscr = 0;
-+}
-+
- #define	ATC_DEFAULT_CFG		(ATC_FIFOCFG_HALFFIFO)
- #define	ATC_DEFAULT_CTRLB	(ATC_SIF(AT_DMA_MEM_IF) \
- 				|ATC_DIF(AT_DMA_MEM_IF))
-diff --git a/drivers/dma/at_hdmac_regs.h b/drivers/dma/at_hdmac_regs.h
-deleted file mode 100644
-index 4d1ebc040031..000000000000
---- a/drivers/dma/at_hdmac_regs.h
-+++ /dev/null
-@@ -1,478 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * Header file for the Atmel AHB DMA Controller driver
-- *
-- * Copyright (C) 2008 Atmel Corporation
-- */
--#ifndef AT_HDMAC_REGS_H
--#define	AT_HDMAC_REGS_H
--
--#define	AT_DMA_MAX_NR_CHANNELS	8
--
--
+ #include <dt-bindings/dma/at91.h>
++#include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/dmaengine.h>
+ #include <linux/dma-mapping.h>
+@@ -35,172 +36,151 @@
+ 
+ #define	AT_DMA_MAX_NR_CHANNELS	8
+ 
 -#define	AT_DMA_GCFG	0x00	/* Global Configuration Register */
 -#define		AT_DMA_IF_BIGEND(i)	(0x1 << (i))	/* AHB-Lite Interface i in Big-endian mode */
 -#define		AT_DMA_ARB_CFG	(0x1 << 4)	/* Arbiter mode. */
 -#define			AT_DMA_ARB_CFG_FIXED		(0x0 << 4)
 -#define			AT_DMA_ARB_CFG_ROUND_ROBIN	(0x1 << 4)
--
++/* Global Configuration Register */
++#define AT_DMA_GCFG		0x00
++#define AT_DMA_IF_BIGEND(i)	BIT((i))	/* AHB-Lite Interface i in Big-endian mode */
++#define AT_DMA_ARB_CFG		BIT(4)		/* Arbiter mode. */
+ 
 -#define	AT_DMA_EN	0x04	/* Controller Enable Register */
 -#define		AT_DMA_ENABLE	(0x1 << 0)
--
++/* Controller Enable Register */
++#define AT_DMA_EN		0x04
++#define AT_DMA_ENABLE		BIT(0)
+ 
 -#define	AT_DMA_SREQ	0x08	/* Software Single Request Register */
 -#define		AT_DMA_SSREQ(x)	(0x1 << ((x) << 1))		/* Request a source single transfer on channel x */
 -#define		AT_DMA_DSREQ(x)	(0x1 << (1 + ((x) << 1)))	/* Request a destination single transfer on channel x */
--
++/* Software Single Request Register */
++#define AT_DMA_SREQ		0x08
++#define AT_DMA_SSREQ(x)		BIT((x) << 1)		/* Request a source single transfer on channel x */
++#define AT_DMA_DSREQ(x)		BIT(1 + ((x) << 1))	/* Request a destination single transfer on channel x */
+ 
 -#define	AT_DMA_CREQ	0x0C	/* Software Chunk Transfer Request Register */
 -#define		AT_DMA_SCREQ(x)	(0x1 << ((x) << 1))		/* Request a source chunk transfer on channel x */
 -#define		AT_DMA_DCREQ(x)	(0x1 << (1 + ((x) << 1)))	/* Request a destination chunk transfer on channel x */
--
++/* Software Chunk Transfer Request Register */
++#define AT_DMA_CREQ		0x0c
++#define AT_DMA_SCREQ(x)		BIT((x) << 1)		/* Request a source chunk transfer on channel x */
++#define AT_DMA_DCREQ(x)		BIT(1 + ((x) << 1))	/* Request a destination chunk transfer on channel x */
+ 
 -#define	AT_DMA_LAST	0x10	/* Software Last Transfer Flag Register */
 -#define		AT_DMA_SLAST(x)	(0x1 << ((x) << 1))		/* This src rq is last tx of buffer on channel x */
 -#define		AT_DMA_DLAST(x)	(0x1 << (1 + ((x) << 1)))	/* This dst rq is last tx of buffer on channel x */
--
++/* Software Last Transfer Flag Register */
++#define AT_DMA_LAST		0x10
++#define AT_DMA_SLAST(x)		BIT((x) << 1)		/* This src rq is last tx of buffer on channel x */
++#define AT_DMA_DLAST(x)		BIT(1 + ((x) << 1))	/* This dst rq is last tx of buffer on channel x */
+ 
 -#define	AT_DMA_SYNC	0x14	/* Request Synchronization Register */
 -#define		AT_DMA_SYR(h)	(0x1 << (h))			/* Synchronize handshake line h */
--
--/* Error, Chained Buffer transfer completed and Buffer transfer completed Interrupt registers */
++/* Request Synchronization Register */
++#define AT_DMA_SYNC		0x14
++#define AT_DMA_SYR(h)		BIT((h))		/* Synchronize handshake line h */
+ 
+ /* Error, Chained Buffer transfer completed and Buffer transfer completed Interrupt registers */
 -#define	AT_DMA_EBCIER	0x18	/* Enable register */
 -#define	AT_DMA_EBCIDR	0x1C	/* Disable register */
 -#define	AT_DMA_EBCIMR	0x20	/* Mask Register */
@@ -634,11 +162,39 @@ index 4d1ebc040031..000000000000
 -#define		AT_DMA_EMPT(x)	(0x1 << (16 + (x)))
 -#define		AT_DMA_STAL(x)	(0x1 << (24 + (x)))
 -
--
 -#define	AT_DMA_CH_REGS_BASE	0x3C	/* Channel registers base address */
 -#define	ch_regs(x)	(AT_DMA_CH_REGS_BASE + (x) * 0x28) /* Channel x base addr */
--
--/* Hardware register offset for each channel */
++#define AT_DMA_EBCIER		0x18			/* Enable register */
++#define AT_DMA_EBCIDR		0x1c			/* Disable register */
++#define AT_DMA_EBCIMR		0x20			/* Mask Register */
++#define AT_DMA_EBCISR		0x24			/* Status Register */
++#define AT_DMA_CBTC_OFFSET	8
++#define AT_DMA_ERR_OFFSET	16
++#define AT_DMA_BTC(x)		BIT((x))
++#define AT_DMA_CBTC(x)		BIT(AT_DMA_CBTC_OFFSET + (x))
++#define AT_DMA_ERR(x)		BIT(AT_DMA_ERR_OFFSET + (x))
++
++/* Channel Handler Enable Register */
++#define AT_DMA_CHER		0x28
++#define AT_DMA_ENA(x)		BIT((x))
++#define AT_DMA_SUSP(x)		BIT(8 + (x))
++#define AT_DMA_KEEP(x)		BIT(24 + (x))
++
++/* Channel Handler Disable Register */
++#define AT_DMA_CHDR		0x2c
++#define AT_DMA_DIS(x)		BIT(x)
++#define AT_DMA_RES(x)		BIT(8 + (x))
++
++/* Channel Handler Status Register */
++#define AT_DMA_CHSR		0x30
++#define AT_DMA_EMPT(x)		BIT(16 + (x))
++#define AT_DMA_STAL(x)		BIT(24 + (x))
++
++/* Channel registers base address */
++#define AT_DMA_CH_REGS_BASE	0x3c
++#define ch_regs(x)		(AT_DMA_CH_REGS_BASE + (x) * 0x28) /* Channel x base addr */
+ 
+ /* Hardware register offset for each channel */
 -#define	ATC_SADDR_OFFSET	0x00	/* Source Address Register */
 -#define	ATC_DADDR_OFFSET	0x04	/* Destination Address Register */
 -#define	ATC_DSCR_OFFSET		0x08	/* Descriptor Address Register */
@@ -647,14 +203,21 @@ index 4d1ebc040031..000000000000
 -#define	ATC_CFG_OFFSET		0x14	/* Configuration Register */
 -#define	ATC_SPIP_OFFSET		0x18	/* Src PIP Configuration Register */
 -#define	ATC_DPIP_OFFSET		0x1C	/* Dst PIP Configuration Register */
--
--
--/* Bitfield definitions */
--
--/* Bitfields in DSCR */
++#define ATC_SADDR_OFFSET	0x00	/* Source Address Register */
++#define ATC_DADDR_OFFSET	0x04	/* Destination Address Register */
++#define ATC_DSCR_OFFSET		0x08	/* Descriptor Address Register */
++#define ATC_CTRLA_OFFSET	0x0c	/* Control A Register */
++#define ATC_CTRLB_OFFSET	0x10	/* Control B Register */
++#define ATC_CFG_OFFSET		0x14	/* Configuration Register */
++#define ATC_SPIP_OFFSET		0x18	/* Src PIP Configuration Register */
++#define ATC_DPIP_OFFSET		0x1c	/* Dst PIP Configuration Register */
+ 
+ /* Bitfield definitions */
+ /* Bitfields in DSCR */
 -#define	ATC_DSCR_IF(i)		(0x3 & (i))	/* Dsc feched via AHB-Lite Interface i */
--
--/* Bitfields in CTRLA */
++#define ATC_DSCR_IF		GENMASK(1, 0)	/* Dsc feched via AHB-Lite Interface */
+ 
+ /* Bitfields in CTRLA */
 -#define	ATC_BTSIZE_MAX		0xFFFFUL	/* Maximum Buffer Transfer Size */
 -#define	ATC_BTSIZE(x)		(ATC_BTSIZE_MAX & (x)) /* Buffer Transfer Size */
 -#define	ATC_SCSIZE_MASK		(0x7 << 16)	/* Source Chunk Transfer Size */
@@ -689,8 +252,15 @@ index 4d1ebc040031..000000000000
 -#define		ATC_DST_WIDTH_HALFWORD	(0x1 << 28)
 -#define		ATC_DST_WIDTH_WORD	(0x2 << 28)
 -#define	ATC_DONE		(0x1 << 31)	/* Tx Done (only written back in descriptor) */
--
--/* Bitfields in CTRLB */
++#define ATC_BTSIZE_MAX		GENMASK(15, 0)	/* Maximum Buffer Transfer Size */
++#define ATC_BTSIZE		GENMASK(15, 0)	/* Buffer Transfer Size */
++#define ATC_SCSIZE		GENMASK(18, 16)	/* Source Chunk Transfer Size */
++#define ATC_DCSIZE		GENMASK(22, 20)	/* Destination Chunk Transfer Size */
++#define ATC_SRC_WIDTH		GENMASK(25, 24)	/* Source Single Transfer Size */
++#define ATC_DST_WIDTH		GENMASK(29, 28)	/* Destination Single Transfer Size */
++#define ATC_DONE		BIT(31)	/* Tx Done (only written back in descriptor) */
+ 
+ /* Bitfields in CTRLB */
 -#define	ATC_SIF(i)		(0x3 & (i))	/* Src tx done via AHB-Lite Interface i */
 -#define	ATC_DIF(i)		((0x3 & (i)) <<  4)	/* Dst tx done via AHB-Lite Interface i */
 -				  /* Specify AHB interfaces */
@@ -720,10 +290,37 @@ index 4d1ebc040031..000000000000
 -#define		ATC_DST_ADDR_MODE_FIXED	(0x2 << 28)	/* Fixed Mode */
 -#define	ATC_IEN			(0x1 << 30)	/* BTC interrupt enable (active low) */
 -#define	ATC_AUTO		(0x1 << 31)	/* Auto multiple buffer tx enable */
--
--/* Bitfields in CFG */
--#define ATC_PER_MSB(h)	((0x30U & (h)) >> 4)	/* Extract most significant bits of a handshaking identifier */
--
++#define ATC_SIF			GENMASK(1, 0)	/* Src tx done via AHB-Lite Interface i */
++#define ATC_DIF			GENMASK(5, 4)	/* Dst tx done via AHB-Lite Interface i */
++#define AT_DMA_MEM_IF		0x0		/* interface 0 as memory interface */
++#define AT_DMA_PER_IF		0x1		/* interface 1 as peripheral interface */
++#define ATC_SRC_PIP		BIT(8)		/* Source Picture-in-Picture enabled */
++#define ATC_DST_PIP		BIT(12)		/* Destination Picture-in-Picture enabled */
++#define ATC_SRC_DSCR_DIS	BIT(16)		/* Src Descriptor fetch disable */
++#define ATC_DST_DSCR_DIS	BIT(20)		/* Dst Descriptor fetch disable */
++#define ATC_FC			GENMASK(22, 21)	/* Choose Flow Controller */
++#define ATC_FC_MEM2MEM		0x0		/* Mem-to-Mem (DMA) */
++#define ATC_FC_MEM2PER		0x1		/* Mem-to-Periph (DMA) */
++#define ATC_FC_PER2MEM		0x2		/* Periph-to-Mem (DMA) */
++#define ATC_FC_PER2PER		0x3		/* Periph-to-Periph (DMA) */
++#define ATC_FC_PER2MEM_PER	0x4		/* Periph-to-Mem (Peripheral) */
++#define ATC_FC_MEM2PER_PER	0x5		/* Mem-to-Periph (Peripheral) */
++#define ATC_FC_PER2PER_SRCPER	0x6		/* Periph-to-Periph (Src Peripheral) */
++#define ATC_FC_PER2PER_DSTPER	0x7		/* Periph-to-Periph (Dst Peripheral) */
++#define ATC_SRC_ADDR_MODE	GENMASK(25, 24)
++#define ATC_SRC_ADDR_MODE_INCR	0x0		/* Incrementing Mode */
++#define ATC_SRC_ADDR_MODE_DECR	0x1		/* Decrementing Mode */
++#define ATC_SRC_ADDR_MODE_FIXED	0x2		/* Fixed Mode */
++#define ATC_DST_ADDR_MODE	GENMASK(29, 28)
++#define ATC_DST_ADDR_MODE_INCR	0x0		/* Incrementing Mode */
++#define ATC_DST_ADDR_MODE_DECR	0x1		/* Decrementing Mode */
++#define ATC_DST_ADDR_MODE_FIXED	0x2		/* Fixed Mode */
++#define ATC_IEN			BIT(30)		/* BTC interrupt enable (active low) */
++#define ATC_AUTO		BIT(31)		/* Auto multiple buffer tx enable */
+ 
+ /* Bitfields in CFG */
+ #define ATC_PER_MSB(h)	((0x30U & (h)) >> 4)	/* Extract most significant bits of a handshaking identifier */
+ 
 -#define	ATC_SRC_PER(h)		(0xFU & (h))	/* Channel src rq associated with periph handshaking ifc h */
 -#define	ATC_DST_PER(h)		((0xFU & (h)) <<  4)	/* Channel dst rq associated with periph handshaking ifc h */
 -#define	ATC_SRC_REP		(0x1 <<  8)	/* Source Replay Mod */
@@ -747,311 +344,314 @@ index 4d1ebc040031..000000000000
 -#define		ATC_FIFOCFG_LARGESTBURST	(0x0 << 28)
 -#define		ATC_FIFOCFG_HALFFIFO		(0x1 << 28)
 -#define		ATC_FIFOCFG_ENOUGHSPACE		(0x2 << 28)
--
--/* Bitfields in SPIP */
++#define ATC_SRC_PER		GENMASK(3, 0)	/* Channel src rq associated with periph handshaking ifc h */
++#define ATC_DST_PER		GENMASK(7, 4)	/* Channel dst rq associated with periph handshaking ifc h */
++#define ATC_SRC_REP		BIT(8)		/* Source Replay Mod */
++#define ATC_SRC_H2SEL		BIT(9)		/* Source Handshaking Mod */
++#define ATC_SRC_PER_MSB		GENMASK(11, 10)	/* Channel src rq (most significant bits) */
++#define ATC_DST_REP		BIT(12)		/* Destination Replay Mod */
++#define ATC_DST_H2SEL		BIT(13)		/* Destination Handshaking Mod */
++#define ATC_DST_PER_MSB		GENMASK(15, 14)	/* Channel dst rq (most significant bits) */
++#define ATC_SOD			BIT(16)		/* Stop On Done */
++#define ATC_LOCK_IF		BIT(20)		/* Interface Lock */
++#define ATC_LOCK_B		BIT(21)		/* AHB Bus Lock */
++#define ATC_LOCK_IF_L		BIT(22)		/* Master Interface Arbiter Lock */
++#define ATC_AHB_PROT		GENMASK(26, 24)	/* AHB Protection */
++#define ATC_FIFOCFG		GENMASK(29, 28)	/* FIFO Request Configuration */
++#define ATC_FIFOCFG_LARGESTBURST	0x0
++#define ATC_FIFOCFG_HALFFIFO		0x1
++#define ATC_FIFOCFG_ENOUGHSPACE		0x2
+ 
+ /* Bitfields in SPIP */
 -#define	ATC_SPIP_HOLE(x)	(0xFFFFU & (x))
 -#define	ATC_SPIP_BOUNDARY(x)	((0x3FF & (x)) << 16)
--
--/* Bitfields in DPIP */
++#define ATC_SPIP_HOLE		GENMASK(15, 0)
++#define ATC_SPIP_BOUNDARY	GENMASK(25, 16)
+ 
+ /* Bitfields in DPIP */
 -#define	ATC_DPIP_HOLE(x)	(0xFFFFU & (x))
 -#define	ATC_DPIP_BOUNDARY(x)	((0x3FF & (x)) << 16)
--
--
--/*--  descriptors  -----------------------------------------------------*/
--
--/* LLI == Linked List Item; aka DMA buffer descriptor */
--struct at_lli {
--	/* values that are not changed by hardware */
--	dma_addr_t	saddr;
--	dma_addr_t	daddr;
--	/* value that may get written back: */
--	u32		ctrla;
--	/* more values that are not changed by hardware */
--	u32		ctrlb;
--	dma_addr_t	dscr;	/* chain to next lli */
--};
--
--/**
-- * struct at_desc - software descriptor
-- * @at_lli: hardware lli structure
-- * @txd: support for the async_tx api
-- * @desc_node: node on the channed descriptors list
-- * @len: descriptor byte count
-- * @total_len: total transaction byte count
-- */
--struct at_desc {
--	/* FIRST values the hardware uses */
--	struct at_lli			lli;
--
--	/* THEN values for driver housekeeping */
--	struct list_head		tx_list;
--	struct dma_async_tx_descriptor	txd;
--	struct list_head		desc_node;
--	size_t				len;
--	size_t				total_len;
--
--	/* Interleaved data */
--	size_t				boundary;
--	size_t				dst_hole;
--	size_t				src_hole;
--
--	/* Memset temporary buffer */
--	bool				memset_buffer;
--	dma_addr_t			memset_paddr;
--	int				*memset_vaddr;
--};
--
--static inline struct at_desc *
--txd_to_at_desc(struct dma_async_tx_descriptor *txd)
--{
--	return container_of(txd, struct at_desc, txd);
--}
--
--
--/*--  Channels  --------------------------------------------------------*/
--
--/**
-- * atc_status - information bits stored in channel status flag
-- *
-- * Manipulated with atomic operations.
-- */
--enum atc_status {
--	ATC_IS_ERROR = 0,
--	ATC_IS_PAUSED = 1,
--	ATC_IS_CYCLIC = 24,
--};
--
--/**
-- * struct at_dma_chan - internal representation of an Atmel HDMAC channel
-- * @chan_common: common dmaengine channel object members
-- * @device: parent device
-- * @ch_regs: memory mapped register base
-- * @mask: channel index in a mask
-- * @per_if: peripheral interface
-- * @mem_if: memory interface
-- * @status: transmit status information from irq/prep* functions
-- *                to tasklet (use atomic operations)
-- * @tasklet: bottom half to finish transaction work
-- * @save_cfg: configuration register that is saved on suspend/resume cycle
-- * @save_dscr: for cyclic operations, preserve next descriptor address in
-- *             the cyclic list on suspend/resume cycle
-- * @dma_sconfig: configuration for slave transfers, passed via
-- * .device_config
-- * @lock: serializes enqueue/dequeue operations to descriptors lists
-- * @active_list: list of descriptors dmaengine is being running on
-- * @queue: list of descriptors ready to be submitted to engine
-- * @free_list: list of descriptors usable by the channel
-- */
--struct at_dma_chan {
--	struct dma_chan		chan_common;
--	struct at_dma		*device;
--	void __iomem		*ch_regs;
--	u8			mask;
--	u8			per_if;
--	u8			mem_if;
--	unsigned long		status;
--	struct tasklet_struct	tasklet;
--	u32			save_cfg;
--	u32			save_dscr;
--	struct dma_slave_config dma_sconfig;
--
--	spinlock_t		lock;
--
--	/* these other elements are all protected by lock */
--	struct list_head	active_list;
--	struct list_head	queue;
--	struct list_head	free_list;
--};
--
--#define	channel_readl(atchan, name) \
--	__raw_readl((atchan)->ch_regs + ATC_##name##_OFFSET)
--
--#define	channel_writel(atchan, name, val) \
--	__raw_writel((val), (atchan)->ch_regs + ATC_##name##_OFFSET)
--
--static inline struct at_dma_chan *to_at_dma_chan(struct dma_chan *dchan)
--{
--	return container_of(dchan, struct at_dma_chan, chan_common);
--}
--
--/*
-- * Fix sconfig's burst size according to at_hdmac. We need to convert them as:
-- * 1 -> 0, 4 -> 1, 8 -> 2, 16 -> 3, 32 -> 4, 64 -> 5, 128 -> 6, 256 -> 7.
-- *
-- * This can be done by finding most significant bit set.
-- */
--static inline void convert_burst(u32 *maxburst)
--{
--	if (*maxburst > 1)
--		*maxburst = fls(*maxburst) - 2;
--	else
--		*maxburst = 0;
--}
--
--/*
-- * Fix sconfig's bus width according to at_hdmac.
-- * 1 byte -> 0, 2 bytes -> 1, 4 bytes -> 2.
-- */
--static inline u8 convert_buswidth(enum dma_slave_buswidth addr_width)
--{
--	switch (addr_width) {
--	case DMA_SLAVE_BUSWIDTH_2_BYTES:
--		return 1;
--	case DMA_SLAVE_BUSWIDTH_4_BYTES:
--		return 2;
--	default:
--		/* For 1 byte width or fallback */
--		return 0;
--	}
--}
--
--/*--  Controller  ------------------------------------------------------*/
--
--/**
-- * struct at_dma - internal representation of an Atmel HDMA Controller
-- * @chan_common: common dmaengine dma_device object members
-- * @atdma_devtype: identifier of DMA controller compatibility
-- * @ch_regs: memory mapped register base
-- * @clk: dma controller clock
-- * @save_imr: interrupt mask register that is saved on suspend/resume cycle
-- * @all_chan_mask: all channels availlable in a mask
-- * @dma_desc_pool: base of DMA descriptor region (DMA address)
-- * @chan: channels table to store at_dma_chan structures
-- */
--struct at_dma {
--	struct dma_device	dma_common;
--	void __iomem		*regs;
--	struct clk		*clk;
--	u32			save_imr;
--
--	u8			all_chan_mask;
--
--	struct dma_pool		*dma_desc_pool;
--	struct dma_pool		*memset_pool;
--	/* AT THE END channels table */
--	struct at_dma_chan	chan[];
--};
--
--#define	dma_readl(atdma, name) \
--	__raw_readl((atdma)->regs + AT_DMA_##name)
--#define	dma_writel(atdma, name, val) \
--	__raw_writel((val), (atdma)->regs + AT_DMA_##name)
--
--static inline struct at_dma *to_at_dma(struct dma_device *ddev)
--{
--	return container_of(ddev, struct at_dma, dma_common);
--}
--
--
--/*--  Helper functions  ------------------------------------------------*/
--
--static struct device *chan2dev(struct dma_chan *chan)
--{
--	return &chan->dev->device;
--}
--
--#if defined(VERBOSE_DEBUG)
--static void vdbg_dump_regs(struct at_dma_chan *atchan)
--{
--	struct at_dma	*atdma = to_at_dma(atchan->chan_common.device);
--
--	dev_err(chan2dev(&atchan->chan_common),
--		"  channel %d : imr = 0x%x, chsr = 0x%x\n",
--		atchan->chan_common.chan_id,
--		dma_readl(atdma, EBCIMR),
--		dma_readl(atdma, CHSR));
--
--	dev_err(chan2dev(&atchan->chan_common),
--		"  channel: s0x%x d0x%x ctrl0x%x:0x%x cfg0x%x l0x%x\n",
--		channel_readl(atchan, SADDR),
--		channel_readl(atchan, DADDR),
--		channel_readl(atchan, CTRLA),
--		channel_readl(atchan, CTRLB),
--		channel_readl(atchan, CFG),
--		channel_readl(atchan, DSCR));
--}
--#else
--static void vdbg_dump_regs(struct at_dma_chan *atchan) {}
--#endif
--
--static void atc_dump_lli(struct at_dma_chan *atchan, struct at_lli *lli)
--{
--	dev_crit(chan2dev(&atchan->chan_common),
--		 "desc: s%pad d%pad ctrl0x%x:0x%x l%pad\n",
--		 &lli->saddr, &lli->daddr,
--		 lli->ctrla, lli->ctrlb, &lli->dscr);
--}
--
--
--static void atc_setup_irq(struct at_dma *atdma, int chan_id, int on)
--{
--	u32 ebci;
--
--	/* enable interrupts on buffer transfer completion & error */
--	ebci =    AT_DMA_BTC(chan_id)
--		| AT_DMA_ERR(chan_id);
--	if (on)
--		dma_writel(atdma, EBCIER, ebci);
--	else
--		dma_writel(atdma, EBCIDR, ebci);
--}
--
--static void atc_enable_chan_irq(struct at_dma *atdma, int chan_id)
--{
--	atc_setup_irq(atdma, chan_id, 1);
--}
--
--static void atc_disable_chan_irq(struct at_dma *atdma, int chan_id)
--{
--	atc_setup_irq(atdma, chan_id, 0);
--}
--
--
--/**
-- * atc_chan_is_enabled - test if given channel is enabled
-- * @atchan: channel we want to test status
-- */
--static inline int atc_chan_is_enabled(struct at_dma_chan *atchan)
--{
--	struct at_dma	*atdma = to_at_dma(atchan->chan_common.device);
--
--	return !!(dma_readl(atdma, CHSR) & atchan->mask);
--}
--
--/**
-- * atc_chan_is_paused - test channel pause/resume status
-- * @atchan: channel we want to test status
-- */
--static inline int atc_chan_is_paused(struct at_dma_chan *atchan)
--{
--	return test_bit(ATC_IS_PAUSED, &atchan->status);
--}
--
--/**
-- * atc_chan_is_cyclic - test if given channel has cyclic property set
-- * @atchan: channel we want to test status
-- */
--static inline int atc_chan_is_cyclic(struct at_dma_chan *atchan)
--{
--	return test_bit(ATC_IS_CYCLIC, &atchan->status);
--}
--
--/**
-- * set_desc_eol - set end-of-link to descriptor so it will end transfer
-- * @desc: descriptor, signle or at the end of a chain, to end chain on
-- */
--static void set_desc_eol(struct at_desc *desc)
--{
--	u32 ctrlb = desc->lli.ctrlb;
--
--	ctrlb &= ~ATC_IEN;
--	ctrlb |= ATC_SRC_DSCR_DIS | ATC_DST_DSCR_DIS;
--
--	desc->lli.ctrlb = ctrlb;
--	desc->lli.dscr = 0;
--}
--
--#endif /* AT_HDMAC_REGS_H */
++#define ATC_DPIP_HOLE		GENMASK(15, 0)
++#define ATC_DPIP_BOUNDARY	GENMASK(25, 16)
++
++#define ATC_SRC_PER_ID(id)	(FIELD_PREP(ATC_SRC_PER_MSB, (id)) |	\
++				 FIELD_PREP(ATC_SRC_PER, (id)))
++#define ATC_DST_PER_ID(id)	(FIELD_PREP(ATC_DST_PER_MSB, (id)) |	\
++				 FIELD_PREP(ATC_DST_PER, (id)))
++
+ 
+ /*--  descriptors  -----------------------------------------------------*/
+ 
+@@ -489,9 +469,9 @@ static void set_desc_eol(struct at_desc *desc)
+ 	desc->lli.dscr = 0;
+ }
+ 
+-#define	ATC_DEFAULT_CFG		(ATC_FIFOCFG_HALFFIFO)
+-#define	ATC_DEFAULT_CTRLB	(ATC_SIF(AT_DMA_MEM_IF) \
+-				|ATC_DIF(AT_DMA_MEM_IF))
++#define	ATC_DEFAULT_CFG		FIELD_PREP(ATC_FIFOCFG, ATC_FIFOCFG_HALFFIFO)
++#define	ATC_DEFAULT_CTRLB	(FIELD_PREP(ATC_SIF, AT_DMA_MEM_IF) | \
++				 FIELD_PREP(ATC_DIF, AT_DMA_MEM_IF))
+ #define ATC_DMA_BUSWIDTHS\
+ 	(BIT(DMA_SLAVE_BUSWIDTH_UNDEFINED) |\
+ 	BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |\
+@@ -707,10 +687,12 @@ static void atc_dostart(struct at_dma_chan *atchan, struct at_desc *first)
+ 	channel_writel(atchan, CTRLA, 0);
+ 	channel_writel(atchan, CTRLB, 0);
+ 	channel_writel(atchan, DSCR, first->txd.phys);
+-	channel_writel(atchan, SPIP, ATC_SPIP_HOLE(first->src_hole) |
+-		       ATC_SPIP_BOUNDARY(first->boundary));
+-	channel_writel(atchan, DPIP, ATC_DPIP_HOLE(first->dst_hole) |
+-		       ATC_DPIP_BOUNDARY(first->boundary));
++	channel_writel(atchan, SPIP, FIELD_PREP(ATC_SPIP_HOLE,
++						first->src_hole) |
++		       FIELD_PREP(ATC_SPIP_BOUNDARY, first->boundary));
++	channel_writel(atchan, DPIP, FIELD_PREP(ATC_DPIP_HOLE,
++						first->dst_hole) |
++		       FIELD_PREP(ATC_DPIP_BOUNDARY, first->boundary));
+ 	dma_writel(atdma, CHER, atchan->mask);
+ 
+ 	vdbg_dump_regs(atchan);
+@@ -748,8 +730,8 @@ static struct at_desc *atc_get_desc_by_cookie(struct at_dma_chan *atchan,
+  */
+ static inline int atc_calc_bytes_left(int current_len, u32 ctrla)
+ {
+-	u32 btsize = (ctrla & ATC_BTSIZE_MAX);
+-	u32 src_width = ATC_REG_TO_SRC_WIDTH(ctrla);
++	u32 btsize = FIELD_GET(ATC_BTSIZE, ctrla);
++	u32 src_width = FIELD_GET(ATC_SRC_WIDTH, ctrla);
+ 
+ 	/*
+ 	 * According to the datasheet, when reading the Control A Register
+@@ -1223,15 +1205,14 @@ atc_prep_dma_interleaved(struct dma_chan *chan,
+ 		return NULL;
+ 	}
+ 
+-	ctrla = ATC_SRC_WIDTH(dwidth) |
+-		ATC_DST_WIDTH(dwidth);
++	ctrla = FIELD_PREP(ATC_SRC_WIDTH, dwidth) |
++		FIELD_PREP(ATC_DST_WIDTH, dwidth);
+ 
+-	ctrlb =   ATC_DEFAULT_CTRLB | ATC_IEN
+-		| ATC_SRC_ADDR_MODE_INCR
+-		| ATC_DST_ADDR_MODE_INCR
+-		| ATC_SRC_PIP
+-		| ATC_DST_PIP
+-		| ATC_FC_MEM2MEM;
++	ctrlb = ATC_DEFAULT_CTRLB | ATC_IEN |
++		FIELD_PREP(ATC_SRC_ADDR_MODE, ATC_SRC_ADDR_MODE_INCR) |
++		FIELD_PREP(ATC_DST_ADDR_MODE, ATC_DST_ADDR_MODE_INCR) |
++		ATC_SRC_PIP | ATC_DST_PIP |
++		FIELD_PREP(ATC_FC, ATC_FC_MEM2MEM);
+ 
+ 	/* create the transfer */
+ 	desc = atc_desc_get(atchan);
+@@ -1292,10 +1273,10 @@ atc_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
+ 		return NULL;
+ 	}
+ 
+-	ctrlb =   ATC_DEFAULT_CTRLB | ATC_IEN
+-		| ATC_SRC_ADDR_MODE_INCR
+-		| ATC_DST_ADDR_MODE_INCR
+-		| ATC_FC_MEM2MEM;
++	ctrlb = ATC_DEFAULT_CTRLB | ATC_IEN |
++		FIELD_PREP(ATC_SRC_ADDR_MODE, ATC_SRC_ADDR_MODE_INCR) |
++		FIELD_PREP(ATC_DST_ADDR_MODE, ATC_DST_ADDR_MODE_INCR) |
++		FIELD_PREP(ATC_FC, ATC_FC_MEM2MEM);
+ 
+ 	/*
+ 	 * We can be a lot more clever here, but this should take care
+@@ -1303,8 +1284,8 @@ atc_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
+ 	 */
+ 	src_width = dst_width = atc_get_xfer_width(src, dest, len);
+ 
+-	ctrla = ATC_SRC_WIDTH(src_width) |
+-		ATC_DST_WIDTH(dst_width);
++	ctrla = FIELD_PREP(ATC_SRC_WIDTH, src_width) |
++		FIELD_PREP(ATC_DST_WIDTH, dst_width);
+ 
+ 	for (offset = 0; offset < len; offset += xfer_count << src_width) {
+ 		xfer_count = min_t(size_t, (len - offset) >> src_width,
+@@ -1350,11 +1331,11 @@ static struct at_desc *atc_create_memset_desc(struct dma_chan *chan,
+ 	struct at_desc *desc;
+ 	size_t xfer_count;
+ 
+-	u32 ctrla = ATC_SRC_WIDTH(2) | ATC_DST_WIDTH(2);
++	u32 ctrla = FIELD_PREP(ATC_SRC_WIDTH, 2) | FIELD_PREP(ATC_DST_WIDTH, 2);
+ 	u32 ctrlb = ATC_DEFAULT_CTRLB | ATC_IEN |
+-		ATC_SRC_ADDR_MODE_FIXED |
+-		ATC_DST_ADDR_MODE_INCR |
+-		ATC_FC_MEM2MEM;
++		    FIELD_PREP(ATC_SRC_ADDR_MODE, ATC_SRC_ADDR_MODE_FIXED) |
++		    FIELD_PREP(ATC_DST_ADDR_MODE, ATC_DST_ADDR_MODE_INCR) |
++		    FIELD_PREP(ATC_FC, ATC_FC_MEM2MEM);
+ 
+ 	xfer_count = len >> 2;
+ 	if (xfer_count > ATC_BTSIZE_MAX) {
+@@ -1569,18 +1550,20 @@ atc_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 		return NULL;
+ 	}
+ 
+-	ctrla =   ATC_SCSIZE(sconfig->src_maxburst)
+-		| ATC_DCSIZE(sconfig->dst_maxburst);
++	ctrla = FIELD_PREP(ATC_SCSIZE, sconfig->src_maxburst) |
++		FIELD_PREP(ATC_DCSIZE, sconfig->dst_maxburst);
+ 	ctrlb = ATC_IEN;
+ 
+ 	switch (direction) {
+ 	case DMA_MEM_TO_DEV:
+ 		reg_width = convert_buswidth(sconfig->dst_addr_width);
+-		ctrla |=  ATC_DST_WIDTH(reg_width);
+-		ctrlb |=  ATC_DST_ADDR_MODE_FIXED
+-			| ATC_SRC_ADDR_MODE_INCR
+-			| ATC_FC_MEM2PER
+-			| ATC_SIF(atchan->mem_if) | ATC_DIF(atchan->per_if);
++		ctrla |= FIELD_PREP(ATC_DST_WIDTH, reg_width);
++		ctrlb |= FIELD_PREP(ATC_DST_ADDR_MODE,
++				    ATC_DST_ADDR_MODE_FIXED) |
++			 FIELD_PREP(ATC_SRC_ADDR_MODE, ATC_SRC_ADDR_MODE_INCR) |
++			 FIELD_PREP(ATC_FC, ATC_FC_MEM2PER) |
++			 FIELD_PREP(ATC_SIF, atchan->mem_if) |
++			 FIELD_PREP(ATC_DIF, atchan->per_if);
+ 		reg = sconfig->dst_addr;
+ 		for_each_sg(sgl, sg, sg_len, i) {
+ 			struct at_desc	*desc;
+@@ -1604,9 +1587,9 @@ atc_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 
+ 			desc->lli.saddr = mem;
+ 			desc->lli.daddr = reg;
+-			desc->lli.ctrla = ctrla
+-					| ATC_SRC_WIDTH(mem_width)
+-					| len >> mem_width;
++			desc->lli.ctrla = ctrla |
++					  FIELD_PREP(ATC_SRC_WIDTH, mem_width) |
++					  len >> mem_width;
+ 			desc->lli.ctrlb = ctrlb;
+ 			desc->len = len;
+ 
+@@ -1616,11 +1599,13 @@ atc_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 		break;
+ 	case DMA_DEV_TO_MEM:
+ 		reg_width = convert_buswidth(sconfig->src_addr_width);
+-		ctrla |=  ATC_SRC_WIDTH(reg_width);
+-		ctrlb |=  ATC_DST_ADDR_MODE_INCR
+-			| ATC_SRC_ADDR_MODE_FIXED
+-			| ATC_FC_PER2MEM
+-			| ATC_SIF(atchan->per_if) | ATC_DIF(atchan->mem_if);
++		ctrla |= FIELD_PREP(ATC_SRC_WIDTH, reg_width);
++		ctrlb |= FIELD_PREP(ATC_DST_ADDR_MODE, ATC_DST_ADDR_MODE_INCR) |
++			 FIELD_PREP(ATC_SRC_ADDR_MODE,
++				    ATC_SRC_ADDR_MODE_FIXED) |
++			 FIELD_PREP(ATC_FC, ATC_FC_PER2MEM) |
++			 FIELD_PREP(ATC_SIF, atchan->per_if) |
++			 FIELD_PREP(ATC_DIF, atchan->mem_if);
+ 
+ 		reg = sconfig->src_addr;
+ 		for_each_sg(sgl, sg, sg_len, i) {
+@@ -1645,9 +1630,9 @@ atc_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 
+ 			desc->lli.saddr = reg;
+ 			desc->lli.daddr = mem;
+-			desc->lli.ctrla = ctrla
+-					| ATC_DST_WIDTH(mem_width)
+-					| len >> reg_width;
++			desc->lli.ctrla = ctrla |
++					  FIELD_PREP(ATC_DST_WIDTH, mem_width) |
++					  len >> reg_width;
+ 			desc->lli.ctrlb = ctrlb;
+ 			desc->len = len;
+ 
+@@ -1713,22 +1698,24 @@ atc_dma_cyclic_fill_desc(struct dma_chan *chan, struct at_desc *desc,
+ 	u32			ctrla;
+ 
+ 	/* prepare common CRTLA value */
+-	ctrla =   ATC_SCSIZE(sconfig->src_maxburst)
+-		| ATC_DCSIZE(sconfig->dst_maxburst)
+-		| ATC_DST_WIDTH(reg_width)
+-		| ATC_SRC_WIDTH(reg_width)
+-		| period_len >> reg_width;
++	ctrla = FIELD_PREP(ATC_SCSIZE, sconfig->src_maxburst) |
++		FIELD_PREP(ATC_DCSIZE, sconfig->dst_maxburst) |
++		FIELD_PREP(ATC_DST_WIDTH, reg_width) |
++		FIELD_PREP(ATC_SRC_WIDTH, reg_width) |
++		period_len >> reg_width;
+ 
+ 	switch (direction) {
+ 	case DMA_MEM_TO_DEV:
+ 		desc->lli.saddr = buf_addr + (period_len * period_index);
+ 		desc->lli.daddr = sconfig->dst_addr;
+ 		desc->lli.ctrla = ctrla;
+-		desc->lli.ctrlb = ATC_DST_ADDR_MODE_FIXED
+-				| ATC_SRC_ADDR_MODE_INCR
+-				| ATC_FC_MEM2PER
+-				| ATC_SIF(atchan->mem_if)
+-				| ATC_DIF(atchan->per_if);
++		desc->lli.ctrlb = FIELD_PREP(ATC_DST_ADDR_MODE,
++					     ATC_DST_ADDR_MODE_FIXED) |
++				  FIELD_PREP(ATC_SRC_ADDR_MODE,
++					     ATC_SRC_ADDR_MODE_INCR) |
++				  FIELD_PREP(ATC_FC, ATC_FC_MEM2PER) |
++				  FIELD_PREP(ATC_SIF, atchan->mem_if) |
++				  FIELD_PREP(ATC_DIF, atchan->per_if);
+ 		desc->len = period_len;
+ 		break;
+ 
+@@ -1736,11 +1723,13 @@ atc_dma_cyclic_fill_desc(struct dma_chan *chan, struct at_desc *desc,
+ 		desc->lli.saddr = sconfig->src_addr;
+ 		desc->lli.daddr = buf_addr + (period_len * period_index);
+ 		desc->lli.ctrla = ctrla;
+-		desc->lli.ctrlb = ATC_DST_ADDR_MODE_INCR
+-				| ATC_SRC_ADDR_MODE_FIXED
+-				| ATC_FC_PER2MEM
+-				| ATC_SIF(atchan->per_if)
+-				| ATC_DIF(atchan->mem_if);
++		desc->lli.ctrlb = FIELD_PREP(ATC_DST_ADDR_MODE,
++					     ATC_DST_ADDR_MODE_INCR) |
++				  FIELD_PREP(ATC_SRC_ADDR_MODE,
++					     ATC_SRC_ADDR_MODE_FIXED) |
++				  FIELD_PREP(ATC_FC, ATC_FC_PER2MEM) |
++				  FIELD_PREP(ATC_SIF, atchan->per_if) |
++				  FIELD_PREP(ATC_DIF, atchan->mem_if);
+ 		desc->len = period_len;
+ 		break;
+ 
+@@ -2144,14 +2133,13 @@ static struct dma_chan *at_dma_xlate(struct of_phandle_args *dma_spec,
+ 		return NULL;
+ 	}
+ 
+-	atslave->cfg = ATC_DST_H2SEL_HW | ATC_SRC_H2SEL_HW;
++	atslave->cfg = ATC_DST_H2SEL | ATC_SRC_H2SEL;
+ 	/*
+ 	 * We can fill both SRC_PER and DST_PER, one of these fields will be
+ 	 * ignored depending on DMA transfer direction.
+ 	 */
+ 	per_id = dma_spec->args[1] & AT91_DMA_CFG_PER_ID_MASK;
+-	atslave->cfg |= ATC_DST_PER_MSB(per_id) | ATC_DST_PER(per_id)
+-		     | ATC_SRC_PER_MSB(per_id) | ATC_SRC_PER(per_id);
++	atslave->cfg |= ATC_DST_PER_ID(per_id) |  ATC_SRC_PER_ID(per_id);
+ 	/*
+ 	 * We have to translate the value we get from the device tree since
+ 	 * the half FIFO configuration value had to be 0 to keep backward
+@@ -2159,14 +2147,16 @@ static struct dma_chan *at_dma_xlate(struct of_phandle_args *dma_spec,
+ 	 */
+ 	switch (dma_spec->args[1] & AT91_DMA_CFG_FIFOCFG_MASK) {
+ 	case AT91_DMA_CFG_FIFOCFG_ALAP:
+-		atslave->cfg |= ATC_FIFOCFG_LARGESTBURST;
++		atslave->cfg |= FIELD_PREP(ATC_FIFOCFG,
++					   ATC_FIFOCFG_LARGESTBURST);
+ 		break;
+ 	case AT91_DMA_CFG_FIFOCFG_ASAP:
+-		atslave->cfg |= ATC_FIFOCFG_ENOUGHSPACE;
++		atslave->cfg |= FIELD_PREP(ATC_FIFOCFG,
++					   ATC_FIFOCFG_ENOUGHSPACE);
+ 		break;
+ 	case AT91_DMA_CFG_FIFOCFG_HALF:
+ 	default:
+-		atslave->cfg |= ATC_FIFOCFG_HALFFIFO;
++		atslave->cfg |= FIELD_PREP(ATC_FIFOCFG, ATC_FIFOCFG_HALFFIFO);
+ 	}
+ 	atslave->dma_dev = &dmac_pdev->dev;
+ 
 -- 
 2.25.1
 

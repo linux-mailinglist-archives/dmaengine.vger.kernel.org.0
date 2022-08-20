@@ -2,42 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C233D59AE3E
+	by mail.lfdr.de (Postfix) with ESMTP id 309E359AE3C
 	for <lists+dmaengine@lfdr.de>; Sat, 20 Aug 2022 15:02:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347604AbiHTNBI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 20 Aug 2022 09:01:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35768 "EHLO
+        id S1347785AbiHTNBN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 20 Aug 2022 09:01:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347616AbiHTNA1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 20 Aug 2022 09:00:27 -0400
+        with ESMTP id S1347158AbiHTNAf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 20 Aug 2022 09:00:35 -0400
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25564868AD;
-        Sat, 20 Aug 2022 05:59:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA7C78A1C6;
+        Sat, 20 Aug 2022 05:59:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1661000351; x=1692536351;
+  t=1661000354; x=1692536354;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=+YvybVBwNlRymwG1fxaRQyE2wDdutvaCQCMO9iy144c=;
-  b=Bvh+4UL/vpmEBbNkGnEFtRh0fnNVTgnkgCyeUX1A0YqQlzp8mlb3djnN
-   8eUP1FMD+YOU9Puc4YudomUlrK66zB2ZYCIi1wPmuXuWD1GmTj4ASFIhd
-   ZHKq7Qo07yCF1H+pK2BRXAW8ba74uHBG1h5ITnR53qmkEpv4yeUqDzAPY
-   ER53RWtcnWGtZN0Nyo4nkSH77ntoVgCkf9ARFoEhgQR17ePJfNm/dyqFP
-   r7syThVUQKxnsPiIxILBZTj/XXmOWhukMlO4mWHeR+h+h9QTrfl/MCtEa
-   ay4A3SIDTyQTBaxTs6q6cCWYuAq6UWgXSaCrVtyCKAUV26GNnltN7OKYH
+  bh=Lld3vah51r9NmmPsNHxT9mVmwu9BEfyoTnLOez1YBdk=;
+  b=CdnqHwQPv6lpL2fNETbkeatBoScOpBdc1XNsQYtPNRMF1Kvhd1FGvzSJ
+   hlBECGYDub6EZQKYlrqulKUkzAn5tKyN29K2PH7Pp8WM7Aje9z8D0vq7D
+   J4/3+kjU6HaJJ3eigFjVE/xUhBnXeVyZoli/qaD1igu6wSvmJV+J7Bd5w
+   8zAnUBlqIdjC8g1AhyyWLjbdlud5yj+o20GL6GHkdn2J+SDKvIYadsZaN
+   2mLAC/Xs1DbDVmwB8PTj2DQTlv3coSneFobWMkOGmjCGVNfZIgTQf9kaI
+   L5CUxM+FOTJTqzc2fOIe+Mi2XAtrOIJIxgCC54XFu+HuQ9Bj1cNu+8c9J
    A==;
 X-IronPort-AV: E=Sophos;i="5.93,251,1654585200"; 
-   d="scan'208";a="109911987"
+   d="scan'208";a="109911995"
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Aug 2022 05:59:09 -0700
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Aug 2022 05:59:10 -0700
 Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Sat, 20 Aug 2022 05:59:06 -0700
+ 15.1.2507.12; Sat, 20 Aug 2022 05:59:10 -0700
 Received: from ROB-ULT-M18064N.mchp-main.com (10.10.115.15) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.12 via Frontend Transport; Sat, 20 Aug 2022 05:59:03 -0700
+ 15.1.2507.12 via Frontend Transport; Sat, 20 Aug 2022 05:59:06 -0700
 From:   Tudor Ambarus <tudor.ambarus@microchip.com>
 To:     <vkoul@kernel.org>, <peda@axentia.se>, <du@axentia.se>,
         <regressions@leemhuis.info>
@@ -45,10 +45,12 @@ CC:     <ludovic.desroches@microchip.com>, <maciej.sosnowski@intel.com>,
         <tudor.ambarus@microchip.com>, <dan.j.williams@intel.com>,
         <nicolas.ferre@microchip.com>, <mripard@kernel.org>,
         <torfl6749@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH 30/33] dmaengine: at_hdmac: Check return code of dma_async_device_register
-Date:   Sat, 20 Aug 2022 15:57:14 +0300
-Message-ID: <20220820125717.588722-31-tudor.ambarus@microchip.com>
+        <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Tudor Ambarus <tudor.ambarus@gmail.com>
+Subject: [PATCH 31/33] dmaengine: at_hdmac: Use pm_ptr()
+Date:   Sat, 20 Aug 2022 15:57:15 +0300
+Message-ID: <20220820125717.588722-32-tudor.ambarus@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220820125717.588722-1-tudor.ambarus@microchip.com>
 References: <20220820125717.588722-1-tudor.ambarus@microchip.com>
@@ -65,39 +67,38 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-dma_async_device_register() can fail, check the return code and display an
-error.
+From: Tudor Ambarus <tudor.ambarus@gmail.com>
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Use pm_ptr() macro to fill at_xdmac_driver.driver.pm. In case CONFIG_PM is
+not enabled, the macro will return NULL.
+
+Signed-off-by: Tudor Ambarus <tudor.ambarus@gmail.com>
 ---
- drivers/dma/at_hdmac.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/dma/at_hdmac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-index 042c7cba74bb..0b473e6d161d 100644
+index 0b473e6d161d..e35b4b325452 100644
 --- a/drivers/dma/at_hdmac.c
 +++ b/drivers/dma/at_hdmac.c
-@@ -2353,7 +2353,11 @@ static int __init at_dma_probe(struct platform_device *pdev)
- 	  dma_has_cap(DMA_SLAVE, atdma->dma_device.cap_mask)  ? "slave " : "",
- 	  plat_dat->nr_channels);
+@@ -2524,7 +2524,7 @@ static int at_dma_resume_noirq(struct device *dev)
+ 	return 0;
+ }
  
--	dma_async_device_register(&atdma->dma_device);
-+	err = dma_async_device_register(&atdma->dma_device);
-+	if (err) {
-+		dev_err(&pdev->dev, "Unable to register: %d.\n", err);
-+		goto err_dma_async_device_register;
-+	}
- 
- 	/*
- 	 * Do not return an error if the dmac node is not present in order to
-@@ -2373,6 +2377,7 @@ static int __init at_dma_probe(struct platform_device *pdev)
- 
- err_of_dma_controller_register:
- 	dma_async_device_unregister(&atdma->dma_device);
-+err_dma_async_device_register:
- 	dma_pool_destroy(atdma->memset_pool);
- err_memset_pool_create:
- 	dma_pool_destroy(atdma->dma_desc_pool);
+-static const struct dev_pm_ops at_dma_dev_pm_ops = {
++static const struct dev_pm_ops __maybe_unused at_dma_dev_pm_ops = {
+ 	.prepare = at_dma_prepare,
+ 	.suspend_noirq = at_dma_suspend_noirq,
+ 	.resume_noirq = at_dma_resume_noirq,
+@@ -2536,7 +2536,7 @@ static struct platform_driver at_dma_driver = {
+ 	.id_table	= atdma_devtypes,
+ 	.driver = {
+ 		.name	= "at_hdmac",
+-		.pm	= &at_dma_dev_pm_ops,
++		.pm	= pm_ptr(&at_dma_dev_pm_ops),
+ 		.of_match_table	= of_match_ptr(atmel_dma_dt_ids),
+ 	},
+ };
 -- 
 2.25.1
 

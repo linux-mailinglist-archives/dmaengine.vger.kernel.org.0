@@ -2,333 +2,167 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4488F59BC8B
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Aug 2022 11:16:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C9BA59BED2
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Aug 2022 13:49:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233610AbiHVJQ4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 22 Aug 2022 05:16:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59132 "EHLO
+        id S234877AbiHVLtK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 22 Aug 2022 07:49:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234599AbiHVJPy (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 Aug 2022 05:15:54 -0400
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 209E1286F2;
-        Mon, 22 Aug 2022 02:15:41 -0700 (PDT)
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 27M9FaUN121375;
-        Mon, 22 Aug 2022 04:15:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1661159736;
-        bh=4RWmn9Vu1OlHjUmqPhU6tSBzfYbt3rOJpZXMAAaiX+w=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=NuVwIMSvZ6ZH0I95bUagB4dlPI77RKUHqPAqFr+E4PmjsS+sk3/0VQZdVKU6Sj+iS
-         Qtb5tQbeJySFzu507Im1iLoq97l4H4YP2xetHw8xfgwsRgur2HSOH71UO73gCwqfG2
-         izvGG9Vfg0ToVeaD+FLaR6QR/fVzv0vSbqcZW/zI=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 27M9Fa8q111278
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 22 Aug 2022 04:15:36 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Mon, 22
- Aug 2022 04:15:36 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
- Frontend Transport; Mon, 22 Aug 2022 04:15:36 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 27M9FZuh069753;
-        Mon, 22 Aug 2022 04:15:36 -0500
-From:   Vaishnav Achath <vaishnav.a@ti.com>
-To:     <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>,
-        <broonie@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>
-CC:     <vigneshr@ti.com>, <kishon@ti.com>, <vaishnav.a@ti.com>
-Subject: [PATCH 2/2] spi: spi-omap2-mcspi: Use EOW interrupt for completion when DMA enabled
-Date:   Mon, 22 Aug 2022 14:45:31 +0530
-Message-ID: <20220822091531.27827-3-vaishnav.a@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220822091531.27827-1-vaishnav.a@ti.com>
-References: <20220822091531.27827-1-vaishnav.a@ti.com>
+        with ESMTP id S234833AbiHVLst (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 Aug 2022 07:48:49 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07630140A5
+        for <dmaengine@vger.kernel.org>; Mon, 22 Aug 2022 04:48:29 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id x10so10335205ljq.4
+        for <dmaengine@vger.kernel.org>; Mon, 22 Aug 2022 04:48:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc;
+        bh=JvWkrZCHWaZg0B4fxrggJpcKlzsXeXTjMFTXm2G7Ln0=;
+        b=ntDl1WxU9/IUGVBIzGbRcPLYqrhAQsz+Epif8d5cKLduGObeiWeA+h2oQrWj4VfwJY
+         3us3dedr0/iRRja4d/vUR9gyixjlX1+X4SY4lGD+9XJVyYj13nJnyiRIaRQ7O4tr/kKz
+         yVwDWJQ59ycGmvBy501WrN4nlF0J8cNfqJW4pkP4jSiHUfd/NQx61qUkncqhc1Zd9XS2
+         6XexzVqLwQZ6WKD2g/2YnZ2kC28NrSkKDev5OkONAM5CRDnSAODI1zTzKxS/XGp7EiGG
+         6x7c1Gh1p+bf6fEeksc92jtUlNdaagTzBLFPYGJrwU3U2MqG6L8NzqLbNKvAdaf2aUHF
+         ErQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc;
+        bh=JvWkrZCHWaZg0B4fxrggJpcKlzsXeXTjMFTXm2G7Ln0=;
+        b=WBU7/EXoJHUPx4Ycy4I8h+2LjfitxcMfpF5U415k4KVH92eIujYGvJdja9yVHlii37
+         axVF4faJB+y+jB25GneToasQQ4PxdL3BAGMDijfcMdG+PLfuYn/VXl9l53kLNanuynM2
+         Dvk7Elqp9V66CB5m9NBZo/vl4PXgdMsg1w9OJqc6KPXxuYH3sgqQpn6G8PGKk7UqSI9a
+         3Jt/qJ07aftnEjoaHCXhOapx/Q4TOOIBjM24U0arebxkoFNxQccNvdXrXBBHtGZtOIMZ
+         SSCLL70PiM4bchu6oTCth2SVKcrUyDN+XLK3AEF2lElEQfW+45uSECAKCATf405fQbky
+         u9kQ==
+X-Gm-Message-State: ACgBeo1XepljrxxOalOtseekQvgVIcmHKEfdDd545Mm2aWolBeFqlDqH
+        TI1r7V8B25rqKgqDthvzqX+00i9BuCYp1g==
+X-Google-Smtp-Source: AA6agR4fIfbHU9sQN9gJYIMhUAZyI5YxjG0VfzrmyjddRUTPs/HW/kNhis6A88PpJ6e6VUtpkSe7+A==
+X-Received: by 2002:a2e:952:0:b0:261:d128:142b with SMTP id 79-20020a2e0952000000b00261d128142bmr803620ljj.50.1661168907193;
+        Mon, 22 Aug 2022 04:48:27 -0700 (PDT)
+Received: from localhost.localdomain ([188.244.36.106])
+        by smtp.googlemail.com with ESMTPSA id u34-20020a05651c142200b00261b32f1548sm1744559lje.100.2022.08.22.04.48.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Aug 2022 04:48:26 -0700 (PDT)
+From:   Alexander Fomichev <fomichev.ru@gmail.com>
+To:     dmaengine@vger.kernel.org
+Cc:     linux@yadro.com, Vinod Koul <vkoul@kernel.org>,
+        Alexander Fomichev <a.fomichev@yadro.com>
+Subject: [PATCH] dmatest: add CPU binding parameter
+Date:   Mon, 22 Aug 2022 14:48:04 +0300
+Message-Id: <20220822114804.95751-1-fomichev.ru@gmail.com>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-In MCSPI controller EOW interrupt is triggered when the channel has
-transmitted the set number of bytes in MCSPI_XFERLEVEL[31-16] WCNT,
-this can be used to signal the completion of a TX/RX when the internal
-FIFO is enabled, when DMA is enabled the internal FIFO is always enabled.
-Waiting for the DMA completion adds unpredictable delays due to the
-non-realtime completion calculation mechanism in k3-udma driver.
+From: Alexander Fomichev <a.fomichev@yadro.com>
 
-This commit removes the dma_tx_completion and dma_rx_completion and
-relies on the MCSPI controller EOW interrupt to signal transaction
-completion.This fixes the real-time performance issues in master and
-slave mode when DMA was enabled which resulted from the DMA completion
-calculation delays.
+Introduce "on_cpu" module parameter for dmatest.
+By default, its value is -1 which means no binding implies.
+Positive values or zero cause the next "channel" assignment(s) to bind
+channel's thread to certain CPU. Thus, it is possible to bind different
+DMA channels' threads to different CPUs.
 
-Since the MCSPI driver now uses internal mechanism to identify a transfer
-completion we disable the TX and RX DMA completion callback and remove
-DMA_PREP_INTERRUPT.
+This is useful for the cases when cold cache (because of task migrating
+between CPUs) significantly impacts DMA Engine performance. Such
+situation was analyzed in [1].
 
-Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
+[1] Scheduler: DMA Engine regression because of sched/fair changes
+https://lore.kernel.org/all/20220128165058.zxyrnd7nzr4hlks2@yadro.com/
+
+Signed-off-by: Alexander Fomichev <a.fomichev@yadro.com>
 ---
- drivers/spi/spi-omap2-mcspi.c | 141 +++++++++-------------------------
- 1 file changed, 36 insertions(+), 105 deletions(-)
+ drivers/dma/dmatest.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
-index c48d02bb7013..8680465533e0 100644
---- a/drivers/spi/spi-omap2-mcspi.c
-+++ b/drivers/spi/spi-omap2-mcspi.c
-@@ -91,10 +91,6 @@
- struct omap2_mcspi_dma {
- 	struct dma_chan *dma_tx;
- 	struct dma_chan *dma_rx;
--
--	struct completion dma_tx_completion;
--	struct completion dma_rx_completion;
--
- 	char dma_rx_ch_name[14];
- 	char dma_tx_ch_name[14];
- };
-@@ -116,7 +112,7 @@ struct omap2_mcspi_regs {
- };
+diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+index f696246f57fd..c91cbc9e5d1a 100644
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -89,6 +89,10 @@ static bool polled;
+ module_param(polled, bool, S_IRUGO | S_IWUSR);
+ MODULE_PARM_DESC(polled, "Use polling for completion instead of interrupts");
  
- struct omap2_mcspi {
--	struct completion	txdone;
-+	struct completion	txrxdone;
- 	struct spi_master	*master;
- 	/* Virtual base address of the controller */
- 	void __iomem		*base;
-@@ -375,30 +371,6 @@ static int mcspi_wait_for_completion(struct  omap2_mcspi *mcspi,
- 	return 0;
- }
- 
--static void omap2_mcspi_rx_callback(void *data)
--{
--	struct spi_device *spi = data;
--	struct omap2_mcspi *mcspi = spi_master_get_devdata(spi->master);
--	struct omap2_mcspi_dma *mcspi_dma = &mcspi->dma_channels[spi->chip_select];
--
--	/* We must disable the DMA RX request */
--	omap2_mcspi_set_dma_req(spi, 1, 0);
--
--	complete(&mcspi_dma->dma_rx_completion);
--}
--
--static void omap2_mcspi_tx_callback(void *data)
--{
--	struct spi_device *spi = data;
--	struct omap2_mcspi *mcspi = spi_master_get_devdata(spi->master);
--	struct omap2_mcspi_dma *mcspi_dma = &mcspi->dma_channels[spi->chip_select];
--
--	/* We must disable the DMA TX request */
--	omap2_mcspi_set_dma_req(spi, 0, 0);
--
--	complete(&mcspi_dma->dma_tx_completion);
--}
--
- static void omap2_mcspi_tx_dma(struct spi_device *spi,
- 				struct spi_transfer *xfer,
- 				struct dma_slave_config cfg)
-@@ -413,12 +385,9 @@ static void omap2_mcspi_tx_dma(struct spi_device *spi,
- 	dmaengine_slave_config(mcspi_dma->dma_tx, &cfg);
- 
- 	tx = dmaengine_prep_slave_sg(mcspi_dma->dma_tx, xfer->tx_sg.sgl,
--				     xfer->tx_sg.nents,
--				     DMA_MEM_TO_DEV,
--				     DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-+					xfer->tx_sg.nents, DMA_MEM_TO_DEV, DMA_CTRL_ACK);
++static int on_cpu = -1;
++module_param(on_cpu, int, 0644);
++MODULE_PARM_DESC(on_cpu, "Bind CPU to run threads on (default: auto scheduled (-1))");
 +
- 	if (tx) {
--		tx->callback = omap2_mcspi_tx_callback;
--		tx->callback_param = spi;
- 		dmaengine_submit(tx);
- 	} else {
- 		/* FIXME: fall back to PIO? */
-@@ -500,11 +469,9 @@ omap2_mcspi_rx_dma(struct spi_device *spi, struct spi_transfer *xfer,
+ /**
+  * struct dmatest_params - test parameters.
+  * @buf_size:		size of the memcpy test buffer
+@@ -237,6 +241,7 @@ struct dmatest_thread {
+ struct dmatest_chan {
+ 	struct list_head	node;
+ 	struct dma_chan		*chan;
++	int					cpu;
+ 	struct list_head	threads;
+ };
+ 
+@@ -602,6 +607,7 @@ static int dmatest_func(void *data)
+ 	ret = -ENOMEM;
+ 
+ 	smp_rmb();
++
+ 	thread->pending = false;
+ 	info = thread->info;
+ 	params = &info->params;
+@@ -1010,6 +1016,7 @@ static int dmatest_add_channel(struct dmatest_info *info,
+ 	struct dmatest_chan	*dtc;
+ 	struct dma_device	*dma_dev = chan->device;
+ 	unsigned int		thread_count = 0;
++	char	cpu_str[20];
+ 	int cnt;
+ 
+ 	dtc = kmalloc(sizeof(struct dmatest_chan), GFP_KERNEL);
+@@ -1018,6 +1025,13 @@ static int dmatest_add_channel(struct dmatest_info *info,
+ 		return -ENOMEM;
  	}
  
- 	tx = dmaengine_prep_slave_sg(mcspi_dma->dma_rx, sg_out[0],
--				     out_mapped_nents[0], DMA_DEV_TO_MEM,
--				     DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-+				     out_mapped_nents[0], DMA_DEV_TO_MEM, DMA_CTRL_ACK);
++	memset(cpu_str, 0, sizeof(cpu_str));
++	if (on_cpu >= nr_cpu_ids || on_cpu < -1)
++		on_cpu = -1;
++	dtc->cpu = on_cpu;
++	if (dtc->cpu != -1)
++		snprintf(cpu_str, sizeof(cpu_str) - 1, " on CPU #%d", dtc->cpu);
 +
- 	if (tx) {
--		tx->callback = omap2_mcspi_rx_callback;
--		tx->callback_param = spi;
- 		dmaengine_submit(tx);
- 	} else {
- 		/* FIXME: fall back to PIO? */
-@@ -513,10 +480,10 @@ omap2_mcspi_rx_dma(struct spi_device *spi, struct spi_transfer *xfer,
- 	dma_async_issue_pending(mcspi_dma->dma_rx);
- 	omap2_mcspi_set_dma_req(spi, 1, 1);
+ 	dtc->chan = chan;
+ 	INIT_LIST_HEAD(&dtc->threads);
  
--	ret = mcspi_wait_for_completion(mcspi, &mcspi_dma->dma_rx_completion);
-+	ret = mcspi_wait_for_completion(mcspi, &mcspi->txrxdone);
-+	omap2_mcspi_set_dma_req(spi, 1, 0);
- 	if (ret || mcspi->slave_aborted) {
- 		dmaengine_terminate_sync(mcspi_dma->dma_rx);
--		omap2_mcspi_set_dma_req(spi, 1, 0);
- 		return 0;
+@@ -1050,8 +1064,8 @@ static int dmatest_add_channel(struct dmatest_info *info,
+ 		thread_count += cnt > 0 ? cnt : 0;
  	}
  
-@@ -587,8 +554,8 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
- 	enum dma_slave_buswidth width;
- 	unsigned es;
- 	void __iomem		*chstat_reg;
--	void __iomem            *irqstat_reg;
- 	int			wait_res;
-+	int ret;
+-	pr_info("Added %u threads using %s\n",
+-		thread_count, dma_chan_name(chan));
++	pr_info("Added %u threads using %s%s\n",
++		thread_count, dma_chan_name(chan), cpu_str);
  
- 	mcspi = spi_master_get_devdata(spi->master);
- 	mcspi_dma = &mcspi->dma_channels[spi->chip_select];
-@@ -618,68 +585,36 @@ omap2_mcspi_txrx_dma(struct spi_device *spi, struct spi_transfer *xfer)
- 	tx = xfer->tx_buf;
+ 	list_add_tail(&dtc->node, &info->channels);
+ 	info->nr_channels++;
+@@ -1125,6 +1139,11 @@ static void run_pending_tests(struct dmatest_info *info)
  
- 	mcspi->slave_aborted = false;
--	reinit_completion(&mcspi_dma->dma_tx_completion);
--	reinit_completion(&mcspi_dma->dma_rx_completion);
--	reinit_completion(&mcspi->txdone);
--	if (tx) {
--		/* Enable EOW IRQ to know end of tx in slave mode */
--		if (spi_controller_is_slave(spi->master))
--			mcspi_write_reg(spi->master,
--					OMAP2_MCSPI_IRQENABLE,
--					OMAP2_MCSPI_IRQSTATUS_EOW);
-+	reinit_completion(&mcspi->txrxdone);
-+	mcspi_write_reg(spi->master, OMAP2_MCSPI_IRQENABLE,	OMAP2_MCSPI_IRQSTATUS_EOW);
-+	if (tx)
- 		omap2_mcspi_tx_dma(spi, xfer, cfg);
--	}
- 
--	if (rx != NULL)
-+	if (rx)
- 		count = omap2_mcspi_rx_dma(spi, xfer, cfg, es);
- 
--	if (tx != NULL) {
--		int ret;
--
--		ret = mcspi_wait_for_completion(mcspi, &mcspi_dma->dma_tx_completion);
--		if (ret || mcspi->slave_aborted) {
--			dmaengine_terminate_sync(mcspi_dma->dma_tx);
--			omap2_mcspi_set_dma_req(spi, 0, 0);
--			return 0;
--		}
--
--		if (spi_controller_is_slave(mcspi->master)) {
--			ret = mcspi_wait_for_completion(mcspi, &mcspi->txdone);
--			if (ret || mcspi->slave_aborted)
--				return 0;
--		}
-+	ret = mcspi_wait_for_completion(mcspi, &mcspi->txrxdone);
-+	omap2_mcspi_set_dma_req(spi, 0, 0);
-+	if (ret || mcspi->slave_aborted)
-+		return 0;
- 
-+	/* for TX_ONLY mode, be sure all words have shifted out */
-+	if (tx && !rx) {
-+		chstat_reg = cs->base + OMAP2_MCSPI_CHSTAT0;
- 		if (mcspi->fifo_depth > 0) {
--			irqstat_reg = mcspi->base + OMAP2_MCSPI_IRQSTATUS;
--
--			if (mcspi_wait_for_reg_bit(irqstat_reg,
--						OMAP2_MCSPI_IRQSTATUS_EOW) < 0)
--				dev_err(&spi->dev, "EOW timed out\n");
--
--			mcspi_write_reg(mcspi->master, OMAP2_MCSPI_IRQSTATUS,
--					OMAP2_MCSPI_IRQSTATUS_EOW);
--		}
--
--		/* for TX_ONLY mode, be sure all words have shifted out */
--		if (rx == NULL) {
--			chstat_reg = cs->base + OMAP2_MCSPI_CHSTAT0;
--			if (mcspi->fifo_depth > 0) {
--				wait_res = mcspi_wait_for_reg_bit(chstat_reg,
--						OMAP2_MCSPI_CHSTAT_TXFFE);
--				if (wait_res < 0)
--					dev_err(&spi->dev, "TXFFE timed out\n");
--			} else {
--				wait_res = mcspi_wait_for_reg_bit(chstat_reg,
--						OMAP2_MCSPI_CHSTAT_TXS);
--				if (wait_res < 0)
--					dev_err(&spi->dev, "TXS timed out\n");
--			}
--			if (wait_res >= 0 &&
--				(mcspi_wait_for_reg_bit(chstat_reg,
--					OMAP2_MCSPI_CHSTAT_EOT) < 0))
--				dev_err(&spi->dev, "EOT timed out\n");
-+			wait_res = mcspi_wait_for_reg_bit(chstat_reg, OMAP2_MCSPI_CHSTAT_TXFFE);
-+			if (wait_res < 0)
-+				dev_err(&spi->dev, "TXFFE timed out\n");
-+		} else {
-+			wait_res = mcspi_wait_for_reg_bit(chstat_reg, OMAP2_MCSPI_CHSTAT_TXS);
-+			if (wait_res < 0)
-+				dev_err(&spi->dev, "TXS timed out\n");
+ 		thread_count = 0;
+ 		list_for_each_entry(thread, &dtc->threads, node) {
++			if (dtc->cpu != -1) {
++				if (!thread->pending)
++					continue;
++				kthread_bind(thread->task, dtc->cpu);
++			}
+ 			wake_up_process(thread->task);
+ 			thread_count++;
  		}
-+		if (wait_res >= 0 && (mcspi_wait_for_reg_bit(chstat_reg,
-+							     OMAP2_MCSPI_CHSTAT_EOT) < 0))
-+			dev_err(&spi->dev, "EOT timed out\n");
- 	}
-+
- 	return count;
- }
- 
-@@ -1010,9 +945,6 @@ static int omap2_mcspi_request_dma(struct omap2_mcspi *mcspi,
- 		mcspi_dma->dma_rx = NULL;
- 	}
- 
--	init_completion(&mcspi_dma->dma_rx_completion);
--	init_completion(&mcspi_dma->dma_tx_completion);
--
- no_dma:
- 	return ret;
- }
-@@ -1102,8 +1034,10 @@ static irqreturn_t omap2_mcspi_irq_handler(int irq, void *data)
- 
- 	/* Disable IRQ and wakeup slave xfer task */
- 	mcspi_write_reg(mcspi->master, OMAP2_MCSPI_IRQENABLE, 0);
--	if (irqstat & OMAP2_MCSPI_IRQSTATUS_EOW)
--		complete(&mcspi->txdone);
-+	if (irqstat & OMAP2_MCSPI_IRQSTATUS_EOW) {
-+		complete_all(&mcspi->txrxdone);
-+		mcspi_write_reg(mcspi->master, OMAP2_MCSPI_IRQSTATUS, OMAP2_MCSPI_IRQSTATUS_EOW);
-+	}
- 
- 	return IRQ_HANDLED;
- }
-@@ -1111,12 +1045,9 @@ static irqreturn_t omap2_mcspi_irq_handler(int irq, void *data)
- static int omap2_mcspi_slave_abort(struct spi_master *master)
- {
- 	struct omap2_mcspi *mcspi = spi_master_get_devdata(master);
--	struct omap2_mcspi_dma *mcspi_dma = mcspi->dma_channels;
- 
- 	mcspi->slave_aborted = true;
--	complete(&mcspi_dma->dma_rx_completion);
--	complete(&mcspi_dma->dma_tx_completion);
--	complete(&mcspi->txdone);
-+	complete_all(&mcspi->txrxdone);
- 
- 	return 0;
- }
-@@ -1516,7 +1447,7 @@ static int omap2_mcspi_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "no irq resource found\n");
- 		goto free_master;
- 	}
--	init_completion(&mcspi->txdone);
-+	init_completion(&mcspi->txrxdone);
- 	status = devm_request_irq(&pdev->dev, status,
- 				  omap2_mcspi_irq_handler, 0, pdev->name,
- 				  mcspi);
 -- 
-2.17.1
+2.37.1
 

@@ -2,54 +2,57 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B70A159EAA1
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Aug 2022 20:14:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AAFB59EAD8
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Aug 2022 20:21:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232185AbiHWSM7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 23 Aug 2022 14:12:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40200 "EHLO
+        id S229494AbiHWSVE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 23 Aug 2022 14:21:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232254AbiHWSMi (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 23 Aug 2022 14:12:38 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6E329C2D6
-        for <dmaengine@vger.kernel.org>; Tue, 23 Aug 2022 09:24:42 -0700 (PDT)
+        with ESMTP id S234226AbiHWSUc (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 23 Aug 2022 14:20:32 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA3C15FFD
+        for <dmaengine@vger.kernel.org>; Tue, 23 Aug 2022 09:37:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661271882;
+        s=mimecast20190719; t=1661272633;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ZInkH65kXXJrl1np4vOxGvfc6E02VGBPw4illArQKwk=;
-        b=XZF6RNByb/QcamLklY/rdK9GhlcDomZm/pIeSsm+LI6czKyIJMt0U5TozjKoUBi75QlZmf
-        MVFdIbKhEL6rGUlnHrq4EWTyz5/rzO2TEFmK2GC3iHh26HJ53nO6bEOOfbK7XgmkiZfvgI
-        ZfayICDIc/7HC1/yU1bSI0rVWhE2S5o=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Rr+CCLl6pUAPYpKq6d4iIVUVGRYiHUH+ODgPiQU/msQ=;
+        b=Ie2MVqixNuu8ZlOhzA1G83aNLs6XkM+QGDfUwYoRFykzvIkurGKtHVyJms1eIfwsYS5JwH
+        vRBT9BgTURevupqvokBmXGLjY2eVCsynYhvmRSAiCfTiZSsfiVz41eCktiUEKoW87hjJEF
+        sP3BeA8IdeXv+zSzxGqY12aX1uyZYbk=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-382-b1M910_7MUWejWr76gIR-Q-1; Tue, 23 Aug 2022 12:24:38 -0400
-X-MC-Unique: b1M910_7MUWejWr76gIR-Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+ us-mta-461-5E-0USGqOuSVCT5-i_iu1A-1; Tue, 23 Aug 2022 12:37:11 -0400
+X-MC-Unique: 5E-0USGqOuSVCT5-i_iu1A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C4C7A3C0E20F;
-        Tue, 23 Aug 2022 16:24:37 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4C49B1818CB7;
+        Tue, 23 Aug 2022 16:37:11 +0000 (UTC)
 Received: from cantor.redhat.com (unknown [10.2.16.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2DC964010D2A;
-        Tue, 23 Aug 2022 16:24:37 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AC81C945D0;
+        Tue, 23 Aug 2022 16:37:10 +0000 (UTC)
 From:   Jerry Snitselaar <jsnitsel@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Fenghua Yu <fenghua.yu@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
         Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH] idxd: avoid deadlock in process_misc_interrupts()
-Date:   Tue, 23 Aug 2022 09:24:35 -0700
-Message-Id: <20220823162435.2099389-1-jsnitsel@redhat.com>
+Subject: [PATCH v2] dmaengine: idxd: avoid deadlock in process_misc_interrupts()
+Date:   Tue, 23 Aug 2022 09:37:09 -0700
+Message-Id: <20220823163709.2102468-1-jsnitsel@redhat.com>
+In-Reply-To: <20220823162435.2099389-1-jsnitsel@redhat.com>
+References: <20220823162435.2099389-1-jsnitsel@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,8 +70,11 @@ Cc: Fenghua Yu <fenghua.yu@intel.com>
 Cc: Dave Jiang <dave.jiang@intel.com>
 Cc: Vinod Koul <vkoul@kernel.org>
 Cc: dmaengine@vger.kernel.org
+Fixes: cf4ac3fef338 ("dmaengine: idxd: fix lockdep warning on device driver removal")
 Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
 ---
+v2: add Fixes tag, and add subsystem to summary
+
  drivers/dma/idxd/irq.c | 2 --
  1 file changed, 2 deletions(-)
 

@@ -2,127 +2,187 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63A465A034F
-	for <lists+dmaengine@lfdr.de>; Wed, 24 Aug 2022 23:34:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAA155A0389
+	for <lists+dmaengine@lfdr.de>; Wed, 24 Aug 2022 23:59:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238348AbiHXVeK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 Aug 2022 17:34:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44032 "EHLO
+        id S240458AbiHXV7c (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 24 Aug 2022 17:59:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240071AbiHXVeH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Aug 2022 17:34:07 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AFD95FAFF
-        for <dmaengine@vger.kernel.org>; Wed, 24 Aug 2022 14:34:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661376844;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2cnZB4/kxG5SzSCN2CWQT4rDr7KWqDzVyVVIFcXfgQM=;
-        b=bTTVmU3kWUL7LBdJxTQHczpEHBc7qZnbK9S4/lnlzkldm+y6MWq2vMboA2krGV0txPSnf5
-        QWXdkmxMwcu6ylEtnKEhNUBb4veCyGFsDruaKUyVSIizm6U9Ha2RmUsKPE9IIKVS6wcQUk
-        fPxl59R0Vr9zBSgMl3e5OyzLjlWIzU0=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-380-lw0eWdK1MCy3AKGvoxOoLg-1; Wed, 24 Aug 2022 17:34:03 -0400
-X-MC-Unique: lw0eWdK1MCy3AKGvoxOoLg-1
-Received: by mail-qk1-f197.google.com with SMTP id az11-20020a05620a170b00b006bc374c71e8so6395637qkb.17
-        for <dmaengine@vger.kernel.org>; Wed, 24 Aug 2022 14:34:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc;
-        bh=2cnZB4/kxG5SzSCN2CWQT4rDr7KWqDzVyVVIFcXfgQM=;
-        b=8HXjNXpuRNF++ea3SaTxM+Pu25hLEryvlhg6eMwZsnwkcmF5DbZnz6aN3LeYgm5q4g
-         8WOBvGCHvakqxkv552tefdeFFj4llnRKumjnahl23x6zaCpCC3pgdGUhyUpZfm3/6apG
-         On7r3qW9NtWUcUy6MMFE3buegv7ABaO5yOk1oUST2M0RiKkv5Ddlwh08Q3DlFpij1UzT
-         TJRqmQEuqLOmN61vTRt+ua8WVd/NKcayuBNBNOhCrZh6l1I5BPoHnR6Ddenny9lNlino
-         8pIDhRAReHtj3Dgw+2L2FQfEnO8+meEjub9PdTuGxAe4kDC/CBUmDnohE48nWa/hYTo8
-         dIww==
-X-Gm-Message-State: ACgBeo0AKXgkDXNTXcdnlJlFEGxLakDScyuNfEuyRqwsOGdM/bLA5Byb
-        WxXeSoWl/itPXAYIFf91Q51BsK604zwS43YH9uafp4w4YiJYKbdrgtFFnGDRCg+jLVSHM64CcLd
-        duU+G/EYpwPsqWEcXS0lw
-X-Received: by 2002:a0c:8ec4:0:b0:47a:aa82:58b6 with SMTP id y4-20020a0c8ec4000000b0047aaa8258b6mr1101005qvb.46.1661376842580;
-        Wed, 24 Aug 2022 14:34:02 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR7LxUBZZyk1oZ838GhE3PkTke8FDXLF93qqatyFqk9FsKOChbuDqNEDTkPMPH0cwnstfTqidg==
-X-Received: by 2002:a0c:8ec4:0:b0:47a:aa82:58b6 with SMTP id y4-20020a0c8ec4000000b0047aaa8258b6mr1100986qvb.46.1661376842404;
-        Wed, 24 Aug 2022 14:34:02 -0700 (PDT)
-Received: from [192.168.1.52] (ip98-179-76-75.ph.ph.cox.net. [98.179.76.75])
-        by smtp.gmail.com with ESMTPSA id b17-20020ac84f11000000b0031e9ab4e4cesm13337901qte.26.2022.08.24.14.34.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Aug 2022 14:34:01 -0700 (PDT)
-Message-ID: <33a546ea17fe62ca9fc763041fe340ad5e4945fe.camel@redhat.com>
-Subject: Re: [PATCH v2] dmaengine: idxd: avoid deadlock in
- process_misc_interrupts()
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Zhu, Tony" <tony.zhu@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Date:   Wed, 24 Aug 2022 14:34:00 -0700
-In-Reply-To: <IA1PR11MB6097988CC9C2C1C713E3D8339B739@IA1PR11MB6097.namprd11.prod.outlook.com>
-References: <20220823162435.2099389-1-jsnitsel@redhat.com>
-         <20220823163709.2102468-1-jsnitsel@redhat.com>
-         <905d3feb-f75b-e91c-f3de-b69718aa5c69@intel.com>
-         <20220824005435.jyexxvjxj3z7tc2f@cantor>
-         <223e5a43-95a5-da54-0ff7-c2e088a072e3@intel.com>
-         <38e416b47bb30fa161e52f24ecbcf95015480fed.camel@redhat.com>
-         <IA1PR11MB6097988CC9C2C1C713E3D8339B739@IA1PR11MB6097.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
+        with ESMTP id S231190AbiHXV7c (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Aug 2022 17:59:32 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7194D76767;
+        Wed, 24 Aug 2022 14:59:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661378371; x=1692914371;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9REPZdDEy9RRI9myELv6/dbokzZN4ZySL0Hd0k9yaHc=;
+  b=IsQ2IbdwJRBk2fPPHJ50LHscKfYmEF9arBGUQ5q0qA+d+mdDijVVogVM
+   7nci4aBjDsbJM9/ZOy5+pMkEMPV176FEO9JBFbV5JEGsy8L3McyuMBGKa
+   I17xVFf9lfAO32F2G53uEHz/46FXOGM76YFrIqpe8oyo7f5gTiRq33kLZ
+   diL+MFLaPJMJ0qyskgg/+LXYu7dOzeT+tU7CesFBZKk23tRuqYVqd6gRH
+   b7UsWQaOGkuJkr26i/+vAOEQHbWc87kYt+oTvx11cIByMqqbOPjA/o3UP
+   gSYJB4U8WViETTaM76MMOoujkuuxEX+R2gkuWXPg8Gwi/qYZpo+mgJqMy
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10449"; a="295364826"
+X-IronPort-AV: E=Sophos;i="5.93,261,1654585200"; 
+   d="scan'208";a="295364826"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 14:59:30 -0700
+X-IronPort-AV: E=Sophos;i="5.93,261,1654585200"; 
+   d="scan'208";a="678210321"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.213.178.56]) ([10.213.178.56])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 14:59:30 -0700
+Message-ID: <d0dbdd27-a890-1eea-63b5-ab6aaa27583e@intel.com>
+Date:   Wed, 24 Aug 2022 14:59:29 -0700
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.12.0
+Subject: Re: [PATCH] dmaengine: idxd: Set workqueue state to disabled before
+ trying to re-enable
+Content-Language: en-US
+To:     Jerry Snitselaar <jsnitsel@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+References: <20220824192913.2425634-1-jsnitsel@redhat.com>
+ <1417f4ce-2573-5c88-6c92-fda5c57ebceb@intel.com>
+ <20220824211625.mfcyefi5yvasdt4r@cantor>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20220824211625.mfcyefi5yvasdt4r@cantor>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, 2022-08-24 at 21:11 +0000, Yu, Fenghua wrote:
-> Hi, Jerry,
->=20
-> > I see another potential issue. If a software reset is attempted
-> > idxd_device_reinit()
-> > will be called which walks the wqs, and if a wq has the state
-> > IDXD_WQ_ENABLED it calls idxd_wq_enable(), but the first thing
-> > idxd_wq_enable() does is see that the state is IDXD_WQ_ENABLED and
-> > returns 0.
-> > Without the wq enable command being sent, it will not be re-
-> > enabled, yes?
->=20
-> Could you please describe how to reproduce the issues and test case?
 
-Nothing special, just running dsa_user_test_runner.sh from idxd-config
-(3.4.6.3) with intel_iommu=3Don,sm_on (default is lazy dma domain) on an
-Intel supplied SPR system. During the run there is a dmar fault, halts
-the device with it needing an flr reset. That is where the deadlock was
-noticed. Then after the dsa_user_runner.sh fails, if you do modprobe -r
-idxd, you hit the warning in devm_iounmap().
+On 8/24/2022 2:16 PM, Jerry Snitselaar wrote:
+> On Wed, Aug 24, 2022 at 01:29:03PM -0700, Dave Jiang wrote:
+>> On 8/24/2022 12:29 PM, Jerry Snitselaar wrote:
+>>> For a software reset idxd_device_reinit() is called, which will walk
+>>> the device workqueues to see which ones were enabled, and try to
+>>> re-enable them. It keys off wq->state being iDXD_WQ_ENABLED, but the
+>>> first thing idxd_enable_wq() will do is see that the state of the
+>>> workqueue is enabled, and return 0 instead of attempting to issue
+>>> a command to enable the workqueue.
+>>>
+>>> So once a workqueue is found that needs to be re-enabled,
+>>> set the state to disabled prior to calling idxd_enable_wq().
+>>> This would accurately reflect the state if the enable fails
+>>> as well.
+>>>
+>>> Cc: Fenghua Yu <fenghua.yu@intel.com>
+>>> Cc: Dave Jiang <dave.jiang@intel.com>
+>>> Cc: Vinod Koul <vkoul@kernel.org>
+>>> Cc: dmaengine@vger.kernel.org
+>>> Fixes: bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data accelerators")
+>>> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+>>> ---
+>>>    drivers/dma/idxd/irq.c | 1 +
+>>>    1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+>>> index 743ead5ebc57..723eeb5328d6 100644
+>>> --- a/drivers/dma/idxd/irq.c
+>>> +++ b/drivers/dma/idxd/irq.c
+>>> @@ -52,6 +52,7 @@ static void idxd_device_reinit(struct work_struct *work)
+>>>    		struct idxd_wq *wq = idxd->wqs[i];
+>>>    		if (wq->state == IDXD_WQ_ENABLED) {
+>>> +			wq->state = IDXD_WQ_DISABLED;
+>> Might be better off to insert this line in idxd_wq_disable_cleanup(). I
+>> think that should put it in sane state.
+> I don't think that is called in the code path that I was lookng at. I've been
+> looking at this bit of process_misc_interrupts():
+>
+> halt:
+> 	gensts.bits = ioread32(idxd->reg_base + IDXD_GENSTATS_OFFSET);
+> 	if (gensts.state == IDXD_DEVICE_STATE_HALT) {
+> 		idxd->state = IDXD_DEV_HALTED;
+> 		if (gensts.reset_type == IDXD_DEVICE_RESET_SOFTWARE) {
+> 			/*
+> 			 * If we need a software reset, we will throw the work
+> 			 * on a system workqueue in order to allow interrupts
+> 			 * for the device command completions.
+> 			 */
+> 			INIT_WORK(&idxd->work, idxd_device_reinit);
+> 			queue_work(idxd->wq, &idxd->work);
+> 		} else {
+> 			idxd->state = IDXD_DEV_HALTED;
+> 			idxd_wqs_quiesce(idxd);
+> 			idxd_wqs_unmap_portal(idxd);
+> 			spin_lock(&idxd->dev_lock);
+> 			idxd_device_clear_state(idxd);
+> 			dev_err(&idxd->pdev->dev,
+> 				"idxd halted, need %s.\n",
+> 				gensts.reset_type == IDXD_DEVICE_RESET_FLR ?
+> 				"FLR" : "system reset");
+> 			spin_unlock(&idxd->dev_lock);
+> 			return -ENXIO;
+> 		}
+> 	}
+>
+> 	return 0;
+> }
+>
+> So it sees that the device is halted, and sticks idxd_device_reinint() on that
+> workqueue. The idxd_device_reinit() has this loop to re-enable the idxd wqs:
 
-The idxd_device_reinit() case I haven't reproduced, I'm just looking at
-the code.
+idxd_device_reinit() should called idxd_device_reset() first. And that 
+should at some point call idxd_wq_disable_cleanup() and clean up the states.
 
-I should note that I've only run into an issue with that model
-of system. The other models of SPR systems don't hit an issue. This is
-with a 6.0-rc1 kernel, and our kernel. I'm guessing there is an issue
-with that model of system/fw. I've seen both fault reasons 0x50 and
-0x58 when it faults.
+https://elixir.bootlin.com/linux/v6.0-rc2/source/drivers/dma/idxd/irq.c#L42
 
-Regards,
-Jerry
+https://elixir.bootlin.com/linux/v6.0-rc2/source/drivers/dma/idxd/device.c#L725
 
->=20
-> Thanks.
->=20
-> -Fenghua
+https://elixir.bootlin.com/linux/v6.0-rc2/source/drivers/dma/idxd/device.c#L711
 
+https://elixir.bootlin.com/linux/v6.0-rc2/source/drivers/dma/idxd/device.c#L376
+
+So if we stick the wq state reset in there, it should show up as 
+"disabled" by the time we try to enable the WQs again. Does that look 
+reasonable?
+
+
+>
+> 	for (i = 0; i < idxd->max_wqs; i++) {
+> 		struct idxd_wq *wq = idxd->wqs[i];
+>
+> 		if (wq->state == IDXD_WQ_ENABLED) {
+> 			wq->state = IDXD_WQ_DISABLED;
+> 			rc = idxd_wq_enable(wq);
+> 			if (rc < 0) {
+> 				dev_warn(dev, "Unable to re-enable wq %s\n",
+> 					 dev_name(wq_confdev(wq)));
+> 			}
+> 		}
+> 	}
+>
+> Once you go into idxd_wq_enable() though you get this check at the beginning:
+>
+>   	if (wq->state == IDXD_WQ_ENABLED) {
+> 		dev_dbg(dev, "WQ %d already enabled\n", wq->id);
+> 		return 0;
+> 	}
+>
+> So IIUC it sees the device is halted, goes to reset it, figures out a wq
+> should be re-enabled, calls idxd_wq_enable() which hits the check, returns
+> 0 and the wq is never really re-enabled, though it will still have wq state
+> set to IDXD_WQ_ENABLED.
+>
+> Or am I missing something?
+>
+> Regards,
+> Jerry
+>
+>>>    			rc = idxd_wq_enable(wq);
+>>>    			if (rc < 0) {
+>>>    				dev_warn(dev, "Unable to re-enable wq %s\n",

@@ -2,117 +2,108 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7667859FFD1
-	for <lists+dmaengine@lfdr.de>; Wed, 24 Aug 2022 18:51:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B46F05A00A2
+	for <lists+dmaengine@lfdr.de>; Wed, 24 Aug 2022 19:45:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239457AbiHXQvb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 Aug 2022 12:51:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55422 "EHLO
+        id S238819AbiHXRpd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 24 Aug 2022 13:45:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238223AbiHXQvW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Aug 2022 12:51:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47F475A80E;
-        Wed, 24 Aug 2022 09:51:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D6EEB61A34;
-        Wed, 24 Aug 2022 16:51:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00FCFC433D6;
-        Wed, 24 Aug 2022 16:51:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661359880;
-        bh=cGAkc/rrARLF7e7NN9ARyeNoGB0+TSPpMWsWHg5rdfM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=XLxhRweehd12ykVqcG+n39k19vj8yTvdFthMnpD1PkSFPIUVEHIpad5L6dhkUrhHt
-         eevbhB7j8o/zO19pa8RrDcfBI1ZH0rhCJeDsqqRpv1hqAVr5FqxV01iz9AVKVB3L/8
-         NsVzAI1cCbvTeasbeeGA0XdLguCDTuKOYSR5uxxhV/NliMS/LMWHV4owCd7uGKcLa3
-         p6tFtsnLOxeRAFihWe4iHP8IN1h5AR9j8vKNvvYtl+4iz6sr8xoX9JmbnAooCTGQw1
-         jsnjWcjW+Ne+hEu8d7ZNdYcQVL/xeDcVUVxtAo4sOenWWq2LLtny2/g7WzH743OGqe
-         5Ib1hR3TRE5Aw==
-Date:   Wed, 24 Aug 2022 11:51:18 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v5 24/24] PCI: dwc: Add DW eDMA engine support
-Message-ID: <20220824165118.GA2785269@bhelgaas>
+        with ESMTP id S240245AbiHXRpX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Aug 2022 13:45:23 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 655B380EA8;
+        Wed, 24 Aug 2022 10:45:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661363122; x=1692899122;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=j9Y4RfhJhiqAcJQ1n06sQz7TM6Rj//b03WX4pHgBo98=;
+  b=j9ue4aL8JWrCWfSzhJ2ZmSrfAzm5/vQ0I3qkAAhrGtcGpBYWd+5dFkr3
+   +j3LwZJcXrx5E7nmW9u5oMPw/EVw3hUAClXE/4DsKoz+eit4sJHt9lF9x
+   9itO5XjzsxtaP7nGcOIr2FWROkmhdrJkEg1qDJncwBv/Pwbp7hT52XWwc
+   TMps9Y12YOhjSTqWWLsIhLeDykIXLr5+6zOIJ4YIe/m0yjV7M/RAZ/DV4
+   fdoufI/FcpqoOkpnd1EzqkZnP6NKHgzSAIfHxTkKb4T2WayCc5SMyRzUq
+   NVHo79Ymi2sdgxUbiuN3GZXiJeHpGHzCnW1bC10BwX55sB5vHbdghrbSr
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10449"; a="274422898"
+X-IronPort-AV: E=Sophos;i="5.93,261,1654585200"; 
+   d="scan'208";a="274422898"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 10:45:22 -0700
+X-IronPort-AV: E=Sophos;i="5.93,261,1654585200"; 
+   d="scan'208";a="678135941"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.213.178.56]) ([10.213.178.56])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2022 10:45:21 -0700
+Message-ID: <223e5a43-95a5-da54-0ff7-c2e088a072e3@intel.com>
+Date:   Wed, 24 Aug 2022 10:45:21 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220822185332.26149-25-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.12.0
+Subject: Re: [PATCH v2] dmaengine: idxd: avoid deadlock in
+ process_misc_interrupts()
+Content-Language: en-US
+To:     Jerry Snitselaar <jsnitsel@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+References: <20220823162435.2099389-1-jsnitsel@redhat.com>
+ <20220823163709.2102468-1-jsnitsel@redhat.com>
+ <905d3feb-f75b-e91c-f3de-b69718aa5c69@intel.com>
+ <20220824005435.jyexxvjxj3z7tc2f@cantor>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20220824005435.jyexxvjxj3z7tc2f@cantor>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Aug 22, 2022 at 09:53:32PM +0300, Serge Semin wrote:
-> Since the DW eDMA driver now supports eDMA controllers embedded into the
-> locally accessible DW PCIe Root Ports and Endpoints, we can use the
-> updated interface to register DW eDMA as DMA engine device if it's
-> available. In order to successfully do that the DW PCIe core driver need
-> to perform some preparations first. First of all it needs to find out the
-> eDMA controller CSRs base address, whether they are accessible over the
-> Port Logic or iATU unrolled space. Afterwards it can try to auto-detect
-> the eDMA controller availability and number of it's read/write channels.
 
-s/it's//
+On 8/23/2022 5:54 PM, Jerry Snitselaar wrote:
+> On Tue, Aug 23, 2022 at 09:46:19AM -0700, Dave Jiang wrote:
+>> On 8/23/2022 9:37 AM, Jerry Snitselaar wrote:
+>>> idxd_device_clear_state() now grabs the idxd->dev_lock
+>>> itself, so don't grab the lock prior to calling it.
+>>>
+>>> This was seen in testing after dmar fault occurred on system,
+>>> resulting in lockup stack traces.
+>>>
+>>> Cc: Fenghua Yu <fenghua.yu@intel.com>
+>>> Cc: Dave Jiang <dave.jiang@intel.com>
+>>> Cc: Vinod Koul <vkoul@kernel.org>
+>>> Cc: dmaengine@vger.kernel.org
+>>> Fixes: cf4ac3fef338 ("dmaengine: idxd: fix lockdep warning on device driver removal")
+>>> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+>> Thanks Jerry!
+>>
+>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>>
+> I noticed another problem while looking at this. When the device ends
+> up in the halted state, and needs an flr or system reset, it calls
+> idxd_wqs_unmap_portal(). Then if you do a modprobe -r idxd, you hit
+> the WARN_ON in devm_iounmap(), because the remove code path calls
+> idxd_wq_portal_unmap(), and wq->portal is null. I'm not sure if it
+> just needs a simple sanity check in drv_disable_wq() to avoid the call
+> in the case that it has already been unmapped, or if more cleanup
+> needs to be done, and possibly a state to differentiate between
+> halted + soft reset possible, versus halted + flr or system reset
+> needed.  You get multiple "Device is HALTED" messages during the
+> removal as well.
 
-> If none was found the procedure will just silently halt with no error
-> returned. Secondly the platform is supposed to provide either combined or
-> per-channel IRQ signals. If no valid IRQs set is found the procedure will
-> also halt with no error returned so to be backward compatible with the
-> platforms where DW PCIe controllers have eDMA embedded but lack of the
-> IRQs defined for them. Finally before actually probing the eDMA device we
-> need to allocate LLP items buffers. After that the DW eDMA can be
-> registered. If registration is successful the info-message regarding the
-> number of detected Read/Write eDMA channels will be printed to the system
-> log in the similar way as it's done for the iATU settings.
+Thanks!
 
-s/in the similar way as it's done/as is done/
+Fenghua, can you please take a look at this when you have a chance? 
+Thank you!
 
-> +static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
-> +{
-> +	u32 val;
-> +
-> +	val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
-> +	if (val == 0xFFFFFFFF && pci->edma.reg_base) {
-> +		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
-> +
-> +		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
-> +	} else if (val != 0xFFFFFFFF) {
 
-Consider PCI_POSSIBLE_ERROR() as an annotation about the meaning of
-0xFFFFFFFF and something to grep for.
-
-> +		pci->edma.mf = EDMA_MF_EDMA_LEGACY;
-> +
-> +		pci->edma.reg_base = pci->dbi_base + PCIE_DMA_VIEWPORT_BASE;
-> +	} else {
-> +		return -ENODEV;
-> +	}
-
-> + * eDMA CSRs. DW PCIe IP-core v4.70a and older had the eDMA registers accessible
-> + * over the Port Logic registers space. Afterwords the unrolled mapping was
-
-s/Afterwords/Afterwards/
-
-> + * introduced so eDMA and iATU could be accessed via a dedicated registers
-> + * space.
+>
+> Regards,
+> Jerry
+>

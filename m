@@ -2,77 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C7265A017F
-	for <lists+dmaengine@lfdr.de>; Wed, 24 Aug 2022 20:42:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51F875A021C
+	for <lists+dmaengine@lfdr.de>; Wed, 24 Aug 2022 21:29:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239423AbiHXSma (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 Aug 2022 14:42:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51288 "EHLO
+        id S239921AbiHXT31 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 24 Aug 2022 15:29:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232226AbiHXSmY (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Aug 2022 14:42:24 -0400
+        with ESMTP id S236263AbiHXT3X (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Aug 2022 15:29:23 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6A717A761
-        for <dmaengine@vger.kernel.org>; Wed, 24 Aug 2022 11:42:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4665C78BDE
+        for <dmaengine@vger.kernel.org>; Wed, 24 Aug 2022 12:29:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661366543;
+        s=mimecast20190719; t=1661369361;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=34X7VFt8V3iE8XwzbGfHOBsqTvNr4hGuESvVJPfwn4E=;
-        b=YbMxxdfSNjhZQBxZF8efjjW77WDvdtDJxmN01fBXckPWNxkmYUe8IQYVwjid7dXGTqSH6E
-        w02ZgjinQr7Z0GVVXEeX/mPZukD8bnzK8v0A1kYhzSEhikouDiUN8MC/H3VrB8ci1J1biI
-        RVN9/wcqse/HpoL9PSqfwSJjpyOeTTg=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-41-nI6NlMU3PhKoK729N5aRlQ-1; Wed, 24 Aug 2022 14:42:14 -0400
-X-MC-Unique: nI6NlMU3PhKoK729N5aRlQ-1
-Received: by mail-qt1-f200.google.com with SMTP id v5-20020ac873c5000000b003434ef0a8c7so13665232qtp.21
-        for <dmaengine@vger.kernel.org>; Wed, 24 Aug 2022 11:42:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc;
-        bh=34X7VFt8V3iE8XwzbGfHOBsqTvNr4hGuESvVJPfwn4E=;
-        b=xEl5qcVJlbdas9IPzXwxBZ9Uk6zjauf+vGgrpD4r2QNrMWbP3Rz4E1cQTmH3DQW3YF
-         aFRNCn74FCTwWS9GhbwkktoZTmDQDRb67gn9j6AEpYqEkuNU02ObdrRUkXdZPheMHOxC
-         vlm796QMa848k7TlPjVRx4YlbGH48TlCPqVtU0uwnF/GYpraMlQINRfdwCFG/70z91wZ
-         iaRpTvo9Bn7bemT+OC+eVg5WMLW4Wu7JCVm8S7lgch6j1ekpvrFHtjo04qySFBiV+bGE
-         BC3TBT7axrmhp4+O+HtbVTQFsdY8TPwS67u+7o9HuNKbsEEjtzaRPxZQlurDCu+DoCTL
-         /2Ig==
-X-Gm-Message-State: ACgBeo38/Fov/5wn2TOe4TWRgkHFTaPeh39reeD8ohoa+ESQLpkusJyx
-        5P/TxA6qbQ6+lhKWcj16Rg1FtPSqDi87E7t3gTuPslcV5GCJuW5WjeuJNEGQCNelDI3cH3eGOqe
-        G7LbofKMvmZS0szz6WBjY
-X-Received: by 2002:a37:952:0:b0:6ba:37c6:12ec with SMTP id 79-20020a370952000000b006ba37c612ecmr472052qkj.331.1661366533530;
-        Wed, 24 Aug 2022 11:42:13 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR6zZO3JsIuYFh83voDv4+f19vJAN66uxS7OW65PV5Ygvr7CcBVHQ5XqJSy6pDjQP2Ne3PP31Q==
-X-Received: by 2002:a37:952:0:b0:6ba:37c6:12ec with SMTP id 79-20020a370952000000b006ba37c612ecmr472042qkj.331.1661366533349;
-        Wed, 24 Aug 2022 11:42:13 -0700 (PDT)
-Received: from [192.168.1.52] (ip98-179-76-75.ph.ph.cox.net. [98.179.76.75])
-        by smtp.gmail.com with ESMTPSA id r25-20020ae9d619000000b006bb2f555ba4sm15216878qkk.41.2022.08.24.11.42.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Aug 2022 11:42:12 -0700 (PDT)
-Message-ID: <38e416b47bb30fa161e52f24ecbcf95015480fed.camel@redhat.com>
-Subject: Re: [PATCH v2] dmaengine: idxd: avoid deadlock in
- process_misc_interrupts()
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=1madC+R9UQ0sdGYZ6Rb4RFre0WnX4XbXDajpRgvIHys=;
+        b=COdi4NnHSRJEU0nDtZoePDO9AH/VM+o0a6YWnLe7ZRCJvKeXO5sNLpbUjsAcdZ7fej096/
+        hkiAh8S+4J8sMOe1bA9DgMQ49TLGLjIi/7SaI4WEJ8PNqQal1z4n/pFl43nVr5Z0m95FUK
+        YY2uAPHdqFv/ixPnaljUpN1KxLS+YAQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-79-pGYwyQFlM8qip7dsuiawMg-1; Wed, 24 Aug 2022 15:29:16 -0400
+X-MC-Unique: pGYwyQFlM8qip7dsuiawMg-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E132A18A6507;
+        Wed, 24 Aug 2022 19:29:15 +0000 (UTC)
+Received: from cantor.redhat.com (unknown [10.2.16.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 517FB492C3B;
+        Wed, 24 Aug 2022 19:29:15 +0000 (UTC)
 From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
+To:     linux-kernel@vger.kernel.org
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
         Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Date:   Wed, 24 Aug 2022 11:42:11 -0700
-In-Reply-To: <223e5a43-95a5-da54-0ff7-c2e088a072e3@intel.com>
-References: <20220823162435.2099389-1-jsnitsel@redhat.com>
-         <20220823163709.2102468-1-jsnitsel@redhat.com>
-         <905d3feb-f75b-e91c-f3de-b69718aa5c69@intel.com>
-         <20220824005435.jyexxvjxj3z7tc2f@cantor>
-         <223e5a43-95a5-da54-0ff7-c2e088a072e3@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
+Subject: [PATCH] dmaengine: idxd: Set workqueue state to disabled before trying to re-enable
+Date:   Wed, 24 Aug 2022 12:29:13 -0700
+Message-Id: <20220824192913.2425634-1-jsnitsel@redhat.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
@@ -83,65 +57,40 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, 2022-08-24 at 10:45 -0700, Dave Jiang wrote:
->=20
-> On 8/23/2022 5:54 PM, Jerry Snitselaar wrote:
-> > On Tue, Aug 23, 2022 at 09:46:19AM -0700, Dave Jiang wrote:
-> > > On 8/23/2022 9:37 AM, Jerry Snitselaar wrote:
-> > > > idxd_device_clear_state() now grabs the idxd->dev_lock
-> > > > itself, so don't grab the lock prior to calling it.
-> > > >=20
-> > > > This was seen in testing after dmar fault occurred on system,
-> > > > resulting in lockup stack traces.
-> > > >=20
-> > > > Cc: Fenghua Yu <fenghua.yu@intel.com>
-> > > > Cc: Dave Jiang <dave.jiang@intel.com>
-> > > > Cc: Vinod Koul <vkoul@kernel.org>
-> > > > Cc: dmaengine@vger.kernel.org
-> > > > Fixes: cf4ac3fef338 ("dmaengine: idxd: fix lockdep warning on
-> > > > device driver removal")
-> > > > Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> > > Thanks Jerry!
-> > >=20
-> > > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> > >=20
-> > I noticed another problem while looking at this. When the device
-> > ends
-> > up in the halted state, and needs an flr or system reset, it calls
-> > idxd_wqs_unmap_portal(). Then if you do a modprobe -r idxd, you hit
-> > the WARN_ON in devm_iounmap(), because the remove code path calls
-> > idxd_wq_portal_unmap(), and wq->portal is null. I'm not sure if it
-> > just needs a simple sanity check in drv_disable_wq() to avoid the
-> > call
-> > in the case that it has already been unmapped, or if more cleanup
-> > needs to be done, and possibly a state to differentiate between
-> > halted + soft reset possible, versus halted + flr or system reset
-> > needed.=C2=A0 You get multiple "Device is HALTED" messages during the
-> > removal as well.
->=20
-> Thanks!
->=20
-> Fenghua, can you please take a look at this when you have a chance?=20
-> Thank you!
->=20
->=20
+For a software reset idxd_device_reinit() is called, which will walk
+the device workqueues to see which ones were enabled, and try to
+re-enable them. It keys off wq->state being iDXD_WQ_ENABLED, but the
+first thing idxd_enable_wq() will do is see that the state of the
+workqueue is enabled, and return 0 instead of attempting to issue
+a command to enable the workqueue.
 
-Fenghua,
+So once a workqueue is found that needs to be re-enabled,
+set the state to disabled prior to calling idxd_enable_wq().
+This would accurately reflect the state if the enable fails
+as well.
 
-I see another potential issue. If a software reset is
-attempted idxd_device_reinit() will be called which walks
-the wqs, and if a wq has the state IDXD_WQ_ENABLED it calls
-idxd_wq_enable(), but the first thing idxd_wq_enable() does
-is see that the state is IDXD_WQ_ENABLED and returns 0.
-Without the wq enable command being sent, it will not be
-re-enabled, yes?
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Fixes: bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data accelerators")
+Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+---
+ drivers/dma/idxd/irq.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Regards,
-Jerry
-
-> >=20
-> > Regards,
-> > Jerry
-> >=20
->=20
+diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+index 743ead5ebc57..723eeb5328d6 100644
+--- a/drivers/dma/idxd/irq.c
++++ b/drivers/dma/idxd/irq.c
+@@ -52,6 +52,7 @@ static void idxd_device_reinit(struct work_struct *work)
+ 		struct idxd_wq *wq = idxd->wqs[i];
+ 
+ 		if (wq->state == IDXD_WQ_ENABLED) {
++			wq->state = IDXD_WQ_DISABLED;
+ 			rc = idxd_wq_enable(wq);
+ 			if (rc < 0) {
+ 				dev_warn(dev, "Unable to re-enable wq %s\n",
+-- 
+2.37.2
 

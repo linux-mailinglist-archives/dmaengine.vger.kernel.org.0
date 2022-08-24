@@ -2,36 +2,36 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D080C59FFA1
-	for <lists+dmaengine@lfdr.de>; Wed, 24 Aug 2022 18:39:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7667859FFD1
+	for <lists+dmaengine@lfdr.de>; Wed, 24 Aug 2022 18:51:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235300AbiHXQjV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 Aug 2022 12:39:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60846 "EHLO
+        id S239457AbiHXQvb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 24 Aug 2022 12:51:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232226AbiHXQjU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Aug 2022 12:39:20 -0400
+        with ESMTP id S238223AbiHXQvW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Aug 2022 12:51:22 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C16A19C506;
-        Wed, 24 Aug 2022 09:39:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47F475A80E;
+        Wed, 24 Aug 2022 09:51:21 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5F03761A39;
-        Wed, 24 Aug 2022 16:39:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FEF0C433B5;
-        Wed, 24 Aug 2022 16:39:18 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D6EEB61A34;
+        Wed, 24 Aug 2022 16:51:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00FCFC433D6;
+        Wed, 24 Aug 2022 16:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661359158;
-        bh=P9NJxmLjZQ10oJJJpdAAG7ttOIVT5PbWRk2gfsQM17s=;
+        s=k20201202; t=1661359880;
+        bh=cGAkc/rrARLF7e7NN9ARyeNoGB0+TSPpMWsWHg5rdfM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=kVQFbC3ee769vaKefbEA8RdkpMhpWOTPVOcfXC4a24isFzPJw8YEEm8p/HWns9aNb
-         klLRBSIhXK1c5shCjD5CqliS0TL+Q8RA4GTuUArWCtYsUb433hUAaX1Zg3OxoWiFBt
-         yv9ZcjCHaRSw3OBgwzNHs0ZP0kv1h01kS9DDTWLPhWeBYMPq1djcd+lD6ohpsFqbVL
-         +dQqwPt1avhWGgSfjBpXyv0ft8xf1HGJ5xMuMkXG6Al/WSSqZ7UlvF1zsKlkP16Eim
-         GGEDytLxPfFrJ1+8RL/mE2Uxh/MGlQB22Idph8sLRTnBK5Spw11sHCuzswvid9ZAAi
-         ZjtgTvm061hYQ==
-Date:   Wed, 24 Aug 2022 11:39:16 -0500
+        b=XLxhRweehd12ykVqcG+n39k19vj8yTvdFthMnpD1PkSFPIUVEHIpad5L6dhkUrhHt
+         eevbhB7j8o/zO19pa8RrDcfBI1ZH0rhCJeDsqqRpv1hqAVr5FqxV01iz9AVKVB3L/8
+         NsVzAI1cCbvTeasbeeGA0XdLguCDTuKOYSR5uxxhV/NliMS/LMWHV4owCd7uGKcLa3
+         p6tFtsnLOxeRAFihWe4iHP8IN1h5AR9j8vKNvvYtl+4iz6sr8xoX9JmbnAooCTGQw1
+         jsnjWcjW+Ne+hEu8d7ZNdYcQVL/xeDcVUVxtAo4sOenWWq2LLtny2/g7WzH743OGqe
+         5Ib1hR3TRE5Aw==
+Date:   Wed, 24 Aug 2022 11:51:18 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
@@ -40,19 +40,19 @@ Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v5 00/24] dmaengine: dw-edma: Add RP/EP local DMA
- controllers support
-Message-ID: <20220824163916.GA2784109@bhelgaas>
+Subject: Re: [PATCH RESEND v5 24/24] PCI: dwc: Add DW eDMA engine support
+Message-ID: <20220824165118.GA2785269@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220822185332.26149-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20220822185332.26149-25-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -63,36 +63,56 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Aug 22, 2022 at 09:53:08PM +0300, Serge Semin wrote:
-> This is a final patchset in the series created in the framework of
-> my Baikal-T1 PCIe/eDMA-related work:
-> 
-> [1: Done v5] PCI: dwc: Various fixes and cleanups
-> Link: https://lore.kernel.org/linux-pci/20220624143428.8334-1-Sergey.Semin@baikalelectronics.ru/
-> Merged: kernel 6.0-rc1
-> [2: Done v4] PCI: dwc: Add hw version and dma-ranges support
-> Link: https://lore.kernel.org/linux-pci/20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru
-> Merged: kernel 6.0-rc1
-> [3: In-review v5] PCI: dwc: Add generic resources and Baikal-T1 support
-> Link: https://lore.kernel.org/linux-pci/20220822184701.25246-1-Sergey.Semin@baikalelectronics.ru/
-> [4: Done v5] dmaengine: dw-edma: Add RP/EP local DMA support
-> Link: ---you are looking at it---
-> ...
+On Mon, Aug 22, 2022 at 09:53:32PM +0300, Serge Semin wrote:
+> Since the DW eDMA driver now supports eDMA controllers embedded into the
+> locally accessible DW PCIe Root Ports and Endpoints, we can use the
+> updated interface to register DW eDMA as DMA engine device if it's
+> available. In order to successfully do that the DW PCIe core driver need
+> to perform some preparations first. First of all it needs to find out the
+> eDMA controller CSRs base address, whether they are accessible over the
+> Port Logic or iATU unrolled space. Afterwards it can try to auto-detect
+> the eDMA controller availability and number of it's read/write channels.
 
-> Please note originally this series was self content, but due to Frank
-> being a bit faster in his work submission I had to rebase my patchset onto
-> his one. So now this patchset turns to be dependent on the Frank' work:
-> 
-> Link: https://lore.kernel.org/linux-pci/20220524152159.2370739-1-Frank.Li@nxp.com/
+s/it's//
 
-I think this paragraph is obsolete, since the "Enable designware PCI
-EP EDMA locally" series you reference is already upstream:
-https://git.kernel.org/linus/94d13317bef3
+> If none was found the procedure will just silently halt with no error
+> returned. Secondly the platform is supposed to provide either combined or
+> per-channel IRQ signals. If no valid IRQs set is found the procedure will
+> also halt with no error returned so to be backward compatible with the
+> platforms where DW PCIe controllers have eDMA embedded but lack of the
+> IRQs defined for them. Finally before actually probing the eDMA device we
+> need to allocate LLP items buffers. After that the DW eDMA can be
+> registered. If registration is successful the info-message regarding the
+> number of detected Read/Write eDMA channels will be printed to the system
+> log in the similar way as it's done for the iATU settings.
 
-What remains are items 3 and 4.
+s/in the similar way as it's done/as is done/
 
-3 is mostly drivers/pci/ and DT bindings (Lorenzo).  4 is mostly
-drivers/dma/dw-edma/ stuff (Gustavo).  I guess Lorenzo and Gustavo can
-figure out where it makes the most sense to merge it.
+> +static int dw_pcie_edma_find_chip(struct dw_pcie *pci)
+> +{
+> +	u32 val;
+> +
+> +	val = dw_pcie_readl_dbi(pci, PCIE_DMA_VIEWPORT_BASE + PCIE_DMA_CTRL);
+> +	if (val == 0xFFFFFFFF && pci->edma.reg_base) {
+> +		pci->edma.mf = EDMA_MF_EDMA_UNROLL;
+> +
+> +		val = dw_pcie_readl_dma(pci, PCIE_DMA_CTRL);
+> +	} else if (val != 0xFFFFFFFF) {
 
-Bjorn
+Consider PCI_POSSIBLE_ERROR() as an annotation about the meaning of
+0xFFFFFFFF and something to grep for.
+
+> +		pci->edma.mf = EDMA_MF_EDMA_LEGACY;
+> +
+> +		pci->edma.reg_base = pci->dbi_base + PCIE_DMA_VIEWPORT_BASE;
+> +	} else {
+> +		return -ENODEV;
+> +	}
+
+> + * eDMA CSRs. DW PCIe IP-core v4.70a and older had the eDMA registers accessible
+> + * over the Port Logic registers space. Afterwords the unrolled mapping was
+
+s/Afterwords/Afterwards/
+
+> + * introduced so eDMA and iATU could be accessed via a dedicated registers
+> + * space.

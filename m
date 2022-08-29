@@ -2,47 +2,47 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77A1C5A55A9
+	by mail.lfdr.de (Postfix) with ESMTP id 20C265A55A8
 	for <lists+dmaengine@lfdr.de>; Mon, 29 Aug 2022 22:36:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229869AbiH2UgM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 29 Aug 2022 16:36:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57922 "EHLO
+        id S229916AbiH2UgN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 29 Aug 2022 16:36:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229935AbiH2UgJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 29 Aug 2022 16:36:09 -0400
+        with ESMTP id S229595AbiH2UgK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 29 Aug 2022 16:36:10 -0400
 Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 598B98B99E;
-        Mon, 29 Aug 2022 13:36:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289478A7D7;
+        Mon, 29 Aug 2022 13:36:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661805368; x=1693341368;
+  t=1661805369; x=1693341369;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=t4PZeQmey/yHZcSqbdkm0gA9lwZhJ+ucFrG4fh62X8o=;
-  b=BKgEgl4bTbVW1ctzkzMhht+ZAryv6kb/3MVZMyAksyic7kxLN1otyQ0M
-   d/I8WOJMIrTF4noCZ0NpfTzeI+fJOqrvtwgiz9tAM6NwgdHqExR+4w5lc
-   4as60YPi8WRqSszUOgoYzBprSye8ofcVNB3WrYopM3aS+CHSu/kGmN34H
-   uPTZ6+Vfmsn0MgUrk/rED7eRJtYjFMsCQQ3Dwhqn4Jdtxs76wcI0nRPTq
-   KoACW1psIcsRa8enUth1fwNBx3R/7wc1uXfjvJmPBl9JOD2qwU249Tfp0
-   sdh2Sigx4tIAatWifX2ninShWtmIipZPlj8ZIaJf6hfuKoM3ODCHO+14d
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10454"; a="358958403"
+  bh=Ey9ESHItUX+aFxTTPPXJK8bEONO6TSPqV2uRxm95yfw=;
+  b=XpYg3r/qdeVthC/Y24E6yIK5hrnjH3eqwIIiKhtXboRgDe1x48mN8u3w
+   YRYFDU0UEPpfz4I7DYQehEKEPQZ2lukgS6wQkG4dXj7MdWsl45t4MNvLq
+   QHDOzbJdjMXsBL9Oob2jc1JU3sZOjBmNEdrKeoUCGQz7rLqQE8WdKV9co
+   jSWIN9a9rS8Qpf2dCE8wLeFnEWPUL8fqfXPqtLzuXllTA39ZhDRyGXKq6
+   AJCFUTQPUE0VNURkfEcwJjHNOzJa1dQVSM8zy5qib6BfIUuHObmWT5iKW
+   SHN/v8n699n1IwBcaz+WoO+g5Nz4KlyzHnRqm9973KuA65ewA86lgZMLN
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10454"; a="358958413"
 X-IronPort-AV: E=Sophos;i="5.93,273,1654585200"; 
-   d="scan'208";a="358958403"
+   d="scan'208";a="358958413"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2022 13:36:05 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2022 13:36:07 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,273,1654585200"; 
-   d="scan'208";a="614344320"
+   d="scan'208";a="614344328"
 Received: from bwalker-desk.ch.intel.com ([143.182.136.162])
-  by fmsmga007.fm.intel.com with ESMTP; 29 Aug 2022 13:36:04 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 29 Aug 2022 13:36:07 -0700
 From:   Ben Walker <benjamin.walker@intel.com>
 To:     vkoul@kernel.org
 Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/7] dmaengine: Move dma_set_tx_state to the provider API header
-Date:   Mon, 29 Aug 2022 13:35:32 -0700
-Message-Id: <20220829203537.30676-3-benjamin.walker@intel.com>
+Subject: [PATCH v5 3/7] dmaengine: Add dmaengine_async_is_tx_complete
+Date:   Mon, 29 Aug 2022 13:35:33 -0700
+Message-Id: <20220829203537.30676-4-benjamin.walker@intel.com>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20220829203537.30676-1-benjamin.walker@intel.com>
 References: <20220622193753.3044206-1-benjamin.walker@intel.com>
@@ -59,56 +59,138 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This is only used by DMA providers, not DMA clients. Move it next
-to the other cookie utility functions.
+This is the replacement for dma_async_is_tx_complete with two changes:
+1) The name prefix is 'dmaengine' as per convention
+2) It no longer reports the 'last' or 'used' cookie
+
+Drivers should convert to using dmaengine_async_is_tx_complete.
 
 Signed-off-by: Ben Walker <benjamin.walker@intel.com>
 ---
- drivers/dma/dmaengine.h   | 11 +++++++++++
- include/linux/dmaengine.h | 11 -----------
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ Documentation/driver-api/dmaengine/client.rst | 19 ++++---------------
+ .../driver-api/dmaengine/provider.rst         |  6 +++---
+ drivers/dma/dmaengine.c                       |  2 +-
+ drivers/dma/dmatest.c                         |  3 +--
+ include/linux/dmaengine.h                     | 16 ++++++++++++++++
+ 5 files changed, 25 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/dma/dmaengine.h b/drivers/dma/dmaengine.h
-index a2ce377e9ed0f..e72876a512a39 100644
---- a/drivers/dma/dmaengine.h
-+++ b/drivers/dma/dmaengine.h
-@@ -90,6 +90,17 @@ static inline enum dma_status dma_cookie_status(struct dma_chan *chan,
- 	return DMA_IN_PROGRESS;
- }
+diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
+index 85ecec2c40005..9ae489a4ca97f 100644
+--- a/Documentation/driver-api/dmaengine/client.rst
++++ b/Documentation/driver-api/dmaengine/client.rst
+@@ -259,8 +259,8 @@ The details of these operations are:
  
-+static inline void dma_set_tx_state(struct dma_tx_state *st,
-+	dma_cookie_t last, dma_cookie_t used, u32 residue)
-+{
-+	if (!st)
-+		return;
-+
-+	st->last = last;
-+	st->used = used;
-+	st->residue = residue;
-+}
-+
- static inline void dma_set_residue(struct dma_tx_state *state, u32 residue)
- {
- 	if (state)
+       dma_cookie_t dmaengine_submit(struct dma_async_tx_descriptor *desc)
+ 
+-   This returns a cookie can be used to check the progress of DMA engine
+-   activity via other DMA engine calls not covered in this document.
++   This returns a cookie that can be used to check the progress of a transaction
++   via dmaengine_async_is_tx_complete().
+ 
+    dmaengine_submit() will not start the DMA operation, it merely adds
+    it to the pending queue. For this, see step 5, dma_async_issue_pending.
+@@ -339,23 +339,12 @@ Further APIs
+ 
+    .. code-block:: c
+ 
+-      enum dma_status dma_async_is_tx_complete(struct dma_chan *chan,
+-		dma_cookie_t cookie, dma_cookie_t *last, dma_cookie_t *used)
+-
+-   This can be used to check the status of the channel. Please see
+-   the documentation in include/linux/dmaengine.h for a more complete
+-   description of this API.
++      enum dma_status dmaengine_async_is_tx_complete(struct dma_chan *chan,
++		dma_cookie_t cookie)
+ 
+    This can be used with the cookie returned from dmaengine_submit()
+    to check for completion of a specific DMA transaction.
+ 
+-   .. note::
+-
+-      Not all DMA engine drivers can return reliable information for
+-      a running DMA channel. It is recommended that DMA engine users
+-      pause or stop (via dmaengine_terminate_all()) the channel before
+-      using this API.
+-
+ 5. Synchronize termination API
+ 
+    .. code-block:: c
+diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
+index ceac2a300e328..1d0da2777921d 100644
+--- a/Documentation/driver-api/dmaengine/provider.rst
++++ b/Documentation/driver-api/dmaengine/provider.rst
+@@ -539,10 +539,10 @@ where to put them)
+ 
+ dma_cookie_t
+ 
+-- it's a DMA transaction ID that will increment over time.
++- it's a DMA transaction ID.
+ 
+-- Not really relevant any more since the introduction of ``virt-dma``
+-  that abstracts it away.
++- The value can be chosen by the provider, or use the helper APIs
++  such as dma_cookie_assign() and dma_cookie_complete().
+ 
+ DMA_CTRL_ACK
+ 
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index c741b6431958c..2816b8f492dab 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -523,7 +523,7 @@ enum dma_status dma_sync_wait(struct dma_chan *chan, dma_cookie_t cookie)
+ 
+ 	dma_async_issue_pending(chan);
+ 	do {
+-		status = dma_async_is_tx_complete(chan, cookie, NULL, NULL);
++		status = dmaengine_async_is_tx_complete(chan, cookie);
+ 		if (time_after_eq(jiffies, dma_sync_wait_timeout)) {
+ 			dev_err(chan->device->dev, "%s: timeout!\n", __func__);
+ 			return DMA_ERROR;
+diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+index 9fe2ae7943169..dde7b9b626336 100644
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -831,8 +831,7 @@ static int dmatest_func(void *data)
+ 					done->done,
+ 					msecs_to_jiffies(params->timeout));
+ 
+-			status = dma_async_is_tx_complete(chan, cookie, NULL,
+-							  NULL);
++			status = dmaengine_async_is_tx_complete(chan, cookie);
+ 		}
+ 
+ 		if (!done->done) {
 diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index c55dcae7dc620..5ae881729b620 100644
+index 5ae881729b620..0ee21887b3924 100644
 --- a/include/linux/dmaengine.h
 +++ b/include/linux/dmaengine.h
-@@ -1444,17 +1444,6 @@ static inline enum dma_status dma_async_is_tx_complete(struct dma_chan *chan,
+@@ -1426,6 +1426,8 @@ static inline void dma_async_issue_pending(struct dma_chan *chan)
+  * @last: returns last completed cookie, can be NULL
+  * @used: returns last issued cookie, can be NULL
+  *
++ * Note: This is deprecated. Use dmaengine_async_is_tx_complete instead.
++ *
+  * If @last and @used are passed in, upon return they reflect the most
+  * recently submitted (used) cookie and the most recently completed
+  * cookie.
+@@ -1444,6 +1446,20 @@ static inline enum dma_status dma_async_is_tx_complete(struct dma_chan *chan,
  	return status;
  }
  
--static inline void
--dma_set_tx_state(struct dma_tx_state *st, dma_cookie_t last, dma_cookie_t used, u32 residue)
--{
--	if (!st)
--		return;
--
--	st->last = last;
--	st->used = used;
--	st->residue = residue;
--}
--
++/**
++ * dmaengine_async_is_tx_complete - poll for transaction completion
++ * @chan: DMA channel
++ * @cookie: transaction identifier to check status of
++ *
++ */
++static inline enum dma_status dmaengine_async_is_tx_complete(struct dma_chan *chan,
++	dma_cookie_t cookie)
++{
++	struct dma_tx_state state;
++
++	return chan->device->device_tx_status(chan, cookie, &state);
++}
++
  #ifdef CONFIG_DMA_ENGINE
  struct dma_chan *dma_find_channel(enum dma_transaction_type tx_type);
  enum dma_status dma_sync_wait(struct dma_chan *chan, dma_cookie_t cookie);

@@ -2,57 +2,58 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E484B5A5651
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Aug 2022 23:42:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A9D35A57C1
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Aug 2022 01:46:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229683AbiH2Vmh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 29 Aug 2022 17:42:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60202 "EHLO
+        id S229468AbiH2XqV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 29 Aug 2022 19:46:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbiH2Vmg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 29 Aug 2022 17:42:36 -0400
+        with ESMTP id S229446AbiH2XqU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 29 Aug 2022 19:46:20 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 777677C509;
-        Mon, 29 Aug 2022 14:42:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF9F598588;
+        Mon, 29 Aug 2022 16:46:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B5ED4B81210;
-        Mon, 29 Aug 2022 21:42:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88FC1C433C1;
-        Mon, 29 Aug 2022 21:42:31 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4FEB1B815A1;
+        Mon, 29 Aug 2022 23:46:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E13DC433D6;
+        Mon, 29 Aug 2022 23:46:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661809352;
-        bh=MsyOWASI1g4z1h2BMPcGA+iFSFPUPWSag4GkwTQTTr0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gfUPeOL0oxsol1pgs+1ZKtB1/6OBBiKCodFruY4XdnN/DAWYdBMIuLDcOs4kDTd4M
-         BmAjVtAlN/S6RjR31cvtb+Xp8vT2zZSZlX+R7wkXB1xwSrMCf/R0c2YCIGdMmBlYL/
-         ST0XtrZUyJd1LFOb/+7P180jbCcC3BSdf7chgDttsYspezm/5sYHQYnGIVjB7h1wfV
-         s5UEVk20vwHGh8aKAtqr3EuNje77DcqQlRHj9FW16ekj7D2rBCpBMjecyDL1FGkhNt
-         FI7TB+zavJ+Y2U4SLjoWX6mpSWMHdoXgHhHu5I8yDEyRIP0vsZdj3VCYp8KIwzVmdV
-         nYs0egWRFmMyg==
-Date:   Mon, 29 Aug 2022 16:42:29 -0500
+        s=k20201202; t=1661816777;
+        bh=+VvePBFLp/LWmK5hX6RIjAP6zHRRsMudqWZ6EI8ufAk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BEUFplEohMizRY5cMmxOHX5fEqyEQp1OOmKmxtPpmCx/tDNAJRtzpsc3cnZ6Zz9nt
+         NFeXcVoAOSpjyB3BN4Tn669fMPUe7CRfsrTq0EJglgoSO8V1UJce1rc5QTl2d0YEik
+         1cxbbMZ1dm16q+rZzR7k+izR1LqEi5aTHvPx3E7Tu8fFfAgv7xOEVCBYPHFgLG4yPC
+         xlI66+r26noL8Wo9denx0EXkWNsVPwfg1gNf5O8cv/lmzktFdH9lccrcTwX9ipbRoA
+         LMa3PIaOd+stnvWxcLv8shrEP3l31Wu1lBl2AalOkd70k0dWRxnFgVL6M2dMwlhkSq
+         cY7NJzt/xL3jw==
 From:   Bjorn Andersson <andersson@kernel.org>
-To:     Luca Weiss <luca.weiss@fairphone.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: qcom: gpi: add compatible
- for SM6350
-Message-ID: <20220829214229.zs264vapq4hxmdpz@builder.lan>
-References: <20220812082721.1125759-1-luca.weiss@fairphone.com>
- <20220812082721.1125759-2-luca.weiss@fairphone.com>
+To:     a39.skl@gmail.com
+Cc:     linux-pm@vger.kernel.org, linux-mmc@vger.kernel.org,
+        vkoul@kernel.org, linux-arm-msm@vger.kernel.org, will@kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, iommu@lists.linux.dev,
+        konrad.dybcio@somainline.org, devicetree@vger.kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, agross@kernel.org,
+        linux-arm-kernel@lists.infradead.org, robdclark@chromium.org,
+        loic.poulain@linaro.org, rafael@kernel.org,
+        dmaengine@vger.kernel.org, bhupesh.sharma@linaro.org,
+        phone-devel@vger.kernel.org, robin.murphy@arm.com,
+        Viresh Kumar <viresh.kumar@linaro.org>, ulf.hansson@linaro.org,
+        emma@anholt.net, robh+dt@kernel.org, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, quic_saipraka@quicinc.com
+Subject: Re: (subset) [PATCH 0/7] Compatibles for SM6115
+Date:   Mon, 29 Aug 2022 18:45:38 -0500
+Message-Id: <166181675976.322065.5888575144597732401.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20220815100952.23795-1-a39.skl@gmail.com>
+References: <20220815100952.23795-1-a39.skl@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220812082721.1125759-2-luca.weiss@fairphone.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -63,29 +64,26 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Aug 12, 2022 at 10:27:19AM +0200, Luca Weiss wrote:
-> Document the compatible for GPI DMA controller on SM6350 SoC.
+On Mon, 15 Aug 2022 12:09:38 +0200, Adam Skladowski wrote:
+> This patch series add bunch of compatibles in preparation
+> for sending device tree patches for Snapdragon 662 SoC
 > 
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> Adam Skladowski (7):
+>   dt-bindings: dmaengine: qcom: gpi: add compatible for SM6115
+>   dmaengine: qcom: gpi: Add SM6115 support
+>   dt-bindings: mmc: sdhci-msm: Document the SM6115 compatible
+>   cpufreq: Add SM6115 to cpufreq-dt-platdev blocklist
+>   dt-bindings: arm-smmu: Add compatible for Qualcomm SM6115
+>   iommu/arm-smmu-qcom: Add SM6115 support
+>   dt-bindings: firmware: document Qualcomm SM6115 SCM
+> 
+> [...]
 
-Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+Applied, thanks!
 
-> ---
->  Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-> index 7d2fc4eb5530..eabf8a76d3a0 100644
-> --- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-> +++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-> @@ -21,6 +21,7 @@ properties:
->      enum:
->        - qcom,sc7280-gpi-dma
->        - qcom,sdm845-gpi-dma
-> +      - qcom,sm6350-gpi-dma
->        - qcom,sm8150-gpi-dma
->        - qcom,sm8250-gpi-dma
->        - qcom,sm8350-gpi-dma
-> -- 
-> 2.37.1
-> 
+[7/7] dt-bindings: firmware: document Qualcomm SM6115 SCM
+      commit: f2567b732b0aa2160228a956e0c2007feaeb4b64
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>

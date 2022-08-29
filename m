@@ -2,47 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D71C5A55A6
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Aug 2022 22:36:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B47F25A55A5
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Aug 2022 22:36:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229943AbiH2UgN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 29 Aug 2022 16:36:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57900 "EHLO
+        id S229892AbiH2UgP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 29 Aug 2022 16:36:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229847AbiH2UgL (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 29 Aug 2022 16:36:11 -0400
+        with ESMTP id S229593AbiH2UgO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 29 Aug 2022 16:36:14 -0400
 Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69CC886C15;
-        Mon, 29 Aug 2022 13:36:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B297478BD0;
+        Mon, 29 Aug 2022 13:36:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1661805370; x=1693341370;
+  t=1661805373; x=1693341373;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=zm0cSjM3YIXr3tYin2nPtyem0FnSC/v3TJOFRW6jOaI=;
-  b=Ffp4EfiqGyEcZ/qJzvCMj2ryViOuQ70VTxjGa92oMGTtns5qM8zWvWk4
-   gPYqJsxmnFfZnHMhVn/4dGAY8fV+d60+0UoIWYxvJdY9Zfp4cwbDDSU7W
-   FX+P0c+Wt6CdlQWU8qWBbWoW2HYCGxec7QXp6AiuU2Y34/q0BHpIe6jWg
-   mVR3+LRPrcy+09cncAPUAzr74oGkrTlOrZtU5TuJvhnpUB8HtwCmwuWf1
-   SzgtPqzH6xJKC+9hn4TIKj4HpA8RMcEYuVEmNdeeXjAxPiAFv/CoA5+jZ
-   fte5d/VP0LjIbwfaD4twuQQDjrUw+6goiR5v2J/p7pIXpHgjjq0LuU8hz
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10454"; a="358958428"
+  bh=SsDUgyJnKFU1wjSCmT6NcnZ6nhHM03n8RmHcmSLP/IU=;
+  b=X353sxB1AMVI0xzqPWwoi5W02ais5m9sqnuRTkpBlAILtn8FJ6cq9Z35
+   pLJoEeYjcVQb1v4phlAh0nYvmPmNT0CA3HIELYe8gQQIEik/BdzjbSFWv
+   VDQ0FGBGQSoRz/1TsPtblh/JEFjlCd+lylqgeXt2OiorHane6UxvmzFsC
+   msD5DhlromLeOA/5jzDzthobMDEglI8zDo5th2whXuv3U3X85en9+fd9D
+   mZtyABxAzYy/0CsAOqxBLO8o7ppAlDzCamj4+bZ49uZNoCPVHtE8Hj+Lq
+   HxxdYpYEFTHsDhaJ76K/2XvEpA4QxwhWEVwGlURysDpVnBzc18u4ew2JP
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10454"; a="358958437"
 X-IronPort-AV: E=Sophos;i="5.93,273,1654585200"; 
-   d="scan'208";a="358958428"
+   d="scan'208";a="358958437"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2022 13:36:09 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2022 13:36:13 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,273,1654585200"; 
-   d="scan'208";a="614344333"
+   d="scan'208";a="614344344"
 Received: from bwalker-desk.ch.intel.com ([143.182.136.162])
-  by fmsmga007.fm.intel.com with ESMTP; 29 Aug 2022 13:36:09 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 29 Aug 2022 13:36:13 -0700
 From:   Ben Walker <benjamin.walker@intel.com>
 To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 4/7] dmaengine: Add provider documentation on cookie assignment
-Date:   Mon, 29 Aug 2022 13:35:34 -0700
-Message-Id: <20220829203537.30676-5-benjamin.walker@intel.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dave Jiang <dave.jiang@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH v5 5/7] dmaengine: idxd: idxd_desc.id is now a u16
+Date:   Mon, 29 Aug 2022 13:35:35 -0700
+Message-Id: <20220829203537.30676-6-benjamin.walker@intel.com>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20220829203537.30676-1-benjamin.walker@intel.com>
 References: <20220622193753.3044206-1-benjamin.walker@intel.com>
@@ -59,83 +61,29 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Clarify the rules on assigning cookies to DMA transactions.
+This is going to be packed into the cookie. It does not need to be
+negative or larger than u16.
 
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
 Signed-off-by: Ben Walker <benjamin.walker@intel.com>
 ---
- .../driver-api/dmaengine/provider.rst         | 45 +++++++++++++++----
- 1 file changed, 37 insertions(+), 8 deletions(-)
+ drivers/dma/idxd/idxd.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
-index 1d0da2777921d..a5539f816d125 100644
---- a/Documentation/driver-api/dmaengine/provider.rst
-+++ b/Documentation/driver-api/dmaengine/provider.rst
-@@ -417,7 +417,9 @@ supported.
- 
-     - tx_submit: A pointer to a function you have to implement,
-       that is supposed to push the current transaction descriptor to a
--      pending queue, waiting for issue_pending to be called.
-+      pending queue, waiting for issue_pending to be called. Each
-+      descriptor is given a cookie to identify it. See the section
-+      "Cookie Management" below.
- 
-   - In this structure the function pointer callback_result can be
-     initialized in order for the submitter to be notified that a
-@@ -522,6 +524,40 @@ supported.
- 
-   - May sleep.
- 
-+Cookie Management
-+------------------
-+
-+When a transaction is queued for submission via tx_submit(), the provider
-+must assign that transaction a cookie (dma_cookie_t) to uniquely identify it.
-+The provider is allowed to perform this assignment however it wants, but for
-+convenience the following utility functions are available to create
-+monotonically increasing cookies
-+
-+  .. code-block:: c
-+
-+    void dma_cookie_init(struct dma_chan *chan);
-+
-+  Called once at channel creation
-+
-+  .. code-block:: c
-+
-+    dma_cookie_t dma_cookie_assign(struct dma_async_tx_descriptor *tx);
-+
-+  Assign a cookie to the given descriptor
-+
-+  .. code-block:: c
-+
-+    void dma_cookie_complete(struct dma_async_tx_descriptor *tx);
-+
-+  Mark the descriptor as complete and invalidate the cookie
-+
-+  .. code-block:: c
-+
-+    enum dma_status dma_cookie_status(struct dma_chan *chan,
-+      dma_cookie_t cookie, struct dma_tx_state *state);
-+
-+  Report the status of the cookie and filling in state, if not NULL.
-+
- 
- Misc notes
- ==========
-@@ -537,13 +573,6 @@ where to put them)
- - Makes sure that dependent operations are run before marking it
-   as complete.
- 
--dma_cookie_t
--
--- it's a DMA transaction ID.
--
--- The value can be chosen by the provider, or use the helper APIs
--  such as dma_cookie_assign() and dma_cookie_complete().
--
- DMA_CTRL_ACK
- 
- - If clear, the descriptor cannot be reused by provider until the
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index fed0dfc1eaa83..bd93ada32c89d 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -325,7 +325,7 @@ struct idxd_desc {
+ 	struct dma_async_tx_descriptor txd;
+ 	struct llist_node llnode;
+ 	struct list_head list;
+-	int id;
++	u16 id;
+ 	int cpu;
+ 	struct idxd_wq *wq;
+ };
 -- 
 2.37.1
 

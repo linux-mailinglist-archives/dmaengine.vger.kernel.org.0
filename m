@@ -2,35 +2,35 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B12CD5A5B7C
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Aug 2022 08:09:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8E1E5A5B7F
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Aug 2022 08:09:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230048AbiH3GIw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 30 Aug 2022 02:08:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33762 "EHLO
+        id S229629AbiH3GJT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 30 Aug 2022 02:09:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230050AbiH3GIu (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 Aug 2022 02:08:50 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 588B0B69FB;
-        Mon, 29 Aug 2022 23:08:49 -0700 (PDT)
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4MGxfD5FnYzHnVV;
-        Tue, 30 Aug 2022 14:07:00 +0800 (CST)
+        with ESMTP id S229775AbiH3GJS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 Aug 2022 02:09:18 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03345B69DB;
+        Mon, 29 Aug 2022 23:09:16 -0700 (PDT)
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MGxbl6rcQzYd28;
+        Tue, 30 Aug 2022 14:04:51 +0800 (CST)
 Received: from kwepemm600007.china.huawei.com (7.193.23.208) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 30 Aug 2022 14:08:46 +0800
+ 15.1.2375.24; Tue, 30 Aug 2022 14:09:14 +0800
 Received: from localhost.localdomain (10.69.192.56) by
  kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 30 Aug 2022 14:08:46 +0800
+ 15.1.2375.24; Tue, 30 Aug 2022 14:09:14 +0800
 From:   Jie Hai <haijie1@huawei.com>
 To:     <vkoul@kernel.org>, <wangzhou1@hisilicon.com>
 CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RESENT PATCH v5 2/7] dmaengine: hisilicon: Fix CQ head update
-Date:   Tue, 30 Aug 2022 14:05:50 +0800
-Message-ID: <20220830060555.50781-3-haijie1@huawei.com>
+Subject: [RESENT PATCH v5 3/7] dmaengine: hisilicon: Add multi-thread support for a DMA channel
+Date:   Tue, 30 Aug 2022 14:05:51 +0800
+Message-ID: <20220830060555.50781-4-haijie1@huawei.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20220830060555.50781-1-haijie1@huawei.com>
 References: <20220830060555.50781-1-haijie1@huawei.com>
@@ -50,46 +50,93 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-After completion of data transfer of one or multiple descriptors,
-the completion status and the current head pointer to submission
-queue are written into the CQ and interrupt can be generated to
-inform the software. In interrupt process CQ is read and cq_head
-is updated.
+When we get a DMA channel and try to use it in multiple threads it
+will cause oops and hanging the system.
 
-hisi_dma_irq updates cq_head only when the completion status is
-success. When an abnormal interrupt reports, cq_head will not update
-which will cause subsequent interrupt processes read the error CQ
-and never report the correct status.
+% echo 100 > /sys/module/dmatest/parameters/threads_per_chan
+% echo 100 > /sys/module/dmatest/parameters/iterations
+% echo 1 > /sys/module/dmatest/parameters/run
+[383493.327077] Unable to handle kernel paging request at virtual
+		address dead000000000108
+[383493.335103] Mem abort info:
+[383493.335103]   ESR = 0x96000044
+[383493.335105]   EC = 0x25: DABT (current EL), IL = 32 bits
+[383493.335107]   SET = 0, FnV = 0
+[383493.335108]   EA = 0, S1PTW = 0
+[383493.335109]   FSC = 0x04: level 0 translation fault
+[383493.335110] Data abort info:
+[383493.335111]   ISV = 0, ISS = 0x00000044
+[383493.364739]   CM = 0, WnR = 1
+[383493.367793] [dead000000000108] address between user and kernel
+		address ranges
+[383493.375021] Internal error: Oops: 96000044 [#1] PREEMPT SMP
+[383493.437574] CPU: 63 PID: 27895 Comm: dma0chan0-copy2 Kdump:
+		loaded Tainted: GO 5.17.0-rc4+ #2
+[383493.457851] pstate: 204000c9 (nzCv daIF +PAN -UAO -TCO -DIT
+		-SSBS BTYPE=--)
+[383493.465331] pc : vchan_tx_submit+0x64/0xa0
+[383493.469957] lr : vchan_tx_submit+0x34/0xa0
 
-This patch updates cq_head whenever CQ is accessed.
+This occurs because the transmission timed out, and that's due
+to data race. Each thread rewrite channels's descriptor as soon as
+device_issue_pending is called. It leads to the situation that
+the driver thinks that it uses the right descriptor in interrupt
+handler while channels's descriptor has been changed by other
+thread. The descriptor which in fact reported interrupt will not
+be handled any more, as well as its tx->callback.
+That's why timeout reports.
+
+With current fixes channels' descriptor changes it's value only
+when it has been used. A new descriptor is acquired from
+vc->desc_issued queue that is already filled with descriptors
+that are ready to be sent. Threads have no direct access to DMA
+channel descriptor. In case of channel's descriptor is busy, try
+to submit to HW again when a descriptor is completed. In this case,
+vc->desc_issued may be empty when hisi_dma_start_transfer is called,
+so delete error reporting on this. Now it is just possible to queue
+a descriptor for further processing.
 
 Fixes: e9f08b65250d ("dmaengine: hisilicon: Add Kunpeng DMA engine support")
 Signed-off-by: Jie Hai <haijie1@huawei.com>
 Acked-by: Zhou Wang <wangzhou1@hisilicon.com>
 ---
- drivers/dma/hisi_dma.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/dma/hisi_dma.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/dma/hisi_dma.c b/drivers/dma/hisi_dma.c
-index 98bc488893cc..837f7e4adfa6 100644
+index 837f7e4adfa6..0233b42143c7 100644
 --- a/drivers/dma/hisi_dma.c
 +++ b/drivers/dma/hisi_dma.c
-@@ -436,12 +436,10 @@ static irqreturn_t hisi_dma_irq(int irq, void *data)
- 	desc = chan->desc;
- 	cqe = chan->cq + chan->cq_head;
- 	if (desc) {
-+		chan->cq_head = (chan->cq_head + 1) % hdma_dev->chan_depth;
-+		hisi_dma_chan_write(hdma_dev->base, HISI_DMA_CQ_HEAD_PTR,
-+				    chan->qp_num, chan->cq_head);
+@@ -271,7 +271,6 @@ static void hisi_dma_start_transfer(struct hisi_dma_chan *chan)
+ 
+ 	vd = vchan_next_desc(&chan->vc);
+ 	if (!vd) {
+-		dev_err(&hdma_dev->pdev->dev, "no issued task!\n");
+ 		chan->desc = NULL;
+ 		return;
+ 	}
+@@ -303,7 +302,7 @@ static void hisi_dma_issue_pending(struct dma_chan *c)
+ 
+ 	spin_lock_irqsave(&chan->vc.lock, flags);
+ 
+-	if (vchan_issue_pending(&chan->vc))
++	if (vchan_issue_pending(&chan->vc) && !chan->desc)
+ 		hisi_dma_start_transfer(chan);
+ 
+ 	spin_unlock_irqrestore(&chan->vc.lock, flags);
+@@ -441,11 +440,10 @@ static irqreturn_t hisi_dma_irq(int irq, void *data)
+ 				    chan->qp_num, chan->cq_head);
  		if (FIELD_GET(STATUS_MASK, cqe->w0) == STATUS_SUCC) {
--			chan->cq_head = (chan->cq_head + 1) %
--					hdma_dev->chan_depth;
--			hisi_dma_chan_write(hdma_dev->base,
--					    HISI_DMA_CQ_HEAD_PTR, chan->qp_num,
--					    chan->cq_head);
  			vchan_cookie_complete(&desc->vd);
++			hisi_dma_start_transfer(chan);
  		} else {
  			dev_err(&hdma_dev->pdev->dev, "task error!\n");
+ 		}
+-
+-		chan->desc = NULL;
+ 	}
+ 
+ 	spin_unlock(&chan->vc.lock);
 -- 
 2.33.0
 

@@ -2,119 +2,122 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FAC65A9DF7
-	for <lists+dmaengine@lfdr.de>; Thu,  1 Sep 2022 19:26:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC6045AA88F
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Sep 2022 09:14:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232389AbiIAR0A (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 1 Sep 2022 13:26:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35728 "EHLO
+        id S230295AbiIBHOF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 2 Sep 2022 03:14:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234129AbiIARZx (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 1 Sep 2022 13:25:53 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FDE03A4A5;
-        Thu,  1 Sep 2022 10:25:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662053148; x=1693589148;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TmDhYbU8HgErUAJVzSa3J2R5NUU4fr8wdqMREO2cf5U=;
-  b=PYyw19nOnLX4Eyi415vFEYxVfBxxGhPsvpI5+Fm5oBVa83x0GtX33CIG
-   FdMWXqL1Y2zHTY47e/20P6Qa0AKxzI3aXHcSYfWgiNjyK9FyKVCc7+eN/
-   67y/kkzD9zdre0HXwoPWYB+EeELhD27mRAoU5SwuKI0tghNbT1rXffYv4
-   +xXOTlteWUGhq5JcD3eZ6llhPYRvcF8Ppf63Jv+E02QcjR7bKJTZbSiZO
-   1FyFNo3b/BTV2KFXzNgl/Fm3MP+QwwvuE2jRvmWeVq2sDklCZimfq6iZ8
-   nmNdEj8EeNE1FJB6EkmpMl9oU1w9DdUty/lFxPNkTWFdBLbPt1xt5Wn9B
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10457"; a="278796633"
-X-IronPort-AV: E=Sophos;i="5.93,281,1654585200"; 
-   d="scan'208";a="278796633"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2022 10:25:47 -0700
-X-IronPort-AV: E=Sophos;i="5.93,281,1654585200"; 
-   d="scan'208";a="612589961"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.209.165.86]) ([10.209.165.86])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2022 10:25:47 -0700
-Message-ID: <8bced9df-bf93-d2c6-bb7c-8dc2a6aaea6f@intel.com>
-Date:   Thu, 1 Sep 2022 10:25:47 -0700
+        with ESMTP id S229482AbiIBHOE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 2 Sep 2022 03:14:04 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F176DB8F04;
+        Fri,  2 Sep 2022 00:14:01 -0700 (PDT)
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MJpvt0T4qzkWpd;
+        Fri,  2 Sep 2022 15:10:18 +0800 (CST)
+Received: from kwepemm600007.china.huawei.com (7.193.23.208) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 2 Sep 2022 15:14:00 +0800
+Received: from [10.67.102.167] (10.67.102.167) by
+ kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 2 Sep 2022 15:13:59 +0800
+Message-ID: <9c4ca0b8-863d-1f27-9ba0-819d597aa4ce@huawei.com>
+Date:   Fri, 2 Sep 2022 15:13:58 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.2.0
-Subject: Re: [PATCH v5 0/7] dmaengine: Support polling for out of order
- completions
-Content-Language: en-US
-To:     Ben Walker <benjamin.walker@intel.com>, vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220622193753.3044206-1-benjamin.walker@intel.com>
- <20220829203537.30676-1-benjamin.walker@intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20220829203537.30676-1-benjamin.walker@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH 3/3] dmaengine: Fix client_count is countered one more
+ incorrectly.
+To:     Koba Ko <koba.ko@canonical.com>, Vinod Koul <vkoul@kernel.org>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20220830093207.951704-1-koba.ko@canonical.com>
+From:   Jie Hai <haijie1@huawei.com>
+In-Reply-To: <20220830093207.951704-1-koba.ko@canonical.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Originating-IP: [10.67.102.167]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600007.china.huawei.com (7.193.23.208)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi, Koba Ko
 
-On 8/29/2022 1:35 PM, Ben Walker wrote:
-> This series adds support for polling async transactions for completion
-> even if interrupts are disabled and transactions can complete out of
-> order.
->
-> Prior to this series, dma_cookie_t was a monotonically increasing integer and
-> cookies could be compared to one another to determine if earlier operations had
-> completed (up until the cookie wraps around, then it would break). Now, cookies
-> are treated as opaque handles. The series also does some API clean up and
-> documents how dma_cookie_t should behave.
->
-> This closes out by adding support for .device_tx_status() to the idxd
-> driver and then reverting the DMA_OUT_OF_ORDER patch that previously
-> allowed idxd to opt-out of support for polling, which I think is a nice
-> overall simplification to the dmaengine API.
->
-> Changes since version 4:
->   - Rebased
->   - Removed updates to the various drivers that call dma_async_is_tx_complete.
->     These clean ups will be spun off into a separate patch series since they need
->     acks from other maintainers.
->
-> Changes since version 3:
->   - Fixed Message-Id in emails. Sorry they were all stripped! Won't
->     happen again.
->
-> Changes since version 2:
->   - None. Rebased as requested without conflict.
->
-> Changes since version 1:
->   - Broke up the change to remove dma_async_is_tx_complete into a single
->     patch for each driver
->   - Renamed dma_async_is_tx_complete to dmaengine_async_is_tx_complete.
->
-> Ben Walker (7):
->    dmaengine: Remove dma_async_is_complete from client API
->    dmaengine: Move dma_set_tx_state to the provider API header
->    dmaengine: Add dmaengine_async_is_tx_complete
->    dmaengine: Add provider documentation on cookie assignment
->    dmaengine: idxd: idxd_desc.id is now a u16
->    dmaengine: idxd: Support device_tx_status
->    dmaengine: Revert "cookie bypass for out of order completion"
->
->   Documentation/driver-api/dmaengine/client.rst | 24 ++----
->   .../driver-api/dmaengine/provider.rst         | 64 ++++++++------
->   drivers/dma/dmaengine.c                       |  2 +-
->   drivers/dma/dmaengine.h                       | 21 ++++-
->   drivers/dma/dmatest.c                         | 14 +--
->   drivers/dma/idxd/device.c                     |  1 +
->   drivers/dma/idxd/dma.c                        | 86 ++++++++++++++++++-
->   drivers/dma/idxd/idxd.h                       |  3 +-
->   include/linux/dmaengine.h                     | 43 +++-------
->   9 files changed, 164 insertions(+), 94 deletions(-)
-Besides the stray white space, Reviewed-by: Dave Jiang 
-<dave.jiang@gmail.com>
+Thanks for your patch.
+
+I've had the same problem,see
+https://lore.kernel.org/all/20220716024453.1418259-1-haijie1@huawei.com/.
+
+The two operations of updating client_count, that is,
+     chan->client_count++;
+     balance_ref_count(chan);
+
+the order of which is modified by d2f4f99db3e9 ("dmaengine: Rework 
+dma_chan_get").
+
+I have complied and tested it on my arm64 and this patch does
+fix the problem.
+
+For this patch,
+Reviewed-by: Jie Hai <haijie1@huawei.com>
+Test-by: Jie Hai <haijie1@huawei.com>
+
+Best regards,
+Jie Hai
+
+On 2022/8/30 17:32, Koba Ko wrote:
+> If the passed client_count is 0,
+> it would be incremented by balance_ref_count first
+> then increment one more.
+> This would cause client_count to 2.
+> 
+> cat /sys/class/dma/dma0chan*/in_use
+> 2
+> 2
+> 2
+> 
+> Fixes: d2f4f99db3e9 ("dmaengine: Rework dma_chan_get")
+> Signed-off-by: Koba Ko <koba.ko@canonical.com>
+> ---
+>   drivers/dma/dmaengine.c | 7 ++++---
+>   1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index 2cfa8458b51be..78f8a9f3ad825 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -451,7 +451,8 @@ static int dma_chan_get(struct dma_chan *chan)
+>   	/* The channel is already in use, update client count */
+>   	if (chan->client_count) {
+>   		__module_get(owner);
+> -		goto out;
+> +		chan->client_count++;
+> +		return 0;
+>   	}
+>   
+>   	if (!try_module_get(owner))
+> @@ -470,11 +471,11 @@ static int dma_chan_get(struct dma_chan *chan)
+>   			goto err_out;
+>   	}
+>   
+> +	chan->client_count++;
+> +
+>   	if (!dma_has_cap(DMA_PRIVATE, chan->device->cap_mask))
+>   		balance_ref_count(chan);
+>   
+> -out:
+> -	chan->client_count++;
+>   	return 0;
+>   
+>   err_out:

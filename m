@@ -2,50 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F8C05AC5AB
-	for <lists+dmaengine@lfdr.de>; Sun,  4 Sep 2022 19:22:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 681EA5AC5BA
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Sep 2022 19:24:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234039AbiIDRWG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 4 Sep 2022 13:22:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59550 "EHLO
+        id S234216AbiIDRYc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 4 Sep 2022 13:24:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233768AbiIDRWG (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 4 Sep 2022 13:22:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82721303CF;
-        Sun,  4 Sep 2022 10:22:05 -0700 (PDT)
+        with ESMTP id S234039AbiIDRYc (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 4 Sep 2022 13:24:32 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D79C1D134;
+        Sun,  4 Sep 2022 10:24:29 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1E6AD60F77;
-        Sun,  4 Sep 2022 17:22:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55DAFC433D6;
-        Sun,  4 Sep 2022 17:22:03 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A57E9B80E28;
+        Sun,  4 Sep 2022 17:24:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CABAAC433D6;
+        Sun,  4 Sep 2022 17:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662312124;
-        bh=HMQgwDI76WiAFBkZo0CkfR6wG07owwAMh5ZHn7lvDs8=;
+        s=k20201202; t=1662312266;
+        bh=KM+tXy5ruBifHaiU7QANp5OKx2GDwpl5tXPjBlBNfbo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TADRxJARSNjw7GHmC/HOUdV2x5cVOPjHku2DpmPgcT7NReGRss4e/8CVt56COZWHl
-         OswpMkT6TsLHm+Yki7JBhBUTscWas+zQ9LV7WAX+lO6KfhYrpMZNffY3Pv5LIPCTdB
-         n100n1yc5u3qQbH6/DILkk5c2mjmkbCxrPVHFEUSQIo591GcemRzYVWSIZZDf3RLTm
-         oFIDay+4ySsqI3iAHUVlJHyWM0oZDFEAZFHjhm6jUJsryC4Ujq2nWeyOh3Zra+31VX
-         vfrtxOYaebv7uKWty5fGOLo+r+/p3FnzQV/kJDslZ8W6lRHbQPMce8Iq4duUgtPQbW
-         fTGQQyWD3vKHA==
-Date:   Sun, 4 Sep 2022 22:51:59 +0530
+        b=r8p4PsGm4uykiEURez0U+dWyYh2ygeMSQ7O/sC4O/v6wtkiYYynmmkCqnOZv4D8ne
+         K35s6+tZJODK+lQOUfLkl/b7ADvl38+jBRCiLqLNI9F7y/g8roYN4e0LoW8q4+cpR3
+         I/JDjhzjV06bM1n92/iO2c04Nf7qgzSID4ysJh5SXqit1L+OZ/cmwlaDbj94TghbHg
+         AC6Ut0qct/47774GEu3Hj73/HmkpEwjMqzWbSIAP6IoBoXhnOM5aimRcm9CKgMEsDw
+         YBaRqM28bD2dNn4nD2Z+HCWUXqmjwotWKNZcHb8tHYl6AixtcFTmjD97kyyMmwQlQX
+         8UhMY4RbCJJyg==
+Date:   Sun, 4 Sep 2022 22:54:20 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     gustavo.pimentel@synopsys.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH] dmaengine: dw-edma: Remove runtime PM support
-Message-ID: <YxTet82IgKtQ+q9q@matsya>
-References: <20220512083612.122824-1-manivannan.sadhasivam@linaro.org>
- <20220819084018.GC215264@thinkpad>
+To:     Swati Agarwal <swati.agarwal@xilinx.com>
+Cc:     lars@metafoo.de, adrianml@alumnos.upm.es, libaokun1@huawei.com,
+        marex@denx.de, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        harini.katakam@xilinx.com, radhey.shyam.pandey@xilinx.com,
+        michal.simek@xilinx.com, swati.agarwal@amd.com,
+        harini.katakam@amd.com, radhey.shyam.pandey@amd.com,
+        michal.simek@amd.com
+Subject: Re: [PATCH v2 0/3]  dmaengine : xilinx_dma: Fix error handling paths
+Message-ID: <YxTfRPgOItCAiyui@matsya>
+References: <20220817061125.4720-1-swati.agarwal@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220819084018.GC215264@thinkpad>
+In-Reply-To: <20220817061125.4720-1-swati.agarwal@xilinx.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -56,34 +58,11 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 19-08-22, 14:10, Manivannan Sadhasivam wrote:
-> On Thu, May 12, 2022 at 02:06:12PM +0530, Manivannan Sadhasivam wrote:
-> > Currently, the dw-edma driver enables the runtime_pm for parent device
-> > (chip->dev) and increments/decrements the refcount during alloc/free
-> > chan resources callbacks.
-> > 
-> > This leads to a problem when the eDMA driver has been probed, but the
-> > channels were not used. This scenario can happen when the DW PCIe driver
-> > probes eDMA driver successfully, but the PCI EPF driver decides not to
-> > use eDMA channels and use iATU instead for PCI transfers.
-> > 
-> > In this case, the underlying device would be runtime suspended due to
-> > pm_runtime_enable() in dw_edma_probe() and the PCI EPF driver would have
-> > no knowledge of it.
-> > 
-> > Ideally, the eDMA driver should not be the one doing the runtime PM of
-> > the parent device. The responsibility should instead belong to the client
-> > drivers like PCI EPF.
-> > 
-> > So let's remove the runtime PM support from eDMA driver.
-> > 
-> > Cc: Serge Semin <fancer.lancer@gmail.com>
-> > Cc: Frank Li <Frank.Li@nxp.com>
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Looks like this one missed 6.0. Vinod, can you please merge this now?
+On 17-08-22, 11:41, Swati Agarwal wrote:
+> Fix Unchecked return value coverity warning.
+> Fix probe error cleanup.
 
-This fails for me, can you pls rebase and resend
+Applied, thanks
 
 -- 
 ~Vinod

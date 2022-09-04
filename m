@@ -2,52 +2,59 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 681EA5AC5BA
-	for <lists+dmaengine@lfdr.de>; Sun,  4 Sep 2022 19:24:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81A135AC5BF
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Sep 2022 19:26:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234216AbiIDRYc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 4 Sep 2022 13:24:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34556 "EHLO
+        id S234039AbiIDR0T (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 4 Sep 2022 13:26:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234039AbiIDRYc (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 4 Sep 2022 13:24:32 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D79C1D134;
-        Sun,  4 Sep 2022 10:24:29 -0700 (PDT)
+        with ESMTP id S230015AbiIDR0S (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 4 Sep 2022 13:26:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8D4C33367;
+        Sun,  4 Sep 2022 10:26:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A57E9B80E28;
-        Sun,  4 Sep 2022 17:24:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CABAAC433D6;
-        Sun,  4 Sep 2022 17:24:25 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4DECE60F9E;
+        Sun,  4 Sep 2022 17:26:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC08CC433C1;
+        Sun,  4 Sep 2022 17:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662312266;
-        bh=KM+tXy5ruBifHaiU7QANp5OKx2GDwpl5tXPjBlBNfbo=;
+        s=k20201202; t=1662312376;
+        bh=R5gWxWKYx8VItI88Agd++HUcExaO5prF6Vu0sO1trTk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r8p4PsGm4uykiEURez0U+dWyYh2ygeMSQ7O/sC4O/v6wtkiYYynmmkCqnOZv4D8ne
-         K35s6+tZJODK+lQOUfLkl/b7ADvl38+jBRCiLqLNI9F7y/g8roYN4e0LoW8q4+cpR3
-         I/JDjhzjV06bM1n92/iO2c04Nf7qgzSID4ysJh5SXqit1L+OZ/cmwlaDbj94TghbHg
-         AC6Ut0qct/47774GEu3Hj73/HmkpEwjMqzWbSIAP6IoBoXhnOM5aimRcm9CKgMEsDw
-         YBaRqM28bD2dNn4nD2Z+HCWUXqmjwotWKNZcHb8tHYl6AixtcFTmjD97kyyMmwQlQX
-         8UhMY4RbCJJyg==
-Date:   Sun, 4 Sep 2022 22:54:20 +0530
+        b=DNTKxqSPyZkp/kuGSF6u/gx89TsnNB8ulCRyZcbdl0n279YMp1YgrwKR/Y1F8qTUX
+         5lr166D6Ss07JJaGg+NqWAm1ARI3fOlUHOM7Mixreix7k/5vhSMo2T2q+D7P1h6Mib
+         hELOuEVSNHXUUxIc6CwlXaAqIptUJqMjdbL/JeHl5NB6Gz5C0SheJwg8DU2LzUGec7
+         Ag3VCe+zHcQziNAefNRBAEP6irr2yQ1Z32U/7NWh9b8REE1fBN+FG2/YaWatex1swQ
+         ozIMBwivWEwr/mCJXmyhwN8z82jJY90/H9uO2KFZbI1Tz/MDAOGl0lyAtb67UGDArr
+         yB5grrR70VaVg==
+Date:   Sun, 4 Sep 2022 22:56:12 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Swati Agarwal <swati.agarwal@xilinx.com>
-Cc:     lars@metafoo.de, adrianml@alumnos.upm.es, libaokun1@huawei.com,
-        marex@denx.de, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        harini.katakam@xilinx.com, radhey.shyam.pandey@xilinx.com,
-        michal.simek@xilinx.com, swati.agarwal@amd.com,
-        harini.katakam@amd.com, radhey.shyam.pandey@amd.com,
-        michal.simek@amd.com
-Subject: Re: [PATCH v2 0/3]  dmaengine : xilinx_dma: Fix error handling paths
-Message-ID: <YxTfRPgOItCAiyui@matsya>
-References: <20220817061125.4720-1-swati.agarwal@xilinx.com>
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        chaotian.jing@mediatek.com, ulf.hansson@linaro.org,
+        matthias.bgg@gmail.com, hsinyi@chromium.org,
+        nfraprado@collabora.com, allen-kh.cheng@mediatek.com,
+        fparent@baylibre.com, sam.shih@mediatek.com,
+        sean.wang@mediatek.com, long.cheng@mediatek.com,
+        wenbin.mei@mediatek.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, phone-devel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 1/8] dt-bindings: dma: mediatek,uart-dma: Add binding for
+ MT6795 SoC
+Message-ID: <YxTftFYUAAujw90V@matsya>
+References: <20220729104441.39177-1-angelogioacchino.delregno@collabora.com>
+ <20220729104441.39177-2-angelogioacchino.delregno@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220817061125.4720-1-swati.agarwal@xilinx.com>
+In-Reply-To: <20220729104441.39177-2-angelogioacchino.delregno@collabora.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -58,9 +65,9 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 17-08-22, 11:41, Swati Agarwal wrote:
-> Fix Unchecked return value coverity warning.
-> Fix probe error cleanup.
+On 29-07-22, 12:44, AngeloGioacchino Del Regno wrote:
+> Add mediatek,mt6795-uart-dma to the compatibles list to support
+> the MT6795 Helio X10 SoC's UART APDMA.
 
 Applied, thanks
 

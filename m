@@ -2,62 +2,63 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 534EF5AD112
-	for <lists+dmaengine@lfdr.de>; Mon,  5 Sep 2022 13:06:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FF675ADC28
+	for <lists+dmaengine@lfdr.de>; Tue,  6 Sep 2022 02:07:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238289AbiIELD6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 5 Sep 2022 07:03:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56496 "EHLO
+        id S229842AbiIFAHn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 5 Sep 2022 20:07:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238050AbiIELDb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 5 Sep 2022 07:03:31 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AB2821248;
-        Mon,  5 Sep 2022 04:03:30 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 02540B8102F;
-        Mon,  5 Sep 2022 11:03:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ED33C433D6;
-        Mon,  5 Sep 2022 11:03:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662375807;
-        bh=jfYFryh3FP3wn07kVr5yDSno8dPHGKZP1AQ50epDypw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uNnBPQlGPpWbTgTDg6JbTn+Je1l8/d0ugvpOxOEbaQ6bVvjP0uNux5CkzCsrpT8wj
-         VK+MZfwj4ZIA6JQLqp1au0e5TWJ+BTsQ5BHVYCZPAMmdilA+UlnE0r5AkvN1VfOvYw
-         I5Z4l0sqqhnR2AKrP6bh+eMHvRq9KJ+nwmbDVxh9GdMZh2r/oNycEMrQbP5Mi0g03X
-         yMPhay0nXZQcSQRbBDZxbQ2kbZUIjTRN5o9V7BanzR/dNjBoAGLITN5ZEee12FlYHj
-         UfyfgFJh0O9OOiC3YwW7N18gv2NHh1wQYftKduBIfB7Uwsp5jfu0lrkIKAYCwEtumu
-         s3oLXxxkoerzg==
-Date:   Mon, 5 Sep 2022 16:33:23 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Joy Zou <joy.zou@nxp.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        "S.J. Wang" <shengjiu.wang@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] Re: [PATCH V4 2/4] dmaengine: imx-sdma: support hdmi audio
-Message-ID: <YxXXex775kSSmGin@matsya>
-References: <20220901020059.50099-1-joy.zou@nxp.com>
- <YxTPTnrJst9aNpsl@matsya>
- <AM6PR04MB59253DD6C91D41344C08C175E17F9@AM6PR04MB5925.eurprd04.prod.outlook.com>
- <0d523880-9214-7b9b-ce1a-d06d4d5fbdf1@linaro.org>
- <AM6PR04MB59250C67D565B6E5E52621ACE17F9@AM6PR04MB5925.eurprd04.prod.outlook.com>
+        with ESMTP id S230076AbiIFAHn (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 5 Sep 2022 20:07:43 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3382067475
+        for <dmaengine@vger.kernel.org>; Mon,  5 Sep 2022 17:07:36 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id bh13so9173701pgb.4
+        for <dmaengine@vger.kernel.org>; Mon, 05 Sep 2022 17:07:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=schmorgal.com; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=ccOJio8OvVhKT9eRWLFa93p1CadNtYx//Tt6F1LDlyY=;
+        b=VAuUUzX4L5paItKgWwiAmhZtw5rZDMEKCZZ/f8RY9HkMjK8G4xyvnDZow5EtwC0oc4
+         E8Bi/cgpFtB5AKtIOjoCYZWuEgnC/24DNq5Qww6pIDWQ6NdGbC/q/dfbgREz3sIFbIWa
+         TaigSDcbQPcp7MvoUhWkOdw6Hqtnv8yGux49g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=ccOJio8OvVhKT9eRWLFa93p1CadNtYx//Tt6F1LDlyY=;
+        b=tkklhC86mem5ZMG/wcyvbIxlBCRzG9dim3I31YAh9vyyBOWwcfRzs37MzdPQMG815r
+         X4R1VvQDFmkMrGcupUNR9UFoKuQ/CcUn1hyIDhCJR3cX5hYSgSMlRTZ7LyJPS6E4ooVL
+         GFgSopQv2KYTF4Rd5KO4xIJRxXN9inuXv7JDSVhaGZXrBLJdQ8y2J+umlqqZPzDjQWJL
+         ULZ0vq+L4K9VejUk6c5FSDOQ2dP5IoO3hkpLuZhLadYH0tHrJoFDfbIuW23osvNPorbf
+         qHfqnSEgYX+6euLQhmVgpklq2LrHL5mRvB9tLDcuJ2r3Tm4I7rzQRZwoWM2f2map5oRb
+         8n+Q==
+X-Gm-Message-State: ACgBeo2AtsB0C4kMK+iJI/Ss2mZq8ua8NvTkFsS6ZSxuu70OVKyJtpLg
+        9e6wOVdYHd+xvUz0uU4AE022+g==
+X-Google-Smtp-Source: AA6agR6dP+N069mNXwdxsq3HUnT7M0IZLsP6Iy12XKSHEYo5sfAf6ztqQiV4xezj3K00SmvXqbP9yQ==
+X-Received: by 2002:a63:5702:0:b0:42a:b77b:85b3 with SMTP id l2-20020a635702000000b0042ab77b85b3mr42537847pgb.263.1662422855464;
+        Mon, 05 Sep 2022 17:07:35 -0700 (PDT)
+Received: from localhost.localdomain ([50.45.132.243])
+        by smtp.gmail.com with ESMTPSA id ik12-20020a170902ab0c00b00176ca089a7csm607538plb.165.2022.09.05.17.07.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Sep 2022 17:07:34 -0700 (PDT)
+From:   Doug Brown <doug@schmorgal.com>
+To:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        Doug Brown <doug@schmorgal.com>
+Subject: [PATCH] dmaengine: pxa_dma: use platform_get_irq_optional
+Date:   Mon,  5 Sep 2022 17:07:09 -0700
+Message-Id: <20220906000709.52705-1-doug@schmorgal.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR04MB59250C67D565B6E5E52621ACE17F9@AM6PR04MB5925.eurprd04.prod.outlook.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -66,31 +67,40 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 05-09-22, 09:07, Joy Zou wrote:
-> > From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > >> On 01-09-22, 10:00, Joy Zou wrote:
-> > >>> Add hdmi audio support in sdma.
-> > >>
-> > >> Pls make sure you thread your patches properly! They are broken threads!
-> > > I am trying to support for hdmi audio feature on community driver
-> > drivers/gpu/drm/bridge/synopsys/.
-> > 
-> > This does not answer to the problem you patches do not compose proper
-> > thread. v5 which you sent now is also broken. Supporting HDMI audio feature
-> > does not prevent you to send patches correctly, right?
-> I am trying to support for hdmi audio feature on community driver drivers/gpu/drm/bridge/synopsys/.
-> I think the feature may take some time because I am not audio driver owner. I only want to update the others patch as soon as possible, so I send the patch v5. I am also solving the thread patches properly.
+The first IRQ is required, but IRQs 1 through (nb_phy_chans - 1) are
+optional, because on some platforms (e.g. PXA168) there is a single IRQ
+shared between all channels.
 
-Sorry you have not!
+This change inhibits a flood of "IRQ index # not found" messages at
+startup. Tested on a PXA168-based device.
 
-In my inbox, v5 1/2 and 2/2 do not appear as a single thread
+Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to platform_get_irq*()"
+Signed-off-by: Doug Brown <doug@schmorgal.com>
+---
+ drivers/dma/pxa_dma.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Please fix the way you send the series and send them together, it is
-very difficult to review when they are disjoint
-
-FWIW, I checked the v5 2/2 and it does not have in-reply-to set, which
-should point to 1/2.. If you are using git send-email, point both the
-patches to it so that it will do that correctly for you
-
+diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
+index e7034f6f3994..22a392fe6d32 100644
+--- a/drivers/dma/pxa_dma.c
++++ b/drivers/dma/pxa_dma.c
+@@ -1247,14 +1247,14 @@ static int pxad_init_phys(struct platform_device *op,
+ 		return -ENOMEM;
+ 
+ 	for (i = 0; i < nb_phy_chans; i++)
+-		if (platform_get_irq(op, i) > 0)
++		if (platform_get_irq_optional(op, i) > 0)
+ 			nr_irq++;
+ 
+ 	for (i = 0; i < nb_phy_chans; i++) {
+ 		phy = &pdev->phys[i];
+ 		phy->base = pdev->base;
+ 		phy->idx = i;
+-		irq = platform_get_irq(op, i);
++		irq = platform_get_irq_optional(op, i);
+ 		if ((nr_irq > 1) && (irq > 0))
+ 			ret = devm_request_irq(&op->dev, irq,
+ 					       pxad_chan_handler,
 -- 
-~Vinod
+2.25.1
+

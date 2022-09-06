@@ -2,43 +2,43 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03DFA5AE4B0
+	by mail.lfdr.de (Postfix) with ESMTP id 855C75AE4B1
 	for <lists+dmaengine@lfdr.de>; Tue,  6 Sep 2022 11:49:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238885AbiIFJsS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 6 Sep 2022 05:48:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39716 "EHLO
+        id S239017AbiIFJs0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 6 Sep 2022 05:48:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232318AbiIFJsR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 6 Sep 2022 05:48:17 -0400
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2070.outbound.protection.outlook.com [40.107.104.70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B81077562;
-        Tue,  6 Sep 2022 02:48:13 -0700 (PDT)
+        with ESMTP id S232318AbiIFJsV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 6 Sep 2022 05:48:21 -0400
+Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2074.outbound.protection.outlook.com [40.107.104.74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4403477E9E;
+        Tue,  6 Sep 2022 02:48:20 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mhh1G6Ql34z3gdRd2YMxvtvu41HdwHoeK7NnldY4yB0sBuqiI+7nVphGCR4rwLqAylhdY9LiT1DJ3LZrgwCtn3XuOBTV11cwP0DTRErOTtpbbXTw/vL+z3YWUuMzO4sWs2ZzsjIfoQM5uAtqVjRrKzDTn8jRfPQ1H7PMNOQ8MIhzczbF8Gg0BkAZzzWgC3V2OA0Ynjz8oaFX4DiBxcGRWLh7jrtGzP7QaEKZxqHvK3VIK+LwJJuN8stXKFy6SyCSxoDduXtLU03RATyfU+Zc93SxP7UQPcsrIqPzFNX++FSSzaUHN/QqEtBk3iAl5UkSfU5yq44cx+ytgWftW3iKCw==
+ b=ARlHqEkeARIERdqvipmWDyTxI1DpRCZ0RBMqu/Kx3jUD5WHrceiU58lKA+Oil8l42Vwj81k1MYuuv5JQWzHnLGK6DzVQlEMV1+XMxPtTZuZ+JgsIAqxDbiDrQF3GJ8jgzhfvL7P0nBFJKOvdlrheb6pkXm5W4EMbpy55TxwbTds6JSeIge6LU03GZMWz0W5nvJKC4MXibhGah/A4eLqy823if5/L1HVDvplhWZyn2tD5PRuKipVH32S9BJCrIuqYKq8Bh/Fxc2OY0U5grvdy323Ewxy5/7dmjwREa6O5Dc3TlMnhM352bTT5/l3RvzSHRSTelMO0BRQg9xZxNP8iYQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xt6fDI5F3i8dI1X8YcnvQdhddD64JWfTToiqrA14f5Q=;
- b=GmSG1HWsdMQsLtxgwp7J5V3cxpzxrvhI0WV5ebdgv1Rn5uIrEsVmHcY5DjabDxdlcNtKUJNN9QLMHzLKSfStsfnblx+J8EKXhI0fLBBCAjsH4CAucTdb/5RYeZ2BN7atgJMcLeYMvOHzk5OdndOgzqQB0Tla4DbsD+RFkaPhiWKXd17RnYWWgwBIvbDjmFSEslgB/vSiFF7VYuFdt3F6RhygyDsdS1OhLuzvtpaul6+9RPKVUAGHwZNShBCRxFld+eUWS6as4RllxHAvs0j3nQJNzUTAshArCWWAYYpN8ZFG4aw52KMbtkhq7RCbbANjcvZo/4VWlqhtyzfC2b8whQ==
+ bh=IT8qLsWtASgU+jrkmCjIv4P320Habx7fIb/JbroiA8E=;
+ b=DzfVILUnbUj8JMx47Fs02BBLKq/zPWop5+hqVYpH5lnoSRRmX9ti4O1hUZBetpf121tTx0RneuQK5Voh8LcEKhaOx/3VKObjD2fwPGVyrK3FoMs+BzC/v2UIsQqKV5PqW6RXkk5+JUnHk5jRdzGRoKX21+y5l6ANB01OJVeO+dKO5rVMnfKIua3epgVdKFG153naQEy20715TXTa6bslBcFFsyTL7/efnZHCGugxavUqLO/CqwFcLEKk0X+tbb+YhK7s2gZtuJsxD10B5iZjUyH3VkQ4IsKoEaHMYofyPwfPllGGYFOjcqbuF5VYyq+J2V/YfLfK1y5OyDNCYH768w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xt6fDI5F3i8dI1X8YcnvQdhddD64JWfTToiqrA14f5Q=;
- b=mfwOgJIpvTd+EwNcSGruQ9Q/OKlhKbQkU6Ju/H/efwc4c+WoEv8/qhiX6brYSesEBxmeF2RacEAbHa/Pqjsd4/5RSFVnT1wa/zifEEW40uY0+IKh0r5iahjQ9Pf0d8JIAgOU12VH4eAtxtQ0HVu83GENq3mzuHCA0LSJXuBpLec=
+ bh=IT8qLsWtASgU+jrkmCjIv4P320Habx7fIb/JbroiA8E=;
+ b=PznoXhoGi41YHIcpoe1iKTvjiNm3zn1B2uwCn+/CuS5DFzapZKaXBCadn/y45FJR/2mLsSbfyLc2Uzqdwc5kwqzHNb3uYWh0zK9lQtTaUq2s70DzXOMiZfH23vEZWhN6LfR3kBm0d+o1769ljiPWvsF/eElF9zfYpuTQioffnXE=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from AM6PR04MB5925.eurprd04.prod.outlook.com (2603:10a6:20b:ab::19)
  by PR3PR04MB7305.eurprd04.prod.outlook.com (2603:10a6:102:83::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.12; Tue, 6 Sep
- 2022 09:48:10 +0000
+ 2022 09:48:18 +0000
 Received: from AM6PR04MB5925.eurprd04.prod.outlook.com
  ([fe80::704a:fa82:a28e:d198]) by AM6PR04MB5925.eurprd04.prod.outlook.com
  ([fe80::704a:fa82:a28e:d198%6]) with mapi id 15.20.5588.017; Tue, 6 Sep 2022
- 09:48:10 +0000
+ 09:48:17 +0000
 From:   Joy Zou <joy.zou@nxp.com>
 To:     vkoul@kernel.org, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     shengjiu.wang@nxp.com, martink@posteo.de, dev@lynxeye.de,
         aford173@gmail.com, hongxing.zhu@nxp.com, linux-imx@nxp.com,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 1/4] dt-bindings: fsl-imx-sdma: Convert imx sdma to DT schema
-Date:   Tue,  6 Sep 2022 17:42:53 +0800
-Message-Id: <20220906094256.3787384-2-joy.zou@nxp.com>
+Subject: [PATCH v6 2/4] dmaengine: imx-sdma: support hdmi audio
+Date:   Tue,  6 Sep 2022 17:42:54 +0800
+Message-Id: <20220906094256.3787384-3-joy.zou@nxp.com>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20220906094256.3787384-1-joy.zou@nxp.com>
 References: <20220906094256.3787384-1-joy.zou@nxp.com>
@@ -61,51 +61,51 @@ X-ClientProxiedBy: SG2PR03CA0128.apcprd03.prod.outlook.com
  (2603:10a6:20b:ab::19)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 58dbb4ce-1d37-4b9b-d692-08da8fece89c
+X-MS-Office365-Filtering-Correlation-Id: d8ee2195-86c8-4387-0679-08da8fececef
 X-MS-TrafficTypeDiagnostic: PR3PR04MB7305:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: okwYHyOj40wbqLSwWynApPgWZiZpImPVgrfNh4A6iq8sYljixWuBfwGxLT3Qr2TXHyI015aLn377Flj0PmB8E5IY09MMSc57Rz48hLE5bLw9Qz5s5EL08fqndIveJ9knODXfsiXkJCNmNoreGkoF7YADOrt+o+/TUsBBS59jjRmFKE+D4ko+3gz1SO8XW58VbE4d0CUdxtTrgEgXGCNW9LIOP/qcsENAyRWn0njJI1eXwqxNrSJBXtaoes70FDMUKvlMm1A4kCUImvbj7g0hMer33XgAriUl8pHQtLYN6h8iScpq56Jdrl1lUXUVJyuBvb830ikkvHTYEbtEMsPreNEEZ7tFtmCT08oK2yXmA3xS/+7DcU3qerDI1YMhg+u8KQofBueCJgWIS5vYB31BucUCHS0S/AC0TIqnQ0uxt0iIl+pl/ZY+fuxDhzaP5UFX1+CSgOIGZo6DGdUcYsHj/mDxJ1YbY7zZ6DzI6ODB0zgf8GYQf6iddg2lAc78lIpZf2g1RAK9EkVZp9H1Rudtft/u/JgXKZDdkP+Pmzb37mrM06MSDyWae4yaIGGZ6vELGgpm8MPWuv5nDUCAa3yqssmgMqx9nsJFn5F2h+egcAtPXdex41BrJQluzSc54Sa+u12ZluxzV5Y+abV4Ph7pv9xgplDyufbFb5DZu//LbtJnOw5EQZ01NMjs3uwtDJeOU10Hx726so9WX34shCUgU4VAnLQoKqFOXdKSpJGSSr2ONPzLpl01cysUZHdDB5aIU4zZf0xmIQubEJaKO2Mtsk+1jw3otB4G1Lhujjh4FcycyoZETa20UXiSYzqPjDaj5jEiipLj3LHqUFpfiO6+Gw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB5925.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(39860400002)(376002)(136003)(346002)(396003)(7416002)(8936002)(5660300002)(44832011)(2906002)(83380400001)(38350700002)(66476007)(36756003)(8676002)(38100700002)(66946007)(4326008)(66556008)(316002)(6666004)(86362001)(2616005)(6506007)(26005)(1076003)(186003)(41300700001)(6486002)(52116002)(478600001)(966005)(6512007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: zx3ZgPyF6+8Bx0SEXx5kGx0mibsU8bAGP5UoZlVIWOMgVBph+4nOzU/bVR1/GoY7TdzCSw6P5vm5+Up94qoi7oiwuNppd5fe6Egj0p2mTdHKWfa/CudDwfE1cy+tedTCeTwntnxiWalnnaKRZ9yp9gcuaM3t90ZGMRIxtdD7AOduB3kR8v9aDK+25GIQe2LtLW0yzUSPp8/ztvNwgfpYuI245+5bL1K/4cp6BdFu1pGIW9Y7Ok1HGiRTUv6p02elR6M7njvujdvcvotjgfkD0StQ3S3ggB4Z3lvDrN1s8FXEHTT4ZYD134eFEYDHgrJTngtRWg/Bu6krffriyvkAZmkkCh8s8HJvQ/pBBxKy4mi2hQWk6YkTE+Dqt9oAphfDoa6MVopXdhXG7x3bu0pPf1zCFCdbB8Y0G91F4DWG6GRwSALvodTGDbokuH0MFfPjKwmJqmY6DCPbHbZ8YnoRKncV4ibaZtKkrfbz/sER26x5BkEvrU6Q60OFhqA6xQqQb4JMP07izDDmb4G2gBOz/Mqvneg0T2ecUKdS83lNapDuX1YIYkBAeVjfiAumPXZsItD/+e1QfSgV9u80Zckmb/vIn9xFDBijtfHkRAjaK1ceTXkOPvUG4L+vWHWfTAmW3fkzUgP7NcFMHoVdc0SdusOiS69iISZPp+3Cwz86Fq2yhvgJzA5HsbNAEMRn+ohiP4CUghzfEzK4sIfs7jiiGCI7eqqWuXKIrtd+USoZaaqlsnyOu6FntSS5F0Y7kR40HvARQZOfjkV5b1z1akl6PA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB5925.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(39860400002)(376002)(136003)(346002)(396003)(7416002)(8936002)(5660300002)(44832011)(2906002)(83380400001)(38350700002)(66476007)(36756003)(8676002)(38100700002)(66946007)(4326008)(66556008)(316002)(6666004)(86362001)(2616005)(6506007)(26005)(1076003)(186003)(41300700001)(6486002)(52116002)(478600001)(6512007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?M32XJIXQv0m9DoLXWikSt/+ul3FHA6O7PD5tphvnvC5lbHMLIc1CqBScXzcq?=
- =?us-ascii?Q?1ZER2mnEuXiAW5Zq5cUCulmmLpY7UrXe8Vde0KZ/YjL8koXZCaBHOG00vlkZ?=
- =?us-ascii?Q?5c21hJ2hGiqMrYSyWIbRswPYQSREKsBVhh1+eQ2LtS+E0uV91+GGr2KJYCTy?=
- =?us-ascii?Q?SM7yDgEogZZneKpUKd3ydEUA79CiubBTBWtL33Q2eH0xhc5+zbuhlF4EAzxJ?=
- =?us-ascii?Q?gCO00aC2+lVdpxFbBfLZ9k4LzhvL9qBDWwlTT718DR+kG6eh51iULE6UuXVE?=
- =?us-ascii?Q?BTVi7F9p6bdik7HR9ZklmTtWy+Kg6KgzWHfhEOX2pvVFHmpK0fkH9wOM7cra?=
- =?us-ascii?Q?5cHdVYiTWqrT4H0EqAf0oLZckC3G2z0cWcoxMOn8s+JHlS/M3m9est+ezp9E?=
- =?us-ascii?Q?j8L0dtgJ7fBFGwrl4oVejRKCsURhJgXhkMtx42rn4omsmDoo1jtdnPRCcXa+?=
- =?us-ascii?Q?KSwVMvuOpKzHRpbkAptGnqpAdofzc6HH8S+NppzWHEAy0nbYx0RKYGu5lI8F?=
- =?us-ascii?Q?dR+O+p9TIV/1sBXppfpuSgbT6Ifueoivq0vRLJtNAJjMPAtZSZ9kNjsqqo2p?=
- =?us-ascii?Q?XFn+ZRYjakcj1TTUjgr8PsRdZZ8PSsE4L0SmHQ02CS9g9KPOPmBMU8c05ubd?=
- =?us-ascii?Q?L2Lhqy8Pz2reD65LvA/ee86c40IEe4nRPQXCurx93Y6bo177vg6sSjTS7joL?=
- =?us-ascii?Q?54A8WJ0GTl3s/Vp2m+hiQgmeIFgnZkTAu1ncHRNhpFk8Yget5iq60I8uXgpg?=
- =?us-ascii?Q?onkEkz7C9Djnm1IumQT9lISDhUImNsbYTmqdHKAJj3dvkicbnDHivyxRsVRu?=
- =?us-ascii?Q?shkzGWKfGUuqn7msegmexykqJc9N+h9hCrqWSdOLyZmus1jbWsCx45gtq28D?=
- =?us-ascii?Q?m1Og8NOuR5lSI3lQOEd64l2QabzSsompUrcjoG4v55FVFTdiEo0bNn0cfQBg?=
- =?us-ascii?Q?60qheARUGywI2Ca8cJceA/kJHgBn8Lnh0IIoWJrrnqbrOom3jIMr+FNI6GQx?=
- =?us-ascii?Q?NLCS/d7dK1S4kfn6OYPQRyYtVEW57kUoPPcv59MKQNaQ9sXWaVgipXusVhSy?=
- =?us-ascii?Q?dJH61YWYh/f3vkEySbq0aQ/ilvuY48hsKyu2wKldt3skzSORmaoRfdJO8Vss?=
- =?us-ascii?Q?SbHh2ai500pT9Y1CCrwQ4+tMtmF4rBw2QBvttK+b29Q0ueFeHdo5+qAfQZWk?=
- =?us-ascii?Q?INkeN1kjg2/0c2c9S3u2eQabQmlHstGWgVgym/i/4kWdOru6k+KcqbqKaAyh?=
- =?us-ascii?Q?ktdXSyXYni28NDJUneemsHtDzLoWqAdZVB5/o4wmglGG/S4QdE9w8OApZ4AU?=
- =?us-ascii?Q?upM6pp0z0MgVP3S/KbSFSzp16+qqOZONYsj+VP4ODGmHbUQt/qhiK+4G9AK8?=
- =?us-ascii?Q?mBjGEqJ09L7xaRGAZQkL9CTJgBMoslj86HaZ4jk1y2zaCJdXh2urxVTQraOx?=
- =?us-ascii?Q?5rwgE+c/xffZiYxHPNbRJokYajueBBx/YKf7DeVUT/W0OpTEIiZ1WK5tsDfx?=
- =?us-ascii?Q?e4skxFfJmrc8uWNCc25bSLW6x8DJG/JKHAWSLvxXH52N6W4pzZwwkSFkZqqS?=
- =?us-ascii?Q?OBZZpTs/KyKzil2E8fg0F7uXAKOCLv1b4Pn6+yfa?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Ch5fYqUJTfq3Jdl2a5LjDYse71X8m/vrp87GyBPnQiF1ZC9deLWV4OETl9ES?=
+ =?us-ascii?Q?qQAFAw8SUr4C+0zWG725moBEtxxdIvfCGWawNz8Y0RBWfirwxL+RGAu6lJey?=
+ =?us-ascii?Q?lRsG6NDBUJ8n8WaQdQtX727jQtQ8J1BeSCoBOUk7XZWaRgOBvhIhCS5CSI6n?=
+ =?us-ascii?Q?Oj+gqNlF6dVszkL7lSdzHVegKoSZhF7PlfqNSJ6uIGjHL+dL8T4DmdvQGj6l?=
+ =?us-ascii?Q?6jao/5hCNwxob8cDYCAsXS1uCaCDQipTAgaBm5zve7FbI3sl6Vwkwt8t2Atu?=
+ =?us-ascii?Q?+EjGVCWuRiyAiBBsdx5VGxoKck+wJub+P08Y0fWmICvB0DWPHekajkHoDqwe?=
+ =?us-ascii?Q?nxKkoK06I/wj+ds5nFU+yIzfXQPjTegrdnglW1s/lF199kw4Ve/XW2pcRbfM?=
+ =?us-ascii?Q?xWQJmQPka8A8Q0pRYOyBbphv4wKIoN4Zs+tD9B6vdf7bno0pv5BE+3HTC/mu?=
+ =?us-ascii?Q?VMemiXzrCmgICXSvjzfK6ejtsuW9RP/T8aVUaN9a3ts39fdteTMirz+Tha9w?=
+ =?us-ascii?Q?hgiJ/XSDYDuO7vzkENNqxDs0nR5PLL1RHBBqMEsEzKpvFoXOmCpp+1KDbcJJ?=
+ =?us-ascii?Q?2tpywcE1inYSTV/RLuhBVkm//ZV/0dIT+61Gx4OOm+WLqyb/r9Efsf5AYvn6?=
+ =?us-ascii?Q?4OgJ82kEF05bH/ccvXY0gIJtkoiO6BhXm5ZsOGsqtdjyz+YaW0zXPnHMYlgp?=
+ =?us-ascii?Q?Sz/kxVAyIjfdYNwIbOUpefuzD0oLSLecBwTrOuhrjvnxkaZ8mhZOFffYic/n?=
+ =?us-ascii?Q?zcSs1p/UbntpKfEcE/Snt1h5kyWvc1Jjp6o6sxAd+hzcpYdX9UAY/KQEugJK?=
+ =?us-ascii?Q?UeJVcVa43KBI1O3rV1yAUj/uOsTxW7b0PFSGq18eT0q6rY58iV1SbZvlk1RV?=
+ =?us-ascii?Q?Q1hb2wEL3ouxbvIW6oP/Gc2OEbUvYdPO6+0OScMyFF6wHCfEI6OyQk2gKzuP?=
+ =?us-ascii?Q?BbYM+uVZGLI0Vqex+jXGytXzrpVcYbTmQrIqdtwg96S5XuccNvddqGozLrNl?=
+ =?us-ascii?Q?CYaBATCMwQhlKKtDng5zdjUNBC+cmqQVdivDsElU0isKSZpiEJfj6rvKoq6j?=
+ =?us-ascii?Q?f0xXpqPuP70dql8zPXDAahgQhixGTQQK4qHxpJCwnvaI3Z/3YtJ6r+DpTwAJ?=
+ =?us-ascii?Q?YKAVQZr1m+6LZSBJfmaLBkCsqQrcNPEzsHKcWXvswXv611BxchuiywdP2X/D?=
+ =?us-ascii?Q?4Bu4DDUTG220kiExelywQfqDvbA8jC5kPm77sc6d2BO6G0s1QC0v2O7C9Cm4?=
+ =?us-ascii?Q?zaKlnAn8SonR10LWrepgSvmJ7RaYCWaaevBLxnY/DwhPguH1QtzO/VyULTUp?=
+ =?us-ascii?Q?PdzkT9lvAgzfeVCTVdQUcWP0YBKYmkfLKZkT60sewtgDd40otKObQQszWtkX?=
+ =?us-ascii?Q?Typw69EhoIHuHmjJNoE4BI18vCB1YLtn1bTaUG/MvyBV5uHNiACSrc9lPC86?=
+ =?us-ascii?Q?bHYP03IqvXB7BcR24vrvYolpgWefXbiXQ9YF4BekdbWxk7Oz5CVsJS49/970?=
+ =?us-ascii?Q?r611dFl36mDnspnZyNomgdDEVCOIWdmBSPlZPkLRfb0ZguHl9noif0Up+fyy?=
+ =?us-ascii?Q?7h321GKFzaeVp6tyKvzfRyDaRokQrApFMy2rWrxW?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 58dbb4ce-1d37-4b9b-d692-08da8fece89c
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8ee2195-86c8-4387-0679-08da8fececef
 X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB5925.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Sep 2022 09:48:10.6961
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Sep 2022 09:48:17.8050
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GGV3VaLm01ekZWqt89UfkE8G5GhG/yFIrEQupyv/Iojj8Y6b8MOjbI8XJxbB80oC
+X-MS-Exchange-CrossTenant-UserPrincipalName: LcjfyFJz0EYyW/fShKgpsfOzQkn5WrPHnM9ipaTOnMwHDDjy2xW4gH9niWChQROq
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7305
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -117,332 +117,123 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Convert the i.MX SDMA binding to DT schema format using json-schema.
-
-The compatibles fsl,imx31-to1-sdma, fsl,imx31-to2-sdma, fsl,imx35-to1-sdma
-and fsl,imx35-to2-sdma are not used. So need to delete it. The compatibles
-fsl,imx50-sdma, fsl,imx6sll-sdma and fsl,imx6sl-sdma are added. The
-original binding don't list all compatible used.
-
-In addition, add new peripheral types HDMI Audio.
+Add hdmi audio support in sdma.
 
 Signed-off-by: Joy Zou <joy.zou@nxp.com>
 ---
-Changes in v6:
-delete tag Acked-by from commit message.
+ drivers/dma/imx-sdma.c      | 38 +++++++++++++++++++++++++++++--------
+ include/linux/dma/imx-dma.h |  1 +
+ 2 files changed, 31 insertions(+), 8 deletions(-)
 
-Changes in v5:
-modify the commit message fromat.
-add additionalProperties, because delete the quotes in patch v4.
-delete unevaluatedProperties due to similar to additionalProperties.
-modification fsl,sdma-event-remap items and description.
-
-Changes in v4:
-modify the commit message.
-delete the quotes in patch.
-modify the compatible in patch.
-delete maxitems and add items for clock-names property.
-add iram property.
-
-Changes in v3:
-modify the commit message.
-modify the filename.
-modify the maintainer.
-delete the unnecessary comment.
-modify the compatible and run dt_binding_check and dtbs_check.
-add clocks and clock-names property.
-delete the reg description and add maxItems.
-delete the interrupts description and add maxItems.
-add ref for gpr property.
-modify the fsl,sdma-event-remap ref type and add items.
-delete consumer example.
-
-Changes in v2:
-convert imx sdma bindings to DT schema.
----
- .../devicetree/bindings/dma/fsl,imx-sdma.yaml | 147 ++++++++++++++++++
- .../devicetree/bindings/dma/fsl-imx-sdma.txt  | 118 --------------
- 2 files changed, 147 insertions(+), 118 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
- delete mode 100644 Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-
-diff --git a/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml b/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
-new file mode 100644
-index 000000000000..3da65d3ea4af
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
-@@ -0,0 +1,147 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/fsl,imx-sdma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index fbea5f62dd98..ab877ceeac3f 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -954,7 +954,10 @@ static irqreturn_t sdma_int_handler(int irq, void *dev_id)
+ 		desc = sdmac->desc;
+ 		if (desc) {
+ 			if (sdmac->flags & IMX_DMA_SG_LOOP) {
+-				sdma_update_channel_loop(sdmac);
++				if (sdmac->peripheral_type != IMX_DMATYPE_HDMI)
++					sdma_update_channel_loop(sdmac);
++				else
++					vchan_cyclic_callback(&desc->vd);
+ 			} else {
+ 				mxc_sdma_handle_channel_normal(sdmac);
+ 				vchan_cookie_complete(&desc->vd);
+@@ -1074,6 +1077,10 @@ static int sdma_get_pc(struct sdma_channel *sdmac,
+ 		per_2_emi = sdma->script_addrs->sai_2_mcu_addr;
+ 		emi_2_per = sdma->script_addrs->mcu_2_sai_addr;
+ 		break;
++	case IMX_DMATYPE_HDMI:
++		emi_2_per = sdma->script_addrs->hdmi_dma_addr;
++		sdmac->is_ram_script = true;
++		break;
+ 	default:
+ 		dev_err(sdma->dev, "Unsupported transfer type %d\n",
+ 			peripheral_type);
+@@ -1125,11 +1132,16 @@ static int sdma_load_context(struct sdma_channel *sdmac)
+ 	/* Send by context the event mask,base address for peripheral
+ 	 * and watermark level
+ 	 */
+-	context->gReg[0] = sdmac->event_mask[1];
+-	context->gReg[1] = sdmac->event_mask[0];
+-	context->gReg[2] = sdmac->per_addr;
+-	context->gReg[6] = sdmac->shp_addr;
+-	context->gReg[7] = sdmac->watermark_level;
++	if (sdmac->peripheral_type == IMX_DMATYPE_HDMI) {
++		context->gReg[4] = sdmac->per_addr;
++		context->gReg[6] = sdmac->shp_addr;
++	} else {
++		context->gReg[0] = sdmac->event_mask[1];
++		context->gReg[1] = sdmac->event_mask[0];
++		context->gReg[2] = sdmac->per_addr;
++		context->gReg[6] = sdmac->shp_addr;
++		context->gReg[7] = sdmac->watermark_level;
++	}
+ 
+ 	bd0->mode.command = C0_SETDM;
+ 	bd0->mode.status = BD_DONE | BD_WRAP | BD_EXTD;
+@@ -1513,7 +1525,7 @@ static struct sdma_desc *sdma_transfer_init(struct sdma_channel *sdmac,
+ 	desc->sdmac = sdmac;
+ 	desc->num_bd = bds;
+ 
+-	if (sdma_alloc_bd(desc))
++	if (bds && sdma_alloc_bd(desc))
+ 		goto err_desc_out;
+ 
+ 	/* No slave_config called in MEMCPY case, so do here */
+@@ -1678,13 +1690,16 @@ static struct dma_async_tx_descriptor *sdma_prep_dma_cyclic(
+ {
+ 	struct sdma_channel *sdmac = to_sdma_chan(chan);
+ 	struct sdma_engine *sdma = sdmac->sdma;
+-	int num_periods = buf_len / period_len;
++	int num_periods = 0;
+ 	int channel = sdmac->channel;
+ 	int i = 0, buf = 0;
+ 	struct sdma_desc *desc;
+ 
+ 	dev_dbg(sdma->dev, "%s channel: %d\n", __func__, channel);
+ 
++	if (sdmac->peripheral_type != IMX_DMATYPE_HDMI)
++		num_periods = buf_len / period_len;
 +
-+title: Freescale Smart Direct Memory Access (SDMA) Controller for i.MX
+ 	sdma_config_write(chan, &sdmac->slave_config, direction);
+ 
+ 	desc = sdma_transfer_init(sdmac, direction, num_periods);
+@@ -1701,6 +1716,9 @@ static struct dma_async_tx_descriptor *sdma_prep_dma_cyclic(
+ 		goto err_bd_out;
+ 	}
+ 
++	if (sdmac->peripheral_type == IMX_DMATYPE_HDMI)
++		return vchan_tx_prep(&sdmac->vc, &desc->vd, flags);
 +
-+maintainers:
-+  - Joy Zou <joy.zou@nxp.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - fsl,imx50-sdma
-+              - fsl,imx51-sdma
-+              - fsl,imx53-sdma
-+              - fsl,imx6q-sdma
-+              - fsl,imx7d-sdma
-+          - const: fsl,imx35-sdma
-+      - items:
-+          - enum:
-+              - fsl,imx6sx-sdma
-+              - fsl,imx6sl-sdma
-+          - const: fsl,imx6q-sdma
-+      - items:
-+          - const: fsl,imx6ul-sdma
-+          - const: fsl,imx6q-sdma
-+          - const: fsl,imx35-sdma
-+      - items:
-+          - const: fsl,imx6sll-sdma
-+          - const: fsl,imx6ul-sdma
-+      - items:
-+          - const: fsl,imx8mq-sdma
-+          - const: fsl,imx7d-sdma
-+      - items:
-+          - enum:
-+              - fsl,imx8mp-sdma
-+              - fsl,imx8mn-sdma
-+              - fsl,imx8mm-sdma
-+          - const: fsl,imx8mq-sdma
-+      - items:
-+          - enum:
-+              - fsl,imx25-sdma
-+              - fsl,imx31-sdma
-+              - fsl,imx35-sdma
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  fsl,sdma-ram-script-name:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description: Should contain the full path of SDMA RAM scripts firmware.
-+
-+  "#dma-cells":
-+    const: 3
-+    description: |
-+      The first cell: request/event ID
-+
-+      The second cell: peripheral types ID
-+        enum:
-+          - MCU domain SSI: 0
-+          - Shared SSI: 1
-+          - MMC: 2
-+          - SDHC: 3
-+          - MCU domain UART: 4
-+          - Shared UART: 5
-+          - FIRI: 6
-+          - MCU domain CSPI: 7
-+          - Shared CSPI: 8
-+          - SIM: 9
-+          - ATA: 10
-+          - CCM: 11
-+          - External peripheral: 12
-+          - Memory Stick Host Controller: 13
-+          - Shared Memory Stick Host Controller: 14
-+          - DSP: 15
-+          - Memory: 16
-+          - FIFO type Memory: 17
-+          - SPDIF: 18
-+          - IPU Memory: 19
-+          - ASRC: 20
-+          - ESAI: 21
-+          - SSI Dual FIFO: 22
-+              description: needs firmware more than ver 2
-+          - Shared ASRC: 23
-+          - SAI: 24
-+          - HDMI Audio: 25
-+
-+       The third cell: transfer priority ID
-+         enum:
-+           - High: 0
-+           - Medium: 1
-+           - Low: 2
-+
-+  gpr:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: The phandle to the General Purpose Register (GPR) node
-+
-+  fsl,sdma-event-remap:
-+    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-+    maxItems: 2
-+    items:
-+      items:
-+        - description: GPR register offset
-+        - description: GPR register shift
-+        - description: GPR register value
-+    description: |
-+      Register bits of sdma event remap, the format is <reg shift val>.
-+      The order is <RX>, <TX>.
-+
-+  clocks:
-+    maxItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: ipg
-+      - const: ahb
-+
-+  iram:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: The phandle to the On-chip RAM (OCRAM) node.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - fsl,sdma-ram-script-name
-+  - "#dma-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    sdma: dma-controller@83fb0000 {
-+      compatible = "fsl,imx51-sdma", "fsl,imx35-sdma";
-+      reg = <0x83fb0000 0x4000>;
-+      interrupts = <6>;
-+      #dma-cells = <3>;
-+      fsl,sdma-ram-script-name = "sdma-imx51.bin";
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-deleted file mode 100644
-index 12c316ff4834..000000000000
---- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-+++ /dev/null
-@@ -1,118 +0,0 @@
--* Freescale Smart Direct Memory Access (SDMA) Controller for i.MX
--
--Required properties:
--- compatible : Should be one of
--      "fsl,imx25-sdma"
--      "fsl,imx31-sdma", "fsl,imx31-to1-sdma", "fsl,imx31-to2-sdma"
--      "fsl,imx35-sdma", "fsl,imx35-to1-sdma", "fsl,imx35-to2-sdma"
--      "fsl,imx51-sdma"
--      "fsl,imx53-sdma"
--      "fsl,imx6q-sdma"
--      "fsl,imx7d-sdma"
--      "fsl,imx6ul-sdma"
--      "fsl,imx8mq-sdma"
--      "fsl,imx8mm-sdma"
--      "fsl,imx8mn-sdma"
--      "fsl,imx8mp-sdma"
--  The -to variants should be preferred since they allow to determine the
--  correct ROM script addresses needed for the driver to work without additional
--  firmware.
--- reg : Should contain SDMA registers location and length
--- interrupts : Should contain SDMA interrupt
--- #dma-cells : Must be <3>.
--  The first cell specifies the DMA request/event ID.  See details below
--  about the second and third cell.
--- fsl,sdma-ram-script-name : Should contain the full path of SDMA RAM
--  scripts firmware
--
--The second cell of dma phandle specifies the peripheral type of DMA transfer.
--The full ID of peripheral types can be found below.
--
--	ID	transfer type
--	---------------------
--	0	MCU domain SSI
--	1	Shared SSI
--	2	MMC
--	3	SDHC
--	4	MCU domain UART
--	5	Shared UART
--	6	FIRI
--	7	MCU domain CSPI
--	8	Shared CSPI
--	9	SIM
--	10	ATA
--	11	CCM
--	12	External peripheral
--	13	Memory Stick Host Controller
--	14	Shared Memory Stick Host Controller
--	15	DSP
--	16	Memory
--	17	FIFO type Memory
--	18	SPDIF
--	19	IPU Memory
--	20	ASRC
--	21	ESAI
--	22	SSI Dual FIFO	(needs firmware ver >= 2)
--	23	Shared ASRC
--	24	SAI
--
--The third cell specifies the transfer priority as below.
--
--	ID	transfer priority
--	-------------------------
--	0	High
--	1	Medium
--	2	Low
--
--Optional properties:
--
--- gpr : The phandle to the General Purpose Register (GPR) node.
--- fsl,sdma-event-remap : Register bits of sdma event remap, the format is
--  <reg shift val>.
--    reg is the GPR register offset.
--    shift is the bit position inside the GPR register.
--    val is the value of the bit (0 or 1).
--
--Examples:
--
--sdma@83fb0000 {
--	compatible = "fsl,imx51-sdma", "fsl,imx35-sdma";
--	reg = <0x83fb0000 0x4000>;
--	interrupts = <6>;
--	#dma-cells = <3>;
--	fsl,sdma-ram-script-name = "sdma-imx51.bin";
--};
--
--DMA clients connected to the i.MX SDMA controller must use the format
--described in the dma.txt file.
--
--Examples:
--
--ssi2: ssi@70014000 {
--	compatible = "fsl,imx51-ssi", "fsl,imx21-ssi";
--	reg = <0x70014000 0x4000>;
--	interrupts = <30>;
--	clocks = <&clks 49>;
--	dmas = <&sdma 24 1 0>,
--	       <&sdma 25 1 0>;
--	dma-names = "rx", "tx";
--	fsl,fifo-depth = <15>;
--};
--
--Using the fsl,sdma-event-remap property:
--
--If we want to use SDMA on the SAI1 port on a MX6SX:
--
--&sdma {
--	gpr = <&gpr>;
--	/* SDMA events remap for SAI1_RX and SAI1_TX */
--	fsl,sdma-event-remap = <0 15 1>, <0 16 1>;
--};
--
--The fsl,sdma-event-remap property in this case has two values:
--- <0 15 1> means that the offset is 0, so GPR0 is the register of the
--SDMA remap. Bit 15 of GPR0 selects between UART4_RX and SAI1_RX.
--Setting bit 15 to 1 selects SAI1_RX.
--- <0 16 1> means that the offset is 0, so GPR0 is the register of the
--SDMA remap. Bit 16 of GPR0 selects between UART4_TX and SAI1_TX.
--Setting bit 16 to 1 selects SAI1_TX.
+ 	while (buf < buf_len) {
+ 		struct sdma_buffer_descriptor *bd = &desc->bd[i];
+ 		int param;
+@@ -1761,6 +1779,10 @@ static int sdma_config_write(struct dma_chan *chan,
+ 		sdmac->watermark_level |= (dmaengine_cfg->dst_maxburst << 16) &
+ 			SDMA_WATERMARK_LEVEL_HWML;
+ 		sdmac->word_size = dmaengine_cfg->dst_addr_width;
++	} else if (sdmac->peripheral_type == IMX_DMATYPE_HDMI) {
++		sdmac->per_address = dmaengine_cfg->dst_addr;
++		sdmac->per_address2 = dmaengine_cfg->src_addr;
++		sdmac->watermark_level = 0;
+ 	} else {
+ 		sdmac->per_address = dmaengine_cfg->dst_addr;
+ 		sdmac->watermark_level = dmaengine_cfg->dst_maxburst *
+diff --git a/include/linux/dma/imx-dma.h b/include/linux/dma/imx-dma.h
+index f487a4fa103a..cfec5f946e23 100644
+--- a/include/linux/dma/imx-dma.h
++++ b/include/linux/dma/imx-dma.h
+@@ -40,6 +40,7 @@ enum sdma_peripheral_type {
+ 	IMX_DMATYPE_ASRC_SP,	/* Shared ASRC */
+ 	IMX_DMATYPE_SAI,	/* SAI */
+ 	IMX_DMATYPE_MULTI_SAI,	/* MULTI FIFOs For Audio */
++	IMX_DMATYPE_HDMI,       /* HDMI Audio */
+ };
+ 
+ enum imx_dma_prio {
 -- 
 2.37.1
 

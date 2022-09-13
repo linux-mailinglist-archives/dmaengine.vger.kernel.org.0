@@ -2,93 +2,148 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DC205B5D14
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Sep 2022 17:26:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71BD25B7791
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Sep 2022 19:16:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230208AbiILP0f (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 12 Sep 2022 11:26:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50340 "EHLO
+        id S232715AbiIMRPd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 13 Sep 2022 13:15:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230182AbiILP0e (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Sep 2022 11:26:34 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8182713EB2
-        for <dmaengine@vger.kernel.org>; Mon, 12 Sep 2022 08:26:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662996393; x=1694532393;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=QBu4L0OnyCS3R9BiE4M4O3g5J7oe/k8WLwVIVbN7/Gg=;
-  b=G2ojRyvJxmXF8WFLjvfVgHlsLCt9/Kp4CBLnsl/yNU5JOvBcloVlhKfJ
-   D8dFlUkNfjxYbgaKwxYHui1kkOIsznihHutJlXrat7P7Q9XfjNmQO62RM
-   JCKqgQCkVd8+OMoHVA0NzvRtCVhDrtcEnuQQGy8CPqyPzHp3Ivr7X9M57
-   N4ZPLNUre4W1SLupMjFX0AspOGYHMYgjtdQ2Kz70CCaWt2mwduYTWfPcD
-   YVkh5Z6/avwiPFwQc1wrocT6zVJlwby1rDhcDvcGx14Lucv/gkFk+h+vN
-   aU8SFaWp+fLDidp30URuzsTy1xlyvgwambisVs6itN10uAsQ/6lAEpeqf
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10468"; a="278284348"
-X-IronPort-AV: E=Sophos;i="5.93,310,1654585200"; 
-   d="scan'208";a="278284348"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2022 08:26:14 -0700
-X-IronPort-AV: E=Sophos;i="5.93,310,1654585200"; 
-   d="scan'208";a="705190391"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.48.79]) ([10.212.48.79])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2022 08:26:13 -0700
-Message-ID: <a5e1de92-c3a3-50b5-5ebb-322aec19a612@intel.com>
-Date:   Mon, 12 Sep 2022 08:26:13 -0700
+        with ESMTP id S232474AbiIMROl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 13 Sep 2022 13:14:41 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63E2E183AD
+        for <dmaengine@vger.kernel.org>; Tue, 13 Sep 2022 09:03:18 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1oY7e1-0005K2-JO; Tue, 13 Sep 2022 17:16:13 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1oY7e1-0001yU-1A; Tue, 13 Sep 2022 17:16:13 +0200
+Date:   Tue, 13 Sep 2022 17:16:12 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3] dmaengine: mxs: fix driver registering
+Message-ID: <20220913151612.GI12909@pengutronix.de>
+References: <20220614101751.3636028-1-dario.binacchi@amarulasolutions.com>
+ <Yqs3E0ipEpsCT2T2@matsya>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.2.2
-Subject: Re: [PATCH] dmaengine: ioat: remove unused declarations in dma.h
-Content-Language: en-US
-To:     Gaosheng Cui <cuigaosheng1@huawei.com>, vkoul@kernel.org,
-        vinod.koul@intel.com
-Cc:     dmaengine@vger.kernel.org
-References: <20220911091817.3214271-1-cuigaosheng1@huawei.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20220911091817.3214271-1-cuigaosheng1@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Yqs3E0ipEpsCT2T2@matsya>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Vinod,
 
-On 9/11/2022 2:18 AM, Gaosheng Cui wrote:
-> ioat_ring_alloc_order and ioat_ring_max_alloc_order have
-> been removed since commit cd60cd96137f ("dmaengine: IOATDMA:
-> Removing descriptor ring reshape"), so remove them.
->
-> Signed-off-by: Gaosheng Cui <cuigaosheng1@huawei.com>
+On Thu, Jun 16, 2022 at 06:58:43AM -0700, Vinod Koul wrote:
+> On 14-06-22, 12:17, Dario Binacchi wrote:
+> > Driver registration fails on SOC imx8mn as its supplier, the clock
+> > control module, is not ready. Since platform_driver_probe(), as
+> > reported by its description, is incompatible with deferred probing,
+> > we have to use platform_driver_register().
+> > 
+> > Fixes: a580b8c5429a ("dmaengine: mxs-dma: add dma support for i.MX23/28")
+> > Co-developed-by: Michael Trimarchi <michael@amarulasolutions.com>
+> > Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+> > Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> > Cc: stable@vger.kernel.org
+> > 
+> > ---
+> > 
+> > Changes in v3:
+> > - Restore __init in front of mxs_dma_init() definition.
+> > 
+> > Changes in v2:
+> > - Add the tag "Cc: stable@vger.kernel.org" in the sign-off area.
+> > 
+> >  drivers/dma/mxs-dma.c | 9 +++------
+> >  1 file changed, 3 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
+> > index 994fc4d2aca4..6e90540fedc4 100644
+> > --- a/drivers/dma/mxs-dma.c
+> > +++ b/drivers/dma/mxs-dma.c
+> > @@ -741,7 +741,7 @@ static struct dma_chan *mxs_dma_xlate(struct of_phandle_args *dma_spec,
+> >  				     ofdma->of_node);
+> >  }
+> >  
+> > -static int __init mxs_dma_probe(struct platform_device *pdev)
+> > +static int mxs_dma_probe(struct platform_device *pdev)
+> 
+> why drop __init here, if there is a reason for that please split this
+> change and document such reason...
 
-Acked-by: Dave Jiang <dave.jiang@intel.com>
+The reason for dropping __init comes with this patch. With
+platform_driver_probe() the probe function is called only once, during
+init time. The problem with platform_driver_probe() is that the probe
+function will never be called again when it initially returns
+-EPROBE_DEFER. That's a problem for Dario: The clock is not yet
+available, the driver defers probe and will never be probed again
+when the clock is finally available.
 
-Thanks.
+With platform_driver_register() to which this patch switches to the
+probe function can be called at any time, thus __init has to be removed.
 
-> ---
->   drivers/dma/ioat/dma.h | 2 --
->   1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
-> index 140cfe3782fb..35e06b382603 100644
-> --- a/drivers/dma/ioat/dma.h
-> +++ b/drivers/dma/ioat/dma.h
-> @@ -196,10 +196,8 @@ extern const struct sysfs_ops ioat_sysfs_ops;
->   extern struct ioat_sysfs_entry ioat_version_attr;
->   extern struct ioat_sysfs_entry ioat_cap_attr;
->   extern int ioat_pending_level;
-> -extern int ioat_ring_alloc_order;
->   extern struct kobj_type ioat_ktype;
->   extern struct kmem_cache *ioat_cache;
-> -extern int ioat_ring_max_alloc_order;
->   extern struct kmem_cache *ioat_sed_cache;
->   
->   static inline struct ioatdma_chan *to_ioat_chan(struct dma_chan *c)
+For what it's worth:
+
+Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
+
+for this patch.
+
+Sascha
+
+> 
+> >  {
+> >  	struct device_node *np = pdev->dev.of_node;
+> >  	const struct mxs_dma_type *dma_type;
+> > @@ -839,10 +839,7 @@ static struct platform_driver mxs_dma_driver = {
+> >  		.name	= "mxs-dma",
+> >  		.of_match_table = mxs_dma_dt_ids,
+> >  	},
+> > +	.probe = mxs_dma_probe,
+> >  };
+> >  
+> > -static int __init mxs_dma_module_init(void)
+> > -{
+> > -	return platform_driver_probe(&mxs_dma_driver, mxs_dma_probe);
+> > -}
+> > -subsys_initcall(mxs_dma_module_init);
+> > +module_platform_driver(mxs_dma_driver);
+> > -- 
+> > 2.32.0
+> 
+> -- 
+> ~Vinod
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |

@@ -2,140 +2,123 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B4D05B8619
-	for <lists+dmaengine@lfdr.de>; Wed, 14 Sep 2022 12:20:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 286AC5B86DE
+	for <lists+dmaengine@lfdr.de>; Wed, 14 Sep 2022 13:01:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229617AbiINKUD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 14 Sep 2022 06:20:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44848 "EHLO
+        id S229735AbiINLBA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 14 Sep 2022 07:01:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229544AbiINKUB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Sep 2022 06:20:01 -0400
-Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3816EBB;
-        Wed, 14 Sep 2022 03:20:00 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R691e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VPn2uAR_1663150790;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0VPn2uAR_1663150790)
-          by smtp.aliyun-inc.com;
-          Wed, 14 Sep 2022 18:19:58 +0800
-From:   Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To:     peter.ujfalusi@gmail.com
-Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-        Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH] dmaengine: ti: edma: Remove some unused functions
-Date:   Wed, 14 Sep 2022 18:19:43 +0800
-Message-Id: <20220914101943.83929-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+        with ESMTP id S229725AbiINLA7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Sep 2022 07:00:59 -0400
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B74C83868D;
+        Wed, 14 Sep 2022 04:00:58 -0700 (PDT)
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 28EB0pFl020848;
+        Wed, 14 Sep 2022 06:00:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1663153251;
+        bh=N3V5rQp5fY9ZZxVnAZrfo3lpoBY/T8FN05g1IIxelYU=;
+        h=From:To:CC:Subject:Date;
+        b=nCoGwY/A+gFTrgD/14uhQ9x42e0ouRDgezkp2SG7Jrh/aFxJrNK8E9Jr5b0lmGHw6
+         r5qgz6UUMwvbHzktz+kwGm1doC7EizAjrB9ycCIqUUXAUmvrfz3i1xqn6TUpjW4EB6
+         rxueViV1+BdL8AOPp/0Fwe0QA3oQfu55+qC8xpH8=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 28EB0pYo016195
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 14 Sep 2022 06:00:51 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Wed, 14
+ Sep 2022 06:00:50 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
+ Frontend Transport; Wed, 14 Sep 2022 06:00:50 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 28EB0nE9103334;
+        Wed, 14 Sep 2022 06:00:50 -0500
+From:   Vaishnav Achath <vaishnav.a@ti.com>
+To:     <dmaengine@vger.kernel.org>
+CC:     <kishon@ti.com>, <linux-kernel@vger.kernel.org>,
+        <peter.ujfalusi@gmail.com>, <vigneshr@ti.com>, <vkoul@kernel.org>,
+        <vaishnav.a@ti.com>
+Subject: [PATCH v2] dmaengine: ti: k3-udma: Respond TX done if DMA_PREP_INTERRUPT is not requested
+Date:   Wed, 14 Sep 2022 16:30:49 +0530
+Message-ID: <20220914110049.5842-1-vaishnav.a@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-These functions are defined in the edma.c file, but not called elsewhere,
-so delete these unused functions.
+If the DMA consumer driver does not expect the callback for TX done, then
+we need not perform the channel RT byte counter calculations and estimate
+the completion but return complete on first attempt itself.This assumes
+that the consumer who did not request DMA_PREP_INTERRUPT has its own
+mechanism for understanding TX completion, example: MCSPI EOW interrupt
+can be used as TX completion signal for a SPI transaction.
 
-drivers/dma/ti/edma.c:746:31: warning: unused function 'to_edma_cc'.
-drivers/dma/ti/edma.c:420:20: warning: unused function 'edma_param_or'.
-drivers/dma/ti/edma.c:414:20: warning: unused function 'edma_param_and'.
-drivers/dma/ti/edma.c:402:20: warning: unused function 'edma_param_write'.
-drivers/dma/ti/edma.c:373:28: warning: unused function 'edma_shadow0_read'.
-drivers/dma/ti/edma.c:396:28: warning: unused function 'edma_param_read'.
-drivers/dma/ti/edma.c:355:20: warning: unused function 'edma_or_array'.
-
-Link: https://bugzilla.openanolis.cn/show_bug.cgi?id=2152
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
 ---
- drivers/dma/ti/edma.c | 40 ----------------------------------------
- 1 file changed, 40 deletions(-)
 
-diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-index 4cbca80ee16e..fa06d7e6d8e3 100644
---- a/drivers/dma/ti/edma.c
-+++ b/drivers/dma/ti/edma.c
-@@ -352,12 +352,6 @@ static inline void edma_modify_array(struct edma_cc *ecc, int offset, int i,
- 	edma_modify(ecc, offset + (i << 2), and, or);
- }
+V1->V2:
+	* Add comment to explain the expectations from the consumer
+	when DMA_PREP_INTERRUPT is not requested.
+	* v1 was sent as series:
+	https://lore.kernel.org/lkml/20220822091531.27827-2-vaishnav.a@ti.com/
+
+ drivers/dma/ti/k3-udma.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 39b330ada200..fbb80a6e59b2 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -263,6 +263,7 @@ struct udma_chan_config {
+ 	enum udma_tp_level channel_tpl; /* Channel Throughput Level */
  
--static inline void edma_or_array(struct edma_cc *ecc, int offset, int i,
--				 unsigned or)
--{
--	edma_or(ecc, offset + (i << 2), or);
--}
--
- static inline void edma_or_array2(struct edma_cc *ecc, int offset, int i, int j,
- 				  unsigned or)
- {
-@@ -370,11 +364,6 @@ static inline void edma_write_array2(struct edma_cc *ecc, int offset, int i,
- 	edma_write(ecc, offset + ((i * 2 + j) << 2), val);
- }
+ 	u32 tr_trigger_type;
++	unsigned long tx_flags;
  
--static inline unsigned int edma_shadow0_read(struct edma_cc *ecc, int offset)
--{
--	return edma_read(ecc, EDMA_SHADOW0 + offset);
--}
--
- static inline unsigned int edma_shadow0_read_array(struct edma_cc *ecc,
- 						   int offset, int i)
+ 	/* PKDMA mapped channel */
+ 	int mapped_channel_id;
+@@ -1055,9 +1056,14 @@ static bool udma_is_desc_really_done(struct udma_chan *uc, struct udma_desc *d)
  {
-@@ -393,36 +382,12 @@ static inline void edma_shadow0_write_array(struct edma_cc *ecc, int offset,
- 	edma_write(ecc, EDMA_SHADOW0 + offset + (i << 2), val);
- }
+ 	u32 peer_bcnt, bcnt;
  
--static inline unsigned int edma_param_read(struct edma_cc *ecc, int offset,
--					   int param_no)
--{
--	return edma_read(ecc, EDMA_PARM + offset + (param_no << 5));
--}
--
--static inline void edma_param_write(struct edma_cc *ecc, int offset,
--				    int param_no, unsigned val)
--{
--	edma_write(ecc, EDMA_PARM + offset + (param_no << 5), val);
--}
--
- static inline void edma_param_modify(struct edma_cc *ecc, int offset,
- 				     int param_no, unsigned and, unsigned or)
- {
- 	edma_modify(ecc, EDMA_PARM + offset + (param_no << 5), and, or);
- }
+-	/* Only TX towards PDMA is affected */
++	/*
++	 * Only TX towards PDMA is affected.
++	 * If DMA_PREP_INTERRUPT is not set by consumer then skip the transfer
++	 * completion calculation, consumer must ensure that there is no stale
++	 * data in DMA fabric in this case.
++	 */
+ 	if (uc->config.ep_type == PSIL_EP_NATIVE ||
+-	    uc->config.dir != DMA_MEM_TO_DEV)
++	    uc->config.dir != DMA_MEM_TO_DEV || !(uc->config.tx_flags & DMA_PREP_INTERRUPT))
+ 		return true;
  
--static inline void edma_param_and(struct edma_cc *ecc, int offset, int param_no,
--				  unsigned and)
--{
--	edma_and(ecc, EDMA_PARM + offset + (param_no << 5), and);
--}
--
--static inline void edma_param_or(struct edma_cc *ecc, int offset, int param_no,
--				 unsigned or)
--{
--	edma_or(ecc, EDMA_PARM + offset + (param_no << 5), or);
--}
--
- static void edma_assign_priority_to_queue(struct edma_cc *ecc, int queue_no,
- 					  int priority)
- {
-@@ -743,11 +708,6 @@ static void edma_free_channel(struct edma_chan *echan)
- 	edma_setup_interrupt(echan, false);
- }
+ 	peer_bcnt = udma_tchanrt_read(uc, UDMA_CHAN_RT_PEER_BCNT_REG);
+@@ -3418,6 +3424,8 @@ udma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 	if (!burst)
+ 		burst = 1;
  
--static inline struct edma_cc *to_edma_cc(struct dma_device *d)
--{
--	return container_of(d, struct edma_cc, dma_slave);
--}
--
- static inline struct edma_chan *to_edma_chan(struct dma_chan *c)
- {
- 	return container_of(c, struct edma_chan, vchan.chan);
++	uc->config.tx_flags = tx_flags;
++
+ 	if (uc->config.pkt_mode)
+ 		d = udma_prep_slave_sg_pkt(uc, sgl, sglen, dir, tx_flags,
+ 					   context);
 -- 
-2.20.1.7.g153144c
+2.17.1
 

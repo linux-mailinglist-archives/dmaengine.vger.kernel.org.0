@@ -2,70 +2,69 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE97A5B89DE
-	for <lists+dmaengine@lfdr.de>; Wed, 14 Sep 2022 16:06:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2F525B8A34
+	for <lists+dmaengine@lfdr.de>; Wed, 14 Sep 2022 16:20:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229923AbiINOGW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 14 Sep 2022 10:06:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36518 "EHLO
+        id S229550AbiINOUn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 14 Sep 2022 10:20:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229615AbiINOGB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Sep 2022 10:06:01 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50C40286C5;
-        Wed, 14 Sep 2022 07:04:45 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id bj12so34892370ejb.13;
-        Wed, 14 Sep 2022 07:04:45 -0700 (PDT)
+        with ESMTP id S229536AbiINOUn (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Sep 2022 10:20:43 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C0CF4507F;
+        Wed, 14 Sep 2022 07:20:42 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id sb3so5445070ejb.9;
+        Wed, 14 Sep 2022 07:20:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date;
-        bh=02TavS8mINTMVN78q0QlG4Xhc4w7Y+6RhEJOvF39px4=;
-        b=MCF9LBW0gHOs74aOZASWgcLENiamte2K9CdwIM0whMEYmFNVjEjzhwh4Ws0XwmhL4y
-         HbutLuCf1DaD6NEOdjI37XqfcpxyS0Ll6PXEBql0Z9TBh8AmeYLD7aE8VYrgLhw69a24
-         ihh/U99uWU/a6DuPWR7HyYtsCZy2LRtvGQBK3yXcTbQMBZPzgiyWUFoe+Ctr2F+jfMbV
-         ApiV5U4qwArHq056TxlH64tRFE6i7eAI1/py8S5Yvzf83o48bgNbEROjB2CoPG7DQ6Aq
-         BpFpG0fSqTOjEI3J1R+RbNjxjndkvC+bBqm9ofo9mBq8tgbv4u02mEdHh7ikzqaLcPBg
-         pJcw==
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=rQJchlp98LSRkNYT0Y3HEFD0d/jl10aOIqzKMpMh29o=;
+        b=AE+QONsRRVmf1CQraIvgeDAs4Orl2PYlDMwTN/2xAYYVjDXITuqaoLdIFCBywjwQVi
+         0WsYGglrXXYDKgVg0EDsBMQLPgg3PHyryWQrJE5JCLTVo0CLsf4/VwnLvC2Yq50AXMUJ
+         4esTbONxzIc+6Qju/qHpWIPB3PJLU1Wf0F04rvtoliKkutgiEEy+5hyL5BgQ2h0YxLFj
+         mEtBfyvi0pD6eSlfFtbYdkxGMkxEuAjuIHYYkfunn5VipcDgn8uDi0VVQfVdmV0xZlXC
+         l5xlQsHnwQGv455LOGefHEqEJQsiSNbwqjM1FmWkljymlb1urHLe8msqQWkFyY8rT8Yj
+         lP5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=02TavS8mINTMVN78q0QlG4Xhc4w7Y+6RhEJOvF39px4=;
-        b=1gj/FmxPy9GLv0E6Bw23s1doXQEKJrSqi3O2UYOdjD6eJuCU02rT8vuQaw7ecBpUCB
-         I1l9Wjo9SeGax2jIiRydAO0Cw2pQV1FpjAU6Bp90jMeDahMBTvgE4E5heHz9QB6N/xxK
-         zajWfdVJWeuN/1ElgR/u3kV6AQl1LqXvbHdOm0gQ89SgcQYNEr8NgcxPWz0qnYQ4QpGl
-         B0RKu7FA9mTIieNrLZLzSDNQ2dr/wWwW56lrfGSmCPEamhr5Hscb9kpWyvwkaNug0joF
-         zK9JSKqOTD+/Y8ExPKECcA2IcYrh+W5W8+PxSpcSGSGk5DmNSRrVzWs/LDgG9uSdAPzw
-         2BDw==
-X-Gm-Message-State: ACgBeo2vKSet+TrP7bmUSDmPEEujEo0jxb3RcUT7j2JysT+xSKUJnMw6
-        YTwuILVudfqza2VUeuLahuo=
-X-Google-Smtp-Source: AA6agR4C5L8yKcAo75mmo5Zjm3a2SRTK4yfQ8bdXQQNDHTGg2bOsDK1XwnhbxBV/Og7ERmBFGhApNQ==
-X-Received: by 2002:a17:906:fd85:b0:77b:b538:6472 with SMTP id xa5-20020a170906fd8500b0077bb5386472mr13649003ejb.48.1663164279850;
-        Wed, 14 Sep 2022 07:04:39 -0700 (PDT)
-Received: from localhost.localdomain (93-42-70-134.ip85.fastwebnet.it. [93.42.70.134])
-        by smtp.googlemail.com with ESMTPSA id i10-20020a1709061e4a00b0073dba2d9f99sm7560296ejj.128.2022.09.14.07.04.38
+        bh=rQJchlp98LSRkNYT0Y3HEFD0d/jl10aOIqzKMpMh29o=;
+        b=CCPXPt7BhMN6RWyHKHbenM/a8rLNSk/SuQMIPXzL5nMchlCgb7xO2UDY/QtatoAn2j
+         tV3noHFcDvYXW70qToJpy9nkEqUE+0+nKHVxVf3FCXOBhAq2bKrYIo7izJwbu1Kj0Q0u
+         TS9i0HwABS7vVLuSUhrt8+yDCsgD8eNb2wfeEETUMBADVaADomjGomUxyO31V6f7rH9b
+         YMpczZiQGvYnlbQVucjpeMhXxmLvARNovwg9xZjSXRYDbNdvn88yozEDjWvCn88Pe6/H
+         lBdaZpNoTTbxZukjXHQaku5DU1uO4Z9Esa6OFgEHS20UuG5R4KKZgfD0Mzdf/vHzpUR1
+         RuMA==
+X-Gm-Message-State: ACgBeo04dxt5VeTHrHPV5mG2G5OSHW8wqwVzeNO/2dmSbJAgGbblNcz4
+        MXwKDG9TransADp3RmxKcLI=
+X-Google-Smtp-Source: AA6agR7OvPSTBl/G5oWm8qZW5U3e90EFCy/rAGm8UfgS/vXXw+IRsocVCoe4/VnWFJZOtHYvEnJQ1g==
+X-Received: by 2002:a17:907:a0c7:b0:77c:b9cb:be17 with SMTP id hw7-20020a170907a0c700b0077cb9cbbe17mr11861287ejc.335.1663165240929;
+        Wed, 14 Sep 2022 07:20:40 -0700 (PDT)
+Received: from orome (p200300e41f12c800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f12:c800:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id bo24-20020a0564020b3800b0044e8ecb9d25sm9814186edb.52.2022.09.14.07.20.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Sep 2022 07:04:39 -0700 (PDT)
-From:   Christian Marangi <ansuelsmth@gmail.com>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Christian Marangi <ansuelsmth@gmail.com>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] dt-bindings: dma: add additional pbus reset to qcom,adm
-Date:   Wed, 14 Sep 2022 16:04:26 +0200
-Message-Id: <20220914140426.7609-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20220914140426.7609-1-ansuelsmth@gmail.com>
-References: <20220914140426.7609-1-ansuelsmth@gmail.com>
+        Wed, 14 Sep 2022 07:20:39 -0700 (PDT)
+Date:   Wed, 14 Sep 2022 16:20:37 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Akhil R <akhilrajeev@nvidia.com>
+Cc:     ldewangan@nvidia.com, jonathanh@nvidia.com, vkoul@kernel.org,
+        p.zabel@pengutronix.de, dmaengine@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Add dma-channel-mask to
+ Tegra GPCDMA
+Message-ID: <YyHjNfk8ZMx+O96e@orome>
+References: <20220913155251.59375-1-akhilrajeev@nvidia.com>
+ <20220913155251.59375-2-akhilrajeev@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="u68pok3Ii3D4oT+4"
+Content-Disposition: inline
+In-Reply-To: <20220913155251.59375-2-akhilrajeev@nvidia.com>
+User-Agent: Mutt/2.2.7 (2022-08-07)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -76,47 +75,48 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-qcom,adm require an additional reset for the pbus line. Add this missing
-reset to match the current implementation on ipq806x.dtsi.
 
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
- Documentation/devicetree/bindings/dma/qcom,adm.yaml | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+--u68pok3Ii3D4oT+4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom,adm.yaml b/Documentation/devicetree/bindings/dma/qcom,adm.yaml
-index 6c08245bf5d5..6a9d7bc74aff 100644
---- a/Documentation/devicetree/bindings/dma/qcom,adm.yaml
-+++ b/Documentation/devicetree/bindings/dma/qcom,adm.yaml
-@@ -40,6 +40,7 @@ properties:
-   resets:
-     items:
-       - description: phandle to the clk reset
-+      - description: phandle to the pbus reset
-       - description: phandle to the c0 reset
-       - description: phandle to the c1 reset
-       - description: phandle to the c2 reset
-@@ -47,6 +48,7 @@ properties:
-   reset-names:
-     items:
-       - const: clk
-+      - const: pbus
-       - const: c0
-       - const: c1
-       - const: c2
-@@ -86,10 +88,11 @@ examples:
-         clock-names = "core", "iface";
- 
-         resets = <&gcc ADM0_RESET>,
-+                  <&gcc ADM0_PBUS_RESET>,
-                   <&gcc ADM0_C0_RESET>,
-                   <&gcc ADM0_C1_RESET>,
-                   <&gcc ADM0_C2_RESET>;
--        reset-names = "clk", "c0", "c1", "c2";
-+        reset-names = "clk", "pbus", "c0", "c1", "c2";
-         qcom,ee = <0>;
-     };
- 
--- 
-2.37.2
+On Tue, Sep 13, 2022 at 09:22:49PM +0530, Akhil R wrote:
+> Add dma-channel-mask property in Tegra GPCDMA document.
+>=20
+> The property would help to specify the channels to be used in
+> kernel and reserve few for the firmware. This was previously
+> achieved by limiting the channel number to 31 in the driver.
+> Now since we can list all 32 channels, update the interrupts
+> property as well to list all 32 interrupts.
+>=20
+> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+> ---
+>  .../devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml   | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 
+Seems fine:
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--u68pok3Ii3D4oT+4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmMh4zMACgkQ3SOs138+
+s6HIwxAAnV8HckodonLxHxHC2GVwz4llfzXyru2YUhFSnnIgW9gdtEVLw0NVW9Mn
+h4b41JPZoGofX/8BCSkcrP53CZl5HOzRp3lBBjcvoMZfjwtCRYNJXxCsETgyoFpt
++X1RJphVPk2928w/S4jgPzw3HVeDdvJPhupxMu1dxT/maKFmGe1jyXrPH1BSoTPi
+OBpvLDEMegZDhbHraE/KTJbIhuW/DJPTm5w/Y20xdVf3RhNujtSEa3kIkdoQgWvC
+O19xCBbsfw3o+7L4WsZTlUGAseGwu4Q3wqc9gLldlJb9mBGsQ0BFM73prf2ciYqC
+NLYw37RtimQUW+qPvoFrG2SznClJRSTvDWsbUQXQ0PyU5nOtk1NzpNHdW+hh2Lh/
+gfZdPqfBOp4vqke3Zh+KU9RQ5e1Wtac9DUzSsYv6d35bd0hYT32LjqJ1nmLKXzul
+16t4pH/qQVoFygdk+BjGhTd0LwuoGKbGi501H68TuTGx1FRFyrr4g8XTfhh1Q+rC
+uryV9tuOgBdbG94SmUIIn1QauBjGbje+9ljrxXrBJD4cNxJzAPeH+9Oc+PeyMZM/
+3G6AIkvRJsdRK4PVfZDfwOBiYIyqeByNiLG0ibWLacuicJ5rkNqHuV6g4jq49jEg
+YQHkK4DxCfmGUfddIPyVvs0HNSCH5KFfzZGDmstFDuRsE7fVEPs=
+=jbaz
+-----END PGP SIGNATURE-----
+
+--u68pok3Ii3D4oT+4--

@@ -2,70 +2,63 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B2B855B8DA1
-	for <lists+dmaengine@lfdr.de>; Wed, 14 Sep 2022 18:57:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1DBC5B90DF
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Sep 2022 01:08:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229743AbiINQ5h (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 14 Sep 2022 12:57:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37310 "EHLO
+        id S229920AbiINXI2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 14 Sep 2022 19:08:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbiINQ5g (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Sep 2022 12:57:36 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FD6B237D1;
-        Wed, 14 Sep 2022 09:57:35 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id r18so36165010eja.11;
-        Wed, 14 Sep 2022 09:57:35 -0700 (PDT)
+        with ESMTP id S229930AbiINXI1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Sep 2022 19:08:27 -0400
+Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3598987095;
+        Wed, 14 Sep 2022 16:08:26 -0700 (PDT)
+Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-11e9a7135easo45011165fac.6;
+        Wed, 14 Sep 2022 16:08:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date;
-        bh=Dm2hwF6WCe7czySRX8uWW+CCWzNHmf/+RMx8+8WjsmY=;
-        b=fYTCj0gVdjz0ZVF+nuyDBf3LMczRilxAn5L9w9g5Xa1qRrtB997hi29wSSYhCCN0kZ
-         BPrlpQK5H2/3aewy0KP7bGrtCsk9C3kU2KI80iOOHgKv9YZ7+iAvsyMJ1MbdExJss9WX
-         5naAG0dfgHYTnPQZvTn9BBiKKTXKYPXJF07eEwy0yGOj4ZPs5qviF0s2lXll43qpL0oU
-         V7hsGzvb8NWof2IUCOgpHhoeC5mAc5k3kYQWGr6sS6ErhRgKErQNzP0EEOlbkxbqZRMd
-         KOr0wDXT8A1kx/F7kbMTXRzvY/K9+kAJbrTkPTWPkAr4Z0hAoJedYgF4NgwHGuEUuMS9
-         mdVQ==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=OG5uQgkMf39mUwpOHjonQtZ4tonh493neJjEEVg5FeY=;
+        b=f5mZWatEiHtHYsjX+/2J9ybC6dBmaIliKmhjebHkOCdUcXUrcJYa0GiSw7NHSXpRk2
+         EqigwasC0utHelsC5d57UU3cojC3CC9+uI6AoEvc/zdm+5rGU/poVdqEFDORATWnon3z
+         YJsLSG50uHXf3xMrJJbsJW+jlQKNxERIdIOdZ7+w3GFdbSW9r/EPRNtVyx94ZfEQHyLh
+         uhPzJ0zZ+4BYZi/kZx93JYmkQhrxsEzfX0aKxpahNMsYmGuQAkbYwyh7n9rW8JpIxlVI
+         XkPHF/M8WnE+0u5vZf04g/yvPBd7tcB672oQh+/KIjkfaDpCuQvYqOPwYHCbyWAayetL
+         Cw8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date;
-        bh=Dm2hwF6WCe7czySRX8uWW+CCWzNHmf/+RMx8+8WjsmY=;
-        b=hjyVpH8qTxp6DKZnbJx8JMJq2vlCcaFyYQoVSh0ADsojWGpU+mg06eF/frXcAGjJOD
-         N21wHKROtbhL1WWp6xL9w6J/GFFpkxTL9DGczDSknorDoQO/NfhseWxt1LKQmoJDsSY7
-         FUowr/R2M+JrHZuoV4P0GllohOPgg2W5TDcGlDDLsVq0usNSCk3GZ+KkTqUPFMXsxBTN
-         U8t/cFAWErfLqHgyLfbD/6HnwZs8BZbWZZeJ+6qMQ7+mR/j8Fh4bk5FYd+kpXokM+TMq
-         0CKV/gEzS6ChM8rnUiBQ/jmgKqprUhyIq1O0jYR09SP3YOK5EnQKxPqwBQpRlkRcmXWk
-         v6CA==
-X-Gm-Message-State: ACgBeo1CSOblTLSQla9UFCyI9o2m0s2kO31DB1gPuLZkTem/yPbXx13M
-        bER0SIHvDLvyoVXt1AMSBos=
-X-Google-Smtp-Source: AA6agR6OwSTX9fAupj4WotNw0xeC0OpM5SL6CwjZ+b1Akb89ptdU5t7mq25zb77YKR6DV+QQ2tEuuQ==
-X-Received: by 2002:a17:907:845:b0:731:2f6c:6dbd with SMTP id ww5-20020a170907084500b007312f6c6dbdmr26248298ejb.551.1663174653979;
-        Wed, 14 Sep 2022 09:57:33 -0700 (PDT)
-Received: from Ansuel-xps. (93-42-70-134.ip85.fastwebnet.it. [93.42.70.134])
-        by smtp.gmail.com with ESMTPSA id q9-20020a17090676c900b00741a0c3f4cdsm7830173ejn.189.2022.09.14.09.57.32
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=OG5uQgkMf39mUwpOHjonQtZ4tonh493neJjEEVg5FeY=;
+        b=4sTb3j9l0tLroAk0GTy4fsL5YGLW91/upQHFZPHW46LLPxiQ49c6VXXxX+zC0bcYHc
+         ITQnFdIhaK9Iu9SYIOvytzA/J64y70eS4ybOdcQDq/yGC6d2Ksb3b7Du6hhwJV4fZMVt
+         BQRalfA7ii9uAZj7U76nj/bbMe6WTJbdaq4ubGpmO6xpvTlxIZQRx15C5OsjGYFrE0Uk
+         K7F0NVB6l+yS4f+X1r1lbevYTuXDq1D7r3Ws+qVn7FO06McNWFvhPrRSunyQSS5QKu5Y
+         RGyAd6xh6K8kpr2xXzhjDKT0d9PXWD4aWxnd7Lbag2i1uwojP1d5N4wekCqO7rn4DqUM
+         adqA==
+X-Gm-Message-State: ACgBeo2D1fKMmMDipnwaUNXo7UCLJ+PHwqWvfTvcZlCdu0dCzelwGyH1
+        ColN0wa0O+FLNsD/7R0V6Nc=
+X-Google-Smtp-Source: AA6agR4Y0uGwS2dyAPZZOp1q1FZSHn4XnBflw70zqbMQ3/rXHFy1hJp2Nh95+MCKUYjGgjiREH8zKQ==
+X-Received: by 2002:a05:6871:90:b0:11d:cbad:10f5 with SMTP id u16-20020a056871009000b0011dcbad10f5mr3684843oaa.295.1663196905406;
+        Wed, 14 Sep 2022 16:08:25 -0700 (PDT)
+Received: from macondo.. ([2804:431:e7cd:8cb3:fcc0:78f8:fb58:8a76])
+        by smtp.gmail.com with ESMTPSA id s9-20020a056808008900b0034fddfc5922sm2741077oic.36.2022.09.14.16.08.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Sep 2022 09:57:33 -0700 (PDT)
-Message-ID: <632207fd.170a0220.8b7b4.3e14@mx.google.com>
-X-Google-Original-Message-ID: <YyIH+39HUdAuO3+Y@Ansuel-xps.>
-Date:   Wed, 14 Sep 2022 18:57:31 +0200
-From:   Christian Marangi <ansuelsmth@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     dmaengine@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        devicetree@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: dma: rework qcom,adm Documentation
- to yaml schema
-References: <20220914140426.7609-1-ansuelsmth@gmail.com>
- <1663174030.707683.2567031.nullmailer@robh.at.kernel.org>
+        Wed, 14 Sep 2022 16:08:25 -0700 (PDT)
+From:   Rafael Mendonca <rafaelmendsr@gmail.com>
+To:     Fenghua Yu <fenghua.yu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     Rafael Mendonca <rafaelmendsr@gmail.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: idxd: Fix memory leak in idxd_alloc()
+Date:   Wed, 14 Sep 2022 20:08:14 -0300
+Message-Id: <20220914230815.700702-1-rafaelmendsr@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1663174030.707683.2567031.nullmailer@robh.at.kernel.org>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -76,57 +69,32 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Sep 14, 2022 at 11:47:10AM -0500, Rob Herring wrote:
-> On Wed, 14 Sep 2022 16:04:25 +0200, Christian Marangi wrote:
-> > Rework the qcom,adm Documentation to yaml schema.
-> > This is not a pure conversion since originally the driver has changed
-> > implementation for the #dma-cells and was wrong from the start.
-> > Also the driver now handles the common DMA clients implementation with
-> > the first cell that denotes the channel number and nothing else since
-> > the client will have to provide the crci information via other means.
-> > 
-> > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> > ---
-> >  .../devicetree/bindings/dma/qcom,adm.yaml     | 96 +++++++++++++++++++
-> >  .../devicetree/bindings/dma/qcom_adm.txt      | 61 ------------
-> >  2 files changed, 96 insertions(+), 61 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/qcom,adm.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/dma/qcom_adm.txt
-> > 
-> 
-> Running 'make dtbs_check' with the schema in this patch gives the
-> following warnings. Consider if they are expected or the schema is
-> incorrect. These may not be new warnings.
-> 
-> Note that it is not yet a requirement to have 0 warnings for dtbs_check.
-> This will change in the future.
-> 
-> Full log is available here: https://patchwork.ozlabs.org/patch/
-> 
-> 
-> dma-controller@18300000: reset-names:1: 'c0' was expected
-> 	arch/arm/boot/dts/qcom-ipq8064-ap148.dtb
-> 	arch/arm/boot/dts/qcom-ipq8064-rb3011.dtb
-> 
-> dma-controller@18300000: reset-names:2: 'c1' was expected
-> 	arch/arm/boot/dts/qcom-ipq8064-ap148.dtb
-> 	arch/arm/boot/dts/qcom-ipq8064-rb3011.dtb
-> 
-> dma-controller@18300000: reset-names:3: 'c2' was expected
-> 	arch/arm/boot/dts/qcom-ipq8064-ap148.dtb
-> 	arch/arm/boot/dts/qcom-ipq8064-rb3011.dtb
-> 
-> dma-controller@18300000: reset-names: ['clk', 'pbus', 'c0', 'c1', 'c2'] is too long
-> 	arch/arm/boot/dts/qcom-ipq8064-ap148.dtb
-> 	arch/arm/boot/dts/qcom-ipq8064-rb3011.dtb
-> 
-> dma-controller@18300000: resets: [[12, 13], [12, 12], [12, 11], [12, 10], [12, 9]] is too long
-> 	arch/arm/boot/dts/qcom-ipq8064-ap148.dtb
-> 	arch/arm/boot/dts/qcom-ipq8064-rb3011.dtb
-> 
+If the IDA id allocation fails, then the allocated memory for the
+idxd_device struct doesn't get freed before returning NULL, which leads to
+a memleak.
 
-Hi,
-I fixed these warning on the second commit of this series.
+Fixes: 47c16ac27d4c ("dmaengine: idxd: fix idxd conf_dev 'struct device' lifetime")
+Signed-off-by: Rafael Mendonca <rafaelmendsr@gmail.com>
+---
+ drivers/dma/idxd/init.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index aa3478257ddb..fdc97519b8fb 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -445,8 +445,10 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
+ 	idxd->data = data;
+ 	idxd_dev_set_type(&idxd->idxd_dev, idxd->data->type);
+ 	idxd->id = ida_alloc(&idxd_ida, GFP_KERNEL);
+-	if (idxd->id < 0)
++	if (idxd->id < 0) {
++		kfree(idxd);
+ 		return NULL;
++	}
+ 
+ 	device_initialize(conf_dev);
+ 	conf_dev->parent = dev;
 -- 
-	Ansuel
+2.34.1
+

@@ -2,66 +2,98 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B1DBC5B90DF
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Sep 2022 01:08:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3448E5B96F8
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Sep 2022 11:06:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229920AbiINXI2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 14 Sep 2022 19:08:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52972 "EHLO
+        id S229711AbiIOJF7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 15 Sep 2022 05:05:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229930AbiINXI1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Sep 2022 19:08:27 -0400
-Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3598987095;
-        Wed, 14 Sep 2022 16:08:26 -0700 (PDT)
-Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-11e9a7135easo45011165fac.6;
-        Wed, 14 Sep 2022 16:08:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=OG5uQgkMf39mUwpOHjonQtZ4tonh493neJjEEVg5FeY=;
-        b=f5mZWatEiHtHYsjX+/2J9ybC6dBmaIliKmhjebHkOCdUcXUrcJYa0GiSw7NHSXpRk2
-         EqigwasC0utHelsC5d57UU3cojC3CC9+uI6AoEvc/zdm+5rGU/poVdqEFDORATWnon3z
-         YJsLSG50uHXf3xMrJJbsJW+jlQKNxERIdIOdZ7+w3GFdbSW9r/EPRNtVyx94ZfEQHyLh
-         uhPzJ0zZ+4BYZi/kZx93JYmkQhrxsEzfX0aKxpahNMsYmGuQAkbYwyh7n9rW8JpIxlVI
-         XkPHF/M8WnE+0u5vZf04g/yvPBd7tcB672oQh+/KIjkfaDpCuQvYqOPwYHCbyWAayetL
-         Cw8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=OG5uQgkMf39mUwpOHjonQtZ4tonh493neJjEEVg5FeY=;
-        b=4sTb3j9l0tLroAk0GTy4fsL5YGLW91/upQHFZPHW46LLPxiQ49c6VXXxX+zC0bcYHc
-         ITQnFdIhaK9Iu9SYIOvytzA/J64y70eS4ybOdcQDq/yGC6d2Ksb3b7Du6hhwJV4fZMVt
-         BQRalfA7ii9uAZj7U76nj/bbMe6WTJbdaq4ubGpmO6xpvTlxIZQRx15C5OsjGYFrE0Uk
-         K7F0NVB6l+yS4f+X1r1lbevYTuXDq1D7r3Ws+qVn7FO06McNWFvhPrRSunyQSS5QKu5Y
-         RGyAd6xh6K8kpr2xXzhjDKT0d9PXWD4aWxnd7Lbag2i1uwojP1d5N4wekCqO7rn4DqUM
-         adqA==
-X-Gm-Message-State: ACgBeo2D1fKMmMDipnwaUNXo7UCLJ+PHwqWvfTvcZlCdu0dCzelwGyH1
-        ColN0wa0O+FLNsD/7R0V6Nc=
-X-Google-Smtp-Source: AA6agR4Y0uGwS2dyAPZZOp1q1FZSHn4XnBflw70zqbMQ3/rXHFy1hJp2Nh95+MCKUYjGgjiREH8zKQ==
-X-Received: by 2002:a05:6871:90:b0:11d:cbad:10f5 with SMTP id u16-20020a056871009000b0011dcbad10f5mr3684843oaa.295.1663196905406;
-        Wed, 14 Sep 2022 16:08:25 -0700 (PDT)
-Received: from macondo.. ([2804:431:e7cd:8cb3:fcc0:78f8:fb58:8a76])
-        by smtp.gmail.com with ESMTPSA id s9-20020a056808008900b0034fddfc5922sm2741077oic.36.2022.09.14.16.08.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Sep 2022 16:08:25 -0700 (PDT)
-From:   Rafael Mendonca <rafaelmendsr@gmail.com>
-To:     Fenghua Yu <fenghua.yu@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     Rafael Mendonca <rafaelmendsr@gmail.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: idxd: Fix memory leak in idxd_alloc()
-Date:   Wed, 14 Sep 2022 20:08:14 -0300
-Message-Id: <20220914230815.700702-1-rafaelmendsr@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S229725AbiIOJFy (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 15 Sep 2022 05:05:54 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on20631.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe59::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 943F098751;
+        Thu, 15 Sep 2022 02:05:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KxkPJXT+BYGOHp/3yLQ9NrsX1BrXAFot74xo2rDjiJmOzAo8RrqF+Ev/zP4DtTMD4mccHVmYoHXCcXMYj2URlUyjtMg+72D1BciVoeOS/avax0WPCK9ONMYJ/R15awdZFG5Ekb85uk3q73+QeIEG8aYR55FZv/N8iKUnSPtrgCw8Ot3vrjfk5GcJHARjeecFxn2ML8Co7d45gvadyG+aeP8zLBG2nIrUxznMPYDC858wGpfI4RGIZpEzOMuEuuwDRoZejgDwvsEBPuLkWhxM8zxZnVUeNQWoEvS+hP/09aOjKiKeBz1WfEipGa1skgDXzpgmHkET4ubvB9z7kQ3Pag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=u9FeJZj+g0+LVBISQhy1NkL6NyJd4S0siKIjIc5GiJw=;
+ b=LdpzgO36WmYHel74wlfr7+DDmkDfIpnAiKXtW3m6htWxqlWJLZFpUyr+2OzwrazBu7hJrvnkcEsdKk+ACZGWdVl7rlADw/WOUbfJQICos6EDqmZM5aXn6B0mNkG+sikghZxis6rfUqdwcqS5b+bI8uOAw+llellQbyd9pK0dMIPFMcq+T1bNs5Yu+keB2lwfOYshWDYSzJnghg8ao1a1mHz31IixhUb7QmOX1uX6gaQ1SiPeBmuiQz9wHeVb/uNfN7yGK9Etz5AXlSqWyK551tgYWeIPQvcQ5nu+waW9bOVb3yyUxN+/4azUEh2Q6I07fA77rx5mW8KtdWr3Cq/91A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u9FeJZj+g0+LVBISQhy1NkL6NyJd4S0siKIjIc5GiJw=;
+ b=VijIXWzelbuDh1pGJWj4E8gAbYHKhAqfHQgO3F5dVfisEkJeneSo3fhWqQ/QoYH6kr1Ds25dz1qIfDbkXf/bI3sXlUJEpkRmYh01LLAXx5otKTK37JVame9ify0Vytx6aBca9LbeFUXkB2xTuKKXzrJvMiXPc0LmfU14MTpnx/A=
+Received: from BN7PR02CA0017.namprd02.prod.outlook.com (2603:10b6:408:20::30)
+ by MN2PR12MB4423.namprd12.prod.outlook.com (2603:10b6:208:24f::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5632.16; Thu, 15 Sep
+ 2022 09:05:42 +0000
+Received: from BN8NAM11FT019.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:20:cafe::56) by BN7PR02CA0017.outlook.office365.com
+ (2603:10b6:408:20::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5632.15 via Frontend
+ Transport; Thu, 15 Sep 2022 09:05:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT019.mail.protection.outlook.com (10.13.176.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5632.12 via Frontend Transport; Thu, 15 Sep 2022 09:05:42 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Thu, 15 Sep
+ 2022 04:05:41 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Thu, 15 Sep
+ 2022 04:05:20 -0500
+Received: from xhdswatia40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2375.28 via Frontend
+ Transport; Thu, 15 Sep 2022 04:05:18 -0500
+From:   Swati Agarwal <swati.agarwal@amd.com>
+To:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <harini.katakam@amd.com>, <radhey.shyam.pandey@amd.com>,
+        <michal.simek@amd.com>, <appana.durga.kedareswara.rao@amd.com>,
+        <swati.agarwal@amd.com>
+Subject: [PATCH] dmaengine: zynqmp_dma: Add device_synchronize support
+Date:   Thu, 15 Sep 2022 14:35:16 +0530
+Message-ID: <20220915090516.5812-1-swati.agarwal@amd.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT019:EE_|MN2PR12MB4423:EE_
+X-MS-Office365-Filtering-Correlation-Id: a199fd9a-c31f-4440-1665-08da96f977ae
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: gCIovtNq0HpCEdHLkj61SLVTI/BH4Hh0TC1WU3Bb+FOngD41DBs8y3qqSFBjlyyhrrhzQHiHcOI2D7JIZCstflZnUhaJo2EFvHuz+JOsfccPale13cU4ZtiDBURvuloitChyoKuMHiir02VEv8IWMuXOPkbVpbafBDAp/JNfZq2Wm5YUAByMghcaqEFx6fx0/aZz3cy/sW8PFaQnmjkw/fWT5x7zOlw6JlDNlULYPPmm9/ujXAc5hk9SpwY2t6pTsKTGdsClyda8EWyYvuLN/j8ctNQdMMu8z2xZAPtxWjOZG2F9yG70ZlMi7Sjf4Um8pVZNbmgOy5evZU7fn6gw+3U8fJ3G/c3YX8cHcPfcco36WHKFDAb09ajTlyum/y4vLdPK5FP9yiOneilq49EMW839AqYIS/VivrM29gVLxUTswLqTbd4Qn9RbBxhJD4gsEvH/y8zfWFHRm8nzPsuZlqK1Df7p0VxWdrMef2NiNx7gtB3HGAeaexDK7+hQyYdwFD7HWJIlK3wxDBXdQc6McdsSnl5V8bJm9kHvgW3T22vqfeX3ISTvPSk/K303v1mhSGvB9PDxo77Afc7GklLNdNxIS/WUYctNjKk9L56afU0Bk6Bh9wLXHMHEHuz47KJZkKh6FloLpzJcuXa74TXJVIqThxW1GB5U8L/HZTfjVOMrv0imKhb5EWhWewNZn9QQ96E4wk0wK9UNmtdqAyJTUvQL4YrOg1Lg70s+KYc9HaciMguynbdyZLhMuuRpy+iHjZzzj0QTIjRuGQ9HwFFWNhIc3BT/UYP5o+J1mjVsfO83VgCHvbKSOAkOTrHKFHsqV9o6MgT9/AiGys1B0E18OA==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(396003)(376002)(136003)(39860400002)(451199015)(46966006)(40470700004)(36840700001)(47076005)(86362001)(41300700001)(8676002)(1076003)(5660300002)(2616005)(4326008)(8936002)(26005)(70206006)(40460700003)(426003)(316002)(110136005)(54906003)(36756003)(186003)(44832011)(2906002)(336012)(70586007)(82310400005)(356005)(81166007)(478600001)(40480700001)(36860700001)(82740400003)(2101003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2022 09:05:42.4173
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a199fd9a-c31f-4440-1665-08da96f977ae
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT019.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4423
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,32 +101,48 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-If the IDA id allocation fails, then the allocated memory for the
-idxd_device struct doesn't get freed before returning NULL, which leads to
-a memleak.
+dmaengine_synchronize implementation is required to synchronize proper
+termination of current transfers so that any memory resources are not freed
+while still in use.
 
-Fixes: 47c16ac27d4c ("dmaengine: idxd: fix idxd conf_dev 'struct device' lifetime")
-Signed-off-by: Rafael Mendonca <rafaelmendsr@gmail.com>
+Implement this callback in the driver so that framework can use the same
+(in dmaengine_terminate_sync/ dmaengine_synchronize).
+
+Signed-off-by: Swati Agarwal <swati.agarwal@amd.com>
 ---
- drivers/dma/idxd/init.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/dma/xilinx/zynqmp_dma.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index aa3478257ddb..fdc97519b8fb 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -445,8 +445,10 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
- 	idxd->data = data;
- 	idxd_dev_set_type(&idxd->idxd_dev, idxd->data->type);
- 	idxd->id = ida_alloc(&idxd_ida, GFP_KERNEL);
--	if (idxd->id < 0)
-+	if (idxd->id < 0) {
-+		kfree(idxd);
- 		return NULL;
-+	}
+diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
+index a156e5f40fc5..0525caf1f998 100644
+--- a/drivers/dma/xilinx/zynqmp_dma.c
++++ b/drivers/dma/xilinx/zynqmp_dma.c
+@@ -795,6 +795,17 @@ static int zynqmp_dma_device_terminate_all(struct dma_chan *dchan)
+ 	return 0;
+ }
  
- 	device_initialize(conf_dev);
- 	conf_dev->parent = dev;
++/**
++ * zynqmp_dma_synchronize - Synchronizes the termination of a transfers to the current context.
++ * @dchan: DMA channel pointer
++ */
++static void zynqmp_dma_synchronize(struct dma_chan *dchan)
++{
++	struct zynqmp_dma_chan *chan = to_chan(dchan);
++
++	tasklet_kill(&chan->tasklet);
++}
++
+ /**
+  * zynqmp_dma_prep_memcpy - prepare descriptors for memcpy transaction
+  * @dchan: DMA channel
+@@ -1057,6 +1068,7 @@ static int zynqmp_dma_probe(struct platform_device *pdev)
+ 	p = &zdev->common;
+ 	p->device_prep_dma_memcpy = zynqmp_dma_prep_memcpy;
+ 	p->device_terminate_all = zynqmp_dma_device_terminate_all;
++	p->device_synchronize = zynqmp_dma_synchronize;
+ 	p->device_issue_pending = zynqmp_dma_issue_pending;
+ 	p->device_alloc_chan_resources = zynqmp_dma_alloc_chan_resources;
+ 	p->device_free_chan_resources = zynqmp_dma_free_chan_resources;
 -- 
-2.34.1
+2.17.1
 

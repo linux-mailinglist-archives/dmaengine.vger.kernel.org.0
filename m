@@ -2,95 +2,167 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99A1D5BA27C
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Sep 2022 23:56:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB7B15BACC0
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Sep 2022 13:51:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229759AbiIOV4j (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 15 Sep 2022 17:56:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53442 "EHLO
+        id S230432AbiIPLvX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 16 Sep 2022 07:51:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229554AbiIOV4i (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 15 Sep 2022 17:56:38 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58BD88B981
-        for <dmaengine@vger.kernel.org>; Thu, 15 Sep 2022 14:56:36 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id e81so10391610ybb.13
-        for <dmaengine@vger.kernel.org>; Thu, 15 Sep 2022 14:56:36 -0700 (PDT)
+        with ESMTP id S229872AbiIPLvW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 16 Sep 2022 07:51:22 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B7D5AE209;
+        Fri, 16 Sep 2022 04:51:21 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id d2so75488wrq.2;
+        Fri, 16 Sep 2022 04:51:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=JX9fTkq4tugLO6FL9ET8mX9f3rZGcI9uwJUlh9oT3XY=;
-        b=Srf1ZQSyBr19coh7nj2aTvsXsaOIS/oIKx2DhWYMjU2NKDO7WQxtuGTyglZAyVrbnA
-         Uj/QMJC9CSd/l8iFJ01p0tKtEQ2U3EQ1koMIPvAMFp+bkgD9LSk2v4N5YUW6f0QaOtV6
-         wNOeA+4BkU6iyumZrZM3oEk9Yms7pfcFdJ7lv4GYqYCQBlPSjMBmN6poh4GpTuqPLFkC
-         xxET9x6krRs2nQphspUHs/BSeGBOUacsRnu37Feuj4i2VWkopcNB2lmCowlOYbuR2oZg
-         gQvY4ekhDQBXCFgg95GiWFo5hGHp0lFHQSZtNZWxf7ljc1wHsjtg9RZCCXOCFcGiMF5X
-         ANqg==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=QdifIquyoQ6mYOMD2HCI+tIRc44pzp+O1wcBGNhRN9Q=;
+        b=GksRQCrwG3e+fxeVfNlj+wciQ1+OOo8qW5WHJWfCc8uPEg5L8lhTij9DYONG3hba/B
+         UTcfAktsX4H3Wd4YoZyxYBlsHq7bfNSx6n+RNZktyJmQWcfnY1vjgrsonTJNLGN/SSXg
+         odAKobaucCqSF2GLDjrB/iybd2NXOwTFcciZDc7KYilPuFG6JhArHivALhZUM+f1Gv8O
+         rb45j9Fr5BRz8tDfKqP41BFV56WQIAb5iaNdO8Gklbc0svpkvfgJOACQPI06y/TUf8nS
+         qHk3ULmBBanN9kbJB4ftW+gK6ou5ipZrfLdwJRXbtTJM0+cx4/S+DSvrqmek49kokXq/
+         F87Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=JX9fTkq4tugLO6FL9ET8mX9f3rZGcI9uwJUlh9oT3XY=;
-        b=AJK7/5Zjd4c75Nk/KNQ4dc9rYGf+ARrBdu7IGj7o+dZXKx+VsabZYOFpUCAY42gO47
-         8Ufpi/OariRwAjd0x0zgKi8gkIFY/BqrR3WJ8c/SFhcDPtfGCQBL6CgcG3Bol/xtgBXs
-         ffVG/n9IzxcmmOvx9wxOyelzRnAuQbg3cfjdhvrx9kIDunJuZa1A+K1Jz6cAN5BOvvGB
-         0Y16Pn9HdmpByN15EASWs2s4iMUSeXYnvACKjWgdIC/qoS6srhgsk0oX5QFqSZ4icN0o
-         eh22neYMqYVtldSdMuh0NjAIxvqShVQidepMtFFfhfsqOE3sAxczR4wIcitgSTr3xsT6
-         KuiA==
-X-Gm-Message-State: ACrzQf1r+GFNhyc0C/DgIh/Aue9BIMJ+kWnvID2/uT0f/EQ475UqRS9V
-        AFBy4/RfCo9hfBjEb4KpffZcBi9L5u48AHPGlTQD5w==
-X-Google-Smtp-Source: AMsMyM7v2nmvHmfbjX5rLUALCSTtuecAYdmFE+aJnXkmcOJa5iDWlDanh9g4UOjwuvBWDm4ZbJzoju1oeXo/moiWjjc=
-X-Received: by 2002:a25:af13:0:b0:6ae:3166:1aee with SMTP id
- a19-20020a25af13000000b006ae31661aeemr1717295ybh.288.1663278995367; Thu, 15
- Sep 2022 14:56:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220915204844.3838-1-ansuelsmth@gmail.com>
-In-Reply-To: <20220915204844.3838-1-ansuelsmth@gmail.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Fri, 16 Sep 2022 00:56:24 +0300
-Message-ID: <CAA8EJprvxZrK2b1ctP5dtgK7eKFTj09K_H0=2tgA5--oVkR1ew@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: qcom-adm: fix wrong sizeof config in slave_config
-To:     Christian Marangi <ansuelsmth@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=QdifIquyoQ6mYOMD2HCI+tIRc44pzp+O1wcBGNhRN9Q=;
+        b=5jw4dMzpjd8CCv9UbGnqkA/0yFwAakGJpl56sOHSk+EV15Sw1sajg6rxCanPILzTer
+         9nVqiK6Fcu+vYrVW3WBX6hf2pD+crKl2E5EBHmUg4pH2OXfkoH2db8PjRoSjhuSSmusM
+         Pbs+iy0fX5/52zwTdcgbAi1JmiQRM261zGuyfTL7KBhK9+3SfzNr+rbZ0jHqRHvr4b9k
+         k8ovOzyyg1/0+PaHDxSu8q2UUGcxZcKBRqnbwYn69qsD8blNcn2bngopa8aRfMp7T70O
+         CDcX+nyzhjSuFD7OOUQzG1CkymtQsd3sk1B7KpF32ZCOZi5U66Uxktuy/02SNlfG5ya5
+         BO3w==
+X-Gm-Message-State: ACrzQf3lCjf092Ud++ko7IbTc+oKruBS7toxbCTDYQwIiRNf2jXZVi5E
+        ByfWN0c9tAranEatzT3jv4EBgRgJGwk=
+X-Google-Smtp-Source: AMsMyM6wHJ4A/f5KmGKYlgkzApjWskcP+QMNLhnCEMZu7n8HbmgW0O7i2+UqlNawipmDyuf2rf5vAA==
+X-Received: by 2002:a5d:52d0:0:b0:21e:4923:fa09 with SMTP id r16-20020a5d52d0000000b0021e4923fa09mr2711712wrv.244.1663329079714;
+        Fri, 16 Sep 2022 04:51:19 -0700 (PDT)
+Received: from localhost.localdomain (93-42-70-134.ip85.fastwebnet.it. [93.42.70.134])
+        by smtp.googlemail.com with ESMTPSA id d17-20020adffbd1000000b0022ac1be009esm4791245wrs.16.2022.09.16.04.51.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Sep 2022 04:51:19 -0700 (PDT)
+From:   Christian Marangi <ansuelsmth@gmail.com>
+To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Mark Brown <broonie@kernel.org>,
+        Thomas Pedersen <twp@codeaurora.org>,
+        Jonathan McDowell <noodles@earth.li>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Christian Marangi <ansuelsmth@gmail.com>, stable@vger.kernel.org
+Subject: [PATCH] dmaengine: qcom-adm: fix wrong calling convention for prep_slave_sg
+Date:   Fri, 16 Sep 2022 06:12:56 +0200
+Message-Id: <20220916041256.7104-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.37.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, 15 Sept 2022 at 23:49, Christian Marangi <ansuelsmth@gmail.com> wrote:
->
-> Fix broken slave_config function that uncorrectly compare the
-> peripheral_size with the size of the config pointer instead of the size
-> of the config struct. This cause the crci value to be ignored and cause
-> a kernel panic on any slave that use adm driver.
->
-> To fix this, compare to the size of the struct and NOT the size of the
-> pointer.
->
-> Fixes: 03de6b273805 ("dmaengine: qcom-adm: stop abusing slave_id config")
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> Cc: stable@vger.kernel.org # v5.17+
+The calling convention for pre_slave_sg is to return NULL on error and
+provide an error log to the system. Qcom-adm instead provide error
+pointer when an error occur. This indirectly cause kernel panic for
+example for the nandc driver that checks only if the pointer returned by
+device_prep_slave_sg is not NULL. Returning an error pointer makes nandc
+think the device_prep_slave_sg function correctly completed and makes
+the kernel panics later in the code.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+While nandc is the one that makes the kernel crash, it was pointed out
+that the real problem is qcom-adm not following calling convention for
+that function.
 
-> ---
->  drivers/dma/qcom/qcom_adm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+To fix this, drop returning error pointer and return NULL with an error
+log.
 
+Fixes: 03de6b273805 ("dmaengine: qcom-adm: stop abusing slave_id config")
+Fixes: 5c9f8c2dbdbe ("dmaengine: qcom: Add ADM driver")
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+Cc: stable@vger.kernel.org # v5.11+
+---
+ drivers/dma/qcom/qcom_adm.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/dma/qcom/qcom_adm.c b/drivers/dma/qcom/qcom_adm.c
+index facdacf8aede..cd3f12cf4721 100644
+--- a/drivers/dma/qcom/qcom_adm.c
++++ b/drivers/dma/qcom/qcom_adm.c
+@@ -379,13 +379,13 @@ static struct dma_async_tx_descriptor *adm_prep_slave_sg(struct dma_chan *chan,
+ 		if (blk_size < 0) {
+ 			dev_err(adev->dev, "invalid burst value: %d\n",
+ 				burst);
+-			return ERR_PTR(-EINVAL);
++			return NULL;
+ 		}
+ 
+ 		crci = achan->crci & 0xf;
+ 		if (!crci || achan->crci > 0x1f) {
+ 			dev_err(adev->dev, "invalid crci value\n");
+-			return ERR_PTR(-EINVAL);
++			return NULL;
+ 		}
+ 	}
+ 
+@@ -403,8 +403,10 @@ static struct dma_async_tx_descriptor *adm_prep_slave_sg(struct dma_chan *chan,
+ 	}
+ 
+ 	async_desc = kzalloc(sizeof(*async_desc), GFP_NOWAIT);
+-	if (!async_desc)
+-		return ERR_PTR(-ENOMEM);
++	if (!async_desc) {
++		dev_err(adev->dev, "not enough memory for async_desc struct\n");
++		return NULL;
++	}
+ 
+ 	async_desc->mux = achan->mux ? ADM_CRCI_CTL_MUX_SEL : 0;
+ 	async_desc->crci = crci;
+@@ -414,8 +416,10 @@ static struct dma_async_tx_descriptor *adm_prep_slave_sg(struct dma_chan *chan,
+ 				sizeof(*cple) + 2 * ADM_DESC_ALIGN;
+ 
+ 	async_desc->cpl = kzalloc(async_desc->dma_len, GFP_NOWAIT);
+-	if (!async_desc->cpl)
++	if (!async_desc->cpl) {
++		dev_err(adev->dev, "not enough memory for cpl struct\n");
+ 		goto free;
++	}
+ 
+ 	async_desc->adev = adev;
+ 
+@@ -437,8 +441,10 @@ static struct dma_async_tx_descriptor *adm_prep_slave_sg(struct dma_chan *chan,
+ 	async_desc->dma_addr = dma_map_single(adev->dev, async_desc->cpl,
+ 					      async_desc->dma_len,
+ 					      DMA_TO_DEVICE);
+-	if (dma_mapping_error(adev->dev, async_desc->dma_addr))
++	if (dma_mapping_error(adev->dev, async_desc->dma_addr)) {
++		dev_err(adev->dev, "dma mapping error for cpl\n");
+ 		goto free;
++	}
+ 
+ 	cple_addr = async_desc->dma_addr + ((void *)cple - async_desc->cpl);
+ 
+@@ -454,7 +460,7 @@ static struct dma_async_tx_descriptor *adm_prep_slave_sg(struct dma_chan *chan,
+ 
+ free:
+ 	kfree(async_desc);
+-	return ERR_PTR(-ENOMEM);
++	return NULL;
+ }
+ 
+ /**
 -- 
-With best wishes
-Dmitry
+2.37.2
+

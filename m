@@ -2,109 +2,178 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CEEA45BAD47
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Sep 2022 14:21:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34A615BAF46
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Sep 2022 16:26:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231452AbiIPMVL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 16 Sep 2022 08:21:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53218 "EHLO
+        id S232030AbiIPO0P (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 16 Sep 2022 10:26:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231405AbiIPMVK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 16 Sep 2022 08:21:10 -0400
-Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10EA4B089B;
-        Fri, 16 Sep 2022 05:21:08 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id BB2CD58012F;
-        Fri, 16 Sep 2022 08:21:07 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Fri, 16 Sep 2022 08:21:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm1; t=1663330867; x=1663334467; bh=Z7y3PzeVTJ
-        ZOhaYvhx0ZFCEnasatKo4vgoHWfeSmhxQ=; b=Gq8WZZlQodvsYxPY6MapHpPKVD
-        WixsmUh93mSDnGjEeqZNS6a+mC8md5H+Z2yUlNlZDSA3nhKTselB1GAL8PagRPU3
-        VdSkXW2+h3dby4y6mJjODA73NCB9awfEWMhN/OqE6b7Iv/0DMoudyDrhyvfaDfln
-        LO8DPv58XlpwPywhQDFNYV2yFRWC+YmPxuL7ch33r9ic/H7klkRrmQT+dwBgN1y+
-        MC4wzhDLHeRHH1hUdwAMEWuWfe0o67WqmxOS6PTuBLS04PtO8PxmwXAzQdnpN1lJ
-        5HG1TkAy8eYZW/7Uso5wsl+qfoF2q85ttDhk1FUUO+MaaVbsaCcVxZrfkp8w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; t=1663330867; x=1663334467; bh=Z7y3PzeVTJZOhaYvhx0ZFCEnasat
-        Ko4vgoHWfeSmhxQ=; b=lix2UlhL3PIDge88fd8+Q0t/5j1Tvph0H4DMfuTRD7VZ
-        tlsXBw8ch5khFuPrelEYTbECLJfkrdMorUkllfA0oqwYg6vf0Sw47h87ULYa7M/y
-        bvHEJxWJa/tdqvBYiKt4vANh7EvbAxuuqrVFQQZWqZBiqiyYboTr2RF8D8AZ183J
-        R5oSJiTwC27QSNsf3Tl9t50ueuwRsfka5bms/Mr/mzLls0qznCZzRwX/dJqiQACA
-        KWbsl7tr0LwKid9EXBW8YMVeNhc/7v344SCIpZ/ORn2Wx1VgFmk+Mmai69WzDNDn
-        3hV7wjyXbAOCxVg4Px+EzhmI+o0Zydsfc+XKaP94bg==
-X-ME-Sender: <xms:M2okY7l4nigX1Ty5BPO1Yqq0q400eCI_sSKJWtsw5Bew28jsocDpkQ>
-    <xme:M2okY-24cax230p6tAW7f5QzUmGY40xrIAkuq4QCHFu63LKrBJQ_PBZsrSFc8lQXH
-    FB_r3yFPU10jXkww4U>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfedvtddgheefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:M2okYxoDbZC8hcX01i1MotbXSEMKAyGXBTcZmaR1j4qerwNNN8sQ9Q>
-    <xmx:M2okYzkaDxwXx-HWJ-9VNsAwJF0aGuOJeHyMmNj0j4JzlZNADj0S9g>
-    <xmx:M2okY50kzVpNn2UGApa23w0vIAp03plbfw0OM5H6wvXibRx8Pnvsdg>
-    <xmx:M2okY2lYH0pzOhHFJ3Laoh4-iBQKR7iMO7f-vrZ6RBMHaxk9jPB_rw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 500BEB60086; Fri, 16 Sep 2022 08:21:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-935-ge4ccd4c47b-fm-20220914.001-ge4ccd4c4
-Mime-Version: 1.0
-Message-Id: <17ee7d23-27d3-4d29-aec3-a61f7d0d3526@www.fastmail.com>
-In-Reply-To: <20220915204844.3838-1-ansuelsmth@gmail.com>
-References: <20220915204844.3838-1-ansuelsmth@gmail.com>
-Date:   Fri, 16 Sep 2022 14:20:47 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Christian Marangi" <ansuelsmth@gmail.com>,
-        "Andy Gross" <agross@kernel.org>,
-        "Bjorn Andersson" <andersson@kernel.org>,
-        "Konrad Dybcio" <konrad.dybcio@somainline.org>,
-        "Vinod Koul" <vkoul@kernel.org>, "Mark Brown" <broonie@kernel.org>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        with ESMTP id S231863AbiIPOZz (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 16 Sep 2022 10:25:55 -0400
+Received: from soltyk.jannau.net (soltyk.jannau.net [144.76.91.90])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B32E016;
+        Fri, 16 Sep 2022 07:25:52 -0700 (PDT)
+Received: from robin.home.jannau.net (unknown [91.200.110.112])
+        by soltyk.jannau.net (Postfix) with ESMTPSA id 50D3826F078;
+        Fri, 16 Sep 2022 16:25:51 +0200 (CEST)
+From:   Janne Grunau <j@jannau.net>
+To:     asahi@lists.linux.dev
+Cc:     Mark Kettenis <kettenis@openbsd.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Hector Martin <marcan@marcan.st>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        =?UTF-8?q?Martin=20Povi=C5=A1er?= <povik+lin@cutebit.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sven Peter <sven@svenpeter.dev>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: qcom-adm: fix wrong sizeof config in slave_config
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Subject: [PATCH v1 00/10] Apple M1 Pro/Max/Ultra device trees
+Date:   Fri, 16 Sep 2022 16:25:40 +0200
+Message-Id: <20220916142550.269905-1-j@jannau.net>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Sep 15, 2022, at 10:48 PM, Christian Marangi wrote:
-> Fix broken slave_config function that uncorrectly compare the
-> peripheral_size with the size of the config pointer instead of the size
-> of the config struct. This cause the crci value to be ignored and cause
-> a kernel panic on any slave that use adm driver.
->
-> To fix this, compare to the size of the struct and NOT the size of the
-> pointer.
->
-> Fixes: 03de6b273805 ("dmaengine: qcom-adm: stop abusing slave_id config")
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> Cc: stable@vger.kernel.org # v5.17+
+Hej,
 
-Thanks for the fix,
+this series contains device trees for Apple's M1 Pro, Max and Ultra SoCs
+and devices based on these SoCs.
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Quoting from the main commit:
 
-I guess this worked on 64-bit by accident, since both the pointer
-and the struct are 8 bytes, but it was clearly wrong and broke
-32-bit.
+| These SoCs are found in Apple devices with M1 Pro (t6000), M1 Max
+| (t6001) and M1 Ultra (t6002).
+|
+| t6000 is a cut-down version of t6001, so the former just includes the
+| latter and disables the missing bits (This is currently just one PMGR
+| node and all of its domains.
+|
+| t6002 is two connected t6001 dies. The implementation seems to use
+| t6001 with blocks disabled (mostly on the second die). MMIO addresses on
+| the second die have a constant offset. The interrupt controller is
+| multi-die aware. This setup can be represented in the device tree with
+| two top level "soc" nodes. The MMIO offset is applied via "ranges" and
+| devices are included with preproceesor macros to make the node labels
+| unique and to specify the die number for the interrupt definition.
+|
+| Device nodes are distributed over dtsi files based on whether they are
+| present on both dies or just on the first die. The only execption is the
+| NVMe controller which resides on the second die. Its nodes are in a
+| separate file.
 
-     Arnd
+This series depends for full functionality on t600x dart support (latest
+version at
+https://lore.kernel.org/linux-iommu/20220916094152.87137-1-j@jannau.net/T/#t
+expected to be picked up for 6.1). This is the usual device tree /
+driver changes runtime dependency.
+
+Even with the t6000-dart support t600x devices are not terribly useful
+in upstream. There is no input device support. The laptop's keyboard
+and touchpad are missing SPI and HID over SPI drivers. The dwc3
+USB-C ports are not yet added since they require special handling
+after disconnect. The PCIe based USB xhci controller in the Mac Studio
+requires firmware downloaded in a similar way as USB_XHCI_PCI_RENESAS.
+
+To simplify dependency handling this series carries mostly identical
+device tree additions for M1 and M1 Pro/Max/Ultra as part of the in
+development audio support.
+
+The series passes dtbs_check with 3 additional dt bindings changes:
+- "dt-bindings: apple,aic: Fix required item "apple,fiq-index" in
+  affinity description" (merged as da3b1c294d47 in Linus' repo)
+- "ASoC: Add Apple MCA I2S transceiver bindings" (6ed462d1c11675)
+  in sound/for-next
+- "dt-bindings: iommu: dart: add t6000 compatible"
+  https://lore.kernel.org/linux-iommu/20220901012519.7167-2-j@jannau.net/
+
+New bindings passes dt_binding_check.
+
+best regards,
+Janne
+
+Changes in v1:
+- added proper ranges for t6002 soc nodes
+- use unit addresses from ranges for t6002 soc nodes
+- C preprocessor cleanup
+- drop apple,aic.yaml binding fix, already sent as fix to Linus
+- add t8103 pmgr tree reparenting commit for admac
+
+Hector Martin (3):
+  arm64: dts: apple: Fix j45x model years
+  arm64: dts: apple: Add initial t6000/t6001/t6002 DTs
+  arm64: dts: apple: Add J314 and J316 devicetrees
+
+Janne Grunau (5):
+  dt-bindings: dma: apple,admac: Add iommus and power-domains properties
+  dt-bindings: apple,aic2: Add CPU PMU per-cpu pseudo-interrupts
+  dt-bindings: arm: apple: Add t6001/t6002 Mac Studio compatibles
+  arm64: dts: apple: Add J375 devicetrees
+  arm64: dts: apple: t600x: Add MCA and its support
+
+Martin Povišer (2):
+  arm64: dts: apple: t8103: Add AUDIO_P parent to the SIO_ADMA power
+    domain
+  arm64: dts: apple: t8103: Add MCA and its support
+
+ .../devicetree/bindings/arm/apple.yaml        |   14 +-
+ .../devicetree/bindings/dma/apple,admac.yaml  |    7 +
+ .../interrupt-controller/apple,aic2.yaml      |   29 +
+ arch/arm64/boot/dts/apple/Makefile            |    6 +
+ arch/arm64/boot/dts/apple/multi-die-cpp.h     |   22 +
+ arch/arm64/boot/dts/apple/t6000-j314s.dts     |   18 +
+ arch/arm64/boot/dts/apple/t6000-j316s.dts     |   18 +
+ arch/arm64/boot/dts/apple/t6000.dtsi          |   18 +
+ arch/arm64/boot/dts/apple/t6001-j314c.dts     |   18 +
+ arch/arm64/boot/dts/apple/t6001-j316c.dts     |   18 +
+ arch/arm64/boot/dts/apple/t6001-j375c.dts     |   18 +
+ arch/arm64/boot/dts/apple/t6001.dtsi          |   63 +
+ arch/arm64/boot/dts/apple/t6002-j375d.dts     |   50 +
+ arch/arm64/boot/dts/apple/t6002.dtsi          |  175 ++
+ arch/arm64/boot/dts/apple/t600x-common.dtsi   |  137 ++
+ arch/arm64/boot/dts/apple/t600x-die0.dtsi     |  360 +++
+ arch/arm64/boot/dts/apple/t600x-dieX.dtsi     |  103 +
+ .../arm64/boot/dts/apple/t600x-gpio-pins.dtsi |   45 +
+ .../arm64/boot/dts/apple/t600x-j314-j316.dtsi |  114 +
+ arch/arm64/boot/dts/apple/t600x-j375.dtsi     |  117 +
+ arch/arm64/boot/dts/apple/t600x-nvme.dtsi     |   42 +
+ arch/arm64/boot/dts/apple/t600x-pmgr.dtsi     | 2012 +++++++++++++++++
+ arch/arm64/boot/dts/apple/t8103-j456.dts      |    2 +-
+ arch/arm64/boot/dts/apple/t8103-j457.dts      |    2 +-
+ arch/arm64/boot/dts/apple/t8103-jxxx.dtsi     |    4 +
+ arch/arm64/boot/dts/apple/t8103-pmgr.dtsi     |    2 +-
+ arch/arm64/boot/dts/apple/t8103.dtsi          |   73 +
+ 27 files changed, 3483 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/apple/multi-die-cpp.h
+ create mode 100644 arch/arm64/boot/dts/apple/t6000-j314s.dts
+ create mode 100644 arch/arm64/boot/dts/apple/t6000-j316s.dts
+ create mode 100644 arch/arm64/boot/dts/apple/t6000.dtsi
+ create mode 100644 arch/arm64/boot/dts/apple/t6001-j314c.dts
+ create mode 100644 arch/arm64/boot/dts/apple/t6001-j316c.dts
+ create mode 100644 arch/arm64/boot/dts/apple/t6001-j375c.dts
+ create mode 100644 arch/arm64/boot/dts/apple/t6001.dtsi
+ create mode 100644 arch/arm64/boot/dts/apple/t6002-j375d.dts
+ create mode 100644 arch/arm64/boot/dts/apple/t6002.dtsi
+ create mode 100644 arch/arm64/boot/dts/apple/t600x-common.dtsi
+ create mode 100644 arch/arm64/boot/dts/apple/t600x-die0.dtsi
+ create mode 100644 arch/arm64/boot/dts/apple/t600x-dieX.dtsi
+ create mode 100644 arch/arm64/boot/dts/apple/t600x-gpio-pins.dtsi
+ create mode 100644 arch/arm64/boot/dts/apple/t600x-j314-j316.dtsi
+ create mode 100644 arch/arm64/boot/dts/apple/t600x-j375.dtsi
+ create mode 100644 arch/arm64/boot/dts/apple/t600x-nvme.dtsi
+ create mode 100644 arch/arm64/boot/dts/apple/t600x-pmgr.dtsi
+
+-- 
+2.35.1
+

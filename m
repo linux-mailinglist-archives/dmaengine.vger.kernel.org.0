@@ -2,39 +2,39 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 946FE5BB948
-	for <lists+dmaengine@lfdr.de>; Sat, 17 Sep 2022 18:13:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D96AD5BB949
+	for <lists+dmaengine@lfdr.de>; Sat, 17 Sep 2022 18:13:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229642AbiIQQNU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 17 Sep 2022 12:13:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38846 "EHLO
+        id S229655AbiIQQNV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 17 Sep 2022 12:13:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbiIQQNS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Sep 2022 12:13:18 -0400
+        with ESMTP id S229632AbiIQQNT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Sep 2022 12:13:19 -0400
 Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 699282EF05;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03BF02ED7B;
         Sat, 17 Sep 2022 09:13:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663431197; x=1694967197;
+  t=1663431198; x=1694967198;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=y6i0e5Zh0e9cio0oCMoT2cRF9JrNQyrR8iaI2N4widY=;
-  b=M6yBq1PLcA3cSAyHzIX2xi+4mcsC+KrECHGy6Xq7u+A5HyXa3Q/+ssjy
-   Q96T3GLo7wB3tQSr+jW19cy/oeirgeDKajvBdcFP5kbpjOa8grh0iz3AG
-   FC0r5qxc46xuMiJKY06Vm3+ZEXAjhnEXRSKgl6BR6cD4IYsypzQqxjpO0
-   RCjVJ+LD1OZ23MbowALD+N2vbiXrTuMpo4ZNRjsLJxDoeLoZbQUxPe1Av
-   Kxw1PRnUBbPcnUvL6aktiaritAGm3Gcs00V3YZv1J6s/rUlfpMvB3xbwW
-   iyg1GDPyGllNKZdbc0EHtDT3cv7lSAa35VdLAk/sSHVmrhyrUWX7OnmEd
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10473"; a="286206513"
+  bh=9U0nkN0JYOfe69os/M/gMwdpWQP9UqnbAFepp3vF77w=;
+  b=ZkjdRyfh2270vTO+pQJjlvrwt5bR3pOL9lGAudh8flnWb4SWMrKfrmYk
+   QpWAfJjHq5/3EbhZM8w2aZjg7yR7GJ7zgrxDfXO3SLd9ym1JKv1f0krcH
+   YMl+Ex9WQkW0O3SsbQMOq+sfDjjNAHKjOPA5wXJpbPQ2GyfybAZnenxpQ
+   qOoUxqQqRiorE0x+lY2qsbVPEF6tujrCTXZjO6UMv/NN8deSL3SSPafy6
+   mmznmqU6sU91Ozo5CyWk/UtyTjXSdMKfay4NHTGOuNu92A5fMEhryMRp5
+   4pg5JzLN15etemXT25PTLWNaEDwBh63loEtl1bCcxZGLFV/KdPHo+wpwF
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10473"; a="286206515"
 X-IronPort-AV: E=Sophos;i="5.93,323,1654585200"; 
-   d="scan'208";a="286206513"
+   d="scan'208";a="286206515"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
   by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2022 09:13:14 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,323,1654585200"; 
-   d="scan'208";a="686472601"
+   d="scan'208";a="686472604"
 Received: from fyu1.sc.intel.com ([172.25.103.126])
   by fmsmga004.fm.intel.com with ESMTP; 17 Sep 2022 09:13:14 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
@@ -42,9 +42,9 @@ To:     "Vinod Koul" <vkoul@kernel.org>,
         "Dave Jiang" <dave.jiang@intel.com>
 Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         dmaengine@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH 2/5] dmanegine: idxd: reformat opcap output to match bitmap_parse() input
-Date:   Sat, 17 Sep 2022 09:12:19 -0700
-Message-Id: <20220917161222.2835172-3-fenghua.yu@intel.com>
+Subject: [PATCH 3/5] dmaengine: idxd: add WQ operation cap restriction support
+Date:   Sat, 17 Sep 2022 09:12:20 -0700
+Message-Id: <20220917161222.2835172-4-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20220917161222.2835172-1-fenghua.yu@intel.com>
 References: <20220917161222.2835172-1-fenghua.yu@intel.com>
@@ -62,121 +62,272 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Dave Jiang <dave.jiang@intel.com>
 
-To make input and output consistent and prepping for the per WQ operation
-configuration support, change the output of opcap display to match the
-input that is expected by bitmap_parse() helper function. The output will
-be a bitmap with field width as the number of bits using the %*pb format
-specifier for printk() family.
+DSA 2.0 add the capability of configuring DMA ops on a per workqueue basis.
+This means that certain ops can be disabled by the system administrator for
+certain wq. By default, all ops are available. A bitmap is used to store
+the ops due to total op size of 256 bits and it is more convenient to use a
+range list to specify which bits are enabled.
+
+One of the usage to support this is for VM migration between different
+iteration of devices. The newer ops are disabled in order to allow guest to
+migrate to a host that only support older ops. Another usage is to
+restrict the WQ to certain operations for QoS of performance.
+
+A sysfs of ops_config attribute is added per wq. It is only usable when the
+ops_config bit is set under WQ_CAP register. This means that this attribute
+will return -EOPNOTSUPP on DSA 1.x devices. The expected input is a range
+list for the bits per operation the WQ supports.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- drivers/dma/idxd/idxd.h      |  2 ++
- drivers/dma/idxd/init.c      | 20 ++++++++++++++++++++
- drivers/dma/idxd/registers.h |  2 ++
- drivers/dma/idxd/sysfs.c     |  9 ++-------
- 4 files changed, 26 insertions(+), 7 deletions(-)
+ .../ABI/stable/sysfs-driver-dma-idxd          | 11 +++
+ drivers/dma/idxd/device.c                     | 15 +++-
+ drivers/dma/idxd/idxd.h                       |  2 +
+ drivers/dma/idxd/init.c                       | 10 +++
+ drivers/dma/idxd/registers.h                  |  8 +-
+ drivers/dma/idxd/sysfs.c                      | 85 +++++++++++++++++++
+ 6 files changed, 128 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index cda856bfc22a..3ab406d74176 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -308,6 +308,8 @@ struct idxd_device {
- 	struct work_struct work;
+diff --git a/Documentation/ABI/stable/sysfs-driver-dma-idxd b/Documentation/ABI/stable/sysfs-driver-dma-idxd
+index 0c2b613f2373..3f9f93b5e48c 100644
+--- a/Documentation/ABI/stable/sysfs-driver-dma-idxd
++++ b/Documentation/ABI/stable/sysfs-driver-dma-idxd
+@@ -227,6 +227,17 @@ Contact:	dmaengine@vger.kernel.org
+ Description:	Indicate the number of retires for an enqcmds submission on a sharedwq.
+ 		A max value to set attribute is capped at 64.
  
- 	struct idxd_pmu *idxd_pmu;
++What:		/sys/bus/dsa/devices/wq<m>.<n>/op_config
++Date:		Sept 14, 2022
++KernelVersion:	6.0.0
++Contact:	dmaengine@vger.kernel.org
++Description:	Shows the operation capability bits displayed in bitmap format
++		presented by %*pb printk() output format specifier.
++		The attribute can be configured when the WQ is disabled in
++		order to configure the WQ to accept specific bits that
++		correlates to the operations allowed. It's visible only
++		on platforms that support the capability.
 +
-+	unsigned long *opcap_bmap;
- };
- 
- /* IDXD software descriptor */
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index aa3478257ddb..913a55ccb864 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -369,6 +369,19 @@ static void idxd_read_table_offsets(struct idxd_device *idxd)
- 	dev_dbg(dev, "IDXD Perfmon Offset: %#x\n", idxd->perfmon_offset);
+ What:           /sys/bus/dsa/devices/engine<m>.<n>/group_id
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index bbc3c8b9a10f..81a81b8d769d 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -389,6 +389,8 @@ static void idxd_wq_disable_cleanup(struct idxd_wq *wq)
+ 	memset(wq->name, 0, WQ_NAME_SIZE);
+ 	wq->max_xfer_bytes = WQ_DEFAULT_MAX_XFER;
+ 	wq->max_batch_size = WQ_DEFAULT_MAX_BATCH;
++	if (wq->opcap_bmap)
++		bitmap_copy(wq->opcap_bmap, idxd->opcap_bmap, IDXD_MAX_OPCAP_BITS);
  }
  
-+static void multi_u64_to_bmap(unsigned long *bmap, u64 *val, int count)
-+{
-+	int i, j, nr;
+ static void idxd_wq_device_reset_cleanup(struct idxd_wq *wq)
+@@ -807,7 +809,7 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
+ 	struct idxd_device *idxd = wq->idxd;
+ 	struct device *dev = &idxd->pdev->dev;
+ 	u32 wq_offset;
+-	int i;
++	int i, n;
+ 
+ 	if (!wq->group)
+ 		return 0;
+@@ -865,6 +867,17 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
+ 	wq->wqcfg->max_xfer_shift = ilog2(wq->max_xfer_bytes);
+ 	wq->wqcfg->max_batch_shift = ilog2(wq->max_batch_size);
+ 
++	/* bytes 32-63 */
++	if (idxd->hw.wq_cap.op_config && wq->opcap_bmap) {
++		memset(wq->wqcfg->op_config, 0, IDXD_MAX_OPCAP_BITS / 8);
++		for_each_set_bit(n, wq->opcap_bmap, IDXD_MAX_OPCAP_BITS) {
++			int pos = n % BITS_PER_LONG_LONG;
++			int idx = n / BITS_PER_LONG_LONG;
 +
-+	for (i = 0, nr = 0; i < count; i++) {
-+		for (j = 0; j < BITS_PER_LONG_LONG; j++) {
-+			if (val[i] & BIT(j))
-+				set_bit(nr, bmap);
-+			nr++;
++			wq->wqcfg->op_config[idx] |= BIT(pos);
 +		}
 +	}
-+}
 +
- static void idxd_read_caps(struct idxd_device *idxd)
- {
- 	struct device *dev = &idxd->pdev->dev;
-@@ -427,6 +440,7 @@ static void idxd_read_caps(struct idxd_device *idxd)
- 				IDXD_OPCAP_OFFSET + i * sizeof(u64));
- 		dev_dbg(dev, "opcap[%d]: %#llx\n", i, idxd->hw.opcap.bits[i]);
+ 	dev_dbg(dev, "WQ %d CFGs\n", wq->id);
+ 	for (i = 0; i < WQCFG_STRIDES(idxd); i++) {
+ 		wq_offset = WQCFG_OFFSET(idxd, wq->id, i);
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index 3ab406d74176..ba877ad31932 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -195,6 +195,8 @@ struct idxd_wq {
+ 	enum idxd_wq_state state;
+ 	unsigned long flags;
+ 	union wqcfg *wqcfg;
++	unsigned long *opcap_bmap;
++
+ 	struct dsa_hw_desc **hw_descs;
+ 	int num_descs;
+ 	union {
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 913a55ccb864..bee685bf3ce5 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -185,6 +185,16 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+ 			rc = -ENOMEM;
+ 			goto err;
+ 		}
++
++		if (idxd->hw.wq_cap.op_config) {
++			wq->opcap_bmap = bitmap_zalloc(IDXD_MAX_OPCAP_BITS, GFP_KERNEL);
++			if (!wq->opcap_bmap) {
++				put_device(conf_dev);
++				rc = -ENOMEM;
++				goto err;
++			}
++			bitmap_copy(wq->opcap_bmap, idxd->opcap_bmap, IDXD_MAX_OPCAP_BITS);
++		}
+ 		idxd->wqs[i] = wq;
  	}
-+	multi_u64_to_bmap(idxd->opcap_bmap, &idxd->hw.opcap.bits[0], 4);
- }
  
- static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_data *data)
-@@ -448,6 +462,12 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
- 	if (idxd->id < 0)
- 		return NULL;
- 
-+	idxd->opcap_bmap = bitmap_zalloc_node(IDXD_MAX_OPCAP_BITS, GFP_KERNEL, dev_to_node(dev));
-+	if (!idxd->opcap_bmap) {
-+		ida_free(&idxd_ida, idxd->id);
-+		return NULL;
-+	}
-+
- 	device_initialize(conf_dev);
- 	conf_dev->parent = dev;
- 	conf_dev->bus = &dsa_bus_type;
 diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
-index 02449aa9c454..4c96ea85f843 100644
+index 4c96ea85f843..7b95be8f0f64 100644
 --- a/drivers/dma/idxd/registers.h
 +++ b/drivers/dma/idxd/registers.h
-@@ -90,6 +90,8 @@ struct opcap {
- 	u64 bits[4];
- };
+@@ -54,7 +54,8 @@ union wq_cap_reg {
+ 		u64 priority:1;
+ 		u64 occupancy:1;
+ 		u64 occupancy_int:1;
+-		u64 rsvd3:10;
++		u64 op_config:1;
++		u64 rsvd3:9;
+ 	};
+ 	u64 bits;
+ } __packed;
+@@ -350,8 +351,11 @@ union wqcfg {
  
-+#define IDXD_MAX_OPCAP_BITS		256U
+ 		/* bytes 28-31 */
+ 		u32 rsvd8;
 +
- #define IDXD_OPCAP_OFFSET		0x40
++		/* bytes 32-63 */
++		u64 op_config[4];
+ 	};
+-	u32 bits[8];
++	u32 bits[16];
+ } __packed;
  
- #define IDXD_TABLE_OFFSET		0x60
+ #define WQCFG_PASID_IDX                2
 diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index be9ff9d4cc4b..9998ab4b28c8 100644
+index 9998ab4b28c8..3bb1ea02a338 100644
 --- a/drivers/dma/idxd/sysfs.c
 +++ b/drivers/dma/idxd/sysfs.c
-@@ -1180,14 +1180,8 @@ static ssize_t op_cap_show(struct device *dev,
- 			   struct device_attribute *attr, char *buf)
+@@ -1058,6 +1058,68 @@ static ssize_t wq_enqcmds_retries_store(struct device *dev, struct device_attrib
+ static struct device_attribute dev_attr_wq_enqcmds_retries =
+ 		__ATTR(enqcmds_retries, 0644, wq_enqcmds_retries_show, wq_enqcmds_retries_store);
+ 
++static ssize_t wq_op_config_show(struct device *dev,
++				 struct device_attribute *attr, char *buf)
++{
++	struct idxd_wq *wq = confdev_to_wq(dev);
++
++	return sysfs_emit(buf, "%*pb\n", IDXD_MAX_OPCAP_BITS, wq->opcap_bmap);
++}
++
++static int idxd_verify_supported_opcap(struct idxd_device *idxd, unsigned long *opmask)
++{
++	int bit;
++
++	/*
++	 * The OPCAP is defined as 256 bits that represents each operation the device
++	 * supports per bit. Iterate through all the bits and check if the input mask
++	 * is set for bits that are not set in the OPCAP for the device. If no OPCAP
++	 * bit is set and input mask has the bit set, then return error.
++	 */
++	for_each_set_bit(bit, opmask, IDXD_MAX_OPCAP_BITS) {
++		if (!test_bit(bit, idxd->opcap_bmap))
++			return -EINVAL;
++	}
++
++	return 0;
++}
++
++static ssize_t wq_op_config_store(struct device *dev, struct device_attribute *attr,
++				  const char *buf, size_t count)
++{
++	struct idxd_wq *wq = confdev_to_wq(dev);
++	struct idxd_device *idxd = wq->idxd;
++	unsigned long *opmask;
++	int rc;
++
++	if (wq->state != IDXD_WQ_DISABLED)
++		return -EPERM;
++
++	opmask = bitmap_zalloc(IDXD_MAX_OPCAP_BITS, GFP_KERNEL);
++	if (!opmask)
++		return -ENOMEM;
++
++	rc = bitmap_parse(buf, count, opmask, IDXD_MAX_OPCAP_BITS);
++	if (rc < 0)
++		goto err;
++
++	rc = idxd_verify_supported_opcap(idxd, opmask);
++	if (rc < 0)
++		goto err;
++
++	bitmap_copy(wq->opcap_bmap, opmask, IDXD_MAX_OPCAP_BITS);
++
++	bitmap_free(opmask);
++	return count;
++
++err:
++	bitmap_free(opmask);
++	return rc;
++}
++
++static struct device_attribute dev_attr_wq_op_config =
++		__ATTR(op_config, 0644, wq_op_config_show, wq_op_config_store);
++
+ static struct attribute *idxd_wq_attributes[] = {
+ 	&dev_attr_wq_clients.attr,
+ 	&dev_attr_wq_state.attr,
+@@ -1075,11 +1137,33 @@ static struct attribute *idxd_wq_attributes[] = {
+ 	&dev_attr_wq_ats_disable.attr,
+ 	&dev_attr_wq_occupancy.attr,
+ 	&dev_attr_wq_enqcmds_retries.attr,
++	&dev_attr_wq_op_config.attr,
+ 	NULL,
+ };
+ 
++static bool idxd_wq_attr_op_config_invisible(struct attribute *attr,
++					     struct idxd_device *idxd)
++{
++	return attr == &dev_attr_wq_op_config.attr &&
++	       !idxd->hw.wq_cap.op_config;
++}
++
++static umode_t idxd_wq_attr_visible(struct kobject *kobj,
++				    struct attribute *attr, int n)
++{
++	struct device *dev = container_of(kobj, struct device, kobj);
++	struct idxd_wq *wq = confdev_to_wq(dev);
++	struct idxd_device *idxd = wq->idxd;
++
++	if (idxd_wq_attr_op_config_invisible(attr, idxd))
++		return 0;
++
++	return attr->mode;
++}
++
+ static const struct attribute_group idxd_wq_attribute_group = {
+ 	.attrs = idxd_wq_attributes,
++	.is_visible = idxd_wq_attr_visible,
+ };
+ 
+ static const struct attribute_group *idxd_wq_attribute_groups[] = {
+@@ -1091,6 +1175,7 @@ static void idxd_conf_wq_release(struct device *dev)
  {
- 	struct idxd_device *idxd = confdev_to_idxd(dev);
--	int i, rc = 0;
--
--	for (i = 0; i < 4; i++)
--		rc += sysfs_emit_at(buf, rc, "%#llx ", idxd->hw.opcap.bits[i]);
+ 	struct idxd_wq *wq = confdev_to_wq(dev);
  
--	rc--;
--	rc += sysfs_emit_at(buf, rc, "\n");
--	return rc;
-+	return sysfs_emit(buf, "%*pb\n", IDXD_MAX_OPCAP_BITS, idxd->opcap_bmap);
++	bitmap_free(wq->opcap_bmap);
+ 	kfree(wq->wqcfg);
+ 	kfree(wq);
  }
- static DEVICE_ATTR_RO(op_cap);
- 
-@@ -1411,6 +1405,7 @@ static void idxd_conf_device_release(struct device *dev)
- 	kfree(idxd->wqs);
- 	kfree(idxd->engines);
- 	ida_free(&idxd_ida, idxd->id);
-+	bitmap_free(idxd->opcap_bmap);
- 	kfree(idxd);
- }
- 
 -- 
 2.32.0
 

@@ -2,126 +2,102 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10C1F5BE51C
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Sep 2022 14:00:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 390D15BE8FF
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Sep 2022 16:31:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230372AbiITMAq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 20 Sep 2022 08:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59352 "EHLO
+        id S230133AbiITObE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 20 Sep 2022 10:31:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231153AbiITMAN (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 20 Sep 2022 08:00:13 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2069.outbound.protection.outlook.com [40.107.244.69])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDF81E0E6;
-        Tue, 20 Sep 2022 05:00:07 -0700 (PDT)
+        with ESMTP id S230252AbiITOa5 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 20 Sep 2022 10:30:57 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2057.outbound.protection.outlook.com [40.107.92.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 611D73AB29;
+        Tue, 20 Sep 2022 07:30:56 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KTwSxCfZRJ+Z5UyUCB9r1JpVae0nGa+xSKS90rxuW8jOk3ntxkS/Lr6Mi4ixvmuhZvnbMnH9+snVF3dU1ygFj2TT7Aw8XtP4h/OGTUkBcba7Z2Axga+KtnxGThKkvmRXbCe+kAJVw1n3Dssic+AlPmXqjIY96lvYsJyHM3e7rAdHdvtg0BvjxzOavY39FsNlszDiZlwc3f/IiW5CjDYbmZWynR26FUrXZk4BUTDwsHUX2tXNYE/hS2eWllrV1zc4PMu82sVxNCGRQ445rF56yHTTCmSdqnChJiyVRa+9vMk2K5CiroxjraYphjhNsYNdaHsKFlPYkWcbiHTHTZiNKA==
+ b=T93jLpfnzWNz5oUHYAwK4Lqgal4OznEb/pftAJMbL27H8UYvznHy8hfmIcqgt5soT9S70sub1IWq2j8HEyeK0aCKNPfgTwIDkRYgGRsv7KGJtVsPA1u2WYSYLcOOpW566YBNg5jA618XfSFcrx3uoyB0zelHW54l8auJl4Qh/+NX71g3Z7FUueceL3myjP6iLHSflw/4YzoTHOzH6Xu42Jq7/xMOPnqooaBtbC4vzqVwAHToBF+iJRKPAREsQHQ+I6+cSUJ6Pv929vB40Fd6jrnCfKqri1uraHZjWh/07iVa7SIHvGdlldwWh/e11j3uABBGbzpBu7mRZzSY2RLG3g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZqkVDCKy7SMesYjtJByJF2DG/ir/HMKyBwwurKQ8kec=;
- b=RjdILrpWw8prfuF4cq0j8HhjBYJtWdekiR2l5GOweEhta+EwPaOlGTh1fuGJVm9jec5RqSZ50HjsHeQJXvrvfwDp5vX9lzkYgu/30f6/DcImVYC6je16yO7dY9UXihZ5xAt9NIil/wxT1Yx21CMFgIFEliODYysOknNPm0ZKXKx0znHo/FyvV9EbJMlerbT7tY1CesWOe9McmIQVI8Jc9SS5A9QPdxbS5YZbW46n3NMYBIajRsCJUsCPHnyGsCfFKvg+PgmaNNc8laR89b+ZUSDJJ2FKhk/YLtu3R1hxrcKtx+mycL0gFaBjPBoY2MD7e357LVF8orHBnYHwdot0Ag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+ bh=ntkuQQGPerXXklIHQf7aICWiW85+TFytr0oUlkHfeXk=;
+ b=Xb3MkveEbeeAZQlcL9zOSNyLs+t3gW0ZpVt7yVumlOIumTOKuwK5sCvA1tdyLX73HxvmQlsK4Dn1/pGOfRP3GiQ1WJT3QEZYNKBF5M0D0wMCpLCZkcSHYerFO9Rj0h7C2jcetxCRmtc+OQ01b9AlSc1KRw3JHCkvTMxE3LqVDXY8Jo67wFtveg5lxrnZnI95cbg62YdyVezenRqfrtuFXkO74VJmAcU4pJ4s+ylBZwQQ262j4KE4l08LqdH5BCXEQJA8iyf0xpU/U6iHC41hfArMjI9KRysIj4LZegMiSWXHyxI8h9bAEfMHA/PqyUIWeOjY058UXdjQOVLE+XVzxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=gpxsee.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZqkVDCKy7SMesYjtJByJF2DG/ir/HMKyBwwurKQ8kec=;
- b=xvoTCyQInRiLzqIc4XczBheRCMbtyOXxwCafC7ZddUb+9wYFYUufsN0HB13Mc5Jr/SaNdTyBc7fZJ59/g7J2h0BMhWXunFdb+Nf/d/9uTJuI6PtD+2X6vYN9kjKnhLs/F71tXPDL+m76IiqfizW1ZnZLcNPQsZEKvf2P/HLyrUc=
-Received: from MN0PR12MB5953.namprd12.prod.outlook.com (2603:10b6:208:37c::15)
- by SA1PR12MB7294.namprd12.prod.outlook.com (2603:10b6:806:2b8::19) with
+ bh=ntkuQQGPerXXklIHQf7aICWiW85+TFytr0oUlkHfeXk=;
+ b=G/hgFomewlGXO27pRwtR1GQHc6toTZdlUoj2GzEeznWQ0XvQ+Rh0+W+rssJPMWiAPvvuFBvVkWBnCX/UUfATIPa3KTZWfVo4wkrqbgl23LIAva9ZduGZIB7OKCMgqF3psHhytFO+1c3Pd3uZL39Tka4O4yC1DVeKzTxHzcbLMl4=
+Received: from MW4PR04CA0336.namprd04.prod.outlook.com (2603:10b6:303:8a::11)
+ by CH2PR12MB4054.namprd12.prod.outlook.com (2603:10b6:610:a6::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5632.19; Tue, 20 Sep
- 2022 12:00:04 +0000
-Received: from MN0PR12MB5953.namprd12.prod.outlook.com
- ([fe80::8193:5c0c:4da8:7aad]) by MN0PR12MB5953.namprd12.prod.outlook.com
- ([fe80::8193:5c0c:4da8:7aad%7]) with mapi id 15.20.5654.014; Tue, 20 Sep 2022
- 12:00:03 +0000
-From:   "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        "Gaddam, Sarath Babu Naidu" <sarath.babu.naidu.gaddam@amd.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "adrianml@alumnos.upm.es" <adrianml@alumnos.upm.es>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Simek, Michal" <michal.simek@amd.com>,
-        "Sarangi, Anirudha" <anirudha.sarangi@amd.com>,
-        "Katakam, Harini" <harini.katakam@amd.com>,
-        "git@xilinx.com" <git@xilinx.com>, "git (AMD-Xilinx)" <git@amd.com>
-Subject: RE: [RFC V3 PATCH 0/8] Xilinx DMA enhancements and optimization
-Thread-Topic: [RFC V3 PATCH 0/8] Xilinx DMA enhancements and optimization
-Thread-Index: AQHYzLUokPyXdBQ+zkGuk0IkXRyZp63oLoSAgAABReA=
-Date:   Tue, 20 Sep 2022 12:00:02 +0000
-Message-ID: <MN0PR12MB5953774B25AB9CA40A8BB43EB74C9@MN0PR12MB5953.namprd12.prod.outlook.com>
-References: <20220920055119.12634-1-sarath.babu.naidu.gaddam@amd.com>
- <YymjofmCECa3iF20@matsya>
-In-Reply-To: <YymjofmCECa3iF20@matsya>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR12MB5953:EE_|SA1PR12MB7294:EE_
-x-ms-office365-filtering-correlation-id: d9031210-8a81-489f-8ca9-08da9affa6af
-x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cbdYMNGLYsXOxSeD4U4U5mmoVtAkvGc3JB6JuD7XGu/7ozqTJhCm4worMo+wDncWLKo2Z0TUH25VXU2ATsE92BnFjHDdzpGjuM1haFxD2wKUUIU5d8gcydNsVKMUEIgOcGP5Z5FdxVQpLg2nU8hqRZWQWgBS6GYYtzquP53exOvzTipTxzDRgaGMnFOwBqsvzXscyhBNCVkbMIRIElln9nr/D467k+6klAZcqanGV61XZoP0nO4/j9nH/nocCuD47dalMiV0a3IBMxplG0a7yEgwqp2eKlSzCPfbe5VdlctOXakUCulOqRftlqNOV+lELoLY2I75dj5+1evLr5B4cFwOEJ2xe0ahzwzpacGT2Xg30ccCRA9hHGtzSCmalpLdXmRGhYdr8GP+7wTojwYdtvj49nKAQ9oANSwUMqO7kZaSJflTUX14TXqSyqQYCL3z/xPdSHx60yu1sAdlv8JeKTz8Q9rk1RQI/opBHK+dbmgXf7Jfaqi7ygc5WPeZ82cI8VRZMao0a6bAarotJ4VHl+uBl1AWxImNhvob3soPDjGJi0FxraMhzlebVIlLv2FG5XOIS0xrFf+vT7UZeessVC1p4i/JNjOGPrrBujvVsc6EIENBv9TQ8/AW0pJ8DKayuxHtB2N5/5ZjYKSWIsGOTauXe4ubBA0qWkCw4q1dRXLe+yECk3BU59oQG1OdimPLJfY7B7PmrrwOCq/5UxhktQucctWVI44ovhQkuA3mA9vdDWkcRiwy/7be/PyUT21DtjRTeU5aoHHuk7NQ9T9Fmg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB5953.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(39860400002)(376002)(366004)(136003)(346002)(451199015)(9686003)(6506007)(7696005)(53546011)(38070700005)(7416002)(38100700002)(2906002)(478600001)(5660300002)(66446008)(64756008)(66476007)(122000001)(86362001)(33656002)(186003)(55016003)(71200400001)(41300700001)(83380400001)(66556008)(4326008)(110136005)(6636002)(8936002)(54906003)(66946007)(8676002)(316002)(52536014)(76116006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?tCwztYtqFXdhozUC5uTguGe4BNhv8pGA+diiIzlK+gxLwQOyGMwgTiYOB/0M?=
- =?us-ascii?Q?TKxakstrj1gH25Fe14nerm2/OVx/s4ekdseBidDEQcnns3lSUwQQh606BYsh?=
- =?us-ascii?Q?iwyuAridNzRX0LpyHIJa98VQe8a1p+8Wa4/X6TsNKmhOjT/f3dkv0C2Xypd7?=
- =?us-ascii?Q?pxda0WQ7RsTwZh3uVhbgkgJeYR1KW9yGevXbPwyFjbTZvvY7K/hA6DQmQt+m?=
- =?us-ascii?Q?sE3qdSBHqNmoB1uskMG+wawv+8NF5KRHPeJLpfBJSyjnxwARW/BRQGRF2GYg?=
- =?us-ascii?Q?t68Dd11b0hq4DD9yK77xH8KCm8JUz0AJtG/hHX2MqQ2yT0xLABezZqV2OCro?=
- =?us-ascii?Q?DiJSz5WbkCZn5/uBeSTLFeONe8ZFwYtIF3fdgdCpkEBt3FSWT55Kbm732GRi?=
- =?us-ascii?Q?NhUtAFdhpdFqSywJHlg8IyUVBxd48pLWm6R8n6xS7yqpdWrQy+IqnOd4Texh?=
- =?us-ascii?Q?0AytMBK0Vzt7VaybEnI1Uwl+TAFiwv3CIU8Qqvy7StvVR111IqauX1CiA3M5?=
- =?us-ascii?Q?djzscmCy/mv3+8AUGt/rlVzTcCmxFrsDOkPiK/+9EqIjjQ3VNPG0zxveiTqn?=
- =?us-ascii?Q?NN8IxDPgpti7tLoHVBiiWuxRehd/3RBXSGlLLRVtDC+nvxiy0AqYQNW9fItX?=
- =?us-ascii?Q?MF9Rx/rs/m8tMpwSJ2zYvrK5zk+aSo2EoF8MPdQalaxqJhjr56Smme0u03dX?=
- =?us-ascii?Q?8DznO39o0rkdWM8qXP/eJT56rjDW4qS5Zmny5SvPzsefHAEclLQY66tklUeU?=
- =?us-ascii?Q?NBSsAa8ybywiAc4KvbXrt3oK4nIL/PfCJKag7H546eCCOByILQ23hb5r5w/K?=
- =?us-ascii?Q?U9Cd8vi8I145xR2op/w6JAskb5Q1MHUlTJGIEivBHDwTzwOxY0FtKWteXOCI?=
- =?us-ascii?Q?+LBV8T+QztCRjCq6wcQbzfU2JzitzqpVs0T1/F/tSzjiq268QfNZNfvCAwYG?=
- =?us-ascii?Q?l44NvCdu37/wQb3xX2dbS/q6MYCR3D87JJ+1tRg01dj/uUI1DbfbcQe+N2Z5?=
- =?us-ascii?Q?FG1Z6lAM0VoRndh/v/XCbW+11xut3dbNQn1WRIj5dmu6MvSa5BKJF0QqP9BT?=
- =?us-ascii?Q?/yUZ9L/MYZI/EZt+6qx4EigxIhCUdJlR3DQX7RZJUFPehlu/laGBDzHIggmT?=
- =?us-ascii?Q?HI6Tq4JDYZvoxSS6aRBE6HmD+lEb0C1s5HhSiDT9FThn3BCH+DOl7p5NmRqj?=
- =?us-ascii?Q?zDpMPr5/bQZhPh0TuhmmvTUac5LDGSArXo3t3Re9yOfGInklralr02eGbx17?=
- =?us-ascii?Q?mLVjmMNYrmsiaf7eFDIsJUtx9Q6s5xM8Y3bizbbrDzhvJUgnV9HAycNKGbG/?=
- =?us-ascii?Q?a1rVrBoMTsvtB9HCW9iW43Afj4+CYczLoyOvVCrjCFkj7qLLmiyfr4ZWHVbu?=
- =?us-ascii?Q?pM9PiJ1lpn8jLhvPkr5ou4c/wTFD/EMHQULyp7dKs5ywXl2k8nIzafgsgTBO?=
- =?us-ascii?Q?xwOxqlmWZwWG0Zo8diACk0iHN8gW9rMCmBGgmlCLv92f7tCjJs1CPpFHOLLM?=
- =?us-ascii?Q?q/7JOJnpuQAHVhst57+Z7AScnfksYPyBWLr2sMgccQM/Dxq5ruBNYaF3+A0A?=
- =?us-ascii?Q?+fTyHhnLIpGROdXJscZFDqtv454XaijTIvd3dL6z30uNIByJoeDywnO3AUy2?=
- =?us-ascii?Q?QSfaaACTGIZJhWCN+agsvjM=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5632.21; Tue, 20 Sep
+ 2022 14:30:52 +0000
+Received: from CO1PEPF00001A61.namprd05.prod.outlook.com
+ (2603:10b6:303:8a:cafe::f4) by MW4PR04CA0336.outlook.office365.com
+ (2603:10b6:303:8a::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5632.21 via Frontend
+ Transport; Tue, 20 Sep 2022 14:30:51 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF00001A61.mail.protection.outlook.com (10.167.241.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5654.11 via Frontend Transport; Tue, 20 Sep 2022 14:30:51 +0000
+Received: from [10.254.241.52] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Tue, 20 Sep
+ 2022 09:30:47 -0500
+Message-ID: <6c5fd7a8-523b-100c-a104-d2f0bf69be16@amd.com>
+Date:   Tue, 20 Sep 2022 16:30:44 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: [PATCH v2 1/3] Added platform module alias for the xiic I2C
+ driver
+Content-Language: en-US
+To:     <tumic@gpxsee.org>, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "Sreeram, Manikanta" <manikanta.sreeram@amd.com>
+CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        =?UTF-8?Q?Martin_T=c5=afma?= <martin.tuma@digiteqautomotive.com>
+References: <20220919185556.5215-1-tumic@gpxsee.org>
+ <20220919185556.5215-2-tumic@gpxsee.org>
+From:   Michal Simek <michal.simek@amd.com>
+In-Reply-To: <20220919185556.5215-2-tumic@gpxsee.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF00001A61:EE_|CH2PR12MB4054:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4e43a96a-b81c-4510-b9fd-08da9b14b7f0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Rw4gr/Z7dP72ruan/7aodN873ubi9uUEUZSH2zHvAumj7JRTaGAVjNNGiPysVz6BsMjY/evMyrkpd7H0LuKa/WU4ZgtG8jYcddL/hXTUh7+PmDd23lKW4WnWR42wbMarbgFpy21W5owdfSQWFhSCsqcDMBpfOXwd7majO/843ZOH/qgh6tfjdjLIDGwsiUk5ViEYOfJD0FMcRvNV3jdqu2ChtUvs3Ve2qL0UBH2E2iH+2QjneqRQKVZELrcBiiuyjZWr/Onb2LI3Mt4k5cXogFxJwW/Cm/yZiLQK4FWakIVmXTQkx1shAp6iKKzubZg/60YbAzcHhPPNQawsAcIyggfB1fqc2uSHv7hdNPAOQxFvhrkRX3lrWtl17lqQ+SYI30THNoOVH9i5hPfijC0BEh74nWJHaHjlb+stQbH8t5JgSRxbyomi8zph3gOF40gvoix9Dz819Ox0lzqmya4pZ8MW8OaPJHdFnNBR9R/gAWgBK+VFOwy4dPzK19eWjIV/eCAYzrPrUgeDSYXhVM/tqBcpenAV2GxejRyIQ6XFiD3N1tmTx65DPKmg+cIB6cuCZrh5lQTJBZpUzd1+elCGNhSOhU0EMl/MNzQA4gO3DX9w2MmJL5zBpCn7reTxu9zI37kZf3cU0qKhOTv+0BRgANz+OmKmJNPUIitlPIHicBsdBVO6QDNPN7WGte8lWbOFz3bapsiVIrW1mhqUMRvvC6tgZESvJIbtKpItKqBYZkovFg+o2xl3IEUINmLYfmTb/YUpDo7i6GomF1r1lFz68RXFYnIqTENUeAEvhC9Llz5cQ+fWHJTzuC6p362Ew1MrVwlEMRZqcfPxE9E83WsOYg==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(396003)(39860400002)(376002)(136003)(451199015)(36840700001)(46966006)(40470700004)(44832011)(82310400005)(31686004)(40480700001)(36756003)(4744005)(2906002)(6666004)(336012)(16576012)(316002)(82740400003)(36860700001)(426003)(47076005)(4326008)(8676002)(5660300002)(70206006)(70586007)(31696002)(54906003)(110136005)(86362001)(6636002)(81166007)(356005)(16526019)(186003)(478600001)(2616005)(26005)(53546011)(8936002)(40460700003)(41300700001)(43740500002)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB5953.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9031210-8a81-489f-8ca9-08da9affa6af
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2022 12:00:03.0050
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Sep 2022 14:30:51.1816
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AGMpkiVTmIgPxx7vzlKl++YUub2Nz35xZX+XVsG8JiRUasveHh/w7nAAhwUgEPF1
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7294
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e43a96a-b81c-4510-b9fd-08da9b14b7f0
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF00001A61.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4054
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -130,94 +106,41 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-> -----Original Message-----
-> From: Vinod Koul <vkoul@kernel.org>
-> Sent: Tuesday, September 20, 2022 4:57 PM
-> To: Gaddam, Sarath Babu Naidu <sarath.babu.naidu.gaddam@amd.com>
-> Cc: robh+dt@kernel.org; krzysztof.kozlowski+dt@linaro.org;
-> lars@metafoo.de; adrianml@alumnos.upm.es; dmaengine@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>; Pandey,
-> Radhey Shyam <radhey.shyam.pandey@amd.com>; Sarangi, Anirudha
-> <anirudha.sarangi@amd.com>; Katakam, Harini
-> <harini.katakam@amd.com>; git@xilinx.com; git (AMD-Xilinx)
-> <git@amd.com>
-> Subject: Re: [RFC V3 PATCH 0/8] Xilinx DMA enhancements and optimization
->=20
-> On 20-09-22, 11:21, Sarath Babu Naidu Gaddam wrote:
-> > Some background about the patch series: Xilinx Axi Ethernet device
-> > driver
-> > (xilinx_axienet_main.c) currently has axi-dma code inside it. The goal
-> > is to refactor axiethernet driver and use existing AXI DMA driver
-> > using DMAEngine API.
-> >
-> > This patchset does feature addition and optimization to support axidma
-> > integration with axiethernet network driver. Once axidma version is
-> > accepted mcdma specific changes will be added in followup version.
->=20
-> why is this tagged RFC? Is it not ready for merge?
 
-To recap - In v3, the new addition is "[PATCH 8/8] dmaengine:=20
-xilinx_dma: Add device_config support" along with addressing=20
-RFC v2 comment.=20
 
-8/8 is initial proposal on how to implement coalesce feature in
-dmaengine driver to support ethernet usecases. Thought was
-that it's better to have this idea reviewed as RFC before=20
-extending the logic for other IP variants and spin sanity test
-all usecases.=20
+On 9/19/22 20:55, tumic@gpxsee.org wrote:
+> From: Martin Tůma <martin.tuma@digiteqautomotive.com>
 
-Fallback option is to split this series and send patches which are
-already reviewed in RFC v2 as PATCH and only 8/8 (which need=20
-more discussion/framework extension) as RFC?
-Let me know your thoughts.=20
+Subject should contain subsystem prefix and driver.
+
+i2c: xiic: is commonly used in this driver.
+
+> 
+> The missing "platform" alias is required for the mgb4 v4l2 driver to load
+> the i2c controller driver when probing the HW.
+> 
+> Signed-off-by: Martin Tůma <martin.tuma@digiteqautomotive.com>
+> ---
+>   drivers/i2c/busses/i2c-xiic.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/i2c/busses/i2c-xiic.c b/drivers/i2c/busses/i2c-xiic.c
+> index b3fe6b2aa3ca..277a02455cdd 100644
+> --- a/drivers/i2c/busses/i2c-xiic.c
+> +++ b/drivers/i2c/busses/i2c-xiic.c
+> @@ -920,6 +920,7 @@ static struct platform_driver xiic_i2c_driver = {
+> 
+>   module_platform_driver(xiic_i2c_driver);
+> 
+> +MODULE_ALIAS("platform:" DRIVER_NAME);
+>   MODULE_AUTHOR("info@mocean-labs.com");
+>   MODULE_DESCRIPTION("Xilinx I2C bus driver");
+>   MODULE_LICENSE("GPL v2");
+> --
+> 2.37.2
+> 
+
+Change is fine.
 
 Thanks,
-Radhey
->=20
-> >
-> > Changes for V2:
-> > - Use metadata API[1] for passing metadata from dma to netdev client.
-> > - Read irq-delay from DT.
-> > - Remove desc_callback_valid check.
-> > - Addressed RFC v1 comments[2].
-> > - Minor code refactoring.
-> >
-> > Changes for V3:
-> > - Add device_config support for passing any dma client data.
-> > - Address RFC v2 comments.
-> >     - remove hardcoding for axidma_tx_segment.
-> >     - Below review comment is in pipeline. We are facing a race issue w=
-hen
-> >       addressing it. we will fix it in the next version.
-> >       "chan->idle =3D true; in xilinx_dma_irq_handler() needs to be gat=
-ed on
-> >        the active_list being empty".
-> >
-> > Comments, suggestions are very welcome
-> >
-> > Radhey Shyam Pandey (7):
-> >   dt-bindings: dmaengine: xilinx_dma: Add xlnx,axistream-connected
-> >     property
-> >   dt-bindings: dmaengine: xilinx_dma: Add xlnx,irq-delay property
-> >   dmaengine: xilinx_dma: Pass AXI4-Stream control words to dma client
-> >   dmaengine: xilinx_dma: Increase AXI DMA transaction segment count
-> >   dmaengine: xilinx_dma: Freeup active list based on descriptor
-> >     completion bit
-> >   dmaengine: xilinx_dma: Use tasklet_hi_schedule for timing critical
-> >     usecase
-> >   dmaengine: xilinx_dma: Program interrupt delay timeout
-> >
-> > Sarath Babu Naidu Gaddam (1):
-> >   dmaengine: xilinx_dma: Add device_config support
-> >
-> >  .../bindings/dma/xilinx/xilinx_dma.txt        |   4 +
-> >  drivers/dma/xilinx/xilinx_dma.c               | 107 ++++++++++++++++--
-> >  include/linux/dma/xilinx_dma.h                |  16 +++
-> >  3 files changed, 115 insertions(+), 12 deletions(-)
-> >
-> > --
-> > 2.25.1
->=20
-> --
-> ~Vinod
+Michal

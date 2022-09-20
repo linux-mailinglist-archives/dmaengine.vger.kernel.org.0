@@ -2,145 +2,157 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3FF15BDD24
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Sep 2022 08:29:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C93F15BE2AF
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Sep 2022 12:08:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229839AbiITG3S (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 20 Sep 2022 02:29:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33816 "EHLO
+        id S229689AbiITKHU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 20 Sep 2022 06:07:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230210AbiITG3Q (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 20 Sep 2022 02:29:16 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE3F95E31E;
-        Mon, 19 Sep 2022 23:29:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663655355; x=1695191355;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vU4UOY1cFcL0pHjYCJ/Vivviv9dmXv+UoY/OX8Hoa/s=;
-  b=PxFD/6Hpz8dyjeTHf8haMPCkJLbW6Uv/hByAl3NOvJkZiHk6OXj3IFSb
-   Sz92bzxVm4kp6xlCNGamALczrO015DLPCzxzG26uf36zicb6R35hpfjAe
-   aJprmIjBGneD32BBTGaCvpuqhSkgZXkWEGS/7pE/6gQZvTD849LHaiB/I
-   f+ioSMiNr/Ge1BQYoqdYNzvAW27cg5/AWlJ95+sJeNrqqAgjhtX27Wrcv
-   pq38ibJFBnZWJgn7jbYBGxXiWsjkG9iNshYP36ker2oTGxD+Gdh1XBjTb
-   2Co8cXvCExSr2fM/cuOEu0sBKSmBR/aNycNyuuVfS44piOBivvdUmDaim
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10475"; a="385898548"
-X-IronPort-AV: E=Sophos;i="5.93,329,1654585200"; 
-   d="scan'208";a="385898548"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2022 23:29:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,329,1654585200"; 
-   d="scan'208";a="649457126"
-Received: from lkp-server01.sh.intel.com (HELO c0a60f19fe7e) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 19 Sep 2022 23:29:05 -0700
-Received: from kbuild by c0a60f19fe7e with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oaWki-0002Xl-39;
-        Tue, 20 Sep 2022 06:29:04 +0000
-Date:   Tue, 20 Sep 2022 14:28:24 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Lizhi Hou <lizhi.hou@amd.com>, vkoul@kernel.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        trix@redhat.com
-Cc:     kbuild-all@lists.01.org, Lizhi Hou <lizhi.hou@amd.com>,
-        max.zhen@amd.com, sonal.santan@amd.com, larry.liu@amd.com,
-        brian.xu@amd.com
-Subject: Re: [PATCH V3 XDMA 1/1] dmaengine: xilinx: xdma: add xilinx xdma
- driver
-Message-ID: <202209201427.ujYkdhUE-lkp@intel.com>
-References: <1663631039-49732-2-git-send-email-lizhi.hou@amd.com>
+        with ESMTP id S229561AbiITKHM (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 20 Sep 2022 06:07:12 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6D20361138;
+        Tue, 20 Sep 2022 03:07:10 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FCC4169C;
+        Tue, 20 Sep 2022 03:07:16 -0700 (PDT)
+Received: from [10.57.18.118] (unknown [10.57.18.118])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 53F333F73B;
+        Tue, 20 Sep 2022 03:07:07 -0700 (PDT)
+Message-ID: <5ef51421-e6b0-edd5-6b6e-439b47b794a8@arm.com>
+Date:   Tue, 20 Sep 2022 11:07:05 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1663631039-49732-2-git-send-email-lizhi.hou@amd.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [BUG] ls1046a: eDMA does not transfer data from I2C
+Content-Language: en-GB
+To:     Sean Anderson <sean.anderson@seco.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-i2c@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Cc:     Li Yang <leoyang.li@nxp.com>, Peng Ma <peng.ma@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel@lists.freedesktop.org,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        linaro-mm-sig@lists.linaro.org, Robin Gong <yibin.gong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Joy Zou <joy.zou@nxp.com>, linux-media@vger.kernel.org
+References: <38974aab-06d0-f5ff-d359-5eedd2f3bb3e@seco.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <38974aab-06d0-f5ff-d359-5eedd2f3bb3e@seco.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-9.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Lizhi,
+On 2022-09-19 23:24, Sean Anderson wrote:
+> Hi all,
+> 
+> I discovered a bug in either imx_i2c or fsl-edma on the LS1046A where no
+> data is read in i2c_imx_dma_read except for the last two bytes (which
+> are not read using DMA). This is perhaps best illustrated with the
+> following example:
+> 
+> # hexdump -C /sys/bus/nvmem/devices/0-00540/nvmem
+> [  308.914884] i2c i2c-0: ffff000809380000 0x0000000889380000 0x00000000f5401000 ffff000075401000
+> [  308.923529] src= 2180004 dst=f5401000 attr=   0 soff=   0 nbytes=1 slast=       0
+> [  308.923529] citer=  7e biter=  7e doff=   1 dlast_sga=       0
+> [  308.923529] major_int=1 disable_req=1 enable_sg=0
+> [  308.942113] fsl-edma 2c00000.edma: vchan 000000001b4371fc: txd 00000000d9dd26c5[4]: submitted
+> [  308.974049] fsl-edma 2c00000.edma: txd 00000000d9dd26c5[4]: marked complete
+> [  308.981339] i2c i2c-0: ffff000809380000 = [2e 2e 2f 2e 2e 2f 2e 2e 2f 64 65 76 69 63 65 73 2f 70 6c 61 74 66 6f 72 6d 2f 73 6f 63 2f 32 31 38 30 30 30 30 2e 69 32 63 2f 69 32 63 2d 30 2f 30 2d 30 30 35 34 2f 30 2d 30 30 35 34 30 00 00]
+> [  309.002226] i2c i2c-0: ffff000075401000 = [2e 2e 2f 2e 2e 2f 2e 2e 2f 64 65 76 69 63 65 73 2f 70 6c 61 74 66 6f 72 6d 2f 73 6f 63 2f 32 31 38 30 30 30 30 2e 69 32 63 2f 69 32 63 2d 30 2f 30 2d 30 30 35 34 2f 30 2d 30 30 35 34 30 00 00]
+> [  309.024649] i2c i2c-0: ffff000809380080 0x0000000889380080 0x00000000f5401800 ffff000075401800
+> [  309.033270] src= 2180004 dst=f5401800 attr=   0 soff=   0 nbytes=1 slast=       0
+> [  309.033270] citer=  7e biter=  7e doff=   1 dlast_sga=       0
+> [  309.033270] major_int=1 disable_req=1 enable_sg=0
+> [  309.051633] fsl-edma 2c00000.edma: vchan 000000001b4371fc: txd 00000000d9dd26c5[5]: submitted
+> [  309.083526] fsl-edma 2c00000.edma: txd 00000000d9dd26c5[5]: marked complete
+> [  309.090807] i2c i2c-0: ffff000809380080 = [00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+> [  309.111694] i2c i2c-0: ffff000075401800 = [00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00]
+> 00000000  2e 2e 2f 2e 2e 2f 2e 2e  2f 64 65 76 69 63 65 73  |../../../devices|
+> 00000010  2f 70 6c 61 74 66 6f 72  6d 2f 73 6f 63 2f 32 31  |/platform/soc/21|
+> 00000020  38 30 30 30 30 2e 69 32  63 2f 69 32 63 2d 30 2f  |80000.i2c/i2c-0/|
+> 00000030  30 2d 30 30 35 34 2f 30  2d 30 30 35 34 30 00 00  |0-0054/0-00540..|
+> 00000040  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+> *
+> 00000070  00 00 00 00 00 00 00 00  00 00 00 00 00 00 ff ff  |................|
+> 00000080  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+> *
+> 000000f0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 ff 5b  |...............[|
+> 00000100
+> 
+> (patch with my debug prints appended below)
+> 
+> Despite the DMA completing successfully, no data was copied into the
+> buffer, leaving the original (now junk) contents. I probed the I2C bus
+> with an oscilloscope, and I verified that the transfer did indeed occur.
+> The timing between submission and completion seems reasonable for the
+> bus speed (50 kHz for whatever reason).
+> 
+> I had a look over the I2C driver, and nothing looked obviously
+> incorrect. If anyone has ideas on what to try, I'm more than willing.
 
-I love your patch! Yet something to improve:
+Is the DMA controller cache-coherent? I see the mainline LS1046A DT 
+doesn't have a "dma-coherent" property for it, but the behaviour is 
+entirely consistent with that being wrong - dma_map_single() cleans the 
+cache, coherent DMA write hits the still-present cache lines, 
+dma_unmap_single() invalidates the cache, and boom, the data is gone and 
+you read back the previous content of the buffer that was cleaned out to 
+DRAM beforehand.
 
-[auto build test ERROR on vkoul-dmaengine/next]
-[also build test ERROR on linus/master v6.0-rc6 next-20220919]
-[cannot apply to xilinx-xlnx/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Robin.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Lizhi-Hou/xilinx-XDMA-driver/20220920-074553
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
-config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20220920/202209201427.ujYkdhUE-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/2622fde9f389e211554d46e149765c1fe5da6f44
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Lizhi-Hou/xilinx-XDMA-driver/20220920-074553
-        git checkout 2622fde9f389e211554d46e149765c1fe5da6f44
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k SHELL=/bin/bash drivers/dma/xilinx/
-
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
-   In file included from <command-line>:
-   drivers/dma/xilinx/xdma.c: In function 'xdma_xfer_start.isra':
->> include/linux/compiler_types.h:354:45: error: call to '__compiletime_assert_247' declared with attribute error: FIELD_GET: type of reg too small for mask
-     354 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |                                             ^
-   include/linux/compiler_types.h:335:25: note: in definition of macro '__compiletime_assert'
-     335 |                         prefix ## suffix();                             \
-         |                         ^~~~~~
-   include/linux/compiler_types.h:354:9: note: in expansion of macro '_compiletime_assert'
-     354 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
-      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:71:17: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      71 |                 BUILD_BUG_ON_MSG(__bf_cast_unsigned(_mask, _mask) >     \
-         |                 ^~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:128:17: note: in expansion of macro '__BF_FIELD_CHECK'
-     128 |                 __BF_FIELD_CHECK(_mask, _reg, 0U, "FIELD_GET: ");       \
-         |                 ^~~~~~~~~~~~~~~~
-   drivers/dma/xilinx/xdma.c:358:15: note: in expansion of macro 'FIELD_GET'
-     358 |         val = FIELD_GET(XDMA_HI_ADDR_MASK, block->dma_addr);
-         |               ^~~~~~~~~
-
-
-vim +/__compiletime_assert_247 +354 include/linux/compiler_types.h
-
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  340  
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  341  #define _compiletime_assert(condition, msg, prefix, suffix) \
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  342  	__compiletime_assert(condition, msg, prefix, suffix)
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  343  
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  344  /**
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  345   * compiletime_assert - break build and emit msg if condition is false
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  346   * @condition: a compile-time constant condition to check
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  347   * @msg:       a message to emit if condition is false
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  348   *
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  349   * In tradition of POSIX assert, this macro will break the build if the
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  350   * supplied condition is *false*, emitting the supplied error message if the
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  351   * compiler has support to do so.
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  352   */
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  353  #define compiletime_assert(condition, msg) \
-eb5c2d4b45e3d2 Will Deacon 2020-07-21 @354  	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  355  
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+> --Sean
+> 
+> diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+> index 15896e2413c4..1d9d4a55d2af 100644
+> --- a/drivers/dma/fsl-edma-common.c
+> +++ b/drivers/dma/fsl-edma-common.c
+> @@ -391,6 +391,12 @@ void fsl_edma_fill_tcd(struct fsl_edma_hw_tcd *tcd, u32 src, u32 dst,
+>   {
+>          u16 csr = 0;
+>   
+> +       pr_info("src=%8x dst=%8x attr=%4x soff=%4x nbytes=%u slast=%8x\n"
+> +               "citer=%4x biter=%4x doff=%4x dlast_sga=%8x\n"
+> +               "major_int=%d disable_req=%d enable_sg=%d\n",
+> +               src, dst, attr, soff, nbytes, slast, citer, biter, doff,
+> +               dlast_sga, major_int, disable_req, enable_sg);
+> +
+>          /*
+>           * eDMA hardware SGs require the TCDs to be stored in little
+>           * endian format irrespective of the register endian model.
+> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+> index 3576b63a6c03..0217f0cb1331 100644
+> --- a/drivers/i2c/busses/i2c-imx.c
+> +++ b/drivers/i2c/busses/i2c-imx.c
+> @@ -402,6 +402,9 @@ static int i2c_imx_dma_xfer(struct imx_i2c_struct *i2c_imx,
+>                  dev_err(dev, "DMA mapping failed\n");
+>                  goto err_map;
+>          }
+> +       phys_addr_t bufp = virt_to_phys(msgs->buf);
+> +       dev_info(dev, "%px %pap %pad %px\n", msgs->buf, &bufp,
+> +                &dma->dma_buf, phys_to_virt(dma->dma_buf));
+>   
+>          txdesc = dmaengine_prep_slave_single(dma->chan_using, dma->dma_buf,
+>                                          dma->dma_len, dma->dma_transfer_dir,
+> @@ -965,6 +968,9 @@ static int i2c_imx_dma_read(struct imx_i2c_struct *i2c_imx,
+>                  }
+>                  schedule();
+>          }
+> +       dev_info(dev, "%px = [%*ph]\n", msgs->buf, msgs->len, msgs->buf);
+> +       dev_info(dev, "%px = [%*ph]\n", phys_to_virt(dma->dma_buf), msgs->len,
+> +                phys_to_virt(dma->dma_buf));
+>   
+>          temp = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
+>          temp &= ~I2CR_DMAEN;

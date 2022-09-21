@@ -2,67 +2,123 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 01A4C5BFB96
-	for <lists+dmaengine@lfdr.de>; Wed, 21 Sep 2022 11:47:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1F395BFC7E
+	for <lists+dmaengine@lfdr.de>; Wed, 21 Sep 2022 12:40:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231790AbiIUJrw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 21 Sep 2022 05:47:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46494 "EHLO
+        id S229911AbiIUKj7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 21 Sep 2022 06:39:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231793AbiIUJrg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 21 Sep 2022 05:47:36 -0400
-Received: from mx.gpxsee.org (mx.gpxsee.org [37.205.14.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 023FF81686;
-        Wed, 21 Sep 2022 02:44:51 -0700 (PDT)
-Received: from [192.168.4.25] (unknown [62.77.71.229])
-        by mx.gpxsee.org (Postfix) with ESMTPSA id 0CDF5488AC;
-        Wed, 21 Sep 2022 11:44:50 +0200 (CEST)
-Message-ID: <285cddef-bc3e-dd86-46e0-5f4de6ebcd32@gpxsee.org>
-Date:   Wed, 21 Sep 2022 11:44:49 +0200
+        with ESMTP id S230038AbiIUKjx (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 21 Sep 2022 06:39:53 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01D9915A2D
+        for <dmaengine@vger.kernel.org>; Wed, 21 Sep 2022 03:39:48 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1oax8d-0003B3-Nx; Wed, 21 Sep 2022 12:39:31 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1oax8c-0007fE-T1; Wed, 21 Sep 2022 12:39:30 +0200
+Date:   Wed, 21 Sep 2022 12:39:30 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RESEND PATCH v5 1/2] dmaengine: mxs: use
+ platform_driver_register
+Message-ID: <20220921103930.GM12909@pengutronix.de>
+References: <20220904141020.2947725-1-dario.binacchi@amarulasolutions.com>
+ <20220913163510.GR6477@pengutronix.de>
+ <CABGWkvpur+A1UHwhJ6CCStyaYH79_aqJo4eWOW-s1p2jakbFMA@mail.gmail.com>
+ <YyqDq9FL1W5gMveQ@matsya>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-To:     sonal.santan@amd.com
-Cc:     dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        martin.tuma@digiteqautomotive.com, mchehab@kernel.org,
-        michal.simek@xilinx.com, tumic@gpxsee.org, vkoul@kernel.org
-References: <40c6af79-9288-7a67-e41b-30c288dbe1ff@amd.com>
-Subject: Re: [PATCH v2 0/3] Digiteq Automotive MGB4 driver
-Content-Language: en-US
-From:   =?UTF-8?Q?Martin_T=c5=afma?= <tumic@gpxsee.org>
-In-Reply-To: <40c6af79-9288-7a67-e41b-30c288dbe1ff@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YyqDq9FL1W5gMveQ@matsya>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,
+On Wed, Sep 21, 2022 at 08:53:23AM +0530, Vinod Koul wrote:
+> On 20-09-22, 19:10, Dario Binacchi wrote:
+> > Hi Vinoud,
+> > 
+> > On Tue, Sep 13, 2022 at 6:35 PM Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> > >
+> > > Hi Dario,
+> > >
+> > > On Sun, Sep 04, 2022 at 04:10:19PM +0200, Dario Binacchi wrote:
+> > > > Driver registration fails on SOC imx8mn as its supplier, the clock
+> > > > control module, is probed later than subsys initcall level. This driver
+> > > > uses platform_driver_probe which is not compatible with deferred probing
+> > > > and won't be probed again later if probe function fails due to clock not
+> > > > being available at that time.
+> > > >
+> > > > This patch replaces the use of platform_driver_probe with
+> > > > platform_driver_register which will allow probing the driver later again
+> > > > when the clock control module will be available.
+> > > >
+> > > > Fixes: a580b8c5429a ("dmaengine: mxs-dma: add dma support for i.MX23/28")
+> > > > Co-developed-by: Michael Trimarchi <michael@amarulasolutions.com>
+> > > > Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+> > > > Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> > > > Cc: stable@vger.kernel.org
+> > >
+> > > How I see it v3 of this patch is perfectly fine and should be taken
+> > > instead of this one. I just commented that to v3.
+> > >
+> > > Not sure if Vinod would take v3, or if you should resend v3 as v6
+> > > instead. If you do, you can add my Acked-by.
+> > >
+> > > Vinod, please let us know what you prefer.
+> > 
+> > Could you please let me know how to proceed? This patch has been pending for
+> > a while and it's a real shame as the change is minimal and fixes a
+> > real issue that is
+> > still present in the mainline and stable kernels.
+> 
+> Ooops, Somehow this seems to have really slipped. Sorry I owe you an
+> apology for this
+> 
+> I am still not sure of this patch yet, lets get it right and merged
+> quickly. I will send my review later today
 
- > Xilinx/AMD is working on upstreaming the XDMA driver into Linux
- > dmaengine subsystem for use by all users of XDMA IP. You can find the 
- > V3
- > patch set here:
- >
- > 
-https://lore.kernel.org/dmaengine/1663631039-49732-1-git-send-email-lizhi.hou@amd.com/T/#t
+I just realized that unlike what I said v3 of this patch is still wrong
+as it leaves the __init annotation on mxs_dma_init() which is called
+from (non __init) mxs_dma_probe(). v3 probably doesn't give a section
+mismatch warning because mxs_dma_init() is inlined.
 
-That's good news. If this would happen before I have spend two weeks 
-converting the original Xilinx "driver" to something with at least a 
-theoretical chance to be included into the kernel, it would be even 
-better... ;-)
+Really v2 is the one we should take which is at:
 
- > Will appreciate your review of that patch set and hopefully MGB4 driver
- > can be rebased on top it?
+https://lore.kernel.org/linux-arm-kernel/20220523132247.1429321-1-dario.binacchi@amarulasolutions.com/T/
 
-As I already replied to Lizhi Hou, this new XDMA driver is at the moment 
-unusable for most XDMA-based HW as it does not handle the user IRQs 
-logic and as it also takes up the user IRQs register memory space, it 
-even actively hinders other drivers to at least handle the IRQs themselves.
+Sascha
 
-M.
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |

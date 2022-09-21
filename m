@@ -2,57 +2,69 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D1AB5C047D
-	for <lists+dmaengine@lfdr.de>; Wed, 21 Sep 2022 18:45:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21E4A5C0514
+	for <lists+dmaengine@lfdr.de>; Wed, 21 Sep 2022 19:06:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230282AbiIUQpB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 21 Sep 2022 12:45:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44788 "EHLO
+        id S229691AbiIURGs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 21 Sep 2022 13:06:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230351AbiIUQog (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 21 Sep 2022 12:44:36 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FF99C48;
-        Wed, 21 Sep 2022 09:34:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 30413B83181;
-        Wed, 21 Sep 2022 16:34:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EABEAC433D6;
-        Wed, 21 Sep 2022 16:34:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663778066;
-        bh=4zrBKD8p+a54Do+feopb+gqIFXrxU78pdFojW+ucLfU=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=J3QCuee4s29ve2tV6oh4IFghBWy5ckvmTP9jyy3WWKKqa4lVP9D3HlrU2tDBsD3mC
-         UKEYAcVI6CYD4HnQ88uwCNIUterxrnwcyiS9wddwGMx/pstfoLAgmmN/1wRo1w4ltx
-         IuiSzZpaNtXcufXu6HtoOE1CrAX9voSRoXqWEBrNQRlkA9OO0mpCco0gxtkEbDh0zo
-         DtJXJdNy0cZshJz0fYF7N85p7UBWJRT8BfX52vBzOhhFhhJS0zJz2OGstjlWeGSpF1
-         SFA6BzjTJrSj5MrW69OMQDaMIbUhadtaXW++D01PKSbsHrZ2Ck2AanPhA0KPvR5PNQ
-         V2gASgG8rlKWA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CBA66E21ECF;
-        Wed, 21 Sep 2022 16:34:25 +0000 (UTC)
-Subject: Re: [GIT PULL]: dmaengine fixes for v6.0
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <YysQ6+o7IqJUwTdY@matsya>
-References: <YysQ6+o7IqJUwTdY@matsya>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <YysQ6+o7IqJUwTdY@matsya>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-fix-6.0
-X-PR-Tracked-Commit-Id: e0f1b21c504f050de83922dd49e6a425dad2d518
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 88e6546b36771daa145e7f6cf29f3496341634a6
-Message-Id: <166377806582.17149.5464169894846940042.pr-tracker-bot@kernel.org>
-Date:   Wed, 21 Sep 2022 16:34:25 +0000
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        with ESMTP id S229831AbiIURGr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 21 Sep 2022 13:06:47 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC27E9413C
+        for <dmaengine@vger.kernel.org>; Wed, 21 Sep 2022 10:06:45 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id z13so9606654edb.13
+        for <dmaengine@vger.kernel.org>; Wed, 21 Sep 2022 10:06:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=13KrUn/vK4OvwOsT1GyfzamKvbOZHawCA5zcRq7muWw=;
+        b=K08ArTlVGsyc0SAIljgyi30InRUPlMtrNCxpDmu1hgp81UAVnxk/nCuUHorbHVEIwR
+         6S29osbtR09bB8cVoWs/j3VPhB4VSJ4E57HIk3O9wj/CaNvmV/GbulyUmDtlEn5gNZ4k
+         hZFUYg6ISBFf1gJp8MwoTnpoQdlhjnm8v9Rlo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=13KrUn/vK4OvwOsT1GyfzamKvbOZHawCA5zcRq7muWw=;
+        b=A4AFnVRQCLct5AxXsB98cI/E6ywWUiRn2HoopZT0Vjs0ZDL/pHOkWosNJe5FUJtJUY
+         MFtAwmgPXaxWnW5m2Cq9QKWKEZzTx82qVK8VZ9P5jBdYMlRIjI6B6L6eRKbm8eGYTKD+
+         iqDww10XXbgZQAW+HgDC3oMVhKYEWSUMQOBKW9PemExKOZA69EPJAT1uXtP72dyGpCLc
+         B737GzNc3bTwEYEr2obTWH6/MvI2cnxoLv1ry8b4uaqhN8YHsMxigjDkgJcSWM01EdHW
+         elPXVo8xybxJtuMz+kjO+L8vwoSkgjTBn6nZuppXEB/n1JdpQxh6UXDzhVuWvupbof49
+         U+ag==
+X-Gm-Message-State: ACrzQf2pYbSEHWqfFZ/LOUck6TvpnMeZwlvCV7iuvT8V/jiA/t5dr4eG
+        GEly/SACBaDMZncR8JuJ6AtCIQ==
+X-Google-Smtp-Source: AMsMyM5LostbLMrQ/ZLX3Zv+Rf1hWT+t6mpBiz9T0uqd2GeK3MULwy/v1qfzz59wqxZEro4/2cgLcg==
+X-Received: by 2002:a05:6402:d05:b0:425:b5c8:faeb with SMTP id eb5-20020a0564020d0500b00425b5c8faebmr25420939edb.273.1663780004402;
+        Wed, 21 Sep 2022 10:06:44 -0700 (PDT)
+Received: from dario-ThinkPad-T14s-Gen-2i.homenet.telecomitalia.it (host-95-232-92-192.retail.telecomitalia.it. [95.232.92.192])
+        by smtp.gmail.com with ESMTPSA id t15-20020a170906608f00b0077a8fa8ba55sm1468940ejj.210.2022.09.21.10.06.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Sep 2022 10:06:43 -0700 (PDT)
+From:   Dario Binacchi <dario.binacchi@amarulasolutions.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula@amarulasolutions.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>, stable@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v6] dmaengine: mxs: use platform_driver_register
+Date:   Wed, 21 Sep 2022 19:05:56 +0200
+Message-Id: <20220921170556.1055962-1-dario.binacchi@amarulasolutions.com>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,15 +72,90 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The pull request you sent on Wed, 21 Sep 2022 18:56:03 +0530:
+Driver registration fails on SOC imx8mn as its supplier, the clock
+control module, is probed later than subsys initcall level. This driver
+uses platform_driver_probe which is not compatible with deferred probing
+and won't be probed again later if probe function fails due to clock not
+being available at that time.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-fix-6.0
+This patch replaces the use of platform_driver_probe with
+platform_driver_register which will allow probing the driver later again
+when the clock control module will be available.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/88e6546b36771daa145e7f6cf29f3496341634a6
+The __init annotation has been dropped because it is not compatible with
+deferred probing. The code is not executed once and its memory cannot be
+freed.
 
-Thank you!
+Fixes: a580b8c5429a ("dmaengine: mxs-dma: add dma support for i.MX23/28")
+Co-developed-by: Michael Trimarchi <michael@amarulasolutions.com>
+Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: stable@vger.kernel.org
 
+---
+
+Changes in v6:
+- Drop __init annotation.
+- Drop the "dmaengine: mxs: fix section mismatch" patch.
+- Update the commit message.
+- Add Sascha Hauer's Acked-by tag.
+
+Changes in v5:
+- Update the commit message.
+- Add the patch "dmaengine: mxs: fix section mismatch" to remove the
+  warning raised by this patch.
+
+Changes in v4:
+- Restore __init in front of mxs_dma_probe() definition.
+- Rename the mxs_dma_driver variable to mxs_dma_driver_probe.
+- Update the commit message.
+- Use builtin_platform_driver() instead of module_platform_driver().
+
+Changes in v3:
+- Restore __init in front of mxs_dma_init() definition.
+
+Changes in v2:
+- Add the tag "Cc: stable@vger.kernel.org" in the sign-off area.
+
+ drivers/dma/mxs-dma.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
+index 994fc4d2aca4..dc147cc2436e 100644
+--- a/drivers/dma/mxs-dma.c
++++ b/drivers/dma/mxs-dma.c
+@@ -670,7 +670,7 @@ static enum dma_status mxs_dma_tx_status(struct dma_chan *chan,
+ 	return mxs_chan->status;
+ }
+ 
+-static int __init mxs_dma_init(struct mxs_dma_engine *mxs_dma)
++static int mxs_dma_init(struct mxs_dma_engine *mxs_dma)
+ {
+ 	int ret;
+ 
+@@ -741,7 +741,7 @@ static struct dma_chan *mxs_dma_xlate(struct of_phandle_args *dma_spec,
+ 				     ofdma->of_node);
+ }
+ 
+-static int __init mxs_dma_probe(struct platform_device *pdev)
++static int mxs_dma_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+ 	const struct mxs_dma_type *dma_type;
+@@ -839,10 +839,7 @@ static struct platform_driver mxs_dma_driver = {
+ 		.name	= "mxs-dma",
+ 		.of_match_table = mxs_dma_dt_ids,
+ 	},
++	.probe = mxs_dma_probe,
+ };
+ 
+-static int __init mxs_dma_module_init(void)
+-{
+-	return platform_driver_probe(&mxs_dma_driver, mxs_dma_probe);
+-}
+-subsys_initcall(mxs_dma_module_init);
++builtin_platform_driver(mxs_dma_driver);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.32.0
+

@@ -2,52 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26FBE5E8497
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Sep 2022 23:09:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 281ED5E849D
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Sep 2022 23:09:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229520AbiIWVJr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 23 Sep 2022 17:09:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56910 "EHLO
+        id S232557AbiIWVJt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 23 Sep 2022 17:09:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230514AbiIWVJo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 23 Sep 2022 17:09:44 -0400
+        with ESMTP id S231841AbiIWVJq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 23 Sep 2022 17:09:46 -0400
 Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B10C2959A;
-        Fri, 23 Sep 2022 14:09:40 -0700 (PDT)
-Received: by mail-io1-xd2f.google.com with SMTP id 138so905802iou.9;
-        Fri, 23 Sep 2022 14:09:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E80BBF590;
+        Fri, 23 Sep 2022 14:09:42 -0700 (PDT)
+Received: by mail-io1-xd2f.google.com with SMTP id p202so916896iod.6;
+        Fri, 23 Sep 2022 14:09:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=3c4ZAc9dBRUfN8kF3XkqGE0NE2NzTCE9N19aY/1pR8g=;
-        b=f21iVcAcCZkGjQ5arBU+W/9189SGgFnXRy4+wlnyC17/DypF4Zw0n5+FgPrxduPq3W
-         XERw8FADfJJnc/WCz1mvbuBJiC8592siaUrJ/3EMQ9dwg566jzvDAwbCEmO4A6r+irAl
-         q/2IYYpvzkwnk74ioa/lMS/DqVzbAD38V+XupciGmNj6bOpathSLtYutsbX0aOVzM6YP
-         3l6Nm207f88M1CUhpc/Y27cJIATr3kFkEugpQDytFtMj1MZV2DLH+Z4WiBYbu3iRhbZA
-         3IzrQVbfYEUXmfY0JBPiMwrJxFuY4uXo8ADat6BbYmEysqzZBADJHdeqqAYtElSk1tZo
-         z0Cg==
+        bh=FQuCkSBJtehCIFomFirxSqESVrtox6RTz8WxwEmFExk=;
+        b=hkNxe4g1EMgbUALSZYuGcOq/No6cFk2sHZCCEFloIWiV8diS279DoPQzNcMi/yAP/h
+         S+L8ugBcjExIb9FhyaVEpcAVGbo+55Ifkwm+1Art+mlPRFhUJ3reDWsEcBEshIzM8opp
+         ibmAxsEi0P34i/l2rTUPcTksD/EOSumXqWOjDYk23CUWTMIxTsc+v9qa3xcofufLDewW
+         R3VoKLnZLMS+EOioWCECg5vKQ8dW9TOxw2di2X4YK46s5WJojcaEl+gjzslEes/NTTYU
+         nrqpgJYR7wBKj11/AbdgwPCMh58fI3B4NKzB98f5ZeBWDJr+QDZmGfcvgGdRQcwB29gm
+         61Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=3c4ZAc9dBRUfN8kF3XkqGE0NE2NzTCE9N19aY/1pR8g=;
-        b=DKZct3axBNQn/7kfWok0FLHgmhhe9MwYuzNo7GmqrKC4lI45RoZAWIyYQVDigAjAil
-         xw/klpTUfUmw1yZX7ulvqEDN3io3ZR2z0+PQqb0Lj15NaJAVrxkuqR6LJdIc/h9TZuh0
-         dtI5wjpZvP+mI3HBghC4rh6+b3kCrfMbArUWGo0U5oIBuNDI7Bl+rrBW1t1/YRAmqWLC
-         OP6xYk+P8dO5+FSNfXvGDtvQE0Cxt41I/KYFka1PXYsQXwHousk1egKXVMA/XNqvPphq
-         AVBOG9ttpXhVnzw9t5F0ME5oABbkruKmawtiq6bO6U136WIQ8Jrr+og0SGC3ZV7yujXN
-         3kOA==
-X-Gm-Message-State: ACrzQf16zLXF5JUbGGXxUrTZM74mRprSdUmTA6FZ81buvigChZ5KMltn
-        oaW+fj4pf6A8cx4SsS8KSfnzt9b70Hk=
-X-Google-Smtp-Source: AMsMyM6exuRICTOYWGmQS7cNUzxHbnkecOd+p6VkCup1aeDR20fMUzFcXUc/Fd0QXZz9U66EPqmT7g==
-X-Received: by 2002:a05:6638:22ce:b0:35a:4e78:9bc4 with SMTP id j14-20020a05663822ce00b0035a4e789bc4mr5740221jat.127.1663967379868;
-        Fri, 23 Sep 2022 14:09:39 -0700 (PDT)
+        bh=FQuCkSBJtehCIFomFirxSqESVrtox6RTz8WxwEmFExk=;
+        b=HgNUT86HcSspzHqNohxvtdXKQaVs+ZwdpkS3NqBOXYvLuaACf/PoMQPIi//+An1T3s
+         JmhJgiQAEC7PW6afOlkAhkrQcjZkgl/fPmv0v7zjON56JnlI1TkAy5iglHxQYEM10ZNx
+         xePFddXByutUlr3Hro8XDBTceasIU+NTsht5XbnvnEzmudrHm2wg76c1PnA1/3H9cHFZ
+         l9Kf0fBJKvB9pxObD0ZVBeNxWuwp0/eJppTyfTsGGoRUjYMWVZIS97OG3Bk4xsxOXKJY
+         R1wz/OBEROVX3Hn9vn5DkwyS3VABCU00XVQd+auP8B/M9bRQVU517LgnIf/dkvKrIQpZ
+         n2xw==
+X-Gm-Message-State: ACrzQf3Zn3qofc4Qvk/UNX/jPEYN78upHlyugs+omGqPUwf761dgnJ1L
+        HNJOUB8AgqSkD+Frqt0w5LNkV92280s=
+X-Google-Smtp-Source: AMsMyM59IG79O6PnrQ/pZpoqbNyRv4vDLjCRj8lS+xQvwR9hZVr7gKiKTKpZnDJtwH8ZD2AlMvNgfg==
+X-Received: by 2002:a05:6638:248f:b0:358:4319:69e8 with SMTP id x15-20020a056638248f00b00358431969e8mr5703239jat.30.1663967382211;
+        Fri, 23 Sep 2022 14:09:42 -0700 (PDT)
 Received: from localhost ([2607:fea8:a2e2:2d00::1eda])
-        by smtp.gmail.com with UTF8SMTPSA id v20-20020a056e020f9400b002eb75fb01dbsm3525921ilo.28.2022.09.23.14.09.38
+        by smtp.gmail.com with UTF8SMTPSA id k13-20020a02cb4d000000b0035a578870a4sm3781543jap.129.2022.09.23.14.09.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Sep 2022 14:09:39 -0700 (PDT)
+        Fri, 23 Sep 2022 14:09:41 -0700 (PDT)
 From:   Richard Acayan <mailingradian@gmail.com>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Andy Gross <agross@kernel.org>,
@@ -58,9 +58,9 @@ Cc:     Andy Gross <agross@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         Richard Acayan <mailingradian@gmail.com>
-Subject: [PATCH v2 1/4] dt-bindings: dma: qcom: gpi: add fallback compatible
-Date:   Fri, 23 Sep 2022 17:09:31 -0400
-Message-Id: <20220923210934.280034-2-mailingradian@gmail.com>
+Subject: [PATCH v2 2/4] dt-bindings: dma: qcom: gpi: add compatible for sdm670
+Date:   Fri, 23 Sep 2022 17:09:32 -0400
+Message-Id: <20220923210934.280034-3-mailingradian@gmail.com>
 X-Mailer: git-send-email 2.37.3
 In-Reply-To: <20220923210934.280034-1-mailingradian@gmail.com>
 References: <20220923210934.280034-1-mailingradian@gmail.com>
@@ -76,44 +76,26 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The drivers are transitioning from matching against lists of specific
-compatible strings to matching against smaller lists of more generic
-compatible strings. Add a fallback compatible string in the schema to
-support this change.
+The Snapdragon 670 uses GPI DMA for its GENI interface. Add a compatible
+string for it in the documentation.
 
 Signed-off-by: Richard Acayan <mailingradian@gmail.com>
 ---
- .../devicetree/bindings/dma/qcom,gpi.yaml       | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-index eabf8a76d3a0..25bc1a6de794 100644
+index 25bc1a6de794..6be3c99a73ec 100644
 --- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
 +++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-@@ -18,14 +18,15 @@ allOf:
- 
- properties:
+@@ -20,6 +20,7 @@ properties:
    compatible:
--    enum:
--      - qcom,sc7280-gpi-dma
--      - qcom,sdm845-gpi-dma
--      - qcom,sm6350-gpi-dma
--      - qcom,sm8150-gpi-dma
--      - qcom,sm8250-gpi-dma
--      - qcom,sm8350-gpi-dma
--      - qcom,sm8450-gpi-dma
-+    - enum:
-+        - qcom,sc7280-gpi-dma
-+        - qcom,sdm845-gpi-dma
-+        - qcom,sm6350-gpi-dma
-+        - qcom,sm8150-gpi-dma
-+        - qcom,sm8250-gpi-dma
-+        - qcom,sm8350-gpi-dma
-+        - qcom,sm8450-gpi-dma
-+    - const: qcom,gpi-dma
- 
-   reg:
-     maxItems: 1
+     - enum:
+         - qcom,sc7280-gpi-dma
++        - qcom,sdm670-gpi-dma
+         - qcom,sdm845-gpi-dma
+         - qcom,sm6350-gpi-dma
+         - qcom,sm8150-gpi-dma
 -- 
 2.37.3
 

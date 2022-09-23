@@ -2,126 +2,120 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A78D25E78AF
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Sep 2022 12:50:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 144205E78B3
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Sep 2022 12:51:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231849AbiIWKu4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 23 Sep 2022 06:50:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56896 "EHLO
+        id S231883AbiIWKvP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 23 Sep 2022 06:51:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231903AbiIWKuj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 23 Sep 2022 06:50:39 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2067.outbound.protection.outlook.com [40.107.220.67])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAC9FE170B;
-        Fri, 23 Sep 2022 03:50:38 -0700 (PDT)
+        with ESMTP id S231837AbiIWKu7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 23 Sep 2022 06:50:59 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2070.outbound.protection.outlook.com [40.107.223.70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C7728FD4E;
+        Fri, 23 Sep 2022 03:50:58 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dkBgz62SEXBvRbdeGc4mzyBsVFqk1AADq76r0Yr9Lj+UmVqTVf7ltItZMTIBwF33UOP4PrHqXswHBagoUekyNgkc7xN2PC8W50cF03ehev2DRiVUJWTrVN4ZWd+zicYvteM6gwxbeLoBJBCYUdSmE8sF2bgWE6TCJCoRcWL1RcgnIbe2ySm2x4kFymAdoDXAOqcUWDVbfXWpSHNos5zdyrJqUfmP4VDQvGA2G/ytIT0UENEc3q8ZOkCDFw1uAejn6UH3VyVFHoNNcvR3F0Z3DnJI2T7pgM2APGIeNyLZI105LOc0uJ2mvK4rhZiZa/rGw5bZWlOlu26AEnu+ykmAgQ==
+ b=WjuQjvY/CayD9FhgSiWg4+vbp/ITi6sI3hFGOZj8juNwXjrt7+nzBihgTkG1RDbZv4OQCAQMa4xNx97fpUjDNgqjI8AX9hvS13BGnlRTM2IQJv+d2JU/fkRzQk5QqOwatKYt8DO1QU8OKnaooOzdPjTN8rYrpA+KvNX5f8BXB74vGUNeX4UGLAghXMawZHlP4vpzv+L4CTbqfGmIgy3YCl6o8zVdYLQqOy+GZxZT1irii17shslq7Jvbr6DVYHA92qvRIsqj+1vLtn7lwK5IbemeBAGcafDjxv58iL3hBRwhn6O09QP5IGhmH/GUkpN+eLXmIzO+Zx+KYKmS27XEfA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Gq3OFKErN4SwkH81hJR9t80+rW6cQIkMMauTbkguzgo=;
- b=IpB3xKAK2SaGW28VeH8uAeMUSfgk8xRHohsdff+Nv2bjwHsUZ6oaIVaRRMv99TtYZ26B1NuP8QDRTDvR6PZ+MJ7zcF6ow8B6wLQnM28FNXAvCv11C3Ff+DzGPymjVbjrNp5WCthdFi3hgc6h754KN0sMt1VBMkWnM9xnvjYlMIyUeQ5e2uxPe//ieWoiIbZTA4SaLlgKBGBqgT8/HQHnsT/3PykdDDEQgf7SVF0n1sR4+vOh5AFcLES3rCT50LmZYylyjI9aLWPfkTqY9RZcRu1PLaFYXSKdBtS2bm+a9riORCRqD5g/Dq8FfMfafMxlASnghf+xEPpcxd6IoUN2JA==
+ bh=0MaP5PoKrY65eaPp8iat4ZoELDeWT8tW8rByDJSfjQc=;
+ b=czs4snoduOeIfgYlheZW+sNGZDlbnW9bK1sBH9qIqE9PSrSmWaNy4znxXuNbmyMj+3y+4WQNa3+LtQEySegdk2OCgczNPmosN1uBZYCsS6hZumP8HQj95oX9kmuB5cL5jweFiDPIzEiPa0WiN7GsnccuFsZjrdhd/EgvbyayeozrVLPn5LPvJNve3C/VgrmvwcbWgnqlxpg+OwZ4TdIrZtRcvnv0elncF9WMN0XX10f1nVGJ9fQ0iXF3HG8JXue9c90R+YazOz7+tn3uJHUxr1BS/Fl2MIAxbjpt90czj4DXepY/DHGtNwuh1IM3IpdPLGGZby0Sr7pxBoRMM61xQg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Gq3OFKErN4SwkH81hJR9t80+rW6cQIkMMauTbkguzgo=;
- b=Tst2CDu4/NOm3wsEvup34kERMwJUBPYYFAlKQzOn4uRlGjMn1Q47MWjDfK90ehg8d8bG3Stqnqytclt5lKAk4svLG0EwpB3l4TbGT8zmTdsC49byeYoDL0/kmWsW5tB1Qaa0ZuiRqqMpwCwiRP9MbN2jc1RLhiFGHDA0xQDpNFfjmIb65Ltex43R7AUgplTQaCo+cO3WKjnHf9fuhpOa565IBudIs92JHI1SDpdLJVgSU/VzTZXjKI+NI74X9otyvPnJ2fjkCcwq6FSznUcXHDs8FXHJL3pFk8WiMDCyZId0SAvSt79F/QxXAseFcL9pC08aoD9xOWc9bEKWiE8x9g==
+ bh=0MaP5PoKrY65eaPp8iat4ZoELDeWT8tW8rByDJSfjQc=;
+ b=etunCUPBtYINEK7be9QWq9dG7Z76t19PlRof746dG+upbwqz+joielEgKFLwWqhtrLzLvJoAzxWf3uFUdH4xcD4EnZclv5VlLZemy0IlAKsizFrbI8N3EJfkGhfLQ/nDpfQyBDc3/2A2Du/uDay7q7zNABPTmSq4qSG0Gret0R3dw8/YJyjbt8kA80214jRpAh/imgX5zZLdfV39tuuV9YQ5InuVaRy6NsUQLM0QsmfaH+7U8JLhooIi9KsrHXsFx8Zw9VDxvwgfuJ/RqUD563kn41v3hJTtpumySNwFz8e5xSAsIkzl/gMXG13DEFM2vmZWFq+KQiRVWfFDV2WdKA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from CO6PR12MB5444.namprd12.prod.outlook.com (2603:10b6:5:35e::8) by
  DM4PR12MB5183.namprd12.prod.outlook.com (2603:10b6:5:396::16) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5654.20; Fri, 23 Sep 2022 10:50:37 +0000
+ 15.20.5654.20; Fri, 23 Sep 2022 10:50:57 +0000
 Received: from CO6PR12MB5444.namprd12.prod.outlook.com
  ([fe80::b07f:53b1:426e:a29d]) by CO6PR12MB5444.namprd12.prod.outlook.com
  ([fe80::b07f:53b1:426e:a29d%5]) with mapi id 15.20.5654.020; Fri, 23 Sep 2022
- 10:50:37 +0000
-Message-ID: <d2b4a1f5-200f-2560-c249-709e4e2817b1@nvidia.com>
-Date:   Fri, 23 Sep 2022 11:50:30 +0100
+ 10:50:56 +0000
+Message-ID: <b56bb804-4d1b-0db0-ff39-96728015f580@nvidia.com>
+Date:   Fri, 23 Sep 2022 11:50:51 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
 Subject: Re: [PATCH v2 3/3] dmaengine: tegra: Add support for dma-channel-mask
 Content-Language: en-US
-To:     Akhil R <akhilrajeev@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To:     Akhil R <akhilrajeev@nvidia.com>, ldewangan@nvidia.com,
+        vkoul@kernel.org, thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 References: <20220919112559.58195-1-akhilrajeev@nvidia.com>
  <20220919112559.58195-4-akhilrajeev@nvidia.com>
- <8d15c575-a490-e1ed-7e97-5a5cdea0925f@nvidia.com>
- <SJ1PR12MB633958099C6DDAA4A428ECBEC0519@SJ1PR12MB6339.namprd12.prod.outlook.com>
 From:   Jon Hunter <jonathanh@nvidia.com>
-In-Reply-To: <SJ1PR12MB633958099C6DDAA4A428ECBEC0519@SJ1PR12MB6339.namprd12.prod.outlook.com>
+In-Reply-To: <20220919112559.58195-4-akhilrajeev@nvidia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0102.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2bc::17) To CO6PR12MB5444.namprd12.prod.outlook.com
+X-ClientProxiedBy: LO4P265CA0101.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2bc::10) To CO6PR12MB5444.namprd12.prod.outlook.com
  (2603:10b6:5:35e::8)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CO6PR12MB5444:EE_|DM4PR12MB5183:EE_
-X-MS-Office365-Filtering-Correlation-Id: 61057a44-0ccf-46b0-99c7-08da9d5172d9
+X-MS-Office365-Filtering-Correlation-Id: aafb4336-fd39-4303-6fcb-08da9d517e7e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Pdq3ocCTdWX5CAhk7pYQw4mNueC/w2QrnhJ3MDhnpYrpFXpElITJVrM0RerKA1rSS6xllyExS5/voxMIf1vlZCJYDjzXD+aC+oM3hbCOY0IijMJ892ni7IhMaKjjQhQuQAyaY/84RzjsiDOkw1TSCSCJ9mERkfPUNQ9MmxuvPiy/yxAX0pRQ+U7DORnTFDQQuKAXx1PHKOnLw0hBZ9QS4Cn0COMIHlBleTf14JTcxgII8pehBfWnIkxJ92sFYJp2zWrBLvyelyes74y7ZZZpNVXlm3a+4UugFJmEEM4o7pblXqetJlwGOoR987WhLKFNXF6aon5iApClcpLouunE4Jaf3Dg2pOjx3nPBwOEtR+InFfjo4vXXEUFufVWYHlpNHkyP0i/A9Dl9+RO/6mllBVRO1EsxHa8FLAR/J9dCMtQvHoRSl/KDgFtnD0hjUj8tHJHS7bs6CT/F96GkBCyX3XSOvcjdRHm4tRcyqfW0QNPgYKGdjFjmAu8dvlfzBq5ARCf4KUAEuteYcxoVJjg+dR21V0OmRdGOk6xGvzCdtZtZdcnh5TKoWyv8Tu+hcKMhTzLasG1H6Vve5fnIxItJC/iJppnZRcrjMdldwe8M/K+sQk1J36wGJ8cq+1fX7hACYhE0yOMSGA/+kuSu8QjXT0HDuZd4zQT7mGrrZXE1+pe4r5+Aei9zLgyoKhl1gLh2KGzLL8Q6LyTTrb5jctYduovQc6ofzo+KNplyMXAPZ0z7xTbBwl0pzize/Q2u2mMWaYinwtMedlN3VWglh1Y8z6jwL1cFTNhu69omQgQFB6U=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5444.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(136003)(396003)(376002)(39860400002)(366004)(451199015)(38100700002)(5660300002)(478600001)(6486002)(6666004)(53546011)(8676002)(66946007)(66556008)(66476007)(83380400001)(316002)(110136005)(2616005)(41300700001)(86362001)(36756003)(186003)(31686004)(6512007)(6506007)(8936002)(31696002)(2906002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: UoDeSm7HohHfFdC5dCHlQcn8amJp3GbTdxGgRVNpyZeROukErTgpN3AnrTQVTlvpyIx1HUjUgKqJbcRdK4K6m+8lSUAmHW4QBaobwwq6nAtempYC8xMtngO2fQuvwL1D2RHoNRFi/QGb96yLp5zi058+dAmcnQO/zQvJZBm2Jw4i919Ot1E5MRVURh+QWP0RHaII1DzKnsVyXC3v8XuppO4m5Eqc6m9GS11apTBMMJe0D1e5kgUClHBDjzVhTD/Lx/Ni77zhdBYochosyw/1IH6C0U7XA2QFtz2nBYoLTng/euvueXTKatfENxu0HX+5klYTMK1bbpDawPAFGNFrZVeoxbZF1Pd7dRBrBuwPX5ra6WwMS+D+L6FFhIBz7KXJRiXykkYaa6in7YTiUqOo2bB4SjXuSxDWiobo42y8j1EMFN3c1+lsZa3g/0aVga4QPkoyuOEGPWEsNwiBj7Gnqj3ldXH1IwF/yMI37UgpRFo6DOchdq7iJ0DdRHakOlXCTS34P3QTX0mDnm1YgEcG8xWICM+Te24gL3NE2X6YJZvR/6dyN5IfeG2MG+a67fRmOx0URYsurPLta7qUeHBL3D/pBYnWYesuZmUEL2iXwa/XcS7U/Uki/z60EFsjKwAkv9ibu0q8BSSXM8YaoZ3P7BGBIERe7YC1Q1o2LJf/iW6ppHr79YJqqHxzpr0zefawCJvWJ0uP3KRJWRBXD6WRFQisLRO4/PofvO+ii3cIRrNryKrwDi/HkVKbmA68BD8YBXFqm6La2qzzIkE8RyvJ18Crns434HtiWSYjMVkA+qM=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5444.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(136003)(396003)(376002)(39860400002)(366004)(451199015)(38100700002)(5660300002)(478600001)(6486002)(6666004)(53546011)(8676002)(66946007)(66556008)(66476007)(83380400001)(316002)(2616005)(41300700001)(86362001)(36756003)(186003)(31686004)(6512007)(6506007)(8936002)(31696002)(2906002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?a1ZlSEtHcUVDaEI2ei9FOHRZcGJ3Q1gxZEJ6bVRrMEsyekJrL3V1U0IzeWMr?=
- =?utf-8?B?WFF4SFYvd29CTHNyRXEybUlGZlVhYzNlVy82aitYVTE5NkROekl3QWFVOEJC?=
- =?utf-8?B?dWwxSU5MelJycHJXdUliL2JhUFJmL3VpOHRyWFNsLzBQRmR3SXg0VXYxRDlq?=
- =?utf-8?B?Q0ZwZjFVa1crOWh0ZUpOaHRReGRSMVM0dmFkdjRMZzBzSS9Qc0tKYlhRcGZS?=
- =?utf-8?B?WEJUVktlRjVQYnNPQTNyT3BOS2tQSzBJelRLTEtJaDNBN2Zvc25PbEtKaHlr?=
- =?utf-8?B?cnh5RWZxaUpVaXQvRXVNL3JwUWRHT1RzWjZPalRSMEEwc0xQYll6OUI2ZGRI?=
- =?utf-8?B?ZSt2dGtJT252U0YyUENraFZteU5nWGxaZUFGQ2c2MEhBb0t0RnNibmZyZi94?=
- =?utf-8?B?cWsrMUxzNGdwQjdFZlMyVVF5OUNwbDJxYmIrQUpERUFQV1NIWjhhRmRmS2Z1?=
- =?utf-8?B?eDBnOGsyZ0cxWkZQOGFsbThEY1E1TUVaMXNtQnZUZzBSUGZxejk1Z0Y1ODNx?=
- =?utf-8?B?TTFkUVpIdkRRR3oxMlU5Z05TRE1HRy9XTHpNQllaV2ladm9KNVJJc1RsRDJm?=
- =?utf-8?B?TndSNjYrN0NHSUUxSEg0U1I0VjByMTZJa2dNWDFYQUNmWE1RRWNMblFuQXdR?=
- =?utf-8?B?RU5XNUNWUjhDUldzSnFLR1FJbEhqL2R6MmZPQm1Jck8xUC9VbmF3TEtDV2Nn?=
- =?utf-8?B?VE1wK1lsTXovb0wvbkNRL2JSZy82b1dmRDIyR2FTb2JGUVorbEtvTk9yWU1l?=
- =?utf-8?B?eXVsRlkxdUh1cnRmaFRXd0w2ZnYvMno4cmFWYmNZTmhvQ0xlVDhLZGpwU0Yr?=
- =?utf-8?B?STZKbGwxSXRHUHJkMXl3RDE2ZzRYN1RzdEd2Y1p3MjZyRkNEVktpVjlYdFpv?=
- =?utf-8?B?cnR1MUtaWXRCakFudXZKSDhXV2I4b2ZyTFBQeThETFlOeFFCR2JPVU1JWGt6?=
- =?utf-8?B?OVMyNWxGUUR1WmJQdFZXUkJmMjIxc1AweWhUZzg2ckFaKytSWWF0VDV3c01p?=
- =?utf-8?B?SjlsdzJnM25VVldGS0NPOU94MlRidzdtNWhSQnkyYis3UUtFWlpTcDRZYVJH?=
- =?utf-8?B?amhsNlo0S2N4cmhXTXJhbU5CTWRwN0FCNmVyM3hMSmRIQXVraGhhZURFcmxo?=
- =?utf-8?B?QjNPUmtDaGNXNzN3bTYzT2JFVkw2Z3d1ZFVySEE1ZXlGWkNNQ2ZiQzVxb2NC?=
- =?utf-8?B?L2dkSStzajZtbHlNQitxckMrZnpXVi8rNEIwZzgvMERDS0JZM3Q2NS9oNlRU?=
- =?utf-8?B?dWorVW1WT1EvSG5EdzQzRWwrWGdPaEV1Vk8vTW5wZHRJVW9FUkZFcGpyU2Fq?=
- =?utf-8?B?Und2dmhMdkZrRk42VkxKbFRjcCtMMDdSRHZaY0RrMG9BNTdHWTR0d0RsR1A0?=
- =?utf-8?B?bFFCOXZCVUJueVhuSDQ5RnpoVEJWdG40WkgxcjRjdm5xZHNzOEo2ODAwRk9r?=
- =?utf-8?B?dER6V3ZmUk05ZG9uWFdwSDhJN3FYWkpDNWxmTFJlcmJibElVcFhnTGsvTXVy?=
- =?utf-8?B?MTVFV045NW92Q0U4RVFrODc5R3RCcDV1cmF2dVpLaXhsbHNlYmdqRW1yVlVv?=
- =?utf-8?B?THI1d1VwVThKL2VOM1RvUytjSkNxZjNrMy9WUUpSOElXeDJCWURxd2xlalZn?=
- =?utf-8?B?cTZ0V2FoRG44Y0dXU204a0ZJcEdyODBJQnhzUll6a3ZWek81cERjNmowSFdI?=
- =?utf-8?B?SDdzelBTUHNFNElsUFFFZmFuMFdIMTNhbkpaN0VyUUZDRXJNOVpvanliejQ5?=
- =?utf-8?B?SkVPTjdUWHFDWXdmcXhUTnhWK2RQbnBvNkRGN1V0SldCcE0rWGZCMm9HNXd5?=
- =?utf-8?B?VFRhK1Z3UE5iSmJkRG1ScXZnNjcrSWtkeHB2VEI0Zk1sMjNpZnRLaFRGTWd1?=
- =?utf-8?B?WjBzZmNodjgrUzZPdWdkVGhWUVJmQ2M4SFpxdS9uSUZ2ZU5GTFhhUHM0N1Z4?=
- =?utf-8?B?dFNia01HeDEvaUllOUV6eGNOd2lOQVhxTmh1UXk0M3p5SWxIcFFFY0tJQ1dR?=
- =?utf-8?B?VXRsVWlRTitYd0k0MDYyRlI0d1R3QUdmWUJrakNGWEtQM0E1QkFGTXBidjFn?=
- =?utf-8?B?UFFmamVpZHlWNXhwQU1qZDVqeEdMK1UvUFJ0ZnpRV2tBSXkvVHFDczg2UzdV?=
- =?utf-8?B?Y0JUcWRuSE9Najk0aVdibmw0MHpJWVhFeHA3b3R4TlptUm9PSWxiVWl2ZHY1?=
- =?utf-8?B?dXVFY3ZpWGQ4WW9mY1F0MjNpWXJBdnR4eXpQR2dJK1FoL3c2WjZXdGxMcVNk?=
- =?utf-8?B?QkV6cjNPRHFuekxNbmZTSmE2WEpBPT0=?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UVc4MTc2VHVRS2tjbkZmMG1iNEk0TlYzdm5GVkRCY3NWU2VtTS93U3p6dnp3?=
+ =?utf-8?B?R1hsdDNPQVpRMmlReGIzbGM0T1NWKzQxQmsrUEtiQzE4OGd6NjE2Nis1NHJM?=
+ =?utf-8?B?RkRhUmdGVFR2N3lKd0hWMmxETU10TnR4UTZvQ09ZN3locURmUy9FN3FXRlZ6?=
+ =?utf-8?B?L1V5VGg1UXZBYm45T1czaHNRTXlNUVoyWTNzaFJsaWUzWUJZTFg1T0o0RzM3?=
+ =?utf-8?B?NXNDRUx0Y2FEZ1A1cDFHZUE5VkJCODFWV3ZTWDZ6U0VhdVRxTUhpbzhrS2po?=
+ =?utf-8?B?R3F1enllRGh0MmZYODBNNVFhRlB3OWlHT1NkMnBrUFhFZE1HcGx5NTZUNEZT?=
+ =?utf-8?B?RHF6QkVsQ1ErRTBxSHlSNXVwQUdTUURBM3JmTElUWDRSVlVvTjRwdXdFWXN4?=
+ =?utf-8?B?NmV3VlJtRHQ3V3FtN29QUFNha1pjKzk1UncrejR6TVoyZU1kSUg5NzMreGhM?=
+ =?utf-8?B?TWZmV1VBd0ZZK1ZEWnZoYjBsY3I5WlpHU3lHb2gxeHBwWTk3ZDNMaFhMUlda?=
+ =?utf-8?B?bDZtK1kzL3B5MExYbDVYblR2WnhFL1Mxd2dHNjRXZUxYSzl1bTVQc3FUK3lH?=
+ =?utf-8?B?dUZvWWIrNUFYcGhJcGczdkdBdjNwNTlnNVBudEZLbmlVTnlWcGcrNkNlcXFS?=
+ =?utf-8?B?NnZWcmhtR2pKTEwxMDJJUzZNd2V6alNnaEVwd2RjUi9PdjNZZ0NGMVRHTmoz?=
+ =?utf-8?B?RFYzUEMxR1k2blRDRDlsSE56SUtMcEUwdThsMDk0Y1JBREpFYkNOQlh3enUw?=
+ =?utf-8?B?YlFLaWlzanJTcFdib2tnd0JGN1IzNjJOMkhsRHVuSVBWeW9tVjFSS0tCd05J?=
+ =?utf-8?B?bVpSU3JUQSt6VThoL1JSTVl1Rklic2F4OHhYdDNRM0E3bFEySUI4ZlZObFBH?=
+ =?utf-8?B?dVJnRjRJZGo5dG9CZWRTTXNCSHZsNFQ2UmQ5V0FtczRyeE1QMDFnRzJyUGI3?=
+ =?utf-8?B?NDBGZWpSOGVvQlF2V3NXbWE4cUdhcXJKRHBMOUJuZWZlWTRwbXVNMVJTZUx1?=
+ =?utf-8?B?VFlwSlc1c3AyVWM1RWk4Zks5UEtxdXJ4NmxSNEcwK0ppMnUxZitIUHVtTDhC?=
+ =?utf-8?B?c21JT2lFdDBoYXNyWTdlU2t4MjljcVFsR1pLRGhLWWNlbnFJZ2dwZWY5ZGgz?=
+ =?utf-8?B?M0lHWWhRNVZaK2Z3UmJkVCtHdFI1QXpBdkh4NTVWUXM0K3EyQkt0UkpiVUNu?=
+ =?utf-8?B?VkxnRlBUOXJTL0cyWEtnQitaNmdhZzRPTmtPOEZZcHBsQ0orK3lMMzNFZVZB?=
+ =?utf-8?B?UnNTekQ3bk83RWJ6TVVsVmh5VWlIUG1VWW16ZmZ5K2FDcDkwMmxLWVlweWRt?=
+ =?utf-8?B?S2EySytmUG5CaGNOeERWWWNjVUtmSEFwMitFelpubkEwaHJRYzNNMTJxQTBT?=
+ =?utf-8?B?WmQ5eEk5L2dKblJia0VBYldtNWs0ZGUrZEk5aUZpVnl1bW8vZHlsZ2JSM2hm?=
+ =?utf-8?B?MDZ0RE80S2RHeE5BV01XdkdIL3J1N0lhQ0o1aXVHMGlodVRBaFRpR1hTRzY0?=
+ =?utf-8?B?MFQ3NnNNZSsvT2g0VjB3RjNLTVpPTjc5YlZmcDFKUGMzcXlkSy9vY1M0NEtZ?=
+ =?utf-8?B?MmFKQ3ZlZW52aGdtUFVyUjVpdUI0UUZLemJ3dXBUenNyRWhtd0FCTjdaVWxv?=
+ =?utf-8?B?SFBvdkpBbFp3V2xXL3NRUW8zWW5Ca04zaTcwcjdaallzVEhoQlMzeGR6c2Z4?=
+ =?utf-8?B?RTN0OVljMXJxOThpNUJCenFqRW1uSjNRV2pKR3YxenFWMFEvaG5qV0xjNGdC?=
+ =?utf-8?B?UGhiUzVpNC83NExFeTRwbkJmempZTWRkVlRqYmRXRVA2M1VaUURFeXRaZm5D?=
+ =?utf-8?B?QmEwSVRLelJScVFvYmJGbTkxWG94RGs0WUJJZ0NwN0pXWGNyR1BUbUUySitK?=
+ =?utf-8?B?bnExVWFhNlNvS1Y2b243SUJ4L0Y0bmVtYU1mV2I1Zno2eVExNFpDTVlBUDds?=
+ =?utf-8?B?czUyODA0LzlKNnYzaFVrRm1SSzljTGsyOUZzK2FFd3ViWjY3ODN4cGNJZTBz?=
+ =?utf-8?B?bmo4MDhxVGtzL1F1RmZ3Vyt5Qlg2T3ZZTk9YNzNPMHhGK3JaMExmTG9LSHFm?=
+ =?utf-8?B?Y3VnM0JXMFYzdEU1S29YckhCUHpRUVA3V1lFRFIrLzVsM0UyV3lpOGdBM1BJ?=
+ =?utf-8?B?SEhSUExmajNSMWMyYmp5TFBsUnl1aytnUlpVMEJZY1gvSVo0b0RjWDYrRDFx?=
+ =?utf-8?B?TE81bG45WVI5NlVUVXRpb1hLTUNJS0RZNjR3YklxclIyOXc5R0RxU3VDb3ps?=
+ =?utf-8?B?djZSUmRXenlWWjlYUHpOck9oWVZ3PT0=?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61057a44-0ccf-46b0-99c7-08da9d5172d9
+X-MS-Exchange-CrossTenant-Network-Message-Id: aafb4336-fd39-4303-6fcb-08da9d517e7e
 X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5444.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2022 10:50:37.3777
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2022 10:50:56.8661
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3iQa1dZKOAR6D564ccZSxEWk/Q43I7uHIdKxbXxMV4kvCm61yibpozA8wO6poFdhXvTBtm5ivwK2DE2tfdrd8A==
+X-MS-Exchange-CrossTenant-UserPrincipalName: p2xUh9YAATcJAvFRdQpZTb0jksrxajg6ooDZoBgx6DV6lIl0tP7xYBnjHXDzOqAGaMTwSsH9pzAtBB1942dAQQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5183
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
@@ -134,51 +128,137 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On 23/09/2022 11:17, Akhil R wrote:
->> On 19/09/2022 12:25, Akhil R wrote:
->>> Add support for dma-channel-mask so that only the specified channels
->>> are used. This helps to reserve some channels for the firmware.
->>>
->>> This was initially achieved by limiting the channel number to 31 in
->>> the driver and adjusting the register address to skip channel0 which
->>> was reserved for a firmware. Now, with this change, the driver can
->>> align more to the actual hardware which has 32 channels.
->>>
->>> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
->>> ---
->>>    drivers/dma/tegra186-gpc-dma.c | 37 +++++++++++++++++++++++++++-------
->>>    1 file changed, 30 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-
->> dma.c
->>> index fa9bda4a2bc6..1d1180db6d4e 100644
->>> --- a/drivers/dma/tegra186-gpc-dma.c
->>> +++ b/drivers/dma/tegra186-gpc-dma.c
->>> @@ -161,7 +161,10 @@
->>>    #define TEGRA_GPCDMA_BURST_COMPLETION_TIMEOUT	5000 /* 5
->> msec */
->>>
->>>    /* Channel base address offset from GPCDMA base address */
->>> -#define TEGRA_GPCDMA_CHANNEL_BASE_ADD_OFFSET	0x20000
->>> +#define TEGRA_GPCDMA_CHANNEL_BASE_ADDR_OFFSET	0x10000
->>
->> Why did this value change? There is no mention in the commit message. If
->> this was incorrect before, then this needs to be a separate patch and
->> tagged with the appropriate fixes tag so that this can be picked up for
->> stable.
-> This is mentioned in the commit message.
+On 19/09/2022 12:25, Akhil R wrote:
+> Add support for dma-channel-mask so that only the specified channels
+> are used. This helps to reserve some channels for the firmware.
 > 
-> "... and adjusting the register address to skip channel0 ..."
+> This was initially achieved by limiting the channel number to 31 in
+> the driver and adjusting the register address to skip channel0 which
+> was reserved for a firmware. Now, with this change, the driver can
+> align more to the actual hardware which has 32 channels.
 > 
-> Probably it is not very clear that it directs to this change. Shall I update the
-> commit message to have a clearer context?
+> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+> ---
+>   drivers/dma/tegra186-gpc-dma.c | 37 +++++++++++++++++++++++++++-------
+>   1 file changed, 30 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-dma.c
+> index fa9bda4a2bc6..1d1180db6d4e 100644
+> --- a/drivers/dma/tegra186-gpc-dma.c
+> +++ b/drivers/dma/tegra186-gpc-dma.c
+> @@ -161,7 +161,10 @@
+>   #define TEGRA_GPCDMA_BURST_COMPLETION_TIMEOUT	5000 /* 5 msec */
+>   
+>   /* Channel base address offset from GPCDMA base address */
+> -#define TEGRA_GPCDMA_CHANNEL_BASE_ADD_OFFSET	0x20000
+> +#define TEGRA_GPCDMA_CHANNEL_BASE_ADDR_OFFSET	0x10000
+> +
+> +/* Default channel mask reserving channel0 */
+> +#define TEGRA_GPCDMA_DEFAULT_CHANNEL_MASK	0xfffffffe
+>   
+>   struct tegra_dma;
+>   struct tegra_dma_channel;
+> @@ -246,6 +249,7 @@ struct tegra_dma {
+>   	const struct tegra_dma_chip_data *chip_data;
+>   	unsigned long sid_m2d_reserved;
+>   	unsigned long sid_d2m_reserved;
+> +	u32 chan_mask;
+>   	void __iomem *base_addr;
+>   	struct device *dev;
+>   	struct dma_device dma_dev;
+> @@ -1288,7 +1292,7 @@ static struct dma_chan *tegra_dma_of_xlate(struct of_phandle_args *dma_spec,
+>   }
+>   
+>   static const struct tegra_dma_chip_data tegra186_dma_chip_data = {
+> -	.nr_channels = 31,
+> +	.nr_channels = 32,
+>   	.channel_reg_size = SZ_64K,
+>   	.max_dma_count = SZ_1G,
+>   	.hw_support_pause = false,
+> @@ -1296,7 +1300,7 @@ static const struct tegra_dma_chip_data tegra186_dma_chip_data = {
+>   };
+>   
+>   static const struct tegra_dma_chip_data tegra194_dma_chip_data = {
+> -	.nr_channels = 31,
+> +	.nr_channels = 32,
+>   	.channel_reg_size = SZ_64K,
+>   	.max_dma_count = SZ_1G,
+>   	.hw_support_pause = true,
+> @@ -1304,7 +1308,7 @@ static const struct tegra_dma_chip_data tegra194_dma_chip_data = {
+>   };
+>   
+>   static const struct tegra_dma_chip_data tegra234_dma_chip_data = {
+> -	.nr_channels = 31,
+> +	.nr_channels = 32,
+>   	.channel_reg_size = SZ_64K,
+>   	.max_dma_count = SZ_1G,
+>   	.hw_support_pause = true,
+> @@ -1380,15 +1384,28 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>   	}
+>   	stream_id = iommu_spec->ids[0] & 0xffff;
+>   
+> +	ret = device_property_read_u32(&pdev->dev, "dma-channel-mask",
+> +				       &tdma->chan_mask);
+> +	if (ret) {
+> +		dev_warn(&pdev->dev,
+> +			 "Missing dma-channel-mask property, using default channel mask %#x\n",
+> +			 TEGRA_GPCDMA_DEFAULT_CHANNEL_MASK);
+> +		tdma->chan_mask = TEGRA_GPCDMA_DEFAULT_CHANNEL_MASK;
+> +	}
+> +
+>   	INIT_LIST_HEAD(&tdma->dma_dev.channels);
+>   	for (i = 0; i < cdata->nr_channels; i++) {
+>   		struct tegra_dma_channel *tdc = &tdma->channels[i];
+>   
+> +		/* Check for channel mask */
+> +		if (!(tdma->chan_mask & BIT(i)))
+> +			continue;
+> +
+>   		tdc->irq = platform_get_irq(pdev, i);
+>   		if (tdc->irq < 0)
+>   			return tdc->irq;
+>   
+> -		tdc->chan_base_offset = TEGRA_GPCDMA_CHANNEL_BASE_ADD_OFFSET +
+> +		tdc->chan_base_offset = TEGRA_GPCDMA_CHANNEL_BASE_ADDR_OFFSET +
+>   					i * cdata->channel_reg_size;
+>   		snprintf(tdc->name, sizeof(tdc->name), "gpcdma.%d", i);
+>   		tdc->tdma = tdma;
+> @@ -1449,8 +1466,8 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>   		return ret;
+>   	}
+>   
+> -	dev_info(&pdev->dev, "GPC DMA driver register %d channels\n",
+> -		 cdata->nr_channels);
+> +	dev_info(&pdev->dev, "GPC DMA driver register %lu channels\n",
+> +		 hweight_long(tdma->chan_mask));
+>   
+>   	return 0;
+>   }
+> @@ -1473,6 +1490,9 @@ static int __maybe_unused tegra_dma_pm_suspend(struct device *dev)
+>   	for (i = 0; i < tdma->chip_data->nr_channels; i++) {
+>   		struct tegra_dma_channel *tdc = &tdma->channels[i];
+>   
+> +		if (!(tdma->chan_mask & BIT(i)))
+> +			continue;
+> +
+>   		if (tdc->dma_desc) {
+>   			dev_err(tdma->dev, "channel %u busy\n", i);
+>   			return -EBUSY;
+> @@ -1492,6 +1512,9 @@ static int __maybe_unused tegra_dma_pm_resume(struct device *dev)
+>   	for (i = 0; i < tdma->chip_data->nr_channels; i++) {
+>   		struct tegra_dma_channel *tdc = &tdma->channels[i];
+>   
+> +		if (!(tdma->chan_mask & BIT(i)))
+> +			continue;
+> +
+>   		tegra_dma_program_sid(tdc, tdc->stream_id);
+>   	}
+>   
 
-Ah OK. I was wondering how this worked with 'channel_reg_size' but 
-looking closer I see channel_reg_size is always SZ_64K. I wonder why we 
-even bother having this parameter and don't use SZ_64K directly?
 
-Anyway, for now this is fine.
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
 
+Thanks!
 Jon
 
 -- 

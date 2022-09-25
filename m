@@ -2,135 +2,113 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16C555E94EF
-	for <lists+dmaengine@lfdr.de>; Sun, 25 Sep 2022 19:34:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2D385E95C2
+	for <lists+dmaengine@lfdr.de>; Sun, 25 Sep 2022 21:55:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230411AbiIYReT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 25 Sep 2022 13:34:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53156 "EHLO
+        id S229505AbiIYTz5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 25 Sep 2022 15:55:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229850AbiIYReR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 25 Sep 2022 13:34:17 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD6A11263E;
-        Sun, 25 Sep 2022 10:34:16 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id x29so5223577ljq.2;
-        Sun, 25 Sep 2022 10:34:16 -0700 (PDT)
+        with ESMTP id S232937AbiIYTz4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 25 Sep 2022 15:55:56 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BFF727170
+        for <dmaengine@vger.kernel.org>; Sun, 25 Sep 2022 12:55:51 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id w2so4842227pfb.0
+        for <dmaengine@vger.kernel.org>; Sun, 25 Sep 2022 12:55:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=1DQ+A/zmD61KcVWpqhZ9SC5wsRL6ZDGy3hAgi5YTkDc=;
-        b=UijSseiqh2+vp4Q/LyKtcj2SfBAYd9gmhEueKBqgn3kZ9bj4ZzsxjuA7GJ2mtCwebV
-         7IiSj8LCJGT/BKnIZfL+gA6db82MkkJ4M8Jnk59sckLtvm50CNJi+EsIt6Y/9eN2YSwA
-         gNMm0Dyn8periyXf2cQmbbkpFgIQ/uMRI4eDeR8zGd7zQk7cCY8WSHDhtL94K/zRBrug
-         hDaqZVPKw/8ZogDKeqDEkSQvAAernhPUi8u5QeROomK9+qZfhUip5EQBWPSqLYBrLgZd
-         9PhaHSE1cNByxo8scwvTLJ+ddBMnZdJfEcsACiCoknK9ZwHQ99yx829ZjpQNrlqmFteI
-         JMJw==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=BbC1wgZUGA3VG7aRyXwF4yEsg/v9U58AhC2p3t+lydk=;
+        b=RutrL0MsAkUUROpcd5FYbEbC+/QokzgyVRCH/j8FRvV09XIHjBTZFKRA8Xg3HfRtrC
+         dSe1KElRTg3X3b9Y3dU3Teg+d++0XdXmT3zMdekEmbqJrHhXl2hYzsZpgj04J9OG2J0o
+         YoEDLQvLkEWYwH669Eo73wyB5z2ASBAtOEnI4XS0Enmw3BfQoFBc0L3WT9ReLRi2MunM
+         MGukH+BEyYfUTsGnuE5IqXy/9quwp049VZyFx/5WjNAdrMEBOUlO5iiH/7P1l1btWojG
+         nGDrMd3EOL9n+NcItLtkZy+BCwTJIG3kGVy/SzbXn1kSlc7v7Kngz5mjNVinfdpuUs1x
+         90UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=1DQ+A/zmD61KcVWpqhZ9SC5wsRL6ZDGy3hAgi5YTkDc=;
-        b=LPbFazOfqFwj+iYy3cyP+6mVTkzNuzDcdmuW7v6en4edTz2SBLQ0Z63C2JjxeSNT3b
-         hkh2TEzatW18afvvgJ+ChDn6PiNMxej2tupDs1mqmD01pBXSK1alqcGVzNvmP6i+zx++
-         Eym1cvkirYOCEuK4MOHu77uhIDL7iZB7Cs2Jk+Oh0JHd1j2GWLtFGsGqwh3tQZpYiDiJ
-         Kdd0DtjzsOzv/T9SzHaPm1W5dyS4nb4tV4PEidoyvy5mF+uJ3lVEEYI1i8UThPnTGVGW
-         BEoHKPyTxA7B/CPycgM0l0kFwqw4x0EkdrgCDOdJtu/IWRbatS0DaBRZDBHPQnoacxLK
-         nH6g==
-X-Gm-Message-State: ACrzQf0jHGCOxgOVK03Ph/Y/7hXw51i0NtzyrXxBUZdgdGNNYt1rf0ul
-        48kEh/1N67imOwIsc0oRMzHdLNwIGxRoIQ==
-X-Google-Smtp-Source: AMsMyM41QqjkVazWGZHBljkGkZ9s122zhTeKQ7ipVJutemr+qo5GleK5ppHy1cI8u3eFeI18Dr2Arg==
-X-Received: by 2002:a2e:7d13:0:b0:26c:4062:acfe with SMTP id y19-20020a2e7d13000000b0026c4062acfemr6443232ljc.201.1664127255061;
-        Sun, 25 Sep 2022 10:34:15 -0700 (PDT)
-Received: from mobilestation ([95.79.140.178])
-        by smtp.gmail.com with ESMTPSA id b17-20020ac247f1000000b004a100c21eaesm672434lfp.97.2022.09.25.10.34.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Sep 2022 10:34:14 -0700 (PDT)
-Date:   Sun, 25 Sep 2022 20:34:12 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Cai Huoqing <cai.huoqing@linux.dev>
-Cc:     caihuoqing <caihuoqing@baidu.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH 0/3] dmaengine: dw-edma: Add support for native HDMA
-Message-ID: <20220925173412.u2ez6rbmfc5fupdn@mobilestation>
-References: <20220921064859.10328-1-cai.huoqing@linux.dev>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=BbC1wgZUGA3VG7aRyXwF4yEsg/v9U58AhC2p3t+lydk=;
+        b=1niz6N7uoqkG6qW2MLtoEmKzJZsKL27smNUySrmZuvX58uxDItlAOB9bfiEJ/ZizqE
+         r16gfGEe2T4zdy/HsBLVpShRQaWrcYCfNMB6DyTpKbTBiS2ovNYlEA4LNs8HGxZXnvCp
+         XMWsaKIjXfakx1jtlcOEhAWSqK6m6u71bH6lhKDmgIrxvD9JpZTd5mNsoLLcZ5v7Z/+s
+         qyHfl1BN2ve0LGPpxrwTAOQoGtIicgCd2qTDmG6bMXO7zByaiux4FxIu9Bu9h10/Ihzt
+         7EqtK/tv8WA3lmk/Zoe6fXRH/f9/rVorV0pEI87ZhfzhQgAcHwb/m7tQBvJF54RKg97+
+         zEFg==
+X-Gm-Message-State: ACrzQf0kX36Rup/r5eug9KLHR1caFo6o98ScYBR3I3q7jhThuNy479Ri
+        xCDUYPBLIzy7qGtY4FnjtGTn1w==
+X-Google-Smtp-Source: AMsMyM4t+v6XPNUaxap0bWu9i+f5KlhpaoKfnyU0oegKA9jcmE3xZdN3m0RuFmaVQ1i28NrVV1ICGQ==
+X-Received: by 2002:a65:6cc7:0:b0:42a:4d40:8dc1 with SMTP id g7-20020a656cc7000000b0042a4d408dc1mr17069878pgw.321.1664135750972;
+        Sun, 25 Sep 2022 12:55:50 -0700 (PDT)
+Received: from ?IPV6:2401:4900:1c60:7faa:3d17:778b:4e63:9e61? ([2401:4900:1c60:7faa:3d17:778b:4e63:9e61])
+        by smtp.gmail.com with ESMTPSA id s1-20020a170902b18100b00176ad86b213sm9507680plr.259.2022.09.25.12.55.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 25 Sep 2022 12:55:50 -0700 (PDT)
+Message-ID: <d3205b59-6b6e-2983-9e2a-39354cd1803e@linaro.org>
+Date:   Mon, 26 Sep 2022 01:25:45 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220921064859.10328-1-cai.huoqing@linux.dev>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH] dt-bindings: dma: Make minor fixes to qcom,bam-dma
+ binding doc
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        devicetree@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, bhupesh.linux@gmail.com,
+        linux-kernel@vger.kernel.org, vkoul@kernel.org, agross@kernel.org,
+        dmaengine@vger.kernel.org, konrad.dybcio@somainline.org,
+        robh+dt@kernel.org, andersson@kernel.org
+References: <20220918081119.295364-1-bhupesh.sharma@linaro.org>
+ <d7507d61-9d16-c2d3-2066-5e2f9afd6eb9@linaro.org>
+From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
+In-Reply-To: <d7507d61-9d16-c2d3-2066-5e2f9afd6eb9@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Sep 21, 2022 at 02:48:49PM +0800, Cai Huoqing wrote:
-> From: caihuoqing <caihuoqing@baidu.com>
-> 
-> Add support for HDMA NATIVE, as long the IP design has set
-> the compatible register map parameter-HDMA_NATIVE,
-> which allows compatibility for native HDMA register configuration.
-> 
-> The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
-> And the native HDMA registers are different from eDMA,
-> so this patch add support for HDMA NATIVE mode.
-> 
-> HDMA write and read channels operate independently to maximize
-> the performance of the HDMA read and write data transfer over
-> the link When you configure the HDMA with multiple read channels,
-> then it uses a round robin (RR) arbitration scheme to select
-> the next read channel to be serviced.
-> The same applies when you have multiple write channels.
-> 
-> The native HDMA driver also supports a maximum of 16 independent
-> channels (8 write + 8 read), which can run simultaneously.
-> Both SAR (Source Address Register) and DAR (Destination Address Register)
-> are alignmented to byte.dmaengine: dw-edma: Add support for native HDMA
-> 
-> These series based on the series
-> https://lore.kernel.org/dmaengine/20220822185332.26149-1-Sergey.Semin@baikalelectronics.ru/
 
-Great! Thanks for rebasing on top of my series. I'll have a look at
-your patchset in several weeks (two or most likely three) since the
-next merge window is upon us and neither mine nor your patchset will
-get into the Bjorn/Vinod repos before that anyway.
+On 9/18/22 2:19 PM, Krzysztof Kozlowski wrote:
+> On 18/09/2022 09:11, Bhupesh Sharma wrote:
+>> As a user recently noted, the qcom,bam-dma binding document
+>> describes the BAM DMA node incorrectly.
+> 
+> It's a bit confusing - what is exactly incorrectly described by binding?
+> You did not make any changes to the binding itself...
 
--Sergey
+Sorry for the late reply. Your comment just skipped through my mail 
+filters :(
 
-> 
-> Cai Huoqing (3):
->   dmaengine: dw-edma: Rename dw_edma_core_ops structure to
->     dw_edma_plat_ops
->   dmaengine: dw-edma: Create a new dw_edma_core_ops structure to
->     abstract controller operation
->   dmaengine: dw-edma: Add support for native HDMA
-> 
->  drivers/dma/dw-edma/Makefile             |   6 +-
->  drivers/dma/dw-edma/dw-edma-core.c       |  65 ++---
->  drivers/dma/dw-edma/dw-edma-core.h       |  19 ++
->  drivers/dma/dw-edma/dw-edma-pcie.c       |   4 +-
->  drivers/dma/dw-edma/dw-edma-v0-core.c    |  90 ++++++-
->  drivers/dma/dw-edma/dw-edma-v0-core.h    |  14 +-
->  drivers/dma/dw-edma/dw-hdma-v0-core.c    | 304 +++++++++++++++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-core.h    |  17 ++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c | 150 +++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h |  22 ++
->  drivers/dma/dw-edma/dw-hdma-v0-regs.h    |  98 ++++++++
->  include/linux/dma/edma.h                 |   7 +-
->  12 files changed, 725 insertions(+), 71 deletions(-)
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> 
-> -- 
-> 2.25.1
-> 
+I understand your point. I should have made the commit message more 
+descriptive (infact now I look at it, I see some key words are actually 
+missing from the commit message).
+
+The commit message should infact read as:
+
+"As a user recently noted, the qcom,bam-dma binding document
+describes the BAM DMA node *in the example section* incorrectly. Fix the 
+same by making it consistent with the node present inside 'qcom-msm8974' 
+dts file, *namely the 'reg' and 'interrupt' values which are incorrect. 
+While looking at the example in the binding document, the user noted 
+that its incorrect when compared with both the 'msm8974' upstream as 
+well as downstream dts files.*
+
+I hope the bold text (which I added above), helps clear the purpose of 
+the patch better.
+
+Please let me know your views.
+
+Thanks,
+Bhupesh

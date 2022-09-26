@@ -2,71 +2,59 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 752215EB08F
-	for <lists+dmaengine@lfdr.de>; Mon, 26 Sep 2022 20:53:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53EB05EB145
+	for <lists+dmaengine@lfdr.de>; Mon, 26 Sep 2022 21:26:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230321AbiIZSxe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 26 Sep 2022 14:53:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33224 "EHLO
+        id S229515AbiIZT0l (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 26 Sep 2022 15:26:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231235AbiIZSx2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 26 Sep 2022 14:53:28 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5ADE8053D;
-        Mon, 26 Sep 2022 11:53:27 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id 10so12348184lfy.5;
-        Mon, 26 Sep 2022 11:53:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date;
-        bh=LTprvCg8UrTMN0V7Jb/ZUGpUP2Drp+PBcPjICaNlCm8=;
-        b=SLZK7mbvT23yOz/NZMoFljpw9++bR4DS1v01TMykZFQ2Ib/mZlkFXd45iq1y70hLTB
-         HuTkM91Kcl+Djq7zmKDb/cbjZB7AmeMGt6lERR4g/vJVHFzw58zrEVkZUl7OijsqVBkP
-         Hy78HbIVWQrrPe2gyBbJMUS49kBCeZxTV3u/9OA+djn8QtbiZyo8H5K6ie6jAAgcopgG
-         ZStwJC6gblFf4iCS3nU9nh5Wbd+r1CQWHz9V9Yxj+0qLLr+BlJsrnBbIJUxXUhyOG5Ng
-         HixDb1tIyWokhQXKEb1npUO+RXDhisoYArBPmrzw5acsY8dJLzH5Ks3kYNQDfLFCgCvc
-         NEfw==
+        with ESMTP id S229928AbiIZT0j (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 26 Sep 2022 15:26:39 -0400
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DFB46C121;
+        Mon, 26 Sep 2022 12:26:38 -0700 (PDT)
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-127dca21a7dso10537645fac.12;
+        Mon, 26 Sep 2022 12:26:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=LTprvCg8UrTMN0V7Jb/ZUGpUP2Drp+PBcPjICaNlCm8=;
-        b=haHcQ88Pv3mtBkLr519rjESr0Dubj1n5wF2CJiekpKbMQMgoSKBdvTe4xYaOfsn10m
-         GWqIO6Qu7tQ8YUnPvvK3dQlFKaLZIg0nyA+Sm4uLghbuNJM693sjhLj0r96NStikfxDO
-         zu6J4JyCCy9KqQkVCFJk9tEs7EvxPsdZ/0korMNuBB2Ivphj9ND0zz3iEk255MUDaawk
-         ZGtYq1W1Cy6aDCgMsxU02oUb2LYnzTeUJBTwc2x97gpZHbNOkpS1vKKb8NwMAi5IJumN
-         qTShI2NLDZ+HEgpNYSIoDazyjKQY/Oe4azVSFQAGEg/vEw3REdQQSm9gl6Fxhgk4JUI/
-         i9Zg==
-X-Gm-Message-State: ACrzQf1WA85q/JM8fi4jxiApxbmMpf9oAHKzRSjy1yb4bFoPa7NpvI40
-        F/D1N7yPCXYjFbJRWkW4cdg=
-X-Google-Smtp-Source: AMsMyM6aSz15nrB8kdgmCWJPgka4iQpIl4hUGvHQa74xXfxatFsll0h09KX6X3+FVXP9ybOP2Wdx3w==
-X-Received: by 2002:a05:6512:308e:b0:49b:9015:e76e with SMTP id z14-20020a056512308e00b0049b9015e76emr10036043lfd.393.1664218406121;
-        Mon, 26 Sep 2022 11:53:26 -0700 (PDT)
-Received: from [10.0.0.42] (91-159-150-230.elisa-laajakaista.fi. [91.159.150.230])
-        by smtp.gmail.com with ESMTPSA id a25-20020ac25e79000000b0049ade93ad24sm2604902lfr.156.2022.09.26.11.53.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Sep 2022 11:53:25 -0700 (PDT)
-Message-ID: <cf3194ec-0952-fa7a-cc05-6a60e7e66cf0@gmail.com>
-Date:   Mon, 26 Sep 2022 22:02:16 +0300
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=rUlnvAfvU9pdRtWZ1FAEOghgD+29ogap9V6WaxteLbk=;
+        b=0vs5aVuiRJ9+NSKrjMpHYvl7v7pVNOz0s6JAxoB/GqF1cxq4PoMPE6jrvIQv8jEis/
+         qobGsOLSlxfBMxFLM8cXPc+yCHnTMmumvvrRF5rELsuvxXbaxoa/fST0KC3ynipLCF2K
+         9TtHxhByBEXDc+rqtvQpDpMiOrOi759pYIh/SgbxLTn01zmmamHC83H0LdwcQIjKEwMg
+         P3x0rRMv6dXmBUMgpYYyX5R16Kt2bNh7mEo690IFWzTrIlAZbQjgLagf77U6mZnKkVmQ
+         aKyy3WkcUGaFeyjIzfGWUxKA8zKyTV/S7SErg16+LCNRQOeL4JGy5pSD9zSlxprLLWr9
+         n5lg==
+X-Gm-Message-State: ACrzQf1cvbs6LDP3vYRdmvhd2WSY3XMWq1QYHohk5dotQhXT4USDCbDa
+        ++8JGdE6aBg04hXQNaZSFw==
+X-Google-Smtp-Source: AMsMyM5kLkAXrkRnR+o1QnkojxPzqGoxGj/7A2kLwmibagYdnQEcpnrV0eQbVZdgQy1zKxSGb4xRIg==
+X-Received: by 2002:a05:6870:d686:b0:12a:f869:cb90 with SMTP id z6-20020a056870d68600b0012af869cb90mr158805oap.242.1664220397290;
+        Mon, 26 Sep 2022 12:26:37 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id g14-20020a9d6b0e000000b00659ba9f2872sm8077131otp.77.2022.09.26.12.26.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Sep 2022 12:26:36 -0700 (PDT)
+Received: (nullmailer pid 2640966 invoked by uid 1000);
+        Mon, 26 Sep 2022 19:26:36 -0000
+Date:   Mon, 26 Sep 2022 14:26:36 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Deming Wang <wangdeming@inspur.com>
+Cc:     krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        peter.ujfalusi@gmail.com, vkoul@kernel.org, robh+dt@kernel.org
+Subject: Re: [PATCH] Documentation: devicetree: dma: update the comments
+Message-ID: <20220926192636.GA2640932-robh@kernel.org>
+References: <20220920020721.2190-1-wangdeming@inspur.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Content-Language: en-US
-To:     Kevin Hilman <khilman@baylibre.com>, dmaengine@vger.kernel.org
-Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Nicolas Frayer <nfrayer@baylibre.com>
-References: <20220926181848.2917639-1-khilman@baylibre.com>
-From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-Subject: Re: [PATCH 0/3] dma/ti: enable udma and psil to be built as modules
-In-Reply-To: <20220926181848.2917639-1-khilman@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220920020721.2190-1-wangdeming@inspur.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,38 +62,13 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Kevin,
-
-On 9/26/22 21:18, Kevin Hilman wrote:
-> Enable the UDMA driver & glue and PSIL maps to be built & loaded as modules.
+On Mon, 19 Sep 2022 22:07:21 -0400, Deming Wang wrote:
+> remove the double word to.
 > 
-> The defauilt Kconfig settings are not changed, so default upstream is
-> still to be built in.  This series just enables the option to build as
-> modules.
-
-I can finally drop the half backed stuff I roll on top of -next ;)
-
-Do you plan to convert the ringacc also? It is straight forward, like:
-https://github.com/omap-audio/linux-audio/commit/01f9290c1c61e8bbc0fbdd877382672883ba7e73
-
-> Kevin Hilman (3):
->   of/irq: export of_msi_get_domain
->   dma/ti: convert k3-udma to module
->   dma/ti: convert PSIL to be buildable as module
-> 
->  drivers/dma/ti/Kconfig          |  7 +++---
->  drivers/dma/ti/k3-psil-am62.c   |  4 ++++
->  drivers/dma/ti/k3-psil-am64.c   |  4 ++++
->  drivers/dma/ti/k3-psil-am654.c  |  4 ++++
->  drivers/dma/ti/k3-psil-j7200.c  |  4 ++++
->  drivers/dma/ti/k3-psil-j721e.c  |  4 ++++
->  drivers/dma/ti/k3-psil-j721s2.c |  4 ++++
->  drivers/dma/ti/k3-psil.c        |  2 ++
->  drivers/dma/ti/k3-udma-glue.c   |  5 ++++-
->  drivers/dma/ti/k3-udma.c        | 40 +++++----------------------------
->  drivers/of/irq.c                |  1 +
->  11 files changed, 40 insertions(+), 39 deletions(-)
+> Signed-off-by: Deming Wang <wangdeming@inspur.com>
+> ---
+>  Documentation/devicetree/bindings/dma/ti-dma-crossbar.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
--- 
-Péter
+Acked-by: Rob Herring <robh@kernel.org>

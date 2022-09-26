@@ -2,69 +2,72 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A4A35EB087
-	for <lists+dmaengine@lfdr.de>; Mon, 26 Sep 2022 20:50:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC78B5EB06D
+	for <lists+dmaengine@lfdr.de>; Mon, 26 Sep 2022 20:45:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230463AbiIZSux (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 26 Sep 2022 14:50:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55192 "EHLO
+        id S230387AbiIZSpL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 26 Sep 2022 14:45:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230408AbiIZSuw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 26 Sep 2022 14:50:52 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2614E7549A
-        for <dmaengine@vger.kernel.org>; Mon, 26 Sep 2022 11:50:50 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id s90-20020a17090a2f6300b00203a685a1aaso7852712pjd.1
-        for <dmaengine@vger.kernel.org>; Mon, 26 Sep 2022 11:50:50 -0700 (PDT)
+        with ESMTP id S230439AbiIZSop (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 26 Sep 2022 14:44:45 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A989FDD;
+        Mon, 26 Sep 2022 11:43:58 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id j16so12316703lfg.1;
+        Mon, 26 Sep 2022 11:43:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:from:to:cc:subject:date;
-        bh=lRlQkEGyVotDOVgVJrH2x+4l2jryHK0GCkRlRhyLnhU=;
-        b=wNQjmt87soT1/9iOavumcWhdxLJRmPMW/Ex1HSaDbDYmyFFKqLTbfk3MxMIVF3/h+2
-         6r+N+caO4DyzpBpMl0zcVzBLaCM+NmRuuqmipB3zKX5h088QcM6jqUHIcSqjA0vaTR2h
-         yPW5ooz9pjoc++gBhvJLObhUxv08wgY7qtiUMkr19WxtHQeXrCFiYHx3851B/1P5AdoQ
-         kHoVB1XRCiiSj/Y6vwFavbjyY192VXrpUynzhzx48CitCJ/9OpuhPZMQjEfipvXDYujP
-         KeJ2ALh31b/acF7AG6nuE3h7z/8ecfUtN5UM0oVrY2Nb6BsyHeO5rKaiijcKmrgaCyeC
-         hwUQ==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=rRJ44Z2TX288yMrnSrkrRyEiDyacpZBDYBKuFx6X4sU=;
+        b=naPg2JaAG1fG4AtFV5gayR79vs77brYXjsKVbtw3+Dt4nNjA2oS+zhLlIv4POoS9ak
+         X3NFeNAechadRmuggYjqLkpFcB87U/QKe+GNSYULh+oeg7Bp1DGf7bOzJzKNiSqlItPR
+         +Tjw8TJdG3SoSvIm+sAdr7W+czxys3PDBiP0/BvXRFQAyHHIxERmPCLBQgb9Eg6C87tm
+         z4gIW8t4v8yYnkgWJN7u8TV2aJiR24Eiw3uHxMPyLgZEW150ejd8jOhbBsSA+uNWTj2V
+         6v4pM/JGApy2ZzcOXNn6Ts7zTbmBFu2nH4W7DaGUuvLGdkSQSGaEeHKz5j9hp/RFlVbF
+         VAdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=lRlQkEGyVotDOVgVJrH2x+4l2jryHK0GCkRlRhyLnhU=;
-        b=wW36t7fj4OBK8HonGkVqiN1yXVWb7JqbtSnOCHdbNYYw+gzo/lJ9J+lVJHSSaWiZlk
-         nQODulvINUC/6JfJE3PYVacekkwk7IVCjFiYLe4SiWNH6nmW/PetBdjGqQhywr5fPMjQ
-         jkz28zwzoEQrPqyhyItr+r8Jkzt9NhFDZPBL+ZEI79FnQcubaDgsNDIJVdSJpw21EYEk
-         bkaTivjvEo56P6e0YbtYl6qtAUfKUQo0amyyk+1nPtYrJ/WimIAZIP9uTp8xHJ+idxLc
-         2NeaY005572Y9GW7wyL9lNg6Owwf57G1g8Ktft5NH8EtlstTp3qt1sLdvkDc/mZh9zkv
-         OzhA==
-X-Gm-Message-State: ACrzQf0n9MqOPzc9MZnC3UzOPFnVTp1A4aQ392L88WmQOR2B4RRt5gxA
-        x60fi43nRDXbAY/DUva/Zr5RXQ==
-X-Google-Smtp-Source: AMsMyM6J++Jq/n6Tnfq8CzvGKz64B+KbXGB62f9OfjkL7sI9zcmjBW7e/aO/O6KZ5Zz+zGyVI86+Kw==
-X-Received: by 2002:a17:902:da8f:b0:178:399b:89bb with SMTP id j15-20020a170902da8f00b00178399b89bbmr23612803plx.57.1664218249640;
-        Mon, 26 Sep 2022 11:50:49 -0700 (PDT)
-Received: from localhost ([76.146.1.42])
-        by smtp.gmail.com with ESMTPSA id y4-20020a655a04000000b00439d071c110sm11083443pgs.43.2022.09.26.11.50.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 11:50:48 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     =?utf-8?Q?P=C3=A9ter?= Ujfalusi <peter.ujfalusi@gmail.com>,
-        dmaengine@vger.kernel.org
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=rRJ44Z2TX288yMrnSrkrRyEiDyacpZBDYBKuFx6X4sU=;
+        b=S0VsAknNlETbt8jP9COyMonrC48FxLFkEwZCy9gCqo44Gf5dS/iK1zpQd6MKTB1lRT
+         jgt1EyJG1RsUKDelLYx6ieh9ivi2Wt0Wa6kmRZSA6n5Cg/IiWGVROgyu8JiLzgPwn7ff
+         EbtanduxDHf2859ws2/doYPELjvIfooJeRiPwYhriS4wx7Yh0BFmCf1hAycOU7qD3NgE
+         wXcQG1o4PkRAgDKWVWgQ6h5qiQQCyKSYy97TvFY43uDiZdkV6QM0uPNdJ//axLEDHw1k
+         yC6/vhf9PZBhrIb+QOrH95r0k3ftYv6wXd4vJXx7mubC/pCxff1NeQQgBQtvHvlXSZgo
+         DLWQ==
+X-Gm-Message-State: ACrzQf108y4jo/YoMdduoM2eXuJN9lhy7wpU0Z71/EjAsNQax9bPPppU
+        zDFnY2kdD1SBwGBVTqSVH+Q=
+X-Google-Smtp-Source: AMsMyM4DNdayqjG4b6vFSIA8TyVdb/tkPuOYISyGSR+6fFnG1xWgENsMRD5DuBCMf9RQWYdoACINJg==
+X-Received: by 2002:a05:6512:32c7:b0:49f:53f2:a51a with SMTP id f7-20020a05651232c700b0049f53f2a51amr10431749lfg.236.1664217836681;
+        Mon, 26 Sep 2022 11:43:56 -0700 (PDT)
+Received: from [10.0.0.42] (91-159-150-230.elisa-laajakaista.fi. [91.159.150.230])
+        by smtp.gmail.com with ESMTPSA id t26-20020a2e9d1a000000b0026c297a9e11sm2424244lji.133.2022.09.26.11.43.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Sep 2022 11:43:56 -0700 (PDT)
+Message-ID: <11cf284c-d0d6-0687-b70b-2245ff8d6fcd@gmail.com>
+Date:   Mon, 26 Sep 2022 21:52:46 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH 2/3] dma/ti: convert k3-udma to module
+Content-Language: en-US
+To:     Kevin Hilman <khilman@baylibre.com>, dmaengine@vger.kernel.org
 Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Nicolas Frayer <nfrayer@baylibre.com>
-Subject: Re: [PATCH 3/3] dma/ti: convert PSIL to be buildable as module
-In-Reply-To: <4c9f0284-f8d0-75e5-8bc9-944b040f9edb@gmail.com>
 References: <20220926181848.2917639-1-khilman@baylibre.com>
- <20220926181848.2917639-4-khilman@baylibre.com>
- <4c9f0284-f8d0-75e5-8bc9-944b040f9edb@gmail.com>
-Date:   Mon, 26 Sep 2022 11:50:46 -0700
-Message-ID: <7hfsgeezqx.fsf@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+ <20220926181848.2917639-3-khilman@baylibre.com>
+From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+In-Reply-To: <20220926181848.2917639-3-khilman@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,67 +75,158 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-P=C3=A9ter Ujfalusi <peter.ujfalusi@gmail.com> writes:
 
-> Hi Kevin,
->
-> On 9/26/22 21:18, Kevin Hilman wrote:
->> map symbols need EXPORT_SYMBOL and files need MODULE_LICENSE.
->>=20
->> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
->> ---
->>  drivers/dma/ti/Kconfig          | 3 ++-
->>  drivers/dma/ti/k3-psil-am62.c   | 4 ++++
->>  drivers/dma/ti/k3-psil-am64.c   | 4 ++++
->>  drivers/dma/ti/k3-psil-am654.c  | 4 ++++
->>  drivers/dma/ti/k3-psil-j7200.c  | 4 ++++
->>  drivers/dma/ti/k3-psil-j721e.c  | 4 ++++
->>  drivers/dma/ti/k3-psil-j721s2.c | 4 ++++
->>  drivers/dma/ti/k3-psil.c        | 2 ++
->>  8 files changed, 28 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/drivers/dma/ti/Kconfig b/drivers/dma/ti/Kconfig
->> index f196be3b222f..2adc2cca10e9 100644
->> --- a/drivers/dma/ti/Kconfig
->> +++ b/drivers/dma/ti/Kconfig
->> @@ -56,7 +56,8 @@ config TI_K3_UDMA_GLUE_LAYER
->>  	  If unsure, say N.
->>=20=20
->>  config TI_K3_PSIL
->> -	bool
->> +       tristate
->> +       default TI_K3_UDMA
->>=20=20
->>  config TI_DMA_CROSSBAR
->>  	bool
->> diff --git a/drivers/dma/ti/k3-psil-am62.c b/drivers/dma/ti/k3-psil-am62=
-.c
->> index 2b6fd6e37c61..7c4ca85f68b1 100644
->> --- a/drivers/dma/ti/k3-psil-am62.c
->> +++ b/drivers/dma/ti/k3-psil-am62.c
->> @@ -4,6 +4,7 @@
->>   */
->>=20=20
->>  #include <linux/kernel.h>
->> +#include <linux/module.h>
->>=20=20
->>  #include "k3-psil-priv.h"
->>=20=20
->> @@ -184,3 +185,6 @@ struct psil_ep_map am62_ep_map =3D {
->>  	.dst =3D am62_dst_ep_map,
->>  	.dst_count =3D ARRAY_SIZE(am62_dst_ep_map),
->>  };
->> +EXPORT_SYMBOL_GPL(am62_ep_map);
->
-> Wouldn't it be better to build one module (k3-psil.ko) and link all the
-> platform libs into that?
-> They are unconditionally built in all cases anyways and makes the lsmod
-> under control.
-> And no need to export these maps at all is a plus.
 
-I guess that's one option, but seems to be to be the wrong direction for
-a modular kernel.  To me, it seems like the next step would be to make
-it so only the SoC specific module is loaded instead of always loading
-them all.
+On 9/26/22 21:18, Kevin Hilman wrote:
+> Currently k3-udma driver is built as separate platform drivers with a
+> shared probe and identical code path, just differnet platform data.
+> 
+> To enable to build as module, convert the separate platform driver
+> into a single module_platform_driver with the data selection done via
+> compatible string and of_match.  The separate of_match tables are also
+> combined into a single table to avoid the multiple calls to
+> of_match_node()
+> 
+> Since all modern TI platforms using this are DT enabled, the removal
+> of separate platform_drivers shoul should nave no functional change.
+> 
+> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+> ---
+>  drivers/dma/ti/Kconfig        |  4 ++--
+>  drivers/dma/ti/k3-udma-glue.c |  5 ++++-
+>  drivers/dma/ti/k3-udma.c      | 40 +++++------------------------------
+>  3 files changed, 11 insertions(+), 38 deletions(-)
+> 
+> diff --git a/drivers/dma/ti/Kconfig b/drivers/dma/ti/Kconfig
+> index 79618fac119a..f196be3b222f 100644
+> --- a/drivers/dma/ti/Kconfig
+> +++ b/drivers/dma/ti/Kconfig
+> @@ -35,7 +35,7 @@ config DMA_OMAP
+>  	  DMA engine is found on OMAP and DRA7xx parts.
+>  
+>  config TI_K3_UDMA
+> -	bool "Texas Instruments UDMA support"
+> +	tristate "Texas Instruments UDMA support"
+>  	depends on ARCH_K3
+>  	depends on TI_SCI_PROTOCOL
+>  	depends on TI_SCI_INTA_IRQCHIP
+> @@ -48,7 +48,7 @@ config TI_K3_UDMA
+>  	  DMA engine is used in AM65x and j721e.
+>  
+>  config TI_K3_UDMA_GLUE_LAYER
+> -	bool "Texas Instruments UDMA Glue layer for non DMAengine users"
+> +	tristate "Texas Instruments UDMA Glue layer for non DMAengine users"
+>  	depends on ARCH_K3
+>  	depends on TI_K3_UDMA
+>  	help
+> diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
+> index 4fdd9f06b723..c29de4695ae7 100644
+> --- a/drivers/dma/ti/k3-udma-glue.c
+> +++ b/drivers/dma/ti/k3-udma-glue.c
+> @@ -6,6 +6,7 @@
+>   *
+>   */
+>  
+> +#include <linux/module.h>
+>  #include <linux/atomic.h>
+>  #include <linux/delay.h>
+>  #include <linux/dma-mapping.h>
+> @@ -1433,4 +1434,6 @@ static int __init k3_udma_glue_class_init(void)
+>  {
+>  	return class_register(&k3_udma_glue_devclass);
+>  }
+> -arch_initcall(k3_udma_glue_class_init);
+> +
+> +module_init(k3_udma_glue_class_init);
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+> index 2f0d2c68c93c..7239ff31c8c5 100644
+> --- a/drivers/dma/ti/k3-udma.c
+> +++ b/drivers/dma/ti/k3-udma.c
+> @@ -5,6 +5,7 @@
+>   */
+>  
+>  #include <linux/kernel.h>
+> +#include <linux/module.h>
+>  #include <linux/delay.h>
+>  #include <linux/dmaengine.h>
+>  #include <linux/dma-mapping.h>
+> @@ -4318,18 +4319,10 @@ static const struct of_device_id udma_of_match[] = {
+>  		.compatible = "ti,j721e-navss-mcu-udmap",
+>  		.data = &j721e_mcu_data,
+>  	},
+> -	{ /* Sentinel */ },
+> -};
+> -
+> -static const struct of_device_id bcdma_of_match[] = {
+>  	{
+>  		.compatible = "ti,am64-dmss-bcdma",
+>  		.data = &am64_bcdma_data,
+>  	},
+> -	{ /* Sentinel */ },
+> -};
+> -
+> -static const struct of_device_id pktdma_of_match[] = {
+>  	{
+>  		.compatible = "ti,am64-dmss-pktdma",
+>  		.data = &am64_pktdma_data,
+> @@ -5254,14 +5247,9 @@ static int udma_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  
+>  	match = of_match_node(udma_of_match, dev->of_node);
+> -	if (!match)
+> -		match = of_match_node(bcdma_of_match, dev->of_node);
+>  	if (!match) {
+> -		match = of_match_node(pktdma_of_match, dev->of_node);
+> -		if (!match) {
+> -			dev_err(dev, "No compatible match found\n");
+> -			return -ENODEV;
+> -		}
+> +		dev_err(dev, "No compatible match found\n");
+> +		return -ENODEV;
+>  	}
+>  	ud->match_data = match->data;
+>  
+> @@ -5494,27 +5482,9 @@ static struct platform_driver udma_driver = {
+>  	},
+>  	.probe		= udma_probe,
+>  };
+> -builtin_platform_driver(udma_driver);
+>  
+> -static struct platform_driver bcdma_driver = {
+> -	.driver = {
+> -		.name	= "ti-bcdma",
+> -		.of_match_table = bcdma_of_match,
+> -		.suppress_bind_attrs = true,
+> -	},
+> -	.probe		= udma_probe,
+> -};
+> -builtin_platform_driver(bcdma_driver);
+> -
+> -static struct platform_driver pktdma_driver = {
+> -	.driver = {
+> -		.name	= "ti-pktdma",
+> -		.of_match_table = pktdma_of_match,
+> -		.suppress_bind_attrs = true,
+> -	},
+> -	.probe		= udma_probe,
+> -};
+> -builtin_platform_driver(pktdma_driver);
+> +module_platform_driver(udma_driver);
 
-Kevin
+I did liked the 'hack' that the dev_* prints contained the actual type
+of the DMA (udma/bcdma/pktdma), but it is not working via modules,
+unless the driver init parts are split out and the bulk is kept as a
+library.
+I had this half way implemented in my wip, but never got the chance to
+finalize it.
+
+But, one can get the info via the address, so...
+
+> +MODULE_LICENSE("GPL v2");
+>  
+>  /* Private interfaces to UDMA */
+>  #include "k3-udma-private.c"
+
+-- 
+Péter

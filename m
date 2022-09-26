@@ -2,85 +2,148 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E27D65EB40D
-	for <lists+dmaengine@lfdr.de>; Tue, 27 Sep 2022 00:02:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 942795EB52A
+	for <lists+dmaengine@lfdr.de>; Tue, 27 Sep 2022 01:12:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231287AbiIZWCW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 26 Sep 2022 18:02:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55386 "EHLO
+        id S230164AbiIZXMn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 26 Sep 2022 19:12:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231207AbiIZWB5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 26 Sep 2022 18:01:57 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C8E0E62EB
-        for <dmaengine@vger.kernel.org>; Mon, 26 Sep 2022 15:01:54 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id f193so7803288pgc.0
-        for <dmaengine@vger.kernel.org>; Mon, 26 Sep 2022 15:01:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=NT8F/Sj0Q9yRmFZyi3XfPWnAIOXfMEUrjgewG27HyFQ=;
-        b=fG1qXK+12aDUGiqFjjOVulomtauZVkrqe3h5VvQdj+htLs5ndcJc0MdCDW+x5UcrKn
-         +lcSzfixuuBRg6TR4H06W6f12YdqwR6ooH1yFU/iPC/F1VPkCdt3wyLOsZZwuGLjvFd1
-         VzTQPpWPTGPrSs8uJT3B0igrvLR7gppRnrVAY=
+        with ESMTP id S230298AbiIZXMl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 26 Sep 2022 19:12:41 -0400
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40693AC38F;
+        Mon, 26 Sep 2022 16:12:40 -0700 (PDT)
+Received: by mail-oi1-f172.google.com with SMTP id n83so10067139oif.11;
+        Mon, 26 Sep 2022 16:12:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=NT8F/Sj0Q9yRmFZyi3XfPWnAIOXfMEUrjgewG27HyFQ=;
-        b=HHZ5FER3LWe6GQZWMbyw4Urs2bfIDk9+amg/1Z7aycPgl0VfnprZ7/DCTYc0nCwjzz
-         yqLSk+ulm/AOu4N/kLiQsS+mtoCFpr4aMbGyNlfQZSu1WeqKVzxzHYlNP3Wvukv0eFDR
-         7bSjyH0pZjPFnPuyRDHaW65Z0IuSqI7wLtHTnmZJ/YbP4fcn2Ltw3RH6TQb1UlxaYY1n
-         dQw1hsyGrvYrb5++01/r3z5fEkLnj9ccu75PWmmJv7l8zoiDe1oL8+8NdoCmvh1OBQP3
-         Cd1bCmrtWrE3yqrlXUSLpFIdfQr+b7qmBQBEpVuDHF6awRCN+zBucmJ0IHvjvoBASkXh
-         njzw==
-X-Gm-Message-State: ACrzQf0ffjUjacqIcxKds5dG/eP98Bi/m9ISrA/VJ/pSsNKCPPZ5vZHP
-        Q/AoZY4vfcsQh2Dvt7KzxHKKFSPF9/ym7g==
-X-Google-Smtp-Source: AMsMyM4y9lezo0/S2wIwtV3prmWvVTnyikbgsWsF5HtyKR42X3AVNNebI3RAI2KsxQVWW4FtvnHm9A==
-X-Received: by 2002:a63:6a03:0:b0:43a:18ce:7473 with SMTP id f3-20020a636a03000000b0043a18ce7473mr22561085pgc.616.1664229713937;
-        Mon, 26 Sep 2022 15:01:53 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t7-20020a63eb07000000b0043a0de69c94sm11034189pgh.14.2022.09.26.15.01.53
+        bh=sd3nu7wOmD66JHzdTn3GImPyIDBACVdi1fceUwY0jNo=;
+        b=E7w7nFBXCXXOmP6urvEVo8SeRhUxtB6blJM2jSFd+zGEK0gW0ieghYzXhHVlOiq93N
+         aE6577x5zCA/qwRz5i31ejc8shSgZmkmUuAKd93yin43fd+WgoORUH4BXXiBsPF0x9Mc
+         CNd8d212EFtjNfCtPhQ1mSIAcDtq0Yjh8TsdMRCyUfS2CSMN3/rAItCCu8cZ8R/zmXz5
+         567kaNmpIT0X7zcIYfDA2QjqAsbWylQ3nkL/zdM3cPhQtwosEtM+TkvFyxZOYb5GfC3D
+         otZPYEeUQHvbuAcLhUoqDK8IrLeVazSYp/tgouhBICf4mzaK502GBiOpVrSrfAIJ46+I
+         bC7w==
+X-Gm-Message-State: ACrzQf0moLL8fPtM9JBgn5e3V6GXEOOtMhyGwdBIRA2AH5Gb1QJe3Ej2
+        JqLjabCN+bdmB183fbrFiig8er8UZQ==
+X-Google-Smtp-Source: AMsMyM4Jq4d7LwcSbV7kR28dreIrQcf3dyepJYPYiHsFi23ydQpd1GZSW+TL/vsFuTGW59z84oHAPg==
+X-Received: by 2002:a05:6808:246:b0:34f:e4d6:330c with SMTP id m6-20020a056808024600b0034fe4d6330cmr532855oie.142.1664233959454;
+        Mon, 26 Sep 2022 16:12:39 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id w7-20020a056870430700b0011f400edb17sm9810530oah.4.2022.09.26.16.12.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 15:01:53 -0700 (PDT)
-Date:   Mon, 26 Sep 2022 15:01:52 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] dmaengine: sh: rcar-dmac: Replace zero-length
- arrays with DECLARE_FLEX_ARRAY() helper
-Message-ID: <202209261501.E08CDA4@keescook>
-References: <YzIdsJqsR3LH2qEK@work>
+        Mon, 26 Sep 2022 16:12:38 -0700 (PDT)
+Received: (nullmailer pid 3145952 invoked by uid 1000);
+        Mon, 26 Sep 2022 23:12:38 -0000
+Date:   Mon, 26 Sep 2022 18:12:38 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Richard Acayan <mailingradian@gmail.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: dma: qcom: gpi: add fallback
+Message-ID: <20220926231238.GA3132756-robh@kernel.org>
+References: <20220923210934.280034-1-mailingradian@gmail.com>
+ <20220923210934.280034-2-mailingradian@gmail.com>
+ <7b066e11-6e5c-c6d9-c8ed-9feccaec4c0c@linaro.org>
+ <20220923222028.284561-1-mailingradian@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YzIdsJqsR3LH2qEK@work>
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20220923222028.284561-1-mailingradian@gmail.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 04:46:24PM -0500, Gustavo A. R. Silva wrote:
-> Zero-length arrays are deprecated and we are moving towards adopting
-> C99 flexible-array members, instead. So, replace zero-length arrays
-> declarations in anonymous union with the new DECLARE_FLEX_ARRAY()
-> helper macro.
+On Fri, Sep 23, 2022 at 06:20:28PM -0400, Richard Acayan wrote:
+> > On 23/09/2022 23:09, Richard Acayan wrote:
+> > > The drivers are transitioning from matching against lists of specific
+> > > compatible strings to matching against smaller lists of more generic
+> > > compatible strings. Add a fallback compatible string in the schema to
+> > > support this change.
+> > 
+> > Thanks for the patch. I wished we discussed it a bit more. :)
 > 
-> This helper allows for flexible-array members in unions.
+> Ah, sorry for not replying to your original suggestion. I didn't see the
+> opportunity for discussion as this new series wasn't that hard to come up
+> with.
 > 
-> Link: https://github.com/KSPP/linux/issues/193
-> Link: https://github.com/KSPP/linux/issues/217
-> Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > qcom,gpi-dma does not look like specific enough to be correct fallback,
+> > at least not for all of the devices. I propose either a IP block version
+> > (which is tricky without access to documentation) or just one of the SoC
+> > IP blocks.
+> 
+> Solution 1:
+> 
+> Yes, I could use something like qcom,sdm845-gpi-dma. It would be weird to
+> see the compatible strings for that, though:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Why is it weird? That's how 'compatible' works. You are saying a new 
+implementation is compatible with an older implementation.
 
--- 
-Kees Cook
+
+>     compatible = "qcom,sdm670-gpi-dma", "qcom,sdm845-gpi-dma";
+> 
+
+>     // This would need to be valid in dt schema, suggesting solution 2
+>     compatible = "qcom,sdm845-gpi-dma";
+>     // This just doesn't make sense
+>     compatible = "qcom,sdm845-gpi-dma", "qcom,sdm845-gpi-dma";
+
+Is your question how to get the first one to work, but not the second 
+one? You need 'oneOf' with at least an entry for each case with 
+different number of compatible strings (1 and 2 entries). There are 
+lot's of examples in the tree.
+
+> 
+>     compatible = "qcom,sm8150-gpi-dma", "qcom,sdm845-gpi-dma";
+> 
+>     compatible = "qcom,sm8250-gpi-dma", "qcom,sdm845-gpi-dma";
+> 
+> Solution 2:
+> 
+> I could stray from the "soc-specific compat", "fallback compat" and just
+> have "qcom,sdm845-gpi-dma" for every SoC.
+
+No.
+
+> Solution 3:
+> 
+> I found the original mailing list archive for this driver:
+> 
+> https://lore.kernel.org/linux-arm-msm/20200824084712.2526079-1-vkoul@kernel.org/
+> https://lore.kernel.org/linux-arm-msm/20200918062955.2095156-1-vkoul@kernel.org/
+> 
+> It seems like the author originally handled the ee_offset as a dt property
+> and removed it. It was removed because it was a Qualcomm-specific property.
+> One option would be to bring this back against the author's wishes (or ask
+> the author about it, since they are a recipient).
+
+No.
+
+> 
+> Solution 4:
+> 
+> You mentioned there being an xPU3 block here:
+> 
+> https://lore.kernel.org/linux-arm-msm/e3bfa28a-ecbc-7a57-a996-042650043514@linaro.org/
+> 
+> Maybe it's fine to have qcom,gpi-dma-v3?
+
+I don't like made up version numbers. QCom does or did have very 
+specific version numbers, but in the end they it tended to be 1 or maybe 
+2 SoCs per version. So not really beneficial.
+
+Rob

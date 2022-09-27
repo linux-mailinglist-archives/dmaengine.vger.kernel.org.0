@@ -2,109 +2,108 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9150F5ECAAC
-	for <lists+dmaengine@lfdr.de>; Tue, 27 Sep 2022 19:21:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B077F5ECBB9
+	for <lists+dmaengine@lfdr.de>; Tue, 27 Sep 2022 19:55:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231956AbiI0RVh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 27 Sep 2022 13:21:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45172 "EHLO
+        id S233285AbiI0RzC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 27 Sep 2022 13:55:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230118AbiI0RVg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 27 Sep 2022 13:21:36 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AF0FEF0BD;
-        Tue, 27 Sep 2022 10:21:35 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id b6so11657793ljr.10;
-        Tue, 27 Sep 2022 10:21:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=Y1H5sQw1pB57hlTStlx7yu2qnClPknyxb90LREDOfJM=;
-        b=UVWz/KfeGp0cOYxIOpGvpl6qI1R8pPOVRUwVvgjN1yqWCeHoN7ejEhBI92+5CUOkc5
-         IP1g4satFGhiRRznF9pB1colfYEbGJJI8IkOzNYf5iGplVIaiE9QG8DRgNUW3fUY2J6E
-         uUlxvxVinfrFkfSv3Wo2loA1OUiT1srMby0etFxIBxYwZhSVgOh4HZ9pZ542D3AANHMP
-         /S3FEUD0or50fF9rnH9phXgHsUVA+i9v9yJrBgzgDmmXYXF8wDnFnS6zm9votKF+XrtY
-         IZZ92Cl/lfQ+KI3svh0YpO64wMeZAmIa9HQkIXHhqlyeXpdl2L+/3oW8VEZrB8az4IOT
-         V2DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=Y1H5sQw1pB57hlTStlx7yu2qnClPknyxb90LREDOfJM=;
-        b=aBkOCYeJLUlnGDKyDhM4IZMh2S3i+GBMObPBCdcYoZ4YGmE9b9mmwTyndzLzqAsbfX
-         q0t1158D1rSgvzfS0BO80SCHU2uWmFz8blC/3ByyR3sanPViHW/i3VDIr36mvAv6E1of
-         fjSFIhClfhyZnjjDmAtEb7brk14DckTVKkTecpfcT7w1J0IWF22LBWUySNgJ+jN3E+U4
-         e3D9LOjEYXjnS24RCtHjZjwGZ769glLv19MvdfJ128VCtaT5Svj4bqwMBelRTBhnZcKK
-         1FYJmeWDz/RDqVu4a+gJp2ZAieX6f1ewcBElv1QoZJ+xmaWsZqhXJaSvKYm48IohWuds
-         m5JQ==
-X-Gm-Message-State: ACrzQf1ojgJ6cuBsZ4r94nfph4UEy6bIfkuJKgSVxLXYVQFyhRC4xNng
-        +j6NLhlxBMHQjHwb4uBeFoc9px1Z30tdfg==
-X-Google-Smtp-Source: AMsMyM5EMDAfdCgT3bXJLqU/0O3iq+aMoyCBq5ABOgKS4zM9naWYwBFBa0rAVvkmDXt6tv1hY7sPLg==
-X-Received: by 2002:a2e:a547:0:b0:26c:6b98:6b2e with SMTP id e7-20020a2ea547000000b0026c6b986b2emr9672366ljn.90.1664299293781;
-        Tue, 27 Sep 2022 10:21:33 -0700 (PDT)
-Received: from [10.0.0.127] (91-159-150-230.elisa-laajakaista.fi. [91.159.150.230])
-        by smtp.gmail.com with ESMTPSA id v8-20020a2ea608000000b002618e5c2664sm209507ljp.103.2022.09.27.10.21.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Sep 2022 10:21:33 -0700 (PDT)
-Message-ID: <541337f7-1c0d-3ea4-d959-cd5aed83e615@gmail.com>
-Date:   Tue, 27 Sep 2022 20:21:53 +0300
+        with ESMTP id S232245AbiI0Ryv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 27 Sep 2022 13:54:51 -0400
+Received: from mx.gpxsee.org (mx.gpxsee.org [37.205.14.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5BFDE117F;
+        Tue, 27 Sep 2022 10:54:40 -0700 (PDT)
+Received: from [192.168.4.25] (unknown [62.77.71.229])
+        by mx.gpxsee.org (Postfix) with ESMTPSA id 2B618544C;
+        Tue, 27 Sep 2022 19:54:38 +0200 (CEST)
+Message-ID: <68fdd2a3-b881-470b-c5b3-0f2fc881ed27@gpxsee.org>
+Date:   Tue, 27 Sep 2022 19:54:37 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH 0/3] dma/ti: enable udma and psil to be built as modules
+ Thunderbird/102.1.2
+Subject: Re: [PATCH V4 XDMA 2/2] dmaengine: xilinx: xdma: Add user logic
+ interrupt support
 Content-Language: en-US
-To:     Kevin Hilman <khilman@baylibre.com>, dmaengine@vger.kernel.org
-Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Nicolas Frayer <nfrayer@baylibre.com>
-References: <20220926181848.2917639-1-khilman@baylibre.com>
- <cf3194ec-0952-fa7a-cc05-6a60e7e66cf0@gmail.com>
- <7h7d1pg7c4.fsf@baylibre.com>
-From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <7h7d1pg7c4.fsf@baylibre.com>
+To:     Lizhi Hou <lizhi.hou@amd.com>, vkoul@kernel.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        trix@redhat.com
+Cc:     max.zhen@amd.com, sonal.santan@amd.com, larry.liu@amd.com,
+        brian.xu@amd.com
+References: <1663871905-60498-1-git-send-email-lizhi.hou@amd.com>
+ <1663871905-60498-3-git-send-email-lizhi.hou@amd.com>
+ <a2b5c35d-ced2-ff83-c550-4bbf29973b80@gpxsee.org>
+ <64388266-1707-ee20-c3ab-edb67ada68dc@amd.com>
+ <c0430eb7-d607-acfd-201a-db56db982309@gpxsee.org>
+ <5f77987e-49bc-e035-19e0-52c25f4adc7e@amd.com>
+From:   =?UTF-8?Q?Martin_T=c5=afma?= <tumic@gpxsee.org>
+In-Reply-To: <5f77987e-49bc-e035-19e0-52c25f4adc7e@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 27/09/2022 00:21, Kevin Hilman wrote:
-> Hi Péter,
+On 27. 09. 22 19:18, Lizhi Hou wrote:
 > 
-> Péter Ujfalusi <peter.ujfalusi@gmail.com> writes:
-> 
->> On 9/26/22 21:18, Kevin Hilman wrote:
->>> Enable the UDMA driver & glue and PSIL maps to be built & loaded as modules.
+> On 9/27/22 09:46, Martin Tůma wrote:
+>> On 27. 09. 22 18:28, Lizhi Hou wrote:
+>>
+>>> Okay, I got the point. How about changing request/remove APIs to 
+>>> enable/disable APIs as below
 >>>
->>> The defauilt Kconfig settings are not changed, so default upstream is
->>> still to be built in.  This series just enables the option to build as
->>> modules.
+>>>       xdma_enable_user_irq(struct platform_device *pdev, u32 
+>>> user_irq_index, u32 *irq)
+>>>
+>>>              user_irq_index: user logic interrupt wire index. (XDMA 
+>>> driver determines how system IRQs are mapped to DMA channels and user 
+>>> logic wires)
+>>>
+>>>              irq: IRQ number returned for registering interrupt 
+>>> handler (request_irq()) or passing to existing platform driver.
+>>>
+>>>      xdma_disable_user_irq(struct platform_device *pdev, u32 
+>>> user_irq_index)
+>>>
+>>> Does this make sense to you?
+>>>
 >>
->> I can finally drop the half backed stuff I roll on top of -next ;)
+>> I think even the "irq" parameter in the enable function is surplus as 
+>> the parent driver (the driver of the actual PCIe card) knows* what PCI 
+>> irq he has to allocate without XDMA providing the number.
 >>
->> Do you plan to convert the ringacc also? It is straight forward, like:
->> https://github.com/omap-audio/linux-audio/commit/01f9290c1c61e8bbc0fbdd877382672883ba7e73
+>> xdma_enable_user_irq(struct platform_device *pdev, u32 user_irq_index);
+>> xdma_disable_user_irq(struct platform_device *pdev, u32 user_irq_index);
+>>
+>> should be all that is needed.
+>>
+>> M.
+>>
+>> * something like:
+>> pci_irq_vector((pdev), PCI_BAR_ID) + NUM_C2H_CHANNELS + NUM_H2C_CHANNELS
+>> can be used from the PCIe driver
 > 
-> Yes, my colleague Nicolas (cc'd) was planning ringacc shortly, but we
-> didn't realize you had already don it.  Your version looks fine to me.
-> Any reason not to submit yours?
+> How does parent driver know the first few vectors will be assigned to 
+> DMA channel?  Parent diver should not assume the first 
+> (NUM_C2H_CHANNELS+NUM_H2C_CHANNELS) are for DMA channel.
+> 
+> Parent driver passes the system IRQ range  to XDMA driver, and only XDMA 
+> driver knows what IRQs are used by DMA channel and what IRQs are mapped 
+> to user logic wires. I would keep the "u32 *irq" argument.
+> 
 
-It can only be sent after the UDMA is able to be built as a module.
-When I did the module support there were also a tisci dependency which 
-for some reason took too long for me to be able to send these.
+The parent driver knows how much DMA channels it wants/allocates. If it 
+is possible to allocate different IRQs than the first NUM_C2H_CHANNELS + 
+NUM_H2C_CHANNELS to the XDMA IP core, than that parameter may be needed, 
+but I haven't seen such HW. Moreover, every parent driver author should 
+IMHO know how the channel and user IRQs are mapped in their specific HW 
+configuration so this info can be "hard-wired" in the parent driver, but 
+I'm fine with it when the irq parameter is kept anyway. All I really 
+need is that the enable/disable logic is split from the irq 
+allocate/register logic so I can use the other platform drivers.
 
-I can send my version later if it is OK, but if Nicolas have a better 
-take on it, I don't mind.
-
--- 
-Péter
+M.

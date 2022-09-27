@@ -2,109 +2,71 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A003E5ECBF4
-	for <lists+dmaengine@lfdr.de>; Tue, 27 Sep 2022 20:14:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1922F5ED08F
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Sep 2022 00:56:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231642AbiI0SO4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 27 Sep 2022 14:14:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49346 "EHLO
+        id S231985AbiI0W4g (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 27 Sep 2022 18:56:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231706AbiI0SOw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 27 Sep 2022 14:14:52 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2070.outbound.protection.outlook.com [40.107.244.70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A88611E3D0;
-        Tue, 27 Sep 2022 11:14:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ImiCIgMrajgt5yxkvrDRJHjnfJqFxRBuGAv/f/0ZUvCfu7xZmaToluzS+o3qXu401U8eFH2IoS+OAEkdWP82TbYhFopdZqoJn7ksHjG0bjb6+t6P82NPOpBHdfs+AXfOq5d9Mn5g9GyHAjxn4g9lZXJy7M/aslxiBAuicN5bzq7f+4ZO1NVebod5It7fWnrihufButUGT4c8kXz2bNWdfaB5e4Xu6D1pfw6v2/uiXXrqWODoE4XwnNZ3eaKSdENUfbhFAI9mIB99Ikjgei6IQUo/jPUjCtRnBz59ixL+xKfvtyZJJsu3VnlBco5mIKUvwxjg2kIABBfhKGYhQwqmyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=URi4MJL+/mJjyobGSwyT/FWVrEuXrU6GOt+Jp0ZHzlE=;
- b=fdoO0USMmWq0YI1+lpsyEQB0KBBGEUEaJLbIQbtGotisoqjc/ooqWB6T+FgfXnzGplpxgR2nhCszOhwVdSTKRZFYxUoR2UiNK8PdxUgPIsnKzCsBD+ArXF32iQyoK+rpIyminj9NkqXK9WwBOizOfOd13j1Vp2PXBiANsuVF7K0ZAw/Jz0o4SDp+syxVMecsViEk0gAvDWJDDtn+6tCpie1O2JSPIqI7luil37wdftltlMKQzZdSldWnDEgtKbPLXesVjbkLlZK/aCZYRfL0P8pOshVbyCI4VWMX1GTV2uPy5/LuNdMKn8x/O3Ix2odfP+Mdmb9Ceajf1t+oBryjHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=gpxsee.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=URi4MJL+/mJjyobGSwyT/FWVrEuXrU6GOt+Jp0ZHzlE=;
- b=mopSPeW+SVSt7HhtIXyjJKPPQ9D7FHqF5IicDdaiWXB10PJTswnZYEUfWAIg4wUk+tH+yFNtCrvGpsXFfBtGgNxDd2P5X0qRdWUSLDfvovnohcTyYWfU9UKCR4p8Mfy66gulLGlVN/r4X1MZse96ao/A9JOGQxdtWCr6nfdjgdA=
-Received: from DM6PR08CA0036.namprd08.prod.outlook.com (2603:10b6:5:80::49) by
- DM6PR12MB4155.namprd12.prod.outlook.com (2603:10b6:5:221::15) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5654.26; Tue, 27 Sep 2022 18:14:46 +0000
-Received: from DM6NAM11FT027.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:80:cafe::3c) by DM6PR08CA0036.outlook.office365.com
- (2603:10b6:5:80::49) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5654.25 via Frontend
- Transport; Tue, 27 Sep 2022 18:14:46 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- DM6NAM11FT027.mail.protection.outlook.com (10.13.172.205) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5676.17 via Frontend Transport; Tue, 27 Sep 2022 18:14:45 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Tue, 27 Sep
- 2022 13:14:45 -0500
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Tue, 27 Sep
- 2022 13:14:45 -0500
-Received: from [172.19.74.144] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2375.28 via Frontend
- Transport; Tue, 27 Sep 2022 13:14:44 -0500
-Message-ID: <2339d3e2-1c1d-4005-b5bc-e115f3c7a6cc@amd.com>
-Date:   Tue, 27 Sep 2022 11:14:44 -0700
+        with ESMTP id S229538AbiI0W4d (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 27 Sep 2022 18:56:33 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AEAC7C33A
+        for <dmaengine@vger.kernel.org>; Tue, 27 Sep 2022 15:56:29 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id f23so10350896plr.6
+        for <dmaengine@vger.kernel.org>; Tue, 27 Sep 2022 15:56:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:from:to:cc:subject:date;
+        bh=EqsA45vArW1jYc6Dv+3e8MlzVLIM63c0M/moa9HScAs=;
+        b=JZOfY0lOjazdIP0MDuNJHVFccA9b0/il8AAhKDa27ZEIeDaH+9fTz8BEbVHlkwP2kw
+         i3S62LkMEK6O6WxnnnXpl3/aTYuQ5FlkPakGBWGhrOfxOQ+ob1rK0v0SBITdUpzB5n+b
+         /llmHiT+TNGjyMipQxiWMcyZbYpg85i/CX8twNJWGJ/CdzIaV+FqnV+HG/KRWqEd2cvQ
+         R3RWKacXTP5r2MmYbWiIAyaYubOyTxRziz+M7APUI5hNlCoMKikX3p0p8lX+lCdh9l55
+         y8Ct87c2+vApFfVG7xeNPVKSCsTj3tB4rpQLDs04OBlAUiq3rrs1zuWwIKfiZzhbIYGa
+         volQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=EqsA45vArW1jYc6Dv+3e8MlzVLIM63c0M/moa9HScAs=;
+        b=Ms9UT4oEuBQSdc9fgjLwAE/CsI+LghYUjVoYJ+csWfeyJt10WdgGaM0sqFukWwyRTZ
+         oePm89xy7HvNuxEwjrDdliVJv8uhQJYZZ0EF7kt1OzlYkjACdM2lhm6sKINVMl4yfEHs
+         /n45NIskAHVCOIWs/dUpINrbpmklIxCcKtd0D2J8xG9Cp4laqPDb7JMFn8/oVNDz+D1D
+         S/8Te8ylPXfHQN+BoLyZEUz0wU+bLDRN0aKYzytBg7HalsIzpiUHw7aUrtp5g4RrT6Mu
+         QBDnxLBS8cXHHoGsgQ+yKlhy6/G+VdKdJ5kmdRYMMByTkl8Htn4Fl5Rrfqz7v698FjCG
+         ZgGg==
+X-Gm-Message-State: ACrzQf3qKXiYH2bTF/V7W+KYEPbYSZFWq3mHaOJ+F9QxGwXytCW5VMZ8
+        8x8ls2kxeItcft8wdMy0nvoy01xzlmnvALQO
+X-Google-Smtp-Source: AMsMyM5t1JhreBtatSfnKTTKPGS84TrGl9GhuTEiy60uIooQuvggjqh5URIINlBdoD2aFCHbQSXkCA==
+X-Received: by 2002:a17:902:db12:b0:178:1f91:74e6 with SMTP id m18-20020a170902db1200b001781f9174e6mr29787222plx.100.1664319388738;
+        Tue, 27 Sep 2022 15:56:28 -0700 (PDT)
+Received: from localhost ([76.146.1.42])
+        by smtp.gmail.com with ESMTPSA id p125-20020a625b83000000b0052d432b4cc0sm2359967pfb.33.2022.09.27.15.56.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Sep 2022 15:56:27 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     =?utf-8?Q?P=C3=A9ter?= Ujfalusi <peter.ujfalusi@gmail.com>,
+        dmaengine@vger.kernel.org
+Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Nicolas Frayer <nfrayer@baylibre.com>
+Subject: Re: [PATCH 3/3] dma/ti: convert PSIL to be buildable as module
+In-Reply-To: <390efbdd-6bb2-b1bb-7c4f-9c6f9032876a@gmail.com>
+References: <20220926181848.2917639-1-khilman@baylibre.com>
+ <20220926181848.2917639-4-khilman@baylibre.com>
+ <4c9f0284-f8d0-75e5-8bc9-944b040f9edb@gmail.com>
+ <7hfsgeezqx.fsf@baylibre.com>
+ <390efbdd-6bb2-b1bb-7c4f-9c6f9032876a@gmail.com>
+Date:   Tue, 27 Sep 2022 15:56:27 -0700
+Message-ID: <7hmtakxw84.fsf@baylibre.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V4 XDMA 2/2] dmaengine: xilinx: xdma: Add user logic
- interrupt support
-Content-Language: en-US
-To:     =?UTF-8?Q?Martin_T=c5=afma?= <tumic@gpxsee.org>,
-        <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <trix@redhat.com>
-CC:     <max.zhen@amd.com>, <sonal.santan@amd.com>, <larry.liu@amd.com>,
-        <brian.xu@amd.com>
-References: <1663871905-60498-1-git-send-email-lizhi.hou@amd.com>
- <1663871905-60498-3-git-send-email-lizhi.hou@amd.com>
- <a2b5c35d-ced2-ff83-c550-4bbf29973b80@gpxsee.org>
- <64388266-1707-ee20-c3ab-edb67ada68dc@amd.com>
- <c0430eb7-d607-acfd-201a-db56db982309@gpxsee.org>
- <5f77987e-49bc-e035-19e0-52c25f4adc7e@amd.com>
- <68fdd2a3-b881-470b-c5b3-0f2fc881ed27@gpxsee.org>
-From:   Lizhi Hou <lizhi.hou@amd.com>
-In-Reply-To: <68fdd2a3-b881-470b-c5b3-0f2fc881ed27@gpxsee.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT027:EE_|DM6PR12MB4155:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5dfd39a7-9081-4662-9cd1-08daa0b42886
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: CloMndp4jEWdH1rSPvyMSVwaKZ9vHeQHxsB/k7VljAj2fZMCF1qkHjqJaYnm28A6YwKAz/GPVXI4RcXYlU9kIAkXyOZfEsexHCdMDEYAMmyweBUZFiKM6vulKQNpfXlTwGF2+SJKpsbO6QydTjA5VWTr8dPTcDE+lP2SmjrIUz+PIgFRBvVACJnr75uxZky5mhvo3Wcjh2yu2dfS/CVLPaLEdaWjH8huK9yxq9mXYuzjZWZMOu45BHTsLYMK+hY1soz2W1GNGvUDEgkbSyRvcTJSH4WlWyOiQd9OASQjjWNsdmdegBFXa/jIgkiy7hswKzHJFPvoxMCDGAcRzIETSkEhSX1hiZk++zm6xb0OFZpnOduy1PyFzcoSVZqZdvV+wWL4nzVNEumpdXlmrzvHaLUX6nBjEht52mtvOP2QGIKk+2blXI4q/Cw3DJZL1TAH+pWa6XN9OfKr/MnwU5Cn9yHkJi1OITzKXhMLLcp+arFRPSoU+BH4Dz3JSaXJZzQfFhzswUzFd8sHvq5/fuLtoRLH5l+/hoL2LCyDV6SYoTiKF7PAqdCYiQZuEVyDJdXLLMGG6kXpScT9mDB6OTMLKs0MarYOVrI+clw0vhuw2MoG7Pc630bN9hYVYhpZ1HNipcysf3L1bumXyhB5IR903H0nX/t37gBX0mBI5IfwXee9JOX3xqfEfMlSg4pnwuh1bkdIxwXhfMlnJC9XdV8CZ/jfolbGGDhwTAbTFLGAS59kOohG66N/E2XM/EdpQMFNGwgwPe8DBDITwtnIWWuJ+3D0hdSWfx/Q8kuTAgaB8TjCIm7rXC8HPAjMUfKjs5YVvpSB4htaEkBdFppDGf2Dsw==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(396003)(376002)(346002)(136003)(451199015)(40470700004)(46966006)(36840700001)(70206006)(70586007)(81166007)(356005)(4326008)(8676002)(5660300002)(31696002)(86362001)(44832011)(2906002)(2616005)(8936002)(186003)(66574015)(426003)(336012)(83380400001)(316002)(478600001)(41300700001)(40460700003)(26005)(36860700001)(53546011)(110136005)(54906003)(82740400003)(16576012)(47076005)(36756003)(31686004)(82310400005)(40480700001)(36900700001)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Sep 2022 18:14:45.9877
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5dfd39a7-9081-4662-9cd1-08daa0b42886
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT027.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4155
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -112,76 +74,99 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi P=C3=A9ter
 
-On 9/27/22 10:54, Martin Tůma wrote:
-> On 27. 09. 22 19:18, Lizhi Hou wrote:
->>
->> On 9/27/22 09:46, Martin Tůma wrote:
->>> On 27. 09. 22 18:28, Lizhi Hou wrote:
+P=C3=A9ter Ujfalusi <peter.ujfalusi@gmail.com> writes:
+
+> On 26/09/2022 21:50, Kevin Hilman wrote:
+>> P=C3=A9ter Ujfalusi <peter.ujfalusi@gmail.com> writes:
+>>=20
+>>> Hi Kevin,
 >>>
->>>> Okay, I got the point. How about changing request/remove APIs to 
->>>> enable/disable APIs as below
+>>> On 9/26/22 21:18, Kevin Hilman wrote:
+>>>> map symbols need EXPORT_SYMBOL and files need MODULE_LICENSE.
 >>>>
->>>>       xdma_enable_user_irq(struct platform_device *pdev, u32 
->>>> user_irq_index, u32 *irq)
+>>>> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+>>>> ---
+>>>>   drivers/dma/ti/Kconfig          | 3 ++-
+>>>>   drivers/dma/ti/k3-psil-am62.c   | 4 ++++
+>>>>   drivers/dma/ti/k3-psil-am64.c   | 4 ++++
+>>>>   drivers/dma/ti/k3-psil-am654.c  | 4 ++++
+>>>>   drivers/dma/ti/k3-psil-j7200.c  | 4 ++++
+>>>>   drivers/dma/ti/k3-psil-j721e.c  | 4 ++++
+>>>>   drivers/dma/ti/k3-psil-j721s2.c | 4 ++++
+>>>>   drivers/dma/ti/k3-psil.c        | 2 ++
+>>>>   8 files changed, 28 insertions(+), 1 deletion(-)
 >>>>
->>>>              user_irq_index: user logic interrupt wire index. (XDMA 
->>>> driver determines how system IRQs are mapped to DMA channels and 
->>>> user logic wires)
->>>>
->>>>              irq: IRQ number returned for registering interrupt 
->>>> handler (request_irq()) or passing to existing platform driver.
->>>>
->>>>      xdma_disable_user_irq(struct platform_device *pdev, u32 
->>>> user_irq_index)
->>>>
->>>> Does this make sense to you?
->>>>
+>>>> diff --git a/drivers/dma/ti/Kconfig b/drivers/dma/ti/Kconfig
+>>>> index f196be3b222f..2adc2cca10e9 100644
+>>>> --- a/drivers/dma/ti/Kconfig
+>>>> +++ b/drivers/dma/ti/Kconfig
+>>>> @@ -56,7 +56,8 @@ config TI_K3_UDMA_GLUE_LAYER
+>>>>   	  If unsure, say N.
+>>>>=20=20=20
+>>>>   config TI_K3_PSIL
+>>>> -	bool
+>>>> +       tristate
+>>>> +       default TI_K3_UDMA
+>>>>=20=20=20
+>>>>   config TI_DMA_CROSSBAR
+>>>>   	bool
+>>>> diff --git a/drivers/dma/ti/k3-psil-am62.c b/drivers/dma/ti/k3-psil-am=
+62.c
+>>>> index 2b6fd6e37c61..7c4ca85f68b1 100644
+>>>> --- a/drivers/dma/ti/k3-psil-am62.c
+>>>> +++ b/drivers/dma/ti/k3-psil-am62.c
+>>>> @@ -4,6 +4,7 @@
+>>>>    */
+>>>>=20=20=20
+>>>>   #include <linux/kernel.h>
+>>>> +#include <linux/module.h>
+>>>>=20=20=20
+>>>>   #include "k3-psil-priv.h"
+>>>>=20=20=20
+>>>> @@ -184,3 +185,6 @@ struct psil_ep_map am62_ep_map =3D {
+>>>>   	.dst =3D am62_dst_ep_map,
+>>>>   	.dst_count =3D ARRAY_SIZE(am62_dst_ep_map),
+>>>>   };
+>>>> +EXPORT_SYMBOL_GPL(am62_ep_map);
 >>>
->>> I think even the "irq" parameter in the enable function is surplus 
->>> as the parent driver (the driver of the actual PCIe card) knows* 
->>> what PCI irq he has to allocate without XDMA providing the number.
->>>
->>> xdma_enable_user_irq(struct platform_device *pdev, u32 user_irq_index);
->>> xdma_disable_user_irq(struct platform_device *pdev, u32 
->>> user_irq_index);
->>>
->>> should be all that is needed.
->>>
->>> M.
->>>
->>> * something like:
->>> pci_irq_vector((pdev), PCI_BAR_ID) + NUM_C2H_CHANNELS + 
->>> NUM_H2C_CHANNELS
->>> can be used from the PCIe driver
->>
->> How does parent driver know the first few vectors will be assigned to 
->> DMA channel?  Parent diver should not assume the first 
->> (NUM_C2H_CHANNELS+NUM_H2C_CHANNELS) are for DMA channel.
->>
->> Parent driver passes the system IRQ range  to XDMA driver, and only 
->> XDMA driver knows what IRQs are used by DMA channel and what IRQs are 
->> mapped to user logic wires. I would keep the "u32 *irq" argument.
->>
+>>> Wouldn't it be better to build one module (k3-psil.ko) and link all the
+>>> platform libs into that?
+>>> They are unconditionally built in all cases anyways and makes the lsmod
+>>> under control.
+>>> And no need to export these maps at all is a plus.
+>>=20
+>> I guess that's one option, but seems to be to be the wrong direction for
+>> a modular kernel.  To me, it seems like the next step would be to make
+>> it so only the SoC specific module is loaded instead of always loading
+>> them all.
 >
-> The parent driver knows how much DMA channels it wants/allocates. If 
-> it is possible to allocate different IRQs than the first 
-> NUM_C2H_CHANNELS + NUM_H2C_CHANNELS to the XDMA IP core, than that 
-> parameter may be needed, but I haven't seen such HW. Moreover, every 
-> parent driver author should IMHO know how the channel and user IRQs 
-> are mapped in their specific HW configuration so this info can be 
-> "hard-wired" in the parent driver, but I'm fine with it when the irq 
-> parameter is kept anyway. All I really need is that the enable/disable 
-> logic is split from the irq allocate/register logic so I can use the 
-> other platform drivers.
+> The PSI-L map is a library atm and exporting all the maps outside of the=
+=20
+> PSI-L library is wrong. We shall have fixed API to look up (and update)=20
+> a PSI-L endpoint configuration and only that API shall be allowed.
 >
-> M.
+> I prefer to have a single .ko binary for the PSI-L library/database for=20
+> now. Optionally the individual SoC maps could be marked as init data and=
+=20
+> we could make a copy of the one that is needed on the booted device.
+>
+> For SoC only loading this whole library way must be reworked to a=20
+> platform or a bus driver (the bus description via DT was shot down=20
+> during the initial UDMA submission, fyi). So you need to find a 'device'=
+=20
+> which would probe the PSI-L map and only load the map that is needed.
+>
+> Furthermore: having the individual maps as separate .ko objects does not=
+=20
+> make much sense as none of them can be removed runtime, the symbols are=20
+> used in the 'core' library.
 
-Thanks Mark, all your comments are very helpful. And glad to know you 
-are fine with irq parameter. The IRQ binding is set by xdma driver ( 
-xdma_set_vector_reg() ). That means xdma driver is able to map any 
-system IRQ to dma channel or user logic. That is why I prefer to keep 
-irq parameter. Just a FYI.
+OK, I understand.  I'll send a v2 with everything built into a single
+.ko (but I'll leave the initdata stuff for an optional follow-up series,
+since I don't fully understand how/when all these maps are used.)
 
-Lizhi
+Thanks for your detailed review & suggestions,
 
+Kevin

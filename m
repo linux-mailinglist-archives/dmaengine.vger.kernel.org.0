@@ -2,60 +2,63 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55CDE5ED0B6
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Sep 2022 01:08:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CBB95ED0B8
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Sep 2022 01:08:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232071AbiI0XII (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 27 Sep 2022 19:08:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44558 "EHLO
+        id S232192AbiI0XIK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 27 Sep 2022 19:08:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231773AbiI0XIH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 27 Sep 2022 19:08:07 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0E7C10CA47
-        for <dmaengine@vger.kernel.org>; Tue, 27 Sep 2022 16:08:06 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d10so9861044pfh.6
-        for <dmaengine@vger.kernel.org>; Tue, 27 Sep 2022 16:08:06 -0700 (PDT)
+        with ESMTP id S231371AbiI0XIJ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 27 Sep 2022 19:08:09 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53F9A10C7B4
+        for <dmaengine@vger.kernel.org>; Tue, 27 Sep 2022 16:08:08 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id v10-20020a17090a634a00b00205e48cf845so156939pjs.4
+        for <dmaengine@vger.kernel.org>; Tue, 27 Sep 2022 16:08:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=nd4m0j2Ff4yr1SI153AzWT37h3dHh1P48RrPCZDi4ac=;
-        b=RgWXxFKo+UIx+9E3zmCcy1+XK43OEGkLyLS/BxuVp2xemzSRFZoZEeC5k5p0hmKrdS
-         9y23DR1FQxB24n/5Do5DplXtLgXzDgvVv7shWnMv0CxM0F9rAxzhAr69GHy4NENJzX1l
-         oW5DAQh6tG8xbWl2eyHwE8kJVvi1P+VcoP9wicZJUDf9WttMrp7PvxwawxlumHtREiKb
-         B1iA6feagfCpTrU4ONzM3XsDyYxgFyv5/l5qB5G7hhfvuzrpf8xBy8rpuKZeGpIlH8YO
-         vZQv5Hz/XmWC0P7U2Dwb2SnwUcQft1JryBS474RZX0agJm0GUq1L7b/SbGd6cgi8kDHT
-         ojnQ==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
+        bh=/0Wgb/pUWIq+NWeSNBH6i++oWwTqz1d9Kg9pALwjvjA=;
+        b=DvNf2QAz0UeP6EdWSsJ0nLp7UC/cTYt1i+tB6cGYeQOQmAvWQhnvHRTda6G8CT3LUk
+         mbCmI0RCl74H4fto4GkN5wPH1Sp5wM5BwZqOHEsBMF3nUjAQjhr+sKgNXAT/gUxIaxLy
+         TS0GtqYNLZTbvG9W08ShNreSUrTW7Odg64X5lbKYiuW1IDtP4YIZueUASu63Lb63H3EF
+         MsuWjw3bxeaJawYs9zIDUEq96bVL5uIMj0e0tlSpES+mCxUsy11ljhhgPlzQ8e7SL1Xr
+         s/pXXQamNyJhPCmk8yrZjIPI4SSTUJISb5QBsMYOpH+3kPZX+kjIi+j++pVEb0+yxO1f
+         2bVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=nd4m0j2Ff4yr1SI153AzWT37h3dHh1P48RrPCZDi4ac=;
-        b=G5koO1jHUp1yszoF5C7mnNyeTyMcV03a9JBg1+4yIkV4I+mW6s7PN7J9Xdl7SQsVT2
-         X0hg7lR//Ome0YnJazVgMGUU5Hbx6NZ6Ay8uPWkpYXVdrXX7bYkJrwgGPmXkKbxmKOoF
-         CiQU3+UghHDHju9MK18bzJoTZ6ijqq1XHBQTDzeVXoAPABmXeU/tDq0DwUrGig8BxAgA
-         A2WwOXBjAVAzgQdlZTg2eZI31liAaZcrrg7HJ3CpdfXEl3rYteqNTSCcW8SS8qB1nRY+
-         GXQoYEf6yVITi7OuFyFbbApFOcD9w16IC1tkfhluAhm5Z8hQ5nPC4xb1ypmQkt7bJKpI
-         EN/A==
-X-Gm-Message-State: ACrzQf3dgSNqIwQLb4Tr50O44f1dUCnSMITU36yA7/fY1HkCQMMPD+Ba
-        B+1jEY/t3IMGc/ZniEOAbcsNgV5Ebo60fwR1
-X-Google-Smtp-Source: AMsMyM5C+Shf0TZRjlFvSJFPI2e6VNH3r4FQKeSMLtoBRayYHfSd4f6/1KYR2ZjvIG7zSTR7yoY7sg==
-X-Received: by 2002:a05:6a00:1911:b0:545:cdf0:a61f with SMTP id y17-20020a056a00191100b00545cdf0a61fmr30634434pfi.32.1664320086141;
-        Tue, 27 Sep 2022 16:08:06 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=/0Wgb/pUWIq+NWeSNBH6i++oWwTqz1d9Kg9pALwjvjA=;
+        b=vuc3cRUpS653gJUfkOqu5hLk3mP+bGVTkHWh9hPFb7m0C1ctfb1WnruV8iukP3Qo8K
+         8D8uM2Vt4ZOhtJrkmNMX8nOhhG+WCr27dx+0FQPfZV6+b7un5G5VbkEdHijfNmrIU+Gl
+         FiZVlBcJb5DprtK+n4hGlWru2ZPcK0FTI4YtJH6JYCDu2OLDcyc2Jweflob2zga3QJxT
+         Shvh5PzLONAHX7Mgu35S+pBVppn43astwWhBs9Mi2tQgKsBn5mM+HNo4LZRFWS0RRuf0
+         JA8CBD6wUmJZCIy+GoDAgzv90D5VERsC7mjqNTcsIlntBM0Jdd3x/QNtQiltFqcVdTHL
+         40QA==
+X-Gm-Message-State: ACrzQf2QhgBZ5ZExSl+EUFDsoyTcT+Zx0l0H+/hQDuGr1D1720TI8fzN
+        ylKYl0yBBluWNqieskWa/Q4xYA==
+X-Google-Smtp-Source: AMsMyM5wYuSJqm+bKdlRIYCXAy/FatWIyUqT1yDRQc5JfrKgKJaC3qlgpz/ZghVX344Tk4e8jXrotA==
+X-Received: by 2002:a17:902:c1cb:b0:179:edcc:2bf9 with SMTP id c11-20020a170902c1cb00b00179edcc2bf9mr4736379plc.110.1664320087794;
+        Tue, 27 Sep 2022 16:08:07 -0700 (PDT)
 Received: from localhost ([76.146.1.42])
-        by smtp.gmail.com with ESMTPSA id v24-20020a634818000000b0042b2311f749sm2085928pga.19.2022.09.27.16.08.04
+        by smtp.gmail.com with ESMTPSA id n3-20020a170903110300b00177e590df96sm2134637plh.118.2022.09.27.16.08.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Sep 2022 16:08:04 -0700 (PDT)
+        Tue, 27 Sep 2022 16:08:07 -0700 (PDT)
 From:   Kevin Hilman <khilman@baylibre.com>
 To:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
         dmaengine@vger.kernel.org
 Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Nicolas Frayer <nfrayer@baylibre.com>
-Subject: [PATCH v2 0/3] dma/ti: enable udma and psil to be built as modules 
-Date:   Tue, 27 Sep 2022 16:08:01 -0700
-Message-Id: <20220927230804.4085579-1-khilman@baylibre.com>
+Subject: [PATCH v2 1/3] of/irq: export of_msi_get_domain
+Date:   Tue, 27 Sep 2022 16:08:02 -0700
+Message-Id: <20220927230804.4085579-2-khilman@baylibre.com>
 X-Mailer: git-send-email 2.34.0
+In-Reply-To: <20220927230804.4085579-1-khilman@baylibre.com>
+References: <20220927230804.4085579-1-khilman@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -67,30 +70,29 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Enable the UDMA driver & glue and PSIL lib to be built & loaded as modules.                                                                                                   
-                                                                                                                                                                               
-The defauilt Kconfig settings are not changed, so default upstream is                                                                                                          
-still to be built in.  This series just enables the option to build as                                                                                                         
-modules.      
+Export of_mis_get_domain to enable it for users from outside.
 
-v1->v2:
-- rework PSIL lib into a single .ko
+Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Link: https://lore.kernel.org/r/20200122104723.16955-1-peter.ujfalusi@ti.com
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+---
+ drivers/of/irq.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Kevin Hilman (3):
-  of/irq: export of_msi_get_domain
-  dma/ti: convert k3-udma to module
-  dma/ti: convert PSIL to be buildable as module
-
- drivers/dma/ti/Kconfig        |  7 +++---
- drivers/dma/ti/Makefile       | 15 +++++++------
- drivers/dma/ti/k3-psil.c      |  2 ++
- drivers/dma/ti/k3-udma-glue.c |  5 ++++-
- drivers/dma/ti/k3-udma.c      | 40 +++++------------------------------
- drivers/of/irq.c              |  1 +
- 6 files changed, 24 insertions(+), 46 deletions(-)
-
-
-base-commit: 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index d22f605fa7ee..c9308baa32c5 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -727,6 +727,7 @@ struct irq_domain *of_msi_get_domain(struct device *dev,
+ 
+ 	return NULL;
+ }
++EXPORT_SYMBOL_GPL(of_msi_get_domain);
+ 
+ /**
+  * of_msi_configure - Set the msi_domain field of a device
 -- 
 2.34.0
 

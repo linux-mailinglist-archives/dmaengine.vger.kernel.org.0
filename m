@@ -2,67 +2,70 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA5985EDE2E
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Sep 2022 15:53:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 691995EDE39
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Sep 2022 15:54:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234185AbiI1NxN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 28 Sep 2022 09:53:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53866 "EHLO
+        id S234236AbiI1NyX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 28 Sep 2022 09:54:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234182AbiI1NxM (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 28 Sep 2022 09:53:12 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D1F683062;
-        Wed, 28 Sep 2022 06:53:10 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id a3so20427546lfk.9;
-        Wed, 28 Sep 2022 06:53:10 -0700 (PDT)
+        with ESMTP id S231703AbiI1NyU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 28 Sep 2022 09:54:20 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A0398598;
+        Wed, 28 Sep 2022 06:54:17 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id bu25so18596152lfb.3;
+        Wed, 28 Sep 2022 06:54:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date;
-        bh=yBiN95FwXRcgfqH7XG/uqubJ1q9Z8t5K+fsUnYyXFIk=;
-        b=ENjf752b9fFgA9usSparRmdSBfWBFzJc8yFOGpCdx+SQgL9fwTlDLHYguW3fAom/E2
-         etuJIZtAPLEc7pHLUYwtVUWAJxZgdNI/bAXEqxDfMaYGopNmU8UVocqUWvsISjdTLRqU
-         JODX4DhpOVyLFNiCjcKyuIJWiVd4ZwEDdGhVd7FKyjPSfH/rKc5xblVt7MzRDuHb7q6l
-         TljJoRcclQPPpRgI2g0UyXIRfo5rMMFOVfXJTIobsmFFR/6at1PySrL8kPtfmzOOytCw
-         +S0pRovvBx1F3h5iLRrFns3ffcbOfXQjprTHKlyZcAfMLhWasyRT3QiVu4Bjv+bgMTVR
-         oKCA==
+        bh=pJaOmlDhm2J/Qv/9jO+uJFLo/xFaMO8ypgUu9QLNXjQ=;
+        b=FQjoFIH0M+6s8FrYI/bYP7fabSnsu/OgjzEb1aVrl5++pl8CMC+Jjf4lDvCX5XJpzb
+         YU2uBA+Bf9CmTn+vaDEgIcSV/RwxzLeowKUKZ06qsqVSLtWeTBazJ9U18yVs/OR3gkos
+         4S30CiySj9soED9Q74EjKR7piBbNtFJ6AMiQJQkrq3jKAdRU7G0NKClGqhGj0FJmHSqj
+         TZyVD2RDYvNTMKiCq50irtJ2f87xPG6pY+C9qBQ3L2cf15fdSRqB6G8NvbUqRoWSXn3V
+         CyqbGVsBSkN1/VuT5BvBfCMZ6NFDjqabc92L7N2r7BWuhBMIdE8ZWj0me4ZRa+0+gKc/
+         m7pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=yBiN95FwXRcgfqH7XG/uqubJ1q9Z8t5K+fsUnYyXFIk=;
-        b=jKFyG3NCxtKoSUnkjW6LxJ8VmrN+GkCZqbfGjvoEyN+kPTjpkFLwW65ogsADKqBy+Q
-         vMGDZdD7VkxZxCAz2jDX/BU3uA3qBlbmNAWiip8nth3f3KY4mWu53uytu5J2oPog6I4N
-         IX5275A36d37dJzlQZFhCXlokdj+InyHLfwNSZWxWpAZKCV1067S/MJH3XCpU773R+79
-         NuAcrsR+Yszjc7iE5X3cNnZEM1pLN3uQ7WqCLVgaOELc4bWa/4kW6G+2f4DTwVtYIFD0
-         yHMKG3iQZw2HV0RMN9ikSmw29bUV5Onmyg3IWT+GqTBV9K6ZTceuLM+jEi6TC3EM9Kqe
-         Ah9A==
-X-Gm-Message-State: ACrzQf2HMVEL3qP4Hf2xE/E3WX6d15zwyLFkwciQfaG+jpZA9uphrcKy
-        xmJeyLOcjJ6kMDSPd0qQi7E=
-X-Google-Smtp-Source: AMsMyM4PrduexhWMJN2qzdPe5tnerRxzUuCeMIbhv4g8ynQZyAWHUFk4rWTvuD0KvdIn0bqxVNimEg==
-X-Received: by 2002:a05:6512:2621:b0:491:10ba:321a with SMTP id bt33-20020a056512262100b0049110ba321amr12449601lfb.187.1664373188837;
-        Wed, 28 Sep 2022 06:53:08 -0700 (PDT)
+        bh=pJaOmlDhm2J/Qv/9jO+uJFLo/xFaMO8ypgUu9QLNXjQ=;
+        b=zagGA5oWRaD7S7OEaUuug9dvIWn67sF2cwyK3DmzcmumOPIhhtIigg1i95dFpfuJaJ
+         th23HalrifbsSoD1IHlTtcs0UuhSEAgyMAvSmSEicZmiPzKJwLzc6QtS3LIQu2/t6iQ8
+         pYjgB/AiLhbm5fdAiwKPzcWBA0741HVflZZBS+dWDjPmwnjZ5gEIMeV+qlE7U3M/rWQ6
+         PH6tsOKfuLx+/KCkdb7Fj7fv01kpMw7EAnBDCy7YdZ2z54GT6PyEoX2W8X21RF3GeMdo
+         OArUwEeJpwz/EPMnM242+LEmUe5nH3SeBFQAJe9vfUdl7v9iaoj4DMTBZ9g6ZI2nI51k
+         Nzow==
+X-Gm-Message-State: ACrzQf0LAYWA76NCg3X48iTUJ/rrNAtzT9fnKU/k9p1VqqsEEGt1nBb5
+        O1Wl67y1JoB9yc2RlT3jRx8=
+X-Google-Smtp-Source: AMsMyM52L82ePjStOypgNj+CtqLqDyXMXbCIl4plBUXZUHXjcAtcth2MnLXLqw+8XWKoY7AYVYnGVQ==
+X-Received: by 2002:a05:6512:31c8:b0:49c:db9d:bb97 with SMTP id j8-20020a05651231c800b0049cdb9dbb97mr12881483lfe.12.1664373255370;
+        Wed, 28 Sep 2022 06:54:15 -0700 (PDT)
 Received: from ?IPV6:2001:999:270:b554:a1b6:ee54:d32:c388? ([2001:999:270:b554:a1b6:ee54:d32:c388])
-        by smtp.gmail.com with ESMTPSA id f26-20020a05651c02da00b00268b85321eesm442108ljo.113.2022.09.28.06.53.07
+        by smtp.gmail.com with ESMTPSA id d28-20020ac25edc000000b0049462af8614sm479500lfq.145.2022.09.28.06.54.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Sep 2022 06:53:07 -0700 (PDT)
-Message-ID: <9e628dc7-6453-7a96-87ca-9f1efa8bedc7@gmail.com>
-Date:   Wed, 28 Sep 2022 16:53:28 +0300
+        Wed, 28 Sep 2022 06:54:14 -0700 (PDT)
+Message-ID: <007480c6-890d-a5c4-8b36-9aeb95de690b@gmail.com>
+Date:   Wed, 28 Sep 2022 16:54:35 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.0
-Subject: Re: [PATCH v2 3/3] dma/ti: convert PSIL to be buildable as module
+Subject: Re: [PATCH 0/3] dma/ti: enable udma and psil to be built as modules
+Content-Language: en-US
 To:     Kevin Hilman <khilman@baylibre.com>, dmaengine@vger.kernel.org
 Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Nicolas Frayer <nfrayer@baylibre.com>
-References: <20220927230804.4085579-1-khilman@baylibre.com>
- <20220927230804.4085579-4-khilman@baylibre.com>
-Content-Language: en-US
+References: <20220926181848.2917639-1-khilman@baylibre.com>
+ <cf3194ec-0952-fa7a-cc05-6a60e7e66cf0@gmail.com>
+ <7h7d1pg7c4.fsf@baylibre.com>
+ <541337f7-1c0d-3ea4-d959-cd5aed83e615@gmail.com>
+ <7hfsgcxvl3.fsf@baylibre.com>
 From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <20220927230804.4085579-4-khilman@baylibre.com>
+In-Reply-To: <7hfsgcxvl3.fsf@baylibre.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -75,82 +78,19 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Kevin,
 
-On 28/09/2022 02:08, Kevin Hilman wrote:
-> Combine all the SoC specific files into a single lib that can be
-> built-in or built as a module.
+
+On 28/09/2022 02:10, Kevin Hilman wrote:
+>> When I did the module support there were also a tisci dependency which
+>> for some reason took too long for me to be able to send these.
+>> I can send my version later if it is OK, but if Nicolas have a better
+>> take on it, I don't mind.
 > 
-> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-> ---
->   drivers/dma/ti/Kconfig   |  3 ++-
->   drivers/dma/ti/Makefile  | 15 ++++++++-------
->   drivers/dma/ti/k3-psil.c |  2 ++
->   3 files changed, 12 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/dma/ti/Kconfig b/drivers/dma/ti/Kconfig
-> index f196be3b222f..2adc2cca10e9 100644
-> --- a/drivers/dma/ti/Kconfig
-> +++ b/drivers/dma/ti/Kconfig
-> @@ -56,7 +56,8 @@ config TI_K3_UDMA_GLUE_LAYER
->   	  If unsure, say N.
->   
->   config TI_K3_PSIL
-> -	bool
-> +       tristate
-> +       default TI_K3_UDMA
->   
->   config TI_DMA_CROSSBAR
->   	bool
-> diff --git a/drivers/dma/ti/Makefile b/drivers/dma/ti/Makefile
-> index d3a303f0d7c6..383bbd6d12b9 100644
-> --- a/drivers/dma/ti/Makefile
-> +++ b/drivers/dma/ti/Makefile
-> @@ -4,11 +4,12 @@ obj-$(CONFIG_TI_EDMA) += edma.o
->   obj-$(CONFIG_DMA_OMAP) += omap-dma.o
->   obj-$(CONFIG_TI_K3_UDMA) += k3-udma.o
->   obj-$(CONFIG_TI_K3_UDMA_GLUE_LAYER) += k3-udma-glue.o
-> -obj-$(CONFIG_TI_K3_PSIL) += k3-psil.o \
-> -			    k3-psil-am654.o \
-> -			    k3-psil-j721e.o \
-> -			    k3-psil-j7200.o \
-> -			    k3-psil-am64.o \
-> -			    k3-psil-j721s2.o \
-> -			    k3-psil-am62.o
-> +obj-$(CONFIG_TI_K3_PSIL) += k3-psil-lib.o
-> +k3-psil-lib-objs := k3-psil.o \
-> +		    k3-psil-am654.o \
-> +		    k3-psil-j721e.o \
-> +		    k3-psil-j7200.o \
-> +		    k3-psil-am64.o \
-> +		    k3-psil-j721s2.o \
-> +		    k3-psil-am62.o
+> We've got a handful of other conversions coming for a fully modular
+> kernel, so I'm sure Nicolas would be happy if you took care of
+> ringacc. :)
 
-Can you reverse the order? First declare the objects needed for k3-psil-lib.
-It is more natural and easier to read.
-
-With that change you can add my:
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-
-
->   obj-$(CONFIG_TI_DMA_CROSSBAR) += dma-crossbar.o
-> diff --git a/drivers/dma/ti/k3-psil.c b/drivers/dma/ti/k3-psil.c
-> index 761a384093d2..8b6533a1eeeb 100644
-> --- a/drivers/dma/ti/k3-psil.c
-> +++ b/drivers/dma/ti/k3-psil.c
-> @@ -5,6 +5,7 @@
->    */
->   
->   #include <linux/kernel.h>
-> +#include <linux/module.h>
->   #include <linux/device.h>
->   #include <linux/init.h>
->   #include <linux/mutex.h>
-> @@ -101,3 +102,4 @@ int psil_set_new_ep_config(struct device *dev, const char *name,
->   	return 0;
->   }
->   EXPORT_SYMBOL_GPL(psil_set_new_ep_config);
-> +MODULE_LICENSE("GPL v2");
+Sure, I will send it when the UDMA part is merged.
 
 -- 
 Péter

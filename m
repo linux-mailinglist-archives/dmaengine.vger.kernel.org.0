@@ -2,94 +2,193 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6C365EDF6C
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Sep 2022 17:00:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23D8F5EE029
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Sep 2022 17:23:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234680AbiI1PAX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 28 Sep 2022 11:00:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35684 "EHLO
+        id S233049AbiI1PXO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 28 Sep 2022 11:23:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234628AbiI1PAF (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 28 Sep 2022 11:00:05 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF1412BE2E;
-        Wed, 28 Sep 2022 08:00:00 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id e18so8691854wmq.3;
-        Wed, 28 Sep 2022 08:00:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date;
-        bh=fFiLND83FCjvj8QwqbyEssDIGtRuYehgQzyyJqOIdyc=;
-        b=UQ3q/e1ke5sijr2KhSsWJYHOGV0H+c97fEYqLx2EepdISeaRTbn66VWqkWHMsT5aPv
-         frhEcMl4SIyG5IbklWvidgmPSFFWZZLWxLstHaeON/YLji3GVTkAVaSdAsiJVBCGTAHX
-         nsri/LyBsmour2b96MFsXtebmyN/+Yjz/XWNzbqK5HSHy5vuHEVnU3pSMvbykqqweDpF
-         mrLCM7WJkqZ5/qtHpAnU2JdxEycaDKXpxU/F1sWNKgX7pkOPzLAz42fDCuwNkLD6Vb+9
-         qTWE+0tt9IkVQWUT+EqkCW4QRW5NtQ+cWVb18bhYVKLbgTwyl6fMeXeeTtdHPXHdjoZ4
-         k/eQ==
+        with ESMTP id S234161AbiI1PWk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 28 Sep 2022 11:22:40 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0F745B055
+        for <dmaengine@vger.kernel.org>; Wed, 28 Sep 2022 08:21:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1664378484;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xDmQ1DANCDaUuqhIrlX3xlqcUcfbmIgkqlY33q/Kj78=;
+        b=SDyqq/P33E4WoD4qSwEvrPgwO3c6Ld6N40BMWJIR0B2NOhtPz6H7GF7FbeE56LbETJJHjl
+        19ybmw5leD+kk6lrM0SsAyZAEDpWqabwsnAJ/Nf+obhphX0GwTHmZ6Xm7MfA6GGxt+YEuT
+        IdLQ5MAawIXlFag+9AAegWGMKBNLKVk=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-596-IPTzzn9IPIGVduQ7rG-xww-1; Wed, 28 Sep 2022 11:21:23 -0400
+X-MC-Unique: IPTzzn9IPIGVduQ7rG-xww-1
+Received: by mail-qt1-f198.google.com with SMTP id e8-20020ac85988000000b0035c39dd5eb9so9121321qte.16
+        for <dmaengine@vger.kernel.org>; Wed, 28 Sep 2022 08:21:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=fFiLND83FCjvj8QwqbyEssDIGtRuYehgQzyyJqOIdyc=;
-        b=zQCVz6XOS748eShP4CPR+AZPm6K7Z5u8fEJOmAQCzFjIE/8acEl2OMm4Ou+d4BmkvU
-         lX0RyeUm79QdMv68ETVwPYkaygE+LUayr0qz4r4NK3cw3egq9iqFC9ywOV1mDG0BH24J
-         9LpmSS/Z/n15VVVNIvGEBZCKWnKuW/1cXASTf95u37z1i7Cssig6+NSOyfm7NYj8SBrB
-         bU8kPL2IS+VVNf3MHMaC+/qMwM/zZ3LAWWIZAJL2+ywnVD972li19TOlnegHG/SLkUlj
-         4FM576H0qgoXeb8fhwYoLLydIdPSNscgC1Ajk5ITj9D7A2SFL5+oK7PhvKkqZ7i2rdOR
-         v15Q==
-X-Gm-Message-State: ACrzQf282mBO/zwnrU5WwUvpeDybP/Ndrp1Cpf03yHnY4rL8u2dq+DS6
-        rAM2gScT+rk02IYGC4m2ts8=
-X-Google-Smtp-Source: AMsMyM7lrfFC0VKPitQtgOmDtxRV+EymVgDdvtALG/htkm0zTcSAR6tU3+XXNjhkGB8g3q/eEEnlBw==
-X-Received: by 2002:a05:600c:3b12:b0:3b4:a6ea:1399 with SMTP id m18-20020a05600c3b1200b003b4a6ea1399mr7157848wms.49.1664377199052;
-        Wed, 28 Sep 2022 07:59:59 -0700 (PDT)
-Received: from Red ([2a01:cb1d:3d5:a100:264b:feff:fe03:2806])
-        by smtp.googlemail.com with ESMTPSA id x14-20020adfec0e000000b0022a297950cesm4547101wrn.23.2022.09.28.07.59.58
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=xDmQ1DANCDaUuqhIrlX3xlqcUcfbmIgkqlY33q/Kj78=;
+        b=audqfNPDqocbmJ32A4Uihi7rIQNkqKKFa0d9FiFm3gWKBl64w42fYDxP7j12Nk5eRy
+         hjcYDFpzf+lW0xE9hB4/NBE9OpvWvUPHwHX4nh0iTuU4vhLY++IKYy1TMYZeXaH/l8rt
+         t0sk3vRj6y5a+tMHNmNelIZ3sAJnLwpqFN2WihYlubx3L50FynH+KDNn/k5hSE/cEnxp
+         Nkp+PBFqYtUi6tWRQU5TMif8f9AONJlB/wU+xC+pJPZzZHOAjXegxhJrja/GKMaFeemr
+         AmkPXWt85KKnNDO3Mni7E9uiP8IEof2UQ9+6R6MceuWle2dVqyMSKS2DadqI2fJUg1Pz
+         w0Eg==
+X-Gm-Message-State: ACrzQf2giZB4hSFYg+bGeUMTkexA5/l6af+sS6tWcdhk226uGG0i8cUH
+        3crI7omX0GwhWXY67UO++XqpBZ7J6l4wgF6iZOH/hCyUkUA5oHKu0cIPdQZFDTsM+/kOwelK90+
+        qC7+Y+lDeMihbZRKYXK8X
+X-Received: by 2002:a05:6214:1bcd:b0:4af:646a:9793 with SMTP id m13-20020a0562141bcd00b004af646a9793mr15914886qvc.94.1664378482407;
+        Wed, 28 Sep 2022 08:21:22 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM73nezA3iYhO9c31xv3DWn4iUg7lZDa1ELdpZgByCB9Ae6jn/htBUoq53tpR7IwUkbPk7tmyw==
+X-Received: by 2002:a05:6214:1bcd:b0:4af:646a:9793 with SMTP id m13-20020a0562141bcd00b004af646a9793mr15914858qvc.94.1664378482032;
+        Wed, 28 Sep 2022 08:21:22 -0700 (PDT)
+Received: from localhost (ip98-179-76-75.ph.ph.cox.net. [98.179.76.75])
+        by smtp.gmail.com with ESMTPSA id m17-20020a05620a24d100b006cbcdc6efedsm3314206qkn.41.2022.09.28.08.21.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Sep 2022 07:59:58 -0700 (PDT)
-Date:   Wed, 28 Sep 2022 16:59:56 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        dmaengine@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Nicolas Frayer <nfrayer@baylibre.com>
-Subject: Re: [PATCH v2 2/3] dma/ti: convert k3-udma to module
-Message-ID: <YzRhbNd4Dse+zLSb@Red>
-References: <20220927230804.4085579-1-khilman@baylibre.com>
- <20220927230804.4085579-3-khilman@baylibre.com>
+        Wed, 28 Sep 2022 08:21:21 -0700 (PDT)
+Date:   Wed, 28 Sep 2022 08:21:20 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 2/2] dmaengine: idxd: track enabled workqueues in bitmap
+Message-ID: <20220928152120.3wsvc4iungzsmryn@cantor>
+References: <20220919215553.600246-1-jsnitsel@redhat.com>
+ <20220919215553.600246-3-jsnitsel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220927230804.4085579-3-khilman@baylibre.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220919215553.600246-3-jsnitsel@redhat.com>
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Le Tue, Sep 27, 2022 at 04:08:03PM -0700, Kevin Hilman a écrit :
-> Currently k3-udma driver is built as separate platform drivers with a
-> shared probe and identical code path, just differnet platform data.
+On Mon, Sep 19, 2022 at 02:55:53PM -0700, Jerry Snitselaar wrote:
+> Now that idxd_wq_disable_cleanup() sets the workqueue state to
+> IDXD_WQ_DISABLED, use a bitmap to track which workqueues have been
+> enabled. This will then be used to determine which workqueues
+> should be re-enabled when attempting a software reset to recover
+> from a device halt state.
 > 
-> To enable to build as module, convert the separate platform driver
-> into a single module_platform_driver with the data selection done via
-> compatible string and of_match.  The separate of_match tables are also
-> combined into a single table to avoid the multiple calls to
-> of_match_node()
+> Cc: Fenghua Yu <fenghua.yu@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> ---
+>  drivers/dma/idxd/device.c | 2 ++
+>  drivers/dma/idxd/idxd.h   | 2 ++
+>  drivers/dma/idxd/init.c   | 6 ++++++
+>  drivers/dma/idxd/irq.c    | 4 ++--
+>  drivers/dma/idxd/sysfs.c  | 1 +
+>  5 files changed, 13 insertions(+), 2 deletions(-)
 > 
-> Since all modern TI platforms using this are DT enabled, the removal
-> of separate platform_drivers shoul should nave no functional change.
-> 
-Hello
+> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+> index 31911e255ac1..f0c7d6d348e3 100644
+> --- a/drivers/dma/idxd/device.c
+> +++ b/drivers/dma/idxd/device.c
+> @@ -196,6 +196,7 @@ int idxd_wq_enable(struct idxd_wq *wq)
+>  	}
+>  
+>  	wq->state = IDXD_WQ_ENABLED;
+> +	set_bit(wq->id, idxd->wq_enable_map);
+>  	dev_dbg(dev, "WQ %d enabled\n", wq->id);
+>  	return 0;
+>  }
+> @@ -223,6 +224,7 @@ int idxd_wq_disable(struct idxd_wq *wq, bool reset_config)
+>  
+>  	if (reset_config)
+>  		idxd_wq_disable_cleanup(wq);
+> +	clear_bit(wq->id, idxd->wq_enable_map);
+>  	wq->state = IDXD_WQ_DISABLED;
+>  	dev_dbg(dev, "WQ %d disabled\n", wq->id);
+>  	return 0;
+> diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+> index fed0dfc1eaa8..f527a7f88b92 100644
+> --- a/drivers/dma/idxd/idxd.h
+> +++ b/drivers/dma/idxd/idxd.h
+> @@ -11,6 +11,7 @@
+>  #include <linux/idr.h>
+>  #include <linux/pci.h>
+>  #include <linux/ioasid.h>
+> +#include <linux/bitmap.h>
+>  #include <linux/perf_event.h>
+>  #include <uapi/linux/idxd.h>
+>  #include "registers.h"
+> @@ -299,6 +300,7 @@ struct idxd_device {
+>  	int rdbuf_limit;
+>  	int nr_rdbufs;		/* non-reserved read buffers */
+>  	unsigned int wqcfg_size;
+> +	unsigned long *wq_enable_map;
+>  
+>  	union sw_err_reg sw_err;
+>  	wait_queue_head_t cmd_waitq;
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index aa3478257ddb..7e27e69ff741 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
+> @@ -151,6 +151,12 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
+>  	if (!idxd->wqs)
+>  		return -ENOMEM;
+>  
+> +	idxd->wq_enable_map = bitmap_zalloc_node(idxd->max_wqs, GFP_KERNEL, dev_to_node(dev));
+> +	if (!idxd->wq_enable_map) {
+> +		kfree(idxd->wqs);
+> +		return -ENOMEM;
+> +	}
+> +
+>  	for (i = 0; i < idxd->max_wqs; i++) {
+>  		wq = kzalloc_node(sizeof(*wq), GFP_KERNEL, dev_to_node(dev));
+>  		if (!wq) {
+> diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+> index 743ead5ebc57..8efaf137fc65 100644
+> --- a/drivers/dma/idxd/irq.c
+> +++ b/drivers/dma/idxd/irq.c
+> @@ -49,9 +49,9 @@ static void idxd_device_reinit(struct work_struct *work)
+>  		goto out;
+>  
+>  	for (i = 0; i < idxd->max_wqs; i++) {
+> -		struct idxd_wq *wq = idxd->wqs[i];
+> +		if (test_bit(i, idxd->wq_enable_map)) {
+> +			struct idxd_wq *wq = idxd->wqs[i];
+>  
+> -		if (wq->state == IDXD_WQ_ENABLED) {
+>  			rc = idxd_wq_enable(wq);
+>  			if (rc < 0) {
+>  				dev_warn(dev, "Unable to re-enable wq %s\n",
 
-You have some typo in last sentence. (extra shoul, nave->have)
+Hi Dave and Fenghua,
 
-Regards
+Thinking about this last night, this should probably clear the bit here in
+the case where an error is returned from idxd_wq_enable here, yes? I can
+send a v2.
+
+
+> diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+> index 3f262a57441b..3325b16ed959 100644
+> --- a/drivers/dma/idxd/sysfs.c
+> +++ b/drivers/dma/idxd/sysfs.c
+> @@ -1405,6 +1405,7 @@ static void idxd_conf_device_release(struct device *dev)
+>  	struct idxd_device *idxd = confdev_to_idxd(dev);
+>  
+>  	kfree(idxd->groups);
+> +	bitmap_free(idxd->wq_enable_map);
+>  	kfree(idxd->wqs);
+>  	kfree(idxd->engines);
+>  	ida_free(&idxd_ida, idxd->id);
+> -- 
+> 2.37.2
+> 
+

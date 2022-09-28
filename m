@@ -2,74 +2,71 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 691995EDE39
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Sep 2022 15:54:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6C365EDF6C
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Sep 2022 17:00:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234236AbiI1NyX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 28 Sep 2022 09:54:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54630 "EHLO
+        id S234680AbiI1PAX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 28 Sep 2022 11:00:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231703AbiI1NyU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 28 Sep 2022 09:54:20 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A0398598;
-        Wed, 28 Sep 2022 06:54:17 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id bu25so18596152lfb.3;
-        Wed, 28 Sep 2022 06:54:16 -0700 (PDT)
+        with ESMTP id S234628AbiI1PAF (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 28 Sep 2022 11:00:05 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF1412BE2E;
+        Wed, 28 Sep 2022 08:00:00 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id e18so8691854wmq.3;
+        Wed, 28 Sep 2022 08:00:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=pJaOmlDhm2J/Qv/9jO+uJFLo/xFaMO8ypgUu9QLNXjQ=;
-        b=FQjoFIH0M+6s8FrYI/bYP7fabSnsu/OgjzEb1aVrl5++pl8CMC+Jjf4lDvCX5XJpzb
-         YU2uBA+Bf9CmTn+vaDEgIcSV/RwxzLeowKUKZ06qsqVSLtWeTBazJ9U18yVs/OR3gkos
-         4S30CiySj9soED9Q74EjKR7piBbNtFJ6AMiQJQkrq3jKAdRU7G0NKClGqhGj0FJmHSqj
-         TZyVD2RDYvNTMKiCq50irtJ2f87xPG6pY+C9qBQ3L2cf15fdSRqB6G8NvbUqRoWSXn3V
-         CyqbGVsBSkN1/VuT5BvBfCMZ6NFDjqabc92L7N2r7BWuhBMIdE8ZWj0me4ZRa+0+gKc/
-         m7pw==
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date;
+        bh=fFiLND83FCjvj8QwqbyEssDIGtRuYehgQzyyJqOIdyc=;
+        b=UQ3q/e1ke5sijr2KhSsWJYHOGV0H+c97fEYqLx2EepdISeaRTbn66VWqkWHMsT5aPv
+         frhEcMl4SIyG5IbklWvidgmPSFFWZZLWxLstHaeON/YLji3GVTkAVaSdAsiJVBCGTAHX
+         nsri/LyBsmour2b96MFsXtebmyN/+Yjz/XWNzbqK5HSHy5vuHEVnU3pSMvbykqqweDpF
+         mrLCM7WJkqZ5/qtHpAnU2JdxEycaDKXpxU/F1sWNKgX7pkOPzLAz42fDCuwNkLD6Vb+9
+         qTWE+0tt9IkVQWUT+EqkCW4QRW5NtQ+cWVb18bhYVKLbgTwyl6fMeXeeTtdHPXHdjoZ4
+         k/eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=pJaOmlDhm2J/Qv/9jO+uJFLo/xFaMO8ypgUu9QLNXjQ=;
-        b=zagGA5oWRaD7S7OEaUuug9dvIWn67sF2cwyK3DmzcmumOPIhhtIigg1i95dFpfuJaJ
-         th23HalrifbsSoD1IHlTtcs0UuhSEAgyMAvSmSEicZmiPzKJwLzc6QtS3LIQu2/t6iQ8
-         pYjgB/AiLhbm5fdAiwKPzcWBA0741HVflZZBS+dWDjPmwnjZ5gEIMeV+qlE7U3M/rWQ6
-         PH6tsOKfuLx+/KCkdb7Fj7fv01kpMw7EAnBDCy7YdZ2z54GT6PyEoX2W8X21RF3GeMdo
-         OArUwEeJpwz/EPMnM242+LEmUe5nH3SeBFQAJe9vfUdl7v9iaoj4DMTBZ9g6ZI2nI51k
-         Nzow==
-X-Gm-Message-State: ACrzQf0LAYWA76NCg3X48iTUJ/rrNAtzT9fnKU/k9p1VqqsEEGt1nBb5
-        O1Wl67y1JoB9yc2RlT3jRx8=
-X-Google-Smtp-Source: AMsMyM52L82ePjStOypgNj+CtqLqDyXMXbCIl4plBUXZUHXjcAtcth2MnLXLqw+8XWKoY7AYVYnGVQ==
-X-Received: by 2002:a05:6512:31c8:b0:49c:db9d:bb97 with SMTP id j8-20020a05651231c800b0049cdb9dbb97mr12881483lfe.12.1664373255370;
-        Wed, 28 Sep 2022 06:54:15 -0700 (PDT)
-Received: from ?IPV6:2001:999:270:b554:a1b6:ee54:d32:c388? ([2001:999:270:b554:a1b6:ee54:d32:c388])
-        by smtp.gmail.com with ESMTPSA id d28-20020ac25edc000000b0049462af8614sm479500lfq.145.2022.09.28.06.54.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Sep 2022 06:54:14 -0700 (PDT)
-Message-ID: <007480c6-890d-a5c4-8b36-9aeb95de690b@gmail.com>
-Date:   Wed, 28 Sep 2022 16:54:35 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH 0/3] dma/ti: enable udma and psil to be built as modules
-Content-Language: en-US
-To:     Kevin Hilman <khilman@baylibre.com>, dmaengine@vger.kernel.org
-Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        bh=fFiLND83FCjvj8QwqbyEssDIGtRuYehgQzyyJqOIdyc=;
+        b=zQCVz6XOS748eShP4CPR+AZPm6K7Z5u8fEJOmAQCzFjIE/8acEl2OMm4Ou+d4BmkvU
+         lX0RyeUm79QdMv68ETVwPYkaygE+LUayr0qz4r4NK3cw3egq9iqFC9ywOV1mDG0BH24J
+         9LpmSS/Z/n15VVVNIvGEBZCKWnKuW/1cXASTf95u37z1i7Cssig6+NSOyfm7NYj8SBrB
+         bU8kPL2IS+VVNf3MHMaC+/qMwM/zZ3LAWWIZAJL2+ywnVD972li19TOlnegHG/SLkUlj
+         4FM576H0qgoXeb8fhwYoLLydIdPSNscgC1Ajk5ITj9D7A2SFL5+oK7PhvKkqZ7i2rdOR
+         v15Q==
+X-Gm-Message-State: ACrzQf282mBO/zwnrU5WwUvpeDybP/Ndrp1Cpf03yHnY4rL8u2dq+DS6
+        rAM2gScT+rk02IYGC4m2ts8=
+X-Google-Smtp-Source: AMsMyM7lrfFC0VKPitQtgOmDtxRV+EymVgDdvtALG/htkm0zTcSAR6tU3+XXNjhkGB8g3q/eEEnlBw==
+X-Received: by 2002:a05:600c:3b12:b0:3b4:a6ea:1399 with SMTP id m18-20020a05600c3b1200b003b4a6ea1399mr7157848wms.49.1664377199052;
+        Wed, 28 Sep 2022 07:59:59 -0700 (PDT)
+Received: from Red ([2a01:cb1d:3d5:a100:264b:feff:fe03:2806])
+        by smtp.googlemail.com with ESMTPSA id x14-20020adfec0e000000b0022a297950cesm4547101wrn.23.2022.09.28.07.59.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Sep 2022 07:59:58 -0700 (PDT)
+Date:   Wed, 28 Sep 2022 16:59:56 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        dmaengine@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Nicolas Frayer <nfrayer@baylibre.com>
-References: <20220926181848.2917639-1-khilman@baylibre.com>
- <cf3194ec-0952-fa7a-cc05-6a60e7e66cf0@gmail.com>
- <7h7d1pg7c4.fsf@baylibre.com>
- <541337f7-1c0d-3ea4-d959-cd5aed83e615@gmail.com>
- <7hfsgcxvl3.fsf@baylibre.com>
-From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <7hfsgcxvl3.fsf@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v2 2/3] dma/ti: convert k3-udma to module
+Message-ID: <YzRhbNd4Dse+zLSb@Red>
+References: <20220927230804.4085579-1-khilman@baylibre.com>
+ <20220927230804.4085579-3-khilman@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+In-Reply-To: <20220927230804.4085579-3-khilman@baylibre.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -78,19 +75,21 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 28/09/2022 02:10, Kevin Hilman wrote:
->> When I did the module support there were also a tisci dependency which
->> for some reason took too long for me to be able to send these.
->> I can send my version later if it is OK, but if Nicolas have a better
->> take on it, I don't mind.
+Le Tue, Sep 27, 2022 at 04:08:03PM -0700, Kevin Hilman a écrit :
+> Currently k3-udma driver is built as separate platform drivers with a
+> shared probe and identical code path, just differnet platform data.
 > 
-> We've got a handful of other conversions coming for a fully modular
-> kernel, so I'm sure Nicolas would be happy if you took care of
-> ringacc. :)
+> To enable to build as module, convert the separate platform driver
+> into a single module_platform_driver with the data selection done via
+> compatible string and of_match.  The separate of_match tables are also
+> combined into a single table to avoid the multiple calls to
+> of_match_node()
+> 
+> Since all modern TI platforms using this are DT enabled, the removal
+> of separate platform_drivers shoul should nave no functional change.
+> 
+Hello
 
-Sure, I will send it when the UDMA part is merged.
+You have some typo in last sentence. (extra shoul, nave->have)
 
--- 
-PÃ©ter
+Regards

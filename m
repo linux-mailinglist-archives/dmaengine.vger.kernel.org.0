@@ -2,48 +2,57 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF4455EFA7A
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Sep 2022 18:30:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 965315EFA85
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Sep 2022 18:31:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234996AbiI2QaX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 29 Sep 2022 12:30:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36148 "EHLO
+        id S235415AbiI2Qbf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 29 Sep 2022 12:31:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236280AbiI2Q3v (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 29 Sep 2022 12:29:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B9614D489;
-        Thu, 29 Sep 2022 09:29:26 -0700 (PDT)
+        with ESMTP id S235656AbiI2Qb2 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 29 Sep 2022 12:31:28 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F37514C9D0;
+        Thu, 29 Sep 2022 09:31:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F0ED461AB0;
-        Thu, 29 Sep 2022 16:29:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C45D0C433C1;
-        Thu, 29 Sep 2022 16:29:23 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8F5A8B82547;
+        Thu, 29 Sep 2022 16:31:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FFCDC433C1;
+        Thu, 29 Sep 2022 16:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664468964;
-        bh=lai6muO+sRFE7eR6vEJvlDipJfbkCfQ+xED7W97wXI0=;
+        s=k20201202; t=1664469081;
+        bh=m/ihyg+6/QviLbrF/OUEZsfQ9lsN0rCuzODFHQsvoso=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o9FQOFEXL17hXS/u8KqgrzyQ5bvPM6dTunuauTk2O7Vn9/FTLteX4LfXJZ+V5hPN6
-         ZhTZZcHCdhKGed0dhVrdo2R2+qvb/2Socun53eKJ95FUKbTtPSJ821U6HfnglgtgGT
-         MSISMdL8bs/lksnvn6zOBspsf/JGbB/6D2P9QQf6C5iRS04qM0S+++DavwnGHi4+uw
-         Dc/L6kOvRZtOMrnarkZ1q+oTT8l1WPhR1njF5ecorceP0tDxZgVODU4kI1nyGeSho6
-         WkEBfx6jY/adGcrzarjxFXZpj+UQuRfzmbvwdSmgyJl6+Q1Kk5F0J3RdeAfVTuvTHo
-         FE97mRPwsnGfQ==
-Date:   Thu, 29 Sep 2022 21:59:19 +0530
+        b=ujm6lUIYEoDBW5zdIPQLQ6/6zCRoIRlVRW071g3XlmPUe3cxEhIOn5+pGEdT4MF1N
+         kRD4I5LbTzmuQPeNpuTHGuwZ2TGYI2TOonA8Osl3XeVSvqWtjRzH31wGHRqboqR6qS
+         taH0SZ8VPH1T9DDBDRC5tG+GBb08B/ChjNIovDT/GN0A02Hqu6SGAHs8TDKBfVujKD
+         4yWlSoOmssyx2+gJ2XI6mWbQrUeweBYKrpRh+WsSpF5jkkwSq2ULXBhR7mCRAmoTzf
+         77yVJPgOyAcVPRJxQSnvehA5pciqES0EXf8Tnni5JhN1vK0P8LAG5duyVZEKau6Miw
+         /nZz67UK9SO8w==
+Date:   Thu, 29 Sep 2022 22:01:16 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH 0/5] Enable a few DSA 2.0 features
-Message-ID: <YzXH3zJMtezvavpW@matsya>
-References: <20220917161222.2835172-1-fenghua.yu@intel.com>
+To:     Janne Grunau <j@jannau.net>
+Cc:     asahi@lists.linux.dev, Mark Kettenis <kettenis@openbsd.org>,
+        Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Hector Martin <marcan@marcan.st>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sven Peter <sven@svenpeter.dev>, devicetree@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 01/10] dt-bindings: dma: apple,admac: Add iommus and
+ power-domains properties
+Message-ID: <YzXIVM6zGszDa2JQ@matsya>
+References: <20220916142550.269905-1-j@jannau.net>
+ <20220916142550.269905-2-j@jannau.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220917161222.2835172-1-fenghua.yu@intel.com>
+In-Reply-To: <20220916142550.269905-2-j@jannau.net>
 X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -53,9 +62,9 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 17-09-22, 09:12, Fenghua Yu wrote:
-> Data Streaming Accelerator (DSA) 2.0 [1] introduces a few new features.
-> This series enables the new features:
+On 16-09-22, 16:25, Janne Grunau wrote:
+> Apple's ADMAC is on all supported Apple silicon SoCs behind an IOMMU
+> and has its own power-domain.
 
 Applied, thanks
 

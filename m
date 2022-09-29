@@ -2,49 +2,78 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B3895EEF75
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Sep 2022 09:43:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4DE55EEF8F
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Sep 2022 09:47:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235477AbiI2HnT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 29 Sep 2022 03:43:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49618 "EHLO
+        id S235033AbiI2HrL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 29 Sep 2022 03:47:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235357AbiI2Hmo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 29 Sep 2022 03:42:44 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B7379AFAA
-        for <dmaengine@vger.kernel.org>; Thu, 29 Sep 2022 00:42:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 14642B8220A
-        for <dmaengine@vger.kernel.org>; Thu, 29 Sep 2022 07:42:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24BEFC433C1;
-        Thu, 29 Sep 2022 07:42:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664437349;
-        bh=co081rKhMPRCaSwto1picKA39re+uKqhG6F+V4UNp84=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WTuGXmljYuykaakudwp4UCx1gBckDK/WsEmE5tamRsMAGj0UMKlqYfOZgl5TyWs0M
-         G/2Ef/Pf2gVyR3NlXwj52oXYUg0w/ip6jCle7H1YYRZpUIA/Lh8GLqXivRxTwSFHha
-         7tURLizpZ5onn7M4HuG5Cy6DXLN1i9waACfFBzGHNt/mHhaTwVIB3vDRQlH7z6NG8U
-         1KAtCOOcUi6Ah/SiwteNuzG18SeKLZkRgtGLjWGKxL7XGfswpiE2seFVZcgD+ygYLz
-         wR2n3fQ4URkxsezgv9xJv2Mck35t1YfUQV91N9vQ8OTHCw8IIMqCC3q94BGiBHZaHk
-         FOGyrRa2ev9pg==
-Date:   Thu, 29 Sep 2022 13:12:26 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Yuan Can <yuancan@huawei.com>
-Cc:     fenghua.yu@intel.com, dave.jiang@intel.com,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH RESEND] dmaengine: idxd: Remove unused struct idxd_fault
-Message-ID: <YzVMYrXuFXwIJwEv@matsya>
-References: <20220928014747.106808-1-yuancan@huawei.com>
+        with ESMTP id S235375AbiI2HrG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 29 Sep 2022 03:47:06 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DB111397DD
+        for <dmaengine@vger.kernel.org>; Thu, 29 Sep 2022 00:47:05 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id j16so1032975lfg.1
+        for <dmaengine@vger.kernel.org>; Thu, 29 Sep 2022 00:47:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=dnITc0xpMXEA7t4sgElLx+4qVX7nYEDyilpbd4CXC9k=;
+        b=uGcDNVPXkiKp0/IY8guVgHnvizB80zoouBV1zI+CcewxalPdMXFlJWZKjDLFmQe8Ew
+         8a5qUQegbDboAzpjvI3sllEEUmzijzphlGkf9tzBFw7rPk5N0XHAkhtsteKz4MtOrTp4
+         le0qhM/SdCBr1jBpyYtpJtlhGyUxyp9AjxBZn6+DSMHcZrOWmwaMFTZ00rpxU2OHaVIv
+         0yGJ6ByVRnvFZCyVMhhF2Yo+keJdb73RddGy8Ew5bqE38IEAkzeNckD8p2dK5JgF9ZPg
+         XDxlZWK5CXmuzsn5dxrPDGsVedmSNrRP0NgwyxeuXG7Xd0/v8no08f1Nbfg43NQqmx12
+         8Yqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=dnITc0xpMXEA7t4sgElLx+4qVX7nYEDyilpbd4CXC9k=;
+        b=N8LYzzNZPTLFms/J6x05OHTEdaW6ycgUasrhZAkLuYLcCB8tTka9OmKBfyrOiNdcMk
+         mUgGoI3tHXfrUgJ3zJE6t0TAMZanEg7O1l2eBlPvnanZnG6AxfAPndMyoL5duWp91R5V
+         1JW83a+RGt8a4zn9q/JPkOMtnCmpZCXxjevDTOgQXpwmbQ9HLSW+lSupfz+RaHTfZL8A
+         mqO3NDj0iBz916BmszW34mXYOV/EqdKSRwE+oE3Y66vLYMinVW55nWLkTM/VGH9SG6UD
+         ipZEOsT1DDRcdHDcWBUV3HgDGpGJCBuY4yxSQb/NN6u76/ePruCt0i6+C7ewkI/FE4XV
+         gVCA==
+X-Gm-Message-State: ACrzQf1Cy8K4MIAY9hfY7Q17U39E/Gz0y5oDhkfw/3H4IVEMHw2Z10ev
+        PWu7U8iwmOJRJCNsMVqXXIoUig==
+X-Google-Smtp-Source: AMsMyM4hj4TmCFv/FCH2LyFkLclQe3iKtiAqO9DG8bMvZXl/z5OzzjZ3a0sVROUTS4OrTteQNvmhnQ==
+X-Received: by 2002:a05:6512:535:b0:498:30c7:1e13 with SMTP id o21-20020a056512053500b0049830c71e13mr745638lfc.264.1664437623342;
+        Thu, 29 Sep 2022 00:47:03 -0700 (PDT)
+Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id 145-20020a2e0997000000b0026befa96249sm631817ljj.8.2022.09.29.00.47.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Sep 2022 00:47:02 -0700 (PDT)
+Message-ID: <96e091f5-c593-2868-4472-267f57695997@linaro.org>
+Date:   Thu, 29 Sep 2022 09:47:02 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220928014747.106808-1-yuancan@huawei.com>
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH v2 1/4] dt-bindings: dma: qcom: gpi: add fallback
+ compatible
+Content-Language: en-US
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Richard Acayan <mailingradian@gmail.com>,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org
+References: <20220923210934.280034-1-mailingradian@gmail.com>
+ <20220923210934.280034-2-mailingradian@gmail.com>
+ <7b066e11-6e5c-c6d9-c8ed-9feccaec4c0c@linaro.org> <YzVLtvPk6YiDfBtb@matsya>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <YzVLtvPk6YiDfBtb@matsya>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -52,16 +81,35 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 28-09-22, 01:47, Yuan Can wrote:
-> Since fault processing code has been removed, struct idxd_fault is not used any
-> more and can be removed as well.
+On 29/09/2022 09:39, Vinod Koul wrote:
+> On 23-09-22, 23:26, Krzysztof Kozlowski wrote:
+>> On 23/09/2022 23:09, Richard Acayan wrote:
+>>> The drivers are transitioning from matching against lists of specific
+>>> compatible strings to matching against smaller lists of more generic
+>>> compatible strings. Add a fallback compatible string in the schema to
+>>> support this change.
+>>
+>> Thanks for the patch. I wished we discussed it a bit more. :)
+>> qcom,gpi-dma does not look like specific enough to be correct fallback,
+>> at least not for all of the devices. I propose either a IP block version
+>> (which is tricky without access to documentation) or just one of the SoC
+> 
+> You should have access :-)
 
-This should have been tagged v2... this is update over v1
+But Richard and many other community members do not...
 
-> Fixes: commit 0e96454ca26c ("dmaengine: idxd: remove fault processing code")
+> 
+>> IP blocks.
+> 
+> So knowing this IP we have two versions, one was initial sdm845 that
+> should be the base compatible. Then second should be sm8350 which was
+> the version we need ee_offset to be added, so these two can be the base
+> ones for future...
+> 
+> My 0.02
 
-This is not a valid fix, it is an improvement so dropped
+Or just use SoC versions, not IP block versions :)
 
-I have applied this
--- 
-~Vinod
+Best regards,
+Krzysztof
+

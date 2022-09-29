@@ -2,53 +2,47 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B804C5EEF5B
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Sep 2022 09:41:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B3895EEF75
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Sep 2022 09:43:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235418AbiI2Hl3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 29 Sep 2022 03:41:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49144 "EHLO
+        id S235477AbiI2HnT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 29 Sep 2022 03:43:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235381AbiI2Hk6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 29 Sep 2022 03:40:58 -0400
+        with ESMTP id S235357AbiI2Hmo (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 29 Sep 2022 03:42:44 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4D7C121116;
-        Thu, 29 Sep 2022 00:40:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B7379AFAA
+        for <dmaengine@vger.kernel.org>; Thu, 29 Sep 2022 00:42:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B8F20B8220A;
-        Thu, 29 Sep 2022 07:40:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09CFCC433C1;
-        Thu, 29 Sep 2022 07:40:41 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 14642B8220A
+        for <dmaengine@vger.kernel.org>; Thu, 29 Sep 2022 07:42:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24BEFC433C1;
+        Thu, 29 Sep 2022 07:42:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664437242;
-        bh=C2emNc0NAZeHrems5nNVYRQ4SMC2epBUFyJLM2zmGmI=;
+        s=k20201202; t=1664437349;
+        bh=co081rKhMPRCaSwto1picKA39re+uKqhG6F+V4UNp84=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W9BEhHgjvuv4D6muqvt5Pkw9paqZhAL7cFaBdyPd/SR4timbLw5eh25nw+lEa5O2e
-         vwz+GstAWGi5dtaKYnk+URjtXIpyKwwuRHxWIzq9rAKDjxMIiRR8E8Pk8QB/EK7IHS
-         FbKPLVW1Fbm34B3HbNLApoa2A9cWy1QrIiIHL9PfdXEmVqwOFbG1dWXHjzJS30PXeL
-         qaGHKpxoCkKXgCe8CD0XCRcZ10hknMDckSpsK6aX3zuraRPk37cvI74s1wUGGG87vG
-         kwSJ6KWxej+R0Iu/6f91rhuP/qB4xWW/DHJolj/XMBulcSC4IWr5UBkXbUvNyJ0QQO
-         5N7i3Ghm9ER6w==
-Date:   Thu, 29 Sep 2022 13:10:38 +0530
+        b=WTuGXmljYuykaakudwp4UCx1gBckDK/WsEmE5tamRsMAGj0UMKlqYfOZgl5TyWs0M
+         G/2Ef/Pf2gVyR3NlXwj52oXYUg0w/ip6jCle7H1YYRZpUIA/Lh8GLqXivRxTwSFHha
+         7tURLizpZ5onn7M4HuG5Cy6DXLN1i9waACfFBzGHNt/mHhaTwVIB3vDRQlH7z6NG8U
+         1KAtCOOcUi6Ah/SiwteNuzG18SeKLZkRgtGLjWGKxL7XGfswpiE2seFVZcgD+ygYLz
+         wR2n3fQ4URkxsezgv9xJv2Mck35t1YfUQV91N9vQ8OTHCw8IIMqCC3q94BGiBHZaHk
+         FOGyrRa2ev9pg==
+Date:   Thu, 29 Sep 2022 13:12:26 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Richard Acayan <mailingradian@gmail.com>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] dmaengine: qcom: gpi: drop redundant of_device_id
- entries
-Message-ID: <YzVL9ngfwqfwhF8Q@matsya>
-References: <20220927014846.32892-1-mailingradian@gmail.com>
- <20220927014846.32892-5-mailingradian@gmail.com>
+To:     Yuan Can <yuancan@huawei.com>
+Cc:     fenghua.yu@intel.com, dave.jiang@intel.com,
+        dmaengine@vger.kernel.org
+Subject: Re: [PATCH RESEND] dmaengine: idxd: Remove unused struct idxd_fault
+Message-ID: <YzVMYrXuFXwIJwEv@matsya>
+References: <20220928014747.106808-1-yuancan@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220927014846.32892-5-mailingradian@gmail.com>
+In-Reply-To: <20220928014747.106808-1-yuancan@huawei.com>
 X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -58,36 +52,16 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 26-09-22, 21:48, Richard Acayan wrote:
-> The drivers are transitioning from matching against lists of specific
-> compatible strings to matching against smaller lists of more generic
-> compatible strings. Continue the transition in the GPI DMA driver.
-> 
-> Signed-off-by: Richard Acayan <mailingradian@gmail.com>
-> ---
->  drivers/dma/qcom/gpi.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-> index 89839864b4ec..e5f37d61f30a 100644
-> --- a/drivers/dma/qcom/gpi.c
-> +++ b/drivers/dma/qcom/gpi.c
-> @@ -2289,8 +2289,6 @@ static const struct of_device_id gpi_of_match[] = {
->  	{ .compatible = "qcom,sc7280-gpi-dma", .data = (void *)0x10000 },
->  	{ .compatible = "qcom,sdm845-gpi-dma", .data = (void *)0x0 },
->  	{ .compatible = "qcom,sm6350-gpi-dma", .data = (void *)0x10000 },
-> -	{ .compatible = "qcom,sm8150-gpi-dma", .data = (void *)0x0 },
-> -	{ .compatible = "qcom,sm8250-gpi-dma", .data = (void *)0x0 },
+On 28-09-22, 01:47, Yuan Can wrote:
+> Since fault processing code has been removed, struct idxd_fault is not used any
+> more and can be removed as well.
 
-We cant do this without breaking stuff...
+This should have been tagged v2... this is update over v1
 
-There are DTs which have this id!
+> Fixes: commit 0e96454ca26c ("dmaengine: idxd: remove fault processing code")
 
->  	{ .compatible = "qcom,sm8350-gpi-dma", .data = (void *)0x10000 },
->  	{ .compatible = "qcom,sm8450-gpi-dma", .data = (void *)0x10000 },
->  	{ },
-> -- 
-> 2.37.3
+This is not a valid fix, it is an improvement so dropped
 
+I have applied this
 -- 
 ~Vinod

@@ -2,107 +2,109 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17AA95F034D
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Sep 2022 05:28:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6EFB5F03FD
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Sep 2022 07:03:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229728AbiI3D2y (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 29 Sep 2022 23:28:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53080 "EHLO
+        id S229998AbiI3FDL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 30 Sep 2022 01:03:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230079AbiI3D2h (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 29 Sep 2022 23:28:37 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C1A015935C
-        for <dmaengine@vger.kernel.org>; Thu, 29 Sep 2022 20:28:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664508516; x=1696044516;
-  h=from:to:cc:subject:date:message-id;
-  bh=4RyAsolEIbR1o8oMUe/70E8iOQr4Kf0XTNvRkl8rap8=;
-  b=Xc4Zl7xsQrsnW4UWjqaiypUElpyWdYBoTq9ny+zs3R5SFfzYe30L7sKn
-   UdTzWZ6hs4XKtVSJNETpInaAqBdTJ87oKoo4q2ivSXBh1LbrDwT+NxNU0
-   eDUvpbQq3+kpRtPzXLmJMGK9B2AYHZhMip7/0UFMdsIJghJiKWTLzBbIb
-   bnPhGmP3ai0MYUGuBQOFCdN801AAJcLc7MoN/I7RYhY4iXJ6RqL96SGq/
-   dfdtSi6uGuFndqKK3dF189cv+eODrCVX5NQ6JX5AVO6TEI0X1hRE1xmYb
-   dvDWOqVciv/EJ6Kk/1xt+mvPDD5eWZ2XgAMiEjHE6hx3erIkCtMyoYwSe
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10485"; a="285229525"
-X-IronPort-AV: E=Sophos;i="5.93,357,1654585200"; 
-   d="scan'208";a="285229525"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2022 20:28:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10485"; a="653382804"
-X-IronPort-AV: E=Sophos;i="5.93,357,1654585200"; 
-   d="scan'208";a="653382804"
-Received: from fgao-dev-hp-compaq-elite-8300-cmt.sh.intel.com ([10.239.131.213])
-  by orsmga008.jf.intel.com with ESMTP; 29 Sep 2022 20:28:34 -0700
-From:   Fengqian Gao <fengqian.gao@intel.com>
-To:     vkoul@kernel.org, fenghua.yu@intel.com, dave.jiang@intel.com,
-        dmaengine@vger.kernel.org
-Cc:     pei.p.jia@intel.com, xiaochen.shen@intel.com,
-        fengqian.gao@intel.com
-Subject: [PATCH] dmaengine: idxd: fix RO device state error after been disabled/reset
-Date:   Fri, 30 Sep 2022 11:28:35 +0800
-Message-Id: <20220930032835.2290-1-fengqian.gao@intel.com>
-X-Mailer: git-send-email 2.17.1
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229505AbiI3FDK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 30 Sep 2022 01:03:10 -0400
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6104A163B4B
+        for <dmaengine@vger.kernel.org>; Thu, 29 Sep 2022 22:03:09 -0700 (PDT)
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 1434041472
+        for <dmaengine@vger.kernel.org>; Fri, 30 Sep 2022 04:44:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1664513075;
+        bh=ux33z7H02aeUKz+r07uUOZtr3NLmpYkTJn7m+ajiqak=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=QDLwRbLkoAhn9dPVgk24XjJQN7TeqsQ3urioQBeJkRfz4e7EutXdBuE42w35Jgxkf
+         yyBF3wjPDiyI1WaeCpOQCSeWymRy0dAZvWHwPCHgexfHrQPlyVgvXgikB5Vhyz0RYM
+         JKxOxqsW5Peq1RFxmeZmnlpcYidOkeEEMUWGzcDnPblBFYGi1LFzczh99JJkHx17vJ
+         Ci+zlEQvlAmMB0q+qnwMq3Tp+Xi3sPaLn0w6isaKk3CA/2rztjKneT90Wtn5vdUg1V
+         DZ08N32x+EMtHCFLXwcJ/ufPlsEfGRvdIfgrtvOlbONXYEGBKK+OzuS5JfBSNDl1Ra
+         TU0w2PcmsIgOg==
+Received: by mail-pl1-f198.google.com with SMTP id b11-20020a170902d50b00b0017828988079so2436251plg.21
+        for <dmaengine@vger.kernel.org>; Thu, 29 Sep 2022 21:44:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=ux33z7H02aeUKz+r07uUOZtr3NLmpYkTJn7m+ajiqak=;
+        b=lK6g86NLwYKLz/CjcB3s3jn4002s3EcCwQzYlyVoBxkF84KI+9wfkqQELKIftWn3Ih
+         Ak9N1qNoA8xzmo3G5uUDX+9EaBnRDbFNx5UnXJxKxRWpa05ArNVg+GCqSULc0v1KI9Tw
+         GsxRLmbjOK1pj2d5Y1CS/+bdUO/Zh3w4InvDejmwbMEy9bqC5KEUHxYgpRKGo7kcL0Ky
+         kmzl3Xm01ffQK3myZxOmxE8vM6ddg5PqD0wmnPkciSXatMsPtpur/cRvP5DDodG7f+Jd
+         cWpeYz0KJx/zomKdjbk3d6gH4selSohad+XI0PpB2apAwBUlFojvE5VfmgSjvedJzw61
+         IjEQ==
+X-Gm-Message-State: ACrzQf03qIvVI1xAC2Se5n7UrCtUgGobJIRhBZHw2fROuPVI6mL17Yw9
+        N6nNiBqYoOmZOrwNhomW6vrgHIGAdUUatci2ZoefPyXOYjOfWO91j5Pxiq9wqh7tvWxs2Rng2yy
+        hUOwWeZKSbp7GCY2+TDXTS4JoELC8e2AMR1w0CUxXdU2P2C++q5mE7Q==
+X-Received: by 2002:a65:498b:0:b0:412:8e4:2842 with SMTP id r11-20020a65498b000000b0041208e42842mr5994921pgs.71.1664513073461;
+        Thu, 29 Sep 2022 21:44:33 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM7o+zURSqlabmjLr1RsgQuhoRn0j1PHFVEdM97/h6usvgfHP0rrcUpv5yIS+xoCLI8bzmxVyC7qwjdvS34EuNM=
+X-Received: by 2002:a65:498b:0:b0:412:8e4:2842 with SMTP id
+ r11-20020a65498b000000b0041208e42842mr5994912pgs.71.1664513073191; Thu, 29
+ Sep 2022 21:44:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220830093207.951704-1-koba.ko@canonical.com>
+ <20220929165710.biw4yry4xuxv7jbh@cantor> <YzXRbBvv+2MGE6Eq@matsya> <4394cae0b5830533ed5464817da2c52119e30cea.camel@redhat.com>
+In-Reply-To: <4394cae0b5830533ed5464817da2c52119e30cea.camel@redhat.com>
+From:   Koba Ko <koba.ko@canonical.com>
+Date:   Fri, 30 Sep 2022 12:44:22 +0800
+Message-ID: <CAJB-X+XYq6JRewKkPu0OSnEhJAsW5qFcs2ym2c+wErxWgoXGDA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dmaengine: Fix client_count is countered one more incorrectly.
+To:     Jerry Snitselaar <jsnitsel@redhat.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-When IDXD is not configurable, that means its WQ, engine, and group
-configurations cannot be changed. But it can be disabled and its state
-should be set as disabled regardless it's configurable or not.
+On Fri, Sep 30, 2022 at 1:26 AM Jerry Snitselaar <jsnitsel@redhat.com> wrote:
+>
+> On Thu, 2022-09-29 at 22:40 +0530, Vinod Koul wrote:
+> > On 29-09-22, 09:57, Jerry Snitselaar wrote:
+> > > On Tue, Aug 30, 2022 at 05:32:07PM +0800, Koba Ko wrote:
+> >
+> > >
+> > > Hi Vinod,
+> > >
+> > > Any thoughts on this patch? We recently came across this issue as
+> > > well.
+> >
+> > I have only patch 3, where is the rest of the series... ?
+> >
+>
+> I never found anything else when I looked at this earlier.
+> The one thing I can think of is perhaps Koba was seeing multiple
+> issues at time when he found this, like:
+>
+> https://lore.kernel.org/linux-crypto/20220901144712.1192698-1-koba.ko@canonical.com/
+>
+> That was also being seen by an engineer here that was looking
+> at client_count code.
+>
+> Koba, was this meant to be part of a series, or by itself?
+>
 
-Fix this by setting device state IDXD_DEV_DISABLED for read-only device
-as well in idxd_device_clear_state().
+Jerry, you're right, it's a part of the series.
 
-Fixes: cf4ac3fef338 ("dmaengine: idxd: fix lockdep warning on device driver removal")
-Signed-off-by: Fengqian Gao <fengqian.gao@intel.com>
-Reviewed-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
----
- drivers/dma/idxd/device.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 5a8cc52c1abf..bdd67728e507 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -724,13 +724,21 @@ static void idxd_device_wqs_clear_state(struct idxd_device *idxd)
- 
- void idxd_device_clear_state(struct idxd_device *idxd)
- {
--	if (!test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags))
--		return;
-+	/* IDXD is always disabled. Other states are cleared only when IDXD is configurable. */
-+	if (test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags)) {
-+		/*
-+		 * Clearing wq state is protected by wq lock.
-+		 * So no need to be protected by device lock.
-+		 */
-+		idxd_device_wqs_clear_state(idxd);
-+
-+		spin_lock(&idxd->dev_lock);
-+		idxd_groups_clear_state(idxd);
-+		idxd_engines_clear_state(idxd);
-+	} else {
-+		spin_lock(&idxd->dev_lock);
-+	}
- 
--	idxd_device_wqs_clear_state(idxd);
--	spin_lock(&idxd->dev_lock);
--	idxd_groups_clear_state(idxd);
--	idxd_engines_clear_state(idxd);
- 	idxd->state = IDXD_DEV_DISABLED;
- 	spin_unlock(&idxd->dev_lock);
- }
--- 
-2.17.1
-
+>
+> Regards,
+> Jerry
+>

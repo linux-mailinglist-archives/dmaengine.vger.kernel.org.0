@@ -2,109 +2,153 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6EFB5F03FD
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Sep 2022 07:03:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06AAF5F0453
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Sep 2022 07:54:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229998AbiI3FDL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 30 Sep 2022 01:03:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58456 "EHLO
+        id S229479AbiI3Fyc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 30 Sep 2022 01:54:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbiI3FDK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 30 Sep 2022 01:03:10 -0400
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6104A163B4B
-        for <dmaengine@vger.kernel.org>; Thu, 29 Sep 2022 22:03:09 -0700 (PDT)
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 1434041472
-        for <dmaengine@vger.kernel.org>; Fri, 30 Sep 2022 04:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1664513075;
-        bh=ux33z7H02aeUKz+r07uUOZtr3NLmpYkTJn7m+ajiqak=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=QDLwRbLkoAhn9dPVgk24XjJQN7TeqsQ3urioQBeJkRfz4e7EutXdBuE42w35Jgxkf
-         yyBF3wjPDiyI1WaeCpOQCSeWymRy0dAZvWHwPCHgexfHrQPlyVgvXgikB5Vhyz0RYM
-         JKxOxqsW5Peq1RFxmeZmnlpcYidOkeEEMUWGzcDnPblBFYGi1LFzczh99JJkHx17vJ
-         Ci+zlEQvlAmMB0q+qnwMq3Tp+Xi3sPaLn0w6isaKk3CA/2rztjKneT90Wtn5vdUg1V
-         DZ08N32x+EMtHCFLXwcJ/ufPlsEfGRvdIfgrtvOlbONXYEGBKK+OzuS5JfBSNDl1Ra
-         TU0w2PcmsIgOg==
-Received: by mail-pl1-f198.google.com with SMTP id b11-20020a170902d50b00b0017828988079so2436251plg.21
-        for <dmaengine@vger.kernel.org>; Thu, 29 Sep 2022 21:44:34 -0700 (PDT)
+        with ESMTP id S229498AbiI3Fyb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 30 Sep 2022 01:54:31 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5468B1FBCAB;
+        Thu, 29 Sep 2022 22:54:30 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id 3so3328131pga.1;
+        Thu, 29 Sep 2022 22:54:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=mMla8qCrMLjnlPkIDgBir+wXYj1Zc/1eiSyiQWCV6G0=;
+        b=VNj3Hcn9y0aPmE1nNn973o/skfilArCE60NPJpTpaQkBF7FrZhvwGHfn+MGMNtfgXD
+         iTppUJf6FDskwxdnb4OWwp9hUaOHccMHSxok6pFSyBGZ9VzTUEhj23KXrkrPWCMg/ZuK
+         N4NeCZ6GetB46nu5UhY9BrVTxIt0WTmryZDsfYQ8I1fPf0kRVg6cliWL3oWHMn2iZwDG
+         z5sOk+xT16CBpf8knSzQckrqZ+7xLPq11sY8nZ07NacGyR9N4V2g8NLYbd8yVhjj1l/W
+         JjM3YOcP4M94my+4gcB8hK7LX8meBBsycijBM0MgggnI2K3RA951SwSQGr77aenKPXty
+         W+4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=ux33z7H02aeUKz+r07uUOZtr3NLmpYkTJn7m+ajiqak=;
-        b=lK6g86NLwYKLz/CjcB3s3jn4002s3EcCwQzYlyVoBxkF84KI+9wfkqQELKIftWn3Ih
-         Ak9N1qNoA8xzmo3G5uUDX+9EaBnRDbFNx5UnXJxKxRWpa05ArNVg+GCqSULc0v1KI9Tw
-         GsxRLmbjOK1pj2d5Y1CS/+bdUO/Zh3w4InvDejmwbMEy9bqC5KEUHxYgpRKGo7kcL0Ky
-         kmzl3Xm01ffQK3myZxOmxE8vM6ddg5PqD0wmnPkciSXatMsPtpur/cRvP5DDodG7f+Jd
-         cWpeYz0KJx/zomKdjbk3d6gH4selSohad+XI0PpB2apAwBUlFojvE5VfmgSjvedJzw61
-         IjEQ==
-X-Gm-Message-State: ACrzQf03qIvVI1xAC2Se5n7UrCtUgGobJIRhBZHw2fROuPVI6mL17Yw9
-        N6nNiBqYoOmZOrwNhomW6vrgHIGAdUUatci2ZoefPyXOYjOfWO91j5Pxiq9wqh7tvWxs2Rng2yy
-        hUOwWeZKSbp7GCY2+TDXTS4JoELC8e2AMR1w0CUxXdU2P2C++q5mE7Q==
-X-Received: by 2002:a65:498b:0:b0:412:8e4:2842 with SMTP id r11-20020a65498b000000b0041208e42842mr5994921pgs.71.1664513073461;
-        Thu, 29 Sep 2022 21:44:33 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM7o+zURSqlabmjLr1RsgQuhoRn0j1PHFVEdM97/h6usvgfHP0rrcUpv5yIS+xoCLI8bzmxVyC7qwjdvS34EuNM=
-X-Received: by 2002:a65:498b:0:b0:412:8e4:2842 with SMTP id
- r11-20020a65498b000000b0041208e42842mr5994912pgs.71.1664513073191; Thu, 29
- Sep 2022 21:44:33 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=mMla8qCrMLjnlPkIDgBir+wXYj1Zc/1eiSyiQWCV6G0=;
+        b=XHRoJwtQv0pK9QZ6mCYriR5BHq+ftRN1dxfYBIyJ4K7ORgTjw0zpHwLb7VUudg1dFx
+         FuRUbJ1p3Qqccc6/Ikt5EKwFOsVOTvAP/+yXkze3TYoKYoeHSXqpAAFQz4Pw+TkZMW1d
+         UPxIWNXo5f7WyB6aZapqG3su6TKa6PwQ/PHnph/WHbTiIerkf6e7Q8+r4IMZzByI8PQ8
+         QyTmXM6LInCRLnKoJlENg6MnA/h65YN1OQVOtGqaZJXq77fyItcDQ5AouTmYZU0fwfpQ
+         mlifLqtnDRyB6pcsqKFJVjnaV0yE0eNUG6z46YJkl1gom8hGnvgMBsyd/K3tv2vHpiEe
+         ETCQ==
+X-Gm-Message-State: ACrzQf3xome1Q41jojE7BOBG5lz9trfTh6aB78Vzs6XFPENIWamFTCKc
+        SAwdTB1fT2bu2l2h/78enpc=
+X-Google-Smtp-Source: AMsMyM4EngzK8I/XurK1P002ilWwL1ClIYaiyIytQlnUCsjsmRry6xZf2+WtosQGW9/E9/pQrfznIQ==
+X-Received: by 2002:a05:6a00:24d2:b0:542:f6e3:e18d with SMTP id d18-20020a056a0024d200b00542f6e3e18dmr7086871pfv.36.1664517269750;
+        Thu, 29 Sep 2022 22:54:29 -0700 (PDT)
+Received: from tj10039pcu.spreadtrum.com ([117.18.48.102])
+        by smtp.gmail.com with ESMTPSA id r18-20020a170903411200b00176b84eb29asm896738pld.301.2022.09.29.22.54.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Sep 2022 22:54:29 -0700 (PDT)
+From:   Cixi Geng <gengcixi@gmail.com>
+To:     vkoul@kernel.org, orsonzhai@gmail.com,
+        baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: sprd: Support two-stage dma interrupt
+Date:   Fri, 30 Sep 2022 13:53:31 +0800
+Message-Id: <20220930055331.138868-1-gengcixi@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20220830093207.951704-1-koba.ko@canonical.com>
- <20220929165710.biw4yry4xuxv7jbh@cantor> <YzXRbBvv+2MGE6Eq@matsya> <4394cae0b5830533ed5464817da2c52119e30cea.camel@redhat.com>
-In-Reply-To: <4394cae0b5830533ed5464817da2c52119e30cea.camel@redhat.com>
-From:   Koba Ko <koba.ko@canonical.com>
-Date:   Fri, 30 Sep 2022 12:44:22 +0800
-Message-ID: <CAJB-X+XYq6JRewKkPu0OSnEhJAsW5qFcs2ym2c+wErxWgoXGDA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dmaengine: Fix client_count is countered one more incorrectly.
-To:     Jerry Snitselaar <jsnitsel@redhat.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Sep 30, 2022 at 1:26 AM Jerry Snitselaar <jsnitsel@redhat.com> wrote:
->
-> On Thu, 2022-09-29 at 22:40 +0530, Vinod Koul wrote:
-> > On 29-09-22, 09:57, Jerry Snitselaar wrote:
-> > > On Tue, Aug 30, 2022 at 05:32:07PM +0800, Koba Ko wrote:
-> >
-> > >
-> > > Hi Vinod,
-> > >
-> > > Any thoughts on this patch? We recently came across this issue as
-> > > well.
-> >
-> > I have only patch 3, where is the rest of the series... ?
-> >
->
-> I never found anything else when I looked at this earlier.
-> The one thing I can think of is perhaps Koba was seeing multiple
-> issues at time when he found this, like:
->
-> https://lore.kernel.org/linux-crypto/20220901144712.1192698-1-koba.ko@canonical.com/
->
-> That was also being seen by an engineer here that was looking
-> at client_count code.
->
-> Koba, was this meant to be part of a series, or by itself?
->
+From: Cixi Geng <cixi.geng1@unisoc.com>
 
-Jerry, you're right, it's a part of the series.
+Audio need to request Audio CP global dma interrupt, so Audio CP
+DMA should support two-stage interrupt to adapte it.
+It will occur interrupt when two-stage dma channel transfer done.
 
->
-> Regards,
-> Jerry
->
+Signed-off-by: Cixi Geng <cixi.geng1@unisoc.com>
+---
+ drivers/dma/sprd-dma.c       |  8 ++++----
+ include/linux/dma/sprd-dma.h | 12 ++++++++++++
+ 2 files changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+index 474d3ba8ec9f..7a9ade422a00 100644
+--- a/drivers/dma/sprd-dma.c
++++ b/drivers/dma/sprd-dma.c
+@@ -441,7 +441,7 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+ 		val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
+ 		val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
+ 		val |= SPRD_DMA_GLB_2STAGE_EN;
+-		if (schan->int_type != SPRD_DMA_NO_INT)
++		if (schan->int_type != SPRD_DMA_SRC_CHN0_INT)
+ 			val |= SPRD_DMA_GLB_SRC_INT;
+ 
+ 		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP1, val, val);
+@@ -451,7 +451,7 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+ 		val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
+ 		val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
+ 		val |= SPRD_DMA_GLB_2STAGE_EN;
+-		if (schan->int_type != SPRD_DMA_NO_INT)
++		if (schan->int_type != SPRD_DMA_SRC_CHN1_INT)
+ 			val |= SPRD_DMA_GLB_SRC_INT;
+ 
+ 		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP2, val, val);
+@@ -461,7 +461,7 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+ 		val = (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
+ 			SPRD_DMA_GLB_DEST_CHN_MASK;
+ 		val |= SPRD_DMA_GLB_2STAGE_EN;
+-		if (schan->int_type != SPRD_DMA_NO_INT)
++		if (schan->int_type != SPRD_DMA_DST_CHN0_INT)
+ 			val |= SPRD_DMA_GLB_DEST_INT;
+ 
+ 		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP1, val, val);
+@@ -471,7 +471,7 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
+ 		val = (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
+ 			SPRD_DMA_GLB_DEST_CHN_MASK;
+ 		val |= SPRD_DMA_GLB_2STAGE_EN;
+-		if (schan->int_type != SPRD_DMA_NO_INT)
++		if (schan->int_type != SPRD_DMA_DST_CHN1_INT)
+ 			val |= SPRD_DMA_GLB_DEST_INT;
+ 
+ 		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP2, val, val);
+diff --git a/include/linux/dma/sprd-dma.h b/include/linux/dma/sprd-dma.h
+index d09c6f6f6da5..26de41d6d915 100644
+--- a/include/linux/dma/sprd-dma.h
++++ b/include/linux/dma/sprd-dma.h
+@@ -101,6 +101,14 @@ enum sprd_dma_req_mode {
+  * is done.
+  * @SPRD_DMA_CFGERR_INT: configure error interrupt when configuration is
+  * incorrect.
++ * @SPRD_DMA_SRC_CHN0_INT: interrupt occurred when source channel0
++ * transfer is done.
++ * @SPRD_DMA_SRC_CHN1_INT: interrupt occurred when source channel1
++ * transfer is done.
++ * @SPRD_DMA_DST_CHN0_INT: interrupt occurred when destination channel0
++ * transfer is done.
++ * @SPRD_DMA_DST_CHN1_INT: interrupt occurred when destination channel1
++ * transfer is done.
+  */
+ enum sprd_dma_int_type {
+ 	SPRD_DMA_NO_INT,
+@@ -112,6 +120,10 @@ enum sprd_dma_int_type {
+ 	SPRD_DMA_TRANS_BLK_INT,
+ 	SPRD_DMA_LIST_INT,
+ 	SPRD_DMA_CFGERR_INT,
++	SPRD_DMA_SRC_CHN0_INT,
++	SPRD_DMA_SRC_CHN1_INT,
++	SPRD_DMA_DST_CHN0_INT,
++	SPRD_DMA_DST_CHN1_INT,
+ };
+ 
+ /*
+-- 
+2.34.1
+

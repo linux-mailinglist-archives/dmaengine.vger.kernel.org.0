@@ -2,56 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1653B5F1A86
-	for <lists+dmaengine@lfdr.de>; Sat,  1 Oct 2022 09:14:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 612C75F1A8C
+	for <lists+dmaengine@lfdr.de>; Sat,  1 Oct 2022 09:14:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbiJAHOM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 1 Oct 2022 03:14:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40512 "EHLO
+        id S229583AbiJAHO2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 1 Oct 2022 03:14:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229559AbiJAHOK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 1 Oct 2022 03:14:10 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFBFE31EC2
-        for <dmaengine@vger.kernel.org>; Sat,  1 Oct 2022 00:14:08 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id k3so5867411ybk.9
-        for <dmaengine@vger.kernel.org>; Sat, 01 Oct 2022 00:14:08 -0700 (PDT)
+        with ESMTP id S229578AbiJAHO1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 1 Oct 2022 03:14:27 -0400
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F5BBFAD2
+        for <dmaengine@vger.kernel.org>; Sat,  1 Oct 2022 00:14:26 -0700 (PDT)
+Received: by mail-yb1-xb2a.google.com with SMTP id 81so269817ybf.7
+        for <dmaengine@vger.kernel.org>; Sat, 01 Oct 2022 00:14:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=7ue00wyDQ8ycUSRPgbYo15PRoBs6yC8KtymaqQ2kQws=;
-        b=V8S7xMkKB8LxnpjClzNYnqqYUOHVR5IoKwSjTrUKqdMcznu8+8TjbH1IIf44DhJ6nG
-         7Dk/yOSlBvcd/XwMgZbDhCqINA8IEhM4ju3RHcwj6Y+YoZVZdMsQ/gPz5y9SuRvPNutb
-         jmV8CGdMTLw7fL3H55NCpT5jZhclV89iPtyG83wTNbkc2m5xMMo+qqGwLmXRfoG0LetY
-         Y2eXFCOHJttOiFRTseVmiRRH0r3zZ78J+PQ5r5jQ0OakJO6jeLdnApBCuRB+3sd332g5
-         oPFicevFdOuBqJtuaYb2X+qz8996tK2bCqibp+tWrz8e/5LzIsrP+TGQcjOYbir8oSfH
-         jD0Q==
+        bh=PgzZ0PoJnAJz0dQXkSQKaL7dHuT1cZSXRrd9261Dnqk=;
+        b=mlQfF7N1lrHCE7kzVtI6RSbT96oqYXRvPkt9eX6xq+qfm4PQfTjJVQlxNDnrIqSiK7
+         fYF0Md3sB5LhiyQOzellOrJf+UQq0Usqk7TkNrf3IEMewO5PdRPyuNMDKMOMoqpm/YdL
+         U76rKfnEfbppYSWsDQENGMquaxWiWBPv8nXQnH8I5RP+s+IkOaMuiYfqg01Cfsc3aGfI
+         PJLIQnsuxZAuyMfxGnywGcU0cWYVhzR1J7o61gpcW518YfAIrTs330qNfLWP6fX9oiEY
+         7xSObKxr6BQM5qFim7Ez/TfVjduQ0VT4rjTXCutA4b+am1i6GQSiu5mipBtOS7rfyAc6
+         FF3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=7ue00wyDQ8ycUSRPgbYo15PRoBs6yC8KtymaqQ2kQws=;
-        b=dBRe7OzjI92/A/hD3YzkkZts012egcQNsSI1VGcRMrFpIUH6Q6/n0AZIG07Hr0/X7R
-         1jfm0UTABxb6ACXhsKMWpLBqH9acXuQRkrNCodrYeOjruhIyjx+T2yxpvmnZuHIe3aiR
-         cQ8/kQPcWAgTxc7KtI69kItLNz1jHnpVtOyB9PMzFef6+tGa2wmEQ8Y5SRqty9Ukn6BU
-         XK9LugX1LVltwsMve2N+nqNEroMVOFB9a9ny7kTN+PQT/Cd6EhijYq++I6SJZ3ufXiwL
-         UVxG5SVn6GU4inbFgIfrqKk/pWEsD2my/MCv/in7w3k7qpix8vKOxXiHqzlUSt6CGzam
-         Ijyg==
-X-Gm-Message-State: ACrzQf1m+C1ztgqHpKYqK6pkRAEVOTnFK70Qj5wjheaPqqlN/5kr7zv3
-        viuATvmmTlZVbadhw6Jh1khWK6WbYZ/ox/CoJjTUlQ==
-X-Google-Smtp-Source: AMsMyM7oJ0p65XoYBq5LSSqHJKDAIk67BF452YFYa2UMr/VG/BxY67wN0a+Cq8WpTODQqJHR8sfRB0fvpubzUG5Hxdo=
-X-Received: by 2002:a25:ba45:0:b0:67a:6298:7bac with SMTP id
- z5-20020a25ba45000000b0067a62987bacmr12061140ybj.194.1664608448066; Sat, 01
- Oct 2022 00:14:08 -0700 (PDT)
+        bh=PgzZ0PoJnAJz0dQXkSQKaL7dHuT1cZSXRrd9261Dnqk=;
+        b=amiEjXb6SFUNp66eP/MR+acAIvlufbOUcjJEWmZmoySryNiOzYQDJ6togfgh2SOCQ0
+         0k0Cr0NgQt1Q422R/DZgLIOUupSYUuoVVk8E5fjwXkNlvn17SW+yM/cvJuus7hvjm7gl
+         g2XQVwHMGsS487o3J5DyCm4YRXxxLRjx/cT7zIMBhrttwIhpxiVuRSRL8bV2MU6YUvZ2
+         adj/28Q7h2WqLCmrmtE6wmmNjdEwUe0IDRIgCVnDCAHHwvH+yLKEXBClnWkl1KskhJZd
+         25aLHUSE/zeCdsR+EQA2EStY2HIrrH20xhe22WtjVGLGSv+ko4FZ+jHwxgcxRbog755f
+         qQpQ==
+X-Gm-Message-State: ACrzQf228hm0ookeF/CwpGXLpEnqB6pa/AqCtH5NIWmRHs0yQObYBmhc
+        aUdOXti0ajOHbkyq3H5qCxL27cbcdI2UVuFpaI8fgw==
+X-Google-Smtp-Source: AMsMyM6u9BV0jp1phJUaaaJ8xA763ZxFTU2uofLHSHfSHU9LH6ozAYvYoscycfEMeh5n7Po4WdRQDl22O+CU0dKPQTY=
+X-Received: by 2002:a05:6902:102f:b0:6b4:7cba:b77a with SMTP id
+ x15-20020a056902102f00b006b47cbab77amr11680432ybt.516.1664608465947; Sat, 01
+ Oct 2022 00:14:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221001030627.29147-1-quic_molvera@quicinc.com> <20221001030627.29147-2-quic_molvera@quicinc.com>
-In-Reply-To: <20221001030627.29147-2-quic_molvera@quicinc.com>
+References: <20221001030627.29147-1-quic_molvera@quicinc.com> <20221001030627.29147-3-quic_molvera@quicinc.com>
+In-Reply-To: <20221001030627.29147-3-quic_molvera@quicinc.com>
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Sat, 1 Oct 2022 10:13:57 +0300
-Message-ID: <CAA8EJpo5x4Wva4thoryvh3_jf9WssbRN=94fNq8Xwvph75G_iQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: qcom: gpi: Add compatible for
- QDU1000 and QRU1000
+Date:   Sat, 1 Oct 2022 10:14:15 +0300
+Message-ID: <CAA8EJppLd6dti=gbR0hbEAQyj5PHA7xWR3w+DESx1qcKcyf3YA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dmaengine: qcom: gpi: Add compatible for QDU1000 and QRU1000
 To:     Melody Olvera <quic_molvera@quicinc.com>
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -73,29 +72,29 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 On Sat, 1 Oct 2022 at 06:08, Melody Olvera <quic_molvera@quicinc.com> wrote:
 >
-> Add compatible documentation for Qualcomm QDU1000 and QRU1000 SoCs.
+> Add compatible fields for the Qualcomm QDU1000 and QRU1000 SoCs.
 >
 > Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
 > ---
->  Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 2 ++
+>  drivers/dma/qcom/gpi.c | 2 ++
 >  1 file changed, 2 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-> index 7d2fc4eb5530..e37cee079c78 100644
-> --- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-> +++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-> @@ -25,6 +25,8 @@ properties:
->        - qcom,sm8250-gpi-dma
->        - qcom,sm8350-gpi-dma
->        - qcom,sm8450-gpi-dma
-> +      - qcom,qdu1000-gpi-dma
-> +      - qcom,qru1000-gpi-dma
+> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
+> index 8f0c9c4e2efd..94f92317979c 100644
+> --- a/drivers/dma/qcom/gpi.c
+> +++ b/drivers/dma/qcom/gpi.c
+> @@ -2292,6 +2292,8 @@ static const struct of_device_id gpi_of_match[] = {
+>         { .compatible = "qcom,sm8250-gpi-dma", .data = (void *)0x0 },
+>         { .compatible = "qcom,sm8350-gpi-dma", .data = (void *)0x10000 },
+>         { .compatible = "qcom,sm8450-gpi-dma", .data = (void *)0x10000 },
+> +       { .compatible = "qcom,qdu1000-gpi-dma", .data = (void *)0x10000 },
+> +       { .compatible = "qcom,qru1000-gpi-dma", .data = (void *)0x10000 },
 
-You know my comment, qdu/qru comes before sm/sc
+As usual
 
->
->    reg:
->      maxItems: 1
+>         { },
+>  };
+>  MODULE_DEVICE_TABLE(of, gpi_of_match);
 > --
 > 2.37.3
 >

@@ -2,139 +2,185 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE4DE5F21EC
-	for <lists+dmaengine@lfdr.de>; Sun,  2 Oct 2022 10:15:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C4FC5F242B
+	for <lists+dmaengine@lfdr.de>; Sun,  2 Oct 2022 18:53:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229677AbiJBIPR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 2 Oct 2022 04:15:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44130 "EHLO
+        id S229946AbiJBQx4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 2 Oct 2022 12:53:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229513AbiJBIPO (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 2 Oct 2022 04:15:14 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49C9027DF2
-        for <dmaengine@vger.kernel.org>; Sun,  2 Oct 2022 01:15:11 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id c2so6309493lfb.10
-        for <dmaengine@vger.kernel.org>; Sun, 02 Oct 2022 01:15:11 -0700 (PDT)
+        with ESMTP id S229847AbiJBQx4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 2 Oct 2022 12:53:56 -0400
+Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 718483CBEA;
+        Sun,  2 Oct 2022 09:53:55 -0700 (PDT)
+Received: by mail-io1-xd2d.google.com with SMTP id 138so6636747iou.9;
+        Sun, 02 Oct 2022 09:53:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=s2Uh3PpT13mJBJ1e61WOr6LFLJbasTKO+1hejNf0JLE=;
-        b=G8Azz3hP9CXBtBE70r+A+65q7ULxWW7RN2y0u3zIhkmPtS2nzuDLJhbxrhvbMHpdGo
-         JLmPnJRv2l6Ob3CX5KU7JeTM7KLtYb0xNsTSw5+dG8ECARBt7LR772vanwbvZWKQLDHH
-         cA6wksS99Tlgom9wuzMqaQCXRYMe9MxToDEKm3bpSSH67ysad3D6QTz+VV02PswMOVk2
-         Es6WKaGusYax+Mq1Qw7WfU/HoFJWGAO9y2g7dwZuWo1B2uHFz9K8fpbDQ0mTqt8Thrpc
-         m7b0/cFCUJ2kvof+03yDdIs0thFrWLMG82fIzPkINnKKbX6tuEVtCCUIAD9Y1JuT6JaB
-         pZlg==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=ubQjNTuesFewVeey+udg8F7CqkMS4n6rohRkhXXEiNo=;
+        b=gobyR88qKFcMBijBTqmIcGqK75+JwLdIY2Odmy3jKbIJiRH4x+GXpTNwuGyjntZIm+
+         F7C11fyKIbmBHWwKKEiiT9AKRvajGshQClVCPNn4expJIz1Osd1iqBzstmCX6hZ1Qixj
+         ducGiPdpp+0JyObN9teowoD9HifPIirnqOfRFa+4nMUvB/Ll4/wqkaDTLak+EZwZcbTf
+         ssvPW1Rf+V1ec0k7rGQ2TeGPZ60gUyPnS1uqm6tnjjv0EII0UIe5nY+4sI1ExGmDQhtl
+         bU/RV3PO3qX0fNG1gwWmmY2xI804pn3mP7QBzVqt8XPPOyuL8w4DTLZ3Rn72+IdeAi8I
+         q3Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=s2Uh3PpT13mJBJ1e61WOr6LFLJbasTKO+1hejNf0JLE=;
-        b=74ehlH10cyDlBxZXtQh2hrimT52ZYCYiUw4TeyNrHBCLYC6LvBoXXBQvZxaybhN1VR
-         SJ0uBrw1m7ZZz0Tux0AlKx3RRX2GUIEUs2aY3sQwbRv+BUs0L0AqJwOYUnpYjJYBHtro
-         cjxNpchrkniZ1AgG4Rxu4uEY4kAAS/qjBe4fcUW62rG3YbpxBKPlZ1EHvor/wlf4SLql
-         LAkpM3LsB3tLxoDY16zQJIr4JWSlgJ90yHcvYFqODLaPmU+CC6iTes2i2yfn+dp2DLIH
-         g3f6699Y+/dSFMt/lbuFQJOLzGvWfEcUBOvDrloQUdHEvnMOu8qFGj33bukONUw9uaU2
-         AhWg==
-X-Gm-Message-State: ACrzQf33VBzUSWB+s8RUZxIfq4kgxoW/O3HtRhXVlxhXBwBEZOLna2H6
-        t5X16I84wKRCMXR5Ez8pTfj0Vw==
-X-Google-Smtp-Source: AMsMyM4Sj6uZkC2lA6Ka+K7fj8c8gZXyehTdGN5ox47TbrEQoI19qCfeJZhga1vrP3W16jlm3hWlvg==
-X-Received: by 2002:a05:6512:1047:b0:49d:a875:8d90 with SMTP id c7-20020a056512104700b0049da8758d90mr6007164lfb.630.1664698509667;
-        Sun, 02 Oct 2022 01:15:09 -0700 (PDT)
-Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id d6-20020a2e96c6000000b0026c3ecf9a39sm592594ljj.38.2022.10.02.01.15.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Oct 2022 01:15:09 -0700 (PDT)
-Message-ID: <dc5c1c52-efb2-34a6-5aee-e63453fc91c7@linaro.org>
-Date:   Sun, 2 Oct 2022 10:15:08 +0200
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=ubQjNTuesFewVeey+udg8F7CqkMS4n6rohRkhXXEiNo=;
+        b=RJei+V/qWjHwTlLnPl6E9yDMpLds6Is3RFPd/GSDSjPZqfDjbo/U+r+g4dmJTYc9Mp
+         ThpVHAkH8DNnA40NMoZpEz/ncJNPcxyfwLC4AOjUxMXAZfTdy3AQ6gpKNXzrAXdwYLRN
+         LezcHU8sTJ2QsDHo6L6pnfyUheNeKlvxYsrryg3sJ+ZOZHqeSAG0oXmUI48k3ibVHMUP
+         LHYgWt+pDLstLPKotrg1AbCw4HhITNoFklGGm4Punk6cdAIOIq0FfzDojcKfJZgmq17A
+         er/sDmUgqm30tTcz63KlbL4zsxRIWrhltDSrNty88wpvE6KtoRE0vXZ0ME9SSKtWuKbO
+         ZplA==
+X-Gm-Message-State: ACrzQf1AFNKJLmHIgub/j6HXvYGl6/6ubFKUu6yP+bIdJG8/UG9CmbxJ
+        DhXWLu3Mi2KgBY0bus7WN6VPxdc5Q/2BP/H3twEtsuhOaWyQiA==
+X-Google-Smtp-Source: AMsMyM7+Ydg7AeXoWzXbb8RtVOLygGx2R/Q1FKzWSh4fKBXJ+4EndGP/EQhq9VIi8vzseO8uPpQssRfHudTz+k2h0uQ=
+X-Received: by 2002:a05:6638:160e:b0:35a:5882:db1b with SMTP id
+ x14-20020a056638160e00b0035a5882db1bmr8981747jas.299.1664729634875; Sun, 02
+ Oct 2022 09:53:54 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: sm6125: Add GPI DMA nodes
-Content-Language: en-US
-To:     Martin Botka <martin.botka@somainline.org>, martin.botka1@gmail.com
-Cc:     ~postmarketos/upstreaming@lists.sr.ht,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@somainline.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Jami Kettunen <jamipkettunen@somainline.org>,
-        Paul Bouchara <paul.bouchara@somainline.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221001185526.494095-1-martin.botka@somainline.org>
- <20221001185526.494095-3-martin.botka@somainline.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221001185526.494095-3-martin.botka@somainline.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20220930055331.138868-1-gengcixi@gmail.com> <bd3ce49b-f887-1021-f21f-4e57ade1ba25@linux.alibaba.com>
+In-Reply-To: <bd3ce49b-f887-1021-f21f-4e57ade1ba25@linux.alibaba.com>
+From:   Cixi Geng <gengcixi@gmail.com>
+Date:   Mon, 3 Oct 2022 00:53:18 +0800
+Message-ID: <CAF12kFuXV+9=vQjce44a8CBMtC0=DP+wv0BZ5UjkZOBX3p0=yA@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: sprd: Support two-stage dma interrupt
+To:     Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc:     vkoul@kernel.org, orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 01/10/2022 20:55, Martin Botka wrote:
-> This commit adds and configures GPI DMA nodes.
-> 
-> Signed-off-by: Martin Botka <martin.botka@somainline.org>
-> ---
->  arch/arm64/boot/dts/qcom/sm6125.dtsi | 37 ++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm6125.dtsi b/arch/arm64/boot/dts/qcom/sm6125.dtsi
-> index d35ea4474234..7e135041bd42 100644
-> --- a/arch/arm64/boot/dts/qcom/sm6125.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm6125.dtsi
-> @@ -6,6 +6,7 @@
->  #include <dt-bindings/clock/qcom,dispcc-sm6125.h>
->  #include <dt-bindings/clock/qcom,gcc-sm6125.h>
->  #include <dt-bindings/clock/qcom,rpmcc.h>
-> +#include <dt-bindings/dma/qcom-gpi.h>
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/power/qcom-rpmpd.h>
-> @@ -1076,6 +1077,42 @@ sdhc_2: mmc@4784000 {
->  			status = "disabled";
->  		};
->  
-> +		gpi_dma0: dma-controller@4a00000 {
-> +			compatible = "qcom,sm6125-gpi-dma";
-
-You will need here sdm845 fallback.
-
-> +			#dma-cells = <5>;
-> +			reg = <0x04a00000 0x60000>;
-> +			iommus = <&apps_smmu 0x0136 0x0>;
-> +			dma-channels = <8>;
-> +			dma-channel-mask = <0x1f>;
-> +			interrupts = <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 338 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>;
-> +			status = "okay";
-
-No need, its okay by default.
-
-Both comments apply everywhere.
-
-Best regards,
-Krzysztof
-
+Baolin Wang <baolin.wang@linux.alibaba.com> =E4=BA=8E2022=E5=B9=B49=E6=9C=
+=8830=E6=97=A5=E5=91=A8=E4=BA=94 14:42=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Hi Cixi,
+>
+> On 9/30/2022 1:53 PM, Cixi Geng wrote:
+> > From: Cixi Geng <cixi.geng1@unisoc.com>
+> >
+> > Audio need to request Audio CP global dma interrupt, so Audio CP
+> > DMA should support two-stage interrupt to adapte it.
+> > It will occur interrupt when two-stage dma channel transfer done.
+>
+> If the AP does not want the interrupt, why not just set SPRD_DMA_NO_INT?
+>
+> I am struggling to understand the whole requirement, could you elaborate?
+>
+The AP should deal with the interrupt. I wrote the wrong conditions.
+AP handle different interrupts about the 2-stage dma channel.
+> >
+> > Signed-off-by: Cixi Geng <cixi.geng1@unisoc.com>
+> > ---
+> >   drivers/dma/sprd-dma.c       |  8 ++++----
+> >   include/linux/dma/sprd-dma.h | 12 ++++++++++++
+> >   2 files changed, 16 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+> > index 474d3ba8ec9f..7a9ade422a00 100644
+> > --- a/drivers/dma/sprd-dma.c
+> > +++ b/drivers/dma/sprd-dma.c
+> > @@ -441,7 +441,7 @@ static int sprd_dma_set_2stage_config(struct sprd_d=
+ma_chn *schan)
+> >               val =3D chn & SPRD_DMA_GLB_SRC_CHN_MASK;
+> >               val |=3D BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFF=
+SET;
+> >               val |=3D SPRD_DMA_GLB_2STAGE_EN;
+> > -             if (schan->int_type !=3D SPRD_DMA_NO_INT)
+> > +             if (schan->int_type !=3D SPRD_DMA_SRC_CHN0_INT)
+> >                       val |=3D SPRD_DMA_GLB_SRC_INT;
+>
+> That does not make sense to me. If user configues the interrupt type as
+> SPRD_DMA_NO_INT, the code will still enable the source interrupt.
+>
+> If user configures the interrupt type as SPRD_DMA_SRC_CHN0_INT, you will
+> disable the source interrupt? Confusing...
+Sorry, the condition should be  (schan->int_type & SPRD_DMA_SRC_CHN0_INT)
+I will fixed it next vesion.
+>
+> >               sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP1, val, =
+val);
+> > @@ -451,7 +451,7 @@ static int sprd_dma_set_2stage_config(struct sprd_d=
+ma_chn *schan)
+> >               val =3D chn & SPRD_DMA_GLB_SRC_CHN_MASK;
+> >               val |=3D BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFF=
+SET;
+> >               val |=3D SPRD_DMA_GLB_2STAGE_EN;
+> > -             if (schan->int_type !=3D SPRD_DMA_NO_INT)
+> > +             if (schan->int_type !=3D SPRD_DMA_SRC_CHN1_INT)
+> >                       val |=3D SPRD_DMA_GLB_SRC_INT;
+> >
+> >               sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP2, val, =
+val);
+> > @@ -461,7 +461,7 @@ static int sprd_dma_set_2stage_config(struct sprd_d=
+ma_chn *schan)
+> >               val =3D (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
+> >                       SPRD_DMA_GLB_DEST_CHN_MASK;
+> >               val |=3D SPRD_DMA_GLB_2STAGE_EN;
+> > -             if (schan->int_type !=3D SPRD_DMA_NO_INT)
+> > +             if (schan->int_type !=3D SPRD_DMA_DST_CHN0_INT)
+> >                       val |=3D SPRD_DMA_GLB_DEST_INT;
+> >
+> >               sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP1, val, =
+val);
+> > @@ -471,7 +471,7 @@ static int sprd_dma_set_2stage_config(struct sprd_d=
+ma_chn *schan)
+> >               val =3D (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
+> >                       SPRD_DMA_GLB_DEST_CHN_MASK;
+> >               val |=3D SPRD_DMA_GLB_2STAGE_EN;
+> > -             if (schan->int_type !=3D SPRD_DMA_NO_INT)
+> > +             if (schan->int_type !=3D SPRD_DMA_DST_CHN1_INT)
+> >                       val |=3D SPRD_DMA_GLB_DEST_INT;
+> >
+> >               sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP2, val, =
+val);
+> > diff --git a/include/linux/dma/sprd-dma.h b/include/linux/dma/sprd-dma.=
+h
+> > index d09c6f6f6da5..26de41d6d915 100644
+> > --- a/include/linux/dma/sprd-dma.h
+> > +++ b/include/linux/dma/sprd-dma.h
+> > @@ -101,6 +101,14 @@ enum sprd_dma_req_mode {
+> >    * is done.
+> >    * @SPRD_DMA_CFGERR_INT: configure error interrupt when configuration=
+ is
+> >    * incorrect.
+> > + * @SPRD_DMA_SRC_CHN0_INT: interrupt occurred when source channel0
+> > + * transfer is done.
+> > + * @SPRD_DMA_SRC_CHN1_INT: interrupt occurred when source channel1
+> > + * transfer is done.
+> > + * @SPRD_DMA_DST_CHN0_INT: interrupt occurred when destination channel=
+0
+> > + * transfer is done.
+> > + * @SPRD_DMA_DST_CHN1_INT: interrupt occurred when destination channel=
+1
+> > + * transfer is done.
+> >    */
+> >   enum sprd_dma_int_type {
+> >       SPRD_DMA_NO_INT,
+> > @@ -112,6 +120,10 @@ enum sprd_dma_int_type {
+> >       SPRD_DMA_TRANS_BLK_INT,
+> >       SPRD_DMA_LIST_INT,
+> >       SPRD_DMA_CFGERR_INT,
+> > +     SPRD_DMA_SRC_CHN0_INT,
+> > +     SPRD_DMA_SRC_CHN1_INT,
+> > +     SPRD_DMA_DST_CHN0_INT,
+> > +     SPRD_DMA_DST_CHN1_INT,
+> >   };
+> >
+> >   /*

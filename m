@@ -1,116 +1,118 @@
 Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
-Received: from out1.vger.email (unknown [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB1255F48F9
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Oct 2022 19:55:41 +0200 (CEST)
+Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
+	by mail.lfdr.de (Postfix) with ESMTP id 18F7B5F4A0E
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Oct 2022 22:03:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229509AbiJDRzj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 4 Oct 2022 13:55:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43790 "EHLO
+        id S229816AbiJDUDr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 4 Oct 2022 16:03:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbiJDRzi (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Oct 2022 13:55:38 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9652627FFB;
-        Tue,  4 Oct 2022 10:55:31 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id a10so16221379ljq.0;
-        Tue, 04 Oct 2022 10:55:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=QgxCTgKtdvmNPdjkMmoM5ghrfxtt0usDYHhdkKKlo+A=;
-        b=Wt4WMLyZojZ8tIIStbBRyyF1UQUyrL4Shkojh6ysp/OMiuLxu+WcxMQ4Rk9g4xX3VX
-         OfnevgIJ4NOBEDi/p0g40h9nMseLV/2XDs0ey7YuRiStKJ2+EDbXFsue1N+wGwmwIthU
-         Ab3rO8sFRNOAKBtuWYgYmN0JsSBointi1FjwyEW7nzc/2wHLHhG0sdLea7tpMBqM0atW
-         JiUQD3lEh3milMFrLX2YO7nJ9pUPD8eW3vErU/IeKWIS+4DzF/fX/3town3xRTxGF+T/
-         n3AAXUXj1d4r6u9U/aPkFZhi23YfkKHFnSHMhlHHiDxntUNQuxT/atD61BP3RM/g1bCC
-         hRQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=QgxCTgKtdvmNPdjkMmoM5ghrfxtt0usDYHhdkKKlo+A=;
-        b=vnWT/4I//YIYvfMmAwCUHIy74z+yOydrJpOFkPAGXLIJEeTZB6+pROp2pVIl5r5P5P
-         7lqXjVCfVQqv4e1lj3epWUW/aj8ut/jCtgkSqZ1sNpk3mbFlN/JzrZG7/hp5Q9ELayyr
-         ZQT9a3WCgPQHLUaz7JLieXNXDydl72BOn4ZXQXvGlIXJgd9OadcYk72CAzoruNAVKOzT
-         7sa6XanknPreGJz3SDUK8fbEqgUNVurdyEuKg2Jpa9W0JesnY4K8XPiLS2PkSmkmJSe/
-         XIFNgL18/Z7ipVCI2QQrpTewUmoCHC3EEzDnd2J1OlwwsHyXjG3OBYuZd2NJHWB4VS6d
-         P7Ng==
-X-Gm-Message-State: ACrzQf3wd5jTtHZtQfydend2F5dfWPXeYF56X5AHE6WPK5P6terOo1B/
-        N2RleQpjnSnAPOb58amNbdg=
-X-Google-Smtp-Source: AMsMyM67m/p+B2iHeDWVa4IzXzN0UNOn9ODz6/pOGFynbscR/dhyWkTcGGZq8jGKwrHiJy//qApwnA==
-X-Received: by 2002:a2e:5d6:0:b0:26d:d28b:4858 with SMTP id 205-20020a2e05d6000000b0026dd28b4858mr4011645ljf.445.1664906129874;
-        Tue, 04 Oct 2022 10:55:29 -0700 (PDT)
-Received: from [10.0.0.100] (host-185-69-38-8.kaisa-laajakaista.fi. [185.69.38.8])
-        by smtp.gmail.com with ESMTPSA id x7-20020a2e9c87000000b0026dcfe9c7dasm929090lji.14.2022.10.04.10.55.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Oct 2022 10:55:29 -0700 (PDT)
-Message-ID: <9bdee3dd-3bfa-3965-ad4a-11c6a3308928@gmail.com>
-Date:   Tue, 4 Oct 2022 20:55:56 +0300
+        with ESMTP id S229556AbiJDUDq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Oct 2022 16:03:46 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B5191EAF0;
+        Tue,  4 Oct 2022 13:03:46 -0700 (PDT)
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 294JQIJq004487;
+        Tue, 4 Oct 2022 20:03:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=+4Un6+7BE9002G3mRa+XIvmJ2Jfd03kLNtGuUWJoSp4=;
+ b=mtM1H8FNwWxVpm5pnuhs/FIMtx5rt+o4cXeDFt3H5QwIKN30nXRe85FLfyNU/6+BcsCm
+ Z1KnhvdNYfRWnOCWRIY6U/qM2Ei1sakuSq+mp0/fkZWE+ew46j/5z0vu/JywaXmiaH8F
+ jhRLIOeOaQHS2PmiuEX2WDI0idd/ed98W9sr1Mj5gh0xQi236gmooIT39xREpFwg2HMA
+ 88ueutcVCz07yHwNo/HyaaJCf7y2WqwS/Q0GoquZIqj6Ek3/1bgyBttJnvjGmJU+e9R7
+ DeB4FAIMFVcxQoYhW8W7a18UIZq5ir2FwZsPUOAfhthZ/99XikrP5G3CwRDgHXD4lOx7 Vg== 
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3k0hxpse2v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Oct 2022 20:03:43 +0000
+Received: from nasanex01b.na.qualcomm.com (corens_vlan604_snip.qualcomm.com [10.53.140.1])
+        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 294K3gpb012508
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 4 Oct 2022 20:03:42 GMT
+Received: from [10.110.73.50] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Tue, 4 Oct 2022
+ 13:03:41 -0700
+Message-ID: <486ac802-f7b9-7a06-bc10-f068bf29c773@quicinc.com>
+Date:   Tue, 4 Oct 2022 15:03:40 -0500
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH v3 0/3] dma/ti: enable udma and psil to be built as
- modules
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: qcom: gpi: Add compatible for
+ QDU1000 and QRU1000
 Content-Language: en-US
-To:     Kevin Hilman <khilman@baylibre.com>, dmaengine@vger.kernel.org
-Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Nicolas Frayer <nfrayer@baylibre.com>
-References: <20220929234820.940048-1-khilman@baylibre.com>
-From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <20220929234820.940048-1-khilman@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20221001030627.29147-1-quic_molvera@quicinc.com>
+ <20221001030627.29147-2-quic_molvera@quicinc.com>
+ <CAA8EJpo5x4Wva4thoryvh3_jf9WssbRN=94fNq8Xwvph75G_iQ@mail.gmail.com>
+From:   Melody Olvera <quic_molvera@quicinc.com>
+In-Reply-To: <CAA8EJpo5x4Wva4thoryvh3_jf9WssbRN=94fNq8Xwvph75G_iQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: edKf2_AIPHgiCMEh-d-xfe6PZa3n53j8
+X-Proofpoint-ORIG-GUID: edKf2_AIPHgiCMEh-d-xfe6PZa3n53j8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-10-04_09,2022-09-29_03,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 spamscore=0 mlxlogscore=861 lowpriorityscore=0 mlxscore=0
+ malwarescore=0 suspectscore=0 bulkscore=0 clxscore=1015 impostorscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2209130000 definitions=main-2210040130
+X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Kevin,
 
-On 30/09/2022 02:48, Kevin Hilman wrote:
-> Enable the UDMA driver & glue and PSIL lib to be built & loaded as modules.
->                                                                                                                                                                                 
-> The defauilt Kconfig settings are not changed, so default upstream is
-> still to be built in.  This series just enables the option to build as
-> modules.
 
-Thanks for the updates, I can re-affirm my ack:
+On 10/1/2022 2:13 AM, Dmitry Baryshkov wrote:
+> On Sat, 1 Oct 2022 at 06:08, Melody Olvera <quic_molvera@quicinc.com> wrote:
+>> Add compatible documentation for Qualcomm QDU1000 and QRU1000 SoCs.
+>>
+>> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+>> ---
+>>  Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+>> index 7d2fc4eb5530..e37cee079c78 100644
+>> --- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+>> +++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+>> @@ -25,6 +25,8 @@ properties:
+>>        - qcom,sm8250-gpi-dma
+>>        - qcom,sm8350-gpi-dma
+>>        - qcom,sm8450-gpi-dma
+>> +      - qcom,qdu1000-gpi-dma
+>> +      - qcom,qru1000-gpi-dma
+> You know my comment, qdu/qru comes before sm/sc
+Got it.
+>>    reg:
+>>      maxItems: 1
+>> --
+>> 2.37.3
+>>
+Thanks,
+Melody
 
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-
-> 
-> v2-v3:
-> - change dma/ prefix to dmaengine:
-> - rework Makefile order for PSIL lib
-> 
-> v1->v2:
-> - rework PSIL lib into a single .ko
-> 
-> Kevin Hilman (3):
->    of/irq: export of_msi_get_domain
->    dma/ti: convert k3-udma to module
->    dma/ti: convert PSIL to be buildable as module
-> 
->   drivers/dma/ti/Kconfig        |  7 +++---
->   drivers/dma/ti/Makefile       | 15 +++++++------
->   drivers/dma/ti/k3-psil.c      |  2 ++
->   drivers/dma/ti/k3-udma-glue.c |  5 ++++-
->   drivers/dma/ti/k3-udma.c      | 40 +++++------------------------------
->   drivers/of/irq.c              |  1 +
->   6 files changed, 24 insertions(+), 46 deletions(-)
-> 
-> 
-> base-commit: 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
-
--- 
-Péter

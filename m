@@ -2,105 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 935025F6D14
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Oct 2022 19:42:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDBA05F7818
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Oct 2022 14:41:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229527AbiJFRmx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 6 Oct 2022 13:42:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43440 "EHLO
+        id S229700AbiJGMlN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 7 Oct 2022 08:41:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230039AbiJFRmw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Oct 2022 13:42:52 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2064.outbound.protection.outlook.com [40.107.244.64])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3DCFB274D;
-        Thu,  6 Oct 2022 10:42:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Yk1fTCQPoaqFLV7sYupu9IUv/KgCFuXI+snEH7RCZGo/hC3WD+u0BfkGjySbHL5mzFait2kkm6j0P8YiIq5hD4K97dRzS4tkhPQ5U4qc0X3SZa9sSRLZQbwQ9UuiQdXtWMf9TFs7LJa/QOtc6pP9UqwwlL9F8lAotbsMHAPcNLvvV+pmzQ+wVRojmFM5DJKEWeVKHi6sbnfFAMsBba8R0LqPyPLiIxcqZc6gMx09/m4Mpuqlo90e2hTObZbDuLxKU2yEwW5t8rGjHT8+hrcRARzswBZvGz+3KxSdJVe26PcdUx45FC+WVLKT0coL/Hu0RR2G3B0nCJXFlpOsQG6F1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GugUSR1Ts6HanG2FbAOsl1KwBKQKRMvFtMSkHG4Au4Y=;
- b=kisRH8T2lLS6AzZ+rik9Vw9LkBoffrQL/xWkLr3wnAM0WcFgWACbyk52Saxh8T8F7caF1CEhR/jVVf1haLVvyPBZKt8xkCOCyb4C7DuH3+PKT4vpvIlL+aBqYpej2uDvHp4vXVT9eg1ZaMdRvMv99OnmuG0gzUmQKNwPA5IGaVb487nKj3D0+dAcYQB1K3pKEBFFe8W1sXFHTX1lmXk4C2bwousearC2yobw7prmQnF4pObUB6YhllZPZvNmCMH0yvbG9O6f70k5w2aYQToXbYuU9ahjQCMi4yE8PtYiutFw0g6gysB16dN/c1oxkrlm79njAFROyRddfsFqAJX/nA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=gpxsee.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GugUSR1Ts6HanG2FbAOsl1KwBKQKRMvFtMSkHG4Au4Y=;
- b=nFyXH6bCrW4WWd3sNDaGBy8a6KC+iY97NrVbSpqcEjGA+xlvY4GjmVp4/mOuHZ3lZW+xsMavYzXnkr7FOcW/zbGF5PvMejgcxTRjfJeDtMPUGVEpG8WLEqNuDerpf29e565F5aU+XohgfXwah6kJ7mdsSpKalybxYuZxwfVqkuA=
-Received: from BN9PR03CA0902.namprd03.prod.outlook.com (2603:10b6:408:107::7)
- by IA0PR12MB7602.namprd12.prod.outlook.com (2603:10b6:208:43a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.17; Thu, 6 Oct
- 2022 17:42:47 +0000
-Received: from BN8NAM11FT034.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:107:cafe::a6) by BN9PR03CA0902.outlook.office365.com
- (2603:10b6:408:107::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.23 via Frontend
- Transport; Thu, 6 Oct 2022 17:42:46 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BN8NAM11FT034.mail.protection.outlook.com (10.13.176.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5709.10 via Frontend Transport; Thu, 6 Oct 2022 17:42:46 +0000
-Received: from SATLEXMB07.amd.com (10.181.41.45) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Thu, 6 Oct
- 2022 12:42:45 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB07.amd.com
- (10.181.41.45) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Thu, 6 Oct
- 2022 10:42:45 -0700
-Received: from [172.19.74.144] (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2375.28 via Frontend
- Transport; Thu, 6 Oct 2022 12:42:44 -0500
-Message-ID: <e04c498e-c3f5-9b0f-14cf-56057dd77d4e@amd.com>
-Date:   Thu, 6 Oct 2022 10:42:44 -0700
+        with ESMTP id S229682AbiJGMlI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 7 Oct 2022 08:41:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E53DED1C;
+        Fri,  7 Oct 2022 05:41:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4014E61CD5;
+        Fri,  7 Oct 2022 12:41:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18725C433D6;
+        Fri,  7 Oct 2022 12:40:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665146460;
+        bh=k3p4RHAw+QEwWScHrKYPvoyEhjLHmOZX8Y1a0KB/8QI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=frxn9l6htA+lZY3KAZ0sobWHjhr4tl3aodtOyUP3fc58WJqXX4XErG1KB+AvZ+/5X
+         SYQNCcQrV3MA6Kzr+Id8ImeC0pyCjdENlqx4egGWvheEWO/OYbTttdTzmth3DMjPzU
+         0tHhOc5290vJEpN0c6CrOYpgGOMEcJk1qH5RGJUlZlWz6piCE8wzJMn/9ykoXDk7ie
+         g908tMeDARLvempxyKIOWgmEQ9CoOQlKYje+B+sWq4viTriwFhEgj+EjFITe8OBh2j
+         bgOsyc0/e0k0I6YEg4OS5Ux5iFwel0WdoLHUSXp/jzMqQ3v6sG35fjSbCCVlzFGSMv
+         uxxylEN+A2nIg==
+Date:   Fri, 7 Oct 2022 18:10:56 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: dmaengine updates for v6.1-rc1
+Message-ID: <Y0AeWM7UabE2ZK34@matsya>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V6 XDMA 0/2] xilinx XDMA driver
-Content-Language: en-US
-To:     =?UTF-8?Q?Martin_T=c5=afma?= <tumic@gpxsee.org>,
-        <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <trix@redhat.com>
-CC:     <max.zhen@amd.com>, <sonal.santan@amd.com>, <larry.liu@amd.com>,
-        <brian.xu@amd.com>
-References: <1664919839-27149-1-git-send-email-lizhi.hou@amd.com>
- <4e4481e9-0eb9-ac28-b9ff-348adb4dc866@gpxsee.org>
-From:   Lizhi Hou <lizhi.hou@amd.com>
-In-Reply-To: <4e4481e9-0eb9-ac28-b9ff-348adb4dc866@gpxsee.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT034:EE_|IA0PR12MB7602:EE_
-X-MS-Office365-Filtering-Correlation-Id: eb2a5daa-24f1-4e8b-eca6-08daa7c22dea
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: grSX+Lgdfp7hlwysN6GjtDdisJvUyFYC0r+3vwAtUymOQTAQ6UE49j/9GOi2Jtlp+NxmtC9OspUSxeTZ4FPrPDmr0r32n9XY4XaxCUK70HKUGWFJzLonjCB6kL+VMB7bs4DNcn38/hsmGunu6TfdAe/I1G+ZmY5+pW+DOXki/qLosAk3azOTvc8hm1XLzSMDZvyBQo7nrEtrHWO69q5OJ57DvqsjdnTdyi6xucdvIwJBUFmV8oV8/Xizl18MX/MLUQtbBxWi93uZCsZd8lOVZSlhDY8NdoRkEYDhhFW3U1zZthYvNsiJfXXnyuxr2OLnEmWG14lVmzmLfABl2TQKdL6X/lUIszj7W1qG785eKi9TX4JGJwo/ihRtRVPnzATyWHgkR5jjpyehyIJUpyIXSRFPCeROj+7XnlWoBfG1EsmlYssnb02AY5oI9A89Xe+qZ3bKAgykK/76WHST2kbUJs8HyqAaikp+F0eZcBiLF5jnEicxnwVahyTdsze0jSzthbCUyl/HTuGd6NpHd+JzBxSFcU1kSD352q8mnDH6Dzn47vA/Mc5AeB07Flhc0QA7XCX3CIrPT9uj3KvC1hj5TC1eVpS4R3m5r+pQwsFK3aSroD+SN/BAAo28rJ3epLQ0N/5BzisqZOcBG9VMiP6gjOvLNtjevXEbnceDOLLUxgHu/NxV9rQgG/CvPtrwSe+51QhD5eyWjZ0TMB6bwbrFeBqm/HukegMzeMgcn1yVshNW4H87f9hR6iPRqpjZ5zG08i7ijM/Z+r+eQi8N/Jwc5umW9NYli2oPf0jcingod8xMOiOzUSOC44aL2aGw/eCNMJIf2XeHM99UcKfmP8w7T+DZ1I74/fE9vEenocBa94Gg89oEO6gTKYRxCA7RB/EqeNbtNwq+MC9FLZjwPB4MMw==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(376002)(346002)(136003)(39860400002)(396003)(451199015)(36840700001)(46966006)(40470700004)(40460700003)(16576012)(336012)(5660300002)(110136005)(36756003)(8936002)(2616005)(53546011)(83380400001)(31696002)(966005)(54906003)(36860700001)(82310400005)(426003)(70206006)(66574015)(478600001)(81166007)(356005)(82740400003)(40480700001)(47076005)(86362001)(41300700001)(4326008)(186003)(70586007)(8676002)(44832011)(2906002)(316002)(31686004)(26005)(36900700001)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Oct 2022 17:42:46.1586
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb2a5daa-24f1-4e8b-eca6-08daa7c22dea
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT034.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7602
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="YwH7OzFFF1YwJZMw"
+Content-Disposition: inline
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -108,109 +52,253 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On 10/6/22 09:37, Martin Tůma wrote:
-> On 04. 10. 22 23:43, Lizhi Hou wrote:
->> Hello,
->>
->> This V6 of patch series is to provide the platform driver to support the
->> Xilinx XDMA subsystem. The XDMA subsystem is used in conjunction with 
->> the
->> PCI Express IP block to provide high performance data transfer 
->> between host
->> memory and the card's DMA subsystem. It also provides up to 16 user
->> interrupt wires to user logic that generate interrupts to the host.
->>
->>              +-------+       +-------+       +-----------+
->>     PCIe     |       |       |       |       |           |
->>     Tx/Rx    |       |       |       |  AXI  |           |
->>   <=======>  | PCIE  | <===> | XDMA  | <====>| User Logic|
->>              |       |       |       |       |           |
->>              +-------+       +-------+       +-----------+
->>
->> The XDMA has been used for Xilinx Alveo PCIe devices.
->> And it is also integrated into Versal ACAP DMA and Bridge Subsystem.
->>      https://www.xilinx.com/products/boards-and-kits/alveo.html
->> https://docs.xilinx.com/r/en-US/pg344-pcie-dma-versal/Introduction-to-the-DMA-and-Bridge-Subsystems
->>
->> The device driver for any FPGA based PCIe device which leverages XDMA 
->> can
->> call the standard dmaengine APIs to discover and use the XDMA subsystem
->> without duplicating the XDMA driver code in its own driver.
->>
->> Changes since v5:
->> - Modified user logic interrupt APIs to handle user logic IP which 
->> does not
->>    have its own register to enable/disable interrupt.
->> - Clean up code based on review comments.
->>
->> Changes since v4:
->> - Modified user logic interrupt APIs.
->>
->> Changes since v3:
->> - Added one patch to support user logic interrupt.
->>
->> Changes since v2:
->> - Removed tasklet.
->> - Fixed regression bug introduced to V2.
->> - Test Robot warning.
->>
->> Changes since v1:
->> - Moved filling hardware descriptor to xdma_prep_device_sg().
->> - Changed hardware descriptor enum to "struct xdma_hw_desc".
->> - Minor changes from code review comments.
->>
->> Lizhi Hou (2):
->>    dmaengine: xilinx: xdma: Add xilinx xdma driver
->>    dmaengine: xilinx: xdma: Add user logic interrupt support
->>
->>   MAINTAINERS                            |   11 +
->>   drivers/dma/Kconfig                    |   13 +
->>   drivers/dma/xilinx/Makefile            |    1 +
->>   drivers/dma/xilinx/xdma-regs.h         |  171 ++++
->>   drivers/dma/xilinx/xdma.c              | 1034 ++++++++++++++++++++++++
->>   include/linux/dma/amd_xdma.h           |   16 +
->>   include/linux/platform_data/amd_xdma.h |   34 +
->>   7 files changed, 1280 insertions(+)
->>   create mode 100644 drivers/dma/xilinx/xdma-regs.h
->>   create mode 100644 drivers/dma/xilinx/xdma.c
->>   create mode 100644 include/linux/dma/amd_xdma.h
->>   create mode 100644 include/linux/platform_data/amd_xdma.h
->>
->
-> Hi,
-> I have rewritten our V4L2 driver to use this new XDMA driver, but it 
-> does not work on our HW (where the previous Xilinx XDMA driver derived 
-> from the Xilinx sample code worked fine). The driver is sucessfully 
-> loaded and 4(2+2) DMA channels are successfully created. But when a 
-> DMA transfer is initiated, I get an error from my PC's DMA chip:
->
-> AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x000a address=0x36a00000 
-> flags=0x0000]
->
-> and no error from XDMA.
->
-> Does the driver expect some special FPGA IP core configuration? Or is 
-> there something else I'm missing? My code is quiet similar to what you 
-> use in your XRT repo on GitHub (there is btw. a bug in the XRT code - 
-> you do not clear the dma_slave_config struct before using) but in my 
-> case the DMA transfer triggers the AMD-Vi error and timeouts.
->
-> The code of our driver is attached, the relevant parts are in mgb4_dma.c
-> and mgb4_core.c.
->
-> M.
+--YwH7OzFFF1YwJZMw
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Martin,
+Hello Linus,
 
-Thanks for trying this and got a lot thing works. I have read your 
-driver. Could you call pci_map_sg() before calling prep_sg()? (and 
-pci_unmap_sg()) after transfer complete?
+Please pull to receive dmaengine updates for v6.1-rc1. Bunch of new
+device/driver support and updates to drivers this time around.
 
-example: 
-https://github.com/houlz0507/XRT-1/blob/xdma_v4_usage/src/runtime_src/core/pcie/driver/linux/xocl/subdev/xdma.c#L103
+The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
 
+  Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
 
-Thanks,
+are available in the Git repository at:
 
-Lizhi
+  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dm=
+aengine-6.1-rc1
 
+for you to fetch changes up to b957df98469240d459bcfae6904b36d6ecea9bee:
+
+  dmaengine: ioat: remove unused declarations in dma.h (2022-09-29 22:46:09=
+ +0530)
+
+----------------------------------------------------------------
+dmaengine updates for v6.1-rc1
+
+New Support:
+ - AngeloGioacchino Del Regno added support for MT6795 SoC dma controller
+ - Christian Marangi updated qcom-adm controller binding to yaml
+ - Geert Uytterhoeven added yaml binding for Renesas r8a779g0 dma controller
+ - Luca Weiss added support for Qualcomm SM6350 GPI dma controller
+
+Updates:
+ - Amelie Delaunay provided STM32 DMA-MDMA chaining support
+ - Andy Shevchenko updated hsu driver to use managed resources
+ - Dave Jiang & Jerry Snitselaar provided usual round of idxd driver updates
+ - Janne Grunau & Martin Povi=C5=A1er updated apple dma driver for iommu an=
+d pd
+   properties and removed use of devres for irqs
+ - Swati Agarwal added device_synchronize support for Xilinx zynqmp driver
+
+----------------------------------------------------------------
+Amelie Delaunay (6):
+      dmaengine: stm32-dma: introduce 3 helpers to address channel flags
+      dmaengine: stm32-dma: use bitfield helpers
+      docs: arm: stm32: introduce STM32 DMA-MDMA chaining feature
+      dmaengine: stm32-dmamux: set dmamux channel id in dma features bitfie=
+ld
+      dmaengine: stm32-dma: add support to trigger STM32 MDMA
+      dmaengine: stm32-mdma: add support to be triggered by STM32 DMA
+
+Andy Shevchenko (4):
+      dmaengine: hsu: Finish conversion to managed resources
+      dmaengine: hsu: using for_each_set_bit to simplify the code
+      dmaengine: hsu: Use GENMASK() consistently
+      dmaengine: hsu: Include headers we are direct user of
+
+AngeloGioacchino Del Regno (1):
+      dt-bindings: dma: mediatek,uart-dma: Add binding for MT6795 SoC
+
+Bhupesh Sharma (1):
+      dt-bindings: dma: Make minor fixes to qcom,bam-dma binding doc
+
+Christian Marangi (4):
+      dmaengine: qcom-adm: fix wrong sizeof config in slave_config
+      dmaengine: qcom-adm: fix wrong calling convention for prep_slave_sg
+      dt-bindings: dma: rework qcom,adm Documentation to yaml schema
+      dt-bindings: dma: add additional pbus reset to qcom,adm
+
+Christophe JAILLET (1):
+      dmaengine: stm32-dmamux: Simplify code and save a few bytes of memory
+
+Dario Binacchi (1):
+      dmaengine: mxs: use platform_driver_register
+
+Dave Jiang (6):
+      dmaengine: ioat: stop mod_timer from resurrecting deleted timer in __=
+cleanup()
+      dmaengine: idxd: convert ats_dis to a wq flag
+      dmanegine: idxd: reformat opcap output to match bitmap_parse() input
+      dmaengine: idxd: add WQ operation cap restriction support
+      dmaengine: idxd: add configuration for concurrent work descriptor pro=
+cessing
+      dmaengine: idxd: add configuration for concurrent batch descriptor pr=
+ocessing
+
+Deming Wang (1):
+      Documentation: devicetree: dma: update the comments
+
+Gaosheng Cui (1):
+      dmaengine: ioat: remove unused declarations in dma.h
+
+Geert Uytterhoeven (1):
+      dt-bindings: renesas,rcar-dmac: Add r8a779g0 support
+
+Gustavo A. R. Silva (1):
+      dmaengine: sh: rcar-dmac: Replace zero-length arrays with DECLARE_FLE=
+X_ARRAY() helper
+
+Harini Katakam (1):
+      dmaengine: pl330: Remove unused flags
+
+Janne Grunau (1):
+      dt-bindings: dma: apple,admac: Add iommus and power-domains properties
+
+Jason Wang (1):
+      dmaengine: stm32-dmamux: Fix comment typo
+
+Jean Delvare (1):
+      dmaengine: dw-axi-dmac: Drop obsolete dependency on COMPILE_TEST
+
+Jerry Snitselaar (3):
+      dmaengine: idxd: avoid deadlock in process_misc_interrupts()
+      dmaengine: idxd: Set wq state to disabled in idxd_wq_disable_cleanup()
+      dmaengine: idxd: track enabled workqueues in bitmap
+
+Jiapeng Chong (1):
+      dmaengine: ti: edma: Remove some unused functions
+
+Jie Hai (7):
+      dmaengine: hisilicon: Disable channels when unregister hisi_dma
+      dmaengine: hisilicon: Fix CQ head update
+      dmaengine: hisilicon: Add multi-thread support for a DMA channel
+      dmaengine: hisilicon: Use macros instead of magic number
+      dmaengine: hisilicon: Adapt DMA driver to HiSilicon IP09
+      dmaengine: hisilicon: Dump regs to debugfs
+      MAINTAINERS: Add myself as maintainer for hisi_dma
+
+Luca Weiss (2):
+      dt-bindings: dmaengine: qcom: gpi: add compatible for SM6350
+      dmaengine: qcom: gpi: Add SM6350 support
+
+Manivannan Sadhasivam (1):
+      dmaengine: dw-edma: Remove runtime PM support
+
+Martin Povi=C5=A1er (2):
+      dmaengine: apple-admac: Do not use devres for IRQs
+      dmaengine: apple-admac: Trigger shared reset
+
+Matt Ranostay (2):
+      dmaengine: ti: k3-psil: add additional TX threads for j7200
+      dmaengine: ti: k3-psil: add additional TX threads for j721e
+
+Rob Herring (1):
+      dt-bindings: dma: arm,pl330: Add missing 'iommus' property
+
+Shaomin Deng (2):
+      dmaengine: virt-dma: Fix double word in comments
+      dmaengine: pl08x: Fix double word
+
+Swati Agarwal (1):
+      dmaengine: zynqmp_dma: Add device_synchronize support
+
+Tudor Ambarus (1):
+      dmaengine: at_xdmac: Replace two if statements with only one with two=
+ conditions
+
+Tuo Cao (1):
+      dmaengine: qcom: gpi: move read_lock_bh to read_lock in tasklet
+
+Vaishnav Achath (2):
+      dmaengine: ti: k3-udma: Reset UDMA_CHAN_RT byte counters to prevent o=
+verflow
+      dmaengine: ti: k3-udma: Respond TX done if DMA_PREP_INTERRUPT is not =
+requested
+
+Yuan Can (1):
+      dmaengine: idxd: Remove unused struct idxd_fault
+
+ye xingchen (1):
+      dmaengine: sf-pdma:Remove the print function dev_err()
+
+ Documentation/ABI/stable/sysfs-driver-dma-idxd     |  35 ++
+ Documentation/arm/index.rst                        |   1 +
+ .../arm/stm32/stm32-dma-mdma-chaining.rst          | 415 +++++++++++++
+ .../devicetree/bindings/dma/apple,admac.yaml       |   7 +
+ .../devicetree/bindings/dma/arm,pl330.yaml         |   6 +
+ .../devicetree/bindings/dma/mediatek,uart-dma.yaml |   1 +
+ .../devicetree/bindings/dma/qcom,adm.yaml          |  99 ++++
+ .../devicetree/bindings/dma/qcom,bam-dma.yaml      |   8 +-
+ .../devicetree/bindings/dma/qcom,gpi.yaml          |   1 +
+ Documentation/devicetree/bindings/dma/qcom_adm.txt |  61 --
+ .../devicetree/bindings/dma/renesas,rcar-dmac.yaml |   1 +
+ .../devicetree/bindings/dma/ti-dma-crossbar.txt    |   2 +-
+ MAINTAINERS                                        |   1 +
+ drivers/dma/Kconfig                                |   2 +-
+ drivers/dma/amba-pl08x.c                           |   2 +-
+ drivers/dma/apple-admac.c                          |  45 +-
+ drivers/dma/at_xdmac.c                             |   5 +-
+ drivers/dma/dw-edma/dw-edma-core.c                 |  12 -
+ drivers/dma/hisi_dma.c                             | 650 +++++++++++++++++=
++---
+ drivers/dma/hsu/hsu.c                              |   8 +
+ drivers/dma/hsu/hsu.h                              |  12 +-
+ drivers/dma/hsu/pci.c                              |  47 +-
+ drivers/dma/idxd/device.c                          |  38 +-
+ drivers/dma/idxd/idxd.h                            |  10 +-
+ drivers/dma/idxd/init.c                            |  36 ++
+ drivers/dma/idxd/irq.c                             |  13 +-
+ drivers/dma/idxd/registers.h                       |  35 +-
+ drivers/dma/idxd/sysfs.c                           | 187 +++++-
+ drivers/dma/ioat/dma.c                             |   6 +-
+ drivers/dma/ioat/dma.h                             |   2 -
+ drivers/dma/mxs-dma.c                              |  11 +-
+ drivers/dma/pl330.c                                |   4 -
+ drivers/dma/qcom/gpi.c                             |   7 +-
+ drivers/dma/qcom/qcom_adm.c                        |  22 +-
+ drivers/dma/s3c24xx-dma.c                          |   2 +-
+ drivers/dma/sf-pdma/sf-pdma.c                      |   8 +-
+ drivers/dma/sh/rcar-dmac.c                         |   4 +-
+ drivers/dma/stm32-dma.c                            | 136 +++--
+ drivers/dma/stm32-dmamux.c                         |  12 +-
+ drivers/dma/stm32-mdma.c                           |  70 ++-
+ drivers/dma/ti/edma.c                              |  40 --
+ drivers/dma/ti/k3-psil-j7200.c                     |  67 +++
+ drivers/dma/ti/k3-psil-j721e.c                     |  79 +++
+ drivers/dma/ti/k3-udma.c                           |  37 +-
+ drivers/dma/xilinx/zynqmp_dma.c                    |  12 +
+ include/linux/dma/hsu.h                            |   6 +-
+ include/linux/platform_data/dma-hsu.h              |   2 +-
+ 47 files changed, 1854 insertions(+), 413 deletions(-)
+ create mode 100644 Documentation/arm/stm32/stm32-dma-mdma-chaining.rst
+ create mode 100644 Documentation/devicetree/bindings/dma/qcom,adm.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/qcom_adm.txt
+
+--=20
+~Vinod
+
+--YwH7OzFFF1YwJZMw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAmNAHlgACgkQfBQHDyUj
+g0cRLg//RDmZ4PcCxFoaBcFRhkLl5otjpgR5WMN9WgMDIt+8rZOS1X2wkpZICEle
+c1O9fxgJyDLkrOf4CBWuCoKZGO2iSV7+YvNKNHk6jkYsPzFEZB+HUrhIXrtYXAOQ
+V3qqKP+rwCrvbfmksSa01hq40GQZFrJioZ7YGhm376G8+2TdZvBuBUNuTcu192NM
+0DVMfziY77lXgUUGqMrNlMq4C+wqry/iLidpZ+M/wH5ebR+lbZRAG5iqvfc9mDkL
+KU2WJLRWYYYC5kJ5lZ8gOPYiAhd32JcNb432FWcS01nMlHeqvuj5zWmqV8/1mJVd
+76rOyWLAv9e7hNr7dSMrF7ATN4c/D50zafJLaJV1bi38wBNpeVaFajRDZYUbiEUP
+kTD73K65/IUqsAirbLxE5Hv5liDyS7HkS/nNabow6/bl1ksiVlGQToN8+sD9G4Qx
+0vTN2vVLcsQxvtQKvo5D8uCEWfuB4L3JQGy7lGG3Z/p6uxn6c9TY7sNmMJzBZu1c
+OMPPuU9B5/QNxBmrOaCVrTe8hY9nwVqQyhamOEiLxEeepX+Y3wabj9cUayErXyuz
+dKdla4AGV7kw9hS+X4ryHsH+0Szqt6j7SY8bmUEgoy20KApjYTO5sr0FdOOdEKzj
+YNcEesbarOCXIV42SEyXmHEiKVhLVedm5TB0eaDI5OC4Ho/pUso=
+=vED+
+-----END PGP SIGNATURE-----
+
+--YwH7OzFFF1YwJZMw--

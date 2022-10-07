@@ -2,107 +2,73 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 330F05F801F
-	for <lists+dmaengine@lfdr.de>; Fri,  7 Oct 2022 23:36:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69D6E5F8144
+	for <lists+dmaengine@lfdr.de>; Sat,  8 Oct 2022 01:38:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229741AbiJGVgy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 7 Oct 2022 17:36:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39282 "EHLO
+        id S229899AbiJGXh5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 7 Oct 2022 19:37:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229723AbiJGVgw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 7 Oct 2022 17:36:52 -0400
-Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A1F310325D;
-        Fri,  7 Oct 2022 14:36:52 -0700 (PDT)
-Received: by mail-io1-xd29.google.com with SMTP id h74so668279iof.0;
-        Fri, 07 Oct 2022 14:36:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EXa0o6AJijj8nZh92TnYExxwyBjBOTqBx3x8YowQqdc=;
-        b=ea4IhKNWGm6cnuAUG5tIY3qjDwSZ2lm8gHCkZ60vR7UTmBD8UNci4ZgfwP8r0TiEPh
-         AdWjw3KNDQ197dflei/W2m0E9DG7mpVtONT9NKVq0GJvJBWsUuObneqySMBKFwBZq/cJ
-         0U5pUmSdavO4fslNI0MNHUKSjxPd7TpDOp5KvSfiG9o3dAC1vbyD2BYyJ8tnfAeGrI6V
-         oEukdu0NG6FcbWXPv2B2vE4VssgBUTowtmY1JW38/KYdxoHqh1ASwc4UCtwEZG2YDCww
-         jhMRaAYI47t3yjivaiNJa7rMvL82QE4x2e69+Axs7XzN7UGdvmbuX3un7OHe/LjpZUgM
-         i87g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EXa0o6AJijj8nZh92TnYExxwyBjBOTqBx3x8YowQqdc=;
-        b=N282GrhEsZ88//FYoQhUeSvR7qkIWgV2FSXTETKRNerNw5IPLh6FL/6BWv8fEaOlhi
-         XJRy6znS9CPdHWBII+HzgDBIP05STHj3RxH6sXs3Rs/YTwWjxj9V8oXzDGyBvw4b235t
-         Y+iHTui8B3/A6bxChiUmdO2C0zs8S8OKr+4CHD8Hw7C91e4dVlogU4hZHqmc96MzEePG
-         yTumPqktS7UmbrMAanYT78L3qZxgmaxNkkEu07vFhrm8wL59l75akAz7pcFZz2RIxea/
-         PmU1lB9bESI/Y+j4WNZc0ET/ELVx/cH4L531/LgH9qHNCCs7qGKU7aZnRi9e7MvAII+u
-         dQTg==
-X-Gm-Message-State: ACrzQf0lefD9fWC6mgDvPRKsOxzki337ahUv5MekymldAAs6T98HnM2k
-        h1oBBHFnoOXcy+jK/eaWK4wfIfD5MSALig==
-X-Google-Smtp-Source: AMsMyM7gLUUuKzzn2ZHTqwpvq5obp2MUcZfUKJ2G2oHtqIjJTOq89eQVFSc3ULp+OeU9fyuv4aHL5A==
-X-Received: by 2002:a05:6638:3452:b0:363:69f8:549f with SMTP id q18-20020a056638345200b0036369f8549fmr3777255jav.190.1665178611692;
-        Fri, 07 Oct 2022 14:36:51 -0700 (PDT)
-Received: from localhost ([2607:fea8:a2e2:2d00::b714])
-        by smtp.gmail.com with UTF8SMTPSA id r11-20020a92d44b000000b002f6028e31cesm1276491ilm.61.2022.10.07.14.36.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Oct 2022 14:36:51 -0700 (PDT)
-From:   Richard Acayan <mailingradian@gmail.com>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        Richard Acayan <mailingradian@gmail.com>
-Subject: [PATCH v5 3/3] dmaengine: qcom: deprecate redundant of_device_id entries
-Date:   Fri,  7 Oct 2022 17:36:40 -0400
-Message-Id: <20221007213640.85469-4-mailingradian@gmail.com>
-X-Mailer: git-send-email 2.38.0
-In-Reply-To: <20221007213640.85469-1-mailingradian@gmail.com>
-References: <20221007213640.85469-1-mailingradian@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229673AbiJGXhv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 7 Oct 2022 19:37:51 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D7FA2618;
+        Fri,  7 Oct 2022 16:37:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F1F2D61E03;
+        Fri,  7 Oct 2022 23:37:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5D8C0C433B5;
+        Fri,  7 Oct 2022 23:37:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665185870;
+        bh=357zRFROIW4a2y8A+PgWe9vPssaARCkGsIvrFwgEUAs=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=l8U+HwtovLcoymGcKoyQATy/VG/XU7vXnhpLKp3F9eAlieqT/Sf3wRrelYPj/gzc6
+         gUbIP0NMMPQlMMndQL6KPqB99OUeqVP5hmW2ZfknowtpvDajtjSl89LjCURm4GZ/BP
+         ooeeIaaQga4wBjbSrFPQ4AYXfZsrgxT9chC0Z5aySivQ+pD8D1ZRPvcGyvn4AGKMLV
+         uAbqtVik5n6pDD9i7ugfg7XoT5OWnLNegNps5WhO7Nwe3en5Wk91EAP39UxBhoNrkK
+         X/ihQMXmpDKuGbbUsNMpOwfs5LKk6p/d/d33re0LBCUf34x5CHC5xphLVTEHywlhno
+         UwuIURBE9omNg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 43C29E21ED6;
+        Fri,  7 Oct 2022 23:37:50 +0000 (UTC)
+Subject: Re: [GIT PULL]: dmaengine updates for v6.1-rc1
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <Y0AeWM7UabE2ZK34@matsya>
+References: <Y0AeWM7UabE2ZK34@matsya>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <Y0AeWM7UabE2ZK34@matsya>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-6.1-rc1
+X-PR-Tracked-Commit-Id: b957df98469240d459bcfae6904b36d6ecea9bee
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 416a2f4f91525fcdec821320bc4608cf012d418e
+Message-Id: <166518587026.18327.1358246973646450497.pr-tracker-bot@kernel.org>
+Date:   Fri, 07 Oct 2022 23:37:50 +0000
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The drivers are transitioning from matching against lists of specific
-compatible strings to matching against smaller lists of more generic
-compatible strings. Add a message that the compatible strings with an
-ee_offset of 0 are deprecated except for the SDM845 compatible string.
+The pull request you sent on Fri, 7 Oct 2022 18:10:56 +0530:
 
-Signed-off-by: Richard Acayan <mailingradian@gmail.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/dma/qcom/gpi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+> git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-6.1-rc1
 
-diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-index 89839864b4ec..ff22f5725ded 100644
---- a/drivers/dma/qcom/gpi.c
-+++ b/drivers/dma/qcom/gpi.c
-@@ -2289,6 +2289,10 @@ static const struct of_device_id gpi_of_match[] = {
- 	{ .compatible = "qcom,sc7280-gpi-dma", .data = (void *)0x10000 },
- 	{ .compatible = "qcom,sdm845-gpi-dma", .data = (void *)0x0 },
- 	{ .compatible = "qcom,sm6350-gpi-dma", .data = (void *)0x10000 },
-+	/*
-+	 * Deprecated, devices with ee_offset = 0 should use sdm845-gpi-dma as
-+	 * fallback and not need their own entries here.
-+	 */
- 	{ .compatible = "qcom,sm8150-gpi-dma", .data = (void *)0x0 },
- 	{ .compatible = "qcom,sm8250-gpi-dma", .data = (void *)0x0 },
- 	{ .compatible = "qcom,sm8350-gpi-dma", .data = (void *)0x10000 },
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/416a2f4f91525fcdec821320bc4608cf012d418e
+
+Thank you!
+
 -- 
-2.38.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html

@@ -2,149 +2,107 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 334615FCD41
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Oct 2022 23:30:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 558CA5FCD62
+	for <lists+dmaengine@lfdr.de>; Wed, 12 Oct 2022 23:40:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229625AbiJLVaF convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Wed, 12 Oct 2022 17:30:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59224 "EHLO
+        id S229514AbiJLVkU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 12 Oct 2022 17:40:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230217AbiJLV3U (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Oct 2022 17:29:20 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D69A9120BFA
-        for <dmaengine@vger.kernel.org>; Wed, 12 Oct 2022 14:29:07 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-269-WPghBqosPyeNkdeVSYELTw-1; Wed, 12 Oct 2022 22:29:04 +0100
-X-MC-Unique: WPghBqosPyeNkdeVSYELTw-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.38; Wed, 12 Oct
- 2022 22:29:02 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.040; Wed, 12 Oct 2022 22:29:02 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Joe Perches' <joe@perches.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
-        "dev@openvswitch.org" <dev@openvswitch.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "SHA-cyfmac-dev-list@infineon.com" <SHA-cyfmac-dev-list@infineon.com>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-actions@lists.infradead.org" 
-        <linux-actions@lists.infradead.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "cake@lists.bufferbloat.net" <cake@lists.bufferbloat.net>,
-        "brcm80211-dev-list.pdl@broadcom.com" 
-        <brcm80211-dev-list.pdl@broadcom.com>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [PATCH v1 3/5] treewide: use get_random_u32() when possible
-Thread-Topic: [PATCH v1 3/5] treewide: use get_random_u32() when possible
-Thread-Index: AQHY3m9QJDmwhr5XuUa4Hi/RfD23ja4LRXVg
-Date:   Wed, 12 Oct 2022 21:29:02 +0000
-Message-ID: <d45bd258e033453b85a137112e7694e1@AcuMS.aculab.com>
-References: <20221005214844.2699-1-Jason@zx2c4.com>
-         <20221005214844.2699-4-Jason@zx2c4.com>
- <f8ad3ba44d28dec1a5f7626b82c5e9c2aeefa729.camel@perches.com>
-In-Reply-To: <f8ad3ba44d28dec1a5f7626b82c5e9c2aeefa729.camel@perches.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        with ESMTP id S229506AbiJLVkT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Oct 2022 17:40:19 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B3B046D89;
+        Wed, 12 Oct 2022 14:40:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1665610816; x=1697146816;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=1LTMA3/XHH00E7Eh5BDx5GqsoMAtA/guNRF3xzFYot4=;
+  b=hpZ1lsCT5oose1DVJlM4k+HZ/Rj5R7xa4RgsZK2boELo/4brSzSOQAQR
+   0tPSjRPgou9dQMfXy8SDm5sPYN5xcFsSSOn4/Q+dLKXZ2shQscI3Mg5vH
+   IFPlYAF7FIqiHehJAXlWdIl4PKxrmRWejx+zDXeENTxG2Wz7DXbHusouo
+   pzdAgpJHeP7UDVGM781SnX1+NmmpoFy2nWzEXiFiNNa49HqzBTUKA2m98
+   98fRLrLU/yK3Ps5v2t2aM8I0tk4E5egVm8gXAKg+ZkcsLe4nBbBgzxtX9
+   1ErtGOYe8vVxTpiPWYe+jXRBgEB7pQG17lGK+iLLZtwbHQ0Ngk3Q8+3R2
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10498"; a="366914758"
+X-IronPort-AV: E=Sophos;i="5.95,180,1661842800"; 
+   d="scan'208";a="366914758"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2022 14:40:14 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10498"; a="577981465"
+X-IronPort-AV: E=Sophos;i="5.95,180,1661842800"; 
+   d="scan'208";a="577981465"
+Received: from mpatter1-mobl.amr.corp.intel.com (HELO [10.209.53.34]) ([10.209.53.34])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2022 14:40:14 -0700
+Message-ID: <9e967bb2-ac46-fc1c-ac3a-ed527c6a4cb5@intel.com>
+Date:   Wed, 12 Oct 2022 14:40:14 -0700
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] dmaengine: idxd: Do not enable user type Work Queue
+ without Shared Virtual Addressing
 Content-Language: en-US
+To:     Fenghua Yu <fenghua.yu@intel.com>, Vinod Koul <vkoul@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Arjan Van De Ven <arjan.van.de.ven@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     dmaengine@vger.kernel.org, stable@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20221012201418.3883096-1-fenghua.yu@intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <20221012201418.3883096-1-fenghua.yu@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Joe Perches
-> Sent: 12 October 2022 20:17
+On 10/12/22 13:14, Fenghua Yu wrote:
+> Userspace can directly access physical address through user type
+> Work Queue (WQ) in two scenarios: no IOMMU or IOMMU Passthrough
+> without Shared Virtual Addressing (SVA). In these two cases, user type WQ
+> allows userspace to issue DMA physical address access without virtual
+> to physical translation.
 > 
-> On Wed, 2022-10-05 at 23:48 +0200, Jason A. Donenfeld wrote:
-> > The prandom_u32() function has been a deprecated inline wrapper around
-> > get_random_u32() for several releases now, and compiles down to the
-> > exact same code. Replace the deprecated wrapper with a direct call to
-> > the real function.
-> []
-> > diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
-> []
-> > @@ -734,7 +734,7 @@ static int send_connect(struct c4iw_ep *ep)
-> >  				   &ep->com.remote_addr;
-> >  	int ret;
-> >  	enum chip_type adapter_type = ep->com.dev->rdev.lldi.adapter_type;
-> > -	u32 isn = (prandom_u32() & ~7UL) - 1;
-> > +	u32 isn = (get_random_u32() & ~7UL) - 1;
+> This is inconsistent with the security goals of a good kernel API.
 > 
-> trivia:
+> Plus there is no usage for user type WQ without SVA.
 > 
-> There are somewhat odd size mismatches here.
-> 
-> I had to think a tiny bit if random() returned a value from 0 to 7
-> and was promoted to a 64 bit value then truncated to 32 bit.
-> 
-> Perhaps these would be clearer as ~7U and not ~7UL
+> So enable user type WQ only when SVA is enabled (i.e. user PASID is
+> enabled).
 
-That makes no difference - the compiler will generate the same code.
+I'm not sure the changelog here is great.
 
-The real question is WTF is the code doing?
-The '& ~7u' clears the bottom 3 bits.
-The '- 1' then sets the bottom 3 bits and decrements the
-(random) high bits.
+The whole "user Work Queue" thing is an entire *DRIVER*.  So, this
+really has zero to do with the type of workqueue and everything to do
+with the kind of drivers we allow to be loaded and drive the hardware.
 
-So is the same as get_random_u32() | 7.
-But I bet the coder had something else in mind.
+Basically, the *hardware* allows pretty arbitrary direct access to
+physical memory.  The 'idxd_user_drv' driver code (including
+idxd_user_drv_probe()) gives low-level, direct access to the hardware,
+which is bad news.
 
-	David
+Plus, even if userspace got access to the device via this driver, they
+have to feel physical addresses to it, which is generally not easy from
+userspace.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+That's as close as I can get to rephrasing the above TLA soup in plain
+old English.
 
+I also detest the "There is no usage case for the WQ without SVA."
+language.  Those words lack meaning.  There has to be a *REASON* there
+is no use case.  Please think about what those words *mean*, then delete
+them and write what they mean.

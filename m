@@ -2,115 +2,130 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83A315FCB78
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Oct 2022 21:26:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCF105FCBDD
+	for <lists+dmaengine@lfdr.de>; Wed, 12 Oct 2022 22:14:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229625AbiJLT0d convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Wed, 12 Oct 2022 15:26:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39388 "EHLO
+        id S229678AbiJLUOf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 12 Oct 2022 16:14:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229748AbiJLT0b (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Oct 2022 15:26:31 -0400
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45A9910251A;
-        Wed, 12 Oct 2022 12:26:30 -0700 (PDT)
-Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
-        by unirelay01.hostedemail.com (Postfix) with ESMTP id 2096E1C6C41;
-        Wed, 12 Oct 2022 19:17:09 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf12.hostedemail.com (Postfix) with ESMTPA id AB9FC17;
-        Wed, 12 Oct 2022 19:16:43 +0000 (UTC)
-Message-ID: <f8ad3ba44d28dec1a5f7626b82c5e9c2aeefa729.camel@perches.com>
-Subject: Re: [PATCH v1 3/5] treewide: use get_random_u32() when possible
-From:   Joe Perches <joe@perches.com>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        linux-kernel@vger.kernel.org
-Cc:     brcm80211-dev-list.pdl@broadcom.com, cake@lists.bufferbloat.net,
-        ceph-devel@vger.kernel.org, coreteam@netfilter.org,
-        dccp@vger.kernel.org, dev@openvswitch.org,
-        dmaengine@vger.kernel.org, drbd-dev@lists.linbit.com,
-        dri-devel@lists.freedesktop.org, kasan-dev@googlegroups.com,
-        linux-actions@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-fbdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-hams@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mm@kvack.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-raid@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-sctp@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        lvs-devel@vger.kernel.org, netdev@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, rds-devel@oss.oracle.com,
-        SHA-cyfmac-dev-list@infineon.com, target-devel@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net
-Date:   Wed, 12 Oct 2022 12:16:53 -0700
-In-Reply-To: <20221005214844.2699-4-Jason@zx2c4.com>
-References: <20221005214844.2699-1-Jason@zx2c4.com>
-         <20221005214844.2699-4-Jason@zx2c4.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
+        with ESMTP id S229616AbiJLUO2 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Oct 2022 16:14:28 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63EC7B2D9F;
+        Wed, 12 Oct 2022 13:14:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1665605666; x=1697141666;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=huo+KtRk2qsQtwkewNosEHJSjhPQ+l135DctbnNxUwc=;
+  b=l3+PuHku82CeAoCL0QaygLslfhVJCY+NZ76j3/yv1jUrTDvIgd1zF6pD
+   Iaks/tNRkl4xtOqlpodPSL/nMe1INmpHhnSS1QnkEXdTDN55QkuVYsMU4
+   MPuM+sHaEykYANzIo6tgJbTaD/Y6UZKXJ5oNcCztdlPFlAzTY5ROJETE/
+   bhHkV3sYXiXg83acjVspWUF3nfrOoYTBqmehuDh5t3UIb7Sllou1JxFY+
+   bBZcfgA2hkeoACSrgO+cHEC4Y32u4jLTta5VPaHsJ3kgs5xi6jbTE/eVU
+   U/k9VqJMrXpDg0FbplE9B1dZIwJNxuDP6Zg+JX0mJCSPmXfo1dRrL08Vz
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10498"; a="331395163"
+X-IronPort-AV: E=Sophos;i="5.95,180,1661842800"; 
+   d="scan'208";a="331395163"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2022 13:14:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10498"; a="621904664"
+X-IronPort-AV: E=Sophos;i="5.95,180,1661842800"; 
+   d="scan'208";a="621904664"
+Received: from fyu1.sc.intel.com ([172.25.103.126])
+  by orsmga007.jf.intel.com with ESMTP; 12 Oct 2022 13:14:08 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Vinod Koul" <vkoul@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Sasha Levin" <sashal@kernel.org>,
+        "Arjan Van De Ven" <arjan.van.de.ven@intel.com>,
+        "Dave Hansen" <dave.hansen@linux.intel.com>,
+        "Dave Jiang" <dave.jiang@intel.com>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        "Jacob Pan" <jacob.jun.pan@linux.intel.com>
+Cc:     dmaengine@vger.kernel.org, stable@vger.kernel.org,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH] dmaengine: idxd: Do not enable user type Work Queue without Shared Virtual Addressing
+Date:   Wed, 12 Oct 2022 13:14:18 -0700
+Message-Id: <20221012201418.3883096-1-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
-        SPF_NONE,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-        version=3.4.6
-X-Stat-Signature: c3d78nppyrywoyngway5d943fw3wwtdu
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: AB9FC17
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1/Qw27OeRP8/mQW0Su38d7rwhSo1NO9QCw=
-X-HE-Tag: 1665602203-428634
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, 2022-10-05 at 23:48 +0200, Jason A. Donenfeld wrote:
-> The prandom_u32() function has been a deprecated inline wrapper around
-> get_random_u32() for several releases now, and compiles down to the
-> exact same code. Replace the deprecated wrapper with a direct call to
-> the real function.
-[]
-> diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
-[]
-> @@ -734,7 +734,7 @@ static int send_connect(struct c4iw_ep *ep)
->  				   &ep->com.remote_addr;
->  	int ret;
->  	enum chip_type adapter_type = ep->com.dev->rdev.lldi.adapter_type;
-> -	u32 isn = (prandom_u32() & ~7UL) - 1;
-> +	u32 isn = (get_random_u32() & ~7UL) - 1;
+Userspace can directly access physical address through user type
+Work Queue (WQ) in two scenarios: no IOMMU or IOMMU Passthrough
+without Shared Virtual Addressing (SVA). In these two cases, user type WQ
+allows userspace to issue DMA physical address access without virtual
+to physical translation.
 
-trivia:
+This is inconsistent with the security goals of a good kernel API.
 
-There are somewhat odd size mismatches here.
+Plus there is no usage for user type WQ without SVA.
 
-I had to think a tiny bit if random() returned a value from 0 to 7
-and was promoted to a 64 bit value then truncated to 32 bit.
+So enable user type WQ only when SVA is enabled (i.e. user PASID is
+enabled).
 
-Perhaps these would be clearer as ~7U and not ~7UL
+Fixes: 42d279f9137a ("dmaengine: idxd: add char driver to expose submission portal to userland")
 
->  	struct net_device *netdev;
->  	u64 params;
->  
-> @@ -2469,7 +2469,7 @@ static int accept_cr(struct c4iw_ep *ep, struct sk_buff *skb,
->  	}
->  
->  	if (!is_t4(adapter_type)) {
-> -		u32 isn = (prandom_u32() & ~7UL) - 1;
-> +		u32 isn = (get_random_u32() & ~7UL) - 1;
+Suggested-by: Arjan Van De Ven <arjan.van.de.ven@intel.com>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/dma/idxd/cdev.c   | 14 ++++++++++++++
+ include/uapi/linux/idxd.h |  1 +
+ 2 files changed, 15 insertions(+)
 
-etc...
-
-drivers/infiniband/hw/cxgb4/cm.c:	u32 isn = (prandom_u32() & ~7UL) - 1;
-drivers/infiniband/hw/cxgb4/cm.c:		u32 isn = (prandom_u32() & ~7UL) - 1;
-drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_cm.c:	rpl5->iss = cpu_to_be32((prandom_u32() & ~7UL) - 1);
-drivers/scsi/cxgbi/cxgb4i/cxgb4i.c:		u32 isn = (prandom_u32() & ~7UL) - 1;
-drivers/scsi/cxgbi/cxgb4i/cxgb4i.c:		u32 isn = (prandom_u32() & ~7UL) - 1;
-drivers/target/iscsi/cxgbit/cxgbit_cm.c:	rpl5->iss = cpu_to_be32((prandom_u32() & ~7UL) - 1);
+diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+index c2808fd081d6..4cd3400c5a48 100644
+--- a/drivers/dma/idxd/cdev.c
++++ b/drivers/dma/idxd/cdev.c
+@@ -312,6 +312,20 @@ static int idxd_user_drv_probe(struct idxd_dev *idxd_dev)
+ 	if (idxd->state != IDXD_DEV_ENABLED)
+ 		return -ENXIO;
+ 
++	/*
++	 * User type WQ is enabled only when SVA is enabled for two reasons:
++	 *   - If no IOMMU or IOMMU Passthrough without SVA, userspace
++	 *     can directly access physical address through the WQ.
++	 *   - There is no usage case for the WQ without SVA.
++	 */
++	if (!device_user_pasid_enabled(idxd)) {
++		idxd->cmd_status = IDXD_SCMD_WQ_USER_NO_IOMMU;
++		dev_dbg(&idxd->pdev->dev,
++			"User type WQ cannot be enabled without SVA.\n");
++
++		return -EOPNOTSUPP;
++	}
++
+ 	mutex_lock(&wq->wq_lock);
+ 	wq->type = IDXD_WQT_USER;
+ 	rc = drv_enable_wq(wq);
+diff --git a/include/uapi/linux/idxd.h b/include/uapi/linux/idxd.h
+index 095299c75828..2b9e7feba3f3 100644
+--- a/include/uapi/linux/idxd.h
++++ b/include/uapi/linux/idxd.h
+@@ -29,6 +29,7 @@ enum idxd_scmd_stat {
+ 	IDXD_SCMD_WQ_NO_SIZE = 0x800e0000,
+ 	IDXD_SCMD_WQ_NO_PRIV = 0x800f0000,
+ 	IDXD_SCMD_WQ_IRQ_ERR = 0x80100000,
++	IDXD_SCMD_WQ_USER_NO_IOMMU = 0x80110000,
+ };
+ 
+ #define IDXD_SCMD_SOFTERR_MASK	0x80000000
+-- 
+2.32.0
 

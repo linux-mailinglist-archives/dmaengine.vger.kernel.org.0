@@ -2,33 +2,61 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0E915FD6D8
-	for <lists+dmaengine@lfdr.de>; Thu, 13 Oct 2022 11:17:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 501C95FE248
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Oct 2022 20:59:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229652AbiJMJRX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 13 Oct 2022 05:17:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54634 "EHLO
+        id S230049AbiJMS7a (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 13 Oct 2022 14:59:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229513AbiJMJRW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 13 Oct 2022 05:17:22 -0400
-Received: from aposti.net (aposti.net [89.234.176.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3E925FBC;
-        Thu, 13 Oct 2022 02:17:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1665652637; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QfKF6P//aPtt3yXkddZGb8gQhNXBSYeBQmboxbZCJlU=;
-        b=Ip0NSVDD1AM8ZgtvW/VD87fTHoRfAC5ZKR4g5vCDTryKzaGimlZJoh+FC5CRuxEyrYuyOV
-        zFio5aFohd39Q+mWiqCJyJxM7qdFhkFObmPHLG9/o7LYmzxzlFG4La4/m47ImlJB8FwZ5u
-        kKRpu9SSwogossEIyH7SeLGOjn8wS2U=
-Date:   Thu, 13 Oct 2022 10:17:04 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
+        with ESMTP id S232355AbiJMS6y (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 13 Oct 2022 14:58:54 -0400
+Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA30827928;
+        Thu, 13 Oct 2022 11:57:06 -0700 (PDT)
+Received: by mail-il1-x129.google.com with SMTP id q11so1431005ilj.10;
+        Thu, 13 Oct 2022 11:57:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aU4v5j25jcA4b2/jV12oaXw7opkB9OVDvdOu4hkOSkY=;
+        b=QhFO5qgSaKUMRml2Jd5VUmeEmiC9AF9BZmoWzw8uxvh3OpKZoYPyVVGYi4p2MDAlFa
+         +hMoMa8jTFYXU93+Kr/LdS9ATml85nFb2/ErVZ6DUkcki6WLco1sdO0u0MUr7zdLcb50
+         U8gM9fCJcsogz5Lw6B9QRyxGaZ8d9HJ75FXki6+24oVpcN9wE3GBgQinDmZm8oG27DKl
+         xfaeeT3GBBYthIwZkrCiBgC8M40Lo3rPe4nJ2ES38QAj1B8OCrI9b5eQNKJsi5wChNTd
+         b60m4fcAQbwUuQngvLcY0Luy7sOWRSIr/XRLCS5wpz0wbDJKImI5VlSnEwoWCcuyaX5y
+         1YLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aU4v5j25jcA4b2/jV12oaXw7opkB9OVDvdOu4hkOSkY=;
+        b=K4VQ24JcmhHFUeTtBBqWcn+HkAA1v3Z0OiUu56pd0rz/g+xDSvNXZo7hV7kxoMIvCF
+         BYZebeejThbZ2ftg78MEZ6seU/N5oUCUEdJ/oOA6faZyr7hKHd+5NSATgqVASKbQsAeR
+         +2fpEUNTpWS9NGcRMF4H0RdXqtwlS96n0ZDs4gBJhSjdvP94QmottMTze+OAk6HnDPjN
+         IRR+JAIAuXKrVDCfa9rTl6nAMspyX9L7uPqGF1qripGfnadyogAr4rjOoFsSVhmZuUEw
+         dGrZRK/xsA4BidXcpOFaK7iygGbwug9gAXeplOKtMQ6I3wuMNDPoRHhFaPUOCSe2M1dK
+         sswQ==
+X-Gm-Message-State: ACrzQf0CddUJX4PziJN2cc9gi4EcyODUXt73ToCo/0WlWWscv8MSmnhO
+        Uq3AB6wLtq1kqWXFO5G7E8WGvQcsjqKHxfKjIDk=
+X-Google-Smtp-Source: AMsMyM4tAkBUHy+Lv4iPEVX7fI3kq/6F/ptm2DyftFBCewja+gWmdmjL6xlLgaH6l9cZUi7njV1AcafirE2fwO2o+eY=
+X-Received: by 2002:a05:6e02:20ea:b0:2fa:bf8:300a with SMTP id
+ q10-20020a056e0220ea00b002fa0bf8300amr696533ilv.309.1665687426081; Thu, 13
+ Oct 2022 11:57:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20221009181338.2896660-8-lis8215@gmail.com> <202210100607.YdxoR0tD-lkp@intel.com>
+ <CAKNVLfaFvge4A8-QUzeq-JManpuYMGvyHXCJi-ew==CWN8-M=A@mail.gmail.com>
+ <bb9f79d4-82a9-4790-b849-d517333ea2d4@app.fastmail.com> <GSPOJR.M4XZ4D03G60F@crapouillou.net>
+In-Reply-To: <GSPOJR.M4XZ4D03G60F@crapouillou.net>
+From:   Siarhei Volkau <lis8215@gmail.com>
+Date:   Thu, 13 Oct 2022 21:56:54 +0300
+Message-ID: <CAKNVLfZukazKx2yDBrLZc7J9=3cCvMgZbdghtt1YO7WivdPjvw@mail.gmail.com>
 Subject: Re: [PATCH 7/8] serial: 8250/ingenic: Add support for the
  JZ4750/JZ4755 SoCs
-To:     Siarhei Volkau <lis8215@gmail.com>
+To:     Paul Cercueil <paul@crapouillou.net>
 Cc:     Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>,
         kbuild-all@lists.01.org,
         Michael Turquette <mturquette@baylibre.com>,
@@ -44,66 +72,29 @@ Cc:     Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>,
         dmaengine@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-mips@vger.kernel.org,
         GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>
-Message-Id: <GSPOJR.M4XZ4D03G60F@crapouillou.net>
-In-Reply-To: <bb9f79d4-82a9-4790-b849-d517333ea2d4@app.fastmail.com>
-References: <20221009181338.2896660-8-lis8215@gmail.com>
-        <202210100607.YdxoR0tD-lkp@intel.com>
-        <CAKNVLfaFvge4A8-QUzeq-JManpuYMGvyHXCJi-ew==CWN8-M=A@mail.gmail.com>
-        <bb9f79d4-82a9-4790-b849-d517333ea2d4@app.fastmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,
+=D1=87=D1=82, 13 =D0=BE=D0=BA=D1=82. 2022 =D0=B3. =D0=B2 12:17, Paul Cercue=
+il <paul@crapouillou.net>:
+>
+> Just disable the divider in ingenic_fixup_fdt() in
+> arch/mips/generic/board-ingenic.c.
+>
+> Cheers,
+> -Paul
+>
 
-Le jeu., oct. 13 2022 at 08:46:39 +0200, Arnd Bergmann <arnd@arndb.de>=20
-a =C3=A9crit :
-> On Thu, Oct 13, 2022, at 8:37 AM, Siarhei Volkau wrote:
->>  =D0=BF=D0=BD, 10 =D0=BE=D0=BA=D1=82. 2022 =D0=B3. =D0=B2 01:29, kernel =
-test robot=20
->> <lkp@intel.com>:
->>>  config: ia64-allyesconfig
->>>  config: arm64-randconfig-r035-20221010
->>=20
->>>   > 142  #define CGU_REG_CPCCR   ((void *)CKSEG1ADDR(0x10000000))
->>=20
->>>  0-DAY CI Kernel Test Service
->>=20
->>  I know CKSEG1ADDR is MIPS specific, might be it needed to disable=20
->> COMPILE_TEST
->>  on the driver?
->>  Since early syscon isn't mainlined yet I don't see any other way at=20
->> the moment.
->>=20
->>  Any suggestions on that, folks?
->=20
-> This looks like some setup that belongs into the bootloader. If you=20
-> are
-> handing over the console from bootloader to kernel, the hardware=20
-> should
-> already be in a working state, with no need to touch it during early
-> boot.
->=20
-> If you are dealing with broken bootloaders that are not under your=20
-> control,
-> having this code in the architecture specific early boot as a fixup
-> would be better than putting it into the driver.
+Looks reasonable, I hope the bootloader initialized peripherals can handle
+doubled frequency, till re-initialization completes. I'll check that.
 
-Agreed. I am not fond of having a driver poking into an unrelated=20
-subsystem's memory area.
-
-Just disable the divider in ingenic_fixup_fdt() in=20
-arch/mips/generic/board-ingenic.c.
-
-Cheers,
--Paul
-
-
+Thank you all, guys.

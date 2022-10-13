@@ -2,166 +2,152 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9286B5FD037
-	for <lists+dmaengine@lfdr.de>; Thu, 13 Oct 2022 02:25:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 272D25FD2CB
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Oct 2022 03:43:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230512AbiJMAZE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 12 Oct 2022 20:25:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56090 "EHLO
+        id S229586AbiJMBnX convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Wed, 12 Oct 2022 21:43:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229941AbiJMAYW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Oct 2022 20:24:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A63B4A285F;
-        Wed, 12 Oct 2022 17:23:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3296C616F8;
-        Thu, 13 Oct 2022 00:23:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD1CFC4347C;
-        Thu, 13 Oct 2022 00:23:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665620630;
-        bh=opJ560Mld8QhWmSSOPieqs+ADj6zk6rs1gncd2h+GPY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V+x1/iPkVPE/7Svhfsvm32DXbL7yhmzPUNqO3i5jlAyD0fV6qEwZlrFn2LVomMRFu
-         i/khNVTqE4OvjJbjXI39w+Ax8V50ssVkjoxPDijB4TNw5fqb6RvKSo36imrb+eBqJ5
-         ECSvn7zXyp7ZzP4UQVrg9zg+0y74MuLMSKybu7zYmngpjazplCsNEHphGWHa8RX4+d
-         NAkqQGBjeJTjIwgGPXmrSBcl19PwQY/lCS4hRDhbS5rVI1bR/yBYSFVjQu3FuS8QZx
-         5+biXl+xjrp/+A/YHdA8OXY5YGzgqkQfnhpnZuhQ2er9YG2xjBgCycrwYx439hWF5r
-         1ckE226raTHLA==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vaishnav Achath <vaishnav.a@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 06/33] dmaengine: ti: k3-udma: Reset UDMA_CHAN_RT byte counters to prevent overflow
-Date:   Wed, 12 Oct 2022 20:23:05 -0400
-Message-Id: <20221013002334.1894749-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221013002334.1894749-1-sashal@kernel.org>
-References: <20221013002334.1894749-1-sashal@kernel.org>
+        with ESMTP id S229459AbiJMBnV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Oct 2022 21:43:21 -0400
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7678936DEB;
+        Wed, 12 Oct 2022 18:43:19 -0700 (PDT)
+Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
+        by unirelay02.hostedemail.com (Postfix) with ESMTP id 640C9120237;
+        Thu, 13 Oct 2022 01:37:28 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf20.hostedemail.com (Postfix) with ESMTPA id 56EDD20026;
+        Thu, 13 Oct 2022 01:37:01 +0000 (UTC)
+Message-ID: <3f527ec95a12135eb40f5f2d156a2954feb7fbfe.camel@perches.com>
+Subject: Re: [PATCH v1 3/5] treewide: use get_random_u32() when possible
+From:   Joe Perches <joe@perches.com>
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
+        "dev@openvswitch.org" <dev@openvswitch.org>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
+        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
+        "SHA-cyfmac-dev-list@infineon.com" <SHA-cyfmac-dev-list@infineon.com>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-actions@lists.infradead.org" 
+        <linux-actions@lists.infradead.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
+        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "cake@lists.bufferbloat.net" <cake@lists.bufferbloat.net>,
+        "brcm80211-dev-list.pdl@broadcom.com" 
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Date:   Wed, 12 Oct 2022 18:37:11 -0700
+In-Reply-To: <d45bd258e033453b85a137112e7694e1@AcuMS.aculab.com>
+References: <20221005214844.2699-1-Jason@zx2c4.com>
+         <20221005214844.2699-4-Jason@zx2c4.com>
+         <f8ad3ba44d28dec1a5f7626b82c5e9c2aeefa729.camel@perches.com>
+         <d45bd258e033453b85a137112e7694e1@AcuMS.aculab.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
+        SPF_NONE,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+        version=3.4.6
+X-Stat-Signature: jmxt1u5agdpi9w76hr4tp6uotie3p373
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 56EDD20026
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX18KEIRmyyr9pSEavQqF5X0dTzAEITyiJq4=
+X-HE-Tag: 1665625021-540494
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Vaishnav Achath <vaishnav.a@ti.com>
+On Wed, 2022-10-12 at 21:29 +0000, David Laight wrote:
+> From: Joe Perches
+> > Sent: 12 October 2022 20:17
+> > 
+> > On Wed, 2022-10-05 at 23:48 +0200, Jason A. Donenfeld wrote:
+> > > The prandom_u32() function has been a deprecated inline wrapper around
+> > > get_random_u32() for several releases now, and compiles down to the
+> > > exact same code. Replace the deprecated wrapper with a direct call to
+> > > the real function.
+> > []
+> > > diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
+> > []
+> > > @@ -734,7 +734,7 @@ static int send_connect(struct c4iw_ep *ep)
+> > >  				   &ep->com.remote_addr;
+> > >  	int ret;
+> > >  	enum chip_type adapter_type = ep->com.dev->rdev.lldi.adapter_type;
+> > > -	u32 isn = (prandom_u32() & ~7UL) - 1;
+> > > +	u32 isn = (get_random_u32() & ~7UL) - 1;
+> > 
+> > trivia:
+> > 
+> > There are somewhat odd size mismatches here.
+> > 
+> > I had to think a tiny bit if random() returned a value from 0 to 7
+> > and was promoted to a 64 bit value then truncated to 32 bit.
+> > 
+> > Perhaps these would be clearer as ~7U and not ~7UL
+> 
+> That makes no difference - the compiler will generate the same code.
 
-[ Upstream commit 7c94dcfa8fcff2dba53915f1dabfee49a3df8b88 ]
+True, more or less.  It's more a question for the reader.
 
-UDMA_CHAN_RT_*BCNT_REG stores the real-time channel bytecount statistics.
-These registers are 32-bit hardware counters and the driver uses these
-counters to monitor the operational progress status for a channel, when
-transferring more than 4GB of data it was observed that these counters
-overflow and completion calculation of a operation gets affected and the
-transfer hangs indefinitely.
+> The real question is WTF is the code doing?
 
-This commit adds changes to decrease the byte count for every complete
-transaction so that these registers never overflow and the proper byte
-count statistics is maintained for ongoing transaction by the RT counters.
+True.
 
-Earlier uc->bcnt used to maintain a count of the completed bytes at driver
-side, since the RT counters maintain the statistics of current transaction
-now, the maintenance of uc->bcnt is not necessary.
+> The '& ~7u' clears the bottom 3 bits.
+> The '- 1' then sets the bottom 3 bits and decrements the
+> (random) high bits.
 
-Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-Link: https://lore.kernel.org/r/20220802054835.19482-1-vaishnav.a@ti.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/ti/k3-udma.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+Right.
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index d3902784cae2..eacc4377e4a0 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -235,8 +235,6 @@ struct udma_chan {
- 
- 	struct udma_tx_drain tx_drain;
- 
--	u32 bcnt; /* number of bytes completed since the start of the channel */
--
- 	/* Channel configuration parameters */
- 	struct udma_chan_config config;
- 
-@@ -656,6 +654,20 @@ static void udma_reset_rings(struct udma_chan *uc)
- 	}
- }
- 
-+static void udma_decrement_byte_counters(struct udma_chan *uc, u32 val)
-+{
-+	if (uc->desc->dir == DMA_DEV_TO_MEM) {
-+		udma_rchanrt_write(uc, UDMA_CHAN_RT_BCNT_REG, val);
-+		udma_rchanrt_write(uc, UDMA_CHAN_RT_SBCNT_REG, val);
-+		udma_rchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
-+	} else {
-+		udma_tchanrt_write(uc, UDMA_CHAN_RT_BCNT_REG, val);
-+		udma_tchanrt_write(uc, UDMA_CHAN_RT_SBCNT_REG, val);
-+		if (!uc->bchan)
-+			udma_tchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
-+	}
-+}
-+
- static void udma_reset_counters(struct udma_chan *uc)
- {
- 	u32 val;
-@@ -687,8 +699,6 @@ static void udma_reset_counters(struct udma_chan *uc)
- 		val = udma_rchanrt_read(uc, UDMA_CHAN_RT_PEER_BCNT_REG);
- 		udma_rchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
- 	}
--
--	uc->bcnt = 0;
- }
- 
- static int udma_reset_chan(struct udma_chan *uc, bool hard)
-@@ -1006,7 +1016,7 @@ static void udma_check_tx_completion(struct work_struct *work)
- 		if (uc->desc) {
- 			struct udma_desc *d = uc->desc;
- 
--			uc->bcnt += d->residue;
-+			udma_decrement_byte_counters(uc, d->residue);
- 			udma_start(uc);
- 			vchan_cookie_complete(&d->vd);
- 			break;
-@@ -1060,7 +1070,7 @@ static irqreturn_t udma_ring_irq_handler(int irq, void *data)
- 				vchan_cyclic_callback(&d->vd);
- 			} else {
- 				if (udma_is_desc_really_done(uc, d)) {
--					uc->bcnt += d->residue;
-+					udma_decrement_byte_counters(uc, d->residue);
- 					udma_start(uc);
- 					vchan_cookie_complete(&d->vd);
- 				} else {
-@@ -1097,7 +1107,7 @@ static irqreturn_t udma_udma_irq_handler(int irq, void *data)
- 			vchan_cyclic_callback(&d->vd);
- 		} else {
- 			/* TODO: figure out the real amount of data */
--			uc->bcnt += d->residue;
-+			udma_decrement_byte_counters(uc, d->residue);
- 			udma_start(uc);
- 			vchan_cookie_complete(&d->vd);
- 		}
-@@ -2741,7 +2751,6 @@ static enum dma_status udma_tx_status(struct dma_chan *chan,
- 			bcnt = udma_tchanrt_read(uc, UDMA_CHAN_RT_BCNT_REG);
- 		}
- 
--		bcnt -= uc->bcnt;
- 		if (bcnt && !(bcnt % uc->desc->residue))
- 			residue = 0;
- 		else
--- 
-2.35.1
+> So is the same as get_random_u32() | 7.
 
+True, it's effectively the same as the upper 29 bits are random
+anyway and the bottom 3 bits are always set.
+
+> But I bet the coder had something else in mind.
+
+Likely.
+
+And it was also likely copy/pasted a few times.

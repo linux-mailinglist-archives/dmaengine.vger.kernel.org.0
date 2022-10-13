@@ -2,48 +2,47 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A1215FD194
-	for <lists+dmaengine@lfdr.de>; Thu, 13 Oct 2022 02:40:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 959DA5FD12D
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Oct 2022 02:35:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230091AbiJMAkI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 12 Oct 2022 20:40:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43728 "EHLO
+        id S231526AbiJMAfo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 12 Oct 2022 20:35:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231403AbiJMAhe (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Oct 2022 20:37:34 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61B91139E75;
-        Wed, 12 Oct 2022 17:31:53 -0700 (PDT)
+        with ESMTP id S231814AbiJMAcX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Oct 2022 20:32:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F5E6DFC2E;
+        Wed, 12 Oct 2022 17:28:27 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 949E3B81CCB;
-        Thu, 13 Oct 2022 00:18:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55F71C433C1;
-        Thu, 13 Oct 2022 00:18:22 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A21FD61684;
+        Thu, 13 Oct 2022 00:19:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4658BC43141;
+        Thu, 13 Oct 2022 00:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665620303;
-        bh=UcMC/ohTlfSufjYNgla/y8KiliyHVdq5JfegDQggsIE=;
+        s=k20201202; t=1665620349;
+        bh=M+GQYKj7W9Q9eqQVTrqZvdk+oerpuJZZbVXvQ6MtdVg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VcELeYaaGXogzZg8x+/K6GJ71tQOP+GqDw04Fyh+xwHaOW9sGbdfj49LPIbGu5cOn
-         cmJkeJKx9miBIcVqgFc+YGZ4/OMI+z8sM+nc1GYtQbo+58IUZbM6Yq37l2CdiTf8qj
-         7ygRyWxxgQ0vjd0RIszCGDZOSf8VYX/vT9UY12lsJ4923lG8BUNr0MF1p8pfJLyt6p
-         +RAfeG3gQrUqwC+uEv3pdWlKP2ITGGnSjydv6+KvtYnnx+2jDV2G5faUlZoBYU53rz
-         Wkh7AMxJlNH4cn5+tBXQEPGuyMc6f1eo9TNR4c22HKSQEZqI9rvUSGEKFWSmusH92M
-         dRARX5VfWCKjw==
+        b=gXavkX+/E2EzW+eDHKKTjHwsut1yem5A291CG/eg4jcGrglQlmnDwuy8dlxnTt6xi
+         hZrSj+tTxUo1GW9nmmPsmRgWloMrPaVsnPiNH/mgdcpwXPE0cr6Q8mZe4RdZKbh4og
+         HkSmTEJP+PRSvh09hPaD4+1JAy0LioUZAuKlZzcHOoMyUL+0qkMZXUDkZ/IfoS0aHT
+         /NL3AqX8YjEVQebI3SjtccLitxSkrLJlqqfECDMVO2fB7+lAQqLY2I1DRkvcsJz6hu
+         qjbokTS4rW54ruUGRM+dLI7AZOjv5cbt7kc9q7wUzdxIt80umUkJxQkEFu+caakRz/
+         Xjzj+IQdgHgCA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Frank Li <Frank.Li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, gustavo.pimentel@synopsys.com,
+Cc:     Vaishnav Achath <vaishnav.a@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
         dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.0 63/67] dmaengine: dw-edma: Remove runtime PM support
-Date:   Wed, 12 Oct 2022 20:15:44 -0400
-Message-Id: <20221013001554.1892206-63-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.19 10/63] dmaengine: ti: k3-udma: Reset UDMA_CHAN_RT byte counters to prevent overflow
+Date:   Wed, 12 Oct 2022 20:17:44 -0400
+Message-Id: <20221013001842.1893243-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221013001554.1892206-1-sashal@kernel.org>
-References: <20221013001554.1892206-1-sashal@kernel.org>
+In-Reply-To: <20221013001842.1893243-1-sashal@kernel.org>
+References: <20221013001842.1893243-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,97 +56,112 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+From: Vaishnav Achath <vaishnav.a@ti.com>
 
-[ Upstream commit a0188eb6e71c93ab7dd9bfa4305fac43c70db309 ]
+[ Upstream commit 7c94dcfa8fcff2dba53915f1dabfee49a3df8b88 ]
 
-Currently, the dw-edma driver enables the runtime_pm for parent device
-(chip->dev) and increments/decrements the refcount during alloc/free
-chan resources callbacks.
+UDMA_CHAN_RT_*BCNT_REG stores the real-time channel bytecount statistics.
+These registers are 32-bit hardware counters and the driver uses these
+counters to monitor the operational progress status for a channel, when
+transferring more than 4GB of data it was observed that these counters
+overflow and completion calculation of a operation gets affected and the
+transfer hangs indefinitely.
 
-This leads to a problem when the eDMA driver has been probed, but the
-channels were not used. This scenario can happen when the DW PCIe driver
-probes eDMA driver successfully, but the PCI EPF driver decides not to
-use eDMA channels and use iATU instead for PCI transfers.
+This commit adds changes to decrease the byte count for every complete
+transaction so that these registers never overflow and the proper byte
+count statistics is maintained for ongoing transaction by the RT counters.
 
-In this case, the underlying device would be runtime suspended due to
-pm_runtime_enable() in dw_edma_probe() and the PCI EPF driver would have
-no knowledge of it.
+Earlier uc->bcnt used to maintain a count of the completed bytes at driver
+side, since the RT counters maintain the statistics of current transaction
+now, the maintenance of uc->bcnt is not necessary.
 
-Ideally, the eDMA driver should not be the one doing the runtime PM of
-the parent device. The responsibility should instead belong to the client
-drivers like PCI EPF.
-
-So let's remove the runtime PM support from eDMA driver.
-
-Cc: Serge Semin <fancer.lancer@gmail.com>
-Cc: Frank Li <Frank.Li@nxp.com>
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Link: https://lore.kernel.org/r/20220910054700.12205-1-manivannan.sadhasivam@linaro.org
+Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Link: https://lore.kernel.org/r/20220802054835.19482-1-vaishnav.a@ti.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dw-edma/dw-edma-core.c | 12 ------------
- 1 file changed, 12 deletions(-)
+ drivers/dma/ti/k3-udma.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index 07f756479663..c54b24ff5206 100644
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -9,7 +9,6 @@
- #include <linux/module.h>
- #include <linux/device.h>
- #include <linux/kernel.h>
--#include <linux/pm_runtime.h>
- #include <linux/dmaengine.h>
- #include <linux/err.h>
- #include <linux/interrupt.h>
-@@ -682,15 +681,12 @@ static int dw_edma_alloc_chan_resources(struct dma_chan *dchan)
- 	if (chan->status != EDMA_ST_IDLE)
- 		return -EBUSY;
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 2f0d2c68c93c..fcfcde947b30 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -300,8 +300,6 @@ struct udma_chan {
  
--	pm_runtime_get(chan->dw->chip->dev);
+ 	struct udma_tx_drain tx_drain;
+ 
+-	u32 bcnt; /* number of bytes completed since the start of the channel */
 -
- 	return 0;
+ 	/* Channel configuration parameters */
+ 	struct udma_chan_config config;
+ 
+@@ -757,6 +755,20 @@ static void udma_reset_rings(struct udma_chan *uc)
+ 	}
  }
  
- static void dw_edma_free_chan_resources(struct dma_chan *dchan)
++static void udma_decrement_byte_counters(struct udma_chan *uc, u32 val)
++{
++	if (uc->desc->dir == DMA_DEV_TO_MEM) {
++		udma_rchanrt_write(uc, UDMA_CHAN_RT_BCNT_REG, val);
++		udma_rchanrt_write(uc, UDMA_CHAN_RT_SBCNT_REG, val);
++		udma_rchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
++	} else {
++		udma_tchanrt_write(uc, UDMA_CHAN_RT_BCNT_REG, val);
++		udma_tchanrt_write(uc, UDMA_CHAN_RT_SBCNT_REG, val);
++		if (!uc->bchan)
++			udma_tchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
++	}
++}
++
+ static void udma_reset_counters(struct udma_chan *uc)
  {
- 	unsigned long timeout = jiffies + msecs_to_jiffies(5000);
--	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
- 	int ret;
- 
- 	while (time_before(jiffies, timeout)) {
-@@ -703,8 +699,6 @@ static void dw_edma_free_chan_resources(struct dma_chan *dchan)
- 
- 		cpu_relax();
+ 	u32 val;
+@@ -790,8 +802,6 @@ static void udma_reset_counters(struct udma_chan *uc)
+ 		val = udma_rchanrt_read(uc, UDMA_CHAN_RT_PEER_BCNT_REG);
+ 		udma_rchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
  	}
 -
--	pm_runtime_put(chan->dw->chip->dev);
+-	uc->bcnt = 0;
  }
  
- static int dw_edma_channel_setup(struct dw_edma *dw, bool write,
-@@ -977,9 +971,6 @@ int dw_edma_probe(struct dw_edma_chip *chip)
- 	if (err)
- 		goto err_irq_free;
+ static int udma_reset_chan(struct udma_chan *uc, bool hard)
+@@ -1115,7 +1125,7 @@ static void udma_check_tx_completion(struct work_struct *work)
+ 		if (uc->desc) {
+ 			struct udma_desc *d = uc->desc;
  
--	/* Power management */
--	pm_runtime_enable(dev);
--
- 	/* Turn debugfs on */
- 	dw_edma_v0_core_debugfs_on(dw);
+-			uc->bcnt += d->residue;
++			udma_decrement_byte_counters(uc, d->residue);
+ 			udma_start(uc);
+ 			vchan_cookie_complete(&d->vd);
+ 			break;
+@@ -1168,7 +1178,7 @@ static irqreturn_t udma_ring_irq_handler(int irq, void *data)
+ 				vchan_cyclic_callback(&d->vd);
+ 			} else {
+ 				if (udma_is_desc_really_done(uc, d)) {
+-					uc->bcnt += d->residue;
++					udma_decrement_byte_counters(uc, d->residue);
+ 					udma_start(uc);
+ 					vchan_cookie_complete(&d->vd);
+ 				} else {
+@@ -1204,7 +1214,7 @@ static irqreturn_t udma_udma_irq_handler(int irq, void *data)
+ 			vchan_cyclic_callback(&d->vd);
+ 		} else {
+ 			/* TODO: figure out the real amount of data */
+-			uc->bcnt += d->residue;
++			udma_decrement_byte_counters(uc, d->residue);
+ 			udma_start(uc);
+ 			vchan_cookie_complete(&d->vd);
+ 		}
+@@ -3809,7 +3819,6 @@ static enum dma_status udma_tx_status(struct dma_chan *chan,
+ 			bcnt = udma_tchanrt_read(uc, UDMA_CHAN_RT_BCNT_REG);
+ 		}
  
-@@ -1009,9 +1000,6 @@ int dw_edma_remove(struct dw_edma_chip *chip)
- 	for (i = (dw->nr_irqs - 1); i >= 0; i--)
- 		free_irq(chip->ops->irq_vector(dev, i), &dw->irq[i]);
- 
--	/* Power management */
--	pm_runtime_disable(dev);
--
- 	/* Deregister eDMA device */
- 	dma_async_device_unregister(&dw->wr_edma);
- 	list_for_each_entry_safe(chan, _chan, &dw->wr_edma.channels,
+-		bcnt -= uc->bcnt;
+ 		if (bcnt && !(bcnt % uc->desc->residue))
+ 			residue = 0;
+ 		else
 -- 
 2.35.1
 

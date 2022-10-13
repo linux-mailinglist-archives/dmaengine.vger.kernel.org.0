@@ -2,152 +2,98 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 272D25FD2CB
-	for <lists+dmaengine@lfdr.de>; Thu, 13 Oct 2022 03:43:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDC6D5FD4EB
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Oct 2022 08:37:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229586AbiJMBnX convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Wed, 12 Oct 2022 21:43:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52382 "EHLO
+        id S229547AbiJMGhw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 13 Oct 2022 02:37:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbiJMBnV (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Oct 2022 21:43:21 -0400
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7678936DEB;
-        Wed, 12 Oct 2022 18:43:19 -0700 (PDT)
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-        by unirelay02.hostedemail.com (Postfix) with ESMTP id 640C9120237;
-        Thu, 13 Oct 2022 01:37:28 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf20.hostedemail.com (Postfix) with ESMTPA id 56EDD20026;
-        Thu, 13 Oct 2022 01:37:01 +0000 (UTC)
-Message-ID: <3f527ec95a12135eb40f5f2d156a2954feb7fbfe.camel@perches.com>
-Subject: Re: [PATCH v1 3/5] treewide: use get_random_u32() when possible
-From:   Joe Perches <joe@perches.com>
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
-        "dev@openvswitch.org" <dev@openvswitch.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "SHA-cyfmac-dev-list@infineon.com" <SHA-cyfmac-dev-list@infineon.com>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-actions@lists.infradead.org" 
-        <linux-actions@lists.infradead.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "cake@lists.bufferbloat.net" <cake@lists.bufferbloat.net>,
-        "brcm80211-dev-list.pdl@broadcom.com" 
-        <brcm80211-dev-list.pdl@broadcom.com>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Date:   Wed, 12 Oct 2022 18:37:11 -0700
-In-Reply-To: <d45bd258e033453b85a137112e7694e1@AcuMS.aculab.com>
-References: <20221005214844.2699-1-Jason@zx2c4.com>
-         <20221005214844.2699-4-Jason@zx2c4.com>
-         <f8ad3ba44d28dec1a5f7626b82c5e9c2aeefa729.camel@perches.com>
-         <d45bd258e033453b85a137112e7694e1@AcuMS.aculab.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
+        with ESMTP id S229454AbiJMGhv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 13 Oct 2022 02:37:51 -0400
+Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E04D411D98B;
+        Wed, 12 Oct 2022 23:37:49 -0700 (PDT)
+Received: by mail-io1-xd32.google.com with SMTP id 187so592717iov.10;
+        Wed, 12 Oct 2022 23:37:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eNhamnGFWcGOYQgKBpc4NUk2S/tQUkP2tXcVyRZsw7w=;
+        b=d4aW4wNfEHhNXyr75oI4eP0P0/jj9mS3Yq4Xewq/VAfs/yi+YOj7xR7T9Iifrk8exY
+         qty6B/1u+xVf39efvYVSQ7WElxAW4XbiqGS5W4zhff34t7nKvl4KVxYuiqj05miEa2xK
+         D27giew9e0cP9xobx4bvEhsvPT+Xt4cXVWnLvKGNpm1Hlxxzd7eh+WTtaqabSFpy6+Qo
+         xTJSnEhHPtwptVdrxC1C1DDPqLDaVnb2/H0PmYBOqgUL57wQhMCI4SCoSegDLmoW6Jdg
+         fmW+nBc9qE0HYq0riPMvBowSSW156BKMR+ybHsUDbI0rGSg47Oll+jiikOU3H8me6kq6
+         5qGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eNhamnGFWcGOYQgKBpc4NUk2S/tQUkP2tXcVyRZsw7w=;
+        b=l/7j3OSDWbzKyG42id30dhhGxfM/tdn8fcKw/TKEI1W2dYXeUi9BrChoK3LjUtFAWA
+         dbnI45tZf0vyaEgVzNq8McWZBSi0mW9bzTT28iW+qt+fT1bVe7b7+sJ66jnuvyVrNRS2
+         HvqwqOpC7tBD5KHcujeBkohg4AD+Te8AOgcsv32T+/tKg1q2wVItuc18mlTJjfM+LPk0
+         aM9I+XWG7ZW9GEd3gCKAgsJevLSxXe7XV/jWpEbidcnYjaQh+hIV8KYyBv1w6pOZKi8Y
+         gQKKuX4YXmn8cxdPrqhoOj1qJPzInlywmGPV63B8oSgHaBvQSm24fsC88btKR4rs1vsX
+         fkZw==
+X-Gm-Message-State: ACrzQf3dL//V6AopN72LUbIH+vjd2Mgn4UGFe5MkbJr08bIENwbevN42
+        sVYZozauoiJiT8SFafNfNfE/pOwKPH6PS+Os83g=
+X-Google-Smtp-Source: AMsMyM4ELJz9R9H1jqMfQnPYwPEgtKghQ8aj+Oa+wwS+iJG1Es590FLazGuHIs7ncAaAH0z4hQQdeIryUql3pX9gNE0=
+X-Received: by 2002:a05:6638:2494:b0:363:db4f:c870 with SMTP id
+ x20-20020a056638249400b00363db4fc870mr5703669jat.65.1665643069023; Wed, 12
+ Oct 2022 23:37:49 -0700 (PDT)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
-        SPF_NONE,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-        version=3.4.6
-X-Stat-Signature: jmxt1u5agdpi9w76hr4tp6uotie3p373
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 56EDD20026
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX18KEIRmyyr9pSEavQqF5X0dTzAEITyiJq4=
-X-HE-Tag: 1665625021-540494
+References: <20221009181338.2896660-8-lis8215@gmail.com> <202210100607.YdxoR0tD-lkp@intel.com>
+In-Reply-To: <202210100607.YdxoR0tD-lkp@intel.com>
+From:   Siarhei Volkau <lis8215@gmail.com>
+Date:   Thu, 13 Oct 2022 09:37:37 +0300
+Message-ID: <CAKNVLfaFvge4A8-QUzeq-JManpuYMGvyHXCJi-ew==CWN8-M=A@mail.gmail.com>
+Subject: Re: [PATCH 7/8] serial: 8250/ingenic: Add support for the
+ JZ4750/JZ4755 SoCs
+To:     kernel test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jiri Slaby <jirislaby@kernel.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, 2022-10-12 at 21:29 +0000, David Laight wrote:
-> From: Joe Perches
-> > Sent: 12 October 2022 20:17
-> > 
-> > On Wed, 2022-10-05 at 23:48 +0200, Jason A. Donenfeld wrote:
-> > > The prandom_u32() function has been a deprecated inline wrapper around
-> > > get_random_u32() for several releases now, and compiles down to the
-> > > exact same code. Replace the deprecated wrapper with a direct call to
-> > > the real function.
-> > []
-> > > diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
-> > []
-> > > @@ -734,7 +734,7 @@ static int send_connect(struct c4iw_ep *ep)
-> > >  				   &ep->com.remote_addr;
-> > >  	int ret;
-> > >  	enum chip_type adapter_type = ep->com.dev->rdev.lldi.adapter_type;
-> > > -	u32 isn = (prandom_u32() & ~7UL) - 1;
-> > > +	u32 isn = (get_random_u32() & ~7UL) - 1;
-> > 
-> > trivia:
-> > 
-> > There are somewhat odd size mismatches here.
-> > 
-> > I had to think a tiny bit if random() returned a value from 0 to 7
-> > and was promoted to a 64 bit value then truncated to 32 bit.
-> > 
-> > Perhaps these would be clearer as ~7U and not ~7UL
-> 
-> That makes no difference - the compiler will generate the same code.
+=D0=BF=D0=BD, 10 =D0=BE=D0=BA=D1=82. 2022 =D0=B3. =D0=B2 01:29, kernel test=
+ robot <lkp@intel.com>:
+> config: ia64-allyesconfig
+> config: arm64-randconfig-r035-20221010
 
-True, more or less.  It's more a question for the reader.
+>  > 142  #define CGU_REG_CPCCR   ((void *)CKSEG1ADDR(0x10000000))
 
-> The real question is WTF is the code doing?
+> 0-DAY CI Kernel Test Service
 
-True.
+I know CKSEG1ADDR is MIPS specific, might be it needed to disable COMPILE_T=
+EST
+on the driver?
+Since early syscon isn't mainlined yet I don't see any other way at the mom=
+ent.
 
-> The '& ~7u' clears the bottom 3 bits.
-> The '- 1' then sets the bottom 3 bits and decrements the
-> (random) high bits.
-
-Right.
-
-> So is the same as get_random_u32() | 7.
-
-True, it's effectively the same as the upper 29 bits are random
-anyway and the bottom 3 bits are always set.
-
-> But I bet the coder had something else in mind.
-
-Likely.
-
-And it was also likely copy/pasted a few times.
+Any suggestions on that, folks?

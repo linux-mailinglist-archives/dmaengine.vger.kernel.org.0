@@ -2,47 +2,47 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 959DA5FD12D
-	for <lists+dmaengine@lfdr.de>; Thu, 13 Oct 2022 02:35:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF8B35FD00C
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Oct 2022 02:24:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231526AbiJMAfo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 12 Oct 2022 20:35:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47178 "EHLO
+        id S230411AbiJMAYb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 12 Oct 2022 20:24:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231814AbiJMAcX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Oct 2022 20:32:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F5E6DFC2E;
-        Wed, 12 Oct 2022 17:28:27 -0700 (PDT)
+        with ESMTP id S231169AbiJMAX4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Oct 2022 20:23:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD0DC12C89A;
+        Wed, 12 Oct 2022 17:22:21 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A21FD61684;
-        Thu, 13 Oct 2022 00:19:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4658BC43141;
-        Thu, 13 Oct 2022 00:19:08 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 82440615BE;
+        Thu, 13 Oct 2022 00:21:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CB57C433D6;
+        Thu, 13 Oct 2022 00:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665620349;
-        bh=M+GQYKj7W9Q9eqQVTrqZvdk+oerpuJZZbVXvQ6MtdVg=;
+        s=k20201202; t=1665620509;
+        bh=6xyclav8Mn6Z5DBx4PeLkb663P0y9XtwnIcCPni89VI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gXavkX+/E2EzW+eDHKKTjHwsut1yem5A291CG/eg4jcGrglQlmnDwuy8dlxnTt6xi
-         hZrSj+tTxUo1GW9nmmPsmRgWloMrPaVsnPiNH/mgdcpwXPE0cr6Q8mZe4RdZKbh4og
-         HkSmTEJP+PRSvh09hPaD4+1JAy0LioUZAuKlZzcHOoMyUL+0qkMZXUDkZ/IfoS0aHT
-         /NL3AqX8YjEVQebI3SjtccLitxSkrLJlqqfECDMVO2fB7+lAQqLY2I1DRkvcsJz6hu
-         qjbokTS4rW54ruUGRM+dLI7AZOjv5cbt7kc9q7wUzdxIt80umUkJxQkEFu+caakRz/
-         Xjzj+IQdgHgCA==
+        b=eMATqoy0XNS31d9jcZ2ewozbhYO18JNwLjpBZTZJlHtWHsWLpWrJjoSCT0pp/TeOt
+         JjGo57khjSuw0gBQBaMsYEnUqt0wBkA2nmGNZRxdPSuUhdjg7YdclxqXpNfCbBKwu7
+         XiAeMBEIAKig9p8Aj0I0t4pbyklyfK2GxK79Qw7X/Si5SUe7o7seb13WO0B6Rb8iqX
+         rMh38bZ5z5Nm/bDftcBXLYWYkAHrH2zdRukV3QAHX6WxXn0eQuemEE0lC8NSQWdMZ7
+         BZIlGmxElNSSiQ6R8QLGXCJWB6suq9uvdA09QJUElWSzpzW0d3vj4gCY6XqTSK189h
+         Fm8EEbYOZ3y0Q==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Vaishnav Achath <vaishnav.a@ti.com>,
         Peter Ujfalusi <peter.ujfalusi@gmail.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
         dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.19 10/63] dmaengine: ti: k3-udma: Reset UDMA_CHAN_RT byte counters to prevent overflow
-Date:   Wed, 12 Oct 2022 20:17:44 -0400
-Message-Id: <20221013001842.1893243-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 07/47] dmaengine: ti: k3-udma: Reset UDMA_CHAN_RT byte counters to prevent overflow
+Date:   Wed, 12 Oct 2022 20:20:42 -0400
+Message-Id: <20221013002124.1894077-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221013001842.1893243-1-sashal@kernel.org>
-References: <20221013001842.1893243-1-sashal@kernel.org>
+In-Reply-To: <20221013002124.1894077-1-sashal@kernel.org>
+References: <20221013002124.1894077-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -85,7 +85,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 17 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 2f0d2c68c93c..fcfcde947b30 100644
+index 041d8e32d630..75f2a0006c73 100644
 --- a/drivers/dma/ti/k3-udma.c
 +++ b/drivers/dma/ti/k3-udma.c
 @@ -300,8 +300,6 @@ struct udma_chan {
@@ -154,7 +154,7 @@ index 2f0d2c68c93c..fcfcde947b30 100644
  			udma_start(uc);
  			vchan_cookie_complete(&d->vd);
  		}
-@@ -3809,7 +3819,6 @@ static enum dma_status udma_tx_status(struct dma_chan *chan,
+@@ -3811,7 +3821,6 @@ static enum dma_status udma_tx_status(struct dma_chan *chan,
  			bcnt = udma_tchanrt_read(uc, UDMA_CHAN_RT_BCNT_REG);
  		}
  

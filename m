@@ -2,28 +2,28 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A8DD75FF637
-	for <lists+dmaengine@lfdr.de>; Sat, 15 Oct 2022 00:13:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18DB35FF62C
+	for <lists+dmaengine@lfdr.de>; Sat, 15 Oct 2022 00:12:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229811AbiJNWND (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 14 Oct 2022 18:13:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45938 "EHLO
+        id S229914AbiJNWMp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 14 Oct 2022 18:12:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229849AbiJNWMi (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Oct 2022 18:12:38 -0400
+        with ESMTP id S229926AbiJNWML (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Oct 2022 18:12:11 -0400
 Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 183811B94D5;
-        Fri, 14 Oct 2022 15:12:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41AED189C15;
+        Fri, 14 Oct 2022 15:11:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1665785539; x=1697321539;
+  t=1665785513; x=1697321513;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=FKgC6OLpKYMgVDETJhRX1J7j15OZSZ0dueAYeVHLr8U=;
-  b=ltrTK+Xb83tRi3lsC8jd16swsjJ8rXiqXpzvu6rVCQpd505WFJXt3+M+
-   g8pGPlxzs6CyLm+aV4Cv4X3be9WLCQ6aCCKMa75jMYz16HU2sC0AOMlxC
-   XyrUXwZ/5YdhBHSgeeDuH4ZbKaFFx2HdeYAqOc7sxmo35lePa815nQi5z
-   w=;
+  bh=19lRMBFasEqUWBFZnLl5rtxmJMcHAYGIrEn6zw3Bk1U=;
+  b=giPJ9RBgxF7XIoslMNXyw/UzE+L4+plQ551u4IOc+wUkXtFgPhYBmqeS
+   GNP68tI+L0abF5kK9YrPNCmjO/MaM5pizN/mUXVn/TaI9s+hWU5z1ngts
+   xTzHkya2jku0+Dj8MCGm667KJBiMvMH3YXLB0oJZg6rgUh8owlxrlpoTI
+   s=;
 Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
   by alexa-out-sd-02.qualcomm.com with ESMTP; 14 Oct 2022 15:11:52 -0700
 X-QCInternal: smtphost
@@ -42,9 +42,9 @@ To:     Andy Gross <agross@kernel.org>,
 CC:     <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Melody Olvera <quic_molvera@quicinc.com>
-Subject: [PATCH v2 1/2] dt-bindings: dmaengine: qcom: gpi: Add compatible for QDU1000 and QRU1000
-Date:   Fri, 14 Oct 2022 15:11:01 -0700
-Message-ID: <20221014221102.7445-2-quic_molvera@quicinc.com>
+Subject: [PATCH v2 2/2] dmaengine: qcom: gpi: Add compatible for QDU1000 and QRU1000
+Date:   Fri, 14 Oct 2022 15:11:02 -0700
+Message-ID: <20221014221102.7445-3-quic_molvera@quicinc.com>
 X-Mailer: git-send-email 2.38.0
 In-Reply-To: <20221014221102.7445-1-quic_molvera@quicinc.com>
 References: <20221014221102.7445-1-quic_molvera@quicinc.com>
@@ -63,26 +63,26 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add compatible documentation for Qualcomm QDU1000 and QRU1000 SoCs.
+Add compatible fields for the Qualcomm QDU1000 and QRU1000 SoCs.
 
 Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
 ---
- Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 2 ++
+ drivers/dma/qcom/gpi.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-index 750b40c32213..8c52ea5525c7 100644
---- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-+++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-@@ -20,6 +20,8 @@ properties:
-   compatible:
-     oneOf:
-       - enum:
-+          - qcom,qdu1000-gpi-dma
-+          - qcom,qru1000-gpi-dma
-           - qcom,sc7280-gpi-dma
-           - qcom,sdm845-gpi-dma
-           - qcom,sm6350-gpi-dma
+diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
+index cc938a31dc2d..02438735e92b 100644
+--- a/drivers/dma/qcom/gpi.c
++++ b/drivers/dma/qcom/gpi.c
+@@ -2286,6 +2286,8 @@ static int gpi_probe(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id gpi_of_match[] = {
++	{ .compatible = "qcom,qdu1000-gpi-dma", .data = (void *)0x10000 },
++	{ .compatible = "qcom,qru1000-gpi-dma", .data = (void *)0x10000 },
+ 	{ .compatible = "qcom,sc7280-gpi-dma", .data = (void *)0x10000 },
+ 	{ .compatible = "qcom,sdm845-gpi-dma", .data = (void *)0x0 },
+ 	{ .compatible = "qcom,sm6350-gpi-dma", .data = (void *)0x10000 },
 -- 
 2.38.0
 

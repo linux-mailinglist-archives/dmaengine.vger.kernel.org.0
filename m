@@ -2,139 +2,115 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B1825FF65C
-	for <lists+dmaengine@lfdr.de>; Sat, 15 Oct 2022 00:25:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0B8A5FF734
+	for <lists+dmaengine@lfdr.de>; Sat, 15 Oct 2022 01:57:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbiJNWZe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 14 Oct 2022 18:25:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58646 "EHLO
+        id S229609AbiJNX5J (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 14 Oct 2022 19:57:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbiJNWZd (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Oct 2022 18:25:33 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36DF166846;
-        Fri, 14 Oct 2022 15:25:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1665786332; x=1697322332;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=crbgjyT8O52ZWI32HYW5IlNr+CfyhK7rYCZVgst+Q/E=;
-  b=D3feSMbEqHs5de/PT/qGV2u4n7iYtYJ/nn1dp+EAZdW0E+ycLiuP42gf
-   ZrqKFtpK82IuiykgX2rNUufok12LZyIGIoQ5mX+9l6oBoKFQkGZ9PP9p2
-   R7EMgfQYf6tkZs4dV7SUA4UOuD5n7H5ECrWlSM1w9RM/BrsQSoxGhtO4t
-   ozHuDzXfAmtH+o+Y1HEmSAgGZuOIB1VsffiGWYaZmGXbOOW1uCqkZKXnS
-   gRmDnkRYZSGFG9J5ImPL7uFq+9IPre8/0OvwHM2f65TmLkOv+E+doJPUj
-   c3kOt4/PJnktJHZdV/uuR5N0lHZg7ZYbPWlpOgA3gG25Yus1f4XrZN4Zn
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10500"; a="305472374"
-X-IronPort-AV: E=Sophos;i="5.95,185,1661842800"; 
-   d="scan'208";a="305472374"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2022 15:25:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10500"; a="578779966"
-X-IronPort-AV: E=Sophos;i="5.95,185,1661842800"; 
-   d="scan'208";a="578779966"
-Received: from fyu1.sc.intel.com ([172.25.103.126])
-  by orsmga003.jf.intel.com with ESMTP; 14 Oct 2022 15:25:31 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     "Vinod Koul" <vkoul@kernel.org>,
-        "Arjan Van De Ven" <arjan.van.de.ven@intel.com>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        "Jacob Pan" <jacob.jun.pan@linux.intel.com>
-Cc:     dmaengine@vger.kernel.org,
-        "linux-kernel" <linux-kernel@vger.kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>, stable@vger.kernel.org
-Subject: [PATCH v2] dmaengine: idxd: Do not enable user type Work Queue without Shared Virtual Addressing
-Date:   Fri, 14 Oct 2022 15:25:41 -0700
-Message-Id: <20221014222541.3912195-1-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.32.0
+        with ESMTP id S229539AbiJNX5E (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Oct 2022 19:57:04 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BE3C9A9E0;
+        Fri, 14 Oct 2022 16:57:03 -0700 (PDT)
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29EIEBCB010260;
+        Fri, 14 Oct 2022 23:57:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=YDEfTLXOJppjFZ0Y2gGdqkY+0fCvg0JR4TTDdIGHpk4=;
+ b=pGFJYukJnsD5VE/a9Q+VoyEKwtQch4MXvfA92FUKKsXxPl6fY3KZwHDB5W/NqTaXXHGR
+ rmHwN+OjCQZ5SuM6Us2dllz+YJyBiPC6A09lpmmuouFSvcc/FR3wst+lngAcRzEWt2I/
+ GLPlgMTd+17lhAjBG6wBTQkpxbji0FypFJqv/UogmU2ldk65iJryJl4U+ST+4lYvihRk
+ We1/mkoueLGV6YU5fyjJDc8SbNjJaMUlZiAuaRmt8pDRWX3E+KL6dfqzvT8RB7h/FsXp
+ 8EtwPdvO35e/GwXWTvdoy2X29EOkQ40H+oCh1R9qD1K3+/FpMs70Z/rSMeGsGhMs0Cba vw== 
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3k73h6kk34-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Oct 2022 23:57:00 +0000
+Received: from nasanex01b.na.qualcomm.com (corens_vlan604_snip.qualcomm.com [10.53.140.1])
+        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 29ENuxj5022933
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Oct 2022 23:56:59 GMT
+Received: from [10.110.77.177] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Fri, 14 Oct
+ 2022 16:56:59 -0700
+Message-ID: <41db98ac-6a90-fa26-2575-6009729537ba@quicinc.com>
+Date:   Fri, 14 Oct 2022 16:56:59 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH v2 0/2] Add dma gpi support for QDU1000/QRU1000 SoCs
+Content-Language: en-US
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+CC:     <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20221014221102.7445-1-quic_molvera@quicinc.com>
+From:   Melody Olvera <quic_molvera@quicinc.com>
+In-Reply-To: <20221014221102.7445-1-quic_molvera@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: LcOzUTZJL-7NZYLq4WKNsUBXF5H7whOy
+X-Proofpoint-GUID: LcOzUTZJL-7NZYLq4WKNsUBXF5H7whOy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-10-14_13,2022-10-14_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ suspectscore=0 mlxscore=0 impostorscore=0 spamscore=0 mlxlogscore=751
+ lowpriorityscore=0 phishscore=0 priorityscore=1501 adultscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2209130000 definitions=main-2210140132
+X-Spam-Status: No, score=-5.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-When the idxd_user_drv driver is bound to a Work Queue (WQ) device
-without IOMMU or with IOMMU Passthrough without Shared Virtual
-Addressing (SVA), the application gains direct access to physical
-memory via the device by programming physical address to a submitted
-descriptor. This allows direct userspace read and write access to
-arbitrary physical memory. This is inconsistent with the security
-goals of a good kernel API.
 
-Unlike vfio_pci driver, the IDXD char device driver does not provide any
-ways to pin user pages and translate the address from user VA to IOVA or
-PA without IOMMU SVA. Therefore the application has no way to instruct the
-device to perform DMA function. This makes the char device not usable for
-normal application usage.
 
-Since user type WQ without SVA cannot be used for normal application usage
-and presents the security issue, bind idxd_user_drv driver and enable user
-type WQ only when SVA is enabled (i.e. user PASID is enabled).
-
-Fixes: 448c3de8ac83 ("dmaengine: idxd: create user driver for wq 'device'")
-Cc: stable@vger.kernel.org
-Suggested-by: Arjan Van De Ven <arjan.van.de.ven@intel.com>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
----
-v2:
-- Update changlog per Dave Hansen's comments
-
- drivers/dma/idxd/cdev.c   | 18 ++++++++++++++++++
- include/uapi/linux/idxd.h |  1 +
- 2 files changed, 19 insertions(+)
-
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index c2808fd081d6..a9b96b18772f 100644
---- a/drivers/dma/idxd/cdev.c
-+++ b/drivers/dma/idxd/cdev.c
-@@ -312,6 +312,24 @@ static int idxd_user_drv_probe(struct idxd_dev *idxd_dev)
- 	if (idxd->state != IDXD_DEV_ENABLED)
- 		return -ENXIO;
- 
-+	/*
-+	 * User type WQ is enabled only when SVA is enabled for two reasons:
-+	 *   - If no IOMMU or IOMMU Passthrough without SVA, userspace
-+	 *     can directly access physical address through the WQ.
-+	 *   - The IDXD cdev driver does not provide any ways to pin
-+	 *     user pages and translate the address from user VA to IOVA or
-+	 *     PA without IOMMU SVA. Therefore the application has no way
-+	 *     to instruct the device to perform DMA function. This makes
-+	 *     the cdev not usable for normal application usage.
-+	 */
-+	if (!device_user_pasid_enabled(idxd)) {
-+		idxd->cmd_status = IDXD_SCMD_WQ_USER_NO_IOMMU;
-+		dev_dbg(&idxd->pdev->dev,
-+			"User type WQ cannot be enabled without SVA.\n");
-+
-+		return -EOPNOTSUPP;
-+	}
-+
- 	mutex_lock(&wq->wq_lock);
- 	wq->type = IDXD_WQT_USER;
- 	rc = drv_enable_wq(wq);
-diff --git a/include/uapi/linux/idxd.h b/include/uapi/linux/idxd.h
-index 095299c75828..2b9e7feba3f3 100644
---- a/include/uapi/linux/idxd.h
-+++ b/include/uapi/linux/idxd.h
-@@ -29,6 +29,7 @@ enum idxd_scmd_stat {
- 	IDXD_SCMD_WQ_NO_SIZE = 0x800e0000,
- 	IDXD_SCMD_WQ_NO_PRIV = 0x800f0000,
- 	IDXD_SCMD_WQ_IRQ_ERR = 0x80100000,
-+	IDXD_SCMD_WQ_USER_NO_IOMMU = 0x80110000,
- };
- 
- #define IDXD_SCMD_SOFTERR_MASK	0x80000000
--- 
-2.32.0
+On 10/14/2022 3:11 PM, Melody Olvera wrote:
+> This series adds the dt bindings and driver support for dma gpi driver
+> on the QDU1000 and QRU1000 SoCs.
+>
+> This patchset is based off of patches found at [1].
+>
+> The Qualcomm Technologies, Inc. Distributed Unit 1000 and Radio Unit
+> 1000 are new SoCs meant for enabling Open RAN solutions. See more at
+> https://www.qualcomm.com/content/dam/qcomm-martech/dm-assets/documents/qualcomm_5g_ran_platforms_product_brief.pdf
+>
+> [1] https://lore.kernel.org/all/20220927014846.32892-1-mailingradian@gmail.com/
+Changes from v1:
+- fixed ordering
+- rebased on top of [1]
+>
+> Melody Olvera (2):
+>   dt-bindings: dmaengine: qcom: gpi: Add compatible for QDU1000 and
+>     QRU1000
+>   dmaengine: qcom: gpi: Add compatible for QDU1000 and QRU1000
+>
+>  Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 2 ++
+>  drivers/dma/qcom/gpi.c                              | 2 ++
+>  2 files changed, 4 insertions(+)
+>
+>
+> base-commit: dca0a0385a4963145593ba417e1417af88a7c18d
+> prerequisite-patch-id: 3fbdc40584bde724063f88038e6e5178413fa9ce
+> prerequisite-patch-id: 7df51dc9dfa16d11f910c5142513ca7e43e5c4d4
+> prerequisite-patch-id: cb57181838cf718e80f2e07b290ffaf67b5acbc9
+> prerequisite-patch-id: efc95efd7a81f8bc65dc188f5d7c75769340dbe7
 

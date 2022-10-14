@@ -2,28 +2,28 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 579C05FF630
-	for <lists+dmaengine@lfdr.de>; Sat, 15 Oct 2022 00:13:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8DD75FF637
+	for <lists+dmaengine@lfdr.de>; Sat, 15 Oct 2022 00:13:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229972AbiJNWNB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 14 Oct 2022 18:13:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46966 "EHLO
+        id S229811AbiJNWND (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 14 Oct 2022 18:13:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229837AbiJNWMg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Oct 2022 18:12:36 -0400
+        with ESMTP id S229849AbiJNWMi (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Oct 2022 18:12:38 -0400
 Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E78B11CC779;
-        Fri, 14 Oct 2022 15:12:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 183811B94D5;
+        Fri, 14 Oct 2022 15:12:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1665785531; x=1697321531;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=DI7qluMmvdU6Xy+i5dPa+KBhMy+MAaoUFY3q3I6UluU=;
-  b=E38Qccl/nl9ypIHVIEoCZX4sW3wXBaAM2qSy3v0ey9rqtq5EZPJbdHDJ
-   FTzH7r0wKQtX9jvBFflxHt9/DVUoaIXt33Jo8T3IlO5X08XaIE/3GmcMJ
-   mXjN9w/annu63IiK9/qmJ87cf5YRaPkDuzjcidUnTWrwU41gTJokmTaHA
-   E=;
+  t=1665785539; x=1697321539;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=FKgC6OLpKYMgVDETJhRX1J7j15OZSZ0dueAYeVHLr8U=;
+  b=ltrTK+Xb83tRi3lsC8jd16swsjJ8rXiqXpzvu6rVCQpd505WFJXt3+M+
+   g8pGPlxzs6CyLm+aV4Cv4X3be9WLCQ6aCCKMa75jMYz16HU2sC0AOMlxC
+   XyrUXwZ/5YdhBHSgeeDuH4ZbKaFFx2HdeYAqOc7sxmo35lePa815nQi5z
+   w=;
 Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
   by alexa-out-sd-02.qualcomm.com with ESMTP; 14 Oct 2022 15:11:52 -0700
 X-QCInternal: smtphost
@@ -32,7 +32,7 @@ Received: from nasanex01b.na.qualcomm.com ([10.46.141.250])
 Received: from hu-molvera-sd.qualcomm.com (10.80.80.8) by
  nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.29; Fri, 14 Oct 2022 15:11:20 -0700
+ 15.2.986.29; Fri, 14 Oct 2022 15:11:21 -0700
 From:   Melody Olvera <quic_molvera@quicinc.com>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
@@ -42,10 +42,12 @@ To:     Andy Gross <agross@kernel.org>,
 CC:     <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Melody Olvera <quic_molvera@quicinc.com>
-Subject: [PATCH v2 0/2] Add dma gpi support for QDU1000/QRU1000 SoCs
-Date:   Fri, 14 Oct 2022 15:11:00 -0700
-Message-ID: <20221014221102.7445-1-quic_molvera@quicinc.com>
+Subject: [PATCH v2 1/2] dt-bindings: dmaengine: qcom: gpi: Add compatible for QDU1000 and QRU1000
+Date:   Fri, 14 Oct 2022 15:11:01 -0700
+Message-ID: <20221014221102.7445-2-quic_molvera@quicinc.com>
 X-Mailer: git-send-email 2.38.0
+In-Reply-To: <20221014221102.7445-1-quic_molvera@quicinc.com>
+References: <20221014221102.7445-1-quic_molvera@quicinc.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -61,32 +63,26 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This series adds the dt bindings and driver support for dma gpi driver
-on the QDU1000 and QRU1000 SoCs.
+Add compatible documentation for Qualcomm QDU1000 and QRU1000 SoCs.
 
-This patchset is based off of patches found at [1].
-
-The Qualcomm Technologies, Inc. Distributed Unit 1000 and Radio Unit
-1000 are new SoCs meant for enabling Open RAN solutions. See more at
-https://www.qualcomm.com/content/dam/qcomm-martech/dm-assets/documents/qualcomm_5g_ran_platforms_product_brief.pdf
-
-[1] https://lore.kernel.org/all/20220927014846.32892-1-mailingradian@gmail.com/
-
-Melody Olvera (2):
-  dt-bindings: dmaengine: qcom: gpi: Add compatible for QDU1000 and
-    QRU1000
-  dmaengine: qcom: gpi: Add compatible for QDU1000 and QRU1000
-
+Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+---
  Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 2 ++
- drivers/dma/qcom/gpi.c                              | 2 ++
- 2 files changed, 4 insertions(+)
+ 1 file changed, 2 insertions(+)
 
-
-base-commit: dca0a0385a4963145593ba417e1417af88a7c18d
-prerequisite-patch-id: 3fbdc40584bde724063f88038e6e5178413fa9ce
-prerequisite-patch-id: 7df51dc9dfa16d11f910c5142513ca7e43e5c4d4
-prerequisite-patch-id: cb57181838cf718e80f2e07b290ffaf67b5acbc9
-prerequisite-patch-id: efc95efd7a81f8bc65dc188f5d7c75769340dbe7
+diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+index 750b40c32213..8c52ea5525c7 100644
+--- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
++++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+@@ -20,6 +20,8 @@ properties:
+   compatible:
+     oneOf:
+       - enum:
++          - qcom,qdu1000-gpi-dma
++          - qcom,qru1000-gpi-dma
+           - qcom,sc7280-gpi-dma
+           - qcom,sdm845-gpi-dma
+           - qcom,sm6350-gpi-dma
 -- 
 2.38.0
 

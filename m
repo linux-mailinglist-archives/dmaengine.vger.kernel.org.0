@@ -2,110 +2,110 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8FDB6000A2
-	for <lists+dmaengine@lfdr.de>; Sun, 16 Oct 2022 17:31:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11D2C6002EA
+	for <lists+dmaengine@lfdr.de>; Sun, 16 Oct 2022 20:40:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229761AbiJPPbX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 16 Oct 2022 11:31:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39802 "EHLO
+        id S229663AbiJPSkC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 16 Oct 2022 14:40:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229616AbiJPPbV (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 16 Oct 2022 11:31:21 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32FC83386D
-        for <dmaengine@vger.kernel.org>; Sun, 16 Oct 2022 08:31:20 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id bb5so6432876qtb.11
-        for <dmaengine@vger.kernel.org>; Sun, 16 Oct 2022 08:31:20 -0700 (PDT)
+        with ESMTP id S229464AbiJPSkC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 16 Oct 2022 14:40:02 -0400
+Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0565620994;
+        Sun, 16 Oct 2022 11:40:00 -0700 (PDT)
+Received: by mail-io1-xd2c.google.com with SMTP id y80so7580407iof.3;
+        Sun, 16 Oct 2022 11:39:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fG8tP6ulNvkW7prqoOtdguFD+mr4WxhtDePb8i/GegQ=;
-        b=jtyK9tawIw2C4KLU0bugKmT3U5/ee5JXFKGlIcbQXqLt+c5xGMSBPyG06M1SKlymVF
-         YYaPoVMH5EaMqsWV2Vh7cTnEpjNaRsxiePEeQlCEFRbqg27QijX5bAcgtSb6jC5j+LrR
-         C+6wE5KbfIdF2SAfjBGYlG8ZITasN76hNvYkEculvQ52fOpkdH5PWAEhLOQDalWGJ/H0
-         kQHn+VmG7c8k3HHtUb5KMSvfkPJP0uBQswLVtmIPSO0gnEIxfTRlHXnTcKdyYvvEG3Xr
-         3nzo6OO6xzjcSnzOgnrGgXozFGIwb8yMWEqgG7yVM8lqOMjSgePFtFklg++pFhqsylMr
-         4z6A==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=er//qg/gl4dGP2tGaPp0ROa9zLnweqgMmV1YWZYYP7c=;
+        b=VLlF0F3ix3yIubo5GyNOzrxMT9uWk3plyHN40JmolDouSrQ6S1EkrNOya03i9KYYee
+         Pdev33Tl7wz7AOBvwkIWQLGgDzO0xQkh+PhQREIzD1GZPnPRO/lcMf1VWMop9hq358fl
+         aXOTiHnPm7vzpKXFYAJcnkfoGhLNd0RFOM2wNTECtw4VAB3Z8WkZM6t4+8EN3t5JCW4L
+         0kDq5AgEHKFhEyBJPfvXQmLC4Jb6kCZhJVx/oy7N6XuJqZhwJVR2VkREM2wKA0uzh8Fk
+         UIavRDjcsJugiUVfEo2acS8siEp0mDsbdgjZfIVNnTI51xK3B2T9kTvnL0L4+W4wKQoU
+         tMlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fG8tP6ulNvkW7prqoOtdguFD+mr4WxhtDePb8i/GegQ=;
-        b=prAIllSM/xN5Hh9LKn7VtuMdNocJQwx98+y6QB77M33VBuDxD0yWCk6jM1uqo/VC8W
-         vqBYnx1B0UytZwxunY3FI0A1TdsGHi6yOOoJw7XPdS+3UuMqKlBp1zm7NvVX+7oI07nP
-         S0OHU2w7THCPFUL05GgFQ5Krie4XTNzbOjR5jrRBvY9ai2y5hHlc3vw7kK7J8kmkwr/M
-         S8zTtzfYebpwLJRzu8IVnmtKAxox9XoOmtRv31uTiwuR4Y5NP//OHxcJ82S02lCwFuHI
-         EvrponDYRizo2ZS0q6Rm/OYw4iPeeUMhHlawc0QzQRrg/kdDcCpkje1HEbumUnV30Mmk
-         qRQQ==
-X-Gm-Message-State: ACrzQf3rxTvnjn2q16kvnfQMc3UqAcymYXaCnRx82xlyk0Z8LLbzuHMO
-        TiIPZfm+DUQL8JyUT61yUOIwSg==
-X-Google-Smtp-Source: AMsMyM52zXE8H21VnnAi0L26xzxHGEAYVZ8vcpPooGRfX+RS9nAahoVcOGbKg2uzEgS50/tHmc6wSw==
-X-Received: by 2002:ac8:4e4e:0:b0:39c:e3ac:df36 with SMTP id e14-20020ac84e4e000000b0039ce3acdf36mr4515219qtw.495.1665934279312;
-        Sun, 16 Oct 2022 08:31:19 -0700 (PDT)
-Received: from ?IPV6:2601:42:0:3450:9b13:d679:7b5b:6921? ([2601:42:0:3450:9b13:d679:7b5b:6921])
-        by smtp.gmail.com with ESMTPSA id r28-20020ae9d61c000000b006ed30a8fb21sm6672822qkk.76.2022.10.16.08.31.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Oct 2022 08:31:18 -0700 (PDT)
-Message-ID: <77676eda-20f1-e029-9bfb-a588caa96d73@linaro.org>
-Date:   Sun, 16 Oct 2022 11:31:17 -0400
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=er//qg/gl4dGP2tGaPp0ROa9zLnweqgMmV1YWZYYP7c=;
+        b=mMm23AdkgG1EnOyPnxxR3zgNWvxXWVThECAzYiCnBKBHI4P1kJb3NzA6i4MoP/lMwZ
+         7JhImFN/QqoBXAJDvFKDvRE8LPpgyIETuDJpCWD0QMjtwlAOgb4sOzYI+944OFg2vR1v
+         K5L5Vx7Lc+SG+ofpWwVy7Hwb8T6MqtCZGK+3CGRYqvuDz33bLIpzqOBSNa03IAUb0cuK
+         4/xzn9SsV8M/giTZWHVbz+5WYu1t1cn9EubagMfDP5w/V60Ba6Rbcyuo5GJAvg2nr6/q
+         i8gJP5ztRH2MWFsJXEUUDwO1fe2Hv4cYA10hbDY6S0c2qFUvW6njcP10nOAi0gNZSH0t
+         Frew==
+X-Gm-Message-State: ACrzQf0NAfdEwFvVIzjl/8Zkhf/RGf6li8JtmtP9Y23bXc8eg/b5UADb
+        UnNtauaM8lW9uK2lQ+9kW1aEB3/2GEv5EPnV0Ps=
+X-Google-Smtp-Source: AMsMyM418IYKdUWCL2jLsEzw/ZxVzVBP8CpmwVFc41Ps8SCy1jto6Dznc6/8LG+UqyyPQURKmvlBPoxB8eZ05lpVVqA=
+X-Received: by 2002:a6b:6716:0:b0:6bc:113c:22a2 with SMTP id
+ b22-20020a6b6716000000b006bc113c22a2mr3022066ioc.12.1665945599378; Sun, 16
+ Oct 2022 11:39:59 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH v2 1/2] dt-bindings: ingenic: Add support for the JZ4755
- dmaengine
-Content-Language: en-US
-To:     Siarhei Volkau <lis8215@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-References: <20221016151256.3021729-1-lis8215@gmail.com>
- <20221016151256.3021729-2-lis8215@gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221016151256.3021729-2-lis8215@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20221009181338.2896660-8-lis8215@gmail.com> <202210100607.YdxoR0tD-lkp@intel.com>
+ <CAKNVLfaFvge4A8-QUzeq-JManpuYMGvyHXCJi-ew==CWN8-M=A@mail.gmail.com>
+ <bb9f79d4-82a9-4790-b849-d517333ea2d4@app.fastmail.com> <GSPOJR.M4XZ4D03G60F@crapouillou.net>
+ <CAKNVLfZukazKx2yDBrLZc7J9=3cCvMgZbdghtt1YO7WivdPjvw@mail.gmail.com>
+In-Reply-To: <CAKNVLfZukazKx2yDBrLZc7J9=3cCvMgZbdghtt1YO7WivdPjvw@mail.gmail.com>
+From:   Siarhei Volkau <lis8215@gmail.com>
+Date:   Sun, 16 Oct 2022 21:39:48 +0300
+Message-ID: <CAKNVLfbePJQN07GfhqAs-opm23poWsL0o-DkV=n-f9+H7Y7rpg@mail.gmail.com>
+Subject: Re: [PATCH 7/8] serial: 8250/ingenic: Add support for the
+ JZ4750/JZ4755 SoCs
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>,
+        kbuild-all@lists.01.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jiri Slaby <jirislaby@kernel.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-mips@vger.kernel.org,
+        GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 16/10/2022 11:12, Siarhei Volkau wrote:
+=D1=87=D1=82, 13 =D0=BE=D0=BA=D1=82. 2022 =D0=B3. =D0=B2 21:56, Siarhei Vol=
+kau <lis8215@gmail.com>:
 
-You miss here now commit msg.
+> > Just disable the divider in ingenic_fixup_fdt() in
 
+> I'll check that.
 
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
+I checked that approach: serial seems to be working as expected,
+but not all the time: there's a time period when the CGU driver
+started but serial console driver is still early one.
+In my case UART produces garbage at that period since CGU
+needs to enable clock divider back: ext is 24MHz but 12MHz
+required for audio codec and USB to function properly.
 
-No empty lines allowed between tags
+So I think Arnd's approach:
 
-> Signed-off-by: Siarhei Volkau <lis8215@gmail.com>
-> ---
->  Documentation/devicetree/bindings/dma/ingenic,dma.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/ingenic,dma.yaml b/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
-> index 3b0b3b919..e42b8ce94 100644
-> --- a/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
-> @@ -18,6 +18,7 @@ properties:
->        - enum:
->            - ingenic,jz4740-dma
->            - ingenic,jz4725b-dma
-> +          - ingenic,jz4755-dma
->            - ingenic,jz4760-dma
->            - ingenic,jz4760-bdma
->            - ingenic,jz4760-mdma
+> the hardware should already be in a working state,
+> with no need to touch it during early boot.
 
-Best regards,
-Krzysztof
+shall resolve the problem, although I can't check it on all supported
+hardware.
 
+BR,
+Siarhei

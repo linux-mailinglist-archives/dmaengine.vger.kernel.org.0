@@ -2,109 +2,99 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 463F5602CC1
-	for <lists+dmaengine@lfdr.de>; Tue, 18 Oct 2022 15:19:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2140602D3D
+	for <lists+dmaengine@lfdr.de>; Tue, 18 Oct 2022 15:45:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230380AbiJRNTg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 18 Oct 2022 09:19:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57160 "EHLO
+        id S230470AbiJRNp1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 18 Oct 2022 09:45:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230369AbiJRNTd (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Oct 2022 09:19:33 -0400
-Received: from aposti.net (aposti.net [89.234.176.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61E3DB7CB;
-        Tue, 18 Oct 2022 06:19:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1666099169; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HN6qEph+YykdsQG5bbLmu5Q4ymal6rx7oLABFA4amOY=;
-        b=KKDanF8wUwyf7bcqIa5qwhcaZ/EbzxJtTa0PYmVYyQ0xMFSecaYtvOqkKj91KGh/CVuxpy
-        IvKjHQRD/WMpTbTCcifuRzuAOLWwSRXuvQh5n7ZGVeHz47DOpeAQhy7Sx6cn996I8Vv8jA
-        RDSm+AAtja9p8LWi5s77Die5rk66K84=
-Date:   Tue, 18 Oct 2022 14:19:20 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 2/2] dmaengine: JZ4780: Add support for the JZ4755.
-To:     Siarhei Volkau <lis8215@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Message-Id: <8CAYJR.MSXCGTKEB37V2@crapouillou.net>
-In-Reply-To: <20221016151256.3021729-3-lis8215@gmail.com>
-References: <20221016151256.3021729-1-lis8215@gmail.com>
-        <20221016151256.3021729-3-lis8215@gmail.com>
+        with ESMTP id S229720AbiJRNpY (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Oct 2022 09:45:24 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30920ABF14
+        for <dmaengine@vger.kernel.org>; Tue, 18 Oct 2022 06:45:22 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id bv10so23556119wrb.4
+        for <dmaengine@vger.kernel.org>; Tue, 18 Oct 2022 06:45:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:organization:from:reply-to
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=MJnaw4Nz/0LgJzP7kyxNcgi29Swk3/5rr37ifIz0ztw=;
+        b=qm28la7HKa0mTC4IqnER+pSavQF5rf2U/g2TYDSqEzerpd8hRn5ew7DHga2eqk/vhe
+         gcsBlX7jhzY/Zhtgmwb+/mWJ7Rez6bPb5eJ9kkIGplP1GerC400+HBKr1osapVzBgk3K
+         XGcQ6qEXROnauyzLo6R1pvcjhZZ82x31JNWtQbNpj18Dbb1nPW26otcrzBommLmr4QqN
+         XsmkMTaXm2HG1qDP2mLsmt9rzRy/rGPLFq76jKScxqvomPFxVBx4ASdA9IzYFPfwlWfl
+         8U70j+JxFPPWf7WD6hSJWFp8AnKHKZpH+wSUWYb/RKetq36jEWSZ268Kpmu0eo0D1HG3
+         4wjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:organization:from:reply-to
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MJnaw4Nz/0LgJzP7kyxNcgi29Swk3/5rr37ifIz0ztw=;
+        b=BAnsLGhH8N4wfRwpZCflXA3xPdQUKaV5GOG9EphnGi1cDTGUcv01kEQkX8Wmr2jLnu
+         uxG4pMSiSPrytd7pvh87EGSUi8oK+u7DPpJAvpDY3dmYVMQV480eeFkHygnugVZQ24l0
+         qbXnA4v/Togr89MF0HWMrPAjIxGiOSsRisizCChthEHe12cliNrWbXYuK9zg9zWumnxZ
+         lrQaOtNFwxFKe2EIiutsrVLTi8CXszFu5B7z61q5da6f2GVgTk7KVkbw0otsanbUD39Y
+         VL686z3YC9Fpd55/Pp34X/zW3A3ICXreMW6V7E9tMuvbmKeugkyU6tFoTknT+U+0jhmo
+         Isxg==
+X-Gm-Message-State: ACrzQf1q+9jxU+N+jRwR+aNhaKlzDer46Xlw7zvSjXz/5Fgrt+feDJQb
+        9hLGK3XRQwOfU7VavafzdejxzQ==
+X-Google-Smtp-Source: AMsMyM4FyNB+hm27xiZNu6OR6bDUk9kxUANipNOmcBaInA9C+QLskKPhKGLV0gHR7zsYn59wtiebyg==
+X-Received: by 2002:a05:6000:1842:b0:22e:7bbf:c75 with SMTP id c2-20020a056000184200b0022e7bbf0c75mr1976315wri.547.1666100720778;
+        Tue, 18 Oct 2022 06:45:20 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:7fad:ace8:cda6:d900? ([2a01:e0a:982:cbb0:7fad:ace8:cda6:d900])
+        by smtp.gmail.com with ESMTPSA id x8-20020a5d6508000000b00228dff8d975sm11176515wru.109.2022.10.18.06.45.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Oct 2022 06:45:20 -0700 (PDT)
+Message-ID: <37b4c6e6-ff16-184a-08b7-b6d1ee225c6a@linaro.org>
+Date:   Tue, 18 Oct 2022 15:45:19 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH 3/5] arm64: dts: qcom: sc7280: Add GPI DMA compatible
+ fallback
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Richard Acayan <mailingradian@gmail.com>,
+        Melody Olvera <quic_molvera@quicinc.com>
+References: <20221015140447.55221-1-krzysztof.kozlowski@linaro.org>
+ <20221015140447.55221-4-krzysztof.kozlowski@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Organization: Linaro Developer Services
+In-Reply-To: <20221015140447.55221-4-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Siarhei,
-
-Le dim., oct. 16 2022 at 18:12:56 +0300, Siarhei Volkau=20
-<lis8215@gmail.com> a =E9crit :
-> The JZ4755 has 4 DMA channels per DMA unit, two idential DMA units.
->=20
-> The JZ4755 has the similar DMA engine to JZ4725b, so I assume it has=20
-> the
-> same bug as JZ4725b, see commit a40c94be2336.
->=20
-> Signed-off-by: Siarhei Volkau <lis8215@gmail.com>
-
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
-
-Cheers,
--Paul
-
+On 15/10/2022 16:04, Krzysztof Kozlowski wrote:
+> Use SM6350 as fallback for GPI DMA, to indicate devices are compatible
+> and that drivers can bind with only one compatible.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
->  drivers/dma/dma-jz4780.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-> index 2a483802d..9c1a6e9a9 100644
-> --- a/drivers/dma/dma-jz4780.c
-> +++ b/drivers/dma/dma-jz4780.c
-> @@ -1038,6 +1038,13 @@ static const struct jz4780_dma_soc_data=20
-> jz4725b_dma_soc_data =3D {
->  		 JZ_SOC_DATA_BREAK_LINKS,
->  };
->=20
-> +static const struct jz4780_dma_soc_data jz4755_dma_soc_data =3D {
-> +	.nb_channels =3D 4,
-> +	.transfer_ord_max =3D 5,
-> +	.flags =3D JZ_SOC_DATA_PER_CHAN_PM | JZ_SOC_DATA_NO_DCKES_DCKEC |
-> +		 JZ_SOC_DATA_BREAK_LINKS,
-> +};
-> +
->  static const struct jz4780_dma_soc_data jz4760_dma_soc_data =3D {
->  	.nb_channels =3D 5,
->  	.transfer_ord_max =3D 6,
-> @@ -1101,6 +1108,7 @@ static const struct jz4780_dma_soc_data=20
-> x1830_dma_soc_data =3D {
->  static const struct of_device_id jz4780_dma_dt_match[] =3D {
->  	{ .compatible =3D "ingenic,jz4740-dma", .data =3D &jz4740_dma_soc_data=20
-> },
->  	{ .compatible =3D "ingenic,jz4725b-dma", .data =3D=20
-> &jz4725b_dma_soc_data },
-> +	{ .compatible =3D "ingenic,jz4755-dma", .data =3D &jz4755_dma_soc_data=20
-> },
->  	{ .compatible =3D "ingenic,jz4760-dma", .data =3D &jz4760_dma_soc_data=20
-> },
->  	{ .compatible =3D "ingenic,jz4760-mdma", .data =3D=20
-> &jz4760_mdma_soc_data },
->  	{ .compatible =3D "ingenic,jz4760-bdma", .data =3D=20
-> &jz4760_bdma_soc_data },
-> --
-> 2.36.1
->=20
+>   arch/arm64/boot/dts/qcom/sc7280.dtsi | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
 
-
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>

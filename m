@@ -2,76 +2,75 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DC4460224B
-	for <lists+dmaengine@lfdr.de>; Tue, 18 Oct 2022 05:12:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5993602729
+	for <lists+dmaengine@lfdr.de>; Tue, 18 Oct 2022 10:39:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231535AbiJRDMY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 17 Oct 2022 23:12:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34096 "EHLO
+        id S229770AbiJRIje (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 18 Oct 2022 04:39:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231220AbiJRDK5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Oct 2022 23:10:57 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E71779B850;
-        Mon, 17 Oct 2022 20:07:30 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 80D49CE1B19;
-        Tue, 18 Oct 2022 03:07:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 044C6C43141;
-        Tue, 18 Oct 2022 03:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666062446;
-        bh=ZpMmgT8oQQ40zKYleh0BmEb9DnJKp+eyoY+CIYOGN0E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W5PHA9YL0CNMKQ24BZgKgGScefveW/SoKFTBhD/W+khnqCiPD3RRa62lWp9ptBgda
-         oGizIXFVCAksNmzxgsi8DiSq38J3WxCelbqfLgXzKlAWHa64mgPxAg1jB/PM1gs6W6
-         wHjuAUkdFXhKQjD5MslrY9pPpCN5yhifMUXam5xq10CtY+0gu/qDhF/xePmNrR4vh6
-         frOTR0q0Eg+GeP2Zu/ZGpFEybkZdXmdmkHufrZxDOtz8p5xuyPN3KZnWIQvuQtyX03
-         gT4weZGVKfW7JBlG/HhgeMBKgHvI5ZgRMiPzoVt1PEJucdzQ9JDNUsQLsutLgVpCgR
-         7QqsvUMMzdysA==
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     linux-arm-msm@vger.kernel.org, mailingradian@gmail.com
-Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        vkoul@kernel.org, robh+dt@kernel.org, agross@kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>
-Subject: Re: (subset) [PATCH v4 0/4] SDM670 GPI DMA support
-Date:   Mon, 17 Oct 2022 22:05:59 -0500
-Message-Id: <166606235840.3553294.10065837804679889388.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20221001211934.62511-1-mailingradian@gmail.com>
-References: <20221001211934.62511-1-mailingradian@gmail.com>
+        with ESMTP id S229957AbiJRIjc (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Oct 2022 04:39:32 -0400
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69E866574;
+        Tue, 18 Oct 2022 01:39:29 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R991e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VSTn1kW_1666082351;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0VSTn1kW_1666082351)
+          by smtp.aliyun-inc.com;
+          Tue, 18 Oct 2022 16:39:26 +0800
+From:   Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To:     peter.ujfalusi@gmail.com
+Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+        Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH] dmaengine: ti: edma: Remove the unused function edma_and()
+Date:   Tue, 18 Oct 2022 16:38:20 +0800
+Message-Id: <20221018083820.25297-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sat, 1 Oct 2022 17:19:30 -0400, Richard Acayan wrote:
-> Changes since v3:
->  - keep other compatible strings in driver and add comment
->  - accumulate review tags
-> 
-> Changes since v2:
->  - change fallback to sdm845 compat string (and keep compat string in
->    driver)
->  - fallback now only affects two SoCs + SDM670
-> 
-> [...]
+The function edma_and() is defined in the edma.c file, but not called
+elsewhere, so remove this unused function.
 
-Applied, thanks!
+drivers/dma/ti/edma.c:321:20: warning: unused function 'edma_and'.
 
-[3/4] arm64: dts: qcom: add gpi-dma fallback compatible
-      commit: e7e24786cf904e22e0472ac9a5ad35bcbd3fb7a3
+Link: https://bugzilla.openanolis.cn/show_bug.cgi?id=2430
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+---
+ drivers/dma/ti/edma.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-Best regards,
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index fa06d7e6d8e3..9ea91c640c32 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -318,14 +318,6 @@ static inline void edma_modify(struct edma_cc *ecc, int offset, unsigned and,
+ 	edma_write(ecc, offset, val);
+ }
+ 
+-static inline void edma_and(struct edma_cc *ecc, int offset, unsigned and)
+-{
+-	unsigned val = edma_read(ecc, offset);
+-
+-	val &= and;
+-	edma_write(ecc, offset, val);
+-}
+-
+ static inline void edma_or(struct edma_cc *ecc, int offset, unsigned or)
+ {
+ 	unsigned val = edma_read(ecc, offset);
 -- 
-Bjorn Andersson <andersson@kernel.org>
+2.20.1.7.g153144c
+

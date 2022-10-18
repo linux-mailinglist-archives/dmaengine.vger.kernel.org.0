@@ -2,65 +2,63 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E7AD603212
-	for <lists+dmaengine@lfdr.de>; Tue, 18 Oct 2022 20:12:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E30E4603216
+	for <lists+dmaengine@lfdr.de>; Tue, 18 Oct 2022 20:12:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229836AbiJRSMn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 18 Oct 2022 14:12:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48264 "EHLO
+        id S230089AbiJRSMr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 18 Oct 2022 14:12:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229769AbiJRSMm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Oct 2022 14:12:42 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AC0D72EFF;
-        Tue, 18 Oct 2022 11:12:42 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id u21so21708688edi.9;
-        Tue, 18 Oct 2022 11:12:41 -0700 (PDT)
+        with ESMTP id S229965AbiJRSMp (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Oct 2022 14:12:45 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45D1B74365;
+        Tue, 18 Oct 2022 11:12:44 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id k2so34325403ejr.2;
+        Tue, 18 Oct 2022 11:12:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CzZ/0kJ25IZFQ+fXOgV6ivprSS9GGp5SkUxE38Mr8iA=;
-        b=k8xt6iNp8AcFdSbK5TpAFwVfQGD8kzS1kC6Gr7mGPcM+PIz2oqR6qUL6anbtPwywAd
-         inRlyMNZxNauWxt8LngR5DFaqBlfF7Z9rKvf6OAZ9nD9Xrlkq58jLV1zDlZU4s0hQ3z6
-         pQttw5sQ2hJCrl/Kzn62nInyVt3dIk/kN2ES+GtEWQTP2jekrXNC1lDkF0QKwRPLikdH
-         LVc1OQJxV7Fua6vrWqlvQlGIxX3IdiyqnV4PNIwmHC6GCRvqNjG8v9+nGKmEiwa/0EB5
-         vBMlD6x0bmleit0GXufS3+lJlJWgMP6OIwzat7PKTQZ++B3dLjb5VU7ukxIFfBmTsiwp
-         BLRQ==
+        bh=O9BWsdOmt2DdZ9rM9JV+zrPCJi6ZcySjb5J/mdJmGW4=;
+        b=apFEQeVUoC9kYaMCL1ZrShTVl2Gbz8Nn7EAwFWSkjNo2A1a4YetvqT6i8zUUqI5IIT
+         xrARLa2v1tCo02v0oXYnrSoPMR+Fn6mTme6LzAwbFUNSuzNrUy2FiPC4pA20QQbJOJTy
+         PZGJQTa6xdg4EWYlGPQOiK+hOZMP4l6pOrQvKgL0vaEktZA/qvvQepSnJT+S7HI0jH4r
+         XlZpbKEimyAoahZsewt5h3/pweuL/Rh0eVd3XTVqRVIhkYJpC/vs6LVB7Q1shy/HJnJd
+         jN7WySWufLuZi9ciS2BkvKOH8OyxxQYxF0L8X8tHmdskoM0UjGaxEVL4OXM5b48RjQ2B
+         fBPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CzZ/0kJ25IZFQ+fXOgV6ivprSS9GGp5SkUxE38Mr8iA=;
-        b=m5eUhsnXThzaJyw9gmbUUKUOQ9G5W8eTijk+uwMSP31G5pSRCE6zf7HMtI32JC2CVy
-         A1yFC6bB49wIiFCCJvGDtwpUf+VJLkaL1tsnyHCv42rjVSnzhZxfiFwR/wbOqhpppBPd
-         deACfY8jEprfByVKvOKZZAshBBHmZLaNHDEP1gavvnLy/Yd0RQEfqwU4by81g68n8coM
-         qITdAF6PfrTicYnS1J0fTHDftet8omqg6PIvARlwXploorQhb1wnBytulv+HDbd+e1SF
-         HyPhfRlCzq1GzdsFouJ2TRRTpIlaytMzQwe+TDBTDQ8wghcLwII/4k/hcs4fDvnqvfA1
-         Lojw==
-X-Gm-Message-State: ACrzQf1BV3IVs7V14ihFegMDIpKDXfEdG9pfuVDI6KS+tW3Y29goxSvf
-        1qaPJv13/m6s4Gv4ItjNOMU=
-X-Google-Smtp-Source: AMsMyM7khN6IDOMf/4HA4PpsYLo3zP45OqH+nan1ktNTyRT+c7HkNuqf5tCA174m4vWjqOaixElq8Q==
-X-Received: by 2002:aa7:c98d:0:b0:45c:6451:320e with SMTP id c13-20020aa7c98d000000b0045c6451320emr3809315edt.172.1666116760660;
-        Tue, 18 Oct 2022 11:12:40 -0700 (PDT)
+        bh=O9BWsdOmt2DdZ9rM9JV+zrPCJi6ZcySjb5J/mdJmGW4=;
+        b=pz/Si6goxQAt/2EFchCx5fXbuQLd4x+86Dyih+4wEijwEGgF/9uROjPeMT7ql9+3yi
+         SIaYZBKZ0jFuVcIlyGhudTN1qnKXVqImH9N7aPjGpTb3zCvDCYQKA0T6XTgNxZVaU6SV
+         d7rrMNDf1f8T4JVZRqXx3UaeD4LXVX2ugWQLEnBvx8IrQr7L/tNziym3ivA2s7dtsX9u
+         V1LhaHzTxn4cNsG6IioYcAjlLpbN3Uktvgyw1e/azd0OWsoDNCGNziwwx9Ih1zkbjkXs
+         Y3f5HEvpc2ixIjcDd9gXsrcF/EmLZ1itaTsRzXFGlm2EcEep6tfxx7mDEUpeyCp/3LKB
+         6aiA==
+X-Gm-Message-State: ACrzQf0ajtoKESJRZxfjq3IXXGfGvwF2//hmFtiJZUzXk6WxJLUJSpmc
+        hiduqjNb54Ogdy8aZW2IuAk=
+X-Google-Smtp-Source: AMsMyM7ZPyVPQTXkr1zo3sQa8iuQFw0eBMml+7HJB05GhzwuI3WK14gZpi3PKA6rlXKa5IHuze1OOA==
+X-Received: by 2002:a17:907:1b1e:b0:783:8e33:2d1c with SMTP id mp30-20020a1709071b1e00b007838e332d1cmr3506475ejc.304.1666116762780;
+        Tue, 18 Oct 2022 11:12:42 -0700 (PDT)
 Received: from hp-power-15.localdomain (mm-39-1-212-37.vitebsk.dynamic.pppoe.byfly.by. [37.212.1.39])
-        by smtp.gmail.com with ESMTPSA id u22-20020a056402111600b00458dc7e8ecasm9253043edv.72.2022.10.18.11.12.39
+        by smtp.gmail.com with ESMTPSA id u22-20020a056402111600b00458dc7e8ecasm9253043edv.72.2022.10.18.11.12.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Oct 2022 11:12:40 -0700 (PDT)
+        Tue, 18 Oct 2022 11:12:42 -0700 (PDT)
 From:   Siarhei Volkau <lis8215@gmail.com>
-Cc:     Siarhei Volkau <lis8215@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
+Cc:     Siarhei Volkau <lis8215@gmail.com>, Vinod Koul <vkoul@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Paul Cercueil <paul@crapouillou.net>,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: [PATCH v3 1/2] dt-bindings: ingenic: Add support for the JZ4755 dmaengine
-Date:   Tue, 18 Oct 2022 21:12:18 +0300
-Message-Id: <20221018181219.3251309-2-lis8215@gmail.com>
+Subject: [PATCH v3 2/2] dmaengine: JZ4780: Add support for the JZ4755.
+Date:   Tue, 18 Oct 2022 21:12:19 +0300
+Message-Id: <20221018181219.3251309-3-lis8215@gmail.com>
 X-Mailer: git-send-email 2.36.1
 In-Reply-To: <20221018181219.3251309-1-lis8215@gmail.com>
 References: <20221018181219.3251309-1-lis8215@gmail.com>
@@ -77,26 +75,45 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Update documentation prior to adding driver changes.
+The JZ4755 has 4 DMA channels per DMA unit, two idential DMA units.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+The JZ4755 has the similar DMA engine to JZ4725b and it has the
+same bug as JZ4725b, see commit a40c94be2336.
+At least the JZ_SOC_DATA_BREAK_LINKS flag make it work much better,
+although not ideal.
+
+Tested-by: Siarhei Volkau <lis8215@gmail.com>
 Signed-off-by: Siarhei Volkau <lis8215@gmail.com>
 ---
- Documentation/devicetree/bindings/dma/ingenic,dma.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/dma-jz4780.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/ingenic,dma.yaml b/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
-index 3b0b3b919..e42b8ce94 100644
---- a/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
-+++ b/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
-@@ -18,6 +18,7 @@ properties:
-       - enum:
-           - ingenic,jz4740-dma
-           - ingenic,jz4725b-dma
-+          - ingenic,jz4755-dma
-           - ingenic,jz4760-dma
-           - ingenic,jz4760-bdma
-           - ingenic,jz4760-mdma
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index 2a483802d..9c1a6e9a9 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -1038,6 +1038,13 @@ static const struct jz4780_dma_soc_data jz4725b_dma_soc_data = {
+ 		 JZ_SOC_DATA_BREAK_LINKS,
+ };
+ 
++static const struct jz4780_dma_soc_data jz4755_dma_soc_data = {
++	.nb_channels = 4,
++	.transfer_ord_max = 5,
++	.flags = JZ_SOC_DATA_PER_CHAN_PM | JZ_SOC_DATA_NO_DCKES_DCKEC |
++		 JZ_SOC_DATA_BREAK_LINKS,
++};
++
+ static const struct jz4780_dma_soc_data jz4760_dma_soc_data = {
+ 	.nb_channels = 5,
+ 	.transfer_ord_max = 6,
+@@ -1101,6 +1108,7 @@ static const struct jz4780_dma_soc_data x1830_dma_soc_data = {
+ static const struct of_device_id jz4780_dma_dt_match[] = {
+ 	{ .compatible = "ingenic,jz4740-dma", .data = &jz4740_dma_soc_data },
+ 	{ .compatible = "ingenic,jz4725b-dma", .data = &jz4725b_dma_soc_data },
++	{ .compatible = "ingenic,jz4755-dma", .data = &jz4755_dma_soc_data },
+ 	{ .compatible = "ingenic,jz4760-dma", .data = &jz4760_dma_soc_data },
+ 	{ .compatible = "ingenic,jz4760-mdma", .data = &jz4760_mdma_soc_data },
+ 	{ .compatible = "ingenic,jz4760-bdma", .data = &jz4760_bdma_soc_data },
 -- 
 2.36.1
 

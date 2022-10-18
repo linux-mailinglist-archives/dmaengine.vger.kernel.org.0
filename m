@@ -2,113 +2,109 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83131603493
-	for <lists+dmaengine@lfdr.de>; Tue, 18 Oct 2022 23:03:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C0AA603648
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Oct 2022 01:04:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230242AbiJRVDS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 18 Oct 2022 17:03:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47400 "EHLO
+        id S229596AbiJRXD6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 18 Oct 2022 19:03:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230274AbiJRVDQ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Oct 2022 17:03:16 -0400
-Received: from aposti.net (aposti.net [89.234.176.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C41E457BFD;
-        Tue, 18 Oct 2022 14:02:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1666126967; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hm2vibk7Nws+cwH2D661vnMd4Ktzez2ut5ZPSrOfgLw=;
-        b=D/CwAwX3TpCrbczLRmoIbaT8xeRBIeoOVtnJTh2Z9eowd9F57Xw5Mu8PPWG71PUb/HGb8m
-        1EUiCwxnMeEXWmv0wqTElv7rD4NWl9m0q8+kbW5jjO+Xi5KpmQYpnyk4mB84EHjaZzzdhe
-        OTEPYEtvkhPgM2j6+EOLlkG3KPCU6pM=
-Date:   Tue, 18 Oct 2022 22:02:37 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 2/2] dmaengine: JZ4780: Add support for the JZ4755.
-To:     Siarhei Volkau <lis8215@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S229697AbiJRXD5 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Oct 2022 19:03:57 -0400
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DE8EBCBAF
+        for <dmaengine@vger.kernel.org>; Tue, 18 Oct 2022 16:03:56 -0700 (PDT)
+Received: by mail-qk1-x730.google.com with SMTP id j21so9672978qkk.9
+        for <dmaengine@vger.kernel.org>; Tue, 18 Oct 2022 16:03:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oeAzVhwyZLPp4pOGbTzIPOMrEf5YLeMPlDQWrWigIBM=;
+        b=Wx0QEAIey6z2YgQv+U50YS8sUgO+KreRxo2xd83lGy9othZ3XU5PbGfXB2+tTt2qJX
+         13hjmEHtTveaPAKxTC7D92s8P4QPdioMG2NKDe8D9C5hXIN2vxh6DoxlERdz3+Nc6+aO
+         rwJwi/hISggdUV8d90uIh5CCH19/8+39BM3uGWWufFDl/LtuT5ckjRFB+wKu7bdewMbc
+         uyzRoTNkQiKhN38603RPMX1IAmyyKK/lzllM72pAVC0jX5zWOPATaJTkO5gyae7X9rSo
+         jGc04aN2T8EpXQ2h0NkJeOo8oYq4PFALTb2NTe99NO4Hzif5lOkRQPqun59pUGO1msDH
+         auYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oeAzVhwyZLPp4pOGbTzIPOMrEf5YLeMPlDQWrWigIBM=;
+        b=AA6d1RoCJoNwKFR7qedLZTxgRAzLuQxDv6J5QeND4Zei3CkyDslFSM3yyhAXp6X9P4
+         7YCOKFzVU1Kem7s8aiOPPm+iHC4S/c/iPHHFp9XDskKUQjxpC4RQX2DFvDSWkm634Q8o
+         qMcZ7QEnDOp97lYOKGkAeos2DLGWTOsPsZNnt8C/xXxlN+0D8S6t3UT/4bvnMFCpOyXq
+         gAWooqcKqCWr7UVYTIOJ+YclTO1Jv9Wvi3gEGfGxbPm2pOlYLMyj+mEKc1cgURo2TCEl
+         aebBDZ4BgdLDrSL7o0s8tPkth7vRnDxFuOg+n0VdUwTnm0w73lXwekxl9OMvUMYFdnyp
+         ap/g==
+X-Gm-Message-State: ACrzQf3czll619nRT15cykP9ghwLLBbsJV3UKG/4vRekO9Yabk7JRfL3
+        uT+7aw3HcJKz+JpBHt2YfbRXVw==
+X-Google-Smtp-Source: AMsMyM5R/Cte/NFhGimHeJHnKuTFLzp/W4TRm70uS+gyZImkgd+su2n3i47o3LzbRFjd2EqjoVsW6Q==
+X-Received: by 2002:a05:620a:3720:b0:6dd:beba:b3a1 with SMTP id de32-20020a05620a372000b006ddbebab3a1mr3508446qkb.138.1666134235590;
+        Tue, 18 Oct 2022 16:03:55 -0700 (PDT)
+Received: from krzk-bin.MSRM (pool-72-83-177-149.washdc.east.verizon.net. [72.83.177.149])
+        by smtp.gmail.com with ESMTPSA id 134-20020a370a8c000000b006cbcdc6efedsm3279010qkk.41.2022.10.18.16.03.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Oct 2022 16:03:54 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Message-Id: <DSVYJR.6R2II2D52YQ5@crapouillou.net>
-In-Reply-To: <20221018181219.3251309-3-lis8215@gmail.com>
-References: <20221018181219.3251309-1-lis8215@gmail.com>
-        <20221018181219.3251309-3-lis8215@gmail.com>
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 0/5] dma/arm64: qcom: use one compatible also for 0x10000 offset
+Date:   Tue, 18 Oct 2022 19:03:47 -0400
+Message-Id: <20221018230352.1238479-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Siarhei,
+Hi,
 
-Le mar., oct. 18 2022 at 21:12:19 +0300, Siarhei Volkau=20
-<lis8215@gmail.com> a =E9crit :
-> The JZ4755 has 4 DMA channels per DMA unit, two idential DMA units.
->=20
-> The JZ4755 has the similar DMA engine to JZ4725b and it has the
-> same bug as JZ4725b, see commit a40c94be2336.
-> At least the JZ_SOC_DATA_BREAK_LINKS flag make it work much better,
-> although not ideal.
->=20
-> Tested-by: Siarhei Volkau <lis8215@gmail.com>
-> Signed-off-by: Siarhei Volkau <lis8215@gmail.com>
+Changes since v1
+================
+1. Rebase on v6 of Richard's patch.
+2. Add tags.
 
-You forgot my tag that I added on your V2.
+Dependencies
+============
+1. DT bindings and DMA driver change depends contextually on:
+   https://lore.kernel.org/all/20221018005740.23952-1-mailingradian@gmail.com/
 
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+2. DTS patches are independent, although they will spark some dtbs_check
+   warnings (due to change in bindings).
 
-Cheers,
--Paul
+Best regards,
+Krzysztof
 
-> ---
->  drivers/dma/dma-jz4780.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-> index 2a483802d..9c1a6e9a9 100644
-> --- a/drivers/dma/dma-jz4780.c
-> +++ b/drivers/dma/dma-jz4780.c
-> @@ -1038,6 +1038,13 @@ static const struct jz4780_dma_soc_data=20
-> jz4725b_dma_soc_data =3D {
->  		 JZ_SOC_DATA_BREAK_LINKS,
->  };
->=20
-> +static const struct jz4780_dma_soc_data jz4755_dma_soc_data =3D {
-> +	.nb_channels =3D 4,
-> +	.transfer_ord_max =3D 5,
-> +	.flags =3D JZ_SOC_DATA_PER_CHAN_PM | JZ_SOC_DATA_NO_DCKES_DCKEC |
-> +		 JZ_SOC_DATA_BREAK_LINKS,
-> +};
-> +
->  static const struct jz4780_dma_soc_data jz4760_dma_soc_data =3D {
->  	.nb_channels =3D 5,
->  	.transfer_ord_max =3D 6,
-> @@ -1101,6 +1108,7 @@ static const struct jz4780_dma_soc_data=20
-> x1830_dma_soc_data =3D {
->  static const struct of_device_id jz4780_dma_dt_match[] =3D {
->  	{ .compatible =3D "ingenic,jz4740-dma", .data =3D &jz4740_dma_soc_data=20
-> },
->  	{ .compatible =3D "ingenic,jz4725b-dma", .data =3D=20
-> &jz4725b_dma_soc_data },
-> +	{ .compatible =3D "ingenic,jz4755-dma", .data =3D &jz4755_dma_soc_data=20
-> },
->  	{ .compatible =3D "ingenic,jz4760-dma", .data =3D &jz4760_dma_soc_data=20
-> },
->  	{ .compatible =3D "ingenic,jz4760-mdma", .data =3D=20
-> &jz4760_mdma_soc_data },
->  	{ .compatible =3D "ingenic,jz4760-bdma", .data =3D=20
-> &jz4760_bdma_soc_data },
-> --
-> 2.36.1
->=20
+Krzysztof Kozlowski (5):
+  dt-bindings: dma: qcom: gpi: Use sm6350 fallback
+  dmaengine: qcom: gpi: Document preferred SM6350 binding
+  arm64: dts: qcom: sc7280: Add GPI DMA compatible fallback
+  arm64: dts: qcom: sm8350: Add GPI DMA compatible fallback
+  arm64: dts: qcom: sm8450: Add GPI DMA compatible fallback
 
+ Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 9 ++++++---
+ arch/arm64/boot/dts/qcom/sc7280.dtsi                | 4 ++--
+ arch/arm64/boot/dts/qcom/sm8350.dtsi                | 6 +++---
+ arch/arm64/boot/dts/qcom/sm8450.dtsi                | 6 +++---
+ drivers/dma/qcom/gpi.c                              | 7 ++++---
+ 5 files changed, 18 insertions(+), 14 deletions(-)
+
+-- 
+2.34.1
 

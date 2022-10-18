@@ -2,25 +2,25 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EE8A6030C1
-	for <lists+dmaengine@lfdr.de>; Tue, 18 Oct 2022 18:29:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 920CF6030C6
+	for <lists+dmaengine@lfdr.de>; Tue, 18 Oct 2022 18:29:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229622AbiJRQ3H (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 18 Oct 2022 12:29:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55592 "EHLO
+        id S230055AbiJRQ3L (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 18 Oct 2022 12:29:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230018AbiJRQ3A (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Oct 2022 12:29:00 -0400
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2055.outbound.protection.outlook.com [40.107.101.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2813BC47B;
-        Tue, 18 Oct 2022 09:28:54 -0700 (PDT)
+        with ESMTP id S230002AbiJRQ3K (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Oct 2022 12:29:10 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2051.outbound.protection.outlook.com [40.107.223.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBAA0BC466;
+        Tue, 18 Oct 2022 09:29:08 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HnFMS4UzLqmm0/uRiYw4hwB2NMmUw4xKRAT9XXmY+Z5d8G5pk4potm8VpXt2b9FHJPd1lB8/ahvTsp4OtHDTJBMi+HD8YmpeOFEmvu8JHbglfksISkSSohEW+9frERYxIUW1qxBgU0pFkZbLO4e6qbO+Gqd4vDiMuxRV65Ns1cm1Tv2xfmPSQPh2DPLqd8O+64mFgTAuxrEg2Z90TJN9CkxYim2HlBLYIPb9y29nk8BFRt5JrezyGev4eRa6mLD1q8CYt5KBIcm32lqjZGSFtKc6vGWP9bbdqo7pPTDpg0wqyY4unZ7WMucrAJC2F5BjN8t/mALMzzW7I08u6H+RwA==
+ b=LnmvB1YgGKcez9BBJQAhAozNS1MUr1znzHUDSnCR9Pai8ZdxGRHCTLiIVUiZy0WUCFUxcpudf5sts30PIaBRVutytvhGOUv/JQLMdo3qJnGcLmlaWZhx2lI5kgVhLPkZB9Pw1pGF+TUrF2KXYyO+OOF+7tdZySH6JDjQyKxz/zXGLUTmzhTiGYgSuqWv63/2zyZ2muLxlSM1+frTk6/s62eBcpFZwsUoIAgjgRLSPs1kPqVa9ZxAVbIkUVx7XJ35Z3v/it0UJga5EWeCNM8WPM9/ENBTJVrV/Y6JpV8SCyaUSUo+FhzDHSNH2GwVgke2k0ZZIV8R97w+xXnu0+nysg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dQzIWFZ5aH2Zm8fCIT34AMMeWZtJUsHhyL2NPV5hoqc=;
- b=fajK8+XpmSfA+obg0kOFCPzEKvanDonnr8yrfLOVAPU7Kp3MLLUSUeEHnm/I/cPF8IbjGA0OFzFgLDjAkUjh20nGTZUABnS3nklU99n0vyfWQmJLJGEFTxL6WOetV/66gJSKonHIm8zF3OYyIPKGx6qmPjKRiZLozwBJswTFQgQmK2pfq7/A3tTvTNjgrWFrwLahNZfoYoJy4QyG74NeFldRAWJHGDi7qd9O1PZ9i/W2jf5QHdf2NmpfKTHbwD+NYcqGh02T/FDpyRkEtQX++VmqeTLJNYwmmN4p6JK4PYG772iqjqh8WuuRVhv40NhPu5t4ajhAGTnTd7c5jd92og==
+ bh=jNwyMeAIYU3rsM0sxRbv5dfLY4ZKhEDZlaw8279Ciz0=;
+ b=ALK3CTObDk0xYwfebJOYj6QfUM38xziP68vSH4u0JjV3c4VtEGNJYFTRrSEbbyvjtHtb8MPxZd0t2FpJZhPIkg3QSm/jru8yELCrpUvRzbZZU91jaPBsXJPd/3yMPtqFExb32dzTXZPgx6R+elqLfAao1OGTUVsuFnrtJFzs5cQmNfV/hemHGiL2Ew+0GnCu5UXPqzLaL7xMKRqeaKSI2iAh53zA8Ecetl++J+qg6yp6UWNt2sFUB7OKgpU+DkkDx8D3Mj1KBSFDelKt/ywnjETp25bcxdUBnx6J+0LQN/6paxsVH8oj1UBVeYxuF9VkWHoEDSCjtCPgwsVLh5B2HQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
  216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
  dmarc=fail (p=reject sp=reject pct=100) action=oreject
@@ -28,47 +28,47 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dQzIWFZ5aH2Zm8fCIT34AMMeWZtJUsHhyL2NPV5hoqc=;
- b=PG9RgZbODpl0u+e75cIDrEjU7jTqhPE7e0CoAosd34em4yuHatJYKeOrnawCikUf8bKZrYRpDyEsfbeUMEKVOagvc+1ihw02P4CTRQTpKdLNSrmX2dE49IWlm5Us1ZFDJ7HdrIEV0RMLdyRfNk5BB5TllGkCSz7lp1V/PGGAmupXCg70PJSdF39tjKrI1y66Z31qgSuH1MrzYbqetV78s4g1DC3iycXYTFzwuuJZjxGApSIHxjUzi22fdEFeppHrPewKkJTuL+hMZ+yF5dBy6fyhIsCQZ2+7NLB9OtWGCkA6KK07xUqdlQKF+yYKR2tnu5wQAT5yrv2sClSKrJ7TDA==
-Received: from BN9PR03CA0985.namprd03.prod.outlook.com (2603:10b6:408:109::30)
- by MW4PR12MB7357.namprd12.prod.outlook.com (2603:10b6:303:219::16) with
+ bh=jNwyMeAIYU3rsM0sxRbv5dfLY4ZKhEDZlaw8279Ciz0=;
+ b=XkWHeqW6Qg8+fen5R6dv1r0u2Rajf2+FCBS7KEaE9ca8MvSXATalbxkFVEqtXcuOIGprw6bswLn8290Y9tEEaNLM8ZJWu8BBFNK8qiY3HiztqGhdGJVNbP89SNc0Q/ZWJk+LJeD/Uw2k6NNRUKXvZXaBSwIlr9rd1OzPPcunQFdJ6LfZCn37JHhrbqFD1zDySMhB4hPbNDdckJ6AamQfgXEfqkqNZiRZs+gbjiVh64biNeegE2dfFlscg1Ei4cki/bX3kLwu/w7dOnxwM9fSMA98mH5r47AZjF4Ty4ImcC+klkRL1TTgpBuS7CiigaxDI5N9vH7WUw2rt+qsg8Eqjg==
+Received: from BN0PR10CA0010.namprd10.prod.outlook.com (2603:10b6:408:143::14)
+ by SA1PR12MB7223.namprd12.prod.outlook.com (2603:10b6:806:2bc::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.33; Tue, 18 Oct
- 2022 16:28:53 +0000
-Received: from BN8NAM11FT024.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:109:cafe::98) by BN9PR03CA0985.outlook.office365.com
- (2603:10b6:408:109::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.31 via Frontend
- Transport; Tue, 18 Oct 2022 16:28:53 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.29; Tue, 18 Oct
+ 2022 16:29:04 +0000
+Received: from BN8NAM11FT085.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:143:cafe::f1) by BN0PR10CA0010.outlook.office365.com
+ (2603:10b6:408:143::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.34 via Frontend
+ Transport; Tue, 18 Oct 2022 16:29:03 +0000
 X-MS-Exchange-Authentication-Results: spf=none (sender IP is 216.228.117.161)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=fail action=oreject header.from=nvidia.com;
 Received-SPF: None (protection.outlook.com: nvidia.com does not designate
  permitted sender hosts)
 Received: from mail.nvidia.com (216.228.117.161) by
- BN8NAM11FT024.mail.protection.outlook.com (10.13.177.38) with Microsoft SMTP
+ BN8NAM11FT085.mail.protection.outlook.com (10.13.176.100) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5746.16 via Frontend Transport; Tue, 18 Oct 2022 16:28:52 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
+ 15.20.5746.16 via Frontend Transport; Tue, 18 Oct 2022 16:29:03 +0000
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
  (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.26; Tue, 18 Oct
- 2022 09:28:42 -0700
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ 2022 09:28:48 -0700
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail203.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Tue, 18 Oct
- 2022 09:28:41 -0700
+ 2022 09:28:47 -0700
 Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.14) by mail.nvidia.com
  (10.129.68.6) with Microsoft SMTP Server id 15.2.986.29 via Frontend
- Transport; Tue, 18 Oct 2022 09:28:38 -0700
+ Transport; Tue, 18 Oct 2022 09:28:44 -0700
 From:   Akhil R <akhilrajeev@nvidia.com>
 To:     <ldewangan@nvidia.com>, <jonathanh@nvidia.com>, <vkoul@kernel.org>,
         <thierry.reding@gmail.com>, <p.zabel@pengutronix.de>,
         <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC:     <akhilrajeev@nvidia.com>
-Subject: [PATCH RESEND v2 2/3] arm64: tegra: Add dma-channel-mask in GPCDMA node
-Date:   Tue, 18 Oct 2022 21:58:11 +0530
-Message-ID: <20221018162812.69673-3-akhilrajeev@nvidia.com>
+Subject: [PATCH RESEND v2 3/3] dmaengine: tegra: Add support for dma-channel-mask
+Date:   Tue, 18 Oct 2022 21:58:12 +0530
+Message-ID: <20221018162812.69673-4-akhilrajeev@nvidia.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20221018162812.69673-1-akhilrajeev@nvidia.com>
 References: <20221018162812.69673-1-akhilrajeev@nvidia.com>
@@ -77,23 +77,23 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT024:EE_|MW4PR12MB7357:EE_
-X-MS-Office365-Filtering-Correlation-Id: fbebc32c-66be-4e12-9117-08dab125d86e
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT085:EE_|SA1PR12MB7223:EE_
+X-MS-Office365-Filtering-Correlation-Id: 40123605-acf8-414d-3bc5-08dab125def2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nNxaPQhYP5KXEdKh+nnvwwDyHM0zL5QQ4CXo+gbgwVsHESy4tIb9XeX8Ajf2qqwTJUrZ3ZLGsnEtDUvQHA/4e7j0wPUoxnJqbQ6FKuTqTVPywz2wbT368+R3vK09+BnScGtQ6xNZykDtxgfcdjujj5Q/tBdWOPDUXSeKcbE+SRVJga31iTykCSIfbA1hRubPPsLgHvfj7QsvPVOwjI95rCi2HYpspuC7h/o+vbsJ+fbkYvz/vmHRJ/FNnye0oiV2tA8qGQjHrdQ67MSC9g/fmNUM4hrneuONbJuEO9EIianZWynuy8GFDfrWD+BQmlUeQZDjdU2oShHNC4EHnhK+ZPl8EIxlj1fIblV0tsLBPMdgzX9gtQRsQBW4mG+wxG22Ecgu8YFBiQAiL+dvaUwJl1fdXqgPGC4l/QmGUTgeExpmh4IkkGSvFmr0KvG5FLOmm75iG4b1CEaB9VBch3r9WTUKS/BGscLkJdeObSostNT6ozNJOvwif0BBfEteqW4KMjCrCu0JmYG2Msd4yfZiIAzu/4WipydEOjwsRnxYAsLE297xunre7u4fTVRGSkIqWPgSLcR89jEIPxeziVOZUNe46SESNCdbgK6BCLXSN5Wanb0Gv1Ca+DKX/UFMUUnNxyU0yuflh4WvTnVVBWcvBgaHJ2fEGMItZmfgyz6CgffCvO2K7a2k7/Xu9MitrOZXi9rZKm9iRI+0OhRGFiOnqvIIQh53Ya5dawYEGtRLoryzHmtIY+oTnsvPlWe41muot4oEF9l9bIAnGLrO10DkvA==
-X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(396003)(136003)(376002)(451199015)(36840700001)(40470700004)(46966006)(36756003)(86362001)(356005)(7636003)(82740400003)(2906002)(6666004)(83380400001)(40460700003)(5660300002)(40480700001)(107886003)(7696005)(336012)(26005)(186003)(2616005)(1076003)(47076005)(426003)(36860700001)(478600001)(82310400005)(110136005)(316002)(70586007)(70206006)(8676002)(4326008)(41300700001)(8936002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: zZxOWxw930dfHXMEvveriM9BT0cgnXx0plZ8vWQoQNqzeGhAs+8l4ZK/FAXKtDOKOCpdPzYUZhI1gSbVHO/z9JLpnFkUxvfF74fAHjAkAopsq/hzfj77fbGe1mQ/s/9GJu2xwpgz/HJ4Z9Wmargc7F0DqwKzBnzNj663tZmMdVSD7jRL5TQxqzqZeY+9awIWFu39nIV1Xmq21w492urnDH/pA4uQXUvv3XHbvoddKmZXoTWpeKQMZvmqgroBwk+OpXmUd9AP1IAXpA7kUacpdkXBmhfuPutzExHJ+HDuhx4fcR33xxPpZWgQnCcXMk0F5yDyh45la/YbKq2PcOY5m1YYmBrG/bj6jNQWg11CIokTAy65kCxAKbtGAgOpmh7SBGZf9fU6MXah/14Z3dEu+oVeFRScLOuKmM1Qq9vSYTk//3SR8v5CFvTk31iAfFdNTiFrFyrpQE0Grkt6SpXwgyb2ZTxKbboCpBS7/BInAWDO7F22GD50ifMldU9ymdYVaF/arzaz4McA9fXjJ4eo5lDK6wpouq5IxlyOp7l8JdSxzNgC9D7ZNMc8JJYm4DsY7L/J3oOXAUr/Cfnlr4lJjJfhSLic4KNEHde8GyxhGuz5ctVXvLX3ddDrxCTUbxvj6MTDTSfAEyDdsnLga6KEvKbvGMw/cA0ig5DGLytylumTN7c+3ZoiXoHI+MjOiG5/7POF8S99TkpZh8aXKoZHQqHdzWQWb0EuM82kha+hK0w+Alwn9wyTLDDhBBaP1dDlrjINFF45hMlxHlfV/0gfqA==
+X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(396003)(136003)(376002)(451199015)(46966006)(40470700004)(36840700001)(36756003)(2906002)(82310400005)(8936002)(5660300002)(86362001)(4326008)(107886003)(40460700003)(41300700001)(186003)(26005)(2616005)(1076003)(478600001)(336012)(6666004)(8676002)(426003)(47076005)(7636003)(40480700001)(70586007)(356005)(83380400001)(70206006)(7696005)(316002)(82740400003)(110136005)(36860700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2022 16:28:52.7033
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2022 16:29:03.6326
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fbebc32c-66be-4e12-9117-08dab125d86e
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40123605-acf8-414d-3bc5-08dab125def2
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT024.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT085.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7357
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7223
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
@@ -104,86 +104,131 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add dma-channel-mask property in Tegra GPCDMA device tree node.
+Add support for dma-channel-mask so that only the specified channels
+are used. This helps to reserve some channels for the firmware.
 
-The property would help to specify the channels to be used in
-kernel and reserve few for the firmware. This was previously
-achieved by limiting the channel number to 31 in the driver.
-Now since we can list all 32 channels, update the interrupts
-property as well to list all 32 interrupts.
+This was initially achieved by limiting the channel number to 31 in
+the driver and adjusting the register address to skip channel0 which
+was reserved for a firmware. Now, with this change, the driver can
+align more to the actual hardware which has 32 channels.
 
 Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
 ---
- arch/arm64/boot/dts/nvidia/tegra186.dtsi | 4 +++-
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 4 +++-
- arch/arm64/boot/dts/nvidia/tegra234.dtsi | 4 +++-
- 3 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/dma/tegra186-gpc-dma.c | 37 +++++++++++++++++++++++++++-------
+ 1 file changed, 30 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-index 6602fe421ee8..db479064ff72 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-@@ -78,7 +78,8 @@
- 		reg = <0x0 0x2600000 0x0 0x210000>;
- 		resets = <&bpmp TEGRA186_RESET_GPCDMA>;
- 		reset-names = "gpcdma";
--		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
-+		interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>,
- 			     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>,
-@@ -112,6 +113,7 @@
- 		#dma-cells = <1>;
- 		iommus = <&smmu TEGRA186_SID_GPCDMA_0>;
- 		dma-coherent;
-+		dma-channel-mask = <0xfffffffe>;
- 		status = "okay";
- 	};
+diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-dma.c
+index fa9bda4a2bc6..1d1180db6d4e 100644
+--- a/drivers/dma/tegra186-gpc-dma.c
++++ b/drivers/dma/tegra186-gpc-dma.c
+@@ -161,7 +161,10 @@
+ #define TEGRA_GPCDMA_BURST_COMPLETION_TIMEOUT	5000 /* 5 msec */
  
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 41f3a7e188d0..b009f8145016 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -142,7 +142,8 @@
- 			reg = <0x2600000 0x210000>;
- 			resets = <&bpmp TEGRA194_RESET_GPCDMA>;
- 			reset-names = "gpcdma";
--			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
-+			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>,
-@@ -176,6 +177,7 @@
- 			#dma-cells = <1>;
- 			iommus = <&smmu TEGRA194_SID_GPCDMA_0>;
- 			dma-coherent;
-+			dma-channel-mask = <0xfffffffe>;
- 			status = "okay";
- 		};
+ /* Channel base address offset from GPCDMA base address */
+-#define TEGRA_GPCDMA_CHANNEL_BASE_ADD_OFFSET	0x20000
++#define TEGRA_GPCDMA_CHANNEL_BASE_ADDR_OFFSET	0x10000
++
++/* Default channel mask reserving channel0 */
++#define TEGRA_GPCDMA_DEFAULT_CHANNEL_MASK	0xfffffffe
  
-diff --git a/arch/arm64/boot/dts/nvidia/tegra234.dtsi b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-index 0170bfa8a467..ccc1a4bd094d 100644
---- a/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-@@ -27,7 +27,8 @@
- 			reg = <0x2600000 0x210000>;
- 			resets = <&bpmp TEGRA234_RESET_GPCDMA>;
- 			reset-names = "gpcdma";
--			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
-+			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>,
-@@ -60,6 +61,7 @@
- 				     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
- 			#dma-cells = <1>;
- 			iommus = <&smmu_niso0 TEGRA234_SID_GPCDMA>;
-+			dma-channel-mask = <0xfffffffe>;
- 			dma-coherent;
- 		};
+ struct tegra_dma;
+ struct tegra_dma_channel;
+@@ -246,6 +249,7 @@ struct tegra_dma {
+ 	const struct tegra_dma_chip_data *chip_data;
+ 	unsigned long sid_m2d_reserved;
+ 	unsigned long sid_d2m_reserved;
++	u32 chan_mask;
+ 	void __iomem *base_addr;
+ 	struct device *dev;
+ 	struct dma_device dma_dev;
+@@ -1288,7 +1292,7 @@ static struct dma_chan *tegra_dma_of_xlate(struct of_phandle_args *dma_spec,
+ }
+ 
+ static const struct tegra_dma_chip_data tegra186_dma_chip_data = {
+-	.nr_channels = 31,
++	.nr_channels = 32,
+ 	.channel_reg_size = SZ_64K,
+ 	.max_dma_count = SZ_1G,
+ 	.hw_support_pause = false,
+@@ -1296,7 +1300,7 @@ static const struct tegra_dma_chip_data tegra186_dma_chip_data = {
+ };
+ 
+ static const struct tegra_dma_chip_data tegra194_dma_chip_data = {
+-	.nr_channels = 31,
++	.nr_channels = 32,
+ 	.channel_reg_size = SZ_64K,
+ 	.max_dma_count = SZ_1G,
+ 	.hw_support_pause = true,
+@@ -1304,7 +1308,7 @@ static const struct tegra_dma_chip_data tegra194_dma_chip_data = {
+ };
+ 
+ static const struct tegra_dma_chip_data tegra234_dma_chip_data = {
+-	.nr_channels = 31,
++	.nr_channels = 32,
+ 	.channel_reg_size = SZ_64K,
+ 	.max_dma_count = SZ_1G,
+ 	.hw_support_pause = true,
+@@ -1380,15 +1384,28 @@ static int tegra_dma_probe(struct platform_device *pdev)
+ 	}
+ 	stream_id = iommu_spec->ids[0] & 0xffff;
+ 
++	ret = device_property_read_u32(&pdev->dev, "dma-channel-mask",
++				       &tdma->chan_mask);
++	if (ret) {
++		dev_warn(&pdev->dev,
++			 "Missing dma-channel-mask property, using default channel mask %#x\n",
++			 TEGRA_GPCDMA_DEFAULT_CHANNEL_MASK);
++		tdma->chan_mask = TEGRA_GPCDMA_DEFAULT_CHANNEL_MASK;
++	}
++
+ 	INIT_LIST_HEAD(&tdma->dma_dev.channels);
+ 	for (i = 0; i < cdata->nr_channels; i++) {
+ 		struct tegra_dma_channel *tdc = &tdma->channels[i];
+ 
++		/* Check for channel mask */
++		if (!(tdma->chan_mask & BIT(i)))
++			continue;
++
+ 		tdc->irq = platform_get_irq(pdev, i);
+ 		if (tdc->irq < 0)
+ 			return tdc->irq;
+ 
+-		tdc->chan_base_offset = TEGRA_GPCDMA_CHANNEL_BASE_ADD_OFFSET +
++		tdc->chan_base_offset = TEGRA_GPCDMA_CHANNEL_BASE_ADDR_OFFSET +
+ 					i * cdata->channel_reg_size;
+ 		snprintf(tdc->name, sizeof(tdc->name), "gpcdma.%d", i);
+ 		tdc->tdma = tdma;
+@@ -1449,8 +1466,8 @@ static int tegra_dma_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	dev_info(&pdev->dev, "GPC DMA driver register %d channels\n",
+-		 cdata->nr_channels);
++	dev_info(&pdev->dev, "GPC DMA driver register %lu channels\n",
++		 hweight_long(tdma->chan_mask));
+ 
+ 	return 0;
+ }
+@@ -1473,6 +1490,9 @@ static int __maybe_unused tegra_dma_pm_suspend(struct device *dev)
+ 	for (i = 0; i < tdma->chip_data->nr_channels; i++) {
+ 		struct tegra_dma_channel *tdc = &tdma->channels[i];
+ 
++		if (!(tdma->chan_mask & BIT(i)))
++			continue;
++
+ 		if (tdc->dma_desc) {
+ 			dev_err(tdma->dev, "channel %u busy\n", i);
+ 			return -EBUSY;
+@@ -1492,6 +1512,9 @@ static int __maybe_unused tegra_dma_pm_resume(struct device *dev)
+ 	for (i = 0; i < tdma->chip_data->nr_channels; i++) {
+ 		struct tegra_dma_channel *tdc = &tdma->channels[i];
+ 
++		if (!(tdma->chan_mask & BIT(i)))
++			continue;
++
+ 		tegra_dma_program_sid(tdc, tdc->stream_id);
+ 	}
  
 -- 
 2.17.1

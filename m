@@ -2,55 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AEE46047B0
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Oct 2022 15:44:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2ED16047E6
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Oct 2022 15:47:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230273AbiJSNod (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 19 Oct 2022 09:44:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40932 "EHLO
+        id S233514AbiJSNr1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 19 Oct 2022 09:47:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233216AbiJSNoA (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 19 Oct 2022 09:44:00 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 334291552F4;
-        Wed, 19 Oct 2022 06:31:00 -0700 (PDT)
+        with ESMTP id S233020AbiJSNqQ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 19 Oct 2022 09:46:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 129451C840A;
+        Wed, 19 Oct 2022 06:31:55 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8CD26B823B2;
-        Wed, 19 Oct 2022 13:30:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81588C433C1;
-        Wed, 19 Oct 2022 13:30:15 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4131561871;
+        Wed, 19 Oct 2022 13:31:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D43BC433C1;
+        Wed, 19 Oct 2022 13:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666186216;
-        bh=2L2jeDsVN9w9kUdnBfgnFxJ5WxkNRtvWQ38M5+XfO/4=;
+        s=k20201202; t=1666186291;
+        bh=yrinlrU4GJFw5V8Pbm68WtjQ9PDNU+MEIvH4dMiemYg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IIUPHmMcZWYt3OvMmRU/6acc8WNrgwHI/j40NvGwvaPYH4m8M7uDA/nf1NNshtW6o
-         X6AyS/wMjWZ3X8M8vySGdL1wIoygXc5pzd+Ajjj0AQGU/C9PJ7p3qjs1CR1v8AlIYi
-         4nLuu238p59ZORrMzteTWOg5rk6oWVymepGYuSyjw4H0ZFaqe1wQM9GH7S13Nn/WiL
-         3QyuUYbVd+28HujNkqsBPEmkldVNCGPIc3gIsIrIBY/noy8118Ss0BaBKEO+emmRpq
-         WlQjwsrnw8wBQ90AntiNw6zz/h1/dBQcqlszpet03zZHaXuX5iLemoXhB76pswnE4l
-         ujVKLR0Fpba9A==
-Date:   Wed, 19 Oct 2022 19:00:12 +0530
+        b=QtQfot2R1zDOvLSyEHXFdv4m6AtscL8NOugTTNHxO+zgyBqLUIk6KxyuELqdVJ8/O
+         x67CsoRPxX0cPDzoDEDAGTZ+B/8jAtZvOv25VRXmXoBdVsDmoH079a0nihfQlvLnsF
+         +3ef9CUOjsloN1Dg/i001SdTCiTgm6+MvfMAvhNk+VPRGEXnaVG1zZTD4WF6PVD3MU
+         46Rw4f22OZqWkUIReKjLqVOGHVFPnWwk2dFjkLO/Y8HOSLv/ZWDg6Y00FY3aMgCAop
+         lx70EsZgKD1zmUlwl+zjMvY/Nm7Nq+pGFGvvHO4+NyVmMG0nkKkpPSmXPifOZABD7r
+         NgnZMvkrMIepA==
+Date:   Wed, 19 Oct 2022 19:01:27 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Melody Olvera <quic_molvera@quicinc.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] dmaengine: qcom: gpi: Add compatible for QDU1000
- and QRU1000
-Message-ID: <Y0/75E7MqCpQml+I@matsya>
-References: <20221014221102.7445-1-quic_molvera@quicinc.com>
- <20221014221102.7445-3-quic_molvera@quicinc.com>
- <15b50b09-ba8c-c93c-a5f8-7b0d4d12f223@linaro.org>
+To:     Amelie Delaunay <amelie.delaunay@foss.st.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: stm32-mdma: memset stm32_mdma_chan_config
+ struct before using it
+Message-ID: <Y0/8L/13dozOA+WG@matsya>
+References: <20221017131413.202567-1-amelie.delaunay@foss.st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <15b50b09-ba8c-c93c-a5f8-7b0d4d12f223@linaro.org>
+In-Reply-To: <20221017131413.202567-1-amelie.delaunay@foss.st.com>
 X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -60,32 +56,17 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 15-10-22, 09:42, Krzysztof Kozlowski wrote:
-> On 14/10/2022 18:11, Melody Olvera wrote:
-> > Add compatible fields for the Qualcomm QDU1000 and QRU1000 SoCs.
-> > 
-> > Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
-> > ---
-> >  drivers/dma/qcom/gpi.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-> > index cc938a31dc2d..02438735e92b 100644
-> > --- a/drivers/dma/qcom/gpi.c
-> > +++ b/drivers/dma/qcom/gpi.c
-> > @@ -2286,6 +2286,8 @@ static int gpi_probe(struct platform_device *pdev)
-> >  }
-> >  
-> >  static const struct of_device_id gpi_of_match[] = {
-> > +	{ .compatible = "qcom,qdu1000-gpi-dma", .data = (void *)0x10000 },
-> > +	{ .compatible = "qcom,qru1000-gpi-dma", .data = (void *)0x10000 },
+On 17-10-22, 15:14, Amelie Delaunay wrote:
+> New bool m2m_hw has been added at the end of stm32_mdma_chan_config struct
+> to support the STM32 DMA MDMA chaining.
 > 
-> The feedback was: drop entire patch.
+> m2m_hw is set true in stm32_mdma_slave_config() if peripheral_size is set,
+> but m2m_hw is never initialized false.
 > 
-> There is really no need for this pattern to keep growing.
+> To ensure this case, and any further new update of the structure, memset it
+> to 0 before using it.
 
-Right, I have picked the patches so you dont need to add yours to driver
-file, please check dmaengine/next
+Applied, thanks
 
 -- 
 ~Vinod

@@ -2,53 +2,45 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5D53605637
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Oct 2022 06:12:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4A17605753
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Oct 2022 08:30:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229816AbiJTEMc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 20 Oct 2022 00:12:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59384 "EHLO
+        id S230096AbiJTGaA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 20 Oct 2022 02:30:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbiJTEMb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 Oct 2022 00:12:31 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF7AC164BE1;
-        Wed, 19 Oct 2022 21:12:29 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 33CE7B8265D;
-        Thu, 20 Oct 2022 04:12:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53090C433D6;
-        Thu, 20 Oct 2022 04:12:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666239146;
-        bh=8Sy3yjbG4x+58rCR96ZxpH5efyxWTXR5EzlYoAF02Y8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T9QKV7oX1tGOYm7q9C3NfFgwmw4NiaixAwz2JXzeDYqRM4BXBMMqRhn2tNTZJh9A3
-         hOwPpiOZMQhdxNWRHxrtmg9UW614jyUigx4HyhOPPWdH5ibe+XjgpGyZmkcmnc0V6L
-         tT0KO/q5sy6N2B5EKFL3mgjSZxS6mYN5fShfDYKYXO9ir7kXufxX0eylGFo+6hF30H
-         0TayjJkcW8c4TpV+v1qMVkOzZ1w/K2nwTUhuflbII/JVNH4la5bqY2FwGgCkc/PQ9d
-         2QrylT8QKR3yYNp49Vqo8CF79LedNC/q+cu3nrWHUvpd77FFOzT/j1h0MDn1fYzBDA
-         f3/zM4UfpBcBQ==
-Date:   Thu, 20 Oct 2022 09:42:22 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "Walker, Benjamin" <benjamin.walker@intel.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/7] dmaengine: Add provider documentation on cookie
- assignment
-Message-ID: <Y1DKpnOdP5MbSGeO@matsya>
-References: <20220622193753.3044206-1-benjamin.walker@intel.com>
- <20220829203537.30676-1-benjamin.walker@intel.com>
- <20220829203537.30676-5-benjamin.walker@intel.com>
- <Y1Am/RpgWv3PAVaU@matsya>
- <297dff63-e199-d14b-7148-916888030740@intel.com>
+        with ESMTP id S230089AbiJTG36 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 Oct 2022 02:29:58 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 597F923E95
+        for <dmaengine@vger.kernel.org>; Wed, 19 Oct 2022 23:29:55 -0700 (PDT)
+Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MtHkr61NTzHv8t;
+        Thu, 20 Oct 2022 14:29:40 +0800 (CST)
+Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
+ dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 20 Oct 2022 14:29:25 +0800
+Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
+ (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 20 Oct
+ 2022 14:29:24 +0800
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     <dmaengine@vger.kernel.org>
+CC:     <vigneshr@ti.com>, <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
+        <yangyingliang@huawei.com>
+Subject: [PATCH] dmaengine: ti: k3-udma-glue: fix memory leak when register device fail
+Date:   Thu, 20 Oct 2022 14:28:27 +0800
+Message-ID: <20221020062827.2914148-1-yangyingliang@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <297dff63-e199-d14b-7148-916888030740@intel.com>
-X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.103.91]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemm500007.china.huawei.com (7.185.36.183)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,65 +48,44 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 19-10-22, 10:21, Walker, Benjamin wrote:
-> On 10/19/2022 9:34 AM, Vinod Koul wrote:
-> > On 29-08-22, 13:35, Ben Walker wrote:
-> > > Clarify the rules on assigning cookies to DMA transactions.
-> > > 
-> > > Signed-off-by: Ben Walker <benjamin.walker@intel.com>
-> > > ---
-> > >   .../driver-api/dmaengine/provider.rst         | 45 +++++++++++++++----
-> > >   1 file changed, 37 insertions(+), 8 deletions(-)
-> > > 
-> > > diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
-> > > index 1d0da2777921d..a5539f816d125 100644
-> > > --- a/Documentation/driver-api/dmaengine/provider.rst
-> > > +++ b/Documentation/driver-api/dmaengine/provider.rst
-> > > @@ -417,7 +417,9 @@ supported.
-> > >       - tx_submit: A pointer to a function you have to implement,
-> > >         that is supposed to push the current transaction descriptor to a
-> > > -      pending queue, waiting for issue_pending to be called.
-> > > +      pending queue, waiting for issue_pending to be called. Each
-> > > +      descriptor is given a cookie to identify it. See the section
-> > > +      "Cookie Management" below.
-> > >     - In this structure the function pointer callback_result can be
-> > >       initialized in order for the submitter to be notified that a
-> > > @@ -522,6 +524,40 @@ supported.
-> > >     - May sleep.
-> > > +Cookie Management
-> > > +------------------
-> > > +
-> > > +When a transaction is queued for submission via tx_submit(), the provider
-> > > +must assign that transaction a cookie (dma_cookie_t) to uniquely identify it.
-> > > +The provider is allowed to perform this assignment however it wants, but for
-> > 
-> > We assumes that we have monotonically increasing cookie and
-> > if cookie 10 is marked complete cookie 8 is assumed complete too...
-> 
-> That's exactly what this patch series is changing. The earlier patches make
-> changes to no longer report to the client the "last" or "used" cookie (to
-> compare against) in the client APIs, and it turns out that nothing in the
-> kernel actually cares about this behavior. So it's simply a documentation
-> change to indicate that the client no longer has any visibility into the
-> cookie behavior.
+If device_register() fails, it should call put_device() to give
+up reference, the name allocated in dev_set_name() can be freed
+in callback function kobject_cleanup().
 
-Not really, there are some engines which will notify that descriptor X
-completed which also implies that all descriptors before X have
-completed as well...
+Fixes: 5b65781d06ea ("dmaengine: ti: k3-udma-glue: Add support for K3 PKTDMA")
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+---
+ drivers/dma/ti/k3-udma-glue.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-If we change the default behaviour, we risk breaking those.
-> 
-> Immediately below here the documentation then says that there's some
-> convenience functions that providers can use that do produce monotonically
-> increasing cookies. These are now optional for providers to use, if they
-> find them useful, rather than the required way to manage the cookies.
-> 
-> > 
-> > Completion is always in order unless we specify DMA_COMPLETION_NO_ORDER
-> 
-> The final patch in this series eliminates DMA_COMPLETION_NO_ORDER entirely.
-> It was only used by the IDXD driver, and the reason I'm doing these patches
-> is so that we can poll the IDXD driver for completions even though it can
-> complete out of order.
+diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
+index 4fdd9f06b723..4f1aeb81e9c7 100644
+--- a/drivers/dma/ti/k3-udma-glue.c
++++ b/drivers/dma/ti/k3-udma-glue.c
+@@ -299,6 +299,7 @@ struct k3_udma_glue_tx_channel *k3_udma_glue_request_tx_chn(struct device *dev,
+ 	ret = device_register(&tx_chn->common.chan_dev);
+ 	if (ret) {
+ 		dev_err(dev, "Channel Device registration failed %d\n", ret);
++		put_device(&tx_chn->common.chan_dev);
+ 		tx_chn->common.chan_dev.parent = NULL;
+ 		goto err;
+ 	}
+@@ -917,6 +918,7 @@ k3_udma_glue_request_rx_chn_priv(struct device *dev, const char *name,
+ 	ret = device_register(&rx_chn->common.chan_dev);
+ 	if (ret) {
+ 		dev_err(dev, "Channel Device registration failed %d\n", ret);
++		put_device(&rx_chn->common.chan_dev);
+ 		rx_chn->common.chan_dev.parent = NULL;
+ 		goto err;
+ 	}
+@@ -1048,6 +1050,7 @@ k3_udma_glue_request_remote_rx_chn(struct device *dev, const char *name,
+ 	ret = device_register(&rx_chn->common.chan_dev);
+ 	if (ret) {
+ 		dev_err(dev, "Channel Device registration failed %d\n", ret);
++		put_device(&rx_chn->common.chan_dev);
+ 		rx_chn->common.chan_dev.parent = NULL;
+ 		goto err;
+ 	}
 -- 
-~Vinod
+2.25.1
+

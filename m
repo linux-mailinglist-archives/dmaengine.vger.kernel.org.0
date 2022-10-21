@@ -2,60 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A7AD607B7A
-	for <lists+dmaengine@lfdr.de>; Fri, 21 Oct 2022 17:51:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 55D8E607BA5
+	for <lists+dmaengine@lfdr.de>; Fri, 21 Oct 2022 17:58:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229616AbiJUPvI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 21 Oct 2022 11:51:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39728 "EHLO
+        id S229728AbiJUP6U (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 21 Oct 2022 11:58:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229779AbiJUPu7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 21 Oct 2022 11:50:59 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97BCE38A21;
-        Fri, 21 Oct 2022 08:50:13 -0700 (PDT)
+        with ESMTP id S230235AbiJUP5x (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 21 Oct 2022 11:57:53 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C89E27E2F0;
+        Fri, 21 Oct 2022 08:57:48 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9DCC961EFF;
-        Fri, 21 Oct 2022 15:50:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06D87C433C1;
-        Fri, 21 Oct 2022 15:50:05 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D77AFB82C9D;
+        Fri, 21 Oct 2022 15:57:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0EC6C433C1;
+        Fri, 21 Oct 2022 15:57:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666367411;
-        bh=u6mgMMUQyq3LFTowajdhaabP7RK0RDkS+CspfzBu8ss=;
-        h=From:To:Cc:Subject:Date:From;
-        b=us0m33iN6iGUZAAMh/Tz2ACZqo/rRVOrTPq0AWj1RL6s3z/p+CCsHUvJRu5akxjQo
-         NAgDX/4rE2eTKbbKRNUu1qMS9HbUE7hBKXzuyBmlbAVPKgTnm7SIIoBjG7oa1JhO5X
-         Bbn3eytw/tvEaOQRAP3EchiZX1LCriiwv1RlRq7dYHNHecYzEOfrJiMPlBJsIgS2v4
-         ffjTapecJOzW8de60RWn4ZRsLwB9JEl7RXFN35GRR68VGqfScsqL4/H001kjm+08Zj
-         kByGPimYibfhMNGOY7hTpfmS8tGiJ4liQ5zHdn+cfX9gK/rfydaNWrsuLbjIbDnFm6
-         pgQ9VzbgZnxdA==
+        s=k20201202; t=1666367864;
+        bh=uRhTubaMPy1QnYuX7qPtmgOomefbSd6elASyZXYtb6w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=B5Vft1lYSZtszgLPCy6EaLP76hZowv6UDFWcxtqHVA6tLGcuxunn6Q6I2D9oZPyUP
+         rqG8hN4A1iNPen6/m7QXlozh8klUqQhXm1YFiMKaf7BThATVnmIm+FLJxC0ytmhsbU
+         FUF6Ddh8gF/jlRNsJ3JkwhBz2lVDTTcAeus2kg4wCNTjgD4iD5y1XOK/cUjfkN3pOp
+         jNrakjRzInepx1xyw+peJ8IfsDpo8TCl6OQ0NkAFI2WIql81OcqittKlqipFfcZGsL
+         v2UYArrs5PzenjbJqkbbOOe6TAM1xjcd+xpUVHoywx79KX46FMujuyHT99W2MGyjxM
+         AyipKyrrqDJVA==
 From:   Arnd Bergmann <arnd@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org,
         Russell King <linux@armlinux.org.uk>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Lubomir Rintel <lkundrak@v3.sk>
+        Lubomir Rintel <lkundrak@v3.sk>, Vinod Koul <vkoul@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Helge Deller <deller@gmx.de>, Lee Jones <lee@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Peter Chubb <peter.chubb@unsw.edu.au>,
-        Richard Weinberger <richard@nod.at>,
-        Stefan Eletzhofer <stefan.eletzhofer@eletztrick.de>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-pm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH 00/11] ARM: sa1100, mmp: drop unused board files
-Date:   Fri, 21 Oct 2022 17:49:30 +0200
-Message-Id: <20221021155000.4108406-1-arnd@kernel.org>
+        dmaengine@vger.kernel.org
+Subject: [PATCH 09/11] ARM: mmp: remove custom sram code
+Date:   Fri, 21 Oct 2022 17:49:39 +0200
+Message-Id: <20221021155000.4108406-10-arnd@kernel.org>
 X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20221021155000.4108406-1-arnd@kernel.org>
+References: <20221021155000.4108406-1-arnd@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -69,206 +57,310 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-A number of board files were marked as 'unused' in 2022 and can
-get removed in linux-6.2 at the beginning of 2023.
-I wanted to group these two platforms with the PXA series, but
-that one is already too big.
+The MMP_SRAM code is no longer used by the tdma driver because
+the Kconfig symbol is not selected, so remove it along with its
+former callsite.
 
-MMP is now DT-only, which allows removing most of the platform
-specific source code.
-
-On SA1100, four boards that have no apparent users get removed,
-while another four boards each had one person saying they would
-like to keep it around.
-
-Arnd Bergmann (11):
-  ARM: sa1100: un-deprecate jornada720
-  ARM: sa1100: remove unused board files
-  ARM: sa1100: remove irda references
-  ARM: sa1100: make cpufreq driver build standalone
-  cpufreq: remove sa1100 driver
-  mtd: remove lart flash driver
-  ARM: mmp: select specific CPU implementation
-  ARM: mmp: remove all board files
-  ARM: mmp: remove custom sram code
-  ARM: mmp: remove device definitions
-  ARM: mmp: remove old PM support
-
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Dominik Brodowski <linux@dominikbrodowski.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Helge Deller <deller@gmx.de>
-Cc: Lee Jones <lee@kernel.org>
-Cc: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Peter Chubb <peter.chubb@unsw.edu.au>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Stefan Eletzhofer <stefan.eletzhofer@eletztrick.de>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-pm@vger.kernel.org
-Cc: dmaengine@vger.kernel.org
-Cc: linux-mtd@lists.infradead.org
-Cc: linux-usb@vger.kernel.org
-Cc: linux-fbdev@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-
- MAINTAINERS                                   |  11 -
- arch/arm/Kconfig                              |   6 -
- arch/arm/boot/compressed/head-sa1100.S        |   4 -
- arch/arm/configs/badge4_defconfig             | 105 ---
- arch/arm/configs/cerfcube_defconfig           |  73 --
- arch/arm/configs/hackkit_defconfig            |  48 --
- arch/arm/configs/jornada720_defconfig         |   1 -
- arch/arm/configs/lart_defconfig               |  64 --
- arch/arm/configs/pleb_defconfig               |  53 --
- arch/arm/configs/pxa168_defconfig             |   3 -
- arch/arm/configs/pxa910_defconfig             |   2 -
- arch/arm/configs/shannon_defconfig            |  45 --
- arch/arm/configs/simpad_defconfig             | 100 ---
- arch/arm/mach-mmp/Kconfig                     |  96 ---
- arch/arm/mach-mmp/Makefile                    |  21 +-
- arch/arm/mach-mmp/aspenite.c                  | 284 --------
- arch/arm/mach-mmp/avengers_lite.c             |  55 --
- arch/arm/mach-mmp/brownstone.c                | 237 ------
- arch/arm/mach-mmp/common.c                    |   5 -
- arch/arm/mach-mmp/common.h                    |   2 -
- arch/arm/mach-mmp/devices.c                   | 359 ---------
- arch/arm/mach-mmp/devices.h                   |  57 --
- arch/arm/mach-mmp/flint.c                     | 131 ----
- arch/arm/mach-mmp/gplugd.c                    | 206 ------
- arch/arm/mach-mmp/irqs.h                      | 240 ------
- arch/arm/mach-mmp/jasper.c                    | 185 -----
- arch/arm/mach-mmp/mfp-mmp2.h                  | 396 ----------
- arch/arm/mach-mmp/mfp-pxa168.h                | 355 ---------
- arch/arm/mach-mmp/mfp-pxa910.h                | 170 -----
- arch/arm/mach-mmp/mfp.h                       |  35 -
- arch/arm/mach-mmp/mmp2.c                      | 175 -----
- arch/arm/mach-mmp/mmp2.h                      | 104 ---
- arch/arm/mach-mmp/pm-mmp2.c                   | 248 -------
- arch/arm/mach-mmp/pm-mmp2.h                   |  59 --
- arch/arm/mach-mmp/pm-pxa910.c                 | 272 -------
- arch/arm/mach-mmp/pm-pxa910.h                 |  75 --
- arch/arm/mach-mmp/pxa168.c                    | 175 -----
- arch/arm/mach-mmp/pxa168.h                    | 139 ----
- arch/arm/mach-mmp/pxa910.c                    | 190 -----
- arch/arm/mach-mmp/pxa910.h                    |  90 ---
- arch/arm/mach-mmp/regs-apbc.h                 |  19 -
- arch/arm/mach-mmp/regs-apmu.h                 |  28 -
- arch/arm/mach-mmp/regs-icu.h                  |  69 --
- arch/arm/mach-mmp/regs-timers.h               |   5 -
- arch/arm/mach-mmp/regs-usb.h                  | 155 ----
- arch/arm/mach-mmp/sram.c                      | 167 -----
- arch/arm/mach-mmp/teton_bga.c                 | 100 ---
- arch/arm/mach-mmp/teton_bga.h                 |  22 -
- arch/arm/mach-mmp/time.c                      |   9 +-
- arch/arm/mach-mmp/ttc_dkb.c                   | 315 --------
- arch/arm/mach-sa1100/Kconfig                  | 112 ---
- arch/arm/mach-sa1100/Makefile                 |  21 -
- arch/arm/mach-sa1100/assabet.c                |   1 -
- arch/arm/mach-sa1100/badge4.c                 | 338 ---------
- arch/arm/mach-sa1100/cerf.c                   | 181 -----
- arch/arm/mach-sa1100/collie.c                 |   1 -
- arch/arm/mach-sa1100/generic.c                |  32 -
- arch/arm/mach-sa1100/generic.h                |   4 -
- arch/arm/mach-sa1100/h3100.c                  | 140 ----
- arch/arm/mach-sa1100/h3600.c                  |   1 -
- arch/arm/mach-sa1100/hackkit.c                | 184 -----
- arch/arm/mach-sa1100/include/mach/badge4.h    |  71 --
- arch/arm/mach-sa1100/include/mach/cerf.h      |  20 -
- arch/arm/mach-sa1100/include/mach/generic.h   |   1 -
- .../arm/mach-sa1100/include/mach/nanoengine.h |  48 --
- arch/arm/mach-sa1100/include/mach/shannon.h   |  40 -
- arch/arm/mach-sa1100/include/mach/simpad.h    | 159 ----
- arch/arm/mach-sa1100/lart.c                   | 177 -----
- arch/arm/mach-sa1100/nanoengine.c             | 136 ----
- arch/arm/mach-sa1100/pci-nanoengine.c         | 191 -----
- arch/arm/mach-sa1100/pleb.c                   | 148 ----
- arch/arm/mach-sa1100/shannon.c                | 157 ----
- arch/arm/mach-sa1100/simpad.c                 | 423 -----------
- drivers/cpufreq/Kconfig                       |   2 +-
- drivers/cpufreq/Kconfig.arm                   |   3 -
- drivers/cpufreq/Makefile                      |   1 -
- drivers/cpufreq/sa1100-cpufreq.c              | 206 ------
- drivers/cpufreq/sa1110-cpufreq.c              |  38 +-
- drivers/dma/mmp_tdma.c                        |   7 +-
- drivers/mfd/Kconfig                           |   2 +-
- drivers/mtd/devices/Kconfig                   |   8 -
- drivers/mtd/devices/Makefile                  |   1 -
- drivers/mtd/devices/lart.c                    | 682 ------------------
- drivers/pcmcia/sa1100_generic.c               |   5 +-
- drivers/pcmcia/sa1100_h3600.c                 |   2 +-
- drivers/pcmcia/sa1111_generic.c               |   4 -
- drivers/usb/host/ohci-sa1111.c                |   5 +-
- drivers/video/fbdev/sa1100fb.c                |   1 -
- include/linux/platform_data/dma-mmp_tdma.h    |  36 -
- include/linux/platform_data/irda-sa11x0.h     |  17 -
- include/linux/soc/mmp/cputype.h               |  24 +-
- 91 files changed, 43 insertions(+), 9352 deletions(-)
- delete mode 100644 arch/arm/configs/badge4_defconfig
- delete mode 100644 arch/arm/configs/cerfcube_defconfig
- delete mode 100644 arch/arm/configs/hackkit_defconfig
- delete mode 100644 arch/arm/configs/lart_defconfig
- delete mode 100644 arch/arm/configs/pleb_defconfig
- delete mode 100644 arch/arm/configs/shannon_defconfig
- delete mode 100644 arch/arm/configs/simpad_defconfig
- delete mode 100644 arch/arm/mach-mmp/aspenite.c
- delete mode 100644 arch/arm/mach-mmp/avengers_lite.c
- delete mode 100644 arch/arm/mach-mmp/brownstone.c
- delete mode 100644 arch/arm/mach-mmp/devices.c
- delete mode 100644 arch/arm/mach-mmp/devices.h
- delete mode 100644 arch/arm/mach-mmp/flint.c
- delete mode 100644 arch/arm/mach-mmp/gplugd.c
- delete mode 100644 arch/arm/mach-mmp/irqs.h
- delete mode 100644 arch/arm/mach-mmp/jasper.c
- delete mode 100644 arch/arm/mach-mmp/mfp-mmp2.h
- delete mode 100644 arch/arm/mach-mmp/mfp-pxa168.h
- delete mode 100644 arch/arm/mach-mmp/mfp-pxa910.h
- delete mode 100644 arch/arm/mach-mmp/mfp.h
- delete mode 100644 arch/arm/mach-mmp/mmp2.c
- delete mode 100644 arch/arm/mach-mmp/mmp2.h
- delete mode 100644 arch/arm/mach-mmp/pm-mmp2.c
- delete mode 100644 arch/arm/mach-mmp/pm-mmp2.h
- delete mode 100644 arch/arm/mach-mmp/pm-pxa910.c
- delete mode 100644 arch/arm/mach-mmp/pm-pxa910.h
- delete mode 100644 arch/arm/mach-mmp/pxa168.c
- delete mode 100644 arch/arm/mach-mmp/pxa168.h
- delete mode 100644 arch/arm/mach-mmp/pxa910.c
- delete mode 100644 arch/arm/mach-mmp/pxa910.h
- delete mode 100644 arch/arm/mach-mmp/regs-apbc.h
- delete mode 100644 arch/arm/mach-mmp/regs-apmu.h
- delete mode 100644 arch/arm/mach-mmp/regs-icu.h
- delete mode 100644 arch/arm/mach-mmp/regs-usb.h
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm/mach-mmp/Makefile                 |   1 -
+ arch/arm/mach-mmp/mmp2.h                   |  13 --
+ arch/arm/mach-mmp/sram.c                   | 167 ---------------------
+ drivers/dma/mmp_tdma.c                     |   7 +-
+ include/linux/platform_data/dma-mmp_tdma.h |  36 -----
+ 5 files changed, 2 insertions(+), 222 deletions(-)
  delete mode 100644 arch/arm/mach-mmp/sram.c
- delete mode 100644 arch/arm/mach-mmp/teton_bga.c
- delete mode 100644 arch/arm/mach-mmp/teton_bga.h
- delete mode 100644 arch/arm/mach-mmp/ttc_dkb.c
- delete mode 100644 arch/arm/mach-sa1100/badge4.c
- delete mode 100644 arch/arm/mach-sa1100/cerf.c
- delete mode 100644 arch/arm/mach-sa1100/h3100.c
- delete mode 100644 arch/arm/mach-sa1100/hackkit.c
- delete mode 100644 arch/arm/mach-sa1100/include/mach/badge4.h
- delete mode 100644 arch/arm/mach-sa1100/include/mach/cerf.h
- delete mode 100644 arch/arm/mach-sa1100/include/mach/generic.h
- delete mode 100644 arch/arm/mach-sa1100/include/mach/nanoengine.h
- delete mode 100644 arch/arm/mach-sa1100/include/mach/shannon.h
- delete mode 100644 arch/arm/mach-sa1100/include/mach/simpad.h
- delete mode 100644 arch/arm/mach-sa1100/lart.c
- delete mode 100644 arch/arm/mach-sa1100/nanoengine.c
- delete mode 100644 arch/arm/mach-sa1100/pci-nanoengine.c
- delete mode 100644 arch/arm/mach-sa1100/pleb.c
- delete mode 100644 arch/arm/mach-sa1100/shannon.c
- delete mode 100644 arch/arm/mach-sa1100/simpad.c
- delete mode 100644 drivers/cpufreq/sa1100-cpufreq.c
- delete mode 100644 drivers/mtd/devices/lart.c
  delete mode 100644 include/linux/platform_data/dma-mmp_tdma.h
- delete mode 100644 include/linux/platform_data/irda-sa11x0.h
 
+diff --git a/arch/arm/mach-mmp/Makefile b/arch/arm/mach-mmp/Makefile
+index 65cc9b691983..cd874c5a6cb8 100644
+--- a/arch/arm/mach-mmp/Makefile
++++ b/arch/arm/mach-mmp/Makefile
+@@ -8,7 +8,6 @@ obj-y				+= common.o devices.o time.o
+ obj-$(CONFIG_CPU_PXA168)	+= pxa168.o
+ obj-$(CONFIG_CPU_PXA910)	+= pxa910.o
+ obj-$(CONFIG_CPU_MMP2)		+= mmp2.o
+-obj-$(CONFIG_MMP_SRAM)		+= sram.o
+ 
+ ifeq ($(CONFIG_PM),y)
+ obj-$(CONFIG_CPU_PXA910)	+= pm-pxa910.o
+diff --git a/arch/arm/mach-mmp/mmp2.h b/arch/arm/mach-mmp/mmp2.h
+index 7f80b90248fb..5c80836aea76 100644
+--- a/arch/arm/mach-mmp/mmp2.h
++++ b/arch/arm/mach-mmp/mmp2.h
+@@ -10,7 +10,6 @@ extern void mmp2_clear_pmic_int(void);
+ 
+ #include <linux/i2c.h>
+ #include <linux/platform_data/i2c-pxa.h>
+-#include <linux/platform_data/dma-mmp_tdma.h>
+ #include <linux/irqchip/mmp.h>
+ 
+ #include "devices.h"
+@@ -29,8 +28,6 @@ extern struct mmp_device_desc mmp2_device_sdh0;
+ extern struct mmp_device_desc mmp2_device_sdh1;
+ extern struct mmp_device_desc mmp2_device_sdh2;
+ extern struct mmp_device_desc mmp2_device_sdh3;
+-extern struct mmp_device_desc mmp2_device_asram;
+-extern struct mmp_device_desc mmp2_device_isram;
+ 
+ extern struct platform_device mmp2_device_gpio;
+ 
+@@ -90,15 +87,5 @@ static inline int mmp2_add_sdhost(int id, struct sdhci_pxa_platdata *data)
+ 	return mmp_register_device(d, data, sizeof(*data));
+ }
+ 
+-static inline int mmp2_add_asram(struct sram_platdata *data)
+-{
+-	return mmp_register_device(&mmp2_device_asram, data, sizeof(*data));
+-}
+-
+-static inline int mmp2_add_isram(struct sram_platdata *data)
+-{
+-	return mmp_register_device(&mmp2_device_isram, data, sizeof(*data));
+-}
+-
+ #endif /* __ASM_MACH_MMP2_H */
+ 
+diff --git a/arch/arm/mach-mmp/sram.c b/arch/arm/mach-mmp/sram.c
+deleted file mode 100644
+index ecc46c31004f..000000000000
+--- a/arch/arm/mach-mmp/sram.c
++++ /dev/null
+@@ -1,167 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- *  linux/arch/arm/mach-mmp/sram.c
+- *
+- *  based on mach-davinci/sram.c - DaVinci simple SRAM allocator
+- *
+- *  Copyright (c) 2011 Marvell Semiconductors Inc.
+- *  All Rights Reserved
+- *
+- *  Add for mmp sram support - Leo Yan <leoy@marvell.com>
+- */
+-
+-#include <linux/module.h>
+-#include <linux/mod_devicetable.h>
+-#include <linux/init.h>
+-#include <linux/platform_device.h>
+-#include <linux/io.h>
+-#include <linux/err.h>
+-#include <linux/slab.h>
+-#include <linux/genalloc.h>
+-
+-#include <linux/platform_data/dma-mmp_tdma.h>
+-
+-struct sram_bank_info {
+-	char *pool_name;
+-	struct gen_pool *gpool;
+-	int granularity;
+-
+-	phys_addr_t sram_phys;
+-	void __iomem *sram_virt;
+-	u32 sram_size;
+-
+-	struct list_head node;
+-};
+-
+-static DEFINE_MUTEX(sram_lock);
+-static LIST_HEAD(sram_bank_list);
+-
+-struct gen_pool *sram_get_gpool(char *pool_name)
+-{
+-	struct sram_bank_info *info = NULL;
+-
+-	if (!pool_name)
+-		return NULL;
+-
+-	mutex_lock(&sram_lock);
+-
+-	list_for_each_entry(info, &sram_bank_list, node)
+-		if (!strcmp(pool_name, info->pool_name))
+-			break;
+-
+-	mutex_unlock(&sram_lock);
+-
+-	if (&info->node == &sram_bank_list)
+-		return NULL;
+-
+-	return info->gpool;
+-}
+-EXPORT_SYMBOL(sram_get_gpool);
+-
+-static int sram_probe(struct platform_device *pdev)
+-{
+-	struct sram_platdata *pdata = pdev->dev.platform_data;
+-	struct sram_bank_info *info;
+-	struct resource *res;
+-	int ret = 0;
+-
+-	if (!pdata || !pdata->pool_name)
+-		return -ENODEV;
+-
+-	info = kzalloc(sizeof(*info), GFP_KERNEL);
+-	if (!info)
+-		return -ENOMEM;
+-
+-	platform_set_drvdata(pdev, info);
+-
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (res == NULL) {
+-		dev_err(&pdev->dev, "no memory resource defined\n");
+-		ret = -ENODEV;
+-		goto out;
+-	}
+-
+-	if (!resource_size(res))
+-		return 0;
+-
+-	info->sram_phys   = (phys_addr_t)res->start;
+-	info->sram_size   = resource_size(res);
+-	info->sram_virt   = ioremap(info->sram_phys, info->sram_size);
+-	info->pool_name	  = kstrdup(pdata->pool_name, GFP_KERNEL);
+-	info->granularity = pdata->granularity;
+-
+-	info->gpool = gen_pool_create(ilog2(info->granularity), -1);
+-	if (!info->gpool) {
+-		dev_err(&pdev->dev, "create pool failed\n");
+-		ret = -ENOMEM;
+-		goto create_pool_err;
+-	}
+-
+-	ret = gen_pool_add_virt(info->gpool, (unsigned long)info->sram_virt,
+-				info->sram_phys, info->sram_size, -1);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "add new chunk failed\n");
+-		ret = -ENOMEM;
+-		goto add_chunk_err;
+-	}
+-
+-	mutex_lock(&sram_lock);
+-	list_add(&info->node, &sram_bank_list);
+-	mutex_unlock(&sram_lock);
+-
+-	dev_info(&pdev->dev, "initialized\n");
+-	return 0;
+-
+-add_chunk_err:
+-	gen_pool_destroy(info->gpool);
+-create_pool_err:
+-	iounmap(info->sram_virt);
+-	kfree(info->pool_name);
+-out:
+-	kfree(info);
+-	return ret;
+-}
+-
+-static int sram_remove(struct platform_device *pdev)
+-{
+-	struct sram_bank_info *info;
+-
+-	info = platform_get_drvdata(pdev);
+-
+-	if (info->sram_size) {
+-		mutex_lock(&sram_lock);
+-		list_del(&info->node);
+-		mutex_unlock(&sram_lock);
+-
+-		gen_pool_destroy(info->gpool);
+-		iounmap(info->sram_virt);
+-		kfree(info->pool_name);
+-	}
+-
+-	kfree(info);
+-
+-	return 0;
+-}
+-
+-static const struct platform_device_id sram_id_table[] = {
+-	{ "asram", MMP_ASRAM },
+-	{ "isram", MMP_ISRAM },
+-	{ }
+-};
+-
+-static struct platform_driver sram_driver = {
+-	.probe		= sram_probe,
+-	.remove		= sram_remove,
+-	.driver		= {
+-		.name	= "mmp-sram",
+-	},
+-	.id_table	= sram_id_table,
+-};
+-
+-static int __init sram_init(void)
+-{
+-	return platform_driver_register(&sram_driver);
+-}
+-core_initcall(sram_init);
+-
+-MODULE_LICENSE("GPL");
+diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
+index a262e0eb4cc9..d83e608dca05 100644
+--- a/drivers/dma/mmp_tdma.c
++++ b/drivers/dma/mmp_tdma.c
+@@ -15,7 +15,7 @@
+ #include <linux/dmaengine.h>
+ #include <linux/platform_device.h>
+ #include <linux/device.h>
+-#include <linux/platform_data/dma-mmp_tdma.h>
++#include <linux/genalloc.h>
+ #include <linux/of_device.h>
+ #include <linux/of_dma.h>
+ 
+@@ -670,10 +670,7 @@ static int mmp_tdma_probe(struct platform_device *pdev)
+ 
+ 	INIT_LIST_HEAD(&tdev->device.channels);
+ 
+-	if (pdev->dev.of_node)
+-		pool = of_gen_pool_get(pdev->dev.of_node, "asram", 0);
+-	else
+-		pool = sram_get_gpool("asram");
++	pool = of_gen_pool_get(pdev->dev.of_node, "asram", 0);
+ 	if (!pool) {
+ 		dev_err(&pdev->dev, "asram pool not available\n");
+ 		return -ENOMEM;
+diff --git a/include/linux/platform_data/dma-mmp_tdma.h b/include/linux/platform_data/dma-mmp_tdma.h
+deleted file mode 100644
+index 8bec5484dc86..000000000000
+--- a/include/linux/platform_data/dma-mmp_tdma.h
++++ /dev/null
+@@ -1,36 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- *  SRAM Memory Management
+- *
+- *  Copyright (c) 2011 Marvell Semiconductors Inc.
+- */
+-
+-#ifndef __DMA_MMP_TDMA_H
+-#define __DMA_MMP_TDMA_H
+-
+-#include <linux/genalloc.h>
+-
+-/* ARBITRARY:  SRAM allocations are multiples of this 2^N size */
+-#define SRAM_GRANULARITY	512
+-
+-enum sram_type {
+-	MMP_SRAM_UNDEFINED = 0,
+-	MMP_ASRAM,
+-	MMP_ISRAM,
+-};
+-
+-struct sram_platdata {
+-	char *pool_name;
+-	int granularity;
+-};
+-
+-#ifdef CONFIG_MMP_SRAM
+-extern struct gen_pool *sram_get_gpool(char *pool_name);
+-#else
+-static inline struct gen_pool *sram_get_gpool(char *pool_name)
+-{
+-	return NULL;
+-}
+-#endif
+-
+-#endif /* __DMA_MMP_TDMA_H */
 -- 
 2.29.2
 

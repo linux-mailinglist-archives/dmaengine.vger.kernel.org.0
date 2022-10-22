@@ -2,103 +2,116 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50BE6608815
-	for <lists+dmaengine@lfdr.de>; Sat, 22 Oct 2022 10:10:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 329BC608DFC
+	for <lists+dmaengine@lfdr.de>; Sat, 22 Oct 2022 17:19:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232424AbiJVIKI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 22 Oct 2022 04:10:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57152 "EHLO
+        id S229752AbiJVPTA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 22 Oct 2022 11:19:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233074AbiJVII2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 22 Oct 2022 04:08:28 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98AEA2CB8BA;
-        Sat, 22 Oct 2022 00:53:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8789860B83;
-        Sat, 22 Oct 2022 07:52:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8531FC43470;
-        Sat, 22 Oct 2022 07:52:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1666425167;
-        bh=k9UmSSd24VoHD4EdvwgqSONVwGFzHEbaHDORRiPVUfQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=naz7o3c014gL0BG8ejmgL+BXYtjb6VfmbAl6bnX1uycoTAvNsFtgzY3bxlfnQ14OO
-         fLlVbyh/okQGAHZBXEdNmOXumvkprRxaz4Khl3DgIuzc7tAWzA+d9OCTXNgxjpMKK0
-         cWpmizbahHcHoPPvTPVQtTDD/3g1pZnJ7pe+lYxQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.19 412/717] dmaengine: idxd: avoid deadlock in process_misc_interrupts()
-Date:   Sat, 22 Oct 2022 09:24:51 +0200
-Message-Id: <20221022072516.329391173@linuxfoundation.org>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221022072415.034382448@linuxfoundation.org>
-References: <20221022072415.034382448@linuxfoundation.org>
-User-Agent: quilt/0.67
+        with ESMTP id S229619AbiJVPS7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 22 Oct 2022 11:18:59 -0400
+Received: from mail-oa1-x2e.google.com (mail-oa1-x2e.google.com [IPv6:2001:4860:4864:20::2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A59F667CB9
+        for <dmaengine@vger.kernel.org>; Sat, 22 Oct 2022 08:18:55 -0700 (PDT)
+Received: by mail-oa1-x2e.google.com with SMTP id 586e51a60fabf-12c8312131fso7096410fac.4
+        for <dmaengine@vger.kernel.org>; Sat, 22 Oct 2022 08:18:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gz0LxUsOUlJDcIAW5bPu+WDjpQGro2FyWxGKpu7r8bo=;
+        b=gWrs34NeTJPV2fQ1MVoQY+zpFojHR3D/A6fVxaEOoPyaG1lz86TK/RINtSik3ihs6m
+         epr6PhFlnoD33CCeTfWoNQCRee99kzlwRupaR937A3VU5HU4OTIvs/zluF82SMnywl6D
+         HdEJ7m7PbwxapFaNOFa9ppWW4y91iGtKkwoLpnocgDPBTYKE8ItremNKc8YrHhceRIZp
+         h3VMtehI1AqTwZwEWQcTgFOjDVRQQngjmAnbv2gz4Ef/Bbck+zcB6GCOTs8PKUKrqPeL
+         49sPdfcCEYUyqTEphtRdJczJc984b2NmTshEFvs/XiFALWDOPilFuaMHYm7NR6Fhz+qX
+         X9nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gz0LxUsOUlJDcIAW5bPu+WDjpQGro2FyWxGKpu7r8bo=;
+        b=Y/eRciGVSF7tr0CBz4WSoVH7lnYUAuN4mueIDK885lSta76gAN51VP1iCvFE6eIPEG
+         A56KG9gJkg56mAoSPDudxhwPIcA2kEo7AfrgoC79F10uC+7dlPWVp4R6O/mNlyVSbgni
+         EgacfzYnWHFlDux3l0A8Y8OvG0z5eH/1km3IXbNpbdHywQoUDPQt0wcxM7ZezvrDu6ba
+         jyOEjYsND7GCNJRvO0hotlx8gz3qSShGKExljTyv1h4+ELia5ZSMV64Ekl8mGVAz8kBn
+         IPsHYtCaAffD2rAZMVzgDvLBXyZ0dN0wWRJc4kWPQiTZcs5rh7SM2sP9KKJRTslw9ZnQ
+         l1Nw==
+X-Gm-Message-State: ACrzQf1oMOJDvmPOA3DNcj+997iIJ6cKt0XHILOtURReYzWxpsnRCOEp
+        zv1dO1omIyoxyXaLtBvs1/OgEg==
+X-Google-Smtp-Source: AMsMyM4Ums0et6AQMZox+xdB7Wz2plUu78klbaMd0EOzV1OnnwGbhhl8/BymyNDqbBFL+Y+cBT/t0g==
+X-Received: by 2002:a05:6870:f288:b0:131:de71:3eb6 with SMTP id u8-20020a056870f28800b00131de713eb6mr31239483oap.63.1666451935002;
+        Sat, 22 Oct 2022 08:18:55 -0700 (PDT)
+Received: from [10.203.8.70] ([205.153.95.177])
+        by smtp.gmail.com with ESMTPSA id v5-20020a056870310500b00136c20b1c59sm11538284oaa.43.2022.10.22.08.18.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 22 Oct 2022 08:18:54 -0700 (PDT)
+Message-ID: <e7ace68a-98e5-63c8-7dd7-a35d0eba1c6e@linaro.org>
+Date:   Sat, 22 Oct 2022 11:18:49 -0400
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH 00/21] ARM: s3c: clean out obsolete platforms
+To:     Arnd Bergmann <arnd@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>,
+        Simtec Linux Team <linux@simtec.co.uk>,
+        Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        patches@opensource.cirrus.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-pm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-watchdog@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-pwm@vger.kernel.org
+References: <20221021202254.4142411-1-arnd@kernel.org>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221021202254.4142411-1-arnd@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Jerry Snitselaar <jsnitsel@redhat.com>
+On 21/10/2022 16:22, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The s3c24xx platform was marked as deprecated a while ago,
+> and for the s3c64xx platform, we marked all except one legacy
+> board file as unused.
+> 
+> This series removes all of those, leaving only s3c64xx support
+> for DT based boots as well as the cragg6410 board file.
+> 
+> About half of the s3c specific drivers were only used on
+> the now removed machines, so these drivers can be retired
+> as well. I can either merge the driver removal patches through
+> the soc tree along with the board file patches, or subsystem
+> maintainers can pick them up into their own trees, whichever
+> they prefer.
 
-[ Upstream commit 407171717a4f4d2d80825584643374a2dfdb0540 ]
-
-idxd_device_clear_state() now grabs the idxd->dev_lock
-itself, so don't grab the lock prior to calling it.
-
-This was seen in testing after dmar fault occurred on system,
-resulting in lockup stack traces.
-
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org
-Fixes: cf4ac3fef338 ("dmaengine: idxd: fix lockdep warning on device driver removal")
-Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Link: https://lore.kernel.org/r/20220823163709.2102468-1-jsnitsel@redhat.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/idxd/irq.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-index 743ead5ebc57..5b9921475be6 100644
---- a/drivers/dma/idxd/irq.c
-+++ b/drivers/dma/idxd/irq.c
-@@ -324,13 +324,11 @@ static int process_misc_interrupts(struct idxd_device *idxd, u32 cause)
- 			idxd->state = IDXD_DEV_HALTED;
- 			idxd_wqs_quiesce(idxd);
- 			idxd_wqs_unmap_portal(idxd);
--			spin_lock(&idxd->dev_lock);
- 			idxd_device_clear_state(idxd);
- 			dev_err(&idxd->pdev->dev,
- 				"idxd halted, need %s.\n",
- 				gensts.reset_type == IDXD_DEVICE_RESET_FLR ?
- 				"FLR" : "system reset");
--			spin_unlock(&idxd->dev_lock);
- 			return -ENXIO;
- 		}
- 	}
--- 
-2.35.1
+Just to be sure - do you expect me to ack the series, or rather as usual
+pick them up?
 
 
+Best regards,
+Krzysztof
 

@@ -2,170 +2,71 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06FDF60B51C
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Oct 2022 20:12:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 819BA60C2DB
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Oct 2022 06:55:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231857AbiJXSMu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 24 Oct 2022 14:12:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48130 "EHLO
+        id S229587AbiJYEzv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 25 Oct 2022 00:55:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231854AbiJXSMU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Oct 2022 14:12:20 -0400
-Received: from wnew4-smtp.messagingengine.com (wnew4-smtp.messagingengine.com [64.147.123.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C56126C452;
-        Mon, 24 Oct 2022 09:53:44 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 011D42B066F0;
-        Mon, 24 Oct 2022 09:19:09 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Mon, 24 Oct 2022 09:19:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1666617549; x=1666624749; bh=dNk4I7ELz1
-        Q72dRob/8j+4seSTYFKAZT/RUPASjRJ5c=; b=q+NqZuUcR73y8BnZPPG5dx1Zsk
-        6km9xLqa6tEkJrornmVIrbgVsoTaG0EQRj//U3P/qs5FFUR0kQj3xsDpIMDiHNAP
-        KHymuWr00P67rJl6tNZNMaSvfwBvDXs8mjOeO+DtIb91LFvy9u7IqPZlLBHzDqVY
-        OqQ+UV/5sGJOiUEzmGUI9NOmwTaSDzu4RgOGbpc9QTg1ReluTq9aBn60FamJs6vN
-        DKIJe0X1BrhoAYInvyHnNd5GZdOejs+w4Suvb5ImKHNqRwAYBvpipR0/HvaVLckd
-        CHTLMlrLH5H5bEpdNq1ZJ2ZVvg8gjN0DzzHIiqNjzW420ViiiKKJHNZdB8zg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; t=1666617549; x=1666624749; bh=dNk4I7ELz1Q72dRob/8j+4seSTYF
-        KAZT/RUPASjRJ5c=; b=uYEImk9/JaoBLZkHmS4JMUN51UUW3Adz4NZ33zTXfhfn
-        X2zc+bMCIXUEr4nNHo354GqKRASijikTpJx4FFU+epgcfr8J1IPlgZPNpNiYVB9M
-        w8ihE4tr46Zh/a1sL2xOLJxavoW+rkvJ5mUtViAoLX1JGrLBO17yVcJcaCCL+4DZ
-        U79zEm+ybsbN3XMbJe7XZH2qegoAJbChw5mNkbbe1D33ukaTT9FYQuJEpTpQ+3Cm
-        dcgc9DJADBfxr4sonBlprzuNuFtddjyQxgp5OFhdXtZwXkncp0R9eBa1XvUUpv5H
-        Fai3j/IlJ8ZfnHiUrjBdKzUP8vcWG93GWsi2JgpEew==
-X-ME-Sender: <xms:zZBWY4d6hZdrWDWBmQnXOunjtmGBLNtVOGtYlcpUAkqGnIq3nQ_ULg>
-    <xme:zZBWY6ORVL4inZtEZ347UGYnYKlOyas-DedRgWZhgJSTlHghoiUBMTH5Vdl7j2SlB
-    orGRM2A45E3sznwkiE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrgedtgedgheelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:zZBWY5jMfpgYOekZ5Xiy1zZWPWGF2N1SaGbKcsqvIIsAoksVTelYew>
-    <xmx:zZBWY98Y0Yr03VdtjC58Vfn64oQoe8znN7FH4bLecym0d8-7ie150w>
-    <xmx:zZBWY0u1N4N4cR6ZhhO6MwuQK8N3p7TbkgEiIMvu0C2hnaFTg0G-QA>
-    <xmx:zZBWY2px7fOBs4XObZs9jNKaCaM5g4TthCLLA4wr0bUEo7pzc_VBCiqJhiU>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 3DDB5B60086; Mon, 24 Oct 2022 09:19:09 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-1047-g9e4af4ada4-fm-20221005.001-g9e4af4ad
-Mime-Version: 1.0
-Message-Id: <e5aa233d-526b-45ab-9acb-ab792b8686bc@app.fastmail.com>
-In-Reply-To: <20221024130035.GA1645003-robh@kernel.org>
-References: <20221021202254.4142411-1-arnd@kernel.org>
- <20221024130035.GA1645003-robh@kernel.org>
-Date:   Mon, 24 Oct 2022 15:18:41 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Rob Herring" <robh@kernel.org>, "Arnd Bergmann" <arnd@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
-        linux-kernel@vger.kernel.org, "Ben Dooks" <ben-linux@fluff.org>,
-        "Simtec Linux Team" <linux@simtec.co.uk>,
-        linux-doc@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, patches@opensource.cirrus.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-        "linux-mmc @ vger . kernel . org" <linux-mmc@vger.kernel.org>,
-        linux-mtd@lists.infradead.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-watchdog@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 00/21] ARM: s3c: clean out obsolete platforms
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229491AbiJYEzu (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Oct 2022 00:55:50 -0400
+X-Greylist: delayed 14401 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 24 Oct 2022 21:55:47 PDT
+Received: from smtp.smtpout.orange.fr (smtp-26.smtpout.orange.fr [80.12.242.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B091F6337
+        for <dmaengine@vger.kernel.org>; Mon, 24 Oct 2022 21:55:46 -0700 (PDT)
+Received: from pop-os.home ([86.243.100.34])
+        by smtp.orange.fr with ESMTPA
+        id n3Scop2yXkifIn3ScotAlr; Mon, 24 Oct 2022 21:50:11 +0200
+X-ME-Helo: pop-os.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 24 Oct 2022 21:50:11 +0200
+X-ME-IP: 86.243.100.34
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH] dmaengine: mv_xor_v2: Fix a resource leak in mv_xor_v2_remove()
+Date:   Mon, 24 Oct 2022 21:50:09 +0200
+Message-Id: <e9e3837a680c9bd2438e4db2b83270c6c052d005.1666640987.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Oct 24, 2022, at 15:00, Rob Herring wrote:
-> On Fri, Oct 21, 2022 at 10:22:28PM +0200, Arnd Bergmann wrote:
->> From: Arnd Bergmann <arnd@arndb.de>
->> 
->> The s3c24xx platform was marked as deprecated a while ago,
->> and for the s3c64xx platform, we marked all except one legacy
->> board file as unused.
->> 
->> This series removes all of those, leaving only s3c64xx support
->> for DT based boots as well as the cragg6410 board file.
->> 
->> About half of the s3c specific drivers were only used on
->> the now removed machines, so these drivers can be retired
->> as well. I can either merge the driver removal patches through
->> the soc tree along with the board file patches, or subsystem
->> maintainers can pick them up into their own trees, whichever
->> they prefer.
->
-> [...]
->
->>  Documentation/arm/index.rst                   |    1 -
->>  Documentation/arm/samsung-s3c24xx/cpufreq.rst |   77 -
->>  .../arm/samsung-s3c24xx/eb2410itx.rst         |   59 -
->>  Documentation/arm/samsung-s3c24xx/gpio.rst    |  172 --
->>  Documentation/arm/samsung-s3c24xx/h1940.rst   |   41 -
->>  Documentation/arm/samsung-s3c24xx/index.rst   |   20 -
->>  Documentation/arm/samsung-s3c24xx/nand.rst    |   30 -
->>  .../arm/samsung-s3c24xx/overview.rst          |  311 ---
->>  Documentation/arm/samsung-s3c24xx/s3c2412.rst |  121 -
->>  Documentation/arm/samsung-s3c24xx/s3c2413.rst |   22 -
->>  .../arm/samsung-s3c24xx/smdk2440.rst          |   57 -
->>  Documentation/arm/samsung-s3c24xx/suspend.rst |  137 --
->>  .../arm/samsung-s3c24xx/usb-host.rst          |   91 -
->>  Documentation/arm/samsung/overview.rst        |   13 -
->
-> What about?:
->
-> Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt
-> Documentation/devicetree/bindings/interrupt-controller/samsung,s3c24xx-irq.txt
-> Documentation/devicetree/bindings/mmc/samsung,s3cmci.txt
+A clk_prepare_enable() call in the probe is not balanced by a corresponding
+clk_disable_unprepare() in the remove function.
 
-Good catch!
+Add the missing call.
 
-I've removed these three now and and will add the removal to
-the same patch, also the related
-samsung,s3c2412-clock.txt and samsung,s3c2443-clock.txt
-files.
+Fixes: 3cd2c313f1d6 ("dmaengine: mv_xor_v2: Fix clock resource by adding a register clock")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/dma/mv_xor_v2.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt
+diff --git a/drivers/dma/mv_xor_v2.c b/drivers/dma/mv_xor_v2.c
+index f629ef6fd3c2..113834e1167b 100644
+--- a/drivers/dma/mv_xor_v2.c
++++ b/drivers/dma/mv_xor_v2.c
+@@ -893,6 +893,7 @@ static int mv_xor_v2_remove(struct platform_device *pdev)
+ 	tasklet_kill(&xor_dev->irq_tasklet);
+ 
+ 	clk_disable_unprepare(xor_dev->clk);
++	clk_disable_unprepare(xor_dev->reg_clk);
+ 
+ 	return 0;
+ }
+-- 
+2.34.1
 
-samsung,s3c2412-nand is apparently still used on s3c6400,
-and the driver is selectable on that platform, so I think
-that should remain in there until we remove s3c64xx in 2024,
-even if it is not referenced by the dts files in the kernel.
-
-> Documentation/devicetree/bindings/usb/s3c2410-usb.txt
-
-Similarly, the driver is used on the crag6410 board
-(without DT), and probably just works with the DT based
-boards if one adds a node to s3c64xx.dtsi.
-
-I've also checked if any of the other removed drivers
-matches of_device_id[] strings to see if there are more
-bindings to kill off, but I don't see any that have
-now become obsolete. It did point me to pxa2xx_ac97_dt_ids,
-which Robert already complained about, this apparently
-is still used with dts files outside of mainline.
-
-      Arnd

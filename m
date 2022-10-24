@@ -2,131 +2,94 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63BEF609CDD
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Oct 2022 10:36:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1527760AB9C
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Oct 2022 15:55:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229706AbiJXIgk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 24 Oct 2022 04:36:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33340 "EHLO
+        id S233085AbiJXNy6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 24 Oct 2022 09:54:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230055AbiJXIgj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Oct 2022 04:36:39 -0400
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 211216049F;
-        Mon, 24 Oct 2022 01:36:31 -0700 (PDT)
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29O6kuPT019014;
-        Mon, 24 Oct 2022 10:36:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=selector1;
- bh=hjE8e/e8vt5lFLFZZcNa3D98nO+5lJyHBO3xGTZhfLE=;
- b=VR9qan/lYTl1+Hk7VmjXfbdwaN/nhYrQpOHgBIX5QYJA1B1jVXJL8+8QXpuQPZH1D7UA
- 2aBlA7Z3F5Uy0Fh8m5wOdDRSZXbftP779KBI2My9BgiHkp7UBN+EP3J3iVwyE+EaJGi+
- lTWXzxEz/wX1YtqN+xNbfL+vnVdh+NHp1KBC6Ui3ndO5akDEfH7O3ewx3Y0FBUMJqTva
- F0g5Im5FY//1g3InGIu0MOfZx9HoghUryBWRmnqM0dLTomLdXYaFdbixFlnYDm6wOrvU
- /PFRkwN2JRI3wknW80CS0HCi9JJH3MsyoEVeIT9/5tnR0xxZyk7BvtDFeNZGK81+DLMG Ig== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3kc7v29fyn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Oct 2022 10:36:17 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7D3D310002A;
-        Mon, 24 Oct 2022 10:36:13 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 795E0216ECE;
-        Mon, 24 Oct 2022 10:36:13 +0200 (CEST)
-Received: from localhost (10.201.20.208) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 24 Oct
- 2022 10:36:13 +0200
-From:   Amelie Delaunay <amelie.delaunay@foss.st.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Amelie Delaunay <amelie.delaunay@foss.st.com>
-CC:     <dmaengine@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] dmaengine: stm32-dma: fix potential race between pause and resume
-Date:   Mon, 24 Oct 2022 10:36:11 +0200
-Message-ID: <20221024083611.132588-1-amelie.delaunay@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S236785AbiJXNyI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Oct 2022 09:54:08 -0400
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05002BD05D
+        for <dmaengine@vger.kernel.org>; Mon, 24 Oct 2022 05:43:54 -0700 (PDT)
+Received: by mail-qk1-f170.google.com with SMTP id o2so5923321qkk.10
+        for <dmaengine@vger.kernel.org>; Mon, 24 Oct 2022 05:43:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CQzXqrwIC0QwRKejNt8LVE2JYI0YL7ErsUlEluRisec=;
+        b=VfrgqMHPLBsQhMyfqIb+txPYc98Nb3UJm4VvRFohYHEeVwpx5tEBEq/qBfp6gx8Oot
+         qqNONpCEVA9Y6PrzVNsO2cPI6ZrdGi3zbCUh1qRXfqKP2iVfZD41ff+/vmbWKvqgjkY0
+         EQD1PbksJVU2r1r1LaSqfAx+hNjRbpxbNlW37LpNKNDBaXX3PWq5lOiDnarzKr1pIiUE
+         tPUO5uNmIfe527jUdxGKP4d7ckN7lInohm+x/98bvtgDhmWbTvMHzebP0K1gcFSynduB
+         mhNDJ9hXNk/va2Neh8DUz32F1PN/3vPSVmgoBzSGtszc77n498r4iRw/HkVj2xnWNJ+N
+         53zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CQzXqrwIC0QwRKejNt8LVE2JYI0YL7ErsUlEluRisec=;
+        b=4k0Eo9W+yk4cHJCkRsbtIPEt7KG7JgMszREOTuYA6mGaEvCuj4pSyqJ0jroVrQojlo
+         mX62EE1MOuP3pbBpjKCP0+fxJuBG0FjrzM+xm5kTDQOpZ5/zMqZWHByQOA4ppqPmGyS+
+         Db6qmpEBnF8Wp3s2Hd+4hGhLQPKNngVyhsKLBbqNgDf3tmOI1/5JaeXmUs3vWvbSz1Fl
+         nBEiOQZgZ728/DLOakh6zuMdpjBfu3TfqyaPPZYTxbiI3fvS+1Ai4M8NQbS8pQ74otZd
+         ZD0cqB6uuFBXQuUOUtMIdOR8EJQO6RglxgG17PzXbh1sS5b+zBE+vchGY7pq9XFeM9lM
+         lgUg==
+X-Gm-Message-State: ACrzQf2JJTzwv08XAyqbQdGYy3eOkMoqPsIXpjjl2D5O+XLU58VcAgFu
+        njIf4GHgdT/X0/l7Kiao7VIHJQ==
+X-Google-Smtp-Source: AMsMyM5GJlopQSnchtqeAVaJKk0KkeZOI6RZXCaagWiqyRgE+7EghQIXyEkNJ8GlAlpcNHsw1akpBg==
+X-Received: by 2002:a05:620a:1469:b0:6ee:d38a:7acc with SMTP id j9-20020a05620a146900b006eed38a7accmr22626676qkl.585.1666615202919;
+        Mon, 24 Oct 2022 05:40:02 -0700 (PDT)
+Received: from [192.168.1.8] ([64.57.193.93])
+        by smtp.gmail.com with ESMTPSA id dt27-20020a05620a479b00b006b9c9b7db8bsm15325374qkb.82.2022.10.24.05.40.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Oct 2022 05:40:02 -0700 (PDT)
+Message-ID: <be51d813-f36c-61ac-88d4-8a18cc6507f8@linaro.org>
+Date:   Mon, 24 Oct 2022 08:40:00 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.201.20.208]
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-10-24_02,2022-10-21_01,2022-06-22_01
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH 14/21] dmaengine: remove s3c24xx driver
+Content-Language: en-US
+To:     Arnd Bergmann <arnd@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>,
+        Simtec Linux Team <linux@simtec.co.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        dmaengine@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+References: <20221021202254.4142411-1-arnd@kernel.org>
+ <20221021203329.4143397-14-arnd@kernel.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221021203329.4143397-14-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-When disabling dma channel, a TCF flag is set and as TCIE is enabled, an
-interrupt is raised.
-On a busy system, the interrupt may have latency and the user can ask for
-dmaengine_resume while stm32-dma driver has not yet managed the complete
-pause (backup of registers to restore state in resume).
-To avoid such a case, instead of waiting the interrupt to backup the
-registers, do it just after disabling the channel and discard Transfer
-Complete interrupt in case the channel is paused.
+On 21/10/2022 16:27, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The s3c24xx platform was removed and this driver is no longer
+> needed.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Fixes: 099a9a94be0e ("dmaengine: stm32-dma: add device_pause/device_resume support")
-Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
----
- drivers/dma/stm32-dma.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index 4891a1767e5a..37674029cb42 100644
---- a/drivers/dma/stm32-dma.c
-+++ b/drivers/dma/stm32-dma.c
-@@ -675,6 +675,8 @@ static void stm32_dma_handle_chan_paused(struct stm32_dma_chan *chan)
- 
- 	chan->chan_reg.dma_sndtr = stm32_dma_read(dmadev, STM32_DMA_SNDTR(chan->id));
- 
-+	chan->status = DMA_PAUSED;
-+
- 	dev_dbg(chan2dev(chan), "vchan %pK: paused\n", &chan->vchan);
- }
- 
-@@ -789,9 +791,7 @@ static irqreturn_t stm32_dma_chan_irq(int irq, void *devid)
- 	if (status & STM32_DMA_TCI) {
- 		stm32_dma_irq_clear(chan, STM32_DMA_TCI);
- 		if (scr & STM32_DMA_SCR_TCIE) {
--			if (chan->status == DMA_PAUSED && !(scr & STM32_DMA_SCR_EN))
--				stm32_dma_handle_chan_paused(chan);
--			else
-+			if (chan->status != DMA_PAUSED)
- 				stm32_dma_handle_chan_done(chan, scr);
- 		}
- 		status &= ~STM32_DMA_TCI;
-@@ -838,13 +838,11 @@ static int stm32_dma_pause(struct dma_chan *c)
- 		return -EPERM;
- 
- 	spin_lock_irqsave(&chan->vchan.lock, flags);
-+
- 	ret = stm32_dma_disable_chan(chan);
--	/*
--	 * A transfer complete flag is set to indicate the end of transfer due to the stream
--	 * interruption, so wait for interrupt
--	 */
- 	if (!ret)
--		chan->status = DMA_PAUSED;
-+		stm32_dma_handle_chan_paused(chan);
-+
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- 
- 	return ret;
--- 
-2.25.1
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
 

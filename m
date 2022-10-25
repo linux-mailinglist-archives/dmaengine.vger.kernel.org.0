@@ -2,100 +2,80 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1323460D2DC
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Oct 2022 19:57:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DB8A60D5DE
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Oct 2022 22:50:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231814AbiJYR5u (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 25 Oct 2022 13:57:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46106 "EHLO
+        id S232226AbiJYUuM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 25 Oct 2022 16:50:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232377AbiJYR5t (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Oct 2022 13:57:49 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2068.outbound.protection.outlook.com [40.107.93.68])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51817F682B;
-        Tue, 25 Oct 2022 10:57:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MQ2s1BDmaZDSrOgvvyJu3rFZdfc0GlhvjAVkklAL+U2iAW8IwBNC37rIbmj2/jE99beRZsrVWArSRvynNOCgwZ9o9SK9QZ4z/lU5NppjpmnO+Rw4OiC4ZVu3c3FesQKjc3H9OoNKmMpIc43aJTkV7OcIlvrrwPnAFMhfDnwKy6OhsWg843Q3wS5yQbR7qk/JCQkVAEzC4/m/n3001VuPsNskW6Tg/ikolP3aqQzr7GbNo6sYFZgTuszW+eC+0UVI+qYnJiIa+T38c6jMdJtfeI4WdYrMKzG/Kfw6UStVnKLwEn+oJ81+sv8Jq8VpxUUyJq11sWGPhWu1GsLiGAVT6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=664N7wOuvn6e+bqMG60UPws27P8KgZSZf/gw02vHhXk=;
- b=AX5RbwYZvlHAaYxLgUGP0an8YsJczauY3qhStrQF1vgFU3YcvYrSb7wPPff8H8XanA8oN02wohien05S4zoB0E/g0DT6F8eGdN/T5ADoF3V+J8RkVtaFPz3757G7E8r7aVv1keDCbNgeOO6G7cFSBEbxIqA1MKx0VHiJUDbw8SE35TtJnEum4m/lPp/jPJ9lAQdtsWSzD6LNEiNWRf0NgJHTC7qRVRJCU2rQNuijZrVuy1pe2Hsb7MCJnfsWAxuFN4DzmJVkiuVblzv7FCrFO6CMXpr6ESEGC0c4mtDU75Z2QjS+X7PeoNYeJdRystVxyLlbCKjZUxFdmGFqvtRifA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=664N7wOuvn6e+bqMG60UPws27P8KgZSZf/gw02vHhXk=;
- b=VxSeQZgJhP7V3VEsBMmgngkzOVVi0QeaqRjEU+nBhHD+VByQhs01VTuLolTV0nhj9r/boTH4jpI0As2zYu1jfiJLvR5O1H7wsCb15r8B/KVJlFxKG4Du+LT4nJFexA4NGJTWvKgPt7KDwRk3BjY+dz4FDig+Exz8r/mQgQXFS1E=
-Received: from BN9P220CA0003.NAMP220.PROD.OUTLOOK.COM (2603:10b6:408:13e::8)
- by IA1PR12MB6484.namprd12.prod.outlook.com (2603:10b6:208:3a7::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.32; Tue, 25 Oct
- 2022 17:57:46 +0000
-Received: from BN8NAM11FT088.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:13e:cafe::2d) by BN9P220CA0003.outlook.office365.com
- (2603:10b6:408:13e::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.27 via Frontend
- Transport; Tue, 25 Oct 2022 17:57:46 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BN8NAM11FT088.mail.protection.outlook.com (10.13.177.81) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5746.16 via Frontend Transport; Tue, 25 Oct 2022 17:57:46 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 25 Oct
- 2022 12:57:45 -0500
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 25 Oct
- 2022 12:57:45 -0500
-Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2375.31 via Frontend
- Transport; Tue, 25 Oct 2022 12:57:44 -0500
-From:   Lizhi Hou <lizhi.hou@amd.com>
-To:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <trix@redhat.com>
-CC:     Lizhi Hou <lizhi.hou@amd.com>, <tumic@gpxsee.org>,
-        <max.zhen@amd.com>, <sonal.santan@amd.com>, <larry.liu@amd.com>,
-        <brian.xu@amd.com>
-Subject: [PATCH V9 XDMA 2/2] dmaengine: xilinx: xdma: Add user logic interrupt support
-Date:   Tue, 25 Oct 2022 10:57:18 -0700
-Message-ID: <1666720638-33496-3-git-send-email-lizhi.hou@amd.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1666720638-33496-1-git-send-email-lizhi.hou@amd.com>
-References: <1666720638-33496-1-git-send-email-lizhi.hou@amd.com>
+        with ESMTP id S232114AbiJYUuL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Oct 2022 16:50:11 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A07862715C;
+        Tue, 25 Oct 2022 13:50:09 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id d6so24480672lfs.10;
+        Tue, 25 Oct 2022 13:50:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0Zk0HPezbVSSSJ26DNMPr74Oe4/FvtGH3/8t8fHqL6A=;
+        b=jKWbAnjWBnndyv7DxomPX4MSpPatJ08V4DET/Y7ttenPs2dTjQcpNk1nJqdZ7NLVwQ
+         VA2h13zzQaQuYi8tiG6TbMJlS49Y9ndEB3IkALhIiCbKfezA3fvPyg+1/J/BFr497dmq
+         l7WzJQNSp/1fBINfQyX/UXp34ZgKZtd8wfbzlK1riOrUEXwS7vlP+ZKR9SIbk2mAHKBC
+         W08tvXsln7Rmbt8KranCE4GG/FvF/sfDJXMpQTXzN98qdn5dPhehaDKeA5x4DuYB/RZO
+         /Ycl2+yyJKdVW7xefk6fuyPzhewJQyAAOu4WvkKsqyk7zyDVqCwY973qaaX+SgLCHb2D
+         W7lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0Zk0HPezbVSSSJ26DNMPr74Oe4/FvtGH3/8t8fHqL6A=;
+        b=5LbZauW66ZglVenpp3BxYNFDhVNfCC2AFg9hWSYyug2Yhv0+Nkl6mXJBouFaGFpOLR
+         7prgwL50adc4ClvulpB1oW77Rf1npbALCxLE7QIiwbkpVYk610HhFewk++RWjny6CT03
+         17oot9MZ/nKZluYoXEhsYO6Cgh0WteI6l0O35hnkSDjY519fLhzcykOUvJ2KwmLNebwK
+         2Arz7/QLDupdFfjRNuREjAhHypyEbQWuukRHh9MQ2q5fS6tPWWGuNXwVKc+gwSvrzkGr
+         72b4qWsnIkuBkol8DbCWifT9ziQXjeU1Zl1/1SFuZVcZ7DVl1iwtd3EHE1lciUbCw/oD
+         f4FQ==
+X-Gm-Message-State: ACrzQf1gQT3gfvxVn4APGeC102uAjRrzpxOT/6EHEv9mJPVZ6QXtdEde
+        p9pa/cnpgMkcuhpF8PEZGMQ=
+X-Google-Smtp-Source: AMsMyM5uYwVwDKnBqszAnU0sifEWzu2LfEC6oDJHninzUR/bA59rx7jKgADkRe+KiV+wj9tub36twA==
+X-Received: by 2002:a05:6512:2342:b0:4a4:81e4:374b with SMTP id p2-20020a056512234200b004a481e4374bmr3164754lfu.502.1666731007362;
+        Tue, 25 Oct 2022 13:50:07 -0700 (PDT)
+Received: from mobilestation ([91.193.177.120])
+        by smtp.gmail.com with ESMTPSA id e18-20020a05651236d200b004946bb30469sm572202lfs.82.2022.10.25.13.50.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Oct 2022 13:50:06 -0700 (PDT)
+Date:   Tue, 25 Oct 2022 23:50:02 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH RESEND v5 00/24] dmaengine: dw-edma: Add RP/EP local DMA
+ controllers support
+Message-ID: <20221025205002.u3kznrq7hdp4shnm@mobilestation>
+References: <20220822185332.26149-1-Sergey.Semin@baikalelectronics.ru>
+ <20221025075930.GB221610@thinkpad>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT088:EE_|IA1PR12MB6484:EE_
-X-MS-Office365-Filtering-Correlation-Id: cfccd302-3e62-4d3c-e82a-08dab6b26c1a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vH/owQfOKn8DIs3qMo5pQUwiHvJRviJ4oRoDIIm8o2WEOeiWEQrKr2NPfhmWUPQHxXSr02egR1TPVg5S5RJigXxB7t/P9+oXi+e8hadLkj9IzPJ/SnnYhmWkanjz7p0wiQmnIdEDNfstNg89Gf6y/OuvS5nBKavoP9YFYQb7G8bJEWuLy7J2/Ybs7KjLJB+r+0SHbZDltbHQky3FJuZDcVy4XqDeYTU0gdtUyn+CuIoMCy5rXyHW+HCQDMaxWFOy+4GYv2prMQwW46CtotMJ75Hc1CPNEuyAyu3MWF06VNnLyXACo97Wr2IMflYigD/ScPC1lpxKw4cJ3ogt93EVBFoirGF47RFbG0qb3J+vgkM1mDJeM8MZ74+nwK0rqUjS/uajF0j9pW5pcF1WryXPfjj6DPXigDRQkhVGKnIb2/nKTworSqif7EFB//9VDDiuzHyMfdefHWV/QFElgm06PQf916XAmw8r9yldtXyPPxVgLSfwMeNjVeuGGEtaeFPPi7EdkklaykBhVMJlgo18ESD2E5XjwZAYKAr/HEGuSx4sZkt1/Dfe4A80telaOg9xNBK4H2kvLPvg/H0/m4CWC3WaHNYYtxReCxL9CHSj03sgfm/ncPSKl488xshsm75miAtPsIq8a8kT6yOW5bQRgobpc0RRXqsOc8GN8gkVu61NVLDRR9MLbQZHUtkthce3XOLjl64Ei7xnlLipLjlp1xenKe84jLxOPeSISe0suu4I3BzUxB1Kl3gSJFjDz7tTgtS7bAmSSTEGh7SXgXG86ShkD/cp1BYcQyvbZq0T8yp2IvwmMasn5AQHP9/4RMHo
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(376002)(396003)(136003)(39860400002)(346002)(451199015)(46966006)(40470700004)(36840700001)(41300700001)(83380400001)(40480700001)(81166007)(6666004)(36860700001)(8676002)(82740400003)(4326008)(36756003)(70206006)(70586007)(40460700003)(5660300002)(86362001)(44832011)(356005)(2906002)(426003)(8936002)(26005)(2616005)(186003)(478600001)(82310400005)(316002)(110136005)(336012)(54906003)(47076005)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2022 17:57:46.0014
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cfccd302-3e62-4d3c-e82a-08dab6b26c1a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT088.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6484
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221025075930.GB221610@thinkpad>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -103,175 +83,192 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The Xilinx DMA/Bridge Subsystem for PCIe (XDMA) provides up to 16 user
-interrupt wires to user logic that generate interrupts to the host.
-This patch adds APIs to enable/disable user logic interrupt for a given
-interrupt wire index.
+On Tue, Oct 25, 2022 at 01:29:30PM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Aug 22, 2022 at 09:53:08PM +0300, Serge Semin wrote:
+> > This is a final patchset in the series created in the framework of
+> > my Baikal-T1 PCIe/eDMA-related work:
+> > 
+> > [1: Done v5] PCI: dwc: Various fixes and cleanups
+> > Link: https://lore.kernel.org/linux-pci/20220624143428.8334-1-Sergey.Semin@baikalelectronics.ru/
+> > Merged: kernel 6.0-rc1
+> > [2: Done v4] PCI: dwc: Add hw version and dma-ranges support
+> > Link: https://lore.kernel.org/linux-pci/20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru
+> > Merged: kernel 6.0-rc1
+> > [3: In-review v5] PCI: dwc: Add generic resources and Baikal-T1 support
+> > Link: https://lore.kernel.org/linux-pci/20220822184701.25246-1-Sergey.Semin@baikalelectronics.ru/
+> > [4: Done v5] dmaengine: dw-edma: Add RP/EP local DMA support
+> > Link: ---you are looking at it---
+> > 
+> > Note it is very recommended to merge the patchsets in the same order as
+> > they are listed in the set above in order to have them applied smoothly.
+> > Nothing prevents them from being reviewed synchronously though.
+> > 
+> > Please note originally this series was self content, but due to Frank
+> > being a bit faster in his work submission I had to rebase my patchset onto
+> > his one. So now this patchset turns to be dependent on the Frank' work:
+> > 
+> > Link: https://lore.kernel.org/linux-pci/20220524152159.2370739-1-Frank.Li@nxp.com/
+> > 
+> > Here is a short summary regarding this patchset. The series starts with
+> > fixes patches. We discovered that the dw-edma-pcie.c driver incorrectly
+> > initializes the LL/DT base addresses for the platforms with not matching
+> > CPU and PCIe memory spaces. It is fixed by using the pci_bus_address()
+> > method to get a correct base address. After that you can find a series of
+> > the interleaved xfers fixes. It turned out the interleaved transfers
+> > implementation didn't work quite correctly from the very beginning for
+> > instance missing src/dst addresses initialization, etc. In the framework
+> > of the next two patches we suggest to add a new platform-specific
+> > callback - pci_address() and use it to convert the CPU address to the PCIe
+> > space address. It is at least required for the DW eDMA remote End-point
+> > setup on the platforms with not-matching CPU/PCIe address spaces. In case
+> > of the DW eDMA local RP/EP setup the conversion will be done automatically
+> > by the outbound iATU (if no DMA-bypass flag is specified for the
+> > corresponding iATU window). Then we introduce a set of the patches to make
+> > the DebugFS part of the code supporting the multi-eDMA controllers
+> > platforms. It starts with several cleanup patches and is closed joining
+> > the Read/Write channels into a single DMA-device as they originally should
+> > have been. After that you can find the patches with adding the non-atomic
+> > io-64 methods usage, dropping DT-region descriptors allocation, replacing
+> > chip IDs with the device name. In addition to that in order to have the
+> > eDMA embedded into the DW PCIe RP/EP supported we need to bypass the
+> > dma-ranges-based memory ranges mapping since in case of the root port DT
+> > node it's applicable for the peripheral PCIe devices only. Finally at the
+> > series closure we introduce a generic DW eDMA controller support being
+> > available in the DW PCIe Root Port/Endpoint driver.
+> > 
+> 
 
-Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
-Signed-off-by: Sonal Santan <sonal.santan@amd.com>
-Signed-off-by: Max Zhen <max.zhen@amd.com>
-Signed-off-by: Brian Xu <brian.xu@amd.com>
----
- MAINTAINERS                  |  1 +
- drivers/dma/xilinx/xdma.c    | 87 ++++++++++++++++++++++++++++++++++++
- include/linux/dma/amd_xdma.h | 16 +++++++
- 3 files changed, 104 insertions(+)
- create mode 100644 include/linux/dma/amd_xdma.h
+> Looks like this series still got stuck :( And most of the discussion is with
+> patch 22/24 and it is for the Baikal platform (at present) I believe. There is
+> also a discussion on 24/24, but that's not a big deal as 22/24.
+> 
+> Can we exclude the patch 22/24 (even 24/24 if required) and merge rest in the
+> meantime. The patch(es) can still be submitted separately and merged after
+> reaching consensus.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d598c4e23901..eaf6590dda19 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22583,6 +22583,7 @@ L:	dmaengine@vger.kernel.org
- S:	Supported
- F:	drivers/dma/xilinx/xdma-regs.h
- F:	drivers/dma/xilinx/xdma.c
-+F:	include/linux/dma/amd_xdma.h
- F:	include/linux/platform_data/amd_xdma.h
- 
- XILINX ZYNQMP DPDMA DRIVER
-diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
-index 85ba306c457e..c3b08b3f131a 100644
---- a/drivers/dma/xilinx/xdma.c
-+++ b/drivers/dma/xilinx/xdma.c
-@@ -25,6 +25,7 @@
- #include <linux/dmapool.h>
- #include <linux/regmap.h>
- #include <linux/dmaengine.h>
-+#include <linux/dma/amd_xdma.h>
- #include <linux/platform_device.h>
- #include <linux/platform_data/amd_xdma.h>
- #include <linux/dma-mapping.h>
-@@ -746,6 +747,7 @@ static int xdma_set_vector_reg(struct xdma_device *xdev, u32 vec_tbl_start,
- static int xdma_irq_init(struct xdma_device *xdev)
- {
- 	u32 irq = xdev->irq_start;
-+	u32 user_irq_start;
- 	int i, j, ret;
- 
- 	/* return failure if there are not enough IRQs */
-@@ -788,6 +790,18 @@ static int xdma_irq_init(struct xdma_device *xdev)
- 		goto failed_init_c2h;
- 	}
- 
-+	/* config user IRQ registers if needed */
-+	user_irq_start = XDMA_CHAN_NUM(xdev);
-+	if (xdev->irq_num > user_irq_start) {
-+		ret = xdma_set_vector_reg(xdev, XDMA_IRQ_USER_VEC_NUM,
-+					  user_irq_start,
-+					  xdev->irq_num - user_irq_start);
-+		if (ret) {
-+			xdma_err(xdev, "failed to set user vectors: %d", ret);
-+			goto failed_init_c2h;
-+		}
-+	}
-+
- 	/* enable interrupt */
- 	ret = xdma_enable_intr(xdev);
- 	if (ret) {
-@@ -815,6 +829,79 @@ static bool xdma_filter_fn(struct dma_chan *chan, void *param)
- 	return chan_info->dir == xdma_chan->dir;
- }
- 
-+/**
-+ * xdma_disable_user_irq - Disable user interrupt
-+ * @pdev: Pointer to the platform_device structure
-+ * @irq_num: System IRQ number
-+ */
-+void xdma_disable_user_irq(struct platform_device *pdev, u32 irq_num)
-+{
-+	struct xdma_device *xdev = platform_get_drvdata(pdev);
-+	u32 user_irq_index;
-+
-+	user_irq_index = irq_num - xdev->irq_start;
-+	if (user_irq_index < XDMA_CHAN_NUM(xdev) ||
-+	    user_irq_index >= xdev->irq_num) {
-+		xdma_err(xdev, "invalid user irq number");
-+		return;
-+	}
-+	user_irq_index -= XDMA_CHAN_NUM(xdev);
-+
-+	xdma_write_reg(xdev, XDMA_IRQ_BASE, XDMA_IRQ_USER_INT_EN_W1C,
-+		       (1 << user_irq_index));
-+}
-+EXPORT_SYMBOL(xdma_disable_user_irq);
-+
-+/**
-+ * xdma_enable_user_irq - Enable user logic interrupt
-+ * @pdev: Pointer to the platform_device structure
-+ * @irq_num: System IRQ number
-+ */
-+int xdma_enable_user_irq(struct platform_device *pdev, u32 irq_num)
-+{
-+	struct xdma_device *xdev = platform_get_drvdata(pdev);
-+	u32 user_irq_index;
-+	int ret;
-+
-+	user_irq_index = irq_num - xdev->irq_start;
-+	if (user_irq_index < XDMA_CHAN_NUM(xdev) ||
-+	    user_irq_index >= xdev->irq_num) {
-+		xdma_err(xdev, "invalid user irq number");
-+		return -EINVAL;
-+	}
-+	user_irq_index -= XDMA_CHAN_NUM(xdev);
-+
-+	ret = xdma_write_reg(xdev, XDMA_IRQ_BASE, XDMA_IRQ_USER_INT_EN_W1S,
-+			     (1 << user_irq_index));
-+	if (ret) {
-+		xdma_err(xdev, "set user irq mask failed, %d", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(xdma_enable_user_irq);
-+
-+/**
-+ * xdma_get_user_irq - Get system IRQ number
-+ * @pdev: Pointer to the platform_device structure
-+ * @user_irq_index: User logic IRQ wire index
-+ *
-+ * Return: The system IRQ number allocated for the given wire index.
-+ */
-+int xdma_get_user_irq(struct platform_device *pdev, u32 user_irq_index)
-+{
-+	struct xdma_device *xdev = platform_get_drvdata(pdev);
-+
-+	if (XDMA_CHAN_NUM(xdev) + user_irq_index >= xdev->irq_num) {
-+		xdma_err(xdev, "invalid user irq index");
-+		return -EINVAL;
-+	}
-+
-+	return xdev->irq_start + XDMA_CHAN_NUM(xdev) + user_irq_index;
-+}
-+EXPORT_SYMBOL(xdma_get_user_irq);
-+
- /**
-  * xdma_remove - Driver remove function
-  * @pdev: Pointer to the platform_device structure
-diff --git a/include/linux/dma/amd_xdma.h b/include/linux/dma/amd_xdma.h
-new file mode 100644
-index 000000000000..ceba69ed7cb4
---- /dev/null
-+++ b/include/linux/dma/amd_xdma.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (C) 2022, Advanced Micro Devices, Inc.
-+ */
-+
-+#ifndef _DMAENGINE_AMD_XDMA_H
-+#define _DMAENGINE_AMD_XDMA_H
-+
-+#include <linux/interrupt.h>
-+#include <linux/platform_device.h>
-+
-+int xdma_enable_user_irq(struct platform_device *pdev, u32 irq_num);
-+void xdma_disable_user_irq(struct platform_device *pdev, u32 irq_num);
-+int xdma_get_user_irq(struct platform_device *pdev, u32 user_irq_index);
-+
-+#endif /* _DMAENGINE_AMD_XDMA_H */
--- 
-2.27.0
+The discussion has come to some conclusion in the framework of another
+series:
+https://lore.kernel.org/linux-pci/20221007224515.sseyabdfa2phcsdz@mobilestation/
+It includes solutions for several problems raised by @Robin Murphy.
+Seeing no objection from @Robin received and the solutions were mainly
+suggested by @Robin himself I'll implement them in the next series
+re-spin. So to speak don't worry. The series isn't stuck. I'll
+resubmit it for review on this week.
 
+-Sergey
+
+> 
+> Thanks,
+> Mani
+> 
+> > Link: https://lore.kernel.org/linux-pci/20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru/
+> > Changelog v2:
+> > - Drop the patches:
+> >   [PATCH 1/25] dmaengine: dw-edma: Drop dma_slave_config.direction field usage
+> >   [PATCH 2/25] dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction semantics
+> >   since they are going to be merged in in the framework of the
+> >   Frank's patchset.
+> > - Add a new patch: "dmaengine: dw-edma: Release requested IRQs on
+> >   failure."
+> > - Drop __iomem qualifier from the struct dw_edma_debugfs_entry instance
+> >   definition in the dw_edma_debugfs_u32_get() method. (@Manivannan)
+> > - Add a new patch: "dmaengine: dw-edma: Rename DebugFS dentry variables to
+> >   'dent'." (@Manivannan)
+> > - Slightly extend the eDMA name array size. (@Manivannan)
+> > - Change the specific DMA mapping comment a bit to being
+> >   clearer. (@Manivannan)
+> > - Add a new patch: "PCI: dwc: Add generic iATU/eDMA CSRs space detection
+> >   method."
+> > - Don't fail eDMA detection procedure if the DW eDMA driver couldn't probe
+> >   device. That happens if the driver is disabled. (@Manivannan)
+> > - Add "dma" registers resource mapping procedure. (@Manivannan)
+> > - Move the eDMA CSRs space detection into the dw_pcie_map_detect() method.
+> > - Remove eDMA on the dw_pcie_ep_init() internal errors. (@Manivannan)
+> > - Remove eDMA in the dw_pcie_ep_exit() method.
+> > - Move the dw_pcie_edma_detect() method execution to the tail of the
+> >   dw_pcie_ep_init() function.
+> > 
+> > Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
+> > Changelog v3:
+> > - Conditionally set dchan->dev->device.dma_coherent field since it can
+> >   be missing on some platforms. (@Manivannan)
+> > - Drop the patch: "PCI: dwc: Add generic iATU/eDMA CSRs space detection
+> >   method". A similar modification has been done in another patchset.
+> > - Add more comprehensive and less regression prune eDMA block detection
+> >   procedure.
+> > - Drop the patch: "dma-direct: take dma-ranges/offsets into account in
+> >   resource mapping". It will be separately reviewed.
+> > - Remove Manivannan tb tag from the modified patches.
+> > - Rebase onto the kernel v5.18.
+> > 
+> > Link: https://lore.kernel.org/linux-pci/20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru
+> > Changelog v4:
+> > - Rabase onto the laters Frank Li series:
+> > Link: https://lore.kernel.org/all/20220524152159.2370739-1-Frank.Li@nxp.com/
+> > - Add Vinod' Ab-tag.
+> > - Rebase onto the kernel v5.19-rcX.
+> > 
+> > Link: https://lore.kernel.org/linux-pci/20220728142841.12305-1-Sergey.Semin@baikalelectronics.ru
+> > Changelog v5:
+> > - Just resend.
+> > - Rebase onto the kernel v6.0-rc2.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Acked-By: Vinod Koul <vkoul@kernel.org>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> > Cc: "Krzysztof Wilczyński" <kw@linux.com>
+> > Cc: linux-pci@vger.kernel.org
+> > Cc: dmaengine@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > 
+> > Serge Semin (24):
+> >   dmaengine: Fix dma_slave_config.dst_addr description
+> >   dmaengine: dw-edma: Release requested IRQs on failure
+> >   dmaengine: dw-edma: Convert ll/dt phys-address to PCIe bus/DMA address
+> >   dmaengine: dw-edma: Fix missing src/dst address of the interleaved
+> >     xfers
+> >   dmaengine: dw-edma: Don't permit non-inc interleaved xfers
+> >   dmaengine: dw-edma: Fix invalid interleaved xfers semantics
+> >   dmaengine: dw-edma: Add CPU to PCIe bus address translation
+> >   dmaengine: dw-edma: Add PCIe bus address getter to the remote EP
+> >     glue-driver
+> >   dmaengine: dw-edma: Drop chancnt initialization
+> >   dmaengine: dw-edma: Fix DebugFS reg entry type
+> >   dmaengine: dw-edma: Stop checking debugfs_create_*() return value
+> >   dmaengine: dw-edma: Add dw_edma prefix to the DebugFS nodes descriptor
+> >   dmaengine: dw-edma: Convert DebugFS descs to being kz-allocated
+> >   dmaengine: dw-edma: Rename DebugFS dentry variables to 'dent'
+> >   dmaengine: dw-edma: Simplify the DebugFS context CSRs init procedure
+> >   dmaengine: dw-edma: Move eDMA data pointer to DebugFS node descriptor
+> >   dmaengine: dw-edma: Join Write/Read channels into a single device
+> >   dmaengine: dw-edma: Use DMA-engine device DebugFS subdirectory
+> >   dmaengine: dw-edma: Use non-atomic io-64 methods
+> >   dmaengine: dw-edma: Drop DT-region allocation
+> >   dmaengine: dw-edma: Replace chip ID number with device name
+> >   dmaengine: dw-edma: Bypass dma-ranges mapping for the local setup
+> >   dmaengine: dw-edma: Skip cleanup procedure if no private data found
+> >   PCI: dwc: Add DW eDMA engine support
+> > 
+> >  drivers/dma/dw-edma/dw-edma-core.c            | 216 +++++-----
+> >  drivers/dma/dw-edma/dw-edma-core.h            |  10 +-
+> >  drivers/dma/dw-edma/dw-edma-pcie.c            |  24 +-
+> >  drivers/dma/dw-edma/dw-edma-v0-core.c         |  60 +--
+> >  drivers/dma/dw-edma/dw-edma-v0-core.h         |   1 -
+> >  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      | 372 ++++++++----------
+> >  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   5 -
+> >  .../pci/controller/dwc/pcie-designware-ep.c   |  12 +-
+> >  .../pci/controller/dwc/pcie-designware-host.c |  13 +-
+> >  drivers/pci/controller/dwc/pcie-designware.c  | 186 +++++++++
+> >  drivers/pci/controller/dwc/pcie-designware.h  |  20 +
+> >  include/linux/dma/edma.h                      |  18 +-
+> >  include/linux/dmaengine.h                     |   2 +-
+> >  13 files changed, 583 insertions(+), 356 deletions(-)
+> > 
+> > -- 
+> > 2.35.1
+> > 
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்

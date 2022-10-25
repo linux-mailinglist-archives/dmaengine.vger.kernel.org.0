@@ -2,53 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C85F60C76A
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Oct 2022 11:05:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A13FE60C771
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Oct 2022 11:06:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231758AbiJYJFw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 25 Oct 2022 05:05:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57568 "EHLO
+        id S229629AbiJYJGW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 25 Oct 2022 05:06:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230149AbiJYJFB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Oct 2022 05:05:01 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DA4C15A321;
-        Tue, 25 Oct 2022 02:03:59 -0700 (PDT)
+        with ESMTP id S232225AbiJYJFI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Oct 2022 05:05:08 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EB9515A8F6;
+        Tue, 25 Oct 2022 02:04:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1666688639; x=1698224639;
+  t=1666688644; x=1698224644;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=oXpZ9eKaq68nqmZW2GmzFIDev696mazQ2FYejaSR4Ss=;
-  b=UXFlh9jAuXSc5K34/Uun4cxOm1CKUOjO/5LJZ77Sao4A3PtRuMgT02C6
-   iNb3byDq3sxNr3g4YvFSC9oYX1vLglUBmunBpTZf5TNgZrQZeqz8ZtrKE
-   3JjkPsIvYpufkpDm1l1s9KTZYYOmekiH5rr+7rAxSYMKTPiamesn+iZ7p
-   73LVff/bsUSoMR08o0zC2gKVU1Vjo2JcOoDt4aJl1d3ZLnC8+7d61IWd2
-   XVnQJg2BZHkruFQnl4lauB9EfBF/CvjikaEHFWXBW56kQdLcwKqYLipn3
-   /pIXZTcPfl1xzdkfKLRXuOr3mz9In1kPGigXAafdL0Tavb/RtUCRexaOW
-   g==;
+  bh=kDm2uPx3R/Ls2XXpsY+sy6aD5vNdGltPVO6OtLCRB/w=;
+  b=YhkYd1nrGYmhA5Q4c4yMR4hoBVOATQ3u1NrT58y33Bo1JXEiht+hZvkN
+   4C2l9VtZM5B1PhSzFWjihN5lVW6xnBAq08RUDzRT1ltXJK91Jymjv7Jm9
+   O98YrmiSJVEhi2Rbh7joXQzAgfc5F1TKPBrAAmyQ6mk2YtE9wf0CVcHr9
+   Y+wgYsC+gxp8VMqhPXci/hBgIphM6/EjiDbsdA5jguzXXtiENSdCfux9O
+   ZY5wKjnXXgAukhXAfw6EDcjZzjhb+Ckn3A6dbIpA5Ug70RPcm1EyFDAN9
+   j1f3jlwXsEbdj1bdpRQzv448PiJlv5ig0X2pHqJYWC8JoS359ixKt+/8F
+   Q==;
 X-IronPort-AV: E=Sophos;i="5.95,211,1661842800"; 
-   d="scan'208";a="186273117"
+   d="scan'208";a="120221319"
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Oct 2022 02:03:58 -0700
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Oct 2022 02:04:04 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Tue, 25 Oct 2022 02:03:58 -0700
+ 15.1.2507.12; Tue, 25 Oct 2022 02:04:00 -0700
 Received: from ROB-ULT-M18064N.mchp-main.com (10.10.115.15) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.12 via Frontend Transport; Tue, 25 Oct 2022 02:03:55 -0700
+ 15.1.2507.12 via Frontend Transport; Tue, 25 Oct 2022 02:03:58 -0700
 From:   Tudor Ambarus <tudor.ambarus@microchip.com>
 To:     <vkoul@kernel.org>, <peda@axentia.se>, <du@axentia.se>
 CC:     <maciej.sosnowski@intel.com>, <nicolas.ferre@microchip.com>,
         <mripard@kernel.org>, <torfl6749@gmail.com>,
         <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        "Tudor Ambarus" <tudor.ambarus@microchip.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH v2 15/32] dmaengine: at_hdmac: Check return code of dma_async_device_register
-Date:   Tue, 25 Oct 2022 12:02:49 +0300
-Message-ID: <20221025090306.297886-16-tudor.ambarus@microchip.com>
+        "Tudor Ambarus" <tudor.ambarus@microchip.com>
+Subject: [PATCH v2 16/32] dmaengine: at_hdmac: Do not print messages on console while holding the lock
+Date:   Tue, 25 Oct 2022 12:02:50 +0300
+Message-ID: <20221025090306.297886-17-tudor.ambarus@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221025090306.297886-1-tudor.ambarus@microchip.com>
 References: <20221025090306.297886-1-tudor.ambarus@microchip.com>
@@ -57,49 +56,45 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-dma_async_device_register() can fail, check the return code and display an
-error.
+The descriptor was already removed from the transfer list, there's no
+reason to keep the channel lock while printing desc info, thus do the
+prints without holding the lock.
 
-Fixes: dc78baa2b90b ("dmaengine: at_hdmac: new driver for the Atmel AHB DMA Controller")
 Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Cc: stable@vger.kernel.org
 ---
- drivers/dma/at_hdmac.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/dma/at_hdmac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-index afcbad3e1718..858bd64f1313 100644
+index 858bd64f1313..f365ac4d87ff 100644
 --- a/drivers/dma/at_hdmac.c
 +++ b/drivers/dma/at_hdmac.c
-@@ -1928,7 +1928,11 @@ static int __init at_dma_probe(struct platform_device *pdev)
- 	  dma_has_cap(DMA_SLAVE, atdma->dma_common.cap_mask)  ? "slave " : "",
- 	  plat_dat->nr_channels);
+@@ -549,6 +549,8 @@ static void atc_handle_error(struct at_dma_chan *atchan)
+ 		atc_dostart(atchan, desc);
+ 	}
  
--	dma_async_device_register(&atdma->dma_common);
-+	err = dma_async_device_register(&atdma->dma_common);
-+	if (err) {
-+		dev_err(&pdev->dev, "Unable to register: %d.\n", err);
-+		goto err_dma_async_device_register;
-+	}
- 
++	spin_unlock_irqrestore(&atchan->lock, flags);
++
  	/*
- 	 * Do not return an error if the dmac node is not present in order to
-@@ -1948,6 +1952,7 @@ static int __init at_dma_probe(struct platform_device *pdev)
+ 	 * KERN_CRITICAL may seem harsh, but since this only happens
+ 	 * when someone submits a bad physical address in a
+@@ -564,8 +566,6 @@ static void atc_handle_error(struct at_dma_chan *atchan)
+ 	list_for_each_entry(child, &bad_desc->tx_list, desc_node)
+ 		atc_dump_lli(atchan, &child->lli);
  
- err_of_dma_controller_register:
- 	dma_async_device_unregister(&atdma->dma_common);
-+err_dma_async_device_register:
- 	dma_pool_destroy(atdma->memset_pool);
- err_memset_pool_create:
- 	dma_pool_destroy(atdma->dma_desc_pool);
+-	spin_unlock_irqrestore(&atchan->lock, flags);
+-
+ 	/* Pretend the descriptor completed successfully */
+ 	atc_chain_complete(atchan, bad_desc);
+ }
 -- 
 2.25.1
 

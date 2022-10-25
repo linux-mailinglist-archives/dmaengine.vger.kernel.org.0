@@ -2,25 +2,25 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9A8C60C594
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Oct 2022 09:42:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36F0560C5A5
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Oct 2022 09:43:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229904AbiJYHmn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 25 Oct 2022 03:42:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39306 "EHLO
+        id S231951AbiJYHnF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 25 Oct 2022 03:43:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231938AbiJYHmm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Oct 2022 03:42:42 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2058.outbound.protection.outlook.com [40.107.92.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3930C15A315;
-        Tue, 25 Oct 2022 00:42:40 -0700 (PDT)
+        with ESMTP id S231976AbiJYHmx (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Oct 2022 03:42:53 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2057.outbound.protection.outlook.com [40.107.244.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B74D15B332;
+        Tue, 25 Oct 2022 00:42:51 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZV4+2BsrmFbG42op52WZpz/ZG9NZyptW72vCZ5sviprpJJeqrnACse7PnHhh/SeEBoWEG8I9hwKxktBGqWXJGtOCcTGQ/92wYeWpttIZUMxpRlzem2+1r9+75C1MN5d/nMrkubWJbjk4D+a+T/fkl3SIYTumJUycDB2DJBikTUiNRsvAFtJlVSDndpkA5CY+FX85xoTHBqHV0kvr3rSCG34hEo9dhiVdPJKELQAY5yWoDTGdHg7olWDTwbUpgCU3f2V3a4VhlObLJGqxaaVypNAE4MYL5+IHny2toUmitQJGkrJwuRilkViG8K9cHPqeDYeR+Hr9pf6jFKbo8AG29w==
+ b=W5/fz0vlQKEXdk/CrK1o7t8syBKy5bhv+upcFiud2UcUELlaVkXRpHefr2Tez+QgGrodiBDRmoA9VEXxiO26dRAL+ud8/qlGu7RZ97Vyj38S2nXiNzDpdPfIIrZcXLOoC96sSbE7Q6VrAP1RLxD598JzVftAOkfj4ma4jxoHqcjEpQqjWyRwGXO0QGUJBj5uG8wtWLqA/IW4LCnPOEQlR8JM0nhiWSkgPUolvVjtmiQ1CSlPJVsutEC9DI3wxkJ3KI/SyGKjhlKveS3YryGUGCyQzbzxyO6uOXVyh45IWLKdEagi1VydTZ2PDI4BKXIO/TMiUwWpwHboKXiHOIYKBg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=T2TzToUFi1HhLvKI2SJAzs8KeV9WjY87+qwa8hL/lFE=;
- b=WHP08dVVnVSiZuHQao/UCtestcZwEU+i5YFLflANjp7syq3CZAjl4RfCFhbKqPfUMsu62ZPq8O4IKGu6ljY0WeOmrKuawMvUgg5jMyM2vtdF2n3Nagmc1jw8N5EXV9aNDDMKDpMOQigUjnzGPLsMBF/nQyOScKBx3uwpw8gj/BIPgC9jWuuzIxrTuOLGUGfnmcTSGPaaAaVcEJivb8/PCd5/gob686yzEhH9wgslyDnbL1pnH5qTT3kvkBoalBEt1hqE29/85y/vUxXhBAFWRIxLVmfkOC+d5ecqY7eRc365PPKOLGXKEJU4Kan7pEmXbTaQ9Lvk3F+7dw3FBu8w8A==
+ bh=Dgk2sAcNnGetUsiJ7ISneoDbz5GPlSbQSzif/2LXHNA=;
+ b=lkmzvVbTXIWDoui78VeNWlkoO1W/Gn9fY9TT1hCUSjmGtgEr2sf2F6e6lPUWdSYYy/yUzsND8DUVzqFVA2mVxj/gcVxR48T1H++wSGRdz7ElYj49jLe7Bn+G0aplEB3Svo9GXzjYmAQhTioz6HH4IPDswMBH8EcHjp1BPLnDdmOR49Xoc4l3nkoMciSx90jMIJu7NuVHh34niCGxpQTYKxJ7AZ5P2x97C3O9cA17+dYJRgoUKavEKeNoiYAZkvTXttP5CI76fJekHFe+rC8+t/pOMa0JJSY51jbzk4Jz7XWNjk8UkrCQvp5xt1PNmQULxgtBEJSpGHM1G2uKNGOS/g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.62.198) smtp.rcpttodomain=amd.com smtp.mailfrom=xilinx.com;
  dmarc=fail (p=quarantine sp=quarantine pct=100) action=quarantine
@@ -28,35 +28,35 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T2TzToUFi1HhLvKI2SJAzs8KeV9WjY87+qwa8hL/lFE=;
- b=AUYOtn4vtHBLEwwfgXz9ngbfHhoZS5QIaLcaYh9TV/ougUROp8ooXW1s4KSmOrYO0oXr8LKP7SOzOTydd73lxQyhneyKZkITfLbSsc0RJ4ADGQXEWE0VVNv+D/8s9DpYP+Dn4Y9YPd3suA3mcEunIqp9ZZaCElv7Ed56n+Np49Q=
-Received: from BN9PR03CA0921.namprd03.prod.outlook.com (2603:10b6:408:107::26)
- by CO6PR02MB7777.namprd02.prod.outlook.com (2603:10b6:303:a9::7) with
+ bh=Dgk2sAcNnGetUsiJ7ISneoDbz5GPlSbQSzif/2LXHNA=;
+ b=Ky6p6aa+gpRYsF2mYTRah5juCaAW8+vd+XXqchkTulsMuJwcrU1obI8yEBCkx+Eie7WKljczgQsNh97GfymJthLE7FevFQX8rPBjNhlYHtplH32HaEPVo2hz0FIzO1rwxqI5PgBJRCIO622qhGzZhjjoiUpCIbFD2D7m9nuumEw=
+Received: from DS7PR03CA0225.namprd03.prod.outlook.com (2603:10b6:5:3ba::20)
+ by DM8PR02MB7989.namprd02.prod.outlook.com (2603:10b6:8:12::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.23; Tue, 25 Oct
- 2022 07:42:38 +0000
-Received: from BN1NAM02FT048.eop-nam02.prod.protection.outlook.com
- (2603:10b6:408:107:cafe::e) by BN9PR03CA0921.outlook.office365.com
- (2603:10b6:408:107::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.27 via Frontend
- Transport; Tue, 25 Oct 2022 07:42:37 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.28; Tue, 25 Oct
+ 2022 07:42:50 +0000
+Received: from DM3NAM02FT026.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:5:3ba:cafe::61) by DS7PR03CA0225.outlook.office365.com
+ (2603:10b6:5:3ba::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.28 via Frontend
+ Transport; Tue, 25 Oct 2022 07:42:50 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
  smtp.mailfrom=xilinx.com; dkim=none (message not signed)
  header.d=none;dmarc=fail action=quarantine header.from=amd.com;
 Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.62.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com; pr=C
-Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
- BN1NAM02FT048.mail.protection.outlook.com (10.13.2.157) with Microsoft SMTP
+ client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com; pr=C
+Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
+ DM3NAM02FT026.mail.protection.outlook.com (10.13.5.129) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5746.16 via Frontend Transport; Tue, 25 Oct 2022 07:42:37 +0000
+ 15.20.5746.16 via Frontend Transport; Tue, 25 Oct 2022 07:42:50 +0000
 Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
- xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28; Tue, 25 Oct 2022 00:42:36 -0700
+ 15.1.2507.9; Tue, 25 Oct 2022 00:42:49 -0700
 Received: from smtp.xilinx.com (172.19.127.95) by
  xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2507.9 via Frontend Transport; Tue, 25 Oct 2022 00:42:36 -0700
+ 15.1.2507.9 via Frontend Transport; Tue, 25 Oct 2022 00:42:49 -0700
 Envelope-to: git@amd.com,
  radhey.shyam.pandey@amd.com,
  marex@denx.de,
@@ -64,20 +64,20 @@ Envelope-to: git@amd.com,
  lars@metafoo.de,
  dmaengine@vger.kernel.org,
  linux-kernel@vger.kernel.org
-Received: from [172.23.64.3] (port=50957 helo=xhdvnc103.xilinx.com)
+Received: from [172.23.64.3] (port=50965 helo=xhdvnc103.xilinx.com)
         by smtp.xilinx.com with esmtp (Exim 4.90)
         (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1onEa4-000Gu7-2u; Tue, 25 Oct 2022 00:42:36 -0700
+        id 1onEaH-000GuX-Bv; Tue, 25 Oct 2022 00:42:49 -0700
 Received: by xhdvnc103.xilinx.com (Postfix, from userid 13245)
-        id 39CC910550C; Tue, 25 Oct 2022 13:12:22 +0530 (IST)
+        id 3ED6010550F; Tue, 25 Oct 2022 13:12:22 +0530 (IST)
 From:   Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
 To:     <vkoul@kernel.org>
 CC:     <michal.simek@xilinx.com>, <lars@metafoo.de>, <marex@denx.de>,
         <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <git@amd.com>, Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-Subject: [PATCH 1/2] dmaengine: xilinx_dma: fix xilinx_dma_child_probe() return documentation
-Date:   Tue, 25 Oct 2022 13:12:16 +0530
-Message-ID: <1666683737-7668-2-git-send-email-radhey.shyam.pandey@amd.com>
+Subject: [PATCH 2/2] dmaengine: xilinx_dma : add xilinx_dma_device_config() return documentation
+Date:   Tue, 25 Oct 2022 13:12:17 +0530
+Message-ID: <1666683737-7668-3-git-send-email-radhey.shyam.pandey@amd.com>
 X-Mailer: git-send-email 2.1.1
 In-Reply-To: <1666683737-7668-1-git-send-email-radhey.shyam.pandey@amd.com>
 References: <1666683737-7668-1-git-send-email-radhey.shyam.pandey@amd.com>
@@ -85,23 +85,23 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1NAM02FT048:EE_|CO6PR02MB7777:EE_
-X-MS-Office365-Filtering-Correlation-Id: b7264247-fe8a-475a-99a4-08dab65c7ceb
+X-MS-TrafficTypeDiagnostic: DM3NAM02FT026:EE_|DM8PR02MB7989:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6f9d5550-46e0-4d81-13d8-08dab65c84a2
 X-MS-Exchange-SenderADCheck: 0
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: E02cq7gS62MsVhnWATaa3q4/aVc+7aeq84hJwIdqkCp5DGq1+iLuzhxa3xWUXOCq1jvl2bUb6XIss8STfeVhKtHlwwkSghwRbUGC0yBrMTLVZuZrGkX1lzgU9vL7wj2l1eT2q85tgDCUDaMeqIpfYD8wFpVJ5LIQ3gksp/sgNwVK9H1Ne5fbeT+IANwgFme1od1pF5szepX/DMJnykvtC5sAmSW1YX8JL7qqnCmxNq5G5Il6p3iXhGvW10OCpVJlqxH1b+Qg8BrYn/ide9Fe9E+IEXQLMoouBpy5MxbX7NgEnlYgrns2lVTMrdzgug/5I1pOwRitawHhck4VjtPoYsJwQVtXkdE7qpoi+HuQv9gSRLeQN16wmJuJj7SYcFo6vMfp3t71Xzk5B6PBFSdNSuN3lQ0GY1lCEueCxKNuUxqtSNhovzYXs9abxde/l4Mq5tav4mQM8AA2rw0WjqHDOqkzfmQArN44Zf+HTomKH6QlzRtdJTHOmu3kRNT3MLF+kbNMs7MeTkILpGk63qtcnkOxfOKFxY0nFaKdJLqBEl32VhowpmX6K+X87/8+MziX0eybL3dWeliTsNKzsbApRJZ85xI4BG66noOxs8zQKvauTzcPAuxEWaIwASU9GcnsijGZECs62TEHKW6ATTPhfLO44gKV4WbyIAKt5BasomLFDUdFdlo6e63fJah9P8tmdIAC5v/Pev91ey7TBot43+owzZL9nKL2uiN0pCmIOwkJwoFtY6Je0MtJj7pLS2mmapY+suu4EetkWfwQoi6db6D9zYr9Kk84sSigKB7ZnoY=
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230022)(4636009)(136003)(39860400002)(376002)(346002)(396003)(451199015)(40470700004)(46966006)(36840700001)(6266002)(41300700001)(26005)(8936002)(6916009)(8676002)(5660300002)(54906003)(36756003)(4326008)(70586007)(42186006)(6666004)(40480700001)(36860700001)(7636003)(82740400003)(316002)(83170400001)(82310400005)(336012)(42882007)(47076005)(186003)(2906002)(2616005)(4744005)(356005)(70206006)(40460700003)(83380400001)(508600001)(102446001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: gn45ScSEb9P2FLnt/T0aCdO9RCZ3Do4orNekVzTwR4ckYXSsWuVPsmAjGQcBKI/CvUVhigGAgcSPlv/nw+PKn2huVkG8nKwTJqYskq8n+ltuMItOqyQjjtck0NvnwH61oUrG+dmQxlMTtnZ6kYhbnKyny4EXW5EragvUiblkLq+BJ7I+tsoWvN8vzjS+oW+Kg/epF9rLL1itR+ONTaMNF4D2QhdzbktDeNQGd3+ogbqvQWzOmShY85ApxDWt6K/q2joKnaV8174GlnVBA2VnVtmpDvH7henUlNjcyFbtTDBiBqKhxrOHy2FboJqRvWE+bDG4SRJ7Iar4/0DUyvDIO/9gRQmIKslxXTSYD36bziSyO1ehNB++PRb3HovleBjSy8wV6uLash1NFaxim1AwXvPPosXcmUK84VnZqfH8V6+KfBll8lAoKgn/AQTeShF5fwG+2x0iIq44QG53UZBVwdo/83mZsC4Qa9rO1CESM6S3v3SnAytjdwYtmnlBPuEqPv33/OgeHWNQgkudEDw4RMlRmpvp4VphJm+E+2MSNtW4mxqCsyKXbwC+mO/fw3vqJoNCif7LRrLOXeZbFTD8lZ5IeKLcFIu9rHX8O2EjoARD3+pZZMTPwoRiKMX5JyjGMF7ewQwbWG63kBtHSGYpV+oCZREpR2hjawBotZRCFJy436ZrvMgT+/CNwxNJrJraw2ETx8Gprh7UDQ6pjtBq0RiLViwDYgg8EqhKAXazQrzp6m/NJfDiM1iu//Ql19IPHKPEqHsH/XIlsr9OjNJq+ArprLWz70caQH5UGEXCic8=
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230022)(4636009)(396003)(376002)(39860400002)(346002)(136003)(451199015)(36840700001)(40470700004)(46966006)(83380400001)(36860700001)(42882007)(186003)(336012)(6266002)(2616005)(26005)(82310400005)(2906002)(47076005)(82740400003)(5660300002)(6916009)(36756003)(41300700001)(83170400001)(6666004)(42186006)(54906003)(40460700003)(316002)(8936002)(70586007)(4326008)(70206006)(4744005)(508600001)(356005)(8676002)(7636003)(40480700001)(102446001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2022 07:42:37.3533
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2022 07:42:50.3713
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7264247-fe8a-475a-99a4-08dab65c7ceb
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f9d5550-46e0-4d81-13d8-08dab65c84a2
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN1NAM02FT048.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM3NAM02FT026.eop-nam02.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR02MB7777
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR02MB7989
 X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=no
@@ -112,28 +112,31 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Modify xilinx_dma_child_probe() return documentation to be inline
-with implementation i.e. can also return failure value on error.
+document xilinx_dma_device_config() return value. Fixes below
+kernel-doc warning.
 
-Fixes: f17e53388e82 ("dmaengine: xilinx: Handle IRQ mapping errors")
+xilinx_dma.c:1665: warning: No description found for return value
+of 'xilinx_dma_device_config'
+
+Fixes: 4153a7f6440f ("dmaengine: xilinx: Add empty device_config function")
 Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
 ---
- drivers/dma/xilinx/xilinx_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/xilinx/xilinx_dma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 8cd4e69dc7b4..3b8cfeccf2da 100644
+index 3b8cfeccf2da..a8d23cdf883e 100644
 --- a/drivers/dma/xilinx/xilinx_dma.c
 +++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -2924,7 +2924,7 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
-  * @xdev: Driver specific device structure
-  * @node: Device node
-  *
-- * Return: 0 always.
-+ * Return: '0' on success and failure value on error.
+@@ -1659,6 +1659,8 @@ static void xilinx_dma_issue_pending(struct dma_chan *dchan)
+  * xilinx_dma_device_config - Configure the DMA channel
+  * @dchan: DMA channel
+  * @config: channel configuration
++ *
++ * Return: 0 always.
   */
- static int xilinx_dma_child_probe(struct xilinx_dma_device *xdev,
- 				    struct device_node *node)
+ static int xilinx_dma_device_config(struct dma_chan *dchan,
+ 				    struct dma_slave_config *config)
 -- 
 2.25.1
 

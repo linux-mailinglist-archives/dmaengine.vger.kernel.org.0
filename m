@@ -2,109 +2,79 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36F0560C5A5
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Oct 2022 09:43:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7426F60C5F1
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Oct 2022 09:59:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231951AbiJYHnF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 25 Oct 2022 03:43:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39796 "EHLO
+        id S229455AbiJYH7m (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 25 Oct 2022 03:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231976AbiJYHmx (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Oct 2022 03:42:53 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2057.outbound.protection.outlook.com [40.107.244.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B74D15B332;
-        Tue, 25 Oct 2022 00:42:51 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W5/fz0vlQKEXdk/CrK1o7t8syBKy5bhv+upcFiud2UcUELlaVkXRpHefr2Tez+QgGrodiBDRmoA9VEXxiO26dRAL+ud8/qlGu7RZ97Vyj38S2nXiNzDpdPfIIrZcXLOoC96sSbE7Q6VrAP1RLxD598JzVftAOkfj4ma4jxoHqcjEpQqjWyRwGXO0QGUJBj5uG8wtWLqA/IW4LCnPOEQlR8JM0nhiWSkgPUolvVjtmiQ1CSlPJVsutEC9DI3wxkJ3KI/SyGKjhlKveS3YryGUGCyQzbzxyO6uOXVyh45IWLKdEagi1VydTZ2PDI4BKXIO/TMiUwWpwHboKXiHOIYKBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Dgk2sAcNnGetUsiJ7ISneoDbz5GPlSbQSzif/2LXHNA=;
- b=lkmzvVbTXIWDoui78VeNWlkoO1W/Gn9fY9TT1hCUSjmGtgEr2sf2F6e6lPUWdSYYy/yUzsND8DUVzqFVA2mVxj/gcVxR48T1H++wSGRdz7ElYj49jLe7Bn+G0aplEB3Svo9GXzjYmAQhTioz6HH4IPDswMBH8EcHjp1BPLnDdmOR49Xoc4l3nkoMciSx90jMIJu7NuVHh34niCGxpQTYKxJ7AZ5P2x97C3O9cA17+dYJRgoUKavEKeNoiYAZkvTXttP5CI76fJekHFe+rC8+t/pOMa0JJSY51jbzk4Jz7XWNjk8UkrCQvp5xt1PNmQULxgtBEJSpGHM1G2uKNGOS/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.62.198) smtp.rcpttodomain=amd.com smtp.mailfrom=xilinx.com;
- dmarc=fail (p=quarantine sp=quarantine pct=100) action=quarantine
- header.from=amd.com; dkim=none (message not signed); arc=none
+        with ESMTP id S231390AbiJYH7k (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Oct 2022 03:59:40 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E77325CE
+        for <dmaengine@vger.kernel.org>; Tue, 25 Oct 2022 00:59:37 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id s22-20020a17090a075600b002130d2ad62aso4380989pje.2
+        for <dmaengine@vger.kernel.org>; Tue, 25 Oct 2022 00:59:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dgk2sAcNnGetUsiJ7ISneoDbz5GPlSbQSzif/2LXHNA=;
- b=Ky6p6aa+gpRYsF2mYTRah5juCaAW8+vd+XXqchkTulsMuJwcrU1obI8yEBCkx+Eie7WKljczgQsNh97GfymJthLE7FevFQX8rPBjNhlYHtplH32HaEPVo2hz0FIzO1rwxqI5PgBJRCIO622qhGzZhjjoiUpCIbFD2D7m9nuumEw=
-Received: from DS7PR03CA0225.namprd03.prod.outlook.com (2603:10b6:5:3ba::20)
- by DM8PR02MB7989.namprd02.prod.outlook.com (2603:10b6:8:12::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.28; Tue, 25 Oct
- 2022 07:42:50 +0000
-Received: from DM3NAM02FT026.eop-nam02.prod.protection.outlook.com
- (2603:10b6:5:3ba:cafe::61) by DS7PR03CA0225.outlook.office365.com
- (2603:10b6:5:3ba::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.28 via Frontend
- Transport; Tue, 25 Oct 2022 07:42:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
- smtp.mailfrom=xilinx.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com; pr=C
-Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
- DM3NAM02FT026.mail.protection.outlook.com (10.13.5.129) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5746.16 via Frontend Transport; Tue, 25 Oct 2022 07:42:50 +0000
-Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.9; Tue, 25 Oct 2022 00:42:49 -0700
-Received: from smtp.xilinx.com (172.19.127.95) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2507.9 via Frontend Transport; Tue, 25 Oct 2022 00:42:49 -0700
-Envelope-to: git@amd.com,
- radhey.shyam.pandey@amd.com,
- marex@denx.de,
- vkoul@kernel.org,
- lars@metafoo.de,
- dmaengine@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Received: from [172.23.64.3] (port=50965 helo=xhdvnc103.xilinx.com)
-        by smtp.xilinx.com with esmtp (Exim 4.90)
-        (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1onEaH-000GuX-Bv; Tue, 25 Oct 2022 00:42:49 -0700
-Received: by xhdvnc103.xilinx.com (Postfix, from userid 13245)
-        id 3ED6010550F; Tue, 25 Oct 2022 13:12:22 +0530 (IST)
-From:   Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-To:     <vkoul@kernel.org>
-CC:     <michal.simek@xilinx.com>, <lars@metafoo.de>, <marex@denx.de>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <git@amd.com>, Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-Subject: [PATCH 2/2] dmaengine: xilinx_dma : add xilinx_dma_device_config() return documentation
-Date:   Tue, 25 Oct 2022 13:12:17 +0530
-Message-ID: <1666683737-7668-3-git-send-email-radhey.shyam.pandey@amd.com>
-X-Mailer: git-send-email 2.1.1
-In-Reply-To: <1666683737-7668-1-git-send-email-radhey.shyam.pandey@amd.com>
-References: <1666683737-7668-1-git-send-email-radhey.shyam.pandey@amd.com>
+        d=linaro.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cMUESaRlILiaSWwbpZuVWrzmIieCVjRDSyCQWGc52qc=;
+        b=K1WGVUEUAjRGEDecQJUkXGvrVKFuMpNXHZfEo+T64wtofDcgZTkKf9/zk+Nm42YjPH
+         uLWiltD2Yqlt0PrPaRsvVYOpGDPHPXFwVNCoZp+2kmVjYP1S7ZMAWcUDpDefvkw3vxCo
+         oCnyumVsRs1uk7TfTNzSzNLAsj9aglxXYSxnhCKvmVJhF3MzIu8Yg31gA3wBwU9RkP+c
+         ikJlzHrO0esHUkhCrd+6Dk5jO2bFni18OuIICnaTz12GrRIYLmR+XojT70M077V9NWjs
+         FlKg8QJQtsRGgE2cFhStmE4XEg9TF+z72JUBCLZmhltPXqZ+l5O/0lxleo1/dkZFhXDj
+         2gRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cMUESaRlILiaSWwbpZuVWrzmIieCVjRDSyCQWGc52qc=;
+        b=Ocz5uAxOxWGwEDntAMDFkTwfeaX46Fry8sZfpXF+4vvxVqHu61NCpuKEy0xItjXpdf
+         4KKiVdd6Qk6voAqSsy9oeDuWp9eB4l9TBppNxPEr7LMm+BhbmOFmhO0HEWMBe/Vifpwc
+         x69eryK5nJwe/XhXWv12BntTv6mDLLQkzJ+GWNg2sMvxou6mlMVAvHUi/OVEcZs9MdU+
+         NiNnAGGP2J9L222WE3pYq1zEWHgs9oCenD+imQfbC47IyABzMqsZxOyLoj0s0RIrPUjm
+         Z8/y3dLGzQ1yHgO5UfRfrpXPMgrwRVJsVz2wbyYrWSnkQBGU6T9Wym2DoJn456pJWJZO
+         AAFA==
+X-Gm-Message-State: ACrzQf0Vr6wf4IxpvCnALiJrcBKiP2pRTQuNttVnfgyTkZ71dkvyT8Hl
+        jueefHXzfLHvu5UUMXIIVPOS
+X-Google-Smtp-Source: AMsMyM4MfcpJpHJgKg4DNjFnqy2evZXRi10iSPyt9sQmowEhgrwDYbpGxSaO0VypGb/OUGNyDRB1/A==
+X-Received: by 2002:a17:90b:380b:b0:20d:7364:796f with SMTP id mq11-20020a17090b380b00b0020d7364796fmr41812019pjb.13.1666684777244;
+        Tue, 25 Oct 2022 00:59:37 -0700 (PDT)
+Received: from thinkpad ([117.193.211.146])
+        by smtp.gmail.com with ESMTPSA id x23-20020aa78f17000000b0056baca45977sm908046pfr.21.2022.10.25.00.59.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Oct 2022 00:59:36 -0700 (PDT)
+Date:   Tue, 25 Oct 2022 13:29:30 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v5 00/24] dmaengine: dw-edma: Add RP/EP local DMA
+ controllers support
+Message-ID: <20221025075930.GB221610@thinkpad>
+References: <20220822185332.26149-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM3NAM02FT026:EE_|DM8PR02MB7989:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6f9d5550-46e0-4d81-13d8-08dab65c84a2
-X-MS-Exchange-SenderADCheck: 0
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gn45ScSEb9P2FLnt/T0aCdO9RCZ3Do4orNekVzTwR4ckYXSsWuVPsmAjGQcBKI/CvUVhigGAgcSPlv/nw+PKn2huVkG8nKwTJqYskq8n+ltuMItOqyQjjtck0NvnwH61oUrG+dmQxlMTtnZ6kYhbnKyny4EXW5EragvUiblkLq+BJ7I+tsoWvN8vzjS+oW+Kg/epF9rLL1itR+ONTaMNF4D2QhdzbktDeNQGd3+ogbqvQWzOmShY85ApxDWt6K/q2joKnaV8174GlnVBA2VnVtmpDvH7henUlNjcyFbtTDBiBqKhxrOHy2FboJqRvWE+bDG4SRJ7Iar4/0DUyvDIO/9gRQmIKslxXTSYD36bziSyO1ehNB++PRb3HovleBjSy8wV6uLash1NFaxim1AwXvPPosXcmUK84VnZqfH8V6+KfBll8lAoKgn/AQTeShF5fwG+2x0iIq44QG53UZBVwdo/83mZsC4Qa9rO1CESM6S3v3SnAytjdwYtmnlBPuEqPv33/OgeHWNQgkudEDw4RMlRmpvp4VphJm+E+2MSNtW4mxqCsyKXbwC+mO/fw3vqJoNCif7LRrLOXeZbFTD8lZ5IeKLcFIu9rHX8O2EjoARD3+pZZMTPwoRiKMX5JyjGMF7ewQwbWG63kBtHSGYpV+oCZREpR2hjawBotZRCFJy436ZrvMgT+/CNwxNJrJraw2ETx8Gprh7UDQ6pjtBq0RiLViwDYgg8EqhKAXazQrzp6m/NJfDiM1iu//Ql19IPHKPEqHsH/XIlsr9OjNJq+ArprLWz70caQH5UGEXCic8=
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230022)(4636009)(396003)(376002)(39860400002)(346002)(136003)(451199015)(36840700001)(40470700004)(46966006)(83380400001)(36860700001)(42882007)(186003)(336012)(6266002)(2616005)(26005)(82310400005)(2906002)(47076005)(82740400003)(5660300002)(6916009)(36756003)(41300700001)(83170400001)(6666004)(42186006)(54906003)(40460700003)(316002)(8936002)(70586007)(4326008)(70206006)(4744005)(508600001)(356005)(8676002)(7636003)(40480700001)(102446001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2022 07:42:50.3713
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f9d5550-46e0-4d81-13d8-08dab65c84a2
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM3NAM02FT026.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR02MB7989
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=no
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220822185332.26149-1-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -112,31 +82,178 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-document xilinx_dma_device_config() return value. Fixes below
-kernel-doc warning.
+On Mon, Aug 22, 2022 at 09:53:08PM +0300, Serge Semin wrote:
+> This is a final patchset in the series created in the framework of
+> my Baikal-T1 PCIe/eDMA-related work:
+> 
+> [1: Done v5] PCI: dwc: Various fixes and cleanups
+> Link: https://lore.kernel.org/linux-pci/20220624143428.8334-1-Sergey.Semin@baikalelectronics.ru/
+> Merged: kernel 6.0-rc1
+> [2: Done v4] PCI: dwc: Add hw version and dma-ranges support
+> Link: https://lore.kernel.org/linux-pci/20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru
+> Merged: kernel 6.0-rc1
+> [3: In-review v5] PCI: dwc: Add generic resources and Baikal-T1 support
+> Link: https://lore.kernel.org/linux-pci/20220822184701.25246-1-Sergey.Semin@baikalelectronics.ru/
+> [4: Done v5] dmaengine: dw-edma: Add RP/EP local DMA support
+> Link: ---you are looking at it---
+> 
+> Note it is very recommended to merge the patchsets in the same order as
+> they are listed in the set above in order to have them applied smoothly.
+> Nothing prevents them from being reviewed synchronously though.
+> 
+> Please note originally this series was self content, but due to Frank
+> being a bit faster in his work submission I had to rebase my patchset onto
+> his one. So now this patchset turns to be dependent on the Frank' work:
+> 
+> Link: https://lore.kernel.org/linux-pci/20220524152159.2370739-1-Frank.Li@nxp.com/
+> 
+> Here is a short summary regarding this patchset. The series starts with
+> fixes patches. We discovered that the dw-edma-pcie.c driver incorrectly
+> initializes the LL/DT base addresses for the platforms with not matching
+> CPU and PCIe memory spaces. It is fixed by using the pci_bus_address()
+> method to get a correct base address. After that you can find a series of
+> the interleaved xfers fixes. It turned out the interleaved transfers
+> implementation didn't work quite correctly from the very beginning for
+> instance missing src/dst addresses initialization, etc. In the framework
+> of the next two patches we suggest to add a new platform-specific
+> callback - pci_address() and use it to convert the CPU address to the PCIe
+> space address. It is at least required for the DW eDMA remote End-point
+> setup on the platforms with not-matching CPU/PCIe address spaces. In case
+> of the DW eDMA local RP/EP setup the conversion will be done automatically
+> by the outbound iATU (if no DMA-bypass flag is specified for the
+> corresponding iATU window). Then we introduce a set of the patches to make
+> the DebugFS part of the code supporting the multi-eDMA controllers
+> platforms. It starts with several cleanup patches and is closed joining
+> the Read/Write channels into a single DMA-device as they originally should
+> have been. After that you can find the patches with adding the non-atomic
+> io-64 methods usage, dropping DT-region descriptors allocation, replacing
+> chip IDs with the device name. In addition to that in order to have the
+> eDMA embedded into the DW PCIe RP/EP supported we need to bypass the
+> dma-ranges-based memory ranges mapping since in case of the root port DT
+> node it's applicable for the peripheral PCIe devices only. Finally at the
+> series closure we introduce a generic DW eDMA controller support being
+> available in the DW PCIe Root Port/Endpoint driver.
+> 
 
-xilinx_dma.c:1665: warning: No description found for return value
-of 'xilinx_dma_device_config'
+Looks like this series still got stuck :( And most of the discussion is with
+patch 22/24 and it is for the Baikal platform (at present) I believe. There is
+also a discussion on 24/24, but that's not a big deal as 22/24.
 
-Fixes: 4153a7f6440f ("dmaengine: xilinx: Add empty device_config function")
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
----
- drivers/dma/xilinx/xilinx_dma.c | 2 ++
- 1 file changed, 2 insertions(+)
+Can we exclude the patch 22/24 (even 24/24 if required) and merge rest in the
+meantime. The patch(es) can still be submitted separately and merged after
+reaching consensus.
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 3b8cfeccf2da..a8d23cdf883e 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -1659,6 +1659,8 @@ static void xilinx_dma_issue_pending(struct dma_chan *dchan)
-  * xilinx_dma_device_config - Configure the DMA channel
-  * @dchan: DMA channel
-  * @config: channel configuration
-+ *
-+ * Return: 0 always.
-  */
- static int xilinx_dma_device_config(struct dma_chan *dchan,
- 				    struct dma_slave_config *config)
+Thanks,
+Mani
+
+> Link: https://lore.kernel.org/linux-pci/20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v2:
+> - Drop the patches:
+>   [PATCH 1/25] dmaengine: dw-edma: Drop dma_slave_config.direction field usage
+>   [PATCH 2/25] dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction semantics
+>   since they are going to be merged in in the framework of the
+>   Frank's patchset.
+> - Add a new patch: "dmaengine: dw-edma: Release requested IRQs on
+>   failure."
+> - Drop __iomem qualifier from the struct dw_edma_debugfs_entry instance
+>   definition in the dw_edma_debugfs_u32_get() method. (@Manivannan)
+> - Add a new patch: "dmaengine: dw-edma: Rename DebugFS dentry variables to
+>   'dent'." (@Manivannan)
+> - Slightly extend the eDMA name array size. (@Manivannan)
+> - Change the specific DMA mapping comment a bit to being
+>   clearer. (@Manivannan)
+> - Add a new patch: "PCI: dwc: Add generic iATU/eDMA CSRs space detection
+>   method."
+> - Don't fail eDMA detection procedure if the DW eDMA driver couldn't probe
+>   device. That happens if the driver is disabled. (@Manivannan)
+> - Add "dma" registers resource mapping procedure. (@Manivannan)
+> - Move the eDMA CSRs space detection into the dw_pcie_map_detect() method.
+> - Remove eDMA on the dw_pcie_ep_init() internal errors. (@Manivannan)
+> - Remove eDMA in the dw_pcie_ep_exit() method.
+> - Move the dw_pcie_edma_detect() method execution to the tail of the
+>   dw_pcie_ep_init() function.
+> 
+> Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v3:
+> - Conditionally set dchan->dev->device.dma_coherent field since it can
+>   be missing on some platforms. (@Manivannan)
+> - Drop the patch: "PCI: dwc: Add generic iATU/eDMA CSRs space detection
+>   method". A similar modification has been done in another patchset.
+> - Add more comprehensive and less regression prune eDMA block detection
+>   procedure.
+> - Drop the patch: "dma-direct: take dma-ranges/offsets into account in
+>   resource mapping". It will be separately reviewed.
+> - Remove Manivannan tb tag from the modified patches.
+> - Rebase onto the kernel v5.18.
+> 
+> Link: https://lore.kernel.org/linux-pci/20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru
+> Changelog v4:
+> - Rabase onto the laters Frank Li series:
+> Link: https://lore.kernel.org/all/20220524152159.2370739-1-Frank.Li@nxp.com/
+> - Add Vinod' Ab-tag.
+> - Rebase onto the kernel v5.19-rcX.
+> 
+> Link: https://lore.kernel.org/linux-pci/20220728142841.12305-1-Sergey.Semin@baikalelectronics.ru
+> Changelog v5:
+> - Just resend.
+> - Rebase onto the kernel v6.0-rc2.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Acked-By: Vinod Koul <vkoul@kernel.org>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> Cc: "Krzysztof Wilczyński" <kw@linux.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: dmaengine@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Serge Semin (24):
+>   dmaengine: Fix dma_slave_config.dst_addr description
+>   dmaengine: dw-edma: Release requested IRQs on failure
+>   dmaengine: dw-edma: Convert ll/dt phys-address to PCIe bus/DMA address
+>   dmaengine: dw-edma: Fix missing src/dst address of the interleaved
+>     xfers
+>   dmaengine: dw-edma: Don't permit non-inc interleaved xfers
+>   dmaengine: dw-edma: Fix invalid interleaved xfers semantics
+>   dmaengine: dw-edma: Add CPU to PCIe bus address translation
+>   dmaengine: dw-edma: Add PCIe bus address getter to the remote EP
+>     glue-driver
+>   dmaengine: dw-edma: Drop chancnt initialization
+>   dmaengine: dw-edma: Fix DebugFS reg entry type
+>   dmaengine: dw-edma: Stop checking debugfs_create_*() return value
+>   dmaengine: dw-edma: Add dw_edma prefix to the DebugFS nodes descriptor
+>   dmaengine: dw-edma: Convert DebugFS descs to being kz-allocated
+>   dmaengine: dw-edma: Rename DebugFS dentry variables to 'dent'
+>   dmaengine: dw-edma: Simplify the DebugFS context CSRs init procedure
+>   dmaengine: dw-edma: Move eDMA data pointer to DebugFS node descriptor
+>   dmaengine: dw-edma: Join Write/Read channels into a single device
+>   dmaengine: dw-edma: Use DMA-engine device DebugFS subdirectory
+>   dmaengine: dw-edma: Use non-atomic io-64 methods
+>   dmaengine: dw-edma: Drop DT-region allocation
+>   dmaengine: dw-edma: Replace chip ID number with device name
+>   dmaengine: dw-edma: Bypass dma-ranges mapping for the local setup
+>   dmaengine: dw-edma: Skip cleanup procedure if no private data found
+>   PCI: dwc: Add DW eDMA engine support
+> 
+>  drivers/dma/dw-edma/dw-edma-core.c            | 216 +++++-----
+>  drivers/dma/dw-edma/dw-edma-core.h            |  10 +-
+>  drivers/dma/dw-edma/dw-edma-pcie.c            |  24 +-
+>  drivers/dma/dw-edma/dw-edma-v0-core.c         |  60 +--
+>  drivers/dma/dw-edma/dw-edma-v0-core.h         |   1 -
+>  drivers/dma/dw-edma/dw-edma-v0-debugfs.c      | 372 ++++++++----------
+>  drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   5 -
+>  .../pci/controller/dwc/pcie-designware-ep.c   |  12 +-
+>  .../pci/controller/dwc/pcie-designware-host.c |  13 +-
+>  drivers/pci/controller/dwc/pcie-designware.c  | 186 +++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h  |  20 +
+>  include/linux/dma/edma.h                      |  18 +-
+>  include/linux/dmaengine.h                     |   2 +-
+>  13 files changed, 583 insertions(+), 356 deletions(-)
+> 
+> -- 
+> 2.35.1
+> 
+
 -- 
-2.25.1
-
+மணிவண்ணன் சதாசிவம்

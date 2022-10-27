@@ -2,223 +2,191 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BBE160EF73
-	for <lists+dmaengine@lfdr.de>; Thu, 27 Oct 2022 07:20:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 102DF60F3AC
+	for <lists+dmaengine@lfdr.de>; Thu, 27 Oct 2022 11:28:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229473AbiJ0FUy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 27 Oct 2022 01:20:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52028 "EHLO
+        id S234389AbiJ0J2p (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 27 Oct 2022 05:28:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233815AbiJ0FUv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Oct 2022 01:20:51 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F8CA153E09;
-        Wed, 26 Oct 2022 22:20:50 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id e4so448611pfl.2;
-        Wed, 26 Oct 2022 22:20:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=356wsUtfDj9Of8EBeD21kcVauGg1lCBRFlRX+/DNRBM=;
-        b=ahouZy8C+S7spZ0vVK6XNt6vbx+n3vPFmNXZfu+SJ/8ckoT29WDQy2cb/1fc4VipLC
-         tSSOTjUsTWLkodKJb4Z2qd7v8Ps8cZGMGmxoAUJ72Gpzv7VF6vmgFzpMTVArkiLLRQc6
-         El2Slf8ioPqohUhwPVnpheZTTST1rcHcyrgWz/xyeucSQM8NJUK71lCn9EkiqheYWOoO
-         1QH9RQ06/D+I6Mx0AQVb9HOXBzcj5caq2eY5BdF1baPkFPqfkI9Ui865U3OvTm0Y3zRq
-         kni9cPbi404/a5w2cjJC0yK5HApEnH0OxwpQ3U2lfE8vPCYrggJ0mti+N2IbP6o9vLq4
-         B5vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=356wsUtfDj9Of8EBeD21kcVauGg1lCBRFlRX+/DNRBM=;
-        b=OYEnAuh/UJgQJF6qcu3mra0PVLQF6N9YbTfhNujIy6w1qJIlHwRp0UETjh3uuMXBBC
-         ADtDsdB61SKk4TiG8OMHhpqFkah93jzc8neXCY9LAV1sEGfETX3hqu5AbkMfmHC3BiTa
-         +FhuqrT2aAxoFnV+MsWaCMy78cDhF4U6Y1aElBsnWnwnI31fM2br2ga2Hb8QjYWQ4qzZ
-         KUci51iGyIM8Pzh6O3cA2a0R/LA/tVRatSiRTentwr7r+aTibBfRINHVPM0tlJfOHMt2
-         xJiG6VZLCJyOH0zNCaWENGIfhwM94sz35pKKk8BLSwn4xKj2m6239r0s30bv3RMH2D4p
-         JozQ==
-X-Gm-Message-State: ACrzQf0uoCDOD+41EMbQfWoyKo+9TwtQI+Qz6NNhv3HazVb38LzxBGYn
-        OUuyN4SruOIks6vDTl4wm3Q=
-X-Google-Smtp-Source: AMsMyM47Lz9/iaBrP9YC1HpfaUARkHVrv8BEscxyCyP9xxb5YsX4tfSNmlV3cvOnn6qUxiu1288o5A==
-X-Received: by 2002:aa7:9292:0:b0:56b:c4d3:a723 with SMTP id j18-20020aa79292000000b0056bc4d3a723mr20246911pfa.57.1666848049752;
-        Wed, 26 Oct 2022 22:20:49 -0700 (PDT)
-Received: from skynet-linux.local ([2406:7400:61:dcaa:bb0:9908:b137:b0b4])
-        by smtp.googlemail.com with ESMTPSA id u9-20020a17090341c900b00186afd756edsm218874ple.283.2022.10.26.22.20.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Oct 2022 22:20:49 -0700 (PDT)
-From:   Sireesh Kodali <sireeshkodali1@gmail.com>
-To:     andersson@kernel.org, agross@kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, linux-kernel@vger.kernel.org
-Cc:     dmaengine@vger.kernel.org,
-        Vladimir Lypak <vladimir.lypak@gmail.com>,
-        Sireesh Kodali <sireeshkodali1@gmail.com>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT)
-Subject: [PATCH v2 1/1] dmaengine: qcom: bam_dma: Add support for metadata
-Date:   Thu, 27 Oct 2022 10:50:07 +0530
-Message-Id: <20221027052007.47403-2-sireeshkodali1@gmail.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221027052007.47403-1-sireeshkodali1@gmail.com>
-References: <20221027052007.47403-1-sireeshkodali1@gmail.com>
+        with ESMTP id S229379AbiJ0J2n (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Oct 2022 05:28:43 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50187645EC;
+        Thu, 27 Oct 2022 02:28:40 -0700 (PDT)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 1DEDF66028C6;
+        Thu, 27 Oct 2022 10:28:37 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1666862918;
+        bh=nkLiBVCq8vH0MrkVPppLESgMJQN4ENcJIlUdfoTlX3k=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=JsMoHSUWjscrjyRcFEI09Vb+4I/iVUwYCNIqSiZu+oYKGyjoBrY7wvwzODTgQvqZS
+         BlkdJnP40hCu6Tt/QcsgC3cMajtRroAE92NvvfSyOQKCCTktYbir0tpMvb4enWVfRb
+         mK1/rhmf6Y34WoMMwqO0JZylDWfZmjec7cO8hgEmc/WEWjL3eodJ59VV7itMzn6CXV
+         XNEsXqiTQGsbzlA175jU0rxY7ImPIEP2BmyzuqEpwkr5xRQ341ftPUKbp3gCdCJLsI
+         1lAsHrnRiJyFajpjqFSQRwFgu0KT9fpQBrT1CVjUgm8aweV39YBZUUeeogZR5Azr1s
+         9h+2YP9BaiCZQ==
+Message-ID: <17139e24-d33c-8240-cd4a-d87fb3b29276@collabora.com>
+Date:   Thu, 27 Oct 2022 11:28:34 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH 7/7] arm64: dts: mediatek: Add support for MT6795 Sony
+ Xperia M5 smartphone
+Content-Language: en-US
+To:     Konrad Dybcio <konrad.dybcio@somainline.org>, robh+dt@kernel.org
+Cc:     krzysztof.kozlowski+dt@linaro.org, vkoul@kernel.org,
+        chaotian.jing@mediatek.com, ulf.hansson@linaro.org,
+        matthias.bgg@gmail.com, hsinyi@chromium.org,
+        nfraprado@collabora.com, allen-kh.cheng@mediatek.com,
+        fparent@baylibre.com, sam.shih@mediatek.com,
+        sean.wang@mediatek.com, long.cheng@mediatek.com,
+        wenbin.mei@mediatek.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, phone-devel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht
+References: <20220729104441.39177-1-angelogioacchino.delregno@collabora.com>
+ <20220729104441.39177-8-angelogioacchino.delregno@collabora.com>
+ <a8fa9e22-8c3f-60b2-a0db-01cfd5c37765@somainline.org>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <a8fa9e22-8c3f-60b2-a0db-01cfd5c37765@somainline.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Vladimir Lypak <vladimir.lypak@gmail.com>
+Il 29/07/22 14:00, Konrad Dybcio ha scritto:
+> 
+> 
+> On 29.07.2022 12:44, AngeloGioacchino Del Regno wrote:
+>> Add a basic support for the Sony Xperia M5 (codename "Holly")
+>> smartphone, powered by a MediaTek Helio X10 SoC.
+>>
+>> This achieves a console boot.
+>>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-Add client metadata support for receiving information about transfers.
-Only type of metadata implemented is amount of transferred bytes. This
-can be used to know how much data is actually received if information
-transferred doesn't contain header with size or is aggregated.
+Hello Konrad,
+First of all, I'm sorry for the very late reply.
 
-Signed-off-by: Vladimir Lypak <vladimir.lypak@gmail.com>
-Signed-off-by: Sireesh Kodali <sireeshkodali1@gmail.com>
----
- drivers/dma/qcom/bam_dma.c       | 57 ++++++++++++++++++++++++++++++++
- include/linux/dma/qcom_bam_dma.h |  8 +++++
- 2 files changed, 65 insertions(+)
+>> ---
+>>   arch/arm64/boot/dts/mediatek/Makefile         |  1 +
+>>   .../dts/mediatek/mt6795-sony-xperia-m5.dts    | 90 +++++++++++++++++++
+>>   2 files changed, 91 insertions(+)
+>>   create mode 100644 arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dts
+>>
+>> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+>> index af362a085a02..72fd683c9264 100644
+>> --- a/arch/arm64/boot/dts/mediatek/Makefile
+>> +++ b/arch/arm64/boot/dts/mediatek/Makefile
+>> @@ -3,6 +3,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt6779-evb.dtb
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
+>> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-sony-xperia-m5.dtb
+> -holly.dtb?
+> 
 
-diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index 3135a3e4a167..264a9a2e199f 100644
---- a/drivers/dma/qcom/bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -30,6 +30,7 @@
- #include <linux/module.h>
- #include <linux/interrupt.h>
- #include <linux/dma-mapping.h>
-+#include <linux/dma/qcom_bam_dma.h>
- #include <linux/scatterlist.h>
- #include <linux/device.h>
- #include <linux/platform_device.h>
-@@ -70,6 +71,7 @@ struct bam_async_desc {
- 	u16 flags;
- 
- 	struct bam_desc_hw *curr_desc;
-+	struct bam_dma_metadata *metadata;
- 
- 	/* list node for the desc in the bam_chan list of descriptors */
- 	struct list_head desc_node;
-@@ -418,6 +420,52 @@ static inline void __iomem *bam_addr(struct bam_device *bdev, u32 pipe,
- 		r.ee_mult * bdev->ee;
- }
- 
-+/**
-+ * bam_update_metadata - update metadata buffer
-+ * @bchan: BAM channel to read metadata from
-+ * @async_desc: BAM async descriptior
-+ *
-+ * Updates metadata buffer (transfer size) based on values
-+ * read from FIFO descriptors at bchan->head
-+ */
-+
-+static inline void bam_update_metadata(struct bam_chan *bchan,
-+				       struct bam_async_desc *async_desc)
-+{
-+	unsigned int i, e, len = 0;
-+	struct bam_desc_hw *fifo;
-+
-+	if (!async_desc->metadata)
-+		return;
-+
-+	fifo = PTR_ALIGN(bchan->fifo_virt, sizeof(struct bam_desc_hw));
-+	for (i = bchan->head, e = i + async_desc->xfer_len; i < e; i++)
-+		len += fifo[i % MAX_DESCRIPTORS].size;
-+
-+	async_desc->metadata->xfer_len_bytes += len;
-+}
-+
-+/**
-+ * bam_attach_metadata - attach metadata buffer to the async descriptor
-+ * @desc: async descriptor
-+ * @data: buffer pointer
-+ * @len: length of passed buffer
-+ */
-+static int bam_attach_metadata(struct dma_async_tx_descriptor *desc, void *data,
-+			       size_t len)
-+{
-+	struct bam_async_desc *async_desc;
-+
-+	if (!data || len != sizeof(struct bam_dma_metadata))
-+		return -EINVAL;
-+
-+	async_desc = container_of(desc, struct bam_async_desc, vd.tx);
-+	async_desc->metadata = data;
-+	async_desc->metadata->xfer_len_bytes = 0;
-+
-+	return 0;
-+}
-+
- /**
-  * bam_reset() - reset and initialize BAM registers
-  * @bdev: bam device
-@@ -456,6 +504,10 @@ static void bam_reset(struct bam_device *bdev)
- 	writel_relaxed(BAM_IRQ_MSK, bam_addr(bdev, 0, BAM_IRQ_SRCS_MSK_EE));
- }
- 
-+static struct dma_descriptor_metadata_ops metadata_ops = {
-+	.attach = bam_attach_metadata,
-+};
-+
- /**
-  * bam_reset_channel - Reset individual BAM DMA channel
-  * @bchan: bam channel
-@@ -714,6 +766,8 @@ static struct dma_async_tx_descriptor *bam_prep_slave_sg(struct dma_chan *chan,
- 		} while (remainder > 0);
- 	}
- 
-+	async_desc->vd.tx.metadata_ops = &metadata_ops;
-+
- 	return vchan_tx_prep(&bchan->vc, &async_desc->vd, flags);
- }
- 
-@@ -867,6 +921,8 @@ static u32 process_channel_irqs(struct bam_device *bdev)
- 			if (avail < async_desc->xfer_len)
- 				break;
- 
-+			bam_update_metadata(bchan, async_desc);
-+
- 			/* manage FIFO */
- 			bchan->head += async_desc->xfer_len;
- 			bchan->head %= MAX_DESCRIPTORS;
-@@ -1347,6 +1403,7 @@ static int bam_dma_probe(struct platform_device *pdev)
- 	bdev->common.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
- 	bdev->common.src_addr_widths = DMA_SLAVE_BUSWIDTH_4_BYTES;
- 	bdev->common.dst_addr_widths = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+	bdev->common.desc_metadata_modes = DESC_METADATA_CLIENT;
- 	bdev->common.device_alloc_chan_resources = bam_alloc_chan;
- 	bdev->common.device_free_chan_resources = bam_free_chan;
- 	bdev->common.device_prep_slave_sg = bam_prep_slave_sg;
-diff --git a/include/linux/dma/qcom_bam_dma.h b/include/linux/dma/qcom_bam_dma.h
-index 68fc0e643b1b..8168b0573f45 100644
---- a/include/linux/dma/qcom_bam_dma.h
-+++ b/include/linux/dma/qcom_bam_dma.h
-@@ -8,6 +8,14 @@
- 
- #include <asm/byteorder.h>
- 
-+/*
-+ * This data type is used as client metadata buffer in bam driver.
-+ */
-+struct bam_dma_metadata {
-+	/* Actual number of bytes transferred by hardware */
-+	size_t xfer_len_bytes;
-+};
-+
- /*
-  * This data type corresponds to the native Command Element
-  * supported by BAM DMA Engine.
--- 
-2.38.1
+I prefer using the commercial name to identify the device.
+"Holly" is the smartphone project codename and that is mentioned almost nowhere:
+the aim here is to enhance readability as to make it immediately understandable
+that this devicetree is for the Xperia M5 device.
+
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
+>>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+>> diff --git a/arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dts b/arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dts
+>> new file mode 100644
+>> index 000000000000..94d011c4126c
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/mediatek/mt6795-sony-xperia-m5.dts
+>> @@ -0,0 +1,90 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (c) 2022, Collabora Ltd
+>> + * Author: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "mt6795.dtsi"
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+> Looks unused.
+> 
+
+Right, I'll remove that in v2.
+
+>> +
+>> +/ {
+>> +	model = "Sony Xperia M5";
+>> +	compatible = "sony,xperia-m5", "mediatek,mt6795";
+> sony,holly?
+> 
+
+I'm sorry, but I can't understand the sense of adding that compatible string to
+the mix. To the kernel, it doesn't mean anything - and we already have another
+string advertising the specific machine, which is "sony,xperia-m5".
+
+Of course, there is no Xperia M5 with a different SoC and, even if there was a
+xperia-m5 with a different SoC, we anyway have both a machine compatible and a
+SoC compatible in here, so that would still not pose any issue.
+
+>> +	chassis-type = "handset";
+>> +
+>> +	aliases {
+>> +		mmc0 = &mmc0;
+>> +		mmc1 = &mmc1;
+>> +		serial0 = &uart0;
+>> +		serial1 = &uart1;
+>> +	};
+>> +
+>> +	memory@40000000 {
+>> +		device_type = "memory";
+>> +		reg = <0 0x40000000 0 0x1E800000>;
+> Lowercase hex in size. Also, doesn't the bootloader fill it in?
+> 
+
+Updating the device to the latest software version will give you a bootloader
+that fills that in, but the first-ever software release contains one that will
+not do that in particular conditions (fastboot boot).
+
+>> +	};
+>> +
+>> +	reserved_memory: reserved-memory {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +		/* 128 KiB reserved for ARM Trusted Firmware (BL31) */
+> Is that true for all devices with this SoC, or..? If so, it may be worth
+> moving this into mt6795.dtsi.
+> 
+>> +		bl31_secmon_reserved: secmon@43000000 {
+> memory@, everywhere. Use labels to name the nodes.
+> 
+
+I'm afraid that's not possible, as the bootloader is reading the devicetree
+and requires these nodes to follow this naming.
+
+>> +			no-map;
+> reg goes first.
+
+Will fix in v2.
+
+Best regards,
+Angelo
+
 

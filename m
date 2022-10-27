@@ -2,67 +2,61 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3862D60EF66
-	for <lists+dmaengine@lfdr.de>; Thu, 27 Oct 2022 07:15:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAB8C60EF70
+	for <lists+dmaengine@lfdr.de>; Thu, 27 Oct 2022 07:20:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234437AbiJ0FPS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 27 Oct 2022 01:15:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38484 "EHLO
+        id S233881AbiJ0FUr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 27 Oct 2022 01:20:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234369AbiJ0FPD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Oct 2022 01:15:03 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13AE574CCC;
-        Wed, 26 Oct 2022 22:15:01 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id b29so390705pfp.13;
-        Wed, 26 Oct 2022 22:15:01 -0700 (PDT)
+        with ESMTP id S229473AbiJ0FUq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Oct 2022 01:20:46 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D48B153E09;
+        Wed, 26 Oct 2022 22:20:46 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id z5-20020a17090a8b8500b00210a3a2364fso5217641pjn.0;
+        Wed, 26 Oct 2022 22:20:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mOGRH9NXdrfqgbNenNuBmO6i+ru+iWERjL2qQ8bxKOc=;
-        b=GGl2VErwxlzjseiEoId4PZOsXmsgVi2Udhz+DvniQ41BY8OPcCl1DVdKnUs8R7cY71
-         sS4is/og8XoTndtqK9zcSUX8Ek/9GYYe163+5S6qZUAhGz7hDIA73bhnXCTusQ6tppnQ
-         Cw15UZ2XJaiqZlWNlfl56JtY8QJ8523iRbkBii3Qnhagc1nTeUWNdlz0HkgJAKcanEvW
-         2fSNowmzImpuC1sa0tih6zRYsZlmGo+iCy1wDmyf9LMXKi9qucQYjiV0oguqFuwJRZL1
-         fRt1QEh2+W8uhteWX4b6LBfgKyIgKVi1kmvKxuDQMthf72CFVPtEG+WV7Mh4fn8vbIbv
-         xLIw==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=c98TshV0sVbCsSk7aMfhfHp9AIQDXwn0PvylKZ9s3/c=;
+        b=bOHlO7ccEdD1rw/fpFt4CQzLk9chgVa2o8KJxfjzlV84rMKV+UAkhGikJn81vw6EHz
+         SwHrBxx829mv7VhR7RTk4hrnpWPOgZg6aUhqfMieN1vypMsUj2n1e4F8MgEamCPOBLfg
+         FBLt9LG1GBNKrzEoqKm1oi03h8B0YQ20xHliOeAW8YihZ5yjL3BLdNcMcXB7CttvGrk/
+         fV52Taio4mWmy9GQUjV7N/hmav2ThghZU8Wf2fvx8nK3+yxXQ+DkcSZ6L3pWSLQF4EBt
+         90rjlCnnAeWK+7pci2iC8y6eYbQbdhuRnchVJIRNapSxIdSnQaoIVsRQ3LHRaxfPKSnV
+         edww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mOGRH9NXdrfqgbNenNuBmO6i+ru+iWERjL2qQ8bxKOc=;
-        b=C4+Dp2A/stO9NN6kq1qjqGMnicgufOAkUAnE3X2y21tNisgoBaU+HFyTuaCv5+Lj30
-         aWtTi8RliSPEad4xF9a+4N00LPfdBrZsiX3Lw0jIrVUfZl6ETgzxGOTkHyicYrf6nusu
-         bAawtwYnF+KnUrPsDHDkdLrgCmMfz1YJZU5S6ekhgMiq78xEhIHQsNuA7kWQc2EY9rkD
-         VnHHoivQ1ATCj9ZuAowNyKS2W23+u1C73+UxRwS0nojJcK3lkzOpOYESZKYvh5rj60HO
-         OVODnawV1atoMUhqXyNlLPKvzMISEiKgO+oTEU5xbmDfS+MYuJ3u5aSvQ8A/YVeL8ZrN
-         /fIA==
-X-Gm-Message-State: ACrzQf1SNRk8H9j6vES13EauemiiN9dQ52o46euEcb8etozxlFrLtssd
-        IAhCmq57UYwICeYuGvyBtEiZLf4sd+rH7w==
-X-Google-Smtp-Source: AMsMyM7kLAPyboZ1bo3FBbafLPqEEmUiEqpipe4WaWFsn+1q7Q+Y6J3nXYCe8ac9I5OcmiDy5RLvaw==
-X-Received: by 2002:a17:902:900a:b0:178:77c7:aa28 with SMTP id a10-20020a170902900a00b0017877c7aa28mr46692384plp.3.1666847690404;
-        Wed, 26 Oct 2022 22:14:50 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c98TshV0sVbCsSk7aMfhfHp9AIQDXwn0PvylKZ9s3/c=;
+        b=v5wZkJUp6NZ+ke5Ml4aYOFyJtajBlNojAVg+4B10hhrsR9BhBM+fDRexVPkQL12q+h
+         zgnAHpx0NEcfnRJ4tU3WCl0JNAvaXHAnD92KDZ6lSlE+2fMvXpTuk1TeLynlw1uoyG14
+         PDfuChzIfRFKk41ZWqY7VcbbIfm647vIsjUIAgBbw3Xw9Uo1iEWixdjIJ++ozuULmqY1
+         cwVuVZBqqnbAa/gEn0+JAwfcqkx1HHR4P5f6XGmnySUhTHB3oC6aeuJkp3/8xP/DZwW6
+         z4RQA7M2mRPtNunb+vZ4zVbWk9TK0AcSgtoqPRYPTOoBgn8GT4j3GECzqJEu8V7AWVMa
+         cnxA==
+X-Gm-Message-State: ACrzQf3z4O8yKGvv1dpdIOZ3Sl4nNYnnO0jKcjWSgrsh1Z3k+UXNWtYd
+        riaXisM8v5af7cLpfAG4gH0=
+X-Google-Smtp-Source: AMsMyM4OD3oGiBqCNRkzsMEg9amdbhFFfPUzyaBgkF6OktEK/J2FZe6rM2I9RLwKeorMwr+H5K2adQ==
+X-Received: by 2002:a17:903:32c2:b0:182:1a9c:8f40 with SMTP id i2-20020a17090332c200b001821a9c8f40mr48878611plr.54.1666848045618;
+        Wed, 26 Oct 2022 22:20:45 -0700 (PDT)
 Received: from skynet-linux.local ([2406:7400:61:dcaa:bb0:9908:b137:b0b4])
-        by smtp.googlemail.com with ESMTPSA id s8-20020a170902ea0800b001869ba04c83sm216713plg.245.2022.10.26.22.14.47
+        by smtp.googlemail.com with ESMTPSA id u9-20020a17090341c900b00186afd756edsm218874ple.283.2022.10.26.22.20.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Oct 2022 22:14:49 -0700 (PDT)
+        Wed, 26 Oct 2022 22:20:45 -0700 (PDT)
 From:   Sireesh Kodali <sireeshkodali1@gmail.com>
-To:     vkoul@kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc:     dmaengine@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        Sireesh Kodali <sireeshkodali1@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>
-Subject: [PATCH v2 3/3] dmaengine: bam_dma: Add support for immediate commands
-Date:   Thu, 27 Oct 2022 10:44:29 +0530
-Message-Id: <20221027051429.46593-4-sireeshkodali1@gmail.com>
+To:     andersson@kernel.org, agross@kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, linux-kernel@vger.kernel.org
+Cc:     dmaengine@vger.kernel.org,
+        Sireesh Kodali <sireeshkodali1@gmail.com>
+Subject: [PATCH v2 0/1] dmaengine: qcom: Add support for metadata in bam_dma
+Date:   Thu, 27 Oct 2022 10:50:06 +0530
+Message-Id: <20221027052007.47403-1-sireeshkodali1@gmail.com>
 X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221027051429.46593-1-sireeshkodali1@gmail.com>
-References: <20221027051429.46593-1-sireeshkodali1@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -75,37 +69,27 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Immediate commands are handled similar to regular commands that are sent
-over BAM, only a different flag needs to be set. The immediate command
-support is needed to implement support for IPA v2.x, which rely on BAM
-immediate commands to send commands to the IPA microcontroller.
+IPA v2.x uses BAM to send and receive IP packets, to and from the AP.
+However, unlike its predecessor BAM-DMUX, it doesn't send information
+about the packet length. To find the length of the packet, one must
+instead read the bam_desc metadata. This patch adds support for sending
+the size metadata over the dmaengine metadata api. Currently only the
+dma size is stored in the metadata. Only client-side metadata is
+supported for now, because host-side metadata doesn't make sense for
+IPA, where more than one DMA descriptors could be waiting to be acked
+and processed.
 
-Signed-off-by: Sireesh Kodali <sireeshkodali1@gmail.com>
----
- drivers/dma/qcom/bam_dma.c | 3 +++
- 1 file changed, 3 insertions(+)
+Changes since v1:
+ * Rebased onto 6.0 kernel
+ * Patch redone by Vladimir
 
-diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index 2ff787df513e..3135a3e4a167 100644
---- a/drivers/dma/qcom/bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -58,6 +58,7 @@ struct bam_desc_hw {
- #define DESC_FLAG_EOB BIT(13)
- #define DESC_FLAG_NWD BIT(12)
- #define DESC_FLAG_CMD BIT(11)
-+#define DESC_FLAG_IMM BIT(8)
- 
- struct bam_async_desc {
- 	struct virt_dma_desc vd;
-@@ -693,6 +694,8 @@ static struct dma_async_tx_descriptor *bam_prep_slave_sg(struct dma_chan *chan,
- 		do {
- 			if (flags & DMA_PREP_CMD)
- 				desc->flags |= cpu_to_le16(DESC_FLAG_CMD);
-+			else if (flags & DMA_PREP_IMM_CMD)
-+				desc->flags |= cpu_to_le16(DESC_FLAG_IMM);
- 
- 			desc->addr = cpu_to_le32(sg_dma_address(sg) +
- 						 curr_offset);
+Vladimir Lypak (1):
+  dmaengine: qcom: bam_dma: Add support for metadata
+
+ drivers/dma/qcom/bam_dma.c       | 57 ++++++++++++++++++++++++++++++++
+ include/linux/dma/qcom_bam_dma.h |  8 +++++
+ 2 files changed, 65 insertions(+)
+
 -- 
 2.38.1
 

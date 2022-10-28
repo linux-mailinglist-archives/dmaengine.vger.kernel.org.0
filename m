@@ -2,88 +2,95 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36513611120
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Oct 2022 14:21:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 184556111FB
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Oct 2022 14:55:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229535AbiJ1MVd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 28 Oct 2022 08:21:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57930 "EHLO
+        id S229455AbiJ1Mzn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 28 Oct 2022 08:55:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230211AbiJ1MVW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Oct 2022 08:21:22 -0400
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 816D17B287;
-        Fri, 28 Oct 2022 05:21:21 -0700 (PDT)
-Received: by mail-qv1-f51.google.com with SMTP id x15so3934407qvp.1;
-        Fri, 28 Oct 2022 05:21:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uNWNDj2XHz/Hz59MrchMAuMDI5o9KuQ1jezmkkViv5E=;
-        b=DtRR1ITK+YfqY/64F5TIgDq1Y9iidQDMrzpnmojoWe38ACBeCI1BpjwljiOLX0ctdx
-         MdyXQURs+rHR6wZ0YW7VHFGhsFIwnvQ6uo6UIPkOmcoixTib1CQY0t6lSpa0IjcJkJ4R
-         vwcvWNjrEC+2wyluVFEBH8ca/oqzmz8nuSWzjOk2gIBZBJHqBh+Lt2TRX9CZ7v+Ln7xT
-         grWAn8jljZEoiu0MVsyKeL2mz2ed3HZGSrc6bXsk7J1kQXfghWwFeT822SegDmclG6gz
-         hnB88+kFpMqOhAGFM5kfTEuwfnvAnxHLujbegokeaauV0lHeuGB21sK0efRanRBv6JYe
-         m7BQ==
-X-Gm-Message-State: ACrzQf0oI1tF3rXqx2OWSJXhKOQWDVI3J0/B9TphkSvbX6FqQUUI8mkZ
-        vyEQXR2XCWMCXASIDswVJ0wlNJysvIJUsA==
-X-Google-Smtp-Source: AMsMyM6sEvtYx6kMVsprKkWz+xBUqUMqm9i/43kvKYPUu+pH/13m82jBOonRtAx1AxLECL2Ni/EKgQ==
-X-Received: by 2002:ad4:5be6:0:b0:4b3:ff39:7ad4 with SMTP id k6-20020ad45be6000000b004b3ff397ad4mr45325558qvc.126.1666959680451;
-        Fri, 28 Oct 2022 05:21:20 -0700 (PDT)
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
-        by smtp.gmail.com with ESMTPSA id h17-20020a05620a245100b006ecdfcf9d81sm2848791qkn.84.2022.10.28.05.21.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Oct 2022 05:21:20 -0700 (PDT)
-Received: by mail-yb1-f181.google.com with SMTP id f205so5947966yba.2;
-        Fri, 28 Oct 2022 05:21:19 -0700 (PDT)
-X-Received: by 2002:a25:d24a:0:b0:6ca:4a7a:75cd with SMTP id
- j71-20020a25d24a000000b006ca4a7a75cdmr39355446ybg.89.1666959679596; Fri, 28
- Oct 2022 05:21:19 -0700 (PDT)
+        with ESMTP id S229379AbiJ1Mzm (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Oct 2022 08:55:42 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FB68198989;
+        Fri, 28 Oct 2022 05:55:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1666961741; x=1698497741;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=j6mmci6yqeE9vsqUFPTb1XAq/fXqTEJvQ3kd2FzN0qw=;
+  b=yk+D6gvI8d2+K8qKOkyh+IKPekV1BkNLXBDxXu1eePS9oYZKUBDdtalq
+   kJW4qwuCNnuTPsZZMOTOfaQv5eS3bWbE51Qn3I4mKCR+1+HO277mZes+2
+   ABl8AQzovIAYKhs56/ZqkTePcCNKMiCSs/gzZS8KojJpBF0lxYJLY4XU9
+   Rh9SUNyNONxp/TfIS8k9PgsXvh+2Wu5+W6Py0E22kGa/Tk3TBOKc3UMF0
+   XSE7OfHRQMt1QD7wmtoxI0AO19wdpuelbqrI1RzPnIw+mkwHRavfASyZb
+   HbSFJvE43eqa+G2dDSm0kpP/1B1IQGiHmkDuiZiPpLOo1PYjxOkoKWuyE
+   A==;
+X-IronPort-AV: E=Sophos;i="5.95,221,1661842800"; 
+   d="scan'208";a="186775063"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 Oct 2022 05:55:40 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.12; Fri, 28 Oct 2022 05:55:40 -0700
+Received: from [10.159.245.112] (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.12 via Frontend
+ Transport; Fri, 28 Oct 2022 05:55:38 -0700
+Message-ID: <61e54c48-6347-f0ab-e843-ae48d5374903@microchip.com>
+Date:   Fri, 28 Oct 2022 14:55:37 +0200
 MIME-Version: 1.0
-References: <20221028115336.1052782-1-steve@sk2.org>
-In-Reply-To: <20221028115336.1052782-1-steve@sk2.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 28 Oct 2022 14:21:06 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXw0fG+gb0b8T6EvWcJRouTsO-LedpJcV+4-h7DTRqsTA@mail.gmail.com>
-Message-ID: <CAMuHMdXw0fG+gb0b8T6EvWcJRouTsO-LedpJcV+4-h7DTRqsTA@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: sh: Remove unused shdma-arm.h
-To:     steve@sk2.org
-Cc:     Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH v2 32/32] dmaengine: at_hdmac: Convert driver to use
+ virt-dma
+Content-Language: en-US
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>, <vkoul@kernel.org>,
+        <peda@axentia.se>, <du@axentia.se>
+CC:     <maciej.sosnowski@intel.com>, <mripard@kernel.org>,
+        <torfl6749@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+References: <20221025090306.297886-1-tudor.ambarus@microchip.com>
+ <20221025090306.297886-33-tudor.ambarus@microchip.com>
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+In-Reply-To: <20221025090306.297886-33-tudor.ambarus@microchip.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Oct 28, 2022 at 1:54 PM Stephen Kitt <steve@sk2.org> wrote:
-> shdma-arm.h was introduced with commit 1e69653d40f1 ("DMA: shdma: add
-> r8a73a4 DMAC data to the device ID table"), and its sole user was
-> removed with commit a19788612f51 ("dmaengine: sh: Remove R-Mobile APE6
-> support"). The latter mentions r8a73a4.dtsi but shdma support was
-> removed from that with commit cfda82037780 ("ARM: dts: r8a73a4: Remove
-> non-functional DMA support"), so it seems this is safe to remove.
->
-> Signed-off-by: Stephen Kitt <steve@sk2.org>
+On 25/10/2022 at 11:03, Tudor Ambarus wrote:
+> Convert the driver to use the core virt-dma. The driver will be easier to
+> maintain as it uses the list handling and the tasklet from virt-dma.
+> 
+> With the conversion replace the election of a new transfer in the tasklet
+> with the election of the new transfer in the interrupt handler. With this
+> we have a shorter idle window as we remove the scheduling latency of the
+> tasklet. I chose to do this while doing the conversion to virt-dma,
+> because if I made a prerequisite patch with the new transfer election in
+> the irq handler, I would have to duplicate some virt-dma code in the
+> at_hdmac driver that would end up being removed at the virt-dma conversion
+> anyway. So do this in a single step.
+> 
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Even if it's difficult to review, I support the transition:
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-Gr{oetje,eeting}s,
+Thanks Tudor, regards,
+   Nicolas
 
-                        Geert
+[..]
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+-- 
+Nicolas Ferre
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds

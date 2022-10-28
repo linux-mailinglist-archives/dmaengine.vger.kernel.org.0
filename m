@@ -2,43 +2,43 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43BBF610996
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Oct 2022 07:10:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3B59610991
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Oct 2022 07:10:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229819AbiJ1FKR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 28 Oct 2022 01:10:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33784 "EHLO
+        id S229757AbiJ1FKF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 28 Oct 2022 01:10:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229798AbiJ1FKG (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Oct 2022 01:10:06 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2057.outbound.protection.outlook.com [40.107.92.57])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ABEB209A7;
-        Thu, 27 Oct 2022 22:10:02 -0700 (PDT)
+        with ESMTP id S229787AbiJ1FKC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Oct 2022 01:10:02 -0400
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2060.outbound.protection.outlook.com [40.107.101.60])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68CBC2F3AF;
+        Thu, 27 Oct 2022 22:10:00 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IRluJeUNuf7FU82KbEfbO2QKNBjDPAYBNoNDPhA8NG/PzUsUD0PFX9yOroSf/0XkX9WjJ1lmn/RS44+z7JSF3MoDfVMs+eGnn8u03nPwqTQcATSm1lQk1gFtOQmLcD/igprCwjZ+njWZ/u5M44KGrgm2RZTInioKGNb1DtA4p/KrQ+xKqIQegyGs7BfPMzjglEAeFPIUilMco0kDpP9YLLC5ZfOrLpUfEBbReW1pv94OP5o/AirBhxOIySGS6u+AMKDM7QIW7dMxhzQ4rAkYFbnJfQeXU+t+/brNUf5ru/oFhCb7ig9245whRBBwx026q7Bbw8mpGHfUBlqTbSXdcQ==
+ b=nQQRnM+GK8IBAMJynG6fsAr1Tq3dxHuRsAL2ZgeKItYKGj1gbPHGqYrUiv3yF/sbTD8ZvwWMCdELx2yXRloLLLqEnZetUeUBpEW8vcQn3lgSRTondbcmHrTD6q5DZiCZMPO4pUF69gjsCKStW7T8GRpPtPkbstkVTb4BOjVRQOBzfY3Bo6RPmWQsYi70yn42e4KX1D1Wsqx8G4UrVIaDhC13NCXSzbqS8qMZctvOhbVeCd2T4fUrDH7THK4m/uDjEg6biigA6Sdvx67uidF+yeuYSeDgK1aS4NVHSW5mMTN/+VZ648lZlylCViIqD2qPp8iej5qqit0/DHiqZ5+SSw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NXv1KRMk7l+GwHFfacek8MrL5RuwhHO6oiSVEO5Go0s=;
- b=B2AAPLCnVsuxl8r7F2aDkRiALd/GEl7349r8r5Wg6wL2ZSOXdsOszuT66XoyDVYy29MhbczD6NKIuXd7EVbsFoaTt1JcrHatPqGTMJEtqT87J5Tl2mypE/3s6FRDmVuAR78NLChztZ+vD8JIREvZNsmiJev5IbfbsbxvexnoqDT71vL5mNI/ttDjLCQWMRtIdubKKnluCg0cmACvVyFrhJUM3CTxu8/WEzjeHjNFt8ZXBe9JPiviz0dl0fVfEQwVbjBSibcA3G1mLvPNExI7PJ96G/4EAVvCeOZhSv5GNcE0+2rN0BjU8hhbGwlb1O5tlVz/wUuToS+khS+Pr6qUSQ==
+ bh=7i9nHptZBne6tnAEleZ1X5f0vX6ZgN82WLJyjGTmnmE=;
+ b=e0G+bheL6+GVKToGnAffRtcrl9boe1fTc89CEcvABbvnhUvZDCeB3M3QElaEUYbCYJHU98WW43i+dvUC8MW4c42cny/p2/ePh/Me1g3UvbDcrUpH37acHCb9VyCuk9Q1ctf1pSh+9TLYqhc3fVYG2+rJwI6dQU+iclbhsy3rdfeiL75wOKonco2JvuPaHXFpIWdOcE1qUN/hHv5giA1mHzjVWCN3FN65KQwRb/FJuIuVriyOY2X9vs3l33uvrm30xvqNRIfIFS+DENEyB0rMbMuAgCDAeZ3B0DpEe85fRMCsF27U8m9HvBKjIIF1AYXilHEcmHABz8RpHFU7M4BkfA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NXv1KRMk7l+GwHFfacek8MrL5RuwhHO6oiSVEO5Go0s=;
- b=cI8lanL3vNA9T0ostTCFO0dwxgSjhVkTzFInK3hW4kT3k3e3VaziFu/HKzrYR55eQLrmjzIbBMZNhvgGCKYbu83ErExrnpkZ9RztMRlcj1fLRwTra+m3n0u7ZJMf2zQzAZNkBOTrZMF8l4cK21FmBmyqOcHKJDO0DPpjZSjiUa4=
-Received: from MN2PR11CA0005.namprd11.prod.outlook.com (2603:10b6:208:23b::10)
- by BL1PR12MB5141.namprd12.prod.outlook.com (2603:10b6:208:309::7) with
+ bh=7i9nHptZBne6tnAEleZ1X5f0vX6ZgN82WLJyjGTmnmE=;
+ b=miDAajLr25JAt8nLuMCuYu6u6AJ5I2BBLKLmaz6JRchSFmxyzIwKOOfZ+7juoHQQFLZNovciFVvkaIYS+Ygm7icSbGz2KK1sLftw9qQo2hqiKBIcv3iNKBIeEGirhIHOSjiAx0fl5Kv/vyJrLMVVNBzmFjXXzsz0wTe2BqUDi+E=
+Received: from BN8PR03CA0034.namprd03.prod.outlook.com (2603:10b6:408:94::47)
+ by CH0PR12MB5268.namprd12.prod.outlook.com (2603:10b6:610:d3::23) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.28; Fri, 28 Oct
- 2022 05:09:55 +0000
-Received: from BL02EPF0000C409.namprd05.prod.outlook.com
- (2603:10b6:208:23b:cafe::b2) by MN2PR11CA0005.outlook.office365.com
- (2603:10b6:208:23b::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.29 via Frontend
- Transport; Fri, 28 Oct 2022 05:09:55 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.15; Fri, 28 Oct
+ 2022 05:09:59 +0000
+Received: from BL02EPF0000C403.namprd05.prod.outlook.com
+ (2603:10b6:408:94:cafe::29) by BN8PR03CA0034.outlook.office365.com
+ (2603:10b6:408:94::47) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.15 via Frontend
+ Transport; Fri, 28 Oct 2022 05:09:59 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -46,16 +46,16 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF0000C409.mail.protection.outlook.com (10.167.241.11) with Microsoft
+ BL02EPF0000C403.mail.protection.outlook.com (10.167.241.5) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5723.20 via Frontend Transport; Fri, 28 Oct 2022 05:09:55 +0000
+ 15.20.5723.20 via Frontend Transport; Fri, 28 Oct 2022 05:09:58 +0000
 Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 28 Oct
- 2022 00:09:53 -0500
+ 2022 00:09:57 -0500
 Received: from xhdpranavis40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server id 15.1.2375.31 via Frontend
- Transport; Fri, 28 Oct 2022 00:09:49 -0500
+ Transport; Fri, 28 Oct 2022 00:09:54 -0500
 From:   Sarath Babu Naidu Gaddam <sarath.babu.naidu.gaddam@amd.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>,
         <krzysztof.kozlowski+dt@linaro.org>, <lars@metafoo.de>,
@@ -66,9 +66,9 @@ CC:     <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <radhey.shyam.pandey@amd.com>, <anirudha.sarangi@amd.com>,
         <harini.katakam@amd.com>, <sarath.babu.naidu.gaddam@amd.com>,
         <git@amd.com>
-Subject: [PATCH 2/5] dt-bindings: dmaengine: xilinx_dma: Add xlnx,irq-delay property
-Date:   Thu, 27 Oct 2022 23:09:37 -0600
-Message-ID: <20221028050940.27888-3-sarath.babu.naidu.gaddam@amd.com>
+Subject: [PATCH 3/5] dmaengine: xilinx_dma: Pass AXI4-Stream control words to dma client
+Date:   Thu, 27 Oct 2022 23:09:38 -0600
+Message-ID: <20221028050940.27888-4-sarath.babu.naidu.gaddam@amd.com>
 X-Mailer: git-send-email 2.36.1
 In-Reply-To: <20221028050940.27888-1-sarath.babu.naidu.gaddam@amd.com>
 References: <20221028050940.27888-1-sarath.babu.naidu.gaddam@amd.com>
@@ -77,23 +77,23 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0000C409:EE_|BL1PR12MB5141:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8b44f080-d1dd-4d92-a66c-08dab8a2a74c
+X-MS-TrafficTypeDiagnostic: BL02EPF0000C403:EE_|CH0PR12MB5268:EE_
+X-MS-Office365-Filtering-Correlation-Id: b5336b17-6f8c-470f-7c8a-08dab8a2a929
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JgKc2S/gzyVVBSp6P0ryPxWJv6ZTo4BCvR86tjnU91iiNJYtrpYLWS7erbSNqzslm5m6Ckkg8SCT6QVodZ8l2CpC0YqUVOIcP513Rn7WThFXc2JmUQUcyWQGQOlIPUSVvwGJ7IR3YVSyis1xNBnRqavyLToc5bxvyYuaZ5d2s5/fmu99V4BBUPgpTSPfd71eAoU1HB/aqlvpiCWuLdHy58Y+aC4GNBx+zX1kzWrvESRt6++/L6ZjpJE4P4WMdVLiBP79p1Fk0qM42V5sMIQJeDxeyjsTludenrRtH9jC8LqBjGtBkwW9F6eo9hVGuRjvGpyudbtwDJvXTUwmHU9jw0Os3FvaveHoMPRFCyTPpyfW3LJxa1k6PLqxzR1M/56jBI860FdKpWgUrtL2TzccYdfY+kGp4wBdKcv3ZekIca8JqlueQHo04VU0+nqqGwV7bClVoXUBGjYzzAK9BeFhh2IJeZtmD17MWk+sApSN4HJNZ/b1wYjDZ1tmDxLhAC0fxIw1YeMhF2/pnnjWnU9vD6jU9AC6stmRE+yTgUyADq8E8YSTBduoE4UFOpacVJXEj/P5ucpJNFrjKt7CUXqlfRcaVjRJpyYcMlMTro9PWZZYnnFE2GdApgaDo8SAlXYaCbgQ3pLlYRoDblxKJ42i790825UZ73jAse43A3SRPYIyEH/dA9AHxD58NGhW1LGOxemaW/3qNGM1uugiwIQHqfNPQnzw6EUh5L3JpM7Cvu/MXwVutZd9Zv86p13IjyGawPqqjR/Ew+Hl9Lrbwd1hnA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(451199015)(36840700001)(40470700004)(46966006)(5660300002)(47076005)(36860700001)(8676002)(54906003)(40460700003)(6666004)(36756003)(1076003)(336012)(8936002)(4326008)(82310400005)(316002)(103116003)(70206006)(70586007)(2616005)(26005)(2906002)(508600001)(110136005)(426003)(186003)(86362001)(83380400001)(81166007)(356005)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: haMwq5ucbDsL5BzCNebNbM6kmtGFz2ssC6Ucl18ipwgYTMnpnNXIBSgWOuU+jcK2NvflZ80ODte/qiv6WhnmkFRwIDAL+ngoqv//H3aOBGMV0yI9ynJGWkKvCuZZaZqiUCLQJf7cviG2WmOVQ6XWbdH4fPKcXRje9YEVoE5FLEcwFeo/vrsEFb1nZua+eJBJ9zD6dMgfzIThTTVuTpxPuea6w7T6GZTbNiPazo699oTrJMntNiCfbxc/R68loz9+O1FSuxPFJ8mKqR2msGl/iqAIeQkuviaNvHL65KwSjTCh+rCwiDVqGf5yonBt/RZX/a5lAeN/dqg8SGdnNJxDMjQp6NesNCdDXjoW6pmSlDQKwqOan9BSfaOpv/0fAB1fdQ7mcPkjNNSH0s9ASAPPMMVPIBYdxddcBiYZP+CLtbLgTv8V4lsmA8a/2XVk+vMQF47sNjednHmsYlPxpDoXZqPTob4qM3OXp2tBarzD2Gv5nYSu3ot+L7d0u2PBIOjD+v+eGogoUJzJE8gW6NfEDAoVi4vDDN437vXCUVFXOfRv53x2Xlif1uiNflkiu+nQRrXDJM2pgp1nYEmytFdCZQX0yHr2cjC0xc9Wz8q+rioaGUaJe+aGhmoOpHGMWxar2p1cZGFOKn7tZ0y6a32Ey+jzFU0HCdjhedcRg5p5MiCV5XV3edYaEp9MIhyI1VFAON0gOHFgu6djOMmlJUl3NMI2r0iEAaOGzsVXiRk05wkvaZIsNLLN1nVEyMi7t2JuQV8h9nHLZSOCd9gTxvHBoHVLrBXKnqbZaaRqLGm+JWmFK9koDekyjZSyu2L1Awoc
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(136003)(396003)(376002)(451199015)(36840700001)(46966006)(40470700004)(86362001)(103116003)(36860700001)(426003)(47076005)(336012)(82740400003)(186003)(356005)(81166007)(5660300002)(4326008)(41300700001)(8676002)(8936002)(82310400005)(6666004)(40460700003)(478600001)(2616005)(1076003)(26005)(316002)(54906003)(70586007)(70206006)(110136005)(2906002)(40480700001)(36756003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2022 05:09:55.6752
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2022 05:09:58.8159
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b44f080-d1dd-4d92-a66c-08dab8a2a74c
+X-MS-Exchange-CrossTenant-Network-Message-Id: b5336b17-6f8c-470f-7c8a-08dab8a2a929
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BL02EPF0000C409.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BL02EPF0000C403.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5141
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5268
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
@@ -106,37 +106,99 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 
-Add an optional AXI DMA property 'xlnx,irq-delay'. It specifies interrupt
-timeout value and causes the DMA engine to generate an interrupt after the
-delay time period has expired. Timer begins counting at the end of a packet
-and resets with receipt of a new packet or a timeout event occurs.
-
-This property is useful when AXI DMA is connected to the streaming IP i.e
-axiethernet where inter packet latency is critical while still taking the
-benefit of interrupt coalescing.
+Read DT property to check if AXI DMA is connected to streaming IP
+i.e axiethernet. If connected pass AXI4-Stream control words to
+dma client using metadata_ops dmaengine API.
 
 Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sarath Babu Naidu Gaddam <sarath.babu.naidu.gaddam@amd.com>
 ---
- Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/dma/xilinx/xilinx_dma.c | 37 +++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-index 18445aa092ab..9793523633a4 100644
---- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-+++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-@@ -50,7 +50,9 @@ Optional properties for AXI DMA and MCDMA:
- 	is missing or invalid then the default value 23 is used. This is the
- 	maximum value that is supported by all IP versions.
- - xlnx,axistream-connected: Tells whether DMA is connected to AXI stream IP.
--
-+- xlnx,irq-delay: Tells the interrupt delay timeout value. Valid range is from
-+	0-255. Setting this value to zero disables the delay timer interrupt.
-+	1 timeout interval = 125 * clock period of SG clock.
- Optional properties for VDMA:
- - xlnx,flush-fsync: Tells which channel to Flush on Frame sync.
- 	It takes following values:
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index 8cd4e69dc7b4..b69e0482a50f 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -493,6 +493,7 @@ struct xilinx_dma_config {
+  * @s2mm_chan_id: DMA s2mm channel identifier
+  * @mm2s_chan_id: DMA mm2s channel identifier
+  * @max_buffer_len: Max buffer length
++ * @has_axistream_connected: AXI DMA connected to AXI Stream IP
+  */
+ struct xilinx_dma_device {
+ 	void __iomem *regs;
+@@ -511,6 +512,7 @@ struct xilinx_dma_device {
+ 	u32 s2mm_chan_id;
+ 	u32 mm2s_chan_id;
+ 	u32 max_buffer_len;
++	bool has_axistream_connected;
+ };
+ 
+ /* Macros */
+@@ -623,6 +625,29 @@ static inline void xilinx_aximcdma_buf(struct xilinx_dma_chan *chan,
+ 	}
+ }
+ 
++/**
++ * xilinx_dma_get_metadata_ptr- Populate metadata pointer and payload length
++ * @tx: async transaction descriptor
++ * @payload_len: metadata payload length
++ * @max_len: metadata max length
++ * Return: The app field pointer.
++ */
++static void *xilinx_dma_get_metadata_ptr(struct dma_async_tx_descriptor *tx,
++					 size_t *payload_len, size_t *max_len)
++{
++	struct xilinx_dma_tx_descriptor *desc = to_dma_tx_descriptor(tx);
++	struct xilinx_axidma_tx_segment *seg;
++
++	*max_len = *payload_len = sizeof(u32) * XILINX_DMA_NUM_APP_WORDS;
++	seg = list_first_entry(&desc->segments,
++			       struct xilinx_axidma_tx_segment, node);
++	return seg->hw.app;
++}
++
++static struct dma_descriptor_metadata_ops xilinx_dma_metadata_ops = {
++	.get_ptr = xilinx_dma_get_metadata_ptr,
++};
++
+ /* -----------------------------------------------------------------------------
+  * Descriptors and segments alloc and free
+  */
+@@ -2326,6 +2351,9 @@ static struct dma_async_tx_descriptor *xilinx_dma_prep_dma_cyclic(
+ 		segment->hw.control |= XILINX_DMA_BD_EOP;
+ 	}
+ 
++	if (chan->xdev->has_axistream_connected)
++		desc->async_tx.metadata_ops = &xilinx_dma_metadata_ops;
++
+ 	return &desc->async_tx;
+ 
+ error:
+@@ -3065,6 +3093,11 @@ static int xilinx_dma_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++	if (xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA) {
++		xdev->has_axistream_connected =
++			of_property_read_bool(node, "xlnx,axistream-connected");
++	}
++
+ 	if (xdev->dma_config->dmatype == XDMA_TYPE_VDMA) {
+ 		err = of_property_read_u32(node, "xlnx,num-fstores",
+ 					   &num_frames);
+@@ -3090,6 +3123,10 @@ static int xilinx_dma_probe(struct platform_device *pdev)
+ 	else
+ 		xdev->ext_addr = false;
+ 
++	/* Set metadata mode */
++	if (xdev->has_axistream_connected)
++		xdev->common.desc_metadata_modes = DESC_METADATA_ENGINE;
++
+ 	/* Set the dma mask bits */
+ 	err = dma_set_mask_and_coherent(xdev->dev, DMA_BIT_MASK(addr_width));
+ 	if (err < 0) {
 -- 
 2.25.1
 

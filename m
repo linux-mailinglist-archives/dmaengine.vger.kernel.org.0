@@ -2,176 +2,106 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06500611BCB
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Oct 2022 22:49:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B74D661299C
+	for <lists+dmaengine@lfdr.de>; Sun, 30 Oct 2022 10:43:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229971AbiJ1UtI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 28 Oct 2022 16:49:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48154 "EHLO
+        id S230024AbiJ3Jnc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 30 Oct 2022 05:43:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229968AbiJ1Usp (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Oct 2022 16:48:45 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02D8523AB79;
-        Fri, 28 Oct 2022 13:48:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666990123; x=1698526123;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vMCqd5k3WahxigGt7TY5NIkIs3Luf/Dyqdfr9vdCMF4=;
-  b=lhejwK6VQFY/XI6uO9PolGv+ejCPdJ7MZNYYIV9p50yyqrgS4elkrMAB
-   ARNfIhMu0BxAnkC3astDh+FU90emG6SOrxIheH92Pcw9ClM6+0ICR23tr
-   N1vuE6ZaXlYMeeK8fdNYu6VVKy8u9ijHHSGDNfIKpvqZvJ+0wLSpSPMKZ
-   /ZX8VuyNiro2ZYg0tMCTGn4QNH4AFF31o1zF7pCl2uICnc7F5suwq2tB/
-   0C6LyLm4yI6N5W/xhv3Xo95pqEZW6Gy5xVoA4eBpFaoW1sClLjnwgHZ/C
-   2MiFhaCKIuPfPRsurhE8nJGr0jU7PKTKqctbn3xcY0NPLkl87lpnF5lRv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10514"; a="291885132"
-X-IronPort-AV: E=Sophos;i="5.95,222,1661842800"; 
-   d="scan'208";a="291885132"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2022 13:48:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10514"; a="962159903"
-X-IronPort-AV: E=Sophos;i="5.95,222,1661842800"; 
-   d="scan'208";a="962159903"
-Received: from bwalker-desk.ch.intel.com ([143.182.136.162])
-  by fmsmga005.fm.intel.com with ESMTP; 28 Oct 2022 13:48:42 -0700
-From:   Ben Walker <benjamin.walker@intel.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: [PATCH v6 7/7] dmaengine: Revert "cookie bypass for out of order completion"
-Date:   Fri, 28 Oct 2022 13:48:12 -0700
-Message-Id: <20221028204812.1772736-8-benjamin.walker@intel.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20221028204812.1772736-1-benjamin.walker@intel.com>
-References: <20220829203537.30676-1-benjamin.walker@intel.com>
- <20221028204812.1772736-1-benjamin.walker@intel.com>
+        with ESMTP id S229853AbiJ3JnN (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 30 Oct 2022 05:43:13 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 657FBD10A;
+        Sun, 30 Oct 2022 02:43:12 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id l14so12116177wrw.2;
+        Sun, 30 Oct 2022 02:43:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cEHqsPqv95R3eGrYKhg4ruWGo3ymO/H/xi/Qhw4VFG0=;
+        b=WK2hF+vuK3yG0ecPgY6uKRUUPFghjZB9XmWCti0Jk/MWl4A5UFU620msKEzGSiSdB5
+         xwDV3KiEWdaEO3jjnY1xenzUh4JzhHF61broc17FdKC+adqFZ/EbDyE3dL8UV9VMyUc/
+         1q3b86DQntJXMK2By1KrJTirZ9v/RD3TK6Mw0y03B1Ss8Zmr53KayO/7kSED1KuSfV6S
+         VPy/gzErZCgfy48SIiSYuBhxJmJ+fcwA7hA54cJtMebRqlXTPZoV7kG426m1Gj67Hauu
+         ifxZW4j1QhiKXkJBiicUSvR2PuiWXbcqAVXItdlChcFwIJxL7+Kv5cvrnUZ9pNuLW2iH
+         bcJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cEHqsPqv95R3eGrYKhg4ruWGo3ymO/H/xi/Qhw4VFG0=;
+        b=Tk67YWZROIo3ehC6uMB9T1MOVrB3mrOtO7z+hu7lwNCiKjCuICN9MHXrN92+u/EV2V
+         ZiXqCsGy8jDzCPIeTEtPSdCjFEUvsuXDEItWHnmUPpNh3rlcQx9XvhMhelT8CMe5UwRS
+         Az0lFyw981Tct1ugScm3jW/FNJkKg14xqZcYJvzEeItdxy/LbfWYVs8elag073ekx8C+
+         EQsmFh69t0UJhXSKmT8Aa/tzFKekKz0i4FT31LazUujukWni4uJVuhFND7Js5icNJJ5m
+         22bJv6t1s8OGg/rYG6P7rcTvxTzuaACLtU5ZqP4/vzKA/WI731iYJ8VosYWsnr3AfHKJ
+         g6xQ==
+X-Gm-Message-State: ACrzQf2MpUuoFAGIY54tKysdOan3UfOdTLlrq9skNerBPsv8XdhZrOPP
+        HD5W9mtMYWzYBca54xeB0Ig=
+X-Google-Smtp-Source: AMsMyM66e4g3WQ6fedXjdOCMEKxZ3pSirsYGsXa5o877lNeILtX1jNDDqqDvS106b3qK0FCV/GqiRg==
+X-Received: by 2002:a05:6000:408c:b0:236:a7b4:fb4d with SMTP id da12-20020a056000408c00b00236a7b4fb4dmr4407306wrb.524.1667122990901;
+        Sun, 30 Oct 2022 02:43:10 -0700 (PDT)
+Received: from localhost ([77.78.20.135])
+        by smtp.gmail.com with ESMTPSA id s4-20020a05600c384400b003c3a1d8c8e6sm3916879wmr.19.2022.10.30.02.43.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 30 Oct 2022 02:43:10 -0700 (PDT)
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Adam Skladowski <a39.skl@gmail.com>,
+        Iskren Chernev <iskren.chernev@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 3/8] dt-bindings: dmaengine: qcom: gpi: add compatible for SM6115
+Date:   Sun, 30 Oct 2022 11:42:53 +0200
+Message-Id: <20221030094258.486428-4-iskren.chernev@gmail.com>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20221030094258.486428-1-iskren.chernev@gmail.com>
+References: <20221030094258.486428-1-iskren.chernev@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This reverts commit 47ec7f09bc107720905c96bc37771e4ed1ff0aed.
+From: Adam Skladowski <a39.skl@gmail.com>
 
-This is no longer necessary now that all assumptions about the order of
-completions have been removed from the dmaengine client API.
+Document the compatible for GPI DMA controller on SM6115 SoC.
 
-Signed-off-by: Ben Walker <benjamin.walker@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
+Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
 ---
- .../driver-api/dmaengine/provider.rst         | 19 -------------------
- drivers/dma/dmatest.c                         | 11 +----------
- drivers/dma/idxd/dma.c                        |  1 -
- include/linux/dmaengine.h                     |  2 --
- 4 files changed, 1 insertion(+), 32 deletions(-)
+ Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
-index a5539f816d125..8d1510c8cb66f 100644
---- a/Documentation/driver-api/dmaengine/provider.rst
-+++ b/Documentation/driver-api/dmaengine/provider.rst
-@@ -258,22 +258,6 @@ Currently, the types available are:
-     want to transfer a portion of uncompressed data directly to the
-     display to print it
- 
--- DMA_COMPLETION_NO_ORDER
--
--  - The device does not support in order completion.
--
--  - The driver should return DMA_OUT_OF_ORDER for device_tx_status if
--    the device is setting this capability.
--
--  - All cookie tracking and checking API should be treated as invalid if
--    the device exports this capability.
--
--  - At this point, this is incompatible with polling option for dmatest.
--
--  - If this cap is set, the user is recommended to provide an unique
--    identifier for each descriptor sent to the DMA device in order to
--    properly track the completion.
--
- - DMA_REPEAT
- 
-   - The device supports repeated transfers. A repeated transfer, indicated by
-@@ -457,9 +441,6 @@ supported.
-   - In the case of a cyclic transfer, it should only take into
-     account the total size of the cyclic buffer.
- 
--  - Should return DMA_OUT_OF_ORDER if the device does not support in order
--    completion and is completing the operation out of order.
--
-   - This function can be called in an interrupt context.
- 
- - device_config
-diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index 76a027e95d2aa..2febc179a7074 100644
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -838,10 +838,7 @@ static int dmatest_func(void *data)
- 			result("test timed out", total_tests, src->off, dst->off,
- 			       len, 0);
- 			goto error_unmap_continue;
--		} else if (status != DMA_COMPLETE &&
--			   !(dma_has_cap(DMA_COMPLETION_NO_ORDER,
--					 dev->cap_mask) &&
--			     status == DMA_OUT_OF_ORDER)) {
-+		} else if (status != DMA_COMPLETE) {
- 			result(status == DMA_ERROR ?
- 			       "completion error status" :
- 			       "completion busy status", total_tests, src->off,
-@@ -1019,12 +1016,6 @@ static int dmatest_add_channel(struct dmatest_info *info,
- 	dtc->chan = chan;
- 	INIT_LIST_HEAD(&dtc->threads);
- 
--	if (dma_has_cap(DMA_COMPLETION_NO_ORDER, dma_dev->cap_mask) &&
--	    info->params.polled) {
--		info->params.polled = false;
--		pr_warn("DMA_COMPLETION_NO_ORDER, polled disabled\n");
--	}
--
- 	if (dma_has_cap(DMA_MEMCPY, dma_dev->cap_mask)) {
- 		if (dmatest == 0) {
- 			cnt = dmatest_add_threads(info, dtc, DMA_MEMCPY);
-diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
-index 87749efec311b..071aafec3de1b 100644
---- a/drivers/dma/idxd/dma.c
-+++ b/drivers/dma/idxd/dma.c
-@@ -296,7 +296,6 @@ int idxd_register_dma_device(struct idxd_device *idxd)
- 
- 	dma_cap_set(DMA_INTERRUPT, dma->cap_mask);
- 	dma_cap_set(DMA_PRIVATE, dma->cap_mask);
--	dma_cap_set(DMA_COMPLETION_NO_ORDER, dma->cap_mask);
- 	dma->device_release = idxd_dma_release;
- 
- 	dma->device_prep_dma_interrupt = idxd_dma_prep_interrupt;
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 72b7d51fe41de..59c7f67cb3b5a 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -39,7 +39,6 @@ enum dma_status {
- 	DMA_IN_PROGRESS,
- 	DMA_PAUSED,
- 	DMA_ERROR,
--	DMA_OUT_OF_ORDER,
- };
- 
- /**
-@@ -62,7 +61,6 @@ enum dma_transaction_type {
- 	DMA_SLAVE,
- 	DMA_CYCLIC,
- 	DMA_INTERLEAVE,
--	DMA_COMPLETION_NO_ORDER,
- 	DMA_REPEAT,
- 	DMA_LOAD_EOT,
- /* last transaction type for creation of the capabilities mask */
+diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+index 0c2894498845..232895fa1d8d 100644
+--- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
++++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+@@ -25,6 +25,7 @@ properties:
+       - items:
+           - enum:
+               - qcom,sc7280-gpi-dma
++              - qcom,sm6115-gpi-dma
+               - qcom,sm8350-gpi-dma
+               - qcom,sm8450-gpi-dma
+           - const: qcom,sm6350-gpi-dma
 -- 
-2.37.3
+2.38.1
 

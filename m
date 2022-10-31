@@ -2,77 +2,112 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B74D661299C
-	for <lists+dmaengine@lfdr.de>; Sun, 30 Oct 2022 10:43:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BDB7A6133E6
+	for <lists+dmaengine@lfdr.de>; Mon, 31 Oct 2022 11:49:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230024AbiJ3Jnc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 30 Oct 2022 05:43:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40898 "EHLO
+        id S230020AbiJaKtM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 31 Oct 2022 06:49:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229853AbiJ3JnN (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 30 Oct 2022 05:43:13 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 657FBD10A;
-        Sun, 30 Oct 2022 02:43:12 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id l14so12116177wrw.2;
-        Sun, 30 Oct 2022 02:43:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cEHqsPqv95R3eGrYKhg4ruWGo3ymO/H/xi/Qhw4VFG0=;
-        b=WK2hF+vuK3yG0ecPgY6uKRUUPFghjZB9XmWCti0Jk/MWl4A5UFU620msKEzGSiSdB5
-         xwDV3KiEWdaEO3jjnY1xenzUh4JzhHF61broc17FdKC+adqFZ/EbDyE3dL8UV9VMyUc/
-         1q3b86DQntJXMK2By1KrJTirZ9v/RD3TK6Mw0y03B1Ss8Zmr53KayO/7kSED1KuSfV6S
-         VPy/gzErZCgfy48SIiSYuBhxJmJ+fcwA7hA54cJtMebRqlXTPZoV7kG426m1Gj67Hauu
-         ifxZW4j1QhiKXkJBiicUSvR2PuiWXbcqAVXItdlChcFwIJxL7+Kv5cvrnUZ9pNuLW2iH
-         bcJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cEHqsPqv95R3eGrYKhg4ruWGo3ymO/H/xi/Qhw4VFG0=;
-        b=Tk67YWZROIo3ehC6uMB9T1MOVrB3mrOtO7z+hu7lwNCiKjCuICN9MHXrN92+u/EV2V
-         ZiXqCsGy8jDzCPIeTEtPSdCjFEUvsuXDEItWHnmUPpNh3rlcQx9XvhMhelT8CMe5UwRS
-         Az0lFyw981Tct1ugScm3jW/FNJkKg14xqZcYJvzEeItdxy/LbfWYVs8elag073ekx8C+
-         EQsmFh69t0UJhXSKmT8Aa/tzFKekKz0i4FT31LazUujukWni4uJVuhFND7Js5icNJJ5m
-         22bJv6t1s8OGg/rYG6P7rcTvxTzuaACLtU5ZqP4/vzKA/WI731iYJ8VosYWsnr3AfHKJ
-         g6xQ==
-X-Gm-Message-State: ACrzQf2MpUuoFAGIY54tKysdOan3UfOdTLlrq9skNerBPsv8XdhZrOPP
-        HD5W9mtMYWzYBca54xeB0Ig=
-X-Google-Smtp-Source: AMsMyM66e4g3WQ6fedXjdOCMEKxZ3pSirsYGsXa5o877lNeILtX1jNDDqqDvS106b3qK0FCV/GqiRg==
-X-Received: by 2002:a05:6000:408c:b0:236:a7b4:fb4d with SMTP id da12-20020a056000408c00b00236a7b4fb4dmr4407306wrb.524.1667122990901;
-        Sun, 30 Oct 2022 02:43:10 -0700 (PDT)
-Received: from localhost ([77.78.20.135])
-        by smtp.gmail.com with ESMTPSA id s4-20020a05600c384400b003c3a1d8c8e6sm3916879wmr.19.2022.10.30.02.43.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Oct 2022 02:43:10 -0700 (PDT)
-From:   Iskren Chernev <iskren.chernev@gmail.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Adam Skladowski <a39.skl@gmail.com>,
-        Iskren Chernev <iskren.chernev@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 3/8] dt-bindings: dmaengine: qcom: gpi: add compatible for SM6115
-Date:   Sun, 30 Oct 2022 11:42:53 +0200
-Message-Id: <20221030094258.486428-4-iskren.chernev@gmail.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221030094258.486428-1-iskren.chernev@gmail.com>
-References: <20221030094258.486428-1-iskren.chernev@gmail.com>
-MIME-Version: 1.0
+        with ESMTP id S230177AbiJaKtK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 31 Oct 2022 06:49:10 -0400
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2086.outbound.protection.outlook.com [40.107.249.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2797F25D0;
+        Mon, 31 Oct 2022 03:49:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GZJcB48uNCCQkshlI4pcy7/GK1+pl1ybZuXPf/tbFycgv5lZTgGsEbMxZ2mS8pz6vYAQGZqlGLHlJqtdwBfN0NLi56rXpANudeC7+LpU0mFlQyix0VElSf6hNuG9V9DRvtpX7KO2vC97F4sosRV5HwcZfQWhTrUWHARKpRrd+7yjdM+tSM0z/gdXPSk/S9iIYtf9pcH8uimFvAArmA5y7QFlAppoS1BbbXtLdnvbHU5tWhXS4ShPWqLrfeScoW1uANyL/E9ULXFw9FiCBdC5V1CvjKqux66padqp2+a5dRcOH4tjp5hHd3knzYFMIeZfy8eQTemW6/jgZCnf/VatbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3VrjJy/viKtUTs/dRGwMV1X0W0tQdVKWwAITPA4U3ZA=;
+ b=Yajxg3+htdauLOA2QRb6xzxXgF1TvnHWmE/FaOG9Xzsp/B3lLF1NT1XSDrxlanQvauJlUPkcTJ0TQ62yFIUJRUX2IrlkUyky0TcN0VUaxL82Se5cyfKlFZb0C3FK5a+j4W8uQTE5KoE4Wux1RvAgPlZ0eJNSr1kqn83hQ9G1dnciAVKJHTZBt2k2xZCCN4Y5qUeI3m1Z135ejaqr/zRyP2/5bijEcENRmXitru3VB2bMQ0QV+qkbRTQ2f3pGlkq6biC/SL+4UXanX/vncXsPRywbAuiBrf4f2S30+ShJd+hrb8E/za/ZIk0qjm5BdI/hB4xkttRQ4D9rRETKOcdV6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3VrjJy/viKtUTs/dRGwMV1X0W0tQdVKWwAITPA4U3ZA=;
+ b=CnDMV+/f1gxf/lZ0zARfB0M8Lw39O/VqZ5rtjWSwZ4gp6flthXmrJu78wnQTbMJMN9gTWl2keBYCrvYgNtTB7NRNZHPHrdmfmotAx/ojOnZ35GCsgZBzMIVw0D9i963p5HDGP0NKkcBoirxlslijdLUDUiu9TNF5tintRAAcUTE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB5925.eurprd04.prod.outlook.com (2603:10a6:20b:ab::19)
+ by AM9PR04MB8793.eurprd04.prod.outlook.com (2603:10a6:20b:408::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.16; Mon, 31 Oct
+ 2022 10:49:05 +0000
+Received: from AM6PR04MB5925.eurprd04.prod.outlook.com
+ ([fe80::7a34:469:fd53:922c]) by AM6PR04MB5925.eurprd04.prod.outlook.com
+ ([fe80::7a34:469:fd53:922c%7]) with mapi id 15.20.5769.019; Mon, 31 Oct 2022
+ 10:49:05 +0000
+From:   Joy Zou <joy.zou@nxp.com>
+To:     vkoul@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com
+Cc:     shengjiu.wang@nxp.com, martink@posteo.de, dev@lynxeye.de,
+        alexander.stein@ew.tq-group.com, peng.fan@nxp.com, david@ixit.cz,
+        aford173@gmail.com, hongxing.zhu@nxp.com, linux-imx@nxp.com,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v9 0/2] dmaengine: sdma support hdmi audio
+Date:   Mon, 31 Oct 2022 18:50:26 +0800
+Message-Id: <20221031105028.598502-1-joy.zou@nxp.com>
+X-Mailer: git-send-email 2.37.1
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR06CA0006.apcprd06.prod.outlook.com
+ (2603:1096:4:186::19) To AM6PR04MB5925.eurprd04.prod.outlook.com
+ (2603:10a6:20b:ab::19)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR04MB5925:EE_|AM9PR04MB8793:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9465336e-ebfe-46e8-c21b-08dabb2d87c9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: G1pH3Lapx/M98Q6NKRTqyCNMIwPIO/l7FRRM8YWM1M3Nd6o9dXtQZmVjQxUC1et6FZSasXfvXnqZTvmdU8OqgNFfLnfHwWvA18hlmzZGHytxnhKZvWk8LuJG0yKiegG4/wDh/1KDp2tnZ9QlBpZl9bX4GYo5oQt7rIC08Cnb5DStVWDxuKoNIYGG7h0FKMhv9xzbn5CczUygYkmwedS1xQvLYPxuRfa/+Bkc5zyh9GRordb8N6Ft9NsDbissLfozmy50oLYKeeA6fesfwcT90c8wPbWR6BOehPmDP3JO8LPaEwT++RzXF5jJrgzfR3gGjFzsKdaYr3bi/OU6HLR3OSM+neLxtlMmpGxenoRrOlhFFI8cf6c1nJosWTnrF1/YeLl2HYoQ+58VSqQjSA3nEFWagd7jMzyYmWPmARW1lHzFH8V21h3bwDv+3NoWPY4PucV6fEssZ52aobrTaOnxpN/XqjGb80zS1ULD2NwTaYHJWU+J61vc/qMWMZFOIsSNgE90rYKKOUkGFPyWSvgMFy1f5TqL3TUyuEqOU+Td9+CUbMOTrkEi58SiCEncpDH92xcIyuXYj/ypYygoeem24r/PtM/U6bZ2E343pPfmvE1GMZJZX8wgl1/YA3JVHFsCZaWxBQ/4RZhhzODHWT30kqncXYylp7rxLaCAervm+mlf414T+NGd1FbgVHa9/A37ZxJSNjKDsvuYbqj/3fNqC/VDA+meS0NKc+O0rnLcUH1aM000wJAZTcxwbthGQvu512Kfv4OSBRvspwK4aJEY1w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB5925.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(396003)(366004)(39860400002)(376002)(136003)(451199015)(38100700002)(44832011)(38350700002)(36756003)(86362001)(4744005)(2906002)(6486002)(6666004)(8676002)(478600001)(41300700001)(316002)(4326008)(66946007)(66476007)(8936002)(7416002)(5660300002)(66556008)(186003)(2616005)(1076003)(6506007)(52116002)(6512007)(26005)(83380400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?tIHs3h35n0tawFwWazd0QCJStCBdv8UZcwt5LdMTi1N3Jb/jlQIaTNOLuFoE?=
+ =?us-ascii?Q?CkmpwACbtwgbS6PvemclaZ6hqcu7IzoVfIo+s62GOwO6aIguvUEWCtP2Fgb3?=
+ =?us-ascii?Q?2eY+BBvRtWt+5IyN8aW4bnOlCCVIqfphoMpiyZPB5PCJuy0f0jqs+RUqiFpg?=
+ =?us-ascii?Q?fxFwz3sFNf4V7HytmgkTriZyu1YG1fvQ0PdJ/FpblZNv1rJzzWGWCqgg4NyR?=
+ =?us-ascii?Q?lkwPDMsgeNq/vbl0Tc/FKU60T+vXbzozMB4o+z/WQw1GeeqcjBV2+tf+cm0z?=
+ =?us-ascii?Q?WkIjv20iji8Z6hebrp8NOQhKAMTH0noul6o4P1kPesF9vo8drEchmnoKGMjq?=
+ =?us-ascii?Q?nMSWb3eckuNpM1K42cFpNsPDPF4pA4pkqQkFHlaUCjAsjNt4tKN6D1xIlRjT?=
+ =?us-ascii?Q?G4YSzO94WWLyE3CWOnPk6PSt8EYz7/gc4MdMWagscyU6ULnAo0pgAJzgUsro?=
+ =?us-ascii?Q?xFgYfhQ9z6IUwWMzihAtbAXqu0keqxA8RLM7cPsDLSi07X2bGO7NGkHgw8R4?=
+ =?us-ascii?Q?d3X9OLoMzYcUV2/yxHlYpUHcWok+B4JGj5YEchWEdtwTmhCla0PuLhuoqV5z?=
+ =?us-ascii?Q?duCpygnRvK2xF0l9mcGJubMe3FYeATjZgxRZFwcm/5hQlboOXgbRHyGgMmXi?=
+ =?us-ascii?Q?1V7XgRo5oNoxsPj0teS2laUtNwk9brZDZRs+ALX01zSVsGiPK4dFzuSoAewo?=
+ =?us-ascii?Q?2Qzs9QRkv7YRexyq+2YQbVjQF95IiVV4fCAnat5zrhiUHMYIie8yl8/dW8zT?=
+ =?us-ascii?Q?JKYal+EYe3kxkwl5jClb6Ec9W+LO8KhF9WuKp7S26232F7doIXPs7fY00uZS?=
+ =?us-ascii?Q?bRbKRYnEdzT4fYZC3t/eFbpS8fWkYljdByff6jnDx6r/JlvHYUz1xIofwyk1?=
+ =?us-ascii?Q?4s/JnYnf4uEZNRSAJzuRvvoeivIURAuILVIgP0iOi0hrOY+Yw0bt+f0q+ar7?=
+ =?us-ascii?Q?hTxdUQYuwVbCanMXa1ZMWoB2fx/28bbjQYdlxdGxKj3AI9LEJLzO169mtzyX?=
+ =?us-ascii?Q?zHiWQUnCptXcDeNBSKjZgAM5f5QqUPtEckNhe8vNz8KBRm5MScBeak7uLzvP?=
+ =?us-ascii?Q?9HO211z1JU11eFhl95AT8VXFmStE8S3YVwDbNTGPMhGz2zWpWumM0bJidDFG?=
+ =?us-ascii?Q?xHQ1R1XANSyD1kU3Lzx6LCqYT5kXvTD5qEoIbS6UxlcgTw1aMVWq3Q5yM/Qw?=
+ =?us-ascii?Q?BOC7KaU+34BB93L6Hwiwx4dB+4dnyGuP7w255RrNnK225Z36oEBgobP8Pp/r?=
+ =?us-ascii?Q?ts5LXMcEol9smWTwgHL4JHofwSDl2p7jorSWa1NDtUa2KPqvzR47sNJ31dhw?=
+ =?us-ascii?Q?bQ0JHBtkQOpOL7RD6HiB7DqgtF+uvyL2RHDYWgw/ZIiP/pZwFODxZpsTlkcH?=
+ =?us-ascii?Q?x33lRucacs4J+uH19phvKy/SFoRQnlX1KMmrLEmiA/A29elSMcaoiVj13w1w?=
+ =?us-ascii?Q?vNg1WL2o8Y2cAT+GiGvV1P7o4GF96C7HjS20cu+8Wz/gzbhF+zt00nZQW/sv?=
+ =?us-ascii?Q?dqubsCJtyMhBpeYv2zADL9Rdu4TWr8q69AkPcxaTsmSSKCiLglSK0KbAbZgl?=
+ =?us-ascii?Q?E8Yg2+onN8sP7FlAdBJjNUhJmrAv/yxQWlU8UyWm?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9465336e-ebfe-46e8-c21b-08dabb2d87c9
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB5925.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Oct 2022 10:49:05.6009
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Sm9cuVBaiFEKQYYg3z7+jDuDp2Ubf9oS5lF+0sgWgPyhvBRQ73gUMRURwaBnysWJ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8793
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,28 +115,21 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Adam Skladowski <a39.skl@gmail.com>
+The patchset supports sdma hdmi audio.
+For the details, please check the patch commit log.
 
-Document the compatible for GPI DMA controller on SM6115 SoC.
+Joy Zou (2):
+  dt-bindings: fsl-imx-sdma: Convert imx sdma to DT schema
+  dmaengine: imx-sdma: support hdmi in sdma
 
-Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
-Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
----
- Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/dma/fsl,imx-sdma.yaml | 149 ++++++++++++++++++
+ .../devicetree/bindings/dma/fsl-imx-sdma.txt  | 118 --------------
+ drivers/dma/imx-sdma.c                        |  38 ++++-
+ include/linux/dma/imx-dma.h                   |   1 +
+ 4 files changed, 180 insertions(+), 126 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-index 0c2894498845..232895fa1d8d 100644
---- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-+++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-@@ -25,6 +25,7 @@ properties:
-       - items:
-           - enum:
-               - qcom,sc7280-gpi-dma
-+              - qcom,sm6115-gpi-dma
-               - qcom,sm8350-gpi-dma
-               - qcom,sm8450-gpi-dma
-           - const: qcom,sm6350-gpi-dma
 -- 
-2.38.1
+2.37.1
 

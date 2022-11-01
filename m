@@ -2,259 +2,256 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3420A6145B1
-	for <lists+dmaengine@lfdr.de>; Tue,  1 Nov 2022 09:28:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14A976149BD
+	for <lists+dmaengine@lfdr.de>; Tue,  1 Nov 2022 12:48:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230039AbiKAI2N (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 1 Nov 2022 04:28:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54916 "EHLO
+        id S231408AbiKALsH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 1 Nov 2022 07:48:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230057AbiKAI2K (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 1 Nov 2022 04:28:10 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2077.outbound.protection.outlook.com [40.107.243.77])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB7DB186E6;
-        Tue,  1 Nov 2022 01:28:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ve1rSDmJrtH/rsvrU809PVxS/rweTREt2S2OsdsDWyJNIhh8F8kjMCqfWQmVBFk35ufXJ5s19wCkfMNDU8jwTgKqS3yaPk5UAoT/uZHomeY0+VD+bfTMsQ+b+UuGNS9/yqn7arHMtfGTTnv9ifW0M6ACbvsG4gGq5wqE6sWnEkRbE2pS2//0f5G9mCf/6uc6ygEdO7KWIIu5i1m8pvYTd6SOoeMM4WdKrcdrm051hSaxM7QOXLxhnmwLwj089QTlazNnyos/GMKeAm9J6EQOF9TaE+Jj6xAoFhTnru8Rg86CIZ5jCk2z/5QWcWAtECOCgQopnRlsxQX4vElK45TYzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3ih8fZgTKpRUKfbFDjAki9kXI1hNFYttEYTKJptVy04=;
- b=ANttBSLiE0du5nsLb5Ok7d1ah9dftxNutiX8/XjIXAmdKipeqydMvGQWlF1CiFA0bk7EaVra5PkGEbSReQQIqgacs4rkPSkYckA/bTJ2ZO6w7XitcAc2AXPlAusLx5Tq4FaYJHVczYzPQ8NA0lTf/9Bw5/RlzflrszPnXogooXPXRKe5pnUh0ridpXYTJJe4V/DSNXzaw27VBiu8NVbYe6xtxnBImg7AHKY6eiJPtfhftDB8FkafKBM9ixodCKYSPYQRLpUAB+ssAYXulSAKZsgSgxcTaHaAsHzItExWFJ6aNTrBbHCiEENVXV+72FNoDC7vXlg7iRIg67e3FOj+qg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3ih8fZgTKpRUKfbFDjAki9kXI1hNFYttEYTKJptVy04=;
- b=JrzgiTH5Q63ciC9+1L9vc8/rnWhXxNa+HdYwMQrYTDp0f9URDpNBqp98qUZWhqthVyqblW8hMWjgZEIALY1ha/NRo3p+QnKuZ4rppgaFStTyjMTY7hXL19yV2/QVxrNYkB9fa8In6urMoOU+WstqBHUojG2sYO/iz8ZT0KBgCE/LutaClmsa2bW1AXbB9JDjLQObrQ1qHQUkmJfVaDZ8C6DVUM/1vUC2jZ6ZhVvDPpw6WwuYC/QkP1kHYDQP+B6dnxKnlvxuJwyVahwZb6IjmL69qWD6FEYGJQaPihggwiwjEudDPQ2mpc+tFiUadYG8JhQkDba9TwpHaQyUJY24jg==
-Received: from MW4PR03CA0323.namprd03.prod.outlook.com (2603:10b6:303:dd::28)
- by PH7PR12MB6396.namprd12.prod.outlook.com (2603:10b6:510:1fc::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.19; Tue, 1 Nov
- 2022 08:28:07 +0000
-Received: from CO1NAM11FT040.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:dd:cafe::95) by MW4PR03CA0323.outlook.office365.com
- (2603:10b6:303:dd::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.18 via Frontend
- Transport; Tue, 1 Nov 2022 08:28:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CO1NAM11FT040.mail.protection.outlook.com (10.13.174.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5769.14 via Frontend Transport; Tue, 1 Nov 2022 08:28:07 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.26; Tue, 1 Nov 2022
- 01:27:57 -0700
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Tue, 1 Nov 2022
- 01:27:57 -0700
-Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.14) by mail.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server id 15.2.986.29 via Frontend
- Transport; Tue, 1 Nov 2022 01:27:53 -0700
-From:   Akhil R <akhilrajeev@nvidia.com>
-To:     <ldewangan@nvidia.com>, <jonathanh@nvidia.com>, <vkoul@kernel.org>,
-        <thierry.reding@gmail.com>, <p.zabel@pengutronix.de>,
-        <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <sfr@canb.auug.org.au>
-CC:     <akhilrajeev@nvidia.com>
-Subject: [PATCH v3 3/3] dmaengine: tegra: Add support for dma-channel-mask
-Date:   Tue, 1 Nov 2022 13:57:12 +0530
-Message-ID: <20221101082712.59263-4-akhilrajeev@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20221101082712.59263-1-akhilrajeev@nvidia.com>
-References: <20221101082712.59263-1-akhilrajeev@nvidia.com>
-X-NVConfidentiality: public
+        with ESMTP id S231278AbiKALry (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 1 Nov 2022 07:47:54 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E85DEE4;
+        Tue,  1 Nov 2022 04:40:21 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id a13so21406977edj.0;
+        Tue, 01 Nov 2022 04:40:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GmDhui1fuCaXgbg430oH7yny2k6M/vj7S6F1BQ8jHzQ=;
+        b=kNZxCYHyKpEf/VhYMlbdCM0GXt8X1ZLFnwkyKicobyel30LMpeY6HItBS0lE+CZTWV
+         iAc+A7jKTPJhGj3ogsoozhxmFtURG7gshFOpQGRCWkPhBmehQ36p23sqQ6WeuFin82rQ
+         4tCefaKN/zuFW7/DsgLpFnRtk2q6lzTHTNTc+ja6/liRrmS0NENoTCIFw4In56kuAEXd
+         UbpNGdVb2Z2IN4ZJybhue2ClPgyLrmIuiZL7WqK3PFkDnGQVWRFnU15na3LPgRPyMDcw
+         rvc94TOb69cNPjpaFRXYQJOXJNoEWOFpod7tEg3zQ3uOTxrRSFUeh2bpoVZlYQYe18jx
+         n8NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GmDhui1fuCaXgbg430oH7yny2k6M/vj7S6F1BQ8jHzQ=;
+        b=pjYrCH+OWjCJ2yFPO95/fRQuFkKwpWMztYLA0915evz0+61MamJ3+Ks9eop2Td8cpR
+         6l7AY6L1l4QmPvfEhqlee7yfcqY5USL1xFgJ4q1DqBW9wg9DRb5IbbWBqF2QspmHKQo8
+         aXMLVM5r61nBBXGnpM99BzE6MtO1/R83fxU76pKM2iOuDnMv4e1pnrzGpEJe7rVkfUJr
+         hEJuqquZ/d5SIEmxRxhCBPEq1+qFXnY+7pueIGe/WgVLYBswDfv/y6IGQLhzGtQZIkjv
+         hPkzx+htKYUVO2EqGlOOPjdU945tSGgHk/dTaAOzcLrAOBgRAR7rO62/zX4wpwWahzZj
+         6CPg==
+X-Gm-Message-State: ACrzQf0ZR6MS3stOj/BO3+4ZhHea0oKKs/ge87S5keLKXg0UNrA2C/d5
+        cYJ5RUCUNu3yGImJTVFTYR4mzHJvyzE=
+X-Google-Smtp-Source: AMsMyM5AW45Zb4lvw6D/an20McEeD1S0voOspF4Vm3vpzNUWEMPSMeHLU/BYR/GoKjfQ3zkECFjipQ==
+X-Received: by 2002:a05:6402:114a:b0:454:85e4:2295 with SMTP id g10-20020a056402114a00b0045485e42295mr19204344edw.348.1667302819300;
+        Tue, 01 Nov 2022 04:40:19 -0700 (PDT)
+Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id y21-20020a1709060a9500b0078d76ee7543sm4077256ejf.222.2022.11.01.04.40.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Nov 2022 04:40:18 -0700 (PDT)
+Date:   Tue, 1 Nov 2022 12:40:16 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Akhil R <akhilrajeev@nvidia.com>, Rob Herring <robh@kernel.org>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>
+Subject: Re: [PATCH RESEND v2 3/3] dmaengine: tegra: Add support for
+ dma-channel-mask
+Message-ID: <Y2EFoG1H9YpfxRjs@orome>
+References: <20221020083322.36431-1-akhilrajeev@nvidia.com>
+ <20221020083322.36431-4-akhilrajeev@nvidia.com>
+ <20221021021604.GA2181729-robh@kernel.org>
+ <SJ1PR12MB63399B01D750CD4725A13A03C0309@SJ1PR12MB6339.namprd12.prod.outlook.com>
+ <76617e20-2a1d-baba-719d-bd8b32fa69be@nvidia.com>
+ <SJ1PR12MB6339F181734DA0A05B4862AFC0339@SJ1PR12MB6339.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT040:EE_|PH7PR12MB6396:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8a490114-4acc-493e-1dc7-08dabbe300e6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ECiYB3ussOfvm0pNiOTAnoqoZ3o1DgXgmwSeVSSXmhCXZDbowIAYBydInD1QXyHeuzkgzAQnkJUwvxWN3luQPVyfNey0pBmTRH8c+wel8PvXv4IfS+9taE4yCmaG1WeoJrGqwKRvWGPEpBfFqg0LNEnrOEvk6iF6DmT4ygWRubsSlZMRN1472s7olhsYvG0ULWRBsyN9IQBOX5S7hSEMY1h1sST047qt966ObRrUMjPigajvL57+XikxGFU4MRI4hLsKYJIe9U1QdABz2s477JBbYdjopyec/bhwY8qD3xOWewhhXaSN0CY+TdYLUwN+X/mdmqDUTnhIJiNvuZk1+C2t+4uWCw3uBi8baAwM/ygzEw/zUKgGUTrDUvrWcNEJKn1OqhopukpV80VbpGXIYU8amhoEdklVUuZ3ZWzsBD3RJS+bPsOQjbtygv1DBTYAjwjIVEOiVgi/MsjJF1mXipXSQk2zw4xzHNS0jupm4sKFkR6+Wa8NqCi+oZh9+0T9iuVjen20RjQxke/Yms3RTToIsFYOacjMOh/5wy0JO4oQErJZhMuuVqzoACVS921Zyzz7O9kGNzMszJNeoBwMkTAzcNZpjAoGEoVq0kcLrshrjsBWaKEqhTt9rbs8UDvZu8iyMWKcDIj2ALGjNAEBja7TF85GY87HLOQJfwgT40mrET5nDEMmSdAX3FGbIozfrEPzL+aJ3FhZ3Lj6txOTvtV1x8ZSoxMhbYlIJDY12OnG4A088zLw/smcRP7oH5Mk1BRbcGbYgdE5LCxq8mYCIWg95mBH2NdWYxXxttPPiLE=
-X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(376002)(136003)(396003)(346002)(451199015)(46966006)(40470700004)(36840700001)(8936002)(83380400001)(47076005)(426003)(36860700001)(82740400003)(478600001)(2906002)(336012)(8676002)(356005)(316002)(82310400005)(4326008)(40480700001)(70206006)(70586007)(7636003)(921005)(2616005)(186003)(7696005)(86362001)(1076003)(6666004)(41300700001)(40460700003)(107886003)(5660300002)(7416002)(26005)(36756003)(110136005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Nov 2022 08:28:07.1522
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a490114-4acc-493e-1dc7-08dabbe300e6
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT040.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6396
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="oesM7UOI0DB+Ei+g"
+Content-Disposition: inline
+In-Reply-To: <SJ1PR12MB6339F181734DA0A05B4862AFC0339@SJ1PR12MB6339.namprd12.prod.outlook.com>
+User-Agent: Mutt/2.2.7 (2022-08-07)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add support for dma-channel-mask so that only the specified channels
-are used. This helps to reserve some channels for the firmware.
 
-This was initially achieved by limiting the channel number to 31 in
-the driver and adjusting the register address to skip channel0 which
-was reserved for a firmware. Now, with this change, the driver can
-align more to the actual hardware which has 32 channels.
+--oesM7UOI0DB+Ei+g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
----
- drivers/dma/tegra186-gpc-dma.c | 47 +++++++++++++++++++++++++++-------
- 1 file changed, 38 insertions(+), 9 deletions(-)
+On Thu, Oct 27, 2022 at 10:13:00AM +0000, Akhil R wrote:
+> > On 26/10/2022 05:44, Akhil R wrote:
+> > >> On Thu, Oct 20, 2022 at 02:03:22PM +0530, Akhil R wrote:
+> > >>> Add support for dma-channel-mask so that only the specified channels
+> > >>> are used. This helps to reserve some channels for the firmware.
+> > >>>
+> > >>> This was initially achieved by limiting the channel number to 31 in
+> > >>> the driver and adjusting the register address to skip channel0 which
+> > >>> was reserved for a firmware. Now, with this change, the driver can
+> > >>> align more to the actual hardware which has 32 channels.
+> > >>>
+> > >>> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+> > >>> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+> > >>> ---
+> > >>>   drivers/dma/tegra186-gpc-dma.c | 37 +++++++++++++++++++++++++++--=
+--
+> > ---
+> > >>>   1 file changed, 30 insertions(+), 7 deletions(-)
+> > >>>
+> > >>> diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-=
+gpc-
+> > >> dma.c
+> > >>> index fa9bda4a2bc6..1d1180db6d4e 100644
+> > >>> --- a/drivers/dma/tegra186-gpc-dma.c
+> > >>> +++ b/drivers/dma/tegra186-gpc-dma.c
+> > >>> @@ -161,7 +161,10 @@
+> > >>>   #define TEGRA_GPCDMA_BURST_COMPLETION_TIMEOUT        5000 /* 5
+> > >> msec */
+> > >>>
+> > >>>   /* Channel base address offset from GPCDMA base address */
+> > >>> -#define TEGRA_GPCDMA_CHANNEL_BASE_ADD_OFFSET 0x20000
+> > >>> +#define TEGRA_GPCDMA_CHANNEL_BASE_ADDR_OFFSET        0x10000
+> > >>> +
+> > >>> +/* Default channel mask reserving channel0 */
+> > >>> +#define TEGRA_GPCDMA_DEFAULT_CHANNEL_MASK    0xfffffffe
+> > >>>
+> > >>>   struct tegra_dma;
+> > >>>   struct tegra_dma_channel;
+> > >>> @@ -246,6 +249,7 @@ struct tegra_dma {
+> > >>>        const struct tegra_dma_chip_data *chip_data;
+> > >>>        unsigned long sid_m2d_reserved;
+> > >>>        unsigned long sid_d2m_reserved;
+> > >>> +     u32 chan_mask;
+> > >>>        void __iomem *base_addr;
+> > >>>        struct device *dev;
+> > >>>        struct dma_device dma_dev;
+> > >>> @@ -1288,7 +1292,7 @@ static struct dma_chan
+> > *tegra_dma_of_xlate(struct
+> > >> of_phandle_args *dma_spec,
+> > >>>   }
+> > >>>
+> > >>>   static const struct tegra_dma_chip_data tegra186_dma_chip_data =
+=3D {
+> > >>> -     .nr_channels =3D 31,
+> > >>> +     .nr_channels =3D 32,
+> > >>
+> > >> This is an ABI break. A new kernel with an old DTB will use 32 chann=
+els
+> > >> instead of 31. You should leave this and use the dma-channel-mask to
+> > >> enable all 32 channels.
+> > >>
+> > > Hi Rob,
+> > >
+> > > If using an old DTB, tdma->chan_mask will be default to 0xfffffffe si=
+nce it
+> > > would not have the dma-channel-mask property. The driver would still
+> > > use 31 channels even if it uses an old DTB. Shouldn't it prevent the
+> > > ABI break?
+> >=20
+> > Unfortunately no. Yes for an old DTB without the dma-channel-mask
+> > property, we set the channel mask to 0xfffffffe, but this is not correct
+> > because it only has 31 interrupts/channels and not 32. So I think we
+> > will need to use of_irq_count() here.
+> >
+>=20
+> Shall I put it in a way that only the used interrupts are mentioned in th=
+e DT?
+> With this I can revert the interrupt change in the DT and would not break
+> the ABI as well.
+>=20
+> The code would look something like this.
+>=20
+> int chan_count =3D 0;
+>=20
+> if (of_irq_count(pdev->dev.of_node) !=3D hweight_long(tdma->chan_mask)) {
+>         dev_err(&pdev->dev, "Interrupt count doesn't match with channels\=
+n");
+>         return -EINVAL;
+> }
+>=20
+> for (i =3D 0; i < cdata->nr_channels; i++) {
+>         struct tegra_dma_channel *tdc =3D &tdma->channels[i];
+>    =20
+>         /* Check for channel mask */
+>         if (!(tdma->chan_mask & BIT(i)))
+>             continue;
+>=20
+>         tdc->irq =3D platform_get_irq(pdev, chan_count);
+>         chan_count++;
+>         if (tdc->irq < 0)
+>             return tdc->irq;
+>     ...
+>     ...
+> }
 
-diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-dma.c
-index fa9bda4a2bc6..31c8b46e5bf2 100644
---- a/drivers/dma/tegra186-gpc-dma.c
-+++ b/drivers/dma/tegra186-gpc-dma.c
-@@ -15,6 +15,7 @@
- #include <linux/module.h>
- #include <linux/of_device.h>
- #include <linux/of_dma.h>
-+#include <linux/of_irq.h>
- #include <linux/platform_device.h>
- #include <linux/reset.h>
- #include <linux/slab.h>
-@@ -161,7 +162,10 @@
- #define TEGRA_GPCDMA_BURST_COMPLETION_TIMEOUT	5000 /* 5 msec */
- 
- /* Channel base address offset from GPCDMA base address */
--#define TEGRA_GPCDMA_CHANNEL_BASE_ADD_OFFSET	0x20000
-+#define TEGRA_GPCDMA_CHANNEL_BASE_ADDR_OFFSET	0x10000
-+
-+/* Default channel mask reserving channel0 */
-+#define TEGRA_GPCDMA_DEFAULT_CHANNEL_MASK	0xfffffffe
- 
- struct tegra_dma;
- struct tegra_dma_channel;
-@@ -246,6 +250,7 @@ struct tegra_dma {
- 	const struct tegra_dma_chip_data *chip_data;
- 	unsigned long sid_m2d_reserved;
- 	unsigned long sid_d2m_reserved;
-+	u32 chan_mask;
- 	void __iomem *base_addr;
- 	struct device *dev;
- 	struct dma_device dma_dev;
-@@ -1288,7 +1293,7 @@ static struct dma_chan *tegra_dma_of_xlate(struct of_phandle_args *dma_spec,
- }
- 
- static const struct tegra_dma_chip_data tegra186_dma_chip_data = {
--	.nr_channels = 31,
-+	.nr_channels = 32,
- 	.channel_reg_size = SZ_64K,
- 	.max_dma_count = SZ_1G,
- 	.hw_support_pause = false,
-@@ -1296,7 +1301,7 @@ static const struct tegra_dma_chip_data tegra186_dma_chip_data = {
- };
- 
- static const struct tegra_dma_chip_data tegra194_dma_chip_data = {
--	.nr_channels = 31,
-+	.nr_channels = 32,
- 	.channel_reg_size = SZ_64K,
- 	.max_dma_count = SZ_1G,
- 	.hw_support_pause = true,
-@@ -1304,7 +1309,7 @@ static const struct tegra_dma_chip_data tegra194_dma_chip_data = {
- };
- 
- static const struct tegra_dma_chip_data tegra234_dma_chip_data = {
--	.nr_channels = 31,
-+	.nr_channels = 32,
- 	.channel_reg_size = SZ_64K,
- 	.max_dma_count = SZ_1G,
- 	.hw_support_pause = true,
-@@ -1346,7 +1351,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 	struct iommu_fwspec *iommu_spec;
- 	unsigned int stream_id, i;
- 	struct tegra_dma *tdma;
--	int ret;
-+	int ret, chan_count = 0;
- 
- 	cdata = of_device_get_match_data(&pdev->dev);
- 
-@@ -1380,15 +1385,34 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 	}
- 	stream_id = iommu_spec->ids[0] & 0xffff;
- 
-+	ret = device_property_read_u32(&pdev->dev, "dma-channel-mask",
-+				       &tdma->chan_mask);
-+	if (ret) {
-+		dev_warn(&pdev->dev,
-+			 "Missing dma-channel-mask property, using default channel mask %#x\n",
-+			 TEGRA_GPCDMA_DEFAULT_CHANNEL_MASK);
-+		tdma->chan_mask = TEGRA_GPCDMA_DEFAULT_CHANNEL_MASK;
-+	}
-+
-+	if (of_irq_count(pdev->dev.of_node) != hweight_long(tdma->chan_mask)) {
-+		dev_err(&pdev->dev, "IRQ count mismatch with channels\n");
-+		return -EINVAL;
-+	}
-+
- 	INIT_LIST_HEAD(&tdma->dma_dev.channels);
- 	for (i = 0; i < cdata->nr_channels; i++) {
- 		struct tegra_dma_channel *tdc = &tdma->channels[i];
- 
--		tdc->irq = platform_get_irq(pdev, i);
-+		/* Check for channel mask */
-+		if (!(tdma->chan_mask & BIT(i)))
-+			continue;
-+
-+		tdc->irq = platform_get_irq(pdev, chan_count);
- 		if (tdc->irq < 0)
- 			return tdc->irq;
- 
--		tdc->chan_base_offset = TEGRA_GPCDMA_CHANNEL_BASE_ADD_OFFSET +
-+		chan_count++;
-+		tdc->chan_base_offset = TEGRA_GPCDMA_CHANNEL_BASE_ADDR_OFFSET +
- 					i * cdata->channel_reg_size;
- 		snprintf(tdc->name, sizeof(tdc->name), "gpcdma.%d", i);
- 		tdc->tdma = tdma;
-@@ -1449,8 +1473,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	dev_info(&pdev->dev, "GPC DMA driver register %d channels\n",
--		 cdata->nr_channels);
-+	dev_info(&pdev->dev, "GPC DMA driver register %d channels\n", chan_count);
- 
- 	return 0;
- }
-@@ -1473,6 +1496,9 @@ static int __maybe_unused tegra_dma_pm_suspend(struct device *dev)
- 	for (i = 0; i < tdma->chip_data->nr_channels; i++) {
- 		struct tegra_dma_channel *tdc = &tdma->channels[i];
- 
-+		if (!(tdma->chan_mask & BIT(i)))
-+			continue;
-+
- 		if (tdc->dma_desc) {
- 			dev_err(tdma->dev, "channel %u busy\n", i);
- 			return -EBUSY;
-@@ -1492,6 +1518,9 @@ static int __maybe_unused tegra_dma_pm_resume(struct device *dev)
- 	for (i = 0; i < tdma->chip_data->nr_channels; i++) {
- 		struct tegra_dma_channel *tdc = &tdma->channels[i];
- 
-+		if (!(tdma->chan_mask & BIT(i)))
-+			continue;
-+
- 		tegra_dma_program_sid(tdc, tdc->stream_id);
- 	}
- 
--- 
-2.17.1
+This is all getting quite complicated for what is essentially a bug fix.
+The root of this problem is that the original bindings were simply wrong
+and didn't accurately represent the hardware.
 
+The GPC DMA controller has 32 channels and each channel has one DMA
+interrupt. So the right way to describe this in DT is by listing all of
+the interrupts. If the firmware then ends up using one of those channels
+the right way is not to make it seem like the controller supports only
+31 channels, but rather to mark the used channels as reserved.
+
+So I think the bottom line here is that the original binding has a bug
+that we're trying to address. Any workaround for this is problematic,
+and I think breaking backwards-compatibility is the cleanest solution
+here.
+
+Now, GPC DMA was introduced on Tegra186 and the DT bindings were added
+in 5.19. Any products released with this IP were released with kernels
+prior to 5.19 and bindings that were never in-tree. Any of those
+products that are supported upstream we know have replaceable DTB images
+(i.e. by default they are flashed at the same time as the kernel image),
+so breaking DT ABI should be okay.
+
+In fact, there are slight incompatibilities between product and upstream
+DT bindings (we're in the process of removing those as part of the
+upstreaming process), so being able to reflash the DTB is a prerequisite
+for supporting upstream Linux on these devices.
+
+I think going forward we should be extra careful about these kinds of
+problems, so that we don't have to keep dealing with fallout like this.
+
+Rob, given the above, do you think it's okay to proceed with the ABI
+break?
+
+Thierry
+
+--oesM7UOI0DB+Ei+g
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmNhBZ0ACgkQ3SOs138+
+s6Eqwg/9EjmFdYeGMUhmTZiHZu7Ycw3dCkWi7Fg5GidVRzZ8fxWd6/GvFUDU73gg
+WTNvZkT+wS1eBZcYXsnybwZMtgP9Bxu2nHz7e0KCRD18ePrqBi7/qiDv1EldVcUb
+xX171nBNKoBdDY8BthVw45RJ8TbozkhRgQhUC9gyqBlw0y3/HrnNPKCVT770yOsJ
+t9EAUyc0IHKkuYkfCH7Zu1g64yEKLxvM8Dm9SN63BsYC7OXbFM95/XyZJ/7kvkis
++J1YQf17qoSfpxKTIWZcYgDTE3nST3NF4E4E5F9DftQk4U31bM5jiQMZk4bvvD7M
+zus4+vKbVdfyjmXsiKLFaULBf2Tia+j8Vel6oyflXkLd/S/wL7Ebc3v00uvBW+4e
+qYM+PjBdNH79iipFBTjV1y008UFz3GUKUf0JXW52RqCihc0DkM/bJliiLjlteGzY
+AEy+EKJssJgTSyqiAUCxjftAsEIr+m0GHX1v2ZOG4uno/hrgXxvgb9qfDnjmffcu
+gZgdZjLkvBULXQac5i8M7Em/WxmmPWUuLupB/TRfUE4brpnlnZEPx8Uo9NtnBh6y
+rOZ7PFHsY91g5EtcjM4Icn8bVQowmiwQulMB8cgdmSDFco/Q+mrXR9R8uc+Il5Ge
+7kSfGJ+x7p21VPsKPWyssL01r2y0smKQsoArnMa0HqDwwQysxHQ=
+=5cml
+-----END PGP SIGNATURE-----
+
+--oesM7UOI0DB+Ei+g--

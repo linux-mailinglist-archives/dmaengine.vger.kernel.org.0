@@ -2,77 +2,60 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F284617E70
-	for <lists+dmaengine@lfdr.de>; Thu,  3 Nov 2022 14:53:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43E996189AC
+	for <lists+dmaengine@lfdr.de>; Thu,  3 Nov 2022 21:39:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229539AbiKCNxx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 3 Nov 2022 09:53:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49806 "EHLO
+        id S229496AbiKCUjs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 3 Nov 2022 16:39:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbiKCNxw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 3 Nov 2022 09:53:52 -0400
-Received: from mail-qv1-xf36.google.com (mail-qv1-xf36.google.com [IPv6:2607:f8b0:4864:20::f36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6884AC767
-        for <dmaengine@vger.kernel.org>; Thu,  3 Nov 2022 06:53:51 -0700 (PDT)
-Received: by mail-qv1-xf36.google.com with SMTP id o8so1133688qvw.5
-        for <dmaengine@vger.kernel.org>; Thu, 03 Nov 2022 06:53:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SOnq3Q7cbBeOTNlE0Pk9c0a++XuWD6tqMEfNSX20zFE=;
-        b=P4KAzYIKuFAX55nKGJB3Fq+iRQhlrik/s59/DNPfH48Vupwss5dy586W9qL+8E5+pD
-         NBiY6bNORsMg1h8mSwpuGHLYX46j1f8yU7+CLpiI3mafoJ5Bbgz4eyGJCi6wyt3kpBwU
-         0HZzDKJl5q6SsE0vdbFIFmDa1gk+zESwIta6TF7RybBq+aEx1xNMHbTUw1xvTfjEqfKe
-         I7FhCng/91v8nAgDx1yrOfd2SeNpw732SstdrXMlH9ZoC9O9qZn+N/1Xeoi30+7tRws3
-         QvFUppU8F2QvHGynpiw+Thh34/c+H7mVil2C7SnNOf2TbGVkdt3dwDWQ0N7cE078RirM
-         BAJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SOnq3Q7cbBeOTNlE0Pk9c0a++XuWD6tqMEfNSX20zFE=;
-        b=QJDFGoiJCAr/ELiS1rn9sE+uAPidPdPXdFRxFzjhDmKyKMUNaTYw8uFUbz3PZzzghZ
-         CayTtJ8YcgwuskkfJo8SazOCpKoxT3J7+N5G/T37fWs2jnJPeg5ekcmK2e6AnBbAl9ME
-         IPrH3oELEPoF1dsTVdER6bkuXIS1H7I8HjvTL5rBZRK+WzVQPSVkfHBljzoD5glcDrI6
-         RBtk0Q7v++hudQw8rVJ8ZpkN+wYBYHDAT7oGKLTVhPz28x3Tv1e2QVej02h3wb+YI6FS
-         jIDPo7MLnP8L1P+kEBSCBkZJshiXJdvCe2dqicmW9EpuzpW1feWMfYpqUW0dEAuYatw+
-         U7SQ==
-X-Gm-Message-State: ACrzQf0xYxvinlqC8OoxpR5jkXPMXTai9EvanCgHiGDDTS0YJfHl4UOK
-        A6wH+LWGyyGHMqMHqWnTA2/mBQ==
-X-Google-Smtp-Source: AMsMyM5skPuWzCFccIM23T9uUZq3VbVuLp+5LeS6JiEfsRkrXTqIzSMyVYOtF/zFvUzQlWHeyQX11A==
-X-Received: by 2002:a0c:90a2:0:b0:47b:6b36:f94a with SMTP id p31-20020a0c90a2000000b0047b6b36f94amr27057499qvp.26.1667483630525;
-        Thu, 03 Nov 2022 06:53:50 -0700 (PDT)
-Received: from ?IPV6:2601:586:5000:570:a35d:9f85:e3f7:d9fb? ([2601:586:5000:570:a35d:9f85:e3f7:d9fb])
-        by smtp.gmail.com with ESMTPSA id bv7-20020a05622a0a0700b003a5092ed8cdsm575356qtb.9.2022.11.03.06.53.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Nov 2022 06:53:49 -0700 (PDT)
-Message-ID: <a73e76b9-f186-a818-713b-3c14033f27cb@linaro.org>
-Date:   Thu, 3 Nov 2022 09:53:48 -0400
+        with ESMTP id S229481AbiKCUjq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 3 Nov 2022 16:39:46 -0400
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0FD1209B9;
+        Thu,  3 Nov 2022 13:39:44 -0700 (PDT)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2A3Kdfbk052060;
+        Thu, 3 Nov 2022 15:39:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1667507981;
+        bh=Te3maA9q1oBAmqEE7eTdUyjAvosJePhk5cDGiOG+13E=;
+        h=From:To:CC:Subject:Date;
+        b=KTEh/Tr2tWeakV5fPSalx3wpThLRR913UKufJrYSy140VRu6q3lc4yNqYAGDJBGm8
+         MwvAkqPAJSX/nK4MAAa645FpJTQUjEYD4AMYfrKYkLP27Tu0IT/kiEMwDmDp6lsVsj
+         GmKkvUCKgzCk5N/gooQtVr6W8Xoo0EExYHjdg3ss=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2A3KdfIg054992
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 3 Nov 2022 15:39:41 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Thu, 3 Nov
+ 2022 15:39:41 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
+ Frontend Transport; Thu, 3 Nov 2022 15:39:41 -0500
+Received: from jti.ent.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2A3KdY2p002296;
+        Thu, 3 Nov 2022 15:39:36 -0500
+From:   Georgi Vlaev <g-vlaev@ti.com>
+To:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>
+CC:     Nishanth Menon <nm@ti.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Georgi Vlaev <g-vlaev@ti.com>
+Subject: [PATCH v2] dmaengine: k3-udma: Add system suspend/resume support
+Date:   Thu, 3 Nov 2022 22:30:21 +0200
+Message-ID: <20221103203021.83929-1-g-vlaev@ti.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH v9 1/2] dt-bindings: fsl-imx-sdma: Convert imx sdma to DT
- schema
-Content-Language: en-US
-To:     Joy Zou <joy.zou@nxp.com>, vkoul@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com
-Cc:     shengjiu.wang@nxp.com, martink@posteo.de, dev@lynxeye.de,
-        alexander.stein@ew.tq-group.com, peng.fan@nxp.com, david@ixit.cz,
-        aford173@gmail.com, hongxing.zhu@nxp.com, linux-imx@nxp.com,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20221031105028.598502-1-joy.zou@nxp.com>
- <20221031105028.598502-2-joy.zou@nxp.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221031105028.598502-2-joy.zou@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,93 +63,122 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 31/10/2022 06:50, Joy Zou wrote:
-> Convert the i.MX SDMA binding to DT schema format using json-schema.
-> 
-> The compatibles fsl,imx31-to1-sdma, fsl,imx31-to2-sdma, fsl,imx35-to1-sdma
-> and fsl,imx35-to2-sdma are not used. So need to delete it. The compatibles
-> fsl,imx50-sdma, fsl,imx6sll-sdma and fsl,imx6sl-sdma are added. The
-> original binding don't list all compatible used.
-> 
-> In addition, add new peripheral types HDMI Audio.
-> 
-> Signed-off-by: Joy Zou <joy.zou@nxp.com>
-> ---
-> Changes in v9:
-> add the dma-common quotes.
-> delete the dma-controller quotes.
+From: Vignesh Raghavendra <vigneshr@ti.com>
 
-I have no clue what you are doing here... Do you know what are "quotes"?
-I linked last time explanation of "quotes", so did you read it?
+The K3 platforms configure the DMA resources with the
+help of the TI's System Firmware's Device Manager(DM)
+over TISCI. The group of DMA related Resource Manager[1]
+TISCI messages includes: INTA, RINGACC, UDMAP, and PSI-L.
+This configuration however, does not persist in the DM
+after leaving from Suspend-to-RAM state. We have to restore
+the DMA channel configuration over TISCI for all configured
+channels when returning from suspend.
 
+The TISCI resource management calls for each DMA type (UDMA,
+PKTDMA, BCDMA) happen in device_free_chan_resources() and
+device_alloc_chan_resources(). In pm_suspend() we store
+the current udma_chan_config for channels that still have
+attached clients and call device_free_chan_resources().
+In pm_resume() restore the udma_channel_config from backup
+and call device_alloc_chan_resources() for those channels.
+Drivers like CPSW can do their own DMA resource management,
+so use the late system suspend/resume hooks.
 
-> 
-> Changes in v8:
-> add the dma-controller quotes.
-> delete #dma-cells in required.
-> 
-> Changes in v6:
-> delete tag Acked-by from commit message.
-> 
-> Changes in v5:
-> modify the commit message fromat.
-> add additionalProperties, because delete the quotes in patch v4.
-> delete unevaluatedProperties due to similar to additionalProperties.
-> modification fsl,sdma-event-remap items and description.
-> 
-> Changes in v4:
-> modify the commit message.
-> delete the quotes in patch.
-> modify the compatible in patch.
-> delete maxitems and add items for clock-names property.
-> add iram property.
-> 
-> Changes in v3:
-> modify the commit message.
-> modify the filename.
-> modify the maintainer.
-> delete the unnecessary comment.
-> modify the compatible and run dt_binding_check and dtbs_check.
-> add clocks and clock-names property.
-> delete the reg description and add maxItems.
-> delete the interrupts description and add maxItems.
-> add ref for gpr property.
-> modify the fsl,sdma-event-remap ref type and add items.
-> delete consumer example.
-> 
-> Changes in v2:
-> convert imx sdma bindings to DT schema.
-> ---
->  .../devicetree/bindings/dma/fsl,imx-sdma.yaml | 149 ++++++++++++++++++
->  .../devicetree/bindings/dma/fsl-imx-sdma.txt  | 118 --------------
->  2 files changed, 149 insertions(+), 118 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
->  delete mode 100644 Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml b/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
-> new file mode 100644
-> index 000000000000..95d0391a1f39
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/fsl,imx-sdma.yaml
-> @@ -0,0 +1,149 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/fsl,imx-sdma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale Smart Direct Memory Access (SDMA) Controller for i.MX
-> +
-> +maintainers:
-> +  - Joy Zou <joy.zou@nxp.com>
-> +
-> +allOf:
-> +  - $ref: dma-common.yaml#
+[1] https://software-dl.ti.com/tisci/esd/latest/2_tisci_msgs/index.html#resource-management-rm
 
-That's wrong. This should be dma-controller. Why this was changed?
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+[g-vlaev@ti.com: Add patch description and config backup]
+[g-vlaev@ti.com: Supend only channels with clients]
+Signed-off-by: Georgi Vlaev <g-vlaev@ti.com>
+---
+Changes:
 
+v2:
+* Update the commit message
+* Use list_for_each_entry() to iterate over the channel list.
 
+ drivers/dma/ti/k3-udma.c | 54 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index ce8b80bb34d7..29844044132c 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -304,6 +304,8 @@ struct udma_chan {
+ 
+ 	/* Channel configuration parameters */
+ 	struct udma_chan_config config;
++	/* Channel configuration parameters (backup) */
++	struct udma_chan_config backup_config;
+ 
+ 	/* dmapool for packet mode descriptors */
+ 	bool use_dma_pool;
+@@ -5491,11 +5493,63 @@ static int udma_probe(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
++static int udma_pm_suspend(struct device *dev)
++{
++	struct udma_dev *ud = dev_get_drvdata(dev);
++	struct dma_device *dma_dev = &ud->ddev;
++	struct dma_chan *chan;
++	struct udma_chan *uc;
++
++	list_for_each_entry(chan, &dma_dev->channels, device_node) {
++		if (chan->client_count) {
++			uc = to_udma_chan(chan);
++			/* backup the channel configuration */
++			memcpy(&uc->backup_config, &uc->config,
++			       sizeof(struct udma_chan_config));
++			dev_dbg(dev, "Suspending channel %s\n",
++				dma_chan_name(chan));
++			ud->ddev.device_free_chan_resources(chan);
++		}
++	}
++
++	return 0;
++}
++
++static int udma_pm_resume(struct device *dev)
++{
++	struct udma_dev *ud = dev_get_drvdata(dev);
++	struct dma_device *dma_dev = &ud->ddev;
++	struct dma_chan *chan;
++	struct udma_chan *uc;
++	int ret;
++
++	list_for_each_entry(chan, &dma_dev->channels, device_node) {
++		if (chan->client_count) {
++			uc = to_udma_chan(chan);
++			/* restore the channel configuration */
++			memcpy(&uc->config, &uc->backup_config,
++			       sizeof(struct udma_chan_config));
++			dev_dbg(dev, "Resuming channel %s\n",
++				dma_chan_name(chan));
++			ret = ud->ddev.device_alloc_chan_resources(chan);
++			if (ret)
++				return ret;
++		}
++	}
++
++	return 0;
++}
++
++static const struct dev_pm_ops udma_pm_ops = {
++	SET_LATE_SYSTEM_SLEEP_PM_OPS(udma_pm_suspend, udma_pm_resume)
++};
++
+ static struct platform_driver udma_driver = {
+ 	.driver = {
+ 		.name	= "ti-udma",
+ 		.of_match_table = udma_of_match,
+ 		.suppress_bind_attrs = true,
++		.pm = &udma_pm_ops,
+ 	},
+ 	.probe		= udma_probe,
+ };
+
+base-commit: 81214a573d19ae2fa5b528286ba23cd1cb17feec
+-- 
+2.30.2
 

@@ -2,158 +2,152 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CAC7E616BBC
-	for <lists+dmaengine@lfdr.de>; Wed,  2 Nov 2022 19:09:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 683D2617564
+	for <lists+dmaengine@lfdr.de>; Thu,  3 Nov 2022 05:13:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231482AbiKBSI6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 2 Nov 2022 14:08:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36548 "EHLO
+        id S229531AbiKCENC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 3 Nov 2022 00:13:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231312AbiKBSIa (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 2 Nov 2022 14:08:30 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 084192EF58
-        for <dmaengine@vger.kernel.org>; Wed,  2 Nov 2022 11:07:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1667412451;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=FxfvX4krt4abJfRYzsFsAKRNK0FMytHkvgVp73QFGQ0=;
-        b=FmDOprvg0TKMbc6NlLv6Q8uX5Y4VxiGyqmGq+9Q3GoV3Ur69zd1z6GHGNgkcGOQp/xXvbv
-        VfrpxI5TiFz2dxvagiKsPM3Ti95GkvgudL6oQkArnaQf7m0zoABEDG9R60WLdDMUAkzQO2
-        FXXKfUh+AtHXgceKrx8UF2FJsPdW/WA=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-362-Yds2eNcmM3i8zT59SINbyg-1; Wed, 02 Nov 2022 14:07:30 -0400
-X-MC-Unique: Yds2eNcmM3i8zT59SINbyg-1
-Received: by mail-qk1-f198.google.com with SMTP id o13-20020a05620a2a0d00b006cf9085682dso15703166qkp.7
-        for <dmaengine@vger.kernel.org>; Wed, 02 Nov 2022 11:07:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FxfvX4krt4abJfRYzsFsAKRNK0FMytHkvgVp73QFGQ0=;
-        b=Ubp3vspNh7dybSUJveB34bWBfx4f8qY4sfp7ITzFJ7Y+EpE2IZF7/2WDiLsID+Y6OX
-         Y6zIBx0KeC2dhbdFjdVSxyCOQqVrPBw97ADGxmb8CCQvNag8DHRVvBdEyzk7ZFgG8zPc
-         Ikqtme79Ddez1q563FoWNkvSwMMRBWeVWFnapW9Lq4bSh2kRzIG1jAIPerffq8m7vGvt
-         Th3ndwhgs+K/eih8cyvScTmvgMTpIMrh3qZXu0eNpDXAMgGvACq6yviywB1RdeS8d5+8
-         0EJXZj9HjqwKuy2A2X2uzKXenoNJkp4gD5VnL/Z8dwU8GAd8Yt1dLEho3zxWo0QhoB69
-         kVaw==
-X-Gm-Message-State: ACrzQf2cCVSa7QJnveQ9p+SDqjTOjAdvIL1bC2aCvR69IOjwMTwA3men
-        bawyUMD+qHhjzAsDgipVo8g2+TmHv2e/jh9g4pe+fPReo7tYBxCVK9/u0mGdC0QR9vzArtkaboH
-        mPvSHi5Vu1Nx1P7PGAEVk
-X-Received: by 2002:a05:622a:4d4b:b0:3a5:4106:4f16 with SMTP id fe11-20020a05622a4d4b00b003a541064f16mr6155045qtb.488.1667412449533;
-        Wed, 02 Nov 2022 11:07:29 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM73gGFi5A2/k5ejnsDKWbiYpJx1+K0ajgL+aoZE9BOqeMUbwF4ar5l/PPR04bf0bMhzO0Z3eA==
-X-Received: by 2002:a05:622a:4d4b:b0:3a5:4106:4f16 with SMTP id fe11-20020a05622a4d4b00b003a541064f16mr6155020qtb.488.1667412449297;
-        Wed, 02 Nov 2022 11:07:29 -0700 (PDT)
-Received: from localhost (ip98-179-76-75.ph.ph.cox.net. [98.179.76.75])
-        by smtp.gmail.com with ESMTPSA id cc8-20020a05622a410800b003a4cda52c95sm5086434qtb.63.2022.11.02.11.07.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Nov 2022 11:07:27 -0700 (PDT)
-Date:   Wed, 2 Nov 2022 11:07:26 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Koba Ko <koba.ko@canonical.com>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jie Hai <haijie1@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH V2] dmaengine: Fix client_count is countered one more
- incorrectly.
-Message-ID: <20221102180726.fuwwk2npsse56ius@cantor>
-References: <20220930173652.1251349-1-koba.ko@canonical.com>
+        with ESMTP id S229493AbiKCENB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 3 Nov 2022 00:13:01 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C7F313EBD;
+        Wed,  2 Nov 2022 21:13:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lPQPZ5GVQ3lgr5FbUqSgEdY9mgLWD1KwlT0qzdDI3OWVP8AsruxEvI3ieRLd7U/IaQiuTQPBaYHB7o7LLKt0vAJ2VqTkvMbb77mtaP60FaFIDQcnRX/76L5HowVz0XTzd4DvV0kjFz6CJJgYi7LK05RQn/9uI8ac11ByYCdQKiv4C6+oiYuEtCyD0twUa2fum/X8mnVTQ6L4bw1rpAdCCgdE2uFuNcpALIDO+SukFr4+79fVZiPfsvIEVoM4/clL3F8BAwlQQOW7mqUuwMVqnMH47lhaZiiWa7MZG5ZEDJ6oqZZIf3zPtGxeBUIVKvaFUGh/Q2+u65wkIXRbZ9UwJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=k6uS0OgCmJSHJbxgdXIZn8WDKLvaqw2uQVhLMv0Gtqo=;
+ b=Byi2vfTwr0FfjZJC+XJeU0dxbuDRz/vpQjq0f106NJP66sJ6vp+UP3LB/0ilGZbNJU9BdA1FIzxN+9/FRbR5ddeI0WRF7Q2RgOqlv4iMRpRLGq7s84r/9Syn+W7hZcfgrIJ/s3Fag9/k5c/nIko84n7EDRfXlfzbKCnnbMWx0+0Lbww2v35FPS5FLVNGFv2ilbSs0qdGIq5/x/oAE/4tlD+kgJZNpjodUsRDyL+gFpfua4VrEFAYS4dSZxtW18GwtcH/ryKRbW2A9zWyRovW+W0W1YRe2vG4BDZTiYOV00GVtVjbFTD9JDZYnCTtFrpU95H0dPjii0iRfXe6Kyq4Ow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=amd.com smtp.mailfrom=xilinx.com;
+ dmarc=fail (p=quarantine sp=quarantine pct=100) action=quarantine
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=k6uS0OgCmJSHJbxgdXIZn8WDKLvaqw2uQVhLMv0Gtqo=;
+ b=puZQJQIH8dRoEA7wcrrOzAy8vQQO2Zam2EpQgd7pB5+15iNmOcC2q73gdTX54WeJILz3kv0vyS6607BEiwZhI0WkXiu3uD1+D8M7NGm2V7VxrAyeOsYjdR3Flio2KSSN9tPh53LP+gV5vfW3gHq7kNBvGs+6RT7ULvnRwOqkXbE=
+Received: from SN6PR2101CA0010.namprd21.prod.outlook.com
+ (2603:10b6:805:106::20) by CH2PR02MB6936.namprd02.prod.outlook.com
+ (2603:10b6:610:5e::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.24; Thu, 3 Nov
+ 2022 04:12:57 +0000
+Received: from SN1NAM02FT0021.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:805:106:cafe::a1) by SN6PR2101CA0010.outlook.office365.com
+ (2603:10b6:805:106::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.5 via Frontend
+ Transport; Thu, 3 Nov 2022 04:12:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=quarantine header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com; pr=C
+Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
+ SN1NAM02FT0021.mail.protection.outlook.com (10.97.5.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5791.20 via Frontend Transport; Thu, 3 Nov 2022 04:12:56 +0000
+Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.9; Wed, 2 Nov 2022 21:12:52 -0700
+Received: from smtp.xilinx.com (172.19.127.96) by
+ xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
+ 15.1.2507.9 via Frontend Transport; Wed, 2 Nov 2022 21:12:52 -0700
+Envelope-to: git@amd.com,
+ harini.katakam@amd.com,
+ radhey.shyam.pandey@amd.com,
+ robh+dt@kernel.org,
+ vkoul@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org,
+ m.tretter@pengutronix.de,
+ devicetree@vger.kernel.org,
+ dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Received: from [172.23.64.3] (port=53952 helo=xhdvnc103.xilinx.com)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <radhey.shyam.pandey@xilinx.com>)
+        id 1oqRb1-00028X-RE; Wed, 02 Nov 2022 21:12:52 -0700
+Received: by xhdvnc103.xilinx.com (Postfix, from userid 13245)
+        id 0EDEB10550D; Thu,  3 Nov 2022 09:42:51 +0530 (IST)
+From:   Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>
+CC:     <michal.simek@xilinx.com>, <m.tretter@pengutronix.de>,
+        <harini.katakam@amd.com>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <git@amd.com>, Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Subject: [PATCH] dt-bindings: dmaengine: zynqmp_dma: add xlnx,bus-width required property
+Date:   Thu, 3 Nov 2022 09:42:37 +0530
+Message-ID: <1667448757-7001-1-git-send-email-radhey.shyam.pandey@amd.com>
+X-Mailer: git-send-email 2.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220930173652.1251349-1-koba.ko@canonical.com>
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1NAM02FT0021:EE_|CH2PR02MB6936:EE_
+X-MS-Office365-Filtering-Correlation-Id: 23fff423-3fe4-4634-b402-08dabd51b000
+X-MS-Exchange-SenderADCheck: 0
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hP9fJovjK2AyJ/kvdZFCGiShDlGXQSDfDpTWb/lnjcMu1wG1y90XpZ7EOXJY6h3Cu6vRng1Ag3GIM8J3DX6NkjLHBu5E0Yl95sgjuoWINjWKfQWv09QktrKkU2U875bxi/E9CwDyp2LsxaH9c3h6LMmioRlRaDeOKLghUFeAww2Sbjn+WmTfkPuJ5GcT0T0VBnSzDOTk6yGPLMGtlh0jVHHPCJCyDskBYhQ/5QF49Zq/rVUB/mP7E5VYHiHa9BHodqLNLYrCMp1BWsJwyg4HWH48/B27hCjiJOqDZcT0QA6dYv0zenfFlt1i6lNgxBnpe2ZFX5Xq4f/bjugND5E//v6B7DTqAwAWKfe+ayGILCGVSQvtFxxHz6MDGSiR1eUKHkAa5T4PBz8AMKcwlQj5TaCRBc0HImU8e88YWqYBM9wnPD95gwuIG/nSOqgAi3uaVZV7z27GZwVzla5hfs/O8MvR/PpHc5SMF7K4VOlBVXzTNRIuTlbwzkQjtFoOU4fmZdGEvPMVtyg2R+Rg2kNIIUiyHOQvBu82o/VoFmcgTAuaA83p0JMEbCdYJ2RWMbQ69/3OezlXgxmmVMIWr2o1DZVRnoj4OBv2n34aanjeL2SDIdkaKCKT/p4vFQujba+MznjGXnMdwJFuJpXJUY65Vws+zDpvwpUgYfqhoEtVD5OOiLJr4jd4UfSi4jo/8hoFo3Co76prmTc2iqIlHIVtJbhzS6T9HNJH0cXUYpWgo2Of1JHanKOOhF9o4rRjJLPvlHJeyePg4Xs4jYvSy+rRBIDFsPlOGopEG7jKTe8+nII=
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230022)(4636009)(346002)(136003)(376002)(396003)(39860400002)(451199015)(36840700001)(46966006)(40470700004)(36860700001)(36756003)(40460700003)(7636003)(356005)(82740400003)(83170400001)(41300700001)(7416002)(8936002)(5660300002)(316002)(8676002)(54906003)(42186006)(70206006)(70586007)(4326008)(82310400005)(2906002)(110136005)(42882007)(336012)(47076005)(2616005)(186003)(40480700001)(83380400001)(478600001)(6266002)(26005)(6666004)(102446001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2022 04:12:56.7464
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23fff423-3fe4-4634-b402-08dabd51b000
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0021.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6936
+X-Spam-Status: No, score=0.0 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vinod,
+xlnx,bus-width is a required property. In yaml conversion somehow
+it got missed out. Bring it back and mention it in required list.
+Also add Harini and myself to the maintainer list.
 
-Thoughts on this patch?
+Fixes: 5a04982df8da ("dt-bindings: dmaengine: zynqmp_dma: convert to yaml")
+Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+---
+ .../devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml    | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Maybe changing the summary to "dmaengine: Fix double increment of client_count in dma_chan_get()"
-would be clearer?
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
+index c0a1408b12ec..a10019d3a650 100644
+--- a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
++++ b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dma-1.0.yaml
+@@ -13,6 +13,8 @@ description: |
+ 
+ maintainers:
+   - Michael Tretter <m.tretter@pengutronix.de>
++  - Harini Katakam <harini.katakam@amd.com>
++  - Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+ 
+ allOf:
+   - $ref: "../dma-controller.yaml#"
+@@ -65,6 +67,7 @@ required:
+   - interrupts
+   - clocks
+   - clock-names
++  - xlnx,bus-width
+ 
+ additionalProperties: false
+ 
 
-On Sat, Oct 01, 2022 at 01:36:52AM +0800, Koba Ko wrote:
-> If the passed client_count is 0,
-> it would be incremented by balance_ref_count first
-> then increment one more.
-> This would cause client_count to 2.
->
-> cat /sys/class/dma/dma0chan*/in_use
-> 2
-> 2
-> 2
-
-Would this be better?
-
-    The first time dma_chan_get() is called for a channel the channel
-    client_count is incorrectly incremented twice for public channels,
-    first in balance_ref_count(), and again prior to returning. This
-    results in an incorrect client count which will lead to the
-    channel resources not being freed when they should be. A simple
-    test of repeated module load and unload of async_tx on a Dell
-    Power Edge R7425 also shows this resulting in a kref underflow
-    warning.
-
-
-Regards,
-Jerry
-
->
-> Fixes: d2f4f99db3e9 ("dmaengine: Rework dma_chan_get")
-> Signed-off-by: Koba Ko <koba.ko@canonical.com>
-> Reviewed-by: Jie Hai <haijie1@huawei.com>
-> Test-by: Jie Hai <haijie1@huawei.com>
-> Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> 
-> ---
-> V2: Remove [3/3] on subject.
-> ---
->  drivers/dma/dmaengine.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> index 2cfa8458b51be..78f8a9f3ad825 100644
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -451,7 +451,8 @@ static int dma_chan_get(struct dma_chan *chan)
->  	/* The channel is already in use, update client count */
->  	if (chan->client_count) {
->  		__module_get(owner);
-> -		goto out;
-> +		chan->client_count++;
-> +		return 0;
->  	}
->  
->  	if (!try_module_get(owner))
-> @@ -470,11 +471,11 @@ static int dma_chan_get(struct dma_chan *chan)
->  			goto err_out;
->  	}
->  
-> +	chan->client_count++;
-> +
->  	if (!dma_has_cap(DMA_PRIVATE, chan->device->cap_mask))
->  		balance_ref_count(chan);
->  
-> -out:
-> -	chan->client_count++;
->  	return 0;
->  
->  err_out:
-> -- 
-> 2.25.1
-> 
+base-commit: 9abf2313adc1ca1b6180c508c25f22f9395cc780
+-- 
+2.25.1
 

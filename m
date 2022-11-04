@@ -2,47 +2,53 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CFDB619A47
-	for <lists+dmaengine@lfdr.de>; Fri,  4 Nov 2022 15:40:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 730EB619A50
+	for <lists+dmaengine@lfdr.de>; Fri,  4 Nov 2022 15:42:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232230AbiKDOkc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 4 Nov 2022 10:40:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55292 "EHLO
+        id S231761AbiKDOmS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 4 Nov 2022 10:42:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231331AbiKDOkL (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 4 Nov 2022 10:40:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70CAE2FFF3
-        for <dmaengine@vger.kernel.org>; Fri,  4 Nov 2022 07:38:42 -0700 (PDT)
+        with ESMTP id S232109AbiKDOlk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 4 Nov 2022 10:41:40 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6BB8326DE;
+        Fri,  4 Nov 2022 07:40:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0B3CE62228
-        for <dmaengine@vger.kernel.org>; Fri,  4 Nov 2022 14:38:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7B0BC433C1;
-        Fri,  4 Nov 2022 14:38:40 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A4F28B82E10;
+        Fri,  4 Nov 2022 14:40:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D32A0C433C1;
+        Fri,  4 Nov 2022 14:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667572721;
-        bh=21cUV4Pta+B4H9ld553mG+e5ajulzhjf78H2yjl8mkU=;
+        s=k20201202; t=1667572838;
+        bh=WYCCcSJVmicU+dbST6CG79P8MqUy8oqYTP/FgTAJBRU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N30HdoJbw5PnH6QpxueoIn6x7uShLoEboJD6UP6zyQ7aevOXy+VA/ANfNIEZVMlFM
-         aYR8k6CPihCVnhDVMB9MvywVpnrdEkNsZ/PQ6WqeY/H+VvFRSUsx1yfav15hOTfeK9
-         8hm1inZ42H7gfZO+/APH36ww/zBpzI6zd4pvQbztYgAZ1DYe1JaYybBCWhGgDtiKe2
-         dpgFbmC8FyGO5O+utypnxOqg8F7CnrknQ/ti+HJz633QC9dhflwoTte7BwEOFsB77r
-         RlU/iu2AvA1y72/InfCruL9imNMpLmJgoCVH4ISrGzuA2YS3FmK1/34ZNtpISgR6ye
-         bY5EGNddy+AwQ==
-Date:   Fri, 4 Nov 2022 20:08:37 +0530
+        b=f+iVWKUE0xZWqAe8c1MIDP5AFq6ebVKKwJEFHrzqs9k9MH2xrFAWcvZNbmreEHaBZ
+         9WGIvbY3pqfX1fBGppXzLVuOuExM2ZKjoKuIAlwyRRlfbE68D2CSVkXnqx5rjUNWSg
+         fqoHumycwGrDuvYJSf4o14em/m5JDR2CSPmH4yxej4UnhBIltfPf7pbDCet9C11zh+
+         7hiX5i0zTxgvLbWTibE7isAQP+KFFOntl7IiY1t+8Y4yovju72v2kesitlqNrKYo9K
+         QQaUDLQ8IPMDNv/iJbSnfP9QBPnd/8DjY3otp8eAsIIfJvflP8RHMp0lw6C1KZJB1J
+         iysSgwxY8KnVA==
+Date:   Fri, 4 Nov 2022 20:10:34 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Yang Yingliang <yangyingliang@huawei.com>
-Cc:     dmaengine@vger.kernel.org, vigneshr@ti.com, peter.ujfalusi@ti.com
-Subject: Re: [PATCH] dmaengine: ti: k3-udma-glue: fix memory leak when
- register device fail
-Message-ID: <Y2Uj7TTAz+wJfAxZ@matsya>
-References: <20221020062827.2914148-1-yangyingliang@huawei.com>
+To:     "Jiapeng.Chong" <jiapeng.chong@linux.alibaba.com>
+Cc:     "peter.ujfalusi" <peter.ujfalusi@gmail.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Abaci Robot <abaci@linux.alibaba.com>
+Subject: Re: =?utf-8?B?5Zue5aSN77yaW1BBVENI?= =?utf-8?Q?=5D?= dmaengine: ti:
+ edma: Remove the unused function edma_and()
+Message-ID: <Y2UkYnTIG4BywIQE@matsya>
+References: <20221018083820.25297-1-jiapeng.chong@linux.alibaba.com>
+ <Y0//nxmB2CEjFvMp@matsya>
+ <354896d0-3a48-44a1-81bf-8e46caf55a7e.jiapeng.chong@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20221020062827.2914148-1-yangyingliang@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <354896d0-3a48-44a1-81bf-8e46caf55a7e.jiapeng.chong@linux.alibaba.com>
 X-Spam-Status: No, score=-8.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -52,12 +58,61 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 20-10-22, 14:28, Yang Yingliang wrote:
-> If device_register() fails, it should call put_device() to give
-> up reference, the name allocated in dev_set_name() can be freed
-> in callback function kobject_cleanup().
+On 20-10-22, 10:10, Jiapeng.Chong wrote:
+> The report is the link, which can be seen in the submitted patch description. Thank you.
 
-Applied, thanks
+Pls dont top post!
+
+> Link: https://bugzilla.openanolis.cn/show_bug.cgi?id=2430
+
+This bug says: "ABACI reported the following bug by code static
+scanning"
+
+Where is the ABACI report?
+
+> ------------------------------------------------------------------
+> 发件人：Vinod Koul <vkoul@kernel.org>
+> 发送时间：2022年10月19日(星期三) 21:46
+> 收件人：Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+> 抄　送：peter.ujfalusi <peter.ujfalusi@gmail.com>; dmaengine <dmaengine@vger.kernel.org>; linux-kernel <linux-kernel@vger.kernel.org>; Abaci Robot <abaci@linux.alibaba.com>
+> 主　题：Re: [PATCH] dmaengine: ti: edma: Remove the unused function edma_and()
+> On 18-10-22, 16:38, Jiapeng Chong wrote:
+> > The function edma_and() is defined in the edma.c file, but not called
+> > elsewhere, so remove this unused function.
+> > 
+> > drivers/dma/ti/edma.c:321:20: warning: unused function 'edma_and'.
+> > 
+> > Link: https://bugzilla.openanolis.cn/show_bug.cgi?id=2430
+> > Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Where is this report?
+> > Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+> > ---
+> > drivers/dma/ti/edma.c | 8 --------
+> > 1 file changed, 8 deletions(-)
+> > 
+> > diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+> > index fa06d7e6d8e3..9ea91c640c32 100644
+> > --- a/drivers/dma/ti/edma.c
+> > +++ b/drivers/dma/ti/edma.c
+> > @@ -318,14 +318,6 @@ static inline void edma_modify(struct edma_cc *ecc, int offset, unsigned and,
+> > edma_write(ecc, offset, val);
+> > }
+> > 
+> > -static inline void edma_and(struct edma_cc *ecc, int offset, unsigned and)
+> > -{
+> > - unsigned val = edma_read(ecc, offset);
+> > -
+> > - val &= and;
+> > - edma_write(ecc, offset, val);
+> > -}
+> > -
+> > static inline void edma_or(struct edma_cc *ecc, int offset, unsigned or)
+> > {
+> > unsigned val = edma_read(ecc, offset);
+> > -- 
+> > 2.20.1.7.g153144c
+> -- 
+> ~Vinod
 
 -- 
 ~Vinod

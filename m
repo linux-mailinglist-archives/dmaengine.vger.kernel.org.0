@@ -2,49 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0915A6199AC
-	for <lists+dmaengine@lfdr.de>; Fri,  4 Nov 2022 15:26:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A2B16199C1
+	for <lists+dmaengine@lfdr.de>; Fri,  4 Nov 2022 15:27:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230127AbiKDO0V (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 4 Nov 2022 10:26:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36358 "EHLO
+        id S231238AbiKDO1f (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 4 Nov 2022 10:27:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232108AbiKDOZk (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 4 Nov 2022 10:25:40 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73013EA3;
-        Fri,  4 Nov 2022 07:23:29 -0700 (PDT)
+        with ESMTP id S231620AbiKDO0y (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 4 Nov 2022 10:26:54 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDC623123A;
+        Fri,  4 Nov 2022 07:24:34 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1BEC5B82E10;
-        Fri,  4 Nov 2022 14:23:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6EF1C433D7;
-        Fri,  4 Nov 2022 14:23:25 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6C46962203;
+        Fri,  4 Nov 2022 14:24:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A253C433C1;
+        Fri,  4 Nov 2022 14:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667571806;
-        bh=whWPClS/alRqLYsy1/mTyPtTHF0C97qQhJcqxk8t16I=;
+        s=k20201202; t=1667571873;
+        bh=rnnq8YcDa6s9xDb97Qu6StRWt8birHWJkZRHsp2sSV8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tsUxoSPPwM84zkz+t8UXsKETEK+fOHmyO99JoXKzLbR6+B+tYqxRNe2154rS69XVK
-         hwu2kI3Du2EbFBy0dyOiHqoLe1QDqzrJwoTudAzvA2vYEpfTpYkh3PAOz0+UtJWerX
-         qBVtJ2I6xGiauK3WbxTS6ILRPywkDGFbQKPJw15+FGDuJRcLSrD0YOIA/IK5AtUriP
-         dMzr4ruC1fjpJ9TvEaqNsh4Ez3LcgvCwPbsdDWvColBYwR2S1xeEjOKaA3SDZEGx9n
-         /lt5L7aTQI+MNgY4Gg0Nj97fGVdbEHvXhAGRJRSIaX7v5MxhcAMvr0YoE4tm6dI58Z
-         VvXuBhEuMcRZw==
-Date:   Fri, 4 Nov 2022 19:53:21 +0530
+        b=HT6h8Nvk5iHN0jInMwlpceezFkiLGnBubhpuADb+1csZweBlsAnOcKXFg7xu738sp
+         MEXKPOnKX0dMLOLsglrROH8Duujd6ixSvfI1KnIy3fgyZ4juY6v1m05gYkWm36HtSo
+         63bUj/R+fdvGglnSDbKO6GBo1AQspt/tkI8ZraI46Ez+Tb4U7PBP4YQ/beVRa+DD1P
+         M8YEBCbH4iWhaRPCNU+afqV0sEAJfWQ9Pyt9Tf8o+v5OW2eVfzS8Ys8AxfevQVpLpr
+         6ws4ZghVZSD/8YeOnvXVd+QdQzCEg3fbIqBLwOj9ysCERj5RS8ZjJyG0d6vcqBJY2X
+         pDSOAqx6dINRQ==
+Date:   Fri, 4 Nov 2022 19:54:29 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: mv_xor_v2: Fix a resource leak in
- mv_xor_v2_remove()
-Message-ID: <Y2UgWUSppfl+nngY@matsya>
-References: <e9e3837a680c9bd2438e4db2b83270c6c052d005.1666640987.git.christophe.jaillet@wanadoo.fr>
+To:     Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Cc:     michal.simek@xilinx.com, lars@metafoo.de, marex@denx.de,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        git@amd.com
+Subject: Re: [PATCH 0/2] dmaengine: xilinx_dma: minor documentation updates
+Message-ID: <Y2UgnelN3C/9nar3@matsya>
+References: <1666683737-7668-1-git-send-email-radhey.shyam.pandey@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e9e3837a680c9bd2438e4db2b83270c6c052d005.1666640987.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <1666683737-7668-1-git-send-email-radhey.shyam.pandey@amd.com>
 X-Spam-Status: No, score=-8.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -54,9 +53,10 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 24-10-22, 21:50, Christophe JAILLET wrote:
-> A clk_prepare_enable() call in the probe is not balanced by a corresponding
-> clk_disable_unprepare() in the remove function.
+On 25-10-22, 13:12, Radhey Shyam Pandey wrote:
+> This patch series add missing kernel documentation for 
+> xilinx_dma_device_config() and also fix return doc
+> for xilinx_dma_child_probe().
 
 Applied, thanks
 

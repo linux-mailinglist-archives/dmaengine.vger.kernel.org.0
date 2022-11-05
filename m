@@ -2,86 +2,73 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0D7661D91E
-	for <lists+dmaengine@lfdr.de>; Sat,  5 Nov 2022 10:30:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A44661DA5B
+	for <lists+dmaengine@lfdr.de>; Sat,  5 Nov 2022 13:40:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229501AbiKEJan (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 5 Nov 2022 05:30:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55826 "EHLO
+        id S229868AbiKEMkI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 5 Nov 2022 08:40:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbiKEJam (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 5 Nov 2022 05:30:42 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB264240BB
-        for <dmaengine@vger.kernel.org>; Sat,  5 Nov 2022 02:30:37 -0700 (PDT)
-Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.53])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4N4Bwq0zsrzJnQP;
-        Sat,  5 Nov 2022 17:27:39 +0800 (CST)
-Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Sat, 5 Nov 2022 17:30:36 +0800
-Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
- (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Sat, 5 Nov
- 2022 17:30:35 +0800
-From:   Yang Yingliang <yangyingliang@huawei.com>
-To:     <dmaengine@vger.kernel.org>
-CC:     <vkoul@kernel.org>, <dave.jiang@intel.com>, <jsnitsel@redhat.com>,
-        <yangyingliang@huawei.com>
-Subject: [PATCH v2] dmaengine: fix possible memory leak in while registering device channel
-Date:   Sat, 5 Nov 2022 17:29:23 +0800
-Message-ID: <20221105092923.2844847-1-yangyingliang@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229909AbiKEMkA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 5 Nov 2022 08:40:00 -0400
+Received: from mail-oa1-x2f.google.com (mail-oa1-x2f.google.com [IPv6:2001:4860:4864:20::2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B6C51759B
+        for <dmaengine@vger.kernel.org>; Sat,  5 Nov 2022 05:39:59 -0700 (PDT)
+Received: by mail-oa1-x2f.google.com with SMTP id 586e51a60fabf-1322d768ba7so8221516fac.5
+        for <dmaengine@vger.kernel.org>; Sat, 05 Nov 2022 05:39:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=c8XA1N0uaxkLO/wKHErNWHaSuu64k5Pjb5u9dmcZrOc=;
+        b=mu8m7znM9duu/MEuox3wxE9uI+enJzfHDrHCiCJ0dxXEnbtqlugP30RV4pUA4LaD8D
+         DTqzL6R3iJdygnN0tebcl2jKMC1xnk2qmH9yHj5ZpYJsig0zgAkFbQEJMtQOsyMS9E9+
+         9mZsd+BXbCYizoNZILloIeJgVKBYQDDlfcxWmhtehgP0gShVz6QbysTuA73O0zNW89oN
+         M95vp9qd39mlLDduLYXTQkqHXtcuCB6sr4c0ysKpoCTw5s/vT8zmw06SHC/DLusZ9o66
+         sNkDbmLIhAcJBtA+VmbRSjB+l+4rXBDt3pKOG75zF9L+vjSBjo5n2zZjo+rRsufLH5jZ
+         6xmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c8XA1N0uaxkLO/wKHErNWHaSuu64k5Pjb5u9dmcZrOc=;
+        b=yXQkH4xWdSJ2YYLpWz/DinbmTIbvlkSe10dRhQVPP5SavFtxADfZKXESDflUsG76qh
+         xlWZNE5NyE2yJBppIZ+oy/1GkqMobW4LlNULIEBwXw088BFeOZX3GYwq7RqQMo3KwgG2
+         yGPaI8pvE+/AhLMlxjVXe1JKDbYA7poDPl51e4pHN4dHd1ovi/jyZajOZ4r6KVCyrZg3
+         IGsG7BcvTm2v37WiW38XRswrv56BvdRqRU0YYFo4qWmmVMSqLMLV+HCwZRGv1mv7AdJY
+         xSe69OXK2Tq1V+LMyqHqydvZipbW1NmAerYMw4arhAv1RIbutQuAp+sNGQfAF1WR8xwa
+         R2Cw==
+X-Gm-Message-State: ACrzQf0RThEMQ/qRbWmJTV/QSTrake+T4OrdKEYvKaGN2S2qY9BbBzcD
+        lZ7Bae3/0UKgo23pYDg+TQTCBLYY/shjUlZXJ+978zwf4Z8=
+X-Google-Smtp-Source: AMsMyM5GFe2gsiMaHXHXvp99K7JeNN2UuK6dELDyLpsoJjIUkQcn4q3aD74FbKEapmwctM2YF8x1D4LMLHeg4fM3LVk=
+X-Received: by 2002:a17:90b:4ac3:b0:213:3918:f276 with SMTP id
+ mh3-20020a17090b4ac300b002133918f276mr57022678pjb.19.1667651987563; Sat, 05
+ Nov 2022 05:39:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.103.91]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500007.china.huawei.com (7.185.36.183)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:7301:2e91:b0:83:922d:c616 with HTTP; Sat, 5 Nov 2022
+ 05:39:47 -0700 (PDT)
+Reply-To: stefanopessia755@hotmail.com
+From:   Stefano Pessina <wamathaibenard@gmail.com>
+Date:   Sat, 5 Nov 2022 15:39:47 +0300
+Message-ID: <CAN7bvZKO8GxFn7CG_EtS_Of+AZ+KsuqTkq40Mq-yJDNrEHyakg@mail.gmail.com>
+Subject: Geldspende
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-If device_register() returns error, the name allocated by
-dev_set_name() need be freed. As comment of device_register()
-says, it should use put_device() to give up the reference in
-the error path. So fix this by calling put_device(), then the
-name can be freed in kobject_cleanup(), the dma_chan_dev will
-be freed in chan_dev_release(), set 'chan->dev' to null in the
-error path to avoid it be freed again by kfree().
-
-Fixes: d2fb0a043838 ("dmaengine: break out channel registration")
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
----
-v1 -> v2:
-  Add fix tag and update commit message.
----
- drivers/dma/dmaengine.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index c741b6431958..46adfec04f0c 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -1068,8 +1068,11 @@ static int __dma_async_device_channel_register(struct dma_device *device,
- 	dev_set_name(&chan->dev->device, "dma%dchan%d",
- 		     device->dev_id, chan->chan_id);
- 	rc = device_register(&chan->dev->device);
--	if (rc)
-+	if (rc) {
-+		put_device(&chan->dev->device);
-+		chan->dev = NULL;
- 		goto err_out_ida;
-+	}
- 	chan->client_count = 0;
- 	device->chancnt++;
- 
--- 
-2.25.1
-
+--=20
+Die Summe von 500.000,00 =E2=82=AC wurde Ihnen von STEFANO PESSINA gespende=
+t.
+Bitte kontaktieren Sie uns f=C3=BCr weitere Informationen =C3=BCber
+stefanopessia755@hotmail.com

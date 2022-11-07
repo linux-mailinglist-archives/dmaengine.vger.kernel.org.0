@@ -2,186 +2,128 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F21B161EDFD
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Nov 2022 10:00:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3690061F057
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Nov 2022 11:23:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230428AbiKGJAO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 7 Nov 2022 04:00:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59830 "EHLO
+        id S231767AbiKGKXz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 7 Nov 2022 05:23:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbiKGJAN (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 7 Nov 2022 04:00:13 -0500
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85FBC12AFA;
-        Mon,  7 Nov 2022 01:00:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1667811612; x=1699347612;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=eJRJg4dr6L1XMewhqOoQg2VFwfTUhQIjjDurN4sIL9Q=;
-  b=KvCsANrYHi1qRWps0HUhXL8sYJdphZ26A8G/FEaaLL68MMMCpT2fHaV7
-   lL6ggW+U2Axk9qmtrBc8pr5C5M8n1o/SokR7UzWoshzln8LwUL3DIToxz
-   4iDVNAeqKiS4wDHf6h2n0svCAP/sSBFHIszoarHwKpXkCI+pMOg3t5dsu
-   Td/OyMfeLFjK5AAyf5HSHOeK2P94FZ1U/zd1eeRLLhRnAy6L282pE+ix2
-   lQCY0N1r6rq0+dlvMXyz2DILkmsC8zrQXhvZkTPi4pgwuF9idX+OwyHEe
-   bODXHZbR8iNwARA2ux2mkLB4SCGKHSAASnI2FD3lzzKsXPkenuit7QoHz
-   A==;
-X-IronPort-AV: E=Sophos;i="5.96,143,1665471600"; 
-   d="scan'208";a="198685223"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Nov 2022 02:00:12 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Mon, 7 Nov 2022 02:00:10 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12 via Frontend Transport; Mon, 7 Nov 2022 02:00:10 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LFJEOZofiJcwSwwHr8P2Q3Ivvqjsa1Sf3r0X72vYrZJkhPZaYjS7pGRP6F7ltl1148pJ7cyZfCNm715SeJZR8piNxcsQHDnuwDlnDm/aLbemX5Aa3u26x4qHI0gxRMfJwz5+aXEJeBd3Gs7th8bAC3W+9s7yTDG0Bp9YlSt6kYA4IpZ7w4jbiOA5eC519ooMYQ7PONO6Xqf8aPF3bIQk70frh7CmsQdOGm8qGdl0j1momNxcaK2QN3J99aqAmJMldGcKdjl78PZLOMEi3jirk1f/W4ffZdQ+Zs6oJIKcFzXqKpI5G+duFc79iHwWSYZX7eneR4KcQq5QenE5+HfUlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eJRJg4dr6L1XMewhqOoQg2VFwfTUhQIjjDurN4sIL9Q=;
- b=ZRQoTnFMbIYfZPuJw9wo97RVf3PAVOWaGYPC+jQldIB39IKzEGL/UaDvwPIYM7xQsyarK9sa3UV5Xr0TZVVB53VofeJI4sbq/8TLaeAy7/iRPqBImLyo8BC6Cm06Foc0jM8QZVMWrlZkuGASHslblXQSkxVKArNaZXtd8cAfs7RfYB0R72bZOKJZ0ctPoarwwIDiNINo2LyupkbtUdxvjL3FgVD2HK8ZyYaB+ctme5Gxhdn2OO/fHafXdqYFFf7tVXtRCUlIHBw+gVljtpYNC6qi4N0Xc/Az06DFvkd9MbTqgiqzWab8RoLDvP1QZKsOem2tmM6B2YxNxQ5RVcUp0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        with ESMTP id S231363AbiKGKXx (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 7 Nov 2022 05:23:53 -0500
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD58D165BD
+        for <dmaengine@vger.kernel.org>; Mon,  7 Nov 2022 02:23:52 -0800 (PST)
+Received: by mail-pj1-x1041.google.com with SMTP id d59-20020a17090a6f4100b00213202d77e1so14124776pjk.2
+        for <dmaengine@vger.kernel.org>; Mon, 07 Nov 2022 02:23:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eJRJg4dr6L1XMewhqOoQg2VFwfTUhQIjjDurN4sIL9Q=;
- b=k/hE+F9Kjprz8AI6Nz2162xEH20teS7mQMCtT0J2yUYY0W7qqs5UZEF03VahInK4z7T2qYFwVCvvOKngFfVeQ6KeJPqxVqM7UzeEbShGAL91VnUm+fejlR2tCJVcobO74dMYWcsBebeik+LEIddLE5oWr21uVllbj05+zBt4OEA=
-Received: from DM4PR11MB6479.namprd11.prod.outlook.com (2603:10b6:8:8c::19) by
- MN0PR11MB5962.namprd11.prod.outlook.com (2603:10b6:208:371::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.26; Mon, 7 Nov
- 2022 09:00:06 +0000
-Received: from DM4PR11MB6479.namprd11.prod.outlook.com
- ([fe80::626d:ef37:c13f:1c4b]) by DM4PR11MB6479.namprd11.prod.outlook.com
- ([fe80::626d:ef37:c13f:1c4b%4]) with mapi id 15.20.5791.026; Mon, 7 Nov 2022
- 09:00:06 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <vkoul@kernel.org>
-CC:     <peda@axentia.se>, <du@axentia.se>, <maciej.sosnowski@intel.com>,
-        <Nicolas.Ferre@microchip.com>, <mripard@kernel.org>,
-        <torfl6749@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 00/32] dmaengine: at_hdmac: Fix concurrency bugs and
- then convert to virt-dma
-Thread-Topic: [PATCH v2 00/32] dmaengine: at_hdmac: Fix concurrency bugs and
- then convert to virt-dma
-Thread-Index: AQHY8GAxL57d78lf2Ea0R6kPIjrAlw==
-Date:   Mon, 7 Nov 2022 09:00:06 +0000
-Message-ID: <da042959-9c87-94cc-990c-27f7d9b8ab29@microchip.com>
-References: <20221025090306.297886-1-tudor.ambarus@microchip.com>
- <Y2USF24O90/dLKz7@matsya>
- <d1035d5f-02f8-a98f-fbfe-bccbdfd3920b@microchip.com>
- <93048355-18a0-df4e-54ad-9c5955933109@microchip.com>
- <Y2VS6xPnTXNvNtf8@matsya> <Y2iKn5CH7IYUxwy8@matsya>
-In-Reply-To: <Y2iKn5CH7IYUxwy8@matsya>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM4PR11MB6479:EE_|MN0PR11MB5962:EE_
-x-ms-office365-filtering-correlation-id: 00831814-ecd9-4d1c-0f2a-08dac09e7717
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8+hn6xURH7oMQxllYK/fcgRbCCKNh1mMKNfuWk9HhhLUCifHhPsD/5nUMioVv0TNadpSphu9teZTH67aGkF9vKndBYRwkTw/x+A9SA8xXzL1HC5O6fIHMXh/etjtsbvRvxdkqHQCcflsfa2fIhN0nEv72FHA49CmUjtM5OoQ2KHV6iDKbCKa2I45FuEHr3PkvGzgINFBQWYPOV+PLnHkkFbwTC/gN5x+lXEV9k/Tlbtk9Xk8OV6vqaaanwYCHDnNxoAtvmYAmTn4l/TO4b0JCGkIsAW+1JrX2Gy7UQCNfne15uWsX4tVIA7uVkDF1cPJpPaXC1N7lAo1exxxb15ut9VO6CaifTmRqFMZ+duGU7j7PitpTb+R52V6kHaIXrF6WA5r7t7tG2gfrbGnAbwiIRmWUhHU59EfST8mJwWjToLjCVciec47usWsR2sTOecIKb30dHG73jUM8nj8wO8LBvOAczw7bmc4BNNG1TgYl4JsCmNIRaFlx6CN300qtiB6EOdqbSdbnAa6Zk1MgrVSS9H3Ale15wCvIJ7PgkBLacNzktWWbZ2K5ZMy7sGN1qifgfV70HVbIMkgJkZDIJ2eHvNkFbX1B4anmMKkXfAvnUdnymdMH3MgtK3uXfZQtQqzXKCNRfovMxBwesVuDfH910HYkapmJ5Rc6C1NLlR93qAwCCa8dv5fjFJ63/qHgRHsrcKqxmyuiKjOMZBFmbGND0QkpcYkjbkabYs9HalA0mkQ2O22Ag0Qxs/MMXS5YJORNynl0eb98M4eZz3P0B872kZ0RpR5oLurxmKE38u1qY9EJzcvrwFeapQPHdo9pWUKdnFyEsSwYgAbp/W0OJ7FU3HYddgnxzg5g1b8LCrJOkubdU+xznxuV5pqRyPjsyoZ8n0RP+yKWjabfahcjPHLow==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6479.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(376002)(39860400002)(366004)(396003)(136003)(346002)(451199015)(84970400001)(186003)(66946007)(76116006)(66446008)(64756008)(8676002)(66556008)(316002)(66476007)(6916009)(91956017)(4326008)(54906003)(31686004)(478600001)(2906002)(966005)(6486002)(71200400001)(38100700002)(5660300002)(36756003)(8936002)(41300700001)(26005)(53546011)(86362001)(31696002)(6512007)(2616005)(6506007)(38070700005)(83380400001)(122000001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?R0lPdDd0WTN3akJ5aWsyeGZqY3R4Qzhld09xZHFjeUtpMFdVRlM2cDVkRkR0?=
- =?utf-8?B?Z0R6b0VQSUhpNHNZWUpXdkwyN3JtUlUzb05uTXk3cUJzRUJsakU2cEM2bHds?=
- =?utf-8?B?K2dPMWdtTFFGVTFwWTAvUjdiNStLQk50VnF0OGs5RGdXS1NLWGlKdkZWZ1NX?=
- =?utf-8?B?dEZGbERFQnY2RUI0Yi9RNHUxZ3c0WVdoMVgwTmx2RjVXL3hlSUV6bTl1bGRG?=
- =?utf-8?B?WHhleVk1ZzdwWUNMa0EydFZXbUYvNTlXUVpSZlovdmxDQXRCK1pISEJDRHN5?=
- =?utf-8?B?RERTMDBPaG1XSjF1Q2xCbVdVUHA5dEthK1FNVFBTY3RDRENRMnJmcngzc2Jo?=
- =?utf-8?B?TzFoUFpLaTh5T3lja2paWUlVdmdMTTh5SXFLeVpiUXNPRkVFYXdzWnltY09s?=
- =?utf-8?B?dUE2bW1hUkc5WTFzMDNKTmFKT0VyRzNERFEwUklKdlk2Q0FSMy9Wdi9URjAv?=
- =?utf-8?B?MkUzYnRwZW9QOXRiUk1ya2NVVzhMQnM3aWkxZmx6TmFUeDhGcjlmdE5TRFpa?=
- =?utf-8?B?Smo1M0pKMWtHeGdxVXFiZTRMWnZSUG1jcmhra0kwcCtwNGpNQnEzUzJUSnFY?=
- =?utf-8?B?SHR5aVUyb05YTzlCd0VQRHJmN0IyaDRacHhiZlBlbWJ2dW9JRVV5MGF5dzBl?=
- =?utf-8?B?eStrbksxZ1dDbnM1Rjk1NHAxM2g1TWpQd0ZpNWtMNmlRaWVCQ0RDTzdRZ0Ja?=
- =?utf-8?B?OTF3eGFIcnBhMEFPSU5Rby83OG8vWERxZTRWUzJTNU5iTGtQOWNqMm1FMy80?=
- =?utf-8?B?ZTdJWFNlb0lOdTJRL0UzM0dBbEYwaUgrU001QjNyS1RpNG5ndWlmb0k0V1dI?=
- =?utf-8?B?ZDVubkV6UU15Wlh2QXZsd0pMRlp3ZTVoUE12UXQ5b3NBVnFOWUxyU2xBemdC?=
- =?utf-8?B?M0lYOHlzaDJ0dXVBR1JxSWRNVkpiMUg4MFkycnJtN1hBV0JLMXpuNlp3K2hS?=
- =?utf-8?B?OUJHMjdKM2xuWUZmSFo4V3dzbjFReDJKUExhUnVXL2FXdWtLMm5DSkJtOHhQ?=
- =?utf-8?B?MzV0K1dGY3NsMXp5bUFaUWpRUkZVSytldWxnUGszWEpPMVROQ0JNamk2YzBi?=
- =?utf-8?B?YWlZUHN2NGJLVytENEZYZlcrbkMzS2VjOVd6ZUtkVjNoQ29lVXpvUGhqSVBZ?=
- =?utf-8?B?SXhEdk15dmtnOGZrcUpRbHZDbVZWZGR5RTBSYW5kdTZFbUloaWNQQ2V5cDlO?=
- =?utf-8?B?T3RmL3kveDlocTlKUWRvejhCbkk0YjVvMUN3K01IV01XNUZGWENycWs5UWVC?=
- =?utf-8?B?N2ZObGVWQkxjZGhhdEhoZFlmTmN3WkhuZ1ZhYThHbU1SNWJQenNzdVdwWnF6?=
- =?utf-8?B?Ynk1S09kY0pMbUdZVFhhTm00eVBFK0Qxam1yVVF1NzhJbkNTQ3VxMzNjeEVR?=
- =?utf-8?B?OUlYQUd4STlWdURWVzZsaVY2MW53Zy9Nblp4VnJwcTRmVERyZjdodmpSOEhO?=
- =?utf-8?B?NWZlZWI1K3h6dGVCTXBGZ3lKcmdSQ21EOUhOSmh5NDdVendzVmhzNnlYOElU?=
- =?utf-8?B?T2JmeWxIbkRnNGNNOHZ0NVRwdHBaMGg0YVR5TUFXMGhXSkFoVjQ1U3NvRDRr?=
- =?utf-8?B?SEJHM1FoOW9xcVpYa29WcWEwbExxbnE3L3BSUFFiaE5vU2FjMUt5Z1E4QUtY?=
- =?utf-8?B?cUJ2c3ZSa25RWG5hS3BXT1Z4a04wQXlIOW1jYVZ2Y2VUSTNjVnFOWVNrR3Ro?=
- =?utf-8?B?Z1dXb1VpWWxTQldoaDdFSm9yMHlFVktBZDliaFdva2EvWHVFYmQ3NVdKd2VS?=
- =?utf-8?B?ZWRIUG1GdlNDRWIxSFdsR1Zxai92WFROUEs3d1g5aDFRam4xWW5nTGNMam55?=
- =?utf-8?B?RWFzMWprd2pzNVIyVVd6aEZqYmYzRUh3R2VsWDdNQ0dCV2JQYkR5VnFaam1F?=
- =?utf-8?B?WlB1RXVaSnQ5bFlaTVJINEdJUUlldE1qRUpqN0tyTEc1TFlXZTRic1VlUyt6?=
- =?utf-8?B?TU4zZG9URHpIbnViUG1JU2IwK3F1YVQrbEwyd1N4Zld2MEJYTVROYlpIZUVo?=
- =?utf-8?B?cThLU05PSHRSaGsvU1M3Rkx1cm0va2tDRjVBbnhmMFNnRjZuTnQvdUdaNUpk?=
- =?utf-8?B?NTF1cUtUZjdoQzRjdDNxNXoxb1E3TFFsNVRHWjZYVExCWjNERHB6YXZKd2VW?=
- =?utf-8?Q?kzzF1X+5Af/zWPK9voej7NX4f?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BD6ECF53837FBA4F9FA1FFB9AAAFB380@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AOmtRIzmF5dcnWrT0j3skK83MYTC+QvduwZ6ndeN2Ks=;
+        b=Zv++OJ/ncK2pWuUWAQT+z52+cIoHK/WVJU4bVze52hunD5wDL4D5XJdl5mW2VbRjhi
+         PKA0tQ/z42/ONfUnPJoBfdYRGEG2gwiyoDRW7hecaxcg+/0t0u3g44ISFlpe+B9l1fvu
+         TmkNgtKOyak6WThRMAIvY+g5IgPZxvnz63e21BpajeaX9653GP4qpHUHyfV7BL4cSNb4
+         pCU1fNGxZBn7NlKzWZCMHMxM9LSs8sKofgpQ0FSoeb/qTDQ+CPP+tvlBe/vGQ8T8hOyn
+         vdUZr48/zTuwVxtBDF6IrOR7pT19nf73qD9i1Q8QUWEzM8dVJjwmGS+xVbVCXqFaE09J
+         SKzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AOmtRIzmF5dcnWrT0j3skK83MYTC+QvduwZ6ndeN2Ks=;
+        b=SQ55rhroYcbeGjAtkv2YDkHX/uqXqMolMT9VBis7el+GRTD0pWgpJwu87sQgMgdj6C
+         +O7yvRJBdCOxwM3tCZj67p9+NNsNRfj/OG3DQgrOYb2wId/eUPUgy3lY11CjuLsaspOO
+         YjDsNEl9Y0xSfZL87Ho+4sc3H+MX1LV3aZIQ5oGq9N/eHE6WABDXJKTBtJabU4rmqa8O
+         fDsM/fE9wZKQJiLgzySotUYDWiSh3VpHBWoMJzKDZL/3cMvy40iXEOKyrbSdzcIz2e2R
+         6n6elLleLyKG+zDDZnAYLokXwfwwprwS4Rw8xCDXOk9Hg0HPzcwfKJrNT4Lq5h50UA3a
+         7elA==
+X-Gm-Message-State: ACrzQf2Om5gRa1c7IR7PCoAoUT4FPQE/CyNpRyREd2ZfFBZGG2btgl08
+        NwN6l+IEXcQVcTjHcwDon/UqZdyQkK7zGgrTsBs=
+X-Google-Smtp-Source: AMsMyM7DPjaK7bSeUBIcMTkNZUaqK+NSwCEUfp88ZZDLY5TXShnQ2+B86xH3ryBKqTyGQWW3ozA/96x60VupsK8qo34=
+X-Received: by 2002:a17:902:8a90:b0:186:b145:f5ec with SMTP id
+ p16-20020a1709028a9000b00186b145f5ecmr50774476plo.103.1667816632274; Mon, 07
+ Nov 2022 02:23:52 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6479.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00831814-ecd9-4d1c-0f2a-08dac09e7717
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2022 09:00:06.1243
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kPEUApOQaAS8TOPb6mwBtZMVgVcsnfZ4SfHnQeIuzqg2d6FAWU371RwqksGsnbNAfyyfrFWv2vKJ9hhfCpCG7Jluv72ib+jUo6/yw6xLDsU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB5962
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+Received: by 2002:a05:6a06:925:b0:587:19e0:c567 with HTTP; Mon, 7 Nov 2022
+ 02:23:51 -0800 (PST)
+Reply-To: contact@ammico.it
+From:   =?UTF-8?Q?Mrs=2E_Monika_Everenov=C3=A1?= <977638ib@gmail.com>
+Date:   Mon, 7 Nov 2022 11:23:51 +0100
+Message-ID: <CAHAXD+bPNCns8Ez=7iXmPLADMtJgZj3-mFTk3NMhWC-Ca1b9rw@mail.gmail.com>
+Subject: Re:
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=5.8 required=5.0 tests=ADVANCE_FEE_2_NEW_MONEY,
+        BAYES_20,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_FROM,FROM_STARTS_WITH_NUMS,LOTS_OF_MONEY,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,UNDISC_MONEY autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:1041 listed in]
+        [list.dnswl.org]
+        * -0.0 BAYES_20 BODY: Bayes spam probability is 5 to 20%
+        *      [score: 0.1858]
+        *  0.7 FROM_STARTS_WITH_NUMS From: starts with several numbers
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [977638ib[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        *  3.3 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+        *  2.0 ADVANCE_FEE_2_NEW_MONEY Advance Fee fraud and lots of money
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-T24gMTEvNy8yMiAwNjozMywgVmlub2QgS291bCB3cm90ZToNCj4gRVhURVJOQUwgRU1BSUw6IERv
-IG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5b3Uga25vdyB0aGUg
-Y29udGVudCBpcyBzYWZlDQo+IA0KPiBPbiAwNC0xMS0yMiwgMjM6MjksIFZpbm9kIEtvdWwgd3Jv
-dGU6DQo+PiBPbiAwNC0xMS0yMiwgMTU6MjEsIFR1ZG9yLkFtYmFydXNAbWljcm9jaGlwLmNvbSB3
-cm90ZToNCj4+Pg0KPj4+Pj4NCj4+Pj4+IFRoaXMgZG9lcyBub3QgYXBwbHkgb24gZG1hZW5naW5l
-LWZpeGVzLCBjYW4geW91IHBsZWFzZSByZWJhc2UgYW5kIHJlc2VuZA0KPj4+Pj4NCj4+Pj4NCj4+
-Pj4gU3VyZSwgSSBjYW4sIGJ1dCBvbiBteSBzaWRlIGl0IGFwcGxpZXMganVzdCBmaW5lLCBib3Ro
-IG9uIHRoZSBmaXhlcyBhbmQgbmV4dA0KPj4+PiBicmFuY2hlcy4gSSB1c2VkIGdpdDovL2dpdC5r
-ZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC92a291bC9kbWFlbmdpbmUuZ2l0DQo+
-Pj4+IFNoYWxsIEkgdXNlIG90aGVyIHRyZWU/DQo+Pg0KPj4gdGhpcyBpcyByaWdodCB0cmVlLCBJ
-IHdhcyBvbiBmaXhlcyBicmFuY2ggKGZvciBpbml0aWFsIGZpeGVzKSBhbmQgaQ0KPj4gdGhpbmsg
-N3RoIG9yIDh0aCBvbmUgZmFpbGVkIHRvIGFwcGx5IGZvciBtZS4uLg0KPj4NCj4+Pg0KPj4+ICQg
-Z2l0IGxvZyAtLW9uZWxpbmUNCj4+PiA3OTAyOWRjMzQxYzcgKEhFQUQsIHZrb3VsLWRtYS9maXhl
-cykgZG1hZW5naW5lOiBzdG0zMi1kbWE6IGZpeCBwb3RlbnRpYWwgcmFjZSBiZXR3ZWVuIHBhdXNl
-IGFuZCByZXN1bWUNCj4+Pg0KPj4+IFtjdXRdDQo+Pj4NCj4+PiAkIGI0IGFtIDIwMjIxMDI1MDkw
-MzA2LjI5Nzg4Ni0xLXR1ZG9yLmFtYmFydXNAbWljcm9jaGlwLmNvbQ0KPj4+IExvb2tpbmcgdXAg
-aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvci8yMDIyMTAyNTA5MDMwNi4yOTc4ODYtMS10dWRvci5h
-bWJhcnVzJTQwbWljcm9jaGlwLmNvbQ0KPj4+IEdyYWJiaW5nIHRocmVhZCBmcm9tIGxvcmUua2Vy
-bmVsLm9yZy9hbGwvMjAyMjEwMjUwOTAzMDYuMjk3ODg2LTEtdHVkb3IuYW1iYXJ1cyU0MG1pY3Jv
-Y2hpcC5jb20vdC5tYm94Lmd6DQo+Pj4gQW5hbHl6aW5nIDM3IG1lc3NhZ2VzIGluIHRoZSB0aHJl
-YWQNCj4+PiBDaGVja2luZyBhdHRlc3RhdGlvbiBvbiBhbGwgbWVzc2FnZXMsIG1heSB0YWtlIGEg
-bW9tZW50Li4uDQo+IA0KPiBPa2F5IGdyYWJiaW5nIHRoZSBiNCB2ZXJzaW9uIGRpZCB0aGUgdHJp
-Y2ssIG5vIHN1cmUgd2h5IG15IGxvY2FsIG9uZQ0KPiBmYWlsZWQuIEkgaGF2ZSBhcHBsaWVkIHRo
-ZXNlIG5vdy4gVGhhbmtzDQoNCkNvb2wsIHRoYW5rIHlvdSENCg0K
+Hei ja miten voit?
+Nimeni on rouva Evereen, l=C3=A4het=C3=A4n t=C3=A4m=C3=A4n viestin suurella=
+ toivolla
+v=C3=A4lit=C3=B6n vastaus, koska minun on teht=C3=A4v=C3=A4 uusi syd=C3=A4n=
+leikkaus
+t=C3=A4ll=C3=A4 hetkell=C3=A4 huonokuntoinen ja v=C3=A4h=C3=A4iset mahdolli=
+suudet selviyty=C3=A4.
+Mutta ennen kuin min=C3=A4
+Tee toinen vaarallinen operaatio, annan sen sinulle
+Minulla on 6 550 000 dollaria yhdysvaltalaisella pankkitilill=C3=A4
+sijoittamista, hallinnointia ja k=C3=A4ytt=C3=B6=C3=A4 varten
+voittoa hyv=C3=A4ntekev=C3=A4isyysprojektin toteuttamiseen. Tarkoitan saira=
+iden auttamista
+ja k=C3=B6yh=C3=A4t ovat viimeinen haluni maan p=C3=A4=C3=A4ll=C3=A4, sill=
+=C3=A4 minulla ei ole niit=C3=A4
+kenelt=C3=A4 perii rahaa.
+Vastaa minulle nopeasti
+terveisi=C3=A4
+Rouva Monika Evereen
+Florida, Amerikan Yhdysvallat
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+Hi and how are you?
+My name is Mrs. Evereen, I am sending this message with great hope for
+an immediate response, as I have to undergo heart reoperation in my
+current poor health with little chance of survival. But before I
+undertake the second dangerous operation, I will give you the
+$6,550,000 I have in my US bank account to invest well, manage and use
+the profits to run a charity project for me. I count helping the sick
+and the poor as my last wish on earth, because I have no one to
+inherit money from.
+Please give me a quick reply
+regards
+Mrs. Monika Evereen
+Florida, United States of America

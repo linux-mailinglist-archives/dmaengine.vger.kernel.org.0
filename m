@@ -2,34 +2,34 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 93BD76200BB
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Nov 2022 22:14:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 927516200A6
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Nov 2022 22:14:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233423AbiKGVOf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 7 Nov 2022 16:14:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60962 "EHLO
+        id S232941AbiKGVOT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 7 Nov 2022 16:14:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233417AbiKGVOK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 7 Nov 2022 16:14:10 -0500
+        with ESMTP id S233332AbiKGVOF (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 7 Nov 2022 16:14:05 -0500
 Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 794CB32069
-        for <dmaengine@vger.kernel.org>; Mon,  7 Nov 2022 13:11:07 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ABAF031F8E
+        for <dmaengine@vger.kernel.org>; Mon,  7 Nov 2022 13:11:01 -0800 (PST)
 Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id 1538FE0EDA;
+        by post.baikalelectronics.com (Proxmox) with ESMTP id CC0CFE0ED5;
         Tue,  8 Nov 2022 00:04:56 +0300 (MSK)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         baikalelectronics.ru; h=cc:cc:content-transfer-encoding
         :content-type:content-type:date:from:from:in-reply-to:message-id
         :mime-version:references:reply-to:subject:subject:to:to; s=post;
-         bh=vdNm8AlhboipMtNfGl5+3dMHPE1Onpe03l7utPzgqBY=; b=Ws3B3TWYYNxZ
-        KoDpg2swwx1YapTfqZs3JZfoctN+zHEgXk90nZZAgHKU3AcFkOo246jCcfl68V6l
-        loMBigWC3sELgLJYa2iM3wABbwq3v7kxCvnSmF+/ptwWHE/9x3+W7yMBQKRTe2Fp
-        rHWBWJo1ltS5WXOvigjG4I86C90B6Ds=
+         bh=uLrWtBLWVUXZaOz/RCUH5MdQ2Nui9vv0eXTwuNgZT7s=; b=RJpZNJuRzCP7
+        Y31NdxY4PZQgS7qad0QjNp/vmXZ+v1SkqWb/wLZJTeO8UiGjnE6te7g/xNWhaUYm
+        UFuXFkZzPNW+uSyZQJckAGkvAldDrpgp3oVsmXe2ucnjZuIwfjUsfkSYhaVhLqva
+        W5TKdBDR+SW5LYSi2hMu4dGvQN+WtqU=
 Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id 06C1BE0ED5;
+        by post.baikalelectronics.com (Proxmox) with ESMTP id BB851E0ED3;
         Tue,  8 Nov 2022 00:04:56 +0300 (MSK)
 Received: from localhost (192.168.168.10) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 8 Nov 2022 00:04:55 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 8 Nov 2022 00:04:56 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -46,9 +46,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         caihuoqing <caihuoqing@baidu.com>, <linux-pci@vger.kernel.org>,
         <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 15/24] dmaengine: dw-edma: Simplify the DebugFS context CSRs init procedure
-Date:   Tue, 8 Nov 2022 00:04:29 +0300
-Message-ID: <20221107210438.1515-16-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v6 16/24] dmaengine: dw-edma: Move eDMA data pointer to DebugFS node descriptor
+Date:   Tue, 8 Nov 2022 00:04:30 +0300
+Message-ID: <20221107210438.1515-17-Sergey.Semin@baikalelectronics.ru>
 X-Mailer: git-send-email 2.38.0
 In-Reply-To: <20221107210438.1515-1-Sergey.Semin@baikalelectronics.ru>
 References: <20221107210438.1515-1-Sergey.Semin@baikalelectronics.ru>
@@ -66,187 +66,419 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-DW eDMA v4.70a and older have the read and write channels context CSRs
-indirectly accessible. It means the CSRs like Channel Control, Xfer size,
-SAR, DAR and LLP address are accessed over at a fixed MMIO address, but
-their reference to the corresponding channel is determined by the Viewport
-CSR. In order to have a coherent access to these registers the CSR IOs are
-supposed to be protected with a spin-lock. DW eDMA v4.80a and newer
-normally have unrolled Read/Write channel context registers. That is all
-CSRs denoted before are directly mapped in the controller MMIO space.
-
-Since both normal and viewport-based registers are exposed via the DebugFS
-nodes, the original code author decided to implement an algorithm based on
-the unrolled CSRs mapping with the viewport addresses recalculation if
-it's required. The problem is that such implementation turned to be first
-unscalable (supports a platform with only single eDMA available since a
-base address statically preserved) and second needlessly overcomplicated
-(it loops over all Rd/Wr context addresses and re-calculates the viewport
-base address on each DebugFS node access). The algorithm can be greatly
-simplified just by adding the channel ID and it's direction fields in the
-eDMA DebugFS node descriptor. These new parameters can be used to find a
-CSR offset within the corresponding channel registers space. The DW eDMA
-DebugFS node getter afterwards will also use them in order to activate the
-respective context CSRs viewport before reading data from the specified
-register. In case of the unrolled version of the CSRs mapping there won't
-be any spin-lock taken/released, no viewport activation as before this
-modification.
-
-Note this modification fixes the REGISTER() macros using an externally
-defined local variable. The same problem with the rest of the macro will
-be fixed in the next commit.
+The last thing that really stops the DebugFS part of the eDMA driver from
+supporting the multi-eDMA platform in is keeping the eDMA private data
+pointer in the static area of the DebugFS module. Since the DebugFS node
+descriptors are now kz-allocated we can freely move that pointer to being
+preserved in the descriptors. After the DebugFS initialization procedure
+that pointer will be used in the DebugFS files getter to access the common
+CSRs space and the context CSRs spin-lock. So the main part of this change
+is connected with the DebugFS nodes descriptors initialization macros,
+which aside with already defined prototypes now require to have the DW
+eDMA private data pointer passed.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Acked-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 84 +++++++++++-------------
- 1 file changed, 38 insertions(+), 46 deletions(-)
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 242 +++++++++++------------
+ 1 file changed, 117 insertions(+), 125 deletions(-)
 
 diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-index 7bb3363b40e4..1596eedf35c5 100644
+index 1596eedf35c5..e6cf608d121b 100644
 --- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
 +++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-@@ -15,9 +15,27 @@
+@@ -13,53 +13,55 @@
+ #include "dw-edma-v0-regs.h"
+ #include "dw-edma-core.h"
  
- #define REGS_ADDR(name) \
- 	((void __iomem *)&regs->name)
-+
-+#define REGS_CH_ADDR(name, _dir, _ch)						\
+-#define REGS_ADDR(name) \
+-	((void __iomem *)&regs->name)
++#define REGS_ADDR(dw, name)							\
 +	({									\
-+		struct dw_edma_v0_ch_regs __iomem *__ch_regs;			\
++		struct dw_edma_v0_regs __iomem *__regs = (dw)->chip->reg_base;	\
 +										\
-+		if ((dw)->chip->mf == EDMA_MF_EDMA_LEGACY)			\
-+			__ch_regs = &regs->type.legacy.ch;			\
-+		else if (_dir == EDMA_DIR_READ)					\
-+			__ch_regs = &regs->type.unroll.ch[_ch].rd;		\
-+		else								\
-+			__ch_regs = &regs->type.unroll.ch[_ch].wr;		\
-+										\
-+		(void __iomem *)&__ch_regs->name;				\
++		(void __iomem *)&__regs->name;					\
 +	})
-+
- #define REGISTER(name) \
- 	{ #name, REGS_ADDR(name) }
  
-+#define CTX_REGISTER(name, dir, ch) \
-+	{ #name, REGS_CH_ADDR(name, dir, ch), dir, ch }
-+
- #define WR_REGISTER(name) \
- 	{ #name, REGS_ADDR(wr_##name) }
- #define RD_REGISTER(name) \
-@@ -41,14 +59,11 @@
- static struct dw_edma				*dw;
- static struct dw_edma_v0_regs			__iomem *regs;
+-#define REGS_CH_ADDR(name, _dir, _ch)						\
++#define REGS_CH_ADDR(dw, name, _dir, _ch)					\
+ 	({									\
+ 		struct dw_edma_v0_ch_regs __iomem *__ch_regs;			\
+ 										\
+ 		if ((dw)->chip->mf == EDMA_MF_EDMA_LEGACY)			\
+-			__ch_regs = &regs->type.legacy.ch;			\
++			__ch_regs = REGS_ADDR(dw, type.legacy.ch);		\
+ 		else if (_dir == EDMA_DIR_READ)					\
+-			__ch_regs = &regs->type.unroll.ch[_ch].rd;		\
++			__ch_regs = REGS_ADDR(dw, type.unroll.ch[_ch].rd);	\
+ 		else								\
+-			__ch_regs = &regs->type.unroll.ch[_ch].wr;		\
++			__ch_regs = REGS_ADDR(dw, type.unroll.ch[_ch].wr);	\
+ 										\
+ 		(void __iomem *)&__ch_regs->name;				\
+ 	})
  
--static struct {
--	void					__iomem *start;
--	void					__iomem *end;
--} lim[2][EDMA_V0_MAX_NR_CH];
+-#define REGISTER(name) \
+-	{ #name, REGS_ADDR(name) }
++#define REGISTER(dw, name) \
++	{ dw, #name, REGS_ADDR(dw, name) }
+ 
+-#define CTX_REGISTER(name, dir, ch) \
+-	{ #name, REGS_CH_ADDR(name, dir, ch), dir, ch }
++#define CTX_REGISTER(dw, name, dir, ch) \
++	{ dw, #name, REGS_CH_ADDR(dw, name, dir, ch), dir, ch }
+ 
+-#define WR_REGISTER(name) \
+-	{ #name, REGS_ADDR(wr_##name) }
+-#define RD_REGISTER(name) \
+-	{ #name, REGS_ADDR(rd_##name) }
++#define WR_REGISTER(dw, name) \
++	{ dw, #name, REGS_ADDR(dw, wr_##name) }
++#define RD_REGISTER(dw, name) \
++	{ dw, #name, REGS_ADDR(dw, rd_##name) }
+ 
+-#define WR_REGISTER_LEGACY(name) \
+-	{ #name, REGS_ADDR(type.legacy.wr_##name) }
++#define WR_REGISTER_LEGACY(dw, name) \
++	{ dw, #name, REGS_ADDR(dw, type.legacy.wr_##name) }
+ #define RD_REGISTER_LEGACY(name) \
+-	{ #name, REGS_ADDR(type.legacy.rd_##name) }
++	{ dw, #name, REGS_ADDR(dw, type.legacy.rd_##name) }
+ 
+-#define WR_REGISTER_UNROLL(name) \
+-	{ #name, REGS_ADDR(type.unroll.wr_##name) }
+-#define RD_REGISTER_UNROLL(name) \
+-	{ #name, REGS_ADDR(type.unroll.rd_##name) }
++#define WR_REGISTER_UNROLL(dw, name) \
++	{ dw, #name, REGS_ADDR(dw, type.unroll.wr_##name) }
++#define RD_REGISTER_UNROLL(dw, name) \
++	{ dw, #name, REGS_ADDR(dw, type.unroll.rd_##name) }
+ 
+ #define WRITE_STR				"write"
+ #define READ_STR				"read"
+ #define CHANNEL_STR				"channel"
+ #define REGISTERS_STR				"registers"
+ 
+-static struct dw_edma				*dw;
+-static struct dw_edma_v0_regs			__iomem *regs;
 -
  struct dw_edma_debugfs_entry {
++	struct dw_edma				*dw;
  	const char				*name;
  	void __iomem				*reg;
-+	enum dw_edma_dir			dir;
-+	u16					ch;
- };
- 
+ 	enum dw_edma_dir			dir;
+@@ -69,10 +71,11 @@ struct dw_edma_debugfs_entry {
  static int dw_edma_debugfs_u32_get(void *data, u64 *val)
-@@ -58,33 +73,16 @@ static int dw_edma_debugfs_u32_get(void *data, u64 *val)
+ {
+ 	struct dw_edma_debugfs_entry *entry = data;
++	struct dw_edma *dw = entry->dw;
+ 	void __iomem *reg = entry->reg;
  
  	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY &&
- 	    reg >= (void __iomem *)&regs->type.legacy.ch) {
--		void __iomem *ptr = &regs->type.legacy.ch;
--		u32 viewport_sel = 0;
+-	    reg >= (void __iomem *)&regs->type.legacy.ch) {
++	    reg >= REGS_ADDR(dw, type.legacy.ch)) {
  		unsigned long flags;
--		u16 ch;
--
--		for (ch = 0; ch < dw->wr_ch_cnt; ch++)
--			if (lim[0][ch].start >= reg && reg < lim[0][ch].end) {
--				ptr += (reg - lim[0][ch].start);
--				goto legacy_sel_wr;
--			}
--
--		for (ch = 0; ch < dw->rd_ch_cnt; ch++)
--			if (lim[1][ch].start >= reg && reg < lim[1][ch].end) {
--				ptr += (reg - lim[1][ch].start);
--				goto legacy_sel_rd;
--			}
--
--		return 0;
--legacy_sel_rd:
--		viewport_sel = BIT(31);
--legacy_sel_wr:
--		viewport_sel |= FIELD_PREP(EDMA_V0_VIEWPORT_MASK, ch);
-+		u32 viewport_sel;
-+
-+		viewport_sel = entry->dir == EDMA_DIR_READ ? BIT(31) : 0;
-+		viewport_sel |= FIELD_PREP(EDMA_V0_VIEWPORT_MASK, entry->ch);
+ 		u32 viewport_sel;
+ 
+@@ -81,7 +84,7 @@ static int dw_edma_debugfs_u32_get(void *data, u64 *val)
  
  		raw_spin_lock_irqsave(&dw->lock, flags);
  
- 		writel(viewport_sel, &regs->type.legacy.viewport_sel);
--		*val = readl(ptr);
-+		*val = readl(reg);
+-		writel(viewport_sel, &regs->type.legacy.viewport_sel);
++		writel(viewport_sel, REGS_ADDR(dw, type.legacy.viewport_sel));
+ 		*val = readl(reg);
  
  		raw_spin_unlock_irqrestore(&dw->lock, flags);
- 	} else {
-@@ -114,19 +112,19 @@ static void dw_edma_debugfs_create_x32(const struct dw_edma_debugfs_entry ini[],
+@@ -93,7 +96,8 @@ static int dw_edma_debugfs_u32_get(void *data, u64 *val)
+ }
+ DEFINE_DEBUGFS_ATTRIBUTE(fops_x32, dw_edma_debugfs_u32_get, NULL, "0x%08llx\n");
+ 
+-static void dw_edma_debugfs_create_x32(const struct dw_edma_debugfs_entry ini[],
++static void dw_edma_debugfs_create_x32(struct dw_edma *dw,
++				       const struct dw_edma_debugfs_entry ini[],
+ 				       int nr_entries, struct dentry *dent)
+ {
+ 	struct dw_edma_debugfs_entry *entries;
+@@ -112,62 +116,62 @@ static void dw_edma_debugfs_create_x32(const struct dw_edma_debugfs_entry ini[],
  	}
  }
  
--static void dw_edma_debugfs_regs_ch(struct dw_edma_v0_ch_regs __iomem *regs,
-+static void dw_edma_debugfs_regs_ch(enum dw_edma_dir dir, u16 ch,
- 				    struct dentry *dent)
+-static void dw_edma_debugfs_regs_ch(enum dw_edma_dir dir, u16 ch,
+-				    struct dentry *dent)
++static void dw_edma_debugfs_regs_ch(struct dw_edma *dw, enum dw_edma_dir dir,
++				    u16 ch, struct dentry *dent)
  {
--	const struct dw_edma_debugfs_entry debugfs_regs[] = {
--		REGISTER(ch_control1),
--		REGISTER(ch_control2),
--		REGISTER(transfer_size),
--		REGISTER(sar.lsb),
--		REGISTER(sar.msb),
--		REGISTER(dar.lsb),
--		REGISTER(dar.msb),
--		REGISTER(llp.lsb),
--		REGISTER(llp.msb),
-+	struct dw_edma_debugfs_entry debugfs_regs[] = {
-+		CTX_REGISTER(ch_control1, dir, ch),
-+		CTX_REGISTER(ch_control2, dir, ch),
-+		CTX_REGISTER(transfer_size, dir, ch),
-+		CTX_REGISTER(sar.lsb, dir, ch),
-+		CTX_REGISTER(sar.msb, dir, ch),
-+		CTX_REGISTER(dar.lsb, dir, ch),
-+		CTX_REGISTER(dar.msb, dir, ch),
-+		CTX_REGISTER(llp.lsb, dir, ch),
-+		CTX_REGISTER(llp.msb, dir, ch),
+ 	struct dw_edma_debugfs_entry debugfs_regs[] = {
+-		CTX_REGISTER(ch_control1, dir, ch),
+-		CTX_REGISTER(ch_control2, dir, ch),
+-		CTX_REGISTER(transfer_size, dir, ch),
+-		CTX_REGISTER(sar.lsb, dir, ch),
+-		CTX_REGISTER(sar.msb, dir, ch),
+-		CTX_REGISTER(dar.lsb, dir, ch),
+-		CTX_REGISTER(dar.msb, dir, ch),
+-		CTX_REGISTER(llp.lsb, dir, ch),
+-		CTX_REGISTER(llp.msb, dir, ch),
++		CTX_REGISTER(dw, ch_control1, dir, ch),
++		CTX_REGISTER(dw, ch_control2, dir, ch),
++		CTX_REGISTER(dw, transfer_size, dir, ch),
++		CTX_REGISTER(dw, sar.lsb, dir, ch),
++		CTX_REGISTER(dw, sar.msb, dir, ch),
++		CTX_REGISTER(dw, dar.lsb, dir, ch),
++		CTX_REGISTER(dw, dar.msb, dir, ch),
++		CTX_REGISTER(dw, llp.lsb, dir, ch),
++		CTX_REGISTER(dw, llp.msb, dir, ch),
  	};
  	int nr_entries;
  
-@@ -191,10 +189,7 @@ static void dw_edma_debugfs_regs_wr(struct dentry *dent)
+ 	nr_entries = ARRAY_SIZE(debugfs_regs);
+-	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, dent);
++	dw_edma_debugfs_create_x32(dw, debugfs_regs, nr_entries, dent);
+ }
+ 
+-static void dw_edma_debugfs_regs_wr(struct dentry *dent)
++static void dw_edma_debugfs_regs_wr(struct dw_edma *dw, struct dentry *dent)
+ {
+ 	const struct dw_edma_debugfs_entry debugfs_regs[] = {
+ 		/* eDMA global registers */
+-		WR_REGISTER(engine_en),
+-		WR_REGISTER(doorbell),
+-		WR_REGISTER(ch_arb_weight.lsb),
+-		WR_REGISTER(ch_arb_weight.msb),
++		WR_REGISTER(dw, engine_en),
++		WR_REGISTER(dw, doorbell),
++		WR_REGISTER(dw, ch_arb_weight.lsb),
++		WR_REGISTER(dw, ch_arb_weight.msb),
+ 		/* eDMA interrupts registers */
+-		WR_REGISTER(int_status),
+-		WR_REGISTER(int_mask),
+-		WR_REGISTER(int_clear),
+-		WR_REGISTER(err_status),
+-		WR_REGISTER(done_imwr.lsb),
+-		WR_REGISTER(done_imwr.msb),
+-		WR_REGISTER(abort_imwr.lsb),
+-		WR_REGISTER(abort_imwr.msb),
+-		WR_REGISTER(ch01_imwr_data),
+-		WR_REGISTER(ch23_imwr_data),
+-		WR_REGISTER(ch45_imwr_data),
+-		WR_REGISTER(ch67_imwr_data),
+-		WR_REGISTER(linked_list_err_en),
++		WR_REGISTER(dw, int_status),
++		WR_REGISTER(dw, int_mask),
++		WR_REGISTER(dw, int_clear),
++		WR_REGISTER(dw, err_status),
++		WR_REGISTER(dw, done_imwr.lsb),
++		WR_REGISTER(dw, done_imwr.msb),
++		WR_REGISTER(dw, abort_imwr.lsb),
++		WR_REGISTER(dw, abort_imwr.msb),
++		WR_REGISTER(dw, ch01_imwr_data),
++		WR_REGISTER(dw, ch23_imwr_data),
++		WR_REGISTER(dw, ch45_imwr_data),
++		WR_REGISTER(dw, ch67_imwr_data),
++		WR_REGISTER(dw, linked_list_err_en),
+ 	};
+ 	const struct dw_edma_debugfs_entry debugfs_unroll_regs[] = {
+ 		/* eDMA channel context grouping */
+-		WR_REGISTER_UNROLL(engine_chgroup),
+-		WR_REGISTER_UNROLL(engine_hshake_cnt.lsb),
+-		WR_REGISTER_UNROLL(engine_hshake_cnt.msb),
+-		WR_REGISTER_UNROLL(ch0_pwr_en),
+-		WR_REGISTER_UNROLL(ch1_pwr_en),
+-		WR_REGISTER_UNROLL(ch2_pwr_en),
+-		WR_REGISTER_UNROLL(ch3_pwr_en),
+-		WR_REGISTER_UNROLL(ch4_pwr_en),
+-		WR_REGISTER_UNROLL(ch5_pwr_en),
+-		WR_REGISTER_UNROLL(ch6_pwr_en),
+-		WR_REGISTER_UNROLL(ch7_pwr_en),
++		WR_REGISTER_UNROLL(dw, engine_chgroup),
++		WR_REGISTER_UNROLL(dw, engine_hshake_cnt.lsb),
++		WR_REGISTER_UNROLL(dw, engine_hshake_cnt.msb),
++		WR_REGISTER_UNROLL(dw, ch0_pwr_en),
++		WR_REGISTER_UNROLL(dw, ch1_pwr_en),
++		WR_REGISTER_UNROLL(dw, ch2_pwr_en),
++		WR_REGISTER_UNROLL(dw, ch3_pwr_en),
++		WR_REGISTER_UNROLL(dw, ch4_pwr_en),
++		WR_REGISTER_UNROLL(dw, ch5_pwr_en),
++		WR_REGISTER_UNROLL(dw, ch6_pwr_en),
++		WR_REGISTER_UNROLL(dw, ch7_pwr_en),
+ 	};
+ 	struct dentry *regs_dent, *ch_dent;
+ 	int nr_entries, i;
+@@ -176,11 +180,11 @@ static void dw_edma_debugfs_regs_wr(struct dentry *dent)
+ 	regs_dent = debugfs_create_dir(WRITE_STR, dent);
+ 
+ 	nr_entries = ARRAY_SIZE(debugfs_regs);
+-	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, regs_dent);
++	dw_edma_debugfs_create_x32(dw, debugfs_regs, nr_entries, regs_dent);
+ 
+ 	if (dw->chip->mf == EDMA_MF_HDMA_COMPAT) {
+ 		nr_entries = ARRAY_SIZE(debugfs_unroll_regs);
+-		dw_edma_debugfs_create_x32(debugfs_unroll_regs, nr_entries,
++		dw_edma_debugfs_create_x32(dw, debugfs_unroll_regs, nr_entries,
+ 					   regs_dent);
+ 	}
+ 
+@@ -189,47 +193,47 @@ static void dw_edma_debugfs_regs_wr(struct dentry *dent)
  
  		ch_dent = debugfs_create_dir(name, regs_dent);
  
--		dw_edma_debugfs_regs_ch(&regs->type.unroll.ch[i].wr, ch_dent);
--
--		lim[0][i].start = &regs->type.unroll.ch[i].wr;
--		lim[0][i].end = &regs->type.unroll.ch[i].padding_1[0];
-+		dw_edma_debugfs_regs_ch(EDMA_DIR_WRITE, i, ch_dent);
+-		dw_edma_debugfs_regs_ch(EDMA_DIR_WRITE, i, ch_dent);
++		dw_edma_debugfs_regs_ch(dw, EDMA_DIR_WRITE, i, ch_dent);
  	}
  }
  
-@@ -256,10 +251,7 @@ static void dw_edma_debugfs_regs_rd(struct dentry *dent)
+-static void dw_edma_debugfs_regs_rd(struct dentry *dent)
++static void dw_edma_debugfs_regs_rd(struct dw_edma *dw, struct dentry *dent)
+ {
+ 	const struct dw_edma_debugfs_entry debugfs_regs[] = {
+ 		/* eDMA global registers */
+-		RD_REGISTER(engine_en),
+-		RD_REGISTER(doorbell),
+-		RD_REGISTER(ch_arb_weight.lsb),
+-		RD_REGISTER(ch_arb_weight.msb),
++		RD_REGISTER(dw, engine_en),
++		RD_REGISTER(dw, doorbell),
++		RD_REGISTER(dw, ch_arb_weight.lsb),
++		RD_REGISTER(dw, ch_arb_weight.msb),
+ 		/* eDMA interrupts registers */
+-		RD_REGISTER(int_status),
+-		RD_REGISTER(int_mask),
+-		RD_REGISTER(int_clear),
+-		RD_REGISTER(err_status.lsb),
+-		RD_REGISTER(err_status.msb),
+-		RD_REGISTER(linked_list_err_en),
+-		RD_REGISTER(done_imwr.lsb),
+-		RD_REGISTER(done_imwr.msb),
+-		RD_REGISTER(abort_imwr.lsb),
+-		RD_REGISTER(abort_imwr.msb),
+-		RD_REGISTER(ch01_imwr_data),
+-		RD_REGISTER(ch23_imwr_data),
+-		RD_REGISTER(ch45_imwr_data),
+-		RD_REGISTER(ch67_imwr_data),
++		RD_REGISTER(dw, int_status),
++		RD_REGISTER(dw, int_mask),
++		RD_REGISTER(dw, int_clear),
++		RD_REGISTER(dw, err_status.lsb),
++		RD_REGISTER(dw, err_status.msb),
++		RD_REGISTER(dw, linked_list_err_en),
++		RD_REGISTER(dw, done_imwr.lsb),
++		RD_REGISTER(dw, done_imwr.msb),
++		RD_REGISTER(dw, abort_imwr.lsb),
++		RD_REGISTER(dw, abort_imwr.msb),
++		RD_REGISTER(dw, ch01_imwr_data),
++		RD_REGISTER(dw, ch23_imwr_data),
++		RD_REGISTER(dw, ch45_imwr_data),
++		RD_REGISTER(dw, ch67_imwr_data),
+ 	};
+ 	const struct dw_edma_debugfs_entry debugfs_unroll_regs[] = {
+ 		/* eDMA channel context grouping */
+-		RD_REGISTER_UNROLL(engine_chgroup),
+-		RD_REGISTER_UNROLL(engine_hshake_cnt.lsb),
+-		RD_REGISTER_UNROLL(engine_hshake_cnt.msb),
+-		RD_REGISTER_UNROLL(ch0_pwr_en),
+-		RD_REGISTER_UNROLL(ch1_pwr_en),
+-		RD_REGISTER_UNROLL(ch2_pwr_en),
+-		RD_REGISTER_UNROLL(ch3_pwr_en),
+-		RD_REGISTER_UNROLL(ch4_pwr_en),
+-		RD_REGISTER_UNROLL(ch5_pwr_en),
+-		RD_REGISTER_UNROLL(ch6_pwr_en),
+-		RD_REGISTER_UNROLL(ch7_pwr_en),
++		RD_REGISTER_UNROLL(dw, engine_chgroup),
++		RD_REGISTER_UNROLL(dw, engine_hshake_cnt.lsb),
++		RD_REGISTER_UNROLL(dw, engine_hshake_cnt.msb),
++		RD_REGISTER_UNROLL(dw, ch0_pwr_en),
++		RD_REGISTER_UNROLL(dw, ch1_pwr_en),
++		RD_REGISTER_UNROLL(dw, ch2_pwr_en),
++		RD_REGISTER_UNROLL(dw, ch3_pwr_en),
++		RD_REGISTER_UNROLL(dw, ch4_pwr_en),
++		RD_REGISTER_UNROLL(dw, ch5_pwr_en),
++		RD_REGISTER_UNROLL(dw, ch6_pwr_en),
++		RD_REGISTER_UNROLL(dw, ch7_pwr_en),
+ 	};
+ 	struct dentry *regs_dent, *ch_dent;
+ 	int nr_entries, i;
+@@ -238,11 +242,11 @@ static void dw_edma_debugfs_regs_rd(struct dentry *dent)
+ 	regs_dent = debugfs_create_dir(READ_STR, dent);
+ 
+ 	nr_entries = ARRAY_SIZE(debugfs_regs);
+-	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, regs_dent);
++	dw_edma_debugfs_create_x32(dw, debugfs_regs, nr_entries, regs_dent);
+ 
+ 	if (dw->chip->mf == EDMA_MF_HDMA_COMPAT) {
+ 		nr_entries = ARRAY_SIZE(debugfs_unroll_regs);
+-		dw_edma_debugfs_create_x32(debugfs_unroll_regs, nr_entries,
++		dw_edma_debugfs_create_x32(dw, debugfs_unroll_regs, nr_entries,
+ 					   regs_dent);
+ 	}
+ 
+@@ -251,15 +255,15 @@ static void dw_edma_debugfs_regs_rd(struct dentry *dent)
  
  		ch_dent = debugfs_create_dir(name, regs_dent);
  
--		dw_edma_debugfs_regs_ch(&regs->type.unroll.ch[i].rd, ch_dent);
--
--		lim[1][i].start = &regs->type.unroll.ch[i].rd;
--		lim[1][i].end = &regs->type.unroll.ch[i].padding_2[0];
-+		dw_edma_debugfs_regs_ch(EDMA_DIR_READ, i, ch_dent);
+-		dw_edma_debugfs_regs_ch(EDMA_DIR_READ, i, ch_dent);
++		dw_edma_debugfs_regs_ch(dw, EDMA_DIR_READ, i, ch_dent);
  	}
  }
  
+-static void dw_edma_debugfs_regs(void)
++static void dw_edma_debugfs_regs(struct dw_edma *dw)
+ {
+ 	const struct dw_edma_debugfs_entry debugfs_regs[] = {
+-		REGISTER(ctrl_data_arb_prior),
+-		REGISTER(ctrl),
++		REGISTER(dw, ctrl_data_arb_prior),
++		REGISTER(dw, ctrl),
+ 	};
+ 	struct dentry *regs_dent;
+ 	int nr_entries;
+@@ -267,40 +271,28 @@ static void dw_edma_debugfs_regs(void)
+ 	regs_dent = debugfs_create_dir(REGISTERS_STR, dw->debugfs);
+ 
+ 	nr_entries = ARRAY_SIZE(debugfs_regs);
+-	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, regs_dent);
++	dw_edma_debugfs_create_x32(dw, debugfs_regs, nr_entries, regs_dent);
+ 
+-	dw_edma_debugfs_regs_wr(regs_dent);
+-	dw_edma_debugfs_regs_rd(regs_dent);
++	dw_edma_debugfs_regs_wr(dw, regs_dent);
++	dw_edma_debugfs_regs_rd(dw, regs_dent);
+ }
+ 
+-void dw_edma_v0_debugfs_on(struct dw_edma *_dw)
++void dw_edma_v0_debugfs_on(struct dw_edma *dw)
+ {
+ 	if (!debugfs_initialized())
+ 		return;
+ 
+-	dw = _dw;
+-	if (!dw)
+-		return;
+-
+-	regs = dw->chip->reg_base;
+-	if (!regs)
+-		return;
+-
+ 	dw->debugfs = debugfs_create_dir(dw->name, NULL);
+ 
+ 	debugfs_create_u32("mf", 0444, dw->debugfs, &dw->chip->mf);
+ 	debugfs_create_u16("wr_ch_cnt", 0444, dw->debugfs, &dw->wr_ch_cnt);
+ 	debugfs_create_u16("rd_ch_cnt", 0444, dw->debugfs, &dw->rd_ch_cnt);
+ 
+-	dw_edma_debugfs_regs();
++	dw_edma_debugfs_regs(dw);
+ }
+ 
+-void dw_edma_v0_debugfs_off(struct dw_edma *_dw)
++void dw_edma_v0_debugfs_off(struct dw_edma *dw)
+ {
+-	dw = _dw;
+-	if (!dw)
+-		return;
+-
+ 	debugfs_remove_recursive(dw->debugfs);
+ 	dw->debugfs = NULL;
+ }
 -- 
 2.38.0
 

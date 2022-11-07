@@ -2,34 +2,34 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3AB86200AF
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Nov 2022 22:14:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 435696200C4
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Nov 2022 22:14:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233373AbiKGVO3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 7 Nov 2022 16:14:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60928 "EHLO
+        id S233009AbiKGVOn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 7 Nov 2022 16:14:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233152AbiKGVOG (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 7 Nov 2022 16:14:06 -0500
+        with ESMTP id S233446AbiKGVOM (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 7 Nov 2022 16:14:12 -0500
 Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 55AE732068
-        for <dmaengine@vger.kernel.org>; Mon,  7 Nov 2022 13:11:01 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B1FD632BAF;
+        Mon,  7 Nov 2022 13:11:07 -0800 (PST)
 Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id AF31DE0EDB;
-        Tue,  8 Nov 2022 00:04:57 +0300 (MSK)
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 0AF16E0EDC;
+        Tue,  8 Nov 2022 00:04:59 +0300 (MSK)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         baikalelectronics.ru; h=cc:cc:content-transfer-encoding
         :content-type:content-type:date:from:from:in-reply-to:message-id
         :mime-version:references:reply-to:subject:subject:to:to; s=post;
-         bh=b1koMPM0e7uSgc8aTiOng6xoNZy9+0EslMrzPDK2AOQ=; b=TIU3gi8r5tfy
-        tt6Ng/QEpJn4YRvyFvcZIIdYSiuWM+lia2rcTUxRqXPWxfecpBT7JtY2z6vU9Cuv
-        jmaSYhVrZK3yzc0rlqIRg6liKu2GlgK29wqltl5H7mhan7Q/D2b0D+4Qrquqmo7z
-        8tfkqnxyl/wBS9tUhV6oQtXuu/xC3zU=
+         bh=SpBP4Fn4J/GfthicQi7qndLt0cTXxxszspP5qS5v4TM=; b=Jg79k1EQTNQu
+        q6xoVhiSTWq3DWyXji+pTJPNS9M32n54fWZzciOkjEAJjHCcg/dqENZuBjrVMZpj
+        ToJa/lhjnFWW8FmCbGia0a1gVB0/SOOiidO0qR9YxZQCaY4ysogOPstse1JBg6zo
+        pprrYTLn4YEN2ZHjcrOXJp8rnbXs7tg=
 Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id A0BD6E0ED3;
-        Tue,  8 Nov 2022 00:04:57 +0300 (MSK)
+        by post.baikalelectronics.com (Proxmox) with ESMTP id EE9BBE0ED3;
+        Tue,  8 Nov 2022 00:04:58 +0300 (MSK)
 Received: from localhost (192.168.168.10) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 8 Nov 2022 00:04:57 +0300
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 8 Nov 2022 00:04:58 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -46,9 +46,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         caihuoqing <caihuoqing@baidu.com>, <linux-pci@vger.kernel.org>,
         <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 17/24] dmaengine: dw-edma: Join Write/Read channels into a single device
-Date:   Tue, 8 Nov 2022 00:04:31 +0300
-Message-ID: <20221107210438.1515-18-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v6 18/24] dmaengine: dw-edma: Use DMA-engine device DebugFS subdirectory
+Date:   Tue, 8 Nov 2022 00:04:32 +0300
+Message-ID: <20221107210438.1515-19-Sergey.Semin@baikalelectronics.ru>
 X-Mailer: git-send-email 2.38.0
 In-Reply-To: <20221107210438.1515-1-Sergey.Semin@baikalelectronics.ru>
 References: <20221107210438.1515-1-Sergey.Semin@baikalelectronics.ru>
@@ -59,270 +59,138 @@ X-Originating-IP: [192.168.168.10]
 X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Indeed there is no point in such split up because due to multiple reasons.
-First of all eDMA read and write channels belong to one physical
-controller. Splitting them up illogical. Secondly the channels
-differentiating can be done by means of the filtering and the
-dma_get_slave_caps() method. Finally having these channels handled
-separately not only needlessly complicates the code, but also causes the
-DebugFS error printed to console:
-
->> Debugfs: Directory '1f052000.pcie' with parent 'dmaengine' already present!
-
-So to speak let's join the read/write channels into a single DMA device.
-The client drivers will be able to choose the channel with required
-capability by getting the DMA slave direction setting. It's default value
-is overridden by the dw_edma_device_caps() callback in accordance with the
-channel nature.
+Since all DW eDMA read and write channels are now installed in a framework
+of a single DMA-engine device, we can freely move all the DW eDMA-specific
+DebugFS nodes into a ready-to-use DMA-engine DebugFS subdirectory. It's
+created during the DMA-device registration and can be found in the
+dma_device.dbg_dev_root field.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Acked-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/dma/dw-edma/dw-edma-core.c | 116 +++++++++++++++--------------
- drivers/dma/dw-edma/dw-edma-core.h |   5 +-
- 2 files changed, 61 insertions(+), 60 deletions(-)
+ drivers/dma/dw-edma/dw-edma-core.c       |  3 ---
+ drivers/dma/dw-edma/dw-edma-core.h       |  3 ---
+ drivers/dma/dw-edma/dw-edma-v0-core.c    |  5 -----
+ drivers/dma/dw-edma/dw-edma-v0-core.h    |  1 -
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 16 ++++------------
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.h |  5 -----
+ 6 files changed, 4 insertions(+), 29 deletions(-)
 
 diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index ecd3e8f7ac5d..c3ecae4287d0 100644
+index c3ecae4287d0..58808bec4148 100644
 --- a/drivers/dma/dw-edma/dw-edma-core.c
 +++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -208,6 +208,24 @@ static void dw_edma_start_transfer(struct dw_edma_chan *chan)
- 	desc->chunks_alloc--;
- }
- 
-+static void dw_edma_device_caps(struct dma_chan *dchan,
-+				struct dma_slave_caps *caps)
-+{
-+	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
-+
-+	if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
-+		if (chan->dir == EDMA_DIR_READ)
-+			caps->directions = BIT(DMA_DEV_TO_MEM);
-+		else
-+			caps->directions = BIT(DMA_MEM_TO_DEV);
-+	} else {
-+		if (chan->dir == EDMA_DIR_WRITE)
-+			caps->directions = BIT(DMA_DEV_TO_MEM);
-+		else
-+			caps->directions = BIT(DMA_MEM_TO_DEV);
-+	}
-+}
-+
- static int dw_edma_device_config(struct dma_chan *dchan,
- 				 struct dma_slave_config *config)
- {
-@@ -717,8 +735,7 @@ static void dw_edma_free_chan_resources(struct dma_chan *dchan)
- 	}
- }
- 
--static int dw_edma_channel_setup(struct dw_edma *dw, bool write,
--				 u32 wr_alloc, u32 rd_alloc)
-+static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
- {
- 	struct dw_edma_chip *chip = dw->chip;
- 	struct dw_edma_region *dt_region;
-@@ -726,27 +743,15 @@ static int dw_edma_channel_setup(struct dw_edma *dw, bool write,
- 	struct dw_edma_chan *chan;
- 	struct dw_edma_irq *irq;
- 	struct dma_device *dma;
--	u32 alloc, off_alloc;
--	u32 i, j, cnt;
--	int err = 0;
-+	u32 i, ch_cnt;
- 	u32 pos;
- 
--	if (write) {
--		i = 0;
--		cnt = dw->wr_ch_cnt;
--		dma = &dw->wr_edma;
--		alloc = wr_alloc;
--		off_alloc = 0;
--	} else {
--		i = dw->wr_ch_cnt;
--		cnt = dw->rd_ch_cnt;
--		dma = &dw->rd_edma;
--		alloc = rd_alloc;
--		off_alloc = wr_alloc;
--	}
-+	ch_cnt = dw->wr_ch_cnt + dw->rd_ch_cnt;
-+	dma = &dw->dma;
- 
- 	INIT_LIST_HEAD(&dma->channels);
--	for (j = 0; (alloc || dw->nr_irqs == 1) && j < cnt; j++, i++) {
-+
-+	for (i = 0; i < ch_cnt; i++) {
- 		chan = &dw->chan[i];
- 
- 		dt_region = devm_kzalloc(dev, sizeof(*dt_region), GFP_KERNEL);
-@@ -756,52 +761,62 @@ static int dw_edma_channel_setup(struct dw_edma *dw, bool write,
- 		chan->vc.chan.private = dt_region;
- 
- 		chan->dw = dw;
--		chan->id = j;
--		chan->dir = write ? EDMA_DIR_WRITE : EDMA_DIR_READ;
-+
-+		if (i < dw->wr_ch_cnt) {
-+			chan->id = i;
-+			chan->dir = EDMA_DIR_WRITE;
-+		} else {
-+			chan->id = i - dw->wr_ch_cnt;
-+			chan->dir = EDMA_DIR_READ;
-+		}
-+
- 		chan->configured = false;
- 		chan->request = EDMA_REQ_NONE;
- 		chan->status = EDMA_ST_IDLE;
- 
--		if (write)
--			chan->ll_max = (chip->ll_region_wr[j].sz / EDMA_LL_SZ);
-+		if (chan->dir == EDMA_DIR_WRITE)
-+			chan->ll_max = (chip->ll_region_wr[chan->id].sz / EDMA_LL_SZ);
- 		else
--			chan->ll_max = (chip->ll_region_rd[j].sz / EDMA_LL_SZ);
-+			chan->ll_max = (chip->ll_region_rd[chan->id].sz / EDMA_LL_SZ);
- 		chan->ll_max -= 1;
- 
- 		dev_vdbg(dev, "L. List:\tChannel %s[%u] max_cnt=%u\n",
--			 write ? "write" : "read", j, chan->ll_max);
-+			 chan->dir == EDMA_DIR_WRITE ? "write" : "read",
-+			 chan->id, chan->ll_max);
- 
- 		if (dw->nr_irqs == 1)
- 			pos = 0;
-+		else if (chan->dir == EDMA_DIR_WRITE)
-+			pos = chan->id % wr_alloc;
- 		else
--			pos = off_alloc + (j % alloc);
-+			pos = wr_alloc + chan->id % rd_alloc;
- 
- 		irq = &dw->irq[pos];
- 
--		if (write)
--			irq->wr_mask |= BIT(j);
-+		if (chan->dir == EDMA_DIR_WRITE)
-+			irq->wr_mask |= BIT(chan->id);
- 		else
--			irq->rd_mask |= BIT(j);
-+			irq->rd_mask |= BIT(chan->id);
- 
- 		irq->dw = dw;
- 		memcpy(&chan->msi, &irq->msi, sizeof(chan->msi));
- 
- 		dev_vdbg(dev, "MSI:\t\tChannel %s[%u] addr=0x%.8x%.8x, data=0x%.8x\n",
--			 write ? "write" : "read", j,
-+			 chan->dir == EDMA_DIR_WRITE  ? "write" : "read", chan->id,
- 			 chan->msi.address_hi, chan->msi.address_lo,
- 			 chan->msi.data);
- 
- 		chan->vc.desc_free = vchan_free_desc;
- 		vchan_init(&chan->vc, dma);
- 
--		if (write) {
--			dt_region->paddr = chip->dt_region_wr[j].paddr;
--			dt_region->vaddr = chip->dt_region_wr[j].vaddr;
--			dt_region->sz = chip->dt_region_wr[j].sz;
-+		if (chan->dir == EDMA_DIR_WRITE) {
-+			dt_region->paddr = chip->dt_region_wr[chan->id].paddr;
-+			dt_region->vaddr = chip->dt_region_wr[chan->id].vaddr;
-+			dt_region->sz = chip->dt_region_wr[chan->id].sz;
- 		} else {
--			dt_region->paddr = chip->dt_region_rd[j].paddr;
--			dt_region->vaddr = chip->dt_region_rd[j].vaddr;
--			dt_region->sz = chip->dt_region_rd[j].sz;
-+			dt_region->paddr = chip->dt_region_rd[chan->id].paddr;
-+			dt_region->vaddr = chip->dt_region_rd[chan->id].vaddr;
-+			dt_region->sz = chip->dt_region_rd[chan->id].sz;
- 		}
- 
- 		dw_edma_v0_core_device_config(chan);
-@@ -813,7 +828,7 @@ static int dw_edma_channel_setup(struct dw_edma *dw, bool write,
- 	dma_cap_set(DMA_CYCLIC, dma->cap_mask);
- 	dma_cap_set(DMA_PRIVATE, dma->cap_mask);
- 	dma_cap_set(DMA_INTERLEAVE, dma->cap_mask);
--	dma->directions = BIT(write ? DMA_DEV_TO_MEM : DMA_MEM_TO_DEV);
-+	dma->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
- 	dma->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
- 	dma->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
- 	dma->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
-@@ -822,6 +837,7 @@ static int dw_edma_channel_setup(struct dw_edma *dw, bool write,
- 	dma->dev = chip->dev;
- 	dma->device_alloc_chan_resources = dw_edma_alloc_chan_resources;
- 	dma->device_free_chan_resources = dw_edma_free_chan_resources;
-+	dma->device_caps = dw_edma_device_caps;
- 	dma->device_config = dw_edma_device_config;
- 	dma->device_pause = dw_edma_device_pause;
- 	dma->device_resume = dw_edma_device_resume;
-@@ -835,9 +851,7 @@ static int dw_edma_channel_setup(struct dw_edma *dw, bool write,
- 	dma_set_max_seg_size(dma->dev, U32_MAX);
- 
- 	/* Register DMA device */
--	err = dma_async_device_register(dma);
--
--	return err;
-+	return dma_async_device_register(dma);
- }
- 
- static inline void dw_edma_dec_irq_alloc(int *nr_irqs, u32 *alloc, u16 cnt)
-@@ -982,13 +996,8 @@ int dw_edma_probe(struct dw_edma_chip *chip)
- 	if (err)
- 		return err;
- 
--	/* Setup write channels */
--	err = dw_edma_channel_setup(dw, true, wr_alloc, rd_alloc);
--	if (err)
--		goto err_irq_free;
--
--	/* Setup read channels */
--	err = dw_edma_channel_setup(dw, false, wr_alloc, rd_alloc);
-+	/* Setup write/read channels */
-+	err = dw_edma_channel_setup(dw, wr_alloc, rd_alloc);
- 	if (err)
- 		goto err_irq_free;
- 
-@@ -1022,15 +1031,8 @@ int dw_edma_remove(struct dw_edma_chip *chip)
- 		free_irq(chip->ops->irq_vector(dev, i), &dw->irq[i]);
- 
- 	/* Deregister eDMA device */
--	dma_async_device_unregister(&dw->wr_edma);
--	list_for_each_entry_safe(chan, _chan, &dw->wr_edma.channels,
--				 vc.chan.device_node) {
--		tasklet_kill(&chan->vc.task);
--		list_del(&chan->vc.chan.device_node);
--	}
--
--	dma_async_device_unregister(&dw->rd_edma);
--	list_for_each_entry_safe(chan, _chan, &dw->rd_edma.channels,
-+	dma_async_device_unregister(&dw->dma);
-+	list_for_each_entry_safe(chan, _chan, &dw->dma.channels,
- 				 vc.chan.device_node) {
- 		tasklet_kill(&chan->vc.task);
+@@ -1038,9 +1038,6 @@ int dw_edma_remove(struct dw_edma_chip *chip)
  		list_del(&chan->vc.chan.device_node);
+ 	}
+ 
+-	/* Turn debugfs off */
+-	dw_edma_v0_core_debugfs_off(dw);
+-
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(dw_edma_remove);
 diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-index 85df2d511907..b576a8fff45a 100644
+index b576a8fff45a..e3ad3e372b55 100644
 --- a/drivers/dma/dw-edma/dw-edma-core.h
 +++ b/drivers/dma/dw-edma/dw-edma-core.h
-@@ -98,10 +98,9 @@ struct dw_edma_irq {
- struct dw_edma {
- 	char				name[20];
+@@ -111,9 +111,6 @@ struct dw_edma {
+ 	raw_spinlock_t			lock;		/* Only for legacy */
  
--	struct dma_device		wr_edma;
--	u16				wr_ch_cnt;
-+	struct dma_device		dma;
+ 	struct dw_edma_chip             *chip;
+-#ifdef CONFIG_DEBUG_FS
+-	struct dentry			*debugfs;
+-#endif /* CONFIG_DEBUG_FS */
+ };
  
--	struct dma_device		rd_edma;
-+	u16				wr_ch_cnt;
- 	u16				rd_ch_cnt;
+ struct dw_edma_sg {
+diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
+index 77e6cfe52e0a..66f296daac5a 100644
+--- a/drivers/dma/dw-edma/dw-edma-v0-core.c
++++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+@@ -504,8 +504,3 @@ void dw_edma_v0_core_debugfs_on(struct dw_edma *dw)
+ {
+ 	dw_edma_v0_debugfs_on(dw);
+ }
+-
+-void dw_edma_v0_core_debugfs_off(struct dw_edma *dw)
+-{
+-	dw_edma_v0_debugfs_off(dw);
+-}
+diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.h b/drivers/dma/dw-edma/dw-edma-v0-core.h
+index 75aec6d31b21..ab96a1f48080 100644
+--- a/drivers/dma/dw-edma/dw-edma-v0-core.h
++++ b/drivers/dma/dw-edma/dw-edma-v0-core.h
+@@ -23,6 +23,5 @@ void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first);
+ int dw_edma_v0_core_device_config(struct dw_edma_chan *chan);
+ /* eDMA debug fs callbacks */
+ void dw_edma_v0_core_debugfs_on(struct dw_edma *dw);
+-void dw_edma_v0_core_debugfs_off(struct dw_edma *dw);
  
- 	struct dw_edma_irq		*irq;
+ #endif /* _DW_EDMA_V0_CORE_H */
+diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+index e6cf608d121b..d12c607433bf 100644
+--- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
++++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+@@ -268,7 +268,7 @@ static void dw_edma_debugfs_regs(struct dw_edma *dw)
+ 	struct dentry *regs_dent;
+ 	int nr_entries;
+ 
+-	regs_dent = debugfs_create_dir(REGISTERS_STR, dw->debugfs);
++	regs_dent = debugfs_create_dir(REGISTERS_STR, dw->dma.dbg_dev_root);
+ 
+ 	nr_entries = ARRAY_SIZE(debugfs_regs);
+ 	dw_edma_debugfs_create_x32(dw, debugfs_regs, nr_entries, regs_dent);
+@@ -282,17 +282,9 @@ void dw_edma_v0_debugfs_on(struct dw_edma *dw)
+ 	if (!debugfs_initialized())
+ 		return;
+ 
+-	dw->debugfs = debugfs_create_dir(dw->name, NULL);
+-
+-	debugfs_create_u32("mf", 0444, dw->debugfs, &dw->chip->mf);
+-	debugfs_create_u16("wr_ch_cnt", 0444, dw->debugfs, &dw->wr_ch_cnt);
+-	debugfs_create_u16("rd_ch_cnt", 0444, dw->debugfs, &dw->rd_ch_cnt);
++	debugfs_create_u32("mf", 0444, dw->dma.dbg_dev_root, &dw->chip->mf);
++	debugfs_create_u16("wr_ch_cnt", 0444, dw->dma.dbg_dev_root, &dw->wr_ch_cnt);
++	debugfs_create_u16("rd_ch_cnt", 0444, dw->dma.dbg_dev_root, &dw->rd_ch_cnt);
+ 
+ 	dw_edma_debugfs_regs(dw);
+ }
+-
+-void dw_edma_v0_debugfs_off(struct dw_edma *dw)
+-{
+-	debugfs_remove_recursive(dw->debugfs);
+-	dw->debugfs = NULL;
+-}
+diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.h b/drivers/dma/dw-edma/dw-edma-v0-debugfs.h
+index 3391b86edf5a..fb3342d97d6d 100644
+--- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.h
++++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.h
+@@ -13,15 +13,10 @@
+ 
+ #ifdef CONFIG_DEBUG_FS
+ void dw_edma_v0_debugfs_on(struct dw_edma *dw);
+-void dw_edma_v0_debugfs_off(struct dw_edma *dw);
+ #else
+ static inline void dw_edma_v0_debugfs_on(struct dw_edma *dw)
+ {
+ }
+-
+-static inline void dw_edma_v0_debugfs_off(struct dw_edma *dw)
+-{
+-}
+ #endif /* CONFIG_DEBUG_FS */
+ 
+ #endif /* _DW_EDMA_V0_DEBUG_FS_H */
 -- 
 2.38.0
 

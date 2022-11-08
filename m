@@ -2,154 +2,78 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CC66620F88
-	for <lists+dmaengine@lfdr.de>; Tue,  8 Nov 2022 12:51:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D779C62102C
+	for <lists+dmaengine@lfdr.de>; Tue,  8 Nov 2022 13:19:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233620AbiKHLv1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 8 Nov 2022 06:51:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50228 "EHLO
+        id S234113AbiKHMS7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 8 Nov 2022 07:18:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233539AbiKHLv0 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 8 Nov 2022 06:51:26 -0500
+        with ESMTP id S234072AbiKHMSz (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 8 Nov 2022 07:18:55 -0500
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20394303E7;
-        Tue,  8 Nov 2022 03:51:26 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C87BF5AA;
+        Tue,  8 Nov 2022 04:18:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1667908286; x=1699444286;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=PA5PPvzCWsS/nHBKDgh1b3BKexZpIiC9lh37QzQleWY=;
-  b=CcfbOBST/S1n0jQanB7fmsFfmMCrSy3ZfrkaSzkEdfOeF1nbDodmN1+l
-   guD7JYQJPQdSZACQQjCI6LP8B5iftXysuEnVyQYLmNMaX9GVX1/w32D20
-   k9vbTU6utE9czjxIWsxApqavvL2n6cjrm02ghOmJlYEK/ZkYnnHyQl+Mp
-   fYGdQJk5dteXiJx6K0zyKybCGsGS5KK9t/b7fiYMJW8LBfcIts5Nr5+qK
-   EjaRqptFFD3nYNq0BdBFmvBFp2B17UylFbh8aF7RStjDL8hZf0XTiRKhr
-   eSIEPIxJ+gxD5lgBPwnvHGJSYf6prmiCz9lCxnA9Wqa3TC5YMxHK+wJgf
-   g==;
+  t=1667909933; x=1699445933;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ATL8NluNmzVOrZ6KRc2y2XUqJ6aP2/xwVUpcGm+Lf6U=;
+  b=pDJMhZHtMmG0SYw1vOtuF1iG5Mw5OGnotF80qj64HUWUIuJzXFV/Kgz2
+   LCWl91ouZf7Pyx2NSjrp/yQb/NYCF3LxRCrF2Zovmn39eExPjJkEvXYx4
+   aYfqJErGcnopexZXC20dhSr8CiIDVDZ/hF8XXUCL7ddtdZ3OWS9Fxi/og
+   4F9AF65iAPILZt6sRBf9ZYUhdkm/Ulo2kK8VEx1u5rt7lkWw6mSmRSmA6
+   6ECYjAm0i94uDSsJYjp3oP0OOoftQOKs54Ztx8zzI4fYnXVDryi7tFm+5
+   V+aB3/buWkRb0cxuFjkzNVF/5G48/mp6NcVVGSFQVBz8x0vlDTx9gTmsq
+   Q==;
 X-IronPort-AV: E=Sophos;i="5.96,147,1665471600"; 
-   d="scan'208";a="185892781"
+   d="scan'208";a="182453957"
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Nov 2022 04:51:25 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Nov 2022 05:18:52 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Tue, 8 Nov 2022 04:51:24 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12 via Frontend Transport; Tue, 8 Nov 2022 04:51:24 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fEZ8XRBBHOlS8tS86WU+hgoz/+jvydPR/UQ+Ux9vjn5L10iki87oQFTSXyArkncNlo3bB6PTsRzJGCrc4Mmx1XHZXhols7wZzvHaRrjAZMT4flkMIOZQolbJ1FIeY0Xhq1njN1OqERhaD/HBRiTR8siUBOIcRQGRhfXA+zKrnzZK5bvXJ0alGyrMnY0I5wFMPC9vyf6WvR5QK8bzImE64RzdF5lmfgg6WU+8lnGXR+iRgejmIn/WlJRwY5HYIlk89FQarzfuK8GI4cPRrfwNCsYroaMbjUrdvHk46/4+dTuuwiuXs5Isez0W2+4xnCL1woR4AAcM4A3XaWvORon9eA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PA5PPvzCWsS/nHBKDgh1b3BKexZpIiC9lh37QzQleWY=;
- b=X9GnTXKQX21zr6g0MqCUUubxKguMBv1lf25F8UgzI1A8V8lA/qTv5pre1lpSSvkOvw6VcikI8XFmjuG1picL7gW7J5z5Fa0QMx86IH7ubzcCWWqz1NGQOdoElRcNTULS+699noFQlUOAICgRvA3UTmXNw7Cs3J6QVqRhbxPXWdeHi7WfPeyCuUe6NY3MaQOTPkag/avZf25gNn0Emcy/WPyRvXhqnAXORvS8copisISB5ecfKXZakhVEFxmE+3nNPs/KzkOVI33TOIUnZ5bnUovYwfcGBX6LTiqn/mgelZwGwhHMxQWUGzOWLbDvg/VJPMeP9KlgYN1UUXbD8RNyRQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PA5PPvzCWsS/nHBKDgh1b3BKexZpIiC9lh37QzQleWY=;
- b=MFKdEF0Ze6JVl/BcDPcGemHPJ1lHzDGkOPBAwVZ0KTWMMFg3mRsSFAPnG9/QfEAjaSs5+DSL7rI9Hx2VjmL80UqT24w15ChPa7NTzhz2gzr+7gkSJdLrw0+9ieVzlnMEfCgoskTm48lZxX+8zjOoj69bljY2NBX9FjZfNjD2yCk=
-Received: from DM4PR11MB6479.namprd11.prod.outlook.com (2603:10b6:8:8c::19) by
- CH0PR11MB5220.namprd11.prod.outlook.com (2603:10b6:610:e3::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5791.26; Tue, 8 Nov 2022 11:51:20 +0000
-Received: from DM4PR11MB6479.namprd11.prod.outlook.com
- ([fe80::626d:ef37:c13f:1c4b]) by DM4PR11MB6479.namprd11.prod.outlook.com
- ([fe80::626d:ef37:c13f:1c4b%4]) with mapi id 15.20.5791.026; Tue, 8 Nov 2022
- 11:51:20 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <andriy.shevchenko@linux.intel.com>, <vkoul@kernel.org>,
-        <Nicolas.Ferre@microchip.com>,
+ 15.1.2507.12; Tue, 8 Nov 2022 05:18:49 -0700
+Received: from ROB-ULT-M18064N.mchp-main.com (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.12 via Frontend Transport; Tue, 8 Nov 2022 05:18:39 -0700
+From:   Tudor Ambarus <tudor.ambarus@microchip.com>
+To:     <vkoul@kernel.org>
+CC:     <f.fainelli@gmail.com>, <rjui@broadcom.com>,
+        <sbranden@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
+        <lars@metafoo.de>, <shawnguo@kernel.org>, <s.hauer@pengutronix.de>,
+        <kernel@pengutronix.de>, <festevam@gmail.com>, <linux-imx@nxp.com>,
+        <sean.wang@mediatek.com>, <matthias.bgg@gmail.com>,
+        <daniel@zonque.org>, <haojian.zhuang@gmail.com>,
+        <robert.jarzmik@free.fr>, <agross@kernel.org>,
+        <andersson@kernel.org>, <konrad.dybcio@somainline.org>,
+        <green.wan@sifive.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@foss.st.com>, <wens@csie.org>,
+        <jernej.skrabec@gmail.com>, <samuel@sholland.org>,
+        <ldewangan@nvidia.com>, <jonathanh@nvidia.com>,
+        <thierry.reding@gmail.com>, <peter.ujfalusi@gmail.com>,
+        <michal.simek@xilinx.com>, <tony@atomide.com>,
+        <krzysztof.kozlowski@linaro.org>, <trix@redhat.com>,
+        <radhey.shyam.pandey@xilinx.com>, <shravya.kumbham@xilinx.com>,
+        <harini.katakam@xilinx.com>, <swati.agarwal@amd.com>,
+        <dmaengine@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <Ludovic.Desroches@microchip.com>
-Subject: Re: [PATCH v1 2/2] at_hdmac: return actual status when txstatus
- parameter is NULL
-Thread-Topic: [PATCH v1 2/2] at_hdmac: return actual status when txstatus
- parameter is NULL
-Thread-Index: AQHY82hqVy8QqOGaxE2Ne4FlEQWx4A==
-Date:   Tue, 8 Nov 2022 11:51:20 +0000
-Message-ID: <7289fcc5-154f-f720-853c-31a8eb6f233c@microchip.com>
-References: <20221108074938.48853-1-andriy.shevchenko@linux.intel.com>
- <20221108074938.48853-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20221108074938.48853-2-andriy.shevchenko@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM4PR11MB6479:EE_|CH0PR11MB5220:EE_
-x-ms-office365-filtering-correlation-id: 41dab02c-aaa7-440e-7006-08dac17f8d80
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ooex6+bgt9E6tWrBfh3n40TAvJJiNgm74eNlYg4778eNrPtKk2lVtIwOaC3odnYmvjkrhnpYXf4jWauxvwNzkmJREpePlZzHNmy/jiSNbpXzUe9jTUnSng62JDLIQMFqkJwmajzn5/OsPAGgjtPhPR5nQ0vV0QGvdDICg7nDcws/O4YjyW5mRK5U2Hhfz5l2e9DAl+5uXq77Z+lJALvboj4Kxrm1vVkl0b9O7RJN/OjIsg+4Au2U3TC5UwxtB5t02hVOu2s03UFdZ7Mm822UkY/Vx8b8r9qm2SdoPznWdjuN1WXQrvbQg2T25B6DO34MY7ldvjTSFqz07TWIWEKqIrLWsTsrNjiQwBt5mnCkfzX3F+LYT5n5nRoIWRPXxo5FUAQy59rYrXOs8fQeV/3kSDM+NaK+ongsDgI1PUSg3DLpx4Y3KW0z8GVjppAW/D+rT8u8kdYaS14IUTzzMfjRlRC+zwdyBEZGHpy1poUPVYldYvfTBfYDU0ntCQN3hvStrRx2klwc0kFNnwSyooeI8PVafd49/sh2g9NxHW0UwEtj8RZsCp7ugQNG1KL+xV9naE5e/KeraGc+z+2toaZV6wevjCdDhpLPSlFLUu4skbizNWVKcBqtN9Jwhfjy/N/mPoWq8lnGJKoOUJCxVhVOrVzXitcsiN3OlzpTyvrKCzbb+TvmOvR74wntxXDsA/c/DS3+CVzJyXvlJcIgapYnX56yLAVbwHjxwkbRZym5JBITQd9CobbRW51E02JD4bZyH+9vArM7C1klvRnRu2dEgX/CRa4s5hqOzc+qPLvaxklEo+THq4yOGI1q+fOJtiDZ8yk/qlbCKJSy0Kj7R1q5Hw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6479.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(396003)(366004)(136003)(39860400002)(376002)(451199015)(36756003)(31686004)(38070700005)(31696002)(86362001)(83380400001)(4744005)(2906002)(186003)(26005)(6512007)(53546011)(38100700002)(107886003)(6506007)(122000001)(66446008)(66946007)(66476007)(4326008)(64756008)(8676002)(66556008)(2616005)(316002)(110136005)(76116006)(91956017)(8936002)(6486002)(478600001)(71200400001)(5660300002)(41300700001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WHQ2YzBsSVJXNDAycThxbXVMTENCbXlZM0hzb2hIOFhUYVlDWmloZDA5L2pt?=
- =?utf-8?B?MUQ0RS8xVHNCYXd3M3drb0xKY0R5THpmVGpBeDloZVpTdGFDVmhQamVaVzZl?=
- =?utf-8?B?aHJjNGs1aGRmVUVuQWIvVEhsNFg1VzA1dHE2M2NncXUzdEk0RTRJZHBQV2RU?=
- =?utf-8?B?SUFTM0dsOE1YeFZEUGk1L2VlK3hublM2OGVxSkZLeFVSRWJOZVVBN0wyb3Fp?=
- =?utf-8?B?VnV5ZE1HK215S1pneHRvVGZnVFdHeFZNQ3NoNCtzdkh4c1pBY2ZXUk5VL1Bu?=
- =?utf-8?B?SytBcXJNdmxma3IxWm54NUFKWUpSUEd5Nm92VTduVDNhUWk1S1JsN2trUVhz?=
- =?utf-8?B?cE0xWGJYREhaV2F6SEdIVzFyYVZ4Sk1rQllxTHFCK3lOSDlUREVoazNYYlBM?=
- =?utf-8?B?SUM4T0JkZjdxYkxaV0VlTWtXaDFzSDBnZGxyNDlDdVhqbkFvc3JLaHU1TnpH?=
- =?utf-8?B?QW9GL3VDV2lrSkdWaXM1YW1ma2RodWYxdU9DLzUzUzBaa2dpOHRnMDdpTzJx?=
- =?utf-8?B?MG5OQjgwT2tkRWZ4WVk5MUdGOUFWVXEzanJnbzVhUWhsd0lYVkFMSGE1Rkd2?=
- =?utf-8?B?U3VFTGV3a3NGN1VxRS96eitDWitQeWR3bmVnOEkxMjVmc3RZV0ZKbEYza1Yy?=
- =?utf-8?B?WHBvZTZ3bzhSOFl3a0Nad3BuQjBkSkFxQTdsVW56MDcrYXUraHF5ZnluNGo0?=
- =?utf-8?B?Wk1SVitYck1NaUd5cU1FQ1pUWjgxb25QWEZpNjFLNWRtMnFDZlFQSnlneTJS?=
- =?utf-8?B?Y0hka0FHQUVCNVpEdmlnQXlSb0M5RkVnNWlkMkErZ2lVelhUNFkybFFRZzVO?=
- =?utf-8?B?eVlGM0xKNFYwdncwTFFsNENFZE1sS0liaWNsMnhLMVFZS1Q2RjV2OHJJNlhu?=
- =?utf-8?B?bVUveHpUb080cWt3Wm0vUkIxb1YwRjdUNCs0UTMvenk5NDdNcVNueU5IWVZG?=
- =?utf-8?B?aUxJTWk4SmJrMDRmZ05VSnhSMDQ4VkwvL29JRDAyamRiOGNSTTBMQVJmS1VT?=
- =?utf-8?B?NXh2endiWUhKQ2hyUjZGY3BITld6bmU4R2ZJc296UldncGp4MlprNVIvaHBx?=
- =?utf-8?B?OW1SNVNUL0c0UmpnWXkrYjFoaFdyOVlsYWE5UmdtSm1mWUFzSHFDT0txVzRj?=
- =?utf-8?B?akZnSUI1SWZtY0xGVFBBM1ZRTDBQdExUYWpxVExBd1RPSCtBN0RHeGpxc2Zy?=
- =?utf-8?B?U09HQnBZNlNtRldRVkJOSUdDTkMzYUwvL1pIT3pvNXk4M0QzYmZubDJSdnFi?=
- =?utf-8?B?QlQwQWNxbE9hQ0RGY1R3WEZiN2NyK1JnanM5V2NmUWJCWlVRQzJHaDFwSG9U?=
- =?utf-8?B?aGxOblBmTW1GSE1XSWJzWXZodEg1WGlVb1VoUXlZeUF4cFJtQTU2Z1JEZFpH?=
- =?utf-8?B?dDZ0UEJ1ekdvd0FEYkJRczZjbkRqWXdNUU1BMHNpMDBiaTl1LzhaQ1Y0N2ZT?=
- =?utf-8?B?TDZFTUhQSTZaS3hOMFJmUWVSRzFKUWJyQWVCYU80S3JUdkwxT05vcTFibStu?=
- =?utf-8?B?MkZWZW52N1ZoWnVocEhwZXVtREwxNkNQeDNtd2JHMFdTL0FWNWFpOFMvNjFY?=
- =?utf-8?B?aHRTUnJsTUV3aHBHYm9FSGFJRVpHekFiNUpGNTd1Skk2Uk92VzRIUFZjTnVC?=
- =?utf-8?B?bHpDaXdJdVRBTXdGUFl5SXFYUFMvQWlybTBaclpSNmYvQ0Z0andEV0R2UHdJ?=
- =?utf-8?B?M3VYTmtCc0NMYW9CdkVER0ZjZ2NoZjZmTlZmUm10Q21Fbi80UVlkQitUTnY0?=
- =?utf-8?B?NGpzdzI5YnByL09VRmhtWllUYXFVUGs5Rm1PeU9Eb2o0bTdQcTVLMXNLd1BE?=
- =?utf-8?B?dzhTZFlkODBXTTVTZjR5U1ZNajlkSy9YdGlsM0hrQmJCcFVBb0dKME1nZ1dK?=
- =?utf-8?B?UlFEbHdwNDNlU2sybjZVMEg5ZlZxQStFNW9JYTNIZFBZUXNpTERNS29laTZI?=
- =?utf-8?B?dHFJZGdyais0R0pmUFovbnZLMlBtOGlPc3VjY3VWaHRQL3lKcW4zZEMrRWtN?=
- =?utf-8?B?OVFmZVlLMWRvQnRzUCtSaGJWUGtabWlMcnVnaHFxQk5nRlBTZXJCdlVpSmNN?=
- =?utf-8?B?S0V0M05CU0c3Vi9ucTlxamNpazg0blZUQ1laa3FsK2NOcjlzZXBnMjhWc2hk?=
- =?utf-8?B?QmlXTFFnVGlVVk5FRWtJOVMybHlrT1kzK0tHU0Vkc0N2K0kyVFp1VTdpb0Rx?=
- =?utf-8?B?UEE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <87C69535E7B7CD4C80A9BE0B07DB91FF@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-sunxi@lists.linux.dev>, <linux-tegra@vger.kernel.org>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+Subject: [PATCH v2] dmaengine: drivers: Use devm_platform_ioremap_resource()
+Date:   Tue, 8 Nov 2022 14:18:37 +0200
+Message-ID: <20221108121837.540293-1-tudor.ambarus@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6479.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41dab02c-aaa7-440e-7006-08dac17f8d80
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2022 11:51:20.4889
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nVfzc15PruUzp5HxbpC8AlideFPn1NE4zNgpKcPVJwhgnccEguMU8mK+m3XLsS1/RdrOEs53oh7L3zPFJ9Z+6Nozq96VH4VB/Ssl+cAIjvk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB5220
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -157,23 +81,750 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-T24gMTEvOC8yMiAwOTo0OSwgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0KPiBFWFRFUk5BTCBFTUFJ
-TDogRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNzIHlvdSBrbm93
-IHRoZSBjb250ZW50IGlzIHNhZmUNCj4gDQo+IFRoZXJlIGlzIG5vIHBvaW50IHRvIHJldHVybiBE
-TUFfRVJST1IgaWYgdHhzdGF0dXMgcGFyYW1ldGVyIGlzIE5VTEwuIEl0J3MgYQ0KPiB2YWxpZCBj
-YXNlIGFuZCBzaG91bGQgYmUgaGFuZGxlZCBjb3JyZXNwb25kaW5nbHkuDQo+IA0KPiBTaWduZWQt
-b2ZmLWJ5OiBBbmR5IFNoZXZjaGVua28gPGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVsLmNv
-bT4NCj4gLS0tDQo+ICBkcml2ZXJzL2RtYS9hdF9oZG1hYy5jIHwgMiArLQ0KPiAgMSBmaWxlIGNo
-YW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9kbWEvYXRfaGRtYWMuYyBiL2RyaXZlcnMvZG1hL2F0X2hkbWFjLmMNCj4gaW5kZXgg
-YTlkOGRkOTkwZDZlLi40MDM1ZDU0Mzg1MzAgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZG1hL2F0
-X2hkbWFjLmMNCj4gKysrIGIvZHJpdmVycy9kbWEvYXRfaGRtYWMuYw0KPiBAQCAtMTY3OSw3ICsx
-Njc5LDcgQEAgYXRjX3R4X3N0YXR1cyhzdHJ1Y3QgZG1hX2NoYW4gKmNoYW4sDQo+ICAgICAgICAg
-aWYgKCF0eHN0YXRlKSB7DQo+ICAgICAgICAgICAgICAgICBpZiAodGVzdF9iaXQoQVRDX0lTX1BB
-VVNFRCwgJmF0Y2hhbi0+c3RhdHVzKSkNCj4gICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJu
-IERNQV9QQVVTRUQ7DQo+IC0gICAgICAgICAgICAgICByZXR1cm4gRE1BX0VSUk9SOw0KPiArICAg
-ICAgICAgICAgICAgcmV0dXJuIGRtYV9zdGF0dXM7DQoNCm9oLCBJIHNlZSB5b3UgZG8gaXQgaGVy
-ZSwgcGxlYXNlIHNxdWFzaCB0aGlzIHBhdGNoIHRvIHRoZSBwcmV2aW91cyBvbmUsDQp5b3UgaW50
-cm9kdWNlZCBETUFfRVJST1IgaW4gdGhlIHByZXZpb3VzIHBhdGNoLg0KDQo+ICAgICAgICAgfQ0K
-PiANCj4gICAgICAgICBzcGluX2xvY2tfaXJxc2F2ZSgmYXRjaGFuLT52Yy5sb2NrLCBmbGFncyk7
-DQo+IC0tDQo+IDIuMzUuMQ0KPiANCg0KLS0gDQpDaGVlcnMsDQp0YQ0KDQo=
+platform_get_resource() and devm_ioremap_resource() are wrapped up in the
+devm_platform_ioremap_resource() helper. Use the helper and get rid of the
+local variable for struct resource *. We now have a function call less.
+
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+---
+v2:
+- rebase on dma/next. s3c24xx was removed, thus drop the changes for it.
+- collect Acked-by
+
+ drivers/dma/bcm2835-dma.c                      |  4 +---
+ drivers/dma/dma-axi-dmac.c                     |  4 +---
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c |  4 +---
+ drivers/dma/fsl-edma.c                         |  8 +++-----
+ drivers/dma/fsl-qdma.c                         | 10 +++-------
+ drivers/dma/idma64.c                           |  4 +---
+ drivers/dma/img-mdc-dma.c                      |  4 +---
+ drivers/dma/imx-dma.c                          |  4 +---
+ drivers/dma/imx-sdma.c                         |  4 +---
+ drivers/dma/mcf-edma.c                         |  5 +----
+ drivers/dma/mediatek/mtk-hsdma.c               |  4 +---
+ drivers/dma/mmp_pdma.c                         |  4 +---
+ drivers/dma/mmp_tdma.c                         |  4 +---
+ drivers/dma/moxart-dma.c                       |  4 +---
+ drivers/dma/mv_xor_v2.c                        |  7 ++-----
+ drivers/dma/mxs-dma.c                          |  4 +---
+ drivers/dma/nbpfaxi.c                          |  4 +---
+ drivers/dma/pxa_dma.c                          |  4 +---
+ drivers/dma/qcom/bam_dma.c                     |  4 +---
+ drivers/dma/sf-pdma/sf-pdma.c                  |  4 +---
+ drivers/dma/sh/usb-dmac.c                      |  4 +---
+ drivers/dma/stm32-dma.c                        |  4 +---
+ drivers/dma/stm32-dmamux.c                     |  4 +---
+ drivers/dma/stm32-mdma.c                       |  4 +---
+ drivers/dma/sun4i-dma.c                        |  4 +---
+ drivers/dma/sun6i-dma.c                        |  4 +---
+ drivers/dma/tegra210-adma.c                    |  4 +---
+ drivers/dma/ti/cppi41.c                        | 10 +++-------
+ drivers/dma/ti/omap-dma.c                      |  4 +---
+ drivers/dma/xilinx/zynqmp_dma.c                |  4 +---
+ 30 files changed, 37 insertions(+), 103 deletions(-)
+
+diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+index 630dfbb01a40..0807fb9eb262 100644
+--- a/drivers/dma/bcm2835-dma.c
++++ b/drivers/dma/bcm2835-dma.c
+@@ -878,7 +878,6 @@ static struct dma_chan *bcm2835_dma_xlate(struct of_phandle_args *spec,
+ static int bcm2835_dma_probe(struct platform_device *pdev)
+ {
+ 	struct bcm2835_dmadev *od;
+-	struct resource *res;
+ 	void __iomem *base;
+ 	int rc;
+ 	int i, j;
+@@ -902,8 +901,7 @@ static int bcm2835_dma_probe(struct platform_device *pdev)
+ 
+ 	dma_set_max_seg_size(&pdev->dev, 0x3FFFFFFF);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	base = devm_ioremap_resource(&pdev->dev, res);
++	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
+diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+index f30dabc99795..a812b9b00e6b 100644
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -910,7 +910,6 @@ static int axi_dmac_probe(struct platform_device *pdev)
+ {
+ 	struct dma_device *dma_dev;
+ 	struct axi_dmac *dmac;
+-	struct resource *res;
+ 	struct regmap *regmap;
+ 	unsigned int version;
+ 	int ret;
+@@ -925,8 +924,7 @@ static int axi_dmac_probe(struct platform_device *pdev)
+ 	if (dmac->irq == 0)
+ 		return -EINVAL;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	dmac->base = devm_ioremap_resource(&pdev->dev, res);
++	dmac->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(dmac->base))
+ 		return PTR_ERR(dmac->base);
+ 
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+index a183d93bd7e2..3dec8adfc4ea 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+@@ -1365,7 +1365,6 @@ static int dw_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *node = pdev->dev.of_node;
+ 	struct axi_dma_chip *chip;
+-	struct resource *mem;
+ 	struct dw_axi_dma *dw;
+ 	struct dw_axi_dma_hcfg *hdata;
+ 	u32 i;
+@@ -1391,8 +1390,7 @@ static int dw_probe(struct platform_device *pdev)
+ 	if (chip->irq < 0)
+ 		return chip->irq;
+ 
+-	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	chip->regs = devm_ioremap_resource(chip->dev, mem);
++	chip->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(chip->regs))
+ 		return PTR_ERR(chip->regs);
+ 
+diff --git a/drivers/dma/fsl-edma.c b/drivers/dma/fsl-edma.c
+index 76cbf54aec58..e40769666e39 100644
+--- a/drivers/dma/fsl-edma.c
++++ b/drivers/dma/fsl-edma.c
+@@ -272,7 +272,6 @@ static int fsl_edma_probe(struct platform_device *pdev)
+ 	const struct fsl_edma_drvdata *drvdata = NULL;
+ 	struct fsl_edma_chan *fsl_chan;
+ 	struct edma_regs *regs;
+-	struct resource *res;
+ 	int len, chans;
+ 	int ret, i;
+ 
+@@ -298,8 +297,7 @@ static int fsl_edma_probe(struct platform_device *pdev)
+ 	fsl_edma->n_chans = chans;
+ 	mutex_init(&fsl_edma->fsl_edma_mutex);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	fsl_edma->membase = devm_ioremap_resource(&pdev->dev, res);
++	fsl_edma->membase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(fsl_edma->membase))
+ 		return PTR_ERR(fsl_edma->membase);
+ 
+@@ -323,8 +321,8 @@ static int fsl_edma_probe(struct platform_device *pdev)
+ 	for (i = 0; i < fsl_edma->drvdata->dmamuxs; i++) {
+ 		char clkname[32];
+ 
+-		res = platform_get_resource(pdev, IORESOURCE_MEM, 1 + i);
+-		fsl_edma->muxbase[i] = devm_ioremap_resource(&pdev->dev, res);
++		fsl_edma->muxbase[i] = devm_platform_ioremap_resource(pdev,
++								      1 + i);
+ 		if (IS_ERR(fsl_edma->muxbase[i])) {
+ 			/* on error: disable all previously enabled clks */
+ 			fsl_disable_clocks(fsl_edma, i);
+diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
+index 045ead46ec8f..eddb2688f234 100644
+--- a/drivers/dma/fsl-qdma.c
++++ b/drivers/dma/fsl-qdma.c
+@@ -1119,7 +1119,6 @@ static int fsl_qdma_probe(struct platform_device *pdev)
+ 	int ret, i;
+ 	int blk_num, blk_off;
+ 	u32 len, chans, queues;
+-	struct resource *res;
+ 	struct fsl_qdma_chan *fsl_chan;
+ 	struct fsl_qdma_engine *fsl_qdma;
+ 	struct device_node *np = pdev->dev.of_node;
+@@ -1183,18 +1182,15 @@ static int fsl_qdma_probe(struct platform_device *pdev)
+ 		if (!fsl_qdma->status[i])
+ 			return -ENOMEM;
+ 	}
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	fsl_qdma->ctrl_base = devm_ioremap_resource(&pdev->dev, res);
++	fsl_qdma->ctrl_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(fsl_qdma->ctrl_base))
+ 		return PTR_ERR(fsl_qdma->ctrl_base);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	fsl_qdma->status_base = devm_ioremap_resource(&pdev->dev, res);
++	fsl_qdma->status_base = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(fsl_qdma->status_base))
+ 		return PTR_ERR(fsl_qdma->status_base);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+-	fsl_qdma->block_base = devm_ioremap_resource(&pdev->dev, res);
++	fsl_qdma->block_base = devm_platform_ioremap_resource(pdev, 2);
+ 	if (IS_ERR(fsl_qdma->block_base))
+ 		return PTR_ERR(fsl_qdma->block_base);
+ 	fsl_qdma->queue = fsl_qdma_alloc_queue_resources(pdev, fsl_qdma);
+diff --git a/drivers/dma/idma64.c b/drivers/dma/idma64.c
+index c33087c5cd02..cd9622f6e59c 100644
+--- a/drivers/dma/idma64.c
++++ b/drivers/dma/idma64.c
+@@ -627,7 +627,6 @@ static int idma64_platform_probe(struct platform_device *pdev)
+ 	struct idma64_chip *chip;
+ 	struct device *dev = &pdev->dev;
+ 	struct device *sysdev = dev->parent;
+-	struct resource *mem;
+ 	int ret;
+ 
+ 	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
+@@ -638,8 +637,7 @@ static int idma64_platform_probe(struct platform_device *pdev)
+ 	if (chip->irq < 0)
+ 		return chip->irq;
+ 
+-	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	chip->regs = devm_ioremap_resource(dev, mem);
++	chip->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(chip->regs))
+ 		return PTR_ERR(chip->regs);
+ 
+diff --git a/drivers/dma/img-mdc-dma.c b/drivers/dma/img-mdc-dma.c
+index e4ea107ce78c..ad084552640f 100644
+--- a/drivers/dma/img-mdc-dma.c
++++ b/drivers/dma/img-mdc-dma.c
+@@ -886,7 +886,6 @@ static int img_mdc_runtime_resume(struct device *dev)
+ static int mdc_dma_probe(struct platform_device *pdev)
+ {
+ 	struct mdc_dma *mdma;
+-	struct resource *res;
+ 	unsigned int i;
+ 	u32 val;
+ 	int ret;
+@@ -898,8 +897,7 @@ static int mdc_dma_probe(struct platform_device *pdev)
+ 
+ 	mdma->soc = of_device_get_match_data(&pdev->dev);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	mdma->regs = devm_ioremap_resource(&pdev->dev, res);
++	mdma->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(mdma->regs))
+ 		return PTR_ERR(mdma->regs);
+ 
+diff --git a/drivers/dma/imx-dma.c b/drivers/dma/imx-dma.c
+index 65c6094ce063..80086977973f 100644
+--- a/drivers/dma/imx-dma.c
++++ b/drivers/dma/imx-dma.c
+@@ -1038,7 +1038,6 @@ static struct dma_chan *imxdma_xlate(struct of_phandle_args *dma_spec,
+ static int __init imxdma_probe(struct platform_device *pdev)
+ {
+ 	struct imxdma_engine *imxdma;
+-	struct resource *res;
+ 	int ret, i;
+ 	int irq, irq_err;
+ 
+@@ -1049,8 +1048,7 @@ static int __init imxdma_probe(struct platform_device *pdev)
+ 	imxdma->dev = &pdev->dev;
+ 	imxdma->devtype = (uintptr_t)of_device_get_match_data(&pdev->dev);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	imxdma->base = devm_ioremap_resource(&pdev->dev, res);
++	imxdma->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(imxdma->base))
+ 		return PTR_ERR(imxdma->base);
+ 
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index fbea5f62dd98..3565066a54f5 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -2167,7 +2167,6 @@ static int sdma_probe(struct platform_device *pdev)
+ 	const char *fw_name;
+ 	int ret;
+ 	int irq;
+-	struct resource *iores;
+ 	struct resource spba_res;
+ 	int i;
+ 	struct sdma_engine *sdma;
+@@ -2190,8 +2189,7 @@ static int sdma_probe(struct platform_device *pdev)
+ 	if (irq < 0)
+ 		return irq;
+ 
+-	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	sdma->regs = devm_ioremap_resource(&pdev->dev, iores);
++	sdma->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(sdma->regs))
+ 		return PTR_ERR(sdma->regs);
+ 
+diff --git a/drivers/dma/mcf-edma.c b/drivers/dma/mcf-edma.c
+index e12b754e6398..ebd8733f72ad 100644
+--- a/drivers/dma/mcf-edma.c
++++ b/drivers/dma/mcf-edma.c
+@@ -182,7 +182,6 @@ static int mcf_edma_probe(struct platform_device *pdev)
+ 	struct fsl_edma_engine *mcf_edma;
+ 	struct fsl_edma_chan *mcf_chan;
+ 	struct edma_regs *regs;
+-	struct resource *res;
+ 	int ret, i, len, chans;
+ 
+ 	pdata = dev_get_platdata(&pdev->dev);
+@@ -210,9 +209,7 @@ static int mcf_edma_probe(struct platform_device *pdev)
+ 
+ 	mutex_init(&mcf_edma->fsl_edma_mutex);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-
+-	mcf_edma->membase = devm_ioremap_resource(&pdev->dev, res);
++	mcf_edma->membase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(mcf_edma->membase))
+ 		return PTR_ERR(mcf_edma->membase);
+ 
+diff --git a/drivers/dma/mediatek/mtk-hsdma.c b/drivers/dma/mediatek/mtk-hsdma.c
+index f7717c44b887..69cc61c0b262 100644
+--- a/drivers/dma/mediatek/mtk-hsdma.c
++++ b/drivers/dma/mediatek/mtk-hsdma.c
+@@ -896,7 +896,6 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
+ 	struct mtk_hsdma_device *hsdma;
+ 	struct mtk_hsdma_vchan *vc;
+ 	struct dma_device *dd;
+-	struct resource *res;
+ 	int i, err;
+ 
+ 	hsdma = devm_kzalloc(&pdev->dev, sizeof(*hsdma), GFP_KERNEL);
+@@ -905,8 +904,7 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
+ 
+ 	dd = &hsdma->ddev;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	hsdma->base = devm_ioremap_resource(&pdev->dev, res);
++	hsdma->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(hsdma->base))
+ 		return PTR_ERR(hsdma->base);
+ 
+diff --git a/drivers/dma/mmp_pdma.c b/drivers/dma/mmp_pdma.c
+index e8d71b35593e..5c39dcec08ef 100644
+--- a/drivers/dma/mmp_pdma.c
++++ b/drivers/dma/mmp_pdma.c
+@@ -1022,7 +1022,6 @@ static int mmp_pdma_probe(struct platform_device *op)
+ 	struct mmp_pdma_device *pdev;
+ 	const struct of_device_id *of_id;
+ 	struct mmp_dma_platdata *pdata = dev_get_platdata(&op->dev);
+-	struct resource *iores;
+ 	int i, ret, irq = 0;
+ 	int dma_channels = 0, irq_num = 0;
+ 	const enum dma_slave_buswidth widths =
+@@ -1037,8 +1036,7 @@ static int mmp_pdma_probe(struct platform_device *op)
+ 
+ 	spin_lock_init(&pdev->phy_lock);
+ 
+-	iores = platform_get_resource(op, IORESOURCE_MEM, 0);
+-	pdev->base = devm_ioremap_resource(pdev->dev, iores);
++	pdev->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pdev->base))
+ 		return PTR_ERR(pdev->base);
+ 
+diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
+index a262e0eb4cc9..e956702932aa 100644
+--- a/drivers/dma/mmp_tdma.c
++++ b/drivers/dma/mmp_tdma.c
+@@ -639,7 +639,6 @@ static int mmp_tdma_probe(struct platform_device *pdev)
+ 	enum mmp_tdma_type type;
+ 	const struct of_device_id *of_id;
+ 	struct mmp_tdma_device *tdev;
+-	struct resource *iores;
+ 	int i, ret;
+ 	int irq = 0, irq_num = 0;
+ 	int chan_num = TDMA_CHANNEL_NUM;
+@@ -663,8 +662,7 @@ static int mmp_tdma_probe(struct platform_device *pdev)
+ 			irq_num++;
+ 	}
+ 
+-	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	tdev->base = devm_ioremap_resource(&pdev->dev, iores);
++	tdev->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(tdev->base))
+ 		return PTR_ERR(tdev->base);
+ 
+diff --git a/drivers/dma/moxart-dma.c b/drivers/dma/moxart-dma.c
+index 7459382a8353..7565ad98ba66 100644
+--- a/drivers/dma/moxart-dma.c
++++ b/drivers/dma/moxart-dma.c
+@@ -563,7 +563,6 @@ static int moxart_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *node = dev->of_node;
+-	struct resource *res;
+ 	void __iomem *dma_base_addr;
+ 	int ret, i;
+ 	unsigned int irq;
+@@ -580,8 +579,7 @@ static int moxart_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	dma_base_addr = devm_ioremap_resource(dev, res);
++	dma_base_addr = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(dma_base_addr))
+ 		return PTR_ERR(dma_base_addr);
+ 
+diff --git a/drivers/dma/mv_xor_v2.c b/drivers/dma/mv_xor_v2.c
+index 113834e1167b..89790beba305 100644
+--- a/drivers/dma/mv_xor_v2.c
++++ b/drivers/dma/mv_xor_v2.c
+@@ -714,7 +714,6 @@ static int mv_xor_v2_resume(struct platform_device *dev)
+ static int mv_xor_v2_probe(struct platform_device *pdev)
+ {
+ 	struct mv_xor_v2_device *xor_dev;
+-	struct resource *res;
+ 	int i, ret = 0;
+ 	struct dma_device *dma_dev;
+ 	struct mv_xor_v2_sw_desc *sw_desc;
+@@ -726,13 +725,11 @@ static int mv_xor_v2_probe(struct platform_device *pdev)
+ 	if (!xor_dev)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	xor_dev->dma_base = devm_ioremap_resource(&pdev->dev, res);
++	xor_dev->dma_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(xor_dev->dma_base))
+ 		return PTR_ERR(xor_dev->dma_base);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	xor_dev->glob_base = devm_ioremap_resource(&pdev->dev, res);
++	xor_dev->glob_base = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(xor_dev->glob_base))
+ 		return PTR_ERR(xor_dev->glob_base);
+ 
+diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
+index dc147cc2436e..acc4d53e4630 100644
+--- a/drivers/dma/mxs-dma.c
++++ b/drivers/dma/mxs-dma.c
+@@ -746,7 +746,6 @@ static int mxs_dma_probe(struct platform_device *pdev)
+ 	struct device_node *np = pdev->dev.of_node;
+ 	const struct mxs_dma_type *dma_type;
+ 	struct mxs_dma_engine *mxs_dma;
+-	struct resource *iores;
+ 	int ret, i;
+ 
+ 	mxs_dma = devm_kzalloc(&pdev->dev, sizeof(*mxs_dma), GFP_KERNEL);
+@@ -763,8 +762,7 @@ static int mxs_dma_probe(struct platform_device *pdev)
+ 	mxs_dma->type = dma_type->type;
+ 	mxs_dma->dev_id = dma_type->id;
+ 
+-	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	mxs_dma->base = devm_ioremap_resource(&pdev->dev, iores);
++	mxs_dma->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(mxs_dma->base))
+ 		return PTR_ERR(mxs_dma->base);
+ 
+diff --git a/drivers/dma/nbpfaxi.c b/drivers/dma/nbpfaxi.c
+index a7063e9cd551..e72e8c10355e 100644
+--- a/drivers/dma/nbpfaxi.c
++++ b/drivers/dma/nbpfaxi.c
+@@ -1294,7 +1294,6 @@ static int nbpf_probe(struct platform_device *pdev)
+ 	struct device_node *np = dev->of_node;
+ 	struct nbpf_device *nbpf;
+ 	struct dma_device *dma_dev;
+-	struct resource *iomem;
+ 	const struct nbpf_config *cfg;
+ 	int num_channels;
+ 	int ret, irq, eirq, i;
+@@ -1318,8 +1317,7 @@ static int nbpf_probe(struct platform_device *pdev)
+ 	dma_dev = &nbpf->dma_dev;
+ 	dma_dev->dev = dev;
+ 
+-	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	nbpf->base = devm_ioremap_resource(dev, iomem);
++	nbpf->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(nbpf->base))
+ 		return PTR_ERR(nbpf->base);
+ 
+diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
+index 22a392fe6d32..e8db361fbba1 100644
+--- a/drivers/dma/pxa_dma.c
++++ b/drivers/dma/pxa_dma.c
+@@ -1346,7 +1346,6 @@ static int pxad_probe(struct platform_device *op)
+ 	const struct of_device_id *of_id;
+ 	const struct dma_slave_map *slave_map = NULL;
+ 	struct mmp_dma_platdata *pdata = dev_get_platdata(&op->dev);
+-	struct resource *iores;
+ 	int ret, dma_channels = 0, nb_requestors = 0, slave_map_cnt = 0;
+ 	const enum dma_slave_buswidth widths =
+ 		DMA_SLAVE_BUSWIDTH_1_BYTE   | DMA_SLAVE_BUSWIDTH_2_BYTES |
+@@ -1358,8 +1357,7 @@ static int pxad_probe(struct platform_device *op)
+ 
+ 	spin_lock_init(&pdev->phy_lock);
+ 
+-	iores = platform_get_resource(op, IORESOURCE_MEM, 0);
+-	pdev->base = devm_ioremap_resource(&op->dev, iores);
++	pdev->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pdev->base))
+ 		return PTR_ERR(pdev->base);
+ 
+diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+index 2ff787df513e..1e47d27e1f81 100644
+--- a/drivers/dma/qcom/bam_dma.c
++++ b/drivers/dma/qcom/bam_dma.c
+@@ -1237,7 +1237,6 @@ static int bam_dma_probe(struct platform_device *pdev)
+ {
+ 	struct bam_device *bdev;
+ 	const struct of_device_id *match;
+-	struct resource *iores;
+ 	int ret, i;
+ 
+ 	bdev = devm_kzalloc(&pdev->dev, sizeof(*bdev), GFP_KERNEL);
+@@ -1254,8 +1253,7 @@ static int bam_dma_probe(struct platform_device *pdev)
+ 
+ 	bdev->layout = match->data;
+ 
+-	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	bdev->regs = devm_ioremap_resource(&pdev->dev, iores);
++	bdev->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(bdev->regs))
+ 		return PTR_ERR(bdev->regs);
+ 
+diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+index 6b524eb6bcf3..d7d2dacac830 100644
+--- a/drivers/dma/sf-pdma/sf-pdma.c
++++ b/drivers/dma/sf-pdma/sf-pdma.c
+@@ -494,7 +494,6 @@ static void sf_pdma_setup_chans(struct sf_pdma *pdma)
+ static int sf_pdma_probe(struct platform_device *pdev)
+ {
+ 	struct sf_pdma *pdma;
+-	struct resource *res;
+ 	int ret, n_chans;
+ 	const enum dma_slave_buswidth widths =
+ 		DMA_SLAVE_BUSWIDTH_1_BYTE | DMA_SLAVE_BUSWIDTH_2_BYTES |
+@@ -519,8 +518,7 @@ static int sf_pdma_probe(struct platform_device *pdev)
+ 
+ 	pdma->n_chans = n_chans;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pdma->membase = devm_ioremap_resource(&pdev->dev, res);
++	pdma->membase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pdma->membase))
+ 		return PTR_ERR(pdma->membase);
+ 
+diff --git a/drivers/dma/sh/usb-dmac.c b/drivers/dma/sh/usb-dmac.c
+index 5edaeb89d1e6..b14cf350b669 100644
+--- a/drivers/dma/sh/usb-dmac.c
++++ b/drivers/dma/sh/usb-dmac.c
+@@ -768,7 +768,6 @@ static int usb_dmac_probe(struct platform_device *pdev)
+ 	const enum dma_slave_buswidth widths = USB_DMAC_SLAVE_BUSWIDTH;
+ 	struct dma_device *engine;
+ 	struct usb_dmac *dmac;
+-	struct resource *mem;
+ 	unsigned int i;
+ 	int ret;
+ 
+@@ -789,8 +788,7 @@ static int usb_dmac_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	/* Request resources. */
+-	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	dmac->iomem = devm_ioremap_resource(&pdev->dev, mem);
++	dmac->iomem = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(dmac->iomem))
+ 		return PTR_ERR(dmac->iomem);
+ 
+diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+index 37674029cb42..5e94b724d3bd 100644
+--- a/drivers/dma/stm32-dma.c
++++ b/drivers/dma/stm32-dma.c
+@@ -1565,7 +1565,6 @@ static int stm32_dma_probe(struct platform_device *pdev)
+ 	struct stm32_dma_device *dmadev;
+ 	struct dma_device *dd;
+ 	const struct of_device_id *match;
+-	struct resource *res;
+ 	struct reset_control *rst;
+ 	int i, ret;
+ 
+@@ -1581,8 +1580,7 @@ static int stm32_dma_probe(struct platform_device *pdev)
+ 
+ 	dd = &dmadev->ddev;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	dmadev->base = devm_ioremap_resource(&pdev->dev, res);
++	dmadev->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(dmadev->base))
+ 		return PTR_ERR(dmadev->base);
+ 
+diff --git a/drivers/dma/stm32-dmamux.c b/drivers/dma/stm32-dmamux.c
+index ee3cbbf51006..46b884d46188 100644
+--- a/drivers/dma/stm32-dmamux.c
++++ b/drivers/dma/stm32-dmamux.c
+@@ -179,7 +179,6 @@ static int stm32_dmamux_probe(struct platform_device *pdev)
+ 	const struct of_device_id *match;
+ 	struct device_node *dma_node;
+ 	struct stm32_dmamux_data *stm32_dmamux;
+-	struct resource *res;
+ 	void __iomem *iomem;
+ 	struct reset_control *rst;
+ 	int i, count, ret;
+@@ -238,8 +237,7 @@ static int stm32_dmamux_probe(struct platform_device *pdev)
+ 	}
+ 	pm_runtime_get_noresume(&pdev->dev);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	iomem = devm_ioremap_resource(&pdev->dev, res);
++	iomem = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(iomem))
+ 		return PTR_ERR(iomem);
+ 
+diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
+index b9d4c843635f..84e7f4f4a800 100644
+--- a/drivers/dma/stm32-mdma.c
++++ b/drivers/dma/stm32-mdma.c
+@@ -1580,7 +1580,6 @@ static int stm32_mdma_probe(struct platform_device *pdev)
+ 	struct stm32_mdma_device *dmadev;
+ 	struct dma_device *dd;
+ 	struct device_node *of_node;
+-	struct resource *res;
+ 	struct reset_control *rst;
+ 	u32 nr_channels, nr_requests;
+ 	int i, count, ret;
+@@ -1622,8 +1621,7 @@ static int stm32_mdma_probe(struct platform_device *pdev)
+ 				       count);
+ 	dmadev->nr_ahb_addr_masks = count;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	dmadev->base = devm_ioremap_resource(&pdev->dev, res);
++	dmadev->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(dmadev->base))
+ 		return PTR_ERR(dmadev->base);
+ 
+diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
+index f291b1b4db32..e86c8829513a 100644
+--- a/drivers/dma/sun4i-dma.c
++++ b/drivers/dma/sun4i-dma.c
+@@ -1144,15 +1144,13 @@ static irqreturn_t sun4i_dma_interrupt(int irq, void *dev_id)
+ static int sun4i_dma_probe(struct platform_device *pdev)
+ {
+ 	struct sun4i_dma_dev *priv;
+-	struct resource *res;
+ 	int i, j, ret;
+ 
+ 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	priv->base = devm_ioremap_resource(&pdev->dev, res);
++	priv->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->base))
+ 		return PTR_ERR(priv->base);
+ 
+diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+index b7557f437936..2f4bf72e7769 100644
+--- a/drivers/dma/sun6i-dma.c
++++ b/drivers/dma/sun6i-dma.c
+@@ -1283,7 +1283,6 @@ static int sun6i_dma_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct sun6i_dma_dev *sdc;
+-	struct resource *res;
+ 	int ret, i;
+ 
+ 	sdc = devm_kzalloc(&pdev->dev, sizeof(*sdc), GFP_KERNEL);
+@@ -1294,8 +1293,7 @@ static int sun6i_dma_probe(struct platform_device *pdev)
+ 	if (!sdc->cfg)
+ 		return -ENODEV;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	sdc->base = devm_ioremap_resource(&pdev->dev, res);
++	sdc->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(sdc->base))
+ 		return PTR_ERR(sdc->base);
+ 
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index ae39b52012b2..d1a84483f627 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -837,7 +837,6 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ {
+ 	const struct tegra_adma_chip_data *cdata;
+ 	struct tegra_adma *tdma;
+-	struct resource	*res;
+ 	int ret, i;
+ 
+ 	cdata = of_device_get_match_data(&pdev->dev);
+@@ -857,8 +856,7 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 	tdma->nr_channels = cdata->nr_channels;
+ 	platform_set_drvdata(pdev, tdma);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	tdma->base_addr = devm_ioremap_resource(&pdev->dev, res);
++	tdma->base_addr = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(tdma->base_addr))
+ 		return PTR_ERR(tdma->base_addr);
+ 
+diff --git a/drivers/dma/ti/cppi41.c b/drivers/dma/ti/cppi41.c
+index 695915dba707..c3555cfb0681 100644
+--- a/drivers/dma/ti/cppi41.c
++++ b/drivers/dma/ti/cppi41.c
+@@ -1039,7 +1039,6 @@ static int cppi41_dma_probe(struct platform_device *pdev)
+ 	struct cppi41_dd *cdd;
+ 	struct device *dev = &pdev->dev;
+ 	const struct cppi_glue_infos *glue_info;
+-	struct resource *mem;
+ 	int index;
+ 	int irq;
+ 	int ret;
+@@ -1072,18 +1071,15 @@ static int cppi41_dma_probe(struct platform_device *pdev)
+ 	if (index < 0)
+ 		return index;
+ 
+-	mem = platform_get_resource(pdev, IORESOURCE_MEM, index);
+-	cdd->ctrl_mem = devm_ioremap_resource(dev, mem);
++	cdd->ctrl_mem = devm_platform_ioremap_resource(pdev, index);
+ 	if (IS_ERR(cdd->ctrl_mem))
+ 		return PTR_ERR(cdd->ctrl_mem);
+ 
+-	mem = platform_get_resource(pdev, IORESOURCE_MEM, index + 1);
+-	cdd->sched_mem = devm_ioremap_resource(dev, mem);
++	cdd->sched_mem = devm_platform_ioremap_resource(pdev, index + 1);
+ 	if (IS_ERR(cdd->sched_mem))
+ 		return PTR_ERR(cdd->sched_mem);
+ 
+-	mem = platform_get_resource(pdev, IORESOURCE_MEM, index + 2);
+-	cdd->qmgr_mem = devm_ioremap_resource(dev, mem);
++	cdd->qmgr_mem = devm_platform_ioremap_resource(pdev, index + 2);
+ 	if (IS_ERR(cdd->qmgr_mem))
+ 		return PTR_ERR(cdd->qmgr_mem);
+ 
+diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+index 27f5019bdc1e..02e1c08c596d 100644
+--- a/drivers/dma/ti/omap-dma.c
++++ b/drivers/dma/ti/omap-dma.c
+@@ -1658,7 +1658,6 @@ static int omap_dma_probe(struct platform_device *pdev)
+ {
+ 	const struct omap_dma_config *conf;
+ 	struct omap_dmadev *od;
+-	struct resource *res;
+ 	int rc, i, irq;
+ 	u32 val;
+ 
+@@ -1666,8 +1665,7 @@ static int omap_dma_probe(struct platform_device *pdev)
+ 	if (!od)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	od->base = devm_ioremap_resource(&pdev->dev, res);
++	od->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(od->base))
+ 		return PTR_ERR(od->base);
+ 
+diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
+index 21472a5d7636..ce359058c638 100644
+--- a/drivers/dma/xilinx/zynqmp_dma.c
++++ b/drivers/dma/xilinx/zynqmp_dma.c
+@@ -890,7 +890,6 @@ static int zynqmp_dma_chan_probe(struct zynqmp_dma_device *zdev,
+ 			   struct platform_device *pdev)
+ {
+ 	struct zynqmp_dma_chan *chan;
+-	struct resource *res;
+ 	struct device_node *node = pdev->dev.of_node;
+ 	int err;
+ 
+@@ -900,8 +899,7 @@ static int zynqmp_dma_chan_probe(struct zynqmp_dma_device *zdev,
+ 	chan->dev = zdev->dev;
+ 	chan->zdev = zdev;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	chan->regs = devm_ioremap_resource(&pdev->dev, res);
++	chan->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(chan->regs))
+ 		return PTR_ERR(chan->regs);
+ 
+-- 
+2.25.1
+

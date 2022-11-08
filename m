@@ -2,97 +2,111 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63F1B6216D4
-	for <lists+dmaengine@lfdr.de>; Tue,  8 Nov 2022 15:33:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC77F62192E
+	for <lists+dmaengine@lfdr.de>; Tue,  8 Nov 2022 17:14:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234269AbiKHOdA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 8 Nov 2022 09:33:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40864 "EHLO
+        id S233737AbiKHQOT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 8 Nov 2022 11:14:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233884AbiKHObg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 8 Nov 2022 09:31:36 -0500
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE39D13F96
-        for <dmaengine@vger.kernel.org>; Tue,  8 Nov 2022 06:31:15 -0800 (PST)
-Received: by mail-pj1-x1029.google.com with SMTP id l22-20020a17090a3f1600b00212fbbcfb78so18038463pjc.3
-        for <dmaengine@vger.kernel.org>; Tue, 08 Nov 2022 06:31:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
-        b=plCZMl07mNxOy4FwEnJyPWecERqsJQyrHYHIsHPByWrtU1k24II845ABLvzsZ/utuV
-         xrfZ6D/e/ZRoyRjpbZ5oMDY9h9ndbu6gtWFiQs/CjHcVVSqci/vjYPMMyy1pnVJ69u5N
-         OM2Kwkcs/9db1KNzWi4t4Kki8xmdjDy37F969+9phg4q7Iutyq/zyteGqROU9T6wdO4n
-         lS/c2RFkn8H1h3UlswE5jNY6oMt5wQG8oq965L41J8fDh6fe1zek7KZifUk151Do70De
-         k9oKwcRkEhDvguAg4zcTYagV5rrGsvTLwyNtdWlzI5EY/CPrjAga8S7nNTzf3DHImH9S
-         a/jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
-        b=g3d/njyqm6loC5zlNoS9vznEeYuDuYDdoROB4ByicxRj3HX+UOaGwcIslnnOKYpiE6
-         Y7tjrOp1J11VPlvzebGD4tKLG4LVhisNmT1KnpYmAuIs7D9KhqCl4jBtrxMhgGGAoURI
-         0lca0Bp1nAvv8IRDXKOzpZz8rl12ENSl11/KUW8hCcaWsjACjuAip50xnveboTkx9Ew/
-         RzxNx/MYJmF8a+/xSaED4a42wgpGr878xBxIixYmMcep/w7DFPzl5+27bMLZg28loLN/
-         O/2f9QtRNLy6R7pgkoJ8yT0b+fF5gvcbQGgnoLCbT5pUChJaW6867S9KqSzyG5+9Ppm9
-         eo5A==
-X-Gm-Message-State: ACrzQf1rC9n1JfIamG7BFG35G62WRjKsLmHOzKtWOI8qMS2YE0BFMzAu
-        PuStVHoMNl6JDTs3Fbzkbzu/Gv8tyjCyPpmUjlIM8cw6wqU+Mg==
-X-Google-Smtp-Source: AMsMyM5cpw1VKvG8gEasOMmG4UhkblJY7gBReqfbYX80x9OXEWSZokzXOm90JDY4L5h3JbfU+3ckCU+QNWhG8SGrNVo=
-X-Received: by 2002:a05:6a00:1da6:b0:56c:318a:f8ab with SMTP id
- z38-20020a056a001da600b0056c318af8abmr56843835pfw.82.1667917864342; Tue, 08
- Nov 2022 06:31:04 -0800 (PST)
+        with ESMTP id S233789AbiKHQOS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 8 Nov 2022 11:14:18 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 193FF13CE0;
+        Tue,  8 Nov 2022 08:14:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667924058; x=1699460058;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+SalQDIftpGV1y96eUwtO7Aw99Xo9hl/udl63LYREOE=;
+  b=LA6CCH7eVnXsSk3juolWP6c1uTnhq+EYBU4HNIuxPaFajiSiVGGQ7U/A
+   PDIjDHded0FOkGwqJE3EoJ6q1WOIcpaq2kW6sJZrSeJHegNoIQSduaQ8+
+   CIDr+S5NHWO2RnnRqiHcSpf7GID0lk8ykqJCQkVFChX6jmzcF7uvjN7FD
+   MpubVnG8BEMLlYngs3vs8a8nNIvrqFXctRnrxeOXNarBz7z26cpn68h1F
+   51Zz/GFigUA25PTNRtoGRti5srgvOoGuQmKlQ5Kq2iKXdsFWIyNFLghTy
+   G3+/gIXfSjWYZF2hDgZ3EVL/t2ONSU6PESQETYLb4/K1RjymbF1V2W6Lp
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="291122765"
+X-IronPort-AV: E=Sophos;i="5.96,148,1665471600"; 
+   d="scan'208";a="291122765"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 08:13:59 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="630921892"
+X-IronPort-AV: E=Sophos;i="5.96,148,1665471600"; 
+   d="scan'208";a="630921892"
+Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.98.44]) ([10.212.98.44])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 08:13:58 -0800
+Message-ID: <b7527fc3-8750-69b8-40fa-214962ef50ed@intel.com>
+Date:   Tue, 8 Nov 2022 08:13:57 -0800
 MIME-Version: 1.0
-Received: by 2002:ac4:c8c2:0:b0:56a:d900:eb11 with HTTP; Tue, 8 Nov 2022
- 06:31:03 -0800 (PST)
-Reply-To: mr.abraham022@gmail.com
-From:   "Mr.Abraham" <davidbraddy01@gmail.com>
-Date:   Tue, 8 Nov 2022 14:31:03 +0000
-Message-ID: <CAHGOU4PvdrNhE2KifzdPkFxZTCG5gy+23qf130PwnSmJcLRSew@mail.gmail.com>
-Subject: Greeting
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:1029 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.4908]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [mr.abraham022[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [davidbraddy01[at]gmail.com]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [davidbraddy01[at]gmail.com]
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.4.1
+Subject: Re: [PATCH 1/3] dmaengine: idxd: Add descriptor definitions for 16
+ bytes of pattern in memory fill operation
+Content-Language: en-US
+To:     Fenghua Yu <fenghua.yu@intel.com>, Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20221108003944.2095567-1-fenghua.yu@intel.com>
+ <20221108003944.2095567-2-fenghua.yu@intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20221108003944.2095567-2-fenghua.yu@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-My Greeting, Did you receive the letter i sent to you. Please answer me.
-Regard, Mr.Abraham
+
+
+On 11/7/2022 4:39 PM, Fenghua Yu wrote:
+> The memory fill operation (0x04) can fill in memory with either 8 bytes
+> or 16 bytes of pattern. To fill in memory with 16 bytes of pattern, the
+> first 8 bytes are provided in pattern lower in bytes 16-23 and the next
+> 8 bytes are in pattern upper in bytes 40-47 in the descriptor. Currently
+> only 8 bytes of pattern is enabled.
+> 
+> Add descriptor definitions for pattern lower and pattern upper so that
+> user can use 16 bytes of pattern to fill memory.
+> 
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>   include/uapi/linux/idxd.h | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/include/uapi/linux/idxd.h b/include/uapi/linux/idxd.h
+> index 095299c75828..04a2f6411820 100644
+> --- a/include/uapi/linux/idxd.h
+> +++ b/include/uapi/linux/idxd.h
+> @@ -179,6 +179,7 @@ struct dsa_hw_desc {
+>   		uint64_t	rdback_addr;
+>   		uint64_t	pattern;
+>   		uint64_t	desc_list_addr;
+> +		uint64_t	pattern_lower;
+>   	};
+>   	union {
+>   		uint64_t	dst_addr;
+> @@ -243,6 +244,11 @@ struct dsa_hw_desc {
+>   			uint16_t	dest_app_tag_seed;
+>   		};
+>   
+> +		/* Fill */
+> +		struct {
+
+I don't think the anon struct is needed here. If there are others, that 
+can be added later with the next patch that needs it.
+
+> +			uint64_t	pattern_upper;
+> +		};
+> +
+>   		uint8_t		op_specific[24];
+>   	};
+>   } __attribute__((packed));

@@ -2,90 +2,105 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BAC4620AB1
-	for <lists+dmaengine@lfdr.de>; Tue,  8 Nov 2022 08:49:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3968620EEC
+	for <lists+dmaengine@lfdr.de>; Tue,  8 Nov 2022 12:24:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233631AbiKHHtY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 8 Nov 2022 02:49:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53386 "EHLO
+        id S234102AbiKHLYZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 8 Nov 2022 06:24:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233412AbiKHHtW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 8 Nov 2022 02:49:22 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 314FA13D3F;
-        Mon,  7 Nov 2022 23:49:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667893762; x=1699429762;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=rDiKYYjFpjjWtrYxiCT/r9k/W3/JQ0t2Kz7s3ZTXOAY=;
-  b=OGYPdk5HR54T6Nok04p9yKDoruiDGhvy/1O5LKFej1fCCuzldNF3+qzP
-   aEyC1hD9GRCq1T3qGHRVd8JgqmJKqjV5Vq6wH2FIDt/mi92cfv7YIuwfS
-   QziVKOqrwWJrLxGcmG5mTMwC6/wx/Pjdf/Ha8eUZtuZ54bKolXDkrNSSV
-   ST7UaxzYXFyz2fCDFLs607BOoSKTGdi2F1C2lzsmNNFG24rSwBR4eZ3wP
-   eYAkb27iubQP3aSEsWk5Is/9AAe23LDFhNYl3iI8LOh5XeDg+FKUp0yHL
-   X95sAmjmpb6Lu94miqQTZkQP7eCYUPaSYpmudwBa0sxOgrGHahFWeJ1a6
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="308252779"
-X-IronPort-AV: E=Sophos;i="5.96,147,1665471600"; 
-   d="scan'208";a="308252779"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2022 23:49:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="725470502"
-X-IronPort-AV: E=Sophos;i="5.96,147,1665471600"; 
-   d="scan'208";a="725470502"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 07 Nov 2022 23:49:19 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 5DCE9B7; Tue,  8 Nov 2022 09:49:43 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 2/2] at_hdmac: return actual status when txstatus parameter is NULL
-Date:   Tue,  8 Nov 2022 09:49:38 +0200
-Message-Id: <20221108074938.48853-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221108074938.48853-1-andriy.shevchenko@linux.intel.com>
-References: <20221108074938.48853-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S234058AbiKHLYS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 8 Nov 2022 06:24:18 -0500
+Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CBFC49B70
+        for <dmaengine@vger.kernel.org>; Tue,  8 Nov 2022 03:24:14 -0800 (PST)
+Received: by mail-il1-x12d.google.com with SMTP id bp12so5993881ilb.9
+        for <dmaengine@vger.kernel.org>; Tue, 08 Nov 2022 03:24:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5B7dfi7xVJ3OslQ0ALi00lhJojz9IHhiYsVHA/RHqOE=;
+        b=LXzLwEfFEIjs9nRQ/0D9sK0UdFF/hcYD1/7lPcxtKxGf+ipiOyxIUkG9FxWjTQwnxI
+         D0k1pcJ4r9HbGweGR8VttiL8E2qc4lcsz3jC3X1z+Myzw30J2a8GCz5AS/bkRvOOAlHD
+         E+tAU65cwh01zP65Dht/AwghXmg8POvqM5wMW+NclASoJJ1M+p89BgFOSDch5BgQ0Avc
+         9JiZIkvYkz5qbwJiVyZnhn8aEs4dsNPEV6aJ60VBa1B1c4nkJvkSo/q1xUjbvGvnQsI2
+         YCKRfjADZRvavXIhrgWVqvohpAMKlTCL5cT3Ex4YqBvyGRv/IX591YGJ8Vqkx1vqKbDZ
+         WAQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5B7dfi7xVJ3OslQ0ALi00lhJojz9IHhiYsVHA/RHqOE=;
+        b=ung1VFHUE2+Z7B64dIWx4H/bPiJTy0mATN9iL5/J0N98cyYkrOG2c/D9yUeEllLsuf
+         evPvGr3kimT9n+NKitM7ieS6+NpI26TI33lbNlolqaOxdTFGcj05QV3XQvZVehPSC6yb
+         yiS0+6w2bY8kfidGKk2uIRxlKIw/FyR+7Gb056mf/hK8LcwoTHhmPlITsrr859aR5ux7
+         JkQ2Sl5l/3aV4gYE1WsVstPTWpabowOd58hFiN19EYFaJy7DfP5MQmkejI+MYZ2Q7f7O
+         cvudWElBVLaYxoLSkiRKpmlawJJTpiEE8ynQeV1SoZvuSZ7N3buSjlpzN0cemiNKYveQ
+         mZaA==
+X-Gm-Message-State: ACrzQf17w+ngplbbjBS6OV72M7uw/yqLEiosd40PiBqlH8i37M8mUG0A
+        /6JfVgeb+Th2he/jIJQUuB4B62RHf0WR04LHNBQ=
+X-Google-Smtp-Source: AMsMyM7l9664LpWj9QcPDmFBWC92J2k8lgTtaMBq0d8Kn2LaY6/WvjL6jmQ58ep7k3CUc1mU0tvXdcs9IQAedNtHTSY=
+X-Received: by 2002:a92:bf0e:0:b0:300:cc8e:fe07 with SMTP id
+ z14-20020a92bf0e000000b00300cc8efe07mr18642833ilh.184.1667906653482; Tue, 08
+ Nov 2022 03:24:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6638:1921:0:0:0:0 with HTTP; Tue, 8 Nov 2022 03:24:13
+ -0800 (PST)
+Reply-To: mrinvest1010@gmail.com
+From:   "K. A. Mr. Kairi" <ctocik10@gmail.com>
+Date:   Tue, 8 Nov 2022 03:24:13 -0800
+Message-ID: <CAEbPynvxfjzGLRVVaaVB9fasgmGPWiH+Ceaj9c3oE5eqT5_+0Q@mail.gmail.com>
+Subject: Re: My Response..
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:12d listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [mrinvest1010[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [ctocik10[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [ctocik10[at]gmail.com]
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-There is no point to return DMA_ERROR if txstatus parameter is NULL. It's a
-valid case and should be handled correspondingly.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/dma/at_hdmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-index a9d8dd990d6e..4035d5438530 100644
---- a/drivers/dma/at_hdmac.c
-+++ b/drivers/dma/at_hdmac.c
-@@ -1679,7 +1679,7 @@ atc_tx_status(struct dma_chan *chan,
- 	if (!txstate) {
- 		if (test_bit(ATC_IS_PAUSED, &atchan->status))
- 			return DMA_PAUSED;
--		return DMA_ERROR;
-+		return dma_status;
- 	}
- 
- 	spin_lock_irqsave(&atchan->vc.lock, flags);
 -- 
-2.35.1
+Dear
 
+How are you, I have a serious client, whom will be interested to
+invest in your country, I got your Details through the Investment
+Network and world Global Business directory.
+
+Let me know if you are interested for more details.....
+
+Sincerely,
+Mr. Kairi Andrew

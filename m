@@ -2,91 +2,73 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 638CA625DF7
-	for <lists+dmaengine@lfdr.de>; Fri, 11 Nov 2022 16:11:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDCD96260C5
+	for <lists+dmaengine@lfdr.de>; Fri, 11 Nov 2022 19:03:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234824AbiKKPLV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 11 Nov 2022 10:11:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35906 "EHLO
+        id S234436AbiKKSDE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 11 Nov 2022 13:03:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234860AbiKKPKq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 11 Nov 2022 10:10:46 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 648297BE51;
-        Fri, 11 Nov 2022 07:09:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668179349; x=1699715349;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ZB6JYZNEQiujRYOAO+WFXvD9hep/TYyArLu5LIX0BKY=;
-  b=CIhct/tyqUi5onA7RD85sGxeDsc6fnlG0wPkNdqWOwTnyMOQK3wEfUgY
-   df+V97q9cT6dBgZVQM4S+jZkmw9+WLyyk4orhC/qQJUIUkQ8o8DFY90lG
-   +ilEFrZ8OlNSymt3Q8DJGwVzciKVKHzUrdAmZfU2Q23eRBEdOPBAZ1YzE
-   U9hY6aPy4Zwr0g7u2j/jUbu0/cHDOMqsSBXYWREhGNjnmWYCAExcvbj/7
-   ez9deSacWg79MPPE6hKvpD/49ioAZJviaRZhA9APEHF+/m5IhwIps+x+g
-   qg+Vpfn9+d5cqE4BYAHuQg7uL5G4lY435OR1XKM5v1rlQLDswi0ZIKQrT
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10528"; a="310322455"
-X-IronPort-AV: E=Sophos;i="5.96,156,1665471600"; 
-   d="scan'208";a="310322455"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2022 07:09:03 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10528"; a="780204318"
-X-IronPort-AV: E=Sophos;i="5.96,156,1665471600"; 
-   d="scan'208";a="780204318"
-Received: from ajayitem-mobl1.amr.corp.intel.com (HELO [10.212.52.53]) ([10.212.52.53])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2022 07:09:02 -0800
-Message-ID: <7198b11e-e9e3-6cbe-e2e8-dce3eb998f7e@intel.com>
-Date:   Fri, 11 Nov 2022 08:09:02 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.4.1
-Subject: Re: [PATCH] dmaengine: idxd: Fix crc_val field for completion record
-Content-Language: en-US
-To:     Fenghua Yu <fenghua.yu@intel.com>, Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        dmaengine@vger.kernel.org, Nirav N Shah <nirav.n.shah@intel.com>
-References: <20221111012715.2031481-1-fenghua.yu@intel.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20221111012715.2031481-1-fenghua.yu@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S234407AbiKKSDC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 11 Nov 2022 13:03:02 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B83063BA0;
+        Fri, 11 Nov 2022 10:03:01 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 59E2FB82694;
+        Fri, 11 Nov 2022 18:03:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 036A2C433C1;
+        Fri, 11 Nov 2022 18:02:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668189779;
+        bh=sdNGp3guQXq6RbeF2+roJZSVZX5CNGispvIqNMmia1U=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=GKZWoXRqvqnXNzLqdBt6Ri7iL8N+k6zO4Ayq5R5AdL92J+nJTEfPrwag3q0GINeXc
+         d+cwlpc7GRiDleqgv3SS2peknmvAlNqhFPk5O8376QaBzDBJN1wwUvuxbgHCiHozud
+         7YXx3QTY8y+4dHdDc2XRgdOwTMDh/Flwwueg/ff3NYM1/qVtrsF8Ohez1e3/ptXlqw
+         vxHkJop878mTPALtvOEqu+MDGfPylTYUwnQntvO+VIfhfbGHnAElIIB3aDpWiX4FqW
+         6uKhjYz25FNeVXww99ejl/Ad/D7lvhl9w+kxJLI07hjhIS/1ct/CdkMTe9vmFbowMi
+         ib8dsHgYsN8+g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D9E4AE270C3;
+        Fri, 11 Nov 2022 18:02:58 +0000 (UTC)
+Subject: Re: [GIT PULL]: dmaengine fixes for v6.1
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <Y23uoaujTTOGvcwH@matsya>
+References: <Y23uoaujTTOGvcwH@matsya>
+X-PR-Tracked-List-Id: <dmaengine.vger.kernel.org>
+X-PR-Tracked-Message-Id: <Y23uoaujTTOGvcwH@matsya>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-fix-6.1
+X-PR-Tracked-Commit-Id: c47e6403fa099f200868d6b106701cb42d181d2b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 91c77a6ec4e207085b9d4c27e6710f349d43195d
+Message-Id: <166818977887.15878.6603309583822814920.pr-tracker-bot@kernel.org>
+Date:   Fri, 11 Nov 2022 18:02:58 +0000
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dma <dmaengine@vger.kernel.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+The pull request you sent on Fri, 11 Nov 2022 12:11:37 +0530:
 
+> git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-fix-6.1
 
-On 11/10/2022 5:27 PM, Fenghua Yu wrote:
-> The crc_val in the completion record should be 64 bits and not 32 bits.
-> 
-> Fixes: 4ac823e9cd85 ("dmaengine: idxd: fix delta_rec and crc size field for completion record")
-> 
-> Reported-by: Nirav N Shah <nirav.n.shah@intel.com>
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/91c77a6ec4e207085b9d4c27e6710f349d43195d
 
-> ---
->   include/uapi/linux/idxd.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/linux/idxd.h b/include/uapi/linux/idxd.h
-> index 61ee43823622..09947ae61663 100644
-> --- a/include/uapi/linux/idxd.h
-> +++ b/include/uapi/linux/idxd.h
-> @@ -329,7 +329,7 @@ struct dsa_completion_record {
->   		};
->   
->   		uint32_t	delta_rec_size;
-> -		uint32_t	crc_val;
-> +		uint64_t	crc_val;
->   
->   		/* DIF check & strip */
->   		struct {
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html

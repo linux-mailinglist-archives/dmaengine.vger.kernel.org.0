@@ -2,240 +2,182 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 607B96252FE
-	for <lists+dmaengine@lfdr.de>; Fri, 11 Nov 2022 06:14:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7A096253F1
+	for <lists+dmaengine@lfdr.de>; Fri, 11 Nov 2022 07:41:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230280AbiKKFO0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 11 Nov 2022 00:14:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53428 "EHLO
+        id S232894AbiKKGlr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 11 Nov 2022 01:41:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbiKKFOZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 11 Nov 2022 00:14:25 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A47267F48;
-        Thu, 10 Nov 2022 21:14:24 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id l22-20020a17090a3f1600b00212fbbcfb78so6817528pjc.3;
-        Thu, 10 Nov 2022 21:14:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=srcaCHFtK2vyQ3fYNkzOxa+xrjkCW1kyZ+JRGVA6Vqw=;
-        b=cRiuY95CmfdaeYKVExJSNoKjUYouXQ3xV3kzqphUAITWh0qJx2+k9AXnEDFCuIO8CX
-         pJfuRK6yr7Zg/r+f8a9Ndx9EODos+WayBXd5ttHjZk4lc9AOYA2ru1uCptyucnE27rVP
-         Am1ZH/Vtd4ui0EmC7heZTJIkHESNCrZ7+apxeWa6BLClgkOxmq/SNiToTSAEZYlCenu3
-         3qnllG/zchH4cOEbTz9LHibeIZqwDXs1oStYoAVj6Ei6A3oeNGGHKpINtemdSohVwdyH
-         Whczz3pNja1Q9y2FKZ+ojaJX9GWfLqg2SWZSONw2jzosAbUJjfItcDIbgsd439Hc+n2j
-         5GRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=srcaCHFtK2vyQ3fYNkzOxa+xrjkCW1kyZ+JRGVA6Vqw=;
-        b=IQg9tTdPVqzVzFFliDwjVil5mfIvSIPQPyqQIqmlphDmOiTWAu8wjXoRPmVQ+8C1XO
-         GBSKIB/zjjstI/5fVapwASuvCl9//mPSRsAMiUcKpKAUp4VplUu9dkAX3TBP4hWTX0gh
-         wgHZAuMQTrlq6JypFujdm0OdIGQdUBFjt06UO+EuQEPw9eP8WGIvkCCFMU9xcJc1d54g
-         eBAR8oZMU8r9vK1KcDaPjqh0a8co7ZRVXElOgVJ0uewtBvUNOy9FAVMVvCRO7R5PcVV+
-         w7PO/T75CMtqzxZ+VKl8Htk9e3X6Ou19KqvZrQebuOXrSs1O5LVRChx03n6vhbRINJ+D
-         fZFg==
-X-Gm-Message-State: ANoB5pkKVlkxNqZKV1UfVR/bm4lZEp9hZQvT7QGOGth0zDgI+6XxR064
-        CfpUFuTLdK+lR7gfqyJvWTw=
-X-Google-Smtp-Source: AA0mqf5doN4b/PD0hm0FXSFDJK8UtY3pGopv/1ZswZyGTJlUqB0S6e8DIRpFvGD+ZCJXkzM1NRiPUw==
-X-Received: by 2002:a17:90b:274c:b0:213:e907:5c0d with SMTP id qi12-20020a17090b274c00b00213e9075c0dmr147261pjb.83.1668143663961;
-        Thu, 10 Nov 2022 21:14:23 -0800 (PST)
-Received: from localhost ([122.172.87.196])
-        by smtp.gmail.com with ESMTPSA id x30-20020aa79a5e000000b005618189b0ffsm583785pfj.104.2022.11.10.21.14.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Nov 2022 21:14:23 -0800 (PST)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 11 Nov 2022 10:44:19 +0530
-Message-Id: <CO97KPQTBTVK.2NI3OSQT2BUG7@skynet-linux>
-From:   "Sireesh Kodali" <sireeshkodali1@gmail.com>
-To:     "Vinod Koul" <vkoul@kernel.org>
-Cc:     <andersson@kernel.org>, <agross@kernel.org>,
-        <~postmarketos/upstreaming@lists.sr.ht>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        "Vladimir Lypak" <vladimir.lypak@gmail.com>,
-        "Konrad Dybcio" <konrad.dybcio@somainline.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] dmaengine: qcom: bam_dma: Add support for
- metadata
-X-Mailer: aerc 0.13.0
-References: <20221027052007.47403-1-sireeshkodali1@gmail.com>
- <20221027052007.47403-2-sireeshkodali1@gmail.com> <Y2UFuvg5sq9tLf83@matsya>
-In-Reply-To: <Y2UFuvg5sq9tLf83@matsya>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S232944AbiKKGlq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 11 Nov 2022 01:41:46 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A81C5554FA;
+        Thu, 10 Nov 2022 22:41:45 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 58EE0B823E5;
+        Fri, 11 Nov 2022 06:41:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22FFAC433D6;
+        Fri, 11 Nov 2022 06:41:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668148903;
+        bh=imgg4tVLfCZ/GizDZDghCksoFItFXoconeGZjaDVqSU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=axTqDXCflYHUNlkP2Y7f4TluUWsluykOAweRp7d+/Y3c1SH+FFhISP05Og42Tyrls
+         NP6DQz0eYULyrzvYwW3NAupG3LDMLosoLt5bu/6sJl/v9OV7sTd2wh4QFbcjA9ZZop
+         AvMHkrnZgIe5us6lmuILPkFDj5IK1hwFBJCGFZSttxk5QEDxzF+ko/fl+QVH6uRrj/
+         o3W8dDjK5F/QFmNIlDjbDs/d6hmBqgGz7jUAduPUA9sI9Ry3uizx4eX+LcCIIoIRiG
+         Lfspb0GgRHPWetumNKhSOkWWojV/I4T+62BOQQ5N+rGVAWf+OZ/P+hZnrHEE0+20me
+         k/ytGJBBLioUQ==
+Date:   Fri, 11 Nov 2022 12:11:37 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        dma <dmaengine@vger.kernel.org>
+Subject: [GIT PULL]: dmaengine fixes for v6.1
+Message-ID: <Y23uoaujTTOGvcwH@matsya>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="k1N6UD84RmFQ/IzO"
+Content-Disposition: inline
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri Nov 4, 2022 at 5:59 PM IST, Vinod Koul wrote:
-> On 27-10-22, 10:50, Sireesh Kodali wrote:
-> > From: Vladimir Lypak <vladimir.lypak@gmail.com>
-> >=20
-> > Add client metadata support for receiving information about transfers.
-> > Only type of metadata implemented is amount of transferred bytes. This
-> > can be used to know how much data is actually received if information
-> > transferred doesn't contain header with size or is aggregated.
-> >=20
-> > Signed-off-by: Vladimir Lypak <vladimir.lypak@gmail.com>
-> > Signed-off-by: Sireesh Kodali <sireeshkodali1@gmail.com>
-> > ---
-> >  drivers/dma/qcom/bam_dma.c       | 57 ++++++++++++++++++++++++++++++++
-> >  include/linux/dma/qcom_bam_dma.h |  8 +++++
-> >  2 files changed, 65 insertions(+)
-> >=20
-> > diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-> > index 3135a3e4a167..264a9a2e199f 100644
-> > --- a/drivers/dma/qcom/bam_dma.c
-> > +++ b/drivers/dma/qcom/bam_dma.c
-> > @@ -30,6 +30,7 @@
-> >  #include <linux/module.h>
-> >  #include <linux/interrupt.h>
-> >  #include <linux/dma-mapping.h>
-> > +#include <linux/dma/qcom_bam_dma.h>
-> >  #include <linux/scatterlist.h>
-> >  #include <linux/device.h>
-> >  #include <linux/platform_device.h>
-> > @@ -70,6 +71,7 @@ struct bam_async_desc {
-> >  	u16 flags;
-> > =20
-> >  	struct bam_desc_hw *curr_desc;
-> > +	struct bam_dma_metadata *metadata;
-> > =20
-> >  	/* list node for the desc in the bam_chan list of descriptors */
-> >  	struct list_head desc_node;
-> > @@ -418,6 +420,52 @@ static inline void __iomem *bam_addr(struct bam_de=
-vice *bdev, u32 pipe,
-> >  		r.ee_mult * bdev->ee;
-> >  }
-> > =20
-> > +/**
-> > + * bam_update_metadata - update metadata buffer
-> > + * @bchan: BAM channel to read metadata from
-> > + * @async_desc: BAM async descriptior
-> > + *
-> > + * Updates metadata buffer (transfer size) based on values
-> > + * read from FIFO descriptors at bchan->head
-> > + */
-> > +
-> > +static inline void bam_update_metadata(struct bam_chan *bchan,
-> > +				       struct bam_async_desc *async_desc)
-> > +{
-> > +	unsigned int i, e, len =3D 0;
-> > +	struct bam_desc_hw *fifo;
-> > +
-> > +	if (!async_desc->metadata)
-> > +		return;
-> > +
-> > +	fifo =3D PTR_ALIGN(bchan->fifo_virt, sizeof(struct bam_desc_hw));
-> > +	for (i =3D bchan->head, e =3D i + async_desc->xfer_len; i < e; i++)
-> > +		len +=3D fifo[i % MAX_DESCRIPTORS].size;
-> > +
-> > +	async_desc->metadata->xfer_len_bytes +=3D len;
-> > +}
-> > +
-> > +/**
-> > + * bam_attach_metadata - attach metadata buffer to the async descripto=
-r
-> > + * @desc: async descriptor
-> > + * @data: buffer pointer
-> > + * @len: length of passed buffer
-> > + */
-> > +static int bam_attach_metadata(struct dma_async_tx_descriptor *desc, v=
-oid *data,
-> > +			       size_t len)
-> > +{
-> > +	struct bam_async_desc *async_desc;
-> > +
-> > +	if (!data || len !=3D sizeof(struct bam_dma_metadata))
-> > +		return -EINVAL;
-> > +
-> > +	async_desc =3D container_of(desc, struct bam_async_desc, vd.tx);
-> > +	async_desc->metadata =3D data;
-> > +	async_desc->metadata->xfer_len_bytes =3D 0;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  /**
-> >   * bam_reset() - reset and initialize BAM registers
-> >   * @bdev: bam device
-> > @@ -456,6 +504,10 @@ static void bam_reset(struct bam_device *bdev)
-> >  	writel_relaxed(BAM_IRQ_MSK, bam_addr(bdev, 0, BAM_IRQ_SRCS_MSK_EE));
-> >  }
-> > =20
-> > +static struct dma_descriptor_metadata_ops metadata_ops =3D {
-> > +	.attach =3D bam_attach_metadata,
-> > +};
-> > +
-> >  /**
-> >   * bam_reset_channel - Reset individual BAM DMA channel
-> >   * @bchan: bam channel
-> > @@ -714,6 +766,8 @@ static struct dma_async_tx_descriptor *bam_prep_sla=
-ve_sg(struct dma_chan *chan,
-> >  		} while (remainder > 0);
-> >  	}
-> > =20
-> > +	async_desc->vd.tx.metadata_ops =3D &metadata_ops;
-> > +
-> >  	return vchan_tx_prep(&bchan->vc, &async_desc->vd, flags);
-> >  }
-> > =20
-> > @@ -867,6 +921,8 @@ static u32 process_channel_irqs(struct bam_device *=
-bdev)
-> >  			if (avail < async_desc->xfer_len)
-> >  				break;
-> > =20
-> > +			bam_update_metadata(bchan, async_desc);
-> > +
-> >  			/* manage FIFO */
-> >  			bchan->head +=3D async_desc->xfer_len;
-> >  			bchan->head %=3D MAX_DESCRIPTORS;
-> > @@ -1347,6 +1403,7 @@ static int bam_dma_probe(struct platform_device *=
-pdev)
-> >  	bdev->common.residue_granularity =3D DMA_RESIDUE_GRANULARITY_SEGMENT;
-> >  	bdev->common.src_addr_widths =3D DMA_SLAVE_BUSWIDTH_4_BYTES;
-> >  	bdev->common.dst_addr_widths =3D DMA_SLAVE_BUSWIDTH_4_BYTES;
-> > +	bdev->common.desc_metadata_modes =3D DESC_METADATA_CLIENT;
-> >  	bdev->common.device_alloc_chan_resources =3D bam_alloc_chan;
-> >  	bdev->common.device_free_chan_resources =3D bam_free_chan;
-> >  	bdev->common.device_prep_slave_sg =3D bam_prep_slave_sg;
-> > diff --git a/include/linux/dma/qcom_bam_dma.h b/include/linux/dma/qcom_=
-bam_dma.h
-> > index 68fc0e643b1b..8168b0573f45 100644
-> > --- a/include/linux/dma/qcom_bam_dma.h
-> > +++ b/include/linux/dma/qcom_bam_dma.h
-> > @@ -8,6 +8,14 @@
-> > =20
-> >  #include <asm/byteorder.h>
-> > =20
-> > +/*
-> > + * This data type is used as client metadata buffer in bam driver.
-> > + */
-> > +struct bam_dma_metadata {
-> > +	/* Actual number of bytes transferred by hardware */
-> > +	size_t xfer_len_bytes;
->
-> Pls implement dmaengine_result() and report that with proper residue
-> set...
 
-Sure, I'll update the patch with this change
+--k1N6UD84RmFQ/IzO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Sireesh
->
-> Thanks
->
-> --=20
-> ~Vinod
+Hello Linus,
 
+Please pull to consider fixes in dmaengine subsystem. These bring minor
+driver fixes and a big pile of at_hdmac driver fixes. More work on this
+driver is done and sitting in next.
+
+The following changes since commit 9abf2313adc1ca1b6180c508c25f22f9395cc780:
+
+  Linux 6.1-rc1 (2022-10-16 15:36:24 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dm=
+aengine-fix-6.1
+
+for you to fetch changes up to c47e6403fa099f200868d6b106701cb42d181d2b:
+
+  dmaengine: at_hdmac: Check return code of dma_async_device_register (2022=
+-11-08 10:43:57 +0530)
+
+----------------------------------------------------------------
+dmaengine fixes for v6.1
+
+Driver fixes for:
+ - Pile of at_hdmac driver rework which fixes many long standing issues
+   for this driver.
+ - couple of stm32 driver fixes for clearing structure and race fix
+ - idxd fixes for RO device state and batch size
+ - ti driver mem leak fix
+ - apple fix for grabbing channels in xlate
+ - resource leak fix in mv xor
+
+----------------------------------------------------------------
+Amelie Delaunay (2):
+      dmaengine: stm32-mdma: memset stm32_mdma_chan_config struct before us=
+ing it
+      dmaengine: stm32-dma: fix potential race between pause and resume
+
+Christophe JAILLET (1):
+      dmaengine: mv_xor_v2: Fix a resource leak in mv_xor_v2_remove()
+
+Doug Brown (1):
+      dmaengine: pxa_dma: use platform_get_irq_optional
+
+Fenghua Yu (1):
+      dmaengine: idxd: Do not enable user type Work Queue without Shared Vi=
+rtual Addressing
+
+Fengqian Gao (1):
+      dmaengine: idxd: fix RO device state error after been disabled/reset
+
+Martin Povi=C5=A1er (1):
+      dmaengine: apple-admac: Fix grabbing of channels in of_xlate
+
+Tudor Ambarus (15):
+      dmaengine: at_hdmac: Fix at_lli struct definition
+      dmaengine: at_hdmac: Don't start transactions at tx_submit level
+      dmaengine: at_hdmac: Start transfer for cyclic channels in issue_pend=
+ing
+      dmaengine: at_hdmac: Fix premature completion of desc in issue_pending
+      dmaengine: at_hdmac: Do not call the complete callback on device_term=
+inate_all
+      dmaengine: at_hdmac: Protect atchan->status with the channel lock
+      dmaengine: at_hdmac: Fix concurrency problems by removing atc_complet=
+e_all()
+      dmaengine: at_hdmac: Fix concurrency over descriptor
+      dmaengine: at_hdmac: Free the memset buf without holding the chan lock
+      dmaengine: at_hdmac: Fix concurrency over the active list
+      dmaengine: at_hdmac: Fix descriptor handling when issuing it to hardw=
+are
+      dmaengine: at_hdmac: Fix completion of unissued descriptor in case of=
+ errors
+      dmaengine: at_hdmac: Don't allow CPU to reorder channel enable
+      dmaengine: at_hdmac: Fix impossible condition
+      dmaengine: at_hdmac: Check return code of dma_async_device_register
+
+Xiaochen Shen (1):
+      dmaengine: idxd: Fix max batch size for Intel IAA
+
+Yang Yingliang (1):
+      dmaengine: ti: k3-udma-glue: fix memory leak when register device fail
+
+ drivers/dma/apple-admac.c     |   2 +-
+ drivers/dma/at_hdmac.c        | 153 +++++++++++++++++---------------------=
+----
+ drivers/dma/at_hdmac_regs.h   |  10 +--
+ drivers/dma/idxd/cdev.c       |  18 +++++
+ drivers/dma/idxd/device.c     |  26 ++++---
+ drivers/dma/idxd/idxd.h       |  32 +++++++++
+ drivers/dma/idxd/init.c       |   4 +-
+ drivers/dma/idxd/sysfs.c      |   2 +-
+ drivers/dma/mv_xor_v2.c       |   1 +
+ drivers/dma/pxa_dma.c         |   4 +-
+ drivers/dma/stm32-dma.c       |  14 ++--
+ drivers/dma/stm32-mdma.c      |   1 +
+ drivers/dma/ti/k3-udma-glue.c |   3 +
+ include/uapi/linux/idxd.h     |   1 +
+ 14 files changed, 150 insertions(+), 121 deletions(-)
+
+Thanks
+--=20
+~Vinod
+
+--k1N6UD84RmFQ/IzO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAmNt7qEACgkQfBQHDyUj
+g0c7zhAAoD2ZfIGGL+Na3qnyXnzjKMw8/caySIW/AvYRPBqz8Oa3sMm2psSXwyWb
+myJf0/CFg5HeoiaNWUK7b3utm1N66F9uGyt//fhTndklDdSWMIt77iPTfMPAyrXV
+bA8Rw8179o812x8voNLJCivwImSNXLx5G/FlFVuVL1lqk3Z9nrox3ZjiI/OrQPfM
+p3HbLxV0InDPxg4fIxvuKj5Z2Uj+XmSOYZBUIVMyBqy++e7yb9cM+4cjFclYtLJF
+NdWtsxRw9XoxHUAIlsfdiwl/+9ho3WCw2TgOjHUZaIQcvin+W1w1R6eLVdQvTZe0
+X5Q2/DGzadVum4u6vtS63tCvK9L3uQAE6Zd9/boqWj0w9zGZk0SA5M1frGsw9rN/
+PX2zJdyj6o7/MEwRlbtBhvwLygUJBLWgA+DcHb3b2DPxrlS8zHJo3oZjR2XW9erJ
+cxftTt58B2SBuijttl/fr0KtEKI7maRm+xbKLAy43SUngOiXBqgAvx+rWmb3N+yq
+RDiitR+0I7/gggbztj/l9J95knDtxSvVd+m1VnTec+coZb2+6xqjkUk9XEEDq0Cr
+lTaNp1PHu3KZGC4fxIyIWBlsXKc2h8hhq1B/O4tuo+LL3HEC9wcvi+2GZREIkVhs
+8fTVFPe7Sk9FGRUsHzHLeywdjMrkqeNLUl2oMYfJy/8fsBSBnBQ=
+=l+4V
+-----END PGP SIGNATURE-----
+
+--k1N6UD84RmFQ/IzO--

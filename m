@@ -2,73 +2,72 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B18E63674C
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Nov 2022 18:33:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3689C6370D8
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Nov 2022 04:14:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238924AbiKWRdh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 23 Nov 2022 12:33:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53336 "EHLO
+        id S229576AbiKXDO3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 23 Nov 2022 22:14:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238547AbiKWRdh (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Nov 2022 12:33:37 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DE9B84807
-        for <dmaengine@vger.kernel.org>; Wed, 23 Nov 2022 09:33:35 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id l22-20020a17090a3f1600b00212fbbcfb78so2719404pjc.3
-        for <dmaengine@vger.kernel.org>; Wed, 23 Nov 2022 09:33:35 -0800 (PST)
+        with ESMTP id S229590AbiKXDOY (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Nov 2022 22:14:24 -0500
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15A4377202;
+        Wed, 23 Nov 2022 19:14:23 -0800 (PST)
+Received: by mail-pf1-x433.google.com with SMTP id 9so471732pfx.11;
+        Wed, 23 Nov 2022 19:14:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZMav1MoLnlovR7wauioRwnzBkg6agxKz0diAzOaiymY=;
-        b=uQk48qc8RxNQ3vdF2jt//Dx6Y6u15ctAKMSb43mWo/sbHtZm7Hb8i80uMZGxIJrEgg
-         i/teLSbsfsw6TkjsHYXU+ZiH33Yxtn811y0YZx1If+3OdPF2l3XMEJxHA8qwGcJ6Pog0
-         wv4G1fajI+kvV93KU8//hgn8rhFI5vzJcpCDiPZxmoDGp6opxmeEL5TAHsjESHmkfTqi
-         IKJmj+ZY+hMeQYRKzEvjejSKPNnU0tnDrzWibCQk1oV9cvkExuol/JK8ccfr+gSWu5t6
-         g+7A9fwOCozqxrQoRGrsnjbIZtoq6rQ25MIMU8t/fdueECofcNQuPsBMS87gypYrkSHf
-         2QcQ==
+        d=gmail.com; s=20210112;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7eV9Vty9UioHPXG+7Z49fEwX2mXa79xcuBVejyPSsgU=;
+        b=KxZSfqXlnCWaBcXEPM+UKWwas6eD5rxuXSaY2yeaKRo3uqckgZ2hsvy3Br3kA2pLXB
+         yUYySLxXqJUACOTku5Hoxhrtd+cAM0K5+WaHpPsYUM4iliPYWEsdF8T54JIiJYqoupZT
+         Zf6oeSe2PqWVGRCiLEfVSUwtTRuEo0et/4xGmf+6sXg+ghlz/RoopmNgG+1kl/x24VRu
+         MCaVAr5bONmI5yRTPnwzC8fwWlCSOIpy5AkFB9BGc0IpoVIFRHbANiikyuggGv72KzkW
+         2HAzfR9ou0xPb3GRPxpA0PLVoB4Di92AJARNq3tLlgteA22L9UpIc8uKizzAqeTgE3z5
+         fMJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZMav1MoLnlovR7wauioRwnzBkg6agxKz0diAzOaiymY=;
-        b=FhwM5yuA68mko+OG0qvc0uO7saJtHM1fwinfb4NXH4SbbPTymm0zjBDKPgJ9VQYVkQ
-         VgE3cnZJi3IdF4qSUCgBRdT8AKISg1tjAo7zQC83TxfQwK3p6JbvSJH5VBZHvQlAy4tv
-         MpW2AstwbgnZFR0h7IpLizG1Mc3v4BaDysfL+obxJJHlTKomDAGGdyshWZAqChod7Cta
-         47EMEe0WXOfjrHu633Hk6c5/3ukrTzZelbY/VHYXxNphfsbJtPwlYUopUc7xqRc0Bd0I
-         BP2plVPMgonkJzfOD3b+Qjyj8jUxE/byEi26wEof8eOtyfr2XT6Lymq5MrJVCC1fGqI/
-         P24Q==
-X-Gm-Message-State: ANoB5pkZ6xmRuUq2jcQIo3pKskNnltzVfzpmJjwRuNnOWRS32DQJ5jvt
-        HtcsCQHmrP6j3cyO3v7KarmifQ==
-X-Google-Smtp-Source: AA0mqf4WqLxxdXhfKDPLxWyUcqM26bK2hgFSm1DPmYLJL1nGrkggO31sxqSMLdpb+g5jh57m36xZQg==
-X-Received: by 2002:a17:902:f643:b0:188:9ae7:bb81 with SMTP id m3-20020a170902f64300b001889ae7bb81mr22748148plg.66.1669224814860;
-        Wed, 23 Nov 2022 09:33:34 -0800 (PST)
-Received: from localhost ([75.172.139.56])
-        by smtp.gmail.com with ESMTPSA id l125-20020a622583000000b0056baca45977sm12925932pfl.21.2022.11.23.09.33.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Nov 2022 09:33:34 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Nicolas Frayer <nfrayer@baylibre.com>, nm@ti.com,
-        ssantosh@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peter.ujfalusi@gmail.com,
-        vkoul@kernel.org, dmaengine@vger.kernel.org,
-        grygorii.strashko@ti.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, linux-omap@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     glaroque@baylibre.com
-Subject: Re: [PATCH v4 4/4] net: ethernet: ti: davinci_mdio: Deferring probe
- when soc_device_match() returns NULL
-In-Reply-To: <c3ded2b8-cf99-36ac-7152-5a23245a2e9c@ti.com>
-References: <20221108181144.433087-1-nfrayer@baylibre.com>
- <20221108181144.433087-5-nfrayer@baylibre.com>
- <c3ded2b8-cf99-36ac-7152-5a23245a2e9c@ti.com>
-Date:   Wed, 23 Nov 2022 09:33:33 -0800
-Message-ID: <7ho7sx8tjm.fsf@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7eV9Vty9UioHPXG+7Z49fEwX2mXa79xcuBVejyPSsgU=;
+        b=ivCVuZXiN9ANY4Zi6vsvmBlORbUhxls7OZZ5LiyKcXw2AGF2ucpix0XYC65mcpsXyG
+         B4LRjRdYE35Lenbpz9+f74ILOiWV130qs/AzPQqefWqakcytiFqPqz/3tKikfAuPM43r
+         DuiA48L92NjnNeQRDVRk2JhTwxk8CGVZPXMw4iLK3QCD4FC1/Qcjq2uw8JptmA84f5GP
+         SyyZKe6r63ZxOtPDHZ7Uy4D69bfRU2aV/2ZrIZgLj8oQ7QItOjftTdFDevB1L1F80cNe
+         G5ifwuopnfUlTyTP4hdfR/b1gTwDTKON7HzVGVOovwzxGZQdpTAI2IRw5bZ6qBuU0m8s
+         AidQ==
+X-Gm-Message-State: ANoB5pmiUYcpcdG3V+YhX1jFGvC40C2E+YNzh4o/6epOV89c44gySE4d
+        HbH4oAbE4XHP1Q9zNcrA5Kw=
+X-Google-Smtp-Source: AA0mqf7CrYVYWYFErY6Otr1YcZCOCs7kgEP8DZLXoU1xgw4pN2mYtw/mEvG2GJEWvcW1/Ze6OSf/eQ==
+X-Received: by 2002:a63:155e:0:b0:476:95a8:de91 with SMTP id 30-20020a63155e000000b0047695a8de91mr9916512pgv.102.1669259662477;
+        Wed, 23 Nov 2022 19:14:22 -0800 (PST)
+Received: from localhost ([2406:7400:61:64d5:6ced:a13c:ba7b:305b])
+        by smtp.gmail.com with ESMTPSA id s23-20020aa78bd7000000b0055f209690c0sm13463535pfd.50.2022.11.23.19.14.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Nov 2022 19:14:21 -0800 (PST)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Thu, 24 Nov 2022 08:44:15 +0530
+Message-Id: <COK75VDFXZSZ.TLR6MVN7TUMN@skynet-linux>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <~postmarketos/upstreaming@lists.sr.ht>
+Subject: Re: [PATCH v2 0/3] dmaengine: Add support for immediate commands
+From:   "Sireesh Kodali" <sireeshkodali1@gmail.com>
+To:     "Vinod Koul" <vkoul@kernel.org>
+X-Mailer: aerc 0.13.0
+References: <20221027051429.46593-1-sireeshkodali1@gmail.com>
+ <Y2UIS7P0alvqT4jn@matsya> <CO97J91UP8IF.23GNHUUM2KTVH@skynet-linux>
+ <Y3FudBqc1vQ8fEgU@matsya>
+In-Reply-To: <Y3FudBqc1vQ8fEgU@matsya>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,46 +75,52 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vignesh,
-
-Vignesh Raghavendra <vigneshr@ti.com> writes:
-
-> Hi Nicolas,
+On Mon Nov 14, 2022 at 3:53 AM IST, Vinod Koul wrote:
+> On 11-11-22, 10:42, Sireesh Kodali wrote:
+> > On Fri Nov 4, 2022 at 6:10 PM IST, Vinod Koul wrote:
+> > > On 27-10-22, 10:44, Sireesh Kodali wrote:
+> > > > The IPA v2.x block, found on some older Qualcomm SoCs, uses BAM DMA=
+ to
+> > > > send and receive packets from the AP. It also uses BAM to receive
+> > > > commands from the AP (and possibly the modem). These commands are
+> > > > encoded as "Immediate Commands". They vary from regular BAM DMA
+> > > > commands. Adding support for immediate commands is trivial, but req=
+uires
+> > > > also adding Immediate Commands to the dmaengine API, which is what =
+this
+> > > > patch series does.
+> > >
+> > > Can you explain a bit more. I understand you need "Immediate Commands=
+"
+> > > but am really reluctant to add another interface to support a specifi=
+c
+> > > use case
+> > >
+> >=20
+> > Apologies for the delayed response
+> >=20
+> > BAM supports both regular commands, and "immediate commands". Currently=
+,
+> > commands are used by the Qualcom NAND chip driver, while "immediate
+> > commands" are intended to be used by the (yet to be mainlined) IPA
+> > driver. From the BAM driver perspective, both immediate and regular
+> > commands are simply a matter of setting the appropriate flag in the
+> > descriptor. I don't have access to the documentation on BAM to know
+> > exactly how these two modes differ, however I do know they are not
+> > interchangable. If a different API is suggested, I can change the
+> > implementation as needed.
 >
-> On 08/11/22 11:41 pm, Nicolas Frayer wrote:
->> When the k3 socinfo driver is built as a module, there is a possibility
->> that it will probe after the davinci mdio driver. By deferring the mdio
->> probe we allow the k3 socinfo to probe and register the
->> soc_device_attribute structure needed by the mdio driver.
->> 
->> Signed-off-by: Nicolas Frayer <nfrayer@baylibre.com>
->> ---
->>  drivers/net/ethernet/ti/davinci_mdio.c | 4 ++++
->>  1 file changed, 4 insertions(+)
->> 
->> diff --git a/drivers/net/ethernet/ti/davinci_mdio.c b/drivers/net/ethernet/ti/davinci_mdio.c
->> index 946b9753ccfb..095198b6b7be 100644
->> --- a/drivers/net/ethernet/ti/davinci_mdio.c
->> +++ b/drivers/net/ethernet/ti/davinci_mdio.c
->> @@ -533,6 +533,10 @@ static int davinci_mdio_probe(struct platform_device *pdev)
->>  		const struct soc_device_attribute *soc_match_data;
->>  
->>  		soc_match_data = soc_device_match(k3_mdio_socinfo);
->> +
->> +		if (!soc_match_data)
->> +			return -EPROBE_DEFER;
->
-> I dont think this is right way to detect if socinfo driver is probed.
-> Per documentation of soc_device_match() , function will return NULL if
-> it does not match any of the entries in k3_mdio_socinfo (ie if we are
-> running on any platforms other that ones in the list)
->
-> Note that this driver is used on TI's 32 bit SoCs too that dont even
-> have a k3-socinfo driver equivalent. In such case, this code will end up
-> probe deferring indefinitely.
+> Ok, can you please explain what is meant by 'regular' cmd and
+> 'immediate', lets see what is required here
 
-Yes, you're right.  This is not the right solution and this patch should
-be dropped. We'll need to have a deeper look at socinfo to figure out
-if/how it could be configured to support a fully modular kernel.
+I unfortunately don't have access to any documentation that explains the
+difference between the two. All I know is that IPA requires using
+immediate commands, while the QCOM NAND driver requires using 'regular'
+commands.
 
-Kevin
+Regards,
+Sireesh
+>
+> --=20
+> ~Vinod
+

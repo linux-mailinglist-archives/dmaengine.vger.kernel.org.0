@@ -2,72 +2,86 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E01BC637320
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Nov 2022 08:53:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FE8A6373B6
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Nov 2022 09:16:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229657AbiKXHxH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 24 Nov 2022 02:53:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43516 "EHLO
+        id S230050AbiKXIQB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 24 Nov 2022 03:16:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229596AbiKXHxG (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Nov 2022 02:53:06 -0500
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289EB8D48E;
-        Wed, 23 Nov 2022 23:53:03 -0800 (PST)
-Received: by mail-lf1-x131.google.com with SMTP id g12so1368747lfh.3;
-        Wed, 23 Nov 2022 23:53:03 -0800 (PST)
+        with ESMTP id S229990AbiKXIPo (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Nov 2022 03:15:44 -0500
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E123810B422;
+        Thu, 24 Nov 2022 00:14:05 -0800 (PST)
+Received: by mail-lj1-x22d.google.com with SMTP id q7so1133769ljp.9;
+        Thu, 24 Nov 2022 00:14:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:subject:from:content-language
-         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ECjtCwFK8AKreBAAxlUKM9FsJ3BgsuoUjjzjmNTBDC0=;
-        b=HHZTpNla/L/+yqMDzKQOkn8YDQQpbbLVkIdHEyKg1/mjjMX5krc1sK3IcNQxFZoK5o
-         2JFGyHdOCElQeltInVStrUw0wTSlXUv4GjdbCiNDR0YIWXSzoJaj0Z+yuuBOCfbsa0Kw
-         B0mw81hdpvcDbXEwSA+aaXDtfW/+yBW5YBQl1Tt6piBo+tqVk7llgps485pHU7sanMnU
-         pLgw2RAKo9YFykom11Vwi48H35qZsIbROrvfWb19up5lxT6bsTzxrcIxBThDyNNwxjq/
-         +Ftt/GWNPA0S4CFtNZfq2LWLrfiLH4zaqVjvLHqmktFYxfdVvXNq3DWb+yUwcc485ev3
-         iaeQ==
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DeUefraTLOsYVw9xLhjc2jCiF4qkVOolmQaF127DKVk=;
+        b=PAL/4lgO3qwcAfVMsmymoQQ9m3TeqyOkDETk9KBNX6z/o9HLwn8RaXvTDlHWiBBDvg
+         atY0ccAGfcCtVElHLwQsrm0QhHkHvKqJqM7RMLGPIFIPWuhF0QyVvPm9wRCzT9iCxASw
+         LN5V+FcWg/SEJM7UxqmH+AYRIOqBhulcXZfzgGab0XACfOxuhyQKNDmHdtNHKaj/8Zfl
+         FplfjNLMeze2dGtr55IUGmbCnmpZu5oViaQ4LvbS85ZhO261UmBzZe6bsie2P1qRpMeU
+         ZCqIYWK6+QBAocMAgO6/neFsIvtKZ8dEs27C22xWp0mQ/KCBXyWacaXLkPM597S1fqZP
+         NN0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:subject:from:content-language
-         :references:cc:to:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ECjtCwFK8AKreBAAxlUKM9FsJ3BgsuoUjjzjmNTBDC0=;
-        b=zCpFX6B0Q4UL1xXnYo+F0fkO+QJHCjFjcYKpVKbCE2aghRrqPeEVZnBuYtRR3VxDwT
-         U2QE92UVsyAEdmXYx5C+UZVjO0zNxWxQCTjLurxRa2YjZA3pH4b/eBdj2ii2Ru8735N0
-         Ca1HYDrG+DSVtoNXQ4j2mdHmGwQHv2tPy3wHTmcqvfqClU0YcJZVI5HitZjhUwCa4lsd
-         9fwuhYSHnA3+u+edfaqHzrIuyoMTR5DCLL1cs5gnIKy6dXo0tnCovaJ1lFIaT9a/Wrp9
-         aDvwbkEhs0+B+U0JQwkyvxDlDlhz0g92anBVXdekcDbh/cdBWG4c//KSduO1qwNbf0+T
-         BR4Q==
-X-Gm-Message-State: ANoB5pnOchsW8VGz26VuJlAcXFoir/JNAbel9LZ7uyT3Z79OsPyvL+2x
-        iNTMwGFFzPr0U9ZtaTU73eo=
-X-Google-Smtp-Source: AA0mqf6NqRgy2OhgU00e4xP+vqQ9+HMPjtvDVeIq9b271UlSEpQvJG7qPKtNyBOgz2PNDBGmutMbYA==
-X-Received: by 2002:a05:6512:31d1:b0:4ae:6bbc:e8af with SMTP id j17-20020a05651231d100b004ae6bbce8afmr6500765lfe.411.1669276381375;
-        Wed, 23 Nov 2022 23:53:01 -0800 (PST)
+        bh=DeUefraTLOsYVw9xLhjc2jCiF4qkVOolmQaF127DKVk=;
+        b=3FQiVUe90e2bPDxy2MA9Yg7G7X0k1/Vut4g2d6lUNvNmEOEVr0ixAS/b23TBdshekQ
+         vedRyvfyZ+LeU8rsmSiwLQEEARh4PrwIwupudEcSp5zPMwCrROmfL0t/2UUz5OhpUR96
+         7pujEu20npj1PSyjij+rHg8swguBnLuMEUKXFLUjbbtnhuxyDRl6+PRaIiewTtwaDSSy
+         RK72h5GJIBRdux9eK2ezmU7Gwwe3TfCEcLGWaKqOEnrN57L2ZdPxxkiOEai4KYL+28Pu
+         OxXoHQ0eT8s+QedKD4f3P3Yc7/LDaHubZyZQcGQyLMz8QPs6BtBadG3P3YxuB743fT6Y
+         xJMw==
+X-Gm-Message-State: ANoB5pkDvJ0Y3yEKxP51fgpaXHHkNLhsF8jW+6Sh9+E6hDo73Gd71vjy
+        3GU53NME9YX4NbTOgfvufEA=
+X-Google-Smtp-Source: AA0mqf6hK0Yfc6U0TtdSmI9ZQLi93h7zpR/we4ftZe8kBmfGIWxQNqL4Gq2HZFwudP2QWyuNPdZNhg==
+X-Received: by 2002:a2e:c52:0:b0:277:9bf:9411 with SMTP id o18-20020a2e0c52000000b0027709bf9411mr4006863ljd.504.1669277641653;
+        Thu, 24 Nov 2022 00:14:01 -0800 (PST)
 Received: from ?IPV6:2001:999:485:946b:e412:ce24:16c6:ba10? ([2001:999:485:946b:e412:ce24:16c6:ba10])
-        by smtp.gmail.com with ESMTPSA id v26-20020ac258fa000000b004b0b2212315sm43472lfo.121.2022.11.23.23.52.59
+        by smtp.gmail.com with ESMTPSA id p12-20020ac24ecc000000b0049a5a59aa68sm52803lfr.10.2022.11.24.00.13.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Nov 2022 23:53:00 -0800 (PST)
-Message-ID: <7775f7ff-b297-eeab-dd46-e7ac5e1c14fb@gmail.com>
-Date:   Thu, 24 Nov 2022 09:54:12 +0200
+        Thu, 24 Nov 2022 00:14:01 -0800 (PST)
+Message-ID: <b2a00199-fccf-5887-1029-99f9e7e55e7f@gmail.com>
+Date:   Thu, 24 Nov 2022 10:15:11 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.0
-To:     Nicolas Frayer <nfrayer@baylibre.com>, nm@ti.com,
-        ssantosh@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, vkoul@kernel.org,
-        dmaengine@vger.kernel.org, grygorii.strashko@ti.com,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, linux-omap@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     khilman@baylibre.com, glaroque@baylibre.com
-References: <20221108181144.433087-1-nfrayer@baylibre.com>
- <20221108181144.433087-3-nfrayer@baylibre.com>
+Subject: Re: [PATCH v3] dmaengine: drivers: Use
+ devm_platform_ioremap_resource()
 Content-Language: en-US
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>, vkoul@kernel.org
+Cc:     f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, lars@metafoo.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, sean.wang@mediatek.com,
+        matthias.bgg@gmail.com, daniel@zonque.org,
+        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
+        agross@kernel.org, andersson@kernel.org,
+        konrad.dybcio@somainline.org, green.wan@sifive.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+        wens@csie.org, jernej.skrabec@gmail.com, samuel@sholland.org,
+        ldewangan@nvidia.com, jonathanh@nvidia.com,
+        thierry.reding@gmail.com, michal.simek@xilinx.com,
+        tony@atomide.com, krzysztof.kozlowski@linaro.org, trix@redhat.com,
+        radhey.shyam.pandey@xilinx.com, shravya.kumbham@xilinx.com,
+        harini.katakam@xilinx.com, swati.agarwal@amd.com,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-sunxi@lists.linux.dev, linux-tegra@vger.kernel.org,
+        ye.xingchen@zte.com.cn, quic_mojha@quicinc.com
+References: <20221110152528.7821-1-tudor.ambarus@microchip.com>
 From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-Subject: Re: [PATCH v4 2/4] soc: ti: Add module build support
-In-Reply-To: <20221108181144.433087-3-nfrayer@baylibre.com>
+In-Reply-To: <20221110152528.7821-1-tudor.ambarus@microchip.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -82,91 +96,55 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 
 
-On 08/11/2022 20:11, Nicolas Frayer wrote:
-> Added module build support for the TI K3 SoC info driver.
-
-Subject: "soc: ti: k3-socinfo: ..."
-
+On 10/11/2022 17:25, Tudor Ambarus wrote:
+> platform_get_resource() and devm_ioremap_resource() are wrapped up in the
+> devm_platform_ioremap_resource() helper. Use the helper and get rid of the
+> local variable for struct resource *. We now have a function call less.
 > 
-> Signed-off-by: Nicolas Frayer <nfrayer@baylibre.com>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 > ---
->   arch/arm64/Kconfig.platforms |  1 -
->   drivers/soc/ti/Kconfig       |  3 ++-
->   drivers/soc/ti/k3-socinfo.c  | 11 +++++++++++
->   3 files changed, 13 insertions(+), 2 deletions(-)
+> v3:
+> - fix errors reported-by lkp@intel.com
+> - lkp@intel.com built successfully few configs, all should be good now.
 > 
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index 76580b932e44..4f2f92eb499f 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -130,7 +130,6 @@ config ARCH_K3
->   	select TI_SCI_PROTOCOL
->   	select TI_SCI_INTR_IRQCHIP
->   	select TI_SCI_INTA_IRQCHIP
-> -	select TI_K3_SOCINFO
->   	help
->   	  This enables support for Texas Instruments' K3 multicore SoC
->   	  architecture.
-> diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
-> index 7e2fb1c16af1..1a730c057cce 100644
-> --- a/drivers/soc/ti/Kconfig
-> +++ b/drivers/soc/ti/Kconfig
-> @@ -74,7 +74,8 @@ config TI_K3_RINGACC
->   	  If unsure, say N.
->   
->   config TI_K3_SOCINFO
-> -	bool
-> +	tristate "TI K3 SoC info driver"
-> +	default y
+> v2:
+> - rebase on dma/next. s3c24xx was removed, thus drop the changes for it.
+> - collect Acked-by
+> 
+>   drivers/dma/bcm2835-dma.c                      |  4 +---
+>   drivers/dma/dma-axi-dmac.c                     |  4 +---
+>   drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c |  4 +---
+>   drivers/dma/fsl-edma.c                         |  8 +++-----
+>   drivers/dma/fsl-qdma.c                         | 10 +++-------
+>   drivers/dma/idma64.c                           |  4 +---
+>   drivers/dma/img-mdc-dma.c                      |  4 +---
+>   drivers/dma/imx-dma.c                          |  4 +---
+>   drivers/dma/imx-sdma.c                         |  4 +---
+>   drivers/dma/mcf-edma.c                         |  5 +----
+>   drivers/dma/mediatek/mtk-hsdma.c               |  4 +---
+>   drivers/dma/mmp_pdma.c                         |  4 +---
+>   drivers/dma/mmp_tdma.c                         |  4 +---
+>   drivers/dma/moxart-dma.c                       |  4 +---
+>   drivers/dma/mv_xor_v2.c                        |  7 ++-----
+>   drivers/dma/mxs-dma.c                          |  4 +---
+>   drivers/dma/nbpfaxi.c                          |  4 +---
+>   drivers/dma/pxa_dma.c                          |  4 +---
+>   drivers/dma/qcom/bam_dma.c                     |  4 +---
+>   drivers/dma/sf-pdma/sf-pdma.c                  |  4 +---
+>   drivers/dma/sh/usb-dmac.c                      |  4 +---
+>   drivers/dma/stm32-dmamux.c                     |  4 +---
+>   drivers/dma/stm32-mdma.c                       |  4 +---
+>   drivers/dma/sun4i-dma.c                        |  4 +---
+>   drivers/dma/sun6i-dma.c                        |  4 +---
+>   drivers/dma/tegra210-adma.c                    |  4 +---
+>   drivers/dma/ti/cppi41.c                        | 10 +++-------
+>   drivers/dma/ti/omap-dma.c                      |  4 +---
 
-Why it is a good thing to have this driver as module compared to always 
-built in?
-It has no dependencies, just things depending on it.
-It is small, just couple of lines long
+For omap-dma:
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
 
-I don't really see the benefit of building it as a module, not even an 
-academic one...
-
-
->   	depends on ARCH_K3 || COMPILE_TEST
->   	select SOC_BUS
->   	select MFD_SYSCON
-> diff --git a/drivers/soc/ti/k3-socinfo.c b/drivers/soc/ti/k3-socinfo.c
-> index 19f3e74f5376..98348f998e0f 100644
-> --- a/drivers/soc/ti/k3-socinfo.c
-> +++ b/drivers/soc/ti/k3-socinfo.c
-> @@ -13,6 +13,7 @@
->   #include <linux/slab.h>
->   #include <linux/string.h>
->   #include <linux/sys_soc.h>
-> +#include <linux/module.h>
->   
->   #define CTRLMMR_WKUP_JTAGID_REG		0
->   /*
-> @@ -141,6 +142,7 @@ static const struct of_device_id k3_chipinfo_of_match[] = {
->   	{ .compatible = "ti,am654-chipid", },
->   	{ /* sentinel */ },
->   };
-> +MODULE_DEVICE_TABLE(of, k3_chipinfo_of_match);
->   
->   static struct platform_driver k3_chipinfo_driver = {
->   	.driver = {
-> @@ -156,3 +158,12 @@ static int __init k3_chipinfo_init(void)
->   	return platform_driver_register(&k3_chipinfo_driver);
->   }
->   subsys_initcall(k3_chipinfo_init);
-
-subsys_initcall for a module?
-
-> +
-> +static void __exit k3_chipinfo_exit(void)
-> +{
-> +	platform_driver_unregister(&k3_chipinfo_driver);
-> +}
-> +module_exit(k3_chipinfo_exit);
-> +
-> +MODULE_DESCRIPTION("TI K3 SoC info driver");
-> +MODULE_LICENSE("GPL");
-
--- 
+>   drivers/dma/xilinx/zynqmp_dma.c                |  4 +---
+>   29 files changed, 36 insertions(+), 100 deletions(-)
+> -- 
 Péter

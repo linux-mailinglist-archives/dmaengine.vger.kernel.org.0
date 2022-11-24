@@ -2,72 +2,77 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3689C6370D8
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Nov 2022 04:14:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E01BC637320
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Nov 2022 08:53:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbiKXDO3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 23 Nov 2022 22:14:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60360 "EHLO
+        id S229657AbiKXHxH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 24 Nov 2022 02:53:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229590AbiKXDOY (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Nov 2022 22:14:24 -0500
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15A4377202;
-        Wed, 23 Nov 2022 19:14:23 -0800 (PST)
-Received: by mail-pf1-x433.google.com with SMTP id 9so471732pfx.11;
-        Wed, 23 Nov 2022 19:14:23 -0800 (PST)
+        with ESMTP id S229596AbiKXHxG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Nov 2022 02:53:06 -0500
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289EB8D48E;
+        Wed, 23 Nov 2022 23:53:03 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id g12so1368747lfh.3;
+        Wed, 23 Nov 2022 23:53:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7eV9Vty9UioHPXG+7Z49fEwX2mXa79xcuBVejyPSsgU=;
-        b=KxZSfqXlnCWaBcXEPM+UKWwas6eD5rxuXSaY2yeaKRo3uqckgZ2hsvy3Br3kA2pLXB
-         yUYySLxXqJUACOTku5Hoxhrtd+cAM0K5+WaHpPsYUM4iliPYWEsdF8T54JIiJYqoupZT
-         Zf6oeSe2PqWVGRCiLEfVSUwtTRuEo0et/4xGmf+6sXg+ghlz/RoopmNgG+1kl/x24VRu
-         MCaVAr5bONmI5yRTPnwzC8fwWlCSOIpy5AkFB9BGc0IpoVIFRHbANiikyuggGv72KzkW
-         2HAzfR9ou0xPb3GRPxpA0PLVoB4Di92AJARNq3tLlgteA22L9UpIc8uKizzAqeTgE3z5
-         fMJQ==
+        h=content-transfer-encoding:in-reply-to:subject:from:content-language
+         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ECjtCwFK8AKreBAAxlUKM9FsJ3BgsuoUjjzjmNTBDC0=;
+        b=HHZTpNla/L/+yqMDzKQOkn8YDQQpbbLVkIdHEyKg1/mjjMX5krc1sK3IcNQxFZoK5o
+         2JFGyHdOCElQeltInVStrUw0wTSlXUv4GjdbCiNDR0YIWXSzoJaj0Z+yuuBOCfbsa0Kw
+         B0mw81hdpvcDbXEwSA+aaXDtfW/+yBW5YBQl1Tt6piBo+tqVk7llgps485pHU7sanMnU
+         pLgw2RAKo9YFykom11Vwi48H35qZsIbROrvfWb19up5lxT6bsTzxrcIxBThDyNNwxjq/
+         +Ftt/GWNPA0S4CFtNZfq2LWLrfiLH4zaqVjvLHqmktFYxfdVvXNq3DWb+yUwcc485ev3
+         iaeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7eV9Vty9UioHPXG+7Z49fEwX2mXa79xcuBVejyPSsgU=;
-        b=ivCVuZXiN9ANY4Zi6vsvmBlORbUhxls7OZZ5LiyKcXw2AGF2ucpix0XYC65mcpsXyG
-         B4LRjRdYE35Lenbpz9+f74ILOiWV130qs/AzPQqefWqakcytiFqPqz/3tKikfAuPM43r
-         DuiA48L92NjnNeQRDVRk2JhTwxk8CGVZPXMw4iLK3QCD4FC1/Qcjq2uw8JptmA84f5GP
-         SyyZKe6r63ZxOtPDHZ7Uy4D69bfRU2aV/2ZrIZgLj8oQ7QItOjftTdFDevB1L1F80cNe
-         G5ifwuopnfUlTyTP4hdfR/b1gTwDTKON7HzVGVOovwzxGZQdpTAI2IRw5bZ6qBuU0m8s
-         AidQ==
-X-Gm-Message-State: ANoB5pmiUYcpcdG3V+YhX1jFGvC40C2E+YNzh4o/6epOV89c44gySE4d
-        HbH4oAbE4XHP1Q9zNcrA5Kw=
-X-Google-Smtp-Source: AA0mqf7CrYVYWYFErY6Otr1YcZCOCs7kgEP8DZLXoU1xgw4pN2mYtw/mEvG2GJEWvcW1/Ze6OSf/eQ==
-X-Received: by 2002:a63:155e:0:b0:476:95a8:de91 with SMTP id 30-20020a63155e000000b0047695a8de91mr9916512pgv.102.1669259662477;
-        Wed, 23 Nov 2022 19:14:22 -0800 (PST)
-Received: from localhost ([2406:7400:61:64d5:6ced:a13c:ba7b:305b])
-        by smtp.gmail.com with ESMTPSA id s23-20020aa78bd7000000b0055f209690c0sm13463535pfd.50.2022.11.23.19.14.19
+        h=content-transfer-encoding:in-reply-to:subject:from:content-language
+         :references:cc:to:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ECjtCwFK8AKreBAAxlUKM9FsJ3BgsuoUjjzjmNTBDC0=;
+        b=zCpFX6B0Q4UL1xXnYo+F0fkO+QJHCjFjcYKpVKbCE2aghRrqPeEVZnBuYtRR3VxDwT
+         U2QE92UVsyAEdmXYx5C+UZVjO0zNxWxQCTjLurxRa2YjZA3pH4b/eBdj2ii2Ru8735N0
+         Ca1HYDrG+DSVtoNXQ4j2mdHmGwQHv2tPy3wHTmcqvfqClU0YcJZVI5HitZjhUwCa4lsd
+         9fwuhYSHnA3+u+edfaqHzrIuyoMTR5DCLL1cs5gnIKy6dXo0tnCovaJ1lFIaT9a/Wrp9
+         aDvwbkEhs0+B+U0JQwkyvxDlDlhz0g92anBVXdekcDbh/cdBWG4c//KSduO1qwNbf0+T
+         BR4Q==
+X-Gm-Message-State: ANoB5pnOchsW8VGz26VuJlAcXFoir/JNAbel9LZ7uyT3Z79OsPyvL+2x
+        iNTMwGFFzPr0U9ZtaTU73eo=
+X-Google-Smtp-Source: AA0mqf6NqRgy2OhgU00e4xP+vqQ9+HMPjtvDVeIq9b271UlSEpQvJG7qPKtNyBOgz2PNDBGmutMbYA==
+X-Received: by 2002:a05:6512:31d1:b0:4ae:6bbc:e8af with SMTP id j17-20020a05651231d100b004ae6bbce8afmr6500765lfe.411.1669276381375;
+        Wed, 23 Nov 2022 23:53:01 -0800 (PST)
+Received: from ?IPV6:2001:999:485:946b:e412:ce24:16c6:ba10? ([2001:999:485:946b:e412:ce24:16c6:ba10])
+        by smtp.gmail.com with ESMTPSA id v26-20020ac258fa000000b004b0b2212315sm43472lfo.121.2022.11.23.23.52.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Nov 2022 19:14:21 -0800 (PST)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Thu, 24 Nov 2022 08:44:15 +0530
-Message-Id: <COK75VDFXZSZ.TLR6MVN7TUMN@skynet-linux>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <~postmarketos/upstreaming@lists.sr.ht>
-Subject: Re: [PATCH v2 0/3] dmaengine: Add support for immediate commands
-From:   "Sireesh Kodali" <sireeshkodali1@gmail.com>
-To:     "Vinod Koul" <vkoul@kernel.org>
-X-Mailer: aerc 0.13.0
-References: <20221027051429.46593-1-sireeshkodali1@gmail.com>
- <Y2UIS7P0alvqT4jn@matsya> <CO97J91UP8IF.23GNHUUM2KTVH@skynet-linux>
- <Y3FudBqc1vQ8fEgU@matsya>
-In-Reply-To: <Y3FudBqc1vQ8fEgU@matsya>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        Wed, 23 Nov 2022 23:53:00 -0800 (PST)
+Message-ID: <7775f7ff-b297-eeab-dd46-e7ac5e1c14fb@gmail.com>
+Date:   Thu, 24 Nov 2022 09:54:12 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+To:     Nicolas Frayer <nfrayer@baylibre.com>, nm@ti.com,
+        ssantosh@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, vkoul@kernel.org,
+        dmaengine@vger.kernel.org, grygorii.strashko@ti.com,
+        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, linux-omap@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     khilman@baylibre.com, glaroque@baylibre.com
+References: <20221108181144.433087-1-nfrayer@baylibre.com>
+ <20221108181144.433087-3-nfrayer@baylibre.com>
+Content-Language: en-US
+From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+Subject: Re: [PATCH v4 2/4] soc: ti: Add module build support
+In-Reply-To: <20221108181144.433087-3-nfrayer@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,52 +80,93 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon Nov 14, 2022 at 3:53 AM IST, Vinod Koul wrote:
-> On 11-11-22, 10:42, Sireesh Kodali wrote:
-> > On Fri Nov 4, 2022 at 6:10 PM IST, Vinod Koul wrote:
-> > > On 27-10-22, 10:44, Sireesh Kodali wrote:
-> > > > The IPA v2.x block, found on some older Qualcomm SoCs, uses BAM DMA=
- to
-> > > > send and receive packets from the AP. It also uses BAM to receive
-> > > > commands from the AP (and possibly the modem). These commands are
-> > > > encoded as "Immediate Commands". They vary from regular BAM DMA
-> > > > commands. Adding support for immediate commands is trivial, but req=
-uires
-> > > > also adding Immediate Commands to the dmaengine API, which is what =
-this
-> > > > patch series does.
-> > >
-> > > Can you explain a bit more. I understand you need "Immediate Commands=
-"
-> > > but am really reluctant to add another interface to support a specifi=
-c
-> > > use case
-> > >
-> >=20
-> > Apologies for the delayed response
-> >=20
-> > BAM supports both regular commands, and "immediate commands". Currently=
-,
-> > commands are used by the Qualcom NAND chip driver, while "immediate
-> > commands" are intended to be used by the (yet to be mainlined) IPA
-> > driver. From the BAM driver perspective, both immediate and regular
-> > commands are simply a matter of setting the appropriate flag in the
-> > descriptor. I don't have access to the documentation on BAM to know
-> > exactly how these two modes differ, however I do know they are not
-> > interchangable. If a different API is suggested, I can change the
-> > implementation as needed.
->
-> Ok, can you please explain what is meant by 'regular' cmd and
-> 'immediate', lets see what is required here
 
-I unfortunately don't have access to any documentation that explains the
-difference between the two. All I know is that IPA requires using
-immediate commands, while the QCOM NAND driver requires using 'regular'
-commands.
 
-Regards,
-Sireesh
->
-> --=20
-> ~Vinod
+On 08/11/2022 20:11, Nicolas Frayer wrote:
+> Added module build support for the TI K3 SoC info driver.
 
+Subject: "soc: ti: k3-socinfo: ..."
+
+> 
+> Signed-off-by: Nicolas Frayer <nfrayer@baylibre.com>
+> ---
+>   arch/arm64/Kconfig.platforms |  1 -
+>   drivers/soc/ti/Kconfig       |  3 ++-
+>   drivers/soc/ti/k3-socinfo.c  | 11 +++++++++++
+>   3 files changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index 76580b932e44..4f2f92eb499f 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -130,7 +130,6 @@ config ARCH_K3
+>   	select TI_SCI_PROTOCOL
+>   	select TI_SCI_INTR_IRQCHIP
+>   	select TI_SCI_INTA_IRQCHIP
+> -	select TI_K3_SOCINFO
+>   	help
+>   	  This enables support for Texas Instruments' K3 multicore SoC
+>   	  architecture.
+> diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
+> index 7e2fb1c16af1..1a730c057cce 100644
+> --- a/drivers/soc/ti/Kconfig
+> +++ b/drivers/soc/ti/Kconfig
+> @@ -74,7 +74,8 @@ config TI_K3_RINGACC
+>   	  If unsure, say N.
+>   
+>   config TI_K3_SOCINFO
+> -	bool
+> +	tristate "TI K3 SoC info driver"
+> +	default y
+
+Why it is a good thing to have this driver as module compared to always 
+built in?
+It has no dependencies, just things depending on it.
+It is small, just couple of lines long
+
+I don't really see the benefit of building it as a module, not even an 
+academic one...
+
+
+>   	depends on ARCH_K3 || COMPILE_TEST
+>   	select SOC_BUS
+>   	select MFD_SYSCON
+> diff --git a/drivers/soc/ti/k3-socinfo.c b/drivers/soc/ti/k3-socinfo.c
+> index 19f3e74f5376..98348f998e0f 100644
+> --- a/drivers/soc/ti/k3-socinfo.c
+> +++ b/drivers/soc/ti/k3-socinfo.c
+> @@ -13,6 +13,7 @@
+>   #include <linux/slab.h>
+>   #include <linux/string.h>
+>   #include <linux/sys_soc.h>
+> +#include <linux/module.h>
+>   
+>   #define CTRLMMR_WKUP_JTAGID_REG		0
+>   /*
+> @@ -141,6 +142,7 @@ static const struct of_device_id k3_chipinfo_of_match[] = {
+>   	{ .compatible = "ti,am654-chipid", },
+>   	{ /* sentinel */ },
+>   };
+> +MODULE_DEVICE_TABLE(of, k3_chipinfo_of_match);
+>   
+>   static struct platform_driver k3_chipinfo_driver = {
+>   	.driver = {
+> @@ -156,3 +158,12 @@ static int __init k3_chipinfo_init(void)
+>   	return platform_driver_register(&k3_chipinfo_driver);
+>   }
+>   subsys_initcall(k3_chipinfo_init);
+
+subsys_initcall for a module?
+
+> +
+> +static void __exit k3_chipinfo_exit(void)
+> +{
+> +	platform_driver_unregister(&k3_chipinfo_driver);
+> +}
+> +module_exit(k3_chipinfo_exit);
+> +
+> +MODULE_DESCRIPTION("TI K3 SoC info driver");
+> +MODULE_LICENSE("GPL");
+
+-- 
+Péter

@@ -2,235 +2,147 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21508638E63
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Nov 2022 17:42:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D593638E95
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Nov 2022 17:51:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbiKYQmh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 25 Nov 2022 11:42:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51024 "EHLO
+        id S229493AbiKYQvB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 25 Nov 2022 11:51:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229493AbiKYQmh (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Nov 2022 11:42:37 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A93A1FAF2;
-        Fri, 25 Nov 2022 08:42:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669394555; x=1700930555;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=uaIR2GsKLN1NRo+OR0WwpU1aoK3qR6tAfa5WtUuayQ0=;
-  b=FPf/mQVYh2POpQlNPrjhAdkZ+gmSy/sCR13wXRzcIaBlVnjioZ3eFhRZ
-   N6vGOQNRbgKaDHj91iHRyc221xqMDwTS26a8TjCBPHYk7l/xyJJ4e9+Np
-   IMOz5dL/cS3inyVmAA52YkaUMPo9RRC5pN/8Uiifju9bds0owsiA8ckUh
-   c47KRQOKTFXQTyh9KBa44GYpkrt3fxeISap2XhqiQAmVRzouNveofW9ax
-   mstEtnCSHNUNpeY9CyPoI2KddpPSqeUqSIc+LYPURwJ3LsXJhWmsImLKx
-   XvcI+/bNunSJbXdas4b7VU6ot/0s+rM0YAJ4dpS70PWm5xBVg8Nw7elN/
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10542"; a="313208482"
-X-IronPort-AV: E=Sophos;i="5.96,194,1665471600"; 
-   d="scan'208";a="313208482"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2022 08:42:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10542"; a="784985763"
-X-IronPort-AV: E=Sophos;i="5.96,194,1665471600"; 
-   d="scan'208";a="784985763"
-Received: from lkp-server01.sh.intel.com (HELO 64a2d449c951) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Nov 2022 08:42:32 -0800
-Received: from kbuild by 64a2d449c951 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oybmZ-0005LF-2F;
-        Fri, 25 Nov 2022 16:42:31 +0000
-Date:   Sat, 26 Nov 2022 00:41:49 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     nouveau@lists.freedesktop.org, netfilter-devel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, dmaengine@vger.kernel.org,
-        coreteam@netfilter.org, amd-gfx@lists.freedesktop.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- 9e46a79967326efb03c481ddfd58902475bd920d
-Message-ID: <6380f04d.iMaDU3pl/WDyxgxB%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229850AbiKYQuo (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Nov 2022 11:50:44 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FD2421807;
+        Fri, 25 Nov 2022 08:50:26 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id l22-20020a17090a3f1600b00212fbbcfb78so8190283pjc.3;
+        Fri, 25 Nov 2022 08:50:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KfwYrXaErbUOWjxPsFIISqMfJIaUdzQIGOvRpzN2nKo=;
+        b=fdDp0H4hxYRT1ClITZUPzA9Z0MOpbSjNBJUlpGkKulzi2+EPfVXSv5rRC3SI1rSOeC
+         idMuUqX6c8wTWmFGPKBF0Gsw+uHdje5XddS8Mmn7IxIIgx8w5Gum7VQIH/EciGDgr1DM
+         wcsLhr2PHKIeuJ4HisY6pBZlCXcbJ0rz418q4AGSGTgT8rGYvIDf9CrRnZ5eH2UycxJs
+         qaf4znjab6StYPkBciCM90APwXvrymrsd9thMO3iSKrHC/9c7gkM5JnAX3Rif3ltIc+Q
+         r/7tgShFpCFubWcpPOSkHwOKh9lUQV9+OKiwzLTvquKMnra9H9xTtHwz351n1G8IMn9P
+         RMsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KfwYrXaErbUOWjxPsFIISqMfJIaUdzQIGOvRpzN2nKo=;
+        b=zuNcyW9nQN9KwJjE7bIknU9DYpoQCQsb7mQONUrjjb3FivqeAIRZEGjUbTePv+Veuh
+         /BKWHy7O66v6M8Dm8P5CdkuhLF6qhqgzx1ouJJsOrtlI8q0343PlRBQ/CmnalRGBKa2t
+         LAE6oCgXeJYF4JiURd1GfXjISOHmda6LwD/myCIj87jeGsridfevMjK2+yAN9cxbOYzm
+         gGt+Dho68nnNrg9FHX0IzMs0PmSP2qkujoTZauSpigMSYtPi7e1gu4mSm1isD+VXCuz6
+         A25+RAY5NfUPpUjfS5WoGBbdqVp/Fm1N5eeE+r/yUw3PpVTx5ylszZzDcuPY4wlzmwsy
+         OyJw==
+X-Gm-Message-State: ANoB5pk+VdawEZofoY47vZbvbJgIm4BVUOls5j/EX8+bjFwUnKhct7IQ
+        49EJziT+7kNFoaYEOazxUd0sHxiaBf2+QA==
+X-Google-Smtp-Source: AA0mqf591/LJdyKcke50EoqPhdMIyJAjyg8qfuWkR0iQ/7OJ+TNiOSQ+wOnprJ1xunlHvIBDl56Mrw==
+X-Received: by 2002:a17:902:dacd:b0:189:6889:c309 with SMTP id q13-20020a170902dacd00b001896889c309mr3481534plx.3.1669395025398;
+        Fri, 25 Nov 2022 08:50:25 -0800 (PST)
+Received: from localhost ([2406:7400:61:64d5:6ced:a13c:ba7b:305b])
+        by smtp.gmail.com with ESMTPSA id x80-20020a633153000000b004308422060csm2805793pgx.69.2022.11.25.08.50.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Nov 2022 08:50:24 -0800 (PST)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Fri, 25 Nov 2022 22:20:18 +0530
+Message-Id: <COLJ587CFY67.2E0WQZD08PLBY@skynet-linux>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <~postmarketos/upstreaming@lists.sr.ht>
+Subject: Re: [PATCH v2 0/3] dmaengine: Add support for immediate commands
+From:   "Sireesh Kodali" <sireeshkodali1@gmail.com>
+To:     "Vinod Koul" <vkoul@kernel.org>
+X-Mailer: aerc 0.13.0
+References: <20221027051429.46593-1-sireeshkodali1@gmail.com>
+ <Y2UIS7P0alvqT4jn@matsya> <CO97J91UP8IF.23GNHUUM2KTVH@skynet-linux>
+ <Y3FudBqc1vQ8fEgU@matsya>
+In-Reply-To: <Y3FudBqc1vQ8fEgU@matsya>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 9e46a79967326efb03c481ddfd58902475bd920d  Add linux-next specific files for 20221125
+On Mon Nov 14, 2022 at 3:53 AM IST, Vinod Koul wrote:
+> On 11-11-22, 10:42, Sireesh Kodali wrote:
+> > On Fri Nov 4, 2022 at 6:10 PM IST, Vinod Koul wrote:
+> > > On 27-10-22, 10:44, Sireesh Kodali wrote:
+> > > > The IPA v2.x block, found on some older Qualcomm SoCs, uses BAM DMA=
+ to
+> > > > send and receive packets from the AP. It also uses BAM to receive
+> > > > commands from the AP (and possibly the modem). These commands are
+> > > > encoded as "Immediate Commands". They vary from regular BAM DMA
+> > > > commands. Adding support for immediate commands is trivial, but req=
+uires
+> > > > also adding Immediate Commands to the dmaengine API, which is what =
+this
+> > > > patch series does.
+> > >
+> > > Can you explain a bit more. I understand you need "Immediate Commands=
+"
+> > > but am really reluctant to add another interface to support a specifi=
+c
+> > > use case
+> > >
+> >=20
+> > Apologies for the delayed response
+> >=20
+> > BAM supports both regular commands, and "immediate commands". Currently=
+,
+> > commands are used by the Qualcom NAND chip driver, while "immediate
+> > commands" are intended to be used by the (yet to be mainlined) IPA
+> > driver. From the BAM driver perspective, both immediate and regular
+> > commands are simply a matter of setting the appropriate flag in the
+> > descriptor. I don't have access to the documentation on BAM to know
+> > exactly how these two modes differ, however I do know they are not
+> > interchangable. If a different API is suggested, I can change the
+> > implementation as needed.
+>
+> Ok, can you please explain what is meant by 'regular' cmd and
+> 'immediate', lets see what is required here
 
-Error/Warning reports:
+Stephan pointed out the APQ8016E TRM has details on BAM. As I understand
+it, 'regular' commands are queued register read/writes for the
+peripheral. Immediate commands on the other hand seem to be interpreted
+by the peripheral's firmware, and don't involve any register
+writes/reads from BAM's perspective.
 
-https://lore.kernel.org/oe-kbuild-all/202211041320.coq8EELJ-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202211090634.RyFKK0WS-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202211242021.FDZRFNA8-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202211242120.MzZVGULn-lkp@intel.com
+This is what the TRM has to say:
 
-Error/Warning: (recently discovered and may have been fixed)
+> Immediate (IMM) (only for BAM-NDP): Allows the software to create
+> descriptors of type immediate, which does not generate any data
+> transmissions or registers configuration, it is simply supplied to the
+> peripheral, the peripheral then parses its fields (which are
+> irrelevant to the BAM). Only the flags of this descriptor are relevant
+> to the BAM, address and size are irrelevant, and BAM simply passes
+> them as is to the peripheral. This can be used for the software to
+> operate peripheral-specific operations within regular data operations.
+> Immediate descriptors are published on the sidebands as 1 byte size
+> descriptor, once BAM_NDP fetches an immediate descriptor, it publishes
+> all recently fetched descriptors including the immediate descriptor
+> with immediate indication, to inform the peripheral that the last
+> published descriptor was immediate descriptor.
 
-arch/arm/mach-s3c/devs.c:32:10: fatal error: linux/platform_data/dma-s3c24xx.h: No such file or directory
-arch/powerpc/kernel/kvm_emul.o: warning: objtool: kvm_template_end(): can't find starting instruction
-arch/powerpc/kernel/optprobes_head.o: warning: objtool: optprobe_template_end(): can't find starting instruction
-drivers/clk/clk.c:1022:5: error: redefinition of 'clk_prepare'
-drivers/clk/clk.c:1268:6: error: redefinition of 'clk_is_enabled_when_prepared'
-drivers/clk/clk.c:941:6: error: redefinition of 'clk_unprepare'
-drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc.c:4968: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
-drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link_dp.c:5075:24: warning: implicit conversion from 'enum <anonymous>' to 'enum dc_status' [-Wenum-conversion]
-drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dcn201/irq_service_dcn201.c:40:20: warning: no previous prototype for 'to_dal_irq_source_dcn201' [-Wmissing-prototypes]
-drivers/gpu/drm/nouveau/nvkm/engine/fifo/gf100.c:451:1: warning: no previous prototype for 'gf100_fifo_nonstall_block' [-Wmissing-prototypes]
-drivers/gpu/drm/nouveau/nvkm/engine/fifo/runl.c:34:1: warning: no previous prototype for 'nvkm_engn_cgrp_get' [-Wmissing-prototypes]
-drivers/gpu/drm/nouveau/nvkm/engine/gr/tu102.c:210:1: warning: no previous prototype for 'tu102_gr_load' [-Wmissing-prototypes]
-drivers/gpu/drm/nouveau/nvkm/nvfw/acr.c:49:1: warning: no previous prototype for 'wpr_generic_header_dump' [-Wmissing-prototypes]
-drivers/gpu/drm/nouveau/nvkm/subdev/acr/lsfw.c:221:21: warning: variable 'loc' set but not used [-Wunused-but-set-variable]
-net/netfilter/nf_conntrack_netlink.c:2674:6: warning: unused variable 'mark' [-Wunused-variable]
-vmlinux.o: warning: objtool: __btrfs_map_block+0x1d77: unreachable instruction
+> Command (CMD) (only for BAM-lite and BAM-NDP): Allows the software to
+> create descriptors of type command. Descriptors of type command do not
+> generate any data transmissions but configure registers in the
+> peripheral (write and read registers operations)
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
+Regards,
+Sireesh
+>
+> --=20
+> ~Vinod
 
-ERROR: modpost: "input_ff_create_memless" [drivers/hid/hid-axff.ko] undefined!
-ERROR: modpost: "input_ff_create_memless" [drivers/hid/hid-sjoy.ko] undefined!
-ERROR: modpost: "input_ff_create_memless" [drivers/input/misc/arizona-haptics.ko] undefined!
-ERROR: modpost: "input_ff_create_memless" [drivers/input/misc/drv2667.ko] undefined!
-drivers/dma/at_hdmac.c:1371 atc_prep_slave_sg() warn: possible memory leak of 'desc'
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:This-comment-starts-with-but-isn-t-a-kernel-doc-comment.-Refer-Documentation-doc-guide-kernel-doc.rst
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link_dp.c:warning:implicit-conversion-from-enum-anonymous-to-enum-dc_status
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-gf100_fifo_nonstall_block
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-nvkm_engn_cgrp_get
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-tu102_gr_load
-|   |-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-wpr_generic_header_dump
-|   `-- drivers-gpu-drm-nouveau-nvkm-subdev-acr-lsfw.c:warning:variable-loc-set-but-not-used
-|-- alpha-randconfig-r003-20221124
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:This-comment-starts-with-but-isn-t-a-kernel-doc-comment.-Refer-Documentation-doc-guide-kernel-doc.rst
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link_dp.c:warning:implicit-conversion-from-enum-anonymous-to-enum-dc_status
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|-- alpha-randconfig-r016-20221124
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-gf100_fifo_nonstall_block
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-nvkm_engn_cgrp_get
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-tu102_gr_load
-|   |-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-wpr_generic_header_dump
-|   `-- drivers-gpu-drm-nouveau-nvkm-subdev-acr-lsfw.c:warning:variable-loc-set-but-not-used
-|-- arc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:This-comment-starts-with-but-isn-t-a-kernel-doc-comment.-Refer-Documentation-doc-guide-kernel-doc.rst
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link_dp.c:warning:implicit-conversion-from-enum-anonymous-to-enum-dc_status
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-gf100_fifo_nonstall_block
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-nvkm_engn_cgrp_get
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-tu102_gr_load
-|   |-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-wpr_generic_header_dump
-|   `-- drivers-gpu-drm-nouveau-nvkm-subdev-acr-lsfw.c:warning:variable-loc-set-but-not-used
-|-- arm-allyesconfig
-|   |-- arch-arm-mach-s3c-devs.c:fatal-error:linux-platform_data-dma-s3c24xx.h:No-such-file-or-directory
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:This-comment-starts-with-but-isn-t-a-kernel-doc-comment.-Refer-Documentation-doc-guide-kernel-doc.rst
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link_dp.c:warning:implicit-conversion-from-enum-anonymous-to-enum-dc_status
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-gf100_fifo_nonstall_block
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-nvkm_engn_cgrp_get
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-tu102_gr_load
-|   |-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-wpr_generic_header_dump
-|   `-- drivers-gpu-drm-nouveau-nvkm-subdev-acr-lsfw.c:warning:variable-loc-set-but-not-used
-|-- arm-defconfig
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-gf100_fifo_nonstall_block
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-nvkm_engn_cgrp_get
-|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-tu102_gr_load
-|   |-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-wpr_generic_header_dump
-|   `-- drivers-gpu-drm-nouveau-nvkm-subdev-acr-lsfw.c:warning:variable-loc-set-but-not-used
-|-- arm-randconfig-m031-20221124
-|   `-- drivers-dma-at_hdmac.c-atc_prep_slave_sg()-warn:possible-memory-leak-of-desc
-|-- arm64-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:This-comment-starts-with-but-isn-t-a-kernel-doc-comment.-Refer-Documentation-doc-guide-kernel-doc.rst
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link_dp.c:warning:implicit-conversion-from-enum-anonymous-to-enum-dc_status
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
-clang_recent_errors
-|-- i386-randconfig-a013
-|   `-- net-netfilter-nf_conntrack_netlink.c:warning:unused-variable-mark
-`-- x86_64-randconfig-a016
-    `-- vmlinux.o:warning:objtool:handle_bug:call-to-kmsan_unpoison_entry_regs()-leaves-.noinstr.text-section
-
-elapsed time: 736m
-
-configs tested: 59
-configs skipped: 2
-
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-i386                                defconfig
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-arc                  randconfig-r043-20221124
-arc                                 defconfig
-x86_64                              defconfig
-s390                             allmodconfig
-alpha                               defconfig
-s390                                defconfig
-x86_64                           rhel-8.3-syz
-arm                                 defconfig
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-powerpc                           allnoconfig
-x86_64                        randconfig-a013
-powerpc                          allmodconfig
-x86_64                        randconfig-a011
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-arm                              allyesconfig
-x86_64                        randconfig-a006
-sh                               allmodconfig
-x86_64                        randconfig-a015
-m68k                             allmodconfig
-s390                             allyesconfig
-mips                             allyesconfig
-arc                              allyesconfig
-ia64                             allmodconfig
-arm64                            allyesconfig
-x86_64                               rhel-8.3
-i386                          randconfig-a014
-x86_64                           allyesconfig
-i386                          randconfig-a012
-i386                             allyesconfig
-alpha                            allyesconfig
-i386                          randconfig-a016
-m68k                             allyesconfig
-
-clang tested configs:
-riscv                randconfig-r042-20221124
-hexagon              randconfig-r041-20221124
-hexagon              randconfig-r045-20221124
-s390                 randconfig-r044-20221124
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-x86_64                        randconfig-a005
-x86_64                        randconfig-a012
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-x86_64                          rhel-8.3-rust
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp

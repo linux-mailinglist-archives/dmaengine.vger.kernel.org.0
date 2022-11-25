@@ -2,124 +2,214 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55512638593
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Nov 2022 09:52:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 996B0638D7B
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Nov 2022 16:32:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229645AbiKYIw5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 25 Nov 2022 03:52:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37428 "EHLO
+        id S229580AbiKYPcd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 25 Nov 2022 10:32:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229541AbiKYIwz (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Nov 2022 03:52:55 -0500
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1A261F2EC
-        for <dmaengine@vger.kernel.org>; Fri, 25 Nov 2022 00:52:54 -0800 (PST)
-Received: by mail-lf1-x130.google.com with SMTP id s8so5852307lfc.8
-        for <dmaengine@vger.kernel.org>; Fri, 25 Nov 2022 00:52:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2HOoSTuq4XmGVlN86fKAOkleTlxcvh89psdCg1LMg4A=;
-        b=xVID0zJQJp2QJkmW1SBo32zh8XH3xzkv8aG8WeB96TzyJI45ZN8ROc4yikA+WlfIQN
-         YyIXuVTCii3kyRz0MzUiFJkPtWFp3OSIoMcY+xY6bX/spvJbiHZjhTZ31geefUTYZaKu
-         9prcSyg5At5TqqA6ZDHeBr16S13v/28Jipge+rEqVwMZjZYR+DkWKtTc+lN7WNvNuivO
-         CSlDphVEdhoaW3N2m6mUg8mLGMCOIXVZ9w3N80Cwwctel85dPOwdX6IDsvlyvqOzmTuv
-         ROPNdfwidvk4XXRFmBoIWpbL5H3G6YblZCZiLyVWpytqTSCBPNLuZCjWrgGX05b6RKel
-         q5Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2HOoSTuq4XmGVlN86fKAOkleTlxcvh89psdCg1LMg4A=;
-        b=kx0oNVKI+AXHtCoL1XK6NoVcM3d1gEROPUNAGhueYYSfISfUG+SA5D7CJMIYO3gVyu
-         I6wfE9y3utABeS8mqIxf506JUy/bt9cFELYgBvSFli3ivsXgw6KML+QBHAC4U2Z4ljwW
-         SF0143u/sKs235fk5E9GIaM0GttD8ffVnjA07zn+Esjo0qpBoP4m5VoQtUGzyiIqLYCK
-         6xTe/KWvg5btmHJJrUezb9uK7CswZfjnTFmC5pi8jmkSBiosKtiX1J97QJUVwHXO8Vce
-         p3GL6PSUPVw3DbxixR1k4Gfz7heU3GwJoI21bHsEESk974RPn52jyO+ZN1SmFKAD9oXS
-         +KVg==
-X-Gm-Message-State: ANoB5pmZM5in+Z9I1V9UrbT9PEHQf2SDND2mAIlJjgxd4Z5FyvkMgXni
-        GNNNij9gYfJIPRlPuHBk/b84wQ==
-X-Google-Smtp-Source: AA0mqf5hdKwX1Jr/0xm1ekWXXWPH7sNyiUXb+ircocZn1YbXicl7J/ecMU+IwqFeLH/p3Uc4Rr4QNw==
-X-Received: by 2002:a19:381c:0:b0:4ae:d4db:9f89 with SMTP id f28-20020a19381c000000b004aed4db9f89mr8034920lfa.174.1669366373160;
-        Fri, 25 Nov 2022 00:52:53 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id a4-20020a2eb164000000b0026dd24dc4ecsm294276ljm.82.2022.11.25.00.52.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Nov 2022 00:52:52 -0800 (PST)
-Message-ID: <7f5cf3d8-4a3b-41eb-fed9-1ade4ba1e4e2@linaro.org>
-Date:   Fri, 25 Nov 2022 09:52:51 +0100
+        with ESMTP id S229453AbiKYPcc (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Nov 2022 10:32:32 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E16582DCE;
+        Fri, 25 Nov 2022 07:32:30 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 271CE2B;
+        Fri, 25 Nov 2022 07:32:37 -0800 (PST)
+Received: from [10.57.71.118] (unknown [10.57.71.118])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03DB13F587;
+        Fri, 25 Nov 2022 07:32:27 -0800 (PST)
+Message-ID: <8b7ce195-27b7-a27f-bf4e-fd5f20f2a83b@arm.com>
+Date:   Fri, 25 Nov 2022 15:32:23 +0000
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
  Thunderbird/102.5.0
-Subject: Re: [PATCH] ARM: s3c: Fix a build error after the s3c24xx dma driver
- was removed
-Content-Language: en-US
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     Arnd Bergmann <arnd@kernel.org>, kernel@pengutronix.de,
-        linux-samsung-soc@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>,
-        linux-kernel@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        dmaengine@vger.kernel.org, Simtec Linux Team <linux@simtec.co.uk>,
-        linux-next@vger.kernel.org
-References: <20221021203329.4143397-14-arnd@kernel.org>
- <20221118215401.505480-1-u.kleine-koenig@pengutronix.de>
- <f0425349-d965-0a40-0672-27dfbe45eb44@linaro.org>
- <b759a3e7-7a45-3dc9-14ba-8b01da798f10@linaro.org>
- <20221125085117.23p7yv6wgo6b5l3v@pengutronix.de>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221125085117.23p7yv6wgo6b5l3v@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v6 22/24] dmaengine: dw-edma: Bypass dma-ranges mapping
+ for the local setup
+Content-Language: en-GB
+To:     Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        caihuoqing <caihuoqing@baidu.com>, linux-pci@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221107210438.1515-1-Sergey.Semin@baikalelectronics.ru>
+ <20221107210438.1515-23-Sergey.Semin@baikalelectronics.ru>
+ <20221107211134.wxaqi2sew6aejxne@mobilestation>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20221107211134.wxaqi2sew6aejxne@mobilestation>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 25/11/2022 09:51, Uwe Kleine-König wrote:
-> Hello,
+On 2022-11-07 21:11, Serge Semin wrote:
+> On Tue, Nov 08, 2022 at 12:04:36AM +0300, Serge Semin wrote:
+>> DW eDMA doesn't perform any translation of the traffic generated on the
+>> CPU/Application side. It just generates read/write AXI-bus requests with
+>> the specified addresses. But in case if the dma-ranges DT-property is
+>> specified for a platform device node, Linux will use it to create a
+>> mapping the PCIe-bus regions into the CPU memory ranges. This isn't what
+>> we want for the eDMA embedded into the locally accessed DW PCIe Root Port
+>> and End-point. In order to work that around let's set the chan_dma_dev
+>> flag for each DW eDMA channel thus forcing the client drivers to getting a
+>> custom dma-ranges-less parental device for the mappings.
+>>
+>> Note it will only work for the client drivers using the
+>> dmaengine_get_dma_device() method to get the parental DMA device.
 > 
-> On Sun, Nov 20, 2022 at 12:22:31PM +0100, Krzysztof Kozlowski wrote:
->> On 20/11/2022 11:31, Krzysztof Kozlowski wrote:
->>> On 18/11/2022 22:54, Uwe Kleine-König wrote:
->>>> The linux/platform_data/dma-s3c24xx.h header file was removed. It didn't
->>>> declare or define any symbol needed in devs.c though, so the #include
->>>> can just be dropped.
->>>>
->>>> Fixes: cccc46ae3623 ("dmaengine: remove s3c24xx driver")
->>>> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
->>>> ---
->>>
->>> The file was not removed... or it should not have been yet. The s3c24xx
->>> dma driver removal should be part of Arnd series taken via SoC ARM.
-> 
-> The patch enters next with the merge of
-> 
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
-> 
-> Ah, the patch that became cccc46ae3623 (i.e. patch #14) is part of a
-> bigger series. Its patch #1 removes s3c24xx.c (which you pointed out to be still
-> broken) and patch #2 includes the change I suggested here.
-> 
->> I think that commit should be just dropped instead.
-> 
-> +1
-> 
-> BTW, cccc46ae3623 is included in next since next-20221107 and breaks
-> (at least) arm/s3c2410_defconfig. So I would consider reverting
-> cccc46ae3623 a fix. (Added linux-next to Cc:)
+> @Robin, we particularly need you opinion on this patch. I did as you
+> said: call *_dma_configure() method to initialize the child device and
+> set the DMA-mask here instead of the platform driver.
 
-Yes. The build failure of next was reported already by kernel test robot.
+Apologies, I've been busy and this series got buried in my inbox before 
+I'd clocked it as something I was supposed to be looking at.
 
-Vinod, can we drop this patch?
+> @Vinoud, @Manivannan I had to drop your tags from this patch since its
+> content had been significantly changed.
+> 
+> -Sergey
+> 
+>>
+>> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+>>
+>> ---
+>>
+>> Changelog v2:
+>> - Fix the comment a bit to being clearer. (@Manivannan)
+>>
+>> Changelog v3:
+>> - Conditionally set dchan->dev->device.dma_coherent field since it can
+>>    be missing on some platforms. (@Manivannan)
+>> - Remove Manivannan' rb and tb tags since the patch content has been
+>>    changed.
+>>
+>> Changelog v6:
+>> - Directly call *_dma_configure() method on the child device used for
+>>    the DMA buffers mapping. (@Robin)
+>> - Explicitly set the DMA-mask of the child device in the channel
+>>    allocation proecedure. (@Robin)
+>> - Drop @Manivannan and @Vinod rb- and ab-tags due to significant patch
+>>    content change.
+>> ---
+>>   drivers/dma/dw-edma/dw-edma-core.c | 44 ++++++++++++++++++++++++++++++
+>>   1 file changed, 44 insertions(+)
+>>
+>> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+>> index e3671bfbe186..846518509753 100644
+>> --- a/drivers/dma/dw-edma/dw-edma-core.c
+>> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+>> @@ -6,9 +6,11 @@
+>>    * Author: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>>    */
+>>   
+>> +#include <linux/acpi.h>
+>>   #include <linux/module.h>
+>>   #include <linux/device.h>
+>>   #include <linux/kernel.h>
+>> +#include <linux/of_device.h>
+>>   #include <linux/dmaengine.h>
+>>   #include <linux/err.h>
+>>   #include <linux/interrupt.h>
+>> @@ -711,10 +713,52 @@ static irqreturn_t dw_edma_interrupt_common(int irq, void *data)
+>>   static int dw_edma_alloc_chan_resources(struct dma_chan *dchan)
+>>   {
+>>   	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
+>> +	struct device *dev = chan->dw->chip->dev;
+>> +	int ret;
+>>   
+>>   	if (chan->status != EDMA_ST_IDLE)
+>>   		return -EBUSY;
+>>   
+>> +	/* Bypass the dma-ranges based memory regions mapping for the eDMA
+>> +	 * controlled from the CPU/Application side since in that case
+>> +	 * the local memory address is left untranslated.
+>> +	 */
+>> +	if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
+>> +		ret = dma_coerce_mask_and_coherent(&dchan->dev->device,
+>> +						   DMA_BIT_MASK(64));
+>> +		if (ret) {
 
-Best regards,
-Krzysztof
+Setting a 64-bit mask should never fail, especially on any platform that 
+will actually run this code.
 
+>> +			ret = dma_coerce_mask_and_coherent(&dchan->dev->device,
+>> +							   DMA_BIT_MASK(32));
+>> +			if (ret)
+>> +				return ret;
+>> +		}
+>> +
+>> +		if (dev_of_node(dev)) {
+>> +			struct device_node *node = dev_of_node(dev);
+>> +
+>> +			ret = of_dma_configure(&dchan->dev->device, node, true);
+>> +		} else if (has_acpi_companion(dev)) {
+
+Can this can ever happen? AFAICS there's no ACPI binding to match and 
+probe the DWC driver, at best it could only probe as a standard PNP0A08 
+host bridge which wouldn't know anything about eDMA anyway.
+
+>> +			struct acpi_device *adev = to_acpi_device_node(dev->fwnode);
+>> +
+>> +			ret = acpi_dma_configure(&dchan->dev->device,
+>> +						 acpi_get_dma_attr(adev));
+>> +		} else {
+>> +			ret = -EINVAL;
+>> +		}
+>> +
+>> +		if (ret)
+>> +			return ret;
+>> +
+>> +		if (dchan->dev->device.dma_range_map) {
+>> +			kfree(dchan->dev->device.dma_range_map);
+>> +			dchan->dev->device.dma_range_map = NULL;
+>> +		}
+
+Ugh, I guess this is still here because now you're passing the channel 
+device to of_dma_configure() such that it looks like a PCI child :(
+
+Can we just set "chan->dev->device.of_node = dev->of_node;" beforehand 
+so it works as expected (with f1ad5338a4d5 in place) and we don't need 
+to be messing with the dma_range_map details at all? Note that that 
+isn't as hacky as it might sound - it's a relatively well-established 
+practice in places like I2C and SPI, and in this case it seems perfectly 
+appropriate semantically as well.
+
+(And there should be no need to bother with of_node refcounting, since 
+the lifetime of the eDMA driver is bounded by the lifetime of the PCIe 
+driver, thus the lifetime of the DMA channel devices is bounded by the 
+lifetime of the PCIe platform device, which already holds a reference 
+from of_device_alloc().)
+
+Thanks,
+Robin.
+
+>> +
+>> +		dchan->dev->chan_dma_dev = true;
+>> +	} else {
+>> +		dchan->dev->chan_dma_dev = false;
+>> +	}
+>> +
+>>   	return 0;
+>>   }
+>>   
+>> -- 
+>> 2.38.0
+>>
+>>

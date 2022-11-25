@@ -2,214 +2,235 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 996B0638D7B
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Nov 2022 16:32:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 21508638E63
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Nov 2022 17:42:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229580AbiKYPcd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 25 Nov 2022 10:32:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53590 "EHLO
+        id S229618AbiKYQmh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 25 Nov 2022 11:42:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiKYPcc (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Nov 2022 10:32:32 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E16582DCE;
-        Fri, 25 Nov 2022 07:32:30 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 271CE2B;
-        Fri, 25 Nov 2022 07:32:37 -0800 (PST)
-Received: from [10.57.71.118] (unknown [10.57.71.118])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03DB13F587;
-        Fri, 25 Nov 2022 07:32:27 -0800 (PST)
-Message-ID: <8b7ce195-27b7-a27f-bf4e-fd5f20f2a83b@arm.com>
-Date:   Fri, 25 Nov 2022 15:32:23 +0000
+        with ESMTP id S229493AbiKYQmh (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Nov 2022 11:42:37 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A93A1FAF2;
+        Fri, 25 Nov 2022 08:42:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669394555; x=1700930555;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uaIR2GsKLN1NRo+OR0WwpU1aoK3qR6tAfa5WtUuayQ0=;
+  b=FPf/mQVYh2POpQlNPrjhAdkZ+gmSy/sCR13wXRzcIaBlVnjioZ3eFhRZ
+   N6vGOQNRbgKaDHj91iHRyc221xqMDwTS26a8TjCBPHYk7l/xyJJ4e9+Np
+   IMOz5dL/cS3inyVmAA52YkaUMPo9RRC5pN/8Uiifju9bds0owsiA8ckUh
+   c47KRQOKTFXQTyh9KBa44GYpkrt3fxeISap2XhqiQAmVRzouNveofW9ax
+   mstEtnCSHNUNpeY9CyPoI2KddpPSqeUqSIc+LYPURwJ3LsXJhWmsImLKx
+   XvcI+/bNunSJbXdas4b7VU6ot/0s+rM0YAJ4dpS70PWm5xBVg8Nw7elN/
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10542"; a="313208482"
+X-IronPort-AV: E=Sophos;i="5.96,194,1665471600"; 
+   d="scan'208";a="313208482"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2022 08:42:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10542"; a="784985763"
+X-IronPort-AV: E=Sophos;i="5.96,194,1665471600"; 
+   d="scan'208";a="784985763"
+Received: from lkp-server01.sh.intel.com (HELO 64a2d449c951) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Nov 2022 08:42:32 -0800
+Received: from kbuild by 64a2d449c951 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oybmZ-0005LF-2F;
+        Fri, 25 Nov 2022 16:42:31 +0000
+Date:   Sat, 26 Nov 2022 00:41:49 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     nouveau@lists.freedesktop.org, netfilter-devel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, dmaengine@vger.kernel.org,
+        coreteam@netfilter.org, amd-gfx@lists.freedesktop.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ 9e46a79967326efb03c481ddfd58902475bd920d
+Message-ID: <6380f04d.iMaDU3pl/WDyxgxB%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v6 22/24] dmaengine: dw-edma: Bypass dma-ranges mapping
- for the local setup
-Content-Language: en-GB
-To:     Serge Semin <fancer.lancer@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        caihuoqing <caihuoqing@baidu.com>, linux-pci@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221107210438.1515-1-Sergey.Semin@baikalelectronics.ru>
- <20221107210438.1515-23-Sergey.Semin@baikalelectronics.ru>
- <20221107211134.wxaqi2sew6aejxne@mobilestation>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20221107211134.wxaqi2sew6aejxne@mobilestation>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 2022-11-07 21:11, Serge Semin wrote:
-> On Tue, Nov 08, 2022 at 12:04:36AM +0300, Serge Semin wrote:
->> DW eDMA doesn't perform any translation of the traffic generated on the
->> CPU/Application side. It just generates read/write AXI-bus requests with
->> the specified addresses. But in case if the dma-ranges DT-property is
->> specified for a platform device node, Linux will use it to create a
->> mapping the PCIe-bus regions into the CPU memory ranges. This isn't what
->> we want for the eDMA embedded into the locally accessed DW PCIe Root Port
->> and End-point. In order to work that around let's set the chan_dma_dev
->> flag for each DW eDMA channel thus forcing the client drivers to getting a
->> custom dma-ranges-less parental device for the mappings.
->>
->> Note it will only work for the client drivers using the
->> dmaengine_get_dma_device() method to get the parental DMA device.
-> 
-> @Robin, we particularly need you opinion on this patch. I did as you
-> said: call *_dma_configure() method to initialize the child device and
-> set the DMA-mask here instead of the platform driver.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 9e46a79967326efb03c481ddfd58902475bd920d  Add linux-next specific files for 20221125
 
-Apologies, I've been busy and this series got buried in my inbox before 
-I'd clocked it as something I was supposed to be looking at.
+Error/Warning reports:
 
-> @Vinoud, @Manivannan I had to drop your tags from this patch since its
-> content had been significantly changed.
-> 
-> -Sergey
-> 
->>
->> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
->>
->> ---
->>
->> Changelog v2:
->> - Fix the comment a bit to being clearer. (@Manivannan)
->>
->> Changelog v3:
->> - Conditionally set dchan->dev->device.dma_coherent field since it can
->>    be missing on some platforms. (@Manivannan)
->> - Remove Manivannan' rb and tb tags since the patch content has been
->>    changed.
->>
->> Changelog v6:
->> - Directly call *_dma_configure() method on the child device used for
->>    the DMA buffers mapping. (@Robin)
->> - Explicitly set the DMA-mask of the child device in the channel
->>    allocation proecedure. (@Robin)
->> - Drop @Manivannan and @Vinod rb- and ab-tags due to significant patch
->>    content change.
->> ---
->>   drivers/dma/dw-edma/dw-edma-core.c | 44 ++++++++++++++++++++++++++++++
->>   1 file changed, 44 insertions(+)
->>
->> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
->> index e3671bfbe186..846518509753 100644
->> --- a/drivers/dma/dw-edma/dw-edma-core.c
->> +++ b/drivers/dma/dw-edma/dw-edma-core.c
->> @@ -6,9 +6,11 @@
->>    * Author: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->>    */
->>   
->> +#include <linux/acpi.h>
->>   #include <linux/module.h>
->>   #include <linux/device.h>
->>   #include <linux/kernel.h>
->> +#include <linux/of_device.h>
->>   #include <linux/dmaengine.h>
->>   #include <linux/err.h>
->>   #include <linux/interrupt.h>
->> @@ -711,10 +713,52 @@ static irqreturn_t dw_edma_interrupt_common(int irq, void *data)
->>   static int dw_edma_alloc_chan_resources(struct dma_chan *dchan)
->>   {
->>   	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
->> +	struct device *dev = chan->dw->chip->dev;
->> +	int ret;
->>   
->>   	if (chan->status != EDMA_ST_IDLE)
->>   		return -EBUSY;
->>   
->> +	/* Bypass the dma-ranges based memory regions mapping for the eDMA
->> +	 * controlled from the CPU/Application side since in that case
->> +	 * the local memory address is left untranslated.
->> +	 */
->> +	if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
->> +		ret = dma_coerce_mask_and_coherent(&dchan->dev->device,
->> +						   DMA_BIT_MASK(64));
->> +		if (ret) {
+https://lore.kernel.org/oe-kbuild-all/202211041320.coq8EELJ-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202211090634.RyFKK0WS-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202211242021.FDZRFNA8-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202211242120.MzZVGULn-lkp@intel.com
 
-Setting a 64-bit mask should never fail, especially on any platform that 
-will actually run this code.
+Error/Warning: (recently discovered and may have been fixed)
 
->> +			ret = dma_coerce_mask_and_coherent(&dchan->dev->device,
->> +							   DMA_BIT_MASK(32));
->> +			if (ret)
->> +				return ret;
->> +		}
->> +
->> +		if (dev_of_node(dev)) {
->> +			struct device_node *node = dev_of_node(dev);
->> +
->> +			ret = of_dma_configure(&dchan->dev->device, node, true);
->> +		} else if (has_acpi_companion(dev)) {
+arch/arm/mach-s3c/devs.c:32:10: fatal error: linux/platform_data/dma-s3c24xx.h: No such file or directory
+arch/powerpc/kernel/kvm_emul.o: warning: objtool: kvm_template_end(): can't find starting instruction
+arch/powerpc/kernel/optprobes_head.o: warning: objtool: optprobe_template_end(): can't find starting instruction
+drivers/clk/clk.c:1022:5: error: redefinition of 'clk_prepare'
+drivers/clk/clk.c:1268:6: error: redefinition of 'clk_is_enabled_when_prepared'
+drivers/clk/clk.c:941:6: error: redefinition of 'clk_unprepare'
+drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc.c:4968: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link_dp.c:5075:24: warning: implicit conversion from 'enum <anonymous>' to 'enum dc_status' [-Wenum-conversion]
+drivers/gpu/drm/amd/amdgpu/../display/dc/irq/dcn201/irq_service_dcn201.c:40:20: warning: no previous prototype for 'to_dal_irq_source_dcn201' [-Wmissing-prototypes]
+drivers/gpu/drm/nouveau/nvkm/engine/fifo/gf100.c:451:1: warning: no previous prototype for 'gf100_fifo_nonstall_block' [-Wmissing-prototypes]
+drivers/gpu/drm/nouveau/nvkm/engine/fifo/runl.c:34:1: warning: no previous prototype for 'nvkm_engn_cgrp_get' [-Wmissing-prototypes]
+drivers/gpu/drm/nouveau/nvkm/engine/gr/tu102.c:210:1: warning: no previous prototype for 'tu102_gr_load' [-Wmissing-prototypes]
+drivers/gpu/drm/nouveau/nvkm/nvfw/acr.c:49:1: warning: no previous prototype for 'wpr_generic_header_dump' [-Wmissing-prototypes]
+drivers/gpu/drm/nouveau/nvkm/subdev/acr/lsfw.c:221:21: warning: variable 'loc' set but not used [-Wunused-but-set-variable]
+net/netfilter/nf_conntrack_netlink.c:2674:6: warning: unused variable 'mark' [-Wunused-variable]
+vmlinux.o: warning: objtool: __btrfs_map_block+0x1d77: unreachable instruction
 
-Can this can ever happen? AFAICS there's no ACPI binding to match and 
-probe the DWC driver, at best it could only probe as a standard PNP0A08 
-host bridge which wouldn't know anything about eDMA anyway.
+Unverified Error/Warning (likely false positive, please contact us if interested):
 
->> +			struct acpi_device *adev = to_acpi_device_node(dev->fwnode);
->> +
->> +			ret = acpi_dma_configure(&dchan->dev->device,
->> +						 acpi_get_dma_attr(adev));
->> +		} else {
->> +			ret = -EINVAL;
->> +		}
->> +
->> +		if (ret)
->> +			return ret;
->> +
->> +		if (dchan->dev->device.dma_range_map) {
->> +			kfree(dchan->dev->device.dma_range_map);
->> +			dchan->dev->device.dma_range_map = NULL;
->> +		}
+ERROR: modpost: "input_ff_create_memless" [drivers/hid/hid-axff.ko] undefined!
+ERROR: modpost: "input_ff_create_memless" [drivers/hid/hid-sjoy.ko] undefined!
+ERROR: modpost: "input_ff_create_memless" [drivers/input/misc/arizona-haptics.ko] undefined!
+ERROR: modpost: "input_ff_create_memless" [drivers/input/misc/drv2667.ko] undefined!
+drivers/dma/at_hdmac.c:1371 atc_prep_slave_sg() warn: possible memory leak of 'desc'
 
-Ugh, I guess this is still here because now you're passing the channel 
-device to of_dma_configure() such that it looks like a PCI child :(
+Error/Warning ids grouped by kconfigs:
 
-Can we just set "chan->dev->device.of_node = dev->of_node;" beforehand 
-so it works as expected (with f1ad5338a4d5 in place) and we don't need 
-to be messing with the dma_range_map details at all? Note that that 
-isn't as hacky as it might sound - it's a relatively well-established 
-practice in places like I2C and SPI, and in this case it seems perfectly 
-appropriate semantically as well.
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:This-comment-starts-with-but-isn-t-a-kernel-doc-comment.-Refer-Documentation-doc-guide-kernel-doc.rst
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link_dp.c:warning:implicit-conversion-from-enum-anonymous-to-enum-dc_status
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-gf100_fifo_nonstall_block
+|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-nvkm_engn_cgrp_get
+|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-tu102_gr_load
+|   |-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-wpr_generic_header_dump
+|   `-- drivers-gpu-drm-nouveau-nvkm-subdev-acr-lsfw.c:warning:variable-loc-set-but-not-used
+|-- alpha-randconfig-r003-20221124
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:This-comment-starts-with-but-isn-t-a-kernel-doc-comment.-Refer-Documentation-doc-guide-kernel-doc.rst
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link_dp.c:warning:implicit-conversion-from-enum-anonymous-to-enum-dc_status
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|-- alpha-randconfig-r016-20221124
+|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-gf100_fifo_nonstall_block
+|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-nvkm_engn_cgrp_get
+|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-tu102_gr_load
+|   |-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-wpr_generic_header_dump
+|   `-- drivers-gpu-drm-nouveau-nvkm-subdev-acr-lsfw.c:warning:variable-loc-set-but-not-used
+|-- arc-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:This-comment-starts-with-but-isn-t-a-kernel-doc-comment.-Refer-Documentation-doc-guide-kernel-doc.rst
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link_dp.c:warning:implicit-conversion-from-enum-anonymous-to-enum-dc_status
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-gf100_fifo_nonstall_block
+|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-nvkm_engn_cgrp_get
+|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-tu102_gr_load
+|   |-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-wpr_generic_header_dump
+|   `-- drivers-gpu-drm-nouveau-nvkm-subdev-acr-lsfw.c:warning:variable-loc-set-but-not-used
+|-- arm-allyesconfig
+|   |-- arch-arm-mach-s3c-devs.c:fatal-error:linux-platform_data-dma-s3c24xx.h:No-such-file-or-directory
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:This-comment-starts-with-but-isn-t-a-kernel-doc-comment.-Refer-Documentation-doc-guide-kernel-doc.rst
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link_dp.c:warning:implicit-conversion-from-enum-anonymous-to-enum-dc_status
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-gf100_fifo_nonstall_block
+|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-nvkm_engn_cgrp_get
+|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-tu102_gr_load
+|   |-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-wpr_generic_header_dump
+|   `-- drivers-gpu-drm-nouveau-nvkm-subdev-acr-lsfw.c:warning:variable-loc-set-but-not-used
+|-- arm-defconfig
+|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-gf100.c:warning:no-previous-prototype-for-gf100_fifo_nonstall_block
+|   |-- drivers-gpu-drm-nouveau-nvkm-engine-fifo-runl.c:warning:no-previous-prototype-for-nvkm_engn_cgrp_get
+|   |-- drivers-gpu-drm-nouveau-nvkm-engine-gr-tu102.c:warning:no-previous-prototype-for-tu102_gr_load
+|   |-- drivers-gpu-drm-nouveau-nvkm-nvfw-acr.c:warning:no-previous-prototype-for-wpr_generic_header_dump
+|   `-- drivers-gpu-drm-nouveau-nvkm-subdev-acr-lsfw.c:warning:variable-loc-set-but-not-used
+|-- arm-randconfig-m031-20221124
+|   `-- drivers-dma-at_hdmac.c-atc_prep_slave_sg()-warn:possible-memory-leak-of-desc
+|-- arm64-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:This-comment-starts-with-but-isn-t-a-kernel-doc-comment.-Refer-Documentation-doc-guide-kernel-doc.rst
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc_link_dp.c:warning:implicit-conversion-from-enum-anonymous-to-enum-dc_status
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-irq-dcn201-irq_service_dcn201.c:warning:no-previous-prototype-for-to_dal_irq_source_dcn201
+clang_recent_errors
+|-- i386-randconfig-a013
+|   `-- net-netfilter-nf_conntrack_netlink.c:warning:unused-variable-mark
+`-- x86_64-randconfig-a016
+    `-- vmlinux.o:warning:objtool:handle_bug:call-to-kmsan_unpoison_entry_regs()-leaves-.noinstr.text-section
 
-(And there should be no need to bother with of_node refcounting, since 
-the lifetime of the eDMA driver is bounded by the lifetime of the PCIe 
-driver, thus the lifetime of the DMA channel devices is bounded by the 
-lifetime of the PCIe platform device, which already holds a reference 
-from of_device_alloc().)
+elapsed time: 736m
 
-Thanks,
-Robin.
+configs tested: 59
+configs skipped: 2
 
->> +
->> +		dchan->dev->chan_dma_dev = true;
->> +	} else {
->> +		dchan->dev->chan_dma_dev = false;
->> +	}
->> +
->>   	return 0;
->>   }
->>   
->> -- 
->> 2.38.0
->>
->>
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+i386                                defconfig
+i386                          randconfig-a001
+i386                          randconfig-a003
+i386                          randconfig-a005
+arc                  randconfig-r043-20221124
+arc                                 defconfig
+x86_64                              defconfig
+s390                             allmodconfig
+alpha                               defconfig
+s390                                defconfig
+x86_64                           rhel-8.3-syz
+arm                                 defconfig
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+powerpc                           allnoconfig
+x86_64                        randconfig-a013
+powerpc                          allmodconfig
+x86_64                        randconfig-a011
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+arm                              allyesconfig
+x86_64                        randconfig-a006
+sh                               allmodconfig
+x86_64                        randconfig-a015
+m68k                             allmodconfig
+s390                             allyesconfig
+mips                             allyesconfig
+arc                              allyesconfig
+ia64                             allmodconfig
+arm64                            allyesconfig
+x86_64                               rhel-8.3
+i386                          randconfig-a014
+x86_64                           allyesconfig
+i386                          randconfig-a012
+i386                             allyesconfig
+alpha                            allyesconfig
+i386                          randconfig-a016
+m68k                             allyesconfig
+
+clang tested configs:
+riscv                randconfig-r042-20221124
+hexagon              randconfig-r041-20221124
+hexagon              randconfig-r045-20221124
+s390                 randconfig-r044-20221124
+i386                          randconfig-a002
+i386                          randconfig-a004
+i386                          randconfig-a006
+x86_64                        randconfig-a005
+x86_64                        randconfig-a012
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a013
+i386                          randconfig-a011
+i386                          randconfig-a015
+x86_64                          rhel-8.3-rust
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp

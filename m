@@ -2,72 +2,95 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D593638E95
-	for <lists+dmaengine@lfdr.de>; Fri, 25 Nov 2022 17:51:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CC286393B8
+	for <lists+dmaengine@lfdr.de>; Sat, 26 Nov 2022 04:28:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229493AbiKYQvB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 25 Nov 2022 11:51:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54876 "EHLO
+        id S230204AbiKZD2p (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 25 Nov 2022 22:28:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229850AbiKYQuo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Nov 2022 11:50:44 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FD2421807;
-        Fri, 25 Nov 2022 08:50:26 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id l22-20020a17090a3f1600b00212fbbcfb78so8190283pjc.3;
-        Fri, 25 Nov 2022 08:50:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KfwYrXaErbUOWjxPsFIISqMfJIaUdzQIGOvRpzN2nKo=;
-        b=fdDp0H4hxYRT1ClITZUPzA9Z0MOpbSjNBJUlpGkKulzi2+EPfVXSv5rRC3SI1rSOeC
-         idMuUqX6c8wTWmFGPKBF0Gsw+uHdje5XddS8Mmn7IxIIgx8w5Gum7VQIH/EciGDgr1DM
-         wcsLhr2PHKIeuJ4HisY6pBZlCXcbJ0rz418q4AGSGTgT8rGYvIDf9CrRnZ5eH2UycxJs
-         qaf4znjab6StYPkBciCM90APwXvrymrsd9thMO3iSKrHC/9c7gkM5JnAX3Rif3ltIc+Q
-         r/7tgShFpCFubWcpPOSkHwOKh9lUQV9+OKiwzLTvquKMnra9H9xTtHwz351n1G8IMn9P
-         RMsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KfwYrXaErbUOWjxPsFIISqMfJIaUdzQIGOvRpzN2nKo=;
-        b=zuNcyW9nQN9KwJjE7bIknU9DYpoQCQsb7mQONUrjjb3FivqeAIRZEGjUbTePv+Veuh
-         /BKWHy7O66v6M8Dm8P5CdkuhLF6qhqgzx1ouJJsOrtlI8q0343PlRBQ/CmnalRGBKa2t
-         LAE6oCgXeJYF4JiURd1GfXjISOHmda6LwD/myCIj87jeGsridfevMjK2+yAN9cxbOYzm
-         gGt+Dho68nnNrg9FHX0IzMs0PmSP2qkujoTZauSpigMSYtPi7e1gu4mSm1isD+VXCuz6
-         A25+RAY5NfUPpUjfS5WoGBbdqVp/Fm1N5eeE+r/yUw3PpVTx5ylszZzDcuPY4wlzmwsy
-         OyJw==
-X-Gm-Message-State: ANoB5pk+VdawEZofoY47vZbvbJgIm4BVUOls5j/EX8+bjFwUnKhct7IQ
-        49EJziT+7kNFoaYEOazxUd0sHxiaBf2+QA==
-X-Google-Smtp-Source: AA0mqf591/LJdyKcke50EoqPhdMIyJAjyg8qfuWkR0iQ/7OJ+TNiOSQ+wOnprJ1xunlHvIBDl56Mrw==
-X-Received: by 2002:a17:902:dacd:b0:189:6889:c309 with SMTP id q13-20020a170902dacd00b001896889c309mr3481534plx.3.1669395025398;
-        Fri, 25 Nov 2022 08:50:25 -0800 (PST)
-Received: from localhost ([2406:7400:61:64d5:6ced:a13c:ba7b:305b])
-        by smtp.gmail.com with ESMTPSA id x80-20020a633153000000b004308422060csm2805793pgx.69.2022.11.25.08.50.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Nov 2022 08:50:24 -0800 (PST)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 25 Nov 2022 22:20:18 +0530
-Message-Id: <COLJ587CFY67.2E0WQZD08PLBY@skynet-linux>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <~postmarketos/upstreaming@lists.sr.ht>
-Subject: Re: [PATCH v2 0/3] dmaengine: Add support for immediate commands
-From:   "Sireesh Kodali" <sireeshkodali1@gmail.com>
-To:     "Vinod Koul" <vkoul@kernel.org>
-X-Mailer: aerc 0.13.0
-References: <20221027051429.46593-1-sireeshkodali1@gmail.com>
- <Y2UIS7P0alvqT4jn@matsya> <CO97J91UP8IF.23GNHUUM2KTVH@skynet-linux>
- <Y3FudBqc1vQ8fEgU@matsya>
-In-Reply-To: <Y3FudBqc1vQ8fEgU@matsya>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        with ESMTP id S230304AbiKZD22 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Nov 2022 22:28:28 -0500
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2E0E1BE98;
+        Fri, 25 Nov 2022 19:28:24 -0800 (PST)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AQ2hbup007916;
+        Sat, 26 Nov 2022 03:27:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2022-7-12;
+ bh=AcagkFnJ+fxUlscIN6IjL6P7egIgluL1OZhulAL1UnQ=;
+ b=mvu81B1jAjb+iQ6MM92frRDUHEr4JjxmPPoaI8lGgelfK0tY26AeAGpXKYQqxl7PfakE
+ zKYR5gspEHq4K8A5lXxuzIhtLNaXvmIKO62/MRCp0/7BL781RtS2v7uCoevnZJ3y5Jpe
+ o4k15RYgVjtQOzJ7HMVMABblAwr0dtY49pEsscSVs8hehmj/twewXRy1+1LN1vLlT3G/
+ v2xYrPsJW6V6XrJm2hokCQMoNB7mRQcHFN2tzIe9dpmq/LftKP6ZeS9lIhBRARfqXgp+
+ Eaf1bj/wXzdFOlU5SlpQfuENIvXv9u+TNm6GxzDP01RMy7w2HAFdX8VSqM3T7Hplrxc0 Qw== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3m39k2g1ng-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 26 Nov 2022 03:27:47 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2AQ1XTWB007302;
+        Sat, 26 Nov 2022 03:27:47 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3m3988b812-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 26 Nov 2022 03:27:47 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2AQ3Rhsb028327;
+        Sat, 26 Nov 2022 03:27:46 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3m3988b7y9-8;
+        Sat, 26 Nov 2022 03:27:46 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, oss-drivers@corigine.com,
+        James Smart <james.smart@broadcom.com>,
+        Cornelia Huck <cohuck@redhat.com>, dmaengine@vger.kernel.org,
+        Paolo Abeni <pabeni@redhat.com>, Will Deacon <will@kernel.org>,
+        Lee Jones <lee@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Roy Pledge <Roy.Pledge@nxp.com>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>, iommu@lists.linux.dev,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        netdev@vger.kernel.org, kvm@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        linux-scsi@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
+        linux-ide@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [patch 00/10] genirq/msi: Treewide cleanup of pointless linux/msi.h includes
+Date:   Sat, 26 Nov 2022 03:27:39 +0000
+Message-Id: <166943312556.1684293.1625990735787388062.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20221113201935.776707081@linutronix.de>
+References: <20221113201935.776707081@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-26_02,2022-11-25_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 phishscore=0
+ mlxlogscore=825 mlxscore=0 adultscore=0 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
+ definitions=main-2211260024
+X-Proofpoint-GUID: oUxjHgTGr4WNozsr_LV_OOFyzCy5QslK
+X-Proofpoint-ORIG-GUID: oUxjHgTGr4WNozsr_LV_OOFyzCy5QslK
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,74 +98,21 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon Nov 14, 2022 at 3:53 AM IST, Vinod Koul wrote:
-> On 11-11-22, 10:42, Sireesh Kodali wrote:
-> > On Fri Nov 4, 2022 at 6:10 PM IST, Vinod Koul wrote:
-> > > On 27-10-22, 10:44, Sireesh Kodali wrote:
-> > > > The IPA v2.x block, found on some older Qualcomm SoCs, uses BAM DMA=
- to
-> > > > send and receive packets from the AP. It also uses BAM to receive
-> > > > commands from the AP (and possibly the modem). These commands are
-> > > > encoded as "Immediate Commands". They vary from regular BAM DMA
-> > > > commands. Adding support for immediate commands is trivial, but req=
-uires
-> > > > also adding Immediate Commands to the dmaengine API, which is what =
-this
-> > > > patch series does.
-> > >
-> > > Can you explain a bit more. I understand you need "Immediate Commands=
-"
-> > > but am really reluctant to add another interface to support a specifi=
-c
-> > > use case
-> > >
-> >=20
-> > Apologies for the delayed response
-> >=20
-> > BAM supports both regular commands, and "immediate commands". Currently=
-,
-> > commands are used by the Qualcom NAND chip driver, while "immediate
-> > commands" are intended to be used by the (yet to be mainlined) IPA
-> > driver. From the BAM driver perspective, both immediate and regular
-> > commands are simply a matter of setting the appropriate flag in the
-> > descriptor. I don't have access to the documentation on BAM to know
-> > exactly how these two modes differ, however I do know they are not
-> > interchangable. If a different API is suggested, I can change the
-> > implementation as needed.
->
-> Ok, can you please explain what is meant by 'regular' cmd and
-> 'immediate', lets see what is required here
+On Sun, 13 Nov 2022 21:33:54 +0100 (CET), Thomas Gleixner wrote:
 
-Stephan pointed out the APQ8016E TRM has details on BAM. As I understand
-it, 'regular' commands are queued register read/writes for the
-peripheral. Immediate commands on the other hand seem to be interpreted
-by the peripheral's firmware, and don't involve any register
-writes/reads from BAM's perspective.
+> While working on per device MSI domains I noticed that quite some files
+> include linux/msi.h just because.
+> 
+> The top level comment in the header file clearly says:
+> 
+>   Regular device drivers have no business with any of these functions....
+> 
+> [...]
 
-This is what the TRM has to say:
+Applied to 6.2/scsi-queue, thanks!
 
-> Immediate (IMM) (only for BAM-NDP): Allows the software to create
-> descriptors of type immediate, which does not generate any data
-> transmissions or registers configuration, it is simply supplied to the
-> peripheral, the peripheral then parses its fields (which are
-> irrelevant to the BAM). Only the flags of this descriptor are relevant
-> to the BAM, address and size are irrelevant, and BAM simply passes
-> them as is to the peripheral. This can be used for the software to
-> operate peripheral-specific operations within regular data operations.
-> Immediate descriptors are published on the sidebands as 1 byte size
-> descriptor, once BAM_NDP fetches an immediate descriptor, it publishes
-> all recently fetched descriptors including the immediate descriptor
-> with immediate indication, to inform the peripheral that the last
-> published descriptor was immediate descriptor.
+[03/10] scsi: lpfc: Remove linux/msi.h include
+        https://git.kernel.org/mkp/scsi/c/cdd9344e00b4
 
-> Command (CMD) (only for BAM-lite and BAM-NDP): Allows the software to
-> create descriptors of type command. Descriptors of type command do not
-> generate any data transmissions but configure registers in the
-> peripheral (write and read registers operations)
-
-Regards,
-Sireesh
->
-> --=20
-> ~Vinod
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering

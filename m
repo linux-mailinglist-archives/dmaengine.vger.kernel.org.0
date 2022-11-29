@@ -2,109 +2,69 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9302463C51C
-	for <lists+dmaengine@lfdr.de>; Tue, 29 Nov 2022 17:27:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A82E63C906
+	for <lists+dmaengine@lfdr.de>; Tue, 29 Nov 2022 21:13:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233767AbiK2Q1U (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 29 Nov 2022 11:27:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55564 "EHLO
+        id S237250AbiK2UNo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 29 Nov 2022 15:13:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235625AbiK2Q1R (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 29 Nov 2022 11:27:17 -0500
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8047C4C248;
-        Tue, 29 Nov 2022 08:27:16 -0800 (PST)
-Received: by mail-lf1-x134.google.com with SMTP id j16so22819917lfe.12;
-        Tue, 29 Nov 2022 08:27:16 -0800 (PST)
+        with ESMTP id S237243AbiK2UNn (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 29 Nov 2022 15:13:43 -0500
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66B032BB3A
+        for <dmaengine@vger.kernel.org>; Tue, 29 Nov 2022 12:13:42 -0800 (PST)
+Received: by mail-lj1-x244.google.com with SMTP id z4so18572717ljq.6
+        for <dmaengine@vger.kernel.org>; Tue, 29 Nov 2022 12:13:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KDMkrZFWLrSp+7LLIWWLkTwrJI1naRVEumr5IczeOuM=;
-        b=i/cWlAZEJsfRbb0Yosxun7toROgA/8k+rvCjdsiNrtyTCORTp4zP28z1iky4zZNfAT
-         EWlvl7LjYIPLa9Er/dTxYsN7eUuJC6dm1nWbqoOdqmHSkAFXTylR6+aeyN3ONrZDQuhQ
-         xIQf/iDvX+Lr6zuD2lftJWT40lDFj640ymKtQr4xAxzkuiKahYQOeqJboBSrLUksyWli
-         h29dlgqJLEVZ5wpLwvJLAAyIBIn9OXP09kfzVzA4+JwymiPdDxSly4Gi0bcqaEqW4mZ+
-         UH/zEYXt+Efnw/ukH80sLiKYXQg3HExIzq4uR8pE3PNsuuGPoJFsF/24Qv9DxEH66LVM
-         5U9A==
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
+        b=fM2wi5GCSslz9CIyZBqJ6Udlyv0ggnfAc0ToenEo3YH4B7+Tl74tXXdEb5EKWkn2Wu
+         DIs7Qd8CDoudOH9YwohFYngsDQ9eCPghIM38/LWagmk9cGphExczFuqtUy/bGB9d7Pqw
+         YVh9ccSRgw291h59omJ1P20R9/ybbwpZoN3qp0TugbORvlQPA/QDp8KlGHc7ZTTuKkcu
+         6WmDWiSHuUHNnpsDYR8ju/sHsfkUFY9wld5yIlzuFpBJnUYYNjp7/Qa+lrHFccgnfU5e
+         9nY+xCPnFS5/Yss+sn0ObgtuuAqpMKmiqDcPNqJ0d7KbTPqKIvWDl8Bil/6pXZIZrxTa
+         ADyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        h=to:subject:message-id:date:from:reply-to:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KDMkrZFWLrSp+7LLIWWLkTwrJI1naRVEumr5IczeOuM=;
-        b=grXiCsXerOjzWt0AJR+rVswNOv6avw3wMCDpw3sJuJME7iU26EBj1FKUtdNGlQw4q4
-         aS/mGSQkqH4S10qdUBnk9XnMwwIH66SJvbQ/79OcfJ8MauiV88u7a/TrEZNU5R0LhPWX
-         hi9uxjIX5/sDV+FSNr7C6s9hv+Nd631mmxhs5geMAQlAUJiaoKQYj5MYlYm8S8zLyYw/
-         WTv41BjuiOgHMgsjeuNrQa4C/mA5VMaU7MQ6yBejAhSy6WgMW5SBkyjYFtIMeNfDJsC8
-         ZqoMclAwP5S2LY+/+v20wsHrUElvvhWLoK6u+1zHCHp4P/NW+bkfoq3whrzjln8Z/bM5
-         5BOw==
-X-Gm-Message-State: ANoB5pkNbGTkk6WHSz5PKytil8WGviLVAX6LG+QgCJLV/aNQIFZv+nX0
-        hBAXCMRo6N5GWzO6y//7OZC29HWhAY0Mjw==
-X-Google-Smtp-Source: AA0mqf7n3rrKTo9grpzjUGyShBKFJXfD5LfP9vp77wPi/sSmEcuZHOrJ5KxI65xDEtUsDItXwUFo9Q==
-X-Received: by 2002:a05:6512:1042:b0:4a2:46f6:6cee with SMTP id c2-20020a056512104200b004a246f66ceemr15622282lfb.642.1669739234439;
-        Tue, 29 Nov 2022 08:27:14 -0800 (PST)
-Received: from ?IPV6:2001:999:230:8bc4:e9e4:a37:1c80:5708? ([2001:999:230:8bc4:e9e4:a37:1c80:5708])
-        by smtp.gmail.com with ESMTPSA id o16-20020a056512053000b004b1756a0ae9sm2263986lfc.55.2022.11.29.08.27.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Nov 2022 08:27:14 -0800 (PST)
-Message-ID: <f954e71b-043c-43bc-a692-530497de2d0b@gmail.com>
-Date:   Tue, 29 Nov 2022 18:28:31 +0200
+        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
+        b=wbwnXZff+0EBFDKZ++qU2wNAO3Eyn++E4Wq6OPhydoZ+5BRfZOkZglxH+IBVFZk+NE
+         M/hLequUzb8M1pwUz5PmTN3Y7hmy35Q8NCrSjRyz1DuWhn/k9Nc3MvM/4m39ZVdzrNZC
+         3++c4Z2xKCkV49Wrh1Idi92dj4pdhFEQvDoQhV705aoNAFuSKdHqh14/ayldosXTkqcX
+         4b/X6/wYS3IJ5z/4PCXjBokeoJYu3vIcHrGISl99IROJzoDKXO0MrnqxBtwk7g4ZYvN3
+         dvGrhWLUsS1lp33XhTM4/Od9Vhu5jdgd4qWyD+sWp1LrTj/Wb/VyGdqX5qAZX0ANptZq
+         LefA==
+X-Gm-Message-State: ANoB5pms8At+w1L+NzsS3M1bjoebzjhUc9nDX/fU5YTCrabGIFblYwKK
+        hlit9Piuse2+GLYmQvNHGujnGijw9204qKVo0VI=
+X-Google-Smtp-Source: AA0mqf4+F9TyDQP1Ce2PfnR/pYBFWTAEF62pD7GZYkg7CduLXEkkJypQXMVWDo+1vw39/WFBYPCVnCuXdFNJSBE+AXs=
+X-Received: by 2002:a2e:a543:0:b0:277:8f64:f9fa with SMTP id
+ e3-20020a2ea543000000b002778f64f9famr14243228ljn.282.1669752820449; Tue, 29
+ Nov 2022 12:13:40 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH] dmaengine: ti: k3-udma: drop loglevel for non-fatal probe
- deferral log
-Content-Language: en-US
-To:     Jayesh Choudhary <j-choudhary@ti.com>, vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221128101334.512816-1-j-choudhary@ti.com>
-From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <20221128101334.512816-1-j-choudhary@ti.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:6520:2542:b0:22c:9bbc:bff with HTTP; Tue, 29 Nov 2022
+ 12:13:39 -0800 (PST)
+Reply-To: mr.abraham022@gmail.com
+From:   "Mr.Abraham" <joykekeli2@gmail.com>
+Date:   Tue, 29 Nov 2022 20:13:39 +0000
+Message-ID: <CAOikvbtX13y9cXe+vd11-fxb5BMQHxP-R2ju-NE4AaEGAMxSuA@mail.gmail.com>
+Subject: hi
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 28/11/2022 12:13, Jayesh Choudhary wrote:
-> Change the log level from dev_err() to dev_dbg() for non-fatal probe
-> deferral log for getting MSI domain.
-> This makes the kernel log clean and we do not get recurring logs
-> stating: "Failed to get MSI domain".
-
-Or not print at all?
-
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-
-> 
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-> ---
->   drivers/dma/ti/k3-udma.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-> index ce8b80bb34d7..e540166cf4c7 100644
-> --- a/drivers/dma/ti/k3-udma.c
-> +++ b/drivers/dma/ti/k3-udma.c
-> @@ -5344,7 +5344,7 @@ static int udma_probe(struct platform_device *pdev)
->   	dev->msi.domain = of_msi_get_domain(dev, dev->of_node,
->   					    DOMAIN_BUS_TI_SCI_INTA_MSI);
->   	if (!dev->msi.domain) {
-> -		dev_err(dev, "Failed to get MSI domain\n");
-> +		dev_dbg(dev, "Failed to get MSI domain\n");
->   		return -EPROBE_DEFER;
->   	}
->   
-
--- 
-Péter
+My Greeting, Did you receive the letter i sent to you. Please answer me.
+Regard, Mr.Abraham

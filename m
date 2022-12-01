@@ -2,196 +2,283 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77DDB63E817
-	for <lists+dmaengine@lfdr.de>; Thu,  1 Dec 2022 04:01:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42D8C63EFEB
+	for <lists+dmaengine@lfdr.de>; Thu,  1 Dec 2022 12:52:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229569AbiLADBC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 30 Nov 2022 22:01:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55204 "EHLO
+        id S230145AbiLALwa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 1 Dec 2022 06:52:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229640AbiLADBB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 30 Nov 2022 22:01:01 -0500
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 478DE7B4F6
-        for <dmaengine@vger.kernel.org>; Wed, 30 Nov 2022 19:01:00 -0800 (PST)
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D2EE83F32E
-        for <dmaengine@vger.kernel.org>; Thu,  1 Dec 2022 03:00:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1669863657;
-        bh=KBEEiz1TwZZ9uiWteaos76O1CPVzORDpb4GxX5fxihg=;
-        h=From:To:Subject:Date:Message-Id:MIME-Version;
-        b=JD1uVAIfn53tavL45PndwHV1zKJLU3qD2mycucPdmBncrpdilSydNo+Ni4/eHB7CZ
-         j736dSidk3SHxv6rD5RUVebsh/gMMlnznRemnMj3uWXQT50fOzy6Qr8dqzWzwXC24l
-         fHz19Iwfm6qr+xpfxahN7TqQUheaJqTAad2v7J/lFCoYrTjKpOtaHW4xoY6ySPFiZX
-         cdiLvliUX8DYCSAM2zDIOkpCQ3BkxAQDNOa3Ap1KiAbCHBcwz4i4EkPq4DPW2LI/T/
-         7RqRyci2z4ZYIrbxWARW/+VxJwZv2aPfqdx8kgUOM2+mISVGDd7stlULktz0MHYd9S
-         WJja/tmfOc3AA==
-Received: by mail-pj1-f71.google.com with SMTP id pi2-20020a17090b1e4200b0021834843687so4424157pjb.0
-        for <dmaengine@vger.kernel.org>; Wed, 30 Nov 2022 19:00:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KBEEiz1TwZZ9uiWteaos76O1CPVzORDpb4GxX5fxihg=;
-        b=rQ8bfU4g+Sdmn93z/E7Embr8oQNF1C13NOrxPxj4ZkV23dqr6X2KE8pcStrouoC35V
-         Fvz/19fRWhdEUo8iYYgKswIxIKwWtwAlyRYgShxwXqX+0qsVtKRtY69sjQcK4glvC0bI
-         qZpM7dqKRmQq7VIgoaIUB56CBchPQxyNCJ56MPK5GHPNyNuItKu5IyIlBwTVByb4spKB
-         piIDF4I4OqAM4p69a+uGIc8v4rbYEP79rYagJUZcM4t1Z9VS7IRP0Q2VyrXmoWL3GTKJ
-         eSqlwW0YhmhgG/5dv5SFzqsUJ75hxZBe4OEPNLu8/GtCE+3CTX7eqBHeuiwyTdXtFN0B
-         JYqQ==
-X-Gm-Message-State: ANoB5pngx7e9w8zyyz+361DMphd/d5oi7KrHboRBECAxpbZJa/S9ezKX
-        H7mztPRnp84ErrmqhOt2dHG7zIUnliwPfv5wepzX7pHxDEiq6n/S9Lsqv/nKAVKEiZUUy/HziJ7
-        zRkI20v/CK9JM/UkoML94+i89pOcXmwJaENS3Bg==
-X-Received: by 2002:a17:90b:3608:b0:219:6b1b:63d8 with SMTP id ml8-20020a17090b360800b002196b1b63d8mr4653610pjb.143.1669863653226;
-        Wed, 30 Nov 2022 19:00:53 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf5MbvCRZ/jl/yEErQVESS5W/MxdmKCHh4VnDUAEnypUj3sRGH1q8jjQVz/3/1Le8Lb8B4CjIQ==
-X-Received: by 2002:a17:90b:3608:b0:219:6b1b:63d8 with SMTP id ml8-20020a17090b360800b002196b1b63d8mr4653570pjb.143.1669863652813;
-        Wed, 30 Nov 2022 19:00:52 -0800 (PST)
-Received: from canonical.com (2001-b011-300b-b863-5ce4-cae4-1ba7-6f5b.dynamic-ip6.hinet.net. [2001:b011:300b:b863:5ce4:cae4:1ba7:6f5b])
-        by smtp.gmail.com with ESMTPSA id q19-20020aa79613000000b00562a526cd2esm2078337pfg.55.2022.11.30.19.00.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Nov 2022 19:00:52 -0800 (PST)
-From:   Koba Ko <koba.ko@canonical.com>
-To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Jie Hai <haijie1@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Joel Savitz <jsavitz@redhat.com>
-Subject: [PATCH V3] dmaengine: Fix double increment of client_count in dma_chan_get()
-Date:   Thu,  1 Dec 2022 11:00:50 +0800
-Message-Id: <20221201030050.978595-1-koba.ko@canonical.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S229728AbiLALw3 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 1 Dec 2022 06:52:29 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D164D9AE07;
+        Thu,  1 Dec 2022 03:52:27 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E726D6E;
+        Thu,  1 Dec 2022 03:52:34 -0800 (PST)
+Received: from [10.57.71.118] (unknown [10.57.71.118])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDCC73F73D;
+        Thu,  1 Dec 2022 03:52:24 -0800 (PST)
+Message-ID: <136b735e-43b0-59bd-c85b-291730cd6371@arm.com>
+Date:   Thu, 1 Dec 2022 11:52:19 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v6 22/24] dmaengine: dw-edma: Bypass dma-ranges mapping
+ for the local setup
+Content-Language: en-GB
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        caihuoqing <caihuoqing@baidu.com>, linux-pci@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221107210438.1515-1-Sergey.Semin@baikalelectronics.ru>
+ <20221107210438.1515-23-Sergey.Semin@baikalelectronics.ru>
+ <20221107211134.wxaqi2sew6aejxne@mobilestation>
+ <8b7ce195-27b7-a27f-bf4e-fd5f20f2a83b@arm.com>
+ <20221126234509.ezn6vuefnj2f7pyk@mobilestation>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20221126234509.ezn6vuefnj2f7pyk@mobilestation>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The first time dma_chan_get() is called for a channel the channel
-client_count is incorrectly incremented twice for public channels,
-first in balance_ref_count(), and again prior to returning. This
-results in an incorrect client count which will lead to the
-channel resources not being freed when they should be. A simple
- test of repeated module load and unload of async_tx on a Dell
- Power Edge R7425 also shows this resulting in a kref underflow
- warning.
+On 2022-11-26 23:45, Serge Semin wrote:
+> On Fri, Nov 25, 2022 at 03:32:23PM +0000, Robin Murphy wrote:
+>> On 2022-11-07 21:11, Serge Semin wrote:
+>>> On Tue, Nov 08, 2022 at 12:04:36AM +0300, Serge Semin wrote:
+>>>> DW eDMA doesn't perform any translation of the traffic generated on the
+>>>> CPU/Application side. It just generates read/write AXI-bus requests with
+>>>> the specified addresses. But in case if the dma-ranges DT-property is
+>>>> specified for a platform device node, Linux will use it to create a
+>>>> mapping the PCIe-bus regions into the CPU memory ranges. This isn't what
+>>>> we want for the eDMA embedded into the locally accessed DW PCIe Root Port
+>>>> and End-point. In order to work that around let's set the chan_dma_dev
+>>>> flag for each DW eDMA channel thus forcing the client drivers to getting a
+>>>> custom dma-ranges-less parental device for the mappings.
+>>>>
+>>>> Note it will only work for the client drivers using the
+>>>> dmaengine_get_dma_device() method to get the parental DMA device.
+>>>
+>>> @Robin, we particularly need you opinion on this patch. I did as you
+>>> said: call *_dma_configure() method to initialize the child device and
+>>> set the DMA-mask here instead of the platform driver.
+>>
+> 
+>> Apologies, I've been busy and this series got buried in my inbox before I'd
+>> clocked it as something I was supposed to be looking at.
+> 
+> No worries. I'm glad you responded.
+> 
+>>
+>>> @Vinoud, @Manivannan I had to drop your tags from this patch since its
+>>> content had been significantly changed.
+>>>
+>>> -Sergey
+>>>
+>>>>
+>>>> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+>>>>
+>>>> ---
+>>>>
+>>>> Changelog v2:
+>>>> - Fix the comment a bit to being clearer. (@Manivannan)
+>>>>
+>>>> Changelog v3:
+>>>> - Conditionally set dchan->dev->device.dma_coherent field since it can
+>>>>     be missing on some platforms. (@Manivannan)
+>>>> - Remove Manivannan' rb and tb tags since the patch content has been
+>>>>     changed.
+>>>>
+>>>> Changelog v6:
+>>>> - Directly call *_dma_configure() method on the child device used for
+>>>>     the DMA buffers mapping. (@Robin)
+>>>> - Explicitly set the DMA-mask of the child device in the channel
+>>>>     allocation proecedure. (@Robin)
+>>>> - Drop @Manivannan and @Vinod rb- and ab-tags due to significant patch
+>>>>     content change.
+>>>> ---
+>>>>    drivers/dma/dw-edma/dw-edma-core.c | 44 ++++++++++++++++++++++++++++++
+>>>>    1 file changed, 44 insertions(+)
+>>>>
+>>>> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+>>>> index e3671bfbe186..846518509753 100644
+>>>> --- a/drivers/dma/dw-edma/dw-edma-core.c
+>>>> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+>>>> @@ -6,9 +6,11 @@
+>>>>     * Author: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>>>>     */
+>>>> +#include <linux/acpi.h>
+>>>>    #include <linux/module.h>
+>>>>    #include <linux/device.h>
+>>>>    #include <linux/kernel.h>
+>>>> +#include <linux/of_device.h>
+>>>>    #include <linux/dmaengine.h>
+>>>>    #include <linux/err.h>
+>>>>    #include <linux/interrupt.h>
+>>>> @@ -711,10 +713,52 @@ static irqreturn_t dw_edma_interrupt_common(int irq, void *data)
+>>>>    static int dw_edma_alloc_chan_resources(struct dma_chan *dchan)
+>>>>    {
+>>>>    	struct dw_edma_chan *chan = dchan2dw_edma_chan(dchan);
+>>>> +	struct device *dev = chan->dw->chip->dev;
+>>>> +	int ret;
+>>>>    	if (chan->status != EDMA_ST_IDLE)
+>>>>    		return -EBUSY;
+>>>> +	/* Bypass the dma-ranges based memory regions mapping for the eDMA
+>>>> +	 * controlled from the CPU/Application side since in that case
+>>>> +	 * the local memory address is left untranslated.
+>>>> +	 */
+>>>> +	if (chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
+> 
+> 
+>>>> +		ret = dma_coerce_mask_and_coherent(&dchan->dev->device,
+>>>> +						   DMA_BIT_MASK(64));
+>>>> +		if (ret) {
+>>
+>> Setting a 64-bit mask should never fail, especially on any platform that
+>> will actually run this code.
+>>
+>>>> +			ret = dma_coerce_mask_and_coherent(&dchan->dev->device,
+>>>> +							   DMA_BIT_MASK(32));
+> 
+> Indeed. I can just drop the 32-bit mask test then. (But I'd retain the
+> error check anyway.)
+> 
+> The problem is that actual device DMA-addressing capability is
+> determined by the MASTER_BUS_ADDR_WIDTH IP-core synthesize parameter.
+> I can't predict its value from this generic code since it isn't
+> auto-detectable and is platform-specific. That's why back then in
+> our discussion I was insisting on setting the mask in the low-level
+> device drivers. But after the commit 423511ec23e2 ("PCI: dwc: Drop
+> dependency on ZONE_DMA32") it turned to be pointless now since the
+> DMA-mask would be overwritten by the generic DW PCIe driver code anyway.
+> What do you suggest then in this regard? Just keep setting the 64-bit
+> mask only? This will work for my platform, but will fail for the
+> devices with AXI-bus address of only 32-bits width.
 
-[  124.329662] async_tx: api initialized (async)
-[  129.000627] async_tx: api initialized (async)
-[  130.047839] ------------[ cut here ]------------
-[  130.052472] refcount_t: underflow; use-after-free.
-[  130.057279] WARNING: CPU: 3 PID: 19364 at lib/refcount.c:28
-refcount_warn_saturate+0xba/0x110
-[  130.065811] Modules linked in: async_tx(-) rfkill intel_rapl_msr
-intel_rapl_common amd64_edac edac_mce_amd ipmi_ssif kvm_amd dcdbas kvm
-mgag200 drm_shmem_helper acpi_ipmi irqbypass drm_kms_helper ipmi_si
-syscopyarea sysfillrect rapl pcspkr ipmi_devintf sysimgblt fb_sys_fops
-k10temp i2c_piix4 ipmi_msghandler acpi_power_meter acpi_cpufreq vfat
-fat drm fuse xfs libcrc32c sd_mod t10_pi sg ahci crct10dif_pclmul
-libahci crc32_pclmul crc32c_intel ghash_clmulni_intel igb megaraid_sas
-i40e libata i2c_algo_bit ccp sp5100_tco dca dm_mirror dm_region_hash
-dm_log dm_mod [last unloaded: async_tx]
-[  130.117361] CPU: 3 PID: 19364 Comm: modprobe Kdump: loaded Not
-tainted 5.14.0-185.el9.x86_64 #1
-[  130.126091] Hardware name: Dell Inc. PowerEdge R7425/02MJ3T, BIOS
-1.18.0 01/17/2022
-[  130.133806] RIP: 0010:refcount_warn_saturate+0xba/0x110
-[  130.139041] Code: 01 01 e8 6d bd 55 00 0f 0b e9 72 9d 8a 00 80 3d
-26 18 9c 01 00 75 85 48 c7 c7 f8 a3 03 9d c6 05 16 18 9c 01 01 e8 4a
-bd 55 00 <0f> 0b e9 4f 9d 8a 00 80 3d 01 18 9c 01 00 0f 85 5e ff ff ff
-48 c7
-[  130.157807] RSP: 0018:ffffbf98898afe68 EFLAGS: 00010286
-[  130.163036] RAX: 0000000000000000 RBX: ffff9da06028e598 RCX: 0000000000000000
-[  130.170172] RDX: ffff9daf9de26480 RSI: ffff9daf9de198a0 RDI: ffff9daf9de198a0
-[  130.177316] RBP: ffff9da7cddf3970 R08: 0000000000000000 R09: 00000000ffff7fff
-[  130.184459] R10: ffffbf98898afd00 R11: ffffffff9d9e8c28 R12: ffff9da7cddf1970
-[  130.191596] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[  130.198739] FS:  00007f646435c740(0000) GS:ffff9daf9de00000(0000)
-knlGS:0000000000000000
-[  130.206832] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  130.212586] CR2: 00007f6463b214f0 CR3: 00000008ab98c000 CR4: 00000000003506e0
-[  130.219729] Call Trace:
-[  130.222192]  <TASK>
-[  130.224305]  dma_chan_put+0x10d/0x110
-[  130.227988]  dmaengine_put+0x7a/0xa0
-[  130.231575]  __do_sys_delete_module.constprop.0+0x178/0x280
-[  130.237157]  ? syscall_trace_enter.constprop.0+0x145/0x1d0
-[  130.242652]  do_syscall_64+0x5c/0x90
-[  130.246240]  ? exc_page_fault+0x62/0x150
-[  130.250178]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
-[  130.255243] RIP: 0033:0x7f6463a3f5ab
-[  130.258830] Code: 73 01 c3 48 8b 0d 75 a8 1b 00 f7 d8 64 89 01 48
-83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa b8 b0 00 00
-00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 45 a8 1b 00 f7 d8 64 89
-01 48
-[  130.277591] RSP: 002b:00007fff22f972c8 EFLAGS: 00000206 ORIG_RAX:
-00000000000000b0
-[  130.285164] RAX: ffffffffffffffda RBX: 000055b6786edd40 RCX: 00007f6463a3f5ab
-[  130.292303] RDX: 0000000000000000 RSI: 0000000000000800 RDI: 000055b6786edda8
-[  130.299443] RBP: 000055b6786edd40 R08: 0000000000000000 R09: 0000000000000000
-[  130.306584] R10: 00007f6463b9eac0 R11: 0000000000000206 R12: 000055b6786edda8
-[  130.313731] R13: 0000000000000000 R14: 000055b6786edda8 R15: 00007fff22f995f8
-[  130.320875]  </TASK>
-[  130.323081] ---[ end trace eff7156d56b5cf25 ]---
+OK, but you already have that problem either way. The point of 
+dma_set_mask() et al is to inform the DMA API of your device's 
+capability - setting a 64-bit mask is saying "I can use 64-bit addresses 
+if you can" to the DMA layer, and as I say the DMA layer is almost 
+always going to respond "indeed I can, let's do that". If the real DMA 
+mask is platform-specific then you need to pass a platform-specific 
+value here.
 
-cat /sys/class/dma/dma0chan*/in_use would get the wrong result.
-2
-2
-2
+>>>> +			if (ret)
+>>>> +				return ret;
+>>>> +		}
+>>>> +
+>>>> +		if (dev_of_node(dev)) {
+>>>> +			struct device_node *node = dev_of_node(dev);
+>>>> +
+>>>> +			ret = of_dma_configure(&dchan->dev->device, node, true);
+>>>> +		} else if (has_acpi_companion(dev)) {
+>>
+> 
+>> Can this can ever happen? AFAICS there's no ACPI binding to match and probe
+>> the DWC driver, at best it could only probe as a standard PNP0A08 host
+>> bridge which wouldn't know anything about eDMA anyway.
+> 
+> There are several ACPI-based platforms with DW PCIe controllers:
+> pcie-tegra194-acpi.c, pcie-al.c, pcie-hisi.c. All of them are fully
+> ECAM-based so no DW eDMA probing from the Linux kernel implied. But
+> these are still DW PCIe controllers and they or some other ones can
+> have eDMA embedded. Do you think it won't be ever possible to either
+> directly handle these controllers (bypassing the ECAM interface) or
+> have a DW PCIe device accessed via the ACPI bindings?
 
-Fixes: d2f4f99db3e9 ("dmaengine: Rework dma_chan_get")
-Signed-off-by: Koba Ko <koba.ko@canonical.com>
-Reviewed-by: Jie Hai <haijie1@huawei.com>
-Test-by: Jie Hai <haijie1@huawei.com>
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+It's not entirely impossible, but would require new ACPI bindings and 
+code changes to the dw-pci driver, so if somebody ever did do that work 
+they should be responsible for any required changes at this end as well. 
+There's no point adding untested dead code now, to maintain indefinitely 
+just for the theoretical possibility that someone might ever make it 
+reachable.
 
----
-V2: Remove [3/3] on subject.
-V3: Refine title and comments as per suggestions.
-Ref: https://patchwork.kernel.org/project/linux-dmaengine/patch/20220930173652.1251349-1-koba.ko@canonical.com/
----
- drivers/dma/dmaengine.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+> Note basically what I've implemented here was based on the
+> platform_dma_configure() DMA-configuration code pattern. I thought it
+> was a reasonable choice since this code path is executed for the
+> platform devices only (implied by the DW_EDMA_CHIP_LOCAL flag
+> semantic).
+> 
+> On the second thought if the problem in subject is only specific to
+> the DT-based platforms, then I could just skip channel device
+> initialization here for the platform devices with no OF-node detected.
+> So the question is is it specific to the DT-based platforms only?
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 2cfa8458b51be..78f8a9f3ad825 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -451,7 +451,8 @@ static int dma_chan_get(struct dma_chan *chan)
- 	/* The channel is already in use, update client count */
- 	if (chan->client_count) {
- 		__module_get(owner);
--		goto out;
-+		chan->client_count++;
-+		return 0;
- 	}
- 
- 	if (!try_module_get(owner))
-@@ -470,11 +471,11 @@ static int dma_chan_get(struct dma_chan *chan)
- 			goto err_out;
- 	}
- 
-+	chan->client_count++;
-+
- 	if (!dma_has_cap(DMA_PRIVATE, chan->device->cap_mask))
- 		balance_ref_count(chan);
- 
--out:
--	chan->client_count++;
- 	return 0;
- 
- err_out:
--- 
-2.25.1
+I think you still want the DW_EDMA_CHIP_LOCAL flag, since the PCI 
+endpoint device in the dw-edma-pcie case may have an of_node on some 
+platforms, and in that case overriding the chan_dma_dev setup would be 
+wrong. When the flag is set, though, we can simply assume dev_of_node() 
+is valid since it's the only possible way for that to happen (and if 
+someone does ever break that assumption in future, it will likely make 
+itself noticed).
 
+> (Before answering to the question above please read the last comment
+> in this message.)
+> 
+>>
+>>>> +			struct acpi_device *adev = to_acpi_device_node(dev->fwnode);
+>>>> +
+>>>> +			ret = acpi_dma_configure(&dchan->dev->device,
+>>>> +						 acpi_get_dma_attr(adev));
+>>>> +		} else {
+>>>> +			ret = -EINVAL;
+>>>> +		}
+>>>> +
+>>>> +		if (ret)
+>>>> +			return ret;
+>>>> +
+>>>> +		if (dchan->dev->device.dma_range_map) {
+>>>> +			kfree(dchan->dev->device.dma_range_map);
+>>>> +			dchan->dev->device.dma_range_map = NULL;
+>>>> +		}
+>>
+> 
+>> Ugh, I guess this is still here because now you're passing the channel
+>> device to of_dma_configure() such that it looks like a PCI child :(
+> 
+> No. It's still here because I successfully missed your email in my
+> work inbox so I thought you didn't fix that dma-ranges peculiarity of
+> the PCIe-host nodes.(
+> 
+>>
+>> Can we just set "chan->dev->device.of_node = dev->of_node;" beforehand so it
+>> works as expected (with f1ad5338a4d5 in place) and we don't need to be
+>> messing with the dma_range_map details at all? Note that that isn't as hacky
+>> as it might sound - it's a relatively well-established practice in places
+>> like I2C and SPI, and in this case it seems perfectly appropriate
+>> semantically as well.
+> 
+> Of course we can. But now, thanks to your commit f1ad5338a4d5 ("of:
+> Fix "dma-ranges" handling for bus controllers"), there is no point in
+> any dma-ranges hack here because the dma-ranges property is no longer
+> parsed for the PCIe-host platform device. I can and will just drop the
+> custom DMA-channel device initialization from the patch. The only
+> issue left to solve is about setting the DMA-mask. Please see my notes
+> above regarding that problem.
+
+Ah, I assumed you'd still want to keep the chan_dma_dev setup for the 
+sake of independent DMA masks, at least until we get a better solution 
+for the MSI stuff. If you're happy with the compromise of going back to 
+using the real host device to keep things simple, that's fine by me.
+
+Thanks,
+Robin.

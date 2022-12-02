@@ -2,48 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC0CB640D13
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Dec 2022 19:25:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 746D6640D15
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Dec 2022 19:25:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234368AbiLBSZV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 2 Dec 2022 13:25:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56582 "EHLO
+        id S234291AbiLBSZW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 2 Dec 2022 13:25:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234385AbiLBSZQ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 2 Dec 2022 13:25:16 -0500
+        with ESMTP id S234295AbiLBSZS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 2 Dec 2022 13:25:18 -0500
 Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4334DD80DC;
-        Fri,  2 Dec 2022 10:25:16 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FEA1D968C;
+        Fri,  2 Dec 2022 10:25:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670005516; x=1701541516;
+  t=1670005517; x=1701541517;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=vHVG1zmi+voAUhJdqIebJ6t9QgESsGvpHFArjS4/Pac=;
-  b=b6JUWx/1AQi4NkezOdtZCRUEb63rxL/HALnt0JmmWU5bSvpXiQnoL8/h
-   947Gkej4q61BI7TpTa1vr6PsSGWuR8w/nX9CLCHvHsulQhsVZSdFmblHt
-   Q8qf7/q1Sxs5VJEhiLxZwZT8BeSOUO35EyB8SfmvMF+RxaWbuCE8qB3kv
-   u6TsVaebWv7CF6+PwOIsxN9xZ1kKXVZGS1njQ8I3rrqhii38avwlxkH5S
-   gUwUTtEAZgoenoOb25iKW8YNJ0iAid8rkONEhjkVKohPyltrsxYFnA2Ed
-   Q8jsi5qzZcUHnAzId3gqIaBfM+3QBU0sKGDczufPmNu8OU4Exj6n4sov3
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10549"; a="378166715"
+  bh=DcNpbgzbhgDxbBHlo+d3SX0ORto3+aP3skhZTZ4ZTMg=;
+  b=hXSgSOnY4hP0HNGYRFAYldou87uKicvA3lblLscr6hfdAAB4PvYoG9qO
+   Ix8sTKFK9zjYwZ7+2PuHerXYeL/RUpsMhn8n5NJkVdw1sznHTG6j4BJ5J
+   La8xmHgxFuyDQOPjB7fBFSOZHCJlHQ+NAJPT/o6Ce1BgA570n9iPjyALW
+   8CIprwxS7Gt+ueeW4FR/3fHEGfcG1CHjFtUsk0r4dEIrQvzM6AcRT4PVm
+   j9WNxFkemYV5PgZo3kp6HTs5ojxOfXOmLnOc3BIxcrbGFVRH3kHXC+b6U
+   d9eRh8wcaRdd5WhrKNFOPZ3g24B52XsOGEe9/eBQq0DMuE6ZQVXdQWu7I
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10549"; a="378166719"
 X-IronPort-AV: E=Sophos;i="5.96,213,1665471600"; 
-   d="scan'208";a="378166715"
+   d="scan'208";a="378166719"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
   by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2022 10:25:15 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10549"; a="622786436"
+X-IronPort-AV: E=McAfee;i="6500,9779,10549"; a="622786440"
 X-IronPort-AV: E=Sophos;i="5.96,213,1665471600"; 
-   d="scan'208";a="622786436"
+   d="scan'208";a="622786440"
 Received: from rchatre-ws.ostc.intel.com ([10.54.69.144])
   by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2022 10:25:15 -0800
 From:   Reinette Chatre <reinette.chatre@intel.com>
 To:     fenghua.yu@intel.com, dave.jiang@intel.com, vkoul@kernel.org,
         dmaengine@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] dmaengine: idxd: Let probe fail when workqueue cannot be enabled
-Date:   Fri,  2 Dec 2022 10:25:04 -0800
-Message-Id: <1e74e8d74255ff47271c4c9eada7635676ccd320.1670005163.git.reinette.chatre@intel.com>
+Subject: [PATCH 2/3] dmaengine: idxd: Prevent use after free on completion memory
+Date:   Fri,  2 Dec 2022 10:25:05 -0800
+Message-Id: <96e5bcd4b97445227837c3a73e1a1abd93d26175.1670005163.git.reinette.chatre@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1670005163.git.reinette.chatre@intel.com>
 References: <cover.1670005163.git.reinette.chatre@intel.com>
@@ -58,71 +58,52 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The workqueue is enabled when the appropriate driver is loaded and
-disabled when the driver is removed. When the driver is removed it
-assumes that the workqueue was enabled successfully and proceeds to
-free allocations made during workqueue enabling.
+On driver unload any pending descriptors are flushed at the
+time the interrupt is freed:
+idxd_dmaengine_drv_remove() ->
+	drv_disable_wq() ->
+		idxd_wq_free_irq() ->
+			idxd_flush_pending_descs().
 
-Failure during workqueue enabling does not prevent the driver from
-being loaded. This is because the error path within drv_enable_wq()
-returns success unless a second failure is encountered
-during the error path. By returning success it is possible to load
-the driver even if the workqueue cannot be enabled and
-allocations that do not exist are attempted to be freed during
-driver remove.
+If there are any descriptors present that need to be flushed this
+flow triggers a "not present" page fault as below:
 
-Some examples of problematic flows:
-(a)
+ BUG: unable to handle page fault for address: ff391c97c70c9040
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
 
- idxd_dmaengine_drv_probe() -> drv_enable_wq() -> idxd_wq_request_irq():
- In above flow, if idxd_wq_request_irq() fails then
- idxd_wq_unmap_portal() is called on error exit path, but
- drv_enable_wq() returns 0 because idxd_wq_disable() succeeds. The
- driver is thus loaded successfully.
+The address that triggers the fault is the address of the
+descriptor that was freed moments earlier via:
+drv_disable_wq()->idxd_wq_free_resources()
 
- idxd_dmaengine_drv_remove()->drv_disable_wq()->idxd_wq_unmap_portal()
- Above flow on driver unload triggers the WARN in devm_iounmap() because
- the device resource has already been removed during error path of
- drv_enable_wq().
+Fix the use after free by freeing the descriptors after any possible
+usage. This is done after idxd_wq_reset() to ensure that the memory
+remains accessible during possible completion writes by the device.
 
-(b)
-
- idxd_dmaengine_drv_probe() -> drv_enable_wq() -> idxd_wq_request_irq():
- In above flow, if idxd_wq_request_irq() fails then
- idxd_wq_init_percpu_ref() is never called to initialize the percpu
- counter, yet the driver loads successfully because drv_enable_wq()
- returns 0.
-
- idxd_dmaengine_drv_remove()->__idxd_wq_quiesce()->percpu_ref_kill():
- Above flow on driver unload triggers a BUG when attempting to drop the
- initial ref of the uninitialized percpu ref:
- BUG: kernel NULL pointer dereference, address: 0000000000000010
-
-Fix the drv_enable_wq() error path by returning the original error that
-indicates failure of workqueue enabling. This ensures that the probe
-fails when an error is encountered and the driver remove paths are only
-attempted when the workqueue was enabled successfully.
-
-Fixes: 1f2bb40337f0 ("dmaengine: idxd: move wq_enable() to device.c")
+Fixes: 63c14ae6c161 ("dmaengine: idxd: refactor wq driver enable/disable operations")
+Suggested-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
 ---
- drivers/dma/idxd/device.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/dma/idxd/device.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 6f44fa8f78a5..fcd03d29a941 100644
+index fcd03d29a941..b4d7bb923a40 100644
 --- a/drivers/dma/idxd/device.c
 +++ b/drivers/dma/idxd/device.c
-@@ -1391,8 +1391,7 @@ int drv_enable_wq(struct idxd_wq *wq)
- err_irq:
+@@ -1408,11 +1408,11 @@ void drv_disable_wq(struct idxd_wq *wq)
+ 		dev_warn(dev, "Clients has claim on wq %d: %d\n",
+ 			 wq->id, idxd_wq_refcount(wq));
+ 
+-	idxd_wq_free_resources(wq);
  	idxd_wq_unmap_portal(wq);
- err_map_portal:
--	rc = idxd_wq_disable(wq, false);
--	if (rc < 0)
-+	if (idxd_wq_disable(wq, false))
- 		dev_dbg(dev, "wq %s disable failed\n", dev_name(wq_confdev(wq)));
- err:
- 	return rc;
+ 	idxd_wq_drain(wq);
+ 	idxd_wq_free_irq(wq);
+ 	idxd_wq_reset(wq);
++	idxd_wq_free_resources(wq);
+ 	percpu_ref_exit(&wq->wq_active);
+ 	wq->type = IDXD_WQT_NONE;
+ 	wq->client_count = 0;
 -- 
 2.34.1
 

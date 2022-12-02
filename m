@@ -2,72 +2,58 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D61F63FAD3
-	for <lists+dmaengine@lfdr.de>; Thu,  1 Dec 2022 23:47:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8FBE6405B3
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Dec 2022 12:21:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231434AbiLAWrn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 1 Dec 2022 17:47:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38400 "EHLO
+        id S233244AbiLBLUx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 2 Dec 2022 06:20:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230070AbiLAWrm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 1 Dec 2022 17:47:42 -0500
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DECF855A1
-        for <dmaengine@vger.kernel.org>; Thu,  1 Dec 2022 14:47:37 -0800 (PST)
-Received: by mail-ed1-x529.google.com with SMTP id v8so4314396edi.3
-        for <dmaengine@vger.kernel.org>; Thu, 01 Dec 2022 14:47:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2kIVsQfN9yKH0DYGMpC0ApzZk7KmelbVN6aprGnz3wQ=;
-        b=G8BEj3JH2fZS872/6ZTXfJz73rjPHbRTMO8k+5CSFm+fcAZuYGHbcvwjPp9YURHOvC
-         9IIsh8RJ3zWJSAiftpVd6gSjNCzb8qZrEt1JzB7sha4C3q/2ozW98CYFXS1v+YKkEZEw
-         cDXVwNGKUr0LRxZeYkYf1GjMDFzMriqErtgvQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2kIVsQfN9yKH0DYGMpC0ApzZk7KmelbVN6aprGnz3wQ=;
-        b=p76V/SjzeOqPtWuRgRhjlaHPUtBDJJuVFjGsCoaBvGseRS0ajJNL44SHcjWwkTIR0B
-         vbBk8lLkEZLNMpNy7OC1/3c7FEqEVOMzASR5dtxpB7c9/iMAeAuKO+vcluqp0DHdRZHo
-         QJnx02nm9uLmWpNheGsiyYeSOvMWjuusJcJeN59Qb2u9Isfeax3NgJKB4kFPfi04x7SS
-         R6GFwJiJa6VLjFn+PCTfIVmBFtC4jfGSnZhElsGzPYJxhj6vykde4EPNgv39Ar1NncQr
-         Q8IWZoZSSUlUfCnjwJ5uw8MMIE2EDvoD77EoJh6/UmhOcYMWfdlqsfKFm/J/sWenPobU
-         eAoQ==
-X-Gm-Message-State: ANoB5plCONe9wD6R/1bw4CMulAB6bf2rsrFatO1an2zDe1mXmQ52m9sB
-        r+WoOPqfaKMLOENpIYjAbLEFKRQwG84ExpV3
-X-Google-Smtp-Source: AA0mqf4Gl93yWc+ePjQmzJFKYBGQDICdS/6nTAiXcmTiYLyyY9C7nO9a6psdnIO0HoOXHnqzDKoa4g==
-X-Received: by 2002:a05:6402:528d:b0:468:dc9:ec08 with SMTP id en13-20020a056402528d00b004680dc9ec08mr47203800edb.17.1669934855776;
-        Thu, 01 Dec 2022 14:47:35 -0800 (PST)
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com. [209.85.221.41])
-        by smtp.gmail.com with ESMTPSA id ku5-20020a170907788500b00781d411a63csm2253018ejc.151.2022.12.01.14.47.33
-        for <dmaengine@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Dec 2022 14:47:34 -0800 (PST)
-Received: by mail-wr1-f41.google.com with SMTP id u12so4224337wrr.11
-        for <dmaengine@vger.kernel.org>; Thu, 01 Dec 2022 14:47:33 -0800 (PST)
-X-Received: by 2002:a5d:4943:0:b0:242:3ca3:b7bd with SMTP id
- r3-20020a5d4943000000b002423ca3b7bdmr2729799wrs.583.1669934853656; Thu, 01
- Dec 2022 14:47:33 -0800 (PST)
+        with ESMTP id S233186AbiLBLUf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 2 Dec 2022 06:20:35 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 639DAB956F
+        for <dmaengine@vger.kernel.org>; Fri,  2 Dec 2022 03:20:29 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p145P-0000ui-0C; Fri, 02 Dec 2022 12:20:07 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p145L-001mzj-MG; Fri, 02 Dec 2022 12:20:04 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p145L-0021uA-RT; Fri, 02 Dec 2022 12:20:03 +0100
+Date:   Fri, 2 Dec 2022 12:20:03 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Arnd Bergmann <arnd@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>,
+        linux-kernel@vger.kernel.org,
+        Simtec Linux Team <linux@simtec.co.uk>,
+        linux-next@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
+        dmaengine@vger.kernel.org, kernel@pengutronix.de
+Subject: Regression in dmaengine/next was removed
+Message-ID: <20221202112003.kanwr7bixbaiqdgz@pengutronix.de>
+References: <20221021203329.4143397-14-arnd@kernel.org>
+ <20221118215401.505480-1-u.kleine-koenig@pengutronix.de>
+ <f0425349-d965-0a40-0672-27dfbe45eb44@linaro.org>
+ <b759a3e7-7a45-3dc9-14ba-8b01da798f10@linaro.org>
+ <20221125085117.23p7yv6wgo6b5l3v@pengutronix.de>
+ <7f5cf3d8-4a3b-41eb-fed9-1ade4ba1e4e2@linaro.org>
 MIME-Version: 1.0
-References: <1669810824-32094-1-git-send-email-quic_vnivarth@quicinc.com>
-In-Reply-To: <1669810824-32094-1-git-send-email-quic_vnivarth@quicinc.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 1 Dec 2022 14:47:21 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=VWJvBU=uAPpyegxYz-k2sx=jBgiNm=qrso3cb3FXtqjw@mail.gmail.com>
-Message-ID: <CAD=FV=VWJvBU=uAPpyegxYz-k2sx=jBgiNm=qrso3cb3FXtqjw@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: qcom: gpi: Set link_rx bit on GO TRE for rx operation
-To:     Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        vkoul@kernel.org, linux-arm-msm@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_msavaliy@quicinc.com, mka@chromium.org, swboyd@chromium.org,
-        quic_vtanuku@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="en4u4iu4jzm6yqjr"
+Content-Disposition: inline
+In-Reply-To: <7f5cf3d8-4a3b-41eb-fed9-1ade4ba1e4e2@linaro.org>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -76,38 +62,77 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,
 
-On Wed, Nov 30, 2022 at 4:20 AM Vijaya Krishna Nivarthi
-<quic_vnivarth@quicinc.com> wrote:
->
-> As per GSI spec, link_rx bit is to be set on GO TRE on tx
-> channel whenever there is going to be a DMA TRE on rx
-> channel. This is currently set for duplex operation only.
->
-> Set the bit for rx operation as well.
->
-> Signed-off-by: Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>
-> ---
->  drivers/dma/qcom/gpi.c | 1 +
->  1 file changed, 1 insertion(+)
+--en4u4iu4jzm6yqjr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I don't feel qualified to actually give this a review since I don't
-know anything about the details of GSI/GPI. It seems simple enough so
-I'll just assume that Bjorn will land it. Ideally someone else at
-Qualcomm would give you a Reviewed-by tag.
+Hello,
 
-One drive-by comment, though, is that I would say that your patch
-description lacks an answer to the question: "So what?"
+I made the subject a bit more expressive.
 
-In other words, what is broken today? Does everything work fine today
-but some bit counter looked over your shoulder and told you that you
-were a bad person for not setting that bit? Did the lunar lander catch
-fire (despite the lack of Oxygen on the moon!) because it started
-using the RX transfer mode to talk to its fuel valve system and the RX
-transfer mode never worked? ...or maybe everything today works but the
-super secret Qualcomm SDM9002 (shhhh!) chip needs this bit set? Help
-people looking at your patch be able to decide if it's important for
-them to pick to their kernel tree! :-)
+On Fri, Nov 25, 2022 at 09:52:51AM +0100, Krzysztof Kozlowski wrote:
+> On 25/11/2022 09:51, Uwe Kleine-K=F6nig wrote:
+> > On Sun, Nov 20, 2022 at 12:22:31PM +0100, Krzysztof Kozlowski wrote:
+> >> On 20/11/2022 11:31, Krzysztof Kozlowski wrote:
+> >>> On 18/11/2022 22:54, Uwe Kleine-K=F6nig wrote:
+> >>>> The linux/platform_data/dma-s3c24xx.h header file was removed. It di=
+dn't
+> >>>> declare or define any symbol needed in devs.c though, so the #include
+> >>>> can just be dropped.
+> >>>>
+> >>>> Fixes: cccc46ae3623 ("dmaengine: remove s3c24xx driver")
+> >>>> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> >>>> ---
+> >>>
+> >>> The file was not removed... or it should not have been yet. The s3c24=
+xx
+> >>> dma driver removal should be part of Arnd series taken via SoC ARM.
+> >=20
+> > The patch enters next with the merge of
+> >=20
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
+> >=20
+> > Ah, the patch that became cccc46ae3623 (i.e. patch #14) is part of a
+> > bigger series. Its patch #1 removes s3c24xx.c (which you pointed out to=
+ be still
+> > broken) and patch #2 includes the change I suggested here.
+> >=20
+> >> I think that commit should be just dropped instead.
+> >=20
+> > +1
+> >=20
+> > BTW, cccc46ae3623 is included in next since next-20221107 and breaks
+> > (at least) arm/s3c2410_defconfig. So I would consider reverting
+> > cccc46ae3623 a fix. (Added linux-next to Cc:)
+>=20
+> Yes. The build failure of next was reported already by kernel test robot.
+>=20
+> Vinod, can we drop this patch?
 
--Doug
+That patch is still contained in the next tags of this week. :-(
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--en4u4iu4jzm6yqjr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmOJ32AACgkQwfwUeK3K
+7AlUmwf+LTLmRYgc5aGplQwhhXLBn2RQPugEJNed5I4J6UCtllJ68pvPsDd2ezZy
+txODHNwc5eWnIoSCAOKvf0fC0Zz5SFFwWsR/EZHiBv3LxMh8YtbX35boOPxDoxlJ
+at9fz51eYFDaRGOKZURTbW+Bl1dZEUM/YXQ32OS4TOSikbXlMiKGpFjFHSuFdqc4
+Z9N8I2TTJvaqA9Xz3NRGbESZhVdp1cwEWLH0jN+ofX0r2IvoY3D72H0VnXxh/Gx9
+6Wbv0kdOlxsc/EJrZ38ppeT4R3KEjKdCtNGAS3VlC5I+dnYEeBORi/dPJOfY8WwA
+pVl/ZYUrQuh53+t6Mb9ySQX+d29w6g==
+=fnAj
+-----END PGP SIGNATURE-----
+
+--en4u4iu4jzm6yqjr--

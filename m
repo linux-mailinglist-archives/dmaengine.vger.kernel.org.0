@@ -2,56 +2,56 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6E13640DB7
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Dec 2022 19:45:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92793640DBF
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Dec 2022 19:46:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233679AbiLBSpn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 2 Dec 2022 13:45:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55072 "EHLO
+        id S234259AbiLBSqX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 2 Dec 2022 13:46:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233877AbiLBSpR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 2 Dec 2022 13:45:17 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1265ED692;
-        Fri,  2 Dec 2022 10:44:49 -0800 (PST)
+        with ESMTP id S234477AbiLBSp5 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 2 Dec 2022 13:45:57 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9F971B7BD;
+        Fri,  2 Dec 2022 10:45:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670006689; x=1701542689;
+  t=1670006739; x=1701542739;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=taKiwsGEnARe6PdQIcFBdyd/qfTN56kU+jLa9R4yhOE=;
-  b=ZRLKhSYgPmbtXemcjjmpN5QS0xSb+nNNG2RxgraqJDm/9Dm+tJ/cKPaQ
-   aNLCQGvdIHbF7Wdfv1eov18gZY/aiLzUMBKsuo+QykPJNGRTkgawA2T/P
-   8c80IfXrcjhzKUsAxsRjkWKruerwODcfQHQZ/9JmkAZr/mKWtu3Zajkff
-   dxdJqAFgRrKxc9MX0kzOlf4ynSTq7ssHEa1mzjkcETPRBu0IMT6TJ33Cf
-   9O+5KVS1A+/Noy7qYn41xai5WDD6zILa/3nK1Y3iAshBpjB6Q468EX0iA
-   SK46tT1567iM9EL9csSFQVBvRToHkJyfHcm12kgQzuHi/8jvLsClCGv85
+  bh=XWxJdpquJhmjnEg+41kl3vTulfrJiGCU35Tza1QgcvI=;
+  b=ZLqCuX9pbdsbDAtwCBJF8NXBqMlFRHJ+s6kl9N4nXG5NXr8FRzMjSoha
+   Vq13orYQp17p3A5oj4IiKSbEmm5hsBU6KWFmI8QQVmNU5dLbmpCCQMrU5
+   yw/koRIV8gdFWBYsQSZqSWuBamxjQV3O7iaCfW753ed3WAb9NCJLFKn4s
+   /igAYkcO5PKd7dUYrQOh2WU6r/Gb28lgszHgWtOkUjEu9Fd3aCNXF1KPQ
+   1oI6VLwocW5WdncuMdsEoY9f7lLKRHYDcs5BF89DAWxXs2olOs3Ucd1GC
+   ChLs4D2pGHmfs2CkTI6LQS4Y4/kOc/37DwuzGjFfuG2cyJSm3yKJ2ertX
    Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10549"; a="380308446"
+X-IronPort-AV: E=McAfee;i="6500,9779,10549"; a="402299324"
 X-IronPort-AV: E=Sophos;i="5.96,213,1665471600"; 
-   d="scan'208";a="380308446"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2022 10:44:45 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10549"; a="647266661"
+   d="scan'208";a="402299324"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2022 10:45:39 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10549"; a="890249286"
 X-IronPort-AV: E=Sophos;i="5.96,213,1665471600"; 
-   d="scan'208";a="647266661"
+   d="scan'208";a="890249286"
 Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.59.223]) ([10.212.59.223])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2022 10:44:44 -0800
-Message-ID: <cef94a59-6291-4af3-4677-3a3772571667@intel.com>
-Date:   Fri, 2 Dec 2022 11:44:44 -0700
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2022 10:45:39 -0800
+Message-ID: <044897a1-e6e1-b80a-e4cb-6b87423680fe@intel.com>
+Date:   Fri, 2 Dec 2022 11:45:38 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.5.0
-Subject: Re: [PATCH 2/3] dmaengine: idxd: Prevent use after free on completion
- memory
+Subject: Re: [PATCH 3/3] dmaengine: idxd: Do not call DMX TX callbacks during
+ workqueue disable
 Content-Language: en-US
 To:     Reinette Chatre <reinette.chatre@intel.com>, fenghua.yu@intel.com,
         vkoul@kernel.org, dmaengine@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org
 References: <cover.1670005163.git.reinette.chatre@intel.com>
- <96e5bcd4b97445227837c3a73e1a1abd93d26175.1670005163.git.reinette.chatre@intel.com>
+ <93b5d144bfc16e0c0f640d5f7cfaeda6bf08753f.1670005163.git.reinette.chatre@intel.com>
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <96e5bcd4b97445227837c3a73e1a1abd93d26175.1670005163.git.reinette.chatre@intel.com>
+In-Reply-To: <93b5d144bfc16e0c0f640d5f7cfaeda6bf08753f.1670005163.git.reinette.chatre@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -67,52 +67,65 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 
 On 12/2/2022 11:25 AM, Reinette Chatre wrote:
-> On driver unload any pending descriptors are flushed at the
-> time the interrupt is freed:
+> On driver unload any pending descriptors are flushed and pending
+> DMA descriptors are explicitly completed:
 > idxd_dmaengine_drv_remove() ->
 > 	drv_disable_wq() ->
 > 		idxd_wq_free_irq() ->
-> 			idxd_flush_pending_descs().
+> 			idxd_flush_pending_descs() ->
+> 				idxd_dma_complete_txd()
 > 
-> If there are any descriptors present that need to be flushed this
-> flow triggers a "not present" page fault as below:
+> With this done during driver unload any remaining descriptor is
+> likely stuck and can be dropped. Even so, the descriptor may still
+> have a callback set that could no longer be accessible. An
+> example of such a problem is when the dmatest fails and the dmatest
+> module is unloaded. The failure of dmatest leaves descriptors with
+> dma_async_tx_descriptor::callback pointing to code that no longer
+> exist. This causes a page fault as below at the time the IDXD driver
+> is unloaded when it attempts to run the callback:
+>   BUG: unable to handle page fault for address: ffffffffc0665190
+>   #PF: supervisor instruction fetch in kernel mode
+>   #PF: error_code(0x0010) - not-present page
 > 
->   BUG: unable to handle page fault for address: ff391c97c70c9040
->   #PF: supervisor read access in kernel mode
->   #PF: error_code(0x0000) - not-present page
+> Fix this by clearing the callback pointers on the transmit
+> descriptors only when workqueue is disabled.
 > 
-> The address that triggers the fault is the address of the
-> descriptor that was freed moments earlier via:
-> drv_disable_wq()->idxd_wq_free_resources()
-> 
-> Fix the use after free by freeing the descriptors after any possible
-> usage. This is done after idxd_wq_reset() to ensure that the memory
-> remains accessible during possible completion writes by the device.
-> 
-> Fixes: 63c14ae6c161 ("dmaengine: idxd: refactor wq driver enable/disable operations")
-> Suggested-by: Dave Jiang <dave.jiang@intel.com>
 > Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
 > ---
->   drivers/dma/idxd/device.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> History of refactoring made the Fixes: hard to identify by me.
+> 
+>   drivers/dma/idxd/device.c | 10 ++++++++++
+>   1 file changed, 10 insertions(+)
 > 
 > diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-> index fcd03d29a941..b4d7bb923a40 100644
+> index b4d7bb923a40..2ac71a34fa34 100644
 > --- a/drivers/dma/idxd/device.c
 > +++ b/drivers/dma/idxd/device.c
-> @@ -1408,11 +1408,11 @@ void drv_disable_wq(struct idxd_wq *wq)
->   		dev_warn(dev, "Clients has claim on wq %d: %d\n",
->   			 wq->id, idxd_wq_refcount(wq));
+> @@ -1156,6 +1156,7 @@ int idxd_device_load_config(struct idxd_device *idxd)
 >   
-> -	idxd_wq_free_resources(wq);
->   	idxd_wq_unmap_portal(wq);
->   	idxd_wq_drain(wq);
->   	idxd_wq_free_irq(wq);
->   	idxd_wq_reset(wq);
-> +	idxd_wq_free_resources(wq);
->   	percpu_ref_exit(&wq->wq_active);
->   	wq->type = IDXD_WQT_NONE;
->   	wq->client_count = 0;
+>   static void idxd_flush_pending_descs(struct idxd_irq_entry *ie)
+>   {
+> +	struct dma_async_tx_descriptor *tx;
+>   	struct idxd_desc *desc, *itr;
+>   	struct llist_node *head;
+>   	LIST_HEAD(flist);
+> @@ -1175,6 +1176,15 @@ static void idxd_flush_pending_descs(struct idxd_irq_entry *ie)
+>   	list_for_each_entry_safe(desc, itr, &flist, list) {
+>   		list_del(&desc->list);
+>   		ctype = desc->completion->status ? IDXD_COMPLETE_NORMAL : IDXD_COMPLETE_ABORT;
+> +		/*
+> +		 * wq is being disabled. Any remaining descriptors are
+> +		 * likely to be stuck and can be dropped. callback could
+> +		 * point to code that is no longer accessible, for example
+> +		 * if dmatest module has been unloaded.
+> +		 */
+> +		tx = &desc->txd;
+> +		tx->callback = NULL;
+> +		tx->callback_result = NULL;
+>   		idxd_dma_complete_txd(desc, ctype, true);
+>   	}
+>   }

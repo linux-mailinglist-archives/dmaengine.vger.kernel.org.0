@@ -2,104 +2,89 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BC3B643F86
-	for <lists+dmaengine@lfdr.de>; Tue,  6 Dec 2022 10:15:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C493644426
+	for <lists+dmaengine@lfdr.de>; Tue,  6 Dec 2022 14:08:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234600AbiLFJPG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 6 Dec 2022 04:15:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60084 "EHLO
+        id S235066AbiLFNIu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 6 Dec 2022 08:08:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234449AbiLFJPF (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 6 Dec 2022 04:15:05 -0500
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41DF01EEC7;
-        Tue,  6 Dec 2022 01:15:01 -0800 (PST)
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4NRF9v59Wbz8RV7N;
-        Tue,  6 Dec 2022 17:14:59 +0800 (CST)
-Received: from xaxapp01.zte.com.cn ([10.88.40.50])
-        by mse-fl2.zte.com.cn with SMTP id 2B69Em72018258;
-        Tue, 6 Dec 2022 17:14:48 +0800 (+08)
-        (envelope-from ye.xingchen@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-        by mapi (Zmail) with MAPI id mid31;
-        Tue, 6 Dec 2022 17:14:50 +0800 (CST)
-Date:   Tue, 6 Dec 2022 17:14:50 +0800 (CST)
-X-Zmail-TransId: 2af9638f080a56acf900
-X-Mailer: Zmail v1.0
-Message-ID: <202212061714501297954@zte.com.cn>
-Mime-Version: 1.0
-From:   <ye.xingchen@zte.com.cn>
-To:     <vkoul@kernel.org>
-Cc:     <cai.huoqing@linux.dev>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?B?W1BBVENIXSBkbWFlbmdpbmU6IHBwYzR4eDogQ29udmVydCB0byB1c2XCoHN5c2ZzX2VtaXQoKS9zeXNmc19lbWl0X2F0KCkgQVBJcw==?=
-Content-Type: text/plain;
-        charset="UTF-8"
-X-MAIL: mse-fl2.zte.com.cn 2B69Em72018258
-X-Fangmail-Gw-Spam-Type: 0
-X-FangMail-Miltered: at cgslv5.04-192.168.250.137.novalocal with ID 638F0813.000 by FangMail milter!
-X-FangMail-Envelope: 1670318099/4NRF9v59Wbz8RV7N/638F0813.000/10.5.228.133/[10.5.228.133]/mse-fl2.zte.com.cn/<ye.xingchen@zte.com.cn>
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 638F0813.000/4NRF9v59Wbz8RV7N
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S231869AbiLFNIZ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 6 Dec 2022 08:08:25 -0500
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FAB92B606;
+        Tue,  6 Dec 2022 05:06:35 -0800 (PST)
+Received: by mail-oi1-f178.google.com with SMTP id v82so16820176oib.4;
+        Tue, 06 Dec 2022 05:06:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5VLnmw9cgzz1trBmeVfOPIC0eg3Xb4TPnCQ0Or5PgMY=;
+        b=AmbsZ3Sug9Ohwfw9f0CV5ukTD2EuGwp6r+WPt4u+c+pmtQvbB1Eb8OsYfTyKIuxU5B
+         EGCOjyS3N4IRnJdAm/tM2ftNmg5xDRgEU+1D3ujkjbO/KR6ymnZdOn/y8u6AbaLV+27i
+         anZeba1y+5CGTp/8y0AJEChysQUwwzrhatUQh+MFUGjVEWjXbPfsxAirDA/PbJOLV6ZU
+         yoDnWTuzFBCj6Nx5ghozSojOK6bbp4afq03AcfZBByau4mcaj/UD/IvYllYmFoHxgR6S
+         g3f2tihtf3O05WpvW14egXOsPS7D9XZ3UEOtq/Khy3uiMN7NTQoYJR3KJz4bVFCRUMXC
+         kE1w==
+X-Gm-Message-State: ANoB5plnFcoejb1zLvcFC0/uIlkjhqNqCPSny/ii7+fqkRZvkU3sffUr
+        mqjKKOZE/M+XSAz8TEv9mQ==
+X-Google-Smtp-Source: AA0mqf6rA5VNHLxzZM/XwyRklpPC+5cPWHfnnE5YfB9BJ350CCsG5DmrMQoA1lDqr6+SKNMVJEuKmg==
+X-Received: by 2002:a05:6808:a10:b0:35a:433f:b03a with SMTP id n16-20020a0568080a1000b0035a433fb03amr33763043oij.1.1670331994188;
+        Tue, 06 Dec 2022 05:06:34 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id d8-20020a4ab208000000b004805b00b2cdsm7837159ooo.28.2022.12.06.05.06.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Dec 2022 05:06:33 -0800 (PST)
+Received: (nullmailer pid 231668 invoked by uid 1000);
+        Tue, 06 Dec 2022 13:06:32 -0000
+Date:   Tue, 6 Dec 2022 07:06:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        "Paul J. Murphy" <paul.j.murphy@intel.com>,
+        dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Daniele Alessandrelli <daniele.alessandrelli@intel.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: Drop Jee Heng Sia
+Message-ID: <167033198953.231535.1943885623418266769.robh@kernel.org>
+References: <20221205164254.36418-1-krzysztof.kozlowski@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221205164254.36418-1-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: ye xingchen <ye.xingchen@zte.com.cn>
 
-Follow the advice of the Documentation/filesystems/sysfs.rst and show()
-should only use sysfs_emit() or sysfs_emit_at() when formatting the
-value to be returned to user space.
+On Mon, 05 Dec 2022 17:42:54 +0100, Krzysztof Kozlowski wrote:
+> Emails to Jee Heng Sia bounce ("550 #5.1.0 Address rejected.").  Add
+> Keembay platform maintainers as Keembay I2S maintainers.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Acked-by: Mark Brown <broonie@kernel.org>
+> 
+> ---
+> 
+> Changes since v1:
+> 1. Correct email format in keembay-i2s.
+> 2. Add Ack tag.
+> ---
+>  Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml    | 1 -
+>  Documentation/devicetree/bindings/sound/intel,keembay-i2s.yaml | 3 ++-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
 
-Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
----
- drivers/dma/ppc4xx/adma.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/dma/ppc4xx/adma.c b/drivers/dma/ppc4xx/adma.c
-index 6b5e91f26afc..686c270ef710 100644
---- a/drivers/dma/ppc4xx/adma.c
-+++ b/drivers/dma/ppc4xx/adma.c
-@@ -4299,9 +4299,8 @@ static ssize_t devices_show(struct device_driver *dev, char *buf)
- 	for (i = 0; i < PPC440SPE_ADMA_ENGINES_NUM; i++) {
- 		if (ppc440spe_adma_devices[i] == -1)
- 			continue;
--		size += scnprintf(buf + size, PAGE_SIZE - size,
--				 "PPC440SP(E)-ADMA.%d: %s\n", i,
--				 ppc_adma_errors[ppc440spe_adma_devices[i]]);
-+		size += sysfs_emit_at(buf, size, "PPC440SP(E)-ADMA.%d: %s\n",
-+				     i, ppc_adma_errors[ppc440spe_adma_devices[i]]);
- 	}
- 	return size;
- }
-@@ -4309,9 +4308,8 @@ static DRIVER_ATTR_RO(devices);
-
- static ssize_t enable_show(struct device_driver *dev, char *buf)
- {
--	return snprintf(buf, PAGE_SIZE,
--			"PPC440SP(e) RAID-6 capabilities are %sABLED.\n",
--			ppc440spe_r6_enabled ? "EN" : "DIS");
-+	return sysfs_emit(buf, "PPC440SP(e) RAID-6 capabilities are %sABLED.\n",
-+			  ppc440spe_r6_enabled ? "EN" : "DIS");
- }
-
- static ssize_t enable_store(struct device_driver *dev, const char *buf,
-@@ -4362,7 +4360,7 @@ static ssize_t poly_show(struct device_driver *dev, char *buf)
- 	reg &= 0xFF;
- #endif
-
--	size = snprintf(buf, PAGE_SIZE, "PPC440SP(e) RAID-6 driver "
-+	size = sysfs_emit(buf, "PPC440SP(e) RAID-6 driver "
- 			"uses 0x1%02x polynomial.\n", reg);
- 	return size;
- }
--- 
-2.25.1
+Applied, thanks!

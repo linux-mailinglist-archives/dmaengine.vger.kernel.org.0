@@ -2,140 +2,126 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8B50647AAE
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Dec 2022 01:20:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 308086487A7
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Dec 2022 18:22:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229619AbiLIAUm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 8 Dec 2022 19:20:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51990 "EHLO
+        id S230110AbiLIRWC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 9 Dec 2022 12:22:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229632AbiLIAUf (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 8 Dec 2022 19:20:35 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1544792333;
-        Thu,  8 Dec 2022 16:20:35 -0800 (PST)
+        with ESMTP id S230155AbiLIRVt (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 9 Dec 2022 12:21:49 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B80DB2EA;
+        Fri,  9 Dec 2022 09:21:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670545235; x=1702081235;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=dHem1ATkLRYFiJxaz4bVCi5xygpgc/hx55Rdz+UP1DU=;
-  b=H721B5y02yrbRqBJGCo+h1hZ+wRB7WarWTNx7Vws7B9mvK28Qj9xym2W
-   Q0MzRYRU1ZkjZivxpzyeFm02x6BaCm5hvJOJq3l6fGe8pHX0JteBmN4pl
-   GzTiPBkjhVUwOLSBs0jK+JOGWr/YTUZd1hiyq0EVvAfcVsthihoROq8Cv
-   s3mGGJDGnSgWZyCLTkMurn+0xCP7lGY2HNiXns2RjhN/BdlMVYGcikT5J
-   qYb1lEIb/9MTkWhe8ZvVu8a91udj6zNKFW8SgUFxuUM675eYM1kVQ2JcC
-   zqbA4J+aMjkFlsa2/D+LUAwDC+KkdNxOn+ljSfnkPgk0EewrQvmE0nRJu
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="304983424"
-X-IronPort-AV: E=Sophos;i="5.96,228,1665471600"; 
-   d="scan'208";a="304983424"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 16:20:34 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="710696748"
-X-IronPort-AV: E=Sophos;i="5.96,228,1665471600"; 
-   d="scan'208";a="710696748"
-Received: from djiang5-mobl2.amr.corp.intel.com (HELO [10.212.107.194]) ([10.212.107.194])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2022 16:20:33 -0800
-Message-ID: <b3bb2916-0b08-e7a7-f744-21469e32e080@intel.com>
-Date:   Thu, 8 Dec 2022 17:20:32 -0700
+  t=1670606508; x=1702142508;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=qqpnrAny325mADylQgRrfNnHCsliT2KiaF1ZSIOdJqY=;
+  b=cHAmMD0kcojb8uzCwxe82IZVsol5xNPjlqy6Gm3pvQg2W4YGELV5heQ3
+   r11Z2NeyJLdkINorcC+WdZH58csp6GfmVEr6Ffimow8upFQyYaoXN7EEc
+   nl9/+5gVzJ7Mh7XvHPglVRd3hStIUs/s5RXyuUNnkjamJHizqVDNJOEU3
+   L0BAUeRqNO/4SBugKGowrbmP+d+VnQ8RItnes8KeTCWMPtVOXR23ERXzT
+   fjZ1hHVt8cgllscePJjfAst8ODZWtU9wUpDh75tWE+XIZti7DuocmOfAQ
+   ssneyrl+X5P7+mPzgVLF9BxuEIJ3cr5K2H0KxB66+a3LQENLNFPa7o/Qk
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10556"; a="379719514"
+X-IronPort-AV: E=Sophos;i="5.96,230,1665471600"; 
+   d="scan'208";a="379719514"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2022 09:21:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10556"; a="678213784"
+X-IronPort-AV: E=Sophos;i="5.96,230,1665471600"; 
+   d="scan'208";a="678213784"
+Received: from fyu1.sc.intel.com ([172.25.103.126])
+  by orsmga008.jf.intel.com with ESMTP; 09 Dec 2022 09:21:44 -0800
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Vinod Koul" <vkoul@kernel.org>,
+        "Dave Jiang" <dave.jiang@intel.com>
+Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
+        dmaengine@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH] dmaengine: idxd: Set traffic class values in GRPCFG on DSA 2.0
+Date:   Fri,  9 Dec 2022 09:21:41 -0800
+Message-Id: <20221209172141.562648-1-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.5.1
-Subject: Re: [PATCH v2] ntb_netdev: Use dev_kfree_skb_any() in interrupt
- context
-Content-Language: en-US
-To:     epilmore@gigaio.com, netdev@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ntb@lists.linux.dev, allenbh@gmail.com, jdmason@kudzu.us
-References: <20221209000659.8318-1-epilmore@gigaio.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20221209000659.8318-1-epilmore@gigaio.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On DSA/IAX 1.0, TC-A and TC-B in GRPCFG are set as 1 to have best
+performance and cannot be changed through sysfs knobs unless override
+option is given.
 
+The same values should be set on DSA 2.0 as well.
 
-On 12/8/2022 5:06 PM, epilmore@gigaio.com wrote:
-> From: Eric Pilmore <epilmore@gigaio.com>
-> 
-> TX/RX callback handlers (ntb_netdev_tx_handler(),
-> ntb_netdev_rx_handler()) can be called in interrupt
-> context via the DMA framework when the respective
-> DMA operations have completed. As such, any calls
-> by these routines to free skb's, should use the
-> interrupt context safe dev_kfree_skb_any() function.
-> 
-> Previously, these callback handlers would call the
-> interrupt unsafe version of dev_kfree_skb(). This has
-> not presented an issue on Intel IOAT DMA engines as
-> that driver utilizes tasklets rather than a hard
-> interrupt handler, like the AMD PTDMA DMA driver.
-> On AMD systems, a kernel WARNING message is
-> encountered, which is being issued from
-> skb_release_head_state() due to in_hardirq()
-> being true.
-> 
-> Besides the user visible WARNING from the kernel,
-> the other symptom of this bug was that TCP/IP performance
-> across the ntb_netdev interface was very poor, i.e.
-> approximately an order of magnitude below what was
-> expected. With the repair to use dev_kfree_skb_any(),
-> kernel WARNINGs from skb_release_head_state() ceased
-> and TCP/IP performance, as measured by iperf, was on
-> par with expected results, approximately 20 Gb/s on
-> AMD Milan based server. Note that this performance
-> is comparable with Intel based servers.
-> 
-> Fixes: 765ccc7bc3d91 ("ntb_netdev: correct skb leak")
-> Fixes: 548c237c0a997 ("net: Add support for NTB virtual ethernet device")
-> Signed-off-by: Eric Pilmore <epilmore@gigaio.com>
-
+Fixes: ea7c8f598c32 ("dmaengine: idxd: restore traffic class defaults after wq reset")
+Fixes: ade8a86b512c ("dmaengine: idxd: Set defaults for GRPCFG traffic class")
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/dma/idxd/device.c | 2 +-
+ drivers/dma/idxd/init.c   | 2 +-
+ drivers/dma/idxd/sysfs.c  | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-As an FYI for future. Typically you would add the patch revision change 
-log under the "---" line just as an FYI for reviewers on what you've 
-changed and who suggested the change.
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index b55405efd4ab..901257081524 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -834,7 +834,7 @@ static void idxd_groups_clear_state(struct idxd_device *idxd)
+ 		group->use_rdbuf_limit = false;
+ 		group->rdbufs_allowed = 0;
+ 		group->rdbufs_reserved = 0;
+-		if (idxd->hw.version < DEVICE_VERSION_2 && !tc_override) {
++		if (idxd->hw.version <= DEVICE_VERSION_2 && !tc_override) {
+ 			group->tc_a = 1;
+ 			group->tc_b = 1;
+ 		} else {
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 1053e2bb4e9f..4ecd34200998 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -314,7 +314,7 @@ static int idxd_setup_groups(struct idxd_device *idxd)
+ 		}
+ 
+ 		idxd->groups[i] = group;
+-		if (idxd->hw.version < DEVICE_VERSION_2 && !tc_override) {
++		if (idxd->hw.version <= DEVICE_VERSION_2 && !tc_override) {
+ 			group->tc_a = 1;
+ 			group->tc_b = 1;
+ 		} else {
+diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+index 632166538458..9db35011037f 100644
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -388,7 +388,7 @@ static ssize_t group_traffic_class_a_store(struct device *dev,
+ 	if (idxd->state == IDXD_DEV_ENABLED)
+ 		return -EPERM;
+ 
+-	if (idxd->hw.version < DEVICE_VERSION_2 && !tc_override)
++	if (idxd->hw.version <= DEVICE_VERSION_2 && !tc_override)
+ 		return -EPERM;
+ 
+ 	if (val < 0 || val > 7)
+@@ -430,7 +430,7 @@ static ssize_t group_traffic_class_b_store(struct device *dev,
+ 	if (idxd->state == IDXD_DEV_ENABLED)
+ 		return -EPERM;
+ 
+-	if (idxd->hw.version < DEVICE_VERSION_2 && !tc_override)
++	if (idxd->hw.version <= DEVICE_VERSION_2 && !tc_override)
+ 		return -EPERM;
+ 
+ 	if (val < 0 || val > 7)
+-- 
+2.32.0
 
-> ---
-
-i.e.
-
-v2:
-- Use dev_kfree_skb_any() instead of dev_kfree_skb_irq(). (DaveJ)
-
-
->   drivers/net/ntb_netdev.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ntb_netdev.c b/drivers/net/ntb_netdev.c
-> index 80bdc07f2cd3..59250b7accfb 100644
-> --- a/drivers/net/ntb_netdev.c
-> +++ b/drivers/net/ntb_netdev.c
-> @@ -137,7 +137,7 @@ static void ntb_netdev_rx_handler(struct ntb_transport_qp *qp, void *qp_data,
->   enqueue_again:
->   	rc = ntb_transport_rx_enqueue(qp, skb, skb->data, ndev->mtu + ETH_HLEN);
->   	if (rc) {
-> -		dev_kfree_skb(skb);
-> +		dev_kfree_skb_any(skb);
->   		ndev->stats.rx_errors++;
->   		ndev->stats.rx_fifo_errors++;
->   	}
-> @@ -192,7 +192,7 @@ static void ntb_netdev_tx_handler(struct ntb_transport_qp *qp, void *qp_data,
->   		ndev->stats.tx_aborted_errors++;
->   	}
->   
-> -	dev_kfree_skb(skb);
-> +	dev_kfree_skb_any(skb);
->   
->   	if (ntb_transport_tx_free_entry(dev->qp) >= tx_start) {
->   		/* Make sure anybody stopping the queue after this sees the new

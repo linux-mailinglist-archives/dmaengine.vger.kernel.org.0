@@ -2,43 +2,43 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D5AE649D1A
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Dec 2022 12:08:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 21465649D1E
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Dec 2022 12:08:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231715AbiLLLH7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 12 Dec 2022 06:07:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52620 "EHLO
+        id S232034AbiLLLIA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Dec 2022 06:08:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231912AbiLLLHP (ORCPT
+        with ESMTP id S232031AbiLLLHP (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Dec 2022 06:07:15 -0500
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C5011A20;
-        Mon, 12 Dec 2022 02:54:45 -0800 (PST)
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2BCAsMnJ007704;
-        Mon, 12 Dec 2022 04:54:22 -0600
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CE4211A1A;
+        Mon, 12 Dec 2022 02:54:43 -0800 (PST)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2BCAsP0V015748;
+        Mon, 12 Dec 2022 04:54:25 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1670842462;
-        bh=rvmSMN6uRXzCaezzetlytI5WmaJ6dm9scTqZD2bGuhU=;
-        h=From:To:CC:Subject:Date;
-        b=SZBQTD5eW0H4qFotn5JTi3E+7UgWFHNNbFYokizxJDC8eGVSLOpf/AHRNpTRPpluZ
-         mxZE/+BfJQw46aT+TnlQ7gHIgGCabXcdyH9huC/QsEoz6AoTRe1tH3RtU2QNpFcxsu
-         hLnAoQ4DNzE3x1ECN0TRrWxyqsVvtTT6QxCOm9vQ=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2BCAsMpi026412
+        s=ti-com-17Q1; t=1670842465;
+        bh=dJTlfaCoWeUSew/WTKzz41JfWrFikq6mXp6ZOS+6g9Y=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=hmEswQag8s7N09LX2poiEzYQTjn9wRqOUH1NFN8gboBZQOMvVeGQFFfzh5foCzvTI
+         9b0AwLblWWZDFE68pQQk21D6riUnPg3uzsOWAUSvhJPGzHMvQIrwQKR3vfbaq9n5BT
+         Ga0O4f274Mxj4pd7Hrj54XLbRO+lsN7Y7DlvOODg=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2BCAsPAn099781
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 12 Dec 2022 04:54:22 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 12 Dec 2022 04:54:25 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Mon, 12
- Dec 2022 04:54:21 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2022 04:54:25 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
- Frontend Transport; Mon, 12 Dec 2022 04:54:22 -0600
+ Frontend Transport; Mon, 12 Dec 2022 04:54:24 -0600
 Received: from uda0132425.dhcp.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2BCAsJVG035634;
-        Mon, 12 Dec 2022 04:54:19 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2BCAsJVH035634;
+        Mon, 12 Dec 2022 04:54:22 -0600
 From:   Vignesh Raghavendra <vigneshr@ti.com>
 To:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -48,10 +48,12 @@ CC:     <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v2 0/5] dmaengine: Add support for AM62A SoC DMAs
-Date:   Mon, 12 Dec 2022 16:24:11 +0530
-Message-ID: <20221212105416.3628442-1-vigneshr@ti.com>
+Subject: [PATCH v2 1/5] dt-bindings: dma: ti: k3-bcdma: Add bindings for BCDMA CSI RX
+Date:   Mon, 12 Dec 2022 16:24:12 +0530
+Message-ID: <20221212105416.3628442-2-vigneshr@ti.com>
 X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20221212105416.3628442-1-vigneshr@ti.com>
+References: <20221212105416.3628442-1-vigneshr@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -65,41 +67,122 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This series introduces support for various DMAs on TI's AM62A SoC under
-K3 family of devices.
+AM62A SoC has a dedicated BCDMA that serves Camera Serial Interface
+(CSI) IP. Add new compatible for the same. Unlike system
+BCDMA, this instance only has RX DMA channels and lack TX or block copy
+channel. Thus make those properties optional. Additionally CSI RX has
+independent power domain, add the binding for the same.
 
-Apart from usual BCDMA and PKTDMA thats present on K3 family, AM62A has
-a dedicated BCDMA for camera (CSI) with only RX DMA Channels.
-
-Patch 1 adds bindings for this new DMA instance
-Patch 2 fixes a bug that gets exposed due to RX only DMA
-Patch 3 and 4 add base support for AM62A DMA
-Patch 5 does BCDMA CSI RX specific enhancements.
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+---
 
 v2:
-Fix k3-bcdma.yaml as per Krzysztof 's comments
-Address's Peter's comment on 2/5
+reorder compatibles alphabetically
+Fix reg defintion to min 3 and max 5
+Keep top level constraints as is  and further restrict
+variants within "if-else" blocks
 
-v1: https://lore.kernel.org/dmaengine/20221206043554.1521522-1-vigneshr@ti.com/
+ .../devicetree/bindings/dma/ti/k3-bcdma.yaml  | 67 ++++++++++++++-----
+ 1 file changed, 49 insertions(+), 18 deletions(-)
 
-Jai Luthra (1):
-  dmaengine: ti: k3-psil-am62a: Add AM62Ax PSIL and PDMA data
-
-Vignesh Raghavendra (4):
-  dt-bindings: dma: ti: k3-bcdma: Add bindings for BCDMA CSI RX
-  dmaengine: ti: k3-udma: Fix BCDMA for case w/o BCHAN
-  dmaengine: ti: k3-udma: Add support for DMAs on AM62A SoC
-  dmaengine: ti: k3-udma: Add support for BCDMA CSI RX
-
- .../devicetree/bindings/dma/ti/k3-bcdma.yaml  |  67 ++++--
- drivers/dma/ti/Makefile                       |   3 +-
- drivers/dma/ti/k3-psil-am62a.c                | 196 ++++++++++++++++++
- drivers/dma/ti/k3-psil-priv.h                 |   1 +
- drivers/dma/ti/k3-psil.c                      |   1 +
- drivers/dma/ti/k3-udma.c                      |  41 +++-
- 6 files changed, 285 insertions(+), 24 deletions(-)
- create mode 100644 drivers/dma/ti/k3-psil-am62a.c
-
+diff --git a/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml b/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
+index 08627d91e607..86e8bebce3f2 100644
+--- a/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
++++ b/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
+@@ -28,13 +28,15 @@ description: |
+   PDMAs can be configured via BCDMA split channel's peer registers to match with
+   the configuration of the legacy peripheral.
+ 
+-allOf:
+-  - $ref: /schemas/dma/dma-controller.yaml#
+-  - $ref: /schemas/arm/keystone/ti,k3-sci-common.yaml#
+-
+ properties:
+   compatible:
+-    const: ti,am64-dmss-bcdma
++    enum:
++      - ti,am62a-dmss-bcdma-csirx
++      - ti,am64-dmss-bcdma
++
++  reg:
++    minItems: 3
++    maxItems: 5
+ 
+   "#dma-cells":
+     const: 3
+@@ -65,19 +67,13 @@ properties:
+ 
+       cell 3: ASEL value for the channel
+ 
+-  reg:
+-    maxItems: 5
+-
+-  reg-names:
+-    items:
+-      - const: gcfg
+-      - const: bchanrt
+-      - const: rchanrt
+-      - const: tchanrt
+-      - const: ringrt
+-
+   msi-parent: true
+ 
++  power-domains:
++    description:
++      Power domain if available
++    maxItems: 1
++
+   ti,asel:
+     $ref: /schemas/types.yaml#/definitions/uint32
+     description: ASEL value for non slave channels
+@@ -123,10 +119,45 @@ required:
+   - msi-parent
+   - ti,sci
+   - ti,sci-dev-id
+-  - ti,sci-rm-range-bchan
+-  - ti,sci-rm-range-tchan
+   - ti,sci-rm-range-rchan
+ 
++allOf:
++  - $ref: /schemas/dma/dma-controller.yaml#
++  - $ref: /schemas/arm/keystone/ti,k3-sci-common.yaml#
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: ti,am62a-dmss-bcdma-csirx
++    then:
++      properties:
++        ti,sci-rm-range-bchan: false
++        ti,sci-rm-range-tchan: false
++
++        reg-names:
++          items:
++            - const: gcfg
++            - const: rchanrt
++            - const: ringrt
++
++      required:
++        - power-domains
++
++    else:
++      properties:
++        reg-names:
++          items:
++            - const: gcfg
++            - const: bchanrt
++            - const: rchanrt
++            - const: tchanrt
++            - const: ringrt
++
++      required:
++        - ti,sci-rm-range-bchan
++        - ti,sci-rm-range-tchan
++
+ unevaluatedProperties: false
+ 
+ examples:
 -- 
 2.38.1
 

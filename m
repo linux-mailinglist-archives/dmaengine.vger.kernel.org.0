@@ -2,32 +2,32 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86F0C64D3DE
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Dec 2022 00:53:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F61A64D3E1
+	for <lists+dmaengine@lfdr.de>; Thu, 15 Dec 2022 00:53:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229941AbiLNXxk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 14 Dec 2022 18:53:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44034 "EHLO
+        id S229733AbiLNXxl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 14 Dec 2022 18:53:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229755AbiLNXxR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Dec 2022 18:53:17 -0500
+        with ESMTP id S229713AbiLNXxS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Dec 2022 18:53:18 -0500
 Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D41984A056;
-        Wed, 14 Dec 2022 15:53:16 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9D28B4A07E;
+        Wed, 14 Dec 2022 15:53:17 -0800 (PST)
 Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id 72FB0E0ED7;
-        Thu, 15 Dec 2022 02:53:16 +0300 (MSK)
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 39213E0ED8;
+        Thu, 15 Dec 2022 02:53:17 +0300 (MSK)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         baikalelectronics.ru; h=cc:cc:content-transfer-encoding
         :content-type:content-type:date:from:from:in-reply-to:message-id
         :mime-version:references:reply-to:subject:subject:to:to; s=post;
-         bh=GyDv+VBkBqjiSQBQ8kk7yv6uCM9cRHCy0MEvl6dPDdI=; b=AwXwaO5Y9Uvf
-        uGyBAVjPyKji1zxodxDH2ZHjpH3+eMU6v9ZFJhUqrJUvrTZ/gyVuYKORNkFdgl/Y
-        GjU5BB6tM/WQPovvDwY/KEqWk5D26ORCnPizB6svFf1hsmGPcSA6VVTFjmvtGdUR
-        ssxwQtzdm9ywhRlwBH0MCoANSbOkS1U=
+         bh=epmzGansytPxz5Hgaxj/E76J3uOG4CCTCqPVcuYibtE=; b=O8huWynoKiOo
+        9nL3r0CAahyoRdLTQ3jSQUt5y4yFW0MguXzBw6G2P0or1hoQ0EK0qplMDDVRkTFV
+        /zT81noRhQ9y+sZ3nmhQxCVloU+CHibRNRo6JO5C4OiEwOJQCm1+wMH9wK362IQH
+        CKbfVufZZoLpA2TtG+jHmDwKcsi6QUo=
 Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id 5F890E0E6B;
-        Thu, 15 Dec 2022 02:53:16 +0300 (MSK)
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 2C922E0E6B;
+        Thu, 15 Dec 2022 02:53:17 +0300 (MSK)
 Received: from localhost (10.8.30.6) by mail (192.168.51.25) with Microsoft
  SMTP Server (TLS) id 15.0.1395.4; Thu, 15 Dec 2022 02:53:16 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
@@ -48,9 +48,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 12/25] dmaengine: dw-edma: Add dw_edma prefix to the DebugFS nodes descriptor
-Date:   Thu, 15 Dec 2022 02:52:52 +0300
-Message-ID: <20221214235305.31744-13-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v7 13/25] dmaengine: dw-edma: Convert DebugFS descs to being kz-allocated
+Date:   Thu, 15 Dec 2022 02:52:53 +0300
+Message-ID: <20221214235305.31744-14-Sergey.Semin@baikalelectronics.ru>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20221214235305.31744-1-Sergey.Semin@baikalelectronics.ru>
 References: <20221214235305.31744-1-Sergey.Semin@baikalelectronics.ru>
@@ -68,105 +68,72 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The rest of the locally defined and used methods and structures have
-dw_edma prefix in their names. It's right in accordance with the kernel
-coding style to follow the locally defined rule of naming. Let's add that
-prefix to the debugfs_entries structure too especially seeing it's name
-may be confusing as if that structure belongs to the global DebugFS space.
+Currently all the DW eDMA DebugFS nodes descriptors are allocated on
+stack, while the DW eDMA driver private data and CSR limits are statically
+preserved. Such design won't work for the multi-eDMA platforms. As a
+preparation to adding the multi-eDMA system setups support we need to have
+each DebugFS node separately allocated and described. Afterwards we'll put
+an addition info there like Read/Write channel flag, channel ID, DW eDMA
+private data reference.
+
+Note this conversion is mainly required due to having the legacy DW eDMA
+controllers with indirect Read/Write channels context CSRs access. If we
+didn't need to have a synchronized access to these registers the DebugFS
+code of the driver would have been much simpler.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Acked-by: Vinod Koul <vkoul@kernel.org>
+
 ---
- drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+
+Changelog v2:
+- Drop __iomem qualifier from the struct dw_edma_debugfs_entry instance
+  definition in the dw_edma_debugfs_u32_get() method. (@Manivannan)
+---
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-index 6e7f3ef60ca7..2121ffc33cf3 100644
+index 2121ffc33cf3..78f15e4b07ac 100644
 --- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
 +++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-@@ -46,7 +46,7 @@ static struct {
- 	void					__iomem *end;
- } lim[2][EDMA_V0_MAX_NR_CH];
+@@ -53,7 +53,8 @@ struct dw_edma_debugfs_entry {
  
--struct debugfs_entries {
-+struct dw_edma_debugfs_entry {
- 	const char				*name;
- 	void __iomem				*reg;
- };
-@@ -94,7 +94,7 @@ static int dw_edma_debugfs_u32_get(void *data, u64 *val)
+ static int dw_edma_debugfs_u32_get(void *data, u64 *val)
+ {
+-	void __iomem *reg = data;
++	struct dw_edma_debugfs_entry *entry = data;
++	void __iomem *reg = entry->reg;
+ 
+ 	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY &&
+ 	    reg >= (void __iomem *)&regs->type.legacy.ch) {
+@@ -94,14 +95,22 @@ static int dw_edma_debugfs_u32_get(void *data, u64 *val)
  }
  DEFINE_DEBUGFS_ATTRIBUTE(fops_x32, dw_edma_debugfs_u32_get, NULL, "0x%08llx\n");
  
--static void dw_edma_debugfs_create_x32(const struct debugfs_entries entries[],
-+static void dw_edma_debugfs_create_x32(const struct dw_edma_debugfs_entry entries[],
+-static void dw_edma_debugfs_create_x32(const struct dw_edma_debugfs_entry entries[],
++static void dw_edma_debugfs_create_x32(const struct dw_edma_debugfs_entry ini[],
  				       int nr_entries, struct dentry *dir)
  {
++	struct dw_edma_debugfs_entry *entries;
  	int i;
-@@ -108,8 +108,7 @@ static void dw_edma_debugfs_create_x32(const struct debugfs_entries entries[],
- static void dw_edma_debugfs_regs_ch(struct dw_edma_v0_ch_regs __iomem *regs,
- 				    struct dentry *dir)
- {
--	int nr_entries;
--	const struct debugfs_entries debugfs_regs[] = {
-+	const struct dw_edma_debugfs_entry debugfs_regs[] = {
- 		REGISTER(ch_control1),
- 		REGISTER(ch_control2),
- 		REGISTER(transfer_size),
-@@ -120,6 +119,7 @@ static void dw_edma_debugfs_regs_ch(struct dw_edma_v0_ch_regs __iomem *regs,
- 		REGISTER(llp.lsb),
- 		REGISTER(llp.msb),
- 	};
-+	int nr_entries;
  
- 	nr_entries = ARRAY_SIZE(debugfs_regs);
- 	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, dir);
-@@ -127,7 +127,7 @@ static void dw_edma_debugfs_regs_ch(struct dw_edma_v0_ch_regs __iomem *regs,
++	entries = devm_kcalloc(dw->chip->dev, nr_entries, sizeof(*entries),
++			       GFP_KERNEL);
++	if (!entries)
++		return;
++
+ 	for (i = 0; i < nr_entries; i++) {
++		entries[i] = ini[i];
++
+ 		debugfs_create_file_unsafe(entries[i].name, 0444, dir,
+-					   entries[i].reg, &fops_x32);
++					   &entries[i], &fops_x32);
+ 	}
+ }
  
- static void dw_edma_debugfs_regs_wr(struct dentry *dir)
- {
--	const struct debugfs_entries debugfs_regs[] = {
-+	const struct dw_edma_debugfs_entry debugfs_regs[] = {
- 		/* eDMA global registers */
- 		WR_REGISTER(engine_en),
- 		WR_REGISTER(doorbell),
-@@ -148,7 +148,7 @@ static void dw_edma_debugfs_regs_wr(struct dentry *dir)
- 		WR_REGISTER(ch67_imwr_data),
- 		WR_REGISTER(linked_list_err_en),
- 	};
--	const struct debugfs_entries debugfs_unroll_regs[] = {
-+	const struct dw_edma_debugfs_entry debugfs_unroll_regs[] = {
- 		/* eDMA channel context grouping */
- 		WR_REGISTER_UNROLL(engine_chgroup),
- 		WR_REGISTER_UNROLL(engine_hshake_cnt.lsb),
-@@ -191,7 +191,7 @@ static void dw_edma_debugfs_regs_wr(struct dentry *dir)
- 
- static void dw_edma_debugfs_regs_rd(struct dentry *dir)
- {
--	const struct debugfs_entries debugfs_regs[] = {
-+	const struct dw_edma_debugfs_entry debugfs_regs[] = {
- 		/* eDMA global registers */
- 		RD_REGISTER(engine_en),
- 		RD_REGISTER(doorbell),
-@@ -213,7 +213,7 @@ static void dw_edma_debugfs_regs_rd(struct dentry *dir)
- 		RD_REGISTER(ch45_imwr_data),
- 		RD_REGISTER(ch67_imwr_data),
- 	};
--	const struct debugfs_entries debugfs_unroll_regs[] = {
-+	const struct dw_edma_debugfs_entry debugfs_unroll_regs[] = {
- 		/* eDMA channel context grouping */
- 		RD_REGISTER_UNROLL(engine_chgroup),
- 		RD_REGISTER_UNROLL(engine_hshake_cnt.lsb),
-@@ -256,7 +256,7 @@ static void dw_edma_debugfs_regs_rd(struct dentry *dir)
- 
- static void dw_edma_debugfs_regs(void)
- {
--	const struct debugfs_entries debugfs_regs[] = {
-+	const struct dw_edma_debugfs_entry debugfs_regs[] = {
- 		REGISTER(ctrl_data_arb_prior),
- 		REGISTER(ctrl),
- 	};
 -- 
 2.38.1
 

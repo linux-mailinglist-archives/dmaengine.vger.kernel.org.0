@@ -2,96 +2,87 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A25E64DFB3
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Dec 2022 18:32:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC92B64E4D1
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Dec 2022 00:52:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229901AbiLORcy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 15 Dec 2022 12:32:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48292 "EHLO
+        id S229830AbiLOXwc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 15 Dec 2022 18:52:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229770AbiLORcx (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 15 Dec 2022 12:32:53 -0500
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2049.outbound.protection.outlook.com [40.107.102.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60461DF27;
-        Thu, 15 Dec 2022 09:32:51 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Oa/KAjBYsGziGjcCCLL8tBAxcHUc/CeK0vDt0oIEwKBSsGMINADFlQb9tf/d07CQp8umjD6F3zkAAu/kRdCtxnCbZT/Ir0FBTNG2f8Rh6QTsDrxtulqhbvGv6/yPIMJ3qLmelj0qXdgd/vIAn4QJmfsnFYQ1plBm3czxYk+CMonYC+jorgKyKjjpIWegMtfe9bKmFpGZ7j4loo7XSqLevKmpxcN2Jsv625acoLGpaB4f9+MhdLnzN1vL73hz8nvMi9NSi1X/Q1S7TpMwkjHUJKfH7oG79smqt3y/xe0A1yffJTqsu60RnxUU7//XTBgi62yF5vm/NFThscSZPTy3NA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qAzsiTpdL0SBjzJLE5CDWwht36IIvxDx+Yrel2ix04A=;
- b=kpOJl8XxRSPXz3gDRf1gdKgV9T1cP4hG7feyL33BlwJKH1zvsBVul7fhBqp+9RIPA2lyYTc/fL3XTQWD+WAsk07gx869fUDvT+Cja6wypyt6Pe1M/8s0Z55pY1zyVmWxvlOffHZSy85+TU0kmTQEEOOI4Z00IUqEAa1U71fnLKs2DyzMNH0sYL+ncz3FrmwGwUMlE1nYBX2qqDX1mdo4gz1p8/ACCo0H8GC3d6Q1LNPIBl45bSZYaLrlAiIRNU3PMSOb7cQRFX1HskOMQJ+Pqt/GZGhGzaXw8szra9HZKGizfKgwy1zfAfF3NVEzAL8fmPHTS3JhjXScPE9bmqnDXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qAzsiTpdL0SBjzJLE5CDWwht36IIvxDx+Yrel2ix04A=;
- b=LDCkAMtN/FJ341oo2p5YlWKG/zQH/KomHYW1D4qMG/huFhp7LmXjcbitkUHZm0ZYOisRDr2ABhUUEhlPkVtD1cPzZe/FE3VEM6yL0uXtjQFWg0qfUy0Loiod1BFju0JINdzveX6VuHJDAFIDg+G1wLJKz3mIhkYxZZqIRlNRsj0=
-Received: from MW4PR03CA0355.namprd03.prod.outlook.com (2603:10b6:303:dc::30)
- by PH7PR12MB6000.namprd12.prod.outlook.com (2603:10b6:510:1dc::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5924.12; Thu, 15 Dec
- 2022 17:32:49 +0000
-Received: from CO1NAM11FT087.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:dc:cafe::3) by MW4PR03CA0355.outlook.office365.com
- (2603:10b6:303:dc::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5924.14 via Frontend
- Transport; Thu, 15 Dec 2022 17:32:48 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- CO1NAM11FT087.mail.protection.outlook.com (10.13.174.68) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5924.12 via Frontend Transport; Thu, 15 Dec 2022 17:32:48 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 15 Dec
- 2022 11:32:47 -0600
-Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
- Transport; Thu, 15 Dec 2022 11:32:47 -0600
-From:   Lizhi Hou <lizhi.hou@amd.com>
-To:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Lizhi Hou <lizhi.hou@amd.com>, <max.zhen@amd.com>,
-        <sonal.santan@amd.com>, <larry.liu@amd.com>, <brian.xu@amd.com>,
-        <tumic@gpxsee.org>
-Subject: [PATCH V11 XDMA 2/2] dmaengine: xilinx: xdma: Add user logic interrupt support
-Date:   Thu, 15 Dec 2022 09:32:33 -0800
-Message-ID: <1671125553-57707-3-git-send-email-lizhi.hou@amd.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1671125553-57707-1-git-send-email-lizhi.hou@amd.com>
-References: <1671125553-57707-1-git-send-email-lizhi.hou@amd.com>
+        with ESMTP id S229904AbiLOXw2 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 15 Dec 2022 18:52:28 -0500
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5E3562EB2;
+        Thu, 15 Dec 2022 15:52:23 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id g7so945324lfv.5;
+        Thu, 15 Dec 2022 15:52:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5dW+qE3K4WxtDVef0E/p9l1mmLjZkDc4bP16tw6sUOI=;
+        b=IUymvE++JRvF7a7y/097BLBaWDnTlO0F7EWl4HkArCUI7N+w/aoAlDcEcovR1oaCEt
+         mVG5DiQTkoCcsy1AmmEfxb20ZF772QtQ6nVn2qGEsO5/kliQiz/KJBTYa2CcCESe4210
+         Bm0PJvN3VCFaatRhbjJ+jdUW+UzVUxxDOoWCO4BAJkfwBO0aIbxvqXVx6cDaHcsibS1B
+         X5W+ttylCrQzRJrZ9C4o1RbNlQGZLwD9xIHXqVrV53K60yOZ8aft6fhjb8pUz3Wd0RzG
+         NR1TQdIHd7KIj5tL1Xr4eQK4Z3ADGf0BYThfppLwjsotlPmI7OwqDreI7m8pWAZ/kQLx
+         BFVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5dW+qE3K4WxtDVef0E/p9l1mmLjZkDc4bP16tw6sUOI=;
+        b=SwvpUzqslJ2ITGbr4Hj0SBi3KXEyns6CF5u3ULhqY23gB+1SAPWboW4ZAIa8wKZAhC
+         psqTeiHB1K2nBJ4a4+11LwPabT3XKI2TPrMtmmFEZHxZDWWgvvY0aBHkBJIO2omTPHzo
+         tISKWmve3qYbX2xAD3HJUkpxzz+EeOs3QjMauUvnESFmL3y47pvkmAF8L82ofbxcA82Y
+         7gIRSgYUayKr9by6C0FWKaim8axF3rOJZogBSk/1sy7Co+fr1ZV/4ereAoUEZdaQu/nH
+         jHm7qPTTHIv3Xop42R4N8He3LHbuVTk4Er5f9rEJ6wI3/6J+A2cC/+8PlKuXQ6SZ9kNb
+         QWWA==
+X-Gm-Message-State: ANoB5pkJFbwhUGCPqpgKAyr0a16GhwvgXiPy1V3KP/SZ8eMxbV9d8FLo
+        HHrH917+pMsqxr8O5b78fr0=
+X-Google-Smtp-Source: AA0mqf5lcT3SvSHdWwM8ocywqQux+phHblPhKs2Ii2OGWPgRABCYCw0q9U2xvnjyqr7gOBWqskzglg==
+X-Received: by 2002:a05:6512:6ca:b0:4a4:68b8:f4da with SMTP id u10-20020a05651206ca00b004a468b8f4damr10047600lff.32.1671148341873;
+        Thu, 15 Dec 2022 15:52:21 -0800 (PST)
+Received: from mobilestation ([95.79.133.202])
+        by smtp.gmail.com with ESMTPSA id m18-20020a056512359200b004b523766c23sm45661lfr.202.2022.12.15.15.52.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Dec 2022 15:52:21 -0800 (PST)
+Date:   Fri, 16 Dec 2022 02:52:18 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        caihuoqing <caihuoqing@baidu.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 23/25] PCI: dwc: Restore DMA-mask after MSI-data
+ allocation
+Message-ID: <20221215235218.wsuwy5uckqfxjnb6@mobilestation>
+References: <20221214235305.31744-1-Sergey.Semin@baikalelectronics.ru>
+ <20221214235305.31744-24-Sergey.Semin@baikalelectronics.ru>
+ <Y5rJJfZeVqliA5Rg@infradead.org>
+ <20221215092721.tvz3hpaql3kotgnu@mobilestation>
+ <07ec7610-f1be-9b5c-416d-17781a22427d@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT087:EE_|PH7PR12MB6000:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6a0c9d9a-7f82-433c-3b01-08dadec262ca
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MR1uq1bEmp7c34z5is36tuZHzUSJMhhyTZPg7pWYeA4qDNMlM5cI3zh0aF95rdQ+RuTBnGsIUeH3ytktzZYd9CYcwp9guAbLfgc5UMOdsMqjTRuEfswvuzA6HIEVY17OR1JKzJNfWBXTT1sC6GzHEYQsAxwAR6UyYKfymevrCyfQfPToK1alXLp35AOYZwTgx8mXULVI5Wq00SE/WMB5toteg9hTDGD8txTPqKDJMJbFlK9XO10b/ERFOx2L07ng4CpTu/oojJ2s8xms/pvTj+kvsMB2kgL2gtUQuow1+6h0AaNf0J2RXTWa2wquTpyjbb+EnXxbt+zF3KeTSxyKi8agNDVCSEJLkrm3KR4TpPmWkcs5A/8BJejMkXY6WVF7sNCLO+Zoh8CCybOq8XuXb1OTzTA15DAFAgUEJbx8SY7+N5m3lKYkXNRSea+5TS3rlVJ9WdMoMDEnJJSejnaeDiLLZwLBa7yLJmbSD5c9cY/SJ9/LuQ5JHsmFimJCM9klpqUk6HP1wOMTrKllNf/w9xTcbFC9/aLGXdWNNAMmUkFeRfIvml6gLK8lTKCnzpjImY5gkXG4R1PjKnDZhEvnWV+yiVgwYlrCj6n9n2j1MDkWRsSYHKyNom48pVePzmcAshsIx2XPr5UMSxxHfXvmODRgRKjdif/a3C1qy1nSw3rnc5OMsgkMgbKaPZFoyRxTlQftELs5aC1AO9myoPSCfVvKZJdhSsZLElanMPZLYRk=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:CA;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(376002)(39860400002)(396003)(346002)(136003)(451199015)(46966006)(36840700001)(40470700004)(36756003)(356005)(2906002)(82740400003)(81166007)(40480700001)(8936002)(82310400005)(5660300002)(41300700001)(40460700003)(47076005)(426003)(83380400001)(36860700001)(86362001)(478600001)(54906003)(110136005)(44832011)(4326008)(6666004)(70586007)(316002)(8676002)(2616005)(70206006)(26005)(186003)(336012)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Dec 2022 17:32:48.7382
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a0c9d9a-7f82-433c-3b01-08dadec262ca
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT087.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <07ec7610-f1be-9b5c-416d-17781a22427d@arm.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -99,174 +90,62 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The Xilinx DMA/Bridge Subsystem for PCIe (XDMA) provides up to 16 user
-interrupt wires to user logic that generate interrupts to the host.
-This patch adds APIs to enable/disable user logic interrupt for a given
-interrupt wire index.
+On Thu, Dec 15, 2022 at 10:26:08AM +0000, Robin Murphy wrote:
+> On 2022-12-15 09:27, Serge Semin wrote:
+> > Hi Christoph
+> > 
+> > On Wed, Dec 14, 2022 at 11:13:41PM -0800, Christoph Hellwig wrote:
+> > > On Thu, Dec 15, 2022 at 02:53:03AM +0300, Serge Semin wrote:
+> > > > DW PCIe Root Ports and End-points can be equipped with the DW eDMA engine.
+> > > > In that case it is critical to have the platform device pre-initialized
+> > > > with a valid DMA-mask so the drivers using the eDMA-engine would be able
+> > > > to allocate the DMA-able buffers. The MSI-capable data requires to be
+> > > > allocated from the lowest 4GB region. Since that procedure implies the
+> > > > DMA-mask change we need to restore the mask set by the low-level drivers
+> > > > after the MSI-data allocation is done.
+> > > 
+> > > You can't change the DMA mask when there are existing allocations.
+> > 
+> > Em, what do you guys suggest for the DW PCIe devices with the embedded
+> > DMA-engine then? To live forever with the SWIOTLBs? I can't drop the
+> > DMA-mask update due to this commit 423511ec23e2 ("PCI: dwc: Drop
+> > dependency on ZONE_DMA32") and I can't change the mask after it's
+> > updated. Note it's updated for the memory allocation to which actually
+> > no DMA will be performed, see
+> > https://lore.kernel.org/linux-pci/20220825185026.3816331-2-willmcvicker@google.com/.
+> > My patches imply adding the real DMA operations support.
+> > 
+> > We've discussed this a lot with Robin in various threads and I thought
+> > a workable solution was found. I was going to update the mask in
+> > another place, but basically it would still mean to have first setting
+> > the 32-bit mask here, and then change it to 64-bit one in the
+> > framework of the DW eDMA driver.
+> > 
+> > So to speak I don't see a proper way out from the situation. Nothing I
+> > suggested was accepted and now we'll have to live with the SWIOTLBs
+> > used for the memory above 4GB. So please suggest a workable solution
+> > then. We need the next things:
+> > 1. Somehow preserve a single DWORD of the PCIe bus memory for the
+> > iMSI-RX engine. (That's what is currently done the
+> > dw_pcie_msi_host_init() method by allocating the coherent memory.)
+> > 2. Set the actual DMA-mask to the DW PCIe platform device so the
+> > DMA-engine clients would be able to allocate actually DMA-able memory.
+> > 
+> > @Robin, please join the discussion.
+> 
 
-Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
-Signed-off-by: Sonal Santan <sonal.santan@amd.com>
-Signed-off-by: Max Zhen <max.zhen@amd.com>
-Signed-off-by: Brian Xu <brian.xu@amd.com>
-Tested-by: Martin Tuma <tumic@gpxsee.org>
----
- MAINTAINERS                  |  1 +
- drivers/dma/xilinx/xdma.c    | 85 ++++++++++++++++++++++++++++++++++++
- include/linux/dma/amd_xdma.h | 16 +++++++
- 3 files changed, 102 insertions(+)
- create mode 100644 include/linux/dma/amd_xdma.h
+> Basically just don't touch the coherent mask. The eDMA drivers can still set
+> the streaming mask to something larger, and that's the one that's going to
+> matter for most dmaengine clients anyway. Even if someone does call
+> dma_alloc_coherent() for their eDMA channel, it's not going to make much
+> practical difference if that has to come from a DMA zone, unless the system
+> is under severe memory pressure anyway.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d598c4e23901..eaf6590dda19 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22583,6 +22583,7 @@ L:	dmaengine@vger.kernel.org
- S:	Supported
- F:	drivers/dma/xilinx/xdma-regs.h
- F:	drivers/dma/xilinx/xdma.c
-+F:	include/linux/dma/amd_xdma.h
- F:	include/linux/platform_data/amd_xdma.h
- 
- XILINX ZYNQMP DPDMA DRIVER
-diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
-index 118528295fb7..846f10317bba 100644
---- a/drivers/dma/xilinx/xdma.c
-+++ b/drivers/dma/xilinx/xdma.c
-@@ -25,6 +25,7 @@
- #include <linux/dmapool.h>
- #include <linux/regmap.h>
- #include <linux/dmaengine.h>
-+#include <linux/dma/amd_xdma.h>
- #include <linux/platform_device.h>
- #include <linux/platform_data/amd_xdma.h>
- #include <linux/dma-mapping.h>
-@@ -713,6 +714,7 @@ static int xdma_set_vector_reg(struct xdma_device *xdev, u32 vec_tbl_start,
- static int xdma_irq_init(struct xdma_device *xdev)
- {
- 	u32 irq = xdev->irq_start;
-+	u32 user_irq_start;
- 	int i, j, ret;
- 
- 	/* return failure if there are not enough IRQs */
-@@ -755,6 +757,18 @@ static int xdma_irq_init(struct xdma_device *xdev)
- 		goto failed_init_c2h;
- 	}
- 
-+	/* config user IRQ registers if needed */
-+	user_irq_start = XDMA_CHAN_NUM(xdev);
-+	if (xdev->irq_num > user_irq_start) {
-+		ret = xdma_set_vector_reg(xdev, XDMA_IRQ_USER_VEC_NUM,
-+					  user_irq_start,
-+					  xdev->irq_num - user_irq_start);
-+		if (ret) {
-+			xdma_err(xdev, "failed to set user vectors: %d", ret);
-+			goto failed_init_c2h;
-+		}
-+	}
-+
- 	/* enable interrupt */
- 	ret = xdma_write_reg(xdev, XDMA_IRQ_BASE, XDMA_IRQ_CHAN_INT_EN_W1S, ~0);
- 	if (ret)
-@@ -780,6 +794,77 @@ static bool xdma_filter_fn(struct dma_chan *chan, void *param)
- 	return chan_info->dir == xdma_chan->dir;
- }
- 
-+/**
-+ * xdma_disable_user_irq - Disable user interrupt
-+ * @pdev: Pointer to the platform_device structure
-+ * @irq_num: System IRQ number
-+ */
-+void xdma_disable_user_irq(struct platform_device *pdev, u32 irq_num)
-+{
-+	struct xdma_device *xdev = platform_get_drvdata(pdev);
-+	u32 user_irq_index;
-+
-+	user_irq_index = irq_num - xdev->irq_start;
-+	if (user_irq_index < XDMA_CHAN_NUM(xdev) ||
-+	    user_irq_index >= xdev->irq_num) {
-+		xdma_err(xdev, "invalid user irq number");
-+		return;
-+	}
-+	user_irq_index -= XDMA_CHAN_NUM(xdev);
-+
-+	xdma_write_reg(xdev, XDMA_IRQ_BASE, XDMA_IRQ_USER_INT_EN_W1C,
-+		       (1 << user_irq_index));
-+}
-+EXPORT_SYMBOL(xdma_disable_user_irq);
-+
-+/**
-+ * xdma_enable_user_irq - Enable user logic interrupt
-+ * @pdev: Pointer to the platform_device structure
-+ * @irq_num: System IRQ number
-+ */
-+int xdma_enable_user_irq(struct platform_device *pdev, u32 irq_num)
-+{
-+	struct xdma_device *xdev = platform_get_drvdata(pdev);
-+	u32 user_irq_index;
-+	int ret;
-+
-+	user_irq_index = irq_num - xdev->irq_start;
-+	if (user_irq_index < XDMA_CHAN_NUM(xdev) ||
-+	    user_irq_index >= xdev->irq_num) {
-+		xdma_err(xdev, "invalid user irq number");
-+		return -EINVAL;
-+	}
-+	user_irq_index -= XDMA_CHAN_NUM(xdev);
-+
-+	ret = xdma_write_reg(xdev, XDMA_IRQ_BASE, XDMA_IRQ_USER_INT_EN_W1S,
-+			     (1 << user_irq_index));
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(xdma_enable_user_irq);
-+
-+/**
-+ * xdma_get_user_irq - Get system IRQ number
-+ * @pdev: Pointer to the platform_device structure
-+ * @user_irq_index: User logic IRQ wire index
-+ *
-+ * Return: The system IRQ number allocated for the given wire index.
-+ */
-+int xdma_get_user_irq(struct platform_device *pdev, u32 user_irq_index)
-+{
-+	struct xdma_device *xdev = platform_get_drvdata(pdev);
-+
-+	if (XDMA_CHAN_NUM(xdev) + user_irq_index >= xdev->irq_num) {
-+		xdma_err(xdev, "invalid user irq index");
-+		return -EINVAL;
-+	}
-+
-+	return xdev->irq_start + XDMA_CHAN_NUM(xdev) + user_irq_index;
-+}
-+EXPORT_SYMBOL(xdma_get_user_irq);
-+
- /**
-  * xdma_remove - Driver remove function
-  * @pdev: Pointer to the platform_device structure
-diff --git a/include/linux/dma/amd_xdma.h b/include/linux/dma/amd_xdma.h
-new file mode 100644
-index 000000000000..ceba69ed7cb4
---- /dev/null
-+++ b/include/linux/dma/amd_xdma.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (C) 2022, Advanced Micro Devices, Inc.
-+ */
-+
-+#ifndef _DMAENGINE_AMD_XDMA_H
-+#define _DMAENGINE_AMD_XDMA_H
-+
-+#include <linux/interrupt.h>
-+#include <linux/platform_device.h>
-+
-+int xdma_enable_user_irq(struct platform_device *pdev, u32 irq_num);
-+void xdma_disable_user_irq(struct platform_device *pdev, u32 irq_num);
-+int xdma_get_user_irq(struct platform_device *pdev, u32 user_irq_index);
-+
-+#endif /* _DMAENGINE_AMD_XDMA_H */
--- 
-2.27.0
+Got it. Thanks for clarification. I'll resubmit the series with only
+the streaming DMA mask restoration.
 
+-Serge(y)
+
+> 
+> Thanks,
+> Robin.

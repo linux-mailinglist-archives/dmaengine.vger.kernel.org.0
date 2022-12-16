@@ -2,113 +2,100 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3EAB64EC83
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Dec 2022 15:01:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F045A64EDD5
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Dec 2022 16:26:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229892AbiLPOBd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 16 Dec 2022 09:01:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40548 "EHLO
+        id S231336AbiLPP0M (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 16 Dec 2022 10:26:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229923AbiLPOBb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 16 Dec 2022 09:01:31 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0280A14012;
-        Fri, 16 Dec 2022 06:01:28 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D59411042;
-        Fri, 16 Dec 2022 06:02:08 -0800 (PST)
-Received: from [10.57.88.234] (unknown [10.57.88.234])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2ABC83F5A1;
-        Fri, 16 Dec 2022 06:01:25 -0800 (PST)
-Message-ID: <22bae859-58ee-80cd-f31b-2313c2e47531@arm.com>
-Date:   Fri, 16 Dec 2022 14:01:20 +0000
+        with ESMTP id S231217AbiLPP0L (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 16 Dec 2022 10:26:11 -0500
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D91058BCD
+        for <dmaengine@vger.kernel.org>; Fri, 16 Dec 2022 07:26:08 -0800 (PST)
+Received: by mail-ej1-x62b.google.com with SMTP id bj12so6856386ejb.13
+        for <dmaengine@vger.kernel.org>; Fri, 16 Dec 2022 07:26:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tKpnCX1We6Wd+jFghY+6E3YYWeYuw8xu63PLFG+p7NQ=;
+        b=mUCc71x2gfj8zWHkucpemaG9ceX9LG3EweMQXIAWBlZTy3Y9h+Ho2Ln0ho92leTzUC
+         z6jTiXF32YnMtX/Fq2VsEVuabr3WksUq745MBuT00/4zwoe5k0rP9XXrRzeTufO4yNe1
+         pJgodK/x+6zCI3Wvpzl7KjyHuka22cQpmupeU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tKpnCX1We6Wd+jFghY+6E3YYWeYuw8xu63PLFG+p7NQ=;
+        b=47kGShheoq8rctwVppumHUT3xrbQPilrvcbL+GK2g2o5WmxBO4psu/yYngo0YRNhcu
+         r7sO3V0quu4WcRmjGSqslJ2dbuYCYdostqBbTw1WLHIwgF+tjqdkl69JMXPL9GfeWhqA
+         LseH3GsIk0w1O2dGhbDOpmr1vmVzbWP54joBLS1wA1s7W+007yv/mJSfOTrLiaGrCppO
+         AEIXQobWKWl0W4fBiTcdjb5BG7E6CgcE83z+YJiyYBiQXa5A4TfQptDXcYqlnfzTmhs9
+         cm9pcYYCAyFENXB/v3SyeVhw4YDpI5aJPUXRHQsMEKDQc0+rzBKRnSfnrShKUXXiemm7
+         SgBA==
+X-Gm-Message-State: ANoB5plpUia8qnb84+xOW215Mwc32A2oKBn2OFcunVLZQwSDVQ5rHrN5
+        xCzBS6gJzpicOSJc4AHK2rxIQb4h7d/iEJlloO8=
+X-Google-Smtp-Source: AA0mqf5Q+aBaiuuovJfZ0UQHEX8w08vbz0ri7breb8kk06/wmBl6t8vJY0yoqXs4x+AIuwSxn05AHw==
+X-Received: by 2002:a17:906:80c2:b0:7c1:5019:50c6 with SMTP id a2-20020a17090680c200b007c1501950c6mr35890618ejx.72.1671204366825;
+        Fri, 16 Dec 2022 07:26:06 -0800 (PST)
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
+        by smtp.gmail.com with ESMTPSA id la15-20020a170907780f00b007a8de84ce36sm925516ejc.206.2022.12.16.07.26.05
+        for <dmaengine@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Dec 2022 07:26:05 -0800 (PST)
+Received: by mail-wr1-f47.google.com with SMTP id a17so1682077wrt.11
+        for <dmaengine@vger.kernel.org>; Fri, 16 Dec 2022 07:26:05 -0800 (PST)
+X-Received: by 2002:adf:fd89:0:b0:242:1f81:7034 with SMTP id
+ d9-20020adffd89000000b002421f817034mr27601714wrr.617.1671204364781; Fri, 16
+ Dec 2022 07:26:04 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH v7 23/25] PCI: dwc: Restore DMA-mask after MSI-data
- allocation
-Content-Language: en-GB
-To:     Serge Semin <fancer.lancer@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        caihuoqing <caihuoqing@baidu.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20221214235305.31744-1-Sergey.Semin@baikalelectronics.ru>
- <20221214235305.31744-24-Sergey.Semin@baikalelectronics.ru>
- <Y5rJJfZeVqliA5Rg@infradead.org>
- <20221215092721.tvz3hpaql3kotgnu@mobilestation>
- <07ec7610-f1be-9b5c-416d-17781a22427d@arm.com>
- <20221215235218.wsuwy5uckqfxjnb6@mobilestation>
- <Y5wgvdnMWQDxkUd+@infradead.org>
- <20221216093423.4bettdxisserdzsh@mobilestation>
- <Y5w/MkA4N857+AWQ@infradead.org>
- <20221216101827.owq7qpakjduf3rit@mobilestation>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20221216101827.owq7qpakjduf3rit@mobilestation>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <1669810824-32094-1-git-send-email-quic_vnivarth@quicinc.com> <82ec225f-64e2-40a1-aa3e-58480f293d17@quicinc.com>
+In-Reply-To: <82ec225f-64e2-40a1-aa3e-58480f293d17@quicinc.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 16 Dec 2022 07:25:53 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=V+XG9ZBFZOjnVVXfCQnPSCjdAwB095tiomhE9DNbW1Ag@mail.gmail.com>
+Message-ID: <CAD=FV=V+XG9ZBFZOjnVVXfCQnPSCjdAwB095tiomhE9DNbW1Ag@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: qcom: gpi: Set link_rx bit on GO TRE for rx operation
+To:     Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        vkoul@kernel.org, linux-arm-msm@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_msavaliy@quicinc.com, mka@chromium.org, swboyd@chromium.org,
+        quic_vtanuku@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 2022-12-16 10:18, Serge Semin wrote:
-> On Fri, Dec 16, 2022 at 01:49:38AM -0800, Christoph Hellwig wrote:
->> On Fri, Dec 16, 2022 at 12:34:23PM +0300, Serge Semin wrote:
->>> What about instead of save/restore pattern I'll just change the
->>> dma_set_mask_and_coherent() method with the dma_set_coherent_mask()
->>> function call? It seems cleaner. Like this:
->>
->>> Thus the platform-specific streaming DMA mask would be preserved.
->>> Since it's PCIe then having the streaming DMA-mask less than 32-bits
->>> wide is very much improbable. Moreover DW PCIe AXI-interface can be
->>> synthesize only with one out of two address bus widths: 32 and 64.
->>
-> 
->> Where platform-specific means the dwc subdriver?
-> 
-> Right. I meant the streaming DMA-mask set by the low-level DWC PCIe drivers
-> (like pcie-qcom(-ep)?.c, pcie-bt1.c, etc). It's very much important to
-> have the real DMA-mask (at least the streaming one) set for the eDMA-capable
-> controllers so the DMA-engine clients would work with the best performance.
-> 
->> Yes, that seems to work.
-> 
-> Ok. I'll just use the direct dma_set_coherent_mask() method here then.
-> 
->> Alternatively have a flag that says which streaming mask
->> to set.
-> 
-> I'd prefer to have more flexibility here relying on the low-level
-> drivers to set the mask(s) instead of adding the new flag, just in case
-> if there is vendor-specific IP-core/platform changes in the address
-> bus width.
+Hi,
 
-Presumably the low-level glue drivers could pass a bus size or mask 
-value in struct dw_pcie_rp/dw_pcie, so the actual dma_set_mask() call 
-itself could be centralised? I guess there's also an argument that only 
-glue drivers which care about eDMA need to care about setting a mask at 
-all, so I don't have a string preference either way. If you'd rather 
-stick with that approach then it might be worth a brief comment at each 
-site to clarify why the other mask is being set from an entirely 
-different place, just in case anyone comes along and tries to "fix" it.
+On Fri, Dec 16, 2022 at 4:15 AM Vijaya Krishna Nivarthi
+<quic_vnivarth@quicinc.com> wrote:
+>
+> Gentle reminder to review/approve please.
+>
+> Thank you...
 
-Cheers,
-Robin.
+I was expecting you to send a v2 where you beefed up the patch
+description to add the "why". Maybe others are as well? I suppose with
+that I could add a weak Reviewed-by to the patch.
+
+This is also a bad time for patches to be applied--it's right in the
+middle of the merge window. Usually the best time to send reminders is
+between -rc1 and -rc5. Officially "Fixes" could be applied at any time
+(even during the merge window), but unless it's urgent that usually
+doesn't happen.
+
+Speaking of which, given your updated description, I'd say that this
+_is_ a fix. Perhaps you should add a "Fixes" tag? That might actually
+help it get applied sooner. ;-)
+
+-Doug

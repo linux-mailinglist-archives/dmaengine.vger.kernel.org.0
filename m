@@ -2,112 +2,113 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27DB664EB3F
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Dec 2022 13:15:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3EAB64EC83
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Dec 2022 15:01:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230375AbiLPMPu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 16 Dec 2022 07:15:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56812 "EHLO
+        id S229892AbiLPOBd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 16 Dec 2022 09:01:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230468AbiLPMPq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 16 Dec 2022 07:15:46 -0500
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B16EEFD1F;
-        Fri, 16 Dec 2022 04:15:45 -0800 (PST)
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2BG9phJc021843;
-        Fri, 16 Dec 2022 12:15:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=KkeWDQxWZ2/R/fyTtI0H/FFTlptZnIxvDrsLlZi7jnI=;
- b=E8T4PSzz2JV+S+xUVMYKh19sczdZ85/+Kieh+lxs54USSQh7oGeBCFchHQaXNjnTI7Yx
- JoQ57ODNKaaBwzdT5f3TEKcdOt2eW0m2Hf94oXEd3yMysoFoWzf40LTjimxDATmUHD/m
- 9ZiBlusrAdYm15ztePx6J77Bjq0PE+Q9a83+69rlnzHiQN5rnuI3uuGRLdC3wPDh8cul
- rU54t5M2G7EbAft5yQW0xdHLTC+czFCVLWitAgjPZBSdIhPaceVWD7IohBZOut/iEYe9
- CfpEtdHSKmu7Z2b6dNVKyDRqG3RU9K0A780q0yQeWTD+EOpfm2dHRjI3ntN2qz5RZC/D Cg== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3mgpdb0bx5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 16 Dec 2022 12:15:41 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 2BGCFedg014441
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 16 Dec 2022 12:15:40 GMT
-Received: from [10.216.35.225] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Fri, 16 Dec
- 2022 04:15:36 -0800
-Message-ID: <82ec225f-64e2-40a1-aa3e-58480f293d17@quicinc.com>
-Date:   Fri, 16 Dec 2022 17:45:33 +0530
+        with ESMTP id S229923AbiLPOBb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 16 Dec 2022 09:01:31 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0280A14012;
+        Fri, 16 Dec 2022 06:01:28 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D59411042;
+        Fri, 16 Dec 2022 06:02:08 -0800 (PST)
+Received: from [10.57.88.234] (unknown [10.57.88.234])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2ABC83F5A1;
+        Fri, 16 Dec 2022 06:01:25 -0800 (PST)
+Message-ID: <22bae859-58ee-80cd-f31b-2313c2e47531@arm.com>
+Date:   Fri, 16 Dec 2022 14:01:20 +0000
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH] dmaengine: qcom: gpi: Set link_rx bit on GO TRE for rx
- operation
-Content-Language: en-CA
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <vkoul@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <quic_msavaliy@quicinc.com>, <dianders@chromium.org>,
-        <mka@chromium.org>, <swboyd@chromium.org>,
-        <quic_vtanuku@quicinc.com>
-References: <1669810824-32094-1-git-send-email-quic_vnivarth@quicinc.com>
-From:   Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>
-In-Reply-To: <1669810824-32094-1-git-send-email-quic_vnivarth@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH v7 23/25] PCI: dwc: Restore DMA-mask after MSI-data
+ allocation
+Content-Language: en-GB
+To:     Serge Semin <fancer.lancer@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        caihuoqing <caihuoqing@baidu.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20221214235305.31744-1-Sergey.Semin@baikalelectronics.ru>
+ <20221214235305.31744-24-Sergey.Semin@baikalelectronics.ru>
+ <Y5rJJfZeVqliA5Rg@infradead.org>
+ <20221215092721.tvz3hpaql3kotgnu@mobilestation>
+ <07ec7610-f1be-9b5c-416d-17781a22427d@arm.com>
+ <20221215235218.wsuwy5uckqfxjnb6@mobilestation>
+ <Y5wgvdnMWQDxkUd+@infradead.org>
+ <20221216093423.4bettdxisserdzsh@mobilestation>
+ <Y5w/MkA4N857+AWQ@infradead.org>
+ <20221216101827.owq7qpakjduf3rit@mobilestation>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20221216101827.owq7qpakjduf3rit@mobilestation>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: wh1VzmLR3I-iTzU6VL6OjGHFWZ7OmXIY
-X-Proofpoint-ORIG-GUID: wh1VzmLR3I-iTzU6VL6OjGHFWZ7OmXIY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-12-16_07,2022-12-15_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- mlxlogscore=999 phishscore=0 mlxscore=0 adultscore=0 impostorscore=0
- malwarescore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2212160109
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Gentle reminder to review/approve please.
+On 2022-12-16 10:18, Serge Semin wrote:
+> On Fri, Dec 16, 2022 at 01:49:38AM -0800, Christoph Hellwig wrote:
+>> On Fri, Dec 16, 2022 at 12:34:23PM +0300, Serge Semin wrote:
+>>> What about instead of save/restore pattern I'll just change the
+>>> dma_set_mask_and_coherent() method with the dma_set_coherent_mask()
+>>> function call? It seems cleaner. Like this:
+>>
+>>> Thus the platform-specific streaming DMA mask would be preserved.
+>>> Since it's PCIe then having the streaming DMA-mask less than 32-bits
+>>> wide is very much improbable. Moreover DW PCIe AXI-interface can be
+>>> synthesize only with one out of two address bus widths: 32 and 64.
+>>
+> 
+>> Where platform-specific means the dwc subdriver?
+> 
+> Right. I meant the streaming DMA-mask set by the low-level DWC PCIe drivers
+> (like pcie-qcom(-ep)?.c, pcie-bt1.c, etc). It's very much important to
+> have the real DMA-mask (at least the streaming one) set for the eDMA-capable
+> controllers so the DMA-engine clients would work with the best performance.
+> 
+>> Yes, that seems to work.
+> 
+> Ok. I'll just use the direct dma_set_coherent_mask() method here then.
+> 
+>> Alternatively have a flag that says which streaming mask
+>> to set.
+> 
+> I'd prefer to have more flexibility here relying on the low-level
+> drivers to set the mask(s) instead of adding the new flag, just in case
+> if there is vendor-specific IP-core/platform changes in the address
+> bus width.
 
-Thank you...
+Presumably the low-level glue drivers could pass a bus size or mask 
+value in struct dw_pcie_rp/dw_pcie, so the actual dma_set_mask() call 
+itself could be centralised? I guess there's also an argument that only 
+glue drivers which care about eDMA need to care about setting a mask at 
+all, so I don't have a string preference either way. If you'd rather 
+stick with that approach then it might be worth a brief comment at each 
+site to clarify why the other mask is being set from an entirely 
+different place, just in case anyone comes along and tries to "fix" it.
 
-
-On 11/30/2022 5:50 PM, Vijaya Krishna Nivarthi wrote:
-> As per GSI spec, link_rx bit is to be set on GO TRE on tx
-> channel whenever there is going to be a DMA TRE on rx
-> channel. This is currently set for duplex operation only.
->
-> Set the bit for rx operation as well.
->
-> Signed-off-by: Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>
-> ---
->   drivers/dma/qcom/gpi.c | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-> index 061add8..59a36cb 100644
-> --- a/drivers/dma/qcom/gpi.c
-> +++ b/drivers/dma/qcom/gpi.c
-> @@ -1756,6 +1756,7 @@ static int gpi_create_spi_tre(struct gchan *chan, struct gpi_desc *desc,
->   		tre->dword[3] = u32_encode_bits(TRE_TYPE_GO, TRE_FLAGS_TYPE);
->   		if (spi->cmd == SPI_RX) {
->   			tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_IEOB);
-> +			tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_LINK);
->   		} else if (spi->cmd == SPI_TX) {
->   			tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_CHAIN);
->   		} else { /* SPI_DUPLEX */
+Cheers,
+Robin.

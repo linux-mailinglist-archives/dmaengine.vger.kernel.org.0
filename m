@@ -2,103 +2,114 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C130C64F29E
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Dec 2022 21:51:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F006764F4E2
+	for <lists+dmaengine@lfdr.de>; Sat, 17 Dec 2022 00:16:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232021AbiLPUu7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 16 Dec 2022 15:50:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43840 "EHLO
+        id S230166AbiLPXQC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 16 Dec 2022 18:16:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231959AbiLPUu5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 16 Dec 2022 15:50:57 -0500
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C60C72F013
-        for <dmaengine@vger.kernel.org>; Fri, 16 Dec 2022 12:50:54 -0800 (PST)
-Received: by mail-ej1-x62f.google.com with SMTP id tz12so8867156ejc.9
-        for <dmaengine@vger.kernel.org>; Fri, 16 Dec 2022 12:50:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ty4Q6pmKGBdcK+JvghcaxT3SktTZCwT4+BsAt6gEM58=;
-        b=K281Hjcnge0R86zglG2H9v4Gt/ejUenfiXW6UYj7GNr4X2YogLbL9zN80GvGkEXpLF
-         bAscjiNEWAXJvdbmAen53eXH+PgSzU4jrBtGIts4eu+BzaMaTF5Zcp+/cIJ6ooacQEeD
-         7p18N6vnCNtUjS6nqN27cydZ6JYP9JpNOQr6w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ty4Q6pmKGBdcK+JvghcaxT3SktTZCwT4+BsAt6gEM58=;
-        b=U9L0F3k3sV+IDF7f+sVu/hUk0nd3GProTNJJQWrBBtU1LabBIEo/sak1+eLCr0T8VB
-         UnqYqpb5AiOqG86RLIiuIR2Ar2DG4TaVTCR9RfSt8Ic2btb8QUjaljNO3+jn+GnjrGbS
-         KsIABSQeIaSFPZLIPzhMZ5kUVuXKT8d9cWLTn9sESvAeLoT2tSyy2CnYTIw4lUXWdlKw
-         ERsrnhbhH4tNYh/qzI4AMMZE8cvxzoz3iese1+HjvzPI9tAGA1ic0X9QhqpgkqgHyHWd
-         rROUso9R9LverZM65ajr87NEVWv8Aj4CVGnbdTULDT7XH3PpFXYnBxqq80FUkYZTD77q
-         t/Qw==
-X-Gm-Message-State: ANoB5pnAD1wX3bkaACYySvmDUupRnHU6YUOrqlWu3fRad5kQYEB3p9Ko
-        sfJ3xI61jOn7aW5uJx57DBCNvWhu9rh81eFZd40=
-X-Google-Smtp-Source: AA0mqf6BT0PXIxolwLfsf44ffgi7F3b+Qt5LNJN+XKuKhWd0l/TtV1tU+E4KWKZAliP33rhSWJk4kw==
-X-Received: by 2002:a17:906:7751:b0:7ae:df97:c020 with SMTP id o17-20020a170906775100b007aedf97c020mr27653374ejn.13.1671223853269;
-        Fri, 16 Dec 2022 12:50:53 -0800 (PST)
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com. [209.85.221.43])
-        by smtp.gmail.com with ESMTPSA id p26-20020a056402045a00b004610899742asm1262583edw.13.2022.12.16.12.50.51
-        for <dmaengine@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Dec 2022 12:50:51 -0800 (PST)
-Received: by mail-wr1-f43.google.com with SMTP id o5so3673872wrm.1
-        for <dmaengine@vger.kernel.org>; Fri, 16 Dec 2022 12:50:51 -0800 (PST)
-X-Received: by 2002:a5d:4950:0:b0:242:1f80:6cd9 with SMTP id
- r16-20020a5d4950000000b002421f806cd9mr26993001wrs.405.1671223850700; Fri, 16
- Dec 2022 12:50:50 -0800 (PST)
+        with ESMTP id S230014AbiLPXP4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 16 Dec 2022 18:15:56 -0500
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF734C77F;
+        Fri, 16 Dec 2022 15:15:44 -0800 (PST)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2BGLS3lC020106;
+        Fri, 16 Dec 2022 23:15:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=qcppdkim1;
+ bh=eOEnyLa8Idu6Kcj9YUhdXWt7BBG5vo88pgKbA8YFfaU=;
+ b=ehbbbkWdnvMvtdb48kexpihbSQuznd89Cx4cfTPXOfk+vO0bho0umbPpMUwNg7cL1Sqx
+ Mhf/4TGerYTo7ZifV3yq5alux4qknyI8TaVb6VyCNlO3rNKQepN8pKT0lYMWfd1HQCcH
+ bjykTgGCctbjm52lJ/qx8PKRLxo7s9SSaY2DczT48NgMY+Icy1F9j1jZSfcUcLQlPXXC
+ s2O4doDlbZ12YsgqbCRHZazV6yidzYPGlW7jaH2vKB6SNzdiD/c3TXrhYoZyeUL5Tkhd
+ BCmwilpf5o+2gaxWzpPPWS5wq+/VPN+5fWuXIx6M8j4Im0XebZh5216qBhKkUQZc4KeP bg== 
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3mgmv12b9j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 16 Dec 2022 23:15:41 +0000
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+        by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 2BGNFfYm031168
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 16 Dec 2022 23:15:41 GMT
+Received: from hu-molvera-sd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.36; Fri, 16 Dec 2022 15:15:40 -0800
+From:   Melody Olvera <quic_molvera@quicinc.com>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+CC:     Melody Olvera <quic_molvera@quicinc.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [RESEND PATCH] dt-bindings: dmaengine: qcom: gpi: Add QDU1000/QRU1000 gpi device
+Date:   Fri, 16 Dec 2022 15:15:12 -0800
+Message-ID: <20221216231513.25085-1-quic_molvera@quicinc.com>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-References: <1671212293-14767-1-git-send-email-quic_vnivarth@quicinc.com>
-In-Reply-To: <1671212293-14767-1-git-send-email-quic_vnivarth@quicinc.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 16 Dec 2022 12:50:38 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UH_K+oyKOxk88_3zcYTB8C8JHAJVqFwLdO4DE0_wtvBg@mail.gmail.com>
-Message-ID: <CAD=FV=UH_K+oyKOxk88_3zcYTB8C8JHAJVqFwLdO4DE0_wtvBg@mail.gmail.com>
-Subject: Re: [V2] dmaengine: qcom: gpi: Set link_rx bit on GO TRE for rx operation
-To:     Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        vkoul@kernel.org, linux-arm-msm@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_msavaliy@quicinc.com, mka@chromium.org, swboyd@chromium.org,
-        quic_vtanuku@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Tazv2PHrUD3lC_UAabN0Rdg1fDuaTT4L
+X-Proofpoint-ORIG-GUID: Tazv2PHrUD3lC_UAabN0Rdg1fDuaTT4L
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-12-16_14,2022-12-15_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 mlxscore=0
+ mlxlogscore=915 adultscore=0 phishscore=0 impostorscore=0 malwarescore=0
+ suspectscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2212160205
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,
+Add compatible for gpi on QDU1000 and QRU1000 SoCs.
 
-On Fri, Dec 16, 2022 at 9:38 AM Vijaya Krishna Nivarthi
-<quic_vnivarth@quicinc.com> wrote:
->
-> Rx operation on SPI GSI DMA is currently not working.
-> As per GSI spec, link_rx bit is to be set on GO TRE on tx
-> channel whenever there is going to be a DMA TRE on rx
-> channel. This is currently set for duplex operation only.
->
-> Set the bit for rx operation as well.
-> This is part of changes required to bring up Rx.
->
-> Fixes: 94b8f0e58fa1 ("dmaengine: qcom: gpi: set chain and link flag for duplex")
-> Signed-off-by: Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>
-> ---
-> v1 -> v2:
-> - updated change description
-> ---
->  drivers/dma/qcom/gpi.c | 1 +
->  1 file changed, 1 insertion(+)
+Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+This patch comes from discussion on
+https://lore.kernel.org/all/ae4b2333-d243-17ee-1ebd-6b1c89eef9f3@linaro.org/
 
-Without knowing anything about how the hardware actually works, I can
-say that the change looks OK to me.
+---
+ Documentation/devicetree/bindings/dma/qcom,gpi.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+index e7ba1c47a88e..851a11714ce4 100644
+--- a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
++++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+@@ -24,6 +24,7 @@ properties:
+           - qcom,sm6350-gpi-dma
+       - items:
+           - enum:
++              - qcom,qdu1000-gpi-dma
+               - qcom,sc7280-gpi-dma
+               - qcom,sm6115-gpi-dma
+               - qcom,sm6375-gpi-dma
+
+base-commit: ca39c4daa6f7f770b1329ffb46f1e4a6bcc3f291
+-- 
+2.38.1
+

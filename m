@@ -2,73 +2,80 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C84164F8D2
-	for <lists+dmaengine@lfdr.de>; Sat, 17 Dec 2022 12:05:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFB3C64F967
+	for <lists+dmaengine@lfdr.de>; Sat, 17 Dec 2022 15:35:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230034AbiLQLF0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 17 Dec 2022 06:05:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40860 "EHLO
+        id S229675AbiLQOfY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 17 Dec 2022 09:35:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229806AbiLQLFZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Dec 2022 06:05:25 -0500
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0AEDDFE1
-        for <dmaengine@vger.kernel.org>; Sat, 17 Dec 2022 03:05:23 -0800 (PST)
-Received: by mail-lf1-x131.google.com with SMTP id o6so2319408lfi.5
-        for <dmaengine@vger.kernel.org>; Sat, 17 Dec 2022 03:05:23 -0800 (PST)
+        with ESMTP id S229549AbiLQOfX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Dec 2022 09:35:23 -0500
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36650FAF7
+        for <dmaengine@vger.kernel.org>; Sat, 17 Dec 2022 06:35:22 -0800 (PST)
+Received: by mail-lj1-x231.google.com with SMTP id h10so4925302ljk.11
+        for <dmaengine@vger.kernel.org>; Sat, 17 Dec 2022 06:35:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=xj4DQ1GOM3k/W43IzdJyX/2s4vba2cXo55x8d2hFPXs=;
-        b=bg8AX68WuagpjWXrSZydWWNhLySXCMZ6EtlQ6m8Zf5GURQ+xWE5+5f4lXRLAmj6TJk
-         +sRzTrKMWBEYPGMqHhSRsfZdDFdzM5BA7htNAWngbh5OVNSUC9oqreKfMg6cFw4GZyW+
-         tgxoeLPFYV5HrOj6pxsfLMCvNcS+Q8OcXvFGx/OH/Cg5a0DQgh55+sf0cR+7Cu07tXvP
-         seeeC7DSw7ZlvygoX4MEJagDvIZsO22cCZNbsg4CssmDjfkp0MBUudk8b/Q6jXm2mFnz
-         MtzgggC8ltnMisEboXoY8hWqxvpWqSewri+J9wdihYDfnZSoYdzatPnBEnvopaemf/F8
-         cGIQ==
+        bh=Q2NbXIefrhDpmJKbJe0p5pGtCPv/H1p/XKFgPNAP5e8=;
+        b=DGT+hxjwqBvNruxpVyh3pSYJl+25hKQPJfVlKBxisxPwf8p0k/KF1E1kDDfPNsyA6S
+         iuF9+ByLJceYuDXMNMiwAmWurFEOOXpKc2XarKoN+hizrQgwvWspH5lmeGscPF0D5yb+
+         mxg4RT54rgmaHIGVUB8ivp5TzlDpiUdV+1+5CjZPgOYo17T+FfB0Dn9BHjrp+S4OLgo8
+         DzceOp8NpjRKCWgXv55S8k8qxkWKErYo6oronSe1iZya6I+Zd+dKda9lFakQliY9V0qh
+         nR8UyzrxYilspb6Nil6O5Ov49K7W1usNcPtHLRZRacn7kbN12woR3zOGUMfE6DkrWmmV
+         oTfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xj4DQ1GOM3k/W43IzdJyX/2s4vba2cXo55x8d2hFPXs=;
-        b=yuQd+xjSLPv6J5oIBuCEkM9hdq2URW2QO6FhQn/DYfg6/kZjO/uEYQu0URJsGXoPw/
-         xg0YfCj4Ml8o8l/aC/6u90IBsWUFZT0qmIX6/Vf/HCvSs9Biyay3rpo8QcQeHm3bXSrs
-         3OfwXwsgR1C9vigs3s4yG2mTz1AuvbRP7A+1tFX7SX54Nji1A9MV0tNWYySI6qddXSRL
-         u5aIoizPt9yfLMOjWpyXGJDTj5MEDaEtQfwIAk/GW8MJIhQMJ/raTSM7sDlwKAM1osN4
-         qyNjLy6Z663g4l+NiS/A0SRInbzlYZVjUL+nFMC5fEIyXOrLZnExZwI3SbLLh4EqaKsN
-         tQAA==
-X-Gm-Message-State: ANoB5pm7ZI/xJ+xuHFLSgwqoC+sTN7+KM62Q5/Lw8Nhy5rbfs7T2NNPC
-        2TayeCUHWtr2cgHKUAloGrc42A==
-X-Google-Smtp-Source: AA0mqf6yw/xcd1p3DUq/S8ff/vfITEbDcAvZWiYamNuuHB2/TBeOI0/kQQk7ULGVsafimoDlXw6bFA==
-X-Received: by 2002:ac2:4950:0:b0:4b5:7925:870d with SMTP id o16-20020ac24950000000b004b57925870dmr9582948lfi.12.1671275122051;
-        Sat, 17 Dec 2022 03:05:22 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id f19-20020a056512361300b004a03fd4476esm481673lfs.287.2022.12.17.03.05.20
+        bh=Q2NbXIefrhDpmJKbJe0p5pGtCPv/H1p/XKFgPNAP5e8=;
+        b=q+cNRyFKucNCF7AufFVC3ed6d4bJAfiCVefM+tWrpTV8DfPIe1DlO2i/ki9HjAI2rb
+         4dQLQmpfbXAMTBMU/gWEcPbp+vMDIkuQ0tZ9o3bWDsaeAvRTAMpHWHZZ1qJQleynRXBA
+         fD2oliwlKfl55Y6PjTUY653wINwFzOcvFf5kbG3HPqQDtlVbkbb2khzJZ9idmJ6A53DY
+         xKGpHCR98uzcHeqYAh8h2u6M+j+vuc8vDG9TYRUmJLguK7qE/JnWTAU4aCoMqvaWztHz
+         k6Bwe3N3GZMyEyvj05638/LIJea6ktxeub+wQioZhDexATHzj/tpZVDgnB6Fqx6azDfT
+         s6tA==
+X-Gm-Message-State: ANoB5pkONHUzddyWLn2EG1N0zgxouGnsLBtQoWUsxHVde/rrDf7ZKNEq
+        JmBVUy+1IjxJLb9Qi/0GwDFE9A==
+X-Google-Smtp-Source: AA0mqf4sAUxGPRGY1t+nFac9lB8vlD4k06aGikbGf39u4uxX/tEv2+gvhycZZ7fuQsKobeUHW+EwYA==
+X-Received: by 2002:a2e:b947:0:b0:279:edec:808b with SMTP id 7-20020a2eb947000000b00279edec808bmr9484632ljs.9.1671287720565;
+        Sat, 17 Dec 2022 06:35:20 -0800 (PST)
+Received: from [192.168.1.101] (abxh44.neoplus.adsl.tpnet.pl. [83.9.1.44])
+        by smtp.gmail.com with ESMTPSA id bd8-20020a05651c168800b00279e0b8bae7sm347057ljb.65.2022.12.17.06.35.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 Dec 2022 03:05:21 -0800 (PST)
-Message-ID: <b74776b4-0885-f519-8ef7-e01048a8be15@linaro.org>
-Date:   Sat, 17 Dec 2022 12:05:20 +0100
+        Sat, 17 Dec 2022 06:35:20 -0800 (PST)
+Message-ID: <f5496b92-ac1f-5920-1b3f-2bf0e710623b@linaro.org>
+Date:   Sat, 17 Dec 2022 15:35:18 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH] dt-bindings: dma: fsl-mxs-dma: Convert MXS DMA to DT
- schema
+Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: sm6125: Add GPI DMA nodes
 Content-Language: en-US
-To:     Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
+To:     Marijn Suijten <marijn.suijten@somainline.org>,
+        phone-devel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20221217010724.632088-1-marex@denx.de>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221217010724.632088-1-marex@denx.de>
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     ~postmarketos/upstreaming@lists.sr.ht,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@somainline.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Martin Botka <martin.botka@somainline.org>,
+        Jami Kettunen <jami.kettunen@somainline.org>,
+        Lux Aliaga <they@mint.lgbt>,
+        Richard Acayan <mailingradian@gmail.com>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221216231528.1268447-1-marijn.suijten@somainline.org>
+ <20221216231528.1268447-3-marijn.suijten@somainline.org>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20221216231528.1268447-3-marijn.suijten@somainline.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -80,116 +87,81 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 17/12/2022 02:07, Marek Vasut wrote:
-> Convert the MXS DMA binding to DT schema format using json-schema.
+
+
+On 17.12.2022 00:15, Marijn Suijten wrote:
+> From: Martin Botka <martin.botka@somainline.org>
 > 
-> Drop "interrupt-names" property, since it is broken. The drivers/dma/mxs-dma.c
-> in Linux kernel does not use it, the property contains duplicate array entries
-> in existing DTs, and even malformed entries (gmpi, should have been gpmi). Get
-> rid of that optional property altogether.
+> Add nodes for GPI DMA hosts on SM6125.
 > 
-> Update example node names to be standard dma-controller@ ,
-> add global interrupt-parent property into example.
+> Signed-off-by: Martin Botka <martin.botka@somainline.org>
+> [Marijn: reorder properties, use sdm845 fallback compatible, disable by
+>  default, use 3 instead of 5 dma cells]
+> Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm6125.dtsi | 37 ++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm6125.dtsi b/arch/arm64/boot/dts/qcom/sm6125.dtsi
+> index a205121ab4a7..abcd634c4f6d 100644
+> --- a/arch/arm64/boot/dts/qcom/sm6125.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm6125.dtsi
+> @@ -5,6 +5,7 @@
+>  
+>  #include <dt-bindings/clock/qcom,gcc-sm6125.h>
+>  #include <dt-bindings/clock/qcom,rpmcc.h>
+> +#include <dt-bindings/dma/qcom-gpi.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/power/qcom-rpmpd.h>
+> @@ -510,6 +511,42 @@ sdhc_2: mmc@4784000 {
+>  			status = "disabled";
+>  		};
+>  
+> +		gpi_dma0: dma-controller@4a00000 {
+> +			compatible = "qcom,sm6125-gpi-dma", "qcom,sdm845-gpi-dma";
+> +			reg = <0x04a00000 0x60000>;
+> +			interrupts = <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 338 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>;
+> +			dma-channels = <8>;
+> +			dma-channel-mask = <0x1f>;
+> +			iommus = <&apps_smmu 0x0136 0x0>;
+The stream id does not need the leading zero.
+You made the mask a decimal zero in the previous patchset, please
+decide on one convention. Masks are generally more useful as hex,
+but for zero values I suppose zero is less noise for the same thing..
 
-Thank you for your patch. There is something to discuss/improve.
+The DMA nodes however, look good otherwise.
 
+Konrad
+> +			#dma-cells = <3>;
+> +			status = "disabled";
+> +		};
 > +
-> +title: Freescale Direct Memory Access (DMA) Controller from i.MX23/i.MX28
+> +		gpi_dma1: dma-controller@4c00000 {
+> +			compatible = "qcom,sm6125-gpi-dma", "qcom,sdm845-gpi-dma";
+> +			reg = <0x04c00000 0x60000>;
+> +			interrupts = <GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>;
+> +			dma-channels = <8>;
+> +			dma-channel-mask = <0x0f>;
+> +			iommus = <&apps_smmu 0x0156 0x0>;
+> +			#dma-cells = <3>;
+> +			status = "disabled";
+> +		};
 > +
-> +maintainers:
-> +  - Marek Vasut <marex@denx.de>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - fsl,imx6q-dma-apbh
-> +              - fsl,imx6sx-dma-apbh
-> +              - fsl,imx7d-dma-apbh
-> +          - const: fsl,imx28-dma-apbh
-> +      - items:
-
-No need for items here, make it just an enum.
-
-> +          - enum:
-> +              - fsl,imx23-dma-apbh
-> +              - fsl,imx23-dma-apbx
-> +              - fsl,imx28-dma-apbh
-> +              - fsl,imx28-dma-apbx
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 4
-> +    maxItems: 16
-> +
-> +  "#dma-cells":
-> +    const: 1
-> +
-> +  dma-channels:
-> +    enum: [4, 8, 16]
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#dma-cells"
-> +  - dma-channels
-> +  - interrupts
-> +
-> +allOf:
-> +  - $ref: dma-controller.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          not:
-
-I think "not:" goes just after "if:". Please double check that it's correct.
-
-Anyway it is easier to have this without negation and you already
-enumerate all variants (here and below).
-
-
-> +            contains:
-> +              enum:
-> +                - fsl,imx6q-dma-apbh
-> +                - fsl,imx6sx-dma-apbh
-> +                - fsl,imx7d-dma-apbh
-> +                - fsl,imx23-dma-apbx
-> +                - fsl,imx28-dma-apbh
-> +                - fsl,imx28-dma-apbx
-> +    then:
-> +      properties:
-> +        dma-channels:
-> +          const: 8
-> +        interrupts:
-> +          maxItems: 8
-
-Blank line here, please.
-
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          not:
-> +            contains:
-> +              enum:
-> +                - fsl,imx6q-dma-apbh
-> +                - fsl,imx6sx-dma-apbh
-> +                - fsl,imx7d-dma-apbh
-> +                - fsl,imx23-dma-apbh
-> +    then:
-> +      properties:
-> +        dma-channels:
-> +          const: 16
-> +        interrupts:
-> +          maxItems: 16
-> +
-> +additionalProperties: false
-> +
-
-Best regards,
-Krzysztof
-
+>  		usb3: usb@4ef8800 {
+>  			compatible = "qcom,sm6125-dwc3", "qcom,dwc3";
+>  			reg = <0x04ef8800 0x400>;

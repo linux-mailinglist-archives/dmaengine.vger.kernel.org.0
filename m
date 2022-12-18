@@ -2,122 +2,136 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BF8A64FCFF
-	for <lists+dmaengine@lfdr.de>; Sun, 18 Dec 2022 00:12:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CDF064FE6A
+	for <lists+dmaengine@lfdr.de>; Sun, 18 Dec 2022 11:23:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229897AbiLQXMx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 17 Dec 2022 18:12:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33726 "EHLO
+        id S230216AbiLRKXm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 18 Dec 2022 05:23:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbiLQXMw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Dec 2022 18:12:52 -0500
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3217DF1D;
-        Sat, 17 Dec 2022 15:12:50 -0800 (PST)
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        with ESMTP id S229585AbiLRKXl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 18 Dec 2022 05:23:41 -0500
+Received: from relay02.th.seeweb.it (relay02.th.seeweb.it [5.144.164.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60AE364E1
+        for <dmaengine@vger.kernel.org>; Sun, 18 Dec 2022 02:23:40 -0800 (PST)
+Received: from SoMainline.org (94-209-172-39.cable.dynamic.v4.ziggo.nl [94.209.172.39])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: marex@denx.de)
-        by phobos.denx.de (Postfix) with ESMTPSA id D384D84C4B;
-        Sun, 18 Dec 2022 00:12:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-        s=phobos-20191101; t=1671318768;
-        bh=RdS0IoIcqmKegLgBe7nFh0pqEQAdaIVZPqb0t7xm2DE=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=U22M4JAVKEgKGOtmE1tzjmlrAwAgzO6Fk2KgpLEsbBAJbG0e8FpJIgl8Y1sYqQnfT
-         EX1rZIpCSpqdASqK/sEee9nZGFGdnZqJcZW/oYmN9UmY7qmigxfmoDlRRSL5r9d5X2
-         d5VWxzCmDNdCjwRR4kaRLny9t85E77PdLB6l0q5KccLu8R2osNjRbcAlUDu2cta6F/
-         s9ZshBpaJNNQuNXZqF6kx5B6yOV42UbQ2Ib1dIqMJCGrDtp+JvJmEGCZCVy0HarJ+4
-         EtcNfh5JWFPPnAPRKevWtmuknntM0WS2auJB996M9WVvavnThGHfM0OAeyCCoUC7RJ
-         bKYEnYkXAdlGw==
-Message-ID: <ba05612d-fd3b-3e49-4ada-21f3b3c74e23@denx.de>
-Date:   Sun, 18 Dec 2022 00:12:47 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH] dt-bindings: dma: fsl-mxs-dma: Convert MXS DMA to DT
- schema
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        devicetree@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 17B551F7B6;
+        Sun, 18 Dec 2022 11:23:38 +0100 (CET)
+Date:   Sun, 18 Dec 2022 11:23:36 +0100
+From:   Marijn Suijten <marijn.suijten@somainline.org>
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc:     phone-devel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20221217010724.632088-1-marex@denx.de>
- <b74776b4-0885-f519-8ef7-e01048a8be15@linaro.org>
-Content-Language: en-US
-From:   Marek Vasut <marex@denx.de>
-In-Reply-To: <b74776b4-0885-f519-8ef7-e01048a8be15@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
-X-Virus-Status: Clean
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@somainline.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Martin Botka <martin.botka@somainline.org>,
+        Jami Kettunen <jami.kettunen@somainline.org>,
+        Lux Aliaga <they@mint.lgbt>,
+        Richard Acayan <mailingradian@gmail.com>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: sm6125: Add GPI DMA nodes
+Message-ID: <20221218102336.io5epil54gwlqqqh@SoMainline.org>
+Mail-Followup-To: Marijn Suijten <marijn.suijten@somainline.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        phone-devel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Martin Botka <martin.botka@somainline.org>,
+        Jami Kettunen <jami.kettunen@somainline.org>,
+        Lux Aliaga <they@mint.lgbt>,
+        Richard Acayan <mailingradian@gmail.com>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221216231528.1268447-1-marijn.suijten@somainline.org>
+ <20221216231528.1268447-3-marijn.suijten@somainline.org>
+ <f5496b92-ac1f-5920-1b3f-2bf0e710623b@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f5496b92-ac1f-5920-1b3f-2bf0e710623b@linaro.org>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 12/17/22 12:05, Krzysztof Kozlowski wrote:
-
-[...]
-
->> +allOf:
->> +  - $ref: dma-controller.yaml#
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          not:
+On 2022-12-17 15:35:18, Konrad Dybcio wrote:
 > 
-> I think "not:" goes just after "if:". Please double check that it's correct.
 > 
-> Anyway it is easier to have this without negation and you already
-> enumerate all variants (here and below).
+> On 17.12.2022 00:15, Marijn Suijten wrote:
+> > From: Martin Botka <martin.botka@somainline.org>
+> > 
+> > Add nodes for GPI DMA hosts on SM6125.
+> > 
+> > Signed-off-by: Martin Botka <martin.botka@somainline.org>
+> > [Marijn: reorder properties, use sdm845 fallback compatible, disable by
+> >  default, use 3 instead of 5 dma cells]
+> > Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sm6125.dtsi | 37 ++++++++++++++++++++++++++++
+> >  1 file changed, 37 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/sm6125.dtsi b/arch/arm64/boot/dts/qcom/sm6125.dtsi
+> > index a205121ab4a7..abcd634c4f6d 100644
+> > --- a/arch/arm64/boot/dts/qcom/sm6125.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sm6125.dtsi
+> > @@ -5,6 +5,7 @@
+> >  
+> >  #include <dt-bindings/clock/qcom,gcc-sm6125.h>
+> >  #include <dt-bindings/clock/qcom,rpmcc.h>
+> > +#include <dt-bindings/dma/qcom-gpi.h>
+> >  #include <dt-bindings/gpio/gpio.h>
+> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> >  #include <dt-bindings/power/qcom-rpmpd.h>
+> > @@ -510,6 +511,42 @@ sdhc_2: mmc@4784000 {
+> >  			status = "disabled";
+> >  		};
+> >  
+> > +		gpi_dma0: dma-controller@4a00000 {
+> > +			compatible = "qcom,sm6125-gpi-dma", "qcom,sdm845-gpi-dma";
+> > +			reg = <0x04a00000 0x60000>;
+> > +			interrupts = <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 338 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>,
+> > +				     <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>;
+> > +			dma-channels = <8>;
+> > +			dma-channel-mask = <0x1f>;
+> > +			iommus = <&apps_smmu 0x0136 0x0>;
+> The stream id does not need the leading zero.
 
-About this part, I don't think that works. See this:
+Good catch!  Will clean this up for V2.
 
-$ git grep -A 15 'imx2[38]-dma-apb[hx]' arch/ | grep 
-'\(imx2[38]-dma-apb[hx]\|dma-channels\)'
-arch/arm/boot/dts/imx23.dtsi: compatible = "fsl,imx23-dma-apbh";
-arch/arm/boot/dts/imx23.dtsi- dma-channels = <8>;
-arch/arm/boot/dts/imx23.dtsi: compatible = "fsl,imx23-dma-apbx";
-arch/arm/boot/dts/imx23.dtsi- dma-channels = <16>;
-arch/arm/boot/dts/imx28.dtsi: compatible = "fsl,imx28-dma-apbh";
-arch/arm/boot/dts/imx28.dtsi- dma-channels = <16>;
-arch/arm/boot/dts/imx28.dtsi: compatible = "fsl,imx28-dma-apbx";
-arch/arm/boot/dts/imx28.dtsi- dma-channels = <16>;
-arch/arm/boot/dts/imx6qdl.dtsi: compatible = "fsl,imx6q-dma-apbh", 
-"fsl,imx28-dma-apbh";
-arch/arm/boot/dts/imx6qdl.dtsi- dma-channels = <4>;
-arch/arm/boot/dts/imx6sx.dtsi: compatible = "fsl,imx6sx-dma-apbh", 
-"fsl,imx28-dma-apbh";
-arch/arm/boot/dts/imx6sx.dtsi- dma-channels = <4>;
-arch/arm/boot/dts/imx6ul.dtsi: compatible = "fsl,imx6q-dma-apbh", 
-"fsl,imx28-dma-apbh";
-arch/arm/boot/dts/imx6ul.dtsi- dma-channels = <4>;
-arch/arm/boot/dts/imx7s.dtsi: compatible = "fsl,imx7d-dma-apbh", 
-"fsl,imx28-dma-apbh";
-arch/arm/boot/dts/imx7s.dtsi- dma-channels = <4>;
-arch/arm64/boot/dts/freescale/imx8mm.dtsi: compatible = 
-"fsl,imx7d-dma-apbh", "fsl,imx28-dma-apbh";
-arch/arm64/boot/dts/freescale/imx8mm.dtsi- dma-channels = <4>;
-arch/arm64/boot/dts/freescale/imx8mn.dtsi: compatible = 
-"fsl,imx7d-dma-apbh", "fsl,imx28-dma-apbh";
-arch/arm64/boot/dts/freescale/imx8mn.dtsi- dma-channels = <4>;
+> You made the mask a decimal zero in the previous patchset, please
+> decide on one convention. Masks are generally more useful as hex,
+> but for zero values I suppose zero is less noise for the same thing..
 
-So I think what we have to do to validate that, is, say
+The _vast majority_ of qcom dts uses 0x0, I'll fix that in the previous
+patch series.  Looks like I did even clean that up when directly
+transplanting that patch ("Add apps_smmu with streamID to SDHCI 1/2
+nodes") to sm6350 even...
 
-default: 4
+> The DMA nodes however, look good otherwise.
 
-if does not match on 6q/6sx/7d/23-apbx/28-abbh/28-apbx then 8
+And they work great, too!
 
-if does not match on 6q/6sx/7d/23-apbh then 16
-
-But if there is a better way to validate the above, please do tell.
+- Marijn

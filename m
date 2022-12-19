@@ -2,102 +2,248 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 502E0650923
-	for <lists+dmaengine@lfdr.de>; Mon, 19 Dec 2022 10:10:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 947EE650962
+	for <lists+dmaengine@lfdr.de>; Mon, 19 Dec 2022 10:37:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231811AbiLSJKl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 19 Dec 2022 04:10:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40498 "EHLO
+        id S231230AbiLSJhY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 19 Dec 2022 04:37:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231694AbiLSJKE (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 19 Dec 2022 04:10:04 -0500
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 921FCDF52
-        for <dmaengine@vger.kernel.org>; Mon, 19 Dec 2022 01:09:59 -0800 (PST)
-Received: by mail-lj1-x22c.google.com with SMTP id f16so8368726ljc.8
-        for <dmaengine@vger.kernel.org>; Mon, 19 Dec 2022 01:09:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7RQVjAZpZEDfwrYD/tTcNOhnjobio08prwVai5/P43Q=;
-        b=XMfMbUzc79O4B0RFzinDgiHm1AWfTPbT1Rhto7td/0djjFOt/lAJ8CiPyhiZefSjZU
-         +WMKJb40ReNclaeb43gzWdWWCV12cMHy6GoXNfVP0Sdr4aEpSQoJo4B4GbU0vmGNy7z9
-         /gmcZjIXFaAQVhD2T2MCwDUPDk1HLAu5SWwp3uK+MIsL+IQPW0DSn66FfiSfFwl99ULA
-         aj9kVaBhs1uIdrPHEOJOV+uidx2HNQjoUETAluE7kJbMujxdgoprJb2vEEgQjfN+zIGB
-         f1/ya6cCosOukeVSzxPhwwdLKWj4/M9UgU+5lenbqL6PSvGHO8xm5UsjTzZhM8NqnfGl
-         g6fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7RQVjAZpZEDfwrYD/tTcNOhnjobio08prwVai5/P43Q=;
-        b=pnHChB8kqPp6HBbP9WfALWMqveZPvvKqMR/1xE+ysn9FAqITbFK6KrjR5yVGPXhxdI
-         3kOoIW1btypGHOVwozqAd9HyzC/RROhNl9HCqg/NKoX7WKgGEAXHJuYMcqlpJhIdgwII
-         rhUAx7BkQH5VM5pYmZFwq0goUAKVkKmbfd3Nm2yUoNxUVPMR2KwVwBLGujGiFJSOyO7J
-         174lqY3AjvD/IDQJnCzPp4fqA1+Fjycb5cDESR3+15XXmKCkoQZnom+/AXFLz0PDu/PR
-         C1y8gy/N4D2J/WU+JL4BJbU5qBt8vOuW11wHHXhkIjJtaiSk3ahPSo0cjCyMYXe/c/Lq
-         GFkg==
-X-Gm-Message-State: ANoB5plGXAFEBq3HQ7I/8w4MWi1wQTX2jZ8uJKx6NHrakRo9Dz/mOSHH
-        It38ZTJN1c57biN7tOmgAPI/4Q==
-X-Google-Smtp-Source: AA0mqf5EfXZCBaoylRSUyW/qa+q3eZHaBg8V/AaT00MAiNx7UkipD11GvL22iOVI8CSwoieS4Uy00A==
-X-Received: by 2002:a2e:9209:0:b0:279:d624:7fba with SMTP id k9-20020a2e9209000000b00279d6247fbamr10227858ljg.23.1671440997860;
-        Mon, 19 Dec 2022 01:09:57 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id p8-20020a2eb7c8000000b0027997d00fc2sm700409ljo.21.2022.12.19.01.09.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Dec 2022 01:09:57 -0800 (PST)
-Message-ID: <aab465d2-3305-c51f-2c00-08d5df1a333e@linaro.org>
-Date:   Mon, 19 Dec 2022 10:09:56 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v2 1/2] dt-bindings: dma: gpi: Document SM6125 compatible
-Content-Language: en-US
-To:     Marijn Suijten <marijn.suijten@somainline.org>,
-        phone-devel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
+        with ESMTP id S231179AbiLSJhX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 19 Dec 2022 04:37:23 -0500
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 017066249;
+        Mon, 19 Dec 2022 01:37:21 -0800 (PST)
+Received: from tr.lan (ip-86-49-120-218.bb.vodafone.cz [86.49.120.218])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: marex@denx.de)
+        by phobos.denx.de (Postfix) with ESMTPSA id CD96384480;
+        Mon, 19 Dec 2022 10:37:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+        s=phobos-20191101; t=1671442639;
+        bh=TxtTjPiKxLORzwmcpAANzpgmAGJleDoXm2KN/wUzCHc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Got4flQo+qTUCW4iFs09+Tj5NsZ7BbAbUl+H2he/XxsaoymrxB9IHQjZQoq6pZH57
+         CsICPKPfdfZhrvdyid4p0H+IvjOThZVRr9y83OzR4ycG6qqEPPwSQhDzLYAWM/I2uJ
+         uuBvlqpPfc/hoxRw8f9PulOOTaRmRCyrq2nMlhv4QadvC0jOIoZB7KtMpQMsrE5b7t
+         PG12SFTTxsWBE9qIuL/e6XoIeuL1nLxzA/BVwScalkpfqlLKWdBNfmcl9b24mh3GXI
+         WQL9QIa98caB4JKHqk6/1G0oIlnjGxc5RY5JGQsjud0i4B5uA6cCxun8qbtbCzKsvW
+         J46LFzoKBgKHg==
+From:   Marek Vasut <marex@denx.de>
+To:     devicetree@vger.kernel.org
+Cc:     Marek Vasut <marex@denx.de>, Fabio Estevam <festevam@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     ~postmarketos/upstreaming@lists.sr.ht,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@somainline.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Martin Botka <martin.botka@somainline.org>,
-        Jami Kettunen <jami.kettunen@somainline.org>,
-        Lux Aliaga <they@mint.lgbt>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Richard Acayan <mailingradian@gmail.com>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221216231528.1268447-1-marijn.suijten@somainline.org>
- <20221216231528.1268447-2-marijn.suijten@somainline.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221216231528.1268447-2-marijn.suijten@somainline.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2] dt-bindings: dma: fsl-mxs-dma: Convert MXS DMA to DT schema
+Date:   Mon, 19 Dec 2022 10:37:13 +0100
+Message-Id: <20221219093713.328776-1-marex@denx.de>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
+X-Virus-Status: Clean
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 17/12/2022 00:15, Marijn Suijten wrote:
-> From: Martin Botka <martin.botka@somainline.org>
-> 
-> Document compatibility for this GPI DMA controller on SM6125.
-> 
+Convert the MXS DMA binding to DT schema format using json-schema.
 
+Drop "interrupt-names" property, since it is broken. The drivers/dma/mxs-dma.c
+in Linux kernel does not use it, the property contains duplicate array entries
+in existing DTs, and even malformed entries (gmpi, should have been gpmi). Get
+rid of that optional property altogether.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Update example node names to be standard dma-controller@ ,
+add global interrupt-parent property into example.
 
-Best regards,
-Krzysztof
+Signed-off-by: Marek Vasut <marex@denx.de>
+---
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+To: devicetree@vger.kernel.org
+---
+V2: - Drop -items:-enum: and use plain -enum:
+    - Fill in blank line between maxItems:8 and if:
+    - Move not: past if:
+    - Drop the entire allOf section except ref dma-controller.yaml
+---
+ .../devicetree/bindings/dma/fsl,mxs-dma.yaml  | 80 +++++++++++++++++++
+ .../devicetree/bindings/dma/fsl-mxs-dma.txt   | 60 --------------
+ 2 files changed, 80 insertions(+), 60 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/fsl-mxs-dma.txt
+
+diff --git a/Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml b/Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml
+new file mode 100644
+index 0000000000000..add9c77e8b52a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml
+@@ -0,0 +1,80 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/fsl,mxs-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale Direct Memory Access (DMA) Controller from i.MX23/i.MX28
++
++maintainers:
++  - Marek Vasut <marex@denx.de>
++
++allOf:
++  - $ref: dma-controller.yaml#
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - fsl,imx6q-dma-apbh
++              - fsl,imx6sx-dma-apbh
++              - fsl,imx7d-dma-apbh
++          - const: fsl,imx28-dma-apbh
++      - enum:
++          - fsl,imx23-dma-apbh
++          - fsl,imx23-dma-apbx
++          - fsl,imx28-dma-apbh
++          - fsl,imx28-dma-apbx
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  interrupts:
++    minItems: 4
++    maxItems: 16
++
++  "#dma-cells":
++    const: 1
++
++  dma-channels:
++    enum: [4, 8, 16]
++
++required:
++  - compatible
++  - reg
++  - "#dma-cells"
++  - dma-channels
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    interrupt-parent = <&irqc>;
++
++    dma-controller@80004000 {
++      compatible = "fsl,imx28-dma-apbh";
++      reg = <0x80004000 0x2000>;
++      interrupts = <82 83 84 85
++                    88 88 88 88
++                    88 88 88 88
++                    87 86 0 0>;
++      #dma-cells = <1>;
++      dma-channels = <16>;
++    };
++
++    dma-controller@80024000 {
++      compatible = "fsl,imx28-dma-apbx";
++      reg = <0x80024000 0x2000>;
++      interrupts = <78 79 66 0
++                    80 81 68 69
++                    70 71 72 73
++                    74 75 76 77>;
++      #dma-cells = <1>;
++      dma-channels = <16>;
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/dma/fsl-mxs-dma.txt b/Documentation/devicetree/bindings/dma/fsl-mxs-dma.txt
+deleted file mode 100644
+index e30e184f50c72..0000000000000
+--- a/Documentation/devicetree/bindings/dma/fsl-mxs-dma.txt
++++ /dev/null
+@@ -1,60 +0,0 @@
+-* Freescale MXS DMA
+-
+-Required properties:
+-- compatible : Should be "fsl,<chip>-dma-apbh" or "fsl,<chip>-dma-apbx"
+-- reg : Should contain registers location and length
+-- interrupts : Should contain the interrupt numbers of DMA channels.
+-  If a channel is empty/reserved, 0 should be filled in place.
+-- #dma-cells : Must be <1>.  The number cell specifies the channel ID.
+-- dma-channels : Number of channels supported by the DMA controller
+-
+-Optional properties:
+-- interrupt-names : Name of DMA channel interrupts
+-
+-Supported chips:
+-imx23, imx28.
+-
+-Examples:
+-
+-dma_apbh: dma-apbh@80004000 {
+-	compatible = "fsl,imx28-dma-apbh";
+-	reg = <0x80004000 0x2000>;
+-	interrupts = <82 83 84 85
+-		      88 88 88 88
+-		      88 88 88 88
+-		      87 86 0 0>;
+-	interrupt-names = "ssp0", "ssp1", "ssp2", "ssp3",
+-			  "gpmi0", "gmpi1", "gpmi2", "gmpi3",
+-			  "gpmi4", "gmpi5", "gpmi6", "gmpi7",
+-			  "hsadc", "lcdif", "empty", "empty";
+-	#dma-cells = <1>;
+-	dma-channels = <16>;
+-};
+-
+-dma_apbx: dma-apbx@80024000 {
+-	compatible = "fsl,imx28-dma-apbx";
+-	reg = <0x80024000 0x2000>;
+-	interrupts = <78 79 66 0
+-		      80 81 68 69
+-		      70 71 72 73
+-		      74 75 76 77>;
+-	interrupt-names = "auart4-rx", "auart4-tx", "spdif-tx", "empty",
+-			  "saif0", "saif1", "i2c0", "i2c1",
+-			  "auart0-rx", "auart0-tx", "auart1-rx", "auart1-tx",
+-			  "auart2-rx", "auart2-tx", "auart3-rx", "auart3-tx";
+-	#dma-cells = <1>;
+-	dma-channels = <16>;
+-};
+-
+-DMA clients connected to the MXS DMA controller must use the format
+-described in the dma.txt file.
+-
+-Examples:
+-
+-auart0: serial@8006a000 {
+-	compatible = "fsl,imx28-auart", "fsl,imx23-auart";
+-	reg = <0x8006a000 0x2000>;
+-	interrupts = <112>;
+-	dmas = <&dma_apbx 8>, <&dma_apbx 9>;
+-	dma-names = "rx", "tx";
+-};
+-- 
+2.35.1
 

@@ -2,133 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F227F658F0F
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Dec 2022 17:28:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C338658FBF
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Dec 2022 18:25:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233763AbiL2Q2b (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 29 Dec 2022 11:28:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57550 "EHLO
+        id S234008AbiL2RY5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 29 Dec 2022 12:24:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233881AbiL2Q1r (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 29 Dec 2022 11:27:47 -0500
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFD1414D3C;
-        Thu, 29 Dec 2022 08:27:42 -0800 (PST)
-Received: by mail-lf1-x12e.google.com with SMTP id p36so28146470lfa.12;
-        Thu, 29 Dec 2022 08:27:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HKPf3AAmHMNfXy/SpKzN+dMPo3a5K+pwZZAoxAVIWfg=;
-        b=bYsi5L6YsNBkslDh/wzHILPAYgT7PxbAs3niyiZDk5N8RMVXXrFVl6jqHpM7nF+FtG
-         PzJ4CId3kyt3Sf4T/n1p5PsZLFFBEC+6zUerFxY09OJPTP6U7I3qicssv8nrw2IhQw9n
-         SIi9dUq80Qp2zN26tWZZoj3GmUCGBAZDFgOsMhEVOcKpeXHfiAmfmVxUYcLb24AJb+th
-         AHATWn5aJIoigl65iZKX0Fs0526Ib7pNovSeReJjFdUwURIzvJQ8Ew+ctIo4LAUj6hwA
-         HZ7tTu/LUyv+BODEAah9cjNigUZYXCY7DsN0ZdZbHq5YScozcYFVusTsPQt0dD1NW4r/
-         qa1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HKPf3AAmHMNfXy/SpKzN+dMPo3a5K+pwZZAoxAVIWfg=;
-        b=U5CiN7mTrLXw3RAEar+RsSsQSaiQvdULiK+/VD/75RAjNbTtu0ZPWCK636FY5wRh6E
-         ZF4r/ZOhK/NmcKavqBggHWNMA6uG4EX1Z0stvCdA6LU3EMmNm+GX7EEhF1MFM1rUDFRE
-         0mgMidfPuaUOqOVx4Z4t7o75C5gz/ycfrP7RiYiBDvRIYfflE6pn/y0XKwl6MsubJBZ6
-         ikpGTdxBd1gML7ItyqZAYVdX0bNVPNmlqzf6nvHqOvwgyeBc25R+p0zC/NaXIixGhEg3
-         6Szg+IK5Qn4inCx3dCg+XNS2E1hyxzDSyCbUL8cVBDoECsSJhSMUgPv2DnrzoMn7Pss7
-         Qt+Q==
-X-Gm-Message-State: AFqh2kqhguvrbYc+3UM6nB5ZvExPGTih1HW59HGz3xsQFdN2fkuA6x0c
-        33nYn9nyUtjxbOlYMBGgvEg=
-X-Google-Smtp-Source: AMrXdXsBB2ZiPwIR6YWj3B0uL/8/IyT88Tp/l9XNriUSRX5nUSZ/1cwGCtewfLQGGbgWSMxMW1w9Hg==
-X-Received: by 2002:a05:6512:510:b0:4cb:4e2:7a89 with SMTP id o16-20020a056512051000b004cb04e27a89mr4319538lfb.25.1672331261179;
-        Thu, 29 Dec 2022 08:27:41 -0800 (PST)
-Received: from [10.0.0.100] (host-185-69-38-8.kaisa-laajakaista.fi. [185.69.38.8])
-        by smtp.gmail.com with ESMTPSA id j4-20020a056512344400b004cb0dfe4993sm1288025lfr.65.2022.12.29.08.27.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Dec 2022 08:27:40 -0800 (PST)
-Message-ID: <52a11d11-20a0-bf08-ce64-401b5d0ad133@gmail.com>
-Date:   Thu, 29 Dec 2022 18:29:27 +0200
+        with ESMTP id S233925AbiL2RYX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 29 Dec 2022 12:24:23 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5119A15F23;
+        Thu, 29 Dec 2022 09:24:03 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0118DB819FC;
+        Thu, 29 Dec 2022 17:24:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43CF8C4331E;
+        Thu, 29 Dec 2022 17:23:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1672334640;
+        bh=F0VX9OVaVAi5UqXtbc8wTdMW41xY9SwZl+5ouw15lzY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eCggH+9pRcWviQVGukbO+YKB6HGjcqZc3NMYBBfK8EZjbwnQj4MdxQTTrMZdWQIMX
+         aj9//GsogJljut3SO2gSDT7J1rfAscOfT3Al0s7cg/iSCSpQcU04d1P7NmtizjQ3mL
+         xozIvgZka7TLZv6coqM9FYi7swPV5zynisbg3w6ewZ/9AUc2Wdvc2BB4CAinGx8KUX
+         QM7QdDwB6oKr2TH3t9LOQRVX4UUmceWy4dUD8HImwFq1tak00SV7aoj+HEpzIL2kIJ
+         AfY+xd5M9jtz2i9bvxwUbJqgAmesEgEsDv23GY/yJtuoGrkOxFELvUqJVJa5sY+eMk
+         AgNVcL9Ys96Xg==
+From:   Bjorn Andersson <andersson@kernel.org>
+To:     agross@kernel.org, phone-devel@vger.kernel.org, vkoul@kernel.org,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org
+Cc:     bhupesh.sharma@linaro.org, mailingradian@gmail.com,
+        linux-arm-msm@vger.kernel.org, martin.botka@somainline.org,
+        jami.kettunen@somainline.org, they@mint.lgbt,
+        konrad.dybcio@somainline.org, luca.weiss@fairphone.com,
+        dmaengine@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        linux-kernel@vger.kernel.org,
+        angelogioacchino.delregno@somainline.org, konrad.dybcio@linaro.org,
+        devicetree@vger.kernel.org
+Subject: Re: (subset) [PATCH v3 0/2] arm64: dts: qcom: sm6125: Enable GPI DMA
+Date:   Thu, 29 Dec 2022 11:23:38 -0600
+Message-Id: <167233461774.1099840.1967515625455827333.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20221222194600.139854-1-marijn.suijten@somainline.org>
+References: <20221222194600.139854-1-marijn.suijten@somainline.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v3] dmaengine: ti: k3-udma: Deferring probe when
- soc_device_match() returns NULL
-To:     Vinod Koul <vkoul@kernel.org>,
-        Nicolas Frayer <nfrayer@baylibre.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        khilman@baylibre.com, glaroque@baylibre.com
-References: <20221117184406.292416-1-nfrayer@baylibre.com>
- <Y6wlhfdDdm+XAsuH@matsya>
-Content-Language: en-US
-From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <Y6wlhfdDdm+XAsuH@matsya>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 28/12/2022 13:16, Vinod Koul wrote:
-> On 17-11-22, 19:44, Nicolas Frayer wrote:
->> When the k3 socinfo driver is built as a module, there is a possibility
->> that it will probe after the k3 udma driver and the later returns -ENODEV.
->> By deferring the k3 udma probe we allow the k3 socinfo to probe and
->> register the soc_device_attribute structure needed by the k3 udma driver.
->> Removed the dev_err() message as well as it's deferring and not failing.
+On Thu, 22 Dec 2022 20:45:58 +0100, Marijn Suijten wrote:
+> Enable GPI DMA on SM6125 by using the new sdm845 compatible with
+> ee_offset 0.
 > 
-> lgtm, but need rebase as I already picked commit 3f58e10615f3 dmaengine: ti:
-> k3-udma: Add support for BCDMA CSI RX
-
-Is this path needed at all? afaik the k3 socinfo is not going to be 
-module built.
-
+> Changes since v2:
+> - Remove leading zero from iommu stream ID.
 > 
->>
->> Signed-off-by: Nicolas Frayer <nfrayer@baylibre.com>
->> ---
->> v1->v2:
->> Extracted this patch from the following series:
->> https://lore.kernel.org/all/20221108181144.433087-1-nfrayer@baylibre.com/
->>
->> v2->v3:
->> Removed the dev_err() message
->>
->>   drivers/dma/ti/k3-udma.c | 8 ++++----
->>   1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
->> index ce8b80bb34d7..ca1512eb9910 100644
->> --- a/drivers/dma/ti/k3-udma.c
->> +++ b/drivers/dma/ti/k3-udma.c
->> @@ -5271,10 +5271,10 @@ static int udma_probe(struct platform_device *pdev)
->>   	ud->match_data = match->data;
->>   
->>   	soc = soc_device_match(k3_soc_devices);
->> -	if (!soc) {
->> -		dev_err(dev, "No compatible SoC found\n");
->> -		return -ENODEV;
->> -	}
->> +
->> +	if (!soc)
->> +		return -EPROBE_DEFER;
->> +
->>   	ud->soc_data = soc->data;
->>   
->>   	ret = udma_get_mmrs(pdev, ud);
->> -- 
->> 2.25.1
+> v2: https://lore.kernel.org/linux-arm-msm/20221216231528.1268447-1-marijn.suijten@somainline.org/T/#u
 > 
+> [...]
 
+Applied, thanks!
+
+[2/2] arm64: dts: qcom: sm6125: Add GPI DMA nodes
+      commit: 581734f754d2cb3bd748687dedb3c4ba298d7d80
+
+Best regards,
 -- 
-Péter
+Bjorn Andersson <andersson@kernel.org>

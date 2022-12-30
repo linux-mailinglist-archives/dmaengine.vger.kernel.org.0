@@ -2,142 +2,103 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36E1765932C
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Dec 2022 00:31:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1943065964E
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Dec 2022 09:27:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233987AbiL2Xbr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 29 Dec 2022 18:31:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43318 "EHLO
+        id S234427AbiL3I1K (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 30 Dec 2022 03:27:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229537AbiL2Xbq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 29 Dec 2022 18:31:46 -0500
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0474F164A2
-        for <dmaengine@vger.kernel.org>; Thu, 29 Dec 2022 15:31:43 -0800 (PST)
-Received: by mail-yb1-xb2e.google.com with SMTP id e141so22098461ybh.3
-        for <dmaengine@vger.kernel.org>; Thu, 29 Dec 2022 15:31:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8NwlNvW8os5X59hb+wdm0uo0iYsXBEq+kQRMcnpWHiE=;
-        b=0j4VQxs4nuQQ9EjiJwPgd/BWlKvqX8/RfMJ7cBnb1Q3LJKUSLHooHGvRB1cIOnqkig
-         S/QQa1CbQ3LapqEQO1J/jAZP/XsLf9vqw4NPLPE8I2TCyGTqGxB520sGCoVYHzU3dxoY
-         WBcxDegm3jeJk0yZSOB0l7j6PNzK0EX+ixnj5P3hO+URsg6FtBSz3aHITR/rFKENIey3
-         WixOaNwb8qBnA1/w+gFXyIToQsyoyLQgtIDOommrlxN6s+tZp86wgfrwg0gYxkXP3CcG
-         vBgM9+4LTtlz6v6qJNAARMWk3nyorQA5/6Z0xTOvLml2VbFMxrG/luCVxMC3GUA6Tau4
-         m6DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8NwlNvW8os5X59hb+wdm0uo0iYsXBEq+kQRMcnpWHiE=;
-        b=ySft/zfIwD3oHlKhpl1djZnH8f8bcF1gGsyVZWzVSXjH529cLwk7Afsl8bKhwaECW9
-         5M/ngTserLl/YNgblaP9sf6xcsa8yyU5xcnnZSHnTyD5UWYdWOuG5rKn4k1Em0sa7tkB
-         zYAzmE8G8Nn9Y1u5Bo075aijT0eOLrGfbhp+fiWmbOg/k2OgD5ddDMkYrK7Q8Gu5h0Z0
-         FP/rHghq5sEKdXOO8Sd6TqedIffXGZXllXuZlTQTtRqfKSvipdSGilo7mFk45bF2o0qV
-         OgARtxP9B1vfPPjPdzDtRQruZ3BXgRGpBMbumqpt0POdJcBk8GSvtSW+FuJKGttOCgUN
-         dh4A==
-X-Gm-Message-State: AFqh2kqb+fspPOVjo4/8nC39prGLioh/BBH4SGRUa2xxaAx3bZfPlmXb
-        XIWUJ3aCeDarV4gpyD7xenM8r/CbY/V7lfRzGkTDKg==
-X-Google-Smtp-Source: AMrXdXvFwo//4ugbN3LtFvW0Sxm9BywwvyVJV+up6QWzpw24GP8LTdM0mEKDLcMwEI3XthBq05XMVSeokYNuCVarIoE=
-X-Received: by 2002:a25:6fd5:0:b0:6f6:648:510b with SMTP id
- k204-20020a256fd5000000b006f60648510bmr3476079ybc.637.1672356702151; Thu, 29
- Dec 2022 15:31:42 -0800 (PST)
+        with ESMTP id S234813AbiL3I1I (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 30 Dec 2022 03:27:08 -0500
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B59B1A209;
+        Fri, 30 Dec 2022 00:27:07 -0800 (PST)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1pBAjK-0005s0-03; Fri, 30 Dec 2022 09:27:06 +0100
+Message-ID: <0e77436c-9f0a-15b6-697a-7b879e4abc4a@leemhuis.info>
+Date:   Fri, 30 Dec 2022 09:27:05 +0100
 MIME-Version: 1.0
-References: <20221117184406.292416-1-nfrayer@baylibre.com> <Y6wlhfdDdm+XAsuH@matsya>
- <52a11d11-20a0-bf08-ce64-401b5d0ad133@gmail.com>
-In-Reply-To: <52a11d11-20a0-bf08-ce64-401b5d0ad133@gmail.com>
-From:   Nicolas Frayer <nfrayer@baylibre.com>
-Date:   Fri, 30 Dec 2022 00:31:31 +0100
-Message-ID: <CANyCTtTwAoT9O=8kUeJvsX=+KvCANHdtku8T=Brnmpy3AKysLQ@mail.gmail.com>
-Subject: Re: [PATCH v3] dmaengine: ti: k3-udma: Deferring probe when
- soc_device_match() returns NULL
-To:     =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, khilman@baylibre.com,
-        glaroque@baylibre.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Content-Language: en-US, de-DE
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+Cc:     Eric Pilmore <epilmore@gigaio.com>, dmaengine@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: =?UTF-8?Q?=5bregression=5d_Bug=c2=a0216856_-_=5bptdma=5d_NULL_point?=
+ =?UTF-8?Q?er_dereference_in_pt=5fcmd=5fcallback_during_server_shutdown?=
+To:     Sanjay R Mehta <sanju.mehta@amd.com>, Vinod Koul <vkoul@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672388827;e654454c;
+X-HE-SMSGID: 1pBAjK-0005s0-03
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Le jeu. 29 d=C3=A9c. 2022 =C3=A0 17:27, P=C3=A9ter Ujfalusi
-<peter.ujfalusi@gmail.com> a =C3=A9crit :
->
->
->
-> On 28/12/2022 13:16, Vinod Koul wrote:
-> > On 17-11-22, 19:44, Nicolas Frayer wrote:
-> >> When the k3 socinfo driver is built as a module, there is a possibilit=
-y
-> >> that it will probe after the k3 udma driver and the later returns -ENO=
-DEV.
-> >> By deferring the k3 udma probe we allow the k3 socinfo to probe and
-> >> register the soc_device_attribute structure needed by the k3 udma driv=
-er.
-> >> Removed the dev_err() message as well as it's deferring and not failin=
-g.
-> >
-> > lgtm, but need rebase as I already picked commit 3f58e10615f3 dmaengine=
-: ti:
-> > k3-udma: Add support for BCDMA CSI RX
->
-> Is this path needed at all? afaik the k3 socinfo is not going to be
-> module built.
->
-> >
-> >>
-> >> Signed-off-by: Nicolas Frayer <nfrayer@baylibre.com>
-> >> ---
-> >> v1->v2:
-> >> Extracted this patch from the following series:
-> >> https://lore.kernel.org/all/20221108181144.433087-1-nfrayer@baylibre.c=
-om/
-> >>
-> >> v2->v3:
-> >> Removed the dev_err() message
-> >>
-> >>   drivers/dma/ti/k3-udma.c | 8 ++++----
-> >>   1 file changed, 4 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-> >> index ce8b80bb34d7..ca1512eb9910 100644
-> >> --- a/drivers/dma/ti/k3-udma.c
-> >> +++ b/drivers/dma/ti/k3-udma.c
-> >> @@ -5271,10 +5271,10 @@ static int udma_probe(struct platform_device *=
-pdev)
-> >>      ud->match_data =3D match->data;
-> >>
-> >>      soc =3D soc_device_match(k3_soc_devices);
-> >> -    if (!soc) {
-> >> -            dev_err(dev, "No compatible SoC found\n");
-> >> -            return -ENODEV;
-> >> -    }
-> >> +
-> >> +    if (!soc)
-> >> +            return -EPROBE_DEFER;
-> >> +
-> >>      ud->soc_data =3D soc->data;
-> >>
-> >>      ret =3D udma_get_mmrs(pdev, ud);
-> >> --
-> >> 2.25.1
-> >
->
-> --
-> P=C3=A9ter
-Hi Vinod, P=C3=A9ter,
+Hi, this is your Linux kernel regression tracker speaking.
 
-This patch needs to be dropped as the k3 socinfo patch has been dropped.
+I noticed a bug report in bugzilla.kernel.org that looks a lot like a
+regression to my untrained eyes (it's not entirely clear). As many
+(most?) kernel developer don't keep an eye on it, I decided to forward
+it by mail. Quoting from
+https://bugzilla.kernel.org/show_bug.cgi?id=216856 :
 
-Thanks,
-Nicolas
+>  Eric Pilmore 2022-12-27 22:23:50 UTC
+> 
+> Observed kernel panic during host shutdown on a AMD (Milan CPU) based
+> server. The issue ended up being a NULL pointer dereference in
+> pt_cmd_callback() when
+> called from pt_issue_pending(). If you follow the flow in
+> pt_issue_pending() you will note that if pt_next_dma_desc() returns
+> NULL, then engine_is_idle will remain as TRUE, including if
+> pt_next_dma_desc() is still returning NULL in the 2nd call just prior to
+> doing the call to pt_cmd_callback().
+> 
+> The stack flow leading up to the panic was:
+> dma_sync_wait() -> dma_async_issue_pending() -> pt_issue_pending() ->
+> pt_cmd_callback()
+> 
+> Temporarily I worked around the issue by simply changing the IF
+> condition for the call to pt_cmd_callback() to also check for a non-NULL
+> desc, i.e.
+> 
+>    if (engine_is_idle && desc)
+>       pt_cmd_callback(desc, 0);
+> 
+> This resolved the issue for me, however I don't know enough about the
+> driver or the context here to know if this is really the desirable fix,
+> and so I'm submitting this bug rather than attempting to patch myself. I
+> wasn't sure if the secondary pt_next_dma_desc() call was mistakenly
+> leftover from the change that introduced the engine_is_idle variable or
+> not. Note that vchan_issue_pending() will return a boolean as to whether
+> there are any descriptors on the Issue list, i.e. active descriptors.
+> So, maybe that could be used to qualify the need to take some action?
+> Also, if pt_cmd_callback() is really going to start processing on the
+> next descriptor, I wonder if it should be called under the chan->vc.lock
+> lock. I'm not sure of the safety of this, but if you are peeking at
+> descriptors on the Issue list that you might want to ensure they're
+> protected from being accessed/removed by some other thread.
+
+See the ticket for more details.
+
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: v6.1..v6.2-rc1
+https://bugzilla.kernel.org/show_bug.cgi?id=216856
+#regzbot title: ptdma: kernel panic during host shutdown
+#regzbot ignore-activity
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.

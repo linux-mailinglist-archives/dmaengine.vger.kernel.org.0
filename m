@@ -2,50 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC1E665C3FE
-	for <lists+dmaengine@lfdr.de>; Tue,  3 Jan 2023 17:35:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 313DB65C405
+	for <lists+dmaengine@lfdr.de>; Tue,  3 Jan 2023 17:35:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238013AbjACQfY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 3 Jan 2023 11:35:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55616 "EHLO
+        id S238122AbjACQf2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 3 Jan 2023 11:35:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238123AbjACQfS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 Jan 2023 11:35:18 -0500
+        with ESMTP id S230431AbjACQfT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 Jan 2023 11:35:19 -0500
 Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A52A6370
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93F9BE032
         for <dmaengine@vger.kernel.org>; Tue,  3 Jan 2023 08:35:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1672763718; x=1704299718;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=CLUXsFE5EVP8Q5PfXafyc3Q8oQLrvadR0wo4A8ARGrw=;
-  b=abpCbURcABG3QrtFPplVDjyj71JcN9KJMUda5oN0ph+1SwCeMoyzhNWw
-   k5FafKbTQlAqOsWEjxESSfzd9uDmLKRWaB627IAcQ0qLI0gTsFls7f4Ju
-   XpxaKl3fvCcl06QCjJM3EbRS0G8kWndfJ6EDPfdRhHvEdpCuAXktIYHLW
-   GptB80/iyOk5x+4e66Mi73Ex1cdWQkoG1BZEvMkjWzgkQUz7YG9S8/l6q
-   2scNbl0h7TRlvpskH95A81QHN0BL1v4nfOW3lKR6F/f0fQPzAg+mZwHwu
-   poYvV8s2ZAOGjJ7jaRDdM537a+FQ6L+ULDrUmjOeVpZvXxZlJRloXOTI9
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="302072315"
+  bh=YGmCRw23hc83hc1Hm9zD3o3OuJY1E8OGzBfqIp9cLms=;
+  b=jYturswOSBQLxIFC+2LpH7Jg8k0MOHQwZDwxpq0Wbc6i7fn7ulEv/FVu
+   PC8AgHVk4vIzjeNr4mfaxRJvNhSYhBnIqBs8bIF4ZVEQtF/rQW6UFKmy3
+   E/P4xEgTMLlaQzr8IotAhVeFAeBDZddvQRqc4L9y9tWhTiqy8f/bdLTEB
+   e6Q1a+1uN+9z/teJGismt2BVhquE0acM7TyWziBuhfLlQr8gJRE8yRSrs
+   CoI6YojAi4lB+ptnnHOdgmmWTNi0biIb275++N0+tmztroXTWGfCMwy9o
+   8EDEbSreoqPdrHS9EKy5ys16jWJnVlpBeNy/la4qXAfDV40dkOu3Ti3tO
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="302072322"
 X-IronPort-AV: E=Sophos;i="5.96,297,1665471600"; 
-   d="scan'208";a="302072315"
+   d="scan'208";a="302072322"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2023 08:35:13 -0800
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2023 08:35:14 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="604858504"
+X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="604858514"
 X-IronPort-AV: E=Sophos;i="5.96,297,1665471600"; 
-   d="scan'208";a="604858504"
+   d="scan'208";a="604858514"
 Received: from fyu1.sc.intel.com ([172.25.103.126])
   by orsmga003.jf.intel.com with ESMTP; 03 Jan 2023 08:35:13 -0800
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Vinod Koul" <vkoul@kernel.org>,
         "Dave Jiang" <dave.jiang@intel.com>
 Cc:     "Fenghua Yu" <fenghua.yu@intel.com>, dmaengine@vger.kernel.org,
-        Tony Zhu <tony.zhu@intel.com>
-Subject: [PATCH 07/17] dmaengine: idxd: create kmem cache for event log fault items
-Date:   Tue,  3 Jan 2023 08:34:55 -0800
-Message-Id: <20230103163505.1569356-8-fenghua.yu@intel.com>
+        Tony Zhu <tony.zhu@intel.com>, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev
+Subject: [PATCH 08/17] iommu: expose iommu_sva_find() to common header
+Date:   Tue,  3 Jan 2023 08:34:56 -0800
+Message-Id: <20230103163505.1569356-9-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20230103163505.1569356-1-fenghua.yu@intel.com>
 References: <20230103163505.1569356-1-fenghua.yu@intel.com>
@@ -62,82 +64,60 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Dave Jiang <dave.jiang@intel.com>
 
-Add a kmem cache per device for allocating event log fault context. The
-context allows an event log entry to be copied and passed to a software
-workqueue to be processed. Due to each device can have different sized
-event log entry depending on device type, it's not possible to have a
-global kmem cache.
+Move iommu_sva_find() prototype to global header from local header in order
+to allow drivers to call the function. Used by idxd driver to find the mm
+from device reported PASID. The symbol is already exported.
 
 Tested-by: Tony Zhu <tony.zhu@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: iommu@lists.linux.dev
 ---
- drivers/dma/idxd/idxd.h  | 10 ++++++++++
- drivers/dma/idxd/init.c  |  9 +++++++++
- drivers/dma/idxd/sysfs.c |  1 +
- 3 files changed, 20 insertions(+)
+ drivers/iommu/iommu-sva.h | 1 -
+ include/linux/iommu.h     | 7 +++++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 3f182540b040..b4fa1051a482 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -273,6 +273,15 @@ struct idxd_evl {
- 	u16 head;
- };
+diff --git a/drivers/iommu/iommu-sva.h b/drivers/iommu/iommu-sva.h
+index 7215a761b962..102eae1817a2 100644
+--- a/drivers/iommu/iommu-sva.h
++++ b/drivers/iommu/iommu-sva.h
+@@ -9,7 +9,6 @@
+ #include <linux/mm_types.h>
  
-+struct idxd_evl_fault {
-+	struct work_struct work;
-+	struct idxd_wq *wq;
-+	u8 status;
-+
-+	/* make this last member always */
-+	struct __evl_entry entry[];
-+};
-+
- struct idxd_device {
- 	struct idxd_dev idxd_dev;
- 	struct idxd_driver_data *data;
-@@ -330,6 +339,7 @@ struct idxd_device {
+ int iommu_sva_alloc_pasid(struct mm_struct *mm, ioasid_t min, ioasid_t max);
+-struct mm_struct *iommu_sva_find(ioasid_t pasid);
  
- 	unsigned long *opcap_bmap;
- 	struct idxd_evl *evl;
-+	struct kmem_cache *evl_cache;
+ /* I/O Page fault */
+ struct device;
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 46e1347bfa22..7db16ca3f519 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -704,6 +704,8 @@ void iommu_release_device(struct device *dev);
+ int iommu_dev_enable_feature(struct device *dev, enum iommu_dev_features f);
+ int iommu_dev_disable_feature(struct device *dev, enum iommu_dev_features f);
  
- 	struct dentry *dbgfs_dir;
- 	struct dentry *dbgfs_evl_file;
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 9a5ab223d8ac..74d6a12d4bd3 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -341,6 +341,15 @@ static int idxd_init_evl(struct idxd_device *idxd)
++struct mm_struct *iommu_sva_find(ioasid_t pasid);
++
+ int iommu_device_use_default_domain(struct device *dev);
+ void iommu_device_unuse_default_domain(struct device *dev);
  
- 	spin_lock_init(&evl->lock);
- 	evl->size = IDXD_EVL_SIZE_MIN;
-+
-+	idxd->evl_cache = kmem_cache_create(dev_name(idxd_confdev(idxd)),
-+					    sizeof(struct idxd_evl_fault) + evl_ent_size(idxd),
-+					    0, 0, NULL);
-+	if (!idxd->evl_cache) {
-+		kfree(evl);
-+		return -ENOMEM;
-+	}
-+
- 	idxd->evl = evl;
- 	return 0;
+@@ -1042,6 +1044,11 @@ iommu_dev_disable_feature(struct device *dev, enum iommu_dev_features feat)
+ 	return -ENODEV;
  }
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 3e8c4ecd40ee..ea696e3c5680 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -1696,6 +1696,7 @@ static void idxd_conf_device_release(struct device *dev)
- 	kfree(idxd->wqs);
- 	kfree(idxd->engines);
- 	kfree(idxd->evl);
-+	kmem_cache_destroy(idxd->evl_cache);
- 	ida_free(&idxd_ida, idxd->id);
- 	bitmap_free(idxd->opcap_bmap);
- 	kfree(idxd);
+ 
++static inline struct mm_struct *iommu_sva_find(ioasid_t pasid)
++{
++	return ERR_PTR(-ENODEV);
++}
++
+ static inline struct iommu_fwspec *dev_iommu_fwspec_get(struct device *dev)
+ {
+ 	return NULL;
 -- 
 2.32.0
 

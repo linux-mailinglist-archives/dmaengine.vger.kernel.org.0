@@ -2,129 +2,201 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C89CD65AD87
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Jan 2023 07:49:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91B8565BC0E
+	for <lists+dmaengine@lfdr.de>; Tue,  3 Jan 2023 09:19:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230148AbjABGtZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 2 Jan 2023 01:49:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58386 "EHLO
+        id S236934AbjACITs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 3 Jan 2023 03:19:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbjABGtY (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 2 Jan 2023 01:49:24 -0500
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2073.outbound.protection.outlook.com [40.107.244.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EA66113C;
-        Sun,  1 Jan 2023 22:49:23 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C67sCh2/EKXuifM/3c3x+6S56Y8sAKkgBlX+zT9fXHufmKIGtPgGH2ebaCcezEDyO7zPsIY45hkVapAU2shP02a3GTHGafn1dzZj0Ev+j9YMJEMkWGDRMtVjTg49Ioo7Wgxk0Z58NxiUcv50J76DhKNj1Fk5f7X/gS217Ns3OD3USzirh2DSBssS1d4eygm78BXh+iRjGpw5i5cZREMhhqgurytzU6cFwGtg6v1qXxfzjxiuRs+1bsbB8rmZituhgOBamErn0HogH8K/3wDISO6OLIm6gGHRcEP5YWAcJnIhCVDeq2b5o/nuVsaV6Nn2n05C5u1JKAbPNFhUwk0tOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tjlPzEtMVR1/2xBVTHoc4DAvlrw58CGzObYNjGi0ATY=;
- b=E1UGMvYFbhPDQi0bs7ZlODhwTr2SKg4xj1eArFldPyqdAVXyl62UvPqROqj2hmOz35pzXCwFZeiXcaM6K2C82+NyVG0bWLHLk7OPa0wXaW96g8ZJsoA/jKoxc4V6McyXMYpyPH6eS11q6CYv3DSIXdCQ5CNv8MsJQroqKMCKgp8a5HuRFecvM+X2l+YNqmTd4QpyFwRy40EhZz6OYitvprZfwJsCVbTUd6IVf9PH1IG9NLUtZ5IdZcWM8c4kzGK7qFxtAmA6CqObpEz6xIsVPmpGEX5sKyL9SCFW0iuPmqvBfuWI/NgCswieS2mMx6zP8c6sYLnqiPm6oYtHpsl9DA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tjlPzEtMVR1/2xBVTHoc4DAvlrw58CGzObYNjGi0ATY=;
- b=Yhnrs5tRM+nnFZh/3c9a2qnDDCTue0KLBp2XqjEBQsACbDGNOqWEUoBTQF4AhAusiUFAMMOeor7r1r9PxbmQO5x4kdOwqcrJfzBxOQtLcHiFHQeRLSOAZOCAdcJEmafSmyvN2rjKSXLg7rLJvYPC8kGunq0IQqn/IX/bHk5jn2ktWmWO49Q8FqjK54NNIJwbvFYhofTtPWDIq5slU3ySaySHn1dYv1INp71dXkyeD2MlavcXglQ1M5cfOKzfmU4K18RfZZ6FfZGg+wtiy/nlalFcSz/TuM16fcF/OUG/FhUn0+ojmUHIXWvOjYsW4y33s605jhDRWXDUAqq7qnDXog==
-Received: from MW2PR16CA0066.namprd16.prod.outlook.com (2603:10b6:907:1::43)
- by DM6PR12MB4076.namprd12.prod.outlook.com (2603:10b6:5:213::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5944.19; Mon, 2 Jan
- 2023 06:49:20 +0000
-Received: from CO1NAM11FT026.eop-nam11.prod.protection.outlook.com
- (2603:10b6:907:1:cafe::f) by MW2PR16CA0066.outlook.office365.com
- (2603:10b6:907:1::43) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5966.19 via Frontend
- Transport; Mon, 2 Jan 2023 06:49:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CO1NAM11FT026.mail.protection.outlook.com (10.13.175.67) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5966.17 via Frontend Transport; Mon, 2 Jan 2023 06:49:20 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Sun, 1 Jan 2023
- 22:49:12 -0800
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Sun, 1 Jan 2023
- 22:49:11 -0800
-Received: from mkumard.nvidia.com (10.127.8.13) by mail.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server id 15.2.986.36 via Frontend
- Transport; Sun, 1 Jan 2023 22:49:09 -0800
-From:   Mohan Kumar <mkumard@nvidia.com>
-To:     <ldewangan@nvidia.com>, <jonathanh@nvidia.com>, <vkoul@kernel.org>,
-        <thierry.reding@gmail.com>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Mohan Kumar <mkumard@nvidia.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH v2] dmaengine: tegra210-adma: fix global intr clear
-Date:   Mon, 2 Jan 2023 12:18:44 +0530
-Message-ID: <20230102064844.31306-1-mkumard@nvidia.com>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S236992AbjACITq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 Jan 2023 03:19:46 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94861DF7B
+        for <dmaengine@vger.kernel.org>; Tue,  3 Jan 2023 00:19:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1672733939;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=sFAbBCJeww11W0L1auwTuI53DEHjJAchS/0bFQT4L0M=;
+        b=KhQLr4QyC9TxyzWCSYOJzdJaliPmBnPehwpJ0S6aYPoI1Ma7Z2BcY5LOd1I4T8wNTNpppr
+        Fq8h9RcG2ljMI6vO0nBykw7esxIAK5p+tF+PW0nrjosxU3rjhC/AhEu+opm38WDWAtoBg8
+        C7cmBSn8oqVoUMybhBxXydVwLxlugDo=
+Received: from mail-oa1-f71.google.com (mail-oa1-f71.google.com
+ [209.85.160.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-112-g6R_IRDIMGydvjWzGzRNIg-1; Tue, 03 Jan 2023 03:18:58 -0500
+X-MC-Unique: g6R_IRDIMGydvjWzGzRNIg-1
+Received: by mail-oa1-f71.google.com with SMTP id 586e51a60fabf-144870e8fe8so13054854fac.13
+        for <dmaengine@vger.kernel.org>; Tue, 03 Jan 2023 00:18:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sFAbBCJeww11W0L1auwTuI53DEHjJAchS/0bFQT4L0M=;
+        b=br+NPmekEu2ybZBO2CZpB5+bWV5e3YWeE7if/amjdXPdXP7ms+t5/7Acyv7/JTtqoJ
+         p7ibIaadXyPHae6ahZCfHjOxUjNT2JIyDkSn9dWovoPVPY5uQSjo/6ye+B5UhihehX37
+         MvKpMkuaKpLp5JxE7xqvQxIjzH2GpDfXGDwEZmgbLDTc+M0ea3850RBpkawYMePdORfi
+         gxoI4dKCKI2CimL/gXgMw98O39Qd/79M4DZlILFUsuqRDbiGeXFfCR3mfPYBD4Fsc0IM
+         I85D508sa3r4v9VcVLPhuQJc8IFqQISP+5tPg72rcRGa+D1HKqi9530yQV1Sk+MEtd4D
+         RJBA==
+X-Gm-Message-State: AFqh2kqRWjBHVmIj5DD7fVXmo34kcITrxvqN2C7w/fXkoYQ67GQ9uc0j
+        mtJC57yvbJHT91LRWvzeVGuV3VmbahtVR94DsafPXXRzjUysIw3QJmzu9HYL9lw/XkPlkTtRbUC
+        syGC3ybJOzyfvkT7+z6633pZlJ1QDnLwIxfSK
+X-Received: by 2002:a05:6808:1308:b0:35a:9331:8cbb with SMTP id y8-20020a056808130800b0035a93318cbbmr3082768oiv.201.1672733937142;
+        Tue, 03 Jan 2023 00:18:57 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXshsVTw3XWKQfO7iYXsrZfi+bMC8r+qmFqrOOA2ZwLot7LV7UbzqH4Ef7T8uvkDuBhK7y9LABVYrbRa84T6gtA=
+X-Received: by 2002:a05:6808:1308:b0:35a:9331:8cbb with SMTP id
+ y8-20020a056808130800b0035a93318cbbmr3082763oiv.201.1672733936867; Tue, 03
+ Jan 2023 00:18:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT026:EE_|DM6PR12MB4076:EE_
-X-MS-Office365-Filtering-Correlation-Id: a1718b25-5088-4257-117d-08daec8d799f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nkABbZDJplXy6oCnkUlPXKvQluLTntCNVs1L9iUJzQ1NwVQ+I1hTS8WEwJTQEU7AHbc0rCkI3w4Q78vKPHGEeFWx4xJg9SfiunssOJkE0OvmwGVtXfBF4WQPkJtCKD0mNqLuUR0M7uVmQ7lQjeRupzILqIZzIkO+jGEupS/gegmbLSTiO/0J1wZfpshZ7Y0PDo2Smxf/FYkN3j4AS09Abo5mS4egLxwK84ym74RA7zbIUhKrCCinOyZgTrbIdj4ud28eNd6pfhD/PyK5/nx7F/OULyVYzE7OwkHYzJHI5kSqPxoAqI5KeTuqOIF/tz7QGadcRo4vybn0CVYImtFiB6pq5shIRaC53QITDCQasrKfJ4hwCYBS6ADfEcCTqFCuH8EE9mDmJILysgJWVfI/M/DwEdr2TkXar/7fsJ3/x3TuHhFIYhVtBLm/ob7rBCPtkmUe6cOk7jKSSpGvXFRbEFCdsJavTThwxdxNnTJqKx9k6HGem3Iyy6m1sZAPpeEgQsLUPW/SNPItlZUElRoYd+vMEQui9fmFy5Dc2rS/OlX/DuHLjC+V77bKkHJAv40c5gHThQ2gSZGEs/9jUBuSXgCXuxkoDSL8R7+TtMBjC5Ikn/p6xLaj6EJ60rI+LygaEQIcww8ycTXVqcN9M4M7Qg95KZJuEH0ymUpFRIPGxC29cbKTdCbvV1rz9mYv7QjNgoTg7mZ/YW7aTOCcq6MfaO5JeV1Nj3HVGO4/YdJsfwY=
-X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(396003)(346002)(39860400002)(136003)(376002)(451199015)(36840700001)(40470700004)(46966006)(82740400003)(110136005)(36860700001)(478600001)(40460700003)(5660300002)(36756003)(2616005)(1076003)(40480700001)(8936002)(4744005)(41300700001)(7696005)(70206006)(70586007)(4326008)(356005)(8676002)(47076005)(426003)(82310400005)(336012)(7636003)(83380400001)(6666004)(316002)(54906003)(186003)(2906002)(26005)(86362001)(22166006);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jan 2023 06:49:20.0420
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1718b25-5088-4257-117d-08daec8d799f
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT026.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4076
-X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+References: <20221201030050.978595-1-koba.ko@canonical.com>
+In-Reply-To: <20221201030050.978595-1-koba.ko@canonical.com>
+From:   Joel Savitz <jsavitz@redhat.com>
+Date:   Tue, 3 Jan 2023 10:18:40 +0200
+Message-ID: <CAL1p7m7FrQsysFq67NkZ_v1hRg8NuyHgyicBm5dp10VxMN98Aw@mail.gmail.com>
+Subject: Re: [PATCH V3] dmaengine: Fix double increment of client_count in dma_chan_get()
+To:     Koba Ko <koba.ko@canonical.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Jie Hai <haijie1@huawei.com>, Dave Jiang <dave.jiang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The current global interrupt clear programming register offset
-was not correct. Fix the programming with right offset
+Vinod, are there any issues with this patch? It looks good to me.
 
-Fixes: ded1f3db4cd6 ("dmaengine: tegra210-adma: prepare for supporting newer Tegra chips")
-Cc: stable@vger.kernel.org
-Signed-off-by: Mohan Kumar <mkumard@nvidia.com>
----
- drivers/dma/tegra210-adma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Best,
+Joel Savitz
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index ae39b52012b2..79da93cc77b6 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -221,7 +221,7 @@ static int tegra_adma_init(struct tegra_adma *tdma)
- 	int ret;
- 
- 	/* Clear any interrupts */
--	tdma_write(tdma, tdma->cdata->global_int_clear, 0x1);
-+	tdma_write(tdma, tdma->cdata->ch_base_offset + tdma->cdata->global_int_clear, 0x1);
- 
- 	/* Assert soft reset */
- 	tdma_write(tdma, ADMA_GLOBAL_SOFT_RESET, 0x1);
--- 
-2.17.1
+On Thu, Dec 1, 2022 at 5:01 AM Koba Ko <koba.ko@canonical.com> wrote:
+>
+> The first time dma_chan_get() is called for a channel the channel
+> client_count is incorrectly incremented twice for public channels,
+> first in balance_ref_count(), and again prior to returning. This
+> results in an incorrect client count which will lead to the
+> channel resources not being freed when they should be. A simple
+>  test of repeated module load and unload of async_tx on a Dell
+>  Power Edge R7425 also shows this resulting in a kref underflow
+>  warning.
+>
+> [  124.329662] async_tx: api initialized (async)
+> [  129.000627] async_tx: api initialized (async)
+> [  130.047839] ------------[ cut here ]------------
+> [  130.052472] refcount_t: underflow; use-after-free.
+> [  130.057279] WARNING: CPU: 3 PID: 19364 at lib/refcount.c:28
+> refcount_warn_saturate+0xba/0x110
+> [  130.065811] Modules linked in: async_tx(-) rfkill intel_rapl_msr
+> intel_rapl_common amd64_edac edac_mce_amd ipmi_ssif kvm_amd dcdbas kvm
+> mgag200 drm_shmem_helper acpi_ipmi irqbypass drm_kms_helper ipmi_si
+> syscopyarea sysfillrect rapl pcspkr ipmi_devintf sysimgblt fb_sys_fops
+> k10temp i2c_piix4 ipmi_msghandler acpi_power_meter acpi_cpufreq vfat
+> fat drm fuse xfs libcrc32c sd_mod t10_pi sg ahci crct10dif_pclmul
+> libahci crc32_pclmul crc32c_intel ghash_clmulni_intel igb megaraid_sas
+> i40e libata i2c_algo_bit ccp sp5100_tco dca dm_mirror dm_region_hash
+> dm_log dm_mod [last unloaded: async_tx]
+> [  130.117361] CPU: 3 PID: 19364 Comm: modprobe Kdump: loaded Not
+> tainted 5.14.0-185.el9.x86_64 #1
+> [  130.126091] Hardware name: Dell Inc. PowerEdge R7425/02MJ3T, BIOS
+> 1.18.0 01/17/2022
+> [  130.133806] RIP: 0010:refcount_warn_saturate+0xba/0x110
+> [  130.139041] Code: 01 01 e8 6d bd 55 00 0f 0b e9 72 9d 8a 00 80 3d
+> 26 18 9c 01 00 75 85 48 c7 c7 f8 a3 03 9d c6 05 16 18 9c 01 01 e8 4a
+> bd 55 00 <0f> 0b e9 4f 9d 8a 00 80 3d 01 18 9c 01 00 0f 85 5e ff ff ff
+> 48 c7
+> [  130.157807] RSP: 0018:ffffbf98898afe68 EFLAGS: 00010286
+> [  130.163036] RAX: 0000000000000000 RBX: ffff9da06028e598 RCX: 0000000000000000
+> [  130.170172] RDX: ffff9daf9de26480 RSI: ffff9daf9de198a0 RDI: ffff9daf9de198a0
+> [  130.177316] RBP: ffff9da7cddf3970 R08: 0000000000000000 R09: 00000000ffff7fff
+> [  130.184459] R10: ffffbf98898afd00 R11: ffffffff9d9e8c28 R12: ffff9da7cddf1970
+> [  130.191596] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+> [  130.198739] FS:  00007f646435c740(0000) GS:ffff9daf9de00000(0000)
+> knlGS:0000000000000000
+> [  130.206832] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  130.212586] CR2: 00007f6463b214f0 CR3: 00000008ab98c000 CR4: 00000000003506e0
+> [  130.219729] Call Trace:
+> [  130.222192]  <TASK>
+> [  130.224305]  dma_chan_put+0x10d/0x110
+> [  130.227988]  dmaengine_put+0x7a/0xa0
+> [  130.231575]  __do_sys_delete_module.constprop.0+0x178/0x280
+> [  130.237157]  ? syscall_trace_enter.constprop.0+0x145/0x1d0
+> [  130.242652]  do_syscall_64+0x5c/0x90
+> [  130.246240]  ? exc_page_fault+0x62/0x150
+> [  130.250178]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+> [  130.255243] RIP: 0033:0x7f6463a3f5ab
+> [  130.258830] Code: 73 01 c3 48 8b 0d 75 a8 1b 00 f7 d8 64 89 01 48
+> 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa b8 b0 00 00
+> 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 45 a8 1b 00 f7 d8 64 89
+> 01 48
+> [  130.277591] RSP: 002b:00007fff22f972c8 EFLAGS: 00000206 ORIG_RAX:
+> 00000000000000b0
+> [  130.285164] RAX: ffffffffffffffda RBX: 000055b6786edd40 RCX: 00007f6463a3f5ab
+> [  130.292303] RDX: 0000000000000000 RSI: 0000000000000800 RDI: 000055b6786edda8
+> [  130.299443] RBP: 000055b6786edd40 R08: 0000000000000000 R09: 0000000000000000
+> [  130.306584] R10: 00007f6463b9eac0 R11: 0000000000000206 R12: 000055b6786edda8
+> [  130.313731] R13: 0000000000000000 R14: 000055b6786edda8 R15: 00007fff22f995f8
+> [  130.320875]  </TASK>
+> [  130.323081] ---[ end trace eff7156d56b5cf25 ]---
+>
+> cat /sys/class/dma/dma0chan*/in_use would get the wrong result.
+> 2
+> 2
+> 2
+>
+> Fixes: d2f4f99db3e9 ("dmaengine: Rework dma_chan_get")
+> Signed-off-by: Koba Ko <koba.ko@canonical.com>
+> Reviewed-by: Jie Hai <haijie1@huawei.com>
+> Test-by: Jie Hai <haijie1@huawei.com>
+> Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>
+> ---
+> V2: Remove [3/3] on subject.
+> V3: Refine title and comments as per suggestions.
+> Ref: https://patchwork.kernel.org/project/linux-dmaengine/patch/20220930173652.1251349-1-koba.ko@canonical.com/
+> ---
+>  drivers/dma/dmaengine.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index 2cfa8458b51be..78f8a9f3ad825 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -451,7 +451,8 @@ static int dma_chan_get(struct dma_chan *chan)
+>         /* The channel is already in use, update client count */
+>         if (chan->client_count) {
+>                 __module_get(owner);
+> -               goto out;
+> +               chan->client_count++;
+> +               return 0;
+>         }
+>
+>         if (!try_module_get(owner))
+> @@ -470,11 +471,11 @@ static int dma_chan_get(struct dma_chan *chan)
+>                         goto err_out;
+>         }
+>
+> +       chan->client_count++;
+> +
+>         if (!dma_has_cap(DMA_PRIVATE, chan->device->cap_mask))
+>                 balance_ref_count(chan);
+>
+> -out:
+> -       chan->client_count++;
+>         return 0;
+>
+>  err_out:
+> --
+> 2.25.1
+>
 

@@ -2,80 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B2D3465CC83
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Jan 2023 06:06:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C85B65CD74
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Jan 2023 08:02:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229457AbjADFGh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 4 Jan 2023 00:06:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52674 "EHLO
+        id S229469AbjADHCR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 4 Jan 2023 02:02:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229625AbjADFGg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Jan 2023 00:06:36 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 944F0140ED
-        for <dmaengine@vger.kernel.org>; Tue,  3 Jan 2023 21:06:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672808795; x=1704344795;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=DK+zAyg9oejQ1QttmKjFjH1qw762Emv88jmac10UYHw=;
-  b=i6HSV9U3WvWmtITzDDZsLJLVFIPuHr+y39BlHSXRWJqPKxSH1ezgVRMB
-   rmg2K0reenj6FHwKty+dx2NT+qNCym+7x0LabVf4+gNhNK35Z0k5scc8q
-   G1vG+jHjqwmORieOSNB+xgbDT1OQfRRMhwbXQUhQQyEbXpZJJE1w2rs41
-   lWpiUxij57QePatJPlr55t5n/Ockv3DM5VHGTUQFFbZrpU/jOi04h6/GR
-   unrhMAvaCCB34sG0RGtrybB/htZSl5I+cFIKHdAnTIKAltRMl86r0W7mh
-   pJO2+wZcsueD1JMVqRbAignlOADM2g6UeI8YUm1x6f4cX5JvcqpEIrIyW
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="349062237"
-X-IronPort-AV: E=Sophos;i="5.96,297,1665471600"; 
-   d="scan'208";a="349062237"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2023 21:06:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="685635957"
-X-IronPort-AV: E=Sophos;i="5.96,297,1665471600"; 
-   d="scan'208";a="685635957"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga008.jf.intel.com with ESMTP; 03 Jan 2023 21:06:34 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Tue, 3 Jan 2023 21:06:34 -0800
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Tue, 3 Jan 2023 21:06:34 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Tue, 3 Jan 2023 21:06:34 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.170)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Tue, 3 Jan 2023 21:06:33 -0800
+        with ESMTP id S233763AbjADHCP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Jan 2023 02:02:15 -0500
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2070.outbound.protection.outlook.com [40.107.243.70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20B1311A15
+        for <dmaengine@vger.kernel.org>; Tue,  3 Jan 2023 23:02:14 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XvuBkx5K425ER89DC5OBj5hUcjGZeQnuJsHbEzoG/hxUpquyrK1Hi2JzFq8KRcwtEQWbqQq6p5Dn1BnhnX+wts3iLT9fsv+mlFUYYdxKeVn7AaSgUWdLZcKwIwD1PXEAyfo21mZAL0Ld3xIbFoAtCHZ8weoDA2hFXjo9X9BnzHMq8NZH6Lptj6PD7DzYJdOsGVOEXVMVj6sEZISYrq77DGREzMlYWL2ugOHfdPpWzSEPm7Pizej67V+2fPD3l9SoEdEOQD/Na8cNr3SsklODtXGS2AE0Bodl6yNenpJbtFrWwqiGZ6ZgrWV2pwW3WwMixdKHZvgH0ojHgNPTYr/c2g==
+ b=ieUBqG/VgZLyTYyYG6087SeGOC8peWuAqWdgft1RfAMYQ0iFxW1+iUlVmQlFPKmFI3yjjonpsa2/biuU/cZsbRWFiJp45KWuTXrxJp8ML9uObiMikCI8knCKtL+UdIqESS4Pj9Muhb/scRZWSuZh/Ovq98EZGlpGGvbUQEAI4+qtyvaNXgwnrrJbMARwKqR3MbBVSMPB8Mx4wB2Mh9PAhg9Nz224LkQlV36uiKlCJylm20gvFe5ASnpwTomI9MCStkrCWaKHGMH2za5BcK87bSCDFbXvbRE+rNPk/GvPdctaSN3Cb4MdIZBT1I9PVFa038I4ZLaTSBousjoq795r1w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GT+5VwbSsQTMtBUXUM0SNBxnBDVb/bhQmIDdAAuARVk=;
- b=MZigzvvr5qR9Nx+6se+xRSMEhbXq/7ORQbf0PB9UDR5PTrQP53Bmi9dJnrazPn/bICRhrZyGpsQLTpNU8Hyy3itkOd6s1OnbqHAl9i3FJRH9Gw2Nqk1bfyQGyNGZOHphEJsCbAsJuIN5vyjIha626dhx/lXBd9cwXIW5pWQz0ksGwy3Sj/Nu17laNPUxrcNieU/MWFxSi6C7ivzYBet/GAUoazmVaNCWAzES0bB5qXnvbQS7OYIrrVXbSfjPH3wMnfxH3J9Nq/cBr81VYJIvcuU+GMOc6/Bgc+cJZCOHhY2qb+EjOjglSdtSIXn3m7W3LB8dXHsHH+y6WstCHOSfmQ==
+ bh=a4+N0kCaE/s9h/kloeFKGUeaM0Pfj9dWk6GeeyzqhJs=;
+ b=VEYLoBSMnkCI+FUdga1eZ+YC18vWTsPhic4tcCf4px/HIfGJrH0aWo5QIGxEltWGnH0Nqc7PV15k+xyW2youHwf8GRd04V1eLvW7fOwonrg/n+QenIUH3XiYu0euEEb5CLOBgK0QUOPpOjHLwOJ7MW1XizLsf2QV3ukXS+l7amYoWK5dFMWBj9HYZx4tFifgEJ/IX1+tK1u0BidJQixXtIOKhFsniIRMLUQnvgey3velEoqBHeD4Ntr3IHWhWMfLBoDIIck2cjMEo+5iHeCQPTQJAT3gI5tQBBPQPDI6jKbn8U61Ttz1IetvofTuDvlsZKPYu7V2t6+qOHcyEwlVeg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from IA1PR11MB6097.namprd11.prod.outlook.com (2603:10b6:208:3d7::17)
- by PH0PR11MB5625.namprd11.prod.outlook.com (2603:10b6:510:ea::11) with
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a4+N0kCaE/s9h/kloeFKGUeaM0Pfj9dWk6GeeyzqhJs=;
+ b=Ph2AZ146TYmBGNAvSMVpeg1BIlp8lfh02nuaSHxG3fblNhjwdHKq1rXloeHhvC5SHq95eBiVcRwTLX4Wr88dv980jeqqhwoxd8xXPXULwgYEpwozE+mG9RNRq2my+XPglpY5CjMZo7JPlQC3efGuvgLx5KI46oUSGZ7YRRvWjScPYbu/p2po8aZ0GNAimNIfe+JsOO3Sz7PN0XJOUlgHRFL3WnTXbbjj4iDP4rglimqlW1fH02wdhPIok7Oxgz0so6dOiUd+chQl9kZdjQ7Fi99TqLMSYJ5g/L5C3/hCy4tI//99/KIhc5hKHXt8Za8nbTUGJcEbz8EVA+dpXXFbEw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BYAPR12MB3176.namprd12.prod.outlook.com (2603:10b6:a03:134::26)
+ by PH7PR12MB5973.namprd12.prod.outlook.com (2603:10b6:510:1d8::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5944.19; Wed, 4 Jan
- 2023 05:06:29 +0000
-Received: from IA1PR11MB6097.namprd11.prod.outlook.com
- ([fe80::16c0:1ae3:13ee:c40e]) by IA1PR11MB6097.namprd11.prod.outlook.com
- ([fe80::16c0:1ae3:13ee:c40e%3]) with mapi id 15.20.5944.019; Wed, 4 Jan 2023
- 05:06:29 +0000
-From:   "Yu, Fenghua" <fenghua.yu@intel.com>
-To:     Lorenzo Stoakes <lstoakes@gmail.com>
-CC:     Vinod Koul <vkoul@kernel.org>,
+ 2023 07:02:12 +0000
+Received: from BYAPR12MB3176.namprd12.prod.outlook.com
+ ([fe80::ecfb:a3ad:3efa:9df8]) by BYAPR12MB3176.namprd12.prod.outlook.com
+ ([fe80::ecfb:a3ad:3efa:9df8%3]) with mapi id 15.20.5944.019; Wed, 4 Jan 2023
+ 07:02:12 +0000
+References: <20230103163505.1569356-1-fenghua.yu@intel.com>
+ <20230103163505.1569356-10-fenghua.yu@intel.com>
+ <Y7RpuqbTAM11wVQG@lucifer> <Y7Rq0WRc4p3lCkjk@lucifer>
+ <IA1PR11MB609703A614F64CD34FA8F02D9BF49@IA1PR11MB6097.namprd11.prod.outlook.com>
+ <Y7SMYF8MlzeqDgp+@lucifer>
+ <IA1PR11MB609745A8BE83313FAB0236C29BF59@IA1PR11MB6097.namprd11.prod.outlook.com>
+User-agent: mu4e 1.8.10; emacs 28.2
+From:   Alistair Popple <apopple@nvidia.com>
+To:     "Yu, Fenghua" <fenghua.yu@intel.com>
+Cc:     Lorenzo Stoakes <lstoakes@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
         "Jiang, Dave" <dave.jiang@intel.com>,
         "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
         "Zhu, Tony" <tony.zhu@intel.com>,
@@ -83,157 +58,159 @@ CC:     Vinod Koul <vkoul@kernel.org>,
         "linux-mm@kvack.org" <linux-mm@kvack.org>,
         Christoph Hellwig <hch@infradead.org>,
         "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-Subject: RE: [PATCH 09/17] mm: export access_remote_vm() symbol
-Thread-Topic: [PATCH 09/17] mm: export access_remote_vm() symbol
-Thread-Index: AQHZH5FkNhHM4hOH50a42EHT2Acr4K6M9zQAgAABTYCAAA0YkIAAGukAgACKFVA=
-Date:   Wed, 4 Jan 2023 05:06:29 +0000
-Message-ID: <IA1PR11MB609745A8BE83313FAB0236C29BF59@IA1PR11MB6097.namprd11.prod.outlook.com>
-References: <20230103163505.1569356-1-fenghua.yu@intel.com>
- <20230103163505.1569356-10-fenghua.yu@intel.com> <Y7RpuqbTAM11wVQG@lucifer>
- <Y7Rq0WRc4p3lCkjk@lucifer>
- <IA1PR11MB609703A614F64CD34FA8F02D9BF49@IA1PR11MB6097.namprd11.prod.outlook.com>
- <Y7SMYF8MlzeqDgp+@lucifer>
-In-Reply-To: <Y7SMYF8MlzeqDgp+@lucifer>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: IA1PR11MB6097:EE_|PH0PR11MB5625:EE_
-x-ms-office365-filtering-correlation-id: c8093891-b2f8-4e50-978d-08daee11707d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ptrLjs5SJkiyERLGcgkQnACcCp6F5MyL/zLht96Lcs1tpSDQZhbG9gP7EsI/GdJEOFzDjrWBio/uLpLw3Qs9tVCs0Hndb+XP/ANBt2+Q6YGmxFgphoki2wLD+My6cVLJHr3WMl+j+3zQY92yaoT98t2qsPep2hKpZFimW5QJCJv6J/lMzuZMvzh6XSZLILwDrGDdGKWZe3VQswm8OoPq/IdpmtBDq+tB/K6F9ctIIMI5Ywp5ZA62w3DuHDqA6BSGzEgZOpxwZkuoO0Lc8WcnnkBoY7Xpx/yrMeeezaC1JV7Lr4u4QfVqTpo/zrgBPkMzbhHZZR5AXap6MGb8xAEyH3UVc0T71UwVLw0HDNZE3aZw3hgl/ivnvm1mAo7FfEh+pU0vT5U+JCk7eVreT+vbJYlTKB5tcDf7k9rv2l8PVxtVwLm7jUztDzCavpy/K+gf156N6+0dRH2f4jcGBX4+fiYNTps/PxKLajO8bFD9PhTCwsyaGSSe0Isw3nQ42fDFrl3MAFz4QL7D4Dfq+G4+3L0/1+o0Az1mGmKR/G6OMVpvJbRnJ599V6L0azVZox2rsRa0OduMr1Yu1XFyKnwXsVi3/5yHdrik3MxNL0z+/197ROHnAM5ykszq/GNvwzpkbguyRitLoXnAq7DAAn3NwiflygEdGdNf6YJi2DMRq4uHLDOBd7DI+yCFIzGEmuwR+qCIp5OVNXVMP/pknjDuhQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB6097.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(396003)(346002)(136003)(39860400002)(376002)(451199015)(107886003)(6506007)(478600001)(71200400001)(86362001)(55016003)(82960400001)(122000001)(38100700002)(38070700005)(9686003)(186003)(33656002)(83380400001)(26005)(7696005)(8676002)(66556008)(66946007)(4326008)(64756008)(66476007)(66446008)(76116006)(52536014)(8936002)(316002)(2906002)(6916009)(54906003)(41300700001)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?bCfb54EJeV1JoLNk8DgEGBLweSz0sYUQITdy2xp0TRaGmvKGjxQtm2m0A2T+?=
- =?us-ascii?Q?KgQ3p0YKS5SN5M+4F5vw5DDSBGe61E5c7zaQT2ekLlV/az8p39oQrulHppYI?=
- =?us-ascii?Q?lu6kc/SfelKZIr1SYDMLs53ycUE6GVP2YlZVr70CNpG+bZjQJHuI/EbV6pMj?=
- =?us-ascii?Q?gUgtdrEGM6HRBiOXmUV7spMXLtmdlzDOM6ilgZ3i96SdQN2bOizhMFAky8iQ?=
- =?us-ascii?Q?TMcufPmpXbgN7kEspgsytebCVgy8PnR30z1648H+Kt+YvSeF1/Nft1fnRrZQ?=
- =?us-ascii?Q?gLy9MIB8cd9F10awRhthwoYpDOvUNX10AjUzhcyIa89F8pGgysPosupwFjFp?=
- =?us-ascii?Q?XJKZ+lQSUbnik3nfD6/5Hygq8w1QClksE0MWE7mZl0+NXFRUWMVBd4CXvS50?=
- =?us-ascii?Q?UePJeEr/UGnuzbFodZ+0S91iqSX5nxCghjh6HePLBvoEz9PimnH4WMyn7jjN?=
- =?us-ascii?Q?UQ6/aPHthV5k0GkFhtWNGdu2YtX7tCToAshalfa0Dr5kD9ngNxOrabkCNSEt?=
- =?us-ascii?Q?c/wrvMiR4usYHtBSpuuQp0p8D5Q5j/0dnd8ms6aVEnM+tNMDCyf74SHW67Mc?=
- =?us-ascii?Q?NiywfhxOTCEIE0eFkx7/kFE37UAzLsh+CUimKDfztHQlqjsKLEjGjKGPSeIq?=
- =?us-ascii?Q?XQ9lkz1VD+PUck4E7oRmYvqpRpZ39HdjIKPbnxecIXBdS3gKEbJ+SsiK9o/O?=
- =?us-ascii?Q?i7nVTt5z4VeNBaL2HAaYve0NI5cGBhsG2325SK9x7hSjdM22dUS5OE7QNhuN?=
- =?us-ascii?Q?FDpnSCSzmEoSczxuLdJN31GP1+lbVp1yFgbEozZZv95vWIH0NBS2GOzp8Ea+?=
- =?us-ascii?Q?VP8ps1TdZwNFFVHysRLQ0Yfa5u7TJ+EBmu1xdDg14kIZtDTMqOL+/eISq6yX?=
- =?us-ascii?Q?ae7IHhOqQ1h8xGNa/yriDw+UlJHmytcKj0tjGQ15hj0fHGZPflVRymDQJfjv?=
- =?us-ascii?Q?q9mn8yrPMvPUFcrsOgapk7cofR4TkwcfPkDadTTElCAn86mt7G9tJiUTEMQi?=
- =?us-ascii?Q?OtavM0zfpwGyW9v9PHTkF+XUJp4LBWtUIGfi5jnLOhndtdwSpyQb0+ZuWSIt?=
- =?us-ascii?Q?fW1iw/Ns7w5lRl9vLSJ+gR7G+bqmNxdx+ky4xlcppe/Cnq19jsPt614vvqwO?=
- =?us-ascii?Q?VzKb2svLidjp5dJzXSMG3DBD1ucB30RvSkphYtqJMNj4DwnXrU6ZpFoAlhkn?=
- =?us-ascii?Q?D3vK7x7GGalVio0nzf4tulX+sa+hiytCBvxw5jnFVZlTuDKO2+If4BhYHu/L?=
- =?us-ascii?Q?FEZX03z7byiB0YdgnNaED5UO4PgZHp9/UbfuNGbe5YtEBHYCXAZKYaKUwt7H?=
- =?us-ascii?Q?YnxfZRHFHG5fP94gXbXoS0a3zBgy4q4XG17pEtM1PdbL3GQ31g1GSmoa54AN?=
- =?us-ascii?Q?hc36LBa61+zb98o0FtOBc1dEpLxA3a3+cCl27Nkugo4GDYcPM3dNIGKkVzQp?=
- =?us-ascii?Q?2Y8Wo1sZKGG4XeW5WMVnnklSjL2k20e2j6xtrjomeAo2+CkiTQoCL3sW/Y6C?=
- =?us-ascii?Q?lulUYYbPT1HULDaYUrxrQYT1jOsVlC6GSndD6fpbt4NsuP66IeBg76kQlNZ3?=
- =?us-ascii?Q?PQ2ggGS8jAyFMaVV+ykHCkJfGLyWjChtHj/oXtNq?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 09/17] mm: export access_remote_vm() symbol
+Date:   Wed, 04 Jan 2023 17:12:31 +1100
+In-reply-to: <IA1PR11MB609745A8BE83313FAB0236C29BF59@IA1PR11MB6097.namprd11.prod.outlook.com>
+Message-ID: <87tu16rdea.fsf@nvidia.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SYBPR01CA0077.ausprd01.prod.outlook.com
+ (2603:10c6:10:3::17) To BYAPR12MB3176.namprd12.prod.outlook.com
+ (2603:10b6:a03:134::26)
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3176:EE_|PH7PR12MB5973:EE_
+X-MS-Office365-Filtering-Correlation-Id: 07e2b142-9abb-470a-cebf-08daee219a73
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 9sqVcLScDR7EEHRx49yJL8h1XboVt+704Xv+Jv6tp0JcAGmt6F8ttia34F6rwCaVNE6IfBxuZKDUm2nzfxnsq4xXR6MntQmXyVekKixN/j8ylayAhD9NQIV1lrHzrQtzEOIRNLFD5XwVbITL0fIBAEemkSbIBhL3PWApYstaWA+hteMp5RNXflS6njCJn1k3co42c1HBKnWAcAMIEo0e5h6U1914dZphQssftTF77uLfR+dkJohezMKZ1rcV42+M/Cu3A9iAEBT6A7Ew1vNvOizxqkomI6dN0tPknqxzYbKc6+WQNfnzz/1OvC/67QxuDKHqyFZEDqcMAS7/Ubv6HYz+/SQpo3aiwniRCGhqcdraQaTR/MZ1s7MiKr3ryzXTXgbs28UlZhzgSKjnke6kKIQmazE0/GKFBckrY5VUhcg0JT7mHpF/BWlbRearQQy1s5kMr6Vxp0kWlEShGqzuE/gBXKKe/CL+JTyGmQlnZ3uhQnQldI4EM3y2HWksbXeRicYAUOVhuwakhI2dV0DKo7ZkNwY7QN5xTmTxE/+5E80Z/BgqEcIIWM2wvw+o5gOR1Zf5ylp7JMu6yc+EDCnHl5dqUj0LRBshkOvSE9PytfMTH/WJH/MPLYopKK4vRQKIivBUje6m831CQ1bNLq2Hnw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(136003)(39860400002)(396003)(376002)(346002)(451199015)(26005)(6486002)(6506007)(478600001)(186003)(6512007)(86362001)(6666004)(6916009)(54906003)(4326008)(8676002)(66946007)(316002)(66476007)(2616005)(66556008)(38100700002)(41300700001)(36756003)(83380400001)(5660300002)(8936002)(7416002)(2906002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?CeFfz/Pmc7AIxK9Qix6grLzwNTX5AvAJOQsrdrwLw9ycnFyTd9kavMi2XGoE?=
+ =?us-ascii?Q?Wc655rSw6ohWMocxb8W79Yk7dtbHgfA6CzCLanoag4RKSYYqgcXaPRi2Oo8C?=
+ =?us-ascii?Q?/JdAiBNsndzLiSu+R0Kgg4KmowralEC+zWIMs4mgLoIv7XkwXQQUMLy+MwRp?=
+ =?us-ascii?Q?I2blwmDlP28GyhkibFUppB67KGtSLgDphfmBssQACTrUK7Xlo5rQJxJWAWtt?=
+ =?us-ascii?Q?y0mqeDIfozWATQaXqMT+rRT/xE5SJJIdvkJyj0W+V3mT5uO09VLhmvoVtxhy?=
+ =?us-ascii?Q?bdwEb30IP098WjUAZyceugtzb8RNdTNglVvr7lF1RZDsnkC67KiT3i03gURQ?=
+ =?us-ascii?Q?oX7ruGQfBtpJw7w4nGpbEKyWqZyx/D3t2THyUw6e4s91Yf18FBnTH2FugUbF?=
+ =?us-ascii?Q?Uh11koG1cxLil9JwW3t2sViLYSVh72EVNb2oklsWOrNkwtE/HEb5udHFKukm?=
+ =?us-ascii?Q?pp/AZvpelGeV4oBKYfsqH1n3LZ5PCJbQqMM6Sf/FDaabV8O3qM9M/2smbTpb?=
+ =?us-ascii?Q?Hhf6VTqycZZFVoYuCzgCqFkcVTikkVzoBnz5VHyVHRYx8pX6zxUYmIdGgJF/?=
+ =?us-ascii?Q?v+jFdeszmGy+8mWG0fnS65uPqbYcbUfFP+qx1T+WQ59RtjFzVvQbIPiFNw0X?=
+ =?us-ascii?Q?JktK8arNljExX/xcUuj+kbU3E518OYFuOJSR3LEBGkCuxccb9tRL9MULx588?=
+ =?us-ascii?Q?F/iQuP9oxTTL0KyXevwunVw1AzKjUmOa5RrEdIR/T7qwR9hW+TvWiR2bkDmX?=
+ =?us-ascii?Q?VJTlYExNlSrAO0tRWHyQm0PEpBvGrLFZxt8nHLUuhaDWy1Ka/hEcZmdSM1+J?=
+ =?us-ascii?Q?vvBbOLqOoe+MrTetMoFSntOATdNl+KP6pjUZ7v8x1Q634t419vetgOxMI8i1?=
+ =?us-ascii?Q?FlQ1EaBtXky8K6latofeixjTBUyDw4cRoE0cfyDIDJXAYyEFkZFrpuTGC5lp?=
+ =?us-ascii?Q?D3YXUr8kFYx0VqxtJSIMx/KZNM6w0DegSlAh8urch2gZEuMDdiuDgOUQchwU?=
+ =?us-ascii?Q?LELqNWftBF0IQ5j9CO/ooALUoPFcdnU38d2RsjhDhmWpGRkn1dmb3kmcznPq?=
+ =?us-ascii?Q?JlwbUbGG0WVwcn8UHKiHSI+S4kcUk6HXcT0n3p2Ms0j6BWnbs1JuyM2A0w1B?=
+ =?us-ascii?Q?nppuQRppBFQFDYU2z56QJYEgvz53BFRuen0bfeO1wyMi0enC6BEGGJU8knfJ?=
+ =?us-ascii?Q?MYimzOFfSbcetBILRmmpDg/GSlYP1CCTqzte//2WV3/RC7bFu1xAMtwymJ5/?=
+ =?us-ascii?Q?tsyX8YOk79JYD9JQ5irOzj3pNUECiO+2MRtDoQiKtcTzRNNEl1Sfx0tNGg0V?=
+ =?us-ascii?Q?OQ/JjR9adFSm1WuwMcXzTNyKY+AIiT+zoca/Y3JBVecjrELDp3GmifyLGDfQ?=
+ =?us-ascii?Q?oP3IBuOb/D+N7ifGimLOiAlhNVz0OXTvLK33C5iYm4dAVv/sutJa1Lln6qna?=
+ =?us-ascii?Q?rVVB2vvQFD7Q282F2Vefrdu7VtlsiZOdrLNNrK82ERlu9Meku/aaWFxOqCBT?=
+ =?us-ascii?Q?JXWLJ8u1n8pUWd1CfQ42azyK/7YGRa2owjSIzVfcZWUOoJtf7DeSFa8Qc7gh?=
+ =?us-ascii?Q?f6y8yV2hc4vZS3j++cGDtAKm4yL9TUnfO0DBbLK7?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07e2b142-9abb-470a-cebf-08daee219a73
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3176.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB6097.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8093891-b2f8-4e50-978d-08daee11707d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jan 2023 05:06:29.5167
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jan 2023 07:02:12.0208
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: leHSWEyHVzJhLUcKcIFgmp3+bGgeec7NEJtMxFJdxJ3pCeimfWYpqmj6PQ90i4627QEPvtXjVRXEc7GdY6W/kg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5625
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AKkE/v8L6pmi2wnLSSxdsTCuL2bOldXIVEceJVhXGbv4d/c6Y9NmR/gXUM60A1hwfktRBVAv6yWb1p0wftQgbw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5973
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi, Lorenzo,
 
-> Hey Fenghua :)
->=20
-> > access_remote_vm(mm) directly call __access_remote_vm(mm).
-> > access_process_vm(tsk) calls mm=3Dget_task_mm() then
-> __access_remote_vm(mm).
-> >
-> > So instead of access_remote_vm(mm), it's access_process_vm(tsk) that
-> > holds a reference count on the mm, right?
->=20
-> Indeed!
->=20
-> >
-> > > >
-> > > > Is there a reason you can't use access_process_vm() which is
-> > > > exported and additionally handles the refrencing?
-> >
-> > IDXD interrupt handler starts a work which needs to access remote vm.
-> > The remote mm is found by PASID which is saved in device event log.
-> >
-> > In the work, it's hard to get the remote mm from a task because
-> > mm->owner could be NULL but the mm is still existing.
->=20
-> That makes sense, however I do feel nervous about exporting something tha=
-t
-> that relies on this reference.
->=20
-> The issue is ensuring that the mm can't be taken from underneath you, the=
- only
-> user of access_remote_vm(), procfs, does a careful dance using get_task_m=
-m()
-> and
-> mm_access() to ensure this can't happen, if _sometimes_ the remote mm mig=
-ht
-> have an owner and _sometimes_ not it feels like any exported function nee=
-ds to
-> be equally careful?
->=20
-> I definitely don't feel as if simply exporting this is a safe option, and=
- you would in
-> that case need a new function that handles different scenarios of mm
-> ownership/not.
->=20
-> I may be missing something here and I will wait for others to chime in bu=
-t I think
-> we would definitely need something more than simply exporting this.
+"Yu, Fenghua" <fenghua.yu@intel.com> writes:
 
-I may define and export a new wrapper access_remote_vm_ref() which will hol=
-d
-mm's reference count before accessing it:
-int access_remote_vm_ref(mm)
-{
-   int ret;
+> Hi, Lorenzo,
+>
+>> Hey Fenghua :)
+>> 
+>> > access_remote_vm(mm) directly call __access_remote_vm(mm).
+>> > access_process_vm(tsk) calls mm=get_task_mm() then
+>> __access_remote_vm(mm).
+>> >
+>> > So instead of access_remote_vm(mm), it's access_process_vm(tsk) that
+>> > holds a reference count on the mm, right?
+>> 
+>> Indeed!
+>> 
+>> >
+>> > > >
+>> > > > Is there a reason you can't use access_process_vm() which is
+>> > > > exported and additionally handles the refrencing?
+>> >
+>> > IDXD interrupt handler starts a work which needs to access remote vm.
+>> > The remote mm is found by PASID which is saved in device event log.
+>> >
+>> > In the work, it's hard to get the remote mm from a task because
+>> > mm->owner could be NULL but the mm is still existing.
+>> 
+>> That makes sense, however I do feel nervous about exporting something that
+>> that relies on this reference.
+>> 
+>> The issue is ensuring that the mm can't be taken from underneath you, the only
+>> user of access_remote_vm(), procfs, does a careful dance using get_task_mm()
+>> and
+>> mm_access() to ensure this can't happen, if _sometimes_ the remote mm might
+>> have an owner and _sometimes_ not it feels like any exported function needs to
+>> be equally careful?
 
-   if (mm =3D=3D &init_mm)
-        return 0;
+I think the point is the remote mm should be valid as long as the PASID
+is valid because it doesn't make sense to have a PASID without
+associated memory map. iommu_sva_find() does mmget_not_zero() to ensure
+that.
 
-   mmget(mm);
-   ret =3D access_remote_vm(mm);
-   mmput(mm);
+Obviously something must still be holding a mmgrab() though. That should
+happen as part of the PASID allocation done by iommu_sva_bind_device().
+ 
+>> I definitely don't feel as if simply exporting this is a safe option, and you would in
+>> that case need a new function that handles different scenarios of mm
+>> ownership/not.
 
-   return ret;
-}
-EXPORT_SYMBOL_GPL(access_remote_vm_ref);
+Note this isn't that different from get_user_pages_remote().
+ 
+>> I may be missing something here and I will wait for others to chime in but I think
+>> we would definitely need something more than simply exporting this.
+>
+> I may define and export a new wrapper access_remote_vm_ref() which will hold
+> mm's reference count before accessing it:
+> int access_remote_vm_ref(mm)
+> {
+>    int ret;
+>
+>    if (mm == &init_mm)
+>         return 0;
+>
+>    mmget(mm);
+>    ret = access_remote_vm(mm);
+>    mmput(mm);
+>
+>    return ret;
+> }
+> EXPORT_SYMBOL_GPL(access_remote_vm_ref);
+>
+> IDXD or any driver calls this and holds mm reference count while accesses the mm.
+> This is useful for caller to directly access mm even if mm's owner could be NULL.
 
-IDXD or any driver calls this and holds mm reference count while accesses t=
-he mm.
-This is useful for caller to directly access mm even if mm's owner could be=
- NULL.
+I'm not sure that helps much. A driver would still need to hold a
+mm_count to ensure the struct_mm itself can't go away anyway so it may
+as well do the mmget() IMHO (although it really should be
+mmget_not_zero()).
 
-Do you think this is sufficient to take care of the mm reference and is a g=
-ood way to go?
+In any case though iommu_sva_find() already takes care of doing
+mmget_not_zero(). I wonder if it makes more sense to define a wrapper
+(eg. iommu_access_pasid) that takes a PASID and does the mm
+lookup/access_vm/mmput?
 
-Thanks.
+> Do you think this is sufficient to take care of the mm reference and is a good way to go?
+>
+> Thanks.
+>
+> -Fenghua
 
--Fenghua

@@ -2,95 +2,118 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CAAB665F57D
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Jan 2023 22:05:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8C42660675
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Jan 2023 19:38:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235068AbjAEVFE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 5 Jan 2023 16:05:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40072 "EHLO
+        id S230032AbjAFSiU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 6 Jan 2023 13:38:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233371AbjAEVFD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 5 Jan 2023 16:05:03 -0500
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94FC66338A
-        for <dmaengine@vger.kernel.org>; Thu,  5 Jan 2023 13:05:02 -0800 (PST)
-Received: by mail-wm1-x332.google.com with SMTP id g25-20020a7bc4d9000000b003d97c8d4941so2266097wmk.4
-        for <dmaengine@vger.kernel.org>; Thu, 05 Jan 2023 13:05:02 -0800 (PST)
+        with ESMTP id S235688AbjAFSh6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 6 Jan 2023 13:37:58 -0500
+Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3709E7CBFF
+        for <dmaengine@vger.kernel.org>; Fri,  6 Jan 2023 10:37:57 -0800 (PST)
+Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-1322d768ba7so2434290fac.5
+        for <dmaengine@vger.kernel.org>; Fri, 06 Jan 2023 10:37:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HoWJgXt75B2FaD5T8CG8P5HWgc9d5ls9y8uuDb2TdCk=;
-        b=Cvvxp/eZbhwKnViR7moem4VFGoYLw1ZPpnfYtO+GTLH0Cp1P5dpDAG6yMxQ7XAK4rP
-         l0fmAwxjlWee1lz1fV/WXAjYRG6zKRpGHYflZZdVRKe/KxsE14ehtX/LcHl6LQjn+9pV
-         OxMTdclWovGYNSTyHuMLjBDGJMH/r494voTBcRH2ERxKF9m2/zNZqzw3mT0PnwDyuld6
-         KurK+82Xo/rw3fGpBzW+yKIdetfOYItwCAs63ZC3lDJRWPyF61HX5W6N67/8qzQXQ01Y
-         V6vFee4KD/6Fd0vK4oyBTnoFBcIz6+8WsqZ4yesAqdGyRaSti0f1xEoB2Z0/T+7wo+7w
-         RAdg==
+        h=content-transfer-encoding:to:subject:message-id:date:from:sender
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nH9cYiZVRVft8i5xKnlu+BzXoVM9je4X4PL8943d/Og=;
+        b=ePbZd1bxIJUcRbdxV5Nk9PFGJiohRR52pww9vvUPABkxtKfaYUsL/oWm0U/DyCL0NX
+         8Do3qp7gp5NydSFPrvnAIzW2p2rceE30k+pvQ6CYdvXmeAbmkYM5yzDaaPiRmQhgMCZ9
+         r4o3OkozxH3Vy0SRNBRcgcmIU8ToIqqSweqTdL4gj6NYLnLgZlPSPwAQOr6mAgkDzejR
+         XvlFJhrHZT3bDoy1gvUQwbLEj7Nuu/6hEw/MhzysP0ic9imCYy6z1zYca/E4p1CqoW9b
+         8BGX0XqxqGFGDkqdaM6u9KDu+hii4evrums0kWqV3X/ngOuojpnWc0QIOA8pwOz6f3ep
+         N4dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HoWJgXt75B2FaD5T8CG8P5HWgc9d5ls9y8uuDb2TdCk=;
-        b=Njp4g9cO0FMVIzxg0E3DxxrjgRqLQDtPyqDPNyyEPLUclQ2K8R+8QWN1caM+5obZVI
-         fM+p2Kb9W3aEE9+cMiLGb5+llzbJZ8A9/3V/1SECGs8fxNppHuN5wjFkECKJAvNd/JYJ
-         d5U5Afv4bWBf9dZ1KSBJUKPyf+MXBdwYM0hHqMdfGhlHHV3irhvOkIgT2sIo9JKLe2iE
-         2J9e2qqEDgGxT0qZmTW9r9ob3ly3t2Qh5n5pUjw4ZfIHr65n6Lki+h4vw91pGnLbYvWM
-         PFFXBs+P0o6p8pRfQ2aR4CnSr2BTW1UINJLZa0kARPDlIN3oua7xecf6VU05mGgUzzrD
-         KCsg==
-X-Gm-Message-State: AFqh2kpBpQnl/OYXpc+N4yPrS9YN3XCeK6FCqxacua01fV1b+u0En/v7
-        eDQIQ8mZ78JATnLnuy+aL78=
-X-Google-Smtp-Source: AMrXdXv2shvhv/8hSUoaMitujEMFKLRB8CO1/qW92HGxAtrkhB8CmUefelbTOZw24lw/jenTP34FHA==
-X-Received: by 2002:a05:600c:214a:b0:3cf:6910:51d4 with SMTP id v10-20020a05600c214a00b003cf691051d4mr36994060wml.29.1672952701014;
-        Thu, 05 Jan 2023 13:05:01 -0800 (PST)
-Received: from localhost (host81-157-153-247.range81-157.btcentralplus.com. [81.157.153.247])
-        by smtp.gmail.com with ESMTPSA id h10-20020a05600c2caa00b003cfd58409desm3721982wmc.13.2023.01.05.13.04.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jan 2023 13:05:00 -0800 (PST)
-Date:   Thu, 5 Jan 2023 21:04:59 +0000
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     "Yu, Fenghua" <fenghua.yu@intel.com>
-Cc:     Alistair Popple <apopple@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "Zhu, Tony" <tony.zhu@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-Subject: Re: [PATCH 09/17] mm: export access_remote_vm() symbol
-Message-ID: <Y7c7e8vEY0CPfkbx@lucifer>
-References: <Y7Rq0WRc4p3lCkjk@lucifer>
- <IA1PR11MB609703A614F64CD34FA8F02D9BF49@IA1PR11MB6097.namprd11.prod.outlook.com>
- <Y7SMYF8MlzeqDgp+@lucifer>
- <IA1PR11MB609745A8BE83313FAB0236C29BF59@IA1PR11MB6097.namprd11.prod.outlook.com>
- <87tu16rdea.fsf@nvidia.com>
- <Y7XZ8zY3KIRDlu/f@lucifer>
- <87k021vnmw.fsf@nvidia.com>
- <IA1PR11MB6097336ED90E27E78E069E299BFA9@IA1PR11MB6097.namprd11.prod.outlook.com>
- <87tu15u061.fsf@nvidia.com>
- <IA1PR11MB6097D5C6C3182A3C782E99D89BFA9@IA1PR11MB6097.namprd11.prod.outlook.com>
+        h=content-transfer-encoding:to:subject:message-id:date:from:sender
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nH9cYiZVRVft8i5xKnlu+BzXoVM9je4X4PL8943d/Og=;
+        b=IX9Jq4Ost5j5tcwSFiQzGHbTvX3tHb8mCvJ853cy96y9bb8UKHSe7VKJ7UH/gwx6BO
+         YAgKwaQUNLNq2GfQXRLwj+VBOi3fy07znfv8oovN3TwMKMp55e+EPKsJeYnIUQFovfp4
+         Flfnw407R4vyexyH5cf3lf3bUdoM5TY9uRNu2jUvuYfRJOgHU3/Mdy7vHzPelmcTRqgO
+         Ln+jk/1qGuCPDXnXnXZRytSF0NqVT5giDlsbuYPv9YtfEWVRaf1WCznBN3l+X1XjWnKP
+         CO14UF/oAovsaUP5SciW+KkCVPMzxKUHnPTbjwpkihd5G494/yYgvxdlkjiFKKzyxhkd
+         6qAA==
+X-Gm-Message-State: AFqh2krtbHmIqNuV6cx1ARGVUq9at1I11UvfK1b5qZUthLM6bNGVaQzq
+        l9dMU6aCc8dZMAhYmzelQQuerayRTYOiLcmNd6Y=
+X-Google-Smtp-Source: AMrXdXscdFvS2/ho/a96/vRdpP01tEP20W1HPqpXGEJLgQyBlLb8c/JNXkVs5aIcbstvTGiEQt8wl271+xynm+UYjEk=
+X-Received: by 2002:a05:6870:1682:b0:150:7fc3:e895 with SMTP id
+ j2-20020a056870168200b001507fc3e895mr1970886oae.48.1673030276471; Fri, 06 Jan
+ 2023 10:37:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <IA1PR11MB6097D5C6C3182A3C782E99D89BFA9@IA1PR11MB6097.namprd11.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Sender: belloabubakar20002@gmail.com
+Received: by 2002:a05:6358:998e:b0:ea:d5eb:1d55 with HTTP; Fri, 6 Jan 2023
+ 10:37:56 -0800 (PST)
+From:   Bello Abubakar <belloabubaka94@gmail.com>
+Date:   Fri, 6 Jan 2023 10:37:56 -0800
+X-Google-Sender-Auth: L3QE8Uf3wzFLg4BTXL7MlEO9so8
+Message-ID: <CAM5VdHEr+hGv_wLcBpkQpAp2jCMR3sC57POD64zW8V8W-NiWLw@mail.gmail.com>
+Subject: URGENT REPLY
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=6.6 required=5.0 tests=ADVANCE_FEE_5_NEW_MONEY,
+        BAYES_50,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,LOTS_OF_MONEY,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,UNDISC_MONEY,
+        URG_BIZ autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2001:4860:4864:20:0:0:0:36 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5031]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [belloabubaka94[at]gmail.com]
+        *  0.5 SUBJ_ALL_CAPS Subject is all capitals
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [belloabubakar20002[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        *  0.6 URG_BIZ Contains urgent matter
+        *  3.0 ADVANCE_FEE_5_NEW_MONEY Advance Fee fraud and lots of money
+        *  1.7 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Jan 05, 2023 at 08:58:08PM +0000, Yu, Fenghua wrote:
-> This looks better than exporting access_remote_vm(). I will remove this patch
-> and write the IOMMU wrapper to call access_remote_vm() in v2.
+Hello,
 
-Thank you both for a very constructive conversation! I definitely think this is
-the right way to go.
+I am a relative of a politically exposed person (PEP) that is in
+financial regulation. Due to my present health condition, I'd decided
+to write through this email for the security reason.
 
-All the best, Lorenzo
+Therefore, kindly treat this as top secret for the security reason.
+I'd after fasting and prayer choose to write not you particularly but
+I believing in probability of you being a confidant chosen by chance;
+luck to help and share in this noble cause.
+
+I need your assistant to conduct secret transfers of family's funds
+worth =E2=82=AC90.5 millions Euros. It was deposited in bank clandestinely.
+
+I am in grave condition and I expect my death any moment now and I
+want to donate the fund to less privilege and you will be rewarded
+with reasonable percentage of the fund if you can assist.
+
+Please contact me back for more details
+
+Yours truly,
+Bello Abubakar

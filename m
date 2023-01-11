@@ -2,60 +2,106 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC96466178D
-	for <lists+dmaengine@lfdr.de>; Sun,  8 Jan 2023 18:36:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60AF7665B32
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Jan 2023 13:16:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231134AbjAHRgO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 8 Jan 2023 12:36:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58974 "EHLO
+        id S233772AbjAKMQw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 11 Jan 2023 07:16:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230396AbjAHRgK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 8 Jan 2023 12:36:10 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E77463BC
-        for <dmaengine@vger.kernel.org>; Sun,  8 Jan 2023 09:36:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=uKx/6wNbKp0TIcFEhLz5OI0WO0orOz47Y6mrSwwiEyQ=; b=FUO2WOCC5NyD8C6UPyz9qvRX1H
-        XgVBb53AjH0CEyKrTTMcnLzi38cTJH25rYeBhkaRv2X0t2bkfq1cLJiNTm5NIEpNb4My3CdXIZGv1
-        OGxzNG3KLF9iMEZAW2GcerJXSXUqa5U19oiiwK+/yJ5wIHPO8Hl4MI/zdGSc/JjzFJTcm6EieDF5+
-        5eoTHY7aeOwzuf+771xCGw1DhHwPW63o6qjj1HCr2kvrWisXHVfJ7Vo2AA4fkEeIa9zCMhrJ6B6I0
-        c56rMi3b892tWAPwwYwzQH3zdI4CtZ9r8MBsdUzFirEA9wE9WK97PA3+d982oH5cdSQXUnrc4ZYuG
-        exQE58Fg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pEZaY-00EepB-Bo; Sun, 08 Jan 2023 17:36:06 +0000
-Date:   Sun, 8 Jan 2023 09:36:06 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Lorenzo Stoakes <lstoakes@gmail.com>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>, Vinod Koul <vkoul@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org,
-        Tony Zhu <tony.zhu@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH 09/17] mm: export access_remote_vm() symbol
-Message-ID: <Y7r/BjWEP2q64TGy@infradead.org>
-References: <20230103163505.1569356-1-fenghua.yu@intel.com>
- <20230103163505.1569356-10-fenghua.yu@intel.com>
- <Y7RpuqbTAM11wVQG@lucifer>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y7RpuqbTAM11wVQG@lucifer>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S234269AbjAKMQv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 11 Jan 2023 07:16:51 -0500
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49CE9C23;
+        Wed, 11 Jan 2023 04:16:50 -0800 (PST)
+Received: by mail-ej1-x629.google.com with SMTP id tz12so36345751ejc.9;
+        Wed, 11 Jan 2023 04:16:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x08Spm0bFRozqdUSVPHwNKzOpA8X+ZTZMfsdSpNIew8=;
+        b=gmzED7m26SVu62/36L9vOG7cnDA1WZFYKNMJcZFjMtVD1a3+BT+eo1FqfL2AydigOA
+         Khq6LZnEqFVPFw3mJIppspw8UURfTv/eQdSaX+CpW6f7vsK2ZkCaJBv3bx7XWgndFa+I
+         1Fubr71+EIuegTp5xHO/M3LoY7+nIy1heZGTAllQGbVxAWytV8Dfi9dNFmZPFdfQ28w/
+         7C045XLBZFPTzdwH+q0jPIbSbklXAThKjAe9cP+QDvuXzHWpL/yXyUwUZ7fawV3imWMU
+         LuLBdCv7rleGsnILFEHKI79bTovseiCOIX5ZjbdniodVE9Th9FWWPygmvffoOzlsyq9C
+         uaOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x08Spm0bFRozqdUSVPHwNKzOpA8X+ZTZMfsdSpNIew8=;
+        b=z8VkLXxGnla6Q1rCV8dk4UaxOh6d11iaHv03hXwzIr9aVnvt1YftWep3lLXVi0FQXY
+         QvNL9EsyiBwKoJ404TRRbgdQa7Lr84F/6RQWD8zpHV2IRPFtVJebhZzPSr02PVArdWR/
+         b5Nk2ONoFJN6F+ZWNk9qmKxC7ZIPNiVnNPQRd19jTY0qmnCHLMTa3tHcTEFEH1oOfYu2
+         qqne0YoAoIfF9VxfoY3ngG40iUUvSt+/t7H0hy94fosNGkUT7MG/E9u/RgLnIcqpwvWh
+         qtdoX4baXV7S1t5EtkF3Ap3SgW5Lv9P+xgs4uP5Hj1Q5MSZkdobod4FXmoE7qEDjCIBr
+         kabw==
+X-Gm-Message-State: AFqh2kpGXZ7e77vpdwC+yCZu3wvT1feYUeUwRetie0VejqX736T2K1Ww
+        rHOzIiNfVQ3HGHlMv/gtfNQ=
+X-Google-Smtp-Source: AMrXdXtjR0szQ3pFuXAK6UjOEQnmp0MSIjHr7ekMU60R+xKNEQzmKTjmedz7qHq/iBti5BxXSYVvUw==
+X-Received: by 2002:a17:907:a508:b0:7c1:539b:d028 with SMTP id vr8-20020a170907a50800b007c1539bd028mr62112760ejc.48.1673439408769;
+        Wed, 11 Jan 2023 04:16:48 -0800 (PST)
+Received: from felia.fritz.box ([2a02:810d:2a40:1104:a47e:7f3e:6b25:bafb])
+        by smtp.gmail.com with ESMTPSA id q1-20020a17090676c100b007c0d4d3a0c1sm6148208ejn.32.2023.01.11.04.16.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jan 2023 04:16:48 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] dmaengine: dw-edma: remove redundant config PCI dependency for some Synopsys DesignWare eDMA driver configs
+Date:   Wed, 11 Jan 2023 13:16:37 +0100
+Message-Id: <20230111121637.24708-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Exporting access_remote_vm just seems like a horrible idea.
+While reviewing dependencies in some Kconfig files, I noticed the redundant
+dependency "depends on PCI && PCI_MSI". The config PCI_MSI has always,
+since its introduction, been dependent on the config PCI. So, it is
+sufficient to just depend on PCI_MSI, and know that the dependency on PCI
+is implicitly implied.
 
-If a driver needs to access a different VM from a completion path
-in some thread or workqueue (which I assume this does, if not please
-explain the use case), it should use kthread_use_mm to associate the
-mm struct and then just use all the normal uaccess helpers.
+Reduce the dependencies of configs DW_EDMA and DW_EDMA_PCIE.
+No functional change and effective change of Kconfig dependendencies.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+ drivers/dma/dw-edma/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/dw-edma/Kconfig b/drivers/dma/dw-edma/Kconfig
+index 7ff17b2db6a1..0408e515b2f3 100644
+--- a/drivers/dma/dw-edma/Kconfig
++++ b/drivers/dma/dw-edma/Kconfig
+@@ -2,7 +2,7 @@
+ 
+ config DW_EDMA
+ 	tristate "Synopsys DesignWare eDMA controller driver"
+-	depends on PCI && PCI_MSI
++	depends on PCI_MSI
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
+@@ -11,7 +11,7 @@ config DW_EDMA
+ 
+ config DW_EDMA_PCIE
+ 	tristate "Synopsys DesignWare eDMA PCIe driver"
+-	depends on PCI && PCI_MSI
++	depends on PCI_MSI
+ 	select DW_EDMA
+ 	help
+ 	  Provides a glue-logic between the Synopsys DesignWare
+-- 
+2.17.1
+

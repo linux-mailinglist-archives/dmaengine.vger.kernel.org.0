@@ -2,147 +2,181 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BFDC5670A7F
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Jan 2023 23:01:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4761670CD2
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Jan 2023 00:11:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229666AbjAQWBJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 17 Jan 2023 17:01:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42434 "EHLO
+        id S229873AbjAQXLV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 17 Jan 2023 18:11:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229866AbjAQV7m (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 17 Jan 2023 16:59:42 -0500
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A2343C2A3;
-        Tue, 17 Jan 2023 12:26:42 -0800 (PST)
-Received: by mail-vs1-f49.google.com with SMTP id v127so29141213vsb.12;
-        Tue, 17 Jan 2023 12:26:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7rC0mNjXax5vqLz2OAo+EH0y+cJfjyIAm7sm9u5PvgQ=;
-        b=Yr9F31/7vLwBOZRKZ1DOhx7lv+07U9yCPU3kfK3htjNZou2RGjuLkdqwCn8yKk9eF3
-         GnyyMHiW3JgbPuw6+FCnbxXOm2pXbKR74ChWnRn/hHl+9by/VHS5XtgOFtV5OVc06ddw
-         LnzBWPfOsBT9fqwpqly0JUq8dnwIcMSuesyYy1KvIo27t7NfN87fYlhZwyNhgxs4TcFk
-         9BF4fB6bXw5YhS8+79SPrAO36Q1UAWE6lQ/eDxVYm9AGrYBuapnXFFs/g4Y/d3/65nEM
-         cNY+emfDCxLCn/w9cVLEEICPn6d8+Q4pdwHu1n/gCrT2Kr8MUafwGrFjLQWyaGQ2cHdv
-         bY8g==
-X-Gm-Message-State: AFqh2kqzy6dBVKRzPngOGJhrF0YAVXXu3mDkVZ//3HfOKs6E0G/PoFSo
-        ZhqezYlyMbvP27SJixa4hW2wxfnjUsABHg==
-X-Google-Smtp-Source: AMrXdXv8xG+OngFJXkL1EyBOzdj+k3Oc3D+zm5NnPdBiJa4B+CPjVzuCM17G+lAG+3CcyHApPWniCQ==
-X-Received: by 2002:a67:c116:0:b0:3b1:23bb:3087 with SMTP id d22-20020a67c116000000b003b123bb3087mr2147820vsj.26.1673987201149;
-        Tue, 17 Jan 2023 12:26:41 -0800 (PST)
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id q22-20020a05620a2a5600b0070638ad5986sm7355016qkp.85.2023.01.17.12.26.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jan 2023 12:26:40 -0800 (PST)
-Received: by mail-yb1-f176.google.com with SMTP id o75so35606650yba.2;
-        Tue, 17 Jan 2023 12:26:39 -0800 (PST)
-X-Received: by 2002:a25:9012:0:b0:7b8:a0b8:f7ec with SMTP id
- s18-20020a259012000000b007b8a0b8f7ecmr707665ybl.36.1673987199250; Tue, 17 Jan
- 2023 12:26:39 -0800 (PST)
+        with ESMTP id S229484AbjAQXK7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 17 Jan 2023 18:10:59 -0500
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2081.outbound.protection.outlook.com [40.107.220.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4D7E683EE;
+        Tue, 17 Jan 2023 12:54:20 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BOTtZrd2IeIs3RCz86xXXSXPtT66uIk+i2rsyJ5PufHgOrIRjV05E6Ogulz6An3tfheEoYjbqTqxodWT5SIlq8dp/T62iK7nEhaiyo9sv2N6HBZP7Fvg+w2MLnkyqdDTdvm4jDRjqqvU7uNE+5wct/ASMniByW/tyemTpMiGIik83cCTPJq8SouJlqKZHY1UzvNhO2fKEQMDJCkbcrtjpvpmvlcPv0/YRBeM/mV6heJXvojATYb+7z2s5JJPCTscYaJhmCxMsayuicJhjRyP5Ik/l0YL8WOYwJwTKCoJQpAy0Qc+UwhU1dnyzABRR0Bb9ygVabDFTZ02hTa2YJA8Wg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1jvyGBuH2fvAOiqFAE6dALUqHxvX0lHh0TXJhDzIQkY=;
+ b=oC9x4DAKFUDQNAcKlnecl1xQrZLbopOr0D9oes0MpbefezEJI2eeRF+qUieIE7tyT7gkk4Fi5dSftuF/6LhtpOmizUKJz0PryJt4CEVumtA6mV5g37yrKDFUC9CskGLSD6761obFutwVmz25wxMMCtdmqftfoHcsz7PEqqTz41NTGQKojmlM3f9W/43P190B0299lEidAXGx5Ypv5DdX2aSRm6deY5yJDTV0REqNaKUq7lz47tghrfiUpYqItfrXFE7ZfK3SZJ4jwV+RLUN5ebwMPCQDR/NUB8tA32frQYRd1I1JP7HGVWwGJIGXe36THf+aQMatv4E/a/CAEQBTxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1jvyGBuH2fvAOiqFAE6dALUqHxvX0lHh0TXJhDzIQkY=;
+ b=W+CJwLCWJ4YMLhX0dxe1EjVGfI0UUCYC3ymp45bgXUAvzlQPZ4Z+0ZSBNKDVgscjcAKGbAgP4Y45yUjgioQyOa+FTAPkhkLPb9Z5T8eArC5MH6BmlY3PBU6rcAfeXetPO78Tu9NdL+tEriCCIk70dfFupz/2JdOXBjOg4AAAc3M=
+Received: from DM5PR07CA0060.namprd07.prod.outlook.com (2603:10b6:4:ad::25) by
+ CH2PR12MB4875.namprd12.prod.outlook.com (2603:10b6:610:35::24) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5986.23; Tue, 17 Jan 2023 20:54:18 +0000
+Received: from DM6NAM11FT103.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:4:ad:cafe::64) by DM5PR07CA0060.outlook.office365.com
+ (2603:10b6:4:ad::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.19 via Frontend
+ Transport; Tue, 17 Jan 2023 20:54:18 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ DM6NAM11FT103.mail.protection.outlook.com (10.13.172.75) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6002.13 via Frontend Transport; Tue, 17 Jan 2023 20:54:17 +0000
+Received: from SATLEXMB07.amd.com (10.181.41.45) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 17 Jan
+ 2023 14:54:17 -0600
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB07.amd.com
+ (10.181.41.45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 17 Jan
+ 2023 12:54:16 -0800
+Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
+ Transport; Tue, 17 Jan 2023 14:54:16 -0600
+From:   Lizhi Hou <lizhi.hou@amd.com>
+To:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Lizhi Hou <lizhi.hou@amd.com>, <max.zhen@amd.com>,
+        <sonal.santan@amd.com>, <larry.liu@amd.com>, <brian.xu@amd.com>,
+        <tumic@gpxsee.org>
+Subject: [RESEND PATCH V11 XDMA 0/2] xilinx XDMA driver
+Date:   Tue, 17 Jan 2023 12:54:00 -0800
+Message-ID: <1673988842-43631-1-git-send-email-lizhi.hou@amd.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-References: <20230113062339.1909087-1-hch@lst.de> <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
- <20230116071306.GA15848@lst.de> <9325a949-8d19-435a-50bd-9ebe0a432012@landley.net>
-In-Reply-To: <9325a949-8d19-435a-50bd-9ebe0a432012@landley.net>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 17 Jan 2023 21:26:27 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUJm5QvzH8hvqwvn9O6qSbzNOapabjw5nh9DJd0F55Zdg@mail.gmail.com>
-Message-ID: <CAMuHMdUJm5QvzH8hvqwvn9O6qSbzNOapabjw5nh9DJd0F55Zdg@mail.gmail.com>
-Subject: Re: remove arch/sh
-To:     Rob Landley <rob@landley.net>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-sh@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT103:EE_|CH2PR12MB4875:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0b271c94-966a-4031-a601-08daf8ccfffc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ygafrXQjZHmnkh1t+a+y8rAnW3ThI213OPSyx0CsKVPNQ3m304G56pqzpaja1X129+ASzshlLdT0y3PziJdvtWPN5surV46xRuKyrwVy/Qj6m588H3l44NFWfdBUAtVMV+9YXuiiU1Pp0lYizo4ebSE03RxcABTxhW+qFDYTtWXmxf5qBBi9aBYbuO2FDLeGnARzygcc/QKZW18MoXpTvRNA69yA0tpoExTksaSUsSy35p3okWJC0pqp0EyKXLDKNkFFVktBsRuc5ekmkiHQXIkdaw48QPaT3tzENj4HXnsUmeREY8kZg28axV/6soTDHcqpDgoIGhAygxiGaqGZLzsV5WoKXsJRppaOjedq22sInePtEP2NLfkPF/wtPKzJM5/hrSGRmMnDs30HN/G5HvVHEeB3YlHV2bwhPwa9Ycw7Hm78OA9BpabWzuW1Bdg9w42qNlPFRBv8ROlGbndoU5fO76jFF42JNmylas2JisWEr8/zope1kiK/2yz/76e+YiGygdac9do3XoTBJCqceD35RQKXsosnLRDCktiqgM2x31s9MoTLdiQiWXZbQ1iAc5hyYoQanx58Jhih3r3XN4RxGN9b2H1FYmoWBxRsrOibxf9I2GJPflAJGqq/05+E31uxQoMr0HhzTyDWCtIyz5zGYkHqE/alLE3uOloyz2VNEPlfmsT0hrFiC/GSJaFpC1r+Rg/3sgsBS75EBeBzpeYpDH2bPWTlik08ssLI2o4Ffxoh9mOjTiaBZYjRxgYMI60PQ5a5dVkF0jRVq4ekWcO7JtZiDOAvK12a1vnOmUbhIPmYQuQgwPXddu2ItL8b
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(136003)(396003)(376002)(39860400002)(451199015)(46966006)(40470700004)(36840700001)(81166007)(82740400003)(36860700001)(83380400001)(356005)(86362001)(2906002)(5660300002)(44832011)(8676002)(8936002)(70206006)(70586007)(4326008)(41300700001)(2616005)(40480700001)(82310400005)(186003)(26005)(47076005)(336012)(110136005)(40460700003)(426003)(966005)(316002)(6666004)(478600001)(54906003)(36756003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2023 20:54:17.7329
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b271c94-966a-4031-a601-08daf8ccfffc
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT103.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4875
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Rob,
+Hello,
 
-On Tue, Jan 17, 2023 at 8:01 PM Rob Landley <rob@landley.net> wrote:
-> On 1/16/23 01:13, Christoph Hellwig wrote:
-> > On Fri, Jan 13, 2023 at 09:09:52AM +0100, John Paul Adrian Glaubitz wrote:
-> >> I'm still maintaining and using this port in Debian.
-> >>
-> >> It's a bit disappointing that people keep hammering on it. It works fine for me.
-> >
-> > What platforms do you (or your users) use it on?
->
-> 3 j-core boards, two sh4 boards (the sh7760 one I patched the kernel of), and an
-> sh4 emulator.
->
-> I have multiple j-core systems (sh2 compatible with extensions, nommu, 3
-> different kinds of boards running it here). There's an existing mmu version of
-> j-core that's sh3 flavored but they want to redo it so it hasn't been publicly
-> released yet, I have yet to get that to run Linux because the mmu code would
-> need adapting, but the most recent customer projects were on the existing nommu
-> SOC, as was last year's ASIC work via sky130.
+This V11 of patch series is to provide the platform driver to support the
+Xilinx XDMA subsystem. The XDMA subsystem is used in conjunction with the
+PCI Express IP block to provide high performance data transfer between host
+memory and the card's DMA subsystem. It also provides up to 16 user
+interrupt wires to user logic that generate interrupts to the host.
 
-J4 still vaporware?
+            +-------+       +-------+       +-----------+
+   PCIe     |       |       |       |       |           |
+   Tx/Rx    |       |       |       |  AXI  |           |
+ <=======>  | PCIE  | <===> | XDMA  | <====>| User Logic|
+            |       |       |       |       |           |
+            +-------+       +-------+       +-----------+
 
-> My physical sh4 boards are a Johnson Controls N40 (sh7760 chipset) and the
-> little blue one is... sh4a I think? (It can run the same userspace, I haven't
-> replaced that board's kernel since I got it, I think it's the type Glaubitz is
-> using? It's mostly in case he had an issue I couldn't reproduce on different
-> hardware, or if I spill something on my N40.)
->
-> I also have a physical sh2 board on the shelf which I haven't touched in years
-> (used to comparison test during j2 development, and then the j2 boards replaced it).
->
-> I'm lazy and mostly test each new sh4 build under qemu -M r2d because it's
-> really convenient: neither of my physical boards boot from SD card so replacing
-> the kernel requires reflashing soldered in flash. (They'll net mount userspace
-> but I haven't gotten either bootloader to net-boot a kernel.)
+The XDMA has been used for Xilinx Alveo PCIe devices.
+And it is also integrated into Versal ACAP DMA and Bridge Subsystem.
+    https://www.xilinx.com/products/boards-and-kits/alveo.html
+    https://docs.xilinx.com/r/en-US/pg344-pcie-dma-versal/Introduction-to-the-DMA-and-Bridge-Subsystems
 
-On my landisk (with boots from CompactFLASH), I boot the original 2.6.22
-kernel, and use kexec to boot-test each and every renesas-drivers
-release.  Note that this requires both the original 2.6.22 kernel
-and matching kexec-tools.  Apparently both upstreamed kernel and
-kexec-tools support for SH are different, and incompatible with each
-other, so you cannot kexec from a contemporary kernel.
-I tried working my way up from 2.6.22, but gave up around 2.6.29.
-Probably I should do this with r2d and qemu instead ;-)
+The device driver for any FPGA based PCIe device which leverages XDMA can
+call the standard dmaengine APIs to discover and use the XDMA subsystem
+without duplicating the XDMA driver code in its own driver.
 
-Both r2d and landisk are SH7751.
+Changes since v10:
+- Added Tested-by Martin Tuma tumic@gpxsee.org
 
-Probably SH7722/'23'24 (e.g. Migo-R and Ecovec boards) are also
-worth keeping.  Most on-SoC blocks have drivers with DT support,
-as they are shared with ARM.  So the hardest part is clock and
-interrupt-controller support.
-Unfortunately I no longer have access to the (remote) Migo-R.
+Changes since v9:
+- Cleanup code based on review comments.
 
-Gr{oetje,eeting}s,
+Changes since v8:
+- Fixed test robot failure on s390.
 
-                        Geert
+Changes since v7:
+- Used pci device pointer for dma_pool_create().
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Changes since v6:
+- Fixed descriptor filling bug.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Changes since v5:
+- Modified user logic interrupt APIs to handle user logic IP which does not
+  have its own register to enable/disable interrupt.
+- Clean up code based on review comments.
+
+Changes since v4:
+- Modified user logic interrupt APIs.
+
+Changes since v3:
+- Added one patch to support user logic interrupt.
+
+Changes since v2:
+- Removed tasklet.
+- Fixed regression bug introduced to V2.
+- Test Robot warning.
+
+Changes since v1:
+- Moved filling hardware descriptor to xdma_prep_device_sg().
+- Changed hardware descriptor enum to "struct xdma_hw_desc".
+- Minor changes from code review comments.
+
+Lizhi Hou (2):
+  dmaengine: xilinx: xdma: Add xilinx xdma driver
+  dmaengine: xilinx: xdma: Add user logic interrupt support
+
+ MAINTAINERS                            |   11 +
+ drivers/dma/Kconfig                    |   14 +
+ drivers/dma/xilinx/Makefile            |    1 +
+ drivers/dma/xilinx/xdma-regs.h         |  173 ++++
+ drivers/dma/xilinx/xdma.c              | 1004 ++++++++++++++++++++++++
+ include/linux/dma/amd_xdma.h           |   16 +
+ include/linux/platform_data/amd_xdma.h |   34 +
+ 7 files changed, 1253 insertions(+)
+ create mode 100644 drivers/dma/xilinx/xdma-regs.h
+ create mode 100644 drivers/dma/xilinx/xdma.c
+ create mode 100644 include/linux/dma/amd_xdma.h
+ create mode 100644 include/linux/platform_data/amd_xdma.h
+
+-- 
+2.27.0
+

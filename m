@@ -2,506 +2,1335 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 416A86712D8
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Jan 2023 05:51:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 84DC367148F
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Jan 2023 07:55:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229669AbjAREv0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 17 Jan 2023 23:51:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56784 "EHLO
+        id S229794AbjARGz2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 18 Jan 2023 01:55:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229674AbjAREvC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 17 Jan 2023 23:51:02 -0500
-Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9EE1577FE
-        for <dmaengine@vger.kernel.org>; Tue, 17 Jan 2023 20:50:54 -0800 (PST)
-Received: by mail-ot1-x330.google.com with SMTP id n24-20020a0568301e9800b006865671a9d5so407826otr.6
-        for <dmaengine@vger.kernel.org>; Tue, 17 Jan 2023 20:50:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20210112.gappssmtp.com; s=20210112;
-        h=in-reply-to:from:references:cc:to:content-language:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SG5+LTqozVDaffYtP9G7OFK+ve6ONvYEcXJy7w5V5IA=;
-        b=2xgQ8d7BKLcwwadPMeowlexmkVXWEsSPqpODJH4TWAS2lm5uNK8e1M4fieHPTPkveo
-         t3Lm5YJJC16UElG1A8nJSUq8aPuv+wIX7jUFaPsCyMZ0mLXxDfehTsbi1smmdb1EGuaT
-         L2tpYXebysql7mHXV+upGPQkDJQJJOx/ASRuVxDgfNi38V1B9FKHRpSoImfxyHLp/pbv
-         vlKbflnn9ohMsaxZdz0pUDEe8gweojqFIRQG0YusgNWcxuvou7dKQnne2YnYYJgasqm9
-         BCUkRc8vOcJyLuqyXj3M3gLo7s/8X06glEYeSAnOO01aHJOitT15azlYfTpK7YwyCYmr
-         7Gdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:from:references:cc:to:content-language:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=SG5+LTqozVDaffYtP9G7OFK+ve6ONvYEcXJy7w5V5IA=;
-        b=gFETrz0lBQcnAS0wFZbFc+eJkXUlYRAfi8NkFhyZH1B/8+3ColZA0keIXZGpz0mbdi
-         gvhItvC4reB+8wNYB+bATv5pvoA2sDDM+tyTTS8lss+FlaTzgbOF5vjTAELGRf+mjHT7
-         oGkGNm5WBGWEGNwt7lapEeoPHsASAn1neyYpYxqylHY3FI0F3HjltOCkqMeFBO7HNV4l
-         GbX4tKR6CtqTn2LYgAS2GqedgvAKjXxzs6yUQPzCpxW9yp8OYY1c9mJYr268+Jl1TRTY
-         yfEahPgh1COS7UW3PyryPVIMSiwCpYgU6QJeUj/Rpv7RO1+4IG0rO8c7L5omSwCkxM94
-         Y4ow==
-X-Gm-Message-State: AFqh2krOC7os59CsN2oPdYpw5jHJxwC/44KyhvcrE48rbh2VASlY8MfL
-        hHnr9fiyNuMp5D7QlzwJOjaeLJVLSPY6J16TSD4=
-X-Google-Smtp-Source: AMrXdXtkqLH4t69dzrdV9eHzMdZnM8b7Ik4ym3FFGMboYaInpocjydohLDd6MR3dBoqxRlKFDQJoKw==
-X-Received: by 2002:a05:6830:6617:b0:670:9473:c376 with SMTP id cp23-20020a056830661700b006709473c376mr14568692otb.34.1674017453985;
-        Tue, 17 Jan 2023 20:50:53 -0800 (PST)
-Received: from [192.168.86.224] ([136.62.38.22])
-        by smtp.gmail.com with ESMTPSA id ca18-20020a056830611200b0066e873e4c2csm18404797otb.45.2023.01.17.20.50.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jan 2023 20:50:52 -0800 (PST)
-Content-Type: multipart/mixed; boundary="------------iAbKOt5glkmuQqPl0eO0N9M6"
-Message-ID: <7329212f-b1a0-41eb-99b3-a56eb1d23138@landley.net>
-Date:   Tue, 17 Jan 2023 23:03:08 -0600
+        with ESMTP id S229964AbjARGyc (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 18 Jan 2023 01:54:32 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE8AA31E2F;
+        Tue, 17 Jan 2023 22:28:26 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4C12B61695;
+        Wed, 18 Jan 2023 06:28:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 035D3C433EF;
+        Wed, 18 Jan 2023 06:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674023305;
+        bh=o6FYImIobagF2mUlPWdWv1e1kbCZ1HQSnjZUfg+SBCk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lYgvW4M4l5QNUkcPkRckhONyDy8lvn8vf6c0bnHjo0Vpe/pa2AWtEakdIVqcvn5oP
+         kLFI3feQlplV25mXCuyLULTl2u0msdEpf6lXaByKz+DpJvQcFHvwOi97dV9hpu29s/
+         GAJj+P17Vggu0gbRWXZ3wrcMlDYfUpD6Z+RQKyZObCUypqvke5pafsm3wyj18kbs5a
+         4egn6ln/5hFzhQjNUB1nSMOoEoszIIX0h4gqNEGfpo5WN6vjsYfy5ym6uGT5uBvnEz
+         6SbS0KTLlsfVLehRAFd7RhQAanNc7QbnT3Dfk9eC4/JAIP9Qj5n0QGq61GOGvqIctu
+         3p6gFmSwKiNRw==
+Date:   Wed, 18 Jan 2023 11:58:20 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Lizhi Hou <lizhi.hou@amd.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        max.zhen@amd.com, sonal.santan@amd.com, larry.liu@amd.com,
+        brian.xu@amd.com, tumic@gpxsee.org
+Subject: Re: [RESEND PATCH V11 XDMA 1/2] dmaengine: xilinx: xdma: Add xilinx
+ xdma driver
+Message-ID: <Y8eRhO0j+zozVL8N@matsya>
+References: <1673988842-43631-1-git-send-email-lizhi.hou@amd.com>
+ <1673988842-43631-2-git-send-email-lizhi.hou@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: remove arch/sh
-Content-Language: en-US
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-sh@vger.kernel.org
-References: <20230113062339.1909087-1-hch@lst.de>
- <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
- <20230116071306.GA15848@lst.de>
- <9325a949-8d19-435a-50bd-9ebe0a432012@landley.net>
- <CAMuHMdUJm5QvzH8hvqwvn9O6qSbzNOapabjw5nh9DJd0F55Zdg@mail.gmail.com>
-From:   Rob Landley <rob@landley.net>
-In-Reply-To: <CAMuHMdUJm5QvzH8hvqwvn9O6qSbzNOapabjw5nh9DJd0F55Zdg@mail.gmail.com>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1673988842-43631-2-git-send-email-lizhi.hou@amd.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------iAbKOt5glkmuQqPl0eO0N9M6
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-
-
-On 1/17/23 14:26, Geert Uytterhoeven wrote:
-> Hi Rob,
+On 17-01-23, 12:54, Lizhi Hou wrote:
+> Add driver to enable PCIe board which uses XDMA (the DMA/Bridge Subsystem
+> for PCI Express). For example, Xilinx Alveo PCIe devices.
+>     https://www.xilinx.com/products/boards-and-kits/alveo.html
 > 
-> On Tue, Jan 17, 2023 at 8:01 PM Rob Landley <rob@landley.net> wrote:
->> On 1/16/23 01:13, Christoph Hellwig wrote:
->> > On Fri, Jan 13, 2023 at 09:09:52AM +0100, John Paul Adrian Glaubitz wrote:
->> >> I'm still maintaining and using this port in Debian.
->> >>
->> >> It's a bit disappointing that people keep hammering on it. It works fine for me.
->> >
->> > What platforms do you (or your users) use it on?
->>
->> 3 j-core boards, two sh4 boards (the sh7760 one I patched the kernel of), and an
->> sh4 emulator.
->>
->> I have multiple j-core systems (sh2 compatible with extensions, nommu, 3
->> different kinds of boards running it here). There's an existing mmu version of
->> j-core that's sh3 flavored but they want to redo it so it hasn't been publicly
->> released yet, I have yet to get that to run Linux because the mmu code would
->> need adapting, but the most recent customer projects were on the existing nommu
->> SOC, as was last year's ASIC work via sky130.
+> The XDMA engine support up to 4 Host to Card (H2C) and 4 Card to Host (C2H)
+> channels. Memory transfers are specified on a per-channel basis in
+> descriptor linked lists, which the DMA fetches from host memory and
+> processes. Events such as descriptor completion and errors are signaled
+> using interrupts. The hardware detail is provided by
+>     https://docs.xilinx.com/r/en-US/pg195-pcie-dma/Introduction
 > 
-> J4 still vaporware?
-
-The 'existing mmu version' is the theoretical basis for J4 (the move from J3 to
-J4 is tiny from an instruction set perspective, it was more about internal chip
-architecture, primarily multi-issue with tomasulo). It exists, but we haven't
-had a product that uses it and the engineer who was tasked to work on it got
-reassigned during the pandemic.
-
-The real problem is the existing implementation is a branch off of an older SOC
-version so repotting it to the current tree (which among other things builds
-under a different VHDL toolchain) is some work. The "conflict requiring actual
-staring at" isn't the MMU, it's the instruction cancellation logic that backs
-out half-finished instructions when the MMU complains partway through an
-instruction that's multiple steps of microcode, so we have to back _out_ what
-it's already done so it can be cleanly restarted after handling the fault.
-That's got merge conflicts all over the place with the current stuff...
-
-Not actually _hard_, but not something we've sat down and done. We spent those
-cycles last year working on an ASIC implementation through Google's Sky130
-OpenLane/OpenRoad stuff (see https://github.com/j-core/openlane-vhdl-build for
-our in-house toolchain build for that; Google passes around a magic docker that
-most people use, we trimmed off most of the dependencies and build it in a clean
-debootstrap). And that was trying to make an ASIC out of the small simple
-version, because Google's entire asic/skywater partnership was... fraught?
-
-We also tried to get the previous generation of ASIC tools to work before giving
-up and trying to get what Google was working on to work:
-
-  https://landley.net/notes-2022.html#26-01-2022
-  https://landley.net/notes-2022.html#28-01-2022
-
-We targeted "known working SOC that we've been using a long time" to try to make
-a physical silicon chip out of (and the first version isn't even the J2 2xSMP
-SOC with all the cache and peripherals, it was a derivative of the ICE40 port
-that's single processor running straight from SRAM with no DRAM controller), on
-the theory we can always do a more complicated one later an what we were really
-trying to establish here is that Google's ASIC development tools and process
-could be made to work. (Which is kind of a heavy lift, they burned two shuttles
-full of mostly dead chips that we know of before admitting "those timing
-annotations we were talking about actually DO need to go all the way through"...
-Jeff has the URLs to the bug reports in OpenLane/Road's github...)
-
-(Sorry, one of OpenLane/OpenRoad is the DARPA project out of Sandia National
-Laboratory, and the other is Google doing a large extremely complicated thing
-analogous to the AOSP build on top of Darpa's work using a lot different
-programming languages and FOREST of build and runtime package dependencies, and
-I can never remember which is which. The Google thing is the one distributed in
-a docker because it's considered impossible to build rom source by everybody
-except us, because we're funny that way. And added VHDL support instead of just
-Verilog so needed to rebuild from source anyway to do that.)
-
->> My physical sh4 boards are a Johnson Controls N40 (sh7760 chipset) and the
->> little blue one is... sh4a I think? (It can run the same userspace, I haven't
->> replaced that board's kernel since I got it, I think it's the type Glaubitz is
->> using? It's mostly in case he had an issue I couldn't reproduce on different
->> hardware, or if I spill something on my N40.)
->>
->> I also have a physical sh2 board on the shelf which I haven't touched in years
->> (used to comparison test during j2 development, and then the j2 boards replaced it).
->>
->> I'm lazy and mostly test each new sh4 build under qemu -M r2d because it's
->> really convenient: neither of my physical boards boot from SD card so replacing
->> the kernel requires reflashing soldered in flash. (They'll net mount userspace
->> but I haven't gotten either bootloader to net-boot a kernel.)
+> This driver implements dmaengine APIs.
+>     - probe the available DMA channels
+>     - use dma_slave_map for channel lookup
+>     - use virtual channel to manage dmaengine tx descriptors
+>     - implement device_prep_slave_sg callback to handle host scatter gather
+>       list
+>     - implement device_config to config device address for DMA transfer
 > 
-> On my landisk (with boots from CompactFLASH), I boot the original 2.6.22
-> kernel, and use kexec to boot-test each and every renesas-drivers
-> release.  Note that this requires both the original 2.6.22 kernel
-> and matching kexec-tools.
+> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+> Signed-off-by: Sonal Santan <sonal.santan@amd.com>
+> Signed-off-by: Max Zhen <max.zhen@amd.com>
+> Signed-off-by: Brian Xu <brian.xu@amd.com>
+> Tested-by: Martin Tuma <tumic@gpxsee.org>
+> ---
+>  MAINTAINERS                            |  10 +
+>  drivers/dma/Kconfig                    |  14 +
+>  drivers/dma/xilinx/Makefile            |   1 +
+>  drivers/dma/xilinx/xdma-regs.h         | 173 +++++
+>  drivers/dma/xilinx/xdma.c              | 919 +++++++++++++++++++++++++
+>  include/linux/platform_data/amd_xdma.h |  34 +
+>  6 files changed, 1151 insertions(+)
+>  create mode 100644 drivers/dma/xilinx/xdma-regs.h
+>  create mode 100644 drivers/dma/xilinx/xdma.c
+>  create mode 100644 include/linux/platform_data/amd_xdma.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e68a0804394d..d598c4e23901 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -22575,6 +22575,16 @@ F:	Documentation/devicetree/bindings/media/xilinx/
+>  F:	drivers/media/platform/xilinx/
+>  F:	include/uapi/linux/xilinx-v4l2-controls.h
+>  
+> +XILINX XDMA DRIVER
+> +M:	Lizhi Hou <lizhi.hou@amd.com>
+> +M:	Brian Xu <brian.xu@amd.com>
+> +M:	Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>
+> +L:	dmaengine@vger.kernel.org
+> +S:	Supported
+> +F:	drivers/dma/xilinx/xdma-regs.h
+> +F:	drivers/dma/xilinx/xdma.c
+> +F:	include/linux/platform_data/amd_xdma.h
+> +
+>  XILINX ZYNQMP DPDMA DRIVER
+>  M:	Hyun Kwon <hyun.kwon@xilinx.com>
+>  M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index 7524b62a8870..bb5b542c2f9a 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -753,6 +753,20 @@ config XILINX_ZYNQMP_DPDMA
+>  	  driver provides the dmaengine required by the DisplayPort subsystem
+>  	  display driver.
+>  
+> +config XILINX_XDMA
 
-I make it a point to run _current_ kernels in all my mkroot systems, including
-sh4. What I shipped was 6.1 is:
+Please keep this sorted alphabetically, so should come before XILINX_Z*
 
-# cat /proc/version
-Linux version 6.1.0 (landley@driftwood) (sh4-linux-musl-cc (GCC) 9.4.0, GNU ld
-(GNU Binutils) 2.33.1) #1 Tue Jan 10 16:32:07 CST 2023
+> +	tristate "Xilinx DMA/Bridge Subsystem DMA Engine"
+> +	depends on HAS_IOMEM
+> +	select DMA_ENGINE
+> +	select DMA_VIRTUAL_CHANNELS
+> +	select REGMAP_MMIO
+> +	help
+> +	  Enable support for Xilinx DMA/Bridge Subsystem DMA engine. The DMA
+> +	  provides high performance block data movement between Host memory
+> +	  and the DMA subsystem. These direct memory transfers can be both in
+> +	  the Host to Card (H2C) and Card to Host (C2H) transfers.
+> +	  The core also provides up to 16 user interrupt wires that generate
+> +	  interrupts to the host.
+> +
+>  # driver files
+>  source "drivers/dma/bestcomm/Kconfig"
+>  
+> diff --git a/drivers/dma/xilinx/Makefile b/drivers/dma/xilinx/Makefile
+> index 767bb45f641f..c7a538a56643 100644
+> --- a/drivers/dma/xilinx/Makefile
+> +++ b/drivers/dma/xilinx/Makefile
+> @@ -2,3 +2,4 @@
+>  obj-$(CONFIG_XILINX_DMA) += xilinx_dma.o
+>  obj-$(CONFIG_XILINX_ZYNQMP_DMA) += zynqmp_dma.o
+>  obj-$(CONFIG_XILINX_ZYNQMP_DPDMA) += xilinx_dpdma.o
+> +obj-$(CONFIG_XILINX_XDMA) += xdma.o
 
-At the JCI contract where I got the N40 I forward ported the kernel version to a
-release that was I think 2 back from the current release because there was a
-race condition in the flash support I didn't have time to track down? (Only
-showed up under sustained load so the test case took hours to run, and we had a
-ship schedule...)
+Here as well
 
-I've been meaning to get together with somebody to get the blue board updated,
-but I've been busy with other things...
+> diff --git a/drivers/dma/xilinx/xdma-regs.h b/drivers/dma/xilinx/xdma-regs.h
+> new file mode 100644
+> index 000000000000..33838b714bf6
+> --- /dev/null
+> +++ b/drivers/dma/xilinx/xdma-regs.h
+> @@ -0,0 +1,173 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/*
+> + * Copyright (C) 2017-2020 Xilinx, Inc. All rights reserved.
+> + * Copyright (C) 2022, Advanced Micro Devices, Inc.
+> + */
+> +
+> +#ifndef __DMA_XDMA_REGS_H
+> +#define __DMA_XDMA_REGS_H
+> +
+> +/* The length of register space exposed to host */
+> +#define XDMA_REG_SPACE_LEN	65536
+> +
+> +/*
+> + * maximum number of DMA channels for each direction:
+> + * Host to Card (H2C) or Card to Host (C2H)
+> + */
+> +#define XDMA_MAX_CHANNELS	4
+> +
+> +/* macros to get higher and lower 32-bit address */
+> +#define XDMA_HI_ADDR_MASK	GENMASK_ULL(63, 32)
+> +#define XDMA_LO_ADDR_MASK	GENMASK_ULL(31, 0)
+
+Why not use upper_32_bits() and lower_32_bits() instead
+
+> +
+> +/*
+> + * macros to define the number of descriptor blocks can be used in one
+> + * DMA transfer request.
+> + * the DMA engine uses a linked list of descriptor blocks that specify the
+> + * source, destination, and length of the DMA transfers.
+> + */
+> +#define XDMA_DESC_BLOCK_NUM		BIT(7)
+> +#define XDMA_DESC_BLOCK_MASK		(XDMA_DESC_BLOCK_NUM - 1)
+> +
+> +/* descriptor definitions */
+> +#define XDMA_DESC_ADJACENT		32
+> +#define XDMA_DESC_ADJACENT_MASK		(XDMA_DESC_ADJACENT - 1)
+> +#define XDMA_DESC_ADJACENT_BITS		GENMASK(13, 8)
+> +#define XDMA_DESC_MAGIC			0xad4bUL
+> +#define XDMA_DESC_MAGIC_BITS		GENMASK(31, 16)
+> +#define XDMA_DESC_FLAGS_BITS		GENMASK(7, 0)
+> +#define XDMA_DESC_STOPPED		BIT(0)
+> +#define XDMA_DESC_COMPLETED		BIT(1)
+> +#define XDMA_DESC_BLEN_BITS		28
+> +#define XDMA_DESC_BLEN_MAX		(BIT(XDMA_DESC_BLEN_BITS) - PAGE_SIZE)
+> +
+> +/* macros to construct the descriptor control word */
+> +#define XDMA_DESC_CONTROL(adjacent, flag)				\
+> +	(FIELD_PREP(XDMA_DESC_MAGIC_BITS, XDMA_DESC_MAGIC) |		\
+> +	 FIELD_PREP(XDMA_DESC_ADJACENT_BITS, (adjacent) - 1) |		\
+> +	 FIELD_PREP(XDMA_DESC_FLAGS_BITS, (flag)))
+> +#define XDMA_DESC_CONTROL_LAST						\
+> +	XDMA_DESC_CONTROL(1, XDMA_DESC_STOPPED | XDMA_DESC_COMPLETED)
+> +
+> +/*
+> + * Descriptor for a single contiguous memory block transfer.
+> + *
+> + * Multiple descriptors are linked by means of the next pointer. An additional
+> + * extra adjacent number gives the amount of extra contiguous descriptors.
+> + *
+> + * The descriptors are in root complex memory, and the bytes in the 32-bit
+> + * words must be in little-endian byte ordering.
+> + */
+> +struct xdma_hw_desc {
+> +	__le32		control;
+> +	__le32		bytes;
+> +	__le64		src_addr;
+> +	__le64		dst_addr;
+> +	__le64		next_desc;
+> +};
+> +
+> +#define XDMA_DESC_SIZE		sizeof(struct xdma_hw_desc)
+> +#define XDMA_DESC_BLOCK_SIZE	(XDMA_DESC_SIZE * XDMA_DESC_ADJACENT)
+> +#define XDMA_DESC_BLOCK_ALIGN	4096
+> +
+> +/*
+> + * Channel registers
+> + */
+> +#define XDMA_CHAN_IDENTIFIER		0x0
+> +#define XDMA_CHAN_CONTROL		0x4
+> +#define XDMA_CHAN_CONTROL_W1S		0x8
+> +#define XDMA_CHAN_CONTROL_W1C		0xc
+> +#define XDMA_CHAN_STATUS		0x40
+> +#define XDMA_CHAN_COMPLETED_DESC	0x48
+> +#define XDMA_CHAN_ALIGNMENTS		0x4c
+> +#define XDMA_CHAN_INTR_ENABLE		0x90
+> +#define XDMA_CHAN_INTR_ENABLE_W1S	0x94
+> +#define XDMA_CHAN_INTR_ENABLE_W1C	0x9c
+> +
+> +#define XDMA_CHAN_STRIDE	0x100
+> +#define XDMA_CHAN_H2C_OFFSET	0x0
+> +#define XDMA_CHAN_C2H_OFFSET	0x1000
+> +#define XDMA_CHAN_H2C_TARGET	0x0
+> +#define XDMA_CHAN_C2H_TARGET	0x1
+> +
+> +/* macro to check if channel is available */
+> +#define XDMA_CHAN_MAGIC		0x1fc0
+> +#define XDMA_CHAN_CHECK_TARGET(id, target)		\
+> +	(((u32)(id) >> 16) == XDMA_CHAN_MAGIC + (target))
+> +
+> +/* bits of the channel control register */
+> +#define CHAN_CTRL_RUN_STOP			BIT(0)
+> +#define CHAN_CTRL_IE_DESC_STOPPED		BIT(1)
+> +#define CHAN_CTRL_IE_DESC_COMPLETED		BIT(2)
+> +#define CHAN_CTRL_IE_DESC_ALIGN_MISMATCH	BIT(3)
+> +#define CHAN_CTRL_IE_MAGIC_STOPPED		BIT(4)
+> +#define CHAN_CTRL_IE_IDLE_STOPPED		BIT(6)
+> +#define CHAN_CTRL_IE_READ_ERROR			GENMASK(13, 9)
+> +#define CHAN_CTRL_IE_DESC_ERROR			GENMASK(23, 19)
+> +#define CHAN_CTRL_NON_INCR_ADDR			BIT(25)
+> +#define CHAN_CTRL_POLL_MODE_WB			BIT(26)
+> +
+> +#define CHAN_CTRL_START	(CHAN_CTRL_RUN_STOP |				\
+> +			 CHAN_CTRL_IE_DESC_STOPPED |			\
+> +			 CHAN_CTRL_IE_DESC_COMPLETED |			\
+> +			 CHAN_CTRL_IE_DESC_ALIGN_MISMATCH |		\
+> +			 CHAN_CTRL_IE_MAGIC_STOPPED |			\
+> +			 CHAN_CTRL_IE_READ_ERROR |			\
+> +			 CHAN_CTRL_IE_DESC_ERROR)
+> +
+> +/* bits of the channel interrupt enable mask */
+> +#define CHAN_IM_DESC_ERROR			BIT(19)
+> +#define CHAN_IM_READ_ERROR			BIT(9)
+> +#define CHAN_IM_IDLE_STOPPED			BIT(6)
+> +#define CHAN_IM_MAGIC_STOPPED			BIT(4)
+> +#define CHAN_IM_DESC_COMPLETED			BIT(2)
+> +#define CHAN_IM_DESC_STOPPED			BIT(1)
+> +
+> +#define CHAN_IM_ALL	(CHAN_IM_DESC_ERROR | CHAN_IM_READ_ERROR |	\
+> +			 CHAN_IM_IDLE_STOPPED | CHAN_IM_MAGIC_STOPPED | \
+> +			 CHAN_IM_DESC_COMPLETED | CHAN_IM_DESC_STOPPED)
+> +
+> +/*
+> + * Channel SGDMA registers
+> + */
+> +#define XDMA_SGDMA_IDENTIFIER	0x0
+> +#define XDMA_SGDMA_DESC_LO	0x80
+> +#define XDMA_SGDMA_DESC_HI	0x84
+> +#define XDMA_SGDMA_DESC_ADJ	0x88
+> +#define XDMA_SGDMA_DESC_CREDIT	0x8c
+> +
+> +#define XDMA_SGDMA_BASE(chan_base)	((chan_base) + 0x4000)
+> +
+> +/* bits of the SG DMA control register */
+> +#define XDMA_CTRL_RUN_STOP			BIT(0)
+> +#define XDMA_CTRL_IE_DESC_STOPPED		BIT(1)
+> +#define XDMA_CTRL_IE_DESC_COMPLETED		BIT(2)
+> +#define XDMA_CTRL_IE_DESC_ALIGN_MISMATCH	BIT(3)
+> +#define XDMA_CTRL_IE_MAGIC_STOPPED		BIT(4)
+> +#define XDMA_CTRL_IE_IDLE_STOPPED		BIT(6)
+> +#define XDMA_CTRL_IE_READ_ERROR			GENMASK(13, 9)
+> +#define XDMA_CTRL_IE_DESC_ERROR			GENMASK(23, 19)
+> +#define XDMA_CTRL_NON_INCR_ADDR			BIT(25)
+> +#define XDMA_CTRL_POLL_MODE_WB			BIT(26)
+> +
+> +/*
+> + * interrupt registers
+> + */
+> +#define XDMA_IRQ_IDENTIFIER		0x0
+> +#define XDMA_IRQ_USER_INT_EN		0x04
+> +#define XDMA_IRQ_USER_INT_EN_W1S	0x08
+> +#define XDMA_IRQ_USER_INT_EN_W1C	0x0c
+> +#define XDMA_IRQ_CHAN_INT_EN		0x10
+> +#define XDMA_IRQ_CHAN_INT_EN_W1S	0x14
+> +#define XDMA_IRQ_CHAN_INT_EN_W1C	0x18
+> +#define XDMA_IRQ_USER_INT_REQ		0x40
+> +#define XDMA_IRQ_CHAN_INT_REQ		0x44
+> +#define XDMA_IRQ_USER_INT_PEND		0x48
+> +#define XDMA_IRQ_CHAN_INT_PEND		0x4c
+> +#define XDMA_IRQ_USER_VEC_NUM		0x80
+> +#define XDMA_IRQ_CHAN_VEC_NUM		0xa0
+> +
+> +#define XDMA_IRQ_BASE			0x2000
+> +#define XDMA_IRQ_VEC_SHIFT		8
+> +
+> +#endif /* __DMA_XDMA_REGS_H */
+> diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
+> new file mode 100644
+> index 000000000000..118528295fb7
+> --- /dev/null
+> +++ b/drivers/dma/xilinx/xdma.c
+> @@ -0,0 +1,919 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * DMA driver for Xilinx DMA/Bridge Subsystem
+> + *
+> + * Copyright (C) 2017-2020 Xilinx, Inc. All rights reserved.
+> + * Copyright (C) 2022, Advanced Micro Devices, Inc.
+> + */
+> +
+> +/*
+> + * The DMA/Bridge Subsystem for PCI Express allows for the movement of data
+> + * between Host memory and the DMA subsystem. It does this by operating on
+> + * 'descriptors' that contain information about the source, destination and
+> + * amount of data to transfer. These direct memory transfers can be both in
+> + * the Host to Card (H2C) and Card to Host (C2H) transfers. The DMA can be
+> + * configured to have a single AXI4 Master interface shared by all channels
+> + * or one AXI4-Stream interface for each channel enabled. Memory transfers are
+> + * specified on a per-channel basis in descriptor linked lists, which the DMA
+> + * fetches from host memory and processes. Events such as descriptor completion
+> + * and errors are signaled using interrupts. The core also provides up to 16
+> + * user interrupt wires that generate interrupts to the host.
+> + */
+> +
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/dmapool.h>
+> +#include <linux/regmap.h>
+> +#include <linux/dmaengine.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/platform_data/amd_xdma.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/pci.h>
+> +#include "../virt-dma.h"
+> +#include "xdma-regs.h"
+> +
+> +/* mmio regmap config for all XDMA registers */
+> +static const struct regmap_config xdma_regmap_config = {
+> +	.reg_bits = 32,
+> +	.val_bits = 32,
+> +	.reg_stride = 4,
+> +	.max_register = XDMA_REG_SPACE_LEN,
+> +};
+
+Very nice..
+
+> +
+> +/**
+> + * struct xdma_desc_block - Descriptor block
+> + * @virt_addr: Virtual address of block start
+> + * @dma_addr: DMA address of block start
+> + */
+> +struct xdma_desc_block {
+> +	void		*virt_addr;
+> +	dma_addr_t	dma_addr;
+> +};
+> +
+> +/**
+> + * struct xdma_chan - Driver specific DMA channel structure
+> + * @vchan: Virtual channel
+> + * @xdev_hdl: Pointer to DMA device structure
+> + * @base: Offset of channel registers
+> + * @desc_pool: Descriptor pool
+> + * @busy: Busy flag of the channel
+> + * @dir: Transferring direction of the channel
+> + * @cfg: Transferring config of the channel
+> + * @irq: IRQ assigned to the channel
+> + */
+> +struct xdma_chan {
+> +	struct virt_dma_chan		vchan;
+> +	void				*xdev_hdl;
+> +	u32				base;
+> +	struct dma_pool			*desc_pool;
+> +	bool				busy;
+> +	enum dma_transfer_direction	dir;
+> +	struct dma_slave_config		cfg;
+> +	u32				irq;
+> +};
+> +
+> +/**
+> + * struct xdma_desc - DMA desc structure
+> + * @vdesc: Virtual DMA descriptor
+> + * @chan: DMA channel pointer
+> + * @dir: Transferring direction of the request
+> + * @dev_addr: Physical address on DMA device side
+> + * @desc_blocks: Hardware descriptor blocks
+> + * @dblk_num: Number of hardware descriptor blocks
+> + * @desc_num: Number of hardware descriptors
+> + * @completed_desc_num: Completed hardware descriptors
+> + */
+> +struct xdma_desc {
+> +	struct virt_dma_desc		vdesc;
+> +	struct xdma_chan		*chan;
+> +	enum dma_transfer_direction	dir;
+> +	u64				dev_addr;
+> +	struct xdma_desc_block		*desc_blocks;
+> +	u32				dblk_num;
+> +	u32				desc_num;
+> +	u32				completed_desc_num;
+> +};
+> +
+> +#define XDMA_DEV_STATUS_REG_DMA		BIT(0)
+> +#define XDMA_DEV_STATUS_INIT_MSIX	BIT(1)
+> +
+> +/**
+> + * struct xdma_device - DMA device structure
+> + * @pdev: Platform device pointer
+> + * @dma_dev: DMA device structure
+> + * @regmap: MMIO regmap for DMA registers
+> + * @h2c_chans: Host to Card channels
+> + * @c2h_chans: Card to Host channels
+> + * @h2c_chan_num: Number of H2C channels
+> + * @c2h_chan_num: Number of C2H channels
+> + * @irq_start: Start IRQ assigned to device
+> + * @irq_num: Number of IRQ assigned to device
+> + * @status: Initialization status
+> + */
+> +struct xdma_device {
+> +	struct platform_device	*pdev;
+> +	struct dma_device	dma_dev;
+> +	struct regmap		*regmap;
+> +	struct xdma_chan	*h2c_chans;
+> +	struct xdma_chan	*c2h_chans;
+> +	u32			h2c_chan_num;
+> +	u32			c2h_chan_num;
+> +	u32			irq_start;
+> +	u32			irq_num;
+> +	u32			status;
+> +};
+> +
+> +#define xdma_err(xdev, fmt, args...)					\
+> +	dev_err(&(xdev)->pdev->dev, fmt, ##args)
+> +#define XDMA_CHAN_NUM(_xd) ({						\
+> +	typeof(_xd) (xd) = (_xd);					\
+> +	((xd)->h2c_chan_num + (xd)->c2h_chan_num); })
+> +
+> +/* Read and Write DMA registers */
+> +static inline int xdma_read_reg(struct xdma_device *xdev, u32 base, u32 reg,
+> +				u32 *val)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_read(xdev->regmap, base + reg, val);
+> +	if (ret)
+> +		xdma_err(xdev, "read reg %x:%x failed: %d", base, reg, ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static inline int xdma_write_reg(struct xdma_device *xdev, u32 base, u32 reg,
+> +				 u32 val)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_write(xdev->regmap, base + reg, val);
+> +	if (ret)
+> +		xdma_err(xdev, "write reg %x:%x failed: %d", base, reg, ret);
+> +
+> +	return ret;
+> +}
+
+You are doing regmap_ ops, why do you need a wrapper around it? I think
+we can drop the error lines too...
 
 
-> Apparently both upstreamed kernel and
-> kexec-tools support for SH are different, and incompatible with each
-> other, so you cannot kexec from a contemporary kernel.
+> +
+> +/* Get the last desc in a desc block */
+> +static inline void *xdma_blk_last_desc(struct xdma_desc_block *block)
+> +{
+> +	return block->virt_addr + (XDMA_DESC_ADJACENT - 1) * XDMA_DESC_SIZE;
+> +}
+> +
+> +/**
+> + * xdma_link_desc_blocks - Link descriptor blocks for DMA transfer
+> + * @sw_desc: Tx descriptor pointer
+> + */
+> +static void xdma_link_desc_blocks(struct xdma_desc *sw_desc)
+> +{
+> +	struct xdma_desc_block *block;
+> +	u32 last_blk_desc, desc_control;
+> +	struct xdma_hw_desc *desc;
+> +	int i;
+> +
+> +	desc_control = XDMA_DESC_CONTROL(XDMA_DESC_ADJACENT, 0);
+> +	for (i = 1; i < sw_desc->dblk_num; i++) {
 
-Sure you can. Using toybox's insmod and modprobe, anyway. (That's the target I
-tested those on... :)
+Why is this starting from 1
 
-Haven't messed with signing or compression or anything yet, my insmod is just
-doing syscall(SYS_finit_module) and then falling back to SYS_init_module if that
-fails and either fd was 0 or errno was ENOSYS. (Don't ask me why
-SYS_finit_module doesn't work on stdin...)
+> +		block = &sw_desc->desc_blocks[i - 1];
+> +		desc = xdma_blk_last_desc(block);
+> +
+> +		if (!(i & XDMA_DESC_BLOCK_MASK)) {
+> +			desc->control = cpu_to_le32(XDMA_DESC_CONTROL_LAST);
+> +			continue;
+> +		}
+> +		desc->control = cpu_to_le32(desc_control);
+> +		desc->next_desc = cpu_to_le64(block[1].dma_addr);
+> +	}
+> +
+> +	/* update the last block */
+> +	last_blk_desc = (sw_desc->desc_num - 1) & XDMA_DESC_ADJACENT_MASK;
+> +	if (((sw_desc->dblk_num - 1) & XDMA_DESC_BLOCK_MASK) > 0) {
+> +		block = &sw_desc->desc_blocks[sw_desc->dblk_num - 2];
+> +		desc = xdma_blk_last_desc(block);
+> +		desc_control = XDMA_DESC_CONTROL(last_blk_desc + 1, 0);
+> +		desc->control = cpu_to_le32(desc_control);
+> +	}
+> +
+> +	block = &sw_desc->desc_blocks[sw_desc->dblk_num - 1];
+> +	desc = block->virt_addr + last_blk_desc * XDMA_DESC_SIZE;
+> +	desc->control = cpu_to_le32(XDMA_DESC_CONTROL_LAST);
+> +}
+> +
+> +static inline struct xdma_chan *to_xdma_chan(struct dma_chan *chan)
+> +{
+> +	return container_of(chan, struct xdma_chan, vchan.chan);
+> +}
+> +
+> +static inline struct xdma_desc *to_xdma_desc(struct virt_dma_desc *vdesc)
+> +{
+> +	return container_of(vdesc, struct xdma_desc, vdesc);
+> +}
+> +
+> +/**
+> + * xdma_channel_init - Initialize DMA channel registers
+> + * @chan: DMA channel pointer
+> + */
+> +static int xdma_channel_init(struct xdma_chan *chan)
+> +{
+> +	struct xdma_device *xdev = chan->xdev_hdl;
+> +	int ret;
+> +
+> +	ret = xdma_write_reg(xdev, chan->base, XDMA_CHAN_CONTROL_W1C,
+> +			     CHAN_CTRL_NON_INCR_ADDR);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = xdma_write_reg(xdev, chan->base, XDMA_CHAN_INTR_ENABLE,
+> +			     CHAN_IM_ALL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * xdma_free_desc - Free descriptor
+> + * @vdesc: Virtual DMA descriptor
+> + */
+> +static void xdma_free_desc(struct virt_dma_desc *vdesc)
+> +{
+> +	struct xdma_desc *sw_desc;
+> +	int i;
+> +
+> +	sw_desc = to_xdma_desc(vdesc);
+> +	for (i = 0; i < sw_desc->dblk_num; i++) {
+> +		if (!sw_desc->desc_blocks[i].virt_addr)
+> +			break;
+> +		dma_pool_free(sw_desc->chan->desc_pool,
+> +			      sw_desc->desc_blocks[i].virt_addr,
+> +			      sw_desc->desc_blocks[i].dma_addr);
+> +	}
+> +	kfree(sw_desc->desc_blocks);
+> +	kfree(sw_desc);
+> +}
+> +
+> +/**
+> + * xdma_alloc_desc - Allocate descriptor
+> + * @chan: DMA channel pointer
+> + * @desc_num: Number of hardware descriptors
+> + */
+> +static struct xdma_desc *
+> +xdma_alloc_desc(struct xdma_chan *chan, u32 desc_num)
+> +{
+> +	struct xdma_desc *sw_desc;
+> +	struct xdma_hw_desc *desc;
+> +	dma_addr_t dma_addr;
+> +	u32 dblk_num;
+> +	void *addr;
+> +	int i, j;
+> +
+> +	sw_desc = kzalloc(sizeof(*sw_desc), GFP_NOWAIT);
+> +	if (!sw_desc)
+> +		return NULL;
+> +
+> +	sw_desc->chan = chan;
+> +	sw_desc->desc_num = desc_num;
+> +	dblk_num = DIV_ROUND_UP(desc_num, XDMA_DESC_ADJACENT);
+> +	sw_desc->desc_blocks = kcalloc(dblk_num, sizeof(*sw_desc->desc_blocks),
+> +				       GFP_NOWAIT);
+> +	if (!sw_desc->desc_blocks)
+> +		goto failed;
+> +
+> +	sw_desc->dblk_num = dblk_num;
+> +	for (i = 0; i < sw_desc->dblk_num; i++) {
+> +		addr = dma_pool_alloc(chan->desc_pool, GFP_NOWAIT, &dma_addr);
+> +		if (!addr)
+> +			goto failed;
+> +
+> +		sw_desc->desc_blocks[i].virt_addr = addr;
+> +		sw_desc->desc_blocks[i].dma_addr = dma_addr;
+> +		for (j = 0, desc = addr; j < XDMA_DESC_ADJACENT; j++)
+> +			desc[j].control = cpu_to_le32(XDMA_DESC_CONTROL(1, 0));
+> +	}
+> +
+> +	xdma_link_desc_blocks(sw_desc);
+> +
+> +	return sw_desc;
+> +
+> +failed:
+> +	xdma_free_desc(&sw_desc->vdesc);
+> +	return NULL;
+> +}
+> +
+> +/**
+> + * xdma_xfer_start - Start DMA transfer
+> + * @xdma_chan: DMA channel pointer
+> + */
+> +static int xdma_xfer_start(struct xdma_chan *xdma_chan)
+> +{
+> +	struct virt_dma_desc *vd = vchan_next_desc(&xdma_chan->vchan);
+> +	struct xdma_device *xdev = xdma_chan->xdev_hdl;
+> +	struct xdma_desc_block *block;
+> +	u32 val, completed_blocks;
+> +	struct xdma_desc *desc;
+> +	int ret;
+> +
+> +	/*
+> +	 * check if there is not any submitted descriptor or channel is busy.
+> +	 * vchan lock should be held where this function is called.
+> +	 */
+> +	if (!vd || xdma_chan->busy)
+> +		return -EINVAL;
+> +
+> +	/* clear run stop bit to get ready for transfer */
+> +	ret = xdma_write_reg(xdev, xdma_chan->base, XDMA_CHAN_CONTROL_W1C,
+> +			     CHAN_CTRL_RUN_STOP);
+> +	if (ret)
+> +		return ret;
+> +
+> +	desc = to_xdma_desc(vd);
+> +	if (desc->dir != xdma_chan->dir) {
+> +		xdma_err(xdev, "incorrect request direction");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* set DMA engine to the first descriptor block */
+> +	completed_blocks = desc->completed_desc_num / XDMA_DESC_ADJACENT;
+> +	block = &desc->desc_blocks[completed_blocks];
+> +	val = FIELD_GET(XDMA_LO_ADDR_MASK, block->dma_addr);
+> +	ret = xdma_write_reg(xdev, XDMA_SGDMA_BASE(xdma_chan->base),
+> +			     XDMA_SGDMA_DESC_LO, val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	val = FIELD_GET(XDMA_HI_ADDR_MASK, (u64)block->dma_addr);
+> +	ret = xdma_write_reg(xdev, XDMA_SGDMA_BASE(xdma_chan->base),
+> +			     XDMA_SGDMA_DESC_HI, val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (completed_blocks + 1 == desc->dblk_num)
+> +		val = (desc->desc_num - 1) & XDMA_DESC_ADJACENT_MASK;
+> +	else
+> +		val = XDMA_DESC_ADJACENT - 1;
+> +	ret = xdma_write_reg(xdev, XDMA_SGDMA_BASE(xdma_chan->base),
+> +			     XDMA_SGDMA_DESC_ADJ, val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* kick off DMA transfer */
+> +	ret = xdma_write_reg(xdev, xdma_chan->base, XDMA_CHAN_CONTROL,
+> +			     CHAN_CTRL_START);
+> +	if (ret)
+> +		return ret;
+> +
+> +	xdma_chan->busy = true;
+> +	return 0;
+> +}
+> +
+> +/**
+> + * xdma_config_channels - Detect and config DMA channels
 
-https://github.com/landley/toybox/blob/master/toys/other/insmod.c#L31
+Looking at fn, maybe alloc_channels would fit better... you are
+allocating them.. configure sounds more runtime
 
-https://landley.net/toybox/downloads/binaries/0.8.9/toybox-sh4
+> + * @xdev: DMA device pointer
+> + * @dir: Channel direction
+> + */
+> +static int xdma_config_channels(struct xdma_device *xdev,
+> +				enum dma_transfer_direction dir)
+> +{
+> +	struct xdma_platdata *pdata = dev_get_platdata(&xdev->pdev->dev);
+> +	u32 base, identifier, target;
+> +	struct xdma_chan **chans;
+> +	u32 *chan_num;
+> +	int i, j, ret;
+> +
+> +	if (dir == DMA_MEM_TO_DEV) {
+> +		base = XDMA_CHAN_H2C_OFFSET;
+> +		target = XDMA_CHAN_H2C_TARGET;
+> +		chans = &xdev->h2c_chans;
+> +		chan_num = &xdev->h2c_chan_num;
+> +	} else if (dir == DMA_DEV_TO_MEM) {
+> +		base = XDMA_CHAN_C2H_OFFSET;
+> +		target = XDMA_CHAN_C2H_TARGET;
+> +		chans = &xdev->c2h_chans;
+> +		chan_num = &xdev->c2h_chan_num;
+> +	} else {
+> +		xdma_err(xdev, "invalid direction specified");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* detect number of available DMA channels */
+> +	for (i = 0, *chan_num = 0; i < pdata->max_dma_channels; i++) {
+> +		ret = xdma_read_reg(xdev, base + i * XDMA_CHAN_STRIDE,
+> +				    XDMA_CHAN_IDENTIFIER, &identifier);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* check if it is available DMA channel */
+> +		if (XDMA_CHAN_CHECK_TARGET(identifier, target))
+> +			(*chan_num)++;
+> +	}
+> +
+> +	if (!*chan_num) {
+> +		xdma_err(xdev, "does not probe any channel");
+> +		return -EINVAL;
+> +	}
+> +
+> +	*chans = devm_kzalloc(&xdev->pdev->dev, sizeof(**chans) * (*chan_num),
+> +			      GFP_KERNEL);
 
-> I tried working my way up from 2.6.22, but gave up around 2.6.29.
-> Probably I should do this with r2d and qemu instead ;-)
+devm_kcalloc()?
 
-I have current running there. I've had current running there for years. Config
-attached...
+> +	if (!*chans)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0, j = 0; i < pdata->max_dma_channels; i++) {
+> +		ret = xdma_read_reg(xdev, base + i * XDMA_CHAN_STRIDE,
+> +				    XDMA_CHAN_IDENTIFIER, &identifier);
+> +		if (ret)
+> +			return ret;
+> +
+> +		if (!XDMA_CHAN_CHECK_TARGET(identifier, target))
+> +			continue;
+> +
+> +		if (j == *chan_num) {
+> +			xdma_err(xdev, "invalid channel number");
+> +			return -EIO;
+> +		}
+> +
+> +		/* init channel structure and hardware */
+> +		(*chans)[j].xdev_hdl = xdev;
+> +		(*chans)[j].base = base + i * XDMA_CHAN_STRIDE;
+> +		(*chans)[j].dir = dir;
 
-> Both r2d and landisk are SH7751.
+Using a chan pointer locally might help you get rid of this and looks
+and reads clean (bonus you get rid of errors in typos missing *)
 
-Cool. Shouldn't be hard to get landisk running current then.
+> +
+> +		ret = xdma_channel_init(&(*chans)[j]);
+> +		if (ret)
+> +			return ret;
+> +		(*chans)[j].vchan.desc_free = xdma_free_desc;
+> +		vchan_init(&(*chans)[j].vchan, &xdev->dma_dev);
+> +
+> +		j++;
+> +	}
+> +
+> +	dev_info(&xdev->pdev->dev, "configured %d %s channels", j,
+> +		 (dir == DMA_MEM_TO_DEV) ? "H2C" : "C2H");
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * xdma_issue_pending - Issue pending transactions
+> + * @chan: DMA channel pointer
+> + */
+> +static void xdma_issue_pending(struct dma_chan *chan)
+> +{
+> +	struct xdma_chan *xdma_chan = to_xdma_chan(chan);
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&xdma_chan->vchan.lock, flags);
+> +	if (vchan_issue_pending(&xdma_chan->vchan))
+> +		xdma_xfer_start(xdma_chan);
+> +	spin_unlock_irqrestore(&xdma_chan->vchan.lock, flags);
+> +}
+> +
+> +/**
+> + * xdma_prep_device_sg - prepare a descriptor for a
+> + *	DMA transaction
 
-> Probably SH7722/'23'24 (e.g. Migo-R and Ecovec boards) are also
-> worth keeping.  Most on-SoC blocks have drivers with DT support,
-> as they are shared with ARM.  So the hardest part is clock and
-> interrupt-controller support.
+single line pls
 
-J-core is using device tree already. Shouldn't be hard to do a device tree for
-the qemu version, and then for landisk.
+> + * @chan: DMA channel pointer
+> + * @sgl: Transfer scatter gather list
+> + * @sg_len: Length of scatter gather list
+> + * @dir: Transfer direction
+> + * @flags: transfer ack flags
+> + * @context: APP words of the descriptor
+> + */
+> +static struct dma_async_tx_descriptor *
+> +xdma_prep_device_sg(struct dma_chan *chan, struct scatterlist *sgl,
+> +		    unsigned int sg_len, enum dma_transfer_direction dir,
+> +		    unsigned long flags, void *context)
+> +{
+> +	struct xdma_chan *xdma_chan = to_xdma_chan(chan);
+> +	struct dma_async_tx_descriptor *tx_desc;
+> +	u32 desc_num = 0, i, len, rest;
+> +	struct xdma_desc_block *dblk;
+> +	struct xdma_hw_desc *desc;
+> +	struct xdma_desc *sw_desc;
+> +	u64 dev_addr, *src, *dst;
+> +	struct scatterlist *sg;
+> +	u64 addr;
+> +
+> +	for_each_sg(sgl, sg, sg_len, i)
+> +		desc_num += DIV_ROUND_UP(sg_dma_len(sg), XDMA_DESC_BLEN_MAX);
+> +
+> +	sw_desc = xdma_alloc_desc(xdma_chan, desc_num);
+> +	if (!sw_desc)
+> +		return NULL;
+> +	sw_desc->dir = dir;
+> +
+> +	if (dir == DMA_MEM_TO_DEV) {
+> +		dev_addr = xdma_chan->cfg.dst_addr;
+> +		src = &addr;
+> +		dst = &dev_addr;
+> +	} else {
+> +		dev_addr = xdma_chan->cfg.src_addr;
+> +		src = &dev_addr;
+> +		dst = &addr;
+> +	}
+> +
+> +	dblk = sw_desc->desc_blocks;
+> +	desc = dblk->virt_addr;
+> +	desc_num = 1;
+> +	for_each_sg(sgl, sg, sg_len, i) {
+> +		addr = sg_dma_address(sg);
+> +		rest = sg_dma_len(sg);
+> +
+> +		do {
+> +			len = min_t(u32, rest, XDMA_DESC_BLEN_MAX);
+> +			/* set hardware descriptor */
+> +			desc->bytes = cpu_to_le32(len);
+> +			desc->src_addr = cpu_to_le64(*src);
+> +			desc->dst_addr = cpu_to_le64(*dst);
+> +
+> +			if (!(desc_num & XDMA_DESC_ADJACENT_MASK)) {
+> +				dblk++;
+> +				desc = dblk->virt_addr;
+> +			} else {
+> +				desc++;
+> +			}
+> +
+> +			desc_num++;
+> +			dev_addr += len;
+> +			addr += len;
+> +			rest -= len;
+> +		} while (rest);
+> +	}
+> +
+> +	tx_desc = vchan_tx_prep(&xdma_chan->vchan, &sw_desc->vdesc, flags);
+> +	if (!tx_desc)
+> +		goto failed;
+> +
+> +	return tx_desc;
+> +
+> +failed:
+> +	xdma_free_desc(&sw_desc->vdesc);
+> +
+> +	return NULL;
+> +}
+> +
+> +/**
+> + * xdma_device_config - Configure the DMA channel
+> + * @chan: DMA channel
+> + * @cfg: channel configuration
+> + */
+> +static int xdma_device_config(struct dma_chan *chan,
+> +			      struct dma_slave_config *cfg)
+> +{
+> +	struct xdma_chan *xdma_chan = to_xdma_chan(chan);
+> +
+> +	memcpy(&xdma_chan->cfg, cfg, sizeof(*cfg));
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * xdma_free_chan_resources - Free channel resources
+> + * @chan: DMA channel
+> + */
+> +static void xdma_free_chan_resources(struct dma_chan *chan)
+> +{
+> +	struct xdma_chan *xdma_chan = to_xdma_chan(chan);
+> +
+> +	vchan_free_chan_resources(&xdma_chan->vchan);
+> +	dma_pool_destroy(xdma_chan->desc_pool);
+> +	xdma_chan->desc_pool = NULL;
+> +}
+> +
+> +/**
+> + * xdma_alloc_chan_resources - Allocate channel resources
+> + * @chan: DMA channel
+> + */
+> +static int xdma_alloc_chan_resources(struct dma_chan *chan)
+> +{
+> +	struct xdma_chan *xdma_chan = to_xdma_chan(chan);
+> +	struct xdma_device *xdev = xdma_chan->xdev_hdl;
+> +	struct device *dev = xdev->dma_dev.dev;
+> +
+> +	while (dev && !dev_is_pci(dev))
+> +		dev = dev->parent;
+> +	if (!dev) {
+> +		xdma_err(xdev, "unable to find pci device");
+> +		return -EINVAL;
+> +	}
+> +
+> +	xdma_chan->desc_pool = dma_pool_create(dma_chan_name(chan),
+> +					       dev, XDMA_DESC_BLOCK_SIZE,
+> +					       XDMA_DESC_BLOCK_ALIGN, 0);
+> +	if (!xdma_chan->desc_pool) {
+> +		xdma_err(xdev, "unable to allocate descriptor pool");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * xdma_channel_isr - XDMA channel interrupt handler
+> + * @irq: IRQ number
+> + * @dev_id: Pointer to the DMA channel structure
+> + */
+> +static irqreturn_t xdma_channel_isr(int irq, void *dev_id)
+> +{
+> +	struct xdma_chan *xdma_chan = dev_id;
+> +	u32 complete_desc_num = 0;
+> +	struct virt_dma_desc *vd;
+> +	struct xdma_desc *desc;
+> +	int ret;
+> +
+> +	spin_lock(&xdma_chan->vchan.lock);
+> +
+> +	/* get submitted request */
+> +	vd = vchan_next_desc(&xdma_chan->vchan);
+> +	if (!vd)
+> +		goto out;
+> +
+> +	xdma_chan->busy = false;
+> +	desc = to_xdma_desc(vd);
+> +
+> +	ret = xdma_read_reg(xdma_chan->xdev_hdl, xdma_chan->base,
+> +			    XDMA_CHAN_COMPLETED_DESC, &complete_desc_num);
+> +	if (ret)
+> +		goto out;
+> +
+> +	desc->completed_desc_num += complete_desc_num;
+> +	/*
+> +	 * if all data blocks are transferred, remove and complete the request
+> +	 */
+> +	if (desc->completed_desc_num == desc->desc_num) {
+> +		list_del(&vd->node);
+> +		vchan_cookie_complete(vd);
+> +		goto out;
+> +	}
+> +
+> +	if (desc->completed_desc_num > desc->desc_num ||
+> +	    complete_desc_num != XDMA_DESC_BLOCK_NUM * XDMA_DESC_ADJACENT)
+> +		goto out;
+> +
+> +	/* transfer the rest of data */
+> +	xdma_xfer_start(xdma_chan);
+> +
+> +out:
+> +	spin_unlock(&xdma_chan->vchan.lock);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +/**
+> + * xdma_irq_fini - Uninitialize IRQ
+> + * @xdev: DMA device pointer
+> + */
+> +static void xdma_irq_fini(struct xdma_device *xdev)
+> +{
+> +	int i;
+> +
+> +	/* disable interrupt */
+> +	xdma_write_reg(xdev, XDMA_IRQ_BASE, XDMA_IRQ_CHAN_INT_EN_W1C, ~0);
+> +
+> +	/* free irq handler */
+> +	for (i = 0; i < xdev->h2c_chan_num; i++)
+> +		free_irq(xdev->h2c_chans[i].irq, &xdev->h2c_chans[i]);
+> +
+> +	for (i = 0; i < xdev->c2h_chan_num; i++)
+> +		free_irq(xdev->c2h_chans[i].irq, &xdev->c2h_chans[i]);
+> +}
+> +
+> +/**
+> + * xdma_set_vector_reg - configure hardware IRQ registers
+> + * @xdev: DMA device pointer
+> + * @vec_tbl_start: Start of IRQ registers
+> + * @irq_start: Start of IRQ
+> + * @irq_num: Number of IRQ
+> + */
+> +static int xdma_set_vector_reg(struct xdma_device *xdev, u32 vec_tbl_start,
+> +			       u32 irq_start, u32 irq_num)
+> +{
+> +	u32 shift, i, val = 0;
+> +	int ret;
+> +
+> +	/* Each IRQ register is 32 bit and contains 4 IRQs */
+> +	while (irq_num > 0) {
+> +		for (i = 0; i < 4; i++) {
+> +			shift = XDMA_IRQ_VEC_SHIFT * i;
+> +			val |= irq_start << shift;
+> +			irq_start++;
+> +			irq_num--;
+> +		}
+> +
+> +		/* write IRQ register */
+> +		ret = xdma_write_reg(xdev, XDMA_IRQ_BASE, vec_tbl_start, val);
+> +		if (ret)
+> +			return ret;
+> +		vec_tbl_start += sizeof(u32);
+> +		val = 0;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * xdma_irq_init - initialize IRQs
+> + * @xdev: DMA device pointer
+> + */
+> +static int xdma_irq_init(struct xdma_device *xdev)
+> +{
+> +	u32 irq = xdev->irq_start;
+> +	int i, j, ret;
+> +
+> +	/* return failure if there are not enough IRQs */
+> +	if (xdev->irq_num < XDMA_CHAN_NUM(xdev)) {
+> +		xdma_err(xdev, "not enough irq");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* setup H2C interrupt handler */
+> +	for (i = 0; i < xdev->h2c_chan_num; i++) {
+> +		ret = request_irq(irq, xdma_channel_isr, 0,
+> +				  "xdma-h2c-channel", &xdev->h2c_chans[i]);
+> +		if (ret) {
+> +			xdma_err(xdev, "H2C channel%d request irq%d failed: %d",
+> +				 i, irq, ret);
+> +			goto failed_init_h2c;
+> +		}
+> +		xdev->h2c_chans[i].irq = irq;
+> +		irq++;
+> +	}
+> +
+> +	/* setup C2H interrupt handler */
+> +	for (j = 0; j < xdev->c2h_chan_num; j++) {
+> +		ret = request_irq(irq, xdma_channel_isr, 0,
+> +				  "xdma-c2h-channel", &xdev->c2h_chans[j]);
+> +		if (ret) {
+> +			xdma_err(xdev, "H2C channel%d request irq%d failed: %d",
+> +				 j, irq, ret);
+> +			goto failed_init_c2h;
+> +		}
+> +		xdev->c2h_chans[j].irq = irq;
+> +		irq++;
+> +	}
+> +
+> +	/* config hardware IRQ registers */
+> +	ret = xdma_set_vector_reg(xdev, XDMA_IRQ_CHAN_VEC_NUM, 0,
+> +				  XDMA_CHAN_NUM(xdev));
+> +	if (ret) {
+> +		xdma_err(xdev, "failed to set channel vectors: %d", ret);
+> +		goto failed_init_c2h;
+> +	}
+> +
+> +	/* enable interrupt */
+> +	ret = xdma_write_reg(xdev, XDMA_IRQ_BASE, XDMA_IRQ_CHAN_INT_EN_W1S, ~0);
+> +	if (ret)
+> +		goto failed_init_c2h;
+> +
+> +	return 0;
+> +
+> +failed_init_c2h:
+> +	while (j--)
+> +		free_irq(xdev->c2h_chans[j].irq, &xdev->c2h_chans[j]);
+> +failed_init_h2c:
+> +	while (i--)
+> +		free_irq(xdev->h2c_chans[i].irq, &xdev->h2c_chans[i]);
+> +
+> +	return ret;
+> +}
+> +
+> +static bool xdma_filter_fn(struct dma_chan *chan, void *param)
+> +{
+> +	struct xdma_chan *xdma_chan = to_xdma_chan(chan);
+> +	struct xdma_chan_info *chan_info = param;
+> +
+> +	return chan_info->dir == xdma_chan->dir;
+> +}
+> +
+> +/**
+> + * xdma_remove - Driver remove function
+> + * @pdev: Pointer to the platform_device structure
+> + */
+> +static int xdma_remove(struct platform_device *pdev)
+> +{
+> +	struct xdma_device *xdev = platform_get_drvdata(pdev);
+> +
+> +	if (xdev->status & XDMA_DEV_STATUS_INIT_MSIX)
+> +		xdma_irq_fini(xdev);
+> +
+> +	if (xdev->status & XDMA_DEV_STATUS_REG_DMA)
+> +		dma_async_device_unregister(&xdev->dma_dev);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * xdma_probe - Driver probe function
+> + * @pdev: Pointer to the platform_device structure
+> + */
+> +static int xdma_probe(struct platform_device *pdev)
+> +{
+> +	struct xdma_platdata *pdata = dev_get_platdata(&pdev->dev);
+> +	struct xdma_device *xdev;
+> +	void __iomem *reg_base;
+> +	struct resource *res;
+> +	int ret = -ENODEV;
+> +
+> +	if (pdata->max_dma_channels > XDMA_MAX_CHANNELS) {
+> +		dev_err(&pdev->dev, "invalid max dma channels %d",
+> +			pdata->max_dma_channels);
+> +		return -EINVAL;
+> +	}
+> +
+> +	xdev = devm_kzalloc(&pdev->dev, sizeof(*xdev), GFP_KERNEL);
+> +	if (!xdev)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, xdev);
+> +	xdev->pdev = pdev;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> +	if (!res) {
+> +		xdma_err(xdev, "failed to get irq resource");
+> +		goto failed;
+> +	}
+> +	xdev->irq_start = res->start;
+> +	xdev->irq_num = res->end - res->start + 1;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res) {
+> +		xdma_err(xdev, "failed to get io resource");
+> +		goto failed;
+> +	}
+> +
+> +	reg_base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (!reg_base) {
+> +		xdma_err(xdev, "ioremap failed");
+> +		goto failed;
+> +	}
+> +
+> +	xdev->regmap = devm_regmap_init_mmio(&pdev->dev, reg_base,
+> +					     &xdma_regmap_config);
+> +	if (!xdev->regmap) {
+> +		xdma_err(xdev, "config regmap failed: %d", ret);
+> +		goto failed;
+> +	}
+> +	INIT_LIST_HEAD(&xdev->dma_dev.channels);
+> +
+> +	ret = xdma_config_channels(xdev, DMA_MEM_TO_DEV);
+> +	if (ret) {
+> +		xdma_err(xdev, "config H2C channels failed: %d", ret);
+> +		goto failed;
+> +	}
+> +
+> +	ret = xdma_config_channels(xdev, DMA_DEV_TO_MEM);
+> +	if (ret) {
+> +		xdma_err(xdev, "config C2H channels failed: %d", ret);
+> +		goto failed;
+> +	}
+> +
+> +	dma_cap_set(DMA_SLAVE, xdev->dma_dev.cap_mask);
+> +	dma_cap_set(DMA_PRIVATE, xdev->dma_dev.cap_mask);
+> +
+> +	xdev->dma_dev.dev = &pdev->dev;
+> +	xdev->dma_dev.device_free_chan_resources = xdma_free_chan_resources;
+> +	xdev->dma_dev.device_alloc_chan_resources = xdma_alloc_chan_resources;
+> +	xdev->dma_dev.device_tx_status = dma_cookie_status;
+> +	xdev->dma_dev.device_prep_slave_sg = xdma_prep_device_sg;
+> +	xdev->dma_dev.device_config = xdma_device_config;
+> +	xdev->dma_dev.device_issue_pending = xdma_issue_pending;
+> +	xdev->dma_dev.filter.map = pdata->device_map;
+> +	xdev->dma_dev.filter.mapcnt = pdata->device_map_cnt;
+> +	xdev->dma_dev.filter.fn = xdma_filter_fn;
+> +
+> +	ret = dma_async_device_register(&xdev->dma_dev);
+> +	if (ret) {
+> +		xdma_err(xdev, "failed to register Xilinx XDMA: %d", ret);
+> +		goto failed;
+> +	}
+> +	xdev->status |= XDMA_DEV_STATUS_REG_DMA;
+> +
+> +	ret = xdma_irq_init(xdev);
+> +	if (ret) {
+> +		xdma_err(xdev, "failed to init msix: %d", ret);
+> +		goto failed;
+> +	}
+> +	xdev->status |= XDMA_DEV_STATUS_INIT_MSIX;
+> +
+> +	return 0;
+> +
+> +failed:
+> +	xdma_remove(pdev);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct platform_device_id xdma_id_table[] = {
+> +	{ "xdma", 0},
+> +	{ },
+> +};
+> +
+> +static struct platform_driver xdma_driver = {
+> +	.driver		= {
+> +		.name = "xdma",
+> +	},
+> +	.id_table	= xdma_id_table,
+> +	.probe		= xdma_probe,
+> +	.remove		= xdma_remove,
+> +};
+> +
+> +module_platform_driver(xdma_driver);
 
-> Unfortunately I no longer have access to the (remote) Migo-R.
+who creates this platform device? Any reason why this is not a _real_
+device?
 
-There's more stuff in Japan, but that's a Jeff question...
+> +
+> +MODULE_DESCRIPTION("AMD XDMA driver");
+> +MODULE_AUTHOR("XRT Team <runtimeca39d@amd.com>");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/platform_data/amd_xdma.h b/include/linux/platform_data/amd_xdma.h
+> new file mode 100644
+> index 000000000000..b5e23e14bac8
+> --- /dev/null
+> +++ b/include/linux/platform_data/amd_xdma.h
+> @@ -0,0 +1,34 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/*
+> + * Copyright (C) 2022, Advanced Micro Devices, Inc.
+> + */
+> +
+> +#ifndef _PLATDATA_AMD_XDMA_H
+> +#define _PLATDATA_AMD_XDMA_H
+> +
+> +#include <linux/dmaengine.h>
+> +
+> +/**
+> + * struct xdma_chan_info - DMA channel information
+> + *	This information is used to match channel when request dma channel
+> + * @dir: Channel transfer direction
+> + */
+> +struct xdma_chan_info {
+> +	enum dma_transfer_direction dir;
+> +};
+> +
+> +#define XDMA_FILTER_PARAM(chan_info)	((void *)(chan_info))
+> +
+> +struct dma_slave_map;
+> +
+> +/**
+> + * struct xdma_platdata - platform specific data for XDMA engine
+> + * @max_dma_channels: Maximum dma channels in each direction
+> + */
+> +struct xdma_platdata {
+> +	u32 max_dma_channels;
+> +	u32 device_map_cnt;
+> +	struct dma_slave_map *device_map;
+> +};
+> +
+> +#endif /* _PLATDATA_AMD_XDMA_H */
+> -- 
+> 2.27.0
 
-Rob
---------------iAbKOt5glkmuQqPl0eO0N9M6
-Content-Type: application/gzip; name="linux-fullconfig.gz"
-Content-Disposition: attachment; filename="linux-fullconfig.gz"
-Content-Transfer-Encoding: base64
-
-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
-9L8AAA==
---------------iAbKOt5glkmuQqPl0eO0N9M6
-Content-Type: text/plain; charset=UTF-8; name="linux-miniconfig"
-Content-Disposition: attachment; filename="linux-miniconfig"
-Content-Transfer-Encoding: base64
-
-IyBtYWtlIEFSQ0g9c2ggYWxsbm9jb25maWcgS0NPTkZJR19BTExDT05GSUc9bGludXgtbWlu
-aWNvbmZpZwojIG1ha2UgQVJDSD1zaCAtaiAkKG5wcm9jKQojIGJvb3QgYXJjaC9zaC9ib290
-L3pJbWFnZQoKCiMgYXJjaGl0ZWN0dXJlIDAKQ09ORklHX0JJTkZNVF9FTEY9eQpDT05GSUdf
-QklORk1UX1NDUklQVD15CkNPTkZJR19OT19IWj15CkNPTkZJR19ISUdIX1JFU19USU1FUlM9
-eQpDT05GSUdfQkxLX0RFVj15CkNPTkZJR19CTEtfREVWX0lOSVRSRD15CkNPTkZJR19SRF9H
-WklQPXkKQ09ORklHX0JMS19ERVZfTE9PUD15CkNPTkZJR19FWFQ0X0ZTPXkKQ09ORklHX0VY
-VDRfVVNFX0ZPUl9FWFQyPXkKQ09ORklHX1ZGQVRfRlM9eQpDT05GSUdfRkFUX0RFRkFVTFRf
-VVRGOD15CkNPTkZJR19NSVNDX0ZJTEVTWVNURU1TPXkKQ09ORklHX1NRVUFTSEZTPXkKQ09O
-RklHX1NRVUFTSEZTX1hBVFRSPXkKQ09ORklHX1NRVUFTSEZTX1pMSUI9eQpDT05GSUdfREVW
-VE1QRlM9eQpDT05GSUdfREVWVE1QRlNfTU9VTlQ9eQpDT05GSUdfVE1QRlM9eQpDT05GSUdf
-VE1QRlNfUE9TSVhfQUNMPXkKQ09ORklHX05FVD15CkNPTkZJR19QQUNLRVQ9eQpDT05GSUdf
-VU5JWD15CkNPTkZJR19JTkVUPXkKQ09ORklHX0lQVjY9eQpDT05GSUdfTkVUREVWSUNFUz15
-CkNPTkZJR19ORVRfQ09SRT15CkNPTkZJR19ORVRDT05TT0xFPXkKQ09ORklHX0VUSEVSTkVU
-PXkKQ09ORklHX0NPTVBBVF8zMkJJVF9USU1FPXkKQ09ORklHX0VBUkxZX1BSSU5USz15CkNP
-TkZJR19JS0NPTkZJRz15CkNPTkZJR19JS0NPTkZJR19QUk9DPXkKCiMgYXJjaGl0ZWN0dXJl
-IHNwZWNpZmljCkNPTkZJR19DUFVfU1VCVFlQRV9TSDc3NTFSPXkKQ09ORklHX01NVT15CkNP
-TkZJR19WU1lTQ0FMTD15CkNPTkZJR19TSF9GUFU9eQpDT05GSUdfU0hfUlRTNzc1MVIyRD15
-CkNPTkZJR19SVFM3NzUxUjJEX1BMVVM9eQpDT05GSUdfU0VSSUFMX1NIX1NDST15CkNPTkZJ
-R19TRVJJQUxfU0hfU0NJX0NPTlNPTEU9eQpDT05GSUdfUENJPXkKQ09ORklHX05FVF9WRU5E
-T1JfUkVBTFRFSz15CkNPTkZJR184MTM5Q1A9eQpDT05GSUdfUENJPXkKQ09ORklHX0JMS19E
-RVZfU0Q9eQpDT05GSUdfQVRBPXkKQ09ORklHX0FUQV9TRkY9eQpDT05GSUdfQVRBX0JNRE1B
-PXkKQ09ORklHX1BBVEFfUExBVEZPUk09eQpDT05GSUdfQklORk1UX0VMRl9GRFBJQz15CkNP
-TkZJR19CSU5GTVRfRkxBVD15CgojIGFyY2hpdGVjdHVyZSBzcGVjaWZpYwpDT05GSUdfTU9E
-VUxFUz15CkNPTkZJR19NT0RVTEVfVU5MT0FEPXkKCkNPTkZJR19GU0NBQ0hFPW0KQ09ORklH
-X0NBQ0hFRklMRVM9bQoKQ09ORklHX01FTU9SWV9TVEFSVD0weDBjMDAwMDAwCg==
-
---------------iAbKOt5glkmuQqPl0eO0N9M6--
+-- 
+~Vinod

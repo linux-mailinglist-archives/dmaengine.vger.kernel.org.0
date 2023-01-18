@@ -2,67 +2,127 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA8196719B4
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Jan 2023 11:55:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45222671B00
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Jan 2023 12:45:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229696AbjARKza (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 18 Jan 2023 05:55:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47648 "EHLO
+        id S230188AbjARLoJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 18 Jan 2023 06:44:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230058AbjARKxH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 18 Jan 2023 05:53:07 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9675888751
-        for <dmaengine@vger.kernel.org>; Wed, 18 Jan 2023 02:02:16 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 25AB661749
-        for <dmaengine@vger.kernel.org>; Wed, 18 Jan 2023 10:02:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09ED1C433EF;
-        Wed, 18 Jan 2023 10:02:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674036135;
-        bh=/w+U1Nv7bIlZ/5ir9pk8sqhEBP5KoG+McaWLxjkXqeI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CkgHy0TySuURVxJptyZ0yzcC5dsB7A7q3cQZ7p86JyoXxPMHHLW7AFgU+9hq6CA7P
-         RZahjMLS/tew2lg9JAFJz4P2VHdKMQNKqDO//qmJDDIWiKbtAfx4zWJmAD+XkNs70w
-         PBQ2Od33E3c3G0w9+xOFTmLRh0us5uPZnU8mQu6/ooYFMnIwEdK01qoTGCQA97BmbS
-         164i+a4EPSDcpUYxz3sbW+HkBvITDnUBpiARLsbU3fasEIBUUIJollbYZO5oPsMDoK
-         Z5hA6xvxu+fb5x2P38kVUDxbgfyso+UkcZ3+owAb277a+MewZLdA2aBSUzQgoAmD0k
-         wJd5H1M3kR0Ww==
-Date:   Wed, 18 Jan 2023 15:32:11 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Harliman Liem <pliem@maxlinear.com>
-Cc:     mallikarjunax.reddy@linux.intel.com, dmaengine@vger.kernel.org,
-        linux-lgm-soc@maxlinear.com
-Subject: Re: [PATCH] dmaengine: lgm: Move DT parsing after initialization
-Message-ID: <Y8fDo3CTz+DSag1i@matsya>
-References: <afef6fc1ed20098b684e0d53737d69faf63c125f.1672887183.git.pliem@maxlinear.com>
+        with ESMTP id S230117AbjARLnw (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 18 Jan 2023 06:43:52 -0500
+Received: from mail-oa1-x2d.google.com (mail-oa1-x2d.google.com [IPv6:2001:4860:4864:20::2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 537CE654F3
+        for <dmaengine@vger.kernel.org>; Wed, 18 Jan 2023 03:02:21 -0800 (PST)
+Received: by mail-oa1-x2d.google.com with SMTP id 586e51a60fabf-1322d768ba7so35056509fac.5
+        for <dmaengine@vger.kernel.org>; Wed, 18 Jan 2023 03:02:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=landley-net.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KuI0iwHsMdHgi9UUhJbv/FF6Zx1hDWv0kF6EEdUlD2I=;
+        b=5PCGooyhPIEuUA8LfHpgz2E1NSo9q7mSLwwd+kP7a2WQx5oIObawC1SZ8b3GjlhI6w
+         k+aUwf08xYT06HES1GVAUttTfmtlU/+2mUQ+E6nwI3mvpykPVqpS3CT4T1OK8Y7wh8Lh
+         OxdivEq+CnvHPuPDLKxMirSIFn7kanNvD0azdCBrxVrZC626tljgU09Q5NwDlRdCl5Pm
+         h30BKW+O6Gpe2j8vZBVS7nQX0CZx9F+vnTsIKQmfF0oeOZkgBCg3IFGxtjTVee8Llq3v
+         VTgrTzM1eGIkuy0knsusfqmXW3O1e3iUrjIXv4sd1h2zvdReBrfi+vZn6Ejf/45OptwH
+         w5QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KuI0iwHsMdHgi9UUhJbv/FF6Zx1hDWv0kF6EEdUlD2I=;
+        b=becNsdmlUdIPjSRe/s/wKBMJYIRrTCG3Jlf0z2g0+4SE+47NRp6r1hL/iNW5vE8/+w
+         ukE4eVqQ3gmwZHXG+iPAnCr8ZyskZfytkJdDyxpoAVFH/PrLyCcxSmUFYWPOPXsRjuhQ
+         xyc2EwcuUWEQODth8ZKNvZyioswF5XqhjH10+qBDLz2A7Dy2BNxziJA9BK4Zkhh4VlWX
+         umUJNAq8Z7Nrd+MicCNQ3wGN8+R2rkGT1AwuTPos59ayDgwGktVAfHUsOgEofsXAGEel
+         e4fONDJbBl6TEen8CXCCfGVImIseIpgLtgPqqtLPHPDCdrwM6c5iqPToxuFChTyiHzuk
+         Yulw==
+X-Gm-Message-State: AFqh2kpx79IKoayZGJtJgbHuGak1JjTU2+sr4Ura9ha/lhuLpmvVSc+b
+        813lysxD1dn6L7Nc/7hKrQ2V2Q==
+X-Google-Smtp-Source: AMrXdXvlrp1Ed3XBrrhA3zCnrQ6Rbb/wKmg6UrVk+wIslhGo+AMwXBPpNO4DwySZY2+3rtlEwlTN+A==
+X-Received: by 2002:a05:6870:c190:b0:15e:cc77:1e6d with SMTP id h16-20020a056870c19000b0015ecc771e6dmr4364085oad.13.1674039741194;
+        Wed, 18 Jan 2023 03:02:21 -0800 (PST)
+Received: from ?IPV6:2607:fb91:120e:1c84:8038:3fff:fe9f:cbb4? ([2607:fb91:120e:1c84:8038:3fff:fe9f:cbb4])
+        by smtp.gmail.com with ESMTPSA id e19-20020a056871045300b001442fada152sm18099522oag.46.2023.01.18.03.02.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jan 2023 03:02:20 -0800 (PST)
+Message-ID: <efa6a8aa-466e-cfaa-0113-b85002af008e@landley.net>
+Date:   Wed, 18 Jan 2023 05:14:36 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <afef6fc1ed20098b684e0d53737d69faf63c125f.1672887183.git.pliem@maxlinear.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: remove arch/sh
+Content-Language: en-US
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-sh@vger.kernel.org
+References: <20230113062339.1909087-1-hch@lst.de>
+ <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
+ <20230116071306.GA15848@lst.de>
+ <9325a949-8d19-435a-50bd-9ebe0a432012@landley.net>
+ <CAMuHMdUJm5QvzH8hvqwvn9O6qSbzNOapabjw5nh9DJd0F55Zdg@mail.gmail.com>
+ <7329212f-b1a0-41eb-99b3-a56eb1d23138@landley.net>
+ <CAMuHMdXo3iR2C=CAaXO5tBRCncnQAAMR6BMPLOm_nBpFAeVhrA@mail.gmail.com>
+From:   Rob Landley <rob@landley.net>
+In-Reply-To: <CAMuHMdXo3iR2C=CAaXO5tBRCncnQAAMR6BMPLOm_nBpFAeVhrA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 05-01-23, 11:05, Peter Harliman Liem wrote:
-> ldma_cfg_init() will parse DT to retrieve certain configs.
-> However, that is called before ldma_dma_init_vXX(), which
-> will make some initialization to channel configs. It will
-> thus incorrectly overwrite certain configs that are declared
-> in DT.
+On 1/18/23 01:46, Geert Uytterhoeven wrote:
+> Again, I think you're talking about something different.
+> Does kexec work for you?
+
+Sorry, got woken up several hours early by sirens and flashy lights this morning
+(duplex on the corner caught fire, Austin has a LOT of emergency vehicles), been
+a bit underclocked all day.
+
+No, I haven't tried kexec on sh4. I'll add it to the todo heap.
+
+>> > I tried working my way up from 2.6.22, but gave up around 2.6.29.
+>> > Probably I should do this with r2d and qemu instead ;-)
+>>
+>> I have current running there. I've had current running there for years. Config
+>> attached...
+>>
+>> > Both r2d and landisk are SH7751.
+>>
+>> Cool. Shouldn't be hard to get landisk running current then.
 > 
-> To fix that, we move DT parsing after initialization.
-> Function name is renamed to better represent what it does.
+> Current kernels work fine on landisk with an old Debian userspace
+> on CF.  The 8139cp driver is a bit flaky: last time I tried nfsroot,
+> that didn't work well.
 
-Applied, thanks
+I've never had luck with NFS, I was using NBD. Hadn't noticed the flake but
+haven't stress tested it too hard either?
 
--- 
-~Vinod
+Mostly new userspace is what I'm testing...
+
+Rob

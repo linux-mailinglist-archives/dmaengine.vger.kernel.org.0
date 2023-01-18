@@ -2,127 +2,131 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45222671B00
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Jan 2023 12:45:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23086671C31
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Jan 2023 13:35:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230188AbjARLoJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 18 Jan 2023 06:44:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52926 "EHLO
+        id S230184AbjARMfZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 18 Jan 2023 07:35:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230117AbjARLnw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 18 Jan 2023 06:43:52 -0500
-Received: from mail-oa1-x2d.google.com (mail-oa1-x2d.google.com [IPv6:2001:4860:4864:20::2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 537CE654F3
-        for <dmaengine@vger.kernel.org>; Wed, 18 Jan 2023 03:02:21 -0800 (PST)
-Received: by mail-oa1-x2d.google.com with SMTP id 586e51a60fabf-1322d768ba7so35056509fac.5
-        for <dmaengine@vger.kernel.org>; Wed, 18 Jan 2023 03:02:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KuI0iwHsMdHgi9UUhJbv/FF6Zx1hDWv0kF6EEdUlD2I=;
-        b=5PCGooyhPIEuUA8LfHpgz2E1NSo9q7mSLwwd+kP7a2WQx5oIObawC1SZ8b3GjlhI6w
-         k+aUwf08xYT06HES1GVAUttTfmtlU/+2mUQ+E6nwI3mvpykPVqpS3CT4T1OK8Y7wh8Lh
-         OxdivEq+CnvHPuPDLKxMirSIFn7kanNvD0azdCBrxVrZC626tljgU09Q5NwDlRdCl5Pm
-         h30BKW+O6Gpe2j8vZBVS7nQX0CZx9F+vnTsIKQmfF0oeOZkgBCg3IFGxtjTVee8Llq3v
-         VTgrTzM1eGIkuy0knsusfqmXW3O1e3iUrjIXv4sd1h2zvdReBrfi+vZn6Ejf/45OptwH
-         w5QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KuI0iwHsMdHgi9UUhJbv/FF6Zx1hDWv0kF6EEdUlD2I=;
-        b=becNsdmlUdIPjSRe/s/wKBMJYIRrTCG3Jlf0z2g0+4SE+47NRp6r1hL/iNW5vE8/+w
-         ukE4eVqQ3gmwZHXG+iPAnCr8ZyskZfytkJdDyxpoAVFH/PrLyCcxSmUFYWPOPXsRjuhQ
-         xyc2EwcuUWEQODth8ZKNvZyioswF5XqhjH10+qBDLz2A7Dy2BNxziJA9BK4Zkhh4VlWX
-         umUJNAq8Z7Nrd+MicCNQ3wGN8+R2rkGT1AwuTPos59ayDgwGktVAfHUsOgEofsXAGEel
-         e4fONDJbBl6TEen8CXCCfGVImIseIpgLtgPqqtLPHPDCdrwM6c5iqPToxuFChTyiHzuk
-         Yulw==
-X-Gm-Message-State: AFqh2kpx79IKoayZGJtJgbHuGak1JjTU2+sr4Ura9ha/lhuLpmvVSc+b
-        813lysxD1dn6L7Nc/7hKrQ2V2Q==
-X-Google-Smtp-Source: AMrXdXvlrp1Ed3XBrrhA3zCnrQ6Rbb/wKmg6UrVk+wIslhGo+AMwXBPpNO4DwySZY2+3rtlEwlTN+A==
-X-Received: by 2002:a05:6870:c190:b0:15e:cc77:1e6d with SMTP id h16-20020a056870c19000b0015ecc771e6dmr4364085oad.13.1674039741194;
-        Wed, 18 Jan 2023 03:02:21 -0800 (PST)
-Received: from ?IPV6:2607:fb91:120e:1c84:8038:3fff:fe9f:cbb4? ([2607:fb91:120e:1c84:8038:3fff:fe9f:cbb4])
-        by smtp.gmail.com with ESMTPSA id e19-20020a056871045300b001442fada152sm18099522oag.46.2023.01.18.03.02.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jan 2023 03:02:20 -0800 (PST)
-Message-ID: <efa6a8aa-466e-cfaa-0113-b85002af008e@landley.net>
-Date:   Wed, 18 Jan 2023 05:14:36 -0600
+        with ESMTP id S230500AbjARMe7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 18 Jan 2023 07:34:59 -0500
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2061d.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e8d::61d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 812B241B56;
+        Wed, 18 Jan 2023 03:58:23 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jgonAsIU9CSzV0TlETtT70HRiSYpR49irjfRw5w9Rf5Ssic3fNrMHN8RLEJrTO+c464oBSfuRddbEH6i5PDf+OP4W3rCJlvrK0dIBQ6zQiDhk5BsOPWzd5+5zHwTyL+aZgubgdFpuAjCyZ8TeJw8ALUIbhHhawTv+D3FcWYK70UVRf5AOb1K019NPhSWf29ke+bY/CF6uSL72+s4NM4eB1NvuhZGm0qyGDqGehD3ONNvkP0hPmHdmpTCJ/mf52Rr5a8OVvo6j/71BrwXm/jlZeCJ0FQg9nfQ15uSVqTFn8JrJ/qihn7XCsxY9c15V4NuNa0GRgMynSbwJQvVRF1U2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KBZx2EpcCn2Z+gHcq04DcVg9Uw3JU7K3xInL7Jl9cBs=;
+ b=G5QkbHqXTjcmrPH5FB+CXzk4qETvq9Cloxc07ODPIr9lhlSOu1cTFbfRz0TdeHuEdwcc/ywVB0rMkzRWNhCoQafBXnjLQkhnZ6hxWwbrHBN8VdIceY+bJ7yiy1kzSeXmT5MdIt+T8pvzVX4dXEIpIyEuHQavgTHVCDXqD2zJhle/3X44qdAHvMiB1YJue+jqaQu+ESROsJoFUvUy1oK+1/mIbM5LWDNJG72W9m1JHHWxV09mXJka3gknC3T8jwPJ4T6zRgu/3IB0YnmASc0dOf9xjQj+Pz3fDnrLlVBVmzmexrpF+7SdyoVyaeJ4JLXQ2FyjRmWdCODe+CezpcdwXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KBZx2EpcCn2Z+gHcq04DcVg9Uw3JU7K3xInL7Jl9cBs=;
+ b=orOGLTR0v57QCGLwHd3mQ+T5JPGI8BsZ40+vkc1yutSdrqehp9p/Ruy9ajP9CAl493KF6P+aGuev1HTw62ox6XEI0ualIXauSney1IP8xVASErW0Vmv/ZwVAbLD2Utj3uor1aaY1Bf1jT9Wc9lA/7ZxJ+GoMZmmq8gFeglmBSzQigBGsAEQ6gFf1tt8j0BkTmIcI8MD9rQlrW2G8cCIWQt73C2PozRRA1hTxVA4cqdPQqoW6NpXdbQtZfrZRia7RtzpWmm4Jrh4w162yiP5qtt5phE3X4ikyCTxdX8hSjyx8s8DN72NITVseOpz+TdAZu5Xs3D65dfZVI7vT5v0EKw==
+Received: from DS7PR05CA0069.namprd05.prod.outlook.com (2603:10b6:8:57::21) by
+ MW4PR12MB7167.namprd12.prod.outlook.com (2603:10b6:303:225::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5986.23; Wed, 18 Jan
+ 2023 11:58:18 +0000
+Received: from DM6NAM11FT033.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:8:57:cafe::1a) by DS7PR05CA0069.outlook.office365.com
+ (2603:10b6:8:57::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6023.12 via Frontend
+ Transport; Wed, 18 Jan 2023 11:58:17 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ DM6NAM11FT033.mail.protection.outlook.com (10.13.172.221) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6002.13 via Frontend Transport; Wed, 18 Jan 2023 11:58:17 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Wed, 18 Jan
+ 2023 03:58:09 -0800
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Wed, 18 Jan
+ 2023 03:58:08 -0800
+Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.14) by mail.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server id 15.2.986.36 via Frontend
+ Transport; Wed, 18 Jan 2023 03:58:06 -0800
+From:   Akhil R <akhilrajeev@nvidia.com>
+To:     <ldewangan@nvidia.com>, <jonathanh@nvidia.com>, <vkoul@kernel.org>,
+        <thierry.reding@gmail.com>, <p.zabel@pengutronix.de>,
+        <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <akhilrajeev@nvidia.com>
+Subject: [PATCH] dmaengine: tegra: Fix memory leak in terminate_all()
+Date:   Wed, 18 Jan 2023 17:28:01 +0530
+Message-ID: <20230118115801.15210-1-akhilrajeev@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: remove arch/sh
-Content-Language: en-US
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-sh@vger.kernel.org
-References: <20230113062339.1909087-1-hch@lst.de>
- <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
- <20230116071306.GA15848@lst.de>
- <9325a949-8d19-435a-50bd-9ebe0a432012@landley.net>
- <CAMuHMdUJm5QvzH8hvqwvn9O6qSbzNOapabjw5nh9DJd0F55Zdg@mail.gmail.com>
- <7329212f-b1a0-41eb-99b3-a56eb1d23138@landley.net>
- <CAMuHMdXo3iR2C=CAaXO5tBRCncnQAAMR6BMPLOm_nBpFAeVhrA@mail.gmail.com>
-From:   Rob Landley <rob@landley.net>
-In-Reply-To: <CAMuHMdXo3iR2C=CAaXO5tBRCncnQAAMR6BMPLOm_nBpFAeVhrA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT033:EE_|MW4PR12MB7167:EE_
+X-MS-Office365-Filtering-Correlation-Id: af9a03b2-6368-4c34-1cb0-08daf94b499b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: x3NrsvVH+0WeyPeNdBxbxc5s3Bi23po84LTvxGd5U+8CvRSmVYDZ+VSQDZ/q1sJuLwA8+lFBv10c2OlbsmEptP+zPU58PAaj1krRVFDlhZtQBbwqsyHBZKQdvKUujPjKbz74H8pA41HXQs/ISsjxLCo2NKljWy8DzkW6/AjQAm0WGAYYKSg/gey5XQmy3mGO5ByN5hM5T2oNEgZVibtEKm8E7rxQP+FookH7igIhuy5VnM6PW9x/0RxFXLwIvm46dbEbPTHkSQZgKgkJ6cNSOj7AwBPmc9A/nkCVIh8NJMZQI5YRHGluAkPEO4RF+mTBWpgcqiZY6W9sFIi+cEaaH3zupFk4tGEw7WXEtP1xngcjLg/MtGO7MJSNHCwEIyI/GEtNCUEoUPsWhEKhO3njhw/XVfgpdL8kJy8igcTg8gzVUZ+7U6dKmmmxJYnWgVkt2UZNexPTOjOu4dB6dhLl3s7SMd10wbNtvo58RH5H7Rw5EjY3PUFGwDgrNVe2UWoluqjq0EQW1pru/oi+EXxUXuj4Ftdn1DmiOPaktf5HdMLP472gvJWzvxziGkKwicQjii3gAaZA6TAa18U+erXI/ZgVUkhkk3GcuvwhdJeXyCAGhLEGJb5p71HdXX51tJrZnlnHJKmoEIlcR8yHrxDawTDZlfwf1mdYSfskM2RyQNcyq03KeITr/8pLPD4OMF1CCqX07vTYvTCo3HDk5yErXQ==
+X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(136003)(346002)(39860400002)(376002)(396003)(451199015)(36840700001)(46966006)(40470700004)(82740400003)(7636003)(36860700001)(356005)(8676002)(86362001)(4744005)(2906002)(8936002)(5660300002)(4326008)(70206006)(70586007)(41300700001)(82310400005)(26005)(426003)(107886003)(336012)(40480700001)(2616005)(1076003)(47076005)(186003)(478600001)(316002)(7696005)(40460700003)(6666004)(110136005)(36756003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jan 2023 11:58:17.7705
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: af9a03b2-6368-4c34-1cb0-08daf94b499b
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT033.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7167
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        SPF_HELO_PASS,SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 1/18/23 01:46, Geert Uytterhoeven wrote:
-> Again, I think you're talking about something different.
-> Does kexec work for you?
+Terminate vdesc when terminating an ongoing transfer.
+This will ensure that the vdesc is present in the desc_terminated list
+The descriptor will be freed later in desc_free_list().
 
-Sorry, got woken up several hours early by sirens and flashy lights this morning
-(duplex on the corner caught fire, Austin has a LOT of emergency vehicles), been
-a bit underclocked all day.
+This fixes the memory leaks which can happen when terminating an
+ongoing transfer.
 
-No, I haven't tried kexec on sh4. I'll add it to the todo heap.
+Fixes: ee17028009d4 ("dmaengine: tegra: Add tegra gpcdma driver")
+Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+---
+ drivers/dma/tegra186-gpc-dma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
->> > I tried working my way up from 2.6.22, but gave up around 2.6.29.
->> > Probably I should do this with r2d and qemu instead ;-)
->>
->> I have current running there. I've had current running there for years. Config
->> attached...
->>
->> > Both r2d and landisk are SH7751.
->>
->> Cool. Shouldn't be hard to get landisk running current then.
-> 
-> Current kernels work fine on landisk with an old Debian userspace
-> on CF.  The 8139cp driver is a bit flaky: last time I tried nfsroot,
-> that didn't work well.
+diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-dma.c
+index 1d1180db6d4e..8f67f453a492 100644
+--- a/drivers/dma/tegra186-gpc-dma.c
++++ b/drivers/dma/tegra186-gpc-dma.c
+@@ -711,6 +711,7 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+ 			return err;
+ 		}
+ 
++		vchan_terminate_vdesc(&tdc->dma_desc->vd);
+ 		tegra_dma_disable(tdc);
+ 		tdc->dma_desc = NULL;
+ 	}
+-- 
+2.17.1
 
-I've never had luck with NFS, I was using NBD. Hadn't noticed the flake but
-haven't stress tested it too hard either?
-
-Mostly new userspace is what I'm testing...
-
-Rob

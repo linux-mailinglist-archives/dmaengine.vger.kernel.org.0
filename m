@@ -2,50 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 140FE671493
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Jan 2023 07:58:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C051671518
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Jan 2023 08:35:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230045AbjARG60 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 18 Jan 2023 01:58:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56116 "EHLO
+        id S229946AbjARHfE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 18 Jan 2023 02:35:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229819AbjARG5j (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 18 Jan 2023 01:57:39 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EFCA63E05;
-        Tue, 17 Jan 2023 22:29:55 -0800 (PST)
+        with ESMTP id S230058AbjARHeR (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 18 Jan 2023 02:34:17 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8863034C17
+        for <dmaengine@vger.kernel.org>; Tue, 17 Jan 2023 22:50:39 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6F325615AA;
-        Wed, 18 Jan 2023 06:29:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB4DC433D2;
-        Wed, 18 Jan 2023 06:29:39 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3A5D4B81A16
+        for <dmaengine@vger.kernel.org>; Wed, 18 Jan 2023 06:50:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B12EC433D2;
+        Wed, 18 Jan 2023 06:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674023379;
-        bh=jTAtI1meqFg4A1MDMWrkwGfJrx8IetaItUUhiM5XP7s=;
+        s=k20201202; t=1674024636;
+        bh=3Aiht0UF2mbsB7ZfcTBAKn+r8U0tzcv0M4oXNv/layE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rw0IDKyFoQxUlNX+pSkSdIBdBRfJz/1UjBUXRFdDKP7ykkumrHyN0X3G4Q5Ancekb
-         8kclUtiki+/uXvRJBN9j82v3fp96LYDVFcuS5qgAd5SWk3cDvOxUU1GkWShItsRmbM
-         hgv7PwIQ6iFTm6FB8/CG1ocnSlFy0/dMP1iq51Xdxxb8H/tOBufMuIcrycX5iBJBEA
-         evDrZv5eikro5z0yvM/OJNdH7OBTi6xW+j3rKdW+XdSmYVS9tMCeUeXqkCirkKujR8
-         qIzKTd6OkNJpGCePqSf579kx56nKe6qqMybX30xFgBJff6ykHP32D0gx710Vwylva6
-         E0+R8auaeI5gA==
-Date:   Wed, 18 Jan 2023 11:59:35 +0530
+        b=ClyugwJ76G4MS4ZkZf/lw9mNyv3sTsae73cKmQ20x2zgcZEya3emE6VVCHy1CM0Cf
+         nd1kMo+7qEtwwdjQNb+ix2AHRAAwQup6D61ujmAnbGwVcg1vTuZQO5c9ZjkaoAb7SB
+         htGxa7x8WH+qeIz25wAUx2tn4zmPKQCkAh312CNlswC0jdmdm4IgxZbA3p3/coXWd0
+         Ymbj7/Sw8SpSM9CgHJwMFdDu5ppsweULk96vs6Q3yQeFO3XudgN/n5f07dTp9aFmbK
+         22vE8Lld/c31JWa6oP81BTXcEpqkr4evnxn4+KxndQfjPSA2J/clVYqkr9hMWqcpMO
+         sDnwtrVe4ReVA==
+Date:   Wed, 18 Jan 2023 12:20:32 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Lizhi Hou <lizhi.hou@amd.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        max.zhen@amd.com, sonal.santan@amd.com, larry.liu@amd.com,
-        brian.xu@amd.com, tumic@gpxsee.org
-Subject: Re: [RESEND PATCH V11 XDMA 2/2] dmaengine: xilinx: xdma: Add user
- logic interrupt support
-Message-ID: <Y8eRz2sXrnCtSib+@matsya>
-References: <1673988842-43631-1-git-send-email-lizhi.hou@amd.com>
- <1673988842-43631-3-git-send-email-lizhi.hou@amd.com>
+To:     Eric Pilmore <epilmore@gigaio.com>
+Cc:     "Mehta, Sanju" <sanju.mehta@amd.com>, dmaengine@vger.kernel.org
+Subject: Re: [ptdma] pt_core_execute_cmd() from interrupt context results in
+ panic
+Message-ID: <Y8eWuJU5KlTMzRN4@matsya>
+References: <CAOQPn8vzL7h9K8pbCbho-7vNDMhjaufPoGUnTUUiWNfbz6y_Pw@mail.gmail.com>
+ <CAOQPn8s+jjuowgsY10T0_uCDB3mK2B730AXntozVVzjnMjoH4g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1673988842-43631-3-git-send-email-lizhi.hou@amd.com>
+In-Reply-To: <CAOQPn8s+jjuowgsY10T0_uCDB3mK2B730AXntozVVzjnMjoH4g@mail.gmail.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -55,182 +53,73 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 17-01-23, 12:54, Lizhi Hou wrote:
-> The Xilinx DMA/Bridge Subsystem for PCIe (XDMA) provides up to 16 user
-> interrupt wires to user logic that generate interrupts to the host.
-> This patch adds APIs to enable/disable user logic interrupt for a given
-> interrupt wire index.
+On 17-01-23, 10:00, Eric Pilmore wrote:
+> On Wed, Dec 28, 2022 at 1:41 AM Eric Pilmore <epilmore@gigaio.com> wrote:
+> >
+> > Wondering if this might be a known issue in the ptdma DMA driver. Did
+> > not see anything obvious in bugzilla.
+> >
+> > I am doing some testing of the ntb_netdev module in conjunction with
+> > the ptdma module as the supporting DMA engines on an AMD Rome CPU
+> > based platform. The ptdma driver being used is the latest code in the
+> > Linux (6.2) repository.
+> >
+> > There are no issues in doing simple ping operations across the
+> > ntb_netdev (TCP/IP) interface, including sending large packets which
+> > we know will cause the respective DMA engines to be utilized. However,
+> > while doing iperf testing across the ntb_netdev interface, we have
+> > encountered a panic:
+> >
+> > [ 1626.776583] RIP: 0010:mutex_spin_on_owner+0x3b/0xa0
+> > ....
+> > [ 1626.776588] Call Trace:
+> > [ 1626.776588]  <IRQ>
+> > [ 1626.776589]  __mutex_lock.isra.7+0xad/0x4c0
+> > [ 1626.776589]  ? ntb_transport_rx_enqueue+0x127/0x200 [ntb_transport]
+> > [ 1626.776589]  __mutex_lock_slowpath+0x13/0x20
+> > [ 1626.776590]  ? __mutex_lock_slowpath+0x13/0x20
+> > [ 1626.776590]  mutex_lock+0x2f/0x40
+> > [ 1626.776590]  pt_core_perform_passthru+0xc5/0x160 [ptdma]
+> > [ 1626.776591]  pt_cmd_callback.part.7+0x262/0x2d0 [ptdma]
+> > [ 1626.776591]  pt_cmd_callback+0x13/0x20 [ptdma]
+> > [ 1626.776591]  pt_check_status_trans+0xc3/0x120 [ptdma]
+> > [ 1626.776592]  pt_core_irq_handler+0x36/0x60 [ptdma]
+> > [ 1626.776592]  __handle_irq_event_percpu+0x44/0x1a0
+> > [ 1626.776592]  handle_irq_event_percpu+0x32/0x80
+> > [ 1626.776593]  handle_irq_event+0x3b/0x60
+> > [ 1626.776593]  handle_edge_irq+0x83/0x1a0
+> > [ 1626.776593]  handle_irq+0x20/0x30
+> > [ 1626.776593]  do_IRQ+0x50/0xe0
+> > [ 1626.776594]  common_interrupt+0xf/0xf
+> >
+> > The issue is that the ptdma handlers are getting called in interrupt
+> > context, and ultimately the flow leads to pt_core_execute_cmd() which
+> > will attempt to grab a mutex, which is really not appropriate in
+> > interrupt context. I have temporarily changed the lock in question to
+> > a spinlock, which seems to have resolved the issue. However, I don't
+> > know enough about the ptdma driver to really know if this is the
+> > desired repair.
+> >
+> > Hoping that others with more knowledge in this driver might be able to
+> > comment as to the validity of this bug and whether a spinlock is the
+> > correct approach here. If it is, I would be happy to submit a patch,
+
+It is the right approach.. ISR needs to push descriptors and yes you
+need to hold the lock for that..
+
+Pls do send the patch, looks like AMD folks didnt bother
+
+> > otherwise I can just file a bugzilla for the module owner to make a
+> > more appropriate fix.
+> >
+> > Thanks for any advice.
+> >
+> > Eric Pilmore
 > 
-> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
-> Signed-off-by: Sonal Santan <sonal.santan@amd.com>
-> Signed-off-by: Max Zhen <max.zhen@amd.com>
-> Signed-off-by: Brian Xu <brian.xu@amd.com>
-> Tested-by: Martin Tuma <tumic@gpxsee.org>
-> ---
->  MAINTAINERS                  |  1 +
->  drivers/dma/xilinx/xdma.c    | 85 ++++++++++++++++++++++++++++++++++++
->  include/linux/dma/amd_xdma.h | 16 +++++++
->  3 files changed, 102 insertions(+)
->  create mode 100644 include/linux/dma/amd_xdma.h
+> I haven't heard any further on this, so I filed a bugzilla so it
+> doesn't get lost.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d598c4e23901..eaf6590dda19 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -22583,6 +22583,7 @@ L:	dmaengine@vger.kernel.org
->  S:	Supported
->  F:	drivers/dma/xilinx/xdma-regs.h
->  F:	drivers/dma/xilinx/xdma.c
-> +F:	include/linux/dma/amd_xdma.h
->  F:	include/linux/platform_data/amd_xdma.h
->  
->  XILINX ZYNQMP DPDMA DRIVER
-> diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
-> index 118528295fb7..846f10317bba 100644
-> --- a/drivers/dma/xilinx/xdma.c
-> +++ b/drivers/dma/xilinx/xdma.c
-> @@ -25,6 +25,7 @@
->  #include <linux/dmapool.h>
->  #include <linux/regmap.h>
->  #include <linux/dmaengine.h>
-> +#include <linux/dma/amd_xdma.h>
->  #include <linux/platform_device.h>
->  #include <linux/platform_data/amd_xdma.h>
->  #include <linux/dma-mapping.h>
-> @@ -713,6 +714,7 @@ static int xdma_set_vector_reg(struct xdma_device *xdev, u32 vec_tbl_start,
->  static int xdma_irq_init(struct xdma_device *xdev)
->  {
->  	u32 irq = xdev->irq_start;
-> +	u32 user_irq_start;
->  	int i, j, ret;
->  
->  	/* return failure if there are not enough IRQs */
-> @@ -755,6 +757,18 @@ static int xdma_irq_init(struct xdma_device *xdev)
->  		goto failed_init_c2h;
->  	}
->  
-> +	/* config user IRQ registers if needed */
-> +	user_irq_start = XDMA_CHAN_NUM(xdev);
-> +	if (xdev->irq_num > user_irq_start) {
-> +		ret = xdma_set_vector_reg(xdev, XDMA_IRQ_USER_VEC_NUM,
-> +					  user_irq_start,
-> +					  xdev->irq_num - user_irq_start);
-> +		if (ret) {
-> +			xdma_err(xdev, "failed to set user vectors: %d", ret);
-> +			goto failed_init_c2h;
-> +		}
-> +	}
-> +
->  	/* enable interrupt */
->  	ret = xdma_write_reg(xdev, XDMA_IRQ_BASE, XDMA_IRQ_CHAN_INT_EN_W1S, ~0);
->  	if (ret)
-> @@ -780,6 +794,77 @@ static bool xdma_filter_fn(struct dma_chan *chan, void *param)
->  	return chan_info->dir == xdma_chan->dir;
->  }
->  
-> +/**
-> + * xdma_disable_user_irq - Disable user interrupt
-> + * @pdev: Pointer to the platform_device structure
-> + * @irq_num: System IRQ number
-> + */
-> +void xdma_disable_user_irq(struct platform_device *pdev, u32 irq_num)
-> +{
-> +	struct xdma_device *xdev = platform_get_drvdata(pdev);
-> +	u32 user_irq_index;
-> +
-> +	user_irq_index = irq_num - xdev->irq_start;
-> +	if (user_irq_index < XDMA_CHAN_NUM(xdev) ||
-> +	    user_irq_index >= xdev->irq_num) {
-> +		xdma_err(xdev, "invalid user irq number");
-> +		return;
-> +	}
-> +	user_irq_index -= XDMA_CHAN_NUM(xdev);
-> +
-> +	xdma_write_reg(xdev, XDMA_IRQ_BASE, XDMA_IRQ_USER_INT_EN_W1C,
-> +		       (1 << user_irq_index));
-> +}
-> +EXPORT_SYMBOL(xdma_disable_user_irq);
-> +
-> +/**
-> + * xdma_enable_user_irq - Enable user logic interrupt
-> + * @pdev: Pointer to the platform_device structure
-> + * @irq_num: System IRQ number
-> + */
-> +int xdma_enable_user_irq(struct platform_device *pdev, u32 irq_num)
-> +{
-> +	struct xdma_device *xdev = platform_get_drvdata(pdev);
-> +	u32 user_irq_index;
-> +	int ret;
-> +
-> +	user_irq_index = irq_num - xdev->irq_start;
-> +	if (user_irq_index < XDMA_CHAN_NUM(xdev) ||
-> +	    user_irq_index >= xdev->irq_num) {
-> +		xdma_err(xdev, "invalid user irq number");
-> +		return -EINVAL;
-> +	}
-> +	user_irq_index -= XDMA_CHAN_NUM(xdev);
-> +
-> +	ret = xdma_write_reg(xdev, XDMA_IRQ_BASE, XDMA_IRQ_USER_INT_EN_W1S,
-> +			     (1 << user_irq_index));
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(xdma_enable_user_irq);
-> +
-> +/**
-> + * xdma_get_user_irq - Get system IRQ number
-> + * @pdev: Pointer to the platform_device structure
-> + * @user_irq_index: User logic IRQ wire index
-> + *
-> + * Return: The system IRQ number allocated for the given wire index.
-> + */
-> +int xdma_get_user_irq(struct platform_device *pdev, u32 user_irq_index)
-> +{
-> +	struct xdma_device *xdev = platform_get_drvdata(pdev);
-> +
-> +	if (XDMA_CHAN_NUM(xdev) + user_irq_index >= xdev->irq_num) {
-> +		xdma_err(xdev, "invalid user irq index");
-> +		return -EINVAL;
-> +	}
-> +
-> +	return xdev->irq_start + XDMA_CHAN_NUM(xdev) + user_irq_index;
-> +}
-> +EXPORT_SYMBOL(xdma_get_user_irq);
-> +
->  /**
->   * xdma_remove - Driver remove function
->   * @pdev: Pointer to the platform_device structure
-> diff --git a/include/linux/dma/amd_xdma.h b/include/linux/dma/amd_xdma.h
-> new file mode 100644
-> index 000000000000..ceba69ed7cb4
-> --- /dev/null
-> +++ b/include/linux/dma/amd_xdma.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/*
-> + * Copyright (C) 2022, Advanced Micro Devices, Inc.
-> + */
-> +
-> +#ifndef _DMAENGINE_AMD_XDMA_H
-> +#define _DMAENGINE_AMD_XDMA_H
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/platform_device.h>
-> +
-> +int xdma_enable_user_irq(struct platform_device *pdev, u32 irq_num);
-> +void xdma_disable_user_irq(struct platform_device *pdev, u32 irq_num);
-> +int xdma_get_user_irq(struct platform_device *pdev, u32 user_irq_index);
-
-who is the user of these APIs? It is not clear to me how this is to be
-used...
-
-
-> +
-> +#endif /* _DMAENGINE_AMD_XDMA_H */
-> -- 
-> 2.27.0
+> Eric
 
 -- 
 ~Vinod

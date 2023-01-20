@@ -2,36 +2,36 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E782F676192
-	for <lists+dmaengine@lfdr.de>; Sat, 21 Jan 2023 00:29:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58B366761C3
+	for <lists+dmaengine@lfdr.de>; Sat, 21 Jan 2023 00:54:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229587AbjATX31 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 20 Jan 2023 18:29:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33014 "EHLO
+        id S229509AbjATXyz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 20 Jan 2023 18:54:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229760AbjATX30 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 20 Jan 2023 18:29:26 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAEC7762E0;
-        Fri, 20 Jan 2023 15:29:23 -0800 (PST)
+        with ESMTP id S229500AbjATXyy (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 20 Jan 2023 18:54:54 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADFD81449C;
+        Fri, 20 Jan 2023 15:54:53 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4ABAA620DD;
-        Fri, 20 Jan 2023 23:29:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68A9DC4339C;
-        Fri, 20 Jan 2023 23:29:22 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 58D33B82A89;
+        Fri, 20 Jan 2023 23:54:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A73C3C433EF;
+        Fri, 20 Jan 2023 23:54:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674257362;
-        bh=OzMy1pibNfoV7yhVZ0QHEUMQPHCPIA6G8Bauyor+91I=;
+        s=k20201202; t=1674258890;
+        bh=iqOP9lSV+EeLcJNsAsjglTNHC5XAcXVWOnjm6GTY4Ao=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=BerBuk9proGIBBa8RkZ4pRzMSZMugrs7axcI6QMTSwpLPqFMCfGYl+h8Bko5U31Z/
-         pXNPJEdrVjuE7LXtm6Lr0HlLCF/Cy3ris3Hun6Xc7DBDA7dZV/YAN9BnAi3ehgXCs2
-         cG/VhX8tk/eOL2TzZVYpnEL65ptomOkAsFc+KMgGnxqBLvIv9T5Vyh2IG7DU67TNfP
-         iV9oXCVvthFy8NfyWbjT8gvL494BUjfUlYuGt1B5i+m3akC2itTGYEPIfl014U1Upm
-         MH0gHDjKBmVCmrl8/Ln0iFfv/xulykbAl+/73cgaZYsaigNEV3mStA+xo7Y5zdJkuF
-         1Vlg5/M4NuJpw==
-Date:   Fri, 20 Jan 2023 17:29:20 -0600
+        b=fNx76M08EivqBfJbGMukrlvh4EqFOFpmEMiDwWF7NePATZGCS7s5C8yCLEzWNqZF+
+         C1MwY2a9/xN+JejzMVY46RFd85ZmpwjZ5oj0QaqeWv/NB8IY+DjozSksPN3pFE/wPl
+         KY5EcEZ9R5lhKB6uJJUyNZhEQfQytEprNdVxcMS6atz0iYzo2agwamjfHSmwv8nOn+
+         86OYSkjsICiZ5RPD8KoSUHkhSZafUH/xI2LMT+d9IdfDafmn17LQadoU0Yqtm6odtu
+         O1up+U2j8c2W/RdIwaESoTYVJzTVrviyr9NS2NJmG/S4jfmG8Mm0BehQz0Htx0iiu/
+         y1zsgL7Xz4oLA==
+Date:   Fri, 20 Jan 2023 17:54:49 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
@@ -50,13 +50,12 @@ Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 08/27] dmaengine: dw-edma: Add PCIe bus address getter
- to the remote EP glue-driver
-Message-ID: <20230120232920.GA681120@bhelgaas>
+Subject: Re: [PATCH v9 09/27] dmaengine: dw-edma: Drop chancnt initialization
+Message-ID: <20230120235449.GA682361@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230113171409.30470-9-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20230113171409.30470-10-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -66,64 +65,44 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Jan 13, 2023 at 08:13:50PM +0300, Serge Semin wrote:
-> In general the Synopsys PCIe EndPoint IP prototype kit can be attached to
-> a PCIe bus with any PCIe Host controller including to the one with
-> distinctive from CPU address space. Due to that we need to make sure that
-> the source and destination addresses of the DMA-slave devices are properly
-> converted to the PCIe bus address space, otherwise the DMA transaction
-> will not only work as expected, but may cause the memory corruption with
-> subsequent system crash. Let's do that by introducing a new
-> dw_edma_pcie_address() method defined in the dw-edma-pcie.c, which will
-> perform the denoted translation by using the pcibios_resource_to_bus()
-> method.
+On Fri, Jan 13, 2023 at 08:13:51PM +0300, Serge Semin wrote:
+> DMA device drivers aren't supposed to initialize the dma_device.chancnt
+> field. It will be done by the DMA-engine core in accordance with number of
+> added virtual DMA-channels. Pre-initializing it with some value causes
+> having a wrong number of channels printed in the device summary.
 > 
-> Fixes: 41aaff2a2ac0 ("dmaengine: Add Synopsys eDMA IP PCIe glue-logic")
+> Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > Acked-by: Vinod Koul <vkoul@kernel.org>
-> 
 > ---
+>  drivers/dma/dw-edma/dw-edma-core.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> Note this patch depends on the patch "dmaengine: dw-edma: Add CPU to PCIe
-> bus address translation" from this series.
-> ---
->  drivers/dma/dw-edma/dw-edma-pcie.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> index 04c95cba1244..f530bacfd716 100644
-> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> @@ -95,8 +95,23 @@ static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
->  	return pci_irq_vector(to_pci_dev(dev), nr);
->  }
->  
-> +static u64 dw_edma_pcie_address(struct device *dev, phys_addr_t cpu_addr)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	struct pci_bus_region region;
-> +	struct resource res = {
-> +		.flags = IORESOURCE_MEM,
-> +		.start = cpu_addr,
-> +		.end = cpu_addr,
-> +	};
-> +
-> +	pcibios_resource_to_bus(pdev->bus, &region, &res);
-> +	return region.start;
-> +}
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index 6c9f95a8e397..ecd3e8f7ac5d 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -817,7 +817,6 @@ static int dw_edma_channel_setup(struct dw_edma *dw, bool write,
+>  	dma->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+>  	dma->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+>  	dma->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
+> -	dma->chancnt = cnt;
 
-This doesn't look DW-specific.  Do you expect other implementations
-that are specific, or could this be a generic function that shares
-some implementation with pci_bus_address()?
+Did you look for other instances of this bug?  There are several other
+places that *look* like they might have the same issue:
 
->  static const struct dw_edma_core_ops dw_edma_pcie_core_ops = {
->  	.irq_vector = dw_edma_pcie_irq_vector,
-> +	.pci_address = dw_edma_pcie_address,
->  };
->  
->  static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
+  axi_dmac_probe
+  dw_probe               (dw-axi-dmac-platform.c)
+  ioat_pci_probe
+  plx_dma_create
+  ...
+
+I hate to fix just one if there are other similar issues.
+
+>  	/* Set DMA channel callbacks */
+>  	dma->dev = chip->dev;
 > -- 
 > 2.39.0
 > 

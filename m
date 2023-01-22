@@ -2,53 +2,53 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 679C5676A44
-	for <lists+dmaengine@lfdr.de>; Sun, 22 Jan 2023 00:04:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15764676A67
+	for <lists+dmaengine@lfdr.de>; Sun, 22 Jan 2023 01:11:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229901AbjAUXEI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 21 Jan 2023 18:04:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55530 "EHLO
+        id S229637AbjAVALX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 21 Jan 2023 19:11:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbjAUXEH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 21 Jan 2023 18:04:07 -0500
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04AAF10A86;
-        Sat, 21 Jan 2023 15:04:05 -0800 (PST)
-Received: by mail-lj1-x22b.google.com with SMTP id e16so9463317ljn.3;
-        Sat, 21 Jan 2023 15:04:04 -0800 (PST)
+        with ESMTP id S229463AbjAVALX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 21 Jan 2023 19:11:23 -0500
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8853C14E93;
+        Sat, 21 Jan 2023 16:11:21 -0800 (PST)
+Received: by mail-lf1-x134.google.com with SMTP id b3so13209839lfv.2;
+        Sat, 21 Jan 2023 16:11:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=trJ6EtXGVxeJ2E2dBSh9BGipsejRJqHcnNYTifbPX1s=;
-        b=neOi+5+rK+YfvT9LUNVhtid9C6K+7Xg0ZP2CtSeVCv/DOGjZ7LCxuPtI+g8zkjJTuE
-         qwFFmZf5VF8G3tRF6ggLWY587haE3n9sPkPsuaey+Eu8vEVAVLDAX7HOAVb6x4IDAqTF
-         fj4DbFYpvsGNrd0dDiqr7UXTGO9WNQoL3YagIa02v6TqmF/j/ejnVGlVqNG01s8OrswF
-         iatB3dT9AtcUe8jWlZsekYHnmVBlZOMjZd+1ApyXl2LVSLvsHi3mhqnXbPPdj8TvRsyc
-         AqhN6yivRI360IywyGTbsiC+J4OdOeX2SuPZgDUTsXBVD9mHuIPBEF5ZiHP9HKeIKuTw
-         vHeQ==
+        bh=WRreyOWAmXkbLt9Hu6sMXlTjNEw0tKoxlYL8sH0JJNU=;
+        b=CLxbsfeq3WRGjqjefSkV7c7S41zqi1c/P7hxaw59cBAtY0Y9WgKXGqVSqz+cLiJJmS
+         JS7gNjPdut/pbn4Ut8dyeVABLHiKEjwoDrxixTgmCQJmoU6X6Pdi09m6yPq7Zfbcn/7v
+         Fy04cevGkD2kT1dQ4Ug3McT7kXagx23tKTI1jI3nOhKasrByoT7FQ+N1DWSJKitHTkF4
+         ux3Kp6rHXl5Rqo3Od1+gfsg/8qQlcEf/6kmNRD2p3RcltGinWQeVJviPWbHLHnhYC15r
+         do617DiCxwJrZZBSPHmEDKDyDctUSczBEDTPIK+zU4gJ+0lKPQ0kEGVXUU+8zUVhuUvA
+         Ndjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=trJ6EtXGVxeJ2E2dBSh9BGipsejRJqHcnNYTifbPX1s=;
-        b=u8Gt0r4RX7Inx4bZAJyAa0T+g1WUSlnxuqNthFVUVLh7+V27phUrQqSSpbOqv4Jleo
-         EiImwnnPQeqe5xwv7vTlXkoLfTpRjJe3NhZt6WfALfg6ihQfDxCt71BBNMHn74cDWchI
-         7A0XteZUJU/O1SI4Fbh3eTbhx4tONbzoU+dvLmKtALWHP8b4TFtdKe+5SXANDZGa895s
-         iL6WO/k7c7JDdlM/fGQG5/+p0awPXzGJrWvI4LBLkhYRVaCtQmx90NAQXwh1BUJy0USw
-         xjAMx5kCV1gGGTleKy2IHRKvl7BY051T7ldaaY1QKjKIHMTojaY01DUHwTsakFLCBfkJ
-         gYEA==
-X-Gm-Message-State: AFqh2kp3mMM71kQaUHR3KYnQowXCShZAVtwP9YGbgUm2Z9zNGdbtPKHr
-        ihuFTrWtbTBppQhG6k3nSsqcB2wN4jF+4w==
-X-Google-Smtp-Source: AMrXdXvevUITLkb6J0CtuQ+a1v5p48svpJMuSV/nlJ/+2CtLSO8L4mKGqfoduvMpV6ND2goyNRYFtQ==
-X-Received: by 2002:a2e:9152:0:b0:281:1111:7f18 with SMTP id q18-20020a2e9152000000b0028111117f18mr6036462ljg.16.1674342243203;
-        Sat, 21 Jan 2023 15:04:03 -0800 (PST)
+        bh=WRreyOWAmXkbLt9Hu6sMXlTjNEw0tKoxlYL8sH0JJNU=;
+        b=YlJIfpbamBpuumxD1L6tpelPAlDEw0nkdXPZdM1Aw2r3GqluS0ncn8FvrWKDUk7Kir
+         e+SDPUb42us1pMql7wnM5rwJFh9RHXk+AgWp+7JJ7eQmaVGcAp1tW509y1fW2EZtz/gZ
+         oEP/lzQaUTNL2dL8JBddQ5i+1nK+0tneCibmKXPr1pUTf1dUQq4976x4TEterV5csVtO
+         chtJE0UJYjfgVhorAGXhIVdnqk56reZx76cdX3SjmmL6L3N+MooNCcA3JqniSuutYR2z
+         Ly3ZOPjbt/xX2moJkeKYAZJzRKDw51PeNQYNh+GUwqWk7wrv3Tg7/BA51NBd/2xv0hg4
+         AKOA==
+X-Gm-Message-State: AFqh2kotr2tfknBJuVIzOn3ZgS1pIkCTLH9DqdIkRy3m8aO2SAS3Oh7d
+        FfqdxvPdi/2hs6gPaA1VcQw=
+X-Google-Smtp-Source: AMrXdXvqckpNMq4fP+z4FjLx0Oji38k08Incx5QFkX3t+pg0lzrDbq8sn0PF9LhfVF4kSCHdedTj2w==
+X-Received: by 2002:a05:6512:3251:b0:4b5:6755:4226 with SMTP id c17-20020a056512325100b004b567554226mr4909329lfr.55.1674346279465;
+        Sat, 21 Jan 2023 16:11:19 -0800 (PST)
 Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id bj11-20020a2eaa8b000000b0028b959262d4sm1550667ljb.108.2023.01.21.15.04.01
+        by smtp.gmail.com with ESMTPSA id t14-20020a056512208e00b004cc94ce2cb4sm4223155lfr.233.2023.01.21.16.11.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Jan 2023 15:04:02 -0800 (PST)
-Date:   Sun, 22 Jan 2023 02:03:59 +0300
+        Sat, 21 Jan 2023 16:11:18 -0800 (PST)
+Date:   Sun, 22 Jan 2023 03:11:16 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
@@ -67,14 +67,14 @@ Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 19/27] dmaengine: dw-edma: Use non-atomic io-64 methods
-Message-ID: <20230121230359.kqfm4kvwys2jdan6@mobilestation>
-References: <20230113171409.30470-20-Sergey.Semin@baikalelectronics.ru>
- <20230121005401.GA686892@bhelgaas>
+Subject: Re: [PATCH v9 24/27] dmaengine: dw-edma: Relax driver config settings
+Message-ID: <20230122001116.jbhttuaed7zuls26@mobilestation>
+References: <20230113171409.30470-25-Sergey.Semin@baikalelectronics.ru>
+ <20230120225036.GA675763@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230121005401.GA686892@bhelgaas>
+In-Reply-To: <20230120225036.GA675763@bhelgaas>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -85,139 +85,125 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Jan 20, 2023 at 06:54:01PM -0600, Bjorn Helgaas wrote:
-> On Fri, Jan 13, 2023 at 08:14:01PM +0300, Serge Semin wrote:
-> > Instead of splitting the 64-bits IOs up into two 32-bits ones it's
-> > possible to use the already available non-atomic readq/writeq methods
-> > implemented exactly for such cases. They are defined in the dedicated
-> > header files io-64-nonatomic-lo-hi.h/io-64-nonatomic-hi-lo.h. So in case
-> > if the 64-bits readq/writeq methods are unavailable on some platforms at
-> > consideration, the corresponding drivers can have any of these headers
-> > included and stop locally re-implementing the 64-bits IO accessors taking
-> > into account the non-atomic nature of the included methods. Let's do that
-> > in the DW eDMA driver too. Note by doing so we can discard the
-> > CONFIG_64BIT config ifdefs from the code.
+On Fri, Jan 20, 2023 at 04:50:36PM -0600, Bjorn Helgaas wrote:
+> On Fri, Jan 13, 2023 at 08:14:06PM +0300, Serge Semin wrote:
+> > Since the DW PCIe RP/EP driver is about to be updated to register the DW
+> > eDMA-based DMA-engine the drivers build modes must be synchronized.
+> > Currently the DW PCIe RP/EP driver is always built as a builtin module.
+> > Meanwhile the DW eDMA driver can be built as a loadable module. Thus in
+> > the later case the kernel with DW PCIe controllers support will fail to be
+> > linked due to lacking the DW eDMA probe/remove symbols. At the same time
+> > forcibly selecting the DW eDMA driver from the DW PCIe RP/EP kconfig will
+> > effectively eliminate the tristate type of the former driver fixing it to
+> > just the builtin kernel module.
 > > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Acked-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> >  drivers/dma/dw-edma/dw-edma-v0-core.c | 55 +++++++++------------------
-> >  1 file changed, 18 insertions(+), 37 deletions(-)
-> > 
-> > diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > index 66f296daac5a..51a34b43434c 100644
-> > --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > @@ -8,6 +8,8 @@
-> >  
-> >  #include <linux/bitfield.h>
-> >  
-> > +#include <linux/io-64-nonatomic-lo-hi.h>
-> > +
-> >  #include "dw-edma-core.h"
-> >  #include "dw-edma-v0-core.h"
-> >  #include "dw-edma-v0-regs.h"
-> > @@ -53,8 +55,6 @@ static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
-> >  		SET_32(dw, rd_##name, value);		\
-> >  	} while (0)
-> >  
-> > -#ifdef CONFIG_64BIT
-> > -
-> >  #define SET_64(dw, name, value)				\
-> >  	writeq(value, &(__dw_regs(dw)->name))
-> >  
-> > @@ -80,8 +80,6 @@ static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
-> >  		SET_64(dw, rd_##name, value);		\
-> >  	} while (0)
-> >  
-> > -#endif /* CONFIG_64BIT */
+> > Seeing the DW eDMA engine isn't that often met built into the DW PCIe
+> > Root-ports and End-points let's convert the DW eDMA driver config to being
+> > more flexible instead of just forcibly selecting the DW eDMA kconfig. In
+> > order to do that first the DW eDMA PCIe driver config should be converted
+> > to being depended from the DW eDMA core config instead of selecting the
+> > one. Second the DW eDMA probe and remove symbols should be referenced only
+> > if they are reachable by the caller. Thus the user will be able to build
+> > the DW eDMA core driver with any type, meanwhile the dependent code will
+> > be either restricted to the same build type (e.g. DW eDMA PCIe driver if
+> > DW eDMA driver is built as a loadable module) or just won't be able to use
+> > the eDMA engine registration/de-registration functionality (e.g. DW PCIe
+> > RP/EP driver if DW eDMA driver is built as a loadable module).
+> 
+> I'm trying to write the merge commit log, and I understand the linking
+> issue, but I'm having a hard time figuring out what the user-visible
+> scenarios are here.
 > 
 
-> Great to get rid of these #ifdefs!
+> I assume there's something that works when CONFIG_PCIE_DW=y and
+> CONFIG_DW_EDMA_PCIE=y but does *not* work when CONFIG_PCIE_DW=y and
+> CONFIG_DW_EDMA_PCIE=m?
+
+No. The DW eDMA code availability (in other words the CONFIG_DW_EDMA
+config value) determines whether the corresponding driver (DW PCIe
+RP/EP or DW eDMA PCI) is capable to perform the eDMA engine probe
+procedure. Additionally both drivers has the opposite dependency from
+the DW eDMA code.
+|                |     DW PCIe RP/EP    |     DW eDMA PCIe     |
+| CONFIG_DW_EDMA +----------------------+----------------------+
+|                | Probe eDMA | KConfig | Probe eDMA | Kconfig |
++----------------+------------+---------+------------+---------+
+|        y       |     YES    |   y,n   |     YES    |  y,m,n  |
+|        m       |     NO     |   y,n   |     YES    |    m,n  |
+|        n       |     NO     |   y,n   |     NO     |      n  |
++--------------------------------------------------------------+
+
+Basically it means the DW PCIe RP/EP driver will be able to probe the
+DW eDMA engine only if the corresponding driver is built into the
+kernel. At the same time the DW PCIe RP/EP driver doesn't depend on
+the DW eDMA core module config state. The DW eDMA PCIe driver in
+opposite depends on the DW eDMA code config state, but will always be
+able to probe the DW eDMA engine as long as the corresponding code is
+loaded as either a part of the kernel or as a loadable module.
+
 > 
-> Am I missing something?  It looks like SET_64 is used only by
-> SET_RW_64 and SET_BOTH_64, and neither of *them is used at all.
-> 
-> Similarly for GET_64 and GET_RW_64.
-> 
-> So maybe we could get rid of everything inside the #ifdefs as well?
+> If both scenarios worked the same, I would think the existing
+> dw_edma_pcie_probe() would be enough, and you wouldn't need to call
+> dw_pcie_edma_detect() from dw_pcie_host_init() and dw_pcie_ep_init().
 
-Even though these macros are indeed unused in the driver they are
-still a part of the DW eDMA CSRs access interface. In particular they
-are supposed to be used to access the 64-bit registers declared in the
-dw_edma_v0_regs, dw_edma_v0_unroll and dw_edma_v0_ch_regs structures.
-So until the interface is converted to a more preferable direct MMIO
-usage without any packed-structures I'd rather leave these macros
-be.
-
-> 
-> >  #define SET_COMPAT(dw, name, value)			\
-> >  	writel(value, &(__dw_regs(dw)->type.unroll.name))
-> >  
-> > @@ -164,14 +162,13 @@ static inline u32 readl_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
-> >  #define SET_LL_32(ll, value) \
-> >  	writel(value, ll)
-> >  
-> > -#ifdef CONFIG_64BIT
-> > -
-> >  static inline void writeq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
-> >  			     u64 value, void __iomem *addr)
-> >  {
-> > +	unsigned long flags;
-> > +
-> >  	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY) {
-> >  		u32 viewport_sel;
-> > -		unsigned long flags;
-> >  
-> >  		raw_spin_lock_irqsave(&dw->lock, flags);
-> >  
-> > @@ -181,22 +178,22 @@ static inline void writeq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
-> >  
-> >  		writel(viewport_sel,
-> >  		       &(__dw_regs(dw)->type.legacy.viewport_sel));
-> > -		writeq(value, addr);
-> > +	}
-> > +
-> > +	writeq(value, addr);
-> >  
-> > +	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY)
-> >  		raw_spin_unlock_irqrestore(&dw->lock, flags);
-> > -	} else {
-> > -		writeq(value, addr);
-> > -	}
-> 
-
-> This is basically a cosmetic change unrelated to the commit log.  I
-> don't really object to the change, although I think it's of dubious
-> value to remove the repetition of the writeq() at the cost of adding
-> another "if" and unlock.
-> 
-
-The denoted change is basically a leftover of the originally more
-complex modification:
-https://lore.kernel.org/linux-pci/20220503225104.12108-21-Sergey.Semin@baikalelectronics.ru
-for which the update made more sense. But then the corresponding flag
-was dropped from the Frank' patchset and I had to reduce the patch
-to the code above.
-
-Though I agree with you in both aspects. Indeed the value of the
-change is questionable and it isn't related to the commit log.
-
-> Lorenzo already applied this, so it's OK as-is unless you think it's
-> worth reworking to drop the unused stuff mentioned above, in which
-> case this rearrangement could be moved to a separate patch to make
-> both of them more focused.
-
-As I said above I'd rather leave the 64-bit accessors be until the
-packed structure-based interface is removed from the driver.
-
-Regarding the QWORD accessors update. If @Lorenzo agrees to replace
-the already applied v9 patchset with a new one I can resubmit the
-series with no rearrangement above.
+No. These methods have been implemented for the absolutely different
+drivers.
+dw_edma_pcie_probe() is called for an end-point PCIe-device found on a
+PCIe-bus.
+dw_pcie_host_init()/dw_pcie_ep_init() and dw_pcie_edma_detect() are
+called for a platform-device representing a DW PCIe RP/EP controller.
+In other words dw_pcie_edma_detect() and dw_edma_pcie_probe() are in
+no means interchangeable.
 
 -Serge(y)
 
 > 
-> Bjorn
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > ---
+> > 
+> > Changelog v8:
+> > - This is a new patch added on v8 stage of the series in order to fix
+> >   the tbot-reported build issues. (@tbot)
+> > ---
+> >  drivers/dma/dw-edma/Kconfig | 5 ++++-
+> >  include/linux/dma/edma.h    | 2 +-
+> >  2 files changed, 5 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/dma/dw-edma/Kconfig b/drivers/dma/dw-edma/Kconfig
+> > index 7ff17b2db6a1..2b6f2679508d 100644
+> > --- a/drivers/dma/dw-edma/Kconfig
+> > +++ b/drivers/dma/dw-edma/Kconfig
+> > @@ -9,11 +9,14 @@ config DW_EDMA
+> >  	  Support the Synopsys DesignWare eDMA controller, normally
+> >  	  implemented on endpoints SoCs.
+> >  
+> > +if DW_EDMA
+> > +
+> >  config DW_EDMA_PCIE
+> >  	tristate "Synopsys DesignWare eDMA PCIe driver"
+> >  	depends on PCI && PCI_MSI
+> > -	select DW_EDMA
+> >  	help
+> >  	  Provides a glue-logic between the Synopsys DesignWare
+> >  	  eDMA controller and an endpoint PCIe device. This also serves
+> >  	  as a reference design to whom desires to use this IP.
+> > +
+> > +endif # DW_EDMA
+> > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> > index 08833f12b386..c062c8db472c 100644
+> > --- a/include/linux/dma/edma.h
+> > +++ b/include/linux/dma/edma.h
+> > @@ -101,7 +101,7 @@ struct dw_edma_chip {
+> >  };
+> >  
+> >  /* Export to the platform drivers */
+> > -#if IS_ENABLED(CONFIG_DW_EDMA)
+> > +#if IS_REACHABLE(CONFIG_DW_EDMA)
+> >  int dw_edma_probe(struct dw_edma_chip *chip);
+> >  int dw_edma_remove(struct dw_edma_chip *chip);
+> >  #else
+> > -- 
+> > 2.39.0
+> > 
+> > 

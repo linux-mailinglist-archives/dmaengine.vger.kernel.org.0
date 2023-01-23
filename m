@@ -2,145 +2,149 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EF0667820D
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Jan 2023 17:44:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3FC067877F
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Jan 2023 21:19:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233337AbjAWQo1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 23 Jan 2023 11:44:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47476 "EHLO
+        id S232319AbjAWUTb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 23 Jan 2023 15:19:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233461AbjAWQoV (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 23 Jan 2023 11:44:21 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECFC614EB4;
-        Mon, 23 Jan 2023 08:44:00 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D51B0B80BA2;
-        Mon, 23 Jan 2023 16:43:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54EF1C433D2;
-        Mon, 23 Jan 2023 16:43:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674492221;
-        bh=WqiKybcgqHZWpuB4CvE00HHXeoUcUZQ/JLOLaoCTkjs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=VMfiu99BCpzXWevJaNTFsM7TvomFshh155tDVnj617ku4vl+uGiV/afQxhpl51xYZ
-         5/aKaa6OyNCwO6e9q1Vrp0kXheC3K/ETLPsFeLWBxiS76uDirPdh160vf5J6uYiz4s
-         abPu/xzky904dYcqdiC27e2B/YUuSdYp0QkTDKD3s7TYgO1rVggtOtHeJJEICbtUqK
-         wXB15hTfqe4/ZKJ4kmibkxznxf+m9eoUNboDd8ENZZhMWVzt6Z4m4AXWkVCeXy+OT+
-         /RqlQf1xn6I79xpgZQ0hxAAQ2lauf9uN/3pFVTk/Vv2c6KA1atbyBUIH4Vj85Y3SnA
-         pCFUI5I27C/uA==
-Date:   Mon, 23 Jan 2023 10:43:39 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        caihuoqing <caihuoqing@baidu.com>,
+        with ESMTP id S232623AbjAWUTV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 23 Jan 2023 15:19:21 -0500
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3887367F7;
+        Mon, 23 Jan 2023 12:18:52 -0800 (PST)
+Received: by mail-oi1-f178.google.com with SMTP id n8so11479352oih.0;
+        Mon, 23 Jan 2023 12:18:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A9TsVviuOODJWqPa0qVN9YfAyBsPjmf84LKhNhzNHe4=;
+        b=ikg+WXLpXUW9owNV6qT++Lvoumtehu90i7SOkg1TPkJ+zxUmd1FSdZc3bnJ/7+OIp6
+         QDSqUlHbOE4u+D8eBE6PMsi0FvMPtkhotjRW6+/bohnz+qy66CAG29ssxZ/yMDMSoiaL
+         2q54ujx3m0XS6A3E+5MQw8OkvNbEw3v0gtIm81T8hoY8dYrQjjFTUgViqOBPdYuTZQOz
+         jSBJmR+Vrsqw70qg+H1S50Yritt37vHXi586Q6CTMhL4GUGZ3yOc+GcT0iI1HXBHjQ69
+         mQ5Olz2VeR82RTvlftXy/KV2lee2R9iR5jbTK9v/9Hcdv40J69ud0mcBNHcDhsHZVPIY
+         RjzQ==
+X-Gm-Message-State: AFqh2kpDUSiND4ZSMwbn5dYVD3HWG4NrDCZ1XWmyG12PVqLZ0anB1Iwi
+        NzfLrYkk2mwZzlPy1xFTwA==
+X-Google-Smtp-Source: AMrXdXt5T2+J150uc85qX/a/e7OoRAT8w8CmhGAUYbfvTzt6sNah2y7/iS9iRApYVIYYdn6OfeHWPg==
+X-Received: by 2002:a05:6808:280b:b0:36e:c24b:85f5 with SMTP id et11-20020a056808280b00b0036ec24b85f5mr5096100oib.22.1674505131237;
+        Mon, 23 Jan 2023 12:18:51 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id g16-20020a9d6490000000b00684e09b43bdsm105528otl.13.2023.01.23.12.18.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jan 2023 12:18:50 -0800 (PST)
+Received: (nullmailer pid 2455776 invoked by uid 1000);
+        Mon, 23 Jan 2023 20:18:48 -0000
+Date:   Mon, 23 Jan 2023 14:18:48 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     =?UTF-8?B?77+9ZXI=?= <povik+lin@cutebit.org>,
+        linux-mediatek@lists.infradead.org,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        linux-sunxi@lists.linux.dev,
+        Bjorn Andersson <andersson@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Long Cheng <long.cheng@mediatek.com>,
+        Green Wan <green.wan@sifive.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-tegra@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Palmer Debbelt <palmer@sifive.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Hector Martin <marcan@marcan.st>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Peng Fan <peng.fan@nxp.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 24/27] dmaengine: dw-edma: Relax driver config settings
-Message-ID: <20230123164339.GA892847@bhelgaas>
+        Chen-Yu Tsai <wens@csie.org>,
+        Amelie Delaunay <amelie.delaunay@foss.st.com>,
+        devicetree@vger.kernel.org,
+        Olivier Dautricourt <olivierdautricourt@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        - <chuanhua.lei@intel.com>, Rajesh Gumasta <rgumasta@nvidia.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        dmaengine@vger.kernel.org, linux-actions@lists.infradead.org,
+        Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Stefan Roese <sr@denx.de>, linux-riscv@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        asahi@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-arm-msm@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Sven Peter <sven@svenpeter.dev>, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: dma: drop unneeded quotes
+Message-ID: <167450512824.2455711.11173604781836638882.robh@kernel.org>
+References: <20230118180144.364756-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230122001116.jbhttuaed7zuls26@mobilestation>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230118180144.364756-1-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sun, Jan 22, 2023 at 03:11:16AM +0300, Serge Semin wrote:
-> On Fri, Jan 20, 2023 at 04:50:36PM -0600, Bjorn Helgaas wrote:
-> > On Fri, Jan 13, 2023 at 08:14:06PM +0300, Serge Semin wrote:
-> > > Since the DW PCIe RP/EP driver is about to be updated to register the DW
-> > > eDMA-based DMA-engine the drivers build modes must be synchronized.
-> > > Currently the DW PCIe RP/EP driver is always built as a builtin module.
-> > > Meanwhile the DW eDMA driver can be built as a loadable module. Thus in
-> > > the later case the kernel with DW PCIe controllers support will fail to be
-> > > linked due to lacking the DW eDMA probe/remove symbols. At the same time
-> > > forcibly selecting the DW eDMA driver from the DW PCIe RP/EP kconfig will
-> > > effectively eliminate the tristate type of the former driver fixing it to
-> > > just the builtin kernel module.
-> > > 
-> > > Seeing the DW eDMA engine isn't that often met built into the DW PCIe
-> > > Root-ports and End-points let's convert the DW eDMA driver config to being
-> > > more flexible instead of just forcibly selecting the DW eDMA kconfig. In
-> > > order to do that first the DW eDMA PCIe driver config should be converted
-> > > to being depended from the DW eDMA core config instead of selecting the
-> > > one. Second the DW eDMA probe and remove symbols should be referenced only
-> > > if they are reachable by the caller. Thus the user will be able to build
-> > > the DW eDMA core driver with any type, meanwhile the dependent code will
-> > > be either restricted to the same build type (e.g. DW eDMA PCIe driver if
-> > > DW eDMA driver is built as a loadable module) or just won't be able to use
-> > > the eDMA engine registration/de-registration functionality (e.g. DW PCIe
-> > > RP/EP driver if DW eDMA driver is built as a loadable module).
-> > 
-> > I'm trying to write the merge commit log, and I understand the linking
-> > issue, but I'm having a hard time figuring out what the user-visible
-> > scenarios are here.
-> > 
-> > I assume there's something that works when CONFIG_PCIE_DW=y and
-> > CONFIG_DW_EDMA_PCIE=y but does *not* work when CONFIG_PCIE_DW=y and
-> > CONFIG_DW_EDMA_PCIE=m?
-> 
-> No. The DW eDMA code availability (in other words the CONFIG_DW_EDMA
-> config value) determines whether the corresponding driver (DW PCIe
-> RP/EP or DW eDMA PCI) is capable to perform the eDMA engine probe
-> procedure. Additionally both drivers has the opposite dependency from
-> the DW eDMA code.
-> |                |     DW PCIe RP/EP    |     DW eDMA PCIe     |
-> | CONFIG_DW_EDMA +----------------------+----------------------+
-> |                | Probe eDMA | KConfig | Probe eDMA | Kconfig |
-> +----------------+------------+---------+------------+---------+
-> |        y       |     YES    |   y,n   |     YES    |  y,m,n  |
-> |        m       |     NO     |   y,n   |     YES    |    m,n  |
-> |        n       |     NO     |   y,n   |     NO     |      n  |
-> +--------------------------------------------------------------+
-> 
-> Basically it means the DW PCIe RP/EP driver will be able to probe the
-> DW eDMA engine only if the corresponding driver is built into the
-> kernel. At the same time the DW PCIe RP/EP driver doesn't depend on
-> the DW eDMA core module config state. The DW eDMA PCIe driver in
-> opposite depends on the DW eDMA code config state, but will always be
-> able to probe the DW eDMA engine as long as the corresponding code is
-> loaded as either a part of the kernel or as a loadable module.
-> 
-> > If both scenarios worked the same, I would think the existing
-> > dw_edma_pcie_probe() would be enough, and you wouldn't need to call
-> > dw_pcie_edma_detect() from dw_pcie_host_init() and dw_pcie_ep_init().
-> 
-> No. These methods have been implemented for the absolutely different
-> drivers.
-> dw_edma_pcie_probe() is called for an end-point PCIe-device found on a
-> PCIe-bus.
-> dw_pcie_host_init()/dw_pcie_ep_init() and dw_pcie_edma_detect() are
-> called for a platform-device representing a DW PCIe RP/EP controller.
-> In other words dw_pcie_edma_detect() and dw_edma_pcie_probe() are in
-> no means interchangeable.
 
-The question is what the user-visible difference between
-CONFIG_DW_EDMA_PCIE=y and CONFIG_DW_EDMA_PCIE=m is.  If there were no
-difference, dw_pcie_host_init() would not need to call
-dw_pcie_edma_detect().
+On Wed, 18 Jan 2023 19:01:43 +0100, Krzysztof Kozlowski wrote:
+> Cleanup by removing unneeded quotes from refs and redundant blank lines.
+> No functional impact except adjusting to preferred coding style.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  .../devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml        | 2 +-
+>  .../devicetree/bindings/dma/allwinner,sun50i-a64-dma.yaml       | 2 +-
+>  .../devicetree/bindings/dma/allwinner,sun6i-a31-dma.yaml        | 2 +-
+>  Documentation/devicetree/bindings/dma/altr,msgdma.yaml          | 2 +-
+>  Documentation/devicetree/bindings/dma/apple,admac.yaml          | 2 +-
+>  Documentation/devicetree/bindings/dma/arm-pl08x.yaml            | 2 +-
+>  Documentation/devicetree/bindings/dma/dma-controller.yaml       | 2 +-
+>  Documentation/devicetree/bindings/dma/dma-router.yaml           | 2 +-
+>  Documentation/devicetree/bindings/dma/fsl,edma.yaml             | 2 +-
+>  Documentation/devicetree/bindings/dma/ingenic,dma.yaml          | 2 +-
+>  Documentation/devicetree/bindings/dma/intel,ldma.yaml           | 2 +-
+>  Documentation/devicetree/bindings/dma/mediatek,uart-dma.yaml    | 2 +-
+>  .../devicetree/bindings/dma/nvidia,tegra186-gpc-dma.yaml        | 2 +-
+>  Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml | 2 +-
+>  Documentation/devicetree/bindings/dma/owl-dma.yaml              | 2 +-
+>  Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml         | 2 +-
+>  Documentation/devicetree/bindings/dma/qcom,gpi.yaml             | 2 +-
+>  Documentation/devicetree/bindings/dma/renesas,rcar-dmac.yaml    | 2 +-
+>  Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml      | 2 +-
+>  Documentation/devicetree/bindings/dma/renesas,rzn1-dmamux.yaml  | 2 +-
+>  Documentation/devicetree/bindings/dma/renesas,usb-dmac.yaml     | 2 +-
+>  .../devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml         | 2 +-
+>  Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml   | 2 +-
+>  Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml     | 2 +-
+>  .../devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml    | 2 +-
+>  .../devicetree/bindings/dma/socionext,uniphier-xdmac.yaml       | 2 +-
+>  Documentation/devicetree/bindings/dma/st,stm32-dma.yaml         | 2 +-
+>  Documentation/devicetree/bindings/dma/st,stm32-dmamux.yaml      | 2 +-
+>  Documentation/devicetree/bindings/dma/st,stm32-mdma.yaml        | 2 +-
+>  Documentation/devicetree/bindings/dma/stericsson,dma40.yaml     | 2 +-
+>  30 files changed, 30 insertions(+), 30 deletions(-)
+> 
 
-Can you give me a one- or two-sentence merge commit comment that
-explains why we want to merge this?  "Relax driver config settings"
-doesn't tell us that.
-
-Bjorn
+Acked-by: Rob Herring <robh@kernel.org>

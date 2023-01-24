@@ -2,35 +2,35 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0162679A43
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Jan 2023 14:45:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F21E679A51
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Jan 2023 14:46:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234624AbjAXNpq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 24 Jan 2023 08:45:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35524 "EHLO
+        id S234664AbjAXNqD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 24 Jan 2023 08:46:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234550AbjAXNo6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 24 Jan 2023 08:44:58 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84D3E46D53;
-        Tue, 24 Jan 2023 05:43:45 -0800 (PST)
+        with ESMTP id S234580AbjAXNpV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 24 Jan 2023 08:45:21 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B135B474FB;
+        Tue, 24 Jan 2023 05:43:55 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4FED061220;
-        Tue, 24 Jan 2023 13:43:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3D1DC4339E;
-        Tue, 24 Jan 2023 13:43:41 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 91BF5611D7;
+        Tue, 24 Jan 2023 13:43:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 299F4C433D2;
+        Tue, 24 Jan 2023 13:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674567822;
-        bh=nyx8R1iatVI0dqQqG052dXSkuLS+LDgoROTQpI0M2Ow=;
+        s=k20201202; t=1674567835;
+        bh=KDl2zacnSK0FLUxtKWcIV32UB7/5CvDpOu567wZ5mOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nw4lv7461fxyitizI3117Nnz8vUhIXrCxE18MwZFV9AigZjMqoO4ccz1XRC6jSGq1
-         Iodeudl2oe1g3B0NjCQNYDFjLsfGRUV0F2DiDb1HamlMfVcp9sYjStY9JnCYAiCSrd
-         I4E7lMArzlGS/SG/cI48ya/QTuowuuEMY0WHZfm76q0e1s3ci3tqjE5QUc1Jj2naZw
-         9lKq0fWcFgjCx0CyTcVRrYOMCpCL5YFW1o5MdXsIqRbSLBXYcxBn2eT4kVUNgfieDd
-         PsU/u7pW5nAfdLREP4vAroIrwJv1qsPSYQoaVpY2Ivn9P2RZtzC3SA1H9XtDwIvuLp
-         9gx444Fy0qIvA==
+        b=BsXKMWZjJbcC8mvBCXJhxoT1tLJ79RIEO517BBwE7u+TNZXpCS4RioZpTJupyVcEp
+         Ym/FHp8pG7jlMhi41zEm3y//IoMCpFmyPThS29p8Z8Y9EDfte0Kl0yl2JpiGrVxoNb
+         Te/j+mYmBjT8xt7gdDipOSFHtmrOGg8KJVRCTd+qbDBvqFk/TgnntfNRqi/2PjwtjE
+         PgvZ97kPrxnS6V3FoCqT8czlFuh13eMu+gW6MYoZytdps7NuxVBhMXAqiW3O48JSCA
+         mqSKOtVOlk8/x8mlK1B1ZjNC0bIF7ODfjvx9SVZwPlS2fWotGN23eItK0+GCncbNLJ
+         DOy45kF0motZg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hui Wang <hui.wang@canonical.com>,
@@ -38,12 +38,12 @@ Cc:     Hui Wang <hui.wang@canonical.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
         shawnguo@kernel.org, dmaengine@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.10 7/8] dmaengine: imx-sdma: Fix a possible memory leak in sdma_transfer_init
-Date:   Tue, 24 Jan 2023 08:43:27 -0500
-Message-Id: <20230124134328.637707-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 5/6] dmaengine: imx-sdma: Fix a possible memory leak in sdma_transfer_init
+Date:   Tue, 24 Jan 2023 08:43:43 -0500
+Message-Id: <20230124134344.637846-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230124134328.637707-1-sashal@kernel.org>
-References: <20230124134328.637707-1-sashal@kernel.org>
+In-Reply-To: <20230124134344.637846-1-sashal@kernel.org>
+References: <20230124134344.637846-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -81,10 +81,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 2283dcd8bf91..6514db824473 100644
+index 8ec7a7041e84..8dbff2f6c3b8 100644
 --- a/drivers/dma/imx-sdma.c
 +++ b/drivers/dma/imx-sdma.c
-@@ -1363,10 +1363,12 @@ static struct sdma_desc *sdma_transfer_init(struct sdma_channel *sdmac,
+@@ -1360,10 +1360,12 @@ static struct sdma_desc *sdma_transfer_init(struct sdma_channel *sdmac,
  		sdma_config_ownership(sdmac, false, true, false);
  
  	if (sdma_load_context(sdmac))

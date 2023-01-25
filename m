@@ -2,102 +2,57 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D07BB67BBA1
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Jan 2023 21:04:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B56C67BFAD
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Jan 2023 23:13:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236086AbjAYUED (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 25 Jan 2023 15:04:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35872 "EHLO
+        id S230273AbjAYWN5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 25 Jan 2023 17:13:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235331AbjAYUEC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 Jan 2023 15:04:02 -0500
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E1FA27D5F;
-        Wed, 25 Jan 2023 12:04:01 -0800 (PST)
-Received: by mail-oi1-f180.google.com with SMTP id s124so17286463oif.1;
-        Wed, 25 Jan 2023 12:04:01 -0800 (PST)
+        with ESMTP id S230208AbjAYWN4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 Jan 2023 17:13:56 -0500
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 200C623DB2;
+        Wed, 25 Jan 2023 14:13:56 -0800 (PST)
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-15085b8a2f7so346835fac.2;
+        Wed, 25 Jan 2023 14:13:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0Gkcdkob2Y6ObYYrpnf1Losk1qJrdTh8H2I4YXgC+Dk=;
-        b=XtIyImpax2ZxYf7X/jqiGHzpwUFOwg+ALUk7l6pjePHUWXMB22O6me9NbQVDUTpUMz
-         XI1HXVJqFcbOWSieti/6fAu107pq8OeMCUxt7BxOfeZQLs8sCYGWMHI0V9m62RwNMpTF
-         7iBGTjZdAp1FrDFYyrMaZAs2gnY80vgB/92dnlclu1f2CNWwdLo0FjJaQ0TJA/NRXryG
-         5E2dEP09iXuq7386RGMPbqNp9J3ZFd9/5pHHS31AsyxfyfPmPvFPorGLl68FMvCY1w28
-         Jo+TN5lRtBdz2GAvI3kp91eujYL8MMHuurWcWZOOZrzD1K/X4nkQmWtvV0UuAu1sXZ5y
-         MZ6w==
-X-Gm-Message-State: AFqh2krxi3CYuJmWzBVAxOeDRfZ7w++m4kSoXzpPiTIFmwP/7rkwNy50
-        6PDU77nNm07xieE4mYGJkQ==
-X-Google-Smtp-Source: AMrXdXvFtWE+6e2FsDqQXpT3BBXJS/1t8Fhvmq3xKkeGeQdttgRtxg5rjf30XlBDjQNS36QwjR+NjQ==
-X-Received: by 2002:aca:1012:0:b0:364:cacc:515b with SMTP id 18-20020aca1012000000b00364cacc515bmr13031084oiq.52.1674677040479;
-        Wed, 25 Jan 2023 12:04:00 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7tWONC2DLcG7UXmUT4V0Do7k6bI6Vt9ydBIFnBQ35+4=;
+        b=pttknk3PAvp5RulR/ns3hKydYecMpCd9CgyhUglaKhGHSWpxTMCf2wWFJRcK8akjyB
+         AgoaJDrG58ma1uoU9tN+M1olq8fS3boBLT4EcBX1xLd4cVbePZdo5YJtNKKqZWb8tiVM
+         oPIufULy+R2HKtI4yHgBP1e66iuSNUXgUPWwcwaMbV1FCUnjitr9OrelK/noSBxUjhFw
+         7D5+FuFo5WyStM17v7jQqPyeYA3I0yLXDf8Txrtpc6QbTGfXNrrRGDEO7iuYndGDalpa
+         PIuVIuLp3i4sBIjGT+g34okNTDg/Fj6eSK6mjIx/6SV0jJ8o0t2Om8S38V5XYBScc2gw
+         8tAw==
+X-Gm-Message-State: AO0yUKWEqP/vM39i4K2ThIPFJDd8vEHwDN0Uzj5l+W1NbN+m9dh3W3py
+        NwMbtV5OzH0nqy+D5KMPDxE3zG47Ug==
+X-Google-Smtp-Source: AK7set8GB9AfhxSXqkGnrERdEvNo9/262Q8WBeb6t0dGbl1zqQu2Vy6FhBDOVSBFgocMGYQ2mCKiIQ==
+X-Received: by 2002:a05:6870:9112:b0:163:4731:bf2b with SMTP id o18-20020a056870911200b001634731bf2bmr548656oae.53.1674684835268;
+        Wed, 25 Jan 2023 14:13:55 -0800 (PST)
 Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id q64-20020acac043000000b0035e7ed5daa1sm2599650oif.26.2023.01.25.12.03.58
+        by smtp.gmail.com with ESMTPSA id p30-20020a0568708a1e00b00140d421445bsm2429594oaq.11.2023.01.25.14.13.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jan 2023 12:04:00 -0800 (PST)
-Received: (nullmailer pid 2761036 invoked by uid 1000);
-        Wed, 25 Jan 2023 20:03:58 -0000
-Date:   Wed, 25 Jan 2023 14:03:58 -0600
+        Wed, 25 Jan 2023 14:13:54 -0800 (PST)
+Received: (nullmailer pid 3057607 invoked by uid 1000);
+        Wed, 25 Jan 2023 22:13:54 -0000
 From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Hector Martin <marcan@marcan.st>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Andy Gross <agross@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        =?UTF-8?B?77+9ZXI=?= <povik+lin@cutebit.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Paul Cercueil <paul@crapouillou.net>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Long Cheng <long.cheng@mediatek.com>,
-        Stefan Roese <sr@denx.de>, Palmer Debbelt <palmer@sifive.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Olivier Dautricourt <olivierdautricourt@gmail.com>,
-        devicetree@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-riscv@lists.infradead.org,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+To:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
         Vinod Koul <vkoul@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-sunxi@lists.linux.dev,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        - <chuanhua.lei@intel.com>, Sven Peter <sven@svenpeter.dev>,
-        asahi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>,
-        Rajesh Gumasta <rgumasta@nvidia.com>,
-        dmaengine@vger.kernel.org, Green Wan <green.wan@sifive.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Amelie Delaunay <amelie.delaunay@foss.st.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        linux-actions@lists.infradead.org,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] dt-bindings: dma: cleanup examples - indentation,
- lowercase hex
-Message-ID: <167467703767.2760981.10110618536644439258.robh@kernel.org>
-References: <20230124081117.31186-1-krzysztof.kozlowski@linaro.org>
- <20230124081117.31186-2-krzysztof.kozlowski@linaro.org>
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: ti,k3: Use common ti,k3-sci-common.yaml schema
+Date:   Wed, 25 Jan 2023 16:13:39 -0600
+Message-Id: <20230125221339.3057322-1-robh@kernel.org>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230124081117.31186-2-krzysztof.kozlowski@linaro.org>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
@@ -108,23 +63,82 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Instead of redefining the 'ti,sci' and 'ti,sci-dev-id' properties multiple
+times, reference the common schema where they are defined. Most cases
+using these properties already do this, just udma and ringacc need to be
+fixed.
 
-On Tue, 24 Jan 2023 09:11:17 +0100, Krzysztof Kozlowski wrote:
-> Cleanup examples:
->  - use 4-space indentation (for cases when it is neither 4 not 2 space),
->  - use lowercase hex,
->  - drop unused node's label.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-> 
-> Changes since v1:
-> 1. Drop unused label, correct indentation.
-> ---
->  .../bindings/dma/snps,dw-axi-dmac.yaml        | 36 +++++++++----------
->  .../bindings/dma/stericsson,dma40.yaml        | 16 ++++-----
->  2 files changed, 26 insertions(+), 26 deletions(-)
-> 
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/dma/ti/k3-udma.yaml         |  9 +--------
+ .../devicetree/bindings/soc/ti/k3-ringacc.yaml      | 13 ++++---------
+ 2 files changed, 5 insertions(+), 17 deletions(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+diff --git a/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml b/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
+index 7ff428ad3aae..97f6ae9b1236 100644
+--- a/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
++++ b/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
+@@ -44,6 +44,7 @@ description: |
+ 
+ allOf:
+   - $ref: "../dma-controller.yaml#"
++  - $ref: /schemas/arm/keystone/ti,k3-sci-common.yaml#
+ 
+ properties:
+   "#dma-cells":
+@@ -78,14 +79,6 @@ properties:
+ 
+   msi-parent: true
+ 
+-  ti,sci:
+-    description: phandle to TI-SCI compatible System controller node
+-    $ref: /schemas/types.yaml#/definitions/phandle
+-
+-  ti,sci-dev-id:
+-    description: TI-SCI device id of UDMAP
+-    $ref: /schemas/types.yaml#/definitions/uint32
+-
+   ti,ringacc:
+     description: phandle to the ring accelerator node
+     $ref: /schemas/types.yaml#/definitions/phandle
+diff --git a/Documentation/devicetree/bindings/soc/ti/k3-ringacc.yaml b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.yaml
+index ddea3d41971d..22cf9002fee7 100644
+--- a/Documentation/devicetree/bindings/soc/ti/k3-ringacc.yaml
++++ b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.yaml
+@@ -25,6 +25,9 @@ description: |
+   The Ring Accelerator is a hardware module that is responsible for accelerating
+   management of the packet queues. The K3 SoCs can have more than one RA instances
+ 
++allOf:
++  - $ref: /schemas/arm/keystone/ti,k3-sci-common.yaml#
++
+ properties:
+   compatible:
+     items:
+@@ -54,14 +57,6 @@ properties:
+     $ref: /schemas/types.yaml#/definitions/uint32
+     description: TI-SCI RM subtype for GP ring range
+ 
+-  ti,sci:
+-    $ref: /schemas/types.yaml#/definitions/phandle-array
+-    description: phandle on TI-SCI compatible System controller node
+-
+-  ti,sci-dev-id:
+-    $ref: /schemas/types.yaml#/definitions/uint32
+-    description: TI-SCI device id of the ring accelerator
+-
+ required:
+   - compatible
+   - reg
+@@ -72,7 +67,7 @@ required:
+   - ti,sci
+   - ti,sci-dev-id
+ 
+-additionalProperties: false
++unevaluatedProperties: false
+ 
+ examples:
+   - |
+-- 
+2.39.0
+

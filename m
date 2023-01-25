@@ -2,82 +2,133 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39A4567B4FB
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Jan 2023 15:41:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF49A67B74B
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Jan 2023 17:50:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235907AbjAYOlV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 25 Jan 2023 09:41:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44426 "EHLO
+        id S235962AbjAYQuU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 25 Jan 2023 11:50:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235945AbjAYOlP (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 Jan 2023 09:41:15 -0500
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2307C3597;
-        Wed, 25 Jan 2023 06:40:47 -0800 (PST)
-Received: by mail-lf1-x12b.google.com with SMTP id f34so29275459lfv.10;
-        Wed, 25 Jan 2023 06:40:47 -0800 (PST)
+        with ESMTP id S235943AbjAYQuI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 Jan 2023 11:50:08 -0500
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C1B86A6F
+        for <dmaengine@vger.kernel.org>; Wed, 25 Jan 2023 08:50:04 -0800 (PST)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-4ff1fa82bbbso225474317b3.10
+        for <dmaengine@vger.kernel.org>; Wed, 25 Jan 2023 08:50:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QELdzY3NIYjY7OwghVfrJTNG0cf8qKkTucoZEOCtl2E=;
-        b=c3zlEUO9WYifl0n0mN6SSlWRaXAVNGM3DUOIN5BZgmF9Rq7tXLfm9TAC2Lbc+StC+o
-         +h9hrfagVu4lfTJ1tawAncGERjvlmxuUzrJqDPKpmIlHE5RzHvr7UfieUftnPrLdfQwk
-         ZhD2PWrH0UV6xUmgpn1Qcxl0mEaghKywIDwf4LeQ+NkfXrCSPdD2noqN/8gJ4Gz0QbBq
-         kbdgXqxSBptvW4E4mtsD9BP6olb/731YzOzmJiSevg/9wuXSTtYyXwiADqvWnWn/Nub2
-         MJVLy+/oZFGe8RnUGR9VxctcfedMlw+NdgCpacVYyMBjD0l+2nc4YVDs8Gu5ndAmKAAl
-         0/qQ==
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9oBkpwDuDP6Raat/HRHsNpx8MqzIjjZSJojQEumXoyE=;
+        b=telMSbMEB1I/JdT8E+AOlYPkvLPDxj1UCnywL1f/zz+GxB6zyzUgN+Q3Q48l8AYc8X
+         qS5rmRFlzboD9JIVNM4srPZju+Dc0OvfYTnyPjpp4sHdEutwmKfLXtqzcN+4YmFBRVgu
+         A3oTpxaFO/E/7LaM1iu3pe6Iv0CmRV+MC10+sbVUAqr2eeBPD17IhS27buTMH3bCJoMu
+         fEQq5XzvwDAqtF1fp8r2H4g3vh98tijISo+CkjBRkXWvZWGfdkjpWZzF8VgIKtCc5sLs
+         +bZFNae0CmrxcmnBVuga8Dg0CQRlWnW+6m8p+riuFjzQ8BSrHATHKU3+MoO2RS3dWuby
+         cPfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QELdzY3NIYjY7OwghVfrJTNG0cf8qKkTucoZEOCtl2E=;
-        b=UjxUZbz0MwQR1Unu4ZQdIVtPkn1keYbVV3lKCfeDWgtSKrJeo4lSpWioLKAyLlUeiD
-         y/r/1vuKnPrHblgSV3mAgNHdHyMTDVHfdPba69CP8UreEnbJ76YkPfeAik+kWmXMEkHz
-         4WSQiuk3hGg0qFgqK4G6G2GUMpqIHxC+l/ow3JMe1K8DXqJ4KJJgHoUAPLCRJItyy1Wx
-         2e5LvfH8o3uT8wJwIhe0mxeogpKQSWGSMU/6H2GGCsU6TBpfzkuVg+iUCFO+V3I9R0WR
-         y4EtRETnUWro9pH2TGC6yjU3/xoueCflLtvlRgr5KrskHu9Nc27DZW3Ij7oczhAu8u6F
-         0pAQ==
-X-Gm-Message-State: AFqh2kpvUwvsI7uQhHTDjc7nEagc50SFEdVLPguQPg5DOtv8wscimrFb
-        p7RyLw0mSwLU6GpdvwIBD2U=
-X-Google-Smtp-Source: AMrXdXvFwvxwlCoo5ZWFsDiCHyOfQmG36pJybKKqX5u2m3URe5MhETEiO3uJa7MrRpD5z3vreu/Vrw==
-X-Received: by 2002:ac2:4834:0:b0:4d5:7b89:7b62 with SMTP id 20-20020ac24834000000b004d57b897b62mr6587177lft.40.1674657624222;
-        Wed, 25 Jan 2023 06:40:24 -0800 (PST)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id k18-20020ac24f12000000b004a764f9d653sm502594lfr.242.2023.01.25.06.40.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jan 2023 06:40:23 -0800 (PST)
-Date:   Wed, 25 Jan 2023 17:40:19 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        caihuoqing <caihuoqing@baidu.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 24/27] dmaengine: dw-edma: Relax driver config settings
-Message-ID: <20230125144019.sn7kliw3qlwgtwzs@mobilestation>
-References: <20230124144941.42zpgj2p53nvfz36@mobilestation>
- <20230124234744.GA1062727@bhelgaas>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9oBkpwDuDP6Raat/HRHsNpx8MqzIjjZSJojQEumXoyE=;
+        b=qgyOK5ow995F9sB/ZeXN30EvfA+8LPMQ0JFSXboqeSKj/KOA3L6GdGKmCYRfH578nO
+         UGHbZaNcgWLuUvjg1xxby8CMRE3hWvRndz04VONs6I0AF5HU0JJ05MMME9pOTRjR3cpO
+         LBcoEWUsoXLT/9ayzSfxlWXFjsmvF947B3RN6kfZUHDg28QjPPODBiaZpJ4ssRiQZsnt
+         zvln5h60bjpWHK4DeXY1tPm1QJwEouJx3UPO+u2ZMtL+giZC4ucbwfaRNd/LHtp3ktzf
+         i3Dv12GyNdqnLXThgtjmSmdvIisdoFi7yEMX5Gtbli1pb5ufnZgnwNXO+3L5NpvUYAVN
+         +wFQ==
+X-Gm-Message-State: AFqh2koXodaUEIIocL5zhRLWz7/wz+1dWfvYMq33z7AXZq1Bg4QkMyc/
+        bDBU1FdNaVlHoE4iEM7U9yZ53isqT1k9XoHCQ1+z1g==
+X-Google-Smtp-Source: AMrXdXsah5c2WKVW38d6ZSr7pPop+n/mEJC53KDRGLQOXrHcU20AK6F0ktCN8HrtzVAtxjIN7wyafP19A/nGyLOtNU8=
+X-Received: by 2002:a81:1d2:0:b0:433:f1c0:3f1c with SMTP id
+ 201-20020a8101d2000000b00433f1c03f1cmr4401576ywb.438.1674665403087; Wed, 25
+ Jan 2023 08:50:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230124234744.GA1062727@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+References: <20230125083851.27759-1-surenb@google.com> <20230125083851.27759-2-surenb@google.com>
+ <Y9Dx0cPXF2yoLwww@hirez.programming.kicks-ass.net>
+In-Reply-To: <Y9Dx0cPXF2yoLwww@hirez.programming.kicks-ass.net>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Wed, 25 Jan 2023 08:49:50 -0800
+Message-ID: <CAJuCfpEcVCZaCGzc-Wim25eaV5e6YG1YJAAdKwZ6JHViB0z8aw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] mm: introduce vma->vm_flags modifier functions
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     akpm@linux-foundation.org, michel@lespinasse.org,
+        jglisse@google.com, mhocko@suse.com, vbabka@suse.cz,
+        hannes@cmpxchg.org, mgorman@techsingularity.net, dave@stgolabs.net,
+        willy@infradead.org, liam.howlett@oracle.com,
+        ldufour@linux.ibm.com, paulmck@kernel.org, luto@kernel.org,
+        songliubraving@fb.com, peterx@redhat.com, david@redhat.com,
+        dhowells@redhat.com, hughd@google.com, bigeasy@linutronix.de,
+        kent.overstreet@linux.dev, punit.agrawal@bytedance.com,
+        lstoakes@gmail.com, peterjung1337@gmail.com, rientjes@google.com,
+        axelrasmussen@google.com, joelaf@google.com, minchan@google.com,
+        jannh@google.com, shakeelb@google.com, tatashin@google.com,
+        edumazet@google.com, gthelen@google.com, gurua@google.com,
+        arjunroy@google.com, soheil@google.com, hughlynch@google.com,
+        leewalsh@google.com, posk@google.com, will@kernel.org,
+        aneesh.kumar@linux.ibm.com, npiggin@gmail.com,
+        chenhuacai@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        qianweili@huawei.com, wangzhou1@hisilicon.com,
+        herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org,
+        airlied@gmail.com, daniel@ffwll.ch,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, l.stach@pengutronix.de,
+        krzysztof.kozlowski@linaro.org, patrik.r.jakobsson@gmail.com,
+        matthias.bgg@gmail.com, robdclark@gmail.com,
+        quic_abhinavk@quicinc.com, dmitry.baryshkov@linaro.org,
+        tomba@kernel.org, hjc@rock-chips.com, heiko@sntech.de,
+        ray.huang@amd.com, kraxel@redhat.com, sre@kernel.org,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+        tfiga@chromium.org, m.szyprowski@samsung.com, mchehab@kernel.org,
+        dimitri.sivanich@hpe.com, zhangfei.gao@linaro.org,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        dgilbert@interlog.com, hdegoede@redhat.com, mst@redhat.com,
+        jasowang@redhat.com, alex.williamson@redhat.com, deller@gmx.de,
+        jayalk@intworks.biz, viro@zeniv.linux.org.uk, nico@fluxnic.net,
+        xiang@kernel.org, chao@kernel.org, tytso@mit.edu,
+        adilger.kernel@dilger.ca, miklos@szeredi.hu,
+        mike.kravetz@oracle.com, muchun.song@linux.dev, bhe@redhat.com,
+        andrii@kernel.org, yoshfuji@linux-ipv6.org, dsahern@kernel.org,
+        kuba@kernel.org, pabeni@redhat.com, perex@perex.cz, tiwai@suse.com,
+        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-graphics-maintainer@vmware.com,
+        linux-ia64@vger.kernel.org, linux-arch@vger.kernel.org,
+        loongarch@lists.linux.dev, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-crypto@vger.kernel.org, nvdimm@lists.linux.dev,
+        dmaengine@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org,
+        linux-samsung-soc@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org,
+        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-accelerators@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
+        target-devel@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        devel@lists.orangefs.org, kexec@lists.infradead.org,
+        linux-xfs@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, kasan-dev@googlegroups.com,
+        selinux@vger.kernel.org, alsa-devel@alsa-project.org,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -85,181 +136,33 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 05:47:44PM -0600, Bjorn Helgaas wrote:
-> On Tue, Jan 24, 2023 at 05:49:41PM +0300, Serge Semin wrote:
-> > On Mon, Jan 23, 2023 at 10:43:39AM -0600, Bjorn Helgaas wrote:
-> > > On Sun, Jan 22, 2023 at 03:11:16AM +0300, Serge Semin wrote:
-> > > > On Fri, Jan 20, 2023 at 04:50:36PM -0600, Bjorn Helgaas wrote:
-> > > > > On Fri, Jan 13, 2023 at 08:14:06PM +0300, Serge Semin wrote:
-> > > > > > Since the DW PCIe RP/EP driver is about to be updated to register the DW
-> > > > > > eDMA-based DMA-engine the drivers build modes must be synchronized.
-> > > > > > Currently the DW PCIe RP/EP driver is always built as a builtin module.
-> > > > > > Meanwhile the DW eDMA driver can be built as a loadable module. Thus in
-> > > > > > the later case the kernel with DW PCIe controllers support will fail to be
-> > > > > > linked due to lacking the DW eDMA probe/remove symbols. At the same time
-> > > > > > forcibly selecting the DW eDMA driver from the DW PCIe RP/EP kconfig will
-> > > > > > effectively eliminate the tristate type of the former driver fixing it to
-> > > > > > just the builtin kernel module.
-> > > > > > 
-> > > > > > Seeing the DW eDMA engine isn't that often met built into the DW PCIe
-> > > > > > Root-ports and End-points let's convert the DW eDMA driver config to being
-> > > > > > more flexible instead of just forcibly selecting the DW eDMA kconfig. In
-> > > > > > order to do that first the DW eDMA PCIe driver config should be converted
-> > > > > > to being depended from the DW eDMA core config instead of selecting the
-> > > > > > one. Second the DW eDMA probe and remove symbols should be referenced only
-> > > > > > if they are reachable by the caller. Thus the user will be able to build
-> > > > > > the DW eDMA core driver with any type, meanwhile the dependent code will
-> > > > > > be either restricted to the same build type (e.g. DW eDMA PCIe driver if
-> > > > > > DW eDMA driver is built as a loadable module) or just won't be able to use
-> > > > > > the eDMA engine registration/de-registration functionality (e.g. DW PCIe
-> > > > > > RP/EP driver if DW eDMA driver is built as a loadable module).
-> > > > > 
-> > > > > I'm trying to write the merge commit log, and I understand the linking
-> > > > > issue, but I'm having a hard time figuring out what the user-visible
-> > > > > scenarios are here.
-> > > > > 
-> > > > > I assume there's something that works when CONFIG_PCIE_DW=y and
-> > > > > CONFIG_DW_EDMA_PCIE=y but does *not* work when CONFIG_PCIE_DW=y and
-> > > > > CONFIG_DW_EDMA_PCIE=m?
-> > > > 
-> > > > No. The DW eDMA code availability (in other words the CONFIG_DW_EDMA
-> > > > config value) determines whether the corresponding driver (DW PCIe
-> > > > RP/EP or DW eDMA PCI) is capable to perform the eDMA engine probe
-> > > > procedure. Additionally both drivers has the opposite dependency from
-> > > > the DW eDMA code.
-> > > > |                |     DW PCIe RP/EP    |     DW eDMA PCIe     |
-> > > > | CONFIG_DW_EDMA +----------------------+----------------------+
-> > > > |                | Probe eDMA | KConfig | Probe eDMA | Kconfig |
-> > > > +----------------+------------+---------+------------+---------+
-> > > > |        y       |     YES    |   y,n   |     YES    |  y,m,n  |
-> > > > |        m       |     NO     |   y,n   |     YES    |    m,n  |
-> > > > |        n       |     NO     |   y,n   |     NO     |      n  |
-> > > > +--------------------------------------------------------------+
-> > > > 
-> > > > Basically it means the DW PCIe RP/EP driver will be able to probe the
-> > > > DW eDMA engine only if the corresponding driver is built into the
-> > > > kernel. At the same time the DW PCIe RP/EP driver doesn't depend on
-> > > > the DW eDMA core module config state. The DW eDMA PCIe driver in
-> > > > opposite depends on the DW eDMA code config state, but will always be
-> > > > able to probe the DW eDMA engine as long as the corresponding code is
-> > > > loaded as either a part of the kernel or as a loadable module.
-> > > > 
-> > > > > If both scenarios worked the same, I would think the existing
-> > > > > dw_edma_pcie_probe() would be enough, and you wouldn't need to call
-> > > > > dw_pcie_edma_detect() from dw_pcie_host_init() and dw_pcie_ep_init().
-> > > > 
-> > > > No. These methods have been implemented for the absolutely different
-> > > > drivers.
-> > > > dw_edma_pcie_probe() is called for an end-point PCIe-device found on a
-> > > > PCIe-bus.
-> > > > dw_pcie_host_init()/dw_pcie_ep_init() and dw_pcie_edma_detect() are
-> > > > called for a platform-device representing a DW PCIe RP/EP controller.
-> > > > In other words dw_pcie_edma_detect() and dw_edma_pcie_probe() are in
-> > > > no means interchangeable.
-> > > 
-> > > The question is what the user-visible difference between
-> > > CONFIG_DW_EDMA_PCIE=y and CONFIG_DW_EDMA_PCIE=m is. 
-> > 
-> > There will be no difference between them after this commit is applied
-> > from the DW eDMA core driver point of view. CONFIG_DW_EDMA_PCIE now
-> > depends on the CONFIG_DW_EDMA config state (see it's surrounded by
-> > if/endif in the Kconfig file). Without this patch the
-> > CONFIG_DW_EDMA_PCIE config determines the CONFIG_DW_EDMA config state
-> > by forcibly selecting the one. Using the similar approach for the
-> > CONFIG_PCIE_DW driver I found less attractive because it would have
-> > effectively converted the CONFIG_DW_EDMA config tristate to boolean.
-> > 
-> > That's why instead I decided to convert the CONFIG_DW_EDMA config to
-> > being independent from any other config value. (See the table in the
-> > my previous email message.)
-> > 
-> > > If there were no
-> > > difference, dw_pcie_host_init() would not need to call
-> > > dw_pcie_edma_detect().
-> > 
-> > Even if CONFIG_DW_EDMA (not CONFIG_DW_EDMA_PCIE) is set to m or n I
-> > would have still recommended to call dw_pcie_edma_detect() because the
-> > method performs the DW eDMA engine auto-detection independently from the DW
-> > eDMA driver availability. As a result the system log will have a
-> > number of eDMA detected channels if the engine was really found. It's
-> > up to the system administrator to make sure that the eDMA driver is
-> > properly built/loaded then for the engine to be actually available in
-> > the kernel/system.
-> >
-> > > Can you give me a one- or two-sentence merge commit comment that
-> > > explains why we want to merge this?  "Relax driver config settings"
-> > > doesn't tell us that.
-> > 
-> > "Convert the DW eDMA kconfig to being independently selected by the
-> > user in order to preserve the module build options flexibility and fix
-> > the "undefined reference to" error on DW PCIe driver build."
-> 
+On Wed, Jan 25, 2023 at 1:10 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Wed, Jan 25, 2023 at 12:38:46AM -0800, Suren Baghdasaryan wrote:
+>
+> > diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> > index 2d6d790d9bed..6c7c70bf50dd 100644
+> > --- a/include/linux/mm_types.h
+> > +++ b/include/linux/mm_types.h
+> > @@ -491,7 +491,13 @@ struct vm_area_struct {
+> >        * See vmf_insert_mixed_prot() for discussion.
+> >        */
+> >       pgprot_t vm_page_prot;
+> > -     unsigned long vm_flags;         /* Flags, see mm.h. */
+> > +
+> > +     /*
+> > +      * Flags, see mm.h.
+> > +      * WARNING! Do not modify directly.
+> > +      * Use {init|reset|set|clear|mod}_vm_flags() functions instead.
+> > +      */
+> > +     unsigned long vm_flags;
+>
+> We have __private and ACCESS_PRIVATE() to help with enforcing this.
 
-> In the commit log, I think "forcibly selecting the DW eDMA driver from
-> the DW PCIe RP/EP kconfig" actually refers to just the "DW eDMA PCIe"
-> driver" not the "DW PCIe RP/EP driver," right?
+Thanks for pointing this out, Peter! I guess for that I'll need to
+convert all read accesses and provide get_vm_flags() too? That will
+cause some additional churt (a quick search shows 801 hits over 248
+files) but maybe it's worth it? I think Michal suggested that too in
+another patch. Should I do that while we are at it?
 
-Right.
-
-> 
-> The undefined reference to dw_edma_probe() doesn't actually happen
-> unless we merge 27/27 without *this* patch, right? 
-
-Right.
-
-> If so, I wouldn't
-> call this a "fix" because nobody has ever seen the link failure.
-> 
-> OK.  I think this would be much simpler if it were split into two
-> patches:
-> 
->   1) Prepare dw_edma_probe() for builtin callers
-> 
->      When CONFIG_DW_EDMA=m, dw_edma_probe() is built as a module.
->      Previously edma.h declared it as extern, which meant that
->      builtin callers like dw_pcie_host_init() and dw_pcie_ep_init()
->      caused link errors.
-> 
->      Make it safe for builtin callers to call dw_edma_probe() by using
->      IS_REACHABLE() to define a stub when CONFIG_DW_EDMA=m.
-> 
->      Builtin callers will fail to detect and register eDMA devices
->      when CONFIG_DW_EDMA=m but will otherwise work as before.
-> 
->   2) Make DW_EDMA_PCIE depend on DW_EDMA
-> 
->      This seems like a good idea and is much nicer than "select
->      DW_EDMA", but I think it should be a separate patch since it
->      really only relates to dw-edma-pcie.c.  
-
-> I would use "depends on
->      DW_EDMA" instead of adding if/endif around DW_EDMA_PCIE.
-
-Could you explain why is the "depends on" operator more preferable
-than if/endif? In this case since we have a single core kconfig from
-which all the eDMA LLDD config(s) (except PCIE_DW for the reason
-previously described) will surely depend on, using if/endif would
-cause the possible new eDMA-capable LLDD(s) adding their kconfig
-entries within the if-endif clause without need to copy the same
-"depends on DW_EDMA" pattern over and over. That seems to look a bit
-more maintainable than the alternative you suggest. Do you think
-otherwise?
-
-> 
-> Am I still missing something?
-
-No, you aren't.
-
-> What do you think? 
-
-What you described was the second option I had in mind for the update
-to look like, but after all I decided to take a shorter path and
-combine the modifications into a single patch. If you think that
-splitting it up would make the update looking simpler then I'll do as
-you suggest. But in that case Lorenzo will need to re-merge the
-updated patchset v10.
-
--Serge(y)
-
-> 
-> Bjorn
+>

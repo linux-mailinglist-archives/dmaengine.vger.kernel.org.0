@@ -2,58 +2,57 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18D4867B770
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Jan 2023 17:55:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 98DDA67B798
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Jan 2023 17:58:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229496AbjAYQz3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 25 Jan 2023 11:55:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48472 "EHLO
+        id S235804AbjAYQ6R (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 25 Jan 2023 11:58:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235448AbjAYQz2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 Jan 2023 11:55:28 -0500
-Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 695D728D1F
-        for <dmaengine@vger.kernel.org>; Wed, 25 Jan 2023 08:55:25 -0800 (PST)
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-4ff07dae50dso227361237b3.2
-        for <dmaengine@vger.kernel.org>; Wed, 25 Jan 2023 08:55:25 -0800 (PST)
+        with ESMTP id S235501AbjAYQ6P (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 Jan 2023 11:58:15 -0500
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 084C5367C3
+        for <dmaengine@vger.kernel.org>; Wed, 25 Jan 2023 08:58:02 -0800 (PST)
+Received: by mail-yb1-xb2e.google.com with SMTP id h5so6889467ybj.8
+        for <dmaengine@vger.kernel.org>; Wed, 25 Jan 2023 08:58:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=49H+5dcfdqsESvQ4qNxkOgTxyGkRYtaMvRra0jMgwoI=;
-        b=S433Z2p/j0oEnqzhdMbCoBVS6yLsoVuhPxi7PQkxnyRK8RoE5tlGqQCWFiSx/y2EvP
-         VAUU6f5te6yd0FF3QKoXQk59fXSc40Ni99FjmOhoS8uoMeuhfG+AT8hg6vTHrAcNtls7
-         iMIrnMdjSfEnhMBuERTLvpM6IdVwE9wobd2Cb3XY0VBKEUGGTBatMri522T6kyoxGdRv
-         R/YHI2CzXA+66ssNNRD0kBHVPl8TI5ear6XOrgI2lTdtmT0YpMoSddNSDob6lG0ADoLk
-         +xTQAwFZ3i/oeH+aroOYDwlOGwYRh8N7mvnq0HFpqRIYUl+jcTUyG7X+0g74P9WaFx1x
-         4nDw==
+        bh=G/HaQvIeifLKJJp6JsBUTA/Cu0PG4HCFXOBV2LCBpGc=;
+        b=ngnRJahtqVxSN6UIjLqWU+1aTxdIhv7re4hDfLrN8LXncI6BNG1ZwqGy4tzOTLxPiH
+         4VWOIuHk0tMtzp4F11bJV5cn9qN75X4TjPW2iyn4nOIj2Y2qsTa18wfmHkOGhLKlmZoS
+         vXpRc/g/QGDtReYNnPGF6rlvG7jz8sM8MsRTR7LhXioKCpHgDgO7fKBddw0dzS48JeET
+         78piPZYcyZX9vIYyfAzpklatM6XnaaFqr/b+XLZlxI1Y0y+wCHWFOsnbVElEi6T+CQOb
+         4zMPa96gAXD4xbmjnQv7nMUvo5bgJJEK/r3Eu0NIV8f4SPGC7eT5IU6zl2RkKdozGWcK
+         sknQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=49H+5dcfdqsESvQ4qNxkOgTxyGkRYtaMvRra0jMgwoI=;
-        b=1HRG41DyKFM5Ou31Is8EOGuxnoTnTbZilLDsfGOs5idKQZbhyuuJ/+CY4i+Lc++YuH
-         uYM9rHu7vMuPc9DsO6VS+IsRik3q9JiFUSu1tcscgubWnZrrX26M8M7klCNO9QGmy7gf
-         od1vXvQY7c5dxYme/S9V0w88916KM/o3fjbw+As9whSzgh0v+OxWpiytpDOoI6IIZNCg
-         kiXfVcs4P6zotXE49QRyS+174pocYtfxhhbsNPbM4GL72VJTi1I0O+pcYb6vALrHj5pP
-         JX60utEP2F843U3DQErVh+hgdyU+E34/04PzznXugQ9CAJxTq2lnptq9rFYm+GQ8fFjI
-         HO/A==
-X-Gm-Message-State: AO0yUKVGsQFKhvDCQM5r8o4KYz/TGDxcNWf+aKM5wchp2Na+vWgFMGki
-        6kZNJOy+XHgFIgw9q2QXVSsErAPbt2q15mDoU7gKug==
-X-Google-Smtp-Source: AK7set/FwLbWx6yiqkzvjcGbe3t+VxnD8xj+/iXHUbjRIwB0jRkvrcCR+VhH4DhOMzxTzJJlzd0h1TxaYfABci/YfRk=
-X-Received: by 2002:a0d:d456:0:b0:507:26dc:ebd with SMTP id
- w83-20020a0dd456000000b0050726dc0ebdmr239978ywd.455.1674665724181; Wed, 25
- Jan 2023 08:55:24 -0800 (PST)
+        bh=G/HaQvIeifLKJJp6JsBUTA/Cu0PG4HCFXOBV2LCBpGc=;
+        b=W6TUMa2BwYPkgqDSJB9FQxiyMS+A1N0Lh273cKu4Niz/5En8RIL2kg9qVNy4sQqSP8
+         UTdbGYHzyVxUFAI7r7xpxCqaV6FP5pkbeAkWTn0lYnCMErZzKh++5hXlv0bU5izE43iU
+         woNoxdAus23TvR2VTkXcAQ6iTEpgIvvqnDzKTJ7R7YhxbryTTYUMmOuLyuYMOGuWkskY
+         1cvxafJIAPjB3pA0WpC2wV7pGTduV4q6WRksO0ayT3DqwHoRJPGf5IQMYJkpARTQem4P
+         zrgqkyD4mmRB/xwOiv78ksgZwGZf3rpsr7a3rg+IaG9kg5DXH4MPwpkQEHWIMqXbAaXn
+         9sDw==
+X-Gm-Message-State: AO0yUKXTkzR95+HSGRwQAby7V5hsxg0QKi4II4EPFHjrTggyx7T6QUT4
+        WThCo2zrtoxzElUdf6OCqMGRD8MhE5avM/9s6A3jHQ==
+X-Google-Smtp-Source: AK7set97wrc43TM0/ovVONCfpWDKrtFzkyYmNKL3FW97qdU/yOGMPZssBTWD4MRF2UhZkPfEz4JLEj3/xF1loldnjYM=
+X-Received: by 2002:a25:ad02:0:b0:80b:6fd3:84d3 with SMTP id
+ y2-20020a25ad02000000b0080b6fd384d3mr714673ybi.316.1674665880846; Wed, 25 Jan
+ 2023 08:58:00 -0800 (PST)
 MIME-Version: 1.0
-References: <20230125083851.27759-1-surenb@google.com> <20230125083851.27759-4-surenb@google.com>
- <Y9D2zXpy+9iyZNun@dhcp22.suse.cz>
-In-Reply-To: <Y9D2zXpy+9iyZNun@dhcp22.suse.cz>
+References: <20230125083851.27759-1-surenb@google.com> <20230125083851.27759-5-surenb@google.com>
+ <Y9D4rWEsajV/WfNx@dhcp22.suse.cz>
+In-Reply-To: <Y9D4rWEsajV/WfNx@dhcp22.suse.cz>
 From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Wed, 25 Jan 2023 08:55:12 -0800
-Message-ID: <CAJuCfpG7KWnj3J_t4nN1R4gfiM5jgjsiTfL55hNa=Uvz4E835g@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] mm: replace vma->vm_flags direct modifications
- with modifier calls
+Date:   Wed, 25 Jan 2023 08:57:48 -0800
+Message-ID: <CAJuCfpGd2eG0RSMte9OVgsRVWPo+Sj7+t8EOo8o_iKzZoh1MXA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] mm: replace vma->vm_flags indirect modification in ksm_madvise
 To:     Michal Hocko <mhocko@suse.com>
 Cc:     akpm@linux-foundation.org, michel@lespinasse.org,
         jglisse@google.com, vbabka@suse.cz, hannes@cmpxchg.org,
@@ -137,39 +136,26 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Jan 25, 2023 at 1:30 AM 'Michal Hocko' via kernel-team
+On Wed, Jan 25, 2023 at 1:38 AM 'Michal Hocko' via kernel-team
 <kernel-team@android.com> wrote:
 >
-> On Wed 25-01-23 00:38:48, Suren Baghdasaryan wrote:
-> > Replace direct modifications to vma->vm_flags with calls to modifier
+> On Wed 25-01-23 00:38:49, Suren Baghdasaryan wrote:
+> > Replace indirect modifications to vma->vm_flags with calls to modifier
 > > functions to be able to track flag changes and to keep vma locking
-> > correctness.
+> > correctness. Add a BUG_ON check in ksm_madvise() to catch indirect
+> > vm_flags modification attempts.
 >
-> Is this a manual (git grep) based work or have you used Coccinele for
-> the patch generation?
+> Those BUG_ONs scream to much IMHO. KSM is an MM internal code so I
+> gueess we should be willing to trust it.
 
-It was a manual "search and replace" and in the process I temporarily
-renamed vm_flags to ensure I did not miss any usage.
-
->
-> My potentially incomplete check
-> $ git grep ">[[:space:]]*vm_flags[[:space:]]*[&|^]="
->
-> shows that nothing should be left after this. There is still quite a lot
-> of direct checks of the flags (more than 600). Maybe it would be good to
-> make flags accessible only via accessors which would also prevent any
-> future direct setting of those flags in uncontrolled way as well.
-
-Yes, I think Peter's suggestion in the first patch would also require
-that. Much more churn but probably worth it for the future
-maintenance. I'll add a patch which converts all readers as well.
+Yes, but I really want to prevent an indirect misuse since it was not
+easy to find these. If you feel strongly about it I will remove them
+or if you have a better suggestion I'm all for it.
 
 >
-> Anyway
+> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+>
 > Acked-by: Michal Hocko <mhocko@suse.com>
-
-Thanks for all the reviews!
-
 > --
 > Michal Hocko
 > SUSE Labs

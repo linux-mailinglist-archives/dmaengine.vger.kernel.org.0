@@ -2,65 +2,50 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 681546802C1
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Jan 2023 00:11:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2F8E6802BC
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Jan 2023 00:11:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235389AbjA2XLG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 29 Jan 2023 18:11:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50310 "EHLO
+        id S235358AbjA2XLF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 29 Jan 2023 18:11:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235195AbjA2XLD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 29 Jan 2023 18:11:03 -0500
+        with ESMTP id S229476AbjA2XLE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 29 Jan 2023 18:11:04 -0500
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB1781ADC4;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAD181ABEE;
         Sun, 29 Jan 2023 15:10:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=NQ7YgokTLfJq7c2D1zhGDjpisfmSP8xp8m3MmzMVL98=; b=tR5ChEh1M0Z7mmYghFZYDZkhYF
-        VwsBdewvyOhjcUGdyWIEJ3H9OnSGJvzGgGGGZK6So26F8lFBlOPLSVyT2MgVqp0F/7kFDvXC0/wJF
-        F8V88o2nnHVDmRqJkD+BL/KiXWv1Qm/VpDm8EvQqOCt6xD7Jf2tOAs/CfeuJLkkpjtQ6A3d9a7aIl
-        HBWFgKjNcLjPBir7kxsZcNI6e0nzt4fhSIlVln5iSKgticGUPEh3W2m/O3n7k+jPNFAodh6KmJuNN
-        sZE8ZbojS58xsI1pVvol23kXer5LTKxefgKbY9W0Us1t9+zMCnqXwf9SmPbfwDh5BVi7DqyzxV771
-        6Mnq71Lw==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=R2A7akXKvYokl+Oel/FVm+wy+mVQyUawn1NxgC81E2Q=; b=zSp0BbbBdQr9EfVSvgvP22raaU
+        3by1qWSActPJchHujFog9jq8U9bD09KWALit/PoDIWAXB62QJZJ7FqEV0cDK8NtPUqBY4euVkJm7C
+        5aZ6ygloTkJoZZeRFycGe7YG7eUgxn6dHifeRyGGC4j59taGhIqdN+bVKSSwdKo0d+znj30e3JG94
+        IE8+My/lfubfvwFpq9mBu0qC5BILedVg+M05sz4ObNr3Ra4JJKy1hxj70InMvlSZatYjk8jeZMBs9
+        sdfl1rVr2jluVTgYQhVtb31TtB3jQ6ZrbCYjDpkRCGZ2s3IQ7mYkXQmdXWG79I8we7VOAfQ5gEmLy
+        W3B9eVRg==;
 Received: from [2601:1c2:d00:6a60::9526] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pMGp5-0020M2-Rb; Sun, 29 Jan 2023 23:10:55 +0000
+        id 1pMGp7-0020M2-63; Sun, 29 Jan 2023 23:10:57 +0000
 From:   Randy Dunlap <rdunlap@infradead.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-mm@kvack.org,
+        linux-media@vger.kernel.org,
         Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
         Dave Jiang <dave.jiang@intel.com>, nvdimm@lists.linux.dev,
         Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
         Song Liu <song@kernel.org>, linux-raid@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Jiri Pirko <jiri@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-        Josh Triplett <josh@joshtriplett.org>, rcu@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, sparclinux@vger.kernel.org
-Subject: [PATCH 0/9] Documentation: correct lots of spelling errors (series 2)
-Date:   Sun, 29 Jan 2023 15:10:44 -0800
-Message-Id: <20230129231053.20863-1-rdunlap@infradead.org>
+        linux-usb@vger.kernel.org
+Subject: [PATCH 2/9] Documentation: driver-api: correct spelling
+Date:   Sun, 29 Jan 2023 15:10:46 -0800
+Message-Id: <20230129231053.20863-3-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20230129231053.20863-1-rdunlap@infradead.org>
+References: <20230129231053.20863-1-rdunlap@infradead.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -72,164 +57,14 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Maintainers of specific kernel subsystems are only Cc-ed on their
-respective patches, not the entire series. [if all goes well]
+Correct spelling problems for Documentation/driver-api/ as reported
+by codespell.
 
-These patches are based on linux-next-20230127.
-
-
- [PATCH 1/9] Documentation: admin-guide: correct spelling
- [PATCH 2/9] Documentation: driver-api: correct spelling
- [PATCH 3/9] Documentation: hwmon: correct spelling
- [PATCH 4/9] Documentation: networking: correct spelling
- [PATCH 5/9] Documentation: RCU: correct spelling
- [PATCH 6/9] Documentation: scsi/ChangeLog*: correct spelling
- [PATCH 7/9] Documentation: scsi: correct spelling
- [PATCH 8/9] Documentation: sparc: correct spelling
- [PATCH 9/9] Documentation: userspace-api: correct spelling
-
-
- Documentation/RCU/Design/Expedited-Grace-Periods/Expedited-Grace-Periods.rst         |    6 -
- Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst                |    2 
- Documentation/RCU/RTFP.txt                                                           |   10 +-
- Documentation/RCU/UP.rst                                                             |    4 
- Documentation/RCU/lockdep.rst                                                        |    2 
- Documentation/RCU/torture.rst                                                        |    4 
- Documentation/admin-guide/bcache.rst                                                 |    2 
- Documentation/admin-guide/cgroup-v1/blkio-controller.rst                             |    2 
- Documentation/admin-guide/cgroup-v2.rst                                              |   10 +-
- Documentation/admin-guide/cifs/usage.rst                                             |    4 
- Documentation/admin-guide/device-mapper/cache-policies.rst                           |    2 
- Documentation/admin-guide/device-mapper/dm-ebs.rst                                   |    2 
- Documentation/admin-guide/device-mapper/dm-zoned.rst                                 |    2 
- Documentation/admin-guide/device-mapper/unstriped.rst                                |   10 +-
- Documentation/admin-guide/dynamic-debug-howto.rst                                    |    2 
- Documentation/admin-guide/gpio/gpio-sim.rst                                          |    2 
- Documentation/admin-guide/hw-vuln/mds.rst                                            |    4 
- Documentation/admin-guide/kernel-parameters.txt                                      |    8 -
- Documentation/admin-guide/laptops/thinkpad-acpi.rst                                  |    2 
- Documentation/admin-guide/md.rst                                                     |    2 
- Documentation/admin-guide/media/bttv.rst                                             |    2 
- Documentation/admin-guide/media/building.rst                                         |    2 
- Documentation/admin-guide/media/si476x.rst                                           |    2 
- Documentation/admin-guide/media/vivid.rst                                            |    2 
- Documentation/admin-guide/mm/hugetlbpage.rst                                         |    2 
- Documentation/admin-guide/mm/numa_memory_policy.rst                                  |    4 
- Documentation/admin-guide/perf/hns3-pmu.rst                                          |    2 
- Documentation/admin-guide/pm/amd-pstate.rst                                          |    2 
- Documentation/admin-guide/spkguide.txt                                               |    4 
- Documentation/admin-guide/sysctl/vm.rst                                              |    4 
- Documentation/admin-guide/sysrq.rst                                                  |    2 
- Documentation/driver-api/dma-buf.rst                                                 |    2 
- Documentation/driver-api/dmaengine/client.rst                                        |    2 
- Documentation/driver-api/dmaengine/dmatest.rst                                       |    2 
- Documentation/driver-api/hsi.rst                                                     |    4 
- Documentation/driver-api/io-mapping.rst                                              |    4 
- Documentation/driver-api/md/md-cluster.rst                                           |    2 
- Documentation/driver-api/md/raid5-cache.rst                                          |    2 
- Documentation/driver-api/media/drivers/vidtv.rst                                     |    2 
- Documentation/driver-api/media/dtv-demux.rst                                         |    2 
- Documentation/driver-api/media/v4l2-subdev.rst                                       |    4 
- Documentation/driver-api/mei/nfc.rst                                                 |    2 
- Documentation/driver-api/nfc/nfc-hci.rst                                             |    2 
- Documentation/driver-api/nvdimm/nvdimm.rst                                           |    2 
- Documentation/driver-api/nvdimm/security.rst                                         |    2 
- Documentation/driver-api/pin-control.rst                                             |    2 
- Documentation/driver-api/pldmfw/index.rst                                            |    2 
- Documentation/driver-api/serial/driver.rst                                           |    2 
- Documentation/driver-api/surface_aggregator/ssh.rst                                  |    2 
- Documentation/driver-api/thermal/intel_powerclamp.rst                                |    2 
- Documentation/driver-api/usb/dwc3.rst                                                |    2 
- Documentation/driver-api/usb/usb3-debug-port.rst                                     |    2 
- Documentation/hwmon/aht10.rst                                                        |    2 
- Documentation/hwmon/aspeed-pwm-tacho.rst                                             |    2 
- Documentation/hwmon/corsair-psu.rst                                                  |    2 
- Documentation/hwmon/gsc-hwmon.rst                                                    |    6 -
- Documentation/hwmon/hwmon-kernel-api.rst                                             |    4 
- Documentation/hwmon/ltc2978.rst                                                      |    2 
- Documentation/hwmon/max6697.rst                                                      |    2 
- Documentation/hwmon/menf21bmc.rst                                                    |    2 
- Documentation/hwmon/pmbus-core.rst                                                   |    2 
- Documentation/hwmon/sht4x.rst                                                        |    2 
- Documentation/hwmon/smm665.rst                                                       |    2 
- Documentation/hwmon/stpddc60.rst                                                     |    2 
- Documentation/hwmon/vexpress.rst                                                     |    2 
- Documentation/hwmon/via686a.rst                                                      |    2 
- Documentation/networking/af_xdp.rst                                                  |    4 
- Documentation/networking/arcnet-hardware.rst                                         |    2 
- Documentation/networking/can.rst                                                     |    2 
- Documentation/networking/can_ucan_protocol.rst                                       |    2 
- Documentation/networking/cdc_mbim.rst                                                |    2 
- Documentation/networking/device_drivers/atm/iphase.rst                               |    2 
- Documentation/networking/device_drivers/can/ctu/ctucanfd-driver.rst                  |    4 
- Documentation/networking/device_drivers/can/ctu/fsm_txt_buffer_user.svg              |    4 
- Documentation/networking/device_drivers/ethernet/3com/vortex.rst                     |    2 
- Documentation/networking/device_drivers/ethernet/aquantia/atlantic.rst               |    6 -
- Documentation/networking/device_drivers/ethernet/freescale/dpaa2/mac-phy-support.rst |    2 
- Documentation/networking/device_drivers/ethernet/marvell/octeontx2.rst               |    2 
- Documentation/networking/device_drivers/ethernet/pensando/ionic.rst                  |    2 
- Documentation/networking/device_drivers/ethernet/ti/am65_nuss_cpsw_switchdev.rst     |    2 
- Documentation/networking/device_drivers/ethernet/ti/cpsw_switchdev.rst               |    2 
- Documentation/networking/device_drivers/wwan/iosm.rst                                |    2 
- Documentation/networking/devlink/ice.rst                                             |    4 
- Documentation/networking/devlink/netdevsim.rst                                       |    2 
- Documentation/networking/devlink/prestera.rst                                        |    2 
- Documentation/networking/dsa/configuration.rst                                       |    2 
- Documentation/networking/ethtool-netlink.rst                                         |    6 -
- Documentation/networking/gtp.rst                                                     |    2 
- Documentation/networking/ieee802154.rst                                              |    2 
- Documentation/networking/ip-sysctl.rst                                               |    6 -
- Documentation/networking/ipvlan.rst                                                  |    2 
- Documentation/networking/j1939.rst                                                   |    2 
- Documentation/networking/net_failover.rst                                            |    2 
- Documentation/networking/netconsole.rst                                              |    2 
- Documentation/networking/page_pool.rst                                               |    6 -
- Documentation/networking/phonet.rst                                                  |    2 
- Documentation/networking/phy.rst                                                     |    2 
- Documentation/networking/regulatory.rst                                              |    4 
- Documentation/networking/rxrpc.rst                                                   |    2 
- Documentation/networking/snmp_counter.rst                                            |    4 
- Documentation/networking/sysfs-tagging.rst                                           |    2 
- Documentation/scsi/ChangeLog.lpfc                                                    |   36 ++++----
- Documentation/scsi/ChangeLog.megaraid                                                |    8 -
- Documentation/scsi/ChangeLog.megaraid_sas                                            |    4 
- Documentation/scsi/ChangeLog.ncr53c8xx                                               |   16 +--
- Documentation/scsi/ChangeLog.sym53c8xx                                               |   14 +--
- Documentation/scsi/ChangeLog.sym53c8xx_2                                             |   10 +-
- Documentation/scsi/ncr53c8xx.rst                                                     |    4 
- Documentation/scsi/sym53c8xx_2.rst                                                   |    2 
- Documentation/scsi/tcm_qla2xxx.rst                                                   |    2 
- Documentation/scsi/ufs.rst                                                           |    2 
- Documentation/sparc/adi.rst                                                          |    4 
- Documentation/sparc/oradax/dax-hv-api.txt                                            |   44 +++++-----
- Documentation/userspace-api/iommufd.rst                                              |    2 
- Documentation/userspace-api/media/drivers/st-vgxy61.rst                              |    2 
- Documentation/userspace-api/media/rc/lirc-set-wideband-receiver.rst                  |    2 
- Documentation/userspace-api/media/rc/rc-protos.rst                                   |    2 
- Documentation/userspace-api/media/rc/rc-tables.rst                                   |    2 
- Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst                             |    2 
- Documentation/userspace-api/media/v4l/ext-ctrls-codec-stateless.rst                  |    2 
- Documentation/userspace-api/media/v4l/ext-ctrls-jpeg.rst                             |    2 
- Documentation/userspace-api/media/v4l/hist-v4l2.rst                                  |    4 
- Documentation/userspace-api/media/v4l/pixfmt-yuv-luma.rst                            |    2 
- Documentation/userspace-api/media/v4l/vidioc-cropcap.rst                             |    2 
- Documentation/userspace-api/seccomp_filter.rst                                       |    2 
- Documentation/userspace-api/sysfs-platform_profile.rst                               |    2 
- 126 files changed, 232 insertions(+), 232 deletions(-)
-
-
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Cc: Jonathan Corbet <corbet@lwn.net>
 Cc: linux-doc@vger.kernel.org
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Zefan Li <lizefan.x@bytedance.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: cgroups@vger.kernel.org
-Cc: Alasdair Kergon <agk@redhat.com>
-Cc: Mike Snitzer <snitzer@kernel.org>
-Cc: dm-devel@redhat.com
 Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc: linux-media@vger.kernel.org
-Cc: linux-mm@kvack.org
 Cc: Dan Williams <dan.j.williams@intel.com>
 Cc: Vishal Verma <vishal.l.verma@intel.com>
 Cc: Dave Jiang <dave.jiang@intel.com>
@@ -240,21 +75,306 @@ Cc: Song Liu <song@kernel.org>
 Cc: linux-raid@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: linux-usb@vger.kernel.org
-Cc: Jean Delvare <jdelvare@suse.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org
-Cc: Jiri Pirko <jiri@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Neeraj Upadhyay <quic_neeraju@quicinc.com>
-Cc: Josh Triplett <josh@joshtriplett.org>
-Cc: rcu@vger.kernel.org
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org
-Cc: sparclinux@vger.kernel.org
+---
+ Documentation/driver-api/dma-buf.rst                  |    2 +-
+ Documentation/driver-api/dmaengine/client.rst         |    2 +-
+ Documentation/driver-api/dmaengine/dmatest.rst        |    2 +-
+ Documentation/driver-api/hsi.rst                      |    4 ++--
+ Documentation/driver-api/io-mapping.rst               |    4 ++--
+ Documentation/driver-api/md/md-cluster.rst            |    2 +-
+ Documentation/driver-api/md/raid5-cache.rst           |    2 +-
+ Documentation/driver-api/media/drivers/vidtv.rst      |    2 +-
+ Documentation/driver-api/media/dtv-demux.rst          |    2 +-
+ Documentation/driver-api/media/v4l2-subdev.rst        |    4 ++--
+ Documentation/driver-api/mei/nfc.rst                  |    2 +-
+ Documentation/driver-api/nfc/nfc-hci.rst              |    2 +-
+ Documentation/driver-api/nvdimm/nvdimm.rst            |    2 +-
+ Documentation/driver-api/nvdimm/security.rst          |    2 +-
+ Documentation/driver-api/pin-control.rst              |    2 +-
+ Documentation/driver-api/pldmfw/index.rst             |    2 +-
+ Documentation/driver-api/serial/driver.rst            |    2 +-
+ Documentation/driver-api/surface_aggregator/ssh.rst   |    2 +-
+ Documentation/driver-api/thermal/intel_powerclamp.rst |    2 +-
+ Documentation/driver-api/usb/dwc3.rst                 |    2 +-
+ Documentation/driver-api/usb/usb3-debug-port.rst      |    2 +-
+ 21 files changed, 24 insertions(+), 24 deletions(-)
+
+diff -- a/Documentation/driver-api/dma-buf.rst b/Documentation/driver-api/dma-buf.rst
+--- a/Documentation/driver-api/dma-buf.rst
++++ b/Documentation/driver-api/dma-buf.rst
+@@ -264,7 +264,7 @@ through memory management dependencies w
+ randomly hangs workloads until the timeout kicks in. Workloads, which from
+ userspace's perspective, do not contain a deadlock.  In such a mixed fencing
+ architecture there is no single entity with knowledge of all dependencies.
+-Thefore preventing such deadlocks from within the kernel is not possible.
++Therefore preventing such deadlocks from within the kernel is not possible.
+ 
+ The only solution to avoid dependencies loops is by not allowing indefinite
+ fences in the kernel. This means:
+diff -- a/Documentation/driver-api/hsi.rst b/Documentation/driver-api/hsi.rst
+--- a/Documentation/driver-api/hsi.rst
++++ b/Documentation/driver-api/hsi.rst
+@@ -4,7 +4,7 @@ High Speed Synchronous Serial Interface
+ Introduction
+ ---------------
+ 
+-High Speed Syncronous Interface (HSI) is a fullduplex, low latency protocol,
++High Speed Synchronous Interface (HSI) is a full duplex, low latency protocol,
+ that is optimized for die-level interconnect between an Application Processor
+ and a Baseband chipset. It has been specified by the MIPI alliance in 2003 and
+ implemented by multiple vendors since then.
+@@ -52,7 +52,7 @@ hsi-char Device
+ ------------------
+ 
+ Each port automatically registers a generic client driver called hsi_char,
+-which provides a charecter device for userspace representing the HSI port.
++which provides a character device for userspace representing the HSI port.
+ It can be used to communicate via HSI from userspace. Userspace may
+ configure the hsi_char device using the following ioctl commands:
+ 
+diff -- a/Documentation/driver-api/mei/nfc.rst b/Documentation/driver-api/mei/nfc.rst
+--- a/Documentation/driver-api/mei/nfc.rst
++++ b/Documentation/driver-api/mei/nfc.rst
+@@ -3,7 +3,7 @@
+ MEI NFC
+ -------
+ 
+-Some Intel 8 and 9 Serieses chipsets supports NFC devices connected behind
++Some Intel 8 and 9 Series chipsets support NFC devices connected behind
+ the Intel Management Engine controller.
+ MEI client bus exposes the NFC chips as NFC phy devices and enables
+ binding with Microread and NXP PN544 NFC device driver from the Linux NFC
+diff -- a/Documentation/driver-api/nfc/nfc-hci.rst b/Documentation/driver-api/nfc/nfc-hci.rst
+--- a/Documentation/driver-api/nfc/nfc-hci.rst
++++ b/Documentation/driver-api/nfc/nfc-hci.rst
+@@ -150,7 +150,7 @@ LLC
+ 
+ Communication between the CPU and the chip often requires some link layer
+ protocol. Those are isolated as modules managed by the HCI layer. There are
+-currently two modules : nop (raw transfert) and shdlc.
++currently two modules : nop (raw transfer) and shdlc.
+ A new llc must implement the following functions::
+ 
+   struct nfc_llc_ops {
+diff -- a/Documentation/driver-api/serial/driver.rst b/Documentation/driver-api/serial/driver.rst
+--- a/Documentation/driver-api/serial/driver.rst
++++ b/Documentation/driver-api/serial/driver.rst
+@@ -24,7 +24,7 @@ console support.
+ Console Support
+ ---------------
+ 
+-The serial core provides a few helper functions.  This includes identifing
++The serial core provides a few helper functions.  This includes identifying
+ the correct port structure (via uart_get_console()) and decoding command line
+ arguments (uart_parse_options()).
+ 
+diff -- a/Documentation/driver-api/surface_aggregator/ssh.rst b/Documentation/driver-api/surface_aggregator/ssh.rst
+--- a/Documentation/driver-api/surface_aggregator/ssh.rst
++++ b/Documentation/driver-api/surface_aggregator/ssh.rst
+@@ -77,7 +77,7 @@ after the frame structure and before the
+ its own CRC (over all payload bytes). If the payload is not present (i.e.
+ the frame has ``LEN=0``), the CRC of the payload is still present and will
+ evaluate to ``0xffff``. The |LEN| field does not include any of the CRCs, it
+-equals the number of bytes inbetween the CRC of the frame and the CRC of the
++equals the number of bytes between the CRC of the frame and the CRC of the
+ payload.
+ 
+ Additionally, the following fixed two-byte sequences are used:
+diff -- a/Documentation/driver-api/nvdimm/nvdimm.rst b/Documentation/driver-api/nvdimm/nvdimm.rst
+--- a/Documentation/driver-api/nvdimm/nvdimm.rst
++++ b/Documentation/driver-api/nvdimm/nvdimm.rst
+@@ -82,7 +82,7 @@ LABEL:
+   Metadata stored on a DIMM device that partitions and identifies
+   (persistently names) capacity allocated to different PMEM namespaces. It
+   also indicates whether an address abstraction like a BTT is applied to
+-  the namepsace.  Note that traditional partition tables, GPT/MBR, are
++  the namespace.  Note that traditional partition tables, GPT/MBR, are
+   layered on top of a PMEM namespace, or an address abstraction like BTT
+   if present, but partition support is deprecated going forward.
+ 
+diff -- a/Documentation/driver-api/nvdimm/security.rst b/Documentation/driver-api/nvdimm/security.rst
+--- a/Documentation/driver-api/nvdimm/security.rst
++++ b/Documentation/driver-api/nvdimm/security.rst
+@@ -83,7 +83,7 @@ passed in.
+ 6. Freeze
+ ---------
+ The freeze operation does not require any keys. The security config can be
+-frozen by a user with root privelege.
++frozen by a user with root privilege.
+ 
+ 7. Disable
+ ----------
+diff -- a/Documentation/driver-api/thermal/intel_powerclamp.rst b/Documentation/driver-api/thermal/intel_powerclamp.rst
+--- a/Documentation/driver-api/thermal/intel_powerclamp.rst
++++ b/Documentation/driver-api/thermal/intel_powerclamp.rst
+@@ -85,7 +85,7 @@ migrated, unless the CPU is taken offlin
+ belong to the offlined CPUs will be terminated immediately.
+ 
+ Running as SCHED_FIFO and relatively high priority, also allows such
+-scheme to work for both preemptable and non-preemptable kernels.
++scheme to work for both preemptible and non-preemptible kernels.
+ Alignment of idle time around jiffies ensures scalability for HZ
+ values. This effect can be better visualized using a Perf timechart.
+ The following diagram shows the behavior of kernel thread
+diff -- a/Documentation/driver-api/usb/dwc3.rst b/Documentation/driver-api/usb/dwc3.rst
+--- a/Documentation/driver-api/usb/dwc3.rst
++++ b/Documentation/driver-api/usb/dwc3.rst
+@@ -18,7 +18,7 @@ controller which can be configured in on
+ 	4. Hub configuration
+ 
+ Linux currently supports several versions of this controller. In all
+-likelyhood, the version in your SoC is already supported. At the time
++likelihood, the version in your SoC is already supported. At the time
+ of this writing, known tested versions range from 2.02a to 3.10a. As a
+ rule of thumb, anything above 2.02a should work reliably well.
+ 
+diff -- a/Documentation/driver-api/usb/usb3-debug-port.rst b/Documentation/driver-api/usb/usb3-debug-port.rst
+--- a/Documentation/driver-api/usb/usb3-debug-port.rst
++++ b/Documentation/driver-api/usb/usb3-debug-port.rst
+@@ -48,7 +48,7 @@ kernel boot parameter::
+ 	"earlyprintk=xdbc"
+ 
+ If there are multiple xHCI controllers in your system, you can
+-append a host contoller index to this kernel parameter. This
++append a host controller index to this kernel parameter. This
+ index starts from 0.
+ 
+ Current design doesn't support DbC runtime suspend/resume. As
+diff -- a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
+--- a/Documentation/driver-api/dmaengine/client.rst
++++ b/Documentation/driver-api/dmaengine/client.rst
+@@ -175,7 +175,7 @@ The details of these operations are:
+     driver can ask for the pointer, maximum size and the currently used size of
+     the metadata and can directly update or read it.
+ 
+-    Becasue the DMA driver manages the memory area containing the metadata,
++    Because the DMA driver manages the memory area containing the metadata,
+     clients must make sure that they do not try to access or get the pointer
+     after their transfer completion callback has run for the descriptor.
+     If no completion callback has been defined for the transfer, then the
+diff -- a/Documentation/driver-api/dmaengine/dmatest.rst b/Documentation/driver-api/dmaengine/dmatest.rst
+--- a/Documentation/driver-api/dmaengine/dmatest.rst
++++ b/Documentation/driver-api/dmaengine/dmatest.rst
+@@ -89,7 +89,7 @@ The following command returns the state
+ 
+     % cat /sys/module/dmatest/parameters/run
+ 
+-To wait for test completion userpace can poll 'run' until it is false, or use
++To wait for test completion userspace can poll 'run' until it is false, or use
+ the wait parameter. Specifying 'wait=1' when loading the module causes module
+ initialization to pause until a test run has completed, while reading
+ /sys/module/dmatest/parameters/wait waits for any running test to complete
+diff -- a/Documentation/driver-api/io-mapping.rst b/Documentation/driver-api/io-mapping.rst
+--- a/Documentation/driver-api/io-mapping.rst
++++ b/Documentation/driver-api/io-mapping.rst
+@@ -44,7 +44,7 @@ This _wc variant returns a write-combini
+ used with mappings created by io_mapping_create_wc()
+ 
+ Temporary mappings are only valid in the context of the caller. The mapping
+-is not guaranteed to be globaly visible.
++is not guaranteed to be globally visible.
+ 
+ io_mapping_map_local_wc() has a side effect on X86 32bit as it disables
+ migration to make the mapping code work. No caller can rely on this side
+@@ -78,7 +78,7 @@ variant, although this may be significan
+ 				unsigned long offset)
+ 
+ This works like io_mapping_map_atomic/local_wc() except it has no side
+-effects and the pointer is globaly visible.
++effects and the pointer is globally visible.
+ 
+ The mappings are released with::
+ 
+diff -- a/Documentation/driver-api/media/drivers/vidtv.rst b/Documentation/driver-api/media/drivers/vidtv.rst
+--- a/Documentation/driver-api/media/drivers/vidtv.rst
++++ b/Documentation/driver-api/media/drivers/vidtv.rst
+@@ -28,7 +28,7 @@ Currently, it consists of:
+   takes parameters at initialization that will dictate how the simulation
+   behaves.
+ 
+-- Code reponsible for encoding a valid MPEG Transport Stream, which is then
++- Code responsible for encoding a valid MPEG Transport Stream, which is then
+   passed to the bridge driver. This fake stream contains some hardcoded content.
+   For now, we have a single, audio-only channel containing a single MPEG
+   Elementary Stream, which in turn contains a SMPTE 302m encoded sine-wave.
+diff -- a/Documentation/driver-api/media/dtv-demux.rst b/Documentation/driver-api/media/dtv-demux.rst
+--- a/Documentation/driver-api/media/dtv-demux.rst
++++ b/Documentation/driver-api/media/dtv-demux.rst
+@@ -24,7 +24,7 @@ unless this is fixed in the HW platform.
+ 
+ The demux kABI only controls front-ends regarding to their connections with
+ demuxes; the kABI used to set the other front-end parameters, such as
+-tuning, are devined via the Digital TV Frontend kABI.
++tuning, are defined via the Digital TV Frontend kABI.
+ 
+ The functions that implement the abstract interface demux should be defined
+ static or module private and registered to the Demux core for external
+diff -- a/Documentation/driver-api/pin-control.rst b/Documentation/driver-api/pin-control.rst
+--- a/Documentation/driver-api/pin-control.rst
++++ b/Documentation/driver-api/pin-control.rst
+@@ -836,7 +836,7 @@ hardware and shall be put into different
+ 
+ Depending on the exact HW register design, some functions exposed by the
+ GPIO subsystem may call into the pinctrl subsystem in order to
+-co-ordinate register settings across HW modules. In particular, this may
++coordinate register settings across HW modules. In particular, this may
+ be needed for HW with separate GPIO and pin controller HW modules, where
+ e.g. GPIO direction is determined by a register in the pin controller HW
+ module rather than the GPIO HW module.
+diff -- a/Documentation/driver-api/pldmfw/index.rst b/Documentation/driver-api/pldmfw/index.rst
+--- a/Documentation/driver-api/pldmfw/index.rst
++++ b/Documentation/driver-api/pldmfw/index.rst
+@@ -20,7 +20,7 @@ Overview of the ``pldmfw`` library
+ 
+ The ``pldmfw`` library is intended to be used by device drivers for
+ implementing device flash update based on firmware files following the PLDM
+-firwmare file format.
++firmware file format.
+ 
+ It is implemented using an ops table that allows device drivers to provide
+ the underlying device specific functionality.
+diff -- a/Documentation/driver-api/md/md-cluster.rst b/Documentation/driver-api/md/md-cluster.rst
+--- a/Documentation/driver-api/md/md-cluster.rst
++++ b/Documentation/driver-api/md/md-cluster.rst
+@@ -65,7 +65,7 @@ There are three groups of locks for mana
+ 2.3 new-device management
+ -------------------------
+ 
+- A single lock: "no-new-dev" is used to co-ordinate the addition of
++ A single lock: "no-new-dev" is used to coordinate the addition of
+  new devices - this must be synchronized across the array.
+  Normally all nodes hold a concurrent-read lock on this device.
+ 
+diff -- a/Documentation/driver-api/md/raid5-cache.rst b/Documentation/driver-api/md/raid5-cache.rst
+--- a/Documentation/driver-api/md/raid5-cache.rst
++++ b/Documentation/driver-api/md/raid5-cache.rst
+@@ -81,7 +81,7 @@ The write-through and write-back cache u
+ is organized as a simple write log. The log consists of 'meta data' and 'data'
+ pairs. The meta data describes the data. It also includes checksum and sequence
+ ID for recovery identification. Data can be IO data and parity data. Data is
+-checksumed too. The checksum is stored in the meta data ahead of the data. The
++checksummed too. The checksum is stored in the meta data ahead of the data. The
+ checksum is an optimization because MD can write meta and data freely without
+ worry about the order. MD superblock has a field pointed to the valid meta data
+ of log head.
+diff -- a/Documentation/driver-api/media/v4l2-subdev.rst b/Documentation/driver-api/media/v4l2-subdev.rst
+--- a/Documentation/driver-api/media/v4l2-subdev.rst
++++ b/Documentation/driver-api/media/v4l2-subdev.rst
+@@ -321,7 +321,7 @@ response to video node operations. This
+ hardware from applications. For complex devices, finer-grained control of the
+ device than what the video nodes offer may be required. In those cases, bridge
+ drivers that implement :ref:`the media controller API <media_controller>` may
+-opt for making the subdevice operations directly accessible from userpace.
++opt for making the subdevice operations directly accessible from userspace.
+ 
+ Device nodes named ``v4l-subdev``\ *X* can be created in ``/dev`` to access
+ sub-devices directly. If a sub-device supports direct userspace configuration
+@@ -574,7 +574,7 @@ issues with subdevice drivers that let t
+ as they expect to receive the appropriate state as a parameter. To help the
+ conversion of subdevice drivers to a managed active state without having to
+ convert all callers at the same time, an additional wrapper layer has been
+-added to v4l2_subdev_call(), which handles the NULL case by geting and locking
++added to v4l2_subdev_call(), which handles the NULL case by getting and locking
+ the callee's active state with :c:func:`v4l2_subdev_lock_and_get_active_state()`,
+ and unlocking the state after the call.
+ 

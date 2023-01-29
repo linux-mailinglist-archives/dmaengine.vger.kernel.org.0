@@ -2,268 +2,259 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E6D167F948
-	for <lists+dmaengine@lfdr.de>; Sat, 28 Jan 2023 16:58:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 681546802C1
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Jan 2023 00:11:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232579AbjA1P6g (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 28 Jan 2023 10:58:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59804 "EHLO
+        id S235389AbjA2XLG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 29 Jan 2023 18:11:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231496AbjA1P6f (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 28 Jan 2023 10:58:35 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E081298DA;
-        Sat, 28 Jan 2023 07:58:30 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 816D460C23;
-        Sat, 28 Jan 2023 15:58:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DC8FC433D2;
-        Sat, 28 Jan 2023 15:58:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674921508;
-        bh=7R+Y0pFZ9qQaQE2Of8Zyt01fF+w51NH/3ezIsAynqvk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=d4enHA5MJ371GrPucjk++EVvYqWfJUb0Rmdj7ygsHD6FdJSuKLpmLKZObRmyoduRb
-         F7/rgXbXthLnxMVJdAyroI/3tQf7IL+wc3TYMiY9DLLWZ9lgFPGplKFOxflb3tFuNt
-         UtYcUlsjz0il95gmiB3mk4Bvk/TbRiYPJ9FjEivIPmpDedLPGd1WcinaLHdellNT7Y
-         g/L7fp8K98T+nO5sT29tqenfN8c3UVjvN0Ncbjl4SfTpSGVwHHakRtS6Y7/70MN4yc
-         AsRCXMaJ9yLeFgwHKcot/dcC5xFelUPaBwh2MZkhTt1C1Gr3icbGZaQVBWurLjEUVb
-         0mCC0mntbHQgQ==
-Date:   Sat, 28 Jan 2023 16:12:17 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Gatien Chevallier <gatien.chevallier@foss.st.com>
-Cc:     <Oleksii_Moisieiev@epam.com>, <gregkh@linuxfoundation.org>,
-        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <alexandre.torgue@foss.st.com>, <vkoul@kernel.org>,
-        <olivier.moysan@foss.st.com>, <arnaud.pouliquen@foss.st.com>,
-        <mchehab@kernel.org>, <fabrice.gasnier@foss.st.com>,
-        <ulf.hansson@linaro.org>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <linux-crypto@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <linux-media@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-serial@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        Loic PALLARDY <loic.pallardy@st.com>
-Subject: Re: [PATCH v3 4/6] bus: stm32_sys_bus: add support for STM32MP15
- and STM32MP13 system bus
-Message-ID: <20230128161217.0e79436e@jic23-huawei>
-In-Reply-To: <20230127164040.1047583-5-gatien.chevallier@foss.st.com>
-References: <20230127164040.1047583-1-gatien.chevallier@foss.st.com>
-        <20230127164040.1047583-5-gatien.chevallier@foss.st.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.36; x86_64-pc-linux-gnu)
+        with ESMTP id S235195AbjA2XLD (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 29 Jan 2023 18:11:03 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB1781ADC4;
+        Sun, 29 Jan 2023 15:10:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=NQ7YgokTLfJq7c2D1zhGDjpisfmSP8xp8m3MmzMVL98=; b=tR5ChEh1M0Z7mmYghFZYDZkhYF
+        VwsBdewvyOhjcUGdyWIEJ3H9OnSGJvzGgGGGZK6So26F8lFBlOPLSVyT2MgVqp0F/7kFDvXC0/wJF
+        F8V88o2nnHVDmRqJkD+BL/KiXWv1Qm/VpDm8EvQqOCt6xD7Jf2tOAs/CfeuJLkkpjtQ6A3d9a7aIl
+        HBWFgKjNcLjPBir7kxsZcNI6e0nzt4fhSIlVln5iSKgticGUPEh3W2m/O3n7k+jPNFAodh6KmJuNN
+        sZE8ZbojS58xsI1pVvol23kXer5LTKxefgKbY9W0Us1t9+zMCnqXwf9SmPbfwDh5BVi7DqyzxV771
+        6Mnq71Lw==;
+Received: from [2601:1c2:d00:6a60::9526] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pMGp5-0020M2-Rb; Sun, 29 Jan 2023 23:10:55 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-mm@kvack.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, nvdimm@lists.linux.dev,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Song Liu <song@kernel.org>, linux-raid@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Jiri Pirko <jiri@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+        Josh Triplett <josh@joshtriplett.org>, rcu@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, sparclinux@vger.kernel.org
+Subject: [PATCH 0/9] Documentation: correct lots of spelling errors (series 2)
+Date:   Sun, 29 Jan 2023 15:10:44 -0800
+Message-Id: <20230129231053.20863-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, 27 Jan 2023 17:40:38 +0100
-Gatien Chevallier <gatien.chevallier@foss.st.com> wrote:
+Maintainers of specific kernel subsystems are only Cc-ed on their
+respective patches, not the entire series. [if all goes well]
 
-> This driver is checking the access rights of the different
-> peripherals connected to the system bus. If access is denied,
-> the associated device tree node is skipped so the platform bus
-> does not probe it.
-> 
-> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
-> Signed-off-by: Loic PALLARDY <loic.pallardy@st.com>
-
-Hi Gatien,
-
-A few comments inline,
-
-Thanks,
-
-Jonathan
-
-> diff --git a/drivers/bus/stm32_sys_bus.c b/drivers/bus/stm32_sys_bus.c
-> new file mode 100644
-> index 000000000000..c12926466bae
-> --- /dev/null
-> +++ b/drivers/bus/stm32_sys_bus.c
-> @@ -0,0 +1,168 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2023, STMicroelectronics - All Rights Reserved
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/bits.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +
-> +/* ETZPC peripheral as firewall bus */
-> +/* ETZPC registers */
-> +#define ETZPC_DECPROT			0x10
-> +
-> +/* ETZPC miscellaneous */
-> +#define ETZPC_PROT_MASK			GENMASK(1, 0)
-> +#define ETZPC_PROT_A7NS			0x3
-> +#define ETZPC_DECPROT_SHIFT		1
-
-This define makes the code harder to read.  What we care about is
-the number of bits in the register divided by number of entries.
-(which is 2) hence the shift by 1. See below for more on this.
+These patches are based on linux-next-20230127.
 
 
-> +
-> +#define IDS_PER_DECPROT_REGS		16
-
-> +#define STM32MP15_ETZPC_ENTRIES		96
-> +#define STM32MP13_ETZPC_ENTRIES		64
-
-These defines just make the code harder to check.
-They aren't magic numbers, but rather just telling us how many
-entries there are, so I would just put them in the structures directly.
-Their use make it clear what they are without needing to give them a name.
-
-
-> +struct stm32_sys_bus_match_data {
-
-Comment on naming of this below.
-
-> +	unsigned int max_entries;
-> +};
-> +
-
-+static int stm32_etzpc_get_access(struct sys_bus_data *pdata, struct device_node *np)
-+{
-+	int err;
-+	u32 offset, reg_offset, sec_val, id;
-+
-+	err = stm32_sys_bus_get_periph_id(pdata, np, &id);
-+	if (err)
-+		return err;
-+
-+	/* Check access configuration, 16 peripherals per register */
-+	reg_offset = ETZPC_DECPROT + 0x4 * (id / IDS_PER_DECPROT_REGS);
-+	offset = (id % IDS_PER_DECPROT_REGS) << ETZPC_DECPROT_SHIFT;
-
-Use of defines in here is actively unhelpful when it comes to review. I would suggest letting
-the maths be self explanatory (even if it's more code).
-
-	offset = (id % IDS_PER_DECPROT_REGS) * (sizeof(u32) * BITS_PER_BYTE / IDS_PER_DECPROT_REGS);
-
-Or if you prefer have a define of
-
-#define DECPROT_BITS_PER_ID (sizeof(u32) * BITS_PER_BYTE / IDS_PER_DECPROT_REGS)
-
-and
-	offset = (id % IDS_PER_DECPROT_REGS) * DECPROT_BITS_PER_ID;
-
-+
-+	/* Verify peripheral is non-secure and attributed to cortex A7 */
-+	sec_val = (readl(pdata->sys_bus_base + reg_offset) >> offset) & ETZPC_PROT_MASK;
-+	if (sec_val != ETZPC_PROT_A7NS) {
-+		dev_dbg(pdata->dev, "Invalid bus configuration: reg_offset %#x, value %d\n",
-+			reg_offset, sec_val);
-+		return -EACCES;
-+	}
-+
-+	return 0;
-+}
-+
-...
-
-> +static int stm32_sys_bus_probe(struct platform_device *pdev)
-> +{
-> +	struct sys_bus_data *pdata;
-> +	void __iomem *mmio;
-> +	struct device_node *np = pdev->dev.of_node;
-
-I'd be consistent. You use dev_of_node() accessor elsewhere, so should
-use it here as well.
-
-> +
-> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		return -ENOMEM;
-> +
-> +	mmio = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(mmio))
-> +		return PTR_ERR(mmio);
-> +
-> +	pdata->sys_bus_base = mmio;
-> +	pdata->pconf = of_device_get_match_data(&pdev->dev);
-> +	pdata->dev = &pdev->dev;
-> +
-> +	platform_set_drvdata(pdev, pdata);
-
-Does this get used? I can't immediately spot where but maybe I just
-missed it.
-
-> +
-> +	stm32_sys_bus_populate(pdata);
-> +
-> +	/* Populate all available nodes */
-> +	return of_platform_populate(np, NULL, NULL, &pdev->dev);
-
-As np only used here, I'd not bother with the local variable in this function.
-
-> +}
-> +
-> +static const struct stm32_sys_bus_match_data stm32mp15_sys_bus_data = {
-
-Naming a structure after where it comes from is a little unusual and
-confusion when a given call gets it from somewhere else.
-
-I'd expect it to be named after what sort of thing it contains.
-stm32_sys_bus_info or something like that.
-
-> +	.max_entries = STM32MP15_ETZPC_ENTRIES,
-> +};
-> +
-> +static const struct stm32_sys_bus_match_data stm32mp13_sys_bus_data = {
-> +	.max_entries = STM32MP13_ETZPC_ENTRIES,
-> +};
-> +
-> +static const struct of_device_id stm32_sys_bus_of_match[] = {
-> +	{ .compatible = "st,stm32mp15-sys-bus", .data = &stm32mp15_sys_bus_data },
-> +	{ .compatible = "st,stm32mp13-sys-bus", .data = &stm32mp13_sys_bus_data },
-
-Alphabetical order usually preferred when there isn't a strong reason for
-another choice.
-
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, stm32_sys_bus_of_match);
-> +
-> +static struct platform_driver stm32_sys_bus_driver = {
-> +	.probe  = stm32_sys_bus_probe,
-> +	.driver = {
-> +		.name = "stm32-sys-bus",
-> +		.of_match_table = stm32_sys_bus_of_match,
-> +	},
-> +};
-> +
-> +static int __init stm32_sys_bus_init(void)
-> +{
-> +	return platform_driver_register(&stm32_sys_bus_driver);
-> +}
-> +arch_initcall(stm32_sys_bus_init);
-> +
-
-Unwanted trailing blank line.
+ [PATCH 1/9] Documentation: admin-guide: correct spelling
+ [PATCH 2/9] Documentation: driver-api: correct spelling
+ [PATCH 3/9] Documentation: hwmon: correct spelling
+ [PATCH 4/9] Documentation: networking: correct spelling
+ [PATCH 5/9] Documentation: RCU: correct spelling
+ [PATCH 6/9] Documentation: scsi/ChangeLog*: correct spelling
+ [PATCH 7/9] Documentation: scsi: correct spelling
+ [PATCH 8/9] Documentation: sparc: correct spelling
+ [PATCH 9/9] Documentation: userspace-api: correct spelling
 
 
+ Documentation/RCU/Design/Expedited-Grace-Periods/Expedited-Grace-Periods.rst         |    6 -
+ Documentation/RCU/Design/Memory-Ordering/Tree-RCU-Memory-Ordering.rst                |    2 
+ Documentation/RCU/RTFP.txt                                                           |   10 +-
+ Documentation/RCU/UP.rst                                                             |    4 
+ Documentation/RCU/lockdep.rst                                                        |    2 
+ Documentation/RCU/torture.rst                                                        |    4 
+ Documentation/admin-guide/bcache.rst                                                 |    2 
+ Documentation/admin-guide/cgroup-v1/blkio-controller.rst                             |    2 
+ Documentation/admin-guide/cgroup-v2.rst                                              |   10 +-
+ Documentation/admin-guide/cifs/usage.rst                                             |    4 
+ Documentation/admin-guide/device-mapper/cache-policies.rst                           |    2 
+ Documentation/admin-guide/device-mapper/dm-ebs.rst                                   |    2 
+ Documentation/admin-guide/device-mapper/dm-zoned.rst                                 |    2 
+ Documentation/admin-guide/device-mapper/unstriped.rst                                |   10 +-
+ Documentation/admin-guide/dynamic-debug-howto.rst                                    |    2 
+ Documentation/admin-guide/gpio/gpio-sim.rst                                          |    2 
+ Documentation/admin-guide/hw-vuln/mds.rst                                            |    4 
+ Documentation/admin-guide/kernel-parameters.txt                                      |    8 -
+ Documentation/admin-guide/laptops/thinkpad-acpi.rst                                  |    2 
+ Documentation/admin-guide/md.rst                                                     |    2 
+ Documentation/admin-guide/media/bttv.rst                                             |    2 
+ Documentation/admin-guide/media/building.rst                                         |    2 
+ Documentation/admin-guide/media/si476x.rst                                           |    2 
+ Documentation/admin-guide/media/vivid.rst                                            |    2 
+ Documentation/admin-guide/mm/hugetlbpage.rst                                         |    2 
+ Documentation/admin-guide/mm/numa_memory_policy.rst                                  |    4 
+ Documentation/admin-guide/perf/hns3-pmu.rst                                          |    2 
+ Documentation/admin-guide/pm/amd-pstate.rst                                          |    2 
+ Documentation/admin-guide/spkguide.txt                                               |    4 
+ Documentation/admin-guide/sysctl/vm.rst                                              |    4 
+ Documentation/admin-guide/sysrq.rst                                                  |    2 
+ Documentation/driver-api/dma-buf.rst                                                 |    2 
+ Documentation/driver-api/dmaengine/client.rst                                        |    2 
+ Documentation/driver-api/dmaengine/dmatest.rst                                       |    2 
+ Documentation/driver-api/hsi.rst                                                     |    4 
+ Documentation/driver-api/io-mapping.rst                                              |    4 
+ Documentation/driver-api/md/md-cluster.rst                                           |    2 
+ Documentation/driver-api/md/raid5-cache.rst                                          |    2 
+ Documentation/driver-api/media/drivers/vidtv.rst                                     |    2 
+ Documentation/driver-api/media/dtv-demux.rst                                         |    2 
+ Documentation/driver-api/media/v4l2-subdev.rst                                       |    4 
+ Documentation/driver-api/mei/nfc.rst                                                 |    2 
+ Documentation/driver-api/nfc/nfc-hci.rst                                             |    2 
+ Documentation/driver-api/nvdimm/nvdimm.rst                                           |    2 
+ Documentation/driver-api/nvdimm/security.rst                                         |    2 
+ Documentation/driver-api/pin-control.rst                                             |    2 
+ Documentation/driver-api/pldmfw/index.rst                                            |    2 
+ Documentation/driver-api/serial/driver.rst                                           |    2 
+ Documentation/driver-api/surface_aggregator/ssh.rst                                  |    2 
+ Documentation/driver-api/thermal/intel_powerclamp.rst                                |    2 
+ Documentation/driver-api/usb/dwc3.rst                                                |    2 
+ Documentation/driver-api/usb/usb3-debug-port.rst                                     |    2 
+ Documentation/hwmon/aht10.rst                                                        |    2 
+ Documentation/hwmon/aspeed-pwm-tacho.rst                                             |    2 
+ Documentation/hwmon/corsair-psu.rst                                                  |    2 
+ Documentation/hwmon/gsc-hwmon.rst                                                    |    6 -
+ Documentation/hwmon/hwmon-kernel-api.rst                                             |    4 
+ Documentation/hwmon/ltc2978.rst                                                      |    2 
+ Documentation/hwmon/max6697.rst                                                      |    2 
+ Documentation/hwmon/menf21bmc.rst                                                    |    2 
+ Documentation/hwmon/pmbus-core.rst                                                   |    2 
+ Documentation/hwmon/sht4x.rst                                                        |    2 
+ Documentation/hwmon/smm665.rst                                                       |    2 
+ Documentation/hwmon/stpddc60.rst                                                     |    2 
+ Documentation/hwmon/vexpress.rst                                                     |    2 
+ Documentation/hwmon/via686a.rst                                                      |    2 
+ Documentation/networking/af_xdp.rst                                                  |    4 
+ Documentation/networking/arcnet-hardware.rst                                         |    2 
+ Documentation/networking/can.rst                                                     |    2 
+ Documentation/networking/can_ucan_protocol.rst                                       |    2 
+ Documentation/networking/cdc_mbim.rst                                                |    2 
+ Documentation/networking/device_drivers/atm/iphase.rst                               |    2 
+ Documentation/networking/device_drivers/can/ctu/ctucanfd-driver.rst                  |    4 
+ Documentation/networking/device_drivers/can/ctu/fsm_txt_buffer_user.svg              |    4 
+ Documentation/networking/device_drivers/ethernet/3com/vortex.rst                     |    2 
+ Documentation/networking/device_drivers/ethernet/aquantia/atlantic.rst               |    6 -
+ Documentation/networking/device_drivers/ethernet/freescale/dpaa2/mac-phy-support.rst |    2 
+ Documentation/networking/device_drivers/ethernet/marvell/octeontx2.rst               |    2 
+ Documentation/networking/device_drivers/ethernet/pensando/ionic.rst                  |    2 
+ Documentation/networking/device_drivers/ethernet/ti/am65_nuss_cpsw_switchdev.rst     |    2 
+ Documentation/networking/device_drivers/ethernet/ti/cpsw_switchdev.rst               |    2 
+ Documentation/networking/device_drivers/wwan/iosm.rst                                |    2 
+ Documentation/networking/devlink/ice.rst                                             |    4 
+ Documentation/networking/devlink/netdevsim.rst                                       |    2 
+ Documentation/networking/devlink/prestera.rst                                        |    2 
+ Documentation/networking/dsa/configuration.rst                                       |    2 
+ Documentation/networking/ethtool-netlink.rst                                         |    6 -
+ Documentation/networking/gtp.rst                                                     |    2 
+ Documentation/networking/ieee802154.rst                                              |    2 
+ Documentation/networking/ip-sysctl.rst                                               |    6 -
+ Documentation/networking/ipvlan.rst                                                  |    2 
+ Documentation/networking/j1939.rst                                                   |    2 
+ Documentation/networking/net_failover.rst                                            |    2 
+ Documentation/networking/netconsole.rst                                              |    2 
+ Documentation/networking/page_pool.rst                                               |    6 -
+ Documentation/networking/phonet.rst                                                  |    2 
+ Documentation/networking/phy.rst                                                     |    2 
+ Documentation/networking/regulatory.rst                                              |    4 
+ Documentation/networking/rxrpc.rst                                                   |    2 
+ Documentation/networking/snmp_counter.rst                                            |    4 
+ Documentation/networking/sysfs-tagging.rst                                           |    2 
+ Documentation/scsi/ChangeLog.lpfc                                                    |   36 ++++----
+ Documentation/scsi/ChangeLog.megaraid                                                |    8 -
+ Documentation/scsi/ChangeLog.megaraid_sas                                            |    4 
+ Documentation/scsi/ChangeLog.ncr53c8xx                                               |   16 +--
+ Documentation/scsi/ChangeLog.sym53c8xx                                               |   14 +--
+ Documentation/scsi/ChangeLog.sym53c8xx_2                                             |   10 +-
+ Documentation/scsi/ncr53c8xx.rst                                                     |    4 
+ Documentation/scsi/sym53c8xx_2.rst                                                   |    2 
+ Documentation/scsi/tcm_qla2xxx.rst                                                   |    2 
+ Documentation/scsi/ufs.rst                                                           |    2 
+ Documentation/sparc/adi.rst                                                          |    4 
+ Documentation/sparc/oradax/dax-hv-api.txt                                            |   44 +++++-----
+ Documentation/userspace-api/iommufd.rst                                              |    2 
+ Documentation/userspace-api/media/drivers/st-vgxy61.rst                              |    2 
+ Documentation/userspace-api/media/rc/lirc-set-wideband-receiver.rst                  |    2 
+ Documentation/userspace-api/media/rc/rc-protos.rst                                   |    2 
+ Documentation/userspace-api/media/rc/rc-tables.rst                                   |    2 
+ Documentation/userspace-api/media/v4l/dev-sliced-vbi.rst                             |    2 
+ Documentation/userspace-api/media/v4l/ext-ctrls-codec-stateless.rst                  |    2 
+ Documentation/userspace-api/media/v4l/ext-ctrls-jpeg.rst                             |    2 
+ Documentation/userspace-api/media/v4l/hist-v4l2.rst                                  |    4 
+ Documentation/userspace-api/media/v4l/pixfmt-yuv-luma.rst                            |    2 
+ Documentation/userspace-api/media/v4l/vidioc-cropcap.rst                             |    2 
+ Documentation/userspace-api/seccomp_filter.rst                                       |    2 
+ Documentation/userspace-api/sysfs-platform_profile.rst                               |    2 
+ 126 files changed, 232 insertions(+), 232 deletions(-)
+
+
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Zefan Li <lizefan.x@bytedance.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: cgroups@vger.kernel.org
+Cc: Alasdair Kergon <agk@redhat.com>
+Cc: Mike Snitzer <snitzer@kernel.org>
+Cc: dm-devel@redhat.com
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: nvdimm@lists.linux.dev
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Cc: Song Liu <song@kernel.org>
+Cc: linux-raid@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org
+Cc: Jean Delvare <jdelvare@suse.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org
+Cc: Jiri Pirko <jiri@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Neeraj Upadhyay <quic_neeraju@quicinc.com>
+Cc: Josh Triplett <josh@joshtriplett.org>
+Cc: rcu@vger.kernel.org
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org
+Cc: sparclinux@vger.kernel.org

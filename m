@@ -2,111 +2,124 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7FB4680E10
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Jan 2023 13:52:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED25B680E86
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Jan 2023 14:08:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236812AbjA3Mwy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 30 Jan 2023 07:52:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45652 "EHLO
+        id S236141AbjA3NIw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 30 Jan 2023 08:08:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229809AbjA3Mwx (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 30 Jan 2023 07:52:53 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F2A3A92;
-        Mon, 30 Jan 2023 04:52:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675083172; x=1706619172;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=v97echkqpv0ROQM0BvxlBuRxi9UNuWJ0X+ifZwf9NbU=;
-  b=a/vzhrT8kJm8fkddGSXCuQCTdX7JX5IzuoYRQRu7ctceaAcXsL/RbKd2
-   h+oiSfPFwrE1Nrno6UNt18++52Rs7TiiTyvToMPfeIJSfX4tlbX8M8uJ4
-   n6fgcGPth5Tq8fnJtMrKRxpkSj6rFKQmhQGV9svzmuJ3sgD406l2ceH+6
-   lENFOmA/YG6/nklFwRuvUDHGI0msMo4NZKGMTqeyjL0lxZCYPR3gkDqoy
-   ZAMudzqW7aShPRXwp0fCS8B4cPmHkorh7K2HxVY2m0iwe/3Dr+5hGo9ku
-   OJSinDtrvzl4ASl67he82cHSF1rXyRGxr6Xpa3sUmraP++oaasqIQgp4u
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10605"; a="315507345"
-X-IronPort-AV: E=Sophos;i="5.97,258,1669104000"; 
-   d="scan'208";a="315507345"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 04:52:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10605"; a="657441411"
-X-IronPort-AV: E=Sophos;i="5.97,258,1669104000"; 
-   d="scan'208";a="657441411"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP; 30 Jan 2023 04:52:49 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pMTeR-00HM0a-2p;
-        Mon, 30 Jan 2023 14:52:47 +0200
-Date:   Mon, 30 Jan 2023 14:52:47 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Sia Jee Heng <jee.heng.sia@intel.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: dw-axi-dmac: Do not dereference NULL structure
-Message-ID: <Y9e9nwfsxlw/t3sQ@smile.fi.intel.com>
-References: <20230127223623.never.507-kees@kernel.org>
+        with ESMTP id S235425AbjA3NIq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 30 Jan 2023 08:08:46 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D327360B3;
+        Mon, 30 Jan 2023 05:08:32 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 265A1B810B2;
+        Mon, 30 Jan 2023 13:08:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FE29C4339B;
+        Mon, 30 Jan 2023 13:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675084109;
+        bh=h51fw2q7nVcSq+z7R5MTF0ybkYUQSW5xbCVY+5yyiYE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XsSoin7jduGK6g60Ugb2ioUf4CLCE6Boh6CSTHonx0N8EBV3Rw/xd4HScm32tTpNM
+         ecdwLuUdGrQfiIaHMKtU/802xf350L0K3R0/AOdtBtp4NtBPnZ1ERuAFDWj6xN2aH8
+         uCv5/Mxcekl09GwEdlsCNd3KJh1Y0/MQ8Yw1pcJWjYj+J4amlypkV5QG5WG7ihKhx+
+         EZ9oZIpUP3LfwI0NKL/VusU64tFKdGLR5NxN0sFjhTStUjkEnkaOBR0GVhZW29mkGN
+         /IHREe+TTPylV2ju+y2qmmX9uvzfL8EjclfDoy3Fbo7lbKGGYACReoXzAq5Zf8Odc8
+         ckVhPmbixiAtg==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Frank Li <Frank.Li@nxp.com>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: dw-edma: reduce stack usage after debugfs rework
+Date:   Mon, 30 Jan 2023 14:08:10 +0100
+Message-Id: <20230130130826.596171-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230127223623.never.507-kees@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Jan 27, 2023 at 02:36:27PM -0800, Kees Cook wrote:
-> If "vdesc" is NULL, it cannot be used with vd_to_axi_desc(). Leave
-> "bytes" unchanged at 0. Seen under GCC 13 with -Warray-bounds:
-> 
-> ../drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c: In function 'dma_chan_tx_status':
-> ../drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:329:46: warning: array subscript 0 is outside array bounds of 'struct
-> virt_dma_desc[46116860184273879]' [-Warray-bounds=]
->   329 |                 bytes = vd_to_axi_desc(vdesc)->length;
->       |                                              ^~
+From: Arnd Bergmann <arnd@arndb.de>
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+After the dw_edma_debugfs_entry arrays are no longer compile-time
+constant, they take up space on the stack, which exceeds the
+warning limit after inlining:
 
-> Fixes: 8e55444da65c ("dmaengine: dw-axi-dmac: Support burst residue granularity")
-> Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: dmaengine@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> index 08af483331fd..4169e1d7d5ca 100644
-> --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> @@ -325,8 +325,6 @@ dma_chan_tx_status(struct dma_chan *dchan, dma_cookie_t cookie,
->  		len = vd_to_axi_desc(vdesc)->hw_desc[0].len;
->  		completed_length = completed_blocks * len;
->  		bytes = length - completed_length;
-> -	} else {
-> -		bytes = vd_to_axi_desc(vdesc)->length;
->  	}
->  
->  	spin_unlock_irqrestore(&chan->vc.lock, flags);
-> -- 
-> 2.34.1
-> 
+drivers/dma/dw-edma/dw-edma-v0-debugfs.c:280:6: error: stack frame size (1784) exceeds limit (1400) in 'dw_edma_v0_debugfs_on' [-Werror,-Wframe-larger-than]
+void dw_edma_v0_debugfs_on(struct dw_edma *dw)
 
+Work around this by marking the functions with the largest arrays
+as 'noinline_for_stack' to make them not use up space on the same
+stack together.
+
+Fixes: 5c0373eafd83 ("dmaengine: dw-edma: Move eDMA data pointer to debugfs node descriptor")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+index 7be23c26ac88..9dfcbbdfb27b 100644
+--- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
++++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+@@ -116,7 +116,8 @@ static void dw_edma_debugfs_create_x32(struct dw_edma *dw,
+ 	}
+ }
+ 
+-static void dw_edma_debugfs_regs_ch(struct dw_edma *dw, enum dw_edma_dir dir,
++static noinline_for_stack void
++dw_edma_debugfs_regs_ch(struct dw_edma *dw, enum dw_edma_dir dir,
+ 				    u16 ch, struct dentry *dent)
+ {
+ 	struct dw_edma_debugfs_entry debugfs_regs[] = {
+@@ -136,9 +137,10 @@ static void dw_edma_debugfs_regs_ch(struct dw_edma *dw, enum dw_edma_dir dir,
+ 	dw_edma_debugfs_create_x32(dw, debugfs_regs, nr_entries, dent);
+ }
+ 
+-static void dw_edma_debugfs_regs_wr(struct dw_edma *dw, struct dentry *dent)
++static noinline_for_stack void
++dw_edma_debugfs_regs_wr(struct dw_edma *dw, struct dentry *dent)
+ {
+-	static const struct dw_edma_debugfs_entry debugfs_regs[] = {
++	const struct dw_edma_debugfs_entry debugfs_regs[] = {
+ 		/* eDMA global registers */
+ 		WR_REGISTER(dw, engine_en),
+ 		WR_REGISTER(dw, doorbell),
+@@ -159,7 +161,7 @@ static void dw_edma_debugfs_regs_wr(struct dw_edma *dw, struct dentry *dent)
+ 		WR_REGISTER(dw, ch67_imwr_data),
+ 		WR_REGISTER(dw, linked_list_err_en),
+ 	};
+-	static const struct dw_edma_debugfs_entry debugfs_unroll_regs[] = {
++	const struct dw_edma_debugfs_entry debugfs_unroll_regs[] = {
+ 		/* eDMA channel context grouping */
+ 		WR_REGISTER_UNROLL(dw, engine_chgroup),
+ 		WR_REGISTER_UNROLL(dw, engine_hshake_cnt.lsb),
+@@ -197,7 +199,8 @@ static void dw_edma_debugfs_regs_wr(struct dw_edma *dw, struct dentry *dent)
+ 	}
+ }
+ 
+-static void dw_edma_debugfs_regs_rd(struct dw_edma *dw, struct dentry *dent)
++static noinline void
++dw_edma_debugfs_regs_rd(struct dw_edma *dw, struct dentry *dent)
+ {
+ 	const struct dw_edma_debugfs_entry debugfs_regs[] = {
+ 		/* eDMA global registers */
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.0
 

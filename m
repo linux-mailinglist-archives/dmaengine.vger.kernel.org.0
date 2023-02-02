@@ -2,41 +2,41 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 67023687679
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Feb 2023 08:39:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE5726876C1
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Feb 2023 08:52:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229632AbjBBHjS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 2 Feb 2023 02:39:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35944 "EHLO
+        id S229761AbjBBHwH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 2 Feb 2023 02:52:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229618AbjBBHjR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 2 Feb 2023 02:39:17 -0500
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2059.outbound.protection.outlook.com [40.107.220.59])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4FAA6F22A;
-        Wed,  1 Feb 2023 23:39:16 -0800 (PST)
+        with ESMTP id S229495AbjBBHwG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 2 Feb 2023 02:52:06 -0500
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCED830FB;
+        Wed,  1 Feb 2023 23:52:04 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KYW318uCT/8jcPCqAqzQmHo6q3vx+yn4/yC+58IqilTOXiPtjO4DI8Zt/5UTG8eS7+4Sw8XpePxFiyz5mRK1fRIEt4fNEaqw/27j0+pTPyovvtoAFYmy5rLkl6bOioL1rqE39N6Kxb2heZf2b7MH7tw6E0qJ3da5IKo9NwI8qn25iVvSmB7SFlH/Vbl+Emfsy4vIMNMjzRfbc+peKm4aISWKBkafx6pX7b7EIVbanwJnKq1+6S0yN9LNSKboQEMRpRWonKZatWhHaT4F9zAmfq4mF7x1TTCfuQml8TZy+0dbcy9dHPEJHtGfTMONViQ71v7fgdgNakwuLyg7wqfQpA==
+ b=jVC1XmJM9gk+/XiqByvXbQVAmVuuVseGHi9eQmLFGJxGiGBA2eZENE+Zl0561je90Fq/wtfsGYAXObf1Bu5kxRVwGRdYlsh5Kl6HBoZj+JvMXUkcHjgUZhjVf3y+Sc8hqrS9fLpsUB9nLK5Av53FO7FSnpC83USQoBQlX8hxoAnTJzNyjviCIf9UyY+WL0X//RAaAo5opaqfwFg3vcC5++ZbiBaE4+KmwMbKNYDv7jZ54MSdyUHNMY0nYiYQrqqUXtLhWQLLmNkCAE6eMdE34Qh8tGMd8SRTdU/GFrVfsgqsFiIi6YuGmiIoFkw4Q43gNi81cjh+fmcm6gRZLtvYIQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5D3QjEPlpOrivUL5c7dGrVpnneBzN8A8hqSottti8e8=;
- b=gMIyAri+PQf4qzacAqEKdqiU18hd/g6Ny+WGJUBV4tzuewRFhl/E7WpWZxElZWTa8lQ6+DzkphRBxuWfZl8F/WhSG4t94Op4rhyge5fqj0fVTajAo5yRMFKs73tH0YUXSBfgE3FUf2Dc+tl3dqcSElVM4DdHTi/fVeHblmwoYWTrDT1qlnM+0io5c7Dp3I7qpiAuK4tzD7aStUiZus3ZfpNCNeDvuVflKEx/NxP/QQX6yoSLO9U7PnHep6vKMW3JzkHlHCExMCuhqOMsrc+82dILy8xPz4nIiSQ3ISCyq7W8PHJxzKsUNUTt3Hnn0PkVZ4NTwngr4iLgzfRv5gK2+Q==
+ bh=pWC9gcscFB7MnKqRBP53yaaf4KAk2vzynP4kGd7sIfc=;
+ b=FWyOL3UWjF4W5VGepdF6wHV06a/kq1CoxWnjSjkKS/osxkZIhR8oTv4iMLZiBYvQ8PejqRU9hTGofUW5GYxIHZ1+wtVhPVqQXm/YsGp9dcnnxCpdL381lYAN4octF20wQjXijX5Zwmf0UYctew7cniPOh4leocw4o1jxR3PkIuwjncGZeEwLtNWorURW3CvcOoA8HGY4wi8Bja6yWlfVbZByuhISLWDzBKCfAILcEO9htVYo6dNoquXn5UIMEvel69f4eWzJx6x7Nfr7mSEVTfQpt2JW+0U7i7gYAv8KeAZiAFoC0iTPcgvxcdQ9n/ZYpzT0a4fnNZCC43wAxVqhog==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5D3QjEPlpOrivUL5c7dGrVpnneBzN8A8hqSottti8e8=;
- b=rCRsrTaMAbVXI4RG1y3QXTO1Q/BNL82hAAvYhJbgHPJX+J5c2TbJ+xXa3n/VdXyxeB4TURZw4AeMQSL05g3QB1lpfrsciSItLvwrn7N67b4wg4rrp5aFYw1cqmQwwa3rSoPx7zl29dXmBnxxMMxHti0gohH4z+Jt+h7P/ucNjN0=
+ bh=pWC9gcscFB7MnKqRBP53yaaf4KAk2vzynP4kGd7sIfc=;
+ b=44ikaHtfg32GMJ0X1WbpXyiJbLe7NApHZMI6Xt/SgKjtdrp4EMtymuAhMxwxCnS37He+4XKWQYWb/ZsKGcUh5HheWsYlGL46/vrNkmrgwdxfOD5f8ooofe8sE77joZk59buj73zruf9su2Xyy+urXDhJixtJ547dBRUAo2u9u2k=
 Received: from MW5PR12MB5598.namprd12.prod.outlook.com (2603:10b6:303:193::11)
- by MW5PR12MB5682.namprd12.prod.outlook.com (2603:10b6:303:19f::20) with
+ by PH7PR12MB5901.namprd12.prod.outlook.com (2603:10b6:510:1d5::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.27; Thu, 2 Feb
- 2023 07:39:14 +0000
+ 2023 07:52:00 +0000
 Received: from MW5PR12MB5598.namprd12.prod.outlook.com
  ([fe80::8585:d686:cae0:4a10]) by MW5PR12MB5598.namprd12.prod.outlook.com
  ([fe80::8585:d686:cae0:4a10%4]) with mapi id 15.20.6064.024; Thu, 2 Feb 2023
- 07:39:14 +0000
+ 07:52:00 +0000
 From:   "Gaddam, Sarath Babu Naidu" <sarath.babu.naidu.gaddam@amd.com>
 To:     Vinod Koul <vkoul@kernel.org>
 CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
@@ -54,17 +54,17 @@ CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "Sarangi, Anirudha" <anirudha.sarangi@amd.com>,
         "Katakam, Harini" <harini.katakam@amd.com>,
         "git (AMD-Xilinx)" <git@amd.com>
-Subject: RE: [PATCH V2 3/6] dmaengine: xilinx_dma: Pass AXI4-Stream control
- words to dma client
-Thread-Topic: [PATCH V2 3/6] dmaengine: xilinx_dma: Pass AXI4-Stream control
- words to dma client
-Thread-Index: AQHY/++qo3SMgWHWmESnh+GAFjvf166DV0kAgDhaN+A=
-Date:   Thu, 2 Feb 2023 07:39:13 +0000
-Message-ID: <MW5PR12MB5598DFF156682670F0A8038B87D69@MW5PR12MB5598.namprd12.prod.outlook.com>
+Subject: RE: [PATCH V2 6/6] dmaengine: xilinx_dma: Program interrupt delay
+ timeout
+Thread-Topic: [PATCH V2 6/6] dmaengine: xilinx_dma: Program interrupt delay
+ timeout
+Thread-Index: AQHY/++1voKTnTLde0axfE0Yfexfaq6DV2WAgDhcHzA=
+Date:   Thu, 2 Feb 2023 07:52:00 +0000
+Message-ID: <MW5PR12MB55981EAC28AC5A32BF76CF7C87D69@MW5PR12MB5598.namprd12.prod.outlook.com>
 References: <20221124102745.2620370-1-sarath.babu.naidu.gaddam@amd.com>
- <20221124102745.2620370-4-sarath.babu.naidu.gaddam@amd.com>
- <Y6whxpN7bgjU7ZvL@matsya>
-In-Reply-To: <Y6whxpN7bgjU7ZvL@matsya>
+ <20221124102745.2620370-7-sarath.babu.naidu.gaddam@amd.com>
+ <Y6wh3W0S/pzTI4vL@matsya>
+In-Reply-To: <Y6wh3W0S/pzTI4vL@matsya>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -72,56 +72,56 @@ X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MW5PR12MB5598:EE_|MW5PR12MB5682:EE_
-x-ms-office365-filtering-correlation-id: 1f04669e-a0c1-47f5-1d23-08db04f094ec
+x-ms-traffictypediagnostic: MW5PR12MB5598:EE_|PH7PR12MB5901:EE_
+x-ms-office365-filtering-correlation-id: 6b2166b4-ff4e-46ce-65af-08db04f25db7
 x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jx4cmjjGNKZgYTZo3yiUhExCLPAu5eg0Lc57w52g7TrfBtUY0FfDPjzQiQ7ja0BZ4kxn3R43RICUhpfysGomflOY+Cjk6u5h7sUDCVFgC6PtD8oLOI7tI17/zNYhkkZIER2B/yXUi8FPMpF3Bg8Hv+Q/cNpxFoOAim6VPqCrSI2hRSAz2HEk5/9wgdx+nmoBp4NeEuLFpeg0zpOeF/0Xn5B7SpB1R9bRoA65OBtW16kQHUX0nHsJ3SgW3IwgWF6mLWlwbzCCZ4WaTlcqs2eyOYT7RUirW/evKGjU7NQ6EDEuDUauOBe5eADDOSzGaHLGJ0sN68XqUNBjL8q/1nWzCclHQcxB4/mWLDKcBQ92Yf4Ebay9E0SEQ0juMGGWABEETe58nVso+FO2LHdjP5HZ8eWGn3nc9yKELP6VsXmYqSMDc4z0Z8vxtshIei6XWJPoC5EiHOCbt0rlh9u/kL323rpIc71w48NuPrQwGlnQQR19v+HIpwbj4YY9F1JV/DpPXZn2NvLMOok68rIHwN7P+9N4PB6DR58rJTjrqyeLfASnLf00xSBknolQ/OT7p+avaJr1cT9TH9ENGckGh0eigjRXI5qlSWJnOh2g7iZeNvcdAEZyAWxSIykMqOj7XILWQ7LUsKLjFhecRPpRQXxscrSEPnzD0JQcEAWFXJrTSpixIZevuoXzH9Uxu51CBF/055em/3Xdk8UW5ObEQ9vxxg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR12MB5598.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(396003)(136003)(346002)(366004)(376002)(39860400002)(451199018)(55016003)(38070700005)(122000001)(38100700002)(7696005)(8676002)(2906002)(4326008)(54906003)(316002)(7416002)(76116006)(71200400001)(86362001)(5660300002)(8936002)(41300700001)(66946007)(52536014)(6506007)(53546011)(26005)(186003)(33656002)(66446008)(64756008)(66556008)(66476007)(478600001)(9686003)(6916009)(83380400001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: 3IpgeVcQaRBX3NPHCN3H+OTtpK78Cz3IwHbQyxsDPEuOHWNbSc+3ArRa1Qx6M3YdJX6ZnW2z7FZlJeCk26PChCxe8RL+QDO7etmRFhG5Dr4FoJbK/bvno2rWgmRHBoXJUUcxiPpDEk+wz9xzoJCcp+LIQeu9TlPVMtX8x9JV2l2KJjnO/CgWrCLAKGzV/aHSANdbKrmRWbNyyt1rHpTAMq2674ti1GS1UV/XWwAtfcwYaq0ojPdesUUs1stnlRrW1OiGRHzW9Spn3t5KVQvzwjYPGfkeRLCL+wTGk3Xotj02sofrKzRIDPWRqi76jFI5eMiIIWyDyQ81Zxv8+DPcUJ3aI83H7e/17yNvqPJLDFT8WEhimiri9wVeMdl6jdyeAtEhAk046KDCE2aa8bPL41DfGWzj4k+qlBBU3h/6uUQI9Bk3z2iWW7hYkzNgF2zY7zCtpt5sAEB9fTDIE+Bci0blhS/ArQEr9yW+/Ibs6MS9p+JfEzr+dKQgXI8kNMsU1DtTFpxRlN5OMy96RtGd+uSoOysGpCMGm4Pqn2AwZr/KcVZvTbgMIXLIQEgub7wnoxPi2qO/c1Eoag99FL9la+WK1Bu/JlBaoTs5egKPdfWNnO3fFiUWLjIh7jOBkVfO7mImQnVL9C2qVhLPZVRar3/xYKGuEepcSOVkFnVyMBOHItNnGNmhwKrRDBNusHxDBUsJWNa3prznbfoJeXnh/g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR12MB5598.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(396003)(376002)(136003)(366004)(346002)(39860400002)(451199018)(76116006)(66476007)(66946007)(66556008)(38100700002)(4326008)(83380400001)(8676002)(66446008)(64756008)(6916009)(54906003)(122000001)(316002)(6506007)(53546011)(26005)(186003)(9686003)(33656002)(7416002)(478600001)(5660300002)(86362001)(55016003)(41300700001)(38070700005)(71200400001)(7696005)(8936002)(52536014)(2906002);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?QI6nUpHr/X1c2w2UPZNs0C1CeT+CwqW6y1FPFR04T8+9d3lGdhRM4k4kLiEa?=
- =?us-ascii?Q?izXHBcLX2Q6O7/iD5jv4aE422e14Mxq7cknPgiVvDNkdXBRCvzLpjX0NXnwO?=
- =?us-ascii?Q?c++vtiTXFUHAOID/6Y6cgcoIzvtbRDZrUEKQilig6WylUreAFnLAbP0N1Ztl?=
- =?us-ascii?Q?7kqeoXRmb7ChV2euNmXkdrn4Mz4Ym9oRWM/oAqNOmuR/Yc1TLt+XcZTMQ6Lf?=
- =?us-ascii?Q?9kvm6d/0lBICJKiTR1Jc3pwN9Nl0sV1a0f219LGUN7J9AtvQUpExJQbuq/nD?=
- =?us-ascii?Q?KSPj+oWuADhJbwskBW8DNSkxtsAqI6P1kqowlS5bEy/stjUFe2xKGZomwe7u?=
- =?us-ascii?Q?SXmuii3Sjc4LFyfVrtRmQ8lvTPJgZeTa4PDqn5JxqPvuitRSskwU/e/9CWs5?=
- =?us-ascii?Q?1/af1exJTapllSC+zBIK+jwOgpYCzI4WXkmqfmBqtIIzhHBtCRf5vrUmI+wj?=
- =?us-ascii?Q?2ceXMQAUQsOnLD61exay1OYcaHY9bcHXeI/2ZUql16L0yfJlLMmSxF1DAEpv?=
- =?us-ascii?Q?yJeI/l0Ay4bNn8M1PidbXhuJByx2riw5DDSkmxxDqBnYIFh1AEMU1WOgu1ZI?=
- =?us-ascii?Q?KGmI1VAtYYXgpvaxS6K4jQheAcvq7y5eYtHFB+RVGMJiEOn0PVDNa7RDmT5n?=
- =?us-ascii?Q?NFtp5uDTTtTQpxOyADkwAEL2yC7MOt27AtcCBwAUN4hmToDhxpxTP/jX515x?=
- =?us-ascii?Q?/EyaPHuHr56fOd5zKMGfF72yXPtjbQImdfrxEY9nS8ameYFzRwRlSrkn+y9n?=
- =?us-ascii?Q?qdbVE4oQYOuPsSYmpc+KoLLEbtiAZTze1S9AN28/PteRAQ7YsICfLnK0S1xT?=
- =?us-ascii?Q?InYdzcRPA3lUpPusLVtK+SHieKxpShe3D1KhKHECsxZ9pCkIyYOIpF9S9uF8?=
- =?us-ascii?Q?yCIFOSCa2nAwhmgnc9uxQunsb/Ez8r8ji7lmODgk7tzv5tAfcQ1M+iOFP4bO?=
- =?us-ascii?Q?LABHNkHxuyALPXTxNtu2lKVxxgfgiuGlj1bKv1hxqLqRYkE0sWrGpeHGXfRm?=
- =?us-ascii?Q?IbriMfk7yjKD9y5Q7HnYLZQmFmblXSjO5z/mkNd5ptIlV0hEBiQ7JK/2pyY2?=
- =?us-ascii?Q?0rbcMKYT3Z5r1h/MGoEfAzyOWTjJHk01OYu8ghZAF0Y/mTlHj0VENoRPsUtK?=
- =?us-ascii?Q?4jQW12ZGMu7VL63x4H5Y/MW3fJmxw+rN741GzzZPe7qSl8g8q1ULCSax3o5d?=
- =?us-ascii?Q?E5lcph+0WNrdoBImwBGdLTPJqEl0KfyymzEaPSmNMkim1L5kMSpU6ykG3AOB?=
- =?us-ascii?Q?/FucQKH6Qf7pRUcV8ICuGu57d4pheMDLg8VwpBug+YAoPz/F9F1teR6nKMHH?=
- =?us-ascii?Q?Xk0cy6XrplQnKyIggPVm1seRGFU9SEgGlu3hIwPBpVvtfwDkJp1iC3WRDmwy?=
- =?us-ascii?Q?ON8fxrjItXjuaIFPzaYv6K61CvLBK9JvtwFShVkRensMFcBt4h41evhx50iM?=
- =?us-ascii?Q?N+UZ5UTcbf06gVZrbAIr3SGj4mWBmFIJ+84waC/qBW6KjqDZMg3o3+66FrDj?=
- =?us-ascii?Q?igTlZOvbEZzD2uEvW+ppxd6cRJxJuNgFFSuKyATz4Hp12EU1LXK9czYv/WOJ?=
- =?us-ascii?Q?b26CVFU26GFdljKKejA=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?HEZVOwTut+mKENfwROVLWkkZvQ8VCFytAGHtYtMuWvmPEnfil1koIvEir5Pa?=
+ =?us-ascii?Q?2YzXnKAqU9buBeX278xafPY9nhDiiOQHZGW67M2FrXDvxgZCkeZQSVSIvB73?=
+ =?us-ascii?Q?+xcjPguYzXDwDbFrrJLF/ffJNFfQXGXNAMROo59A0BytJnXbuUgQpFdahXkX?=
+ =?us-ascii?Q?yhDkJPZE//qsmeyfxSmHS+GVqyG7mwsFwebo6uopHoac9qNaU59/3DbceY4n?=
+ =?us-ascii?Q?Z1inMS60X0k+fcpDPVogp6Kj6qcnURK1YDLT3oJC7hEvAM/xh8lD3X976v3y?=
+ =?us-ascii?Q?CGOQJDSEIwOxEyJ/c/JUHHbZcskRaO2qYN0a3b0H4nKATIK/9GlDZL00UAUd?=
+ =?us-ascii?Q?j+1qOs2EaaeB3EA5SskWyNZA7M8cRq56rle2Ze/yF6Du9aBHNwdgAtdfBzEs?=
+ =?us-ascii?Q?3159b1Zi9MhsiMXY7KFOMdCcliCsp//gLRn0oUHpCaxYrh3Oyli/Mh9dKqbV?=
+ =?us-ascii?Q?Vx2rDV5ckuOZXMaYB2xeTn0FzAnw8OSQ9Y2XUNY6eY1oyqUnCQrHPm81p5RN?=
+ =?us-ascii?Q?PcukaxCsE/lgEJZBOm5YlzJVN77Rbl2NNt/tERjSsytOuU5OEgMO7hDT1PYD?=
+ =?us-ascii?Q?ea9kr3+8TyXwMNCzQTGYNF9oXlZLGEpdUVvJoFPselxKFfBYJiQmxo/3kAk+?=
+ =?us-ascii?Q?PjEK8Y3b1PFBrNPkjGNblQvh3TkPAknH1Ge6U5kZGZzGWnnAuUMwAZTkID01?=
+ =?us-ascii?Q?vDEfP8ejhV/R/4uHZkFGCRQcVRwe2sfzfSFAFWnus9swjNH2cPA8xmUDgN3T?=
+ =?us-ascii?Q?OgnoTZnLcBvK7rJ/cfBCIYc77n3pMd/+QDxgCgFKuK6+UXwJken5iv/2eTeh?=
+ =?us-ascii?Q?cvJgzhGXPMsMEOxtxCCpaZrHTLdziPsnx0yX6gxoIhYfAqvSpDWKlHpJefU5?=
+ =?us-ascii?Q?dCPXnGpaDWHgv9+s0bvwWOWfAZF4vuNonJfrwADSo+Nj024GFPgwffAJftvS?=
+ =?us-ascii?Q?nMKbEEC7hFhmH1XR5ZE2b/S8NdStikxs9rQyO778u3tyxrNpGVBjuW8Xt4fA?=
+ =?us-ascii?Q?eXSyWnOSGb7ggnzpPNq8Gn8pT+7TVNNoTQCkO3uyrG7zIKG6lT9GQ01Z27dx?=
+ =?us-ascii?Q?OU4L6/Be+XnRZs+H9tq2v3hynK2HvPbBD6tuRIbANw21pc0KGmK1lfKjBVIp?=
+ =?us-ascii?Q?zfz3kWxI78d0CD+aYMB9755OazIIjY1seF+cpQzdt+/AQT6qRmVLCIoMLryq?=
+ =?us-ascii?Q?LeY04TI8/vJBvkSK7fF93E0cchXonG5wi2KeCoezbeQewWCyeV4IRZ5AVlYU?=
+ =?us-ascii?Q?0LD0GIJS7uh71loZAQvwIdnMg/o78w92zo3qr2SAIvg0ekQHH7wwe0ZHeCSP?=
+ =?us-ascii?Q?IhdkDlU7vgsXsww+KcFvVE3o+xapOqa7BfB0lAB+DUtjl7t4/mSRgV89t9bQ?=
+ =?us-ascii?Q?6i+OCCJ3EM1cxSfZBVYrvWoG86TIJX3+hTIX+I4UK+HJSg3NZdr7Zqz/KtHz?=
+ =?us-ascii?Q?K9m4tXBcK9CxnlTrHfpTHaKf8P/QdKdCGiCyqPz0z6VOcnkxFgjDFRT4qe2O?=
+ =?us-ascii?Q?VFLCWR+7CDxnLfvofa10rov043I6yoPFAPnP5IFOWKhhte1KXsbxcTc/D/Xe?=
+ =?us-ascii?Q?QOJtu0YCaI3tmET49cI=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: amd.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: MW5PR12MB5598.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f04669e-a0c1-47f5-1d23-08db04f094ec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Feb 2023 07:39:13.9752
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b2166b4-ff4e-46ce-65af-08db04f25db7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Feb 2023 07:52:00.3485
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yuFvosvd17Etk8Yd1wNmU1X6cQwUmhhkf/Ah8wF+XuYsF7qmws3OnhH0oK+My+lR3oomye8/A0FPMxrDaqWB6w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5682
+X-MS-Exchange-CrossTenant-userprincipalname: LVlNIuWsDva0C7ArHph30W3aPpNtweTVJrxxl0udUZzv/QkU8Bkw5UWVq3Ql7JXudX4qbqnQFWWT4FfCNi/Daw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5901
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
@@ -136,7 +136,7 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 > -----Original Message-----
 > From: Vinod Koul <vkoul@kernel.org>
-> Sent: Wednesday, December 28, 2022 4:30 PM
+> Sent: Wednesday, December 28, 2022 4:31 PM
 > To: Gaddam, Sarath Babu Naidu
 > <sarath.babu.naidu.gaddam@amd.com>
 > Cc: robh+dt@kernel.org; krzysztof.kozlowski+dt@linaro.org;
@@ -147,133 +147,110 @@ X-Mailing-List: dmaengine@vger.kernel.org
 > <radhey.shyam.pandey@amd.com>; Sarangi, Anirudha
 > <anirudha.sarangi@amd.com>; Katakam, Harini
 > <harini.katakam@amd.com>; git (AMD-Xilinx) <git@amd.com>
-> Subject: Re: [PATCH V2 3/6] dmaengine: xilinx_dma: Pass AXI4-Stream
-> control words to dma client
+> Subject: Re: [PATCH V2 6/6] dmaengine: xilinx_dma: Program interrupt
+> delay timeout
 >=20
 > On 24-11-22, 15:57, Sarath Babu Naidu Gaddam wrote:
 > > From: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 > >
-> > Read DT property to check if AXI DMA is connected to streaming IP i.e
-> > axiethernet. If connected pass AXI4-Stream control words to dma client
-> > using metadata_ops dmaengine API.
+> > Program IRQDelay for AXI DMA. The interrupt timeout mechanism
+> causes
+> > the DMA engine to generate an interrupt after the delay time period
+> > has expired. It enables dmaengine to respond in real-time even though
+> > interrupt coalescing is configured. It also remove the placeholder for
+> > delay interrupt and merge it with frame completion interrupt.
+> > Since by default interrupt delay timeout is disabled this feature
+> > addition has no functional impact on VDMA and CDMA IP's.
 > >
 > > Signed-off-by: Radhey Shyam Pandey
 > <radhey.shyam.pandey@xilinx.com>
+> > Signed-off-by: Sarath Babu Naidu Gaddam
+> > <sarath.babu.naidu.gaddam@amd.com>
 > > ---
-> >  drivers/dma/xilinx/xilinx_dma.c | 37
-> > +++++++++++++++++++++++++++++++++
-> >  1 file changed, 37 insertions(+)
+> >  drivers/dma/xilinx/xilinx_dma.c | 20 +++++++++++---------
+> >  1 file changed, 11 insertions(+), 9 deletions(-)
 > >
 > > diff --git a/drivers/dma/xilinx/xilinx_dma.c
-> > b/drivers/dma/xilinx/xilinx_dma.c index 8cd4e69dc7b4..f783ba86cb09
+> > b/drivers/dma/xilinx/xilinx_dma.c index ce0c151d8f61..333d68ee3559
 > > 100644
 > > --- a/drivers/dma/xilinx/xilinx_dma.c
 > > +++ b/drivers/dma/xilinx/xilinx_dma.c
-> > @@ -493,6 +493,7 @@ struct xilinx_dma_config {
-> >   * @s2mm_chan_id: DMA s2mm channel identifier
-> >   * @mm2s_chan_id: DMA mm2s channel identifier
-> >   * @max_buffer_len: Max buffer length
-> > + * @has_axistream_connected: AXI DMA connected to AXI Stream IP
+> > @@ -173,8 +173,10 @@
+> >  #define XILINX_DMA_MAX_TRANS_LEN_MAX	23
+> >  #define XILINX_DMA_V2_MAX_TRANS_LEN_MAX	26
+> >  #define XILINX_DMA_CR_COALESCE_MAX	GENMASK(23, 16)
+> > +#define XILINX_DMA_CR_DELAY_MAX		GENMASK(31, 24)
+> >  #define XILINX_DMA_CR_CYCLIC_BD_EN_MASK	BIT(4)
+> >  #define XILINX_DMA_CR_COALESCE_SHIFT	16
+> > +#define XILINX_DMA_CR_DELAY_SHIFT	24
+> >  #define XILINX_DMA_BD_SOP		BIT(27)
+> >  #define XILINX_DMA_BD_EOP		BIT(26)
+> >  #define XILINX_DMA_COALESCE_MAX		255
+> > @@ -410,6 +412,7 @@ struct xilinx_dma_tx_descriptor {
+> >   * @stop_transfer: Differentiate b/w DMA IP's quiesce
+> >   * @tdest: TDEST value for mcdma
+> >   * @has_vflip: S2MM vertical flip
+> > + * @irq_delay: Interrupt delay timeout
 > >   */
-> >  struct xilinx_dma_device {
-> >  	void __iomem *regs;
-> > @@ -511,6 +512,7 @@ struct xilinx_dma_device {
-> >  	u32 s2mm_chan_id;
-> >  	u32 mm2s_chan_id;
-> >  	u32 max_buffer_len;
-> > +	bool has_axistream_connected;
+> >  struct xilinx_dma_chan {
+> >  	struct xilinx_dma_device *xdev;
+> > @@ -448,6 +451,7 @@ struct xilinx_dma_chan {
+> >  	int (*stop_transfer)(struct xilinx_dma_chan *chan);
+> >  	u16 tdest;
+> >  	bool has_vflip;
+> > +	u8 irq_delay;
 > >  };
 > >
-> >  /* Macros */
-> > @@ -623,6 +625,29 @@ static inline void xilinx_aximcdma_buf(struct
-> xilinx_dma_chan *chan,
-> >  	}
-> >  }
+> >  /**
+> > @@ -1560,6 +1564,9 @@ static void xilinx_dma_start_transfer(struct
+> xilinx_dma_chan *chan)
+> >  	if (chan->has_sg)
+> >  		xilinx_write(chan, XILINX_DMA_REG_CURDESC,
+> >  			     head_desc->async_tx.phys);
+> > +	reg  &=3D ~XILINX_DMA_CR_DELAY_MAX;
+> > +	reg  |=3D chan->irq_delay << XILINX_DMA_CR_DELAY_SHIFT;
+> > +	dma_ctrl_write(chan, XILINX_DMA_REG_DMACR, reg);
 > >
-> > +/**
-> > + * xilinx_dma_get_metadata_ptr- Populate metadata pointer and
-> payload
-> > +length
-> > + * @tx: async transaction descriptor
-> > + * @payload_len: metadata payload length
-> > + * @max_len: metadata max length
-> > + * Return: The app field pointer.
-> > + */
-> > +static void *xilinx_dma_get_metadata_ptr(struct
-> dma_async_tx_descriptor *tx,
-> > +					 size_t *payload_len, size_t
-> *max_len) {
-> > +	struct xilinx_dma_tx_descriptor *desc =3D
-> to_dma_tx_descriptor(tx);
-> > +	struct xilinx_axidma_tx_segment *seg;
-> > +
-> > +	*max_len =3D *payload_len =3D sizeof(u32) *
-> XILINX_DMA_NUM_APP_WORDS;
-> > +	seg =3D list_first_entry(&desc->segments,
-> > +			       struct xilinx_axidma_tx_segment, node);
-> > +	return seg->hw.app;
-> > +}
-> > +
-> > +static struct dma_descriptor_metadata_ops
-> xilinx_dma_metadata_ops =3D {
-> > +	.get_ptr =3D xilinx_dma_get_metadata_ptr, };
-> > +
-> >  /* -------------------------------------------------------------------=
-----------
-> >   * Descriptors and segments alloc and free
-> >   */
-> > @@ -2219,6 +2244,9 @@ static struct dma_async_tx_descriptor
-> *xilinx_dma_prep_slave_sg(
-> >  		segment->hw.control |=3D XILINX_DMA_BD_EOP;
-> >  	}
+> >  	xilinx_dma_start(chan);
 > >
-> > +	if (chan->xdev->has_axistream_connected)
-> > +		desc->async_tx.metadata_ops =3D
-> &xilinx_dma_metadata_ops;
->=20
-> This is an optional property which is added now, what will happen if you
-> are on a system with older DT? This wont work there..
-
-Sorry, we missed this comment. If this optional property is not there,=20
-then driver does not export "metadata_ops" APIs and it does not=20
-break any existing functionality.=20
-
-Thanks,
-Sarath
-
->=20
-> > +
-> >  	return &desc->async_tx;
-> >
-> >  error:
-> > @@ -3065,6 +3093,11 @@ static int xilinx_dma_probe(struct
-> platform_device *pdev)
+> > @@ -1887,15 +1894,8 @@ static irqreturn_t
+> xilinx_dma_irq_handler(int irq, void *data)
 > >  		}
 > >  	}
 > >
-> > +	if (xdev->dma_config->dmatype =3D=3D XDMA_TYPE_AXIDMA) {
-> > +		xdev->has_axistream_connected =3D
-> > +			of_property_read_bool(node, "xlnx,axistream-
-> connected");
-> > +	}
-> > +
-> >  	if (xdev->dma_config->dmatype =3D=3D XDMA_TYPE_VDMA) {
-> >  		err =3D of_property_read_u32(node, "xlnx,num-fstores",
-> >  					   &num_frames);
-> > @@ -3090,6 +3123,10 @@ static int xilinx_dma_probe(struct
-> platform_device *pdev)
-> >  	else
-> >  		xdev->ext_addr =3D false;
+> > -	if (status & XILINX_DMA_DMASR_DLY_CNT_IRQ) {
+> > -		/*
+> > -		 * Device takes too long to do the transfer when user
+> requires
+> > -		 * responsiveness.
+> > -		 */
+> > -		dev_dbg(chan->dev, "Inter-packet latency too long\n");
+> > -	}
+> > -
+> > -	if (status & XILINX_DMA_DMASR_FRM_CNT_IRQ) {
+> > +	if (status & (XILINX_DMA_DMASR_FRM_CNT_IRQ |
+> > +		      XILINX_DMA_DMASR_DLY_CNT_IRQ)) {
+> >  		spin_lock(&chan->lock);
+> >  		xilinx_dma_complete_descriptor(chan);
+> >  		chan->idle =3D true;
+> > @@ -2822,6 +2822,8 @@ static int xilinx_dma_chan_probe(struct
+> xilinx_dma_device *xdev,
+> >  	/* Retrieve the channel properties from the device tree */
+> >  	has_dre =3D of_property_read_bool(node, "xlnx,include-dre");
 > >
-> > +	/* Set metadata mode */
-> > +	if (xdev->has_axistream_connected)
-> > +		xdev->common.desc_metadata_modes =3D
-> DESC_METADATA_ENGINE;
+> > +	of_property_read_u8(node, "xlnx,irq-delay", &chan->irq_delay);
+>=20
+> Same question here too
+
+This is an optional property. If it is not there, then driver programs
+ this value as zero and it does not break existing functionality. =20
+
+>=20
 > > +
-> >  	/* Set the dma mask bits */
-> >  	err =3D dma_set_mask_and_coherent(xdev->dev,
-> DMA_BIT_MASK(addr_width));
-> >  	if (err < 0) {
+> >  	chan->genlock =3D of_property_read_bool(node, "xlnx,genlock-
+> mode");
+> >
+> >  	err =3D of_property_read_u32(node, "xlnx,datawidth", &value);
 > > --
 > > 2.25.1
 >=20

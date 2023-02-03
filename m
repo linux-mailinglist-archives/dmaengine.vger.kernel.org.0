@@ -2,82 +2,64 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97152689ED3
-	for <lists+dmaengine@lfdr.de>; Fri,  3 Feb 2023 17:05:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D2D0689EEA
+	for <lists+dmaengine@lfdr.de>; Fri,  3 Feb 2023 17:08:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232113AbjBCQFJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 3 Feb 2023 11:05:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36580 "EHLO
+        id S233443AbjBCQI1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 3 Feb 2023 11:08:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233297AbjBCQFG (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 3 Feb 2023 11:05:06 -0500
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F866A2A4C;
-        Fri,  3 Feb 2023 08:05:03 -0800 (PST)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-51ba4b1b9feso73909487b3.11;
-        Fri, 03 Feb 2023 08:05:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7wIYdPVdo9w8wJeFawgcWpGlCHgpXqP0aU2proD/z4A=;
-        b=h7Y+KCF7rYYuzKa23/XVH7EqKMk5LTZnVw2PqeMnOFM+xWLo9NJHdhJ7VXQEzh/jEQ
-         43USwhMjApuBXpP8uDT4/9ZWtcfiac4as5JkOYvgtFByz33C36/DfwkQOIfY4SCuqGDK
-         Hv9r2B8MXFnnKurrI2YIIpkW+iLxoK+7IxwMN41GkLxe5SYkAMuhmyEdUiIf3h+NbtlV
-         Vjrsgdy/0uWZlA6GCyhPVQQLTybtIXlZAYgovWjXFPEmbkXmJ1R6oNLeW1Q9wjp7INOt
-         dpYwOYdzkRdvH3M1sRrIE5bOaaFyPkuU4ojNBjyPoq103GnN5D0iyOl6ib+Yx3KeeBsY
-         CkPA==
-X-Gm-Message-State: AO0yUKUt0cK5Wr875sm9z9U0bJzP+91+5+O4ghRPfaBfRmU8ORcDIFi3
-        96J/1/Ux8eteagW4UXGq2OK0nBZCNN5sEw==
-X-Google-Smtp-Source: AK7set/a/Eq2gP6R7fciPiamzKQR29gjZ+vbzZcYT0ptMjiTbNLQIWRvobf0piyfY0iq11BERjizRw==
-X-Received: by 2002:a0d:d648:0:b0:506:4342:1a2d with SMTP id y69-20020a0dd648000000b0050643421a2dmr7042060ywd.12.1675440302426;
-        Fri, 03 Feb 2023 08:05:02 -0800 (PST)
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
-        by smtp.gmail.com with ESMTPSA id r195-20020a37a8cc000000b0071ddbe8fe23sm2101905qke.24.2023.02.03.08.05.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Feb 2023 08:05:02 -0800 (PST)
-Received: by mail-yb1-f179.google.com with SMTP id 74so6528236ybl.12;
-        Fri, 03 Feb 2023 08:05:01 -0800 (PST)
-X-Received: by 2002:a5b:941:0:b0:865:e214:f4e3 with SMTP id
- x1-20020a5b0941000000b00865e214f4e3mr352487ybq.604.1675440301482; Fri, 03 Feb
- 2023 08:05:01 -0800 (PST)
+        with ESMTP id S233217AbjBCQIP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 3 Feb 2023 11:08:15 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A2491ABD8;
+        Fri,  3 Feb 2023 08:08:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675440485; x=1706976485;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=a5pY8S97NNM5t+sjx8sWM1oQ0kSMBPYUOseHtuULdbs=;
+  b=HamwTHuO6/3Xhtz6qeGlAorOJV2wNLBeMOX6Vq7lzhgDX14qgIFHxnie
+   XE378vTbcaR+O1DqoflTm4tWUq4pgm60zxkvIOlw3K7LzbOOF4cQxizsd
+   KKoCIzy6wbzCLsPw9X40K9UdrhUa6NXNjEypRe3TS24UiliVwITC1Lb9A
+   lmsjRa8V3CB9VXmFXVyfXSkZDoyO+DsZ9J7MzHpr13XugERRyCfaLzN2h
+   f9tlp5l6K3qom/mQuhw4XUhRZQQJn4bmfoA1Re3brcKFf01tZFG4E2LcO
+   er3cDbjqjensmgTMy006wuZMKFm2X5FNXMpPuQiyZtSkpr+ABWNql/K3V
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="327419198"
+X-IronPort-AV: E=Sophos;i="5.97,270,1669104000"; 
+   d="scan'208";a="327419198"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2023 08:08:04 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="698124991"
+X-IronPort-AV: E=Sophos;i="5.97,270,1669104000"; 
+   d="scan'208";a="698124991"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.119.40]) ([10.212.119.40])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2023 08:08:03 -0800
+Message-ID: <f4f377dc-143d-ea93-436f-334390e4c120@intel.com>
+Date:   Fri, 3 Feb 2023 09:08:02 -0700
 MIME-Version: 1.0
-References: <20230113062339.1909087-1-hch@lst.de> <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
- <20230116071306.GA15848@lst.de> <40dc1bc1-d9cd-d9be-188e-5167ebae235c@physik.fu-berlin.de>
- <20230203071423.GA24833@lst.de> <afd056a95d21944db1dc0c9708f692dd1f7bb757.camel@physik.fu-berlin.de>
- <20230203083037.GA30738@lst.de> <d10fe31b2af6cf4e03618f38ca9d3ca5c72601ed.camel@physik.fu-berlin.de>
- <CAMuHMdUitVfW088YOmqYm4kwbKwkwb22fAakHcu6boxv7dXDfQ@mail.gmail.com> <f6a60193-a5d1-c42c-158a-4b0bfe9c7538@infradead.org>
-In-Reply-To: <f6a60193-a5d1-c42c-158a-4b0bfe9c7538@infradead.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 3 Feb 2023 17:04:49 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWJ3XOBewDoU8umAHc6b83hJQge5xjY3Cxx03AvoiR7iQ@mail.gmail.com>
-Message-ID: <CAMuHMdWJ3XOBewDoU8umAHc6b83hJQge5xjY3Cxx03AvoiR7iQ@mail.gmail.com>
-Subject: Re: remove arch/sh
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-sh@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=no
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.0
+Subject: Re: [PATCH 1/2] dmaengine: idxd: Add enable/disable device IOPF
+ feature
+Content-Language: en-US
+To:     Lu Baolu <baolu.lu@linux.intel.com>, iommu@lists.linux.dev,
+        dmaengine@vger.kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org
+References: <20230203084456.469641-1-baolu.lu@linux.intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230203084456.469641-1-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -85,27 +67,97 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Randy,
 
-On Fri, Feb 3, 2023 at 4:57 PM Randy Dunlap <rdunlap@infradead.org> wrote:
-> Is this "sh64" still accurate and applicable? from Documentation/kbuild/kbuild.rst:
->
-> But some architectures such as x86 and sparc have aliases.
->
-> - x86: i386 for 32 bit, x86_64 for 64 bit
-> - sh: sh for 32 bit, sh64 for 64 bit <<<<<<<<<<<<<<<
-> - sparc: sparc32 for 32 bit, sparc64 for 64 bit
 
-No, support for sh64 was removed in commit 37744feebc086908
-("sh: remove sh5 support") in v5.8.
+On 2/3/23 1:44 AM, Lu Baolu wrote:
+> The iommu subsystem requires IOMMU_DEV_FEAT_IOPF must be enabled before
+> and disabled after IOMMU_DEV_FEAT_SVA, if device's I/O page faults rely
+> on the IOMMU. Add explicit IOMMU_DEV_FEAT_IOPF enabling/disabling in this
+> driver.
+> 
+> At present, missing IOPF enabling/disabling doesn't cause any real issue,
+> because the IOMMU driver places the IOPF enabling/disabling in the path
+> of SVA feature handling. But this may change.
+> 
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-Gr{oetje,eeting}s,
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> ---
+>   drivers/dma/idxd/init.c | 31 +++++++++++++++++++++++++------
+>   1 file changed, 25 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index 529ea09c9094..d5a709a842a8 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
+> @@ -511,6 +511,27 @@ static void idxd_disable_system_pasid(struct idxd_device *idxd)
+>   	idxd->sva = NULL;
+>   }
+>   
+> +static int idxd_enable_sva(struct pci_dev *pdev)
+> +{
+> +	int ret;
+> +
+> +	ret = iommu_dev_enable_feature(&pdev->dev, IOMMU_DEV_FEAT_IOPF);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = iommu_dev_enable_feature(&pdev->dev, IOMMU_DEV_FEAT_SVA);
+> +	if (ret)
+> +		iommu_dev_disable_feature(&pdev->dev, IOMMU_DEV_FEAT_IOPF);
+> +
+> +	return ret;
+> +}
+> +
+> +static void idxd_disable_sva(struct pci_dev *pdev)
+> +{
+> +	iommu_dev_disable_feature(&pdev->dev, IOMMU_DEV_FEAT_SVA);
+> +	iommu_dev_disable_feature(&pdev->dev, IOMMU_DEV_FEAT_IOPF);
+> +}
+> +
+>   static int idxd_probe(struct idxd_device *idxd)
+>   {
+>   	struct pci_dev *pdev = idxd->pdev;
+> @@ -525,7 +546,7 @@ static int idxd_probe(struct idxd_device *idxd)
+>   	dev_dbg(dev, "IDXD reset complete\n");
+>   
+>   	if (IS_ENABLED(CONFIG_INTEL_IDXD_SVM) && sva) {
+> -		if (iommu_dev_enable_feature(dev, IOMMU_DEV_FEAT_SVA)) {
+> +		if (idxd_enable_sva(pdev)) {
+>   			dev_warn(dev, "Unable to turn on user SVA feature.\n");
+>   		} else {
+>   			set_bit(IDXD_FLAG_USER_PASID_ENABLED, &idxd->flags);
+> @@ -573,21 +594,19 @@ static int idxd_probe(struct idxd_device *idxd)
+>   	if (device_pasid_enabled(idxd))
+>   		idxd_disable_system_pasid(idxd);
+>   	if (device_user_pasid_enabled(idxd))
+> -		iommu_dev_disable_feature(dev, IOMMU_DEV_FEAT_SVA);
+> +		idxd_disable_sva(pdev);
+>   	return rc;
+>   }
+>   
+>   static void idxd_cleanup(struct idxd_device *idxd)
+>   {
+> -	struct device *dev = &idxd->pdev->dev;
+> -
+>   	perfmon_pmu_remove(idxd);
+>   	idxd_cleanup_interrupts(idxd);
+>   	idxd_cleanup_internals(idxd);
+>   	if (device_pasid_enabled(idxd))
+>   		idxd_disable_system_pasid(idxd);
+>   	if (device_user_pasid_enabled(idxd))
+> -		iommu_dev_disable_feature(dev, IOMMU_DEV_FEAT_SVA);
+> +		idxd_disable_sva(idxd->pdev);
+>   }
+>   
+>   static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> @@ -705,7 +724,7 @@ static void idxd_remove(struct pci_dev *pdev)
+>   	pci_free_irq_vectors(pdev);
+>   	pci_iounmap(pdev, idxd->reg_base);
+>   	if (device_user_pasid_enabled(idxd))
+> -		iommu_dev_disable_feature(&pdev->dev, IOMMU_DEV_FEAT_SVA);
+> +		idxd_disable_sva(pdev);
+>   	pci_disable_device(pdev);
+>   	destroy_workqueue(idxd->wq);
+>   	perfmon_pmu_remove(idxd);

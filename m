@@ -2,123 +2,101 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B95268970D
-	for <lists+dmaengine@lfdr.de>; Fri,  3 Feb 2023 11:38:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FB15689860
+	for <lists+dmaengine@lfdr.de>; Fri,  3 Feb 2023 13:17:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232230AbjBCKhH convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Fri, 3 Feb 2023 05:37:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35376 "EHLO
+        id S231889AbjBCMRV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 3 Feb 2023 07:17:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231366AbjBCKhG (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 3 Feb 2023 05:37:06 -0500
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3158412F22;
-        Fri,  3 Feb 2023 02:36:48 -0800 (PST)
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.95)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1pNtQu-0005LU-Pm; Fri, 03 Feb 2023 11:36:40 +0100
-Received: from p57bd9464.dip0.t-ipconnect.de ([87.189.148.100] helo=[192.168.178.81])
-          by inpost2.zedat.fu-berlin.de (Exim 4.95)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1pNtQu-000Qu4-EY; Fri, 03 Feb 2023 11:36:40 +0100
-Message-ID: <1c4be6be8aa9f69af71c967b4cc0b77344d374de.camel@physik.fu-berlin.de>
-Subject: Re: remove arch/sh
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-sh@vger.kernel.org
-Date:   Fri, 03 Feb 2023 11:36:35 +0100
-In-Reply-To: <CAMuHMdUitVfW088YOmqYm4kwbKwkwb22fAakHcu6boxv7dXDfQ@mail.gmail.com>
-References: <20230113062339.1909087-1-hch@lst.de>
-         <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
-         <20230116071306.GA15848@lst.de>
-         <40dc1bc1-d9cd-d9be-188e-5167ebae235c@physik.fu-berlin.de>
-         <20230203071423.GA24833@lst.de>
-         <afd056a95d21944db1dc0c9708f692dd1f7bb757.camel@physik.fu-berlin.de>
-         <20230203083037.GA30738@lst.de>
-         <d10fe31b2af6cf4e03618f38ca9d3ca5c72601ed.camel@physik.fu-berlin.de>
-         <CAMuHMdUitVfW088YOmqYm4kwbKwkwb22fAakHcu6boxv7dXDfQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.46.3 
-MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 87.189.148.100
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231610AbjBCMRU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 3 Feb 2023 07:17:20 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 395EF9DEDE;
+        Fri,  3 Feb 2023 04:17:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675426639; x=1706962639;
+  h=from:to:cc:subject:date:message-id;
+  bh=HDkCFge+HqbMLRAoh8YMHpbr8i9UoJQNnlQE7bkgs/E=;
+  b=kBxQ5785R40kP66iMabySlwvUvAEF1F4E9dr3G90TWcfDiKfADNms5Wl
+   BuLhZDaW5/2YB3K1HVUTc8pqm4YEtlLiwe75h+0tzglFN+4UcaAWhQKBa
+   I5xiSIGh9fin7za/gq0gZu9n6uUchGi7PkOTHYcnF/GpaFYXqfK5k5qnO
+   JPEdzh5VhgtK8aYlCT0CqKD4H1Us7fGQEUzOTbT5uD8taZU+97mmExfOH
+   IbEqgt57nekgioRqz1e+muCBFYK76XBt3lTsmXRhaty+7JlhGRRAhxjoq
+   mAw3p4DYxvpZv1VBxdcrkrNZ2C176cyfCpPa1sHCgGnq8dbM7o3W3YvE/
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10609"; a="328749774"
+X-IronPort-AV: E=Sophos;i="5.97,270,1669104000"; 
+   d="scan'208";a="328749774"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2023 04:17:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10609"; a="665701557"
+X-IronPort-AV: E=Sophos;i="5.97,270,1669104000"; 
+   d="scan'208";a="665701557"
+Received: from uzel-8i-t02.iind.intel.com ([10.49.2.69])
+  by orsmga002.jf.intel.com with ESMTP; 03 Feb 2023 04:17:16 -0800
+From:   aman.kumar@intel.com
+To:     vkoul@kernel.org, dmaengine@vger.kernel.org
+Cc:     andriy.shevchenko@linux.intel.com, srikanth.thokala@intel.com,
+        aman.kumar@intel.com, mallikarjunappa.sangannavar@intel.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/1] dmaengine: idma64: Update bytes_transferred field
+Date:   Fri,  3 Feb 2023 17:47:02 +0530
+Message-Id: <20230203121702.15725-1-aman.kumar@intel.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Geert!
+From: Aman Kumar <aman.kumar@intel.com>
 
-On Fri, 2023-02-03 at 11:33 +0100, Geert Uytterhoeven wrote:
-> Hi Adrian,
-> 
-> On Fri, Feb 3, 2023 at 11:29 AM John Paul Adrian Glaubitz
-> <glaubitz@physik.fu-berlin.de> wrote:
-> > On Fri, 2023-02-03 at 09:30 +0100, Christoph Hellwig wrote:
-> > > On Fri, Feb 03, 2023 at 09:24:46AM +0100, John Paul Adrian Glaubitz wrote:
-> > > > Since this is my very first time stepping up as a kernel maintainer, I was hoping
-> > > > to get some pointers on what to do to make this happen.
-> > > > 
-> > > > So far, we have set up a new kernel tree and I have set up a local development and
-> > > > test environment for SH kernels using my SH7785LCR board as the target platform.
-> > > > 
-> > > > Do I just need to send a patch asking to change the corresponding entry in the
-> > > > MAINTAINERS file?
-> > > 
-> > > I'm not sure a there is a document, but:
-> > > 
-> > >  - add the MAINTAINERS change to your tree
-> > >  - ask Stephen to get your tree included in linux-next
-> > > 
-> > > then eventually send a pull request to Linus with all of that.  Make
-> > > sure it's been in linux-next for a while.
-> > 
-> > OK, thanks for the pointers! Will try to get this done by next week.
-> > 
-> > We're still discussing among SuperH developer community whether there will be a second
-> > maintainer, so please bear with us a few more days. I will collect patches in the
-> > meantime.
-> 
-> Thanks a lot!
-> 
-> If you need any help with process, setup, ... don't hesitate to ask
-> (on e.g. #renesas-soc on Libera).
+Currently when 8250 data transfer is done, bytes_tranferred always returns
+0 at /sys/devices/pci0000\:\:**.*/dma/dma*chan*/bytes_transferred.
+In many cases it gives false impression that data is not being
+trasferred via DMA.
 
-Thanks a lot! I've got some real-life tasks to do today, but I will join later today.
+So, updating the bytes_transferred field to count the bytes
+whenever there is data transfer using idma64.
 
-And I will ask questions ;-).
+Co-developed-by: Srikanth Thokala <srikanth.thokala@intel.com>
+Signed-off-by: Srikanth Thokala <srikanth.thokala@intel.com>
+Signed-off-by: Aman Kumar <aman.kumar@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/dma/idma64.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Adrian
-
+diff --git a/drivers/dma/idma64.c b/drivers/dma/idma64.c
+index c33087c5cd02..8880d2b91bf5 100644
+--- a/drivers/dma/idma64.c
++++ b/drivers/dma/idma64.c
+@@ -137,8 +137,11 @@ static void idma64_chan_irq(struct idma64 *idma64, unsigned short c,
+ 		u32 status_err, u32 status_xfer)
+ {
+ 	struct idma64_chan *idma64c = &idma64->chan[c];
++	struct dma_chan_percpu *stat;
+ 	struct idma64_desc *desc;
+ 
++	stat = this_cpu_ptr(idma64c->vchan.chan.local);
++
+ 	spin_lock(&idma64c->vchan.lock);
+ 	desc = idma64c->desc;
+ 	if (desc) {
+@@ -149,6 +152,7 @@ static void idma64_chan_irq(struct idma64 *idma64, unsigned short c,
+ 			dma_writel(idma64, CLEAR(XFER), idma64c->mask);
+ 			desc->status = DMA_COMPLETE;
+ 			vchan_cookie_complete(&desc->vdesc);
++			stat->bytes_transferred += desc->length;
+ 			idma64_start_transfer(idma64c);
+ 		}
+ 
 -- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+2.17.1
+

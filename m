@@ -2,75 +2,70 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EEA9368A3D4
-	for <lists+dmaengine@lfdr.de>; Fri,  3 Feb 2023 21:57:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 57AA568B2A0
+	for <lists+dmaengine@lfdr.de>; Mon,  6 Feb 2023 00:09:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229657AbjBCU5x (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 3 Feb 2023 15:57:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43234 "EHLO
+        id S229580AbjBEXJI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 5 Feb 2023 18:09:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjBCU5w (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 3 Feb 2023 15:57:52 -0500
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C104F928F2;
-        Fri,  3 Feb 2023 12:57:50 -0800 (PST)
-Received: by mail-ot1-f46.google.com with SMTP id 70-20020a9d084c000000b0068bccf754f1so1742405oty.7;
-        Fri, 03 Feb 2023 12:57:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DTUpcYkNxPIlJHACYCYR7pDb1Buy+e4lFP4bk5Zgp34=;
-        b=D6kjA0iDCoHbJoW0/A85Gd/DEhgeFoqvSv2XUAWEbb1o+0YfaV5M3siOzoHq6v+lem
-         V8B6SLkgyxx/W3zB640h3M9fhSuQRaR8LNQQOuiUzmt1QdoYEVcn76JrF6ewHHqp3BxN
-         Hy2T0sAe3/8AOzMRx9zYqk92gEFBgmAH0ufB0/8eI8xfuhJfuVaupJ3T1XZ1archyji/
-         Nola6qXtDnqlRQdvhMBBBSETrlm+Jd6/+GcxoM2hwr0JFnTnXCwe2grgSZIh27ikr6Um
-         mpX2POkA56H64IeN4GJVZ1uydAwgcMldwGbymiD8KpgUN+uUj18tRkFOctge3sIMEhyG
-         8cTg==
-X-Gm-Message-State: AO0yUKVPGuB7WkOnxV5ZFvTP+YeGM2mRoFmSfcEhOqt90HjqZ1lrYGhk
-        EH1ec8I1KvYGvqaHgJ3Iqw==
-X-Google-Smtp-Source: AK7set/idxy63+ygBDyPnMqtJWkCkCzx9MyU4A+nT1Br4FymPkR4Z0JILK7N/Htqiz/3btTinW8cgQ==
-X-Received: by 2002:a05:6830:1e57:b0:68b:b721:8f1c with SMTP id e23-20020a0568301e5700b0068bb7218f1cmr6718583otj.27.1675457869992;
-        Fri, 03 Feb 2023 12:57:49 -0800 (PST)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id c22-20020a9d6856000000b0068bd5af9b82sm1611458oto.43.2023.02.03.12.57.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Feb 2023 12:57:49 -0800 (PST)
-Received: (nullmailer pid 873929 invoked by uid 1000);
-        Fri, 03 Feb 2023 20:57:48 -0000
-Date:   Fri, 3 Feb 2023 14:57:48 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Gatien Chevallier <gatien.chevallier@foss.st.com>
-Cc:     Oleksii_Moisieiev@epam.com, gregkh@linuxfoundation.org,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        krzysztof.kozlowski+dt@linaro.org, alexandre.torgue@foss.st.com,
-        vkoul@kernel.org, jic23@kernel.org, olivier.moysan@foss.st.com,
-        arnaud.pouliquen@foss.st.com, mchehab@kernel.org,
-        fabrice.gasnier@foss.st.com, ulf.hansson@linaro.org,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] dt-bindings: treewide: add feature-domains
- description in binding files
-Message-ID: <20230203205748.GA860175-robh@kernel.org>
-References: <20230127164040.1047583-1-gatien.chevallier@foss.st.com>
- <20230127164040.1047583-3-gatien.chevallier@foss.st.com>
+        with ESMTP id S229478AbjBEXJH (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 5 Feb 2023 18:09:07 -0500
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1062F17CF5;
+        Sun,  5 Feb 2023 15:09:05 -0800 (PST)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4P94p10kzhz4x1f;
+        Mon,  6 Feb 2023 10:08:56 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+        s=201702; t=1675638543;
+        bh=pNXUawnaU3qfDTxBKpmXsJPpQ4kMgE5LZAjUfYaVNaQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZnYADCx5yiYMn3pkGOedm0t/sNMIjkMYLf/dBTxabGoodLOZTSPJETPuFDge/Cde4
+         aIRPsac6jVpl6zYzM5s0sf9qZ8PH7w9zSC17MHdHR3/1Prai5iUUUHvsKOEj2nhHO3
+         Cblnv6/K2AhBj4YkTU2WIyVtn11Iyu9muX3ILcAHxEldyx9xBhSO4GKxKXmaTccHeU
+         yYw5esGxcNGOWPs8dnxojmNjd9fFKZA9h2nPmfY09YsEtc/xrY2g/H5zDiLVhBoJXQ
+         OF2qL+X7Qm4pEDL2kEKjgtpjAAAz7yUq4t9yOAfwzn4aDqbJ6ZpjiHa3qtmhjT39nt
+         0JnygHWxXhFVw==
+Date:   Mon, 6 Feb 2023 10:08:55 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-sh@vger.kernel.org
+Subject: Re: remove arch/sh
+Message-ID: <20230206100856.603a0f8f@canb.auug.org.au>
+In-Reply-To: <20230203083037.GA30738@lst.de>
+References: <20230113062339.1909087-1-hch@lst.de>
+        <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
+        <20230116071306.GA15848@lst.de>
+        <40dc1bc1-d9cd-d9be-188e-5167ebae235c@physik.fu-berlin.de>
+        <20230203071423.GA24833@lst.de>
+        <afd056a95d21944db1dc0c9708f692dd1f7bb757.camel@physik.fu-berlin.de>
+        <20230203083037.GA30738@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230127164040.1047583-3-gatien.chevallier@foss.st.com>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+Content-Type: multipart/signed; boundary="Sig_/9=gZIOzZKIZz.T3XwOWz_99";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,71 +73,60 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Jan 27, 2023 at 05:40:36PM +0100, Gatien Chevallier wrote:
-> feature-domains is an optional property that allows a peripheral to
-> refer to one or more feature domain controller(s).
-> 
-> Description of this property is added to all peripheral binding files of
-> the peripheral under the STM32 System Bus. It allows an accurate
-> representation of the hardware, where various peripherals are connected
-> to this firewall bus. The firewall can then check the peripheral accesses
-> before allowing it to probe.
-> 
-> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
-> ---
-> 
-> Patch not present in V1 and V2.
-> 
->  Documentation/devicetree/bindings/crypto/st,stm32-hash.yaml | 5 +++++
->  Documentation/devicetree/bindings/dma/st,stm32-dma.yaml     | 5 +++++
->  Documentation/devicetree/bindings/dma/st,stm32-dmamux.yaml  | 5 +++++
->  Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml     | 5 +++++
->  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml | 5 +++++
->  .../devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml     | 5 +++++
->  Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml | 5 +++++
->  Documentation/devicetree/bindings/media/st,stm32-cec.yaml   | 5 +++++
->  Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml  | 5 +++++
->  .../bindings/memory-controllers/st,stm32-fmc2-ebi.yaml      | 5 +++++
->  Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml | 5 +++++
->  Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml  | 6 ++++++
->  Documentation/devicetree/bindings/mmc/arm,pl18x.yaml        | 5 +++++
->  Documentation/devicetree/bindings/net/stm32-dwmac.yaml      | 5 +++++
->  .../devicetree/bindings/phy/phy-stm32-usbphyc.yaml          | 5 +++++
->  .../devicetree/bindings/regulator/st,stm32-vrefbuf.yaml     | 5 +++++
->  Documentation/devicetree/bindings/rng/st,stm32-rng.yaml     | 5 +++++
->  Documentation/devicetree/bindings/serial/st,stm32-uart.yaml | 5 +++++
->  Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml   | 5 +++++
->  Documentation/devicetree/bindings/sound/st,stm32-sai.yaml   | 5 +++++
->  .../devicetree/bindings/sound/st,stm32-spdifrx.yaml         | 5 +++++
->  Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml    | 5 +++++
->  Documentation/devicetree/bindings/spi/st,stm32-spi.yaml     | 5 +++++
->  Documentation/devicetree/bindings/usb/dwc2.yaml             | 5 +++++
->  24 files changed, 121 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/crypto/st,stm32-hash.yaml b/Documentation/devicetree/bindings/crypto/st,stm32-hash.yaml
-> index 4ccb335e8063..cb2ad7d5fdb5 100644
-> --- a/Documentation/devicetree/bindings/crypto/st,stm32-hash.yaml
-> +++ b/Documentation/devicetree/bindings/crypto/st,stm32-hash.yaml
-> @@ -41,6 +41,11 @@ properties:
->      maximum: 2
->      default: 0
->  
-> +  feature-domains:
-> +    $ref: /schemas/feature-controllers/feature-domain-controller.yaml#/properties/feature-domains
+--Sig_/9=gZIOzZKIZz.T3XwOWz_99
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Not how common properties work. Consumer properties should be in a 
-schema with 'select: true' (the one you are referencing) and here you 
-just need to define the entries. Like clocks, power-domains, etc.
+Hi,
 
-> +    minItems: 1
-> +    maxItems: 3
+On Fri, 3 Feb 2023 09:30:37 +0100 Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Fri, Feb 03, 2023 at 09:24:46AM +0100, John Paul Adrian Glaubitz wrote:
+> > Since this is my very first time stepping up as a kernel maintainer, I =
+was hoping
+> > to get some pointers on what to do to make this happen.
+> >=20
+> > So far, we have set up a new kernel tree and I have set up a local deve=
+lopment and
+> > test environment for SH kernels using my SH7785LCR board as the target =
+platform.
+> >=20
+> > Do I just need to send a patch asking to change the corresponding entry=
+ in the
+> > MAINTAINERS file? =20
+>=20
+> I'm not sure a there is a document, but:
+>=20
+>  - add the MAINTAINERS change to your tree
+>  - ask Stephen to get your tree included in linux-next
 
-Why is this variable and what is each entry?
+And by "Stephen", Christoph means me.  When you are ready, please send
+me a request to include your tree/branch in linux-next (usually the
+branch is called something like "for-next" or just "next") telling me
+the git URL, and the contacts I should send email to if there are
+conflicts/build issues with the branch.  I will then fetch the branch
+every time I create a new linux-next release (most work days), so all
+you need to do is update that branch each time you are ready to publish
+more commits.
 
-I still don't like the naming. Everything is a feature and a domain... 
+--=20
+Cheers,
+Stephen Rothwell
 
-It might be a bit easier to come up with a name with multiple users of 
-this binding presented. I'm hesistant to define any new common binding 
-with only 1 user as I've said multiple times on this binding.
+--Sig_/9=gZIOzZKIZz.T3XwOWz_99
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Rob
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmPgNwgACgkQAVBC80lX
+0GzQVAgAjy+Ruo0rndMBlq3LUsn3e3WM6k7+dwjW7y5KrWBUtO9yrheMEypNr12O
+byLw07yy1/H56vz7bZJN3IaFDMrx7kFxU2Rfi4K2lkrd5y7hRGFHFbyG9KACdTVo
+d4yMastrzpa4sqz6druszU7GDQnWEFS8+bdy18sKOXOIF2A4/bCfyPcwbu6WcX9U
+PWBzYOIqYThwk1BW+po7wuq+KMZW0337iVEob5zS9qRotE98YCs2zc5AjSg1XQx3
+SWMIA+zrNKOlxUJ9BUoeDAQUoe6UJjekpz9o0j9q/w1DDNKl9mXQ5q+JvpuzrtGj
+5u71j4opYj+PidkCy3HMoXj2z0tlFw==
+=TRVa
+-----END PGP SIGNATURE-----
+
+--Sig_/9=gZIOzZKIZz.T3XwOWz_99--

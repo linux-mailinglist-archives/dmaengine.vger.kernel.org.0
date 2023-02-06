@@ -2,221 +2,120 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E44C68B47A
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Feb 2023 04:29:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3829268BBC9
+	for <lists+dmaengine@lfdr.de>; Mon,  6 Feb 2023 12:38:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229524AbjBFD3E (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 5 Feb 2023 22:29:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39002 "EHLO
+        id S229572AbjBFLia (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 6 Feb 2023 06:38:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbjBFD3C (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 5 Feb 2023 22:29:02 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C9F144B4;
-        Sun,  5 Feb 2023 19:29:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675654141; x=1707190141;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=ui5yNL3yeJqKPq2v9A4ZH0pKuc/YVHeP7iMqEtoLePM=;
-  b=GH+0gjKEu6D7rylJaAzweW+U04ooSDcesLdbN0LanGn5/cN7SgIW+jHZ
-   JaAojHtmuGn+LilTEv23vJPPgEmyVj59eXJg/jtX3CsH7MiBaYl112YLq
-   w8XxQj6DbuPxXUH/wgd+WpEgbXtsw1ZKGQorxTI18RgcodQUHTTx/AwVO
-   o5MhTUpEDEqUNcKQVQWc4Vy8M8/JqkO/ktNEipqFcM1n+S6bVT7oQaBrP
-   QoIX5wDOsQSPusVKW9vEjAXaOh5BS1YI0zYadkBo8ArTr3hB6MEUlY8ey
-   cp1ZmpZMZwpm+a6mkGOoUoXxgxyYJIAvSqf631h+YYr33/NxWqnk+agaT
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10612"; a="329138003"
-X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="329138003"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2023 19:29:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10612"; a="729875395"
-X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="729875395"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga008.fm.intel.com with ESMTP; 05 Feb 2023 19:29:00 -0800
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Sun, 5 Feb 2023 19:29:00 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Sun, 5 Feb 2023 19:29:00 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.107)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Sun, 5 Feb 2023 19:29:00 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LOjVwhk8840Aj++DGBBSSbWOtdT7N5Ey/hmgJwVcO345CbRVSKPJPOLCuGTYodcI5jIpeCwdNNbGRfACZgNtITC0hZW7WYppzX56hm9vTWONpCHFheh9ao8xtNzn8krm0Kz228NhKB6Jl1H0IT9f8k/6MF1UcWYsULoxCEN05zjuGFC0DiN9ukpkLQ0EREEkIqMAVPdHJyW4i7Wa7Po7zQiJB6JIqkkv+g2wMjcbwfL/WATNQVnjRR2XA8a3u9wPjAtdMpdIh7qVAtzeAEPdP7AhUhwEFRak0G6f9xxEN7C/xQkxrqsxbFFvYyVq0M2QBa8JR8trUR8qfE4tEypRPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7ATtlTKVHZOGT9xYIynjWrxChNByKH1WSWhAWC0KAhI=;
- b=l0xni5ddQTd5JpelXshRLO3IEvORqK7ol2V/GFOjdDBmbLaxxBOSuCVidhypydcm9XjntEO/BNp/CfK7tB/IqyB5NaTPBfJLk6J5/fah69LSyneiaZgxRMLil9kkvn2umWjKxg61Wx1paH/Z+baukHI5BTT17E+9uRqkgsewnTQY5EDuoM43hKHw5ixwoaFws8NrWW+3zE75jRoSWKXsHPePWtNV5u5lhFWOpn1sQ1mB78PcrL8pUbYp2AvJuP11jRxNeVcc1NX5mPPJ6jO7zZUB9AYV30CohPqGQnzikpO8+FzzaLi7zmhX1NGgFRYFFhNLbAjI/Frnq5cbMUNv/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
- by MW3PR11MB4714.namprd11.prod.outlook.com (2603:10b6:303:5d::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.34; Mon, 6 Feb
- 2023 03:28:53 +0000
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::6a8d:b95:e1b5:d79d]) by BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::6a8d:b95:e1b5:d79d%8]) with mapi id 15.20.6064.034; Mon, 6 Feb 2023
- 03:28:53 +0000
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-CC:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        "Robin Murphy" <robin.murphy@arm.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
+        with ESMTP id S229478AbjBFLi3 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Feb 2023 06:38:29 -0500
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AA3618160;
+        Mon,  6 Feb 2023 03:38:26 -0800 (PST)
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+        by ex01.ufhost.com (Postfix) with ESMTP id 427E124E16F;
+        Mon,  6 Feb 2023 19:38:23 +0800 (CST)
+Received: from EXMBX168.cuchost.com (172.16.6.78) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Mon, 6 Feb
+ 2023 19:38:23 +0800
+Received: from localhost.localdomain (183.27.96.33) by EXMBX168.cuchost.com
+ (172.16.6.78) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Mon, 6 Feb
+ 2023 19:38:22 +0800
+From:   Walker Chen <walker.chen@starfivetech.com>
+To:     <linux-riscv@lists.infradead.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/2] iommu/vt-d: Move iopf code from SVA to IOPF enabling
- path
-Thread-Topic: [PATCH 2/2] iommu/vt-d: Move iopf code from SVA to IOPF enabling
- path
-Thread-Index: AQHZN60EIGh+HMbBFkyBqYknjucFXK7BRJlw
-Date:   Mon, 6 Feb 2023 03:28:52 +0000
-Message-ID: <BN9PR11MB527659435BA073B21A1291588CDA9@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20230203084456.469641-1-baolu.lu@linux.intel.com>
- <20230203084456.469641-2-baolu.lu@linux.intel.com>
-In-Reply-To: <20230203084456.469641-2-baolu.lu@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|MW3PR11MB4714:EE_
-x-ms-office365-filtering-correlation-id: 5e561cd7-ccb9-43b6-baca-08db07f244fd
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hshqBiEA99DZ5bUpv32kUMY3G+Qsl2gTOHcqaIHEqvr8//QEB3RkBnksA/wJElKAfKo1EiL11ncF0PV/hLHaqeTNhLc+yc453TfmK/RX/Vhw09YWOHExbrMiVBH11+BXOms2md/yKdF783K5FoQ5p7/VDJzr3BDAjR55vCBxkpL+3hpymKZg0vHR9ZcBfBulYldhBF9/N/wdem8xoyF/YhnAIuKRPxSm9DnPGDZ6oDy8A+zmSXdUClxnf7axZzeItiK6GK/kvZCpDAOhcT8a174Wt8apNYQU4jMSBi878ZmIzIrv5+37L9+dWAklHf7+mpHVyjo2Df+cNiFNnFfCiSeL6/vjC0zUJWH+H0ue5MKXrP/ZcC/XZE4Ba17EkY0zxF74VMGQrPTPISi4JtdL30x1KItiEr+IfuRvv8M3yZDG69XQbp0RLN/EMvB5pnbf8SM9XprTFxw1eUeE9b6cmTFU3f70YvazNnQgY+HV2Q6xJBd9LFATDc1pJ7jSglYHkWpHpRJEoBNXZZzsuI0CGvTPBfKEZtPNMr+yVX3buJYBxA7cYF/rmX+FnSVvxnTju2XknA5Tf/Jeul+102UcunN+zAxmduW/yheTRNncXDWsAuYrQ0Ze/TJ1I/uPS5ZoMYLtl437QwTexrqJkreXnjktCyOgpR5NjHergCC03clzPs79km4F0IlvqJpY+3tGbNlO1BABxjiv7bbKCuNUsg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(366004)(136003)(396003)(346002)(39860400002)(376002)(451199018)(33656002)(7696005)(71200400001)(54906003)(316002)(110136005)(6506007)(8676002)(52536014)(5660300002)(2906002)(66476007)(66556008)(64756008)(66446008)(4326008)(76116006)(66946007)(478600001)(41300700001)(8936002)(82960400001)(26005)(38070700005)(86362001)(38100700002)(55016003)(122000001)(83380400001)(186003)(9686003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?YcK+A//IoCUfrjLymyywB044D6rcnf3pzU4xt68c556XYVH8/8J7J4oUGSK0?=
- =?us-ascii?Q?t5358JUPY7uedDOwWyth7oOq1zwag5toKZ0NGoYTqJPsUb8bXP2nQAOfBlPW?=
- =?us-ascii?Q?HdLniPvVXHYgAF8rocJQt+KZH5eCT989NVrm2OOFblzqTnJfHgVR/ISVi4ke?=
- =?us-ascii?Q?fHg1sbnr1A/ch/XSen6m5Mz1GZ7Duw5NQFSQVrOBN6T8Y1XDz7Om/ll/qpRS?=
- =?us-ascii?Q?TCFteJswTv8B1n8m7LSsv7RXQKO73P88EWEXCIbA6aobokZGCqxlHwub/Zog?=
- =?us-ascii?Q?19ic3Phssevn9uKPtLbWPFQrTrTapxLDTTVVHNle3O33l0bQWrumKsIKMrf1?=
- =?us-ascii?Q?W2SETOvhmXhwi17A5IvU7gCYeSWA4gRCMXVtAlzWdDJFMVDYAtP3b26CY8P1?=
- =?us-ascii?Q?R4wZdlFP8SofXuqH/4HOIHLtfiGOxsGi+V49jhz7zXqCXbtOyHOKgOMt0Ryl?=
- =?us-ascii?Q?SE6O34pXgb9S1GzrkQKEe8ua85sA66sI/foRfdg3JjLzgSRqWPAdQ8Yveu0x?=
- =?us-ascii?Q?/RiuW/LWxdDB8MiXfMyUGhmMiSuSLcDdMw9AUF2H0gL2+MCnUdViBWDq/BPm?=
- =?us-ascii?Q?D/wkhzTjpLmQxG+I+AlnslXCSNmYw0jOcnDYrLBxPCJgkCYviMgVzTleOW8o?=
- =?us-ascii?Q?HHm8dB5zin+d4vHYtnaB3RYMK+kBbPjWNJneORxsBOute+X269Pn71U1sGyk?=
- =?us-ascii?Q?0p9Xlj442QhzKp1oPhpKE4yzP+qZgBwccXcoD/BqGzbvm9HN6gig3Ri1ECER?=
- =?us-ascii?Q?D68LUKKXfmaiKkP2Yw60zKhDUgpDAOcBPymEw5aCsGBkc+C48qzlFDF+wlfo?=
- =?us-ascii?Q?3gkUGc3AyWshX7DTvUYKahPhMbazVurVm1ZWd0Y+QnjCfLofFvuQl0NtSiJF?=
- =?us-ascii?Q?UIg/6uic0oIz8IS5/RKy6tW9He9T/JiQJN5kw7DWdQIV6Mol+/F2FnwECj4g?=
- =?us-ascii?Q?AEAc+nRzzAiHnqZtYlWh6s046NS8mMqAnzLP4mhThsXSo/M/a6piCEDrUMdB?=
- =?us-ascii?Q?fu+Y9JIJ8ZFdaX8NaU5Sw0pp6qcshAuHaIv0uXK0mjAl8tdj8JSRmRj+QseJ?=
- =?us-ascii?Q?lK7kR9LdwGQiV/R5sygmuseOFAAG/AuMMzEHjS2xmdHpoJ5E352hv11K2LWj?=
- =?us-ascii?Q?bUyn4RxQejwOdHT9yn3Dito06onlRVTcbOmIFaDrllKxGJvmKvUDrC2kjh/Z?=
- =?us-ascii?Q?KA8EtvDrlUgCYzte0+X8lpZqz92hRIGz0N8vOcanCo39+lDlX3hfaZIcUMH8?=
- =?us-ascii?Q?OwWRclUOUcEnXLa6oqW2nqSYVWt6PbvKkJze/rXN3FHp+bq7nOCkyFMLMN+u?=
- =?us-ascii?Q?oKUNlIB4XYTDFXTzruG6D4z4imouljRDL5KD4QiDiiYdKG9yE/goXDs/tahn?=
- =?us-ascii?Q?ffHq3dhLta8MeqxKX8DczgLGNeDSTPELHjtyXbQNN09otr5dPo/spWIOrfyo?=
- =?us-ascii?Q?O8CJshlunfkeFsqvM8A66mfPMI9txLOBtTX2yvl/8aXetKUMIXqrc80cS0ZD?=
- =?us-ascii?Q?8chDoF0HiBM1PXB4YkbngP9vRt6uVPrByCQm6avDJL1Ns/vSl5TYbkeA/wCp?=
- =?us-ascii?Q?pddk9NCysLz+pBej9VO3AP13cepOvc2XO9xNo8pk?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor@kernel.org>,
+        "Palmer Dabbelt" <palmer@dabbelt.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        "Walker Chen" <walker.chen@starfivetech.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 0/3] Add DMA driver for StarFive JH7110 SoC
+Date:   Mon, 6 Feb 2023 19:38:08 +0800
+Message-ID: <20230206113811.23133-1-walker.chen@starfivetech.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e561cd7-ccb9-43b6-baca-08db07f244fd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Feb 2023 03:28:52.3391
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VoOl+LaxAreuzyUQ2UCtZcl15T1jsAMKKwUjbz7LLxu/nYY4ln5PgAiEMEZzKEJHsUfgNAVku3USFi1N9KchQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4714
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [183.27.96.33]
+X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX168.cuchost.com
+ (172.16.6.78)
+X-YovoleRuleAgent: yovoleflag
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-> From: Lu Baolu <baolu.lu@linux.intel.com>
-> Sent: Friday, February 3, 2023 4:45 PM
->=20
-> Generally enabling IOMMU_DEV_FEAT_SVA requires
-> IOMMU_DEV_FEAT_IOPF, but
-> some devices manage I/O Page Faults themselves instead of relying on the
-> IOMMU. Move IOPF related code from SVA to IOPF enabling path to make
-> the
-> driver work for devices that manage IOPF themselves.
->=20
-> For the device drivers that relies on the IOMMU for IOPF through PCI/PRI,
-> IOMMU_DEV_FEAT_IOPF must be enabled before and disabled after
-> IOMMU_DEV_FEAT_SVA.
+This patch series adds dma support for the StarFive JH7110 RISC-V SoC.
+The first patch adds device tree binding. The second patch includes dma
+driver. The last patch adds device node of dma to JH7110 dts.
 
-ARM still handles this differently:
+The series has been tested on the VisionFive 2 board which equip with
+JH7110 SoC and works normally.
 
-arm_smmu_master_enable_sva()
-  arm_smmu_master_sva_enable_iopf():
-{
-	/*
-	 * Drivers for devices supporting PRI or stall should enable IOPF first.
-	 * Others have device-specific fault handlers and don't need IOPF.
-	 */
-	if (!arm_smmu_master_iopf_supported(master))
-		return 0;
+The last patch should be applied after the following patchset:
+https://lore.kernel.org/all/20230120024445.244345-1-xingyu.wu@starfivetech.com/
 
-	if (!master->iopf_enabled)
-		return -EINVAL;
-}
+Walker Chen (3):
+  dt-bindings: dma: snps,dw-axi-dmac: Update resets and add
+    snps,num-hs-if
+  dma: dw-axi-dmac: Add support for StarFive DMA
+  riscv: dts: starfive: add dma controller node
 
-i.e. device specific IOPF is allowed only when PRI or stall is not supporte=
-d.
+ .../bindings/dma/snps,dw-axi-dmac.yaml        | 17 ++++++++++++-
+ arch/riscv/boot/dts/starfive/jh7110.dtsi      | 20 +++++++++++++++
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 25 ++++++++++++++++---
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  3 +++
+ 4 files changed, 60 insertions(+), 5 deletions(-)
 
-it's different from what this patch does to allow device specific IOPF even
-when PRI is supported.
 
-should we make them consistent given SVA/IOPF capabilities are general
-iommu definitions or fine to leave each iommu driver with different
-restriction?
+base-commit: 830b3c68c1fb1e9176028d02ef86f3cf76aa2476
+prerequisite-patch-id: 54ce870d6ea747466474b5d4105cfbc05e1b01ab
+prerequisite-patch-id: e8dd8258a4c4062eee2cf07c4607d52baea71f3a
+prerequisite-patch-id: 057fa35870d8d7d22a57c13362588ffb9e9df316
+prerequisite-patch-id: 102368a6ff799c4cb639aed513deff09c1839161
+prerequisite-patch-id: 7c1a50a37919fedbbd336ca5dec295ac63c2a89d
+prerequisite-patch-id: a5d9e0f7d4f8163f566678894cf693015119f2d9
+prerequisite-patch-id: 87cb528acd9a7f1ffe7475d7261553f6a4de5753
+prerequisite-patch-id: 417736eb958e1158c60a5ed74bc2350394321a80
+prerequisite-patch-id: a137312ca162b5712e28719f77d0da78e9fdd778
+prerequisite-patch-id: f7c548b4619f491ce27f319242c4e3685c76173b
+prerequisite-patch-id: 4d90febab2fb7928f50a73104e7454312b9ce6c8
+prerequisite-patch-id: 645a807d50e0e56593ffdc6c3b50ea54a230827a
+prerequisite-patch-id: 165f8cd740ae60585d22c95b99a0689084d468e3
+prerequisite-patch-id: 480d910deccadc2947b3318c3c13dfa0882c8e0d
+prerequisite-patch-id: 1d1cb90ec12dfc9312e448759c7cab89f2bc6394
+prerequisite-patch-id: 5f539ac7c96023b36489c6da7c70c31eaf64a25b
+prerequisite-patch-id: 6bb9a780c62af3bcc2368dfd20303c7b1bc91e23
+prerequisite-patch-id: 258ea5f9b8bf41b6981345dcc81795f25865d38f
+prerequisite-patch-id: 8b6f2c9660c0ac0ee4e73e4c21aca8e6b75e81b9
+prerequisite-patch-id: e3b986b9c60b2b93b7812ec174c9e1b4cfb14c97
+prerequisite-patch-id: 2e03eeb766aefd5d38f132d091618e9fa19a37b6
+prerequisite-patch-id: e0ba7af0f8d3d41844da9fbcba14b548cbc18f55
+prerequisite-patch-id: c1f8603e58c64828d0f36deac9b93c24289d8e05
+prerequisite-patch-id: d73b2371a15f99416566904dedd45be30109aa84
+prerequisite-patch-id: fbbd7f621c50a0762b188f52585e3418f9896a28
+prerequisite-patch-id: 2ddada18ab6ea5cd1da14212aaf59632f5203d40
+prerequisite-patch-id: dd10a6d021de43aef31a1df70fc1a7f8a710d137
+prerequisite-patch-id: 7acbc9c924e802712d3574dd74a6b3576089f78c
+prerequisite-patch-id: e0ac2cb2de37dcd8c6a3f27d6cba1164a6967145
+prerequisite-patch-id: ce8a6557564ba04bd90bb41d34f520347f399887
+prerequisite-patch-id: 9f71c539a241baf1e73c7e7dfde5b0b04c66a502
+prerequisite-patch-id: 0813e1684f69e106bc7a84e5f5a1f40a28e8a38d
+prerequisite-patch-id: bb8e071ed43998874b9d98292c0dcdeedc0760ca
+prerequisite-patch-id: 0c04762f1d20f09cd2a1356334a86e520907d111
+prerequisite-patch-id: 23db1e84f5de4e117427509c466ae1c106e367bf
+prerequisite-patch-id: 56577b43ff594598eaa3c1dc9f7caa462d7f94cd
+prerequisite-patch-id: 2bc43b375b470f7e8bbe937b78678ba3856e3b8f
+-- 
+2.17.1
 
->=20
-> -	ret =3D iopf_queue_add_device(iommu->iopf_queue, dev);
-> -	if (!ret)
-> -		ret =3D iommu_register_device_fault_handler(dev,
-> iommu_queue_iopf, dev);
-> -
-> -	return ret;
-> +	return 0;
->  }
-
-here and below...
-
-> +	ret =3D iopf_queue_add_device(info->iommu->iopf_queue, dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D iommu_register_device_fault_handler(dev, iommu_queue_iopf,
-> dev);
-> +	if (ret)
-> +		iopf_queue_remove_device(info->iommu->iopf_queue, dev);
-> +
-> +	return ret;
->  }
-
-...indicate a bug fix on error handling. better to have the fix as
-a separate patch and then move code.

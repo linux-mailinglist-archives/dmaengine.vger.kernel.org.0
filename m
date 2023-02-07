@@ -2,96 +2,113 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DFB068D20B
-	for <lists+dmaengine@lfdr.de>; Tue,  7 Feb 2023 10:07:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0420868D376
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Feb 2023 11:03:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231372AbjBGJHM convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Tue, 7 Feb 2023 04:07:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49380 "EHLO
+        id S230149AbjBGKDP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 7 Feb 2023 05:03:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229690AbjBGJHM (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Feb 2023 04:07:12 -0500
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68931234DF;
-        Tue,  7 Feb 2023 01:07:08 -0800 (PST)
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.95)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1pPJwG-001RJZ-JC; Tue, 07 Feb 2023 10:06:56 +0100
-Received: from p57bd9464.dip0.t-ipconnect.de ([87.189.148.100] helo=[192.168.178.81])
-          by inpost2.zedat.fu-berlin.de (Exim 4.95)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1pPJwE-000mCw-Hc; Tue, 07 Feb 2023 10:06:56 +0100
-Message-ID: <60ed320c8f5286e8dbbf71be29b760339fd25069.camel@physik.fu-berlin.de>
-Subject: Re: remove arch/sh
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-sh@vger.kernel.org
-Date:   Tue, 07 Feb 2023 10:06:53 +0100
-In-Reply-To: <20230203071423.GA24833@lst.de>
-References: <20230113062339.1909087-1-hch@lst.de>
-         <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
-         <20230116071306.GA15848@lst.de>
-         <40dc1bc1-d9cd-d9be-188e-5167ebae235c@physik.fu-berlin.de>
-         <20230203071423.GA24833@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.46.3 
+        with ESMTP id S229447AbjBGKDO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Feb 2023 05:03:14 -0500
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3D94F0
+        for <dmaengine@vger.kernel.org>; Tue,  7 Feb 2023 02:03:12 -0800 (PST)
+Received: by mail-wm1-x331.google.com with SMTP id f47-20020a05600c492f00b003dc584a7b7eso12736267wmp.3
+        for <dmaengine@vger.kernel.org>; Tue, 07 Feb 2023 02:03:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kkp+Ll4tkGit72TXAobb+8Dz4GgYVkfmJNmgRsYUejc=;
+        b=LRZACxNr6xLylc10hfxaGCMDHYoNzUw7AbwuCI2aCOHqO8Fd1Iv9fdEZIGhwe5sw5k
+         ADjtTTlMfrNWXrTrxL7RCwfHdjvN6x6lTBgwBL3PlLK536ZolxhyxlNsrze9qSuatUy/
+         3VU7vCmD62DyHDA/q9QKBZoVG7Vy302PbYoO3dyfTDFHr0AK7p/ZdrV/uMnnAxPXzCmP
+         kBJdEOyOBTg7G2038O5JQKie8VkX3LfhVw6oZO4zpuARyDcex3k/zljLKSFa0eASPKS+
+         F9voe7MdN0Fgf2XDYP9Vrl90P6JOyRkp5ar3MtwKnMKKzO0jsQ8nEQ5P4r1vSmwEImhA
+         45/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Kkp+Ll4tkGit72TXAobb+8Dz4GgYVkfmJNmgRsYUejc=;
+        b=iZxdxQNy1cu43v9I7HlkTEqliBsvsxLgynlQGspF8mqxczLABqklKSxa/dvnRPvbQB
+         BryLgr/1S6RlNTIAOCkDJSBImJmFBcgAGg+t07xGC2UbvMmV4aYPLwbZeaPCSrGfZz7W
+         JbgZWVnXHaX2X25Vs9UOY0cUpfp+eRGG8gq/7BY4TJWcrbHFGk4YQEvqRjZSalv0HZVj
+         +jtJlxXLqt2ICYrA7fNHP8TaQgr38GphBOBBP/8clbX5qHWbNBe9RHPLYnxeKtHuh85m
+         KYhdXvVukY7sirOzFL9srnbhn37e1142MRz7PWGy+H8vWgFga56jHkr+4ApfaWzSh3rx
+         YmXA==
+X-Gm-Message-State: AO0yUKXgCD6Ro/MjvpfNPmzmEs7LhHFDNuBafVvsrpJRxPdEvAcrM59B
+        sW3gKtpCYwh2Rbqgjx/OpQWdyg==
+X-Google-Smtp-Source: AK7set9i0aBmW+7wDDLpgeqpJaDcgLuU4ehpABvZIFJKCasLAsMRYKVJh2tk4PARadiQ4MozA7GnMw==
+X-Received: by 2002:a05:600c:2e87:b0:3e0:1a9:b1f5 with SMTP id p7-20020a05600c2e8700b003e001a9b1f5mr2534413wmn.28.1675764191241;
+        Tue, 07 Feb 2023 02:03:11 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id x20-20020a05600c21d400b003dff2b493c8sm9921505wmj.36.2023.02.07.02.03.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Feb 2023 02:03:10 -0800 (PST)
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Date:   Tue, 07 Feb 2023 11:03:10 +0100
+Subject: [PATCH] dt-bindings: dma: qcom,bam-dma: add optional memory
+ interconnect properties
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 87.189.148.100
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230207-topic-sm8550-upstream-bam-dma-bindings-fix-v1-1-57dba71e8727@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAN0h4mMC/x2OzQqDMBCEX0Vy7kKMhGpfpfSQn60umDVktRTEd
+ +/Swxy+YfiY0wg2QjGP7jQNPyS0sUJ/60xaAs8IlJWNs26wzt5h3yolkDJ6b+GosjcMBaImlwC
+ ROBPPAm/6wthPbkpDxOCTUWEMghBb4LSoko911bI21O3/wfN1XT/+Ov4tkQAAAA==
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.12.0
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello Christoph!
+Recents SoCs like the SM8450 or SM8550 requires memory interconnect
+in order to have functional DMA.
 
-On Fri, 2023-02-03 at 08:14 +0100, Christoph Hellwig wrote:
-> On Mon, Jan 16, 2023 at 09:52:10AM +0100, John Paul Adrian Glaubitz wrote:
-> > We have had a discussion between multiple people invested in the SuperH port and
-> > I have decided to volunteer as a co-maintainer of the port to support Rich Felker
-> > when he isn't available.
-> 
-> So, this still isn't reflected in MAINTAINERS in linux-next.  When
-> do you plan to take over?  What platforms will remain supported and
-> what can we start dropping due to being unused and unmaintained?
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+ Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I'm getting everything ready now with Geert's help and I have a probably dumb
-question regarding the MAINTAINERS file change: Shall I just add myself as an
-additional maintainer first or shall I also drop Yoshinori Sato?
+diff --git a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+index 003098caf709..e922fafca833 100644
+--- a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
++++ b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+@@ -36,6 +36,12 @@ properties:
+   interrupts:
+     maxItems: 1
+ 
++  interconnects:
++    description: Path leading to system memory
++
++  interconnect-names:
++    const: memory
++
+   iommus:
+     minItems: 1
+     maxItems: 4
 
-Also, is it desirable to add a "T:" entry for the kernel tree?
+---
+base-commit: 49a8133221c71b935f36a7c340c0271c2a9ee2db
+change-id: 20230207-topic-sm8550-upstream-bam-dma-bindings-fix-81929c3bea5c
 
-Thanks,
-Adrian
-
+Best regards,
 -- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+Neil Armstrong <neil.armstrong@linaro.org>
+

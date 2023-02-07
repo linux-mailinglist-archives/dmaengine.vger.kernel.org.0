@@ -2,158 +2,146 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCE2E68DFAF
-	for <lists+dmaengine@lfdr.de>; Tue,  7 Feb 2023 19:16:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C1E568E264
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Feb 2023 21:58:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231390AbjBGSQL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 7 Feb 2023 13:16:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39638 "EHLO
+        id S229649AbjBGU6H (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 7 Feb 2023 15:58:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231470AbjBGSQH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Feb 2023 13:16:07 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A473B0FA;
-        Tue,  7 Feb 2023 10:16:02 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 16D9DB81A21;
-        Tue,  7 Feb 2023 18:16:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B253DC433EF;
-        Tue,  7 Feb 2023 18:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675793759;
-        bh=hyXPCMlpO7BwytLT5DV1xWv0+2q0jvjZX4T5MnllIuY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tNot2fP8+qrl20uC7aLd2k2WQ99VRMTB7di8BZJFBFz2A1up4MdDzlXsN9VfNUBDh
-         OvfsbMsAJJ6yhcOc44mbPRMCdoXiSAz/8AL0VxfVuRvEyYimbrt0ycjvsHm7N/z8hw
-         kEmjSAtxeGw0nwh7FL/myNOxI38jux/T8bWui7Tk5aw1ZVSNsAJJ/hiNeCVuLA7/19
-         hNQsHWC6HMh+y7COle+7qMFaS5QyYnHHv78+6DYrg7yY5Y9ASDV3oeqsVj9wq+a2n/
-         fouDliMttw82xgyyKRrc0XgEAiUHxb66LoxNwKZTSdaRGO8kUnNLKMSZll/15uucPz
-         Tuk4nfNxioQVA==
-Date:   Tue, 7 Feb 2023 18:15:55 +0000
-From:   Conor Dooley <conor@kernel.org>
-To:     shravan kumar <shravan.chippa@microchip.com>, vkoul@kernel.org
-Cc:     green.wan@sifive.com, vkoul@kernel.org, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v1] dmaengine: sf-pdma: pdma_desc memory leak fix
-Message-ID: <Y+KVW4o1ZXJHFSZt@spud>
-References: <20230120100623.3530634-1-shravan.chippa@microchip.com>
+        with ESMTP id S229623AbjBGU6G (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Feb 2023 15:58:06 -0500
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F02AD14499;
+        Tue,  7 Feb 2023 12:58:01 -0800 (PST)
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-16a8d511ce0so2119238fac.1;
+        Tue, 07 Feb 2023 12:58:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yqtKI6VvbLeNL2RUrUWXNfeUaIXVwWm1vJplGrZvFTs=;
+        b=nNvYs5h8RHHeXNfSnkhQlVV1j4DVRxdqpwN2kL6I1Ep53955tdj00uk6KcXiS52OIP
+         sIt9b4B5fK6RVgjlqF5emm5setn5WTccPK27YPzOSw0CHzsjdPtTp6NmCvae6hZQAkAl
+         Ag9Wk7L2lJuH7dm3SOhFCIdXUWifjE3HBavzoKLNbVsyusfZXw94onO20hg02YtGhG7F
+         x/LX1eW2wpaDMeSwEKua9Mv6M1fQNQ5e+fe7iGa5+bZPXKE884rBR66riysm+9fcrtjB
+         cuEcomsEMU6e21TsYZeSVNzoVfjc+TYMdsNdS8Q+Es96fSj5liaLzbcvcDxhr8C6XNLF
+         sWww==
+X-Gm-Message-State: AO0yUKWpDOYJvCq4fjdCplncDdNK7pFxeW7+n2tYk35SNPk3AwUr/snY
+        eK17twfE1xkUKg6xcOkYext5kdnjgA==
+X-Google-Smtp-Source: AK7set9bFssBm+5bRaiQQaqfvXv/9qHnz1QnYd/r18TnCsF10XdNoZ3shz76XhSe7GxcLpeT/Kg5Gw==
+X-Received: by 2002:a05:6870:ec91:b0:16a:2a6d:9e40 with SMTP id eo17-20020a056870ec9100b0016a2a6d9e40mr2489358oab.29.1675803481127;
+        Tue, 07 Feb 2023 12:58:01 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id b9-20020a9d6b89000000b0068bcef4f543sm7025713otq.21.2023.02.07.12.58.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Feb 2023 12:58:00 -0800 (PST)
+Received: (nullmailer pid 4142751 invoked by uid 1000);
+        Tue, 07 Feb 2023 20:58:00 -0000
+Date:   Tue, 7 Feb 2023 14:58:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Walker Chen <walker.chen@starfivetech.com>
+Cc:     linux-riscv@lists.infradead.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] dt-bindings: dma: snps,dw-axi-dmac: Update resets
+ and add snps,num-hs-if
+Message-ID: <20230207205800.GA4140140-robh@kernel.org>
+References: <20230206113811.23133-1-walker.chen@starfivetech.com>
+ <20230206113811.23133-2-walker.chen@starfivetech.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="CFXVfqSA5rCRtNup"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230120100623.3530634-1-shravan.chippa@microchip.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230206113811.23133-2-walker.chen@starfivetech.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
---CFXVfqSA5rCRtNup
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hey Vinod,
-
-On Fri, Jan 20, 2023 at 03:36:23PM +0530, shravan kumar wrote:
-> From: Shravan Chippa <shravan.chippa@microchip.com>
->=20
-> Commit b2cc5c465c2c ("dmaengine: sf-pdma: Add multithread support for a
-> DMA channel") changed sf_pdma_prep_dma_memcpy() to unconditionally
-> allocate a new sf_pdma_desc each time it is called.
->=20
-> The driver previously recycled descs, by checking the in_use flag, only
-> allocating additional descs if the existing one was in use. This logic
-> was removed in commit b2cc5c465c2c ("dmaengine: sf-pdma: Add multithread
-> support for a DMA channel"), but sf_pdma_free_desc() was not changed to
-> handle the new behaviour.
->=20
-> As a result, each time sf_pdma_prep_dma_memcpy() is called, the previous
-> descriptor is leaked, over time leading to memory starvation:
->=20
->   unreferenced object 0xffffffe008447300 (size 192):
->   comm "irq/39-mchp_dsc", pid 343, jiffies 4294906910 (age 981.200s)
->   hex dump (first 32 bytes):
->     00 00 00 ff 00 00 00 00 b8 c1 00 00 00 00 00 00  ................
->     00 00 70 08 10 00 00 00 00 00 00 c0 00 00 00 00  ..p.............
->   backtrace:
->     [<00000000064a04f4>] kmemleak_alloc+0x1e/0x28
->     [<00000000018927a7>] kmem_cache_alloc+0x11e/0x178
->     [<000000002aea8d16>] sf_pdma_prep_dma_memcpy+0x40/0x112
->=20
-> Add the missing kfree() to sf_pdma_free_desc(), and remove the redundant
-> in_use flag.
->=20
-> Fixes: b2cc5c465c2c ("dmaengine: sf-pdma: Add multithread support for a D=
-MA channel")
-> Signed-off-by: Shravan Chippa <shravan.chippa@microchip.com>
-
-Just checking in to make sure that this patch is on your radar.
-Is there something you're waiting for on it?
-
-Cheers,
-Conor.
-
+On Mon, Feb 06, 2023 at 07:38:09PM +0800, Walker Chen wrote:
+> Add two reset items and properties 'snps,num-hs-if'.
+> The DMA controller needs to be reset before being used in JH7110 SoC.
+> Another difference from the original version is that the hardware
+> handshake number of DMA can be up to 56 while the number in original
+> version is less than 16, and different registers are selected according
+> to this.
+> 
+> Signed-off-by: Walker Chen <walker.chen@starfivetech.com>
 > ---
->  drivers/dma/sf-pdma/sf-pdma.c | 3 +--
->  drivers/dma/sf-pdma/sf-pdma.h | 1 -
->  2 files changed, 1 insertion(+), 3 deletions(-)
->=20
-> diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
-> index 6b524eb6bcf3..e578ad556949 100644
-> --- a/drivers/dma/sf-pdma/sf-pdma.c
-> +++ b/drivers/dma/sf-pdma/sf-pdma.c
-> @@ -96,7 +96,6 @@ sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,	dma_add=
-r_t dest, dma_addr_t src,
->  	if (!desc)
->  		return NULL;
-> =20
-> -	desc->in_use =3D true;
->  	desc->dirn =3D DMA_MEM_TO_MEM;
->  	desc->async_tx =3D vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
-> =20
-> @@ -290,7 +289,7 @@ static void sf_pdma_free_desc(struct virt_dma_desc *v=
-desc)
->  	struct sf_pdma_desc *desc;
-> =20
->  	desc =3D to_sf_pdma_desc(vdesc);
-> -	desc->in_use =3D false;
-> +	kfree(desc);
->  }
-> =20
->  static void sf_pdma_donebh_tasklet(struct tasklet_struct *t)
-> diff --git a/drivers/dma/sf-pdma/sf-pdma.h b/drivers/dma/sf-pdma/sf-pdma.h
-> index dcb3687bd5da..5c398a83b491 100644
-> --- a/drivers/dma/sf-pdma/sf-pdma.h
-> +++ b/drivers/dma/sf-pdma/sf-pdma.h
-> @@ -78,7 +78,6 @@ struct sf_pdma_desc {
->  	u64				src_addr;
->  	struct virt_dma_desc		vdesc;
->  	struct sf_pdma_chan		*chan;
-> -	bool				in_use;
->  	enum dma_transfer_direction	dirn;
->  	struct dma_async_tx_descriptor *async_tx;
->  };
-> --=20
-> 2.34.1
->=20
+>  .../bindings/dma/snps,dw-axi-dmac.yaml          | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> index 67aa7bb6d36a..1a8d8c20e254 100644
+> --- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> +++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> @@ -9,6 +9,7 @@ title: Synopsys DesignWare AXI DMA Controller
+>  maintainers:
+>    - Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+>    - Jee Heng Sia <jee.heng.sia@intel.com>
+> +  - Walker Chen <walker.chen@starfivetech.com>
+>  
+>  description:
+>    Synopsys DesignWare AXI DMA Controller DT Binding
+> @@ -21,6 +22,7 @@ properties:
+>      enum:
+>        - snps,axi-dma-1.01a
+>        - intel,kmb-axi-dma
+> +      - starfive,axi-dma
 
---CFXVfqSA5rCRtNup
-Content-Type: application/pgp-signature; name="signature.asc"
+This should be SoC specific.
 
------BEGIN PGP SIGNATURE-----
+>  
+>    reg:
+>      minItems: 1
+> @@ -59,7 +61,12 @@ properties:
+>      maximum: 8
+>  
+>    resets:
+> -    maxItems: 1
+> +    maxItems: 2
+> +
+> +  reset-names:
+> +    items:
+> +      - const: axi-rst
+> +      - const: ahb-rst
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCY+KVWwAKCRB4tDGHoIJi
-0pfUAQCRSYpj+UXdzwRJIDxnAY4Ex2piBHnUpqHXYSzu+uHbXQD9GzSXnoeUACmz
-isahFC6JG6tJAbxK/VM7KbIzY4vlFwU=
-=jO8h
------END PGP SIGNATURE-----
+'-rst' is redundant.
 
---CFXVfqSA5rCRtNup--
+>  
+>    snps,dma-masters:
+>      description: |
+> @@ -74,6 +81,14 @@ properties:
+>      $ref: /schemas/types.yaml#/definitions/uint32
+>      enum: [0, 1, 2, 3, 4, 5, 6]
+>  
+> +  snps,num-hs-if:
+> +    description: |
+> +      The number of hardware handshake. If it is more than 16,
+> +      CHx_CFG2 is used to configure the DMA transfer instead of CHx_CFG.
+
+Can't you infer this from the compatible string?
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 1
+> +    maximum: 256
+> +
+>    snps,priority:
+>      description: |
+>        Channel priority specifier associated with the DMA channels.
+> -- 
+> 2.17.1
+> 

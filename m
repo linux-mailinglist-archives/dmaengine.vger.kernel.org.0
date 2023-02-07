@@ -2,78 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9602B68DCFE
-	for <lists+dmaengine@lfdr.de>; Tue,  7 Feb 2023 16:27:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BCE2E68DFAF
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Feb 2023 19:16:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232082AbjBGP1Z (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 7 Feb 2023 10:27:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38290 "EHLO
+        id S231390AbjBGSQL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 7 Feb 2023 13:16:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232034AbjBGP1Y (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Feb 2023 10:27:24 -0500
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F23E021955
-        for <dmaengine@vger.kernel.org>; Tue,  7 Feb 2023 07:27:22 -0800 (PST)
-Received: by mail-ej1-x633.google.com with SMTP id qw12so44054579ejc.2
-        for <dmaengine@vger.kernel.org>; Tue, 07 Feb 2023 07:27:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fMQJ/M1Q2nvChk2Ny36EReTBD9rLHa0fXryg1T6cnSs=;
-        b=qPz9ZOKomPDlWlpdZtYvkEaWEdiQh6WP1rtaHIF6L2itugID2Eh8iDZnrBObXefyh3
-         aPzzxXxKbh8tRsqmApKRE2YGbZ7KdOFU+suxYagHPL6W3GHb8KQx741yr6A0welQoXoq
-         dCmI192BDdcaIBMloCn2fUG9I8sTddl5krCAikEfbqN4iOXv/4SezbPkK2Dr3FgCqcoH
-         H6qfprENl94FkLpvUvO+hmVRp7EOcxDP+IOVY2GG4HKHzsJpHtQkramcSRlIn9lf6eWr
-         LzvqPs9s4xXEkfLVnYn/Mz98u+9wmIIRccoNXV8YJD0yZEmUOXLHwL6m2OlxCmJX1Ke/
-         mFuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fMQJ/M1Q2nvChk2Ny36EReTBD9rLHa0fXryg1T6cnSs=;
-        b=oaPjTD74HANhFzy7nV8CHW/Ttb3AaoI4w8X8TQeygwUehvA/i8kot1VknD/wMGOQ04
-         wADrwB20OaSI+Bzbj4/6q9ttsh12iJ0zRFodjOLhnv4c5ONsPK5w7RgIlmMhvaRxqliM
-         qbE0AhcNQFZQhYHVQTzg0LqLXCAR5X3pHs8PjxWjehGX0IBa2e2ENUdxPd0fIxcBEhXn
-         rykoC6x8Vpbnp8865ZNNhPZAti+c1Y02V1MLyesJI3IHhtsU2E2hkysWS8UnMxxNdUPO
-         x96dKFGz1WTMFFmCx8R2HYWmJkm1rDVGB1U9lplIIYF3Tit0CYY39yS381kg4Q1IB6xv
-         qJ6A==
-X-Gm-Message-State: AO0yUKXdgMOCGfq23GUnok5+LGbYm0RrhevEaBqlFyBmliat0ytZ4ofX
-        3UOnSwEhabO8uCK47v0nQtdSeVUrEkFVjc2T
-X-Google-Smtp-Source: AK7set+RHdPVmS1IDz/HBvQqKkgitlTJqDiZH8F6izfjOiJN7vAGqja/pDFklu1JntBWHPPCwCmoxg==
-X-Received: by 2002:a17:906:3e92:b0:878:4a5e:3a56 with SMTP id a18-20020a1709063e9200b008784a5e3a56mr2985735ejj.15.1675783641582;
-        Tue, 07 Feb 2023 07:27:21 -0800 (PST)
-Received: from ?IPV6:2001:14ba:a085:4d00::8a5? (dzccz6yyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a085:4d00::8a5])
-        by smtp.gmail.com with ESMTPSA id q19-20020a17090622d300b0088a2397cb2csm7076696eja.143.2023.02.07.07.27.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Feb 2023 07:27:21 -0800 (PST)
-Message-ID: <88c31e71-55b6-a20d-1fcf-07804eace54b@linaro.org>
-Date:   Tue, 7 Feb 2023 17:27:20 +0200
+        with ESMTP id S231470AbjBGSQH (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Feb 2023 13:16:07 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A473B0FA;
+        Tue,  7 Feb 2023 10:16:02 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 16D9DB81A21;
+        Tue,  7 Feb 2023 18:16:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B253DC433EF;
+        Tue,  7 Feb 2023 18:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675793759;
+        bh=hyXPCMlpO7BwytLT5DV1xWv0+2q0jvjZX4T5MnllIuY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tNot2fP8+qrl20uC7aLd2k2WQ99VRMTB7di8BZJFBFz2A1up4MdDzlXsN9VfNUBDh
+         OvfsbMsAJJ6yhcOc44mbPRMCdoXiSAz/8AL0VxfVuRvEyYimbrt0ycjvsHm7N/z8hw
+         kEmjSAtxeGw0nwh7FL/myNOxI38jux/T8bWui7Tk5aw1ZVSNsAJJ/hiNeCVuLA7/19
+         hNQsHWC6HMh+y7COle+7qMFaS5QyYnHHv78+6DYrg7yY5Y9ASDV3oeqsVj9wq+a2n/
+         fouDliMttw82xgyyKRrc0XgEAiUHxb66LoxNwKZTSdaRGO8kUnNLKMSZll/15uucPz
+         Tuk4nfNxioQVA==
+Date:   Tue, 7 Feb 2023 18:15:55 +0000
+From:   Conor Dooley <conor@kernel.org>
+To:     shravan kumar <shravan.chippa@microchip.com>, vkoul@kernel.org
+Cc:     green.wan@sifive.com, vkoul@kernel.org, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v1] dmaengine: sf-pdma: pdma_desc memory leak fix
+Message-ID: <Y+KVW4o1ZXJHFSZt@spud>
+References: <20230120100623.3530634-1-shravan.chippa@microchip.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH] dt-bindings: dma: qcom,bam-dma: add optional memory
- interconnect properties
-Content-Language: en-GB
-To:     neil.armstrong@linaro.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230207-topic-sm8550-upstream-bam-dma-bindings-fix-v1-1-57dba71e8727@linaro.org>
- <a188a52e-6327-f0ea-a54e-a23b88bca82f@linaro.org>
- <a8112f61-f8d3-c1e0-9549-a9036a7e7894@linaro.org>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <a8112f61-f8d3-c1e0-9549-a9036a7e7894@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="CFXVfqSA5rCRtNup"
+Content-Disposition: inline
+In-Reply-To: <20230120100623.3530634-1-shravan.chippa@microchip.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,32 +54,106 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 07/02/2023 15:35, Neil Armstrong wrote:
-> On 07/02/2023 11:32, Dmitry Baryshkov wrote:
->> On 07/02/2023 12:03, Neil Armstrong wrote:
->>> Recents SoCs like the SM8450 or SM8550 requires memory interconnect
->>> in order to have functional DMA.
->>>
->>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->>> ---
->>>   Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml | 6 ++++++
->>>   1 file changed, 6 insertions(+)
->>
->> I suspect this will not work without a change for a driver.
->>
-> 
-> I had the impression single interconnect entries would be taken in account
-> by the platform core, but it doesn't seem to be the case, anyway I can;t 
-> find
-> any code doing that.
 
-Probably you mixed interconnects and power-domains here.
+--CFXVfqSA5rCRtNup
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I'll resend with a driver change.
+Hey Vinod,
 
-Thanks!
+On Fri, Jan 20, 2023 at 03:36:23PM +0530, shravan kumar wrote:
+> From: Shravan Chippa <shravan.chippa@microchip.com>
+>=20
+> Commit b2cc5c465c2c ("dmaengine: sf-pdma: Add multithread support for a
+> DMA channel") changed sf_pdma_prep_dma_memcpy() to unconditionally
+> allocate a new sf_pdma_desc each time it is called.
+>=20
+> The driver previously recycled descs, by checking the in_use flag, only
+> allocating additional descs if the existing one was in use. This logic
+> was removed in commit b2cc5c465c2c ("dmaengine: sf-pdma: Add multithread
+> support for a DMA channel"), but sf_pdma_free_desc() was not changed to
+> handle the new behaviour.
+>=20
+> As a result, each time sf_pdma_prep_dma_memcpy() is called, the previous
+> descriptor is leaked, over time leading to memory starvation:
+>=20
+>   unreferenced object 0xffffffe008447300 (size 192):
+>   comm "irq/39-mchp_dsc", pid 343, jiffies 4294906910 (age 981.200s)
+>   hex dump (first 32 bytes):
+>     00 00 00 ff 00 00 00 00 b8 c1 00 00 00 00 00 00  ................
+>     00 00 70 08 10 00 00 00 00 00 00 c0 00 00 00 00  ..p.............
+>   backtrace:
+>     [<00000000064a04f4>] kmemleak_alloc+0x1e/0x28
+>     [<00000000018927a7>] kmem_cache_alloc+0x11e/0x178
+>     [<000000002aea8d16>] sf_pdma_prep_dma_memcpy+0x40/0x112
+>=20
+> Add the missing kfree() to sf_pdma_free_desc(), and remove the redundant
+> in_use flag.
+>=20
+> Fixes: b2cc5c465c2c ("dmaengine: sf-pdma: Add multithread support for a D=
+MA channel")
+> Signed-off-by: Shravan Chippa <shravan.chippa@microchip.com>
 
--- 
-With best wishes
-Dmitry
+Just checking in to make sure that this patch is on your radar.
+Is there something you're waiting for on it?
 
+Cheers,
+Conor.
+
+> ---
+>  drivers/dma/sf-pdma/sf-pdma.c | 3 +--
+>  drivers/dma/sf-pdma/sf-pdma.h | 1 -
+>  2 files changed, 1 insertion(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+> index 6b524eb6bcf3..e578ad556949 100644
+> --- a/drivers/dma/sf-pdma/sf-pdma.c
+> +++ b/drivers/dma/sf-pdma/sf-pdma.c
+> @@ -96,7 +96,6 @@ sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,	dma_add=
+r_t dest, dma_addr_t src,
+>  	if (!desc)
+>  		return NULL;
+> =20
+> -	desc->in_use =3D true;
+>  	desc->dirn =3D DMA_MEM_TO_MEM;
+>  	desc->async_tx =3D vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
+> =20
+> @@ -290,7 +289,7 @@ static void sf_pdma_free_desc(struct virt_dma_desc *v=
+desc)
+>  	struct sf_pdma_desc *desc;
+> =20
+>  	desc =3D to_sf_pdma_desc(vdesc);
+> -	desc->in_use =3D false;
+> +	kfree(desc);
+>  }
+> =20
+>  static void sf_pdma_donebh_tasklet(struct tasklet_struct *t)
+> diff --git a/drivers/dma/sf-pdma/sf-pdma.h b/drivers/dma/sf-pdma/sf-pdma.h
+> index dcb3687bd5da..5c398a83b491 100644
+> --- a/drivers/dma/sf-pdma/sf-pdma.h
+> +++ b/drivers/dma/sf-pdma/sf-pdma.h
+> @@ -78,7 +78,6 @@ struct sf_pdma_desc {
+>  	u64				src_addr;
+>  	struct virt_dma_desc		vdesc;
+>  	struct sf_pdma_chan		*chan;
+> -	bool				in_use;
+>  	enum dma_transfer_direction	dirn;
+>  	struct dma_async_tx_descriptor *async_tx;
+>  };
+> --=20
+> 2.34.1
+>=20
+
+--CFXVfqSA5rCRtNup
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCY+KVWwAKCRB4tDGHoIJi
+0pfUAQCRSYpj+UXdzwRJIDxnAY4Ex2piBHnUpqHXYSzu+uHbXQD9GzSXnoeUACmz
+isahFC6JG6tJAbxK/VM7KbIzY4vlFwU=
+=jO8h
+-----END PGP SIGNATURE-----
+
+--CFXVfqSA5rCRtNup--

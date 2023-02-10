@@ -2,53 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A7A2691A6B
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Feb 2023 09:55:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 526E3691A75
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Feb 2023 09:57:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231642AbjBJIzi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 10 Feb 2023 03:55:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55364 "EHLO
+        id S231585AbjBJI5S (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 10 Feb 2023 03:57:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231649AbjBJIzh (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Feb 2023 03:55:37 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E11A486604;
-        Fri, 10 Feb 2023 00:55:36 -0800 (PST)
+        with ESMTP id S231682AbjBJI5R (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Feb 2023 03:57:17 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 926C73EC5D
+        for <dmaengine@vger.kernel.org>; Fri, 10 Feb 2023 00:57:15 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 745C561D01;
-        Fri, 10 Feb 2023 08:55:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE3F7C433D2;
-        Fri, 10 Feb 2023 08:55:34 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2BB8461CE7
+        for <dmaengine@vger.kernel.org>; Fri, 10 Feb 2023 08:57:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65954C4339C;
+        Fri, 10 Feb 2023 08:57:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676019335;
-        bh=MxY7R4Rxp8ZOUVZ/CmwVSjIi1w4aat4d+j7a3Ft0m+k=;
+        s=k20201202; t=1676019434;
+        bh=cq2Zjxb9IFLTjKoTG1Sgf8ioMQeBIEyucNefb0l2NQg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F159VEwm2/eoB/GfQfyY7D02EPevTmknMNxizoKxhLypX/dSuV/LNdTzHtsH6Ve2V
-         o2gaOol/L1QzFxlZacUDVy7dtImL7PWaQiadaxv5lYpwcq+OcGA0+bU1n7HAhpGbx/
-         yz5/+yEBIHKtqEIbOgZwLrkuxx+nK7luHIslV4r+hHrjf8khn1MQHbIyw0fJLepZ1/
-         Gu6RjolBlUl/jEMpdM/KStCAK7eObl34Y5WCFC6oOjjRBXcywy9sLLohPCAe+LqMz+
-         94Cx+NjuV4oMIaaFt0wZbndUACMR+VI7LqzWy5rbIC/FDOLMJtkNqlH/PVG8LoUOBR
-         ubUUrSHeRYnZQ==
-Date:   Fri, 10 Feb 2023 14:25:30 +0530
+        b=fPn0LRYUWl2kdcJeerNjD6GpodqgG85RywOQ86VQZQ0sPE9uqO7c3pRZ5z8n2XWTO
+         aTT0BRAQV/HbCLuEEUMuQc2JUWyS5tKUBtOOkVcPtWLO0ZLBK9ZpAt5i78NepStaxf
+         xj8TyWCcbF6Au6F23HC5xqP+S3z/j7yP0Q5so+W/7zEqux0Ue0I2lgismC8kRzFlP8
+         ZjgLXjGPJkE/BbxqZRIicEL8UJdsaRchUoVwUU+zrqyAdIGp6sOqftFOGEK+6c2yvw
+         GdvwgcDFd0D9GqAKw7oYlP+++d+TF9HXTKTWIgJHdzSiiC3ACr42G2mGBOvJoeBYzc
+         UYD/ZKpuHUTSQ==
+Date:   Fri, 10 Feb 2023 14:27:09 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: imx-sdma: Set DMA channel to be private
-Message-ID: <Y+YGgj2A1XvOonzo@matsya>
-References: <20230207045745.1029959-1-kai.heng.feng@canonical.com>
+To:     Eric Pilmore <epilmore@gigaio.com>
+Cc:     Sanju.Mehta@amd.com, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v2] dmaengine: ptdma: check for null desc before calling
+ pt_cmd_callback
+Message-ID: <Y+YG5QPxpjdjHlxA@matsya>
+References: <20230210075142.58253-1-epilmore@gigaio.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230207045745.1029959-1-kai.heng.feng@canonical.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+In-Reply-To: <20230210075142.58253-1-epilmore@gigaio.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,12 +52,15 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 07-02-23, 12:57, Kai-Heng Feng wrote:
-> If async-tx is loaded before device drivers that requires imx-sdma, the
-> dmaengine_get() routine from async-tx grabs all non-private channels,
-> so devices that require DMA fail to work.
-> 
-> So mark imx-sdma with DMA_PRIVATE to avoid such situation.
+On 09-02-23, 23:51, Eric Pilmore wrote:
+> Resolves a panic that can occur on AMD systems, typically during host
+> shutdown, after the PTDMA driver had been exercised. The issue was
+> the pt_issue_pending() function is mistakenly assuming that there will
+> be at least one descriptor in the Submitted queue when the function
+> is called. However, it is possible that both the Submitted and Issued
+> queues could be empty, which could result in pt_cmd_callback() being
+> mistakenly called with a NULL pointer.
+> Ref: Bugzilla Bug 216856.
 
 Applied, thanks
 

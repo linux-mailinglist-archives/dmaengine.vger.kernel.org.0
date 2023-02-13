@@ -2,141 +2,116 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1646E694AEE
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Feb 2023 16:20:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ACE06694CCB
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Feb 2023 17:31:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229777AbjBMPUb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 13 Feb 2023 10:20:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34806 "EHLO
+        id S230149AbjBMQbA convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Mon, 13 Feb 2023 11:31:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230090AbjBMPUa (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Feb 2023 10:20:30 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8607B76A4;
-        Mon, 13 Feb 2023 07:20:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676301627; x=1707837627;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ObQP9l0TevncY/9K8ieb/b6KtPH6c9i6zQUdHqY1bFg=;
-  b=hP9Cfkx+BJQQ4YyOp7gONaFgeVs264mPywHV27uEe+1K0QocCsTQWFaN
-   3+1u1MtInoEPHaTuK5IP29utZtfyPsvR4tOz0V+Eg9bVpx7Nwn/MOOaZX
-   KcBPAX1vgW7mfL5HDl6O4w+zRq6gUiTunUZa4wBqtJMacvgJ0Yv88rlQQ
-   BmdDf77Vlb4EDC5S9Tuj9LkJJ5TYQ2haS1ubzAC24TjEw5VLxLpPELFkr
-   NfRVa+e0IFuqrnJ/yekqTxgt3iu8SR5gF8AI9jmsH9XKvgdrEF7s0CVR+
-   a3f1faFaQi0GGeExnHcHZtj/QRVMWvAPwQ6f5BV6GBIPZVJnc3lqrXaCT
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="333047988"
-X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
-   d="scan'208";a="333047988"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 07:20:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="699196719"
-X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
-   d="scan'208";a="699196719"
-Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 13 Feb 2023 07:20:23 -0800
-Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pRacw-0007op-2S;
-        Mon, 13 Feb 2023 15:20:22 +0000
-Date:   Mon, 13 Feb 2023 23:20:19 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Cai Huoqing <cai.huoqing@linux.dev>,
-        Sergey.Semin@baikalelectronics.ru
-Cc:     oe-kbuild-all@lists.linux.dev, Cai huoqing <cai.huoqing@linux.dev>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] dmaengine: dw-edma: Add support for native HDMA
-Message-ID: <202302132344.oOgPHjYP-lkp@intel.com>
-References: <20230213132411.65524-4-cai.huoqing@linux.dev>
+        with ESMTP id S229815AbjBMQbA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Feb 2023 11:31:00 -0500
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97041CA3E;
+        Mon, 13 Feb 2023 08:30:58 -0800 (PST)
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.95)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1pRbiw-0043kT-S2; Mon, 13 Feb 2023 17:30:38 +0100
+Received: from p5b13aa49.dip0.t-ipconnect.de ([91.19.170.73] helo=[192.168.178.81])
+          by inpost2.zedat.fu-berlin.de (Exim 4.95)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1pRbiw-0046cc-HY; Mon, 13 Feb 2023 17:30:38 +0100
+Message-ID: <dbda1f6e1c280c13d963ad6e7f68a853a7741199.camel@physik.fu-berlin.de>
+Subject: Re: remove arch/sh
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-sh@vger.kernel.org
+Date:   Mon, 13 Feb 2023 17:30:36 +0100
+In-Reply-To: <20230206100856.603a0f8f@canb.auug.org.au>
+References: <20230113062339.1909087-1-hch@lst.de>
+         <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
+         <20230116071306.GA15848@lst.de>
+         <40dc1bc1-d9cd-d9be-188e-5167ebae235c@physik.fu-berlin.de>
+         <20230203071423.GA24833@lst.de>
+         <afd056a95d21944db1dc0c9708f692dd1f7bb757.camel@physik.fu-berlin.de>
+         <20230203083037.GA30738@lst.de> <20230206100856.603a0f8f@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.46.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230213132411.65524-4-cai.huoqing@linux.dev>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 91.19.170.73
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Cai,
+Hi Steve!
 
-Thank you for the patch! Yet something to improve:
+On Mon, 2023-02-06 at 10:08 +1100, Stephen Rothwell wrote:
+> Hi,
+> 
+> On Fri, 3 Feb 2023 09:30:37 +0100 Christoph Hellwig <hch@lst.de> wrote:
+> > 
+> > On Fri, Feb 03, 2023 at 09:24:46AM +0100, John Paul Adrian Glaubitz wrote:
+> > > Since this is my very first time stepping up as a kernel maintainer, I was hoping
+> > > to get some pointers on what to do to make this happen.
+> > > 
+> > > So far, we have set up a new kernel tree and I have set up a local development and
+> > > test environment for SH kernels using my SH7785LCR board as the target platform.
+> > > 
+> > > Do I just need to send a patch asking to change the corresponding entry in the
+> > > MAINTAINERS file?  
+> > 
+> > I'm not sure a there is a document, but:
+> > 
+> >  - add the MAINTAINERS change to your tree
+> >  - ask Stephen to get your tree included in linux-next
+> 
+> And by "Stephen", Christoph means me.  When you are ready, please send
+> me a request to include your tree/branch in linux-next (usually the
+> branch is called something like "for-next" or just "next") telling me
+> the git URL, and the contacts I should send email to if there are
+> conflicts/build issues with the branch.  I will then fetch the branch
+> every time I create a new linux-next release (most work days), so all
+> you need to do is update that branch each time you are ready to publish
+> more commits.
 
-[auto build test ERROR on next-20230213]
-[cannot apply to vkoul-dmaengine/next linus/master v6.2-rc8 v6.2-rc7 v6.2-rc6 v6.2-rc8]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I'm in the MAINTAINERS now in Linus' tree. I have requested a kernel.org
+account now and will hopefully have my trees set up later this week.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Cai-Huoqing/dmaengine-dw-edma-Rename-dw_edma_core_ops-structure-to-dw_edma_plat_ops/20230213-213412
-patch link:    https://lore.kernel.org/r/20230213132411.65524-4-cai.huoqing%40linux.dev
-patch subject: [PATCH v3 3/4] dmaengine: dw-edma: Add support for native HDMA
-config: i386-randconfig-a016-20230213 (https://download.01.org/0day-ci/archive/20230213/202302132344.oOgPHjYP-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
-reproduce (this is a W=1 build):
-        # https://github.com/intel-lab-lkp/linux/commit/04d89cfa187deda4fa5a7cc947dbb797ce05e72f
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Cai-Huoqing/dmaengine-dw-edma-Rename-dw_edma_core_ops-structure-to-dw_edma_plat_ops/20230213-213412
-        git checkout 04d89cfa187deda4fa5a7cc947dbb797ce05e72f
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 O=build_dir ARCH=i386 olddefconfig
-        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash
+I'll let you know about the URLs as soon as possible.
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202302132344.oOgPHjYP-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/dma/dw-edma/dw-hdma-v0-core.c: In function 'dw_hdma_v0_write_ll_data':
->> drivers/dma/dw-edma/dw-hdma-v0-core.c:195:17: error: implicit declaration of function 'writeq'; did you mean 'writel'? [-Werror=implicit-function-declaration]
-     195 |                 writeq(sar, &lli->sar.reg);
-         |                 ^~~~~~
-         |                 writel
-   cc1: some warnings being treated as errors
-
-
-vim +195 drivers/dma/dw-edma/dw-hdma-v0-core.c
-
-   177	
-   178	static void dw_hdma_v0_write_ll_data(struct dw_edma_chunk *chunk, int i,
-   179					     u32 control, u32 size, u64 sar, u64 dar)
-   180	{
-   181		ptrdiff_t ofs = i * sizeof(struct dw_hdma_v0_lli);
-   182	
-   183		if (chunk->chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
-   184			struct dw_hdma_v0_lli *lli = chunk->ll_region.vaddr.mem + ofs;
-   185	
-   186			lli->control = control;
-   187			lli->transfer_size = size;
-   188			lli->sar.reg = sar;
-   189			lli->dar.reg = dar;
-   190		} else {
-   191			struct dw_hdma_v0_lli __iomem *lli = chunk->ll_region.vaddr.io + ofs;
-   192	
-   193			writel(control, &lli->control);
-   194			writel(size, &lli->transfer_size);
- > 195			writeq(sar, &lli->sar.reg);
-   196			writeq(dar, &lli->dar.reg);
-   197		}
-   198	}
-   199	
+Adrian
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913

@@ -2,30 +2,30 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1135B69470C
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Feb 2023 14:31:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CB6D69470E
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Feb 2023 14:31:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229680AbjBMNbq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 13 Feb 2023 08:31:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36834 "EHLO
+        id S229539AbjBMNbs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 13 Feb 2023 08:31:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229698AbjBMNbp (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Feb 2023 08:31:45 -0500
-X-Greylist: delayed 415 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 13 Feb 2023 05:31:34 PST
-Received: from out-24.mta0.migadu.com (out-24.mta0.migadu.com [91.218.175.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CE4D1ABD6
+        with ESMTP id S229698AbjBMNbr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Feb 2023 08:31:47 -0500
+X-Greylist: delayed 416 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 13 Feb 2023 05:31:35 PST
+Received: from out-250.mta0.migadu.com (out-250.mta0.migadu.com [IPv6:2001:41d0:1004:224b::fa])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E7C11B55E
         for <dmaengine@vger.kernel.org>; Mon, 13 Feb 2023 05:31:33 -0800 (PST)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1676294676;
+        t=1676294687;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=3EqMwrGOz+jm0mszPNZB0XW9wyavpaseOxhiaj+8Q8o=;
-        b=sjfngHBjx9M7sAOivsHCGGpNUGP/PcSlzQK5OaZEaLbsdz9bJNmBJr0a0GTuIQKeUSM5pj
-        STJZEotmcJngssNGqJElukgSvbneuvPtHjVe2NCxEUNcgyKhZ2kR7AQeoqexWL10RwM+Ba
-        RflxtUK+ZZHeb92d+E/N7itISHXPxT4=
+        bh=DKup9p/xeA9T5rGgS1Yb0rKEYRpMsoxolsVPXrOhsu4=;
+        b=C4U9ouzErs0vO0uuEaMeGd0YZNEvR7OTHIJ2myB3FCbQFUseJxtvXrYmfChgjQP0700xVa
+        C6F9FTRIGWJO2tdTl9ryUSQDSE7BQsXJWcM03xDV4pX2Frgi56ehbq5352A66yQotVfqV/
+        G0lhhGOc/6U/FNCO9xV4uEltp5jcNOw=
 From:   Cai Huoqing <cai.huoqing@linux.dev>
 To:     Sergey.Semin@baikalelectronics.ru
 Cc:     Cai huoqing <cai.huoqing@linux.dev>,
@@ -38,9 +38,9 @@ Cc:     Cai huoqing <cai.huoqing@linux.dev>,
         Bjorn Helgaas <bhelgaas@google.com>,
         linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH v3 2/4] dmaengine: dw-edma: Create a new dw_edma_core_ops structure to abstract controller operation
-Date:   Mon, 13 Feb 2023 21:24:07 +0800
-Message-Id: <20230213132411.65524-3-cai.huoqing@linux.dev>
+Subject: [PATCH v3 3/4] dmaengine: dw-edma: Add support for native HDMA
+Date:   Mon, 13 Feb 2023 21:24:08 +0800
+Message-Id: <20230213132411.65524-4-cai.huoqing@linux.dev>
 In-Reply-To: <20230213132411.65524-1-cai.huoqing@linux.dev>
 References: <20230213132411.65524-1-cai.huoqing@linux.dev>
 MIME-Version: 1.0
@@ -48,7 +48,7 @@ Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -57,368 +57,188 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Cai huoqing <cai.huoqing@linux.dev>
 
-The structure dw_edma_core_ops has a set of the pointers
-abstracting out the DW eDMA vX and DW HDMA Native controllers.
-And use dw_edma_v0_core_register to set up operation.
+Add support for HDMA NATIVE, as long the IP design has set
+the compatible register map parameter-HDMA_NATIVE,
+which allows compatibility for native HDMA register configuration.
+
+The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
+And the native HDMA registers are different from eDMA,
+so this patch add support for HDMA NATIVE mode.
+
+HDMA write and read channels operate independently to maximize
+the performance of the HDMA read and write data transfer over
+the link When you configure the HDMA with multiple read channels,
+then it uses a round robin (RR) arbitration scheme to select
+the next read channel to be serviced.
+The same applies when you have multiple write channels.
+
+The native HDMA driver also supports a maximum of 16 independent
+channels (8 write + 8 read), which can run simultaneously.
+Both SAR (Source Address Register) and DAR (Destination Address Register)
+are alignmented to byte.
 
 Signed-off-by: Cai huoqing <cai.huoqing@linux.dev>
 ---
- drivers/dma/dw-edma/dw-edma-core.c    | 63 ++++++------------
- drivers/dma/dw-edma/dw-edma-core.h    | 92 +++++++++++++++++++++++++++
- drivers/dma/dw-edma/dw-edma-v0-core.c | 88 +++++++++++++++++++++----
- drivers/dma/dw-edma/dw-edma-v0-core.h | 14 +---
- 4 files changed, 188 insertions(+), 69 deletions(-)
+ drivers/dma/dw-edma/Makefile          |   5 +-
+ drivers/dma/dw-edma/dw-hdma-v0-core.c | 315 ++++++++++++++++++++++++++
+ drivers/dma/dw-edma/dw-hdma-v0-core.h |  17 ++
+ drivers/dma/dw-edma/dw-hdma-v0-regs.h | 129 +++++++++++
+ 4 files changed, 464 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
 
-diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index 1906a836f0aa..c171809beba1 100644
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -183,6 +183,7 @@ static void vchan_free_desc(struct virt_dma_desc *vdesc)
+diff --git a/drivers/dma/dw-edma/Makefile b/drivers/dma/dw-edma/Makefile
+index 8d45c0d5689d..b1c91ef2c63d 100644
+--- a/drivers/dma/dw-edma/Makefile
++++ b/drivers/dma/dw-edma/Makefile
+@@ -2,6 +2,7 @@
  
- static void dw_edma_start_transfer(struct dw_edma_chan *chan)
- {
-+	struct dw_edma *dw = chan->dw;
- 	struct dw_edma_chunk *child;
- 	struct dw_edma_desc *desc;
- 	struct virt_dma_desc *vd;
-@@ -200,7 +201,7 @@ static void dw_edma_start_transfer(struct dw_edma_chan *chan)
- 	if (!child)
- 		return;
- 
--	dw_edma_v0_core_start(child, !desc->xfer_sz);
-+	dw_edma_core_start(dw, child, !desc->xfer_sz);
- 	desc->xfer_sz += child->ll_region.sz;
- 	dw_edma_free_burst(child);
- 	list_del(&child->list);
-@@ -285,7 +286,7 @@ static int dw_edma_device_terminate_all(struct dma_chan *dchan)
- 		chan->configured = false;
- 	} else if (chan->status == EDMA_ST_IDLE) {
- 		chan->configured = false;
--	} else if (dw_edma_v0_core_ch_status(chan) == DMA_COMPLETE) {
-+	} else if (dw_edma_core_ch_status(chan) == DMA_COMPLETE) {
- 		/*
- 		 * The channel is in a false BUSY state, probably didn't
- 		 * receive or lost an interrupt
-@@ -588,13 +589,13 @@ dw_edma_device_prep_interleaved_dma(struct dma_chan *dchan,
- 	return dw_edma_device_transfer(&xfer);
- }
- 
--static void dw_edma_done_interrupt(struct dw_edma_chan *chan)
-+void dw_edma_done_interrupt(struct dw_edma_chan *chan)
- {
- 	struct dw_edma_desc *desc;
- 	struct virt_dma_desc *vd;
- 	unsigned long flags;
- 
--	dw_edma_v0_core_clear_done_int(chan);
-+	dw_edma_core_clear_done_int(chan);
- 
- 	spin_lock_irqsave(&chan->vc.lock, flags);
- 	vd = vchan_next_desc(&chan->vc);
-@@ -631,12 +632,12 @@ static void dw_edma_done_interrupt(struct dw_edma_chan *chan)
- 	spin_unlock_irqrestore(&chan->vc.lock, flags);
- }
- 
--static void dw_edma_abort_interrupt(struct dw_edma_chan *chan)
-+void dw_edma_abort_interrupt(struct dw_edma_chan *chan)
- {
- 	struct virt_dma_desc *vd;
- 	unsigned long flags;
- 
--	dw_edma_v0_core_clear_abort_int(chan);
-+	dw_edma_core_clear_abort_int(chan);
- 
- 	spin_lock_irqsave(&chan->vc.lock, flags);
- 	vd = vchan_next_desc(&chan->vc);
-@@ -651,41 +652,11 @@ static void dw_edma_abort_interrupt(struct dw_edma_chan *chan)
- 
- static irqreturn_t dw_edma_interrupt(int irq, void *data, bool write)
- {
-+	enum dw_edma_dir dir = write ? EDMA_DIR_WRITE : EDMA_DIR_READ;
- 	struct dw_edma_irq *dw_irq = data;
--	struct dw_edma *dw = dw_irq->dw;
--	unsigned long total, pos, val;
--	unsigned long off;
--	u32 mask;
--
--	if (write) {
--		total = dw->wr_ch_cnt;
--		off = 0;
--		mask = dw_irq->wr_mask;
--	} else {
--		total = dw->rd_ch_cnt;
--		off = dw->wr_ch_cnt;
--		mask = dw_irq->rd_mask;
--	}
--
--	val = dw_edma_v0_core_status_done_int(dw, write ?
--							  EDMA_DIR_WRITE :
--							  EDMA_DIR_READ);
--	val &= mask;
--	for_each_set_bit(pos, &val, total) {
--		struct dw_edma_chan *chan = &dw->chan[pos + off];
--
--		dw_edma_done_interrupt(chan);
--	}
--
--	val = dw_edma_v0_core_status_abort_int(dw, write ?
--							   EDMA_DIR_WRITE :
--							   EDMA_DIR_READ);
--	val &= mask;
--	for_each_set_bit(pos, &val, total) {
--		struct dw_edma_chan *chan = &dw->chan[pos + off];
- 
--		dw_edma_abort_interrupt(chan);
--	}
-+	dw_edma_core_done_handle(dw_irq, dir);
-+	dw_edma_core_abort_handle(dw_irq, dir);
- 
- 	return IRQ_HANDLED;
- }
-@@ -806,7 +777,7 @@ static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
- 
- 		vchan_init(&chan->vc, dma);
- 
--		dw_edma_v0_core_device_config(chan);
-+		dw_edma_core_ch_config(chan);
- 	}
- 
- 	/* Set DMA channel capabilities */
-@@ -951,14 +922,16 @@ int dw_edma_probe(struct dw_edma_chip *chip)
- 
- 	dw->chip = chip;
- 
-+	dw_edma_v0_core_register(dw);
+ obj-$(CONFIG_DW_EDMA)		+= dw-edma.o
+ dw-edma-$(CONFIG_DEBUG_FS)	:= dw-edma-v0-debugfs.o
+-dw-edma-objs			:= dw-edma-core.o \
+-					dw-edma-v0-core.o $(dw-edma-y)
++dw-edma-objs			:= dw-edma-core.o	\
++				   dw-edma-v0-core.o	\
++				   dw-hdma-v0-core.o $(dw-edma-y)
+ obj-$(CONFIG_DW_EDMA_PCIE)	+= dw-edma-pcie.o
+diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+new file mode 100644
+index 000000000000..7e4f98987e29
+--- /dev/null
++++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+@@ -0,0 +1,315 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2023 Cai Huoqing
++ * Synopsys DesignWare HDMA v0 core
++ */
 +
- 	raw_spin_lock_init(&dw->lock);
- 
- 	dw->wr_ch_cnt = min_t(u16, chip->ll_wr_cnt,
--			      dw_edma_v0_core_ch_count(dw, EDMA_DIR_WRITE));
-+			      dw_edma_core_ch_count(dw, EDMA_DIR_WRITE));
- 	dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);
- 
- 	dw->rd_ch_cnt = min_t(u16, chip->ll_rd_cnt,
--			      dw_edma_v0_core_ch_count(dw, EDMA_DIR_READ));
-+			      dw_edma_core_ch_count(dw, EDMA_DIR_READ));
- 	dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);
- 
- 	if (!dw->wr_ch_cnt && !dw->rd_ch_cnt)
-@@ -977,7 +950,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
- 		 dev_name(chip->dev));
- 
- 	/* Disable eDMA, only to establish the ideal initial conditions */
--	dw_edma_v0_core_off(dw);
-+	dw_edma_core_off(dw);
- 
- 	/* Request IRQs */
- 	err = dw_edma_irq_request(dw, &wr_alloc, &rd_alloc);
-@@ -990,7 +963,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
- 		goto err_irq_free;
- 
- 	/* Turn debugfs on */
--	dw_edma_v0_core_debugfs_on(dw);
-+	dw_edma_core_debugfs_on(dw);
- 
- 	chip->dw = dw;
- 
-@@ -1016,7 +989,7 @@ int dw_edma_remove(struct dw_edma_chip *chip)
- 		return -ENODEV;
- 
- 	/* Disable eDMA */
--	dw_edma_v0_core_off(dw);
-+	dw_edma_core_off(dw);
- 
- 	/* Free irqs */
- 	for (i = (dw->nr_irqs - 1); i >= 0; i--)
-diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-index 0ab2b6dba880..2555ae0e1b8b 100644
---- a/drivers/dma/dw-edma/dw-edma-core.h
-+++ b/drivers/dma/dw-edma/dw-edma-core.h
-@@ -111,6 +111,23 @@ struct dw_edma {
- 	raw_spinlock_t			lock;		/* Only for legacy */
- 
- 	struct dw_edma_chip             *chip;
++#include <linux/bitfield.h>
 +
-+	const struct dw_edma_core_ops	*core;
++#include "dw-edma-core.h"
++#include "dw-hdma-v0-core.h"
++#include "dw-hdma-v0-regs.h"
++
++enum dw_hdma_control {
++	DW_HDMA_V0_CB					= BIT(0),
++	DW_HDMA_V0_TCB					= BIT(1),
++	DW_HDMA_V0_LLP					= BIT(2),
++	DW_HDMA_V0_LIE					= BIT(3),
++	DW_HDMA_V0_RIE					= BIT(4),
++	DW_HDMA_V0_CCS					= BIT(8),
++	DW_HDMA_V0_LLE					= BIT(9),
 +};
 +
-+struct dw_edma_core_ops {
-+	void (*off)(struct dw_edma *dw);
-+	u16 (*ch_count)(struct dw_edma *dw, enum dw_edma_dir dir);
-+	enum dma_status (*ch_status)(struct dw_edma_chan *chan);
-+	void (*clear_done_int)(struct dw_edma_chan *chan);
-+	void (*clear_abort_int)(struct dw_edma_chan *chan);
-+	void (*done_handle)(struct dw_edma_irq *dw_irq,
-+			    enum dw_edma_dir dir);
-+	void (*abort_handle)(struct dw_edma_irq *dw_irq,
-+			     enum dw_edma_dir dir);
-+	void (*start)(struct dw_edma_chunk *chunk, bool first);
-+	void (*ch_config)(struct dw_edma_chan *chan);
-+	void (*debugfs_on)(struct dw_edma *dw);
- };
- 
- struct dw_edma_sg {
-@@ -136,6 +153,9 @@ struct dw_edma_transfer {
- 	enum dw_edma_xfer_type		type;
- };
- 
-+void dw_edma_done_interrupt(struct dw_edma_chan *chan);
-+void dw_edma_abort_interrupt(struct dw_edma_chan *chan);
-+
- static inline
- struct dw_edma_chan *vc2dw_edma_chan(struct virt_dma_chan *vc)
- {
-@@ -148,4 +168,76 @@ struct dw_edma_chan *dchan2dw_edma_chan(struct dma_chan *dchan)
- 	return vc2dw_edma_chan(to_virt_chan(dchan));
- }
- 
-+static inline
-+void dw_edma_core_off(struct dw_edma *dw)
++static inline struct dw_hdma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
 +{
-+	dw->core->off(dw);
++	return dw->chip->reg_base;
 +}
 +
-+static inline
-+u16 dw_edma_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
++static inline struct dw_hdma_v0_ch_regs __iomem *
++__dw_ch_regs(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch)
 +{
-+	return dw->core->ch_count(dw, dir);
++	if (dir == EDMA_DIR_WRITE)
++		return &(__dw_regs(dw)->ch[ch].wr);
++	else
++		return &(__dw_regs(dw)->ch[ch].rd);
 +}
 +
-+static inline
-+enum dma_status dw_edma_core_ch_status(struct dw_edma_chan *chan)
++#define SET_CH_32(dw, dir, ch, name, value) \
++	writel(value, &(__dw_ch_regs(dw, dir, ch)->name))
++
++#define GET_CH_32(dw, dir, ch, name) \
++	readl(&(__dw_ch_regs(dw, dir, ch)->name))
++
++#define SET_BOTH_CH_32(dw, ch, name, value) \
++	do {					\
++		writel(value, &(__dw_ch_regs(dw, EDMA_DIR_WRITE, ch)->name));		\
++		writel(value, &(__dw_ch_regs(dw, EDMA_DIR_READ, ch)->name));	\
++	} while (0)
++
++/* HDMA management callbacks */
++static void dw_hdma_v0_core_off(struct dw_edma *dw)
++{
++	int id;
++
++	for (id = 0; id < HDMA_V0_MAX_NR_CH; id++) {
++		SET_BOTH_CH_32(dw, id, int_setup,
++			       HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
++		SET_BOTH_CH_32(dw, id, int_clear,
++			       HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
++		SET_BOTH_CH_32(dw, id, ch_en, 0);
++	}
++}
++
++static u16 dw_hdma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
++{
++	u32 num_ch = 0;
++	int id;
++
++	for (id = 0; id < HDMA_V0_MAX_NR_CH; id++) {
++		if (GET_CH_32(dw, id, dir, ch_en) & BIT(0))
++			num_ch++;
++	}
++
++	if (num_ch > HDMA_V0_MAX_NR_CH)
++		num_ch = HDMA_V0_MAX_NR_CH;
++
++	return (u16)num_ch;
++}
++
++static enum dma_status dw_hdma_v0_core_ch_status(struct dw_edma_chan *chan)
++{
++	struct dw_edma *dw = chan->dw;
++	u32 tmp;
++
++	tmp = FIELD_GET(HDMA_V0_CH_STATUS_MASK,
++			GET_CH_32(dw, chan->id, chan->dir, ch_stat));
++
++	if (tmp == 1)
++		return DMA_IN_PROGRESS;
++	else if (tmp == 3)
++		return DMA_COMPLETE;
++	else
++		return DMA_ERROR;
++}
++
++static void dw_hdma_v0_core_clear_done_int(struct dw_edma_chan *chan)
 +{
 +	struct dw_edma *dw = chan->dw;
 +
-+	return dw->core->ch_status(chan);
++	SET_CH_32(dw, chan->dir, chan->id, int_clear, HDMA_V0_STOP_INT_MASK);
 +}
 +
-+static inline
-+void dw_edma_core_clear_done_int(struct dw_edma_chan *chan)
++static void dw_hdma_v0_core_clear_abort_int(struct dw_edma_chan *chan)
 +{
 +	struct dw_edma *dw = chan->dw;
 +
-+	dw->core->clear_done_int(chan);
++	SET_CH_32(dw, chan->dir, chan->id, int_clear, HDMA_V0_ABORT_INT_MASK);
 +}
 +
-+static inline
-+void dw_edma_core_clear_abort_int(struct dw_edma_chan *chan)
++static u32 dw_hdma_v0_core_status_int(struct dw_edma_chan *chan)
 +{
 +	struct dw_edma *dw = chan->dw;
 +
-+	dw->core->clear_abort_int(chan);
++	return GET_CH_32(dw, chan->dir, chan->id, int_stat);
 +}
 +
-+static inline
-+void dw_edma_core_done_handle(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir)
++static u32 dw_hdma_v0_core_check_done_int(u32 val)
 +{
-+	struct dw_edma *dw = dw_irq->dw;
-+
-+	dw->core->done_handle(dw_irq, dir);
++	return FIELD_GET(HDMA_V0_STOP_INT_MASK, val);
 +}
 +
-+static inline
-+void dw_edma_core_abort_handle(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir)
++static u32 dw_hdma_v0_core_check_abort_int(u32 val)
 +{
-+	struct dw_edma *dw = dw_irq->dw;
-+
-+	dw->core->abort_handle(dw_irq, dir);
++	return FIELD_GET(HDMA_V0_ABORT_INT_MASK, val);
 +}
 +
-+static inline
-+void dw_edma_core_start(struct dw_edma *dw, struct dw_edma_chunk *chunk, bool first)
-+{
-+	dw->core->start(chunk, first);
-+}
-+
-+static inline
-+void dw_edma_core_ch_config(struct dw_edma_chan *chan)
-+{
-+	struct dw_edma *dw = chan->dw;
-+
-+	dw->core->ch_config(chan);
-+}
-+
-+static inline
-+void dw_edma_core_debugfs_on(struct dw_edma *dw)
-+{
-+	dw->core->debugfs_on(dw);
-+}
-+
- #endif /* _DW_EDMA_CORE_H */
-diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-index 72e79a0c0a4e..73dcf72ba3a9 100644
---- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-@@ -216,7 +216,7 @@ static inline u64 readq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
- 	readq_ch(dw, dir, ch, &(__dw_ch_regs(dw, dir, ch)->name))
- 
- /* eDMA management callbacks */
--void dw_edma_v0_core_off(struct dw_edma *dw)
-+static void dw_edma_v0_core_off(struct dw_edma *dw)
- {
- 	SET_BOTH_32(dw, int_mask,
- 		    EDMA_V0_DONE_INT_MASK | EDMA_V0_ABORT_INT_MASK);
-@@ -225,7 +225,7 @@ void dw_edma_v0_core_off(struct dw_edma *dw)
- 	SET_BOTH_32(dw, engine_en, 0);
- }
- 
--u16 dw_edma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
-+static u16 dw_edma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
- {
- 	u32 num_ch;
- 
-@@ -242,7 +242,7 @@ u16 dw_edma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
- 	return (u16)num_ch;
- }
- 
--enum dma_status dw_edma_v0_core_ch_status(struct dw_edma_chan *chan)
-+static enum dma_status dw_edma_v0_core_ch_status(struct dw_edma_chan *chan)
- {
- 	struct dw_edma *dw = chan->dw;
- 	u32 tmp;
-@@ -258,7 +258,7 @@ enum dma_status dw_edma_v0_core_ch_status(struct dw_edma_chan *chan)
- 		return DMA_ERROR;
- }
- 
--void dw_edma_v0_core_clear_done_int(struct dw_edma_chan *chan)
-+static void dw_edma_v0_core_clear_done_int(struct dw_edma_chan *chan)
- {
- 	struct dw_edma *dw = chan->dw;
- 
-@@ -266,7 +266,7 @@ void dw_edma_v0_core_clear_done_int(struct dw_edma_chan *chan)
- 		  FIELD_PREP(EDMA_V0_DONE_INT_MASK, BIT(chan->id)));
- }
- 
--void dw_edma_v0_core_clear_abort_int(struct dw_edma_chan *chan)
-+static void dw_edma_v0_core_clear_abort_int(struct dw_edma_chan *chan)
- {
- 	struct dw_edma *dw = chan->dw;
- 
-@@ -274,18 +274,66 @@ void dw_edma_v0_core_clear_abort_int(struct dw_edma_chan *chan)
- 		  FIELD_PREP(EDMA_V0_ABORT_INT_MASK, BIT(chan->id)));
- }
- 
--u32 dw_edma_v0_core_status_done_int(struct dw_edma *dw, enum dw_edma_dir dir)
-+static u32 dw_edma_v0_core_status_done_int(struct dw_edma *dw, enum dw_edma_dir dir)
- {
- 	return FIELD_GET(EDMA_V0_DONE_INT_MASK,
- 			 GET_RW_32(dw, dir, int_status));
- }
- 
--u32 dw_edma_v0_core_status_abort_int(struct dw_edma *dw, enum dw_edma_dir dir)
-+static u32 dw_edma_v0_core_status_abort_int(struct dw_edma *dw, enum dw_edma_dir dir)
- {
- 	return FIELD_GET(EDMA_V0_ABORT_INT_MASK,
- 			 GET_RW_32(dw, dir, int_status));
- }
- 
 +static
-+void dw_edma_v0_core_done_handle(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir)
++void dw_hdma_v0_core_done_handle(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir)
 +{
 +	struct dw_edma *dw = dw_irq->dw;
 +	unsigned long total, pos, val;
-+	unsigned long off;
-+	u32 mask;
++	unsigned long off, mask;
 +
 +	if (dir == EDMA_DIR_WRITE) {
 +		total = dw->wr_ch_cnt;
@@ -430,19 +250,21 @@ index 72e79a0c0a4e..73dcf72ba3a9 100644
 +		mask = dw_irq->rd_mask;
 +	}
 +
-+	val = dw_edma_v0_core_status_done_int(dw, dir);
-+	val &= mask;
-+	for_each_set_bit(pos, &val, total)
-+		dw_edma_done_interrupt(&dw->chan[pos + off]);
++	for_each_set_bit(pos, &mask, total) {
++		struct dw_edma_chan *chan = &dw->chan[pos + off];
++
++		val = dw_hdma_v0_core_status_int(chan);
++		if (dw_hdma_v0_core_check_done_int(val))
++			dw_edma_done_interrupt(chan);
++	}
 +}
 +
 +static
-+void dw_edma_v0_core_abort_handle(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir)
++void dw_hdma_v0_core_abort_handle(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir)
 +{
 +	struct dw_edma *dw = dw_irq->dw;
 +	unsigned long total, pos, val;
-+	unsigned long off;
-+	u32 mask;
++	unsigned long off, mask;
 +
 +	if (dir == EDMA_DIR_WRITE) {
 +		total = dw->wr_ch_cnt;
@@ -454,89 +276,311 @@ index 72e79a0c0a4e..73dcf72ba3a9 100644
 +		mask = dw_irq->rd_mask;
 +	}
 +
-+	val = dw_edma_v0_core_status_abort_int(dw, dir);
-+	val &= mask;
-+	for_each_set_bit(pos, &val, total)
-+		dw_edma_abort_interrupt(&dw->chan[pos + off]);
++	for_each_set_bit(pos, &mask, total) {
++		struct dw_edma_chan *chan = &dw->chan[pos + off];
++
++		val = dw_hdma_v0_core_status_int(chan);
++		if (dw_hdma_v0_core_check_abort_int(val))
++			dw_edma_abort_interrupt(&dw->chan[pos + off]);
++	}
 +}
 +
- static void dw_edma_v0_write_ll_data(struct dw_edma_chunk *chunk, int i,
- 				     u32 control, u32 size, u64 sar, u64 dar)
- {
-@@ -356,7 +404,7 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
- 	dw_edma_v0_write_ll_link(chunk, i, control, chunk->ll_region.paddr);
- }
- 
--void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-+static void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
- {
- 	struct dw_edma_chan *chan = chunk->chan;
- 	struct dw_edma *dw = chan->dw;
-@@ -427,7 +475,7 @@ void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
- 		  FIELD_PREP(EDMA_V0_DOORBELL_CH_MASK, chan->id));
- }
- 
--int dw_edma_v0_core_device_config(struct dw_edma_chan *chan)
-+static void dw_edma_v0_core_ch_config(struct dw_edma_chan *chan)
- {
- 	struct dw_edma *dw = chan->dw;
- 	u32 tmp = 0;
-@@ -494,12 +542,28 @@ int dw_edma_v0_core_device_config(struct dw_edma_chan *chan)
- 		SET_RW_32(dw, chan->dir, ch67_imwr_data, tmp);
- 		break;
- 	}
--
--	return 0;
- }
- 
- /* eDMA debugfs callbacks */
--void dw_edma_v0_core_debugfs_on(struct dw_edma *dw)
-+static void dw_edma_v0_core_debugfs_on(struct dw_edma *dw)
- {
- 	dw_edma_v0_debugfs_on(dw);
- }
++static void dw_hdma_v0_write_ll_data(struct dw_edma_chunk *chunk, int i,
++				     u32 control, u32 size, u64 sar, u64 dar)
++{
++	ptrdiff_t ofs = i * sizeof(struct dw_hdma_v0_lli);
 +
-+static const struct dw_edma_core_ops edma_core = {
-+	.off = dw_edma_v0_core_off,
-+	.ch_count = dw_edma_v0_core_ch_count,
-+	.ch_status = dw_edma_v0_core_ch_status,
-+	.clear_done_int = dw_edma_v0_core_clear_done_int,
-+	.clear_abort_int = dw_edma_v0_core_clear_abort_int,
-+	.done_handle = dw_edma_v0_core_done_handle,
-+	.abort_handle = dw_edma_v0_core_abort_handle,
-+	.start = dw_edma_v0_core_start,
-+	.ch_config = dw_edma_v0_core_ch_config,
-+	.debugfs_on = dw_edma_v0_core_debugfs_on,
++	if (chunk->chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
++		struct dw_hdma_v0_lli *lli = chunk->ll_region.vaddr.mem + ofs;
++
++		lli->control = control;
++		lli->transfer_size = size;
++		lli->sar.reg = sar;
++		lli->dar.reg = dar;
++	} else {
++		struct dw_hdma_v0_lli __iomem *lli = chunk->ll_region.vaddr.io + ofs;
++
++		writel(control, &lli->control);
++		writel(size, &lli->transfer_size);
++		writeq(sar, &lli->sar.reg);
++		writeq(dar, &lli->dar.reg);
++	}
++}
++
++static void dw_hdma_v0_write_ll_link(struct dw_edma_chunk *chunk,
++				     int i, u32 control, u64 pointer)
++{
++	ptrdiff_t ofs = i * sizeof(struct dw_hdma_v0_lli);
++
++	if (chunk->chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
++		struct dw_hdma_v0_llp *llp = chunk->ll_region.vaddr.mem + ofs;
++
++		llp->control = control;
++		llp->llp.reg = pointer;
++	} else {
++		struct dw_hdma_v0_llp __iomem *llp = chunk->ll_region.vaddr.io + ofs;
++
++		writel(control, &llp->control);
++		writeq(pointer, &llp->llp.reg);
++	}
++}
++
++static void dw_hdma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
++{
++	struct dw_edma_burst *child;
++	struct dw_edma_chan *chan = chunk->chan;
++	u32 control = 0, i = 0;
++	int j;
++
++	if (chunk->cb)
++		control = DW_HDMA_V0_CB;
++
++	j = chunk->bursts_alloc;
++	list_for_each_entry(child, &chunk->burst->list, list) {
++		j--;
++		if (!j) {
++			control |= DW_HDMA_V0_LIE;
++			if (!(chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL))
++				control |= DW_HDMA_V0_RIE;
++		}
++
++		dw_hdma_v0_write_ll_data(chunk, i++, control, child->sz,
++					 child->sar, child->dar);
++	}
++
++	control = DW_HDMA_V0_LLP | DW_HDMA_V0_TCB;
++	if (!chunk->cb)
++		control |= DW_HDMA_V0_CB;
++
++	dw_hdma_v0_write_ll_link(chunk, i, control, chunk->ll_region.paddr);
++}
++
++static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
++{
++	struct dw_edma_chan *chan = chunk->chan;
++	struct dw_edma *dw = chan->dw;
++	u32 tmp;
++
++	dw_hdma_v0_core_write_chunk(chunk);
++
++	if (first) {
++		/* Enable engine */
++		SET_CH_32(dw, chan->dir, chan->id, ch_en, BIT(0));
++		/* Interrupt enable&unmask - done, abort */
++		tmp = GET_CH_32(dw, chan->dir, chan->id, int_setup) | HDMA_V0_STOP_INT_MASK |
++		      HDMA_V0_ABORT_INT_MASK | HDMA_V0_LOCAL_STOP_INT_EN |
++		      HDMA_V0_LOCAL_STOP_INT_EN;
++		SET_CH_32(dw, chan->dir, chan->id, int_setup, tmp);
++		/* Channel control */
++		SET_CH_32(dw, chan->dir, chan->id, control1, HDMA_V0_LINKLIST_EN);
++		/* Linked list */
++		/* llp is not aligned on 64bit -> keep 32bit accesses */
++		SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
++			  lower_32_bits(chunk->ll_region.paddr));
++		SET_CH_32(dw, chan->dir, chan->id, llp.msb,
++			  upper_32_bits(chunk->ll_region.paddr));
++	}
++	/* Set consumer cycle */
++	SET_CH_32(dw, chan->dir, chan->id, cycle_sync,
++		  HDMA_V0_CONSUMER_CYCLE_STAT | HDMA_V0_CONSUMER_CYCLE_BIT);
++	/* Doorbell */
++	SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
++}
++
++static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
++{
++	struct dw_edma *dw = chan->dw;
++
++	/* MSI done addr - low, high */
++	SET_CH_32(dw, chan->dir, chan->id, msi_stop.lsb, chan->msi.address_lo);
++	SET_CH_32(dw, chan->dir, chan->id, msi_stop.msb, chan->msi.address_hi);
++	/* MSI abort addr - low, high */
++	SET_CH_32(dw, chan->dir, chan->id, msi_abort.lsb, chan->msi.address_lo);
++	SET_CH_32(dw, chan->dir, chan->id, msi_abort.msb, chan->msi.address_hi);
++	/* config MSI data */
++	SET_CH_32(dw, chan->dir, chan->id, msi_msgdata, chan->msi.data);
++}
++
++/* HDMA debugfs callbacks */
++static void dw_hdma_v0_core_debugfs_on(struct dw_edma *dw)
++{
++}
++
++static const struct dw_edma_core_ops hdma_core = {
++	.off = dw_hdma_v0_core_off,
++	.ch_count = dw_hdma_v0_core_ch_count,
++	.ch_status = dw_hdma_v0_core_ch_status,
++	.clear_done_int = dw_hdma_v0_core_clear_done_int,
++	.clear_abort_int = dw_hdma_v0_core_clear_abort_int,
++	.done_handle = dw_hdma_v0_core_done_handle,
++	.abort_handle = dw_hdma_v0_core_abort_handle,
++	.start = dw_hdma_v0_core_start,
++	.ch_config = dw_hdma_v0_core_ch_config,
++	.debugfs_on = dw_hdma_v0_core_debugfs_on,
 +};
 +
-+void dw_edma_v0_core_register(struct dw_edma *dw)
++void dw_hdma_v0_core_register(struct dw_edma *dw)
 +{
-+	dw->core = &edma_core;
++	dw->core = &hdma_core;
 +}
-diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.h b/drivers/dma/dw-edma/dw-edma-v0-core.h
-index ab96a1f48080..04a882222f99 100644
---- a/drivers/dma/dw-edma/dw-edma-v0-core.h
-+++ b/drivers/dma/dw-edma/dw-edma-v0-core.h
-@@ -11,17 +11,7 @@
- 
- #include <linux/dma/edma.h>
- 
--/* eDMA management callbacks */
--void dw_edma_v0_core_off(struct dw_edma *chan);
--u16 dw_edma_v0_core_ch_count(struct dw_edma *chan, enum dw_edma_dir dir);
--enum dma_status dw_edma_v0_core_ch_status(struct dw_edma_chan *chan);
--void dw_edma_v0_core_clear_done_int(struct dw_edma_chan *chan);
--void dw_edma_v0_core_clear_abort_int(struct dw_edma_chan *chan);
--u32 dw_edma_v0_core_status_done_int(struct dw_edma *chan, enum dw_edma_dir dir);
--u32 dw_edma_v0_core_status_abort_int(struct dw_edma *chan, enum dw_edma_dir dir);
--void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first);
--int dw_edma_v0_core_device_config(struct dw_edma_chan *chan);
--/* eDMA debug fs callbacks */
--void dw_edma_v0_core_debugfs_on(struct dw_edma *dw);
-+/* eDMA core register */
-+void dw_edma_v0_core_register(struct dw_edma *dw);
- 
- #endif /* _DW_EDMA_V0_CORE_H */
+diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.h b/drivers/dma/dw-edma/dw-hdma-v0-core.h
+new file mode 100644
+index 000000000000..c373b4f0bd8a
+--- /dev/null
++++ b/drivers/dma/dw-edma/dw-hdma-v0-core.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2023 Cai Huoqing
++ * Synopsys DesignWare HDMA v0 core
++ *
++ * Author: Cai Huoqing <cai.huoqing@linux.dev>
++ */
++
++#ifndef _DW_HDMA_V0_CORE_H
++#define _DW_HDMA_V0_CORE_H
++
++#include <linux/dma/edma.h>
++
++/* HDMA core register */
++void dw_hdma_v0_core_register(struct dw_edma *dw);
++
++#endif /* _DW_HDMA_V0_CORE_H */
+diff --git a/drivers/dma/dw-edma/dw-hdma-v0-regs.h b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
+new file mode 100644
+index 000000000000..f6b2bd03060c
+--- /dev/null
++++ b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
+@@ -0,0 +1,129 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2023 Cai Huoqing
++ * Synopsys DesignWare HDMA v0 reg
++ *
++ * Author: Cai Huoqing <cai.huoqing@linux.dev>
++ */
++
++#ifndef _DW_HDMA_V0_REGS_H
++#define _DW_HDMA_V0_REGS_H
++
++#include <linux/dmaengine.h>
++
++#define HDMA_V0_MAX_NR_CH			8
++#define HDMA_V0_LOCAL_ABORT_INT_EN		BIT(6)
++#define HDMA_V0_REMOTE_ABORT_INT_EN		BIT(5)
++#define HDMA_V0_LOCAL_STOP_INT_EN		BIT(4)
++#define HDMA_V0_REMOTEL_STOP_INT_EN		BIT(3)
++#define HDMA_V0_ABORT_INT_MASK			BIT(2)
++#define HDMA_V0_STOP_INT_MASK			BIT(0)
++#define HDMA_V0_LINKLIST_EN			BIT(0)
++#define HDMA_V0_CONSUMER_CYCLE_STAT		BIT(1)
++#define HDMA_V0_CONSUMER_CYCLE_BIT		BIT(0)
++#define HDMA_V0_DOORBELL_START			BIT(0)
++#define HDMA_V0_CH_STATUS_MASK			GENMASK(1, 0)
++
++struct dw_hdma_v0_ch_regs {
++	u32 ch_en;				/* 0x0000 */
++	u32 doorbell;				/* 0x0004 */
++	u32 prefetch;				/* 0x0008 */
++	u32 handshake;				/* 0x000c */
++	union {
++		u64 reg;			/* 0x0010..0x0014 */
++		struct {
++			u32 lsb;		/* 0x0010 */
++			u32 msb;		/* 0x0014 */
++		};
++	} llp;
++	u32 cycle_sync;				/* 0x0018 */
++	u32 transfer_size;			/* 0x001c */
++	union {
++		u64 reg;			/* 0x0020..0x0024 */
++		struct {
++			u32 lsb;		/* 0x0020 */
++			u32 msb;		/* 0x0024 */
++		};
++	} sar;
++	union {
++		u64 reg;			/* 0x0028..0x002c */
++		struct {
++			u32 lsb;		/* 0x0028 */
++			u32 msb;		/* 0x002c */
++		};
++	} dar;
++
++	u32 watermark_en;			/* 0x0030 */
++	u32	control1;			/* 0x0034 */
++	u32	func_num;			/* 0x0038 */
++	u32	qos;				/* 0x003c */
++	u32	reserved;			/* 0x0040..0x007c */
++	u32 ch_stat;				/* 0x0080 */
++	u32 int_stat;				/* 0x0084 */
++	u32 int_setup;				/* 0x0088 */
++	u32 int_clear;				/* 0x008c */
++	union {
++		u64 reg;			/* 0x0090..0x0094 */
++		struct {
++			u32 lsb;		/* 0x0090 */
++			u32 msb;		/* 0x0094 */
++		};
++	} msi_stop;
++	union {
++		u64 reg;			/* 0x0098..0x009c */
++		struct {
++			u32 lsb;		/* 0x0098 */
++			u32 msb;		/* 0x009c */
++		};
++	} msi_watermark;
++	union {
++		u64 reg;			/* 0x00a0..0x00a4 */
++		struct {
++			u32 lsb;		/* 0x00a0 */
++			u32 msb;		/* 0x00a4 */
++		};
++	} msi_abort;
++	u32	msi_msgdata;			/* 0x00a8 */
++} __packed;
++
++struct dw_hdma_v0_ch {
++	struct dw_hdma_v0_ch_regs wr;		/* 0x0000 */
++	struct dw_hdma_v0_ch_regs rd;		/* 0x0100 */
++} __packed;
++
++struct dw_hdma_v0_regs {
++	struct dw_hdma_v0_ch ch[HDMA_V0_MAX_NR_CH];	/* 0x0000..0x0fa8 */
++} __packed;
++
++struct dw_hdma_v0_lli {
++	u32 control;
++	u32 transfer_size;
++	union {
++		u64 reg;
++		struct {
++			u32 lsb;
++			u32 msb;
++		};
++	} sar;
++	union {
++		u64 reg;
++		struct {
++			u32 lsb;
++			u32 msb;
++		};
++	} dar;
++} __packed;
++
++struct dw_hdma_v0_llp {
++	u32 control;
++	u32 reserved;
++	union {
++		u64 reg;
++		struct {
++			u32 lsb;
++			u32 msb;
++		};
++	} llp;
++} __packed;
++
++#endif /* _DW_HDMA_V0_REGS_H */
 -- 
 2.34.1
 

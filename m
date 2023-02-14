@@ -2,60 +2,97 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87A166967E4
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Feb 2023 16:21:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA731696A86
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Feb 2023 17:59:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233518AbjBNPVW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 14 Feb 2023 10:21:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39718 "EHLO
+        id S232720AbjBNQ7l (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 14 Feb 2023 11:59:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233525AbjBNPVP (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Feb 2023 10:21:15 -0500
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0599E2B2BF;
-        Tue, 14 Feb 2023 07:21:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1676388064; x=1707924064;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PJhtvYwUVrba315GfdJC2HmxllCdahamNor2uBxDCIY=;
-  b=NCUktWhS+w8J13MoG5m+n1P6WI45e3A4Nw2w46/QQCANthT39AfMCDcV
-   PgBRM4jswAYUMm/Sc37cxy4kgaUYxBBkQdopM3Vfkr10arp+OXrvTE/k3
-   S0ySYAGfEIHs1JvYbJLcOWS1DDiPT8gthJDGUFS01F25IUSCNdWdyVdSk
-   gUq1bdbLoFV/trwD6OjFao7psYmYCIgBPRyuOc7pcWexbQtRx9dI09I11
-   s/qaudM2jRJYZiEeJrECREkYqg7vZs/qdRy6Co8FrGeX1gLU8qD3dHobC
-   +x6soy1lbO6RYVGFjIpy30iVPFTJq3eLAuNiSu8IrLR66BIjCrdnEktA2
-   g==;
-X-IronPort-AV: E=Sophos;i="5.97,296,1669100400"; 
-   d="scan'208";a="211939093"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Feb 2023 08:21:01 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Tue, 14 Feb 2023 08:21:01 -0700
-Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.16 via Frontend Transport; Tue, 14 Feb 2023 08:20:58 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <ludovic.desroches@microchip.com>, <tudor.ambarus@linaro.org>,
-        <vkoul@kernel.org>, <nicolas.ferre@microchip.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 7/7] dmaengine: at_xdmac: align declaration of ret with the rest of variables
-Date:   Tue, 14 Feb 2023 17:18:27 +0200
-Message-ID: <20230214151827.1050280-8-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230214151827.1050280-1-claudiu.beznea@microchip.com>
-References: <20230214151827.1050280-1-claudiu.beznea@microchip.com>
+        with ESMTP id S232871AbjBNQ7X (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Feb 2023 11:59:23 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C642DE4F;
+        Tue, 14 Feb 2023 08:58:58 -0800 (PST)
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31EGY9Pp005532;
+        Tue, 14 Feb 2023 16:57:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2022-7-12;
+ bh=30UhpvvVeEJ74x+BZp2PjN//3LlD3wleEKrKnHvlEME=;
+ b=2misEQBvI1JJ+56u+Isk0cVjdv3SudPEHPSoait3o7rcSbIUiV8kvbNovJXev5wnzRRT
+ yQ2FDobU5eLDlpUHtycmSVgXhklWuWtXQyHRjAHg4K0sauxjALREy/2VhaHtDgCZdLaF
+ WxYI96R7LpJAVqIrrE5IGe7UCpDyG8ufLqpiszIpg2aGbVIFZRZ6w2Y7Tf675ols5O2I
+ yfYbzI5S2ct/M57g5be3lojAhGOcNXLEw2X/oeo77pxT6TjnWvmZmiG1mlLR5DMbyBcp
+ LmGNOjxpVoIfmfqhy6o1eHoDUtrAQ8cCW6RDnWi5XswKte0lYf8KJhvyj0d5ylUCs/EQ lg== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3np1xb5yx8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Feb 2023 16:57:49 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 31EGpwLS009585;
+        Tue, 14 Feb 2023 16:57:48 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3np1f5uukx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Feb 2023 16:57:48 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 31EGuHou039739;
+        Tue, 14 Feb 2023 16:57:47 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3np1f5uuff-10;
+        Tue, 14 Feb 2023 16:57:46 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-mm@kvack.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, nvdimm@lists.linux.dev,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Song Liu <song@kernel.org>, linux-raid@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Jiri Pirko <jiri@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+        Josh Triplett <josh@joshtriplett.org>, rcu@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        linux-scsi@vger.kernel.org, sparclinux@vger.kernel.org
+Subject: Re: (subset) [PATCH 0/9] Documentation: correct lots of spelling errors (series 2)
+Date:   Tue, 14 Feb 2023 11:57:36 -0500
+Message-Id: <167639371119.486235.3812806947516384921.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20230129231053.20863-1-rdunlap@infradead.org>
+References: <20230129231053.20863-1-rdunlap@infradead.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-14_11,2023-02-14_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302140144
+X-Proofpoint-ORIG-GUID: qDgMHyaxiheYWVhdwVSVG77rlBQfOrXl
+X-Proofpoint-GUID: qDgMHyaxiheYWVhdwVSVG77rlBQfOrXl
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,29 +100,32 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Align the declaration of ret in atmel_xdmac_resume() with the rest of
-variables. Do this by adding ret to the line with declaration for i
-variable.
+On Sun, 29 Jan 2023 15:10:44 -0800, Randy Dunlap wrote:
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- drivers/dma/at_xdmac.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> Maintainers of specific kernel subsystems are only Cc-ed on their
+> respective patches, not the entire series. [if all goes well]
+> 
+> These patches are based on linux-next-20230127.
+> 
+> 
+>  [PATCH 1/9] Documentation: admin-guide: correct spelling
+>  [PATCH 2/9] Documentation: driver-api: correct spelling
+>  [PATCH 3/9] Documentation: hwmon: correct spelling
+>  [PATCH 4/9] Documentation: networking: correct spelling
+>  [PATCH 5/9] Documentation: RCU: correct spelling
+>  [PATCH 6/9] Documentation: scsi/ChangeLog*: correct spelling
+>  [PATCH 7/9] Documentation: scsi: correct spelling
+>  [PATCH 8/9] Documentation: sparc: correct spelling
+>  [PATCH 9/9] Documentation: userspace-api: correct spelling
+> 
+> [...]
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index 7ff6ca01e0b5..7da6d9b6098e 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -2181,8 +2181,7 @@ static int __maybe_unused atmel_xdmac_resume(struct device *dev)
- 	struct at_xdmac_chan	*atchan;
- 	struct dma_chan		*chan, *_chan;
- 	struct platform_device	*pdev = container_of(dev, struct platform_device, dev);
--	int			i;
--	int ret;
-+	int			i, ret;
- 
- 	ret = clk_prepare_enable(atxdmac->clk);
- 	if (ret)
+Applied to 6.3/scsi-queue, thanks!
+
+[6/9] Documentation: scsi/ChangeLog*: correct spelling
+      https://git.kernel.org/mkp/scsi/c/685d5ef436a9
+[7/9] Documentation: scsi: correct spelling
+      https://git.kernel.org/mkp/scsi/c/cf065a7da517
+
 -- 
-2.34.1
-
+Martin K. Petersen	Oracle Linux Engineering

@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAA826967E2
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Feb 2023 16:21:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA7116967E6
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Feb 2023 16:21:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233052AbjBNPVU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 14 Feb 2023 10:21:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39954 "EHLO
+        id S232997AbjBNPV0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 14 Feb 2023 10:21:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233532AbjBNPVM (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Feb 2023 10:21:12 -0500
+        with ESMTP id S229502AbjBNPVT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Feb 2023 10:21:19 -0500
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F2532B631;
-        Tue, 14 Feb 2023 07:21:01 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5376298E7;
+        Tue, 14 Feb 2023 07:21:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1676388061; x=1707924061;
+  t=1676388065; x=1707924065;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=qLhOvZL6ESJ8VOsLsLHiNb3s5VJ+t2td+m1FLHyK8zE=;
-  b=sh5XeMFrNW627H3ibKTq+U2jQLnfXwU2HjZKV/p+0trsawVz59fo+55p
-   1Mk+ADBYqkpoh/TxE/Z9TpbO/cQSsapyPtjyYorqsPzk2p9fDqoFsc/gg
-   i5/BHJc/B4LHd9OIhq7kmT+P4lHp4iuANekRpX3O7zSe6XGeNwJRstlBc
-   JqhZmpGL5p+DjAckwNS3Gemt8XC3ViDiZp8eBS0sD21++ERZgOSIiQ5bN
-   YJik+BzK5jpTLWk3ewJjRn2bkGcgccmTFjjkKx+D2WbckWf3f21rP/lzU
-   gp7kcFTx8Pt9XITsPR2qDz8ipCh8LG8ks8XU87gsos4UUA20/gX5emV/7
-   A==;
+  bh=MoXoU31ArhE8FDW59rzMPaTdif2Rdo/JdPDq2bLPVJQ=;
+  b=1ksMsmxpjAvXdpfYlbvV9KetGen/L5KbFkW5CfGmaO8DSxK+1b6Hqa6K
+   SNfcup4lScZeQSDHIIXMMuluwPhlSudLUq+A6DJqBRHL3M9bDpMi/ZOhn
+   VQLY5yFRzui5V9m8huyjdkZBPs5W13LBLRYJNpBa/SGIhAS+6Kmc5ZdeZ
+   8vH3ZMaFx14HwQDvTCNnJL3gEVFfrCj+7Akb5wSk77Kyi1TxvwkHR4QQL
+   UqB44HHbfPi8QefdSVi6XeNHcexb854jI+FE+Wl54XBbQfpFI+0IyHvw7
+   88D0MaDLMo69QTM8/GUfkYRWDTXfHhD5TIum/7uvCKvh69VEntpjLi6Lm
+   Q==;
 X-IronPort-AV: E=Sophos;i="5.97,296,1669100400"; 
-   d="scan'208";a="137131091"
+   d="scan'208";a="200468521"
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Feb 2023 08:20:58 -0700
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Feb 2023 08:21:05 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Tue, 14 Feb 2023 08:20:55 -0700
+ 15.1.2507.16; Tue, 14 Feb 2023 08:20:58 -0700
 Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.115.15) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.16 via Frontend Transport; Tue, 14 Feb 2023 08:20:52 -0700
+ 15.1.2507.16 via Frontend Transport; Tue, 14 Feb 2023 08:20:55 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <ludovic.desroches@microchip.com>, <tudor.ambarus@linaro.org>,
         <vkoul@kernel.org>, <nicolas.ferre@microchip.com>
 CC:     <linux-arm-kernel@lists.infradead.org>,
         <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 5/7] dmaengine: at_xdmac: do not enable all cyclic channels
-Date:   Tue, 14 Feb 2023 17:18:25 +0200
-Message-ID: <20230214151827.1050280-6-claudiu.beznea@microchip.com>
+Subject: [PATCH 6/7] dmaengine: at_xdmac: add a warning message regarding for unpaused channels
+Date:   Tue, 14 Feb 2023 17:18:26 +0200
+Message-ID: <20230214151827.1050280-7-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230214151827.1050280-1-claudiu.beznea@microchip.com>
 References: <20230214151827.1050280-1-claudiu.beznea@microchip.com>
@@ -63,46 +63,27 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Do not global enable all the cyclic channels in at_xdmac_resume(). Instead
-save the global status in at_xdmac_suspend() and re-enable the cyclic
-channel only if it was active before suspend.
+Add a warning message on suspend to let the user that there are channels
+not paused by their consumers.
 
-Fixes: e1f7c9eee707 ("dmaengine: at_xdmac: creation of the atmel eXtended DMA Controller driver")
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- drivers/dma/at_xdmac.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/dma/at_xdmac.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index 34c004a4b23c..96f1b69f8a75 100644
+index 96f1b69f8a75..7ff6ca01e0b5 100644
 --- a/drivers/dma/at_xdmac.c
 +++ b/drivers/dma/at_xdmac.c
-@@ -246,6 +246,7 @@ struct at_xdmac {
- 	int			irq;
- 	struct clk		*clk;
- 	u32			save_gim;
-+	u32			save_gs;
- 	struct dma_pool		*at_xdmac_desc_pool;
- 	const struct at_xdmac_layout	*layout;
- 	struct at_xdmac_chan	chan[];
-@@ -2162,6 +2163,7 @@ static int __maybe_unused atmel_xdmac_suspend(struct device *dev)
- 		}
- 	}
- 	atxdmac->save_gim = at_xdmac_read(atxdmac, AT_XDMAC_GIM);
-+	atxdmac->save_gs = at_xdmac_read(atxdmac, AT_XDMAC_GS);
- 
- 	at_xdmac_off(atxdmac, false);
- 	pm_runtime_mark_last_busy(atxdmac->dev);
-@@ -2224,7 +2226,8 @@ static int __maybe_unused atmel_xdmac_resume(struct device *dev)
- 			at_xdmac_chan_write(atchan, AT_XDMAC_CNDC, atchan->save_cndc);
- 			at_xdmac_chan_write(atchan, AT_XDMAC_CIE, atchan->save_cim);
- 			wmb();
--			at_xdmac_write(atxdmac, AT_XDMAC_GE, atchan->mask);
-+			if (atxdmac->save_gs & atchan->mask)
-+				at_xdmac_write(atxdmac, AT_XDMAC_GE, atchan->mask);
- 		}
- 	}
- 
+@@ -2154,6 +2154,8 @@ static int __maybe_unused atmel_xdmac_suspend(struct device *dev)
+ 		atchan->save_cc = at_xdmac_chan_read(atchan, AT_XDMAC_CC);
+ 		if (at_xdmac_chan_is_cyclic(atchan)) {
+ 			if (!at_xdmac_chan_is_paused(atchan)) {
++				dev_warn(chan2dev(chan), "%s: channel %d not paused\n",
++					 __func__, chan->chan_id);
+ 				at_xdmac_device_pause_internal(atchan);
+ 				at_xdmac_runtime_suspend_descriptors(atchan);
+ 			}
 -- 
 2.34.1
 

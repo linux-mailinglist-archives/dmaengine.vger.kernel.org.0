@@ -2,45 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6199697CF8
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Feb 2023 14:17:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2126C697D1E
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Feb 2023 14:25:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233108AbjBONRx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 15 Feb 2023 08:17:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60762 "EHLO
+        id S234264AbjBONY7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 15 Feb 2023 08:24:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232055AbjBONRw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Feb 2023 08:17:52 -0500
+        with ESMTP id S234212AbjBONYw (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Feb 2023 08:24:52 -0500
 Received: from aposti.net (aposti.net [89.234.176.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11F60269F;
-        Wed, 15 Feb 2023 05:17:49 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 981CA38E86;
+        Wed, 15 Feb 2023 05:24:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1676467068; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1676467467; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=jo1hcFRAlyScdE9l1OosLx/8lHX5O2IFB6fOVnE2huo=;
-        b=dyI3tzY/o5ySfHS2uP9etLBRf86yxechHKW5lri8USdQRBHHrd0w/KLW0upLzNQcIJAtgD
-        DYCqbacZeOamgDEdoobPUajkTc8GRMAgpAAwvdrSUKR8E72yJ5Utyd+bMDGgFbcc1fstVA
-        kLIO0hpgIVwSprX9suKvFbufOz/fZ5w=
-Message-ID: <53753ec9589aeb1f7ce035414220c67f0c02c983.camel@crapouillou.net>
+        bh=FEyXmPy0b4Lc8uWvpDYsGz83becDnInwGO3EaqxRFUk=;
+        b=T50XxDNIkK9Jr/7I9BBsd9GHLn2cecKVyqr2xeGtQ8IA38nxEFb3mQ+ofgeumWqBvInmxm
+        5KwiyF3++QQZpDR5UTyo0oaxfKfnSSgo9mp1P0ccekk9gb8jWvz+dcZ49zn3rHvBfBZgtT
+        P8wOXw7B/fVRCQLp6LDGFeyyCf0lZdc=
+Message-ID: <db4d83f3c3c8dc4f3ef5f850fe4c1c04aa648d47.camel@crapouillou.net>
 Subject: Re: Question: partial transfers of DMABUFs
 From:   Paul Cercueil <paul@crapouillou.net>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+To:     Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
         Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
         Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
-Date:   Wed, 15 Feb 2023 13:17:45 +0000
-In-Reply-To: <9e6b428e-81c0-4e2a-6825-43f022483013@linux.intel.com>
+Cc:     linux-media@vger.kernel.org, dmaengine@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Date:   Wed, 15 Feb 2023 13:24:24 +0000
+In-Reply-To: <c5fe8089-49e9-2bec-eac5-e8a035412cf3@amd.com>
 References: <53ea4d2db570d3ca514a69015488bd5b849a5193.camel@crapouillou.net>
-         <836d600a-bb1c-fbb2-89f5-7c79c3150e8c@linux.intel.com>
-         <d540965a25138772fa063d62e907ffd611f93205.camel@crapouillou.net>
-         <05fb3949-d0aa-b653-d9a3-236a4c95a5a3@linux.intel.com>
-         <77fc4dec6738d57ae6ca6232e502e3b228b1ae03.camel@crapouillou.net>
-         <9e6b428e-81c0-4e2a-6825-43f022483013@linux.intel.com>
+         <c5fe8089-49e9-2bec-eac5-e8a035412cf3@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
@@ -53,143 +48,62 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Le mercredi 15 f=C3=A9vrier 2023 =C3=A0 13:13 +0100, Maarten Lankhorst a =
-=C3=A9crit=C2=A0:
->=20
-> On 2023-02-15 13:00, Paul Cercueil wrote:
-> > Hi Maarten,
-> >=20
-> > Le mercredi 15 f=C3=A9vrier 2023 =C3=A0 12:52 +0100, Maarten Lankhorst =
-a
-> > =C3=A9crit=C2=A0:
-> > > Hey,
-> > >=20
-> > > On 2023-02-15 12:47, Paul Cercueil wrote:
-> > > > Hi Maarten,
-> > > >=20
-> > > > Le mercredi 15 f=C3=A9vrier 2023 =C3=A0 12:30 +0100, Maarten Lankho=
-rst a
-> > > > =C3=A9crit=C2=A0:
-> > > > > Hey,
-> > > > >=20
-> > > > > On 2023-02-15 11:48, Paul Cercueil wrote:
-> > > > > > Hi,
-> > > > > >=20
-> > > > > > I am working on adding support for DMABUFs in the IIO
-> > > > > > subsystem.
-> > > > > >=20
-> > > > > > One thing we want there, is the ability to specify the
-> > > > > > number
-> > > > > > of
-> > > > > > bytes
-> > > > > > to transfer (while still defaulting to the DMABUF size).
-> > > > > >=20
-> > > > > > Since dma_buf_map_attachment() returns a sg_table, I
-> > > > > > basically
-> > > > > > have
-> > > > > > two
-> > > > > > options, and I can't decide which one is the best (or the
-> > > > > > less
-> > > > > > ugly):
-> > > > > >=20
-> > > > > > - Either I add a new API function similar to
-> > > > > > dmaengine_prep_slave_sg(),
-> > > > > > which still takes a scatterlist as argument but also takes
-> > > > > > the
-> > > > > > number
-> > > > > > of bytes as argument;
-> > > > > >=20
-> > > > > > - Or I add a function to duplicate the scatterlist and then
-> > > > > > shrink
-> > > > > > it
-> > > > > > manually, which doesn't sound like a good idea either.
-> > > > > >=20
-> > > > > > What would be the recommended way?
-> > > > > Does this need an api change? If you create a DMA-BUF of size
-> > > > > X,
-> > > > > it
-> > > > > has
-> > > > > to be of size X. You can pad with a dummy page probably if
-> > > > > you
-> > > > > know
-> > > > > it
-> > > > > in advance. But after it has been imported, it cannot change
-> > > > > size.
-> > > > Yes, the sizes are fixed.
-> > > >=20
-> > > > > You don=C2=B4t have to write the entire dma-buf either, so if you
-> > > > > want
-> > > > > to
-> > > > > create a 1GB buf and only use the first 4K, that is allowed.
-> > > > > The
-> > > > > contents of=C2=A0 the remainder of the DMA-BUF are undefined. It'=
-s
-> > > > > up
-> > > > > to
-> > > > > userspace to assign a meaning to it.
-> > > > >=20
-> > > > > I think I'm missing something here that makes the whole
-> > > > > question
-> > > > > m,ake
-> > > > > more sense.
-> > > > I want my userspace to be able to specify how much of the
-> > > > DMABUF is
-> > > > to
-> > > > be read from or written to.
-> > > >=20
-> > > > So in my new "dmabuf enqueue" IOCTL that I want to add to IIO,
-> > > > I
-> > > > added
-> > > > a parameter to specify the number of bytes to transfer (where 0
-> > > > means
-> > > > the whole buffer).
-> > > >=20
-> > > > The problem I have now, is that the current dmaengine core does
-> > > > not
-> > > > have a API function that takes a scatterlist (returned by
-> > > > dma_map_attachment()) and a transfer size in bytes, it will
-> > > > always
-> > > > transfer the whole scatterlist.
-> > > >=20
-> > > > So my two options would be to add a new API function to support
-> > > > specifying a bytes count, or add a mechanism to duplicate a
-> > > > scatterlist, so that I can tweak it to the right size.
-> > > This doesn't have to happen through DMA-BUF. Presumably you are
-> > > both
-> > > the
-> > > importer and the exporter, so after you know how much is read,
-> > > you
-> > > can
-> > > tell this to the importer that X number of bytes can be read from
-> > > DMA-BUF Y.
-> > Yes, I do that already as it is an argument in my ioctl.
-> >=20
-> > > In your case, when enqueing you will get a full SG list, but if
-> > > you
-> > > know
-> > > only X bytes are read/written you only have to map the first X
-> > > bytes
-> > > to
-> > > your IIO device. The rest of the SG list could be ignored safely.
-> > Yes. But I don't know how to "ignore the rest of the SG list".
-> >=20
-> > - dma_buf_map_attachment() does not have a parameter to specify
-> > that I
-> > only need the first X bytes mapped;
-> >=20
-> > - if I map the whole thing, dmaengine_prep_slave_sg() does not have
-> > an
-> > option to specify that I only want the first X bytes transferred.
->=20
-> sg_split apppears to allow you to split it? I'm not 100% sure whether
-> it=20
-> leaves the original SG untouched, but you can try to put it in
-> between=20
-> those 2 calls to get a smaller SG to pass to prep_slave_sg.
+Hi Christian,
 
-I overlooked sg_split. It looks like it could work for me.
+Le mercredi 15 f=C3=A9vrier 2023 =C3=A0 13:58 +0100, Christian K=C3=B6nig a=
+ =C3=A9crit=C2=A0:
+> Hi Paul,
+>=20
+> Am 15.02.23 um 11:48 schrieb Paul Cercueil:
+> > Hi,
+> >=20
+> > I am working on adding support for DMABUFs in the IIO subsystem.
+> >=20
+> > One thing we want there, is the ability to specify the number of
+> > bytes
+> > to transfer (while still defaulting to the DMABUF size).
+> >=20
+> > Since dma_buf_map_attachment() returns a sg_table,
+>=20
+> Please don't assume that this is an sg_table. We just used it as=20
+> container for DMA addresses, but this has proven to be a mistake.
 
-Thanks!
+TL/DR, why was it a mistake? Just curious.
+
+> There is work underway to replace the sg_table with (for example)
+> just=20
+> an array of DMA addresses.
+
+Ok, so I believe at some point we will need an equivalent of
+dmaengine_prep_slave_sg() which takes an array of DMA addresses.
+
+> > I basically have two options, and I can't decide which one is the
+> > best (or the less ugly):
+> >=20
+> > - Either I add a new API function similar to
+> > dmaengine_prep_slave_sg(),
+> > which still takes a scatterlist as argument but also takes the
+> > number
+> > of bytes as argument;
+> >=20
+> > - Or I add a function to duplicate the scatterlist and then shrink
+> > it
+> > manually, which doesn't sound like a good idea either.
+> >=20
+> > What would be the recommended way?
+>=20
+> I strongly recommend to come up with a new function which only takes
+> DMA=20
+> addresses and separate segment length.
+
+Alright, thanks for your input.
+
+So I would add a new dma_device.dma_prep_slave_dma_array() callback
+with a corresponding API function, and then the drivers can be
+converted from using .dma_prep_slave_sg() to this new function in due
+time.
+
+Vinod, that works for you?
 
 Cheers,
 -Paul

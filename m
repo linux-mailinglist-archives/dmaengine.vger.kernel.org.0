@@ -2,53 +2,53 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 59E3D6999B0
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Feb 2023 17:17:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BB096999EE
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Feb 2023 17:25:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229717AbjBPQRY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Feb 2023 11:17:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45916 "EHLO
+        id S229502AbjBPQZM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 16 Feb 2023 11:25:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229482AbjBPQRY (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Feb 2023 11:17:24 -0500
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78EB94C13;
-        Thu, 16 Feb 2023 08:17:21 -0800 (PST)
-Received: by mail-lf1-x136.google.com with SMTP id x40so3380074lfu.12;
-        Thu, 16 Feb 2023 08:17:21 -0800 (PST)
+        with ESMTP id S229677AbjBPQZM (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Feb 2023 11:25:12 -0500
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37BDB20D23;
+        Thu, 16 Feb 2023 08:25:08 -0800 (PST)
+Received: by mail-lf1-x12c.google.com with SMTP id br9so3463012lfb.4;
+        Thu, 16 Feb 2023 08:25:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vnj3EscbtCltkfIR8SjHlFZd1A7JOCyFQ8kYndGNhxM=;
-        b=ZpOKqm2XqwpTqMpZBzGRYm6O0p8mUEx3hohET87mV9AW/MHcCwlQR+TRhKHdT+JuCZ
-         P950QkZBykOIecWgX51WRf8afuQ1Jf386p+G++49XSdE/kzhRP1tm2ly4A3wnxV+J7DZ
-         L1FyXH2mvAoejhaomvfgYhrR/3uNyHPj8gBxXxEiG2PF50p8s7QFzXWb36qqiUG0maQO
-         8mBpM3Hw6qhAYO/d+mZudtN6tSw4C2o07EiAnY+6+Fi4Hm/DEqlP09iVIzKWJqL3MgyX
-         l1P6DA2InaVsQH7gQvQUcaEO9LdQ1Ob8uZSutHMxjgQfxSK15gU9zKDuMyJBDGaTkW2v
-         bN1Q==
+        bh=/TNynnLHfktkNsfY8Pon/0hde2e+W+t+X/6D6G/tUvM=;
+        b=YVFzR+0u51ojfkQntSSl+XkLX+3kU9e0D0xN0UYVdPmclraAsKDIaukqASI0wdSqiQ
+         /fjJNVLDl7XxjPbeiPN8vegKnfducP/dfduqfqsc0LJeHXducTzaelUB8FtmJSOu0Nb8
+         bdKlfXdEvzAb00hqsK+SuFkfOGa4JD8lYtGkMwZwG2QGP20nwRgV7XSZu5OePuUPSDEc
+         jVxneirzIaZypSgDLA3QieA1+K/kDhe+ySRDtzzcP6Bgl9XHj9mIZy/SeKCXNLzSeKPs
+         vkR5unb703yxGrJuHWAnx1QSjIYr2BJxLPU+95I/BTyp4uW/LZODsjUDkXouYsnZvoxY
+         v5Kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Vnj3EscbtCltkfIR8SjHlFZd1A7JOCyFQ8kYndGNhxM=;
-        b=fDxf3vwmEuGjQYzoBqqI1Y9nItd5JK2oL+0iAOBkStf6xUrFTNALgkxmv7pGTX75bh
-         KHDG0J/3XCSCnQo+58dgY1AUyi/Fwi3QDwVbnJFyg6ST/mtb1ZnOhvepKB5sTheZZNgH
-         M+s1oUm95XZwnzcmkAn287Jd9QbTap4ajtz1G3XvOF+dD1u/ucg9TBaxCxipyNKpQXuO
-         /654hzLU2huKZBW13EhYpDlYdq7vJnELLtUbRG5aCLY0Pr69WQYwtHB4Et7VvhlhPXnq
-         lGQYzHG/d4xAaF4eQSuGCRfucv0s+G/gggrOJfP3gbRa12MajKVx4xpOaxS0Yd2Jrmt5
-         RfFQ==
-X-Gm-Message-State: AO0yUKUtjSKcpzOIBB64OPWVqpwR2MxoR40ZDma7JaBTm2BbK+CbgQ9u
-        XeegALFKNxYUfrrrX0zb9JE=
-X-Google-Smtp-Source: AK7set9+GtY9OYxOQnUl43gfFxs7TC16WxtP0TpoObCPuca5KYm7VpG/dDNHooYOyRt9Nm1I/Yd2xg==
-X-Received: by 2002:a05:6512:10d3:b0:4db:5123:c271 with SMTP id k19-20020a05651210d300b004db5123c271mr1125341lfg.29.1676564239623;
-        Thu, 16 Feb 2023 08:17:19 -0800 (PST)
+        bh=/TNynnLHfktkNsfY8Pon/0hde2e+W+t+X/6D6G/tUvM=;
+        b=xrAPswPEaMMTpvhAqkr/lJf7Ceki66+GrMx43Zv0eObAdPFKW3hb8If/kNS4+ARUVu
+         1mfd0SVhugGX9rj00+wtGFYrHWmRO2Nx8Yxpc33FWclPIurAPY6AZFV2ML7MpfvMCGS2
+         pccyHd3ImVhuSw8ZnpWFOJZ7PMMPaT1nyKVO8Whpo593c26+PyQURQ+Y/lflvdTCpK/i
+         uTRaI7FbGqp6BoXCvXjZLKUF5dg3KrKbc58ihXenJFCleOAUtgivsGzkkTcFQmmC00nE
+         APWe4nvtZcdTa82sksbmussK50CCvxDYNZB9vsP3hZYOdK2Xsx0RV52FfCdidsm1O5j1
+         q0wg==
+X-Gm-Message-State: AO0yUKUxCSbE4Vk/C4ZYGjCeIEQyIfRLj1/7MatohO5WPuEVzhfmo/0G
+        7l6sWfMBL69n8kknZ0Ty55I=
+X-Google-Smtp-Source: AK7set+PH1rrGoznfiEW4+eq3AAK0p5SqglAard9j6tIK4SKdCmXhpPFZs0roSipgcrEeydVSpaRsQ==
+X-Received: by 2002:ac2:48b0:0:b0:4cc:93e9:df8e with SMTP id u16-20020ac248b0000000b004cc93e9df8emr1855987lfg.33.1676564706407;
+        Thu, 16 Feb 2023 08:25:06 -0800 (PST)
 Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id m2-20020ac24ac2000000b004db51387ad6sm344017lfp.129.2023.02.16.08.17.18
+        by smtp.gmail.com with ESMTPSA id p3-20020a05651211e300b004db50ad07ffsm349331lfs.247.2023.02.16.08.25.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Feb 2023 08:17:19 -0800 (PST)
-Date:   Thu, 16 Feb 2023 19:17:17 +0300
+        Thu, 16 Feb 2023 08:25:05 -0800 (PST)
+Date:   Thu, 16 Feb 2023 19:25:03 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Cai Huoqing <cai.huoqing@linux.dev>
 Cc:     Sergey.Semin@baikalelectronics.ru,
@@ -63,7 +63,7 @@ Cc:     Sergey.Semin@baikalelectronics.ru,
         linux-pci@vger.kernel.org
 Subject: Re: [PATCH v3 2/4] dmaengine: dw-edma: Create a new dw_edma_core_ops
  structure to abstract controller operation
-Message-ID: <20230216161717.76od4psqpw6vgiwy@mobilestation>
+Message-ID: <20230216162503.vqg75n6ecm62lziz@mobilestation>
 References: <20230213132411.65524-1-cai.huoqing@linux.dev>
  <20230213132411.65524-3-cai.huoqing@linux.dev>
 MIME-Version: 1.0
@@ -136,15 +136,8 @@ On Mon, Feb 13, 2023 at 09:24:07PM +0800, Cai Huoqing wrote:
 >  	struct virt_dma_desc *vd;
 >  	unsigned long flags;
 >  
-
 > -	dw_edma_v0_core_clear_done_int(chan);
-> +	dw_edma_core_clear_done_int(chan);   <+
-                                              |
-As I already said in v2 just call this method + in the IRQ-handle loop
-within the IP-core-specific module (see further for details). Thus you'll
-be able to drop the dw_edma_core_ops.clear_done_int pointer. The same
-concerns the dw_edma_core_ops.clear_abort_int callback.
-
+> +	dw_edma_core_clear_done_int(chan);
 >  
 >  	spin_lock_irqsave(&chan->vc.lock, flags);
 >  	vd = vchan_next_desc(&chan->vc);
@@ -158,12 +151,8 @@ concerns the dw_edma_core_ops.clear_abort_int callback.
 >  	struct virt_dma_desc *vd;
 >  	unsigned long flags;
 >  
-
 > -	dw_edma_v0_core_clear_abort_int(chan);
 > +	dw_edma_core_clear_abort_int(chan);
-
-ditto
-
 >  
 >  	spin_lock_irqsave(&chan->vc.lock, flags);
 >  	vd = vchan_next_desc(&chan->vc);
@@ -283,92 +272,12 @@ ditto
 > +	void (*off)(struct dw_edma *dw);
 > +	u16 (*ch_count)(struct dw_edma *dw, enum dw_edma_dir dir);
 > +	enum dma_status (*ch_status)(struct dw_edma_chan *chan);
-
 > +	void (*clear_done_int)(struct dw_edma_chan *chan);
 > +	void (*clear_abort_int)(struct dw_edma_chan *chan);
-
-As I noted above these methods could be called locally from the
-corresponding IP-core-specific module. Thus you won't need to define
-the callbacks. It shall simplify the interface a bit.
-
 > +	void (*done_handle)(struct dw_edma_irq *dw_irq,
 > +			    enum dw_edma_dir dir);
 > +	void (*abort_handle)(struct dw_edma_irq *dw_irq,
 > +			     enum dw_edma_dir dir);
-
-Seeing both of these callbacks (done,abort handlers) are called from
-the same IRQ-handler what about converting them to a single callback:
-irqreturn_t (*handle_int)(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir);
-?
-The eDMA channels IRQ-handlers would look like this:
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -692,12 +692,16 @@ static irqreturn_t dw_edma_interrupt(int irq, void *data, bool write)
- static inline irqreturn_t dw_edma_interrupt_write(int irq, void *data)
- {
--	return dw_edma_interrupt(irq, data, true);
-+	struct dw_edma_irq *dw_irq = data;
-+
-+	return dw_edma_core_handle_int(dw_irq, EDMA_DIR_WRITE);
- }
- 
- static inline irqreturn_t dw_edma_interrupt_read(int irq, void *data)
- {
--	return dw_edma_interrupt(irq, data, false);
-+	struct dw_edma_irq *dw_irq = data;
-+
-+	return dw_edma_core_handle_int(dw_irq, EDMA_DIR_READ);
- }
- 
- static irqreturn_t dw_edma_interrupt_common(int irq, void *data)
-
-Therefore you'll be able to completely drop the
-static irqreturn_t dw_edma_interrupt(int irq, void *data, bool write)
-function from drivers/dma/dw-edma/dw-edma-core.c. The function body would
-be almost fully moved to the handle_int() function of the eDMA/HDMA
-core-specific ops.
-
-For instance in case of the DW eDMA it would look like this:
-static irqreturn_t dw_edma_v0_core_handle_int(struct dw_edma_irq, enum dw_edma_dir dir)
-{
-        struct dw_edma *dw = dw_irq->dw;
-        unsigned long total, pos, val;
-        unsigned long off;
-        u32 mask;
-
-	if (dir == EDMA_DIR_WRITE) {
-		total = dw->wr_ch_cnt;
-		off = 0;
-		mask = dw_irq->wr_mask;
-	} else {
-		total = dw->rd_ch_cnt;
-		off = dw->wr_ch_cnt;
-		mask = dw_irq->rd_mask;
-	}
-
-	val = dw_edma_v0_core_status_done_int(dw, dir) & mask;
-        for_each_set_bit(pos, &val, total) {
-                struct dw_edma_chan *chan = &dw->chan[pos + off];
-
-		dw_edma_v0_core_clear_done_int(chan);
-
-                dw_edma_done_interrupt(chan);
-        }
-
-        val = dw_edma_v0_core_status_abort_int(dw, dir) & mask;
-        for_each_set_bit(pos, &val, total) {
-                struct dw_edma_chan *chan = &dw->chan[pos + off];
-
-		dw_edma_v0_core_clear_abort_int(chan);
-
-                dw_edma_abort_interrupt(chan);
-        }
-
-        return IRQ_HANDLED;
-}
-
-What do you think?
-
 > +	void (*start)(struct dw_edma_chunk *chunk, bool first);
 > +	void (*ch_config)(struct dw_edma_chan *chan);
 > +	void (*debugfs_on)(struct dw_edma *dw);
@@ -425,7 +334,6 @@ What do you think?
 > +	dw->core->clear_abort_int(chan);
 > +}
 > +
-
 > +static inline
 > +void dw_edma_core_done_handle(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir)
 > +{
@@ -441,10 +349,6 @@ What do you think?
 > +
 > +	dw->core->abort_handle(dw_irq, dir);
 > +}
-
-As I suggested above these two methods can be replaced with a single
-one: dw_edma_core_handle_int(...).
-
 > +
 > +static inline
 > +void dw_edma_core_start(struct dw_edma *dw, struct dw_edma_chunk *chunk, bool first)
@@ -554,26 +458,8 @@ one: dw_edma_core_handle_int(...).
 > +
 > +	val = dw_edma_v0_core_status_done_int(dw, dir);
 > +	val &= mask;
-
 > +	for_each_set_bit(pos, &val, total)
 > +		dw_edma_done_interrupt(&dw->chan[pos + off]);
-
-As I suggested above replace this with:
-+	for_each_set_bit(pos, &val, total) {
-+		struct dw_edma_chan *chan = &dw->chan[pos + off];
-+
-+ 		dw_edma_v0_core_clear_done_int(chan);
-+ 
-+		dw_edma_done_interrupt(chan);
-+ 	}
-
-Therefore you'll be able to drop the clear_done_int callback and its
-invocation from the dw_edma_done_interrupt() function.
-
-BTW Why did you change the dw_edma_v0_core_done_handle() semantics
-from taking the function pointers as an argument to calling the global
-version of dw_edma_done_interrupt() ?
-
 > +}
 > +
 > +static
@@ -596,12 +482,8 @@ version of dw_edma_done_interrupt() ?
 > +
 > +	val = dw_edma_v0_core_status_abort_int(dw, dir);
 > +	val &= mask;
-
 > +	for_each_set_bit(pos, &val, total)
 > +		dw_edma_abort_interrupt(&dw->chan[pos + off]);
-
-ditto
-
 > +}
 > +
 >  static void dw_edma_v0_write_ll_data(struct dw_edma_chunk *chunk, int i,
@@ -640,47 +522,21 @@ ditto
 >  	dw_edma_v0_debugfs_on(dw);
 >  }
 > +
+
 > +static const struct dw_edma_core_ops edma_core = {
+
+Please use the dw_edma_v0_core name for the structure instance in
+order to maintain the local naming convention.
+
+-Serge(y)
+
 > +	.off = dw_edma_v0_core_off,
 > +	.ch_count = dw_edma_v0_core_ch_count,
 > +	.ch_status = dw_edma_v0_core_ch_status,
-
 > +	.clear_done_int = dw_edma_v0_core_clear_done_int,
 > +	.clear_abort_int = dw_edma_v0_core_clear_abort_int,
 > +	.done_handle = dw_edma_v0_core_done_handle,
 > +	.abort_handle = dw_edma_v0_core_abort_handle,
-
-If you take into account what I suggested above these four callbacks will
-be replaced with a single one handle_int. Thus the interface will look
-much simpler so will the whole IRQs-handling logic:
-
-irq: dw_edma_interrupt_{write,read}()
-     +-> dw_edma_core_handle_int() (dw-edma-v0-core.c)
-         +-> dw_edma_v0_core_status_done_int() (dw-edma-v0-core.c)
-         +-> dw_edma_v0_core_clear_done_int() (dw-edma-v0-core.c)
-         +-> dw_edma_done_interrupt() (dw-edma-core.c)
-         +-> dw_edma_v0_core_status_abort_int() (dw-edma-v0-core.c)
-         +-> dw_edma_v0_core_clear_abort_int() (dw-edma-v0-core.c)
-         +-> dw_edma_abort_interrupt() (dw-edma-core.c)
-
-In your case the calls hierarchy looks like this:
-irq: dw_edma_interrupt_{write,read}()
-     +-> dw_edma_interrupt()
-         +-> dw_edma_core_done_handle() (dw-edma-v0-core.c)
-             +-> dw_edma_v0_core_status_done_int() (dw-edma-v0-core.c)
-             +-> dw_edma_done_interrupt() (dw-edma-core.c)
-                 +-> dw_edma_core_clear_done_int() (dw-edma-v0-core.c)
-         +-> dw_edma_core_abort_handle() (dw-edma-v0-core.c)
-             +-> dw_edma_v0_core_status_abort_int() (dw-edma-v0-core.c)
-             +-> dw_edma_abort_interrupt() (dw-edma-core.c)
-                 +-> dw_edma_core_clear_abort_int() (dw-edma-v0-core.c)
-
-See the calls thread is more linear in my case and the reader won't
-need to get several times back and forth between the generic part of
-the driver and the IP-core-specific one.
-
--Serge(y)
-
 > +	.start = dw_edma_v0_core_start,
 > +	.ch_config = dw_edma_v0_core_ch_config,
 > +	.debugfs_on = dw_edma_v0_core_debugfs_on,

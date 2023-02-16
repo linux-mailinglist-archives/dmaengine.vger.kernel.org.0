@@ -2,53 +2,53 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EFA47699A3C
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Feb 2023 17:38:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 534EA699A4C
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Feb 2023 17:41:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229737AbjBPQir (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Feb 2023 11:38:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37754 "EHLO
+        id S229955AbjBPQlt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 16 Feb 2023 11:41:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229745AbjBPQiq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Feb 2023 11:38:46 -0500
+        with ESMTP id S229948AbjBPQlr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Feb 2023 11:41:47 -0500
 Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 104D44ECD2;
-        Thu, 16 Feb 2023 08:38:36 -0800 (PST)
-Received: by mail-lf1-x12e.google.com with SMTP id o20so3504843lfk.5;
-        Thu, 16 Feb 2023 08:38:35 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02DE53B872;
+        Thu, 16 Feb 2023 08:41:45 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id g28so3570108lfv.0;
+        Thu, 16 Feb 2023 08:41:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VWA/vL4w8IYDC4UQzlk5P3glDWRHL2g05buhT0EW6WI=;
-        b=iDbgo5oZoVcr6yGSW4ecnY6ApVcB/kMR92lOzQszj0Er4Grp8aZeScQfUV1Tk5wL6v
-         6quk5OOiGETCeIEYcXbeibJtVEG+zorfej/8Ol3L6aFeVZSqy47tdZIPTkK2HBr9HxAx
-         RzJ1H/ZWRgdlSsTe3uuUTzF2xKLiqWmi9lK0ZlOPDI8wNk8YKSoARbpO0NB3hSqJrrbI
-         IZJFUYVU3moVDHVG2GctTTNemNWur5eMZPUNMk3jIthSTVNwyz2PR3aUMAHJ34YlYWh4
-         t+JdrcS5V1LmECVmr+BlfIvhh0FqrWf1KLdaGRf5xBiyE1ycO2/TNhyxQKoQQDUCb0Tt
-         vz/A==
+        bh=T82iQacn0HrZjSBA8i6g9doGMcTElWG37x9Wz0+zpmY=;
+        b=pmorjVQjLvbFSm5E/m/lHBFcCidY0K28WNtsXIPbzqcX0PAl+d2LMKLUQwaTX1xZbt
+         LqRSBM7QaXNPL9HhMBZV/c1QqXS7TS8LREv17tnB/iXp9r6bEkGI2qNVumbLBBChO7Md
+         Kw9WFo2m3hot+mdtrZN5sXDdnOCA7fqwIqK4B0C7OSVwdjcP7CaA+28ecEzjtpoaHi0k
+         +ndKrOtnDpd0IKbUvG/NL5wdV1jvQKcYSXYMKXgWSCysq3xAT7ko5qMIarqav1SzEG79
+         DEXU3ieBWWFrQiYvMZ584rKwxKpW1Tlet9ApLl87jgyrifRMDS95gd5KzLRJKzdtvZ98
+         PTzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VWA/vL4w8IYDC4UQzlk5P3glDWRHL2g05buhT0EW6WI=;
-        b=Z17xm7yaytk0A1YLWLSRUf7s3HrLgNJOaU9kc9AsLYtMoCmNN1aECXevuFya6VwbGa
-         w457yexQ/mtvajWiS0CuOXFbXbo+LMitzkP7xEVe89vats6w3/wNZxod7kn950iScTeo
-         9LaIVegpBhGMVztAIHETBaJDKSGUpJDDm3vo8siMC5bSbdnmbqFS3u+vbGuXud1RzPzD
-         uqwkj8j27RJ02vi/iVY/aIsG8Zu0ZMQH67a9VXJqJZ0gagTy3i0LPSfLt3AhL7SHX1wu
-         aJbrKS5whZVRS7GJGm9836JOI4nI+GpxaR/FJsl9LdV2rYTR8cVgcOzHj6T3p8astKSE
-         0hsQ==
-X-Gm-Message-State: AO0yUKVFByggtH5twh2IHfgPX5XdwB0mghggZ2FBIfLWcFBM1JB1w7It
-        eLmrcyOxuCC/AWQgol9iW1I=
-X-Google-Smtp-Source: AK7set/EtvlI4S7BhNo2mwcW7HVQyk0pv49uK5B7soXXE7GmQGcrX6SldZnEvZDGmG3+gmGEbmyIig==
-X-Received: by 2002:ac2:46fc:0:b0:4d8:7f17:d0e9 with SMTP id q28-20020ac246fc000000b004d87f17d0e9mr1796811lfo.14.1676565514223;
-        Thu, 16 Feb 2023 08:38:34 -0800 (PST)
+        bh=T82iQacn0HrZjSBA8i6g9doGMcTElWG37x9Wz0+zpmY=;
+        b=xZ8j6jT+JDxxxCFGO7UxmiLKUcKSDf9fSZp8Y4q3N3hKyjfQFO2PtDXqigUzQ2u8pE
+         Blx2+fcIgCsm5l/DWigc31Pl+/CUdPLbz1lMGKalNx4huxxWgnL2PJdTCkDRo+IwU8Bw
+         D8up9gzeTBYbN3S4vbos8hF9Pgw1duqpOrS6kvdyn1jT9NItDjOWDFByYx2q3gn9MLWy
+         3jk+yYo55vU47L7MERVBvPOmZlk0XVDDj2lUXTb0BX9r8hnUs73rUyRp2E5FBwZ+1MHo
+         eaOWgus1OZA9W+bI8Bv4fE6IK6xJRvnNrPVjZPiJawkoPfxnSESwouyTAdeQo5SujG5U
+         EIwQ==
+X-Gm-Message-State: AO0yUKUdfre9rlGbAVUDgN4xEMcw/WrQetmZ3ByBiov7NWvthWyUjSHO
+        pYlZE1C5HQTgJZFadapp0bz6fQIo76g=
+X-Google-Smtp-Source: AK7set+OLiXWj5m8hOuNdr1a6EYCHTSTGugv9As2Bk0paD1ZdKhdMHeTU7lEFk1IG9FqPw8RDmvnXg==
+X-Received: by 2002:ac2:4845:0:b0:4cc:a166:e27f with SMTP id 5-20020ac24845000000b004cca166e27fmr1635447lfy.3.1676565703266;
+        Thu, 16 Feb 2023 08:41:43 -0800 (PST)
 Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id l3-20020a2e9083000000b002945a164803sm266878ljg.80.2023.02.16.08.38.33
+        by smtp.gmail.com with ESMTPSA id z5-20020a056512376500b004cc7026d95asm354734lft.259.2023.02.16.08.41.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Feb 2023 08:38:33 -0800 (PST)
-Date:   Thu, 16 Feb 2023 19:38:31 +0300
+        Thu, 16 Feb 2023 08:41:42 -0800 (PST)
+Date:   Thu, 16 Feb 2023 19:41:40 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Cai Huoqing <cai.huoqing@linux.dev>
 Cc:     Sergey.Semin@baikalelectronics.ru,
@@ -62,7 +62,7 @@ Cc:     Sergey.Semin@baikalelectronics.ru,
         linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-pci@vger.kernel.org
 Subject: Re: [PATCH v3 3/4] dmaengine: dw-edma: Add support for native HDMA
-Message-ID: <20230216163831.6lp3ywnz6pacncgg@mobilestation>
+Message-ID: <20230216164140.vvivovdzy2jzthvw@mobilestation>
 References: <20230213132411.65524-1-cai.huoqing@linux.dev>
  <20230213132411.65524-4-cai.huoqing@linux.dev>
 MIME-Version: 1.0
@@ -258,7 +258,6 @@ On Mon, Feb 13, 2023 at 09:24:08PM +0800, Cai Huoqing wrote:
 > +	return FIELD_GET(HDMA_V0_ABORT_INT_MASK, val);
 > +}
 > +
-
 > +static
 > +void dw_hdma_v0_core_done_handle(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir)
 > +{
@@ -310,11 +309,6 @@ On Mon, Feb 13, 2023 at 09:24:08PM +0800, Cai Huoqing wrote:
 > +			dw_edma_abort_interrupt(&dw->chan[pos + off]);
 > +	}
 > +}
-
-Please see my comments to the previous patch in the series regarding
-the done/abort IRQ-handlers and the core_clear_{done,abort}_int
-callbacks usage.
-
 > +
 > +static void dw_hdma_v0_write_ll_data(struct dw_edma_chunk *chunk, int i,
 > +				     u32 control, u32 size, u64 sar, u64 dar)
@@ -437,7 +431,14 @@ callbacks usage.
 > +{
 > +}
 > +
+
 > +static const struct dw_edma_core_ops hdma_core = {
+
+Please use the dw_hdma_v0_core structure instance name to maintain the
+local naming convention.
+
+-Serge(y)
+
 > +	.off = dw_hdma_v0_core_off,
 > +	.ch_count = dw_hdma_v0_core_ch_count,
 > +	.ch_status = dw_hdma_v0_core_ch_status,
@@ -538,15 +539,11 @@ callbacks usage.
 > +		};
 > +	} dar;
 > +
-
 > +	u32 watermark_en;			/* 0x0030 */
 > +	u32	control1;			/* 0x0034 */
 > +	u32	func_num;			/* 0x0038 */
 > +	u32	qos;				/* 0x003c */
 > +	u32	reserved;			/* 0x0040..0x007c */
-
-As Bjorn correctly noted, please fix the indentation.
-
 > +	u32 ch_stat;				/* 0x0080 */
 > +	u32 int_stat;				/* 0x0084 */
 > +	u32 int_setup;				/* 0x0088 */
@@ -572,13 +569,7 @@ As Bjorn correctly noted, please fix the indentation.
 > +			u32 msb;		/* 0x00a4 */
 > +		};
 > +	} msi_abort;
-
 > +	u32	msi_msgdata;			/* 0x00a8 */
-
-ditto
-
--Serge(y)
-
 > +} __packed;
 > +
 > +struct dw_hdma_v0_ch {

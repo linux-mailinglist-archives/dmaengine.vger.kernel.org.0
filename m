@@ -2,119 +2,138 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42A38697E9D
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Feb 2023 15:45:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BA5D698A5F
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Feb 2023 03:09:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229811AbjBOOpD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 15 Feb 2023 09:45:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41640 "EHLO
+        id S229478AbjBPCJU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 15 Feb 2023 21:09:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229806AbjBOOpD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Feb 2023 09:45:03 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79F7E8A5A;
-        Wed, 15 Feb 2023 06:45:02 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ECE0F61C3C;
-        Wed, 15 Feb 2023 14:45:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BC86C433A7;
-        Wed, 15 Feb 2023 14:45:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676472301;
-        bh=J7FR16wSeO0h7U2Rx2QzFOI98aN6QgOwDZqATCeQYVQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lfElhBWLykO/IJQQRODB6ZD2kRjRd9ASIZp9f8lTKR1+9FgfwaFmqe0HnNRHT9Hl3
-         JkgU5v3vEdtLPgjeRRcJq3hv3Km6WJFocxQkgUlojqH7alhgWDMRAap4yyKNgWSlFM
-         VOKpNUIYYpHF2vVio8HrKf+q9cSvm2aoZha9llKLmKv0QphWJ/mxRv0vnCW8R6jklr
-         6/N5X7ZgJLm/dJ5bLJ2/oN/4kh2OUdKUkAp5UrVWyp3FdeUiiDJBhVtRjbFx85GCMO
-         FOoM69qE8ueaGL5qtN2q7B9tqqLreXbtKeazbacUgYNmZfg4npkiMi2Sg8mDYWsOhr
-         e3Fj94sQQv/6w==
-Received: by mail-vk1-f180.google.com with SMTP id i4so5108071vkn.13;
-        Wed, 15 Feb 2023 06:45:01 -0800 (PST)
-X-Gm-Message-State: AO0yUKWRxNVrkYU67FU8fZYkGWztrgBayDtmbx6BUB3/8dDceZjRwexI
-        v6YRg30pQvZI28f9FChM42EBwQg+U2USS8FoNQ==
-X-Google-Smtp-Source: AK7set/kjqpJSwgOPQgeLthfUJMRO50WEjm6M46aPnoKXLrEXKV0KxBlqDn2v26BG08pkp0X6ufGr+PEnWMps4WzT6E=
-X-Received: by 2002:a1f:1b83:0:b0:401:42f3:5657 with SMTP id
- b125-20020a1f1b83000000b0040142f35657mr350241vkb.42.1676472300265; Wed, 15
- Feb 2023 06:45:00 -0800 (PST)
+        with ESMTP id S229606AbjBPCJT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Feb 2023 21:09:19 -0500
+Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [IPv6:2001:41d0:203:375::af])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F07B4113CB
+        for <dmaengine@vger.kernel.org>; Wed, 15 Feb 2023 18:09:12 -0800 (PST)
+Date:   Thu, 16 Feb 2023 10:08:56 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1676513350;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mGZVYqrPsVzRiWIZ8ejwKDqsr3b+Ny3Dw/gLZG651EM=;
+        b=dE0cEMLPCvJC/xxylQ6EoaJ3PzR7jRjojAIMO49F7OWGCatDQOwedZbTw2EXk/s8ICEkoo
+        4sy72JOvyOvxmfyRJoF97G9W52lptaybOT3akVGuishptU4I92IPJMAb2cWrfBh7u7e9Aq
+        ILX3AhI5IsmV2Cn3+6UuBdVkbjlYS3M=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Cai Huoqing <cai.huoqing@linux.dev>
+To:     Sergey.Semin@baikalelectronics.ru, fancer.lancer@gmail.com
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] dmaengine: dw-edma: Add support for native HDMA
+Message-ID: <Y+2QOAsk6qFm56E3@chq-MS-7D45>
+References: <20230213132411.65524-1-cai.huoqing@linux.dev>
 MIME-Version: 1.0
-References: <20230214141053.92731-1-povik+lin@cutebit.org> <167638945429.3790.16067227881981242831.robh@kernel.org>
- <6B75F1A1-E2DE-40D5-AA79-A764C65D8AD2@cutebit.org>
-In-Reply-To: <6B75F1A1-E2DE-40D5-AA79-A764C65D8AD2@cutebit.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 15 Feb 2023 08:44:49 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJTHy3ZGUKk1dv3aD+ToxdmvYrjq1JPjHYt7R7LVVZpGQ@mail.gmail.com>
-Message-ID: <CAL_JsqJTHy3ZGUKk1dv3aD+ToxdmvYrjq1JPjHYt7R7LVVZpGQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] dt-bindings: dma: apple,sio: Add schema
-To:     =?UTF-8?Q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>
-Cc:     Janne Grunau <j@jannau.net>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Hector Martin <marcan@marcan.st>, devicetree@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>, Sven Peter <sven@svenpeter.dev>,
-        asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230213132411.65524-1-cai.huoqing@linux.dev>
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Feb 14, 2023 at 1:18 PM Martin Povi=C5=A1er <povik+lin@cutebit.org>=
- wrote:
->
->
-> > On 14. 2. 2023, at 17:12, Rob Herring <robh@kernel.org> wrote:
-> > On Tue, 14 Feb 2023 15:10:53 +0100, Martin Povi=C5=A1er wrote:
-> >> Describe the SIO coprocessor which serves as pretend DMA controller on
-> >> recent Apple platforms.
-> >>
-> >> Signed-off-by: Martin Povi=C5=A1er <povik+lin@cutebit.org>
-> >> ---
-> >>
-> >> Since the schema mentions a loader preparing the binding appropriately=
-,
-> >> here's a PR with the relevant (WIP) loader code, if anyone wants to lo=
-ok:
-> >> https://github.com/AsahiLinux/m1n1/pull/286
-> >>
-> >> .../devicetree/bindings/dma/apple,sio.yaml    | 129 ++++++++++++++++++
-> >> 1 file changed, 129 insertions(+)
-> >> create mode 100644 Documentation/devicetree/bindings/dma/apple,sio.yam=
-l
-> >>
-> >
-> > My bot found errors running 'make DT_CHECKER_FLAGS=3D-m dt_binding_chec=
-k'
-> > on your patch (DT_CHECKER_FLAGS is new in v5.13):
-> >
-> > yamllint warnings/errors:
-> >
-> > dtschema/dtc warnings/errors:
-> > Documentation/devicetree/bindings/dma/apple,sio.example.dts:24.35-27.11=
-: Warning (node_name_vs_property_name): /example-0/interrupt-controller: no=
-de name and property name conflict
->
-> I saw the warning, but since I had copied that part of the example from
-> apple,admac.yaml I didn=E2=80=99t make much of it. Now that I look at it =
-again,
-> the example in apple,admac doesn=E2=80=99t raise the same warning, how co=
-me?
->
-> This is just a curiosity since we don=E2=80=99t need the aic node in the =
-example
-> anyway (unlike in apple,admac where it=E2=80=99s needed because of empty =
-entries
-> in interrupts-extended).
+On 13 2月 23 21:24:05, Cai Huoqing wrote:
+> From: Cai huoqing <cai.huoqing@linux.dev>
+> 
+> Add support for HDMA NATIVE, as long the IP design has set
+> the compatible register map parameter-HDMA_NATIVE,
+> which allows compatibility for native HDMA register configuration.
+> 
+> The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
+> And the native HDMA registers are different from eDMA,
+> so this patch add support for HDMA NATIVE mode.
+> 
+> HDMA write and read channels operate independently to maximize
+> the performance of the HDMA read and write data transfer over
+> the link When you configure the HDMA with multiple read channels,
+> then it uses a round robin (RR) arbitration scheme to select
+> the next read channel to be serviced.
+> The same applies when you have multiple write channels.
+> 
+> The native HDMA driver also supports a maximum of 16 independent
+> channels (8 write + 8 read), which can run simultaneously.
+> Both SAR (Source Address Register) and DAR (Destination Address Register)
+> are alignmented to byte.dmaengine: dw-edma: Add support for native HDMA
+> 
+> Cai huoqing (4):
+>   dmaengine: dw-edma: Rename dw_edma_core_ops structure to
+>     dw_edma_plat_ops
+>   dmaengine: dw-edma: Create a new dw_edma_core_ops structure to
+>     abstract controller operation
+>   dmaengine: dw-edma: Add support for native HDMA
+>   dmaengine: dw-edma: Add HDMA DebugFS support
+> 
+>   v2->v3:
+>     [1/4]
+>     1.Add more commit log to explain why use dw_edma_plat_ops.
+>     2.Update the structure name in the DW PCIe driver.
+>     [2/4]
+>     3.Use the reverse xmas tree vars definition order.
+>     4.Add edma core ops wrapper.
+>     5.Add dw_edma_done_interrupt() and dw_edma_abort_interrupt()
+>       global methods.
+>     6.Fix some indentation.
+>     7.Fix some typo
+>     8.Make use off dw_edma_core prefix instead of dw_xdma_core_.
+>     [3/4]
+>     9.Remove unnecessary include: dw-edma-v0-regs.h and dw-edma-v0-regs.h
+>     10.HDMA supports the LL descriptors placed on the CPU memory.
+>     [4/4]
+>     11.Split DebugFS to be a separate patch.
+>     12.Refactor HDMA DebugFS like the series in @Bjorn tree.
+> 
+>   v2 link:
+>   https://lore.kernel.org/lkml/20220925173412.u2ez6rbmfc5fupdn@mobilestation/
+Hi Sergey,
 
-'interrupts-extended' is why. If the example just has 'interrupts',
-then a fake parent is constructed. It's pretty hacky, but necessary to
-parse the interrupts later on for validation.
+  Could you please give some comments for this patch v3
 
-Rob
+Thanks,
+Cai
+> 
+>  drivers/dma/dw-edma/Makefile                 |   8 +-
+>  drivers/dma/dw-edma/dw-edma-core.c           |  63 ++--
+>  drivers/dma/dw-edma/dw-edma-core.h           |  92 ++++++
+>  drivers/dma/dw-edma/dw-edma-pcie.c           |   4 +-
+>  drivers/dma/dw-edma/dw-edma-v0-core.c        |  88 ++++-
+>  drivers/dma/dw-edma/dw-edma-v0-core.h        |  14 +-
+>  drivers/dma/dw-edma/dw-hdma-v0-core.c        | 317 +++++++++++++++++++
+>  drivers/dma/dw-edma/dw-hdma-v0-core.h        |  17 +
+>  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c     | 175 ++++++++++
+>  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h     |  22 ++
+>  drivers/dma/dw-edma/dw-hdma-v0-regs.h        | 129 ++++++++
+>  drivers/pci/controller/dwc/pcie-designware.c |   2 +-
+>  include/linux/dma/edma.h                     |   7 +-
+>  13 files changed, 860 insertions(+), 78 deletions(-)
+>  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
+>  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
+>  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
+>  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
+>  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
+> 
+> -- 
+> 2.34.1
+> 

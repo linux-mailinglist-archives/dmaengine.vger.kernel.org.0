@@ -2,174 +2,143 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17D76698F1F
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Feb 2023 09:56:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A3CA698F53
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Feb 2023 10:06:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230003AbjBPI4U (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Feb 2023 03:56:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42822 "EHLO
+        id S229956AbjBPJGr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 16 Feb 2023 04:06:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230001AbjBPI4N (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Feb 2023 03:56:13 -0500
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE7333B654;
-        Thu, 16 Feb 2023 00:56:09 -0800 (PST)
-Received: by mail-lj1-x235.google.com with SMTP id a9so1163237ljr.13;
-        Thu, 16 Feb 2023 00:56:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=NfCtVHnWntV5JSpdIXfsBMSNM2BpIltYXG1KJiuplvw=;
-        b=fdZ//BncOC6HnkEpA28mgzeARL4fjsh8algAznLlQ8cuGKgAbFquRQVdU1wBVWEJHN
-         TDvUuFDGVAARnRe4CpLnnxp52PIheCz5NWljYGpATn/7g61UbycK2/xPwrzKn4ncYfKP
-         5zisptU5SLv7GC7amgsEUfne0OjAN+mxT0TkVzbWNCJSj51vhKj4MAwm6XLYqLyEgIFa
-         y9inwP6stMPuu7JbVQfQawh0X7aGb/SaNWtyuMqIwmmTk3Qveqmz++AnfSbnSuALn4UI
-         /mFsnIezJcqwaT2liBHFesrX3XFjKp3P5shYSyqaAlzl2nqvB+/cYGHC0s7arQOWXk/+
-         +D2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NfCtVHnWntV5JSpdIXfsBMSNM2BpIltYXG1KJiuplvw=;
-        b=ZedaCE7j6pYDqV10DLlixDNhDOFE7/ZegdWASwLVeby1Hz/IZdn67TsdON7SFzRV0S
-         LzY7czH6QwRjpPmccxQLZNZsI/t0Zx7s2YdNZI/+1Rh6UiHVCE7hg50KTn7nosFjSnV2
-         1dNDAqhY4O71GWjd9/AhpKrjYO+Ct9EVo6km1crzUHTrscB3+U4Sc9nsF01nWq+eYH3i
-         xSCY0smxkvQo2Sz+iCHCZ/Es9ceSdV9KYQsLOqBPKP6vUSz8pHeE4c2BMP0NuZN27LRr
-         nq1RhflDkVxcYj3vzdAdHhU+3B4u1v2MXbugXcXudJNhR8L1Sjdhx1RswFEbVdeUppDX
-         rpDQ==
-X-Gm-Message-State: AO0yUKVPvYvwHfB2X92ozGHK0rAe/u7GLvngLiIPvxHHv0boQmvcsoZ5
-        42sMck+qrnpy16CBFZEztp0=
-X-Google-Smtp-Source: AK7set8WsrdXQik9YVzkdtfAe50G7asMHPmerIr8yMkZO+O5tX85TD6TrmUD1Leppppa0gML3MFRRQ==
-X-Received: by 2002:a2e:9949:0:b0:293:5007:75b7 with SMTP id r9-20020a2e9949000000b00293500775b7mr1580608ljj.23.1676537768157;
-        Thu, 16 Feb 2023 00:56:08 -0800 (PST)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id m13-20020a2e97cd000000b002936022605dsm104398ljj.23.2023.02.16.00.56.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Feb 2023 00:56:07 -0800 (PST)
-Date:   Thu, 16 Feb 2023 11:56:05 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Cai Huoqing <cai.huoqing@linux.dev>
-Cc:     Sergey.Semin@baikalelectronics.ru,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 0/4] dmaengine: dw-edma: Add support for native HDMA
-Message-ID: <20230216085605.smffk2b3xig34eqr@mobilestation>
-References: <20230213132411.65524-1-cai.huoqing@linux.dev>
- <Y+2QOAsk6qFm56E3@chq-MS-7D45>
+        with ESMTP id S229914AbjBPJGq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Feb 2023 04:06:46 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A30B41097;
+        Thu, 16 Feb 2023 01:06:41 -0800 (PST)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31G7kTpT012454;
+        Thu, 16 Feb 2023 09:06:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=oDZWguDzkkgUlhjTXniQgW8NbcX0l1LLI9MK2woh0/c=;
+ b=OfTlQqnfR1j1VbZx81MZOPaYaTTHadETCEakTHA9nTCaDpB3fjAkVgY5bC0izpVGq0BB
+ 0TFwNP2unVsoIGUz4yZe8QWF9pkodruFYaTVgr4kBvY0AEcVsknXsJ/bm/ZTUzuCTl9r
+ vMvoYZOyF2kgHhF3g3FEsd6GKFvoKeyOVSFFdtFGJY0bP5b2QYCbrFQ0AVsjE0mkZLa8
+ R5HvpbZQuAqDIKJkzCZkcaz8unYHeenJLpu9iNzwtKLCQl7q5ffbSY5dj/VwEvXRqYcK
+ ABhEyMgdz1BsSKZnUnw/USRcSAei9yCoAfnoKnfnt4MLWL9sJeVd2fw6Ezxvg5gU6/pL 8Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nsf973h6c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Feb 2023 09:06:34 +0000
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 31G8pZN6002683;
+        Thu, 16 Feb 2023 09:06:33 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nsf973h5f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Feb 2023 09:06:33 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 31G4JYkl010684;
+        Thu, 16 Feb 2023 09:06:32 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+        by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3np2n6xe4t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Feb 2023 09:06:31 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 31G96THf48300430
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Feb 2023 09:06:29 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 62F4F20049;
+        Thu, 16 Feb 2023 09:06:29 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B58E820043;
+        Thu, 16 Feb 2023 09:06:28 +0000 (GMT)
+Received: from [9.179.9.244] (unknown [9.179.9.244])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Thu, 16 Feb 2023 09:06:28 +0000 (GMT)
+Message-ID: <f479ae76754c5e3b1a9d435e6d1435ea9d293e54.camel@linux.ibm.com>
+Subject: Re: [PATCH 2/2] dmaengine: make QCOM_HIDMA depend on HAS_IOMEM
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linux-s390@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dmaengine@vger.kernel.org
+Date:   Thu, 16 Feb 2023 10:06:28 +0100
+In-Reply-To: <20230216073403.451455-2-bhe@redhat.com>
+References: <20230216073403.451455-1-bhe@redhat.com>
+         <20230216073403.451455-2-bhe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.46.3 (3.46.3-1.fc37) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: jft_d8iaQoMDqmwl8QUaAms192uLi51l
+X-Proofpoint-GUID: ufE62dfTdphCQlr0y9mr8FaQKnSSoo71
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y+2QOAsk6qFm56E3@chq-MS-7D45>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-16_06,2023-02-15_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 malwarescore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ adultscore=0 mlxscore=0 impostorscore=0 clxscore=1011 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302160075
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Cai
+On Thu, 2023-02-16 at 15:34 +0800, Baoquan He wrote:
+> On s390 systems (aka mainframes), it has classic channel devices for
+> networking and permanent storage that are currently even more common
+> than PCI devices. Hence it could have a fully functional s390 kernel
+> with CONFIG_PCI=3Dn, then the relevant iomem mapping functions
+> [including ioremap(), devm_ioremap(), etc.] are not available.
+>=20
+> Here let QCOM_HIDMA depend on HAS_IOMEM so that it won't be built to
+> cause below compiling error if PCI is unset.
+>=20
+> --------------------------------------------------------
+> ld: drivers/dma/qcom/hidma.o: in function `hidma_probe':
+> hidma.c:(.text+0x4b46): undefined reference to `devm_ioremap_resource'
+> ld: hidma.c:(.text+0x4b9e): undefined reference to `devm_ioremap_resource'
+> make[1]: *** [scripts/Makefile.vmlinux:35: vmlinux] Error 1
+> make: *** [Makefile:1264: vmlinux] Error 2
+>=20
+> Link: https://lore.kernel.org/all/Y0TcaZD4nB1w+mAQ@MiWiFi-R3L-srv/T/#u
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <andersson@kernel.org>
+> Cc: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: dmaengine@vger.kernel.org
+> ---
+>  drivers/dma/qcom/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/dma/qcom/Kconfig b/drivers/dma/qcom/Kconfig
+> index 3f926a653bd8..ace75d7b835a 100644
+> --- a/drivers/dma/qcom/Kconfig
+> +++ b/drivers/dma/qcom/Kconfig
+> @@ -45,6 +45,7 @@ config QCOM_HIDMA_MGMT
+>=20=20
+>  config QCOM_HIDMA
+>  	tristate "Qualcomm Technologies HIDMA Channel support"
+> +	depends on HAS_IOMEM
+>  	select DMA_ENGINE
+>  	help
+>  	  Enable support for the Qualcomm Technologies HIDMA controller.
 
-On Thu, Feb 16, 2023 at 10:08:56AM +0800, Cai Huoqing wrote:
-> On 13 2月 23 21:24:05, Cai Huoqing wrote:
-> > From: Cai huoqing <cai.huoqing@linux.dev>
-> > 
-> > Add support for HDMA NATIVE, as long the IP design has set
-> > the compatible register map parameter-HDMA_NATIVE,
-> > which allows compatibility for native HDMA register configuration.
-> > 
-> > The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
-> > And the native HDMA registers are different from eDMA,
-> > so this patch add support for HDMA NATIVE mode.
-> > 
-> > HDMA write and read channels operate independently to maximize
-> > the performance of the HDMA read and write data transfer over
-> > the link When you configure the HDMA with multiple read channels,
-> > then it uses a round robin (RR) arbitration scheme to select
-> > the next read channel to be serviced.
-> > The same applies when you have multiple write channels.
-> > 
-> > The native HDMA driver also supports a maximum of 16 independent
-> > channels (8 write + 8 read), which can run simultaneously.
-> > Both SAR (Source Address Register) and DAR (Destination Address Register)
-> > are alignmented to byte.dmaengine: dw-edma: Add support for native HDMA
-> > 
-> > Cai huoqing (4):
-> >   dmaengine: dw-edma: Rename dw_edma_core_ops structure to
-> >     dw_edma_plat_ops
-> >   dmaengine: dw-edma: Create a new dw_edma_core_ops structure to
-> >     abstract controller operation
-> >   dmaengine: dw-edma: Add support for native HDMA
-> >   dmaengine: dw-edma: Add HDMA DebugFS support
-> > 
-> >   v2->v3:
-> >     [1/4]
-> >     1.Add more commit log to explain why use dw_edma_plat_ops.
-> >     2.Update the structure name in the DW PCIe driver.
-> >     [2/4]
-> >     3.Use the reverse xmas tree vars definition order.
-> >     4.Add edma core ops wrapper.
-> >     5.Add dw_edma_done_interrupt() and dw_edma_abort_interrupt()
-> >       global methods.
-> >     6.Fix some indentation.
-> >     7.Fix some typo
-> >     8.Make use off dw_edma_core prefix instead of dw_xdma_core_.
-> >     [3/4]
-> >     9.Remove unnecessary include: dw-edma-v0-regs.h and dw-edma-v0-regs.h
-> >     10.HDMA supports the LL descriptors placed on the CPU memory.
-> >     [4/4]
-> >     11.Split DebugFS to be a separate patch.
-> >     12.Refactor HDMA DebugFS like the series in @Bjorn tree.
-> > 
-> >   v2 link:
-> >   https://lore.kernel.org/lkml/20220925173412.u2ez6rbmfc5fupdn@mobilestation/
+Thanks for the patch!
 
-> Hi Sergey,
-> 
->   Could you please give some comments for this patch v3
+Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com?
 
-The series has landed in my inbox. I'll give you some comments shortly
-today or tomorrow.
-
--Serge(y)
-
-> 
-> Thanks,
-> Cai
-> > 
-> >  drivers/dma/dw-edma/Makefile                 |   8 +-
-> >  drivers/dma/dw-edma/dw-edma-core.c           |  63 ++--
-> >  drivers/dma/dw-edma/dw-edma-core.h           |  92 ++++++
-> >  drivers/dma/dw-edma/dw-edma-pcie.c           |   4 +-
-> >  drivers/dma/dw-edma/dw-edma-v0-core.c        |  88 ++++-
-> >  drivers/dma/dw-edma/dw-edma-v0-core.h        |  14 +-
-> >  drivers/dma/dw-edma/dw-hdma-v0-core.c        | 317 +++++++++++++++++++
-> >  drivers/dma/dw-edma/dw-hdma-v0-core.h        |  17 +
-> >  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c     | 175 ++++++++++
-> >  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h     |  22 ++
-> >  drivers/dma/dw-edma/dw-hdma-v0-regs.h        | 129 ++++++++
-> >  drivers/pci/controller/dwc/pcie-designware.c |   2 +-
-> >  include/linux/dma/edma.h                     |   7 +-
-> >  13 files changed, 860 insertions(+), 78 deletions(-)
-> >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
-> >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
-> >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-> >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-> >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> > 
-> > -- 
-> > 2.34.1
-> > 

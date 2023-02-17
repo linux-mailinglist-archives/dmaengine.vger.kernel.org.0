@@ -2,67 +2,142 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F37269A784
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Feb 2023 09:54:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B15E69A84E
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Feb 2023 10:40:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbjBQIyO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 17 Feb 2023 03:54:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57664 "EHLO
+        id S230107AbjBQJkM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 17 Feb 2023 04:40:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbjBQIyO (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Feb 2023 03:54:14 -0500
-X-Greylist: delayed 487 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 17 Feb 2023 00:54:13 PST
-Received: from mail.paretdee.com (mail.paretdee.com [141.95.17.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FAAE4233
-        for <dmaengine@vger.kernel.org>; Fri, 17 Feb 2023 00:54:12 -0800 (PST)
-Received: by mail.paretdee.com (Postfix, from userid 1002)
-        id B871EA25BF; Fri, 17 Feb 2023 08:46:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=paretdee.com; s=mail;
-        t=1676623563; bh=81y7GKW1qfpmZraEf77YtkUdBRVrEXx1Dfams4657E8=;
-        h=Date:From:To:Subject:From;
-        b=ZkNio5ZBxMek2CQ6fVDB4n/z9ECkNFLaFlvGpt07MbLnN9QbXqw/fB7hiBUy+V99b
-         /PwQbLfxbEZhDYWDoUlf4mzdepQwhVEq1DlptJ2Tv+0ZQqGS8WDHdOqRQqPBbKKrAo
-         VCFGVcMb0ACU12rnnF8OeGoxLQGEgeolkDojdC9YhfzyRB0T/BTnBb4uSeaIrLHoje
-         DLPSrxCYu+/xUe025/3Uv2vC13/jrmcSpNcwqI3yR9f/W1j2HYEsXYCrT+DtuEgA7C
-         ushMIL2Q4TPCHBTcql5pMQIyIUNQhf5zFxpQw+orFT7OIvV4XVdqANReu9sp646qvx
-         FeziuLOF2AUKQ==
-Received: by mail.paretdee.com for <dmaengine@vger.kernel.org>; Fri, 17 Feb 2023 08:46:01 GMT
-Message-ID: <20230217074500-0.1.4x.aeqb.0.1bz6dd1rlu@paretdee.com>
-Date:   Fri, 17 Feb 2023 08:46:01 GMT
-From:   "Zbynek Spacek" <zbynek.spacek@paretdee.com>
-To:     <dmaengine@vger.kernel.org>
-Subject: Silicone rubber - vulcanization
-X-Mailer: mail.paretdee.com
+        with ESMTP id S229790AbjBQJkK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Feb 2023 04:40:10 -0500
+Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E358362FDC;
+        Fri, 17 Feb 2023 01:40:00 -0800 (PST)
+Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 0AB62E0EAA;
+        Fri, 17 Feb 2023 12:39:59 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        baikalelectronics.ru; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:from:from:message-id
+        :mime-version:reply-to:subject:subject:to:to; s=post; bh=s4GbBTn
+        mS7KrQ6aqqnSvUqvcmPEcQprtwoDeUBF0LW8=; b=Sfm6jUMN3ZM8vSCUU3xAYzO
+        RdpbO0KpLb3sao8ZZ+8rGH+ZCZKbNfWRnmXmTd1Pqk4YZ+N99oFNbQsCfieP9bSf
+        UdIsupNm9T1lMOIPOP6Xhqm45XBuR6wbEjgZv2cLHvRFeSxi4uNxR3y5rY/1zeSu
+        VuR351U3Gx18abMRJYSY=
+Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id D65ABE0E6A;
+        Fri, 17 Feb 2023 12:39:58 +0300 (MSK)
+Received: from localhost (10.8.30.14) by mail (192.168.51.25) with Microsoft
+ SMTP Server (TLS) id 15.0.1395.4; Fri, 17 Feb 2023 12:39:58 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 00/11] PCI: dwc: Relatively simple fixes and cleanups
+Date:   Fri, 17 Feb 2023 12:39:45 +0300
+Message-ID: <20230217093956.27126-1-Sergey.Semin@baikalelectronics.ru>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FROM_FMBLA_NEWDOM28,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.8.30.14]
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Good morning,
+It turns out the recent DW PCIe-related patchset was merged in with
+several relatively trivial issues left unsettled (noted by Bjorn and
+Manivannan). All of these lefovers have been fixed in this patchset.
+Namely the series starts with two bug-fixes. The first one concerns the
+improper link-mode initialization in case if the CDM-check is enabled. The
+second unfortunate mistake I made in the IP-core version type helper. In
+particular instead of testing the IP-core version type the macro function
+referred to the just IP-core version which obviously wasn't what I
+intended.
 
-a few months ago, we were contacted by a company from your industry, wher=
-e too high costs were generated by the purchase of silicone rubbers and s=
-ilicone mixtures with specific properties.
+Afterwards two @Mani-noted fixes follow. Firstly the dma-ranges related warning
+message is fixed to start with "DMA-ranges" word instead of "Dma-ranges".
+Secondly the Baikal-T1 PCIe Host driver is converted to perform the
+asynchronous probe type which saved us of about 15% of bootup time if no any
+PCIe peripheral device attached to the port.
 
-We offered them a wide range of HTV silicone rubbers with technical prope=
-rties and liquid silicone rubber (LSR), as well as dyes and stabilizers. =
-Competitive conditions made it possible to flexibly adjust to their needs=
- and type of production.
+Then the patchset contains the Baikal-T1 PCIe driver fix. The
+corresponding patch removes the false error message printed during the
+controller probe procedure. I accidentally added the unconditional
+dev_err_probe() method invocation. It was obviously wrong.
 
-Now the purchase and delivery of rubber runs smoothly, the client has gai=
-ned a significant increase in savings in relation to the planned budget a=
-t the level of several percent per year.
+Then two trivial cleanups are introduced. The first one concerns the
+duplicated fast-link-mode flag unsetting. The second one implies
+dropping a redundant empty line from the dw_pcie_link_set_max_speed()
+function.
 
-Would you like to check what solutions we can provide you?
+The series continues with a patch inspired by the last @Bjorn note
+regarding the generic resources request interface. As @Bjorn correctly
+said it would be nice to have the new interface used wider in the DW PCIe
+subsystem. Aside with the Baikal-T1 PCIe Host driver the Toshiba Visconti
+PCIe driver can be easily converted to using the generic clock names.
+That's what is done in the noted patch.
+
+The patchset is closed with a series of MAINTAINERS-list related patches.
+Firstly after getting the DW PCIe RP/EP DT-schemas refactored I forgot to
+update the MAINTAINER-list with the new files added in the framework of
+that procedure. All the snps,dw-pcie* schemas shall be maintained by the
+DW PCIe core driver maintainers. Secondly seeing how long it took for my
+patchsets to review and not having any comments from the original driver
+maintainers I'd suggest to add myself as the reviewer to the DW PCIe and
+eDMA drivers. Thus hopefully the new updates review process will be
+performed with much less latencies. For the same reason I would also like
+to suggest to add @Manivannan as the DW PCIe/eDMA drivers maintainer if
+he isn't against that idea. What do you think about the last suggestion?
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: linux-pci@vger.kernel.org
+Cc: dmaengine@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (11):
+  PCI: dwc: Fix port link CSR improper init if CDM check enabled
+  PCI: dwc: Fix erroneous version type test helper
+  PCI: dwc: Fix inbound iATU entries out-of-bounds warning message
+  PCI: bt1: Enable async probe type
+  PCI: bt1: Fix printing false error message
+  PCI: dwc: Drop duplicated fast-link-mode flag unsetting
+  PCI: dwc: Drop empty line from dw_pcie_link_set_max_speed()
+  PCI: visconti: Convert to using generic resources getter
+  MAINTAINERS: Add all generic DW PCIe RP/EP DT-schemas
+  MAINTAINERS: Add myself as the DW PCIe core reviewer
+  MAINTAINERS: Add myself as the DW eDMA driver reviewer
+
+ MAINTAINERS                                   |  5 ++-
+ drivers/pci/controller/dwc/pcie-bt1.c         |  5 ++-
+ .../pci/controller/dwc/pcie-designware-host.c |  2 +-
+ drivers/pci/controller/dwc/pcie-designware.c  |  3 +-
+ drivers/pci/controller/dwc/pcie-designware.h  |  7 +++-
+ drivers/pci/controller/dwc/pcie-visconti.c    | 37 +++++++++----------
+ 6 files changed, 31 insertions(+), 28 deletions(-)
+
+-- 
+2.39.0
 
 
-Best regards
-Zbynek Spacek

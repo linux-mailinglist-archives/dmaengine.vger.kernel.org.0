@@ -2,34 +2,34 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD36D69A854
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Feb 2023 10:40:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A7C969A856
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Feb 2023 10:40:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230108AbjBQJkN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 17 Feb 2023 04:40:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34498 "EHLO
+        id S230122AbjBQJkO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 17 Feb 2023 04:40:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229839AbjBQJkK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Feb 2023 04:40:10 -0500
+        with ESMTP id S230097AbjBQJkM (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Feb 2023 04:40:12 -0500
 Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6DDE95ECBB;
-        Fri, 17 Feb 2023 01:40:05 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4A15162FC4;
+        Fri, 17 Feb 2023 01:40:10 -0800 (PST)
 Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id 91613E0EB0;
-        Fri, 17 Feb 2023 12:40:04 +0300 (MSK)
+        by post.baikalelectronics.com (Proxmox) with ESMTP id EF648E0EB1;
+        Fri, 17 Feb 2023 12:40:05 +0300 (MSK)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         baikalelectronics.ru; h=cc:cc:content-transfer-encoding
         :content-type:content-type:date:from:from:in-reply-to:message-id
         :mime-version:references:reply-to:subject:subject:to:to; s=post;
-         bh=89Ho1QIRcZKfX5soZrCE2EzO1YSV3CvfzfRXmtNkSVI=; b=DmZKi+izA4wM
-        ZlfiOENvY/BchS7+ZKZ1J/EcKu+MnRlCC/0WK1dVp0CXSQYgDMZk7+EXjsrGQE64
-        xeJEWpR/hSHbn+wyTyWgOcDMg9NGAr6mU2VNxAxJC0R4dVTuEK0A7ZqH8VItZlBF
-        kA4sqb7SHiC4bcqtBnJSHGI3ClNOAos=
+         bh=h8ZIQkAkmsk8Sq+0FVklTiFjRYhjzEGYwZkUfKAAjwc=; b=vbTyxYCznMEB
+        cw21xpv2Urs2d6rAuR2y7JuuQUk8+3kWPk2qQ05Oe6l++GhjC+T8Ixj3be0d9cDz
+        qoXq0w/Kk52BL4jcpO8Zphq5B3WNV537xTBUeIEKRX9dMYVpo71oeaQ0WioGHY7J
+        Cmc0lXQO3UGYpsLWgOMdvx0PQu8lIgE=
 Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id 7AEFFE0E6A;
-        Fri, 17 Feb 2023 12:40:04 +0300 (MSK)
+        by post.baikalelectronics.com (Proxmox) with ESMTP id D8AD1E0E6A;
+        Fri, 17 Feb 2023 12:40:05 +0300 (MSK)
 Received: from localhost (10.8.30.14) by mail (192.168.51.25) with Microsoft
- SMTP Server (TLS) id 15.0.1395.4; Fri, 17 Feb 2023 12:40:04 +0300
+ SMTP Server (TLS) id 15.0.1395.4; Fri, 17 Feb 2023 12:40:05 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -48,9 +48,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH 04/11] PCI: bt1: Enable async probe type
-Date:   Fri, 17 Feb 2023 12:39:49 +0300
-Message-ID: <20230217093956.27126-5-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH 05/11] PCI: bt1: Fix printing false error message
+Date:   Fri, 17 Feb 2023 12:39:50 +0300
+Message-ID: <20230217093956.27126-6-Sergey.Semin@baikalelectronics.ru>
 X-Mailer: git-send-email 2.39.0
 In-Reply-To: <20230217093956.27126-1-Sergey.Semin@baikalelectronics.ru>
 References: <20230217093956.27126-1-Sergey.Semin@baikalelectronics.ru>
@@ -68,30 +68,33 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-It's safe to enable the asyncronous probe type since the PCIe peripheral
-devices probing order isn't essential for booting the system. Moreover
-enabling that feature saves 0.5 seconds of bootup time if no any device
-attached to the PCIe root port. It's a significant performance gain seeing
-the total bootup time takes about 3 seconds.
+The dev_err_probe() method is supposed to be invoked only if any error is
+happened. It was definitely wrong to call it unconditionally. Due to that
+the DWC PCIe host initialization error-message is printed all the time the
+Baikal-T1 PCIe controller is probed even if no error actually happened.
 
-Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Fixes: ba6ed462dcf4 ("PCI: dwc: Add Baikal-T1 PCIe controller support")
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 ---
- drivers/pci/controller/dwc/pcie-bt1.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/dwc/pcie-bt1.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-bt1.c b/drivers/pci/controller/dwc/pcie-bt1.c
-index 3346770e6654..036a22886d17 100644
+index 036a22886d17..055ed6ae321f 100644
 --- a/drivers/pci/controller/dwc/pcie-bt1.c
 +++ b/drivers/pci/controller/dwc/pcie-bt1.c
-@@ -634,6 +634,7 @@ static struct platform_driver bt1_pcie_driver = {
- 	.driver = {
- 		.name	= "bt1-pcie",
- 		.of_match_table = bt1_pcie_of_match,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 	},
- };
- module_platform_driver(bt1_pcie_driver);
+@@ -593,8 +593,10 @@ static int bt1_pcie_add_port(struct bt1_pcie *btpci)
+ 	dw_pcie_cap_set(&btpci->dw, REQ_RES);
+ 
+ 	ret = dw_pcie_host_init(&btpci->dw.pp);
++	if (ret)
++		dev_err_probe(dev, ret, "Failed to initialize DWC PCIe host\n");
+ 
+-	return dev_err_probe(dev, ret, "Failed to initialize DWC PCIe host\n");
++	return ret;
+ }
+ 
+ static void bt1_pcie_del_port(struct bt1_pcie *btpci)
 -- 
 2.39.0
 

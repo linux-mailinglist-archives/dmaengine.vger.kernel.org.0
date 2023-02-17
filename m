@@ -2,98 +2,150 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 24B2969ADD4
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Feb 2023 15:20:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 897DC69AE18
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Feb 2023 15:30:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229570AbjBQOUz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 17 Feb 2023 09:20:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48430 "EHLO
+        id S229687AbjBQOaq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 17 Feb 2023 09:30:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229702AbjBQOUy (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Feb 2023 09:20:54 -0500
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 656914224
-        for <dmaengine@vger.kernel.org>; Fri, 17 Feb 2023 06:20:52 -0800 (PST)
-Received: by mail-ed1-x529.google.com with SMTP id i28so4344889eda.8
-        for <dmaengine@vger.kernel.org>; Fri, 17 Feb 2023 06:20:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DepS95Xiv6tzBVf9W0DYPpboAHnjdejp3hM9TEZ9nSc=;
-        b=Yp2ODLUktl1oQf6nksGQtZHVM8M5TW/tSP4Ywbb/s9ExrHvtB5Hb52c5I4gmsNRf7Z
-         e5IZaQdDxc08Gai6InENBwbflRS5VqZLnuiEXDzvTGyg0vPfSqUEHg7ObsHuJVrlaKIB
-         roiJvsk3GiuBxXfK7g9c2EGSPco1aWl1bqkkSK4k3iY7PVWkP3B2LkNuA0QbtKz2BJNz
-         OwSaIWQ/5Zv0JB1O2F77QiLiGAdMnS6sD7iyIMsCd7CSa9Jv+nPzE0NreulSBacCPVCL
-         AzjfSWDq4xOgtNFbVfKjqVoQYUCFoRqPX6R6LoABF9tG1HnAcPIG8CxCRvgxvlQuAyi8
-         mFtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DepS95Xiv6tzBVf9W0DYPpboAHnjdejp3hM9TEZ9nSc=;
-        b=QQ6s7x1UV2r4GEqdcixE/20x5DQEc6q0aZ6zUkq8Vm5sFD+eyVCvpuvtFDxD1m5FtO
-         sJBGhhXIDzyEIi6YeY9UBXqGCHMJjkZiQuGS1gkPGXFX6MU0Lo0OD/0ZlkJaVRX6VNZu
-         NFx79t+M5T+/Gxp116kjfn/lvEWA6fUOyCQDHGwCouQ4eruJuKOZfOTdZT69ZzakQHr3
-         NC71b9vKhru2ZlFBGy4Qdz8ZtXYlZFtZJ+p65CV3P3mnbnbJ6pDuXaVd+OUHAtnt+DBD
-         ONuerthtfBgVQtI03+QzyOSL9xhCQMe+t1001Xg705VPfQeLfsydPtLbhcaoRbxb8FOb
-         BIZA==
-X-Gm-Message-State: AO0yUKUn+svEB3zZwxjN2NM4L4n2UuiAInJq5ld0J9FXkLOHqZblijNy
-        ngfrL3fI2lRKd7nQuQKEwbzZJw==
-X-Google-Smtp-Source: AK7set9rX7c55oN2r+fSDrfkxl+GHz0jcsU7INVi4Un1Ho2Dh46EQcbo0Bir57Bi89khR4O46oJc+Q==
-X-Received: by 2002:a17:907:6b8a:b0:879:43d5:3832 with SMTP id rg10-20020a1709076b8a00b0087943d53832mr5075230ejc.14.1676643650875;
-        Fri, 17 Feb 2023 06:20:50 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id t1-20020a17090616c100b008b13a1abadasm2162597ejd.75.2023.02.17.06.20.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Feb 2023 06:20:50 -0800 (PST)
-Message-ID: <19c80f85-a1c5-3897-b592-6e9cd0579657@linaro.org>
-Date:   Fri, 17 Feb 2023 15:20:48 +0100
+        with ESMTP id S229784AbjBQOap (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Feb 2023 09:30:45 -0500
+X-Greylist: delayed 451 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 17 Feb 2023 06:30:43 PST
+Received: from smtp.smtpout.orange.fr (smtp-22.smtpout.orange.fr [80.12.242.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 944DC5ECAA
+        for <dmaengine@vger.kernel.org>; Fri, 17 Feb 2023 06:30:43 -0800 (PST)
+Received: from pop-os.home ([86.243.2.178])
+        by smtp.orange.fr with ESMTPA
+        id T1dgpDEZkPPaiT1dhp5Tkn; Fri, 17 Feb 2023 15:23:08 +0100
+X-ME-Helo: pop-os.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 17 Feb 2023 15:23:08 +0100
+X-ME-IP: 86.243.2.178
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH] dmaengine: Reorder fields in 'struct dma_slave_config'
+Date:   Fri, 17 Feb 2023 15:23:00 +0100
+Message-Id: <7ea34ff257633d9a1eeac77dd00616fb24429c4f.1676643752.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH 22/24] kbuild, dmaengine: s3c24xx: remove MODULE_LICENSE
- in non-modules
-To:     Nick Alcock <nick.alcock@oracle.com>, mcgrof@kernel.org
-Cc:     linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, dmaengine@vger.kernel.org
-References: <20230217141059.392471-1-nick.alcock@oracle.com>
- <20230217141059.392471-23-nick.alcock@oracle.com>
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230217141059.392471-23-nick.alcock@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 17/02/2023 15:10, Nick Alcock wrote:
-> Since commit 8b41fc4454e ("kbuild: create modules.builtin without
-> Makefile.modbuiltin or tristate.conf"), MODULE_LICENSE declarations
-> are used to identify modules. As a consequence, uses of the macro
-> in non-modules will cause modprobe to misidentify their containing
-> object file as a module when it is not (false positives), and modprobe
-> might succeed rather than failing with a suitable error message.
-> 
-> So remove it in the files in this commit, none of which can be built as
-> modules.
+Group some variables based on their sizes to reduce hole and avoid padding.
+On x86_64, this shrinks the size of 'struct dma_slave_config'
+from 72 to 64 bytes.
 
-I think you need to base your tree-wide patches on next. The driver was
-removed. Please drop the patch.
+This should save a few bytes of memory and a few cycles.
 
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Using pahole
 
-Best regards,
-Krzysztof
+Before:
+======
+struct dma_slave_config {
+	enum dma_transfer_direction direction;           /*     0     4 */
+
+	/* XXX 4 bytes hole, try to pack */
+
+	phys_addr_t                src_addr;             /*     8     8 */
+	phys_addr_t                dst_addr;             /*    16     8 */
+	enum dma_slave_buswidth    src_addr_width;       /*    24     4 */
+	enum dma_slave_buswidth    dst_addr_width;       /*    28     4 */
+	u32                        src_maxburst;         /*    32     4 */
+	u32                        dst_maxburst;         /*    36     4 */
+	u32                        src_port_window_size; /*    40     4 */
+	u32                        dst_port_window_size; /*    44     4 */
+	bool                       device_fc;            /*    48     1 */
+
+	/* XXX 7 bytes hole, try to pack */
+
+	void *                     peripheral_config;    /*    56     8 */
+	/* --- cacheline 1 boundary (64 bytes) --- */
+	size_t                     peripheral_size;      /*    64     8 */
+
+	/* size: 72, cachelines: 2, members: 12 */
+	/* sum members: 61, holes: 2, sum holes: 11 */
+	/* last cacheline: 8 bytes */
+};
+
+After:
+=====
+struct dma_slave_config {
+	enum dma_transfer_direction direction;           /*     0     4 */
+	bool                       device_fc;            /*     4     1 */
+
+	/* XXX 3 bytes hole, try to pack */
+
+	phys_addr_t                src_addr;             /*     8     8 */
+	phys_addr_t                dst_addr;             /*    16     8 */
+	enum dma_slave_buswidth    src_addr_width;       /*    24     4 */
+	enum dma_slave_buswidth    dst_addr_width;       /*    28     4 */
+	u32                        src_maxburst;         /*    32     4 */
+	u32                        dst_maxburst;         /*    36     4 */
+	u32                        src_port_window_size; /*    40     4 */
+	u32                        dst_port_window_size; /*    44     4 */
+	void *                     peripheral_config;    /*    48     8 */
+	size_t                     peripheral_size;      /*    56     8 */
+
+	/* size: 64, cachelines: 1, members: 12 */
+	/* sum members: 61, holes: 1, sum holes: 3 */
+};
+---
+ include/linux/dmaengine.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index c3656e590213..61e1d1da4446 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -390,6 +390,9 @@ enum dma_slave_buswidth {
+  * legal values. DEPRECATED, drivers should use the direction argument
+  * to the device_prep_slave_sg and device_prep_dma_cyclic functions or
+  * the dir field in the dma_interleaved_template structure.
++ * @device_fc: Flow Controller Settings. Only valid for slave channels. Fill
++ * with 'true' if peripheral should be flow controller. Direction will be
++ * selected at Runtime.
+  * @src_addr: this is the physical address where DMA slave data
+  * should be read (RX), if the source is memory this argument is
+  * ignored.
+@@ -415,9 +418,6 @@ enum dma_slave_buswidth {
+  * loops in this area in order to transfer the data.
+  * @dst_port_window_size: same as src_port_window_size but for the destination
+  * port.
+- * @device_fc: Flow Controller Settings. Only valid for slave channels. Fill
+- * with 'true' if peripheral should be flow controller. Direction will be
+- * selected at Runtime.
+  * @peripheral_config: peripheral configuration for programming peripheral
+  * for dmaengine transfer
+  * @peripheral_size: peripheral configuration buffer size
+@@ -436,6 +436,7 @@ enum dma_slave_buswidth {
+  */
+ struct dma_slave_config {
+ 	enum dma_transfer_direction direction;
++	bool device_fc;
+ 	phys_addr_t src_addr;
+ 	phys_addr_t dst_addr;
+ 	enum dma_slave_buswidth src_addr_width;
+@@ -444,7 +445,6 @@ struct dma_slave_config {
+ 	u32 dst_maxburst;
+ 	u32 src_port_window_size;
+ 	u32 dst_port_window_size;
+-	bool device_fc;
+ 	void *peripheral_config;
+ 	size_t peripheral_size;
+ };
+-- 
+2.34.1
 

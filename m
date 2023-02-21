@@ -2,171 +2,130 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A39769E141
-	for <lists+dmaengine@lfdr.de>; Tue, 21 Feb 2023 14:26:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 30D4569E1E7
+	for <lists+dmaengine@lfdr.de>; Tue, 21 Feb 2023 15:04:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233923AbjBUN0Q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 21 Feb 2023 08:26:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46056 "EHLO
+        id S234271AbjBUOEm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 21 Feb 2023 09:04:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231916AbjBUN0P (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 21 Feb 2023 08:26:15 -0500
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B4DA27D7D;
-        Tue, 21 Feb 2023 05:26:14 -0800 (PST)
-Received: by mail-qt1-f177.google.com with SMTP id h19so1433798qtk.7;
-        Tue, 21 Feb 2023 05:26:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dOflBLgkYyNU7DCD9/DC80jueE1mu7ROFrIheewJRtQ=;
-        b=RA9ojgXZUFoBjSl5VHQgUGoPi+6HJ3aNxo8H20nP9YEVdpZai7hBLbzCF7t+I8fScs
-         KyNMj9wfGErxQIZf4f7hWp2uQgFGr4kXYVH/bDzTIYrb0Zvjra6BL/Np4FXJQ5u7tRNx
-         vQMm2L9lej2vKxnCfjWlcAz09pFhmKIFjJIb6Jek5S5vvzCUQzMi6pWbZw2oiKHPZ/X4
-         RyG2gJOQnrIH5m1qZnpaHi5cxF68b34/fK6QV/BSjBDHpFj7k3cfcQa/HhfvFAa6hee3
-         GW222wvBwg5/cW8unxFmCuEBn/SurOr79fFq592doq/HL3TE+y8DFGH3OU3yKNXeXzc4
-         SWog==
-X-Gm-Message-State: AO0yUKV7+T0LiJe0JiBibyWugjEoVT1vlyTBRfo1VrPL5V8K+QsBQ1Fm
-        FQFA/C3qA14+E+pZ37qGeUnckov6lMbUyw==
-X-Google-Smtp-Source: AK7set/uXwHGU7dVbofXNJhkOv4MejSkET7L2Q9FfX9QQmIlJ096TL5QYgbYFDMh8fJaczCcZzoXgQ==
-X-Received: by 2002:ac8:5c0e:0:b0:3ba:2641:50d3 with SMTP id i14-20020ac85c0e000000b003ba264150d3mr7699086qti.42.1676985972961;
-        Tue, 21 Feb 2023 05:26:12 -0800 (PST)
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
-        by smtp.gmail.com with ESMTPSA id a7-20020ac86107000000b003b6382f66b1sm285195qtm.29.2023.02.21.05.26.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Feb 2023 05:26:12 -0800 (PST)
-Received: by mail-yb1-f180.google.com with SMTP id a20so3197558ybj.8;
-        Tue, 21 Feb 2023 05:26:11 -0800 (PST)
-X-Received: by 2002:a05:6902:2d0:b0:920:2b79:84b4 with SMTP id
- w16-20020a05690202d000b009202b7984b4mr1094608ybh.386.1676985971580; Tue, 21
- Feb 2023 05:26:11 -0800 (PST)
+        with ESMTP id S234187AbjBUOEl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 21 Feb 2023 09:04:41 -0500
+Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40D0E24108;
+        Tue, 21 Feb 2023 06:04:38 -0800 (PST)
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+        by fd01.gateway.ufhost.com (Postfix) with ESMTP id 757EC24E13F;
+        Tue, 21 Feb 2023 22:04:35 +0800 (CST)
+Received: from EXMBX168.cuchost.com (172.16.6.78) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Tue, 21 Feb
+ 2023 22:04:35 +0800
+Received: from localhost.localdomain (183.27.98.67) by EXMBX168.cuchost.com
+ (172.16.6.78) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Tue, 21 Feb
+ 2023 22:04:34 +0800
+From:   Walker Chen <walker.chen@starfivetech.com>
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor@kernel.org>,
+        "Palmer Dabbelt" <palmer@dabbelt.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        "Emil Renner Berthing" <emil.renner.berthing@canonical.com>
+CC:     <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
+Subject: [PATCH v2 0/3] Add DMA driver for StarFive JH7110 SoC
+Date:   Tue, 21 Feb 2023 22:04:21 +0800
+Message-ID: <20230221140424.719-1-walker.chen@starfivetech.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <1675969514-3137-1-git-send-email-lizhi.hou@amd.com> <1675969514-3137-2-git-send-email-lizhi.hou@amd.com>
-In-Reply-To: <1675969514-3137-2-git-send-email-lizhi.hou@amd.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 21 Feb 2023 14:25:59 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXsUPAW5zKrsaTR9Tgv7kFdkz8s_QUjLXq6zDpoo47fRA@mail.gmail.com>
-Message-ID: <CAMuHMdXsUPAW5zKrsaTR9Tgv7kFdkz8s_QUjLXq6zDpoo47fRA@mail.gmail.com>
-Subject: Re: [RESEND PATCH V12 XDMA 1/2] dmaengine: xilinx: xdma: Add xilinx
- xdma driver
-To:     Lizhi Hou <lizhi.hou@amd.com>
-Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, max.zhen@amd.com,
-        sonal.santan@amd.com, larry.liu@amd.com, brian.xu@amd.com,
-        tumic@gpxsee.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [183.27.98.67]
+X-ClientProxiedBy: EXCAS064.cuchost.com (172.16.6.24) To EXMBX168.cuchost.com
+ (172.16.6.78)
+X-YovoleRuleAgent: yovoleflag
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Lizhi,
+This patch series adds dma support for the StarFive JH7110 RISC-V SoC.
+The first patch adds device tree binding. The second patch includes dma
+driver. The last patch adds device node of dma to JH7110 dts.
 
-On Thu, Feb 9, 2023 at 8:18 PM Lizhi Hou <lizhi.hou@amd.com> wrote:
-> Add driver to enable PCIe board which uses XDMA (the DMA/Bridge Subsystem
-> for PCI Express). For example, Xilinx Alveo PCIe devices.
->     https://www.xilinx.com/products/boards-and-kits/alveo.html
->
-> The XDMA engine support up to 4 Host to Card (H2C) and 4 Card to Host (C2H)
-> channels. Memory transfers are specified on a per-channel basis in
-> descriptor linked lists, which the DMA fetches from host memory and
-> processes. Events such as descriptor completion and errors are signaled
-> using interrupts. The hardware detail is provided by
->     https://docs.xilinx.com/r/en-US/pg195-pcie-dma/Introduction
->
-> This driver implements dmaengine APIs.
->     - probe the available DMA channels
->     - use dma_slave_map for channel lookup
->     - use virtual channel to manage dmaengine tx descriptors
->     - implement device_prep_slave_sg callback to handle host scatter gather
->       list
->     - implement device_config to config device address for DMA transfer
->
-> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
-> Signed-off-by: Sonal Santan <sonal.santan@amd.com>
-> Signed-off-by: Max Zhen <max.zhen@amd.com>
-> Signed-off-by: Brian Xu <brian.xu@amd.com>
-> Tested-by: Martin Tuma <tumic@gpxsee.org>
+The series has been tested on the VisionFive 2 board which equip with
+JH7110 SoC and works normally.
 
-Thanks for your patch, which is now commit 17ce252266c7f016
-("dmaengine: xilinx: xdma: Add xilinx xdma driver") in dmaengine/next.
+The last patch should be applied after the following patchset:
+https://lore.kernel.org/all/20230221083323.302471-1-xingyu.wu@starfivetech.com/
 
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -735,6 +735,20 @@ config XILINX_DMA
->           the scatter gather interface with multiple channels independent
->           configuration support.
->
-> +config XILINX_XDMA
-> +       tristate "Xilinx DMA/Bridge Subsystem DMA Engine"
-> +       depends on HAS_IOMEM
-> +       select DMA_ENGINE
-> +       select DMA_VIRTUAL_CHANNELS
-> +       select REGMAP_MMIO
+Changes since v1:
+- Rebased on Linux 6.2.
+- Changed the compatible string to SoC specific and dropped '-rst' from
+  reset-names in the dt-binding.
+- Dropped 'snps,num-hs-if' in the dt-binding.
+- Use different configuration on CH_CFG registers according to the compatible string.
 
-No platform dependencies at all, while this is a platform driver that
-relies on some other not-yet-existing driver creating an "xdma"
-platform device?
+v1: https://lore.kernel.org/all/20230206113811.23133-1-walker.chen@starfivetech.com/
 
-> +       help
-> +         Enable support for Xilinx DMA/Bridge Subsystem DMA engine. The DMA
-> +         provides high performance block data movement between Host memory
-> +         and the DMA subsystem. These direct memory transfers can be both in
-> +         the Host to Card (H2C) and Card to Host (C2H) transfers.
-> +         The core also provides up to 16 user interrupt wires that generate
-> +         interrupts to the host.
-> +
->  config XILINX_ZYNQMP_DMA
->         tristate "Xilinx ZynqMP DMA Engine"
->         depends on ARCH_ZYNQ || MICROBLAZE || ARM64 || COMPILE_TEST
+Walker Chen (3):
+  dt-bindings: dma: snps,dw-axi-dmac: Add reset items
+  dmaengine: dw-axi-dmac: Add support for StarFive JH7110 DMA
+  riscv: dts: starfive: add dma controller node
 
-> --- /dev/null
-> +++ b/drivers/dma/xilinx/xdma.c
+ .../bindings/dma/snps,dw-axi-dmac.yaml        |  8 +++++++-
+ arch/riscv/boot/dts/starfive/jh7110.dtsi      | 19 +++++++++++++++++++
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 19 +++++++++++++++++--
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  3 +++
+ 4 files changed, 46 insertions(+), 3 deletions(-)
 
-> +/**
-> + * xdma_probe - Driver probe function
-> + * @pdev: Pointer to the platform_device structure
-> + */
-> +static int xdma_probe(struct platform_device *pdev)
-> +{
-> +       struct xdma_platdata *pdata = dev_get_platdata(&pdev->dev);
 
-Platform data? No DT?
-Do we still accept plain platform drivers?
-
-> +static const struct platform_device_id xdma_id_table[] = {
-> +       { "xdma", 0},
-> +       { },
-> +};
-
-This table is not needed, as the single entry matches driver.name below.
-
-> +
-> +static struct platform_driver xdma_driver = {
-> +       .driver         = {
-> +               .name = "xdma",
-> +       },
-> +       .id_table       = xdma_id_table,
-> +       .probe          = xdma_probe,
-> +       .remove         = xdma_remove,
-> +};
-> +
-> +module_platform_driver(xdma_driver);
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+base-commit: c9c3395d5e3dcc6daee66c6908354d47bf98cb0c
+prerequisite-patch-id: 54ce870d6ea747466474b5d4105cfbc05e1b01ab
+prerequisite-patch-id: ac150a8c622e858e088df8121093d448df49c245
+prerequisite-patch-id: 044263ef2fb9f1e5a586edbf85d5f67814a28430
+prerequisite-patch-id: 057fa35870d8d7d22a57c13362588ffb9e9df316
+prerequisite-patch-id: 848332ca483b026a755639b9eefb0bf8f3fcf8be
+prerequisite-patch-id: 1b2d0982b18da060c82134f05bf3ce16425bac8d
+prerequisite-patch-id: 090ba4b78d47bc19204916e76fdbc70021785388
+prerequisite-patch-id: a5d9e0f7d4f8163f566678894cf693015119f2d9
+prerequisite-patch-id: 87cb528acd9a7f1ffe7475d7261553f6a4de5753
+prerequisite-patch-id: 417736eb958e1158c60a5ed74bc2350394321a80
+prerequisite-patch-id: ff9fe0b043a5f7f74a1f6af5cebc4793c6f14ce7
+prerequisite-patch-id: 290602062703e666191c20ca02f2840471a6bf4f
+prerequisite-patch-id: f0b29adbb18edffbfeec7292c5f33e2bbeb30945
+prerequisite-patch-id: fccfad539d8455777988b709171ad97729e1a97c
+prerequisite-patch-id: 929ebaffab0df158ea801661d0da74e8b5ef138c
+prerequisite-patch-id: 0d9ddcaa8a867fcbc790b41d6d0349796e0c44b0
+prerequisite-patch-id: 5f539ac7c96023b36489c6da7c70c31eaf64a25b
+prerequisite-patch-id: 65f2aed865d88e6fa468d2923527b523d4313857
+prerequisite-patch-id: 258ea5f9b8bf41b6981345dcc81795f25865d38f
+prerequisite-patch-id: 8b6f2c9660c0ac0ee4e73e4c21aca8e6b75e81b9
+prerequisite-patch-id: e3b986b9c60b2b93b7812ec174c9e1b4cfb14c97
+prerequisite-patch-id: 2e03eeb766aefd5d38f132d091618e9fa19a37b6
+prerequisite-patch-id: dbb0c0151b8bdf093e6ce79fd2fe3f60791a6e0b
+prerequisite-patch-id: ea9a6d0313dd3936c8de0239dc2072c3360a2f6b
+prerequisite-patch-id: d57e95d31686772abc4c4d5aa1cadc344dc293cd
+prerequisite-patch-id: 602c3cf8f42c8c88125defa0a8a301da51f8af49
+prerequisite-patch-id: 82d2d2bc302045505a51f4ab2bf607a904d4b2d1
+prerequisite-patch-id: a6df0f7d8fc2d534c06d85f17578c9134913d01b
+prerequisite-patch-id: 2ddada18ab6ea5cd1da14212aaf59632f5203d40
+prerequisite-patch-id: b9b8fda5e8cd2dd4c9101ec03f4c8fb8e8caa573
+prerequisite-patch-id: 7acbc9c924e802712d3574dd74a6b3576089f78c
+prerequisite-patch-id: f9ce88e490c2473c3c94ad63fa26bc91829ce2cc
+prerequisite-patch-id: ce8a6557564ba04bd90bb41d34f520347f399887
+prerequisite-patch-id: 9f71c539a241baf1e73c7e7dfde5b0b04c66a502
+prerequisite-patch-id: 378a6ccc643a8bf51918cdd61876af813564c638
+prerequisite-patch-id: bb8e071ed43998874b9d98292c0dcdeedc0760ca
+prerequisite-patch-id: 0c04762f1d20f09cd2a1356334a86e520907d111
+prerequisite-patch-id: 8867ef35e4d555491a97106db7834149309426b7
+prerequisite-patch-id: e5a319ba557c8165f7620e574c79ff2ad3be1f65
+prerequisite-patch-id: 2bc43b375b470f7e8bbe937b78678ba3856e3b8f
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds

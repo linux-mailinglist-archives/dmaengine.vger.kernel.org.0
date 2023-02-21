@@ -2,96 +2,124 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F6B969E9B2
-	for <lists+dmaengine@lfdr.de>; Tue, 21 Feb 2023 22:46:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48A3A69EAD2
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Feb 2023 00:01:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229779AbjBUVq2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 21 Feb 2023 16:46:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48822 "EHLO
+        id S230013AbjBUXBA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 21 Feb 2023 18:01:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229683AbjBUVq1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 21 Feb 2023 16:46:27 -0500
-Received: from mx.gpxsee.org (mx.gpxsee.org [37.205.14.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8D2682E0C3;
-        Tue, 21 Feb 2023 13:46:24 -0800 (PST)
-Received: from [192.168.42.220] (host-178-72-203-11.ip.nej.cz [178.72.203.11])
-        by mx.gpxsee.org (Postfix) with ESMTPSA id 4BEE2A4F0;
-        Tue, 21 Feb 2023 22:46:22 +0100 (CET)
-Message-ID: <aeb43671-57fd-654a-8e8d-d14ebb7f4083@gpxsee.org>
-Date:   Tue, 21 Feb 2023 22:46:26 +0100
+        with ESMTP id S229569AbjBUXA7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 21 Feb 2023 18:00:59 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CD2558A;
+        Tue, 21 Feb 2023 15:00:57 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 424CA6120E;
+        Tue, 21 Feb 2023 23:00:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C303C433EF;
+        Tue, 21 Feb 2023 23:00:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677020456;
+        bh=8bmVqzYdGSQJBrlI/va5oEWARaelMvmFIsQmXscWXQg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=FhhSoLiOKfneaQLehBw4QHqvStnUSYRmqfUWsoDGeslX5+756eTVPXUDE2BT6NNQS
+         NR9a91w5naG9e2IqwUfg7gIIpmLGyeb1pDFDYAy3NqJtHSnXrY2o6SP2Ob46/55LaR
+         ip0j5QmOgvWYtj9nH7FDNcUsS6C+9doGAqrIWgmmUKDRrCKq97xFvAnub2hUFrn8zH
+         3STdD38F4JOaIdWhU+BQwxclp9sZC+RZ9Th6NWksBknbTxXsmPGBv7Od8TpZU4p1Ep
+         Y7fvGHKcXIBDd8nC8gx3u5TRwd2JtksKMaXKrWQXcurK6RFYUDf8fVY12VUeS7tEyb
+         oY9NjwWo3I+IA==
+Date:   Tue, 21 Feb 2023 17:00:54 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        caihuoqing <caihuoqing@baidu.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v9 23/27] dmaengine: dw-edma: Add mem-mapped LL-entries
+ support
+Message-ID: <20230221230054.GA3736402@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [RESEND PATCH V12 XDMA 1/2] dmaengine: xilinx: xdma: Add xilinx
- xdma driver
-Content-Language: en-US
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lizhi Hou <lizhi.hou@amd.com>, vkoul@kernel.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        max.zhen@amd.com, sonal.santan@amd.com, larry.liu@amd.com,
-        brian.xu@amd.com
-References: <1675969514-3137-1-git-send-email-lizhi.hou@amd.com>
- <1675969514-3137-2-git-send-email-lizhi.hou@amd.com>
- <CAMuHMdXsUPAW5zKrsaTR9Tgv7kFdkz8s_QUjLXq6zDpoo47fRA@mail.gmail.com>
- <0f1aafa2-7495-163b-523a-f634bacc4b1f@gpxsee.org>
- <CAMuHMdUVkbPf1a8cW+zY1HwD83tm_m0L7Ufy=GO-RQB-AF_15A@mail.gmail.com>
-From:   =?UTF-8?Q?Martin_T=c5=afma?= <tumic@gpxsee.org>
-In-Reply-To: <CAMuHMdUVkbPf1a8cW+zY1HwD83tm_m0L7Ufy=GO-RQB-AF_15A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=1.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: *
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230113171409.30470-24-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 21. 02. 23 22:06, Geert Uytterhoeven wrote:
-> Hi Martin,
+On Fri, Jan 13, 2023 at 08:14:05PM +0300, Serge Semin wrote:
+> Currently the DW eDMA driver only supports the linked lists memory
+> allocated locally with respect to the remote eDMA engine setup. It means
+> the linked lists will be accessible by the CPU via the MMIO space only. If
+> eDMA is embedded into the DW PCIe Root Ports or local End-points (which
+> support will be added in one of the following up commits) the linked lists
+> are supposed to be allocated in the CPU memory. In that case the
+> LL-entries can be directly accessed meanwhile the former case implies
+> using the MMIO-accessors for that.
 > 
-> On Tue, Feb 21, 2023 at 9:45 PM Martin Tůma <tumic@gpxsee.org> wrote:
->> On 21. 02. 23 14:25, Geert Uytterhoeven wrote:
->>> No platform dependencies at all, while this is a platform driver that
->>> relies on some other not-yet-existing driver creating an "xdma"
->>> platform device?
->>
->> There is at least one "already-existing" driver based on this driver
->> that is waiting in the v4l2 queue for xdma - our MGB4 driver:
->> https://patchwork.kernel.org/project/linux-media/patch/20230207150119.5542-2-tumic@gpxsee.org/
+> In order to have both cases supported by the driver the dw_edma_region
+> descriptor should be fixed to contain the MMIO-backed and just
+> memory-based virtual addresses. The linked lists initialization procedure
+> will use one of them depending on the eDMA device nature. If the eDMA
+> engine is embedded into the local DW PCIe RP/EP controllers then the list
+> entries will be directly accessed by referencing the corresponding
+> structure fields.  Otherwise the MMIO accessors usage will be preserved.
 > 
-> Thanks for the link!
-> 
-> As VIDEO_MGB4 selects XILINX_XDMA, perhaps XILINX_XDMA
-> can be made invisible, unless compile-testing?
-> 
->      config XILINX_XDMA
->          tristate "Xilinx DMA/Bridge Subsystem DMA Engine" if COMPILE_TEST
-> 
-> Gr{oetje,eeting}s,
-> 
->                          Geert
-> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-Hi,
-I think that the XDMA driver will always be used by a superior PCIe card 
-driver like in our case (mgb4) and using it separately makes no sense/is 
-not possible, so disabling it until some of the superior drivers selects 
-it makes sense for me. But what about out-of-the-tree modules based on 
-xdma? Making the module "invisible" will make compile them much harder I 
-guess? And there will be proprietary drivers based on xdma, see Xilinx 
-XRT: https://github.com/houlz0507/XRT-1/tree/xdma_v4_usage
+Hi Vinod, I just realized that I didn't solicit your ack for this
+patch and the following one (which I ended up splitting into two), and
+I hate to ask Linus to pull them without your OK.
 
-The xdma authors from Xilinx will definitely give you a more 
-authoritative answer. I'm just a "random" user of the xdma module. 
-Originally our mgb4 driver was based on our own xdma sub-driver (in turn 
-based on some old "test" driver from Xilinx) which I was glad we could 
-abandon when this xdma driver has appeared. I helped the xdma module to 
-become usable for PCIe cards like our v4l2 grabber, but the original 
-intents of the xdma driver are unknown to me. If it is XRT, than Xilinx 
-will probably like the module to stay visible.
+Here are the current versions in the PCI tree:
 
-M.
+  https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?id=b47364a83054
+  https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?id=157ce95927c1
+  https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?id=536e6529e975
 
+If you ack them, I will update them to reflect that.
+
+Thanks,
+  Bjorn
+
+> Changelog v9:
+> - This is a new patch added on v9 stage of the series.
+> ---
+>  drivers/dma/dw-edma/dw-edma-pcie.c    | 32 ++++++-------
+>  drivers/dma/dw-edma/dw-edma-v0-core.c | 69 +++++++++++++++++----------
+>  include/linux/dma/edma.h              |  5 +-
+>  3 files changed, 64 insertions(+), 42 deletions(-)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> index 3f9dadc73854..2b40f2b44f5e 100644
+> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> @@ -240,20 +240,20 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  		struct dw_edma_block *ll_block = &vsec_data.ll_wr[i];
+>  		struct dw_edma_block *dt_block = &vsec_data.dt_wr[i];
+>  
+> -		ll_region->vaddr = pcim_iomap_table(pdev)[ll_block->bar];
+> -		if (!ll_region->vaddr)
+> +		ll_region->vaddr.io = pcim_iomap_table(pdev)[ll_block->bar];
+> +		if (!ll_region->vaddr.io)
+> ...

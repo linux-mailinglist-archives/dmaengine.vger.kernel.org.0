@@ -2,97 +2,62 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B23669E1EE
-	for <lists+dmaengine@lfdr.de>; Tue, 21 Feb 2023 15:04:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B9A6969E918
+	for <lists+dmaengine@lfdr.de>; Tue, 21 Feb 2023 21:46:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234187AbjBUOEz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 21 Feb 2023 09:04:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54842 "EHLO
+        id S229501AbjBUUqD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 21 Feb 2023 15:46:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234285AbjBUOEp (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 21 Feb 2023 09:04:45 -0500
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7D52274AA;
-        Tue, 21 Feb 2023 06:04:43 -0800 (PST)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-        by ex01.ufhost.com (Postfix) with ESMTP id 3D1A524E1DB;
-        Tue, 21 Feb 2023 22:04:37 +0800 (CST)
-Received: from EXMBX168.cuchost.com (172.16.6.78) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Tue, 21 Feb
- 2023 22:04:37 +0800
-Received: from localhost.localdomain (183.27.98.67) by EXMBX168.cuchost.com
- (172.16.6.78) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Tue, 21 Feb
- 2023 22:04:36 +0800
-From:   Walker Chen <walker.chen@starfivetech.com>
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor@kernel.org>,
-        "Palmer Dabbelt" <palmer@dabbelt.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        "Emil Renner Berthing" <emil.renner.berthing@canonical.com>
-CC:     <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-Subject: [PATCH v2 3/3] riscv: dts: starfive: add dma controller node
-Date:   Tue, 21 Feb 2023 22:04:24 +0800
-Message-ID: <20230221140424.719-4-walker.chen@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230221140424.719-1-walker.chen@starfivetech.com>
-References: <20230221140424.719-1-walker.chen@starfivetech.com>
+        with ESMTP id S229441AbjBUUqC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 21 Feb 2023 15:46:02 -0500
+Received: from mx.gpxsee.org (mx.gpxsee.org [37.205.14.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 457802E811;
+        Tue, 21 Feb 2023 12:45:59 -0800 (PST)
+Received: from [192.168.42.220] (host-178-72-203-11.ip.nej.cz [178.72.203.11])
+        by mx.gpxsee.org (Postfix) with ESMTPSA id 02960A433;
+        Tue, 21 Feb 2023 21:45:56 +0100 (CET)
+Message-ID: <0f1aafa2-7495-163b-523a-f634bacc4b1f@gpxsee.org>
+Date:   Tue, 21 Feb 2023 21:46:01 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [183.27.98.67]
-X-ClientProxiedBy: EXCAS064.cuchost.com (172.16.6.24) To EXMBX168.cuchost.com
- (172.16.6.78)
-X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [RESEND PATCH V12 XDMA 1/2] dmaengine: xilinx: xdma: Add xilinx
+ xdma driver
+Content-Language: en-US
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Lizhi Hou <lizhi.hou@amd.com>
+Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, max.zhen@amd.com,
+        sonal.santan@amd.com, larry.liu@amd.com, brian.xu@amd.com
+References: <1675969514-3137-1-git-send-email-lizhi.hou@amd.com>
+ <1675969514-3137-2-git-send-email-lizhi.hou@amd.com>
+ <CAMuHMdXsUPAW5zKrsaTR9Tgv7kFdkz8s_QUjLXq6zDpoo47fRA@mail.gmail.com>
+From:   =?UTF-8?Q?Martin_T=c5=afma?= <tumic@gpxsee.org>
+In-Reply-To: <CAMuHMdXsUPAW5zKrsaTR9Tgv7kFdkz8s_QUjLXq6zDpoo47fRA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=1.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add the dma controller node for the Starfive JH7110 SoC.
+On 21. 02. 23 14:25, Geert Uytterhoeven wrote:
 
-Signed-off-by: Walker Chen <walker.chen@starfivetech.com>
----
- arch/riscv/boot/dts/starfive/jh7110.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+> No platform dependencies at all, while this is a platform driver that
+> relies on some other not-yet-existing driver creating an "xdma"
+> platform device?
 
-diff --git a/arch/riscv/boot/dts/starfive/jh7110.dtsi b/arch/riscv/boot/dts/starfive/jh7110.dtsi
-index 697ab59191a1..c30fe4239285 100644
---- a/arch/riscv/boot/dts/starfive/jh7110.dtsi
-+++ b/arch/riscv/boot/dts/starfive/jh7110.dtsi
-@@ -510,6 +510,25 @@
- 			#gpio-cells = <2>;
- 		};
- 
-+		dma: dma-controller@16050000 {
-+			compatible = "starfive,jh7110-axi-dma";
-+			reg = <0x0 0x16050000 0x0 0x10000>;
-+			clocks = <&stgcrg JH7110_STGCLK_DMA1P_AXI>,
-+				 <&stgcrg JH7110_STGCLK_DMA1P_AHB>;
-+			clock-names = "core-clk", "cfgr-clk";
-+			resets = <&stgcrg JH7110_STGRST_DMA1P_AXI>,
-+				 <&stgcrg JH7110_STGRST_DMA1P_AHB>;
-+			reset-names = "axi", "ahb";
-+			interrupts = <73>;
-+			#dma-cells = <1>;
-+			dma-channels = <4>;
-+			snps,dma-masters = <1>;
-+			snps,data-width = <3>;
-+			snps,block-size = <65536 65536 65536 65536>;
-+			snps,priority = <0 1 2 3>;
-+			snps,axi-max-burst-len = <16>;
-+		};
-+
- 		aoncrg: clock-controller@17000000 {
- 			compatible = "starfive,jh7110-aoncrg";
- 			reg = <0x0 0x17000000 0x0 0x10000>;
--- 
-2.17.1
+There is at least one "already-existing" driver based on this driver 
+that is waiting in the v4l2 queue for xdma - our MGB4 driver:
+https://patchwork.kernel.org/project/linux-media/patch/20230207150119.5542-2-tumic@gpxsee.org/
 
+And I'm quiet sure that more are to come when the xdma driver becomes 
+finally available as the FPGA IP core is used in many more PCIe cards.
+
+M.

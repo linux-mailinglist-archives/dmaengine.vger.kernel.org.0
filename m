@@ -2,329 +2,171 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CAA2C69D984
-	for <lists+dmaengine@lfdr.de>; Tue, 21 Feb 2023 04:48:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A39769E141
+	for <lists+dmaengine@lfdr.de>; Tue, 21 Feb 2023 14:26:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233487AbjBUDsA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 20 Feb 2023 22:48:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45414 "EHLO
+        id S233923AbjBUN0Q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 21 Feb 2023 08:26:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233483AbjBUDr7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 Feb 2023 22:47:59 -0500
-Received: from out-24.mta1.migadu.com (out-24.mta1.migadu.com [IPv6:2001:41d0:203:375::18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F16FA24CA8
-        for <dmaengine@vger.kernel.org>; Mon, 20 Feb 2023 19:47:35 -0800 (PST)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1676951252;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qcnWhBrWoKHZ/WK3Doar1XVXfDm6DLpodkC79EYNwPc=;
-        b=LfiIasr2iulBJ8rPirg9AAgtUD4J2A9JoL3g4wzxN5Q5qCb1N6W4h0OI020O1eZkJuRJW5
-        H6NgbBC6wGxHVxUNYGQNjqmM/aPMPCowEx6sxbzH8YaVPSYtln9b/8ljcZm/f1ptd4ooc0
-        k8TizojPGGWCNcpwwlIAVHKJUetbu6s=
-From:   Cai Huoqing <cai.huoqing@linux.dev>
-To:     fancer.lancer@gmail.com
-Cc:     Cai huoqing <cai.huoqing@linux.dev>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v4 4/4] dmaengine: dw-edma: Add HDMA DebugFS support
-Date:   Tue, 21 Feb 2023 11:46:55 +0800
-Message-Id: <20230221034656.14476-5-cai.huoqing@linux.dev>
-In-Reply-To: <20230221034656.14476-1-cai.huoqing@linux.dev>
-References: <20230221034656.14476-1-cai.huoqing@linux.dev>
+        with ESMTP id S231916AbjBUN0P (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 21 Feb 2023 08:26:15 -0500
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B4DA27D7D;
+        Tue, 21 Feb 2023 05:26:14 -0800 (PST)
+Received: by mail-qt1-f177.google.com with SMTP id h19so1433798qtk.7;
+        Tue, 21 Feb 2023 05:26:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dOflBLgkYyNU7DCD9/DC80jueE1mu7ROFrIheewJRtQ=;
+        b=RA9ojgXZUFoBjSl5VHQgUGoPi+6HJ3aNxo8H20nP9YEVdpZai7hBLbzCF7t+I8fScs
+         KyNMj9wfGErxQIZf4f7hWp2uQgFGr4kXYVH/bDzTIYrb0Zvjra6BL/Np4FXJQ5u7tRNx
+         vQMm2L9lej2vKxnCfjWlcAz09pFhmKIFjJIb6Jek5S5vvzCUQzMi6pWbZw2oiKHPZ/X4
+         RyG2gJOQnrIH5m1qZnpaHi5cxF68b34/fK6QV/BSjBDHpFj7k3cfcQa/HhfvFAa6hee3
+         GW222wvBwg5/cW8unxFmCuEBn/SurOr79fFq592doq/HL3TE+y8DFGH3OU3yKNXeXzc4
+         SWog==
+X-Gm-Message-State: AO0yUKV7+T0LiJe0JiBibyWugjEoVT1vlyTBRfo1VrPL5V8K+QsBQ1Fm
+        FQFA/C3qA14+E+pZ37qGeUnckov6lMbUyw==
+X-Google-Smtp-Source: AK7set/uXwHGU7dVbofXNJhkOv4MejSkET7L2Q9FfX9QQmIlJ096TL5QYgbYFDMh8fJaczCcZzoXgQ==
+X-Received: by 2002:ac8:5c0e:0:b0:3ba:2641:50d3 with SMTP id i14-20020ac85c0e000000b003ba264150d3mr7699086qti.42.1676985972961;
+        Tue, 21 Feb 2023 05:26:12 -0800 (PST)
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
+        by smtp.gmail.com with ESMTPSA id a7-20020ac86107000000b003b6382f66b1sm285195qtm.29.2023.02.21.05.26.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Feb 2023 05:26:12 -0800 (PST)
+Received: by mail-yb1-f180.google.com with SMTP id a20so3197558ybj.8;
+        Tue, 21 Feb 2023 05:26:11 -0800 (PST)
+X-Received: by 2002:a05:6902:2d0:b0:920:2b79:84b4 with SMTP id
+ w16-20020a05690202d000b009202b7984b4mr1094608ybh.386.1676985971580; Tue, 21
+ Feb 2023 05:26:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <1675969514-3137-1-git-send-email-lizhi.hou@amd.com> <1675969514-3137-2-git-send-email-lizhi.hou@amd.com>
+In-Reply-To: <1675969514-3137-2-git-send-email-lizhi.hou@amd.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 21 Feb 2023 14:25:59 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXsUPAW5zKrsaTR9Tgv7kFdkz8s_QUjLXq6zDpoo47fRA@mail.gmail.com>
+Message-ID: <CAMuHMdXsUPAW5zKrsaTR9Tgv7kFdkz8s_QUjLXq6zDpoo47fRA@mail.gmail.com>
+Subject: Re: [RESEND PATCH V12 XDMA 1/2] dmaengine: xilinx: xdma: Add xilinx
+ xdma driver
+To:     Lizhi Hou <lizhi.hou@amd.com>
+Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, max.zhen@amd.com,
+        sonal.santan@amd.com, larry.liu@amd.com, brian.xu@amd.com,
+        tumic@gpxsee.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Cai huoqing <cai.huoqing@linux.dev>
+Hi Lizhi,
 
-Add HDMA DebugFS support to show register information
+On Thu, Feb 9, 2023 at 8:18 PM Lizhi Hou <lizhi.hou@amd.com> wrote:
+> Add driver to enable PCIe board which uses XDMA (the DMA/Bridge Subsystem
+> for PCI Express). For example, Xilinx Alveo PCIe devices.
+>     https://www.xilinx.com/products/boards-and-kits/alveo.html
+>
+> The XDMA engine support up to 4 Host to Card (H2C) and 4 Card to Host (C2H)
+> channels. Memory transfers are specified on a per-channel basis in
+> descriptor linked lists, which the DMA fetches from host memory and
+> processes. Events such as descriptor completion and errors are signaled
+> using interrupts. The hardware detail is provided by
+>     https://docs.xilinx.com/r/en-US/pg195-pcie-dma/Introduction
+>
+> This driver implements dmaengine APIs.
+>     - probe the available DMA channels
+>     - use dma_slave_map for channel lookup
+>     - use virtual channel to manage dmaengine tx descriptors
+>     - implement device_prep_slave_sg callback to handle host scatter gather
+>       list
+>     - implement device_config to config device address for DMA transfer
+>
+> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+> Signed-off-by: Sonal Santan <sonal.santan@amd.com>
+> Signed-off-by: Max Zhen <max.zhen@amd.com>
+> Signed-off-by: Brian Xu <brian.xu@amd.com>
+> Tested-by: Martin Tuma <tumic@gpxsee.org>
 
-Signed-off-by: Cai huoqing <cai.huoqing@linux.dev>
----
-  v3->v4:
-    1.Add field watermark_en, func_num, qos, msi_watermark,etc.
-    2.Make variables reverse xmas tree order.
-    3.Declare const for 'struct dw_hdma_debugfs_entry'
+Thanks for your patch, which is now commit 17ce252266c7f016
+("dmaengine: xilinx: xdma: Add xilinx xdma driver") in dmaengine/next.
 
-  v3 link:
-  https://lore.kernel.org/lkml/20230213132411.65524-5-cai.huoqing@linux.dev/
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -735,6 +735,20 @@ config XILINX_DMA
+>           the scatter gather interface with multiple channels independent
+>           configuration support.
+>
+> +config XILINX_XDMA
+> +       tristate "Xilinx DMA/Bridge Subsystem DMA Engine"
+> +       depends on HAS_IOMEM
+> +       select DMA_ENGINE
+> +       select DMA_VIRTUAL_CHANNELS
+> +       select REGMAP_MMIO
 
- drivers/dma/dw-edma/Makefile             |   3 +-
- drivers/dma/dw-edma/dw-hdma-v0-core.c    |   2 +
- drivers/dma/dw-edma/dw-hdma-v0-debugfs.c | 181 +++++++++++++++++++++++
- drivers/dma/dw-edma/dw-hdma-v0-debugfs.h |  22 +++
- 4 files changed, 207 insertions(+), 1 deletion(-)
- create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
- create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
+No platform dependencies at all, while this is a platform driver that
+relies on some other not-yet-existing driver creating an "xdma"
+platform device?
 
-diff --git a/drivers/dma/dw-edma/Makefile b/drivers/dma/dw-edma/Makefile
-index b1c91ef2c63d..83ab58f87760 100644
---- a/drivers/dma/dw-edma/Makefile
-+++ b/drivers/dma/dw-edma/Makefile
-@@ -1,7 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- obj-$(CONFIG_DW_EDMA)		+= dw-edma.o
--dw-edma-$(CONFIG_DEBUG_FS)	:= dw-edma-v0-debugfs.o
-+dw-edma-$(CONFIG_DEBUG_FS)	:= dw-edma-v0-debugfs.o	\
-+				   dw-hdma-v0-debugfs.o
- dw-edma-objs			:= dw-edma-core.o	\
- 				   dw-edma-v0-core.o	\
- 				   dw-hdma-v0-core.o $(dw-edma-y)
-diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-index cadc80dc62b2..6850042dbbe0 100644
---- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-+++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-@@ -10,6 +10,7 @@
- #include "dw-edma-core.h"
- #include "dw-hdma-v0-core.h"
- #include "dw-hdma-v0-regs.h"
-+#include "dw-hdma-v0-debugfs.h"
- 
- enum dw_hdma_control {
- 	DW_HDMA_V0_CB					= BIT(0),
-@@ -282,6 +283,7 @@ static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
- /* HDMA debugfs callbacks */
- static void dw_hdma_v0_core_debugfs_on(struct dw_edma *dw)
- {
-+	dw_hdma_v0_debugfs_on(dw);
- }
- 
- static const struct dw_edma_core_ops dw_hdma_v0_core = {
-diff --git a/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-new file mode 100644
-index 000000000000..3a6f70173a03
---- /dev/null
-+++ b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-@@ -0,0 +1,181 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2023 Cai Huoqing
-+ * Synopsys DesignWare HDMA v0 debugfs
-+ *
-+ * Author: Cai Huoqing <cai.huoqing@linux.dev>
-+ */
-+
-+#include <linux/debugfs.h>
-+#include <linux/bitfield.h>
-+
-+#include "dw-hdma-v0-debugfs.h"
-+#include "dw-hdma-v0-regs.h"
-+#include "dw-edma-core.h"
-+
-+#define REGS_ADDR(dw, name)						       \
-+	({								       \
-+		struct dw_hdma_v0_regs __iomem *__regs = (dw)->chip->reg_base; \
-+									       \
-+		(void __iomem *)&__regs->name;				       \
-+	})
-+
-+#define REGS_CH_ADDR(dw, name, _dir, _ch)				       \
-+	({								       \
-+		struct dw_hdma_v0_ch_regs __iomem *__ch_regs;		       \
-+									       \
-+		if (_dir == EDMA_DIR_READ)				       \
-+			__ch_regs = REGS_ADDR(dw, ch[_ch].rd);		       \
-+		else							       \
-+			__ch_regs = REGS_ADDR(dw, ch[_ch].wr);		       \
-+									       \
-+		(void __iomem *)&__ch_regs->name;			       \
-+	})
-+
-+#define CTX_REGISTER(dw, name, dir, ch) \
-+	{ dw, #name, REGS_CH_ADDR(dw, name, dir, ch), dir, ch }
-+
-+#define REGISTER(dw, name) \
-+	{ dw, #name, REGS_ADDR(dw, name) }
-+
-+#define WRITE_STR				"write"
-+#define READ_STR				"read"
-+#define CHANNEL_STR				"channel"
-+#define REGISTERS_STR				"registers"
-+
-+struct dw_hdma_debugfs_entry {
-+	struct dw_edma				*dw;
-+	const char				*name;
-+	void __iomem				*reg;
-+	enum dw_edma_dir			dir;
-+	u16					ch;
-+};
-+
-+static int dw_hdma_debugfs_u32_get(void *data, u64 *val)
-+{
-+	void __iomem *reg = (void __force __iomem *)data;
-+	*val = readl(reg);
-+
-+	return 0;
-+}
-+DEFINE_DEBUGFS_ATTRIBUTE(fops_x32, dw_hdma_debugfs_u32_get, NULL, "0x%08llx\n");
-+
-+static void dw_hdma_debugfs_create_x32(struct dw_edma *dw,
-+				       const struct dw_hdma_debugfs_entry ini[],
-+				       int nr_entries, struct dentry *dent)
-+{
-+	struct dw_hdma_debugfs_entry *entries;
-+	int i;
-+
-+	entries = devm_kcalloc(dw->chip->dev, nr_entries, sizeof(*entries),
-+			       GFP_KERNEL);
-+	for (i = 0; i < nr_entries; i++) {
-+		entries[i] = ini[i];
-+
-+		debugfs_create_file_unsafe(entries[i].name, 0444, dent,
-+					   &entries[i], &fops_x32);
-+	}
-+}
-+
-+static void dw_hdma_debugfs_regs_ch(struct dw_edma *dw, enum dw_edma_dir dir,
-+				    u16 ch, struct dentry *dent)
-+{
-+	const struct dw_hdma_debugfs_entry debugfs_regs[] = {
-+		CTX_REGISTER(dw, ch_en, dir, ch),
-+		CTX_REGISTER(dw, doorbell, dir, ch),
-+		CTX_REGISTER(dw, prefetch, dir, ch),
-+		CTX_REGISTER(dw, handshake, dir, ch),
-+		CTX_REGISTER(dw, llp.lsb, dir, ch),
-+		CTX_REGISTER(dw, llp.msb, dir, ch),
-+		CTX_REGISTER(dw, cycle_sync, dir, ch),
-+		CTX_REGISTER(dw, transfer_size, dir, ch),
-+		CTX_REGISTER(dw, sar.lsb, dir, ch),
-+		CTX_REGISTER(dw, sar.msb, dir, ch),
-+		CTX_REGISTER(dw, dar.lsb, dir, ch),
-+		CTX_REGISTER(dw, dar.msb, dir, ch),
-+		CTX_REGISTER(dw, watermark_en, dir, ch),
-+		CTX_REGISTER(dw, control1, dir, ch),
-+		CTX_REGISTER(dw, func_num, dir, ch),
-+		CTX_REGISTER(dw, qos, dir, ch),
-+		CTX_REGISTER(dw, ch_stat, dir, ch),
-+		CTX_REGISTER(dw, int_stat, dir, ch),
-+		CTX_REGISTER(dw, int_setup, dir, ch),
-+		CTX_REGISTER(dw, int_clear, dir, ch),
-+		CTX_REGISTER(dw, msi_stop.lsb, dir, ch),
-+		CTX_REGISTER(dw, msi_stop.msb, dir, ch),
-+		CTX_REGISTER(dw, msi_watermark.lsb, dir, ch),
-+		CTX_REGISTER(dw, msi_watermark.msb, dir, ch),
-+		CTX_REGISTER(dw, msi_abort.lsb, dir, ch),
-+		CTX_REGISTER(dw, msi_abort.msb, dir, ch),
-+		CTX_REGISTER(dw, msi_msgdata, dir, ch),
-+	};
-+	int nr_entries = ARRAY_SIZE(debugfs_regs);
-+
-+	dw_hdma_debugfs_create_x32(dw, debugfs_regs, nr_entries, dent);
-+}
-+
-+static void dw_hdma_debugfs_regs_wr(struct dw_edma *dw, struct dentry *dent)
-+{
-+	struct dentry *regs_dent, *ch_dent;
-+	char name[16];
-+	int i;
-+
-+	regs_dent = debugfs_create_dir(WRITE_STR, dent);
-+	if (!regs_dent)
-+		return;
-+
-+	for (i = 0; i < dw->wr_ch_cnt; i++) {
-+		snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
-+
-+		ch_dent = debugfs_create_dir(name, regs_dent);
-+		if (!ch_dent)
-+			return;
-+
-+		dw_hdma_debugfs_regs_ch(dw, EDMA_DIR_WRITE, i, ch_dent);
-+	}
-+}
-+
-+static void dw_hdma_debugfs_regs_rd(struct dw_edma *dw, struct dentry *dent)
-+{
-+	struct dentry *regs_dent, *ch_dent;
-+	char name[16];
-+	int i;
-+
-+	regs_dent = debugfs_create_dir(READ_STR, dent);
-+	if (!regs_dent)
-+		return;
-+
-+	for (i = 0; i < dw->rd_ch_cnt; i++) {
-+		snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
-+
-+		ch_dent = debugfs_create_dir(name, regs_dent);
-+		if (!ch_dent)
-+			return;
-+
-+		dw_hdma_debugfs_regs_ch(dw, EDMA_DIR_READ, i, ch_dent);
-+	}
-+}
-+
-+static void dw_hdma_debugfs_regs(struct dw_edma *dw)
-+{
-+	struct dentry *regs_dent;
-+
-+	regs_dent = debugfs_create_dir(REGISTERS_STR, dw->dma.dbg_dev_root);
-+	if (!regs_dent)
-+		return;
-+
-+	dw_hdma_debugfs_regs_wr(dw, regs_dent);
-+	dw_hdma_debugfs_regs_rd(dw, regs_dent);
-+}
-+
-+void dw_hdma_v0_debugfs_on(struct dw_edma *dw)
-+{
-+	if (!debugfs_initialized())
-+		return;
-+
-+	debugfs_create_u32("mf", 0444, dw->dma.dbg_dev_root, &dw->chip->mf);
-+	debugfs_create_u16("wr_ch_cnt", 0444, dw->dma.dbg_dev_root, &dw->wr_ch_cnt);
-+	debugfs_create_u16("rd_ch_cnt", 0444, dw->dma.dbg_dev_root, &dw->rd_ch_cnt);
-+
-+	dw_hdma_debugfs_regs(dw);
-+}
-diff --git a/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-new file mode 100644
-index 000000000000..e6842c83777d
---- /dev/null
-+++ b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-@@ -0,0 +1,22 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2023 Cai Huoqing
-+ * Synopsys DesignWare HDMA v0 debugfs
-+ *
-+ * Author: Cai Huoqing <cai.huoqing@linux.dev>
-+ */
-+
-+#ifndef _DW_HDMA_V0_DEBUG_FS_H
-+#define _DW_HDMA_V0_DEBUG_FS_H
-+
-+#include <linux/dma/edma.h>
-+
-+#ifdef CONFIG_DEBUG_FS
-+void dw_hdma_v0_debugfs_on(struct dw_edma *dw);
-+#else
-+static inline void dw_hdma_v0_debugfs_on(struct dw_edma *dw)
-+{
-+}
-+#endif /* CONFIG_DEBUG_FS */
-+
-+#endif /* _DW_HDMA_V0_DEBUG_FS_H */
+> +       help
+> +         Enable support for Xilinx DMA/Bridge Subsystem DMA engine. The DMA
+> +         provides high performance block data movement between Host memory
+> +         and the DMA subsystem. These direct memory transfers can be both in
+> +         the Host to Card (H2C) and Card to Host (C2H) transfers.
+> +         The core also provides up to 16 user interrupt wires that generate
+> +         interrupts to the host.
+> +
+>  config XILINX_ZYNQMP_DMA
+>         tristate "Xilinx ZynqMP DMA Engine"
+>         depends on ARCH_ZYNQ || MICROBLAZE || ARM64 || COMPILE_TEST
+
+> --- /dev/null
+> +++ b/drivers/dma/xilinx/xdma.c
+
+> +/**
+> + * xdma_probe - Driver probe function
+> + * @pdev: Pointer to the platform_device structure
+> + */
+> +static int xdma_probe(struct platform_device *pdev)
+> +{
+> +       struct xdma_platdata *pdata = dev_get_platdata(&pdev->dev);
+
+Platform data? No DT?
+Do we still accept plain platform drivers?
+
+> +static const struct platform_device_id xdma_id_table[] = {
+> +       { "xdma", 0},
+> +       { },
+> +};
+
+This table is not needed, as the single entry matches driver.name below.
+
+> +
+> +static struct platform_driver xdma_driver = {
+> +       .driver         = {
+> +               .name = "xdma",
+> +       },
+> +       .id_table       = xdma_id_table,
+> +       .probe          = xdma_probe,
+> +       .remove         = xdma_remove,
+> +};
+> +
+> +module_platform_driver(xdma_driver);
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.34.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds

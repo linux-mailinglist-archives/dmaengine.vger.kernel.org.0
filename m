@@ -2,121 +2,73 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F03C76A1E78
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Feb 2023 16:23:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED1186A2693
+	for <lists+dmaengine@lfdr.de>; Sat, 25 Feb 2023 02:38:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230313AbjBXPXp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 24 Feb 2023 10:23:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48792 "EHLO
+        id S230163AbjBYBh7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 24 Feb 2023 20:37:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbjBXPXh (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 24 Feb 2023 10:23:37 -0500
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 852D31BD3;
-        Fri, 24 Feb 2023 07:23:10 -0800 (PST)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-        by fd01.gateway.ufhost.com (Postfix) with ESMTP id E170724E2C7;
-        Fri, 24 Feb 2023 23:23:04 +0800 (CST)
-Received: from EXMBX168.cuchost.com (172.16.6.78) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 24 Feb
- 2023 23:23:04 +0800
-Received: from [192.168.125.93] (113.72.147.165) by EXMBX168.cuchost.com
- (172.16.6.78) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 24 Feb
- 2023 23:23:03 +0800
-Message-ID: <4636338e-b69c-0dc6-d9ee-2a687bf9448c@starfivetech.com>
-Date:   Fri, 24 Feb 2023 23:23:03 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: [PATCH v2 1/3] dt-bindings: dma: snps,dw-axi-dmac: Add reset
- items
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor@kernel.org>,
-        "Palmer Dabbelt" <palmer@dabbelt.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        "Emil Renner Berthing" <emil.renner.berthing@canonical.com>
-CC:     <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-References: <20230221140424.719-1-walker.chen@starfivetech.com>
- <20230221140424.719-2-walker.chen@starfivetech.com>
- <1467f7c5-07eb-97db-c6f2-573a4208cc28@linaro.org>
- <d0984638-3f7f-7e4e-fe3e-5e1f88375dca@starfivetech.com>
- <36188e04-332f-e944-9c58-f6f2b74987da@linaro.org>
- <bd4301c5-d79f-6ba5-a840-95b733d2d44e@starfivetech.com>
- <6ebf87aa-4422-1f84-7e76-276ac4d884c3@linaro.org>
-From:   Walker Chen <walker.chen@starfivetech.com>
-In-Reply-To: <6ebf87aa-4422-1f84-7e76-276ac4d884c3@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [113.72.147.165]
-X-ClientProxiedBy: EXCAS061.cuchost.com (172.16.6.21) To EXMBX168.cuchost.com
- (172.16.6.78)
-X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S230150AbjBYBh6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 24 Feb 2023 20:37:58 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70817EC60;
+        Fri, 24 Feb 2023 17:37:57 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2F4CEB81D78;
+        Sat, 25 Feb 2023 01:37:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CA8A2C433EF;
+        Sat, 25 Feb 2023 01:37:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677289074;
+        bh=mmc6ujydkNfiOmiAhQIcKI7mxZhfqrRKXc+fk6m6HDM=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=KRkRYY8yecJLR2WhFi5wzP+B93NlhQsd3FwxjqhgTfWDbKoIS46yVCXcK9aLoz776
+         +S7+YsN0HxRKT9uL8TTbqSVo/oNRoIhPIV+VL2a42sLZtudiy/0Z8iqKpLaxEP4feY
+         Y/9bmCSvtPgnujKWnoSfxZQ60DjR4Tl62zK24CHZnaw2BocSKPTtmVXsCsx3gNHtmW
+         kLQBd4ZheJy1rg5VypAKIxo82iVYbVFXECB/jIFZ2C6MIM4glxfmch0t31oasupxVf
+         aY+708TrPYMA7/4zeaHDxCwUUqKQR210Oj5sU7Zc3dRQR8++iorAGb9rI/JqDhGrP5
+         L926K0SN8A6Gw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B9CA0C41676;
+        Sat, 25 Feb 2023 01:37:54 +0000 (UTC)
+Subject: Re: [GIT PULL]: dmaengine updates for v6.3
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <Y/i6M7DxoQQwL5Et@matsya>
+References: <Y/i6M7DxoQQwL5Et@matsya>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <Y/i6M7DxoQQwL5Et@matsya>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-6.3-rc1
+X-PR-Tracked-Commit-Id: e922bbf37564a4c67efca9dd6133eaadbffb65f5
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9e6bfd42b14b45737cae8bc84c759f1874949b8b
+Message-Id: <167728907475.28954.5142347962769887728.pr-tracker-bot@kernel.org>
+Date:   Sat, 25 Feb 2023 01:37:54 +0000
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+The pull request you sent on Fri, 24 Feb 2023 18:52:59 +0530:
 
+> git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-6.3-rc1
 
-On 2023/2/24 21:21, Krzysztof Kozlowski wrote:
-> On 24/02/2023 14:09, Walker Chen wrote:
->> 
->> 
->> On 2023/2/24 18:51, Krzysztof Kozlowski wrote:
->>> On 24/02/2023 11:14, Walker Chen wrote:
->>>>>>    resets:
->>>>>> -    maxItems: 1
->>>>>> +    maxItems: 2
->>>>>
->>>>> This breaks ABI and all other users. Test your changes before sending.
->>>>
->>>> I think 'minItems' should be added here. So like this:
->>>> resets:
->>>>   minItems: 1
->>>>   maxItems: 2
->>>>
->>>> Other platform/users will not be affected by this.
->>>
->>> Which will allow two resets on all platforms. Is this correct for these
->>> platforms? Do they have two resets?
->>>
->> In kernel 6.2, only two platforms use this DMA controller (see 'arch/arc/boot/dts/hsdk.dts' and 'arch/riscv/boot/dts/canaan/k210.dtsi').
-> 
-> What about all out-of-tree platforms, bootloaders and FW?
-> 
->> There is one reset on k210, while there is no reset of DMA on hsdk at all.
->> If here minItems with value 1 is added and the value of maxItems is changed to 2, after my testing,
->> whether it is one reset or two resets, even no reset, there is no errors occur when doing dtbs_check,
-> 
-> Yeah, I know how this works.
-> 
->> the DMA initialization shall not be affected either on their platforms.
-> 
-> I asked whether the hardware physically have two resets. dtbs_check
-> checks the DTS, not the hardware. You know allow two resets for each
-> other variant. What's more, you call first reset axi for all variants.
-> This does not look correct, e.g. k210.dtsi does not indicate this is axi
-> reset line but reset for entire block.
-> 
-> Thus your change should be constrained per your variant (min/max in
-> top-level, allOf:if:then allowing two lines for you, disallowing for
-> others).
-> 
-I see what you mean. Thank you for your guidance!
-I will use allOf:if:then structure to indicate different case for resets in next version of patch.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9e6bfd42b14b45737cae8bc84c759f1874949b8b
 
-Best regards,
-Walker 
+Thank you!
 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html

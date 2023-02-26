@@ -2,82 +2,65 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3352E6A2AC7
-	for <lists+dmaengine@lfdr.de>; Sat, 25 Feb 2023 17:41:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7A2E6A2F02
+	for <lists+dmaengine@lfdr.de>; Sun, 26 Feb 2023 10:40:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229709AbjBYQlm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 25 Feb 2023 11:41:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56300 "EHLO
+        id S229536AbjBZJkt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 26 Feb 2023 04:40:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbjBYQll (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 25 Feb 2023 11:41:41 -0500
-Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 831BE125AF;
-        Sat, 25 Feb 2023 08:41:35 -0800 (PST)
-Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-172a623ad9aso3027885fac.13;
-        Sat, 25 Feb 2023 08:41:35 -0800 (PST)
+        with ESMTP id S229445AbjBZJks (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 26 Feb 2023 04:40:48 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ED1C1041B;
+        Sun, 26 Feb 2023 01:40:46 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id nw10-20020a17090b254a00b00233d7314c1cso7137214pjb.5;
+        Sun, 26 Feb 2023 01:40:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rmn+cqYTvDT85OGvCMKkjTNE8FVd8ZGTaREnVmw8Y5k=;
-        b=JeAIBpYUvNiXAA121YTlLRE7xs6FpBBdLcnKmViFAKnx0CAyuikX7hInf+ybRgcPU2
-         +qxGszBkgPNH4cJ4wAI4569+t1Xqf6fh5xaaQD98MO1fYRYlLG3zyXte2pP0cX/Oe5DZ
-         iSk5+0t1cywz6YkzojDiSA0c2orMUnZLEtqT/+iPn16CmlC3iLxUIKNnWvmULxuDanUC
-         jFwxulUiH4rLfylMJcybmUuXmvj6jcewXl5auogL9CVK1z8HLdut85UvNOLa2AdE3QPn
-         RjZzs+2BDhqeqYVEVmdYunlYeDNE0J71QG7PZ4iKjxXy3svG2dNR7jHcKrEGsF4WxZQ1
-         Qbmw==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7fHwmrCRCxm2Kglss2PSZMaGgwhyeQygsMnvaMvHoa0=;
+        b=cslYMk0gyd3EEsE8+9ioTOMDqscQXZRHyVJuqP79QqL2jQJBS0hhjHjz3mW+o+CRS4
+         Q/lkXjHyTc/zGaUpjAfFXbQggCR3ZEvPgfkKDdP8TL0KOSG3tn4WLXz7W3+ywkYgMOhl
+         LhmtKYxSVD45mcmDqYqOpeCROX36DD4jlGdD98i4IE95n1u8FE23u6sHAqpcm3i+WODJ
+         v4qkNngjLw8y5S2RSKPza4Ph50ytTdtVXjBkUp1Fsy5OxA7k7xtGCLluoMpsj1IFez9w
+         PuovoQ4+sv/9kq9v4EkY8xeyflqZaG/YuoSC7hbx7u8UkKU+M7M4Bkz1PJrbHcM8jN3g
+         j6HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rmn+cqYTvDT85OGvCMKkjTNE8FVd8ZGTaREnVmw8Y5k=;
-        b=QjTgcFXsbrMfsNhCkeBMLJbhS7SoS7l+2qnEw1wNZmtXHCk7UXfH8kySz9/fUJ08r3
-         pgfIrr3+yqouF9v/KUaCdVv5sDeo0RipvoDNMzdtc2RMJrWm+iPZ3bFixPj1q5d4deDV
-         HDqdBwJVWM4mR4ZXj/BSdCt5nrzwSHVWL19t36KWa1jRd5jwKFliiXQFWWaoUIa4tUjW
-         NNdfHXW+z63ezFycliWCBL+VacKLzDMw8bO98pDnV+1VofIAum+7zH3d0oWC6TcFytcr
-         0eHOX0FZ1jnsW8Si6RcfeNGkpzQYGMVM8z+VJyqfPMjJGioYCRHuAw2rEi6X9JxWCneg
-         A78A==
-X-Gm-Message-State: AO0yUKXEj8pbiN+tUZOyP5lKiCy0pB2sjwzXFS4KAVCyeu2Rq8wv9HbS
-        UpUlqejPF2vGF49noNcTCjm0twyipIY=
-X-Google-Smtp-Source: AK7set9nFJwgKU2JNnNF/RkpGiT2OOeIvv/dN+67jI23lAI/UoG09P6nrZwOJLRbeHtMWkberKCg4w==
-X-Received: by 2002:a05:6870:910c:b0:16d:c18d:4074 with SMTP id o12-20020a056870910c00b0016dc18d4074mr15754800oae.12.1677343294607;
-        Sat, 25 Feb 2023 08:41:34 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id t2-20020a05687044c200b001726cfeea97sm718811oai.29.2023.02.25.08.41.33
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7fHwmrCRCxm2Kglss2PSZMaGgwhyeQygsMnvaMvHoa0=;
+        b=VNZxRNpUqQZ45HTJeDqPoZDnev4RXYoIm21HL159mZc8Y58A4dMW4h5vHpZw7xn9Lq
+         YoPTboFYEAoQUU7jRdMt51820FHX75C5Wszruz8FjXC/aHT/afTIDzo004tkF31ySkfB
+         adzo7DZpP+jHiymfwuG+Vk1CKHnNwHR4N9swQc+/Kqv/86h984S1yQ6uTsAUCxlrgIRV
+         GiZ/ia8yGBe0eg/XTg+QYiCraU5IF9Ud1QoMGqDSkfX4g5TNs6Sbr2DAFbbGIzasrlGQ
+         nmvWlHnNKPPHN0hj6upIPlj7gdtkRRQJrvbl2z8sifTDcDxfpn5+/2Xza0Peveri3z2c
+         F3sw==
+X-Gm-Message-State: AO0yUKUAwVqqPPjdPDg618Ukc1i3zmdD5G7m0+s1KPhtyMvF/EStWXMR
+        j9/5qm4k5fvApNQlvT+g/fnUF2tRdQsATo4+
+X-Google-Smtp-Source: AK7set+dFUFPxr0bAdTB9AXnq3YP45AzvRNMPw2W1SzQs6TFUEu5nMH9qZBNfLTGg45ryBOUQox9fw==
+X-Received: by 2002:a17:90b:4aca:b0:237:9f75:6937 with SMTP id mh10-20020a17090b4aca00b002379f756937mr7743616pjb.28.1677404445540;
+        Sun, 26 Feb 2023 01:40:45 -0800 (PST)
+Received: from passwd123-ThinkStation-P920.. ([222.20.94.23])
+        by smtp.gmail.com with ESMTPSA id p5-20020a17090b010500b002349fcf17f8sm4206453pjz.15.2023.02.26.01.40.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Feb 2023 08:41:33 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Sat, 25 Feb 2023 08:41:32 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Fabien Parent <fparent@baylibre.com>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        vkoul@kernel.org, qii.wang@mediatek.com, matthias.bgg@gmail.com,
-        jic23@kernel.org, chaotian.jing@mediatek.com,
-        ulf.hansson@linaro.org, srinivas.kandagatla@linaro.org,
-        chunfeng.yun@mediatek.com, broonie@kernel.org,
-        wim@linux-watchdog.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-iio@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH 08/17] dt-bindings: watchdog: mtk-wdt: Add MT8365 SoC
- bindings
-Message-ID: <20230225164132.GA2905933@roeck-us.net>
-References: <20220531135026.238475-1-fparent@baylibre.com>
- <20220531135026.238475-9-fparent@baylibre.com>
+        Sun, 26 Feb 2023 01:40:45 -0800 (PST)
+From:   Kang Chen <void0red@gmail.com>
+To:     peter.ujfalusi@gmail.com
+Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kang Chen <void0red@gmail.com>
+Subject: [PATCH] dmaengine: ti: add null check of devm_kasprintf in edma_probe and udma_probe
+Date:   Sun, 26 Feb 2023 17:40:38 +0800
+Message-Id: <20230226094038.3227062-1-void0red@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220531135026.238475-9-fparent@baylibre.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -85,31 +68,54 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, May 31, 2022 at 03:50:17PM +0200, Fabien Parent wrote:
-> Add binding documentation for the MT8365 SoC.
-> 
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+devm_kasprintf may fails, irq_name and uc->name might be null and wrong irq
+name will be used in request.
 
-Going through my old e-mails:
+Signed-off-by: Kang Chen <void0red@gmail.com>
+---
+ drivers/dma/ti/edma.c    | 8 ++++++++
+ drivers/dma/ti/k3-udma.c | 2 ++
+ 2 files changed, 10 insertions(+)
 
-This patch never made it upstream and would have to be rewritten to apply
-to Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml.
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index fa06d7e6d..85cd72b64 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -2413,6 +2413,10 @@ static int edma_probe(struct platform_device *pdev)
+ 	if (irq >= 0) {
+ 		irq_name = devm_kasprintf(dev, GFP_KERNEL, "%s_ccint",
+ 					  dev_name(dev));
++		if (!irq_name) {
++			ret = -ENOMEM;
++			goto err_disable_pm;
++		}
+ 		ret = devm_request_irq(dev, irq, dma_irq_handler, 0, irq_name,
+ 				       ecc);
+ 		if (ret) {
+@@ -2429,6 +2433,10 @@ static int edma_probe(struct platform_device *pdev)
+ 	if (irq >= 0) {
+ 		irq_name = devm_kasprintf(dev, GFP_KERNEL, "%s_ccerrint",
+ 					  dev_name(dev));
++		if (!irq_name) {
++			ret = -ENOMEM;
++			goto err_disable_pm;
++		}
+ 		ret = devm_request_irq(dev, irq, dma_ccerr_handler, 0, irq_name,
+ 				       ecc);
+ 		if (ret) {
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 7e23a6fde..692d1d25c 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -5494,6 +5494,8 @@ static int udma_probe(struct platform_device *pdev)
+ 		uc->config.dir = DMA_MEM_TO_MEM;
+ 		uc->name = devm_kasprintf(dev, GFP_KERNEL, "%s chan%d",
+ 					  dev_name(dev), i);
++		if (!uc->name)
++			return -ENOMEM;
+ 
+ 		vchan_init(&uc->vc, &ud->ddev);
+ 		/* Use custom vchan completion handling */
+-- 
+2.34.1
 
-Guenter
-
-> ---
->  Documentation/devicetree/bindings/watchdog/mtk-wdt.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> index a97418c74f6b..0e63c4ba3785 100644
-> --- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> @@ -19,6 +19,7 @@ Required properties:
->  	"mediatek,mt8516-wdt", "mediatek,mt6589-wdt": for MT8516
->  	"mediatek,mt8192-wdt": for MT8192
->  	"mediatek,mt8195-wdt", "mediatek,mt6589-wdt": for MT8195
-> +	"mediatek,mt8365-wdt", "mediatek,mt6589-wdt": for MT8365
->  
->  - reg : Specifies base physical address and size of the registers.
->  

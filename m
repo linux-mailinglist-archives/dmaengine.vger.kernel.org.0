@@ -2,141 +2,122 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB9AA6A656D
-	for <lists+dmaengine@lfdr.de>; Wed,  1 Mar 2023 03:23:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F13E6A720B
+	for <lists+dmaengine@lfdr.de>; Wed,  1 Mar 2023 18:28:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229615AbjCACXC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 28 Feb 2023 21:23:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40756 "EHLO
+        id S229530AbjCAR2S (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 1 Mar 2023 12:28:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229567AbjCACXC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Feb 2023 21:23:02 -0500
-Received: from out-50.mta1.migadu.com (out-50.mta1.migadu.com [IPv6:2001:41d0:203:375::32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D5B030D2
-        for <dmaengine@vger.kernel.org>; Tue, 28 Feb 2023 18:22:59 -0800 (PST)
-Date:   Wed, 1 Mar 2023 10:22:53 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1677637377;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KjfrdvJ5EsT0YAy1o3AET9M3uaWnQUjK9n1xqYiKKqI=;
-        b=ZFXZDpPnzIeQyQPyopzXCeCoC1mkMkXU8UcQM1hTChwqORjbga7wiPKXPpidve6XUGscqM
-        fQs+AXb1Z5HNbO/mV3bCbstCvjWzgrpZxEyrajLZw54msNo26fkgmuqizhu18ygxhVQ1kS
-        5cyqVzY61WkjZGpnvEYJFrCGMYxBAAI=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Cai Huoqing <cai.huoqing@linux.dev>
-To:     fancer.lancer@gmail.com
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 0/4] dmaengine: dw-edma: Add support for native HDMA
-Message-ID: <Y/62/XUiHz363qmD@chq-MS-7D45>
-References: <20230221034656.14476-1-cai.huoqing@linux.dev>
+        with ESMTP id S229734AbjCAR2R (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 1 Mar 2023 12:28:17 -0500
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B37F61B9;
+        Wed,  1 Mar 2023 09:28:12 -0800 (PST)
+Received: by mail-ed1-x543.google.com with SMTP id s26so56774498edw.11;
+        Wed, 01 Mar 2023 09:28:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gulWVH/sPIU6yOCZNhy1ilRLX8pmCKNR1YsylU0tXqg=;
+        b=MY2ha1FCla4JB/Wvo5yDX5+a5sR1M2PfNbPuMfm1zLo9DxFq3w1npu0wm2wnqNabif
+         hf+dwv6sXF0/DyiSchrpgQERJMmpp/PpEku/N8oI1GsWbAPUAzqQmlDUEVtfeKhH0F+5
+         ohLl61Y5qwKxAz+fZPpwcttfd/OeZ+5YmwjUQfXfaOhsOvJLI7yDJurXTGgbZ0c25gxB
+         OiiyqJGLEm+JtW+K1qskQHLHVlo6V6dXzln7XkTVpcBhku/s5ROTPQlVkZ+h9SpXo3SI
+         Td6dIJZ7vBBlQ/TCvfZNLQOyKgAOcesmfkRMzcun4wrRFJ0Ao/3kirvlL6xCX4MksC/X
+         99kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gulWVH/sPIU6yOCZNhy1ilRLX8pmCKNR1YsylU0tXqg=;
+        b=n0ilRbiY4dNahOQb3j1hxQhG/yBbR9z3jP2qSyPfahRB/7J7gbnrDqufTkxJCqweg8
+         kJlCkIoVdLdHmBo0LcRvy3pH0dZr7Fkiypko3/iSJmM50ygPbkFfbvfYlOOSUZe+62/o
+         MgQ5VdGgfgfYDPkHFVmO5e4Cm/RaIEcL9MQ+9N9CvNAvZsWSyBxDmqihiVcbikFn0Mj3
+         pYv6FT4j3PrS48Zn9SO3MKQm0DXK2oPxclKeTdS/FENtCkxXQbVaGnp0SmE4HsANexdd
+         khZr48Zyws64ouy43Axgf4z5R5EvPXSj/lgt/bRoITBpHcrLE2s6VTm+UUiJnH7Qz08B
+         Wc1Q==
+X-Gm-Message-State: AO0yUKXQQCZraYogbhyFrkGhvzoENox8RQq0rVx9JodjHa67sc9H66S6
+        o/tE/+7ATN1A1vwIu99JpFY=
+X-Google-Smtp-Source: AK7set/oP8YcQpwI4E3owCU87g+/OfqHNU5T/spkclqiEAS8Llf4/XCGUSo56vD3xah0+tfmftjYuQ==
+X-Received: by 2002:a05:6402:1117:b0:4ad:7224:ce94 with SMTP id u23-20020a056402111700b004ad7224ce94mr8780777edv.15.1677691691044;
+        Wed, 01 Mar 2023 09:28:11 -0800 (PST)
+Received: from [127.0.1.1] (i130160.upc-i.chello.nl. [62.195.130.160])
+        by smtp.googlemail.com with ESMTPSA id k12-20020a508acc000000b004af71e8cc3dsm5851023edk.60.2023.03.01.09.28.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Mar 2023 09:28:10 -0800 (PST)
+From:   Jakob Koschel <jkl820.git@gmail.com>
+Date:   Wed, 01 Mar 2023 18:28:06 +0100
+Subject: [PATCH] dmaengine: ppc4xx: Avoid returning iterator in
+ ppc440spe_get_group_entry()
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230221034656.14476-1-cai.huoqing@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230301-dmaengine-ppc4xx-avoid-iter-after-loop-v1-1-330689e1e6fd@gmail.com>
+X-B4-Tracking: v=1; b=H4sIACWL/2MC/x2OwQrDIBBEfyXsuQvGhFD6K6WHVddkoVHREoSQf
+ 4/2MvCY4TEnFM7CBV7DCZkPKRJDg/ExgN0orIziGoNWelKTGtHtxGGVwJiSnWtFOqI4lB9nJN/
+ zG2NC/VyU0WYhP4/QZIYKo8kU7NZ1O5U27UXK7KX+H7w/13UDoTtxYZEAAAA=
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pietro Borrello <borrello@diag.uniroma1.it>,
+        Cristiano Giuffrida <c.giuffrida@vu.nl>,
+        "Bos, H.J." <h.j.bos@vu.nl>, Jakob Koschel <jkl820.git@gmail.com>
+X-Mailer: b4 0.12.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1677691690; l=1271;
+ i=jkl820.git@gmail.com; s=20230112; h=from:subject:message-id;
+ bh=SYwttO2B0dATcsw8vkVCVRiW0EC92ynoBMVqWDILQOw=;
+ b=L/YvdY4EBghRKSRVN+Llho0v4AnJD+stIr5hKidmbjspFs51fe/LMlv09llbCTNYOqI1DIUEgJC5
+ SpvbOYmbCfDwlUoqiaXNhAEjklxa5VfKS9R0VtBgcZ9jvJsiVW0S
+X-Developer-Key: i=jkl820.git@gmail.com; a=ed25519;
+ pk=rcRpP90oZXet9udPj+2yOibfz31aYv8tpf0+ZYOQhyA=
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 21 2月 23 11:46:51, Cai Huoqing wrote:
-> Add support for HDMA NATIVE, as long the IP design has set
-> the compatible register map parameter-HDMA_NATIVE,
-> which allows compatibility for native HDMA register configuration.
-> 
-> The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
-> And the native HDMA registers are different from eDMA,
-> so this patch add support for HDMA NATIVE mode.
-> 
-> HDMA write and read channels operate independently to maximize
-> the performance of the HDMA read and write data transfer over
-> the link When you configure the HDMA with multiple read channels,
-> then it uses a round robin (RR) arbitration scheme to select
-> the next read channel to be serviced.The same applies when
-> youhave multiple write channels.
-> 
-> The native HDMA driver also supports a maximum of 16 independent
-> channels (8 write + 8 read), which can run simultaneously.
-> Both SAR (Source Address Register) and DAR (Destination Address Register)
-> are aligned to byte.
-Just ping this patch v4
+Linus proposed to avoid any use of the list iterator variable after the
+loop, in the attempt to move the list iterator variable declaration into
+the marcro to avoid any potential misuse after the loop [1].
 
-Thanks,
-Cai-
-> 
-> Cai huoqing (4):
->   dmaengine: dw-edma: Rename dw_edma_core_ops structure to
->     dw_edma_plat_ops
->   dmaengine: dw-edma: Create a new dw_edma_core_ops structure to
->     abstract controller operation
->   dmaengine: dw-edma: Add support for native HDMA
->   dmaengine: dw-edma: Add HDMA DebugFS support
-> 
->   v3->v4:
->     [1/4]
->     1.Update the structure name dw_edma_plat_ops in commit log
->     2.Fix code stytle.
->     [2/4]
->     3.Refactor dw_edma_interrupt() and related callbacks to
->       make the code more readable, the calls hierarchy like this:
-> 
->       irq: dw_edma_interrupt_{write,read}()
->       +-> dw_edma_core_handle_int() (dw-edma-v0-core.c)
->           +-> dw_edma_v0_core_status_done_int() (dw-edma-v0-core.c)
->           +-> dw_edma_v0_core_clear_done_int() (dw-edma-v0-core.c)
->           +-> dw_edma_done_interrupt() (dw-edma-core.c)
->           +-> dw_edma_v0_core_status_abort_int() (dw-edma-v0-core.c)
->           +-> dw_edma_v0_core_clear_abort_int() (dw-edma-v0-core.c)
->           +-> dw_edma_abort_interrupt() (dw-edma-core.c)
->     4.Use the dw_edma_v0_core name for the dw_edma_core_ops structure instance.
->     [3/4]
->     5.Fix weird indentation of control1, func_num, etc.
->     6.Include 'linux/io-64-nonatomic-lo-hi.h' to fix warning.
->     7.Refactor dw_edma_core_handle_int related callback in dw_hdma_v0_core ops.
->     [4/4]
->     8.Add field watermark_en, func_num, qos, msi_watermark,etc.
->     9.Make variables reverse xmas tree order.
->     10.Declare const for 'struct dw_hdma_debugfs_entry'
-> 
->   v3 link:
->   https://lore.kernel.org/lkml/20230213132411.65524-1-cai.huoqing@linux.dev/
-> 
->  drivers/dma/dw-edma/Makefile                 |   8 +-
->  drivers/dma/dw-edma/dw-edma-core.c           |  77 ++---
->  drivers/dma/dw-edma/dw-edma-core.h           |  56 ++++
->  drivers/dma/dw-edma/dw-edma-pcie.c           |   4 +-
->  drivers/dma/dw-edma/dw-edma-v0-core.c        |  73 ++++-
->  drivers/dma/dw-edma/dw-edma-v0-core.h        |  14 +-
->  drivers/dma/dw-edma/dw-hdma-v0-core.c        | 302 +++++++++++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-core.h        |  17 ++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c     | 181 +++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h     |  22 ++
->  drivers/dma/dw-edma/dw-hdma-v0-regs.h        | 129 ++++++++
->  drivers/pci/controller/dwc/pcie-designware.c |   2 +-
->  include/linux/dma/edma.h                     |   7 +-
->  13 files changed, 807 insertions(+), 85 deletions(-)
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> 
-> -- 
-> 2.34.1
-> 
+Instead we'll just return 'iter' within the iterator and otherwise NULL.
+This ensures there is never a bogus pointer returned (e.g. if the list
+is empty).
+
+Link: https://lore.kernel.org/all/CAHk-=wgRr_D8CB-D9Kg-c=EHreAsk5SqXPwr9Y7k9sA6cWXJ6w@mail.gmail.com/ [1]
+Signed-off-by: Jakob Koschel <jkl820.git@gmail.com>
+---
+ drivers/dma/ppc4xx/adma.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/ppc4xx/adma.c b/drivers/dma/ppc4xx/adma.c
+index 686c270ef710..f62f9653196f 100644
+--- a/drivers/dma/ppc4xx/adma.c
++++ b/drivers/dma/ppc4xx/adma.c
+@@ -1431,9 +1431,9 @@ ppc440spe_get_group_entry(struct ppc440spe_adma_desc_slot *tdesc, u32 entry_idx)
+ 
+ 	list_for_each_entry(iter, &tdesc->group_list, chain_node) {
+ 		if (i++ == entry_idx)
+-			break;
++			return iter;
+ 	}
+-	return iter;
++	return NULL;
+ }
+ 
+ /**
+
+---
+base-commit: c0927a7a5391f7d8e593e5e50ead7505a23cadf9
+change-id: 20230301-dmaengine-ppc4xx-avoid-iter-after-loop-2860b2b6af41
+
+Best regards,
+-- 
+Jakob Koschel <jkl820.git@gmail.com>
+

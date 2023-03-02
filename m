@@ -2,47 +2,47 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ED9D76A79CA
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Mar 2023 04:07:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AFD76A79F8
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Mar 2023 04:20:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229657AbjCBDHP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 1 Mar 2023 22:07:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54138 "EHLO
+        id S229613AbjCBDUZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 1 Mar 2023 22:20:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229595AbjCBDHO (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 1 Mar 2023 22:07:14 -0500
+        with ESMTP id S229471AbjCBDUY (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 1 Mar 2023 22:20:24 -0500
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45ECF48E1B;
-        Wed,  1 Mar 2023 19:07:13 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 012C64617C;
+        Wed,  1 Mar 2023 19:20:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677726433; x=1709262433;
+  t=1677727223; x=1709263223;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=ShesbyNrXCmnE5x/WCFn2XeFR0xUOirn7589vr8VSJQ=;
-  b=diMjbHat6qLm3ncr3P9R5AWAt6akGIQZzq4V5gtG6n8yCXilma2vZBZQ
-   NrdxzNkHrrQIvQ6vH0MerUYk85hVodP9N//K5zKBMWNwWqzUMjWwtxYfy
-   RIinJkIlzVL0oHilXXft/cfhsfsTLqCOVEoKrRcxVVKulArow+NMAiMb2
-   6Q/6okmZUP7ZyrU62NBN8QX//w58rE2PLQJelfbGEJJ9EifHTU23AlgBB
-   fScbz3jOXaadoUncIUsYBPNecvZ9wEKnTlrx5CzQTDXq9dAq9TmxC+Egr
-   STGJw8qUC9w85N2lnPbUWjq6XqgkL2dvQ78+7192fcTEF3DynXo0JqnGJ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="336895365"
+  bh=5wCXS3NGbhL2UyPQFWo52MSxzJKpnJXFbkk9FAvmH6g=;
+  b=O98+j6eEmN1oCRLj3ikJXFObwh7zjGTaoNX53hYKTdVAjBQOixFAFlCh
+   dWEgmst3XTc/qaXmnGsNh7utBd4Nnm2j2DsKi/rnggf3dvcC2V7r7JeQs
+   fJRRWz2aDRo5jyTxUzrUCjq3IEcN46wf+RZOsvd4VqFiHNKYBMbjDIKZq
+   ieaD/vKvclZyH/r3Ml7ZMWBeHuOQrVBGnq0aE7Q7lLqCOJNCX9gmDMgSI
+   AbVJINNafOTcDsbHcc0IkudF5tDaVmo9vzy4gF/CVWGF/wN//pTGJrHh/
+   Mp1UM3YXQfZ9fQSm2cUSp82IJZ92s3bcwkbOZfgpSEpn09wdgMhFOZB8k
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="336898259"
 X-IronPort-AV: E=Sophos;i="5.98,226,1673942400"; 
-   d="scan'208";a="336895365"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2023 19:07:02 -0800
+   d="scan'208";a="336898259"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2023 19:20:22 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="817819177"
+X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="920497304"
 X-IronPort-AV: E=Sophos;i="5.98,226,1673942400"; 
-   d="scan'208";a="817819177"
+   d="scan'208";a="920497304"
 Received: from lkp-server01.sh.intel.com (HELO 776573491cc5) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 01 Mar 2023 19:06:57 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 01 Mar 2023 19:20:18 -0800
 Received: from kbuild by 776573491cc5 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1pXZHV-000080-0X;
-        Thu, 02 Mar 2023 03:06:57 +0000
-Date:   Thu, 2 Mar 2023 11:06:51 +0800
+        id 1pXZU5-00008f-1k;
+        Thu, 02 Mar 2023 03:19:57 +0000
+Date:   Thu, 2 Mar 2023 11:19:15 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
         LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
@@ -62,7 +62,7 @@ Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
         "Zanussi, Tom" <tom.zanussi@intel.com>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>
 Subject: Re: [PATCH 3/4] iommu/sva: Support reservation of global PASIDs
-Message-ID: <202303021016.avd8l1rJ-lkp@intel.com>
+Message-ID: <202303021143.qA8IMjmN-lkp@intel.com>
 References: <20230302005959.2695267-4-jacob.jun.pan@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -92,39 +92,73 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Jacob-Pan/iommu-vt-d-Impl
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
 patch link:    https://lore.kernel.org/r/20230302005959.2695267-4-jacob.jun.pan%40linux.intel.com
 patch subject: [PATCH 3/4] iommu/sva: Support reservation of global PASIDs
-config: arm64-randconfig-r013-20230302 (https://download.01.org/0day-ci/archive/20230302/202303021016.avd8l1rJ-lkp@intel.com/config)
+config: hexagon-buildonly-randconfig-r005-20230302 (https://download.01.org/0day-ci/archive/20230302/202303021143.qA8IMjmN-lkp@intel.com/config)
 compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project 67409911353323ca5edf2049ef0df54132fa1ca7)
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
-        # install arm64 cross compiling tool for clang build
-        # apt-get install binutils-aarch64-linux-gnu
         # https://github.com/intel-lab-lkp/linux/commit/b27170369658e99a0aafd84985de0ce48c1b2539
         git remote add linux-review https://github.com/intel-lab-lkp/linux
         git fetch --no-tags linux-review Jacob-Pan/iommu-vt-d-Implement-set-device-pasid-op-for-default-domain/20230302-085748
         git checkout b27170369658e99a0aafd84985de0ce48c1b2539
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 SHELL=/bin/bash drivers/gpu/drm/exynos/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=hexagon olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=hexagon SHELL=/bin/bash drivers/crypto/hisilicon/sec/
 
 If you fix the issue, kindly add following tag where applicable
 | Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202303021016.avd8l1rJ-lkp@intel.com/
+| Link: https://lore.kernel.org/oe-kbuild-all/202303021143.qA8IMjmN-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   In file included from drivers/gpu/drm/exynos/exynos_drm_dma.c:8:
+   In file included from drivers/crypto/hisilicon/sec/sec_drv.c:11:
+   In file included from include/linux/dma-mapping.h:10:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/hexagon/include/asm/io.h:334:
+   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           val = __raw_readb(PCI_IOBASE + addr);
+                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+                                                           ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
+   #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
+                                                     ^
+   In file included from drivers/crypto/hisilicon/sec/sec_drv.c:11:
+   In file included from include/linux/dma-mapping.h:10:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/hexagon/include/asm/io.h:334:
+   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+                                                           ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
+   #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
+                                                     ^
+   In file included from drivers/crypto/hisilicon/sec/sec_drv.c:11:
+   In file included from include/linux/dma-mapping.h:10:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/hexagon/include/asm/io.h:334:
+   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           __raw_writeb(value, PCI_IOBASE + addr);
+                               ~~~~~~~~~~ ^
+   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+                                                         ~~~~~~~~~~ ^
+   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+                                                         ~~~~~~~~~~ ^
+   In file included from drivers/crypto/hisilicon/sec/sec_drv.c:14:
 >> include/linux/iommu.h:1215:1: error: expected identifier or '('
    {
    ^
-   drivers/gpu/drm/exynos/exynos_drm_dma.c:54:35: warning: implicit conversion from 'unsigned long long' to 'unsigned int' changes value from 18446744073709551615 to 4294967295 [-Wconstant-conversion]
-           dma_set_max_seg_size(subdrv_dev, DMA_BIT_MASK(32));
-           ~~~~~~~~~~~~~~~~~~~~             ^~~~~~~~~~~~~~~~
-   include/linux/dma-mapping.h:76:40: note: expanded from macro 'DMA_BIT_MASK'
+   drivers/crypto/hisilicon/sec/sec_drv.c:1209:39: warning: shift count >= width of type [-Wshift-count-overflow]
+           ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+                                                ^~~~~~~~~~~~~~~~
+   include/linux/dma-mapping.h:76:54: note: expanded from macro 'DMA_BIT_MASK'
    #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
-                                          ^~~~~
-   1 warning and 1 error generated.
+                                                        ^ ~~~
+   7 warnings and 1 error generated.
 
 
 vim +1215 include/linux/iommu.h

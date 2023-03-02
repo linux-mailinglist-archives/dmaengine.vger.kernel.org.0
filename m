@@ -2,96 +2,80 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B68E66A87BB
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Mar 2023 18:19:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 251766A8833
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Mar 2023 19:01:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229683AbjCBRTY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 2 Mar 2023 12:19:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56982 "EHLO
+        id S229695AbjCBSA7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 2 Mar 2023 13:00:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229701AbjCBRTX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 2 Mar 2023 12:19:23 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FFB5CA26;
-        Thu,  2 Mar 2023 09:19:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677777562; x=1709313562;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=t6Bmp0fFrnUCAiBWt37tkMKRrr79WxRyKdKg/hHFkKg=;
-  b=NaBkTcAU7tdLy2RfP3iodlo5NckgeVEwDH9wiAk0ihbkz9sEMyzQJ9+i
-   gCkkH0KmOGewr5stGPufKx2i85dUFmXznsw/ZfmfjDZjLESj0w4ZTTLc8
-   0Dbu3edExg93KYjleZ8ICNiITWiwRiV+bb8XSEaNLus+2NNPOxVAggsSb
-   e229dW3JMQFC9BAd/0I+X9yZcDeiBL9F8lG3hd26FQFjskbPguX/+T6Ro
-   1gdD4KgcDhzchQ0R3hHxblRdHQe3VOh4ydEcmkF4EhQ2hoSsPMtRIey9G
-   D8b4p9aEvTbRpykGnhNcmJqYmKhhX0/wJhlBolD55lehJjmdVNOvIiOdq
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10637"; a="333508780"
-X-IronPort-AV: E=Sophos;i="5.98,228,1673942400"; 
-   d="scan'208";a="333508780"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2023 09:19:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10637"; a="849150513"
-X-IronPort-AV: E=Sophos;i="5.98,228,1673942400"; 
-   d="scan'208";a="849150513"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2023 09:19:21 -0800
-Date:   Thu, 2 Mar 2023 09:23:10 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Tina Zhang <tina.zhang@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, <iommu@lists.linux.dev>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Dave Hansen" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "X86 Kernel" <x86@kernel.org>, <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>, <corbet@lwn.net>,
-        <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v4 3/6] iommu/sva: Stop using ioasid_set for SVA
-Message-ID: <20230302092310.77f97361@jacob-builder>
-In-Reply-To: <43e9711f-042e-eaf9-e091-07db78cad943@intel.com>
-References: <20230301235646.2692846-1-jacob.jun.pan@linux.intel.com>
-        <20230301235646.2692846-4-jacob.jun.pan@linux.intel.com>
-        <43e9711f-042e-eaf9-e091-07db78cad943@intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        with ESMTP id S229480AbjCBSA6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 2 Mar 2023 13:00:58 -0500
+X-Greylist: delayed 970 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 02 Mar 2023 10:00:57 PST
+Received: from www381.your-server.de (www381.your-server.de [78.46.137.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D8BC3B0EE;
+        Thu,  2 Mar 2023 10:00:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+        s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID;
+        bh=4IbCOFCeBwXgy84YRcxOCpjeU9wDALUMkNtS889rDxE=; b=AyabjqvNJyhU5Og+xENvCL+fpP
+        qkD8tjW3rj7LrMdujFDbrOEDeWdT0DDNppAOzlTHl5nQDb56vnPaS3QgZ6e/nfSB7LSGGzhc9Qy0B
+        eCJG8qIZPaukd3Sq2lqDCJk0IWLq2eQ+OFT5rmTSCOPqnQHZGnAn90VtoLDpv/2DClqEi1TlZp0Nc
+        lXmfqJ1Jy2jvyxsqxt5KMsAXHN321VQPsu4UtWFCXGiVLKbPCRtuL2N6DjhcMk+vJK/06lxog8EPG
+        7O/pVn85ilMTuzLUcw5ZSMT9OYtouLk90UNaUg+BwEJKWZsjiGduRWKhZsxFlEqz1VyfPo0poHf0L
+        9Z5SwPrA==;
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www381.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <lars@metafoo.de>)
+        id 1pXmhj-0005nh-6i; Thu, 02 Mar 2023 18:26:55 +0100
+Received: from [2604:5500:c0e5:eb00:da5e:d3ff:feff:933b]
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1pXmhi-000JZJ-Ju; Thu, 02 Mar 2023 18:26:54 +0100
+Message-ID: <b108f61d-e812-a500-0c8f-4fb1acd44ca2@metafoo.de>
+Date:   Thu, 2 Mar 2023 09:26:51 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v4 3/4] dmaengine: dw-edma: Add support for native HDMA
+Content-Language: en-US
+To:     Cai Huoqing <cai.huoqing@linux.dev>, fancer.lancer@gmail.com
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20230221034656.14476-1-cai.huoqing@linux.dev>
+ <20230221034656.14476-4-cai.huoqing@linux.dev>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+In-Reply-To: <20230221034656.14476-4-cai.huoqing@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.103.8/26828/Thu Mar  2 07:36:42 2023)
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Tina,
+On 2/20/23 19:46, Cai Huoqing wrote:
+> +void dw_hdma_v0_core_register(struct dw_edma *dw)
+> +{
+> +	dw->core = &dw_hdma_v0_core;
+> +}
 
-On Thu, 2 Mar 2023 21:52:42 +0800, Tina Zhang <tina.zhang@intel.com> wrote:
+Where is dw_hdma_v0_core_register() called?
 
-> >   		if (mm->pasid < min || mm->pasid >= max)  
-> Here seems not right, since the valid range is defined [min, max]. 
-> Shouldn't the invalid range be:
-> 		if (mm->pasid < min || mm->pasid > max)
-yes it is better to be consistent even if we removed the inclusive
-requirements in the previous comments.
 
-Thanks,
-
-Jacob

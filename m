@@ -2,104 +2,110 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EEB76A840D
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Mar 2023 15:20:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F83B6A8717
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Mar 2023 17:43:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229471AbjCBOUa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 2 Mar 2023 09:20:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41496 "EHLO
+        id S229970AbjCBQnz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 2 Mar 2023 11:43:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229658AbjCBOU3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 2 Mar 2023 09:20:29 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87C9C19F1F;
-        Thu,  2 Mar 2023 06:20:28 -0800 (PST)
+        with ESMTP id S229849AbjCBQnx (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 2 Mar 2023 11:43:53 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AE9F15C9D;
+        Thu,  2 Mar 2023 08:43:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677766828; x=1709302828;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3676zTBvU6TZnvPW7IT27dMb+Hxhu8evGp71QQAk5BI=;
-  b=hFy/LeqKbvY+wnkS1L07Qdxu3VFeCUAgJdFagw/3CZFLgfy9wc9mpwGq
-   iVMU8cgDfa9HzNJofa0ryhE2zsVURybhwvzVcZwtnsY51FYWqc5iMTB0j
-   spY/9rrhw6VbRwnfzN7Hv0zFZjw+Z29Rfjxwc+YjmQrc87Kqu2cQXkIqE
-   5Vi14Ri1jZvn52EiyRpXiL3jK5DhY7bK1pG3ibTzyXaVkHwuBy9c2x2x7
-   2/taGh+PxFkLJl/o3rqumTWgkeIMBmNsC6L1JZiVsU8peL0JB6OJB52DW
-   bok+94+nP78FUhi1JFOPN0QtS5JxIIyigh3O4eBZ+OZf1Zl0iiGD62MGR
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10637"; a="397299707"
-X-IronPort-AV: E=Sophos;i="5.98,227,1673942400"; 
-   d="scan'208";a="397299707"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2023 06:11:43 -0800
+  t=1677775432; x=1709311432;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ZVR0fEMxC1xCM/KNPaB7wfbb6IVdTmO+3FaxenBdqhA=;
+  b=GGdMrMFdYPTIw7S5/9i8iXqU+qPX2IvPAdDRgXoX+Y3rJ5xkMPOliG8n
+   6pIWCchiOIa3pQGi1fSdC0ld9p/LWQ3Mzha/eCpOpCJrfDTlPyJRK+5XM
+   JPfAZr7NbHzFHioW9bp6QN6FfZ8b2HG6J3JYEGuhdFGPCpnB5mchhFyFt
+   z1IwC+LK3ZN0Jan/V4KWtap5zll1qNIsZ2sH4iilvdczp6TPvr3XI9wj6
+   msBslFyAIz9qph8Gel1Xkm5CyEcNdwFH08ogTijqoVO4F0kqCpIjiFXLQ
+   NxCVeDo1WC4pYlSTtPqYgriIBl/zAhijoJZ3NkoWAcjHL5XgsRkm2rqhb
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10637"; a="334801851"
+X-IronPort-AV: E=Sophos;i="5.98,228,1673942400"; 
+   d="scan'208";a="334801851"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2023 08:43:51 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10637"; a="739086119"
-X-IronPort-AV: E=Sophos;i="5.98,227,1673942400"; 
-   d="scan'208";a="739086119"
-Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.254.214.218]) ([10.254.214.218])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2023 06:11:39 -0800
-Message-ID: <0afa8e6e-1676-d6a5-d679-173351fe439c@linux.intel.com>
-Date:   Thu, 2 Mar 2023 22:11:36 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Cc:     baolu.lu@linux.intel.com, Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Zanussi, Tom" <tom.zanussi@intel.com>
-Subject: Re: [PATCH 2/4] iommu/vt-d: Use non-privileged mode for all PASIDs
-Content-Language: en-US
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
+X-IronPort-AV: E=McAfee;i="6500,9779,10637"; a="668314513"
+X-IronPort-AV: E=Sophos;i="5.98,228,1673942400"; 
+   d="scan'208";a="668314513"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2023 08:43:50 -0800
+Date:   Thu, 2 Mar 2023 08:47:39 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
         Jason Gunthorpe <jgg@nvidia.com>,
-        Joerg Roedel <joro@8bytes.org>, dmaengine@vger.kernel.org,
-        vkoul@kernel.org
-References: <20230302005959.2695267-1-jacob.jun.pan@linux.intel.com>
- <20230302005959.2695267-3-jacob.jun.pan@linux.intel.com>
-From:   Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20230302005959.2695267-3-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Jean-Philippe Brucker" <jean-philippe@linaro.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        X86 Kernel <x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v4 2/6] iommu/sva: Move PASID helpers to sva code
+Message-ID: <20230302084518.33712064@jacob-builder>
+In-Reply-To: <BN9PR11MB5276E466C33CB6240B06B0728CB29@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20230301235646.2692846-1-jacob.jun.pan@linux.intel.com>
+ <20230301235646.2692846-3-jacob.jun.pan@linux.intel.com>
+ <BN9PR11MB5276E466C33CB6240B06B0728CB29@BN9PR11MB5276.namprd11.prod.outlook.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 2023/3/2 8:59, Jacob Pan wrote:
-> For in-kernel DMA, use non-privileged access for all PASIDs to be
-> consistent with RID_PASID.
-> There's no need to differentiate user and kernel for in-kernel DMA. >
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->   drivers/iommu/intel/iommu.c | 2 --
->   1 file changed, 2 deletions(-)
+Hi Kevin,
+
+On Thu, 2 Mar 2023 09:03:52 +0000, "Tian, Kevin" <kevin.tian@intel.com>
+wrote:
+
+> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Sent: Thursday, March 2, 2023 7:57 AM
+> >
+> > -static inline void mm_pasid_drop(struct mm_struct *mm)
+> > -{
+> > -	if (pasid_valid(mm->pasid)) {
+> > -		ioasid_free(mm->pasid);
+> > -		mm->pasid = INVALID_IOASID;
+> > -	}
+> > -}
+> > +void mm_pasid_drop(struct mm_struct *mm);  
 > 
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index a0cb3bc851ac..9e3c056e392d 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -2334,8 +2334,6 @@ static int domain_setup_first_level(struct intel_iommu *iommu,
->   	if (level != 4 && level != 5)
->   		return -EINVAL;
->   
-> -	if (pasid != PASID_RID2PASID)
-> -		flags |= PASID_FLAG_SUPERVISOR_MODE;
+> Is it good to have a function declared in a header file of one
+> subsystem while being implemented in another subsystem?
+Good point!  I will move it to iommu_helper.h
 
-With above removed, PASID_FLAG_SUPERVISOR_MODE is not used anywhere?
-Perhaps you can cleanup it to avoid dead code?
+Thanks,
 
->   	if (level == 5)
->   		flags |= PASID_FLAG_FL5LP;
->   
-
-Best regards,
-baolu
+Jacob

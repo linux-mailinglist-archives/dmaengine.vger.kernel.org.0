@@ -2,93 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 237A36AA3BB
-	for <lists+dmaengine@lfdr.de>; Fri,  3 Mar 2023 23:03:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E14486AA40D
+	for <lists+dmaengine@lfdr.de>; Fri,  3 Mar 2023 23:18:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233559AbjCCWDw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 3 Mar 2023 17:03:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43020 "EHLO
+        id S232461AbjCCWSn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 3 Mar 2023 17:18:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233568AbjCCWDY (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 3 Mar 2023 17:03:24 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51AAC664F3;
-        Fri,  3 Mar 2023 13:53:42 -0800 (PST)
+        with ESMTP id S233469AbjCCWSZ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 3 Mar 2023 17:18:25 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE7066BC26;
+        Fri,  3 Mar 2023 14:09:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677880423; x=1709416423;
+  t=1677881361; x=1709417361;
   h=date:from:to:cc:subject:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=qxJfn1HMo5o/TEK84TFNUVCEuwu46pEXGqZ2QTppX2c=;
-  b=gNIpRPK8y43yn/q7QNe7cjMBmXt7QFF5J021G4hevFWd3xR6RM97PhiQ
-   UpCm2qAjw1DM4d1BwA94AR38ZRX450hYZ5qqnLhUHzGPj+TpaIA44f1pZ
-   0psJROt+JHrgDMXMZPXSJULeZUp49J51gDoI1Y85jSUKudSkAz9TJSxOr
-   x59LN129nnw7U2cJ8+ztjvCrm8c+IGiyquMsuBetnQstQyWFqW2SUKBFh
-   FI9pGorJpFw7Su1N+Y5wYtQQWhtKrppJKWHp4Ocmsp2dSROxgKR/mi9Ow
-   vYEeq92ndSqlqWrULlvY8G/AYTsJsTp5Ky6kKrYR4aGVO0PEZzLBPWZ/B
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="318989793"
+  bh=F0jJypZHaRaBJ6BMYaW1CHf7YuZJ1wW4P1q1vVBdKzE=;
+  b=CgXJzl2QPyJCfpYz3gwPd2tiPmkjVSQhsMM5H+M2eh9E5uvtzx6WPR3w
+   epSp3BGMJGbMZ+Eg0WP6cCoJ6Mxdz3xJ0KL4i8FckOdXHADMSg8N6dY5K
+   LlrDQkdRNrPMx2SUczGgKaNDMyAPOAZh0/OsslWT4xblato/u4iiFqDSe
+   LZL/usCaVKZ16mCM/3LTqxVG7PSdiuMx8IF7dEJQ5Zv3ze58DSJu4kFoS
+   idNgm3ZBALcg8J7R3JZQ7DatXEwm75LsLvt31mN3HTPjlxRV70oskUVNq
+   VPn2b25lqL1rxYnYtiqFGv0DloKL/nUNghibqaSj45GGeUMuLgRUUSk31
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="421443552"
 X-IronPort-AV: E=Sophos;i="5.98,231,1673942400"; 
-   d="scan'208";a="318989793"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2023 13:48:20 -0800
+   d="scan'208";a="421443552"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2023 14:08:35 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="921252005"
+X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="677809639"
 X-IronPort-AV: E=Sophos;i="5.98,231,1673942400"; 
-   d="scan'208";a="921252005"
+   d="scan'208";a="677809639"
 Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2023 13:48:20 -0800
-Date:   Fri, 3 Mar 2023 13:52:09 -0800
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2023 14:08:34 -0800
+Date:   Fri, 3 Mar 2023 14:12:24 -0800
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Baolu Lu <baolu.lu@linux.intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
         Jason Gunthorpe <jgg@nvidia.com>,
-        Joerg Roedel <joro@8bytes.org>, dmaengine@vger.kernel.org,
-        vkoul@kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
         Will Deacon <will@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        "David Woodhouse" <dwmw2@infradead.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
         "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
         "Zanussi, Tom" <tom.zanussi@intel.com>,
         jacob.jun.pan@linux.intel.com
 Subject: Re: [PATCH 4/4] dmaengine/idxd: Re-enable kernel workqueue under
  DMA API
-Message-ID: <20230303135209.16caf5ad@jacob-builder>
-In-Reply-To: <063ed735-b8d1-1b44-67d7-78c3adb34074@linux.intel.com>
+Message-ID: <20230303141224.7f1bf7e0@jacob-builder>
+In-Reply-To: <BN9PR11MB527624EDB9FCD26751C73B128CB29@BN9PR11MB5276.namprd11.prod.outlook.com>
 References: <20230302005959.2695267-1-jacob.jun.pan@linux.intel.com>
         <20230302005959.2695267-5-jacob.jun.pan@linux.intel.com>
-        <063ed735-b8d1-1b44-67d7-78c3adb34074@linux.intel.com>
+        <BN9PR11MB527624EDB9FCD26751C73B128CB29@BN9PR11MB5276.namprd11.prod.outlook.com>
 Organization: OTC
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Baolu,
+Hi Kevin,
 
-On Fri, 3 Mar 2023 09:19:48 +0800, Baolu Lu <baolu.lu@linux.intel.com>
+On Thu, 2 Mar 2023 09:47:00 +0000, "Tian, Kevin" <kevin.tian@intel.com>
 wrote:
 
-> On 3/2/23 8:59 AM, Jacob Pan wrote:
-> > diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> > index f30eef701970..dadc908318aa 100644
-> > --- a/drivers/dma/idxd/init.c
-> > +++ b/drivers/dma/idxd/init.c
-> > @@ -501,14 +501,52 @@ static struct idxd_device *idxd_alloc(struct
-> > pci_dev *pdev, struct idxd_driver_d 
-> >   static int idxd_enable_system_pasid(struct idxd_device *idxd)
-> >   {
+> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Sent: Thursday, March 2, 2023 9:00 AM
+> > 
+> >  static int idxd_enable_system_pasid(struct idxd_device *idxd)
+> >  {
 > > -	return -EOPNOTSUPP;
 > > +	struct pci_dev *pdev = idxd->pdev;
 > > +	struct device *dev = &pdev->dev;
@@ -101,22 +101,42 @@ wrote:
 > > +	if (!domain || domain->type == IOMMU_DOMAIN_BLOCKED)
 > > +		return -EPERM;  
 > 
-> The idxd driver has claimed the DMA ownership of this device. Unless the
-> idxd driver itself attached another domain, iommu_get_domain_for_dev()
-> should never return a blocking domain.
+> what about UNMANAGED?
+will fix this by getting the dma domain.
 > 
-> "domain == NULL" happens when CONFIG_IOMMU_API is not set.
+> > +
+> > +	pasid = iommu_sva_reserve_pasid(1, dev->iommu->max_pasids);
+> > +	if (pasid == IOMMU_PASID_INVALID)
+> > +		return -ENOSPC;  
 > 
-> Furthermore, iommu_get_domain_for_dev() doesn't hold any refcount from
-> the domain, so in theory it's not safe here because it possibly causes
-> use-after-release case.
+> as commented in last patch we can just pass a device pointer to a
+> general allocation interface.
+will do
 > 
-> I would say iommu_get_dma_domain() or something similar is more suitable
-> for use here. It directly returns the device's default domain and the
-> iommu core guarantees that default domain will always valid during the
-> life cycle of any device driver.
+> > +
+> > +	ret = iommu_attach_device_pasid(domain, dev, pasid);
+> > +	if (ret) {
+> > +		dev_err(dev, "failed to attach device pasid %d, domain
+> > type %d",
+> > +			pasid, domain->type);
+> > +		iommu_sva_unreserve_pasid(pasid);
+> > +		return ret;
+> > +	}
+> > +
+> > +	/* Since we set user privilege for kernel DMA, enable
+> > completion IRQ */
+> > +	gencfg.bits = ioread32(idxd->reg_base + IDXD_GENCFG_OFFSET);
+> > +	gencfg.user_int_en = 1;
+> > +	iowrite32(gencfg.bits, idxd->reg_base + IDXD_GENCFG_OFFSET);
+> > +	idxd->pasid = pasid;  
 > 
-will do, same as Jason's comments.
+> Why does user privilege requires a completion interrupt?
+> 
+> Or instead it's more due to doing kernel DMA itself then we certainly
+> don't want to poll in the kernel?
+yes, kernel wq does not support polling, therefore it needs interrupts.
+Without user_int_en bit set, there would be no interrupts if we use user
+privilege for kernel wq.
 
 Thanks,
 

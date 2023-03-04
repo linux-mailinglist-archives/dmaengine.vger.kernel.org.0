@@ -2,142 +2,192 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E14486AA40D
-	for <lists+dmaengine@lfdr.de>; Fri,  3 Mar 2023 23:18:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 51A726AA877
+	for <lists+dmaengine@lfdr.de>; Sat,  4 Mar 2023 07:51:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232461AbjCCWSn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 3 Mar 2023 17:18:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46690 "EHLO
+        id S229535AbjCDGvo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 4 Mar 2023 01:51:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233469AbjCCWSZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 3 Mar 2023 17:18:25 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE7066BC26;
-        Fri,  3 Mar 2023 14:09:21 -0800 (PST)
+        with ESMTP id S229498AbjCDGvn (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 4 Mar 2023 01:51:43 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98273B749;
+        Fri,  3 Mar 2023 22:51:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677881361; x=1709417361;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=F0jJypZHaRaBJ6BMYaW1CHf7YuZJ1wW4P1q1vVBdKzE=;
-  b=CgXJzl2QPyJCfpYz3gwPd2tiPmkjVSQhsMM5H+M2eh9E5uvtzx6WPR3w
-   epSp3BGMJGbMZ+Eg0WP6cCoJ6Mxdz3xJ0KL4i8FckOdXHADMSg8N6dY5K
-   LlrDQkdRNrPMx2SUczGgKaNDMyAPOAZh0/OsslWT4xblato/u4iiFqDSe
-   LZL/usCaVKZ16mCM/3LTqxVG7PSdiuMx8IF7dEJQ5Zv3ze58DSJu4kFoS
-   idNgm3ZBALcg8J7R3JZQ7DatXEwm75LsLvt31mN3HTPjlxRV70oskUVNq
-   VPn2b25lqL1rxYnYtiqFGv0DloKL/nUNghibqaSj45GGeUMuLgRUUSk31
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="421443552"
-X-IronPort-AV: E=Sophos;i="5.98,231,1673942400"; 
-   d="scan'208";a="421443552"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2023 14:08:35 -0800
+  t=1677912702; x=1709448702;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JGi8y72DqKWL+R1ytY0Z+Y7NhTUceMCbtC1BVCCR8g0=;
+  b=PuDrtH/Fo2emD1ImMbK2g6r+vEP6kGHY5fx2NHjdKIjbfTqVweqLnH5L
+   zffpYE0F0PX35d3lgc7pbaMSgMofuD2b08TAASrCezhBtAxTc0u6SHOm1
+   qJTapbqp2yNKUHyJcTcfiCb+6oKiA/sdckKvWioke8rOO4FMlEefpkf1B
+   eHyrLKA+NyBBJr+rqygek36pGNb3XFJW2bLaJAfewrh1zzB9d3L4ARUry
+   ELKS4JkQX9YdiiZegi3yyKX170lpzfuQ6+mWyWagxD2pqtMr4eYuPQFuo
+   f2w3G8fdBHwmuFLHYCG65LU1Npe+qp8mFoSsZn21F9QJ3uaI1nkuzidXA
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="332710341"
+X-IronPort-AV: E=Sophos;i="5.98,233,1673942400"; 
+   d="scan'208";a="332710341"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2023 22:51:41 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="677809639"
-X-IronPort-AV: E=Sophos;i="5.98,231,1673942400"; 
-   d="scan'208";a="677809639"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2023 14:08:34 -0800
-Date:   Fri, 3 Mar 2023 14:12:24 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Zanussi, Tom" <tom.zanussi@intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 4/4] dmaengine/idxd: Re-enable kernel workqueue under
- DMA API
-Message-ID: <20230303141224.7f1bf7e0@jacob-builder>
-In-Reply-To: <BN9PR11MB527624EDB9FCD26751C73B128CB29@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20230302005959.2695267-1-jacob.jun.pan@linux.intel.com>
-        <20230302005959.2695267-5-jacob.jun.pan@linux.intel.com>
-        <BN9PR11MB527624EDB9FCD26751C73B128CB29@BN9PR11MB5276.namprd11.prod.outlook.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="764666624"
+X-IronPort-AV: E=Sophos;i="5.98,233,1673942400"; 
+   d="scan'208";a="764666624"
+Received: from lkp-server01.sh.intel.com (HELO 776573491cc5) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 03 Mar 2023 22:51:38 -0800
+Received: from kbuild by 776573491cc5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pYLk2-0001wG-0F;
+        Sat, 04 Mar 2023 06:51:38 +0000
+Date:   Sat, 4 Mar 2023 14:51:07 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Cai Huoqing <cai.huoqing@linux.dev>, fancer.lancer@gmail.com
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        Cai huoqing <cai.huoqing@linux.dev>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 3/4] dmaengine: dw-edma: Add support for native HDMA
+Message-ID: <202303041444.2M7BzjRU-lkp@intel.com>
+References: <20230303124642.5519-4-cai.huoqing@linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230303124642.5519-4-cai.huoqing@linux.dev>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Kevin,
+Hi Cai,
 
-On Thu, 2 Mar 2023 09:47:00 +0000, "Tian, Kevin" <kevin.tian@intel.com>
-wrote:
+Thank you for the patch! Perhaps something to improve:
 
-> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Sent: Thursday, March 2, 2023 9:00 AM
-> > 
-> >  static int idxd_enable_system_pasid(struct idxd_device *idxd)
-> >  {
-> > -	return -EOPNOTSUPP;
-> > +	struct pci_dev *pdev = idxd->pdev;
-> > +	struct device *dev = &pdev->dev;
-> > +	struct iommu_domain *domain;
-> > +	union gencfg_reg gencfg;
-> > +	ioasid_t pasid;
-> > +	int ret;
-> > +
-> > +	domain = iommu_get_domain_for_dev(dev);
-> > +	if (!domain || domain->type == IOMMU_DOMAIN_BLOCKED)
-> > +		return -EPERM;  
-> 
-> what about UNMANAGED?
-will fix this by getting the dma domain.
-> 
-> > +
-> > +	pasid = iommu_sva_reserve_pasid(1, dev->iommu->max_pasids);
-> > +	if (pasid == IOMMU_PASID_INVALID)
-> > +		return -ENOSPC;  
-> 
-> as commented in last patch we can just pass a device pointer to a
-> general allocation interface.
-will do
-> 
-> > +
-> > +	ret = iommu_attach_device_pasid(domain, dev, pasid);
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to attach device pasid %d, domain
-> > type %d",
-> > +			pasid, domain->type);
-> > +		iommu_sva_unreserve_pasid(pasid);
-> > +		return ret;
-> > +	}
-> > +
-> > +	/* Since we set user privilege for kernel DMA, enable
-> > completion IRQ */
-> > +	gencfg.bits = ioread32(idxd->reg_base + IDXD_GENCFG_OFFSET);
-> > +	gencfg.user_int_en = 1;
-> > +	iowrite32(gencfg.bits, idxd->reg_base + IDXD_GENCFG_OFFSET);
-> > +	idxd->pasid = pasid;  
-> 
-> Why does user privilege requires a completion interrupt?
-> 
-> Or instead it's more due to doing kernel DMA itself then we certainly
-> don't want to poll in the kernel?
-yes, kernel wq does not support polling, therefore it needs interrupts.
-Without user_int_en bit set, there would be no interrupts if we use user
-privilege for kernel wq.
+[auto build test WARNING on pci/next]
+[also build test WARNING on linus/master next-20230303]
+[cannot apply to vkoul-dmaengine/next pci/for-linus v6.2]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Thanks,
+url:    https://github.com/intel-lab-lkp/linux/commits/Cai-Huoqing/dmaengine-dw-edma-Rename-dw_edma_core_ops-structure-to-dw_edma_plat_ops/20230303-204905
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20230303124642.5519-4-cai.huoqing%40linux.dev
+patch subject: [PATCH v5 3/4] dmaengine: dw-edma: Add support for native HDMA
+config: arm-randconfig-r016-20230303 (https://download.01.org/0day-ci/archive/20230304/202303041444.2M7BzjRU-lkp@intel.com/config)
+compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project 67409911353323ca5edf2049ef0df54132fa1ca7)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm cross compiling tool for clang build
+        # apt-get install binutils-arm-linux-gnueabi
+        # https://github.com/intel-lab-lkp/linux/commit/061ed1e9b9bf70de12d7885880ee6302865a72d0
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Cai-Huoqing/dmaengine-dw-edma-Rename-dw_edma_core_ops-structure-to-dw_edma_plat_ops/20230303-204905
+        git checkout 061ed1e9b9bf70de12d7885880ee6302865a72d0
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/dma/
 
-Jacob
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202303041444.2M7BzjRU-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/dma/dw-edma/dw-hdma-v0-core.c:12:
+>> drivers/dma/dw-edma/dw-hdma-v0-regs.h:71:4: warning: field msi_stop within 'struct dw_hdma_v0_ch_regs' is less aligned than 'union (unnamed union at drivers/dma/dw-edma/dw-hdma-v0-regs.h:65:2)' and is usually due to 'struct dw_hdma_v0_ch_regs' being packed, which can lead to unaligned accesses [-Wunaligned-access]
+           } msi_stop;
+             ^
+>> drivers/dma/dw-edma/dw-hdma-v0-regs.h:78:4: warning: field msi_watermark within 'struct dw_hdma_v0_ch_regs' is less aligned than 'union (unnamed union at drivers/dma/dw-edma/dw-hdma-v0-regs.h:72:2)' and is usually due to 'struct dw_hdma_v0_ch_regs' being packed, which can lead to unaligned accesses [-Wunaligned-access]
+           } msi_watermark;
+             ^
+>> drivers/dma/dw-edma/dw-hdma-v0-regs.h:85:4: warning: field msi_abort within 'struct dw_hdma_v0_ch_regs' is less aligned than 'union (unnamed union at drivers/dma/dw-edma/dw-hdma-v0-regs.h:79:2)' and is usually due to 'struct dw_hdma_v0_ch_regs' being packed, which can lead to unaligned accesses [-Wunaligned-access]
+           } msi_abort;
+             ^
+   3 warnings generated.
+
+
+vim +71 drivers/dma/dw-edma/dw-hdma-v0-regs.h
+
+    26	
+    27	struct dw_hdma_v0_ch_regs {
+    28		u32 ch_en;				/* 0x0000 */
+    29		u32 doorbell;				/* 0x0004 */
+    30		u32 prefetch;				/* 0x0008 */
+    31		u32 handshake;				/* 0x000c */
+    32		union {
+    33			u64 reg;			/* 0x0010..0x0014 */
+    34			struct {
+    35				u32 lsb;		/* 0x0010 */
+    36				u32 msb;		/* 0x0014 */
+    37			};
+    38		} llp;
+    39		u32 cycle_sync;				/* 0x0018 */
+    40		u32 transfer_size;			/* 0x001c */
+    41		union {
+    42			u64 reg;			/* 0x0020..0x0024 */
+    43			struct {
+    44				u32 lsb;		/* 0x0020 */
+    45				u32 msb;		/* 0x0024 */
+    46			};
+    47		} sar;
+    48		union {
+    49			u64 reg;			/* 0x0028..0x002c */
+    50			struct {
+    51				u32 lsb;		/* 0x0028 */
+    52				u32 msb;		/* 0x002c */
+    53			};
+    54		} dar;
+    55	
+    56		u32 watermark_en;			/* 0x0030 */
+    57		u32 control1;				/* 0x0034 */
+    58		u32 func_num;				/* 0x0038 */
+    59		u32 qos;				/* 0x003c */
+    60		u32 reserved;				/* 0x0040..0x007c */
+    61		u32 ch_stat;				/* 0x0080 */
+    62		u32 int_stat;				/* 0x0084 */
+    63		u32 int_setup;				/* 0x0088 */
+    64		u32 int_clear;				/* 0x008c */
+    65		union {
+    66			u64 reg;			/* 0x0090..0x0094 */
+    67			struct {
+    68				u32 lsb;		/* 0x0090 */
+    69				u32 msb;		/* 0x0094 */
+    70			};
+  > 71		} msi_stop;
+    72		union {
+    73			u64 reg;			/* 0x0098..0x009c */
+    74			struct {
+    75				u32 lsb;		/* 0x0098 */
+    76				u32 msb;		/* 0x009c */
+    77			};
+  > 78		} msi_watermark;
+    79		union {
+    80			u64 reg;			/* 0x00a0..0x00a4 */
+    81			struct {
+    82				u32 lsb;		/* 0x00a0 */
+    83				u32 msb;		/* 0x00a4 */
+    84			};
+  > 85		} msi_abort;
+    86		u32 msi_msgdata;			/* 0x00a8 */
+    87	} __packed;
+    88	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests

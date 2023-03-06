@@ -2,623 +2,181 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CC216AC46B
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Mar 2023 16:09:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA5DE6AC873
+	for <lists+dmaengine@lfdr.de>; Mon,  6 Mar 2023 17:44:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230110AbjCFPJB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 6 Mar 2023 10:09:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55350 "EHLO
+        id S230329AbjCFQoV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 6 Mar 2023 11:44:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229528AbjCFPI7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Mar 2023 10:08:59 -0500
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA174211C3;
-        Mon,  6 Mar 2023 07:08:56 -0800 (PST)
-Received: by mail-lf1-x131.google.com with SMTP id i28so13248417lfv.0;
-        Mon, 06 Mar 2023 07:08:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678115335;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ulOlgEJXjVXy+hFaCJHg99rPn+u/eIobZt28KnkxdgA=;
-        b=iCFk65eFoP3v2/48cMVCsDpzv9fY/l7Wg+j+HxEz+b+fJH2hrAH3HtiS3y3LO/hN37
-         P93XEmor2WF0IPAuXf1hbHAgBkoxyGkBnWSrNqGP0935sMYDIKPm6Aw6oqGagQ93iYQ9
-         39MGC0M1WQNOA10lNNlnAlsNkmld9z+3COmMFyd15RNzXP1wP7TG7gKSBp+DJBvxeBqC
-         qc2EjgYW4AQZL+rVmesqOK3WLaWKs3W/ydXx9VDBmzClDxJxsOPtpkRe2qEXVskHUCHj
-         fOQxEsn7pDIfmhJsgerBKraC1QtqrHGdGg4cmNVF/k9WDThRlKDPRL2pusnXBNHrT/H0
-         4ZEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678115335;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ulOlgEJXjVXy+hFaCJHg99rPn+u/eIobZt28KnkxdgA=;
-        b=0dfjE2WAJSKwDxF5XhuzDkbNLLr0k4qKH285wsYY4VBB0VC2Z0GaxYcHn5pRuFOj75
-         GivMCpTbdRl84qVZEcHsbpN4/JEIpsYcb3Qd2GfpiFDACYPIweojb8ihJfFHuBJDvmJw
-         q9Rb5OBnOI9c0Bnqs/Gr/mVnyWejVuy4SbAemECyh9Zl58TQnKQ19ksRIuPwPXcvj54s
-         SPBOthusFvl7xG89MOQ14jNblVJglFduqlHIOdl15RoeBxmXpV8KNmmGRUNN1TD234Ib
-         atOD1bP4n80GVDsKgrsM0V7bSHJIYUJ+sFr8KM+ypf5Xltadc9EWd5JHVfHM4bJwX4ld
-         HQRg==
-X-Gm-Message-State: AO0yUKUMQEP0oBL6R7YeoxZANI20zENsMmO2wd8AJdHRmzX5fTOEde7z
-        78H5UItJN7TubRvPKUwkBSaTxjnrg+I=
-X-Google-Smtp-Source: AK7set9CMe0bKn3oZv+3nkrVbumLt3LsxdqRNzS09IRkbD5Yrm/E1kO2h/y9I4G+L16i1sYX9wi3Ig==
-X-Received: by 2002:ac2:598b:0:b0:4db:513b:6ef4 with SMTP id w11-20020ac2598b000000b004db513b6ef4mr3030994lfn.11.1678115334802;
-        Mon, 06 Mar 2023 07:08:54 -0800 (PST)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id q2-20020ac246e2000000b004a91df49508sm1677548lfo.177.2023.03.06.07.08.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Mar 2023 07:08:53 -0800 (PST)
-Date:   Mon, 6 Mar 2023 18:08:51 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Cai Huoqing <cai.huoqing@linux.dev>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 2/4] dmaengine: dw-edma: Create a new dw_edma_core_ops
- structure to abstract controller operation
-Message-ID: <20230306150851.7zahnr3zqmo3ta4v@mobilestation>
-References: <20230303124642.5519-1-cai.huoqing@linux.dev>
- <20230303124642.5519-3-cai.huoqing@linux.dev>
- <20230303170931.noto3tk5lvq24ok2@mobilestation>
- <ZAXoIiBoV1p1OVea@chq-MS-7D45>
+        with ESMTP id S230242AbjCFQoH (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Mar 2023 11:44:07 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 927679EDB;
+        Mon,  6 Mar 2023 08:43:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678121023; x=1709657023;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kJZUZf+J47j7PPpaqeXXB3/Hvai5TS6lAosU6kfHu3s=;
+  b=AevzY5s437XuVBMrk5YtNu7pe//oHK3ltCtLvbMOSAjXPlJsRPVMXAPS
+   yZKSK2bxUuiAnRWz3N0Tc79LfpaffwDolYuu9gxA6+9fREVJPvUC4gUvG
+   bE+YV36YJBvGVBwL1fqIuuBZV41uPnhNwk4VyKtoc701kMicIMn7KJulM
+   fgbjA48wGchokMTorjyGaaMlc0qvryRnnYnzaKJKA5Ns7dZfYlwDa2wUS
+   xsvHTF7TfvBNfF5ZkKT5GF7vawH/fkisKxiNI5gt3ZuuixsKWW/wMJqtD
+   +TIpNyqGdsn7ENVwrCklAeLMCZ9JHm/4bqK1RlK2j1/MXgCOfn2NbhK2R
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="398181125"
+X-IronPort-AV: E=Sophos;i="5.98,238,1673942400"; 
+   d="scan'208";a="398181125"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2023 08:31:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="669504454"
+X-IronPort-AV: E=Sophos;i="5.98,238,1673942400"; 
+   d="scan'208";a="669504454"
+Received: from fyu1.sc.intel.com ([172.25.103.126])
+  by orsmga007.jf.intel.com with ESMTP; 06 Mar 2023 08:31:54 -0800
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Vinod Koul" <vkoul@kernel.org>,
+        "Dave Jiang" <dave.jiang@intel.com>
+Cc:     dmaengine@vger.kernel.org,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH v2 00/16] Enable DSA 2.0 Event Log and completion record faulting features
+Date:   Mon,  6 Mar 2023 08:31:22 -0800
+Message-Id: <20230306163138.587484-1-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZAXoIiBoV1p1OVea@chq-MS-7D45>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Mar 06, 2023 at 09:18:26PM +0800, Cai Huoqing wrote:
-> On 03 3月 23 20:09:31, Serge Semin wrote:
-> > On Fri, Mar 03, 2023 at 08:46:32PM +0800, Cai Huoqing wrote:
-> > > From: Cai huoqing <cai.huoqing@linux.dev>
-> > > 
-> > > The structure dw_edma_core_ops has a set of the pointers
-> > > abstracting out the DW eDMA vX and DW HDMA Native controllers.
-> > > And use dw_edma_v0_core_register to set up operation.
-> > > 
-> > > Signed-off-by: Cai huoqing <cai.huoqing@linux.dev>
-> > > ---
-> > >   v4->v5:
-> > >     1.Refactor add return irqreturn_t to dw_edma_core_handle_int
-> > >     2.Define dw_edma_core_handle_int as inline fuction and move to
-> > >       dw-edma-core.h.
-> > > 
-> > >   v4 link:
-> > >   https://lore.kernel.org/lkml/20230221034656.14476-3-cai.huoqing@linux.dev/
-> > > 
-> > >  drivers/dma/dw-edma/dw-edma-core.c    | 83 ++++++++-------------------
-> > >  drivers/dma/dw-edma/dw-edma-core.h    | 64 +++++++++++++++++++++
-> > >  drivers/dma/dw-edma/dw-edma-v0-core.c | 75 ++++++++++++++++++++----
-> > >  drivers/dma/dw-edma/dw-edma-v0-core.h | 14 +----
-> > >  4 files changed, 153 insertions(+), 83 deletions(-)
-> > > 
-> > > diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> > > index 1906a836f0aa..5cfba5730695 100644
-> > > --- a/drivers/dma/dw-edma/dw-edma-core.c
-> > > +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> > > @@ -183,6 +183,7 @@ static void vchan_free_desc(struct virt_dma_desc *vdesc)
-> > >  
-> > >  static void dw_edma_start_transfer(struct dw_edma_chan *chan)
-> > >  {
-> > > +	struct dw_edma *dw = chan->dw;
-> > >  	struct dw_edma_chunk *child;
-> > >  	struct dw_edma_desc *desc;
-> > >  	struct virt_dma_desc *vd;
-> > > @@ -200,7 +201,7 @@ static void dw_edma_start_transfer(struct dw_edma_chan *chan)
-> > >  	if (!child)
-> > >  		return;
-> > >  
-> > > -	dw_edma_v0_core_start(child, !desc->xfer_sz);
-> > > +	dw_edma_core_start(dw, child, !desc->xfer_sz);
-> > >  	desc->xfer_sz += child->ll_region.sz;
-> > >  	dw_edma_free_burst(child);
-> > >  	list_del(&child->list);
-> > > @@ -285,7 +286,7 @@ static int dw_edma_device_terminate_all(struct dma_chan *dchan)
-> > >  		chan->configured = false;
-> > >  	} else if (chan->status == EDMA_ST_IDLE) {
-> > >  		chan->configured = false;
-> > > -	} else if (dw_edma_v0_core_ch_status(chan) == DMA_COMPLETE) {
-> > > +	} else if (dw_edma_core_ch_status(chan) == DMA_COMPLETE) {
-> > >  		/*
-> > >  		 * The channel is in a false BUSY state, probably didn't
-> > >  		 * receive or lost an interrupt
-> > > @@ -588,14 +589,12 @@ dw_edma_device_prep_interleaved_dma(struct dma_chan *dchan,
-> > >  	return dw_edma_device_transfer(&xfer);
-> > >  }
-> > >  
-> > > -static void dw_edma_done_interrupt(struct dw_edma_chan *chan)
-> > > +void dw_edma_done_interrupt(struct dw_edma_chan *chan)
-> > >  {
-> > >  	struct dw_edma_desc *desc;
-> > >  	struct virt_dma_desc *vd;
-> > >  	unsigned long flags;
-> > >  
-> > > -	dw_edma_v0_core_clear_done_int(chan);
-> > > -
-> > >  	spin_lock_irqsave(&chan->vc.lock, flags);
-> > >  	vd = vchan_next_desc(&chan->vc);
-> > >  	if (vd) {
-> > > @@ -631,13 +630,11 @@ static void dw_edma_done_interrupt(struct dw_edma_chan *chan)
-> > >  	spin_unlock_irqrestore(&chan->vc.lock, flags);
-> > >  }
-> > >  
-> > > -static void dw_edma_abort_interrupt(struct dw_edma_chan *chan)
-> > > +void dw_edma_abort_interrupt(struct dw_edma_chan *chan)
-> > >  {
-> > >  	struct virt_dma_desc *vd;
-> > >  	unsigned long flags;
-> > >  
-> > > -	dw_edma_v0_core_clear_abort_int(chan);
-> > > -
-> > >  	spin_lock_irqsave(&chan->vc.lock, flags);
-> > >  	vd = vchan_next_desc(&chan->vc);
-> > >  	if (vd) {
-> > > @@ -649,63 +646,29 @@ static void dw_edma_abort_interrupt(struct dw_edma_chan *chan)
-> > >  	chan->status = EDMA_ST_IDLE;
-> > >  }
-> > >  
-> > > -static irqreturn_t dw_edma_interrupt(int irq, void *data, bool write)
-> > > +static inline irqreturn_t dw_edma_interrupt_write(int irq, void *data)
-> > >  {
-> > >  	struct dw_edma_irq *dw_irq = data;
-> > > -	struct dw_edma *dw = dw_irq->dw;
-> > > -	unsigned long total, pos, val;
-> > > -	unsigned long off;
-> > > -	u32 mask;
-> > > -
-> > > -	if (write) {
-> > > -		total = dw->wr_ch_cnt;
-> > > -		off = 0;
-> > > -		mask = dw_irq->wr_mask;
-> > > -	} else {
-> > > -		total = dw->rd_ch_cnt;
-> > > -		off = dw->wr_ch_cnt;
-> > > -		mask = dw_irq->rd_mask;
-> > > -	}
-> > > -
-> > > -	val = dw_edma_v0_core_status_done_int(dw, write ?
-> > > -							  EDMA_DIR_WRITE :
-> > > -							  EDMA_DIR_READ);
-> > > -	val &= mask;
-> > > -	for_each_set_bit(pos, &val, total) {
-> > > -		struct dw_edma_chan *chan = &dw->chan[pos + off];
-> > > -
-> > > -		dw_edma_done_interrupt(chan);
-> > > -	}
-> > > -
-> > > -	val = dw_edma_v0_core_status_abort_int(dw, write ?
-> > > -							   EDMA_DIR_WRITE :
-> > > -							   EDMA_DIR_READ);
-> > > -	val &= mask;
-> > > -	for_each_set_bit(pos, &val, total) {
-> > > -		struct dw_edma_chan *chan = &dw->chan[pos + off];
-> > > -
-> > > -		dw_edma_abort_interrupt(chan);
-> > > -	}
-> > >  
-> > > -	return IRQ_HANDLED;
-> > > -}
-> > > -
-> > > -static inline irqreturn_t dw_edma_interrupt_write(int irq, void *data)
-> > > -{
-> > > -	return dw_edma_interrupt(irq, data, true);
-> > > +	return dw_edma_core_handle_int(dw_irq, EDMA_DIR_WRITE);
-> > >  }
-> > >  
-> > >  static inline irqreturn_t dw_edma_interrupt_read(int irq, void *data)
-> > >  {
-> > > -	return dw_edma_interrupt(irq, data, false);
-> > > +	struct dw_edma_irq *dw_irq = data;
-> > > +
-> > > +	return dw_edma_core_handle_int(dw_irq, EDMA_DIR_READ);
-> > >  }
-> > >  
-> > >  static irqreturn_t dw_edma_interrupt_common(int irq, void *data)
-> > >  {
-> > > -	dw_edma_interrupt(irq, data, true);
-> > > -	dw_edma_interrupt(irq, data, false);
-> > > +	struct dw_edma_irq *dw_irq = data;
-> > > +	irqreturn_t ret = IRQ_NONE;
-> > > +
-> > > +	ret |= dw_edma_core_handle_int(dw_irq, EDMA_DIR_WRITE);
-> > > +	ret |= dw_edma_core_handle_int(dw_irq, EDMA_DIR_READ);
-> > >  
-> > > -	return IRQ_HANDLED;
-> > > +	return ret;
-> > >  }
-> > >  
-> > >  static int dw_edma_alloc_chan_resources(struct dma_chan *dchan)
-> > > @@ -806,7 +769,7 @@ static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
-> > >  
-> > >  		vchan_init(&chan->vc, dma);
-> > >  
-> > > -		dw_edma_v0_core_device_config(chan);
-> > > +		dw_edma_core_ch_config(chan);
-> > >  	}
-> > >  
-> > >  	/* Set DMA channel capabilities */
-> > > @@ -951,14 +914,16 @@ int dw_edma_probe(struct dw_edma_chip *chip)
-> > >  
-> > >  	dw->chip = chip;
-> > >  
-> > > +	dw_edma_v0_core_register(dw);
-> > > +
-> > >  	raw_spin_lock_init(&dw->lock);
-> > >  
-> > >  	dw->wr_ch_cnt = min_t(u16, chip->ll_wr_cnt,
-> > > -			      dw_edma_v0_core_ch_count(dw, EDMA_DIR_WRITE));
-> > > +			      dw_edma_core_ch_count(dw, EDMA_DIR_WRITE));
-> > >  	dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);
-> > >  
-> > >  	dw->rd_ch_cnt = min_t(u16, chip->ll_rd_cnt,
-> > > -			      dw_edma_v0_core_ch_count(dw, EDMA_DIR_READ));
-> > > +			      dw_edma_core_ch_count(dw, EDMA_DIR_READ));
-> > >  	dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);
-> > >  
-> > >  	if (!dw->wr_ch_cnt && !dw->rd_ch_cnt)
-> > > @@ -977,7 +942,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
-> > >  		 dev_name(chip->dev));
-> > >  
-> > >  	/* Disable eDMA, only to establish the ideal initial conditions */
-> > > -	dw_edma_v0_core_off(dw);
-> > > +	dw_edma_core_off(dw);
-> > >  
-> > >  	/* Request IRQs */
-> > >  	err = dw_edma_irq_request(dw, &wr_alloc, &rd_alloc);
-> > > @@ -990,7 +955,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
-> > >  		goto err_irq_free;
-> > >  
-> > >  	/* Turn debugfs on */
-> > > -	dw_edma_v0_core_debugfs_on(dw);
-> > > +	dw_edma_core_debugfs_on(dw);
-> > >  
-> > >  	chip->dw = dw;
-> > >  
-> > > @@ -1016,7 +981,7 @@ int dw_edma_remove(struct dw_edma_chip *chip)
-> > >  		return -ENODEV;
-> > >  
-> > >  	/* Disable eDMA */
-> > > -	dw_edma_v0_core_off(dw);
-> > > +	dw_edma_core_off(dw);
-> > >  
-> > >  	/* Free irqs */
-> > >  	for (i = (dw->nr_irqs - 1); i >= 0; i--)
-> > > diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-> > > index 0ab2b6dba880..b0c4648cd30c 100644
-> > > --- a/drivers/dma/dw-edma/dw-edma-core.h
-> > > +++ b/drivers/dma/dw-edma/dw-edma-core.h
-> > > @@ -111,6 +111,19 @@ struct dw_edma {
-> > >  	raw_spinlock_t			lock;		/* Only for legacy */
-> > >  
-> > >  	struct dw_edma_chip             *chip;
-> > > +
-> > > +	const struct dw_edma_core_ops	*core;
-> > > +};
-> > > +
-> > > +struct dw_edma_core_ops {
-> > > +	void (*off)(struct dw_edma *dw);
-> > > +	u16 (*ch_count)(struct dw_edma *dw, enum dw_edma_dir dir);
-> > > +	enum dma_status (*ch_status)(struct dw_edma_chan *chan);
-> > > +	irqreturn_t (*handle_int)(struct dw_edma_irq *dw_irq,
-> > > +				  enum dw_edma_dir dir);
-> > > +	void (*start)(struct dw_edma_chunk *chunk, bool first);
-> > > +	void (*ch_config)(struct dw_edma_chan *chan);
-> > > +	void (*debugfs_on)(struct dw_edma *dw);
-> > >  };
-> > >  
-> > >  struct dw_edma_sg {
-> > > @@ -136,6 +149,9 @@ struct dw_edma_transfer {
-> > >  	enum dw_edma_xfer_type		type;
-> > >  };
-> > > 
-> >  
-> > > +void dw_edma_done_interrupt(struct dw_edma_chan *chan);
-> > > +void dw_edma_abort_interrupt(struct dw_edma_chan *chan);
-> > 
-> > I'll ask one more time. So you've decided to go with the global
-> > dw_edma_done_interrupt()/dw_edma_abort_interrupt() methods instead of
-> > passing them as the function pointers to the handle_int callback.
-> > 
-> > Are you sure it looks better (simpler, more readable) that way?
+Applications can send 64B descriptors to the DSA device via CPU
+instructions MOVDIR64B or ENQCMD. The application can choose to have
+the device write back a completion record (CR) in system memory to
+indicate the status of the descriptor submitted on completion.
 
-> Do you pefer the two method as handle_int callback?
+With the DSA hardware, the device is able to do on demand paging through
+the hardware by faulting in the user pages that do not have physical memory
+page backing with assistance from IOMMU. In the spec this was designated as
+the block on fault feature. While this hardware feature made operation
+simpler, it also stalls the device engines while the memory pages are being
+faulted in through Page Request Service (PRS). For applications sharing the
+same workqueue (wq) or wqs in the same group, operations are stalled if
+there are no free engines. To avoid slowing the performance of all other
+running applications sharing the same device engine(s), PRS can to be
+disabled and software can deal with partial completion.
 
-Personally I think that passing the "done" and "abort" callbacks to
-the handle_int() function would be more descriptive. Thus the
-interface will be more-or-less complete with no implicit dependency
-from the external objects. So If I were you I would have defined the
-handle_int() prototype like this
-struct dw_edma_core_ops {
-	irqreturn_t (*handle_int)(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir,
-				  void (*done)(struct dw_edma_chan *),
-				  void (*abort)(struct dw_edma_chan *))
-}
+The block on fault feature on DSA 1.0 can be disabled for the wq. However,
+PRS is not completely disabled for the whole path. It is not disabled for
+CRs or batch list for a batch operation.
 
-Alternatively if the construction above looks a bit bulky the handlers
-type could be also defined:
-typedef void (*dw_edma_handler_t)(struct dw_edma_chan *);
+The other issue is the DSA 1.0 error reporting mechanism, SWERROR register.
+The SWERROR register can only report a single error at a time until the
+driver reads and acknowledges the error. The follow on errors cannot be
+reported until the current error is "cleared" by the software by writing
+a bit to the SWERR register. If a large number of faults arrive and the
+software cannot clear them fast enough, overflowed errors will be dropped
+by the device.
 
-struct dw_edma_core_ops {
-	irqreturn_t (*handle_int)(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir,
-				  dw_edma_handler_t done, dw_edma_handler_t abort),
-}
+A CR is the optional 32 bytes (DSA) or 64 bytes (IAA) status that is
+written back for a submitted descriptor. If the address for the CR faults,
+the error is reported to the SWERROR register instead.
 
--Serge(y)
+With DSA 2.0 hardware [1], the event log feature is added. All errors are
+reported as an entry in a circular buffer reside in the system memory.
+The system admin is responsible to configure the size of the circular
+buffer large enough per device to handle the potential errors that may be
+reported. If the buffer is full and another error needs to be reported,
+the device engine will block until there's a free slot in the buffer.
+An event log entry for a faulted CR will contain the error information,
+the CR address that faulted, and the expected CR content the device had
+originally intended to write.
 
-> 
-> > 
-> > > +
-> > >  static inline
-> > >  struct dw_edma_chan *vc2dw_edma_chan(struct virt_dma_chan *vc)
-> > >  {
-> > > @@ -148,4 +164,52 @@ struct dw_edma_chan *dchan2dw_edma_chan(struct dma_chan *dchan)
-> > >  	return vc2dw_edma_chan(to_virt_chan(dchan));
-> > >  }
-> > >  
-> > > +static inline
-> > > +void dw_edma_core_off(struct dw_edma *dw)
-> > > +{
-> > > +	dw->core->off(dw);
-> > > +}
-> > > +
-> > > +static inline
-> > > +u16 dw_edma_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
-> > > +{
-> > > +	return dw->core->ch_count(dw, dir);
-> > > +}
-> > > +
-> > > +static inline
-> > > +enum dma_status dw_edma_core_ch_status(struct dw_edma_chan *chan)
-> > > +{
-> > > +	struct dw_edma *dw = chan->dw;
-> > > +
-> > > +	return dw->core->ch_status(chan);
-> > > +}
-> > > +
-> > > +static inline irqreturn_t
-> > > +dw_edma_core_handle_int(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir)
-> > > +{
-> > > +	struct dw_edma *dw = dw_irq->dw;
-> > > +
-> > > +	return dw->core->handle_int(dw_irq, dir);
-> > > +}
-> > > +
-> > > +static inline
-> > > +void dw_edma_core_start(struct dw_edma *dw, struct dw_edma_chunk *chunk, bool first)
-> > > +{
-> > > +	dw->core->start(chunk, first);
-> > > +}
-> > > +
-> > > +static inline
-> > > +void dw_edma_core_ch_config(struct dw_edma_chan *chan)
-> > > +{
-> > > +	struct dw_edma *dw = chan->dw;
-> > > +
-> > > +	dw->core->ch_config(chan);
-> > > +}
-> > > +
-> > > +static inline
-> > > +void dw_edma_core_debugfs_on(struct dw_edma *dw)
-> > > +{
-> > > +	dw->core->debugfs_on(dw);
-> > > +}
-> > > +
-> > >  #endif /* _DW_EDMA_CORE_H */
-> > > diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > > index 72e79a0c0a4e..2ebae48531f9 100644
-> > > --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > > +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > > @@ -216,7 +216,7 @@ static inline u64 readq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
-> > >  	readq_ch(dw, dir, ch, &(__dw_ch_regs(dw, dir, ch)->name))
-> > >  
-> > >  /* eDMA management callbacks */
-> > > -void dw_edma_v0_core_off(struct dw_edma *dw)
-> > > +static void dw_edma_v0_core_off(struct dw_edma *dw)
-> > >  {
-> > >  	SET_BOTH_32(dw, int_mask,
-> > >  		    EDMA_V0_DONE_INT_MASK | EDMA_V0_ABORT_INT_MASK);
-> > > @@ -225,7 +225,7 @@ void dw_edma_v0_core_off(struct dw_edma *dw)
-> > >  	SET_BOTH_32(dw, engine_en, 0);
-> > >  }
-> > >  
-> > > -u16 dw_edma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
-> > > +static u16 dw_edma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
-> > >  {
-> > >  	u32 num_ch;
-> > >  
-> > > @@ -242,7 +242,7 @@ u16 dw_edma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
-> > >  	return (u16)num_ch;
-> > >  }
-> > >  
-> > > -enum dma_status dw_edma_v0_core_ch_status(struct dw_edma_chan *chan)
-> > > +static enum dma_status dw_edma_v0_core_ch_status(struct dw_edma_chan *chan)
-> > >  {
-> > >  	struct dw_edma *dw = chan->dw;
-> > >  	u32 tmp;
-> > > @@ -258,7 +258,7 @@ enum dma_status dw_edma_v0_core_ch_status(struct dw_edma_chan *chan)
-> > >  		return DMA_ERROR;
-> > >  }
-> > >  
-> > > -void dw_edma_v0_core_clear_done_int(struct dw_edma_chan *chan)
-> > > +static void dw_edma_v0_core_clear_done_int(struct dw_edma_chan *chan)
-> > >  {
-> > >  	struct dw_edma *dw = chan->dw;
-> > >  
-> > > @@ -266,7 +266,7 @@ void dw_edma_v0_core_clear_done_int(struct dw_edma_chan *chan)
-> > >  		  FIELD_PREP(EDMA_V0_DONE_INT_MASK, BIT(chan->id)));
-> > >  }
-> > >  
-> > > -void dw_edma_v0_core_clear_abort_int(struct dw_edma_chan *chan)
-> > > +static void dw_edma_v0_core_clear_abort_int(struct dw_edma_chan *chan)
-> > >  {
-> > >  	struct dw_edma *dw = chan->dw;
-> > >  
-> > > @@ -274,18 +274,56 @@ void dw_edma_v0_core_clear_abort_int(struct dw_edma_chan *chan)
-> > >  		  FIELD_PREP(EDMA_V0_ABORT_INT_MASK, BIT(chan->id)));
-> > >  }
-> > >  
-> > > -u32 dw_edma_v0_core_status_done_int(struct dw_edma *dw, enum dw_edma_dir dir)
-> > > +static u32 dw_edma_v0_core_status_done_int(struct dw_edma *dw, enum dw_edma_dir dir)
-> > >  {
-> > >  	return FIELD_GET(EDMA_V0_DONE_INT_MASK,
-> > >  			 GET_RW_32(dw, dir, int_status));
-> > >  }
-> > >  
-> > > -u32 dw_edma_v0_core_status_abort_int(struct dw_edma *dw, enum dw_edma_dir dir)
-> > > +static u32 dw_edma_v0_core_status_abort_int(struct dw_edma *dw, enum dw_edma_dir dir)
-> > >  {
-> > >  	return FIELD_GET(EDMA_V0_ABORT_INT_MASK,
-> > >  			 GET_RW_32(dw, dir, int_status));
-> > >  }
-> > >  
-> > > +static
-> > > +irqreturn_t dw_edma_v0_core_handle_int(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir)
-> > > +{
-> > > +	struct dw_edma *dw = dw_irq->dw;
-> > > +	unsigned long total, pos, val;
-> > > +	struct dw_edma_chan *chan;
-> >   +	int ret = IRQ_NONE;
-> > > +	unsigned long off;
-> > > +	u32 mask;
-> > > +
-> > > +	if (dir == EDMA_DIR_WRITE) {
-> > > +		total = dw->wr_ch_cnt;
-> > > +		off = 0;
-> > > +		mask = dw_irq->wr_mask;
-> > > +	} else {
-> > > +		total = dw->rd_ch_cnt;
-> > > +		off = dw->wr_ch_cnt;
-> > > +		mask = dw_irq->rd_mask;
-> > > +	}
-> > > +
-> > > +	val = dw_edma_v0_core_status_done_int(dw, dir);
-> > > +	val &= mask;
-> > > +	for_each_set_bit(pos, &val, total) {
-> > > +		chan = &dw->chan[pos + off];
-> >   + newline
-> > > +		dw_edma_v0_core_clear_done_int(chan);
-> > > +		dw_edma_done_interrupt(chan);
-> >   + newline
-> >   +		ret = IRQ_HANDLED;
-> > > +	}
-> > > +
-> > > +	val = dw_edma_v0_core_status_abort_int(dw, dir);
-> > > +	val &= mask;
-> > > +	for_each_set_bit(pos, &val, total) {
-> > > +		chan = &dw->chan[pos + off];
-> >   + newline
-> > > +		dw_edma_v0_core_clear_abort_int(chan);
-> > > +		dw_edma_abort_interrupt(chan);
-> >   + newline
-> >   +		ret = IRQ_HANDLED;
-> > > +	}
-> > > +
-> > > -	return IRQ_HANDLED;
-> >   +	return ret;
-> > > +}
-> > 
-> > Your version of the handler doesn't indicate whether the IRQ was
-> > actually handled. Instead it misleadingly returns always-handled
-> > status. What if no IRQ flag was actually set and no for-each
-> > loop was taken? It's possible for the shared IRQ lines.
-> > 
-> > Besides of adding the actual IRQ-handling status return please note
-> > 1. newlines
-> > 2. include "linux/irqreturn.h" to the head of the file.
-> > 
-> > -Serge(y)
-> > 
-> > > +
-> > >  static void dw_edma_v0_write_ll_data(struct dw_edma_chunk *chunk, int i,
-> > >  				     u32 control, u32 size, u64 sar, u64 dar)
-> > >  {
-> > > @@ -356,7 +394,7 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
-> > >  	dw_edma_v0_write_ll_link(chunk, i, control, chunk->ll_region.paddr);
-> > >  }
-> > >  
-> > > -void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> > > +static void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> > >  {
-> > >  	struct dw_edma_chan *chan = chunk->chan;
-> > >  	struct dw_edma *dw = chan->dw;
-> > > @@ -427,7 +465,7 @@ void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> > >  		  FIELD_PREP(EDMA_V0_DOORBELL_CH_MASK, chan->id));
-> > >  }
-> > >  
-> > > -int dw_edma_v0_core_device_config(struct dw_edma_chan *chan)
-> > > +static void dw_edma_v0_core_ch_config(struct dw_edma_chan *chan)
-> > >  {
-> > >  	struct dw_edma *dw = chan->dw;
-> > >  	u32 tmp = 0;
-> > > @@ -494,12 +532,25 @@ int dw_edma_v0_core_device_config(struct dw_edma_chan *chan)
-> > >  		SET_RW_32(dw, chan->dir, ch67_imwr_data, tmp);
-> > >  		break;
-> > >  	}
-> > > -
-> > > -	return 0;
-> > >  }
-> > >  
-> > >  /* eDMA debugfs callbacks */
-> > > -void dw_edma_v0_core_debugfs_on(struct dw_edma *dw)
-> > > +static void dw_edma_v0_core_debugfs_on(struct dw_edma *dw)
-> > >  {
-> > >  	dw_edma_v0_debugfs_on(dw);
-> > >  }
-> > > +
-> > > +static const struct dw_edma_core_ops dw_edma_v0_core = {
-> > > +	.off = dw_edma_v0_core_off,
-> > > +	.ch_count = dw_edma_v0_core_ch_count,
-> > > +	.ch_status = dw_edma_v0_core_ch_status,
-> > > +	.handle_int = dw_edma_v0_core_handle_int,
-> > > +	.start = dw_edma_v0_core_start,
-> > > +	.ch_config = dw_edma_v0_core_ch_config,
-> > > +	.debugfs_on = dw_edma_v0_core_debugfs_on,
-> > > +};
-> > > +
-> > > +void dw_edma_v0_core_register(struct dw_edma *dw)
-> > > +{
-> > > +	dw->core = &dw_edma_v0_core;
-> > > +}
-> > > diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.h b/drivers/dma/dw-edma/dw-edma-v0-core.h
-> > > index ab96a1f48080..04a882222f99 100644
-> > > --- a/drivers/dma/dw-edma/dw-edma-v0-core.h
-> > > +++ b/drivers/dma/dw-edma/dw-edma-v0-core.h
-> > > @@ -11,17 +11,7 @@
-> > >  
-> > >  #include <linux/dma/edma.h>
-> > >  
-> > > -/* eDMA management callbacks */
-> > > -void dw_edma_v0_core_off(struct dw_edma *chan);
-> > > -u16 dw_edma_v0_core_ch_count(struct dw_edma *chan, enum dw_edma_dir dir);
-> > > -enum dma_status dw_edma_v0_core_ch_status(struct dw_edma_chan *chan);
-> > > -void dw_edma_v0_core_clear_done_int(struct dw_edma_chan *chan);
-> > > -void dw_edma_v0_core_clear_abort_int(struct dw_edma_chan *chan);
-> > > -u32 dw_edma_v0_core_status_done_int(struct dw_edma *chan, enum dw_edma_dir dir);
-> > > -u32 dw_edma_v0_core_status_abort_int(struct dw_edma *chan, enum dw_edma_dir dir);
-> > > -void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first);
-> > > -int dw_edma_v0_core_device_config(struct dw_edma_chan *chan);
-> > > -/* eDMA debug fs callbacks */
-> > > -void dw_edma_v0_core_debugfs_on(struct dw_edma *dw);
-> > > +/* eDMA core register */
-> > > +void dw_edma_v0_core_register(struct dw_edma *dw);
-> > >  
-> > >  #endif /* _DW_EDMA_V0_CORE_H */
-> > > -- 
-> > > 2.34.1
-> > > 
+DSA 2.0 also introduces per wq PRS disable knob. This will disable all PRS
+operations for the specific wq. The device will still have Address
+Translation Service (ATS) on. When ATS fails on a memory address for a CR,
+an eventlog entry will be written by the hardware into the event log
+ring buffer. The driver software is expected to parse the event log entry,
+fault in the address of the CR, and the write the content of the CR to
+the memory address.
+
+This patch series will implement the DSA 2 event log support. The support
+for the handling of the faulted user CR is added. The driver is also
+adding the same support for batch operation descriptors. With a batch
+operation the handling of the event log entry is a bit more complex.
+The faulting CR could be for the batch descriptor or any of the operation
+descriptors within the batch. The hardware generates a batch identifier
+that is used by the driver software to correlate the event log entries for
+the relevant descriptors of that batch.
+
+The faulting of source and destination addresses for the operation is not
+handled by the driver. That is left to be handled by the user application
+by faulting in the memory and re-submit the remaining operation.
+
+This series consists of three parts:
+1. Patch 1: Make misc interrupt one shot. Event Log interrupt depends on
+   this patch. This patch was released before but is not in upstream yet:
+   https://lore.kernel.org/dmaengine/165125374675.311834.10460196228320964350.stgit@djiang5-desk3.ch.intel.com/
+2. Patches 2-15: Enable Event Log and Completion Record faulting.
+3. Patch 16: Configure PRS disable per WQ.
+
+This series is applied cleanly on top of "Expose IAA 2.0 device
+capabilities" series:
+https://lore.kernel.org/lkml/20230303213732.3357494-1-fenghua.yu@intel.com/
+
+Change log:
+v2:
+- Define and export iommu_access_remote_vm() for IDXD driver to write
+  completion record to user address space. This change removes
+  patch 8 and 9 in v1 (Alistair Popple)
+
+Dave Jiang (15):
+  dmaengine: idxd: make misc interrupt one shot
+  dmaengine: idxd: add event log size sysfs attribute
+  dmaengine: idxd: setup event log configuration
+  dmaengine: idxd: add interrupt handling for event log
+  dmanegine: idxd: add debugfs for event log dump
+  dmaengine: idxd: add per DSA wq workqueue for processing cr faults
+  dmaengine: idxd: create kmem cache for event log fault items
+  dmaengine: idxd: process user page faults for completion record
+  dmaengine: idxd: add descs_completed field for completion record
+  dmaengine: idxd: process batch descriptor completion record faults
+  dmaengine: idxd: add per file user counters for completion record
+    faults
+  dmaengine: idxd: add a device to represent the file opened
+  dmaengine: idxd: expose fault counters to sysfs
+  dmaengine: idxd: add pid to exported sysfs attribute for opened file
+  dmaengine: idxd: add per wq PRS disable
+
+Fenghua Yu (1):
+  iommu: define and export iommu_access_remote_vm()
+
+ .../ABI/stable/sysfs-driver-dma-idxd          |  43 +++
+ drivers/dma/Kconfig                           |   1 +
+ drivers/dma/idxd/Makefile                     |   2 +-
+ drivers/dma/idxd/cdev.c                       | 264 ++++++++++++++++--
+ drivers/dma/idxd/debugfs.c                    | 138 +++++++++
+ drivers/dma/idxd/device.c                     | 113 +++++++-
+ drivers/dma/idxd/idxd.h                       |  63 +++++
+ drivers/dma/idxd/init.c                       |  53 ++++
+ drivers/dma/idxd/irq.c                        | 203 ++++++++++++--
+ drivers/dma/idxd/registers.h                  | 105 ++++++-
+ drivers/dma/idxd/sysfs.c                      | 112 +++++++-
+ drivers/iommu/iommu-sva.c                     |  35 +++
+ include/linux/iommu.h                         |   9 +
+ include/uapi/linux/idxd.h                     |  15 +-
+ 14 files changed, 1091 insertions(+), 65 deletions(-)
+ create mode 100644 drivers/dma/idxd/debugfs.c
+
+-- 
+2.37.1
+

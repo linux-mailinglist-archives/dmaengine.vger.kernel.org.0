@@ -2,285 +2,218 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B95F6AC3DB
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Mar 2023 15:50:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D557F6AC3EB
+	for <lists+dmaengine@lfdr.de>; Mon,  6 Mar 2023 15:52:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231238AbjCFOuf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 6 Mar 2023 09:50:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54964 "EHLO
+        id S229819AbjCFOwB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 6 Mar 2023 09:52:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231281AbjCFOuX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Mar 2023 09:50:23 -0500
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB6F252B0
-        for <dmaengine@vger.kernel.org>; Mon,  6 Mar 2023 06:50:02 -0800 (PST)
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id E1BCC3F765
-        for <dmaengine@vger.kernel.org>; Mon,  6 Mar 2023 14:39:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1678113595;
-        bh=qW5xSmxdKjIllEUHvJ4dJwdCFXtHwGvw1GNV6BFAGZk=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=IOK8YuhFrwl7i+lZoCkGwwiiWkyOAKJeOc2djF1/dCLLAqE0v3dFj7X2h2xQmXuTV
-         1wSEm8gw2HtLzViBr98+aYFnCHeas2mxt6NljVC5dWnbu/HH71EaVCka6WANxebEr4
-         6xME08BBIcW5qjgfiKj930Ti6qp/Ml94k+g4saH2ve2s92Xg7oo3+KQwZh4MDa50qa
-         xw9gELE5zVK8hbVHlDPPBStpHaaXDTol+d2jpL+9jc46WI6qqpy6BDFz8/W2J5yTDx
-         pRu+K3WM3JxvWNoeERXl6E6Ss0iIQlRfzIARGJovo2BfcqauQlKf5chr047fS29khm
-         0IP1SyQgoP++Q==
-Received: by mail-qt1-f199.google.com with SMTP id r4-20020ac867c4000000b003bfefb6dd58so5321473qtp.2
-        for <dmaengine@vger.kernel.org>; Mon, 06 Mar 2023 06:39:55 -0800 (PST)
+        with ESMTP id S229806AbjCFOwA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Mar 2023 09:52:00 -0500
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A33F6AA;
+        Mon,  6 Mar 2023 06:51:38 -0800 (PST)
+Received: by mail-lf1-x12d.google.com with SMTP id n2so13034736lfb.12;
+        Mon, 06 Mar 2023 06:51:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678114295;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5c+7FnHrIhi+nzncPlqGKgsZZ8Eb6JEqACGpgvAOqy4=;
+        b=EypR4CU/Cu41sOh9JLsnIN7yJQ3FCrRU5w74rKDtnumTEWm94z75XmSHx/dxW/jdpm
+         BmCKq8ALREeTRfNsAMCjs1+fj1Aj5RM/I679I71gCRgDbZBP2UPzKkW7scKHmmlJOVzk
+         p+1hVqvOfpvYKJFcoSseQtjL6wBLwIyVxKOkfRFi9I4d50RqVso2WsgPdb2nrkUWKEnL
+         Glvs25PLjQ0fsTjIX+60Pe1lS6kBQPwrerWTPnOQhmKJZEa5/YBbr9fy0WEqpxIf3TWV
+         NLWYu8QHLd0F2IqfiQZH2Ctd+Yq2W8M+HMrMUbN3xKaN7UjqKjT9ma3sOE9V/0N/gzbW
+         PV4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678113595;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qW5xSmxdKjIllEUHvJ4dJwdCFXtHwGvw1GNV6BFAGZk=;
-        b=Gqjb1HyQBv6WwiojE0NhWdKUF5FWbnrtDoNnLcjuiOHAzwABFq+m+g4N/LdvsCK36y
-         XaJSQeWIokTDgO94Bk8biEwFuCyna6UO7Mr4y4b1VvIW1NKAU+NHGsS1Y2Ofw6+vYwNE
-         RQOFeICbkHGiE4f8yWYwrSzvzI9cB40Fz3prpDxoVXqNUrApKDKVxwydHDj6VfUSN/OT
-         /s0u5tt4G3X96YAmhR13FX5UrbZxEx9zepEm+ZYWnYDWhFEzDGEHqUlEZYnmVyTSDcfG
-         eiQvWaTtgo8EPJXNGCXGzGMGmiQOAR0284kJgZX1Bz/kwTXNHS0va+a5zHxZxmeqcSZp
-         N7zw==
-X-Gm-Message-State: AO0yUKXbx/qPeT7oRMlGkHmRKkmQ+qvtfJxwfMNcKUD4o1x+isvL0tkH
-        ROBrL+cBCsyIfFSQB7JCCK757/E+JrGpciVu1WEtyaks1uYJBY9B4NdwiGb5v3F+s94BKJM+Ctt
-        aMWHDmj1UCOUPzPM19NOmi3EGn9r1fhc82211wdwMutmBemRStu6Biw==
-X-Received: by 2002:a05:6214:b04:b0:56e:917a:1c19 with SMTP id u4-20020a0562140b0400b0056e917a1c19mr2609274qvj.0.1678113594907;
-        Mon, 06 Mar 2023 06:39:54 -0800 (PST)
-X-Google-Smtp-Source: AK7set/ehV6HNf3S4FDeQyHkWVmBdfzUrtJQgMvbF9DrzBzPARNK/FID8eqVdEk5fo+Vs9b0LwywNHLGCvDf2s6ysZo=
-X-Received: by 2002:a05:6214:b04:b0:56e:917a:1c19 with SMTP id
- u4-20020a0562140b0400b0056e917a1c19mr2609267qvj.0.1678113594619; Mon, 06 Mar
- 2023 06:39:54 -0800 (PST)
-MIME-Version: 1.0
-References: <20230306140430.28951-1-walker.chen@starfivetech.com> <20230306140430.28951-3-walker.chen@starfivetech.com>
-In-Reply-To: <20230306140430.28951-3-walker.chen@starfivetech.com>
-From:   Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Date:   Mon, 6 Mar 2023 15:39:38 +0100
-Message-ID: <CAJM55Z_216xezPNE1tXBsWA9pKk1ZaKsNVM=4PuHrg5Cgs3zcw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] dmaengine: dw-axi-dmac: Add support for StarFive
- JH7110 DMA
-To:     Walker Chen <walker.chen@starfivetech.com>
-Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        d=1e100.net; s=20210112; t=1678114295;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5c+7FnHrIhi+nzncPlqGKgsZZ8Eb6JEqACGpgvAOqy4=;
+        b=fwEvR0oRxFO7wDNoQVDI+cz5coTzGgitQ3hi92FwvIhAniovXHYXnEu6VIwjMn37rh
+         RXsy/Z/UfLiC3zZa/cyBeySrr8H0fGot48mrOX8Cr009ExkDqGZPeciYRGziN+vDDHMv
+         MWJVyeShK6leKqeqswHmcdoVv+DvjsJltZr5UZU5E64TH712/ycJqxSW9SnmsA8La+Hx
+         vt7eMgMW3kQrarwcUGs/6p87Co89K/X4exSHgCUBgqttTALl4Jh+KoDE9OfqE57F4nzB
+         J692ItqwvFqieE+CxGgHuxyPLZCN6Kbeq4l1XHrb2CcSTb/4goaGQtIQT8PlQeu/fGrT
+         w/vA==
+X-Gm-Message-State: AO0yUKU2u2D8by/LADWe8Qr9ooa2GfOSsR+VI8r1nyew4KY8mGrTv7Yq
+        o2sQSj9Bbgxxx60joKW6Rlg=
+X-Google-Smtp-Source: AK7set+wNClpKRpski9MKQKw/az3bYzoccb7jDpWom0HO52lCm3FZbI5VfdPmasZc1j6laoNnn5jKg==
+X-Received: by 2002:ac2:5df6:0:b0:4d8:5232:21c0 with SMTP id z22-20020ac25df6000000b004d8523221c0mr2702951lfq.30.1678114295441;
+        Mon, 06 Mar 2023 06:51:35 -0800 (PST)
+Received: from mobilestation ([95.79.133.202])
+        by smtp.gmail.com with ESMTPSA id b14-20020ac2562e000000b004dafe604c2esm1669963lff.211.2023.03.06.06.51.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Mar 2023 06:51:34 -0800 (PST)
+Date:   Mon, 6 Mar 2023 17:51:32 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Cai Huoqing <cai.huoqing@linux.dev>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 1/4] dmaengine: dw-edma: Rename dw_edma_core_ops
+ structure to dw_edma_plat_ops
+Message-ID: <20230306145132.wqzq7f6gsluqgp25@mobilestation>
+References: <20230303124642.5519-1-cai.huoqing@linux.dev>
+ <20230303124642.5519-2-cai.huoqing@linux.dev>
+ <20230303165125.fuymevji2jkybmbl@mobilestation>
+ <ZAXrSq1A8O7e55F6@chq-MS-7D45>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZAXrSq1A8O7e55F6@chq-MS-7D45>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, 6 Mar 2023 at 15:04, Walker Chen <walker.chen@starfivetech.com> wrote:
->
-> Add dma reset operation in device probe and use different configuration
-> on CH_CFG registers according to match data. Update all uses of
-> of_device_is_compatible with of_device_get_match_data.
->
-> Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+On Mon, Mar 06, 2023 at 09:31:54PM +0800, Cai Huoqing wrote:
+> On 03 3月 23 19:51:25, Serge Semin wrote:
+> > On Fri, Mar 03, 2023 at 08:46:31PM +0800, Cai Huoqing wrote:
+> > > From: Cai huoqing <cai.huoqing@linux.dev>
+> > > 
+> > 
+> > > Rename dw_edma_core_ops structure to dw_edma_plat_ops, the ops is platform
+> > > specific operations: the DMA device environment configs like IRQs,
+> > > address translation, etc.
+> > > 
+> > > The dw_edma_plat_ops name was supposed to refer to the platform which
+> > > the DW eDMA engine is embedded to, like PCIe end-point (accessible via
+> > > the PCIe bus) or a PCIe root port (directly accessible by CPU).
+> > > Needless to say that for them the IRQ-vector and PCI-addresses are
+> > > differently determined. The suggested name has a connection with the
+> > > kernel platform device only as a private case of the eDMA/hDMA embedded
+> > > into the DW PCI Root ports, though basically it was supposed to refer to
+> > > any platform in which the DMA hardware lives.
+> > > 
+> > > Anyway the renaming was necessary to distinguish two types of
+> > > the implementation callbacks:
+> > > 1. DW eDMA/hDMA IP-core specific operations: device-specific CSR
+> > > setups in one or another aspect of the DMA-engine initialization.
+> > > 2. DW eDMA/hDMA platform specific operations: the DMA device
+> > > environment configs like IRQs, address translation, etc.
+> > > 
+> > > dw_edma_core_ops is supposed to be used for the case 1, and
+> > > dw_edma_plat_ops - for the case 2.
+> > 
+> > This text was my explanation to Bjorn of why the renaming was
+> > necessary. The patch log has a bit different context so I would
+> > change it to something like this:
+> > 
+> > "The dw_edma_core_ops structure contains a set of the operations:
+> > device IRQ numbers getter, CPU/PCI address translation. Based on the
+> > functions semantics the structure name "dw_edma_plat_ops" looks more
+> > descriptive since indeed the operations are platform-specific. The
+> > "dw_edma_core_ops" name shall be used for a structure with the IP-core
+> > specific set of callbacks in order to abstract out DW eDMA and DW HDMA
+> > setups. Such structure will be added in one of the next commit in the
+> > framework of the set of changes adding the DW HDMA device support."
+> OK
+> 
+> > 
+> > > 
+> > > Signed-off-by: Cai huoqing <cai.huoqing@linux.dev>
+> > > ---
+> > >   v4->v5:
+> > >     1.Revert the instance dw_edma_pcie_core_ops
+> > >     2.Move the change EDMA_MF_HDMA_NATIVE to patch[3/4] 
+> > > 
+> > >   v4 link:
+> > >   https://lore.kernel.org/lkml/20230221034656.14476-2-cai.huoqing@linux.dev/
+> > >  
+> > >  drivers/dma/dw-edma/dw-edma-pcie.c           | 2 +-
+> > >  drivers/pci/controller/dwc/pcie-designware.c | 2 +-
+> > >  include/linux/dma/edma.h                     | 4 ++--
+> > >  3 files changed, 4 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > > index 2b40f2b44f5e..190b32d8016d 100644
+> > > --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> > > +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> > > @@ -109,7 +109,7 @@ static u64 dw_edma_pcie_address(struct device *dev, phys_addr_t cpu_addr)
+> > >  	return region.start;
+> > >  }
+> > >  
+> > 
+> > > -static const struct dw_edma_core_ops dw_edma_pcie_core_ops = {
+> > > +static const struct dw_edma_plat_ops dw_edma_pcie_core_ops = {
+> > 
+> > Please carefully note my comment to v4. I asked to add the prefix
+> > specific to the local naming convention:
+> > 
+> > -static const struct dw_edma_core_ops dw_edma_pcie_core_ops = {
+> > +static const struct dw_edma_plat_ops dw_edma_pcie_plat_ops = {
+> > 
+> > But besides of adding the correct prefix you changed the suffix to the
+> > improper one. Please get it back so the instance name would be
+> > "dw_edma_pcie_plat_ops".
 
-Hi Walker,
+> Do you mean ditto
+> -	chip->ops = &dw_edma_pcie_core_ops;
+> +	chip->ops = &dw_edma_pcie_plat_ops;
 
-Again please remove my Reviewed-by when you're adding a bunch of new
-code as you're doing here.
+Yes, please.
 
-> Signed-off-by: Walker Chen <walker.chen@starfivetech.com>
-> ---
->  .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 67 ++++++++++++++++---
->  drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  2 +
->  2 files changed, 61 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> index bf85aa0979ec..d1148f6fbcf9 100644
-> --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-> @@ -21,10 +21,12 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/of_dma.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/property.h>
-> +#include <linux/reset.h>
->  #include <linux/slab.h>
->  #include <linux/types.h>
->
-> @@ -46,6 +48,12 @@
->         DMA_SLAVE_BUSWIDTH_32_BYTES     | \
->         DMA_SLAVE_BUSWIDTH_64_BYTES)
->
-> +struct axi_dma_chip_config {
-> +       int (*apb_setup)(struct platform_device *pdev, struct axi_dma_chip *chip);
-> +       int (*reset_init)(struct platform_device *pdev);
-> +       bool use_cfg2;
-> +};
-> +
->  static inline void
->  axi_dma_iowrite32(struct axi_dma_chip *chip, u32 reg, u32 val)
->  {
-> @@ -86,7 +94,8 @@ static inline void axi_chan_config_write(struct axi_dma_chan *chan,
->
->         cfg_lo = (config->dst_multblk_type << CH_CFG_L_DST_MULTBLK_TYPE_POS |
->                   config->src_multblk_type << CH_CFG_L_SRC_MULTBLK_TYPE_POS);
-> -       if (chan->chip->dw->hdata->reg_map_8_channels) {
-> +       if (chan->chip->dw->hdata->reg_map_8_channels &&
-> +           !chan->chip->dw->hdata->use_cfg2) {
->                 cfg_hi = config->tt_fc << CH_CFG_H_TT_FC_POS |
->                          config->hs_sel_src << CH_CFG_H_HS_SEL_SRC_POS |
->                          config->hs_sel_dst << CH_CFG_H_HS_SEL_DST_POS |
-> @@ -1142,7 +1151,7 @@ static int dma_chan_terminate_all(struct dma_chan *dchan)
->         axi_chan_disable(chan);
->
->         ret = readl_poll_timeout_atomic(chan->chip->regs + DMAC_CHEN, val,
-> -                                       !(val & chan_active), 1000, 10000);
-> +                                       !(val & chan_active), 1000, DMAC_TIMEOUT_US);
->         if (ret == -ETIMEDOUT)
->                 dev_warn(dchan2dev(dchan),
->                          "%s failed to stop\n", axi_chan_name(chan));
-> @@ -1367,13 +1376,33 @@ static int parse_device_properties(struct axi_dma_chip *chip)
->         return 0;
->  }
->
-> +static int intel_apb_setup(struct platform_device *pdev, struct axi_dma_chip *chip)
-> +{
-> +       chip->apb_regs = devm_platform_ioremap_resource(pdev, 1);
-> +       if (IS_ERR(chip->apb_regs))
-> +               return PTR_ERR(chip->apb_regs);
-> +       else
-> +               return 0;
-> +}
-> +
-> +static int jh7110_reset_init(struct platform_device *pdev)
-> +{
-> +       struct reset_control *resets;
-> +
-> +       resets = devm_reset_control_array_get_exclusive(&pdev->dev);
-> +       if (IS_ERR(resets))
-> +               return PTR_ERR(resets);
-> +
-> +       return reset_control_deassert(resets);
-> +}
-> +
->  static int dw_probe(struct platform_device *pdev)
->  {
-> -       struct device_node *node = pdev->dev.of_node;
->         struct axi_dma_chip *chip;
->         struct resource *mem;
->         struct dw_axi_dma *dw;
->         struct dw_axi_dma_hcfg *hdata;
-> +       const struct axi_dma_chip_config *ccfg;
->         u32 i;
->         int ret;
->
-> @@ -1402,10 +1431,21 @@ static int dw_probe(struct platform_device *pdev)
->         if (IS_ERR(chip->regs))
->                 return PTR_ERR(chip->regs);
->
-> -       if (of_device_is_compatible(node, "intel,kmb-axi-dma")) {
-> -               chip->apb_regs = devm_platform_ioremap_resource(pdev, 1);
-> -               if (IS_ERR(chip->apb_regs))
-> -                       return PTR_ERR(chip->apb_regs);
-> +       ccfg = of_device_get_match_data(&pdev->dev);
-> +       if (ccfg) {
-> +               if (ccfg->apb_setup) {
-> +                       ret = ccfg->apb_setup(pdev, chip);
-> +                       if (ret)
-> +                               return ret;
-> +               }
-> +
-> +               if (ccfg->reset_init) {
-> +                       ret = ccfg->reset_init(pdev);
-> +                       if (ret)
-> +                               return ret;
-> +               }
-> +
-> +               chip->dw->hdata->use_cfg2 = ccfg->use_cfg2;
+-Serge(y)
 
-This claims and deasserts the resets before the clocks, whereas your
-previous versions did it after turning the clocks on. Which is the
-correct order?
-
-Also this certainly gets rid of of_device_is_compatible calls, but
-seems like a lot of code to do that. Did you consider something like
-
-+#define AXI_DMA_FLAG_HAS_APB_REGS BIT(0)
-+#define AXI_DMA_FLAG_HAS_RESETS BIT(1)
-+#define AXI_DMA_FLAG_USE_CFG2 BIT(2)
-
-+unsigned int flags = (uintptr_t)device_get_match_data(&pdev->dev);
-
--if (of_device_is_compatible(node, "intel,kmb-axi-dma")) {
-+if (flags & AXI_DMA_FLAG_HAS_APB_REGS) {
-
--if (of_device_is_compatible(node, "starfive,jh7110-axi-dma)) {
-+if (flags & AXI_DMA_FLAG_HAS_RESETS) {
-
-+chip->dw->hwdata->use_cfg2 = !!(flags & AXI_DMA_FLAG_USE_CFG2);
-
--{ .compatible = "intel,kmb-axi-dma" },
-+{ .compatible = "intel,kmb-axi-dma", .data = (void
-*)AXI_DMA_FLAG_HAS_APB_REGS },
-+{ .compatible = "starive,jh7110-axi-dma", .data = (void
-*)(AXI_DMA_FLAG_HAS_RESETS | AXI_DMA_FLAG_USE_CFG2) },
-
->         }
->
->         chip->core_clk = devm_clk_get(chip->dev, "core-clk");
-> @@ -1557,9 +1597,20 @@ static const struct dev_pm_ops dw_axi_dma_pm_ops = {
->         SET_RUNTIME_PM_OPS(axi_dma_runtime_suspend, axi_dma_runtime_resume, NULL)
->  };
->
-> +static const struct axi_dma_chip_config intel_chip_config = {
-> +       .apb_setup = intel_apb_setup,
-> +       .use_cfg2 = false,
-> +};
-> +
-> +static const struct axi_dma_chip_config jh7110_chip_config = {
-> +       .reset_init = jh7110_reset_init,
-> +       .use_cfg2 = true,
-> +};
-> +
->  static const struct of_device_id dw_dma_of_id_table[] = {
->         { .compatible = "snps,axi-dma-1.01a" },
-> -       { .compatible = "intel,kmb-axi-dma" },
-> +       { .compatible = "intel,kmb-axi-dma", .data = &intel_chip_config },
-> +       { .compatible = "starfive,jh7110-axi-dma", .data = &jh7110_chip_config },
->         {}
->  };
->  MODULE_DEVICE_TABLE(of, dw_dma_of_id_table);
-> diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-> index e9d5eb0fd594..b906d5884efe 100644
-> --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-> +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-> @@ -21,6 +21,7 @@
->  #define DMAC_MAX_CHANNELS      16
->  #define DMAC_MAX_MASTERS       2
->  #define DMAC_MAX_BLK_SIZE      0x200000
-> +#define DMAC_TIMEOUT_US                200000
->
->  struct dw_axi_dma_hcfg {
->         u32     nr_channels;
-> @@ -33,6 +34,7 @@ struct dw_axi_dma_hcfg {
->         /* Register map for DMAX_NUM_CHANNELS <= 8 */
->         bool    reg_map_8_channels;
->         bool    restrict_axi_burst_len;
-> +       bool    use_cfg2;
->  };
->
->  struct axi_dma_chan {
-> --
-> 2.17.1
->
+> 
+> > 
+> > -Serge(y)
+> > 
+> > >  	.irq_vector = dw_edma_pcie_irq_vector,
+> > >  	.pci_address = dw_edma_pcie_address,
+> > >  };
+> > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > > index 53a16b8b6ac2..44e90b71d429 100644
+> > > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > > @@ -828,7 +828,7 @@ static int dw_pcie_edma_irq_vector(struct device *dev, unsigned int nr)
+> > >  	return platform_get_irq_byname_optional(pdev, name);
+> > >  }
+> > >  
+> > > -static struct dw_edma_core_ops dw_pcie_edma_ops = {
+> > > +static struct dw_edma_plat_ops dw_pcie_edma_ops = {
+> > >  	.irq_vector = dw_pcie_edma_irq_vector,
+> > >  };
+> > >  
+> > > diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> > > index d2638d9259dc..ed401c965a87 100644
+> > > --- a/include/linux/dma/edma.h
+> > > +++ b/include/linux/dma/edma.h
+> > > @@ -40,7 +40,7 @@ struct dw_edma_region {
+> > >   *			iATU windows. That will be done by the controller
+> > >   *			automatically.
+> > >   */
+> > > -struct dw_edma_core_ops {
+> > > +struct dw_edma_plat_ops {
+> > >  	int (*irq_vector)(struct device *dev, unsigned int nr);
+> > >  	u64 (*pci_address)(struct device *dev, phys_addr_t cpu_addr);
+> > >  };
+> > > @@ -80,7 +80,7 @@ enum dw_edma_chip_flags {
+> > >  struct dw_edma_chip {
+> > >  	struct device		*dev;
+> > >  	int			nr_irqs;
+> > > -	const struct dw_edma_core_ops   *ops;
+> > > +	const struct dw_edma_plat_ops	*ops;
+> > >  	u32			flags;
+> > >  
+> > >  	void __iomem		*reg_base;
+> > > -- 
+> > > 2.34.1
+> > > 

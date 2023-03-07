@@ -2,122 +2,116 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9310B6AF7FD
-	for <lists+dmaengine@lfdr.de>; Tue,  7 Mar 2023 22:50:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 327566AF8B2
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Mar 2023 23:29:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231183AbjCGVuO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 7 Mar 2023 16:50:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59898 "EHLO
+        id S230209AbjCGW3e (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 7 Mar 2023 17:29:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230074AbjCGVuL (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Mar 2023 16:50:11 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3B3856164;
-        Tue,  7 Mar 2023 13:50:10 -0800 (PST)
+        with ESMTP id S230050AbjCGW3P (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Mar 2023 17:29:15 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30E5C9BA76;
+        Tue,  7 Mar 2023 14:28:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678225810; x=1709761810;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=77dMKDKBCqeHL/BHmh65e59P0A/ZjNveCWI4JDmFEZA=;
-  b=UUX5VioKVRc7gcShTU24XxcSbgLSi7qhevbpwWXnhyaLufUdFZ2O6OX6
-   XbEewKsn0HyCURKQnPkILVhaQ6ZuV4IN27rQT0S0i/krxt1sjBLPh0phL
-   4muuRTcVGoI/fglUON+x0L5LeGEFFAw5HwG9lbPVBJqMAmytOnYnZU4ew
-   rODVeIH1XerNfMX+LyuvGX67816nLznZdHx84daK/0e+LcZ3sq1qygYOZ
-   br4BVI1VLdAzWTG8lK7V10atv7EVEc4G3DVJWMZ41+zao+HjlGD+67W8D
-   h4OoHYYLlw9vVM9Tv1C2gdxq2xpKzxSaZZrWaSujZ/kE98qm/OlvoLXXY
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="333455340"
+  t=1678228102; x=1709764102;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=yuyXsGR1whfmHiXJsv4+qjpy0Dresym5ojZswg7XH3A=;
+  b=JI7uRhF/EcegyWUNuG0QJb4DAVE9iRQdzVLIlteZTrpeeRj/5ZbB+//Y
+   BkxmJzJm8wSViL7xM8o0yRx7etrTTOkqk0itpWZM0JvEhogMp0+mKwvJo
+   eTFMmKAzFSL5hQHiD8f5ABYtJ/tk844auUPwukx94Fp/uIHzbLEnuBDpv
+   Uf96amDVpIj+Ck2jqqFwsSi9VBn8or6MKtSW0h1w86dbUykbup5esdqsk
+   mgqXxLDXMETqsOIPxIUp50yJs5wVhfnjBrt9X9dYCwzRn6oufquzp1kP7
+   A+9/Z7Tx7GeeDfB1P10X0Nr/14+vk5hj70XOqXTTouvO7c4UzxQs0OfLY
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="336010941"
 X-IronPort-AV: E=Sophos;i="5.98,242,1673942400"; 
-   d="scan'208";a="333455340"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 13:50:10 -0800
+   d="scan'208";a="336010941"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 14:28:17 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="670082995"
+X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="676725345"
 X-IronPort-AV: E=Sophos;i="5.98,242,1673942400"; 
-   d="scan'208";a="670082995"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.116.173]) ([10.212.116.173])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 13:50:09 -0800
-Message-ID: <18a73c95-53da-9acb-9e10-0e6095e7dd31@intel.com>
-Date:   Tue, 7 Mar 2023 14:50:08 -0700
+   d="scan'208";a="676725345"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 14:28:17 -0800
+Date:   Tue, 7 Mar 2023 14:32:09 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Baolu Lu <baolu.lu@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
+        Joerg Roedel <joro@8bytes.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        X86 Kernel <x86@kernel.org>, bp@alien8.de,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>, corbet@lwn.net,
+        vkoul@kernel.org, dmaengine@vger.kernel.org,
+        linux-doc@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v4 3/6] iommu/sva: Stop using ioasid_set for SVA
+Message-ID: <20230307143209.2873d9e2@jacob-builder>
+In-Reply-To: <ZAHzAa0mnilf0N9K@nvidia.com>
+References: <20230301235646.2692846-1-jacob.jun.pan@linux.intel.com>
+        <20230301235646.2692846-4-jacob.jun.pan@linux.intel.com>
+        <3b7fb4d3-1fe9-a3be-46ad-c271be9f96c7@linux.intel.com>
+        <20230302091707.58d59964@jacob-builder>
+        <794c7dad-2e62-3afa-ea10-92179b0d1659@linux.intel.com>
+        <20230303093235.GB361458@myrica>
+        <3b2c6fe9-821f-9b84-acb6-777e8517a0fc@linux.intel.com>
+        <ZAHzAa0mnilf0N9K@nvidia.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH] dmaengine: ioat: use PCI core macros for PCIe Capability
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>, Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20230307214615.887354-1-helgaas@kernel.org>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230307214615.887354-1-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Jason,
 
+On Fri, 3 Mar 2023 09:15:45 -0400, Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-On 3/7/23 2:46 PM, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+> On Fri, Mar 03, 2023 at 05:57:41PM +0800, Baolu Lu wrote:
+> > On 2023/3/3 17:32, Jean-Philippe Brucker wrote:  
+> > > > I suppose the common thing is reserving some kind of special
+> > > > PASIDs.  
+> > > Are you planning to use RID_PASID != 0 in VT-d?  Otherwise we could
+> > > just communicate min_pasid from the IOMMU driver the same way we do
+> > > max_pasid.
+> > > 
+> > > Otherwise I guess re-introduce a lighter ioasid_alloc() that the IOMMU
+> > > driver calls to reserve PASID0/RID_PASID.  
+> > 
+> > Yes. We probably will use a non-zero RID_PASID in the future. An
+> > interface to reserve (or allocate) a PASID from iommu_global_pasid_ida
+> > should work then.  
 > 
-> The PCIe Capability is defined by the PCIe spec, so use the PCI_EXP_DEVCTL
-> macros defined by the PCI core instead of defining copies in IOAT.  This
-> makes it easier to find all uses of the PCIe Device Control register.  No
-> functional change intended.
+> Just allowing the driver to store XA_ZERO_ENTRY would be fine
 > 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+It looks like there are incoming users of iommu_sva_find()
+https://lore.kernel.org/lkml/20230306163138.587484-1-fenghua.yu@intel.com/T/#m1fc97725a0e56ea269c8bdabacee447070d51846
+Should we keep the xa here instead of the global ida?
 
-Acked-by: Dave Jiang <dave.jiang@intel.com>
+ 
+Thanks,
 
-> ---
->   drivers/dma/ioat/init.c      | 6 +++---
->   drivers/dma/ioat/registers.h | 7 -------
->   2 files changed, 3 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
-> index 5d707ff63554..fa7c0f9aa61d 100644
-> --- a/drivers/dma/ioat/init.c
-> +++ b/drivers/dma/ioat/init.c
-> @@ -1191,13 +1191,13 @@ static int ioat3_dma_probe(struct ioatdma_device *ioat_dma, int dca)
->   		ioat_dma->dca = ioat_dca_init(pdev, ioat_dma->reg_base);
->   
->   	/* disable relaxed ordering */
-> -	err = pcie_capability_read_word(pdev, IOAT_DEVCTRL_OFFSET, &val16);
-> +	err = pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &val16);
->   	if (err)
->   		return pcibios_err_to_errno(err);
->   
->   	/* clear relaxed ordering enable */
-> -	val16 &= ~IOAT_DEVCTRL_ROE;
-> -	err = pcie_capability_write_word(pdev, IOAT_DEVCTRL_OFFSET, val16);
-> +	val16 &= ~PCI_EXP_DEVCTL_RELAX_EN;
-> +	err = pcie_capability_write_word(pdev, PCI_EXP_DEVCTL, val16);
->   	if (err)
->   		return pcibios_err_to_errno(err);
->   
-> diff --git a/drivers/dma/ioat/registers.h b/drivers/dma/ioat/registers.h
-> index f55a5f92f185..54cf0ad39887 100644
-> --- a/drivers/dma/ioat/registers.h
-> +++ b/drivers/dma/ioat/registers.h
-> @@ -14,13 +14,6 @@
->   #define IOAT_PCI_CHANERR_INT_OFFSET		0x180
->   #define IOAT_PCI_CHANERRMASK_INT_OFFSET		0x184
->   
-> -/* PCIe config registers */
-> -
-> -/* EXPCAPID + N */
-> -#define IOAT_DEVCTRL_OFFSET			0x8
-> -/* relaxed ordering enable */
-> -#define IOAT_DEVCTRL_ROE			0x10
-> -
->   /* MMIO Device Registers */
->   #define IOAT_CHANCNT_OFFSET			0x00	/*  8-bit */
->   
+Jacob

@@ -2,74 +2,79 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E113D6AD961
-	for <lists+dmaengine@lfdr.de>; Tue,  7 Mar 2023 09:41:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F172E6AD9CE
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Mar 2023 10:03:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229886AbjCGIlE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 7 Mar 2023 03:41:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48638 "EHLO
+        id S230183AbjCGJD6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 7 Mar 2023 04:03:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229812AbjCGIlA (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Mar 2023 03:41:00 -0500
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 166F1460A9
-        for <dmaengine@vger.kernel.org>; Tue,  7 Mar 2023 00:40:58 -0800 (PST)
-Received: by mail-wm1-x335.google.com with SMTP id k37so7261958wms.0
-        for <dmaengine@vger.kernel.org>; Tue, 07 Mar 2023 00:40:58 -0800 (PST)
+        with ESMTP id S230051AbjCGJD5 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Mar 2023 04:03:57 -0500
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2F3F32531
+        for <dmaengine@vger.kernel.org>; Tue,  7 Mar 2023 01:03:55 -0800 (PST)
+Received: by mail-ed1-x52f.google.com with SMTP id cy23so49266992edb.12
+        for <dmaengine@vger.kernel.org>; Tue, 07 Mar 2023 01:03:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678178456;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+0UKndbP14gZjHXMQXXDLbDlp36Mnb3xL7pi3Fj5BQw=;
-        b=P3b/7PQEXKyg73nyy4qZAscI5K/g2NnKp93Uh+3PIwOrasFJedSSjOLLd1bd903q4c
-         HMysVB702K66d76WiAOLkWrWKNwQiTrGtWV+zjvvDevRqA/j/TkzdsNPog4+X+2JOVdv
-         6gADtaQnNjnFICS84aOnziUt5awhzqAGZqsHGnkn8OIdIlFOntuSLRjggSpM6PqXcx59
-         /8lOei7vUv42kDrAjnMiBC7LIIcqDvehKjClc6DGa9ZbjLhXPRt2+ibjyeKoKcTOTChL
-         enw/VngLPJjqIKyEXmHn3YnrusHkHqvLFG590sGP1UnlFiihReClvyytQGXC6l98zu7Z
-         qexg==
+        d=linaro.org; s=google; t=1678179834;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sKx0mOkpRvRnCD/ymFwDwCwKvrzXqmFUgh9qzSW4PII=;
+        b=nlg42fRs9OuoIq2xD+xUEYMEZSBK+LODPpSyr7N/ri7VyhxSZQ3xCqI0BoOFn5eTEl
+         RuxaQv0qgZoAHX38sXj/b83UiUbDXYkKFpZo2eJZwJ3UjFeYuG6ziSALDog48COpvZ+w
+         QJ8AdYBf6c23YgJ8LJDCqKoMDQcuTkprPZavXtf+vsTRIN/qhP2mEPQtMsPvZFFIHpCI
+         Ug5xQ3ekBUF3Q9vjsx76uCOYoWzre5Tr2v/9Pe/rkHSQgXnrjTLah301lJvPcaope+ye
+         Vtq/aefqJd1wJ6p+Vfeb/ZcaZ3/01p1QXEcrSECX7wtj9MbdTRsr33gEo0LhN0A5RDuO
+         V+Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678178456;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+0UKndbP14gZjHXMQXXDLbDlp36Mnb3xL7pi3Fj5BQw=;
-        b=74PnC0XYc4I7+OMopRNwHRo+LT6MfdslXU8sdc9HmFhw0y2TFxZ2GJBOCQ0Ub1PM+F
-         1+4Wo/B08Mk8ihjNavPsFD9Y+2UmwLyTkws0EGalwwddCOq9v1IlQErWitLY2DFxQV0A
-         vfgClYycVgpg8cdYwGq4re4nRlCH3QEUpDRCXMG58O4rNPh0hDZm280bxvD68p42F9SM
-         dnuvZP6TqNTNgx/g/yVKhIMFqu7U83OgR5diwrEMBR4kyX096rV+2u6u+Gh06eBbBNVA
-         QbiHwBZb3JkAC68+gUqRKFKBMaxrFGylkgWYHSZ8xZbxA8EN+FE68MXYNC+d64D8OcmT
-         K2RQ==
-X-Gm-Message-State: AO0yUKWZhdl9ZCs4+34W6mGeNC1Oe5tOXeHwk3qksiaYHqLQdxJGxZiC
-        LMjzuMeA1Fmxsa/csXiO3MZolg==
-X-Google-Smtp-Source: AK7set+52QDU/ZyulReQ++I2BeOAZ7h56nRoRwlNzYV9UZ5O+BKWRWrAUuleGQszagPqAWonnp2Bbg==
-X-Received: by 2002:a05:600c:1c1f:b0:3eb:3b7e:7b89 with SMTP id j31-20020a05600c1c1f00b003eb3b7e7b89mr12353899wms.3.1678178456567;
-        Tue, 07 Mar 2023 00:40:56 -0800 (PST)
-Received: from myrica (054592b0.skybroadband.com. [5.69.146.176])
-        by smtp.gmail.com with ESMTPSA id l8-20020a05600c4f0800b003b47b80cec3sm18273948wmq.42.2023.03.07.00.40.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Mar 2023 00:40:56 -0800 (PST)
-Date:   Tue, 7 Mar 2023 08:40:58 +0000
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
-        dmaengine@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alistair Popple <apopple@nvidia.com>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>, iommu@lists.linux.dev
-Subject: Re: [PATCH v2 08/16] iommu: define and export
- iommu_access_remote_vm()
-Message-ID: <20230307084058.GA1330745@myrica>
-References: <20230306163138.587484-1-fenghua.yu@intel.com>
- <20230306163138.587484-9-fenghua.yu@intel.com>
+        d=1e100.net; s=20210112; t=1678179834;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sKx0mOkpRvRnCD/ymFwDwCwKvrzXqmFUgh9qzSW4PII=;
+        b=BtEwtVwPRg2hcwyMXB2EVU3KSqQYQIs36QEF/FepKZVoteJ2cwvlTSYjPxGt0xar7R
+         db1L/LeuU/e+u+d5Ft+TlxIGZoNTRfu6xy+xgKw7+25RAGpKyhdF1fjDC+O6AXJuJR97
+         pupiRrAzXNpbePCZQj8VH9XYZf2Oj+oVH6DSgLGtRzz7CKw8HXsGnV3VHdhs72E1RmSK
+         FhNJtJduUHwK6bMv9UGrd+hh3JRzzEiuSOHaJMl5JlWnG3pjokSg3ZUJrzBRsjcAyd0w
+         pzUP0exLuRjdbRJkpDyqYJWMJ7BLG3t/gQaF+XrTD5ojmhbGB+WYxYjY5OwYLn4FeDP4
+         qGiQ==
+X-Gm-Message-State: AO0yUKUqDmmpfNRJHZfwNRCMaXTHjpPtwNNvaPcf/6N3swPFE+V/ChQA
+        +kHX+SKAsy32oYNjb/0CPSbc1Q==
+X-Google-Smtp-Source: AK7set/bUqwAq/6asQNaUsbcnghCIXoZCJWabHy9kZ1G907/38X/E3IF17xsoo9IDiWsPXCP2TfTrA==
+X-Received: by 2002:a17:906:4783:b0:878:4497:380e with SMTP id cw3-20020a170906478300b008784497380emr17334260ejc.4.1678179834212;
+        Tue, 07 Mar 2023 01:03:54 -0800 (PST)
+Received: from ?IPV6:2a02:810d:15c0:828:5310:35c7:6f9e:2cd3? ([2a02:810d:15c0:828:5310:35c7:6f9e:2cd3])
+        by smtp.gmail.com with ESMTPSA id uk19-20020a170907ca1300b008cecb8f374asm5741155ejc.0.2023.03.07.01.03.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Mar 2023 01:03:53 -0800 (PST)
+Message-ID: <b2b36909-b0b1-7507-3145-141eb5ec0f3f@linaro.org>
+Date:   Tue, 7 Mar 2023 10:03:52 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230306163138.587484-9-fenghua.yu@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v4 1/3] dt-bindings: dma: snps,dw-axi-dmac: constrain
+ resets items for JH7110 dma
+Content-Language: en-US
+To:     Walker Chen <walker.chen@starfivetech.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <20230306140430.28951-1-walker.chen@starfivetech.com>
+ <20230306140430.28951-2-walker.chen@starfivetech.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230306140430.28951-2-walker.chen@starfivetech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -78,128 +83,74 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Fenghua,
-
-On Mon, Mar 06, 2023 at 08:31:30AM -0800, Fenghua Yu wrote:
-> Define and export iommu_access_remote_vm() to allow IOMMU related
-> drivers to access user address space by PASID.
+On 06/03/2023 15:04, Walker Chen wrote:
+> The DMA controller needs two reset items to work properly on JH7110 SoC,
+> so there is need to constrain the items' value to 2, other platforms
+> have 1 reset item at most.
 > 
-> The IDXD driver would like to use it to write the user's completion
-> record that the hardware device is not able to write to due to user
-> page fault.
-> 
-> Without the API, it's complex for IDXD driver to copy completion record
-> to a process' fault address for two reasons:
-> 1. access_remote_vm() is not exported and shouldn't be exported for
->    drivers because drivers may easily cause mm reference issue.
-> 2. user frees fault address pages to trigger fault by IDXD device.
-> 
-> The driver has to call iommu_sva_find(), kthread_use_mm(), re-implement
-> majority of access_remote_vm() etc to access remote vm.
-> 
-> This IOMMU specific API hides these details and provides a clean interface
-> for idxd driver and potentially other IOMMU related drivers.
-> 
-> Suggested-by: Alistair Popple <apopple@nvidia.com>
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Alistair Popple <apopple@nvidia.com>
-> Cc: Lorenzo Stoakes <lstoakes@gmail.com>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: iommu@lists.linux.dev
+> Signed-off-by: Walker Chen <walker.chen@starfivetech.com>
 > ---
-> v2:
-> - Define and export iommu_access_remote_vm() for IDXD driver to write
->   completion record to user address space. This change removes
->   patch 8 and 9 in v1 (Alistair Popple)
+>  .../bindings/dma/snps,dw-axi-dmac.yaml        | 24 +++++++++++++++----
+>  1 file changed, 20 insertions(+), 4 deletions(-)
 > 
->  drivers/iommu/iommu-sva.c | 35 +++++++++++++++++++++++++++++++++++
->  include/linux/iommu.h     |  9 +++++++++
->  2 files changed, 44 insertions(+)
-> 
-> diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
-> index 24bf9b2b58aa..1d7a0aee58f7 100644
-> --- a/drivers/iommu/iommu-sva.c
-> +++ b/drivers/iommu/iommu-sva.c
-> @@ -71,6 +71,41 @@ struct mm_struct *iommu_sva_find(ioasid_t pasid)
->  }
->  EXPORT_SYMBOL_GPL(iommu_sva_find);
+> diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> index ad107a4d3b33..d8b5439f215c 100644
+> --- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> +++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> @@ -12,14 +12,12 @@ maintainers:
+>  description:
+>    Synopsys DesignWare AXI DMA Controller DT Binding
 >  
-> +/**
-> + * iommu_access_remote_vm - access another process' address space by PASID
-> + * @pasid:	Process Address Space ID assigned to the mm
-> + * @addr:	start address to access
-> + * @buf:	source or destination buffer
-> + * @len:	number of bytes to transfer
-> + * @gup_flags:	flags modifying lookup behaviour
-> + *
-> + * Another process' address space is found by PASID. A reference on @mm
-> + * is taken and released inside the function.
-> + *
-> + * Return: number of bytes copied from source to destination.
-> + */
-> +int iommu_access_remote_vm(ioasid_t pasid, unsigned long addr, void *buf,
-> +			   int len, unsigned int gup_flags)
-> +{
-> +	struct mm_struct *mm;
-> +	int copied;
-> +
-> +	mm = iommu_sva_find(pasid);
-
-The ability to find a mm by PASID is being removed, see 
-https://lore.kernel.org/linux-iommu/20230301235646.2692846-4-jacob.jun.pan@linux.intel.com/
-
-Thanks,
-Jean
-
-> +	if (IS_ERR_OR_NULL(mm))
-> +		return 0;
-> +
-> +	/*
-> +	 * A reference on @mm has been held by mmget_not_zero()
-> +	 * during iommu_sva_find().
-> +	 */
-> +	copied = access_remote_vm(mm, addr, buf, len, gup_flags);
-> +	/* The reference is released. */
-> +	mmput(mm);
-> +
-> +	return copied;
-> +}
-> +EXPORT_SYMBOL_GPL(iommu_access_remote_vm);
-> +
->  /**
->   * iommu_sva_bind_device() - Bind a process address space to a device
->   * @dev: the device
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index 6595454d4f48..414a46a53799 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -1177,6 +1177,8 @@ struct iommu_sva *iommu_sva_bind_device(struct device *dev,
->  					struct mm_struct *mm);
->  void iommu_sva_unbind_device(struct iommu_sva *handle);
->  u32 iommu_sva_get_pasid(struct iommu_sva *handle);
-> +int iommu_access_remote_vm(ioasid_t pasid, unsigned long addr, void *buf,
-> +			   int len, unsigned int gup_flags);
->  #else
->  static inline struct iommu_sva *
->  iommu_sva_bind_device(struct device *dev, struct mm_struct *mm)
-> @@ -1192,6 +1194,13 @@ static inline u32 iommu_sva_get_pasid(struct iommu_sva *handle)
->  {
->  	return IOMMU_PASID_INVALID;
->  }
-> +
-> +static inline int iommu_access_remote_vm(ioasid_t pasid, unsigned long addr,
-> +					 void *buf, int len,
-> +					 unsigned int gup_flags)
-> +{
-> +	return 0;
-> +}
->  #endif /* CONFIG_IOMMU_SVA */
+> -allOf:
+> -  - $ref: "dma-controller.yaml#"
+> -
+>  properties:
+>    compatible:
+>      enum:
+>        - snps,axi-dma-1.01a
+>        - intel,kmb-axi-dma
+> +      - starfive,jh7110-axi-dma
 >  
->  #endif /* __LINUX_IOMMU_H */
-> -- 
-> 2.37.1
-> 
-> 
+>    reg:
+>      minItems: 1
+> @@ -58,7 +56,8 @@ properties:
+>      maximum: 8
+>  
+>    resets:
+> -    maxItems: 1
+> +    minItems: 1
+> +    maxItems: 2
+>  
+>    snps,dma-masters:
+>      description: |
+> @@ -109,6 +108,23 @@ required:
+>    - snps,priority
+>    - snps,block-size
+>  
+> +allOf:
+> +  - $ref: "dma-controller.yaml#"
+
+Rebase your patches on something recent... I would argue that it should
+be based on maintainer's (or linux-next) tree, but that would be too
+good to be true.
+
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - starfive,jh7110-axi-dma
+> +    then:
+> +      properties:
+> +        resets:
+> +          minItems: 2
+
+What are the items expected here?
+
+> +    else:
+> +      properties:
+> +        resets:
+
+Best regards,
+Krzysztof
+

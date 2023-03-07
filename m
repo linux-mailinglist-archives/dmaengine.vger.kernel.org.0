@@ -2,107 +2,173 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 965DE6AE3B3
-	for <lists+dmaengine@lfdr.de>; Tue,  7 Mar 2023 16:03:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A34576AE561
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Mar 2023 16:52:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229993AbjCGPDN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 7 Mar 2023 10:03:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44342 "EHLO
+        id S230184AbjCGPv7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 7 Mar 2023 10:51:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbjCGPCg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Mar 2023 10:02:36 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9702396F1F;
-        Tue,  7 Mar 2023 06:51:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678200666; x=1709736666;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=r1dUJcozr+fM3DQbaDzTE4BCBoXoBC1lE+oOBvXW+R4=;
-  b=J4c/HHDWUouew4Xjiu+9psA5YMUIcsgHjSe87EdxH3ZGlm5LFgB5mf/M
-   AaKIO8sB3rIj1+FyCBo3NIsN9ndpG0gZ2O0kC5I3/JrXr3zIwjqAdkx3c
-   TpiHhe4zQjJe5CjixVtYL6Ct/OKH2zv/MqWlVrijD3LNm4cNv5ypHa3T8
-   IUSlthpcIBdbxaYZSjUWRWRQNTbkDkOWivTm+B7tekLySO5ktvMlYfC0T
-   5U48CDKwdy4jnX+QSdqM0NJBA5nWSmOk3h06BuRAiRMA31emx1Z4tFv2Y
-   l95TApfLGF1BesYKGhXToSrxt1hc0PYYuXqiIPQqCIcnioCeYxDFJqbLI
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="422138508"
-X-IronPort-AV: E=Sophos;i="5.98,241,1673942400"; 
-   d="scan'208";a="422138508"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 06:50:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="819774602"
-X-IronPort-AV: E=Sophos;i="5.98,241,1673942400"; 
-   d="scan'208";a="819774602"
-Received: from suchetam-mobl.amr.corp.intel.com ([10.212.53.59])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 06:50:48 -0800
-Message-ID: <20a26cbe5404c420722f8dd39cf52ba7bb89bb9c.camel@linux.intel.com>
-Subject: Re: [PATCH 01/16] dmaengine: idxd: add wq driver name support for
- accel-config user tool
-From:   Tom Zanussi <tom.zanussi@linux.intel.com>
-To:     Fenghua Yu <fenghua.yu@intel.com>, herbert@gondor.apana.org.au,
-        davem@davemloft.net, vkoul@kernel.org
-Cc:     dave.jiang@intel.com, tony.luck@intel.com,
-        wajdi.k.feghali@intel.com, james.guilford@intel.com,
-        kanchana.p.sridhar@intel.com, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org
-Date:   Tue, 07 Mar 2023 08:50:47 -0600
-In-Reply-To: <c44caf95-6fe5-c336-e47e-d624e9c27054@intel.com>
-References: <20230306185226.26483-1-tom.zanussi@linux.intel.com>
-         <20230306185226.26483-2-tom.zanussi@linux.intel.com>
-         <c44caf95-6fe5-c336-e47e-d624e9c27054@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.44.1-0ubuntu1 
+        with ESMTP id S229977AbjCGPv5 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Mar 2023 10:51:57 -0500
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85AD98C514
+        for <dmaengine@vger.kernel.org>; Tue,  7 Mar 2023 07:51:54 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id g3so54226854eda.1
+        for <dmaengine@vger.kernel.org>; Tue, 07 Mar 2023 07:51:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678204313;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RcDQzVN19ofjg8Tgdw5tyOv/MuABZ5E/YdFtUvot80Q=;
+        b=YFJygNIbp45Ch4nXFzOoHjdOtcWm38mODz32cOZACaptJnRWrDMIWR9xzC4+D1aXyB
+         QUoUK6gEMMp6rabx4Hr1Uz50KlcGeOnUBPx6RCXOvBYGZoTgaraSCT15eVcTXieGo/SL
+         id7Gt85z552OTBu98ZiqtTYdE/Rhc6Zs5a8SEJADZGQuUa+F5qIXCihEUGKlveW5/iV/
+         T0h0Y9Oj3oolzzrWona14BG8KcuHcbW3eB9CRfoQeevRX0ceBnu82fIRdw5DMS0LRWaF
+         gYlqrLdNrMBBxjA2SuK2d4T29F372atFGo7OYkpIJcpyXfN2qiFVfh4bKq3V/HfejG2C
+         +VjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678204313;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RcDQzVN19ofjg8Tgdw5tyOv/MuABZ5E/YdFtUvot80Q=;
+        b=nGkFev/DDa73g8GMFFUFoW/DZDG1BgRd0jGdPubEZVsiCO3DEHXMMjQ9SKpXyNuioK
+         z0Fu2Ozz1OXuEaEa39HBGYsjhUYFLrCBZko/TOJgiPONkR6ER88xAiZGj2U5ZOCI7egt
+         oramwT2ZiQW/sn9m9ihfTtO34axRMhDqWUnziafESVnzIkBkoAruE3A5ahYey6y2WelX
+         i+2boco4VRGpqPbUdhROzNp/8KH3dZTB2ZmI6ORe/gqoKjUh4WujQPC03DqXuKmm3M/M
+         B0kjxjUebS4ke1zzIe9ZFRRSvP0v6raac/UUA7AE213p0M1+MFZNFHS8ffMnb9ZcG29Q
+         MztQ==
+X-Gm-Message-State: AO0yUKWuZ6PIK2jlqx1ET21oJcsYyOPofDUJxQO5SSKqa2kjLCo9ZLlw
+        //ZGj1PaVAbUnA2QAowUBXpgPQ==
+X-Google-Smtp-Source: AK7set9L4TCnhGG3SxprVoNK/2nNWxTQQ0uvBtCv1oRmv5bm89yo39bZ/2uW8VInhxLWFZixBqCbUw==
+X-Received: by 2002:a17:907:86a5:b0:8b1:7fe9:ac69 with SMTP id qa37-20020a17090786a500b008b17fe9ac69mr19571063ejc.75.1678204313020;
+        Tue, 07 Mar 2023 07:51:53 -0800 (PST)
+Received: from ?IPV6:2a02:810d:15c0:828:a60f:e604:c252:1f3d? ([2a02:810d:15c0:828:a60f:e604:c252:1f3d])
+        by smtp.gmail.com with ESMTPSA id qw15-20020a170906fcaf00b008d57e796dcbsm6238380ejb.25.2023.03.07.07.51.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Mar 2023 07:51:52 -0800 (PST)
+Message-ID: <e3da08df-a5cb-3fbd-2356-64416f48c073@linaro.org>
+Date:   Tue, 7 Mar 2023 16:51:51 +0100
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v4 1/3] dt-bindings: dma: snps,dw-axi-dmac: constrain
+ resets items for JH7110 dma
+Content-Language: en-US
+To:     Walker Chen <walker.chen@starfivetech.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <20230306140430.28951-1-walker.chen@starfivetech.com>
+ <20230306140430.28951-2-walker.chen@starfivetech.com>
+ <b2b36909-b0b1-7507-3145-141eb5ec0f3f@linaro.org>
+ <0725e451-7c0b-0aac-ecd3-502b02276a9a@starfivetech.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <0725e451-7c0b-0aac-ecd3-502b02276a9a@starfivetech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-SGkgRmVuZ2h1YSwKCk9uIFR1ZSwgMjAyMy0wMy0wNyBhdCAwNTo0MyAtMDgwMCwgRmVuZ2h1YSBZ
-dSB3cm90ZToKPiBIaSwgVG9tLAo+IAo+IE9uIDMvNi8yMyAxMDo1MiwgVG9tIFphbnVzc2kgd3Jv
-dGU6Cj4gPiBGcm9tOiBEYXZlIEppYW5nIDxkYXZlLmppYW5nQGludGVsLmNvbT4KPiA+IAo+ID4g
-V2l0aCB0aGUgcG9zc2liaWxpdHkgb2YgbXVsdGlwbGUgd3EgZHJpdmVycyB0aGF0IGNhbiBiZSBi
-b3VuZCB0bwo+ID4gdGhlIHdxLAo+ID4gdGhlIHVzZXIgY29uZmlnIHRvb2wgYWNjZWwtY29uZmln
-IG5lZWRzIGEgd2F5IHRvIGtub3cgd2hpY2ggd3EKPiA+IGRyaXZlciB0bwo+ID4gYmluZCB0byB0
-aGUgd3EuIEludHJvZHVjZSBwZXIgd3EgZHJpdmVyX25hbWUgc3lzZnMgYXR0cmlidXRlIHdoZXJl
-Cj4gPiB0aGUgdXNlcgo+ID4gY2FuIGluZGljYXRlIHRoZSBkcml2ZXIgdG8gYmUgYm91bmQgdG8g
-dGhlIHdxLiBUaGlzIGFsbG93cyBhY2NlbC0KPiA+IGNvbmZpZyB0bwo+ID4ganVzdCBiaW5kIHRv
-IHRoZSBkcml2ZXIgdXNpbmcgd3EtPmRyaXZlcl9uYW1lLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5
-OiBEYXZlIEppYW5nIDxkYXZlLmppYW5nQGludGVsLmNvbT4KPiA+IFNpZ25lZC1vZmYtYnk6IFRv
-bSBaYW51c3NpIDx0b20uemFudXNzaUBsaW51eC5pbnRlbC5jb20+Cj4gPiAtLS0KPiA+IMKgIC4u
-Li9BQkkvc3RhYmxlL3N5c2ZzLWRyaXZlci1kbWEtaWR4ZMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAg
-NiArKysrCj4gPiDCoCBkcml2ZXJzL2RtYS9pZHhkL2NkZXYuY8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCA4ICsrKysrKwo+ID4gwqAgZHJpdmVycy9kbWEv
-aWR4ZC9kbWEuY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-fMKgIDYgKysrKwo+ID4gwqAgZHJpdmVycy9kbWEvaWR4ZC9pZHhkLmjCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgNyArKysrKwo+ID4gwqAgZHJpdmVycy9k
-bWEvaWR4ZC9zeXNmcy5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IHwgMjgKPiA+ICsrKysrKysrKysrKysrKysrKysKPiA+IMKgIGluY2x1ZGUvdWFwaS9saW51eC9p
-ZHhkLmjCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCAxICsKPiA+
-IMKgIDYgZmlsZXMgY2hhbmdlZCwgNTYgaW5zZXJ0aW9ucygrKQo+ID4gCj4gPiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9BQkkvc3RhYmxlL3N5c2ZzLWRyaXZlci1kbWEtaWR4ZAo+ID4gYi9E
-b2N1bWVudGF0aW9uL0FCSS9zdGFibGUvc3lzZnMtZHJpdmVyLWRtYS1pZHhkCj4gPiBpbmRleCAz
-YmVjYzlhODJiZGYuLmU5YTM3ZTA2NDE5MyAxMDA2NDQKPiA+IC0tLSBhL0RvY3VtZW50YXRpb24v
-QUJJL3N0YWJsZS9zeXNmcy1kcml2ZXItZG1hLWlkeGQKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24v
-QUJJL3N0YWJsZS9zeXNmcy1kcml2ZXItZG1hLWlkeGQKPiA+IEBAIC0yNDQsNiArMjQ0LDEyIEBA
-IERlc2NyaXB0aW9uOsKgwqDCoMKgwqDCoMKgU2hvd3MgdGhlIG9wZXJhdGlvbgo+ID4gY2FwYWJp
-bGl0eSBiaXRzIGRpc3BsYXllZCBpbiBiaXRtYXAgZm9ybWF0Cj4gPiDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoGNvcnJlbGF0ZXMgdG8gdGhlIG9wZXJhdGlvbnMgYWxsb3dlZC4gSXQn
-cyB2aXNpYmxlCj4gPiBvbmx5Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoG9u
-IHBsYXRmb3JtcyB0aGF0IHN1cHBvcnQgdGhlIGNhcGFiaWxpdHkuCj4gPiDCoCAKPiA+ICtXaGF0
-OsKgwqDCoMKgwqDCoMKgwqDCoMKgL3N5cy9idXMvZHNhL2RldmljZXMvd3E8bT4uPG4+L2RyaXZl
-cl9uYW1lCj4gPiArRGF0ZTrCoMKgwqDCoMKgwqDCoMKgwqDCoEZlYiAyMywgMjAyMwo+ID4gK0tl
-cm5lbFZlcnNpb246wqA2LjMuMAo+IAo+IE5lZWQgdG8gY2hhbmdlIHRvIDYuNC4wLiBUaGlzIHNl
-cmllcyB3b24ndCBiZSBpbiA2LjMuMC4KCk9LLCB3aWxsIGNoYW5nZSB0byA2LjQuMC4KClRoYW5r
-cywKClRvbQoKPiAKPiA+ICtDb250YWN0OsKgwqDCoMKgwqDCoMKgZG1hZW5naW5lQHZnZXIua2Vy
-bmVsLm9yZwo+ID4gK0Rlc2NyaXB0aW9uOsKgwqDCoE5hbWUgb2YgZHJpdmVyIHRvIGJlIGJvdW5k
-ZWQgdG8gdGhlIHdxLgo+ID4gKwo+IAo+IFRoYW5rcy4KPiAKPiAtRmVuZ2h1YQoK
+On 07/03/2023 11:30, Walker Chen wrote:
+> 
+> 
+> On 2023/3/7 17:03, Krzysztof Kozlowski wrote:
+>> On 06/03/2023 15:04, Walker Chen wrote:
+>>> The DMA controller needs two reset items to work properly on JH7110 SoC,
+>>> so there is need to constrain the items' value to 2, other platforms
+>>> have 1 reset item at most.
+>>>
+>>> Signed-off-by: Walker Chen <walker.chen@starfivetech.com>
+>>> ---
+>>>  .../bindings/dma/snps,dw-axi-dmac.yaml        | 24 +++++++++++++++----
+>>>  1 file changed, 20 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+>>> index ad107a4d3b33..d8b5439f215c 100644
+>>> --- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+>>> +++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+>>> @@ -12,14 +12,12 @@ maintainers:
+>>>  description:
+>>>    Synopsys DesignWare AXI DMA Controller DT Binding
+>>>  
+>>> -allOf:
+>>> -  - $ref: "dma-controller.yaml#"
+>>> -
+>>>  properties:
+>>>    compatible:
+>>>      enum:
+>>>        - snps,axi-dma-1.01a
+>>>        - intel,kmb-axi-dma
+>>> +      - starfive,jh7110-axi-dma
+>>>  
+>>>    reg:
+>>>      minItems: 1
+>>> @@ -58,7 +56,8 @@ properties:
+>>>      maximum: 8
+>>>  
+>>>    resets:
+>>> -    maxItems: 1
+>>> +    minItems: 1
+>>> +    maxItems: 2
+>>>  
+>>>    snps,dma-masters:
+>>>      description: |
+>>> @@ -109,6 +108,23 @@ required:
+>>>    - snps,priority
+>>>    - snps,block-size
+>>>  
+>>> +allOf:
+>>> +  - $ref: "dma-controller.yaml#"
+>>
+>> Rebase your patches on something recent... I would argue that it should
+>> be based on maintainer's (or linux-next) tree, but that would be too
+>> good to be true.
+> 
+> This was written by referring to the syntax of other dt-binding, but your suggestion 
+> is a good one, the next version of patches will be rebased on kernel 6.3.
+
+Rebasing on old kernel was referring to syntax of other binding? I don't
+understand this. How old code which you copied is related anyhow to
+other binding? You are expected to send patches always based on recent
+one, not something old.
+
+> 
+>>
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            enum:
+>>> +              - starfive,jh7110-axi-dma
+>>> +    then:
+>>> +      properties:
+>>> +        resets:
+>>> +          minItems: 2
+>>
+>> What are the items expected here?
+> 
+> Do you mean to add descriptions for items here ?
+
+Yes, because order of the items is fixed.
+
+
+
+Best regards,
+Krzysztof
 

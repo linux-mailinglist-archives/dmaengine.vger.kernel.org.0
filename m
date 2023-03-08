@@ -2,116 +2,158 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 327566AF8B2
-	for <lists+dmaengine@lfdr.de>; Tue,  7 Mar 2023 23:29:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 51F006AFBC6
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Mar 2023 02:08:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230209AbjCGW3e (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 7 Mar 2023 17:29:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55696 "EHLO
+        id S229923AbjCHBIu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 7 Mar 2023 20:08:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230050AbjCGW3P (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Mar 2023 17:29:15 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30E5C9BA76;
-        Tue,  7 Mar 2023 14:28:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678228102; x=1709764102;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=yuyXsGR1whfmHiXJsv4+qjpy0Dresym5ojZswg7XH3A=;
-  b=JI7uRhF/EcegyWUNuG0QJb4DAVE9iRQdzVLIlteZTrpeeRj/5ZbB+//Y
-   BkxmJzJm8wSViL7xM8o0yRx7etrTTOkqk0itpWZM0JvEhogMp0+mKwvJo
-   eTFMmKAzFSL5hQHiD8f5ABYtJ/tk844auUPwukx94Fp/uIHzbLEnuBDpv
-   Uf96amDVpIj+Ck2jqqFwsSi9VBn8or6MKtSW0h1w86dbUykbup5esdqsk
-   mgqXxLDXMETqsOIPxIUp50yJs5wVhfnjBrt9X9dYCwzRn6oufquzp1kP7
-   A+9/Z7Tx7GeeDfB1P10X0Nr/14+vk5hj70XOqXTTouvO7c4UzxQs0OfLY
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="336010941"
-X-IronPort-AV: E=Sophos;i="5.98,242,1673942400"; 
-   d="scan'208";a="336010941"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 14:28:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="676725345"
-X-IronPort-AV: E=Sophos;i="5.98,242,1673942400"; 
-   d="scan'208";a="676725345"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 14:28:17 -0800
-Date:   Tue, 7 Mar 2023 14:32:09 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Baolu Lu <baolu.lu@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
-        Joerg Roedel <joro@8bytes.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        X86 Kernel <x86@kernel.org>, bp@alien8.de,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>, corbet@lwn.net,
-        vkoul@kernel.org, dmaengine@vger.kernel.org,
-        linux-doc@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v4 3/6] iommu/sva: Stop using ioasid_set for SVA
-Message-ID: <20230307143209.2873d9e2@jacob-builder>
-In-Reply-To: <ZAHzAa0mnilf0N9K@nvidia.com>
-References: <20230301235646.2692846-1-jacob.jun.pan@linux.intel.com>
-        <20230301235646.2692846-4-jacob.jun.pan@linux.intel.com>
-        <3b7fb4d3-1fe9-a3be-46ad-c271be9f96c7@linux.intel.com>
-        <20230302091707.58d59964@jacob-builder>
-        <794c7dad-2e62-3afa-ea10-92179b0d1659@linux.intel.com>
-        <20230303093235.GB361458@myrica>
-        <3b2c6fe9-821f-9b84-acb6-777e8517a0fc@linux.intel.com>
-        <ZAHzAa0mnilf0N9K@nvidia.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        with ESMTP id S229772AbjCHBIt (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Mar 2023 20:08:49 -0500
+Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88D9E8480B;
+        Tue,  7 Mar 2023 17:08:44 -0800 (PST)
+Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
+        by fd01.gateway.ufhost.com (Postfix) with ESMTP id 9683E24E20D;
+        Wed,  8 Mar 2023 09:08:32 +0800 (CST)
+Received: from EXMBX168.cuchost.com (172.16.6.78) by EXMBX165.cuchost.com
+ (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 8 Mar
+ 2023 09:08:32 +0800
+Received: from [192.168.125.96] (183.27.97.46) by EXMBX168.cuchost.com
+ (172.16.6.78) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 8 Mar
+ 2023 09:08:31 +0800
+Message-ID: <f4f81330-645c-e5bc-3dc8-69160337b7dc@starfivetech.com>
+Date:   Wed, 8 Mar 2023 09:08:33 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v4 1/3] dt-bindings: dma: snps,dw-axi-dmac: constrain
+ resets items for JH7110 dma
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "Emil Renner Berthing" <emil.renner.berthing@canonical.com>
+CC:     <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
+References: <20230306140430.28951-1-walker.chen@starfivetech.com>
+ <20230306140430.28951-2-walker.chen@starfivetech.com>
+ <b2b36909-b0b1-7507-3145-141eb5ec0f3f@linaro.org>
+ <0725e451-7c0b-0aac-ecd3-502b02276a9a@starfivetech.com>
+ <e3da08df-a5cb-3fbd-2356-64416f48c073@linaro.org>
+Content-Language: en-US
+From:   Walker Chen <walker.chen@starfivetech.com>
+In-Reply-To: <e3da08df-a5cb-3fbd-2356-64416f48c073@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-Originating-IP: [183.27.97.46]
+X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX168.cuchost.com
+ (172.16.6.78)
+X-YovoleRuleAgent: yovoleflag
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Jason,
 
-On Fri, 3 Mar 2023 09:15:45 -0400, Jason Gunthorpe <jgg@nvidia.com> wrote:
 
-> On Fri, Mar 03, 2023 at 05:57:41PM +0800, Baolu Lu wrote:
-> > On 2023/3/3 17:32, Jean-Philippe Brucker wrote:  
-> > > > I suppose the common thing is reserving some kind of special
-> > > > PASIDs.  
-> > > Are you planning to use RID_PASID != 0 in VT-d?  Otherwise we could
-> > > just communicate min_pasid from the IOMMU driver the same way we do
-> > > max_pasid.
-> > > 
-> > > Otherwise I guess re-introduce a lighter ioasid_alloc() that the IOMMU
-> > > driver calls to reserve PASID0/RID_PASID.  
-> > 
-> > Yes. We probably will use a non-zero RID_PASID in the future. An
-> > interface to reserve (or allocate) a PASID from iommu_global_pasid_ida
-> > should work then.  
+On 2023/3/7 23:51, Krzysztof Kozlowski wrote:
+> On 07/03/2023 11:30, Walker Chen wrote:
+>> 
+>> 
+>> On 2023/3/7 17:03, Krzysztof Kozlowski wrote:
+>>> On 06/03/2023 15:04, Walker Chen wrote:
+>>>> The DMA controller needs two reset items to work properly on JH7110 SoC,
+>>>> so there is need to constrain the items' value to 2, other platforms
+>>>> have 1 reset item at most.
+>>>>
+>>>> Signed-off-by: Walker Chen <walker.chen@starfivetech.com>
+>>>> ---
+>>>>  .../bindings/dma/snps,dw-axi-dmac.yaml        | 24 +++++++++++++++----
+>>>>  1 file changed, 20 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+>>>> index ad107a4d3b33..d8b5439f215c 100644
+>>>> --- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+>>>> +++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+>>>> @@ -12,14 +12,12 @@ maintainers:
+>>>>  description:
+>>>>    Synopsys DesignWare AXI DMA Controller DT Binding
+>>>>  
+>>>> -allOf:
+>>>> -  - $ref: "dma-controller.yaml#"
+>>>> -
+>>>>  properties:
+>>>>    compatible:
+>>>>      enum:
+>>>>        - snps,axi-dma-1.01a
+>>>>        - intel,kmb-axi-dma
+>>>> +      - starfive,jh7110-axi-dma
+>>>>  
+>>>>    reg:
+>>>>      minItems: 1
+>>>> @@ -58,7 +56,8 @@ properties:
+>>>>      maximum: 8
+>>>>  
+>>>>    resets:
+>>>> -    maxItems: 1
+>>>> +    minItems: 1
+>>>> +    maxItems: 2
+>>>>  
+>>>>    snps,dma-masters:
+>>>>      description: |
+>>>> @@ -109,6 +108,23 @@ required:
+>>>>    - snps,priority
+>>>>    - snps,block-size
+>>>>  
+>>>> +allOf:
+>>>> +  - $ref: "dma-controller.yaml#"
+>>>
+>>> Rebase your patches on something recent... I would argue that it should
+>>> be based on maintainer's (or linux-next) tree, but that would be too
+>>> good to be true.
+>> 
+>> This was written by referring to the syntax of other dt-binding, but your suggestion 
+>> is a good one, the next version of patches will be rebased on kernel 6.3.
 > 
-> Just allowing the driver to store XA_ZERO_ENTRY would be fine
+> Rebasing on old kernel was referring to syntax of other binding? I don't
+> understand this. How old code which you copied is related anyhow to
+> other binding? You are expected to send patches always based on recent
+> one, not something old.
+
+Okay, I understand what you mean.
+
 > 
-It looks like there are incoming users of iommu_sva_find()
-https://lore.kernel.org/lkml/20230306163138.587484-1-fenghua.yu@intel.com/T/#m1fc97725a0e56ea269c8bdabacee447070d51846
-Should we keep the xa here instead of the global ida?
+>> 
+>>>
+>>>> +  - if:
+>>>> +      properties:
+>>>> +        compatible:
+>>>> +          contains:
+>>>> +            enum:
+>>>> +              - starfive,jh7110-axi-dma
+>>>> +    then:
+>>>> +      properties:
+>>>> +        resets:
+>>>> +          minItems: 2
+>>>
+>>> What are the items expected here?
+>> 
+>> Do you mean to add descriptions for items here ?
+> 
+> Yes, because order of the items is fixed.
 
- 
-Thanks,
+Thanks!
 
-Jacob
+Best regards,
+Walker

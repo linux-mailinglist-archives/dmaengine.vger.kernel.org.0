@@ -2,158 +2,116 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51F006AFBC6
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Mar 2023 02:08:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6AE56AFCE1
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Mar 2023 03:24:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229923AbjCHBIu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 7 Mar 2023 20:08:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47294 "EHLO
+        id S229548AbjCHCYy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 7 Mar 2023 21:24:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229772AbjCHBIt (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Mar 2023 20:08:49 -0500
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88D9E8480B;
-        Tue,  7 Mar 2023 17:08:44 -0800 (PST)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-        by fd01.gateway.ufhost.com (Postfix) with ESMTP id 9683E24E20D;
-        Wed,  8 Mar 2023 09:08:32 +0800 (CST)
-Received: from EXMBX168.cuchost.com (172.16.6.78) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 8 Mar
- 2023 09:08:32 +0800
-Received: from [192.168.125.96] (183.27.97.46) by EXMBX168.cuchost.com
- (172.16.6.78) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 8 Mar
- 2023 09:08:31 +0800
-Message-ID: <f4f81330-645c-e5bc-3dc8-69160337b7dc@starfivetech.com>
-Date:   Wed, 8 Mar 2023 09:08:33 +0800
+        with ESMTP id S229629AbjCHCYv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Mar 2023 21:24:51 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB64AA336C;
+        Tue,  7 Mar 2023 18:24:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678242289; x=1709778289;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=T/tjOgbeN2d/sg5f4egU/DU2gu++1HrMEaAOm2wBhdA=;
+  b=W7vdxRryzxuVThwNTLok4hAYJPfm/XK4oQk9xtmIO2wSV4DckGE0CuQL
+   dla6yhjzK6E8Zxap2F864qqlgzjNs+SKKjB+1NrK/CY0bge2VukBh3jFW
+   PiwajPj0CO/iLFloxLNLBdCZMNtLhHUUX5tbAVNaLYMOgpodwOR7/Iz5L
+   AgWMFqZXM9efQSJ7SrZxvUZMk6NF5iOnckJa8YFt4EztGhXFZqwhMjfiv
+   cGyKA6nWJp/ufBt0zNGsJj+NB4IL9BnUwH5Za4NZKiMH5FAIO6p/77w0j
+   Kc3WdwToE8srCCvGVQBbA0wth6UiYiLeV2nBAScHGxwF0LPhVppHxe2kA
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="337554171"
+X-IronPort-AV: E=Sophos;i="5.98,242,1673942400"; 
+   d="scan'208";a="337554171"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 18:24:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="676804666"
+X-IronPort-AV: E=Sophos;i="5.98,242,1673942400"; 
+   d="scan'208";a="676804666"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.48]) ([10.239.159.48])
+  by orsmga002.jf.intel.com with ESMTP; 07 Mar 2023 18:24:46 -0800
+Message-ID: <e37f4226-b4ee-9a80-187c-ac13733d353c@linux.intel.com>
+Date:   Wed, 8 Mar 2023 10:23:48 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v4 1/3] dt-bindings: dma: snps,dw-axi-dmac: constrain
- resets items for JH7110 dma
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "Emil Renner Berthing" <emil.renner.berthing@canonical.com>
-CC:     <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-References: <20230306140430.28951-1-walker.chen@starfivetech.com>
- <20230306140430.28951-2-walker.chen@starfivetech.com>
- <b2b36909-b0b1-7507-3145-141eb5ec0f3f@linaro.org>
- <0725e451-7c0b-0aac-ecd3-502b02276a9a@starfivetech.com>
- <e3da08df-a5cb-3fbd-2356-64416f48c073@linaro.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Cc:     baolu.lu@linux.intel.com, dmaengine@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alistair Popple <apopple@nvidia.com>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Lorenzo Stoakes <lstoakes@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>, iommu@lists.linux.dev
+Subject: Re: [PATCH v2 08/16] iommu: define and export
+ iommu_access_remote_vm()
 Content-Language: en-US
-From:   Walker Chen <walker.chen@starfivetech.com>
-In-Reply-To: <e3da08df-a5cb-3fbd-2356-64416f48c073@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Fenghua Yu <fenghua.yu@intel.com>, Vinod Koul <vkoul@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>
+References: <20230306163138.587484-1-fenghua.yu@intel.com>
+ <20230306163138.587484-9-fenghua.yu@intel.com>
+ <f7b0cbef-3d7d-e5aa-1971-fe230d0c80e1@linux.intel.com>
+ <932aebd3-c655-3266-1acb-e41e8cbfb771@intel.com>
+From:   Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <932aebd3-c655-3266-1acb-e41e8cbfb771@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [183.27.97.46]
-X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX168.cuchost.com
- (172.16.6.78)
-X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 2023/3/7 23:51, Krzysztof Kozlowski wrote:
-> On 07/03/2023 11:30, Walker Chen wrote:
->> 
->> 
->> On 2023/3/7 17:03, Krzysztof Kozlowski wrote:
->>> On 06/03/2023 15:04, Walker Chen wrote:
->>>> The DMA controller needs two reset items to work properly on JH7110 SoC,
->>>> so there is need to constrain the items' value to 2, other platforms
->>>> have 1 reset item at most.
->>>>
->>>> Signed-off-by: Walker Chen <walker.chen@starfivetech.com>
->>>> ---
->>>>  .../bindings/dma/snps,dw-axi-dmac.yaml        | 24 +++++++++++++++----
->>>>  1 file changed, 20 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
->>>> index ad107a4d3b33..d8b5439f215c 100644
->>>> --- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
->>>> +++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
->>>> @@ -12,14 +12,12 @@ maintainers:
->>>>  description:
->>>>    Synopsys DesignWare AXI DMA Controller DT Binding
->>>>  
->>>> -allOf:
->>>> -  - $ref: "dma-controller.yaml#"
->>>> -
->>>>  properties:
->>>>    compatible:
->>>>      enum:
->>>>        - snps,axi-dma-1.01a
->>>>        - intel,kmb-axi-dma
->>>> +      - starfive,jh7110-axi-dma
->>>>  
->>>>    reg:
->>>>      minItems: 1
->>>> @@ -58,7 +56,8 @@ properties:
->>>>      maximum: 8
->>>>  
->>>>    resets:
->>>> -    maxItems: 1
->>>> +    minItems: 1
->>>> +    maxItems: 2
->>>>  
->>>>    snps,dma-masters:
->>>>      description: |
->>>> @@ -109,6 +108,23 @@ required:
->>>>    - snps,priority
->>>>    - snps,block-size
->>>>  
->>>> +allOf:
->>>> +  - $ref: "dma-controller.yaml#"
->>>
->>> Rebase your patches on something recent... I would argue that it should
->>> be based on maintainer's (or linux-next) tree, but that would be too
->>> good to be true.
->> 
->> This was written by referring to the syntax of other dt-binding, but your suggestion 
->> is a good one, the next version of patches will be rebased on kernel 6.3.
+On 3/8/23 1:55 AM, Fenghua Yu wrote:
+> Hi, Baolu,
 > 
-> Rebasing on old kernel was referring to syntax of other binding? I don't
-> understand this. How old code which you copied is related anyhow to
-> other binding? You are expected to send patches always based on recent
-> one, not something old.
+> On 3/6/23 17:41, Baolu Lu wrote:
+>> On 3/7/23 12:31 AM, Fenghua Yu wrote:
+>>> Define and export iommu_access_remote_vm() to allow IOMMU related
+>>> drivers to access user address space by PASID.
+>>>
+>>> The IDXD driver would like to use it to write the user's completion
+>>> record that the hardware device is not able to write to due to user
+>>> page fault.
+>>
+>> I don't quite follow here. Isn't I/O page fault already supported?
+> 
+> The following patch 9 in this series explains in details why IDXD device 
+> cannot use page fault to write to user memory: 
+> https://lore.kernel.org/dmaengine/20230306163138.587484-10-fenghua.yu@intel.com/
+> 
+> "DSA supports page fault handling through PRS. However, the DMA engine
+> that's processing the descriptor is blocked until the PRS response is
+> received. Other workqueues sharing the engine are also blocked.
+> Page fault handing by the driver with PRS disabled can be used to
+> mitigate the stalling.
 
-Okay, I understand what you mean.
+Ah! Get your point now. Thanks for the explanation.
 
 > 
->> 
->>>
->>>> +  - if:
->>>> +      properties:
->>>> +        compatible:
->>>> +          contains:
->>>> +            enum:
->>>> +              - starfive,jh7110-axi-dma
->>>> +    then:
->>>> +      properties:
->>>> +        resets:
->>>> +          minItems: 2
->>>
->>> What are the items expected here?
->> 
->> Do you mean to add descriptions for items here ?
+> With PRS disabled while ATS remain enabled, DSA handles page faults on
+> a completion record by reporting an event in the event log. In this
+> instance, the descriptor is completed and the event log contains the
+> completion record address and the contents of the completion record."
 > 
-> Yes, because order of the items is fixed.
-
-Thanks!
+> That's why IDXD driver needs this IOMMU's helper 
+> iommu_access_remote_vm() to copy the completion record from event log 
+> buffer to user space.
+> 
+> Thanks.
+> 
+> -Fenghua
 
 Best regards,
-Walker
+baolu

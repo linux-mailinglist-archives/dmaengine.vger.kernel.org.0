@@ -2,60 +2,138 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83F7A6B2110
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Mar 2023 11:16:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A9F56B2BA1
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Mar 2023 18:08:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231273AbjCIKQ3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 9 Mar 2023 05:16:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49396 "EHLO
+        id S230432AbjCIRIb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 9 Mar 2023 12:08:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231279AbjCIKPr (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Mar 2023 05:15:47 -0500
-Received: from 167-179-156-38.a7b39c.syd.nbn.aussiebb.net (167-179-156-38.a7b39c.syd.nbn.aussiebb.net [167.179.156.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 192D35DCA1;
-        Thu,  9 Mar 2023 02:15:20 -0800 (PST)
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-        by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-        id 1paDIH-00250t-OJ; Thu, 09 Mar 2023 18:14:42 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 09 Mar 2023 18:14:41 +0800
-Date:   Thu, 9 Mar 2023 18:14:41 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     Tom Zanussi <tom.zanussi@linux.intel.com>, davem@davemloft.net,
-        fenghua.yu@intel.com, vkoul@kernel.org, tony.luck@intel.com,
-        wajdi.k.feghali@intel.com, james.guilford@intel.com,
-        kanchana.p.sridhar@intel.com, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH 00/16] crypto: Add Intel Analytics Accelerator (IAA)
- crypto compression driver
-Message-ID: <ZAmxkd7yMz8hiCxR@gondor.apana.org.au>
-References: <20230306185226.26483-1-tom.zanussi@linux.intel.com>
- <ZAa7lS/eS1wWuXYp@gondor.apana.org.au>
- <3a39812e-62da-377c-f430-dd6c1eb473e2@intel.com>
+        with ESMTP id S231192AbjCIRIK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Mar 2023 12:08:10 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EE96E6D9B;
+        Thu,  9 Mar 2023 09:04:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678381491; x=1709917491;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=7G0O80eoi717307ESCF3NXvsdQ1Hks/w/yE5W6NxlwA=;
+  b=hu4T1vRH2Jr7FYKWqEjn6k0D8EmqaPKqTGlTkl/iETZewK9CgcEKPdsM
+   BLsaEJEA+vlopVrbRsUWfrqhsItEUtHlWEXTLksCmKjlcAfEbDpgJCHh4
+   jEIapWZjzsNjb/NuKvsJUF5z/SSEzxIh6FI4ElKTW13jtSXmYljcHrHgL
+   W41DSFVzpYImffTa/wk303nIZ8LK5b2OxRkz7QaHnfaj+pmEynvmOUcI3
+   50bMbWammJihTBpqLru+ihoZcYhATQ+Re9arbzjgcevHR+BQAZDQThyjq
+   PVL8OQTdkqqUWpcNBwDmLcAApYHrY0xiTrf0M1MMJIz310YNwaMWSaORv
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="333975373"
+X-IronPort-AV: E=Sophos;i="5.98,247,1673942400"; 
+   d="scan'208";a="333975373"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2023 09:02:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="787663874"
+X-IronPort-AV: E=Sophos;i="5.98,247,1673942400"; 
+   d="scan'208";a="787663874"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2023 09:02:31 -0800
+Date:   Thu, 9 Mar 2023 09:06:23 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "Zanussi, Tom" <tom.zanussi@intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 3/4] iommu/sva: Support reservation of global PASIDs
+Message-ID: <20230309090623.7ea2c3fe@jacob-builder>
+In-Reply-To: <ZAY5d2MSXjWRGF0n@nvidia.com>
+References: <20230302005959.2695267-1-jacob.jun.pan@linux.intel.com>
+        <20230302005959.2695267-4-jacob.jun.pan@linux.intel.com>
+        <BN9PR11MB52765C5E0DC0759880C08E258CB29@BN9PR11MB5276.namprd11.prod.outlook.com>
+        <20230303134753.660d0755@jacob-builder>
+        <ZAXkLN39VUSl+t65@nvidia.com>
+        <20230306094408.2d675d5b@jacob-builder>
+        <ZAYmS4Sx6bm+ziDY@nvidia.com>
+        <20230306095759.1dd65cca@jacob-builder>
+        <ZAYunPcgSOGFK8Qi@nvidia.com>
+        <SJ1PR11MB6083DFA2C1D00B00C3918982FCB69@SJ1PR11MB6083.namprd11.prod.outlook.com>
+        <ZAY5d2MSXjWRGF0n@nvidia.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3a39812e-62da-377c-f430-dd6c1eb473e2@intel.com>
-X-Spam-Status: No, score=2.7 required=5.0 tests=BAYES_00,HELO_DYNAMIC_IPADDR2,
-        PDS_RDNS_DYNAMIC_FP,RDNS_DYNAMIC,SPF_HELO_NONE,SPF_PASS,TVD_RCVD_IP
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: **
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Mar 07, 2023 at 08:54:03AM -0700, Dave Jiang wrote:
->
-> Hi Herbert, does this mean drivers/crypto/qat should now move to
-> drivers/crypto/intel/qat?
+Hi Jason,
 
-Yes we should move qat as well.  Oh and there's also ixp4xx and
-keembay.
+On Mon, 6 Mar 2023 15:05:27 -0400, Jason Gunthorpe <jgg@nvidia.com> wrote:
+
+> On Mon, Mar 06, 2023 at 06:48:43PM +0000, Luck, Tony wrote:
+> > >> ENQCMDS does not have the restriction of using a single CPU MSR to
+> > >> store PASIDs, PASID is supplied to the instruction operand.   
+> > >
+> > > Huh? That isn't what it says in the programming manual. It says the
+> > > PASID only comes from the IA32_PASID msr and the only two operands are
+> > > the destination MMIO and the memory source for the rest of the
+> > > payload.  
+> > 
+> > Jason,
+> > 
+> > Two different instructions with only one letter different in the name.
+> > 
+> > ENQCMD - ring 3 instruction. The PASID is inserted into the descriptor
+> > pushed to the device from the IA32_PASID MSR.
+> > 
+> > ENQCMDS - ring 0 instruction (see that trailing "S" for Supervisor
+> > mode). In this case the submitter can include any PASID value they want
+> > in the in-memory copy of the descriptor and ENQCMDS will pass that to
+> > the device.  
+> 
+> Ah, well, my comment wasn't talking about ENQCMDS :)
+> 
+> If ENQCMDS can take in an arbitary PASID then there is no
+> justification here to use the global allocator.
+> 
+> The rational is more like:
+> 
+>  IDXD uses PASIDs that come from the SVA allocator. It needs to create
+>  an internal kernel-only PASID that is non-overlapping so allow the SVA
+>  allocator to reserve PASIDs for driver use.
+> 
+>  IDXD has to use the global SVA PASID allocator beacuse its userspace
+>  will use ENQCMD which requires global PASIDs.
+> 
+yes, great summary. I think that is the same as what I was trying to say
+earlier :)
+"due the unforgiving nature of ENQCMD that requires global PASIDs, ENQCMDS
+has no choice but to allocate from the same numberspace to avoid conflict."
+
+In that sense, I feel the global allocator should be staying with SVA
+instead of moving to iommu core (as Kevin suggested). Because we are trying
+to have non-overlapping pasid with SVA.
 
 Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+
+Jacob

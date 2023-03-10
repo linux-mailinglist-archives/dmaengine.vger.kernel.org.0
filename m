@@ -2,354 +2,210 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A5F8C6B3507
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Mar 2023 04:51:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DBC3B6B35F5
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Mar 2023 06:10:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229636AbjCJDvA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 9 Mar 2023 22:51:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35858 "EHLO
+        id S230060AbjCJFKS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 10 Mar 2023 00:10:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229922AbjCJDu7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Mar 2023 22:50:59 -0500
-Received: from out-27.mta1.migadu.com (out-27.mta1.migadu.com [IPv6:2001:41d0:203:375::1b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86A63101F33
-        for <dmaengine@vger.kernel.org>; Thu,  9 Mar 2023 19:50:57 -0800 (PST)
-Date:   Fri, 10 Mar 2023 11:50:50 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1678420253;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4wxTkaIXK8MdNWIHcK6N2kDTTh+mu1Ue6klXyxEMtuo=;
-        b=PQw4pn9tibPEscvbKd+A45gRxLmWbsM/MBl62SUcneA2MTg3KhE6LNGPO+zNSWJPi1lxbb
-        y7nyYRPkSccdTpNxrsDaMFrIJYGtBVbpT7yiUVnNjEt/xOrUzS3TNmAwSFTK0toR1iNx7B
-        k+jhQytTlt/c6ITwBzwdNFdDnr2i8Ik=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Cai Huoqing <cai.huoqing@linux.dev>
-To:     fancer.lancer@gmail.com
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 4/5] dmaengine: dw-edma: Add HDMA DebugFS support
-Message-ID: <ZAqpGuAsV+HJYJkE@chq-MS-7D45>
-References: <20230310032342.17395-1-cai.huoqing@linux.dev>
- <20230310032342.17395-5-cai.huoqing@linux.dev>
+        with ESMTP id S230161AbjCJFJx (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Mar 2023 00:09:53 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 935E6107D7B;
+        Thu,  9 Mar 2023 21:09:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678424944; x=1709960944;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+J49aPyhvpQwkShbD0yDrpi5G/X/Mfrh2uMgIT+15TA=;
+  b=JTaGs5tZIqGmZ44KXYM7TXLUfhZZ+3OKBt+tQDqYq6uDJKKNLBSP9iuw
+   yoy+wKmwBWaGxNc/Y1moUloMIboS4WLA9FJQ9Hfe0rMpvZpzcQFpc2C11
+   ARIx40DMf9g78gvF6fHHsWpRSibFA3PBrBxsrfvlGkrbWINAwMVPNteBW
+   PO2DPro1U32vDB+quZD+xREqVQUJlDLTGpLSduugg9fG3A89vJCf7G03J
+   VXB/ys9LiQGtCdffh7lFhqpYqfuVrIdWzNVXpxf8LXjo3fzNhV8eMteLU
+   CTbbkuhb2qYAYx32qV45ttMflzD5TvdlqHMgIanFX+FlnGzn2pmCtGsly
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="335345582"
+X-IronPort-AV: E=Sophos;i="5.98,248,1673942400"; 
+   d="scan'208";a="335345582"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2023 21:08:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="741826265"
+X-IronPort-AV: E=Sophos;i="5.98,248,1673942400"; 
+   d="scan'208";a="741826265"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.48]) ([10.239.159.48])
+  by fmsmga008.fm.intel.com with ESMTP; 09 Mar 2023 21:08:51 -0800
+Message-ID: <69753e4a-32f3-8760-ba1d-8286badd159e@linux.intel.com>
+Date:   Fri, 10 Mar 2023 13:07:51 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230310032342.17395-5-cai.huoqing@linux.dev>
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Cc:     baolu.lu@linux.intel.com, Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH v5 4/7] iommu/sva: Stop using ioasid_set for SVA
+Content-Language: en-US
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        X86 Kernel <x86@kernel.org>, bp@alien8.de,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>, corbet@lwn.net,
+        vkoul@kernel.org, dmaengine@vger.kernel.org,
+        linux-doc@vger.kernel.org
+References: <20230309222159.487826-1-jacob.jun.pan@linux.intel.com>
+ <20230309222159.487826-6-jacob.jun.pan@linux.intel.com>
+From:   Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20230309222159.487826-6-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 10 3月 23 11:23:37, Cai Huoqing wrote:
-> From: Cai huoqing <cai.huoqing@linux.dev>
+On 3/10/23 6:21 AM, Jacob Pan wrote:
+> From: Jason Gunthorpe <jgg@nvidia.com>
 > 
-> Add HDMA DebugFS support to show register information
+> Instead SVA drivers can use a simple global IDA to allocate PASIDs for
+> each mm_struct.
 > 
-> Signed-off-by: Cai huoqing <cai.huoqing@linux.dev>
+> Future work would be to allow drivers using the SVA APIs to reserve global
+> PASIDs from this IDA for their internal use, eg with the DMA API PASID
+> support.
+> 
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > ---
-> v5->v6:
->   9.Fix 'reg' pointing error in dw_hdma_debugfs_u32_get.
->   10.Add padding_1/_2 reserve to fix wrong reg offset.
+> v5:
+> 	- Put removing iommu_sva_find() to a separate patch (Kevin)
+> 	- Make pasid allocation range to be inclusive (Tina)
+> 	- Simplified return code handling (Baolu)
+> v4:
+> 	- Keep GFP_ATOMIC flag for PASID allocation, will changed to
+> 	GFP_KERNEL in a separate patch.
+> ---
+>   drivers/iommu/iommu-sva.c | 42 +++++++++++++--------------------------
+>   drivers/iommu/iommu-sva.h |  2 --
+>   2 files changed, 14 insertions(+), 30 deletions(-)
 > 
-> v5 link:
-> 	https://lore.kernel.org/lkml/20230303124642.5519-5-cai.huoqing@linux.dev/
-> 
->  drivers/dma/dw-edma/Makefile             |   3 +-
->  drivers/dma/dw-edma/dw-hdma-v0-core.c    |   2 +
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c | 176 +++++++++++++++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h |  22 +++
->  drivers/dma/dw-edma/dw-hdma-v0-regs.h    |   3 +-
->  5 files changed, 204 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-> 
-> diff --git a/drivers/dma/dw-edma/Makefile b/drivers/dma/dw-edma/Makefile
-> index b1c91ef2c63d..83ab58f87760 100644
-> --- a/drivers/dma/dw-edma/Makefile
-> +++ b/drivers/dma/dw-edma/Makefile
-> @@ -1,7 +1,8 @@
->  # SPDX-License-Identifier: GPL-2.0
->  
->  obj-$(CONFIG_DW_EDMA)		+= dw-edma.o
-> -dw-edma-$(CONFIG_DEBUG_FS)	:= dw-edma-v0-debugfs.o
-> +dw-edma-$(CONFIG_DEBUG_FS)	:= dw-edma-v0-debugfs.o	\
-> +				   dw-hdma-v0-debugfs.o
->  dw-edma-objs			:= dw-edma-core.o	\
->  				   dw-edma-v0-core.o	\
->  				   dw-hdma-v0-core.o $(dw-edma-y)
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> index 5446e9f38d65..84a691a2d110 100644
-> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> @@ -11,6 +11,7 @@
->  #include "dw-edma-core.h"
->  #include "dw-hdma-v0-core.h"
->  #include "dw-hdma-v0-regs.h"
-> +#include "dw-hdma-v0-debugfs.h"
->  
->  enum dw_hdma_control {
->  	DW_HDMA_V0_CB					= BIT(0),
-> @@ -257,6 +258,7 @@ static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
->  /* HDMA debugfs callbacks */
->  static void dw_hdma_v0_core_debugfs_on(struct dw_edma *dw)
->  {
-> +	dw_hdma_v0_debugfs_on(dw);
->  }
->  
->  static const struct dw_edma_core_ops dw_hdma_v0_core = {
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-> new file mode 100644
-> index 000000000000..f2082b1bf72a
-> --- /dev/null
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-> @@ -0,0 +1,176 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2023 Cai Huoqing
-> + * Synopsys DesignWare HDMA v0 debugfs
-> + *
-> + * Author: Cai Huoqing <cai.huoqing@linux.dev>
-> + */
-> +
-> +#include <linux/debugfs.h>
-> +#include <linux/bitfield.h>
-> +
-> +#include "dw-hdma-v0-debugfs.h"
-> +#include "dw-hdma-v0-regs.h"
-> +#include "dw-edma-core.h"
-> +
-> +#define REGS_ADDR(dw, name)						       \
-> +	({								       \
-> +		struct dw_hdma_v0_regs __iomem *__regs = (dw)->chip->reg_base; \
-> +									       \
-> +		(void __iomem *)&__regs->name;				       \
-> +	})
-> +
-> +#define REGS_CH_ADDR(dw, name, _dir, _ch)				       \
-> +	({								       \
-> +		struct dw_hdma_v0_ch_regs __iomem *__ch_regs;		       \
-> +									       \
-> +		if (_dir == EDMA_DIR_READ)				       \
-> +			__ch_regs = REGS_ADDR(dw, ch[_ch].rd);		       \
-> +		else							       \
-> +			__ch_regs = REGS_ADDR(dw, ch[_ch].wr);		       \
-> +									       \
-> +		(void __iomem *)&__ch_regs->name;			       \
-> +	})
-> +
-> +#define CTX_REGISTER(dw, name, dir, ch) \
-> +	{ dw, #name, REGS_CH_ADDR(dw, name, dir, ch), dir, ch }
-> +
-> +#define REGISTER(dw, name) \
-> +	{ dw, #name, REGS_ADDR(dw, name) }
-> +
-> +#define WRITE_STR				"write"
-> +#define READ_STR				"read"
-> +#define CHANNEL_STR				"channel"
-> +#define REGISTERS_STR				"registers"
-> +
-> +struct dw_hdma_debugfs_entry {
-> +	struct dw_edma				*dw;
-> +	const char				*name;
-> +	void __iomem				*reg;
-> +	enum dw_edma_dir			dir;
-> +	u16					ch;
-> +};
-> +
-> +static int dw_hdma_debugfs_u32_get(void *data, u64 *val)
-> +{
-> +	struct dw_hdma_debugfs_entry *entry = data;
-> +	void __iomem *reg = entry->reg;
-> +
-> +	*val = readl(reg);
-> +
-> +	return 0;
-> +}
-> +DEFINE_DEBUGFS_ATTRIBUTE(fops_x32, dw_hdma_debugfs_u32_get, NULL, "0x%08llx\n");
-> +
-> +static void dw_hdma_debugfs_create_x32(struct dw_edma *dw,
-> +				       const struct dw_hdma_debugfs_entry ini[],
-> +				       int nr_entries, struct dentry *dent)
-> +{
-> +	struct dw_hdma_debugfs_entry *entries;
-> +	int i;
-> +
-> +	entries = devm_kcalloc(dw->chip->dev, nr_entries, sizeof(*entries),
-> +			       GFP_KERNEL);
-> +	if (!entries)
+> diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
+> index 4f357ef14f04..b75711bdbe97 100644
+> --- a/drivers/iommu/iommu-sva.c
+> +++ b/drivers/iommu/iommu-sva.c
+> @@ -9,47 +9,33 @@
+>   #include "iommu-sva.h"
+>   
+>   static DEFINE_MUTEX(iommu_sva_lock);
+> -static DECLARE_IOASID_SET(iommu_sva_pasid);
+> +static DEFINE_IDA(iommu_global_pasid_ida);
+>   
+> -/**
+> - * iommu_sva_alloc_pasid - Allocate a PASID for the mm
+> - * @mm: the mm
+> - * @min: minimum PASID value (inclusive)
+> - * @max: maximum PASID value (inclusive)
+> - *
+> - * Try to allocate a PASID for this mm, or take a reference to the existing one
+> - * provided it fits within the [@min, @max] range. On success the PASID is
+> - * available in mm->pasid and will be available for the lifetime of the mm.
+> - *
+> - * Returns 0 on success and < 0 on error.
+> - */
+> -int iommu_sva_alloc_pasid(struct mm_struct *mm, ioasid_t min, ioasid_t max)
+> +static int iommu_sva_alloc_pasid(struct mm_struct *mm, ioasid_t min, ioasid_t max)
+>   {
+>   	int ret = 0;
+> -	ioasid_t pasid;
+>   
+> -	if (min == INVALID_IOASID || max == INVALID_IOASID ||
+> -	    min == 0 || max < min)
+> +	if (!pasid_valid(min) || !pasid_valid(max) ||
+> +	     min == 0 || max < min)
+
+No need to change above line.
+
+>   		return -EINVAL;
+>   
+>   	mutex_lock(&iommu_sva_lock);
+>   	/* Is a PASID already associated with this mm? */
+>   	if (pasid_valid(mm->pasid)) {
+> -		if (mm->pasid < min || mm->pasid >= max)
+> +		if (mm->pasid < min || mm->pasid > max)
+
+I forgot why do we need to change above line. But it's better to put
+some comments there so that people don't need to dive into
+ioasid_alloc() to know the inclusion or exclusion of @min or @max.
+
+>   			ret = -EOVERFLOW;
+>   		goto out;
+>   	}
+>   
+> -	pasid = ioasid_alloc(&iommu_sva_pasid, min, max, mm);
+> -	if (!pasid_valid(pasid))
+> -		ret = -ENOMEM;
+> -	else
+> -		mm->pasid = pasid;
+> +	ret = ida_alloc_range(&iommu_global_pasid_ida, min, max, GFP_ATOMIC);
+> +	if (ret < 0)
+> +		goto out;
+> +	mm->pasid = ret;
+> +	ret = 0;
+>   out:
+>   	mutex_unlock(&iommu_sva_lock);
+>   	return ret;
+>   }
+> -EXPORT_SYMBOL_GPL(iommu_sva_alloc_pasid);
+>   
+>   /**
+>    * iommu_sva_bind_device() - Bind a process address space to a device
+> @@ -221,8 +207,8 @@ iommu_sva_handle_iopf(struct iommu_fault *fault, void *data)
+>   
+>   void mm_pasid_drop(struct mm_struct *mm)
+>   {
+> -	if (pasid_valid(mm->pasid)) {
+> -		ioasid_free(mm->pasid);
+> -		mm->pasid = INVALID_IOASID;
+> -	}
+> +	if (likely(!pasid_valid(mm->pasid)))
 > +		return;
 > +
-> +	for (i = 0; i < nr_entries; i++) {
-> +		entries[i] = ini[i];
-> +
-> +		debugfs_create_file_unsafe(entries[i].name, 0444, dent,
-> +					   &entries[i], &fops_x32);
-> +	}
-> +}
-> +
-> +static void dw_hdma_debugfs_regs_ch(struct dw_edma *dw, enum dw_edma_dir dir,
-> +				    u16 ch, struct dentry *dent)
-> +{
-> +	const struct dw_hdma_debugfs_entry debugfs_regs[] = {
-> +		CTX_REGISTER(dw, ch_en, dir, ch),
-> +		CTX_REGISTER(dw, doorbell, dir, ch),
-> +		CTX_REGISTER(dw, prefetch, dir, ch),
-> +		CTX_REGISTER(dw, handshake, dir, ch),
-> +		CTX_REGISTER(dw, llp.lsb, dir, ch),
-> +		CTX_REGISTER(dw, llp.msb, dir, ch),
-> +		CTX_REGISTER(dw, cycle_sync, dir, ch),
-> +		CTX_REGISTER(dw, transfer_size, dir, ch),
-> +		CTX_REGISTER(dw, sar.lsb, dir, ch),
-> +		CTX_REGISTER(dw, sar.msb, dir, ch),
-> +		CTX_REGISTER(dw, dar.lsb, dir, ch),
-> +		CTX_REGISTER(dw, dar.msb, dir, ch),
-> +		CTX_REGISTER(dw, watermark_en, dir, ch),
-> +		CTX_REGISTER(dw, control1, dir, ch),
-> +		CTX_REGISTER(dw, func_num, dir, ch),
-> +		CTX_REGISTER(dw, qos, dir, ch),
-> +		CTX_REGISTER(dw, ch_stat, dir, ch),
-> +		CTX_REGISTER(dw, int_stat, dir, ch),
-> +		CTX_REGISTER(dw, int_setup, dir, ch),
-> +		CTX_REGISTER(dw, int_clear, dir, ch),
-> +		CTX_REGISTER(dw, msi_stop.lsb, dir, ch),
-> +		CTX_REGISTER(dw, msi_stop.msb, dir, ch),
-> +		CTX_REGISTER(dw, msi_watermark.lsb, dir, ch),
-> +		CTX_REGISTER(dw, msi_watermark.msb, dir, ch),
-> +		CTX_REGISTER(dw, msi_abort.lsb, dir, ch),
-> +		CTX_REGISTER(dw, msi_abort.msb, dir, ch),
-> +		CTX_REGISTER(dw, msi_msgdata, dir, ch),
-> +	};
-> +	int nr_entries = ARRAY_SIZE(debugfs_regs);
-> +
-> +	dw_hdma_debugfs_create_x32(dw, debugfs_regs, nr_entries, dent);
-> +}
-> +
-> +static void dw_hdma_debugfs_regs_wr(struct dw_edma *dw, struct dentry *dent)
-> +{
-> +	struct dentry *regs_dent, *ch_dent;
-> +	char name[16];
-> +	int i;
-> +
-> +	regs_dent = debugfs_create_dir(WRITE_STR, dent);
-> +
-> +	for (i = 0; i < dw->wr_ch_cnt; i++) {
-> +		snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
-> +
-> +		ch_dent = debugfs_create_dir(name, regs_dent);
-> +
-> +		dw_hdma_debugfs_regs_ch(dw, EDMA_DIR_WRITE, i, ch_dent);
-> +	}
-> +}
-> +
-> +static void dw_hdma_debugfs_regs_rd(struct dw_edma *dw, struct dentry *dent)
-> +{
-> +	struct dentry *regs_dent, *ch_dent;
-> +	char name[16];
-> +	int i;
-> +
-> +	regs_dent = debugfs_create_dir(READ_STR, dent);
-> +
-> +	for (i = 0; i < dw->rd_ch_cnt; i++) {
-> +		snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
-> +
-> +		ch_dent = debugfs_create_dir(name, regs_dent);
-> +
-> +		dw_hdma_debugfs_regs_ch(dw, EDMA_DIR_READ, i, ch_dent);
-> +	}
-> +}
-> +
-> +static void dw_hdma_debugfs_regs(struct dw_edma *dw)
-> +{
-> +	struct dentry *regs_dent;
-> +
-> +	regs_dent = debugfs_create_dir(REGISTERS_STR, dw->dma.dbg_dev_root);
-> +
-> +	dw_hdma_debugfs_regs_wr(dw, regs_dent);
-> +	dw_hdma_debugfs_regs_rd(dw, regs_dent);
-> +}
-> +
-> +void dw_hdma_v0_debugfs_on(struct dw_edma *dw)
-> +{
-> +	if (!debugfs_initialized())
-> +		return;
-> +
-> +	debugfs_create_u32("mf", 0444, dw->dma.dbg_dev_root, &dw->chip->mf);
-> +	debugfs_create_u16("wr_ch_cnt", 0444, dw->dma.dbg_dev_root, &dw->wr_ch_cnt);
-> +	debugfs_create_u16("rd_ch_cnt", 0444, dw->dma.dbg_dev_root, &dw->rd_ch_cnt);
-> +
-> +	dw_hdma_debugfs_regs(dw);
-> +}
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-> new file mode 100644
-> index 000000000000..e6842c83777d
-> --- /dev/null
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-> @@ -0,0 +1,22 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2023 Cai Huoqing
-> + * Synopsys DesignWare HDMA v0 debugfs
-> + *
-> + * Author: Cai Huoqing <cai.huoqing@linux.dev>
-> + */
-> +
-> +#ifndef _DW_HDMA_V0_DEBUG_FS_H
-> +#define _DW_HDMA_V0_DEBUG_FS_H
-> +
-> +#include <linux/dma/edma.h>
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +void dw_hdma_v0_debugfs_on(struct dw_edma *dw);
-> +#else
-> +static inline void dw_hdma_v0_debugfs_on(struct dw_edma *dw)
-> +{
-> +}
-> +#endif /* CONFIG_DEBUG_FS */
-> +
-> +#endif /* _DW_HDMA_V0_DEBUG_FS_H */
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-regs.h b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> index 1106f56280c0..0a6032aa1a33 100644
-> --- a/drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> @@ -57,7 +57,7 @@ struct dw_hdma_v0_ch_regs {
->  	u32 control1;				/* 0x0034 */
->  	u32 func_num;				/* 0x0038 */
->  	u32 qos;				/* 0x003c */
-> -	u64 reserved[8];			/* 0x0040..0x0078 */
-> +	u32 padding_1[16];			/* 0x0040..0x0078 */
->  	u32 ch_stat;				/* 0x0080 */
->  	u32 int_stat;				/* 0x0084 */
->  	u32 int_setup;				/* 0x0088 */
-> @@ -84,6 +84,7 @@ struct dw_hdma_v0_ch_regs {
->  		};
->  	} msi_abort;
->  	u32 msi_msgdata;			/* 0x00a8 */
-> +	u32 padding_2[21];			/* 0x00ac..0x00e8 */
+> +	ida_free(&iommu_global_pasid_ida, mm->pasid);
 
-This should be move to patch [3/5], will fix it in next version with
-other changes together.
+Any reason why do you drop "mm->pasid = INVALID_IOASID;" here?
 
-Thanks,
-Cai -
->  } __packed;
->  
->  struct dw_hdma_v0_ch {
-> -- 
-> 2.34.1
-> 
+>   }
+> diff --git a/drivers/iommu/iommu-sva.h b/drivers/iommu/iommu-sva.h
+> index 102eae1817a2..c22d0174ad61 100644
+> --- a/drivers/iommu/iommu-sva.h
+> +++ b/drivers/iommu/iommu-sva.h
+> @@ -8,8 +8,6 @@
+>   #include <linux/ioasid.h>
+>   #include <linux/mm_types.h>
+>   
+> -int iommu_sva_alloc_pasid(struct mm_struct *mm, ioasid_t min, ioasid_t max);
+> -
+>   /* I/O Page fault */
+>   struct device;
+>   struct iommu_fault;
+
+Best regards,
+baolu

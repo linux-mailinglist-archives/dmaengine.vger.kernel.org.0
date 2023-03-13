@@ -2,174 +2,190 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 156DF6B7C54
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Mar 2023 16:47:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 38ABF6B7EAD
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Mar 2023 18:05:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229847AbjCMPra (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 13 Mar 2023 11:47:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40106 "EHLO
+        id S229845AbjCMRFV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 13 Mar 2023 13:05:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229524AbjCMPr3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Mar 2023 11:47:29 -0400
-Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01on2084.outbound.protection.outlook.com [40.107.14.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 004935D45D;
-        Mon, 13 Mar 2023 08:47:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nYDushW11yKM3lEXJ5dmKg38CqH68eXQyQyVK/0aP9L1b7ISd9wieqeuoJ27vdTQdIsHY92fdULserWrizcU6fz8s6txXj2/3qQDU/o8dUhiyf7Lkn+tT8etS0/YoCjtBi45YBZrv+LjOFDhh9n0w+WMyV8rJWq55QB8cTNDNf13Dvf57NWWJFiojTEzCph4E5x/U9pUTxoXq3xpgD9xqNfTdzBADYS4nMYeHyWlylvBAIhO4PNvnzC0vH5LeYqjg+bFowqBWZ+oyKr27QE4tcDKFArvwWTzb9euZFX+E0taTOfnEZ6sO7fSYrB2h76eBvTM39KUrfHZiIBGNmpQLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=29QtUbAOrZ06TQ0+MtSyDA1MjCf2l3qVoC5CcOKIEjE=;
- b=ToH7Ogl5TS8HoDPWNE5AS3SuHG/UoIK4YJ28DRg/q9r35E+jntaQfKqI30qkfQ+thB0qXoG6khqI5gCu5XLEi0sKf3a+mJ7vbh/SPylbRHqBku7TPYmg+w1Qi7KD5d4AIIqyClsYKAU5kkbClOGmoPdB6VibPpReUp7XCA0Rrme+NX6dLsGHFbHEZqRjFOHHgiMz3FQK6B0PO1Fy/LM3yBuhwldOZ/AvEv4/4Y0Onwh2tWdNdeS/+ASvaVMPmu72emwaTLGQgaRWSyqRXvHgwmoJcgiDckAbsMSERwU3MkUg8XW/WiAil0gPEDdlNtbKDL7uBHcGxSYUyp79HtaBDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=29QtUbAOrZ06TQ0+MtSyDA1MjCf2l3qVoC5CcOKIEjE=;
- b=V//ggHCcuA73lZpLz1GCRdcBWOB/dDkBquUyD63IOpHvzDFBNENyOJU3VVeQYDNeuMapEYGqMMNQULgUIbcQ7V2QFQec70szNSoWcxdYpK9agSiP1SvdNf8QbYN5s9w/wl+CMzIOD3xjxGk9x0sMWoKuJd+LzDEw+yqjDaH+Kg0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR0402MB3405.eurprd04.prod.outlook.com (2603:10a6:803:3::26)
- by PAXPR04MB8405.eurprd04.prod.outlook.com (2603:10a6:102:1c2::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.24; Mon, 13 Mar
- 2023 15:47:25 +0000
-Received: from VI1PR0402MB3405.eurprd04.prod.outlook.com
- ([fe80::f469:ba5b:88ad:3fa0]) by VI1PR0402MB3405.eurprd04.prod.outlook.com
- ([fe80::f469:ba5b:88ad:3fa0%7]) with mapi id 15.20.6178.024; Mon, 13 Mar 2023
- 15:47:25 +0000
-Message-ID: <b12d1fb1-1ca6-5f9c-c8b9-97c451734923@nxp.com>
-Date:   Mon, 13 Mar 2023 17:47:18 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH 0/6] bus: fsl-mc: Make remove function return void
-Content-Language: en-CA
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Roy Pledge <Roy.Pledge@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>,
-        Pankaj Gupta <pankaj.gupta@nxp.com>,
-        Gaurav Jain <gaurav.jain@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vinod Koul <vkoul@kernel.org>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Yangbo Lu <yangbo.lu@nxp.com>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Richard Cochran <richardcochran@gmail.com>
-Cc:     kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        dmaengine@vger.kernel.org, netdev@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20230310224128.2638078-1-u.kleine-koenig@pengutronix.de>
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-In-Reply-To: <20230310224128.2638078-1-u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM9P192CA0024.EURP192.PROD.OUTLOOK.COM
- (2603:10a6:20b:21d::29) To VI1PR0402MB3405.eurprd04.prod.outlook.com
- (2603:10a6:803:3::26)
+        with ESMTP id S230207AbjCMREz (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Mar 2023 13:04:55 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AFCE6A40A;
+        Mon, 13 Mar 2023 10:04:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678727054; x=1710263054;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/Q7EgTFqE29R+y9PHzZyxRRsO1s5UbLhd1WJBpHJ1uM=;
+  b=UzJuEdEgCvf05SrA3K5MMoSroebPL4P1Z8/pAQn7lR1IYrFHME98Gw21
+   MIm6Hnq87eY0mAeYNAS42CbpEdl8oOkS3nx6r8wYv7BzVGjt5MLfoqxkY
+   WpbvVu0qwyCwLG/9SJaqtWfVlJT/zUMZN3ohZR+pIQCcoBV6uLEyzaoUq
+   orylO5SrIIPiBA1kDy/uSu94laBkeh4bKm1jaVuQCsxfCi95pC22cOxtg
+   BrlRwBnqB0bfEeModV+/LXXxE7JDOYGBiE74/UGz9kmc9cJgtac3Z7qsL
+   wkBH6xQNLcg+60BWRkCgMxN7hf6OVg29bjY/6HkTYQhj/qjtJdv6A0ToH
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10648"; a="334679609"
+X-IronPort-AV: E=Sophos;i="5.98,257,1673942400"; 
+   d="scan'208";a="334679609"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2023 10:02:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10648"; a="708950881"
+X-IronPort-AV: E=Sophos;i="5.98,257,1673942400"; 
+   d="scan'208";a="708950881"
+Received: from fyu1.sc.intel.com ([172.25.103.126])
+  by orsmga008.jf.intel.com with ESMTP; 13 Mar 2023 10:02:39 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Vinod Koul" <vkoul@kernel.org>,
+        "Dave Jiang" <dave.jiang@intel.com>
+Cc:     dmaengine@vger.kernel.org,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH v3 00/16] Enable DSA 2.0 Event Log and completion record faulting features
+Date:   Mon, 13 Mar 2023 10:02:03 -0700
+Message-Id: <20230313170219.1956012-1-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB3405:EE_|PAXPR04MB8405:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8b99d424-b6ae-4b79-127b-08db23da3d3c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zgO2AseiaSvkGMtZ7axDFoGaT8xZaaKFuW+7dN35XmGxxosu/aXRJ/j2Ac6GsQRvIqkm/f8cCMB27HJrVtVbrcJYLyE4MfosrsKj9O3gNTceve6r08WmGUJReBDfwkKv9ah6303Vo4IfmTkWItLhR/wIF2LqfG3z4VS5bzNMe1ajqm6iPM1YrVVI9WDpkvRoYPWhl/sBY27PYIfZV6m6iErtjTNwQWbFUo83CzlR6GE9qF9M6jY0ei7uECBLwCdRyPiZVAjziOCk8QPon9D9wltD5eAmY98fgHY6CU6t4yOsJd9mdonskugWPd3wbiID347P5KouC1JCrC5rjL3Z0w5yf50uQHxtLcGl7PrpytNxj+VmDTnb55MO7qeN5l3+xbeQzObygnPPA6oHELGkS1KNrZkXdGQX5kt7smG2uUAFwJfjDdPZhmFWj6UWeU7Y8sSlBg6gB9JF5Uhx9D4DneVXpOqGc29zQl2DdnBfx8RjWFceCb7HyKeIyZktxv0kbFDnpzggXqwc5stcuvAf2UvIp5WNnhc87Aqo0p1uTJQdfGg0G6K4Qaxnk1amCXIYfv4OplgiXPdy0sSF3y9NikA8dVF0juZ/diRhQA3pGPTWLswWGso4xd0FIHopgLpWJZgW1xcItUwDp2lY4pt1wnhNY5WO2+DII+Vf0A+UeJtQ9haEMAV1lcSBsaPT/R8HPzA3+pXYzsx/ztodWdX8Mp04BMDtTLbp/bQyRGg50xDdnHy+F6LkckQUA+9l1ZApsc6msXtT6DqLcI2b7o1MS/0kE0MVor2+wRDVUtsscss=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3405.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(451199018)(2906002)(31686004)(83380400001)(7416002)(5660300002)(36756003)(44832011)(66946007)(66556008)(8936002)(41300700001)(921005)(4326008)(38100700002)(31696002)(38350700002)(66476007)(86362001)(110136005)(316002)(8676002)(478600001)(66574015)(186003)(2616005)(53546011)(52116002)(6506007)(26005)(6666004)(6512007)(6486002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aU5GdHc5QWZtUVk4YVZCSzFuVFVzbjdEM3B1dlZITnZBTitTVDFCTDRKK1E4?=
- =?utf-8?B?Zk0xWFFnUTRRU2RNTUtpZFNaQUU2VmpPZzhPWVN5MkQ2SlhvZXVlQUphYlFL?=
- =?utf-8?B?dUVGRlR6SVI4cjUyNmtBWFIvc0poS2R6VEl1S1FYL016SGUxdGhlMWQ0Ymdo?=
- =?utf-8?B?V085MHlVdGVNaUZ0RVd3WmVma21PMWJyT0pYWS9VbFUzMlRIN3VweEc5MDh5?=
- =?utf-8?B?REhBcitwbFVuSFBkblBHNkdxeGJIL05scEZhLzlLZU1ETkdqWjB1OVJwaGhF?=
- =?utf-8?B?cFlrVGNqUjZtbFd2eFZhcHZrdmhEeE1Zalp1VG9BWkVxdFNFa09QVkZpdkJo?=
- =?utf-8?B?dGZxWlR2U2I3ZVA5YWNvYWlvZHhVTnMzTlozS0JZRy8wYmRoczdNR0FEalQw?=
- =?utf-8?B?YjF6Sm1CTjdmYXJHWVY1VUdBMnlSbVRnNU1xZlhMWjFlV3IxSzk5eGxGaGNC?=
- =?utf-8?B?N3BjczR6YnBVWFc5QkV5SWtkbVJxRjFhelZJTzQ0Y1NIajQ2TDVpQ3V3VGh1?=
- =?utf-8?B?emlwbW5BTWd2NFc1TFBBMVh0RWVMSGljc0lqKy84UkF5eUw0bVhMUGxVOElH?=
- =?utf-8?B?TW8xV3BrOFFTWjQwVnZFS29HNHZTdkhMRnJEanh6Sm1YZHFKZVRvMjJzT1NE?=
- =?utf-8?B?LzlqcmxZNEpYQjhMcUZuRE94enQzZTBIdkxqMEdhZnAybHhLWHd1Z3lKdmZZ?=
- =?utf-8?B?RTVIT2RpWlNIcVJmU3NMY0o1SlZYVHFTdnRqYzdXTHZlR0pYb28xMVVPemVn?=
- =?utf-8?B?cVd0UUJoMm4xM25hS0tDemlKRG94elc2cXNmd3kvK3dZbmxxbGJWSTVXTWR3?=
- =?utf-8?B?R3ExOUVYbUZuVnVxY0xqUjVVQytFenpZY3BBcjYxTEk0anNxeTYwbjdPRWJ6?=
- =?utf-8?B?aUtVNFYwL2w5a0E5d0dZa0ZZUFVwcVF6MG8rT25MQXFyUDJRaC9veXZzdzI4?=
- =?utf-8?B?Ky9BL284UFMvT3AxeVdiMm9iL0ZpSERQQjM5a2pMcmtPTE1OV0dXL0RRTkxp?=
- =?utf-8?B?dzRjcTV4TjNtbEpGTFZ4dmJkT0wvZHU5N3Y2VjFmbHhmZkJ6TVlURnZkaEYw?=
- =?utf-8?B?dmcranZ6OEFaV2JHYWRVYkZNQUd5T0NNMjlHS0ZDMEpYZ0VVYkhCeXhUMW5H?=
- =?utf-8?B?Ky85REM2SnpZbGJvM2o3MHRtMTJrMlNBbnVibTVzR3d4dmZEd0VJRndTVkh5?=
- =?utf-8?B?bWNUMlpzU3hLWit1RTBxNkJadGM1eUdjTmNzR2U3Ni9nRFg1ci94Vlp5UTlP?=
- =?utf-8?B?bDdvUFRvQkdjK2Mzb0Jwb2RFV0lxRVREU0VRK2Z1NlNrNUJ0QXZGTFR0cFBI?=
- =?utf-8?B?bm5wdmZaVm9MNmYvaXAzSTlLYVpYRXhVMndEMG9hY2hvcXJBWnQzSFRJb2dK?=
- =?utf-8?B?T1JueVJMcWFCNktSVzJOc0FvbGpxdWtGczJ6cVVGZ0p5K3pjdWNmbjNoMENQ?=
- =?utf-8?B?eFhneFNSZHk5enJKYmJrdVVsU1NSdkxjRzFLZHlhTGEvNjVKeloyZHNqaWdQ?=
- =?utf-8?B?TkVwOFEwZ3RGaitWeWp6ZjFWRXRIMjdwNjFFWEcxQXkrZkovUTJ3TXlpU0o4?=
- =?utf-8?B?d1FBR0ZQZmJGamlMTkZlRmpKOXpmY0ZMWjhoMEhTNng3b3ZPVjRXUktNUEQy?=
- =?utf-8?B?bmZDWG5PbzhNcmI5QkxTMzdjSlIyaUxsUVBrOEZiNktQU0JDNWZjOXV5eGYz?=
- =?utf-8?B?L1ovUTczSWhWd2ZoOU5wVVFPVy9YL0RzNXE5L0ZQQUN2b2dFRTBwVTIwOUVX?=
- =?utf-8?B?dzZNbkJHSVljUVRQb2tReEdBNmZ1c2JlVm03M0RnTzQ0SmwwQ3dLN0psRXpF?=
- =?utf-8?B?WDV3bHVMSTdkREo2RlMyeFpla3hnNlVjRytoVzFEREZ6LzJWL0lUZ3V5T2s0?=
- =?utf-8?B?eVN0ZkhXRHlVNHFVbGYraklIM2pTdkNjY3BSWkYwNjZYYklSUHV4bnExMFdV?=
- =?utf-8?B?aGdGem1zWUJOK1hsbzdyVDNMRDg3bzVxeUVoS1JyRGJGc3VualJhUjdiUEFW?=
- =?utf-8?B?R3lZZE9sSWNUaDAzOFI5cmt2UjY0WFZub2NlcUVWM2ZBY2JsaUJuM2J6YklQ?=
- =?utf-8?B?VndiZ25IMG1nOGpFTjY4b2RGZkc2KzBOL3RnYlpqTGJ3cHlXYVpzdExPenAz?=
- =?utf-8?B?ZnRjT2EzejdXK2I5WWtaRTFSODdCbStMS2JNUjY2NklqZ20vbXh3RmxZZjUw?=
- =?utf-8?B?dVE9PQ==?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b99d424-b6ae-4b79-127b-08db23da3d3c
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3405.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2023 15:47:24.7590
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rXQ+O3+JIgti9inFtMhQpc6SNR6z2HuYDd3+hQORenDdXaovJX4rnpBh2cJqWHbYQ68vXdUHUpTMI9JvjwW5Hg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8405
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Applications can send 64B descriptors to the DSA device via CPU
+instructions MOVDIR64B or ENQCMD. The application can choose to have
+the device write back a completion record (CR) in system memory to
+indicate the status of the descriptor submitted on completion.
 
+With the DSA hardware, the device is able to do on demand paging through
+the hardware by faulting in the user pages that do not have physical memory
+page backing with assistance from IOMMU. In the spec this was designated as
+the block on fault feature. While this hardware feature made operation
+simpler, it also stalls the device engines while the memory pages are being
+faulted in through Page Request Service (PRS). For applications sharing the
+same workqueue (wq) or wqs in the same group, operations are stalled if
+there are no free engines. To avoid slowing the performance of all other
+running applications sharing the same device engine(s), PRS can to be
+disabled and software can deal with partial completion.
 
-On 3/11/2023 12:41 AM, Uwe Kleine-König wrote:
-> Hello,
-> 
-> many bus remove functions return an integer which is a historic
-> misdesign that makes driver authors assume that there is some kind of
-> error handling in the upper layers. This is wrong however and returning
-> and error code only yields an error message.
-> 
-> This series improves the fsl-mc bus by changing the remove callback to
-> return no value instead. As a preparation all drivers are changed to
-> return zero before so that they don't trigger the error message.
-> 
-> Best regards
-> Uwe
-> 
-> Uwe Kleine-König (6):
->    bus: fsl-mc: Only warn once about errors on device unbind
->    bus: fsl-mc: dprc: Push down error message from fsl_mc_driver_remove()
->    bus: fsl-mc: fsl-mc-allocator: Drop if block with always wrong
->      condition
->    bus: fsl-mc: fsl-mc-allocator: Improve error reporting
->    soc: fsl: dpio: Suppress duplicated error reporting on device remove
->    bus: fsl-mc: Make remove function return void
-> 
+The block on fault feature on DSA 1.0 can be disabled for the wq. However,
+PRS is not completely disabled for the whole path. It is not disabled for
+CRs or batch list for a batch operation.
 
-Thanks for the series, Uwe. Did a quick boot test with ACPI, so:
+The other issue is the DSA 1.0 error reporting mechanism, SWERROR register.
+The SWERROR register can only report a single error at a time until the
+driver reads and acknowledges the error. The follow on errors cannot be
+reported until the current error is "cleared" by the software by writing
+a bit to the SWERR register. If a large number of faults arrive and the
+software cannot clear them fast enough, overflowed errors will be dropped
+by the device.
 
-Reviewed-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Tested-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+A CR is the optional 32 bytes (DSA) or 64 bytes (IAA) status that is
+written back for a submitted descriptor. If the address for the CR faults,
+the error is reported to the SWERROR register instead.
+
+With DSA 2.0 hardware [1], the event log feature is added. All errors are
+reported as an entry in a circular buffer reside in the system memory.
+The system admin is responsible to configure the size of the circular
+buffer large enough per device to handle the potential errors that may be
+reported. If the buffer is full and another error needs to be reported,
+the device engine will block until there's a free slot in the buffer.
+An event log entry for a faulted CR will contain the error information,
+the CR address that faulted, and the expected CR content the device had
+originally intended to write.
+
+DSA 2.0 also introduces per wq PRS disable knob. This will disable all PRS
+operations for the specific wq. The device will still have Address
+Translation Service (ATS) on. When ATS fails on a memory address for a CR,
+an eventlog entry will be written by the hardware into the event log
+ring buffer. The driver software is expected to parse the event log entry,
+fault in the address of the CR, and the write the content of the CR to
+the memory address.
+
+This patch series will implement the DSA 2 event log support. The support
+for the handling of the faulted user CR is added. The driver is also
+adding the same support for batch operation descriptors. With a batch
+operation the handling of the event log entry is a bit more complex.
+The faulting CR could be for the batch descriptor or any of the operation
+descriptors within the batch. The hardware generates a batch identifier
+that is used by the driver software to correlate the event log entries for
+the relevant descriptors of that batch.
+
+The faulting of source and destination addresses for the operation is not
+handled by the driver. That is left to be handled by the user application
+by faulting in the memory and re-submit the remaining operation.
+
+This series consists of three parts:
+1. Patch 1: Make misc interrupt one shot. Event Log interrupt depends on
+   this patch. This patch was released before but is not in upstream yet:
+   https://lore.kernel.org/dmaengine/165125374675.311834.10460196228320964350.stgit@djiang5-desk3.ch.intel.com/
+2. Patches 2-15: Enable Event Log and Completion Record faulting.
+3. Patch 16: Configure PRS disable per WQ.
+
+This series is applied cleanly on top of "Expose IAA 2.0 device
+capabilities" series:
+https://lore.kernel.org/lkml/20230303213732.3357494-1-fenghua.yu@intel.com/
+
+Change log:
+v3:
+- Since iommu_sva_find() will be removed in IOMMU and access_remote_vm()
+  cannot be exported, the completion record copy function idxd_copy_cr()
+  is rewritten by maintaining and finding mm in xarray and copy completion
+  record to the mm.
+  Please check discussion on iommu_sva_find() will be removed and
+  access_remote_vm() cannot be exported:
+  1. https://lore.kernel.org/lkml/ZAjSsm4%2FPDRqViwa@nvidia.com/
+  2. https://lore.kernel.org/lkml/20230306163138.587484-1-fenghua.yu@intel.com/T/#m1fc97725a0e56ea269c8bdabacee447070d51846
+
+v2:
+- Define and export iommu_access_remote_vm() for IDXD driver to write
+  completion record to user address space. This change removes
+  patch 8 and 9 in v1 (Alistair Popple)
+https://lore.kernel.org/lkml/20230306163138.587484-1-fenghua.yu@intel.com/
+
+Dave Jiang (15):
+  dmaengine: idxd: make misc interrupt one shot
+  dmaengine: idxd: add event log size sysfs attribute
+  dmaengine: idxd: setup event log configuration
+  dmaengine: idxd: add interrupt handling for event log
+  dmanegine: idxd: add debugfs for event log dump
+  dmaengine: idxd: add per DSA wq workqueue for processing cr faults
+  dmaengine: idxd: create kmem cache for event log fault items
+  dmaengine: idxd: process user page faults for completion record
+  dmaengine: idxd: add descs_completed field for completion record
+  dmaengine: idxd: process batch descriptor completion record faults
+  dmaengine: idxd: add per file user counters for completion record
+    faults
+  dmaengine: idxd: add a device to represent the file opened
+  dmaengine: idxd: expose fault counters to sysfs
+  dmaengine: idxd: add pid to exported sysfs attribute for opened file
+  dmaengine: idxd: add per wq PRS disable
+
+Fenghua Yu (1):
+  dmaengine: idxd: define idxd_copy_cr()
+
+ .../ABI/stable/sysfs-driver-dma-idxd          |  43 +++
+ drivers/dma/Kconfig                           |   1 +
+ drivers/dma/idxd/Makefile                     |   2 +-
+ drivers/dma/idxd/cdev.c                       | 354 ++++++++++++++++--
+ drivers/dma/idxd/debugfs.c                    | 138 +++++++
+ drivers/dma/idxd/device.c                     | 113 +++++-
+ drivers/dma/idxd/idxd.h                       |  65 ++++
+ drivers/dma/idxd/init.c                       |  53 +++
+ drivers/dma/idxd/irq.c                        | 202 ++++++++--
+ drivers/dma/idxd/registers.h                  | 105 +++++-
+ drivers/dma/idxd/sysfs.c                      | 112 +++++-
+ include/uapi/linux/idxd.h                     |  15 +-
+ 12 files changed, 1139 insertions(+), 64 deletions(-)
+ create mode 100644 drivers/dma/idxd/debugfs.c
+
+-- 
+2.37.1
+

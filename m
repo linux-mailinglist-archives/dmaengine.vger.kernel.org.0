@@ -2,54 +2,43 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7729D6B7F18
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Mar 2023 18:15:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B68A6B7F24
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Mar 2023 18:17:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230097AbjCMRP0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 13 Mar 2023 13:15:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36640 "EHLO
+        id S231244AbjCMRRC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 13 Mar 2023 13:17:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230200AbjCMRPX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Mar 2023 13:15:23 -0400
+        with ESMTP id S231451AbjCMRQx (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Mar 2023 13:16:53 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C865977E1F;
-        Mon, 13 Mar 2023 10:14:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F3E277C8E;
+        Mon, 13 Mar 2023 10:16:26 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B0D0FB810D8;
-        Mon, 13 Mar 2023 17:13:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F7D2C433A4;
-        Mon, 13 Mar 2023 17:13:50 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 12BDCB810D8;
+        Mon, 13 Mar 2023 17:15:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE31DC433EF;
+        Mon, 13 Mar 2023 17:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678727633;
-        bh=waygJoMsmEuzShbrfLKTmYsjXJJABs/ZjxmcAXxJrFo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MzHKXiczApY5CW+k510wfPoijOe94MAfIi9QUFi6zkEn4hI/btbZ9sLGreVlnKLeR
-         bcpn7r6Kbv1A15fq6RMXqCj57/YTzz1VxBTzjijTyos35t5U4w2C3Hfe0CKPZxB5K4
-         IdRpfyr0xXHVSbQpqvMCLcMtQ8NFC/FLXCNK0PJkqeyybsMU7nOa0ibkMtJMOrLILJ
-         4rd+3N8Y2i196SbGbk/+aXTt003pva4/qKcLDo9FKe1GGvV48IS8yz23oY/JZLcDu2
-         A5NglNk2j5ouel+0hhQBzTq3AdpdF14O09x0v72BqY2pNuTklScLo/DhHHemSSAr15
-         kaAULm8lzRayQ==
+        s=k20201202; t=1678727732;
+        bh=AgxnGnjCcuCLrvUebJaSyNbX/LjrIkQcC+AUGh//ULo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Rc1X74Z0PSz0l+9fCLydu9UqhFcIazbnDk4YVJ2BFsmNxkIqMEaKNBtigo95WLuW0
+         qrLi7CACAwXSyrit0YQ7TefcadFTdBu1hQKaRkYkFHBV9brsOyDn4/7cp20Mk1LY33
+         hE+yZNL0cKfzlBDVfPBLuXzga2mg8QGbb6q2VtBNwG/Z1XPfVLMS73mqn0sH42L/qL
+         e4/oBDdQNahOyL1d1IrfAoylwTrPm9bq2EWTUeHty0iml60OKDA+R072Z1WP21M0ZT
+         sdKsj023JvtU4mlSb8voF+iRpl3Xqowkr5J9E3RCB3uWcmx1OSGpif6TVZHvwq8hlP
+         +GB35luE+SsKA==
 From:   Jisheng Zhang <jszhang@kernel.org>
-To:     Lars-Peter Clausen <lars@metafoo.de>,
-        Vinod Koul <vkoul@kernel.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Sinan Kaya <okaya@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH 5/5] dmaengine: sprd: Don't set chancnt
-Date:   Tue, 14 Mar 2023 01:02:50 +0800
-Message-Id: <20230313170250.815-6-jszhang@kernel.org>
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 00/11] dmaengine: dw-axi_dmac: bug fix clean up and more features
+Date:   Tue, 14 Mar 2023 01:04:39 +0800
+Message-Id: <20230313170450.897-1-jszhang@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230313170250.815-1-jszhang@kernel.org>
-References: <20230313170250.815-1-jszhang@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -61,26 +50,27 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The dma framework will calculate the dma channels chancnt, setting it
-outself is wrong.
+This series first fix a bug related with runtime pm. Then do three clean
+up. After that, we add three new features: per channel irq support,
+dma-channel-mask support and polled mode support.
 
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
----
- drivers/dma/sprd-dma.c | 1 -
- 1 file changed, 1 deletion(-)
+Jisheng Zhang (11):
+  dmaengine: dw-axi-dmac: fix reading register hen runtime suspended
+  dmaengine: dw-axi-dmac: remove unnecessary devm_free_irq() calling
+  dmaengine: dw-axi-dmac: remove unnecessary axi_dma_enable() calling
+  dmaengine: dw-axi-dmac: remove redudant axi_dma_disable() calling
+  dmaengine: dw-axi-dmac: delay irq getting until request_irq
+  dmaengine: dw-axi-dmac: move ch irq handling into common routine
+  dmaengine: dw-axi-dmac: support per channel irq
+  dmaengine: dw-axi-dmac: support dma-channel-mask
+  dmaengine: dw-axi-dmac: try best to get residue when tx is running
+  dmaengine: dw-axi-dmac: move dma_chan_tx_status()
+  dmaengine: dw-axi-dmac: support polled mode
 
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index 474d3ba8ec9f..2b639adb48ba 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -1169,7 +1169,6 @@ static int sprd_dma_probe(struct platform_device *pdev)
- 
- 	dma_cap_set(DMA_MEMCPY, sdev->dma_dev.cap_mask);
- 	sdev->total_chns = chn_count;
--	sdev->dma_dev.chancnt = chn_count;
- 	INIT_LIST_HEAD(&sdev->dma_dev.channels);
- 	INIT_LIST_HEAD(&sdev->dma_dev.global_node);
- 	sdev->dma_dev.dev = &pdev->dev;
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 207 ++++++++++++------
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |   4 +
+ 2 files changed, 147 insertions(+), 64 deletions(-)
+
 -- 
 2.39.2
 

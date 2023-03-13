@@ -2,35 +2,35 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D62846B7F14
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Mar 2023 18:15:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 78BB36B7F60
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Mar 2023 18:24:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231405AbjCMRPY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 13 Mar 2023 13:15:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36272 "EHLO
+        id S230231AbjCMRYK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 13 Mar 2023 13:24:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231657AbjCMRPL (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Mar 2023 13:15:11 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB918D536;
-        Mon, 13 Mar 2023 10:14:47 -0700 (PDT)
+        with ESMTP id S230263AbjCMRXw (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Mar 2023 13:23:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3ED63ABE;
+        Mon, 13 Mar 2023 10:22:57 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6807BB811A9;
-        Mon, 13 Mar 2023 17:13:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01845C433A4;
-        Mon, 13 Mar 2023 17:13:42 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6E53261414;
+        Mon, 13 Mar 2023 17:13:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5BCCC4339B;
+        Mon, 13 Mar 2023 17:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678727626;
-        bh=MmQlG4bKX5zRhls8Ppg0KYbzYJ0yCTbRflxLRO/KTAQ=;
+        s=k20201202; t=1678727629;
+        bh=sheGLWSRVeZHY8o45gICU781ZznV4t/ae6HtpWxBx6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MaxyiQm3zr++CxlIZQvcW00rgAI+9VUp45EuH39mSHwSJYNEN3erATeQQBmRAbDu4
-         cVAF7BjY731YkBIC0veCIoGxOy9TjxXtXygU7Dtk1Npl5Ayu4xhUdiBEKdLfSqk3+2
-         /E6GI7kiVSyhBBujStix0sb6kdj4ecpiaU0exXy4zUVucXDiEkeLdWhTIrM2khMzH8
-         tBP5VPdrF1QADqGTs7xKRL+lHSi3t0mdSNDibe6Uhs1lXcCeFYczD95hqoZExkOYNQ
-         r/Tp1Ch88FT7gUE24U8Ajn7vz22H4nQj2DP1/9hZHty6kAixtFz8/BcoGKZ85yRAdW
-         oKxHJ7Gc7jy2Q==
+        b=qf/UOe9YjBj6REsfrKde/wD39EkAWcypvQ3WAqT+0+FFqQ6Ffgx0TPeqPLDgy5NLe
+         Vd0wn75BEOm3xW7xNHHJPZ/ZWX89ofjbTLlxFia0uvDGFDhl6DBdazT4iTCrwxJomQ
+         Wew47qEoGgxKmOtPj4JGSHmIjz6GAMU5PG+E6LV4BqbZwCw2iR4Z0jtVL2XRCoVx37
+         je9F07HOoMrM8tI9Zvkc4sQOluGXL6M7MFWWb2JrMDbNxPEY8CmKwP0LbRv2JI8SGb
+         jnN7zAE6TN0h1scWNriCZuy7jEz8ZB8ei+E4uDzu3K3gWhBE5NQ/Ra89Eg/gnpBjZn
+         T1JWesBbzPsEQ==
 From:   Jisheng Zhang <jszhang@kernel.org>
 To:     Lars-Peter Clausen <lars@metafoo.de>,
         Vinod Koul <vkoul@kernel.org>,
@@ -44,9 +44,9 @@ To:     Lars-Peter Clausen <lars@metafoo.de>,
         Chunyan Zhang <zhang.lyra@gmail.com>
 Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH 3/5] dmaengine: plx_dma: Don't set chancnt
-Date:   Tue, 14 Mar 2023 01:02:48 +0800
-Message-Id: <20230313170250.815-4-jszhang@kernel.org>
+Subject: [PATCH 4/5] dmaengine: hidma: Don't set chancnt
+Date:   Tue, 14 Mar 2023 01:02:49 +0800
+Message-Id: <20230313170250.815-5-jszhang@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230313170250.815-1-jszhang@kernel.org>
 References: <20230313170250.815-1-jszhang@kernel.org>
@@ -66,21 +66,21 @@ outself is wrong.
 
 Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 ---
- drivers/dma/plx_dma.c | 1 -
+ drivers/dma/qcom/hidma.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/drivers/dma/plx_dma.c b/drivers/dma/plx_dma.c
-index 12725fa1655f..34b6416c3287 100644
---- a/drivers/dma/plx_dma.c
-+++ b/drivers/dma/plx_dma.c
-@@ -517,7 +517,6 @@ static int plx_dma_create(struct pci_dev *pdev)
- 	plxdev->bar = pcim_iomap_table(pdev)[0];
+diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
+index 04d1c33afc12..344525c3a32f 100644
+--- a/drivers/dma/qcom/hidma.c
++++ b/drivers/dma/qcom/hidma.c
+@@ -214,7 +214,6 @@ static int hidma_chan_init(struct hidma_dev *dmadev, u32 dma_sig)
  
- 	dma = &plxdev->dma_dev;
--	dma->chancnt = 1;
- 	INIT_LIST_HEAD(&dma->channels);
- 	dma_cap_set(DMA_MEMCPY, dma->cap_mask);
- 	dma->copy_align = DMAENGINE_ALIGN_1_BYTE;
+ 	spin_lock_init(&mchan->lock);
+ 	list_add_tail(&mchan->chan.device_node, &ddev->channels);
+-	dmadev->ddev.chancnt++;
+ 	return 0;
+ }
+ 
 -- 
 2.39.2
 

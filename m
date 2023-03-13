@@ -2,34 +2,34 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B5276B824B
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Mar 2023 21:09:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AB516B8251
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Mar 2023 21:09:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229508AbjCMUJC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 13 Mar 2023 16:09:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39518 "EHLO
+        id S229745AbjCMUJP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 13 Mar 2023 16:09:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230165AbjCMUJA (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Mar 2023 16:09:00 -0400
+        with ESMTP id S229827AbjCMUJN (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Mar 2023 16:09:13 -0400
 Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A19217D0B2;
-        Mon, 13 Mar 2023 13:08:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CA4AB8734E;
+        Mon, 13 Mar 2023 13:09:00 -0700 (PDT)
 Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id 2E5C5E0EB9;
-        Mon, 13 Mar 2023 23:08:58 +0300 (MSK)
+        by post.baikalelectronics.com (Proxmox) with ESMTP id EE387E0EB1;
+        Mon, 13 Mar 2023 23:08:59 +0300 (MSK)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         baikalelectronics.ru; h=cc:cc:content-transfer-encoding
         :content-type:content-type:date:from:from:in-reply-to:message-id
         :mime-version:references:reply-to:subject:subject:to:to; s=post;
-         bh=wmLbPrEvUhosLhF3xtwmyvP8cH20qOYeMCcwNJxebsw=; b=CIdpjC46w36s
-        fShvKRRVOYnDpjqiEI7XjT8B6tMo1bfd9VPDgbvfZs7OorRi/TyXlIxWKPbFEEHd
-        JuFe70cpluWodiOp/zhR/t9PZKpadgPx7Uvy6dZwi12zKrzJTZT3Z7oIiEIllPa3
-        l6yEbMV0ilfsvyA8/rFiCkOiPBlhOR4=
+         bh=rbebU3IwMNsR5287a6iHK1pF7ZRlyIl4rDfBcl8Mq/4=; b=oYPAvWvcNZ2n
+        joTWPOoaMGaxXHVJHdAGTZzZORhV/ljyqwBziMaZQfnMwl+hsSz07JmFHWmm8N6f
+        ZWqovug7vmUAbw1kwHus/MJSPtTCWaXvmOXpUGLmK7K3AlJF8M6K0HrjlEw0dvgi
+        u18GVzs/W4BRMwgJgzW3DPV3EJjULww=
 Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id 15AFCE0E1C;
-        Mon, 13 Mar 2023 23:08:58 +0300 (MSK)
+        by post.baikalelectronics.com (Proxmox) with ESMTP id D88E5E0E1C;
+        Mon, 13 Mar 2023 23:08:59 +0300 (MSK)
 Received: from localhost (10.8.30.10) by mail (192.168.51.25) with Microsoft
- SMTP Server (TLS) id 15.0.1395.4; Mon, 13 Mar 2023 23:08:57 +0300
+ SMTP Server (TLS) id 15.0.1395.4; Mon, 13 Mar 2023 23:08:59 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -40,17 +40,19 @@ To:     Bjorn Helgaas <bhelgaas@google.com>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Rob Herring <robh@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH RESEND v2 07/11] PCI: dwc: Drop empty line from dw_pcie_link_set_max_speed()
-Date:   Mon, 13 Mar 2023 23:08:11 +0300
-Message-ID: <20230313200816.30105-8-Sergey.Semin@baikalelectronics.ru>
+        <linux-kernel@vger.kernel.org>, Bjorn Helgaas <helgaas@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH RESEND v2 08/11] PCI: visconti: Convert to using generic resources getter
+Date:   Mon, 13 Mar 2023 23:08:12 +0300
+Message-ID: <20230313200816.30105-9-Sergey.Semin@baikalelectronics.ru>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230313200816.30105-1-Sergey.Semin@baikalelectronics.ru>
 References: <20230313200816.30105-1-Sergey.Semin@baikalelectronics.ru>
@@ -68,27 +70,98 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Well, just drop a redundant empty line from the tail of the denoted
-function which by mistake was added in commit 39bc5006501c ("PCI: dwc:
-Centralize link gen setting").
+The generic resources request infrastructure has been recently added to
+the DW PCIe core driver. Since the DT-bindings of the Toshibo Visconti
+PCIe Host controller is fully compatible with the generic names set let's
+convert the driver to using that infrastructure. It won't take much effort
+since the low-level device driver implies the resources request only with
+no additional manipulations involving them. So just drop the locally
+defined clocks request procedures, activate the generic resources request
+capability and make sure the mandatory resources have been requested by
+the DW PCIe core driver.
 
+Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 ---
- drivers/pci/controller/dwc/pcie-designware.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-visconti.c | 37 ++++++++++------------
+ 1 file changed, 17 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 6061824f7b7e..83ecc764330c 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -729,7 +729,6 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
+diff --git a/drivers/pci/controller/dwc/pcie-visconti.c b/drivers/pci/controller/dwc/pcie-visconti.c
+index 71026fefa366..ae1517b52c58 100644
+--- a/drivers/pci/controller/dwc/pcie-visconti.c
++++ b/drivers/pci/controller/dwc/pcie-visconti.c
+@@ -29,9 +29,6 @@ struct visconti_pcie {
+ 	void __iomem *ulreg_base;
+ 	void __iomem *smu_base;
+ 	void __iomem *mpu_base;
+-	struct clk *refclk;
+-	struct clk *coreclk;
+-	struct clk *auxclk;
+ };
  
- 	cap &= ~((u32)PCI_EXP_LNKCAP_SLS);
- 	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, cap | link_speed);
+ #define PCIE_UL_REG_S_PCIE_MODE		0x00F4
+@@ -198,6 +195,21 @@ static int visconti_pcie_host_init(struct dw_pcie_rp *pp)
+ 	int err;
+ 	u32 val;
+ 
++	if (!pcie->pci.core_clks[DW_PCIE_REF_CLK].clk) {
++		dev_err(pci->dev, "Missing ref clock source\n");
++		return -ENOENT;
++	}
++
++	if (!pcie->pci.core_clks[DW_PCIE_CORE_CLK].clk) {
++		dev_err(pci->dev, "Missing core clock source\n");
++		return -ENOENT;
++	}
++
++	if (!pcie->pci.core_clks[DW_PCIE_AUX_CLK].clk) {
++		dev_err(pci->dev, "Missing aux clock source\n");
++		return -ENOENT;
++	}
++
+ 	visconti_smu_writel(pcie,
+ 			    PISMU_CKON_PCIE_AUX_CLK | PISMU_CKON_PCIE_MSTR_ACLK,
+ 			    PISMU_CKON_PCIE);
+@@ -242,8 +254,6 @@ static const struct dw_pcie_host_ops visconti_pcie_host_ops = {
+ static int visconti_get_resources(struct platform_device *pdev,
+ 				  struct visconti_pcie *pcie)
+ {
+-	struct device *dev = &pdev->dev;
 -
+ 	pcie->ulreg_base = devm_platform_ioremap_resource_byname(pdev, "ulreg");
+ 	if (IS_ERR(pcie->ulreg_base))
+ 		return PTR_ERR(pcie->ulreg_base);
+@@ -256,21 +266,6 @@ static int visconti_get_resources(struct platform_device *pdev,
+ 	if (IS_ERR(pcie->mpu_base))
+ 		return PTR_ERR(pcie->mpu_base);
+ 
+-	pcie->refclk = devm_clk_get(dev, "ref");
+-	if (IS_ERR(pcie->refclk))
+-		return dev_err_probe(dev, PTR_ERR(pcie->refclk),
+-				     "Failed to get ref clock\n");
+-
+-	pcie->coreclk = devm_clk_get(dev, "core");
+-	if (IS_ERR(pcie->coreclk))
+-		return dev_err_probe(dev, PTR_ERR(pcie->coreclk),
+-				     "Failed to get core clock\n");
+-
+-	pcie->auxclk = devm_clk_get(dev, "aux");
+-	if (IS_ERR(pcie->auxclk))
+-		return dev_err_probe(dev, PTR_ERR(pcie->auxclk),
+-				     "Failed to get aux clock\n");
+-
+ 	return 0;
  }
  
- void dw_pcie_iatu_detect(struct dw_pcie *pci)
+@@ -304,6 +299,8 @@ static int visconti_pcie_probe(struct platform_device *pdev)
+ 	pci->dev = dev;
+ 	pci->ops = &dw_pcie_ops;
+ 
++	dw_pcie_cap_set(pci, REQ_RES);
++
+ 	ret = visconti_get_resources(pdev, pcie);
+ 	if (ret)
+ 		return ret;
 -- 
 2.39.2
 

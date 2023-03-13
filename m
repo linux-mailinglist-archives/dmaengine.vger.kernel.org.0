@@ -2,42 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 67D6D6B7F2C
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Mar 2023 18:17:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A61416B7F2F
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Mar 2023 18:17:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229988AbjCMRRR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 13 Mar 2023 13:17:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39756 "EHLO
+        id S229477AbjCMRRZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 13 Mar 2023 13:17:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231527AbjCMRRJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Mar 2023 13:17:09 -0400
+        with ESMTP id S231551AbjCMRRM (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Mar 2023 13:17:12 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACAF88092F;
-        Mon, 13 Mar 2023 10:16:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5E2C80902;
+        Mon, 13 Mar 2023 10:16:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B6EACB811AF;
-        Mon, 13 Mar 2023 17:15:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81027C433EF;
-        Mon, 13 Mar 2023 17:15:46 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 417C3B811B2;
+        Mon, 13 Mar 2023 17:15:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02C2CC4339E;
+        Mon, 13 Mar 2023 17:15:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678727747;
-        bh=iP3PWNMb+3tRizoMnR4yxUHqhZ9zp9+fFtQ/nNwpumk=;
+        s=k20201202; t=1678727749;
+        bh=do8+kPrEABA/+sArd48GuvtE5icgNiKsJ/7FNgFAelM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r6B1QTM2G4QG7c6I9hwylzYb/x7Ch6gfDExVqIDhHFj0NuC8gZN0M2zyvSymKgzgJ
-         /CLWU5n8lN5UGw5EO2P2WLvbSU+zpSmRi+Tq6+o3JIc7L10oZEy8UdMpeJVMxoO9Eg
-         YIm2uQR1zaAZOAacvX5cIC1Z6fZfbByoC4bgpRBZkIJc/U30MzQ89EsCQkDMStoLgo
-         sPbIegUeD9CCsAyvqwQVYE7zDF2x0tktW2tb9m1WNMmTywTUvcNchn+fM5nKpms/Ie
-         96KwQIjDECl+IW60bH8GQKSElYwSs77N09WjjKnZgfGeP6Z7osUFt8Z04WNt0zdS+c
-         dgF+0478/dDuw==
+        b=Q/qc6WSx2eaxfWUOaCR+Jt4U8paKMjj7KnDAWCX+J3H2/KXdEoE/A1nkimEhlbjId
+         Y209A1IzajyXtQfyP7cyCqN9F2qVAT6MTQVxk0cpCzRZYiLgRB0Ee1JeM29PeOievu
+         vJHJWiMJTTSYjMJN799lYCJ47zl+b3YXI+ZhbcAntWpxIDHvUgOQn/bVWv0cGauw55
+         7T8uruloIifyaQnZb+FNgLYkHX+pkDSOqrXpuWmj6P7yHRglLFseQOd1MMQfcDCgpY
+         LOyCZ5qowffCRz1O5QVnL7JcyO0U2rXTxEH9LLMEs3ivku9ahB4G+knIWDtqNed30M
+         KAgELShJAfwYA==
 From:   Jisheng Zhang <jszhang@kernel.org>
 To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>
 Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 10/11] dmaengine: dw-axi-dmac: move dma_chan_tx_status()
-Date:   Tue, 14 Mar 2023 01:04:49 +0800
-Message-Id: <20230313170450.897-11-jszhang@kernel.org>
+Subject: [PATCH 11/11] dmaengine: dw-axi-dmac: support polled mode
+Date:   Tue, 14 Mar 2023 01:04:50 +0800
+Message-Id: <20230313170450.897-12-jszhang@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230313170450.897-1-jszhang@kernel.org>
 References: <20230313170450.897-1-jszhang@kernel.org>
@@ -52,119 +52,76 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-We will add polled support soon, for which we need to call
-dw_axi_dma_handle_ch() in dma_chan_tx_status(). Move the function
-to avoid pre-declaration.
-
-No functionality changes.
+Run in polled mode if the DMA_PREP_INTERRUPT flag is not provided.
 
 Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 ---
- .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 84 +++++++++----------
- 1 file changed, 42 insertions(+), 42 deletions(-)
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 11 ++++++++++-
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h          |  1 +
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index 1c1b9574985a..1d00793a83bf 100644
+index 1d00793a83bf..8daeb22d4560 100644
 --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
 +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -300,48 +300,6 @@ static void vchan_desc_put(struct virt_dma_desc *vdesc)
- 	axi_desc_put(vd_to_axi_desc(vdesc));
- }
+@@ -383,7 +383,10 @@ static void axi_chan_block_xfer_start(struct axi_dma_chan *chan,
+ 	write_chan_llp(chan, first->hw_desc[0].llp | lms);
  
--static enum dma_status
--dma_chan_tx_status(struct dma_chan *dchan, dma_cookie_t cookie,
--		  struct dma_tx_state *txstate)
--{
--	struct axi_dma_chan *chan = dchan_to_axi_dma_chan(dchan);
--	struct axi_dma_desc *desc = NULL;
--	struct virt_dma_desc *vdesc;
--	enum dma_status status;
--	u32 completed_length;
--	unsigned long flags;
--	u32 completed_blocks;
--	size_t bytes = 0;
--	u32 length;
--	u32 len;
--
--	status = dma_cookie_status(dchan, cookie, txstate);
--	if (status == DMA_COMPLETE || !txstate)
--		return status;
--
--	spin_lock_irqsave(&chan->vc.lock, flags);
--
--	vdesc = vchan_find_desc(&chan->vc, cookie);
--	if (vdesc) {
--		desc = vd_to_axi_desc(vdesc);
--	} else if (chan->desc && chan->desc->vd.tx.cookie == cookie) {
--		desc = chan->desc;
--	}
--
--	if (desc) {
--		length = desc->length;
--		completed_blocks = desc->completed_blocks;
--		len = desc->hw_desc[0].len;
--		completed_length = completed_blocks * len;
--		bytes = length - completed_length;
--	}
--
--	spin_unlock_irqrestore(&chan->vc.lock, flags);
--	dma_set_residue(txstate, bytes);
--
--	return status;
--}
--
- static void write_desc_llp(struct axi_dma_hw_desc *desc, dma_addr_t adr)
- {
- 	desc->lli->llp = cpu_to_le64(adr);
-@@ -1166,6 +1124,48 @@ static irqreturn_t dw_axi_dma_ch_interrupt(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
+ 	irq_mask = DWAXIDMAC_IRQ_DMA_TRF | DWAXIDMAC_IRQ_ALL_ERR;
+-	axi_chan_irq_sig_set(chan, irq_mask);
++	if (chan->polled)
++		axi_chan_irq_sig_set(chan, DWAXIDMAC_IRQ_NONE);
++	else
++		axi_chan_irq_sig_set(chan, irq_mask);
  
-+static enum dma_status
-+dma_chan_tx_status(struct dma_chan *dchan, dma_cookie_t cookie,
-+		  struct dma_tx_state *txstate)
-+{
-+	struct axi_dma_chan *chan = dchan_to_axi_dma_chan(dchan);
-+	struct axi_dma_desc *desc = NULL;
-+	struct virt_dma_desc *vdesc;
-+	enum dma_status status;
-+	u32 completed_length;
-+	unsigned long flags;
-+	u32 completed_blocks;
-+	size_t bytes = 0;
-+	u32 length;
-+	u32 len;
+ 	/* Generate 'suspend' status but don't generate interrupt */
+ 	irq_mask |= DWAXIDMAC_IRQ_SUSPENDED;
+@@ -714,6 +717,7 @@ dw_axi_dma_chan_prep_cyclic(struct dma_chan *dchan, dma_addr_t dma_addr,
+ 	if (unlikely(!desc))
+ 		goto err_desc_get;
+ 
++	chan->polled = !(flags & DMA_PREP_INTERRUPT);
+ 	chan->direction = direction;
+ 	desc->chan = chan;
+ 	chan->cyclic = true;
+@@ -796,6 +800,7 @@ dw_axi_dma_chan_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
+ 
+ 	desc->chan = chan;
+ 	desc->length = 0;
++	chan->polled = !(flags & DMA_PREP_INTERRUPT);
+ 	chan->direction = direction;
+ 
+ 	for_each_sg(sgl, sg, sg_len, i) {
+@@ -859,6 +864,7 @@ dma_chan_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst_adr,
+ 	if (unlikely(!desc))
+ 		goto err_desc_get;
+ 
++	chan->polled = !(flags & DMA_PREP_INTERRUPT);
+ 	desc->chan = chan;
+ 	num = 0;
+ 	desc->length = 0;
+@@ -1139,6 +1145,9 @@ dma_chan_tx_status(struct dma_chan *dchan, dma_cookie_t cookie,
+ 	u32 length;
+ 	u32 len;
+ 
++	if (chan->polled)
++		dw_axi_dma_handle_ch(chan);
 +
-+	status = dma_cookie_status(dchan, cookie, txstate);
-+	if (status == DMA_COMPLETE || !txstate)
-+		return status;
-+
-+	spin_lock_irqsave(&chan->vc.lock, flags);
-+
-+	vdesc = vchan_find_desc(&chan->vc, cookie);
-+	if (vdesc) {
-+		desc = vd_to_axi_desc(vdesc);
-+	} else if (chan->desc && chan->desc->vd.tx.cookie == cookie) {
-+		desc = chan->desc;
-+	}
-+
-+	if (desc) {
-+		length = desc->length;
-+		completed_blocks = desc->completed_blocks;
-+		len = desc->hw_desc[0].len;
-+		completed_length = completed_blocks * len;
-+		bytes = length - completed_length;
-+	}
-+
-+	spin_unlock_irqrestore(&chan->vc.lock, flags);
-+	dma_set_residue(txstate, bytes);
-+
-+	return status;
-+}
-+
- static int dma_chan_terminate_all(struct dma_chan *dchan)
- {
- 	struct axi_dma_chan *chan = dchan_to_axi_dma_chan(dchan);
+ 	status = dma_cookie_status(dchan, cookie, txstate);
+ 	if (status == DMA_COMPLETE || !txstate)
+ 		return status;
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+index f57961620d2d..e4fbc38446ec 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+@@ -54,6 +54,7 @@ struct axi_dma_chan {
+ 	bool				cyclic;
+ 	/* these other elements are all protected by vc.lock */
+ 	bool				is_paused;
++	bool				polled;
+ };
+ 
+ struct dw_axi_dma {
 -- 
 2.39.2
 

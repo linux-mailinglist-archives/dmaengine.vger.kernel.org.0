@@ -2,40 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5AB66B7ECA
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Mar 2023 18:06:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CA4E6B7ECB
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Mar 2023 18:06:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230493AbjCMRGa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 13 Mar 2023 13:06:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42838 "EHLO
+        id S231301AbjCMRGb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 13 Mar 2023 13:06:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230491AbjCMRGS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Mar 2023 13:06:18 -0400
+        with ESMTP id S230494AbjCMRGT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Mar 2023 13:06:19 -0400
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E1BC78CAE;
-        Mon, 13 Mar 2023 10:05:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48C447C956;
+        Mon, 13 Mar 2023 10:05:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678727126; x=1710263126;
+  t=1678727129; x=1710263129;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=MnpLq/KXUUwPvadOwJMGjEgqddJKg/VVIpHgp4pkIOQ=;
-  b=fLauRILh8v7pQ32opo/DiKBMYkN0mgVkDC0VINHdbo2E+a7F+zCktxGV
-   ulbi5wCTlUG0Jh2kVhMNompeQeKk+aimqo2AmvwZSc36O9MshLn1qaYUy
-   K6eGDjG2yDbQn/Cga2fAdR5MnHh7yGFgj2xFqquoio/OSA/9j3v2urm+I
-   g9nwP2/fiJ9tpSL3peXGrkl+QLilXPwTQpGnLajORovTcKLd49Snpx9LC
-   l/bWSEd7CoePdjaClSt4Zl6kjQSOhKGf8nuXLeSugVkcF1CuS9wDdWLNG
-   z9JA4H94u/IyNiw/qJol0plF9BC9cn4hIncrBQzuaG2WVb5OXuV5sKmW8
+  bh=ureOUccbBjiZp4q5Ed94teDiRAssgIZrA3C3TcZXraQ=;
+  b=mSzTneJGdqsS57NZVP98VQZQ015Nwh1I/AS1S4WSj6KsOOLwCOEbrpap
+   8CQPYAUQBbNYIuK1lTYhfOrl41HDp2CO/ootLvPNTRC20VEG0LalRF0jo
+   y7Pb1IwwRxbQtGeVQQuwhpUMh8btUFxWolUGvVLd6Rw0b+2qme3UDgCJt
+   oSl9O6BVy8cmuuIvQPcKQyn2t7zfRGYL7+rnSektgKOZkO+bT/rTAypd5
+   0dz0MMe35ccA9CwSpqBMSIsrVR0QPjabA0wyAjcjUOA8LkHsT9YodDkxP
+   cyIysshlOrzYreaAffS3OOoSSpe3NB7jAql/DqV9l9knse58/0L8mGFGM
    A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10648"; a="334679660"
+X-IronPort-AV: E=McAfee;i="6500,9779,10648"; a="334679667"
 X-IronPort-AV: E=Sophos;i="5.98,257,1673942400"; 
-   d="scan'208";a="334679660"
+   d="scan'208";a="334679667"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2023 10:02:42 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10648"; a="708950920"
+X-IronPort-AV: E=McAfee;i="6500,9779,10648"; a="708950925"
 X-IronPort-AV: E=Sophos;i="5.98,257,1673942400"; 
-   d="scan'208";a="708950920"
+   d="scan'208";a="708950925"
 Received: from fyu1.sc.intel.com ([172.25.103.126])
   by orsmga008.jf.intel.com with ESMTP; 13 Mar 2023 10:02:41 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
@@ -43,10 +43,11 @@ To:     "Vinod Koul" <vkoul@kernel.org>,
         "Dave Jiang" <dave.jiang@intel.com>
 Cc:     dmaengine@vger.kernel.org,
         "linux-kernel" <linux-kernel@vger.kernel.org>,
+        Tony Zhu <tony.zhu@intel.com>,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v3 08/16] dmaengine: idxd: define idxd_copy_cr()
-Date:   Mon, 13 Mar 2023 10:02:11 -0700
-Message-Id: <20230313170219.1956012-9-fenghua.yu@intel.com>
+Subject: [PATCH v3 09/16] dmaengine: idxd: process user page faults for completion record
+Date:   Mon, 13 Mar 2023 10:02:12 -0700
+Message-Id: <20230313170219.1956012-10-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20230313170219.1956012-1-fenghua.yu@intel.com>
 References: <20230313170219.1956012-1-fenghua.yu@intel.com>
@@ -61,284 +62,331 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Define idxd_copy_cr() to copy completion record to fault address in
-user address that is found by wq and PASID.
+From: Dave Jiang <dave.jiang@intel.com>
 
-It will be used to write the user's completion record that the hardware
-device is not able to write to due to user page fault.
+DSA supports page fault handling through PRS. However, the DMA engine
+that's processing the descriptor is blocked until the PRS response is
+received. Other workqueues sharing the engine are also blocked.
+Page fault handing by the driver with PRS disabled can be used to
+mitigate the stalling.
 
-An xarray is added to associate the PASID and mm with the
-struct idxd_user_context so mm can be found by PASID and wq.
+With PRS disabled while ATS remain enabled, DSA handles page faults on
+a completion record by reporting an event in the event log. In this
+instance, the descriptor is completed and the event log contains the
+completion record address and the contents of the completion record. Add
+support to the event log handling code to fault in the completion record
+and copy the content of the completion record to user memory.
 
-Although access_remote_vm() can access remote mm, it's not exported
-and should not be exported because driver callers may easily make
-mistakes by missing mm reference. Since access_remote_vm() cannot be
-called directly, _idxd_copy_cr() implements a simplified version of
-access_remote_vm() to copy completion record to a remote mm.
-Thus, there is duplicate code between the two functions.
+A bitmap is introduced to keep track of discarded event log entries. When
+the user process initiates ->release() of the char device, it no longer is
+interested in any remaining event log entries tied to the relevant wq and
+PASID. The driver will mark the event log entry index in the bitmap. Upon
+encountering the entries during processing, the event log handler will just
+clear the bitmap bit and skip the entry rather than attempt to process the
+event log entry.
 
+Tested-by: Tony Zhu <tony.zhu@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 ---
 v3:
-- Since iommu_sva_find() will be removed in IOMMU and access_remote_vm()
-  cannot be exported, the completion record copy function idxd_copy_cr()
-  is rewritten by maintaining and finding mm in xarray and copy completion
-  record to the mm.
-  Please check discussion on iommu_sva_find() will be removed and
-  access_remote_vm() cannot be exported:
-  1. https://lore.kernel.org/lkml/ZAjSsm4%2FPDRqViwa@nvidia.com/
-  2. https://lore.kernel.org/lkml/20230306163138.587484-1-fenghua.yu@intel.com/T/#m1fc97725a0e56ea269c8bdabacee447070d51846
+- Call new function idxd_copy_cr().
 
 v2:
-- Define and export iommu_access_remote_vm() for IDXD driver to write
-  completion record to user address space. This change removes
-  patch 8 and 9 in v1 (Alistair Popple)
- drivers/dma/idxd/cdev.c  | 127 +++++++++++++++++++++++++++++++++++++--
- drivers/dma/idxd/idxd.h  |   6 ++
- drivers/dma/idxd/init.c  |   2 +
- drivers/dma/idxd/sysfs.c |   1 +
- 4 files changed, 131 insertions(+), 5 deletions(-)
+- Call iommu_access_remote_vm() to copy completion record to user.
+ drivers/dma/Kconfig       |  1 +
+ drivers/dma/idxd/cdev.c   | 30 +++++++++++++++
+ drivers/dma/idxd/device.c | 22 ++++++++++-
+ drivers/dma/idxd/idxd.h   |  2 +
+ drivers/dma/idxd/init.c   |  2 +
+ drivers/dma/idxd/irq.c    | 78 ++++++++++++++++++++++++++++++++++++---
+ include/uapi/linux/idxd.h |  1 +
+ 7 files changed, 129 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index fb7073fc034f..c8a2d255930e 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -297,6 +297,7 @@ config INTEL_IDXD
+ 	depends on PCI_PASID
+ 	depends on SBITMAP
+ 	select DMA_ENGINE
++	select IOMMU_SVA
+ 	help
+ 	  Enable support for the Intel(R) data accelerators present
+ 	  in Intel Xeon CPU.
 diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index cbe29e1a6a44..17d83ecf54e9 100644
+index 17d83ecf54e9..fa71059825e2 100644
 --- a/drivers/dma/idxd/cdev.c
 +++ b/drivers/dma/idxd/cdev.c
-@@ -11,7 +11,9 @@
- #include <linux/fs.h>
- #include <linux/poll.h>
- #include <linux/iommu.h>
-+#include <linux/highmem.h>
- #include <uapi/linux/idxd.h>
-+#include <linux/xarray.h>
- #include "registers.h"
- #include "idxd.h"
- 
-@@ -34,6 +36,7 @@ struct idxd_user_context {
- 	struct idxd_wq *wq;
- 	struct task_struct *task;
- 	unsigned int pasid;
-+	struct mm_struct *mm;
- 	unsigned int flags;
- 	struct iommu_sva *sva;
- };
-@@ -68,6 +71,19 @@ static inline struct idxd_wq *inode_wq(struct inode *inode)
- 	return idxd_cdev->wq;
- }
- 
-+static void idxd_xa_pasid_remove(struct idxd_user_context *ctx)
-+{
-+	struct idxd_wq *wq = ctx->wq;
-+	void *ptr;
-+
-+	mutex_lock(&wq->uc_lock);
-+	ptr = xa_cmpxchg(&wq->upasid_xa, ctx->pasid, ctx, NULL, GFP_KERNEL);
-+	if (ptr != (void *)ctx)
-+		dev_warn(&wq->idxd->pdev->dev, "xarray cmpxchg failed for pasid %u\n",
-+			 ctx->pasid);
-+	mutex_unlock(&wq->uc_lock);
-+}
-+
- static int idxd_cdev_open(struct inode *inode, struct file *filp)
- {
- 	struct idxd_user_context *ctx;
-@@ -108,20 +124,26 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
- 
- 		pasid = iommu_sva_get_pasid(sva);
- 		if (pasid == IOMMU_PASID_INVALID) {
--			iommu_sva_unbind_device(sva);
- 			rc = -EINVAL;
--			goto failed;
-+			goto failed_get_pasid;
- 		}
- 
- 		ctx->sva = sva;
- 		ctx->pasid = pasid;
-+		ctx->mm = current->mm;
-+
-+		mutex_lock(&wq->uc_lock);
-+		rc = xa_insert(&wq->upasid_xa, pasid, ctx, GFP_KERNEL);
-+		mutex_unlock(&wq->uc_lock);
-+		if (rc < 0)
-+			dev_warn(dev, "PASID entry already exist in xarray.\n");
- 
- 		if (wq_dedicated(wq)) {
- 			rc = idxd_wq_set_pasid(wq, pasid);
- 			if (rc < 0) {
- 				iommu_sva_unbind_device(sva);
- 				dev_err(dev, "wq set pasid failed: %d\n", rc);
--				goto failed;
-+				goto failed_set_pasid;
- 			}
- 		}
- 	}
-@@ -130,7 +152,13 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
- 	mutex_unlock(&wq->wq_lock);
- 	return 0;
- 
-- failed:
-+failed_set_pasid:
-+	if (device_user_pasid_enabled(idxd))
-+		idxd_xa_pasid_remove(ctx);
-+failed_get_pasid:
-+	if (device_user_pasid_enabled(idxd))
-+		iommu_sva_unbind_device(sva);
-+failed:
- 	mutex_unlock(&wq->wq_lock);
- 	kfree(ctx);
+@@ -164,6 +164,35 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
  	return rc;
-@@ -161,8 +189,10 @@ static int idxd_cdev_release(struct inode *node, struct file *filep)
- 		}
+ }
+ 
++static void idxd_cdev_evl_drain_pasid(struct idxd_wq *wq, u32 pasid)
++{
++	struct idxd_device *idxd = wq->idxd;
++	struct idxd_evl *evl = idxd->evl;
++	union evl_status_reg status;
++	u16 h, t, size;
++	int ent_size = evl_ent_size(idxd);
++	struct __evl_entry *entry_head;
++
++	if (!evl)
++		return;
++
++	spin_lock(&evl->lock);
++	status.bits = ioread64(idxd->reg_base + IDXD_EVLSTATUS_OFFSET);
++	t = status.tail;
++	h = evl->head;
++	size = evl->size;
++
++	while (h != t) {
++		entry_head = (struct __evl_entry *)(evl->log + (h * ent_size));
++		if (entry_head->pasid == pasid && entry_head->wq_idx == wq->id)
++			set_bit(h, evl->bmap);
++		h = (h + 1) % size;
++	}
++	spin_unlock(&evl->lock);
++
++	drain_workqueue(wq->wq);
++}
++
+ static int idxd_cdev_release(struct inode *node, struct file *filep)
+ {
+ 	struct idxd_user_context *ctx = filep->private_data;
+@@ -190,6 +219,7 @@ static int idxd_cdev_release(struct inode *node, struct file *filep)
  	}
  
--	if (ctx->sva)
-+	if (ctx->sva) {
+ 	if (ctx->sva) {
++		idxd_cdev_evl_drain_pasid(wq, ctx->pasid);
  		iommu_sva_unbind_device(ctx->sva);
-+		idxd_xa_pasid_remove(ctx);
-+	}
- 	kfree(ctx);
- 	mutex_lock(&wq->wq_lock);
- 	idxd_wq_put(wq);
-@@ -418,3 +448,90 @@ void idxd_cdev_remove(void)
- 		ida_destroy(&ictx[i].minor_ida);
+ 		idxd_xa_pasid_remove(ctx);
  	}
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index 230fe9bb56ae..fd97b2b58734 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -762,18 +762,29 @@ static int idxd_device_evl_setup(struct idxd_device *idxd)
+ 	dma_addr_t dma_addr;
+ 	int size;
+ 	struct idxd_evl *evl = idxd->evl;
++	unsigned long *bmap;
++	int rc;
+ 
+ 	if (!evl)
+ 		return 0;
+ 
+ 	size = evl_size(idxd);
++
++	bmap = bitmap_zalloc(size, GFP_KERNEL);
++	if (!bmap) {
++		rc = -ENOMEM;
++		goto err_bmap;
++	}
++
+ 	/*
+ 	 * Address needs to be page aligned. However, dma_alloc_coherent() provides
+ 	 * at minimal page size aligned address. No manual alignment required.
+ 	 */
+ 	addr = dma_alloc_coherent(dev, size, &dma_addr, GFP_KERNEL);
+-	if (!addr)
+-		return -ENOMEM;
++	if (!addr) {
++		rc = -ENOMEM;
++		goto err_alloc;
++	}
+ 
+ 	memset(addr, 0, size);
+ 
+@@ -781,6 +792,7 @@ static int idxd_device_evl_setup(struct idxd_device *idxd)
+ 	evl->log = addr;
+ 	evl->dma = dma_addr;
+ 	evl->log_size = size;
++	evl->bmap = bmap;
+ 
+ 	memset(&evlcfg, 0, sizeof(evlcfg));
+ 	evlcfg.bits[0] = dma_addr & GENMASK(63, 12);
+@@ -799,6 +811,11 @@ static int idxd_device_evl_setup(struct idxd_device *idxd)
+ 
+ 	spin_unlock(&evl->lock);
+ 	return 0;
++
++err_alloc:
++	bitmap_free(bmap);
++err_bmap:
++	return rc;
  }
-+
-+static int _idxd_copy_cr(struct mm_struct *mm, unsigned long addr, void *cr,
-+			 int len)
-+{
-+	void *old_cr = cr;
-+
-+	if (mmap_read_lock_killable(mm))
-+		return 0;
-+
-+	/*
-+	 * Page backing on user address is not available. Need to get the
-+	 * pages and write the completion record to the pages.
-+	 */
-+	while (len) {
-+		struct vm_area_struct *vma;
-+		struct page *page = NULL;
-+		int bytes, ret, offset;
-+		void *maddr;
-+
-+		ret = get_user_pages_remote(mm, addr, 1, FOLL_WRITE,
-+					    &page, &vma, NULL);
-+		if (ret <= 0)
-+			break;
-+
-+		bytes = len;
-+		offset = addr & (PAGE_SIZE - 1);
-+		if (bytes > PAGE_SIZE - offset)
-+			bytes = PAGE_SIZE - offset;
-+
-+		maddr = kmap_local_page(page);
-+		copy_to_user_page(vma, page, addr,
-+				  maddr + offset, cr, bytes);
-+		set_page_dirty_lock(page);
-+		kunmap_local(maddr);
-+		put_page(page);
-+
-+		len -= bytes;
-+		cr += bytes;
-+		addr += bytes;
-+	}
-+
-+	mmap_read_unlock(mm);
-+
-+	return cr - old_cr;
-+}
-+
-+/**
-+ * idxd_copy_cr - copy completion record to user address space found by wq and
-+ *		  PASID
-+ * @wq:		work queue
-+ * @pasid:	PASID
-+ * @addr:	user fault address to write
-+ * @cr:		completion record
-+ * @len:	number of bytes to copy
-+ *
-+ * Return: number of bytes copied.
-+ */
-+int idxd_copy_cr(struct idxd_wq *wq, ioasid_t pasid, unsigned long addr,
-+		 void *cr, int len)
-+{
-+	struct device *dev = &wq->idxd->pdev->dev;
-+	struct idxd_user_context *ctx;
-+	struct mm_struct *mm;
-+	int copied = 0;
-+
-+	mutex_lock(&wq->uc_lock);
-+
-+	ctx = xa_load(&wq->upasid_xa, pasid);
-+	if (!ctx) {
-+		dev_warn(dev, "No user context\n");
-+		goto out;
-+	}
-+
-+	mm = ctx->mm;
-+	if (!mmget_not_zero(mm)) {
-+		dev_warn(dev, "Cannot get mm\n");
-+		goto out;
-+	}
-+
-+	copied = _idxd_copy_cr(mm, addr, cr, len);
-+	mmput(mm);
-+
-+out:
-+	mutex_unlock(&wq->uc_lock);
-+
-+	return copied;
-+}
+ 
+ static void idxd_device_evl_free(struct idxd_device *idxd)
+@@ -824,6 +841,7 @@ static void idxd_device_evl_free(struct idxd_device *idxd)
+ 	iowrite64(0, idxd->reg_base + IDXD_EVLCFG_OFFSET + 8);
+ 
+ 	dma_free_coherent(dev, evl->log_size, evl->log, evl->dma);
++	bitmap_free(evl->bmap);
+ 	evl->log = NULL;
+ 	evl->size = IDXD_EVL_SIZE_MIN;
+ 	spin_unlock(&evl->lock);
 diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index c5d99c179902..b3f9a12adce2 100644
+index b3f9a12adce2..3963c83165a6 100644
 --- a/drivers/dma/idxd/idxd.h
 +++ b/drivers/dma/idxd/idxd.h
-@@ -215,6 +215,10 @@ struct idxd_wq {
- 	char name[WQ_NAME_SIZE + 1];
- 	u64 max_xfer_bytes;
- 	u32 max_batch_size;
-+
-+	/* Lock to protect upasid_xa access. */
-+	struct mutex uc_lock;
-+	struct xarray upasid_xa;
+@@ -264,6 +264,7 @@ struct idxd_driver_data {
+ 	struct device_type *dev_type;
+ 	int compl_size;
+ 	int align;
++	int evl_cr_off;
  };
  
- struct idxd_engine {
-@@ -702,6 +706,8 @@ void idxd_cdev_remove(void);
- int idxd_cdev_get_major(struct idxd_device *idxd);
- int idxd_wq_add_cdev(struct idxd_wq *wq);
- void idxd_wq_del_cdev(struct idxd_wq *wq);
-+int idxd_copy_cr(struct idxd_wq *wq, ioasid_t pasid, unsigned long addr,
-+		 void *buf, int len);
+ struct idxd_evl {
+@@ -276,6 +277,7 @@ struct idxd_evl {
+ 	/* The number of entries in the event log. */
+ 	u16 size;
+ 	u16 head;
++	unsigned long *bmap;
+ };
  
- /* perfmon */
- #if IS_ENABLED(CONFIG_INTEL_IDXD_PERFMON)
+ struct idxd_evl_fault {
 diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index a7c98fac7a85..912753a99747 100644
+index 912753a99747..be4f3676e1a6 100644
 --- a/drivers/dma/idxd/init.c
 +++ b/drivers/dma/idxd/init.c
-@@ -200,6 +200,8 @@ static int idxd_setup_wqs(struct idxd_device *idxd)
- 			}
- 			bitmap_copy(wq->opcap_bmap, idxd->opcap_bmap, IDXD_MAX_OPCAP_BITS);
- 		}
-+		mutex_init(&wq->uc_lock);
-+		xa_init(&wq->upasid_xa);
- 		idxd->wqs[i] = wq;
- 	}
+@@ -47,6 +47,7 @@ static struct idxd_driver_data idxd_driver_data[] = {
+ 		.compl_size = sizeof(struct dsa_completion_record),
+ 		.align = 32,
+ 		.dev_type = &dsa_device_type,
++		.evl_cr_off = offsetof(struct dsa_evl_entry, cr),
+ 	},
+ 	[IDXD_TYPE_IAX] = {
+ 		.name_prefix = "iax",
+@@ -54,6 +55,7 @@ static struct idxd_driver_data idxd_driver_data[] = {
+ 		.compl_size = sizeof(struct iax_completion_record),
+ 		.align = 64,
+ 		.dev_type = &iax_device_type,
++		.evl_cr_off = offsetof(struct iax_evl_entry, cr),
+ 	},
+ };
  
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 8b9dfa0d2b99..465d2e7627e4 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -1292,6 +1292,7 @@ static void idxd_conf_wq_release(struct device *dev)
- 
- 	bitmap_free(wq->opcap_bmap);
- 	kfree(wq->wqcfg);
-+	xa_destroy(&wq->upasid_xa);
- 	kfree(wq);
+diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+index 52b8b7d9db22..a428d89de077 100644
+--- a/drivers/dma/idxd/irq.c
++++ b/drivers/dma/idxd/irq.c
+@@ -7,6 +7,8 @@
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/dmaengine.h>
+ #include <linux/delay.h>
++#include <linux/iommu.h>
++#include <linux/sched/mm.h>
+ #include <uapi/linux/idxd.h>
+ #include "../dmaengine.h"
+ #include "idxd.h"
+@@ -217,14 +219,80 @@ static void idxd_int_handle_revoke(struct work_struct *work)
+ 	kfree(revoke);
  }
  
+-static void process_evl_entry(struct idxd_device *idxd, struct __evl_entry *entry_head)
++static void idxd_evl_fault_work(struct work_struct *work)
++{
++	struct idxd_evl_fault *fault = container_of(work, struct idxd_evl_fault, work);
++	struct idxd_wq *wq = fault->wq;
++	struct idxd_device *idxd = wq->idxd;
++	struct device *dev = &idxd->pdev->dev;
++	struct __evl_entry *entry_head = fault->entry;
++	void *cr = (void *)entry_head + idxd->data->evl_cr_off;
++	int cr_size = idxd->data->compl_size, copied;
++
++	switch (fault->status) {
++	case DSA_COMP_CRA_XLAT:
++	case DSA_COMP_DRAIN_EVL:
++		/*
++		 * Copy completion record to fault_addr in user address space
++		 * that is found by wq and PASID.
++		 */
++		copied = idxd_copy_cr(wq, entry_head->pasid,
++				      entry_head->fault_addr,
++				      cr, cr_size);
++		if (copied != cr_size) {
++			dev_err(dev, "Failed to write to completion record. (%d:%d)\n",
++				cr_size, copied);
++		}
++		break;
++	default:
++		dev_err(dev, "Unrecognized error code: %#x\n",
++			DSA_COMP_STATUS(entry_head->error));
++		break;
++	}
++
++	kmem_cache_free(idxd->evl_cache, fault);
++}
++
++static void process_evl_entry(struct idxd_device *idxd,
++			      struct __evl_entry *entry_head, unsigned int index)
+ {
+ 	struct device *dev = &idxd->pdev->dev;
++	struct idxd_evl *evl = idxd->evl;
+ 	u8 status;
+ 
+-	status = DSA_COMP_STATUS(entry_head->error);
+-	dev_warn_ratelimited(dev, "Device error %#x operation: %#x fault addr: %#llx\n",
+-			     status, entry_head->operation, entry_head->fault_addr);
++	if (test_bit(index, evl->bmap)) {
++		clear_bit(index, evl->bmap);
++	} else {
++		status = DSA_COMP_STATUS(entry_head->error);
++
++		if (status == DSA_COMP_CRA_XLAT || status == DSA_COMP_DRAIN_EVL) {
++			struct idxd_evl_fault *fault;
++			int ent_size = evl_ent_size(idxd);
++
++			if (entry_head->rci)
++				dev_dbg(dev, "Completion Int Req set, ignoring!\n");
++
++			if (!entry_head->rcr && status == DSA_COMP_DRAIN_EVL)
++				return;
++
++			fault = kmem_cache_alloc(idxd->evl_cache, GFP_ATOMIC);
++			if (fault) {
++				struct idxd_wq *wq = idxd->wqs[entry_head->wq_idx];
++
++				fault->wq = wq;
++				fault->status = status;
++				memcpy(&fault->entry, entry_head, ent_size);
++				INIT_WORK(&fault->work, idxd_evl_fault_work);
++				queue_work(wq->wq, &fault->work);
++			} else {
++				dev_warn(dev, "Failed to service fault work.\n");
++			}
++		} else {
++			dev_warn_ratelimited(dev, "Device error %#x operation: %#x fault addr: %#llx\n",
++					     status, entry_head->operation,
++					     entry_head->fault_addr);
++		}
++	}
+ }
+ 
+ static void process_evl_entries(struct idxd_device *idxd)
+@@ -250,7 +318,7 @@ static void process_evl_entries(struct idxd_device *idxd)
+ 
+ 	while (h != t) {
+ 		entry_head = (struct __evl_entry *)(evl->log + (h * ent_size));
+-		process_evl_entry(idxd, entry_head);
++		process_evl_entry(idxd, entry_head, h);
+ 		h = (h + 1) % size;
+ 	}
+ 
+diff --git a/include/uapi/linux/idxd.h b/include/uapi/linux/idxd.h
+index e86199d09a91..4b584d5afd87 100644
+--- a/include/uapi/linux/idxd.h
++++ b/include/uapi/linux/idxd.h
+@@ -135,6 +135,7 @@ enum dsa_completion_status {
+ 	DSA_COMP_HW_ERR1,
+ 	DSA_COMP_HW_ERR_DRB,
+ 	DSA_COMP_TRANSLATION_FAIL,
++	DSA_COMP_DRAIN_EVL = 0x26,
+ };
+ 
+ enum iax_completion_status {
 -- 
 2.37.1
 

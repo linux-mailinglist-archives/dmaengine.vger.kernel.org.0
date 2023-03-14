@@ -2,116 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFBB76B84AB
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Mar 2023 23:21:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B04FC6B8812
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Mar 2023 03:08:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229505AbjCMWVc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 13 Mar 2023 18:21:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33578 "EHLO
+        id S229480AbjCNCIu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 13 Mar 2023 22:08:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229482AbjCMWVc (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Mar 2023 18:21:32 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFEFB1ABC8;
-        Mon, 13 Mar 2023 15:21:30 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id b13so14191114ljf.6;
-        Mon, 13 Mar 2023 15:21:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678746089;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/lgLb5XFePEU9jptTtQsEKcrGixEAnt+jbUUD2Xgwnk=;
-        b=XrECHhrUNMF7t1fwGgwocFZDCoNVlVcKRW5Em4KQoq1n8fmq6JuBJSVM51ELcsxROP
-         1LzAJ9r6cQ8fK22QU8b7+71aJZq6timCL+alDw0n6IB5XrCg52tVoc8YUG6cl1g1gGRd
-         QVYJf9W1iWwWwxIlwD5b69A50LglRfo5bxIjNupvDdqQdaLEY43MfTZKFgUIDbtoooRz
-         AyrsyTQr0f16aGDfRAWPAMHoIWVODHcKD8kRpqdgI+Lt1vLtPPeYW2uuJQqYqYOlPMzg
-         hqnjYkMwdkSNAmNWdYKxhDDuzDM3LuwSbMSFvUgmkKjhLhSXuyjaPFhnfpiioR6Sj6Uv
-         WIAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678746089;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/lgLb5XFePEU9jptTtQsEKcrGixEAnt+jbUUD2Xgwnk=;
-        b=YLB49Dc2V7ISdcgNmwO6rMcm/Tklo7xz7evlJrefwmr3NBg40haGDuuBBnRZgAKPmg
-         ABtD/ZhTL/L5OiPZRN2QhSAnGJjb61lgBffcXjVqWxN6UiCTFG6U76saVim2VNwkt8Hs
-         QO45Ky2bykBmtZ7y4hLBpUBq1xgNvYHgZBbQNadbCCVskniCfooomEf0rEZemOXS/hFD
-         0mUm7/w4+AVQZsvQycMG6VordRpDZIJ1CVfgQFcgdU64OskJbA67RwpmauffKdoboiFO
-         LWAFjF51Bar1Xb2ImWfHkYDm85gy0I0BQ8K56VISJiNUhtfTCXWgqEs3qbOSNnzOOUMk
-         ke3g==
-X-Gm-Message-State: AO0yUKVNFsYtVDWLXWjd8ZCuBaPm6WIiCl5TEhjoNjrtyuS4XR+qjAtj
-        y4rRiAtt794HVBaMvYa2UKs=
-X-Google-Smtp-Source: AK7set9VSGT9OVCegHXHz7hvv7WJzGrMgLmFof3LizWBxMiVI+Q8qhqs1X7/TA3/c6KZhSy8EiUx4g==
-X-Received: by 2002:a2e:8510:0:b0:295:9ba2:8a78 with SMTP id j16-20020a2e8510000000b002959ba28a78mr3394391lji.17.1678746088803;
-        Mon, 13 Mar 2023 15:21:28 -0700 (PDT)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id e19-20020a2e9853000000b002934b5c5c67sm173547ljj.32.2023.03.13.15.21.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Mar 2023 15:21:28 -0700 (PDT)
-Date:   Tue, 14 Mar 2023 01:21:23 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Rob Herring <robh@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v2 00/11] PCI: dwc: Relatively simple fixes and
- cleanups
-Message-ID: <20230313222123.fshj3vvpbpcptyru@mobilestation>
-References: <20230313200816.30105-1-Sergey.Semin@baikalelectronics.ru>
- <20230313211752.GA1541360@bhelgaas>
+        with ESMTP id S230216AbjCNCIr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 Mar 2023 22:08:47 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3D83574DD;
+        Mon, 13 Mar 2023 19:08:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678759724; x=1710295724;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=bRI6C1D0hIvwlek2z3EZa4aw19mMVjVytLdUlz7WWlM=;
+  b=iBxjI7gw0nKzAhBb8lfYW/dbzYxLjV4RyMiOm7K2sLqU6jqh9Gv4tTbu
+   DXRiJZgd22s5bEa19uGoKjQ2ZP3Bco0CJxAaoXvLxSjaeaN7EWBB8G2Oa
+   ElAFWdBXP1+q/Dn7etOj08RsiBttoCirhEZfytUzlaCS7MW6t6q74QMuh
+   BrsWtOdpnKmIuvo5ZqSQXaU87yQiA5O0LigE6pvoBCmund3myOCtYyPzw
+   Rykp1lNYYJEoQKul2pThtPLjv/MxnOJrApR0r0GuMczgnw2t50n4FGPFj
+   Ht2EEy2DVqNBuddK++drdPHVVtKTPDuekcjciQgCu0wTWsIj7GriEVJrj
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10648"; a="399897696"
+X-IronPort-AV: E=Sophos;i="5.98,258,1673942400"; 
+   d="scan'208";a="399897696"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2023 19:08:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10648"; a="656171280"
+X-IronPort-AV: E=Sophos;i="5.98,258,1673942400"; 
+   d="scan'208";a="656171280"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.48]) ([10.239.159.48])
+  by orsmga006.jf.intel.com with ESMTP; 13 Mar 2023 19:08:37 -0700
+Message-ID: <4ae1b61b-90a6-86e2-8443-78d4ae028d91@linux.intel.com>
+Date:   Tue, 14 Mar 2023 10:07:33 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230313211752.GA1541360@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Cc:     baolu.lu@linux.intel.com, Will Deacon <will@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH v6 2/7] iommu/sva: Move PASID helpers to sva code
+Content-Language: en-US
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        X86 Kernel <x86@kernel.org>, bp@alien8.de,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>, corbet@lwn.net,
+        vkoul@kernel.org, dmaengine@vger.kernel.org,
+        linux-doc@vger.kernel.org
+References: <20230313204158.1495067-1-jacob.jun.pan@linux.intel.com>
+ <20230313204158.1495067-3-jacob.jun.pan@linux.intel.com>
+From:   Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20230313204158.1495067-3-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Bjorn
-
-On Mon, Mar 13, 2023 at 04:17:52PM -0500, Bjorn Helgaas wrote:
-> On Mon, Mar 13, 2023 at 11:08:04PM +0300, Serge Semin wrote:
-> > ...
-> > Link: https://lore.kernel.org/linux-pci/20230217093956.27126-1-Sergey.Semin@baikalelectronics.ru/
-> > Changelog v2:
-> > - Rebase onto the kernel 6.3-rc2.
+On 3/14/23 4:41 AM, Jacob Pan wrote:
+> Preparing to remove IOASID infrastructure, PASID management will be
+> under SVA code. Decouple mm code from IOASID.
 > 
+> Signed-off-by: Jacob Pan<jacob.jun.pan@linux.intel.com>
 
-> This is fine, but just FYI that there's no need to rebase past -rc1
-> because PCI patches are applied on topic branches based on the PCI
-> "main" branch, typically -rc1.
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
 
-Thanks for reminding about that. I am not that keen of early rc's
-because there is a higher risk to catch instability in unexpected
-places. Normally I wait for rc2 or newer kernel is released in order
-to rebase onto that mainline kernel. I am using the Linus' master
-because most of time I get to develop and submit patchsets for several
-subsystems concurrently (currently it's PCIe, EDAC, net and MIPS-arch)
-and having them rebased on top of each subsystem' next-branch would be
-even more risky. Of course I understand that the subsystem main/topic
-branches may have some conflicting changes. So normally I make sure
-that the submitted changes are applicable against the subsystem trees
-if/when it's necessary. (Can't deny though I forget to do that from
-time to time.)
-
--Serge(y)
-
-> 
-> Bjorn
+Best regards,
+baolu

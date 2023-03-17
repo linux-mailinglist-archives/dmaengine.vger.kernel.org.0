@@ -2,53 +2,53 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72F266BE83C
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Mar 2023 12:34:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C63416BE83A
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Mar 2023 12:34:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230104AbjCQLeA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 17 Mar 2023 07:34:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50754 "EHLO
+        id S230133AbjCQLeJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 17 Mar 2023 07:34:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230093AbjCQLd7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Mar 2023 07:33:59 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 691B4A8C62
-        for <dmaengine@vger.kernel.org>; Fri, 17 Mar 2023 04:33:18 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id i5so4990332pla.2
-        for <dmaengine@vger.kernel.org>; Fri, 17 Mar 2023 04:33:18 -0700 (PDT)
+        with ESMTP id S229704AbjCQLeG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Mar 2023 07:34:06 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7D4053281
+        for <dmaengine@vger.kernel.org>; Fri, 17 Mar 2023 04:33:23 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id le6so4956236plb.12
+        for <dmaengine@vger.kernel.org>; Fri, 17 Mar 2023 04:33:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=igel-co-jp.20210112.gappssmtp.com; s=20210112; t=1679052798;
+        d=igel-co-jp.20210112.gappssmtp.com; s=20210112; t=1679052801;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=znKfKtHV6TgFWLrDIG0H6CwhrMa6Sg0ibY+beHEykvU=;
-        b=ueqNZvZn+HPM/j87SWRqQzkqDAM75u9n1eh0Ej8ZqQ5w4ZsnWheJsDzwp60Jtezhyo
-         OC4CifyjKZYzPQM7wNV4Lez3j5u55SR2ZzclpJBDyp0CYKTJ2SwQXtWvlWj2cvmdY97a
-         +STY2TuVveQdjgZTYR1ozzT1wSJccym7hxbInqTZlbtbmTDETsP6cnPm7y4Z8BH/WsTo
-         n85euSBP3Bf1kLhUjXNKrY9E3kX0IqwZIP1yui7quTzz4weWt/s2YF0Y86AITyuz8EuJ
-         at6v903i3AEidzNB3kh0mHbQHIBiDUF6bp2xZE/poJuVJBHDeeaZukQHOhzD6JZHJmDH
-         t7uQ==
+        bh=dEWvzeZcqK871MfRmlZTSC0+Rvvt2fdWWI9+tB+ygs8=;
+        b=A9d6Me/U+38g8tYFkHJboHIB24mipqPLRwBsFdf8QUZKGyqMVI3+7nJy7pjnKEW1cz
+         7tyAc9Ar6ITDWVM3La5oW1UclxYpTBwGApriRVy/0QPOn9vPXrbBuLzv0CjvsznaqOPB
+         zIz9Z2KSkNrX7wt/LUthw8aR8Xpib389ogzxBC99Jq41y5+GzBO0aw6O52qtv18dh4wO
+         nKg6MOih323wL5HenFkvYjNokMPR/aZPQwe2+zKFM/XHWhbwKtkj7XM7JYMIRSzlxV14
+         5EIKlT43jK7fnSN/cOFw2Hhtjpr3T2BdAOFqX7R/F+qzwjGTOHmcMWLXs/kp9ctvbqJj
+         BDnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679052798;
+        d=1e100.net; s=20210112; t=1679052801;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=znKfKtHV6TgFWLrDIG0H6CwhrMa6Sg0ibY+beHEykvU=;
-        b=iqNFU4+JEIUc1ZnWBDvoJ8kJgz109XEsAgLG+91kR7Xdc6o4vTPJBgjpBTzdI3FHzs
-         zZpu1polAOAVPr7dIYrKddJzNTT4eKdd5CeOI87+30Asc8T2l72ZmlikgKzk5g4Jazi/
-         JWRyIlFbmojucS+xOif8K2UPXq4kSJA7Vx2+HC1H/zFK+8zh33hEmJcCYjbFG9w2gX31
-         AU3T15iOSHnFL8LVCEKI1eJm8bXaBVr+jhhAwrn8u6sQ9RJjKGpLr4MOE/fnbphiSxXm
-         noheXLYb5SpwxOGWLW2ZzedF56r2sxclBB5qCSmzaelif+S6fR8oDN46qo1t0SQiOy7j
-         uRBA==
-X-Gm-Message-State: AO0yUKWFkf00cn8lTPNRHp33CuQcp3ZFL+PCHADJyvHMB6/zKUmQkxhV
-        hheVNtCbPXzXUQBeeX0Jy7GmJ4i2UUyxUUNmWpc=
-X-Google-Smtp-Source: AK7set/LgrS1REaYSHbX7wy9zHzuHqlQGfTkMV7xpn0Bgj4jZ+J0GnfpGtRwL4MisMzUmi3zDFRDKg==
-X-Received: by 2002:a17:90b:17cb:b0:23d:3057:12a3 with SMTP id me11-20020a17090b17cb00b0023d305712a3mr7729422pjb.27.1679052797846;
-        Fri, 17 Mar 2023 04:33:17 -0700 (PDT)
+        bh=dEWvzeZcqK871MfRmlZTSC0+Rvvt2fdWWI9+tB+ygs8=;
+        b=q4UF635Mxam6/9aHgHuJVCm+TUTwRY69/s/IRnG2h7MBQ20aFXRtG5YixI8crigX8J
+         /6WiBt+w42CV/8Mij0w2m56Q857z2L8HawsX54JG/sw4VY8BofBLKvfiS1YmeedID8pM
+         iOX/QOW0DobAvdjbq1xJiiMSi7M+H8maGGLa7Le4SjC6BJ7/QjLZS1wJ+a8Eyi9ouZRz
+         UqVweotbp/vuf0p7mQ24iXIBJkQxfeJVBGz8LfiK4uByoU0TRPtv4IEBxc3TnhGQc+lt
+         kD7W7o2zxH+mgyYK8OWGSr4sah48HpI+pbFhBJ1sAi8BQSx4dfrc+1Aej0tAbKmCume3
+         9rdw==
+X-Gm-Message-State: AO0yUKV90tkfi58X+hFcaEzwBIFEjW/yZ4MNyzZDz7NX3W7OK5iq6QyO
+        5p5Z4LjBl2fwPdw5LLcd/P2yBQ==
+X-Google-Smtp-Source: AK7set+TPpYwApi7RqjbM4INqbH8WoK4AaTlrq4ktuIO2IWD/jWG8Ua248P+wQDOKsbMN7p5EOdeRw==
+X-Received: by 2002:a17:90b:17cb:b0:236:73d5:82cf with SMTP id me11-20020a17090b17cb00b0023673d582cfmr7715034pjb.9.1679052801454;
+        Fri, 17 Mar 2023 04:33:21 -0700 (PDT)
 Received: from tyrell.hq.igel.co.jp (napt.igel.co.jp. [219.106.231.132])
-        by smtp.gmail.com with ESMTPSA id e3-20020a17090a818300b00233aacab89esm1182904pjn.48.2023.03.17.04.33.14
+        by smtp.gmail.com with ESMTPSA id e3-20020a17090a818300b00233aacab89esm1182904pjn.48.2023.03.17.04.33.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Mar 2023 04:33:17 -0700 (PDT)
+        Fri, 17 Mar 2023 04:33:21 -0700 (PDT)
 From:   Shunsuke Mie <mie@igel.co.jp>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Cc:     Vinod Koul <vkoul@kernel.org>,
@@ -64,9 +64,9 @@ Cc:     Vinod Koul <vkoul@kernel.org>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Frank Li <Frank.Li@nxp.com>, linux-kernel@vger.kernel.org,
         dmaengine@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [RFC PATCH 09/11] tools: PCI: Add 'C' option to support continuous transfer
-Date:   Fri, 17 Mar 2023 20:32:36 +0900
-Message-Id: <20230317113238.142970-10-mie@igel.co.jp>
+Subject: [RFC PATCH 10/11] dmaengine: dw-edma: Fix to change for continuous transfer
+Date:   Fri, 17 Mar 2023 20:32:37 +0900
+Message-Id: <20230317113238.142970-11-mie@igel.co.jp>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230317113238.142970-1-mie@igel.co.jp>
 References: <20230317113238.142970-1-mie@igel.co.jp>
@@ -81,84 +81,84 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add a new command line option 'C' to specify the number of transfers to
-perform continuously. This option helps to detect problem of DMAC in DMA
-transfers. By default, the number is set to 1.
+The dw-edma driver stops after processing a DMA request even if a request
+remains in the issued queue, which is not the expected behavior. The DMA
+engine API requires continuous processing.
 
+Add a trigger to start after one processing finished if there are requests
+remain.
+
+Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
 Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
 ---
- tools/pci/pcitest.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/dma/dw-edma/dw-edma-core.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/tools/pci/pcitest.c b/tools/pci/pcitest.c
-index 441b54234635..a66b28e1e65e 100644
---- a/tools/pci/pcitest.c
-+++ b/tools/pci/pcitest.c
-@@ -35,6 +35,7 @@ struct pci_test {
- 	bool		write;
- 	bool		copy;
- 	unsigned long	size;
-+	unsigned long	count;
- 	bool		use_dma;
- };
+diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+index 1906a836f0aa..c527af00ff4e 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.c
++++ b/drivers/dma/dw-edma/dw-edma-core.c
+@@ -181,7 +181,7 @@ static void vchan_free_desc(struct virt_dma_desc *vdesc)
+ 	dw_edma_free_desc(vd2dw_edma_desc(vdesc));
+ }
  
-@@ -115,6 +116,7 @@ static int run_test(struct pci_test *test)
+-static void dw_edma_start_transfer(struct dw_edma_chan *chan)
++static int dw_edma_start_transfer(struct dw_edma_chan *chan)
+ {
+ 	struct dw_edma_chunk *child;
+ 	struct dw_edma_desc *desc;
+@@ -189,16 +189,16 @@ static void dw_edma_start_transfer(struct dw_edma_chan *chan)
  
- 	if (test->write) {
- 		param.size = test->size;
-+		param.count = test->count;
- 		if (test->use_dma)
- 			param.flags = PCITEST_FLAGS_USE_DMA;
- 		ret = ioctl(fd, PCITEST_WRITE, &param);
-@@ -127,6 +129,7 @@ static int run_test(struct pci_test *test)
+ 	vd = vchan_next_desc(&chan->vc);
+ 	if (!vd)
+-		return;
++		return 0;
  
- 	if (test->read) {
- 		param.size = test->size;
-+		param.count = test->count;
- 		if (test->use_dma)
- 			param.flags = PCITEST_FLAGS_USE_DMA;
- 		ret = ioctl(fd, PCITEST_READ, &param);
-@@ -139,6 +142,7 @@ static int run_test(struct pci_test *test)
+ 	desc = vd2dw_edma_desc(vd);
+ 	if (!desc)
+-		return;
++		return 0;
  
- 	if (test->copy) {
- 		param.size = test->size;
-+		param.count = test->count;
- 		if (test->use_dma)
- 			param.flags = PCITEST_FLAGS_USE_DMA;
- 		ret = ioctl(fd, PCITEST_COPY, &param);
-@@ -171,10 +175,13 @@ int main(int argc, char **argv)
- 	/* set default size as 100KB */
- 	test->size = 0x19000;
+ 	child = list_first_entry_or_null(&desc->chunk->list,
+ 					 struct dw_edma_chunk, list);
+ 	if (!child)
+-		return;
++		return 0;
  
-+	/* set default transfer count */
-+	test->count = 1;
+ 	dw_edma_v0_core_start(child, !desc->xfer_sz);
+ 	desc->xfer_sz += child->ll_region.sz;
+@@ -206,6 +206,8 @@ static void dw_edma_start_transfer(struct dw_edma_chan *chan)
+ 	list_del(&child->list);
+ 	kfree(child);
+ 	desc->chunks_alloc--;
 +
- 	/* set default endpoint device */
- 	test->device = "/dev/pci-endpoint-test.0";
++	return 1;
+ }
  
--	while ((c = getopt(argc, argv, "D:b:m:x:i:deIlhrwcs:")) != EOF)
-+	while ((c = getopt(argc, argv, "D:b:m:x:i:deIlhrwcs:C:")) != EOF)
- 	switch (c) {
- 	case 'D':
- 		test->device = optarg;
-@@ -221,6 +228,9 @@ int main(int argc, char **argv)
- 	case 's':
- 		test->size = strtoul(optarg, NULL, 0);
- 		continue;
-+	case 'C':
-+		test->count = strtoul(optarg, NULL, 0);
-+		continue;
- 	case 'd':
- 		test->use_dma = true;
- 		continue;
-@@ -243,6 +253,7 @@ int main(int argc, char **argv)
- 			"\t-w			Write buffer test\n"
- 			"\t-c			Copy buffer test\n"
- 			"\t-s <size>		Size of buffer {default: 100KB}\n"
-+			"\t-C <count>		Number of The continuous data transfers {default: 1}\n"
- 			"\t-h			Print this help message\n",
- 			argv[0]);
- 		return -EINVAL;
+ static void dw_edma_device_caps(struct dma_chan *dchan,
+@@ -602,14 +604,17 @@ static void dw_edma_done_interrupt(struct dw_edma_chan *chan)
+ 		switch (chan->request) {
+ 		case EDMA_REQ_NONE:
+ 			desc = vd2dw_edma_desc(vd);
+-			if (desc->chunks_alloc) {
+-				chan->status = EDMA_ST_BUSY;
+-				dw_edma_start_transfer(chan);
+-			} else {
++			if (!desc->chunks_alloc) {
+ 				list_del(&vd->node);
+ 				vchan_cookie_complete(vd);
+-				chan->status = EDMA_ST_IDLE;
+ 			}
++
++			/* Continue to transfer in case of there are rest chunks, or issued
++			 * requests remain.
++			 */
++			chan->status = EDMA_ST_BUSY;
++			if (!dw_edma_start_transfer(chan))
++				chan->status = EDMA_ST_IDLE;
+ 			break;
+ 
+ 		case EDMA_REQ_STOP:
 -- 
 2.25.1
 

@@ -2,53 +2,53 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E2F36BE820
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Mar 2023 12:33:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B86676BE826
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Mar 2023 12:33:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229896AbjCQLdK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 17 Mar 2023 07:33:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49398 "EHLO
+        id S230046AbjCQLdR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 17 Mar 2023 07:33:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230016AbjCQLdG (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Mar 2023 07:33:06 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A9CD6EB82
-        for <dmaengine@vger.kernel.org>; Fri, 17 Mar 2023 04:32:56 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id v21so4965528ple.9
-        for <dmaengine@vger.kernel.org>; Fri, 17 Mar 2023 04:32:56 -0700 (PDT)
+        with ESMTP id S230029AbjCQLdI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Mar 2023 07:33:08 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 882C8763D2
+        for <dmaengine@vger.kernel.org>; Fri, 17 Mar 2023 04:33:00 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id p3-20020a17090a74c300b0023f69bc7a68so388458pjl.4
+        for <dmaengine@vger.kernel.org>; Fri, 17 Mar 2023 04:33:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=igel-co-jp.20210112.gappssmtp.com; s=20210112; t=1679052776;
+        d=igel-co-jp.20210112.gappssmtp.com; s=20210112; t=1679052780;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5sI1q8FeCzoYjS80FmoBFGlXkDMRicrucbVZQV9c508=;
-        b=wtuEZ6mlE8yg3VIJrKgHJ8dxGzj9nc/+1LNPpzE/t7m7nzMWHIbgWeb86J9hRAi91l
-         72XaVrh9ZwfvmMuoJ8toT+QOBHeTUOVbQY7e59rUy4gqx4UhUHBvwkAel4ljh4iPwMcI
-         lnXvt8iO39tYxEYzMfMEGf8tCqLJ2RMovRACyBYEug7De+x3HnSlu9cDdu952iVB1Rmk
-         Dw9SW3Vmdp1BveJfi2a2FplQyfknon1qcXKBKcyybzVKeumW/kLaxyhj5MiZwHkG29an
-         hbAHQItpw41sOAjdNuHGr6CeItUEFHQxF/o0248m1qTbpxOT6k5YoZhDVo9/A8L9rxZY
-         vJ9Q==
+        bh=02xUqfEugvmsV40WG30Qa2tXUYlhWNLWy8/nr55CGig=;
+        b=4P4Ag5T9O6UF2JNgzQOd/XqYteXdWN+gFSUKQfREV6+na/dzjZVvbtd7t75wSjkLRz
+         sfU1y6//aC0sRcbKwiErqhP47Kmig9CO7GRffsItnE6N8g2uSH85vX0htlJYkWwRhqiV
+         750xt0J/CkT6CpRIR9AsM9BxJ5aemjO/m6GuwYGupnSG509fpD4R7n9wdJJ/YElw20I6
+         c66wi5hzNT0t0/Jb/ATPCTm9XBpQwqOlli87yEKbNyOcJeoDECZg0D3GY2CS8SJciqIQ
+         eb4JnVfDE/pvvt8VRz6KvGDn5NYE3kjgCubYAMslqcvqzt2LM8gM8MUZNe9I2F0ohubi
+         08DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679052776;
+        d=1e100.net; s=20210112; t=1679052780;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5sI1q8FeCzoYjS80FmoBFGlXkDMRicrucbVZQV9c508=;
-        b=XtEOotZF/24AUA3glYDtCb2ff8m19rVdxcMtyAOYN0xlXzrnggPmf68afcb0EjIRfg
-         LoTMmord8cWJrq4VclIHONfa2gdaRbGDGqLCc2v58dZqzrRpD8i1PPlamLUElrnHhIpc
-         kG3QwwgF2sjdrmJ+Bn0SHnGmBUzMCRmT3uClDupNraqXUscxcN2W7uO9QOJyQgfVeEQn
-         Aix3f+OI7ARMm0uvd6oXLz8NZIbeHmNji9Ju2fjoRYz0ZDhUEQni6eeSSmIAYSAISnML
-         hI8HWgOpIkdBx4WVLdBJ4IJnHlzwbKsMcfxZmHQ3a7dOylDrm72qBrI+ZZ2tBkCmIDLQ
-         ViTw==
-X-Gm-Message-State: AO0yUKW9REDc1EdRx3rI5SYZQkGDREXTjMmt1l1MRT0NWvNpkaGMIvBt
-        5EEwWfHO30iJRtl7Z1/HNbc2zQ==
-X-Google-Smtp-Source: AK7set8HF6l0jo84zLOB7MX/fRtN4brKhFNLhH2+J96cVLUVYh0wHNh/ZygV2azN5x17QV/AqFWT6w==
-X-Received: by 2002:a17:90b:3b4d:b0:233:ee50:d28b with SMTP id ot13-20020a17090b3b4d00b00233ee50d28bmr8170087pjb.16.1679052776174;
-        Fri, 17 Mar 2023 04:32:56 -0700 (PDT)
+        bh=02xUqfEugvmsV40WG30Qa2tXUYlhWNLWy8/nr55CGig=;
+        b=d2iqI+YX10pl07DqMvo1iBSF7FFr7zGOpD3O/h1Mv2JiaGIwIH0FwkaiLSAWX+jH/h
+         x3bLtDm8FHb6Ql0qCTlMU6+3wvwKGB0im3eCTmAbO7IH/bdV7Ez6V5VuWBtia6ikiiky
+         MeKYS+fGRZuG4oBY0uxv4w3XAdqial9Kqt+h+dNdksKKB1ONBeIkt6thI2D007d133AP
+         Keo1j5iWS2PKEzdfrE32a56PJbgGnxvIMvy+Mqs3tqVYlt+NWZtAyMtXwYM144aqwV6G
+         PiNjccIBhJc1EH3HubPtyMcq3LFXprSbqV+Zm7TpTBRR0bD8LE7B+WZQIeoYIjzL1BfE
+         S34w==
+X-Gm-Message-State: AO0yUKVuFbpaiW3jPkW2Tqs4QIOG8w6PDYI12096axHY0+78XEIRUhsQ
+        bR6C/8fk9wN31baybRoKJnWcrQ==
+X-Google-Smtp-Source: AK7set8YHzFZhlF4nGvlioh0immV7c7RJw5smiE65VQhF7yAnNjifH85xfnz7kikkGdWtEdESDV8iQ==
+X-Received: by 2002:a17:903:110d:b0:1a1:93d0:e807 with SMTP id n13-20020a170903110d00b001a193d0e807mr7608803plh.36.1679052779764;
+        Fri, 17 Mar 2023 04:32:59 -0700 (PDT)
 Received: from tyrell.hq.igel.co.jp (napt.igel.co.jp. [219.106.231.132])
-        by smtp.gmail.com with ESMTPSA id e3-20020a17090a818300b00233aacab89esm1182904pjn.48.2023.03.17.04.32.52
+        by smtp.gmail.com with ESMTPSA id e3-20020a17090a818300b00233aacab89esm1182904pjn.48.2023.03.17.04.32.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Mar 2023 04:32:55 -0700 (PDT)
+        Fri, 17 Mar 2023 04:32:59 -0700 (PDT)
 From:   Shunsuke Mie <mie@igel.co.jp>
 To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Cc:     Vinod Koul <vkoul@kernel.org>,
@@ -64,98 +64,164 @@ Cc:     Vinod Koul <vkoul@kernel.org>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Frank Li <Frank.Li@nxp.com>, linux-kernel@vger.kernel.org,
         dmaengine@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [RFC PATCH 03/11] pci: endpoint: function/pci-epf-test: Unify a range of time measurement
-Date:   Fri, 17 Mar 2023 20:32:30 +0900
-Message-Id: <20230317113238.142970-4-mie@igel.co.jp>
+Subject: [RFC PATCH 04/11] PCI: endpoint: functions/pci-epf-test: Move common difinitions to header file
+Date:   Fri, 17 Mar 2023 20:32:31 +0900
+Message-Id: <20230317113238.142970-5-mie@igel.co.jp>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230317113238.142970-1-mie@igel.co.jp>
 References: <20230317113238.142970-1-mie@igel.co.jp>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This test code measures a time of data transfer. Some measurements include
-print, preparation and error checking. Change to measure during data
-tansfer.
+The pci-epf-test and pci_endpoint_test drivers communicate by registers on
+PCIe BAR. The register details are duplicated in their code respectively.
+Move a common part to an introduced header file from pci-epf-test.
 
 Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/pci/endpoint/functions/pci-epf-test.c | 37 +---------
+ include/linux/pci-epf-test.h                  | 67 +++++++++++++++++++
+ 2 files changed, 68 insertions(+), 36 deletions(-)
+ create mode 100644 include/linux/pci-epf-test.h
 
 diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 172e5ac0bd96..6955a3d2eb7e 100644
+index 6955a3d2eb7e..99d8a05b8507 100644
 --- a/drivers/pci/endpoint/functions/pci-epf-test.c
 +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -356,7 +356,6 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
- 		goto err_dst_addr;
- 	}
+@@ -17,31 +17,9 @@
  
--	ktime_get_ts64(&start);
- 	use_dma = !!(reg->flags & FLAG_USE_DMA);
- 	if (use_dma) {
- 		if (!epf_test->dma_supported) {
-@@ -371,9 +370,11 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
- 			goto err_map_addr;
- 		}
+ #include <linux/pci-epc.h>
+ #include <linux/pci-epf.h>
++#include <linux/pci-epf-test.h>
+ #include <linux/pci_regs.h>
  
-+		ktime_get_ts64(&start);
- 		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
- 						 src_phys_addr, reg->size, 0,
- 						 DMA_MEM_TO_MEM);
-+		ktime_get_ts64(&end);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
- 	} else {
-@@ -385,11 +386,13 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
- 			goto err_map_addr;
- 		}
- 
-+		ktime_get_ts64(&start);
- 		memcpy_fromio(buf, src_addr, reg->size);
- 		memcpy_toio(dst_addr, buf, reg->size);
-+		ktime_get_ts64(&end);
- 		kfree(buf);
- 	}
--	ktime_get_ts64(&end);
-+
- 	pci_epf_test_print_rate("COPY", reg->size, &start, &end, use_dma);
- 
- err_map_addr:
-@@ -467,9 +470,9 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
- 		ret = pci_epf_test_data_transfer(epf_test, dst_phys_addr,
- 						 phys_addr, reg->size,
- 						 reg->src_addr, DMA_DEV_TO_MEM);
-+		ktime_get_ts64(&end);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
--		ktime_get_ts64(&end);
- 
- 		dma_unmap_single(dma_dev, dst_phys_addr, reg->size,
- 				 DMA_FROM_DEVICE);
-@@ -556,14 +559,13 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
- 		}
- 
- 		ktime_get_ts64(&start);
+-#define IRQ_TYPE_LEGACY			0
+-#define IRQ_TYPE_MSI			1
+-#define IRQ_TYPE_MSIX			2
 -
- 		ret = pci_epf_test_data_transfer(epf_test, phys_addr,
- 						 src_phys_addr, reg->size,
- 						 reg->dst_addr,
- 						 DMA_MEM_TO_DEV);
-+		ktime_get_ts64(&end);
- 		if (ret)
- 			dev_err(dev, "Data transfer failed\n");
--		ktime_get_ts64(&end);
+-#define COMMAND_RAISE_LEGACY_IRQ	BIT(0)
+-#define COMMAND_RAISE_MSI_IRQ		BIT(1)
+-#define COMMAND_RAISE_MSIX_IRQ		BIT(2)
+-#define COMMAND_READ			BIT(3)
+-#define COMMAND_WRITE			BIT(4)
+-#define COMMAND_COPY			BIT(5)
+-
+-#define STATUS_READ_SUCCESS		BIT(0)
+-#define STATUS_READ_FAIL		BIT(1)
+-#define STATUS_WRITE_SUCCESS		BIT(2)
+-#define STATUS_WRITE_FAIL		BIT(3)
+-#define STATUS_COPY_SUCCESS		BIT(4)
+-#define STATUS_COPY_FAIL		BIT(5)
+-#define STATUS_IRQ_RAISED		BIT(6)
+-#define STATUS_SRC_ADDR_INVALID		BIT(7)
+-#define STATUS_DST_ADDR_INVALID		BIT(8)
+-
+-#define FLAG_USE_DMA			BIT(0)
+-
+ #define TIMER_RESOLUTION		1
  
- 		dma_unmap_single(dma_dev, src_phys_addr, reg->size,
- 				 DMA_TO_DEVICE);
+ static struct workqueue_struct *kpcitest_workqueue;
+@@ -60,19 +38,6 @@ struct pci_epf_test {
+ 	const struct pci_epc_features *epc_features;
+ };
+ 
+-struct pci_epf_test_reg {
+-	u32	magic;
+-	u32	command;
+-	u32	status;
+-	u64	src_addr;
+-	u64	dst_addr;
+-	u32	size;
+-	u32	checksum;
+-	u32	irq_type;
+-	u32	irq_number;
+-	u32	flags;
+-} __packed;
+-
+ static struct pci_epf_header test_header = {
+ 	.vendorid	= PCI_ANY_ID,
+ 	.deviceid	= PCI_ANY_ID,
+diff --git a/include/linux/pci-epf-test.h b/include/linux/pci-epf-test.h
+new file mode 100644
+index 000000000000..636057c3377f
+--- /dev/null
++++ b/include/linux/pci-epf-test.h
+@@ -0,0 +1,67 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef __PCI_EPF_TEST_H
++#define __PCI_EPF_TEST_H
++
++struct pci_epf_test_reg {
++#define PCI_ENDPOINT_TEST_MAGIC offsetof(struct pci_epf_test_reg, magic)
++	u32	magic;
++#define PCI_ENDPOINT_TEST_COMMAND offsetof(struct pci_epf_test_reg, command)
++#define COMMAND_RAISE_LEGACY_IRQ		BIT(0)
++#define COMMAND_RAISE_MSI_IRQ			BIT(1)
++#define COMMAND_RAISE_MSIX_IRQ			BIT(2)
++#define COMMAND_READ				BIT(3)
++#define COMMAND_WRITE				BIT(4)
++#define COMMAND_COPY				BIT(5)
++	u32	command;
++#define STATUS_READ_SUCCESS			BIT(0)
++#define STATUS_READ_FAIL			BIT(1)
++#define STATUS_WRITE_SUCCESS			BIT(2)
++#define STATUS_WRITE_FAIL			BIT(3)
++#define STATUS_COPY_SUCCESS			BIT(4)
++#define STATUS_COPY_FAIL			BIT(5)
++#define STATUS_IRQ_RAISED			BIT(6)
++#define STATUS_SRC_ADDR_INVALID			BIT(7)
++#define STATUS_DST_ADDR_INVALID			BIT(8)
++#define PCI_ENDPOINT_TEST_STATUS offsetof(struct pci_epf_test_reg, status)
++	u32	status;
++	union {
++#define PCI_ENDPOINT_TEST_SRC_ADDR offsetof(struct pci_epf_test_reg, src_addr)
++		u64	src_addr;
++		struct {
++#define PCI_ENDPOINT_TEST_LOWER_SRC_ADDR offsetof(struct pci_epf_test_reg, src_low)
++			u32 src_low;
++#define PCI_ENDPOINT_TEST_UPPER_SRC_ADDR offsetof(struct pci_epf_test_reg, src_high)
++			u32 src_high;
++		} __packed;
++	};
++	union {
++#define PCI_ENDPOINT_TEST_DST_ADDR offsetof(struct pci_epf_test_reg, dst_addr)
++		u64	dst_addr;
++		struct {
++#define PCI_ENDPOINT_TEST_LOWER_DST_ADDR offsetof(struct pci_epf_test_reg, dst_low)
++			u32 dst_low;
++#define PCI_ENDPOINT_TEST_UPPER_DST_ADDR offsetof(struct pci_epf_test_reg, dst_high)
++			u32 dst_high;
++		} __packed;
++	};
++#define PCI_ENDPOINT_TEST_SIZE offsetof(struct pci_epf_test_reg, size)
++	u32	size;
++#define PCI_ENDPOINT_TEST_COUNT offsetof(struct pci_epf_test_reg, count)
++	u32 count;
++#define PCI_ENDPOINT_TEST_CHECKSUM offsetof(struct pci_epf_test_reg, checksum)
++	u32	checksum;
++#define PCI_ENDPOINT_TEST_IRQ_TYPE offsetof(struct pci_epf_test_reg, irq_type)
++#define IRQ_TYPE_UNDEFINED			-1
++#define IRQ_TYPE_LEGACY				0
++#define IRQ_TYPE_MSI				1
++#define IRQ_TYPE_MSIX				2
++	u32	irq_type;
++#define PCI_ENDPOINT_TEST_IRQ_NUMBER offsetof(struct pci_epf_test_reg, irq_number)
++	u32	irq_number;
++#define PCI_ENDPOINT_TEST_FLAGS offsetof(struct pci_epf_test_reg, flags)
++#define FLAG_USE_DMA				BIT(0)
++	u32	flags;
++} __packed;
++
++#endif /* __PCI_EPF_TEST_H */
 -- 
 2.25.1
 

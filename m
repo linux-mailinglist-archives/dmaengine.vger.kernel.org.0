@@ -2,85 +2,103 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCC5D6BF395
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Mar 2023 22:09:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B9716BF84F
+	for <lists+dmaengine@lfdr.de>; Sat, 18 Mar 2023 07:23:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230016AbjCQVJm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 17 Mar 2023 17:09:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40266 "EHLO
+        id S229533AbjCRGXE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 18 Mar 2023 02:23:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229787AbjCQVJl (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Mar 2023 17:09:41 -0400
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6678CC66F;
-        Fri, 17 Mar 2023 14:09:40 -0700 (PDT)
-Received: by mail-io1-f41.google.com with SMTP id b5so2905996iow.0;
-        Fri, 17 Mar 2023 14:09:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679087379;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        with ESMTP id S229470AbjCRGXD (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 18 Mar 2023 02:23:03 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B7B132E6;
+        Fri, 17 Mar 2023 23:23:02 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id p13-20020a17090a284d00b0023d2e945aebso9567654pjf.0;
+        Fri, 17 Mar 2023 23:23:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679120582;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wJjkdUcY9AWxCDvg4UhtGFEbpOz8FP6Z6hjJ4WNipBE=;
-        b=4yVxfh7rZvAtGJliGbFiidCmz+jB3r7cz85XTu28O2Fzg8mF+Z97DOT8CJ59zA/zx0
-         OM350GMGgEtVlbtnMz3IQcJOuOGSf+yGsAc+9wcDunda5M+MiakOdPQWVsHFnta15mYN
-         +yRZLiXpfBqz1Hibz4qEuA3o9HrcPTpT0XN4lc0Bl4NfOcJQ+QeXsGka/k4e+B1+P6DW
-         nEmSUf61ld54U3O1xH22bbkplVCV3C9OfYI70GEA43hF4UAebPkrVoHir52zHEWCY8iy
-         SD/1bzEsH1PpaqNCItpZq4mFwYOPeXxz+HFblZhQBuhswdkNbdCh5wdMd+FQxzIjyj7c
-         o6HQ==
-X-Gm-Message-State: AO0yUKW9/Xq+5tO5fzCedQNFjdOFe371o11UoQRHa8/15U5dcxPfzm40
-        fzKE6VFB7ACyBb4O5jrw2Q==
-X-Google-Smtp-Source: AK7set/ZUv+aH87BKtKr6DwPjobM7Ae5IZJ5lDL9yd5h2e+8QMtJhjH+new0tYZcxWxEgjV2zx9+BA==
-X-Received: by 2002:a5e:8c1a:0:b0:74e:3b0f:4498 with SMTP id n26-20020a5e8c1a000000b0074e3b0f4498mr30945ioj.7.1679087379656;
-        Fri, 17 Mar 2023 14:09:39 -0700 (PDT)
-Received: from robh_at_kernel.org ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id x11-20020a056638248b00b0040637924a30sm598205jat.31.2023.03.17.14.09.38
+        bh=ngDoAe2SMF8O9JG38OYK9h6kTvKqSQulQP0C6GqWh/Q=;
+        b=e2pQqreq7rkm52RLzPxDS3uNVqdQLahxPO1muWuYQZQgyQ54svwC4aU0VCGlGFneLj
+         DQ2yHyqweqV9sPjmDLB+UW0wBaBSvyO9k+36htJIUzYc1I5gf0EiQPXcnLBGaYCo6+Si
+         HJoX2RntExcDQN+HnrbWITFrO6PKu/QL9YBalQmcJKje3G772pIv4mbjsva4alDfxP19
+         JCMie1oVzDa4n0nQgHhZFXiG6YG6v2J0B33ZkNaNcpoYZjiaN+YhrC7b/3w/EnF9u0vU
+         RpGrK3cjy0RRcaO1bhhr2+szznRCbwxmZ5e04kLHFQswh8qtCnj+iNmxlCvKKkL1lDd7
+         Qddg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679120582;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ngDoAe2SMF8O9JG38OYK9h6kTvKqSQulQP0C6GqWh/Q=;
+        b=q4lfVhQxe+qFNIJDZyPQD95UGKQKUIxwT8n6WZlgzpw2L4HiWjOJ/qeiKWDpY5nwCY
+         9B0aC7h2YkXAhz1RYEzcWN4Lz3lpUCZDT9XeFauVw+v16Tf9FTkMzCsiNmvPSDGxiWWi
+         1PhpAi+ZJDRHX1Ox7lyW12CxNWeUnAppGCKWp5xfmbPcfSHEQKsEG+u0OzfWF5PsSX0F
+         fAQYdeZ+kQCDE68u9TyD7WadQNL4gckh5jncBBv1/EGCjGIMrGn7Doi5t2iYbFO/JLfu
+         finVeqpEtVGiOsDxDWQLXBSPCX+pQc8MHrBZDk3jFY0TChjhnQ9SnMMcQg27MpLMDtLg
+         +kgQ==
+X-Gm-Message-State: AO0yUKVwkaPKqEIC85tDSPKu/Z+KgVRHQla3JqwJE3IfNRUO9jVJA6Jb
+        c65B9hDuco3c/uDwiWE/T2Z8rO7Ni6cGcw==
+X-Google-Smtp-Source: AK7set9Apsyg0sCnkb7f2s8fWryv7QSWnxLCvkc3B9H3iqN3lLZtTlLctNJiovC7B05SypnJN2f0bQ==
+X-Received: by 2002:a17:903:234a:b0:19e:6e29:2a8c with SMTP id c10-20020a170903234a00b0019e6e292a8cmr11290347plh.5.1679120581746;
+        Fri, 17 Mar 2023 23:23:01 -0700 (PDT)
+Received: from DESKTOP-HHR6EMI.localdomain ([143.244.50.165])
+        by smtp.gmail.com with ESMTPSA id d18-20020a170902aa9200b001a1add0d616sm1471208plr.161.2023.03.17.23.22.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Mar 2023 14:09:39 -0700 (PDT)
-Received: (nullmailer pid 2809946 invoked by uid 1000);
-        Fri, 17 Mar 2023 21:09:38 -0000
-Date:   Fri, 17 Mar 2023 16:09:38 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Walker Chen <walker.chen@starfivetech.com>
-Cc:     Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv@lists.infradead.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v5 1/3] dt-bindings: dma: snps,dw-axi-dmac: constrain the
- items of resets for JH7110 dma
-Message-ID: <167908737748.2809883.11210849394769213152.robh@kernel.org>
-References: <20230314083537.22571-1-walker.chen@starfivetech.com>
- <20230314083537.22571-2-walker.chen@starfivetech.com>
+        Fri, 17 Mar 2023 23:23:01 -0700 (PDT)
+From:   void0red <void0red@gmail.com>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peter.ujfalusi@gmail.com, void0red@gmail.com
+Subject: [PATCH v2 1/2] dmaengine: ti: add null check of devm_kasprintf in udma_probe
+Date:   Sat, 18 Mar 2023 14:22:54 +0800
+Message-Id: <20230318062255.76-1-void0red@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <ZBSj/0kIGVROIGi7@matsya>
+References: <ZBSj/0kIGVROIGi7@matsya>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230314083537.22571-2-walker.chen@starfivetech.com>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+From: Kang Chen <void0red@gmail.com>
 
-On Tue, 14 Mar 2023 16:35:35 +0800, Walker Chen wrote:
-> The DMA controller needs two reset items to work properly on JH7110 SoC,
-> so there is need to constrain the items' value to 2, other platforms
-> have 1 reset item at most.
-> 
-> Signed-off-by: Walker Chen <walker.chen@starfivetech.com>
-> ---
->  .../bindings/dma/snps,dw-axi-dmac.yaml        | 23 ++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
-> 
+devm_kasprintf may fails, uc->name might be null and wrong irq
+name will be used in request.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Fixes: 25dcb5dd7b7c ("dmaengine: ti: New driver for K3 UDMA")
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Kang Chen <void0red@gmail.com>
+---
+v2 -> v1: split into two patches and add some tags
+
+ drivers/dma/ti/k3-udma.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 7e23a6fdef95..692d1d25c70a 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -5494,6 +5494,8 @@ static int udma_probe(struct platform_device *pdev)
+ 		uc->config.dir = DMA_MEM_TO_MEM;
+ 		uc->name = devm_kasprintf(dev, GFP_KERNEL, "%s chan%d",
+ 					  dev_name(dev), i);
++		if (!uc->name)
++			return -ENOMEM;
+ 
+ 		vchan_init(&uc->vc, &ud->ddev);
+ 		/* Use custom vchan completion handling */
+-- 
+2.34.1
 

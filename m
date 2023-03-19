@@ -2,88 +2,128 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 163EF6BFAAD
-	for <lists+dmaengine@lfdr.de>; Sat, 18 Mar 2023 15:10:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AEB06C0321
+	for <lists+dmaengine@lfdr.de>; Sun, 19 Mar 2023 17:32:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbjCROKW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 18 Mar 2023 10:10:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41582 "EHLO
+        id S231151AbjCSQcy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 19 Mar 2023 12:32:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229541AbjCROKV (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 18 Mar 2023 10:10:21 -0400
-Received: from www381.your-server.de (www381.your-server.de [78.46.137.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 186F32210A;
-        Sat, 18 Mar 2023 07:10:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-        s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID;
-        bh=Luv4E4Zi2VCB+ZCtjwI79vLjcLeZ5+7puHaRvQvw66k=; b=gvhhnjYhMMX9IcdWK0SRcmhyYi
-        ANx26ZNPmi880X3NFYjtI6t4/ZFLLnPX8xngazTkX8fdWsjPZKlw8x5XE4GXCC5s407HjJjGZ9vOn
-        lHGJbICc20UZh2gc30e885K00Bulj/7V8nzAyC1yLKJrVsTCQKtuKhE7JkZDFy6/JjBl3972/wQ8y
-        EiiHa1eJcJeDOirH1VcuAmc07GswM0r54WovTB56oKjeUw7gRVFrwlBm9K/ww9/Kst9XOq7NgU9kh
-        u7cEoIAbNf/BmV5JyHi0TeLWy5Hct7LEGBM05yGFXPyHnufFxO0+ruEHURJF7u//8uydlbaxTOKLg
-        kB1/PLSA==;
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www381.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <lars@metafoo.de>)
-        id 1pdWwL-0005Ex-NR; Sat, 18 Mar 2023 14:49:45 +0100
-Received: from [2604:5500:c0e5:eb00:da5e:d3ff:feff:933b]
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1pdWwL-000UnY-7I; Sat, 18 Mar 2023 14:49:45 +0100
-Message-ID: <02216197-6cbd-319d-1015-bfb4449ead85@metafoo.de>
-Date:   Sat, 18 Mar 2023 06:49:41 -0700
+        with ESMTP id S230515AbjCSQcr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 19 Mar 2023 12:32:47 -0400
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BED71EFF2;
+        Sun, 19 Mar 2023 09:32:27 -0700 (PDT)
+Received: by mail-il1-f172.google.com with SMTP id 4so5405318ilz.6;
+        Sun, 19 Mar 2023 09:32:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679243547;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dOGXaArRq4ZZyP8cyGdaWJb+Pur+8PAtmWP3/78HMM8=;
+        b=k11DZJ2uE7oU90ueJBNfe0CNi0yzCDwJaqniTU+GRbt5Qdf35cQgqIExqNjI8mm+oG
+         TQS9bcpl6GbxAuGdOeDis8dDl1koIUmEw+4RvK1AHr+OGFDEkISgDm4Pk7uBU1GbW9MZ
+         MWNhOPolYoYB0hQ00Qsr5a61/ldZk3dq6mLX8Ug7h2LSgbdhQlZRzfz23AWAgiTEv5Il
+         gVktl06DzyO5UhNH6W1UA3BTLmixaGjRtUUnA286uSq4tdTOCKsm+38LO9auOEXBdxQs
+         9iZfX4wMBzCKTqPUrNw6nsma0IIWstKk6oanaInVd0EWndWST/ufwAl6/lVAVc2/Ra12
+         Brzg==
+X-Gm-Message-State: AO0yUKXe+63JAl8EUWM9igqNToJNZbZfJWAGaw2F1hgGhs3f20pG7r07
+        Z8NCq3YQcwtq1OHPrrAhBEV9qfzMRg==
+X-Google-Smtp-Source: AK7set/e/gq8gz7R6YCaK9c1AoNcAk4b2KXHEjOqeKZ2Me2Dp7xVCy6rqG1LsWLqkxPIcqB1DP/XxA==
+X-Received: by 2002:a05:6e02:4c8:b0:315:9749:7a0e with SMTP id f8-20020a056e0204c800b0031597497a0emr3938435ils.23.1679243546912;
+        Sun, 19 Mar 2023 09:32:26 -0700 (PDT)
+Received: from robh_at_kernel.org ([2605:ef80:80c7:2689:137d:d795:47e4:3de1])
+        by smtp.gmail.com with ESMTPSA id a6-20020a056638164600b003c4e65fd6dfsm2434348jat.176.2023.03.19.09.32.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Mar 2023 09:32:26 -0700 (PDT)
+Received: (nullmailer pid 226421 invoked by uid 1000);
+        Sun, 19 Mar 2023 16:32:23 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: bestcomm: Use of_address_to_resource()
+Date:   Sun, 19 Mar 2023 11:32:22 -0500
+Message-Id: <20230319163222.226377-1-robh@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v7 3/5] dmaengine: dw-edma: Add support for native HDMA
-Content-Language: en-US
-To:     Cai Huoqing <cai.huoqing@linux.dev>, fancer.lancer@gmail.com
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <20230315012840.6986-1-cai.huoqing@linux.dev>
- <20230315012840.6986-4-cai.huoqing@linux.dev>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-In-Reply-To: <20230315012840.6986-4-cai.huoqing@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.103.8/26847/Sat Mar 18 08:21:32 2023)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 3/14/23 18:28, Cai Huoqing wrote:
-> Add support for HDMA NATIVE, as long the IP design has set
->
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-regs.h b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> new file mode 100644
-> index 000000000000..0a6032aa1a33
-> --- /dev/null
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> @@ -0,0 +1,130 @@
->
-> +struct dw_hdma_v0_ch_regs {
-> [...]
-> +	u32 msi_msgdata;			/* 0x00a8 */
-> +	u32 padding_2[21];			/* 0x00ac..0x00e8 */
-The comment here is wrong. This goes all the way to 0x00fc.
-> +} __packed;
-> +
+Replace of_get_address() and of_translate_address() calls with single
+call to of_address_to_resource().
+
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/dma/bestcomm/sram.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/dma/bestcomm/sram.c b/drivers/dma/bestcomm/sram.c
+index c465758e7193..103174cbda65 100644
+--- a/drivers/dma/bestcomm/sram.c
++++ b/drivers/dma/bestcomm/sram.c
+@@ -38,7 +38,7 @@ int bcom_sram_init(struct device_node *sram_node, char *owner)
+ {
+ 	int rv;
+ 	const u32 *regaddr_p;
+-	u64 regaddr64, size64;
++	struct resource res;
+ 	unsigned int psize;
+ 
+ 	/* Create our state struct */
+@@ -56,21 +56,18 @@ int bcom_sram_init(struct device_node *sram_node, char *owner)
+ 	}
+ 
+ 	/* Get address and size of the sram */
+-	regaddr_p = of_get_address(sram_node, 0, &size64, NULL);
+-	if (!regaddr_p) {
++	rv = of_address_to_resource(sram_node, 0, &res);
++	if (rv) {
+ 		printk(KERN_ERR "%s: bcom_sram_init: "
+ 			"Invalid device node !\n", owner);
+-		rv = -EINVAL;
+ 		goto error_free;
+ 	}
+ 
+-	regaddr64 = of_translate_address(sram_node, regaddr_p);
+-
+-	bcom_sram->base_phys = (phys_addr_t) regaddr64;
+-	bcom_sram->size = (unsigned int) size64;
++	bcom_sram->base_phys = res.start;
++	bcom_sram->size = resource_size(&res);
+ 
+ 	/* Request region */
+-	if (!request_mem_region(bcom_sram->base_phys, bcom_sram->size, owner)) {
++	if (!request_mem_region(res.start, resource_size(&res), owner)) {
+ 		printk(KERN_ERR "%s: bcom_sram_init: "
+ 			"Couldn't request region !\n", owner);
+ 		rv = -EBUSY;
+@@ -79,7 +76,7 @@ int bcom_sram_init(struct device_node *sram_node, char *owner)
+ 
+ 	/* Map SRAM */
+ 		/* sram is not really __iomem */
+-	bcom_sram->base_virt = (void*) ioremap(bcom_sram->base_phys, bcom_sram->size);
++	bcom_sram->base_virt = (void*) ioremap(res.start, resource_size(&res));
+ 
+ 	if (!bcom_sram->base_virt) {
+ 		printk(KERN_ERR "%s: bcom_sram_init: "
+@@ -120,7 +117,7 @@ int bcom_sram_init(struct device_node *sram_node, char *owner)
+ 	return 0;
+ 
+ error_release:
+-	release_mem_region(bcom_sram->base_phys, bcom_sram->size);
++	release_mem_region(res.start, resource_size(&res));
+ error_free:
+ 	kfree(bcom_sram);
+ 	bcom_sram = NULL;
+-- 
+2.39.2
 

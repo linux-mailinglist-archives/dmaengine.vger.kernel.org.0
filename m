@@ -2,76 +2,127 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16BBA6C20D2
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Mar 2023 20:05:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CA726C2136
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Mar 2023 20:20:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230196AbjCTTFb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 20 Mar 2023 15:05:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55308 "EHLO
+        id S229583AbjCTTUs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 20 Mar 2023 15:20:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231543AbjCTTE6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 Mar 2023 15:04:58 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEB4942BF1;
-        Mon, 20 Mar 2023 11:56:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679338616; x=1710874616;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AE8a5J60lm2ExPmrAUwk6hAYLhb2V7vaXeCwOYYD2l8=;
-  b=cD19lcDwU70u8zWIkK1CfcI925grzDcyP+32voqnb/RHHvpOGoKj6YLN
-   Tu+/Ti6ohT62pV9t8EQ/uTp/xUkS3SLRNjajjZYq3e6gatkdYQhYItK27
-   RXhkrKz3cK4F5DXdr8xBlANJ9q/bfVEGlfI8Vk23BatxQUvRUKq43nfpp
-   ovFrDq9r4dTCm/dHVW2eq4fObj7eLwQOwPuR554jhNxWrRdzMWCoE1VjX
-   Crq17jC52PWMK/QfRbfgCwQtyGbLPSCOTQZl+Ue/ukgC6rS295sLG9Q0I
-   6UF4zPEXxwh1xx5157rWEFgVJvLqrPCrqp84W2jo3XBNkxPKFqAQQAVdP
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="366473814"
-X-IronPort-AV: E=Sophos;i="5.98,276,1673942400"; 
-   d="scan'208";a="366473814"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 11:55:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="927076491"
-X-IronPort-AV: E=Sophos;i="5.98,276,1673942400"; 
-   d="scan'208";a="927076491"
-Received: from srinivas-otcpl-7600.jf.intel.com (HELO jacob-builder.jf.intel.com) ([10.54.39.106])
-  by fmsmga006.fm.intel.com with ESMTP; 20 Mar 2023 11:55:22 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        with ESMTP id S231530AbjCTTTX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 Mar 2023 15:19:23 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2056.outbound.protection.outlook.com [40.107.94.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21032E1AD;
+        Mon, 20 Mar 2023 12:11:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aPm4XGecaAiJgw3lJXTRNLXUSU3V68+xXN8PAOCTIPo0QDoObUwWCDHfdNB/8kOSbqy6yamhw50FLk3aORYnYKLsjM7v1A+A5cm8hq0BzPa2YmWBLElY3OMS60HbG6w5ieKmajqC2640Pe+CvnansJNstfp1R1+I8O8naDuwF4pBfJ+PBZH8XxwVYN2vqoNlO567svQ/0UNVfedt03GBEzAeHS4aL0PHn7/d3UG6nWdPtyRAcwanRvJnRIO2hKOI/xYHnFgym9wExvpYSXkyC3gq84WlnLK0uA7Ww8M0UoWrAaSD2Rm6zaC/MoNVPIrDMT600Tr5XhzExjmhLIiFrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=m0TooSyZrgXJgX6GFt4U94Y+9mX47rDQeSZl8faGHLw=;
+ b=Ny9qHx3OPD3V2lWkar+xYdAf1zzDLQ67ML7xjwIR0SGWKbAEI05eEf6gOYFlNOl0mRACgcXW0v2J+ymN94Z+Eevt9B28FFnnw43+Z9k3LBY8IeZfvEF1xUgh9TLYvLTVTjXD+CyEGdc84Fa6U+jHuDSv9NFZNxZLgzyYMlhBnAVGGgeLPxpTb4HmirHrkVJ7E3HPbfiTDeFtEkeTCm/NLZ1jl4B2hbaEpEd0tzLqhjNOKSGm/WGgf7Q2l2/L+mO3Tqni0Jr2fyhsbHiFFjBAQrcNKw03jAfwtbT72K3gQH9BSxDPuWcCNxzU+LMwzq6iBgPGiafQ0eninmiveSeFIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m0TooSyZrgXJgX6GFt4U94Y+9mX47rDQeSZl8faGHLw=;
+ b=D75kv/zWnB2wyTE1yWQEDzcNLxPqhhu0M9qKkotNoqTqmKGq7g1ZDc4LARbPtLElkqhiEeAhRKrjG2GmMoDj5o961roj7oyO/VmQnYQW9VJvBGz6/xDjHHuAbcKfR5uIMucntQaIlEtHfJ6uBF71PSsJnuPENUcLyz2ANe8jK6aKWb5ieQIIqJpLSKEM8Tr24dwmA1vh1f5N1oH+7/wiUt5bZLdWC7X/enb+tu1ebYXP+RuJsTqm3AHIKpOPM66KceFcAlwznIBHN5gVY4TS52PlUqq3U05FotugaHH2ukPomC43i9yaaON495497J3FaAMZwy8XNI2pRt8BktdvjA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
+ by DM4PR12MB7573.namprd12.prod.outlook.com (2603:10b6:8:10f::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.37; Mon, 20 Mar
+ 2023 19:11:12 +0000
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::ef6d:fdf6:352f:efd1]) by LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::ef6d:fdf6:352f:efd1%3]) with mapi id 15.20.6178.037; Mon, 20 Mar 2023
+ 19:11:12 +0000
+Date:   Mon, 20 Mar 2023 16:11:10 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
+        Lu Baolu <baolu.lu@linux.intel.com>,
         Joerg Roedel <joro@8bytes.org>,
         Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "Robin Murphy" <robin.murphy@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
         Dave Hansen <dave.hansen@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         X86 Kernel <x86@kernel.org>, bp@alien8.de,
         "H. Peter Anvin" <hpa@zytor.com>,
         Peter Zijlstra <peterz@infradead.org>, corbet@lwn.net,
         vkoul@kernel.org, dmaengine@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     "Will Deacon" <will@kernel.org>,
+        linux-doc@vger.kernel.org, Will Deacon <will@kernel.org>,
         David Woodhouse <dwmw2@infradead.org>,
         Raj Ashok <ashok.raj@intel.com>,
         "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
         "Yu, Fenghua" <fenghua.yu@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
         Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v7 7/7] iommu: Remove ioasid infrastructure
-Date:   Mon, 20 Mar 2023 11:59:10 -0700
-Message-Id: <20230320185910.2643260-8-jacob.jun.pan@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230320185910.2643260-1-jacob.jun.pan@linux.intel.com>
+        Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH v7 2/7] iommu/sva: Move PASID helpers to sva code
+Message-ID: <ZBivznuBdkadHbA+@nvidia.com>
 References: <20230320185910.2643260-1-jacob.jun.pan@linux.intel.com>
+ <20230320185910.2643260-3-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230320185910.2643260-3-jacob.jun.pan@linux.intel.com>
+X-ClientProxiedBy: MN2PR13CA0027.namprd13.prod.outlook.com
+ (2603:10b6:208:160::40) To LV2PR12MB5869.namprd12.prod.outlook.com
+ (2603:10b6:408:176::16)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|DM4PR12MB7573:EE_
+X-MS-Office365-Filtering-Correlation-Id: d6f2ab1b-6698-4f54-8b0f-08db2976de62
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: RY/4lE4Tw8x2ILn0WfpL9rty6al/UsN+BT1mM5OBGmfwQR3TXNGLZXFxBefVukcuU4FKLYnHBsVGeXkWSu0aqcFbry3WQCNYaFn57/XwX07BHpFu7UK2ciHsAyDxa6N0q8fnBjQAd6b3fSoWbjfUZJ1amKqkjnxCioHQXQEaihtw4l7C5G/0/iCKdrnWpREFIHVf5bcHDTN9DhwEh4UgaUD7kU3QP4rCo65Hkt7isT+HTG6m/upcptRqVCZIHScQ+lNntGXYdNYzEV0JWQoE5jIRIw+eg9JvXS5n+8tq3ZWhtluca/2aTeJkbQZdr6eYeEVbKLxMdP2YMIBBjZvmNslOTOSymayQcDr0Wh1VTCf+ZdD+lY/ytEDjG4iKSd0j+T2c+B3QqgJQcVXaUiv0PA76jPHC1rPMwRH5WQRg5T9CXgoLuhk2yVuqWSplyECYHOYlJ5ASy+Kg4xRwB4GPi5m6jcL/CiqzkV0pDTg4cCylXdEKfJBlp+u16vWjmxoiL0iEnEhCbCia0Ogx2G+NR0ToLQzd8nMG49wKvtSFVjGXH5AKgji85nT2WJDl9Dkp7hXl6h4e56eq8iNlK44wz5raRzJCMAhRzgPrsVxXsD6GLnnWh/Ny0DKsTOSDqhNOXpKR0vQbeTB1NBmP3kh8Vw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(396003)(376002)(366004)(39860400002)(346002)(451199018)(5660300002)(7416002)(6486002)(41300700001)(66556008)(83380400001)(478600001)(316002)(54906003)(6916009)(66476007)(4326008)(86362001)(36756003)(8936002)(8676002)(66946007)(2906002)(2616005)(186003)(38100700002)(26005)(6512007)(6506007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5jd7m6H+cAjCOc/FULoz+in+y5bMIQJS77yyw4PaMN4tELMdZNxglYXCRHJz?=
+ =?us-ascii?Q?NOorg8UeE9YJ/Gsca5fXxvcY6f+NXVIHtaVnVKH+vAceBHYe7VU4lxCAfHr8?=
+ =?us-ascii?Q?fgjreDb4hdYxDARUI2uNnmhJuNpSWXf8B2m1Jsc84k8euoOcDmdy8jCjlB4m?=
+ =?us-ascii?Q?7mCnY6nbKVV/LAExE3MXBlzYqcQKQJAeCNOUVE9Zpd08+/3L35z3qYnGKEzZ?=
+ =?us-ascii?Q?1551Xho/i5PlOMckDDuSSHcbrAGskoWt57y5wJBaasnl+MAWMEhHVLG9Mjc0?=
+ =?us-ascii?Q?DxtX3E27R+YNSH3r+C43CfPbhACKTgOD4sD4swCo7SOtIvPB/FCf4Q4BNU4q?=
+ =?us-ascii?Q?lDNa/qbVr8it4GRTKW6+MAoBj5CwG7PBjniuUe2py+MyywVqOs3Kcn0tRx9j?=
+ =?us-ascii?Q?a7332fob2waERUHkdjpeiiTd0suRgIA8ifkvsFrYFy/qwqNAH1vyaVmAa3k0?=
+ =?us-ascii?Q?FZCrb13CWDLP+KgFAQqKibbQeYo+HVcFyWEeuc5a1ChZo9xn2j3tgb85qVxo?=
+ =?us-ascii?Q?oCH1wU+Dc6xSEjXajXTUeU9fgqo9rAHtj6CQ+jrUreuZLqVgkchjF49LxtEe?=
+ =?us-ascii?Q?pZY6mTARmg1E2QcDZphXbRgozvjTEAcFZQPqYM0NVlT+8WxQnl0wMSHjpIM6?=
+ =?us-ascii?Q?y/nF3+CJHTX3a3w3iy78Gc/omy+CFIu7xO65FVcVON/F4MxodVZg6/R21L9S?=
+ =?us-ascii?Q?2fbsWPcEjGrmQG1b7YOvEIN1GraziJOvKdotw8U3C+krE0Yiwg8J9cj1OpJ+?=
+ =?us-ascii?Q?OaW2UZEcYynD1lXYZ7kTeEqzHY4p7Lg8+NTBVgp+UGrbqOJb/2A9geoBoXWu?=
+ =?us-ascii?Q?WDQuJJgCDY4XeucvZ0I9SZ3mWdMB+e9iGLUKDb1+omWvMbndBB4oiObUJyy9?=
+ =?us-ascii?Q?qUJmpG63PpJCB7BUJaKMVGGKYAPFynlTvuz37TpA/EYel72mqIVJlofJH9yz?=
+ =?us-ascii?Q?Dk6G5gRk5SoxRSUgmYcRCB+XzFOXErBtDCxiL2EzCGzu4TCswzaqh/x0pD3g?=
+ =?us-ascii?Q?0695ADDBNILKiBXm2mYkMqEPPJP9DBQ6Pg3B7WaNXeiT1rxMmhc95L0I2uS6?=
+ =?us-ascii?Q?gCdN3qwPPU2oZW4lVP4zk0s30UGN1iEE6OpjX1Y175/0kUxKkxThsPIo9HQD?=
+ =?us-ascii?Q?nceTBY45bf0s1c4h6T+DY+9xYsnH6sZl4xt7FwHoCR18KL8VW9RpxJAGEWpg?=
+ =?us-ascii?Q?NNuCmNW4DLW+uQ8xjwZZtQVfOM2vVIV1DeVp3gMBtYtiynxeN5ngWViKG+3R?=
+ =?us-ascii?Q?bfV2X67ud2aOeFye6h9Iba/ozksAqWDMjb/HoZaS2wnn/KJtAoXCk041BSQ7?=
+ =?us-ascii?Q?3AYklAV7HlVbOxmDkCGJ0D2iG8vHZu2nCBZPhYzsPd7VV3sa2WGLeG0Tajac?=
+ =?us-ascii?Q?4+xsHeepkM7bdjaZQQhFx2Sq+0boeviZOeIz77vNJ1ZXPqlN5DC6YBKPPIiW?=
+ =?us-ascii?Q?Op+loxhe+dhGvNvx5KarGF0vVs0sb6Pi419sQDuNRAyfSsvC1nPx2VZQkMek?=
+ =?us-ascii?Q?n5pS64IGAKDrRhDei9IwlBNkY8GJRlEMd235SPy+LWlH/zuflDc/Okqh899T?=
+ =?us-ascii?Q?rNRBr0gkOx8gt/zKssGGDx4HFjoAGnECESSK/3MI?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d6f2ab1b-6698-4f54-8b0f-08db2976de62
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2023 19:11:11.8811
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: n5SRUfzwgKmkcsjWuV3LTdwtjdJFTlSURciRLqXSJfYSQLsNk+kS1Kq7Sn5HZqgT
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7573
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -79,630 +130,190 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@nvidia.com>
+On Mon, Mar 20, 2023 at 11:59:05AM -0700, Jacob Pan wrote:
+> Preparing to remove IOASID infrastructure, PASID management will be
+> under SVA code. Decouple mm code from IOASID.
+> 
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+> v7:
+> 	- use CONFIG_IOMMU_SVA around PASID helpers in fork.c, Fixes a
+> 	compile problem.
+> v6:
+> 	- put helpers under iommu.h instead of iommu-helper.h
+> v5:
+> 	- move definition of helpers to iommu code to be consistent with
+> 	  declarations. (Kevin)
+> 	- fix patch partitioning bug (Baolu)
+> v4:
+> 	- delete and open code mm_set_pasid
+> 	- keep mm_init_pasid() as inline for fork performance
+> ---
+>  drivers/iommu/iommu-sva.c | 10 +++++++++-
+>  include/linux/ioasid.h    |  6 +-----
+>  include/linux/iommu.h     | 14 +++++++++++++-
+>  include/linux/sched/mm.h  | 26 --------------------------
+>  kernel/fork.c             |  5 +++++
+>  5 files changed, 28 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
+> index 24bf9b2b58aa..fcfdc80a3939 100644
+> --- a/drivers/iommu/iommu-sva.c
+> +++ b/drivers/iommu/iommu-sva.c
+> @@ -44,7 +44,7 @@ int iommu_sva_alloc_pasid(struct mm_struct *mm, ioasid_t min, ioasid_t max)
+>  	if (!pasid_valid(pasid))
+>  		ret = -ENOMEM;
+>  	else
+> -		mm_pasid_set(mm, pasid);
+> +		mm->pasid = pasid;
+>  out:
+>  	mutex_unlock(&iommu_sva_lock);
+>  	return ret;
+> @@ -238,3 +238,11 @@ iommu_sva_handle_iopf(struct iommu_fault *fault, void *data)
+>  
+>  	return status;
+>  }
+> +
+> +void mm_pasid_drop(struct mm_struct *mm)
+> +{
+> +	if (pasid_valid(mm->pasid)) {
+> +		ioasid_free(mm->pasid);
+> +		mm->pasid = INVALID_IOASID;
+> +	}
+> +}
+> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+> index af1c9d62e642..bdee937da907 100644
+> --- a/include/linux/ioasid.h
+> +++ b/include/linux/ioasid.h
+> @@ -4,8 +4,8 @@
+>  
+>  #include <linux/types.h>
+>  #include <linux/errno.h>
+> +#include <linux/iommu.h>
+>  
+> -#define INVALID_IOASID ((ioasid_t)-1)
+>  typedef unsigned int ioasid_t;
+>  typedef ioasid_t (*ioasid_alloc_fn_t)(ioasid_t min, ioasid_t max, void *data);
+>  typedef void (*ioasid_free_fn_t)(ioasid_t ioasid, void *data);
+> @@ -40,10 +40,6 @@ void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+>  int ioasid_register_allocator(struct ioasid_allocator_ops *allocator);
+>  void ioasid_unregister_allocator(struct ioasid_allocator_ops *allocator);
+>  int ioasid_set_data(ioasid_t ioasid, void *data);
+> -static inline bool pasid_valid(ioasid_t ioasid)
+> -{
+> -	return ioasid != INVALID_IOASID;
+> -}
+>  
+>  #else /* !CONFIG_IOASID */
+>  static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 6595454d4f48..d3f81dc6e4dd 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -13,7 +13,6 @@
+>  #include <linux/errno.h>
+>  #include <linux/err.h>
+>  #include <linux/of.h>
+> -#include <linux/ioasid.h>
+>  #include <uapi/linux/iommu.h>
+>  
+>  #define IOMMU_READ	(1 << 0)
+> @@ -192,6 +191,8 @@ enum iommu_dev_features {
+>  };
+>  
+>  #define IOMMU_PASID_INVALID	(-1U)
+> +typedef unsigned int ioasid_t;
+> +#define INVALID_IOASID ((ioasid_t)-1)
+>  
+>  #ifdef CONFIG_IOMMU_API
+>  
+> @@ -1172,7 +1173,16 @@ static inline bool tegra_dev_iommu_get_stream_id(struct device *dev, u32 *stream
+>  	return false;
+>  }
+>  
+> +static inline bool pasid_valid(ioasid_t ioasid)
+> +{
+> +	return ioasid != INVALID_IOASID;
+> +}
+>  #ifdef CONFIG_IOMMU_SVA
+> +static inline void mm_pasid_init(struct mm_struct *mm)
+> +{
+> +	mm->pasid = INVALID_IOASID;
+> +}
+> +void mm_pasid_drop(struct mm_struct *mm);
+>  struct iommu_sva *iommu_sva_bind_device(struct device *dev,
+>  					struct mm_struct *mm);
+>  void iommu_sva_unbind_device(struct iommu_sva *handle);
+> @@ -1192,6 +1202,8 @@ static inline u32 iommu_sva_get_pasid(struct iommu_sva *handle)
+>  {
+>  	return IOMMU_PASID_INVALID;
+>  }
+> +static inline void mm_pasid_init(struct mm_struct *mm) {}
+> +static inline void mm_pasid_drop(struct mm_struct *mm) {}
+>  #endif /* CONFIG_IOMMU_SVA */
+>  
+>  #endif /* __LINUX_IOMMU_H */
+> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+> index 2a243616f222..da9712a3ba73 100644
+> --- a/include/linux/sched/mm.h
+> +++ b/include/linux/sched/mm.h
+> @@ -8,7 +8,6 @@
+>  #include <linux/mm_types.h>
+>  #include <linux/gfp.h>
+>  #include <linux/sync_core.h>
+> -#include <linux/ioasid.h>
+>  
+>  /*
+>   * Routines for handling mm_structs
+> @@ -451,29 +450,4 @@ static inline void membarrier_update_current_mm(struct mm_struct *next_mm)
+>  }
+>  #endif
+>  
+> -#ifdef CONFIG_IOMMU_SVA
+> -static inline void mm_pasid_init(struct mm_struct *mm)
+> -{
+> -	mm->pasid = INVALID_IOASID;
+> -}
+> -
+> -/* Associate a PASID with an mm_struct: */
+> -static inline void mm_pasid_set(struct mm_struct *mm, u32 pasid)
+> -{
+> -	mm->pasid = pasid;
+> -}
+> -
+> -static inline void mm_pasid_drop(struct mm_struct *mm)
+> -{
+> -	if (pasid_valid(mm->pasid)) {
+> -		ioasid_free(mm->pasid);
+> -		mm->pasid = INVALID_IOASID;
+> -	}
+> -}
+> -#else
+> -static inline void mm_pasid_init(struct mm_struct *mm) {}
+> -static inline void mm_pasid_set(struct mm_struct *mm, u32 pasid) {}
+> -static inline void mm_pasid_drop(struct mm_struct *mm) {}
+> -#endif
 
-This has no use anymore, delete it all.
 
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
-v3:	- put rename under a different patch
-	- delete makefile and Kconfig
-v2:
-	- fix compile issue w/o CONFIG_IOMMU_SVA
-	- consolidate INVALID_IOASID w/ IOMMU_PASID_INVALID
----
- drivers/dma/idxd/idxd.h     |   1 -
- drivers/iommu/Kconfig       |   5 -
- drivers/iommu/Makefile      |   1 -
- drivers/iommu/intel/iommu.h |   1 -
- drivers/iommu/intel/svm.c   |   1 -
- drivers/iommu/ioasid.c      | 422 ------------------------------------
- drivers/iommu/iommu-sva.h   |   1 -
- include/linux/ioasid.h      |  80 -------
- 8 files changed, 512 deletions(-)
- delete mode 100644 drivers/iommu/ioasid.c
- delete mode 100644 include/linux/ioasid.h
+> @@ -794,7 +795,9 @@ void __mmdrop(struct mm_struct *mm)
+>  	mmu_notifier_subscriptions_destroy(mm);
+>  	check_mm(mm);
+>  	put_user_ns(mm->user_ns);
+> +#ifdef CONFIG_IOMMU_SVA	
+>  	mm_pasid_drop(mm);
+> +#endif
+>  
+>  	for (i = 0; i < NR_MM_COUNTERS; i++)
+>  		percpu_counter_destroy(&mm->rss_stat[i]);
+> @@ -1140,7 +1143,9 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
+>  	mm_init_cpumask(mm);
+>  	mm_init_aio(mm);
+>  	mm_init_owner(mm, p);
+> +#ifdef CONFIG_IOMMU_SVA	
+>  	mm_pasid_init(mm);
+> +#endif
 
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 417e602a46b6..dd2a6ed8949b 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -10,7 +10,6 @@
- #include <linux/cdev.h>
- #include <linux/idr.h>
- #include <linux/pci.h>
--#include <linux/ioasid.h>
- #include <linux/bitmap.h>
- #include <linux/perf_event.h>
- #include <linux/iommu.h>
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index 889c7efd050b..a799221f8844 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -3,10 +3,6 @@
- config IOMMU_IOVA
- 	tristate
- 
--# The IOASID library may also be used by non-IOMMU_API users
--config IOASID
--	tristate
--
- # IOMMU_API always gets selected by whoever wants it.
- config IOMMU_API
- 	bool
-@@ -160,7 +156,6 @@ config IOMMU_DMA
- # Shared Virtual Addressing
- config IOMMU_SVA
- 	bool
--	select IOASID
- 
- config FSL_PAMU
- 	bool "Freescale IOMMU support"
-diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-index f461d0651385..769e43d780ce 100644
---- a/drivers/iommu/Makefile
-+++ b/drivers/iommu/Makefile
-@@ -9,7 +9,6 @@ obj-$(CONFIG_IOMMU_IO_PGTABLE) += io-pgtable.o
- obj-$(CONFIG_IOMMU_IO_PGTABLE_ARMV7S) += io-pgtable-arm-v7s.o
- obj-$(CONFIG_IOMMU_IO_PGTABLE_LPAE) += io-pgtable-arm.o
- obj-$(CONFIG_IOMMU_IO_PGTABLE_DART) += io-pgtable-dart.o
--obj-$(CONFIG_IOASID) += ioasid.o
- obj-$(CONFIG_IOMMU_IOVA) += iova.o
- obj-$(CONFIG_OF_IOMMU)	+= of_iommu.o
- obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
-diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
-index a2010fb120e2..65b15be72878 100644
---- a/drivers/iommu/intel/iommu.h
-+++ b/drivers/iommu/intel/iommu.h
-@@ -19,7 +19,6 @@
- #include <linux/iommu.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
- #include <linux/dmar.h>
--#include <linux/ioasid.h>
- #include <linux/bitfield.h>
- #include <linux/xarray.h>
- #include <linux/perf_event.h>
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index 3848a1b0800c..e95b339e9cdc 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -16,7 +16,6 @@
- #include <linux/interrupt.h>
- #include <linux/mm_types.h>
- #include <linux/xarray.h>
--#include <linux/ioasid.h>
- #include <asm/page.h>
- #include <asm/fpu/api.h>
- 
-diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
-deleted file mode 100644
-index a786c034907c..000000000000
---- a/drivers/iommu/ioasid.c
-+++ /dev/null
-@@ -1,422 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * I/O Address Space ID allocator. There is one global IOASID space, split into
-- * subsets. Users create a subset with DECLARE_IOASID_SET, then allocate and
-- * free IOASIDs with ioasid_alloc() and ioasid_free().
-- */
--#include <linux/ioasid.h>
--#include <linux/module.h>
--#include <linux/slab.h>
--#include <linux/spinlock.h>
--#include <linux/xarray.h>
--
--struct ioasid_data {
--	ioasid_t id;
--	struct ioasid_set *set;
--	void *private;
--	struct rcu_head rcu;
--};
--
--/*
-- * struct ioasid_allocator_data - Internal data structure to hold information
-- * about an allocator. There are two types of allocators:
-- *
-- * - Default allocator always has its own XArray to track the IOASIDs allocated.
-- * - Custom allocators may share allocation helpers with different private data.
-- *   Custom allocators that share the same helper functions also share the same
-- *   XArray.
-- * Rules:
-- * 1. Default allocator is always available, not dynamically registered. This is
-- *    to prevent race conditions with early boot code that want to register
-- *    custom allocators or allocate IOASIDs.
-- * 2. Custom allocators take precedence over the default allocator.
-- * 3. When all custom allocators sharing the same helper functions are
-- *    unregistered (e.g. due to hotplug), all outstanding IOASIDs must be
-- *    freed. Otherwise, outstanding IOASIDs will be lost and orphaned.
-- * 4. When switching between custom allocators sharing the same helper
-- *    functions, outstanding IOASIDs are preserved.
-- * 5. When switching between custom allocator and default allocator, all IOASIDs
-- *    must be freed to ensure unadulterated space for the new allocator.
-- *
-- * @ops:	allocator helper functions and its data
-- * @list:	registered custom allocators
-- * @slist:	allocators share the same ops but different data
-- * @flags:	attributes of the allocator
-- * @xa:		xarray holds the IOASID space
-- * @rcu:	used for kfree_rcu when unregistering allocator
-- */
--struct ioasid_allocator_data {
--	struct ioasid_allocator_ops *ops;
--	struct list_head list;
--	struct list_head slist;
--#define IOASID_ALLOCATOR_CUSTOM BIT(0) /* Needs framework to track results */
--	unsigned long flags;
--	struct xarray xa;
--	struct rcu_head rcu;
--};
--
--static DEFINE_SPINLOCK(ioasid_allocator_lock);
--static LIST_HEAD(allocators_list);
--
--static ioasid_t default_alloc(ioasid_t min, ioasid_t max, void *opaque);
--static void default_free(ioasid_t ioasid, void *opaque);
--
--static struct ioasid_allocator_ops default_ops = {
--	.alloc = default_alloc,
--	.free = default_free,
--};
--
--static struct ioasid_allocator_data default_allocator = {
--	.ops = &default_ops,
--	.flags = 0,
--	.xa = XARRAY_INIT(ioasid_xa, XA_FLAGS_ALLOC),
--};
--
--static struct ioasid_allocator_data *active_allocator = &default_allocator;
--
--static ioasid_t default_alloc(ioasid_t min, ioasid_t max, void *opaque)
--{
--	ioasid_t id;
--
--	if (xa_alloc(&default_allocator.xa, &id, opaque, XA_LIMIT(min, max), GFP_ATOMIC)) {
--		pr_err("Failed to alloc ioasid from %d to %d\n", min, max);
--		return INVALID_IOASID;
--	}
--
--	return id;
--}
--
--static void default_free(ioasid_t ioasid, void *opaque)
--{
--	struct ioasid_data *ioasid_data;
--
--	ioasid_data = xa_erase(&default_allocator.xa, ioasid);
--	kfree_rcu(ioasid_data, rcu);
--}
--
--/* Allocate and initialize a new custom allocator with its helper functions */
--static struct ioasid_allocator_data *ioasid_alloc_allocator(struct ioasid_allocator_ops *ops)
--{
--	struct ioasid_allocator_data *ia_data;
--
--	ia_data = kzalloc(sizeof(*ia_data), GFP_ATOMIC);
--	if (!ia_data)
--		return NULL;
--
--	xa_init_flags(&ia_data->xa, XA_FLAGS_ALLOC);
--	INIT_LIST_HEAD(&ia_data->slist);
--	ia_data->flags |= IOASID_ALLOCATOR_CUSTOM;
--	ia_data->ops = ops;
--
--	/* For tracking custom allocators that share the same ops */
--	list_add_tail(&ops->list, &ia_data->slist);
--
--	return ia_data;
--}
--
--static bool use_same_ops(struct ioasid_allocator_ops *a, struct ioasid_allocator_ops *b)
--{
--	return (a->free == b->free) && (a->alloc == b->alloc);
--}
--
--/**
-- * ioasid_register_allocator - register a custom allocator
-- * @ops: the custom allocator ops to be registered
-- *
-- * Custom allocators take precedence over the default xarray based allocator.
-- * Private data associated with the IOASID allocated by the custom allocators
-- * are managed by IOASID framework similar to data stored in xa by default
-- * allocator.
-- *
-- * There can be multiple allocators registered but only one is active. In case
-- * of runtime removal of a custom allocator, the next one is activated based
-- * on the registration ordering.
-- *
-- * Multiple allocators can share the same alloc() function, in this case the
-- * IOASID space is shared.
-- */
--int ioasid_register_allocator(struct ioasid_allocator_ops *ops)
--{
--	struct ioasid_allocator_data *ia_data;
--	struct ioasid_allocator_data *pallocator;
--	int ret = 0;
--
--	spin_lock(&ioasid_allocator_lock);
--
--	ia_data = ioasid_alloc_allocator(ops);
--	if (!ia_data) {
--		ret = -ENOMEM;
--		goto out_unlock;
--	}
--
--	/*
--	 * No particular preference, we activate the first one and keep
--	 * the later registered allocators in a list in case the first one gets
--	 * removed due to hotplug.
--	 */
--	if (list_empty(&allocators_list)) {
--		WARN_ON(active_allocator != &default_allocator);
--		/* Use this new allocator if default is not active */
--		if (xa_empty(&active_allocator->xa)) {
--			rcu_assign_pointer(active_allocator, ia_data);
--			list_add_tail(&ia_data->list, &allocators_list);
--			goto out_unlock;
--		}
--		pr_warn("Default allocator active with outstanding IOASID\n");
--		ret = -EAGAIN;
--		goto out_free;
--	}
--
--	/* Check if the allocator is already registered */
--	list_for_each_entry(pallocator, &allocators_list, list) {
--		if (pallocator->ops == ops) {
--			pr_err("IOASID allocator already registered\n");
--			ret = -EEXIST;
--			goto out_free;
--		} else if (use_same_ops(pallocator->ops, ops)) {
--			/*
--			 * If the new allocator shares the same ops,
--			 * then they will share the same IOASID space.
--			 * We should put them under the same xarray.
--			 */
--			list_add_tail(&ops->list, &pallocator->slist);
--			goto out_free;
--		}
--	}
--	list_add_tail(&ia_data->list, &allocators_list);
--
--	spin_unlock(&ioasid_allocator_lock);
--	return 0;
--out_free:
--	kfree(ia_data);
--out_unlock:
--	spin_unlock(&ioasid_allocator_lock);
--	return ret;
--}
--EXPORT_SYMBOL_GPL(ioasid_register_allocator);
--
--/**
-- * ioasid_unregister_allocator - Remove a custom IOASID allocator ops
-- * @ops: the custom allocator to be removed
-- *
-- * Remove an allocator from the list, activate the next allocator in
-- * the order it was registered. Or revert to default allocator if all
-- * custom allocators are unregistered without outstanding IOASIDs.
-- */
--void ioasid_unregister_allocator(struct ioasid_allocator_ops *ops)
--{
--	struct ioasid_allocator_data *pallocator;
--	struct ioasid_allocator_ops *sops;
--
--	spin_lock(&ioasid_allocator_lock);
--	if (list_empty(&allocators_list)) {
--		pr_warn("No custom IOASID allocators active!\n");
--		goto exit_unlock;
--	}
--
--	list_for_each_entry(pallocator, &allocators_list, list) {
--		if (!use_same_ops(pallocator->ops, ops))
--			continue;
--
--		if (list_is_singular(&pallocator->slist)) {
--			/* No shared helper functions */
--			list_del(&pallocator->list);
--			/*
--			 * All IOASIDs should have been freed before
--			 * the last allocator that shares the same ops
--			 * is unregistered.
--			 */
--			WARN_ON(!xa_empty(&pallocator->xa));
--			if (list_empty(&allocators_list)) {
--				pr_info("No custom IOASID allocators, switch to default.\n");
--				rcu_assign_pointer(active_allocator, &default_allocator);
--			} else if (pallocator == active_allocator) {
--				rcu_assign_pointer(active_allocator,
--						list_first_entry(&allocators_list,
--								struct ioasid_allocator_data, list));
--				pr_info("IOASID allocator changed");
--			}
--			kfree_rcu(pallocator, rcu);
--			break;
--		}
--		/*
--		 * Find the matching shared ops to delete,
--		 * but keep outstanding IOASIDs
--		 */
--		list_for_each_entry(sops, &pallocator->slist, list) {
--			if (sops == ops) {
--				list_del(&ops->list);
--				break;
--			}
--		}
--		break;
--	}
--
--exit_unlock:
--	spin_unlock(&ioasid_allocator_lock);
--}
--EXPORT_SYMBOL_GPL(ioasid_unregister_allocator);
--
--/**
-- * ioasid_set_data - Set private data for an allocated ioasid
-- * @ioasid: the ID to set data
-- * @data:   the private data
-- *
-- * For IOASID that is already allocated, private data can be set
-- * via this API. Future lookup can be done via ioasid_find.
-- */
--int ioasid_set_data(ioasid_t ioasid, void *data)
--{
--	struct ioasid_data *ioasid_data;
--	int ret = 0;
--
--	spin_lock(&ioasid_allocator_lock);
--	ioasid_data = xa_load(&active_allocator->xa, ioasid);
--	if (ioasid_data)
--		rcu_assign_pointer(ioasid_data->private, data);
--	else
--		ret = -ENOENT;
--	spin_unlock(&ioasid_allocator_lock);
--
--	/*
--	 * Wait for readers to stop accessing the old private data, so the
--	 * caller can free it.
--	 */
--	if (!ret)
--		synchronize_rcu();
--
--	return ret;
--}
--EXPORT_SYMBOL_GPL(ioasid_set_data);
--
--/**
-- * ioasid_alloc - Allocate an IOASID
-- * @set: the IOASID set
-- * @min: the minimum ID (inclusive)
-- * @max: the maximum ID (inclusive)
-- * @private: data private to the caller
-- *
-- * Allocate an ID between @min and @max. The @private pointer is stored
-- * internally and can be retrieved with ioasid_find().
-- *
-- * Return: the allocated ID on success, or %INVALID_IOASID on failure.
-- */
--ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
--		      void *private)
--{
--	struct ioasid_data *data;
--	void *adata;
--	ioasid_t id;
--
--	data = kzalloc(sizeof(*data), GFP_ATOMIC);
--	if (!data)
--		return INVALID_IOASID;
--
--	data->set = set;
--	data->private = private;
--
--	/*
--	 * Custom allocator needs allocator data to perform platform specific
--	 * operations.
--	 */
--	spin_lock(&ioasid_allocator_lock);
--	adata = active_allocator->flags & IOASID_ALLOCATOR_CUSTOM ? active_allocator->ops->pdata : data;
--	id = active_allocator->ops->alloc(min, max, adata);
--	if (id == INVALID_IOASID) {
--		pr_err("Failed ASID allocation %lu\n", active_allocator->flags);
--		goto exit_free;
--	}
--
--	if ((active_allocator->flags & IOASID_ALLOCATOR_CUSTOM) &&
--	     xa_alloc(&active_allocator->xa, &id, data, XA_LIMIT(id, id), GFP_ATOMIC)) {
--		/* Custom allocator needs framework to store and track allocation results */
--		pr_err("Failed to alloc ioasid from %d\n", id);
--		active_allocator->ops->free(id, active_allocator->ops->pdata);
--		goto exit_free;
--	}
--	data->id = id;
--
--	spin_unlock(&ioasid_allocator_lock);
--	return id;
--exit_free:
--	spin_unlock(&ioasid_allocator_lock);
--	kfree(data);
--	return INVALID_IOASID;
--}
--EXPORT_SYMBOL_GPL(ioasid_alloc);
--
--/**
-- * ioasid_free - Free an ioasid
-- * @ioasid: the ID to remove
-- */
--void ioasid_free(ioasid_t ioasid)
--{
--	struct ioasid_data *ioasid_data;
--
--	spin_lock(&ioasid_allocator_lock);
--	ioasid_data = xa_load(&active_allocator->xa, ioasid);
--	if (!ioasid_data) {
--		pr_err("Trying to free unknown IOASID %u\n", ioasid);
--		goto exit_unlock;
--	}
--
--	active_allocator->ops->free(ioasid, active_allocator->ops->pdata);
--	/* Custom allocator needs additional steps to free the xa element */
--	if (active_allocator->flags & IOASID_ALLOCATOR_CUSTOM) {
--		ioasid_data = xa_erase(&active_allocator->xa, ioasid);
--		kfree_rcu(ioasid_data, rcu);
--	}
--
--exit_unlock:
--	spin_unlock(&ioasid_allocator_lock);
--}
--EXPORT_SYMBOL_GPL(ioasid_free);
--
--/**
-- * ioasid_find - Find IOASID data
-- * @set: the IOASID set
-- * @ioasid: the IOASID to find
-- * @getter: function to call on the found object
-- *
-- * The optional getter function allows to take a reference to the found object
-- * under the rcu lock. The function can also check if the object is still valid:
-- * if @getter returns false, then the object is invalid and NULL is returned.
-- *
-- * If the IOASID exists, return the private pointer passed to ioasid_alloc.
-- * Private data can be NULL if not set. Return an error if the IOASID is not
-- * found, or if @set is not NULL and the IOASID does not belong to the set.
-- */
--void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
--		  bool (*getter)(void *))
--{
--	void *priv;
--	struct ioasid_data *ioasid_data;
--	struct ioasid_allocator_data *idata;
--
--	rcu_read_lock();
--	idata = rcu_dereference(active_allocator);
--	ioasid_data = xa_load(&idata->xa, ioasid);
--	if (!ioasid_data) {
--		priv = ERR_PTR(-ENOENT);
--		goto unlock;
--	}
--	if (set && ioasid_data->set != set) {
--		/* data found but does not belong to the set */
--		priv = ERR_PTR(-EACCES);
--		goto unlock;
--	}
--	/* Now IOASID and its set is verified, we can return the private data */
--	priv = rcu_dereference(ioasid_data->private);
--	if (getter && !getter(priv))
--		priv = NULL;
--unlock:
--	rcu_read_unlock();
--
--	return priv;
--}
--EXPORT_SYMBOL_GPL(ioasid_find);
--
--MODULE_AUTHOR("Jean-Philippe Brucker <jean-philippe.brucker@arm.com>");
--MODULE_AUTHOR("Jacob Pan <jacob.jun.pan@linux.intel.com>");
--MODULE_DESCRIPTION("IO Address Space ID (IOASID) allocator");
--MODULE_LICENSE("GPL");
-diff --git a/drivers/iommu/iommu-sva.h b/drivers/iommu/iommu-sva.h
-index c22d0174ad61..54946b5a7caf 100644
---- a/drivers/iommu/iommu-sva.h
-+++ b/drivers/iommu/iommu-sva.h
-@@ -5,7 +5,6 @@
- #ifndef _IOMMU_SVA_H
- #define _IOMMU_SVA_H
- 
--#include <linux/ioasid.h>
- #include <linux/mm_types.h>
- 
- /* I/O Page fault */
-diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-deleted file mode 100644
-index 6cf5d1c904c5..000000000000
---- a/include/linux/ioasid.h
-+++ /dev/null
-@@ -1,80 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __LINUX_IOASID_H
--#define __LINUX_IOASID_H
--
--#include <linux/types.h>
--#include <linux/errno.h>
--#include <linux/iommu.h>
--
--typedef unsigned int ioasid_t;
--#define INVALID_IOASID ((ioasid_t)-1)
--typedef ioasid_t (*ioasid_alloc_fn_t)(ioasid_t min, ioasid_t max, void *data);
--typedef void (*ioasid_free_fn_t)(ioasid_t ioasid, void *data);
--
--struct ioasid_set {
--	int dummy;
--};
--
--/**
-- * struct ioasid_allocator_ops - IOASID allocator helper functions and data
-- *
-- * @alloc:	helper function to allocate IOASID
-- * @free:	helper function to free IOASID
-- * @list:	for tracking ops that share helper functions but not data
-- * @pdata:	data belong to the allocator, provided when calling alloc()
-- */
--struct ioasid_allocator_ops {
--	ioasid_alloc_fn_t alloc;
--	ioasid_free_fn_t free;
--	struct list_head list;
--	void *pdata;
--};
--
--#define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
--
--#if IS_ENABLED(CONFIG_IOASID)
--ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
--		      void *private);
--void ioasid_free(ioasid_t ioasid);
--void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
--		  bool (*getter)(void *));
--int ioasid_register_allocator(struct ioasid_allocator_ops *allocator);
--void ioasid_unregister_allocator(struct ioasid_allocator_ops *allocator);
--int ioasid_set_data(ioasid_t ioasid, void *data);
--
--#else /* !CONFIG_IOASID */
--static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
--				    ioasid_t max, void *private)
--{
--	return INVALID_IOASID;
--}
--
--static inline void ioasid_free(ioasid_t ioasid) { }
--
--static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
--				bool (*getter)(void *))
--{
--	return NULL;
--}
--
--static inline int ioasid_register_allocator(struct ioasid_allocator_ops *allocator)
--{
--	return -ENOTSUPP;
--}
--
--static inline void ioasid_unregister_allocator(struct ioasid_allocator_ops *allocator)
--{
--}
--
--static inline int ioasid_set_data(ioasid_t ioasid, void *data)
--{
--	return -ENOTSUPP;
--}
--
--static inline bool pasid_valid(ioasid_t ioasid)
--{
--	return false;
--}
--
--#endif /* CONFIG_IOASID */
--#endif /* __LINUX_IOASID_H */
--- 
-2.25.1
+No ifdef here, you correctly made static inline dummy functions above.
 
+Jason

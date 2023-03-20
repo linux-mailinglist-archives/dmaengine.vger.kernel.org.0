@@ -2,562 +2,655 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B1D46C106E
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Mar 2023 12:13:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB0B16C108C
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Mar 2023 12:17:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230266AbjCTLM7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 20 Mar 2023 07:12:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58870 "EHLO
+        id S231217AbjCTLRL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 20 Mar 2023 07:17:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229730AbjCTLMh (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 Mar 2023 07:12:37 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 099BB14212;
-        Mon, 20 Mar 2023 04:09:32 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id z42so11628688ljq.13;
-        Mon, 20 Mar 2023 04:09:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679310571;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MEDNvx7fg0sHf1rjjv9Vrk8TqJMY3Iv4eGigpDNwJNg=;
-        b=oJuI7bkXcyVQjzCuA3pGVYF/gM8tM2CY218DkvJkq7JPqoAedan95jL8/FXGiLBgLZ
-         QnubzxtwetBimepVKyTX6mu7xH/ThxqTsX38EEcKFXx3g1mQaah0gRuu8Bqd/TH3Q+aP
-         PQflzXJTpWZel5T9QSsmOk0wLYDXG+AjiprxPMquvDZq7uTfL2w77zJYokTxVs91BfvE
-         55MAXHV9ly4lpHUZTUAk00+UBJ1vjl67Ofb8PzIGtlYmQq012sQNmNh5sfREufzyknuF
-         BpAdDtgkPkhQ0OZJYq3o5i7Dv3F0j3ebX5qnO5DFbw3TS/c3f1Zhy1qbMUzwHOZc1+mn
-         gSIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679310571;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MEDNvx7fg0sHf1rjjv9Vrk8TqJMY3Iv4eGigpDNwJNg=;
-        b=TIUzfIsYE+xYSbE1LBo/VpHB4eBTHe6bJ7KAVYPZzef5TSvwWtRFRQVPA5rrCroNDe
-         c21aITHSdLfguvL3vuGd3yOusAv3D22xWz9MtoVtaAGioQzyUYxrbaPdXEjfqhaq0dK3
-         +lYr5bAk9eKW3teoCIDkaJZWzA1aoX7ZfNjsNE2ndJ603+K4jUEjoi2EzDrcoCFjbUWa
-         VRKAux1LqIZ5v4Xj36rragCQX3Xope8iWP8ITy4f3zyhf8++A8keZTPRGLExIqL4CDfV
-         K5vW1QrGi8H4FCkXO0v9GLYkwu4Ksg84LP+fgRTaCGNo55cfNbfCIMp/dEPAZZeEhyNV
-         mY5g==
-X-Gm-Message-State: AO0yUKVOEc6UJzrl301aKm/MgNWVH635eKIYN7GAgKoBQhGRz9MAn5HM
-        C+3F5exvGiEAL0dTCb0DDww=
-X-Google-Smtp-Source: AK7set/5PnvPqNyy/vOsgMwaFSjKxxuBULU/Y7HOZA2IGF8+TnMEIccQTPKG6NQXJcVNsV+ZhNfR2Q==
-X-Received: by 2002:a05:651c:2213:b0:295:941d:9557 with SMTP id y19-20020a05651c221300b00295941d9557mr7221543ljq.51.1679310570584;
-        Mon, 20 Mar 2023 04:09:30 -0700 (PDT)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id p15-20020a2ea40f000000b00295a8d1ecc7sm1697449ljn.18.2023.03.20.04.09.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Mar 2023 04:09:30 -0700 (PDT)
-Date:   Mon, 20 Mar 2023 14:09:28 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Cai Huoqing <cai.huoqing@linux.dev>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v7 2/5] dmaengine: dw-edma: Create a new dw_edma_core_ops
- structure to abstract controller operation
-Message-ID: <20230320110928.znzlrmomlkmy5mw7@mobilestation>
-References: <20230315012840.6986-1-cai.huoqing@linux.dev>
- <20230315012840.6986-3-cai.huoqing@linux.dev>
+        with ESMTP id S229648AbjCTLQs (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 Mar 2023 07:16:48 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49CF16E97;
+        Mon, 20 Mar 2023 04:15:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679310919; x=1710846919;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Amz4/Av8RIHbzuWj5LX0wvdbWha7TGpA6N4V/XgAueM=;
+  b=KnhdyhlCecZlPN9GZAKgnXHKLdJCJhJsOd4WpjEVp40Z94XvRxmpwK+6
+   LjgENiOPXMbfLxp5sleJ8L2irqMKolQtNAdDyLCjDCdj7iVSLvKYVRLAf
+   cqgcnprg4H/QA0o7GUysqQqcToDmtq8QzxOGe5jhQJ4TSjaAebMKCQQ9g
+   DHLxE1XpM6MdnrF/djW41BE/AHgtRIsWT42+Cg73jvdE7ovxjPP6xRJUU
+   mpBzcg3+1MMQ7vppn6dXnE069MXnrog6QKzoAB3OFDnO2yJ+rQGXGUan9
+   L5Szh0pcjoRr1LaEPB+u0x6QGndYfZaRpesEkqZHhiJxPYwS+5JE04F28
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10654"; a="401206731"
+X-IronPort-AV: E=Sophos;i="5.98,274,1673942400"; 
+   d="scan'208";a="401206731"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 04:14:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10654"; a="1010431497"
+X-IronPort-AV: E=Sophos;i="5.98,274,1673942400"; 
+   d="scan'208";a="1010431497"
+Received: from mbouhaou-mobl1.ger.corp.intel.com ([10.252.61.151])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 04:14:24 -0700
+Date:   Mon, 20 Mar 2023 13:14:22 +0200 (EET)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Chia-Wei Wang <chiawei_wang@aspeedtech.com>
+cc:     vkoul@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, joel@jms.id.au, andrew@aj.id.au,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>, pmenzel@molgen.mpg.de,
+        hdanton@sina.com, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-serial <linux-serial@vger.kernel.org>,
+        openbmc@lists.ozlabs.org
+Subject: Re: [PATCH v3 3/5] dmaengine: aspeed: Add AST2600 UART DMA driver
+In-Reply-To: <20230320081133.23655-4-chiawei_wang@aspeedtech.com>
+Message-ID: <493b758-2ddf-b44a-48a8-69e8de5d85b@linux.intel.com>
+References: <20230320081133.23655-1-chiawei_wang@aspeedtech.com> <20230320081133.23655-4-chiawei_wang@aspeedtech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230315012840.6986-3-cai.huoqing@linux.dev>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Mar 15, 2023 at 09:28:33AM +0800, Cai Huoqing wrote:
-> From: Cai huoqing <cai.huoqing@linux.dev>
+On Mon, 20 Mar 2023, Chia-Wei Wang wrote:
+
+> Aspeed AST2600 UART DMA (UDMA) includes 28 channels for the
+> DMA transmission and recevie of each UART devices.
 > 
-> The structure dw_edma_core_ops has a set of the pointers
-> abstracting out the DW eDMA vX and DW HDMA Native controllers.
-> And use dw_edma_v0_core_register to set up operation.
-> 
-> Signed-off-by: Cai huoqing <cai.huoqing@linux.dev>
-
-LGTM. Thanks.
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-
--Serge(y)
-
+> Signed-off-by: Chia-Wei Wang <chiawei_wang@aspeedtech.com>
 > ---
-> v6->v7:
->   1.Revert dw_edma_core_handle_int back to dw-edma-core.h.
->   2.Fix code style.
-> 
-> v6 link:
->   https://lore.kernel.org/lkml/20230310032342.17395-3-cai.huoqing@linux.dev/
-> 
->  drivers/dma/dw-edma/dw-edma-core.c    | 82 ++++++++------------------
->  drivers/dma/dw-edma/dw-edma-core.h    | 58 ++++++++++++++++++
->  drivers/dma/dw-edma/dw-edma-v0-core.c | 85 +++++++++++++++++++++++----
->  drivers/dma/dw-edma/dw-edma-v0-core.h | 14 +----
->  4 files changed, 157 insertions(+), 82 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-> index 1906a836f0aa..f916f0d84bd6 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-core.c
-> @@ -183,6 +183,7 @@ static void vchan_free_desc(struct virt_dma_desc *vdesc)
->  
->  static void dw_edma_start_transfer(struct dw_edma_chan *chan)
->  {
-> +	struct dw_edma *dw = chan->dw;
->  	struct dw_edma_chunk *child;
->  	struct dw_edma_desc *desc;
->  	struct virt_dma_desc *vd;
-> @@ -200,7 +201,7 @@ static void dw_edma_start_transfer(struct dw_edma_chan *chan)
->  	if (!child)
->  		return;
->  
-> -	dw_edma_v0_core_start(child, !desc->xfer_sz);
-> +	dw_edma_core_start(dw, child, !desc->xfer_sz);
->  	desc->xfer_sz += child->ll_region.sz;
->  	dw_edma_free_burst(child);
->  	list_del(&child->list);
-> @@ -285,7 +286,7 @@ static int dw_edma_device_terminate_all(struct dma_chan *dchan)
->  		chan->configured = false;
->  	} else if (chan->status == EDMA_ST_IDLE) {
->  		chan->configured = false;
-> -	} else if (dw_edma_v0_core_ch_status(chan) == DMA_COMPLETE) {
-> +	} else if (dw_edma_core_ch_status(chan) == DMA_COMPLETE) {
->  		/*
->  		 * The channel is in a false BUSY state, probably didn't
->  		 * receive or lost an interrupt
-> @@ -594,8 +595,6 @@ static void dw_edma_done_interrupt(struct dw_edma_chan *chan)
->  	struct virt_dma_desc *vd;
->  	unsigned long flags;
->  
-> -	dw_edma_v0_core_clear_done_int(chan);
-> -
->  	spin_lock_irqsave(&chan->vc.lock, flags);
->  	vd = vchan_next_desc(&chan->vc);
->  	if (vd) {
-> @@ -636,8 +635,6 @@ static void dw_edma_abort_interrupt(struct dw_edma_chan *chan)
->  	struct virt_dma_desc *vd;
->  	unsigned long flags;
->  
-> -	dw_edma_v0_core_clear_abort_int(chan);
-> -
->  	spin_lock_irqsave(&chan->vc.lock, flags);
->  	vd = vchan_next_desc(&chan->vc);
->  	if (vd) {
-> @@ -649,63 +646,32 @@ static void dw_edma_abort_interrupt(struct dw_edma_chan *chan)
->  	chan->status = EDMA_ST_IDLE;
->  }
->  
-> -static irqreturn_t dw_edma_interrupt(int irq, void *data, bool write)
-> +static inline irqreturn_t dw_edma_interrupt_write(int irq, void *data)
->  {
->  	struct dw_edma_irq *dw_irq = data;
-> -	struct dw_edma *dw = dw_irq->dw;
-> -	unsigned long total, pos, val;
-> -	unsigned long off;
-> -	u32 mask;
-> -
-> -	if (write) {
-> -		total = dw->wr_ch_cnt;
-> -		off = 0;
-> -		mask = dw_irq->wr_mask;
-> -	} else {
-> -		total = dw->rd_ch_cnt;
-> -		off = dw->wr_ch_cnt;
-> -		mask = dw_irq->rd_mask;
-> -	}
-> -
-> -	val = dw_edma_v0_core_status_done_int(dw, write ?
-> -							  EDMA_DIR_WRITE :
-> -							  EDMA_DIR_READ);
-> -	val &= mask;
-> -	for_each_set_bit(pos, &val, total) {
-> -		struct dw_edma_chan *chan = &dw->chan[pos + off];
-> -
-> -		dw_edma_done_interrupt(chan);
-> -	}
-> -
-> -	val = dw_edma_v0_core_status_abort_int(dw, write ?
-> -							   EDMA_DIR_WRITE :
-> -							   EDMA_DIR_READ);
-> -	val &= mask;
-> -	for_each_set_bit(pos, &val, total) {
-> -		struct dw_edma_chan *chan = &dw->chan[pos + off];
-> -
-> -		dw_edma_abort_interrupt(chan);
-> -	}
-> -
-> -	return IRQ_HANDLED;
-> -}
->  
-> -static inline irqreturn_t dw_edma_interrupt_write(int irq, void *data)
-> -{
-> -	return dw_edma_interrupt(irq, data, true);
-> +	return dw_edma_core_handle_int(dw_irq, EDMA_DIR_WRITE,
-> +				       dw_edma_done_interrupt,
-> +				       dw_edma_abort_interrupt);
->  }
->  
->  static inline irqreturn_t dw_edma_interrupt_read(int irq, void *data)
->  {
-> -	return dw_edma_interrupt(irq, data, false);
-> +	struct dw_edma_irq *dw_irq = data;
+> diff --git a/drivers/dma/ast2600-udma.c b/drivers/dma/ast2600-udma.c
+> new file mode 100644
+> index 000000000000..39117b26996d
+> --- /dev/null
+> +++ b/drivers/dma/ast2600-udma.c
+> @@ -0,0 +1,534 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) ASPEED Technology Inc.
+> + */
+> +#include <linux/delay.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/dmaengine.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_dma.h>
+> +#include <linux/dma-direct.h>
+> +#include "dmaengine.h"
 > +
-> +	return dw_edma_core_handle_int(dw_irq, EDMA_DIR_READ,
-> +				       dw_edma_done_interrupt,
-> +				       dw_edma_abort_interrupt);
->  }
->  
->  static irqreturn_t dw_edma_interrupt_common(int irq, void *data)
->  {
-> -	dw_edma_interrupt(irq, data, true);
-> -	dw_edma_interrupt(irq, data, false);
-> +	irqreturn_t ret = IRQ_NONE;
+> +#define DEVICE_NAME	"aspeed-udma"
 > +
-> +	ret |= dw_edma_interrupt_write(irq, data);
-> +	ret |= dw_edma_interrupt_read(irq, data);
->  
-> -	return IRQ_HANDLED;
-> +	return ret;
->  }
->  
->  static int dw_edma_alloc_chan_resources(struct dma_chan *dchan)
-> @@ -806,7 +772,7 @@ static int dw_edma_channel_setup(struct dw_edma *dw, u32 wr_alloc, u32 rd_alloc)
->  
->  		vchan_init(&chan->vc, dma);
->  
-> -		dw_edma_v0_core_device_config(chan);
-> +		dw_edma_core_ch_config(chan);
->  	}
->  
->  	/* Set DMA channel capabilities */
-> @@ -951,14 +917,16 @@ int dw_edma_probe(struct dw_edma_chip *chip)
->  
->  	dw->chip = chip;
->  
-> +	dw_edma_v0_core_register(dw);
+> +/* register offset */
+> +#define UDMA_TX_EN		0x000
+> +#define UDMA_RX_EN		0x004
+> +#define UDMA_TMOUT		0x00c
+> +#define UDMA_TX_PTR_RST		0x020
+> +#define UDMA_RX_PTR_RST		0x024
+> +#define UDMA_TX_INT_EN		0x030
+> +#define UDMA_TX_INT_STS		0x034
+> +#define UDMA_RX_INT_EN		0x038
+> +#define UDMA_RX_INT_STS		0x03c
 > +
->  	raw_spin_lock_init(&dw->lock);
->  
->  	dw->wr_ch_cnt = min_t(u16, chip->ll_wr_cnt,
-> -			      dw_edma_v0_core_ch_count(dw, EDMA_DIR_WRITE));
-> +			      dw_edma_core_ch_count(dw, EDMA_DIR_WRITE));
->  	dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);
->  
->  	dw->rd_ch_cnt = min_t(u16, chip->ll_rd_cnt,
-> -			      dw_edma_v0_core_ch_count(dw, EDMA_DIR_READ));
-> +			      dw_edma_core_ch_count(dw, EDMA_DIR_READ));
->  	dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);
->  
->  	if (!dw->wr_ch_cnt && !dw->rd_ch_cnt)
-> @@ -977,7 +945,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
->  		 dev_name(chip->dev));
->  
->  	/* Disable eDMA, only to establish the ideal initial conditions */
-> -	dw_edma_v0_core_off(dw);
-> +	dw_edma_core_off(dw);
->  
->  	/* Request IRQs */
->  	err = dw_edma_irq_request(dw, &wr_alloc, &rd_alloc);
-> @@ -990,7 +958,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
->  		goto err_irq_free;
->  
->  	/* Turn debugfs on */
-> -	dw_edma_v0_core_debugfs_on(dw);
-> +	dw_edma_core_debugfs_on(dw);
->  
->  	chip->dw = dw;
->  
-> @@ -1016,7 +984,7 @@ int dw_edma_remove(struct dw_edma_chip *chip)
->  		return -ENODEV;
->  
->  	/* Disable eDMA */
-> -	dw_edma_v0_core_off(dw);
-> +	dw_edma_core_off(dw);
->  
->  	/* Free irqs */
->  	for (i = (dw->nr_irqs - 1); i >= 0; i--)
-> diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-> index 0ab2b6dba880..71894b9e0b15 100644
-> --- a/drivers/dma/dw-edma/dw-edma-core.h
-> +++ b/drivers/dma/dw-edma/dw-edma-core.h
-> @@ -111,6 +111,21 @@ struct dw_edma {
->  	raw_spinlock_t			lock;		/* Only for legacy */
->  
->  	struct dw_edma_chip             *chip;
+> +#define UDMA_CH_OFFS(x)		((x) * 0x10)
+> +#define UDMA_CH_RPTR(x)		(0x040 + UDMA_CH_OFFS(x))
+> +#define UDMA_CH_WPTR(x)		(0x044 + UDMA_CH_OFFS(x))
+> +#define UDMA_CH_ADDR(x)		(0x048 + UDMA_CH_OFFS(x))
+> +#define UDMA_CH_CTRL(x)		(0x04c + UDMA_CH_OFFS(x))
+> +#define   UDMA_CH_CTRL_BUFSZ	GENMASK(1, 0)
 > +
-> +	const struct dw_edma_core_ops	*core;
+> +#define UDMA_MAX_BUFSZ	(0x10000)
+
+Unnecessary parenthesis.
+
+> +#define UDMA_MAX_TXSZ	(UDMA_MAX_BUFSZ - 1)
+> +
+> +enum ast2600_udma_bufsz {
+> +	UDMA_BUFSZ_1KB,
+> +	UDMA_BUFSZ_4KB,
+> +	UDMA_BUFSZ_16KB,
+> +	UDMA_BUFSZ_64KB,
 > +};
 > +
-> +typedef void (*dw_edma_handler_t)(struct dw_edma_chan *);
+> +struct ast2600_udma_desc {
+> +	struct dma_async_tx_descriptor tx;
+> +	dma_addr_t addr;
+> +	unsigned int size;
+> +};
 > +
-> +struct dw_edma_core_ops {
-> +	void (*off)(struct dw_edma *dw);
-> +	u16 (*ch_count)(struct dw_edma *dw, enum dw_edma_dir dir);
-> +	enum dma_status (*ch_status)(struct dw_edma_chan *chan);
-> +	irqreturn_t (*handle_int)(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir,
-> +				  dw_edma_handler_t done, dw_edma_handler_t abort);
-> +	void (*start)(struct dw_edma_chunk *chunk, bool first);
-> +	void (*ch_config)(struct dw_edma_chan *chan);
-> +	void (*debugfs_on)(struct dw_edma *dw);
->  };
->  
->  struct dw_edma_sg {
-> @@ -148,4 +163,47 @@ struct dw_edma_chan *dchan2dw_edma_chan(struct dma_chan *dchan)
->  	return vc2dw_edma_chan(to_virt_chan(dchan));
->  }
->  
-> +static inline
-> +void dw_edma_core_off(struct dw_edma *dw)
+> +struct ast2600_udma_chan {
+> +	struct dma_chan chan;
+> +	struct ast2600_udma_desc ud;
+> +	struct ast2600_udma *udma;
+> +	uint32_t residue;
+> +
+> +	/* 4B-aligned local buffer for workaround */
+> +	uint8_t *buf;
+> +	dma_addr_t buf_addr;
+> +
+> +	bool is_tx;
+> +};
+> +
+> +struct ast2600_udma {
+> +	struct dma_device ddev;
+> +	uint8_t __iomem *regs;
+> +	int irq;
+> +	struct ast2600_udma_chan *ucs;
+> +	uint32_t n_ucs;
+> +	spinlock_t lock;
+> +};
+> +
+> +static struct ast2600_udma_chan *to_ast2600_udma_chan(struct dma_chan *chan)
 > +{
-> +	dw->core->off(dw);
+> +	return container_of(chan, struct ast2600_udma_chan, chan);
 > +}
 > +
-> +static inline
-> +u16 dw_edma_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
+> +static int ast2600_udma_alloc_chan_resources(struct dma_chan *chan)
 > +{
-> +	return dw->core->ch_count(dw, dir);
+> +	dma_cookie_init(chan);
+> +
+> +	return 0;
 > +}
 > +
-> +static inline
-> +enum dma_status dw_edma_core_ch_status(struct dw_edma_chan *chan)
+> +static dma_cookie_t ast2600_udma_tx_submit(struct dma_async_tx_descriptor *tx)
 > +{
-> +	return chan->dw->core->ch_status(chan);
+> +	return dma_cookie_assign(tx);
 > +}
 > +
-> +static inline irqreturn_t
-> +dw_edma_core_handle_int(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir,
-> +			dw_edma_handler_t done, dw_edma_handler_t abort)
+> +/* consider only 8250_dma using dmaengine_prep_slave_single() */
+> +static struct dma_async_tx_descriptor *ast2600_udma_prep_slave_sg(struct dma_chan *chan,
+> +								  struct scatterlist *sgl,
+> +								  unsigned int sg_len,
+> +								  enum dma_transfer_direction dir,
+> +								  unsigned long tx_flags,
+> +								  void *context)
 > +{
-> +	return dw_irq->dw->core->handle_int(dw_irq, dir, done, abort);
-> +}
+> +	struct device *dev = chan->device->dev;
+> +	struct ast2600_udma_chan *uc = to_ast2600_udma_chan(chan);
+> +	struct ast2600_udma_desc *ud = &uc->ud;
+> +	phys_addr_t pa;
+> +	void *va;
 > +
-> +static inline
-> +void dw_edma_core_start(struct dw_edma *dw, struct dw_edma_chunk *chunk, bool first)
-> +{
-> +	dw->core->start(chunk, first);
-> +}
+> +	if (!is_slave_direction(dir)) {
+> +		dev_err(dev, "direction is not slave mode\n");
+> +		return NULL;
+> +	}
 > +
-> +static inline
-> +void dw_edma_core_ch_config(struct dw_edma_chan *chan)
-> +{
-> +	chan->dw->core->ch_config(chan);
-> +}
+> +	if (sg_len != 1) {
+
+> 1
+
+> +		dev_err(dev, "scatter list length is not 1\n");
+> +		return NULL;
+> +	}
 > +
-> +static inline
-> +void dw_edma_core_debugfs_on(struct dw_edma *dw)
-> +{
-> +	dw->core->debugfs_on(dw);
-> +}
+> +	if (uc->is_tx && dir != DMA_MEM_TO_DEV) {
+> +		dev_err(dev, "invalid direction to TX channel\n");
+> +		return NULL;
+> +	}
 > +
->  #endif /* _DW_EDMA_CORE_H */
-> diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> index 72e79a0c0a4e..16c48197d3c6 100644
-> --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> @@ -7,7 +7,7 @@
->   */
->  
->  #include <linux/bitfield.h>
-> -
-> +#include <linux/irqreturn.h>
->  #include <linux/io-64-nonatomic-lo-hi.h>
->  
->  #include "dw-edma-core.h"
-> @@ -216,7 +216,7 @@ static inline u64 readq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
->  	readq_ch(dw, dir, ch, &(__dw_ch_regs(dw, dir, ch)->name))
->  
->  /* eDMA management callbacks */
-> -void dw_edma_v0_core_off(struct dw_edma *dw)
-> +static void dw_edma_v0_core_off(struct dw_edma *dw)
->  {
->  	SET_BOTH_32(dw, int_mask,
->  		    EDMA_V0_DONE_INT_MASK | EDMA_V0_ABORT_INT_MASK);
-> @@ -225,7 +225,7 @@ void dw_edma_v0_core_off(struct dw_edma *dw)
->  	SET_BOTH_32(dw, engine_en, 0);
->  }
->  
-> -u16 dw_edma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
-> +static u16 dw_edma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
->  {
->  	u32 num_ch;
->  
-> @@ -242,7 +242,7 @@ u16 dw_edma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
->  	return (u16)num_ch;
->  }
->  
-> -enum dma_status dw_edma_v0_core_ch_status(struct dw_edma_chan *chan)
-> +static enum dma_status dw_edma_v0_core_ch_status(struct dw_edma_chan *chan)
->  {
->  	struct dw_edma *dw = chan->dw;
->  	u32 tmp;
-> @@ -258,7 +258,7 @@ enum dma_status dw_edma_v0_core_ch_status(struct dw_edma_chan *chan)
->  		return DMA_ERROR;
->  }
->  
-> -void dw_edma_v0_core_clear_done_int(struct dw_edma_chan *chan)
-> +static void dw_edma_v0_core_clear_done_int(struct dw_edma_chan *chan)
->  {
->  	struct dw_edma *dw = chan->dw;
->  
-> @@ -266,7 +266,7 @@ void dw_edma_v0_core_clear_done_int(struct dw_edma_chan *chan)
->  		  FIELD_PREP(EDMA_V0_DONE_INT_MASK, BIT(chan->id)));
->  }
->  
-> -void dw_edma_v0_core_clear_abort_int(struct dw_edma_chan *chan)
-> +static void dw_edma_v0_core_clear_abort_int(struct dw_edma_chan *chan)
->  {
->  	struct dw_edma *dw = chan->dw;
->  
-> @@ -274,18 +274,64 @@ void dw_edma_v0_core_clear_abort_int(struct dw_edma_chan *chan)
->  		  FIELD_PREP(EDMA_V0_ABORT_INT_MASK, BIT(chan->id)));
->  }
->  
-> -u32 dw_edma_v0_core_status_done_int(struct dw_edma *dw, enum dw_edma_dir dir)
-> +static u32 dw_edma_v0_core_status_done_int(struct dw_edma *dw, enum dw_edma_dir dir)
->  {
->  	return FIELD_GET(EDMA_V0_DONE_INT_MASK,
->  			 GET_RW_32(dw, dir, int_status));
->  }
->  
-> -u32 dw_edma_v0_core_status_abort_int(struct dw_edma *dw, enum dw_edma_dir dir)
-> +static u32 dw_edma_v0_core_status_abort_int(struct dw_edma *dw, enum dw_edma_dir dir)
->  {
->  	return FIELD_GET(EDMA_V0_ABORT_INT_MASK,
->  			 GET_RW_32(dw, dir, int_status));
->  }
->  
-> +static irqreturn_t
-> +dw_edma_v0_core_handle_int(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir,
-> +			   dw_edma_handler_t done, dw_edma_handler_t abort)
-> +{
-> +	struct dw_edma *dw = dw_irq->dw;
-> +	unsigned long total, pos, val;
-> +	irqreturn_t ret = IRQ_NONE;
-> +	struct dw_edma_chan *chan;
-> +	unsigned long off;
-> +	u32 mask;
+> +	ud->addr = sg_dma_address(sgl);
+> +	ud->size = sg_dma_len(sgl);
 > +
-> +	if (dir == EDMA_DIR_WRITE) {
-> +		total = dw->wr_ch_cnt;
-> +		off = 0;
-> +		mask = dw_irq->wr_mask;
+> +	if (uc->is_tx) {
+> +		if (ud->size > UDMA_MAX_TXSZ) {
+> +			dev_err(dev, "invalid TX DMA SIZE");
+> +			return NULL;
+> +		}
+> +
+> +		/*
+> +		 * UDMA is limited to 4B-aligned DMA addresses.
+> +		 * Thus copy data to local 4B-aligned buffer if
+> +		 * the source does not fit.
+> +		 */
+> +		if (ud->addr & 0x3) {
+
+!IS_ALIGNED()
+
+Remember to add include for it.
+
+> +			pa = dma_to_phys(chan->device->dev, ud->addr);
+> +			if (pa != (phys_addr_t)-1) {
+> +				va = phys_to_virt(pa);
+> +				memcpy(uc->buf, va, ud->size);
+> +				ud->addr = uc->buf_addr;
+> +			}
+> +		}
 > +	} else {
-> +		total = dw->rd_ch_cnt;
-> +		off = dw->wr_ch_cnt;
-> +		mask = dw_irq->rd_mask;
+> +		/*
+> +		 * UDMA RX buffer size is limited to 1/4/16/64 KB
+> +		 * We use the lower bits to encode the buffer size
+> +		 */
+> +		switch (ud->size) {
+> +		case 0x400:
+
+SZ_1K, etc in linux/sizes.h.
+
+> +			ud->size |= FIELD_PREP(UDMA_CH_CTRL_BUFSZ, UDMA_BUFSZ_1KB);
+> +			break;
+> +		case 0x1000:
+> +			ud->size |= FIELD_PREP(UDMA_CH_CTRL_BUFSZ, UDMA_BUFSZ_4KB);
+> +			break;
+> +		case 0x4000:
+> +			ud->size |= FIELD_PREP(UDMA_CH_CTRL_BUFSZ, UDMA_BUFSZ_16KB);
+> +			break;
+> +		case 0x10000:
+> +			ud->size |= FIELD_PREP(UDMA_CH_CTRL_BUFSZ, UDMA_BUFSZ_64KB);
+> +			break;
+> +		default:
+> +			dev_err(dev, "invalid RX DMA size\n");
+> +			return NULL;
+> +		}
 > +	}
 > +
-> +	val = dw_edma_v0_core_status_done_int(dw, dir);
-> +	val &= mask;
-> +	for_each_set_bit(pos, &val, total) {
-> +		chan = &dw->chan[pos + off];
+> +	dma_async_tx_descriptor_init(&ud->tx, &uc->chan);
+> +	ud->tx.tx_submit = ast2600_udma_tx_submit;
 > +
-> +		dw_edma_v0_core_clear_done_int(chan);
-> +		done(chan);
-> +
-> +		ret = IRQ_HANDLED;
-> +	}
-> +
-> +	val = dw_edma_v0_core_status_abort_int(dw, dir);
-> +	val &= mask;
-> +	for_each_set_bit(pos, &val, total) {
-> +		chan = &dw->chan[pos + off];
-> +
-> +		dw_edma_v0_core_clear_abort_int(chan);
-> +		abort(chan);
-> +
-> +		ret = IRQ_HANDLED;
-> +	}
-> +
-> +	return ret;
+> +	return &ud->tx;
 > +}
 > +
->  static void dw_edma_v0_write_ll_data(struct dw_edma_chunk *chunk, int i,
->  				     u32 control, u32 size, u64 sar, u64 dar)
->  {
-> @@ -356,7 +402,7 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
->  	dw_edma_v0_write_ll_link(chunk, i, control, chunk->ll_region.paddr);
->  }
->  
-> -void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
-> +static void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
->  {
->  	struct dw_edma_chan *chan = chunk->chan;
->  	struct dw_edma *dw = chan->dw;
-> @@ -427,7 +473,7 @@ void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
->  		  FIELD_PREP(EDMA_V0_DOORBELL_CH_MASK, chan->id));
->  }
->  
-> -int dw_edma_v0_core_device_config(struct dw_edma_chan *chan)
-> +static void dw_edma_v0_core_ch_config(struct dw_edma_chan *chan)
->  {
->  	struct dw_edma *dw = chan->dw;
->  	u32 tmp = 0;
-> @@ -494,12 +540,25 @@ int dw_edma_v0_core_device_config(struct dw_edma_chan *chan)
->  		SET_RW_32(dw, chan->dir, ch67_imwr_data, tmp);
->  		break;
->  	}
-> -
-> -	return 0;
->  }
->  
->  /* eDMA debugfs callbacks */
-> -void dw_edma_v0_core_debugfs_on(struct dw_edma *dw)
-> +static void dw_edma_v0_core_debugfs_on(struct dw_edma *dw)
->  {
->  	dw_edma_v0_debugfs_on(dw);
->  }
+> +static void ast2600_udma_issue_pending(struct dma_chan *chan)
+> +{
+> +	unsigned long flags;
+> +	uint32_t r_pr, r_is, r_ie, r_en, reg;
+> +	uint32_t ch_id = chan->chan_id;
+> +	uint32_t ch_bit = ch_id / 2;
+> +	dma_addr_t rx_addr;
+> +	uint32_t rx_size;
+> +	struct ast2600_udma_chan *uc = to_ast2600_udma_chan(chan);
+> +	struct ast2600_udma_desc *ud = &uc->ud;
+> +	struct ast2600_udma *udma = uc->udma;
 > +
-> +static const struct dw_edma_core_ops dw_edma_v0_core = {
-> +	.off = dw_edma_v0_core_off,
-> +	.ch_count = dw_edma_v0_core_ch_count,
-> +	.ch_status = dw_edma_v0_core_ch_status,
-> +	.handle_int = dw_edma_v0_core_handle_int,
-> +	.start = dw_edma_v0_core_start,
-> +	.ch_config = dw_edma_v0_core_ch_config,
-> +	.debugfs_on = dw_edma_v0_core_debugfs_on,
+> +	if (uc->is_tx) {
+> +		r_pr = UDMA_TX_PTR_RST;
+> +		r_is = UDMA_TX_INT_STS;
+> +		r_ie = UDMA_TX_INT_EN;
+> +		r_en = UDMA_TX_EN;
+> +	} else {
+> +		r_pr = UDMA_RX_PTR_RST;
+> +		r_is = UDMA_RX_INT_STS;
+> +		r_ie = UDMA_RX_INT_EN;
+> +		r_en = UDMA_RX_EN;
+> +	}
+> +
+> +	spin_lock_irqsave(&udma->lock, flags);
+> +
+> +	/* reset channel HW read/write pointer */
+> +	writel(BIT(ch_bit), udma->regs + r_pr);
+> +	writel(0, udma->regs + r_pr);
+> +
+> +	/* clear interrupt status */
+> +	writel(BIT(ch_bit), udma->regs + r_is);
+> +
+> +	/* set transfer address & size */
+> +	if (uc->is_tx) {
+> +		writel(ud->addr, udma->regs + UDMA_CH_ADDR(ch_id));
+> +		writel(ud->size, udma->regs + UDMA_CH_WPTR(ch_id));
+> +		writel(UDMA_BUFSZ_64KB, udma->regs + UDMA_CH_CTRL(ch_id));
+> +	} else {
+> +		/*
+> +		 * UDMA is limited to 4B-aligned addresses.
+> +		 * Thus use local 4B-aligned buffer to get
+> +		 * RX data and copy to the real destination
+> +		 * after then.
+> +		 */
+> +		rx_addr = (ud->addr & 0x3) ? uc->buf_addr : ud->addr;
+
+!IS_ALIGNED()
+
+> +		rx_size = FIELD_GET(UDMA_CH_CTRL_BUFSZ, ud->size);
+> +		writel(rx_addr, udma->regs + UDMA_CH_ADDR(ch_id));
+> +		writel(rx_size, udma->regs + UDMA_CH_CTRL(ch_id));
+> +	}
+> +
+> +	/* enable interrupt */
+> +	reg = readl(udma->regs + r_ie) | BIT(ch_bit);
+
+Usually, in this kind of constructs, the logic is put on its own line 
+between readl and writel.
+
+> +	writel(reg, udma->regs + r_ie);
+> +
+> +	/* start DMA */
+> +	reg = readl(udma->regs + r_en) | BIT(ch_bit);
+> +	writel(reg, udma->regs + r_en);
+> +
+> +	spin_unlock_irqrestore(&udma->lock, flags);
+> +}
+> +
+> +static enum dma_status ast2600_udma_tx_status(struct dma_chan *chan,
+> +		dma_cookie_t cookie, struct dma_tx_state *txstate)
+> +{
+> +	struct ast2600_udma_chan *uc = to_ast2600_udma_chan(chan);
+> +	enum dma_status sts = dma_cookie_status(chan, cookie, txstate);
+> +
+> +	dma_set_residue(txstate, uc->residue);
+> +
+> +	return sts;
+> +}
+> +
+> +static int ast2600_udma_pause(struct dma_chan *chan)
+> +{
+> +	unsigned long flags;
+> +	uint32_t r_en, r_ie, reg;
+> +	uint32_t ch_id = chan->chan_id;
+> +	uint32_t ch_bit = ch_id / 2;
+> +	struct ast2600_udma_chan *uc = to_ast2600_udma_chan(chan);
+> +	struct ast2600_udma *udma = uc->udma;
+> +
+> +	if (uc->is_tx) {
+> +		r_en = UDMA_TX_EN;
+> +		r_ie = UDMA_TX_INT_EN;
+> +	} else {
+> +		r_en = UDMA_RX_EN;
+> +		r_ie = UDMA_RX_INT_EN;
+> +	}
+> +
+> +	spin_lock_irqsave(&udma->lock, flags);
+> +
+> +	reg = readl(udma->regs + r_en) & ~BIT(ch_bit);
+> +	writel(reg, udma->regs + r_en);
+> +
+> +	reg = readl(udma->regs + r_ie) & ~BIT(ch_bit);
+> +	writel(reg, udma->regs + r_ie);
+> +
+> +	spin_unlock_irqrestore(&udma->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ast2600_udma_resume(struct dma_chan *chan)
+> +{
+> +	unsigned long flags;
+> +	uint32_t r_en, r_ie, reg;
+> +	uint32_t ch_id = chan->chan_id;
+> +	uint32_t ch_bit = ch_id / 2;
+> +	struct ast2600_udma_chan *uc = to_ast2600_udma_chan(chan);
+> +	struct ast2600_udma *udma = uc->udma;
+> +
+> +	if (uc->is_tx) {
+> +		r_en = UDMA_TX_EN;
+> +		r_ie = UDMA_TX_INT_EN;
+> +	} else {
+> +		r_en = UDMA_RX_EN;
+> +		r_ie = UDMA_RX_INT_EN;
+> +	}
+> +
+> +	spin_lock_irqsave(&udma->lock, flags);
+> +
+> +	reg = readl(udma->regs + r_en) | BIT(ch_bit);
+> +	writel(reg, udma->regs + r_en);
+> +
+> +	reg = readl(udma->regs + r_ie) | BIT(ch_bit);
+> +	writel(reg, udma->regs + r_ie);
+> +
+> +	spin_unlock_irqrestore(&udma->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ast2600_udma_terminate(struct dma_chan *chan)
+> +{
+> +	unsigned long flags;
+> +	uint32_t r_pr, r_is, r_ie, r_en, reg;
+> +	uint32_t ch_id = chan->chan_id;
+> +	uint32_t ch_bit = ch_id / 2;
+> +	struct ast2600_udma_chan *uc = to_ast2600_udma_chan(chan);
+> +	struct ast2600_udma *udma = uc->udma;
+> +
+> +	if (uc->is_tx) {
+> +		r_pr = UDMA_TX_PTR_RST;
+> +		r_is = UDMA_TX_INT_STS;
+> +		r_ie = UDMA_TX_INT_EN;
+> +		r_en = UDMA_TX_EN;
+> +	} else {
+> +		r_pr = UDMA_RX_PTR_RST;
+> +		r_is = UDMA_RX_INT_STS;
+> +		r_ie = UDMA_RX_INT_EN;
+> +		r_en = UDMA_RX_EN;
+> +	}
+> +
+> +	spin_lock_irqsave(&udma->lock, flags);
+> +
+> +	/* disable DMA */
+> +	reg = readl(udma->regs + r_en) & ~BIT(ch_bit);
+> +	writel(reg, udma->regs + r_en);
+> +
+> +	/* disable interrupt */
+> +	reg = readl(udma->regs + r_ie) & ~BIT(ch_bit);
+> +	writel(reg, udma->regs + r_ie);
+> +
+> +	/* clear interrupt status */
+> +	writel(BIT(ch_bit), udma->regs + r_is);
+> +
+> +	/* reset channel HW read/write pointer */
+> +	writel(BIT(ch_bit), udma->regs + r_pr);
+> +	writel(0, udma->regs + r_pr);
+> +
+> +	spin_unlock_irqrestore(&udma->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t ast2600_udma_isr(int irq, void *arg)
+> +{
+> +	struct ast2600_udma *udma = arg;
+> +	struct ast2600_udma_chan *uc;
+> +	struct ast2600_udma_desc *ud;
+> +	struct dma_async_tx_descriptor *tx;
+> +	uint32_t sts, rptr, wptr;
+> +	uint32_t ch_id, ch_bit;
+> +	phys_addr_t pa;
+> +	void *va;
+> +
+> +	/* handle TX interrupt */
+> +	sts = readl(udma->regs + UDMA_TX_INT_STS);
+> +	for_each_set_bit(ch_bit, (unsigned long *)&sts, (udma->n_ucs / 2)) {
+
+Why not make sts unsigned long to avoid the cast?
+
+Unnecessary parenthesis.
+
+> +		ch_id = ch_bit << 1;
+> +		rptr = readl(udma->regs + UDMA_CH_RPTR(ch_id));
+> +		wptr = readl(udma->regs + UDMA_CH_WPTR(ch_id));
+> +
+> +		uc = &udma->ucs[ch_id];
+> +		uc->residue = wptr - rptr;
+> +
+> +		ast2600_udma_terminate(&uc->chan);
+> +
+> +		tx = &uc->ud.tx;
+> +		dma_cookie_complete(tx);
+> +		dma_descriptor_unmap(tx);
+> +		dmaengine_desc_get_callback_invoke(tx, NULL);
+> +	}
+> +
+> +	/* handle RX interrupt */
+> +	sts = readl(udma->regs + UDMA_RX_INT_STS);
+> +	for_each_set_bit(ch_bit, (unsigned long *)&sts, udma->n_ucs / 2) {
+> +		ch_id = (ch_bit << 1) + 1;
+> +		wptr = readl(udma->regs + UDMA_CH_WPTR(ch_id));
+> +
+> +		uc = &udma->ucs[ch_id];
+> +		ud = &uc->ud;
+> +		tx = &ud->tx;
+> +
+> +		uc->residue = (ud->size & ~UDMA_CH_CTRL_BUFSZ) - wptr;
+> +
+> +		/* handle non-4B-aligned case */
+> +		if (ud->addr & 0x3) {
+
+!IS_ALIGNED()
+
+> +			pa = dma_to_phys(uc->chan.device->dev, ud->addr);
+> +			if (pa != (phys_addr_t)-1) {
+> +				va = phys_to_virt(pa);
+> +				memcpy(va, uc->buf, wptr);
+> +			}
+> +		}
+> +
+> +		ast2600_udma_terminate(&uc->chan);
+> +
+> +		dma_cookie_complete(tx);
+> +		dma_descriptor_unmap(tx);
+> +		dmaengine_desc_get_callback_invoke(tx, NULL);
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int ast2600_udma_probe(struct platform_device *pdev)
+> +{
+> +	int i, rc;
+> +	struct resource *res;
+> +	struct ast2600_udma *udma;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	udma = devm_kzalloc(dev, sizeof(*udma), GFP_KERNEL);
+> +	if (!udma)
+> +		return -ENOMEM;
+> +
+> +	dma_cap_set(DMA_SLAVE, udma->ddev.cap_mask);
+> +	udma->ddev.device_alloc_chan_resources = ast2600_udma_alloc_chan_resources;
+> +	udma->ddev.device_prep_slave_sg = ast2600_udma_prep_slave_sg;
+> +	udma->ddev.device_issue_pending = ast2600_udma_issue_pending;
+> +	udma->ddev.device_tx_status = ast2600_udma_tx_status;
+> +	udma->ddev.device_pause = ast2600_udma_pause;
+> +	udma->ddev.device_resume = ast2600_udma_resume;
+> +	udma->ddev.device_terminate_all = ast2600_udma_terminate;
+> +	udma->ddev.src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE);
+> +	udma->ddev.dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE);
+> +	udma->ddev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+> +	udma->ddev.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+> +	udma->ddev.dev = dev;
+> +	INIT_LIST_HEAD(&udma->ddev.channels);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (IS_ERR(res)) {
+> +		dev_err(dev, "cannot get IO resource\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	udma->regs = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(udma->regs)) {
+> +		dev_err(dev, "cannot map IO registers\n");
+> +		return PTR_ERR(udma->regs);
+> +	}
+> +
+> +	/* timeout value: 0x200 * (PCLK * 14400) */
+> +	writel(0x200, udma->regs + UDMA_TMOUT);
+> +
+> +	/* disable all for safety */
+> +	writel(0x0, udma->regs + UDMA_TX_EN);
+> +	writel(0x0, udma->regs + UDMA_RX_EN);
+> +
+> +	udma->irq = platform_get_irq(pdev, 0);
+> +	if (udma->irq < 0)
+> +		return udma->irq;
+> +
+> +	rc = devm_request_irq(&pdev->dev, udma->irq, ast2600_udma_isr,
+> +			      IRQF_SHARED, DEVICE_NAME, udma);
+> +	if (rc) {
+> +		dev_err(dev, "cannot request IRQ\n");
+> +		return rc;
+> +	}
+> +
+> +	rc = of_property_read_u32(dev->of_node, "dma-channels", &udma->n_ucs);
+> +	if (rc) {
+> +		dev_err(dev, "cannot find number of channels\n");
+> +		return rc;
+> +	}
+> +
+> +	udma->ucs = devm_kzalloc(dev,
+> +				 sizeof(struct ast2600_udma_chan) * udma->n_ucs, GFP_KERNEL);
+> +	if (!udma->ucs)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < udma->n_ucs; ++i) {
+> +		udma->ucs[i].is_tx = !(i % 2);
+
+& 1 would make more sense I think.
+
+> +		udma->ucs[i].chan.device = &udma->ddev;
+> +		udma->ucs[i].buf = dmam_alloc_coherent(dev, UDMA_MAX_BUFSZ,
+> +						       &udma->ucs[i].buf_addr, GFP_KERNEL);
+> +		if (!udma->ucs[i].buf)
+> +			return -ENOMEM;
+> +
+> +		udma->ucs[i].udma = udma;
+> +		list_add_tail(&udma->ucs[i].chan.device_node, &udma->ddev.channels);
+> +	}
+> +
+> +	rc = dma_async_device_register(&udma->ddev);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = of_dma_controller_register(dev->of_node, of_dma_xlate_by_chan_id, &udma->ddev);
+> +	if (rc)
+> +		return rc;
+> +
+> +	spin_lock_init(&udma->lock);
+> +
+> +	platform_set_drvdata(pdev, udma);
+> +
+> +	dev_info(dev, "module loaded\n");
+
+Don't print anything when there's no error.
+
+> +	return 0;
+> +}
+> +
+> +static int ast2600_udma_remove(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct ast2600_udma *udma = platform_get_drvdata(pdev);
+> +
+> +	of_dma_controller_free(dev->of_node);
+> +	dma_async_device_unregister(&udma->ddev);
+> +
+> +	dev_info(dev, "module removed\n");
+
+Ditto.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id ast2600_udma_match[] = {
+> +	{ .compatible = "aspeed,ast2600-udma" },
+> +	{ },
 > +};
 > +
-> +void dw_edma_v0_core_register(struct dw_edma *dw)
-> +{
-> +	dw->core = &dw_edma_v0_core;
-> +}
-> diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.h b/drivers/dma/dw-edma/dw-edma-v0-core.h
-> index ab96a1f48080..04a882222f99 100644
-> --- a/drivers/dma/dw-edma/dw-edma-v0-core.h
-> +++ b/drivers/dma/dw-edma/dw-edma-v0-core.h
-> @@ -11,17 +11,7 @@
->  
->  #include <linux/dma/edma.h>
->  
-> -/* eDMA management callbacks */
-> -void dw_edma_v0_core_off(struct dw_edma *chan);
-> -u16 dw_edma_v0_core_ch_count(struct dw_edma *chan, enum dw_edma_dir dir);
-> -enum dma_status dw_edma_v0_core_ch_status(struct dw_edma_chan *chan);
-> -void dw_edma_v0_core_clear_done_int(struct dw_edma_chan *chan);
-> -void dw_edma_v0_core_clear_abort_int(struct dw_edma_chan *chan);
-> -u32 dw_edma_v0_core_status_done_int(struct dw_edma *chan, enum dw_edma_dir dir);
-> -u32 dw_edma_v0_core_status_abort_int(struct dw_edma *chan, enum dw_edma_dir dir);
-> -void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first);
-> -int dw_edma_v0_core_device_config(struct dw_edma_chan *chan);
-> -/* eDMA debug fs callbacks */
-> -void dw_edma_v0_core_debugfs_on(struct dw_edma *dw);
-> +/* eDMA core register */
-> +void dw_edma_v0_core_register(struct dw_edma *dw);
->  
->  #endif /* _DW_EDMA_V0_CORE_H */
-> -- 
-> 2.34.1
+> +static struct platform_driver ast2600_udma_driver = {
+> +	.probe = ast2600_udma_probe,
+> +	.remove = ast2600_udma_remove,
+> +	.driver = {
+> +			.name = DEVICE_NAME,
+> +			.of_match_table = ast2600_udma_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(ast2600_udma_driver);
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Chia-Wei Wang <chiawei_wang@aspeedtech.com");
 > 
+
+-- 
+ i.
+

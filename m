@@ -2,81 +2,100 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF4C46C1FA5
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Mar 2023 19:26:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C51916C20E2
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Mar 2023 20:08:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229987AbjCTS0Y (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 20 Mar 2023 14:26:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38964 "EHLO
+        id S231176AbjCTTIK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 20 Mar 2023 15:08:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231560AbjCTSZW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 Mar 2023 14:25:22 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89D303D906
-        for <dmaengine@vger.kernel.org>; Mon, 20 Mar 2023 11:18:14 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id y4so50431633edo.2
-        for <dmaengine@vger.kernel.org>; Mon, 20 Mar 2023 11:18:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679336290;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uVVx652hcMKMJrY2/TW3X5uhdHnpbhSboZxjUwpyCmQ=;
-        b=LCPQpO+/TIMoBmEv9zdmvK7Lh15i5OPYxBaVV5AXmfMyEiOGyAyKVEN48pMZpZjoBx
-         cldkdBGQnCveMh3VaGERnBg7mNj5JtDxkaAyt8YH2ckCJ+WL3FkgjNrG1nmtfn8XJTs1
-         SrLcLSFoVig+wJErYSKJFd0Hu18lKXwNczvOFbAPlkhay/Kj7IiKsROduF9bbLIUKuVy
-         4nM62dwzjJyvePwqw9v50d34MbRoWsclWgaWYgJZtd13eygML3AZ6rlSXApM7gsXWqMb
-         oGBss1d9SmAJDxlS5p0rLeXeWxGcJ0iP2G2009F+fvoAmxZ8+akCMeA3dpKRQ5Q5HoiB
-         DhUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679336290;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uVVx652hcMKMJrY2/TW3X5uhdHnpbhSboZxjUwpyCmQ=;
-        b=64oO/QeG+JlbTacnl4cMqj7bwRoFRdIAhKDNO5ER3w8emhM52CB9Jiadn8772jD5cA
-         VgvRe6y4dEeMao7HF5k/n+InRFFWUafrUGLfKmVXT8Y6jsqgUgAKgd6z1+ADxax6Pwv8
-         YVGqGJkwDw/zKo7rYyJ8uO5NmJPMy+4S4hvhWu8GU6+dVvu/JL/9TEl/5Rws9heTMzbR
-         C0IPaofPb9GcQ/3oV8ju9syxkyJQ+IcRg+LTv2fKSTzi9g0w7zoOU5kypwNUBwLZB5Ah
-         BxR/mnqz+2AH4AKbRInSU7U+ABlZ60nCWVuUFYXrFpceNrz1mA9xn105y/UyRbjzaaxH
-         RvJg==
-X-Gm-Message-State: AO0yUKUBkKGjZHEYTNpuE+XYXMrafISIKzClXOEEa1DFGonXZ7lDCizp
-        FHBXMlnS3tmkuebmXX0SmyQdfEt7usxkhCDnUQg=
-X-Google-Smtp-Source: AK7set8rfQQqUkj+svHwzbF1jndD0qaZCeRI8o2TU6zQiAC2h8QtnFxxqt97uqqNCsT4vcVYlTdvVRfLmoUzRH80vSI=
-X-Received: by 2002:a17:907:1def:b0:877:747e:f076 with SMTP id
- og47-20020a1709071def00b00877747ef076mr25298ejc.0.1679336290427; Mon, 20 Mar
- 2023 11:18:10 -0700 (PDT)
+        with ESMTP id S229746AbjCTTHr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 Mar 2023 15:07:47 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF0EA2B613;
+        Mon, 20 Mar 2023 12:00:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679338805; x=1710874805;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RVUBV13vg50kKjzvJu8eWgLIZUCC4rAeEXycCUsrUFE=;
+  b=Cb1Rv6PhQG0o1qfeF7Hq2yt3uTkzi8CTMrWas0m5Bpu7EIfGv9P65yk3
+   NORI50/RE2o4eflb8ems3kQBqL36MuO/hC4I5jqbRjE9x/KbTElHS1bqF
+   238u7JSR/hE3vEAsnJsAWg48YBu8VFCKnbU81+wvfBG4gT/FReIO0AyT+
+   ghKaIQAJu1AN8OddwzgtwxZSJ+OoYqZ6zxTZlkHizZ7XfQexeRd5zhI8S
+   tO8/ejPd2m5XZ22uMudOyb1Znlqr9WsymJUAOZpRUC6HUqRRvJqSgx6K4
+   wI/sbHzvVn1T/OiK9043KuRXCiNCBRBprxeWYv/f9D7pslmpWAUuDJ/HK
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="338777323"
+X-IronPort-AV: E=Sophos;i="5.98,276,1673942400"; 
+   d="scan'208";a="338777323"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 11:58:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="855346805"
+X-IronPort-AV: E=Sophos;i="5.98,276,1673942400"; 
+   d="scan'208";a="855346805"
+Received: from vrchili-mobl2.amr.corp.intel.com (HELO [10.209.117.85]) ([10.209.117.85])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 11:58:15 -0700
+Message-ID: <b1a380ad-50b4-4a00-2480-ac4d1542c71f@intel.com>
+Date:   Mon, 20 Mar 2023 11:58:14 -0700
 MIME-Version: 1.0
-From:   ANNA MARIA <usatopdatalist789@gmail.com>
-Date:   Mon, 20 Mar 2023 13:17:57 -0500
-Message-ID: <CACe2vLVc=H8oiyCfAJ=UCzuPwSZpEPfUXA=TDZUK-MhYLtfGFA@mail.gmail.com>
-Subject: RE: Fintech Meetup Attendees Email List- 2023
-To:     ANNA MARIA <usatopdatalist789@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_FILL_THIS_FORM_SHORT autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v7 6/7] iommu/ioasid: Rename INVALID_IOASID
+Content-Language: en-US
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        X86 Kernel <x86@kernel.org>, bp@alien8.de,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>, corbet@lwn.net,
+        vkoul@kernel.org, dmaengine@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     Will Deacon <will@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>
+References: <20230320185910.2643260-1-jacob.jun.pan@linux.intel.com>
+ <20230320185910.2643260-7-jacob.jun.pan@linux.intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <20230320185910.2643260-7-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,
+On 3/20/23 11:59, Jacob Pan wrote:
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -40,7 +40,10 @@
+>  #include <linux/io.h>
+>  #include <linux/hardirq.h>
+>  #include <linux/atomic.h>
+> -#include <linux/ioasid.h>
+> +
+> +#ifdef CONFIG_IOMMU_SVA
+> +#include <linux/iommu.h>
+> +#endif
 
-I hope you=E2=80=99re having a great week!
+What's the deal with the #ifdef'd #include?
 
-Would you be interested in acquiring Fintech Meetup Attendees Email List 20=
-23?
+What's the harm of just making it unconditional?
 
-List Includes:- Org-Name, First Name, Last Name, Contact Job Title,
-Verified Email Address, Website URL, Mailing Address, Phone Number,
-Fax Number, Industry and many more=E2=80=A6
-
-Number of Contacts: - 5,386 Verified Contacts.
-Cost: $1,326
-
-Kind Regards,
-Anna Maria
-Marketing Coordinator

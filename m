@@ -2,53 +2,68 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B08DE6C283B
-	for <lists+dmaengine@lfdr.de>; Tue, 21 Mar 2023 03:32:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A0E46C29F8
+	for <lists+dmaengine@lfdr.de>; Tue, 21 Mar 2023 06:44:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229934AbjCUCcP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 20 Mar 2023 22:32:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49276 "EHLO
+        id S229634AbjCUFoS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 21 Mar 2023 01:44:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229914AbjCUCcO (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 Mar 2023 22:32:14 -0400
-Received: from out-41.mta0.migadu.com (out-41.mta0.migadu.com [91.218.175.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 660A5399EC;
-        Mon, 20 Mar 2023 19:31:53 -0700 (PDT)
-Date:   Tue, 21 Mar 2023 10:31:47 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1679365911;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vH8g1u/isyRONRi7xFZiLBJKBxPjGqE0tRMeBX5v3EI=;
-        b=d6b8zRinkJjb6+k0mGh5XeaoO4+JSi5euPs8baVtYhIAP9YVFg+DpdDTjwYHNkeik6dVkF
-        41qzIBxUiQrY5CR/bnxZLMqg/WrvCijvnuHKUqflXWfOBHTy+qbtAWkxctIN5Zg7Xvvxzh
-        /tLc62XEko12D/AsqOtyHq4gZDJCp04=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Cai Huoqing <cai.huoqing@linux.dev>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v7 0/5] dmaengine: dw-edma: Add support for native HDMA
-Message-ID: <ZBkXEzoZZlIy18xB@chq-MS-7D45>
-References: <20230315012840.6986-1-cai.huoqing@linux.dev>
- <20230320121401.zkcjbqmghzacpffh@mobilestation>
+        with ESMTP id S229494AbjCUFoR (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 21 Mar 2023 01:44:17 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B9EB1589F;
+        Mon, 20 Mar 2023 22:44:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679377456; x=1710913456;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=aYKfSTlUBleYkVyElMNA3zlWKwAfGp8fUVwgAyZJIkA=;
+  b=YBkpovjt8h4SpfYp15oKHgfnfzUM0A8n8IG+2gXa1XtQKRKaBLt7tSnQ
+   1RMWMKgJcZfOzKgCrCCFq8Xai+diIriYTuuTiMxh98g2OCjwJi+v29tDl
+   +or5MT7Qddxp7Pr+XWbpdU52JtYm+50GKC/C8+VfKxhXQ+S7CyVgF1lG/
+   BgfGdntJK+W2KuFwaGkIOmIy/DxkqLJabwPvb5JZVT/6K4Yop+XvXUWB6
+   juYXVyTNq/nhpM+K+fLgBqd7HHeXXYCid5NekQLiPvZbJUUTRGXKPi4w7
+   NZKauTCApeRZz/Jl1GFgllcQf7rGe+aOsqG5sehS9HjjoC9zRn24uLHO2
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="340397929"
+X-IronPort-AV: E=Sophos;i="5.98,278,1673942400"; 
+   d="scan'208";a="340397929"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 22:44:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="791933553"
+X-IronPort-AV: E=Sophos;i="5.98,278,1673942400"; 
+   d="scan'208";a="791933553"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.48]) ([10.239.159.48])
+  by fmsmga002.fm.intel.com with ESMTP; 20 Mar 2023 22:44:11 -0700
+Message-ID: <9c5d1951-5475-863b-b258-1a4cbc242f0b@linux.intel.com>
+Date:   Tue, 21 Mar 2023 13:43:00 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230320121401.zkcjbqmghzacpffh@mobilestation>
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux.dev,
+        dmaengine@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] iommu/vt-d: Allow SVA with device-specific IOPF
+Content-Language: en-US
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+References: <20230309025639.26109-1-baolu.lu@linux.intel.com>
+ <20230309025639.26109-3-baolu.lu@linux.intel.com>
+ <20230320090006.180efbed@jacob-builder>
+From:   Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20230320090006.180efbed@jacob-builder>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
         URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,104 +71,61 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 20 3月 23 15:14:01, Serge Semin wrote:
-> Hi Cai
+On 3/21/23 12:00 AM, Jacob Pan wrote:
+> Hi BaoLu,
+
+Hi Jacob,
+
 > 
-> On Wed, Mar 15, 2023 at 09:28:31AM +0800, Cai Huoqing wrote:
-> > Add support for HDMA NATIVE, as long the IP design has set
-> > the compatible register map parameter-HDMA_NATIVE,
-> > which allows compatibility for native HDMA register configuration.
-> > 
-> > The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
-> > And the native HDMA registers are different from eDMA,
-> > so this patch add support for HDMA NATIVE mode.
-> > 
-> > HDMA write and read channels operate independently to maximize
-> > the performance of the HDMA read and write data transfer over
-> > the link When you configure the HDMA with multiple read channels,
-> > then it uses a round robin (RR) arbitration scheme to select
-> > the next read channel to be serviced.The same applies when
-> > youhave multiple write channels.
-> > 
-> > The native HDMA driver also supports a maximum of 16 independent
-> > channels (8 write + 8 read), which can run simultaneously.
-> > Both SAR (Source Address Register) and DAR (Destination Address Register)
-> > are aligned to byte.
+> On Thu,  9 Mar 2023 10:56:36 +0800, Lu Baolu<baolu.lu@linux.intel.com>
+> wrote:
 > 
-> It seems like we are getting towards the series finalization. I'll
-> test it out on my HW after v8 is submitted. Meanwhile could you please
-> clarify whether you have a real device with DW HDMA engine on board?
+>> Currently enabling SVA requires IOPF support from the IOMMU and device
+>> PCI PRI. However, some devices can handle IOPF by itself without ever
+>> sending PCI page requests nor advertising PRI capability.
+>>
+>> Allow SVA support with IOPF handled either by IOMMU (PCI PRI) or device
+>> driver (device-specific IOPF). As long as IOPF could be handled, SVA
+>> should continue to work.
+>>
+>> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
+>> ---
+>>   drivers/iommu/intel/iommu.c | 13 ++++++++++++-
+>>   1 file changed, 12 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+>> index 7c2f4bd33582..d2fcab9d8f61 100644
+>> --- a/drivers/iommu/intel/iommu.c
+>> +++ b/drivers/iommu/intel/iommu.c
+>> @@ -4650,7 +4650,18 @@ static int intel_iommu_enable_sva(struct device
+>> *dev) if (!(iommu->flags & VTD_FLAG_SVM_CAPABLE))
+>>   		return -ENODEV;
+>>   
+>> -	if (!info->pasid_enabled || !info->pri_enabled ||
+>> !info->ats_enabled)
+>> +	if (!info->pasid_enabled)
+>> +		return -EINVAL;
+>> +
+>> +	/*
+>> +	 * Devices having device-specific I/O fault handling should not
+>> +	 * support PCI/PRI.
+>> +	 */
+>> +	if (!info->pri_supported)
+>> +		return 0;
+> If you put this check at the very beginning, everything else should it be
+> the same, right?
 
-Our hardware is an AI Accelerartor(PCIE Card).
+Even for device specific IOPF, PASID/ATS are still required on the IOMMU
+side.
 
-The device pci.ids is 1d22:3864
-in https://github.com/pciutils/pciids/blob/master/pci.ids
-line 24737,
-
-"1d22  Baidu Technology
-        3684  Kunlun AI Accelerator
-        3685  Kunlun2 AI Accelerator [VF]"
-
-And our device driver is not ready to upstream(will cost serveral
-
-months to port DRM etc.),
-
-but I have taken this DW eDMA core into our driver test.
-
-Thanks
-Cai-
-
-> You keep submitting the DW eDMA driver core update, but there is no
-> glue-driver or low-level device driver patch for a real device which
-> would set the EDMA_MF_HDMA_NATIVE mapping.
 > 
-> -Serge(y)
-> 
-> > 
-> > Cai Huoqing (2):
-> >   dmaengine: dw-edma: Add support for native HDMA
-> >   dmaengine: dw-edma: Optimization in dw_edma_v0_core_handle_int
-> > 
-> > Cai huoqing (3):
-> >   dmaengine: dw-edma: Rename dw_edma_core_ops structure to
-> >     dw_edma_plat_ops
-> >   dmaengine: dw-edma: Create a new dw_edma_core_ops structure to
-> >     abstract controller operation
-> >   dmaengine: dw-edma: Add HDMA DebugFS support
-> > 
-> > v6->v7:
-> >   [1/5]
-> >   1.Update the commit log.
-> >   [2/5]
-> >   2.Revert dw_edma_core_handle_int back to dw-edma-core.h.
-> >   3.Fix code style.
-> >   [3/5]
-> >   4.Move the change of register file from patch[4/5] to patch[3/5].
-> >   5.Fix code style.
-> > 
-> > v6 link:
-> >   https://lore.kernel.org/lkml/20230310032342.17395-1-cai.huoqing@linux.dev/
-> > 
-> >  drivers/dma/dw-edma/Makefile                 |   8 +-
-> >  drivers/dma/dw-edma/dw-edma-core.c           |  86 ++----
-> >  drivers/dma/dw-edma/dw-edma-core.h           |  58 ++++
-> >  drivers/dma/dw-edma/dw-edma-pcie.c           |   4 +-
-> >  drivers/dma/dw-edma/dw-edma-v0-core.c        |  91 ++++--
-> >  drivers/dma/dw-edma/dw-edma-v0-core.h        |  14 +-
-> >  drivers/dma/dw-edma/dw-hdma-v0-core.c        | 277 +++++++++++++++++++
-> >  drivers/dma/dw-edma/dw-hdma-v0-core.h        |  17 ++
-> >  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c     | 176 ++++++++++++
-> >  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h     |  22 ++
-> >  drivers/dma/dw-edma/dw-hdma-v0-regs.h        | 130 +++++++++
-> >  drivers/pci/controller/dwc/pcie-designware.c |   2 +-
-> >  include/linux/dma/edma.h                     |   7 +-
-> >  13 files changed, 785 insertions(+), 107 deletions(-)
-> >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
-> >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
-> >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-> >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-> >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> > 
-> > -- 
-> > 2.34.1
-> > 
+> Still feel a little weird that, SVA is tied to PRI for PCI PRI but not for
+> device specific IOPF.
+
+PCI PRI and device specific IOPF *should* be equivalent. But the IOMMU
+side has no means to check the capability of device-specific IOPF.
+Therefore, IOMMU can only default that if the device driver enables SVA
+on a non-PRI device, it will handle IOPF in its own way.
+
+Best regards,
+baolu

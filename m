@@ -2,26 +2,26 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EE2C6C46F0
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Mar 2023 10:49:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C998A6C46F9
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Mar 2023 10:49:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230364AbjCVJta (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 22 Mar 2023 05:49:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55504 "EHLO
+        id S230008AbjCVJtg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 22 Mar 2023 05:49:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229751AbjCVJtC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Mar 2023 05:49:02 -0400
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DCD528E7D;
-        Wed, 22 Mar 2023 02:48:35 -0700 (PDT)
-Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
+        with ESMTP id S230078AbjCVJtH (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Mar 2023 05:49:07 -0400
+Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37FAB2CC75;
+        Wed, 22 Mar 2023 02:48:36 -0700 (PDT)
+Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
         (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-        by ex01.ufhost.com (Postfix) with ESMTP id 0E07224E330;
+        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
+        by fd01.gateway.ufhost.com (Postfix) with ESMTP id BA79D24E047;
         Wed, 22 Mar 2023 17:48:34 +0800 (CST)
-Received: from EXMBX168.cuchost.com (172.16.6.78) by EXMBX166.cuchost.com
- (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 22 Mar
- 2023 17:48:33 +0800
+Received: from EXMBX168.cuchost.com (172.16.6.78) by EXMBX165.cuchost.com
+ (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 22 Mar
+ 2023 17:48:35 +0800
 Received: from localhost.localdomain (183.27.97.64) by EXMBX168.cuchost.com
  (172.16.6.78) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 22 Mar
  2023 17:48:33 +0800
@@ -36,9 +36,9 @@ To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
         Walker Chen <walker.chen@starfivetech.com>
 CC:     <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-Subject: [PATCH v6 3/4] dmaengine: dw-axi-dmac: Increase polling time to DMA transmission completion status
-Date:   Wed, 22 Mar 2023 17:48:19 +0800
-Message-ID: <20230322094820.24738-4-walker.chen@starfivetech.com>
+Subject: [PATCH v6 4/4] riscv: dts: starfive: add dma controller node
+Date:   Wed, 22 Mar 2023 17:48:20 +0800
+Message-ID: <20230322094820.24738-5-walker.chen@starfivetech.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20230322094820.24738-1-walker.chen@starfivetech.com>
 References: <20230322094820.24738-1-walker.chen@starfivetech.com>
@@ -48,39 +48,52 @@ X-Originating-IP: [183.27.97.64]
 X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX168.cuchost.com
  (172.16.6.78)
 X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=0.0 required=5.0 tests=SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-0.0 required=5.0 tests=RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The bit DMAC_CHEN[0] is automatically cleared by hardware to disable the
-channel after the last AMBA transfer of the DMA transfer to the
-destination has completed. Software can therefore poll this bit to
-determine when this channel is free for a new DMA transfer.
-This time requires at least 40 milliseconds on JH7110 SoC, otherwise an
-error message 'failed to stop' will be reported.
+Add the dma controller node for the Starfive JH7110 SoC.
 
+Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 Signed-off-by: Walker Chen <walker.chen@starfivetech.com>
 ---
- drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/boot/dts/starfive/jh7110.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index 6cfcb541d8c3..6937cc0c0b65 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -1147,7 +1147,7 @@ static int dma_chan_terminate_all(struct dma_chan *dchan)
- 	axi_chan_disable(chan);
+diff --git a/arch/riscv/boot/dts/starfive/jh7110.dtsi b/arch/riscv/boot/dts/starfive/jh7110.dtsi
+index 17220576b21c..b503b6137743 100644
+--- a/arch/riscv/boot/dts/starfive/jh7110.dtsi
++++ b/arch/riscv/boot/dts/starfive/jh7110.dtsi
+@@ -510,6 +510,24 @@
+ 			#gpio-cells = <2>;
+ 		};
  
- 	ret = readl_poll_timeout_atomic(chan->chip->regs + DMAC_CHEN, val,
--					!(val & chan_active), 1000, 10000);
-+					!(val & chan_active), 1000, 50000);
- 	if (ret == -ETIMEDOUT)
- 		dev_warn(dchan2dev(dchan),
- 			 "%s failed to stop\n", axi_chan_name(chan));
++		dma: dma-controller@16050000 {
++			compatible = "starfive,jh7110-axi-dma";
++			reg = <0x0 0x16050000 0x0 0x10000>;
++			clocks = <&stgcrg JH7110_STGCLK_DMA1P_AXI>,
++				 <&stgcrg JH7110_STGCLK_DMA1P_AHB>;
++			clock-names = "core-clk", "cfgr-clk";
++			resets = <&stgcrg JH7110_STGRST_DMA1P_AXI>,
++				 <&stgcrg JH7110_STGRST_DMA1P_AHB>;
++			interrupts = <73>;
++			#dma-cells = <1>;
++			dma-channels = <4>;
++			snps,dma-masters = <1>;
++			snps,data-width = <3>;
++			snps,block-size = <65536 65536 65536 65536>;
++			snps,priority = <0 1 2 3>;
++			snps,axi-max-burst-len = <16>;
++		};
++
+ 		aoncrg: clock-controller@17000000 {
+ 			compatible = "starfive,jh7110-aoncrg";
+ 			reg = <0x0 0x17000000 0x0 0x10000>;
 -- 
 2.17.1
 

@@ -2,98 +2,117 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C998A6C46F9
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Mar 2023 10:49:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 117386C49D6
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Mar 2023 13:01:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230008AbjCVJtg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 22 Mar 2023 05:49:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56934 "EHLO
+        id S230415AbjCVMBD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 22 Mar 2023 08:01:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230078AbjCVJtH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Mar 2023 05:49:07 -0400
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37FAB2CC75;
-        Wed, 22 Mar 2023 02:48:36 -0700 (PDT)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-        by fd01.gateway.ufhost.com (Postfix) with ESMTP id BA79D24E047;
-        Wed, 22 Mar 2023 17:48:34 +0800 (CST)
-Received: from EXMBX168.cuchost.com (172.16.6.78) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 22 Mar
- 2023 17:48:35 +0800
-Received: from localhost.localdomain (183.27.97.64) by EXMBX168.cuchost.com
- (172.16.6.78) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Wed, 22 Mar
- 2023 17:48:33 +0800
-From:   Walker Chen <walker.chen@starfivetech.com>
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "Emil Renner Berthing" <emil.renner.berthing@canonical.com>,
-        Walker Chen <walker.chen@starfivetech.com>
-CC:     <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-Subject: [PATCH v6 4/4] riscv: dts: starfive: add dma controller node
-Date:   Wed, 22 Mar 2023 17:48:20 +0800
-Message-ID: <20230322094820.24738-5-walker.chen@starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230322094820.24738-1-walker.chen@starfivetech.com>
-References: <20230322094820.24738-1-walker.chen@starfivetech.com>
+        with ESMTP id S230427AbjCVMAt (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Mar 2023 08:00:49 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 938555F6F6
+        for <dmaengine@vger.kernel.org>; Wed, 22 Mar 2023 05:00:39 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id v1so10651118wrv.1
+        for <dmaengine@vger.kernel.org>; Wed, 22 Mar 2023 05:00:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1679486438;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wpYhPbFNmhWZbxQ+2pcfKt9iFKv1OlqjHaycSTExZk4=;
+        b=T3+P58p7TtpSXyY3ZycUB/vhlz41Yj1CfMNVjOWonYKasqKMq9b8QMuOhuwGy7DcwD
+         Bwu9VRMcvxYt+2Er3PEVwKUkveKla8rLhghJRYHGb9eWLMvfoGmiXlB77k8RLeHq4HzH
+         4jIVTb4eQOIBz83B0X/g4N4kb0RRmDvN3+gqfS3Ybtpst74o4BdX1ncTx0aspd4FlfGT
+         AlgkXYY1OLI6r8WRDofTgbINQ1YR4RC+fdNWji1n2LSPaR51/ZOCOJX9eUEBEZJ7M9dS
+         c7oIDNYzGJAvpPuhIvdoKwDc+kyi1eaFNkNJyBpw0Rmo09B+N5wIyyFOUUUZ81r0NCI5
+         5puw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679486438;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wpYhPbFNmhWZbxQ+2pcfKt9iFKv1OlqjHaycSTExZk4=;
+        b=STuNUoIHG/6FFvzNrOqoOVw6PfGfLGmnBm+SPG7ct/PhlXZ4WRRpWxqENXDr7PB3TX
+         D52zEKCWBCmO6naFhOmhVdrrJV6vhqoJWNW6bmU6oRKUmcAs5Aoyxv3HvpL7G9nw0ug4
+         RX3XXYLJnXQ7x00dEaArql0YFuBFJgvXGJB8umQy6tn5EmGTDOoTjULlTKftvRVJWfEX
+         +DQDxN3Q6kk1DKGP1wxQNhU0IJVVKjLXMDqkIIVUr13d8OwKtVc0lBtAVjKgqnpgx4UZ
+         kBeqKT0IGWqlKzLvVkx2CwyOMeEuZJ4+DXRABL1Xs2mGNsxq0Os4zIW4kvaXdgSQsRkq
+         i4XQ==
+X-Gm-Message-State: AO0yUKWpaKkmWassk0C04cZF9Fk1XYX12haz6QaZWx/uclTfA5/xt4M/
+        9hTSfE9jizPoEi7n5WH1n7Egdg==
+X-Google-Smtp-Source: AK7set8/yTqjcXgh/0/3dEkcHOUGMYrnXUP5s6INEQiSDvFROBDrAK59IhLwG+g/Y6jATAukLqfvKQ==
+X-Received: by 2002:a5d:6ace:0:b0:2d8:908c:8fa0 with SMTP id u14-20020a5d6ace000000b002d8908c8fa0mr5270114wrw.9.1679486438062;
+        Wed, 22 Mar 2023 05:00:38 -0700 (PDT)
+Received: from [192.168.1.166] ([90.243.20.231])
+        by smtp.gmail.com with ESMTPSA id d9-20020adfe889000000b002d97529b3bbsm3362583wrm.96.2023.03.22.05.00.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Mar 2023 05:00:37 -0700 (PDT)
+Message-ID: <7ecf4fbf-392e-7c55-b731-2d61f962ddeb@linaro.org>
+Date:   Wed, 22 Mar 2023 12:00:36 +0000
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [183.27.97.64]
-X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX168.cuchost.com
- (172.16.6.78)
-X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=-0.0 required=5.0 tests=RCVD_IN_MSPIKE_H2,
-        SPF_HELO_PASS,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.9.0
+Subject: Re: [RFC v1 1/1] Refactor ACPI DMA to support platforms without
+ shared info descriptor in CSRT
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     mika.westerberg@linux.intel.com, vkoul@kernel.org,
+        dmaengine@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Sudeep.Holla@arm.com, Souvik.Chakravarty@arm.com,
+        Sunny.Wang@arm.com, lorenzo.pieralisi@linaro.org,
+        bob.zhang@cixtech.com, fugang.duan@cixtech.com
+References: <20230321160241.1339538-1-niyas.sait@linaro.org>
+ <ZBnvHSmHVvgsumlM@smile.fi.intel.com>
+ <6e90881b-ba24-7f5a-e80d-1ae7fc9d9382@linaro.org>
+ <ZBrLr4QDdZpgs3RV@smile.fi.intel.com>
+From:   Niyas Sait <niyas.sait@linaro.org>
+In-Reply-To: <ZBrLr4QDdZpgs3RV@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add the dma controller node for the Starfive JH7110 SoC.
+On 22/03/2023 09:34, Andy Shevchenko wrote:
 
-Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Signed-off-by: Walker Chen <walker.chen@starfivetech.com>
----
- arch/riscv/boot/dts/starfive/jh7110.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+>>> Btw, what is the real argument of not using this table?
+>>>
+>>> Yes, I know that this is an MS extension, but why ARM needs something else and
+>>> why even that is needed at all? CSRT is only for the_shared_  DMA resources
+>>> and I think most of the IPs nowadays are using private DMA engines (or
+>>> semi-private when driver based on ID can know which channel services which
+>>> device).
+>> The issue is that shared info descriptor is not part of CSRT definition [1]
+>> and I think it is not standardized or documented anywhere.
+>>
+>> I was specifically looking at NXP I.MX8MP platform and the DMA lines for
+>> devices are specified using FixedDMA resource descriptor. I think other Arm
+>> platforms like RPi have similar requirement.
+> Perhaps, but my question is_why_  is it so?
+> I.o.w. what is the technical background for this solution.
+> 
 
-diff --git a/arch/riscv/boot/dts/starfive/jh7110.dtsi b/arch/riscv/boot/dts/starfive/jh7110.dtsi
-index 17220576b21c..b503b6137743 100644
---- a/arch/riscv/boot/dts/starfive/jh7110.dtsi
-+++ b/arch/riscv/boot/dts/starfive/jh7110.dtsi
-@@ -510,6 +510,24 @@
- 			#gpio-cells = <2>;
- 		};
- 
-+		dma: dma-controller@16050000 {
-+			compatible = "starfive,jh7110-axi-dma";
-+			reg = <0x0 0x16050000 0x0 0x10000>;
-+			clocks = <&stgcrg JH7110_STGCLK_DMA1P_AXI>,
-+				 <&stgcrg JH7110_STGCLK_DMA1P_AHB>;
-+			clock-names = "core-clk", "cfgr-clk";
-+			resets = <&stgcrg JH7110_STGRST_DMA1P_AXI>,
-+				 <&stgcrg JH7110_STGRST_DMA1P_AHB>;
-+			interrupts = <73>;
-+			#dma-cells = <1>;
-+			dma-channels = <4>;
-+			snps,dma-masters = <1>;
-+			snps,data-width = <3>;
-+			snps,block-size = <65536 65536 65536 65536>;
-+			snps,priority = <0 1 2 3>;
-+			snps,axi-max-burst-len = <16>;
-+		};
-+
- 		aoncrg: clock-controller@17000000 {
- 			compatible = "starfive,jh7110-aoncrg";
- 			reg = <0x0 0x17000000 0x0 0x10000>;
+NXP I.MX8MP board uses shared DMA controller and the current ACPI 
+firmware describes DMA request lines for devices using ACPI FixedDMA 
+descriptors.
+
+> JFYI: ARM platform(s) use SPCR, which is also not a part of the specification.
+
+SPCR and CSRT tables have permissive licensing and probably okay to use 
+them.
+
+The main issue is that the shared info descriptor in the CSRT table is 
+not a standard and none of the arm platforms uses them.
+
+ >> [1]https://uefi.org/sites/default/files/resources/CSRT%20v2.pdf
+
 -- 
-2.17.1
-
+Niyas

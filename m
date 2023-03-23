@@ -2,75 +2,65 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57D9E6C645D
-	for <lists+dmaengine@lfdr.de>; Thu, 23 Mar 2023 11:03:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD4506C673E
+	for <lists+dmaengine@lfdr.de>; Thu, 23 Mar 2023 12:56:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229838AbjCWKDf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 23 Mar 2023 06:03:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42296 "EHLO
+        id S231708AbjCWL4Q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 23 Mar 2023 07:56:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229775AbjCWKDe (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 23 Mar 2023 06:03:34 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1846910D;
-        Thu, 23 Mar 2023 03:03:30 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id 20so14632122lju.0;
-        Thu, 23 Mar 2023 03:03:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679565808;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sy5b+KDY1QEJL7mnyP5vXspq/Ud8cBYsoJBHH7kWSZU=;
-        b=j3XpnyuUTBe2lZwJ4H+ijcbIAV8FMzJN14XtYuGKH10iU51z0wmSLVi/hZzbBRBVmZ
-         0wwPNnW1Hrdg3rFQhX9QfDIIcHXNIQMwlKE+DHxEqAScG3fz7X1SAygeUG614ywrt86m
-         sJMOF9L1gVrLfus+b5eZMUNkTZNPC0aJD2rUr2F18GqegdPfK6S5DxWl9LcFJ30ofAxu
-         i/b8tSmR3Tsj/pRVGElqQ1kVXHEdi39/vtwNBSDl3/NiV9epBAe7PNxwhCh+aAb294vY
-         RgluT40KZrAfa0/48NGJkUDn7JIjSIAiQicIT15rqKEg08F2O68L88Ul1OXxU9aCrFTk
-         FcQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679565808;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sy5b+KDY1QEJL7mnyP5vXspq/Ud8cBYsoJBHH7kWSZU=;
-        b=tVU42xw1EkUcLLzj9zgN07jpHS69WLdOcPz3OvAave0ASJCuGNrD/8Xuj/vN7X4hR2
-         J0zfkMRcME3eMbwBYPJIITXQepbKo7qdlj+cI1ndOkuNZCjKero0knmQXH4MiU52vd7/
-         PKS3c9asIg9W66O5g1K8A1PEfLXm2/kitdEB35TT3SJNCTHyqwQBqkarePqrd425h6b6
-         epk0ivHWz6ghl/TS9U6R9mzlZCZLgDy4FGxSnvsRFjju0pcaCZDE6UfrNcfoHFAXEmv9
-         ieeySmBIvN676RtMYYtbyiNDDyRZjsZO+9o26GJG6ooTRSCCxQ98NgdvMFaTzUOG15+y
-         U4Qw==
-X-Gm-Message-State: AO0yUKVxFw+wDQ/jpw9+1ycVzI3E6wgEnaKq+EzIHYJMUQde5Gy6loT8
-        EmvsN97Dh5IaWbguIFkCLx0=
-X-Google-Smtp-Source: AK7set8D18UAQZRnHt4bxilF6eKLnimanHWFyClpJP2tW69pSyEtG+Waz44EvJcPmBQ7szAYdYMF8g==
-X-Received: by 2002:a2e:7410:0:b0:2a0:4de2:db88 with SMTP id p16-20020a2e7410000000b002a04de2db88mr1843237ljc.44.1679565808245;
-        Thu, 23 Mar 2023 03:03:28 -0700 (PDT)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id y26-20020a2e321a000000b002934febffe4sm2930024ljy.128.2023.03.23.03.03.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Mar 2023 03:03:27 -0700 (PDT)
-Date:   Thu, 23 Mar 2023 13:03:25 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Cai Huoqing <cai.huoqing@linux.dev>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v8 4/4] dmaengine: dw-edma: Add HDMA DebugFS support
-Message-ID: <20230323100325.zltk7emftkyfgsef@mobilestation>
-References: <20230323034944.78357-1-cai.huoqing@linux.dev>
- <20230323034944.78357-5-cai.huoqing@linux.dev>
+        with ESMTP id S231709AbjCWLzs (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 23 Mar 2023 07:55:48 -0400
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B6CB19B1;
+        Thu, 23 Mar 2023 04:55:46 -0700 (PDT)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 32NBtbd7070313;
+        Thu, 23 Mar 2023 06:55:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1679572537;
+        bh=EDRAraXsrfnCC8fcfomneLhyhI3khcdDnG5K3ZiYUyI=;
+        h=Date:Subject:To:CC:References:From:In-Reply-To;
+        b=eQjxQJVJsJ710M6YrIfTyoO/zfCj3c7ArxxcLyKqjHIKZeNTXPLFeWN6LYnAFbqYG
+         mYOJoOcsKtdx+SNEY7LURYXADbTl/uVcUxkJInwHnuR5JOXD+qlzovq1YY189V/v1E
+         mCMtwSXfp3J5gia39OIFHHRf0/h7B0UR9dquE+cQ=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 32NBtbxf103130
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 23 Mar 2023 06:55:37 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Thu, 23
+ Mar 2023 06:55:37 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
+ Frontend Transport; Thu, 23 Mar 2023 06:55:37 -0500
+Received: from [172.24.145.176] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 32NBtYgS114011;
+        Thu, 23 Mar 2023 06:55:35 -0500
+Message-ID: <2ddcbea8-d3fa-ed73-ead1-834a8f304f88@ti.com>
+Date:   Thu, 23 Mar 2023 17:25:34 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230323034944.78357-5-cai.huoqing@linux.dev>
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH] dma: ti: k3-udma: Workaround errata i2234
+Content-Language: en-US
+To:     =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Vinod Koul <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+References: <20211209180715.27998-1-vigneshr@ti.com>
+ <a76fcbd1-20fa-fb16-bca4-68dd90031787@gmail.com>
+From:   Jayesh Choudhary <j-choudhary@ti.com>
+In-Reply-To: <a76fcbd1-20fa-fb16-bca4-68dd90031787@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,280 +68,67 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Mar 23, 2023 at 11:49:41AM +0800, Cai Huoqing wrote:
-> From: Cai huoqing <cai.huoqing@linux.dev>
-> 
-> Add HDMA DebugFS support to show register information
+Hello Peter,
 
-s/register information/registers content.
+On 10/12/21 20:52, Péter Ujfalusi wrote:
+> Hi Vignesh,
+> 
+> On 09/12/2021 20:07, Vignesh Raghavendra wrote:
+>> Per [1], UDMA TR15 transactions may hang if ICNT0 is less than 64B
+>> Work around is to set EOL flag is to 1 for ICNT0.
+>>
+>> Since, there is no performance penalty / side effects of setting EOL
+>> flag event ICNTO > 64B, just set the flag for all UDMAP TR15
+>> descriptors.
+> 
+> PDMAs and CSI does not send EOL? If you set it the EOL to one then when
+> it arrives the remaining icnt0 is skipped...
+
+I am planning to respin v2 for this.
+Will fix this in v2.
 
 > 
-> Signed-off-by: Cai huoqing <cai.huoqing@linux.dev>
-> ---
-> v7->v8:
->   1.Drop some unused field in dw_hdma_debugfs_entry.
-> 
-> v7 link:
->   https://lore.kernel.org/lkml/20230315012840.6986-5-cai.huoqing@linux.dev/
-> 
-> 
->  drivers/dma/dw-edma/Makefile             |   3 +-
->  drivers/dma/dw-edma/dw-hdma-v0-core.c    |   2 +
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c | 173 +++++++++++++++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h |  22 +++
->  4 files changed, 199 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-> 
-> diff --git a/drivers/dma/dw-edma/Makefile b/drivers/dma/dw-edma/Makefile
-> index b1c91ef2c63d..83ab58f87760 100644
-> --- a/drivers/dma/dw-edma/Makefile
-> +++ b/drivers/dma/dw-edma/Makefile
-> @@ -1,7 +1,8 @@
->  # SPDX-License-Identifier: GPL-2.0
->  
->  obj-$(CONFIG_DW_EDMA)		+= dw-edma.o
-> -dw-edma-$(CONFIG_DEBUG_FS)	:= dw-edma-v0-debugfs.o
-> +dw-edma-$(CONFIG_DEBUG_FS)	:= dw-edma-v0-debugfs.o	\
-> +				   dw-hdma-v0-debugfs.o
->  dw-edma-objs			:= dw-edma-core.o	\
->  				   dw-edma-v0-core.o	\
->  				   dw-hdma-v0-core.o $(dw-edma-y)
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> index 22b7b0410deb..00b735a0202a 100644
-> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> @@ -11,6 +11,7 @@
->  #include "dw-edma-core.h"
->  #include "dw-hdma-v0-core.h"
->  #include "dw-hdma-v0-regs.h"
-> +#include "dw-hdma-v0-debugfs.h"
->  
->  enum dw_hdma_control {
->  	DW_HDMA_V0_CB					= BIT(0),
-> @@ -276,6 +277,7 @@ static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
->  /* HDMA debugfs callbacks */
->  static void dw_hdma_v0_core_debugfs_on(struct dw_edma *dw)
->  {
-> +	dw_hdma_v0_debugfs_on(dw);
->  }
->  
->  static const struct dw_edma_core_ops dw_hdma_v0_core = {
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-> new file mode 100644
-> index 000000000000..c1f2c61e941e
-> --- /dev/null
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-> @@ -0,0 +1,173 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2023 Cai Huoqing
-> + * Synopsys DesignWare HDMA v0 debugfs
-> + *
-> + * Author: Cai Huoqing <cai.huoqing@linux.dev>
-> + */
-> +
-> +#include <linux/debugfs.h>
-> +#include <linux/bitfield.h>
-> +
-> +#include "dw-hdma-v0-debugfs.h"
-> +#include "dw-hdma-v0-regs.h"
-> +#include "dw-edma-core.h"
-> +
-> +#define REGS_ADDR(dw, name)						       \
-> +	({								       \
-> +		struct dw_hdma_v0_regs __iomem *__regs = (dw)->chip->reg_base; \
-> +									       \
-> +		(void __iomem *)&__regs->name;				       \
-> +	})
-> +
-> +#define REGS_CH_ADDR(dw, name, _dir, _ch)				       \
-> +	({								       \
-> +		struct dw_hdma_v0_ch_regs __iomem *__ch_regs;		       \
-> +									       \
-> +		if (_dir == EDMA_DIR_READ)				       \
-> +			__ch_regs = REGS_ADDR(dw, ch[_ch].rd);		       \
-> +		else							       \
-> +			__ch_regs = REGS_ADDR(dw, ch[_ch].wr);		       \
-> +									       \
-> +		(void __iomem *)&__ch_regs->name;			       \
-> +	})
-> +
-> +#define CTX_REGISTER(dw, name, dir, ch) \
-> +	{#name, REGS_CH_ADDR(dw, name, dir, ch)}
-> +
+>>
+>> [1] https://www.ti.com/lit/er/sprz455a/sprz455a.pdf
+>> Errata doc for J721E DRA829/TDA4VM Processors Silicon Revision 1.1/1.0 (Rev. A)
+>>
+>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+>> ---
+>>   drivers/dma/ti/k3-udma.c     | 48 +++++++++++++++++++-----------------
+>>   include/linux/dma/ti-cppi5.h |  1 +
+>>   2 files changed, 27 insertions(+), 22 deletions(-)
+>>
 
-> +#define REGISTER(dw, name) \
-> +	{ dw, #name, REGS_ADDR(dw, name) }
+[...]
 
-This macro appears to be unused. Please drop. Other than that the
-patch looks good.
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+>> diff --git a/include/linux/dma/ti-cppi5.h b/include/linux/dma/ti-cppi5.h
+>> index efa2f0309f00..c53c0f6e3b1a 100644
+>> --- a/include/linux/dma/ti-cppi5.h
+>> +++ b/include/linux/dma/ti-cppi5.h
+>> @@ -616,6 +616,7 @@ static inline void *cppi5_hdesc_get_swdata(struct cppi5_host_desc_t *desc)
+>>   #define   CPPI5_TR_CSF_SUPR_EVT			BIT(2)
+>>   #define   CPPI5_TR_CSF_EOL_ADV_SHIFT		(4U)
+>>   #define   CPPI5_TR_CSF_EOL_ADV_MASK		GENMASK(6, 4)
+>> +#define   CPPI5_TR_CSF_EOL_ICNT0		BIT(4)
+> 
+> the correct expression is: (1 << CPPI5_TR_CSF_EOL_ADV_SHIFT)
 
--Serge(y)
+Both these expressions expands to the same value
+(CPPI5_TR_CSF_EOL_ADV_SHIFT = 4U)
 
-> +
-> +#define WRITE_STR				"write"
-> +#define READ_STR				"read"
-> +#define CHANNEL_STR				"channel"
-> +#define REGISTERS_STR				"registers"
-> +
-> +struct dw_hdma_debugfs_entry {
-> +	const char				*name;
-> +	void __iomem				*reg;
-> +};
-> +
-> +static int dw_hdma_debugfs_u32_get(void *data, u64 *val)
-> +{
-> +	struct dw_hdma_debugfs_entry *entry = data;
-> +	void __iomem *reg = entry->reg;
-> +
-> +	*val = readl(reg);
-> +
-> +	return 0;
-> +}
-> +DEFINE_DEBUGFS_ATTRIBUTE(fops_x32, dw_hdma_debugfs_u32_get, NULL, "0x%08llx\n");
-> +
-> +static void dw_hdma_debugfs_create_x32(struct dw_edma *dw,
-> +				       const struct dw_hdma_debugfs_entry ini[],
-> +				       int nr_entries, struct dentry *dent)
-> +{
-> +	struct dw_hdma_debugfs_entry *entries;
-> +	int i;
-> +
-> +	entries = devm_kcalloc(dw->chip->dev, nr_entries, sizeof(*entries),
-> +			       GFP_KERNEL);
-> +	if (!entries)
-> +		return;
-> +
-> +	for (i = 0; i < nr_entries; i++) {
-> +		entries[i] = ini[i];
-> +
-> +		debugfs_create_file_unsafe(entries[i].name, 0444, dent,
-> +					   &entries[i], &fops_x32);
-> +	}
-> +}
-> +
-> +static void dw_hdma_debugfs_regs_ch(struct dw_edma *dw, enum dw_edma_dir dir,
-> +				    u16 ch, struct dentry *dent)
-> +{
-> +	const struct dw_hdma_debugfs_entry debugfs_regs[] = {
-> +		CTX_REGISTER(dw, ch_en, dir, ch),
-> +		CTX_REGISTER(dw, doorbell, dir, ch),
-> +		CTX_REGISTER(dw, prefetch, dir, ch),
-> +		CTX_REGISTER(dw, handshake, dir, ch),
-> +		CTX_REGISTER(dw, llp.lsb, dir, ch),
-> +		CTX_REGISTER(dw, llp.msb, dir, ch),
-> +		CTX_REGISTER(dw, cycle_sync, dir, ch),
-> +		CTX_REGISTER(dw, transfer_size, dir, ch),
-> +		CTX_REGISTER(dw, sar.lsb, dir, ch),
-> +		CTX_REGISTER(dw, sar.msb, dir, ch),
-> +		CTX_REGISTER(dw, dar.lsb, dir, ch),
-> +		CTX_REGISTER(dw, dar.msb, dir, ch),
-> +		CTX_REGISTER(dw, watermark_en, dir, ch),
-> +		CTX_REGISTER(dw, control1, dir, ch),
-> +		CTX_REGISTER(dw, func_num, dir, ch),
-> +		CTX_REGISTER(dw, qos, dir, ch),
-> +		CTX_REGISTER(dw, ch_stat, dir, ch),
-> +		CTX_REGISTER(dw, int_stat, dir, ch),
-> +		CTX_REGISTER(dw, int_setup, dir, ch),
-> +		CTX_REGISTER(dw, int_clear, dir, ch),
-> +		CTX_REGISTER(dw, msi_stop.lsb, dir, ch),
-> +		CTX_REGISTER(dw, msi_stop.msb, dir, ch),
-> +		CTX_REGISTER(dw, msi_watermark.lsb, dir, ch),
-> +		CTX_REGISTER(dw, msi_watermark.msb, dir, ch),
-> +		CTX_REGISTER(dw, msi_abort.lsb, dir, ch),
-> +		CTX_REGISTER(dw, msi_abort.msb, dir, ch),
-> +		CTX_REGISTER(dw, msi_msgdata, dir, ch),
-> +	};
-> +	int nr_entries = ARRAY_SIZE(debugfs_regs);
-> +
-> +	dw_hdma_debugfs_create_x32(dw, debugfs_regs, nr_entries, dent);
-> +}
-> +
-> +static void dw_hdma_debugfs_regs_wr(struct dw_edma *dw, struct dentry *dent)
-> +{
-> +	struct dentry *regs_dent, *ch_dent;
-> +	char name[16];
-> +	int i;
-> +
-> +	regs_dent = debugfs_create_dir(WRITE_STR, dent);
-> +
-> +	for (i = 0; i < dw->wr_ch_cnt; i++) {
-> +		snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
-> +
-> +		ch_dent = debugfs_create_dir(name, regs_dent);
-> +
-> +		dw_hdma_debugfs_regs_ch(dw, EDMA_DIR_WRITE, i, ch_dent);
-> +	}
-> +}
-> +
-> +static void dw_hdma_debugfs_regs_rd(struct dw_edma *dw, struct dentry *dent)
-> +{
-> +	struct dentry *regs_dent, *ch_dent;
-> +	char name[16];
-> +	int i;
-> +
-> +	regs_dent = debugfs_create_dir(READ_STR, dent);
-> +
-> +	for (i = 0; i < dw->rd_ch_cnt; i++) {
-> +		snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
-> +
-> +		ch_dent = debugfs_create_dir(name, regs_dent);
-> +
-> +		dw_hdma_debugfs_regs_ch(dw, EDMA_DIR_READ, i, ch_dent);
-> +	}
-> +}
-> +
-> +static void dw_hdma_debugfs_regs(struct dw_edma *dw)
-> +{
-> +	struct dentry *regs_dent;
-> +
-> +	regs_dent = debugfs_create_dir(REGISTERS_STR, dw->dma.dbg_dev_root);
-> +
-> +	dw_hdma_debugfs_regs_wr(dw, regs_dent);
-> +	dw_hdma_debugfs_regs_rd(dw, regs_dent);
-> +}
-> +
-> +void dw_hdma_v0_debugfs_on(struct dw_edma *dw)
-> +{
-> +	if (!debugfs_initialized())
-> +		return;
-> +
-> +	debugfs_create_u32("mf", 0444, dw->dma.dbg_dev_root, &dw->chip->mf);
-> +	debugfs_create_u16("wr_ch_cnt", 0444, dw->dma.dbg_dev_root, &dw->wr_ch_cnt);
-> +	debugfs_create_u16("rd_ch_cnt", 0444, dw->dma.dbg_dev_root, &dw->rd_ch_cnt);
-> +
-> +	dw_hdma_debugfs_regs(dw);
-> +}
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-> new file mode 100644
-> index 000000000000..e6842c83777d
-> --- /dev/null
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-> @@ -0,0 +1,22 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2023 Cai Huoqing
-> + * Synopsys DesignWare HDMA v0 debugfs
-> + *
-> + * Author: Cai Huoqing <cai.huoqing@linux.dev>
-> + */
-> +
-> +#ifndef _DW_HDMA_V0_DEBUG_FS_H
-> +#define _DW_HDMA_V0_DEBUG_FS_H
-> +
-> +#include <linux/dma/edma.h>
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +void dw_hdma_v0_debugfs_on(struct dw_edma *dw);
-> +#else
-> +static inline void dw_hdma_v0_debugfs_on(struct dw_edma *dw)
-> +{
-> +}
-> +#endif /* CONFIG_DEBUG_FS */
-> +
-> +#endif /* _DW_HDMA_V0_DEBUG_FS_H */
-> -- 
-> 2.34.1
+And according to the linux checkpatch, the usage of BIT macro
+is preferred so I will keep it the same.
+
+Warm regards,
+-Jayesh
+
+> as EOL = 1 is what you want to set.
+> EOL = 2 will clear icnt0 and 1 on EOL.
+> 3 will do the same for icnt 0, 1 and 2
+> 4 will skip the remainin tr.
+> 
+>>   #define   CPPI5_TR_CSF_EOP			BIT(7)
+>>   
+>>   /**
+>>
 > 

@@ -2,133 +2,199 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD4506C673E
-	for <lists+dmaengine@lfdr.de>; Thu, 23 Mar 2023 12:56:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D883E6C6787
+	for <lists+dmaengine@lfdr.de>; Thu, 23 Mar 2023 13:03:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231708AbjCWL4Q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 23 Mar 2023 07:56:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54044 "EHLO
+        id S231676AbjCWMDO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 23 Mar 2023 08:03:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231709AbjCWLzs (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 23 Mar 2023 07:55:48 -0400
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B6CB19B1;
-        Thu, 23 Mar 2023 04:55:46 -0700 (PDT)
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 32NBtbd7070313;
-        Thu, 23 Mar 2023 06:55:37 -0500
+        with ESMTP id S229563AbjCWMCz (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 23 Mar 2023 08:02:55 -0400
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CFC4367FD;
+        Thu, 23 Mar 2023 05:01:17 -0700 (PDT)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 32NC194a099471;
+        Thu, 23 Mar 2023 07:01:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1679572537;
-        bh=EDRAraXsrfnCC8fcfomneLhyhI3khcdDnG5K3ZiYUyI=;
-        h=Date:Subject:To:CC:References:From:In-Reply-To;
-        b=eQjxQJVJsJ710M6YrIfTyoO/zfCj3c7ArxxcLyKqjHIKZeNTXPLFeWN6LYnAFbqYG
-         mYOJoOcsKtdx+SNEY7LURYXADbTl/uVcUxkJInwHnuR5JOXD+qlzovq1YY189V/v1E
-         mCMtwSXfp3J5gia39OIFHHRf0/h7B0UR9dquE+cQ=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 32NBtbxf103130
+        s=ti-com-17Q1; t=1679572869;
+        bh=FUB77A/dWJI4L/JUMtJNi/1d+ynfoPHVkgEDX79znkw=;
+        h=From:To:CC:Subject:Date;
+        b=VkLsNCAaPmIREYLqqYsHFh5loOponyT0rPjHoZH5/fnllcoBGlX+hyqOKhjh+YiqT
+         8zMRXcL6jRiSgfHtLfIIjkeppeQMXUHDJXyqogRKPLN/LMOb+YuYTYhAYLhn+yKkgY
+         RR6cpgs5XADvLQavOO2qeWAgpo2HPyBCW9sHNkm4=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 32NC19Le025154
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 23 Mar 2023 06:55:37 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 23 Mar 2023 07:01:09 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Thu, 23
- Mar 2023 06:55:37 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2023 07:01:08 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
- Frontend Transport; Thu, 23 Mar 2023 06:55:37 -0500
-Received: from [172.24.145.176] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 32NBtYgS114011;
-        Thu, 23 Mar 2023 06:55:35 -0500
-Message-ID: <2ddcbea8-d3fa-ed73-ead1-834a8f304f88@ti.com>
-Date:   Thu, 23 Mar 2023 17:25:34 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH] dma: ti: k3-udma: Workaround errata i2234
-Content-Language: en-US
-To:     =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
-References: <20211209180715.27998-1-vigneshr@ti.com>
- <a76fcbd1-20fa-fb16-bca4-68dd90031787@gmail.com>
+ Frontend Transport; Thu, 23 Mar 2023 07:01:08 -0500
+Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 32NC17gh021970;
+        Thu, 23 Mar 2023 07:01:08 -0500
 From:   Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <a76fcbd1-20fa-fb16-bca4-68dd90031787@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To:     <peter.ujfalusi@gmail.com>, <vkoul@kernel.org>
+CC:     <vigneshr@ti.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <j-choudhary@ti.com>
+Subject: [PATCH v2] dmaengine: ti: k3-udma: Workaround errata i2234
+Date:   Thu, 23 Mar 2023 17:31:07 +0530
+Message-ID: <20230323120107.27638-1-j-choudhary@ti.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello Peter,
+From: Vignesh Raghavendra <vigneshr@ti.com>
 
-On 10/12/21 20:52, Péter Ujfalusi wrote:
-> Hi Vignesh,
-> 
-> On 09/12/2021 20:07, Vignesh Raghavendra wrote:
->> Per [1], UDMA TR15 transactions may hang if ICNT0 is less than 64B
->> Work around is to set EOL flag is to 1 for ICNT0.
->>
->> Since, there is no performance penalty / side effects of setting EOL
->> flag event ICNTO > 64B, just set the flag for all UDMAP TR15
->> descriptors.
-> 
-> PDMAs and CSI does not send EOL? If you set it the EOL to one then when
-> it arrives the remaining icnt0 is skipped...
+Per [1], UDMA TR15 transactions may hang if ICNT0 is less than 64B
+Work around is to set EOL flag is to 1 for ICNT0.
 
-I am planning to respin v2 for this.
-Will fix this in v2.
+Since, there is no performance penalty / side effects of setting EOL
+flag event ICNTO > 64B, just set the flag for all UDMAP TR15
+descriptors.
 
-> 
->>
->> [1] https://www.ti.com/lit/er/sprz455a/sprz455a.pdf
->> Errata doc for J721E DRA829/TDA4VM Processors Silicon Revision 1.1/1.0 (Rev. A)
->>
->> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
->> ---
->>   drivers/dma/ti/k3-udma.c     | 48 +++++++++++++++++++-----------------
->>   include/linux/dma/ti-cppi5.h |  1 +
->>   2 files changed, 27 insertions(+), 22 deletions(-)
->>
+[1] https://www.ti.com/lit/er/sprz455a/sprz455a.pdf
+Errata doc for J721E DRA829/TDA4VM Processors Silicon Revision 1.1/1.0
+(Rev. A)
 
-[...]
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+[j-choudhary@ti.com: minor cleanups]
+Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+---
 
->> diff --git a/include/linux/dma/ti-cppi5.h b/include/linux/dma/ti-cppi5.h
->> index efa2f0309f00..c53c0f6e3b1a 100644
->> --- a/include/linux/dma/ti-cppi5.h
->> +++ b/include/linux/dma/ti-cppi5.h
->> @@ -616,6 +616,7 @@ static inline void *cppi5_hdesc_get_swdata(struct cppi5_host_desc_t *desc)
->>   #define   CPPI5_TR_CSF_SUPR_EVT			BIT(2)
->>   #define   CPPI5_TR_CSF_EOL_ADV_SHIFT		(4U)
->>   #define   CPPI5_TR_CSF_EOL_ADV_MASK		GENMASK(6, 4)
->> +#define   CPPI5_TR_CSF_EOL_ICNT0		BIT(4)
-> 
-> the correct expression is: (1 << CPPI5_TR_CSF_EOL_ADV_SHIFT)
+Changelog v1->v2:
+- Correct the commit subject
+- Update functions that uses only tr_type15_t, and not tr_type_1_t
+  as PDMAs and CSI uses tr_type_1_t (to address Peter's comment in v1)
 
-Both these expressions expands to the same value
-(CPPI5_TR_CSF_EOL_ADV_SHIFT = 4U)
+v1 patch link:
+<https://lore.kernel.org/all/20211209180715.27998-1-vigneshr@ti.com/>
 
-And according to the linux checkpatch, the usage of BIT macro
-is preferred so I will keep it the same.
+ drivers/dma/ti/k3-udma.c     | 20 +++++++++++---------
+ include/linux/dma/ti-cppi5.h |  1 +
+ 2 files changed, 12 insertions(+), 9 deletions(-)
 
-Warm regards,
--Jayesh
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 7e23a6fdef95..e33a7fec2c0f 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -2964,6 +2964,7 @@ udma_prep_slave_sg_triggered_tr(struct udma_chan *uc, struct scatterlist *sgl,
+ 	struct scatterlist *sgent;
+ 	struct cppi5_tr_type15_t *tr_req = NULL;
+ 	enum dma_slave_buswidth dev_width;
++	u32 csf = CPPI5_TR_CSF_SUPR_EVT;
+ 	u16 tr_cnt0, tr_cnt1;
+ 	dma_addr_t dev_addr;
+ 	struct udma_desc *d;
+@@ -3034,6 +3035,7 @@ udma_prep_slave_sg_triggered_tr(struct udma_chan *uc, struct scatterlist *sgl,
+ 
+ 	if (uc->ud->match_data->type == DMA_TYPE_UDMA) {
+ 		asel = 0;
++		csf |= CPPI5_TR_CSF_EOL_ICNT0;
+ 	} else {
+ 		asel = (u64)uc->config.asel << K3_ADDRESS_ASEL_SHIFT;
+ 		dev_addr |= asel;
+@@ -3057,7 +3059,7 @@ udma_prep_slave_sg_triggered_tr(struct udma_chan *uc, struct scatterlist *sgl,
+ 
+ 		cppi5_tr_init(&tr_req[tr_idx].flags, CPPI5_TR_TYPE15, false,
+ 			      true, CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
+-		cppi5_tr_csf_set(&tr_req[tr_idx].flags, CPPI5_TR_CSF_SUPR_EVT);
++		cppi5_tr_csf_set(&tr_req[tr_idx].flags, csf);
+ 		cppi5_tr_set_trigger(&tr_req[tr_idx].flags,
+ 				     uc->config.tr_trigger_type,
+ 				     CPPI5_TR_TRIGGER_TYPE_ICNT2_DEC, 0, 0);
+@@ -3103,8 +3105,7 @@ udma_prep_slave_sg_triggered_tr(struct udma_chan *uc, struct scatterlist *sgl,
+ 			cppi5_tr_init(&tr_req[tr_idx].flags, CPPI5_TR_TYPE15,
+ 				      false, true,
+ 				      CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
+-			cppi5_tr_csf_set(&tr_req[tr_idx].flags,
+-					 CPPI5_TR_CSF_SUPR_EVT);
++			cppi5_tr_csf_set(&tr_req[tr_idx].flags, csf);
+ 			cppi5_tr_set_trigger(&tr_req[tr_idx].flags,
+ 					     uc->config.tr_trigger_type,
+ 					     CPPI5_TR_TRIGGER_TYPE_ICNT2_DEC,
+@@ -3148,8 +3149,7 @@ udma_prep_slave_sg_triggered_tr(struct udma_chan *uc, struct scatterlist *sgl,
+ 		d->residue += sg_len;
+ 	}
+ 
+-	cppi5_tr_csf_set(&tr_req[tr_idx - 1].flags,
+-			 CPPI5_TR_CSF_SUPR_EVT | CPPI5_TR_CSF_EOP);
++	cppi5_tr_csf_set(&tr_req[tr_idx - 1].flags, csf | CPPI5_TR_CSF_EOP);
+ 
+ 	return d;
+ }
+@@ -3678,6 +3678,7 @@ udma_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
+ 	int num_tr;
+ 	size_t tr_size = sizeof(struct cppi5_tr_type15_t);
+ 	u16 tr0_cnt0, tr0_cnt1, tr1_cnt0;
++	u32 csf = CPPI5_TR_CSF_SUPR_EVT;
+ 
+ 	if (uc->config.dir != DMA_MEM_TO_MEM) {
+ 		dev_err(chan->device->dev,
+@@ -3708,13 +3709,15 @@ udma_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
+ 	if (uc->ud->match_data->type != DMA_TYPE_UDMA) {
+ 		src |= (u64)uc->ud->asel << K3_ADDRESS_ASEL_SHIFT;
+ 		dest |= (u64)uc->ud->asel << K3_ADDRESS_ASEL_SHIFT;
++	} else {
++		csf |= CPPI5_TR_CSF_EOL_ICNT0;
+ 	}
+ 
+ 	tr_req = d->hwdesc[0].tr_req_base;
+ 
+ 	cppi5_tr_init(&tr_req[0].flags, CPPI5_TR_TYPE15, false, true,
+ 		      CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
+-	cppi5_tr_csf_set(&tr_req[0].flags, CPPI5_TR_CSF_SUPR_EVT);
++	cppi5_tr_csf_set(&tr_req[0].flags, csf);
+ 
+ 	tr_req[0].addr = src;
+ 	tr_req[0].icnt0 = tr0_cnt0;
+@@ -3733,7 +3736,7 @@ udma_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
+ 	if (num_tr == 2) {
+ 		cppi5_tr_init(&tr_req[1].flags, CPPI5_TR_TYPE15, false, true,
+ 			      CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
+-		cppi5_tr_csf_set(&tr_req[1].flags, CPPI5_TR_CSF_SUPR_EVT);
++		cppi5_tr_csf_set(&tr_req[1].flags, csf);
+ 
+ 		tr_req[1].addr = src + tr0_cnt1 * tr0_cnt0;
+ 		tr_req[1].icnt0 = tr1_cnt0;
+@@ -3748,8 +3751,7 @@ udma_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
+ 		tr_req[1].dicnt3 = 1;
+ 	}
+ 
+-	cppi5_tr_csf_set(&tr_req[num_tr - 1].flags,
+-			 CPPI5_TR_CSF_SUPR_EVT | CPPI5_TR_CSF_EOP);
++	cppi5_tr_csf_set(&tr_req[num_tr - 1].flags, csf | CPPI5_TR_CSF_EOP);
+ 
+ 	if (uc->config.metadata_size)
+ 		d->vd.tx.metadata_ops = &metadata_ops;
+diff --git a/include/linux/dma/ti-cppi5.h b/include/linux/dma/ti-cppi5.h
+index efa2f0309f00..c53c0f6e3b1a 100644
+--- a/include/linux/dma/ti-cppi5.h
++++ b/include/linux/dma/ti-cppi5.h
+@@ -616,6 +616,7 @@ static inline void *cppi5_hdesc_get_swdata(struct cppi5_host_desc_t *desc)
+ #define   CPPI5_TR_CSF_SUPR_EVT			BIT(2)
+ #define   CPPI5_TR_CSF_EOL_ADV_SHIFT		(4U)
+ #define   CPPI5_TR_CSF_EOL_ADV_MASK		GENMASK(6, 4)
++#define   CPPI5_TR_CSF_EOL_ICNT0		BIT(4)
+ #define   CPPI5_TR_CSF_EOP			BIT(7)
+ 
+ /**
+-- 
+2.25.1
 
-> as EOL = 1 is what you want to set.
-> EOL = 2 will clear icnt0 and 1 on EOL.
-> 3 will do the same for icnt 0, 1 and 2
-> 4 will skip the remainin tr.
-> 
->>   #define   CPPI5_TR_CSF_EOP			BIT(7)
->>   
->>   /**
->>
-> 

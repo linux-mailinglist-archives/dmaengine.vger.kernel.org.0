@@ -2,152 +2,134 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B86E6C792C
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Mar 2023 08:45:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34AE76C7A88
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Mar 2023 09:58:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231741AbjCXHpG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 24 Mar 2023 03:45:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51746 "EHLO
+        id S231387AbjCXI6R (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 24 Mar 2023 04:58:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231603AbjCXHpF (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 24 Mar 2023 03:45:05 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D5FD26CCE;
-        Fri, 24 Mar 2023 00:45:00 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id q16so1063266lfe.10;
-        Fri, 24 Mar 2023 00:45:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679643898;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=s+UV2/A47c89Jw8feRGPloqstRMGJ9kLamxjoxXavQI=;
-        b=CYHlI1+jBadeYcUBefEWaLptMti0Lg7GJOVdshb5STqx0W9f3T4YNMf3DQHzrQ0fqq
-         Big01GJiGCkpvLq5EMGJHrR8XYQyhJp0f3t49+iy3B7Jba6pI3T4KQnHqRtYL6KCQ/w1
-         ofsxpEDMaMRhANGymFw5KElZ5edQ6VPYhzTPg4h4mjI+mf4tHrMQFsgCSdirGZ/nbDpW
-         h6oe/BCDsC5XhZvLUUIHkU9l/GF8RV3D66D6SoQuHqMqvQKwBVRbVArJLz+4ELYh845G
-         RskVQ2OgngQRqd7U0vvJAm5XTDe886q415jG9UreOly5Dp8LnrS0Gc/lqMUbNtMHWWC/
-         20QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679643898;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s+UV2/A47c89Jw8feRGPloqstRMGJ9kLamxjoxXavQI=;
-        b=qRPy8U0cAt73Ydwn6Ae/1KFsxy9zymw9MmD5FPoI2gSVrbT/e/6Hk7IO+TYP9CJ9Zb
-         VwgsDNC3HU033OQx5BeatpCL2bEPltbOgvJkuMYNAPJmXDY98Q/MfQZ5N4N1FYFV3l1H
-         s5WyZmB7ILmZUGOTIzwSMa57jlpiSruU9YJSejRXhUGMnlqoMNchgLwBd7p6vU7+rD68
-         hmX1U6s4X6G3+hbWBT8prhVITRnN//7WqT6m3NRkdaVaCYI1GTFoL7Pz4/1UWLj3Ux7Z
-         JkqH9t9IT6UWTjhDisZsfI8peKRXVdZT2tfY1lighaSX3ngIUyiNGZv51t4csxFN3isU
-         EjLg==
-X-Gm-Message-State: AAQBX9c7w0v9fj09ccn/d2YjltWUvu9MptLIjg4/UkLy/7Y99p6MU1QA
-        AeuY1+WiMi4i8a/QGOxACs4=
-X-Google-Smtp-Source: AKy350a98yvebhHpNeg2qVRYbw9cCcFtUHiTM8qakidih2d32psksP7cRfXauD6tixz6UppBoIdrYw==
-X-Received: by 2002:ac2:520c:0:b0:4ea:e7ca:6e21 with SMTP id a12-20020ac2520c000000b004eae7ca6e21mr519215lfl.6.1679643898392;
-        Fri, 24 Mar 2023 00:44:58 -0700 (PDT)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id u15-20020ac243cf000000b004eaf2291dcdsm1235444lfl.102.2023.03.24.00.44.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Mar 2023 00:44:57 -0700 (PDT)
-Date:   Fri, 24 Mar 2023 10:44:55 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Cai Huoqing <cai.huoqing@linux.dev>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v9 0/4] dmaengine: dw-edma: Add support for native HDMA
-Message-ID: <20230324074455.bosmaxwkbo7mlyvj@mobilestation>
-References: <20230324021420.73401-1-cai.huoqing@linux.dev>
+        with ESMTP id S231987AbjCXI6L (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 24 Mar 2023 04:58:11 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BB9B2658F;
+        Fri, 24 Mar 2023 01:57:47 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 07606B82277;
+        Fri, 24 Mar 2023 08:57:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34FF9C433D2;
+        Fri, 24 Mar 2023 08:57:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1679648249;
+        bh=ys+7yc4sUX1/Wx2eRmenuEDPnjFxIcQOIE/STjZHko4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HhwSKU9pyBrx2ROAjIW/p7RuF507eM0FSC69dHElcXrQf2yuqK/Xrbh/JXGQvjh3f
+         PrWbnxo/K0ouYFnmNzaCNHLlxgdIIdiXRQTovhr24yxAOetZ6TZV3VLDOd4EGIngPJ
+         DzoTmuN/gau0G7fgbnyeK5XTpLWCnYTi5GsmeCmA=
+Date:   Fri, 24 Mar 2023 09:57:26 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH 32/36] dmaengine: idxd: use const struct bus_type *
+Message-ID: <ZB1l9mWTNPrUX4FJ@kroah.com>
+References: <20230313182918.1312597-1-gregkh@linuxfoundation.org>
+ <20230313182918.1312597-32-gregkh@linuxfoundation.org>
+ <76db3d98-2d09-54de-ab46-0ec9d743e05d@intel.com>
+ <ZBLsYNXXCBkb8QlO@kroah.com>
+ <43c53ae9-6cc7-0fa7-584a-7720569179cf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230324021420.73401-1-cai.huoqing@linux.dev>
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <43c53ae9-6cc7-0fa7-584a-7720569179cf@intel.com>
+X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vinod
+On Thu, Mar 16, 2023 at 04:57:54PM -0700, Fenghua Yu wrote:
+> Hi, Greg,
+> 
+> On 3/16/23 03:16, Greg Kroah-Hartman wrote:
+> > On Mon, Mar 13, 2023 at 12:07:27PM -0700, Fenghua Yu wrote:
+> > > Hi, Greg,
+> > > 
+> > > On 3/13/23 11:29, Greg Kroah-Hartman wrote:
+> > > > In the functions unbind_store() and bind_store(), a struct bus_type *
+> > > > should be a const one, as the driver core bus functions used by this
+> > > > variable are expecting the pointer to be constant, and these functions
+> > > > do not modify the pointer at all.
+> > > > 
+> > > > Cc: Fenghua Yu <fenghua.yu@intel.com>
+> > > > Cc: Dave Jiang <dave.jiang@intel.com>
+> > > > Cc: Vinod Koul <vkoul@kernel.org>
+> > > > Cc: dmaengine@vger.kernel.org
+> > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > ---
+> > > > Note, this is a patch that is a prepatory cleanup as part of a larger
+> > > > series of patches that is working on resolving some old driver core
+> > > > design mistakes.  It will build and apply cleanly on top of 6.3-rc2 on
+> > > > its own, but I'd prefer if I could take it through my driver-core tree
+> > > > so that the driver core changes can be taken through there for 6.4-rc1.
+> > > > 
+> > > >    drivers/dma/idxd/compat.c | 4 ++--
+> > > >    1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/dma/idxd/compat.c b/drivers/dma/idxd/compat.c
+> > > > index 3df21615f888..5fd38d1b9d28 100644
+> > > > --- a/drivers/dma/idxd/compat.c
+> > > > +++ b/drivers/dma/idxd/compat.c
+> > > > @@ -16,7 +16,7 @@ extern void device_driver_detach(struct device *dev);
+> > > >    static ssize_t unbind_store(struct device_driver *drv, const char *buf, size_t count)
+> > > >    {
+> > > > -	struct bus_type *bus = drv->bus;
+> > > > +	const struct bus_type *bus = drv->bus;
+> > > >    	struct device *dev;
+> > > >    	int rc = -ENODEV;
+> > > > @@ -32,7 +32,7 @@ static DRIVER_ATTR_IGNORE_LOCKDEP(unbind, 0200, NULL, unbind_store);
+> > > >    static ssize_t bind_store(struct device_driver *drv, const char *buf, size_t count)
+> > > >    {
+> > > > -	struct bus_type *bus = drv->bus;
+> > > > +	const struct bus_type *bus = drv->bus;
+> > > >    	struct device *dev;
+> > > >    	struct device_driver *alt_drv = NULL;
+> > > >    	int rc = -ENODEV;
+> > > 
+> > > After applying this patch, warning is reported:
+> > > 
+> > > drivers/dma/idxd/compat.c: In function ‘bind_store’:
+> > > drivers/dma/idxd/compat.c:47:47: warning: passing argument 2 of
+> > > ‘driver_find’ discards ‘const’ qualifier from pointer target type
+> > > [-Wdiscarded-qualifiers]
+> > >     47 |                 alt_drv = driver_find("idxd", bus);
+> > >        |                                               ^~~
+> > > In file included from ./include/linux/device.h:32,
+> > >                   from drivers/dma/idxd/compat.c:6:
+> > > ./include/linux/device/driver.h:129:59: note: expected ‘struct bus_type *’
+> > > but argument is of type ‘const struct bus_type *’
+> > >    129 |                                          struct bus_type *bus);
+> > >        |                                          ~~~~~~~~~~~~~~~~~^~~
+> > > 
+> > > Should the "bus" parameter in driver_find() definition be changed to const
+> > > as well to avoid the warning?
+> > 
+> > Oops, yes, it needs an earlier patch in this series, sorry, I didn't
+> > call that out properly in the notes section of the patch.
+> > 
+> > So I can just take this through my tree if that's ok.
+> 
+> Sure.
+> 
+> Acked-by: Fenghua Yu <fenghua.yu@intel.com>
 
-On Fri, Mar 24, 2023 at 10:14:14AM +0800, Cai Huoqing wrote:
-> Add support for HDMA NATIVE, as long the IP design has set
-> the compatible register map parameter-HDMA_NATIVE,
-> which allows compatibility for native HDMA register configuration.
-> 
-> The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
-> And the native HDMA registers are different from eDMA,
-> so this patch add support for HDMA NATIVE mode.
-> 
-> HDMA write and read channels operate independently to maximize
-> the performance of the HDMA read and write data transfer over
-> the link When you configure the HDMA with multiple read channels,
-> then it uses a round robin (RR) arbitration scheme to select
-> the next read channel to be serviced.The same applies when
-> youhave multiple write channels.
-> 
-> The native HDMA driver also supports a maximum of 16 independent
-> channels (8 write + 8 read), which can run simultaneously.
-> Both SAR (Source Address Register) and DAR (Destination Address Register)
-> are aligned to byte.
-> 
-> Cai Huoqing (1):
->   dmaengine: dw-edma: Add support for native HDMA
-> 
-> Cai huoqing (3):
->   dmaengine: dw-edma: Rename dw_edma_core_ops structure to
->     dw_edma_plat_ops
->   dmaengine: dw-edma: Create a new dw_edma_core_ops structure to
->     abstract controller operation
->   dmaengine: dw-edma: Add HDMA DebugFS support
-> 
-> Tested-by: Serge Semin <fancer.lancer@gmail.com>
+Great, thanks for this, I've now queued up the series in my tree.
 
-I finished the patchset review and testing. Could you have a look at
-the series. If you are ok with what it does please merge in.
-
--Serge(y)
-
-> 
-> v8->v9:
->   [3/4]
->   1.Drop an empty line.
->   [4/4]
->   2.Update commit log.
->   3.Remove unused macro
-> 
-> v8 link:
->   https://lore.kernel.org/lkml/20230323034944.78357-1-cai.huoqing@linux.dev/
-> 
->  drivers/dma/dw-edma/Makefile                 |   8 +-
->  drivers/dma/dw-edma/dw-edma-core.c           |  86 ++----
->  drivers/dma/dw-edma/dw-edma-core.h           |  58 ++++
->  drivers/dma/dw-edma/dw-edma-pcie.c           |   4 +-
->  drivers/dma/dw-edma/dw-edma-v0-core.c        |  85 +++++-
->  drivers/dma/dw-edma/dw-edma-v0-core.h        |  14 +-
->  drivers/dma/dw-edma/dw-hdma-v0-core.c        | 296 +++++++++++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-core.h        |  17 ++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c     | 170 +++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h     |  22 ++
->  drivers/dma/dw-edma/dw-hdma-v0-regs.h        | 129 ++++++++
->  drivers/pci/controller/dwc/pcie-designware.c |   2 +-
->  include/linux/dma/edma.h                     |   7 +-
->  13 files changed, 807 insertions(+), 91 deletions(-)
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> 
-> -- 
-> 2.34.1
-> 
+greg k-h

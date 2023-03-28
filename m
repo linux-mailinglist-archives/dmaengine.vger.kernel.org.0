@@ -2,127 +2,107 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C03E6CB663
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Mar 2023 07:54:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 451E76CB67E
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Mar 2023 08:04:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231929AbjC1Fxw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 28 Mar 2023 01:53:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41526 "EHLO
+        id S230468AbjC1GED (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 28 Mar 2023 02:04:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232140AbjC1Fxv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Mar 2023 01:53:51 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23F002D67
-        for <dmaengine@vger.kernel.org>; Mon, 27 Mar 2023 22:53:49 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id e18so10880064wra.9
-        for <dmaengine@vger.kernel.org>; Mon, 27 Mar 2023 22:53:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679982827;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JS0pA7dTK//9+UyGYDDGbrV1+24ixtl3SbvVnf67nhQ=;
-        b=jEHWPzTrGpEMleU840krXgzFguip/yZPH9Ln2iBEqaPZ7vZO+qgv/CLesHnXxxEWma
-         LkOuwUS7mTA9PITANbgFDSXet7YS4gMaWPolVZ+2q71XM5VI+JoZClJYoxTwyu4ZR27j
-         E74PpOrF9u7+3b+gvOLv6bRJhK1KMSvy5XNRXsJaZIK/mnapUZZeXvPKEJ6EanhyHRo7
-         uzl6VjO6r4N5AQoWPRKLYp8MvtTsK1GLtamRdmqZlcjBMcu9jEqixSPk+js96kWlMvIH
-         OW0pINmtLrAKEE5OyUiJSOdYfKY2TEHxNtbRWcPRN9GwLeIm1bHE8XoIAJlMFZI3N41t
-         40fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679982827;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JS0pA7dTK//9+UyGYDDGbrV1+24ixtl3SbvVnf67nhQ=;
-        b=tssVOUDtp0KSyYYMMilemqGSY+uZ9/hjAgodvLZarjLBjyOO2b/xCSVs4TnnSUa9Nt
-         MMGZp//6kIEM/R5a6WunXjphOJUlFL04jeoE09vvj7+FuAVqWiNE39AGl8FCmCNy9Wor
-         qx25Wkm+vUfyzfdoUoAuBzDh6FL6AAk51FZEKBsKFpK5EhVqf6znOSWGtMnqkTbwGjOF
-         BLnr9DJD30fLPScqZchlhbA+gvrpLt2o+2CLfR6JrcXDKL6MVRm96Ruvaq4DOlIcugMF
-         0v4Rqf2/1vqtqN1/Ik1CaOWjvLSCC8KurdNIMq2MePpNjTJPZ+p8tPcEE7LmeMAK8b9f
-         JXDg==
-X-Gm-Message-State: AAQBX9cX1k0HFd4w8/Szg0QTOwbbJNnh/R8mC2cjaXgwEN5zMpycB+vS
-        TsnKVwgi6FAifgY+MT6pmJuYN6mMdU0Yu79JRzOZ9g==
-X-Google-Smtp-Source: AKy350Y4+xkcnQAc1ICGZNMlkAi2Rc1gi2m98kbPnFAUFZoojSgwj6O24a5KHuE+6ii35Y/77jlNsth4h3MjHe2bU+E=
-X-Received: by 2002:a5d:648c:0:b0:2d7:9771:fc4b with SMTP id
- o12-20020a5d648c000000b002d79771fc4bmr6317194wri.5.1679982827489; Mon, 27 Mar
- 2023 22:53:47 -0700 (PDT)
+        with ESMTP id S229968AbjC1GEC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Mar 2023 02:04:02 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13A02DC;
+        Mon, 27 Mar 2023 23:04:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679983442; x=1711519442;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vnpTrkgWOEL/GwwdpC+uOT5gFwIGgE12DtT51MDVw6A=;
+  b=FqAOZ5DLZ7lltQVTjEtMqlwWLDA2pRJrpozoHfiHo4ZQhaXx9yppQKaE
+   VSAuk8WJzX7ht3B2VDwRrgdLv5QW7aCkx3A0niMbct/hTh/dZxMM8RSZD
+   1eovkLxKBv9BYbnMGmqYK6aDa5R1L31KkOQD6ckpnKDF1Bv8jeZnAbWbQ
+   TID8pQzPYEiyFlPxWxpAGEtn4lvZK4K3kHhXpeYSXHKnHD9rcAqdEyB9L
+   3ls7pa3SaJCipjIkcs6G2w+HU/coDZYzOuw2SZnZQPBBPgEoDAIbwXiE2
+   gjSwyjHL22JikEg1oq35anE7rPzFn8jatbJLVGjRV/W7E8upIOmTqaUc+
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="426743807"
+X-IronPort-AV: E=Sophos;i="5.98,296,1673942400"; 
+   d="scan'208";a="426743807"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2023 23:04:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="683758172"
+X-IronPort-AV: E=Sophos;i="5.98,296,1673942400"; 
+   d="scan'208";a="683758172"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.48]) ([10.239.159.48])
+  by orsmga002.jf.intel.com with ESMTP; 27 Mar 2023 23:03:56 -0700
+Message-ID: <e7d53d04-6b7f-05a4-3077-42470c6d2823@linux.intel.com>
+Date:   Tue, 28 Mar 2023 14:04:15 +0800
 MIME-Version: 1.0
-References: <20230320071211.3005769-1-bhupesh.sharma@linaro.org> <7b26e32d-6f3e-4e1f-33a7-0a994ae8526d@linaro.org>
-In-Reply-To: <7b26e32d-6f3e-4e1f-33a7-0a994ae8526d@linaro.org>
-From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Date:   Tue, 28 Mar 2023 11:23:36 +0530
-Message-ID: <CAH=2NtzGbmeWUusC_vuE5EOR8AWVKEskmuBzQxSu_vCRKuh54A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: dma: Add support for SM6115 and QCS2290 SoCs
-To:     Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-Cc:     dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, andersson@kernel.org,
-        bhupesh.linux@gmail.com, vkoul@kernel.org,
-        krzysztof.kozlowski@linaro.org, robh+dt@kernel.org,
-        konrad.dybcio@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Cc:     baolu.lu@linux.intel.com, Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Zanussi, Tom" <tom.zanussi@intel.com>
+Subject: Re: [PATCH v2 7/8] iommu: Export iommu_get_dma_domain
+Content-Language: en-US
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Joerg Roedel <joro@8bytes.org>, dmaengine@vger.kernel.org,
+        vkoul@kernel.org
+References: <20230327232138.1490712-1-jacob.jun.pan@linux.intel.com>
+ <20230327232138.1490712-8-jacob.jun.pan@linux.intel.com>
+From:   Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20230327232138.1490712-8-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vladimir,
+On 3/28/23 7:21 AM, Jacob Pan wrote:
+> Devices that use ENQCMDS to submit work needs to retrieve its DMA
+> domain. It can then attach PASID to the DMA domain for shared mapping
+> (with RID) established by DMA API.
+> 
+> Signed-off-by: Jacob Pan<jacob.jun.pan@linux.intel.com>
+> ---
+>   drivers/iommu/iommu.c | 1 +
+>   include/linux/iommu.h | 5 +++++
+>   2 files changed, 6 insertions(+)
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 10db680acaed..c51d343a75d2 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -2118,6 +2118,7 @@ struct iommu_domain *iommu_get_dma_domain(struct device *dev)
+>   {
+>   	return dev->iommu_group->default_domain;
+>   }
+> +EXPORT_SYMBOL_GPL(iommu_get_dma_domain);
 
-On Fri, 24 Mar 2023 at 17:38, Vladimir Zapolskiy
-<vladimir.zapolskiy@linaro.org> wrote:
->
-> Hi Bhupesh,
->
-> On 3/20/23 09:12, Bhupesh Sharma wrote:
-> > Add new compatible for BAM DMA engine version v1.7.4 which is
-> > found on Qualcomm SM6115 and QCS2290 SoCs.
-> >
-> > While at it, also update qcom,bam-dma bindings to add comments
-> > which describe the BAM DMA versions used in SM8150 and SM8250 SoCs.
-> > This provides an easy reference for identifying the actual BAM DMA
-> > version available on Qualcomm SoCs.
-> >
-> > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> > ---
-> >   Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml | 4 +++-
-> >   1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
-> > index f1ddcf672261..4c8536df98fe 100644
-> > --- a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
-> > +++ b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
-> > @@ -20,8 +20,10 @@ properties:
-> >         - qcom,bam-v1.3.0
-> >           # MSM8974, APQ8074 and APQ8084
-> >         - qcom,bam-v1.4.0
-> > -        # MSM8916 and SDM845
-> > +        # MSM8916, SDM845, SM8150 and SM8250
-> >         - qcom,bam-v1.7.0
-> > +        # SM6115 and QRB2290
-> > +      - qcom,bam-v1.7.4
-> >
-> >     clocks:
-> >       maxItems: 1
->
-> apparently it's a good time to implement a switch in compatible values
-> similar to the one done for QCE:
->
-> https://lore.kernel.org/linux-arm-msm/20230222172240.3235972-6-vladimir.zapolskiy@linaro.org/
->
-> If this is done in the nearest time, then new platfrom QCE changes
-> can be seamlessly added after the next merge window, also the change
-> in the compatible values model shall resolve multiple technical
-> concerns including the one above about 1/1 change in the series.
+Directly exporting this function for external use seems unsafe. If the
+caller is the kernel driver for this device, it's fine because default
+domain remains unchanged during the life cycle of the driver. Otherwise,
+using this function may cause UAF. Keep in mind that group's default
+domain could be changed through sysfs.
 
-That is on my to-do list, but it's not of urgent priority as of now,
-as fortunately the BAM DMA versions 1.7.0 and 1.7.4 are very similar
-(at least in terms of how the linux driver uses them), so when we have
-future use-cases that exploit the differences between the two versions
-(or newer versions introduced in SoCs in the meanwhile) in the DMA
-driver we can move to the soc-specific compatibles.
+However, iommu_get_domain_for_dev() has already done so and has been
+exported. Maybe I'm worried too much. :-)
 
-Thanks,
-Bhupesh
+Best regards,
+baolu

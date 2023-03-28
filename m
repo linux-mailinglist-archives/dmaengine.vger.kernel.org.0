@@ -2,49 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9270C6CC69E
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Mar 2023 17:37:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 759006CC6EC
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Mar 2023 17:45:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233501AbjC1Phc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 28 Mar 2023 11:37:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46928 "EHLO
+        id S233527AbjC1Pp3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 28 Mar 2023 11:45:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232921AbjC1Pgz (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Mar 2023 11:36:55 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 708BE1BCE;
-        Tue, 28 Mar 2023 08:36:18 -0700 (PDT)
+        with ESMTP id S233524AbjC1PpK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Mar 2023 11:45:10 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D41BBEB46;
+        Tue, 28 Mar 2023 08:44:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680017778; x=1711553778;
+  t=1680018292; x=1711554292;
   h=date:from:to:cc:subject:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=xbE93YN0zae2+8ft70/75Up7UaulvpFbU76HZ3jAYPY=;
-  b=du7pmDsw2tm3z8OyQCseW0DBw3DCjgpZAc39F8T2qUB14Qn+8UEY98cc
-   qs7EP8k+iAiKx3AwIGHvcWq1aoEKXF75zsEdeOwyHP6rPkfN1pzdXk7RW
-   bBnC97Nk/oDARYFa/HO6TUzYdx8j2rfDHuoQxbV31LvJyRMANO7gmmL2f
-   fTECkOVo7fRTmlX8mKgjydZm8GnUIdAVUwjg8ycLu8vXyll+OK1Ks8zA8
-   W1RBZ9ZkQHCULZ/pWvFpfLJ6xPwZ55LIPmDiSJfp1P+ZqZThUJ+0jXiqe
-   R0rPBtmqrITyq0q69Nq2jfFYZIuPOxe4uZc8xwCKy5nrAkQddSuScpu9Q
+  bh=4pyh949E97gRjYQQaTn6XtjnpRmrAxMmEo978KIuT4s=;
+  b=fbvIfUM7l8Z2BLXiD1GhoPWjWLHv2iNWOi/ypz5fv4Ue+sk1k8OduYqY
+   YSJe6pn404OtSCNQ+5y7auuex10CvaRZizixptqYnSxcDOFHb3Rq5x/MI
+   rLxj7cBeDh8AGLWzNeaFmbON7zAoZe1uWfQnSKLw6qwniyQdNUnOd/JiI
+   J7jlcourEnkKBSZnLVcmm8nJlJxNbFgGd1HEWYqNs9rZ2Z4heoLD1NbDL
+   jIPK9WeaVGugD+Vni/N0yYy2/S5YhwpY676AssMbiKl0s+amvjwlA8lUr
+   ePYDGFQnMZqZc0h1kNIY1DRYvVlC75gVwHv61YC6j6hE4vG3OU5W7UYzf
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10663"; a="324499059"
+X-IronPort-AV: E=McAfee;i="6600,9927,10663"; a="321005871"
 X-IronPort-AV: E=Sophos;i="5.98,297,1673942400"; 
-   d="scan'208";a="324499059"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2023 08:36:14 -0700
+   d="scan'208";a="321005871"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2023 08:44:19 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10663"; a="827504413"
+X-IronPort-AV: E=McAfee;i="6600,9927,10663"; a="716525655"
 X-IronPort-AV: E=Sophos;i="5.98,297,1673942400"; 
-   d="scan'208";a="827504413"
+   d="scan'208";a="716525655"
 Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2023 08:36:13 -0700
-Date:   Tue, 28 Mar 2023 08:40:15 -0700
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2023 08:44:19 -0700
+Date:   Tue, 28 Mar 2023 08:48:22 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
 To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+Cc:     Baolu Lu <baolu.lu@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
         "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
         Jason Gunthorpe <jgg@nvidia.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
         Joerg Roedel <joro@8bytes.org>,
         "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
         "vkoul@kernel.org" <vkoul@kernel.org>,
@@ -58,20 +58,21 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         "Luck, Tony" <tony.luck@intel.com>,
         "Zanussi, Tom" <tom.zanussi@intel.com>,
         jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 6/8] iommu/vt-d: Implement set_dev_pasid domain op
-Message-ID: <20230328084015.5c8c08ca@jacob-builder>
-In-Reply-To: <BN9PR11MB5276B3FF6D21608BB17E32A18C889@BN9PR11MB5276.namprd11.prod.outlook.com>
+Subject: Re: [PATCH v2 7/8] iommu: Export iommu_get_dma_domain
+Message-ID: <20230328084822.4b46e649@jacob-builder>
+In-Reply-To: <BN9PR11MB527623AC2CE25EDA10FF81548C889@BN9PR11MB5276.namprd11.prod.outlook.com>
 References: <20230327232138.1490712-1-jacob.jun.pan@linux.intel.com>
-        <20230327232138.1490712-7-jacob.jun.pan@linux.intel.com>
-        <BN9PR11MB5276B3FF6D21608BB17E32A18C889@BN9PR11MB5276.namprd11.prod.outlook.com>
+        <20230327232138.1490712-8-jacob.jun.pan@linux.intel.com>
+        <e7d53d04-6b7f-05a4-3077-42470c6d2823@linux.intel.com>
+        <BN9PR11MB527623AC2CE25EDA10FF81548C889@BN9PR11MB5276.namprd11.prod.outlook.com>
 Organization: OTC
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-0.1 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -80,30 +81,54 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 Hi Kevin,
 
-On Tue, 28 Mar 2023 07:47:45 +0000, "Tian, Kevin" <kevin.tian@intel.com>
+On Tue, 28 Mar 2023 07:52:23 +0000, "Tian, Kevin" <kevin.tian@intel.com>
 wrote:
 
-> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Sent: Tuesday, March 28, 2023 7:22 AM
+> > From: Baolu Lu <baolu.lu@linux.intel.com>
+> > Sent: Tuesday, March 28, 2023 2:04 PM
 > > 
-> > Devices that use ENQCMDS to submit work on buffers mapped by DMA API
-> > must attach a PASID to the default domain of the device. In preparation
-> > for this use case, this patch implements set_dev_pasid() for the
-> > default_domain_ops. Besides PASID attachment, device will also be
-> > attached to the domain as the result of this call if the device has not
-> > been attached before.
+> > On 3/28/23 7:21 AM, Jacob Pan wrote:  
+> > > Devices that use ENQCMDS to submit work needs to retrieve its DMA
+> > > domain. It can then attach PASID to the DMA domain for shared mapping
+> > > (with RID) established by DMA API.
+> > >
+> > > Signed-off-by: Jacob Pan<jacob.jun.pan@linux.intel.com>
+> > > ---
+> > >   drivers/iommu/iommu.c | 1 +
+> > >   include/linux/iommu.h | 5 +++++
+> > >   2 files changed, 6 insertions(+)
+> > >
+> > > diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> > > index 10db680acaed..c51d343a75d2 100644
+> > > --- a/drivers/iommu/iommu.c
+> > > +++ b/drivers/iommu/iommu.c
+> > > @@ -2118,6 +2118,7 @@ struct iommu_domain  
+> > *iommu_get_dma_domain(struct device *dev)  
+> > >   {
+> > >   	return dev->iommu_group->default_domain;
+> > >   }
+> > > +EXPORT_SYMBOL_GPL(iommu_get_dma_domain);  
+> > 
+> > Directly exporting this function for external use seems unsafe. If the
+> > caller is the kernel driver for this device, it's fine because default
+> > domain remains unchanged during the life cycle of the driver. Otherwise,
+> > using this function may cause UAF. Keep in mind that group's default
+> > domain could be changed through sysfs.
+> > 
+> > However, iommu_get_domain_for_dev() has already done so and has been
+> > exported. Maybe I'm worried too much. :-)
 > >   
 > 
-> I didn't get the last point. PASID attach should only have the scope
-> for the pasid. RID of the device might be attached to another domain
-> which shouldn't be changed by this call.
-I meant if the RID context has not been set up before attaching this PASID,
-this call will also set up the context, PASID dir etc. In the end, we
-eliminated ordering requirement of attaching device, RID_PASID first, then
-other PASIDs.
-How about:
-"If the device context has not been set up prior to this call, this will
-set up the device context in addition to PASID attachment."
+> Agree. The kernel driver managing the device wants to get the current 
+> domain of the device then iommu_get_domain_for_dev() is the right
+> interface. It knows the domain is the dma domain.
+This goes back to v1 then :)
+
+I thought the comments from v1 is that we don't want to check the domain
+type is DMA domain returned by iommu_get_domain_for_dev()
+
+If the driver "knows" the domain is dma domain, why can't it use
+iommu_get_dma_domain()? seems paradoxical.
 
 Thanks,
 

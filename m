@@ -2,111 +2,186 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A11D6CB5C2
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Mar 2023 07:05:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE2386CB5C5
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Mar 2023 07:11:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232025AbjC1FFZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 28 Mar 2023 01:05:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43562 "EHLO
+        id S229632AbjC1FK7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 28 Mar 2023 01:10:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229611AbjC1FFY (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Mar 2023 01:05:24 -0400
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 734D6106
-        for <dmaengine@vger.kernel.org>; Mon, 27 Mar 2023 22:05:23 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id i6so13582708ybu.8
-        for <dmaengine@vger.kernel.org>; Mon, 27 Mar 2023 22:05:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679979922;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jrPzyNKILilfkJFnFnLXXP/rj7p3oM271F7TMZaj07g=;
-        b=RfAoYRrp/ry3w6Qu6wCXR0DV84TkBrUbkfxRatXNGNVsi/U/EN1Q2fsTERXgz2FDBr
-         zhmhMIBH/BxGDF19/wtk67stxPyp2n0Z98cewhWnmVwpwbL85qV/gC0b8L8frCxgmD/d
-         gDlZba9aDc2U8DQOfCyNXSfA1r5Hkqwmgwjh3MtC4/rQgFwzD81mqj3biHtKYacDCTMw
-         9m895W6944SMxF47JkoZP6WdvD7Q6ohKOBiDMKU4pFHRlrkBhoH6LGb1oYy8vxOCg+9L
-         uLPRTQe96GpK+SgwOzRVHifjSTiIGNhjcYIVyPkxmrHWNJFuJmwLJVuY8Lvm/IlGFwQh
-         fW6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679979922;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jrPzyNKILilfkJFnFnLXXP/rj7p3oM271F7TMZaj07g=;
-        b=AqAJBxitzL2Cc3IVONXKWVpB66Ut7ldXqkOHV9qxKKYcq0QrMF1Zv+SZtxfmS1ul2E
-         oO4EB8ftG6+rbpX1UWF8bkXLX/azrkVNlqwsnBln3ypk3Axggz3gG6IOvPWfpVeyXuzM
-         HPiWhIqjLB0gbJlTt/4LgO95gLjl+SzvEeD/ReivQEqqT8V7CRSJ8ZeXogrYXjYqHpA2
-         VSY4EUkRHx7bxxq/680JmpErw09AIoLyH5zgRK8Xr2klTbnnJFKpRv2ofxc2TsBYXfIy
-         M33MHH46paoTlI4by9fWACVTpS4OLl0NGbV9lfQ1kIdC36I5e5mjq3AZR+485LhwvHg0
-         b9iQ==
-X-Gm-Message-State: AAQBX9d3DisXoK6ncS70jnQ0g0/XyFspnJpU2turKGzKHVhNBn8/Qjs/
-        oYnWTYc6KBUAqQ7ESyIozyhjT9PfljCx/XzwFjOx0IHBhnqt4A==
-X-Google-Smtp-Source: AKy350YD5EDHsaYe/O3bddm4iPZVSu/jTdz7pjuY3tkR/rdTvaBa8cAVI1v0zpaz8mhbMgpkJ4GXL/D1/Z+qVOsIDQA=
-X-Received: by 2002:a05:6902:102e:b0:b6a:2590:6c63 with SMTP id
- x14-20020a056902102e00b00b6a25906c63mr11816848ybt.2.1679979922516; Mon, 27
- Mar 2023 22:05:22 -0700 (PDT)
+        with ESMTP id S229611AbjC1FK6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Mar 2023 01:10:58 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F18D199A;
+        Mon, 27 Mar 2023 22:10:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679980257; x=1711516257;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Un8dKs5y4eyj3uC1NIu/eO1SaITBeaVWV+VT0Cb7HVs=;
+  b=bpgPwBmRBnp7Cd34fDnL6kmLmuwTfD6mlRKS+Q9w6H1D6qBYnkch6UeI
+   GZxGD4MzQr3cDBqGl3vQSjr7oAGq01aPp3ptVYOEp1oMlTGHE7Hq+xhpd
+   QU+RzdTaxb7BLsZ6DfAPnIRrvmk1jl1z2vpON1Gza0L81igriOSzDfuJ5
+   7on7naAXGSEt2YMvWaFxmNpnc7upI7J0Krf9v8t1vg2XnsAXuimWaDcN6
+   76+vbdCnlLwrSMsXhN3Tn7+dCJkppyaP9XOZS4jJbzvmqlthKY2wLGBhg
+   vyoN+RaMj2QVNRBvt5hc9LB26Mq6WjopsX03Yvcg+PDoOE8TAbIXysBnC
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="426737319"
+X-IronPort-AV: E=Sophos;i="5.98,296,1673942400"; 
+   d="scan'208";a="426737319"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2023 22:10:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="929721831"
+X-IronPort-AV: E=Sophos;i="5.98,296,1673942400"; 
+   d="scan'208";a="929721831"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.48]) ([10.239.159.48])
+  by fmsmga006.fm.intel.com with ESMTP; 27 Mar 2023 22:10:52 -0700
+Message-ID: <e1e23af3-b627-ac5d-64d0-9547ed982dc4@linux.intel.com>
+Date:   Tue, 28 Mar 2023 13:11:12 +0800
 MIME-Version: 1.0
-From:   Rosen Penev <rosenp@gmail.com>
-Date:   Mon, 27 Mar 2023 22:05:11 -0700
-Message-ID: <CAKxU2N9yHa7ia_=07Csa7dDsZxcbPMmGSZKr+UxRSWH1VpG1fw@mail.gmail.com>
-Subject: mv_xor error during mdadm array creation
-To:     dmaengine@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Cc:     baolu.lu@linux.intel.com, Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Zanussi, Tom" <tom.zanussi@intel.com>
+Subject: Re: [PATCH v2 3/8] iommu/sva: Support reservation of global SVA
+ PASIDs
+Content-Language: en-US
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Joerg Roedel <joro@8bytes.org>, dmaengine@vger.kernel.org,
+        vkoul@kernel.org
+References: <20230327232138.1490712-1-jacob.jun.pan@linux.intel.com>
+ <20230327232138.1490712-4-jacob.jun.pan@linux.intel.com>
+From:   Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20230327232138.1490712-4-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-I noticed this when I created my array. Not sure if it's something to
-worry about. Device is an Armada 38x with 4 SATA ports.
+On 3/28/23 7:21 AM, Jacob Pan wrote:
+> Devices that use Intel ENQCMD to submit work must use global PASIDs in
+> that the PASID are stored in a per CPU MSR. When such device need to
+> submit work for in-kernel DMA with PASID, it must allocate PASIDs from
+> the same global number space to avoid conflict.
+> 
+> This patch introduces IOMMU SVA APIs to reserve and release global PASIDs.
+> It is expected that device drivers will use the allocated PASIDs to attach
+> to appropriate IOMMU domains for use.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>   drivers/iommu/iommu-sva.c | 33 +++++++++++++++++++++++++++++++++
+>   include/linux/iommu.h     | 14 ++++++++++++++
+>   2 files changed, 47 insertions(+)
+> 
+> diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
+> index c434b95dc8eb..84b9de84b3e0 100644
+> --- a/drivers/iommu/iommu-sva.c
+> +++ b/drivers/iommu/iommu-sva.c
+> @@ -148,6 +148,39 @@ u32 iommu_sva_get_pasid(struct iommu_sva *handle)
+>   }
+>   EXPORT_SYMBOL_GPL(iommu_sva_get_pasid);
+>   
+> +/**
+> + * @brief
+> + *	Reserve a PASID from the SVA global number space.
+> + *
+> + * @param min starting range, inclusive
+> + * @param max ending range, inclusive
+> + * @return The reserved PASID on success or IOMMU_PASID_INVALID on failure.
+> + */
+> +ioasid_t iommu_sva_reserve_pasid(ioasid_t min, ioasid_t max)
+> +{
+> +	int ret;
+> +
+> +	if (!pasid_valid(min) || !pasid_valid(max) ||
+> +	    min == 0 || max < min)
 
-[22404.763561] WARNING: CPU: 1 PID: 2013 at
-crypto/async_tx/async_xor.c:228 async_xor_offs+0x3cf/0x3d8 [async_xor]
-[22404.763581] async_xor_offs: no space for dma address conversion
-[22404.763584] Modules linked in: aufs aes_arm_bs crypto_simd
-cast5_generic cast_common blowfish_generic blowfish_common
-algif_skcipher af_alg overlay cp210x usbserial orion_wdt at24 pwm_fan
-wireguard curve25519_neon libcurve25519_generic libchacha20poly1305
-chacha_neon poly1305_arm ip6_udp_tunnel udp_tunnel pkcs8_key_parser
-softdog lm75 marvell_cesa libdes configfs sunrpc ip_tables x_tables
-autofs4 raid10 raid456 async_raid6_recov async_memcpy async_pq
-async_xor async_tx raid1 raid0 multipath linear md_mod uas
-[22404.763688] CPU: 1 PID: 2013 Comm: md0_raid5 Not tainted
-5.15.89-mvebu #22.11.4
-[22404.763695] Hardware name: Marvell Armada 380/385 (Device Tree)
-[22404.763704] [<c010c301>] (unwind_backtrace) from [<c0108927>]
-(show_stack+0xb/0xc)
-[22404.763722] [<c0108927>] (show_stack) from [<c080d685>]
-(dump_stack_lvl+0x2b/0x34)
-[22404.763734] [<c080d685>] (dump_stack_lvl) from [<c08087f5>]
-(__warn+0x7d/0x8e)
-[22404.763749] [<c08087f5>] (__warn) from [<c080885f>]
-(warn_slowpath_fmt+0x59/0x70)
-[22404.763760] [<c080885f>] (warn_slowpath_fmt) from [<bf8523cf>]
-(async_xor_offs+0x3cf/0x3d8 [async_xor])
-[22404.763774] [<bf8523cf>] (async_xor_offs [async_xor]) from
-[<bf86bb6d>] (raid_run_ops+0xb01/0x110c [raid456])
-[22404.763820] [<bf86bb6d>] (raid_run_ops [raid456]) from [<bf86fe29>]
-(handle_stripe+0x6d5/0x1f4c [raid456])
-[22404.763867] [<bf86fe29>] (handle_stripe [raid456]) from
-[<bf871951>] (handle_active_stripes.constprop.21+0x2b1/0x3c8
-[raid456])
-[22404.763914] [<bf871951>] (handle_active_stripes.constprop.21
-[raid456]) from [<bf871e45>] (raid5d+0x291/0x47c [raid456])
-[22404.763959] [<bf871e45>] (raid5d [raid456]) from [<bf809529>]
-(md_thread+0xdd/0xfc [md_mod])
-[22404.764021] [<bf809529>] (md_thread [md_mod]) from [<c013388d>]
-(kthread+0x111/0x124)
-[22404.764051] [<c013388d>] (kthread) from [<c0100139>]
-(ret_from_fork+0x11/0x38)
-[22404.764060] Exception stack(0xc3c93fb0 to 0xc3c93ff8)
-[22404.764066] 3fa0:                                     00000000
-00000000 00000000 00000000
-[22404.764071] 3fc0: 00000000 00000000 00000000 00000000 00000000
-00000000 00000000 00000000
-[22404.764076] 3fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[22404.764080] ---[ end trace 12bd672a6d45792f ]--
+I still think we should make "min == 0" a valid case. The ARM/AMD/Intel
+drivers should reserve PASID 0 for special usage with this interface.
+
+Probably we should also make "min == max" a valid case. Both @min and
+@max are inclusive.
+
+> +		return IOMMU_PASID_INVALID;
+> +
+> +	ret = ida_alloc_range(&iommu_global_pasid_ida, min, max, GFP_KERNEL);
+> +	if (ret < 0)
+> +		return IOMMU_PASID_INVALID;
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_sva_reserve_pasid);
+> +
+> +void iommu_sva_release_pasid(ioasid_t pasid)
+> +{
+> +	if (!pasid_valid(pasid))
+
+The caller should never release an invalid pasid. So perhaps,
+
+	if (WARN_ON(!pasid_valid(pasid)))
+		return;
+
+to discover bugs during development.
+
+> +		return;
+> +
+> +	ida_free(&iommu_global_pasid_ida, pasid);
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_sva_release_pasid);
+> +
+>   /*
+>    * I/O page fault handler for SVA
+>    */
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 54f535ff9868..0471089dc1d0 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -1187,6 +1187,9 @@ struct iommu_sva *iommu_sva_bind_device(struct device *dev,
+>   					struct mm_struct *mm);
+>   void iommu_sva_unbind_device(struct iommu_sva *handle);
+>   u32 iommu_sva_get_pasid(struct iommu_sva *handle);
+> +ioasid_t iommu_sva_reserve_pasid(ioasid_t min, ioasid_t max);
+> +void iommu_sva_release_pasid(ioasid_t pasid);
+> +
+>   #else
+>   static inline struct iommu_sva *
+>   iommu_sva_bind_device(struct device *dev, struct mm_struct *mm)
+> @@ -1202,6 +1205,17 @@ static inline u32 iommu_sva_get_pasid(struct iommu_sva *handle)
+>   {
+>   	return IOMMU_PASID_INVALID;
+>   }
+> +
+> +static inline ioasid_t iommu_sva_reserve_pasid(ioasid_t min, ioasid_t max)
+> +{
+> +	return IOMMU_PASID_INVALID;
+> +}
+> +
+> +static inline void iommu_sva_release_pasid(ioasid_t pasid)
+> +{
+> +
+> +}
+> +
+>   static inline void mm_pasid_init(struct mm_struct *mm) {}
+>   static inline void mm_pasid_drop(struct mm_struct *mm) {}
+>   #endif /* CONFIG_IOMMU_SVA */
+
+Best regards,
+baolu

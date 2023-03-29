@@ -2,97 +2,128 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 19D586CD7F7
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Mar 2023 12:55:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F3F66CDCBD
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Mar 2023 16:36:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229379AbjC2KzO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 29 Mar 2023 06:55:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54388 "EHLO
+        id S229884AbjC2Ogm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 29 Mar 2023 10:36:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229462AbjC2KzO (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Mar 2023 06:55:14 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD9D91FC3;
-        Wed, 29 Mar 2023 03:55:11 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id j18-20020a05600c1c1200b003ee5157346cso11157720wms.1;
-        Wed, 29 Mar 2023 03:55:11 -0700 (PDT)
+        with ESMTP id S230424AbjC2OgV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Mar 2023 10:36:21 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD11A76A4
+        for <dmaengine@vger.kernel.org>; Wed, 29 Mar 2023 07:32:16 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id l12so15940079wrm.10
+        for <dmaengine@vger.kernel.org>; Wed, 29 Mar 2023 07:32:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680087310;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BxWVSYNg3x9Lr51Q6bn5n72HMeWHBmcsrPZstVqCyrs=;
-        b=VByNFV754kE/eZ25qMrcu38DuGFTX/xp6ub/tU5fe0hFGPJ1aemzBDNAEjfKi9vYcJ
-         /nTqcFmhbNwmMDhoHAEPDVZbUcnAUU3NYchYF6spapngQYwqAUI+6qTIGOprLVBRcp/+
-         QMmfzCEE0c4jKkwGX1Yzu2es6052pBefuK3fkYPndyOJxxWeKxD79y1ArMxF3wovBKEE
-         wkRxDmDejC299H96F8ULKImKCv11Rd3iL139pvb6ey++pdb8w95pAmv4DuDKAgtQ+A6O
-         aXLF8ukAMlAZBXbnFMSYGUE0BH79pHeLLXs9NYdtAxL83DPPOA46RvmQh+9RJGnAk0eo
-         d0ag==
+        d=gmail.com; s=20210112; t=1680100289;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=hgZ/e6oLwPoPQ1aK11s+Ly2z6BUU28oJA4/et60gdgA=;
+        b=PFEBt9fRT6zOH4hiwRMauzwDFJ0Lirss+OFvMLwQy3VG4YFjKdWttSXV2l1Ic2bDC+
+         clZ2oJRyam3wCHz2WWcHe3DLZrcmcga5n4JBBrswu+sBOePBQTJmH2/4Qg7Yi14VcU9F
+         Rk4k6/oAT79dEE4o7BwM0hD1m8wLdP7RFOECLqpxI8hJidL5cTOhpw/HOUrd7MOa/eCA
+         9e9PGBuEDNh0wVC++2EHiLBEa/9sQC0q13XS8mhxVIw+tCWd13dSE/IQY7IyglCkfGts
+         yAsRVWnyizL0NNWAjdh5p5RxDX5AmfqhuDMknDUNPPwWX33MM/2oEBJ5ot5mva3Ut8A1
+         SUBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680087310;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BxWVSYNg3x9Lr51Q6bn5n72HMeWHBmcsrPZstVqCyrs=;
-        b=duMp7mkvutkkQU43/jjglL3Vh7Whm0mJ5ylt69gOm2eyRcm8jWsYuLFSpdMheFYVlC
-         0Z9+R3/inlbuDxoO4XEfFC/hm2oeYhdhhVprkzW3pHdGxfmZN0evL+8pZ3RK68JHKwaY
-         Ya3JQ2bsoMfqL9ltdqA1jLehkCALg0z+EUTQz1dq9Tr/32uouY5oJKPgz9fwL0U7JFgX
-         cLfSFjSxyhBQWDaF7Gmf40PBLJ0UEuwMdQyez3eGDE7sxpHl3Hp8diAW2ssqYvTemIr7
-         3i68x7AAnqZWhFogHDESMpeyv5kE+rLDkmB8+GxAlEQUjx8W1KryLUDIBfmOYu24NvKu
-         G2Eg==
-X-Gm-Message-State: AAQBX9dYSNuAu6iRpguD3sbGYOiCjEsLmifeG0L5JMsYxY+kLu6d+Np5
-        bE0D7SPGapJ9EyekMNUFxTA=
-X-Google-Smtp-Source: AKy350ZJu7jp4nxoNA3PBt3BQ1lskpGA2HTjnMYG3XSyNpuQ7wI1e+c6pBNkeN/aR69zppzW9k/gMQ==
-X-Received: by 2002:a05:600c:3c94:b0:3ef:6989:19ef with SMTP id bg20-20020a05600c3c9400b003ef698919efmr1458736wmb.13.1680087310085;
-        Wed, 29 Mar 2023 03:55:10 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id t14-20020a05600c198e00b003ee1e07a14asm1940538wmq.45.2023.03.29.03.55.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Mar 2023 03:55:09 -0700 (PDT)
-Date:   Wed, 29 Mar 2023 13:55:05 +0300
-From:   Dan Carpenter <error27@gmail.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH 1/2] dmaengine: mv_xor_v2: Fix an error code.
-Message-ID: <73af278e-1fc7-43fb-87b9-f107ae533266@kili.mountain>
-References: <201170dff832a3c496d125772e10070cd834ebf2.1679814350.git.christophe.jaillet@wanadoo.fr>
- <e53e6f9a-09a9-42e4-8e81-dfe2ad2813ad@kili.mountain>
+        d=1e100.net; s=20210112; t=1680100289;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hgZ/e6oLwPoPQ1aK11s+Ly2z6BUU28oJA4/et60gdgA=;
+        b=QygQKyrrK3S5Sdti3iM4ImjC4H4FPQvNp7aDpSg+HDzUA3dc0/ntBvKby0STfvQy5D
+         hVni2iN//VCDJYUY47u1maXWdQwOXNBEOX4v5GNwtQ534ju2ocBsKrmTN6uubi8B7nMP
+         34ac1hGLIzm7gfh5PMwThrtW9cI9ZpFTJH2gc1qVbiDnpqwGwcGVke296puO4T5fMVtE
+         PWbDhoiTTLdd57GwC/yGPS/hc+ZIPFxMdFz5zEKm8sKan55t4AzFeguDNlYfdhjEPKpM
+         zuJi1sQfm7gIg9nyTSnyFCxawkdkJAT4qybhA9mOpIu6WkD0Jw+CIEJlWp0KWYBNsZ75
+         ZSeA==
+X-Gm-Message-State: AAQBX9ejr5vb9wxg796zPqX+f0OxBizsUfYn6m35Dh/QrBzIYWR7TSk1
+        FeD9BROG3JbOKnwew4vmrcz5RlfoBZhKxvtBZRpg533Y4Ek=
+X-Google-Smtp-Source: AKy350bPwbw0F9g+zW/9GR6yF7z99W2vtyYbA2VP1hVRfS2ZVHNnmGyCCFDpjkJ5O78WtfnXWoVrTIDPi1VZb34Ght8=
+X-Received: by 2002:a05:6000:511:b0:2c5:5817:f241 with SMTP id
+ a17-20020a056000051100b002c55817f241mr3392582wrf.7.1680100288951; Wed, 29 Mar
+ 2023 07:31:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e53e6f9a-09a9-42e4-8e81-dfe2ad2813ad@kili.mountain>
-X-Spam-Status: No, score=0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+From:   Kristof Havasi <havasiefr@gmail.com>
+Date:   Wed, 29 Mar 2023 16:31:17 +0200
+Message-ID: <CADBnMvj93bSO=+wU4=pLTgONV7w_hhecxQHAc_YS4P4GaqMNrA@mail.gmail.com>
+Subject: dmaengine: at_hdmac: Regression regarding rs485 via dma in v5.4
+To:     tudor.ambarus@microchip.com, dmaengine@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-A bunch of false positives could be silenced by changing the assign
-and return hooks to check for unsigned types:
+Hi there,
 
-static void match_assign(struct expression *expr)
-{
-        if (expr_unsigned(expr->left))
-                return;
-        warn_on_positive_error(expr->right);
-}
+I was rebasing the Kernel branch of our SAMA5D35 based board from
+v5.4.189 to v5.4.238.
+I noticed that after the rebase we could _only send, but not receive_
+through our RS485 interface.
 
-static void match_return(struct expression *expr)
-{
-        struct symbol *type;
+I could bisect the problem to 77b97ef4908aa917e7b68667ec6b344cc5dc5034
+in the v5.4.225 release. If I revert this commit, the tx/rx works just
+like before.
+Maybe this use-case wasn't considered when this patch was created?
+I haven't seen a documentation change regarding this in DT bindings,
+but if the config should be something else, please let me know.
+Otherwise this commit breaks the RS485 function of atmel_serial at
+least in the v5.4.y branch.
 
-        type = cur_func_return_type();
-        if (type_unsigned(type))
-                return;
+Best Regards,
+Krist=C3=B3f Havasi
 
-        warn_on_positive_error(expr);
-}
+The relevant device tree nodes:
 
-regards,
-dan carpenter
+from sama5d3.dtsi:
+
+usart1: serial@f0020000 {
+  compatible =3D "atmel,at91sam9260-usart";
+  reg =3D <0xf0020000 0x100>;
+  interrupts =3D <13 IRQ_TYPE_LEVEL_HIGH 5>;
+  dmas =3D <&dma0 2 AT91_DMA_CFG_PER_ID(5)>,
+  <&dma0 2 (AT91_DMA_CFG_PER_ID(6) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
+  dma-names =3D "tx", "rx";
+  pinctrl-names =3D "default";
+  pinctrl-0 =3D <&pinctrl_usart1>;
+  clocks =3D <&usart1_clk>;
+  clock-names =3D "usart";
+  status =3D "disabled";
+};
+
+pinctrl_usart1: usart1-0 {
+  atmel,pins =3D
+  <AT91_PIOB 28 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+   AT91_PIOB 29 AT91_PERIPH_A AT91_PINCTRL_NONE>;
+};
+pinctrl_usart1_rts_cts: usart1_rts_cts-0 {
+  atmel,pins =3D
+  <AT91_PIOB 26 AT91_PERIPH_A AT91_PINCTRL_NONE /* PB26 periph A,
+conflicts with GRX7 */
+   AT91_PIOB 27 AT91_PERIPH_A AT91_PINCTRL_NONE>; /* PB27 periph A,
+conflicts with G125CKO */
+};
+
+from our dts:
+
+&usart1 {
+  pinctrl-0 =3D <&pinctrl_usart1 &pinctrl_usart1_rts_cts>;
+  atmel,use-dma-rx;
+  atmel,use-dma-tx;
+  rs485-rx-during-tx;
+  linux,rs485-enabled-at-boot-time;
+  status =3D "okay";
+};
+
+HW:
+The SAMA5D3's PB27 is connected to the |RE+DE of the RS485 transceiver
+SP3458EN-L

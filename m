@@ -2,53 +2,53 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54CB66CD7A1
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Mar 2023 12:27:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19D586CD7F7
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Mar 2023 12:55:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230027AbjC2K1e (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 29 Mar 2023 06:27:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34262 "EHLO
+        id S229379AbjC2KzO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 29 Mar 2023 06:55:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229603AbjC2K1d (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Mar 2023 06:27:33 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99AE3125;
-        Wed, 29 Mar 2023 03:27:32 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id l15-20020a05600c4f0f00b003ef6d684102so5799772wmq.3;
-        Wed, 29 Mar 2023 03:27:32 -0700 (PDT)
+        with ESMTP id S229462AbjC2KzO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Mar 2023 06:55:14 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD9D91FC3;
+        Wed, 29 Mar 2023 03:55:11 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id j18-20020a05600c1c1200b003ee5157346cso11157720wms.1;
+        Wed, 29 Mar 2023 03:55:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680085651;
+        d=gmail.com; s=20210112; t=1680087310;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bf3058/knQ0tFWmfPZfCyE9CWSx0vTUnHs2fjB/KymA=;
-        b=SRm5l+xoouFUwc/HhzgIa6DAkMoKhJcUyDR0D0R3x+zdtiAfng1p+AO/dWn/e+9vNw
-         /SaomAk8+yu+hwqM9AtZcEUf3H/w5Yqdj9XpyMUaQUu1DRoyjHQQDjFKpVVpDl90qCCN
-         5ghgcfI3oZoA2jfuNt//uMd61CTsm5EysUWqBrBcf46l0/m+K0/oK1Nz5e3f/iJXIx3q
-         Q+BWHcfkwqqrkqg/ukt9w0nCypdxVl6uCRqaoxuzKhMHM3EuW0+oYntXLCnfEAKIgRN1
-         D5Xboz3IxJrtsVEaPVAl9H2I1J2j0LuWJEoFdwLKTv/pd5b5+4r6bEOVFZOFhHbunKhT
-         ahgg==
+        bh=BxWVSYNg3x9Lr51Q6bn5n72HMeWHBmcsrPZstVqCyrs=;
+        b=VByNFV754kE/eZ25qMrcu38DuGFTX/xp6ub/tU5fe0hFGPJ1aemzBDNAEjfKi9vYcJ
+         /nTqcFmhbNwmMDhoHAEPDVZbUcnAUU3NYchYF6spapngQYwqAUI+6qTIGOprLVBRcp/+
+         QMmfzCEE0c4jKkwGX1Yzu2es6052pBefuK3fkYPndyOJxxWeKxD79y1ArMxF3wovBKEE
+         wkRxDmDejC299H96F8ULKImKCv11Rd3iL139pvb6ey++pdb8w95pAmv4DuDKAgtQ+A6O
+         aXLF8ukAMlAZBXbnFMSYGUE0BH79pHeLLXs9NYdtAxL83DPPOA46RvmQh+9RJGnAk0eo
+         d0ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680085651;
+        d=1e100.net; s=20210112; t=1680087310;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bf3058/knQ0tFWmfPZfCyE9CWSx0vTUnHs2fjB/KymA=;
-        b=b0f84KKgb3kqc5fpzCAMlTLaeIMW5ymsH4chc7DIB2iqDkAs4/0wwA92sgXYK04lts
-         t841IHQ4wlnUFZovZ9zYgKnzbGbsmvieTGkoIx+9dRZbGHJyQmZW+5aJjU8Uj0pjdy1F
-         d+2QdX+HUAJu6ICfVqTr4SG1JA7r3RTPW7vMPnY26yxCsUQ4FQaati2Aw9FovoPvvIRm
-         fg9wq2s4E1sbvnP/C5ttgzzP5Nsb9zy1X2H0E3tNAJN8xfV9Z+T/qvk9+pkhO9v/xL9S
-         db6NlKNZ/V9VdhFvsbmteH+LKt5zMYVxiafl2sTnyamB7j+iA5ji/FPHQTqiPXqvJORz
-         /lmA==
-X-Gm-Message-State: AAQBX9fswi/FgR7ev6pLDMPGV7aiHMN6XLvpQUbN+v3IxAzXX26LLSLl
-        AjknBEb+XlAEilbzvzNqRKQ=
-X-Google-Smtp-Source: AKy350aGhZYrMYVU5tSUM4mkZxfaDXPRFSfr27ptUeJw0v34q88f53TVJeg9baQ9z6YwvA49wTCBiw==
-X-Received: by 2002:a05:600c:28d:b0:3ed:3268:5f35 with SMTP id 13-20020a05600c028d00b003ed32685f35mr1426339wmk.18.1680085650933;
-        Wed, 29 Mar 2023 03:27:30 -0700 (PDT)
+        bh=BxWVSYNg3x9Lr51Q6bn5n72HMeWHBmcsrPZstVqCyrs=;
+        b=duMp7mkvutkkQU43/jjglL3Vh7Whm0mJ5ylt69gOm2eyRcm8jWsYuLFSpdMheFYVlC
+         0Z9+R3/inlbuDxoO4XEfFC/hm2oeYhdhhVprkzW3pHdGxfmZN0evL+8pZ3RK68JHKwaY
+         Ya3JQ2bsoMfqL9ltdqA1jLehkCALg0z+EUTQz1dq9Tr/32uouY5oJKPgz9fwL0U7JFgX
+         cLfSFjSxyhBQWDaF7Gmf40PBLJ0UEuwMdQyez3eGDE7sxpHl3Hp8diAW2ssqYvTemIr7
+         3i68x7AAnqZWhFogHDESMpeyv5kE+rLDkmB8+GxAlEQUjx8W1KryLUDIBfmOYu24NvKu
+         G2Eg==
+X-Gm-Message-State: AAQBX9dYSNuAu6iRpguD3sbGYOiCjEsLmifeG0L5JMsYxY+kLu6d+Np5
+        bE0D7SPGapJ9EyekMNUFxTA=
+X-Google-Smtp-Source: AKy350ZJu7jp4nxoNA3PBt3BQ1lskpGA2HTjnMYG3XSyNpuQ7wI1e+c6pBNkeN/aR69zppzW9k/gMQ==
+X-Received: by 2002:a05:600c:3c94:b0:3ef:6989:19ef with SMTP id bg20-20020a05600c3c9400b003ef698919efmr1458736wmb.13.1680087310085;
+        Wed, 29 Mar 2023 03:55:10 -0700 (PDT)
 Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id v13-20020a05600c444d00b003ee8ab8d6cfsm1886094wmn.21.2023.03.29.03.27.29
+        by smtp.gmail.com with ESMTPSA id t14-20020a05600c198e00b003ee1e07a14asm1940538wmq.45.2023.03.29.03.55.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Mar 2023 03:27:30 -0700 (PDT)
-Date:   Wed, 29 Mar 2023 13:27:27 +0300
+        Wed, 29 Mar 2023 03:55:09 -0700 (PDT)
+Date:   Wed, 29 Mar 2023 13:55:05 +0300
 From:   Dan Carpenter <error27@gmail.com>
 To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
@@ -56,12 +56,13 @@ Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
         linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
         dmaengine@vger.kernel.org
 Subject: Re: [PATCH 1/2] dmaengine: mv_xor_v2: Fix an error code.
-Message-ID: <16cfc681-7a08-4160-bd69-4c8b59774688@kili.mountain>
+Message-ID: <73af278e-1fc7-43fb-87b9-f107ae533266@kili.mountain>
 References: <201170dff832a3c496d125772e10070cd834ebf2.1679814350.git.christophe.jaillet@wanadoo.fr>
+ <e53e6f9a-09a9-42e4-8e81-dfe2ad2813ad@kili.mountain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <201170dff832a3c496d125772e10070cd834ebf2.1679814350.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <e53e6f9a-09a9-42e4-8e81-dfe2ad2813ad@kili.mountain>
 X-Spam-Status: No, score=0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
         DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
@@ -72,33 +73,26 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sun, Mar 26, 2023 at 09:06:37AM +0200, Christophe JAILLET wrote:
-> If the probe is deferred, -EPROBE_DEFER should be returned, not
-> +EPROBE_DEFER.
-> 
-> Fixes: 3cd2c313f1d6 ("dmaengine: mv_xor_v2: Fix clock resource by adding a register clock")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->  drivers/dma/mv_xor_v2.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/mv_xor_v2.c b/drivers/dma/mv_xor_v2.c
-> index 89790beba305..0991b8265829 100644
-> --- a/drivers/dma/mv_xor_v2.c
-> +++ b/drivers/dma/mv_xor_v2.c
-> @@ -752,7 +752,7 @@ static int mv_xor_v2_probe(struct platform_device *pdev)
->  
->  	xor_dev->clk = devm_clk_get(&pdev->dev, NULL);
->  	if (PTR_ERR(xor_dev->clk) == -EPROBE_DEFER) {
-> -		ret = EPROBE_DEFER;
-> +		ret = -EPROBE_DEFER;
->  		goto disable_reg_clk;
+A bunch of false positives could be silenced by changing the assign
+and return hooks to check for unsigned types:
 
-Heh.  Looking through the Smatch results, I don't think this actually
-affects runtime because driver_probe_device() checks for both positive
-and negatives.  People shouldn't be returning positives, of course, but
-it appears there is a work around for bugs built in already.
+static void match_assign(struct expression *expr)
+{
+        if (expr_unsigned(expr->left))
+                return;
+        warn_on_positive_error(expr->right);
+}
+
+static void match_return(struct expression *expr)
+{
+        struct symbol *type;
+
+        type = cur_func_return_type();
+        if (type_unsigned(type))
+                return;
+
+        warn_on_positive_error(expr);
+}
 
 regards,
 dan carpenter
-

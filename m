@@ -2,180 +2,88 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8947F6CEFC8
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Mar 2023 18:50:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 980D36CF0F2
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Mar 2023 19:22:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229638AbjC2Qul (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 29 Mar 2023 12:50:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59990 "EHLO
+        id S229609AbjC2RWc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 29 Mar 2023 13:22:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230375AbjC2Qui (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Mar 2023 12:50:38 -0400
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B14E44ECA;
-        Wed, 29 Mar 2023 09:50:33 -0700 (PDT)
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 32TFs3Qw039376;
-        Wed, 29 Mar 2023 10:54:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1680105243;
-        bh=WAzoF+GZ+3htx/VecrbaI/auuYHR+49PsTPPUQMF9fo=;
-        h=From:To:CC:Subject:Date;
-        b=QNCgjYaGUl2ggyS+Xl7rkFLwYDmnJoLEj+N7JSDkGZbKTfD/+F2dECcnnaCfbAQEw
-         EHbE4G8ItFF5rchf4V2+3vZF4+DB+iQX/yeQGKh3tbZlAlQ5+7oy/VAf/5gm3hvEse
-         5AWbmmlwh63hIcP7wAXrVOheqvPdBT23ZHApr8Cc=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 32TFs3U8016342
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 29 Mar 2023 10:54:03 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Wed, 29
- Mar 2023 10:54:02 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
- Frontend Transport; Wed, 29 Mar 2023 10:54:02 -0500
-Received: from uda0132425.dhcp.ti.com (ileaxei01-snat.itg.ti.com [10.180.69.5])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 32TFs03H081701;
-        Wed, 29 Mar 2023 10:54:01 -0500
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [RESEND PATCH v2] dmaengine: ti: k3-udma: Add system suspend/resume support
-Date:   Wed, 29 Mar 2023 21:23:49 +0530
-Message-ID: <20230329155349.2566010-1-vigneshr@ti.com>
-X-Mailer: git-send-email 2.40.0
+        with ESMTP id S229456AbjC2RWb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Mar 2023 13:22:31 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D04654682
+        for <dmaengine@vger.kernel.org>; Wed, 29 Mar 2023 10:21:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1680110500;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=cXO0bYsmE8RQkiU8p+vffYn85AnFZlCiXkctXOQi2o4=;
+        b=NfC/6EsDmJcO6HZQVrgERuNi2Hmk/m9d6N5pCrFL/08/cXsQ5YcQDTYNBqKY9Ld7EItFEO
+        nWd7pVLY0PHuYB0gNbcz2kU/1KhwTy/8BNXh3TNUGXNM7dhfz6IH4jv4egAnARuCg5BlLm
+        V75Xak2hiYjEyzW8GNlFb1OwKzWg7vE=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-515-2yB2SrAONRCyVg1nQ3lGGg-1; Wed, 29 Mar 2023 13:21:36 -0400
+X-MC-Unique: 2yB2SrAONRCyVg1nQ3lGGg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2EC473815F6F;
+        Wed, 29 Mar 2023 17:21:36 +0000 (UTC)
+Received: from trippy.localdomain.com (unknown [10.22.10.235])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1477D14171BB;
+        Wed, 29 Mar 2023 17:21:36 +0000 (UTC)
+From:   Mark Salter <msalter@redhat.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org
+Subject: [PATCH] dmaengine: tegra: explicitly select DMA_VIRTUAL_CHANNELS
+Date:   Wed, 29 Mar 2023 13:21:29 -0400
+Message-Id: <20230329172129.88403-1-msalter@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The K3 platforms configure the DMA resources with the
-help of the TI's System Firmware's Device Manager(DM)
-over TISCI. The group of DMA related Resource Manager[1]
-TISCI messages includes: INTA, RINGACC, UDMAP, and PSI-L.
-This configuration however, does not persist in the DM
-after leaving from Suspend-to-RAM state. We have to restore
-the DMA channel configuration over TISCI for all configured
-channels when returning from suspend.
+Enabling TEGRA186_GPC_DMA will cause this build failure unless some other
+DMA driver which uses DMA_VIRTUAL_CHANNELS is enabled:
 
-The TISCI resource management calls for each DMA type (UDMA,
-PKTDMA, BCDMA) happen in device_free_chan_resources() and
-device_alloc_chan_resources(). In pm_suspend() we store
-the current udma_chan_config for channels that still have
-attached clients and call device_free_chan_resources().
-In pm_resume() restore the udma_channel_config from backup
-and call device_alloc_chan_resources() for those channels.
+  ERROR: modpost: "vchan_dma_desc_free_list" [drivers/dma/tegra186-gpc-dma.ko] undefined!
+  ERROR: modpost: "vchan_init" [drivers/dma/tegra186-gpc-dma.ko] undefined!
+  ERROR: modpost: "vchan_tx_submit" [drivers/dma/tegra186-gpc-dma.ko] undefined!
+  ERROR: modpost: "vchan_tx_desc_free" [drivers/dma/tegra186-gpc-dma.ko] undefined!
+  ERROR: modpost: "vchan_find_desc" [drivers/dma/tegra186-gpc-dma.ko] undefined!
+  make[1]: *** [scripts/Makefile.modpost:136: Module.symvers] Error 1
 
-Drivers like CPSW that use k3-udma-glue already do their own
-DMA resource management so use the late system suspend/resume hooks.
+Add an explicit select of DMA_VIRTUAL_CHANNELS to avoid this.
 
-[1] https://software-dl.ti.com/tisci/esd/latest/2_tisci_msgs/index.html#resource-management-rm
-
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-[g-vlaev@ti.com: Add patch description and config backup]
-[g-vlaev@ti.com: Supend only channels with clients]
-Signed-off-by: Georgi Vlaev <g-vlaev@ti.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Signed-off-by: Mark Salter <msalter@redhat.com>
 ---
+ drivers/dma/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-RESEND v2:
-Collect Peter's ACK, reword commit msg to reflect glue layer state
-
-v2: https://lore.kernel.org/all/20221103203021.83929-1-g-vlaev@ti.com/
-
- drivers/dma/ti/k3-udma.c | 54 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
-
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 7e23a6fdef95..f652a217be76 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -305,6 +305,8 @@ struct udma_chan {
- 
- 	/* Channel configuration parameters */
- 	struct udma_chan_config config;
-+	/* Channel configuration parameters (backup) */
-+	struct udma_chan_config backup_config;
- 
- 	/* dmapool for packet mode descriptors */
- 	bool use_dma_pool;
-@@ -5522,11 +5524,63 @@ static int udma_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static int udma_pm_suspend(struct device *dev)
-+{
-+	struct udma_dev *ud = dev_get_drvdata(dev);
-+	struct dma_device *dma_dev = &ud->ddev;
-+	struct dma_chan *chan;
-+	struct udma_chan *uc;
-+
-+	list_for_each_entry(chan, &dma_dev->channels, device_node) {
-+		if (chan->client_count) {
-+			uc = to_udma_chan(chan);
-+			/* backup the channel configuration */
-+			memcpy(&uc->backup_config, &uc->config,
-+			       sizeof(struct udma_chan_config));
-+			dev_dbg(dev, "Suspending channel %s\n",
-+				dma_chan_name(chan));
-+			ud->ddev.device_free_chan_resources(chan);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int udma_pm_resume(struct device *dev)
-+{
-+	struct udma_dev *ud = dev_get_drvdata(dev);
-+	struct dma_device *dma_dev = &ud->ddev;
-+	struct dma_chan *chan;
-+	struct udma_chan *uc;
-+	int ret;
-+
-+	list_for_each_entry(chan, &dma_dev->channels, device_node) {
-+		if (chan->client_count) {
-+			uc = to_udma_chan(chan);
-+			/* restore the channel configuration */
-+			memcpy(&uc->config, &uc->backup_config,
-+			       sizeof(struct udma_chan_config));
-+			dev_dbg(dev, "Resuming channel %s\n",
-+				dma_chan_name(chan));
-+			ret = ud->ddev.device_alloc_chan_resources(chan);
-+			if (ret)
-+				return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops udma_pm_ops = {
-+	SET_LATE_SYSTEM_SLEEP_PM_OPS(udma_pm_suspend, udma_pm_resume)
-+};
-+
- static struct platform_driver udma_driver = {
- 	.driver = {
- 		.name	= "ti-udma",
- 		.of_match_table = udma_of_match,
- 		.suppress_bind_attrs = true,
-+		.pm = &udma_pm_ops,
- 	},
- 	.probe		= udma_probe,
- };
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index fb7073fc034f..f5f422f9b850 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -623,6 +623,7 @@ config TEGRA186_GPC_DMA
+ 	depends on (ARCH_TEGRA || COMPILE_TEST) && ARCH_DMA_ADDR_T_64BIT
+ 	depends on IOMMU_API
+ 	select DMA_ENGINE
++	select DMA_VIRTUAL_CHANNELS
+ 	help
+ 	  Support for the NVIDIA Tegra General Purpose Central DMA controller.
+ 	  The DMA controller has multiple DMA channels which can be configured
 -- 
-2.40.0
+2.39.2
 

@@ -2,173 +2,151 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BE2D6D50BA
-	for <lists+dmaengine@lfdr.de>; Mon,  3 Apr 2023 20:37:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BD946D52A1
+	for <lists+dmaengine@lfdr.de>; Mon,  3 Apr 2023 22:39:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231655AbjDCShc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 3 Apr 2023 14:37:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42654 "EHLO
+        id S232329AbjDCUjF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 3 Apr 2023 16:39:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232354AbjDCShc (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 3 Apr 2023 14:37:32 -0400
-Received: from aposti.net (aposti.net [89.234.176.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9308899;
-        Mon,  3 Apr 2023 11:37:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1680547048;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bnQrvEz/F0HtMo61MRMevGwpunBFI0o/+wdfXFhszQw=;
-        b=wmGIpaAeX3wlUIVZdWVbWY5RMVdmTF8B40N5sXTdehP85NEPptugaqHw+XJX2cPDclj4WM
-        atYeygViHa62jb9sd3JFz3XJkkiptTMr2M6qClT8yr7YS7UCHzJiq2HgKhRuPR2z7rVKai
-        SbXDqG7PskUUFgyASdtczeEkdEVJmqg=
-Message-ID: <6a75a551b3ef3fc7cf9281db0b69167a570130c2.camel@crapouillou.net>
-Subject: Re: [PATCH v3 11/11] Documentation: iio: Document high-speed DMABUF
- based API
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Vinod Koul <vkoul@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-doc@vger.kernel.org
-Date:   Mon, 03 Apr 2023 20:37:26 +0200
-In-Reply-To: <87zg7p7xz4.fsf@meer.lwn.net>
-References: <20230403154800.215924-1-paul@crapouillou.net>
-         <20230403154955.216148-1-paul@crapouillou.net>
-         <20230403154955.216148-2-paul@crapouillou.net>
-         <87zg7p7xz4.fsf@meer.lwn.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S232711AbjDCUjE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 3 Apr 2023 16:39:04 -0400
+Received: from smtp.smtpout.orange.fr (smtp-22.smtpout.orange.fr [80.12.242.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 06E1BE1
+        for <dmaengine@vger.kernel.org>; Mon,  3 Apr 2023 13:39:02 -0700 (PDT)
+Received: from [192.168.1.18] ([86.243.2.178])
+        by smtp.orange.fr with ESMTPA
+        id jQl2pODDfvQQZjQl2pwJMT; Mon, 03 Apr 2023 22:26:30 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+        s=t20230301; t=1680553590;
+        bh=i7Lyw2OrRszW29de0LtEKwp3rNTIdn65NavbOlZqjGI=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To;
+        b=ZnpuwGd7BBB5gPAgJ1Tqd2mAyIHerqjV+3Qib1/HF89S8O+iksWI+cPO+kHb3uSQa
+         svJRWuuDinFIFgWNhgX3aZzfQ6HckzEzQZa4R2N+DVI5DAX2dd3csvRfFR2CN0lDFm
+         3NseoekMVMrx0x5aBT95aVckSL8oA9r19/Fysn7bHhZwLxkhaELTEcvuBP+6yLDEzf
+         Xz++3R0LXVPSeDXVIJ3x7Wka78JLoiwdxx/cGTgVJGZLk6NB/y5jEfn4DjbZpR6rqR
+         nkj8o9JJuHDMksJmFOycVB2J7VWT5HeZpZ7akXRuya8ZO5m5p0fgiOWH94YiRh9EGG
+         SpQkRrVqoUaoA==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 03 Apr 2023 22:26:30 +0200
+X-ME-IP: 86.243.2.178
+Message-ID: <83cb23dd-9c42-b7fe-c859-c453556d1a27@wanadoo.fr>
+Date:   Mon, 3 Apr 2023 22:26:28 +0200
 MIME-Version: 1.0
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v2 1/1] dmaengine: switchtec-dma: Introduce Switchtec DMA
+ engine PCI driver
+Content-Language: fr
+To:     Kelvin Cao <kelvin.cao@microchip.com>, vkoul@kernel.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     logang@deltatee.com, george.ge@microchip.com
+References: <20230403180630.4186061-1-kelvin.cao@microchip.com>
+ <20230403180630.4186061-2-kelvin.cao@microchip.com>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20230403180630.4186061-2-kelvin.cao@microchip.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.2 required=5.0 tests=DKIM_INVALID,DKIM_SIGNED,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Jonathan,
+Le 03/04/2023 à 20:06, Kelvin Cao a écrit :
+> Some Switchtec Switches can expose DMA engines via extra PCI functions
+> on the upstream ports. At most one such function can be supported on
+> each upstream port. Each function can have one or more DMA channels.
+> 
+> Implement core PCI driver skeleton and register DMA engine callbacks.
+> 
+> Signed-off-by: Kelvin Cao <kelvin.cao@microchip.com>
+> Co-developed-by: George Ge <george.ge@microchip.com>
+> Signed-off-by: George Ge <george.ge@microchip.com>
+> ---
+>   MAINTAINERS                 |    5 +
+>   drivers/dma/Kconfig         |    9 +
+>   drivers/dma/Makefile        |    1 +
+>   drivers/dma/switchtec_dma.c | 1734 +++++++++++++++++++++++++++++++++++
+>   4 files changed, 1749 insertions(+)
+>   create mode 100644 drivers/dma/switchtec_dma.c
+> 
 
-Le lundi 03 avril 2023 =C3=A0 10:05 -0600, Jonathan Corbet a =C3=A9crit=C2=
-=A0:
-> Paul Cercueil <paul@crapouillou.net> writes:
->=20
-> One nit:
->=20
-> > Document the new DMABUF based API.
-> >=20
-> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > Cc: Jonathan Corbet <corbet@lwn.net>
-> > Cc: linux-doc@vger.kernel.org
-> >=20
-> > ---
-> > v2: - Explicitly state that the new interface is optional and is
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 not implemented by all drivers.
-> > =C2=A0=C2=A0=C2=A0 - The IOCTLs can now only be called on the buffer FD=
- returned
-> > by
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 IIO_BUFFER_GET_FD_IOCTL.
-> > =C2=A0=C2=A0=C2=A0 - Move the page up a bit in the index since it is co=
-re stuff
-> > and not
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 driver-specific.
-> > v3: Update the documentation to reflect the new API.
-> > ---
-> > =C2=A0Documentation/iio/dmabuf_api.rst | 59
-> > ++++++++++++++++++++++++++++++++
-> > =C2=A0Documentation/iio/index.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=
- 2 ++
-> > =C2=A02 files changed, 61 insertions(+)
-> > =C2=A0create mode 100644 Documentation/iio/dmabuf_api.rst
-> >=20
-> > diff --git a/Documentation/iio/dmabuf_api.rst
-> > b/Documentation/iio/dmabuf_api.rst
-> > new file mode 100644
-> > index 000000000000..4d70372c7ebd
-> > --- /dev/null
-> > +++ b/Documentation/iio/dmabuf_api.rst
-> > @@ -0,0 +1,59 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +High-speed DMABUF interface for IIO
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +1. Overview
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +The Industrial I/O subsystem supports access to buffers through a
-> > +file-based interface, with read() and write() access calls through
-> > the
-> > +IIO device's dev node.
-> > +
-> > +It additionally supports a DMABUF based interface, where the
-> > userspace
-> > +can attach DMABUF objects (externally created) to a IIO buffer,
-> > and
-> > +subsequently use them for data transfers.
-> > +
-> > +A userspace application can then use this interface to share
-> > DMABUF
-> > +objects between several interfaces, allowing it to transfer data
-> > in a
-> > +zero-copy fashion, for instance between IIO and the USB stack.
-> > +
-> > +The userspace application can also memory-map the DMABUF objects,
-> > and
-> > +access the sample data directly. The advantage of doing this vs.
-> > the
-> > +read() interface is that it avoids an extra copy of the data
-> > between the
-> > +kernel and userspace. This is particularly useful for high-speed
-> > devices
-> > +which produce several megabytes or even gigabytes of data per
-> > second.
-> > +It does however increase the userspace-kernelspace synchronization
-> > +overhead, as the DMA_BUF_SYNC_START and DMA_BUF_SYNC_END IOCTLs
-> > have to
-> > +be used for data integrity.
-> > +
-> > +2. User API
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +As part of this interface, three new IOCTLs have been added. These
-> > three
-> > +IOCTLs have to be performed on the IIO buffer's file descriptor,
-> > +obtained using the IIO_BUFFER_GET_FD_IOCTL() ioctl.
-> > +
-> > +``IIO_BUFFER_DMABUF_ATTACH_IOCTL(int)``
-> > +----------------------------------------------------------------
-> > +
-> > +Attach the DMABUF object, identified by its file descriptor, to
-> > the IIO
-> > +buffer. Returns zero on success, and a negative errno value on
-> > error.
->=20
-> Rather than abusing subsections, this would be better done as a
-> description list:
->=20
-> =C2=A0 IIO_BUFFER_DMABUF_ATTACH_IOCTL(int)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Attach the DMABUF object, identified by it=
-s file descriptor, to
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 the IIO buffer. Returns zero on success, a=
-nd a negative errno
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 value on error.
+Hi,
+just a few nit, should you find them useful.
 
-Noted, thanks.
+[...]
 
-Cheers,
--Paul
+> +static void switchtec_dma_process_desc(struct switchtec_dma_chan *swdma_chan)
+> +{
+> +	struct device *chan_dev = to_chan_dev(swdma_chan);
+> +	struct dmaengine_result res;
+> +	struct switchtec_dma_desc *desc;
+> +	struct switchtec_dma_hw_ce *ce;
+> +	__le16 phase_tag;
+> +	int tail;
+> +	int cid;
+> +	int se_idx;
+> +	u32 sts_code;
+> +	int i = 0;
+
+No need to init.
+
+[...]
+
+> +static int switchtec_dma_alloc_desc(struct switchtec_dma_chan *swdma_chan)
+> +{
+> +	struct switchtec_dma_dev *swdma_dev = swdma_chan->swdma_dev;
+> +	struct pci_dev *pdev;
+> +	struct chan_fw_regs __iomem *chan_fw = swdma_chan->mmio_chan_fw;
+> +	size_t size;
+> +	struct switchtec_dma_desc *desc;
+> +	int rc;
+> +	int i;
+> +
+> +	swdma_chan->head = swdma_chan->tail = 0;
+> +	swdma_chan->cq_tail = 0;
+> +
+> +	size = SWITCHTEC_DMA_SQ_SIZE * sizeof(*swdma_chan->hw_sq);
+> +	swdma_chan->hw_sq = dma_alloc_coherent(swdma_dev->dma_dev.dev, size,
+> +					       &swdma_chan->dma_addr_sq,
+> +					       GFP_KERNEL);
+> +	if (!swdma_chan->hw_sq) {
+> +		rc = -ENOMEM;
+> +		goto free_and_exit;
+> +	}
+> +
+> +	size = SWITCHTEC_DMA_CQ_SIZE * sizeof(*swdma_chan->hw_cq);
+> +	swdma_chan->hw_cq = dma_alloc_coherent(swdma_dev->dma_dev.dev, size,
+> +					       &swdma_chan->dma_addr_cq,
+> +					       GFP_KERNEL);
+> +	if (!swdma_chan->hw_cq) {
+> +		rc = -ENOMEM;
+> +		goto free_and_exit;
+> +	}
+> +
+> +	memset(swdma_chan->hw_cq, 0, size);
+
+The memory allocated with dma_alloc_coherent() is already zeroed.
+
+> +
+> +	/* reset host phase tag */
+> +	swdma_chan->phase_tag = 0;
+> +
+> +	size = sizeof(*swdma_chan->desc_ring);
+> +	swdma_chan->desc_ring = kcalloc(SWITCHTEC_DMA_RING_SIZE, size,
+> +					GFP_KERNEL);
+> +	if (!swdma_chan->desc_ring) {
+> +		rc = -ENOMEM;
+> +		goto free_and_exit;
+> +	}
+> +
+> +	memset(swdma_chan->desc_ring, 0, SWITCHTEC_DMA_RING_SIZE * size);
+
+This is already kcalloc()'ed.
+
+CJ

@@ -2,212 +2,158 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3F0D6D5B3F
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Apr 2023 10:54:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 964486D5C7A
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Apr 2023 11:57:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234146AbjDDIyf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 4 Apr 2023 04:54:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60136 "EHLO
+        id S233920AbjDDJ5e (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 4 Apr 2023 05:57:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233979AbjDDIy0 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Apr 2023 04:54:26 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on20618.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eab::618])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D381FF2;
-        Tue,  4 Apr 2023 01:54:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LAr0NqjBBUdxmcNjJaGPpw0L6ZL5F9siziHT6zJDU40buuEcHQVaLTWjA8YrDPXUasbYDTJcNtySbJsKvRhJbFIEiq6C7swwH5V1pCDyfemWjQ+h091RZff2HeKcgOvCLhKru1Bk1ea23NdTFvMvGapEMSL0mOICBAWIn8CBUYM4Gv/LTRJj3i5r/P1bB9GagUFbo/URGdQPGL0eop/tkCrSRLkyXdJZTohLLOPZmAfzgyNYftj3FRKCqJjnJYAUC5oUjBilr6ZTfMu+2T+sBnPwOoF7FuPmb9+i4v60TlzfALfOIYNGaauXofHKdWNxK8jFL31Drbdf3To08quJ3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8FAOgb0ZuQYpU1C9FVOQOQ/sS2a+fKHxaC/jUDzvyZE=;
- b=UZ9bUvZD8G+hRLH0xOcQDZDK67zwYJMsEPgnloP5CnnBxwJ54SZVvMbJm/kVgX6rdpiC8S8D0iVXynnUpJQZkiA1RC0IrZDOY6jRQR28TAisq9TsWKcB6EbaKyVmMr/HgH0GPByVavS06lik+Fm3Mr1sIY15U52loFhHGS8JcXAW+2yrEyHSujy5TSlAmW+XRR0C6/bpf13VxbYYmRkl6JTDvjJjWNdHyQ1i31gkLcfhVOWnkxK61ozBKrlIba5ZSRnEjFjjKRfJNnavj76g4dqmdtn7/teZbG/+8aJxeO3kg3ry0IaZN1kZJa22DWpZuLk457xdwzwS5NAJ3XuRaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8FAOgb0ZuQYpU1C9FVOQOQ/sS2a+fKHxaC/jUDzvyZE=;
- b=cUTxmSNdE8QpG+06zW9wf4ATjBOvwz9lctOQOH1baKwyofB9YZIVGaMeG6NWIpIpKFfhfURxDrmIPAxIT74OpRuYg2SkWoZGqBffSpUyt47/hbIFuKhyEJf9MId7Os0VLChm4Payuikz6nCAk3+8eZuCUFrb7H6G5NJvyfV3opA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3587.namprd12.prod.outlook.com (2603:10b6:408:43::13)
- by DM4PR12MB8521.namprd12.prod.outlook.com (2603:10b6:8:17e::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.33; Tue, 4 Apr
- 2023 08:54:19 +0000
-Received: from BN8PR12MB3587.namprd12.prod.outlook.com
- ([fe80::4624:dc39:943e:6ae]) by BN8PR12MB3587.namprd12.prod.outlook.com
- ([fe80::4624:dc39:943e:6ae%5]) with mapi id 15.20.6254.035; Tue, 4 Apr 2023
- 08:54:19 +0000
-Message-ID: <a83e960f-9a7f-95be-e00c-acd94a967e1b@amd.com>
-Date:   Tue, 4 Apr 2023 10:54:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v3 01/11] dmaengine: Add API function
- dmaengine_prep_slave_dma_array()
-Content-Language: en-US
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Hillf Danton <hdanton@sina.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Vinod Koul <vkoul@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        =?UTF-8?Q?Nuno_S=c3=a1?= <noname.nuno@gmail.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-References: <20230403154800.215924-1-paul@crapouillou.net>
- <20230404015944.502-1-hdanton@sina.com>
- <c9c9fa881aeda36862d0ad8c5a46472e0e363531.camel@crapouillou.net>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-In-Reply-To: <c9c9fa881aeda36862d0ad8c5a46472e0e363531.camel@crapouillou.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR0P281CA0072.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:49::9) To BN8PR12MB3587.namprd12.prod.outlook.com
- (2603:10b6:408:43::13)
+        with ESMTP id S233561AbjDDJ5d (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Apr 2023 05:57:33 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82CCC268E
+        for <dmaengine@vger.kernel.org>; Tue,  4 Apr 2023 02:57:32 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id p3-20020a17090a74c300b0023f69bc7a68so33371854pjl.4
+        for <dmaengine@vger.kernel.org>; Tue, 04 Apr 2023 02:57:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=igel-co-jp.20210112.gappssmtp.com; s=20210112; t=1680602252;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8EeJ3Vg/hflzXly6UJfLnp/sYv8Ula1ty7RMpEhQjsE=;
+        b=DZcbyLkyTGTTuO+N7pa4ARwCTRNuL4ybs38LCUxl4HjBDH9eqjR2F0nnTnp1HWGEfc
+         PhRf8bwSKXhOdsUKHc9TxrsB5fNYFMJtf08rWMZhxTVbBRsp71RfQ4+6Ye1omj+dPl4/
+         SNS0NCBcfN3EOdGTJjny3/JDM2TZ/qHzsfDC3ASKsNYrR+VAZmbZd8gqmJ1D7hZUiYBj
+         y/NqILXWJo+WPf7Fv7k5SH72D5y39NCvUOIRvrbjST8TvSWka2VANi3vardpQuZQF+rc
+         BX132iwtB4VLe04nL1nzS6OdsrgWQ5BSA5vOt+Y0Dr1j0WT9LV2DWp1C6KtYOZqFczTL
+         6g4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680602252;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8EeJ3Vg/hflzXly6UJfLnp/sYv8Ula1ty7RMpEhQjsE=;
+        b=LopjB+8OEno7Hk+wfkvCri4ee9zuUptFaIAD7cgVP2uX8vbllWZ3TEXu6ij3F6dnDx
+         dDmTSaW0an9c7mCIbLOSaeUFVEAZWcbRpZmNzWPyAXgPs9mqKDagIYKtzBDjcCgjaZrb
+         2E+9GV27R5j3Ntot7RE8dACY/iEc39Tdt+9+ZrMz1fJ+ds2cnj4AZcQ/Wn/MkasFE6R0
+         lsizE2c7Lf2XozgBPwXTnQE2k6wmaATUPE23aeC5kqyIcE+KwGdPSGBluyXbqXNeQTTl
+         3Qw2ciU1N5khUE4Hrao2e9klcRZ1n1zgEZSz91qgPSfP9PdbarPBzUBi7bVdLSbv6sun
+         rhUw==
+X-Gm-Message-State: AAQBX9cWJLgQWwK4t9ziz4mh5+kMqSaXi9Ah1Hvix71qUKFbd7PqLfZL
+        DI3wY+8iThUn3LJfHMzvuu4mdg==
+X-Google-Smtp-Source: AKy350YRiaOikp91648dDob3kng7cepINTfluG5WzInZqWo8yO2jZPLEMXzTjVgP71gtXNDkoKdSOg==
+X-Received: by 2002:a17:90b:3e89:b0:237:ae7c:15be with SMTP id rj9-20020a17090b3e8900b00237ae7c15bemr2086527pjb.30.1680602251950;
+        Tue, 04 Apr 2023 02:57:31 -0700 (PDT)
+Received: from [10.16.161.199] (napt.igel.co.jp. [219.106.231.132])
+        by smtp.gmail.com with ESMTPSA id iy5-20020a170903130500b0019e81c8fd01sm8005079plb.249.2023.04.04.02.57.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Apr 2023 02:57:31 -0700 (PDT)
+Message-ID: <79357547-d32d-9916-074d-37354d4016c3@igel.co.jp>
+Date:   Tue, 4 Apr 2023 18:57:27 +0900
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3587:EE_|DM4PR12MB8521:EE_
-X-MS-Office365-Filtering-Correlation-Id: 59bc0b0c-c1dd-4320-9645-08db34ea2d5c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mOwncSXMbBBXBVLiitG2czFxR0U6DRyO7EDrYtew12m0UzI5D0vHEqlIID8pDm+RUnXU5gNJ0sfPLNTosi9GKozos/anXovbUpk5Bm16RuanXMKWllbWclIL9qXMyACvX5354CFdS3M1vFQXAZ+atwq692KIicc5er8adubVfdiF+Ntw9ldK7LnZYg/v+iRdU1bgMDKdGS29hRs1sm/yvW0d4Bk+vWm4sSbN9a2SkG/NKXiPTGUXLAnFsTwwDDf2VPVuO6L3WMSQgCoOa1WbbgFk1BrFqmP+sqd1UMn5dZC6x1YrRu60UCIzBLiQa+xOtNksid0v5su+qMFWC70aw/JZDCZ415IaMq+7QyErek5goWRYwVYNFQ2AHWyp8JcQst9kh7c/wLJbeC0HZEfZycGTcvhwekeHzVCsZNengJ1kDkEKT/u+e2w9AyaapqhOPZjAaHceg9C9OF8zp5UkX7LdU0BISLjGhbmAw1jrBpS17Fn+CuMgzS3CBKoJd15cBoRTJp+hRrj0unWxH2M2Ks93F0MDze9Ch30HEjqPMop82KXNVc40IRcOhX+QYp4Rs6fQXhpV37tQ/iqmoqoqjeECwja42yG89Qb8l+136h42wJxpLcQRjevid4XZ/9p7MN+3R8wQQotJkVxADMom3A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3587.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(136003)(366004)(376002)(39860400002)(396003)(451199021)(38100700002)(5660300002)(7416002)(2616005)(31696002)(54906003)(6506007)(316002)(110136005)(6486002)(186003)(6666004)(478600001)(86362001)(26005)(6512007)(36756003)(4326008)(8676002)(41300700001)(8936002)(66946007)(66476007)(66556008)(31686004)(2906002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NWZXYVczcXdEWmJQaFpXODhyaTFiN2VXVlRyYldiK1RNb1hpNmcxZjhrcWNG?=
- =?utf-8?B?NzVCckhzQzhjTjluQ0lOZG5takZ4b09mOVVuOG9adm8zRGxVK2ZpK0h4QUdP?=
- =?utf-8?B?UXovUVVsS1hrM3h1TW1HUFJLVzFyYlhpbHMwUUd4YWV2T3pmbVQyU00vMVQ4?=
- =?utf-8?B?aVJEa0Nkdk9ueTBORW1WNkVFMVFWbzhBYWJTdGE3cUl6b0o3Qi9oZ3J4OTBo?=
- =?utf-8?B?b016WG1hTERHZ0FrYm0vQ3VlMDNCZkRSTjhTbWwraSt2UFNnV1JLZjlaaFk1?=
- =?utf-8?B?ZTllNlNoU2VBRThZMy9oRjN2WDJmOXdDWmdBOUJPeWVrS0JhREZjUDEzRU9K?=
- =?utf-8?B?eUE4QXRoenJPOGFpTjV6Ly94MGE3RnZBdFA0dEFyRGFsN0FJT2JRLy9PaWM5?=
- =?utf-8?B?QWdBajVLWTUzR045Sk8rbVR3bVJ4eVU2dDNXaUdtaCtSRHlWRk5LR0kwMUpR?=
- =?utf-8?B?dHc1SkZORXFaS0N0SFoydU43dk1rdENEeFdRcGg5a2VqWXlpSUgvNGtpSS81?=
- =?utf-8?B?UVdyOTFUbTZ4MHRNakxseEJmdHJ4NjY1eGZiSS8xcVQvRHlydUN4QUdmSlJM?=
- =?utf-8?B?YnQreHdkQUV4ZTl1V200Zi9WcVVPN2VIYVB1TzlhZ09DSC9QdHA4WkdqYmdl?=
- =?utf-8?B?c3ZIOXZhNThOTTBSTlNBNi91Y2k0eWJZT3pJdUl5REdDcElWVHB6UlNibUlM?=
- =?utf-8?B?OGtXSFBWandDR0xLS2lROXBRckxROW1na3d1bktEOFR0RVdDWmk5aXNyVGww?=
- =?utf-8?B?dTNTanJlUUVLcmhrRzg5NEllRGQ4NHBXOERTQ2NaTFBocEFwYTU1SlVqMm5T?=
- =?utf-8?B?YVlMY1V0L2RFb1BhK2tzV1o5OE9BVWJySVlUYmVxOGVJRnF0eU9NSWRDczVN?=
- =?utf-8?B?cFV4QW5uVlF5Zis5MFFQUmM5MkdlR3R4a0N6aHJjdTJNaWJrMnAvQ0NuT2h0?=
- =?utf-8?B?QXNuWFRNeE9Nc2srT2g1cDhKcnkxcCtZUGlRbnFVWXhSOUtaeFJwSUxieVRE?=
- =?utf-8?B?TC9Nejd2Uk9Eak9QeXdaRkZ3a2tmb1UwaUlGclFvSzYvUHVDazhEY2lFa1Rr?=
- =?utf-8?B?ZzdXT1ZTd3hBcWQ4bUNhNjZmL3pQbTUySXYxK1NzK0lkTnk2cmRacG56Y0pW?=
- =?utf-8?B?cVlhWEE2VzZiL1pNN3AvUXM5NUdVUGlPeVpoQ1VCbVZxNGdTSzRGVnl5Tzhz?=
- =?utf-8?B?S0FTM1hqZmY2RnBheVczYTM0MkhOdU4wQXptQk53ZzNSMG0wTlNjUGErMzFT?=
- =?utf-8?B?cE51MXpmb0t1S2NReE44aUFGNFJWL2lvSUNGK2YwM2pmS2xaSnE1Tlg0QjZD?=
- =?utf-8?B?VkY4Vm85UVQ2dUtpRXh0d0NkTkYyZWNxYytiOGp2cXNkY0JOV2MxQXBLdGZ0?=
- =?utf-8?B?SjBXQXQveExHNnlXRFU2VmFjaHBnNkhtTGlyZnNUbzdFNUFOTjN2U2w1SXRM?=
- =?utf-8?B?YU16QjNWcS9nTzRqS0YwcEJzbXg2TDJBQnVmekdldm80QTErdnRZUE9nVnNl?=
- =?utf-8?B?dm5RbUwwemtmd1oxaUpaZkNCaVJtUC92UnJ2NTNyS3NmL0VBR0t6WDA5VmRa?=
- =?utf-8?B?WTVLN0R5UjVvNnVDdzNmRXJUNGtqY2FveW9kaU5XTGI5T1FBQ1hOeUFXcVNr?=
- =?utf-8?B?bXNQNU1zT3BiZVZUTmxpTldVOE5Ka1VWQUFvYklmZkYvdXBzaGVWYkhtdGFH?=
- =?utf-8?B?WkxzMU5ZSFgxOFpJRTZCSm5ERXJwc2pORk5iVGZSeHpZUHJhSy9JellMUW1C?=
- =?utf-8?B?T1pKcWw0Q1h0d00xWTZsZC9pai93Z1EvcjhJb3ZTaGRnQ3JJZk00c3YyWmxH?=
- =?utf-8?B?dzdNVHdENFNOQWlOTmpYZ1g3dlF6VkNIdXJJcHpUeE5TMXpTUDM4VlNNNUpU?=
- =?utf-8?B?aTVGV256OFRuOTdTUmdhQkdBSXY3d3lLNHZoYzRUYWRNVzJ4aUNMYWxldGUy?=
- =?utf-8?B?Y2xNbFhqZEowc0huVmFZUThtQmk1M3IyMGZXTlYrUnpvSkFBbXVnSmwvczI4?=
- =?utf-8?B?ZU1jNjRDWDlTNUtIYjZsSGNoYkNpTkNoeitTOXk1dm9RSy8xMTZEZUlKdm9U?=
- =?utf-8?B?Z1dKMU5iNVBGK09vdlJPMTNuaEIzTDNCWnRUQTZIZFFCb2haK1JLb1hPRFZa?=
- =?utf-8?Q?WN0c=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59bc0b0c-c1dd-4320-9645-08db34ea2d5c
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3587.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2023 08:54:19.3579
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EFk3236ISv2jdvj8fTS1rwMIpheEma2zmSSDnareet4EN/BYTYcb07JgR6DGYARm
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8521
-X-Spam-Status: No, score=-1.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.9.0
+Subject: Re: [RFC PATCH 00/11] Introduce a test for continuous transfer
+Content-Language: en-US
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Frank Li <Frank.Li@nxp.com>, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20230317113238.142970-1-mie@igel.co.jp>
+ <20230331053850.GE4973@thinkpad>
+From:   Shunsuke Mie <mie@igel.co.jp>
+In-Reply-To: <20230331053850.GE4973@thinkpad>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Am 04.04.23 um 09:42 schrieb Paul Cercueil:
-> Hi Hillf,
->
-> Le mardi 04 avril 2023 à 09:59 +0800, Hillf Danton a écrit :
->> On 3 Apr 2023 17:47:50 +0200 Paul Cercueil <paul@crapouillou.net>
->>> This function can be used to initiate a scatter-gather DMA transfer
->>> where the DMA addresses and lengths are located inside arrays.
->>>
->>> The major difference with dmaengine_prep_slave_sg() is that it
->>> supports
->>> specifying the lengths of each DMA transfer; as trying to override
->>> the
->>> length of the transfer with dmaengine_prep_slave_sg() is a very
->>> tedious
->>> process. The introduction of a new API function is also justified
->>> by the
->>> fact that scatterlists are on their way out.
->> Given sg's wayout and conceptually iovec and kvec (in
->> include/linux/uio.h),
->> what you add should have been dma_vec to ease people making use of
->> it.
+
+On 2023/03/31 14:38, Manivannan Sadhasivam wrote:
+> On Fri, Mar 17, 2023 at 08:32:27PM +0900, Shunsuke Mie wrote:
+>> This patchset introduces testing through continuous transfer to the PCI
+>> endpoint tests. The purpose is to find bugs that may exist in the endpoint
+>> controller driver. This changes able to find bugs in the DW EDMA driver and
+>> this patchset includes the fix.
 >>
->>          struct dma_vec {
->>                  dma_addr_t      addr;
->>                  size_t          len;
->>          };
-> Well it's not too late ;)
-
-Yeah adding that is pretty much the job I have on my TODO list for quite 
-some time.
-
-I wouldn't mind if you start adding that and provide helper functions in 
-DMA-buf to convert from/to an sg_table.
-
-This way we can migrate the interface over to a new design over time.
-
-Regards,
-Christian.
-
->
-> Thanks for the feedback.
->
-> Cheers,
-> -Paul
->
->>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>>
->>> ---
->>> v3: New patch
->>> ---
->>>   include/linux/dmaengine.h | 16 ++++++++++++++++
->>>   1 file changed, 16 insertions(+)
->>>
->>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
->>> index c3656e590213..62efa28c009a 100644
->>> --- a/include/linux/dmaengine.h
->>> +++ b/include/linux/dmaengine.h
->>> @@ -912,6 +912,11 @@ struct dma_device {
->>>          struct dma_async_tx_descriptor
->>> *(*device_prep_dma_interrupt)(
->>>                  struct dma_chan *chan, unsigned long flags);
->>>   
->>> +       struct dma_async_tx_descriptor
->>> *(*device_prep_slave_dma_array)(
->>> +               struct dma_chan *chan, dma_addr_t *addrs,
->>> +               size_t *lengths, size_t nb,
->>> +               enum dma_transfer_direction direction,
->>> +               unsigned long flags);
->> Then the callback looks like
+>> This bug does not appear in the current tests because these synchronize to
+>> finish with every data transfer. However, the problem occurs with
+>> continuous DMA issuances. The continuous transfers are required to get high
+>> throughput and low latency. Therefore, the added tests will enable
+>> realistic transfer testing.
 >>
->>          struct dma_async_tx_descriptor *(*device_prep_slave_vec)(
->>                  struct dma_chan *chan,
->>                  struct dma_vec *vec,
->>                  int nvec,
->>                  enum dma_transfer_direction direction,
->>                  unsigned long flags);
+>> This patchset is divided into three parts:
+>> - Remove duplicated definitions and improve some code [1-6/11]
+>> - Add continuous transfer tests [7-9/11]
+>> - Fix for the DW EDMA driver bug [10,11/11]
+>>
+>> This patchset has beed tested on RCar Spidar that has dw pci edma chip.
+>>
+> If you want maintainers to review the patches separately, please remove the RFC
+> tag. Unless you are looking for some overall feedback about the approach.
+Got it.
+>
+> But we are in the process of migrating the existing test under tools to
+> Kselftest framework [1]. Until then, we cannot accept patches improving the
+> existing test code. So please respin the patches on top of the Kselftest patch
+> once it got posted. It's already due for some time :/
+I understood. I'll track the work of Kselftest migration.
+>
+> Also the subject should mention "PCI endpoint".
+Yes.
+>
+> - Mani
+>
+> [1] https://lore.kernel.org/all/20221007053934.5188-1-aman1.gupta@samsung.com/
+Thank you for your comments.
+>> Shunsuke Mie (11):
+>>    misc: pci_endpoint_test: Aggregate irq_type checking
+>>    misc: pci_endpoint_test: Remove an unused variable
+>>    pci: endpoint: function/pci-epf-test: Unify a range of time
+>>      measurement
+>>    PCI: endpoint: functions/pci-epf-test: Move common difinitions to
+>>      header file
+>>    MAINTAINERS: Add a header file for pci-epf-test
+>>    misc: pci_endpoint_test: Use a common header file between endpoint
+>>      driver
+>>    PCI: endpoint: functions/pci-epf-test: Extend the test for continuous
+>>      transfers
+>>    misc: pci_endpoint_test: Support a test of continuous transfer
+>>    tools: PCI: Add 'C' option to support continuous transfer
+>>    dmaengine: dw-edma: Fix to change for continuous transfer
+>>    dmaengine: dw-edma: Fix to enable to issue dma request on DMA
+>>      processing
+>>
+>>   MAINTAINERS                                   |   1 +
+>>   drivers/dma/dw-edma/dw-edma-core.c            |  30 ++-
+>>   drivers/misc/pci_endpoint_test.c              | 132 ++++--------
+>>   drivers/pci/endpoint/functions/pci-epf-test.c | 199 ++++++++----------
+>>   include/linux/pci-epf-test.h                  |  67 ++++++
+>>   include/uapi/linux/pcitest.h                  |   1 +
+>>   tools/pci/pcitest.c                           |  13 +-
+>>   7 files changed, 231 insertions(+), 212 deletions(-)
+>>   create mode 100644 include/linux/pci-epf-test.h
+>>
+>> -- 
+>> 2.25.1
+>>
+Best,
+
+Shunsuke.
 

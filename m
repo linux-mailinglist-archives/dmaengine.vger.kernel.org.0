@@ -2,190 +2,161 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 397176D5CC1
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Apr 2023 12:12:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F09CB6D5EE9
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Apr 2023 13:25:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234433AbjDDKMW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 4 Apr 2023 06:12:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42618 "EHLO
+        id S234792AbjDDLZv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 4 Apr 2023 07:25:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234383AbjDDKMS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Apr 2023 06:12:18 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F9072D72
-        for <dmaengine@vger.kernel.org>; Tue,  4 Apr 2023 03:12:00 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id qe8-20020a17090b4f8800b0023f07253a2cso33394777pjb.3
-        for <dmaengine@vger.kernel.org>; Tue, 04 Apr 2023 03:12:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=igel-co-jp.20210112.gappssmtp.com; s=20210112; t=1680603120;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=H1nFAdUtaNleNvdd4R9u83gwyhhW/N23uXd1WaMTM4U=;
-        b=syseZK3DkzUTu4rg9+gE6qvvj6nkt4Um45ZGqGK1w3ujhwuOfepRvk0YR7dYLzxOU8
-         CdCi8QeP0v0n1rqRzRvN312AW5p6AV7xa9e5gggxbZh4wt8QHtOrnme2BluEspcFyv+o
-         rCCL8n3v/vW6kofNuIFITWRyEfc07xCBJhqVKFcew2eAZsntybVtOP5Kb59iMY6yzAzD
-         Hbc1GUwymQvu7br9rT8i/sb8WUYoEY17Wwc2lv2uu0LJDw5i5wJSQx4sG3+0Cd40wgP6
-         Pv1xHnF4QS7Rfs2dxcKgat/Xu9N6dY4i33A+5E55dLFS7ijmJx1xLzkfd/x4Uh0q4XGl
-         7qUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680603120;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H1nFAdUtaNleNvdd4R9u83gwyhhW/N23uXd1WaMTM4U=;
-        b=Yoi3Qmps+pUg6Z0ZTUnJ6fOgFq50Yu0PrX5rh6vx26wYg2qx9YW1RN52wCJmEScZ4M
-         NPkdVKzp5SVs9Cx01xxnOBg6u5LjhQG+3o3Cj8CR4WfqWOTGUthOToSFhAxloGcK7DvF
-         QFH6jlrHVm0G0qroBR439+Em+dQm/FenNzdIFZcv/SHw1G1Gc7quvIEJ2rW4MOgP39fT
-         qxFVQUtqEKIJwH+cOAF9v2me98ctyL8+oimYrEZet2iVQ+XFuqmFObwtwBcluO9JsDqJ
-         V2xjdx3Z5pUKKeLYmGhdA0ms0/cTH5wWdPVFU8WkKms7MdimHcbXc3q684Jrlk4k3p3q
-         R6Yw==
-X-Gm-Message-State: AAQBX9esg+I14SlN0Dob6BNWmpjE9JX3AMNwoV5WjDcgbeKaVpeg6lv1
-        /g+wRVQyZQ8+h0pSAlHyS/7Aig==
-X-Google-Smtp-Source: AKy350Y+vvljfQnHEd/9uDjlC5EDRk7uFc/JYSTm09VsF7x/uh7AC1a4zTjCjeYUdCxWBgayofcOhw==
-X-Received: by 2002:a17:902:d193:b0:1a2:73d8:5a87 with SMTP id m19-20020a170902d19300b001a273d85a87mr1760672plb.5.1680603119682;
-        Tue, 04 Apr 2023 03:11:59 -0700 (PDT)
-Received: from [10.16.161.199] (napt.igel.co.jp. [219.106.231.132])
-        by smtp.gmail.com with ESMTPSA id az3-20020a170902a58300b001a281063ab4sm8014999plb.233.2023.04.04.03.11.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Apr 2023 03:11:59 -0700 (PDT)
-Message-ID: <2a4e0f94-4766-8db1-c648-e72b1f7924fa@igel.co.jp>
-Date:   Tue, 4 Apr 2023 19:11:55 +0900
+        with ESMTP id S234712AbjDDLZu (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Apr 2023 07:25:50 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 448241FEF;
+        Tue,  4 Apr 2023 04:25:49 -0700 (PDT)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1pjenL-0005Zk-3U; Tue, 04 Apr 2023 13:25:47 +0200
+Message-ID: <1473b364-777a-ede8-3ff6-36d9e1d577ad@leemhuis.info>
+Date:   Tue, 4 Apr 2023 13:25:46 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.9.0
-Subject: Re: [EXT] [RFC PATCH 06/11] misc: pci_endpoint_test: Use a common
- header file between endpoint driver
-Content-Language: en-US
-To:     Frank Li <frank.li@nxp.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-References: <20230317113238.142970-1-mie@igel.co.jp>
- <20230317113238.142970-7-mie@igel.co.jp>
- <AM6PR04MB4838D8F8AF23C61048BDFB9788BD9@AM6PR04MB4838.eurprd04.prod.outlook.com>
-From:   Shunsuke Mie <mie@igel.co.jp>
-In-Reply-To: <AM6PR04MB4838D8F8AF23C61048BDFB9788BD9@AM6PR04MB4838.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: dmaengine: at_hdmac: Regression regarding rs485 via dma in v5.4
+Content-Language: en-US, de-DE
+To:     tudor.ambarus@microchip.com
+References: <CADBnMvj93bSO=+wU4=pLTgONV7w_hhecxQHAc_YS4P4GaqMNrA@mail.gmail.com>
+From:   "Linux regression tracking (Thorsten Leemhuis)" 
+        <regressions@leemhuis.info>
+Cc:     Linux kernel regressions list <regressions@lists.linux.dev>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kristof Havasi <havasiefr@gmail.com>,
+        dmaengine@vger.kernel.org, Peter Rosin <peda@axentia.se>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CADBnMvj93bSO=+wU4=pLTgONV7w_hhecxQHAc_YS4P4GaqMNrA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680607549;38fe22e1;
+X-HE-SMSGID: 1pjenL-0005Zk-3U
+X-Spam-Status: No, score=-1.9 required=5.0 tests=NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+[Adding a few pople to the list of recipients that were involved in
+developing the culprit; also CCing the regression list, as it should be
+in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-On 2023/03/17 23:47, Frank Li wrote:
->> pci@vger.kernel.org
->> Subject: [EXT] [RFC PATCH 06/11] misc: pci_endpoint_test: Use a common
->> header file between endpoint driver
->>
->> Caution: EXT Email
->>
->> Duplicated definitions between pci-epf-test and pci_endpoint_test are
->> already moved to a header file. Remove the common definitions and include
->> the header file. In addition, the separate register address writes were
->> combined into a single write.
->>
->> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
->> ---
->>   drivers/misc/pci_endpoint_test.c | 42 +-------------------------------
->>   1 file changed, 1 insertion(+), 41 deletions(-)
->>
->> diff --git a/drivers/misc/pci_endpoint_test.c
->> b/drivers/misc/pci_endpoint_test.c
->> index 55733dee95ad..d4a42e9ab86a 100644
->> --- a/drivers/misc/pci_endpoint_test.c
->> +++ b/drivers/misc/pci_endpoint_test.c
->> @@ -22,52 +22,12 @@
->>   #include <linux/pci_ids.h>
->>
->>   #include <linux/pci_regs.h>
->> +#include <linux/pci-epf-test.h>
-> Pci-epf-test.h was only used by these two files.
->
-> Actually, I think move  drivers/misc/pci_endpoint_test.c to under drivers/pci/endpoint/functions/
-> And shared one private header is more reasonable.
-> These two files should be stay together because tight coupling.
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
 
-I agree that the shared header is not reasonable. However, it seems 
-difficult to move pci_endpoint_test.c
+On 29.03.23 16:31, Kristof Havasi wrote:
+> 
+> I was rebasing the Kernel branch of our SAMA5D35 based board from
+> v5.4.189 to v5.4.238.
+> I noticed that after the rebase we could _only send, but not receive_
+> through our RS485 interface.
+> 
+> I could bisect the problem to 77b97ef4908aa917e7b68667ec6b344cc5dc5034
+> in the v5.4.225 release. 
 
-because it is not an endpoint function driver. Furthermore, since 
-Kselftest adaption [1] is being worked
+FWIW, that's 7176a6a8982d ("dmaengine: at_hdmac: Don't start
+transactions at tx_submit level") in mainline.
 
-on, I'd like to reconsider how we can apply the Kselftest patch.
+Kristof Havasi: would be good to know if this is something that happens
+with recent mainline as well, because if not it might be something the
+stable team needs to handle.
 
-[1] 
-https://lore.kernel.org/all/20221007053934.5188-1-aman1.gupta@samsung.com/
+> If I revert this commit, the tx/rx works just
+> like before.
+> Maybe this use-case wasn't considered when this patch was created?
+> I haven't seen a documentation change regarding this in DT bindings,
+> but if the config should be something else, please let me know.
+> Otherwise this commit breaks the RS485 function of atmel_serial at
+> least in the v5.4.y branch.
+> 
+> Best Regards,
+> Kristóf Havasi
+> 
+> The relevant device tree nodes:
+> 
+> from sama5d3.dtsi:
+> 
+> usart1: serial@f0020000 {
+>   compatible = "atmel,at91sam9260-usart";
+>   reg = <0xf0020000 0x100>;
+>   interrupts = <13 IRQ_TYPE_LEVEL_HIGH 5>;
+>   dmas = <&dma0 2 AT91_DMA_CFG_PER_ID(5)>,
+>   <&dma0 2 (AT91_DMA_CFG_PER_ID(6) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
+>   dma-names = "tx", "rx";
+>   pinctrl-names = "default";
+>   pinctrl-0 = <&pinctrl_usart1>;
+>   clocks = <&usart1_clk>;
+>   clock-names = "usart";
+>   status = "disabled";
+> };
+> 
+> pinctrl_usart1: usart1-0 {
+>   atmel,pins =
+>   <AT91_PIOB 28 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+>    AT91_PIOB 29 AT91_PERIPH_A AT91_PINCTRL_NONE>;
+> };
+> pinctrl_usart1_rts_cts: usart1_rts_cts-0 {
+>   atmel,pins =
+>   <AT91_PIOB 26 AT91_PERIPH_A AT91_PINCTRL_NONE /* PB26 periph A,
+> conflicts with GRX7 */
+>    AT91_PIOB 27 AT91_PERIPH_A AT91_PINCTRL_NONE>; /* PB27 periph A,
+> conflicts with G125CKO */
+> };
+> 
+> from our dts:
+> 
+> &usart1 {
+>   pinctrl-0 = <&pinctrl_usart1 &pinctrl_usart1_rts_cts>;
+>   atmel,use-dma-rx;
+>   atmel,use-dma-tx;
+>   rs485-rx-during-tx;
+>   linux,rs485-enabled-at-boot-time;
+>   status = "okay";
+> };
+> 
+> HW:
+> The SAMA5D3's PB27 is connected to the |RE+DE of the RS485 transceiver
+> SP3458EN-L
 
->
->>   #include <uapi/linux/pcitest.h>
->>
->>   #define DRV_MODULE_NAME                                "pci-endpoint-test"
->>
->> -#define IRQ_TYPE_UNDEFINED                     -1
->> -#define IRQ_TYPE_LEGACY                                0
->> -#define IRQ_TYPE_MSI                           1
->> -#define IRQ_TYPE_MSIX                          2
->> -
->> -#define PCI_ENDPOINT_TEST_MAGIC                        0x0
->> -
->> -#define PCI_ENDPOINT_TEST_COMMAND              0x4
->> -#define COMMAND_RAISE_LEGACY_IRQ               BIT(0)
->> -#define COMMAND_RAISE_MSI_IRQ                  BIT(1)
->> -#define COMMAND_RAISE_MSIX_IRQ                 BIT(2)
->> -#define COMMAND_READ                           BIT(3)
->> -#define COMMAND_WRITE                          BIT(4)
->> -#define COMMAND_COPY                           BIT(5)
->> -
->> -#define PCI_ENDPOINT_TEST_STATUS               0x8
->> -#define STATUS_READ_SUCCESS                    BIT(0)
->> -#define STATUS_READ_FAIL                       BIT(1)
->> -#define STATUS_WRITE_SUCCESS                   BIT(2)
->> -#define STATUS_WRITE_FAIL                      BIT(3)
->> -#define STATUS_COPY_SUCCESS                    BIT(4)
->> -#define STATUS_COPY_FAIL                       BIT(5)
->> -#define STATUS_IRQ_RAISED                      BIT(6)
->> -#define STATUS_SRC_ADDR_INVALID                        BIT(7)
->> -#define STATUS_DST_ADDR_INVALID                        BIT(8)
->> -
->> -#define PCI_ENDPOINT_TEST_LOWER_SRC_ADDR       0x0c
->> -#define PCI_ENDPOINT_TEST_UPPER_SRC_ADDR       0x10
->> -
->> -#define PCI_ENDPOINT_TEST_LOWER_DST_ADDR       0x14
->> -#define PCI_ENDPOINT_TEST_UPPER_DST_ADDR       0x18
->> -
->> -#define PCI_ENDPOINT_TEST_SIZE                 0x1c
->> -#define PCI_ENDPOINT_TEST_CHECKSUM             0x20
->> -
->> -#define PCI_ENDPOINT_TEST_IRQ_TYPE             0x24
->> -#define PCI_ENDPOINT_TEST_IRQ_NUMBER           0x28
->> -
->> -#define PCI_ENDPOINT_TEST_FLAGS                        0x2c
->> -#define FLAG_USE_DMA                           BIT(0)
->> -
->>   #define PCI_DEVICE_ID_TI_AM654                 0xb00c
->>   #define PCI_DEVICE_ID_TI_J7200                 0xb00f
->>   #define PCI_DEVICE_ID_TI_AM64                  0xb010
->> --
->> 2.25.1
 
-Best,
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-Shunsuke.
+#regzbot ^introduced 77b97ef4908aa
+#regzbot title dmaengine: at_hdmac: receiving data through the RS485
+interface broke
+#regzbot ignore-activity
 
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.

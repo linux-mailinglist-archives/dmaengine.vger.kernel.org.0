@@ -2,161 +2,87 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F09CB6D5EE9
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Apr 2023 13:25:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CABAC6D62AC
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Apr 2023 15:23:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234792AbjDDLZv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 4 Apr 2023 07:25:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56982 "EHLO
+        id S234341AbjDDNXA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 4 Apr 2023 09:23:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234712AbjDDLZu (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Apr 2023 07:25:50 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 448241FEF;
-        Tue,  4 Apr 2023 04:25:49 -0700 (PDT)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1pjenL-0005Zk-3U; Tue, 04 Apr 2023 13:25:47 +0200
-Message-ID: <1473b364-777a-ede8-3ff6-36d9e1d577ad@leemhuis.info>
-Date:   Tue, 4 Apr 2023 13:25:46 +0200
+        with ESMTP id S234887AbjDDNW7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Apr 2023 09:22:59 -0400
+Received: from www381.your-server.de (www381.your-server.de [78.46.137.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F4A115;
+        Tue,  4 Apr 2023 06:22:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+        s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID;
+        bh=KS/PAoriGWh0QOffAFISIzaXM+OMfc5TD47VKbQqGh4=; b=TUkvrOCa+EQWog7XwVqSljA8HD
+        qs2uTEGpr2nmASxWKFA1vB2Poh7nyFNj9w113QvxnlY4tvxhsqQrxoawdCD+od0ySVNeXsqFy4n/2
+        xN6eIdhOYuaq2NIb+WxMh7ji1niYAtbXtxi2rwSnmoJoX6zYA4tUeYPjTDsB4DAA2WqtTUsd7Z2V3
+        RzKDrAnDsG9wF57PofWXZXvYGQlwAQpuNtcQY9AVARJSbzI+L7nCHVRvUSPqc1UzD/ruTSJGDJu8+
+        7iUzG8xnoqjZxlDbVFmxCRzWhp85EjGK/W0E2LUhIlWifeS/8ATIx7/eW3GFWoN6562CF6JaPr/rp
+        EVd7tMug==;
+Received: from sslproxy04.your-server.de ([78.46.152.42])
+        by www381.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <lars@metafoo.de>)
+        id 1pjgch-0008PQ-BV; Tue, 04 Apr 2023 15:22:55 +0200
+Received: from [2604:5500:c0e5:eb00:da5e:d3ff:feff:933b]
+        by sslproxy04.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1pjgcg-0003TQ-Ou; Tue, 04 Apr 2023 15:22:54 +0200
+Message-ID: <370bccc6-e418-a05f-2c3b-6a17b02392a2@metafoo.de>
+Date:   Tue, 4 Apr 2023 06:22:50 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: dmaengine: at_hdmac: Regression regarding rs485 via dma in v5.4
-Content-Language: en-US, de-DE
-To:     tudor.ambarus@microchip.com
-References: <CADBnMvj93bSO=+wU4=pLTgONV7w_hhecxQHAc_YS4P4GaqMNrA@mail.gmail.com>
-From:   "Linux regression tracking (Thorsten Leemhuis)" 
-        <regressions@leemhuis.info>
-Cc:     Linux kernel regressions list <regressions@lists.linux.dev>,
-        LKML <linux-kernel@vger.kernel.org>,
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v3 07/11] iio: core: Add new DMABUF interface
+ infrastructure
+Content-Language: en-US
+To:     Paul Cercueil <paul@crapouillou.net>,
+        =?UTF-8?Q?Nuno_S=c3=a1?= <noname.nuno@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
-        Kristof Havasi <havasiefr@gmail.com>,
-        dmaengine@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CADBnMvj93bSO=+wU4=pLTgONV7w_hhecxQHAc_YS4P4GaqMNrA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        dmaengine@vger.kernel.org, linux-media@vger.kernel.org
+References: <20230403154800.215924-1-paul@crapouillou.net>
+ <20230403154800.215924-8-paul@crapouillou.net>
+ <798e1ff0651da8e4b113d30bf8cec2a7a0e6898f.camel@gmail.com>
+ <2dac030470ffe74b6d21a1e6510afcefaf58cd6a.camel@crapouillou.net>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+In-Reply-To: <2dac030470ffe74b6d21a1e6510afcefaf58cd6a.camel@crapouillou.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1680607549;38fe22e1;
-X-HE-SMSGID: 1pjenL-0005Zk-3U
-X-Spam-Status: No, score=-1.9 required=5.0 tests=NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.103.8/26865/Tue Apr  4 09:24:56 2023)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-[Adding a few pople to the list of recipients that were involved in
-developing the culprit; also CCing the regression list, as it should be
-in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
-
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 29.03.23 16:31, Kristof Havasi wrote:
-> 
-> I was rebasing the Kernel branch of our SAMA5D35 based board from
-> v5.4.189 to v5.4.238.
-> I noticed that after the rebase we could _only send, but not receive_
-> through our RS485 interface.
-> 
-> I could bisect the problem to 77b97ef4908aa917e7b68667ec6b344cc5dc5034
-> in the v5.4.225 release. 
-
-FWIW, that's 7176a6a8982d ("dmaengine: at_hdmac: Don't start
-transactions at tx_submit level") in mainline.
-
-Kristof Havasi: would be good to know if this is something that happens
-with recent mainline as well, because if not it might be something the
-stable team needs to handle.
-
-> If I revert this commit, the tx/rx works just
-> like before.
-> Maybe this use-case wasn't considered when this patch was created?
-> I haven't seen a documentation change regarding this in DT bindings,
-> but if the config should be something else, please let me know.
-> Otherwise this commit breaks the RS485 function of atmel_serial at
-> least in the v5.4.y branch.
-> 
-> Best Regards,
-> Kristóf Havasi
-> 
-> The relevant device tree nodes:
-> 
-> from sama5d3.dtsi:
-> 
-> usart1: serial@f0020000 {
->   compatible = "atmel,at91sam9260-usart";
->   reg = <0xf0020000 0x100>;
->   interrupts = <13 IRQ_TYPE_LEVEL_HIGH 5>;
->   dmas = <&dma0 2 AT91_DMA_CFG_PER_ID(5)>,
->   <&dma0 2 (AT91_DMA_CFG_PER_ID(6) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
->   dma-names = "tx", "rx";
->   pinctrl-names = "default";
->   pinctrl-0 = <&pinctrl_usart1>;
->   clocks = <&usart1_clk>;
->   clock-names = "usart";
->   status = "disabled";
-> };
-> 
-> pinctrl_usart1: usart1-0 {
->   atmel,pins =
->   <AT91_PIOB 28 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
->    AT91_PIOB 29 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-> };
-> pinctrl_usart1_rts_cts: usart1_rts_cts-0 {
->   atmel,pins =
->   <AT91_PIOB 26 AT91_PERIPH_A AT91_PINCTRL_NONE /* PB26 periph A,
-> conflicts with GRX7 */
->    AT91_PIOB 27 AT91_PERIPH_A AT91_PINCTRL_NONE>; /* PB27 periph A,
-> conflicts with G125CKO */
-> };
-> 
-> from our dts:
-> 
-> &usart1 {
->   pinctrl-0 = <&pinctrl_usart1 &pinctrl_usart1_rts_cts>;
->   atmel,use-dma-rx;
->   atmel,use-dma-tx;
->   rs485-rx-during-tx;
->   linux,rs485-enabled-at-boot-time;
->   status = "okay";
-> };
-> 
-> HW:
-> The SAMA5D3's PB27 is connected to the |RE+DE of the RS485 transceiver
-> SP3458EN-L
-
-
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced 77b97ef4908aa
-#regzbot title dmaengine: at_hdmac: receiving data through the RS485
-interface broke
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+On 4/4/23 00:55, Paul Cercueil wrote:
+> [...]
+>>> +       priv = attach->importer_priv;
+>>> +       list_del_init(&priv->entry);
+>>> +
+>>> +       iio_buffer_dmabuf_put(attach);
+>>> +       iio_buffer_dmabuf_put(attach);
+>>> +
+>> Is this intended? Looks suspicious...
+> It is intended, yes. You want to release the dma_buf_attachment that's
+> created in iio_buffer_attach_dmabuf(), and you need to call
+> iio_buffer_find_attachment() to get a pointer to it, which also gets a
+> second reference - so it needs to unref twice.
+Let's add a comment documenting that.

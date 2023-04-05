@@ -2,34 +2,34 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9B296D7EB9
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Apr 2023 16:10:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 669C86D7EBC
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Apr 2023 16:11:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238407AbjDEOK4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 5 Apr 2023 10:10:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52272 "EHLO
+        id S238451AbjDEOLB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 5 Apr 2023 10:11:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238417AbjDEOKi (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Apr 2023 10:10:38 -0400
+        with ESMTP id S238488AbjDEOKm (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Apr 2023 10:10:42 -0400
 Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 23D2665B0;
-        Wed,  5 Apr 2023 07:10:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 685A06A68;
+        Wed,  5 Apr 2023 07:10:15 -0700 (PDT)
 X-IronPort-AV: E=Sophos;i="5.98,319,1673881200"; 
-   d="scan'208";a="158393604"
+   d="scan'208";a="158393613"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 05 Apr 2023 23:09:00 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 05 Apr 2023 23:09:04 +0900
 Received: from localhost.localdomain (unknown [10.226.93.81])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 9E85842D7816;
-        Wed,  5 Apr 2023 23:08:58 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 6EB3642D7816;
+        Wed,  5 Apr 2023 23:09:02 +0900 (JST)
 From:   Biju Das <biju.das.jz@bp.renesas.com>
 To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v2 2/5] dmaengine: sh: rz-dmac: Add device_tx_status() callback
-Date:   Wed,  5 Apr 2023 15:08:39 +0100
-Message-Id: <20230405140842.201883-3-biju.das.jz@bp.renesas.com>
+Subject: [PATCH v2 4/5] dmaengine: sh: rz-dmac: Trivial code clean-ups
+Date:   Wed,  5 Apr 2023 15:08:41 +0100
+Message-Id: <20230405140842.201883-5-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230405140842.201883-1-biju.das.jz@bp.renesas.com>
 References: <20230405140842.201883-1-biju.das.jz@bp.renesas.com>
@@ -43,220 +43,56 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add support for device_tx_status() callback as it is needed for
-RZ/G2L SCIFA driver.
+Some trivial code clean-ups for rz_dmac_lmdesc_recycle() and
+rz_dmac_prep_slave_sg().
 
-Based on a patch in the BSP by Long Luu similar to rcar-dmac
-<long.luu.ur@renesas.com>
+Drop unnecessary lmdesc invalidation in rz_dmac_lmdesc_recycle()
+as the lmdesc is already invalidated.
+
+Drop redundant assignment of i to "0" and change the variable
+type of "i" to unsigned int to match with the variable type of sg_len
+in rz_dmac_prep_slave_sg(). While at it, Remove the braces around
+for_each_sg loop as it has a single statement.
 
 Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
-v1->v2:
- * Replaced the loop for->for_each_sg and dropped sgl and sg_len variables
-   from calculate_total_bytes_in_vd().
- * Updated commit description.
+v2:
+ * New patch.
 ---
- drivers/dma/sh/rz-dmac.c | 169 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 168 insertions(+), 1 deletion(-)
+ drivers/dma/sh/rz-dmac.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
-index 81e72529f7d3..aaaae1c090ad 100644
+index 3ef516aee4fc..153893045932 100644
 --- a/drivers/dma/sh/rz-dmac.c
 +++ b/drivers/dma/sh/rz-dmac.c
-@@ -108,10 +108,12 @@ struct rz_dmac {
-  * Registers
-  */
+@@ -253,7 +253,6 @@ static void rz_dmac_lmdesc_recycle(struct rz_dmac_chan *channel)
+ 	struct rz_lmdesc *lmdesc = channel->lmdesc.head;
  
-+#define CRTB				0x0020
- #define CHSTAT				0x0024
- #define CHCTRL				0x0028
- #define CHCFG				0x002c
- #define NXLA				0x0038
-+#define CRLA				0x003c
- 
- #define DCTRL				0x0000
- 
-@@ -650,6 +652,171 @@ static void rz_dmac_device_synchronize(struct dma_chan *chan)
- 	rz_dmac_set_dmars_register(dmac, channel->index, 0);
- }
- 
-+static unsigned int calculate_total_bytes_in_vd(struct rz_dmac_desc *desc)
-+{
-+	unsigned int i, size = 0;
-+	struct scatterlist *sg;
-+
-+	for_each_sg(desc->sg, sg, desc->sgcount, i)
-+		size += sg_dma_len(sg);
-+
-+	return size;
-+}
-+
-+static unsigned int calculate_residue_bytes_in_vd(struct rz_dmac_chan *channel)
-+{
-+	struct rz_lmdesc *lmdesc = channel->lmdesc.head;
-+	struct dma_chan *chan = &channel->vc.chan;
-+	struct rz_dmac *dmac = to_rz_dmac(chan->device);
-+	unsigned int residue = 0, i = 0;
-+	unsigned int crla;
-+
-+	/* get current lmdesc */
-+	crla = rz_dmac_ch_readl(channel, CRLA, 1);
-+	while (!(lmdesc->nxla == crla)) {
-+		lmdesc++;
-+		if (lmdesc >= (channel->lmdesc.base + DMAC_NR_LMDESC))
-+			lmdesc = channel->lmdesc.base;
-+		i++;
-+		/* Not found current lmdesc */
-+		if (i > DMAC_NR_LMDESC)
-+			return 0;
-+	}
-+
-+	/* Point to current processing lmdesc in hardware */
-+	lmdesc++;
-+	if (lmdesc >= (channel->lmdesc.base + DMAC_NR_LMDESC))
-+		lmdesc = channel->lmdesc.base;
-+
-+	/* Calculate residue from next lmdesc to end of virtual desc*/
-+	while (lmdesc->chcfg & CHCFG_DEM) {
-+		lmdesc++;
-+		if (lmdesc >= (channel->lmdesc.base + DMAC_NR_LMDESC))
-+			lmdesc = channel->lmdesc.base;
-+		residue += lmdesc->tb;
-+	}
-+
-+	dev_dbg(dmac->dev, "%s: Getting residue is %d\n", __func__, residue);
-+
-+	return residue;
-+}
-+
-+static unsigned int rz_dmac_chan_get_residue(struct rz_dmac_chan *channel,
-+					     dma_cookie_t cookie)
-+{
-+	struct rz_dmac_desc *current_desc, *desc;
-+	enum dma_status status;
-+	unsigned int residue;
-+	unsigned int crla;
-+	unsigned int crtb;
+ 	while (!(lmdesc->header & HEADER_LV)) {
+-		lmdesc->header = 0;
+ 		lmdesc++;
+ 		if (lmdesc >= (channel->lmdesc.base + DMAC_NR_LMDESC))
+ 			lmdesc = channel->lmdesc.base;
+@@ -510,16 +509,15 @@ rz_dmac_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 	struct rz_dmac_desc *desc;
+ 	struct scatterlist *sg;
+ 	int dma_length = 0;
+-	int i = 0;
 +	unsigned int i;
-+
-+	/* Get current processing virtual descriptor */
-+	current_desc = list_first_entry(&channel->ld_active,
-+					struct rz_dmac_desc, node);
-+	if (!current_desc)
-+		return 0;
-+
-+	/*
-+	 * If the cookie corresponds to a descriptor that has been completed
-+	 * there is no residue. The same check has already been performed by the
-+	 * caller but without holding the channel lock, so the descriptor could
-+	 * now be complete.
-+	 */
-+	status = dma_cookie_status(&channel->vc.chan, cookie, NULL);
-+	if (status == DMA_COMPLETE)
-+		return 0;
-+
-+	/*
-+	 * If the cookie doesn't correspond to the currently processing virtual
-+	 * descriptor then the descriptor hasn't been processed yet, and the
-+	 * residue is equal to the full descriptor size.
-+	 * Also, a client driver is possible to call this function before
-+	 * rz_dmac_irq_handler_thread() runs. In this case, the running
-+	 * descriptor will be the next descriptor, and the done list will
-+	 * appear. So, if the argument cookie matches the done list's cookie,
-+	 * we can assume the residue is zero.
-+	 */
-+	if (cookie != current_desc->vd.tx.cookie) {
-+		list_for_each_entry(desc, &channel->ld_free, node) {
-+			if (cookie == desc->vd.tx.cookie)
-+				return 0;
-+		}
-+
-+		list_for_each_entry(desc, &channel->ld_queue, node) {
-+			if (cookie == desc->vd.tx.cookie)
-+				return calculate_total_bytes_in_vd(desc);
-+		}
-+
-+		list_for_each_entry(desc, &channel->ld_active, node) {
-+			if (cookie == desc->vd.tx.cookie)
-+				return calculate_total_bytes_in_vd(desc);
-+		}
-+
-+		/*
-+		 * No descriptor found for the cookie, there's thus no residue.
-+		 * This shouldn't happen if the calling driver passes a correct
-+		 * cookie value.
-+		 */
-+		WARN(1, "No descriptor for cookie!");
-+		return 0;
-+	}
-+
-+	/*
-+	 * Correspond to the currently processing virtual descriptor
-+	 *
-+	 * Make sure the hardware does not move to next lmdesc
-+	 * while reading the counter.
-+	 * Trying it 3 times should be enough: Initial read, retry, retry
-+	 * for the paranoid.
-+	 * The current lmdesc running in hardware is channel.lmdesc.head
-+	 */
-+	for (i = 0; i < 3; i++) {
-+		crla = rz_dmac_ch_readl(channel, CRLA, 1);
-+		crtb = rz_dmac_ch_readl(channel, CRTB, 1);
-+		/* Still the same? */
-+		if (crla == rz_dmac_ch_readl(channel, CRLA, 1))
-+			break;
-+	}
-+
-+	WARN_ONCE(i >= 3, "residue might be not continuous!");
-+
-+	/*
-+	 * Calculate number of byte transferred in processing virtual descriptor
-+	 * One virtual descriptor can have many lmdesc
-+	 */
-+	residue = crtb;
-+	residue += calculate_residue_bytes_in_vd(channel);
-+
-+	return residue;
-+}
-+
-+static enum dma_status rz_dmac_tx_status(struct dma_chan *chan,
-+					 dma_cookie_t cookie,
-+					 struct dma_tx_state *txstate)
-+{
-+	struct rz_dmac_chan *channel = to_rz_dmac_chan(chan);
-+	enum dma_status status;
-+	unsigned int residue;
-+	unsigned long flags;
-+
-+	status = dma_cookie_status(chan, cookie, txstate);
-+	if (status == DMA_COMPLETE || !txstate)
-+		return status;
-+
-+	spin_lock_irqsave(&channel->vc.lock, flags);
-+	residue = rz_dmac_chan_get_residue(channel, cookie);
-+	spin_unlock_irqrestore(&channel->vc.lock, flags);
-+
-+	/* if there's no residue, the cookie is complete */
-+	if (!residue)
-+		return DMA_COMPLETE;
-+
-+	dma_set_residue(txstate, residue);
-+
-+	return status;
-+}
-+
- /*
-  * -----------------------------------------------------------------------------
-  * IRQ handling
-@@ -932,7 +1099,7 @@ static int rz_dmac_probe(struct platform_device *pdev)
  
- 	engine->device_alloc_chan_resources = rz_dmac_alloc_chan_resources;
- 	engine->device_free_chan_resources = rz_dmac_free_chan_resources;
--	engine->device_tx_status = dma_cookie_status;
-+	engine->device_tx_status = rz_dmac_tx_status;
- 	engine->device_prep_slave_sg = rz_dmac_prep_slave_sg;
- 	engine->device_prep_dma_memcpy = rz_dmac_prep_dma_memcpy;
- 	engine->device_config = rz_dmac_config;
+ 	if (list_empty(&channel->ld_free))
+ 		return NULL;
+ 
+ 	desc = list_first_entry(&channel->ld_free, struct rz_dmac_desc, node);
+ 
+-	for_each_sg(sgl, sg, sg_len, i) {
++	for_each_sg(sgl, sg, sg_len, i)
+ 		dma_length += sg_dma_len(sg);
+-	}
+ 
+ 	desc->type = RZ_DMAC_DESC_SLAVE_SG;
+ 	desc->sg = sgl;
 -- 
 2.25.1
 

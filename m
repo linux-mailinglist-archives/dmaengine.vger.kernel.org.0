@@ -2,111 +2,110 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 632A56D7EC1
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Apr 2023 16:11:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11CDA6D7ED3
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Apr 2023 16:11:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238509AbjDEOLL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 5 Apr 2023 10:11:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51620 "EHLO
+        id S238529AbjDEOLd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 5 Apr 2023 10:11:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238504AbjDEOKq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Apr 2023 10:10:46 -0400
+        with ESMTP id S237448AbjDEOLM (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Apr 2023 10:11:12 -0400
 Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4CE8CC5;
-        Wed,  5 Apr 2023 07:10:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ED57765BF;
+        Wed,  5 Apr 2023 07:10:41 -0700 (PDT)
 X-IronPort-AV: E=Sophos;i="5.98,319,1673881200"; 
-   d="scan'208";a="158393620"
+   d="scan'208";a="158393799"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 05 Apr 2023 23:09:06 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 05 Apr 2023 23:10:41 +0900
 Received: from localhost.localdomain (unknown [10.226.93.81])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id EACF242D8EF2;
-        Wed,  5 Apr 2023 23:09:04 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id C821B42DB43A;
+        Wed,  5 Apr 2023 23:10:39 +0900 (JST)
 From:   Biju Das <biju.das.jz@bp.renesas.com>
 To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v2 5/5] dmaengine: sh: rz-dmac: rz_dmac_prepare_descs_for_slave_sg() improvements
-Date:   Wed,  5 Apr 2023 15:08:42 +0100
-Message-Id: <20230405140842.201883-6-biju.das.jz@bp.renesas.com>
+Subject: [PATCH v2 3/5] dmaengine: sh: rz-dmac: Add device_{pause,resume}() callbacks
+Date:   Wed,  5 Apr 2023 15:10:37 +0100
+Message-Id: <20230405141037.201999-1-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230405140842.201883-1-biju.das.jz@bp.renesas.com>
-References: <20230405140842.201883-1-biju.das.jz@bp.renesas.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.0 required=5.0 tests=SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=3.0 required=5.0 tests=AC_FROM_MANY_DOTS,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Some code improvements for rz_dmac_prepare_descs_for_slave_sg().
+Add support for device_{pause, resume}() callbacks as it is needed
+for RZ/G2L SCIFA driver.
 
-Replace the loop for->for_each_sg and drop the variables sgl and sg_len.
-Also improve the logic for assigning lmdesc->chcfg and lmdesc->header and
-lastly, add lmdesc assignment along with the declaration.
+Based on a patch in the BSP by Long Luu
+<long.luu.ur@renesas.com>
 
 Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
-v2:
- * New patch.
+v1->v2:
+ * Added resume callback().
+ * Updated commit description.
 ---
- drivers/dma/sh/rz-dmac.c | 22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+ drivers/dma/sh/rz-dmac.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
 diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
-index 153893045932..c6150d7ae8a7 100644
+index aaaae1c090ad..3ef516aee4fc 100644
 --- a/drivers/dma/sh/rz-dmac.c
 +++ b/drivers/dma/sh/rz-dmac.c
-@@ -342,12 +342,12 @@ static void rz_dmac_prepare_desc_for_memcpy(struct rz_dmac_chan *channel)
+@@ -817,6 +817,35 @@ static enum dma_status rz_dmac_tx_status(struct dma_chan *chan,
+ 	return status;
+ }
  
- static void rz_dmac_prepare_descs_for_slave_sg(struct rz_dmac_chan *channel)
- {
-+	struct rz_lmdesc *lmdesc = channel->lmdesc.tail;
- 	struct dma_chan *chan = &channel->vc.chan;
- 	struct rz_dmac *dmac = to_rz_dmac(chan->device);
- 	struct rz_dmac_desc *d = channel->desc;
--	struct scatterlist *sg, *sgl = d->sg;
--	struct rz_lmdesc *lmdesc;
--	unsigned int i, sg_len = d->sgcount;
-+	struct scatterlist *sg;
++static int rz_dmac_device_pause(struct dma_chan *chan)
++{
++	struct rz_dmac_chan *channel = to_rz_dmac_chan(chan);
++	struct rz_dmac *dmac = to_rz_dmac(chan->device);
 +	unsigned int i;
- 
- 	channel->chcfg |= CHCFG_SEL(channel->index) | CHCFG_DEM | CHCFG_DMS;
- 
-@@ -358,9 +358,7 @@ static void rz_dmac_prepare_descs_for_slave_sg(struct rz_dmac_chan *channel)
- 		channel->chcfg |= CHCFG_DAD | CHCFG_REQD;
- 	}
- 
--	lmdesc = channel->lmdesc.tail;
--
--	for (i = 0, sg = sgl; i < sg_len; i++, sg = sg_next(sg)) {
-+	for_each_sg(d->sg, sg, d->sgcount, i) {
- 		if (d->direction == DMA_DEV_TO_MEM) {
- 			lmdesc->sa = channel->src_per_address;
- 			lmdesc->da = sg_dma_address(sg);
-@@ -372,13 +370,11 @@ static void rz_dmac_prepare_descs_for_slave_sg(struct rz_dmac_chan *channel)
- 		lmdesc->tb = sg_dma_len(sg);
- 		lmdesc->chitvl = 0;
- 		lmdesc->chext = 0;
--		if (i == (sg_len - 1)) {
--			lmdesc->chcfg = (channel->chcfg & ~CHCFG_DEM);
--			lmdesc->header = HEADER_LV;
--		} else {
--			lmdesc->chcfg = channel->chcfg;
--			lmdesc->header = HEADER_LV;
--		}
-+		lmdesc->chcfg = channel->chcfg;
-+		lmdesc->header = HEADER_LV;
-+		if (i == (d->sgcount - 1))
-+			lmdesc->chcfg &= ~CHCFG_DEM;
++	u32 chstat;
 +
- 		if (++lmdesc >= (channel->lmdesc.base + DMAC_NR_LMDESC))
- 			lmdesc = channel->lmdesc.base;
- 	}
++	for (i = 0; i < 1024; i++) {
++		chstat = rz_dmac_ch_readl(channel, CHSTAT, 1);
++		if (!(chstat & CHSTAT_EN))
++			break;
++		udelay(1);
++	}
++
++	rz_dmac_set_dmars_register(dmac, channel->index, 0);
++
++	return 0;
++}
++
++static int rz_dmac_device_resume(struct dma_chan *chan)
++{
++	struct rz_dmac_chan *channel = to_rz_dmac_chan(chan);
++	struct rz_dmac *dmac = to_rz_dmac(chan->device);
++
++	rz_dmac_set_dmars_register(dmac, channel->index, channel->mid_rid);
++
++	return 0;
++}
++
+ /*
+  * -----------------------------------------------------------------------------
+  * IRQ handling
+@@ -1106,6 +1135,8 @@ static int rz_dmac_probe(struct platform_device *pdev)
+ 	engine->device_terminate_all = rz_dmac_terminate_all;
+ 	engine->device_issue_pending = rz_dmac_issue_pending;
+ 	engine->device_synchronize = rz_dmac_device_synchronize;
++	engine->device_pause = rz_dmac_device_pause;
++	engine->device_resume = rz_dmac_device_resume;
+ 
+ 	engine->copy_align = DMAENGINE_ALIGN_1_BYTE;
+ 	dma_set_max_seg_size(engine->dev, U32_MAX);
 -- 
 2.25.1
 

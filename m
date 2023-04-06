@@ -2,73 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 121056D8DB0
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Apr 2023 04:50:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 547866D90C8
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Apr 2023 09:47:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235108AbjDFCut (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 5 Apr 2023 22:50:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39900 "EHLO
+        id S233176AbjDFHr3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Apr 2023 03:47:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235119AbjDFCuY (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Apr 2023 22:50:24 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D27F9009;
-        Wed,  5 Apr 2023 19:49:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680749385; x=1712285385;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wNLHlYy6uV4G115SGXQXDrIz1CoHj/OQl8UlKp5dXLs=;
-  b=lEkqMSbTxooxglfJ8+0E9V84q+3C0Ip3/mHcIleCPVEq1kGlwX6ZYV70
-   joo9cZ//RiAtYOd1jI4kJmB6Cl+exBGaIpL+OGBqg77ou4gYWb0B4p65+
-   XN0ba6s+4n4bdzG2p3aVKwRfzYHB5xoPugzkqIeOSEb9pZ4ODAukqPqDV
-   SjPPVk9byVNhICDkMEeP1QOqqYUouIwy5bbzPheL92tGSpqjAaqOJFglq
-   +9gOIZnRrEyL9zffeXbDnvtsSj4M0YP0jM9kVxOvBD2Xxn0hitmBHltdI
-   MqovND55rnh3paZvVzNX8jZ1VeqjI4TDMkC3ckLknTeY8R+bpjflIMe3f
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10671"; a="370457043"
-X-IronPort-AV: E=Sophos;i="5.98,322,1673942400"; 
-   d="scan'208";a="370457043"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2023 19:49:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10671"; a="1016701974"
-X-IronPort-AV: E=Sophos;i="5.98,322,1673942400"; 
-   d="scan'208";a="1016701974"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.48]) ([10.239.159.48])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Apr 2023 19:49:40 -0700
-Message-ID: <7312331a-71a1-deea-6d17-bd6d968e87d4@linux.intel.com>
-Date:   Thu, 6 Apr 2023 10:49:50 +0800
+        with ESMTP id S234581AbjDFHr2 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Apr 2023 03:47:28 -0400
+X-Greylist: delayed 425 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 06 Apr 2023 00:47:24 PDT
+Received: from mail.neston24.com (mail.neston24.com [37.187.225.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C33B3F9
+        for <dmaengine@vger.kernel.org>; Thu,  6 Apr 2023 00:47:24 -0700 (PDT)
+Received: by mail.neston24.com (Postfix, from userid 1002)
+        id E80FF2243A; Thu,  6 Apr 2023 07:40:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=neston24.com; s=mail;
+        t=1680766817; bh=5T/I5ALH265FnsfRMA5qkcy2CLiS4J17pa3P6HzpuT0=;
+        h=Date:From:To:Subject:From;
+        b=onmRSgRxnCxHm0e0Bmjkam2Uk8z01NZJwl/wIFM8jN7ZTAhk/7TTmGqZoZaXYKqGz
+         F/MBtQoF3yWqTp9A0iGveX2NIKEBRry27N+VlQC/8eiI7PgZwNQKqPZ+ephhV6EuwZ
+         uEFJgU/pqQo9TEcECsSru0UsWa7UWJrq6xHRm8vYJfjAJylhxLXG1lzPd56Mjq7dTY
+         HueOTBU4zcupAz8+6YifI7bZ4FjbNNgwCqMRuta64b8/meX6ShGCbsGrf8sL9Y4Egj
+         h+NxY/kmVsgsNgpk5fvWx3+T7ZWY8iBU5rKqWQQTYQJWuiMP0r7pNgVIzddph6vVc8
+         N4MtYcDpQowKw==
+Received: by mail.neston24.com for <dmaengine@vger.kernel.org>; Thu,  6 Apr 2023 07:40:09 GMT
+Message-ID: <20230406064500-0.1.6b.biom.0.p4l0j41lpq@neston24.com>
+Date:   Thu,  6 Apr 2023 07:40:09 GMT
+From:   =?UTF-8?Q? "Leo=C5=A1_Sl=C3=A1dek" ?= <leos.sladek@neston24.com>
+To:     <dmaengine@vger.kernel.org>
+Subject: =?UTF-8?Q?Fotovoltaick=C3=A9_rozvodnice?=
+X-Mailer: mail.neston24.com
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Cc:     baolu.lu@linux.intel.com, LKML <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux.dev, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>, dmaengine@vger.kernel.org,
-        vkoul@kernel.org, Will Deacon <will@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Zanussi, Tom" <tom.zanussi@intel.com>
-Subject: Re: [PATCH v3 7/7] dmaengine/idxd: Re-enable kernel workqueue under
- DMA API
-Content-Language: en-US
-To:     Jason Gunthorpe <jgg@nvidia.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-References: <20230331231137.1947675-1-jacob.jun.pan@linux.intel.com>
- <20230331231137.1947675-8-jacob.jun.pan@linux.intel.com>
- <ZC1mUKH/03QhkcR9@nvidia.com>
-From:   Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <ZC1mUKH/03QhkcR9@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.8 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,43 +45,32 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 4/5/23 8:15 PM, Jason Gunthorpe wrote:
-> On Fri, Mar 31, 2023 at 04:11:37PM -0700, Jacob Pan wrote:
->>   static void idxd_disable_system_pasid(struct idxd_device *idxd)
->>   {
->> +	struct pci_dev *pdev = idxd->pdev;
->> +	struct device *dev = &pdev->dev;
->> +	struct iommu_domain *domain;
->> +	union gencfg_reg gencfg;
->> +
->> +	domain = iommu_get_domain_for_dev(dev);
->> +	if (!domain || domain->type == IOMMU_DOMAIN_BLOCKED)
->> +		return;
->> +
->> +	iommu_detach_device_pasid(domain, dev, idxd->pasid);
-> This sequence is kinda weird, we shouldn't pass in domain to
-> detach_device_pasid, IMHO. We already know the domain because we store
-> it in an xarray, it just creates weirdness if the user passes in the
-> wrong domain.
+Dobr=C3=BD den,
 
-The initial idea was that the driver has a domain and it wants to attach
-the domain to a pasid of the device. During attaching, iommu core will
-save the domain in its xarray.
+obrac=C3=ADm se na V=C3=A1s jm=C3=A9nem dlouholet=C3=A9ho v=C3=BDrobce fo=
+tovoltaick=C3=BDch rozvodnic ur=C4=8Den=C3=BDch pro
+soukrom=C3=A9 i pr=C5=AFmyslov=C3=A9 pou=C5=BEit=C3=AD.
 
-After use, driver want to detach the domain from the pasid by calling
-iommu_detach_device_pasid(). The iommu core will compare the input
-domain and the one it saved. A warning will be triggered if they are
-different.
+Dod=C3=A1v=C3=A1me fotovoltaick=C3=A9 rozvodnice na zak=C3=A1zku a jsme s=
+chopni realizovat i ty nejn=C3=A1ro=C4=8Dn=C4=9Bj=C5=A1=C3=AD
+po=C5=BEadavky instala=C4=8Dn=C3=ADch firem, velkoobchod=C5=AF a distribu=
+tor=C5=AF.
 
-	WARN_ON(xa_erase(&group->pasid_array, pasid) != domain);
+Vyu=C5=BE=C3=ADv=C3=A1me nejkvalitn=C4=9Bj=C5=A1=C3=AD komponenty a mater=
+i=C3=A1ly, =C4=8D=C3=ADm=C5=BE dosahujeme vy=C5=A1=C5=A1=C3=AD odolnost, =
+stabilitu
+provozu a ochranu proti vod=C4=9B, vlku, prachu a n=C3=A1raz=C5=AFm.
 
-Logically speaking, @domain for detach_device_pasid is unnecessary,
-because the pasid array is essentially per-device (as we discussed
-before. the pci_enable_pasid() ensures this), although it is currently
-placed in the group structure. In that case, the driver can and should
-own everything about the pasid and domain. The roles of the iommu core
-and the individual driver are only to handle requests of installing or
-withdrawing a domain on/from a device's pasid.
+V na=C5=A1em sortimentu jsou tak=C3=A9 omezova=C4=8De p=C5=99ep=C4=9Bt=C3=
+=AD AC/DC, kter=C3=A9 zaji=C5=A1=C5=A5uj=C3=AD ochranu
+fotovoltaick=C3=BDch nap=C3=A1jec=C3=ADch instalac=C3=AD p=C5=99ed negati=
+vn=C3=ADmi efekty p=C5=99ep=C4=9Bt=C3=AD a chr=C3=A1n=C3=AD za=C5=99=C3=AD=
+zen=C3=AD p=C5=99ed
+efekty p=C5=AFsoben=C3=AD p=C5=99ep=C4=9Bt=C3=AD a bleskov=C3=BDch proud=C5=
+=AF.
 
-Best regards,
-baolu
+Chcete si vyzkou=C5=A1et na=C5=A1e =C5=99e=C5=A1en=C3=AD?
+
+
+S pozdravem
+Leo=C5=A1 Sl=C3=A1dek

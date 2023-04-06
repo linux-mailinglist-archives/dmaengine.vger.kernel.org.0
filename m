@@ -2,64 +2,57 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFEFD6D9B06
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Apr 2023 16:47:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1849C6DA5A2
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Apr 2023 00:16:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239311AbjDFOrW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 6 Apr 2023 10:47:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51228 "EHLO
+        id S233559AbjDFWQV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Apr 2023 18:16:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239121AbjDFOrD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Apr 2023 10:47:03 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 819FC8A5B;
-        Thu,  6 Apr 2023 07:45:42 -0700 (PDT)
+        with ESMTP id S230440AbjDFWQU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Apr 2023 18:16:20 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1545DE46;
+        Thu,  6 Apr 2023 15:16:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680792342; x=1712328342;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=wKLD3ul2fnQNnbci3vu7fUACYJnL7Pb0yr2YSwJ4YfE=;
-  b=A2m8dlFAIZ8suroi3kz8QDGKbyYDtx6flW4MyIOO8hCnDi6IZcZAzOVr
-   inEwSxAJf8yFsQGjOWAOlR2qtYXOeS86METfwccLwYoWY2NjyjV2V4nzA
-   V5raNxMCCt1YiyBuYvL6k1e5y+tRCFlqVjuc7o4CG6FC5u9lOuoq8Vyt9
-   f3DYh7lBx7ZmhIl7MUzwYNGFz72yJWP0OFUbquz7OTE59QsS+/etr4/cf
-   xUQhnhOPSvRf5NDTZ+jPQZv3pLh4rPblHshJPOaNFrRl3jtqHb7Qk2V+s
-   GGvrlu3zqb+zeHBnChL7G84Mu+Ncrf/ovd3G9DEeq0SkpL9UYhKF6o0TT
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10672"; a="326817273"
-X-IronPort-AV: E=Sophos;i="5.98,323,1673942400"; 
-   d="scan'208";a="326817273"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2023 07:43:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10672"; a="861424812"
-X-IronPort-AV: E=Sophos;i="5.98,323,1673942400"; 
-   d="scan'208";a="861424812"
-Received: from akshayph-mobl.amr.corp.intel.com ([10.212.115.108])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2023 07:43:41 -0700
-Message-ID: <0b95f8b723f50395ee325ff5475e5d5189776928.camel@linux.intel.com>
-Subject: Re: [PATCH v2 12/15] crypto: iaa - Add support for iaa_crypto
- deflate compression algorithm
-From:   Tom Zanussi <tom.zanussi@linux.intel.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     davem@davemloft.net, fenghua.yu@intel.com, vkoul@kernel.org,
-        dave.jiang@intel.com, tony.luck@intel.com,
-        wajdi.k.feghali@intel.com, james.guilford@intel.com,
-        kanchana.p.sridhar@intel.com, giovanni.cabiddu@intel.com,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        dmaengine@vger.kernel.org
-Date:   Thu, 06 Apr 2023 09:43:40 -0500
-In-Reply-To: <ZC58JggIXgpJ1tpD@gondor.apana.org.au>
-References: <20230328153535.126223-1-tom.zanussi@linux.intel.com>
-         <20230328153535.126223-13-tom.zanussi@linux.intel.com>
-         <ZC58JggIXgpJ1tpD@gondor.apana.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.1-0ubuntu1 
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1680819378; x=1712355378;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=HEn8cWigHG4poqzmFeTugeaK71IYmmHqaJBZ1COZvc8=;
+  b=ampNyzzMre2RFzSBRJQMhxFUxhZFJQ8qFw18BBRyZ8ZYQfTC+GGc7VIs
+   o1SIUedWrHURxefTJ2eL/BwIeOOXmfie+6VujNnQDmK01fenrCRT8NZ3z
+   9IB/tAr2gabXZ7Ew4d2fN+NRPxF52qdzMP88FATAfL8QOQQ9juz9OxUeJ
+   Kp8Fm+6ITIaVM//Uv6DbePi9daBXTajIGiMaT/fhaj0i35IaY/G4UyQTQ
+   jy4gSiJu8lpeet6LiLHXaZBJCGYIWKuP+D7x3EReU8HXU5TIZFYt7OwYf
+   k/ISxetb8E37ukHt+r5AY3WOy3z+Q477yhO2Q+hzmkooGvBRZJjJpMzbV
+   A==;
+X-IronPort-AV: E=Sophos;i="5.98,323,1673938800"; 
+   d="scan'208";a="145937248"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Apr 2023 15:16:18 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Thu, 6 Apr 2023 15:16:13 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.21 via Frontend
+ Transport; Thu, 6 Apr 2023 15:16:13 -0700
+From:   Kelvin Cao <kelvin.cao@microchip.com>
+To:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <logang@deltatee.com>, <george.ge@microchip.com>,
+        <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH v3 0/1] Switchtec Switch DMA Engine Driver
+Date:   Thu, 6 Apr 2023 14:03:22 -0700
+Message-ID: <20230406210323.1018163-1-kelvin.cao@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Spam-Status: No, score=-0.1 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,78 +60,41 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Herbert,
+Hi,
 
-On Thu, 2023-04-06 at 16:00 +0800, Herbert Xu wrote:
-> On Tue, Mar 28, 2023 at 10:35:32AM -0500, Tom Zanussi wrote:
-> >=20
-> > @@ -881,12 +1574,26 @@ static int iaa_crypto_probe(struct idxd_dev
-> > *idxd_dev)
-> > =C2=A0
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0rebalance_wq_table();
-> > =C2=A0
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (first_wq) {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0iaa_crypto_enabled =3D true;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0ret =3D iaa_register_compression_device();
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0if (ret !=3D 0) {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0iaa_cr=
-ypto_enabled =3D false;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_db=
-g(dev, "IAA compression device
-> > registration failed\n");
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0goto e=
-rr_register;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0}
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0pr_info("iaa_crypto now ENABLED\n");
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> > +
->=20
-> Sorry for picking on your driver but I've got to start somewhere :)
+This is v3 of the Switchtec Switch DMA Engine Driver, incorporating
+changes for the v2 review comments.
 
-No problem, thanks for reviewing the code. ;-)
+v3 changes:
+  - Remove some unnecessary memory/variable zeroing
 
->=20
-> A long standing problem shared by almost all crypto drivers is that
-> the hardware removal handling is completely broken.
->=20
-> This is because hardware can be removed at any time, including during
-> a crypto operatin.=C2=A0 So drivers must work carefully around that fact.
->=20
-> Here is a recipe for dealing with this safely:
->=20
-> 1) Never unregister your crypto algorithms, even after the last
-> piece of hardware has been unplugged.=C2=A0 The algorithms should only
-> be unregistered (if they have been registered through the first
-> successful probe call) in the module unload function.
->=20
-> 2) Never free any software state for your hardware without some form
-> of synchronisation with oustanding operations.
->=20
-> Any mechanism would do, for example, you could use a spinlock if the
-> critical path isn't very long.=C2=A0 The operational path would take the
-> lock, check the hardware state, and if present proceed with the
-> operation (but still being prepared to cope if the hardware goes
-> AWAL because even if the driver state is still present the actual
-> hardware may be gone already).
->=20
-> Then the removal path would simply take the spinlock, set a flag
-> indicating the hardware is gone and then you could safely unlock
-> and free your driver states.
->=20
+v2 changes:
+  - Move put_device(dma_dev->dev) before kfree(swdma_dev) as dma_dev is
+    part of swdma_dev.
+  - Convert dev_ print calls to pci_ print calls to make the use of
+    print functions consistent within switchtec_dma_create().
+  - Remove some dev_ print calls, which use device pointer as handles,
+    to ensure there's no reference issue when the device is unbound.
+  - Remove unused .driver_data from pci_device_id structure.
 
-OK, yeah, thanks for pointing this out along with the detailed
-explanation and remedy.  Will take care of this in the next version.
+v1:
+The following patch implements a DMAEngine driver to use the DMA
+controller in Switchtec PSX/PFX switchtes. The DMA controller appears as
+a PCI function on the switch upstream port. The DMA function can include
+one or more DMA channels.
 
-Tom
+This patchset is based off of v6.3-rc1.
 
-> Thanks,
+Kelvin Cao (1):
+  dmaengine: switchtec-dma: Introduce Switchtec DMA engine PCI driver
+
+ MAINTAINERS                 |    5 +
+ drivers/dma/Kconfig         |    9 +
+ drivers/dma/Makefile        |    1 +
+ drivers/dma/switchtec_dma.c | 1730 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 1745 insertions(+)
+ create mode 100644 drivers/dma/switchtec_dma.c
+
+-- 
+2.25.1
 

@@ -2,40 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 00A7D6DB535
-	for <lists+dmaengine@lfdr.de>; Fri,  7 Apr 2023 22:31:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFDC56DB536
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Apr 2023 22:31:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230094AbjDGUb2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        id S230151AbjDGUb2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
         Fri, 7 Apr 2023 16:31:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54646 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229804AbjDGUb1 (ORCPT
+        with ESMTP id S229890AbjDGUb1 (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Fri, 7 Apr 2023 16:31:27 -0400
 Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FF197A83;
-        Fri,  7 Apr 2023 13:31:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 143FB7AB8;
+        Fri,  7 Apr 2023 13:31:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680899486; x=1712435486;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=d5ElvGTF+k75NnvAvIHuLEmVfaAX2fwLZSMzSXGu1vU=;
-  b=fN3/v9TzDbHgGcHoYnUtboa/ugRC7DpwFiKu2FzbEo8Y2vMxWKKj3WmD
-   FufxcWHCo9Y+JR55FgbMkupFRNlpmnzGPpNk+nsQyn3yH/A3n9DRnPyu8
-   XSnnkArOuM1Ypv90FtZWwlFNAvk/30Cwet1ki9T7cAbcpIdvGe2kGzTuQ
-   GyYe4NeV7rlIgfmnR3KMoS+zvsdZuIq+ebP6uy7ZmWyXjhIbJ+cCLYOzB
-   AiBBjmR9CI/m+WFYCAtNAZrTVp89uRzT9XXsHSzP0z4qnWgGyGJiTL+l2
-   Po+Hog0VpiNbOS8bE+k2QvD4ISbHez4FRRWTFo9XhURit5WWnWWmGuwLS
+  t=1680899487; x=1712435487;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=MwbXdVdXHEET8kRfN+0wwJVjHIBrLAgznNDkutHFUxs=;
+  b=Ne0a72L+ckihFrVYAY0CWX5vFRqPjmTqjiFurNFs3riA8UZvDnw8ICyk
+   hZJPWya2lufL3tEVdD+oIalmiQAOG8cLVwpBque7/j2WUEkdRYJ8RB8ED
+   3AWb18I0X9IOz01VaQE1bCTnGwgqVnEEts6TmtAN8Cf5bua2HpuHw8KjA
+   TfFP1n26B6cvkLZtVwLQ8ZOPWnh8CZjEMajzrjAmEsU4MuR2vw6kpSuwD
+   bjvvqhAHR1aKrm8nWZ9ruOsh3XGYAdEKzvlgDR/RGlf4bpQ7ybZsiW3P1
+   vGkwqa3an5uPYe2G1EP/rMaw/5n1xLOpDRwGXLcWmGNepXTjPDD7tm7xO
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="408196844"
+X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="408196846"
 X-IronPort-AV: E=Sophos;i="5.98,327,1673942400"; 
-   d="scan'208";a="408196844"
+   d="scan'208";a="408196846"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
   by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2023 13:31:25 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="681125860"
+X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="681125864"
 X-IronPort-AV: E=Sophos;i="5.98,327,1673942400"; 
-   d="scan'208";a="681125860"
+   d="scan'208";a="681125864"
 Received: from fyu1.sc.intel.com ([172.25.103.126])
   by orsmga007.jf.intel.com with ESMTP; 07 Apr 2023 13:31:25 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
@@ -43,11 +43,15 @@ To:     "Vinod Koul" <vkoul@kernel.org>,
         "Dave Jiang" <dave.jiang@intel.com>
 Cc:     dmaengine@vger.kernel.org,
         "linux-kernel" <linux-kernel@vger.kernel.org>,
+        Sanjay Kumar <sanjay.k.kumar@intel.com>,
+        Tony Zhu <tony.zhu@intel.com>,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v4 00/16] Enable DSA 2.0 Event Log and completion record faulting features
-Date:   Fri,  7 Apr 2023 13:31:27 -0700
-Message-Id: <20230407203143.2189681-1-fenghua.yu@intel.com>
+Subject: [PATCH v4 01/16] dmaengine: idxd: make misc interrupt one shot
+Date:   Fri,  7 Apr 2023 13:31:28 -0700
+Message-Id: <20230407203143.2189681-2-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20230407203143.2189681-1-fenghua.yu@intel.com>
+References: <20230407203143.2189681-1-fenghua.yu@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
@@ -60,141 +64,99 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Applications can send 64B descriptors to the DSA device via CPU
-instructions MOVDIR64B or ENQCMD. The application can choose to have
-the device write back a completion record (CR) in system memory to
-indicate the status of the descriptor submitted on completion.
+From: Dave Jiang <dave.jiang@intel.com>
 
-With the DSA hardware, the device is able to do on demand paging through
-the hardware by faulting in the user pages that do not have physical memory
-page backing with assistance from IOMMU. In the spec this was designated as
-the block on fault feature. While this hardware feature made operation
-simpler, it also stalls the device engines while the memory pages are being
-faulted in through Page Request Service (PRS). For applications sharing the
-same workqueue (wq) or wqs in the same group, operations are stalled if
-there are no free engines. To avoid slowing the performance of all other
-running applications sharing the same device engine(s), PRS can to be
-disabled and software can deal with partial completion.
+Current code continuously processes the interrupt as long as the hardware
+is setting the status bit. There's no reason to do that since the threaded
+handler will get called again if another interrupt is asserted.
 
-The block on fault feature on DSA 1.0 can be disabled for the wq. However,
-PRS is not completely disabled for the whole path. It is not disabled for
-CRs or batch list for a batch operation.
+Also through testing, it has shown that if a misprogrammed (or malicious)
+agent can continuously submit descriptors with bad completion record and
+causes errors to be reported via the misc interrupt. Continuous processing
+by the thread can cause software hang watchdog to kick off since the thread
+isn't giving up the CPU.
 
-The other issue is the DSA 1.0 error reporting mechanism, SWERROR register.
-The SWERROR register can only report a single error at a time until the
-driver reads and acknowledges the error. The follow on errors cannot be
-reported until the current error is "cleared" by the software by writing
-a bit to the SWERR register. If a large number of faults arrive and the
-software cannot clear them fast enough, overflowed errors will be dropped
-by the device.
+Reported-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
+Tested-by: Tony Zhu <tony.zhu@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+---
+ drivers/dma/idxd/irq.c | 38 ++++++++++++--------------------------
+ 1 file changed, 12 insertions(+), 26 deletions(-)
 
-A CR is the optional 32 bytes (DSA) or 64 bytes (IAA) status that is
-written back for a submitted descriptor. If the address for the CR faults,
-the error is reported to the SWERROR register instead.
-
-With DSA 2.0 hardware [1], the event log feature is added. All errors are
-reported as an entry in a circular buffer reside in the system memory.
-The system admin is responsible to configure the size of the circular
-buffer large enough per device to handle the potential errors that may be
-reported. If the buffer is full and another error needs to be reported,
-the device engine will block until there's a free slot in the buffer.
-An event log entry for a faulted CR will contain the error information,
-the CR address that faulted, and the expected CR content the device had
-originally intended to write.
-
-DSA 2.0 also introduces per wq PRS disable knob. This will disable all PRS
-operations for the specific wq. The device will still have Address
-Translation Service (ATS) on. When ATS fails on a memory address for a CR,
-an eventlog entry will be written by the hardware into the event log
-ring buffer. The driver software is expected to parse the event log entry,
-fault in the address of the CR, and the write the content of the CR to
-the memory address.
-
-This patch series will implement the DSA 2 event log support. The support
-for the handling of the faulted user CR is added. The driver is also
-adding the same support for batch operation descriptors. With a batch
-operation the handling of the event log entry is a bit more complex.
-The faulting CR could be for the batch descriptor or any of the operation
-descriptors within the batch. The hardware generates a batch identifier
-that is used by the driver software to correlate the event log entries for
-the relevant descriptors of that batch.
-
-The faulting of source and destination addresses for the operation is not
-handled by the driver. That is left to be handled by the user application
-by faulting in the memory and re-submit the remaining operation.
-
-This series consists of three parts:
-1. Patch 1: Make misc interrupt one shot. Event Log interrupt depends on
-   this patch. This patch was released before but is not in upstream yet:
-   https://lore.kernel.org/dmaengine/165125374675.311834.10460196228320964350.stgit@djiang5-desk3.ch.intel.com/
-2. Patches 2-15: Enable Event Log and Completion Record faulting.
-3. Patch 16: Configure PRS disable per WQ.
-
-This series is applied cleanly on top of "Expose IAA 2.0 device
-capabilities" series (which is in dmaengine next branch now):
-https://lore.kernel.org/lkml/20230303213732.3357494-1-fenghua.yu@intel.com/
-
-Change log:
-v4:
-- Use kthread_use_mm(), copy_to_user(), and kthread_unuse_mm() to switch
-  to the mm, copy completion record to the mm, and switch back to the
-  current mm. It's simpler than previous access_remote_vm() or emulation
-  ways (Jason Gunthorpe, Christoph Hellwig, Tony Luck).
-- Change dev_err() to dev_dbg_ratelimited() in CR page fault handler
-  (Tony Luck).
-
-v3:
-- Since iommu_sva_find() will be removed in IOMMU and access_remote_vm()
-  cannot be exported, the completion record copy function idxd_copy_cr()
-  is rewritten by maintaining and finding mm in xarray and copy completion
-  record to the mm.
-  Please check discussion on iommu_sva_find() will be removed and
-  access_remote_vm() cannot be exported:
-  1. https://lore.kernel.org/lkml/ZAjSsm4%2FPDRqViwa@nvidia.com/
-  2. https://lore.kernel.org/lkml/20230306163138.587484-1-fenghua.yu@intel.com/T/#m1fc97725a0e56ea269c8bdabacee447070d51846
-
-v2:
-- Define and export iommu_access_remote_vm() for IDXD driver to write
-  completion record to user address space. This change removes
-  patch 8 and 9 in v1 (Alistair Popple)
-https://lore.kernel.org/lkml/20230306163138.587484-1-fenghua.yu@intel.com/
-
-Dave Jiang (15):
-  dmaengine: idxd: make misc interrupt one shot
-  dmaengine: idxd: add event log size sysfs attribute
-  dmaengine: idxd: setup event log configuration
-  dmaengine: idxd: add interrupt handling for event log
-  dmanegine: idxd: add debugfs for event log dump
-  dmaengine: idxd: add per DSA wq workqueue for processing cr faults
-  dmaengine: idxd: create kmem cache for event log fault items
-  dmaengine: idxd: process user page faults for completion record
-  dmaengine: idxd: add descs_completed field for completion record
-  dmaengine: idxd: process batch descriptor completion record faults
-  dmaengine: idxd: add per file user counters for completion record
-    faults
-  dmaengine: idxd: add a device to represent the file opened
-  dmaengine: idxd: expose fault counters to sysfs
-  dmaengine: idxd: add pid to exported sysfs attribute for opened file
-  dmaengine: idxd: add per wq PRS disable
-
-Fenghua Yu (1):
-  dmaengine: idxd: add idxd_copy_cr() to copy user completion record
-    during page fault handling
-
- .../ABI/stable/sysfs-driver-dma-idxd          |  43 +++
- drivers/dma/idxd/Makefile                     |   2 +-
- drivers/dma/idxd/cdev.c                       | 334 ++++++++++++++++--
- drivers/dma/idxd/debugfs.c                    | 138 ++++++++
- drivers/dma/idxd/device.c                     | 113 +++++-
- drivers/dma/idxd/idxd.h                       |  65 ++++
- drivers/dma/idxd/init.c                       |  53 +++
- drivers/dma/idxd/irq.c                        | 210 +++++++++--
- drivers/dma/idxd/registers.h                  | 105 +++++-
- drivers/dma/idxd/sysfs.c                      | 112 +++++-
- include/uapi/linux/idxd.h                     |  15 +-
- 11 files changed, 1126 insertions(+), 64 deletions(-)
- create mode 100644 drivers/dma/idxd/debugfs.c
-
+diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+index aa314ebec587..0d639303b515 100644
+--- a/drivers/dma/idxd/irq.c
++++ b/drivers/dma/idxd/irq.c
+@@ -217,13 +217,22 @@ static void idxd_int_handle_revoke(struct work_struct *work)
+ 	kfree(revoke);
+ }
+ 
+-static int process_misc_interrupts(struct idxd_device *idxd, u32 cause)
++irqreturn_t idxd_misc_thread(int vec, void *data)
+ {
++	struct idxd_irq_entry *irq_entry = data;
++	struct idxd_device *idxd = ie_to_idxd(irq_entry);
+ 	struct device *dev = &idxd->pdev->dev;
+ 	union gensts_reg gensts;
+ 	u32 val = 0;
+ 	int i;
+ 	bool err = false;
++	u32 cause;
++
++	cause = ioread32(idxd->reg_base + IDXD_INTCAUSE_OFFSET);
++	if (!cause)
++		return IRQ_NONE;
++
++	iowrite32(cause, idxd->reg_base + IDXD_INTCAUSE_OFFSET);
+ 
+ 	if (cause & IDXD_INTC_HALT_STATE)
+ 		goto halt;
+@@ -301,7 +310,7 @@ static int process_misc_interrupts(struct idxd_device *idxd, u32 cause)
+ 			      val);
+ 
+ 	if (!err)
+-		return 0;
++		goto out;
+ 
+ halt:
+ 	gensts.bits = ioread32(idxd->reg_base + IDXD_GENSTATS_OFFSET);
+@@ -324,33 +333,10 @@ static int process_misc_interrupts(struct idxd_device *idxd, u32 cause)
+ 				"idxd halted, need %s.\n",
+ 				gensts.reset_type == IDXD_DEVICE_RESET_FLR ?
+ 				"FLR" : "system reset");
+-			return -ENXIO;
+ 		}
+ 	}
+ 
+-	return 0;
+-}
+-
+-irqreturn_t idxd_misc_thread(int vec, void *data)
+-{
+-	struct idxd_irq_entry *irq_entry = data;
+-	struct idxd_device *idxd = ie_to_idxd(irq_entry);
+-	int rc;
+-	u32 cause;
+-
+-	cause = ioread32(idxd->reg_base + IDXD_INTCAUSE_OFFSET);
+-	if (cause)
+-		iowrite32(cause, idxd->reg_base + IDXD_INTCAUSE_OFFSET);
+-
+-	while (cause) {
+-		rc = process_misc_interrupts(idxd, cause);
+-		if (rc < 0)
+-			break;
+-		cause = ioread32(idxd->reg_base + IDXD_INTCAUSE_OFFSET);
+-		if (cause)
+-			iowrite32(cause, idxd->reg_base + IDXD_INTCAUSE_OFFSET);
+-	}
+-
++out:
+ 	return IRQ_HANDLED;
+ }
+ 
 -- 
 2.37.1
 

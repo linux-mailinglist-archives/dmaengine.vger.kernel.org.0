@@ -2,54 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9E6B6DD8BD
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Apr 2023 13:03:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4C566DD8D0
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Apr 2023 13:05:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229643AbjDKLDf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 11 Apr 2023 07:03:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58018 "EHLO
+        id S230033AbjDKLFV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 11 Apr 2023 07:05:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229711AbjDKLD2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Apr 2023 07:03:28 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A90BB1982
-        for <dmaengine@vger.kernel.org>; Tue, 11 Apr 2023 04:02:52 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id px4so5422571pjb.3
-        for <dmaengine@vger.kernel.org>; Tue, 11 Apr 2023 04:02:52 -0700 (PDT)
+        with ESMTP id S229955AbjDKLFU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Apr 2023 07:05:20 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17E3244A3
+        for <dmaengine@vger.kernel.org>; Tue, 11 Apr 2023 04:04:52 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id p8so7521371plk.9
+        for <dmaengine@vger.kernel.org>; Tue, 11 Apr 2023 04:04:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681210968;
+        d=linaro.org; s=google; t=1681211070;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=8NdaDMR88s+1WtvRZzFseNEUErd04u8W3GHHaAxJqcs=;
-        b=PcARvOGxXSQhEYhGNs5SJ4lcR/LE0utoGKPBYI+EgKQh+DGinmFPhN5kt43TQ2JyDd
-         dKLFtiOqLxKExs6YBGTsPI+kjuI1bSJXgCsoaceJ8gTo2vCVMNwY+9MNxohlTR1KlurA
-         ejPL/IfoGTmi99OxNcnJ73DXjqOBgU6/cZlBOKc2BccUlyhHcRUxYZ1t+2tiXT9rope9
-         Udup0Y2bP9bDgsRt8kX6kiSz3iUXFwhpMl7Y1oFOHuJF8orX/9f1Qp+qXPFN2SRJ4taQ
-         yW/TRxBSYfIyfeWR5l89vB7eQVuWohHz98m0UBLXiWpWMXvatYw+LkFnlYO3oWketJqC
-         YUNw==
+        bh=nFXSqQEvm7WLdQYFLs/odUV6nM3s17jTlqmzGXgnsF8=;
+        b=Mv6PhdV9pezPBL2JvF7UN8LNkuRUTjH/rvz6xm1Zq7XP3k/jPnyD1uP3jdkYy8YOCi
+         oLP9t3Cl2IhSsaqGNr7lfjmBV5hmSsdn5LLjAAWamK3vfCQM35/KMEC2lbFFgBCM8Vm8
+         7XMMG7KgllQUyUNfUE+TMSjg4IFwsOAmDylKiaoFQ02wBisqtupXkRK0x5zpYhCh0wWK
+         d6UuLzn+x3Yu9wBAeINXV/zUUj6YWFZdg920y949OpmKAPFk3HdRqv/pniIX+UDFUqyZ
+         fsOUEBRscUW5M7BHVPjVssyjRqrch53BjK4OUdy0d0UyVj7byvLPxFnKePzTKgkrfoJo
+         ffdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681210968;
+        d=1e100.net; s=20210112; t=1681211070;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8NdaDMR88s+1WtvRZzFseNEUErd04u8W3GHHaAxJqcs=;
-        b=DXuo2TttNi506s9nvlnFE/6chw49rIMGFtB94/PnumSB24srhi7FzA3Zf/oDih1Zas
-         MDhfIHix23b8CmnxHHnBRIiy/GC+ldE4KlRoVYqlLJRyAc5m96zrQ0AvO33s9CVXx6XI
-         KKrp+zKAFL4xajqVeDKxdndvvZ68pbzKshL4Ffl5JRDKIjC8S338VgYNyIiEJjnx1eiz
-         Nu3rozZrmM9wU6W7WrHRqP4HC85gV/38xXuE2TpwHKc52zwxOGN+mXw2sLAkG1kbQuk8
-         BC7d/BBYynS+0xzKGJbOlY37mvAoPVRqyRG48l/AZTQ5PnTTmWASxBY5ov2jCTTh/nKl
-         xDlA==
-X-Gm-Message-State: AAQBX9dQVlFpEFJmdQoXBy/Oc2pUuO6NyPZqutTVFFDlU8gOTiEh2W+0
-        WViBsFS0/nCX0rCrzWU6zFDU
-X-Google-Smtp-Source: AKy350YrgJ+yCoYpqvWMVoHJqr9R84fHbxO/QbzkuGhgDRXGWXXcdoOGiDeCw4wvWJg+mz30I1j3aA==
-X-Received: by 2002:a17:90b:1c8e:b0:234:e3f:f53b with SMTP id oo14-20020a17090b1c8e00b002340e3ff53bmr13789406pjb.21.1681210967895;
-        Tue, 11 Apr 2023 04:02:47 -0700 (PDT)
+        bh=nFXSqQEvm7WLdQYFLs/odUV6nM3s17jTlqmzGXgnsF8=;
+        b=4qUpehvYaR0TAfuC5FfKx33QxhR6SWJaLf+iKr0CGvgNhQ7f7gxjOuzXeFOXwWgDMG
+         4JGh9aSeU2Dvs2esmPQWzhuXJZ+59cMehCR3jCO+UGiPAseY1biaUa7mu6M7E06m06F5
+         nBS3LsKVJb2gd8Cy5LmGwiaQfD83lvkPNLLhgbYIviWD21Ut0HizY6tQBx1v5U5KZjQR
+         6O9DG+SIl1uSR76rh9l+SwnAtXFcr5eIfpVd+Jpqkq5dVBIBySMtRQVPRPIenGp/fiLA
+         F9ZxlEPmY0INMULO/BKA6SDh7h1bw/VXul9a/3ZHGDjYb2xFLJgkuJo2SyUQ9ZYc6cPg
+         OwkQ==
+X-Gm-Message-State: AAQBX9fKPo9qekjMLHKd46F1/0h6JK3IUaWfGGyxfC5C1t7u6ijGBQpq
+        hBHgiZ6e8XxG7MscwQMyDk91
+X-Google-Smtp-Source: AKy350b8YyM+gWZG9+maoSfUuO7Xh5vZ26HQrArMHUvOh+sEsQOeZFwbyYyjKo1HI2/YQAWqY85NTQ==
+X-Received: by 2002:a05:6a20:6d09:b0:da:5084:2764 with SMTP id fv9-20020a056a206d0900b000da50842764mr12933079pzb.24.1681211069983;
+        Tue, 11 Apr 2023 04:04:29 -0700 (PDT)
 Received: from thinkpad ([117.216.120.128])
-        by smtp.gmail.com with ESMTPSA id i6-20020a170902c28600b0019c92f56983sm9416236pld.120.2023.04.11.04.02.43
+        by smtp.gmail.com with ESMTPSA id k24-20020aa78218000000b005921c46cbadsm9794338pfi.99.2023.04.11.04.04.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Apr 2023 04:02:47 -0700 (PDT)
-Date:   Tue, 11 Apr 2023 16:32:40 +0530
+        Tue, 11 Apr 2023 04:04:29 -0700 (PDT)
+Date:   Tue, 11 Apr 2023 16:34:19 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
@@ -61,19 +61,22 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Rob Herring <robh@kernel.org>,
         Serge Semin <fancer.lancer@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v3 00/10] PCI: dwc: Relatively simple fixes and
- cleanups
-Message-ID: <20230411110240.GB5333@thinkpad>
+Subject: Re: [PATCH RESEND v3 01/10] PCI: dwc: Fix erroneous version type
+ test helper
+Message-ID: <20230411110419.GC5333@thinkpad>
 References: <20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru>
+ <20230411033928.30397-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20230411033928.30397-2-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
         DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
@@ -83,96 +86,52 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 06:39:18AM +0300, Serge Semin wrote:
-> It turns out the recent DW PCIe-related patchset was merged in with
-> several relatively trivial issues left unsettled (noted by Bjorn and
-> Manivannan). All of these lefovers have been fixed in this patchset.
-> Namely the series starts with two bug-fixes. The first one concerns the
-> improper link-mode initialization in case if the CDM-check is enabled. The
-> second unfortunate mistake I made in the IP-core version type helper. In
-> particular instead of testing the IP-core version type the macro function
-> referred to the just IP-core version which obviously wasn't what I
-> intended.
+On Tue, Apr 11, 2023 at 06:39:19AM +0300, Serge Semin wrote:
+> Due to an unfortunate mistake the macro function actually checks the
+> IP-core version instead of the IP-core version type which isn't what
+> originally implied. Fix it by introducing a new helper
+> __dw_pcie_ver_type_cmp() with the same semantic as the __dw_pcie_ver_cmp()
+> counterpart except it refers to the dw_pcie.type field in order to perform
+> the passed comparison operation.
 > 
-> Afterwards two @Mani-noted fixes follow. Firstly the dma-ranges related warning
-> message is fixed to start with "DMA-ranges" word instead of "Dma-ranges".
-> Secondly the Baikal-T1 PCIe Host driver is converted to perform the
-> asynchronous probe type which saved us of about 15% of bootup time if no any
-> PCIe peripheral device attached to the port.
-> 
-> Then the patchset contains the Baikal-T1 PCIe driver fix. The
-> corresponding patch removes the false error message printed during the
-> controller probe procedure. I accidentally added the unconditional
-> dev_err_probe() method invocation. It was obviously wrong.
-> 
-> Then two trivial cleanups are introduced. The first one concerns the
-> duplicated fast-link-mode flag unsetting. The second one implies
-> dropping a redundant empty line from the dw_pcie_link_set_max_speed()
-> function.
-> 
-> The series continues with a patch inspired by the last @Bjorn note
-> regarding the generic resources request interface. As @Bjorn correctly
-> said it would be nice to have the new interface used wider in the DW PCIe
-> subsystem. Aside with the Baikal-T1 PCIe Host driver the Toshiba Visconti
-> PCIe driver can be easily converted to using the generic clock names.
-> That's what is done in the noted patch.
-> 
-> The patchset is closed with a series of MAINTAINERS-list related patches.
-> Firstly after getting the DW PCIe RP/EP DT-schemas refactored I forgot to
-> update the MAINTAINER-list with the new files added in the framework of
-> that procedure. All the snps,dw-pcie* schemas shall be maintained by the
-> DW PCIe core driver maintainers. Secondly seeing how long it took for my
-> patchsets to review and not having any comments from the original driver
-> maintainers I'd suggest to add myself as the reviewer to the DW PCIe and
-> eDMA drivers. Thus hopefully the new updates review process will be
-> performed with much less latencies. For the same reason I would also like
-> to suggest to add @Manivannan as the DW PCIe/eDMA drivers maintainer if
-> he isn't against that idea. What do you think about the last suggestion?
-> 
+> Fixes: 0b0a780d52ad ("PCI: dwc: Add macros to compare Synopsys IP core versions")
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-I'm willing to co-maintain the drivers.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 - Mani
 
-> Link: https://lore.kernel.org/linux-pci/20230217093956.27126-1-Sergey.Semin@baikalelectronics.ru/
-> Changelog v2:
-> - Rebase onto the kernel 6.3-rc2.
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.h | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> Link: https://lore.kernel.org/linux-pci/20230313200816.30105-1-Sergey.Semin@baikalelectronics.ru/
-> Changelog v3:
-> - Drop the patch:
->   [PATCH v2 01/11] PCI: dwc: Fix port link CSR improper init if CDM check enabled
->   and rebase onto the already submitted by @Yoshihiro fix:
->   commit cdce67099117 ("PCI: dwc: Fix PORT_LINK_CONTROL update when CDM check enabled")
-> - Just resend.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> Cc: linux-pci@vger.kernel.org
-> Cc: dmaengine@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Serge Semin (10):
->   PCI: dwc: Fix erroneous version type test helper
->   PCI: dwc: Fix inbound iATU entries out-of-bounds warning message
->   PCI: bt1: Enable async probe type
->   PCI: bt1: Fix printing false error message
->   PCI: dwc: Drop duplicated fast-link-mode flag unsetting
->   PCI: dwc: Drop empty line from dw_pcie_link_set_max_speed()
->   PCI: visconti: Convert to using generic resources getter
->   MAINTAINERS: Add all generic DW PCIe RP/EP DT-schemas
->   MAINTAINERS: Add myself as the DW PCIe core reviewer
->   MAINTAINERS: Add myself as the DW eDMA driver reviewer
-> 
->  MAINTAINERS                                   |  5 ++-
->  drivers/pci/controller/dwc/pcie-bt1.c         |  5 ++-
->  .../pci/controller/dwc/pcie-designware-host.c |  2 +-
->  drivers/pci/controller/dwc/pcie-designware.c  |  2 -
->  drivers/pci/controller/dwc/pcie-designware.h  |  7 +++-
->  drivers/pci/controller/dwc/pcie-visconti.c    | 37 +++++++++----------
->  6 files changed, 30 insertions(+), 28 deletions(-)
-> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 79713ce075cc..adad0ea61799 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -37,17 +37,20 @@
+>  #define __dw_pcie_ver_cmp(_pci, _ver, _op) \
+>  	((_pci)->version _op DW_PCIE_VER_ ## _ver)
+>  
+> +#define __dw_pcie_ver_type_cmp(_pci, _type, _op) \
+> +	((_pci)->type _op DW_PCIE_VER_TYPE_ ## _type)
+> +
+>  #define dw_pcie_ver_is(_pci, _ver) __dw_pcie_ver_cmp(_pci, _ver, ==)
+>  
+>  #define dw_pcie_ver_is_ge(_pci, _ver) __dw_pcie_ver_cmp(_pci, _ver, >=)
+>  
+>  #define dw_pcie_ver_type_is(_pci, _ver, _type) \
+>  	(__dw_pcie_ver_cmp(_pci, _ver, ==) && \
+> -	 __dw_pcie_ver_cmp(_pci, TYPE_ ## _type, ==))
+> +	 __dw_pcie_ver_type_cmp(_pci, _type, ==))
+>  
+>  #define dw_pcie_ver_type_is_ge(_pci, _ver, _type) \
+>  	(__dw_pcie_ver_cmp(_pci, _ver, ==) && \
+> -	 __dw_pcie_ver_cmp(_pci, TYPE_ ## _type, >=))
+> +	 __dw_pcie_ver_type_cmp(_pci, _type, >=))
+>  
+>  /* DWC PCIe controller capabilities */
+>  #define DW_PCIE_CAP_REQ_RES		0
 > -- 
 > 2.40.0
 > 

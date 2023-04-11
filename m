@@ -2,54 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4C566DD8D0
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Apr 2023 13:05:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 331DF6DD8D4
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Apr 2023 13:05:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230033AbjDKLFV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 11 Apr 2023 07:05:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33346 "EHLO
+        id S229792AbjDKLFo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 11 Apr 2023 07:05:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229955AbjDKLFU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Apr 2023 07:05:20 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17E3244A3
-        for <dmaengine@vger.kernel.org>; Tue, 11 Apr 2023 04:04:52 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id p8so7521371plk.9
-        for <dmaengine@vger.kernel.org>; Tue, 11 Apr 2023 04:04:52 -0700 (PDT)
+        with ESMTP id S229776AbjDKLFm (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Apr 2023 07:05:42 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63F243C0D
+        for <dmaengine@vger.kernel.org>; Tue, 11 Apr 2023 04:05:17 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id e18-20020a17090ac21200b00246952d917fso6022428pjt.4
+        for <dmaengine@vger.kernel.org>; Tue, 11 Apr 2023 04:05:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681211070;
+        d=linaro.org; s=google; t=1681211116;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=nFXSqQEvm7WLdQYFLs/odUV6nM3s17jTlqmzGXgnsF8=;
-        b=Mv6PhdV9pezPBL2JvF7UN8LNkuRUTjH/rvz6xm1Zq7XP3k/jPnyD1uP3jdkYy8YOCi
-         oLP9t3Cl2IhSsaqGNr7lfjmBV5hmSsdn5LLjAAWamK3vfCQM35/KMEC2lbFFgBCM8Vm8
-         7XMMG7KgllQUyUNfUE+TMSjg4IFwsOAmDylKiaoFQ02wBisqtupXkRK0x5zpYhCh0wWK
-         d6UuLzn+x3Yu9wBAeINXV/zUUj6YWFZdg920y949OpmKAPFk3HdRqv/pniIX+UDFUqyZ
-         fsOUEBRscUW5M7BHVPjVssyjRqrch53BjK4OUdy0d0UyVj7byvLPxFnKePzTKgkrfoJo
-         ffdQ==
+        bh=io8UpU5dAmYXG11sIwaNdSii471vCcYFpdDyFDwKPgY=;
+        b=BAvnR27qwms7MKR6LP3NoeyT/Ghkxw6tRsZ6utkXZICaajKUMt75IRXj8JmnJl9Oya
+         sdNJmthl4XSlSOfr+xLK69CfbgVbIJGqYhIcbRfp6KRY3u9WKrcl0Nwmc0X5SomTa41P
+         Gnboi5DFZTigHhJn4VAbWqtUBO6shp+/stsftRZDkwQ0hQJJeX7jNEzBjmtUkVRfslmz
+         8+DRMHnqN/854QjVjqLe17bARvpT/Jf2ddjNz6gDzbihfavgMu0Pltiao0dMW+7bEjbK
+         FUiSeZTJU0XyttdNcMuR20Nvdn7CDXDkwZyiJ5j5HTItFhvtBQ4Lw/cCWYM63Szpc2Ml
+         S0kQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681211070;
+        d=1e100.net; s=20210112; t=1681211116;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nFXSqQEvm7WLdQYFLs/odUV6nM3s17jTlqmzGXgnsF8=;
-        b=4qUpehvYaR0TAfuC5FfKx33QxhR6SWJaLf+iKr0CGvgNhQ7f7gxjOuzXeFOXwWgDMG
-         4JGh9aSeU2Dvs2esmPQWzhuXJZ+59cMehCR3jCO+UGiPAseY1biaUa7mu6M7E06m06F5
-         nBS3LsKVJb2gd8Cy5LmGwiaQfD83lvkPNLLhgbYIviWD21Ut0HizY6tQBx1v5U5KZjQR
-         6O9DG+SIl1uSR76rh9l+SwnAtXFcr5eIfpVd+Jpqkq5dVBIBySMtRQVPRPIenGp/fiLA
-         F9ZxlEPmY0INMULO/BKA6SDh7h1bw/VXul9a/3ZHGDjYb2xFLJgkuJo2SyUQ9ZYc6cPg
-         OwkQ==
-X-Gm-Message-State: AAQBX9fKPo9qekjMLHKd46F1/0h6JK3IUaWfGGyxfC5C1t7u6ijGBQpq
-        hBHgiZ6e8XxG7MscwQMyDk91
-X-Google-Smtp-Source: AKy350b8YyM+gWZG9+maoSfUuO7Xh5vZ26HQrArMHUvOh+sEsQOeZFwbyYyjKo1HI2/YQAWqY85NTQ==
-X-Received: by 2002:a05:6a20:6d09:b0:da:5084:2764 with SMTP id fv9-20020a056a206d0900b000da50842764mr12933079pzb.24.1681211069983;
-        Tue, 11 Apr 2023 04:04:29 -0700 (PDT)
+        bh=io8UpU5dAmYXG11sIwaNdSii471vCcYFpdDyFDwKPgY=;
+        b=VR3V202w6a+oE02TZ/GomCQWA78qjFiG0+s47HKZ3YudPYS895tf4jCNILoW0NX23m
+         3Ks2bURoEDO1NQPIhbGNERyZ5FBbUTaK3K9DkVzESe9jRL9+1setdddl5yx9YaUuqsc0
+         lWX/koKOGgC2XyXCkfa/IcOCwPsx8UERH61ZtzHupsUBDMyIe9pCfsrMvRIkHdS0eZqA
+         PvKVsFVweWehVbynsxgYuKk7aUIzNBXgb+i59EexQ/A1oT4FihLTfHvbhxENFZyq4ZkV
+         F2ZBJGx6NJcKmCJ+cSU7dk3ENRFG/QYrcyGgN6+sscSkBwQfXY+FXSOluA3eoBXBia9F
+         mdEQ==
+X-Gm-Message-State: AAQBX9fT7A7CiD214qtCrmPlcFL/hDCS2W88mQS8aQJmazoo4Kxjb+VP
+        w2YIKfhJJhF5DiDK8GwuXp63
+X-Google-Smtp-Source: AKy350auwVp798Y4nCCGwszWeeAy8RYT89ODx6HrKEQrzx+s92jgK5a09SHdRU0RH5JS692sJIV6fg==
+X-Received: by 2002:a05:6a20:77af:b0:de:af2f:fdeb with SMTP id c47-20020a056a2077af00b000deaf2ffdebmr9218828pzg.3.1681211115858;
+        Tue, 11 Apr 2023 04:05:15 -0700 (PDT)
 Received: from thinkpad ([117.216.120.128])
-        by smtp.gmail.com with ESMTPSA id k24-20020aa78218000000b005921c46cbadsm9794338pfi.99.2023.04.11.04.04.23
+        by smtp.gmail.com with ESMTPSA id j10-20020a62e90a000000b005a7f8a326a3sm9535165pfh.50.2023.04.11.04.05.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Apr 2023 04:04:29 -0700 (PDT)
-Date:   Tue, 11 Apr 2023 16:34:19 +0530
+        Tue, 11 Apr 2023 04:05:15 -0700 (PDT)
+Date:   Tue, 11 Apr 2023 16:35:07 +0530
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
@@ -67,16 +67,16 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v3 01/10] PCI: dwc: Fix erroneous version type
- test helper
-Message-ID: <20230411110419.GC5333@thinkpad>
+Subject: Re: [PATCH RESEND v3 02/10] PCI: dwc: Fix inbound iATU entries
+ out-of-bounds warning message
+Message-ID: <20230411110507.GD5333@thinkpad>
 References: <20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru>
- <20230411033928.30397-2-Sergey.Semin@baikalelectronics.ru>
+ <20230411033928.30397-3-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230411033928.30397-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20230411033928.30397-3-Sergey.Semin@baikalelectronics.ru>
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
         DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
@@ -86,15 +86,14 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 06:39:19AM +0300, Serge Semin wrote:
-> Due to an unfortunate mistake the macro function actually checks the
-> IP-core version instead of the IP-core version type which isn't what
-> originally implied. Fix it by introducing a new helper
-> __dw_pcie_ver_type_cmp() with the same semantic as the __dw_pcie_ver_cmp()
-> counterpart except it refers to the dw_pcie.type field in order to perform
-> the passed comparison operation.
+On Tue, Apr 11, 2023 at 06:39:20AM +0300, Serge Semin wrote:
+> The message is printed if the number of requested inbound iATU windows
+> exceed the device capability. In that case the message should either refer
+> to the "dma-ranges" DT property or to the DMA-ranges mapping. We suggest
+> to use the later version as a counterpart to the just CPU-ranges mapping.
+> In any case the current "Dma-ranges" phrase seems incorrect.
 > 
-> Fixes: 0b0a780d52ad ("PCI: dwc: Add macros to compare Synopsys IP core versions")
+> Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
@@ -102,36 +101,22 @@ Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 - Mani
 
 > ---
->  drivers/pci/controller/dwc/pcie-designware.h | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 79713ce075cc..adad0ea61799 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -37,17 +37,20 @@
->  #define __dw_pcie_ver_cmp(_pci, _ver, _op) \
->  	((_pci)->version _op DW_PCIE_VER_ ## _ver)
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index 9952057c8819..5718b4bb67f0 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -723,7 +723,7 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+>  	}
 >  
-> +#define __dw_pcie_ver_type_cmp(_pci, _type, _op) \
-> +	((_pci)->type _op DW_PCIE_VER_TYPE_ ## _type)
-> +
->  #define dw_pcie_ver_is(_pci, _ver) __dw_pcie_ver_cmp(_pci, _ver, ==)
+>  	if (pci->num_ib_windows <= i)
+> -		dev_warn(pci->dev, "Dma-ranges exceed inbound iATU size (%u)\n",
+> +		dev_warn(pci->dev, "DMA-ranges exceed inbound iATU size (%u)\n",
+>  			 pci->num_ib_windows);
 >  
->  #define dw_pcie_ver_is_ge(_pci, _ver) __dw_pcie_ver_cmp(_pci, _ver, >=)
->  
->  #define dw_pcie_ver_type_is(_pci, _ver, _type) \
->  	(__dw_pcie_ver_cmp(_pci, _ver, ==) && \
-> -	 __dw_pcie_ver_cmp(_pci, TYPE_ ## _type, ==))
-> +	 __dw_pcie_ver_type_cmp(_pci, _type, ==))
->  
->  #define dw_pcie_ver_type_is_ge(_pci, _ver, _type) \
->  	(__dw_pcie_ver_cmp(_pci, _ver, ==) && \
-> -	 __dw_pcie_ver_cmp(_pci, TYPE_ ## _type, >=))
-> +	 __dw_pcie_ver_type_cmp(_pci, _type, >=))
->  
->  /* DWC PCIe controller capabilities */
->  #define DW_PCIE_CAP_REQ_RES		0
+>  	return 0;
 > -- 
 > 2.40.0
 > 

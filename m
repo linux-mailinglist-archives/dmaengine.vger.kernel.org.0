@@ -2,57 +2,57 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ED0B6DE1EE
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Apr 2023 19:10:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15B226DE23E
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Apr 2023 19:16:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229931AbjDKRKm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 11 Apr 2023 13:10:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58788 "EHLO
+        id S229499AbjDKRQp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 11 Apr 2023 13:16:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbjDKRKh (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Apr 2023 13:10:37 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E3101B0;
-        Tue, 11 Apr 2023 10:10:35 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id i26so11682205lfc.6;
-        Tue, 11 Apr 2023 10:10:35 -0700 (PDT)
+        with ESMTP id S229556AbjDKRQn (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Apr 2023 13:16:43 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7973D5598;
+        Tue, 11 Apr 2023 10:16:20 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id o1so11366825lfc.2;
+        Tue, 11 Apr 2023 10:16:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1681233034; x=1683825034;
+        d=gmail.com; s=20210112; t=1681233379; x=1683825379;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=mGizEsw3sJWfijdGwZY6mnVMilXLlUOHXy9YhsHlUGE=;
-        b=Jy0sZt+9aCxhlmrgogjm1w1D1lzn4DzCHCcxXSgCbwEAB1IR/m6ykT7AYqeWjzaTOG
-         BB8pYP+Fw9dG/pOAQRUHliVux19dMEcuwCjoM9lbUS+aTgwK0mvJeSSUB8n2OjuSFmRW
-         0GVveDs8REUj1WRfbhwuMwqtCO6JKwnDD1B7Gyj7TKdymfgeUvb1mUZpkrfddgYgR87p
-         VHUlWbLH3mBdEFoLOZDDrIlQnc0lgHPY5xEsL4KkArIyKwLjbGJRc226kj8RM2v2hrzK
-         g4jfo765GYwdyAg5UTzHaZz5vxK20Uk/Bhvqt5sDED8Hh7LJcURuq6RA7eTkk3qS5OtZ
-         klMw==
+        bh=zRtwsRyVIGqbkmiCnDqCsYdQjOk1l7EH31DIMvx2aYo=;
+        b=QN4AgX1vG6TwvXQ6XOCqMVOZuOC4Ru5G1vKdR5L6LPPsHkM3tGW+XPrXX09zkc6j2S
+         +xPSm2znuJ8gvEhplWMtooiJusbJB8ZpA6EYHagHeNKic56w9GWMbEhPoRNVAHGOEGnL
+         k0iQXP0rBybo/qdK0qWNDK44bEFMFG4Bwf9NSpCLrM92JxDag+WDEqXV2JjxKhYa64zW
+         fhqxfu4SZFj5CbRY6YGcuuDEDHr+71ucCWLzWEyFdLgRKxLvl3Ez8ttMic61YQcBuV0e
+         EEmuH7oVQ2ZZgRaldisW9NB8vZIy42tZruIrYNdtKnGXjo1u31WFxV5gKncgZP8Ne9Bs
+         sA4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681233034; x=1683825034;
+        d=1e100.net; s=20210112; t=1681233379; x=1683825379;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mGizEsw3sJWfijdGwZY6mnVMilXLlUOHXy9YhsHlUGE=;
-        b=qujTMfNDNPXkV7HNxnar6R9gys7XywJ/Ew6OD5Gk2uTudw5q9d5P4Th0P6vH+CUoFN
-         S97rTjbnpkX0M99UGqOv3FWXNYzl+qAaVA4GRQHsmSADskD1FJkeh//A86izLUCvGbBU
-         TC8QwU4edzo491udE3AWKBHZ5Xtwm+A/EToc1vXekvZoOB1XqOAKlcoaxlGw0IQEzhDM
-         zTR2R0tfjJbIY1+lQZuAiSMAuYIg1LpWpLSOiPFb8mSy7EEQbwD4MTUro+H2ge8qrEr9
-         0mDdUIAx7I1bDchTKzJ9PyYB6wp9VEeqqCxh6B93vG9WzejNGVI8COF5dvd61MLlDbQN
-         g3KA==
-X-Gm-Message-State: AAQBX9c9ZQuvZG1D7j2dezj7nx7wFzyPGLj1b4zQJ5igeT6HDJR3d+8/
-        UM2nPvW+RGHYJou1Aifh9Oo=
-X-Google-Smtp-Source: AKy350av0PRJeqs9sxWDSY7X+R5lmkQbWYkcOyM5ZwFuSFEZujQJmVEaDYiik8NSwxsT+zjPDl+lTA==
-X-Received: by 2002:a05:6512:74:b0:4dd:ce0b:7692 with SMTP id i20-20020a056512007400b004ddce0b7692mr2950205lfo.46.1681233033766;
-        Tue, 11 Apr 2023 10:10:33 -0700 (PDT)
+        bh=zRtwsRyVIGqbkmiCnDqCsYdQjOk1l7EH31DIMvx2aYo=;
+        b=jYnD2W4pgmih8T4R+8T7+Mrf3+2fXkwQ+zOKFAwTjleOWHAyttmdW0sBrHJ+Y9twJA
+         UjZKtZBFSKQ4SOlWZEMEo8wvFw6ruVdGeR3MwoYRft4VAUuR3Vd+r/oAKr1A+YHWDnIx
+         22qE6f6WxQgAzzOfghSen6rWuH7QzqSq45QsPL4O6NOHjUIedAbuWmy9MEwCWfikBLth
+         iqdRp6yRPY8KAdD1WYmpxNpQdl4uRFz6OkJ3ssFOz+m8scbacu+7X5aenSaTvaul/MYR
+         TxUWFKenN30Nh+hAX28UiAhrykHw/mZYemShAwklBIUhtM+P8spSuzVjkJPO8e5U7MAA
+         DHEA==
+X-Gm-Message-State: AAQBX9eiTWPMTtLcRkwrwlSPqvzrKGPfrukf2g0KYavfDcfcsHBFwkzA
+        For1+fcDdndlIGyA9bY0pIA=
+X-Google-Smtp-Source: AKy350aU2RyTu7csMgtptLshnV8XaxjcWlEXI5Nbb6vLFCW/PoKY/nJF++O4isukO/xLPd/Ba3Xn1g==
+X-Received: by 2002:a05:6512:244:b0:4e9:c327:dd81 with SMTP id b4-20020a056512024400b004e9c327dd81mr3582478lfo.63.1681233378577;
+        Tue, 11 Apr 2023 10:16:18 -0700 (PDT)
 Received: from mobilestation ([95.79.140.35])
-        by smtp.gmail.com with ESMTPSA id r15-20020ac25a4f000000b004e848782e2esm2645007lfn.57.2023.04.11.10.10.32
+        by smtp.gmail.com with ESMTPSA id x4-20020a19f604000000b004ebae99cc1dsm2614134lfe.159.2023.04.11.10.16.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Apr 2023 10:10:33 -0700 (PDT)
-Date:   Tue, 11 Apr 2023 20:10:30 +0300
+        Tue, 11 Apr 2023 10:16:17 -0700 (PDT)
+Date:   Tue, 11 Apr 2023 20:16:15 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>, g@thinkpad,
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Cai Huoqing <cai.huoqing@linux.dev>,
@@ -61,25 +61,21 @@ Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>, g@thinkpad,
         Vinod Koul <vkoul@kernel.org>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH RESEND v3 07/10] PCI: visconti: Convert to using generic
- resources getter
-Message-ID: <20230411171030.jsyvwovlqeq7pplw@mobilestation>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v3 09/10] MAINTAINERS: Add myself as the DW PCIe
+ core reviewer
+Message-ID: <20230411171615.gezxhjcndpkrts2b@mobilestation>
 References: <20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru>
- <20230411033928.30397-8-Sergey.Semin@baikalelectronics.ru>
- <20230411111947.GI5333@thinkpad>
+ <20230411033928.30397-10-Sergey.Semin@baikalelectronics.ru>
+ <20230411112416.GK5333@thinkpad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230411111947.GI5333@thinkpad>
+In-Reply-To: <20230411112416.GK5333@thinkpad>
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
         DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
@@ -90,118 +86,52 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 04:49:47PM +0530, Manivannan Sadhasivam wrote:
-> On Tue, Apr 11, 2023 at 06:39:25AM +0300, Serge Semin wrote:
-> > The generic resources request infrastructure has been recently added to
-> > the DW PCIe core driver. Since the DT-bindings of the Toshibo Visconti
-> > PCIe Host controller is fully compatible with the generic names set let's
-> > convert the driver to using that infrastructure. It won't take much effort
-> > since the low-level device driver implies the resources request only with
-> > no additional manipulations involving them. So just drop the locally
-> > defined clocks request procedures, activate the generic resources request
-> > capability and make sure the mandatory resources have been requested by
-> > the DW PCIe core driver.
+On Tue, Apr 11, 2023 at 04:54:16PM +0530, Manivannan Sadhasivam wrote:
+> On Tue, Apr 11, 2023 at 06:39:27AM +0300, Serge Semin wrote:
+> > No actions have been spotted from the driver maintainers for almost two
+> > years now. It significantly delays the review process of the relatively
+> > often incoming updates. Since that IP-core has been used in several our
+> > SoCs adding myself to the list of reviewers will help in the evolving the
+> > driver faster and in catching any potential problem as early as possible.
 > > 
-> > Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
 > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-visconti.c | 37 ++++++++++------------
-> >  1 file changed, 17 insertions(+), 20 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-visconti.c b/drivers/pci/controller/dwc/pcie-visconti.c
-> > index 71026fefa366..ae1517b52c58 100644
-> > --- a/drivers/pci/controller/dwc/pcie-visconti.c
-> > +++ b/drivers/pci/controller/dwc/pcie-visconti.c
-> > @@ -29,9 +29,6 @@ struct visconti_pcie {
-> >  	void __iomem *ulreg_base;
-> >  	void __iomem *smu_base;
-> >  	void __iomem *mpu_base;
-> > -	struct clk *refclk;
-> > -	struct clk *coreclk;
-> > -	struct clk *auxclk;
-> >  };
-> >  
-> >  #define PCIE_UL_REG_S_PCIE_MODE		0x00F4
-> > @@ -198,6 +195,21 @@ static int visconti_pcie_host_init(struct dw_pcie_rp *pp)
-> >  	int err;
-> >  	u32 val;
-> >  
-> > +	if (!pcie->pci.core_clks[DW_PCIE_REF_CLK].clk) {
-> > +		dev_err(pci->dev, "Missing ref clock source\n");
-> > +		return -ENOENT;
-> > +	}
-> > +
-> > +	if (!pcie->pci.core_clks[DW_PCIE_CORE_CLK].clk) {
-> > +		dev_err(pci->dev, "Missing core clock source\n");
-> > +		return -ENOENT;
-> > +	}
-> > +
-> > +	if (!pcie->pci.core_clks[DW_PCIE_AUX_CLK].clk) {
-> > +		dev_err(pci->dev, "Missing aux clock source\n");
-> > +		return -ENOENT;
-> > +	}
-> > +
 > 
-> Looking at the driver, I could see no call to clk_prepare_enable() for these
-> clocks. So from kernel's PoV these are not used at all. So either these clocks
-> are not required (unlikely) or enabled by the bootloader so kernel just uses it.
-> 
-> In that case, the driver should handle these clocks properly.
-> 
-> @Nobuhiro-San, can you please comment?
+> If the Maintainers were not responding for these long years, then it implies
+> that they are not maintaining at all. So I'm inclined to remove their entries
+> too but I'll defer that decision to Lorenzo.
 
-I will easily update the patch with a code enabling these clocks in
-the visconti_pcie_host_init() method if @Nobuhiro-San are ok with
-that.
+To be completely honest @Jingoo responded to a few patches with minor
+comments lately meanwhile @Gustavo has been completely silent for
+about two years now.
+
+> 
+> For this patch,
+> 
+> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+Thanks.
 
 -Serge(y)
 
 > 
 > - Mani
 > 
-> >  	visconti_smu_writel(pcie,
-> >  			    PISMU_CKON_PCIE_AUX_CLK | PISMU_CKON_PCIE_MSTR_ACLK,
-> >  			    PISMU_CKON_PCIE);
-> > @@ -242,8 +254,6 @@ static const struct dw_pcie_host_ops visconti_pcie_host_ops = {
-> >  static int visconti_get_resources(struct platform_device *pdev,
-> >  				  struct visconti_pcie *pcie)
-> >  {
-> > -	struct device *dev = &pdev->dev;
-> > -
-> >  	pcie->ulreg_base = devm_platform_ioremap_resource_byname(pdev, "ulreg");
-> >  	if (IS_ERR(pcie->ulreg_base))
-> >  		return PTR_ERR(pcie->ulreg_base);
-> > @@ -256,21 +266,6 @@ static int visconti_get_resources(struct platform_device *pdev,
-> >  	if (IS_ERR(pcie->mpu_base))
-> >  		return PTR_ERR(pcie->mpu_base);
-> >  
-> > -	pcie->refclk = devm_clk_get(dev, "ref");
-> > -	if (IS_ERR(pcie->refclk))
-> > -		return dev_err_probe(dev, PTR_ERR(pcie->refclk),
-> > -				     "Failed to get ref clock\n");
-> > -
-> > -	pcie->coreclk = devm_clk_get(dev, "core");
-> > -	if (IS_ERR(pcie->coreclk))
-> > -		return dev_err_probe(dev, PTR_ERR(pcie->coreclk),
-> > -				     "Failed to get core clock\n");
-> > -
-> > -	pcie->auxclk = devm_clk_get(dev, "aux");
-> > -	if (IS_ERR(pcie->auxclk))
-> > -		return dev_err_probe(dev, PTR_ERR(pcie->auxclk),
-> > -				     "Failed to get aux clock\n");
-> > -
-> >  	return 0;
-> >  }
-> >  
-> > @@ -304,6 +299,8 @@ static int visconti_pcie_probe(struct platform_device *pdev)
-> >  	pci->dev = dev;
-> >  	pci->ops = &dw_pcie_ops;
-> >  
-> > +	dw_pcie_cap_set(pci, REQ_RES);
-> > +
-> >  	ret = visconti_get_resources(pdev, pcie);
-> >  	if (ret)
-> >  		return ret;
+> > ---
+> >  MAINTAINERS | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 489fd4b4c7ae..51adcafa0f0c 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -16061,6 +16061,7 @@ F:	drivers/pci/controller/dwc/pci-exynos.c
+> >  PCI DRIVER FOR SYNOPSYS DESIGNWARE
+> >  M:	Jingoo Han <jingoohan1@gmail.com>
+> >  M:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > +R:	Serge Semin <fancer.lancer@gmail.com>
+> >  L:	linux-pci@vger.kernel.org
+> >  S:	Maintained
+> >  F:	Documentation/devicetree/bindings/pci/snps,dw-pcie*.yaml
 > > -- 
 > > 2.40.0
 > > 

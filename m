@@ -2,48 +2,63 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AE206DFBF1
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Apr 2023 18:56:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 722BC6DFC01
+	for <lists+dmaengine@lfdr.de>; Wed, 12 Apr 2023 18:58:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229852AbjDLQ4O (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 12 Apr 2023 12:56:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58504 "EHLO
+        id S229541AbjDLQ6a (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 12 Apr 2023 12:58:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229814AbjDLQ4N (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Apr 2023 12:56:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF78A729D;
-        Wed, 12 Apr 2023 09:55:44 -0700 (PDT)
+        with ESMTP id S229950AbjDLQ63 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Apr 2023 12:58:29 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB11D9EC3;
+        Wed, 12 Apr 2023 09:58:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EA9D6631EE;
-        Wed, 12 Apr 2023 16:55:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1CDAC433EF;
-        Wed, 12 Apr 2023 16:55:00 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 65E6561169;
+        Wed, 12 Apr 2023 16:58:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F623C4339B;
+        Wed, 12 Apr 2023 16:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681318501;
-        bh=ut+9zKLRjX+MsVAyakcnRhLhXAlTYjnQGu1Y4AZSi7c=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Nsa2K5wTsw+L5kWNkQxzBrt77qVWU/FH19fHyIGSf2xQkkeEPvf119Ie50/AsIap3
-         XtagNJwD5B0jmanvO6FqgYgpj2ynchDg4XOjdrEFAKgW+imDV4mshYXZoSIXKWuFsn
-         XOZnw3I43EFkFPVE0WD82GQL4NCAY3xD5z6h58x3sz3DKjuQnkVHZ+Dt2PGweQmMcn
-         aElWx7deAB50EbRwFpnsrQbZxjrI2WbxENejqOSl6MzdrUY1eumReDC7jP3W4pZWJS
-         ojxxLsJoDCixFdnMOCo1PZzBjuEmahErdj/c0tMQLtq6tmZYYx6PexXbPkV0BhmmU4
-         MXrF06eUfL3Eg==
-Date:   Wed, 12 Apr 2023 22:24:57 +0530
+        s=k20201202; t=1681318689;
+        bh=mvIllIwwL0a3N/4obdyiGIoypl2z7EHLEGkWiecz4W4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=If4vMZlVFmDy4ncqrtHqk9rr1iXk9l3r/MmO2bK2bDYqMNXk42gBYefyiSPPm71d3
+         Gw5GkARm8UyQLJdPj5rbPqtENXbffZCHV6Kar2gKsdaeNb4/0/iXjovTfQJRYlmd+P
+         qJy3mZ7KE5j5jxZAaVgvKtGwb7HH/ulLTCaKAHwqbi/m2oLmZYvDQO6GtJA0Ijbp7Q
+         7afHh3B4zLBvzNQE0MCn0ilUbSCI+eaoE557JjBhG5lFr4SN11yItMQgPuDI8HeUXS
+         hL4dcLIcqMBmAsk1OKYKqNBbAmB7p4j+9daLFIVl7HhYAnNpD5S5RD8QrJ5GouW7/3
+         V29DR5/yTbwbA==
+Date:   Wed, 12 Apr 2023 22:28:05 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL]: dmaengine fixes for v6.3
-Message-ID: <ZDbiYVOQFNzdnq24@matsya>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v3 00/10] PCI: dwc: Relatively simple fixes and
+ cleanups
+Message-ID: <ZDbjHTenZMxfziZD@matsya>
+References: <20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru>
+ <20230411110240.GB5333@thinkpad>
+ <20230411165924.4zfwhwxacxxeg7rk@mobilestation>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="15JBCVxE94na5Eta"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <20230411165924.4zfwhwxacxxeg7rk@mobilestation>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,77 +66,63 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On 11-04-23, 19:59, Serge Semin wrote:
+> On Tue, Apr 11, 2023 at 04:32:40PM +0530, Manivannan Sadhasivam wrote:
+> > On Tue, Apr 11, 2023 at 06:39:18AM +0300, Serge Semin wrote:
+> > > It turns out the recent DW PCIe-related patchset was merged in with
+> > > several relatively trivial issues left unsettled (noted by Bjorn and
+> > > Manivannan). All of these lefovers have been fixed in this patchset.
+> > > Namely the series starts with two bug-fixes. The first one concerns the
+> > > improper link-mode initialization in case if the CDM-check is enabled. The
+> > > second unfortunate mistake I made in the IP-core version type helper. In
+> > > particular instead of testing the IP-core version type the macro function
+> > > referred to the just IP-core version which obviously wasn't what I
+> > > intended.
+> > > 
+> > > Afterwards two @Mani-noted fixes follow. Firstly the dma-ranges related warning
+> > > message is fixed to start with "DMA-ranges" word instead of "Dma-ranges".
+> > > Secondly the Baikal-T1 PCIe Host driver is converted to perform the
+> > > asynchronous probe type which saved us of about 15% of bootup time if no any
+> > > PCIe peripheral device attached to the port.
+> > > 
+> > > Then the patchset contains the Baikal-T1 PCIe driver fix. The
+> > > corresponding patch removes the false error message printed during the
+> > > controller probe procedure. I accidentally added the unconditional
+> > > dev_err_probe() method invocation. It was obviously wrong.
+> > > 
+> > > Then two trivial cleanups are introduced. The first one concerns the
+> > > duplicated fast-link-mode flag unsetting. The second one implies
+> > > dropping a redundant empty line from the dw_pcie_link_set_max_speed()
+> > > function.
+> > > 
+> > > The series continues with a patch inspired by the last @Bjorn note
+> > > regarding the generic resources request interface. As @Bjorn correctly
+> > > said it would be nice to have the new interface used wider in the DW PCIe
+> > > subsystem. Aside with the Baikal-T1 PCIe Host driver the Toshiba Visconti
+> > > PCIe driver can be easily converted to using the generic clock names.
+> > > That's what is done in the noted patch.
+> > > 
+> > > The patchset is closed with a series of MAINTAINERS-list related patches.
+> > > Firstly after getting the DW PCIe RP/EP DT-schemas refactored I forgot to
+> > > update the MAINTAINER-list with the new files added in the framework of
+> > > that procedure. All the snps,dw-pcie* schemas shall be maintained by the
+> > > DW PCIe core driver maintainers. Secondly seeing how long it took for my
+> > > patchsets to review and not having any comments from the original driver
+> > > maintainers I'd suggest to add myself as the reviewer to the DW PCIe and
+> > > eDMA drivers. Thus hopefully the new updates review process will be
+> > > performed with much less latencies. For the same reason I would also like
+> > > to suggest to add @Manivannan as the DW PCIe/eDMA drivers maintainer if
+> > > he isn't against that idea. What do you think about the last suggestion?
+> > > 
+> > 
+> > I'm willing to co-maintain the drivers.
+> 
+> Awesome! @Bjorn, @Lorenzo, @Vinod what do you think about this? If you
+> are ok with that shall I resubmit the series with @Mani added to the
+> DW PCIe/eDMA maintainers list or will you create the respective
+> patches yourself?
 
---15JBCVxE94na5Eta
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Pls send the patch, that is preferred.
 
-Hello Linus
-
-Please pull couple of fixes in apple driver, core and kernedoc fix for
-dmaengine subsystem for v6.3
-
-The following changes since commit fe15c26ee26efa11741a7b632e9f23b01aca4cc6:
-
-  Linux 6.3-rc1 (2023-03-05 14:52:03 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dm=
-aengine-fix-6.3
-
-for you to fetch changes up to d9503be5a100c553731c0e8a82c7b4201e8a970c:
-
-  dmaengine: apple-admac: Fix 'current_tx' not getting freed (2023-03-31 18=
-:17:21 +0530)
-
-----------------------------------------------------------------
-dmaengine fixes for v6.3
-
-- apple admac driver fixes for current_tx, src_addr_widths and global'
-  interrupt flags handling
-- xdma kerneldoc fix
-- core fix for use of devm_add_action_or_reset
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      dmaengine: Actually use devm_add_action_or_reset()
-
-Martin Povi=C5=A1er (3):
-      dmaengine: apple-admac: Handle 'global' interrupt flags
-      dmaengine: apple-admac: Set src_addr_widths capability
-      dmaengine: apple-admac: Fix 'current_tx' not getting freed
-
-Yang Li (1):
-      dmaengine: xilinx: xdma: Fix some kernel-doc comments
-
- drivers/dma/apple-admac.c | 20 +++++++++++++++++---
- drivers/dma/dmaengine.c   |  2 +-
- drivers/dma/xilinx/xdma.c |  2 +-
- 3 files changed, 19 insertions(+), 5 deletions(-)
-
---=20
+-- 
 ~Vinod
-
---15JBCVxE94na5Eta
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAmQ24mAACgkQfBQHDyUj
-g0dLbhAAkZIGIihQhXrP3aquxAkAhs7uQ3138boXX5bfipVxcKfVgiFZRBnjx5Z4
-XRzVqzmk4xTqZkwMwtIpGt76UsmLC7KqRIrJ3/gZbZUhS1CMSnLlgSpZSnRNN0Wl
-BEO/L1NA4QBdIqzss5EjA/H5yH5f4ghIRzvvdWghIqFuXNw7IChjMOvff/AmD+Ra
-0OXhfoQeKo70mpjvtVYIcgZXW6lDQhusIH7rhMoBn54N/9VQUHCO3EiewexqW0+1
-xke9sJTKOuQqeh1ykceyhdTkYxaBKwHMGCa3AupWGr2qgmp2mm7pL7NgA4TOkPzD
-/g31L6gNOjUMMtZQLBfe1/3YGnHNsuMJr8NnuDXXYGfdYFUyvZ/nF7iDLY8RyUMW
-q80UC4PAltw2ytiwy2RXvsd/+qEJma1cjdhXSWgbUfOLF6hhpVB1diyt85LxIYIh
-poWBNHoe5LVW1rTY1Vyg9RDsaD9v0Ny7R6XTROg5mrbJagDklBdvZON7jzfuoXX1
-X+Vl8QNT1keqiLP7zv9ESgB3f+MFu4EXL2FgSQCuBAfdh7Pxmt3AqE/aB2iS6gM/
-cGz1os7LOCKbINUkHBtYtVsov0Fwztd5Y/ZCQSJW8EfXBVQPTE8dBTmNQbJNOn5E
-tAksjmUdw8vrAPYlvEIG1kBYCiAxZo4+CEJthSAuhjSBlKzPlqk=
-=YQNT
------END PGP SIGNATURE-----
-
---15JBCVxE94na5Eta--

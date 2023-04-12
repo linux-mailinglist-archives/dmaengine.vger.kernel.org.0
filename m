@@ -2,34 +2,34 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 690096DF9DD
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Apr 2023 17:25:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BA7E6DF9E0
+	for <lists+dmaengine@lfdr.de>; Wed, 12 Apr 2023 17:25:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230459AbjDLPZC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        id S229989AbjDLPZC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
         Wed, 12 Apr 2023 11:25:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54984 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231556AbjDLPY6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Apr 2023 11:24:58 -0400
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E2D05FA;
-        Wed, 12 Apr 2023 08:24:56 -0700 (PDT)
+        with ESMTP id S230118AbjDLPZA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Apr 2023 11:25:00 -0400
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6C99411A;
+        Wed, 12 Apr 2023 08:24:59 -0700 (PDT)
 X-IronPort-AV: E=Sophos;i="5.98,339,1673881200"; 
-   d="scan'208";a="155741524"
+   d="scan'208";a="159192076"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 13 Apr 2023 00:24:56 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 13 Apr 2023 00:24:59 +0900
 Received: from localhost.localdomain (unknown [10.226.93.18])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id C18FE4006C6E;
-        Thu, 13 Apr 2023 00:24:54 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 43C654006C9B;
+        Thu, 13 Apr 2023 00:24:57 +0900 (JST)
 From:   Biju Das <biju.das.jz@bp.renesas.com>
 To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v3 3/5] dmaengine: sh: rz-dmac: Add device_{pause,resume}() callbacks
-Date:   Wed, 12 Apr 2023 16:24:43 +0100
-Message-Id: <20230412152445.117439-4-biju.das.jz@bp.renesas.com>
+Subject: [PATCH v3 4/5] dmaengine: sh: rz-dmac: Trivial code clean-ups
+Date:   Wed, 12 Apr 2023 16:24:44 +0100
+Message-Id: <20230412152445.117439-5-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230412152445.117439-1-biju.das.jz@bp.renesas.com>
 References: <20230412152445.117439-1-biju.das.jz@bp.renesas.com>
@@ -43,72 +43,55 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add support for device_{pause, resume}() callbacks as it is needed
-for RZ/G2L SCIFA driver.
+Drop unnecessary lmdesc invalidation in rz_dmac_lmdesc_recycle()
+as the lmdesc is already invalidated.
 
-Based on a patch in the BSP by Long Luu
-<long.luu.ur@renesas.com>
+Drop redundant assignment of i to "0" and change the variable
+type of "i" to unsigned int to match with the variable type of sg_len
+in rz_dmac_prep_slave_sg(). While at it, Remove the braces around
+for_each_sg loop as it contains only a single statement.
 
 Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
 v2->v3:
- * No change.
-v1->v2:
- * Added resume callback()
  * Updated commit description.
+v2:
+ * New patch.
 ---
- drivers/dma/sh/rz-dmac.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ drivers/dma/sh/rz-dmac.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
-index aaaae1c090ad..3ef516aee4fc 100644
+index 3ef516aee4fc..153893045932 100644
 --- a/drivers/dma/sh/rz-dmac.c
 +++ b/drivers/dma/sh/rz-dmac.c
-@@ -817,6 +817,35 @@ static enum dma_status rz_dmac_tx_status(struct dma_chan *chan,
- 	return status;
- }
+@@ -253,7 +253,6 @@ static void rz_dmac_lmdesc_recycle(struct rz_dmac_chan *channel)
+ 	struct rz_lmdesc *lmdesc = channel->lmdesc.head;
  
-+static int rz_dmac_device_pause(struct dma_chan *chan)
-+{
-+	struct rz_dmac_chan *channel = to_rz_dmac_chan(chan);
-+	struct rz_dmac *dmac = to_rz_dmac(chan->device);
+ 	while (!(lmdesc->header & HEADER_LV)) {
+-		lmdesc->header = 0;
+ 		lmdesc++;
+ 		if (lmdesc >= (channel->lmdesc.base + DMAC_NR_LMDESC))
+ 			lmdesc = channel->lmdesc.base;
+@@ -510,16 +509,15 @@ rz_dmac_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 	struct rz_dmac_desc *desc;
+ 	struct scatterlist *sg;
+ 	int dma_length = 0;
+-	int i = 0;
 +	unsigned int i;
-+	u32 chstat;
-+
-+	for (i = 0; i < 1024; i++) {
-+		chstat = rz_dmac_ch_readl(channel, CHSTAT, 1);
-+		if (!(chstat & CHSTAT_EN))
-+			break;
-+		udelay(1);
-+	}
-+
-+	rz_dmac_set_dmars_register(dmac, channel->index, 0);
-+
-+	return 0;
-+}
-+
-+static int rz_dmac_device_resume(struct dma_chan *chan)
-+{
-+	struct rz_dmac_chan *channel = to_rz_dmac_chan(chan);
-+	struct rz_dmac *dmac = to_rz_dmac(chan->device);
-+
-+	rz_dmac_set_dmars_register(dmac, channel->index, channel->mid_rid);
-+
-+	return 0;
-+}
-+
- /*
-  * -----------------------------------------------------------------------------
-  * IRQ handling
-@@ -1106,6 +1135,8 @@ static int rz_dmac_probe(struct platform_device *pdev)
- 	engine->device_terminate_all = rz_dmac_terminate_all;
- 	engine->device_issue_pending = rz_dmac_issue_pending;
- 	engine->device_synchronize = rz_dmac_device_synchronize;
-+	engine->device_pause = rz_dmac_device_pause;
-+	engine->device_resume = rz_dmac_device_resume;
  
- 	engine->copy_align = DMAENGINE_ALIGN_1_BYTE;
- 	dma_set_max_seg_size(engine->dev, U32_MAX);
+ 	if (list_empty(&channel->ld_free))
+ 		return NULL;
+ 
+ 	desc = list_first_entry(&channel->ld_free, struct rz_dmac_desc, node);
+ 
+-	for_each_sg(sgl, sg, sg_len, i) {
++	for_each_sg(sgl, sg, sg_len, i)
+ 		dma_length += sg_dma_len(sg);
+-	}
+ 
+ 	desc->type = RZ_DMAC_DESC_SLAVE_SG;
+ 	desc->sg = sgl;
 -- 
 2.25.1
 

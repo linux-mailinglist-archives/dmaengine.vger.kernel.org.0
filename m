@@ -2,117 +2,154 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DFE86E087A
-	for <lists+dmaengine@lfdr.de>; Thu, 13 Apr 2023 09:59:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C7546E0EE2
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Apr 2023 15:37:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229773AbjDMH7i (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 13 Apr 2023 03:59:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43220 "EHLO
+        id S231549AbjDMNh2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 13 Apr 2023 09:37:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229733AbjDMH7h (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 13 Apr 2023 03:59:37 -0400
-Received: from aposti.net (aposti.net [89.234.176.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E1AD170F;
-        Thu, 13 Apr 2023 00:59:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1681372772;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vfxzlRNk1KGWBdOj5P/K6fuwrIfAfru/Dnxni0GJhqM=;
-        b=ICUcBYBU4Bf7+mQJ5Ux1mcB5R2xdiuY5KtFa/XbsgF+hRunFUSdeGERUNyysZhU+UUv85o
-        YpNkFgjTNfabOwPHhplu5VolRCE+cLMyvO4F9kL8/QX35ojd8S7tRH7lnL3Hst1w4zEWQ+
-        uutqswBtqhSp4JvUD5Qpu+quNM+y9KE=
-Message-ID: <259fbfaafbceb6b57c0c4426be994ed08140af5c.camel@crapouillou.net>
-Subject: Re: [PATCH v3 01/11] dmaengine: Add API function
- dmaengine_prep_slave_dma_array()
-From:   Paul Cercueil <paul@crapouillou.net>
+        with ESMTP id S229612AbjDMNhJ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 13 Apr 2023 09:37:09 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28AFDB748;
+        Thu, 13 Apr 2023 06:34:59 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id h37so2361401lfv.0;
+        Thu, 13 Apr 2023 06:34:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681392897; x=1683984897;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cmyq4oLEbvZOabR5LPmXd0e9aw8CPFOTF9g0Mnw3zQ8=;
+        b=fDuwUZeAzLi+d3WGkzskgRw6aBFykNHU6VZk0j2kvhstSqsJ5+JZZIuU521Fa/Uzl1
+         YSsNS/atdXZpkA851N1K8ez77pEPyuisxWAW5S/7LIG9y/T14hSBglVrq30cI8pjcEDd
+         35xeIhroXJbHr9hZSvMMNEMTw7ZhU5+UUBdmByzRPf3ZqDMPmY62fW3c6GPht5PNAktP
+         Sr27jmOHsmn+JcSC/cogDUA+JUyjpHj35CrXIUKr7Q0BpmBgShp93VkF3ngS0BFH3mhD
+         EtjgR7vjCayk/KPTyQZiimirFQHqP6O32vZgqGPHMNP2/0MXvzq2qPUPxDlqOkPCeSBa
+         IC4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681392897; x=1683984897;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cmyq4oLEbvZOabR5LPmXd0e9aw8CPFOTF9g0Mnw3zQ8=;
+        b=PokdcsPL9/i94ecEIBOLS6LiBLU2wO9jhvdAHWOcmlrnKmrnCulk+6QNBcQ477ZOME
+         gNsqgu9c147yYqT0ic3w0lql0x3GKLkrD8wLxF8JBj7X9RQYLbmQ/30HGFYLx8x18njk
+         9ofpySg5LEtu0V3XV6NpQVpl9g9IPHVdydjAGiuhBrkZc39yxWpo8DIK4Y9ML7YL52kx
+         ikrMFOIxXNIjGh2Ep34QKvynksCe6TU0hMieBvcFlV7Z+nWr3PuZ8KqvK/0nhY3gsw4b
+         a4ojjejgrszM6LxT7oEG1kUxtXRiTGNpUifUJ/Oic+WWzVcbaEbs9op96wr7S2KCR4UD
+         clJA==
+X-Gm-Message-State: AAQBX9dvR/yStZdpx7dlibixyYV4xJ+084rIV4QIJ4yGaMdFYJXoVAQX
+        CQhxXCxvC2sB2AmPcpkAoeA=
+X-Google-Smtp-Source: AKy350Y0ClOr9efKt6NMyB/FwlTVsKQoR+n+Yg3YAFtd25NhAKi9/lE/9DW+uWAigYTheMD//Dvh2Q==
+X-Received: by 2002:ac2:442c:0:b0:4e0:ff8e:bbfe with SMTP id w12-20020ac2442c000000b004e0ff8ebbfemr817572lfl.12.1681392897196;
+        Thu, 13 Apr 2023 06:34:57 -0700 (PDT)
+Received: from mobilestation ([95.79.140.35])
+        by smtp.gmail.com with ESMTPSA id b14-20020ac25e8e000000b004b5979f9ba8sm315586lfq.210.2023.04.13.06.34.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Apr 2023 06:34:56 -0700 (PDT)
+Date:   Thu, 13 Apr 2023 16:34:54 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Date:   Thu, 13 Apr 2023 09:59:29 +0200
-In-Reply-To: <ZDbpDptOcuBLFctc@matsya>
-References: <20230403154800.215924-1-paul@crapouillou.net>
-         <20230403154800.215924-2-paul@crapouillou.net> <ZDbpDptOcuBLFctc@matsya>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v3 00/10] PCI: dwc: Relatively simple fixes and
+ cleanups
+Message-ID: <20230413133454.ef7f5s34ysyequfz@mobilestation>
+References: <20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru>
+ <20230411110240.GB5333@thinkpad>
+ <20230411165924.4zfwhwxacxxeg7rk@mobilestation>
+ <ZDbjHTenZMxfziZD@matsya>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZDbjHTenZMxfziZD@matsya>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-SGkgVmlub2QsCgpMZSBtZXJjcmVkaSAxMiBhdnJpbCAyMDIzIMOgIDIyOjUzICswNTMwLCBWaW5v
-ZCBLb3VsIGEgw6ljcml0wqA6Cj4gT24gMDMtMDQtMjMsIDE3OjQ3LCBQYXVsIENlcmN1ZWlsIHdy
-b3RlOgo+ID4gVGhpcyBmdW5jdGlvbiBjYW4gYmUgdXNlZCB0byBpbml0aWF0ZSBhIHNjYXR0ZXIt
-Z2F0aGVyIERNQSB0cmFuc2Zlcgo+ID4gd2hlcmUgdGhlIERNQSBhZGRyZXNzZXMgYW5kIGxlbmd0
-aHMgYXJlIGxvY2F0ZWQgaW5zaWRlIGFycmF5cy4KPiA+IAo+ID4gVGhlIG1ham9yIGRpZmZlcmVu
-Y2Ugd2l0aCBkbWFlbmdpbmVfcHJlcF9zbGF2ZV9zZygpIGlzIHRoYXQgaXQKPiA+IHN1cHBvcnRz
-Cj4gPiBzcGVjaWZ5aW5nIHRoZSBsZW5ndGhzIG9mIGVhY2ggRE1BIHRyYW5zZmVyOyBhcyB0cnlp
-bmcgdG8gb3ZlcnJpZGUKPiA+IHRoZQo+ID4gbGVuZ3RoIG9mIHRoZSB0cmFuc2ZlciB3aXRoIGRt
-YWVuZ2luZV9wcmVwX3NsYXZlX3NnKCkgaXMgYSB2ZXJ5Cj4gPiB0ZWRpb3VzCj4gPiBwcm9jZXNz
-LiBUaGUgaW50cm9kdWN0aW9uIG9mIGEgbmV3IEFQSSBmdW5jdGlvbiBpcyBhbHNvIGp1c3RpZmll
-ZAo+ID4gYnkgdGhlCj4gPiBmYWN0IHRoYXQgc2NhdHRlcmxpc3RzIGFyZSBvbiB0aGVpciB3YXkg
-b3V0Lgo+IAo+IERvIHdlIG5lZWQgYSBuZXcgQVBJIGZvciB0aGlzPyB3aHkgbm90IHVzZQo+IGRl
-dmljZV9wcmVwX2ludGVybGVhdmVkX2RtYT8KCkkgYWRtaXQgdGhhdCBJIGRpc2NhcmRlZCB0aGUg
-aW50ZXJsZWF2ZWQgRE1BIHdpdGhvdXQgdHJ5aW5nIGl0LCBiZWNhdXNlCnJlYWRpbmcgdGhlIGRv
-YywgZS5nLiB0aGUgb25lIGZvciAic3RydWN0IGRhdGFfY2h1bmsiLCBJdCBsb29rZWQgbGlrZQpp
-dCB3YXMgbm90IHVzYWJsZSBmb3Igd2hlbiB0aGUgRE1BIGFkZHJlc3NlcyBhcmUgc2NhdHRlcmVk
-IGluIG1lbW9yeTsKaXQgYXNzdW1lcyB0aGF0IHRoZSBmb2xsb3dpbmcgRE1BIGFkZHJlc3NlcyB3
-aWxsIGFsd2F5cyBjb21lIGFmdGVyIHRoZQpwcmV2aW91cyBvbmUuCgpDaGVlcnMsCi1QYXVsIAoK
-PiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogUGF1bCBDZXJjdWVpbCA8cGF1bEBjcmFwb3VpbGxvdS5u
-ZXQ+Cj4gPiAKPiA+IC0tLQo+ID4gdjM6IE5ldyBwYXRjaAo+ID4gLS0tCj4gPiDCoGluY2x1ZGUv
-bGludXgvZG1hZW5naW5lLmggfCAxNiArKysrKysrKysrKysrKysrCj4gPiDCoDEgZmlsZSBjaGFu
-Z2VkLCAxNiBpbnNlcnRpb25zKCspCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4
-L2RtYWVuZ2luZS5oIGIvaW5jbHVkZS9saW51eC9kbWFlbmdpbmUuaAo+ID4gaW5kZXggYzM2NTZl
-NTkwMjEzLi42MmVmYTI4YzAwOWEgMTAwNjQ0Cj4gPiAtLS0gYS9pbmNsdWRlL2xpbnV4L2RtYWVu
-Z2luZS5oCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4L2RtYWVuZ2luZS5oCj4gPiBAQCAtOTEyLDYg
-KzkxMiwxMSBAQCBzdHJ1Y3QgZG1hX2RldmljZSB7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgc3RydWN0
-IGRtYV9hc3luY190eF9kZXNjcmlwdG9yCj4gPiAqKCpkZXZpY2VfcHJlcF9kbWFfaW50ZXJydXB0
-KSgKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IGRtYV9jaGFuICpj
-aGFuLCB1bnNpZ25lZCBsb25nIGZsYWdzKTsKPiA+IMKgCj4gPiArwqDCoMKgwqDCoMKgwqBzdHJ1
-Y3QgZG1hX2FzeW5jX3R4X2Rlc2NyaXB0b3IKPiA+ICooKmRldmljZV9wcmVwX3NsYXZlX2RtYV9h
-cnJheSkoCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IGRtYV9jaGFu
-ICpjaGFuLCBkbWFfYWRkcl90ICphZGRycywKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqBzaXplX3QgKmxlbmd0aHMsIHNpemVfdCBuYiwKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqBlbnVtIGRtYV90cmFuc2Zlcl9kaXJlY3Rpb24gZGlyZWN0aW9uLAo+ID4gK8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHVuc2lnbmVkIGxvbmcgZmxhZ3MpOwo+ID4gwqDC
-oMKgwqDCoMKgwqDCoHN0cnVjdCBkbWFfYXN5bmNfdHhfZGVzY3JpcHRvciAqKCpkZXZpY2VfcHJl
-cF9zbGF2ZV9zZykoCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBk
-bWFfY2hhbiAqY2hhbiwgc3RydWN0IHNjYXR0ZXJsaXN0ICpzZ2wsCj4gPiDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoHVuc2lnbmVkIGludCBzZ19sZW4sIGVudW0gZG1hX3RyYW5zZmVy
-X2RpcmVjdGlvbgo+ID4gZGlyZWN0aW9uLAo+ID4gQEAgLTk3NCw2ICs5NzksMTcgQEAgc3RhdGlj
-IGlubGluZSBzdHJ1Y3QgZG1hX2FzeW5jX3R4X2Rlc2NyaXB0b3IKPiA+ICpkbWFlbmdpbmVfcHJl
-cF9zbGF2ZV9zaW5nbGUoCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCBkaXIsIGZsYWdzLAo+ID4gTlVMTCk7Cj4gPiDCoH0KPiA+IMKgCj4gPiArc3RhdGljIGlu
-bGluZSBzdHJ1Y3QgZG1hX2FzeW5jX3R4X2Rlc2NyaXB0b3IKPiA+ICpkbWFlbmdpbmVfcHJlcF9z
-bGF2ZV9kbWFfYXJyYXkoCj4gPiArwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgZG1hX2NoYW4gKmNoYW4s
-IGRtYV9hZGRyX3QgKmFkZHJzLCBzaXplX3QgKmxlbmd0aHMsCj4gPiArwqDCoMKgwqDCoMKgwqBz
-aXplX3QgbmIsIGVudW0gZG1hX3RyYW5zZmVyX2RpcmVjdGlvbiBkaXIsIHVuc2lnbmVkIGxvbmcK
-PiA+IGZsYWdzKQo+ID4gK3sKPiA+ICvCoMKgwqDCoMKgwqDCoGlmICghY2hhbiB8fCAhY2hhbi0+
-ZGV2aWNlIHx8ICFjaGFuLT5kZXZpY2UtCj4gPiA+ZGV2aWNlX3ByZXBfc2xhdmVfZG1hX2FycmF5
-KQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiBOVUxMOwo+ID4gKwo+
-ID4gK8KgwqDCoMKgwqDCoMKgcmV0dXJuIGNoYW4tPmRldmljZS0+ZGV2aWNlX3ByZXBfc2xhdmVf
-ZG1hX2FycmF5KGNoYW4sCj4gPiBhZGRycywgbGVuZ3RocywKPiA+ICvCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBuYiwgZGlyLAo+ID4gZmxhZ3Mp
-Owo+ID4gK30KPiA+ICsKPiA+IMKgc3RhdGljIGlubGluZSBzdHJ1Y3QgZG1hX2FzeW5jX3R4X2Rl
-c2NyaXB0b3IKPiA+ICpkbWFlbmdpbmVfcHJlcF9zbGF2ZV9zZygKPiA+IMKgwqDCoMKgwqDCoMKg
-wqBzdHJ1Y3QgZG1hX2NoYW4gKmNoYW4sIHN0cnVjdCBzY2F0dGVybGlzdCAqc2dsLMKgdW5zaWdu
-ZWQKPiA+IGludCBzZ19sZW4sCj4gPiDCoMKgwqDCoMKgwqDCoMKgZW51bSBkbWFfdHJhbnNmZXJf
-ZGlyZWN0aW9uIGRpciwgdW5zaWduZWQgbG9uZyBmbGFncykKPiA+IC0tIAo+ID4gMi4zOS4yCj4g
-Cgo=
+On Wed, Apr 12, 2023 at 10:28:05PM +0530, Vinod Koul wrote:
+> On 11-04-23, 19:59, Serge Semin wrote:
+> > On Tue, Apr 11, 2023 at 04:32:40PM +0530, Manivannan Sadhasivam wrote:
+> > > On Tue, Apr 11, 2023 at 06:39:18AM +0300, Serge Semin wrote:
+> > > > It turns out the recent DW PCIe-related patchset was merged in with
+> > > > several relatively trivial issues left unsettled (noted by Bjorn and
+> > > > Manivannan). All of these lefovers have been fixed in this patchset.
+> > > > Namely the series starts with two bug-fixes. The first one concerns the
+> > > > improper link-mode initialization in case if the CDM-check is enabled. The
+> > > > second unfortunate mistake I made in the IP-core version type helper. In
+> > > > particular instead of testing the IP-core version type the macro function
+> > > > referred to the just IP-core version which obviously wasn't what I
+> > > > intended.
+> > > > 
+> > > > Afterwards two @Mani-noted fixes follow. Firstly the dma-ranges related warning
+> > > > message is fixed to start with "DMA-ranges" word instead of "Dma-ranges".
+> > > > Secondly the Baikal-T1 PCIe Host driver is converted to perform the
+> > > > asynchronous probe type which saved us of about 15% of bootup time if no any
+> > > > PCIe peripheral device attached to the port.
+> > > > 
+> > > > Then the patchset contains the Baikal-T1 PCIe driver fix. The
+> > > > corresponding patch removes the false error message printed during the
+> > > > controller probe procedure. I accidentally added the unconditional
+> > > > dev_err_probe() method invocation. It was obviously wrong.
+> > > > 
+> > > > Then two trivial cleanups are introduced. The first one concerns the
+> > > > duplicated fast-link-mode flag unsetting. The second one implies
+> > > > dropping a redundant empty line from the dw_pcie_link_set_max_speed()
+> > > > function.
+> > > > 
+> > > > The series continues with a patch inspired by the last @Bjorn note
+> > > > regarding the generic resources request interface. As @Bjorn correctly
+> > > > said it would be nice to have the new interface used wider in the DW PCIe
+> > > > subsystem. Aside with the Baikal-T1 PCIe Host driver the Toshiba Visconti
+> > > > PCIe driver can be easily converted to using the generic clock names.
+> > > > That's what is done in the noted patch.
+> > > > 
+> > > > The patchset is closed with a series of MAINTAINERS-list related patches.
+> > > > Firstly after getting the DW PCIe RP/EP DT-schemas refactored I forgot to
+> > > > update the MAINTAINER-list with the new files added in the framework of
+> > > > that procedure. All the snps,dw-pcie* schemas shall be maintained by the
+> > > > DW PCIe core driver maintainers. Secondly seeing how long it took for my
+> > > > patchsets to review and not having any comments from the original driver
+> > > > maintainers I'd suggest to add myself as the reviewer to the DW PCIe and
+> > > > eDMA drivers. Thus hopefully the new updates review process will be
+> > > > performed with much less latencies. For the same reason I would also like
+> > > > to suggest to add @Manivannan as the DW PCIe/eDMA drivers maintainer if
+> > > > he isn't against that idea. What do you think about the last suggestion?
+> > > > 
+> > > 
+> > > I'm willing to co-maintain the drivers.
+> > 
+> > Awesome! @Bjorn, @Lorenzo, @Vinod what do you think about this? If you
+> > are ok with that shall I resubmit the series with @Mani added to the
+> > DW PCIe/eDMA maintainers list or will you create the respective
+> > patches yourself?
+> 
 
+> Pls send the patch, that is preferred.
+
+Ok. I'll resubmit the series with the new patches replacing @Gustavo with
+@Mani as the DW PCIe/eDMA drivers maintainer.
+
+-Serge(y)
+
+> 
+> -- 
+> ~Vinod

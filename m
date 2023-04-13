@@ -2,80 +2,117 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B00E76E03B0
-	for <lists+dmaengine@lfdr.de>; Thu, 13 Apr 2023 03:29:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34F706E053A
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Apr 2023 05:32:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229651AbjDMB3h (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 12 Apr 2023 21:29:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35734 "EHLO
+        id S229498AbjDMDcH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 12 Apr 2023 23:32:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229707AbjDMB3g (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Apr 2023 21:29:36 -0400
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3373A5FFC;
-        Wed, 12 Apr 2023 18:29:33 -0700 (PDT)
-Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-        by fd01.gateway.ufhost.com (Postfix) with ESMTP id 751497FE0;
-        Thu, 13 Apr 2023 09:29:25 +0800 (CST)
-Received: from EXMBX168.cuchost.com (172.16.6.78) by EXMBX166.cuchost.com
- (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 13 Apr
- 2023 09:29:25 +0800
-Received: from [192.168.125.109] (183.27.97.249) by EXMBX168.cuchost.com
- (172.16.6.78) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 13 Apr
- 2023 09:29:24 +0800
-Message-ID: <d68488a0-ad83-1d46-2143-eda557fcd20f@starfivetech.com>
-Date:   Thu, 13 Apr 2023 09:29:23 +0800
+        with ESMTP id S229526AbjDMDcG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Apr 2023 23:32:06 -0400
+Received: from out-61.mta0.migadu.com (out-61.mta0.migadu.com [91.218.175.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9378BE57
+        for <dmaengine@vger.kernel.org>; Wed, 12 Apr 2023 20:32:04 -0700 (PDT)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1681356722;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=cnkaeNTG6HWrKe4B22XDrTgrH+xGhdfzP0gfBo97fsM=;
+        b=Z3E3dz0owl0nN4rKG9KRQNrCXjK0rI45FCqCz6vaohluJ2uBwZVzc9uTGHywZ3bVY4SS15
+        QBPgXOKqJLCnG0hUElSiYrUfoZGcZGtYRYNnnlzkNrbjtcUdUZDcU/mCvkFHXc3FT12pGs
+        Y7uCtYqVlalKah2mzi2zvxhOUeQq5uQ=
+From:   Cai Huoqing <cai.huoqing@linux.dev>
+To:     fancer.lancer@gmail.com
+Cc:     Cai Huoqing <cai.huoqing@linux.dev>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH RESEND v9 0/4] dmaengine: dw-edma: Add support for native HDMA
+Date:   Thu, 13 Apr 2023 11:31:51 +0800
+Message-Id: <20230413033156.93751-1-cai.huoqing@linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH v6 0/4] Add DMA driver for StarFive JH7110 SoC
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "Emil Renner Berthing" <emil.renner.berthing@canonical.com>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>
-References: <20230322094820.24738-1-walker.chen@starfivetech.com>
- <ZDbp8IVpIwFvNgFv@matsya>
-Content-Language: en-US
-From:   Walker Chen <walker.chen@starfivetech.com>
-In-Reply-To: <ZDbp8IVpIwFvNgFv@matsya>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [183.27.97.249]
-X-ClientProxiedBy: EXCAS064.cuchost.com (172.16.6.24) To EXMBX168.cuchost.com
- (172.16.6.78)
-X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Add support for HDMA NATIVE, as long the IP design has set
+the compatible register map parameter-HDMA_NATIVE,
+which allows compatibility for native HDMA register configuration.
 
+The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
+And the native HDMA registers are different from eDMA,
+so this patch add support for HDMA NATIVE mode.
 
-On 2023/4/13 1:27, Vinod Koul wrote:
-> On 22-03-23, 17:48, Walker Chen wrote:
->> Hello,
->> 
->> This patch series adds dma support for the StarFive JH7110 RISC-V
->> SoC. The first patch adds device tree binding. The second patch includes
->> dma driver. The last patch adds device node of dma to JH7110 dts.
->> 
->> The series has been tested on the VisionFive 2 board which equip with
->> JH7110 SoC and works normally.
-> 
-> Applied 1-3, thanks
-> 
-Vinod, thank you very much!
+HDMA write and read channels operate independently to maximize
+the performance of the HDMA read and write data transfer over
+the link When you configure the HDMA with multiple read channels,
+then it uses a round robin (RR) arbitration scheme to select
+the next read channel to be serviced.The same applies when
+youhave multiple write channels.
 
-Best regards,
-Walker
+The native HDMA driver also supports a maximum of 16 independent
+channels (8 write + 8 read), which can run simultaneously.
+Both SAR (Source Address Register) and DAR (Destination Address Register)
+are aligned to byte.
+
+Cai Huoqing (1):
+  dmaengine: dw-edma: Add support for native HDMA
+
+Cai huoqing (3):
+  dmaengine: dw-edma: Rename dw_edma_core_ops structure to
+    dw_edma_plat_ops
+  dmaengine: dw-edma: Create a new dw_edma_core_ops structure to
+    abstract controller operation
+  dmaengine: dw-edma: Add HDMA DebugFS support
+
+Tested-by: Serge Semin <fancer.lancer@gmail.com>
+
+v8->v9:
+  [3/4]
+  1.Drop an empty line.
+  [4/4]
+  2.Update commit log.
+  3.Remove unused macro
+
+v8 link:
+  https://lore.kernel.org/lkml/20230323034944.78357-1-cai.huoqing@linux.dev/
+
+ drivers/dma/dw-edma/Makefile                 |   8 +-
+ drivers/dma/dw-edma/dw-edma-core.c           |  86 ++----
+ drivers/dma/dw-edma/dw-edma-core.h           |  58 ++++
+ drivers/dma/dw-edma/dw-edma-pcie.c           |   4 +-
+ drivers/dma/dw-edma/dw-edma-v0-core.c        |  85 +++++-
+ drivers/dma/dw-edma/dw-edma-v0-core.h        |  14 +-
+ drivers/dma/dw-edma/dw-hdma-v0-core.c        | 296 +++++++++++++++++++
+ drivers/dma/dw-edma/dw-hdma-v0-core.h        |  17 ++
+ drivers/dma/dw-edma/dw-hdma-v0-debugfs.c     | 170 +++++++++++
+ drivers/dma/dw-edma/dw-hdma-v0-debugfs.h     |  22 ++
+ drivers/dma/dw-edma/dw-hdma-v0-regs.h        | 129 ++++++++
+ drivers/pci/controller/dwc/pcie-designware.c |   2 +-
+ include/linux/dma/edma.h                     |   7 +-
+ 13 files changed, 807 insertions(+), 91 deletions(-)
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
+
+-- 
+2.34.1
+

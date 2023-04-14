@@ -2,82 +2,72 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 251416E18F0
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Apr 2023 02:25:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D38CD6E1919
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Apr 2023 02:41:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230097AbjDNAZo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 13 Apr 2023 20:25:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51582 "EHLO
+        id S229567AbjDNAlm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 13 Apr 2023 20:41:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229493AbjDNAZn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 13 Apr 2023 20:25:43 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE98BB7;
-        Thu, 13 Apr 2023 17:25:41 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id o1so21418476lfc.2;
-        Thu, 13 Apr 2023 17:25:41 -0700 (PDT)
+        with ESMTP id S229598AbjDNAll (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 13 Apr 2023 20:41:41 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D165D2137;
+        Thu, 13 Apr 2023 17:41:39 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id y35so2443470ljq.6;
+        Thu, 13 Apr 2023 17:41:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681431940; x=1684023940;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yImyeG5ZxqGz4x0G0VPUdchtzunzdj+0SM9hBCkgnyg=;
-        b=Mv4xq2QsrYjJgA811eWnvVImUuOV8yAqj66zXVSdL5nfEqlMrzRX3lxbNITcggvyB2
-         hHqs3sNKmFMp4elA+jeNj0VRoDfKrFWQWUwBjFsPyeAgB7QJiqzqZ7hn7IFUehlyJtOv
-         HvrxuC4dx8qClWvWPzlwqwCu5vZPuXO0TpDpv7F2Alc402slBpfLfjBP0PkQ3mML3ruO
-         M6EA2JV9IWwUeJU3N0/UQxrHAs2OvwfQQsnfNazcy5jK7DRsi/75gRkZHXOLYm5T7sKX
-         pACW7c2gcszTC4eQwGoJUzgRznikrznv7ilQxPRDDKT3Csx7kBxhCZC1Ly3p5RWM8rE3
-         gwnA==
+        d=gmail.com; s=20221208; t=1681432898; x=1684024898;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GKQ84SOXrfy0kzXSJ/RLBtfB3PFxpBWlnGKQhidz3C0=;
+        b=cHzHuoqTb78YNpn1UUXblRCLW66YGpYtX+nJyymrpvVsLritsDRcQmXHy2iwcygitn
+         UdmlJY1g3JtZa8cTFXyaz5+haSSAPoaysUuiCNvzq7kQRVdhTav25YNNe42MKIqo1Pvm
+         xxraPwSJ8DR8tFGF1RNzdmqPsNXLiaqAQyTw1cyv84rldGMkxhOMMu8DyQCedIU1qQY2
+         G5pX70Iu7y9d6Lc7Wy0U5O2Mf8PLPmOyL+RIM+8B5ynYsncx+Ld5Wuyjsq5YkNHBDxYZ
+         vueX1p2a8P2XCZNx/GFb5uqhBwT1hhpsVNiPFZrfH3JVWs4IJW5NJSIzIrcStRj1NP3+
+         6Atw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681431940; x=1684023940;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yImyeG5ZxqGz4x0G0VPUdchtzunzdj+0SM9hBCkgnyg=;
-        b=GF0fHz8NkZdeBUfX+6YCoLvvKDcs7l9emuuS1VME0mVFcMe52a2opcv1I+RUBVPq4a
-         s35BpBfKV6NskZLuF86DhwnJropsf/lEa7wtk0M8AH9d3w7wUdkT+54bxuzneX7RY1xK
-         Gb0xGLa3bD3JQpPbsg6L86M551nwLhHQkUttgj7qKkAu2VK1Ro5HQMYDUQrHrB+KWCTi
-         KF7+D0RR9eifF7ogsc07PDmIjGZrTpaBYWp4qQDklV17mGyQSbqj1PAP0MJ4SxKE1vAI
-         3Cj6q9hA8uqJbdCnA034qhLLFs8jAE/H7iK4vb7a7RMdq4Cbp1juBKV1fj1vgkwTkXkL
-         Cukw==
-X-Gm-Message-State: AAQBX9c1Q9CMFqzzNG+NuyAzrTN9FcATsROJLsvk8wrD+8vTovLJ6pPU
-        uXngKcnakDP6+QW3Ya9c2jk=
-X-Google-Smtp-Source: AKy350YA6vyufvtq/6uKoGm4dYs9Gz/KECvQicem/fbRJeNTqzz6GKU+7JPL1tNbi4GS/57PRhud6g==
-X-Received: by 2002:a19:f00b:0:b0:4db:4fe8:fd0f with SMTP id p11-20020a19f00b000000b004db4fe8fd0fmr1210449lfc.25.1681431940097;
-        Thu, 13 Apr 2023 17:25:40 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1681432898; x=1684024898;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GKQ84SOXrfy0kzXSJ/RLBtfB3PFxpBWlnGKQhidz3C0=;
+        b=Rhqiq55hK7GHYybMEBO7GKcXe/Lweg2I+k5eYrfUEm3FkWZuZPaq1YFYTXFhRga7Q9
+         E06L0HkrwIv1x4WlR82NA3VA6Fn3lEX9m5Ym4yuX4Gtnl4pSIHjBNpOxyvaemdAJEcwL
+         FpsB3mSzzi2y2/OV5q/MDOV0cZGRYv2p/p8Mn3VQcMBLZoEeihF+ktjVPublq6ijMj79
+         f7ohzkWLiWPAXNJNnfdUlc/6i8KNavERpv5NsgYSrnYWpLWMamePGMRXXfP40euvg2r2
+         QcPe1QZMvXVeKKhH/ug31Tj/n990KROSHG1K8GJ+qXcMrbIFoQc3y7hD6DlRyMBdRV6j
+         v8PQ==
+X-Gm-Message-State: AAQBX9fBw5068ZAvh9RBIvWw1oB+3tjaVAqNVpzrmEsh5zRyYmXcMJZK
+        RWXxNqPvbVN0z+46s16S6Zo=
+X-Google-Smtp-Source: AKy350Z99G6eEj0VKBCkuGCDlxQC69+DdAqK+tJouJNYbAjwIObtJ5geJv/xOVgD2Hyymbr5nLjLng==
+X-Received: by 2002:a2e:8655:0:b0:2a7:730d:a7c2 with SMTP id i21-20020a2e8655000000b002a7730da7c2mr1735780ljj.46.1681432898123;
+        Thu, 13 Apr 2023 17:41:38 -0700 (PDT)
 Received: from mobilestation ([95.79.140.35])
-        by smtp.gmail.com with ESMTPSA id k4-20020ac24564000000b004ec9361e3c5sm523253lfm.142.2023.04.13.17.25.38
+        by smtp.gmail.com with ESMTPSA id m21-20020a2e97d5000000b002945b04e1ebsm517591ljj.94.2023.04.13.17.41.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Apr 2023 17:25:39 -0700 (PDT)
-Date:   Fri, 14 Apr 2023 03:25:37 +0300
+        Thu, 13 Apr 2023 17:41:37 -0700 (PDT)
+Date:   Fri, 14 Apr 2023 03:41:35 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
+To:     Cai Huoqing <cai.huoqing@linux.dev>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
         Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v3 00/10] PCI: dwc: Relatively simple fixes and
- cleanups
-Message-ID: <20230414002537.3y553iferlqkubfo@mobilestation>
-References: <20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru>
- <20230411110240.GB5333@thinkpad>
- <20230411165924.4zfwhwxacxxeg7rk@mobilestation>
- <ZDbjHTenZMxfziZD@matsya>
- <20230413133454.ef7f5s34ysyequfz@mobilestation>
- <20230413140024.GA13020@thinkpad>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH RESEND v9 0/4] dmaengine: dw-edma: Add support for native
+ HDMA
+Message-ID: <20230414004135.vajewexuld7wcy6d@mobilestation>
+References: <20230413033156.93751-1-cai.huoqing@linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230413140024.GA13020@thinkpad>
+In-Reply-To: <20230413033156.93751-1-cai.huoqing@linux.dev>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -88,88 +78,86 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Apr 13, 2023 at 07:30:24PM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Apr 13, 2023 at 04:34:54PM +0300, Serge Semin wrote:
-> > On Wed, Apr 12, 2023 at 10:28:05PM +0530, Vinod Koul wrote:
-> > > On 11-04-23, 19:59, Serge Semin wrote:
-> > > > On Tue, Apr 11, 2023 at 04:32:40PM +0530, Manivannan Sadhasivam wrote:
-> > > > > On Tue, Apr 11, 2023 at 06:39:18AM +0300, Serge Semin wrote:
-> > > > > > It turns out the recent DW PCIe-related patchset was merged in with
-> > > > > > several relatively trivial issues left unsettled (noted by Bjorn and
-> > > > > > Manivannan). All of these lefovers have been fixed in this patchset.
-> > > > > > Namely the series starts with two bug-fixes. The first one concerns the
-> > > > > > improper link-mode initialization in case if the CDM-check is enabled. The
-> > > > > > second unfortunate mistake I made in the IP-core version type helper. In
-> > > > > > particular instead of testing the IP-core version type the macro function
-> > > > > > referred to the just IP-core version which obviously wasn't what I
-> > > > > > intended.
-> > > > > > 
-> > > > > > Afterwards two @Mani-noted fixes follow. Firstly the dma-ranges related warning
-> > > > > > message is fixed to start with "DMA-ranges" word instead of "Dma-ranges".
-> > > > > > Secondly the Baikal-T1 PCIe Host driver is converted to perform the
-> > > > > > asynchronous probe type which saved us of about 15% of bootup time if no any
-> > > > > > PCIe peripheral device attached to the port.
-> > > > > > 
-> > > > > > Then the patchset contains the Baikal-T1 PCIe driver fix. The
-> > > > > > corresponding patch removes the false error message printed during the
-> > > > > > controller probe procedure. I accidentally added the unconditional
-> > > > > > dev_err_probe() method invocation. It was obviously wrong.
-> > > > > > 
-> > > > > > Then two trivial cleanups are introduced. The first one concerns the
-> > > > > > duplicated fast-link-mode flag unsetting. The second one implies
-> > > > > > dropping a redundant empty line from the dw_pcie_link_set_max_speed()
-> > > > > > function.
-> > > > > > 
-> > > > > > The series continues with a patch inspired by the last @Bjorn note
-> > > > > > regarding the generic resources request interface. As @Bjorn correctly
-> > > > > > said it would be nice to have the new interface used wider in the DW PCIe
-> > > > > > subsystem. Aside with the Baikal-T1 PCIe Host driver the Toshiba Visconti
-> > > > > > PCIe driver can be easily converted to using the generic clock names.
-> > > > > > That's what is done in the noted patch.
-> > > > > > 
-> > > > > > The patchset is closed with a series of MAINTAINERS-list related patches.
-> > > > > > Firstly after getting the DW PCIe RP/EP DT-schemas refactored I forgot to
-> > > > > > update the MAINTAINER-list with the new files added in the framework of
-> > > > > > that procedure. All the snps,dw-pcie* schemas shall be maintained by the
-> > > > > > DW PCIe core driver maintainers. Secondly seeing how long it took for my
-> > > > > > patchsets to review and not having any comments from the original driver
-> > > > > > maintainers I'd suggest to add myself as the reviewer to the DW PCIe and
-> > > > > > eDMA drivers. Thus hopefully the new updates review process will be
-> > > > > > performed with much less latencies. For the same reason I would also like
-> > > > > > to suggest to add @Manivannan as the DW PCIe/eDMA drivers maintainer if
-> > > > > > he isn't against that idea. What do you think about the last suggestion?
-> > > > > > 
-> > > > > 
-> > > > > I'm willing to co-maintain the drivers.
-> > > > 
-> > > > Awesome! @Bjorn, @Lorenzo, @Vinod what do you think about this? If you
-> > > > are ok with that shall I resubmit the series with @Mani added to the
-> > > > DW PCIe/eDMA maintainers list or will you create the respective
-> > > > patches yourself?
-> > > 
-> > 
-> > > Pls send the patch, that is preferred.
-> > 
-> > Ok. I'll resubmit the series with the new patches replacing @Gustavo with
-> > @Mani as the DW PCIe/eDMA drivers maintainer.
-> > 
+On Thu, Apr 13, 2023 at 11:31:51AM +0800, Cai Huoqing wrote:
+> Add support for HDMA NATIVE, as long the IP design has set
+> the compatible register map parameter-HDMA_NATIVE,
+> which allows compatibility for native HDMA register configuration.
 > 
-> I talked to Vinod about the non-responsive maintainers and he suggested first
-> demoting them as Reviewers instead of dropping altogether. So you can move
-> Gustavo as a Reviewer.
+> The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
+> And the native HDMA registers are different from eDMA,
+> so this patch add support for HDMA NATIVE mode.
+> 
+> HDMA write and read channels operate independently to maximize
+> the performance of the HDMA read and write data transfer over
+> the link When you configure the HDMA with multiple read channels,
+> then it uses a round robin (RR) arbitration scheme to select
+> the next read channel to be serviced.The same applies when
+> youhave multiple write channels.
+> 
+> The native HDMA driver also supports a maximum of 16 independent
+> channels (8 write + 8 read), which can run simultaneously.
+> Both SAR (Source Address Register) and DAR (Destination Address Register)
+> are aligned to byte.
+> 
+> Cai Huoqing (1):
+>   dmaengine: dw-edma: Add support for native HDMA
+> 
+> Cai huoqing (3):
+>   dmaengine: dw-edma: Rename dw_edma_core_ops structure to
+>     dw_edma_plat_ops
+>   dmaengine: dw-edma: Create a new dw_edma_core_ops structure to
+>     abstract controller operation
+>   dmaengine: dw-edma: Add HDMA DebugFS support
+> 
+> Tested-by: Serge Semin <fancer.lancer@gmail.com>
 
-Got it. Thanks for the note.
+Two small notes in the regard of the resubmitted series:
+1. On resubmission it would be nice to move the Tested-by tag to all
+the patches of the series. Currently neither b4 tool nor patchwork see
+it which may cause the tag missing should @Vinod apply the patch by
+using these utilities and if he didn't notice it in the cover-letter.
+2. Each resubmission even with no functional change implies patchset version
+advance. So this patchset was supposed to be v10 with the changelog
+describing that it was rebased onto the latest dmaengine-next branch
+state.
+
+Just to make sure that my tag won't be missing should this series be
+applied:
+Tested-by: Serge Semin <fancer.lancer@gmail.com>
 
 -Serge(y)
 
 > 
-> - Mani
+> v8->v9:
+>   [3/4]
+>   1.Drop an empty line.
+>   [4/4]
+>   2.Update commit log.
+>   3.Remove unused macro
 > 
-> > -Serge(y)
-> > 
-> > > 
-> > > -- 
-> > > ~Vinod
+> v8 link:
+>   https://lore.kernel.org/lkml/20230323034944.78357-1-cai.huoqing@linux.dev/
+> 
+>  drivers/dma/dw-edma/Makefile                 |   8 +-
+>  drivers/dma/dw-edma/dw-edma-core.c           |  86 ++----
+>  drivers/dma/dw-edma/dw-edma-core.h           |  58 ++++
+>  drivers/dma/dw-edma/dw-edma-pcie.c           |   4 +-
+>  drivers/dma/dw-edma/dw-edma-v0-core.c        |  85 +++++-
+>  drivers/dma/dw-edma/dw-edma-v0-core.h        |  14 +-
+>  drivers/dma/dw-edma/dw-hdma-v0-core.c        | 296 +++++++++++++++++++
+>  drivers/dma/dw-edma/dw-hdma-v0-core.h        |  17 ++
+>  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c     | 170 +++++++++++
+>  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h     |  22 ++
+>  drivers/dma/dw-edma/dw-hdma-v0-regs.h        | 129 ++++++++
+>  drivers/pci/controller/dwc/pcie-designware.c |   2 +-
+>  include/linux/dma/edma.h                     |   7 +-
+>  13 files changed, 807 insertions(+), 91 deletions(-)
+>  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
+>  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
+>  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
+>  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
+>  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
 > 
 > -- 
-> மணிவண்ணன் சதாசிவம்
+> 2.34.1
+> 

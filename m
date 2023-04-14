@@ -2,162 +2,166 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D38CD6E1919
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Apr 2023 02:41:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10DE26E1A1B
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Apr 2023 04:19:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229567AbjDNAlm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 13 Apr 2023 20:41:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59434 "EHLO
+        id S229841AbjDNCTQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 13 Apr 2023 22:19:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229598AbjDNAll (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 13 Apr 2023 20:41:41 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D165D2137;
-        Thu, 13 Apr 2023 17:41:39 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id y35so2443470ljq.6;
-        Thu, 13 Apr 2023 17:41:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681432898; x=1684024898;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GKQ84SOXrfy0kzXSJ/RLBtfB3PFxpBWlnGKQhidz3C0=;
-        b=cHzHuoqTb78YNpn1UUXblRCLW66YGpYtX+nJyymrpvVsLritsDRcQmXHy2iwcygitn
-         UdmlJY1g3JtZa8cTFXyaz5+haSSAPoaysUuiCNvzq7kQRVdhTav25YNNe42MKIqo1Pvm
-         xxraPwSJ8DR8tFGF1RNzdmqPsNXLiaqAQyTw1cyv84rldGMkxhOMMu8DyQCedIU1qQY2
-         G5pX70Iu7y9d6Lc7Wy0U5O2Mf8PLPmOyL+RIM+8B5ynYsncx+Ld5Wuyjsq5YkNHBDxYZ
-         vueX1p2a8P2XCZNx/GFb5uqhBwT1hhpsVNiPFZrfH3JVWs4IJW5NJSIzIrcStRj1NP3+
-         6Atw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681432898; x=1684024898;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GKQ84SOXrfy0kzXSJ/RLBtfB3PFxpBWlnGKQhidz3C0=;
-        b=Rhqiq55hK7GHYybMEBO7GKcXe/Lweg2I+k5eYrfUEm3FkWZuZPaq1YFYTXFhRga7Q9
-         E06L0HkrwIv1x4WlR82NA3VA6Fn3lEX9m5Ym4yuX4Gtnl4pSIHjBNpOxyvaemdAJEcwL
-         FpsB3mSzzi2y2/OV5q/MDOV0cZGRYv2p/p8Mn3VQcMBLZoEeihF+ktjVPublq6ijMj79
-         f7ohzkWLiWPAXNJNnfdUlc/6i8KNavERpv5NsgYSrnYWpLWMamePGMRXXfP40euvg2r2
-         QcPe1QZMvXVeKKhH/ug31Tj/n990KROSHG1K8GJ+qXcMrbIFoQc3y7hD6DlRyMBdRV6j
-         v8PQ==
-X-Gm-Message-State: AAQBX9fBw5068ZAvh9RBIvWw1oB+3tjaVAqNVpzrmEsh5zRyYmXcMJZK
-        RWXxNqPvbVN0z+46s16S6Zo=
-X-Google-Smtp-Source: AKy350Z99G6eEj0VKBCkuGCDlxQC69+DdAqK+tJouJNYbAjwIObtJ5geJv/xOVgD2Hyymbr5nLjLng==
-X-Received: by 2002:a2e:8655:0:b0:2a7:730d:a7c2 with SMTP id i21-20020a2e8655000000b002a7730da7c2mr1735780ljj.46.1681432898123;
-        Thu, 13 Apr 2023 17:41:38 -0700 (PDT)
-Received: from mobilestation ([95.79.140.35])
-        by smtp.gmail.com with ESMTPSA id m21-20020a2e97d5000000b002945b04e1ebsm517591ljj.94.2023.04.13.17.41.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Apr 2023 17:41:37 -0700 (PDT)
-Date:   Fri, 14 Apr 2023 03:41:35 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Cai Huoqing <cai.huoqing@linux.dev>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
+        with ESMTP id S229625AbjDNCTP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 13 Apr 2023 22:19:15 -0400
+Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A6767524B;
+        Thu, 13 Apr 2023 19:18:59 -0700 (PDT)
+Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id E8F52E0EAB;
+        Fri, 14 Apr 2023 05:18:57 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        baikalelectronics.ru; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:from:from:message-id
+        :mime-version:reply-to:subject:subject:to:to; s=post; bh=KZUA/Ro
+        JHJ6qS4Kx5ByQojqxW8WEBGv+KThTGaJxh3U=; b=RrUReIi3ScT/SqmM7A4oZ8q
+        CQpkETlmNI3h+txuC5JwNjv378JxdETuMWvZv7xDM5WVjqG/9UKm9bJoKDHvcAnt
+        S4OVj4RbIq8aevwORJOjIcSCATneElKz3HIrbSUXlmmJ+rLcTbZ+pZ+BQzT9buwh
+        SyTOVsZ0TASqqPr9xNGA=
+Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id D0947E0E1D;
+        Fri, 14 Apr 2023 05:18:57 +0300 (MSK)
+Received: from localhost (10.8.30.14) by mail (192.168.51.25) with Microsoft
+ SMTP Server (TLS) id 15.0.1395.4; Fri, 14 Apr 2023 05:18:57 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
         Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH RESEND v9 0/4] dmaengine: dw-edma: Add support for native
- HDMA
-Message-ID: <20230414004135.vajewexuld7wcy6d@mobilestation>
-References: <20230413033156.93751-1-cai.huoqing@linux.dev>
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 00/14] PCI: dwc: Relatively simple fixes and cleanups
+Date:   Fri, 14 Apr 2023 05:18:18 +0300
+Message-ID: <20230414021832.13167-1-Sergey.Semin@baikalelectronics.ru>
+X-Mailer: git-send-email 2.40.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230413033156.93751-1-cai.huoqing@linux.dev>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.8.30.14]
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Apr 13, 2023 at 11:31:51AM +0800, Cai Huoqing wrote:
-> Add support for HDMA NATIVE, as long the IP design has set
-> the compatible register map parameter-HDMA_NATIVE,
-> which allows compatibility for native HDMA register configuration.
-> 
-> The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
-> And the native HDMA registers are different from eDMA,
-> so this patch add support for HDMA NATIVE mode.
-> 
-> HDMA write and read channels operate independently to maximize
-> the performance of the HDMA read and write data transfer over
-> the link When you configure the HDMA with multiple read channels,
-> then it uses a round robin (RR) arbitration scheme to select
-> the next read channel to be serviced.The same applies when
-> youhave multiple write channels.
-> 
-> The native HDMA driver also supports a maximum of 16 independent
-> channels (8 write + 8 read), which can run simultaneously.
-> Both SAR (Source Address Register) and DAR (Destination Address Register)
-> are aligned to byte.
-> 
-> Cai Huoqing (1):
->   dmaengine: dw-edma: Add support for native HDMA
-> 
-> Cai huoqing (3):
->   dmaengine: dw-edma: Rename dw_edma_core_ops structure to
->     dw_edma_plat_ops
->   dmaengine: dw-edma: Create a new dw_edma_core_ops structure to
->     abstract controller operation
->   dmaengine: dw-edma: Add HDMA DebugFS support
-> 
-> Tested-by: Serge Semin <fancer.lancer@gmail.com>
+It turns out the recent DW PCIe-related patchset was merged in with
+several relatively trivial issues left unsettled (noted by Bjorn and
+Manivannan). All of these lefovers have been fixed in this patchset.
+Namely the series starts with two bug-fixes. The first one concerns the
+improper link-mode initialization in case if the CDM-check is enabled. The
+second unfortunate mistake I made in the IP-core version type helper. In
+particular instead of testing the IP-core version type the macro function
+referred to the just IP-core version which obviously wasn't what I
+intended.
 
-Two small notes in the regard of the resubmitted series:
-1. On resubmission it would be nice to move the Tested-by tag to all
-the patches of the series. Currently neither b4 tool nor patchwork see
-it which may cause the tag missing should @Vinod apply the patch by
-using these utilities and if he didn't notice it in the cover-letter.
-2. Each resubmission even with no functional change implies patchset version
-advance. So this patchset was supposed to be v10 with the changelog
-describing that it was rebased onto the latest dmaengine-next branch
-state.
+Afterwards two @Mani-noted fixes follow. Firstly the dma-ranges related warning
+message is fixed to start with "DMA-ranges" word instead of "Dma-ranges".
+Secondly the Baikal-T1 PCIe Host driver is converted to perform the
+asynchronous probe type which saved us of about 15% of bootup time if no any
+PCIe peripheral device attached to the port.
 
-Just to make sure that my tag won't be missing should this series be
-applied:
-Tested-by: Serge Semin <fancer.lancer@gmail.com>
+Then the patchset contains the Baikal-T1 PCIe driver fix. The
+corresponding patch removes the false error message printed during the
+controller probe procedure. I accidentally added the unconditional
+dev_err_probe() method invocation. It was obviously wrong.
 
--Serge(y)
+Then two trivial cleanups are introduced. The first one concerns the
+duplicated fast-link-mode flag unsetting. The second one implies
+dropping a redundant empty line from the dw_pcie_link_set_max_speed()
+function.
 
-> 
-> v8->v9:
->   [3/4]
->   1.Drop an empty line.
->   [4/4]
->   2.Update commit log.
->   3.Remove unused macro
-> 
-> v8 link:
->   https://lore.kernel.org/lkml/20230323034944.78357-1-cai.huoqing@linux.dev/
-> 
->  drivers/dma/dw-edma/Makefile                 |   8 +-
->  drivers/dma/dw-edma/dw-edma-core.c           |  86 ++----
->  drivers/dma/dw-edma/dw-edma-core.h           |  58 ++++
->  drivers/dma/dw-edma/dw-edma-pcie.c           |   4 +-
->  drivers/dma/dw-edma/dw-edma-v0-core.c        |  85 +++++-
->  drivers/dma/dw-edma/dw-edma-v0-core.h        |  14 +-
->  drivers/dma/dw-edma/dw-hdma-v0-core.c        | 296 +++++++++++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-core.h        |  17 ++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c     | 170 +++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h     |  22 ++
->  drivers/dma/dw-edma/dw-hdma-v0-regs.h        | 129 ++++++++
->  drivers/pci/controller/dwc/pcie-designware.c |   2 +-
->  include/linux/dma/edma.h                     |   7 +-
->  13 files changed, 807 insertions(+), 91 deletions(-)
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> 
-> -- 
-> 2.34.1
-> 
+The series continues with a patch inspired by the last @Bjorn note
+regarding the generic resources request interface. As @Bjorn correctly
+said it would be nice to have the new interface used wider in the DW PCIe
+subsystem. Aside with the Baikal-T1 PCIe Host driver the Toshiba Visconti
+PCIe driver can be easily converted to using the generic clock names.
+That's what is done in the noted patch.
+
+The patchset is closed with a series of MAINTAINERS-list related patches.
+Firstly after getting the DW PCIe RP/EP DT-schemas refactored I forgot to
+update the MAINTAINER-list with the new files added in the framework of
+that procedure. All the snps,dw-pcie* schemas shall be maintained by the
+DW PCIe core driver maintainers. Secondly seeing how long it took for my
+patchsets to review and not having any comments from the original driver
+maintainers I'd suggest to add myself as the reviewer to the DW PCIe and
+eDMA drivers. Thus hopefully the new updates review process will be
+performed with much less latencies. For the same reason @Manivannan is
+added to the maintainers list of the DW PCIe/eDMA drivers as he already
+agreed to be in.
+
+Link: https://lore.kernel.org/linux-pci/20230217093956.27126-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v2:
+- Rebase onto the kernel 6.3-rc2.
+
+Link: https://lore.kernel.org/linux-pci/20230313200816.30105-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v3:
+- Drop the patch:
+  [PATCH v2 01/11] PCI: dwc: Fix port link CSR improper init if CDM check enabled
+  and rebase onto the already submitted by @Yoshihiro fix:
+  commit cdce67099117 ("PCI: dwc: Fix PORT_LINK_CONTROL update when CDM check enabled")
+- Just resend.
+
+Link: https://lore.kernel.org/linux-pci/20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v4:
+- Demote @Gustavo to being DW PCIe/eDMA drivers reviewer:
+  [PATCH v4 9/14] MAINTAINERS: Demote Gustavo Pimentel to DW PCIe core reviewer
+  [PATCH v4 12/14] MAINTAINERS: Demote Gustavo Pimentel to DW EDMA driver reviewer
+- Add Manivannan to the DW PCIe/eDMA drivers maintainers list:
+  [PATCH v4 10/14] MAINTAINERS: Add Manivannan to DW PCIe core maintainers list
+  [PATCH v4 13/14] MAINTAINERS: Add Manivannan to DW eDMA driver maintainers list
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: linux-pci@vger.kernel.org
+Cc: dmaengine@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (14):
+  PCI: dwc: Fix erroneous version type test helper
+  PCI: dwc: Fix inbound iATU entries out-of-bounds warning message
+  PCI: bt1: Enable async probe type
+  PCI: bt1: Fix printing false error message
+  PCI: dwc: Drop duplicated fast-link-mode flag unsetting
+  PCI: dwc: Drop empty line from dw_pcie_link_set_max_speed()
+  PCI: visconti: Convert to using generic resources getter
+  MAINTAINERS: Add all generic DW PCIe RP/EP DT-schemas
+  MAINTAINERS: Demote Gustavo Pimentel to DW PCIe core reviewer
+  MAINTAINERS: Add Manivannan to DW PCIe core maintainers list
+  MAINTAINERS: Add myself as the DW PCIe core reviewer
+  MAINTAINERS: Demote Gustavo Pimentel to DW EDMA driver reviewer
+  MAINTAINERS: Add Manivannan to DW eDMA driver maintainers list
+  MAINTAINERS: Add myself as the DW eDMA driver reviewer
+
+ MAINTAINERS                                   | 11 ++++--
+ drivers/pci/controller/dwc/pcie-bt1.c         |  5 ++-
+ .../pci/controller/dwc/pcie-designware-host.c |  2 +-
+ drivers/pci/controller/dwc/pcie-designware.c  |  2 -
+ drivers/pci/controller/dwc/pcie-designware.h  |  7 +++-
+ drivers/pci/controller/dwc/pcie-visconti.c    | 37 +++++++++----------
+ 6 files changed, 34 insertions(+), 30 deletions(-)
+
+-- 
+2.40.0
+
+

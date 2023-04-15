@@ -2,58 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DAF46E306E
-	for <lists+dmaengine@lfdr.de>; Sat, 15 Apr 2023 12:07:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 072C66E307C
+	for <lists+dmaengine@lfdr.de>; Sat, 15 Apr 2023 12:13:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229805AbjDOKHD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 15 Apr 2023 06:07:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57400 "EHLO
+        id S229733AbjDOKNN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 15 Apr 2023 06:13:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229760AbjDOKG7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 15 Apr 2023 06:06:59 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5E1EA5F1;
-        Sat, 15 Apr 2023 03:06:31 -0700 (PDT)
+        with ESMTP id S229994AbjDOKNK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 15 Apr 2023 06:13:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08FC3C1E;
+        Sat, 15 Apr 2023 03:13:09 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A5AB061177;
-        Sat, 15 Apr 2023 10:06:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 444C0C433A1;
-        Sat, 15 Apr 2023 10:06:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5EDE460F15;
+        Sat, 15 Apr 2023 10:13:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5F1CC433EF;
+        Sat, 15 Apr 2023 10:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681553190;
-        bh=Z+1BObiXlJgUhyPJtWXSHre7idf+1fVLpCNeJRw84co=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FeGcLJBv75tSgIpzlNfzHv3/MLU4/OGHjPh8RTfAsdeo8+0+ZSKtOhSLGmHmg/VYf
-         ppyz46KmgHsl0wpKO/yzSynsis1Vmh9ImTWOviJtUHyH5GeppSxdB48uaitTi6R5b8
-         LSwKISZeFt3mxodjCv+DKBsgWlHmXTch46IhAqfYOnGWkF8+kGPWlAtXI4UBv4ePS+
-         ryaikh9nl4FK/vf9A6QcjXhNDPzFAbuBssonZfOBE7Y6aUtyPy2f7jreSlxmnRPF8v
-         h98Boa6DdQr2pFnzZe4yqrZTJpMyn9sKtFlzpzOwD5TLKKHmArtK3j6uEOEIwGDt4z
-         pMI6fKNT8u1Gg==
+        s=k20201202; t=1681553588;
+        bh=y8PFiTJmyHVcHoADVCxHznp9xq9eD+8CSpYGucAEaE0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QRkWhbnlSseV5l3hBHRP/eNaCxSXMpLHob+yibG4SaXV/siBfZUZzlyCZ/o5H4U9Z
+         YPkHs8kURnehXrBRyfQXgOWs6pcetoJ8cAxOvT1LU0inYvVYTY6tye57rQutNtTlZf
+         jMSixDxbp2YqX4CnxJ8wu2G+x5K/KdekvsHxArInDCFIGQyn5t+B70U+Rhrez3ghlp
+         v1Qslr3kDv3YXE+jzQlqbFJW/N5xEYbJj/csRRIuXHEYPAf/2eP43tEXDdjqYjC5pq
+         xF4zynIr1Wysm7XqAq5qAwlVmhLq/i2Ez0ZcOeWoqVyg36+SjJvLvK2IY6sLuyLuq8
+         oYaUxJWBLqjmg==
+Date:   Sat, 15 Apr 2023 18:02:14 +0800
 From:   Jisheng Zhang <jszhang@kernel.org>
-To:     Lars-Peter Clausen <lars@metafoo.de>,
-        Vinod Koul <vkoul@kernel.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Sinan Kaya <okaya@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH v2 5/5] dmaengine: sprd: Don't set chancnt
-Date:   Sat, 15 Apr 2023 17:55:17 +0800
-Message-Id: <20230415095517.2763-6-jszhang@kernel.org>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230415095517.2763-1-jszhang@kernel.org>
-References: <20230415095517.2763-1-jszhang@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/11] dmaengine: dw-axi-dmac: fix reading register hen
+ runtime suspended
+Message-ID: <ZDp2JjQRkSzwx03g@xhacker>
+References: <20230313170450.897-1-jszhang@kernel.org>
+ <20230313170450.897-2-jszhang@kernel.org>
+ <ZDbrTvfPdnvW4Gue@matsya>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZDbrTvfPdnvW4Gue@matsya>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,27 +55,72 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The dma framework will calculate the dma channels chancnt, setting it
-ourself is wrong.
+On Wed, Apr 12, 2023 at 11:03:02PM +0530, Vinod Koul wrote:
+> s/hen/when..? or something else
+> 
+> On 14-03-23, 01:04, Jisheng Zhang wrote:
+> > We should runtime resume the device before calling
+> > axi_chan_is_hw_enable().
+> 
+> why is that can you please explain..
 
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
- drivers/dma/sprd-dma.c | 1 -
- 1 file changed, 1 deletion(-)
+If the device is suspended, I.E not resumed, accessing any
+registers in axi_chan_is_hw_enable() will cause cpu abort.
 
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index 474d3ba8ec9f..2b639adb48ba 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -1169,7 +1169,6 @@ static int sprd_dma_probe(struct platform_device *pdev)
- 
- 	dma_cap_set(DMA_MEMCPY, sdev->dma_dev.cap_mask);
- 	sdev->total_chns = chn_count;
--	sdev->dma_dev.chancnt = chn_count;
- 	INIT_LIST_HEAD(&sdev->dma_dev.channels);
- 	INIT_LIST_HEAD(&sdev->dma_dev.global_node);
- 	sdev->dma_dev.dev = &pdev->dev;
--- 
-2.39.2
+I will add this info into commit log of v2.
 
+> 
+> > 
+> > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> > ---
+> >  drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 15 +++++++++++----
+> >  1 file changed, 11 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> > index 7f3a60e28e38..23a10dbdecb7 100644
+> > --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> > +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> > @@ -462,13 +462,17 @@ static void dw_axi_dma_synchronize(struct dma_chan *dchan)
+> >  
+> >  static int dma_chan_alloc_chan_resources(struct dma_chan *dchan)
+> >  {
+> > +	int ret;
+> >  	struct axi_dma_chan *chan = dchan_to_axi_dma_chan(dchan);
+> >  
+> > +	pm_runtime_get(chan->chip->dev);
+> > +
+> >  	/* ASSERT: channel is idle */
+> >  	if (axi_chan_is_hw_enable(chan)) {
+> >  		dev_err(chan2dev(chan), "%s is non-idle!\n",
+> >  			axi_chan_name(chan));
+> > -		return -EBUSY;
+> > +		ret = -EBUSY;
+> > +		goto err_busy;
+> >  	}
+> >  
+> >  	/* LLI address must be aligned to a 64-byte boundary */
+> > @@ -478,13 +482,16 @@ static int dma_chan_alloc_chan_resources(struct dma_chan *dchan)
+> >  					  64, 0);
+> >  	if (!chan->desc_pool) {
+> >  		dev_err(chan2dev(chan), "No memory for descriptors\n");
+> > -		return -ENOMEM;
+> > +		ret = -ENOMEM;
+> > +		goto err_busy;
+> >  	}
+> >  	dev_vdbg(dchan2dev(dchan), "%s: allocating\n", axi_chan_name(chan));
+> >  
+> > -	pm_runtime_get(chan->chip->dev);
+> > -
+> >  	return 0;
+> > +
+> > +err_busy:
+> > +	pm_runtime_put(chan->chip->dev);
+> > +	return ret;
+> >  }
+> >  
+> >  static void dma_chan_free_chan_resources(struct dma_chan *dchan)
+> > -- 
+> > 2.39.2
+> 
+> -- 
+> ~Vinod

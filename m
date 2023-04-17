@@ -2,60 +2,60 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B13946E41C0
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Apr 2023 09:56:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9E906E41C1
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Apr 2023 09:56:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231236AbjDQH4a (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 17 Apr 2023 03:56:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42102 "EHLO
+        id S231245AbjDQH4b (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 17 Apr 2023 03:56:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231175AbjDQH4D (ORCPT
+        with ESMTP id S231183AbjDQH4D (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Apr 2023 03:56:03 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56B4840D5
-        for <dmaengine@vger.kernel.org>; Mon, 17 Apr 2023 00:56:00 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2a8ba23a2abso10342641fa.2
-        for <dmaengine@vger.kernel.org>; Mon, 17 Apr 2023 00:56:00 -0700 (PDT)
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19D5E40F7
+        for <dmaengine@vger.kernel.org>; Mon, 17 Apr 2023 00:56:01 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-4ec8149907aso1200169e87.1
+        for <dmaengine@vger.kernel.org>; Mon, 17 Apr 2023 00:56:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681718158; x=1684310158;
+        d=linaro.org; s=google; t=1681718159; x=1684310159;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6f6IBkBIt739+E7WXx4zldQTdeT9xMqDgSUi25Hzr98=;
-        b=iJ+BuNWG3vRAUZE+T7vEdn54sf368+DJrKBVNkZ2JD+z18ddB1/dgIt5S8eAzQPi4C
-         EpEKGm34ztxZ6UmFEZHxUdBMa/bVCa9w84JR3BpSCUh1wfrJJ80NZWkGKWNJkhlKFVTa
-         YI6qveLXqUu9OhmJCPpnfEn0ItnzC+iJWoVI8R0XQpAgiYdS2LSenrHnvU3JvxW7p4mj
-         2hJR2AeiA32X6hDX0b5Q3ALrFWjBerlapF54w+o03EcFo/wYDI5ehd1kDvbhLRdqegVb
-         0TNf8PxiUVkOH+fJGMnHSIYZ3EM9mW210qqPJDQAQ+REw61Sb4r26uON2GbvE+39Hxcz
-         IpdQ==
+        bh=6O/2AisgZasdz5TfqSJm6yXze5QCOC8Gd2nntmT4L9I=;
+        b=bKmXKwxI1i5GaBTDoiN8WGb3G7UxJGUxg2INzSxaVMCoaFLx48refXd4Nz5bpaTidd
+         +aJVPhMYK3cl1wy7wA5gA2ITlD3XkS104O9DZZlUQkF/2sYeRwZdKIDF9YkwMDLsEHUa
+         fMknMhAwfXB7I6Abw/8FZI2/Fc6hGYMjSWeHlTqNKpRCbf/nCmmlBfc4HHeSS+DKo7Il
+         Usoh5H71wzm1HaCo6ZsGh01TzozH0JBMsxXAxp8OBvFE1iOe8WNQHfmBGmxmUhPK2InJ
+         InJDp5EKEQvh6O5GYiMLKHqqQqQlbPHOxLZUBQN+wvDF8krGuzw/A27tH1xHHfnQZyT3
+         0BCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681718158; x=1684310158;
+        d=1e100.net; s=20221208; t=1681718159; x=1684310159;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6f6IBkBIt739+E7WXx4zldQTdeT9xMqDgSUi25Hzr98=;
-        b=X73JrKIMBcPHilY7nmeZ/9UBXT6tDDkfZ/JJIB3CNe7yYXDd8y+DSpIAbGCai96GQ4
-         FC4HWPMAV2z5ZdJ3Q9riS12B56UTmehUd/WBCqVnDqPoipqe3DNnSEv8QmsjbKUup4Iz
-         cfgvk8T1QCUnQV41f2drvhcjUOmHyEYhaOIW4Lc5TDjWYt880gIDa8DKFdJwQSFDKQk3
-         nw6Q6Ssvtkv6Sw9+58mp+ZbUVGed7JoOi+KTrQbnyyUrK/8aXRonxZORSFq70BfJRBpd
-         PBiEN7J3OW9riQ3xjAU88bn33r7pDAeocn3POUD631kFoAK29XehCD/bceWC3HUX84u0
-         80Cw==
-X-Gm-Message-State: AAQBX9dhRF8FuSwWd7e0F7uHAH5mKOqrhK73orGQ874w7mfqsltEUZkP
-        pDmOfRsvEEE65GArYrjVzdn9xw==
-X-Google-Smtp-Source: AKy350ZReBtvGSADhwf4Gq88llq9bm0MreBu/SXYNYCghuMTThVr5UWog7ASHWBdyCAr0lib67tAHg==
-X-Received: by 2002:ac2:4908:0:b0:4b5:7a91:70f5 with SMTP id n8-20020ac24908000000b004b57a9170f5mr1709749lfi.63.1681718158531;
-        Mon, 17 Apr 2023 00:55:58 -0700 (PDT)
+        bh=6O/2AisgZasdz5TfqSJm6yXze5QCOC8Gd2nntmT4L9I=;
+        b=gBQQMlF05bwnOvIjdj7jWOfcO6xTeibCy2RgGxnB5eD3pwZ1Gi3WcAT0UFTYkhzmOn
+         0GXaij2Z8UP5HrEliwcNyLKcdu9OwRPRg4aRbtos3aaEAhSLoqCqDw0IrlcOm22LSXf0
+         Ztjwwaba1NofJnARRzwi7R5HCI8+jiLXx+y57zoeIbpWAltsq8ym281j3+ivGrWftVvJ
+         b1b8QnVn1Gn7dLGnnZEzW+n3Uvy7ocSjNpgEU1S/kSKdqw2piDitqDE8DA7J833q1PI1
+         nZnFHUu5gLWozfBTxe1U0iu2aOy+zmqm5WfQScQ8f7+LfxZWp+3k8QLZBDqUAx7t3Lt9
+         1yCQ==
+X-Gm-Message-State: AAQBX9fJJ+LM4AlU94zXZ2yEZ0EvRc+H+3OyvyQukTWs5J3th+/Ds/6O
+        yoD4SNg45Ki3lCevr0ZRVB4qOg==
+X-Google-Smtp-Source: AKy350b1bPM4ZvhIq7AXqAPSfk90VNy/bO686xdKsHNZIEjfAdaq86Nur6RkVitNLBwji6bmwe5PsA==
+X-Received: by 2002:a19:f80a:0:b0:4ec:9e01:71e with SMTP id a10-20020a19f80a000000b004ec9e01071emr1697300lff.4.1681718159455;
+        Mon, 17 Apr 2023 00:55:59 -0700 (PDT)
 Received: from [192.168.1.2] (c-05d8225c.014-348-6c756e10.bbcust.telenor.se. [92.34.216.5])
-        by smtp.gmail.com with ESMTPSA id p2-20020a19f002000000b004eb274b3a43sm1952547lfc.134.2023.04.17.00.55.57
+        by smtp.gmail.com with ESMTPSA id p2-20020a19f002000000b004eb274b3a43sm1952547lfc.134.2023.04.17.00.55.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Apr 2023 00:55:58 -0700 (PDT)
+        Mon, 17 Apr 2023 00:55:59 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 17 Apr 2023 09:55:51 +0200
-Subject: [PATCH 6/7] dmaengine: ste_dma40: Use managed resources
+Date:   Mon, 17 Apr 2023 09:55:52 +0200
+Subject: [PATCH 7/7] dmaengine: ste_dma40: Return error codes properly
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230417-ux500-dma40-cleanup-v1-6-b26324956e47@linaro.org>
+Message-Id: <20230417-ux500-dma40-cleanup-v1-7-b26324956e47@linaro.org>
 References: <20230417-ux500-dma40-cleanup-v1-0-b26324956e47@linaro.org>
 In-Reply-To: <20230417-ux500-dma40-cleanup-v1-0-b26324956e47@linaro.org>
 To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
@@ -74,348 +74,178 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This switches the DMA40 driver to use a bunch of managed
-resources and strip down the errorpath.
+This makes the probe() and its subfunction d40_hw_detect_init()
+return proper error codes.
 
-The result is pretty neat and makes the driver way more
-readable.
+One effect of this is that deferred probe, e.g from the clock,
+will start to work, would it happen. Also it is better design.
 
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/dma/ste_dma40.c | 180 ++++++++++++++++--------------------------------
- 1 file changed, 61 insertions(+), 119 deletions(-)
+ drivers/dma/ste_dma40.c | 46 ++++++++++++++++++++++++----------------------
+ 1 file changed, 24 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
-index fe98f12b8130..c5991009d3e4 100644
+index c5991009d3e4..2911017265cf 100644
 --- a/drivers/dma/ste_dma40.c
 +++ b/drivers/dma/ste_dma40.c
-@@ -554,8 +554,6 @@ struct d40_gen_dmac {
-  * @virtbase: The virtual base address of the DMA's register.
-  * @rev: silicon revision detected.
-  * @clk: Pointer to the DMA clock structure.
-- * @phy_start: Physical memory start of the DMA registers.
-- * @phy_size: Size of the DMA register map.
-  * @irq: The IRQ number.
-  * @num_memcpy_chans: The number of channels used for memcpy (mem-to-mem
-  * transfers).
-@@ -599,8 +597,6 @@ struct d40_base {
- 	void __iomem			 *virtbase;
- 	u8				  rev:4;
- 	struct clk			 *clk;
--	phys_addr_t			  phy_start;
--	resource_size_t			  phy_size;
- 	int				  irq;
- 	int				  num_memcpy_chans;
- 	int				  num_phy_chans;
-@@ -3128,65 +3124,58 @@ static int __init d40_phy_res_init(struct d40_base *base)
- 	return num_phy_chans_avail;
+@@ -3132,7 +3132,8 @@ static void d40_drop_kmem_cache_action(void *d)
+ 	kmem_cache_destroy(desc_slab);
  }
  
-+/* Called from the registered devm action */
-+static void d40_drop_kmem_cache_action(void *d)
-+{
-+	struct kmem_cache *desc_slab = d;
-+
-+	kmem_cache_destroy(desc_slab);
-+}
-+
- static struct d40_base * __init d40_hw_detect_init(struct platform_device *pdev)
+-static struct d40_base * __init d40_hw_detect_init(struct platform_device *pdev)
++static int __init d40_hw_detect_init(struct platform_device *pdev,
++				     struct d40_base **retbase)
  {
  	struct stedma40_platform_data *plat_data = dev_get_platdata(&pdev->dev);
  	struct device *dev = &pdev->dev;
- 	struct clk *clk;
- 	void __iomem *virtbase;
--	struct resource *res;
- 	struct d40_base *base;
- 	int num_log_chans;
- 	int num_phy_chans;
- 	int num_memcpy_chans;
--	int clk_ret = -EINVAL;
- 	int i;
- 	u32 pid;
- 	u32 cid;
- 	u8 rev;
-+	int ret;
+@@ -3150,14 +3151,12 @@ static struct d40_base * __init d40_hw_detect_init(struct platform_device *pdev)
  
--	clk = clk_get(dev, NULL);
--	if (IS_ERR(clk)) {
--		d40_err(dev, "No matching clock found\n");
--		goto check_prepare_enabled;
--	}
--
--	clk_ret = clk_prepare_enable(clk);
--	if (clk_ret) {
--		d40_err(dev, "Failed to prepare/enable clock\n");
--		goto disable_unprepare;
--	}
-+	clk = devm_clk_get_enabled(dev, NULL);
-+	if (IS_ERR(clk))
-+		return NULL;
+ 	clk = devm_clk_get_enabled(dev, NULL);
+ 	if (IS_ERR(clk))
+-		return NULL;
++		return PTR_ERR(clk);
  
  	/* Get IO for DMAC base address */
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "base");
--	if (!res)
--		goto disable_unprepare;
--
--	if (request_mem_region(res->start, resource_size(res),
--			       D40_NAME " I/O base") == NULL)
--		goto release_region;
--
--	virtbase = ioremap(res->start, resource_size(res));
--	if (!virtbase)
--		goto release_region;
-+	virtbase = devm_platform_ioremap_resource_byname(pdev, "base");
-+	if (IS_ERR(virtbase)) {
-+		dev_err(dev, "No IO base defined\n");
-+		return NULL;
-+	}
+ 	virtbase = devm_platform_ioremap_resource_byname(pdev, "base");
+-	if (IS_ERR(virtbase)) {
+-		dev_err(dev, "No IO base defined\n");
+-		return NULL;
+-	}
++	if (IS_ERR(virtbase))
++		return PTR_ERR(virtbase);
  
  	/* This is just a regular AMBA PrimeCell ID actually */
  	for (pid = 0, i = 0; i < 4; i++)
--		pid |= (readl(virtbase + resource_size(res) - 0x20 + 4 * i)
-+		pid |= (readl(virtbase + SZ_4K - 0x20 + 4 * i)
- 			& 255) << (i * 8);
- 	for (cid = 0, i = 0; i < 4; i++)
--		cid |= (readl(virtbase + resource_size(res) - 0x10 + 4 * i)
-+		cid |= (readl(virtbase + SZ_4K - 0x10 + 4 * i)
- 			& 255) << (i * 8);
+@@ -3169,13 +3168,13 @@ static struct d40_base * __init d40_hw_detect_init(struct platform_device *pdev)
  
  	if (cid != AMBA_CID) {
  		d40_err(dev, "Unknown hardware! No PrimeCell ID\n");
--		goto unmap_io;
-+		return NULL;
+-		return NULL;
++		return -EINVAL;
  	}
  	if (AMBA_MANF_BITS(pid) != AMBA_VENDOR_ST) {
  		d40_err(dev, "Unknown designer! Got %x wanted %x\n",
  			AMBA_MANF_BITS(pid),
  			AMBA_VENDOR_ST);
--		goto unmap_io;
-+		return NULL;
+-		return NULL;
++		return -EINVAL;
  	}
  	/*
  	 * HW revision:
-@@ -3200,7 +3189,7 @@ static struct d40_base * __init d40_hw_detect_init(struct platform_device *pdev)
+@@ -3189,7 +3188,7 @@ static struct d40_base * __init d40_hw_detect_init(struct platform_device *pdev)
  	rev = AMBA_REV_BITS(pid);
  	if (rev < 2) {
  		d40_err(dev, "hardware revision: %d is not supported", rev);
--		goto unmap_io;
-+		return NULL;
+-		return NULL;
++		return -EINVAL;
  	}
  
  	/* The number of physical channels on this HW */
-@@ -3218,23 +3207,22 @@ static struct d40_base * __init d40_hw_detect_init(struct platform_device *pdev)
- 	num_log_chans = num_phy_chans * D40_MAX_LOG_CHAN_PER_PHY;
+@@ -3216,7 +3215,7 @@ static struct d40_base * __init d40_hw_detect_init(struct platform_device *pdev)
+ 		sizeof(struct d40_chan), GFP_KERNEL);
  
- 	dev_info(dev,
--		 "hardware rev: %d @ %pa with %d physical and %d logical channels\n",
--		 rev, &res->start, num_phy_chans, num_log_chans);
-+		 "hardware rev: %d with %d physical and %d logical channels\n",
-+		 rev, num_phy_chans, num_log_chans);
- 
--	base = kzalloc(ALIGN(sizeof(struct d40_base), 4) +
--		       (num_phy_chans + num_log_chans + num_memcpy_chans) *
--		       sizeof(struct d40_chan), GFP_KERNEL);
-+	base = devm_kzalloc(dev,
-+		ALIGN(sizeof(struct d40_base), 4) +
-+		(num_phy_chans + num_log_chans + num_memcpy_chans) *
-+		sizeof(struct d40_chan), GFP_KERNEL);
- 
--	if (base == NULL)
--		goto unmap_io;
-+	if (!base)
-+		return NULL;
+ 	if (!base)
+-		return NULL;
++		return -ENOMEM;
  
  	base->rev = rev;
  	base->clk = clk;
- 	base->num_memcpy_chans = num_memcpy_chans;
- 	base->num_phy_chans = num_phy_chans;
- 	base->num_log_chans = num_log_chans;
--	base->phy_start = res->start;
--	base->phy_size = resource_size(res);
- 	base->virtbase = virtbase;
- 	base->plat_data = plat_data;
- 	base->dev = dev;
-@@ -3271,76 +3259,55 @@ static struct d40_base * __init d40_hw_detect_init(struct platform_device *pdev)
- 		base->gen_dmac.init_reg_size = ARRAY_SIZE(dma_init_reg_v4a);
- 	}
- 
--	base->phy_res = kcalloc(num_phy_chans,
--				sizeof(*base->phy_res),
--				GFP_KERNEL);
-+	base->phy_res = devm_kcalloc(dev, num_phy_chans,
-+				     sizeof(*base->phy_res),
-+				     GFP_KERNEL);
+@@ -3263,51 +3262,53 @@ static struct d40_base * __init d40_hw_detect_init(struct platform_device *pdev)
+ 				     sizeof(*base->phy_res),
+ 				     GFP_KERNEL);
  	if (!base->phy_res)
--		goto free_base;
-+		return NULL;
+-		return NULL;
++		return -ENOMEM;
  
--	base->lookup_phy_chans = kcalloc(num_phy_chans,
--					 sizeof(*base->lookup_phy_chans),
--					 GFP_KERNEL);
-+	base->lookup_phy_chans = devm_kcalloc(dev, num_phy_chans,
-+					      sizeof(*base->lookup_phy_chans),
-+					      GFP_KERNEL);
+ 	base->lookup_phy_chans = devm_kcalloc(dev, num_phy_chans,
+ 					      sizeof(*base->lookup_phy_chans),
+ 					      GFP_KERNEL);
  	if (!base->lookup_phy_chans)
--		goto free_phy_res;
-+		return NULL;
+-		return NULL;
++		return -ENOMEM;
  
--	base->lookup_log_chans = kcalloc(num_log_chans,
--					 sizeof(*base->lookup_log_chans),
--					 GFP_KERNEL);
-+	base->lookup_log_chans = devm_kcalloc(dev, num_log_chans,
-+					      sizeof(*base->lookup_log_chans),
-+					      GFP_KERNEL);
+ 	base->lookup_log_chans = devm_kcalloc(dev, num_log_chans,
+ 					      sizeof(*base->lookup_log_chans),
+ 					      GFP_KERNEL);
  	if (!base->lookup_log_chans)
--		goto free_phy_chans;
-+		return NULL;
+-		return NULL;
++		return -ENOMEM;
  
--	base->reg_val_backup_chan = kmalloc_array(base->num_phy_chans,
-+	base->reg_val_backup_chan = devm_kmalloc_array(dev, base->num_phy_chans,
+ 	base->reg_val_backup_chan = devm_kmalloc_array(dev, base->num_phy_chans,
  						  sizeof(d40_backup_regs_chan),
  						  GFP_KERNEL);
  	if (!base->reg_val_backup_chan)
--		goto free_log_chans;
-+		return NULL;
+-		return NULL;
++		return -ENOMEM;
  
--	base->lcla_pool.alloc_map = kcalloc(num_phy_chans
-+	base->lcla_pool.alloc_map = devm_kcalloc(dev, num_phy_chans
+ 	base->lcla_pool.alloc_map = devm_kcalloc(dev, num_phy_chans
  					    * D40_LCLA_LINK_PER_EVENT_GRP,
  					    sizeof(*base->lcla_pool.alloc_map),
  					    GFP_KERNEL);
  	if (!base->lcla_pool.alloc_map)
--		goto free_backup_chan;
-+		return NULL;
+-		return NULL;
++		return -ENOMEM;
  
--	base->regs_interrupt = kmalloc_array(base->gen_dmac.il_size,
-+	base->regs_interrupt = devm_kmalloc_array(dev, base->gen_dmac.il_size,
+ 	base->regs_interrupt = devm_kmalloc_array(dev, base->gen_dmac.il_size,
  					     sizeof(*base->regs_interrupt),
  					     GFP_KERNEL);
  	if (!base->regs_interrupt)
--		goto free_map;
-+		return NULL;
+-		return NULL;
++		return -ENOMEM;
  
  	base->desc_slab = kmem_cache_create(D40_NAME, sizeof(struct d40_desc),
  					    0, SLAB_HWCACHE_ALIGN,
  					    NULL);
--	if (base->desc_slab == NULL)
--		goto free_regs;
-+	if (!base->desc_slab)
-+		return NULL;
+ 	if (!base->desc_slab)
+-		return NULL;
++		return -ENOMEM;
  
-+	ret = devm_add_action_or_reset(dev, d40_drop_kmem_cache_action,
-+				       base->desc_slab);
-+	if (ret)
-+		return NULL;
+ 	ret = devm_add_action_or_reset(dev, d40_drop_kmem_cache_action,
+ 				       base->desc_slab);
+ 	if (ret)
+-		return NULL;
++		return ret;
++
++	*retbase = base;
  
- 	return base;
-- free_regs:
--	kfree(base->regs_interrupt);
-- free_map:
--	kfree(base->lcla_pool.alloc_map);
-- free_backup_chan:
--	kfree(base->reg_val_backup_chan);
-- free_log_chans:
--	kfree(base->lookup_log_chans);
-- free_phy_chans:
--	kfree(base->lookup_phy_chans);
-- free_phy_res:
--	kfree(base->phy_res);
-- free_base:
--	kfree(base);
-- unmap_io:
--	iounmap(virtbase);
-- release_region:
--	release_mem_region(res->start, resource_size(res));
-- check_prepare_enabled:
--	if (!clk_ret)
-- disable_unprepare:
--		clk_disable_unprepare(clk);
--	if (!IS_ERR(clk))
--		clk_put(clk);
--	return NULL;
+-	return base;
++	return 0;
  }
  
  static void __init d40_hw_init(struct d40_base *base)
-@@ -3585,11 +3552,11 @@ static int __init d40_probe(struct platform_device *pdev)
- 	} else
- 		writel(base->phy_lcpa, base->virtbase + D40_DREG_LCPA);
+@@ -3503,20 +3504,20 @@ static int __init d40_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct device_node *np_lcpa;
+-	int ret = -ENOENT;
+ 	struct d40_base *base;
+ 	struct resource *res;
+ 	struct resource res_lcpa;
+ 	int num_reserved_chans;
+ 	u32 val;
++	int ret;
  
--	base->lcpa_base = ioremap(base->phy_lcpa, base->lcpa_size);
-+	base->lcpa_base = devm_ioremap(dev, base->phy_lcpa, base->lcpa_size);
- 	if (!base->lcpa_base) {
+ 	if (d40_of_probe(dev, np)) {
  		ret = -ENOMEM;
- 		d40_err(dev, "Failed to ioremap LCPA region\n");
--		goto release_base;
-+		goto report_failure;
- 	}
- 	/* If lcla has to be located in ESRAM we don't need to allocate */
- 	if (base->plat_data->use_esram_lcla) {
-@@ -3599,14 +3566,14 @@ static int __init d40_probe(struct platform_device *pdev)
- 			ret = -ENOENT;
- 			d40_err(dev,
- 				"No \"lcla_esram\" memory resource\n");
--			goto destroy_cache;
-+			goto report_failure;
- 		}
--		base->lcla_pool.base = ioremap(res->start,
--						resource_size(res));
-+		base->lcla_pool.base = devm_ioremap(dev, res->start,
-+						    resource_size(res));
- 		if (!base->lcla_pool.base) {
- 			ret = -ENOMEM;
- 			d40_err(dev, "Failed to ioremap LCLA region\n");
--			goto destroy_cache;
-+			goto report_failure;
- 		}
- 		writel(res->start, base->virtbase + D40_DREG_LCLA);
- 
-@@ -3678,16 +3645,8 @@ static int __init d40_probe(struct platform_device *pdev)
- 
- 	dev_info(base->dev, "initialized\n");
- 	return 0;
-- destroy_cache:
--	kmem_cache_destroy(base->desc_slab);
--	if (base->virtbase)
--		iounmap(base->virtbase);
--
--	if (base->lcla_pool.base && base->plat_data->use_esram_lcla) {
--		iounmap(base->lcla_pool.base);
--		base->lcla_pool.base = NULL;
--	}
- 
-+ destroy_cache:
- 	if (base->lcla_pool.dma_addr)
- 		dma_unmap_single(base->dev, base->lcla_pool.dma_addr,
- 				 SZ_1K * base->num_phy_chans,
-@@ -3699,28 +3658,11 @@ static int __init d40_probe(struct platform_device *pdev)
- 
- 	kfree(base->lcla_pool.base_unaligned);
- 
--	if (base->lcpa_base)
--		iounmap(base->lcpa_base);
--
--release_base:
--	if (base->phy_start)
--		release_mem_region(base->phy_start,
--				   base->phy_size);
--	if (base->clk) {
--		clk_disable_unprepare(base->clk);
--		clk_put(base->clk);
--	}
--
- 	if (base->lcpa_regulator) {
- 		regulator_disable(base->lcpa_regulator);
- 		regulator_put(base->lcpa_regulator);
+ 		goto report_failure;
  	}
  
--	kfree(base->lcla_pool.alloc_map);
--	kfree(base->lookup_log_chans);
--	kfree(base->lookup_phy_chans);
--	kfree(base->phy_res);
--	kfree(base);
-  report_failure:
- 	d40_err(dev, "probe failed\n");
- 	return ret;
+-	base = d40_hw_detect_init(pdev);
+-	if (!base)
++	ret = d40_hw_detect_init(pdev, &base);
++	if (ret)
+ 		goto report_failure;
+ 
+ 	num_reserved_chans = d40_phy_res_init(base);
+@@ -3530,6 +3531,7 @@ static int __init d40_probe(struct platform_device *pdev)
+ 	np_lcpa = of_parse_phandle(np, "sram", 0);
+ 	if (!np_lcpa) {
+ 		dev_err(dev, "no LCPA SRAM node\n");
++		ret = -EINVAL;
+ 		goto report_failure;
+ 	}
+ 	/* This is no device so read the address directly from the node */
 
 -- 
 2.39.2

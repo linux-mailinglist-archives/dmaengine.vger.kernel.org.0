@@ -2,128 +2,85 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18CA46E4E82
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Apr 2023 18:45:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B9646E4E92
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Apr 2023 18:50:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229542AbjDQQpX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 17 Apr 2023 12:45:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56440 "EHLO
+        id S229551AbjDQQuu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 17 Apr 2023 12:50:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbjDQQpW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Apr 2023 12:45:22 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DB247AB9;
-        Mon, 17 Apr 2023 09:45:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681749921; x=1713285921;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=mejMMiNRr2sdE/HkEC1Fb36Btw2PJ43aaguwXoKkpZo=;
-  b=JMSCSx47KBmAR56jqhazXIuEFLvCftJ7Jr3e7ZsIR0tb6awXNERevdz0
-   yhJj+eYUMnsqrIMgVQnnaDJbdXv2QRMksyu2X+Fl/dqi9DeRxkSRbGrE5
-   GZh0mcQFPj/OUrO3fW+VmZG3GeRDQktHSc04pMoMqvpmzzFG4DqFlgpB6
-   Lf40MmVsy9O37b83Cn07lLKAiQENOgUMgEEaqDcsfmbi8snELitQdDAu1
-   DRcFRGUmsycb8IEBjb5QY7rUMI6n3JEA48N1f/iVflDxouo6tSMDzVun6
-   CtNZuY9RaBS+lWkFON/mpzKsdyDQRydTAL2hKKxrzenaaMNuigmOYU9ul
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="347685912"
-X-IronPort-AV: E=Sophos;i="5.99,204,1677571200"; 
-   d="scan'208";a="347685912"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2023 09:42:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="640989218"
-X-IronPort-AV: E=Sophos;i="5.99,204,1677571200"; 
-   d="scan'208";a="640989218"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2023 09:42:16 -0700
-Date:   Mon, 17 Apr 2023 09:46:29 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Baolu Lu <baolu.lu@linux.intel.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Zanussi, Tom" <tom.zanussi@intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v4 3/7] iommu: Support allocation of global PASIDs
- outside SVA
-Message-ID: <20230417094629.59fcfde6@jacob-builder>
-In-Reply-To: <5882ee52-9657-250d-0474-13edffa7b6b9@linux.intel.com>
-References: <20230407180554.2784285-1-jacob.jun.pan@linux.intel.com>
-        <20230407180554.2784285-4-jacob.jun.pan@linux.intel.com>
-        <BN9PR11MB5276D09F18BA65AD074777948C9A9@BN9PR11MB5276.namprd11.prod.outlook.com>
-        <5882ee52-9657-250d-0474-13edffa7b6b9@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        with ESMTP id S229509AbjDQQut (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Apr 2023 12:50:49 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73EAC526A;
+        Mon, 17 Apr 2023 09:50:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=7vXipZ/UwJBW0uB9csVn0cpof8IbwzgFkLpm2tMHzig=; b=DRb+ktBgy9dy7gp9xLzNPGyTsM
+        ReNOA6XrzUnwkCS4xxBitS7Y7sFiFDDbjcZn11nncoNe7E+DeVD7CZGmcZ9IHdBpiieGoF6HoP2jG
+        9JrW1JVq6rC+zQL6vMnOb/P+EZ0N+ynrj+YrpqeRCLmbPx8E2Cu4C5EdHfCorXORyec4XEXwiCgcA
+        FVlL1KoSOSx+7Bd1wMccBWfdXWkjQ8erbEP4e/ZkyiElbWLYplfNhLztp7sRhwp/V8+MTlbqD4J2H
+        Y/lgc817r7FSMb6zR/nRDuM+YMFT475IQFHhh6f7VbIVS8SHkaoULPs9oHxDTM50ozfbMZuYVYYQB
+        dP464ERg==;
+Received: from s0106a84e3fe8c3f3.cg.shawcable.net ([24.64.144.200] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1poS3e-00Azru-5V; Mon, 17 Apr 2023 10:50:26 -0600
+Message-ID: <694b79c7-b88a-bccf-d026-690cd3ccffee@deltatee.com>
+Date:   Mon, 17 Apr 2023 10:50:23 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+To:     Jisheng Zhang <jszhang@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Vinod Koul <vkoul@kernel.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Sinan Kaya <okaya@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+References: <20230415095517.2763-1-jszhang@kernel.org>
+ <20230415095517.2763-4-jszhang@kernel.org>
+Content-Language: en-CA
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20230415095517.2763-4-jszhang@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-SA-Exim-Connect-IP: 24.64.144.200
+X-SA-Exim-Rcpt-To: jszhang@kernel.org, lars@metafoo.de, vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com, okaya@kernel.org, agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org, orsonzhai@gmail.com, baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
+Subject: Re: [PATCH v2 3/5] dmaengine: plx_dma: Don't set chancnt
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Baolu,
 
-On Wed, 12 Apr 2023 09:37:48 +0800, Baolu Lu <baolu.lu@linux.intel.com>
-wrote:
 
-> On 4/11/23 4:02 PM, Tian, Kevin wrote:
-> >> From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> >> Sent: Saturday, April 8, 2023 2:06 AM
-> >> @@ -28,8 +26,8 @@ static int iommu_sva_alloc_pasid(struct mm_struct
-> >> *mm, ioasid_t min, ioasid_t ma
-> >>   		goto out;
-> >>   	}
-> >>
-> >> -	ret = ida_alloc_range(&iommu_global_pasid_ida, min, max,
-> >> GFP_KERNEL);
-> >> -	if (ret < min)
-> >> +	ret = iommu_alloc_global_pasid(min, max);  
-> > 
-> > I wonder whether this can take a device pointer so
-> > dev->iommu->max_pasids is enforced inside the alloc function.  
+On 2023-04-15 03:55, Jisheng Zhang wrote:
+> The dma framework will calculate the dma channels chancnt, setting it
+> ourself is wrong.
 > 
-> Agreed. Instead of using the open code, it looks better to have a helper
-> like dev_iommu_max_pasids().
-yes, probably export dev_iommu_get_max_pasids(dev)?
+> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 
-But if I understood Kevin correctly, he's also suggesting that the
-interface should be changed to iommu_alloc_global_pasid(dev), my concern is
-that how do we use this function to reserve RID_PASID which is not specific
-to a device?
+Seems fine to me.
 
-> 
-> > 
-> > and do we even need the min/max parameters? With special pasids reserved
-> > then what driver needs is just to get a free pasid from the global
-> > space within dev->iommu->max_pasids constraint...
-> > 
-> > iommu_sva_alloc_pasid() can be reworked to avoid min/max by taking a
-> > device pointer too.  
-> 
-> Best regards,
-> baolu
-
+Acked-by: Logan Gunthorpe <logang@deltatee.com>
 
 Thanks,
 
-Jacob
+Logan

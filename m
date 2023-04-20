@@ -2,151 +2,197 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E6506E82F7
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Apr 2023 23:01:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10AC36E9D53
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Apr 2023 22:40:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229547AbjDSVBo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 19 Apr 2023 17:01:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57622 "EHLO
+        id S231534AbjDTUkF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 20 Apr 2023 16:40:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229521AbjDSVBn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 19 Apr 2023 17:01:43 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B838D4C19;
-        Wed, 19 Apr 2023 14:01:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681938102; x=1713474102;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=EvOLRYWpsS17t0KvfH81CLjKKuyPpgtISPNLbl3a8+o=;
-  b=MS6cqjvlmibA84IXMR5vfsaiwfr3lR+2LtHKFGOjlWY8sUklCxU2INJu
-   3hj/bEAzvoWdNi37zl+E9v0fG1SIj8nk5w0+cnnau5U/+qDAVjDDMNqna
-   y4BCyuyQmwJgk3X9pSa4OmC1O86gT9I7KtMwWKKXbdZHHwsANCO/eKoNw
-   0EaN6yHTNuxIZMsjYWp/hyWYo5qNUvDUz2/swixiellb93TTXYo2uJh6g
-   8LCobAesb4Aq6hU9CfMGit9VSoBf1ZyGZqZkMTZ7dmSSq2b8JhKfMI3F9
-   K0DwBHftxotk5VGNtIoApPIMZcXDa5xXmZ55kGgB0k8rLEFMQNSuIGz/Y
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="343040856"
-X-IronPort-AV: E=Sophos;i="5.99,210,1677571200"; 
-   d="scan'208";a="343040856"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 14:01:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="803048939"
-X-IronPort-AV: E=Sophos;i="5.99,210,1677571200"; 
-   d="scan'208";a="803048939"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 14:01:40 -0700
-Date:   Wed, 19 Apr 2023 14:05:54 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Baolu Lu <baolu.lu@linux.intel.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Zanussi, Tom" <tom.zanussi@intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v4 3/7] iommu: Support allocation of global PASIDs
- outside SVA
-Message-ID: <20230419140554.66578c1e@jacob-builder>
-In-Reply-To: <7e182125-f5ab-3201-e69d-b6c96eeede01@linux.intel.com>
-References: <20230407180554.2784285-1-jacob.jun.pan@linux.intel.com>
-        <20230407180554.2784285-4-jacob.jun.pan@linux.intel.com>
-        <BN9PR11MB5276D09F18BA65AD074777948C9A9@BN9PR11MB5276.namprd11.prod.outlook.com>
-        <5882ee52-9657-250d-0474-13edffa7b6b9@linux.intel.com>
-        <20230417094629.59fcfde6@jacob-builder>
-        <a1a82bc0-9a7a-5363-cda8-a0226eff0073@linux.intel.com>
-        <20230418160450.4ea7fb7d@jacob-builder>
-        <7e182125-f5ab-3201-e69d-b6c96eeede01@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        with ESMTP id S231166AbjDTUkE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 Apr 2023 16:40:04 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E310A10D8;
+        Thu, 20 Apr 2023 13:40:02 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-4ec81245ae1so876855e87.0;
+        Thu, 20 Apr 2023 13:40:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682023201; x=1684615201;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2AUbQ+MnIhboEjV+/fmnhA5xYvv9W6JDCwMUV4DMmoc=;
+        b=NuD9Tf7QOTcnmEjUEJinD5uDjBkNph/F1HQvY4UIBtzt25HuFOyEQ8MZjzCiZKgyIr
+         gvdmRL5cmXZ7V9y4PB2iFd9Disf7TCpgcSFODkdxOI7BkS1GQ20s2O9XimOiGo8XYvRR
+         InHFCK5MUoXdsbpSpaPhtdfWTNqzkUoSC2A/HFa+Hugsl6dTAK62wODI/yEBWM2HbGXb
+         rVHgL1niDyHI46E3BQjkJ1Rr8hTB/+/CK7SKn5hw5PSp1fehYU/vuoXA01rS7jBNQSi+
+         B3hf+w9DQ+UKKuIgVY2KNSiMYets+srEIruy6/kOzn4UMxTV0Tsy9zUdRtsCS5+XdybX
+         WQMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682023201; x=1684615201;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2AUbQ+MnIhboEjV+/fmnhA5xYvv9W6JDCwMUV4DMmoc=;
+        b=VFmC99n5NcETr6CLQX+kfyAZQDwAsmjKIRkQWVW0erYCvfXHt6o7BttVVw5K4Mv00o
+         FumEp8X7bitG7cYCO3+tGHWOHNYnSwS9e9e0lCsv3xw6AzrdUQEypdjSl7g0Hoa9svn/
+         WCFSxjT+sLXUG4MfTzZz+wUmRpOGTCdyUPwQsa5iz4o0AMikn5Raqu8GR0AjG7WdpLnu
+         DGtLkVCFu2z8ur5x4oig8sZH1QFCuzHGBqd0n8FAgJY98D2vkfmUaGrAh+18YJIxyEij
+         IASbIwDaE6mCBs0V5uwqPKOQ6CZV5QkLdcntfwcK1gy23d6KX0PTxXkI2ojFcjvI5Zy5
+         f3Og==
+X-Gm-Message-State: AAQBX9cvYCkzchWlnR8McyQYZDupJ4I5gcYkONMmFhfYPIjAmlySVA8S
+        daGB9z420GL8JaFJR0t0qhI=
+X-Google-Smtp-Source: AKy350Yg05neSwu4t2MBMCcOjh/n1P7hxNGl3ovJLFfWIAQBo8kYEJM3ks+Xncy5Dg7TSmksqVSW3A==
+X-Received: by 2002:ac2:5103:0:b0:4ed:be06:9e9a with SMTP id q3-20020ac25103000000b004edbe069e9amr713354lfb.26.1682023201014;
+        Thu, 20 Apr 2023 13:40:01 -0700 (PDT)
+Received: from mobilestation ([95.79.140.35])
+        by smtp.gmail.com with ESMTPSA id e14-20020ac2546e000000b004eaeb0a984csm326772lfn.88.2023.04.20.13.39.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Apr 2023 13:40:00 -0700 (PDT)
+Date:   Thu, 20 Apr 2023 23:39:58 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/14] PCI: dwc: Relatively simple fixes and cleanups
+Message-ID: <20230420203958.vozr25hbfx2d7gjt@mobilestation>
+References: <20230414021832.13167-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230414021832.13167-1-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Baolu,
+Hi Bjorn, Vinod, Mani
 
-On Wed, 19 Apr 2023 10:40:46 +0800, Baolu Lu <baolu.lu@linux.intel.com>
-wrote:
+On Fri, Apr 14, 2023 at 05:18:18AM +0300, Serge Semin wrote:
+> It turns out the recent DW PCIe-related patchset was merged in with
+> several relatively trivial issues left unsettled (noted by Bjorn and
+> Manivannan). All of these lefovers have been fixed in this patchset.
+> Namely the series starts with two bug-fixes. The first one concerns the
+> improper link-mode initialization in case if the CDM-check is enabled. The
+> second unfortunate mistake I made in the IP-core version type helper. In
+> particular instead of testing the IP-core version type the macro function
+> referred to the just IP-core version which obviously wasn't what I
+> intended.
+> 
+> Afterwards two @Mani-noted fixes follow. Firstly the dma-ranges related warning
+> message is fixed to start with "DMA-ranges" word instead of "Dma-ranges".
+> Secondly the Baikal-T1 PCIe Host driver is converted to perform the
+> asynchronous probe type which saved us of about 15% of bootup time if no any
+> PCIe peripheral device attached to the port.
+> 
+> Then the patchset contains the Baikal-T1 PCIe driver fix. The
+> corresponding patch removes the false error message printed during the
+> controller probe procedure. I accidentally added the unconditional
+> dev_err_probe() method invocation. It was obviously wrong.
+> 
+> Then two trivial cleanups are introduced. The first one concerns the
+> duplicated fast-link-mode flag unsetting. The second one implies
+> dropping a redundant empty line from the dw_pcie_link_set_max_speed()
+> function.
+> 
+> The series continues with a patch inspired by the last @Bjorn note
+> regarding the generic resources request interface. As @Bjorn correctly
+> said it would be nice to have the new interface used wider in the DW PCIe
+> subsystem. Aside with the Baikal-T1 PCIe Host driver the Toshiba Visconti
+> PCIe driver can be easily converted to using the generic clock names.
+> That's what is done in the noted patch.
+> 
+> The patchset is closed with a series of MAINTAINERS-list related patches.
+> Firstly after getting the DW PCIe RP/EP DT-schemas refactored I forgot to
+> update the MAINTAINER-list with the new files added in the framework of
+> that procedure. All the snps,dw-pcie* schemas shall be maintained by the
+> DW PCIe core driver maintainers. Secondly seeing how long it took for my
+> patchsets to review and not having any comments from the original driver
+> maintainers I'd suggest to add myself as the reviewer to the DW PCIe and
+> eDMA drivers. Thus hopefully the new updates review process will be
+> performed with much less latencies. For the same reason @Manivannan is
+> added to the maintainers list of the DW PCIe/eDMA drivers as he already
+> agreed to be in.
 
-> On 4/19/23 7:04 AM, Jacob Pan wrote:
-> > On Tue, 18 Apr 2023 10:06:12 +0800, Baolu Lu<baolu.lu@linux.intel.com>
-> > wrote:
-> >   
-> >> On 4/18/23 12:46 AM, Jacob Pan wrote:  
-> >>> On Wed, 12 Apr 2023 09:37:48 +0800, Baolu Lu<baolu.lu@linux.intel.com>
-> >>> wrote:
-> >>>      
-> >>>> On 4/11/23 4:02 PM, Tian, Kevin wrote:  
-> >>>>>> From: Jacob Pan<jacob.jun.pan@linux.intel.com>
-> >>>>>> Sent: Saturday, April 8, 2023 2:06 AM
-> >>>>>> @@ -28,8 +26,8 @@ static int iommu_sva_alloc_pasid(struct mm_struct
-> >>>>>> *mm, ioasid_t min, ioasid_t ma
-> >>>>>>     		goto out;
-> >>>>>>     	}
-> >>>>>>
-> >>>>>> -	ret = ida_alloc_range(&iommu_global_pasid_ida, min, max,
-> >>>>>> GFP_KERNEL);
-> >>>>>> -	if (ret < min)
-> >>>>>> +	ret = iommu_alloc_global_pasid(min, max);  
-> >>>>> I wonder whether this can take a device pointer so
-> >>>>> dev->iommu->max_pasids is enforced inside the alloc function.  
-> >>>> Agreed. Instead of using the open code, it looks better to have a
-> >>>> helper like dev_iommu_max_pasids().  
-> >>> yes, probably export dev_iommu_get_max_pasids(dev)?
-> >>>
-> >>> But if I understood Kevin correctly, he's also suggesting that the
-> >>> interface should be changed to iommu_alloc_global_pasid(dev), my
-> >>> concern is that how do we use this function to reserve RID_PASID which
-> >>> is not specific to a device?  
-> >> Probably we can introduce a counterpart dev->iommu->min_pasids, so that
-> >> there's no need to reserve the RID_PASID. At present, we can set it to
-> >> 1 in the core as ARM/AMD/Intel all treat PASID 0 as a special pasid.
-> >>
-> >> In the future, if VT-d supports using arbitrary number as RID_PASID for
-> >> any specific device, we can call iommu_alloc_global_pasid() for that
-> >> device.
-> >>
-> >> The device drivers don't know and don't need to know the range of
-> >> viable PASIDs, so the @min, @max parameters seem to be unreasonable.  
-> > Sure, that is reasonable. Another question is whether global PASID
-> > allocation is always for a single device, if not I prefer to keep the
-> > current iommu_alloc_global_pasid() and add a wrapper
-> > iommu_alloc_global_pasid_dev(dev) to extract the @min, @max. OK?  
-> 
-> No problem from the code perspective. But we only need one API.
-> 
-> We can now add the kAPI that we really need. In this series, the idxd
-> driver wants to allocate a global PASID for its kernel dma with pasid
-> purpose. So, iommu_alloc_global_pasid_dev() seems to be sufficient.
-> 
-> If, in the future, we will have a need to provide global pasid
-> allocation other than device drivers, we can easily add the variants.
-> 
-sounds good, I will only add iommu_alloc_global_pasid_dev(dev). let the
-core code set @min, @max for devices.
+@Bjorn, anything to say about this patchset? If you are ok with the
+changes please merge in the PCI patches.
+@Vinod, as you requested the series has been extended with the patches
+based on v3 discussion. Please have a look.
+@Mani, the series has been updated with the patches adding you as the
+DW PCIe/eDMA maintainer as per your permission retrieved on v3.
 
-Thanks,
+-Serge(y)
 
-Jacob
+> 
+> Link: https://lore.kernel.org/linux-pci/20230217093956.27126-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v2:
+> - Rebase onto the kernel 6.3-rc2.
+> 
+> Link: https://lore.kernel.org/linux-pci/20230313200816.30105-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v3:
+> - Drop the patch:
+>   [PATCH v2 01/11] PCI: dwc: Fix port link CSR improper init if CDM check enabled
+>   and rebase onto the already submitted by @Yoshihiro fix:
+>   commit cdce67099117 ("PCI: dwc: Fix PORT_LINK_CONTROL update when CDM check enabled")
+> - Just resend.
+> 
+> Link: https://lore.kernel.org/linux-pci/20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v4:
+> - Demote @Gustavo to being DW PCIe/eDMA drivers reviewer:
+>   [PATCH v4 9/14] MAINTAINERS: Demote Gustavo Pimentel to DW PCIe core reviewer
+>   [PATCH v4 12/14] MAINTAINERS: Demote Gustavo Pimentel to DW EDMA driver reviewer
+> - Add Manivannan to the DW PCIe/eDMA drivers maintainers list:
+>   [PATCH v4 10/14] MAINTAINERS: Add Manivannan to DW PCIe core maintainers list
+>   [PATCH v4 13/14] MAINTAINERS: Add Manivannan to DW eDMA driver maintainers list
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> Cc: linux-pci@vger.kernel.org
+> Cc: dmaengine@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Serge Semin (14):
+>   PCI: dwc: Fix erroneous version type test helper
+>   PCI: dwc: Fix inbound iATU entries out-of-bounds warning message
+>   PCI: bt1: Enable async probe type
+>   PCI: bt1: Fix printing false error message
+>   PCI: dwc: Drop duplicated fast-link-mode flag unsetting
+>   PCI: dwc: Drop empty line from dw_pcie_link_set_max_speed()
+>   PCI: visconti: Convert to using generic resources getter
+>   MAINTAINERS: Add all generic DW PCIe RP/EP DT-schemas
+>   MAINTAINERS: Demote Gustavo Pimentel to DW PCIe core reviewer
+>   MAINTAINERS: Add Manivannan to DW PCIe core maintainers list
+>   MAINTAINERS: Add myself as the DW PCIe core reviewer
+>   MAINTAINERS: Demote Gustavo Pimentel to DW EDMA driver reviewer
+>   MAINTAINERS: Add Manivannan to DW eDMA driver maintainers list
+>   MAINTAINERS: Add myself as the DW eDMA driver reviewer
+> 
+>  MAINTAINERS                                   | 11 ++++--
+>  drivers/pci/controller/dwc/pcie-bt1.c         |  5 ++-
+>  .../pci/controller/dwc/pcie-designware-host.c |  2 +-
+>  drivers/pci/controller/dwc/pcie-designware.c  |  2 -
+>  drivers/pci/controller/dwc/pcie-designware.h  |  7 +++-
+>  drivers/pci/controller/dwc/pcie-visconti.c    | 37 +++++++++----------
+>  6 files changed, 34 insertions(+), 30 deletions(-)
+> 
+> -- 
+> 2.40.0
+> 
+> 

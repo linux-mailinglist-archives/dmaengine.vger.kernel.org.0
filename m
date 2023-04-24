@@ -2,228 +2,174 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E1386EC36C
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Apr 2023 03:36:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8408B6ECB56
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Apr 2023 13:31:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229458AbjDXBgp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 23 Apr 2023 21:36:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35744 "EHLO
+        id S231366AbjDXLbz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 24 Apr 2023 07:31:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230349AbjDXBgo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 23 Apr 2023 21:36:44 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E7101997;
-        Sun, 23 Apr 2023 18:36:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682300201; x=1713836201;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=G22SleDyELmqv+4z24qsjjgOeXAlE59i3fa4mNcnIW8=;
-  b=XUXVHW9JKgJY4wMvo1F1sjPAIgqOKAt+iXF7r9sSm6Yja981Qq4HI/rq
-   njUO2EBJPPwVwwyw41RqaWpWWRdBWXyoOvkULU3r50NTDIfui3gSAKhLA
-   c6K1y3ioFshumrh9K+MKssnGBKH7nC2hAMBw6iQlHaT4Grg7UOvqJ1Vrv
-   xrqqf0XmFdj5QGJj7raFdeByEQj/WxQj6lolb9Hic17Np1iC1p+PBAlkC
-   CDhdE9gAkE8kEw65EUZmgQWQ7OtYkeEVzQv1s5PVsZAuAAi7uFNVTMoZl
-   lAlZFhQuIArawZxB5HW/uhaLmVfpUtzsOZR8PtnbuObuaJCbpa0cWkMyu
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10689"; a="432607648"
-X-IronPort-AV: E=Sophos;i="5.99,221,1677571200"; 
-   d="scan'208";a="432607648"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2023 18:36:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10689"; a="670334040"
-X-IronPort-AV: E=Sophos;i="5.99,221,1677571200"; 
-   d="scan'208";a="670334040"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 23 Apr 2023 18:36:38 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pql89-000iCl-0n;
-        Mon, 24 Apr 2023 01:36:37 +0000
-Date:   Mon, 24 Apr 2023 09:36:13 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Kelvin Cao <kelvin.cao@microchip.com>, vkoul@kernel.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev, logang@deltatee.com,
-        george.ge@microchip.com, christophe.jaillet@wanadoo.fr,
-        hch@infradead.org
-Subject: Re: [PATCH v4 1/1] dmaengine: switchtec-dma: Introduce Switchtec DMA
- engine PCI driver
-Message-ID: <202304240915.MYWRJpvn-lkp@intel.com>
-References: <20230423213717.318655-2-kelvin.cao@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230423213717.318655-2-kelvin.cao@microchip.com>
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229547AbjDXLbx (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Apr 2023 07:31:53 -0400
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CD502D70;
+        Mon, 24 Apr 2023 04:31:50 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id C099C5C018B;
+        Mon, 24 Apr 2023 07:31:49 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Mon, 24 Apr 2023 07:31:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm2; t=1682335909; x=1682422309; bh=Y9
+        FYoJaNOjxIXKXj5iVt3HG1MU0gziVJXHg42DuXBOg=; b=O1tJf0aYUL1Asq2G9I
+        v/WenhP5rGZyZB1SAL0Lr08oQeAEEUQrAp0socR3vEd9UgGnvByhJ755hJxV1qKU
+        E9ZSACMVc6ctw5IOj3YSxNtJjppCrcMnuo3EHDjmd3kHM8VJtKdkgvKL4DFoHOqz
+        +W+8IuX2hg35wSKwedvXKJ3PURDaQkrWjJM/7PMwj2nQ3bK1GDbl6lv178HZ/NA8
+        KDsO9MYDBoMlPNBh8aEl4RrLKv4OLsavscqSSR/heANCq8T/WVE0cVUSnj8QfSJQ
+        4u/teN+GVPZosLly+e7aCJHZfWx6MH3m9aFx+6kQZQbTUHFFn+RPDQoPPYxBW1gQ
+        IJSA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1682335909; x=1682422309; bh=Y9FYoJaNOjxIX
+        KXj5iVt3HG1MU0gziVJXHg42DuXBOg=; b=iBdH6uvO/L8/zyujyEmeuLQ7lvT2x
+        GYZygrbZo05oxTN/Md/oDE0e8WW8qA02cbgVhsfFcZOI0ds8e+FbCtiiaOJvFiRx
+        +0cW8fxBsOTCzFHhmKeMdRGumvrSujG5VcT8IFLwY3h8/nMbzymQnlGomWQOWzQx
+        /oBTRzPHT38WBG1dSwXH+qEHrQrBjZbDngRgGtk3lDrZjamKW1iCCAmPUjNH4bVF
+        47At9lDjEDsPYhnN2768xyf3oBtpO2z2m/rKqeUCbiN4YmtGLmGGX3q1bMmxrG9I
+        36sN74EogbvFLVEbiiG9I3iKHbm4hY5BQztKKlqVi2e7UnWmYlN05agjA==
+X-ME-Sender: <xms:o2hGZE7zjv519ykLdrbAQGTLb_LGqm8C9gu0iv5LW_l5ijia9biY7A>
+    <xme:o2hGZF7IUwkhhPb4KXqxJ6jrGKB4g1CI7PypRKEHNaKZ-yKjsy2DgJ29sYcy-8ANi
+    L7P0836qypU8DsWz5I>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfedutddggeduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:o2hGZDccuXBCL3RAIdybA7rao9itrSh_uY8pqy72IR4RYUm3PNP66w>
+    <xmx:o2hGZJLZwUfDzeDL8noN8lkkCw-LNtlf4Vp39AIRXYTSMF4PksJThw>
+    <xmx:o2hGZIKT3iHKm9UvV7uZTvPOYuO2PbPXKewmqiqnd7-usVCISuMq0A>
+    <xmx:pWhGZAVObyMQbbUUBpdedORBxIIpPoWc5gLC07zOHsQjH_IqgL-nMw>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 2684DB60086; Mon, 24 Apr 2023 07:31:47 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-372-g43825cb665-fm-20230411.003-g43825cb6
+Mime-Version: 1.0
+Message-Id: <8101c53e-e682-4dc3-95cc-a332b1822b8b@app.fastmail.com>
+In-Reply-To: <20230424123522.18302-1-nikita.shubin@maquefel.me>
+References: <20230424123522.18302-1-nikita.shubin@maquefel.me>
+Date:   Mon, 24 Apr 2023 13:31:25 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Nikita Shubin" <nikita.shubin@maquefel.me>
+Cc:     "Arnd Bergmann" <arnd@kernel.org>,
+        "Linus Walleij" <linusw@kernel.org>,
+        "Alexander Sverdlin" <alexander.sverdlin@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        "Russell King" <rmk+kernel@armlinux.org.uk>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        "Alessandro Zummo" <a.zummo@towertech.it>,
+        "Alexander Gordeev" <agordeev@linux.ibm.com>,
+        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        "Brian Norris" <briannorris@chromium.org>,
+        "Chuanhong Guo" <gch981213@gmail.com>,
+        "Conor.Dooley" <conor.dooley@microchip.com>,
+        "Damien Le Moal" <dlemoal@kernel.org>,
+        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
+        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+        "Emil Renner Berthing" <kernel@esmil.dk>,
+        "Eric Dumazet" <edumazet@google.com>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        "Guenter Roeck" <linux@roeck-us.net>,
+        "Hartley Sweeten" <hsweeten@visionengravers.com>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        "Hitomi Hasegawa" <hasegawa-hitomi@fujitsu.com>,
+        "Jakub Kicinski" <kuba@kernel.org>,
+        "Jaroslav Kysela" <perex@perex.cz>,
+        "Jean Delvare" <jdelvare@suse.de>, "Joel Stanley" <joel@jms.id.au>,
+        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        "Damien Le Moal" <damien.lemoal@opensource.wdc.com>,
+        "Liam Girdwood" <lgirdwood@gmail.com>,
+        "Liang Yang" <liang.yang@amlogic.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Lukasz Majewski" <lukma@denx.de>, "Lv Ruyi" <lv.ruyi@zte.com.cn>,
+        "Mark Brown" <broonie@kernel.org>,
+        "Masahiro Yamada" <masahiroy@kernel.org>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        "Miquel Raynal" <miquel.raynal@bootlin.com>,
+        "Nathan Chancellor" <nathan@kernel.org>,
+        "Nick Desaulniers" <ndesaulniers@google.com>,
+        "Nicolas Saenz Julienne" <nsaenz@kernel.org>,
+        "Olof Johansson" <olof@lixom.net>,
+        "Paolo Abeni" <pabeni@redhat.com>,
+        "Qin Jian" <qinjian@cqplus1.com>,
+        "Richard Weinberger" <richard@nod.at>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Robert Jarzmik" <robert.jarzmik@free.fr>,
+        "Russell King" <linux@armlinux.org.uk>,
+        "Sebastian Reichel" <sre@kernel.org>,
+        "Sergey Shtylyov" <s.shtylyov@omp.ru>,
+        "Stephen Boyd" <sboyd@kernel.org>,
+        "Sumanth Korikkar" <sumanthk@linux.ibm.com>,
+        "Sven Peter" <sven@svenpeter.dev>, "Takashi Iwai" <tiwai@suse.com>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ulf Hansson" <ulf.hansson@linaro.org>,
+        "Vasily Gorbik" <gor@linux.ibm.com>,
+        "Vignesh Raghavendra" <vigneshr@ti.com>,
+        "Vinod Koul" <vkoul@kernel.org>,
+        "Walker Chen" <walker.chen@starfivetech.com>,
+        "Wim Van Sebroeck" <wim@linux-watchdog.org>,
+        "Yinbo Zhu" <zhuyinbo@loongson.cn>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-ide@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pm@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+        soc@kernel.org
+Subject: Re: [PATCH 00/43] ep93xx device tree conversion
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Kelvin,
+On Mon, Apr 24, 2023, at 14:34, Nikita Shubin wrote:
+> This series aims to convert ep93xx from platform to full device tree support.
+>
+> Tested on ts7250 64 RAM/128 MiB Nand flash, edb9302.
+>
+> Thank you Linus and Arnd for your support, review and comments, sorry 
+> if i missed something -
+> these series are quite big for me.
+>
+> Big thanks to Alexander Sverdlin for his testing, support, review, 
+> fixes and patches.
 
-kernel test robot noticed the following build warnings:
+Thanks a lot for your continued work. I can't merge any of this at
+the moment since the upstream merge window just opened, but I'm
+happy to take this all through the soc tree for 6.5, provided we
+get the sufficient Acks from the subsystem maintainers. Merging
+it through each individual tree would take a lot longer, so I
+hope we can avoid that.
 
-[auto build test WARNING on vkoul-dmaengine/next]
-[also build test WARNING on linus/master v6.3 next-20230421]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Kelvin-Cao/dmaengine-switchtec-dma-Introduce-Switchtec-DMA-engine-PCI-driver/20230424-065123
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
-patch link:    https://lore.kernel.org/r/20230423213717.318655-2-kelvin.cao%40microchip.com
-patch subject: [PATCH v4 1/1] dmaengine: switchtec-dma: Introduce Switchtec DMA engine PCI driver
-config: arm64-allyesconfig (https://download.01.org/0day-ci/archive/20230424/202304240915.MYWRJpvn-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/bd3b335b60238af4f01bd6c28a96873988330557
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Kelvin-Cao/dmaengine-switchtec-dma-Introduce-Switchtec-DMA-engine-PCI-driver/20230424-065123
-        git checkout bd3b335b60238af4f01bd6c28a96873988330557
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm64 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm64 SHELL=/bin/bash drivers/dma/
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202304240915.MYWRJpvn-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/dma/switchtec_dma.c: In function 'switchtec_dma_create':
->> drivers/dma/switchtec_dma.c:1410:13: warning: variable 'i' set but not used [-Wunused-but-set-variable]
-    1410 |         int i;
-         |             ^
-
-
-vim +/i +1410 drivers/dma/switchtec_dma.c
-
-  1400	
-  1401	static int switchtec_dma_create(struct pci_dev *pdev)
-  1402	{
-  1403		struct switchtec_dma_dev *swdma_dev;
-  1404		struct dma_device *dma;
-  1405		struct dma_chan *chan;
-  1406		int chan_cnt;
-  1407		int nr_vecs;
-  1408		int irq;
-  1409		int rc;
-> 1410		int i;
-  1411	
-  1412		/*
-  1413		 * Create the switchtec dma device
-  1414		 */
-  1415		swdma_dev = kzalloc(sizeof(*swdma_dev), GFP_KERNEL);
-  1416		if (!swdma_dev)
-  1417			return -ENOMEM;
-  1418	
-  1419		swdma_dev->bar = ioremap(pci_resource_start(pdev, 0),
-  1420					 pci_resource_len(pdev, 0));
-  1421	
-  1422		pci_info(pdev, "Switchtec PSX/PFX DMA EP\n");
-  1423	
-  1424		RCU_INIT_POINTER(swdma_dev->pdev, pdev);
-  1425	
-  1426		nr_vecs = pci_msix_vec_count(pdev);
-  1427		rc = pci_alloc_irq_vectors(pdev, nr_vecs, nr_vecs, PCI_IRQ_MSIX);
-  1428		if (rc < 0)
-  1429			goto err_exit;
-  1430	
-  1431		tasklet_init(&swdma_dev->chan_status_task,
-  1432			     switchtec_dma_chan_status_task,
-  1433			     (unsigned long)swdma_dev);
-  1434	
-  1435		irq = readw(swdma_dev->bar + SWITCHTEC_REG_CHAN_STS_VEC);
-  1436		pci_dbg(pdev, "Channel pause irq vector %d\n", irq);
-  1437	
-  1438		irq = pci_irq_vector(pdev, irq);
-  1439		if (irq < 0) {
-  1440			rc = irq;
-  1441			goto err_exit;
-  1442		}
-  1443	
-  1444		rc = request_irq(irq, switchtec_dma_chan_status_isr, 0,
-  1445				 KBUILD_MODNAME, swdma_dev);
-  1446		if (rc)
-  1447			goto err_exit;
-  1448	
-  1449		swdma_dev->chan_status_irq = irq;
-  1450	
-  1451		chan_cnt = readl(swdma_dev->bar + SWITCHTEC_REG_CHAN_CNT);
-  1452		if (!chan_cnt) {
-  1453			pci_err(pdev, "No channel configured.\n");
-  1454			rc = -ENXIO;
-  1455			goto err_exit;
-  1456		}
-  1457	
-  1458		chan_cnt = switchtec_dma_chans_enumerate(swdma_dev, chan_cnt);
-  1459		if (chan_cnt < 0) {
-  1460			pci_err(pdev, "Failed to enumerate dma channels: %d\n",
-  1461				chan_cnt);
-  1462			rc = -ENXIO;
-  1463			goto err_exit;
-  1464		}
-  1465	
-  1466		swdma_dev->chan_cnt = chan_cnt;
-  1467	
-  1468		dma = &swdma_dev->dma_dev;
-  1469		dma->copy_align = DMAENGINE_ALIGN_1_BYTE;
-  1470		dma_cap_set(DMA_MEMCPY, dma->cap_mask);
-  1471		dma_cap_set(DMA_PRIVATE, dma->cap_mask);
-  1472		dma->dev = get_device(&pdev->dev);
-  1473	
-  1474		dma->device_alloc_chan_resources = switchtec_dma_alloc_chan_resources;
-  1475		dma->device_free_chan_resources = switchtec_dma_free_chan_resources;
-  1476		dma->device_prep_dma_memcpy = switchtec_dma_prep_memcpy;
-  1477		dma->device_prep_dma_imm_data = switchtec_dma_prep_wimm_data;
-  1478		dma->device_issue_pending = switchtec_dma_issue_pending;
-  1479		dma->device_tx_status = switchtec_dma_tx_status;
-  1480		dma->device_pause = switchtec_dma_pause;
-  1481		dma->device_resume = switchtec_dma_resume;
-  1482		dma->device_terminate_all = switchtec_dma_terminate_all;
-  1483		dma->device_synchronize = switchtec_dma_synchronize;
-  1484		dma->device_release = switchtec_dma_release;
-  1485	
-  1486		rc = dma_async_device_register(dma);
-  1487		if (rc) {
-  1488			pci_err(pdev, "Failed to register dma device: %d\n", rc);
-  1489			goto err_chans_release_exit;
-  1490		}
-  1491	
-  1492		pci_info(pdev, "Channel count: %d\n", chan_cnt);
-  1493	
-  1494		i = 0;
-  1495		list_for_each_entry(chan, &dma->channels, device_node)
-  1496			pci_info(pdev, "%s\n", dma_chan_name(chan));
-  1497	
-  1498		pci_set_drvdata(pdev, swdma_dev);
-  1499	
-  1500		return 0;
-  1501	
-  1502	err_chans_release_exit:
-  1503		switchtec_dma_chans_release(swdma_dev);
-  1504	
-  1505	err_exit:
-  1506		if (swdma_dev->chan_status_irq)
-  1507			free_irq(swdma_dev->chan_status_irq, swdma_dev);
-  1508	
-  1509		iounmap(swdma_dev->bar);
-  1510		kfree(swdma_dev);
-  1511		return rc;
-  1512	}
-  1513	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+      Arnd

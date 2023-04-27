@@ -2,92 +2,145 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D40156F0B13
-	for <lists+dmaengine@lfdr.de>; Thu, 27 Apr 2023 19:40:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D3406F0B3E
+	for <lists+dmaengine@lfdr.de>; Thu, 27 Apr 2023 19:45:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244102AbjD0Rko (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 27 Apr 2023 13:40:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46906 "EHLO
+        id S244370AbjD0Rpl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 27 Apr 2023 13:45:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244281AbjD0Rkm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Apr 2023 13:40:42 -0400
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04187468F;
-        Thu, 27 Apr 2023 10:40:13 -0700 (PDT)
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-1879e28ab04so7061787fac.2;
-        Thu, 27 Apr 2023 10:40:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682617190; x=1685209190;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mp/j3I3sONtLooZJ2ZhetrqGxDwLVuI0JCZmItKp+34=;
-        b=AILdVA+fnsujpIS56mIdazPXLoqXXO4nsk/9ubzXZdzID/55SZIplz4rbOcTD77/Oc
-         jsiMn1fsDgVJ5TeXJ4USij7gfF8nt7di2D9xofX2rGkK1lL0LXSMR8iM5nfRVLgjAKjb
-         kv73nKhZJ8XJFP+kJqd+TmbPDEpZ770BmpI+SXIoNf+es1T9LDTrrCmjGe61XEU8jw8b
-         +oNLVCyKrs3M29wCx2MFpWTKnrcz5QH+WBjGlovNWt6GzoZh865gF67Cti4QTaj3nkZ/
-         aqYR7W7mcN5zHGZOasxgMq5IHaXWNY81I0U/mHqvvsuCOk9SeGXfeiD5gXmAsQcC8W9b
-         N9dQ==
-X-Gm-Message-State: AC+VfDx2S0cCn+Uc1jySTWbYFQtdcSa7CIor01zri+mZy801cMReQsFE
-        FqB6JJHlF4SxL9pyqQddbB6RwGynUQ==
-X-Google-Smtp-Source: ACHHUZ5ZOl3xNe6CmiHnwhpZsA4e/G9yG2SqbFP7NvA7SwlRkqLC5OQxjafdjg1OZn3oT+MR2nkmPA==
-X-Received: by 2002:a05:6870:44c3:b0:18e:f8e9:a6a8 with SMTP id t3-20020a05687044c300b0018ef8e9a6a8mr1081422oai.38.1682617190082;
-        Thu, 27 Apr 2023 10:39:50 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id b6-20020a056830104600b0068bd922a244sm8317143otp.20.2023.04.27.10.39.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Apr 2023 10:39:49 -0700 (PDT)
-Received: (nullmailer pid 3210298 invoked by uid 1000);
-        Thu, 27 Apr 2023 17:39:49 -0000
-Date:   Thu, 27 Apr 2023 12:39:49 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/8] dt-bindings: dma: dma40: Prefer to pass sram
- through phandle
-Message-ID: <168261718864.3210243.12337547291845541745.robh@kernel.org>
-References: <20230417-ux500-dma40-cleanup-v2-0-cdaa68a4b863@linaro.org>
- <20230417-ux500-dma40-cleanup-v2-1-cdaa68a4b863@linaro.org>
+        with ESMTP id S244163AbjD0Rpj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Apr 2023 13:45:39 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ACFE35A5;
+        Thu, 27 Apr 2023 10:45:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1682617521; x=1714153521;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sL1Oogrx9xSZdLUnJG5ws6JoMbQTO9hqS3tsfFCI38U=;
+  b=UwEImCoa0/Gi6LOCz6SeD1pb5ujIdyhBVu6NHPJrwUOpTGkXwsaDA+9I
+   fI6q+cDwJYno3oPoSn8UsWZ48cFTmheXSk4ZZJnsaVz8pXoIBEEAaAmgM
+   LrA9v5CzMdKOhlVzUIcXxcUJwNMVv6GpwUB3tit384cuJZRvhTQxSFrGg
+   Vt5fptj2S+OFoUuCDaa00lGi6mX8Fe7uTLCljRbn902kYMo1UnLUKdHhc
+   kQDlvpqyAmG2oUvxXY4Nk8ArMZWoG9rt17Iijxv7dcy9noJ7+XDg7HmGC
+   T6G4iBRfplX4OvmvCVxB1lgC3G2plme+T9uatjcHSg7tWAyGAZPAXBUNM
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="350398689"
+X-IronPort-AV: E=Sophos;i="5.99,232,1677571200"; 
+   d="scan'208";a="350398689"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2023 10:45:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="1024219686"
+X-IronPort-AV: E=Sophos;i="5.99,232,1677571200"; 
+   d="scan'208";a="1024219686"
+Received: from srinivas-otcpl-7600.jf.intel.com (HELO jacob-builder.jf.intel.com) ([10.54.39.106])
+  by fmsmga005.fm.intel.com with ESMTP; 27 Apr 2023 10:45:19 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
+        "Robin Murphy" <robin.murphy@arm.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>, dmaengine@vger.kernel.org,
+        vkoul@kernel.org
+Cc:     "Will Deacon" <will@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Zanussi, Tom" <tom.zanussi@intel.com>,
+        narayan.ranganathan@intel.com,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v5 0/7] Re-enable IDXD kernel workqueue under DMA API
+Date:   Thu, 27 Apr 2023 10:49:30 -0700
+Message-Id: <20230427174937.471668-1-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230417-ux500-dma40-cleanup-v2-1-cdaa68a4b863@linaro.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.5 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi all,
 
-On Thu, 27 Apr 2023 14:09:56 +0200, Linus Walleij wrote:
-> Extend the DMA40 bindings so that we can pass two SRAM
-> segments as phandles instead of directly referring to the
-> memory address in the second reg cell. This enables more
-> granular control over the SRAM, and adds the optiona LCLA
-> SRAM segment as well.
-> 
-> Deprecate the old way of passing LCPA as a second reg cell,
-> make sram compulsory.
-> 
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> ChangeLog v1->v2:
-> - Enumerate phandles using inner and outer maxItems as specified
->   by Rob.
-> - Drop quotes around reference.
-> ---
->  .../devicetree/bindings/dma/stericsson,dma40.yaml  | 36 +++++++++++++++++-----
->  1 file changed, 28 insertions(+), 8 deletions(-)
-> 
+IDXD kernel work queues were disabled due to the flawed use of kernel VA
+and SVA API.
+Link: https://lore.kernel.org/linux-iommu/20210511194726.GP1002214@nvidia.com/
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The solution is to enable it under DMA API where IDXD shared workqueue users
+can use ENQCMDS to submit work on buffers mapped by DMA API.
+
+This patchset adds support for attaching PASID to the device's default
+domain and the ability to allocate global PASIDs from IOMMU APIs. We can then
+re-enable the kernel work queues and use them under DMA API.
+
+This depends on the IOASID removal series. (merged)
+https://lore.kernel.org/all/ZCaUBJvUMsJyD7EW@8bytes.org/
+
+
+Thanks,
+
+Jacob
+
+---
+Changelog:
+v5:
+	- exclude two patches related to supervisor mode, taken by VT-d
+	maintainer Baolu.
+	- move PASID range check into allocation API so that device drivers
+	  only need to pass in struct device*. (Kevin)
+	- factor out helper functions in device-domain attach (Baolu)
+	- make explicit use of RID_PASID across architectures
+v4:
+	- move dummy functions outside ifdef CONFIG_IOMMU_SVA (Baolu)
+	- dropped domain type check while disabling idxd system PASID (Baolu)
+
+v3:
+	- moved global PASID allocation API from SVA to IOMMU (Kevin)
+	- remove #ifdef around global PASID reservation during boot (Baolu)
+	- remove restriction on PASID 0 allocation (Baolu)
+	- fix a bug in sysfs domain change when attaching devices
+	- clear idxd user interrupt enable bit after disabling device( Fenghua)
+v2:
+	- refactored device PASID attach domain ops based on Baolu's early patch
+	- addressed TLB flush gap
+	- explicitly reserve RID_PASID from SVA PASID number space
+	- get dma domain directly, avoid checking domain types
+
+
+Jacob Pan (6):
+  iommu: Generalize default PCIe requester ID PASID
+  iommu/sva: Explicitly exclude RID_PASID from SVA
+  iommu: Move global PASID allocation from SVA to core
+  iommu/vt-d: Prepare PASID attachment beyond RID_PASID
+  iommu/vt-d: Implement set_dev_pasid domain op
+  dmaengine/idxd: Re-enable kernel workqueue under DMA API
+
+Lu Baolu (1):
+  iommu/vt-d: Factoring out PASID set up helper function
+
+ drivers/dma/idxd/device.c   |  30 +----
+ drivers/dma/idxd/init.c     |  60 ++++++++-
+ drivers/dma/idxd/sysfs.c    |   7 --
+ drivers/iommu/intel/iommu.c | 240 +++++++++++++++++++++++++++++-------
+ drivers/iommu/intel/iommu.h |   8 ++
+ drivers/iommu/intel/pasid.c |   2 +-
+ drivers/iommu/intel/pasid.h |   1 -
+ drivers/iommu/iommu-sva.c   |  25 +---
+ drivers/iommu/iommu.c       |  24 ++++
+ include/linux/iommu.h       |  10 ++
+ 10 files changed, 305 insertions(+), 102 deletions(-)
+
+-- 
+2.25.1
 

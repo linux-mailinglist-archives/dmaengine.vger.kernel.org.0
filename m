@@ -2,256 +2,123 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B11BA6F0B4D
-	for <lists+dmaengine@lfdr.de>; Thu, 27 Apr 2023 19:46:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 429D06F0C37
+	for <lists+dmaengine@lfdr.de>; Thu, 27 Apr 2023 21:01:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244414AbjD0RqE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 27 Apr 2023 13:46:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53734 "EHLO
+        id S244265AbjD0TBW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 27 Apr 2023 15:01:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244512AbjD0Rpv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Apr 2023 13:45:51 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 916C346AE;
-        Thu, 27 Apr 2023 10:45:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682617543; x=1714153543;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=pEuJsmpYbOF+8to32MkeLD540uWJ/8udBhOcyRN9sO4=;
-  b=EbhW3lgJDTbQTOzf7gGqt+rYVlRloAwUAMZsWN8jVXMVEX4SqdVLUqlU
-   nsVH30+nbSTyHmq5rrHN/kqztIZUk8NxjUm2fxLVanTDLxpEDi5hc5XXC
-   UheuwHOYDLjPCEBp3IBH5841PH5sfpVY347O3sgB29ISP8LXuIvYXZU+t
-   2T5RuTL3rHVQnWozKSbIByuK7F8+WbBxf6YC1kDkcE9Augbwoa8ScOJKd
-   CJaeXKsxo62F1baJD0ogyMY4HmvXjLAXAUF6fRNUg/FrkFUZkQ4X6+oX/
-   3o9lN8qgnK7zAQLZx40P//qcRyzacslvxzOY7lSzu/Qp4ZbARVadi/YpT
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="350398752"
-X-IronPort-AV: E=Sophos;i="5.99,232,1677571200"; 
-   d="scan'208";a="350398752"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2023 10:45:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="1024219731"
-X-IronPort-AV: E=Sophos;i="5.99,232,1677571200"; 
-   d="scan'208";a="1024219731"
-Received: from srinivas-otcpl-7600.jf.intel.com (HELO jacob-builder.jf.intel.com) ([10.54.39.106])
-  by fmsmga005.fm.intel.com with ESMTP; 27 Apr 2023 10:45:23 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
-        "Robin Murphy" <robin.murphy@arm.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>, dmaengine@vger.kernel.org,
-        vkoul@kernel.org
-Cc:     "Will Deacon" <will@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Zanussi, Tom" <tom.zanussi@intel.com>,
-        narayan.ranganathan@intel.com,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v5 7/7] dmaengine/idxd: Re-enable kernel workqueue under DMA API
-Date:   Thu, 27 Apr 2023 10:49:37 -0700
-Message-Id: <20230427174937.471668-8-jacob.jun.pan@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230427174937.471668-1-jacob.jun.pan@linux.intel.com>
-References: <20230427174937.471668-1-jacob.jun.pan@linux.intel.com>
+        with ESMTP id S244173AbjD0TBV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Apr 2023 15:01:21 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CED40421B;
+        Thu, 27 Apr 2023 12:01:18 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id 2adb3069b0e04-4efe8b3f3f7so6790787e87.2;
+        Thu, 27 Apr 2023 12:01:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682622077; x=1685214077;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xV2YAsXnqJOfUPWjxJCvcfAyBJMrkTcR9Pqblefq9RU=;
+        b=I+sgCr7aA+Slw3AlYi53LO5wloydXK2ilcqCqUFdaqjO4CrNyj/OlHk06wDjJdvG5N
+         VtsqTbOxUWMRA/J2bWkcxKhI/9OOquAHPwlEolR2ebBGNYR/Kw6bp8bk/5KvVQwS3Tnj
+         nOqmvUBlTqkK3YOZSB5jMa0VEXYAnnO7/jsUiX6Chj6+9tD3zRJNLuQ4HWxB4Obi23Gc
+         IV278ExMvFRuxqYDXBwBZktgExZTGvR3k9qMqEZnQbyUh3sYOCP0dyBnY9RK7IXGErK0
+         5mgi9li7BwHpQbyu84p//KzO/M4CG0AFUsCEvi2lkYI2PKC0p+P+6YyfvJfR1i4oV1nT
+         WZfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682622077; x=1685214077;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xV2YAsXnqJOfUPWjxJCvcfAyBJMrkTcR9Pqblefq9RU=;
+        b=almSugRxazHD8UZzbxDBcRx+ippaWGuhVeB0HrkuSvgZtV9qXaSSIm2OSha2mT7zHP
+         lNdgPXqWfYC9raOMtP9aowYkUElvja4H9Jrx0feH6qoq7j+doreSKSkbycPzdNpx1GzH
+         LhEG4ZAA9ok3px7rdoRSVouAh9eXEMYTwG+XAmCFWFOo2TmmpvQisZCkHXgaiNtU+hB9
+         Dy8gfycdFFm8Tfqe+f/xdf6udvCuSVrCBUhpDU0ghoU0zSG0xt27cMHKOyqN1dLEHPCr
+         1E5CNjffuwja74q/+LMQtKUqAlKR0Glcfs+dr3IIghpKruLvDv7LbHkxiBnB0SC1TSf8
+         jPtw==
+X-Gm-Message-State: AC+VfDxFeCZSZdPmcFkRlxZRqrN+kRHJDDfvAyTV+NGm9eeYr8lcaItA
+        U5APO2fdeIPIjYUox9GbPy+hqoQrYvDfmA==
+X-Google-Smtp-Source: ACHHUZ7BHztPtrElhYsjUgAKeiaqIWyISizxgSVGLhH9jVMnO9Wtesf/mijV4OjteX/uwOafhm6AnQ==
+X-Received: by 2002:a05:6512:14a:b0:4ea:fa87:7a8a with SMTP id m10-20020a056512014a00b004eafa877a8amr958745lfo.37.1682622076775;
+        Thu, 27 Apr 2023 12:01:16 -0700 (PDT)
+Received: from [10.0.0.100] (host-85-29-92-32.kaisa-laajakaista.fi. [85.29.92.32])
+        by smtp.gmail.com with ESMTPSA id l7-20020ac24a87000000b004edb981dfe7sm3050914lfp.172.2023.04.27.12.01.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Apr 2023 12:01:16 -0700 (PDT)
+Message-ID: <1deaf8c0-0be6-1afe-9a91-ae93ba8a21d9@gmail.com>
+Date:   Thu, 27 Apr 2023 22:01:43 +0300
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [RFC PATCH] dmaengine: ti: k3-psil-j721s2: Add PSI-L thread map
+ for main CPSW2G
+To:     Siddharth Vadapalli <s-vadapalli@ti.com>, vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, srk@ti.com, vigneshr@ti.com
+References: <20230426083900.102229-1-s-vadapalli@ti.com>
+Content-Language: en-US
+From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+In-Reply-To: <20230426083900.102229-1-s-vadapalli@ti.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Kernel workqueues were disabled due to flawed use of kernel VA and SVA
-API. Now that we have the support for attaching PASID to the device's
-default domain and the ability to reserve global PASIDs from SVA APIs,
-we can re-enable the kernel work queues and use them under DMA API.
 
-We also use non-privileged access for in-kernel DMA to be consistent
-with the IOMMU settings. Consequently, interrupt for user privilege is
-enabled for work completion IRQs.
 
-Link:https://lore.kernel.org/linux-iommu/20210511194726.GP1002214@nvidia.com/
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
- drivers/dma/idxd/device.c | 30 ++++----------------
- drivers/dma/idxd/init.c   | 60 ++++++++++++++++++++++++++++++++++++---
- drivers/dma/idxd/sysfs.c  |  7 -----
- 3 files changed, 61 insertions(+), 36 deletions(-)
+On 26/04/2023 11:39, Siddharth Vadapalli wrote:
+> From: Kishon Vijay Abraham I <kishon@ti.com>
+> 
+> Add PSI-L thread map for main CPSW2G.
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 6fca8fa8d3a8..f6b133d61a04 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -299,21 +299,6 @@ void idxd_wqs_unmap_portal(struct idxd_device *idxd)
- 	}
- }
- 
--static void __idxd_wq_set_priv_locked(struct idxd_wq *wq, int priv)
--{
--	struct idxd_device *idxd = wq->idxd;
--	union wqcfg wqcfg;
--	unsigned int offset;
--
--	offset = WQCFG_OFFSET(idxd, wq->id, WQCFG_PRIVL_IDX);
--	spin_lock(&idxd->dev_lock);
--	wqcfg.bits[WQCFG_PRIVL_IDX] = ioread32(idxd->reg_base + offset);
--	wqcfg.priv = priv;
--	wq->wqcfg->bits[WQCFG_PRIVL_IDX] = wqcfg.bits[WQCFG_PRIVL_IDX];
--	iowrite32(wqcfg.bits[WQCFG_PRIVL_IDX], idxd->reg_base + offset);
--	spin_unlock(&idxd->dev_lock);
--}
--
- static void __idxd_wq_set_pasid_locked(struct idxd_wq *wq, int pasid)
- {
- 	struct idxd_device *idxd = wq->idxd;
-@@ -1324,15 +1309,14 @@ int drv_enable_wq(struct idxd_wq *wq)
- 	}
- 
- 	/*
--	 * In the event that the WQ is configurable for pasid and priv bits.
--	 * For kernel wq, the driver should setup the pasid, pasid_en, and priv bit.
--	 * However, for non-kernel wq, the driver should only set the pasid_en bit for
--	 * shared wq. A dedicated wq that is not 'kernel' type will configure pasid and
-+	 * In the event that the WQ is configurable for pasid, the driver
-+	 * should setup the pasid, pasid_en bit. This is true for both kernel
-+	 * and user shared workqueues. There is no need to setup priv bit in
-+	 * that in-kernel DMA will also do user privileged requests.
-+	 * A dedicated wq that is not 'kernel' type will configure pasid and
- 	 * pasid_en later on so there is no need to setup.
- 	 */
- 	if (test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags)) {
--		int priv = 0;
--
- 		if (wq_pasid_enabled(wq)) {
- 			if (is_idxd_wq_kernel(wq) || wq_shared(wq)) {
- 				u32 pasid = wq_dedicated(wq) ? idxd->pasid : 0;
-@@ -1340,10 +1324,6 @@ int drv_enable_wq(struct idxd_wq *wq)
- 				__idxd_wq_set_pasid_locked(wq, pasid);
- 			}
- 		}
--
--		if (is_idxd_wq_kernel(wq))
--			priv = 1;
--		__idxd_wq_set_priv_locked(wq, priv);
- 	}
- 
- 	rc = 0;
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index e6ee267da0ff..fdfc7f76186f 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -506,14 +506,65 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
- 
- static int idxd_enable_system_pasid(struct idxd_device *idxd)
- {
--	return -EOPNOTSUPP;
-+	struct pci_dev *pdev = idxd->pdev;
-+	struct device *dev = &pdev->dev;
-+	struct iommu_domain *domain;
-+	union gencfg_reg gencfg;
-+	ioasid_t pasid;
-+	int ret;
-+
-+	/*
-+	 * Attach a global PASID to the DMA domain so that we can use ENQCMDS
-+	 * to submit work on buffers mapped by DMA API.
-+	 */
-+	domain = iommu_get_domain_for_dev(dev);
-+	if (!domain)
-+		return -EPERM;
-+
-+	pasid = iommu_alloc_global_pasid_dev(dev);
-+	if (!pasid_valid(pasid))
-+		return -ENOSPC;
-+
-+	/*
-+	 * DMA domain is owned by the driver, it should support all valid
-+	 * types such as DMA-FQ, identity, etc.
-+	 */
-+	ret = iommu_attach_device_pasid(domain, dev, pasid);
-+	if (ret) {
-+		dev_err(dev, "failed to attach device pasid %d, domain type %d",
-+			pasid, domain->type);
-+		iommu_free_global_pasid(pasid);
-+		return ret;
-+	}
-+
-+	/* Since we set user privilege for kernel DMA, enable completion IRQ */
-+	gencfg.bits = ioread32(idxd->reg_base + IDXD_GENCFG_OFFSET);
-+	gencfg.user_int_en = 1;
-+	iowrite32(gencfg.bits, idxd->reg_base + IDXD_GENCFG_OFFSET);
-+	idxd->pasid = pasid;
-+
-+	return ret;
- }
- 
- static void idxd_disable_system_pasid(struct idxd_device *idxd)
- {
-+	struct pci_dev *pdev = idxd->pdev;
-+	struct device *dev = &pdev->dev;
-+	struct iommu_domain *domain;
-+	union gencfg_reg gencfg;
-+
-+	domain = iommu_get_domain_for_dev(dev);
-+	if (!domain)
-+		return;
-+
-+	iommu_detach_device_pasid(domain, dev, idxd->pasid);
-+	iommu_free_global_pasid(idxd->pasid);
- 
--	iommu_sva_unbind_device(idxd->sva);
-+	gencfg.bits = ioread32(idxd->reg_base + IDXD_GENCFG_OFFSET);
-+	gencfg.user_int_en = 0;
-+	iowrite32(gencfg.bits, idxd->reg_base + IDXD_GENCFG_OFFSET);
- 	idxd->sva = NULL;
-+	idxd->pasid = IOMMU_PASID_INVALID;
- }
- 
- static int idxd_probe(struct idxd_device *idxd)
-@@ -535,8 +586,9 @@ static int idxd_probe(struct idxd_device *idxd)
- 		} else {
- 			set_bit(IDXD_FLAG_USER_PASID_ENABLED, &idxd->flags);
- 
--			if (idxd_enable_system_pasid(idxd))
--				dev_warn(dev, "No in-kernel DMA with PASID.\n");
-+			rc = idxd_enable_system_pasid(idxd);
-+			if (rc)
-+				dev_warn(dev, "No in-kernel DMA with PASID. %d\n", rc);
- 			else
- 				set_bit(IDXD_FLAG_PASID_ENABLED, &idxd->flags);
- 		}
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 18cd8151dee0..c5561c00a503 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -944,13 +944,6 @@ static ssize_t wq_name_store(struct device *dev,
- 	if (strlen(buf) > WQ_NAME_SIZE || strlen(buf) == 0)
- 		return -EINVAL;
- 
--	/*
--	 * This is temporarily placed here until we have SVM support for
--	 * dmaengine.
--	 */
--	if (wq->type == IDXD_WQT_KERNEL && device_pasid_enabled(wq->idxd))
--		return -EOPNOTSUPP;
--
- 	input = kstrndup(buf, count, GFP_KERNEL);
- 	if (!input)
- 		return -ENOMEM;
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> ---
+>   drivers/dma/ti/k3-psil-j721s2.c | 11 +++++++++++
+>   1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/dma/ti/k3-psil-j721s2.c b/drivers/dma/ti/k3-psil-j721s2.c
+> index a488c2250623..1d5430fc5724 100644
+> --- a/drivers/dma/ti/k3-psil-j721s2.c
+> +++ b/drivers/dma/ti/k3-psil-j721s2.c
+> @@ -99,6 +99,8 @@ static struct psil_ep j721s2_src_ep_map[] = {
+>   	PSIL_PDMA_XY_PKT(0x461d),
+>   	PSIL_PDMA_XY_PKT(0x461e),
+>   	PSIL_PDMA_XY_PKT(0x461f),
+> +	/* MAIN_CPSW2G */
+> +	PSIL_ETHERNET(0x4640),
+>   	/* PDMA_USART_G0 - UART0-1 */
+>   	PSIL_PDMA_XY_PKT(0x4700),
+>   	PSIL_PDMA_XY_PKT(0x4701),
+> @@ -161,6 +163,15 @@ static struct psil_ep j721s2_dst_ep_map[] = {
+>   	PSIL_ETHERNET(0xf005),
+>   	PSIL_ETHERNET(0xf006),
+>   	PSIL_ETHERNET(0xf007),
+> +	/* MAIN_CPSW2G */
+> +	PSIL_ETHERNET(0xc640),
+> +	PSIL_ETHERNET(0xc641),
+> +	PSIL_ETHERNET(0xc642),
+> +	PSIL_ETHERNET(0xc643),
+> +	PSIL_ETHERNET(0xc644),
+> +	PSIL_ETHERNET(0xc645),
+> +	PSIL_ETHERNET(0xc646),
+> +	PSIL_ETHERNET(0xc647),
+>   	/* SA2UL */
+>   	PSIL_SA2UL(0xf500, 1),
+>   	PSIL_SA2UL(0xf501, 1),
+
 -- 
-2.25.1
-
+Péter

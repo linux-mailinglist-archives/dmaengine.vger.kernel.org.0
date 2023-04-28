@@ -2,43 +2,43 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4F706F1BF4
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Apr 2023 17:52:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BD4D6F1CB4
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Apr 2023 18:36:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345989AbjD1Pwa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 28 Apr 2023 11:52:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59750 "EHLO
+        id S240110AbjD1QgA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 28 Apr 2023 12:36:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229843AbjD1Pw2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Apr 2023 11:52:28 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6535B4212;
-        Fri, 28 Apr 2023 08:52:27 -0700 (PDT)
+        with ESMTP id S229470AbjD1QgA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Apr 2023 12:36:00 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473582D67;
+        Fri, 28 Apr 2023 09:35:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682697147; x=1714233147;
+  t=1682699759; x=1714235759;
   h=date:from:to:cc:subject:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=0VSoxdyPY93P2BuKRz02q7jUM3wZLua7CfSmMyaDnso=;
-  b=NVULFCiFLXzYaJGPiMN9AeHl67w4PShs1P7rCRtR21Myn8LnRslarZwF
-   Ebyd1GFFXze066IHy03ueUVFaBOvoSMlathxTUuoorDVIVqEwZDDUSKlB
-   SAXBvxO5VdF/jBQt3O61pV302XHfTyPMK2AmwLI9ZEL0QJZgn74mStjim
-   E7zzHtrdlZ2mqRBld4aANDDL1lmgzcIttzhY23XraXrbeRQSGtH7fAD/I
-   SrA5dZef7SjJZU7CKtLBPWML/zfRnBN6CS92WXxx9Y24yPP0skA/Nk+Fv
-   37TBkBHprzsOqjMpm2gVVJ4AQNgg3WsMgm6TS+my2+OTa0DMEH5z+Omva
+  bh=G9QHAq3wbr4zgk8yG3XHRnhnEvrVjVaInnC7sn3kSCA=;
+  b=eYBDzHyCrTTSW3vuBzb6VF7Nb90OPHjydh4Wfc0iuN+aVuFvPALyCwwp
+   r7dSXzMuh/4QsfpECBi3XoIL8CxE5l7obJYcPSJBDGP61L2fcza1plrED
+   b6jdhf13d41olFzgV65JpnwGKz2FDzp7/ddO+6WeYNoTHOKXIf5Fe4IxK
+   kCb0rKWaJ/WANRg8ZZdf/e0PA5SlE/vk8PFdsXdNy5rSVyaPu7/EnZX6N
+   160YZW9ElJmVQGHqizUKL+vf57pyrdAeStUsNRQY5HF8w7YwaWJN41U7+
+   rbkyb4QYiZ+gCSL4DJV9tmEVj6KsNXblzKvIz0gvqG7R9UxLaQ3CTMYha
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="332100069"
+X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="336867580"
 X-IronPort-AV: E=Sophos;i="5.99,235,1677571200"; 
-   d="scan'208";a="332100069"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2023 08:52:26 -0700
+   d="scan'208";a="336867580"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2023 09:35:58 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="645184066"
-X-IronPort-AV: E=Sophos;i="5.99,234,1677571200"; 
-   d="scan'208";a="645184066"
+X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="672246110"
+X-IronPort-AV: E=Sophos;i="5.99,235,1677571200"; 
+   d="scan'208";a="672246110"
 Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2023 08:52:26 -0700
-Date:   Fri, 28 Apr 2023 08:56:45 -0700
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2023 09:35:58 -0700
+Date:   Fri, 28 Apr 2023 09:40:17 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
 To:     "Tian, Kevin" <kevin.tian@intel.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -59,19 +59,21 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         "Zanussi, Tom" <tom.zanussi@intel.com>,
         "Ranganathan, Narayan" <narayan.ranganathan@intel.com>,
         jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v5 2/7] iommu/sva: Explicitly exclude RID_PASID from SVA
-Message-ID: <20230428085645.0310c4ca@jacob-builder>
-In-Reply-To: <BN9PR11MB52760C0384F37927AEAB0C1C8C6B9@BN9PR11MB5276.namprd11.prod.outlook.com>
+Subject: Re: [PATCH v5 3/7] iommu: Move global PASID allocation from SVA to
+ core
+Message-ID: <20230428094017.715dda3f@jacob-builder>
+In-Reply-To: <BN9PR11MB5276C41CCCCF3FDEA7DDF7AC8C6B9@BN9PR11MB5276.namprd11.prod.outlook.com>
 References: <20230427174937.471668-1-jacob.jun.pan@linux.intel.com>
-        <20230427174937.471668-3-jacob.jun.pan@linux.intel.com>
-        <BN9PR11MB52760C0384F37927AEAB0C1C8C6B9@BN9PR11MB5276.namprd11.prod.outlook.com>
+        <20230427174937.471668-4-jacob.jun.pan@linux.intel.com>
+        <BN9PR11MB5276C41CCCCF3FDEA7DDF7AC8C6B9@BN9PR11MB5276.namprd11.prod.outlook.com>
 Organization: OTC
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -82,37 +84,47 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 Hi Kevin,
 
-On Fri, 28 Apr 2023 09:40:12 +0000, "Tian, Kevin" <kevin.tian@intel.com>
+On Fri, 28 Apr 2023 09:46:25 +0000, "Tian, Kevin" <kevin.tian@intel.com>
 wrote:
 
 > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > > Sent: Friday, April 28, 2023 1:50 AM
-> > 
-> > SVA PASID allocation is hardcoded to start from 1 because 0 is used for
-> > RID_PASID, let's make it explicit to avoid the potential conflicts.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  drivers/iommu/iommu-sva.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
-> > index c434b95dc8eb..ac7c93bacb5c 100644
-> > --- a/drivers/iommu/iommu-sva.c
-> > +++ b/drivers/iommu/iommu-sva.c
-> > @@ -66,7 +66,7 @@ struct iommu_sva *iommu_sva_bind_device(struct
-> > device *dev, struct mm_struct *mm
-> >  		return ERR_PTR(-EOPNOTSUPP);
-> > 
-> >  	/* Allocate mm->pasid if necessary. */
-> > -	ret = iommu_sva_alloc_pasid(mm, 1, max_pasids - 1);
-> > +	ret = iommu_sva_alloc_pasid(mm, IOMMU_DEF_RID_PASID + 1,
-> > max_pasids - 1);  
-> 
-> To be future proof it's probably cleaner to define a
-> IOMMU_MAX_RSVD_PASID in case there may be more reserved
-> pasids in future usages?
- much better, will do.
+> >=20
+> > Devices that use Intel ENQCMD to submit work must use global PASIDs in
+> > that the PASID are stored in a per CPU MSR. When such device need to
+> > submit work for in-kernel DMA with PASID, it must allocate PASIDs from
+> > the same global number space to avoid conflict. =20
+>=20
+> well the device itself cannot submit work to itself. It's software to
+> submit work to the device. =F0=9F=98=8A
+will rephrase, how about:
+Intel ENQCMD work submission requires the use of global PASIDs in ...
+> > that the PASID are stored in a per CPU MSR
+>=20
+> >  /* Allocate a PASID for the mm within range (inclusive) */
+> > -static int iommu_sva_alloc_pasid(struct mm_struct *mm, ioasid_t min,
+> > ioasid_t max)
+> > +static int iommu_sva_alloc_pasid(struct mm_struct *mm, struct device
+> > *dev) {
+> >  	int ret =3D 0;
+> >=20
+> > -	if (!pasid_valid(min) || !pasid_valid(max) ||
+> > -	    min =3D=3D 0 || max < min)
+> > -		return -EINVAL;
+> > -
+> >  	mutex_lock(&iommu_sva_lock);
+> >  	/* Is a PASID already associated with this mm? */
+> > -	if (pasid_valid(mm->pasid)) {
+> > -		if (mm->pasid < min || mm->pasid > max)
+> > -			ret =3D -EOVERFLOW;
+> > +	if (pasid_valid(mm->pasid))
+> >  		goto out; =20
+>=20
+> emmm here you still want to check whether mm->pasid exceeds
+> the max pasid width of the bound device.
+good point, existing mm->pasid could be from another device that has a
+larger pasid range.
+
 
 Thanks,
 

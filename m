@@ -2,43 +2,43 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6AE66F1BF0
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Apr 2023 17:51:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4F706F1BF4
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Apr 2023 17:52:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229491AbjD1Pv7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 28 Apr 2023 11:51:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59132 "EHLO
+        id S1345989AbjD1Pwa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 28 Apr 2023 11:52:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230420AbjD1Pv6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Apr 2023 11:51:58 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 917D21984;
-        Fri, 28 Apr 2023 08:51:57 -0700 (PDT)
+        with ESMTP id S229843AbjD1Pw2 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Apr 2023 11:52:28 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6535B4212;
+        Fri, 28 Apr 2023 08:52:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682697117; x=1714233117;
+  t=1682697147; x=1714233147;
   h=date:from:to:cc:subject:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=vrd2psdUQes7KhjYx4FBAisXAZuT9MhfS8Jsg+nYJhs=;
-  b=jy7dWJppzhEZhNt80Fuyo0Br5jiJa5VY2+EmWZPxOBdVxpJyFapw8ngx
-   EiIkgoMntyNaPvDaATskLIGMGrBFibRq/cYK1yr+HOnr075VUdjWjUHA0
-   wP8AkacSkHK5fBwkh+kIqbx9ZxEHB9GzGoTDWH5b+KninxsHbE4oMMnjZ
-   tifLOlv/UfcRuFsiIfQdJ7ddB4r03W6IJypZwnrETftLSkbOp06/ySw5U
-   NqxjGlIuSq3aJzZK3A8rE+5TqlghgEjpqdI/lb/9hyMDdwKDMhZgXJdW1
-   u9V57OSXLgaf8naHQiK0KO1Z2+Sjv0DhaOJMEoVSSZOnVc76wwk9AUPhj
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="434072115"
+  bh=0VSoxdyPY93P2BuKRz02q7jUM3wZLua7CfSmMyaDnso=;
+  b=NVULFCiFLXzYaJGPiMN9AeHl67w4PShs1P7rCRtR21Myn8LnRslarZwF
+   Ebyd1GFFXze066IHy03ueUVFaBOvoSMlathxTUuoorDVIVqEwZDDUSKlB
+   SAXBvxO5VdF/jBQt3O61pV302XHfTyPMK2AmwLI9ZEL0QJZgn74mStjim
+   E7zzHtrdlZ2mqRBld4aANDDL1lmgzcIttzhY23XraXrbeRQSGtH7fAD/I
+   SrA5dZef7SjJZU7CKtLBPWML/zfRnBN6CS92WXxx9Y24yPP0skA/Nk+Fv
+   37TBkBHprzsOqjMpm2gVVJ4AQNgg3WsMgm6TS+my2+OTa0DMEH5z+Omva
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="332100069"
 X-IronPort-AV: E=Sophos;i="5.99,235,1677571200"; 
-   d="scan'208";a="434072115"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2023 08:51:57 -0700
+   d="scan'208";a="332100069"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2023 08:52:26 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="941136513"
-X-IronPort-AV: E=Sophos;i="5.99,235,1677571200"; 
-   d="scan'208";a="941136513"
+X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="645184066"
+X-IronPort-AV: E=Sophos;i="5.99,234,1677571200"; 
+   d="scan'208";a="645184066"
 Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2023 08:51:56 -0700
-Date:   Fri, 28 Apr 2023 08:56:15 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2023 08:52:26 -0700
+Date:   Fri, 28 Apr 2023 08:56:45 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
 To:     "Tian, Kevin" <kevin.tian@intel.com>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -59,22 +59,21 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         "Zanussi, Tom" <tom.zanussi@intel.com>,
         "Ranganathan, Narayan" <narayan.ranganathan@intel.com>,
         jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v5 1/7] iommu: Generalize default PCIe requester ID
- PASID
-Message-ID: <20230428085615.58e437c9@jacob-builder>
-In-Reply-To: <BN9PR11MB5276FD027EC3D6BAA24046F58C6B9@BN9PR11MB5276.namprd11.prod.outlook.com>
+Subject: Re: [PATCH v5 2/7] iommu/sva: Explicitly exclude RID_PASID from SVA
+Message-ID: <20230428085645.0310c4ca@jacob-builder>
+In-Reply-To: <BN9PR11MB52760C0384F37927AEAB0C1C8C6B9@BN9PR11MB5276.namprd11.prod.outlook.com>
 References: <20230427174937.471668-1-jacob.jun.pan@linux.intel.com>
-        <20230427174937.471668-2-jacob.jun.pan@linux.intel.com>
-        <BN9PR11MB5276FD027EC3D6BAA24046F58C6B9@BN9PR11MB5276.namprd11.prod.outlook.com>
+        <20230427174937.471668-3-jacob.jun.pan@linux.intel.com>
+        <BN9PR11MB52760C0384F37927AEAB0C1C8C6B9@BN9PR11MB5276.namprd11.prod.outlook.com>
 Organization: OTC
 X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -83,44 +82,37 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 Hi Kevin,
 
-On Fri, 28 Apr 2023 09:38:32 +0000, "Tian, Kevin" <kevin.tian@intel.com>
+On Fri, 28 Apr 2023 09:40:12 +0000, "Tian, Kevin" <kevin.tian@intel.com>
 wrote:
 
 > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > > Sent: Friday, April 28, 2023 1:50 AM
 > > 
-> > PCIe Process address space ID (PASID) is used to tag DMA traffic, it
-> > provides finer grained isolation than requester ID (RID).
+> > SVA PASID allocation is hardcoded to start from 1 because 0 is used for
+> > RID_PASID, let's make it explicit to avoid the potential conflicts.
 > > 
-> > For each RID, 0 is as a special PASID for the legacy DMA (without
-> > PASID), thus RID_PASID. This is universal across all architectures,
-> > therefore warranted to be declared in the common header.
-> > Noting that VT-d could support none-zero RID_PASID, but currently not
-> > used.
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >  drivers/iommu/iommu-sva.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > > 
-> > By having a common RID_PASID, we can avoid conflicts between different
-> > use cases in the generic code. e.g. SVA and DMA API with PASIDs.  
+> > diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
+> > index c434b95dc8eb..ac7c93bacb5c 100644
+> > --- a/drivers/iommu/iommu-sva.c
+> > +++ b/drivers/iommu/iommu-sva.c
+> > @@ -66,7 +66,7 @@ struct iommu_sva *iommu_sva_bind_device(struct
+> > device *dev, struct mm_struct *mm
+> >  		return ERR_PTR(-EOPNOTSUPP);
+> > 
+> >  	/* Allocate mm->pasid if necessary. */
+> > -	ret = iommu_sva_alloc_pasid(mm, 1, max_pasids - 1);
+> > +	ret = iommu_sva_alloc_pasid(mm, IOMMU_DEF_RID_PASID + 1,
+> > max_pasids - 1);  
 > 
-> You intend it to be generic but in the end only vt-d driver is changed
-> to use it in this series...
-change for SVA is in the patch.
-
-> > @@ -190,6 +190,7 @@ enum iommu_dev_features {
-> >  	IOMMU_DEV_FEAT_IOPF,
-> >  };
-> > 
-> > +#define IOMMU_DEF_RID_PASID	(0U) /* Reserved for DMA w/o PASID
-> > */  
-> 
-> Is RID a general team on other platform?
-RID, aka  requester id is a PCI term. so I this it is common though on SMMU
-might be better called stream ID PASID?
-
-> Would IOMMU_DEF_NO_PASID serve the purpose better?
-not sure, it is still a PASID. For completeness, might be called
-IOMMU_DEF_PASID_FOR_DMA_NO_PASID :)
-
-other suggestions?
+> To be future proof it's probably cleaner to define a
+> IOMMU_MAX_RSVD_PASID in case there may be more reserved
+> pasids in future usages?
+ much better, will do.
 
 Thanks,
 

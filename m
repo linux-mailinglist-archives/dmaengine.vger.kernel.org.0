@@ -2,124 +2,109 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 272E56F31BA
-	for <lists+dmaengine@lfdr.de>; Mon,  1 May 2023 16:01:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A4C16F3240
+	for <lists+dmaengine@lfdr.de>; Mon,  1 May 2023 16:49:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232355AbjEAOBL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 1 May 2023 10:01:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36532 "EHLO
+        id S231229AbjEAOtd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 1 May 2023 10:49:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232349AbjEAOBJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 1 May 2023 10:01:09 -0400
+        with ESMTP id S229928AbjEAOtc (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 1 May 2023 10:49:32 -0400
 Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A21510FC;
-        Mon,  1 May 2023 07:01:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 362DEA6;
+        Mon,  1 May 2023 07:49:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682949668; x=1714485668;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=ZgJxwxQNUm3eiCKrax81lV+9lJby3eUeSvSu4Z4cWpw=;
-  b=bTtX8I7Tlpzl4k3uXnTdOwgZUSKI60cvVj52tzHc5x1Xe/EaJ7aFQCLj
-   Q4XHRvRvhK59iomNJ7FgQO56DrhBXCb3PlC72qLC6Rro5mClo9gEzysLb
-   MvM8QlcPX4iv+zsa/cwodFIkwQOtp4Z9u4NN2xII0qXEl0voVioTJ2Dj6
-   DfjCSinZ//ryG1ExNezoWq6aCLQdXQVUIBWJycU78upFyd/yj+Mc2dfp8
-   0dYjs5vYCJ9w5zm9VYUKY5omXtY3m1Zyt4SbblGLVpkPUTAiXchliNFhF
-   2Etb3zRRsLMdWuo91VkBdDryfctq93qSEhu3zE24RxZi51vh/IAD2Pah9
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10697"; a="413582120"
+  t=1682952571; x=1714488571;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vH5oPa5VEfnYKxkeFDN20IVsNpD96NPIEcwDEoKUY4U=;
+  b=CxhCuD5Aq8ifhzwD3W/f7MEiwnktyChhDyu0bTXiANQJViELbs36T6rJ
+   TX9xsj4a0yGABg6q6liqC27oiKoC+nv6GfsCDJmezzYjNyI48USV8CAcO
+   7dUJOrJMRPVFcPFz6EuErTH1P3BYfJT/kfU8jEuHQOuXAMpke+pjM7iZ+
+   LZ+1e2/AgYZf0TfUSQfGfxaWlw0imgx7e0kIzDx8UgKf0MlC9NYtJUQ7l
+   UiG3O+dIUBxeroJKuIk1PLxr2QITvd3caEjsrABcscHaT1J+Z6pLRnRMv
+   4sP6GaUy8r1Qw9xq1F1Sp8QABaRnU07s83zjn862nqD5YYWCJo/4a8Io9
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10697"; a="413592119"
 X-IronPort-AV: E=Sophos;i="5.99,241,1677571200"; 
-   d="scan'208";a="413582120"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2023 07:01:06 -0700
+   d="scan'208";a="413592119"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2023 07:49:30 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10697"; a="942045094"
+X-IronPort-AV: E=McAfee;i="6600,9927,10697"; a="698558032"
 X-IronPort-AV: E=Sophos;i="5.99,241,1677571200"; 
-   d="scan'208";a="942045094"
-Received: from jplee-mobl1.amr.corp.intel.com ([10.213.190.187])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2023 07:01:05 -0700
-Message-ID: <6835178f8f58f6fce7797953f64c3f4c959d6ade.camel@linux.intel.com>
-Subject: Re: [PATCH v3 01/15] dmaengine: idxd: add wq driver name support
- for accel-config user tool
-From:   Tom Zanussi <tom.zanussi@linux.intel.com>
-To:     Fenghua Yu <fenghua.yu@intel.com>, herbert@gondor.apana.org.au,
-        davem@davemloft.net, vkoul@kernel.org
-Cc:     dave.jiang@intel.com, tony.luck@intel.com,
-        wajdi.k.feghali@intel.com, james.guilford@intel.com,
-        kanchana.p.sridhar@intel.com, giovanni.cabiddu@intel.com,
-        hdanton@sina.com, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org
-Date:   Mon, 01 May 2023 09:01:04 -0500
-In-Reply-To: <d886d1dd-51c8-d2e6-940b-9e5041707c6e@intel.com>
-References: <20230428205539.113902-1-tom.zanussi@linux.intel.com>
-         <20230428205539.113902-2-tom.zanussi@linux.intel.com>
-         <d886d1dd-51c8-d2e6-940b-9e5041707c6e@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.1-0ubuntu1 
+   d="scan'208";a="698558032"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.85.208]) ([10.212.85.208])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2023 07:49:29 -0700
+Message-ID: <f16a6889-2f84-3f97-c6a7-981f2a255b42@intel.com>
+Date:   Mon, 1 May 2023 07:49:29 -0700
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.10.0
+Subject: Re: [PATCH v3 04/15] dmaengine: idxd: Export descriptor management
+ functions
+Content-Language: en-US
+To:     Tom Zanussi <tom.zanussi@linux.intel.com>,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        fenghua.yu@intel.com, vkoul@kernel.org
+Cc:     tony.luck@intel.com, wajdi.k.feghali@intel.com,
+        james.guilford@intel.com, kanchana.p.sridhar@intel.com,
+        giovanni.cabiddu@intel.com, hdanton@sina.com,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        dmaengine@vger.kernel.org
+References: <20230428205539.113902-1-tom.zanussi@linux.intel.com>
+ <20230428205539.113902-5-tom.zanussi@linux.intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230428205539.113902-5-tom.zanussi@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Fenghua,
 
-On Fri, 2023-04-28 at 17:14 -0700, Fenghua Yu wrote:
-> Hi, Tom,
->=20
-> On 4/28/23 13:55, Tom Zanussi wrote:
-> > From: Dave Jiang <dave.jiang@intel.com>
-> >=20
-> > With the possibility of multiple wq drivers that can be bound to
-> > the wq,
-> > the user config tool accel-config needs a way to know which wq
-> > driver to
-> > bind to the wq. Introduce per wq driver_name sysfs attribute where
-> > the user
-> > can indicate the driver to be bound to the wq. This allows accel-
-> > config to
-> > just bind to the driver using wq->driver_name.
-> >=20
-> > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> > Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-> > ---
->=20
-> ...
->=20
-> > diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-> > index 7ced8d283d98..505118fc19de 100644
-> > --- a/drivers/dma/idxd/idxd.h
-> > +++ b/drivers/dma/idxd/idxd.h
-> > @@ -214,6 +214,8 @@ struct idxd_wq {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0char name[WQ_NAME_SIZE =
-+ 1];
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u64 max_xfer_bytes;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 max_batch_size;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0char driver_name[WQ_NAME_SIZ=
-E + 1];
->=20
-> It's confused to use "WQ_NAME_SIZE" for driver name size.
-> Maybe it's better to have a new definition "DRIVER_NAME_SIZE"?
-> BTW, WQ_NAME_SIZE is 1024 which is unnecessary big for storing=20
-> driver_name[] in the structure. It would be better to have a smaller=20
-> size (e.g. 128) in DRIVER_NAME_SIZE.
 
-Yes, that makes sense - I'll add an IAA_DRIVER_NAME_SIZE of 128 and use
-that instead.
+On 4/28/23 1:55 PM, Tom Zanussi wrote:
+> To allow idxd sub-drivers to access the descriptor management
+> functions, export them.
+> 
+> Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Thanks,
-
-Tom
-
->=20
-> Thanks.
->=20
-> -Fenghua
-
+> ---
+>   drivers/dma/idxd/submit.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/dma/idxd/submit.c b/drivers/dma/idxd/submit.c
+> index c01db23e3333..5e651e216094 100644
+> --- a/drivers/dma/idxd/submit.c
+> +++ b/drivers/dma/idxd/submit.c
+> @@ -61,6 +61,7 @@ struct idxd_desc *idxd_alloc_desc(struct idxd_wq *wq, enum idxd_op_type optype)
+>   
+>   	return __get_desc(wq, idx, cpu);
+>   }
+> +EXPORT_SYMBOL_NS_GPL(idxd_alloc_desc, IDXD);
+>   
+>   void idxd_free_desc(struct idxd_wq *wq, struct idxd_desc *desc)
+>   {
+> @@ -69,6 +70,7 @@ void idxd_free_desc(struct idxd_wq *wq, struct idxd_desc *desc)
+>   	desc->cpu = -1;
+>   	sbitmap_queue_clear(&wq->sbq, desc->id, cpu);
+>   }
+> +EXPORT_SYMBOL_NS_GPL(idxd_free_desc, IDXD);
+>   
+>   static struct idxd_desc *list_abort_desc(struct idxd_wq *wq, struct idxd_irq_entry *ie,
+>   					 struct idxd_desc *desc)
+> @@ -215,3 +217,4 @@ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
+>   	percpu_ref_put(&wq->wq_active);
+>   	return 0;
+>   }
+> +EXPORT_SYMBOL_NS_GPL(idxd_submit_desc, IDXD);

@@ -2,183 +2,106 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 79FFB6F6806
-	for <lists+dmaengine@lfdr.de>; Thu,  4 May 2023 11:11:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 635F66F680E
+	for <lists+dmaengine@lfdr.de>; Thu,  4 May 2023 11:13:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230017AbjEDJLX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 4 May 2023 05:11:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35676 "EHLO
+        id S230178AbjEDJM7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 4 May 2023 05:12:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229683AbjEDJLW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 4 May 2023 05:11:22 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C433CAC;
-        Thu,  4 May 2023 02:11:20 -0700 (PDT)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1puUzf-0006QT-5i; Thu, 04 May 2023 11:11:19 +0200
-Message-ID: <eda7abb0-89a2-fa51-4e82-1972b1eed591@leemhuis.info>
-Date:   Thu, 4 May 2023 11:11:17 +0200
+        with ESMTP id S229993AbjEDJM7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 4 May 2023 05:12:59 -0400
+Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 784ED3C02
+        for <dmaengine@vger.kernel.org>; Thu,  4 May 2023 02:12:57 -0700 (PDT)
+Received: by mail-il1-x12b.google.com with SMTP id e9e14a558f8ab-3310c01beb9so1973945ab.2
+        for <dmaengine@vger.kernel.org>; Thu, 04 May 2023 02:12:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1683191577; x=1685783577;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I+cBCuPemC9rnV8/QfSp10iYbH/9Adn653+lN+Obdqg=;
+        b=YTbeCmGImxGvcLEuyfRZE5cMmqFs1C7MvVoUxmYjqrBcwYCW5hdd6Vs5090lxFVFvf
+         ms6o/bOQuPW+RHlFflrZxWSNvNZfa2GTXN7kYDBnfp7UpeQb2uvOslAhscBflo4txXBK
+         kH5qgmCiSEQLeVbqjiDAOmkjZ3M92AS3ZDKgHkR8SVesM7c6IXbaXJrlX+3k0bXWbSI6
+         /2VI27NyGcrDQ4IhOLeL/VkQySMf/IEeUFwpMhrXJAlWpPDE6xpbRP+n4BdB8z6tZzWX
+         AgrPwqBVi/lvENt1iHCHZNcLSad1iYfmSPgmhiDl1RlpwPuyrerZ7NBeDsUZWsRvqDBQ
+         pZug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683191577; x=1685783577;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=I+cBCuPemC9rnV8/QfSp10iYbH/9Adn653+lN+Obdqg=;
+        b=Po3siWunkyLDU6ZOR5In4MjOIZBJWyryQ0Qkb8BlnPskW+9cPaoPShohvhYYuHq0za
+         VASHH57G/lniFb932ZxHHNOJC5Yl38RZSg0SrIjhyhbvCQdjdFvzAClh9DrMpWUDq5ZW
+         Vq2rMBEnUUE0EF1JhZZJyOTIyCE7XYuwazxGS9XWrQxqUK61DlbRIlKFP1NBj8fvwwen
+         4DJymrFndDsQSQIFp82EvOiNqpJpL3+13Y+0j+oVY1an8yXS9yNlit3ljnchwYGbs1Ep
+         ZpDTH5n25ekK9NHFy3dbLxMwTTqJmLrDGPD2NjuZignDD0U9EECfNmkfEMxTUmO9pkJL
+         Sqsw==
+X-Gm-Message-State: AC+VfDzY4KWYDDdYY3ryxckoH1avoJUvMN7jB8SDcemScp4XYs0F4A2F
+        8tlkw8mzp274wvp94QUvvG2KBSloXqa9d2Z5yoIhVtgFaDIbtjY+/wU=
+X-Google-Smtp-Source: ACHHUZ7XzaFfYqsZ2DDqFN4AT6ORAT0qObZMB+f1YXKGsdQZ574TA025qZT7Zk/wE7euYGocFKi/txlwd67zHtlkOJo=
+X-Received: by 2002:a92:c743:0:b0:331:3fe3:d111 with SMTP id
+ y3-20020a92c743000000b003313fe3d111mr5296592ilp.25.1683191576814; Thu, 04 May
+ 2023 02:12:56 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: dmaengine: at_hdmac: Regression regarding rs485 via dma in v5.4
-Content-Language: en-US, de-DE
-From:   "Linux regression tracking (Thorsten Leemhuis)" 
-        <regressions@leemhuis.info>
-To:     Kristof Havasi <havasiefr@gmail.com>
-Cc:     Linux kernel regressions list <regressions@lists.linux.dev>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        tudor.ambarus@microchip.com
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
-          Linux regressions mailing list 
-          <regressions@lists.linux.dev>
-References: <CADBnMvj93bSO=+wU4=pLTgONV7w_hhecxQHAc_YS4P4GaqMNrA@mail.gmail.com>
- <1473b364-777a-ede8-3ff6-36d9e1d577ad@leemhuis.info>
-In-Reply-To: <1473b364-777a-ede8-3ff6-36d9e1d577ad@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1683191480;c47b5798;
-X-HE-SMSGID: 1puUzf-0006QT-5i
-X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+References: <20230426074248.19336-1-zong.li@sifive.com> <mhng-cdb02a07-40f9-4424-b3cf-938247588537@palmer-ri-x1c9>
+In-Reply-To: <mhng-cdb02a07-40f9-4424-b3cf-938247588537@palmer-ri-x1c9>
+From:   Zong Li <zong.li@sifive.com>
+Date:   Thu, 4 May 2023 17:12:45 +0800
+Message-ID: <CANXhq0r3+Wc3jZ7fVRS-RtVUTNM-tZjhvFO7qK_BmSCa4wdGyw@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: xilinx: enable on RISC-V platform
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 04.04.23 13:25, Linux regression tracking (Thorsten Leemhuis) wrote:
-> [Adding a few pople to the list of recipients that were involved in
-> developing the culprit; also CCing the regression list, as it should be
-> in the loop for regressions:
-> https://docs.kernel.org/admin-guide/reporting-regressions.html]
-> 
-> [TLDR: I'm adding this report to the list of tracked Linux kernel
-> regressions; the text you find below is based on a few templates
-> paragraphs you might have encountered already in similar form.
-> See link in footer if these mails annoy you.]
-> 
-> On 29.03.23 16:31, Kristof Havasi wrote:
->>
->> I was rebasing the Kernel branch of our SAMA5D35 based board from
->> v5.4.189 to v5.4.238.
->> I noticed that after the rebase we could _only send, but not receive_
->> through our RS485 interface.
->>
->> I could bisect the problem to 77b97ef4908aa917e7b68667ec6b344cc5dc5034
->> in the v5.4.225 release. 
-> 
-> FWIW, that's 7176a6a8982d ("dmaengine: at_hdmac: Don't start
-> transactions at tx_submit level") in mainline.
-> 
-> Kristof Havasi: would be good to know if this is something that happens
-> with recent mainline as well, because if not it might be something the
-> stable team needs to handle.
+On Wed, Apr 26, 2023 at 10:28=E2=80=AFPM Palmer Dabbelt <palmer@dabbelt.com=
+> wrote:
+>
+> On Wed, 26 Apr 2023 00:42:48 PDT (-0700), zong.li@sifive.com wrote:
+> > Enable the xilinx dmaengine driver on RISC-V platform. We have verified
+> > the CDMA on RISC-V platform, enable this configuration to allow build o=
+n
+> > RISC-V.
+> >
+> > Signed-off-by: Zong Li <zong.li@sifive.com>
+> > ---
+> >  drivers/dma/Kconfig | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> > index fb7073fc034f..816f619804b9 100644
+> > --- a/drivers/dma/Kconfig
+> > +++ b/drivers/dma/Kconfig
+> > @@ -695,7 +695,7 @@ config XGENE_DMA
+> >
+> >  config XILINX_DMA
+> >       tristate "Xilinx AXI DMAS Engine"
+> > -     depends on (ARCH_ZYNQ || MICROBLAZE || ARM64)
+> > +     depends on (ARCH_ZYNQ || MICROBLAZE || ARM64 || RISCV)
+> >       select DMA_ENGINE
+> >       help
+> >         Enable support for Xilinx AXI VDMA Soft IP.
+>
+> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
 
-Kristof, any news? Doesn't look like it from here, but maybe I'm missing
-something.
+Hi Palmer,
+Thanks for your review.
 
-And did you try what I suggested? Without trying that it looks like
-neither the mainline developers nor the stable team cares enough to look
-into your report, as both sides might assume it's the other sides duty
-to do so.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
-
->> If I revert this commit, the tx/rx works just
->> like before.
->> Maybe this use-case wasn't considered when this patch was created?
->> I haven't seen a documentation change regarding this in DT bindings,
->> but if the config should be something else, please let me know.
->> Otherwise this commit breaks the RS485 function of atmel_serial at
->> least in the v5.4.y branch.
->>
->> Best Regards,
->> Kristóf Havasi
->>
->> The relevant device tree nodes:
->>
->> from sama5d3.dtsi:
->>
->> usart1: serial@f0020000 {
->>   compatible = "atmel,at91sam9260-usart";
->>   reg = <0xf0020000 0x100>;
->>   interrupts = <13 IRQ_TYPE_LEVEL_HIGH 5>;
->>   dmas = <&dma0 2 AT91_DMA_CFG_PER_ID(5)>,
->>   <&dma0 2 (AT91_DMA_CFG_PER_ID(6) | AT91_DMA_CFG_FIFOCFG_ASAP)>;
->>   dma-names = "tx", "rx";
->>   pinctrl-names = "default";
->>   pinctrl-0 = <&pinctrl_usart1>;
->>   clocks = <&usart1_clk>;
->>   clock-names = "usart";
->>   status = "disabled";
->> };
->>
->> pinctrl_usart1: usart1-0 {
->>   atmel,pins =
->>   <AT91_PIOB 28 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
->>    AT91_PIOB 29 AT91_PERIPH_A AT91_PINCTRL_NONE>;
->> };
->> pinctrl_usart1_rts_cts: usart1_rts_cts-0 {
->>   atmel,pins =
->>   <AT91_PIOB 26 AT91_PERIPH_A AT91_PINCTRL_NONE /* PB26 periph A,
->> conflicts with GRX7 */
->>    AT91_PIOB 27 AT91_PERIPH_A AT91_PINCTRL_NONE>; /* PB27 periph A,
->> conflicts with G125CKO */
->> };
->>
->> from our dts:
->>
->> &usart1 {
->>   pinctrl-0 = <&pinctrl_usart1 &pinctrl_usart1_rts_cts>;
->>   atmel,use-dma-rx;
->>   atmel,use-dma-tx;
->>   rs485-rx-during-tx;
->>   linux,rs485-enabled-at-boot-time;
->>   status = "okay";
->> };
->>
->> HW:
->> The SAMA5D3's PB27 is connected to the |RE+DE of the RS485 transceiver
->> SP3458EN-L
-> 
-> 
-> Thanks for the report. To be sure the issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-> tracking bot:
-> 
-> #regzbot ^introduced 77b97ef4908aa
-> #regzbot title dmaengine: at_hdmac: receiving data through the RS485
-> interface broke
-> #regzbot ignore-activity
-> 
-> This isn't a regression? This issue or a fix for it are already
-> discussed somewhere else? It was fixed already? You want to clarify when
-> the regression started to happen? Or point out I got the title or
-> something else totally wrong? Then just reply and tell me -- ideally
-> while also telling regzbot about it, as explained by the page listed in
-> the footer of this mail.
-> 
-> Developers: When fixing the issue, remember to add 'Link:' tags pointing
-> to the report (the parent of this mail). See page linked in footer for
-> details.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> That page also explains what to do if mails like this annoy you.
-> 
-> 
+Hi Vinod,
+Could I know if this patch also meets your expectations? If it does,
+would you please consider accepting it?
+Thanks.

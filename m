@@ -2,118 +2,135 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8DEC6F6EA8
-	for <lists+dmaengine@lfdr.de>; Thu,  4 May 2023 17:09:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 966D96F7067
+	for <lists+dmaengine@lfdr.de>; Thu,  4 May 2023 19:04:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231479AbjEDPJE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 4 May 2023 11:09:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34988 "EHLO
+        id S229917AbjEDRER (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 4 May 2023 13:04:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231377AbjEDPI6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 4 May 2023 11:08:58 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DD2746A5
-        for <dmaengine@vger.kernel.org>; Thu,  4 May 2023 08:08:42 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-94f4b911570so96693066b.0
-        for <dmaengine@vger.kernel.org>; Thu, 04 May 2023 08:08:42 -0700 (PDT)
+        with ESMTP id S229618AbjEDREP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 4 May 2023 13:04:15 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E2E535AE
+        for <dmaengine@vger.kernel.org>; Thu,  4 May 2023 10:04:14 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-50bc456cc39so1145274a12.1
+        for <dmaengine@vger.kernel.org>; Thu, 04 May 2023 10:04:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683212920; x=1685804920;
+        d=linaro.org; s=google; t=1683219852; x=1685811852;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=PIp4DKXxo+zp8Ph9xjPC7rzrFgpP5SUcYok+aLyEVyM=;
-        b=g8Li0JxC53ab/FftbLLHq7tOR2Yyc3MYuJ3XUkhUcQx9NIqH5S1oRJO/xMMoE0KULf
-         Lo50THCw6Tib59Q7CkXm4JONVy5uYQMLNs3hjVrLsRFSYozCTsTL0pFjsNENKC0/3zRJ
-         JFbt7pRugIPXSLPsoNHYTC7Z57GY7yidDzSVDCjhJK4DcT7ksZ8ue3m8sGcqUZi5uQb+
-         ZyadixZCBF6WKZMfI1p0X5X4JvhPlU7iLj96PRaKLWa26Z/UUWzyt/+3x8BXayyC7nql
-         3PAtceS+CTjMYvI5bES8OWHrT6b0/Kiv95KL1S+auLxnuCsdVF/6heAIlyleRLvG+/b4
-         nuew==
+        bh=MlRk1RCeKU7o3gs8w9KIlX6up9OV2t4PRbCSyTcr+6o=;
+        b=OdOnw/9rrisJ4kZZyA1yqfRJn9iJ6lIRfQL0QjO85+SIHsSigEj2aa8z2izyQHBn9M
+         RW/g2MTkt5L/Kr3Q+cVgkxsFl0Jm6LP5swk4tHtqClMn7H7rJf1ywAOvbixBFl4PI/Wz
+         fgq/VwyxMfaXunFE+yXZI49L0+EpVCIynbFIVIZxFuXXx79bMObNZ3emC+5acTdWKSRh
+         D0cZw8Cx+MgLJxreej+W72jEzTpZYrBXyLNj1i91Lxcr2NwMA8EcN+5ww4Ypfz6eCDuZ
+         gX9nvtG5+auPWp+92IIlB+5hIuVEoQR3IYQAztyjPmnkBMYFNDrT41URMYs9uuCNjWxD
+         8vsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683212920; x=1685804920;
+        d=1e100.net; s=20221208; t=1683219852; x=1685811852;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PIp4DKXxo+zp8Ph9xjPC7rzrFgpP5SUcYok+aLyEVyM=;
-        b=GgbDYuoViJaXVv4VrqlOAGnH3IX6WG7eeYiU6ViCyOTXdbSxAoOgcRE5wYYGt2xbA6
-         1Wk/iwV5PD5viL6PraQrF+r3vH+tA9qr2/0MOaxC35Ml8UtchxHSWkdpzISJAw+eJv7K
-         p2htOFCd4DSR7sZA4t0gMBmOQkFKobV6cmEc/Gm2I9tZPNbHIVyDdnXGFOVYwQ2t7uiq
-         59DG3icFREb6bDNds72PuPPHP3q8FMlxFyF8Ol1PCpLw4kV4lY8cwDxdgqDmUlaYMvdj
-         tvaRD/XhvlCavE3nukYTtrr6jIs4dGd9MClaZCLrauJQwMpy77buUYFVtXjL2aPvFvNa
-         XbGA==
-X-Gm-Message-State: AC+VfDzfUiwgGapO5Vd8wnrDL1AiS5UfV/lxan7gQ8SXat3SBj4uy6tj
-        S5cSRG7iYNWY3B05B7/xEezFkg==
-X-Google-Smtp-Source: ACHHUZ6/tidMBBOHdOPNqdgzWoQ8Y6QV5hHtyArlFHEFdIvczhELlOjj2No5eq1nQaZjwcXCvQvqFQ==
-X-Received: by 2002:a17:907:a426:b0:94a:9c9e:6885 with SMTP id sg38-20020a170907a42600b0094a9c9e6885mr7259100ejc.58.1683212920481;
-        Thu, 04 May 2023 08:08:40 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:cbf1:e7ef:fb81:e912? ([2a02:810d:15c0:828:cbf1:e7ef:fb81:e912])
-        by smtp.gmail.com with ESMTPSA id cw5-20020a170906478500b0095728d6f3b6sm17176152ejc.125.2023.05.04.08.08.39
+        bh=MlRk1RCeKU7o3gs8w9KIlX6up9OV2t4PRbCSyTcr+6o=;
+        b=IE3UaGy8+CuBNfSyg3mAIKK2tAZy9S03nvwjSwUHHwV95NIxT9eOUWd0ogxQdtx2vp
+         0lEUlY9TBR8ruNi9BJBe6JhPjxbiSU2SyUcoPuBe5sEAhE7QulkSsWKrcIaiKwqOMVAJ
+         uEIoCVBknMcBvxzJ4e3Qpx4PLJC67+uB54v4b8N8e45uc5rPEZzh2QDydGAFVL/ZHGzj
+         Z5/FNhVewXE6MMf/W/ymrDvwNJTTFOEhYCtvf0kV25mX5g5Q2vUxaESNwtmMaJjlPLDN
+         JNLEsOEc6sqDCS4LifesIBVSSzR2yAM00igWVS19CU0tqnJXzToLnhTJ97xCXhE4/O93
+         Lhlw==
+X-Gm-Message-State: AC+VfDxTpuIfQQQrGZqLxLHU30L0tG4ao3agHj/LbRWg0DcAT+hlIz6t
+        NnLsxL0GDgQqYwAnM3qyhlUcAg==
+X-Google-Smtp-Source: ACHHUZ4yw01j72V7v00qdVG/i73OsQ/JtKCOYW5DeoWzDcJ2LoqAxwuyyDltufUE0IdLZz20m8aA7g==
+X-Received: by 2002:aa7:d14b:0:b0:50b:c164:526c with SMTP id r11-20020aa7d14b000000b0050bc164526cmr2610944edo.13.1683219852591;
+        Thu, 04 May 2023 10:04:12 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:bdb9:99c4:33a5:6114? ([2a02:810d:15c0:828:bdb9:99c4:33a5:6114])
+        by smtp.gmail.com with ESMTPSA id n7-20020aa7db47000000b0050bcbb5708asm2082323edt.35.2023.05.04.10.04.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 May 2023 08:08:40 -0700 (PDT)
-Message-ID: <78616bc1-8d9e-4a1c-70d6-ad62c2cfa8a8@linaro.org>
-Date:   Thu, 4 May 2023 17:08:38 +0200
+        Thu, 04 May 2023 10:04:12 -0700 (PDT)
+Message-ID: <6bce9c65-12f3-0128-91d0-142f0b5a791e@linaro.org>
+Date:   Thu, 4 May 2023 19:04:11 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.1
-Subject: Re: [PATCH 7/7] dt-bindings: dmaengine: pl330: Add new quirks
+Subject: Re: [PATCH 1/2] dt-bindings: dma: ti: Add J721S2 BCDMA
 Content-Language: en-US
-To:     Joy Chakraborty <joychakr@google.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, manugautam@google.com,
-        danielmentz@google.com, sjadavani@google.com
-References: <20230504145737.286444-1-joychakr@google.com>
- <20230504145737.286444-8-joychakr@google.com>
+To:     Vaishnav Achath <vaishnav.a@ti.com>, peter.ujfalusi@gmail.com,
+        vkoul@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, j-choudhary@ti.com, u-kumar1@ti.com,
+        vigneshr@ti.com
+References: <20230503065303.16674-1-vaishnav.a@ti.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230504145737.286444-8-joychakr@google.com>
+In-Reply-To: <20230503065303.16674-1-vaishnav.a@ti.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-6.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 04/05/2023 16:57, Joy Chakraborty wrote:
-> Add 2 new quirks added to the driver "arm,pl330-optimize-dev2mem-axsize"
-> and "arm,pl330-periph-single-dregs"
-
-This we can see from the diff. You need to answer why?
-
+On 03/05/2023 08:53, Vaishnav Achath wrote:
+> Add bindings for J721S2 BCDMA instance dedicated for Camera
+> Serial Interface. Unlike AM62A CSI BCDMA, this instance has RX
+> and TX channels but lacks block copy channels.
 > 
-> Signed-off-by: Joy Chakraborty <joychakr@google.com>
+> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
 > ---
->  Documentation/devicetree/bindings/dma/arm,pl330.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  .../devicetree/bindings/dma/ti/k3-bcdma.yaml  | 21 +++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/arm,pl330.yaml b/Documentation/devicetree/bindings/dma/arm,pl330.yaml
-> index 4a3dd6f5309b..0499a7fba88d 100644
-> --- a/Documentation/devicetree/bindings/dma/arm,pl330.yaml
-> +++ b/Documentation/devicetree/bindings/dma/arm,pl330.yaml
-> @@ -53,6 +53,14 @@ properties:
->      type: boolean
->      description: quirk for performing burst transfer only
+> diff --git a/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml b/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
+> index beecfe7a1732..5ca9581a66f4 100644
+> --- a/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
+> +++ b/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
+> @@ -33,6 +33,7 @@ properties:
+>      enum:
+>        - ti,am62a-dmss-bcdma-csirx
+>        - ti,am64-dmss-bcdma
+> +      - ti,j721s2-dmss-bcdma-csi
 >  
-> +  arm,pl330-optimize-dev2mem-axsize:
-> +    type: boolean
-> +    description: quirk for optimizing AxSize used between dev<->mem
-
-This tells me nothing... Neither what it is about nor why this is
-property of a board or PL330 hardware implementation. Please describe
-hardware, not drivers.
-
+>    reg:
+>      minItems: 3
+> @@ -150,7 +151,27 @@ allOf:
+>  
+>        required:
+>          - power-domains
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: ti,j721s2-dmss-bcdma-csi
+> +    then:
+> +      properties:
+> +        ti,sci-rm-range-bchan: false
 > +
-> +  arm,pl330-periph-single-dregs:
-> +    type: boolean
-> +    description: quirk for using dma-singles for peripherals in _dregs()
+> +        reg:
+> +          maxItems: 4
+>  
+> +        reg-names:
+> +          items:
+> +            - const: gcfg
+> +            - const: rchanrt
+> +            - const: tchanrt
+> +            - const: ringrt
+> +
+> +      required:
+> +        - ti,sci-rm-range-tchan
+>      else:
+>        properties:
 
-Same concerns.
 
+You now require 5 reg items on ti,am62a-dmss-bcdma-csirx. I don't think
+you tested your DTS against this change. Rework the else: so it will
+match specific variant (if:).
 
 Best regards,
 Krzysztof

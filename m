@@ -2,61 +2,74 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 962F26F84F2
-	for <lists+dmaengine@lfdr.de>; Fri,  5 May 2023 16:39:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E562C6F8832
+	for <lists+dmaengine@lfdr.de>; Fri,  5 May 2023 19:54:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232845AbjEEOjk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 5 May 2023 10:39:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34074 "EHLO
+        id S233293AbjEERyO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 5 May 2023 13:54:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232758AbjEEOjj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 5 May 2023 10:39:39 -0400
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E3543C38;
-        Fri,  5 May 2023 07:39:38 -0700 (PDT)
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 345EdY3k083468;
-        Fri, 5 May 2023 09:39:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1683297574;
-        bh=dDL1Ix5ed3FpBkik2TeAdp7w4F8HGFiJXQbTgcTMItg=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ipxeQOzq47k4DVknxcdtEMQNqnfx4hU2QZEd/WE/1xiSQkFfHPdZ1GCWQ20r6TRrT
-         YesYYxluA9CxeeCxJ5tB0VtBksCaVkgmwiYb6mXtyEFhGdv6mV9Ca2By3xFwWrSVEo
-         SZn1dz2Awb7gXwTgROhP7uAa/NHqsvXdoCjywhgU=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 345EdYo6015164
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 5 May 2023 09:39:34 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 5
- May 2023 09:39:34 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 5 May 2023 09:39:34 -0500
-Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 345EdX61113551;
-        Fri, 5 May 2023 09:39:34 -0500
-From:   Vaishnav Achath <vaishnav.a@ti.com>
-To:     <peter.ujfalusi@gmail.com>, <vigneshr@ti.com>, <vkoul@kernel.org>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>
-CC:     <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>,
-        <j-choudhary@ti.com>, <vaishnav.a@ti.com>
-Subject: [PATCH v3 2/2] dmaengine: ti: k3-udma: Add support for J721S2 CSI BCDMA instance
-Date:   Fri, 5 May 2023 20:09:29 +0530
-Message-ID: <20230505143929.28131-3-vaishnav.a@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230505143929.28131-1-vaishnav.a@ti.com>
-References: <20230505143929.28131-1-vaishnav.a@ti.com>
+        with ESMTP id S233299AbjEERx5 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 5 May 2023 13:53:57 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C29AC22698
+        for <dmaengine@vger.kernel.org>; Fri,  5 May 2023 10:53:28 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id 4fb4d7f45d1cf-50b383222f7so3127474a12.3
+        for <dmaengine@vger.kernel.org>; Fri, 05 May 2023 10:53:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1683309198; x=1685901198;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WDCSv0avH4pfNfNeC0DOfI7drElfKwvWaAkxpPyXO/U=;
+        b=arfKTyei82D2UyXmshvlZvVJH0oJdCCSpkmvX0YjpNi5mjm6y6oYSvdQ43htajtoQ4
+         BcnJW+vPVPQ7zYB/vjrc5T5ofIzObYgo47OJzOeIbfx/O8ANwJHWWsUP851DaU2aMP2p
+         ayvnBpC7iDrYdN62V4K2HSJDJkXNE351nESXoixBMYcxTFjN60q+e4uJxUfqXi/2dq3b
+         6Omoq5bHXFUcYvYIUuDS9DUwdYN/U5+Ft26419VRWhnff3e/JhJ1obVVWjrs2V2l34Wn
+         Blxjw+k011P5t1fzmrAB7amuknFjzbfpSvKf/cQvrbvi0AtKfrlFr/yNwJy9mVGLvEOb
+         NZxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683309198; x=1685901198;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WDCSv0avH4pfNfNeC0DOfI7drElfKwvWaAkxpPyXO/U=;
+        b=kkpzyaD4SE1y+0z6tRQd3n/Itr3AET04TiUlCruMsCsGIuA6MvMhCV6v7ESZ9K/nDX
+         g3dH9J5gYi10M1gXCG4e+ba6Pe7NWooGuQg16zPLdrTSFUq//+gRieoTjrTKf/+4gWj+
+         lLKKklH7UklkO1Tw9y6WovysfUzeDpW96IhIY6R9cRYki4rFACy33mm+B5BfFvEsPLlE
+         YP2ChCaLkLpZVG1RibuqujfgWCxvXvBYL2I+LHmxj9jFKgXkitJCn8uhYMonqrLgvn0D
+         mWRqJS96DtQhmt/8DhBQkBgfwe+yl55//MDwIAV5JGHZxxlpJBmP0cUKgAvc8rFytV0p
+         M1kA==
+X-Gm-Message-State: AC+VfDzaQCTVjCrvjhHVQzy4L7QgdIZRYi133TMPUW55ES6SBLlIWKbo
+        bu772q7JV0zcExn42JUuoaW2HQ==
+X-Google-Smtp-Source: ACHHUZ5b628M3V2IEGKahrsnnn1Vpsn6iI70y9x2AVaMedJcj0svHaUAy2+obEw0sOt1nmgZsXRzPA==
+X-Received: by 2002:a05:6402:884:b0:4fb:aa0a:5b72 with SMTP id e4-20020a056402088400b004fbaa0a5b72mr2015524edy.5.1683309198718;
+        Fri, 05 May 2023 10:53:18 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:52e:24ce:bbc1:127d? ([2a02:810d:15c0:828:52e:24ce:bbc1:127d])
+        by smtp.gmail.com with ESMTPSA id m18-20020aa7c2d2000000b0050bfeb15049sm2251324edp.60.2023.05.05.10.53.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 May 2023 10:53:17 -0700 (PDT)
+Message-ID: <883eca69-4ed9-d5cd-8408-13e90c287c08@linaro.org>
+Date:   Fri, 5 May 2023 19:53:15 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [PATCH v3 1/2] dt-bindings: dma: ti: Add J721S2 BCDMA
+Content-Language: en-US
+To:     Vaishnav Achath <vaishnav.a@ti.com>, peter.ujfalusi@gmail.com,
+        vigneshr@ti.com, vkoul@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org
+Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, u-kumar1@ti.com, j-choudhary@ti.com
+References: <20230505143929.28131-1-vaishnav.a@ti.com>
+ <20230505143929.28131-2-vaishnav.a@ti.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230505143929.28131-2-vaishnav.a@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,65 +77,17 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-J721S2 has dedicated BCDMA instance for Camera Serial Interface RX
-and TX. The BCDMA instance supports RX and TX channels but block copy
-channels are not present, add support for the same.
+On 05/05/2023 16:39, Vaishnav Achath wrote:
+> Add bindings for J721S2 BCDMA instance dedicated for Camera
+> Serial Interface. Unlike AM62A CSI BCDMA, this instance has RX
+> and TX channels but lacks block copy channels.
+> 
+> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
+> ---
+> 
 
-Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
----
- drivers/dma/ti/k3-udma.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index fc3a2a05ab7b..16c5c333808b 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -4308,6 +4308,15 @@ static struct udma_soc_data am62a_dmss_csi_soc_data = {
- 	},
- };
- 
-+static struct udma_soc_data j721s2_bcdma_csi_soc_data = {
-+	.oes = {
-+		.bcdma_tchan_data = 0x800,
-+		.bcdma_tchan_ring = 0xa00,
-+		.bcdma_rchan_data = 0xe00,
-+		.bcdma_rchan_ring = 0x1000,
-+	},
-+};
-+
- static struct udma_match_data am62a_bcdma_csirx_data = {
- 	.type = DMA_TYPE_BCDMA,
- 	.psil_base = 0x3100,
-@@ -4346,6 +4355,18 @@ static struct udma_match_data am64_pktdma_data = {
- 	},
- };
- 
-+static struct udma_match_data j721s2_bcdma_csi_data = {
-+	.type = DMA_TYPE_BCDMA,
-+	.psil_base = 0x2000,
-+	.enable_memcpy_support = false,
-+	.burst_size = {
-+		TI_SCI_RM_UDMAP_CHAN_BURST_SIZE_64_BYTES, /* Normal Channels */
-+		0, /* No H Channels */
-+		0, /* No UH Channels */
-+	},
-+	.soc_data = &j721s2_bcdma_csi_soc_data,
-+};
-+
- static const struct of_device_id udma_of_match[] = {
- 	{
- 		.compatible = "ti,am654-navss-main-udmap",
-@@ -4373,6 +4394,10 @@ static const struct of_device_id udma_of_match[] = {
- 		.compatible = "ti,am62a-dmss-bcdma-csirx",
- 		.data = &am62a_bcdma_csirx_data,
- 	},
-+	{
-+		.compatible = "ti,j721s2-dmss-bcdma-csi",
-+		.data = &j721s2_bcdma_csi_data,
-+	},
- 	{ /* Sentinel */ },
- };
- 
--- 
-2.17.1
+Best regards,
+Krzysztof
 

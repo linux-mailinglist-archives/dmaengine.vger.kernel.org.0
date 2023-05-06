@@ -2,143 +2,109 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9B386F8A24
-	for <lists+dmaengine@lfdr.de>; Fri,  5 May 2023 22:28:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A7096F9178
+	for <lists+dmaengine@lfdr.de>; Sat,  6 May 2023 13:18:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232050AbjEEU2C (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 5 May 2023 16:28:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57170 "EHLO
+        id S232427AbjEFLSW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 6 May 2023 07:18:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230144AbjEEU2B (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 5 May 2023 16:28:01 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDE6A40FB;
-        Fri,  5 May 2023 13:27:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683318479; x=1714854479;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=attubp1Y5SHGM2s6fxrjpGYDxEhvZVo+MggS/87KNmo=;
-  b=S0BIIfpSuK978Q+FSEQb84SjBLw4FRB/sdbeE0ywaWOmYS8b9kDlGDKy
-   Dxe1H/3odER7prUYg/cTQS1xpK4gcf0IjV23DyiyLM36fEqeuHpg/+vbg
-   64u0zIk1+YR0DUxCDQtxrUx2HnbSJxXe818iIMlvFqkFvkV+HJA5gWtAv
-   tKIC5OLs5Ck50m/q4BL69ePOHIMLzliIx5frb8UoNcnbTMCyR8ZaSSZWe
-   fc+lsPfddsgOG2vcZj/imvOm4/byvxizkFjfN3a1CT0DKj2lHrfHzL+e7
-   sSkFpQyyMHpyrg59YnsaOprVSL/XnvTkDrEKfuXZzEb4p4lTjz+0elaeT
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10701"; a="338495577"
-X-IronPort-AV: E=Sophos;i="5.99,253,1677571200"; 
-   d="scan'208";a="338495577"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2023 13:27:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10701"; a="767259577"
-X-IronPort-AV: E=Sophos;i="5.99,253,1677571200"; 
-   d="scan'208";a="767259577"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2023 13:27:39 -0700
-Date:   Fri, 5 May 2023 13:32:02 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Baolu Lu <baolu.lu@linux.intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Joerg Roedel <joro@8bytes.org>, dmaengine@vger.kernel.org,
-        vkoul@kernel.org, Will Deacon <will@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Zanussi, Tom" <tom.zanussi@intel.com>,
-        narayan.ranganathan@intel.com, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v5 6/7] iommu/vt-d: Implement set_dev_pasid domain op
-Message-ID: <20230505133202.094bf8be@jacob-builder>
-In-Reply-To: <35ceffc2-e306-6215-e90a-43548f6feca6@linux.intel.com>
-References: <20230427174937.471668-1-jacob.jun.pan@linux.intel.com>
-        <20230427174937.471668-7-jacob.jun.pan@linux.intel.com>
-        <76c98e62-1cac-2ab6-7721-08ec2c1fceb8@linux.intel.com>
-        <20230504160334.496085db@jacob-builder>
-        <35ceffc2-e306-6215-e90a-43548f6feca6@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        with ESMTP id S232374AbjEFLSM (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 6 May 2023 07:18:12 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08CD472BC
+        for <dmaengine@vger.kernel.org>; Sat,  6 May 2023 04:16:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1683371813;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Qy7lDPZv9XVIVeoAE9BllecWVloA7NmDgrIr51rk+t0=;
+        b=N2QlYYzDOld/XWiqQByhjOw+MZrnj6MnVexMXjwxNGclAVFJ8ijLGRZQrSuK/oeymmea8o
+        CitTvFHxb7+BldcsL0pvaaS3fXByCA7XUBFKQ93HKQZBy7nmArN4pPSFGf9O9EymCmGaCE
+        aUnQfoTOhgp0q6wCQHKbdpACJLwMxNA=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-155-ju83Lpg3MyaunKYUwqTUig-1; Sat, 06 May 2023 07:16:47 -0400
+X-MC-Unique: ju83Lpg3MyaunKYUwqTUig-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 161E4380664E;
+        Sat,  6 May 2023 11:16:47 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-46.pek2.redhat.com [10.72.12.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B51692166B31;
+        Sat,  6 May 2023 11:16:41 +0000 (UTC)
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, schnelle@linux.ibm.com,
+        linux-s390@vger.kernel.org, Baoquan He <bhe@redhat.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dmaengine@vger.kernel.org
+Subject: [PATCH RESEND 2/2] dmaengine: make QCOM_HIDMA depend on HAS_IOMEM
+Date:   Sat,  6 May 2023 19:16:28 +0800
+Message-Id: <20230506111628.712316-3-bhe@redhat.com>
+In-Reply-To: <20230506111628.712316-1-bhe@redhat.com>
+References: <20230506111628.712316-1-bhe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Baolu,
+On s390 systems (aka mainframes), it has classic channel devices for
+networking and permanent storage that are currently even more common
+than PCI devices. Hence it could have a fully functional s390 kernel
+with CONFIG_PCI=n, then the relevant iomem mapping functions
+[including ioremap(), devm_ioremap(), etc.] are not available.
 
-On Fri, 5 May 2023 10:58:38 +0800, Baolu Lu <baolu.lu@linux.intel.com>
-wrote:
+Here let QCOM_HIDMA depend on HAS_IOMEM so that it won't be built to
+cause below compiling error if PCI is unset.
 
-> On 5/5/23 7:03 AM, Jacob Pan wrote:
-> >>> +static int intel_iommu_attach_device_pasid(struct iommu_domain
-> >>> *domain,
-> >>> +					   struct device *dev,
-> >>> ioasid_t pasid) +{
-> >>> +	struct device_domain_info *info = dev_iommu_priv_get(dev);
-> >>> +	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
-> >>> +	struct intel_iommu *iommu = info->iommu;
-> >>> +	int ret;
-> >>> +
-> >>> +	if (!pasid_supported(iommu))
-> >>> +		return -ENODEV;
-> >>> +
-> >>> +	ret = prepare_domain_attach_device(domain, dev);
-> >>> +	if (ret)
-> >>> +		return ret;
-> >>> +
-> >>> +	/*
-> >>> +	 * Most likely the device context has already been set up,
-> >>> will only
-> >>> +	 * take a domain ID reference. Otherwise, device context will
-> >>> be set
-> >>> +	 * up here.  
-> >> The "otherwise" case is only default domain deferred attaching case,
-> >> right?  
-> > it might be the only case so far, but my intention is to be general.
-> > i.e. no ordering requirements. I believe it is more future proof in case
-> > device_attach_pasid called before device_attach.  
-> 
-> Let's put aside deferred attach and talk about it later.
-> 
-> The device's context entry is configured when the default domain is
-> being attached to the device. And, the default domain attaching is in
-> the iommu probe_device path. It always happens before set_device_pasid
-> which is designed to be called by the device driver. So the real
-> situation is that when the device driver calls set_device_pasid, the
-> context entry should already have been configured.
-> 
-> Then let's pick up the deferred attach case. It is a workaround for
-> kdump (Documentation/admin-guide/kdump/kdump.rst). I don't think PASID
-> feature is functionally required by any kdump capture kernel as its
-> main purpose is to dump the memory of a panic kernel.
-> 
-> In summary, it seems to be reasonable for the vt-d driver to return
-> -EBUSY when a device's context was copied. The idxd driver should
-> continue to work without kernel DMA with PASID support.
-> 
-> 	if (context_copied(iommu, bus, devfn))
-> 		return -EBUSY;
-> 
-> Make things general is always good, but this doesn't mean that we need
-> to make the code complex to support cases that do not exist or are not
-> used. Thoughts?
-> 
-Good point, it is better not put dead code in. Let me also document this
-behavior for future change that may affect the ordering requirement.
+--------------------------------------------------------
+ld: drivers/dma/qcom/hidma.o: in function `hidma_probe':
+hidma.c:(.text+0x4b46): undefined reference to `devm_ioremap_resource'
+ld: hidma.c:(.text+0x4b9e): undefined reference to `devm_ioremap_resource'
+make[1]: *** [scripts/Makefile.vmlinux:35: vmlinux] Error 1
+make: *** [Makefile:1264: vmlinux] Error 2
 
-Thanks,
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: dmaengine@vger.kernel.org
+---
+ drivers/dma/qcom/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Jacob
+diff --git a/drivers/dma/qcom/Kconfig b/drivers/dma/qcom/Kconfig
+index 3f926a653bd8..ace75d7b835a 100644
+--- a/drivers/dma/qcom/Kconfig
++++ b/drivers/dma/qcom/Kconfig
+@@ -45,6 +45,7 @@ config QCOM_HIDMA_MGMT
+ 
+ config QCOM_HIDMA
+ 	tristate "Qualcomm Technologies HIDMA Channel support"
++	depends on HAS_IOMEM
+ 	select DMA_ENGINE
+ 	help
+ 	  Enable support for the Qualcomm Technologies HIDMA controller.
+-- 
+2.34.1
+

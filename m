@@ -2,42 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB9816FB7F8
-	for <lists+dmaengine@lfdr.de>; Mon,  8 May 2023 22:07:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1AB86FB7FB
+	for <lists+dmaengine@lfdr.de>; Mon,  8 May 2023 22:07:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233728AbjEHUH4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 8 May 2023 16:07:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50666 "EHLO
+        id S233791AbjEHUH5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 8 May 2023 16:07:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233401AbjEHUHq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 8 May 2023 16:07:46 -0400
+        with ESMTP id S233514AbjEHUHr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 8 May 2023 16:07:47 -0400
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DEEB559B;
-        Mon,  8 May 2023 13:07:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3925959FF;
+        Mon,  8 May 2023 13:07:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683576465; x=1715112465;
+  t=1683576467; x=1715112467;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=eqtH9QJadtpRCN96NHklw3EbhVbQBfowJXO3N8XcXZc=;
-  b=b4Zc32szSNkVpU6sISUq5N/MQe/Am9wTVzdMfm/Febtn3Hg1f/kQUnkQ
-   H/TIYA8NOZO3hV44qV2DolxwYJ4z3xnTnC77lmDZTYEvkBdOaKUSXkknx
-   PN8M+COJAGSsnNc1XEXOATRC7K3G5rn0iI/S1vOmCAR7GgxsZrUt0JsFH
-   /T7vhN65PynEJRtC/pWjceU2jL16OqcwRYPTR8hZO5CITe+js4ACHz4W+
-   snfVqL8lhkFu4EUMtu049kbJfti6jTpYPg3LX5OQIZrPRi9ZGuvVKZLuN
-   TcT+x9yny12Giz7eny51XxE3gf1C5OMMyatqSkEJbER5G9V5/dpnpiz3n
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="348573616"
+  bh=j3IZVcJECFbyMWLrGNlFQPmLKRsGPfVxfHL1YGVHaIQ=;
+  b=dxU4gPhXpjprQ71A0wPb2zGeVxFWzKM8cmCIfyro4phJcolhQjL6L3Qk
+   kj0seCysNhlGTW+P1Q4Tb3g4yeIebL2IS9XzDD1k/2F0+ynhw0K0lwLOg
+   3q77gt1aISV0rrSnbLBmijayGgVyTG8sKVYaB9vpLDzRnmJF7y3ZdFLoX
+   Gz+1yyQ78OiCQwlAMGmqcrrIVmb5dbd1XfM/vhdPBXsWn3wLO+mZCHR6H
+   rQ3sN9uDsabtR6BfWTve5sJmEgvQIqFfH5oo1O9TUACYUJ8fGv2b5VEFg
+   BNkGMw1a5/LeKYfRwVggQpyZxsq7EyQWFyhAh1uSe2zzTrBeqpPi+xJny
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="348573624"
 X-IronPort-AV: E=Sophos;i="5.99,259,1677571200"; 
-   d="scan'208";a="348573616"
+   d="scan'208";a="348573624"
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:07:45 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:07:47 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="788241620"
+X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="788241624"
 X-IronPort-AV: E=Sophos;i="5.99,259,1677571200"; 
-   d="scan'208";a="788241620"
+   d="scan'208";a="788241624"
 Received: from sajmal-mobl1.amr.corp.intel.com (HELO tzanussi-mobl1.intel.com) ([10.212.74.4])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:07:44 -0700
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:07:45 -0700
 From:   Tom Zanussi <tom.zanussi@linux.intel.com>
 To:     herbert@gondor.apana.org.au, davem@davemloft.net,
         fenghua.yu@intel.com, vkoul@kernel.org
@@ -46,9 +46,9 @@ Cc:     dave.jiang@intel.com, tony.luck@intel.com,
         kanchana.p.sridhar@intel.com, giovanni.cabiddu@intel.com,
         linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
         dmaengine@vger.kernel.org
-Subject: [PATCH v4 02/15] dmaengine: idxd: add external module driver support for dsa_bus_type
-Date:   Mon,  8 May 2023 15:07:24 -0500
-Message-Id: <034196c4edbc78b367c72eca1dece0d7201df13d.1683573703.git.zanussi@kernel.org>
+Subject: [PATCH v4 03/15] dmaengine: idxd: Export drv_enable/disable and related functions
+Date:   Mon,  8 May 2023 15:07:25 -0500
+Message-Id: <8fe2bc424a5eb4c2253c40477d85f4e4df67f10f.1683573703.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1683573703.git.zanussi@kernel.org>
 References: <cover.1683573703.git.zanussi@kernel.org>
@@ -64,54 +64,35 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Dave Jiang <dave.jiang@intel.com>
+To allow idxd sub-drivers to enable and disable wqs, export them.
 
-Add support to allow an external driver to be registered to the
-dsa_bus_type and also auto-loaded.
-
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- drivers/dma/idxd/bus.c  | 6 ++++++
- drivers/dma/idxd/idxd.h | 3 +++
- 2 files changed, 9 insertions(+)
+ drivers/dma/idxd/device.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/dma/idxd/bus.c b/drivers/dma/idxd/bus.c
-index 6f84621053c6..0c9e689a2e77 100644
---- a/drivers/dma/idxd/bus.c
-+++ b/drivers/dma/idxd/bus.c
-@@ -67,11 +67,17 @@ static void idxd_config_bus_remove(struct device *dev)
- 	idxd_drv->remove(idxd_dev);
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index 5f321f3b4242..af1aa88a66c1 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -1406,6 +1406,7 @@ int drv_enable_wq(struct idxd_wq *wq)
+ err:
+ 	return rc;
  }
++EXPORT_SYMBOL_NS_GPL(drv_enable_wq, IDXD);
  
-+static int idxd_bus_uevent(const struct device *dev, struct kobj_uevent_env *env)
-+{
-+	return add_uevent_var(env, "MODALIAS=" IDXD_DEVICES_MODALIAS_FMT, 0);
-+}
-+
- struct bus_type dsa_bus_type = {
- 	.name = "dsa",
- 	.match = idxd_config_bus_match,
- 	.probe = idxd_config_bus_probe,
- 	.remove = idxd_config_bus_remove,
-+	.uevent = idxd_bus_uevent,
- };
- EXPORT_SYMBOL_GPL(dsa_bus_type);
- 
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index a83aecf11a01..193552dea224 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -589,6 +589,9 @@ static inline int idxd_wq_driver_name_match(struct idxd_wq *wq, struct device *d
- 	return (strncmp(wq->driver_name, dev->driver->name, strlen(dev->driver->name)) == 0);
+ void drv_disable_wq(struct idxd_wq *wq)
+ {
+@@ -1427,6 +1428,7 @@ void drv_disable_wq(struct idxd_wq *wq)
+ 	wq->type = IDXD_WQT_NONE;
+ 	wq->client_count = 0;
  }
++EXPORT_SYMBOL_NS_GPL(drv_disable_wq, IDXD);
  
-+#define MODULE_ALIAS_IDXD_DEVICE(type) MODULE_ALIAS("idxd:t" __stringify(type) "*")
-+#define IDXD_DEVICES_MODALIAS_FMT "idxd:t%d"
-+
- int __must_check __idxd_driver_register(struct idxd_device_driver *idxd_drv,
- 					struct module *module, const char *mod_name);
- #define idxd_driver_register(driver) \
+ int idxd_device_drv_probe(struct idxd_dev *idxd_dev)
+ {
 -- 
 2.34.1
 

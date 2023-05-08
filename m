@@ -2,42 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FE9D6FB7FE
-	for <lists+dmaengine@lfdr.de>; Mon,  8 May 2023 22:08:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88A016FB801
+	for <lists+dmaengine@lfdr.de>; Mon,  8 May 2023 22:08:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233710AbjEHUIA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 8 May 2023 16:08:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50986 "EHLO
+        id S233894AbjEHUIB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 8 May 2023 16:08:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233715AbjEHUH4 (ORCPT
+        with ESMTP id S233726AbjEHUH4 (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Mon, 8 May 2023 16:07:56 -0400
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 076805BAA;
-        Mon,  8 May 2023 13:07:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C357459F8;
+        Mon,  8 May 2023 13:07:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683576469; x=1715112469;
+  t=1683576470; x=1715112470;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=yHOF6DrEvuRACHmnKROaRDudHiYk2POqQye99IoY3vM=;
-  b=FnID8r0foLVAZy0mytCfB1LROjdNnJfy4fEznnMKedn5k0mETbzdvNQ0
-   +E6HbGtJPKPou/giiu1b3MsXNjAKjNJfzlfkLrzfgC7Yb6sma3B4kSDfw
-   hXi4bG7A3yQYKMKwV4GC/1V64ve13ll3zZWOu+Ja0+adBWY3TfPmXiVGm
-   7hC0XMn9YJqiOKm/rmCuq382DtyBnynqTVLAtZ9VwDadtNQjgQCzLOHWx
-   +oIr+xvzILMqAj9z/DLmvkw9gwcxFRERfr4vENIoNYyXADrXKLGw53XAi
-   dmvzc5rtPk9U3nfb53+FDiU7BoyonPWCtxGhL6owHltOxEmeIm0Txnf2K
+  bh=XQ1zGv9JKYUAvlq2H9+30zI4fnNsJOWmds2DkhxoNrs=;
+  b=noOwMRwav3sikwndBeDcikFQW/Scbyzyh0kxrLo4K/wR8N0qPiph7m28
+   ao1fhTdjah/HEq7/P7So18Ncq/y/7IABo16aO79zZx01ie8qS1HcSC5QY
+   RfNrSqUV4LyYch/z+9G65ok3OdTopRv5P2B4EldhaeNiqjtIpDuYVoqgu
+   ANhGkT61fNO/115l1yS3dZUTLjlS1lLXGfNrYEBclo91d2tGuJtZGM7P0
+   Vvp+GhOcwaPAko1zpwl4C4QPPxu3Ds2ooCmBjib6iUjGF0GIYihxrAYLA
+   ZHLV12satlOvm3/NX+vjkdGYm5OuUknudWxUGiu4fGcbfwxq6wKB8zDsS
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="348573631"
+X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="348573639"
 X-IronPort-AV: E=Sophos;i="5.99,259,1677571200"; 
-   d="scan'208";a="348573631"
+   d="scan'208";a="348573639"
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:07:48 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:07:50 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="788241629"
+X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="788241634"
 X-IronPort-AV: E=Sophos;i="5.99,259,1677571200"; 
-   d="scan'208";a="788241629"
+   d="scan'208";a="788241634"
 Received: from sajmal-mobl1.amr.corp.intel.com (HELO tzanussi-mobl1.intel.com) ([10.212.74.4])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:07:47 -0700
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:07:49 -0700
 From:   Tom Zanussi <tom.zanussi@linux.intel.com>
 To:     herbert@gondor.apana.org.au, davem@davemloft.net,
         fenghua.yu@intel.com, vkoul@kernel.org
@@ -46,9 +46,9 @@ Cc:     dave.jiang@intel.com, tony.luck@intel.com,
         kanchana.p.sridhar@intel.com, giovanni.cabiddu@intel.com,
         linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
         dmaengine@vger.kernel.org
-Subject: [PATCH v4 04/15] dmaengine: idxd: Export descriptor management functions
-Date:   Mon,  8 May 2023 15:07:26 -0500
-Message-Id: <aaa07cc4203310ced305af34728c857a2caa1e7a.1683573703.git.zanussi@kernel.org>
+Subject: [PATCH v4 05/15] dmaengine: idxd: Export wq resource management functions
+Date:   Mon,  8 May 2023 15:07:27 -0500
+Message-Id: <4037f6839b847cd65b48381e491f0f14e05fa9ff.1683573703.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1683573703.git.zanussi@kernel.org>
 References: <cover.1683573703.git.zanussi@kernel.org>
@@ -64,41 +64,60 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-To allow idxd sub-drivers to access the descriptor management
+To allow idxd sub-drivers to access the wq resource management
 functions, export them.
 
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- drivers/dma/idxd/submit.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/dma/idxd/device.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/dma/idxd/submit.c b/drivers/dma/idxd/submit.c
-index c01db23e3333..5e651e216094 100644
---- a/drivers/dma/idxd/submit.c
-+++ b/drivers/dma/idxd/submit.c
-@@ -61,6 +61,7 @@ struct idxd_desc *idxd_alloc_desc(struct idxd_wq *wq, enum idxd_op_type optype)
- 
- 	return __get_desc(wq, idx, cpu);
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index af1aa88a66c1..7837d0a56314 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -161,6 +161,7 @@ int idxd_wq_alloc_resources(struct idxd_wq *wq)
+ 	free_hw_descs(wq);
+ 	return rc;
  }
-+EXPORT_SYMBOL_NS_GPL(idxd_alloc_desc, IDXD);
++EXPORT_SYMBOL_NS_GPL(idxd_wq_alloc_resources, IDXD);
  
- void idxd_free_desc(struct idxd_wq *wq, struct idxd_desc *desc)
+ void idxd_wq_free_resources(struct idxd_wq *wq)
  {
-@@ -69,6 +70,7 @@ void idxd_free_desc(struct idxd_wq *wq, struct idxd_desc *desc)
- 	desc->cpu = -1;
- 	sbitmap_queue_clear(&wq->sbq, desc->id, cpu);
+@@ -174,6 +175,7 @@ void idxd_wq_free_resources(struct idxd_wq *wq)
+ 	dma_free_coherent(dev, wq->compls_size, wq->compls, wq->compls_addr);
+ 	sbitmap_queue_free(&wq->sbq);
  }
-+EXPORT_SYMBOL_NS_GPL(idxd_free_desc, IDXD);
++EXPORT_SYMBOL_NS_GPL(idxd_wq_free_resources, IDXD);
  
- static struct idxd_desc *list_abort_desc(struct idxd_wq *wq, struct idxd_irq_entry *ie,
- 					 struct idxd_desc *desc)
-@@ -215,3 +217,4 @@ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
- 	percpu_ref_put(&wq->wq_active);
+ int idxd_wq_enable(struct idxd_wq *wq)
+ {
+@@ -422,6 +424,7 @@ int idxd_wq_init_percpu_ref(struct idxd_wq *wq)
+ 	reinit_completion(&wq->wq_resurrect);
  	return 0;
  }
-+EXPORT_SYMBOL_NS_GPL(idxd_submit_desc, IDXD);
++EXPORT_SYMBOL_NS_GPL(idxd_wq_init_percpu_ref, IDXD);
+ 
+ void __idxd_wq_quiesce(struct idxd_wq *wq)
+ {
+@@ -431,6 +434,7 @@ void __idxd_wq_quiesce(struct idxd_wq *wq)
+ 	complete_all(&wq->wq_resurrect);
+ 	wait_for_completion(&wq->wq_dead);
+ }
++EXPORT_SYMBOL_NS_GPL(__idxd_wq_quiesce, IDXD);
+ 
+ void idxd_wq_quiesce(struct idxd_wq *wq)
+ {
+@@ -438,6 +442,7 @@ void idxd_wq_quiesce(struct idxd_wq *wq)
+ 	__idxd_wq_quiesce(wq);
+ 	mutex_unlock(&wq->wq_lock);
+ }
++EXPORT_SYMBOL_NS_GPL(idxd_wq_quiesce, IDXD);
+ 
+ /* Device control bits */
+ static inline bool idxd_is_enabled(struct idxd_device *idxd)
 -- 
 2.34.1
 

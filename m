@@ -2,123 +2,134 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C29436FB90B
-	for <lists+dmaengine@lfdr.de>; Mon,  8 May 2023 22:56:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E440A6FBA59
+	for <lists+dmaengine@lfdr.de>; Mon,  8 May 2023 23:57:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233787AbjEHU43 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 8 May 2023 16:56:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49230 "EHLO
+        id S233831AbjEHV5U convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Mon, 8 May 2023 17:57:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230168AbjEHU41 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 8 May 2023 16:56:27 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8AF986BD;
-        Mon,  8 May 2023 13:56:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683579370; x=1715115370;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=QFP9WhtbudiCSMqQuH58GiD4k9Fn38XJ8vfoggmT+YM=;
-  b=V5MUXSN/n/e412Wxu9pnrAonkIJkS+DOcagxLBGTEvbbpQ1QaIPU0T2h
-   yq/Yme2IAXBTqlEcGigLgBoeVOx3jb1hXJ+k/rncbV0o3GgHKGvLoeaT3
-   Sz26fMAIwkGpKgewGhAK0azIfhuS03ykN4mbTCauwaMvWaVZi2pq29f5G
-   t2dNRmijpqKa3UMNUc63uUQStBGOheKfaDvtHS/fAhtV3zIIDkG8b9FTe
-   JldvZWLnPr/h+KlOzpvaCTPbZHSz/ro9Heg62TAt1TXz+dspEjWqD3l6p
-   OgPJkEL2q0hxFsig4v1W1Mb0Jy32YPdENdy5iGPznsS5qKUJ5oU0P8i82
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="413017336"
-X-IronPort-AV: E=Sophos;i="5.99,259,1677571200"; 
-   d="scan'208";a="413017336"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:55:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10704"; a="872921730"
-X-IronPort-AV: E=Sophos;i="5.99,259,1677571200"; 
-   d="scan'208";a="872921730"
-Received: from aadepoju-mobl1.amr.corp.intel.com ([10.212.34.185])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 13:55:56 -0700
-Message-ID: <5c2f8cd03b03627ca726ca2782887e501827ea7b.camel@linux.intel.com>
-Subject: Re: [PATCH v4 06/15] dmaengine: idxd: Add wq private data accessors
-From:   Tom Zanussi <tom.zanussi@linux.intel.com>
-To:     Dave Jiang <dave.jiang@intel.com>, herbert@gondor.apana.org.au,
-        davem@davemloft.net, fenghua.yu@intel.com, vkoul@kernel.org
-Cc:     tony.luck@intel.com, wajdi.k.feghali@intel.com,
-        james.guilford@intel.com, kanchana.p.sridhar@intel.com,
-        giovanni.cabiddu@intel.com, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org
-Date:   Mon, 08 May 2023 15:55:55 -0500
-In-Reply-To: <2618f557-01a5-f76b-ad09-6eb0871cdf00@intel.com>
-References: <cover.1683573703.git.zanussi@kernel.org>
-         <038db785a87dc59c0073989633eee0205958cb67.1683573703.git.zanussi@kernel.org>
-         <2618f557-01a5-f76b-ad09-6eb0871cdf00@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.1-0ubuntu1 
+        with ESMTP id S233835AbjEHV5T (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 8 May 2023 17:57:19 -0400
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 455271721;
+        Mon,  8 May 2023 14:57:15 -0700 (PDT)
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6439df6c268so2811722b3a.0;
+        Mon, 08 May 2023 14:57:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683583035; x=1686175035;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Nr1Zb6Ozywk7OVF4mmQ0nbkLri6483J5psmZMkp9VDE=;
+        b=TMFDRIjkvtXVCXBuaJUOULkN+1LUbCEudijsoxnX7vthCc3Jx1/n06KLm+uLJkv1A9
+         jLGGJl3mefeMvoXEUWjWGEZsxe7rpUIoRjoRu0jk+txTEgO1eno5SCFTw1fXfJI2eaDB
+         jzv3FTZ9PSVa56rokIwjUu33duzXs/Am8o5vuxBGySo97d5QQhTlDRsKaa0aO6Ma5hvH
+         IyENyy6Q1FL4sERJEIZRm1CSXaJxN3W5tl3Hm6k7dkWqHmrh3GzK3eNhBpmttbW8Fi6j
+         1vVnBSHDEtFf+hFQJxXTJfCVruNYuy23Nie6nPPRGrIgambnZ8gJStl6s7n16gqx8TYZ
+         lsoA==
+X-Gm-Message-State: AC+VfDzPGxwnsKhcHkc9EK/U5nHJWzosK84wu37VL3wmXA6O4gfoQ+SI
+        vYy85ecDZ1D/r3Sq91aPjAkxpx9D+3rUSw==
+X-Google-Smtp-Source: ACHHUZ4tmxB4rSam8sD0aXWYGzOrZuBXAB3fu1o2Ht0Y3lvfZX53viwZJ/q4lq99vIdeBO0T4uDjxA==
+X-Received: by 2002:a05:6a21:7898:b0:101:167d:8472 with SMTP id bf24-20020a056a21789800b00101167d8472mr1720812pzc.26.1683583035227;
+        Mon, 08 May 2023 14:57:15 -0700 (PDT)
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com. [209.85.214.179])
+        by smtp.gmail.com with ESMTPSA id i6-20020a17090aa90600b0024e262feac1sm10223415pjq.23.2023.05.08.14.57.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 May 2023 14:57:15 -0700 (PDT)
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1aaea43def7so34646075ad.2;
+        Mon, 08 May 2023 14:57:13 -0700 (PDT)
+X-Received: by 2002:a17:903:1247:b0:1ac:3605:97ec with SMTP id
+ u7-20020a170903124700b001ac360597ecmr15056103plh.62.1683583033433; Mon, 08
+ May 2023 14:57:13 -0700 (PDT)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20230310224128.2638078-1-u.kleine-koenig@pengutronix.de>
+ <20230412171056.xcluewbuyytm77yp@pengutronix.de> <AM0PR04MB6289BB9BA4BC0B398F2989108F9B9@AM0PR04MB6289.eurprd04.prod.outlook.com>
+ <20230413060004.t55sqmfxqtnejvkc@pengutronix.de> <20230508134300.s36d6k4e25f6ubg4@pengutronix.de>
+In-Reply-To: <20230508134300.s36d6k4e25f6ubg4@pengutronix.de>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Mon, 8 May 2023 16:57:00 -0500
+X-Gmail-Original-Message-ID: <CADRPPNQ0QiLzzKhHon62haPJCanDoN=B4QsWCxunJTc4wXwMaA@mail.gmail.com>
+Message-ID: <CADRPPNQ0QiLzzKhHon62haPJCanDoN=B4QsWCxunJTc4wXwMaA@mail.gmail.com>
+Subject: Re: [PATCH 0/6] bus: fsl-mc: Make remove function return void
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Gaurav Jain <gaurav.jain@nxp.com>,
+        Roy Pledge <roy.pledge@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "Diana Madalina Craciun (OSS)" <diana.craciun@oss.nxp.com>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Pankaj Gupta <pankaj.gupta@nxp.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "Y.B. Lu" <yangbo.lu@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, 2023-05-08 at 13:43 -0700, Dave Jiang wrote:
->=20
->=20
-> On 5/8/23 1:07 PM, Tom Zanussi wrote:
-> > Add the accessors set_idxd_wq_private() and idxd_wq_private()
-> > allowing
-> > users to set and retrieve a private void * associated with an
-> > idxd_wq.
-> >=20
-> > The private data is stored in the idxd_dev.conf_dev associated with
-> > each idxd_wq.
-> >=20
-> > Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-> > ---
-> > =C2=A0 drivers/dma/idxd/idxd.h | 10 ++++++++++
-> > =C2=A0 1 file changed, 10 insertions(+)
-> >=20
-> > diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-> > index 193552dea224..71cd4ca7d27a 100644
-> > --- a/drivers/dma/idxd/idxd.h
-> > +++ b/drivers/dma/idxd/idxd.h
-> > @@ -552,6 +552,16 @@ static inline int idxd_wq_refcount(struct
-> > idxd_wq *wq)
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return wq->client_count=
-;
-> > =C2=A0 };
-> > =C2=A0=20
-> > +static inline void set_idxd_wq_private(struct idxd_wq *wq, void
-> > *private)
->=20
-> I would go with the same kernel naming convention:
->=20
-> idxd_wq_set_private() and idxd_wq_get_private()?
+On Mon, May 8, 2023 at 8:44 AM Uwe Kleine-König
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello Leo,
+>
+> On Thu, Apr 13, 2023 at 08:00:04AM +0200, Uwe Kleine-König wrote:
+> > On Wed, Apr 12, 2023 at 09:30:05PM +0000, Leo Li wrote:
+> > > > On Fri, Mar 10, 2023 at 11:41:22PM +0100, Uwe Kleine-König wrote:
+> > > > > Hello,
+> > > > >
+> > > > > many bus remove functions return an integer which is a historic
+> > > > > misdesign that makes driver authors assume that there is some kind of
+> > > > > error handling in the upper layers. This is wrong however and
+> > > > > returning and error code only yields an error message.
+> > > > >
+> > > > > This series improves the fsl-mc bus by changing the remove callback to
+> > > > > return no value instead. As a preparation all drivers are changed to
+> > > > > return zero before so that they don't trigger the error message.
+> > > >
+> > > > Who is supposed to pick up this patch series (or point out a good reason for
+> > > > not taking it)?
+> > >
+> > > Previously Greg KH picked up MC bus patches.
+> > >
+> > > If no one is picking up them this time, I probably can take it through
+> > > the fsl soc tree.
+> >
+> > I guess Greg won't pick up this series as he didn't get a copy of it :-)
+> >
+> > Browsing through the history of drivers/bus/fsl-mc there is no
+> > consistent maintainer to see. So if you can take it, that's very
+> > appreciated.
+>
+> My mail was meant encouraging, maybe it was too subtile? I'll try again:
+>
+> Yes, please apply, that would be wonderful!
 
+Sorry for missing your previous email.  I will do that.  Thanks.
 
-Yeah, makes sense, will change.
-
-Thanks,
-
-Tom
-
-> > +{
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_set_drvdata(wq_confdev(w=
-q), private);
-> > +}
-> > +
-> > +static inline void *idxd_wq_private(struct idxd_wq *wq)
-> > +{
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return dev_get_drvdata(wq_co=
-nfdev(wq));
-> > +}
-> > +
-> > =C2=A0 /*
-> > =C2=A0=C2=A0 * Intel IAA does not support batch processing.
-> > =C2=A0=C2=A0 * The max batch size of device, max batch size of wq and
-
+Regards,
+Leo

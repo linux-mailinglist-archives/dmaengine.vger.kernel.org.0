@@ -2,202 +2,148 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9420F6FAF93
-	for <lists+dmaengine@lfdr.de>; Mon,  8 May 2023 14:02:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBBFF6FB1E3
+	for <lists+dmaengine@lfdr.de>; Mon,  8 May 2023 15:43:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234094AbjEHMB6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 8 May 2023 08:01:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35982 "EHLO
+        id S233973AbjEHNni (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 8 May 2023 09:43:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234074AbjEHMB0 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 8 May 2023 08:01:26 -0400
-Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D717B4C9AA
-        for <dmaengine@vger.kernel.org>; Mon,  8 May 2023 04:59:06 -0700 (PDT)
-Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-55a64f0053fso65966317b3.3
-        for <dmaengine@vger.kernel.org>; Mon, 08 May 2023 04:59:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683547143; x=1686139143;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QIowkfIi/w2/lZ9wY1KVia8iKFoETo3oMoKgAYwhoeg=;
-        b=CUXUoK5y3HKeeFBmYl0RX9X0y83y8VWqHwJiui8cI4DkfLD1RiJUf/RSH2G80oDA28
-         /1foKFJRT2NsXFxLDP0E63bplVXdaFRFYas+EABmp3j9ck3kuP8NsKeaCY6USAeu57G5
-         dQqStiBALTt5xf+aiA/UxCCkSxntt+2yJoyq4CtS/p0AHMbK5pANnniFF3vYIj0hz5B9
-         Aya9gvzS6N9ooDUX+hfozUwDxoOKaL7qHu3GxCChRyDSvazQENY0VgvZ9kP0Dh050Ljz
-         CdTu8KB4gpmMw7DuVtRr4XEPyyTwRR5Ck05T3qSP5O3q/MbTrmzP64bF4OAhZJRMHKM8
-         RnCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683547143; x=1686139143;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QIowkfIi/w2/lZ9wY1KVia8iKFoETo3oMoKgAYwhoeg=;
-        b=fgfDcHGpsMKrXcje+IWFykHkCuXXcqDejZpxdBQEiehG0Dw53Fmxa3SEMOG0v8O2P8
-         RmLUT9PScp3CcpWAs1j5pPGe82uoT0h6V470M5nWSRDAbYfbH44emmOlD4BEz7vVwHjb
-         JfQWvndZb1mCRRkcttpO0K8Ud/5ID/ln2bI8ZUYcF8rBp2Bduk8bAe9wxbBRLjL8Elye
-         7KOSwXAc5KKdO9VBNxkO6TPGU1mwx+tc/do6SYxZK5wPZVnOBm/Exths9dligTmbgY6X
-         OvoKc2FsRPX7vB+PdBJGuSWhWB9zEHucjPWV2l46neVNe0yFRaAWJQmpr2wuMul4ASk1
-         +aiA==
-X-Gm-Message-State: AC+VfDyYZD+njrK3z8rEcBlKty0HZb3AIJ58Ajs5Gmp/z2dBf7mNLGe7
-        qZPEnWK96QLium1CCoUPu7guoOWNrvXwp6W19CHYeg==
-X-Google-Smtp-Source: ACHHUZ6HUZVug7ZDRRKUd20kN2DYD1F/ilVsXiwLgoLzYKoGNVYq9ZU6JXNMvLJltqVpFR6OojeV1Uz99EAQLmyEqUY=
-X-Received: by 2002:a81:a1c9:0:b0:559:f85e:44e8 with SMTP id
- y192-20020a81a1c9000000b00559f85e44e8mr11335498ywg.29.1683547143242; Mon, 08
- May 2023 04:59:03 -0700 (PDT)
+        with ESMTP id S234124AbjEHNng (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 8 May 2023 09:43:36 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E7201A489
+        for <dmaengine@vger.kernel.org>; Mon,  8 May 2023 06:43:35 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pw18s-0001YG-LV; Mon, 08 May 2023 15:43:06 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pw18n-0020ex-GE; Mon, 08 May 2023 15:43:01 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pw18m-002RT6-Eg; Mon, 08 May 2023 15:43:00 +0200
+Date:   Mon, 8 May 2023 15:43:00 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Leo Li <leoyang.li@nxp.com>
+Cc:     Stuart Yoder <stuyoder@gmail.com>,
+        Gaurav Jain <gaurav.jain@nxp.com>,
+        Roy Pledge <roy.pledge@nxp.com>,
+        "Diana Madalina Craciun (OSS)" <diana.craciun@oss.nxp.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Pankaj Gupta <pankaj.gupta@nxp.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "Y.B. Lu" <yangbo.lu@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 0/6] bus: fsl-mc: Make remove function return void
+Message-ID: <20230508134300.s36d6k4e25f6ubg4@pengutronix.de>
+References: <20230310224128.2638078-1-u.kleine-koenig@pengutronix.de>
+ <20230412171056.xcluewbuyytm77yp@pengutronix.de>
+ <AM0PR04MB6289BB9BA4BC0B398F2989108F9B9@AM0PR04MB6289.eurprd04.prod.outlook.com>
+ <20230413060004.t55sqmfxqtnejvkc@pengutronix.de>
 MIME-Version: 1.0
-References: <20230504145737.286444-1-joychakr@google.com> <20230504145737.286444-8-joychakr@google.com>
- <78616bc1-8d9e-4a1c-70d6-ad62c2cfa8a8@linaro.org> <CAOSNQF15UN2Rckes55UHxbUvN1PJcbj9aWirVGSLDOs5Y5EPnQ@mail.gmail.com>
- <3d9d545d-a620-85f6-b7bd-d57a8729f818@linaro.org>
-In-Reply-To: <3d9d545d-a620-85f6-b7bd-d57a8729f818@linaro.org>
-From:   Joy Chakraborty <joychakr@google.com>
-Date:   Mon, 8 May 2023 17:28:50 +0530
-Message-ID: <CAOSNQF0jJLc78_1aGYY3=csJc7WqqvydwxmQ22rvXpLruQ-XRg@mail.gmail.com>
-Subject: Re: [PATCH 7/7] dt-bindings: dmaengine: pl330: Add new quirks
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, manugautam@google.com,
-        danielmentz@google.com, sjadavani@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="er5lj4tlfdoxmrvp"
+Content-Disposition: inline
+In-Reply-To: <20230413060004.t55sqmfxqtnejvkc@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, May 5, 2023 at 5:53=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 05/05/2023 11:44, Joy Chakraborty wrote:
-> > On Thu, May 4, 2023 at 8:38=E2=80=AFPM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >>
-> >> On 04/05/2023 16:57, Joy Chakraborty wrote:
-> >>> Add 2 new quirks added to the driver "arm,pl330-optimize-dev2mem-axsi=
-ze"
-> >>> and "arm,pl330-periph-single-dregs"
-> >>
-> >> This we can see from the diff. You need to answer why?
-> >>
-> >
-> > Sure will change it to:
-> > "
-> > Addition of following quirks :
-> > - "arm,pl330-periph-use-diff-axsize"
-> >    AxSize of transactions to peripherals are limited by the peripheral
-> > address width which inturn limits the AxSize used for transactions
-> > towards memory.
-> >    This quirk will make transactions to memory use the maximum
-> > possible bus width(AxSize), store data in MFIFO and use narrow
-> > multi-beat transactions to move data to peripherals.
-> >    This only applies to transfers between memory and peripherals where
-> > bus widths available are different for memory and the peripheral.
-> > - "arm,pl330-periph-complete-with-singles" :
-> >    When transfer sizes are not a multiple of a block of burst
-> > transfers (AxLen * AxSize configured at the peripheral), certain
-> > peripherals might choose not to set the burst request at the
-> > peripheral request interface of the DMA.
-> >    This quirk moves the remaining bytes to the peripheral using single
-> > transactions.
-> > "
->
-> This does not answer why. You just copied again the patch contents.
->
-Hi Krzysztof,
-Both the changes could be useful for SOC's which have PL330 integrated
-with a peripheral but I am not sure if all SOC's need/want this change
-hence wanted to keep it as a DT knob to avoid any regressions.
-But like you say it might not be the right thing to do.
 
-> >
-> >>>
-> >>> Signed-off-by: Joy Chakraborty <joychakr@google.com>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/dma/arm,pl330.yaml | 8 ++++++++
-> >>>  1 file changed, 8 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/dma/arm,pl330.yaml b/D=
-ocumentation/devicetree/bindings/dma/arm,pl330.yaml
-> >>> index 4a3dd6f5309b..0499a7fba88d 100644
-> >>> --- a/Documentation/devicetree/bindings/dma/arm,pl330.yaml
-> >>> +++ b/Documentation/devicetree/bindings/dma/arm,pl330.yaml
-> >>> @@ -53,6 +53,14 @@ properties:
-> >>>      type: boolean
-> >>>      description: quirk for performing burst transfer only
-> >>>
-> >>> +  arm,pl330-optimize-dev2mem-axsize:
-> >>> +    type: boolean
-> >>> +    description: quirk for optimizing AxSize used between dev<->mem
-> >>
-> >> This tells me nothing... Neither what it is about nor why this is
-> >> property of a board or PL330 hardware implementation. Please describe
-> >> hardware, not drivers.
-> >>
-> >
-> > Will change the name to "arm,pl330-periph-use-diff-axsize" and add desc=
-ription:
-> > "
-> > Quirk to use different AxSize for bursts while accessing source and
-> > destination when moving data between memory and peripheral.
-> > Maximum possible bus width is used as AxSize for transactions towards
-> > memory and transactions towards peripherals use AxSize as per
-> > peripheral address width.
-> > "
->
-> Still no answer. Why this is property of a board or PL330 hardware
-> implementation?
-> I also asked to describe hardware but I still see "quirk to ...". We use
-> "quirk" as concept in Linux driver. Describe the hardware, not Linux driv=
-er.
->
+--er5lj4tlfdoxmrvp
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This comes to use when the bus width requirement between peripheral
-and memory is different, but buswidth is something we read from HW
-registers so this can be enabled by default.
+Hello Leo,
 
->
-> >
-> >>> +
-> >>> +  arm,pl330-periph-single-dregs:
-> >>> +    type: boolean
-> >>> +    description: quirk for using dma-singles for peripherals in _dre=
-gs()
-> >>
-> >> Same concerns.
-> >>
+On Thu, Apr 13, 2023 at 08:00:04AM +0200, Uwe Kleine-K=F6nig wrote:
+> On Wed, Apr 12, 2023 at 09:30:05PM +0000, Leo Li wrote:
+> > > On Fri, Mar 10, 2023 at 11:41:22PM +0100, Uwe Kleine-K=F6nig wrote:
+> > > > Hello,
+> > > >
+> > > > many bus remove functions return an integer which is a historic
+> > > > misdesign that makes driver authors assume that there is some kind =
+of
+> > > > error handling in the upper layers. This is wrong however and
+> > > > returning and error code only yields an error message.
+> > > >
+> > > > This series improves the fsl-mc bus by changing the remove callback=
+ to
+> > > > return no value instead. As a preparation all drivers are changed to
+> > > > return zero before so that they don't trigger the error message.
+> > >=20
+> > > Who is supposed to pick up this patch series (or point out a good rea=
+son for
+> > > not taking it)?
+> >=20
+> > Previously Greg KH picked up MC bus patches.
+> >=20
+> > If no one is picking up them this time, I probably can take it through
+> > the fsl soc tree.
+>=20
+> I guess Greg won't pick up this series as he didn't get a copy of it :-)
+>=20
+> Browsing through the history of drivers/bus/fsl-mc there is no
+> consistent maintainer to see. So if you can take it, that's very
+> appreciated.
 
-An example of such a case is given in the ARM TRM for PL330, so maybe
-we can have this by default as well.
-Link : https://developer.arm.com/documentation/ddi0424/d/functional-overvie=
-w/peripheral-request-interface/dmac-length-management#:~:text=3DDMAC%20leng=
-th%20management-,Example%202.3,-shows%20a%20DMAC
+My mail was meant encouraging, maybe it was too subtile? I'll try again:
 
-> >
-> > Will change the name to  "arm,pl330-periph-complete-with-singles" and
-> > add description:
-> > "
-> > Quirk to use dma singles n times instead of an n beat burst to
-> > complete a transfer when the transfer size is not a multiple of the
->
-> No, how you wrote it sounds like driver. Don't add driver quirks to DT.
->
-> Best regards,
-> Krzysztof
->
+Yes, please apply, that would be wonderful!
 
-Hi Vinod Kaul,
-
-Do you think it is feasible to enable these changes by default instead
-of a DT property ?
+:-)
 
 Thanks
-Joy
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--er5lj4tlfdoxmrvp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmRY/GMACgkQj4D7WH0S
+/k4cswf+N9Mgu+WF1jiKgllTl1eIxkYX2sJ67f9koV32iMjq4Cfyr/EeCWolZb/c
+5MfyrMdDe6UXeNzFn/HNTMJ+2Uc+zhRsowOFNHQKu9ysxWqNLnGnr+2Z1B9BSQY+
+mK3hhU0iLOWmLRZqQvK4iOKQmoy/jtBUWRIOfmff7fVrmHke3of31J7iZGaVLbEM
+uKgAqaUqbuhy/yKnWrtsjI032ANLw3SbE0KBgTIOLsWADSgYqHJVsxs7Ek5vLFy0
+yixu653kysPtTS5Jb20ytWk7BzQVMpYFdfq7QogzdL0qYqqrO+oJEGjXP5traHsl
+DX2GOiQ8R6tswdZcisDFe4wQC15hYQ==
+=19CE
+-----END PGP SIGNATURE-----
+
+--er5lj4tlfdoxmrvp--

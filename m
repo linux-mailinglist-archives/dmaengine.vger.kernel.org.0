@@ -2,105 +2,101 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B69836FCF94
-	for <lists+dmaengine@lfdr.de>; Tue,  9 May 2023 22:35:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18BBF6FD670
+	for <lists+dmaengine@lfdr.de>; Wed, 10 May 2023 08:04:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234964AbjEIUfU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 9 May 2023 16:35:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60728 "EHLO
+        id S235326AbjEJGE3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 10 May 2023 02:04:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234959AbjEIUfT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 9 May 2023 16:35:19 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED6882122;
-        Tue,  9 May 2023 13:35:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683664517; x=1715200517;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zDgUrx46HKYf2WDUcb3OSI439GIUg2nqyHSQb8R/LPM=;
-  b=nD68BybdIjLNpuiq8tgOuHCTcDottfMKgtZ+yImSzbu4n2LVCIQe3vlW
-   ZZay5VaYrKwGJynQwN83YB0/xmPBzHt1mdeQycE0UYs02wYyU0BjZlad0
-   i5k+utyEXtgA0W0yc9YRP3ki8UZTc/cNmFkruIMjRNqPDQPU213pYcNts
-   pSqrG9Rle3yOklduDPsIu5wiJt2vcI+wjaOr/8dDFiWcHGilMHlW/KEzd
-   Aylk0rGcHOCQuDkb6fIO1KEwFuuygWkoQah308lSkkbvKeL9BdYdq/aTu
-   Y7IYFRpYCCBIdX+8mnpOlSEQdU+IDLn04Y/Dda4xVQQOVeiSNvpL9MoIF
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="334504614"
-X-IronPort-AV: E=Sophos;i="5.99,262,1677571200"; 
-   d="scan'208";a="334504614"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 13:35:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="702004029"
-X-IronPort-AV: E=Sophos;i="5.99,262,1677571200"; 
-   d="scan'208";a="702004029"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 13:35:15 -0700
-Date:   Tue, 9 May 2023 13:39:40 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Zanussi, Tom" <tom.zanussi@intel.com>,
-        "Ranganathan, Narayan" <narayan.ranganathan@intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v5 1/7] iommu: Generalize default PCIe requester ID
- PASID
-Message-ID: <20230509133940.6bf0a053@jacob-builder>
-In-Reply-To: <BN9PR11MB5276A1CC0B5FF8D9394F22F98C729@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20230427174937.471668-1-jacob.jun.pan@linux.intel.com>
-        <20230427174937.471668-2-jacob.jun.pan@linux.intel.com>
-        <BN9PR11MB5276FD027EC3D6BAA24046F58C6B9@BN9PR11MB5276.namprd11.prod.outlook.com>
-        <20230428085615.58e437c9@jacob-builder>
-        <BN9PR11MB5276A1CC0B5FF8D9394F22F98C729@BN9PR11MB5276.namprd11.prod.outlook.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229482AbjEJGE1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 10 May 2023 02:04:27 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3E7040F7
+        for <dmaengine@vger.kernel.org>; Tue,  9 May 2023 23:04:26 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1aafa41116fso47189255ad.1
+        for <dmaengine@vger.kernel.org>; Tue, 09 May 2023 23:04:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1683698666; x=1686290666;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gu0Ww4Btm3ZJWmUm54OXSmR11HegrPdHhOCTMAKgm2g=;
+        b=h8djJvjR8ebEG6ImUF1nkveTqSFqxQK3NuyugJ0rvCgfuk3n7bOjbRYxjtXbDIo41c
+         9hkL5I3sSZAH4LWpU5Hz4rzaimszZBnNgQOeLWbHtCSvV7WE23HlCEltuB97H+lsxDhi
+         T0Nr9HX8Syru1uaPiRtTS46v2moIsJGkvq2fkvbS9avnh5cZYPI/gMly6X4IibbUV9Ex
+         V/dQFKHhfVsUE9F4bjL0+Da5GeBHVH47z3e2nCnG8iqSQwDFB78EZK5iy9Znzu0czH/C
+         bkc9CPb8uKkFm5Hp+RwIdrNE6RB3gLGj+3o9CVYLr6Psz0nv+LzShMjkAsT7kk0uGH+m
+         OjtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683698666; x=1686290666;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Gu0Ww4Btm3ZJWmUm54OXSmR11HegrPdHhOCTMAKgm2g=;
+        b=cacmZ+65VaNm7uW2/3TCmICeX63hwDmMQramm/0Jo+OCpxBRFytAUwJpuJ2uHt4AIp
+         +Y9SmlrRKOshQgu9X3CHAFDiDI6Q0KRipIBnohWMlLMAHm3Mo76SbD1Q20AvuGTmY0BS
+         59Msc8yw81+2itk6uAUUnFLFQWHg7EvvrtrtndMrM4yyL9EzAmLrO87Ib7n5GiNU3rBc
+         hXDLoPyInXXa9TRLOPDtZs5FtRu5VHXCOMb1xXqBwWcRzRjb4Vky36rV6AnDw1TJt5tm
+         Fdi6jsmOU42ep2nl3VtZ2I87tH8dMK73IVbuI+ULKjJjPTqp7AzgBOgIVphkz3JYYQRT
+         njeg==
+X-Gm-Message-State: AC+VfDx/bm+InUd5+nVblGS8Exd97nwyiV24Iy+bBlCuFFNyi3KXHumv
+        +CTX7+IO8ZOLQ7SqEmYylDheUg==
+X-Google-Smtp-Source: ACHHUZ58wm9Z0W6YIYZ1v9zc9DcTUNNZ2qDA21or5nSqrykEbxFIclL0qerbXr6/V4brO+GwwybdGA==
+X-Received: by 2002:a17:902:c40a:b0:1ab:28ec:bf10 with SMTP id k10-20020a170902c40a00b001ab28ecbf10mr23310293plk.51.1683698666262;
+        Tue, 09 May 2023 23:04:26 -0700 (PDT)
+Received: from hsinchu26.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
+        by smtp.gmail.com with ESMTPSA id io20-20020a17090312d400b001ab0a30c895sm2751424plb.202.2023.05.09.23.04.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 May 2023 23:04:25 -0700 (PDT)
+From:   Zong Li <zong.li@sifive.com>
+To:     vkoul@kernel.org, palmer@dabbelt.com, radhey.shyam.pandey@amd.com,
+        dmaengine@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Zong Li <zong.li@sifive.com>
+Subject: [PATCH v2] dmaengine: xilinx: dma: remove arch dependency
+Date:   Wed, 10 May 2023 06:04:21 +0000
+Message-Id: <20230510060421.30982-1-zong.li@sifive.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Kevin,
+As following patches, xilinx dma is also now architecture agnostic,
+and it can be compiled for several architectures. We have verified the
+CDMA on RISC-V platform, let's remove the ARCH dependency list instead
+of adding new ARCH.
 
-On Fri, 5 May 2023 08:28:13 +0000, "Tian, Kevin" <kevin.tian@intel.com>
-wrote:
+'e8b6c54f6d57 ("net: xilinx: temac: Relax Kconfig dependencies")'
+'d7eaf962a90b ("net: axienet: In kconfig remove arch dependency for axi_emac")'
 
-> > > >
-> > > > By having a common RID_PASID, we can avoid conflicts between
-> > > > different use cases in the generic code. e.g. SVA and DMA API with
-> > > > PASIDs.  
-> > >
-> > > You intend it to be generic but in the end only vt-d driver is changed
-> > > to use it in this series...  
-> > change for SVA is in the patch.  
-> 
-> My point was that since it is common why there is no change in arm-smmu
-> driver to use the common macro?
-Got it, I will include changes to SSID 0 in smmu code.
+Signed-off-by: Zong Li <zong.li@sifive.com>
+Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+Suggested-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+---
 
-Thanks,
+ Changes in v2:
+ - Remove ARCH dependency list instead of adding new ARCH
 
-Jacob
+ drivers/dma/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index f5f422f9b850..daf20600a167 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -696,7 +696,6 @@ config XGENE_DMA
+ 
+ config XILINX_DMA
+ 	tristate "Xilinx AXI DMAS Engine"
+-	depends on (ARCH_ZYNQ || MICROBLAZE || ARM64)
+ 	select DMA_ENGINE
+ 	help
+ 	  Enable support for Xilinx AXI VDMA Soft IP.
+-- 
+2.17.1
+

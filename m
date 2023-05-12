@@ -2,155 +2,171 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E999700525
-	for <lists+dmaengine@lfdr.de>; Fri, 12 May 2023 12:23:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 055C0700700
+	for <lists+dmaengine@lfdr.de>; Fri, 12 May 2023 13:40:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240644AbjELKXY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 12 May 2023 06:23:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50410 "EHLO
+        id S240338AbjELLko (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 12 May 2023 07:40:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240670AbjELKXT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 May 2023 06:23:19 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 602F212E;
-        Fri, 12 May 2023 03:23:17 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id 38308e7fff4ca-2ac82b07eb3so98657001fa.1;
-        Fri, 12 May 2023 03:23:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683886995; x=1686478995;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=z23Yys1p+WjW6kez7AKqzscsQbDlp8fVQx68w5qJUf0=;
-        b=QLxxlk7MAaNJPed+IR4tg9xzx6vEcv8gKoLQ6ByxBWOcNZ9jyZ30AS++w3IpXEGLoR
-         fRsPFHc1ruZI15eGdoeG3wMZxlAwlijYfl+2ZW/JaGUwmqne1y7+EHzOlD+WGcq3GSdP
-         Cnf6R1q30GjdiH0o9r1gzP+JceFDwLmUIMg4fRJLAXY9qyncDjkGgUqVrhOiXQNkaWdC
-         sxDoqzeSXepMiqWuUb/LdYSjVQ0ocITH/GiIVFGXEh+Mp0QwXzROvF99IS3Htxv2PlLO
-         MlaHTilNWlMSN0cPjactSPfSy7+Z15kkiKpRoWIQC77P53yfvfT6hnAaGxyG4HK1WcaV
-         Ww8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683886995; x=1686478995;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z23Yys1p+WjW6kez7AKqzscsQbDlp8fVQx68w5qJUf0=;
-        b=DWCgwlVQ6y3IopMWUZo6a6LrYdhL+/vaRvjWxpnLIuty46IG05tXsqhtY9oLoiLUCf
-         DX07Onn8xawh+XcUAfhJEZtRmlXnGPyvB3k4YACjOHiCtymAgAvNu4VZrhz9GCTrmqJ4
-         HN4LVZCqNnCkD8olHFGkpE+/yg9J8NOd7UXIUIiLof0VsEV1eSiG4wwru9l+8Y01vF2M
-         7fwD1jswOQPztfaN6gijrPbY+9EVyiCUb1Tu6xRwt0rMoiRyD3cu4rpNyg92XlOPWH43
-         CVo8X0hfVoJ9RwHzq1oWd68IKI3b6TxcoU9QM3rjE2jCzThKdjyBcF+q7Q3sCG+ouFFq
-         T5KQ==
-X-Gm-Message-State: AC+VfDwh18X8orLll2DbuAhWFXTwuiCyFFv2WZEFF+mOaAPdMYC1lA1P
-        pZasvMpqpfCAHxlqkr3o7ofnfynd9pBYvg==
-X-Google-Smtp-Source: ACHHUZ5K0zQw3IvYCqgKgG7ihj2MX8VyXEJ28EGTiVj+V+XjGCuXuPDxUGlINZ4EwJUydXsHR99biA==
-X-Received: by 2002:a2e:9f14:0:b0:2a8:d103:dc8 with SMTP id u20-20020a2e9f14000000b002a8d1030dc8mr3596263ljk.2.1683886995331;
-        Fri, 12 May 2023 03:23:15 -0700 (PDT)
-Received: from mobilestation ([95.79.140.35])
-        by smtp.gmail.com with ESMTPSA id o6-20020a2e90c6000000b002adaacdb900sm1299548ljg.42.2023.05.12.03.23.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 May 2023 03:23:14 -0700 (PDT)
-Date:   Fri, 12 May 2023 13:23:12 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RESEND v5 01/14] PCI: dwc: Fix erroneous version type
- test helper
-Message-ID: <20230512102312.urrh2gwagopizn44@mobilestation>
-References: <20230511190902.28896-1-Sergey.Semin@baikalelectronics.ru>
- <20230511190902.28896-2-Sergey.Semin@baikalelectronics.ru>
- <TYBPR01MB53411830C969326CDA5E9DF5D8759@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+        with ESMTP id S240467AbjELLkn (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 May 2023 07:40:43 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2079.outbound.protection.outlook.com [40.107.220.79])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08431718;
+        Fri, 12 May 2023 04:40:41 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TfCoOzWMoDiBubJVH0iAOPbVu0zU35vJxd7YvLpiiyR0iKgV2Lqn4rEmj9qreBgRNwIETrgICEBBZacARk1c0fdt7LdptU/NTPZ+fGVnsPBwj38hSUYVTEharRPg0gMJdgHIMrc2tMD7DZybmIbAMJYIChOmpk4azVX6drgRXtu+lQdIK23BHJMCkNG4t+JtpcXLv9Kp5wGHh02m5kPM+RWsjacS9n3wTs0aCtY5WTHwlWqTlAbdoOUzBhG3O38OV/E0WiMIlKY/xEZIZRADb9cZ3PJdTdEBDjo5gXKqMXODA0Xfvx2He4Dy7PN9cjAaVGdlnzKGIZduDazIUyL7sQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4RO1e1MNOQiwDLgRRKBRobTnqUinqglMRRvmWsmndGQ=;
+ b=OliYRuXC0t1URLc6avuJ9LREv/LFWcAYtk2/bZMKfK+aGB2+aSdaI8ae/zbcQmy1MVPHTf9Ud0KjYqp+USTD19lUQzxQt1ujpMQ+ncs8nJvG9CTVPh4uDFzEILwdYU6QMv2NUDIKrBT9g8qQbM2erdLvn73e9pVSnp7SMa662UP5Ybxo21Ag/LTuNKdM3i2MnszJAHpV5B1JcfNZyFhcg7LcWUnxsRkcNtdeIgcHDYe+qlkha02ob6OIqjXr/yApjzHkCDFeFd3YKAnv9t2ESknU7BdxXk4wgSfWQPkNrDVn37vf97I0M6ulCGdE7HKWYeYUinntkxuNBeeCq4Im/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4RO1e1MNOQiwDLgRRKBRobTnqUinqglMRRvmWsmndGQ=;
+ b=4GaxmPqKTpbRD9I4OSrb9XZixRogzo1V7WUAnHijmWR1+SMXFHyeWzLe8UaPHP8q9SFaZcxN0aNe9SYmG5mnF3xo0eBEqCJ/4bOdjE7PWF5uu6uVP0oaZzyDJyupbpJZotQnKXJtIfjvrnNHfY5NHfI5dVyeuFzX5moelPV5UMo=
+Received: from MW4PR04CA0186.namprd04.prod.outlook.com (2603:10b6:303:86::11)
+ by BN9PR12MB5365.namprd12.prod.outlook.com (2603:10b6:408:102::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.24; Fri, 12 May
+ 2023 11:40:39 +0000
+Received: from CO1NAM11FT110.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:86:cafe::1c) by MW4PR04CA0186.outlook.office365.com
+ (2603:10b6:303:86::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.24 via Frontend
+ Transport; Fri, 12 May 2023 11:40:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT110.mail.protection.outlook.com (10.13.175.125) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6387.24 via Frontend Transport; Fri, 12 May 2023 11:40:38 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 12 May
+ 2023 06:40:36 -0500
+From:   Michal Simek <michal.simek@amd.com>
+To:     <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
+        <michal.simek@xilinx.com>, <git@xilinx.com>
+CC:     Conor Dooley <conor+dt@kernel.org>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, <devicetree@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v3] dt-bindings: dma: xilinx: Add power-domains to xlnx,zynqmp-dpdma
+Date:   Fri, 12 May 2023 13:40:33 +0200
+Message-ID: <8f5651634df338743f95a7253a741f9ddc92487d.1683891609.git.michal.simek@amd.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TYBPR01MB53411830C969326CDA5E9DF5D8759@TYBPR01MB5341.jpnprd01.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1862; i=michal.simek@amd.com; h=from:subject:message-id; bh=CIzqKqEHuEC95EL4d11sbyDsplKRyRHucX4oxoB26zI=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhpQ41Vlf7iwMffAt28yIf968sOmZx3Si2TTTjQxN3h6X7 fj3pEG5I5aFQZCJQVZMkUXa5sqZvZUzpghfPCwHM4eVCWQIAxenAEwk6zXDPLO8nf7N5z6VL9/y QXMiR1OywYPz1gzzDM0PC5YUe0+5uj8m6Kt4RZy106dlAA==
+X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT110:EE_|BN9PR12MB5365:EE_
+X-MS-Office365-Filtering-Correlation-Id: 097abc62-935f-4cbf-e5a2-08db52ddb577
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: d6p9LjLOKUqyVt5UKq6BBheBA4u3aUoW/TRx7c0nJ+FVpNjBTDJAfN2ljiJ9s2gJGuLzvfTA1N4GzUQWB4r223FJnJrkJzYGO8ydZZ1emASA13M2+fqZJp4elvpxqmao0vF3eVKsi+0uaYz0JiX6pqLmrSy50PFPd1cxOIVkwbcr4v/BEpkLBJWRu8bF+LCzoGk54rK8mJkQ/1UVHNhuXAaNJaB+ylWa7RqGJOgz99klFIsORdAWOpLKzJl8Vx10gnmFEKj+ohbsLuq5FyUaVyFzzuhCKIOWu2Us2g3sfzd7sdQzbzwpoCPcPOZ4OinH54iu4sMY/jcId2QcwgbIJwMNiy3wb6cYHIyEu9FFu8cEbSlRHTKv4fp3OMKJA0K9ttB994cX4RwZeJuT4BwnceW3tJGNC2Y/KJ2TLbrJs4FQyPCVqQx2vTr2rYjoFKV8JzIXw73e84FEs2jD4v9ObBE/YuK6V5M2VJ2pgtyj5LfWuKdUE8xtbjbnqjBZZ5zJ6xHJxKgXKWH3I4oAFn5YPnwQSNE093KaBniILZ/9eGPJZAMHuwX7Pjio0los6FEVaOAg/JURWY05N0cc4uVWDdzANiXQZsPgy3nyGLVhBekbN3m+vuIqJbr/6IN0Bggsyy0bcWMQKwg1M3fbAK13wk1p4yjU3Qe7anuejHvaPCBkERK0ig/RHGVnc/W1vIRpNOn+Q+v+8+0L9jtikBXGCTQKGOTrBaWYOgVcA12eH6vZXd3xUdKYqU7UCZt5X12qibyvRa8/9d+5FUvwX+eh9Sy/61ZOQH8TONDB93rP2rE=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(396003)(39860400002)(376002)(346002)(136003)(451199021)(36840700001)(40470700004)(46966006)(4326008)(81166007)(356005)(426003)(336012)(82740400003)(26005)(40480700001)(2616005)(966005)(186003)(16526019)(83380400001)(36860700001)(47076005)(2906002)(8676002)(5660300002)(7416002)(8936002)(44832011)(36756003)(478600001)(54906003)(110136005)(40460700003)(6666004)(316002)(41300700001)(70206006)(70586007)(86362001)(82310400005)(36900700001)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2023 11:40:38.7122
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 097abc62-935f-4cbf-e5a2-08db52ddb577
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT110.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5365
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello Yoshihiro
+DP DMA has own power domain that's why describe required power-domain
+property.
 
-On Fri, May 12, 2023 at 09:55:42AM +0000, Yoshihiro Shimoda wrote:
-> Hi Serge,
-> 
-> > From: Serge Semin, Sent: Friday, May 12, 2023 4:09 AM
-> > 
-> > Due to an unfortunate mistake the macro function actually checks the
-> > IP-core version instead of the IP-core version type which isn't what
-> > originally implied. Fix it by introducing a new helper
-> > __dw_pcie_ver_type_cmp() with the same semantic as the __dw_pcie_ver_cmp()
-> > counterpart except it refers to the dw_pcie.type field in order to perform
-> > the passed comparison operation.
-> > 
-> > Fixes: 0b0a780d52ad ("PCI: dwc: Add macros to compare Synopsys IP core versions")
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> I'm not sure whether my review is useful or not, but anyway,
-> 
-> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Michal Simek <michal.simek@amd.com>
+---
 
-It's always useful. Thanks for looking into it.
+Changes in v3:
+- make power-domains as required property
+- also update commit message
 
-Regards
--Serge(y)
+Changes in v2:
+- rewrite commit message - requested by Krzysztof
 
-> 
-> Best regards,
-> Yoshihiro Shimoda
-> 
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware.h | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > index 79713ce075cc..adad0ea61799 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > @@ -37,17 +37,20 @@
-> >  #define __dw_pcie_ver_cmp(_pci, _ver, _op) \
-> >  	((_pci)->version _op DW_PCIE_VER_ ## _ver)
-> > 
-> > +#define __dw_pcie_ver_type_cmp(_pci, _type, _op) \
-> > +	((_pci)->type _op DW_PCIE_VER_TYPE_ ## _type)
-> > +
-> >  #define dw_pcie_ver_is(_pci, _ver) __dw_pcie_ver_cmp(_pci, _ver, ==)
-> > 
-> >  #define dw_pcie_ver_is_ge(_pci, _ver) __dw_pcie_ver_cmp(_pci, _ver, >=)
-> > 
-> >  #define dw_pcie_ver_type_is(_pci, _ver, _type) \
-> >  	(__dw_pcie_ver_cmp(_pci, _ver, ==) && \
-> > -	 __dw_pcie_ver_cmp(_pci, TYPE_ ## _type, ==))
-> > +	 __dw_pcie_ver_type_cmp(_pci, _type, ==))
-> > 
-> >  #define dw_pcie_ver_type_is_ge(_pci, _ver, _type) \
-> >  	(__dw_pcie_ver_cmp(_pci, _ver, ==) && \
-> > -	 __dw_pcie_ver_cmp(_pci, TYPE_ ## _type, >=))
-> > +	 __dw_pcie_ver_type_cmp(_pci, _type, >=))
-> > 
-> >  /* DWC PCIe controller capabilities */
-> >  #define DW_PCIE_CAP_REQ_RES		0
-> > --
-> > 2.40.0
-> > 
-> 
+The commit b06112cd5e08 ("arm64: dts: zynqmp: Add power domain for the
+DisplayPort DMA controller") added this property already in Linux that's
+why the patch is also fixing dts_check warnings.
+
+In v2 I got ack from Krzysztof but not adding it because of additional
+discussion about required property in v3.
+https://lore.kernel.org/r/029ba923-d13e-ea7c-018d-95e179dda2e5@linaro.org
+
+---
+ .../devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml   | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+index d6cbd95ec26d..2128f4645c98 100644
+--- a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
++++ b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+@@ -41,6 +41,9 @@ properties:
+   clock-names:
+     const: axi_clk
+ 
++  power-domains:
++    maxItems: 1
++
+ required:
+   - "#dma-cells"
+   - compatible
+@@ -48,12 +51,14 @@ required:
+   - interrupts
+   - clocks
+   - clock-names
++  - power-domains
+ 
+ additionalProperties: false
+ 
+ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/power/xlnx-zynqmp-power.h>
+ 
+     dma: dma-controller@fd4c0000 {
+       compatible = "xlnx,zynqmp-dpdma";
+@@ -63,6 +68,7 @@ examples:
+       clocks = <&dpdma_clk>;
+       clock-names = "axi_clk";
+       #dma-cells = <1>;
++      power-domains = <&zynqmp_firmware PD_DP>;
+     };
+ 
+ ...
+-- 
+2.36.1
+

@@ -2,42 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6885700457
-	for <lists+dmaengine@lfdr.de>; Fri, 12 May 2023 11:56:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3517670045B
+	for <lists+dmaengine@lfdr.de>; Fri, 12 May 2023 11:56:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240597AbjELJ4L (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 12 May 2023 05:56:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49390 "EHLO
+        id S240572AbjELJ4W (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 12 May 2023 05:56:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240571AbjELJ4E (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 May 2023 05:56:04 -0400
-Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2105.outbound.protection.outlook.com [40.107.113.105])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FE32DC69;
-        Fri, 12 May 2023 02:56:00 -0700 (PDT)
+        with ESMTP id S240581AbjELJ4L (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 May 2023 05:56:11 -0400
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2128.outbound.protection.outlook.com [40.107.113.128])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CAB710E64;
+        Fri, 12 May 2023 02:56:06 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XePP/d8lLBpKOkwkX7ndEtgvnuR7N54isFiRNCrbr9Zq+07RgHVyU1CQE3VyDT5nxLVstsddegI+2jc1s6O9kmtHQvCMQJA6rE917ljPFB6MErQChecHta7qoP7YtId7FQhK44I2JzDfytB5b8xE4/63Xk7xriIJ9KjFBSVm/IxITSiRCsEo3C5WZB53lUuPlJCC1XurtM4kibTyTm23am7FvyVurq1agVN1MVyYR6VAaXG/SQ/a733fN5hf333JLocoPf+lWL1+4XouXkKzw3poVFyk8T3aOBJAOJ2q1v6DzEY5HHx4pj6CDSPL9bflILCaCoEd7vuRE6snJZN2sA==
+ b=HgOANAp8Sq7gdfoiHKXeEw6uFvkrjc3ibi5Opxh2G3NyuPBthiwboDymPS+AeMieIsrCUhnKkmI34sXXvUWFcnU0Qh5vQEMC5w2SFarYHgXu73Lbok89YOpHLctZVCZf6EEqTJmKzbmhcybJW52vurdQ2aiyZuHSDCJ3MWYJV3pNFc6BsHChc5JLK9j3pk7w3CgX0ackT6LEJYTn3oTfjIvlYMQt+zP3BCdDjwGNPsmxk8XmwOYaJASwq7HRZmy9ge5NDSBWLAeHLH+9oeKva+cK7d/l74dhp9kYLTbtGcWkXmaRaw3t5Ri7NZsoyyoJ212539tSIAIiFUyVutmHtw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LvHuP01Ylp2CT5jOz3r4HQr5nf+/0Z3xmjUU4llJeVg=;
- b=jHs1CMS5tPdzV0wDb00ykREzqYTq7vUjwJM+U6Tt9gw+eSY48UkZxE7rPRlr+s1F1OylP6kvlgIGevz73Riz1R8waX1BFftrM6pXRMuQ81Zu9rWv9xFXx/HTCbl+93rbBdVE4sFKyvzxeG8tIBCNr+wzRNk9+XXiA0taojJtZQDSQCH88pod3sGkyIrfPW0yg+HGcSir7X6WSNtswimUe7SEuYvcgC5F5hoM58y4KIrY4HD1535chSxOgqB6cgXzrVz+YGDHZikpwF6icEjTa3RDa0jjK6u4IyJp7EI+DWmH/Z/35w5fPe5EZfF4m/M84J1UvJuysp7HKghy4Clxbg==
+ bh=g4mVJS9d4M/5KCx7ytbaja4BIKvhva+uekkwteV2a30=;
+ b=BP9peHP5UW81d2g7R2szpdpjlVWGXab0e4U801TJaivsuOChBxURrlJUHAqAjF4PEczDTpc2Gz5IOUTiDmiUOFaAwdM0nrf18oY9KkdxqwpBQvE5M/BJ1iqIEzprMdgbOo34rdGPTOBpeSW8n8yfYDY4DmHtQm106PtKJCe+qF1OEiRAY7zgjdMmv5zQTf1qISPnRpZqQV3jSwK7yaURXge7uSuDuZwP5oj228BLEBmz1ajj7/43lu51YFDM5jpuw6kl1WZrkuRmpg9sDGaWTF8hFXuj44Woe3EIMBMd3IfOyMiZzXIYYXbz/dj4yZBhhnNgWmiI+N96Rz1V6Uz0hA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
  dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LvHuP01Ylp2CT5jOz3r4HQr5nf+/0Z3xmjUU4llJeVg=;
- b=b6Kq8F59rw2deJ0tFP9P14aDINWxvgAGd4UadNG1AZwYsmrPpgixtBq2FSYvHKKl+LrWFI+AXYVQMXT8verON/D6TMBZkwVyx0azQlW8YuWHFVJh/lSgZLc7xdrdJD/TorOldel2+r3o1T1Pkf1y1EepMEzv+xopSUqlh+FWxb4=
+ bh=g4mVJS9d4M/5KCx7ytbaja4BIKvhva+uekkwteV2a30=;
+ b=c5hRSAZ72NQ468NuFw5SJ0WNMF/r1hyDJRtv6Z68/Kve/ScsPlO53KiGSEmk5Spd17ajojqFp4mLYoy5AvIZP8tYN1Vf1v+Jl4I2rOo6Wn2x5Rpgncq1gSZECqY3Aa/I0l6vf/5PfkUxiLazYkQhLTw3vBWdIeLwx+8f2v8FbFs=
 Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
  (2603:1096:404:8028::13) by TYCPR01MB9669.jpnprd01.prod.outlook.com
  (2603:1096:400:221::9) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.23; Fri, 12 May
- 2023 09:55:57 +0000
+ 2023 09:56:03 +0000
 Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
  ([fe80::5198:fdcf:d9b1:6003]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
  ([fe80::5198:fdcf:d9b1:6003%7]) with mapi id 15.20.6387.023; Fri, 12 May 2023
- 09:55:57 +0000
+ 09:56:03 +0000
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -57,16 +57,16 @@ CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH RESEND v5 05/14] PCI: dwc: Drop duplicated fast-link-mode
- flag unsetting
-Thread-Topic: [PATCH RESEND v5 05/14] PCI: dwc: Drop duplicated fast-link-mode
- flag unsetting
-Thread-Index: AQHZhDwZvGSMdLqDnUS1Z2y/X9+Jo69WZwYw
-Date:   Fri, 12 May 2023 09:55:57 +0000
-Message-ID: <TYBPR01MB534152367C653DDC7760E0DFD8759@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+Subject: RE: [PATCH RESEND v5 06/14] PCI: dwc: Drop empty line from
+ dw_pcie_link_set_max_speed()
+Thread-Topic: [PATCH RESEND v5 06/14] PCI: dwc: Drop empty line from
+ dw_pcie_link_set_max_speed()
+Thread-Index: AQHZhDwZNwir8jYpdEOY4xKqJzYPPK9WZyZA
+Date:   Fri, 12 May 2023 09:56:03 +0000
+Message-ID: <TYBPR01MB53417A0E46D89EF3FF65351BD8759@TYBPR01MB5341.jpnprd01.prod.outlook.com>
 References: <20230511190902.28896-1-Sergey.Semin@baikalelectronics.ru>
- <20230511190902.28896-6-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20230511190902.28896-6-Sergey.Semin@baikalelectronics.ru>
+ <20230511190902.28896-7-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20230511190902.28896-7-Sergey.Semin@baikalelectronics.ru>
 Accept-Language: ja-JP, en-US
 Content-Language: ja-JP
 X-MS-Has-Attach: 
@@ -75,41 +75,41 @@ authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=renesas.com;
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: TYBPR01MB5341:EE_|TYCPR01MB9669:EE_
-x-ms-office365-filtering-correlation-id: 1b94dd63-061a-475e-0b61-08db52cf15a2
+x-ms-office365-filtering-correlation-id: 00350392-2ec2-48b5-6f2b-08db52cf18d8
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: f7BO/V0u41HKP9/Y7GSPC4ZDvPnkt4EnvzaDt34gLHVNCRKQoKIHppmrVhrPyWZaNqpk7F23Ff95r1bGCX8VL98xx7w/96bHTtC26prx3kBHfcfB6Kr8cKVxWdpFrv4UDEp9m/g5AlHQP9PZxjYhWrbx8rsyov7DLccSSQfiMH32xiQsENN/pCWMj4LrG37BPaCfZUCf2fssLspToKAi/fHfEriyBUbOdfWREqeDfwQKi52G2cHMd1oSTamMPehsBg4XL1HQdrYRSx5KzIjJoPJOiAjhZj8HlQ/OJvH6MTEEgcVUl6noXxFsCwV5S726v/s1sQmQ18WHAAK44HVFK0xl2fB/HEO5vKfCMCsr4mQNoxNRIGe2XiXKrOs6nqKJUP900Gph1nuT7cINKy5RRF1edPSF8Wsdz+cxFQncbzIDcXQdLkAdFYO/seT0MMdAD3JcgQS/Bez0a8f3hX92ZR3NMwy2N7ZLFqZbrdQ4hcXQgAoXoKR3TbiP6Xj3stNOPjhx6fqVqwqpLhfE+sqQ7h09FsN/irYoPHEzz68Nl8fhNVEubq4rIeYOHKiorYO67n40VOTBlC8hu/JzUM7w79F4SbDyUq6P65zNqvNLGDi7nmJALXjAeM931NfO0IFEoUWrHrQvt7v+QPGLPTCmAQ==
+x-microsoft-antispam-message-info: z4iXq8761XT+ImJHppPlIHJ9xHV1olAuCVvrgfL7uIm2Wt4PnOLZ6UKtO87eU6BNEUWzyhUanmmlrIdXrSJqCYt1J3Y/9E9aaVRSLwnZ155SMW+cIo6CStXqBGnELNH2DeSotU2s6qURxzdKoobWwOjNzr16pOUt0cCmKgyanccZ838VhW1+VcDIqyIEoijWtZGjTE5P/482VKlo5rbFUQ9BCSan0p6Efx9QZ/3Egus2IydeQShtKOg6B7GU5/5aOEYIp1gJWqyA0vvKLVS5vP7V7MCUg73FvoAUBrfAac53UqSLcrrLc9JNlQO/fQTL1uZ6ln3nPejVgzQBnUI9j0z7WlwV8UEbGK1s7KAb/Yv0RwSpjHW53FXKirNiVLvzBLyz6lNRnTWYwfgzH70Ibab1zrRZ6Ik5xyvo3k/rxDci2L3mNS1rkERHKNgDuPyLD898OT0/vFAvsI2q23M8qUMO05X5+Kla5Nt9SUH4SRhyDeIZyTN5/DS5WTjz+aVcgTSLTjMce/LccMOlFvZPsLKd18QyM+qLMuWWgV/SG+GIHy8Df5jEYxru4SKSjlvL2EVyU3w0ZsKfhsF8HDlIoaFtGaUCD1pxtDIj66/PZ251zOI6FgoqwcxQnY0p4WUbTvJm9oWanuEQYcjHE5YwlQ==
 x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(39860400002)(396003)(346002)(366004)(376002)(451199021)(64756008)(66476007)(66556008)(76116006)(66946007)(66446008)(110136005)(54906003)(71200400001)(26005)(9686003)(6506007)(316002)(4326008)(41300700001)(478600001)(7696005)(8676002)(8936002)(5660300002)(52536014)(7416002)(86362001)(38100700002)(55016003)(33656002)(186003)(83380400001)(122000001)(921005)(38070700005)(2906002);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?UGI793xwxY394qOxe0e9ZcIPt82LPlJsjR7FHOVDELbJrRpYGo8A52vgC3?=
- =?iso-8859-2?Q?ZLRiKHKxMGLIZmjxv4nPITAkYwGQ/K19+SrWBdm/m4IKauY6GsgK3gvpZk?=
- =?iso-8859-2?Q?LQbinx66ib/WOZTiix8Kx2zzkIJaMXfebAlQeXyS0AZSKApESkz5Of6v9L?=
- =?iso-8859-2?Q?EZSfpchKJlUeH0l0e2MiDCqhvZSxbDhRbP1IH/AaqVLZcugWTdWW6s4C8E?=
- =?iso-8859-2?Q?ZcY2MImS8ePgp/uG1KajJx6PVwiDofmmvIe9vQF79ziKJ/ZDRHwZMqiyAz?=
- =?iso-8859-2?Q?8O+8MnuNd3YYETRnHg6aEMpNQ7swZCQU6omW9cCvrnDh2vZxBtmoj6o4we?=
- =?iso-8859-2?Q?iE3+lyVD/KWe6wRNmYKyryg9EtXFyoly4To7F+i+cekN+0G4YyVOgYueqp?=
- =?iso-8859-2?Q?wPO9b7bDXzWYGFdnTdo4mDt7LyUPg4K7VR9TNu1L7A5rQ7/IpVAXVMnzcF?=
- =?iso-8859-2?Q?8p0OTlOVmWMrJW1tAAB+lOVZNZFU++H6qk0jdsYX4qpdkydeE6/kc6l2Vv?=
- =?iso-8859-2?Q?c+k2gexZM0HGbJga/K0buesa94jBCF1o8WTi4GLQ+HZ0A2g/809cq15msc?=
- =?iso-8859-2?Q?00N+ixEgNaz/rzOafTG5N4pJpm7fekIXKY6g3Tn+0+A4PIE0UXQEgi20BD?=
- =?iso-8859-2?Q?+d2VanRiwH7oBfqGPVo95qia6uBmlXlTZ9KGh4QJZGfMcv7sdHtEpoPbTS?=
- =?iso-8859-2?Q?MqDmFpvksUA45LhEUMczrdAnMiQ6vFwAGODWnInBV+x0a5v/3o01AYNnHB?=
- =?iso-8859-2?Q?4QTGuOA+6a1zq66A4sPVPwpsLcAo1B/EiyvtDaR1vrMzn10B5O0WPObwLX?=
- =?iso-8859-2?Q?4H1J1ZWY1do4haIX2s4Myzwk1lXwvgThWD9zW6EBtCKnODa1+2UewIDrfn?=
- =?iso-8859-2?Q?hN6EzuUgybd1fmDfvwbKwX61XgR9k83tMwBbXE0gbU6GqtfJbSamL8OSH5?=
- =?iso-8859-2?Q?myGMJImreMm2hbFu26tzsfiwU2qdOVGoO2y3Jn++bJg2SSvlyUIIRzxnKa?=
- =?iso-8859-2?Q?WVPB/b0M4Ag63MGJt6SBSjtHDqJ3fH59uW+V/tKbGKErwV+gDqQizUNgLj?=
- =?iso-8859-2?Q?wwAGs+YNYPT2OMx+csCEvaJt2Ecl+6uOS/vZ2q2PnA7UP2RiWv4F6GPoZs?=
- =?iso-8859-2?Q?7blouv3f9fR9y4OG1n0RoIsF7pgXgyKUNN7cMTzFAmNQ13eyNnLc9Abm+1?=
- =?iso-8859-2?Q?eyNkL75mSD1inTmNBzArOTbJAfSEpTUdxcri0YQxA8hAzeyRsGMuZy5qj0?=
- =?iso-8859-2?Q?INTK6yQb7oDWauZCTJKra2HP8Z8YmJDTvueNjE33XP1l00rwngNHRPQT1O?=
- =?iso-8859-2?Q?zRmtFBkeqKNauKp0rYaUkA2jWk5KzNkRTdJ4twXNpZ5hJiKjkz/E7qmBEU?=
- =?iso-8859-2?Q?hswbtaevACOODTdKJ3LfEOlXlLmWyC2mIOJizHCQGFJLraOGMUkFnRVw23?=
- =?iso-8859-2?Q?tvFKR29Lgswk/jYwwglHj3kokZhFlwmymK3C13c6R+n4tW31h6XX5+LhVf?=
- =?iso-8859-2?Q?y/6yf57f/f1ECSbaTYl8F98z9CvatiAky/HkLW7H2hRIfc16OfHwM01JqK?=
- =?iso-8859-2?Q?obW8Qy9VCq9QmNot4dEwW4clGLo8fQ3o9v5cfNI/00VhZBL8yoVshznRBv?=
- =?iso-8859-2?Q?W4VLsS8dsUN0IOZYuvH9e+v/7jjQ4w8dSeVopZPlv/4La2KGaR7zWOXw?=
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?aqRXu7er2S3SnEHNVSTzMPsiQb0c4WjQ19GDa2zJWk+D3PKa6OGmCqsf2u?=
+ =?iso-8859-2?Q?VuDT2YHGKv7YY3c+446TMbr2YDjRV++l6OAWnbo/lVkh/WYtZl9gMrw5th?=
+ =?iso-8859-2?Q?VAmefrMbwDcP8J01NEdSCqoPnv7QOiBnXBCBt4z/MTM+N2c4ieOTivkkMJ?=
+ =?iso-8859-2?Q?3paTqaBD96J13hwxnCID7yJZ7x0C2RQRPbVE/0tARIg6tPz969SdJC0697?=
+ =?iso-8859-2?Q?vI5SJk7tVGQui65u6nEHlstvaLIkOy7dVBPLkHPGdVJZSE/z29QGr/pKtj?=
+ =?iso-8859-2?Q?lL2zH7Us5Tg1q8ozNFfi7KRlS+giZ6I48aVHQ1k2VChqZnbPbHm4KbWwBk?=
+ =?iso-8859-2?Q?BzMKzPj0XXGWkPdRfByjNh+JGthb1/tCDD9BGkfKzi+DzZ3oFy74C/OmFm?=
+ =?iso-8859-2?Q?l8z3xD2xyNC++4u9FatG91kovA3LAD+UpwBh6nIlJjgRBGbMNlFwbqijBp?=
+ =?iso-8859-2?Q?M+hLK1Zuo9toLDG5idfIH5BPSKShIk49EwJc/AsYr6TMCQ746WesmOw6qv?=
+ =?iso-8859-2?Q?UW8yShJpDne3P9Lhv4wju0WU/XDxFYVoxdKrnlOd0ZEW0Si34v6u6n5Gj8?=
+ =?iso-8859-2?Q?wmDlQ9rY9ZZzJxcuLMczXmv8HArExVlWxVDP/zzP+zHH9SXApZI7Cp6MZM?=
+ =?iso-8859-2?Q?dC34ofpiz0oFSDfc60rpjFHMol4dZ20yRbp/Q5ZYb+TqQfvzJn/B0v9gQm?=
+ =?iso-8859-2?Q?2FJY2cSqgcuj7up3Nd3/97eiZMfXLKriPQF5HgtIcMbFPWrdxjEB8k+cP3?=
+ =?iso-8859-2?Q?b7KQDGlGF6XPUGqPSn5fYGwIAjepgY9x4Hog6+s4dLcl5ZTKqr9NNVNOLx?=
+ =?iso-8859-2?Q?09dhiyxHE1WJ5d/7C6O/9wSf+kj7AoecJ+0co0IxytlJqPVCvAS0NIC3LW?=
+ =?iso-8859-2?Q?6UF8FeI/my7Vg+xPoKhc+tRBuzAogAl7eLr5uVkAZ4kK9mTH1g9w1p9p6w?=
+ =?iso-8859-2?Q?C1eFQVdSY+DG2JTC01aaWvy1bO1c6mPWbDBqWgtGvnWjqNcKuR3qhsmNiB?=
+ =?iso-8859-2?Q?o0O+pU+j8kQg5iR4xzWDmpq0jioA4cUV7jgZu3FlGa5RtwTO87vCaAnII9?=
+ =?iso-8859-2?Q?oCfjViyMT9gTiJCRl9Mebt+g3A0Pg2+uQz45DhQttAQD/Ip7qwGvKrPHkb?=
+ =?iso-8859-2?Q?LXpFPNetzEI5ThhSukXqYhk9UL+X8//utWUBEDmSOZyizFVy9lQy3XS4zT?=
+ =?iso-8859-2?Q?3zrrV0CQS8QZxjF62rgNPaMKctgiXPfjXGGb2/1AYECZSMsCS+MddduJTX?=
+ =?iso-8859-2?Q?b6VlkUy7Bn95EFTc3AwTTUtssi2NZeQHPm0EO/i1ApOaX278FyCx20IUmf?=
+ =?iso-8859-2?Q?tGNI+eWugzMqgSN+DhHQRk/49I/RtNJAKy+Rlpxo7MqvdEvqEoumaYdhJX?=
+ =?iso-8859-2?Q?8M7u38LkVF1k03y/8nUkYmpXnTXI6Zb+CsRUEBoha054L3Q+frlV4cP6eG?=
+ =?iso-8859-2?Q?OiAat6Cs9Ud4TkM/THtWRZMEr5YmLKipnF8vgRAL6c8Z60dXeJNALeKjXI?=
+ =?iso-8859-2?Q?FnlFF98UcYC8TJIjEm32bgCzJ1iM8J3bKN9JsVCWBJQDmOZmkDzEs1wh2u?=
+ =?iso-8859-2?Q?injOMsewpveLg0IAeq25XiNFmzR50QUahxvJujwhHF6vpOdCTf42Ozj836?=
+ =?iso-8859-2?Q?56AKSCugwdoXFKi8ReVoCli9YnGKDKjQ9MqhRoUoc5oHlUT4kNN6KzvA?=
  =?iso-8859-2?Q?=3D=3D?=
 Content-Type: text/plain; charset="iso-8859-2"
 Content-Transfer-Encoding: quoted-printable
@@ -117,13 +117,13 @@ MIME-Version: 1.0
 X-OriginatorOrg: renesas.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b94dd63-061a-475e-0b61-08db52cf15a2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2023 09:55:57.7239
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00350392-2ec2-48b5-6f2b-08db52cf18d8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2023 09:56:03.1305
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: O4jdGgTMMR8XjXRikVFcSW6pQvugtsr28HoE0AeWxgR//QJ0iKjcVBYvHU73d4vQEkhJNwMZZT6y6bbHGpXYujX2gsjef8gI42cfD+dhwcnh9feEpPbM3X8GGMylVyaC
+X-MS-Exchange-CrossTenant-userprincipalname: JIwZgPSU2safWmDFlASls+6uxAhwPfRtv7w6WpNGvXfUkEfu/bTt9Pjh3mDfQJ91F5K22fnRhLkLgn+y3oEWU5tFr8QpsXrWheptEzcfNqlkPXRUag/LjzklwblI+CYM
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB9669
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -139,12 +139,9 @@ Hi Serge,
 
 > From: Serge Semin, Sent: Friday, May 12, 2023 4:09 AM
 >=20
-> Most likely by mistake the PORT_LINK_FAST_LINK_MODE flag unsetting was
-> added twice in the commit cff9244432e8 ("PCI: dwc: Ensure FAST_LINK_MODE
-> is cleared"): first it is cleared right after the content of the
-> PCIE_PORT_LINK_CONTROL register is read, second it's cleared in the
-> framework of the link-mode initialization procedure. The later action is
-> redundant. Let's drop it.
+> Well, just drop a redundant empty line from the tail of the denoted
+> function which by mistake was added in commit 39bc5006501c ("PCI: dwc:
+> Centralize link gen setting").
 >=20
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
@@ -162,17 +159,18 @@ Yoshihiro Shimoda
 >=20
 > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/c=
 ontroller/dwc/pcie-designware.c
-> index 8e33e6e59e68..e55b7b387eb6 100644
+> index e55b7b387eb6..ede166645289 100644
 > --- a/drivers/pci/controller/dwc/pcie-designware.c
 > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -1019,7 +1019,6 @@ void dw_pcie_setup(struct dw_pcie *pci)
->  	}
+> @@ -729,7 +729,6 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie=
+ *pci, u32 link_gen)
 >=20
->  	/* Set the number of lanes */
-> -	val &=3D ~PORT_LINK_FAST_LINK_MODE;
->  	val &=3D ~PORT_LINK_MODE_MASK;
->  	switch (pci->num_lanes) {
->  	case 1:
+>  	cap &=3D ~((u32)PCI_EXP_LNKCAP_SLS);
+>  	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, cap | link_speed);
+> -
+>  }
+>=20
+>  void dw_pcie_iatu_detect(struct dw_pcie *pci)
 > --
 > 2.40.0
 >=20

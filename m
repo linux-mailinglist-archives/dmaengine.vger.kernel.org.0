@@ -2,216 +2,100 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FF27700A1B
-	for <lists+dmaengine@lfdr.de>; Fri, 12 May 2023 16:16:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37BC17010D0
+	for <lists+dmaengine@lfdr.de>; Fri, 12 May 2023 23:17:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241249AbjELOQA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 12 May 2023 10:16:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47112 "EHLO
+        id S239968AbjELVRQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 12 May 2023 17:17:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241507AbjELOPv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 May 2023 10:15:51 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC4801492C
-        for <dmaengine@vger.kernel.org>; Fri, 12 May 2023 07:15:32 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-ba6388fb2fbso7310563276.1
-        for <dmaengine@vger.kernel.org>; Fri, 12 May 2023 07:15:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683900932; x=1686492932;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ghbGq9THJREEhkrSIStzO+A3rtDBCJPDalH7s9571pA=;
-        b=vF0Us9UlMXGLXLj1s1tWk3AyVw8tBCXUEnr9XNTtQ8N7JaOIqkdLiflH0w9EI9IaKU
-         6scnMtkiKb8kdFRAbRJ8uxb3wv8c6l6s7HCInpDhGo+HHup+aVHJfh4DVLtoEXs8+qni
-         31D/glRmakh4+sRhXNpuME3k1C7c6RRwKOgO3Ge3+dpvH6Q/HAPQnxd2uQd/C0VpSRN8
-         uX7KyG2x8Krb+3eoDO31JgPReMPbtHBoNpgSOMel1zh64Cr/kYop3aOITI3teaPF++Vz
-         /HbNprO+LkKJ90JAZ3vjXe1sy8vKkJEPoTgkCpGzg2tNwx4lnwcWwdQFQYzSE446QO5S
-         QX3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683900932; x=1686492932;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ghbGq9THJREEhkrSIStzO+A3rtDBCJPDalH7s9571pA=;
-        b=cGq3B1YI1R0trWIyQj3mv2BlshOlr8x9/bB3SZ1sCdnXzLjUi3Jm9HQCnp6RRsngqG
-         +C7UIawTJ4W1A1g/iPLEmrxDwfYBPioS5v4f28zQO8otmd+rGOIDFBJNJKjPiQzeFqz6
-         RpIy10D4UQTeYFzxidqUTLPxa5IWBfqYQXnpHK1nzVL/s7ycwWQIX3bXmOu2oO0+mXDV
-         IXFjVZyhbu8LJ+s+HC6W614qgpZr9jjYGm7RI/G+n3/87O3DdC1yw0v2gvEYVBWXjRDF
-         B904Pp7xsnGk39DfWSVjDhrUu79QzHqt4Dj2HmkrOCfz1JIWwCw3Ou+JbjlS6m4IeTvg
-         hRkw==
-X-Gm-Message-State: AC+VfDzkQPtdBtPPcoTBOlDOUAElUZIvxno8/m1ytCEnKhyhfdNLvREP
-        iKRZeaC+oVbcx5Mlp4F97hkuNnzIVBqp5Q==
-X-Google-Smtp-Source: ACHHUZ5n4GOwp+yXNZiY6lRiLp1LINyIY9W5VlLM4zkXtJJ0m6OA3RidwExCa/CyBYADnz8F1YZwsAkCUT1AKw==
-X-Received: from joychakr.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:6ea])
- (user=joychakr job=sendgmr) by 2002:a25:c7d0:0:b0:ba7:1cea:ee12 with SMTP id
- w199-20020a25c7d0000000b00ba71ceaee12mr954256ybe.12.1683900931853; Fri, 12
- May 2023 07:15:31 -0700 (PDT)
-Date:   Fri, 12 May 2023 14:14:45 +0000
-In-Reply-To: <20230512141445.2026660-1-joychakr@google.com>
-Mime-Version: 1.0
-References: <20230512141445.2026660-1-joychakr@google.com>
-X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
-Message-ID: <20230512141445.2026660-7-joychakr@google.com>
-Subject: [PATCH v2 6/6] dmaengine: pl330: Use dma singles for peripheral _dregs
-From:   Joy Chakraborty <joychakr@google.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, manugautam@google.com,
-        danielmentz@google.com, sjadavani@google.com,
-        Joy Chakraborty <joychakr@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S239672AbjELVRO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 May 2023 17:17:14 -0400
+X-Greylist: delayed 2660 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 12 May 2023 14:16:43 PDT
+Received: from fallback19.i.mail.ru (fallback19.i.mail.ru [79.137.243.70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F59FD86B;
+        Fri, 12 May 2023 14:16:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru; s=mail4;
+        h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=lK+PuqG/PZ+bMj03Uv3D+HZoOeeeJLmEi2QLkUdPOZg=;
+        t=1683926203;x=1684016203; 
+        b=ZRFnGzUSRrYrmQ/v4HBirm8RfJdJW8MV66/kRVxXEdZR5cxnCr3yPT/oDUEI2i+2QNO0EpGUPH7YCDNRUr1506xvCwEC7IUUMHWyXLBaLiFqZIuWf9uT2t+FbrMz1nbuGo3uYcHH4aRJYs+4U+N/UAHGiFFdXaklyYsVyT+nOqrL1IjMGeB9CRprvIJKfLNlCROcwG8Tcxt8oSXGciPA+0H248926n1yz4TZKk7U2AcAhhcdRxLMzGHiJ6AOlg/t2vXvPkZHVA7DUwDcsjqOhRUNabg8ZJQeY5tq4cG3Ghja1LIwU+CAMo7ah0GwnaLWu6kvhvq4km/Z6EbN5yHngA==;
+Received: from [10.161.55.49] (port=48596 helo=smtpng1.i.mail.ru)
+        by fallback19.i.mail.ru with esmtp (envelope-from <fido_max@inbox.ru>)
+        id 1pxZQq-001ItA-9o; Fri, 12 May 2023 23:32:04 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru; s=mail4;
+        h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=lK+PuqG/PZ+bMj03Uv3D+HZoOeeeJLmEi2QLkUdPOZg=;
+        t=1683923524;x=1684013524; 
+        b=giunTIeifrV1WsLu/7Zn5qvD9772DsJTwfN1OSqh1E19rozYNYIiuSA5kU9HjKR3pCaqliWM3OmB1n9RX73kOJZRVeelfFl/A4PansB6c6cC0vf3D7UmcyCZx6StBADM997r4ceqdLnmGzU6EHgRpnXvw4wQl0lEVh8/LJDziiVKOneCL5R3Q7AosHwcLFzjfc6fwufxF3tW0Sup2MJl96AL6v7B8nlqZsOH15h1lNxSC49wZyldB/Z6xBADz5OE4bhJCwJPfJCDdmjKyyj+SjuqPbyQXP0zl4HbeuuLRc0vM8A46eb1Dug606w9XQAv0ic3KFVzhg7P8IcYtiSBEQ==;
+Received: by smtpng1.m.smailru.net with esmtpa (envelope-from <fido_max@inbox.ru>)
+        id 1pxZPl-0006Yx-OW; Fri, 12 May 2023 23:30:58 +0300
+From:   Maxim Kochetkov <fido_max@inbox.ru>
+To:     dmaengine@vger.kernel.org
+Cc:     Maxim Kochetkov <fido_max@inbox.ru>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] dmaengine: dw-axi-dmac: drop useless apb_regs messages
+Date:   Fri, 12 May 2023 23:30:46 +0300
+Message-Id: <20230512203046.96919-1-fido_max@inbox.ru>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Mailru-Src: smtp
+X-7564579A: 646B95376F6C166E
+X-77F55803: 4F1203BC0FB41BD92B2351A05AA37E8C9BC00D86A046157D6099CAA8803524B300894C459B0CD1B91E891992F5778DF00FCD0F2A2F6DE3A558CA1F617DB34F2432F1CFC60563ED00
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7D4C8253EF564ECCEEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F7900637F757A79C3007ACA28638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D88ACE8037EF8144AC9AEB94AE6D4B875B6F9789CCF6C18C3F8528715B7D10C86878DA827A17800CE7212612128AA291179FA2833FD35BB23D9E625A9149C048EE902A1BE408319B296FD1C55BDD38FC3FD2E47CDBA5A96583BD4B6F7A4D31EC0BC014FD901B82EE079FA2833FD35BB23D27C277FBC8AE2E8BFF6C1D329F95ABD4A471835C12D1D977C4224003CC8364762BB6847A3DEAEFB0F43C7A68FF6260569E8FC8737B5C2249E5E764EB5D94DBD4E827F84554CEF50127C277FBC8AE2E8BA83251EDC214901ED5E8D9A59859A8B6753C3A5E0A5AB5B7089D37D7C0E48F6C5571747095F342E88FB05168BE4CE3AF
+X-C1DE0DAB: 0D63561A33F958A5EF76BAC35411AC8864A5293F74C880E3EAE5440BC58813D4F87CCE6106E1FC07E67D4AC08A07B9B0A6C7FFFE744CA7FB9C5DF10A05D560A950611B66E3DA6D700B0A020F03D25A0997E3FB2386030E77
+X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CF7C5FD2CA3C4C0EA444D11449886594C9F87BBFFC3ABBBF47A199EE618BC606C9E98901B1639BBD6317FE5FAEF308060728D8493C4F6E23BCC0B07C5A4A27588306EEC8038AF5C160
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojSxP3OVHGGxEaUyKCfIHZwA==
+X-Mailru-Sender: 689FA8AB762F73933AF1F914F131DBF5C6D525BB210F34E1949B2C900674031398CC072019C18A892CA7F8C7C9492E1F2F5E575105D0B01ADBE2EF17B331888EEAB4BC95F72C04283CDA0F3B3F5B9367
+X-Mras: Ok
+X-7564579A: 78E4E2B564C1792B
+X-77F55803: 6242723A09DB00B4F94BC29E10CAA32028F76D7ACC9C877ABDCFC54178319ED568F3CF0E9FE49B69E99F2AC85445CF8A0BB90AAF709EAF7E6A26C623EBBA28658B0FC916A5BA051E
+X-7FA49CB5: 0D63561A33F958A5020A52AECE418A5A103E5EA9C703B0B60C13F039F00C03A3CACD7DF95DA8FC8BD5E8D9A59859A8B63E5666BE991EB762
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5xhPKz0ZEsZ5k6NOOPWz5QAiZSCXKGQRq3/7KxbCLSB2ESzQkaOXqCBFZPLWFrEGlV1shfWe2EVcxl5toh0c/aCGOghz/frdRhzMe95NxDFdFotv4hLRoZviRObnacbF6w==
+X-Mailru-MI: C000000000000800
+X-Mras: Ok
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Use DMA singles in a loop to load/store data to the peripheral for
-the remaining bytes left after chucks of bursts are done, which is
-handled by the _dregs() function.
+If apb_regs is not used then drivers prints useless message in
+console in every transaction:
 
-If the transfer length is not a multiple of (AxLen*AxSize) then the
-_dregs function takes care of setting up CCR with residual burst
-required to complete the transaction. It does so by changing the
-AxLen in CCR and 1 burst of Load and Store.
-But some peripherals might not set the burst request signal to the DMA
-controller since the number of bytes to transfer is less then the
-initial size of burst requested i.e. AxLen*AxSize leading to a forever
-wait.
+[  217.527569] dw_axi_dmac_platform 10000000.sys-axi-dma: apb_regs not initialized
 
-Example of such a case :
-    Considering a peripheral having an RX FIFO of n bytes and a sw
-    configurable threshold level logic which drives the RX burst req
-    signal to PL330 i.e. when data in the RX fifo crosses the threshold
-    value the peripheral asserts the RX burst request to PL330 to copy
-    data from the fifo in bursts.
-    Taking an example say the Rx Fifo is 256 bytes in depth, the max
-    AxLen is 16, max AxSize is 4bytes and 304 bytes had to copied from
-    peripheral to memory.
-    In this case the peripheral SW driver would configure the threshold
-    to the maximum possible burst size (AxLen*AxSize) i.e. 64 bytes and
-    pass the same to pl330 driver using src/dst_maxburst variable.
-    PL330 would copy the first 256 bytes with 4 burst transactions and
-    the 48 remaining bytes would be handled by _dregs().
-    Currently _dregs() would setup a burst for AxLen=3 and AxSize=16 to
-    copy the 48bytes but since 48bytes is below the threshold configured
-    at the peripheral the Rx burst request signal would not get set
-    leading to a forever wait and timeout.
-    This logic will copy the remaining 48bytes using single transactions
-    of 4bytes each which would not depend on the burst req signal from
-    the peripheral.
+Drop this message printing to reduce console noise.
 
-Instructions generated for above example with logic change:
-    DMAMOV CCR 0xbd0239
-    DMAMOV SAR 0xffffe000
-    DMAMOV DAR 0xffffc860
-    DMALP_1 3
-    DMAFLUSHP 0
-    DMAWFPB 0
-    DMALDB
-    DMASTPB 0
-    DMALPENDA_1 bjmpto_7
-    DMAMOV CCR 0xad0229
-    DMALDA
-    DMALP_0 11
-    DMAFLUSHP 0
-    DMAWFPS 0
-    DMASTPS 0
-    DMALPENDA_0 bjmpto_6
-    DMASEV 3
-    DMAEND
-
-Signed-off-by: Joy Chakraborty <joychakr@google.com>
+Signed-off-by: Maxim Kochetkov <fido_max@inbox.ru>
 ---
- drivers/dma/pl330.c | 65 +++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 63 insertions(+), 2 deletions(-)
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 46e254fd4007..2145f601939e 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -1208,6 +1208,67 @@ static inline int _ldst_peripheral(struct pl330_dmac *pl330,
- 	return off;
- }
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+index 6937cc0c0b65..d6899481803a 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+@@ -356,7 +356,6 @@ static void dw_axi_dma_set_byte_halfword(struct axi_dma_chan *chan, bool set)
+ 	u32 reg_width, val;
  
-+/*
-+ * Sets up transfers to peripheral using DMA Singles instead of Bursts.
-+ * Data is moved between fifo and memory in bursts following which it is
-+ * loaded/stored to peripheral using Loops of DMA singles based on
-+ * transfer direction.
-+ */
-+static inline int _ldst_periph_single_dregs(struct pl330_dmac *pl330,
-+					    unsigned int dry_run, u8 buf[],
-+					    const struct _xfer_spec *pxs,
-+					    int src_length, int dst_length)
-+{
-+	int off = 0;
-+	unsigned int ljmp, lpcnt;
-+	struct _arg_LPEND lpend;
-+	enum dma_transfer_direction direction = pxs->desc->rqtype;
-+
-+	if (direction == DMA_MEM_TO_DEV) {
-+		off += _emit_load(dry_run, &buf[off], ALWAYS, direction,
-+				  pxs->desc->peri);
-+		lpcnt = dst_length;
-+	} else {
-+		lpcnt = src_length;
-+	}
-+
-+	/*
-+	 * Use Loop Cnt 0 to load/store from/to peripheral in single transactions
-+	 * since Burst Req might not be set as pending transfer length maybe less
-+	 * size of bytes to burst (AxSize * AxLen).
-+	 */
-+	off += _emit_LP(dry_run, &buf[off], 0, lpcnt);
-+	ljmp = off;
-+
-+	/*
-+	 * do FLUSHP at beginning to clear any stale dma requests before the
-+	 * first WFP.
-+	 */
-+	if (!(pl330->quirks & PL330_QUIRK_BROKEN_NO_FLUSHP))
-+		off += _emit_FLUSHP(dry_run, &buf[off], pxs->desc->peri);
-+
-+	off += _emit_WFP(dry_run, &buf[off], SINGLE, pxs->desc->peri);
-+
-+	if (direction == DMA_MEM_TO_DEV)
-+		off += _emit_store(dry_run, &buf[off], SINGLE, direction,
-+				   pxs->desc->peri);
-+	else
-+		off += _emit_load(dry_run, &buf[off], SINGLE, direction,
-+				  pxs->desc->peri);
-+
-+	lpend.cond = ALWAYS;
-+	lpend.forever = false;
-+	lpend.loop = 0;
-+	lpend.bjump = off - ljmp;
-+	off += _emit_LPEND(dry_run, &buf[off], &lpend);
-+
-+	if (direction == DMA_DEV_TO_MEM)
-+		off += _emit_store(dry_run, &buf[off], ALWAYS, direction,
-+				   pxs->desc->peri);
-+
-+	return off;
-+}
-+
- static int _bursts(struct pl330_dmac *pl330, unsigned dry_run, u8 buf[],
- 		const struct _xfer_spec *pxs, int cyc)
- {
-@@ -1273,8 +1334,8 @@ static int _dregs(struct pl330_dmac *pl330, unsigned int dry_run, u8 buf[],
- 	case DMA_MEM_TO_DEV:
- 	case DMA_DEV_TO_MEM:
- 		off += _emit_MOV(dry_run, &buf[off], CCR, dregs_ccr);
--		off += _ldst_peripheral(pl330, dry_run, &buf[off], pxs, 1,
--					BURST);
-+		off += _ldst_periph_single_dregs(pl330, dry_run, &buf[off],
-+							 pxs, src_length, dst_length);
- 		break;
+ 	if (!chan->chip->apb_regs) {
+-		dev_dbg(chan->chip->dev, "apb_regs not initialized\n");
+ 		return;
+ 	}
  
- 	case DMA_MEM_TO_MEM:
+@@ -523,7 +522,6 @@ static void dw_axi_dma_set_hw_channel(struct axi_dma_chan *chan, bool set)
+ 	unsigned long reg_value, val;
+ 
+ 	if (!chip->apb_regs) {
+-		dev_err(chip->dev, "apb_regs not initialized\n");
+ 		return;
+ 	}
+ 
 -- 
-2.40.1.606.ga4b1b128d6-goog
+2.39.2
 

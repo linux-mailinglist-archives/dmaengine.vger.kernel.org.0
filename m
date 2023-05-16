@@ -2,60 +2,60 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 00834704E4F
+	by mail.lfdr.de (Postfix) with ESMTP id AA067704E4E
 	for <lists+dmaengine@lfdr.de>; Tue, 16 May 2023 14:56:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233204AbjEPM4Y (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 16 May 2023 08:56:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35994 "EHLO
+        id S233321AbjEPM4Z (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 16 May 2023 08:56:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233271AbjEPM4R (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 16 May 2023 08:56:17 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D21811FD2
-        for <dmaengine@vger.kernel.org>; Tue, 16 May 2023 05:55:47 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2ac78bb48eeso147184071fa.1
-        for <dmaengine@vger.kernel.org>; Tue, 16 May 2023 05:55:47 -0700 (PDT)
+        with ESMTP id S233236AbjEPM4T (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 16 May 2023 08:56:19 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DBEB6587
+        for <dmaengine@vger.kernel.org>; Tue, 16 May 2023 05:55:50 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id 38308e7fff4ca-2ac8d9399d5so133323071fa.1
+        for <dmaengine@vger.kernel.org>; Tue, 16 May 2023 05:55:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684241743; x=1686833743;
+        d=linaro.org; s=google; t=1684241744; x=1686833744;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HXjTKNG/4Q9BqbjF143T/9kpVtT1Frl+2u0I19+j0Tw=;
-        b=AD2VueX4Pbraf05ngrY77FYs6FcnQJMuaaRGp77fLkEDQ/aAmrkVFByrKRdfb/26S1
-         hZRlle0gdGPMXMWaNB/zQ+C+ei2kQI7M6qie0+xcWuLmoR7297GFaS1ivnC9HZIvbvcb
-         rOu/eV7XMd896JpEAiL4uM6qBx7MjEWGlxWnUX+oJzDrH7aUypHS+jcyqhdWqBCOa+Ob
-         AWbWvc835cbYuOMit40ehoaXejghkRWqfhEYTuEspVpRBhUSPZUfxw+LfPBJ62TMLb/N
-         DojPnTARUN5CJ0bOEqKttY/0h8Z1NXRIBzHU6miu1Qf6YqXG17NWDmwooDva+9cUHmzz
-         Qcjg==
+        bh=OMwKntuZiWZlps+UjnlWk+jBiexFAEwBosD6Wyn0I9A=;
+        b=KkBp8x9/KuCNgqi5LqNxZdVhA17gBOVCQVbh48a7pySoiXd5VRWX+Ey96bcLzkoY1S
+         GuNCoYeQPSHYrtGwdT+G0SBGAVSK71Xc1ouBjpz+IIxWH+NJTHW/dWfcl+Hf+XGjazAI
+         /wBYeRcfdVzFRa/9XkbmrY4ulFF5roW3lSsNzZtgOiyXWYDNzn22Ry/KS4WWH/vZvCtr
+         3iaSL5PwNy+ddiqOAFRsNAR5eH61x3hNuxiP+uCIChYEEX2749PviEMyTwXeGkV7a3mr
+         jLMhx3y1Gmt9K+3C/wEi0v2a+LuT40HS1l7Hn/7HyecjCjSSUKAFG1mfshnej9pZHzP5
+         MUfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684241743; x=1686833743;
+        d=1e100.net; s=20221208; t=1684241744; x=1686833744;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HXjTKNG/4Q9BqbjF143T/9kpVtT1Frl+2u0I19+j0Tw=;
-        b=fk+/kWu77aQLZiieBhbPEicNGJGzQraxL23ro5/rYRq3wmeNUPlRDihmQC3v4aA8C9
-         nlkSBxliazdfblBq13WWE0aBsZEPJpbgsGngacXDDurlbng7Q6Lsm93ODErClzTeYp++
-         oh37Ut391JJsJHWwRgZ87YTik91icRG1zD/leE/nr67B5sqJG3yBY0bPdHyrRZRNGwew
-         ITZPPlaqHBED02hpJRKS0AMtK5Z8klJTwiP3uoqiO7lJLp+3Mk+WuAKq7ulKXDlVehOe
-         hTt4GpLCXAjob6Z+3Fli+Jdm4uO37xa1v8cCooN2ekyywrFX5gQSJlk/KT82MJpCm7aX
-         SUJg==
-X-Gm-Message-State: AC+VfDxLZi5GgMdRXvewxzZ6dniXLn85A2seC/qcJqyHnr3DJtPCxdXL
-        bw9oBY2eYiBaQY6j7BIhKzTrtCcJmAYvjUF3v6c=
-X-Google-Smtp-Source: ACHHUZ7AEmd/oegRDvhdW4xIZMmvxg+7pwTYg1MWoJiZQyGlAgiMbV6SawrsmnSGyuGxT5tXX4y/4A==
-X-Received: by 2002:a2e:9697:0:b0:2a8:aec9:b0ba with SMTP id q23-20020a2e9697000000b002a8aec9b0bamr8495250lji.11.1684241742778;
-        Tue, 16 May 2023 05:55:42 -0700 (PDT)
+        bh=OMwKntuZiWZlps+UjnlWk+jBiexFAEwBosD6Wyn0I9A=;
+        b=SqrJjRuIUFwMJB+1XJ5TcdH+2QPKERY+30Fbk/GGRy+m7SCVBmKVu0hFP+a9e93Wj2
+         3sHUXPpzVmSXxdExWUSuAg+xSbpzi+PvTJel2w/zFYqnWVPrYcRBzNW/hDMy2zK1sF0E
+         kuo93RKuZLenzNJKkBMtq8kzYhswMCsyidT+dDgRoQJb+47rmF/XlxHfmKQOFVmpwGI7
+         vHIbKuPWvjdYEXXAfjOPGAVWNIBig/QcGThw4H/bbllYbNZkEFPd8OOiGYB/K6Zb10mC
+         F7oxJTIjliSLi8vmarPkNZM/3GucrkbMJEYNhF0+ElnGjSZzmbkcK7XLkhbn9nqD9evg
+         aPEA==
+X-Gm-Message-State: AC+VfDwU4fSXJ7gwPdFTFXyOIaOaybQT/QN1uzeV6VaCu0ODreSXIeMn
+        8c6QH0FxFDk0xNSF1zdC8S8/4RQ/W8CTy+X+M0E=
+X-Google-Smtp-Source: ACHHUZ7URbgxM3deqsVVcddMzg3AxQ50GbmmyTFpMekTCsfy1oG0HQHzCIasz5WzQEwBPqYYA+T/jg==
+X-Received: by 2002:a2e:b70b:0:b0:2ac:83bb:ab46 with SMTP id j11-20020a2eb70b000000b002ac83bbab46mr7935515ljo.30.1684241743843;
+        Tue, 16 May 2023 05:55:43 -0700 (PDT)
 Received: from [192.168.1.2] (c-05d8225c.014-348-6c756e10.bbcust.telenor.se. [92.34.216.5])
-        by smtp.gmail.com with ESMTPSA id o23-20020a2e7317000000b002add1f4a92asm1647789ljc.113.2023.05.16.05.55.41
+        by smtp.gmail.com with ESMTPSA id o23-20020a2e7317000000b002add1f4a92asm1647789ljc.113.2023.05.16.05.55.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 May 2023 05:55:41 -0700 (PDT)
+        Tue, 16 May 2023 05:55:43 -0700 (PDT)
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 16 May 2023 14:55:33 +0200
-Subject: [PATCH v3 3/7] dmaengine: ste_dma40: Add dev helper variable
+Date:   Tue, 16 May 2023 14:55:34 +0200
+Subject: [PATCH v3 4/7] dmaengine: ste_dma40: Remove platform data
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230417-ux500-dma40-cleanup-v3-3-60bfa6785968@linaro.org>
+Message-Id: <20230417-ux500-dma40-cleanup-v3-4-60bfa6785968@linaro.org>
 References: <20230417-ux500-dma40-cleanup-v3-0-60bfa6785968@linaro.org>
 In-Reply-To: <20230417-ux500-dma40-cleanup-v3-0-60bfa6785968@linaro.org>
 To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
@@ -74,225 +74,254 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The &pdev->dev device pointer is used so many times in the
-probe() and d40_hw_detect_init() functions that a local *dev
-variable makes the code way easier to read.
+The Ux500 is device tree-only since ages. Delete the
+platform data header and push it into or next to the driver
+instead.
+
+Drop the non-DT probe path since this will not happen.
 
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/dma/ste_dma40.c | 50 +++++++++++++++++++++++++------------------------
- 1 file changed, 26 insertions(+), 24 deletions(-)
+ drivers/dma/ste_dma40.c                            |  56 ++++++++----
+ .../dma-ste-dma40.h => drivers/dma/ste_dma40.h     | 101 +--------------------
+ drivers/dma/ste_dma40_ll.c                         |   3 +-
+ 3 files changed, 41 insertions(+), 119 deletions(-)
 
 diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
-index 7890ccae61f9..813de4efced5 100644
+index 813de4efced5..48c9606cfd46 100644
 --- a/drivers/dma/ste_dma40.c
 +++ b/drivers/dma/ste_dma40.c
-@@ -3104,6 +3104,7 @@ static int __init d40_phy_res_init(struct d40_base *base)
- static struct d40_base * __init d40_hw_detect_init(struct platform_device *pdev)
- {
- 	struct stedma40_platform_data *plat_data = dev_get_platdata(&pdev->dev);
-+	struct device *dev = &pdev->dev;
- 	struct clk *clk;
- 	void __iomem *virtbase;
- 	struct resource *res;
-@@ -3117,15 +3118,15 @@ static struct d40_base * __init d40_hw_detect_init(struct platform_device *pdev)
- 	u32 cid;
- 	u8 rev;
+@@ -23,11 +23,39 @@
+ #include <linux/of_dma.h>
+ #include <linux/amba/bus.h>
+ #include <linux/regulator/consumer.h>
+-#include <linux/platform_data/dma-ste-dma40.h>
  
--	clk = clk_get(&pdev->dev, NULL);
-+	clk = clk_get(dev, NULL);
- 	if (IS_ERR(clk)) {
--		d40_err(&pdev->dev, "No matching clock found\n");
-+		d40_err(dev, "No matching clock found\n");
- 		goto check_prepare_enabled;
- 	}
+ #include "dmaengine.h"
++#include "ste_dma40.h"
+ #include "ste_dma40_ll.h"
  
- 	clk_ret = clk_prepare_enable(clk);
- 	if (clk_ret) {
--		d40_err(&pdev->dev, "Failed to prepare/enable clock\n");
-+		d40_err(dev, "Failed to prepare/enable clock\n");
- 		goto disable_unprepare;
- 	}
++/**
++ * struct stedma40_platform_data - Configuration struct for the dma device.
++ *
++ * @dev_tx: mapping between destination event line and io address
++ * @dev_rx: mapping between source event line and io address
++ * @disabled_channels: A vector, ending with -1, that marks physical channels
++ * that are for different reasons not available for the driver.
++ * @soft_lli_chans: A vector, that marks physical channels will use LLI by SW
++ * which avoids HW bug that exists in some versions of the controller.
++ * SoftLLI introduces relink overhead that could impact performace for
++ * certain use cases.
++ * @num_of_soft_lli_chans: The number of channels that needs to be configured
++ * to use SoftLLI.
++ * @use_esram_lcla: flag for mapping the lcla into esram region
++ * @num_of_memcpy_chans: The number of channels reserved for memcpy.
++ * @num_of_phy_chans: The number of physical channels implemented in HW.
++ * 0 means reading the number of channels from DMA HW but this is only valid
++ * for 'multiple of 4' channels, like 8.
++ */
++struct stedma40_platform_data {
++	int				 disabled_channels[STEDMA40_MAX_PHYS];
++	int				*soft_lli_chans;
++	int				 num_of_soft_lli_chans;
++	bool				 use_esram_lcla;
++	int				 num_of_memcpy_chans;
++	int				 num_of_phy_chans;
++};
++
+ #define D40_NAME "dma40"
  
-@@ -3151,11 +3152,11 @@ static struct d40_base * __init d40_hw_detect_init(struct platform_device *pdev)
- 			& 255) << (i * 8);
- 
- 	if (cid != AMBA_CID) {
--		d40_err(&pdev->dev, "Unknown hardware! No PrimeCell ID\n");
-+		d40_err(dev, "Unknown hardware! No PrimeCell ID\n");
- 		goto unmap_io;
- 	}
- 	if (AMBA_MANF_BITS(pid) != AMBA_VENDOR_ST) {
--		d40_err(&pdev->dev, "Unknown designer! Got %x wanted %x\n",
-+		d40_err(dev, "Unknown designer! Got %x wanted %x\n",
- 			AMBA_MANF_BITS(pid),
- 			AMBA_VENDOR_ST);
- 		goto unmap_io;
-@@ -3171,7 +3172,7 @@ static struct d40_base * __init d40_hw_detect_init(struct platform_device *pdev)
- 	 */
- 	rev = AMBA_REV_BITS(pid);
- 	if (rev < 2) {
--		d40_err(&pdev->dev, "hardware revision: %d is not supported", rev);
-+		d40_err(dev, "hardware revision: %d is not supported", rev);
- 		goto unmap_io;
- 	}
- 
-@@ -3189,7 +3190,7 @@ static struct d40_base * __init d40_hw_detect_init(struct platform_device *pdev)
- 
- 	num_log_chans = num_phy_chans * D40_MAX_LOG_CHAN_PER_PHY;
- 
--	dev_info(&pdev->dev,
-+	dev_info(dev,
- 		 "hardware rev: %d @ %pa with %d physical and %d logical channels\n",
- 		 rev, &res->start, num_phy_chans, num_log_chans);
- 
-@@ -3209,7 +3210,7 @@ static struct d40_base * __init d40_hw_detect_init(struct platform_device *pdev)
- 	base->phy_size = resource_size(res);
- 	base->virtbase = virtbase;
- 	base->plat_data = plat_data;
--	base->dev = &pdev->dev;
-+	base->dev = dev;
- 	base->phy_chans = ((void *)base) + ALIGN(sizeof(struct d40_base), 4);
- 	base->log_chans = &base->phy_chans[num_phy_chans];
- 
-@@ -3505,7 +3506,8 @@ static int __init d40_of_probe(struct platform_device *pdev,
- 
- static int __init d40_probe(struct platform_device *pdev)
- {
--	struct stedma40_platform_data *plat_data = dev_get_platdata(&pdev->dev);
-+	struct device *dev = &pdev->dev;
-+	struct stedma40_platform_data *plat_data = dev_get_platdata(dev);
- 	struct device_node *np = pdev->dev.of_node;
- 	struct device_node *np_lcpa;
- 	int ret = -ENOENT;
-@@ -3522,7 +3524,7 @@ static int __init d40_probe(struct platform_device *pdev)
- 				goto report_failure;
- 			}
- 		} else {
--			d40_err(&pdev->dev, "No pdata or Device Tree provided\n");
-+			d40_err(dev, "No pdata or Device Tree provided\n");
- 			goto report_failure;
- 		}
- 	}
-@@ -3541,24 +3543,24 @@ static int __init d40_probe(struct platform_device *pdev)
- 	/* Get IO for logical channel parameter address (LCPA) */
- 	np_lcpa = of_parse_phandle(np, "sram", 0);
- 	if (!np_lcpa) {
--		dev_err(&pdev->dev, "no LCPA SRAM node\n");
-+		dev_err(dev, "no LCPA SRAM node\n");
- 		goto report_failure;
- 	}
- 	/* This is no device so read the address directly from the node */
- 	ret = of_address_to_resource(np_lcpa, 0, &res_lcpa);
- 	if (ret) {
--		dev_err(&pdev->dev, "no LCPA SRAM resource\n");
-+		dev_err(dev, "no LCPA SRAM resource\n");
- 		goto report_failure;
- 	}
- 	base->lcpa_size = resource_size(&res_lcpa);
- 	base->phy_lcpa = res_lcpa.start;
--	dev_info(&pdev->dev, "found LCPA SRAM at 0x%08x, size 0x%08x\n",
-+	dev_info(dev, "found LCPA SRAM at 0x%08x, size 0x%08x\n",
- 		 (u32)base->phy_lcpa, base->lcpa_size);
- 
- 	/* We make use of ESRAM memory for this. */
- 	val = readl(base->virtbase + D40_DREG_LCPA);
- 	if (base->phy_lcpa != val && val != 0) {
--		dev_warn(&pdev->dev,
-+		dev_warn(dev,
- 			 "[%s] Mismatch LCPA dma 0x%x, def %08x\n",
- 			 __func__, val, (u32)base->phy_lcpa);
- 	} else
-@@ -3567,7 +3569,7 @@ static int __init d40_probe(struct platform_device *pdev)
- 	base->lcpa_base = ioremap(base->phy_lcpa, base->lcpa_size);
- 	if (!base->lcpa_base) {
- 		ret = -ENOMEM;
--		d40_err(&pdev->dev, "Failed to ioremap LCPA region\n");
-+		d40_err(dev, "Failed to ioremap LCPA region\n");
- 		goto release_base;
- 	}
- 	/* If lcla has to be located in ESRAM we don't need to allocate */
-@@ -3576,7 +3578,7 @@ static int __init d40_probe(struct platform_device *pdev)
- 							"lcla_esram");
- 		if (!res) {
- 			ret = -ENOENT;
--			d40_err(&pdev->dev,
-+			d40_err(dev,
- 				"No \"lcla_esram\" memory resource\n");
- 			goto destroy_cache;
- 		}
-@@ -3584,7 +3586,7 @@ static int __init d40_probe(struct platform_device *pdev)
- 						resource_size(res));
- 		if (!base->lcla_pool.base) {
- 			ret = -ENOMEM;
--			d40_err(&pdev->dev, "Failed to ioremap LCLA region\n");
-+			d40_err(dev, "Failed to ioremap LCLA region\n");
- 			goto destroy_cache;
- 		}
- 		writel(res->start, base->virtbase + D40_DREG_LCLA);
-@@ -3592,7 +3594,7 @@ static int __init d40_probe(struct platform_device *pdev)
- 	} else {
- 		ret = d40_lcla_allocate(base);
- 		if (ret) {
--			d40_err(&pdev->dev, "Failed to allocate LCLA area\n");
-+			d40_err(dev, "Failed to allocate LCLA area\n");
- 			goto destroy_cache;
- 		}
- 	}
-@@ -3603,7 +3605,7 @@ static int __init d40_probe(struct platform_device *pdev)
- 
- 	ret = request_irq(base->irq, d40_handle_interrupt, 0, D40_NAME, base);
- 	if (ret) {
--		d40_err(&pdev->dev, "No IRQ defined\n");
-+		d40_err(dev, "No IRQ defined\n");
- 		goto destroy_cache;
- 	}
- 
-@@ -3611,7 +3613,7 @@ static int __init d40_probe(struct platform_device *pdev)
- 
- 		base->lcpa_regulator = regulator_get(base->dev, "lcla_esram");
- 		if (IS_ERR(base->lcpa_regulator)) {
--			d40_err(&pdev->dev, "Failed to get lcpa_regulator\n");
-+			d40_err(dev, "Failed to get lcpa_regulator\n");
- 			ret = PTR_ERR(base->lcpa_regulator);
- 			base->lcpa_regulator = NULL;
- 			goto destroy_cache;
-@@ -3619,7 +3621,7 @@ static int __init d40_probe(struct platform_device *pdev)
- 
- 		ret = regulator_enable(base->lcpa_regulator);
- 		if (ret) {
--			d40_err(&pdev->dev,
-+			d40_err(dev,
- 				"Failed to enable lcpa_regulator\n");
- 			regulator_put(base->lcpa_regulator);
- 			base->lcpa_regulator = NULL;
-@@ -3642,7 +3644,7 @@ static int __init d40_probe(struct platform_device *pdev)
- 
- 	ret = dma_set_max_seg_size(base->dev, STEDMA40_MAX_SEG_SIZE);
- 	if (ret) {
--		d40_err(&pdev->dev, "Failed to set dma max seg size\n");
-+		d40_err(dev, "Failed to set dma max seg size\n");
- 		goto destroy_cache;
- 	}
- 
-@@ -3651,7 +3653,7 @@ static int __init d40_probe(struct platform_device *pdev)
- 	if (np) {
- 		ret = of_dma_controller_register(np, d40_xlate, NULL);
- 		if (ret)
--			dev_err(&pdev->dev,
-+			dev_err(dev,
- 				"could not register of_dma_controller\n");
- 	}
- 
-@@ -3701,7 +3703,7 @@ static int __init d40_probe(struct platform_device *pdev)
- 	kfree(base->phy_res);
- 	kfree(base);
-  report_failure:
--	d40_err(&pdev->dev, "probe failed\n");
-+	d40_err(dev, "probe failed\n");
- 	return ret;
+ #define D40_PHY_CHAN -1
+@@ -2269,7 +2297,7 @@ d40_prep_sg(struct dma_chan *dchan, struct scatterlist *sg_src,
+ 	return NULL;
  }
  
+-bool stedma40_filter(struct dma_chan *chan, void *data)
++static bool stedma40_filter(struct dma_chan *chan, void *data)
+ {
+ 	struct stedma40_chan_cfg *info = data;
+ 	struct d40_chan *d40c =
+@@ -2288,7 +2316,6 @@ bool stedma40_filter(struct dma_chan *chan, void *data)
+ 
+ 	return err == 0;
+ }
+-EXPORT_SYMBOL(stedma40_filter);
+ 
+ static void __d40_set_prio_rt(struct d40_chan *d40c, int dev_type, bool src)
+ {
+@@ -3517,16 +3544,9 @@ static int __init d40_probe(struct platform_device *pdev)
+ 	int num_reserved_chans;
+ 	u32 val;
+ 
+-	if (!plat_data) {
+-		if (np) {
+-			if (d40_of_probe(pdev, np)) {
+-				ret = -ENOMEM;
+-				goto report_failure;
+-			}
+-		} else {
+-			d40_err(dev, "No pdata or Device Tree provided\n");
+-			goto report_failure;
+-		}
++	if (d40_of_probe(pdev, np)) {
++		ret = -ENOMEM;
++		goto report_failure;
+ 	}
+ 
+ 	base = d40_hw_detect_init(pdev);
+@@ -3650,11 +3670,11 @@ static int __init d40_probe(struct platform_device *pdev)
+ 
+ 	d40_hw_init(base);
+ 
+-	if (np) {
+-		ret = of_dma_controller_register(np, d40_xlate, NULL);
+-		if (ret)
+-			dev_err(dev,
+-				"could not register of_dma_controller\n");
++	ret = of_dma_controller_register(np, d40_xlate, NULL);
++	if (ret) {
++		dev_err(dev,
++			"could not register of_dma_controller\n");
++		goto destroy_cache;
+ 	}
+ 
+ 	dev_info(base->dev, "initialized\n");
+diff --git a/include/linux/platform_data/dma-ste-dma40.h b/drivers/dma/ste_dma40.h
+similarity index 51%
+rename from include/linux/platform_data/dma-ste-dma40.h
+rename to drivers/dma/ste_dma40.h
+index 10641633facc..c697bfe16a01 100644
+--- a/include/linux/platform_data/dma-ste-dma40.h
++++ b/drivers/dma/ste_dma40.h
+@@ -1,19 +1,8 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright (C) ST-Ericsson SA 2007-2010
+- * Author: Per Forlin <per.forlin@stericsson.com> for ST-Ericsson
+- * Author: Jonas Aaberg <jonas.aberg@stericsson.com> for ST-Ericsson
+- */
+-
+ 
+ #ifndef STE_DMA40_H
+ #define STE_DMA40_H
+ 
+-#include <linux/dmaengine.h>
+-#include <linux/scatterlist.h>
+-#include <linux/workqueue.h>
+-#include <linux/interrupt.h>
+-
+ /*
+  * Maxium size for a single dma descriptor
+  * Size is limited to 16 bits.
+@@ -118,92 +107,4 @@ struct stedma40_chan_cfg {
+ 	int					 phy_channel;
+ };
+ 
+-/**
+- * struct stedma40_platform_data - Configuration struct for the dma device.
+- *
+- * @dev_tx: mapping between destination event line and io address
+- * @dev_rx: mapping between source event line and io address
+- * @disabled_channels: A vector, ending with -1, that marks physical channels
+- * that are for different reasons not available for the driver.
+- * @soft_lli_chans: A vector, that marks physical channels will use LLI by SW
+- * which avoids HW bug that exists in some versions of the controller.
+- * SoftLLI introduces relink overhead that could impact performace for
+- * certain use cases.
+- * @num_of_soft_lli_chans: The number of channels that needs to be configured
+- * to use SoftLLI.
+- * @use_esram_lcla: flag for mapping the lcla into esram region
+- * @num_of_memcpy_chans: The number of channels reserved for memcpy.
+- * @num_of_phy_chans: The number of physical channels implemented in HW.
+- * 0 means reading the number of channels from DMA HW but this is only valid
+- * for 'multiple of 4' channels, like 8.
+- */
+-struct stedma40_platform_data {
+-	int				 disabled_channels[STEDMA40_MAX_PHYS];
+-	int				*soft_lli_chans;
+-	int				 num_of_soft_lli_chans;
+-	bool				 use_esram_lcla;
+-	int				 num_of_memcpy_chans;
+-	int				 num_of_phy_chans;
+-};
+-
+-#ifdef CONFIG_STE_DMA40
+-
+-/**
+- * stedma40_filter() - Provides stedma40_chan_cfg to the
+- * ste_dma40 dma driver via the dmaengine framework.
+- * does some checking of what's provided.
+- *
+- * Never directly called by client. It used by dmaengine.
+- * @chan: dmaengine handle.
+- * @data: Must be of type: struct stedma40_chan_cfg and is
+- * the configuration of the framework.
+- *
+- *
+- */
+-
+-bool stedma40_filter(struct dma_chan *chan, void *data);
+-
+-/**
+- * stedma40_slave_mem() - Transfers a raw data buffer to or from a slave
+- * (=device)
+- *
+- * @chan: dmaengine handle
+- * @addr: source or destination physicall address.
+- * @size: bytes to transfer
+- * @direction: direction of transfer
+- * @flags: is actually enum dma_ctrl_flags. See dmaengine.h
+- */
+-
+-static inline struct
+-dma_async_tx_descriptor *stedma40_slave_mem(struct dma_chan *chan,
+-					    dma_addr_t addr,
+-					    unsigned int size,
+-					    enum dma_transfer_direction direction,
+-					    unsigned long flags)
+-{
+-	struct scatterlist sg;
+-	sg_init_table(&sg, 1);
+-	sg.dma_address = addr;
+-	sg.length = size;
+-
+-	return dmaengine_prep_slave_sg(chan, &sg, 1, direction, flags);
+-}
+-
+-#else
+-static inline bool stedma40_filter(struct dma_chan *chan, void *data)
+-{
+-	return false;
+-}
+-
+-static inline struct
+-dma_async_tx_descriptor *stedma40_slave_mem(struct dma_chan *chan,
+-					    dma_addr_t addr,
+-					    unsigned int size,
+-					    enum dma_transfer_direction direction,
+-					    unsigned long flags)
+-{
+-	return NULL;
+-}
+-#endif
+-
+-#endif
++#endif /* STE_DMA40_H */
+diff --git a/drivers/dma/ste_dma40_ll.c b/drivers/dma/ste_dma40_ll.c
+index b5287c661eb7..4c489b126cb2 100644
+--- a/drivers/dma/ste_dma40_ll.c
++++ b/drivers/dma/ste_dma40_ll.c
+@@ -6,8 +6,9 @@
+  */
+ 
+ #include <linux/kernel.h>
+-#include <linux/platform_data/dma-ste-dma40.h>
++#include <linux/dmaengine.h>
+ 
++#include "ste_dma40.h"
+ #include "ste_dma40_ll.h"
+ 
+ static u8 d40_width_to_bits(enum dma_slave_buswidth width)
 
 -- 
 2.40.1

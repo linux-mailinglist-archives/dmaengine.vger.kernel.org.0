@@ -2,42 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20ACA7059DB
-	for <lists+dmaengine@lfdr.de>; Tue, 16 May 2023 23:50:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 544A17059E0
+	for <lists+dmaengine@lfdr.de>; Tue, 16 May 2023 23:50:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230060AbjEPVum (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 16 May 2023 17:50:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33216 "EHLO
+        id S231196AbjEPVu5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 16 May 2023 17:50:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230131AbjEPVuj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 16 May 2023 17:50:39 -0400
+        with ESMTP id S231201AbjEPVul (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 16 May 2023 17:50:41 -0400
 Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E65FA7DB2;
-        Tue, 16 May 2023 14:50:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6F956E96;
+        Tue, 16 May 2023 14:50:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684273823; x=1715809823;
+  t=1684273826; x=1715809826;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=h7I8YHXeOlCOxfUwufW0FBvwo2i1M2IOXOG0q7S47gY=;
-  b=aQbgLU+wTc90avJz0rn4T7W4uvh1L4Tx4ihej3hgF6vBZSzgEUHFCt3E
-   jJvAOMsWXlzwgcqq59U2O63wmaWvtY5woyeIid6MCqhac7n+uF9oKAHVE
-   DDK6IBrvNUlu8xYHb2OC5CSMAmHcE73f/pZ3Cd3OulPrE/LPNNvHNRjYG
-   cdw8Fj8duokOkF7SFoMnJzB0irLNsFJrqjjrGGrrYGTVp2mj/JkVlpJwv
-   WnwyP6yF/YdOgAkNlmOPtQ2Vqb10K1NGabsQLDe1tMwqBcf3oKhb9yxHU
-   wlrct4SIU3m5B+IYRfLC18OiActj3lDX61CdTeMQzoxwOtDRHTi9N7BcD
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="331961670"
+  bh=yPVyZBdMFSkLLY+neCVq3Ouyo7u0i8a/xzk2t6QMfsQ=;
+  b=CHYhAkvwbpYrrKxTF9gulG9UwNMYS+HeXRDX+PB5HCmuAfMcfLcTjy62
+   VdAd+i0zBdnjqQX+NJatsz78JwxxhB0pzSVvDUeBTUbXGIASkui6A0SXg
+   H43gA8FE7HSRJ2b8jFx+DGa/BPrkvca00vuLbOap5MoYRzZO4MxshBSs3
+   yxTW+GHLfhOihbH8LqQi7D36CbQCpaUrQ3LrQQpjWQDW7oYtMnWf4bPFQ
+   KdrmmskImGLZ9Jdl/13bBfUzUIJj/vI9FQtT8B8nwP1NLOJu0miC0Q445
+   dMrru3oOQhk/yI5g9GlsVJNo8hf3i1uFejAk6ELEVcn10fztGfhKas8x1
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="331961677"
 X-IronPort-AV: E=Sophos;i="5.99,278,1677571200"; 
-   d="scan'208";a="331961670"
+   d="scan'208";a="331961677"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 14:50:23 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 14:50:25 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="704564887"
+X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="704564928"
 X-IronPort-AV: E=Sophos;i="5.99,278,1677571200"; 
-   d="scan'208";a="704564887"
+   d="scan'208";a="704564928"
 Received: from fmunozug-mobl1.amr.corp.intel.com (HELO tzanussi-mobl1.intel.com) ([10.212.83.116])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 14:50:22 -0700
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 14:50:24 -0700
 From:   Tom Zanussi <tom.zanussi@linux.intel.com>
 To:     herbert@gondor.apana.org.au, davem@davemloft.net,
         fenghua.yu@intel.com, vkoul@kernel.org
@@ -46,9 +46,9 @@ Cc:     dave.jiang@intel.com, tony.luck@intel.com,
         kanchana.p.sridhar@intel.com, giovanni.cabiddu@intel.com,
         linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
         dmaengine@vger.kernel.org
-Subject: [PATCH v5 05/15] dmaengine: idxd: Export wq resource management functions
-Date:   Tue, 16 May 2023 16:49:59 -0500
-Message-Id: <20230516215009.51794-6-tom.zanussi@linux.intel.com>
+Subject: [PATCH v5 06/15] dmaengine: idxd: Add wq private data accessors
+Date:   Tue, 16 May 2023 16:50:00 -0500
+Message-Id: <20230516215009.51794-7-tom.zanussi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230516215009.51794-1-tom.zanussi@linux.intel.com>
 References: <20230516215009.51794-1-tom.zanussi@linux.intel.com>
@@ -64,60 +64,39 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-To allow idxd sub-drivers to access the wq resource management
-functions, export them.
+Add the accessors idxd_wq_set_private() and idxd_wq_get_private()
+allowing users to set and retrieve a private void * associated with an
+idxd_wq.
+
+The private data is stored in the idxd_dev.conf_dev associated with
+each idxd_wq.
 
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- drivers/dma/idxd/device.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/dma/idxd/idxd.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 87ad95fa3f98..626600bd394b 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -161,6 +161,7 @@ int idxd_wq_alloc_resources(struct idxd_wq *wq)
- 	free_hw_descs(wq);
- 	return rc;
- }
-+EXPORT_SYMBOL_NS_GPL(idxd_wq_alloc_resources, IDXD);
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index 276b5f9cf967..971daf323655 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -609,6 +609,16 @@ static inline int idxd_wq_refcount(struct idxd_wq *wq)
+ 	return wq->client_count;
+ };
  
- void idxd_wq_free_resources(struct idxd_wq *wq)
- {
-@@ -174,6 +175,7 @@ void idxd_wq_free_resources(struct idxd_wq *wq)
- 	dma_free_coherent(dev, wq->compls_size, wq->compls, wq->compls_addr);
- 	sbitmap_queue_free(&wq->sbq);
- }
-+EXPORT_SYMBOL_NS_GPL(idxd_wq_free_resources, IDXD);
- 
- int idxd_wq_enable(struct idxd_wq *wq)
- {
-@@ -422,6 +424,7 @@ int idxd_wq_init_percpu_ref(struct idxd_wq *wq)
- 	reinit_completion(&wq->wq_resurrect);
- 	return 0;
- }
-+EXPORT_SYMBOL_NS_GPL(idxd_wq_init_percpu_ref, IDXD);
- 
- void __idxd_wq_quiesce(struct idxd_wq *wq)
- {
-@@ -431,6 +434,7 @@ void __idxd_wq_quiesce(struct idxd_wq *wq)
- 	complete_all(&wq->wq_resurrect);
- 	wait_for_completion(&wq->wq_dead);
- }
-+EXPORT_SYMBOL_NS_GPL(__idxd_wq_quiesce, IDXD);
- 
- void idxd_wq_quiesce(struct idxd_wq *wq)
- {
-@@ -438,6 +442,7 @@ void idxd_wq_quiesce(struct idxd_wq *wq)
- 	__idxd_wq_quiesce(wq);
- 	mutex_unlock(&wq->wq_lock);
- }
-+EXPORT_SYMBOL_NS_GPL(idxd_wq_quiesce, IDXD);
- 
- /* Device control bits */
- static inline bool idxd_is_enabled(struct idxd_device *idxd)
++static inline void idxd_wq_set_private(struct idxd_wq *wq, void *private)
++{
++	dev_set_drvdata(wq_confdev(wq), private);
++}
++
++static inline void *idxd_wq_get_private(struct idxd_wq *wq)
++{
++	return dev_get_drvdata(wq_confdev(wq));
++}
++
+ /*
+  * Intel IAA does not support batch processing.
+  * The max batch size of device, max batch size of wq and
 -- 
 2.34.1
 

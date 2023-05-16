@@ -2,42 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A2AA67059F4
-	for <lists+dmaengine@lfdr.de>; Tue, 16 May 2023 23:52:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2CBF7059F7
+	for <lists+dmaengine@lfdr.de>; Tue, 16 May 2023 23:52:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230110AbjEPVwY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 16 May 2023 17:52:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33384 "EHLO
+        id S230440AbjEPVwi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 16 May 2023 17:52:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231132AbjEPVvx (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 16 May 2023 17:51:53 -0400
+        with ESMTP id S231375AbjEPVv7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 16 May 2023 17:51:59 -0400
 Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD32D6EB5;
-        Tue, 16 May 2023 14:51:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9367BAD3B;
+        Tue, 16 May 2023 14:51:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684273864; x=1715809864;
+  t=1684273882; x=1715809882;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=zoyPrM4R1a4hySOPeTqTIarZgmh/Qp2OMC77oRu47RE=;
-  b=EK4OV4ReT7l3Q0cJ29wvzyJjX9WCMY0mNUv6rdmKl9T1qPutwG+tYUrr
-   IcCDmLIYHwbWooT/O+dfIns8G9L7xbl2prX62s0kmJ2NrB1U10r3HxuLO
-   LH7r/bkYqQkzt7TAtOBQO49GTJYnnWHN3ytn/11w9EwyL2Xkmwg8bUoe0
-   kQsKeO1yesYKEUnCVEZxUaA7GPb5ssaiGl8a+fRw9hnvOdvEJxkYajCRk
-   173fEcXRIT59P5OSF6GWY2UsgMKwH+48DfVM5AO+T2se0WKFCqFOPNd6h
-   O0JOzbFdk9ybSS21zOkjL17hFbTkXzMeTdTPf6qG2X3JBK2myrpcO+dJq
+  bh=OBIuCmkLnRddnCNXecq4QYruzmBowSsVNsJxmIxzyxY=;
+  b=NgKg5WLCfPJU0ojKLYFeGec80Bfyul1kJhq+nF35DdEv6NfYTH/0ylQM
+   csF/wf8uZ+b4kuZBTWInAf27D1ziFlis8GN9nQ1GjbERDVdsDQvLMtUaK
+   M6CjGJCk20apuHD1zvk1NeX3qM4eRoKdLqj7N0aNHUDsnVUGZagp6T5sb
+   pJA1hSy+VVQ2Yat0e2A6mTKI3VilbvCjBu5w0iNsP/Z3OsmwFPdBn1Fw+
+   Yll+J5MGBgEm+veCY53hqSZeXEqw4m9DwYalt3BBYI0KTrzvxISCt3o+b
+   pNNCL/VWX6JGnH34j2Ixne4jsMQH89sY5K/hllFtn3auPgD/XZuIFpyiW
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="331961744"
+X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="331961753"
 X-IronPort-AV: E=Sophos;i="5.99,278,1677571200"; 
-   d="scan'208";a="331961744"
+   d="scan'208";a="331961753"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 14:50:41 -0700
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 14:50:43 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="704565173"
+X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="704565190"
 X-IronPort-AV: E=Sophos;i="5.99,278,1677571200"; 
-   d="scan'208";a="704565173"
+   d="scan'208";a="704565190"
 Received: from fmunozug-mobl1.amr.corp.intel.com (HELO tzanussi-mobl1.intel.com) ([10.212.83.116])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 14:50:39 -0700
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 14:50:41 -0700
 From:   Tom Zanussi <tom.zanussi@linux.intel.com>
 To:     herbert@gondor.apana.org.au, davem@davemloft.net,
         fenghua.yu@intel.com, vkoul@kernel.org
@@ -46,9 +46,9 @@ Cc:     dave.jiang@intel.com, tony.luck@intel.com,
         kanchana.p.sridhar@intel.com, giovanni.cabiddu@intel.com,
         linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
         dmaengine@vger.kernel.org
-Subject: [PATCH v5 13/15] crypto: iaa - Add support for default IAA 'canned' compression mode
-Date:   Tue, 16 May 2023 16:50:07 -0500
-Message-Id: <20230516215009.51794-14-tom.zanussi@linux.intel.com>
+Subject: [PATCH v5 14/15] crypto: iaa - Add irq support for the crypto async interface
+Date:   Tue, 16 May 2023 16:50:08 -0500
+Message-Id: <20230516215009.51794-15-tom.zanussi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230516215009.51794-1-tom.zanussi@linux.intel.com>
 References: <20230516215009.51794-1-tom.zanussi@linux.intel.com>
@@ -64,415 +64,351 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add support for a 'canned' compression mode using the IAA compression
-mode in-kernel API.
+The existing iaa crypto async support provides an implementation that
+satisfies the interface but does so in a synchronous manner - it fills
+and submits the IDXD descriptor and then waits for it to complete
+before returning.  This isn't a problem at the moment, since all
+existing callers (e.g. zswap) wrap any asynchronous callees in a
+synchronous wrapper anyway.
 
-The IAA 'canned' compression mode is added alongside the existing
-'fixed' compression mode and is named simply 'canned'.  It implements
-a good general-purpose compression scheme whose tables were generated
-from statistics derived from a wide variety of SPEC17 workloads.
+This change makes the iaa crypto async implementation truly
+asynchronous: it fills and submits the IDXD descriptor, then returns
+immediately with -EINPROGRESS.  It also sets the descriptor's 'request
+completion irq' bit and sets up a callback with the IDXD driver which
+is called when the operation completes and the irq fires.  The
+existing callers such as zswap use synchronous wrappers to deal with
+-EINPROGRESS and so work as expected without any changes.
 
-It provides much better overall characteristics than the existing
-deflate-1951 tables implemented by 'fixed'.
-
-Either 'fixed' or 'canned' modes can be chosen as the mode to be used
-for compression/decompression via the iaa_crypto compression_mode
+This mode can be enabled by writing 'async_irq' to the sync_mode
 iaa_crypto driver attribute:
 
-To choose 'fixed' mode:
+  echo async_irq > /sys/bus/dsa/drivers/crypto/sync_mode
 
-  echo "fixed" >  /sys/bus/dsa/drivers/crypto/compression_mode
+Async mode without interrupts (caller must poll) can be enabled by
+writing 'async' to it:
 
-To choose 'canned' mode:
+  echo async > /sys/bus/dsa/drivers/crypto/sync_mode
 
-  echo "canned" >  /sys/bus/dsa/drivers/crypto/compression_mode
+The default sync mode can be enabled by writing 'sync' to it:
 
-[ Based on work originally by George Powley, Jing Lin and Kyung Min
-Park ]
+  echo sync > /sys/bus/dsa/drivers/crypto/sync_mode
 
 Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 ---
- crypto/testmgr.c                              |  10 ++
- crypto/testmgr.h                              |  72 ++++++++++++
- drivers/crypto/intel/iaa/Makefile             |   2 +-
- drivers/crypto/intel/iaa/iaa_crypto.h         |   2 +
- .../crypto/intel/iaa/iaa_crypto_comp_canned.c | 110 ++++++++++++++++++
- drivers/crypto/intel/iaa/iaa_crypto_main.c    |  44 ++++++-
- 6 files changed, 237 insertions(+), 3 deletions(-)
- create mode 100644 drivers/crypto/intel/iaa/iaa_crypto_comp_canned.c
+ drivers/crypto/intel/iaa/iaa_crypto_main.c | 226 ++++++++++++++++++++-
+ 1 file changed, 224 insertions(+), 2 deletions(-)
 
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index 216878c8bc3d..28e29676a6ef 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -5313,6 +5313,16 @@ static const struct alg_test_desc alg_test_descs[] = {
- 		.suite = {
- 			.hash = __VECS(hmac_streebog512_tv_template)
- 		}
-+	}, {
-+		.alg = "iaa-canned-deflate",
-+		.test = alg_test_comp,
-+		.fips_allowed = 1,
-+		.suite = {
-+			.comp = {
-+				.comp = __VECS(iaa_canned_deflate_comp_tv_template),
-+				.decomp = __VECS(iaa_canned_deflate_decomp_tv_template)
-+			}
-+		}
- 	}, {
- 		.alg = "jitterentropy_rng",
- 		.fips_allowed = 1,
-diff --git a/crypto/testmgr.h b/crypto/testmgr.h
-index 5ca7a412508f..0fa6bc1a33cf 100644
---- a/crypto/testmgr.h
-+++ b/crypto/testmgr.h
-@@ -35829,6 +35829,78 @@ static const struct comp_testvec zlib_deflate_decomp_tv_template[] = {
- 	},
- };
+diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+index 27e917ce5bd0..2937b7b9987f 100644
+--- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
++++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+@@ -117,6 +117,102 @@ static ssize_t verify_compress_store(struct device_driver *driver,
+ }
+ static DRIVER_ATTR_RW(verify_compress);
  
-+static const struct comp_testvec iaa_canned_deflate_comp_tv_template[] = {
-+	{
-+		.inlen	= 70,
-+		.outlen	= 37,
-+		.input	= "Join us now and share the software "
-+			"Join us now and share the software ",
-+		.output	= "\x6d\x23\x43\x23\xa4\x71\x31\xd2"
-+			  "\x88\xc8\x61\x52\x75\x84\x56\x1a"
-+			  "\x13\xa2\x8e\xd6\x49\x63\x43\x74"
-+			  "\xd2\x98\xc8\xe0\xd8\x61\x58\x69"
-+			  "\xcb\x71\x01\xe5\x7f",
-+	}, {
-+		.inlen	= 191,
-+		.outlen	= 128,
-+		.input	= "This document describes a compression method based on the DEFLATE"
-+			"compression algorithm.  This document defines the application of "
-+			"the DEFLATE algorithm to the IP Payload Compression Protocol.",
-+		.output	= "\xdd\x42\x42\x63\xa4\xda\x48\x4d"
-+			  "\x5c\xb8\x2e\x22\x56\xaa\xd5\xc5"
-+			  "\x68\xa2\x43\x83\x74\x31\x52\xb5"
-+			  "\x54\x13\x19\x1e\x15\xad\x8b\x89"
-+			  "\x09\x8d\x8c\x90\x86\xeb\x62\x43"
-+			  "\x22\xb5\xd2\x20\x75\x8c\x4e\x2b"
-+			  "\x05\x3d\x36\x44\x27\xf5\x69\xe5"
-+			  "\xdb\xde\xbb\x5b\x2b\x7d\x37\x75"
-+			  "\xd8\xc0\xc8\xe8\xd0\xd8\x90\x70"
-+			  "\x7b\xa9\x54\x1c\x38\x38\x34\x02"
-+			  "\xc2\xe2\x8e\xea\xa8\xa8\xb0\x50"
-+			  "\x8d\x3a\x16\xf7\x88\x0c\xd6\x8f"
-+			  "\x95\x1f\x40\x1a\x1b\x29\x34\xb4"
-+			  "\xf1\x97\xfa\xab\x87\x87\x45\xaa"
-+			  "\xb5\xd2\x96\x7a\x03\xf9\x47\x47"
-+			  "\xc6\x46\x6a\x22\xc3\xec\xff\x07",
-+	},
-+};
-+
-+static const struct comp_testvec iaa_canned_deflate_decomp_tv_template[] = {
-+	{
-+		.inlen	= 128,
-+		.outlen	= 191,
-+		.input	= "\xdd\x42\x42\x63\xa4\xda\x48\x4d"
-+			  "\x5c\xb8\x2e\x22\x56\xaa\xd5\xc5"
-+			  "\x68\xa2\x43\x83\x74\x31\x52\xb5"
-+			  "\x54\x13\x19\x1e\x15\xad\x8b\x89"
-+			  "\x09\x8d\x8c\x90\x86\xeb\x62\x43"
-+			  "\x22\xb5\xd2\x20\x75\x8c\x4e\x2b"
-+			  "\x05\x3d\x36\x44\x27\xf5\x69\xe5"
-+			  "\xdb\xde\xbb\x5b\x2b\x7d\x37\x75"
-+			  "\xd8\xc0\xc8\xe8\xd0\xd8\x90\x70"
-+			  "\x7b\xa9\x54\x1c\x38\x38\x34\x02"
-+			  "\xc2\xe2\x8e\xea\xa8\xa8\xb0\x50"
-+			  "\x8d\x3a\x16\xf7\x88\x0c\xd6\x8f"
-+			  "\x95\x1f\x40\x1a\x1b\x29\x34\xb4"
-+			  "\xf1\x97\xfa\xab\x87\x87\x45\xaa"
-+			  "\xb5\xd2\x96\x7a\x03\xf9\x47\x47"
-+			  "\xc6\x46\x6a\x22\xc3\xec\xff\x07",
-+		.output	= "This document describes a compression method based on the DEFLATE"
-+			"compression algorithm.  This document defines the application of "
-+			"the DEFLATE algorithm to the IP Payload Compression Protocol.",
-+	}, {
-+		.inlen	= 37,
-+		.outlen	= 70,
-+		.input	= "\x6d\x23\x43\x23\xa4\x71\x31\xd2"
-+			  "\x88\xc8\x61\x52\x75\x84\x56\x1a"
-+			  "\x13\xa2\x8e\xd6\x49\x63\x43\x74"
-+			  "\xd2\x98\xc8\xe0\xd8\x61\x58\x69"
-+			  "\xcb\x71\x01\xe5\x7f",
-+		.output	= "Join us now and share the software "
-+			"Join us now and share the software ",
-+	},
-+};
-+
- /*
-  * LZO test vectors (null-terminated strings).
-  */
-diff --git a/drivers/crypto/intel/iaa/Makefile b/drivers/crypto/intel/iaa/Makefile
-index cc87feffd059..ff6ab1d0bc13 100644
---- a/drivers/crypto/intel/iaa/Makefile
-+++ b/drivers/crypto/intel/iaa/Makefile
-@@ -7,4 +7,4 @@ ccflags-y += -I $(srctree)/drivers/dma/idxd -DDEFAULT_SYMBOL_NAMESPACE=IDXD
- 
- obj-$(CONFIG_CRYPTO_DEV_IAA_CRYPTO) := iaa_crypto.o
- 
--iaa_crypto-y := iaa_crypto_main.o iaa_crypto_comp_fixed.o
-+iaa_crypto-y := iaa_crypto_main.o iaa_crypto_comp_canned.o iaa_crypto_comp_fixed.o
-diff --git a/drivers/crypto/intel/iaa/iaa_crypto.h b/drivers/crypto/intel/iaa/iaa_crypto.h
-index 864aa5e27e2e..cf9aec13b98d 100644
---- a/drivers/crypto/intel/iaa/iaa_crypto.h
-+++ b/drivers/crypto/intel/iaa/iaa_crypto.h
-@@ -115,6 +115,8 @@ struct aecs_decomp_table_record {
- 	u32 decomp_state[1220];
- } __packed;
- 
-+int iaa_aecs_init_canned(void);
-+void iaa_aecs_cleanup_canned(void);
- int iaa_aecs_init_fixed(void);
- void iaa_aecs_cleanup_fixed(void);
- 
-diff --git a/drivers/crypto/intel/iaa/iaa_crypto_comp_canned.c b/drivers/crypto/intel/iaa/iaa_crypto_comp_canned.c
-new file mode 100644
-index 000000000000..aff0899ffb9e
---- /dev/null
-+++ b/drivers/crypto/intel/iaa/iaa_crypto_comp_canned.c
-@@ -0,0 +1,110 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright(c) 2021 Intel Corporation. All rights rsvd. */
-+
-+#include "idxd.h"
-+#include "iaa_crypto.h"
-+
-+#define IAA_AECS_ALIGN			32
-+
 +/*
-+ * These tables were generated from statistics derived from a wide
-+ * variety of SPEC17 workloads and implement a good general-purpose
-+ * compression scheme called simply 'canned'.
++ * The iaa crypto driver supports three 'sync' methods determining how
++ * compressions and decompressions are performed:
++ *
++ * - sync:      the compression or decompression completes before
++ *              returning.  This is the mode used by the async crypto
++ *              interface when the sync mode is set to 'sync' and by
++ *              the sync crypto interface regardless of setting.
++ *
++ * - async:     the compression or decompression is submitted and returns
++ *              immediately.  Completion interrupts are not used so
++ *              the caller is responsible for polling the descriptor
++ *              for completion.  This mode is applicable to only the
++ *              async crypto interface and is ignored for anything
++ *              else.
++ *
++ * - async_irq: the compression or decompression is submitted and
++ *              returns immediately.  Completion interrupts are
++ *              enabled so the caller can wait for the completion and
++ *              yield to other threads.  When the compression or
++ *              decompression completes, the completion is signaled
++ *              and the caller awakened.  This mode is applicable to
++ *              only the async crypto interface and is ignored for
++ *              anything else.
++ *
++ * These modes can be set using the iaa_crypto sync_mode driver
++ * attribute.
 + */
 +
-+static const u32 canned_ll_iaa[286] = {
-+0x28002,  0x38024,  0x40066,  0x40067,  0x40068,  0x48144,  0x40069,  0x48145,
-+0x4006a,  0x48146,  0x4006b,  0x48147,  0x48148,  0x48149,  0x4814a,  0x4814b,
-+0x4006c,  0x4814c,  0x4814d,  0x4814e,  0x4814f,  0x48150,  0x48151,  0x48152,
-+0x4006d,  0x48153,  0x48154,  0x48155,  0x48156,  0x48157,  0x48158,  0x48159,
-+0x38025,  0x4815a,  0x4815b,  0x4815c,  0x4815d,  0x4815e,  0x4815f,  0x48160,
-+0x4006e,  0x48161,  0x48162,  0x48163,  0x48164,  0x48165,  0x4006f,  0x48166,
-+0x38026,  0x38027,  0x40070,  0x40071,  0x40072,  0x40073,  0x40074,  0x40075,
-+0x38028,  0x40076,  0x40077,  0x48167,  0x40078,  0x40079,  0x4007a,  0x38029,
-+0x3802a,  0x4007b,  0x48168,  0x48169,  0x4007c,  0x4816a,  0x4007d,  0x4816b,
-+0x4007e,  0x4816c,  0x4816d,  0x4816e,  0x4816f,  0x48170,  0x48171,  0x48172,
-+0x4007f,  0x48173,  0x48174,  0x48175,  0x48176,  0x48177,  0x48178,  0x48179,
-+0x40080,  0x4817a,  0x4817b,  0x4817c,  0x4817d,  0x4817e,  0x4817f,  0x48180,
-+0x40081,  0x3802b,  0x40082,  0x3802c,  0x3802d,  0x3802e,  0x40083,  0x48181,
-+0x40084,  0x40085,  0x48182,  0x48183,  0x40086,  0x40087,  0x40088,  0x40089,
-+0x4008a,  0x48184,  0x4008b,  0x4008c,  0x4008d,  0x4008e,  0x48185,  0x48186,
-+0x4008f,  0x48187,  0x48188,  0x48189,  0x4818a,  0x4818b,  0x4818c,  0x4818d,
-+0x40090,  0x4818e,  0x4818f,  0x48190,  0x48191,  0x48192,  0x48193,  0x48194,
-+0x40091,  0x48195,  0x48196,  0x48197,  0x48198,  0x48199,  0x4819a,  0x4819b,
-+0x40092,  0x4819c,  0x4819d,  0x4819e,  0x4819f,  0x481a0,  0x481a1,  0x481a2,
-+0x40093,  0x481a3,  0x481a4,  0x481a5,  0x481a6,  0x481a7,  0x481a8,  0x481a9,
-+0x40094,  0x481aa,  0x481ab,  0x481ac,  0x481ad,  0x481ae,  0x481af,  0x481b0,
-+0x481b1,  0x481b2,  0x481b3,  0x481b4,  0x481b5,  0x481b6,  0x481b7,  0x481b8,
-+0x40095,  0x481b9,  0x481ba,  0x481bb,  0x481bc,  0x481bd,  0x481be,  0x481bf,
-+0x40096,  0x481c0,  0x481c1,  0x481c2,  0x481c3,  0x481c4,  0x481c5,  0x40097,
-+0x40098,  0x481c6,  0x481c7,  0x481c8,  0x481c9,  0x481ca,  0x481cb,  0x481cc,
-+0x40099,  0x481cd,  0x481ce,  0x481cf,  0x481d0,  0x481d1,  0x481d2,  0x481d3,
-+0x4009a,  0x481d4,  0x481d5,  0x481d6,  0x481d7,  0x481d8,  0x481d9,  0x481da,
-+0x481db,  0x481dc,  0x481dd,  0x481de,  0x481df,  0x481e0,  0x481e1,  0x481e2,
-+0x4009b,  0x481e3,  0x481e4,  0x481e5,  0x481e6,  0x481e7,  0x481e8,  0x481e9,
-+0x481ea,  0x481eb,  0x481ec,  0x481ed,  0x481ee,  0x481ef,  0x481f0,  0x481f1,
-+0x4009c,  0x481f2,  0x481f3,  0x481f4,  0x481f5,  0x481f6,  0x481f7,  0x481f8,
-+0x481f9,  0x481fa,  0x481fb,  0x503fe,  0x481fc,  0x481fd,  0x481fe,  0x4009d,
-+0x503ff,  0x20000,  0x28003,  0x30010,  0x28004,  0x28005,  0x28006,  0x4009e,
-+0x4009f,  0x3802f,  0x38030,  0x30011,  0x400a0,  0x38031,  0x38032,  0x400a1,
-+0x28007,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,
-+0x0,  0x0,  0x0,  0x0,  0x0,  0x0,
-+};
++/* Use async mode */
++static bool async_mode;
++/* Use interrupts */
++static bool use_irq;
 +
-+static const u32 canned_d_iaa[30] = {
-+0x3807e,  0x20004,  0x481fe,  0x18000,  0x400fe,  0x18001,  0x3003c,  0x20005,
-+0x20006,  0x28016,  0x20007,  0x28017,  0x20008,  0x28018,  0x28019,  0x20009,
-+0x2000a,  0x2801a,  0x2801b,  0x2801c,  0x2801d,  0x3003d,  0x3003e,  0x481ff,
-+0x0,  0x0,  0x0,  0x0,  0x0,  0x0,
-+};
++/**
++ * set_iaa_sync_mode - Set IAA sync mode
++ * @name: The name of the sync mode
++ *
++ * Make the IAA sync mode named @name the current sync mode used by
++ * compression/decompression.
++ */
 +
-+#define CANNED_HEADER_SIZE (71)
-+
-+static const u8 canned_header[] = {
-+0x85, 0xd7, 0x05, 0x40, 0x54, 0x4d, 0x10, 0x06,
-+0x80, 0x3d, 0x40, 0x44, 0x2c, 0x6c, 0xec, 0xb3,
-+0xb1, 0xf0, 0x8e, 0x3c, 0x10, 0xb8, 0x43, 0x11,
-+0xb1, 0xb1, 0xb1, 0x39, 0xee, 0x0e, 0x41, 0x29,
-+0x09, 0xc5, 0xc6, 0xc6, 0xc6, 0xc6, 0xc6, 0x6e,
-+0xc5, 0xc6, 0x04, 0x1b, 0x1b, 0xbb, 0x15, 0xbb,
-+0x15, 0x3b, 0x7e, 0x95, 0x7f, 0xf6, 0xed, 0x2e,
-+0xdc, 0x3d, 0xee, 0xd8, 0x1b, 0x3f, 0xbe, 0x37,
-+0xb3, 0xb3, 0xb3, 0x3b, 0xb3, 0xf1, 0x9e,
-+};
-+
-+#define HEADER_SIZE_IN_BITS 568
-+
-+#define CEIL(a, b)     (((a) + ((b) - 1)) / (b))
-+
-+int iaa_aecs_init_canned(void)
++static int set_iaa_sync_mode(const char *name)
 +{
-+	u16 gen_decomp_table_flags;
-+	unsigned int slen;
-+	int ret;
++	int ret = 0;
 +
-+	slen = CEIL(HEADER_SIZE_IN_BITS, 8);
-+
-+	gen_decomp_table_flags = 0x1;
-+	gen_decomp_table_flags |= 1 << 9; // suppress output
-+	gen_decomp_table_flags |= (((slen * 8) - HEADER_SIZE_IN_BITS) << 6);
-+
-+	ret = add_iaa_compression_mode("canned",
-+				       canned_ll_iaa,
-+				       sizeof(canned_ll_iaa),
-+				       canned_d_iaa,
-+				       sizeof(canned_d_iaa),
-+				       canned_header,
-+				       sizeof(canned_header),
-+				       gen_decomp_table_flags,
-+				       NULL, NULL);
-+
-+	if (!ret)
-+		pr_debug("IAA canned compression mode initialized\n");
++	if (sysfs_streq(name, "sync")) {
++		async_mode = false;
++		use_irq = false;
++	} else if (sysfs_streq(name, "async")) {
++		async_mode = true;
++		use_irq = false;
++	} else if (sysfs_streq(name, "async_irq")) {
++		async_mode = true;
++		use_irq = true;
++	} else {
++		ret = -EINVAL;
++	}
 +
 +	return ret;
 +}
 +
-+void iaa_aecs_cleanup_canned(void)
++static ssize_t sync_mode_show(struct device_driver *driver, char *buf)
 +{
-+	remove_iaa_compression_mode("canned");
++	int ret = 0;
++
++	if (!async_mode && !use_irq)
++		ret = sprintf(buf, "%s\n", "sync");
++	else if (async_mode && !use_irq)
++		ret = sprintf(buf, "%s\n", "async");
++	else if (async_mode && use_irq)
++		ret = sprintf(buf, "%s\n", "async_irq");
++
++	return ret;
 +}
-diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/intel/iaa/iaa_crypto_main.c
-index d8f593d9153a..27e917ce5bd0 100644
---- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
-+++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
-@@ -120,11 +120,16 @@ static DRIVER_ATTR_RW(verify_compress);
++
++static ssize_t sync_mode_store(struct device_driver *driver,
++			       const char *buf, size_t count)
++{
++	int ret = -EBUSY;
++
++	mutex_lock(&iaa_devices_lock);
++
++	if (iaa_crypto_enabled)
++		goto out;
++
++	ret = set_iaa_sync_mode(buf);
++	if (ret == 0)
++		ret = count;
++out:
++	mutex_unlock(&iaa_devices_lock);
++
++	return ret;
++}
++static DRIVER_ATTR_RW(sync_mode);
++
  static struct iaa_compression_mode *iaa_compression_modes[IAA_COMP_MODES_MAX];
  static int active_compression_mode;
  
-+static bool canned_mode = true;
-+
- static ssize_t compression_mode_show(struct device_driver *driver, char *buf)
- {
- 	int ret = 0;
- 
--	ret = sprintf(buf, "%s\n", "fixed");
-+	if (canned_mode)
-+		ret = sprintf(buf, "%s\n", "canned");
-+	else
-+		ret = sprintf(buf, "%s\n", "fixed");
- 
- 	return ret;
- }
-@@ -383,6 +388,12 @@ int set_iaa_compression_mode(const char *name)
- 		ret = 0;
- 	}
- 
-+	if (ret == 0 && !strcmp(name, "canned"))
-+		canned_mode = true;
-+
-+	if (ret == 0 && !strcmp(name, "fixed"))
-+		canned_mode = false;
-+
+@@ -1073,6 +1169,73 @@ static inline int check_completion(struct device *dev,
  	return ret;
  }
  
-@@ -1153,6 +1164,7 @@ static int iaa_compress_verify(struct crypto_tfm *tfm, struct acomp_req *req,
- 	enum idxd_op_type optype;
- 	struct iaa_wq *iaa_wq;
- 	struct pci_dev *pdev;
-+	dma_addr_t src2_addr;
- 	struct device *dev;
- 	int ret = 0;
- 
-@@ -1185,6 +1197,13 @@ static int iaa_compress_verify(struct crypto_tfm *tfm, struct acomp_req *req,
- 	desc->max_dst_size = slen;
- 	desc->completion_addr = idxd_desc->compl_dma;
- 
-+	if (canned_mode) {
-+		src2_addr = iaa_wq->iaa_device->active_compression_mode->aecs_decomp_table_dma_addr;
-+		desc->src2_addr = (u64)src2_addr;
-+		desc->src2_size = 1088;
-+		desc->flags |= IDXD_OP_FLAG_RD_SRC2_AECS;
++static int iaa_compress_verify(struct crypto_tfm *tfm, struct acomp_req *req,
++			       struct idxd_wq *wq,
++			       dma_addr_t src_addr, unsigned int slen,
++			       dma_addr_t dst_addr, unsigned int *dlen,
++			       u32 compression_crc);
++
++static void iaa_desc_complete(struct idxd_desc *idxd_desc,
++			      enum idxd_complete_type comp_type,
++			      bool free_desc, void *__ctx,
++			      u32 *status)
++{
++	struct crypto_ctx *ctx = __ctx;
++	struct idxd_device *idxd;
++	struct iaa_wq *iaa_wq;
++	struct pci_dev *pdev;
++	struct device *dev;
++	int ret, err = 0;
++
++	iaa_wq = idxd_wq_get_private(idxd_desc->wq);
++	idxd = iaa_wq->iaa_device->idxd;
++	pdev = idxd->pdev;
++	dev = &pdev->dev;
++
++	dev_dbg(dev, "%s: compression mode %s,"
++		" ctx->src_addr %llx, ctx->dst_addr %llx\n", __func__,
++		iaa_wq->iaa_device->active_compression_mode->name,
++		ctx->src_addr, ctx->dst_addr);
++
++	ret = check_completion(dev, idxd_desc->iax_completion,
++			       ctx->compress, false);
++	if (ret) {
++		dev_dbg(dev, "%s: check_completion failed ret=%d\n", __func__, ret);
++		err = -EIO;
++		goto err;
 +	}
 +
- 	dev_dbg(dev, "(verify) compression mode %s,"
++	ctx->req->dlen = idxd_desc->iax_completion->output_size;
++
++	if (ctx->compress && iaa_verify_compress) {
++		u32 compression_crc;
++
++		compression_crc = idxd_desc->iax_completion->crc;
++		dma_sync_sg_for_device(dev, ctx->req->dst, 1, DMA_FROM_DEVICE);
++		dma_sync_sg_for_device(dev, ctx->req->src, 1, DMA_TO_DEVICE);
++		ret = iaa_compress_verify(ctx->tfm, ctx->req, iaa_wq->wq, ctx->src_addr,
++					  ctx->req->slen, ctx->dst_addr, &ctx->req->dlen,
++					  compression_crc);
++		if (ret) {
++			dev_dbg(dev, "%s: compress verify failed ret=%d\n", __func__, ret);
++			err = -EIO;
++		}
++	}
++err:
++	if (ctx->req->base.complete)
++		acomp_request_complete(ctx->req, err);
++
++	dma_unmap_sg(dev, ctx->req->dst, sg_nents(ctx->req->dst), DMA_FROM_DEVICE);
++	dma_unmap_sg(dev, ctx->req->src, sg_nents(ctx->req->src), DMA_TO_DEVICE);
++
++	if (ret != 0)
++		dev_dbg(dev, "asynchronous compress failed ret=%d\n", ret);
++
++	if (free_desc)
++		idxd_free_desc(idxd_desc->wq, idxd_desc);
++	iaa_wq_put(idxd_desc->wq);
++}
++
+ static int iaa_compress(struct crypto_tfm *tfm,	struct acomp_req *req,
+ 			struct idxd_wq *wq,
+ 			dma_addr_t src_addr, unsigned int slen,
+@@ -1118,6 +1281,22 @@ static int iaa_compress(struct crypto_tfm *tfm,	struct acomp_req *req,
+ 	desc->src2_size = sizeof(struct aecs_comp_table_record);
+ 	desc->completion_addr = idxd_desc->compl_dma;
+ 
++	if (use_irq) {
++		desc->flags |= IDXD_OP_FLAG_RCI;
++
++		idxd_desc->crypto.req = req;
++		idxd_desc->crypto.tfm = tfm;
++		idxd_desc->crypto.src_addr = src_addr;
++		idxd_desc->crypto.dst_addr = dst_addr;
++		idxd_desc->crypto.compress = true;
++
++		dev_dbg(dev, "%s use_async_irq: compression mode %s,"
++			" src_addr %llx, dst_addr %llx\n", __func__,
++			iaa_wq->iaa_device->active_compression_mode->name,
++			src_addr, dst_addr);
++	} else if (async_mode && !disable_async)
++		req->base.data = idxd_desc;
++
+ 	dev_dbg(dev, "%s: compression mode %s,"
  		" desc->src1_addr %llx, desc->src1_size %d,"
  		" desc->dst_addr %llx, desc->max_dst_size %d,"
-@@ -1237,6 +1256,7 @@ static int iaa_decompress(struct crypto_tfm *tfm, struct acomp_req *req,
- 	enum idxd_op_type optype;
- 	struct iaa_wq *iaa_wq;
- 	struct pci_dev *pdev;
-+	dma_addr_t src2_addr;
- 	struct device *dev;
- 	int ret = 0;
+@@ -1132,6 +1311,12 @@ static int iaa_compress(struct crypto_tfm *tfm,	struct acomp_req *req,
+ 		goto err;
+ 	}
  
-@@ -1268,6 +1288,13 @@ static int iaa_decompress(struct crypto_tfm *tfm, struct acomp_req *req,
- 	desc->src1_size = slen;
- 	desc->completion_addr = idxd_desc->compl_dma;
- 
-+	if (canned_mode) {
-+		src2_addr = iaa_wq->iaa_device->active_compression_mode->aecs_decomp_table_dma_addr;
-+		desc->src2_addr = (u64)src2_addr;
-+		desc->src2_size = 1088;
-+		desc->flags |= IDXD_OP_FLAG_RD_SRC2_AECS;
++	if (async_mode && !disable_async) {
++		ret = -EINPROGRESS;
++		dev_dbg(dev, "%s: returning -EINPROGRESS\n", __func__);
++		goto out;
 +	}
++
+ 	ret = check_completion(dev, idxd_desc->iax_completion, true, false);
+ 	if (ret) {
+ 		dev_dbg(dev, "check_completion failed ret=%d\n", ret);
+@@ -1142,7 +1327,8 @@ static int iaa_compress(struct crypto_tfm *tfm,	struct acomp_req *req,
+ 
+ 	*compression_crc = idxd_desc->iax_completion->crc;
+ 
+-	idxd_free_desc(wq, idxd_desc);
++	if (!async_mode)
++		idxd_free_desc(wq, idxd_desc);
+ out:
+ 	return ret;
+ err:
+@@ -1295,6 +1481,22 @@ static int iaa_decompress(struct crypto_tfm *tfm, struct acomp_req *req,
+ 		desc->flags |= IDXD_OP_FLAG_RD_SRC2_AECS;
+ 	}
+ 
++	if (use_irq && !disable_async) {
++		desc->flags |= IDXD_OP_FLAG_RCI;
++
++		idxd_desc->crypto.req = req;
++		idxd_desc->crypto.tfm = tfm;
++		idxd_desc->crypto.src_addr = src_addr;
++		idxd_desc->crypto.dst_addr = dst_addr;
++		idxd_desc->crypto.compress = false;
++
++		dev_dbg(dev, "%s: use_async_irq compression mode %s,"
++			" src_addr %llx, dst_addr %llx\n", __func__,
++			iaa_wq->iaa_device->active_compression_mode->name,
++			src_addr, dst_addr);
++	} else if (async_mode && !disable_async)
++		req->base.data = idxd_desc;
 +
  	dev_dbg(dev, "%s: decompression mode %s,"
  		" desc->src1_addr %llx, desc->src1_size %d,"
  		" desc->dst_addr %llx, desc->max_dst_size %d,"
-@@ -1573,7 +1600,6 @@ static struct acomp_alg iaa_acomp_deflate = {
- 	.decompress		= iaa_comp_adecompress,
- 	.dst_free		= sgl_free,
- 	.base			= {
--		.cra_name		= "deflate",
- 		.cra_driver_name	= "iaa_crypto",
- 		.cra_module		= THIS_MODULE,
- 		.cra_priority           = IAA_ALG_PRIORITY,
-@@ -1584,6 +1610,11 @@ static int iaa_register_compression_device(void)
- {
- 	int ret;
- 
-+	if (canned_mode)
-+		strcpy(iaa_acomp_deflate.base.cra_name, "iaa-canned-deflate");
-+	else
-+		strcpy(iaa_acomp_deflate.base.cra_name, "deflate");
-+
- 	ret = crypto_register_acomp(&iaa_acomp_deflate);
- 	if (ret)
- 		pr_err("deflate algorithm acomp registration failed (%d)\n", ret);
-@@ -1764,6 +1795,12 @@ static int __init iaa_crypto_init_module(void)
- 		goto out;
+@@ -1309,6 +1511,12 @@ static int iaa_decompress(struct crypto_tfm *tfm, struct acomp_req *req,
+ 		goto err;
  	}
  
-+	ret = iaa_aecs_init_canned();
-+	if (ret < 0) {
-+		pr_debug("IAA canned compression mode init failed\n");
-+		goto err_canned;
++	if (async_mode && !disable_async) {
++		ret = -EINPROGRESS;
++		dev_dbg(dev, "%s: returning -EINPROGRESS\n", __func__);
++		goto out;
 +	}
 +
- 	ret = idxd_driver_register(&iaa_crypto_driver);
+ 	ret = check_completion(dev, idxd_desc->iax_completion, false, false);
  	if (ret) {
- 		pr_debug("IAA wq sub-driver registration failed\n");
-@@ -1795,6 +1832,8 @@ static int __init iaa_crypto_init_module(void)
- 	idxd_driver_unregister(&iaa_crypto_driver);
- err_driver_reg:
- 	iaa_aecs_cleanup_fixed();
-+err_canned:
-+	iaa_aecs_cleanup_fixed();
+ 		dev_dbg(dev, "check_completion failed ret=%d\n", ret);
+@@ -1317,7 +1525,8 @@ static int iaa_decompress(struct crypto_tfm *tfm, struct acomp_req *req,
  
- 	goto out;
- }
-@@ -1809,6 +1848,7 @@ static void __exit iaa_crypto_cleanup_module(void)
+ 	*dlen = idxd_desc->iax_completion->output_size;
+ 
+-	idxd_free_desc(wq, idxd_desc);
++	if (!async_mode)
++		idxd_free_desc(wq, idxd_desc);
+ out:
+ 	return ret;
+ err:
+@@ -1779,6 +1988,7 @@ static struct idxd_device_driver iaa_crypto_driver = {
+ 	.remove = iaa_crypto_remove,
+ 	.name = IDXD_SUBDRIVER_NAME,
+ 	.type = dev_types,
++	.desc_complete = iaa_desc_complete,
+ };
+ 
+ static int __init iaa_crypto_init_module(void)
+@@ -1821,10 +2031,20 @@ static int __init iaa_crypto_init_module(void)
+ 		goto err_verify_attr_create;
+ 	}
+ 
++	ret = driver_create_file(&iaa_crypto_driver.drv,
++				 &driver_attr_sync_mode);
++	if (ret) {
++		pr_debug("IAA sync mode attr creation failed\n");
++		goto err_sync_attr_create;
++	}
++
+ 	pr_debug("initialized\n");
+ out:
+ 	return ret;
+ 
++err_sync_attr_create:
++	driver_remove_file(&iaa_crypto_driver.drv,
++			   &driver_attr_verify_compress);
+ err_verify_attr_create:
  	driver_remove_file(&iaa_crypto_driver.drv,
- 			   &driver_attr_verify_compress);
- 	idxd_driver_unregister(&iaa_crypto_driver);
-+	iaa_aecs_cleanup_canned();
- 	iaa_aecs_cleanup_fixed();
+ 			   &driver_attr_compression_mode);
+@@ -1843,6 +2063,8 @@ static void __exit iaa_crypto_cleanup_module(void)
+ 	if (iaa_unregister_compression_device())
+ 		pr_debug("IAA compression device unregister failed\n");
  
- 	pr_debug("cleaned up\n");
++	driver_remove_file(&iaa_crypto_driver.drv,
++			   &driver_attr_sync_mode);
+ 	driver_remove_file(&iaa_crypto_driver.drv,
+ 			   &driver_attr_compression_mode);
+ 	driver_remove_file(&iaa_crypto_driver.drv,
 -- 
 2.34.1
 

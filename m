@@ -2,51 +2,56 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C0F7705533
-	for <lists+dmaengine@lfdr.de>; Tue, 16 May 2023 19:44:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82F99705547
+	for <lists+dmaengine@lfdr.de>; Tue, 16 May 2023 19:47:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229454AbjEPRoc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 16 May 2023 13:44:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33934 "EHLO
+        id S229799AbjEPRrJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 16 May 2023 13:47:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjEPRob (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 16 May 2023 13:44:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8B68FC;
-        Tue, 16 May 2023 10:44:30 -0700 (PDT)
+        with ESMTP id S229534AbjEPRrI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 16 May 2023 13:47:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 167701BC3;
+        Tue, 16 May 2023 10:47:08 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3C45363D1F;
-        Tue, 16 May 2023 17:44:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14D81C433EF;
-        Tue, 16 May 2023 17:44:28 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 91CDC63D49;
+        Tue, 16 May 2023 17:47:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CFCDC433EF;
+        Tue, 16 May 2023 17:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684259069;
-        bh=QFHWIbp7xVmzwRiivQjuxHEv7aR4ZQD6vkzepj5JacU=;
+        s=k20201202; t=1684259227;
+        bh=q3lk1/GMYHuiihYLYFSQOAgj5CokDV7UTM+ye9181iA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FYV19NujHbagsyC1cAomrbyAind2xfpeegaLb1HRGWSvOfFGbJmQfEiKYJ2M+oMkF
-         Z6yDHZK6X2y0vxpGI1687M0o6DULdHEE0OY/x1c3RhKD7Oyim8HRI2yOdsOvHrMi+s
-         n9a8RH8ccZLPufuG7LP8oJ9i26fl3hInVxVSBVVEXg1S67uEf5nZQUlbuUrWTcSWG5
-         cG+hYyCOYXCy8UaFuU65tHmBQvT0ffxfLL6DAQiuHcvTeGB/ePYQyAZbYbI+2IQ0G4
-         mWVxt/+kMGR0N+dBdjUzLvqqjEkfNxW1yD8/dCpIoo47P/xpecu6CDPIwugy/cq48A
-         JxbS91iI62rJg==
-Date:   Tue, 16 May 2023 23:14:25 +0530
+        b=iz8PRA4HTwIsqjONlPlw0laxnPtgLZG4+WyhGLa28ShQvytQ9QTrz8b8N1L3/hwpi
+         jUhjlfDNVLiHOc8Bp1IoL4Z+fpI9KE6oF/LaXELa8DcTdODrMyZqdRslP9pN8eq/PM
+         q57v9BajZBLGEs0d3NWLIepM4zP2uLGw80nIc5ept+vgCe3HzG/zxOB5/2cIFwt5yu
+         crNFtxwBZOHqoO6yGo8tJiTOnPVKsNY2mO0FeX0i3Yy6kxl3FxVwK+Gvh5pip8Ys7C
+         +TaAuc7gZ2nij0MNaQu9QlEeuckdymo1cf6tTLixbAqEmsZZSqK8Jc9mncyfI0yEkQ
+         XeJJh3hY059Qw==
+Date:   Tue, 16 May 2023 23:17:02 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Tom Rix <trix@redhat.com>
-Cc:     peter.ujfalusi@gmail.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: ti: k3-udma: define udma_pm_resume,suspend
- with CONFIG_PM_SLEEP
-Message-ID: <ZGPA+V5WqZItfp74@matsya>
-References: <20230501025647.2905317-1-trix@redhat.com>
+To:     Michal Simek <michal.simek@amd.com>
+Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com,
+        Conor Dooley <conor+dt@kernel.org>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3] dt-bindings: dma: xilinx: Add power-domains to
+ xlnx,zynqmp-dpdma
+Message-ID: <ZGPBliJGmVq4Y36h@matsya>
+References: <8f5651634df338743f95a7253a741f9ddc92487d.1683891609.git.michal.simek@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230501025647.2905317-1-trix@redhat.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+In-Reply-To: <8f5651634df338743f95a7253a741f9ddc92487d.1683891609.git.michal.simek@amd.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -55,51 +60,11 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 30-04-23, 22:56, Tom Rix wrote:
-> gcc reports
-> drivers/dma/ti/k3-udma.c:5552:12: error: ‘udma_pm_resume’
->   defined but not used [-Werror=unused-function]
->  5552 | static int udma_pm_resume(struct device *dev)
->       |            ^~~~~~~~~~~~~~
-> drivers/dma/ti/k3-udma.c:5530:12: error: ‘udma_pm_suspend’
->   defined but not used [-Werror=unused-function]
->  5530 | static int udma_pm_suspend(struct device *dev)
->       |            ^~~~~~~~~~~~~~~
-> 
-> These functions are used conditionally with CONFIG_PM_SLEEP,
-> so they should be likewise defined.
+On 12-05-23, 13:40, Michal Simek wrote:
+> DP DMA has own power domain that's why describe required power-domain
+> property.
 
-A better way would be to use __maybe_unused. I have sent a patch with
-that change
-
-> 
-> Signed-off-by: Tom Rix <trix@redhat.com>
-> ---
->  drivers/dma/ti/k3-udma.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-> index fc3a2a05ab7b..f189b0f2e423 100644
-> --- a/drivers/dma/ti/k3-udma.c
-> +++ b/drivers/dma/ti/k3-udma.c
-> @@ -5527,6 +5527,7 @@ static int udma_probe(struct platform_device *pdev)
->  	return ret;
->  }
->  
-> +#ifdef CONFIG_PM_SLEEP
->  static int udma_pm_suspend(struct device *dev)
->  {
->  	struct udma_dev *ud = dev_get_drvdata(dev);
-> @@ -5573,6 +5574,7 @@ static int udma_pm_resume(struct device *dev)
->  
->  	return 0;
->  }
-> +#endif
->  
->  static const struct dev_pm_ops udma_pm_ops = {
->  	SET_LATE_SYSTEM_SLEEP_PM_OPS(udma_pm_suspend, udma_pm_resume)
-> -- 
-> 2.27.0
+Applied, thanks
 
 -- 
 ~Vinod

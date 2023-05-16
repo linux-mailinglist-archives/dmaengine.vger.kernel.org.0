@@ -2,108 +2,108 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 94387705583
-	for <lists+dmaengine@lfdr.de>; Tue, 16 May 2023 19:56:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDEFE7059AC
+	for <lists+dmaengine@lfdr.de>; Tue, 16 May 2023 23:37:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232014AbjEPR4x (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 16 May 2023 13:56:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46328 "EHLO
+        id S229709AbjEPVh2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 16 May 2023 17:37:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232083AbjEPR4t (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 16 May 2023 13:56:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30B199B;
-        Tue, 16 May 2023 10:56:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B906463625;
-        Tue, 16 May 2023 17:56:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9498FC433D2;
-        Tue, 16 May 2023 17:56:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684259804;
-        bh=7ULD3yxJaogVlKiE5g0T5dzK9aiAn4kF1SV1cudf0a0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SAyDZvq3aI7/IDGeV2SK+xROv4K/jTU2+ZB3sCeAk+zcBLZcL0uYl7DxSR6UkmAbc
-         GiL70Fl1igazasLe7Nfh1eye/vhD7JlpTfEwFNZa4V3mJ7oWobs3KJAybvXJUm9Z1s
-         jmqTpuxy/tY3W9o/cVEo2kiZ1ONxXb6ZX3MTypvUR7cVMr2kykDqZgrrAQO0fn0BK7
-         +bi2nP6QdG1CyxxfjVNbIRJ9UZ5OX2/Tqf04H+Q2pzva0bfJi1FstVkdad04QkvTNF
-         DQVh1PrLL/V+pmjguWD+nhXThIs7nitRkmHAwu9uwJ2r5hL9SVV0HT/H3jT/f/tTql
-         zJ9h3Yz63kG0A==
-Date:   Tue, 16 May 2023 23:26:39 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        schnelle@linux.ibm.com, linux-s390@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH RESEND 2/2] dmaengine: make QCOM_HIDMA depend on HAS_IOMEM
-Message-ID: <ZGPD1wELeXafPJ/T@matsya>
-References: <20230506111628.712316-1-bhe@redhat.com>
- <20230506111628.712316-3-bhe@redhat.com>
+        with ESMTP id S229578AbjEPVh1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 16 May 2023 17:37:27 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08E846EB1
+        for <dmaengine@vger.kernel.org>; Tue, 16 May 2023 14:36:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:From:References:To:Subject:MIME-Version:Date:
+        Message-ID:Sender:Reply-To:Cc:Content-ID:Content-Description;
+        bh=1zc3dpgq23RpKo9pXqJEUb7/JbZrtaDFZTG/20DfirU=; b=ig9ivryUfxsauWha7JVRLVAshj
+        yxUz6TtZcBYlUwqeoqiWKAjcNQRO9rrSTDO5JzHnmd13gHxrRt+efgPqxjg8jRqQUv5Mf06ETtJJ0
+        90aytNGNchSUth/y35veR81JkK5qrJmj6r+3N3gU10SbUTJO2KldU0K73ahJT6kj2V0BX0WpmPUVk
+        KX7Gyj2cXCrvNTjtxoekBWLLhYKX6APyBXPe4GaPMi6qD3fO+vlJejcHnY8aUpVgJ7D2K+wOHrgsT
+        Xb4lkPEl1zvNrSXYK4VMP71LV8Qz0Lf1lNBF5QMf7N5lEQvjLgDx/oJHyX28a4tRe96vwaMov8KxH
+        YBgzUBxA==;
+Received: from [2601:1c2:980:9ec0::2764]
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1pz2Lj-007C86-1s;
+        Tue, 16 May 2023 21:36:51 +0000
+Message-ID: <0c2f12c6-51fb-8476-d723-efcb10d9431c@infradead.org>
+Date:   Tue, 16 May 2023 14:36:48 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230506111628.712316-3-bhe@redhat.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [PATCH] dmaengine: ti: k3-udma: annotate pm function with
+ __maybe_unused
+Content-Language: en-US
+To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Georgi Vlaev <g-vlaev@ti.com>
+References: <20230516174311.117264-1-vkoul@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20230516174311.117264-1-vkoul@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 06-05-23, 19:16, Baoquan He wrote:
-> On s390 systems (aka mainframes), it has classic channel devices for
-> networking and permanent storage that are currently even more common
-> than PCI devices. Hence it could have a fully functional s390 kernel
-> with CONFIG_PCI=n, then the relevant iomem mapping functions
-> [including ioremap(), devm_ioremap(), etc.] are not available.
-> 
-> Here let QCOM_HIDMA depend on HAS_IOMEM so that it won't be built to
-> cause below compiling error if PCI is unset.
 
-I have 2/2 patch here, where is patch 1 of 2..?
 
+On 5/16/23 10:43, Vinod Koul wrote:
+> We get a warning when PM is not set:
 > 
-> --------------------------------------------------------
-> ld: drivers/dma/qcom/hidma.o: in function `hidma_probe':
-> hidma.c:(.text+0x4b46): undefined reference to `devm_ioremap_resource'
-> ld: hidma.c:(.text+0x4b9e): undefined reference to `devm_ioremap_resource'
-> make[1]: *** [scripts/Makefile.vmlinux:35: vmlinux] Error 1
-> make: *** [Makefile:1264: vmlinux] Error 2
+> ../drivers/dma/ti/k3-udma.c:5552:12: warning: 'udma_pm_resume' defined but not used [-Wunused-function]
+>  5552 | static int udma_pm_resume(struct device *dev)
+>       |            ^~~~~~~~~~~~~~
+> ../drivers/dma/ti/k3-udma.c:5530:12: warning: 'udma_pm_suspend' defined but not used [-Wunused-function]
+>  5530 | static int udma_pm_suspend(struct device *dev)
+>       |            ^~~~~~~~~~~~~~~
 > 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <andersson@kernel.org>
-> Cc: Konrad Dybcio <konrad.dybcio@linaro.org>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: dmaengine@vger.kernel.org
+> Fix this by annotating pm function with __maybe_unused
+> 
+> Fixes: fbe05149e40b ("dmaengine: ti: k3-udma: Add system suspend/resume support")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+Thanks.
+
 > ---
->  drivers/dma/qcom/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/dma/ti/k3-udma.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/dma/qcom/Kconfig b/drivers/dma/qcom/Kconfig
-> index 3f926a653bd8..ace75d7b835a 100644
-> --- a/drivers/dma/qcom/Kconfig
-> +++ b/drivers/dma/qcom/Kconfig
-> @@ -45,6 +45,7 @@ config QCOM_HIDMA_MGMT
+> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+> index fc3a2a05ab7b..b8329a23728d 100644
+> --- a/drivers/dma/ti/k3-udma.c
+> +++ b/drivers/dma/ti/k3-udma.c
+> @@ -5527,7 +5527,7 @@ static int udma_probe(struct platform_device *pdev)
+>  	return ret;
+>  }
 >  
->  config QCOM_HIDMA
->  	tristate "Qualcomm Technologies HIDMA Channel support"
-> +	depends on HAS_IOMEM
->  	select DMA_ENGINE
->  	help
->  	  Enable support for the Qualcomm Technologies HIDMA controller.
-> -- 
-> 2.34.1
+> -static int udma_pm_suspend(struct device *dev)
+> +static int __maybe_unused udma_pm_suspend(struct device *dev)
+>  {
+>  	struct udma_dev *ud = dev_get_drvdata(dev);
+>  	struct dma_device *dma_dev = &ud->ddev;
+> @@ -5549,7 +5549,7 @@ static int udma_pm_suspend(struct device *dev)
+>  	return 0;
+>  }
+>  
+> -static int udma_pm_resume(struct device *dev)
+> +static int __maybe_unused udma_pm_resume(struct device *dev)
+>  {
+>  	struct udma_dev *ud = dev_get_drvdata(dev);
+>  	struct dma_device *dma_dev = &ud->ddev;
 
 -- 
-~Vinod
+~Randy

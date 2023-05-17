@@ -2,129 +2,115 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BD18705BE3
-	for <lists+dmaengine@lfdr.de>; Wed, 17 May 2023 02:19:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 965C5705D9D
+	for <lists+dmaengine@lfdr.de>; Wed, 17 May 2023 05:01:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229658AbjEQATp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 16 May 2023 20:19:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48092 "EHLO
+        id S231656AbjEQDB1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 16 May 2023 23:01:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229521AbjEQATo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 16 May 2023 20:19:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B0E2129
-        for <dmaengine@vger.kernel.org>; Tue, 16 May 2023 17:18:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684282734;
+        with ESMTP id S231710AbjEQDBZ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 16 May 2023 23:01:25 -0400
+Received: from out-25.mta0.migadu.com (out-25.mta0.migadu.com [IPv6:2001:41d0:1004:224b::19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD9E2C1
+        for <dmaengine@vger.kernel.org>; Tue, 16 May 2023 20:01:23 -0700 (PDT)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1684292482;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fAWA1BLnS6OZoKpUWNVEQYD1QFUo+cJ+dgpIwEFG8vQ=;
-        b=MyKNlXGC4lLrsgqQZYBSCeq2R2EJhlFeyansotgpO/+ZclrpYBkaDI37GGK9doMDSe/1y/
-        f1pFHuluczWb8GWyBAQuVluCnMXMH0JC8k48ONbygBT39+5XFPjbfnSxAyjBAf4NpEvlWx
-        zFPPjG3G/kE2lNOhp0hVuCZMe/dcU00=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-630-xSYMGA7rM6C5pLqfMBrTEw-1; Tue, 16 May 2023 20:18:51 -0400
-X-MC-Unique: xSYMGA7rM6C5pLqfMBrTEw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B3A533810B05;
-        Wed, 17 May 2023 00:18:50 +0000 (UTC)
-Received: from localhost (ovpn-12-79.pek2.redhat.com [10.72.12.79])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 02B2A1410DD5;
-        Wed, 17 May 2023 00:18:49 +0000 (UTC)
-Date:   Wed, 17 May 2023 08:18:46 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        schnelle@linux.ibm.com, linux-s390@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH RESEND 2/2] dmaengine: make QCOM_HIDMA depend on HAS_IOMEM
-Message-ID: <ZGQdZhutT+lUdily@MiWiFi-R3L-srv>
-References: <20230506111628.712316-1-bhe@redhat.com>
- <20230506111628.712316-3-bhe@redhat.com>
- <ZGPD1wELeXafPJ/T@matsya>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=uZlIpDLA3NZ6mp2Qw+zJKax+3uAeBqf9vfLEfM23DhI=;
+        b=HAd/eh84o8q70IuzgNiNsoSQwbhhbXZZdhWWmzbf/UdPuw7YzfFR26XftJKfbMfos8BBJC
+        q6v6LLH9QB/UNbVGYYRVNRlGv512VFIuOS+qwdpLKesdpDeiIgKDCnZ1vkcXhT6wFvD0bF
+        7V0WAT/iGZojpEE6uWQ42H7bLJ2y0x0=
+From:   Cai Huoqing <cai.huoqing@linux.dev>
+To:     vkoul@kernel.org
+Cc:     Cai Huoqing <cai.huoqing@linux.dev>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v10 0/4] dmaengine: dw-edma: Add support for native HDMA
+Date:   Wed, 17 May 2023 11:01:10 +0800
+Message-Id: <20230517030115.21093-1-cai.huoqing@linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZGPD1wELeXafPJ/T@matsya>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 05/16/23 at 11:26pm, Vinod Koul wrote:
-> On 06-05-23, 19:16, Baoquan He wrote:
-> > On s390 systems (aka mainframes), it has classic channel devices for
-> > networking and permanent storage that are currently even more common
-> > than PCI devices. Hence it could have a fully functional s390 kernel
-> > with CONFIG_PCI=n, then the relevant iomem mapping functions
-> > [including ioremap(), devm_ioremap(), etc.] are not available.
-> > 
-> > Here let QCOM_HIDMA depend on HAS_IOMEM so that it won't be built to
-> > cause below compiling error if PCI is unset.
-> 
-> I have 2/2 patch here, where is patch 1 of 2..?
+Add support for HDMA NATIVE, as long the IP design has set
+the compatible register map parameter-HDMA_NATIVE,
+which allows compatibility for native HDMA register configuration.
 
-It's here, thanks for check.
-https://lore.kernel.org/all/20230506111628.712316-2-bhe@redhat.com/T/#u
+The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
+And the native HDMA registers are different from eDMA,
+so this patch add support for HDMA NATIVE mode.
 
-I used get_maintainer to get reivewers list, seems your contact is only
-put in 2/2 patch. I also sent to lkml, linux-mm and s390 mailing list,
-so the whole series can be seen in any of the ML.
+HDMA write and read channels operate independently to maximize
+the performance of the HDMA read and write data transfer over
+the link When you configure the HDMA with multiple read channels,
+then it uses a round robin (RR) arbitration scheme to select
+the next read channel to be serviced.The same applies when
+youhave multiple write channels.
 
-Thanks
-Baoquan
+The native HDMA driver also supports a maximum of 16 independent
+channels (8 write + 8 read), which can run simultaneously.
+Both SAR (Source Address Register) and DAR (Destination Address Register)
+are aligned to byte.
 
-> 
-> > 
-> > --------------------------------------------------------
-> > ld: drivers/dma/qcom/hidma.o: in function `hidma_probe':
-> > hidma.c:(.text+0x4b46): undefined reference to `devm_ioremap_resource'
-> > ld: hidma.c:(.text+0x4b9e): undefined reference to `devm_ioremap_resource'
-> > make[1]: *** [scripts/Makefile.vmlinux:35: vmlinux] Error 1
-> > make: *** [Makefile:1264: vmlinux] Error 2
-> > 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> > Cc: Andy Gross <agross@kernel.org>
-> > Cc: Bjorn Andersson <andersson@kernel.org>
-> > Cc: Konrad Dybcio <konrad.dybcio@linaro.org>
-> > Cc: Vinod Koul <vkoul@kernel.org>
-> > Cc: linux-arm-msm@vger.kernel.org
-> > Cc: dmaengine@vger.kernel.org
-> > ---
-> >  drivers/dma/qcom/Kconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/dma/qcom/Kconfig b/drivers/dma/qcom/Kconfig
-> > index 3f926a653bd8..ace75d7b835a 100644
-> > --- a/drivers/dma/qcom/Kconfig
-> > +++ b/drivers/dma/qcom/Kconfig
-> > @@ -45,6 +45,7 @@ config QCOM_HIDMA_MGMT
-> >  
-> >  config QCOM_HIDMA
-> >  	tristate "Qualcomm Technologies HIDMA Channel support"
-> > +	depends on HAS_IOMEM
-> >  	select DMA_ENGINE
-> >  	help
-> >  	  Enable support for the Qualcomm Technologies HIDMA controller.
-> > -- 
-> > 2.34.1
-> 
-> -- 
-> ~Vinod
-> 
+Cai Huoqing (1):
+  dmaengine: dw-edma: Add support for native HDMA
+
+Cai huoqing (3):
+  dmaengine: dw-edma: Rename dw_edma_core_ops structure to
+    dw_edma_plat_ops
+  dmaengine: dw-edma: Create a new dw_edma_core_ops structure to
+    abstract controller operation
+  dmaengine: dw-edma: Add HDMA DebugFS support
+
+Tested-by: Serge Semin <fancer.lancer@gmail.com>
+
+v9->v10:
+  1.Update commit log.
+  2.rebase for dma-next
+
+v9 link:
+  https://lore.kernel.org/lkml/20230413033156.93751-1-cai.huoqing@linux.dev/
+
+ drivers/dma/dw-edma/Makefile                 |   8 +-
+ drivers/dma/dw-edma/dw-edma-core.c           |  86 ++----
+ drivers/dma/dw-edma/dw-edma-core.h           |  58 ++++
+ drivers/dma/dw-edma/dw-edma-pcie.c           |   4 +-
+ drivers/dma/dw-edma/dw-edma-v0-core.c        |  85 +++++-
+ drivers/dma/dw-edma/dw-edma-v0-core.h        |  14 +-
+ drivers/dma/dw-edma/dw-hdma-v0-core.c        | 296 +++++++++++++++++++
+ drivers/dma/dw-edma/dw-hdma-v0-core.h        |  17 ++
+ drivers/dma/dw-edma/dw-hdma-v0-debugfs.c     | 170 +++++++++++
+ drivers/dma/dw-edma/dw-hdma-v0-debugfs.h     |  22 ++
+ drivers/dma/dw-edma/dw-hdma-v0-regs.h        | 129 ++++++++
+ drivers/pci/controller/dwc/pcie-designware.c |   2 +-
+ include/linux/dma/edma.h                     |   7 +-
+ 13 files changed, 807 insertions(+), 91 deletions(-)
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
+
+-- 
+2.34.1
 

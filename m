@@ -2,62 +2,67 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BDFF707CF5
-	for <lists+dmaengine@lfdr.de>; Thu, 18 May 2023 11:32:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51CB8707EF9
+	for <lists+dmaengine@lfdr.de>; Thu, 18 May 2023 13:14:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230212AbjERJcv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 18 May 2023 05:32:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54452 "EHLO
+        id S230134AbjERLOT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 18 May 2023 07:14:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230186AbjERJcs (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 18 May 2023 05:32:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5B692123;
-        Thu, 18 May 2023 02:32:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7AEEA64DC5;
-        Thu, 18 May 2023 09:32:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B693C4339B;
-        Thu, 18 May 2023 09:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684402365;
-        bh=AxosTDF4QElj+lF1aFKpzDoBWCNtV2DhU375tkIJwHs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Wiw61qcuhVDj5zJkbgdbELZ5rbttjn0+LQWiy2Bad0QaVf9jb5Xzf9sIoI5Qi48eG
-         at76n9GncvKk0FCkJLTbUF1W1ddkt7dFeYPs1+2bFRfP/EJfEIg0zJ1yMCbXV3Z9eZ
-         z+kRykqnoX1sd/LFHjo7BO5rs1SPNWQVUZagwjjlXBtVPtYwevVDa9V2LNAP6Vg1QI
-         +eOc/aj0OloKZAgik57+ecrapuh5N+jv46XPeFCt1/kD0Zu1avfAlB0ebjS63XPSma
-         BORoQdh9nPnVKHOGxK2vibN17IjtGCCKLYy4fKZlRfN43mg6sb00FlPPnxcc4jz4du
-         i9BcXvBRhPheg==
-Date:   Thu, 18 May 2023 15:02:41 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Rob Herring <robh@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v5 14/14] MAINTAINERS: Add myself as the DW eDMA
- driver reviewer
-Message-ID: <ZGXwuZgUCabzj0/O@matsya>
-References: <20230511190902.28896-1-Sergey.Semin@baikalelectronics.ru>
- <20230511190902.28896-15-Sergey.Semin@baikalelectronics.ru>
+        with ESMTP id S230223AbjERLOS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 18 May 2023 07:14:18 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D7E0B8
+        for <dmaengine@vger.kernel.org>; Thu, 18 May 2023 04:14:17 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-3078cc99232so1804348f8f.3
+        for <dmaengine@vger.kernel.org>; Thu, 18 May 2023 04:14:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1684408455; x=1687000455;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=xHOBxalE1e/537sbv6IwDm7KN7soNMg/ORaL113xwuA=;
+        b=wmMjkHUMu70UpxU+bZpEWltBosU11MS71pmdYI73ZPyK/M5dOi+wQislBXNJ5n0gju
+         5Dc4doDZtU3br8D2Evu5/tCFcN9ledwdMFoQkqwLn5EC6vXnks4LV2DZ8DUeVCnXRECC
+         fSzPWnHm5Ray1apP6dIfueLWdr3jo2sQxnYLbFg3ut1ncra129ZZanGUrU1wFiVp+vVH
+         tNNqtyHT5z2ySLCgxroIFIbs2GS3KNZe14S5hZ1Mnhf/rmdrPsG7q9zlINpd5dWydV6W
+         AM6SZn+lL0P9J2de7tU9MwTo1FNy6WOz9TZgbq+shIeIFUax4T3dTEln0U2H/PgGp7PR
+         P3AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684408455; x=1687000455;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xHOBxalE1e/537sbv6IwDm7KN7soNMg/ORaL113xwuA=;
+        b=Mt66/wZAMIos0G1IIyKCTsSwMH9KnMeP7d3UuXfvNQiYZUOcijfr0lGGR3RgwtAbUo
+         UzvmIAQn9MnYu9IggUffUQfUIwf7N52brc0wU8b3qzDczU6l5IK9JPTuXsMsa6ivyfXZ
+         suUwhwHOSkWgOVnmpwKW/XBYV7l81ItGSgAP+R112FBMVjCfQvrN1ZSAUSNQvgF0Pz7m
+         KLiZDjVyg4v8Z0IFRm/btzQ6/j7tmx5cuRTBYgzgAxLfsnSMOkHaLZfbPPAnkqj4k0Xg
+         mzJnukftxcId1EerwYLg0iDkN7c+ja9ZfPdbiUnlRdgLmM/Px80583Vr/AUOnEMwSRtv
+         RVfQ==
+X-Gm-Message-State: AC+VfDzxFCTmmFdkU9savI4+30wsfTdzv/mjyCIH+K7gZ1AsTnPF4ByY
+        SD5lYU4ovk1dNehcf6Lcd57yJuB47nF+1W8IGkPnjQ==
+X-Google-Smtp-Source: ACHHUZ7cUQyXn53VkV1XCKcibqrUF0XPZ3SAbqlKk/hiCWPVchdeg2dw8VBSMBdWWb49Wzi0JqYjmwdFrWT9Z620ssw=
+X-Received: by 2002:adf:fd0d:0:b0:307:94fb:3a44 with SMTP id
+ e13-20020adffd0d000000b0030794fb3a44mr1416865wrr.52.1684408455616; Thu, 18
+ May 2023 04:14:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230511190902.28896-15-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+References: <20230518-bamclk-dt-v1-1-82f738c897d9@gerhold.net>
+In-Reply-To: <20230518-bamclk-dt-v1-1-82f738c897d9@gerhold.net>
+From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
+Date:   Thu, 18 May 2023 16:43:57 +0530
+Message-ID: <CAH=2Ntya7bqHVri_F8BOUJ6kJxtG2_usV08do+=OgkaoVJvxBQ@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: qcom: bam_dma: make channels/EEs optional in
+ DT with clock
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -66,13 +71,70 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 11-05-23, 22:09, Serge Semin wrote:
-> The driver original maintainer has been inactive for almost two years now.
-> It doesn't positively affect the new patches tests and reviews process.
-> Since the DW eDMA engine has been embedded into the PCIe controllers in
-> several our SoCs we will be interested in helping with the updates review.
+Hi Stephan,
 
-Applied, thanks
+On Thu, 18 May 2023 at 14:56, Stephan Gerhold <stephan@gerhold.net> wrote:
+>
+> If we have a BAM clock in the DT we are able to turn on the BAM
+> controller while probing, so there is no need to read "num-channels"
+> and "qcom,num-ees" from the DT. It can be read more accurately directly
+> from the identification registers of the BAM.
+>
+> This simplifies setting up typical controlled-remotely BAM DMAs in the
+> DT that can be turned on via a clock (e.g. the BLSP DMA).
 
--- 
-~Vinod
+Can you please list which qcom board(s) you tested this patch on?
+
+Thanks,
+Bhupesh
+
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> ---
+>  drivers/dma/qcom/bam_dma.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+> index 1e47d27e1f81..4c3eb972039d 100644
+> --- a/drivers/dma/qcom/bam_dma.c
+> +++ b/drivers/dma/qcom/bam_dma.c
+> @@ -1272,7 +1272,15 @@ static int bam_dma_probe(struct platform_device *pdev)
+>         bdev->powered_remotely = of_property_read_bool(pdev->dev.of_node,
+>                                                 "qcom,powered-remotely");
+>
+> -       if (bdev->controlled_remotely || bdev->powered_remotely) {
+> +       if (bdev->controlled_remotely || bdev->powered_remotely)
+> +               bdev->bamclk = devm_clk_get_optional(bdev->dev, "bam_clk");
+> +       else
+> +               bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
+> +
+> +       if (IS_ERR(bdev->bamclk))
+> +               return PTR_ERR(bdev->bamclk);
+> +
+> +       if (!bdev->bamclk) {
+>                 ret = of_property_read_u32(pdev->dev.of_node, "num-channels",
+>                                            &bdev->num_channels);
+>                 if (ret)
+> @@ -1284,14 +1292,6 @@ static int bam_dma_probe(struct platform_device *pdev)
+>                         dev_err(bdev->dev, "num-ees unspecified in dt\n");
+>         }
+>
+> -       if (bdev->controlled_remotely || bdev->powered_remotely)
+> -               bdev->bamclk = devm_clk_get_optional(bdev->dev, "bam_clk");
+> -       else
+> -               bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
+> -
+> -       if (IS_ERR(bdev->bamclk))
+> -               return PTR_ERR(bdev->bamclk);
+> -
+>         ret = clk_prepare_enable(bdev->bamclk);
+>         if (ret) {
+>                 dev_err(bdev->dev, "failed to prepare/enable clock\n");
+>
+> ---
+> base-commit: 1c677f238f92ba0a329b7c13220f38b396872806
+> change-id: 20230518-bamclk-dt-d44bae47b337
+>
+> Best regards,
+> --
+> Stephan Gerhold <stephan@gerhold.net>
+>

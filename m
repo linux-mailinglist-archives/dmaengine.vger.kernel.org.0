@@ -2,89 +2,108 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F2CB8707F5B
-	for <lists+dmaengine@lfdr.de>; Thu, 18 May 2023 13:32:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B31B2708090
+	for <lists+dmaengine@lfdr.de>; Thu, 18 May 2023 13:59:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231246AbjERLch (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 18 May 2023 07:32:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57758 "EHLO
+        id S230128AbjERL7d (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 18 May 2023 07:59:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231287AbjERLcd (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 18 May 2023 07:32:33 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9AE519B5;
-        Thu, 18 May 2023 04:32:25 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4357764E74;
-        Thu, 18 May 2023 11:32:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12784C4339C;
-        Thu, 18 May 2023 11:32:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684409544;
-        bh=tPMpgzLhB4+qp6UqQL+xY8X4kJc3RZ//RIRZC7aBtTg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=abiXFU3kXY3gNtksbgeKZF9niDk+C+FEfaDtZVhv49+jRuTzL+oOWbuJjwgPBTyez
-         T3QZmNgW1Cr/6fppRiRKuz6rGZlBhX8icz3DUF5QXvvcmfB9c7CxFpMNH3AvW6zjS1
-         Ims9EEDnyopqiZUhsvUnfQgrrph5dq4PJY0zJD9IVlcwot80L+V3d489IeCs7SGHCe
-         eguaZ3j10VSgqle5VBR7+TPjIXxiMKx4HqwHDKFEJtwWTluKzbI2W43zPe+1YAAacY
-         AuBfVtjL0+qkGJzgV3XCuUJsBjy2pka1EGxy1+J6QIzGL0Lf2r61fMEOOti/Ht4lI1
-         w1CmjO5tZrgIA==
-Date:   Thu, 18 May 2023 17:02:20 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        schnelle@linux.ibm.com, linux-s390@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH RESEND 2/2] dmaengine: make QCOM_HIDMA depend on HAS_IOMEM
-Message-ID: <ZGYMxNCpACqT2nZ3@matsya>
-References: <20230506111628.712316-1-bhe@redhat.com>
- <20230506111628.712316-3-bhe@redhat.com>
- <ZGPD1wELeXafPJ/T@matsya>
- <ZGQdZhutT+lUdily@MiWiFi-R3L-srv>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZGQdZhutT+lUdily@MiWiFi-R3L-srv>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S230036AbjERL7c (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 18 May 2023 07:59:32 -0400
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65339AC;
+        Thu, 18 May 2023 04:59:31 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 0B1BD5C0183;
+        Thu, 18 May 2023 07:59:29 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Thu, 18 May 2023 07:59:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm3; t=1684411169; x=1684497569; bh=j7
+        gx/xJWA0YhHeiCeJS3kGDMo9XKxha1/w1dZ8k7PYA=; b=W9wefS3Y0zTtpNrGfg
+        Xgvs8Ja7T6vysCxzJPZ5gkky9EuKLTpkT/scvY+PWjJlOYekTvDx/oqsJJS11mmj
+        xdOyb4SYwqQTQ8DIzj/PwHorRGqXeZc2Nlaxlh7jlGgdnInMYu+q2HDNEH6/q8RS
+        aGlrLvQwMwNo87Q0dVEC/e9K5fEClQYdVh1G0WHxdHyCsJmlfISPVTUQlFfdj1P3
+        caLCZT9it01GogWNbUh2Sj9tvE6IB7J05qqFvhQBlyyxHKDVms7e/GCyYBqSxwi+
+        nLYMap584icp7vgNWD+x3yrRAZILGemqZlpFMCffevlF2y4rAUO7pg9s3JSzZsZq
+        9Maw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1684411169; x=1684497569; bh=j7gx/xJWA0YhH
+        eiCeJS3kGDMo9XKxha1/w1dZ8k7PYA=; b=StRuArfq4c8MlwrSj1wEqQT8XI/pS
+        TiSQIPyCnQ1KSjhBlTxnqRheWwbTMuuIrPM/yoqlAlGqBMvsRVOTmZH8izwmpU1N
+        WoZ1QpKrUBr3y7vIWs+4HQEiaTF7oJpXUd9DZ7vCy4sOfxwnsqOVEONu2PDw2Mr2
+        asnrEz9IsZ2vrJsUo/nWoPJMfqxq+RljAyFN59deL5THLDY5djjyAXpG4j81U0qV
+        IT2mlsg4JirpxOUvztDPH8NEyweJU0CeQFFyfvWZhIPdNW6fQjZdbjCQ7s8X4ptg
+        akVgelbJ4Dy2PjYxR3IEjqqP0I+voSzM6s51NVP9yjuZ1cSbkef2qAoCw==
+X-ME-Sender: <xms:IBNmZKBzdrrpg5WoNaoEXnl3ptJh0TbXaBVG8KX-zLWFfSQI8jT5yw>
+    <xme:IBNmZEgXx28-R76kVvG3GLf8enaz9mrCqHSNqJW6FsTA1SDUqRWPUEsEcXeZ91T5K
+    2xyDK71aO1NROj2PkY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeeifedggeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepvefhffeltdegheeffffhtdegvdehjedtgfekueevgfduffettedtkeekueef
+    hedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:IBNmZNnxb1RFG9uUZeYDw4eo-Lvcz9C0MM71ijxlvkhcnpch58mTYg>
+    <xmx:IBNmZIxb4u1kkmIwATIZZJRFHYFLZHUCW5qvT0rR2ETrOUr4N46bxA>
+    <xmx:IBNmZPSG9LA3YyLKqFAxzydZ9R-3CgjDUzzydJjIKUkqn1ciwdOX_Q>
+    <xmx:IRNmZNMJaFUXzmtp0cEq9O8o6JDljVGhdXX2jHt7y24DQoo_KRBolg>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 6D646B60086; Thu, 18 May 2023 07:59:28 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-431-g1d6a3ebb56-fm-20230511.001-g1d6a3ebb
+Mime-Version: 1.0
+Message-Id: <2b7eef56-9409-46bd-bcf7-dea054adfccd@app.fastmail.com>
+In-Reply-To: <ZGYMJWoOYL0ddPBg@matsya>
+References: <20230517201951.619693-1-arnd@kernel.org>
+ <ZGYMJWoOYL0ddPBg@matsya>
+Date:   Thu, 18 May 2023 13:59:08 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Vinod Koul" <vkoul@kernel.org>, "Arnd Bergmann" <arnd@kernel.org>
+Cc:     "Linus Walleij" <linus.walleij@linaro.org>,
+        "Julia Lawall" <Julia.Lawall@inria.fr>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: ste_dma40: use proper format string for resource_size_t
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 17-05-23, 08:18, Baoquan He wrote:
-> On 05/16/23 at 11:26pm, Vinod Koul wrote:
-> > On 06-05-23, 19:16, Baoquan He wrote:
-> > > On s390 systems (aka mainframes), it has classic channel devices for
-> > > networking and permanent storage that are currently even more common
-> > > than PCI devices. Hence it could have a fully functional s390 kernel
-> > > with CONFIG_PCI=n, then the relevant iomem mapping functions
-> > > [including ioremap(), devm_ioremap(), etc.] are not available.
-> > > 
-> > > Here let QCOM_HIDMA depend on HAS_IOMEM so that it won't be built to
-> > > cause below compiling error if PCI is unset.
-> > 
-> > I have 2/2 patch here, where is patch 1 of 2..?
-> 
-> It's here, thanks for check.
-> https://lore.kernel.org/all/20230506111628.712316-2-bhe@redhat.com/T/#u
-> 
-> I used get_maintainer to get reivewers list, seems your contact is only
-> put in 2/2 patch. I also sent to lkml, linux-mm and s390 mailing list,
-> so the whole series can be seen in any of the ML.
+On Thu, May 18, 2023, at 13:29, Vinod Koul wrote:
+> On 17-05-23, 22:19, Arnd Bergmann wrote:
+>> From: Arnd Bergmann <arnd@arndb.de>
+>> 
+>> When LPAE is set, both the dma_addr_t and resource_size_t become 64 bit
+>> wide, causing a warning about the format string:
+>> 
+>> drivers/dma/ste_dma40.c: In function 'd40_probe':
+>> drivers/dma/ste_dma40.c:3539:23: error: format '%x' expects argument of type 'unsigned int', but argument 4 has type 'resource_size_t' {aka 'long long unsigned int'} [-Werror=format=]
+>>  3539 |         dev_info(dev, "found LCPA SRAM at 0x%08x, size 0x%08x\n",
+>> 
+>> Change both to the special %pap and %pap helpers for these types.
+>
+> Already posted [1] and applied now
+>
+> [1]: https://lore.kernel.org/r/20230517064434.141091-1-vkoul@kernel.org
 
-Ideally these two could have been sent separately! If sending together
-add a cover and cc everyone, so that we know..
+I think yours is wrong: you use %pR with a resource_size_t, but it
+expects a "struct resource instead".
 
-Applied now
-
--- 
-~Vinod
+      Arnd

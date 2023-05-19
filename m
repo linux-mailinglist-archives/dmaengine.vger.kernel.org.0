@@ -2,105 +2,90 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03BDB7092C0
-	for <lists+dmaengine@lfdr.de>; Fri, 19 May 2023 11:11:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B96B709363
+	for <lists+dmaengine@lfdr.de>; Fri, 19 May 2023 11:36:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231497AbjESJLK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 19 May 2023 05:11:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54198 "EHLO
+        id S230461AbjESJgo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 19 May 2023 05:36:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231520AbjESJK5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 19 May 2023 05:10:57 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA52B1BDB
-        for <dmaengine@vger.kernel.org>; Fri, 19 May 2023 02:10:34 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-3078c092056so1983074f8f.1
-        for <dmaengine@vger.kernel.org>; Fri, 19 May 2023 02:10:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684487433; x=1687079433;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=m4PUn3laZkjlv9r91VlagRE7SeQ4y7zfvRtcaATbBto=;
-        b=tPPNaiTO8lJ5jKQV6OBH0hubdfYT6e0g5een+CNh5ZVnoqtMivb80X9jt62BmL7Ntc
-         JmDTguBRtWeMmeWge9aFO2HntpQSdodBZm/+Bk5lRIzSoCNh6vAi8eupqFAh9LXyq/av
-         mqb/xGE2oU0pXdzRbXi6jBqk9jQj2FCBBKMSVhMYeAHY7KTU9fNZZweDD4jivvMWtQrj
-         OENV18nIItD13qed13rPXMEVGHvBz7PVZ5m4CA4oa5LRABnMxGoPL0J7t8A0zq94JhVp
-         hXc9a81Ra8u+zRHvw9la+GPmwDtH70uD0C2A8Dgcu+vmuDYVDVWK0L5Gt0RgSYf0hcyL
-         pd/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684487433; x=1687079433;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=m4PUn3laZkjlv9r91VlagRE7SeQ4y7zfvRtcaATbBto=;
-        b=MqVglmPsVzFrH+w6RXYVx2qapqIIpY/IZ8i//mqOIM1MMbGkMUJtFKVx15r8nBG/bD
-         CoC3KlhbpFTgqhpG0kOszPHcQL8B1Kt04FtDfhaMvF+jE55LZQXTtjlgGu04PZ+0mDPi
-         x9Ne333oyvgswXUD0nA2I5xY5Ly2s00aXkiH/o7mmT/AWcffshKceclDEd/NjTQaIvTe
-         ZZg7j1/eFbYt53CPCGYiYxfgR3KUVRWwnWyscPQJ6dXx/rkyITI2UwJf4zCvQmrhZgJl
-         gA9YY+XhFLQRLeOxX3/AbODzaUePttL+2o2aLEsoPX7aq7xDWVRBWSFw+xkGAFLk/VHK
-         5LUA==
-X-Gm-Message-State: AC+VfDy0rAI4O2RvE/na5rCcGkjyRKNRYiGqo0uPNF7DRqyIYlJAmarL
-        gsJGa7QmTG1z1L1n0Iqw8m3FnLQW2uHpQ3xS4sztMw==
-X-Google-Smtp-Source: ACHHUZ6Ls/fxuZgcyZ694cYOnC1gqFmjt2rYX4qoLImFgpcP92r4Yt0cObiHBFfjDzWMPfy6SRBwmNGjFRTCq9koXeo=
-X-Received: by 2002:a5d:6388:0:b0:309:492a:bb07 with SMTP id
- p8-20020a5d6388000000b00309492abb07mr1162243wru.26.1684487432711; Fri, 19 May
- 2023 02:10:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230518-bamclk-dt-v1-1-82f738c897d9@gerhold.net>
- <CAH=2Ntya7bqHVri_F8BOUJ6kJxtG2_usV08do+=OgkaoVJvxBQ@mail.gmail.com> <ZGYKQkgRrBqO2rsx@gerhold.net>
-In-Reply-To: <ZGYKQkgRrBqO2rsx@gerhold.net>
-From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Date:   Fri, 19 May 2023 14:40:21 +0530
-Message-ID: <CAH=2Ntw0BZH=RGp14mYLhX7D6jV5O5eDKRQbby=uCy85xMDU_g@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: qcom: bam_dma: make channels/EEs optional in
- DT with clock
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        with ESMTP id S231772AbjESJg1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 19 May 2023 05:36:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB031BC1;
+        Fri, 19 May 2023 02:36:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 59C0A655B6;
+        Fri, 19 May 2023 09:34:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AB93C433EF;
+        Fri, 19 May 2023 09:34:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684488892;
+        bh=LAoKjMeFQXh9WKY0mviRB9jJBiyu4k4R57L17sXUcpQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=F/3GLRHwi6iVYpdhFPhRF1YVpQnKl0RmfNAgxXmXJRGW6yigVmLWXuaaGAYage971
+         OFvBGWZmieCFmAmpr5XqpL8O/67Vte/QeVkxtkjiGBiUPnTv9JrinKxOr9wZ2NJSU+
+         3xPQBfz4ehvL2qGwMoEQAcYsHLUs/8F5wOxmiC2UY0ZP1dz9aEwvV6RhPjyDmFia2r
+         TGgiOJNZRZjrx/9kaDmWvUOjUIKQNi66r8Cw6qKKSGBP5zsF2R3JBPoOKWaiSmkCjU
+         HpDUCAUalun0TpDRA7oBhLR/nfmDHVIfEy3hi5EvaVQVRH3pJScXgTy5+wlERDGjhh
+         fTucJeEuDxCFQ==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Julia Lawall <Julia.Lawall@inria.fr>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Subject: [PATCH] [v2] dmaengine: ste_dma40: use proper format string for resource_size_t
+Date:   Fri, 19 May 2023 11:34:38 +0200
+Message-Id: <20230519093447.4097040-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, 18 May 2023 at 16:51, Stephan Gerhold <stephan@gerhold.net> wrote:
->
-> On Thu, May 18, 2023 at 04:43:57PM +0530, Bhupesh Sharma wrote:
-> > On Thu, 18 May 2023 at 14:56, Stephan Gerhold <stephan@gerhold.net> wrote:
-> > >
-> > > If we have a BAM clock in the DT we are able to turn on the BAM
-> > > controller while probing, so there is no need to read "num-channels"
-> > > and "qcom,num-ees" from the DT. It can be read more accurately directly
-> > > from the identification registers of the BAM.
-> > >
-> > > This simplifies setting up typical controlled-remotely BAM DMAs in the
-> > > DT that can be turned on via a clock (e.g. the BLSP DMA).
-> >
-> > Can you please list which qcom board(s) you tested this patch on?
-> >
->
-> It works fine at least on MSM8916/DB410c (for blsp_dma) and MDM9607
-> (blsp_dma and qpic_dma (for NAND)). More testing would be much
-> appreciated of course!
+From: Arnd Bergmann <arnd@arndb.de>
 
-I tested this yesterday on RB1/RB2, RB5 and saw no improvement, so was wondering
-why exactly is this needed and which platforms are impacted.
+A fixup for a printk format string warning causes an out-of-bounds
+variable access as the %pR string expects a struct resource instead of
+a plain resource_size_t.
 
-> Personally I don't see much of a risk: If enabling the clock doesn't
-> actually enable the BAM controller, then the clock probably does not
-> belong to the BAM in the first place... :)
+Change both to the special %pap and %pap helpers for these types.
 
-Right, but I think the commit message needs a bit more clarity to
-reflect that it is now proposed to check for the bam_clk presence
-earlier in the _probe flow (as compared to earlier).
+Fixes: 5a1a3b9c19dd ("dmaengine: ste_dma40: Get LCPA SRAM from SRAM node")
+Fixes: ef1e1c41a11d ("dmaengine: ste_dma40: use correct print specfier for resource_size_t")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v2: fix up incorrect fix misusing %pR
+---
+ drivers/dma/ste_dma40.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks.
+diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
+index 8e9c02f83fc7..803c65cd6712 100644
+--- a/drivers/dma/ste_dma40.c
++++ b/drivers/dma/ste_dma40.c
+@@ -3536,8 +3536,8 @@ static int __init d40_probe(struct platform_device *pdev)
+ 	}
+ 	base->lcpa_size = resource_size(&res_lcpa);
+ 	base->phy_lcpa = res_lcpa.start;
+-	dev_info(dev, "found LCPA SRAM at 0x%08x, size %pR\n",
+-		 (u32)base->phy_lcpa, &base->lcpa_size);
++	dev_info(dev, "found LCPA SRAM at %pad, size %pa\n",
++		 &base->phy_lcpa, &base->lcpa_size);
+ 
+ 	/* We make use of ESRAM memory for this. */
+ 	val = readl(base->virtbase + D40_DREG_LCPA);
+-- 
+2.39.2
+

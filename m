@@ -2,147 +2,150 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B092E70A06C
-	for <lists+dmaengine@lfdr.de>; Fri, 19 May 2023 22:14:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F02ED70A093
+	for <lists+dmaengine@lfdr.de>; Fri, 19 May 2023 22:27:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231563AbjESUO5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 19 May 2023 16:14:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50540 "EHLO
+        id S229665AbjESU15 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 19 May 2023 16:27:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231789AbjESUOq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 19 May 2023 16:14:46 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10FFE10F0
-        for <dmaengine@vger.kernel.org>; Fri, 19 May 2023 13:14:10 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-3f41d087b3bso37228645e9.0
-        for <dmaengine@vger.kernel.org>; Fri, 19 May 2023 13:14:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684527248; x=1687119248;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=AnzQY1sqcvkjTs0N5+FyW+tD9eHn3O+t59IFw425bEc=;
-        b=lBMivHKfRgtwtCk+QICLAiIJZApK/Ya8eAcwg2PaSoWf/aHVGAuuAVxqiR8GzW4L3P
-         QnOaTovcfEvbcdxxdX6Cy++w8DSCIVL2TTCMG2Y8IEo2ON0UjTTifJy/TgoHmB66wmjQ
-         EPDzFOGysJEybVyEC4CKrHDZcXsDjbTVna5hli/+MjItKxiu9PmBgRGdqEpRQ3qeWgVN
-         ucWiYZKuviqLbfq1YqHdoAwCQy031OYleemP0tyFxWzrezJNvORm3g38mqtn+geEDs5A
-         udl1L6GjoTGK7lCDDUDydf2cmkDpGuAWi97/7sA+nMfN304GTW2xmNZrrFwZ2VPuvXdd
-         etTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684527248; x=1687119248;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AnzQY1sqcvkjTs0N5+FyW+tD9eHn3O+t59IFw425bEc=;
-        b=RkNTBaRe1Fr1vN8MaRa3l5C9y9361gI26mX7tYmCk2DfUnqG601QZrLiGm8SYHkXVg
-         7e9LV2HIn31b1D8qeuiDs+Ul1Jlu5iSDYa94bXu1ELwdc6qVspqETwtHLvD1yUr/s9aM
-         kMOVKzYVxlLG5HumCJMfeoUhvhmUVp8ASxxf+1EqUBAk4Iehnda2TIxR9+VWKLDxwv69
-         J5ANOEYD9NEWCPzsznv1N6h/QjTzu0tpgKvnNwR9ntxQJL5F8rLs2RLis7qMNVgKZdS+
-         vxBs+Ya3Tjlv6I8u9vTipE3025DUOFywXKfDsvfAy5kinQMBsNDoTji9ydKDS/uqnX2h
-         4zpQ==
-X-Gm-Message-State: AC+VfDwn/QZ9SoCloOpzX0Ondc83PhZlPLg5EkYOpELSRo3A0fZzl+C/
-        mb/H4f9tH2vWz80/XT4asSW4glC2uwJqKJ/GmhhfLQ==
-X-Google-Smtp-Source: ACHHUZ42sasNBJ5U+qQUANkYHe8wr6QZwvgJdArljj1mz3V27qwnBdyMWtJUiDirfiineHeOKCNND53yzPz00TsHIAA=
-X-Received: by 2002:a1c:f705:0:b0:3f4:c28b:ec88 with SMTP id
- v5-20020a1cf705000000b003f4c28bec88mr1837762wmh.41.1684527248304; Fri, 19 May
- 2023 13:14:08 -0700 (PDT)
+        with ESMTP id S229546AbjESU15 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 19 May 2023 16:27:57 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2755FE0;
+        Fri, 19 May 2023 13:27:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684528076; x=1716064076;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=lPknCd0JASs7OSTHQDTzAn2JYPT+94NvxjU0w6CeP78=;
+  b=Pp4KjFTBqXEUkd9qbZXDZp63SZlNKtGft+3FOgbF84E+EeU5x576H7Dw
+   ieivGzCZqMWURuyUTqJlDzyyUBfqZ92hPejuBUcjgmX5iQ7Vt6v228CdH
+   1dvImFkrCYL+rquWV+T1/80GQ2yuNrwYsGfCsNE5oMUq4RMadzOHdNaBU
+   Bg7GtmLwanf1m1/SPZ/gkr8gJNq1/XZd3MwHJ8q07eDIsgx0qPl8wQn4o
+   CSlg6hh8zLK0pBMcKW5Y551XrZAiShtWmXu78CJnwO5RuazxAgVyqcVAf
+   e7N8N0vSbZoD2jIhOxJntdSuP7liDPM6YlIWp/P9p5lVIYtWHvTWfLYlu
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10715"; a="418175353"
+X-IronPort-AV: E=Sophos;i="6.00,177,1681196400"; 
+   d="scan'208";a="418175353"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2023 13:27:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10715"; a="876967791"
+X-IronPort-AV: E=Sophos;i="6.00,177,1681196400"; 
+   d="scan'208";a="876967791"
+Received: from srinivas-otcpl-7600.jf.intel.com (HELO jacob-builder.jf.intel.com) ([10.54.97.184])
+  by orsmga005.jf.intel.com with ESMTP; 19 May 2023 13:27:55 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>, dmaengine@vger.kernel.org,
+        vkoul@kernel.org
+Cc:     "Robin Murphy" <robin.murphy@arm.com>,
+        "Will Deacon" <will@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Zanussi, Tom" <tom.zanussi@intel.com>,
+        narayan.ranganathan@intel.com,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v6 0/4] Re-enable IDXD kernel workqueue under DMA API
+Date:   Fri, 19 May 2023 13:32:19 -0700
+Message-Id: <20230519203223.2777255-1-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20230518-bamclk-dt-v2-1-a1a857b966ca@gerhold.net>
-In-Reply-To: <20230518-bamclk-dt-v2-1-a1a857b966ca@gerhold.net>
-From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Date:   Sat, 20 May 2023 01:43:56 +0530
-Message-ID: <CAH=2Ntx3WxEM_ita+caGXvqCJjCy=TkX8gjyT9nSV3j-89Y_cQ@mail.gmail.com>
-Subject: Re: [PATCH v2] dmaengine: qcom: bam_dma: allow omitting num-{channels,ees}
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.3 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, 19 May 2023 at 16:30, Stephan Gerhold <stephan@gerhold.net> wrote:
->
-> The bam_dma driver needs to know the number of channels and execution
-> environments (EEs) at probe time. If we are in full control of the BAM
-> controller this information can be obtained from the BAM identification
-> registers (BAM_REVISION/BAM_NUM_PIPES).
->
-> When the BAM is "controlled remotely" it is more complicated. The BAM
-> might not be on at probe time, so reading the registers could fail.
-> This is why the information must be added to the device tree in this
-> case, using "num-channels" and "qcom,num-ees".
->
-> However, there are also some BAM instances that are initialized by
-> something else but we still have a clock that allows to turn it on when
-> needed. This can be set up in the DT with "qcom,controlled-remotely"
-> and "clocks" and is already supported by the bam_dma driver. Examples
-> for this are the typical BLSP BAM instances on older SoCs, QPIC BAM
-> (for NAND) and the crypto BAM on some SoCs.
->
-> In this case, there is no need to read "num-channels" and
-> "qcom,num-ees" from the DT. The BAN can be turned on using the clock
-> so we can just read it from the BAM registers like in the normal case.
->
-> Check for the BAM clock earlier and skip reading "num-channels" and
-> "qcom,num-ees" if it is present to allow simplifying the DT description
-> a bit.
->
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> ---
-> Changes in v2:
-> - Rewrite commit message for more clarity (discussion with Bhupesh)
-> - Link to v1: https://lore.kernel.org/r/20230518-bamclk-dt-v1-1-82f738c897d9@gerhold.net
-> ---
->  drivers/dma/qcom/bam_dma.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-> index 1e47d27e1f81..4c3eb972039d 100644
-> --- a/drivers/dma/qcom/bam_dma.c
-> +++ b/drivers/dma/qcom/bam_dma.c
-> @@ -1272,7 +1272,15 @@ static int bam_dma_probe(struct platform_device *pdev)
->         bdev->powered_remotely = of_property_read_bool(pdev->dev.of_node,
->                                                 "qcom,powered-remotely");
->
-> -       if (bdev->controlled_remotely || bdev->powered_remotely) {
-> +       if (bdev->controlled_remotely || bdev->powered_remotely)
-> +               bdev->bamclk = devm_clk_get_optional(bdev->dev, "bam_clk");
-> +       else
-> +               bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
-> +
-> +       if (IS_ERR(bdev->bamclk))
-> +               return PTR_ERR(bdev->bamclk);
-> +
-> +       if (!bdev->bamclk) {
->                 ret = of_property_read_u32(pdev->dev.of_node, "num-channels",
->                                            &bdev->num_channels);
->                 if (ret)
-> @@ -1284,14 +1292,6 @@ static int bam_dma_probe(struct platform_device *pdev)
->                         dev_err(bdev->dev, "num-ees unspecified in dt\n");
->         }
->
-> -       if (bdev->controlled_remotely || bdev->powered_remotely)
-> -               bdev->bamclk = devm_clk_get_optional(bdev->dev, "bam_clk");
-> -       else
-> -               bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
-> -
-> -       if (IS_ERR(bdev->bamclk))
-> -               return PTR_ERR(bdev->bamclk);
-> -
->         ret = clk_prepare_enable(bdev->bamclk);
->         if (ret) {
->                 dev_err(bdev->dev, "failed to prepare/enable clock\n");
+Hi Joerg and all,
 
-Reviewed-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
+IDXD kernel work queues were disabled due to the flawed use of kernel VA
+and SVA API.
+Link: https://lore.kernel.org/linux-iommu/20210511194726.GP1002214@nvidia.com/
 
-Thanks.
+The solution is to enable it under DMA API where IDXD shared workqueue users
+can use ENQCMDS to submit work on buffers mapped by DMA API.
+
+This patchset adds support for attaching PASID to the device's default
+domain and the ability to allocate global PASIDs from IOMMU APIs. IDXD driver
+can then re-enable the kernel work queues and use them under DMA API.
+
+This depends on the IOASID removal series. (merged)
+https://lore.kernel.org/all/ZCaUBJvUMsJyD7EW@8bytes.org/
+
+
+Thanks,
+
+Jacob
+
+---
+Changelog:
+v6:
+	- use a simplified version of vt-d driver change for set_device_pasid
+	  from Baolu.
+	- check and rename global PASID allocation base
+v5:
+	- exclude two patches related to supervisor mode, taken by VT-d
+	maintainer Baolu.
+	- move PASID range check into allocation API so that device drivers
+	  only need to pass in struct device*. (Kevin)
+	- factor out helper functions in device-domain attach (Baolu)
+	- make explicit use of RID_PASID across architectures
+v4:
+	- move dummy functions outside ifdef CONFIG_IOMMU_SVA (Baolu)
+	- dropped domain type check while disabling idxd system PASID (Baolu)
+
+v3:
+	- moved global PASID allocation API from SVA to IOMMU (Kevin)
+	- remove #ifdef around global PASID reservation during boot (Baolu)
+	- remove restriction on PASID 0 allocation (Baolu)
+	- fix a bug in sysfs domain change when attaching devices
+	- clear idxd user interrupt enable bit after disabling device( Fenghua)
+v2:
+	- refactored device PASID attach domain ops based on Baolu's early patch
+	- addressed TLB flush gap
+	- explicitly reserve RID_PASID from SVA PASID number space
+	- get dma domain directly, avoid checking domain types
+
+
+
+Jacob Pan (3):
+  iommu: Generalize default PCIe requester ID PASID
+  iommu: Move global PASID allocation from SVA to core
+  dmaengine/idxd: Re-enable kernel workqueue under DMA API
+
+Lu Baolu (1):
+  iommu/vt-d: Add set_dev_pasid callback for dma domain
+
+ drivers/dma/idxd/device.c                     |  30 +---
+ drivers/dma/idxd/dma.c                        |   5 +-
+ drivers/dma/idxd/init.c                       |  60 ++++++-
+ drivers/dma/idxd/sysfs.c                      |   7 -
+ .../iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c   |   2 +-
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |  10 +-
+ drivers/iommu/intel/iommu.c                   | 159 +++++++++++++++---
+ drivers/iommu/intel/iommu.h                   |   7 +
+ drivers/iommu/intel/pasid.c                   |   2 +-
+ drivers/iommu/intel/pasid.h                   |   1 -
+ drivers/iommu/iommu-sva.c                     |  33 ++--
+ drivers/iommu/iommu.c                         |  24 +++
+ include/linux/iommu.h                         |  11 ++
+ 13 files changed, 265 insertions(+), 86 deletions(-)
+
+-- 
+2.25.1
+

@@ -2,88 +2,172 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AC9F70C21C
-	for <lists+dmaengine@lfdr.de>; Mon, 22 May 2023 17:15:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F25770C43D
+	for <lists+dmaengine@lfdr.de>; Mon, 22 May 2023 19:27:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229692AbjEVPPf convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Mon, 22 May 2023 11:15:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53252 "EHLO
+        id S232304AbjEVR1p (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 22 May 2023 13:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231409AbjEVPPe (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 May 2023 11:15:34 -0400
-Received: from mail-out-3.itc.rwth-aachen.de (mail-out-3.itc.rwth-aachen.de [IPv6:2a00:8a60:1:e501::5:48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66DEFCA
-        for <dmaengine@vger.kernel.org>; Mon, 22 May 2023 08:15:32 -0700 (PDT)
-X-IPAS-Result: =?us-ascii?q?A2D4BQDNhmtk/5sagoZaHgErCwYMIoRxAoFbCBOtfodXD?=
- =?us-ascii?q?wEBAQEBAQEBAQgBOQsEAQGKYiY4EwECBAEBAQEDAgMBAQEBAQEDAQEGAQEBA?=
- =?us-ascii?q?QEBBgSBHYUvOQEMhmosAYEAJwQbgneCXBMGrhGBNIEBhHScTAaBQo0rhj9Dh?=
- =?us-ascii?q?2AEiCAEjymMC2eBMHKBI4EogQICCQIRZ4EOCGaBc0ACDWQLC2yBO4ErgVsCA?=
- =?us-ascii?q?hFCDBVdAoEEEAETAwcEAoEOEDEHBDcsBgkdNS0GXQcvJAkTFVMHhBU3A0QdQ?=
- =?us-ascii?q?AMLB249NRQfCAGCRwRxGHtPnH4Dgm5lYiClSaEIAwQDgiuBWgWLdJUJLheDb?=
- =?us-ascii?q?AGTMpIwLoc0kCcgjTqaLQIEAgQFAhaBelCBLnGDN1EXAg+SE495dQIBATcCB?=
- =?us-ascii?q?wsBAQMJijEBgRQBAQ?=
-IronPort-Data: A9a23:mXSkCa2xx4fd3ZvLfvbD5ZVwkn2cJEfYwER7XKvMYLTBsI5bpzAGz
- mBKDWHXbPzeMDPycttwaovko08P6JKGm4cyHVRo3Hw8FHgiRegppDi6BhqqY3nCfpWroGZPt
- Zh2hgzodZhsJpPkjk7xdOKn9xGQ7InQLpLkEunIJyttcgFtTSYlmHpLlvUw6mJSqYHR7zil5
- 5Wq+6UzBHf/g2Qvaj9OsfrawP9SlK2aVA0w7wRWic9j4Qe2e0k9VPo3Oay3Jn3kdYhYdsbSq
- zHrlezREsvxpn/BO/v9+lrJWhRiro36YWBivkFrt52K2XCukARviPphZKpEAatgo27hc9hZk
- L2hvHErIOsjFvWkdO81C3G0H8ziVEFL0OevHJSxjSCc52Dtc3fvyvdKNW1oF5Md1+hIBlhN6
- +NNfVjhbjjb7w636IiEdslBtoEYdozBepkApnElxD2fAftOrZLrGv6Wo4YDhHFq2IYXQKu2i
- 8kxMFKDaDzpaB1OPxE0AZQzhvuAnGbjc3hRoVmVqKxx72W7IAlZiemwYYaPI4zQLSlTtkuG/
- zKaoFbwOBoDLPGv5Ce+tS2ojNaayEsXX6pXTtVU7MVCjFiay2ocCRsbfUW0rOP/iUOkXd9bb
- UsO9UITQbMa7lO3TtTtGgbi5XTCpAEAW59ZH6s25Wlh15bp3upQPUBcJhYpVTDsnJZpLdD2/
- jdlR+/UOAE=
-IronPort-HdrOrdr: A9a23:M7bQHa3o8YwmZihyEc9x+AqjBIMkLtp133Aq2lEZdPUMSL37qy
- ncpoV/6faSskdoZJhAo6H4BEDuexPhHPJOjLX5Xo3SJzUO2lHYT72KhLGKq1aLJ8SUzIFgPN
- JbEpSWf+efMbEVt6rHCUKDYrIdKZG8gceVbMnlvhFQcT0=
-X-Talos-CUID: 9a23:XZzTFmNl9yOZCu5DdQJn+E0dGOQcXiP30nL9LXC/MGV3V+jA
-X-Talos-MUID: =?us-ascii?q?9a23=3Aaei2yg11FBpdTH5tuylQu3xSQjUj7rr3WBxSo5w?=
- =?us-ascii?q?8sNCcGBxdJgza0zC9e9py?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-AV: E=Sophos;i="6.00,184,1681164000"; 
-   d="scan'208";a="195942182"
-Received: from rwthex-s2-b.rwth-ad.de ([134.130.26.155])
-  by mail-in-3.itc.rwth-aachen.de with ESMTP; 22 May 2023 17:15:19 +0200
-Received: from RWTHEX-W2-A.rwth-ad.de (2a00:8a60:1:e500::26:158) by
- RWTHEX-S2-B.rwth-ad.de (2a00:8a60:1:e500::26:155) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Mon, 22 May 2023 17:15:19 +0200
-Received: from RWTHEX-W2-A.rwth-ad.de ([fe80::3504:6d5e:7248:8a1e]) by
- RWTHEX-W2-A.rwth-ad.de ([fe80::3504:6d5e:7248:8a1e%11]) with mapi id
- 15.02.1118.026; Mon, 22 May 2023 17:15:19 +0200
-From:   "Kanert, Achim" <Achim.Kanert@rwth-aachen.de>
-To:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: Possible issue in dma_direct_supported
-Thread-Topic: Possible issue in dma_direct_supported
-Thread-Index: AQHZjMAlkqXRK2WpeUa/Cs6UyujKtA==
-Date:   Mon, 22 May 2023 15:15:18 +0000
-Message-ID: <945b8dcae7934000aff139994160a201@rwth-aachen.de>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [193.34.100.34]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        with ESMTP id S229555AbjEVR1o (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 May 2023 13:27:44 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2080BE9;
+        Mon, 22 May 2023 10:27:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684776463; x=1716312463;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=k+PVL4G2rD+urOokHBLSN6dZ+0SzxBkA4MxkypC2+TQ=;
+  b=YzbQdFdZI66bEmr/2eOcq9mJkwc+NH6qAZ+D8mMCzbcdxolD25pe/5/f
+   GR04hrPVzEB0CkwY1bFr4kEd5PzrEIzg4x9mYpW81O5cQQHdhk8dRiPGy
+   RPd1ccGr6naBup1m9aF0YRLjFhxQoHGOAXUkaQ85glzxFP6jVBqyPlXur
+   fiJHUx472hf4APjm4+tX+p66TsVAda7sv0cLtN0Fz4QdD9gvpHoWPDfBq
+   Y8sUTl8/cBZdLz5Nz++ar62mIaBhuTQeafpn6vjunzYfeSUPdeZGpInW+
+   1D1fguAkxsFIXEQcPmLwbKtu6R/y84xLe9ijtGmKnFormJm5K7IjFmOW9
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="353011711"
+X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
+   d="scan'208";a="353011711"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2023 10:27:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="703625390"
+X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
+   d="scan'208";a="703625390"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2023 10:27:41 -0700
+Date:   Mon, 22 May 2023 10:32:13 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Baolu Lu <baolu.lu@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Joerg Roedel <joro@8bytes.org>, dmaengine@vger.kernel.org,
+        vkoul@kernel.org, Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Zanussi, Tom" <tom.zanussi@intel.com>,
+        narayan.ranganathan@intel.com, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v6 2/4] iommu: Move global PASID allocation from SVA to
+ core
+Message-ID: <20230522103011.2b791d5d@jacob-builder>
+In-Reply-To: <b3c543e0-699a-0779-fdd9-b799c5230da0@linux.intel.com>
+References: <20230519203223.2777255-1-jacob.jun.pan@linux.intel.com>
+ <20230519203223.2777255-3-jacob.jun.pan@linux.intel.com>
+ <b3c543e0-699a-0779-fdd9-b799c5230da0@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,
+Hi Baolu,
 
-I may have found an issue in https://elixir.bootlin.com/linux/v6.3.2/source/kernel/dma/direct.c#L579 the comparisson in line 589 is true
-for all masks >= 32 bits. So if a driver tries to set a mask of 64 bit, and the system only supports 32 the mask is set to 64.
-I discoverd this on an arm64 system which only supports 32-bit DMA for PCIe cards.
+On Sun, 21 May 2023 14:21:25 +0800, Baolu Lu <baolu.lu@linux.intel.com>
+wrote:
 
-Is my assumption correct?
+> On 5/20/23 4:32 AM, Jacob Pan wrote:
+> > Global PASID can be used beyond SVA. For example, drivers that use
+> > Intel ENQCMD to submit work must use global PASIDs in that PASID
+> > is stored in a per CPU MSR. When such device need to submit work
+> > for in-kernel DMA with PASID, it must allocate PASIDs from the same
+> > global number space to avoid conflict.
+> > 
+> > This patch moves global PASID allocation APIs from SVA to IOMMU APIs.
+> > Reserved PASIDs, currently only RID_PASID, are excluded from the global
+> > PASID allocation.
+> > 
+> > It is expected that device drivers will use the allocated PASIDs to
+> > attach to appropriate IOMMU domains for use.
+> > 
+> > Signed-off-by: Jacob Pan<jacob.jun.pan@linux.intel.com>
+> > ---
+> > v6: explicitly exclude reserved a range from SVA PASID allocation
+> >      check mm PASID compatibility with device
+> > v5: move PASID range check inside API so that device drivers only pass
+> >      in struct device* (Kevin)
+> > v4: move dummy functions outside ifdef CONFIG_IOMMU_SVA (Baolu)
+> > ---
+> >   drivers/iommu/iommu-sva.c | 33 ++++++++++++++-------------------
+> >   drivers/iommu/iommu.c     | 24 ++++++++++++++++++++++++
+> >   include/linux/iommu.h     | 10 ++++++++++
+> >   3 files changed, 48 insertions(+), 19 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
+> > index 9821bc44f5ac..7fe8e977d8eb 100644
+> > --- a/drivers/iommu/iommu-sva.c
+> > +++ b/drivers/iommu/iommu-sva.c
+> > @@ -10,33 +10,33 @@
+> >   #include "iommu-sva.h"
+> >   
+> >   static DEFINE_MUTEX(iommu_sva_lock);
+> > -static DEFINE_IDA(iommu_global_pasid_ida);
+> >   
+> >   /* Allocate a PASID for the mm within range (inclusive) */
+> > -static int iommu_sva_alloc_pasid(struct mm_struct *mm, ioasid_t min,
+> > ioasid_t max) +static int iommu_sva_alloc_pasid(struct mm_struct *mm,
+> > struct device *dev) {
+> > +	ioasid_t pasid;
+> >   	int ret = 0;
+> >   
+> > -	if (min == IOMMU_PASID_INVALID ||
+> > -	    max == IOMMU_PASID_INVALID ||
+> > -	    min == 0 || max < min)
+> > -		return -EINVAL;
+> > -
+> >   	if (!arch_pgtable_dma_compat(mm))
+> >   		return -EBUSY;
+> >   
+> >   	mutex_lock(&iommu_sva_lock);
+> >   	/* Is a PASID already associated with this mm? */
+> >   	if (mm_valid_pasid(mm)) {
+> > -		if (mm->pasid < min || mm->pasid > max)
+> > -			ret = -EOVERFLOW;
+> > +		if (mm->pasid <= dev->iommu->max_pasids)
+> > +			goto out;
+> > +		dev_err(dev, "current mm PASID %d exceeds device range
+> > %d!",
+> > +			mm->pasid, dev->iommu->max_pasids);
+> > +		ret = -ERANGE;
+> >   		goto out;
+> >   	}  
+> 
+> Nit: Above is just refactoring, so it's better to keep the code behavior
+> consistent. For example, no need to change the error# from -EOVERFLOW to
+> -ERANGE, and no need to leave a new kernel message.
+> 
+> Anyway, if you think these changes are helpful, it's better to have them
+> in separated patches.
+> 
+> In the end, perhaps we can simply have code like this:
+> 
+> 	if (mm_valid_pasid(mm)) {
+> 		if (mm->pasid > dev->iommu->max_pasids)
+> 			ret = -EOVERFLOW;
+> 		goto out;
+> 	}
+> 
+> Others look good to me, with above addressed,
+> 
+> Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+> 
+much better, will fix.
 
-Regards,
-Achim Kanert
+Thanks,
 
-    
+Jacob

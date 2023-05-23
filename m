@@ -2,133 +2,155 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CD9670E36E
-	for <lists+dmaengine@lfdr.de>; Tue, 23 May 2023 19:46:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 108A870E348
+	for <lists+dmaengine@lfdr.de>; Tue, 23 May 2023 19:46:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233505AbjEWRZ2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 23 May 2023 13:25:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56194 "EHLO
+        id S238190AbjEWRaY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 23 May 2023 13:30:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238099AbjEWRZZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 23 May 2023 13:25:25 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 698EA129
-        for <dmaengine@vger.kernel.org>; Tue, 23 May 2023 10:25:00 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-513fea21228so222512a12.3
-        for <dmaengine@vger.kernel.org>; Tue, 23 May 2023 10:25:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684862696; x=1687454696;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DEQuDajhaZ5cNizdu4KdcsUEK1KvsZFvK+NmAK64xCc=;
-        b=zqS4hmYdmyTgTuFuZBatzvy1P5XCncyzyB/SHx+DytMTt0EAR55RzyQyB7rzM5D/kD
-         729VdVKEtBqRWmDahNbOGMZXb+sHAr0PUit3bMCuqInzrlSwjmCzZOUVoClLI48qQKKj
-         pm55Cs3s7LC8YMF5xw6awXiGIirF5BJLgNppgroTrM8BwPwiC5rHsIxp6FTBdIo1VJJ2
-         Ffy41yHZJONUhAvnPhnCwBxGiPVFRv0dCa1zOo7PUHD//U+uuMoDarw1Z6TkpE0+acVT
-         qkWDpcBaLF8myHmvyEA0nrjKk8OK9ZaimM3xCNndN+sbG4UOarr7c+vxPViPgWwSJbwt
-         9Ggg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684862696; x=1687454696;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DEQuDajhaZ5cNizdu4KdcsUEK1KvsZFvK+NmAK64xCc=;
-        b=AFV5amz1BYpJZgB1Si45Tmi0b5lIOw/Fndu33G6lsjQdTfhZAuGAhgvyXJRGwInw5b
-         xhWFPeU8nMqWbWvglGs+kajVGNu8k4FYsZ3l9o/zP1rkYym2R7CpQdjvWsjNJE0ym4hk
-         jwCryv6kUPAj3PQ+0UWEQYo+AvLTRrtkn1wcJq5NnGhLQdmvEnwNVDOzL2Ypz7gk6gkn
-         2m8TedSopDCckUg3u1WgbjXqMxp6pBq5/Q3MZjFem9gF+9fOM3ZcSY8CxKjvZP50uDBO
-         M8kQooGjEamqIJrHCbMPwKtSmgbaoT8MC58EnSZMoDCSnLkZQFsT/9Lm7x66s8H3Q9Eq
-         uUPQ==
-X-Gm-Message-State: AC+VfDz+3A8O/L/vlxOuaofApTgsnHxegx6vk4WsOh6KbFidgGis07s5
-        EwAS1Yw5LCVaC1+J4X8+mA6hyg==
-X-Google-Smtp-Source: ACHHUZ7hnAw8R6Rbp5a00MNSddIWqxi/0dPWaeG+2dd9cCNPdaO3LBC1H/D/J5DZ01kSz/JGCwiPAw==
-X-Received: by 2002:a17:907:7f09:b0:94f:8aff:c8b3 with SMTP id qf9-20020a1709077f0900b0094f8affc8b3mr13313466ejc.28.1684862695996;
-        Tue, 23 May 2023 10:24:55 -0700 (PDT)
-Received: from [192.168.2.107] ([79.115.63.206])
-        by smtp.gmail.com with ESMTPSA id u7-20020a170906950700b0096f71ace804sm4638374ejx.99.2023.05.23.10.24.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 May 2023 10:24:54 -0700 (PDT)
-Message-ID: <06d53c3d-d300-dca1-6877-b8745e0673e8@linaro.org>
-Date:   Tue, 23 May 2023 18:24:53 +0100
+        with ESMTP id S237564AbjEWRaX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 23 May 2023 13:30:23 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78E3797;
+        Tue, 23 May 2023 10:30:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684863022; x=1716399022;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=cEJSLPDvzjlLklZPDg24lbhzBd1u5HoZaAKoC5OD1wQ=;
+  b=BesdEZaGjucrCSUpAlpU3H0acaqMhKVrl7izBTXtIWCBvc05YFefcCZX
+   mmYrM2fKooThef2KBju2V591uumsXASbo9oMx9DuE9yMeAo7VA+qE2Uhf
+   ySWpruiyHdM2Zmw8Lr3mm0y7bs6yKU+ANTsa/Elsg/RDKz6NAmk0fc69x
+   aKsfPErMS1xxvdr2CoZW6U0nk1NbLRh0upm4w//aFTDyPrKYBz3TXARhl
+   lu1jHR3p8ri3LTrbXBDZkTVdmZlhxbPhoGRySZI5VwUME2cKUkG3W2d3P
+   37s6zGpH3lvdxhUIad3hmRzhsImVrvBoaVovl458Kb8gYWNH5nZ+pi4K4
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="337892789"
+X-IronPort-AV: E=Sophos;i="6.00,187,1681196400"; 
+   d="scan'208";a="337892789"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 10:30:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="1034170002"
+X-IronPort-AV: E=Sophos;i="6.00,187,1681196400"; 
+   d="scan'208";a="1034170002"
+Received: from srinivas-otcpl-7600.jf.intel.com (HELO jacob-builder.jf.intel.com) ([10.54.97.184])
+  by fmsmga005.fm.intel.com with ESMTP; 23 May 2023 10:30:20 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Robin Murphy" <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        dmaengine@vger.kernel.org, vkoul@kernel.org
+Cc:     "Will Deacon" <will@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Zanussi, Tom" <tom.zanussi@intel.com>,
+        narayan.ranganathan@intel.com,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v7 0/4] Re-enable IDXD kernel workqueue under DMA API
+Date:   Tue, 23 May 2023 10:34:47 -0700
+Message-Id: <20230523173451.2932113-1-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v2 1/2] dmaengine: at_hdmac: Repair bitfield macros for
- peripheral ID handling
-Content-Language: en-US
-To:     Peter Rosin <peda@axentia.se>, LKML <linux-kernel@vger.kernel.org>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <221d19e2-6b92-7f38-7d8a-a730f54c33ea@axentia.se>
- <01e5dae1-d4b0-cf31-516b-423b11b077f1@axentia.se>
-From:   Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <01e5dae1-d4b0-cf31-516b-423b11b077f1@axentia.se>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.7 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Joerg and all,
+
+IDXD kernel work queues were disabled due to the flawed use of kernel VA
+and SVA API.
+Link: https://lore.kernel.org/linux-iommu/20210511194726.GP1002214@nvidia.com/
+
+The solution is to enable it under DMA API where IDXD shared workqueue users
+can use ENQCMDS to submit work on buffers mapped by DMA API.
+
+This patchset adds support for attaching PASID to the device's default
+domain and the ability to allocate global PASIDs from IOMMU APIs. IDXD driver
+can then re-enable the kernel work queues and use them under DMA API.
+
+This depends on the IOASID removal series. (merged)
+https://lore.kernel.org/all/ZCaUBJvUMsJyD7EW@8bytes.org/
 
 
-On 5/23/23 18:20, Peter Rosin wrote:
-> The MSB part of the peripheral IDs need to go into the ATC_SRC_PER_MSB
-> and ATC_DST_PER_MSB fields. Not the LSB part.
-> 
-> This fixes a severe regression for TSE-850 devices (compatible
-> axentia,tse850v3) where output to the audio I2S codec (the main
-> purpose of the device) simply do not work.
-> 
-> Fixes: d8840a7edcf0 ("dmaengine: at_hdmac: Use bitfield access macros")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Peter Rosin <peda@axentia.se>
+Thanks,
 
-Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+Jacob
 
-> ---
->  drivers/dma/at_hdmac.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-> index 8858470246e1..6362013b90df 100644
-> --- a/drivers/dma/at_hdmac.c
-> +++ b/drivers/dma/at_hdmac.c
-> @@ -153,8 +153,6 @@
->  #define ATC_AUTO		BIT(31)		/* Auto multiple buffer tx enable */
->  
->  /* Bitfields in CFG */
-> -#define ATC_PER_MSB(h)	((0x30U & (h)) >> 4)	/* Extract most significant bits of a handshaking identifier */
-> -
->  #define ATC_SRC_PER		GENMASK(3, 0)	/* Channel src rq associated with periph handshaking ifc h */
->  #define ATC_DST_PER		GENMASK(7, 4)	/* Channel dst rq associated with periph handshaking ifc h */
->  #define ATC_SRC_REP		BIT(8)		/* Source Replay Mod */
-> @@ -181,10 +179,15 @@
->  #define ATC_DPIP_HOLE		GENMASK(15, 0)
->  #define ATC_DPIP_BOUNDARY	GENMASK(25, 16)
->  
-> -#define ATC_SRC_PER_ID(id)	(FIELD_PREP(ATC_SRC_PER_MSB, (id)) |	\
-> -				 FIELD_PREP(ATC_SRC_PER, (id)))
-> -#define ATC_DST_PER_ID(id)	(FIELD_PREP(ATC_DST_PER_MSB, (id)) |	\
-> -				 FIELD_PREP(ATC_DST_PER, (id)))
-> +#define ATC_PER_MSB		GENMASK(5, 4)	/* Extract MSBs of a handshaking identifier */
-> +#define ATC_SRC_PER_ID(id)					       \
-> +	({ typeof(id) _id = (id);				       \
-> +	   FIELD_PREP(ATC_SRC_PER_MSB, FIELD_GET(ATC_PER_MSB, _id)) |  \
-> +	   FIELD_PREP(ATC_SRC_PER, _id); })
-> +#define ATC_DST_PER_ID(id)					       \
-> +	({ typeof(id) _id = (id);				       \
-> +	   FIELD_PREP(ATC_DST_PER_MSB, FIELD_GET(ATC_PER_MSB, _id)) |  \
-> +	   FIELD_PREP(ATC_DST_PER, _id); })
->  
->  
->  
+---
+Changelog:
+v7:
+	- renamed IOMMU_DEF_RID_PASID to be IOMMU_NO_PASID to be more generic
+	  (Jean)
+	- simplify range checking for sva PASID (Baolu) 
+v6:
+	- use a simplified version of vt-d driver change for set_device_pasid
+	  from Baolu.
+	- check and rename global PASID allocation base
+v5:
+	- exclude two patches related to supervisor mode, taken by VT-d
+	maintainer Baolu.
+	- move PASID range check into allocation API so that device drivers
+	  only need to pass in struct device*. (Kevin)
+	- factor out helper functions in device-domain attach (Baolu)
+	- make explicit use of RID_PASID across architectures
+v4:
+	- move dummy functions outside ifdef CONFIG_IOMMU_SVA (Baolu)
+	- dropped domain type check while disabling idxd system PASID (Baolu)
+
+v3:
+	- moved global PASID allocation API from SVA to IOMMU (Kevin)
+	- remove #ifdef around global PASID reservation during boot (Baolu)
+	- remove restriction on PASID 0 allocation (Baolu)
+	- fix a bug in sysfs domain change when attaching devices
+	- clear idxd user interrupt enable bit after disabling device( Fenghua)
+v2:
+	- refactored device PASID attach domain ops based on Baolu's early patch
+	- addressed TLB flush gap
+	- explicitly reserve RID_PASID from SVA PASID number space
+	- get dma domain directly, avoid checking domain types
+
+
+
+Jacob Pan (3):
+  iommu: Generalize PASID 0 for normal DMA w/o PASID
+  iommu: Move global PASID allocation from SVA to core
+  dmaengine/idxd: Re-enable kernel workqueue under DMA API
+
+Lu Baolu (1):
+  iommu/vt-d: Add set_dev_pasid callback for dma domain
+
+ drivers/dma/idxd/device.c                     |  30 +---
+ drivers/dma/idxd/dma.c                        |   5 +-
+ drivers/dma/idxd/init.c                       |  60 ++++++-
+ drivers/dma/idxd/sysfs.c                      |   7 -
+ .../iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c   |   2 +-
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |  10 +-
+ drivers/iommu/intel/iommu.c                   | 159 +++++++++++++++---
+ drivers/iommu/intel/iommu.h                   |   7 +
+ drivers/iommu/intel/pasid.c                   |   2 +-
+ drivers/iommu/intel/pasid.h                   |   1 -
+ drivers/iommu/iommu-sva.c                     |  28 ++-
+ drivers/iommu/iommu.c                         |  24 +++
+ include/linux/iommu.h                         |  11 ++
+ 13 files changed, 261 insertions(+), 85 deletions(-)
+
+-- 
+2.25.1
+

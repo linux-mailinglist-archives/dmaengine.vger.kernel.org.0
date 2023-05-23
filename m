@@ -2,76 +2,57 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB41470E039
-	for <lists+dmaengine@lfdr.de>; Tue, 23 May 2023 17:18:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BB0870E044
+	for <lists+dmaengine@lfdr.de>; Tue, 23 May 2023 17:20:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237211AbjEWPR6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 23 May 2023 11:17:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57860 "EHLO
+        id S237314AbjEWPUc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 23 May 2023 11:20:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237305AbjEWPR3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 23 May 2023 11:17:29 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EE3318E
-        for <dmaengine@vger.kernel.org>; Tue, 23 May 2023 08:17:23 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-30a8fa6e6fcso1919654f8f.1
-        for <dmaengine@vger.kernel.org>; Tue, 23 May 2023 08:17:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684855041; x=1687447041;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=14Njiq0FVZkX82TLQ37zxuiOET6tE8wUYy1Gx+sJltM=;
-        b=HPXMqt+ftQ9mTQPYy85W+IjqCj+t7mUf/vd+io+75syv/w545t9VnLbPDCUk0b189r
-         QLAugXiFJNerH/1vra8TZHCk5C8vi3MoZ+y1IPb9GAUdZSmTaBakAwrqTZpv3LuCqvN7
-         B34uXE6A+FdOMla4d68WVe5Jy1qORPSa5X3iIelstf/kr734LiBt0MB+3Q+s5xOC1XiU
-         OHxV2ZQaZxi9O6kCkq7SxdBAh/v5mmFptrsbosGhvzk91rZnQ5rLmyIrb9PEZ7z+9L1y
-         3d///bYnJBYDqFaidyadJ8hGIk8OfwiidXm0jZFe+s09lQ+TYBPy8CVj53BsYBt2F0et
-         stig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684855041; x=1687447041;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=14Njiq0FVZkX82TLQ37zxuiOET6tE8wUYy1Gx+sJltM=;
-        b=XWthD5DZcof5aT6g1m7TSwBwlRnCkcWCfbRThMAcd7WbUD21TJDr+bUV8wB3ZtwKkL
-         IlRL+r9Xmwfx1qW0qkcFjljKiTGq8Su9FNxSoHqQkS0AGt6G/mqZMX+lOHZ5s3434qKu
-         BQffIMREWKjK9qgtGLS+mMlzc/+yv0zNfMUOGGxHbtohmH6zN0JFaox0W8i6ePFne4Hd
-         Kl9R+oZA+udxi2oIfPDwAl4w4Fhn0xLAgOQOmntsvGXB0ptRfvAJ8qMWeOdw/v0syz/b
-         20QSx1TwHQvPcEGpSvXUHZdJl5qcHh2j9fJJH0m1m0d65WSyohCbs1+OPSx/WgBF5xd0
-         CpRw==
-X-Gm-Message-State: AC+VfDw3MvUbnp2344hI2MpyUmuBvXDTXJOdW6gRO+HX+ZjDpdXQ0UON
-        ywnxUEWDTQXc8pC9DMPHGA2Ipw==
-X-Google-Smtp-Source: ACHHUZ4iI6vqELamkrPcqLLQGCw+0Bd4pr2ms6KiUywqfz6Y7kYM3qHlgKsqxF9PwdX2OD5L0eQvvA==
-X-Received: by 2002:adf:db46:0:b0:2fb:87f7:3812 with SMTP id f6-20020adfdb46000000b002fb87f73812mr11298378wrj.1.1684855041363;
-        Tue, 23 May 2023 08:17:21 -0700 (PDT)
-Received: from [192.168.2.107] ([79.115.63.206])
-        by smtp.gmail.com with ESMTPSA id w8-20020a5d4b48000000b0030771c6e443sm11442606wrs.42.2023.05.23.08.16.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 May 2023 08:17:06 -0700 (PDT)
-Message-ID: <4b5feef2-8d6f-20b1-9763-6e9552c4eb1c@linaro.org>
-Date:   Tue, 23 May 2023 16:15:52 +0100
+        with ESMTP id S231152AbjEWPUb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 23 May 2023 11:20:31 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA398185;
+        Tue, 23 May 2023 08:20:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+        bh=IwWt8vm7YxokOuC3jq5/50QuiT4RbHvoQwVnGhf4iNQ=; b=txnGef5Iy6+K4m6cCJI53kCfJP
+        9YlrYhFEVXZ/e+zxsxl6tGrvVyceNIKnqDpS6+PYQMuAVxmyUln+aNkK9Pqwj+xRzrtoGmNZWFOED
+        lbIrvSLhGFUY7BbZY6/U8sC8FYX+rZJjgtHHJ58wZ0D3e0NWUuCyX6qNDH91/dCPmDvN1IiiW260m
+        gmgUfCTu1oJB6m8J0tp3phRE+ZprQB6o9Xnq8oqzqR/KomVZ3iNGMw6sQZ7ch7DodmS8/rX2p9Gtv
+        1LBIcROOWkEWmexLOBE5xHfOGNPTfIyvjOVix/YpDeBPCokMEigpmol8FWSRAZimBArIe88uS16yi
+        DFGxlLZQ==;
+Received: from [2601:1c2:980:9ec0::2764]
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1q1ToI-00AcZ9-0L;
+        Tue, 23 May 2023 15:20:26 +0000
+Message-ID: <09f31255-e214-01d7-318a-13d712f73837@infradead.org>
+Date:   Tue, 23 May 2023 08:20:23 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 1/2] dmaengine: at_hdmac: Repair bitfield macros for
- peripheral ID handling
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] dmaengine: pl330: rename _start to prevent build error
 Content-Language: en-US
-To:     Peter Rosin <peda@axentia.se>, LKML <linux-kernel@vger.kernel.org>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
-References: <dc4834cb-fadf-17a5-fbc7-cf500db88f20@axentia.se>
- <68b70631-07b0-f4b2-463c-b8d3c7b9dac3@axentia.se>
-From:   Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <68b70631-07b0-f4b2-463c-b8d3c7b9dac3@axentia.se>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Jaswinder Singh <jassisinghbrar@gmail.com>,
+        Jaswinder Singh <jassi.brar@samsung.com>,
+        Boojin Kim <boojin.kim@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        dmaengine@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <20230523000606.9405-1-rdunlap@infradead.org>
+ <ZGzI+gsYdF6kEHFk@matsya>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <ZGzI+gsYdF6kEHFk@matsya>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -80,76 +61,20 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 
 
-On 5/23/23 13:42, Peter Rosin wrote:
-> The MSB part of the peripheral IDs need to go into the ATC_SRC_PER_MSB
-> and ATC_DST_PER_MSB fields. Not the LSB part.
+On 5/23/23 07:08, Vinod Koul wrote:
+> On 22-05-23, 17:06, Randy Dunlap wrote:
+>> "_start" is used in several arches and proably should be reserved
+>> for ARCH usage. Using it in a driver for a private symbol can cause
+>> a build error when it conflicts with ARCH usage of the same symbol.
+>>
+>> Therefore rename pl330's "_start" to "_start_thread" so that there
+>> is no conflict and no build error.
 > 
-> This fixes a severe regression for TSE-850 devices (compatible
-> axentia,tse850v3) where output to the audio I2S codec (the main
-> purpose of the device) simply do not work.
+> Why not rename to pl330_start or pl330_start_thread to ensure we will
+> might not conflict ever!
 > 
 
-Indeed, sorry Peter.
+Ok, will do. Thanks.
 
-> While at it, rewrite the macros as inline functions to evade checkpatch
-> warnings about argument reuse.
-> 
-> Fixes: d8840a7edcf0 ("dmaengine: at_hdmac: Use bitfield access macros")
-
-cc stable please
-
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
->  drivers/dma/at_hdmac.c | 35 ++++++++++++++++++++++++++++-------
->  1 file changed, 28 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-> index 8858470246e1..6f352160bc3b 100644
-> --- a/drivers/dma/at_hdmac.c
-> +++ b/drivers/dma/at_hdmac.c
-> @@ -153,8 +153,6 @@
->  #define ATC_AUTO		BIT(31)		/* Auto multiple buffer tx enable */
->  
->  /* Bitfields in CFG */
-> -#define ATC_PER_MSB(h)	((0x30U & (h)) >> 4)	/* Extract most significant bits of a handshaking identifier */
-> -
->  #define ATC_SRC_PER		GENMASK(3, 0)	/* Channel src rq associated with periph handshaking ifc h */
->  #define ATC_DST_PER		GENMASK(7, 4)	/* Channel dst rq associated with periph handshaking ifc h */
->  #define ATC_SRC_REP		BIT(8)		/* Source Replay Mod */
-> @@ -181,10 +179,7 @@
->  #define ATC_DPIP_HOLE		GENMASK(15, 0)
->  #define ATC_DPIP_BOUNDARY	GENMASK(25, 16)
->  
-> -#define ATC_SRC_PER_ID(id)	(FIELD_PREP(ATC_SRC_PER_MSB, (id)) |	\
-> -				 FIELD_PREP(ATC_SRC_PER, (id)))
-> -#define ATC_DST_PER_ID(id)	(FIELD_PREP(ATC_DST_PER_MSB, (id)) |	\
-> -				 FIELD_PREP(ATC_DST_PER, (id)))
-> +#define ATC_PER_MSB		GENMASK(5, 4)	/* Extract MSBs of a handshaking identifier */
->  
->  
->  
-> @@ -1780,6 +1775,32 @@ static bool at_dma_filter(struct dma_chan *chan, void *slave)
->  	}
->  }
->  
-> +/**
-> + * atc_src_per_id - prepare the source peripheral fields of the CFG
-> + * register for the given peripheral handshaking id.
-> + *
-> + * @per_id: the peripheral id
-> + */
-> +static inline u32 atc_src_per_id(unsigned int per_id)
-> +{
-> +	return FIELD_PREP(ATC_SRC_PER_MSB,
-> +			  FIELD_GET(ATC_PER_MSB, per_id)) |
-> +		FIELD_PREP(ATC_SRC_PER, per_id);
-> +}
-
-I still prefer a macro, would you use the following instead?
-+#define ATC_SRC_PER_ID(id)                                            \
-+       ({ typeof(id) _id = (id);                                      \
-+          FIELD_PREP(ATC_SRC_PER_MSB, FIELD_GET(ATC_PER_MSB, _id)) |  \
-+          FIELD_PREP(ATC_SRC_PER, _id); })
-
-Cheers,
-ta
+-- 
+~Randy

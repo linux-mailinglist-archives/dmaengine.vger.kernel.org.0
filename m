@@ -2,126 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8745370ECB8
-	for <lists+dmaengine@lfdr.de>; Wed, 24 May 2023 06:53:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2244C70ED3F
+	for <lists+dmaengine@lfdr.de>; Wed, 24 May 2023 07:44:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233249AbjEXExP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 May 2023 00:53:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45032 "EHLO
+        id S233663AbjEXFoh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 24 May 2023 01:44:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231245AbjEXExO (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 May 2023 00:53:14 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69BF2184;
-        Tue, 23 May 2023 21:53:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=x3TATxZ2qX9UI1aV8ki5wVDf4nzUOgqNz0TYOz12DOU=; b=zT5WGgGRyuiauI1Gqh/aDM7kw9
-        en7NVJcwdW+iclF0oXdu6aIQcvoPd3XQpBTqQX5h/Hzc0c9keUnI/kY+EaXgSvRpCPwDPNJgsZI2h
-        FXm2xcQpQKY6+GxUxgiPyq60w4khmqBT+0IJiR9BPx5sS6fdM9Bhgje57XsYI9NcQenvuRqX7vq2B
-        dWxYM241L/EVfLa60E0DyPkyUOUCYJrLZcyLRSWO3oNdUycFL/dFOHJviLvGSDrCoXqI9oR8iKobP
-        /jn3jJ+w2Cg7wFNNujLQI7V/UgJwFIWSb2cui8d5zAqXMVKGMmG2V3SSoFaylPmxffnsGGT2dO6bW
-        7CAkfC7A==;
-Received: from [2601:1c2:980:9ec0::2764] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q1gUp-00CLwp-0V;
-        Wed, 24 May 2023 04:53:12 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Jaswinder Singh <jassisinghbrar@gmail.com>,
-        Boojin Kim <boojin.kim@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: [PATCH v2] dmaengine: pl330: rename _start to prevent build error
-Date:   Tue, 23 May 2023 21:53:10 -0700
-Message-Id: <20230524045310.27923-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.40.1
+        with ESMTP id S239474AbjEXFog (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 May 2023 01:44:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2B6E13E;
+        Tue, 23 May 2023 22:44:35 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3C5A360EB2;
+        Wed, 24 May 2023 05:44:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD4DBC433EF;
+        Wed, 24 May 2023 05:44:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684907074;
+        bh=BAIEHKqWdw+wiFDljo7B9HdVaW+uTTTgwVeC0xa0/ao=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eHUMXZt2BKIzx0FxwovB47fimiy4gupnFQON8FyBp2umdWGOZJafZc2PciYaqPyL/
+         18/1fL5ttqnT/pVs2mnirkPLZaR7vEGCYJAfxGasl9Oaqk36/cmhC6+qVHnvFsNwix
+         jHW3+XsOPA7BXqjtSHcd1cV+s55xQqL9m9yiEewEHh9Xp6Dj5D1U70pTbUColbo40T
+         EkZt2OFrJ7BcbbG5hAeHme6kRcSsJM1k25BMINl4kR1fDwumiAXY89WwtFOWypCFai
+         bpfdDbfFFCxixf7IMvy2mZiteUnRCZD9VY1Rtp1JT4Gl9YLPxGApALXwKf/kRJZHA7
+         NddS8fUQz49hQ==
+Date:   Wed, 24 May 2023 11:14:29 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        dmaengine@vger.kernel.org, Will Deacon <will@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Zanussi, Tom" <tom.zanussi@intel.com>,
+        narayan.ranganathan@intel.com
+Subject: Re: [PATCH v7 4/4] dmaengine/idxd: Re-enable kernel workqueue under
+ DMA API
+Message-ID: <ZG2kPbwMmW4B2PFB@matsya>
+References: <20230523173451.2932113-1-jacob.jun.pan@linux.intel.com>
+ <20230523173451.2932113-5-jacob.jun.pan@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230523173451.2932113-5-jacob.jun.pan@linux.intel.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-"_start" is used in several arches and proably should be reserved
-for ARCH usage. Using it in a driver for a private symbol can cause
-a build error when it conflicts with ARCH usage of the same symbol.
+On 23-05-23, 10:34, Jacob Pan wrote:
+> Kernel workqueues were disabled due to flawed use of kernel VA and SVA
+> API. Now that we have the support for attaching PASID to the device's
+> default domain and the ability to reserve global PASIDs from SVA APIs,
+> we can re-enable the kernel work queues and use them under DMA API.
+> 
+> We also use non-privileged access for in-kernel DMA to be consistent
+> with the IOMMU settings. Consequently, interrupt for user privilege is
+> enabled for work completion IRQs.
 
-Therefore rename pl330's "_start" to "pl330_start_thread" so that there
-is no conflict and no build error.
+Acked-by: Vinod Koul <vkoul@kernel.org>
 
-drivers/dma/pl330.c:1053:13: error: '_start' redeclared as different kind of symbol
- 1053 | static bool _start(struct pl330_thread *thrd)
-      |             ^~~~~~
-In file included from ../include/linux/interrupt.h:21,
-                 from ../drivers/dma/pl330.c:18:
-arch/riscv/include/asm/sections.h:11:13: note: previous declaration of '_start' with type 'char[]'
-   11 | extern char _start[];
-      |             ^~~~~~
-
-Fixes: b7d861d93945 ("DMA: PL330: Merge PL330 driver into drivers/dma/")
-Fixes: ae43b3289186 ("ARM: 8202/1: dmaengine: pl330: Add runtime Power Management support v12")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jaswinder Singh <jassisinghbrar@gmail.com>
-Cc: Boojin Kim <boojin.kim@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Russell King <rmk+kernel@arm.linux.org.uk>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org
-Cc: linux-riscv@lists.infradead.org
----
-v2: make new function name pl330-specific (Vinod)
-    drop Jaswinder Singh @samsung.com from Cc: list
-
- drivers/dma/pl330.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff -- a/drivers/dma/pl330.c b/drivers/dma/pl330.c
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -1050,7 +1050,7 @@ static bool _trigger(struct pl330_thread
- 	return true;
- }
- 
--static bool _start(struct pl330_thread *thrd)
-+static bool pl330_start_thread(struct pl330_thread *thrd)
- {
- 	switch (_state(thrd)) {
- 	case PL330_STATE_FAULT_COMPLETING:
-@@ -1702,7 +1702,7 @@ static int pl330_update(struct pl330_dma
- 			thrd->req_running = -1;
- 
- 			/* Get going again ASAP */
--			_start(thrd);
-+			pl330_start_thread(thrd);
- 
- 			/* For now, just make a list of callbacks to be done */
- 			list_add_tail(&descdone->rqd, &pl330->req_done);
-@@ -2089,7 +2089,7 @@ static void pl330_tasklet(struct tasklet
- 	} else {
- 		/* Make sure the PL330 Channel thread is active */
- 		spin_lock(&pch->thread->dmac->lock);
--		_start(pch->thread);
-+		pl330_start_thread(pch->thread);
- 		spin_unlock(&pch->thread->dmac->lock);
- 	}
- 
-@@ -2107,7 +2107,7 @@ static void pl330_tasklet(struct tasklet
- 			if (power_down) {
- 				pch->active = true;
- 				spin_lock(&pch->thread->dmac->lock);
--				_start(pch->thread);
-+				pl330_start_thread(pch->thread);
- 				spin_unlock(&pch->thread->dmac->lock);
- 				power_down = false;
- 			}
+-- 
+~Vinod

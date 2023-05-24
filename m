@@ -2,75 +2,66 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 167F570EEAC
-	for <lists+dmaengine@lfdr.de>; Wed, 24 May 2023 08:56:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E6CB70F372
+	for <lists+dmaengine@lfdr.de>; Wed, 24 May 2023 11:50:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239693AbjEXG4K (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 May 2023 02:56:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41360 "EHLO
+        id S231808AbjEXJun (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 24 May 2023 05:50:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239846AbjEXGzg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 May 2023 02:55:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E47B10CA;
-        Tue, 23 May 2023 23:54:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1432763990;
-        Wed, 24 May 2023 06:54:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9834BC433EF;
-        Wed, 24 May 2023 06:54:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684911286;
-        bh=2dufkZRvuZe+LYKDbga1c2RGS/mrd5DzOCcRv+UfAZY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j5W3BRyUUcjHqDJ2pWtHUpTRbue3c+xu8cwyUPXsOUbFWSmlIaPLNNQ/qBXNpyPQH
-         ZX2MSBr8yFWSkKYc2oTqfQ28zowfGaGfX6UFmAzRQHoeS63/VkhC5LHREkg6pV2w36
-         NWbg+t23nS2nYAzvKNBIUT5ItHdaNIZ9jMaHLABAkJuUGJdwlDywVgbdJNFKBm3ON2
-         PiuU5aJ8c0+IYljffJcNneSBYzXMu9lXOXsk2Kl64sTBomtlHjWRVokcrH55JYm6qU
-         FToMckoaJCqZ8gK5RjqLko0DbM7DuDqVLEtoM0LblOROl/FM/TTg4ATZXHPDUkSMTk
-         djKKF1NfRhNFw==
-Date:   Wed, 24 May 2023 12:24:42 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Jisheng Zhang <jszhang@kernel.org>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Sinan Kaya <okaya@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 0/5] dma: don't set chancnt
-Message-ID: <ZG20snavUcrYpTIZ@matsya>
-References: <20230521100252.3197-1-jszhang@kernel.org>
+        with ESMTP id S231818AbjEXJuf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 May 2023 05:50:35 -0400
+Received: from 167-179-156-38.a7b39c.syd.nbn.aussiebb.net (167-179-156-38.a7b39c.syd.nbn.aussiebb.net [167.179.156.38])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F3B418B;
+        Wed, 24 May 2023 02:50:31 -0700 (PDT)
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+        by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+        id 1q1l7V-00CkU8-Pj; Wed, 24 May 2023 17:49:26 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 24 May 2023 17:49:25 +0800
+Date:   Wed, 24 May 2023 17:49:25 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Tom Zanussi <tom.zanussi@linux.intel.com>
+Cc:     davem@davemloft.net, fenghua.yu@intel.com, vkoul@kernel.org,
+        dave.jiang@intel.com, tony.luck@intel.com,
+        wajdi.k.feghali@intel.com, james.guilford@intel.com,
+        kanchana.p.sridhar@intel.com, giovanni.cabiddu@intel.com,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        dmaengine@vger.kernel.org
+Subject: Re: [PATCH v5 13/15] crypto: iaa - Add support for default IAA
+ 'canned' compression mode
+Message-ID: <ZG3dpbPlRXbF2ZxN@gondor.apana.org.au>
+References: <20230516215009.51794-1-tom.zanussi@linux.intel.com>
+ <20230516215009.51794-14-tom.zanussi@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230521100252.3197-1-jszhang@kernel.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230516215009.51794-14-tom.zanussi@linux.intel.com>
+X-Spam-Status: No, score=2.7 required=5.0 tests=BAYES_00,HELO_DYNAMIC_IPADDR2,
+        RDNS_DYNAMIC,SPF_HELO_NONE,SPF_PASS,TVD_RCVD_IP,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 21-05-23, 18:02, Jisheng Zhang wrote:
-> I'm patching dw-axi-dmac to add more features, but I found a small
-> clean up point and some drivers in drivers/dma/ have the same issue,
-> so this series comes.
+On Tue, May 16, 2023 at 04:50:07PM -0500, Tom Zanussi wrote:
+.
+> To choose 'fixed' mode:
 > 
-> The dma framework will calculate the dma channels chancnt, setting it
-> is wrong.
+>   echo "fixed" >  /sys/bus/dsa/drivers/crypto/compression_mode
+> 
+> To choose 'canned' mode:
+> 
+>   echo "canned" >  /sys/bus/dsa/drivers/crypto/compression_mode
 
-Applied, thanks
+This seems to be a strange way to switch modes.  How about just
+registering both algorithms and then let the user decide which
+one to use throught the algorithm name?
 
+Thanks,
 -- 
-~Vinod
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt

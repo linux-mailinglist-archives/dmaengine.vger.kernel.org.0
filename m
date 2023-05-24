@@ -2,51 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F9F470ED54
-	for <lists+dmaengine@lfdr.de>; Wed, 24 May 2023 07:50:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 511A670EE89
+	for <lists+dmaengine@lfdr.de>; Wed, 24 May 2023 08:52:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233364AbjEXFuo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 May 2023 01:50:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38306 "EHLO
+        id S231537AbjEXGwf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 24 May 2023 02:52:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232367AbjEXFun (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 May 2023 01:50:43 -0400
+        with ESMTP id S231889AbjEXGv7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 May 2023 02:51:59 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 991B6C1;
-        Tue, 23 May 2023 22:50:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C7AE41;
+        Tue, 23 May 2023 23:51:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 376416390B;
-        Wed, 24 May 2023 05:50:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B25CC433EF;
-        Wed, 24 May 2023 05:50:40 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B1375638E9;
+        Wed, 24 May 2023 06:51:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EED4C433D2;
+        Wed, 24 May 2023 06:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684907441;
-        bh=vAvsTqmFgX+Q9gy81xNfCHJ2KmDSr99InLcdIwbLKSc=;
+        s=k20201202; t=1684911069;
+        bh=SQgChDcw6HLiiW8+cWOlKH9uJ8KGAUmFWwGc0/oyPJg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Eq11SVVaNdlCHVnN/JmVpX/xHvNd0GJCPkLRe0RFtk05cpgAOYkvXgXh+U8vF/aZX
-         oGBPJluzUzStJ6Jib1FQgUlKy19AqTq3IEiXuwstI2L7wc+e6nDz2SZ5poMOIPHcvi
-         GzeJW6XBxh98TuYr5257MRw6uMQubANrMqmzm2G4Hr8j7cAFcNiCw5LxWxRrgcHbyR
-         gLcy5sJN1y/zHOUOu76jtTvSfFSb+YLMRr/ayEIEQsBGsN1Nq/TP6za2DRuL1ZoyaD
-         46VFrMAP6B8fd9rq1b3fjR/UhChP7mSCK/3NQxQOwaPBO8kkXjfkvDVGTN9fOf5ps2
-         et2PG7qvjWygw==
-Date:   Wed, 24 May 2023 11:20:37 +0530
+        b=Pmy70/a2keU9fBFBIbRvYksnt7YJ8/C1aPUk6iYC9AGC2xaG0JuUpdR+HkChT494N
+         oWedZdtvErqqabp2DhYJjB0wfnyf6R4GC0bNINaGmc4JifjeBx8ojnOyZNtwDbdQ8E
+         GAf+DWxagT9fhIINBfvpzq9ZBqxmvEPSJL7vhM5YGYzvzKFDtyvvuHtLfp+J7Cty8O
+         bjZWGGX2wsiLYpv//XMZFtH+mZ9kQxrMG1hUi1ARhBNcMHa6iYm+SEHoFj785Y5Jp0
+         mft6j3KD+UBezEuuZmknMqF389jBm43Uc4tD3XpHr/VtHpLRoruKtBm4ikpmvhzbhV
+         pFuE94THxBo9Q==
+Date:   Wed, 24 May 2023 12:21:05 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Rosin <peda@axentia.se>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Tudor Ambarus <tudor.ambarus@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v2 0/2] dmaengine: at_hdmac: Regression fix and cleanup
-Message-ID: <ZG2lrVWxsR0pGhtC@matsya>
-References: <221d19e2-6b92-7f38-7d8a-a730f54c33ea@axentia.se>
+To:     Cai Huoqing <cai.huoqing@linux.dev>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v11 0/4] dmaengine: dw-edma: Add support for native HDMA
+Message-ID: <ZG2z2U2Bm7kk7mqu@matsya>
+References: <20230520050854.73160-1-cai.huoqing@linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <221d19e2-6b92-7f38-7d8a-a730f54c33ea@axentia.se>
+In-Reply-To: <20230520050854.73160-1-cai.huoqing@linux.dev>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -57,15 +61,26 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 23-05-23, 19:19, Peter Rosin wrote:
-> Hi!
+On 20-05-23, 13:08, Cai Huoqing wrote:
+> Add support for HDMA NATIVE, as long the IP design has set
+> the compatible register map parameter-HDMA_NATIVE,
+> which allows compatibility for native HDMA register configuration.
 > 
-> I found a regression in DMA handling on one of our SAMA5D3 boards.
+> The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
+> And the native HDMA registers are different from eDMA,
+> so this patch add support for HDMA NATIVE mode.
 > 
-> While combing through the regressing commit, a found two unrelated
-> strange things. The first is the actually problematic change. The
-> second is a number of suspect defines, that I fail to see how they
-> can ever do any good.
+> HDMA write and read channels operate independently to maximize
+> the performance of the HDMA read and write data transfer over
+> the link When you configure the HDMA with multiple read channels,
+> then it uses a round robin (RR) arbitration scheme to select
+> the next read channel to be serviced.The same applies when
+> youhave multiple write channels.
+> 
+> The native HDMA driver also supports a maximum of 16 independent
+> channels (8 write + 8 read), which can run simultaneously.
+> Both SAR (Source Address Register) and DAR (Destination Address Register)
+> are aligned to byte.
 
 Applied, thanks
 

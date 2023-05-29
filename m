@@ -2,51 +2,71 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 618767143B1
-	for <lists+dmaengine@lfdr.de>; Mon, 29 May 2023 07:23:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27CA97143EF
+	for <lists+dmaengine@lfdr.de>; Mon, 29 May 2023 08:13:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231527AbjE2FXC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 29 May 2023 01:23:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60164 "EHLO
+        id S230335AbjE2GNc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 29 May 2023 02:13:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231493AbjE2FW7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 29 May 2023 01:22:59 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 167D5B1;
-        Sun, 28 May 2023 22:22:51 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 83DF1611F0;
-        Mon, 29 May 2023 05:22:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7103C433D2;
-        Mon, 29 May 2023 05:22:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685337769;
-        bh=ggrBfM5Pkx6rzaVYqbUXNj5/omnkZEAUkcCnHkhmQ38=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=moNGhNs0pZI4d94Czmaj5IpoVe9wK0bA6CFjla1rjPgX4TJPMNrytbQjcZ2KdoB1D
-         /0YRPJ93oJI1lfJ+3vrc5B06TxpZj7h6mscg9STG8mrBDoZhXDPc2XhTz32saZOYNB
-         OFf7RulZVLDuRdwBJh8vGLib3/MVTAcMsFfkaLXZfRe/nEWYRDiK88KJVSPhhZ6WSm
-         +fMNmubD0mKSkuVF7mwRVdupC2IMmKTny8bNzjWO6xMOUkaMsBvBXj2U+CzAciN5U4
-         lF/qVmlp02zX6GXJyTlM3VpzF0rEqTxA3/JxTNbE4CiCfsudiCkN9PM6caUqVQ3w3H
-         dHL2jiTuwyK8g==
-Date:   Mon, 29 May 2023 10:52:27 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Cai Huoqing <cai.huoqing@linux.dev>
-Cc:     fancer.lancer@gmail.com, gustavo.pimentel@synopsys.com,
-        vkoul@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Add Cai Huoqing as dw-edma maintainer
-Message-ID: <20230529052227.GA2856@thinkpad>
-References: <20230529032423.11650-1-cai.huoqing@linux.dev>
+        with ESMTP id S229572AbjE2GN2 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 29 May 2023 02:13:28 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 016A6AF
+        for <dmaengine@vger.kernel.org>; Sun, 28 May 2023 23:13:26 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-3f60e536250so25724435e9.1
+        for <dmaengine@vger.kernel.org>; Sun, 28 May 2023 23:13:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685340805; x=1687932805;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=N0GoosA+9uka02/xKEt1rQ6orV6x3wMmK2ZhU5cav+I=;
+        b=K46+v7wYyQems0d2CvKbmd9LpTmOQUbsYBKc1WWH8U65Zrgp5Fe5s8mYfCviEyRAUV
+         R5NPDDZlDkCsV394FnSuNk+p96qQ7TJQU5P1J9rCaKpCHZXP3zxtlFexRdADTSaszglY
+         gtKU0lTE0Oq7P1LJ8k4yWW9RYFoXAvPLqBPjqk4MhQtCKyDYcLDTXOER8xq4vLiTNta1
+         VAPZ3b5ktwOBUwseYrVuD9/+CJhZSTzPVSmNUzAJSfpp869uBcIYXdUayLr7K5sc0iuX
+         fA+i+wxiTw7sYD2Le/5bBduMLw3NGHzYyy2NK9vZiGorPo46V9tZB5F5Wj0IRR5cD7gU
+         WThQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685340805; x=1687932805;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N0GoosA+9uka02/xKEt1rQ6orV6x3wMmK2ZhU5cav+I=;
+        b=Y9OU7bSTSaySNt7qmd4mcDtnultKFs6bi3JEcYB/cNljFVGdiUhNG7kGAj+dReLWEK
+         jy3GFp9l/pfYL6STyojnFvamhAb03SubVBDDQ9xs5mPyaXy3fiFU1/GPAq6i37YGfrpC
+         M73mqMeDt+nWP9vWkQbsi4zAFKqef8Zh/z7m6aqMFY6P/4zPQKqUiVR7lBSmIhX7mr4i
+         OQ2fQQUcko9ivgPtM+v1urZAm584FKse4vVllTA+a60+qQQVYfj2KMqTh+txlcwEozJb
+         8yJ7NnkIdSLdOruCxyDkc8Qnqxa5sF2LTLve7WGwUcib0InyTLqJAFNaGqDF0Wshf8G2
+         0nKg==
+X-Gm-Message-State: AC+VfDznO+M6rhY+iwrxCGLXKWn5HFIrKs61AGUbDzqvTqtTBXr6cU6d
+        13ZSKYXKC3bJK0agG+rqSIeYh9Kd8LQKMKCLUDPIgA==
+X-Google-Smtp-Source: ACHHUZ6G1tf+Gf5X/mMh8v33xYphjI7AZtG1DORt+A6DQvoqWXp2ntBRnYy5vqfrG+UbsUuNLaIQL7it7ADddzUT1vg=
+X-Received: by 2002:a05:6000:18c4:b0:309:5889:b86a with SMTP id
+ w4-20020a05600018c400b003095889b86amr5935028wrq.27.1685340805413; Sun, 28 May
+ 2023 23:13:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230529032423.11650-1-cai.huoqing@linux.dev>
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+References: <20230526192210.3146896-1-bhupesh.sharma@linaro.org> <20230526192210.3146896-2-bhupesh.sharma@linaro.org>
+In-Reply-To: <20230526192210.3146896-2-bhupesh.sharma@linaro.org>
+From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
+Date:   Mon, 29 May 2023 11:43:11 +0530
+Message-ID: <CAH=2Ntx+4F+ZP_Y+=e4p9rdTRQV8FHaepJCyqVFtWUPjDehoNg@mail.gmail.com>
+Subject: Re: [PATCH v8 01/11] dt-bindings: dma: Add support for SM6115 and
+ QCM2290 SoCs
+To:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, andersson@kernel.org,
+        bhupesh.linux@gmail.com, krzysztof.kozlowski@linaro.org,
+        robh+dt@kernel.org, konrad.dybcio@linaro.org,
+        vladimir.zapolskiy@linaro.org, rfoss@kernel.org,
+        neil.armstrong@linaro.org, djakov@kernel.org, stephan@gerhold.net,
+        Rob Herring <robh@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Linux Kernel Functional Testing <lkft@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -55,49 +75,68 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,
+Hi Vinod,
 
-On Mon, May 29, 2023 at 11:24:23AM +0800, Cai Huoqing wrote:
-> Since HDMA mode was merged, including the commits:
-> commit e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA"),
-> commit 353d5c241e83 ("dmaengine: dw-edma: Add HDMA DebugFS support"),
-> I would like to add myself as maintainer of the dw-edma driver
-> to recive patch for HDMA part. 
-> 
-> I can test HDMA part by our chip and cmodel and do some code review.
-> I'm active in linux contribution, if possible, I want to
-> take the dw-edma maintainership.
-> 
-
-Thanks for your interest in maintaining this driver. However, maintainership
-involves active reviewing and maintaining the whole driver and not just the HDMA
-part. If that's what you are intend to do, then I'd encourage you to first spend
-some time reviewing and testing the patches targeting the dw-edma driver.
-
-This will help justifying the reviewer/maintainership role in the future.
-
-- Mani
-
-> Signed-off-by: Cai Huoqing <cai.huoqing@linux.dev>
+> On Sat, 27 May 2023 at 00:52, Bhupesh Sharma <bhupesh.sharma@linaro.org> wrote:
+>
+> Add new compatible for BAM DMA engine version v1.7.4 which is
+> found on Qualcomm SM6115 and QCM2290 SoCs. Since its very similar
+> to v1.7.0 used on SM8150 like SoCs, mark the comptible scheme
+> accordingly.
+>
+> While at it, also update qcom,bam-dma bindings to add comments
+> which describe the BAM DMA versions used in SM8150 and SM8250 SoCs.
+> This provides an easy reference for identifying the actual BAM DMA
+> version available on Qualcomm SoCs.
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Tested-by: Anders Roxell <anders.roxell@linaro.org>
+> Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
 > ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3a0504731524..541601feabd0 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5881,6 +5881,7 @@ F:	drivers/mtd/nand/raw/denali*
->  
->  DESIGNWARE EDMA CORE IP DRIVER
->  M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +M:	Cai Huoqing <cai.huoqing@linux.dev>
->  R:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->  R:	Serge Semin <fancer.lancer@gmail.com>
->  L:	dmaengine@vger.kernel.org
-> -- 
-> 2.34.1
-> 
+>  .../devicetree/bindings/dma/qcom,bam-dma.yaml | 20 ++++++++++++-------
+>  1 file changed, 13 insertions(+), 7 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+> index f1ddcf672261..c663b6102f50 100644
+> --- a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+> +++ b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+> @@ -15,13 +15,19 @@ allOf:
+>
+>  properties:
+>    compatible:
+> -    enum:
+> -        # APQ8064, IPQ8064 and MSM8960
+> -      - qcom,bam-v1.3.0
+> -        # MSM8974, APQ8074 and APQ8084
+> -      - qcom,bam-v1.4.0
+> -        # MSM8916 and SDM845
+> -      - qcom,bam-v1.7.0
+> +    oneOf:
+> +      - enum:
+> +          # APQ8064, IPQ8064 and MSM8960
+> +          - qcom,bam-v1.3.0
+> +          # MSM8974, APQ8074 and APQ8084
+> +          - qcom,bam-v1.4.0
+> +          # MSM8916, SDM630
+> +          - qcom,bam-v1.7.0
+> +      - items:
+> +          - enum:
+> +              # SDM845, SM6115, SM8150, SM8250 and QCM2290
+> +              - qcom,bam-v1.7.4
+> +          - const: qcom,bam-v1.7.0
+>
+>    clocks:
+>      maxItems: 1
+> --
+> 2.38.1
 
--- 
-மணிவண்ணன் சதாசிவம்
+Bjorn has applied the dts patches from this series to his tree.
+As suggested by him, can you please pick patches [PATCH 1/11] and
+[PATCH 2/11] from this series via the 'dmaengine' tree.
+
+Seems some Cc fields got messed up while sending the patchset, so
+Cc'ing the dmaengine list again.
+
+Thanks,
+Bhupesh

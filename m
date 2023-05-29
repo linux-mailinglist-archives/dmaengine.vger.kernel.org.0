@@ -2,126 +2,103 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BFB971440C
-	for <lists+dmaengine@lfdr.de>; Mon, 29 May 2023 08:16:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81C9F71466F
+	for <lists+dmaengine@lfdr.de>; Mon, 29 May 2023 10:45:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231474AbjE2GQj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 29 May 2023 02:16:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44856 "EHLO
+        id S230153AbjE2Io0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 29 May 2023 04:44:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231449AbjE2GQh (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 29 May 2023 02:16:37 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8E21FE
-        for <dmaengine@vger.kernel.org>; Sun, 28 May 2023 23:16:13 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-3f6e13940daso30796425e9.0
-        for <dmaengine@vger.kernel.org>; Sun, 28 May 2023 23:16:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685340967; x=1687932967;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=LA0lZXIZyfreSy6UzrDrMm0pLQo6QMWpJJ8ip5ZSwRM=;
-        b=fwnJI2MHpqMgPEusIsDf6dCdGxxELVhkY6rqbFk3lB4f3VkRWgTwc3I9XPPoRSqIA/
-         +i0QzKhrmmpRP8fjyyir1WVPKrQ98bNCt5TfkxeZuaHjnQ4Q0UH1E2fk0maaS1G/Af/T
-         5kmHjNCc6v3dS2RssRi1X2x+yLqBwXQipQpzvOqkkXosU47sMFUEQX4hNMTSWSHQizBI
-         lRAQ6Vl+b9fJlYCWbfZIlbeowumqYxk5TKyEtLN33xTzT5vvfPp2inLsnoLcGkUHlitZ
-         Wk4QVRfCuOPybeD3s3Q5IWrbRSYkQk+XISzzyii2gYRMKrB5MqeQPS/kBEGsK6qmcS0z
-         0AQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685340967; x=1687932967;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LA0lZXIZyfreSy6UzrDrMm0pLQo6QMWpJJ8ip5ZSwRM=;
-        b=YThI7k9sI64u901ynARtV9r3U4/Tpxlxzxqxf0MYTjJz+YAhXIXsoZRuEGBNq8at9r
-         JaVk34VlnMPxZUMMax4LJrNm34ExkA7CdyyoDwk3ubklkJ22oaPlqYugvFRd3jeATJrH
-         oj+t+AbGoPNOpuu0MVqhb2n2+6oFSxE8S/C/O6FXy4qtElXncNaQqnp9icHIf/xaxJN4
-         uL/ZjN/Ru1jfZSRuRxnKYTbXw0rCj5RQP1e0zvo98h+xSaUHuHoInsXr9Ir3wpfBuvnD
-         IrE+PG4nviQDpxBbtPCiQHJPmfccru3JKRsD9I0u08WZWteETJ2Mbi7F11PziIOwcJGW
-         seTg==
-X-Gm-Message-State: AC+VfDwLXoBhaFumBplvDiGgqlmVGKOfeUdSXU9cJoBBT6F8M4Xmg48V
-        ARzErO5f95IwfMNUqWMpLRvVrY+xvfMHO38PuworN2pqBM3AiDvwIS0=
-X-Google-Smtp-Source: ACHHUZ4ueNV2gTUYIfOuOR4I8nBjLUyiMggWa2AaJkdjCQz68pX+xZH4y3Da4ZNKMrsDlhdFfcW6KtA7o9jw9fnmtHc=
-X-Received: by 2002:a7b:cd99:0:b0:3f6:41f:8e66 with SMTP id
- y25-20020a7bcd99000000b003f6041f8e66mr8079474wmj.5.1685340967640; Sun, 28 May
- 2023 23:16:07 -0700 (PDT)
+        with ESMTP id S231648AbjE2IoW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 29 May 2023 04:44:22 -0400
+Received: from out-39.mta0.migadu.com (out-39.mta0.migadu.com [91.218.175.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 783E9B1
+        for <dmaengine@vger.kernel.org>; Mon, 29 May 2023 01:44:20 -0700 (PDT)
+Date:   Mon, 29 May 2023 16:44:15 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1685349859;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GWWjW272D8dSNO84PIr6uIe+T3G/E2XjK68WyXdYOu8=;
+        b=N3LgF6NjYlhUWOYyfVPqcfV/vbf77eNAW3CS7RAF62mQwFXjX8SrBKd2hxO+pu+7kgdDum
+        jqT2PmoKp0xhmlzuxXnzFQsNc0+YTAlfTE+N8R4aq/oaTB/NSJQ5piN0OZk4z+y085wZpy
+        WGcaKbt0xQZbq6VrxwXMVavg6T0WqqU=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Cai Huoqing <cai.huoqing@linux.dev>
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     fancer.lancer@gmail.com, gustavo.pimentel@synopsys.com,
+        vkoul@kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Add Cai Huoqing as dw-edma maintainer
+Message-ID: <ZHRl37L2JPq+UmGp@chq-MS-7D45>
+References: <20230529032423.11650-1-cai.huoqing@linux.dev>
+ <20230529052227.GA2856@thinkpad>
 MIME-Version: 1.0
-References: <20230526192210.3146896-1-bhupesh.sharma@linaro.org> <20230526192210.3146896-6-bhupesh.sharma@linaro.org>
-In-Reply-To: <20230526192210.3146896-6-bhupesh.sharma@linaro.org>
-From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Date:   Mon, 29 May 2023 11:45:54 +0530
-Message-ID: <CAH=2NtwPhspRXD1g390c79+w1CFc19m+RcrzcCEtnGxomumhMQ@mail.gmail.com>
-Subject: Re: [PATCH v8 05/11] dt-bindings: qcom-qce: Fix compatible
- combinations for SM8150 and IPQ4019 SoCs
-To:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, andersson@kernel.org,
-        bhupesh.linux@gmail.com, krzysztof.kozlowski@linaro.org,
-        robh+dt@kernel.org, konrad.dybcio@linaro.org,
-        vladimir.zapolskiy@linaro.org, rfoss@kernel.org,
-        neil.armstrong@linaro.org, djakov@kernel.org, stephan@gerhold.net,
-        Rob Herring <robh@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Linux Kernel Functional Testing <lkft@linaro.org>,
-        dmaengine@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230529052227.GA2856@thinkpad>
+X-Migadu-Flow: FLOW_OUT
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Herbert,
+On 29 5月 23 10:52:27, Manivannan Sadhasivam wrote:
+> Hi,
+> 
+> On Mon, May 29, 2023 at 11:24:23AM +0800, Cai Huoqing wrote:
+> > Since HDMA mode was merged, including the commits:
+> > commit e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA"),
+> > commit 353d5c241e83 ("dmaengine: dw-edma: Add HDMA DebugFS support"),
+> > I would like to add myself as maintainer of the dw-edma driver
+> > to recive patch for HDMA part. 
+> > 
+> > I can test HDMA part by our chip and cmodel and do some code review.
+> > I'm active in linux contribution, if possible, I want to
+> > take the dw-edma maintainership.
+> > 
+> 
+> Thanks for your interest in maintaining this driver. However, maintainership
+> involves active reviewing and maintaining the whole driver and not just the HDMA
+> part. If that's what you are intend to do, then I'd encourage you to first spend
+> some time reviewing and testing the patches targeting the dw-edma driver.
 
-On Sat, 27 May 2023 at 00:53, Bhupesh Sharma <bhupesh.sharma@linaro.org> wrote:
->
-> Currently the compatible list available in 'qce' dt-bindings does not
-> support SM8150 and IPQ4019 SoCs directly which may lead to potential
-> 'dtbs_check' error(s).
->
-> Fix the same.
->
-> Fixes: 00f3bc2db351 ("dt-bindings: qcom-qce: Add new SoC compatible strings for Qualcomm QCE IP")
-> Reviewed-by: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Tested-by: Anders Roxell <anders.roxell@linaro.org>
-> Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> ---
->  Documentation/devicetree/bindings/crypto/qcom-qce.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/crypto/qcom-qce.yaml b/Documentation/devicetree/bindings/crypto/qcom-qce.yaml
-> index e375bd981300..90ddf98a6df9 100644
-> --- a/Documentation/devicetree/bindings/crypto/qcom-qce.yaml
-> +++ b/Documentation/devicetree/bindings/crypto/qcom-qce.yaml
-> @@ -24,6 +24,12 @@ properties:
->          deprecated: true
->          description: Kept only for ABI backward compatibility
->
-> +      - items:
-> +          - enum:
-> +              - qcom,ipq4019-qce
-> +              - qcom,sm8150-qce
-> +          - const: qcom,qce
-> +
->        - items:
->            - enum:
->                - qcom,ipq6018-qce
-> --
-> 2.38.1
-
-Bjorn has applied the dts patches from this series to his tree.
-As suggested by him, can you please pick patches [PATCH 5/11] and
-[PATCH 6/11] from this series via the 'crypto' tree.
-
-Seems some Cc fields got messed up while sending the patchset, so
-Cc'ing the list(s) again.
+Ok, will do.
 
 Thanks,
-Bhupesh
+Cai-
+> 
+> This will help justifying the reviewer/maintainership role in the future.
+> 
+> - Mani
+> 
+> > Signed-off-by: Cai Huoqing <cai.huoqing@linux.dev>
+> > ---
+> >  MAINTAINERS | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 3a0504731524..541601feabd0 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -5881,6 +5881,7 @@ F:	drivers/mtd/nand/raw/denali*
+> >  
+> >  DESIGNWARE EDMA CORE IP DRIVER
+> >  M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > +M:	Cai Huoqing <cai.huoqing@linux.dev>
+> >  R:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> >  R:	Serge Semin <fancer.lancer@gmail.com>
+> >  L:	dmaengine@vger.kernel.org
+> > -- 
+> > 2.34.1
+> > 
+> 
+> -- 
+> மணிவண்ணன் சதாசிவம்

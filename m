@@ -2,74 +2,77 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F376571611A
-	for <lists+dmaengine@lfdr.de>; Tue, 30 May 2023 15:08:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F5BC7162A8
+	for <lists+dmaengine@lfdr.de>; Tue, 30 May 2023 15:51:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232544AbjE3NIz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 30 May 2023 09:08:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37436 "EHLO
+        id S229683AbjE3Nv5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 30 May 2023 09:51:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230289AbjE3NIy (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 May 2023 09:08:54 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 339B0A1
-        for <dmaengine@vger.kernel.org>; Tue, 30 May 2023 06:08:52 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-51456392cbbso8613898a12.0
-        for <dmaengine@vger.kernel.org>; Tue, 30 May 2023 06:08:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685452130; x=1688044130;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jZXIY4rtAXwpW+oWkjV46RQdYU5hKm1yGrqNPmpHKfU=;
-        b=wEi+COhB4saE6t3QX0aBzZRVTpQ7odjIOZ2E4o7tTiZl8AnovhqRf7Bodd0DYdqUIw
-         3dbjTQa6AJYb8q6GdY7xBc4lmTXn9ivsYko6Z48h96ql6mvKhHdDuExxPgKJ/D9g9xw4
-         uxr+SinEI0jqUKRfePH5ukhM/HkBzMk6BfN2S4rtvBv4Pvp7bXxqx+WgBlKTU8ZU8V9g
-         5SsksCPlm6QBoyHDHok8s/Occz5ETdfedATS1HqQIHw4M5QgjmL3RGk6CtzENlKtAc7A
-         z55iGBXDsKcrzb5QbuAlCN89iZDnLPTdi/PUgvEQhUGH7OXFKR4ImPvovl9fVz3h+sFe
-         XHIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685452130; x=1688044130;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jZXIY4rtAXwpW+oWkjV46RQdYU5hKm1yGrqNPmpHKfU=;
-        b=Vv8qxCc2x7gvee4z4xxXoFfh7xOBDG9JjDxDfygZ5tHGk9WdZoIM3iEM8iElyyYnCc
-         IHBBqAbTHY8r2RLYeGAoyMBANhx1VBeAY8gePH57QktG0XWi9b+8fwzuca57RhbnO2Uh
-         s7OBl2xhEVA/Um3bqUxd1Od92UPTsrdrkzqFRNDkQXi4YGfzIQZusOVc73Nho/NvhVzR
-         5OZcpUo0pn+cVH+H5QLJWSMl0O/LFJtNzbaLg9X+Sgjw3Af6NzLBMtsqBiuHY0Q0T+7+
-         prOc/2dxbMBHSMAgoHVouncbWtRu973ltqosAHXUjZL+TGFmZCe2buy/erFeN8P0jsKr
-         RaHA==
-X-Gm-Message-State: AC+VfDy34zs2Twlt0Iqvk078APEAjGO/f5UW7AjvakpVLZe/fZR3LbAd
-        GF1F0vdptUI8W1uvWBB17xhxeQ==
-X-Google-Smtp-Source: ACHHUZ4RM/uBVqPWi+sisdgqZOaN+mYhKX2B80COqCOcYP5pLPymJxYK4pUbM9xiPei6arPXAmPDqA==
-X-Received: by 2002:a17:907:7da0:b0:96f:b40a:c85f with SMTP id oz32-20020a1709077da000b0096fb40ac85fmr10368239ejc.23.1685452130647;
-        Tue, 30 May 2023 06:08:50 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.199.204])
-        by smtp.gmail.com with ESMTPSA id oy11-20020a170907104b00b0096f7e6d0063sm7309682ejb.75.2023.05.30.06.08.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 May 2023 06:08:50 -0700 (PDT)
-Message-ID: <65e7b6df-b83b-2d7c-5093-f5822050827a@linaro.org>
-Date:   Tue, 30 May 2023 15:08:48 +0200
+        with ESMTP id S232155AbjE3Nvz (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 May 2023 09:51:55 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C05B2F0
+        for <dmaengine@vger.kernel.org>; Tue, 30 May 2023 06:51:52 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1q3zkW-0001PG-Iu; Tue, 30 May 2023 15:50:56 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1q3zkQ-003tB5-4p; Tue, 30 May 2023 15:50:50 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1q3zkP-009W9H-Ah; Tue, 30 May 2023 15:50:49 +0200
+Date:   Tue, 30 May 2023 15:50:46 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Li Yang <leoyang.li@nxp.com>
+Cc:     Stuart Yoder <stuyoder@gmail.com>,
+        Gaurav Jain <gaurav.jain@nxp.com>,
+        Roy Pledge <roy.pledge@nxp.com>,
+        "Diana Madalina Craciun (OSS)" <diana.craciun@oss.nxp.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Pankaj Gupta <pankaj.gupta@nxp.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "Y.B. Lu" <yangbo.lu@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 0/6] bus: fsl-mc: Make remove function return void
+Message-ID: <20230530135046.oovq5gxzbjfqgzos@pengutronix.de>
+References: <20230310224128.2638078-1-u.kleine-koenig@pengutronix.de>
+ <20230412171056.xcluewbuyytm77yp@pengutronix.de>
+ <AM0PR04MB6289BB9BA4BC0B398F2989108F9B9@AM0PR04MB6289.eurprd04.prod.outlook.com>
+ <20230413060004.t55sqmfxqtnejvkc@pengutronix.de>
+ <20230508134300.s36d6k4e25f6ubg4@pengutronix.de>
+ <CADRPPNQ0QiLzzKhHon62haPJCanDoN=B4QsWCxunJTc4wXwMaA@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v2 12/12] dt-bindings: fsl-dma: fsl-edma: add edma3
- compatible string
-Content-Language: en-US
-To:     Frank Li <Frank.Li@nxp.com>, krzysztof.kozlowski+dt@linaro.org,
-        peng.fan@nxp.com, vkoul@kernel.org
-Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        imx@lists.linux.dev, joy.zou@nxp.com, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, shenwei.wang@nxp.com
-References: <20230529200453.1423796-1-Frank.Li@nxp.com>
- <20230529200453.1423796-13-Frank.Li@nxp.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230529200453.1423796-13-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4dpyuum7f6cyucl4"
+Content-Disposition: inline
+In-Reply-To: <CADRPPNQ0QiLzzKhHon62haPJCanDoN=B4QsWCxunJTc4wXwMaA@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -78,58 +81,85 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 29/05/2023 22:04, Frank Li wrote:
-> Extend Freescale eDMA driver bindings to support eDMA3 IP blocks in
-> i.MX8QM and i.MX8QXP SoCs. In i.MX93, both eDMA3 and eDMA4 are now.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  .../devicetree/bindings/dma/fsl,edma.yaml     | 20 +++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/fsl,edma.yaml b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-> index 5fd8fc604261..eed12687b0c9 100644
-> --- a/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-> @@ -21,6 +21,10 @@ properties:
->        - enum:
->            - fsl,vf610-edma
->            - fsl,imx7ulp-edma
-> +          - fsl,imx8qm-edma
-> +          - fsl,imx8qm-adma
-> +          - fsl,imx93-edma3
-> +          - fsl,imx93-edma4
 
-What are these last two? What is "3" and "4"?
+--4dpyuum7f6cyucl4
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->        - items:
->            - const: fsl,ls1028a-edma
->            - const: fsl,vf610-edma
-> @@ -101,6 +105,22 @@ allOf:
->          reg:
->            maxItems: 2
->  
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            anyOf:
-> +              - const: fsl,imx8qm-edma
-> +              - const: fsl,imx8qm-adma
-> +              - const: fsl,imx93-edma3
-> +              - const: fsl,imx93-edma4
-> +    then:
-> +      properties:
-> +        reg:
-> +          maxItems: 1
-> +        interrupts:
-> +          maxItems: 64
+Hello,
 
-That's odd. What about the names? What about minItems? Anyway, this
-wasn't tested - you will have failures with dtbs_check.
+On Mon, May 08, 2023 at 04:57:00PM -0500, Li Yang wrote:
+> On Mon, May 8, 2023 at 8:44=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Thu, Apr 13, 2023 at 08:00:04AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> > > On Wed, Apr 12, 2023 at 09:30:05PM +0000, Leo Li wrote:
+> > > > > On Fri, Mar 10, 2023 at 11:41:22PM +0100, Uwe Kleine-K=C3=B6nig w=
+rote:
+> > > > > > Hello,
+> > > > > >
+> > > > > > many bus remove functions return an integer which is a historic
+> > > > > > misdesign that makes driver authors assume that there is some k=
+ind of
+> > > > > > error handling in the upper layers. This is wrong however and
+> > > > > > returning and error code only yields an error message.
+> > > > > >
+> > > > > > This series improves the fsl-mc bus by changing the remove call=
+back to
+> > > > > > return no value instead. As a preparation all drivers are chang=
+ed to
+> > > > > > return zero before so that they don't trigger the error message.
+> > > > >
+> > > > > Who is supposed to pick up this patch series (or point out a good=
+ reason for
+> > > > > not taking it)?
+> > > >
+> > > > Previously Greg KH picked up MC bus patches.
+> > > >
+> > > > If no one is picking up them this time, I probably can take it thro=
+ugh
+> > > > the fsl soc tree.
+> > >
+> > > I guess Greg won't pick up this series as he didn't get a copy of it =
+:-)
+> > >
+> > > Browsing through the history of drivers/bus/fsl-mc there is no
+> > > consistent maintainer to see. So if you can take it, that's very
+> > > appreciated.
+> >
+> > My mail was meant encouraging, maybe it was too subtile? I'll try again:
+> >
+> > Yes, please apply, that would be wonderful!
+>=20
+> Sorry for missing your previous email.  I will do that.  Thanks.
 
+Either you didn't apply this patch set yet, or your tree isn't in next.
+Both variants would be great to be fixed.
 
+I have another change pending for drivers/bus/fsl-mc/fsl-mc-bus.c, would
+be great to see these base patches in next first.
 
-Best regards,
-Krzysztof
+Best regards
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--4dpyuum7f6cyucl4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmR1/zUACgkQj4D7WH0S
+/k6wYwf/aFknTYegOQsYhfPj+VXVEPLkfLFdy+0HcdoIWviyACOPr3L1s4X6BPqq
+sTJMW1RtfiDybFhNCMN1eH2tx0+vSuLIzI3rpU+vrob5w86uWd6UzbIMR8uxXPCn
+JN5+JDgQsZd0CZKYyCQOw7b+5KpzPhEHKUbUlyxocvtyBE6HFXoQtjsWQnrrCmHl
+gvroNfuqjlh3zmsw8ELv/tyZj207mMkvap8BWsKhMtbhRXg132eMBIFJ+XMB//he
+A7iG3AkhiRNNdYGFh/KKiRv2l1vHd+6+YmPEM4zRxDCtidaBJTbRL5SSs3AVeYK0
++gXDgOa2Lsf8VzCxRpTavmjQhdDkcA==
+=eJpM
+-----END PGP SIGNATURE-----
+
+--4dpyuum7f6cyucl4--

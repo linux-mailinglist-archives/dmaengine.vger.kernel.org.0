@@ -2,58 +2,67 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A0D9716CC5
-	for <lists+dmaengine@lfdr.de>; Tue, 30 May 2023 20:46:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6267F716E04
+	for <lists+dmaengine@lfdr.de>; Tue, 30 May 2023 21:50:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232034AbjE3Sqh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 30 May 2023 14:46:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36890 "EHLO
+        id S233291AbjE3TuI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 30 May 2023 15:50:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231757AbjE3Sqg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 May 2023 14:46:36 -0400
-Received: from smtp.smtpout.orange.fr (smtp-25.smtpout.orange.fr [80.12.242.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 695C0C9
-        for <dmaengine@vger.kernel.org>; Tue, 30 May 2023 11:46:31 -0700 (PDT)
-Received: from [192.168.1.18] ([86.243.2.178])
-        by smtp.orange.fr with ESMTPA
-        id 44MPqYngtbOsk44MPqezJs; Tue, 30 May 2023 20:46:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-        s=t20230301; t=1685472384;
-        bh=wAisxzg8dfWOsHsZpM0v+nS0EU1aAoqe1cA6dlcGUok=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To;
-        b=cxt0b70ongh8rsgRilK/5wy7YAeEmoJ6BLvRFuDAttIFdCTyIEADSZEsZ9Pt/f9gp
-         /8DhWc68KV2UcjVYvivWz3kq7O1O5X9Fvi+CTn0I+rEO+d1jf933J2/xdcymkleJIs
-         RGan+1ir9Dzt6Z2N2nRYOgW+dALxxgKqJyoZ08xKxpyGFNSYD55OYnqZuVmjkitpp3
-         OkzZbMEnIRnMELQqRlpZvf5Rq/ylVz+Wt/if9U9hWAXQpfz3S6DnWFAg16Y0fgONQI
-         riQDrtvrRSoEXkaj3RRjcnrJI0HLg8cxj48aDPbFtEAeUBTYdtjAf4VinNLHypXG1o
-         KGXxJF0XHpo/Q==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 30 May 2023 20:46:24 +0200
-X-ME-IP: 86.243.2.178
-Message-ID: <1335982c-70ea-6af2-19cf-73a4332ae510@wanadoo.fr>
-Date:   Tue, 30 May 2023 20:46:21 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] dmaengine: idxd: No need to clear memory after a
- dma_alloc_coherent() call
-To:     Bernd Petrovitsch <bernd@petrovitsch.priv.at>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        with ESMTP id S233478AbjE3TuH (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 May 2023 15:50:07 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9328CE8;
+        Tue, 30 May 2023 12:50:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685476206; x=1717012206;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=0n3ZEj8ND8L8MlrI41iz7g/Mm8JdRRHHjctjs0qDPKc=;
+  b=C2dF7ZOlWju8cBZoVUZf1kXy62BABJi9lyae/Ad48QYgkFalYs+3X+R0
+   vPEmbyD/afOZEjj/cZg7CRMr4w6AmzA2xdMhI/YH55eIayneqHQAvhxVP
+   ynR5dlU/3bRBEDqLaat/8iuJK1N7JAfBTSWJhgOdxkEyQLwHXgLAOymjz
+   c32Z2slxsmQ0k0foEOeaeNPAmxGAWqz511EXAUnbFvcdMw41UgMsa/Qqe
+   nB9CO4NfmImqiLIV1jzNB9U9Togvj14Y7mKpgU4SwzTQ67TNL4TPSEBAc
+   wuU2VgBw4VUGyrAVovwq2THYvV25YWl5Lb5c2ao6HcsagXN15KzdaRXmv
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="352528600"
+X-IronPort-AV: E=Sophos;i="6.00,205,1681196400"; 
+   d="scan'208";a="352528600"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2023 12:50:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="771691794"
+X-IronPort-AV: E=Sophos;i="6.00,205,1681196400"; 
+   d="scan'208";a="771691794"
+Received: from lleonram-mobl.amr.corp.intel.com ([10.212.50.19])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2023 12:50:04 -0700
+Message-ID: <1709001c3cba07ab058b602d628edff5ab72ada4.camel@linux.intel.com>
+Subject: Re: [PATCH v5 13/15] crypto: iaa - Add support for default IAA
+ 'canned' compression mode
+From:   Tom Zanussi <tom.zanussi@linux.intel.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     davem@davemloft.net, fenghua.yu@intel.com, vkoul@kernel.org,
+        dave.jiang@intel.com, tony.luck@intel.com,
+        wajdi.k.feghali@intel.com, james.guilford@intel.com,
+        kanchana.p.sridhar@intel.com, giovanni.cabiddu@intel.com,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
         dmaengine@vger.kernel.org
-References: <f44be04317387f8936d31d5470963541615f30ef.1685283065.git.christophe.jaillet@wanadoo.fr>
- <1e87f3fa-58c5-d47f-3335-cd0a554b3144@petrovitsch.priv.at>
-Content-Language: fr, en-US
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <1e87f3fa-58c5-d47f-3335-cd0a554b3144@petrovitsch.priv.at>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Date:   Tue, 30 May 2023 14:50:03 -0500
+In-Reply-To: <ZG6tun6TOYKr1nxK@gondor.apana.org.au>
+References: <20230516215009.51794-1-tom.zanussi@linux.intel.com>
+         <20230516215009.51794-14-tom.zanussi@linux.intel.com>
+         <ZG3dpbPlRXbF2ZxN@gondor.apana.org.au>
+         <fa90e73483b866a0622ad077f4af16978d1c1c8d.camel@linux.intel.com>
+         <ZG6tun6TOYKr1nxK@gondor.apana.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.1-0ubuntu1 
+MIME-Version: 1.0
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,26 +70,44 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Le 30/05/2023 à 17:54, Bernd Petrovitsch a écrit :
-> On 28/05/2023 16:11, Christophe JAILLET wrote:
->> dma_alloc_coherent() already clear the allocated memory, there is no need
->> to explicitly call memset().
-> 
-> Hmm, so wouldn't be dma_zalloc_coherent() a better name for the function?
-> 
-> Kind regards,
->      Bernd
+Hi Herbert,
 
-Hi,
+On Thu, 2023-05-25 at 08:37 +0800, Herbert Xu wrote:
+> On Wed, May 24, 2023 at 10:58:54AM -0500, Tom Zanussi wrote:
+> >=20
+> > Yes, I think you're right.=C2=A0 The reason we did it this way was that
+> > we're expecting to add more modes, such as 'dynamic' and/or
+> > 'canned-
+> > dynamic' etc.
+> >=20
+> > But I don't see a reason we couldn't just register them all and
+> > have
+> > the user choose using the algorithm names, especially if that's the
+> > way
+> > crypto users expect things to work.
+>=20
+> Are these modes compatible with the deflate algorithm, that is,
+> can the generic deflate uncompress the output of these modes and
+> vice versa, can these modes uncompress the output of the generic
+> algorithm?
+>=20
+> If they're all compatible, then you should just use the "deflate"
+> algorithm name and use different driver names to differentiate them.
+> But if they're not compatible then the modes should have distinct
+> algorithm names.
 
-No strong opinion about it.
-It is not malloc either !)
+Canned mode is not compatible with generic deflate.  Fixed mode is, but
+due to history-window limitations in the hardware, only for buffers <=3D
+4k, or that have been compressed using a <=3D 4k history window.
 
-When dma_zalloc_coherent() has been deprecated (see [1]), for some 
-reason, it was decided to keep the "alloc" version.
+So it sounds like we need to use distinct algorithm names, which I'll
+add in the next version.
 
-CJ
+Thanks,
+
+Tom=20
 
 
-[1]: 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/include/linux/dma-mapping.h?id=06d4dd2f2ce1cdb625f77c0676d5af6ba310c01d
+>=20
+> Cheers,
+

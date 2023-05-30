@@ -2,192 +2,134 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D525771538B
-	for <lists+dmaengine@lfdr.de>; Tue, 30 May 2023 04:20:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F376571611A
+	for <lists+dmaengine@lfdr.de>; Tue, 30 May 2023 15:08:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229889AbjE3CUG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 29 May 2023 22:20:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56328 "EHLO
+        id S232544AbjE3NIz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 30 May 2023 09:08:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229631AbjE3CUF (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 29 May 2023 22:20:05 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01CFBF3;
-        Mon, 29 May 2023 19:20:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685413204; x=1716949204;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lFYn7kOvp6cOxyKCTax16qx7apM/MziGizg65AamduI=;
-  b=iDxsoZTFnXHDeTNNpTp+n9BFbS2no/ELA6LrZSvor+eGryRbf+AcFbP7
-   wU7QJRcPeS8laSRX1ikU6Vx+kJMh8E0NSRYljHQmfJBlgsJhPWNHFjcGn
-   7d+88Batd+N8TVllkVJJn485ByC1bPPTxsauSK0LbGUr8e2e/358zcZO7
-   1UnaZclohYkvF/CZitm6UgV7bGbyeIbyNV2jVAYm17Ibi0rx02Nk7P7cb
-   pqfuBIZouOzLR0AWA+ef/SMPi6md9pmn3jcx9YwgOTeQLvwJ0vYKyvXFN
-   aKrFeyUBdTQcexAeaJGiShjPq1vqsGXywNpDNQOzkx/RwXAmSBozIqUb8
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="418284089"
-X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
-   d="scan'208";a="418284089"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 19:20:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="880595918"
-X-IronPort-AV: E=Sophos;i="6.00,201,1681196400"; 
-   d="scan'208";a="880595918"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
-  by orsmga005.jf.intel.com with ESMTP; 29 May 2023 19:19:58 -0700
-Message-ID: <ba26db48-4102-d6bc-add8-5449423158ca@linux.intel.com>
-Date:   Tue, 30 May 2023 10:19:05 +0800
+        with ESMTP id S230289AbjE3NIy (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 May 2023 09:08:54 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 339B0A1
+        for <dmaengine@vger.kernel.org>; Tue, 30 May 2023 06:08:52 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-51456392cbbso8613898a12.0
+        for <dmaengine@vger.kernel.org>; Tue, 30 May 2023 06:08:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685452130; x=1688044130;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jZXIY4rtAXwpW+oWkjV46RQdYU5hKm1yGrqNPmpHKfU=;
+        b=wEi+COhB4saE6t3QX0aBzZRVTpQ7odjIOZ2E4o7tTiZl8AnovhqRf7Bodd0DYdqUIw
+         3dbjTQa6AJYb8q6GdY7xBc4lmTXn9ivsYko6Z48h96ql6mvKhHdDuExxPgKJ/D9g9xw4
+         uxr+SinEI0jqUKRfePH5ukhM/HkBzMk6BfN2S4rtvBv4Pvp7bXxqx+WgBlKTU8ZU8V9g
+         5SsksCPlm6QBoyHDHok8s/Occz5ETdfedATS1HqQIHw4M5QgjmL3RGk6CtzENlKtAc7A
+         z55iGBXDsKcrzb5QbuAlCN89iZDnLPTdi/PUgvEQhUGH7OXFKR4ImPvovl9fVz3h+sFe
+         XHIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685452130; x=1688044130;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jZXIY4rtAXwpW+oWkjV46RQdYU5hKm1yGrqNPmpHKfU=;
+        b=Vv8qxCc2x7gvee4z4xxXoFfh7xOBDG9JjDxDfygZ5tHGk9WdZoIM3iEM8iElyyYnCc
+         IHBBqAbTHY8r2RLYeGAoyMBANhx1VBeAY8gePH57QktG0XWi9b+8fwzuca57RhbnO2Uh
+         s7OBl2xhEVA/Um3bqUxd1Od92UPTsrdrkzqFRNDkQXi4YGfzIQZusOVc73Nho/NvhVzR
+         5OZcpUo0pn+cVH+H5QLJWSMl0O/LFJtNzbaLg9X+Sgjw3Af6NzLBMtsqBiuHY0Q0T+7+
+         prOc/2dxbMBHSMAgoHVouncbWtRu973ltqosAHXUjZL+TGFmZCe2buy/erFeN8P0jsKr
+         RaHA==
+X-Gm-Message-State: AC+VfDy34zs2Twlt0Iqvk078APEAjGO/f5UW7AjvakpVLZe/fZR3LbAd
+        GF1F0vdptUI8W1uvWBB17xhxeQ==
+X-Google-Smtp-Source: ACHHUZ4RM/uBVqPWi+sisdgqZOaN+mYhKX2B80COqCOcYP5pLPymJxYK4pUbM9xiPei6arPXAmPDqA==
+X-Received: by 2002:a17:907:7da0:b0:96f:b40a:c85f with SMTP id oz32-20020a1709077da000b0096fb40ac85fmr10368239ejc.23.1685452130647;
+        Tue, 30 May 2023 06:08:50 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.199.204])
+        by smtp.gmail.com with ESMTPSA id oy11-20020a170907104b00b0096f7e6d0063sm7309682ejb.75.2023.05.30.06.08.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 May 2023 06:08:50 -0700 (PDT)
+Message-ID: <65e7b6df-b83b-2d7c-5093-f5822050827a@linaro.org>
+Date:   Tue, 30 May 2023 15:08:48 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Cc:     baolu.lu@linux.intel.com, LKML <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux.dev, Joerg Roedel <joro@8bytes.org>,
-        dmaengine@vger.kernel.org, vkoul@kernel.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Zanussi, Tom" <tom.zanussi@intel.com>,
-        narayan.ranganathan@intel.com
-Subject: Re: [PATCH v6 3/4] iommu/vt-d: Add set_dev_pasid callback for dma
- domain
+Subject: Re: [PATCH v2 12/12] dt-bindings: fsl-dma: fsl-edma: add edma3
+ compatible string
 Content-Language: en-US
-To:     Jason Gunthorpe <jgg@nvidia.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-References: <20230519203223.2777255-1-jacob.jun.pan@linux.intel.com>
- <20230519203223.2777255-4-jacob.jun.pan@linux.intel.com>
- <ZHUBoBev2Vzp8nGF@nvidia.com>
-From:   Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <ZHUBoBev2Vzp8nGF@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     Frank Li <Frank.Li@nxp.com>, krzysztof.kozlowski+dt@linaro.org,
+        peng.fan@nxp.com, vkoul@kernel.org
+Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        imx@lists.linux.dev, joy.zou@nxp.com, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, shenwei.wang@nxp.com
+References: <20230529200453.1423796-1-Frank.Li@nxp.com>
+ <20230529200453.1423796-13-Frank.Li@nxp.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230529200453.1423796-13-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 5/30/23 3:48 AM, Jason Gunthorpe wrote:
-> On Fri, May 19, 2023 at 01:32:22PM -0700, Jacob Pan wrote:
+On 29/05/2023 22:04, Frank Li wrote:
+> Extend Freescale eDMA driver bindings to support eDMA3 IP blocks in
+> i.MX8QM and i.MX8QXP SoCs. In i.MX93, both eDMA3 and eDMA4 are now.
 > 
->> @@ -4720,25 +4762,99 @@ static void intel_iommu_iotlb_sync_map(struct iommu_domain *domain,
->>   static void intel_iommu_remove_dev_pasid(struct device *dev, ioasid_t pasid)
->>   {
->>   	struct intel_iommu *iommu = device_to_iommu(dev, NULL, NULL);
->> +	struct dev_pasid_info *curr, *dev_pasid = NULL;
->> +	struct dmar_domain *dmar_domain;
->>   	struct iommu_domain *domain;
->> +	unsigned long flags;
->>   
->> -	/* Domain type specific cleanup: */
->>   	domain = iommu_get_domain_for_dev_pasid(dev, pasid, 0);
->> -	if (domain) {
->> -		switch (domain->type) {
->> -		case IOMMU_DOMAIN_SVA:
->> -			intel_svm_remove_dev_pasid(dev, pasid);
->> -			break;
->> -		default:
->> -			/* should never reach here */
->> -			WARN_ON(1);
->> +	if (!domain)
->> +		goto out_tear_down;
->> +
->> +	/*
->> +	 * The SVA implementation needs to stop mm notification, drain the
->> +	 * pending page fault requests before tearing down the pasid entry.
->> +	 * The VT-d spec (section 6.2.3.1) also recommends that software
->> +	 * could use a reserved domain id for all first-only and pass-through
->> +	 * translations. Hence there's no need to call domain_detach_iommu()
->> +	 * in the sva domain case.
->> +	 */
->> +	if (domain->type == IOMMU_DOMAIN_SVA) {
->> +		intel_svm_remove_dev_pasid(dev, pasid);
->> +		goto out_tear_down;
->> +	}
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../devicetree/bindings/dma/fsl,edma.yaml     | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
-> But why don't you need to do all the other
-> intel_pasid_tear_down_entry(), intel_svm_drain_prq() (which is
-> misnamed) and other stuff from intel_svm_remove_dev_pasid() ?
+> diff --git a/Documentation/devicetree/bindings/dma/fsl,edma.yaml b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
+> index 5fd8fc604261..eed12687b0c9 100644
+> --- a/Documentation/devicetree/bindings/dma/fsl,edma.yaml
+> +++ b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
+> @@ -21,6 +21,10 @@ properties:
+>        - enum:
+>            - fsl,vf610-edma
+>            - fsl,imx7ulp-edma
+> +          - fsl,imx8qm-edma
+> +          - fsl,imx8qm-adma
+> +          - fsl,imx93-edma3
+> +          - fsl,imx93-edma4
 
-Perhaps,
+What are these last two? What is "3" and "4"?
 
-	if (domain->type == IOMMU_DOMAIN_SVA) {
-		intel_svm_remove_dev_pasid(dev, pasid);
-		return;
-	}
+>        - items:
+>            - const: fsl,ls1028a-edma
+>            - const: fsl,vf610-edma
+> @@ -101,6 +105,22 @@ allOf:
+>          reg:
+>            maxItems: 2
+>  
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            anyOf:
+> +              - const: fsl,imx8qm-edma
+> +              - const: fsl,imx8qm-adma
+> +              - const: fsl,imx93-edma3
+> +              - const: fsl,imx93-edma4
+> +    then:
+> +      properties:
+> +        reg:
+> +          maxItems: 1
+> +        interrupts:
+> +          maxItems: 64
 
-?
+That's odd. What about the names? What about minItems? Anyway, this
+wasn't tested - you will have failures with dtbs_check.
 
-> 
-> There still seems to be waaay too much "SVM" in the PASID code.
 
-This segment of code is destined to be temporary. From a long-term
-perspective, I hope to move SVA specific staffs such as mm notification,
-prq draining, etc. to the iommu core. They are generic rather than Intel
-iommu specific.
-
-After the code consolidation done, the code here will become simpler and
-appealing. We just need to tear down the pasid entry.
-
-> 
->> +static int intel_iommu_set_dev_pasid(struct iommu_domain *domain,
->> +				     struct device *dev, ioasid_t pasid)
->> +{
->> +	struct device_domain_info *info = dev_iommu_priv_get(dev);
->> +	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
->> +	struct intel_iommu *iommu = info->iommu;
->> +	struct dev_pasid_info *dev_pasid;
->> +	unsigned long flags;
->> +	int ret;
->> +
->> +	if (!pasid_supported(iommu) || dev_is_real_dma_subdevice(dev))
->> +		return -EOPNOTSUPP;
->> +
->> +	if (context_copied(iommu, info->bus, info->devfn))
->> +		return -EBUSY;
->> +
->> +	ret = prepare_domain_attach_device(domain, dev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	dev_pasid = kzalloc(sizeof(*dev_pasid), GFP_KERNEL);
->> +	if (!dev_pasid)
->> +		return -ENOMEM;
->> +
->> +	ret = domain_attach_iommu(dmar_domain, iommu);
->> +	if (ret)
->> +		goto out_free;
->> +
->> +	if (domain_type_is_si(dmar_domain))
->> +		ret = intel_pasid_setup_pass_through(iommu, dmar_domain,
->> +						     dev, pasid);
->> +	else if (dmar_domain->use_first_level)
->> +		ret = domain_setup_first_level(iommu, dmar_domain,
->> +					       dev, pasid);
->> +	else
->> +		ret = intel_pasid_setup_second_level(iommu, dmar_domain,
->> +						     dev, pasid);
-> 
-> It would be nice if the different domain types had their own ops..
-
-Good suggestion!
-
-We can add a domain ops in the Intel domain structure which is
-responsible for how to install an Intel iommu domain onto the VT-d
-hardware.
-
-It worth a separated refactoring series. Let me do it afterward.
 
 Best regards,
-baolu
+Krzysztof
+

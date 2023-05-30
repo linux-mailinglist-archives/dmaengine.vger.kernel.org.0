@@ -2,127 +2,104 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 15702716A70
-	for <lists+dmaengine@lfdr.de>; Tue, 30 May 2023 19:08:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D323A716C85
+	for <lists+dmaengine@lfdr.de>; Tue, 30 May 2023 20:29:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231207AbjE3RIk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 30 May 2023 13:08:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42248 "EHLO
+        id S233404AbjE3S3w (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 30 May 2023 14:29:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230075AbjE3RIj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 May 2023 13:08:39 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2061.outbound.protection.outlook.com [40.107.92.61])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68236A3;
-        Tue, 30 May 2023 10:08:38 -0700 (PDT)
+        with ESMTP id S229997AbjE3S3v (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 May 2023 14:29:51 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2060.outbound.protection.outlook.com [40.107.93.60])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 793AEA7;
+        Tue, 30 May 2023 11:29:50 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Bx5kHwLXiQo0WSVUVTLtfn6HTP8p1GEATXOUtozYcevx+U9etdhULEnekooPvMoun7mTW7QGeNDo/3PXFUKkkWyqwKq1wsXC1ejOfdZv2aDcSXXVc1SxrG1phyQ20OyTTU2KPJArPBPND0CaIwJmcWIU9qFl98F+7uDarwL2H693z3XZtDWtmNWr+EMgMvoU030dAyGzZYIYTh9A8S8p+0i1Oo92AqBtA66PeONFRyiKPB2HKbSTfcrZ3QSHOO1F0ZycQS4Q8Rr71wjlf0kA8kVHOrWzTVGUfnMfySRxL2t131qf/NQ4SMncZzXM1tiTTtaJ5k9yt8mhMV7QbZFxmg==
+ b=LU+Nrv/AoAs7VcDPcwKSFSdJmo4NB/nlaAWjVKWkDXXJ7uguYFKYSb+TnfLclore/Isqpt+1tvOtxD/FLA592L5LyoRxoB9rV7USz6FDLu10hmilPtfp3nuSur0w0tXoIv6lRIiiVRQTpuxGXA24ynfLM0NUqH3BOR28oo30tJg3u2AUjPNtSzcw8KRQ+1akRd19l4ubp5ImYyui6Y/bv/Yaz03pNnN4g53FISlyUT72Ft8RIl9WPjSKvbOxic0fs+zAc7lEavQH3mo1bxABqznPFNkRUmVHiiYfi+pnuju7H+j26nLB96IhGM6uQqE3I70cmkQ1fHkR9Ef2ifT0bA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FnQ+otSSfLDIG5Qm67owXe7vXRLXAAgVbPNUL0lVrik=;
- b=JOhvtVQQAALdL17dEAdUHyDQ6viXW44css8z1OfpyLMO58tgqZh1itQrfRyQ+3ZeVKncSbRA/DsDxdQ5rKg9obfS3OWGJmg8wJFPetHbsY/TAHKWA/U5laVVHxwysKEKCG5yJmnE5i8iG+b1MKXrwZGkU0u1gJpVIHYHCk+qnKBjZhwsq/KRMoSLckDv17fYvXEjsHzxO07XByN3o2qGinG0a8TJZj3NBcl7fqMb7h7Ve3xzjYRu/WmwkmX+ItzrBgCOcqNAEqpy50mZOJyyR1d1Kv6m/nLwn9ENiy3XDFLM1KI7P1gQHS6a2EiVx3X7zB8Tgfyzmmi4nsL1yr4hNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=Y5oD418VbRmlQAmUNtXtcptFbivtL+KqzqWHiwV1uis=;
+ b=KAJoBJ64dwOmeSvOxOAjIgbd5mMkuoLCeZn4QJRi4Iv73ZIKYkiWVL2mXulUp+stNwRTCVt48Sx+ZbAiMhDc559/MxksPR0opg5pIV76xvNAFmbCBEix3VYW38BMzCcyxUj0og8E30bZPxQcmZhbA0P1+VXc3/7P1UpcgBntFGtToE3FTg5clbfsmPcpgidRFlzpB+6iUzY2mi+FyBFZaCTlr7i2t2q/ZFtXJrgduFbDN972mF8D2jVYu89C0ANobFBSHJRUfmazvWKsPNgF8kG2wDN3fa9JRXpTyYFzfT4ujfovjmqMCSTNQ7AQEItB/pTzFCRzLFqhYNx0r8s73A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=wanadoo.fr smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FnQ+otSSfLDIG5Qm67owXe7vXRLXAAgVbPNUL0lVrik=;
- b=DgwHVI6QDbnoleF3Xo+qNu2RKF2oTV5ONqM5Nmd10g+OTIwJ+au8WcFVsUhi/h4UF8391ED/moJBTnAaKNwh37Izmo+AyIF6KoocXpBdWcfdRRujk7jPc3RDvUuHfn6RgAsSYmYb9ewrzhXD3hPw5LK0nzgRPmAkwPIipMnpSSKOYcoRiVQL7RM8oiMOxbXrdKj0FHiSk4hsU9gXhCf7Z0zdL9AosGnvMFil9ogA7u6ERSUd9EYTHgCkROi7H00nHKb1aRDS94ec9a5IsLC9vuUBbfon89MxWCwMi4YLGV2pwbkrTOJXzyGkgzf0m4BbV8s4hkObLsanF9gZRaJVzQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by PH7PR12MB8054.namprd12.prod.outlook.com (2603:10b6:510:27f::15) with
+ bh=Y5oD418VbRmlQAmUNtXtcptFbivtL+KqzqWHiwV1uis=;
+ b=mdvh9hEVlbgtknno/Jmc+LNXDKq9SykbO3r+83KpfN9MF5PW56dl9O5dIybojQy5lTMcReiQY1+bJxUJF09byGixhgUJ86gbDvlGi4zSSXxv6QyXXn2phDiOvOQD9gkW1tUEJLKAfe2ySvAQq6V10IJVglFIuSBHsJ553vRcCpc=
+Received: from SJ0PR13CA0070.namprd13.prod.outlook.com (2603:10b6:a03:2c4::15)
+ by IA1PR12MB7517.namprd12.prod.outlook.com (2603:10b6:208:41a::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.23; Tue, 30 May
- 2023 17:08:36 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::f7a7:a561:87e9:5fab]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::f7a7:a561:87e9:5fab%6]) with mapi id 15.20.6433.017; Tue, 30 May 2023
- 17:08:36 +0000
-Date:   Tue, 30 May 2023 14:08:34 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Zanussi, Tom" <tom.zanussi@intel.com>,
-        "Ranganathan, Narayan" <narayan.ranganathan@intel.com>
-Subject: Re: [PATCH v7 3/4] iommu/vt-d: Add set_dev_pasid callback for dma
- domain
-Message-ID: <ZHYtkioNR2YfC18C@nvidia.com>
-References: <20230523173451.2932113-1-jacob.jun.pan@linux.intel.com>
- <20230523173451.2932113-4-jacob.jun.pan@linux.intel.com>
- <BN9PR11MB52760139A4844C8DF0EE1BE98C469@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB52760139A4844C8DF0EE1BE98C469@BN9PR11MB5276.namprd11.prod.outlook.com>
-X-ClientProxiedBy: YT4PR01CA0437.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:10d::10) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
+ 2023 18:29:48 +0000
+Received: from CO1PEPF000042AB.namprd03.prod.outlook.com
+ (2603:10b6:a03:2c4:cafe::4c) by SJ0PR13CA0070.outlook.office365.com
+ (2603:10b6:a03:2c4::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.21 via Frontend
+ Transport; Tue, 30 May 2023 18:29:47 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ CO1PEPF000042AB.mail.protection.outlook.com (10.167.243.40) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6455.18 via Frontend Transport; Tue, 30 May 2023 18:29:47 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 30 May
+ 2023 13:29:46 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 30 May
+ 2023 13:29:46 -0500
+Received: from [172.19.74.144] (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
+ Transport; Tue, 30 May 2023 13:29:45 -0500
+Message-ID: <aa375470-6297-0a8f-c520-7c3481520990@amd.com>
+Date:   Tue, 30 May 2023 11:29:45 -0700
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH V1 QDMA 1/1] dmaengine: amd: qdma: Add AMD QDMA driver
+Content-Language: en-US
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Nishad Saraf <nishads@amd.com>, <max.zhen@amd.com>,
+        <sonal.santan@amd.com>, <nishad.saraf@amd.com>
+References: <1685119795-11729-1-git-send-email-lizhi.hou@amd.com>
+ <1685119795-11729-2-git-send-email-lizhi.hou@amd.com>
+ <41f58a00-1ab5-3eae-0e32-0f6e05282cf1@wanadoo.fr>
+From:   Lizhi Hou <lizhi.hou@amd.com>
+In-Reply-To: <41f58a00-1ab5-3eae-0e32-0f6e05282cf1@wanadoo.fr>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|PH7PR12MB8054:EE_
-X-MS-Office365-Filtering-Correlation-Id: d95cecad-4f16-4bf4-38c9-08db61308141
+X-MS-TrafficTypeDiagnostic: CO1PEPF000042AB:EE_|IA1PR12MB7517:EE_
+X-MS-Office365-Filtering-Correlation-Id: ed43ebfe-f927-4390-7977-08db613bd8f3
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: CGMWSPrPL8LTHkleQl7CMheaZptbeIRw3CADJvIuPo03aGQK1S08NFbzrTvAzxoJS04JlLqaYTBmaEsNLa7YL6Cb0CtKe0XDCUzmliDkoNWXYOEh6I01pCUSEmUYUXJ/lI4aE9UZ3JYLX2dNRgjM4VEBBDCBuE464s6bGLVQ/jKcXCw3d0gLLKiHNrKRHzCxjkdb7QeDxsZ1OEroSdEMubbXb0ra7BKwPItcjAbkySr8SWE7s9O7pzx5WMlj/GQNluHWDhVvXj7ULiUY1K21gSB3pGjKFE7l6t5SVyE/u1FKF82Ay7O7gUzByoTMhY2TjkV5+Moh7k0SsbbvCcxgI2K3Vz7CfMVmydYbmIEYre4gFHk4D3P7SOGZdoEa+Upd4MObT4JsI0+VoChnjlI0LeMLNS7Py4Pj6U2qOlTHCeRkbLSzqPJ2ZigdBW7XYre9914BpJUeDNtV7w1Z2UDANLRmD4VySX2+PPAnpB/OWNgDQ8mElXWFAHqAIKQtuunRS/h6VARdfQFJaUwBq3SCv/RRKc7lYFqbiXse0ltDMAeJ8NXZUFEx2ClFckUXyuEc
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(39860400002)(396003)(366004)(376002)(136003)(451199021)(86362001)(36756003)(478600001)(54906003)(4326008)(316002)(66946007)(66556008)(66476007)(6916009)(6486002)(8936002)(8676002)(5660300002)(41300700001)(7416002)(2906002)(38100700002)(2616005)(6512007)(6506007)(26005)(186003)(83380400001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?29OcSqrffcCtpINESYyUeWZL9pkQZa/vb60L2ypZ6a7BtW2YU+tfCjr6438v?=
- =?us-ascii?Q?1Mqbi6BmZJ+HuWgF9JjFowZ0p6O9+PKSP4EEdysMDjuzbKNx/Ce8jQ+BGLjq?=
- =?us-ascii?Q?Bu1m4oROXb6TSo/YwSGgSjuEjVk5t5WVpCehIprHXya9SBo/PRytxxJgqtdG?=
- =?us-ascii?Q?NaqtGad+X1KO2hAC5Kr1l+YAXnr/UotawaW38pGO8Nh6rWK7AWOR6mDuGbgz?=
- =?us-ascii?Q?sGSCEz5TZFTcWBOUeEPnwr0UfRsB9BYThIQu/d/CuPhnTD0dcCn5JUEZ01Vt?=
- =?us-ascii?Q?Ho1mND144F2VY5qq9Q1HF5dAKFXg3wkADtr6TcJTxUajQ5lXUAfwvp91Qoah?=
- =?us-ascii?Q?Db3NmDWkO4pTaRcF68YFVNsjZjyLloeXygs+8b9pwscLnCY5UQRMgTVhvrp8?=
- =?us-ascii?Q?pYIKukYWe4Gx6jHXKeilLqNTNHZIfykgEWwyokH0QpfPch2yZvs0mh7Re0ro?=
- =?us-ascii?Q?N704BMjt3ETo+5uQFqMtV5+a9TFwIrDw3i5L9x714RBDhlYh5Jx/zwXM8rkD?=
- =?us-ascii?Q?jpf7JZGnVQbBeluNLTADLY/oAmJFjnZwr2o5gdjAxIbreN2ZJLMEcHdf98Bs?=
- =?us-ascii?Q?W8F2NeOZnyyCFMpa9s3BZYXyrWjHVCW3slDM7n5ldo0SS44TjCK9Bua0CRKs?=
- =?us-ascii?Q?xT437M7vi/PuLF2b7EKIXDUt/txatZY3G6nCDk4UDNqWEpPVLNkeWU1lLNNE?=
- =?us-ascii?Q?dQ18U9CEywgD/1WaDPzKGFHwGelC42vCHt0Q62/WlELjloLB4WsI/Zyttx/L?=
- =?us-ascii?Q?Ebovbxck7EZe4vHKhb2/Bdh93gGZ5Qmc05sNW/bCdaTQfu/DWK9pBKBYcRU7?=
- =?us-ascii?Q?O5U1DccFCFMWOMyuYZ+FM8BBYTX+rEPjNjEy7D++SsBbEHcMt28e1sTCJncM?=
- =?us-ascii?Q?aFlDFg97zZlvtDHn1+e4CyHeSYXArRN6POkd6fR/1SWE9gp4cQljI4AP1VZO?=
- =?us-ascii?Q?2ppvnSPn2jmS3AuWUsHM5ZN0ZtacedlTePps78KuILhbG946NQvSsz3OpqQ7?=
- =?us-ascii?Q?VBvFhY3Xj2p0a8jQR+XtTETdkGGBY+2GqY3DCr1xK4f+fpYHAsEGmg7bIwx8?=
- =?us-ascii?Q?r6uiaCGVFNN+uR2Ew1PH6d+mcrB33nqm6fiIhFGV6t3osjTEsGms7N3d/8Zl?=
- =?us-ascii?Q?USCxXK8JeEO1vFwTzNdJhgxj5mDULsooEyyf/dwLwHgNtu2N/rQhPU5K0DH+?=
- =?us-ascii?Q?o/F7r7sQAJudRyFbqwKzVUCDLUFyDUZTqMBRdxKiCM2fRl2Jw7U9jFaey6+j?=
- =?us-ascii?Q?aSgKRGFcxlZ3te6NtsK9Vlu7BEJZKqCeB7LfdgaFum1GrCG1dNIpq5Yil+oH?=
- =?us-ascii?Q?haUerbHaYdEAcIIJhF8eCY9DABkw6L0s92Nz8cYZO5+8BQMoe8j2dLY7AGKP?=
- =?us-ascii?Q?ci+R3p/P9XqyMRciyKEXN9Irgmb07dl8gKKt7IIWm5inPZAc35TCEtCNADYP?=
- =?us-ascii?Q?364FdBIS9FF1Mn2BABA20tr7zhDu8nsvWgGIFPS8qi1OMDQUR6rHSFUl0oKP?=
- =?us-ascii?Q?8b1YnGVXbDZvSgRBj6Sew77UP8lJKAZ1d/ew3KrCqiGiq8og1NBTpcTds47U?=
- =?us-ascii?Q?ZAhxkmweCbAEoEQ9z+nKu3pHzG+eL5ddp1hpevMv?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d95cecad-4f16-4bf4-38c9-08db61308141
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2023 17:08:35.9689
+X-Microsoft-Antispam-Message-Info: Me0MhcJuxhchop85UQRtGSXcA5deIt8+2XhQrknLkPpzaRqorVU/LZNKO19RQGcn5UUb9eLqudIDxZGFoc8b0MKhUIdfQzSIoQL5p922zmY134UMFEE6m5K5Lpdf+EWIvNJTn2It7Q4lMSGhs1IdwgPr4SrEwZZXVsw8OLzhXFqY/9RpXd4g7Mp+EiI25Tm3+P8aaqarMj3E41N0nvfcz9wgseyXKsktM9I41oNh/UTNdszkBh0jMZ8erQHh8Tn/XAH/ztHjLFZlXH9f/DLCFGUkqvMX/EWGDPC9pq4Ip9LO9WxnJMwiCRE5D+G1DchCMY9e+/CzaWYmsUlZIjUB2TNJldfTiNoiUXaM4I1p83ReFYiDr3BTUP6cumB34YgrNBmhTtEOLutlcJkki9b6ijZdi04MdFg+YNAX1S9YYUORUMfAD0XG/MrtIki9xYKrZqRobB1VC618gCbZHv08v4N7P3lFsvNt5mWVJ1YtfEG+96R6vV+EO1aqP+x3rWIkQrxOwBSmhHy0ATzBwaGpfP+7hk5M324bCc0vJ9w5FUJo1DRLerO6ukYSFXXlBkPGoG0DsVgpoe5hi0Z2P+5rMRfw0vgw8fPzXfAo9HoMcps7s9Ocuy5evsg+siMiDYovVoTyLaT+w2HeEzhWhKc25C+UEAts0wIeYVo43E4puZ2k2omdg/92iffXhUHl8X4CYqbPyH119T3K3JlV+R26+NCLTPFyHSWql6IHDWPs5yqBCndXCmUjCWQIsifoBLLhjdoYP9NwX6PZQns8hiy3uwzEY7a97yuYVfXKOoh9IwNTEWDAtRhWvLM5owZaV4QCcWq66wHoYhmyxwDUpuFt3w==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(136003)(346002)(376002)(39860400002)(396003)(451199021)(46966006)(40470700004)(36840700001)(186003)(26005)(53546011)(316002)(2906002)(36756003)(40480700001)(40460700003)(5660300002)(41300700001)(966005)(8676002)(44832011)(8936002)(478600001)(82740400003)(81166007)(356005)(36860700001)(31686004)(336012)(54906003)(110136005)(16576012)(426003)(4326008)(31696002)(82310400005)(86362001)(66574015)(47076005)(70586007)(2616005)(83380400001)(70206006)(36900700001)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2023 18:29:47.2450
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rd6WOy694REP123c78GQdXCuNO3BMob1ae0pERCKxFpc10G8TnYNAY6JGrnv4uJK
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8054
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed43ebfe-f927-4390-7977-08db613bd8f3
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF000042AB.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7517
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
         version=3.4.6
@@ -132,35 +109,115 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-> > +	/*
-> > +	 * The SVA implementation needs to stop mm notification, drain the
-> > +	 * pending page fault requests before tearing down the pasid entry.
-> > +	 * The VT-d spec (section 6.2.3.1) also recommends that software
-> > +	 * could use a reserved domain id for all first-only and pass-through
-> > +	 * translations. Hence there's no need to call
-> > domain_detach_iommu()
-> > +	 * in the sva domain case.
-> > +	 */
-> 
-> It's probably clearer to say:
 
-Is this what is going on ??
+On 5/27/23 06:33, Christophe JAILLET wrote:
+> Le 26/05/2023 à 18:49, Lizhi Hou a écrit :
+>> From: Nishad Saraf <nishads@amd.com>
+>>
+>> Adds driver to enable PCIe board which uses AMD QDMA (the Queue-based
+>> Direct Memory Access) subsystem. For example, Xilinx Alveo V70 AI
+>> Accelerator devices.
+>>      https://www.xilinx.com/applications/data-center/v70.html
+>>
+>> The primary mechanism to transfer data using the QDMA is for the QDMA
+>> engine to operate on instructions (descriptors) provided by the host
+>> operating system. Using the descriptors, the QDMA can move data in both
+>> the Host to Card (H2C) direction, or the Card to Host (C2H) direction.
+>> The QDMA provides a per-queue basis option whether DMA traffic goes
+>> to an AXI4 memory map (MM) interface or to an AXI4-Stream interface.
+>>
+>> The hardware detail is provided by
+>>      https://docs.xilinx.com/r/en-US/pg302-qdma
+>>
+>> Implements dmaengine APIs to support MM DMA transfers.
+>> - probe the available DMA channels
+>> - use dma_slave_map for channel lookup
+>> - use virtual channel to manage dmaengine tx descriptors
+>> - implement device_prep_slave_sg callback to handle host scatter gather
+>>    list
+>> - implement descriptor metadata operations to set device address for DMA
+>>    transfer
+>>
+>> Signed-off-by: Nishad Saraf <nishads@amd.com>
+>> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+>> ---
+>
+> [...]
+>
+>> +/**
+>> + * qdma_alloc_queue_resources() - Allocate queue resources
+>> + * @chan: DMA channel
+>> + */
+>> +static int qdma_alloc_queue_resources(struct dma_chan *chan)
+>> +{
+>> +    struct qdma_queue *queue = to_qdma_queue(chan);
+>> +    struct qdma_device *qdev = queue->qdev;
+>> +    struct qdma_ctxt_sw_desc desc;
+>> +    size_t size;
+>> +    int ret;
+>> +
+>> +    ret = qdma_clear_queue_context(queue);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    size = queue->ring_size * QDMA_MM_DESC_SIZE;
+>> +    queue->desc_base = dma_alloc_coherent(qdev->dma_dev.dev, size,
+>> +                          &queue->dma_desc_base,
+>> +                          GFP_KERNEL | __GFP_ZERO);
+>
+> Nit: Useless (but harmless).
+> AFAIK, dma_alloc_coherent() always returned some zeroed memory.
+> (should you remove the __GFP_ZERO, there is another usage below)
+Sure. I will remove __GFP_ZERO.
+>
+>> +    if (!queue->desc_base) {
+>> +        qdma_err(qdev, "Failed to allocate descriptor ring");
+>> +        return -ENOMEM;
+>> +    }
+>> +
+>
+> [...]
+>
+>> +/**
+>> + * struct qdma_platdata - Platform specific data for QDMA engine
+>> + * @max_mm_channels: Maximum number of MM DMA channels in each 
+>> direction
+>> + * @device_map: DMA slave map
+>> + * @irq_index: The index of first IRQ
+>> + */
+>> +struct qdma_platdata {
+>> +    u32            max_mm_channels;
+>> +    struct dma_slave_map    *device_map;
+>> +    u32            irq_index;
+>> +};
+>
+> Noob question: this struct is only retrieved from dev_get_platdata(), 
+> but there is no dev_set_platdata().
+> How the link is done? How this structure is filled?
 
-> /*
->  * SVA domain requires special treatment before tearing down the pasid
->  * entry:
->  *   1) pasid is stored in mm instead of in dev_pasid;
+The platdata is generated with platform device. For example, a PCI 
+driver may do
 
-Why? The mm pasid should not be used by any driver code, the PASID the
-SVA is hooked to does NOT have to be the mm PASID.
+     struct qdma_platdata data = { .... }
 
->  *   2) all SVA domains share a reserved domain id per recommendation
->  *      from VT-d spec (section 6.2.3.1) so domain_detach_iommu() is
->  *      not required;
+     platform_device_register_resndata(.., &data, ...)
 
-The DID should be managed and allocated for the S2 pointer and the
-flushing logic should work genericly by tracking the S2's being used
-and flushing their DIDs when all the S2s fall out of use. The special
-identity S2 just gets a static DID that never falls out of use.
 
-Jason
+>
+>
+> Should it mater, keeping the 2 u32 one after the other, would avoid a 
+> hole.
+
+Sure. I will fix this.
+
+
+Thanks,
+
+Lizhi
+
+>
+> CJ
+>
+>> +
+>> +#endif /* _PLATDATA_AMD_QDMA_H */
+>

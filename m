@@ -2,68 +2,68 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DDE5720272
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Jun 2023 14:56:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0572A7208E6
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Jun 2023 20:17:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229477AbjFBM4g (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 2 Jun 2023 08:56:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50482 "EHLO
+        id S236813AbjFBSRo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 2 Jun 2023 14:17:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232201AbjFBM4f (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 2 Jun 2023 08:56:35 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D97D196;
-        Fri,  2 Jun 2023 05:56:34 -0700 (PDT)
+        with ESMTP id S232628AbjFBSRn (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 2 Jun 2023 14:17:43 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFCD2196;
+        Fri,  2 Jun 2023 11:17:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685710594; x=1717246594;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=25GYVrBSeIZshbsRClfURyGuYpPyStjnVIsiOAveQYw=;
-  b=GfoFtP09q1BlA/WcUsVAFDXAeFNKGMJdM/7CiJdn40dv7LpmD0LO3vUp
-   PeEn/BrGBoaiI5y+6xNN/ZVmiGeo2fso0LH8y5RPV+bJqyt5zNrTl7otJ
-   WAUi30okSES2Z4/dhQhU7oq4SMZjFAu0D07bYupnfJwAGPCG+1PpkuoVX
-   IEft6303HkhgWD+LxxXrtR4Zftp1uErtzO5FXEKWV6EHLYxrFWgfGIKx9
-   riCZJuK8cYUUJxaBWvHdmyeA21rg+3iWrj+kizy0HebIQO2Wcr+Rhw9l6
-   OsNdCuMNUYuMIo0Mex5rIcORXhnOJsSeAKYepUf8/LrmMEPzMjuZAagly
+  t=1685729857; x=1717265857;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=IGxdUSxk/dJPljzxTOGxhMsQ3H/NV4Hapm/IKJF0xNg=;
+  b=fwEE7Z4yV7343psYaMD3OXh3coxRToaQ8CwxAaA3cFr3hPMmy5wakFxY
+   6wQ8quQogjeeWVTMXzp0gHgIBZ3gt2ODU/3NmzS8kvwYVjrt/OvRiBDgI
+   UUvq5YOPk2d1T3/qv7vaEHivgAiaI+kJfao9RR5nVwKX7NZQrOsAm0IQq
+   0nUZ878hLkZ/K54Cn9nxTGElkydmRk1+LjOTj3muDgetZBzRHt9jG6ciY
+   kFg4DuKqmET4xo1vJJKfsJZJmGl8fFPWj13/mMb+T06HyUvoANkU0j8rl
+   DSJ5U7gF9vsOJjsrhXt7XwtZEu3X5CLi6xrNBrTVsBuvgMyfcyga3oEOr
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10729"; a="419392208"
+X-IronPort-AV: E=McAfee;i="6600,9927,10729"; a="442310206"
 X-IronPort-AV: E=Sophos;i="6.00,213,1681196400"; 
-   d="scan'208";a="419392208"
+   d="scan'208";a="442310206"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 05:56:33 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 11:17:37 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10729"; a="831981005"
+X-IronPort-AV: E=McAfee;i="6600,9927,10729"; a="832060955"
 X-IronPort-AV: E=Sophos;i="6.00,213,1681196400"; 
-   d="scan'208";a="831981005"
-Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 02 Jun 2023 05:56:30 -0700
-Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q54KT-0000Rd-2k;
-        Fri, 02 Jun 2023 12:56:29 +0000
-Date:   Fri, 2 Jun 2023 20:55:51 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Binbin Zhou <zhoubinbin@loongson.cn>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-        Huacai Chen <chenhuacai@loongson.cn>
-Cc:     oe-kbuild-all@lists.linux.dev, Xuerui Wang <kernel@xen0n.name>,
-        loongarch@lists.linux.dev, Yingkun Meng <mengyingkun@loongson.cn>,
-        loongson-kernel@lists.loongnix.cn,
-        Binbin Zhou <zhoubinbin@loongson.cn>
-Subject: Re: [PATCH 2/2] dmaengine: ls2x-apb: new driver for the Loongson
- LS2X APB DMA controller
-Message-ID: <202306022006.u6leN6i9-lkp@intel.com>
-References: <f65ebee39b5e1827af08d9e8d1f260928915f9b0.1685448898.git.zhoubinbin@loongson.cn>
+   d="scan'208";a="832060955"
+Received: from srinivas-otcpl-7600.jf.intel.com (HELO jacob-builder.jf.intel.com) ([10.54.97.184])
+  by orsmga004.jf.intel.com with ESMTP; 02 Jun 2023 11:17:36 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "Robin Murphy" <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        dmaengine@vger.kernel.org, vkoul@kernel.org
+Cc:     "Will Deacon" <will@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Zanussi, Tom" <tom.zanussi@intel.com>, rex.zhang@intel.com,
+        xiaochen.shen@intel.com, narayan.ranganathan@intel.com,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v8 0/7] Re-enable IDXD kernel workqueue under DMA API
+Date:   Fri,  2 Jun 2023 11:22:05 -0700
+Message-Id: <20230602182212.150825-1-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f65ebee39b5e1827af08d9e8d1f260928915f9b0.1685448898.git.zhoubinbin@loongson.cn>
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.8 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -72,113 +72,93 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Binbin,
+Hi Joerg and all,
 
-kernel test robot noticed the following build errors:
+IDXD kernel work queues were disabled due to the flawed use of kernel VA
+and SVA API.
+Link: https://lore.kernel.org/linux-iommu/20210511194726.GP1002214@nvidia.com/
 
-[auto build test ERROR on vkoul-dmaengine/next]
-[also build test ERROR on robh/for-next linus/master v6.4-rc4 next-20230602]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The solution is to enable it under DMA API where IDXD shared workqueue users
+can use ENQCMDS to submit work on buffers mapped by DMA API.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Binbin-Zhou/dt-bindings-dmaengine-Add-Loongson-LS2X-APB-DMA-controller/20230531-165211
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
-patch link:    https://lore.kernel.org/r/f65ebee39b5e1827af08d9e8d1f260928915f9b0.1685448898.git.zhoubinbin%40loongson.cn
-patch subject: [PATCH 2/2] dmaengine: ls2x-apb: new driver for the Loongson LS2X APB DMA controller
-config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20230602/202306022006.u6leN6i9-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 12.3.0
-reproduce (this is a W=1 build):
-        mkdir -p ~/bin
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/c78b43fba2c7874dc293c0e2aba22c4e74500283
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Binbin-Zhou/dt-bindings-dmaengine-Add-Loongson-LS2X-APB-DMA-controller/20230531-165211
-        git checkout c78b43fba2c7874dc293c0e2aba22c4e74500283
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=arm olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/dma/
+This patchset adds support for attaching PASID to the device's default
+domain and the ability to allocate global PASIDs from IOMMU APIs. IDXD driver
+can then re-enable the kernel work queues and use them under DMA API.
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202306022006.u6leN6i9-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/dma/ls2x-apb-dma.c: In function 'ls2x_dma_write_cmd':
->> drivers/dma/ls2x-apb-dma.c:179:15: error: implicit declaration of function 'readq'; did you mean 'readw'? [-Werror=implicit-function-declaration]
-     179 |         val = readq(priv->regs + LDMA_ORDER_ERG) & LDMA_ASK_ADDR_MASK;
-         |               ^~~~~
-         |               readw
-   In file included from include/linux/ratelimit_types.h:5,
-                    from include/linux/ratelimit.h:5,
-                    from include/linux/dev_printk.h:16,
-                    from include/linux/device.h:15,
-                    from include/linux/dmaengine.h:8,
-                    from drivers/dma/ls2x-apb-dma.c:8:
-   include/linux/bits.h:35:18: warning: right shift count is negative [-Wshift-count-negative]
-      35 |          (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-         |                  ^~
-   include/linux/bits.h:37:38: note: in expansion of macro '__GENMASK'
-      37 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-         |                                      ^~~~~~~~~
-   drivers/dma/ls2x-apb-dma.c:33:33: note: in expansion of macro 'GENMASK'
-      33 | #define LDMA_ASK_ADDR_MASK      GENMASK(63, 5) /* Ask Addr Mask */
-         |                                 ^~~~~~~
-   drivers/dma/ls2x-apb-dma.c:179:52: note: in expansion of macro 'LDMA_ASK_ADDR_MASK'
-     179 |         val = readq(priv->regs + LDMA_ORDER_ERG) & LDMA_ASK_ADDR_MASK;
-         |                                                    ^~~~~~~~~~~~~~~~~~
->> drivers/dma/ls2x-apb-dma.c:181:9: error: implicit declaration of function 'writeq'; did you mean 'writew'? [-Werror=implicit-function-declaration]
-     181 |         writeq(val, priv->regs + LDMA_ORDER_ERG);
-         |         ^~~~~~
-         |         writew
-   drivers/dma/ls2x-apb-dma.c: In function 'ls2x_dma_start_transfer':
-   include/linux/bits.h:35:18: warning: right shift count is negative [-Wshift-count-negative]
-      35 |          (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-         |                  ^~
-   include/linux/bits.h:37:38: note: in expansion of macro '__GENMASK'
-      37 |         (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-         |                                      ^~~~~~~~~
-   drivers/dma/ls2x-apb-dma.c:33:33: note: in expansion of macro 'GENMASK'
-      33 | #define LDMA_ASK_ADDR_MASK      GENMASK(63, 5) /* Ask Addr Mask */
-         |                                 ^~~~~~~
-   drivers/dma/ls2x-apb-dma.c:204:31: note: in expansion of macro 'LDMA_ASK_ADDR_MASK'
-     204 |         val = (ldma_sg->llp & LDMA_ASK_ADDR_MASK) | LDMA_64BIT_EN | LDMA_START;
-         |                               ^~~~~~~~~~~~~~~~~~
-   In file included from include/linux/device/driver.h:21,
-                    from include/linux/device.h:32:
-   drivers/dma/ls2x-apb-dma.c: At top level:
->> drivers/dma/ls2x-apb-dma.c:628:25: error: 'ls2x_dma_dt_ids' undeclared here (not in a function); did you mean 'ls2x_dma_isr'?
-     628 | MODULE_DEVICE_TABLE(of, ls2x_dma_dt_ids);
-         |                         ^~~~~~~~~~~~~~~
-   include/linux/module.h:244:15: note: in definition of macro 'MODULE_DEVICE_TABLE'
-     244 | extern typeof(name) __mod_##type##__##name##_device_table               \
-         |               ^~~~
->> include/linux/module.h:244:21: error: '__mod_of__ls2x_dma_dt_ids_device_table' aliased to undefined symbol 'ls2x_dma_dt_ids'
-     244 | extern typeof(name) __mod_##type##__##name##_device_table               \
-         |                     ^~~~~~
-   drivers/dma/ls2x-apb-dma.c:628:1: note: in expansion of macro 'MODULE_DEVICE_TABLE'
-     628 | MODULE_DEVICE_TABLE(of, ls2x_dma_dt_ids);
-         | ^~~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
+This depends on the IOASID removal series. (merged)
+https://lore.kernel.org/all/ZCaUBJvUMsJyD7EW@8bytes.org/
 
 
-vim +179 drivers/dma/ls2x-apb-dma.c
+Thanks,
 
-   173	
-   174	static void ls2x_dma_write_cmd(struct ls2x_dma_chan *lchan, bool cmd)
-   175	{
-   176		u64 val = 0;
-   177		struct ls2x_dma_priv *priv = to_ldma_priv(lchan->vchan.chan.device);
-   178	
- > 179		val = readq(priv->regs + LDMA_ORDER_ERG) & LDMA_ASK_ADDR_MASK;
-   180		val |= LDMA_64BIT_EN | cmd;
- > 181		writeq(val, priv->regs + LDMA_ORDER_ERG);
-   182	}
-   183	
+Jacob
+
+---
+Changelog:
+v8:
+	- further vt-d driver refactoring (3-6) around set/remove device PASID
+	  (Baolu)
+	- make consistent use of NO_PASID in SMMU code (Jean)
+	- fix off-by-one error in max PASID check (Kevin)
+v7:
+	- renamed IOMMU_DEF_RID_PASID to be IOMMU_NO_PASID to be more generic
+	  (Jean)
+	- simplify range checking for sva PASID (Baolu) 
+v6:
+	- use a simplified version of vt-d driver change for set_device_pasid
+	  from Baolu.
+	- check and rename global PASID allocation base
+v5:
+	- exclude two patches related to supervisor mode, taken by VT-d
+	maintainer Baolu.
+	- move PASID range check into allocation API so that device drivers
+	  only need to pass in struct device*. (Kevin)
+	- factor out helper functions in device-domain attach (Baolu)
+	- make explicit use of RID_PASID across architectures
+v4:
+	- move dummy functions outside ifdef CONFIG_IOMMU_SVA (Baolu)
+	- dropped domain type check while disabling idxd system PASID (Baolu)
+
+v3:
+	- moved global PASID allocation API from SVA to IOMMU (Kevin)
+	- remove #ifdef around global PASID reservation during boot (Baolu)
+	- remove restriction on PASID 0 allocation (Baolu)
+	- fix a bug in sysfs domain change when attaching devices
+	- clear idxd user interrupt enable bit after disabling device( Fenghua)
+v2:
+	- refactored device PASID attach domain ops based on Baolu's early patch
+	- addressed TLB flush gap
+	- explicitly reserve RID_PASID from SVA PASID number space
+	- get dma domain directly, avoid checking domain types
+
+
+Jacob Pan (3):
+  iommu: Generalize PASID 0 for normal DMA w/o PASID
+  iommu: Move global PASID allocation from SVA to core
+  dmaengine/idxd: Re-enable kernel workqueue under DMA API
+
+Lu Baolu (4):
+  iommu/vt-d: Add domain_flush_pasid_iotlb()
+  iommu/vt-d: Remove pasid_mutex
+  iommu/vt-d: Make prq draining code generic
+  iommu/vt-d: Add set_dev_pasid callback for dma domain
+
+ drivers/dma/idxd/device.c                     |  30 +---
+ drivers/dma/idxd/dma.c                        |   5 +-
+ drivers/dma/idxd/init.c                       |  60 ++++++-
+ drivers/dma/idxd/sysfs.c                      |   7 -
+ .../iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c   |   2 +-
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |  16 +-
+ drivers/iommu/intel/iommu.c                   | 161 +++++++++++++++---
+ drivers/iommu/intel/iommu.h                   |   9 +
+ drivers/iommu/intel/pasid.c                   |   2 +-
+ drivers/iommu/intel/pasid.h                   |   2 -
+ drivers/iommu/intel/svm.c                     |  53 +-----
+ drivers/iommu/iommu-sva.c                     |  28 ++-
+ drivers/iommu/iommu.c                         |  28 +++
+ include/linux/iommu.h                         |  11 ++
+ 14 files changed, 279 insertions(+), 135 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+

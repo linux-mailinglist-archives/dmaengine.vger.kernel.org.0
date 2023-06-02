@@ -2,277 +2,157 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FB497208F1
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Jun 2023 20:18:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D742F720B17
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Jun 2023 23:40:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237043AbjFBSRu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 2 Jun 2023 14:17:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37034 "EHLO
+        id S236565AbjFBVkF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 2 Jun 2023 17:40:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237030AbjFBSRq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 2 Jun 2023 14:17:46 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D370B123;
-        Fri,  2 Jun 2023 11:17:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685729864; x=1717265864;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3l8xEOg1j9eYw8bKEK7cjmoMcmI99b2shaUO5f1bGAc=;
-  b=Jwwpevk6K/l7CDmDhM66bsBNrUqWnvR4IJAj9ptNzbNkD+3WihXb7GtV
-   F/ZlBb3cglnJHNuRhaz6VsGpGs7R5s1uMiQTLThp1bF7wj4KNcPCuv4zk
-   WsX0hCPks25RWaIC4O8oG2Yh4Qf5TjDG+spkR7BdVweiTAJ5zxGPhv0Fq
-   Fcs22tEGDZmWWaHA4Tv/rYuEVpRGYrcgFsxs37//bqh3bzgVRZwOE+Yjq
-   6vOS1l+8TS/74JddYQr15j7ql1Khr28Oij4VJtBkCK97u005W9Xw+PlGs
-   c+bby+raaGDj1VN/8MNATYYPWZfvYDywzaG89ohLXkLQSRWfkDy4H5wYF
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10729"; a="442310266"
-X-IronPort-AV: E=Sophos;i="6.00,213,1681196400"; 
-   d="scan'208";a="442310266"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 11:17:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10729"; a="832060977"
-X-IronPort-AV: E=Sophos;i="6.00,213,1681196400"; 
-   d="scan'208";a="832060977"
-Received: from srinivas-otcpl-7600.jf.intel.com (HELO jacob-builder.jf.intel.com) ([10.54.97.184])
-  by orsmga004.jf.intel.com with ESMTP; 02 Jun 2023 11:17:39 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Robin Murphy" <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        dmaengine@vger.kernel.org, vkoul@kernel.org
-Cc:     "Will Deacon" <will@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Zanussi, Tom" <tom.zanussi@intel.com>, rex.zhang@intel.com,
-        xiaochen.shen@intel.com, narayan.ranganathan@intel.com,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v8 7/7] dmaengine/idxd: Re-enable kernel workqueue under DMA API
-Date:   Fri,  2 Jun 2023 11:22:12 -0700
-Message-Id: <20230602182212.150825-8-jacob.jun.pan@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230602182212.150825-1-jacob.jun.pan@linux.intel.com>
-References: <20230602182212.150825-1-jacob.jun.pan@linux.intel.com>
+        with ESMTP id S236299AbjFBVkC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 2 Jun 2023 17:40:02 -0400
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2057.outbound.protection.outlook.com [40.107.6.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D96AE51;
+        Fri,  2 Jun 2023 14:39:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QAdW73DMHAZSA9MkHz5yIBWfemafgVPBPGl7ch14jgCWINTu465WQHBblOnA3W6jQDAMcMtspK0TXRIruesXBNwGvikYyh9dFNU6KjN83PVP9HMIF+GKeBuihw3N73VS1va2A2fKbV+3iZAYDD9/qHMNAkx/ngI3HAT91DoSx5gK6Za6FINXQJC+ccYs/2bwu34Txk9OUe1XRdztVm+7drdR+b9hT3tKjU7PrrV7KyT51U+G5vmDqhJrIm26zlPOXV72gNVtlC4+VH9tmy+2MzhI97QfNxYEBCltJJAGknSFFXdLJ/edYoPy1yAHUlUP8u60THOVoISUkd9QPyWgxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sxZZQhNMW7iuuOHiA31wqE6HxauQhuMqOWKdw86TfWU=;
+ b=ngkFpPkLioO1vcyuD6pq/jlCtCPT74PVxvnsa50ZtNWEQbfvlveju4jrJWr3cQbXeOc/tgoadzPMoydtHngF5nzjgykOXQlY3Sw24D4lmvl9OboIMbx/uUJ0ZRmbO2wpEJfyyZDG0+4jqV57yaOOB8/I7KWz9+7ghhPwaT0POq98rzUzKNBmN77j0BvbPb82n9VF5oYMdfhzHFud8zYPYxL1mNLrvb9TurhlL8lkTCHFJiXiUqvfBMMGU7Tt9Eo9TVl4UBWzuW03XnmDtUtlpkclWX470tWo7wWamlUIQCDNVbbcDLcU6sbSjM2b19xta2K8CqTBMr8Sr5Pa9an89w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sxZZQhNMW7iuuOHiA31wqE6HxauQhuMqOWKdw86TfWU=;
+ b=kqed2ZvnqvFrrChCX6qp78kcXTkyVT1yluiWH1yUnan0IXYZRj7lafWoOU01NFDiGMmuOBrxiZqFCX8VTBaQrXZk5D8G+K8dgNrgUk5giMjcB1HZaWwjxLX8FufxX6GHZ055V5/EgTo2nyQ9dpPwjhLDEZhO6xqQiGCcP9dj/Ik=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by AM8PR04MB7906.eurprd04.prod.outlook.com (2603:10a6:20b:24e::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.27; Fri, 2 Jun
+ 2023 21:39:56 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::4a2a:262e:415f:e41c]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::4a2a:262e:415f:e41c%7]) with mapi id 15.20.6433.025; Fri, 2 Jun 2023
+ 21:39:55 +0000
+Date:   Fri, 2 Jun 2023 17:39:40 -0400
+From:   Frank Li <Frank.li@nxp.com>
+To:     Joy Zou <joy.zou@nxp.com>
+Cc:     "vkoul@kernel.org" <vkoul@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzysztof.kozlowski+dt@linaro.org" 
+        <krzysztof.kozlowski+dt@linaro.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Shenwei Wang <shenwei.wang@nxp.com>,
+        "imx@lists.linux.dev" <imx@lists.linux.dev>,
+        Aisheng Dong <aisheng.dong@nxp.com>
+Subject: Re: [PATCH v3 11/12] dmaengine: fsl-edma: integrate v3 support
+Message-ID: <ZHphnNw54dkRgk9E@lizhi-Precision-Tower-5810>
+References: <20230601144107.1636833-1-Frank.Li@nxp.com>
+ <20230601144107.1636833-12-Frank.Li@nxp.com>
+ <AM6PR04MB59252F1C1BE15C61911C60EEE14EA@AM6PR04MB5925.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM6PR04MB59252F1C1BE15C61911C60EEE14EA@AM6PR04MB5925.eurprd04.prod.outlook.com>
+X-ClientProxiedBy: BYAPR04CA0025.namprd04.prod.outlook.com
+ (2603:10b6:a03:40::38) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|AM8PR04MB7906:EE_
+X-MS-Office365-Filtering-Correlation-Id: fe800486-a306-4871-b4ea-08db63b1e7c2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: E6cx3KZS5y0sxynUyd5E/yYIjFMOa7l9PTZflXpgNZ5lqvbGq9nHGkMGKVlo3WJ7kq8c6lAhNDTWgtYZi/6orqeVfdpxcVDJXTbZkCgvZ1txaZ3ekXEXmzvJdMB6S2M9cXQq2vVSbSEBoz/0KVEXkB34D3ymZMsghyESiHmXASXpRdKfXbCaPstV1eTa/AQ5gS31QXwoswI18+jSIurD726sb697GBEyKOtjEbke453icr4KPTifJhVrpvea/ymvjtmwnWqL3ah4+qHXXVfUGGaXYYyOpypnR+LJiUY/rfkXWqCobe1xAMEyrqOu6Njdfz6jUfZ9xjmMmmOvfZ3C8ktTv/zjMU9K8iV/NsIvlCJK4UwIHuC0UbSHXYmhKuZXDB4UJ5y+hn0jySW5ly5YRlR0bBcWJTJ36NbkWH04Fd2EvBhMOZ49hISfw/8EVNM7eugoNkSD8EqQm/Wn8LaRjwnYGnzyl1ZScDZ6x1YbyOp6zobNXlgwzqor/vKPQLzO+pL6KQs4Q6AA5k4tVxpqrjrNVEV8kq7U5xUiD++V//3YXYP2SqjttPEclPff6+kciO4Fa+MRHF/Rqc4zgRwovQt+/6Wf5K+j4+yt2USjvfyHHf/wVHjQr4E/5NIPBEsD
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(4636009)(396003)(366004)(346002)(39860400002)(376002)(136003)(451199021)(6666004)(6486002)(478600001)(54906003)(66946007)(6506007)(83380400001)(6512007)(2906002)(66476007)(186003)(33716001)(9686003)(26005)(66556008)(52116002)(38350700002)(38100700002)(86362001)(41300700001)(316002)(6636002)(4326008)(5660300002)(6862004)(8676002)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?LfAdJ68wkM3+oEQW2Dh8IrV/KJj2WOmIjwtXFxFRyqOCvNpEqAL+fLbg5Urk?=
+ =?us-ascii?Q?9hJSCcvmCsFOpVE0xbyR0CPiJpG3skgCBN+bK7clHfyPmyq4hFx+4kndo8+r?=
+ =?us-ascii?Q?vtgecG6KK2GRbT78xoFfONhHJ8rsVC7dzgWD0SY9NAZJU3R+eRgm2UkzOCaK?=
+ =?us-ascii?Q?p0wMBa5C1F6Hc3kwZwkaxYlASPXvBOm5Xs1VKyAAP5cRLsb2b/NKPko6YKqJ?=
+ =?us-ascii?Q?66vwzpSK6H1h1d2DtyrOAcNWo+PBlBB0HNjM35/DNc1g6fZvsjoM+90p3mnU?=
+ =?us-ascii?Q?jCYbnDX6R5zCE/KpNdn0E1pdGuzyzdc+Bv6pmsyomMvyas4wbTwSBvv9IKCC?=
+ =?us-ascii?Q?55LnY0I8qFPKts1soRBi2CCB2mlSZSEGyf3146wBZa3jkO7Upc4rokMJbq9W?=
+ =?us-ascii?Q?fKr7Fp0x5NKf26NKYkx6kpXVqLMcdB+Cg+TSgk2luGIFbYNjPPx24N65lf/b?=
+ =?us-ascii?Q?YdIOotERPwrznRDuqCo9ap+yRXHDk6tHCjLCq8guPNdYFn6gVrlMbMEHfscC?=
+ =?us-ascii?Q?/T4Y3DPq5QI8EcFZNEeWUpvQ+aKC6tgLycC9wVmDKwGom7Hfx4Xdtx1Xydh+?=
+ =?us-ascii?Q?HO444WuYQ7pbmGZbgZ74eJVOAYUkB97oHq+WpXI54VsDR0m7S/Drb7cDU3dt?=
+ =?us-ascii?Q?oz9fwp7k1MA9RBci64CiIIf7HedLPk56zmUIWVSHNGMxhloBIBs6nsc4dZK7?=
+ =?us-ascii?Q?vRNjyx+BH3Q+RE63M77SclW41+US+BtXYSZeUqrWruXdZbObY2VEJY0yOKOI?=
+ =?us-ascii?Q?KDYpiELGSEOEhPdu1c92h3g1aYaMmZcOyNTaQzgKAB9Qx4tChJcjcTvlpNrv?=
+ =?us-ascii?Q?pbjTs8+5wISzKUAukMv2f/lcNvFbq6MeX6ck4N9+o6x+HiCIHJdF8fB1bUFO?=
+ =?us-ascii?Q?HQwDq2xR1jOCvxLSniyJG4rntcdGBwE/8dRMkLczB0AKWp/VH0k0djdJt5Cy?=
+ =?us-ascii?Q?4rcIGazDAgpQC13kvlfCi6Vx01l9fsnqNKIExuO0e2//qo3f7gw104xlnW68?=
+ =?us-ascii?Q?NeR+PsUJc/VfLrOsqa/TkK7945WDqfJxZ1DqgSfkcJXWXmXRRmr3uR3/Bjob?=
+ =?us-ascii?Q?gkZ4VtC4zb0Mt1UNdOkPtnbFvFmz/L/tiXPwJyTrcCtWr+0ZGJk19kSLABz3?=
+ =?us-ascii?Q?3Sa519XleWVWs9yF8bXJSr2NHwsZ4GYQcOVKvLHucBO9qVRWemnrY1R16aei?=
+ =?us-ascii?Q?smcNNX2gLv2yhfOpnVxhUS1Etsx+Zd7JAp5b5FuSw43+uxaGcOseiFK4saoS?=
+ =?us-ascii?Q?c6da68Za4W+DxH0GE5G9NxUWc1/5PBPSkZJkDX86802k1GLU3V9KSrviRO1U?=
+ =?us-ascii?Q?UeLBEjPpa/R4FCHG2T/QR1qdNgPVrQyypVk5C9q89T/baDJ4jgyiiaTE6YnY?=
+ =?us-ascii?Q?kgaFzPOh5PfOGkf6umaxl+OFZW/kXkYQRbo3YkfaE1wW12T+Wv9YZ6swA3yD?=
+ =?us-ascii?Q?d6Cw4zhKi8u5fiW67gz1oAeMNFR6WXjQLlOWU7kRB+WTFvlNLzFYmjhUe7h1?=
+ =?us-ascii?Q?9BZD1Y+YxQ63tX0WDzlUYZvKhqfWQgUCH6rCLO6BlzWaGnq7AilRruZ/n+7+?=
+ =?us-ascii?Q?oDre/ARRl0+objrrwNs=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe800486-a306-4871-b4ea-08db63b1e7c2
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2023 21:39:55.5835
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sCj6U34h6KoXQ/yPUADBFgF0nb2UOLmqzn6rzn5zwSdQCHJ2QQV2OhC01Ot6eeWTBlh4p72IYnRj4NACQmgyRQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7906
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Kernel workqueues were disabled due to flawed use of kernel VA and SVA
-API. Now that we have the support for attaching PASID to the device's
-default domain and the ability to reserve global PASIDs from SVA APIs,
-we can re-enable the kernel work queues and use them under DMA API.
+On Fri, Jun 02, 2023 at 09:41:19AM +0000, Joy Zou wrote:
+> > +	.chreg_off = EDMA_TCD,
+> > +	.chreg_space_sz = sizeof(struct fsl_edma_hw_tcd),
+> >  	.flags = FSL_EDMA_DRV_HAS_DMACLK | FSL_EDMA_DRV_CONFIG32,
+> >  	.setup_irq = fsl_edma2_irq_init,
+> >  };
+> > 
+> > +static struct fsl_edma_drvdata imx8qm_data = {
+> > +	.flags = FSL_EDMA_DRV_HAS_CHMUX | FSL_EDMA_DRV_HAS_PD
+> > +		 | FSL_EDMA_DRV_EDMA3,
+> > +	.chreg_space_sz = 0x10000,
+> > +	.chreg_off = 0x10000,
+> > +	.setup_irq = fsl_edma3_irq_init,
+> > +};
+> Hi frank,
+> There are many dma controllers in imx8qm. But not all dma controllers support ch-mux.
+> In addition, Imx93 edma v3 also doesn't support ch-mux.
+> You can confirm with RM. Can we use the dts node property instead of drvdata flags? 
+> BR
+> Joy Zou
+> > +
 
-We also use non-privileged access for in-kernel DMA to be consistent
-with the IOMMU settings. Consequently, interrupt for user privilege is
-enabled for work completion IRQs.
+I tested all i.mx8qxp have not ch-mux. did you find any one have ch-mux at imx8qm?
+I will remove FSL_EDMA_DRV_HAS_CHMUX at imx8qm and imx93 at next version.
+It works just because dmamuxs is 0. ch-mux register have not written at all.
 
-Link:https://lore.kernel.org/linux-iommu/20210511194726.GP1002214@nvidia.com/
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
- drivers/dma/idxd/device.c | 30 ++++----------------
- drivers/dma/idxd/dma.c    |  5 ++--
- drivers/dma/idxd/init.c   | 60 ++++++++++++++++++++++++++++++++++++---
- drivers/dma/idxd/sysfs.c  |  7 -----
- 4 files changed, 64 insertions(+), 38 deletions(-)
+we have compatible string, which are enough to distinguish the difference.
+not neccesary to add property for that.
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 5abbcc61c528..66b6665a45cb 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -299,21 +299,6 @@ void idxd_wqs_unmap_portal(struct idxd_device *idxd)
- 	}
- }
- 
--static void __idxd_wq_set_priv_locked(struct idxd_wq *wq, int priv)
--{
--	struct idxd_device *idxd = wq->idxd;
--	union wqcfg wqcfg;
--	unsigned int offset;
--
--	offset = WQCFG_OFFSET(idxd, wq->id, WQCFG_PRIVL_IDX);
--	spin_lock(&idxd->dev_lock);
--	wqcfg.bits[WQCFG_PRIVL_IDX] = ioread32(idxd->reg_base + offset);
--	wqcfg.priv = priv;
--	wq->wqcfg->bits[WQCFG_PRIVL_IDX] = wqcfg.bits[WQCFG_PRIVL_IDX];
--	iowrite32(wqcfg.bits[WQCFG_PRIVL_IDX], idxd->reg_base + offset);
--	spin_unlock(&idxd->dev_lock);
--}
--
- static void __idxd_wq_set_pasid_locked(struct idxd_wq *wq, int pasid)
- {
- 	struct idxd_device *idxd = wq->idxd;
-@@ -1423,15 +1408,14 @@ int drv_enable_wq(struct idxd_wq *wq)
- 	}
- 
- 	/*
--	 * In the event that the WQ is configurable for pasid and priv bits.
--	 * For kernel wq, the driver should setup the pasid, pasid_en, and priv bit.
--	 * However, for non-kernel wq, the driver should only set the pasid_en bit for
--	 * shared wq. A dedicated wq that is not 'kernel' type will configure pasid and
-+	 * In the event that the WQ is configurable for pasid, the driver
-+	 * should setup the pasid, pasid_en bit. This is true for both kernel
-+	 * and user shared workqueues. There is no need to setup priv bit in
-+	 * that in-kernel DMA will also do user privileged requests.
-+	 * A dedicated wq that is not 'kernel' type will configure pasid and
- 	 * pasid_en later on so there is no need to setup.
- 	 */
- 	if (test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags)) {
--		int priv = 0;
--
- 		if (wq_pasid_enabled(wq)) {
- 			if (is_idxd_wq_kernel(wq) || wq_shared(wq)) {
- 				u32 pasid = wq_dedicated(wq) ? idxd->pasid : 0;
-@@ -1439,10 +1423,6 @@ int drv_enable_wq(struct idxd_wq *wq)
- 				__idxd_wq_set_pasid_locked(wq, pasid);
- 			}
- 		}
--
--		if (is_idxd_wq_kernel(wq))
--			priv = 1;
--		__idxd_wq_set_priv_locked(wq, priv);
- 	}
- 
- 	rc = 0;
-diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
-index eb35ca313684..07623fb0f52f 100644
---- a/drivers/dma/idxd/dma.c
-+++ b/drivers/dma/idxd/dma.c
-@@ -75,9 +75,10 @@ static inline void idxd_prep_desc_common(struct idxd_wq *wq,
- 	hw->xfer_size = len;
- 	/*
- 	 * For dedicated WQ, this field is ignored and HW will use the WQCFG.priv
--	 * field instead. This field should be set to 1 for kernel descriptors.
-+	 * field instead. This field should be set to 0 for kernel descriptors
-+	 * since kernel DMA on VT-d supports "user" privilege only.
- 	 */
--	hw->priv = 1;
-+	hw->priv = 0;
- 	hw->completion_addr = compl;
- }
- 
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 1aa823974cda..bd7b9bd40f0a 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -550,14 +550,65 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
- 
- static int idxd_enable_system_pasid(struct idxd_device *idxd)
- {
--	return -EOPNOTSUPP;
-+	struct pci_dev *pdev = idxd->pdev;
-+	struct device *dev = &pdev->dev;
-+	struct iommu_domain *domain;
-+	union gencfg_reg gencfg;
-+	ioasid_t pasid;
-+	int ret;
-+
-+	/*
-+	 * Attach a global PASID to the DMA domain so that we can use ENQCMDS
-+	 * to submit work on buffers mapped by DMA API.
-+	 */
-+	domain = iommu_get_domain_for_dev(dev);
-+	if (!domain)
-+		return -EPERM;
-+
-+	pasid = iommu_alloc_global_pasid_dev(dev);
-+	if (pasid == IOMMU_PASID_INVALID)
-+		return -ENOSPC;
-+
-+	/*
-+	 * DMA domain is owned by the driver, it should support all valid
-+	 * types such as DMA-FQ, identity, etc.
-+	 */
-+	ret = iommu_attach_device_pasid(domain, dev, pasid);
-+	if (ret) {
-+		dev_err(dev, "failed to attach device pasid %d, domain type %d",
-+			pasid, domain->type);
-+		iommu_free_global_pasid(pasid);
-+		return ret;
-+	}
-+
-+	/* Since we set user privilege for kernel DMA, enable completion IRQ */
-+	gencfg.bits = ioread32(idxd->reg_base + IDXD_GENCFG_OFFSET);
-+	gencfg.user_int_en = 1;
-+	iowrite32(gencfg.bits, idxd->reg_base + IDXD_GENCFG_OFFSET);
-+	idxd->pasid = pasid;
-+
-+	return ret;
- }
- 
- static void idxd_disable_system_pasid(struct idxd_device *idxd)
- {
-+	struct pci_dev *pdev = idxd->pdev;
-+	struct device *dev = &pdev->dev;
-+	struct iommu_domain *domain;
-+	union gencfg_reg gencfg;
-+
-+	domain = iommu_get_domain_for_dev(dev);
-+	if (!domain)
-+		return;
-+
-+	iommu_detach_device_pasid(domain, dev, idxd->pasid);
-+	iommu_free_global_pasid(idxd->pasid);
- 
--	iommu_sva_unbind_device(idxd->sva);
-+	gencfg.bits = ioread32(idxd->reg_base + IDXD_GENCFG_OFFSET);
-+	gencfg.user_int_en = 0;
-+	iowrite32(gencfg.bits, idxd->reg_base + IDXD_GENCFG_OFFSET);
- 	idxd->sva = NULL;
-+	idxd->pasid = IOMMU_PASID_INVALID;
- }
- 
- static int idxd_enable_sva(struct pci_dev *pdev)
-@@ -600,8 +651,9 @@ static int idxd_probe(struct idxd_device *idxd)
- 		} else {
- 			set_bit(IDXD_FLAG_USER_PASID_ENABLED, &idxd->flags);
- 
--			if (idxd_enable_system_pasid(idxd))
--				dev_warn(dev, "No in-kernel DMA with PASID.\n");
-+			rc = idxd_enable_system_pasid(idxd);
-+			if (rc)
-+				dev_warn(dev, "No in-kernel DMA with PASID. %d\n", rc);
- 			else
- 				set_bit(IDXD_FLAG_PASID_ENABLED, &idxd->flags);
- 		}
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 293739ac5596..63f6966c51aa 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -948,13 +948,6 @@ static ssize_t wq_name_store(struct device *dev,
- 	if (strlen(buf) > WQ_NAME_SIZE || strlen(buf) == 0)
- 		return -EINVAL;
- 
--	/*
--	 * This is temporarily placed here until we have SVM support for
--	 * dmaengine.
--	 */
--	if (wq->type == IDXD_WQT_KERNEL && device_pasid_enabled(wq->idxd))
--		return -EOPNOTSUPP;
--
- 	input = kstrndup(buf, count, GFP_KERNEL);
- 	if (!input)
- 		return -ENOMEM;
--- 
-2.25.1
+Frank Li
 
+> > --
+> > 2.34.1
+> 

@@ -2,21 +2,21 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EA4572169B
-	for <lists+dmaengine@lfdr.de>; Sun,  4 Jun 2023 14:13:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 529637216AB
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Jun 2023 14:13:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231777AbjFDMN1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 4 Jun 2023 08:13:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43596 "EHLO
+        id S231767AbjFDMN3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 4 Jun 2023 08:13:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231727AbjFDMNZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 4 Jun 2023 08:13:25 -0400
+        with ESMTP id S231768AbjFDMN0 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 4 Jun 2023 08:13:26 -0400
 Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47BA8DC;
-        Sun,  4 Jun 2023 05:13:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD9ADF;
+        Sun,  4 Jun 2023 05:13:22 -0700 (PDT)
 Received: from stefanw-SCHENKER ([37.4.248.58]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Mjjvp-1qUtfQ1qzT-00lBNY; Sun, 04 Jun 2023 14:12:47 +0200
+ 1MORVA-1pgvvi1H4g-00PxEL; Sun, 04 Jun 2023 14:12:48 +0200
 From:   Stefan Wahren <stefan.wahren@i2se.com>
 To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -38,29 +38,29 @@ Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
         bcm-kernel-feedback-list@broadcom.com,
         Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 07/10] dt-bindings: mailbox: convert bcm2835-mbox bindings to YAML
-Date:   Sun,  4 Jun 2023 14:12:20 +0200
-Message-Id: <20230604121223.9625-8-stefan.wahren@i2se.com>
+Subject: [PATCH 08/10] dt-bindings: mmc: convert bcm2835-sdhost bindings to YAML
+Date:   Sun,  4 Jun 2023 14:12:21 +0200
+Message-Id: <20230604121223.9625-9-stefan.wahren@i2se.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230604121223.9625-1-stefan.wahren@i2se.com>
 References: <20230604121223.9625-1-stefan.wahren@i2se.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:s9bqnOjBvZVCsDcyHb08k0nMCZ7YVUD8Zw1OzqniAuKGjhTPZKf
- rpBfQJ3D6yT29NzeLHRWuKxFV8oD/cm3Wl4OdqRGRi0EG/4QwcLM6oPiXLq2Fihww/laM5M
- msjMkQdDTZ1VHJUD709v3+c4NytU68OPdJvB0NjGNzKr3YXOmYp8cF3U+vM44aujBXGw/Jt
- /NVJMGpfQ+BZ6n9uW4FaQ==
-UI-OutboundReport: notjunk:1;M01:P0:4yU37JCi/f8=;BE+D+f70115NohCmZRFqLmk4xoG
- /Jug1/zF1OIgoRntxGJnLtSi06FetwUFpoOQghme3GIXzunnILiywTzf7l4hA9G9Lh4Kulypc
- WyjZpRdH1Sh2jjouHSKajaVu8U39LCnMw1gt80uMEedbrEpxoAZZo3FGMyzi1A8RxlO87+8qL
- tF2rxU+wDVZfeoem1hc2Xw06QUflUh1qp8tu3x6FFht60wMngAEOL8hluIio45n7c1QMU1S58
- FYat5mBpP91tY9wo98UQ14Xtme1ytmKFgAAt1WpJSTCH/Bu0SphBnoggAKZOjSEVAQGfWaroM
- U5bVcQuoz3mESDHJQ27Nw6Sq+/8lCtTzBsLTdZGju/yf0+buT/cpRxJEnQ2X0gSRSkf8GoM8w
- XLr0pnBNh97NvdXsFqGrIxM1NeEt0b0jaVY/LpgsNDNu5KplxgVL5sGzKDXylJSy+TL1X/IBH
- LOaIBl1NBDWAiDdaCmtRCj8xvlrtKbN4TS1lVnqadF4rFmcCjqKtYYVKb5aK23JvTRNtA/kUB
- 4/o5MqYFibWw362xhIjqd9q0HLBK5UngGzuskE7V36unDmzkrUBf3MSneGNdmSZNhBx6vWfi7
- VRmSzXmz+w27U2EuShu+LOa7mKhWD3M0UuLOwdc9pYfijWctwHbo8uC1svAjLDEj9bU4Zsk3y
- 596p4X0Cdao9P3Dbk/C0LXysGd5ff0L6mCk0hsgkTg==
+X-Provags-ID: V03:K1:foogFTxftYvxx0yiHrFE16uks19QrCnC8HH3ae90EqYe99lsUrJ
+ 0V1Ex5ERGkktRr5VKMfruARlqiTli4OCKIgdmgyyKGDyMDGmtiNRqvsC7zh4v1lCkeDzOgg
+ dRL0KiBp28PmlWQX0cK9C12X7tVsj5Wr8UIBmSH04Z0w+QtkfZmiRRd0MplQX6P6GvxiOmC
+ skP4ftc3f1GmijzExRr8w==
+UI-OutboundReport: notjunk:1;M01:P0:FYmh3L5uoWE=;+L6An8kNOoyMWyRK1uZ2fyOwVVi
+ x7rg4AZbBz/oFY77feJ0cDnQeVECPvGSZzRyuOCoAWPnLPKXNkV1TlfOY7hQYjJxb1v1gJgzl
+ Wc+V4OUWocJbyzyXP/lon16MVPCRyiveYvONFVv3lnBGGxFjnRhVY2929AHRImEt2AbPh6fBz
+ 9AcSjJ/Ah0+Liec7qhp4Ae7noFbuiDsOiDN0jOmcw+mReRxl/1lUhzYohGFFtX3eGN0tE1cAX
+ h6POHKSN5HuyAO/tn7c3LpwU1kkLfC7XmWMEWVRJNJAaWo2NXKQkM1h3pxISJWlwqnNjwiQmF
+ IeFBcHQRB38SWTJ1yTGyh1UBajqWUydyszbQq4BeyNffHeJ7xO1VhxnOpvRIkqE/W041TAA+H
+ 5VEEMIbRH1SWiso/urkCdPVft1dKpze8WjefqWcOwUhdNFuCv/kk0u1D342KErklWJIJB/Uls
+ s6WwzOg7VU/VI3RqErSL4RuVOVXt3nXRf9v0HcQIgIAAp2hnD0Lkykd8RIGkyPM0uyKaNmFVM
+ yBkjifKX7JtvMh+qxt+iXqsmvk/hmHo6tPv7FuVma2lnwlH1HZJZ9Ibn3oEFbo1SRfKPk8Sqx
+ 1Ew2DhLHjExfWKYDeCLXzUWhACCucwjJcsCDzmKzugkwvuWZm5DfK6B0qKMCyL3MMSbP7xCO0
+ A0LUSpgVXoUPhrg+Ph/PhCcYwwpegDySaeEkiX/Lsg==
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
@@ -70,68 +70,68 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Convert the DT binding document for bcm2835-mbox from .txt to YAML.
+Convert the DT binding document for bcm2835-sdhost from .txt to YAML.
 
 Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 ---
- .../bindings/mailbox/brcm,bcm2835-mbox.txt    | 26 ------------
- .../bindings/mailbox/brcm,bcm2835-mbox.yaml   | 40 +++++++++++++++++++
- 2 files changed, 40 insertions(+), 26 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
- create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.yaml
+ .../bindings/mmc/brcm,bcm2835-sdhost.txt      | 23 --------
+ .../bindings/mmc/brcm,bcm2835-sdhost.yaml     | 54 +++++++++++++++++++
+ 2 files changed, 54 insertions(+), 23 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.yaml
 
-diff --git a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+diff --git a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
 deleted file mode 100644
-index b48d7d30012c..000000000000
---- a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+index d876580ae3b8..000000000000
+--- a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
 +++ /dev/null
-@@ -1,26 +0,0 @@
--Broadcom BCM2835 VideoCore mailbox IPC
+@@ -1,23 +0,0 @@
+-Broadcom BCM2835 SDHOST controller
+-
+-This file documents differences between the core properties described
+-by mmc.txt and the properties that represent the BCM2835 controller.
 -
 -Required properties:
+-- compatible: Should be "brcm,bcm2835-sdhost".
+-- clocks: The clock feeding the SDHOST controller.
 -
--- compatible:	Should be "brcm,bcm2835-mbox"
--- reg:		Specifies base physical address and size of the registers
--- interrupts:	The interrupt number
--		  See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
--- #mbox-cells:	Specifies the number of cells needed to encode a mailbox
--		  channel. The value shall be 0, since there is only one
--		  mailbox channel implemented by the device.
+-Optional properties:
+-- dmas: DMA channel for read and write.
+-          See Documentation/devicetree/bindings/dma/dma.txt for details
 -
 -Example:
 -
--mailbox: mailbox@7e00b880 {
--	compatible = "brcm,bcm2835-mbox";
--	reg = <0x7e00b880 0x40>;
--	interrupts = <0 1>;
--	#mbox-cells = <0>;
+-sdhost: mmc@7e202000 {
+-	compatible = "brcm,bcm2835-sdhost";
+-	reg = <0x7e202000 0x100>;
+-	interrupts = <2 24>;
+-	clocks = <&clocks BCM2835_CLOCK_VPU>;
+-	dmas = <&dma 13>;
+-	dma-names = "rx-tx";
 -};
--
--firmware: firmware {
--	compatible = "raspberrypi,firmware";
--	mboxes = <&mailbox>;
--	#power-domain-cells = <1>;
--};
-diff --git a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.yaml b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.yaml
+diff --git a/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.yaml b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.yaml
 new file mode 100644
-index 000000000000..9588817f4511
+index 000000000000..3a5a44800675
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.yaml
-@@ -0,0 +1,40 @@
++++ b/Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.yaml
+@@ -0,0 +1,54 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/mailbox/brcm,bcm2835-mbox.yaml#
++$id: http://devicetree.org/schemas/mmc/brcm,bcm2835-sdhost.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Broadcom BCM2835 VideoCore mailbox IPC
++title: Broadcom BCM2835 SDHOST controller
 +
 +maintainers:
 +  - Stefan Wahren <stefan.wahren@i2se.com>
 +
++allOf:
++  - $ref: mmc-controller.yaml
++
 +properties:
 +  compatible:
-+    const: brcm,bcm2835-mbox
++    const: brcm,bcm2835-sdhost
 +
 +  reg:
 +    maxItems: 1
@@ -139,24 +139,35 @@ index 000000000000..9588817f4511
 +  interrupts:
 +    maxItems: 1
 +
-+  "#mbox-cells":
-+    const: 0
++  clocks:
++    maxItems: 1
++
++  dmas:
++    maxItems: 1
++
++  dma-names:
++    const: rx-tx
 +
 +required:
 +  - compatible
 +  - reg
 +  - interrupts
-+  - "#mbox-cells"
++  - clocks
 +
-+additionalProperties: false
++unevaluatedProperties: false
 +
 +examples:
 +  - |
-+    mailbox@7e00b880 {
-+      compatible = "brcm,bcm2835-mbox";
-+      reg = <0x7e00b880 0x40>;
-+      interrupts = <0 1>;
-+      #mbox-cells = <0>;
++    #include <dt-bindings/clock/bcm2835.h>
++
++    sdhost: mmc@7e202000 {
++      compatible = "brcm,bcm2835-sdhost";
++      reg = <0x7e202000 0x100>;
++      interrupts = <2 24>;
++      clocks = <&clocks BCM2835_CLOCK_VPU>;
++      dmas = <&dma 13>;
++      dma-names = "rx-tx";
++      bus-width = <4>;
 +    };
 -- 
 2.34.1

@@ -2,21 +2,21 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E8137216C4
-	for <lists+dmaengine@lfdr.de>; Sun,  4 Jun 2023 14:13:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBCF37216BF
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Jun 2023 14:13:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231136AbjFDMNd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 4 Jun 2023 08:13:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43644 "EHLO
+        id S230475AbjFDMNc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 4 Jun 2023 08:13:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231833AbjFDMNa (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 4 Jun 2023 08:13:30 -0400
+        with ESMTP id S231136AbjFDMN2 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 4 Jun 2023 08:13:28 -0400
 Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A2E1E3;
-        Sun,  4 Jun 2023 05:13:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E3913A;
+        Sun,  4 Jun 2023 05:13:25 -0700 (PDT)
 Received: from stefanw-SCHENKER ([37.4.248.58]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MBmI6-1ptdVR1w9U-00C7LT; Sun, 04 Jun 2023 14:12:45 +0200
+ 1MYvLi-1parfS299k-00UseR; Sun, 04 Jun 2023 14:12:46 +0200
 From:   Stefan Wahren <stefan.wahren@i2se.com>
 To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -38,29 +38,29 @@ Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
         bcm-kernel-feedback-list@broadcom.com,
         Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 05/10] dt-bindings: pwm: convert pwm-bcm2835 bindings to YAML
-Date:   Sun,  4 Jun 2023 14:12:18 +0200
-Message-Id: <20230604121223.9625-6-stefan.wahren@i2se.com>
+Subject: [PATCH 06/10] ARM: dts: bcm283x: Increase pwm-cells
+Date:   Sun,  4 Jun 2023 14:12:19 +0200
+Message-Id: <20230604121223.9625-7-stefan.wahren@i2se.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230604121223.9625-1-stefan.wahren@i2se.com>
 References: <20230604121223.9625-1-stefan.wahren@i2se.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:yEqjFtXc/3vGmTSJ7Dy2Z8p775o68ILE0NDuwSUWovXrpTHthm4
- FKr5gNBh7xasgmosXf5YxVHhdkWm9XJLb/gjD/NCM93yHuAn2oc+MbZn36mQEOhyiyYVp5b
- 8he2l2knb/bZlBQMolO6Nc2WJqnUIl9OgzIyJ84oR++6vQEA0K2SiW/HCxcstvBUV/QE6Fo
- A7TZp7Q7AdvNk5Gm6fQWQ==
-UI-OutboundReport: notjunk:1;M01:P0:H0tTJbhnCxM=;5C7Ip//JOF9H88HOGXhCQghs37M
- +2AOYrTihZ9ogAa1Ld5EC4aM/ovwSFqOt3HWhh1WE6Y/4rFyQEnL6JBzbE+d2Fnx2HJr7DtpM
- zgRnuJdbtDrX+EKVIHG8WZ/j6COsghNMrJCK8YjaONRDPjSrlnDpOy4Ge+zWRXlKiokW8gOdG
- kAKkWECaBUYN75zKL/rOcJvH4jhrPIivMWD3UG1UkLCaYb9mLSKTz772MIqmzcHrlX5kXbl5q
- PLm5K49yHrVqAm+/0grw0cdAk5WC4UDDSVPY5UUU+LSWBV+vLxf6NrrUEtOrlImJd56X6K8In
- ruldsRb13XcA5MscluhQfHzFbY5ts0RaPxuh1NRNy1MHbwCAT2H689XX4DCLkgCYvNaWy8GUG
- moD29tyADPmIX7hd6x42HsnC6wQLOraKaqqM0FojfHnZOxQLSabAPgmcJqA3LyymN/Q3cs+qg
- i/m7rTpcqiDPjP+4nocPwLq+iRSolvb1dDQSrAzgjVmLZkYCAtbcngL1VoyVYdMVonmjqLcUN
- 9MtNipE9vkwJEGkgeuwm6WIoO41dnB9wBAmZ5KRBRG9P4Ss2iqlWCWKfM6gejwKnH6jZ2dBIf
- WxAJKepGsIHkGpESWOqN6fFV5ypOiPfiSrCRXeDYFeXgs7a6cFH0QxblcwZs4+fs/UMqjRwFM
- Rr684lCeLd9artVpCgO9t/ReWce0Ls2xbzr9Kg1JCw==
+X-Provags-ID: V03:K1:Ay9E1GOc/hVwhqqW+B2nos8Az5+GOBVwcX2XGQbjPiYWqWsvowg
+ q1p7h8OQiAoT4f/pWfsqadTmYhWyZsW502ec0xUNLJCEVZNguwCoc1EHLcew251qly/P63j
+ /Ch0om9DtfThmHWeiCvu75nDZDOGWbYIMjEJZlFxTTZjqsQDGZZEDGYDI5Fy44PhVTWNy2N
+ bylzZawBR9NUqpWUenzlA==
+UI-OutboundReport: notjunk:1;M01:P0:xK69g/38ndo=;YN0PURB2/gwSWuPHUPRS+xc01hv
+ 8tFg7cH60CtI4rBpwgfpRLAErmDRrIvC0v95mMjqsiDUsNhbENhTZltka04KxeY2SslrntzUr
+ IXkAv/din40cmDNmAjZw/pE57o+Nvj+YYzonbG740Dtz3c3sXHizic7+AOQl/lwEs7pUOb1fz
+ bxT+k34nJ0i6qIdgwnegD3K3HHmn/Dm7f27xCJZDU9Rb5V7vFHd2Wi9E3ET/RvjJKSM+j+rfD
+ aAnQErNy3zMQ2rWiGccTUJ87htbhUjITXWAHCbuVTmXMoVbB9oRiVMwloQyeWXhcvSbA8glCP
+ 2o2jqYP+lSm8GaRMJ1qB/to5JK3OD/Q+R5Fpmvy0gQH611Mafen3LdM4tZ7RXjvWr6/4AesPp
+ 5a+adF8VOIko3uS96VKSi2BbWOK+dRsyybBw54XNUPu8SDhgRHP80Z0O1H8vjPL1easlWnELV
+ r0xHi1SK+R1249+CC2+3x0jlfl6sb3zzcpLQc1uHjOvZbvPwgy+hYSHWDj1qv7+vx6NMfo36G
+ dvrPvtFXH6Q1NMDc/5sxiOumvxEOvIZemE8ZtMY+S6QXoiuTVFJVX89viz9/rUpr2hgyTlVET
+ SChzj7y4a08GZKeVxnkuqL9ymVQMGJATXOG9c0SO73h3fV8bS2LJ3nXzTvCreCRghhDUnm2qP
+ jiatEHDANkw/Liib+lvlVM6H9G61FwgzinpEhTZTEw==
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
@@ -70,101 +70,43 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Convert the DT binding document for pwm-bcm2835 from .txt to YAML.
+The pwm-bcm2835 supports PWM polarity, so adjust the affected dtsi
+files accordingly and fix the dtbs_check warning:
+
+pwm@7e20c000: #pwm-cells:0:0: 3 was expected
 
 Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 ---
- .../devicetree/bindings/pwm/pwm-bcm2835.txt   | 30 -------------
- .../devicetree/bindings/pwm/pwm-bcm2835.yaml  | 43 +++++++++++++++++++
- 2 files changed, 43 insertions(+), 30 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-bcm2835.yaml
+ arch/arm/boot/dts/bcm2711.dtsi | 2 +-
+ arch/arm/boot/dts/bcm283x.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt b/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
-deleted file mode 100644
-index f5753b3f79df..000000000000
---- a/Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
-+++ /dev/null
-@@ -1,30 +0,0 @@
--BCM2835 PWM controller (Raspberry Pi controller)
--
--Required properties:
--- compatible: should be "brcm,bcm2835-pwm"
--- reg: physical base address and length of the controller's registers
--- clocks: This clock defines the base clock frequency of the PWM hardware
--  system, the period and the duty_cycle of the PWM signal is a multiple of
--  the base period.
--- #pwm-cells: Should be 3. See pwm.yaml in this directory for a description of
--  the cells format.
--
--Examples:
--
--pwm@2020c000 {
--	compatible = "brcm,bcm2835-pwm";
--	reg = <0x2020c000 0x28>;
--	clocks = <&clk_pwm>;
--	#pwm-cells = <3>;
--};
--
--clocks {
--	....
--		clk_pwm: pwm {
--			compatible = "fixed-clock";
--			reg = <3>;
--			#clock-cells = <0>;
--			clock-frequency = <9200000>;
--		};
--	....
--};
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-bcm2835.yaml b/Documentation/devicetree/bindings/pwm/pwm-bcm2835.yaml
-new file mode 100644
-index 000000000000..15e7fd98defc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-bcm2835.yaml
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/pwm-bcm2835.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: BCM2835 PWM controller (Raspberry Pi controller)
-+
-+maintainers:
-+  - Stefan Wahren <stefan.wahren@i2se.com>
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    const: brcm,bcm2835-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  "#pwm-cells":
-+    const: 3
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - "#pwm-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pwm@2020c000 {
-+      compatible = "brcm,bcm2835-pwm";
-+      reg = <0x2020c000 0x28>;
-+      clocks = <&clk_pwm>;
-+      #pwm-cells = <3>;
-+    };
+diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+index 83745672a120..239db6927a02 100644
+--- a/arch/arm/boot/dts/bcm2711.dtsi
++++ b/arch/arm/boot/dts/bcm2711.dtsi
+@@ -278,7 +278,7 @@ pwm1: pwm@7e20c800 {
+ 			clocks = <&clocks BCM2835_CLOCK_PWM>;
+ 			assigned-clocks = <&clocks BCM2835_CLOCK_PWM>;
+ 			assigned-clock-rates = <10000000>;
+-			#pwm-cells = <2>;
++			#pwm-cells = <3>;
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index c9c52a19ef3b..2ca8a2505a4d 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -416,7 +416,7 @@ pwm: pwm@7e20c000 {
+ 			clocks = <&clocks BCM2835_CLOCK_PWM>;
+ 			assigned-clocks = <&clocks BCM2835_CLOCK_PWM>;
+ 			assigned-clock-rates = <10000000>;
+-			#pwm-cells = <2>;
++			#pwm-cells = <3>;
+ 			status = "disabled";
+ 		};
+ 
 -- 
 2.34.1
 

@@ -2,141 +2,173 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32028726ECD
-	for <lists+dmaengine@lfdr.de>; Wed,  7 Jun 2023 22:52:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0CEB72726A
+	for <lists+dmaengine@lfdr.de>; Thu,  8 Jun 2023 00:56:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235255AbjFGUwx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 7 Jun 2023 16:52:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54164 "EHLO
+        id S231853AbjFGW4Z (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 7 Jun 2023 18:56:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235304AbjFGUwu (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 7 Jun 2023 16:52:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9611A1FD5;
-        Wed,  7 Jun 2023 13:52:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3127C6477F;
-        Wed,  7 Jun 2023 20:52:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CA51C433EF;
-        Wed,  7 Jun 2023 20:52:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1686171166;
-        bh=ISjSY0teO1jjDO3Glj4U2Jb14Dqoi5zGS6b8HVAh394=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yCWVIm1bxYA+6vZ2xD7IqkaZCAsMc86eBI9964tRiZgVXqXurVazepKec8ExqFhTQ
-         M50X8mcxBQQ2MXHwIo9qvK62hJvi3W9mXCGrfpdDXQCAReXKNVSBETMnnctmWv9agM
-         968vdcpye8AGQzZ1EhftTHfFk7kU6P8uyT+tnt7Q=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        patches@lists.linux.dev, Randy Dunlap <rdunlap@infradead.org>,
-        Jaswinder Singh <jassisinghbrar@gmail.com>,
-        Boojin Kim <boojin.kim@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-riscv@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 07/99] dmaengine: pl330: rename _start to prevent build error
-Date:   Wed,  7 Jun 2023 22:15:59 +0200
-Message-ID: <20230607200900.459958716@linuxfoundation.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230607200900.195572674@linuxfoundation.org>
-References: <20230607200900.195572674@linuxfoundation.org>
-User-Agent: quilt/0.67
+        with ESMTP id S233219AbjFGW4N (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 7 Jun 2023 18:56:13 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4109C2715
+        for <dmaengine@vger.kernel.org>; Wed,  7 Jun 2023 15:55:54 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-5169f614977so2014052a12.3
+        for <dmaengine@vger.kernel.org>; Wed, 07 Jun 2023 15:55:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686178553; x=1688770553;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lwmqmz3SLTAm/5XHn54kA2Qkz1KiGdBlOiEDAaxIk1A=;
+        b=d8ALJgWgHzWLVbYqm5Xun40Trrtx9u26PJxgDpuM+opU1kagifpoMF3E49HbI3GY2V
+         wVrEz/8VMNXOa34mGDXKD+N7lGOv2QGCP2gi2Pc2YR15Cm6aBUEYMKdxMAaBdTZps5JD
+         wHIIcg7iFPDm6hq2Anc8eetPMFV7Dmp3k3ChvztUfrQawEncim7LlPLb1dcX0GFSQa2Z
+         MpCDoaZndeCwrh4lYpSlY+MIxLpkoT0dvzpzNzmwq8ANq48/S89YAmvR6lG4ID6DJkmg
+         UQBMvZ4NUlogSfe/ccOin4LQnm3S/JQ2MwxZLa7FvZbQYk7vl4nSPeVW9A3WoEossLXw
+         Xp4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686178553; x=1688770553;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lwmqmz3SLTAm/5XHn54kA2Qkz1KiGdBlOiEDAaxIk1A=;
+        b=NLk4cywRkG0hpZpFzNMC2xWAyJIGIti/5NCDoikjRb6CFc5W+WGdKrM4UAfSCicLOI
+         XDcsyfWmVHuZLqAEUc/yDKxXjCKU2yfNGvXP3TIlo5neq/y7Oe+i1/G0CaSDmHAe8R/0
+         z4ap/SWKOxRJML2igrUM2xcJCOnO41rWE5ymZyeThoeQlgI3NmfTsZunajsATjMjqBPB
+         Ffopi/rsVhrttiURClCwAtj8FbAUknvlHOBmDkl54OGJQQBMFrSZlHHYNmtnpc8q0all
+         25CoY+1+hyrStthkbBVyxGJokG2TKpcXoXsX8OgD0DLH/A/i55fMpgJxQmS9eDUdyu0o
+         Gt5w==
+X-Gm-Message-State: AC+VfDzChnve87CXoyUO1Tq33t+moHD03/f/QMOyFEX778xMgJa9oM99
+        HLDmLIi1CT+U4p3d9us6dHiDkmRP4+qnPXRFjyc=
+X-Google-Smtp-Source: ACHHUZ5lc5uNG0II8N/7owu97MNYayebO2FU5BOHITGRdvZTCXANx0Yi1fv5Th/dfzvi0zTuZAaSCLE67mXxoPl8ud4=
+X-Received: by 2002:a17:907:8a08:b0:973:ad8f:ef9b with SMTP id
+ sc8-20020a1709078a0800b00973ad8fef9bmr8009971ejc.5.1686178552696; Wed, 07 Jun
+ 2023 15:55:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a54:2409:0:b0:217:72a9:f646 with HTTP; Wed, 7 Jun 2023
+ 15:55:52 -0700 (PDT)
+Reply-To: unitednationcompensationcoordinatortreasury@hotmail.com
+From:   "UNITED NATION DEPUTY SECRETARY-GENERAL (U.N)" 
+        <successikolo@gmail.com>
+Date:   Wed, 7 Jun 2023 15:55:52 -0700
+Message-ID: <CADFNGJ8EwbrtVXBod+yuxOPvcNStu1uNZVywED0Ra-jpG92ATw@mail.gmail.com>
+Subject: CONTACT DHL OFFICE IMMEDIATELY FOR YOUR ATM MASTER CARD 1.5 MILLION,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=6.6 required=5.0 tests=ADVANCE_FEE_3_NEW_FRM_MNY,
+        BAYES_50,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FILL_THIS_FORM,FORM_FRAUD_5,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        LOTS_OF_MONEY,MONEY_FORM,MONEY_FRAUD_5,MONEY_FREEMAIL_REPTO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,
+        T_FILL_THIS_FORM_LOAN,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM,UNDISC_MONEY
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:52f listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [successikolo[at]gmail.com]
+        *  0.5 SUBJ_ALL_CAPS Subject is all capitals
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  2.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  0.2 MONEY_FREEMAIL_REPTO Lots of money from someone using free
+        *      email?
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+        *  0.0 FILL_THIS_FORM Fill in a form with personal information
+        *  0.0 T_FILL_THIS_FORM_LOAN Answer loan question(s)
+        *  0.0 MONEY_FORM Lots of money if you fill out a form
+        *  1.3 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+        *  0.0 ADVANCE_FEE_3_NEW_FRM_MNY Advance Fee fraud form and lots of
+        *      money
+        *  0.2 MONEY_FRAUD_5 Lots of money and many fraud phrases
+        *  0.0 FORM_FRAUD_5 Fill a form and many fraud phrases
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+UNITED NATION DEPUTY SECRETARY-GENERAL.
 
-[ Upstream commit a1a5f2c887252dec161c1e12e04303ca9ba56fa9 ]
+This is to official inform you that we have been having meetings for
+the past three (3) weeks which ended two days ago with MR. JIM YONG
+KIM the world bank president and other seven continent presidents on
+the congress we treated on solution to scam victim problems.
 
-"_start" is used in several arches and proably should be reserved
-for ARCH usage. Using it in a driver for a private symbol can cause
-a build error when it conflicts with ARCH usage of the same symbol.
+ Note: we have decided to contact you following the reports we
+received from anti-fraud international monitoring group your
+name/email has been submitted to us therefore the united nations have
+agreed to compensate you with the sum of (USD$ 1.5 Million) this
+compensation is also including international business that failed you
+in the past due to government problems etc.
 
-Therefore rename pl330's "_start" to "pl330_start_thread" so that there
-is no conflict and no build error.
+ We have arranged your payment through our ATM Master Card and
+deposited it in DHL Office to deliver it to you which is the latest
+instruction from the World Bank president MR. JIM YONG KIM, For your
+information=E2=80=99s, the delivery charges already paid by U.N treasury, t=
+he
+only money you will send to DHL office south Korea is
+($500). for security keeping fee, U.N coordinator already paid for
+others charges fees for delivery except the security keeping fee, the
+director of DHL refused to collect the security keeping fee from U.N
+coordinator, the Director of DHL office said that they don=E2=80=99t know
+exactly time you will contact them to reconfirm your details to avoid
+counting demur-rage that is why they refused collecting the ($500) .
+for security keeping fee.
 
-drivers/dma/pl330.c:1053:13: error: '_start' redeclared as different kind of symbol
- 1053 | static bool _start(struct pl330_thread *thrd)
-      |             ^~~~~~
-In file included from ../include/linux/interrupt.h:21,
-                 from ../drivers/dma/pl330.c:18:
-arch/riscv/include/asm/sections.h:11:13: note: previous declaration of '_start' with type 'char[]'
-   11 | extern char _start[];
-      |             ^~~~~~
+ Therefore be advice to contact DHL Office agent south Korea. Rev:John
+Lee Tae-seok
+who is in position to deliver your ATM
+Master Card to your location address, contact DHL Office immediately
+with the bellow email & phone number as listed below.
 
-Fixes: b7d861d93945 ("DMA: PL330: Merge PL330 driver into drivers/dma/")
-Fixes: ae43b3289186 ("ARM: 8202/1: dmaengine: pl330: Add runtime Power Management support v12")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jaswinder Singh <jassisinghbrar@gmail.com>
-Cc: Boojin Kim <boojin.kim@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Russell King <rmk+kernel@arm.linux.org.uk>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org
-Cc: linux-riscv@lists.infradead.org
-Link: https://lore.kernel.org/r/20230524045310.27923-1-rdunlap@infradead.org
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/pl330.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ Contact name: John Lee Tae-seok
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 77a6495bb6b19..3008ab258fa8e 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -1048,7 +1048,7 @@ static bool _trigger(struct pl330_thread *thrd)
- 	return true;
- }
- 
--static bool _start(struct pl330_thread *thrd)
-+static bool pl330_start_thread(struct pl330_thread *thrd)
- {
- 	switch (_state(thrd)) {
- 	case PL330_STATE_FAULT_COMPLETING:
-@@ -1696,7 +1696,7 @@ static int pl330_update(struct pl330_dmac *pl330)
- 			thrd->req_running = -1;
- 
- 			/* Get going again ASAP */
--			_start(thrd);
-+			pl330_start_thread(thrd);
- 
- 			/* For now, just make a list of callbacks to be done */
- 			list_add_tail(&descdone->rqd, &pl330->req_done);
-@@ -2083,7 +2083,7 @@ static void pl330_tasklet(unsigned long data)
- 	} else {
- 		/* Make sure the PL330 Channel thread is active */
- 		spin_lock(&pch->thread->dmac->lock);
--		_start(pch->thread);
-+		pl330_start_thread(pch->thread);
- 		spin_unlock(&pch->thread->dmac->lock);
- 	}
- 
-@@ -2101,7 +2101,7 @@ static void pl330_tasklet(unsigned long data)
- 			if (power_down) {
- 				pch->active = true;
- 				spin_lock(&pch->thread->dmac->lock);
--				_start(pch->thread);
-+				pl330_start_thread(pch->thread);
- 				spin_unlock(&pch->thread->dmac->lock);
- 				power_down = false;
- 			}
--- 
-2.39.2
+ Email:( dhlgeneralheadquartersrepublic@gmail.com )
 
+ Do not hesitate to Contact Rev: John Lee Tae-seok, as soon as you
 
+ read this message. Email:( dhlgeneralheadquartersrepublic@gmail.com )
 
+ Make sure you reconfirmed DHL Office your details ASAP as stated
+below to avoid wrong delivery.
+
+ Your full name..........
+
+ Home address:.........
+
+ Your country...........
+
+ Your city..............
+
+ Telephone......
+
+ Occupation:.......
+
+ Age:=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6..
+
+ Let us know as soon as possible you receive your ATM MasterCard
+for proper verification.
+
+ Regards,
+
+ Mrs Vivian kakadu.
+
+ DEPUTY SECRETARY-GENERAL (U.N)

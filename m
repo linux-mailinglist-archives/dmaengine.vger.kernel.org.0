@@ -2,84 +2,118 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B895725216
-	for <lists+dmaengine@lfdr.de>; Wed,  7 Jun 2023 04:28:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 124AA72568A
+	for <lists+dmaengine@lfdr.de>; Wed,  7 Jun 2023 09:56:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239942AbjFGC2J (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 6 Jun 2023 22:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48780 "EHLO
+        id S234828AbjFGH41 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 7 Jun 2023 03:56:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234963AbjFGC2J (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 6 Jun 2023 22:28:09 -0400
-Received: from cstnet.cn (smtp80.cstnet.cn [159.226.251.80])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4408F1726;
-        Tue,  6 Jun 2023 19:28:07 -0700 (PDT)
-Received: from ed3e173716be.home.arpa (unknown [124.16.138.125])
-        by APP-01 (Coremail) with SMTP id qwCowAB3fxct639kpd3ODA--.2435S2;
-        Wed, 07 Jun 2023 10:27:57 +0800 (CST)
-From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
-To:     vkoul@kernel.org, arnd@arndb.de, zhangfei.gao@marvell.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiasheng Jiang <jiasheng@iscas.ac.cn>
-Subject: [PATCH] dmaengine: mmp_pdma: Add missing check for dma_set_mask
-Date:   Wed,  7 Jun 2023 10:27:56 +0800
-Message-Id: <20230607022756.35785-1-jiasheng@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S235052AbjFGH40 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 7 Jun 2023 03:56:26 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FE70E79
+        for <dmaengine@vger.kernel.org>; Wed,  7 Jun 2023 00:56:23 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1q6o1V-000699-Pn; Wed, 07 Jun 2023 09:56:05 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1q6o1T-005gwG-6s; Wed, 07 Jun 2023 09:56:03 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1q6o1S-00Bwh7-GJ; Wed, 07 Jun 2023 09:56:02 +0200
+Date:   Wed, 7 Jun 2023 09:56:02 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH 05/10] dt-bindings: pwm: convert pwm-bcm2835 bindings to
+ YAML
+Message-ID: <20230607075602.s2pfs7dl7fwkyevm@pengutronix.de>
+References: <20230604121223.9625-1-stefan.wahren@i2se.com>
+ <20230604121223.9625-6-stefan.wahren@i2se.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: qwCowAB3fxct639kpd3ODA--.2435S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrKr1kKF1rGF4rtw43Gw47CFg_yoWDXrgEvr
-        WUZryvgFs8JrZ29w1akryayr95u3sYgryq9rn2ga1fXry5G39xJ3y7ZF1kAr4UZasxCry5
-        CrsrCrW3tFyfCjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbcxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-        0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4U
-        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
-        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
-        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JV
-        WxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
-        cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb1rW7UUUUU==
-X-Originating-IP: [124.16.138.125]
-X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lyuxia23pum2phqj"
+Content-Disposition: inline
+In-Reply-To: <20230604121223.9625-6-stefan.wahren@i2se.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add check for dma_set_mask() and return the error if it fails.
 
-Fixes: c8acd6aa6bed ("dmaengine: mmp-pdma support")
-Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
----
- drivers/dma/mmp_pdma.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+--lyuxia23pum2phqj
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/dma/mmp_pdma.c b/drivers/dma/mmp_pdma.c
-index ebdfdcbb4f7a..9bf1625b065d 100644
---- a/drivers/dma/mmp_pdma.c
-+++ b/drivers/dma/mmp_pdma.c
-@@ -1103,9 +1103,11 @@ static int mmp_pdma_probe(struct platform_device *op)
- 	pdev->device.residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
- 
- 	if (pdev->dev->coherent_dma_mask)
--		dma_set_mask(pdev->dev, pdev->dev->coherent_dma_mask);
-+		ret = dma_set_mask(pdev->dev, pdev->dev->coherent_dma_mask);
- 	else
--		dma_set_mask(pdev->dev, DMA_BIT_MASK(64));
-+		ret = dma_set_mask(pdev->dev, DMA_BIT_MASK(64));
-+	if (ret)
-+		return ret;
- 
- 	ret = dma_async_device_register(&pdev->device);
- 	if (ret) {
--- 
-2.25.1
+Hello,
 
+On Sun, Jun 04, 2023 at 02:12:18PM +0200, Stefan Wahren wrote:
+> Convert the DT binding document for pwm-bcm2835 from .txt to YAML.
+
+Both dt_binding_check and dtbs_check (for ARCH=3Darm) are happy, apart
+=66rom errors like:
+
+arch/arm/boot/dts/bcm2711-rpi-4-b.dtb: pwm@7e20c000: #pwm-cells:0:0: 3 was =
+expected
+        From schema: Documentation/devicetree/bindings/pwm/pwm-bcm2835.yaml
+
+which is fixed in patch #6. So:
+
+Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Who will pick up this patch? Is it supposed to go in via pwm or
+arm/broadcom? (I suggest the latter.)
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--lyuxia23pum2phqj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmSAOBEACgkQj4D7WH0S
+/k4w2Qf/THJ6pslrb8HwoYlT3z4Xn2MagNVHuNgc00ChJFQ2ZijLk5hnXxwVOXVg
+hIj81DGnNyr+INajGYLHCxPIxwzV1wXJpdI2rj2nysvZB3d74v95qhibjiiUQz5P
+GOy4EQrbYBAx/UZLGv+qoOf1xIzoUnYmgRZr2LcNBbW2o1ttHOMMjK6wh8ov4ARo
+a9livwubMJDy/L00KdyVZ/BfZ0UN+qi8X5fF9PjP19OUgQCTnjYCJBsm0NIFdX0E
+ta3UQwJngoKQ3z2kvRc5ouyq3lVCIi5xZ+4dXJB5KO5ZglOTNgS+IM2DybJt9u5D
+AAGPigBN9yAoSJpaDGdylqO8ktDP/w==
+=nlpC
+-----END PGP SIGNATURE-----
+
+--lyuxia23pum2phqj--

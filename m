@@ -2,32 +2,32 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 28EAE726B13
-	for <lists+dmaengine@lfdr.de>; Wed,  7 Jun 2023 22:22:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 855EA726CED
+	for <lists+dmaengine@lfdr.de>; Wed,  7 Jun 2023 22:37:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232971AbjFGUWS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 7 Jun 2023 16:22:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47360 "EHLO
+        id S234049AbjFGUhv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 7 Jun 2023 16:37:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232991AbjFGUWN (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 7 Jun 2023 16:22:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2A721BFA;
-        Wed,  7 Jun 2023 13:21:54 -0700 (PDT)
+        with ESMTP id S234039AbjFGUhu (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 7 Jun 2023 16:37:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA369271B;
+        Wed,  7 Jun 2023 13:37:34 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7181F643D1;
-        Wed,  7 Jun 2023 20:21:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AFE9C433EF;
-        Wed,  7 Jun 2023 20:21:08 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D0175645A6;
+        Wed,  7 Jun 2023 20:37:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDF2DC433EF;
+        Wed,  7 Jun 2023 20:37:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1686169268;
+        s=korg; t=1686170253;
         bh=c5ZuE0yaAWFLmKZiWkPwIe9FoGlS6223SAYh/GBDZus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=truU1XtbvpoVdhpfk/RzPSwl2iT7x67Agl6xr0bf04upQzXhXID844IOehXO23oRb
-         8oDWMcCN4HnaOple3Y3wbpOvooYRu9IOSpHsLP12o4lHM8+FCAA3n0R3C4DRXyBjU1
-         6SV1GuogK5YsANoibo7P9WmYIoq9kuY1+SyZ6Y5M=
+        b=YsWeTfPJ2AAJM1vNKJAuCnV2XGDaOwUCxczpRcSB1TtJc8WBamJue8qM9nmsVp2ZH
+         /o22Tbe/sVrYen7KMFae1FwcPkaP+bc5b2Nv0IwgtyCjlu5kVi+XHjg8IyCLnel+59
+         riodbQzgV+zhs0H+ByudBso5X+KG0X+dbMAotuvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -38,18 +38,18 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Russell King <rmk+kernel@arm.linux.org.uk>,
         Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
         linux-riscv@lists.infradead.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.3 017/286] dmaengine: pl330: rename _start to prevent build error
-Date:   Wed,  7 Jun 2023 22:11:56 +0200
-Message-ID: <20230607200923.569395420@linuxfoundation.org>
+Subject: [PATCH 6.1 015/225] dmaengine: pl330: rename _start to prevent build error
+Date:   Wed,  7 Jun 2023 22:13:28 +0200
+Message-ID: <20230607200913.846911858@linuxfoundation.org>
 X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230607200922.978677727@linuxfoundation.org>
-References: <20230607200922.978677727@linuxfoundation.org>
+In-Reply-To: <20230607200913.334991024@linuxfoundation.org>
+References: <20230607200913.334991024@linuxfoundation.org>
 User-Agent: quilt/0.67
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on

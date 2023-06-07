@@ -2,84 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C3A7672607E
-	for <lists+dmaengine@lfdr.de>; Wed,  7 Jun 2023 15:07:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28EAE726B13
+	for <lists+dmaengine@lfdr.de>; Wed,  7 Jun 2023 22:22:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239706AbjFGNHC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 7 Jun 2023 09:07:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38284 "EHLO
+        id S232971AbjFGUWS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 7 Jun 2023 16:22:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239651AbjFGNHB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 7 Jun 2023 09:07:01 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C69D188;
-        Wed,  7 Jun 2023 06:06:58 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-4f61d79b0f2so5468793e87.3;
-        Wed, 07 Jun 2023 06:06:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686143216; x=1688735216;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=eVqzqKRxOOSH01gk2xNCMDidxypcD2q3gKimT9RM4+k=;
-        b=nBWgvoDTBM8BU6Km/vGwg3UUgfsXLIrlBfoRdHNeXtmng/myi5+Ld1ezT7XW83byLt
-         pNwdZxebb7SDxqivpL1pUZBf+vXUeSvrjdWjIefpiL3AMjkNxFgsx8pAtXaXW+1sCvlJ
-         9/D1QrTRRwkPj2mFiL7YO8VsdOvSBA2dHc72WG5ZsdSv9KfBZHXyh9AvlJgLR5NHXWv1
-         +JGl2TlnpypVAePh3msVyJhsvXH0+pHSLyRUqOfAzF67U3KopqFmVS6xzaPtN1d2CLPc
-         aPkj9V41/DCpByRLpr39DbImGyA8YAS4rYxOxxhEqtDw8EnvVz8UAT32pND9Hh9Gx8t4
-         cdZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686143216; x=1688735216;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eVqzqKRxOOSH01gk2xNCMDidxypcD2q3gKimT9RM4+k=;
-        b=E7THm+mSGvI5KaHWzRXJqiV5MaURUzKFmdaVJ6oDcEAjiNEjelYVdOmi48Z+pTaWxM
-         OQxCPwAw5PehVeXOtg8aAoFQWiop5JkK2AXAP5EkJafhRt5zyJtBe1GHsXvty73YsobZ
-         1bJ/hxUSn96iar4oxDr/TMA2QZEmMm9WX3eTnTT4m+cxCVlxo7p8nTsfh/BMGsTIqxVI
-         6ozFfXFmzp2+PzJT3TpTuy3vt4CbGcP1KXfWYrhOyzG08UHSAwuDny+Q49wc8CvFoKeC
-         X+xrhpCpQvipi7BlkMnRqE6NPeY9W1kX7iPbO3Djumq1kZwrlgIaKAO4+CIhmIL/yz1r
-         g/1w==
-X-Gm-Message-State: AC+VfDzxZNUOtQSf6t4RKIwxLcB0X4Jo9p3taRK2g0SvpjGHvE5M2os8
-        likYlPi9+gJfmwBb3xHmUEc=
-X-Google-Smtp-Source: ACHHUZ77wsQ6YZTYZqBp2m7uP2YNING/MOKHTzG4QE7uJERRnznOu4OFw9O6bb1BUtghsr8HCqJpzg==
-X-Received: by 2002:ac2:559c:0:b0:4f3:8143:765 with SMTP id v28-20020ac2559c000000b004f381430765mr2283763lfg.27.1686143216337;
-        Wed, 07 Jun 2023 06:06:56 -0700 (PDT)
-Received: from mobilestation ([91.144.185.176])
-        by smtp.gmail.com with ESMTPSA id m1-20020ac24ac1000000b004f13634da05sm1806099lfp.180.2023.06.07.06.06.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Jun 2023 06:06:55 -0700 (PDT)
-Date:   Wed, 7 Jun 2023 16:06:53 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     =?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>
-Cc:     vkoul@kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v11 3/4] dmaengine: dw-edma: Add support for native HDMA
-Message-ID: <20230607130653.5hueky3rfih6cnze@mobilestation>
-References: <20230520050854.73160-1-cai.huoqing@linux.dev>
- <20230520050854.73160-4-cai.huoqing@linux.dev>
- <20230607095832.6d6b1a73@kmaincent-XPS-13-7390>
- <20230607114950.zml4l2rs77cbeesy@mobilestation>
- <20230607144014.6356a197@kmaincent-XPS-13-7390>
+        with ESMTP id S232991AbjFGUWN (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 7 Jun 2023 16:22:13 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2A721BFA;
+        Wed,  7 Jun 2023 13:21:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7181F643D1;
+        Wed,  7 Jun 2023 20:21:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AFE9C433EF;
+        Wed,  7 Jun 2023 20:21:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1686169268;
+        bh=c5ZuE0yaAWFLmKZiWkPwIe9FoGlS6223SAYh/GBDZus=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=truU1XtbvpoVdhpfk/RzPSwl2iT7x67Agl6xr0bf04upQzXhXID844IOehXO23oRb
+         8oDWMcCN4HnaOple3Y3wbpOvooYRu9IOSpHsLP12o4lHM8+FCAA3n0R3C4DRXyBjU1
+         6SV1GuogK5YsANoibo7P9WmYIoq9kuY1+SyZ6Y5M=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        patches@lists.linux.dev, Randy Dunlap <rdunlap@infradead.org>,
+        Jaswinder Singh <jassisinghbrar@gmail.com>,
+        Boojin Kim <boojin.kim@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-riscv@lists.infradead.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.3 017/286] dmaengine: pl330: rename _start to prevent build error
+Date:   Wed,  7 Jun 2023 22:11:56 +0200
+Message-ID: <20230607200923.569395420@linuxfoundation.org>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230607200922.978677727@linuxfoundation.org>
+References: <20230607200922.978677727@linuxfoundation.org>
+User-Agent: quilt/0.67
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230607144014.6356a197@kmaincent-XPS-13-7390>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -87,69 +58,85 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Jun 07, 2023 at 02:40:14PM +0200, Köry Maincent wrote:
-> On Wed, 7 Jun 2023 14:49:50 +0300
-> Serge Semin <fancer.lancer@gmail.com> wrote:
-> 
-> > Hi Köry
-> > First of all. What is akida platform you are referring to? I failed to
-> > find any mention in the mainline kernel repo.
-> 
-> Yes, sorry akida is the project prefix I am currently working on.
-> It is simply a prefix for the symbol export to be different than mainline,
-> don't take it into account.
-> 
-> > > channels by doing the minimum between ll_wr_cnt and the ch_count callback.
-> > > The hdma ch_count callback is counting the number of channels enabled by
-> > > reading the number of ch_en registers set. At probe time there is no
-> > > channels registers that has been set as it is done later in the
-> > > dw_hdma_v0_core_start function. Then the dw_hdma_v0_core_ch_count will
-> > > always return 0 at probe time and the number of channels will be set to 0
-> > > which is not what we want. Could I miss something?  
-> > 
-> > Based on the HDMA patches content you are right. The channels must be
-> > pre-enabled in order to have the dw_hdma_v0_core_ch_count() procedure
-> > to work correctly otherwise you'll indeed end up with an empty list of
-> > channels. I don't have any device with the HDMA engine embedded so I
-> > couldn't have possibly tracked that peculiarity on review. Anyway
-> > AFAICS Cai just implemented a method which seemed to work for his
-> > hardware setup.
-> 
-> Alright, on my side I have a board using this FPGA implementation and it
-> indeed doesn't work as is.
-> 
-> > If you think it doesn't work correctly or it isn't portable enough
-> > then you are free to provide your own implementation of the method and
-> > submit a patch. I hope Cai will be willing to test it out to make sure
-> > that it works correctly for you and his platforms.
-> > 
-> > As for me if I were on your place I would have implemented a loop
-> > which would walk over all possible HDMA channels (HDMA_V0_MAX_NR_CH)
-> > and counted all channels which could be enabled. If the ch_en CSR is
-> > writable (that is the channel could be enabled) then it shall be
-> > considered as existent. Of course before that I would have made sure
-> > that the non-existent channels had non-writable ch_en CSR.
-> 
+From: Randy Dunlap <rdunlap@infradead.org>
 
-> This could be a nice idea but it doesn't work, non-existent channels seems to
-> be writable. The datasheet of the HDMA IP doesn't have any register to find out
-> the maximum existent channel. 
-> As there is no way to know this, the dw_hdma_v0_core_ch_count will simply
-> return HDMA_V0_MAX_NR_CH.
+[ Upstream commit a1a5f2c887252dec161c1e12e04303ca9ba56fa9 ]
 
-What about some other CSRs (llp, etc)? Are they all writable even if
-the respective channel doesn't exist?
+"_start" is used in several arches and proably should be reserved
+for ARCH usage. Using it in a driver for a private symbol can cause
+a build error when it conflicts with ARCH usage of the same symbol.
 
-If it isn't possible to auto-detect a number of channels then indeed
-we need to come up with a strategy to rely on the platform settings
-instead. Your suggestion seems to be the best choice seeing there is a
-commit 16b90dd94d3f ("dmaengine: dw-edma: Improve number of channels
-check") which converts the rely-on-platform-settings pattern to the
-current rely-on-min-between-plat-and-hw-capability.
+Therefore rename pl330's "_start" to "pl330_start_thread" so that there
+is no conflict and no build error.
 
-Cai?
+drivers/dma/pl330.c:1053:13: error: '_start' redeclared as different kind of symbol
+ 1053 | static bool _start(struct pl330_thread *thrd)
+      |             ^~~~~~
+In file included from ../include/linux/interrupt.h:21,
+                 from ../drivers/dma/pl330.c:18:
+arch/riscv/include/asm/sections.h:11:13: note: previous declaration of '_start' with type 'char[]'
+   11 | extern char _start[];
+      |             ^~~~~~
 
--Serge(y)
+Fixes: b7d861d93945 ("DMA: PL330: Merge PL330 driver into drivers/dma/")
+Fixes: ae43b3289186 ("ARM: 8202/1: dmaengine: pl330: Add runtime Power Management support v12")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jaswinder Singh <jassisinghbrar@gmail.com>
+Cc: Boojin Kim <boojin.kim@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org
+Link: https://lore.kernel.org/r/20230524045310.27923-1-rdunlap@infradead.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/dma/pl330.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> Cai how does it works on your side? does the ch_en register already enabled by
-> the implementation?
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 0d9257fbdfb0d..b4731fe6bbc14 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -1050,7 +1050,7 @@ static bool _trigger(struct pl330_thread *thrd)
+ 	return true;
+ }
+ 
+-static bool _start(struct pl330_thread *thrd)
++static bool pl330_start_thread(struct pl330_thread *thrd)
+ {
+ 	switch (_state(thrd)) {
+ 	case PL330_STATE_FAULT_COMPLETING:
+@@ -1702,7 +1702,7 @@ static int pl330_update(struct pl330_dmac *pl330)
+ 			thrd->req_running = -1;
+ 
+ 			/* Get going again ASAP */
+-			_start(thrd);
++			pl330_start_thread(thrd);
+ 
+ 			/* For now, just make a list of callbacks to be done */
+ 			list_add_tail(&descdone->rqd, &pl330->req_done);
+@@ -2089,7 +2089,7 @@ static void pl330_tasklet(struct tasklet_struct *t)
+ 	} else {
+ 		/* Make sure the PL330 Channel thread is active */
+ 		spin_lock(&pch->thread->dmac->lock);
+-		_start(pch->thread);
++		pl330_start_thread(pch->thread);
+ 		spin_unlock(&pch->thread->dmac->lock);
+ 	}
+ 
+@@ -2107,7 +2107,7 @@ static void pl330_tasklet(struct tasklet_struct *t)
+ 			if (power_down) {
+ 				pch->active = true;
+ 				spin_lock(&pch->thread->dmac->lock);
+-				_start(pch->thread);
++				pl330_start_thread(pch->thread);
+ 				spin_unlock(&pch->thread->dmac->lock);
+ 				power_down = false;
+ 			}
+-- 
+2.39.2
+
+
+

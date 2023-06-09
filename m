@@ -2,73 +2,74 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3628D72A5AD
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Jun 2023 23:56:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7EE272A5B3
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Jun 2023 23:56:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232116AbjFIV4C (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 9 Jun 2023 17:56:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38288 "EHLO
+        id S231865AbjFIV4W (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 9 Jun 2023 17:56:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229985AbjFIV4C (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 9 Jun 2023 17:56:02 -0400
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A3E02685;
-        Fri,  9 Jun 2023 14:56:01 -0700 (PDT)
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-77797beb42dso97113739f.2;
-        Fri, 09 Jun 2023 14:56:01 -0700 (PDT)
+        with ESMTP id S229985AbjFIV4W (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 9 Jun 2023 17:56:22 -0400
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 133A830E5;
+        Fri,  9 Jun 2023 14:56:21 -0700 (PDT)
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-33bdab7b4caso9598715ab.3;
+        Fri, 09 Jun 2023 14:56:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686347760; x=1688939760;
+        d=1e100.net; s=20221208; t=1686347780; x=1688939780;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pQKWu/Nmn9JuHRIqTO0O6TLbe/AqUc7TFP8t5cgdkFk=;
-        b=B4AqrSWVUm9yweC4pCeqxPI5Y/943uMUu3u1a/bi7vlL1SzLTI+/PC77NQz/D/HeR2
-         ljKX9j5mLQwqfIGS1k+FhSKe6lqNPQIqiYYtOQvl9pru0Qp1UlI2L+Ye73sbtrMTuPbO
-         rU1FVz1CIYJnmG85lH7HfAHLG5j8SuQ6eFTCEe2D/XBPoEhq3QvWr2rPgEBgTvDtC2vK
-         8AmLk7v4g5svw/EhD73eaJLX2n4T/vs8nyI6yKgMoSqi32a6NdVfXo2fXgDKxumUq4xA
-         JJWJgRZJ91P7iB0dWcRz2FCwTELFrew7+ThzPitvQZDQGER5M/ukJDp/8BrFz7SPrmiC
-         FHvw==
-X-Gm-Message-State: AC+VfDzg4nJHx3flCg90m8nneUcJOvDM+wV71pzPUdDvavrrY7B+1Grc
-        EVMDoLEVghUKruzMkOelTg==
-X-Google-Smtp-Source: ACHHUZ72Z2NSeyntgkWsQ8058OasVu4mqJoKjNA1pG0m5lCpYEU8gqN9EnkF4PcmvXWh6EySCfaTRA==
-X-Received: by 2002:a6b:e801:0:b0:777:b1ac:30af with SMTP id f1-20020a6be801000000b00777b1ac30afmr2737102ioh.12.1686347760412;
-        Fri, 09 Jun 2023 14:56:00 -0700 (PDT)
+        bh=AB9yccAX1Zl0Lgp0ALKMAe+AZ5E+m549f3RDP/SQQ2I=;
+        b=VWu0+qDFpt5mHgRd6WifeaLNXd64gh8KviR2xwNUXVyICoZPcVjDNBUq51eaJerQDj
+         h9WWeE3gDMC1Qv1X9cZNfGywst2VzuerM2uu2IlGR8jFr8NyjDNBJ274srIQObl4kgL0
+         NWMobOT4xh9v6uEn63JHGXVtMS4jOTQKEvI1jNm7fI+5tz3lek/teNg+tBye4iUUsoQI
+         Lhah2X2F5bun0/wMTUhQQNJqfxqcgjOvfKPySemDzB2+7QIio8SUID5RrMfIyI0ukoTg
+         9wC97DUTNPJpWhmX2RSS5S3eJumHYX+gGiJVyovZfTIIFCoq5SJRFHJPOqaLo2fxh//9
+         q+Aw==
+X-Gm-Message-State: AC+VfDwOt1NPr/pMiG0xS8TljcBYIBXEGAz8TJi4bLuqjlEtN2c/hFG8
+        YzPWKqf8ZtQVIqwZBVQwdg==
+X-Google-Smtp-Source: ACHHUZ4mUBthMCIvyHVtNXvPq5INEdw7zijRfRjpz0tvOBvj0MlyFM5JrENgkzrkFTQPX6AJt9/XDA==
+X-Received: by 2002:a92:d901:0:b0:33b:94d:b613 with SMTP id s1-20020a92d901000000b0033b094db613mr2365590iln.11.1686347780245;
+        Fri, 09 Jun 2023 14:56:20 -0700 (PDT)
 Received: from robh_at_kernel.org ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id b8-20020a02a588000000b0041ceadd5f4dsm1198423jam.70.2023.06.09.14.55.57
+        by smtp.gmail.com with ESMTPSA id p11-20020a92d48b000000b0033af42a969asm1314394ilg.57.2023.06.09.14.56.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jun 2023 14:55:59 -0700 (PDT)
-Received: (nullmailer pid 2530251 invoked by uid 1000);
-        Fri, 09 Jun 2023 21:55:56 -0000
-Date:   Fri, 9 Jun 2023 15:55:56 -0600
+        Fri, 09 Jun 2023 14:56:19 -0700 (PDT)
+Received: (nullmailer pid 2530734 invoked by uid 1000);
+        Fri, 09 Jun 2023 21:56:17 -0000
+Date:   Fri, 9 Jun 2023 15:56:17 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     Florian Fainelli <florian.fainelli@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        dmaengine@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
         Zhang Rui <rui.zhang@intel.com>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Conor Dooley <conor+dt@kernel.org>,
         Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-mmc@vger.kernel.org,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Ray Jui <rjui@broadcom.com>, Vinod Koul <vkoul@kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Amit Kucheria <amitk@kernel.org>,
+        linux-pm@vger.kernel.org, linux-mmc@vger.kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
-        Conor Dooley <conor+dt@kernel.org>
-Subject: Re: [PATCH 05/10] dt-bindings: pwm: convert pwm-bcm2835 bindings to
- YAML
-Message-ID: <168634775597.2530196.7706723373983160654.robh@kernel.org>
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pwm@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        Amit Kucheria <amitk@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 07/10] dt-bindings: mailbox: convert bcm2835-mbox
+ bindings to YAML
+Message-ID: <168634777667.2530679.12856393854713881278.robh@kernel.org>
 References: <20230604121223.9625-1-stefan.wahren@i2se.com>
- <20230604121223.9625-6-stefan.wahren@i2se.com>
+ <20230604121223.9625-8-stefan.wahren@i2se.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230604121223.9625-6-stefan.wahren@i2se.com>
+In-Reply-To: <20230604121223.9625-8-stefan.wahren@i2se.com>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
@@ -81,16 +82,16 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On Sun, 04 Jun 2023 14:12:18 +0200, Stefan Wahren wrote:
-> Convert the DT binding document for pwm-bcm2835 from .txt to YAML.
+On Sun, 04 Jun 2023 14:12:20 +0200, Stefan Wahren wrote:
+> Convert the DT binding document for bcm2835-mbox from .txt to YAML.
 > 
 > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 > ---
->  .../devicetree/bindings/pwm/pwm-bcm2835.txt   | 30 -------------
->  .../devicetree/bindings/pwm/pwm-bcm2835.yaml  | 43 +++++++++++++++++++
->  2 files changed, 43 insertions(+), 30 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-bcm2835.yaml
+>  .../bindings/mailbox/brcm,bcm2835-mbox.txt    | 26 ------------
+>  .../bindings/mailbox/brcm,bcm2835-mbox.yaml   | 40 +++++++++++++++++++
+>  2 files changed, 40 insertions(+), 26 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>

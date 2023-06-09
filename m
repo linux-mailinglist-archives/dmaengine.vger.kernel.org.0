@@ -2,44 +2,44 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CEC8572A58F
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Jun 2023 23:48:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18FAA72A5A5
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Jun 2023 23:54:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232602AbjFIVsj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 9 Jun 2023 17:48:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36298 "EHLO
+        id S231871AbjFIVyy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 9 Jun 2023 17:54:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232603AbjFIVsf (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 9 Jun 2023 17:48:35 -0400
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A519E3A86;
-        Fri,  9 Jun 2023 14:48:32 -0700 (PDT)
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-777b4c9e341so100204439f.0;
-        Fri, 09 Jun 2023 14:48:32 -0700 (PDT)
+        with ESMTP id S232706AbjFIVyt (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 9 Jun 2023 17:54:49 -0400
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B4D42685;
+        Fri,  9 Jun 2023 14:54:47 -0700 (PDT)
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-33e585a0ca6so9522175ab.3;
+        Fri, 09 Jun 2023 14:54:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686347312; x=1688939312;
+        d=1e100.net; s=20221208; t=1686347686; x=1688939686;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3qpfwtUB289deyJuENcBGM55nCDkXMSKNdGdYUHnuCU=;
-        b=XNf7AmIHny1WOZ0PIzhzhMlDd2aNtQaDRQLe92/UiUXxruq1HsiI9sh+2ytd23D4nK
-         1mxBJfosAqkjIK17TitpiBhN9F8oQ98+dvP3TZbMXRWSulsBp5Mw2bRdqlu7Vnx0PT+r
-         lPAAPtMRbYxpQiNRGK8arDrU9aQrbdOnbcE5yRi7pjWo679S7UUffc85OjxLCxIalx+d
-         ojKjLmuLO7Sz0/iOrhPIPMFgx/cpi3hmFKj0i+0pEdzj/xmId9AFFm/nAhW0lABezGNv
-         S64qejS3BfY2l1/zvrE4XnTV9ZGJd+0mbbDGIXagYNkXxTRqy93KYTrD/UT4b0mJIKk9
-         QhOw==
-X-Gm-Message-State: AC+VfDxW+IkWDmvBiGQ3dK+4s+YUsqUr4jd9DkT+/n4uXE0i6V6L/HAM
-        PNHBckbXpfWCNn8YUN8Btw==
-X-Google-Smtp-Source: ACHHUZ47VZENLy/puA0Ka/EMeCy9/Ituyd85TfUdYllTCRogMKRllOm/YUoG9xFkK70Op6F8ZIz4Bg==
-X-Received: by 2002:a5e:db07:0:b0:777:8e86:7636 with SMTP id q7-20020a5edb07000000b007778e867636mr2922948iop.15.1686347311726;
-        Fri, 09 Jun 2023 14:48:31 -0700 (PDT)
+        bh=rJ4s8DLGxIQMZgO3h4yWSzjSw0o4+j3wjFGsywkwuyQ=;
+        b=VIysn5K8i0nR7ZHk73uFKcwchrDXZongx0alHB/Z8fycZV0Tt+5Xc7mjNp3GaXm12N
+         5E8HWVOisX5OFylP7IyUMtjBH1q5v6lZgX7un1cS808BuyHJDL5lDYQuS8dHwVz5SW+/
+         X3o3nu+SzltCWDPhQoGzAWl8gibuS2Zuj/tBAr7rS1CkTOAX+Za4BnsBbZuGU4bBKthg
+         HObtfKqRFxlJx4Rbcb+18GPGVWPtQV6XoZiDf1zXE5cs4ERtxyqt+vpy+0chHBOGkE+J
+         uYbxYbkrpHu13uV8aya1BoMO4b1U3bDIpiUtHTMSoWaxQmInFlmF3sUNxPZ8XAeJewUc
+         pL/Q==
+X-Gm-Message-State: AC+VfDzwP7/w5w90PdbyPvxI2g7gXBRo+aimLbDWIrU+I83UzV3rSZY3
+        Bg0JuSX/2TTwoLNX6ofkcg==
+X-Google-Smtp-Source: ACHHUZ7asW6KLLFEuMl3Gpj9wEteHcFkfQtU+mBgAGx4LCseYTLClP89Gsdg7cl4uLoZoq/oLRK0Kw==
+X-Received: by 2002:a92:d690:0:b0:32b:50d1:3403 with SMTP id p16-20020a92d690000000b0032b50d13403mr2464164iln.7.1686347686371;
+        Fri, 09 Jun 2023 14:54:46 -0700 (PDT)
 Received: from robh_at_kernel.org ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id ei5-20020a05663829a500b0041cd0951a93sm1191556jab.8.2023.06.09.14.48.29
+        by smtp.gmail.com with ESMTPSA id k27-20020a02ccdb000000b0041aaebd2017sm1167046jaq.82.2023.06.09.14.54.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jun 2023 14:48:31 -0700 (PDT)
-Received: (nullmailer pid 2522025 invoked by uid 1000);
-        Fri, 09 Jun 2023 21:48:28 -0000
-Date:   Fri, 9 Jun 2023 15:48:28 -0600
+        Fri, 09 Jun 2023 14:54:45 -0700 (PDT)
+Received: (nullmailer pid 2528752 invoked by uid 1000);
+        Fri, 09 Jun 2023 21:54:43 -0000
+Date:   Fri, 9 Jun 2023 15:54:43 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Stefan Wahren <stefan.wahren@i2se.com>
 Cc:     Vinod Koul <vkoul@kernel.org>,
@@ -61,19 +61,18 @@ Cc:     Vinod Koul <vkoul@kernel.org>,
         devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
         bcm-kernel-feedback-list@broadcom.com
-Subject: Re: [PATCH 03/10] dt-bindings: dma: convert bcm2835-dma bindings to
- YAML
-Message-ID: <20230609214828.GA2519714-robh@kernel.org>
+Subject: Re: [PATCH 04/10] ARM: dts: bcm2835: adjust DMA nodes
+Message-ID: <20230609215443.GA2522299-robh@kernel.org>
 References: <20230604121223.9625-1-stefan.wahren@i2se.com>
- <20230604121223.9625-4-stefan.wahren@i2se.com>
+ <20230604121223.9625-5-stefan.wahren@i2se.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230604121223.9625-4-stefan.wahren@i2se.com>
+In-Reply-To: <20230604121223.9625-5-stefan.wahren@i2se.com>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,219 +80,73 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sun, Jun 04, 2023 at 02:12:16PM +0200, Stefan Wahren wrote:
-> Convert the DT binding document for bcm2835-dma from .txt to YAML.
-> Since brcm,dma-channel-mask is considered deprecated use the
-> generic property.
+On Sun, Jun 04, 2023 at 02:12:17PM +0200, Stefan Wahren wrote:
+> After converting the bcm2835-dma DT binding to YAML, the DT schema
+> checks gave warnings like:
+> 
+> $nodename:0: 'dma@7e007000' does not match '^dma-controller(@.*)?$'
+> 'dma-channel-mask' is a required property
+> Unevaluated properties are not allowed ('brcm,dma-channel-mask' was unexpected)
+> 
+> So fix them accordingly.
 > 
 > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 > ---
->  .../bindings/dma/brcm,bcm2835-dma.txt         | 83 ----------------
->  .../bindings/dma/brcm,bcm2835-dma.yaml        | 98 +++++++++++++++++++
->  2 files changed, 98 insertions(+), 83 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
->  create mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml
+>  arch/arm/boot/dts/bcm2711.dtsi        | 4 ++--
+>  arch/arm/boot/dts/bcm2835-common.dtsi | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
-> deleted file mode 100644
-> index b6a8cc0978cd..000000000000
-> --- a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
-> +++ /dev/null
-> @@ -1,83 +0,0 @@
-> -* BCM2835 DMA controller
-> -
-> -The BCM2835 DMA controller has 16 channels in total.
-> -Only the lower 13 channels have an associated IRQ.
-> -Some arbitrary channels are used by the firmware
-> -(1,3,6,7 in the current firmware version).
-> -The channels 0,2 and 3 have special functionality
-> -and should not be used by the driver.
-> -
-> -Required properties:
-> -- compatible: Should be "brcm,bcm2835-dma".
-> -- reg: Should contain DMA registers location and length.
-> -- interrupts: Should contain the DMA interrupts associated
-> -		to the DMA channels in ascending order.
-> -- interrupt-names: Should contain the names of the interrupt
-> -		   in the form "dmaXX".
-> -		   Use "dma-shared-all" for the common interrupt line
-> -		   that is shared by all dma channels.
-> -- #dma-cells: Must be <1>, the cell in the dmas property of the
-> -		client device represents the DREQ number.
-> -- brcm,dma-channel-mask: Bit mask representing the channels
-> -			 not used by the firmware in ascending order,
-> -			 i.e. first channel corresponds to LSB.
-> -
-> -Example:
-> -
-> -dma: dma@7e007000 {
-> -	compatible = "brcm,bcm2835-dma";
-> -	reg = <0x7e007000 0xf00>;
-> -	interrupts = <1 16>,
-> -		     <1 17>,
-> -		     <1 18>,
-> -		     <1 19>,
-> -		     <1 20>,
-> -		     <1 21>,
-> -		     <1 22>,
-> -		     <1 23>,
-> -		     <1 24>,
-> -		     <1 25>,
-> -		     <1 26>,
-> -		     /* dma channel 11-14 share one irq */
-> -		     <1 27>,
-> -		     <1 27>,
-> -		     <1 27>,
-> -		     <1 27>,
-> -		     /* unused shared irq for all channels */
-> -		     <1 28>;
-> -	interrupt-names = "dma0",
-> -			  "dma1",
-> -			  "dma2",
-> -			  "dma3",
-> -			  "dma4",
-> -			  "dma5",
-> -			  "dma6",
-> -			  "dma7",
-> -			  "dma8",
-> -			  "dma9",
-> -			  "dma10",
-> -			  "dma11",
-> -			  "dma12",
-> -			  "dma13",
-> -			  "dma14",
-> -			  "dma-shared-all";
-> -
-> -	#dma-cells = <1>;
-> -	brcm,dma-channel-mask = <0x7f35>;
-> -};
-> -
-> -
-> -DMA clients connected to the BCM2835 DMA controller must use the format
-> -described in the dma.txt file, using a two-cell specifier for each channel.
-> -
-> -Example:
-> -
-> -bcm2835_i2s: i2s@7e203000 {
-> -	compatible = "brcm,bcm2835-i2s";
-> -	reg = <	0x7e203000 0x24>;
-> -	clocks = <&clocks BCM2835_CLOCK_PCM>;
-> -
-> -	dmas = <&dma 2>,
-> -	       <&dma 3>;
-> -	dma-names = "tx", "rx";
-> -};
-> diff --git a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml
-> new file mode 100644
-> index 000000000000..a09000a8131f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml
-> @@ -0,0 +1,98 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/brcm,bcm2835-dma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: BCM2835 DMA controller
-> +
-> +maintainers:
-> +  - Nicolas Saenz Julienne <nsaenz@kernel.org>
-> +
-> +description:
-> +  The BCM2835 DMA controller has 16 channels in total. Only the lower
-> +  13 channels have an associated IRQ. Some arbitrary channels are used by the
-> +  VideoCore firmware (1,3,6,7 in the current firmware version). The channels
-> +  0, 2 and 3 have special functionality and should not be used by the driver.
-> +
-> +allOf:
-> +  - $ref: "dma-controller.yaml#"
+> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+> index 097e9f252235..83745672a120 100644
+> --- a/arch/arm/boot/dts/bcm2711.dtsi
+> +++ b/arch/arm/boot/dts/bcm2711.dtsi
+> @@ -76,7 +76,7 @@ thermal: thermal {
+>  			};
+>  		};
+>  
+> -		dma: dma@7e007000 {
+> +		dma: dma-controller@7e007000 {
+>  			compatible = "brcm,bcm2835-dma";
+>  			reg = <0x7e007000 0xb00>;
+>  			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>,
+> @@ -103,7 +103,7 @@ dma: dma@7e007000 {
+>  					  "dma9",
+>  					  "dma10";
+>  			#dma-cells = <1>;
+> -			brcm,dma-channel-mask = <0x07f5>;
+> +			dma-channel-mask = <0x07f5>;
 
-Drop quotes. Please check elsewhere in the series.
+You're breaking the ABI here. I'd think RPi users would care.
 
-With that fixed,
+You should either list both properties or just leave this as-is. You 
+could also mark the driver "dma-channel-mask" support for stable and 
+somewhat avoid the ABI issue.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +
-> +properties:
-> +  compatible:
-> +    const: brcm,bcm2835-dma
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description:
-> +      Should contain the DMA interrupts associated to the DMA channels in
-> +      ascending order.
-> +    minItems: 1
-> +    maxItems: 16
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 16
-> +
-> +  '#dma-cells':
-> +    description: The single cell represents the DREQ number.
-> +    const: 1
-> +
-> +  dma-channel-mask:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - "#dma-cells"
-> +  - dma-channel-mask
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    dma-controller@7e007000 {
-> +      compatible = "brcm,bcm2835-dma";
-> +      reg = <0x7e007000 0xf00>;
-> +      interrupts = <1 16>,
-> +                   <1 17>,
-> +                   <1 18>,
-> +                   <1 19>,
-> +                   <1 20>,
-> +                   <1 21>,
-> +                   <1 22>,
-> +                   <1 23>,
-> +                   <1 24>,
-> +                   <1 25>,
-> +                   <1 26>,
-> +                   /* dma channel 11-14 share one irq */
-> +                   <1 27>,
-> +                   <1 27>,
-> +                   <1 27>,
-> +                   <1 27>,
-> +                   /* unused shared irq for all channels */
-> +                   <1 28>;
-> +      interrupt-names = "dma0",
-> +                        "dma1",
-> +                        "dma2",
-> +                        "dma3",
-> +                        "dma4",
-> +                        "dma5",
-> +                        "dma6",
-> +                        "dma7",
-> +                        "dma8",
-> +                        "dma9",
-> +                        "dma10",
-> +                        "dma11",
-> +                        "dma12",
-> +                        "dma13",
-> +                        "dma14",
-> +                        "dma-shared-all";
-> +        #dma-cells = <1>;
-> +        dma-channel-mask = <0x7f35>;
-> +    };
-> +
-> +...
+>  		};
+>  
+>  		pm: watchdog@7e100000 {
+> diff --git a/arch/arm/boot/dts/bcm2835-common.dtsi b/arch/arm/boot/dts/bcm2835-common.dtsi
+> index bb7e8f7facaf..3ba8db8eed0f 100644
+> --- a/arch/arm/boot/dts/bcm2835-common.dtsi
+> +++ b/arch/arm/boot/dts/bcm2835-common.dtsi
+> @@ -8,7 +8,7 @@ / {
+>  	interrupt-parent = <&intc>;
+>  
+>  	soc {
+> -		dma: dma@7e007000 {
+> +		dma: dma-controller@7e007000 {
+>  			compatible = "brcm,bcm2835-dma";
+>  			reg = <0x7e007000 0xf00>;
+>  			interrupts = <1 16>,
+> @@ -46,7 +46,7 @@ dma: dma@7e007000 {
+>  					  "dma14",
+>  					  "dma-shared-all";
+>  			#dma-cells = <1>;
+> -			brcm,dma-channel-mask = <0x7f35>;
+> +			dma-channel-mask = <0x7f35>;
+>  		};
+>  
+>  		intc: interrupt-controller@7e00b200 {
 > -- 
 > 2.34.1
 > 

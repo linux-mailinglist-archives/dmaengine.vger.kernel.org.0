@@ -2,73 +2,73 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18FAA72A5A5
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Jun 2023 23:54:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3628D72A5AD
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Jun 2023 23:56:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231871AbjFIVyy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 9 Jun 2023 17:54:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37502 "EHLO
+        id S232116AbjFIV4C (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 9 Jun 2023 17:56:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232706AbjFIVyt (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 9 Jun 2023 17:54:49 -0400
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B4D42685;
-        Fri,  9 Jun 2023 14:54:47 -0700 (PDT)
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-33e585a0ca6so9522175ab.3;
-        Fri, 09 Jun 2023 14:54:47 -0700 (PDT)
+        with ESMTP id S229985AbjFIV4C (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 9 Jun 2023 17:56:02 -0400
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A3E02685;
+        Fri,  9 Jun 2023 14:56:01 -0700 (PDT)
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-77797beb42dso97113739f.2;
+        Fri, 09 Jun 2023 14:56:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686347686; x=1688939686;
+        d=1e100.net; s=20221208; t=1686347760; x=1688939760;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rJ4s8DLGxIQMZgO3h4yWSzjSw0o4+j3wjFGsywkwuyQ=;
-        b=VIysn5K8i0nR7ZHk73uFKcwchrDXZongx0alHB/Z8fycZV0Tt+5Xc7mjNp3GaXm12N
-         5E8HWVOisX5OFylP7IyUMtjBH1q5v6lZgX7un1cS808BuyHJDL5lDYQuS8dHwVz5SW+/
-         X3o3nu+SzltCWDPhQoGzAWl8gibuS2Zuj/tBAr7rS1CkTOAX+Za4BnsBbZuGU4bBKthg
-         HObtfKqRFxlJx4Rbcb+18GPGVWPtQV6XoZiDf1zXE5cs4ERtxyqt+vpy+0chHBOGkE+J
-         uYbxYbkrpHu13uV8aya1BoMO4b1U3bDIpiUtHTMSoWaxQmInFlmF3sUNxPZ8XAeJewUc
-         pL/Q==
-X-Gm-Message-State: AC+VfDzwP7/w5w90PdbyPvxI2g7gXBRo+aimLbDWIrU+I83UzV3rSZY3
-        Bg0JuSX/2TTwoLNX6ofkcg==
-X-Google-Smtp-Source: ACHHUZ7asW6KLLFEuMl3Gpj9wEteHcFkfQtU+mBgAGx4LCseYTLClP89Gsdg7cl4uLoZoq/oLRK0Kw==
-X-Received: by 2002:a92:d690:0:b0:32b:50d1:3403 with SMTP id p16-20020a92d690000000b0032b50d13403mr2464164iln.7.1686347686371;
-        Fri, 09 Jun 2023 14:54:46 -0700 (PDT)
+        bh=pQKWu/Nmn9JuHRIqTO0O6TLbe/AqUc7TFP8t5cgdkFk=;
+        b=B4AqrSWVUm9yweC4pCeqxPI5Y/943uMUu3u1a/bi7vlL1SzLTI+/PC77NQz/D/HeR2
+         ljKX9j5mLQwqfIGS1k+FhSKe6lqNPQIqiYYtOQvl9pru0Qp1UlI2L+Ye73sbtrMTuPbO
+         rU1FVz1CIYJnmG85lH7HfAHLG5j8SuQ6eFTCEe2D/XBPoEhq3QvWr2rPgEBgTvDtC2vK
+         8AmLk7v4g5svw/EhD73eaJLX2n4T/vs8nyI6yKgMoSqi32a6NdVfXo2fXgDKxumUq4xA
+         JJWJgRZJ91P7iB0dWcRz2FCwTELFrew7+ThzPitvQZDQGER5M/ukJDp/8BrFz7SPrmiC
+         FHvw==
+X-Gm-Message-State: AC+VfDzg4nJHx3flCg90m8nneUcJOvDM+wV71pzPUdDvavrrY7B+1Grc
+        EVMDoLEVghUKruzMkOelTg==
+X-Google-Smtp-Source: ACHHUZ72Z2NSeyntgkWsQ8058OasVu4mqJoKjNA1pG0m5lCpYEU8gqN9EnkF4PcmvXWh6EySCfaTRA==
+X-Received: by 2002:a6b:e801:0:b0:777:b1ac:30af with SMTP id f1-20020a6be801000000b00777b1ac30afmr2737102ioh.12.1686347760412;
+        Fri, 09 Jun 2023 14:56:00 -0700 (PDT)
 Received: from robh_at_kernel.org ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id k27-20020a02ccdb000000b0041aaebd2017sm1167046jaq.82.2023.06.09.14.54.44
+        by smtp.gmail.com with ESMTPSA id b8-20020a02a588000000b0041ceadd5f4dsm1198423jam.70.2023.06.09.14.55.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jun 2023 14:54:45 -0700 (PDT)
-Received: (nullmailer pid 2528752 invoked by uid 1000);
-        Fri, 09 Jun 2023 21:54:43 -0000
-Date:   Fri, 9 Jun 2023 15:54:43 -0600
+        Fri, 09 Jun 2023 14:55:59 -0700 (PDT)
+Received: (nullmailer pid 2530251 invoked by uid 1000);
+        Fri, 09 Jun 2023 21:55:56 -0000
+Date:   Fri, 9 Jun 2023 15:55:56 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>,
+Cc:     Florian Fainelli <florian.fainelli@broadcom.com>,
         Scott Branden <sbranden@broadcom.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
         Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
         <u.kleine-koenig@pengutronix.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-mmc@vger.kernel.org,
+        Jassi Brar <jassisinghbrar@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ray Jui <rjui@broadcom.com>, Vinod Koul <vkoul@kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: Re: [PATCH 04/10] ARM: dts: bcm2835: adjust DMA nodes
-Message-ID: <20230609215443.GA2522299-robh@kernel.org>
+        Conor Dooley <conor+dt@kernel.org>
+Subject: Re: [PATCH 05/10] dt-bindings: pwm: convert pwm-bcm2835 bindings to
+ YAML
+Message-ID: <168634775597.2530196.7706723373983160654.robh@kernel.org>
 References: <20230604121223.9625-1-stefan.wahren@i2se.com>
- <20230604121223.9625-5-stefan.wahren@i2se.com>
+ <20230604121223.9625-6-stefan.wahren@i2se.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230604121223.9625-5-stefan.wahren@i2se.com>
+In-Reply-To: <20230604121223.9625-6-stefan.wahren@i2se.com>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
@@ -80,73 +80,18 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sun, Jun 04, 2023 at 02:12:17PM +0200, Stefan Wahren wrote:
-> After converting the bcm2835-dma DT binding to YAML, the DT schema
-> checks gave warnings like:
-> 
-> $nodename:0: 'dma@7e007000' does not match '^dma-controller(@.*)?$'
-> 'dma-channel-mask' is a required property
-> Unevaluated properties are not allowed ('brcm,dma-channel-mask' was unexpected)
-> 
-> So fix them accordingly.
+
+On Sun, 04 Jun 2023 14:12:18 +0200, Stefan Wahren wrote:
+> Convert the DT binding document for pwm-bcm2835 from .txt to YAML.
 > 
 > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 > ---
->  arch/arm/boot/dts/bcm2711.dtsi        | 4 ++--
->  arch/arm/boot/dts/bcm2835-common.dtsi | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
+>  .../devicetree/bindings/pwm/pwm-bcm2835.txt   | 30 -------------
+>  .../devicetree/bindings/pwm/pwm-bcm2835.yaml  | 43 +++++++++++++++++++
+>  2 files changed, 43 insertions(+), 30 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-bcm2835.yaml
 > 
-> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
-> index 097e9f252235..83745672a120 100644
-> --- a/arch/arm/boot/dts/bcm2711.dtsi
-> +++ b/arch/arm/boot/dts/bcm2711.dtsi
-> @@ -76,7 +76,7 @@ thermal: thermal {
->  			};
->  		};
->  
-> -		dma: dma@7e007000 {
-> +		dma: dma-controller@7e007000 {
->  			compatible = "brcm,bcm2835-dma";
->  			reg = <0x7e007000 0xb00>;
->  			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>,
-> @@ -103,7 +103,7 @@ dma: dma@7e007000 {
->  					  "dma9",
->  					  "dma10";
->  			#dma-cells = <1>;
-> -			brcm,dma-channel-mask = <0x07f5>;
-> +			dma-channel-mask = <0x07f5>;
 
-You're breaking the ABI here. I'd think RPi users would care.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-You should either list both properties or just leave this as-is. You 
-could also mark the driver "dma-channel-mask" support for stable and 
-somewhat avoid the ABI issue.
-
->  		};
->  
->  		pm: watchdog@7e100000 {
-> diff --git a/arch/arm/boot/dts/bcm2835-common.dtsi b/arch/arm/boot/dts/bcm2835-common.dtsi
-> index bb7e8f7facaf..3ba8db8eed0f 100644
-> --- a/arch/arm/boot/dts/bcm2835-common.dtsi
-> +++ b/arch/arm/boot/dts/bcm2835-common.dtsi
-> @@ -8,7 +8,7 @@ / {
->  	interrupt-parent = <&intc>;
->  
->  	soc {
-> -		dma: dma@7e007000 {
-> +		dma: dma-controller@7e007000 {
->  			compatible = "brcm,bcm2835-dma";
->  			reg = <0x7e007000 0xf00>;
->  			interrupts = <1 16>,
-> @@ -46,7 +46,7 @@ dma: dma@7e007000 {
->  					  "dma14",
->  					  "dma-shared-all";
->  			#dma-cells = <1>;
-> -			brcm,dma-channel-mask = <0x7f35>;
-> +			dma-channel-mask = <0x7f35>;
->  		};
->  
->  		intc: interrupt-controller@7e00b200 {
-> -- 
-> 2.34.1
-> 

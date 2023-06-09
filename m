@@ -2,61 +2,62 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 045FD728011
-	for <lists+dmaengine@lfdr.de>; Thu,  8 Jun 2023 14:32:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B02D72928F
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Jun 2023 10:17:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236109AbjFHMcc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 8 Jun 2023 08:32:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51694 "EHLO
+        id S240191AbjFIIRh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 9 Jun 2023 04:17:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235761AbjFHMcb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 8 Jun 2023 08:32:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7AAAE43;
-        Thu,  8 Jun 2023 05:32:30 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4A54E61846;
-        Thu,  8 Jun 2023 12:32:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C42B0C433D2;
-        Thu,  8 Jun 2023 12:32:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686227549;
-        bh=r/4PkU/68uF7lKPzBCrmdgapCjizIDkg+xcFVkYgySA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bdFjKVnf5dbKmuzzaVnJeFbvAsXl9DObq6ABi1c57cMksyu32dwik3M6M90T2kncE
-         tavsbDVCuezHRFk0z4j7xUCi633VEdKXpErlip+5IvoyrYcqsqggbeEsdMrfCGrNZQ
-         IDUxuIR3vs6Id91ldSrCfohV/CPHbTyef74JXnDxjAZQeAV8cJBzyzxhI0d1zxylK0
-         gH8M6961qZzW5QmfZm/iy5WQGr0yhaOiLlOMlrCkFi/uaxlY/9MNpZQtgMGNNWAlDL
-         R3CDp3jghBlBF654pxVl2etHgbuFxYIHq9rt7kNa7QmyxoWnOUKQpoTYKT+Q8o6GeJ
-         6vTFRmrwQAKAA==
-Date:   Thu, 8 Jun 2023 18:02:25 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        dmaengine@vger.kernel.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        andersson@kernel.org, bhupesh.linux@gmail.com,
-        krzysztof.kozlowski@linaro.org, robh+dt@kernel.org,
-        konrad.dybcio@linaro.org, vladimir.zapolskiy@linaro.org,
-        rfoss@kernel.org, neil.armstrong@linaro.org, djakov@kernel.org,
-        stephan@gerhold.net, Rob Herring <robh@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Linux Kernel Functional Testing <lkft@linaro.org>
-Subject: Re: [PATCH v8 01/11] dt-bindings: dma: Add support for SM6115 and
- QCM2290 SoCs
-Message-ID: <ZIHKWYMs1e/rOez0@matsya>
-References: <20230526192210.3146896-1-bhupesh.sharma@linaro.org>
- <20230526192210.3146896-2-bhupesh.sharma@linaro.org>
- <CAH=2Ntx+4F+ZP_Y+=e4p9rdTRQV8FHaepJCyqVFtWUPjDehoNg@mail.gmail.com>
+        with ESMTP id S240176AbjFIIRf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 9 Jun 2023 04:17:35 -0400
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::226])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AF0F35B5;
+        Fri,  9 Jun 2023 01:16:59 -0700 (PDT)
+X-GND-Sasl: kory.maincent@bootlin.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1686298616;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Ex6LdIdKwwSp7v20YeX6YqUlcckFZIlUK3H78VaVgeU=;
+        b=DpVXxOJwU8/YuZqdB9Omoc6INTySlWfL4wFxYiokbczMotgp3wKr0VQIntQo8iuwJ3cbrr
+        +VA9cdS9cRaNEFPLlQdygdtAlBcI/3C2VC4OKNm4/qvcQ7TBtTgeS/KXYBKSEFwj2HkRQ0
+        8Z4F4JXlhDxcHXTHcIJAWAETi7MfZsLNwFd/mgKdN0FN8QzMbddaNswIenh4OlsT3vaDbl
+        h3NGDiunQ5ExcaZGka2Q9wFYJtOms276Gv1ZNqsyyzFENWQfclhNgvOdnmerRl9eK4fX3L
+        NiKb0L88DNvzvsu8fEdtoXZ0IwUqnbZbIV9XFHn0KxLl2K3bG1DwPbvKYPedew==
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 193CDC0005;
+        Fri,  9 Jun 2023 08:16:55 +0000 (UTC)
+From:   =?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>
+To:     Cai Huoqing <cai.huoqing@linux.dev>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Herve Codina <herve.codina@bootlin.com>,
+        Kory Maincent <kory.maincent@bootlin.com>
+Subject: [PATCH 0/9] Fix support of dw-edma HDMA NATIVE IP in remote setup
+Date:   Fri,  9 Jun 2023 10:16:45 +0200
+Message-Id: <20230609081654.330857-1-kory.maincent@bootlin.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAH=2Ntx+4F+ZP_Y+=e4p9rdTRQV8FHaepJCyqVFtWUPjDehoNg@mail.gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,75 +65,33 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 29-05-23, 11:43, Bhupesh Sharma wrote:
-> Hi Vinod,
-> 
-> > On Sat, 27 May 2023 at 00:52, Bhupesh Sharma <bhupesh.sharma@linaro.org> wrote:
-> >
-> > Add new compatible for BAM DMA engine version v1.7.4 which is
-> > found on Qualcomm SM6115 and QCM2290 SoCs. Since its very similar
-> > to v1.7.0 used on SM8150 like SoCs, mark the comptible scheme
-> > accordingly.
-> >
-> > While at it, also update qcom,bam-dma bindings to add comments
-> > which describe the BAM DMA versions used in SM8150 and SM8250 SoCs.
-> > This provides an easy reference for identifying the actual BAM DMA
-> > version available on Qualcomm SoCs.
-> >
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > Tested-by: Anders Roxell <anders.roxell@linaro.org>
-> > Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> > ---
-> >  .../devicetree/bindings/dma/qcom,bam-dma.yaml | 20 ++++++++++++-------
-> >  1 file changed, 13 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
-> > index f1ddcf672261..c663b6102f50 100644
-> > --- a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
-> > +++ b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
-> > @@ -15,13 +15,19 @@ allOf:
-> >
-> >  properties:
-> >    compatible:
-> > -    enum:
-> > -        # APQ8064, IPQ8064 and MSM8960
-> > -      - qcom,bam-v1.3.0
-> > -        # MSM8974, APQ8074 and APQ8084
-> > -      - qcom,bam-v1.4.0
-> > -        # MSM8916 and SDM845
-> > -      - qcom,bam-v1.7.0
-> > +    oneOf:
-> > +      - enum:
-> > +          # APQ8064, IPQ8064 and MSM8960
-> > +          - qcom,bam-v1.3.0
-> > +          # MSM8974, APQ8074 and APQ8084
-> > +          - qcom,bam-v1.4.0
-> > +          # MSM8916, SDM630
-> > +          - qcom,bam-v1.7.0
-> > +      - items:
-> > +          - enum:
-> > +              # SDM845, SM6115, SM8150, SM8250 and QCM2290
-> > +              - qcom,bam-v1.7.4
-> > +          - const: qcom,bam-v1.7.0
-> >
-> >    clocks:
-> >      maxItems: 1
-> > --
-> > 2.38.1
-> 
-> Bjorn has applied the dts patches from this series to his tree.
-> As suggested by him, can you please pick patches [PATCH 1/11] and
-> [PATCH 2/11] from this series via the 'dmaengine' tree.
+From: Kory Maincent <kory.maincent@bootlin.com>
 
-I dont have this series in my inbox or dmaengine pw
+This patch series fix the support of dw-edma HDMA NATIVE IP.
+I can only test it in remote HDMA IP setup with single dma transfer, but
+with these fixes it works properly.
 
-> Seems some Cc fields got messed up while sending the patchset, so
-> Cc'ing the dmaengine list again.
+Few fixes has also been added for eDMA version. Similarly to HDMA I have
+tested only eDMA in remote setup.
 
-not just list but mine too..
+Kory Maincent (9):
+  dmaengine: dw-edma: Fix the ch_count hdma callback
+  dmaengine: dw-edma: Typos fixes
+  dmaengine: dw-edma: Add HDMA remote interrupt configuration
+  dmaengine: dw-edma: HDMA: Add memory barrier before starting the DMA
+    transfer in remote setup
+  dmaengine: dw-edma: HDMA: Fix possible race condition in remote setup
+  dmaengine: dw-edma: HDMA: Fix possible race condition in local setup
+  dmaengine: dw-edma: eDMA: Add memory barrier before starting the DMA
+    transfer in remote setup
+  dmaengine: dw-edma: eDMA: Fix possible race condition in remote setup
+  dmaengine: dw-edma: eDMA: Fix possible race condition in local setup
 
-Please rebase and resend
+ drivers/dma/dw-edma/dw-edma-v0-core.c | 23 ++++++++++++---
+ drivers/dma/dw-edma/dw-hdma-v0-core.c | 40 +++++++++++++++------------
+ drivers/dma/dw-edma/dw-hdma-v0-regs.h |  2 +-
+ 3 files changed, 43 insertions(+), 22 deletions(-)
 
 -- 
-~Vinod
+2.25.1
+

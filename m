@@ -2,43 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3F7872BD28
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 11:55:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8A9272BD3B
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 11:55:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230319AbjFLJzW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 12 Jun 2023 05:55:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33460 "EHLO
+        id S232755AbjFLJza (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Jun 2023 05:55:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230186AbjFLJyT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 05:54:19 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C79749FA;
-        Mon, 12 Jun 2023 02:38:54 -0700 (PDT)
+        with ESMTP id S230361AbjFLJyW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 05:54:22 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F34E4C15;
+        Mon, 12 Jun 2023 02:38:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=iuKjwptMM283OkeCg3rHRYfDPMncNnTiTfZUlZvzjjw=; b=eQ6OsD4kYVKLafcm5zMaXykUrJ
-        t3Yx8a+byrZdB944/0aNdLOqAmoLeWSa1sowLg19pvZhRfEGH12EfjQizZN73l+Q2lmgWVTy/jEN2
-        66w/tSoR035EtMK1QJrtp16Z85OKpvfSl1I8OLy7JSDS0vEBXw8vGKRffU4u96Gz85h50NrSym32v
-        8aadmJp7+8xctTmftjzi5KRquTBd3yr6fYIYX7v7Rb7TZGAQFPvFwW5JY6GaXXShnDrDMfhQWRx/H
-        Hx6pFtrNHcKkz/xQw6bxea1nVgSbzWPnczzWWwxrD46aGrv+zXbaZt8xVprl8zZZmhqQuJnaVP8+3
-        u9+4lFQg==;
+        bh=2Fw/6pc13hFz4431UNCf/XS3M9fAIWcYfqPnXE09Ku4=; b=b6HhHqyRgVNIvJxJg3qz34xg3z
+        MclAequn3uyYDgQ5Z5i8iDgOLuz/qXGgm1oMBVoGifA2g41/aPpi+zdp37cuqoJp+mxC5cFvegIAx
+        PrGLhpLp6tRFNJ+xGJdm2Vl8NMuY2mfkHRUQqumE0N6uhf8Hwi+0jsjngOlSw1NjDNooe7ANlbed6
+        InipGNmagWluFfr2AZow7mI1sOKeySpJUvHBQ/S5Qm+hiYjBJavBgxNx9Q3pT2HaDMGuK1RCXjfIv
+        izn1MU80zDpXeVWyzMuTE3zNEGhTt+PqqObFqGdyck+4419X8FjSEtsb3NkqK5BrIhAd8Futl2USY
+        ItEsQUOQ==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q8e0f-008kOo-0K;
-        Mon, 12 Jun 2023 09:38:49 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1q8e0g-002N91-0z; Mon, 12 Jun 2023 09:38:50 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7FC1C302E28;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 86856302EA7;
         Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 0C29230A58077; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
-Message-ID: <20230612093537.693926033@infradead.org>
+        id 0FD3C30A6FEEC; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093537.762718530@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:17 +0200
+Date:   Mon, 12 Jun 2023 11:07:18 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -66,7 +65,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 04/57] kbuild: Drop -Wdeclaration-after-statement
+Subject: [PATCH v3 05/57] sched: Simplify get_nohz_timer_target()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -80,54 +79,46 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-With the advent on scope-based resource management it comes really
-tedious to abide by the contraints of -Wdeclaration-after-statement.
+Use guards to reduce gotos and simplify control flow.
 
-It will still be recommeneded to place declarations at the start of a
-scope where possible, but it will no longer be enforced.
-
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- Makefile                          |    6 +-----
- arch/arm64/kernel/vdso32/Makefile |    2 --
- 2 files changed, 1 insertion(+), 7 deletions(-)
+ kernel/sched/core.c |   15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -447,8 +447,7 @@ HOSTRUSTC = rustc
- HOSTPKG_CONFIG	= pkg-config
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1097,25 +1097,22 @@ int get_nohz_timer_target(void)
  
- KBUILD_USERHOSTCFLAGS := -Wall -Wmissing-prototypes -Wstrict-prototypes \
--			 -O2 -fomit-frame-pointer -std=gnu11 \
--			 -Wdeclaration-after-statement
-+			 -O2 -fomit-frame-pointer -std=gnu11
- KBUILD_USERCFLAGS  := $(KBUILD_USERHOSTCFLAGS) $(USERCFLAGS)
- KBUILD_USERLDFLAGS := $(USERLDFLAGS)
+ 	hk_mask = housekeeping_cpumask(HK_TYPE_TIMER);
  
-@@ -1012,9 +1011,6 @@ endif
- # arch Makefile may override CC so keep this after arch Makefile is included
- NOSTDINC_FLAGS += -nostdinc
+-	rcu_read_lock();
++	guard(rcu)();
++
+ 	for_each_domain(cpu, sd) {
+ 		for_each_cpu_and(i, sched_domain_span(sd), hk_mask) {
+ 			if (cpu == i)
+ 				continue;
  
--# warn about C99 declaration after statement
--KBUILD_CFLAGS += -Wdeclaration-after-statement
--
- # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
- KBUILD_CFLAGS += -Wvla
+-			if (!idle_cpu(i)) {
+-				cpu = i;
+-				goto unlock;
+-			}
++			if (!idle_cpu(i))
++				return i;
+ 		}
+ 	}
  
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -65,11 +65,9 @@ VDSO_CFLAGS += -Wall -Wundef -Wstrict-pr
-                -fno-strict-aliasing -fno-common \
-                -Werror-implicit-function-declaration \
-                -Wno-format-security \
--               -Wdeclaration-after-statement \
-                -std=gnu11
- VDSO_CFLAGS  += -O2
- # Some useful compiler-dependent flags from top-level Makefile
--VDSO_CFLAGS += $(call cc32-option,-Wdeclaration-after-statement,)
- VDSO_CFLAGS += $(call cc32-option,-Wno-pointer-sign)
- VDSO_CFLAGS += -fno-strict-overflow
- VDSO_CFLAGS += $(call cc32-option,-Werror=strict-prototypes)
+ 	if (default_cpu == -1)
+ 		default_cpu = housekeeping_any_cpu(HK_TYPE_TIMER);
+-	cpu = default_cpu;
+-unlock:
+-	rcu_read_unlock();
+-	return cpu;
++
++	return default_cpu;
+ }
+ 
+ /*
 
 

@@ -2,106 +2,169 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3802E72CBC6
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 18:49:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A84272CC1D
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 19:11:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229866AbjFLQtH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 12 Jun 2023 12:49:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44236 "EHLO
+        id S231273AbjFLRL5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Jun 2023 13:11:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235547AbjFLQtF (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 12:49:05 -0400
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B87B1B8;
-        Mon, 12 Jun 2023 09:49:00 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id 38308e7fff4ca-2b1ba50e50bso54474151fa.1;
-        Mon, 12 Jun 2023 09:49:00 -0700 (PDT)
+        with ESMTP id S235128AbjFLRL4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 13:11:56 -0400
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55DD5E7B
+        for <dmaengine@vger.kernel.org>; Mon, 12 Jun 2023 10:11:54 -0700 (PDT)
+Received: by mail-pg1-x549.google.com with SMTP id 41be03b00d2f7-51f7638a56fso3125211a12.3
+        for <dmaengine@vger.kernel.org>; Mon, 12 Jun 2023 10:11:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686588538; x=1689180538;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=562o/MsrOYChmDHYEtCNvBVfOjip2qNAiCYOOBcbh88=;
-        b=CV5mwy2U0+9+ebd7D8cXsG6rMrBoYvBH9E0/4jahlyZzvClH+qStd5QmzoYG/xVqur
-         jnBBjuCBIIfnoXH9JbD+h5VDeGzARgsNhnLPolq+m9BfiuctDIU9sR12Yoe8Ec6FONoW
-         fyQFBF9AESicv1AHngopvjaToOzuUaG1UtCdERlpK+8nnsySH2jgZC4OiBpEGE+GECAw
-         blrAaHtjf+95qv4v3kgYL42o2+0HPXlBer9t0LFu4s5dVjUeuAc12NkS0Gyy3j1M1I/V
-         79HCnuoIdQR6zG+uOpfBXoLe+bHWxrX5I62t3IQS34Xj/PIiuoNdmPGvU0QS8xtsYMuy
-         8EtQ==
+        d=google.com; s=20221208; t=1686589914; x=1689181914;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w/I8oU5lBx7O0AVCpvbGtKKitom6tdJ7McWrPGypDC4=;
+        b=wVF0xEYGM/V+zCU80xvyq4qwV0yj1hOdLFRqOeBG6rNq1mZS9axHGYBLeBI0WMdRIv
+         hkzXG+DQqyxUG3ZNJwhk4nvHa7dTDdVmUbtUbv0KonjLnpMhwIR++Zn+JYGYF4qpACy0
+         TBguC9jF/7RXSTOZFdVTFwDFoUFeZKO/TxKQvxwyOSfFBR1hlTDCsLQF3gJGrQKh0dM1
+         dnbBs1N9sWbWV7gnyAH3EvCgPH/tTgIbVrgHLUeG6DI/qTktPkH3U4iZQSPo6hQIH+Hn
+         C7b43aUeXSO/Vmzkm31QiJeIjfT3Lil1qVykh5WcPDzbPCKU8j1R2gFpw17raF0Nay2u
+         ptyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686588538; x=1689180538;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=562o/MsrOYChmDHYEtCNvBVfOjip2qNAiCYOOBcbh88=;
-        b=QsMsEUegl6+qilGU2x+ndgaNSErX0eQdh42UkWM62psF6iwQk5NYjFHOkX7+d7OUQU
-         lClE95AytEX2MN4oiF8iMl35oZif/fc7k9SQL93qczrqRZLHtZPa0/fRkOpxPuSOdYT/
-         I+A1nZTuHM0ZoiaAJ5BhzX17M32BszEW9UvOAU6SpJDNcY3LhHsj2WX4OAoa85UL7V78
-         a7bPrgYZjv81Iu3w5C1qxscdqb8RIqqmctgd3mZtGvbVnCfI6BThL/POXEsWpvwkHCSP
-         aZDgqyiddsRmq6JkT1u3Z+/Ff7BuvEoVUHCDa0Sw8eP2hje3CeMk9kOT7iEFrUz+ES5C
-         QQlg==
-X-Gm-Message-State: AC+VfDwC/3JWuxqQjouWqKMlx1B+qyMy7UdD1VPpHC875UWarKF9Px+W
-        0ndd8gaZ9iHK7/vG9cPnOx8=
-X-Google-Smtp-Source: ACHHUZ6nq0Et2EFYboIY2SYp8Iszf9G+fa1LnPAiY4L903T+8BvpfegVepTEN9QKrlqbeL+NbdKXsQ==
-X-Received: by 2002:a2e:b050:0:b0:2b1:a4c2:70b4 with SMTP id d16-20020a2eb050000000b002b1a4c270b4mr3609311ljl.30.1686588538464;
-        Mon, 12 Jun 2023 09:48:58 -0700 (PDT)
-Received: from mobilestation ([95.79.140.35])
-        by smtp.gmail.com with ESMTPSA id w13-20020a2e998d000000b00295a3a64816sm1845479lji.2.2023.06.12.09.48.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jun 2023 09:48:58 -0700 (PDT)
-Date:   Mon, 12 Jun 2023 19:48:56 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     =?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
-Cc:     Cai Huoqing <cai.huoqing@linux.dev>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Herve Codina <herve.codina@bootlin.com>
-Subject: Re: [PATCH 0/9] Fix support of dw-edma HDMA NATIVE IP in remote setup
-Message-ID: <20230612164856.xxi3ewxnfiagawz6@mobilestation>
-References: <20230609081654.330857-1-kory.maincent@bootlin.com>
- <20230612105942.039b6fc0@kmaincent-XPS-13-7390>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230612105942.039b6fc0@kmaincent-XPS-13-7390>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        d=1e100.net; s=20221208; t=1686589914; x=1689181914;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=w/I8oU5lBx7O0AVCpvbGtKKitom6tdJ7McWrPGypDC4=;
+        b=J16dGgMaAxEbskRG8WTosf+NSmUVVo9/JXOi8IYYMJbLBsFWJ6z/hx2qhxW90tGixC
+         aK69ABnpOx95JXkOUMZoDgcqe9pwGte9GLTRtLZYxBAaXXYt2TphlmmbYgsjSBpc24AN
+         vOnBaerC8TztiMfJiPohzVLm/6gQ9od0pEa61MaL4hDZ6v8p85R3BPnmsqHTfPg54DZw
+         1VaGbHsHCmluFzG0zBV0ytUhtWlSnvGyOeB7LAj6rmmyT6DJFOYzTpuWVsBkrtADQcZf
+         J80x7S4dFcvBj806TKZADK6BGZRu58I/6FxK+coqDWaP0peHJ3VUtVymZXttXoTcLre5
+         fESg==
+X-Gm-Message-State: AC+VfDzHPOqOEYVE7Dpb30uULmmLJeDknWRVgC9VbrJgYNtiXIh0QeCR
+        6BZRqlgiBYKdZKqjyhXPRVxQH9uyolQ=
+X-Google-Smtp-Source: ACHHUZ5v1c+CqyBwYivhK+DSqau5kQVmVjEZH0nAYmDaNR5inKzg30hD4xw/4ZnGEEzgZLpMXuBMN4uPSsY=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:902:8d81:b0:1b3:95a9:3fc3 with SMTP id
+ v1-20020a1709028d8100b001b395a93fc3mr1303122plo.10.1686589913639; Mon, 12 Jun
+ 2023 10:11:53 -0700 (PDT)
+Date:   Mon, 12 Jun 2023 10:11:51 -0700
+In-Reply-To: <CAHk-=wh6JEk7wYECcMdbXHf5ST8PAkOyUXhE8x2kqT6to+Gn9Q@mail.gmail.com>
+Mime-Version: 1.0
+References: <20230612090713.652690195@infradead.org> <20230612093541.598260416@infradead.org>
+ <CAHk-=wh6JEk7wYECcMdbXHf5ST8PAkOyUXhE8x2kqT6to+Gn9Q@mail.gmail.com>
+Message-ID: <ZIdR18xG1jy8WdEp@google.com>
+Subject: Re: [PATCH v3 56/57] perf: Simplify perf_pmu_output_stop()
+From:   Sean Christopherson <seanjc@google.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, keescook@chromium.org,
+        gregkh@linuxfoundation.org, pbonzini@redhat.com,
+        masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
+        nicolas@fjasle.eu, catalin.marinas@arm.com, will@kernel.org,
+        vkoul@kernel.org, trix@redhat.com, ojeda@kernel.org,
+        mingo@redhat.com, longman@redhat.com, boqun.feng@gmail.com,
+        dennis@kernel.org, tj@kernel.org, cl@linux.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, paulmck@kernel.org,
+        frederic@kernel.org, quic_neeraju@quicinc.com,
+        joel@joelfernandes.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
+        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
+        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
+        john.johansen@canonical.com, paul@paul-moore.com,
+        jmorris@namei.org, serge@hallyn.com, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        llvm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+        rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
+        tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
+        luc.vanoostenryck@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Köry
+On Mon, Jun 12, 2023, Linus Torvalds wrote:
+> This patch looks completely broken to me.
+>=20
+> You now do
+>=20
+>                 if (err =3D=3D -EAGAIN)
+>                         goto restart;
+>=20
+> *within* the RCU-guarded section, and the "goto restart" will guard it ag=
+ain.
 
-On Mon, Jun 12, 2023 at 10:59:42AM +0200, Köry Maincent wrote:
-> On Fri,  9 Jun 2023 10:16:45 +0200
-> Köry Maincent <kory.maincent@bootlin.com> wrote:
-> 
-> > From: Kory Maincent <kory.maincent@bootlin.com>
-> > 
-> > This patch series fix the support of dw-edma HDMA NATIVE IP.
-> > I can only test it in remote HDMA IP setup with single dma transfer, but
-> > with these fixes it works properly.
-> > 
-> > Few fixes has also been added for eDMA version. Similarly to HDMA I have
-> > tested only eDMA in remote setup.
-> 
+What if we require that all guarded sections have explicit scoping?  E.g. d=
+rop
+the current version of guard() and rename scoped_guard() =3D> guard().  And=
+ then
+figure out macro magic to guard an entire function?  E.g. something like
 
-> FYI it seems several patches of this series has been categorized as spam.
-> I think it is because the code of these patches are quite similar.
-> 
-> Köry
+  static void perf_pmu_output_stop(struct perf_event *event) fn_guard(rcu)
+  {
+	...
+  }
 
-Thanks for notifying about that. The entire series landed in my inbox.
-So no problem has been spotted on my side. I'll have a closer look at
-the patchset sometime on this week.
+or just "guard(rcu)" if possible.  IIUC, function scopes like that will be =
+possible
+once -Wdeclaration-after-statement goes away.
 
--Serge(y)
+Bugs aside, IMO guards that are buried in the middle of a function and impl=
+icitly
+scoped to the function are all too easy to overlook.  Requiring explicit sc=
+oping
+would make bugs like this easier to spot since the goto would jump out of s=
+cope
+(and I assume prematurely release the resource/lock?).  As a bonus, annotat=
+ing
+the function itself would also serve as documentation.
 
+The only downside is that the code for function-scoped locks that are acqui=
+red
+partway through the function would be more verbose and/or cumbersome to wri=
+te,
+but that can be mitigated to some extent, e.g. by moving the locked portion=
+ to a
+separate helper.
+
+> On Mon, Jun 12, 2023 at 2:39=E2=80=AFAM Peter Zijlstra <peterz@infradead.=
+org> wrote:
+> >
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -7977,7 +7977,8 @@ static void perf_pmu_output_stop(struct
+> >         int err, cpu;
+> >
+> >  restart:
+> > -       rcu_read_lock();
+> > +       /* cannot have a label in front of a decl */;
+> > +       guard(rcu)();
+> >         list_for_each_entry_rcu(iter, &event->rb->event_list, rb_entry)=
+ {
+> >                 /*
+> >                  * For per-CPU events, we need to make sure that neithe=
+r they
+> > @@ -7993,12 +7994,9 @@ static void perf_pmu_output_stop(struct
+> >                         continue;
+> >
+> >                 err =3D cpu_function_call(cpu, __perf_pmu_output_stop, =
+event);
+> > -               if (err =3D=3D -EAGAIN) {
+> > -                       rcu_read_unlock();
+> > +               if (err =3D=3D -EAGAIN)
+> >                         goto restart;
+> > -               }
+> >         }
+> > -       rcu_read_unlock();
+> >  }

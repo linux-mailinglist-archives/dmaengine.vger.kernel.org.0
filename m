@@ -2,42 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0E9372BD63
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 11:56:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23F3672BD75
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 11:56:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235482AbjFLJzv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 12 Jun 2023 05:55:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33538 "EHLO
+        id S234805AbjFLJzm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Jun 2023 05:55:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbjFLJyb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 05:54:31 -0400
+        with ESMTP id S232321AbjFLJy0 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 05:54:26 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F1F6185;
-        Mon, 12 Jun 2023 02:39:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE925FF6;
+        Mon, 12 Jun 2023 02:39:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=IwZQFShSV/PIl8fTfPc9l4QCHQp32ssy80H3iz5Si2g=; b=n2QBRERGYOTGa4H4UfPiQMxml4
-        DlIa7Bh+E0wy752HUyfCxpdFro63TOC2IKp9jPE5GAfa1mJYpUhJg7mXGYIHTeDn9BySpGXGbyVd3
-        IwJesqbM7Wb3W3h6YpQgJKi2jBSkPrZDWblalKMV6HQ84Jsy2sFXbKyI8rcW+nAOW3dJ/b920m92P
-        rah0RrnGqtwQsyYb1dXy9/e8D1odgIYC+fkV2EbyFFqvSqo9mCNLgutnfVUAg637Ma+mnkR77qzmE
-        PZQFREWg0jB+r3RJ1GGStrlIluYtwark33oMb5t5WyJikLV3GNXnRWJf6oZ44tLapABjEhnCdDKM9
-        42/wgNSw==;
+        bh=quWvb6uoZHCgYMmf8H+8cRm/zhKpzM+NkhuuDLi/jU0=; b=JgwzlZkLk5FJYWO7LoFzK1cisC
+        aBQ5LhcXjSO7nFEY2UqQ25IYFqShzwF1MEvo2tYaU3xImhwE97+SRgARWwFOM90DmkkOcTM9vvRiN
+        K0D/nxB7wgTutGs/BJUirFozMwU4pHGGZoMJI6+adCj6IubDSLGtZCjbBSTXj036wzszfXPaQClUq
+        oDqcKFVTI1+O0Qci768RPoGOOBWrHX6+9VlTGBbGcmYgpqiU9DPthnR9bD67ex3yjQ70UNt/X6uBI
+        49tCO/xKdnsDsuMyH017UA+KPvphoPEfQ2aAhY1SshrRO7CJ3qDBk6tC9l/vfG5WFBXRBMcA2cQPG
+        Y3EYDKXw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1q8e0l-002NBI-II; Mon, 12 Jun 2023 09:38:55 +0000
+        id 1q8e0l-002NBZ-TV; Mon, 12 Jun 2023 09:38:56 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 23BBA303196;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2823C30326D;
         Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 8C04B30A77B63; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
-Message-ID: <20230612093539.371360635@infradead.org>
+        id 93BC430A77B64; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093539.452507393@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:39 +0200
+Date:   Mon, 12 Jun 2023 11:07:40 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -65,7 +65,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 26/57] perf: Simplify event_function*()
+Subject: [PATCH v3 27/57] perf: Simplify perf_cgroup_connect()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -83,101 +83,54 @@ Use guards to reduce gotos and simplify control flow.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/core.c |   39 ++++++++++++++++++++++++++-------------
- 1 file changed, 26 insertions(+), 13 deletions(-)
+ include/linux/file.h |    2 +-
+ kernel/events/core.c |   19 ++++++++-----------
+ 2 files changed, 9 insertions(+), 12 deletions(-)
 
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -214,6 +214,25 @@ struct event_function_struct {
- 	void *data;
- };
- 
-+typedef struct {
-+	struct perf_cpu_context *cpuctx;
-+	struct perf_event_context *ctx;
-+} class_perf_ctx_lock_t;
-+
-+static inline void class_perf_ctx_lock_destructor(class_perf_ctx_lock_t *_T)
-+{
-+	if (_T->cpuctx)
-+		perf_ctx_unlock(_T->cpuctx, _T->ctx);
-+}
-+
-+static inline class_perf_ctx_lock_t
-+class_perf_ctx_lock_constructor(struct perf_cpu_context *cpuctx,
-+				struct perf_event_context *ctx)
-+{
-+	perf_ctx_lock(cpuctx, ctx);
-+	return (class_perf_ctx_lock_t){ cpuctx, ctx };
-+}
-+
- static int event_function(void *info)
+@@ -936,22 +936,20 @@ static inline int perf_cgroup_connect(in
  {
- 	struct event_function_struct *efs = info;
-@@ -224,17 +243,15 @@ static int event_function(void *info)
- 	int ret = 0;
+ 	struct perf_cgroup *cgrp;
+ 	struct cgroup_subsys_state *css;
+-	struct fd f = fdget(fd);
+-	int ret = 0;
++	int ret;
  
- 	lockdep_assert_irqs_disabled();
-+	guard(perf_ctx_lock)(cpuctx, task_ctx);
++	CLASS(fd, f)(fd);
+ 	if (!f.file)
+ 		return -EBADF;
  
--	perf_ctx_lock(cpuctx, task_ctx);
- 	/*
- 	 * Since we do the IPI call without holding ctx->lock things can have
- 	 * changed, double check we hit the task we set out to hit.
+ 	css = css_tryget_online_from_dir(f.file->f_path.dentry,
+ 					 &perf_event_cgrp_subsys);
+-	if (IS_ERR(css)) {
+-		ret = PTR_ERR(css);
+-		goto out;
+-	}
++	if (IS_ERR(css))
++		return PTR_ERR(css);
+ 
+ 	ret = perf_cgroup_ensure_storage(event, css);
+ 	if (ret)
+-		goto out;
++		return ret;
+ 
+ 	cgrp = container_of(css, struct perf_cgroup, css);
+ 	event->cgrp = cgrp;
+@@ -963,11 +961,10 @@ static inline int perf_cgroup_connect(in
  	 */
- 	if (ctx->task) {
--		if (ctx->task != current) {
--			ret = -ESRCH;
--			goto unlock;
--		}
-+		if (ctx->task != current)
-+			return -ESRCH;
- 
- 		/*
- 		 * We only use event_function_call() on established contexts,
-@@ -254,8 +271,6 @@ static int event_function(void *info)
+ 	if (group_leader && group_leader->cgrp != cgrp) {
+ 		perf_detach_cgroup(event);
+-		ret = -EINVAL;
++		return -EINVAL;
  	}
- 
- 	efs->func(event, cpuctx, ctx, efs->data);
--unlock:
--	perf_ctx_unlock(cpuctx, task_ctx);
- 
- 	return ret;
- }
-@@ -329,11 +344,11 @@ static void event_function_local(struct
- 		task_ctx = ctx;
- 	}
- 
--	perf_ctx_lock(cpuctx, task_ctx);
-+	guard(perf_ctx_lock)(cpuctx, task_ctx);
- 
- 	task = ctx->task;
- 	if (task == TASK_TOMBSTONE)
--		goto unlock;
-+		return;
- 
- 	if (task) {
- 		/*
-@@ -343,18 +358,16 @@ static void event_function_local(struct
- 		 */
- 		if (ctx->is_active) {
- 			if (WARN_ON_ONCE(task != current))
--				goto unlock;
-+				return;
- 
- 			if (WARN_ON_ONCE(cpuctx->task_ctx != ctx))
--				goto unlock;
-+				return;
- 		}
- 	} else {
- 		WARN_ON_ONCE(&cpuctx->ctx != ctx);
- 	}
- 
- 	func(event, cpuctx, ctx, data);
--unlock:
--	perf_ctx_unlock(cpuctx, task_ctx);
+-out:
+-	fdput(f);
+-	return ret;
++
++	return 0;
  }
  
- #define PERF_FLAG_ALL (PERF_FLAG_FD_NO_GROUP |\
+ static inline void
 
 

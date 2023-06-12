@@ -2,42 +2,43 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F40572BD4E
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 11:56:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 202DD72BD78
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 11:56:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235416AbjFLJzs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 12 Jun 2023 05:55:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60486 "EHLO
+        id S235724AbjFLJ4N (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Jun 2023 05:56:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231655AbjFLJy2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 05:54:28 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21E505FF9;
-        Mon, 12 Jun 2023 02:39:01 -0700 (PDT)
+        with ESMTP id S233804AbjFLJys (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 05:54:48 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07AB14C18;
+        Mon, 12 Jun 2023 02:39:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=TyEqnNyUrGcTyQQqxTQ7FjrgTS2UCJUv6R0g2vbKlfY=; b=rHHDliBQ2Qfw4zPxTfBy8QXX52
-        G14E6gPiy22JcNYH/Q5ary0q0YX91rEsCLNUeF2er4snB00oi8Lc4f2MMJZUwwWFKvHVk7GQuK7Zl
-        3ahxPQrajWWxBclXKLGynYx8r2sGJlK3yDh9HWCO7kIqSmTRqHGJsywLA/mKXJqegwQvkdaMSNva2
-        uJVrXhoSZLISp+eyXn3YfK2inTs+lOPkrCnxRe7XnCJ3h8JknStPhu9xVH8GzIG76/K6R5JUG74zu
-        XsZmZNsMpz5Ycxrzfr+Z6QJ1Wis1vJw2il0uWR+vhha6EcQ+HD/j4wtxTmR7enXrzcACCcjOxcx3G
-        mOVdO+3w==;
+        bh=ICqqJG5l0sWCX8xrZRxbU0jefpCN2MYfe0yl/+VCRM4=; b=CKNAf/OLveGu3h4G35M1XEIV5u
+        NBuElad+1Cyz7hAjxLmdiofAlNZ59WVXwN3CrP9Gfl4Ccdi/+VZXviefm9IV8ZOsEiIAALkH+ZQeM
+        JSCshvWoOk2ye0l3PailK5L7O/HIe+rzqBLavcMqSUulNXyI0lqc5mlQE1RAC+EzaqyQPBUzKfid5
+        LYfkCZS8vnyRr2VmNLRD6E8uxxm0Qg99fQqc78oc6Bz3sD5VsR472rJ6vx1URMn7VGFn0WBGdm0KG
+        /Q43F20jOaH5vDTomYkIeci0EFi5Mfq3RUVPKf9bOojvjiudIa4EFwja6+7exCspONRew6SwRyHT0
+        wI+FO4zQ==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1q8e0m-002NBu-ET; Mon, 12 Jun 2023 09:38:56 +0000
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1q8e0n-008kR8-1I;
+        Mon, 12 Jun 2023 09:39:04 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3B8233032D0;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3F98B3033B5;
         Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id C402E30A77B6D; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
-Message-ID: <20230612093540.108251860@infradead.org>
+        id CA60630A77B6F; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093540.181605463@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:49 +0200
+Date:   Mon, 12 Jun 2023 11:07:50 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -65,7 +66,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 36/57] perf: Simplify find_get_pmu_context()
+Subject: [PATCH v3 37/57] perf: Simplify perf_read_group()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -82,65 +83,63 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/core.c |   19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ kernel/events/core.c |   30 +++++++++++-------------------
+ 1 file changed, 11 insertions(+), 19 deletions(-)
 
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -4757,11 +4757,14 @@ find_get_context(struct task_struct *tas
- 	return ERR_PTR(err);
+@@ -5472,11 +5472,10 @@ static int perf_read_group(struct perf_e
+ 	struct perf_event *leader = event->group_leader, *child;
+ 	struct perf_event_context *ctx = leader->ctx;
+ 	int ret;
+-	u64 *values;
+ 
+ 	lockdep_assert_held(&ctx->mutex);
+ 
+-	values = kzalloc(event->read_size, GFP_KERNEL);
++	u64 *values __free(kfree) = kzalloc(event->read_size, GFP_KERNEL);
+ 	if (!values)
+ 		return -ENOMEM;
+ 
+@@ -5486,29 +5485,22 @@ static int perf_read_group(struct perf_e
+ 	 * By locking the child_mutex of the leader we effectively
+ 	 * lock the child list of all siblings.. XXX explain how.
+ 	 */
+-	mutex_lock(&leader->child_mutex);
+-
+-	ret = __perf_read_group_add(leader, read_format, values);
+-	if (ret)
+-		goto unlock;
+-
+-	list_for_each_entry(child, &leader->child_list, child_list) {
+-		ret = __perf_read_group_add(child, read_format, values);
++	scoped_guard (mutex, &leader->child_mutex) {
++		ret = __perf_read_group_add(leader, read_format, values);
+ 		if (ret)
+-			goto unlock;
+-	}
++			return ret;
+ 
+-	mutex_unlock(&leader->child_mutex);
++		list_for_each_entry(child, &leader->child_list, child_list) {
++			ret = __perf_read_group_add(child, read_format, values);
++			if (ret)
++				return ret;
++		}
++	}
+ 
+ 	ret = event->read_size;
+ 	if (copy_to_user(buf, values, event->read_size))
+-		ret = -EFAULT;
+-	goto out;
++		return -EFAULT;
+ 
+-unlock:
+-	mutex_unlock(&leader->child_mutex);
+-out:
+-	kfree(values);
+ 	return ret;
  }
  
-+/*
-+ * Returns a matching perf_event_pmu_context with elevated refcount or NULL.
-+ */
- static struct perf_event_pmu_context *
- find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
- 		     struct perf_event *event)
- {
--	struct perf_event_pmu_context *new = NULL, *epc;
-+	struct perf_event_pmu_context *epc;
- 	void *task_ctx_data = NULL;
- 
- 	if (!ctx->task) {
-@@ -4788,16 +4791,14 @@ find_get_pmu_context(struct pmu *pmu, st
- 		return epc;
- 	}
- 
--	new = kzalloc(sizeof(*epc), GFP_KERNEL);
-+	void *new __free(kfree) = kzalloc(sizeof(*epc), GFP_KERNEL);
- 	if (!new)
--		return ERR_PTR(-ENOMEM);
-+		return NULL;
- 
- 	if (event->attach_state & PERF_ATTACH_TASK_DATA) {
- 		task_ctx_data = alloc_task_ctx_data(pmu);
--		if (!task_ctx_data) {
--			kfree(new);
--			return ERR_PTR(-ENOMEM);
--		}
-+		if (!task_ctx_data)
-+			return NULL;
- 	}
- 
- 	__perf_init_event_pmu_context(new, pmu);
-@@ -4820,8 +4821,7 @@ find_get_pmu_context(struct pmu *pmu, st
- 		}
- 	}
- 
--	epc = new;
--	new = NULL;
-+	epc = no_free_ptr(new);
- 
- 	list_add(&epc->pmu_ctx_entry, &ctx->pmu_ctx_list);
- 	epc->ctx = ctx;
-@@ -4835,7 +4835,6 @@ find_get_pmu_context(struct pmu *pmu, st
- 	raw_spin_unlock_irq(&ctx->lock);
- 
- 	free_task_ctx_data(pmu, task_ctx_data);
--	kfree(new);
- 
- 	return epc;
- }
 
 

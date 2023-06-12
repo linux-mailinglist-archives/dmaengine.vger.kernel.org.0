@@ -2,43 +2,43 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F67C72BD99
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 11:57:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0585072BD8B
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 11:56:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234288AbjFLJ43 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 12 Jun 2023 05:56:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33444 "EHLO
+        id S235485AbjFLJzw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Jun 2023 05:55:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234230AbjFLJyw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 05:54:52 -0400
+        with ESMTP id S229877AbjFLJyc (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 05:54:32 -0400
 Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 442CF135;
-        Mon, 12 Jun 2023 02:39:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABC9C6189;
+        Mon, 12 Jun 2023 02:39:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=Xqf5W2yYJrVz/DQlZr8jQFSxQY35vT93yf3RiRPsU+E=; b=SEfMUFGLcxrsWLLqD4rqRZBdOB
-        DMO5LkBgWnb7vye/D7ZkfEdHNA4LQN6b5bn5RL58pOT0LP8Ukx+j7rtkbDL66kKKuWwzQP+0IzjuJ
-        AdEfjN1fLmHqDivsqL1q0OX0YaAfdn6s/zz1LJAh4NMZPXKCPKTrw61PW7pZt7bEWpZBjhknZF1Pu
-        rfeTs7IyGKdFRPRXNbUm16+QK2kGeQ4AWFVZtGzK5KzTe3Y1gWTmt95W3FGRtzT13/BNtcln9du7r
-        HSmORkIVWTlySqAFUGzgBWHME1IieCrv8NsH6CweYmH/tOmp7EBCw7d+LXsHQCoDcEPhMni22BNIN
-        vlnEfTKA==;
+        bh=0Nln3H/TQf9zjJAhRuDD5Vdsf6AHs8EETAgdoNVjkyE=; b=aLyzlCpjSY84iDgpsEBBBGJX3P
+        lK9yNsqeaoP3u7ZT5H3JL27+RTLru0GApQ5l1v5uV8i/wJIkHH27c0wmrJ/GCkYQ/G7TqE972r+Z4
+        olS6TpdyK9sVlqg98ePCC+diSOfoU1XnPSfTCvcxnVGIIzofX5B72ITAND3PEzyTDUpjkk1zcu8Ub
+        PdMjf6R10+giGpo+mqNbqKy4UQa4reNeKvcpiwdZPnE+1yKAYR8IhUcKfW8HYKgRVSbmBWw9pmlCJ
+        zqWAeUSmHhgSXgznUhoQ3Aaf3QwuEHOuaRjzBPrKSygfGuGbdsxJRVlJjK0e4SLbm0NNjGwLzFteH
+        qxfDrnkg==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q8e0m-008kQh-0J;
-        Mon, 12 Jun 2023 09:39:23 +0000
+        id 1q8e0m-008kQi-0Q;
+        Mon, 12 Jun 2023 09:39:00 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2EC853032B4;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2EF723032BD;
         Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id B3A0A30A77B6B; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
-Message-ID: <20230612093539.895253662@infradead.org>
+        id B8BAA30A77B6C; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093539.966607037@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:46 +0200
+Date:   Mon, 12 Jun 2023 11:07:47 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -66,7 +66,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 33/57] perf: Simplify perf_adjust_freq_unthr_context()
+Subject: [PATCH v3 34/57] perf: Simplify perf_event_*_on_exec()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -83,49 +83,125 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/core.c |   10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ kernel/events/core.c |   88 +++++++++++++++++++++++----------------------------
+ 1 file changed, 40 insertions(+), 48 deletions(-)
 
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -4100,7 +4100,7 @@ perf_adjust_freq_unthr_context(struct pe
- 	if (!(ctx->nr_freq || unthrottle))
- 		return;
+@@ -4318,39 +4318,36 @@ static void perf_event_enable_on_exec(st
+ 	enum event_type_t event_type = 0;
+ 	struct perf_cpu_context *cpuctx;
+ 	struct perf_event *event;
+-	unsigned long flags;
+ 	int enabled = 0;
  
--	raw_spin_lock(&ctx->lock);
-+	guard(raw_spinlock)(&ctx->lock);
- 
- 	list_for_each_entry_rcu(event, &ctx->event_list, event_entry) {
- 		if (event->state != PERF_EVENT_STATE_ACTIVE)
-@@ -4110,7 +4110,7 @@ perf_adjust_freq_unthr_context(struct pe
- 		if (!event_filter_match(event))
- 			continue;
- 
--		perf_pmu_disable(event->pmu);
-+		guard(perf_pmu_disable)(event->pmu);
- 
- 		hwc = &event->hw;
- 
-@@ -4121,7 +4121,7 @@ perf_adjust_freq_unthr_context(struct pe
- 		}
- 
- 		if (!event->attr.freq || !event->attr.sample_freq)
--			goto next;
-+			continue;
- 
- 		/*
- 		 * stop the event and update event->count
-@@ -4143,11 +4143,7 @@ perf_adjust_freq_unthr_context(struct pe
- 			perf_adjust_period(event, period, delta, false);
- 
- 		event->pmu->start(event, delta > 0 ? PERF_EF_RELOAD : 0);
--	next:
--		perf_pmu_enable(event->pmu);
- 	}
+-	local_irq_save(flags);
+-	if (WARN_ON_ONCE(current->perf_event_ctxp != ctx))
+-		goto out;
 -
--	raw_spin_unlock(&ctx->lock);
- }
+-	if (!ctx->nr_events)
+-		goto out;
+-
+-	cpuctx = this_cpu_ptr(&perf_cpu_context);
+-	perf_ctx_lock(cpuctx, ctx);
+-	ctx_sched_out(ctx, EVENT_TIME);
+-
+-	list_for_each_entry(event, &ctx->event_list, event_entry) {
+-		enabled |= event_enable_on_exec(event, ctx);
+-		event_type |= get_event_type(event);
++	scoped_guard (irqsave) {
++		if (WARN_ON_ONCE(current->perf_event_ctxp != ctx))
++			return;
++
++		if (!ctx->nr_events)
++			return;
++
++		cpuctx = this_cpu_ptr(&perf_cpu_context);
++		guard(perf_ctx_lock)(cpuctx, ctx);
++
++		ctx_sched_out(ctx, EVENT_TIME);
++
++		list_for_each_entry(event, &ctx->event_list, event_entry) {
++			enabled |= event_enable_on_exec(event, ctx);
++			event_type |= get_event_type(event);
++		}
++
++		/*
++		 * Unclone and reschedule this context if we enabled any event.
++		 */
++		if (enabled) {
++			clone_ctx = unclone_ctx(ctx);
++			ctx_resched(cpuctx, ctx, event_type);
++		} else {
++			ctx_sched_in(ctx, EVENT_TIME);
++		}
+ 	}
  
- /*
+-	/*
+-	 * Unclone and reschedule this context if we enabled any event.
+-	 */
+-	if (enabled) {
+-		clone_ctx = unclone_ctx(ctx);
+-		ctx_resched(cpuctx, ctx, event_type);
+-	} else {
+-		ctx_sched_in(ctx, EVENT_TIME);
+-	}
+-	perf_ctx_unlock(cpuctx, ctx);
+-
+-out:
+-	local_irq_restore(flags);
+-
+ 	if (clone_ctx)
+ 		put_ctx(clone_ctx);
+ }
+@@ -4367,34 +4364,29 @@ static void perf_event_remove_on_exec(st
+ {
+ 	struct perf_event_context *clone_ctx = NULL;
+ 	struct perf_event *event, *next;
+-	unsigned long flags;
+ 	bool modified = false;
+ 
+-	mutex_lock(&ctx->mutex);
++	scoped_guard (mutex, &ctx->mutex) {
++		if (WARN_ON_ONCE(ctx->task != current))
++			return;
+ 
+-	if (WARN_ON_ONCE(ctx->task != current))
+-		goto unlock;
++		list_for_each_entry_safe(event, next, &ctx->event_list, event_entry) {
++			if (!event->attr.remove_on_exec)
++				continue;
+ 
+-	list_for_each_entry_safe(event, next, &ctx->event_list, event_entry) {
+-		if (!event->attr.remove_on_exec)
+-			continue;
++			if (!is_kernel_event(event))
++				perf_remove_from_owner(event);
+ 
+-		if (!is_kernel_event(event))
+-			perf_remove_from_owner(event);
++			modified = true;
+ 
+-		modified = true;
++			perf_event_exit_event(event, ctx);
++		}
+ 
+-		perf_event_exit_event(event, ctx);
++		guard(raw_spinlock_irqsave)(&ctx->lock);
++		if (modified)
++			clone_ctx = unclone_ctx(ctx);
+ 	}
+ 
+-	raw_spin_lock_irqsave(&ctx->lock, flags);
+-	if (modified)
+-		clone_ctx = unclone_ctx(ctx);
+-	raw_spin_unlock_irqrestore(&ctx->lock, flags);
+-
+-unlock:
+-	mutex_unlock(&ctx->mutex);
+-
+ 	if (clone_ctx)
+ 		put_ctx(clone_ctx);
+ }
 
 

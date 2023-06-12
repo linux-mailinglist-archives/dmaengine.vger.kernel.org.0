@@ -2,33 +2,33 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0DFA72BE85
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 12:14:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9008F72C3CF
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 14:18:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234136AbjFLKOR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 12 Jun 2023 06:14:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49166 "EHLO
+        id S232732AbjFLMSJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Jun 2023 08:18:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232344AbjFLKNz (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 06:13:55 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6C104C0D;
-        Mon, 12 Jun 2023 02:55:26 -0700 (PDT)
+        with ESMTP id S230335AbjFLMSI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 08:18:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DDD78F;
+        Mon, 12 Jun 2023 05:18:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4D69060FE3;
-        Mon, 12 Jun 2023 09:55:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9E97C433EF;
-        Mon, 12 Jun 2023 09:55:24 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 29F0C619AC;
+        Mon, 12 Jun 2023 12:18:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0E37C433D2;
+        Mon, 12 Jun 2023 12:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1686563725;
-        bh=uoES/gxKY7cWcXBfxNoMev6F6cyb81VBK5AgiR+dmqo=;
+        s=korg; t=1686572286;
+        bh=2+oPAHG4Lq6LModOSA2D8h8xmstG0BEfV6ZbR8S7Y8Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=agD/+CTYcvklPbL0Mz3mXe8+VTOZK358bIssnktx6csyZChgEWI2AjjuLJEtkOtn8
-         LV0kIpavT31IhjDHX1/k0yQPJsTz487pd1iqKmk/nTEss5sKBBSMgeFrExnv49f+p3
-         0PfciCytn3CzOQsGntyu3TyLTmxjb9ZxgsUSORg0=
-Date:   Mon, 12 Jun 2023 11:55:22 +0200
+        b=sj8wNPhQRZHzcIjWvoPlOsQz6EBp5D+0yuoBOBf83bH1hwRxLox4E7RGJhRk2NghN
+         xa755zgQzSw+e2Yfys/knB0jTKwRMLTQ+b6wHVsmxOKPwgfsKV+aXY+NVX+QAZbIfh
+         7HHxW+YCm4bQuuayaxCSpDRkYiWs7euZm3ewUJfI=
+Date:   Mon, 12 Jun 2023 14:18:03 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     torvalds@linux-foundation.org, keescook@chromium.org,
@@ -57,7 +57,7 @@ Cc:     torvalds@linux-foundation.org, keescook@chromium.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
 Subject: Re: [PATCH v3 46/57] perf: Simplify pmu_dev_alloc()
-Message-ID: <2023061255-comma-crummy-398e@gregkh>
+Message-ID: <2023061213-knapsack-moonlike-e595@gregkh>
 References: <20230612090713.652690195@infradead.org>
  <20230612093540.850386350@infradead.org>
  <20230612094400.GG4253@hirez.programming.kicks-ass.net>
@@ -65,8 +65,8 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20230612094400.GG4253@hirez.programming.kicks-ass.net>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -119,9 +119,32 @@ On Mon, Jun 12, 2023 at 11:44:00AM +0200, Peter Zijlstra wrote:
 > 
 > Is there a saner way to write this?
 
-Yes, there should be, let me look into it later tonight, need to get
-some stable kernels out for review first...
+Ok, the "problem" here is that you have decided to do the "complex" way
+to initialize a struct device.  And as such, you have to do more
+housekeeping than if you were to just use the simple interface.
 
-thanks,
+The rule is, after you call device_initialize() you HAVE to call
+put_device() on the pointer if something goes wrong and you want to
+clean up properly.  Unless you have called device_add(), and at that
+point in time, then you HAVE to call device_del() if the device_add()
+call succeeded.  If the device_add() call failed, then you HAVE to call
+put_device().
+
+Yeah, it's a pain, but you are trying to hand-roll code that is not a
+"normal" path for a struct device, sorry.
+
+I don't know if you really can encode all of that crazy logic in the
+cleanup api, UNLESS you can "switch" the cleanup function at a point in
+time (i.e. after device_add() is successful).  Is that possible?
+
+Anyway, let me see about just cleaning up this code in general, I don't
+think you need the complex interface here for a tiny struct device at
+all, which would make this specific instance moot :)
+
+Also, nit, you are racing with userspace by attempting to add new device
+files _AFTER_ the device is registered with the driver core, this whole
+thing can be made more simpler I hope, give me a bit...
+
+thanks
 
 greg k-h

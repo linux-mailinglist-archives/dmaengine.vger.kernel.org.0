@@ -2,43 +2,43 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12DF972BD5B
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 11:56:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB04272BD5F
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 11:56:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235515AbjFLJzx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 12 Jun 2023 05:55:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33552 "EHLO
+        id S235547AbjFLJz4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Jun 2023 05:55:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230332AbjFLJyd (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 05:54:33 -0400
+        with ESMTP id S233342AbjFLJyo (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 05:54:44 -0400
 Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8882618B;
-        Mon, 12 Jun 2023 02:39:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB964C1B;
+        Mon, 12 Jun 2023 02:39:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=U4i7z1jGLLioJYi9TDEcLiRvRYzXl6AqAACZeSAVHVg=; b=SBLpIgKh9BvTgin8OgClkKlYXg
-        X5ams+FHzFQ6G1lMnSouT1mDdb4OLsixaSq0XGTpb8qMCrU112HpuhNQoPMpu5LuKgc0l67v7cO1h
-        u5ptXidisQWMYnTu9VRqL7lCU0qSFMrhITDD9gjBmwe8Ob3g4CMGsAIsrtG8NhdHIlElo7XiHuBGk
-        i6CUfsyeQ89E6j6aUDbi6UnyyLpJP5feQWE/A/0f7bznVuaG82q1C6WO47OsY3j0TTRUJpg1Of5WA
-        IRcAI8pTAmFoYuUbcG3n6PWRD/wAaLyzUwLu2dB3lMCN4lr3Q2ZxqN2zU2caRGifvgztAd6QumekK
-        vRuQDjXw==;
+        bh=kTQMzLiQOiysp6z8Xt3S6oOFWuHsLtjxBsNekM1iUPM=; b=FnsYw1rgaWsOiA0J8R1O2i1uX3
+        e/F70Qz8dzTuEl3kifFu3bO7NPhClNyjvgCn8IyOXFExymb1mJLxjsIE1VNsGjM+ZK5UdyD9Uvpmx
+        8MMlCDrtOaWNKsB/UhUOB/ZOYncIt9ndU2q2e+wO9d2EOd9MKV6zm5aJXolVKFVPXj7clRX/cVNos
+        UIEMW7CktYOkUgJCjntPeUklJKZwTRaqyQxMkh9aZMJURF4j5ZOLong2c9l7tRmNOL8u2yfvD2bky
+        pOzCMpkX6wckfonGJZWPeiND+Om9Xf6BVzQSrlpTGvnF4Bd5KmsJ+mb8KpkZEAGen/+v1YgVnR9df
+        hpzryTVw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q8e0m-008kQu-39;
-        Mon, 12 Jun 2023 09:39:00 +0000
+        id 1q8e0n-008kR9-1O;
+        Mon, 12 Jun 2023 09:39:02 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3F7FB303383;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 446133033BD;
         Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id D03BE30A77B70; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
-Message-ID: <20230612093540.253514702@infradead.org>
+        id D6BA430A77B71; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093540.324593804@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:51 +0200
+Date:   Mon, 12 Jun 2023 11:07:52 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -66,7 +66,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 38/57] perf: Simplify IOC_SET_OUTPUT
+Subject: [PATCH v3 39/57] perf: Simplify perf_event_*_userpage()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -83,46 +83,98 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/core.c |   17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ kernel/events/core.c |   30 ++++++++++--------------------
+ 1 file changed, 10 insertions(+), 20 deletions(-)
 
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -5762,6 +5762,11 @@ static inline struct fd perf_fdget(int f
- 	return f;
+@@ -5971,10 +5971,10 @@ static void perf_event_init_userpage(str
+ 	struct perf_event_mmap_page *userpg;
+ 	struct perf_buffer *rb;
+ 
+-	rcu_read_lock();
++	guard(rcu)();
+ 	rb = rcu_dereference(event->rb);
+ 	if (!rb)
+-		goto unlock;
++		return;
+ 
+ 	userpg = rb->user_page;
+ 
+@@ -5983,9 +5983,6 @@ static void perf_event_init_userpage(str
+ 	userpg->size = offsetof(struct perf_event_mmap_page, __reserved);
+ 	userpg->data_offset = PAGE_SIZE;
+ 	userpg->data_size = perf_data_size(rb);
+-
+-unlock:
+-	rcu_read_unlock();
  }
  
-+static inline bool is_perf_fd(struct fd fd)
-+{
-+	return fd.file && fd.file->f_op == &perf_fops;
-+}
-+
- static int perf_event_set_output(struct perf_event *event,
- 				 struct perf_event *output_event);
- static int perf_event_set_filter(struct perf_event *event, void __user *arg);
-@@ -5807,19 +5812,15 @@ static long _perf_ioctl(struct perf_even
+ void __weak arch_perf_update_userpage(
+@@ -6004,10 +6001,10 @@ void perf_event_update_userpage(struct p
+ 	struct perf_buffer *rb;
+ 	u64 enabled, running, now;
  
- 	case PERF_EVENT_IOC_SET_OUTPUT:
- 	{
--		int ret;
- 		if (arg != -1) {
- 			struct perf_event *output_event;
--			struct fd output = perf_fdget(arg);
--			if (!output.file)
-+			CLASS(fd, output)(arg);
-+			if (!is_perf_fd(output))
- 				return -EBADF;
- 			output_event = output.file->private_data;
--			ret = perf_event_set_output(event, output_event);
--			fdput(output);
--		} else {
--			ret = perf_event_set_output(event, NULL);
-+			return perf_event_set_output(event, output_event);
- 		}
--		return ret;
-+		return perf_event_set_output(event, NULL);
+-	rcu_read_lock();
++	guard(rcu)();
+ 	rb = rcu_dereference(event->rb);
+ 	if (!rb)
+-		goto unlock;
++		return;
+ 
+ 	/*
+ 	 * compute total_time_enabled, total_time_running
+@@ -6025,7 +6022,7 @@ void perf_event_update_userpage(struct p
+ 	 * Disable preemption to guarantee consistent time stamps are stored to
+ 	 * the user page.
+ 	 */
+-	preempt_disable();
++	guard(preempt)();
+ 	++userpg->lock;
+ 	barrier();
+ 	userpg->index = perf_event_index(event);
+@@ -6043,9 +6040,6 @@ void perf_event_update_userpage(struct p
+ 
+ 	barrier();
+ 	++userpg->lock;
+-	preempt_enable();
+-unlock:
+-	rcu_read_unlock();
+ }
+ EXPORT_SYMBOL_GPL(perf_event_update_userpage);
+ 
+@@ -6061,27 +6055,23 @@ static vm_fault_t perf_mmap_fault(struct
+ 		return ret;
  	}
  
- 	case PERF_EVENT_IOC_SET_FILTER:
+-	rcu_read_lock();
++	guard(rcu)();
+ 	rb = rcu_dereference(event->rb);
+ 	if (!rb)
+-		goto unlock;
++		return ret;
+ 
+ 	if (vmf->pgoff && (vmf->flags & FAULT_FLAG_WRITE))
+-		goto unlock;
++		return ret;
+ 
+ 	vmf->page = perf_mmap_to_page(rb, vmf->pgoff);
+ 	if (!vmf->page)
+-		goto unlock;
++		return ret;
+ 
+ 	get_page(vmf->page);
+ 	vmf->page->mapping = vmf->vma->vm_file->f_mapping;
+ 	vmf->page->index   = vmf->pgoff;
+ 
+-	ret = 0;
+-unlock:
+-	rcu_read_unlock();
+-
+-	return ret;
++	return 0;
+ }
+ 
+ static void ring_buffer_attach(struct perf_event *event,
 
 

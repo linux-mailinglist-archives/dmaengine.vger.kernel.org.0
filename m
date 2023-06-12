@@ -2,42 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5C8072BD6F
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 11:56:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D880072BD5D
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 11:56:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235659AbjFLJ4F (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 12 Jun 2023 05:56:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33562 "EHLO
+        id S235611AbjFLJz6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Jun 2023 05:55:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233646AbjFLJyq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 05:54:46 -0400
+        with ESMTP id S233509AbjFLJyp (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 05:54:45 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A56E6191;
-        Mon, 12 Jun 2023 02:39:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C7F24C21;
+        Mon, 12 Jun 2023 02:39:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=UxgZ8gBb/X/LH3e6EzhOyo9roeaslQ6np5gS0C0ZzJo=; b=HM14QRNLfsj2jCFI7z2tW4MkY6
-        GFgNx3SbksNmnhAVq0AjonGzUDtBI/Mo6iGgqC4Z3Yw0yJRHs5bUbLaUeIW6IvnXfKgBRJJjn7uNQ
-        8kP6DACk9mXjCQZNEWLx2zj6NQ4ximS2Z4sK1z90jL4Lq9e0i0OeQ8TlW7W1cqhcWYNvSCLkdgZmy
-        SqKNr9CxrQ7FW/sh5UaiKJ6haS90E/EgjU7MLEJJu+O0hcnzxUFea/kex+iIicCt101qYrkq6dqe6
-        AVToOOiTV/KbOAryV79BDSwPFxBb+4i3U0+K1JR+w5uDsypkLpq0y4RhhxnrjLRTPqtV8YNct2odK
-        /9QseCKw==;
+        bh=i6isNClAHvIMw2+OzbyxD8vRwSg4Nx0nqjzFU0CtSfM=; b=MxrQC5up24n4fUnoCZs9xhGydj
+        WPiaUY1fVHgP0zt4SgHjFl9bU1FTswRc5S3GTdIwagtnGxmM8g/mVm8h6tFslA0BkAIHCS0lsmsxf
+        mXYApR3w+00dThAGwRw5SSsaVtCEesX57GFzuJg1kHrKYomu8aDdoUGY1JDUE8JBHipCfa92Ifv/r
+        zd+VuHJHkrbYFig5uYcq1Hizv1HY2WFQ43Hgl/mswdSuUFAi9hjrs2LMVRGruHQWcuZ+8W1Fu1Q+7
+        OvClSB+9TLTaaO7D8ryJgXgnOZRmNV9glpRBLCdH+94Z9Be2B+yVwhI1KhGtwMx58ouJ9xNIuEfjs
+        v+1zP2IQ==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1q8e0t-002NHI-V0; Mon, 12 Jun 2023 09:39:04 +0000
+        id 1q8e0u-002NHx-FF; Mon, 12 Jun 2023 09:39:04 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5D877305ED3;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5D94C30611B;
         Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 08B3F30A77B7C; Mon, 12 Jun 2023 11:38:49 +0200 (CEST)
-Message-ID: <20230612093540.850386350@infradead.org>
+        id 0DD7E30A79080; Mon, 12 Jun 2023 11:38:49 +0200 (CEST)
+Message-ID: <20230612093540.931189374@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:59 +0200
+Date:   Mon, 12 Jun 2023 11:08:00 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -65,7 +65,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 46/57] perf: Simplify pmu_dev_alloc()
+Subject: [PATCH v3 47/57] perf: Simplify perf_pmu_register()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -82,91 +82,101 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/core.c |   65 ++++++++++++++++++++++++---------------------------
- 1 file changed, 31 insertions(+), 34 deletions(-)
+ kernel/events/core.c |   40 ++++++++++++++++------------------------
+ 1 file changed, 16 insertions(+), 24 deletions(-)
 
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -11285,49 +11285,46 @@ static void pmu_dev_release(struct devic
- 
- static int pmu_dev_alloc(struct pmu *pmu)
- {
--	int ret = -ENOMEM;
-+	int ret;
- 
--	pmu->dev = kzalloc(sizeof(struct device), GFP_KERNEL);
--	if (!pmu->dev)
--		goto out;
-+	struct device *dev __free(put_device) =
-+		kzalloc(sizeof(struct device), GFP_KERNEL);
-+	if (!dev)
-+		return -ENOMEM;
- 
--	pmu->dev->groups = pmu->attr_groups;
--	device_initialize(pmu->dev);
-+	dev->groups = pmu->attr_groups;
-+	device_initialize(dev);
- 
--	dev_set_drvdata(pmu->dev, pmu);
--	pmu->dev->bus = &pmu_bus;
--	pmu->dev->release = pmu_dev_release;
-+	dev_set_drvdata(dev, pmu);
-+	dev->bus = &pmu_bus;
-+	dev->release = pmu_dev_release;
- 
--	ret = dev_set_name(pmu->dev, "%s", pmu->name);
-+	ret = dev_set_name(dev, "%s", pmu->name);
- 	if (ret)
--		goto free_dev;
-+		return ret;
- 
--	ret = device_add(pmu->dev);
-+	ret = device_add(dev);
- 	if (ret)
--		goto free_dev;
-+		return ret;
- 
--	/* For PMUs with address filters, throw in an extra attribute: */
--	if (pmu->nr_addr_filters)
--		ret = device_create_file(pmu->dev, &dev_attr_nr_addr_filters);
--
--	if (ret)
--		goto del_dev;
-+	struct device *del __free(device_del) = dev;
- 
--	if (pmu->attr_update)
--		ret = sysfs_update_groups(&pmu->dev->kobj, pmu->attr_update);
--
--	if (ret)
--		goto del_dev;
--
--out:
--	return ret;
--
--del_dev:
--	device_del(pmu->dev);
--
--free_dev:
--	put_device(pmu->dev);
--	goto out;
-+	/* For PMUs with address filters, throw in an extra attribute: */
-+	if (pmu->nr_addr_filters) {
-+		ret = device_create_file(dev, &dev_attr_nr_addr_filters);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (pmu->attr_update) {
-+		ret = sysfs_update_groups(&dev->kobj, pmu->attr_update);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	no_free_ptr(del);
-+	pmu->dev = no_free_ptr(dev);
-+	return 0;
+@@ -11344,22 +11344,23 @@ void __perf_pmu_unregister(struct pmu *p
+ 	free_pmu_context(pmu);
  }
  
- static struct lock_class_key cpuctx_mutex;
+-int perf_pmu_register(struct pmu *pmu, const char *name, int type)
++DEFINE_FREE(pmu_unregister, struct pmu *, if (_T) __perf_pmu_unregister(_T))
++
++int perf_pmu_register(struct pmu *_pmu, const char *name, int type)
+ {
+ 	int cpu, ret, max = PERF_TYPE_MAX;
+ 
+-	pmu->type = -1;
++	_pmu->type = -1;
++
++	guard(mutex)(&pmus_lock);
++	struct pmu *pmu __free(pmu_unregister) = _pmu;
+ 
+-	mutex_lock(&pmus_lock);
+-	ret = -ENOMEM;
+ 	pmu->pmu_disable_count = alloc_percpu(int);
+ 	if (!pmu->pmu_disable_count)
+-		goto unlock;
++		return -ENOMEM;
+ 
+-	if (WARN_ONCE(!name, "Can not register anonymous pmu.\n")) {
+-		ret = -EINVAL;
+-		goto free;
+-	}
++	if (WARN_ONCE(!name, "Can not register anonymous pmu.\n"))
++		return -EINVAL;
+ 
+ 	pmu->name = name;
+ 
+@@ -11368,7 +11369,7 @@ int perf_pmu_register(struct pmu *pmu, c
+ 
+ 	ret = idr_alloc(&pmu_idr, pmu, max, 0, GFP_KERNEL);
+ 	if (ret < 0)
+-		goto free;
++		return ret;
+ 
+ 	WARN_ON(type >= 0 && ret != type);
+ 
+@@ -11377,13 +11378,12 @@ int perf_pmu_register(struct pmu *pmu, c
+ 	if (pmu_bus_running && !pmu->dev) {
+ 		ret = pmu_dev_alloc(pmu);
+ 		if (ret)
+-			goto free;
++			return ret;
+ 	}
+ 
+-	ret = -ENOMEM;
+ 	pmu->cpu_pmu_context = alloc_percpu(struct perf_cpu_pmu_context);
+ 	if (!pmu->cpu_pmu_context)
+-		goto free;
++		return -ENOMEM;
+ 
+ 	for_each_possible_cpu(cpu) {
+ 		struct perf_cpu_pmu_context *cpc;
+@@ -11423,21 +11423,14 @@ int perf_pmu_register(struct pmu *pmu, c
+ 
+ 	list_add_rcu(&pmu->entry, &pmus);
+ 	atomic_set(&pmu->exclusive_cnt, 0);
+-	ret = 0;
+-unlock:
+-	mutex_unlock(&pmus_lock);
+-
+-	return ret;
+-
+-free:
+-	__perf_pmu_unregister(pmu);
+-	goto unlock;
++	no_free_ptr(pmu); // let it rip
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(perf_pmu_register);
+ 
+ void perf_pmu_unregister(struct pmu *pmu)
+ {
+-	mutex_lock(&pmus_lock);
++	guard(mutex)(&pmus_lock);
+ 	list_del_rcu(&pmu->entry);
+ 
+ 	/*
+@@ -11448,7 +11441,6 @@ void perf_pmu_unregister(struct pmu *pmu
+ 	synchronize_rcu();
+ 
+ 	__perf_pmu_unregister(pmu);
+-	mutex_unlock(&pmus_lock);
+ }
+ EXPORT_SYMBOL_GPL(perf_pmu_unregister);
+ 
 
 

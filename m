@@ -2,131 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D115672AB5E
-	for <lists+dmaengine@lfdr.de>; Sat, 10 Jun 2023 14:14:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EFB9E72BB99
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 11:04:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230204AbjFJMOO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 10 Jun 2023 08:14:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34600 "EHLO
+        id S232840AbjFLJEH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Jun 2023 05:04:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229645AbjFJMON (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 10 Jun 2023 08:14:13 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D78A62D4A;
-        Sat, 10 Jun 2023 05:14:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686399252; x=1717935252;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8elPVM81BdGcGGAZYBdokG8hYC/1QRR+oygJ7EhpjR0=;
-  b=R6pTbErsvHXjNx/8KTvQ8+xilrinyIFAhWozcbTmVeJqiOM8UffKVuNe
-   FEtbyQ2Qk/fuhM5jEfhnfeUy+pD4LYr4BZvSUUIQNzpTEEs6SM5oIxSfV
-   c/44UQN3zeqdmmAUzS4vqdywKvpdax1fP3jJworlu9D9Rb1a209EwOEvz
-   aLvpS9l8i9QNMPZ1Dw75GHytse0mfnwew2PGOPE0EqBsIMjS4un6FLlIv
-   3wHR7z9R2uY9H/EvftVSOjX4EMGTmZNOf4UZw7Pv/KuKSSwUvOgYU+NLO
-   M2fvS8Tk4+hRN4GEH6uB0DWa7beDl7+EMBS/WAth+HfQjPTLlNq/ii/r5
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="338119665"
-X-IronPort-AV: E=Sophos;i="6.00,232,1681196400"; 
-   d="scan'208";a="338119665"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2023 05:14:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="884879484"
-X-IronPort-AV: E=Sophos;i="6.00,232,1681196400"; 
-   d="scan'208";a="884879484"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
-  by orsmga005.jf.intel.com with ESMTP; 10 Jun 2023 05:14:07 -0700
-Message-ID: <08830c11-5528-0c42-0bc3-89c3796611fe@linux.intel.com>
-Date:   Sat, 10 Jun 2023 20:13:03 +0800
+        with ESMTP id S229732AbjFLJDn (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 05:03:43 -0400
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::224])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 627C64221;
+        Mon, 12 Jun 2023 01:59:46 -0700 (PDT)
+X-GND-Sasl: kory.maincent@bootlin.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1686560385;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cO14zcOxiDtyCfggm0ZmyKFEk1cAqg+L0MJg9mmmLXA=;
+        b=EAx7dXfxNEBqD4fGyCMO1OXqwqMZa1zGGZfX4BGkt1A0KO4KCXzb2UlSxieMdfU7CZmtux
+        PVAbpRpZWubf36NUaKNoOBEwbrB+3FKXxKoGJTBuieInszGut2lOxnPDuup6EVFHyLAbG9
+        fpBu4UlapEYEM3UFPC1DiJkUifjsAGpvQ47wkFWOi2JADQjt2/pSwkUkEzV7w39FWENkMr
+        xBIKLn7ZdBtR4F/2KjsLt9HVZGxpkOHOaEhQUlu4gS0j/UAMXmv3hNERO7YGrZuJC3jABu
+        l9qsINOpjW9Fu7edJrWFgmYiGjhSQziqoeUP4Wv7FrGWDfXv3euhlPf5TYijMQ==
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 97657E000F;
+        Mon, 12 Jun 2023 08:59:44 +0000 (UTC)
+Date:   Mon, 12 Jun 2023 10:59:42 +0200
+From:   =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
+To:     Cai Huoqing <cai.huoqing@linux.dev>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Herve Codina <herve.codina@bootlin.com>
+Subject: Re: [PATCH 0/9] Fix support of dw-edma HDMA NATIVE IP in remote
+ setup
+Message-ID: <20230612105942.039b6fc0@kmaincent-XPS-13-7390>
+In-Reply-To: <20230609081654.330857-1-kory.maincent@bootlin.com>
+References: <20230609081654.330857-1-kory.maincent@bootlin.com>
+Organization: bootlin
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Cc:     baolu.lu@linux.intel.com, Will Deacon <will@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Zanussi, Tom" <tom.zanussi@intel.com>, rex.zhang@intel.com,
-        xiaochen.shen@intel.com, narayan.ranganathan@intel.com
-Subject: Re: [PATCH v8 2/7] iommu: Move global PASID allocation from SVA to
- core
-Content-Language: en-US
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        dmaengine@vger.kernel.org, vkoul@kernel.org
-References: <20230602182212.150825-1-jacob.jun.pan@linux.intel.com>
- <20230602182212.150825-3-jacob.jun.pan@linux.intel.com>
-From:   Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20230602182212.150825-3-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 6/3/23 2:22 AM, Jacob Pan wrote:
-> +ioasid_t iommu_alloc_global_pasid_dev(struct device *dev)
-> +{
-> +	int ret;
-> +	ioasid_t max;
-> +
-> +	max = dev->iommu->max_pasids;
-> +	/*
-> +	 * max_pasids is set up by vendor driver based on number of PASID bits
-> +	 * supported but the IDA allocation is inclusive.
-> +	 */
-> +	ret = ida_alloc_range(&iommu_global_pasid_ida, IOMMU_FIRST_GLOBAL_PASID, max - 1, GFP_KERNEL);
-> +	if (ret < 0)
-> +		return IOMMU_PASID_INVALID;
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(iommu_alloc_global_pasid_dev);
+On Fri,  9 Jun 2023 10:16:45 +0200
+K=C3=B6ry Maincent <kory.maincent@bootlin.com> wrote:
 
-"dev->iommu->max_pasids == 0" indicates no pasid support on the device.
-The code should return IOMMU_PASID_INVALID explicitly. Perhaps we can
-make this function like this:
+> From: Kory Maincent <kory.maincent@bootlin.com>
+>=20
+> This patch series fix the support of dw-edma HDMA NATIVE IP.
+> I can only test it in remote HDMA IP setup with single dma transfer, but
+> with these fixes it works properly.
+>=20
+> Few fixes has also been added for eDMA version. Similarly to HDMA I have
+> tested only eDMA in remote setup.
 
-ioasid_t iommu_alloc_global_pasid_dev(struct device *dev)
-{
-         int ret;
+FYI it seems several patches of this series has been categorized as spam.
+I think it is because the code of these patches are quite similar.
 
-         if (!dev->iommu->max_pasids)
-                 return IOMMU_PASID_INVALID;
-
-         /*
-          * max_pasids is set up by vendor driver based on number of 
-PASID bits
-          * supported but the IDA allocation is inclusive.
-          */
-         ret = ida_alloc_range(&iommu_global_pasid_ida, 
-IOMMU_FIRST_GLOBAL_PASID,
-                               dev->iommu->max_pasids - 1, GFP_KERNEL);
-
-         return ret < 0 ? IOMMU_PASID_INVALID : ret;
-}
-EXPORT_SYMBOL_GPL(iommu_alloc_global_pasid_dev);
-
-Other change in this series looks good to me.
-
-I hope I can queue this series including above change as part of my VT-d
-update for v6.5 to Joerg if no objection.
-
-Let's try to re-enable this key feature of Intel idxd driver in v6.5.
-
-Best regards,
-baolu
+K=C3=B6ry

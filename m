@@ -2,43 +2,43 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 202DD72BD78
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 11:56:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12DF972BD5B
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Jun 2023 11:56:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235724AbjFLJ4N (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 12 Jun 2023 05:56:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32902 "EHLO
+        id S235515AbjFLJzx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Jun 2023 05:55:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233804AbjFLJys (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 05:54:48 -0400
+        with ESMTP id S230332AbjFLJyd (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Jun 2023 05:54:33 -0400
 Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07AB14C18;
-        Mon, 12 Jun 2023 02:39:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8882618B;
+        Mon, 12 Jun 2023 02:39:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=ICqqJG5l0sWCX8xrZRxbU0jefpCN2MYfe0yl/+VCRM4=; b=CKNAf/OLveGu3h4G35M1XEIV5u
-        NBuElad+1Cyz7hAjxLmdiofAlNZ59WVXwN3CrP9Gfl4Ccdi/+VZXviefm9IV8ZOsEiIAALkH+ZQeM
-        JSCshvWoOk2ye0l3PailK5L7O/HIe+rzqBLavcMqSUulNXyI0lqc5mlQE1RAC+EzaqyQPBUzKfid5
-        LYfkCZS8vnyRr2VmNLRD6E8uxxm0Qg99fQqc78oc6Bz3sD5VsR472rJ6vx1URMn7VGFn0WBGdm0KG
-        /Q43F20jOaH5vDTomYkIeci0EFi5Mfq3RUVPKf9bOojvjiudIa4EFwja6+7exCspONRew6SwRyHT0
-        wI+FO4zQ==;
+        bh=U4i7z1jGLLioJYi9TDEcLiRvRYzXl6AqAACZeSAVHVg=; b=SBLpIgKh9BvTgin8OgClkKlYXg
+        X5ams+FHzFQ6G1lMnSouT1mDdb4OLsixaSq0XGTpb8qMCrU112HpuhNQoPMpu5LuKgc0l67v7cO1h
+        u5ptXidisQWMYnTu9VRqL7lCU0qSFMrhITDD9gjBmwe8Ob3g4CMGsAIsrtG8NhdHIlElo7XiHuBGk
+        i6CUfsyeQ89E6j6aUDbi6UnyyLpJP5feQWE/A/0f7bznVuaG82q1C6WO47OsY3j0TTRUJpg1Of5WA
+        IRcAI8pTAmFoYuUbcG3n6PWRD/wAaLyzUwLu2dB3lMCN4lr3Q2ZxqN2zU2caRGifvgztAd6QumekK
+        vRuQDjXw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q8e0n-008kR8-1I;
-        Mon, 12 Jun 2023 09:39:04 +0000
+        id 1q8e0m-008kQu-39;
+        Mon, 12 Jun 2023 09:39:00 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3F98B3033B5;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3F7FB303383;
         Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id CA60630A77B6F; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
-Message-ID: <20230612093540.181605463@infradead.org>
+        id D03BE30A77B70; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093540.253514702@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:50 +0200
+Date:   Mon, 12 Jun 2023 11:07:51 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -66,7 +66,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 37/57] perf: Simplify perf_read_group()
+Subject: [PATCH v3 38/57] perf: Simplify IOC_SET_OUTPUT
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -83,63 +83,46 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/core.c |   30 +++++++++++-------------------
- 1 file changed, 11 insertions(+), 19 deletions(-)
+ kernel/events/core.c |   17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -5472,11 +5472,10 @@ static int perf_read_group(struct perf_e
- 	struct perf_event *leader = event->group_leader, *child;
- 	struct perf_event_context *ctx = leader->ctx;
- 	int ret;
--	u64 *values;
- 
- 	lockdep_assert_held(&ctx->mutex);
- 
--	values = kzalloc(event->read_size, GFP_KERNEL);
-+	u64 *values __free(kfree) = kzalloc(event->read_size, GFP_KERNEL);
- 	if (!values)
- 		return -ENOMEM;
- 
-@@ -5486,29 +5485,22 @@ static int perf_read_group(struct perf_e
- 	 * By locking the child_mutex of the leader we effectively
- 	 * lock the child list of all siblings.. XXX explain how.
- 	 */
--	mutex_lock(&leader->child_mutex);
--
--	ret = __perf_read_group_add(leader, read_format, values);
--	if (ret)
--		goto unlock;
--
--	list_for_each_entry(child, &leader->child_list, child_list) {
--		ret = __perf_read_group_add(child, read_format, values);
-+	scoped_guard (mutex, &leader->child_mutex) {
-+		ret = __perf_read_group_add(leader, read_format, values);
- 		if (ret)
--			goto unlock;
--	}
-+			return ret;
- 
--	mutex_unlock(&leader->child_mutex);
-+		list_for_each_entry(child, &leader->child_list, child_list) {
-+			ret = __perf_read_group_add(child, read_format, values);
-+			if (ret)
-+				return ret;
-+		}
-+	}
- 
- 	ret = event->read_size;
- 	if (copy_to_user(buf, values, event->read_size))
--		ret = -EFAULT;
--	goto out;
-+		return -EFAULT;
- 
--unlock:
--	mutex_unlock(&leader->child_mutex);
--out:
--	kfree(values);
- 	return ret;
+@@ -5762,6 +5762,11 @@ static inline struct fd perf_fdget(int f
+ 	return f;
  }
  
++static inline bool is_perf_fd(struct fd fd)
++{
++	return fd.file && fd.file->f_op == &perf_fops;
++}
++
+ static int perf_event_set_output(struct perf_event *event,
+ 				 struct perf_event *output_event);
+ static int perf_event_set_filter(struct perf_event *event, void __user *arg);
+@@ -5807,19 +5812,15 @@ static long _perf_ioctl(struct perf_even
+ 
+ 	case PERF_EVENT_IOC_SET_OUTPUT:
+ 	{
+-		int ret;
+ 		if (arg != -1) {
+ 			struct perf_event *output_event;
+-			struct fd output = perf_fdget(arg);
+-			if (!output.file)
++			CLASS(fd, output)(arg);
++			if (!is_perf_fd(output))
+ 				return -EBADF;
+ 			output_event = output.file->private_data;
+-			ret = perf_event_set_output(event, output_event);
+-			fdput(output);
+-		} else {
+-			ret = perf_event_set_output(event, NULL);
++			return perf_event_set_output(event, output_event);
+ 		}
+-		return ret;
++		return perf_event_set_output(event, NULL);
+ 	}
+ 
+ 	case PERF_EVENT_IOC_SET_FILTER:
 
 

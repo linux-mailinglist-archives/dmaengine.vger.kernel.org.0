@@ -2,32 +2,34 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FDD672DD3B
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Jun 2023 11:03:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2D6872DDAE
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Jun 2023 11:30:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241298AbjFMJDM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 13 Jun 2023 05:03:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35730 "EHLO
+        id S239768AbjFMJar (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 13 Jun 2023 05:30:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241090AbjFMJDK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 13 Jun 2023 05:03:10 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1E861B0;
-        Tue, 13 Jun 2023 02:03:08 -0700 (PDT)
-Received: from [192.168.1.141] ([37.4.248.58]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M8hIl-1qDeka0hE1-004lYy; Tue, 13 Jun 2023 11:02:41 +0200
-Message-ID: <3b868924-9d9c-ae0a-a7b8-0afbd01c4a4b@i2se.com>
-Date:   Tue, 13 Jun 2023 11:02:40 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 05/10] dt-bindings: pwm: convert pwm-bcm2835 bindings to
- YAML
-Content-Language: en-US
-To:     Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Vinod Koul <vkoul@kernel.org>,
+        with ESMTP id S233791AbjFMJap (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 13 Jun 2023 05:30:45 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF3B6B7
+        for <dmaengine@vger.kernel.org>; Tue, 13 Jun 2023 02:30:43 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1q90Lx-0003DC-Vz; Tue, 13 Jun 2023 11:30:18 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1q90Lw-0075fp-Ff; Tue, 13 Jun 2023 11:30:16 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1q90Lv-00DpVq-G7; Tue, 13 Jun 2023 11:30:15 +0200
+Date:   Tue, 13 Jun 2023 11:30:14 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Rob Herring <robh@kernel.org>, Vinod Koul <vkoul@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
         Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -44,71 +46,96 @@ Cc:     Vinod Koul <vkoul@kernel.org>,
         devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
         bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH 05/10] dt-bindings: pwm: convert pwm-bcm2835 bindings to
+ YAML
+Message-ID: <20230613093014.sot4l2kihnkkx3o5@pengutronix.de>
 References: <20230604121223.9625-1-stefan.wahren@i2se.com>
  <20230604121223.9625-6-stefan.wahren@i2se.com>
  <20230607075602.s2pfs7dl7fwkyevm@pengutronix.de>
  <20230609215932.GA2531610-robh@kernel.org>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <20230609215932.GA2531610-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:wxebQsh+fQdLM/O5aHXaUpZItuLptFkBN2rvVclkEo3Bp8GEKR3
- X6I2DtvCMgKqy9kSY81It0h/h6MP7shw2ankru1f8xolFnfsGNwr/gdURjP2vhZ6DkyT9rL
- j373KVRGH42bYxKr18Cqv5bZqRM7p71jReJ+qCnyH7M+XbwWMpTy61nBDQJxobOwjyZldsU
- RU2HM7ZHeYPIf1R5LV6Tg==
-UI-OutboundReport: notjunk:1;M01:P0:/vyMsFrDTWU=;yu+4WWlRUw7Eic4EVdnPupkpN8Z
- XKWXppWE/Bd+PWomLTBL5Rj0O1JhrxlNpO/lozFYnaHojViyW3S3RnOH03etqjOZ5q0snWxzy
- VU3F5qN75/lb8/wZB3zleVKMMnRpR+2o08HVTbgjJepviur80DDkiFYQoJQgD3oWGmW/A9bFT
- XWgygMn2WQSlT4/AAG1MjcEKIeFYAXGEnJS3ZZwHzRvRBr3SH4kghGwkL9VNe5lcC7jsKYC4/
- tbisOJgNoBu1FVWFjiKPvf7XFTXxZWuqdI2KlgJsJrQkl8dKMoNRLe7rtzWzBdM2fvdSeYObv
- qeS6BHuNXYvEGMr93rRg2+d98Vt1JGzEC6Zrw3MJ+/R47P9tf6lBVxjIfK9HQ0v/Io1hjwCPv
- kn5KyrCdHK9Zwf9v+5v1FiLnEI2m/88pfDqOST3b70X+KwplyJxYwrTSuXg8rFx0BwuZZ5X7r
- ggDC4KcMK5/DHw6SE5C28eEAsk0QdQz5yFp6s2dWmgc11g3K4283rj2c/CRzUb7OtQyf71lNU
- Dl4hb7e7Hud0t8zPk6B1IfG5+XAjkgrnt4BvB5fxUPR1eFHpXobegrBpycEYX2gNddqhp/77d
- 2KJH25reEWK8Tz2DxFhmikvGOZxn8KZAeQaTnMS4aUXpI0qbLwd5Y9Rncx6pPYvJODD0en94f
- YvOAyEfZWFbLH5ttoLQEOBreKOtH+JEGYxNd/bFCLA==
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+ <3b868924-9d9c-ae0a-a7b8-0afbd01c4a4b@i2se.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="q34rb5xucwxwl2gk"
+Content-Disposition: inline
+In-Reply-To: <3b868924-9d9c-ae0a-a7b8-0afbd01c4a4b@i2se.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,
 
-Am 09.06.23 um 23:59 schrieb Rob Herring:
-> On Wed, Jun 07, 2023 at 09:56:02AM +0200, Uwe Kleine-König wrote:
->> Hello,
->>
->> On Sun, Jun 04, 2023 at 02:12:18PM +0200, Stefan Wahren wrote:
->>> Convert the DT binding document for pwm-bcm2835 from .txt to YAML.
->>
->> Both dt_binding_check and dtbs_check (for ARCH=arm) are happy, apart
->> from errors like:
->>
->> arch/arm/boot/dts/bcm2711-rpi-4-b.dtb: pwm@7e20c000: #pwm-cells:0:0: 3 was expected
->>          From schema: Documentation/devicetree/bindings/pwm/pwm-bcm2835.yaml
->>
->> which is fixed in patch #6. So:
->>
->> Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
->>
->> Who will pick up this patch? Is it supposed to go in via pwm or
->> arm/broadcom? (I suggest the latter.)
-> 
-> The default is the subsystem (pwm). Why not here?
+--q34rb5xucwxwl2gk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-i think Uwe's concern is about the fact, that the series is late in 
-cycle. So the chance that the fixing DTS patch 6 miss Linux 6.5 is very 
-high.
+On Tue, Jun 13, 2023 at 11:02:40AM +0200, Stefan Wahren wrote:
+> Hi,
+>=20
+> Am 09.06.23 um 23:59 schrieb Rob Herring:
+> > On Wed, Jun 07, 2023 at 09:56:02AM +0200, Uwe Kleine-K=F6nig wrote:
+> > > Hello,
+> > >=20
+> > > On Sun, Jun 04, 2023 at 02:12:18PM +0200, Stefan Wahren wrote:
+> > > > Convert the DT binding document for pwm-bcm2835 from .txt to YAML.
+> > >=20
+> > > Both dt_binding_check and dtbs_check (for ARCH=3Darm) are happy, apart
+> > > from errors like:
+> > >=20
+> > > arch/arm/boot/dts/bcm2711-rpi-4-b.dtb: pwm@7e20c000: #pwm-cells:0:0: =
+3 was expected
+> > >          From schema: Documentation/devicetree/bindings/pwm/pwm-bcm28=
+35.yaml
+> > >=20
+> > > which is fixed in patch #6. So:
+> > >=20
+> > > Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > >=20
+> > > Who will pick up this patch? Is it supposed to go in via pwm or
+> > > arm/broadcom? (I suggest the latter.)
+> >=20
+> > The default is the subsystem (pwm). Why not here?
+>=20
+> i think Uwe's concern is about the fact, that the series is late in cycle.
+> So the chance that the fixing DTS patch 6 miss Linux 6.5 is very high.
 
-> 
-> Rob
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+My concern is only that nobody might feel responsible and think the
+other party will pick up. Thierry didn't pick up patches yet for the
+next merge window (or I missed it), so I guess it's not yet to late for
+going in via pwm.
+
+I suggest to let it go in via the arm/broadcom tree, to have the whole
+series together.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--q34rb5xucwxwl2gk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmSINyUACgkQj4D7WH0S
+/k7ZDQf/cfElfv6yePm9EHQQdztYHh3IO4c1+a3mYiV4paMsOf7dNK8samM5rkwG
+qR+VEGxcdHYUgNLhqwu4KLj8WqQrk9myA9/WKZIAlL8fOhfuFYwEBTbunRG12ocC
+8zMfwPNwLa/15vEcQjYNcJqUOxxt3LTIfJwQI/rbycLrjUy7uhx/zz1nL0vhR4PN
+75KD5ihTsHVxDRQM7RSNjZ/GjXl/9AC+amWFKoUJ9DGGmrx8/eQDkipqAtgPHeGu
+DxsSWmBqlodiGo6mr8BdLJFaGqYGGIJBAhvXgfFOqpObxy6xS6S1YSUzeMY/ztm7
+DaJyM4EnXxL2LWbTGlBz4IrAf49BNA==
+=jtkA
+-----END PGP SIGNATURE-----
+
+--q34rb5xucwxwl2gk--

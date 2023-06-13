@@ -2,140 +2,148 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 828C772E02D
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Jun 2023 12:55:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08CE172E128
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Jun 2023 13:21:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242066AbjFMKzl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 13 Jun 2023 06:55:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42896 "EHLO
+        id S234660AbjFMLUs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 13 Jun 2023 07:20:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238726AbjFMKzb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 13 Jun 2023 06:55:31 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4C10E55;
-        Tue, 13 Jun 2023 03:55:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=GMlksJ5muipLr0Ufss/WSswgj2qownE6HhlJFXhcXlg=; b=a9KFFt6X10FXGv2kIkzGTnsIDj
-        S2hxVxvC8y8yY6vRCgKbQfTumoiC2Oi7IJwPadzTHPYYf03jUD8rOFcDArJSDmBaTe6ch7rcWPyXk
-        AsuHe3FVpF/zX4yh2hTjPst2Z10wtAhlIFHZXwxwG+eOnp7l7eF7LHqUA5i/bqDVB9ymIzf2gcUeI
-        kujQ8iw8VK2/CQuvfEZRuamzJFGghTqyOI/u4HLE/P+lv1uloNQuptF94XXv6GyVyvIm+QV/aBRZ/
-        LAViy+/LWhi/rAzC8CXHv7awdkWevYiOY17Nv7Zy4O020FOryv2Bfghhni3m1pZ8hc7XXPmwM2VfD
-        5Ece5izQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1q91gJ-003oTx-3o; Tue, 13 Jun 2023 10:55:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AA072300322;
-        Tue, 13 Jun 2023 12:55:22 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8D05424556032; Tue, 13 Jun 2023 12:55:22 +0200 (CEST)
-Date:   Tue, 13 Jun 2023 12:55:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     torvalds@linux-foundation.org, keescook@chromium.org,
-        gregkh@linuxfoundation.org, pbonzini@redhat.com
-Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
-        nicolas@fjasle.eu, catalin.marinas@arm.com, will@kernel.org,
-        vkoul@kernel.org, trix@redhat.com, ojeda@kernel.org,
-        mingo@redhat.com, longman@redhat.com, boqun.feng@gmail.com,
-        dennis@kernel.org, tj@kernel.org, cl@linux.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        adrian.hunter@intel.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, vschneid@redhat.com, paulmck@kernel.org,
-        frederic@kernel.org, quic_neeraju@quicinc.com,
-        joel@joelfernandes.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
-        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
-        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
-        john.johansen@canonical.com, paul@paul-moore.com,
-        jmorris@namei.org, serge@hallyn.com, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        llvm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
-        tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
-        luc.vanoostenryck@gmail.com
-Subject: Re: [PATCH v3 03/57] locking: Introduce __cleanup() based
- infrastructure
-Message-ID: <20230613105522.GU4253@hirez.programming.kicks-ass.net>
-References: <20230612090713.652690195@infradead.org>
- <20230612093537.614161713@infradead.org>
+        with ESMTP id S242432AbjFMLTu (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 13 Jun 2023 07:19:50 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F32891BD5
+        for <dmaengine@vger.kernel.org>; Tue, 13 Jun 2023 04:19:28 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-9768fd99c0cso1325323966b.0
+        for <dmaengine@vger.kernel.org>; Tue, 13 Jun 2023 04:19:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1686655167; x=1689247167;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=dtzyg81yCu4VXwW413lxgy6B2wG9SaGkM8lh+1KCu1g=;
+        b=LYbOWDJUSS7DIRw9J0C8Id2sSIgH9M1zm2KSPI7CbOTgx2VSIGhUWnN0rZbuVXiGc3
+         Rbxy7IGgE36jaklExufVW9DNVTJrSbUiNWgBeAZ/hmIhLrPCV1FbyNZo4BwdRlo73CL9
+         qPd+b4nA7Uqp4mNrk5ttZ9ZIy9VtvsKdcnpUrF8BrJ+ior9hzUADrMi/khEzwfNJgBBB
+         3J3aCRqAmCfHJEUQTgo35GLSrY2DAVgxAkIBeSLAyhb1JMDKYQtJkHNSTPnerU0/5Ut0
+         15Y3W9kYyyBmpkkigX9U2BqLDgVW7ZQtql+TjHZKmKVe5WZNSgoS6jFsrAavv1NznRie
+         Fb1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686655167; x=1689247167;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dtzyg81yCu4VXwW413lxgy6B2wG9SaGkM8lh+1KCu1g=;
+        b=FEb7rt8ttTy+wPRSR/QMaIP7UdmYsqViVqjBBz7xOoPt2MENfrPKXXMbQJaoCdts3Z
+         VJYqll26J3eewLqLpoy3L2mz9HSnA0AVO3KhnVkhlJLEQkuGb77vRzfCB5yE4OnUrXNr
+         L8VJOhy6KcZPP8VsoGF5sHDqpyjYrY9ppd4IFthE2V6B07i/vYlkfvCimv06VfyCmaap
+         ZCTcN/OUxj/6WD9Y38gqAHMHO3s2OPc1x2ZNpJguWxfui+MyTfvVGELo4Yeo+csXZJM8
+         H3jukCfCsdrVqMU5hP5qQgNMe2FMLz7PRbHca5PFB5bhVvzTvQCGMJ9M1gqFN7Rvbh8A
+         U9xw==
+X-Gm-Message-State: AC+VfDy4u03OdnxtRZWx+PomAB+4fNg/0LPyKKDRms3Sa7MOqJfAxx6o
+        YBV7kRRQ0VQxXWrsrhhKkAIq6Q==
+X-Google-Smtp-Source: ACHHUZ7V9uuUJDuQkeE0U0VIpQbamKxyYvpkZgeq1/iDcr16b5+vIJ7b1fWzeTaXfAfKzGUoiNz/fw==
+X-Received: by 2002:a17:906:5d09:b0:978:af9d:c004 with SMTP id g9-20020a1709065d0900b00978af9dc004mr11055545ejt.4.1686655167482;
+        Tue, 13 Jun 2023 04:19:27 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.26])
+        by smtp.gmail.com with ESMTPSA id f13-20020a170906494d00b0097461fecc91sm6493922ejt.81.2023.06.13.04.19.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Jun 2023 04:19:27 -0700 (PDT)
+Message-ID: <7574a6fe-ddf1-1500-ba04-5a1df6845b6a@linaro.org>
+Date:   Tue, 13 Jun 2023 13:19:24 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230612093537.614161713@infradead.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v4 12/12] dt-bindings: fsl-dma: fsl-edma: add edma3
+ compatible string
+To:     Frank Li <Frank.Li@nxp.com>, vkoul@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peng.fan@nxp.com, joy.zou@nxp.com, shenwei.wang@nxp.com,
+        imx@lists.linux.dev
+References: <20230612203418.2017769-1-Frank.Li@nxp.com>
+ <20230612203418.2017769-13-Frank.Li@nxp.com>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230612203418.2017769-13-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 11:07:16AM +0200, Peter Zijlstra wrote:
+On 12/06/2023 22:34, Frank Li wrote:
+> Extend Freescale eDMA driver bindings to support eDMA3 IP blocks in
+> i.MX8QM and i.MX8QXP SoCs. In i.MX93, both eDMA3 and eDMA4 are now.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../devicetree/bindings/dma/fsl,edma.yaml     | 24 +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/fsl,edma.yaml b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
+> index 5fd8fc604261..14cea8a3f442 100644
+> --- a/Documentation/devicetree/bindings/dma/fsl,edma.yaml
+> +++ b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
+> @@ -21,6 +21,10 @@ properties:
+>        - enum:
+>            - fsl,vf610-edma
+>            - fsl,imx7ulp-edma
+> +          - fsl,imx8qm-edma
+> +          - fsl,imx8qm-adma
+> +          - fsl,imx93-edma3
+> +          - fsl,imx93-edma4
+>        - items:
+>            - const: fsl,ls1028a-edma
+>            - const: fsl,vf610-edma
+> @@ -101,6 +105,26 @@ allOf:
+>          reg:
+>            maxItems: 2
+>  
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            anyOf:
 
-> --- /dev/null
-> +++ b/include/linux/cleanup.h
-> @@ -0,0 +1,167 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __LINUX_GUARDS_H
-> +#define __LINUX_GUARDS_H
-> +
-> +#include <linux/compiler.h>
-> +
-> +/*
-> + * DEFINE_FREE(name, type, free):
-> + *	simple helper macro that defines the required wrapper for a __free()
-> + *	based cleanup function. @free is an expression using '_T' to access
-> + *	the variable.
-> + *
-> + * __free(name):
-> + *	variable attribute to add a scoped based cleanup to the variable.
-> + *
+This is just enum.
 
-	no_free_ptr(var):
-	  like a non-atomic xchg(var, NULL), such that the cleanup
-	  function will be inhibited -- provided it sanely deals with a
-	  NULL value.
+> +              - const: fsl,imx8qm-edma
+> +              - const: fsl,imx8qm-adma
 
-> + * return_ptr(p):
-> + *	returns p while inhibiting the __free().
-> + *
-> + * Ex.
-> + *
-> + * DEFINE_FREE(kfree, void *, if (_T) kfree(_T))
-> + *
-> + *	struct obj *p = kmalloc(...);
+Keep entries ordered alphabetically. In compatible list as well.
 
-That should obviously have been:
+> +              - const: fsl,imx93-edma3
+> +              - const: fsl,imx93-edma4
+> +    then:
+> +      properties:
+> +        reg:
+> +          maxItems: 1
+> +        interrupts:
+> +          minItems: 1
+> +          maxItems: 64
+> +        interrupt-names:
+> +          minItems: 1
+> +          maxItems: 64
 
-	struct obj *p __free(kfree) = kmalloc(...);
+It does not look like you tested the bindings, at least after quick
+look. Please run `make dt_binding_check` (see
+Documentation/devicetree/bindings/writing-schema.rst for instructions).
+Maybe you need to update your dtschema and yamllint.
 
-> + *	if (!p)
-> + *		return NULL;
-> + *
-> + *	if (!init_obj(p))
-> + *		return NULL;
-> + *
-> + *	return_ptr(p);
-> + */
-> +
-> +#define DEFINE_FREE(name, type, free) \
-> +	static inline void __free_##name(void *p) { type _T = *(type *)p; free; }
-> +
-> +#define __free(name)	__cleanup(__free_##name)
-> +
-> +#define no_free_ptr(p) \
-> +	({ __auto_type __ptr = (p); (p) = NULL; __ptr; })
-> +
-> +#define return_ptr(p)	return no_free_ptr(p)
+interrupts can be max 17, so just test it and you will see errors.
+
+Why names are not listed? If you accept names like "candy" or
+"elephant", then why having the names in the first place?
+
+And what about clocks?
+
+Best regards,
+Krzysztof
+

@@ -2,55 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 423F672D995
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Jun 2023 07:56:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A305A72DB08
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Jun 2023 09:34:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239196AbjFMF4V convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Tue, 13 Jun 2023 01:56:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55518 "EHLO
+        id S238329AbjFMHe0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 13 Jun 2023 03:34:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234474AbjFMF4U (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 13 Jun 2023 01:56:20 -0400
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26E9618E;
-        Mon, 12 Jun 2023 22:56:19 -0700 (PDT)
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4652fcb2ac1so2100964e0c.1;
-        Mon, 12 Jun 2023 22:56:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686635778; x=1689227778;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CXoP/SfXeEJ/3wkZUjDn660T9VLgrFL+TBUwgZAoObU=;
-        b=iqLgDpZLQwdyissvPRLHjcy3JmFLoxoZlVg6GNaG/3XM1VcZQG8XM7fsRYdsJ9qe3x
-         h6dYWzAGUqVJpGGxy2rbb5eLFrkr4TdRt68ARWnvpbwNZ88kaoogpzWG5vKw28m5Zc2z
-         j2MW6uNU91YIjggpLap+bCd6gZdInnhL5yD2S0cTNsIot0GQxYSRY85L9P723AWjNF2+
-         s0LXlBa3Cr+AqwVuue2V1AvKXF5bpxnM06mpVMq6gdjGkddC60p5cwJ7iu5H0eW9F22t
-         Uk8B6Ec/O2Psjc9g8xA3kaKFFxdODwQyeZjpjwEIkg/w4uQD4aVcyD34lwhR+l/ZbSB8
-         FWLw==
-X-Gm-Message-State: AC+VfDyY3m5uxPLsxL/yO1LqtMgVoIFFUql31wF6aalpcZtw0GY5Rk2Z
-        nLa94QzqGF2YkvD6BzoWLzCysoxWm1jhdhXimWE=
-X-Google-Smtp-Source: ACHHUZ7Cj9u8WTOpvJ3k1N/xhXE9h8rxLIkzVesRwg9r4gsjesfbSe/X67dLrFf1E5Xf3TVgeqrXTm+8Y8tzoGTBqiw=
-X-Received: by 2002:a1f:4386:0:b0:45d:5914:80b with SMTP id
- q128-20020a1f4386000000b0045d5914080bmr5911210vka.6.1686635778061; Mon, 12
- Jun 2023 22:56:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230612090713.652690195@infradead.org> <20230612093539.371360635@infradead.org>
-In-Reply-To: <20230612093539.371360635@infradead.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 12 Jun 2023 22:56:06 -0700
-Message-ID: <CAM9d7cjz4cnEgV_oAnTOqyCWXDeD3ECYQFc=Uksct2-HKuFmiQ@mail.gmail.com>
-Subject: Re: [PATCH v3 26/57] perf: Simplify event_function*()
-To:     Peter Zijlstra <peterz@infradead.org>
+        with ESMTP id S234043AbjFMHeY (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 13 Jun 2023 03:34:24 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB8D10F7;
+        Tue, 13 Jun 2023 00:34:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=tAKolwLuXUR1D5yD/hL0f+kZnHou+PxeYU9aqGSZlgk=; b=PJ7DjtI5p9Scuhe88BpMQDomP0
+        MKCJntJTn1U+Rd2ZhV3FQnt6v8jDArMbzoUNSNBw22KQvf4WZts+aU5TsuEO6LVgTBI9Lt5J5/tRM
+        J8ziNRHbscTBejaoYpXuU/l3qPuKSjn5T8wVUN8+JYdj713tuMnbHx+7gbgAdsmA8wZ38wg4ht6m7
+        i0+jX0ZKdElRGA4MizB5sMdH1s4BRkSbqJI4EUQFv5UwmALAHg55ZjQOv7/wSBKbBTi1uFQEMjskS
+        A/QCcZxrSOjGP5FrTd8O11G3S61ZxvJCh2x57TVAqR8kGkTdhlP7MuYlgXagHdz4r3FYQqRS+YNsG
+        xU47uqLA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1q8yXh-003ev7-B0; Tue, 13 Jun 2023 07:34:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0C1E9300322;
+        Tue, 13 Jun 2023 09:34:16 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DB9FC262C92A1; Tue, 13 Jun 2023 09:34:15 +0200 (CEST)
+Date:   Tue, 13 Jun 2023 09:34:15 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
 Cc:     torvalds@linux-foundation.org, keescook@chromium.org,
-        gregkh@linuxfoundation.org, pbonzini@redhat.com,
-        masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
-        nicolas@fjasle.eu, catalin.marinas@arm.com, will@kernel.org,
-        vkoul@kernel.org, trix@redhat.com, ojeda@kernel.org,
-        mingo@redhat.com, longman@redhat.com, boqun.feng@gmail.com,
-        dennis@kernel.org, tj@kernel.org, cl@linux.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        pbonzini@redhat.com, masahiroy@kernel.org, nathan@kernel.org,
+        ndesaulniers@google.com, nicolas@fjasle.eu,
+        catalin.marinas@arm.com, will@kernel.org, vkoul@kernel.org,
+        trix@redhat.com, ojeda@kernel.org, mingo@redhat.com,
+        longman@redhat.com, boqun.feng@gmail.com, dennis@kernel.org,
+        tj@kernel.org, cl@linux.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
         juri.lelli@redhat.com, vincent.guittot@linaro.org,
         dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
         mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
@@ -67,127 +63,91 @@ Cc:     torvalds@linux-foundation.org, keescook@chromium.org,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v3 46/57] perf: Simplify pmu_dev_alloc()
+Message-ID: <20230613073415.GP4253@hirez.programming.kicks-ass.net>
+References: <20230612090713.652690195@infradead.org>
+ <20230612093540.850386350@infradead.org>
+ <20230612094400.GG4253@hirez.programming.kicks-ass.net>
+ <2023061226-grumpily-entire-f06a@gregkh>
+ <20230612141322.GA83892@hirez.programming.kicks-ass.net>
+ <2023061217-mutable-curry-c2ac@gregkh>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2023061217-mutable-curry-c2ac@gregkh>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Peter,
+On Mon, Jun 12, 2023 at 05:44:59PM +0200, Greg KH wrote:
 
-On Mon, Jun 12, 2023 at 2:39 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> Use guards to reduce gotos and simplify control flow.
->
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  kernel/events/core.c |   39 ++++++++++++++++++++++++++-------------
->  1 file changed, 26 insertions(+), 13 deletions(-)
->
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -214,6 +214,25 @@ struct event_function_struct {
->         void *data;
->  };
->
-> +typedef struct {
-> +       struct perf_cpu_context *cpuctx;
-> +       struct perf_event_context *ctx;
-> +} class_perf_ctx_lock_t;
-> +
-> +static inline void class_perf_ctx_lock_destructor(class_perf_ctx_lock_t *_T)
-> +{
-> +       if (_T->cpuctx)
-> +               perf_ctx_unlock(_T->cpuctx, _T->ctx);
+> Then in the last part of the file, I abuse the DEFINE_FREE() to handle a
+> special case of removing a proc file if things go bad (and add a
+> DEFINE_FREE() for class_destroy(), which should go into
+> include/device/class.h.
+> 
+> I've only test-built it, but is this the proper use of DEFINE_FREE()?
+> There wasn't much documentation :)
 
-Shouldn't it be called unconditionally?
+Yes, this looks right.
 
-Thanks,
-Namhyung
+> To be fair the end-result of misc_init() is much nicer and cleaner and
+> "obviously correct", which is good, even with the crazy proc file mess
+> in it.  So I like the idea overall, need to figure out when to use
+> DEFINE_CLASS() vs. DEFINE_FREE(), that isn't obvious to me.
 
-> +}
-> +
-> +static inline class_perf_ctx_lock_t
-> +class_perf_ctx_lock_constructor(struct perf_cpu_context *cpuctx,
-> +                               struct perf_event_context *ctx)
-> +{
-> +       perf_ctx_lock(cpuctx, ctx);
-> +       return (class_perf_ctx_lock_t){ cpuctx, ctx };
-> +}
-> +
->  static int event_function(void *info)
+CLASS is meant for things that have an obvious contructor as well as a
+destructor, that always go together. Like for example the lock things,
+they always pair a lock and unlock. But also things like:
+fdget()+fdput(), these can also always be paired, and if you want the
+file to escape you simply take yet another reference to prevent the
+fdput() from being the final.
+
+> Also, you can't put a DEFINE_FREE() within a function declaration, which
+> I guess makes sense, but the build warning is very odd when you attempt
+> it, mentioning an "invalid storage class".  Is that supposed to be able
+> to work?
+
+No, DEFINE_FREE() and DEFINE_CLASS() end up defining a bunch of inline
+functions, which can't be done inside another function.
+
+If only C would have lambda functions ... alas.
+
+> @@ -280,29 +268,24 @@ static char *misc_devnode(const struct device *dev, umode_t *mode)
+>  	return NULL;
+>  }
+>  
+> +DEFINE_FREE(class_destroy, struct class *, if (_T) class_destroy(_T));
+
+Documentation for class_create() says it will return ERR_PTR(), so then
+this should be something like:
+
+DEFINE_FRERE(class_destroy, struct class *, if (!IS_ERR_OR_NULL(_T)) class_destroy(_T))
+
+> +DEFINE_FREE(remove_proc, struct proc_dir_entry *, if (_T) remove_proc_entry("misc", NULL));
+>  static int __init misc_init(void)
 >  {
->         struct event_function_struct *efs = info;
-> @@ -224,17 +243,15 @@ static int event_function(void *info)
->         int ret = 0;
->
->         lockdep_assert_irqs_disabled();
-> +       guard(perf_ctx_lock)(cpuctx, task_ctx);
->
-> -       perf_ctx_lock(cpuctx, task_ctx);
->         /*
->          * Since we do the IPI call without holding ctx->lock things can have
->          * changed, double check we hit the task we set out to hit.
->          */
->         if (ctx->task) {
-> -               if (ctx->task != current) {
-> -                       ret = -ESRCH;
-> -                       goto unlock;
-> -               }
-> +               if (ctx->task != current)
-> +                       return -ESRCH;
->
->                 /*
->                  * We only use event_function_call() on established contexts,
-> @@ -254,8 +271,6 @@ static int event_function(void *info)
->         }
->
->         efs->func(event, cpuctx, ctx, efs->data);
-> -unlock:
-> -       perf_ctx_unlock(cpuctx, task_ctx);
->
->         return ret;
+> +	struct proc_dir_entry *ret __free(remove_proc) = proc_create_seq("misc", 0, NULL, &misc_seq_ops);
+> +	struct class *c __free(class_destroy) = class_create("misc");
+>  
+> +	if (IS_ERR(c))
+> +		return PTR_ERR(c);
+>  
+>  	if (register_chrdev(MISC_MAJOR, "misc", &misc_fops))
+> +		return -EIO;
+>  
+> +	c->devnode = misc_devnode;
+> +
+> +	misc_class = no_free_ptr(c);
+> +	no_free_ptr(ret);
+> +
+> +	return 0;
 >  }
-> @@ -329,11 +344,11 @@ static void event_function_local(struct
->                 task_ctx = ctx;
->         }
->
-> -       perf_ctx_lock(cpuctx, task_ctx);
-> +       guard(perf_ctx_lock)(cpuctx, task_ctx);
->
->         task = ctx->task;
->         if (task == TASK_TOMBSTONE)
-> -               goto unlock;
-> +               return;
->
->         if (task) {
->                 /*
-> @@ -343,18 +358,16 @@ static void event_function_local(struct
->                  */
->                 if (ctx->is_active) {
->                         if (WARN_ON_ONCE(task != current))
-> -                               goto unlock;
-> +                               return;
->
->                         if (WARN_ON_ONCE(cpuctx->task_ctx != ctx))
-> -                               goto unlock;
-> +                               return;
->                 }
->         } else {
->                 WARN_ON_ONCE(&cpuctx->ctx != ctx);
->         }
->
->         func(event, cpuctx, ctx, data);
-> -unlock:
-> -       perf_ctx_unlock(cpuctx, task_ctx);
->  }
->
->  #define PERF_FLAG_ALL (PERF_FLAG_FD_NO_GROUP |\
->
->
+
+And yes, this does look nicer.

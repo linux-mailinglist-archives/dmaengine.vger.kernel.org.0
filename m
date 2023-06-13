@@ -2,108 +2,126 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B7D0872DC5B
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Jun 2023 10:25:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25B3B72DCBF
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Jun 2023 10:39:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239133AbjFMIZa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 13 Jun 2023 04:25:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39490 "EHLO
+        id S241566AbjFMIjR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 13 Jun 2023 04:39:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238041AbjFMIZ3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 13 Jun 2023 04:25:29 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF43612C
-        for <dmaengine@vger.kernel.org>; Tue, 13 Jun 2023 01:25:24 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-4f6454a21a9so6329964e87.3
-        for <dmaengine@vger.kernel.org>; Tue, 13 Jun 2023 01:25:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686644723; x=1689236723;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=F4ixw4xWTs3rJNnL8G6eiXhtwXpy6n06cNpG8Z4nKTY=;
-        b=RbHeb7veI2Kdlb7asuxhP7ksdM5VkbyTG261IIwL+nG/+hu1bJvspj4ijIYxr0UvIg
-         xkWIDyfG0KhGOAq0+aqFeTwLph9gvcBS4SruAS5OTUUShCrNMMvxtchL+XDvH0jHiIvR
-         Bcy9ec5BIAiliJFqPrh6bqLfM5FGLt8PNL4rJwT0Zxdx2TlXWRYUwKFrt2dDalvx/gr9
-         USBx87e9Iht9AWwiJy5X29fnYgALEejmp3OcRqJXwIRa9gPz1LXcv3IdppPuvm/wdCMy
-         rc89RPazWjqTPfpCjHL4KfIAeH40knlJXCqWDmU6WYL3ZSDuMLkmyY5G1n4yB+1+JkEO
-         1kEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686644723; x=1689236723;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=F4ixw4xWTs3rJNnL8G6eiXhtwXpy6n06cNpG8Z4nKTY=;
-        b=OJOKs33/01wlZweZFcULTRYoM9bcpj3n/VCqVdR6J2OVu7cjgXF3eVpudsp2YR4bve
-         SoEppLW1aYOFzhkx6hwOSp9mYIEPXLp30nLQxPNI+CFobB6uqmnnQ9bpv/Y1aY6Pog3j
-         jSe9yQAUCwgWTYLqrg0YqYHZs6bZre/Yew7ORyIHkWz4ePEC5qLUAuguwWTdn1gPpiOK
-         itoSXfPY0aVS5byzmfTRt0gmTCglB3S15H5/ZEF6DP2wtmY1T6U8ZD+Wa5toWbdwUfyd
-         vFXtbd6z1YzaBAkPeBKjOP5kbXSi2M//rsxbWCcCqOV3bPcPi06n1hVGiVhQUpr5rRYC
-         +G5A==
-X-Gm-Message-State: AC+VfDyFJQtiHcqS2ixgLfnP2GuaXjgY+RWynnURXkxR4J3LFcUVLD55
-        9PHqIg5HpLWX1HBvOfDn6e9fLg==
-X-Google-Smtp-Source: ACHHUZ7r47vQ3MyWQCdq68QcbgIUmC0wTN9B2tjrjOdXfofm3h3VHlJf3oFPzEa6nhiyIi56iM4r7w==
-X-Received: by 2002:a05:6512:503:b0:4f0:124:b56b with SMTP id o3-20020a056512050300b004f00124b56bmr4880954lfb.7.1686644723189;
-        Tue, 13 Jun 2023 01:25:23 -0700 (PDT)
-Received: from ?IPV6:2a05:6e02:1041:c10:b5a8:28ff:af00:a97f? ([2a05:6e02:1041:c10:b5a8:28ff:af00:a97f])
-        by smtp.googlemail.com with ESMTPSA id 6-20020a05600c230600b003f41bb52834sm13734723wmo.38.2023.06.13.01.25.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Jun 2023 01:25:22 -0700 (PDT)
-Message-ID: <1c77c762-8557-b82d-219e-9d4d6fb0fa31@linaro.org>
-Date:   Tue, 13 Jun 2023 10:25:21 +0200
+        with ESMTP id S241452AbjFMIjG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 13 Jun 2023 04:39:06 -0400
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A482FF1;
+        Tue, 13 Jun 2023 01:39:03 -0700 (PDT)
+Received: from [192.168.192.83] (unknown [50.47.134.245])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 2F2DA3F2A3;
+        Tue, 13 Jun 2023 08:38:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1686645520;
+        bh=wkJrNjdFfolCoIC9MEjZjIPiwFCl2xf4UGf4VNAWiMI=;
+        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+         In-Reply-To:Content-Type;
+        b=LVLJUlToyVjIZMeYTDHbVcedRUNFjvJM1V+s+13q6UgbQn0ASwvp0X4yc7bGkfHtw
+         VhjqVjTOR9is3Ge0hzhB4Zg7Gdt/Ji2LB4CHd2TmO8A+20qjPGQ1SsqW2dpw77Oog6
+         i1VUCugdQ3+3WpD1GKO1V0IqzAoLoosOlosE+w8UO0fWfPLtb8Y1deCbbgbLbJqktw
+         0VhCYzdECJJAm9CmWrs/VncJuzS/7DZg7NHI4jNg3y0/a3HPCVSnTZY3oTb8Igo5rw
+         c4AhpeqpDwxRf2Bcv84SyRnSXSaVYwXc7dBF90QmO7l1VZTUcPBRFU3V55OC8KCJo1
+         C+U+iiL51Pcig==
+Message-ID: <4ec84aaa-b1f4-4cd1-bafc-2873dee1bdb8@canonical.com>
+Date:   Tue, 13 Jun 2023 01:38:25 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH 09/10] dt-bindings: thermal: convert bcm2835-thermal
- bindings to YAML
+Subject: Re: [PATCH v3 02/57] apparmor: Free up __cleanup() name
 Content-Language: en-US
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com
-References: <20230604121223.9625-1-stefan.wahren@i2se.com>
- <20230604121223.9625-10-stefan.wahren@i2se.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <20230604121223.9625-10-stefan.wahren@i2se.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        torvalds@linux-foundation.org, keescook@chromium.org,
+        gregkh@linuxfoundation.org, pbonzini@redhat.com
+Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
+        nicolas@fjasle.eu, catalin.marinas@arm.com, will@kernel.org,
+        vkoul@kernel.org, trix@redhat.com, ojeda@kernel.org,
+        mingo@redhat.com, longman@redhat.com, boqun.feng@gmail.com,
+        dennis@kernel.org, tj@kernel.org, cl@linux.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, paulmck@kernel.org,
+        frederic@kernel.org, quic_neeraju@quicinc.com,
+        joel@joelfernandes.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
+        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
+        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, llvm@lists.linux.dev,
+        linux-perf-users@vger.kernel.org, rcu@vger.kernel.org,
+        linux-security-module@vger.kernel.org, tglx@linutronix.de,
+        ravi.bangoria@amd.com, error27@gmail.com,
+        luc.vanoostenryck@gmail.com
+References: <20230612090713.652690195@infradead.org>
+ <20230612093537.536441207@infradead.org>
+From:   John Johansen <john.johansen@canonical.com>
+Organization: Canonical
+In-Reply-To: <20230612093537.536441207@infradead.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 04/06/2023 14:12, Stefan Wahren wrote:
-> Convert the DT binding document for bcm2835-thermal from .txt to YAML.
+On 6/12/23 02:07, Peter Zijlstra wrote:
+> In order to use __cleanup for __attribute__((__cleanup__(func))) the
+> name must not be used for anything else. Avoid the conflict.
 > 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: John Johansen <john.johansen@canonical.com>
+
 > ---
-
-Applied, thanks
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+>   security/apparmor/include/lib.h |    6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> --- a/security/apparmor/include/lib.h
+> +++ b/security/apparmor/include/lib.h
+> @@ -232,7 +232,7 @@ void aa_policy_destroy(struct aa_policy
+>    */
+>   #define fn_label_build(L, P, GFP, FN)					\
+>   ({									\
+> -	__label__ __cleanup, __done;					\
+> +	__label__ __do_cleanup, __done;					\
+>   	struct aa_label *__new_;					\
+>   									\
+>   	if ((L)->size > 1) {						\
+> @@ -250,7 +250,7 @@ void aa_policy_destroy(struct aa_policy
+>   			__new_ = (FN);					\
+>   			AA_BUG(!__new_);				\
+>   			if (IS_ERR(__new_))				\
+> -				goto __cleanup;				\
+> +				goto __do_cleanup;			\
+>   			__lvec[__j++] = __new_;				\
+>   		}							\
+>   		for (__j = __count = 0; __j < (L)->size; __j++)		\
+> @@ -272,7 +272,7 @@ void aa_policy_destroy(struct aa_policy
+>   			vec_cleanup(profile, __pvec, __count);		\
+>   		} else							\
+>   			__new_ = NULL;					\
+> -__cleanup:								\
+> +__do_cleanup:								\
+>   		vec_cleanup(label, __lvec, (L)->size);			\
+>   	} else {							\
+>   		(P) = labels_profile(L);				\
+> 
+> 
 

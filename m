@@ -2,176 +2,193 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B71F27305BE
-	for <lists+dmaengine@lfdr.de>; Wed, 14 Jun 2023 19:15:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C16F4730852
+	for <lists+dmaengine@lfdr.de>; Wed, 14 Jun 2023 21:36:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233272AbjFNRPK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 14 Jun 2023 13:15:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42026 "EHLO
+        id S236568AbjFNTgJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 14 Jun 2023 15:36:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236424AbjFNRPI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Jun 2023 13:15:08 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1DB4E69;
-        Wed, 14 Jun 2023 10:15:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686762907; x=1718298907;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=+axceMY/sA0RUPEI/SsihcSDgTCdjPx1bekyxvK9JBw=;
-  b=KKKI/h1h8X+yQQpGCcoiKJ3ysnWoOrR9qHIyu1eLidhLHOr0SOEDOPib
-   gR4PmJlYtTHmufRRGc9Vai0WqWbeM4fxPDBXot6G/qoDZ6Cu639jUBDXZ
-   R5UlIrypyLWhAaWUmPdRScknt4cHgBLrQs29wxiDGm4zv3KlWjWS8dYoD
-   MU+DR99F13unH8sP7VOnmT4a8/BMx7IxBQx4KuyvdoyFl7jI/oIgIi/OE
-   g4uGCrdmqjNRKixP3dye+Gqc1y68fAkX1QGj7NpWePuO+rtIXx0gF4MlH
-   MEzj7OLPseG4jvOwFAjUm3eLFuP3tusM6UKRd6wP26MXDBJb6TeYsVNFm
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="358678789"
-X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="358678789"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 10:15:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="801998912"
-X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="801998912"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 10:15:06 -0700
-Date:   Wed, 14 Jun 2023 10:19:49 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Baolu Lu <baolu.lu@linux.intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        dmaengine@vger.kernel.org, vkoul@kernel.org,
-        Will Deacon <will@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Zanussi, Tom" <tom.zanussi@intel.com>, rex.zhang@intel.com,
-        xiaochen.shen@intel.com, narayan.ranganathan@intel.com,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v8 2/7] iommu: Move global PASID allocation from SVA to
- core
-Message-ID: <20230614101949.1164f33f@jacob-builder>
-In-Reply-To: <b5a6a7ad-bfad-b550-f4be-f5ec0679f3d2@linux.intel.com>
-References: <20230602182212.150825-1-jacob.jun.pan@linux.intel.com>
-        <20230602182212.150825-3-jacob.jun.pan@linux.intel.com>
-        <08830c11-5528-0c42-0bc3-89c3796611fe@linux.intel.com>
-        <b5a6a7ad-bfad-b550-f4be-f5ec0679f3d2@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        with ESMTP id S229832AbjFNTgG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Jun 2023 15:36:06 -0400
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2078.outbound.protection.outlook.com [40.107.6.78])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA594D2;
+        Wed, 14 Jun 2023 12:36:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iHN7ziEJn9cnN0YrYpFYxU3yXyTQ9POg7J+P7/EzWqNpXczDxCT5Q2Gy1kP7/9um7msdXtsKwVPXbxu6YfM0+pA8jmP8kClJlbHjqUd+b3SQqju0oO37qXN3Auob4tTrVYFk/zAxhaCFezFEC9tIgkb3aSzDX3aQ7zGXBikBdUIPLyBwhUN5ne2A/ax9hJ5WGBPC7EZHvlXxVEgQuIhhBKV8q66ts56J14aTXB4nt2WPfFQiGOVx+EdkG27vxFheCkvhm69FbFDxga4iL/P0uRUr2uyibDPou6y/sUsmxwyuPQAuewRcmXgEsJkizZri4j+7hZ8yw9C91AyJipkilg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2Mywa6+PKUYc84q7ak8Rep7XhiIUTyqzas6PJPiTKRM=;
+ b=k7XV6MTm8BjVzXnRPDok9h0cbYy1MYATbc5jpaLRzbh9sQoSJxOPkyflrIpCFbkpQuCtBazvGO7bpKJFxif7B+TQ/F8s3qI/IT+YWU8b62GbYlIn2h45EqcdI+Vt1Yb5hKWErOi7fnQInlrk0smtmiMJ4LJSn33hyXahqO5PnrhCY0IzwJIWFdmqBi0GxjKLai+vbQOfLInabYpO+zH/jML59LVOSiVfLOwmtvBQH3UVzTJ7CUQ/NEUrhNvsgzFAecYfYebdnSEAyHSYammcAeDdqx2Onbc1o0iiV4joyOSSVbIs7sbJ6KTeVOmYDKDuYs3kd6iGgafjamjzB5ES5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2Mywa6+PKUYc84q7ak8Rep7XhiIUTyqzas6PJPiTKRM=;
+ b=Nl1JRat3nUGYx9YiP3Lko4BQqi6/a/CsMpGRJCdDs4TenDvpXF8sC2UjPT80H43WCw1rZGScfpRNx29jPlsvx4648JOqU8Op8alTzbR5eZ8nrZwSFqu5w3vb4jkBBpx7pDOZzEQouo3MQHSLXDT/M7vaFtzxPaUbeT6hTcDwzHA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by VI1PR04MB9763.eurprd04.prod.outlook.com (2603:10a6:800:1d3::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.37; Wed, 14 Jun
+ 2023 19:36:00 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::4a2a:262e:415f:e41c]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::4a2a:262e:415f:e41c%7]) with mapi id 15.20.6477.035; Wed, 14 Jun 2023
+ 19:36:00 +0000
+From:   Frank Li <Frank.Li@nxp.com>
+To:     vkoul@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peng.fan@nxp.com, joy.zou@nxp.com, shenwei.wang@nxp.com,
+        imx@lists.linux.dev
+Subject: [PATCH v6 00/12] dmaengine: edma: add freescale edma v3 support
+Date:   Wed, 14 Jun 2023 15:35:32 -0400
+Message-Id: <20230614193544.2114603-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR13CA0051.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c2::26) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|VI1PR04MB9763:EE_
+X-MS-Office365-Filtering-Correlation-Id: cb59cbe9-2790-4817-0e36-08db6d0e9506
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: BLQD2j6zfEckTyaele7ClzzC3x69erjSOOTlVJAwYEAR5ecNR7uqR2mUWK+XskC2jgb6DAz/lV+V6Z0VvWmA/IHzCWEP2pIrtOCriYeL6DoW6CNqCZ9GmgemkKkD3tXZ2AHhrTluFrWsoOldSvTG2bxaJMLPsC4d4JpWbKtx1755w21zKvF7dIfx2JII38jqDzZCllC4nLCs+7vsihzVYfxj+2YhT1SoOMTLms0gcG5OQkGhz2SQjQtYCg5jF0qPJ+oC1ohW77cBkb5Na9ynntF4v6X+Z4NbtBC4eGS1vuQEkPKw6aqhVrIauENuX0M4COmv6U+1Uofjo8mt4KsT155qF4GQyG50KryNEjQHR0ppvf0RIZXXkPgvjOTmzJzFzHts9Kkj7wzqP+XNzzBOqamxIAf/h8yaOWOENQwZYX+4/+kAfVdTwgffGye2hscJHQEIAPL0MHsudVzmZW15bf4Oyw7HPPJurUxqAxyyuCPzniBr5v+VmXE9gMWt4xN/5+AwQpVGSUm0qcuHrh9hBl6evIHiCyZrc0xb2YJBHkGG0VgB9Ls7NnAS2GoeICilbmmfisdv72TdndbNPgMwVwGLd+ww1I6Po5+xgYoHZYOtewG55+L1Tmg3T259+SRcZ4UepEEHZKG5izixwBRkuw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(39860400002)(346002)(136003)(366004)(376002)(451199021)(5660300002)(6486002)(8676002)(52116002)(41300700001)(6666004)(8936002)(66556008)(66476007)(316002)(2906002)(186003)(478600001)(66946007)(83380400001)(38100700002)(38350700002)(921005)(86362001)(36756003)(26005)(6512007)(1076003)(6506007)(2616005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?kB5KJYTCbuUdLHZQ+QN4CndNlgb6peySiPDXsJ4qETOJDJIMZvf8i7n2Z2KT?=
+ =?us-ascii?Q?vZGEwN8Omb5CnwnIkoC4H3rwDllXD1UBF1BrnR37opWXgiB4mGEkMMJRbXCs?=
+ =?us-ascii?Q?ALFlOag9yAy57ynTOaziFZOy+vGZx5NQparwLpR6zSH4OKthQ/aEurbOGB17?=
+ =?us-ascii?Q?YgpnFHkC/ST03o2WZDZzbnisxQMTU7zD/HlEJu1tH5tI1fdzAokvcvrrbjgh?=
+ =?us-ascii?Q?gB+r1Y6g8EiX359lFEH7IAhei+hbH9ueC+6RuhaqvWTAI6NHJn6aeNuhrNKi?=
+ =?us-ascii?Q?rl3RfEhkTRvxw589vpQd7BsDpRtHFK7+N1Rrv0nKat7miMARmPMskzbD1WYo?=
+ =?us-ascii?Q?Fn9Z9ff3qjVMjXBMztSzponsLbU85JJZ1GvN8Mf/K7w3Upn0NiCY0eM3DuOI?=
+ =?us-ascii?Q?purDNC6Wclm20LMK87rRM04H6WhTCmB09MNAyZ8pL6jjOKgt1XdTvccRWw98?=
+ =?us-ascii?Q?hm6WCfFGpT8j2leNBQs2aLW/4GTvRxW/2mDLD3pnNYbGnFl8ehdKAXAsEgLX?=
+ =?us-ascii?Q?p91Sbxbks1uyA/PbijvelejzlOfcZ4QJWav9eSSo2ZkmooFrAQJId1TZ/GT7?=
+ =?us-ascii?Q?/wq2ymuF9U4AsBTgfeabDl2d0Xi391U5yfYt/vXKMSm8W4zIsSqZXPL4iaIw?=
+ =?us-ascii?Q?8SMahqkxlBv7VC8R7ldD5Y7FdmXnWH4UwT70O8g2mvMNEuqiQ/J6gB3Lhv8J?=
+ =?us-ascii?Q?V7hOTcgxz5e+js1giR6VxLpCYJzpo1ycjAd+di6RPR9j7EFQQdqzYjJT6PKZ?=
+ =?us-ascii?Q?V1/QNaKa0evv3eG7tnvQNxDjijMba0EA45IA70nXsve1GxtoFtt1aV9ATuBD?=
+ =?us-ascii?Q?k8uYlSlIqDuhhNr8J1rZ1uMg9Pniv6BVTUun6dZMYPmvWPzf5h9EZ6QxXCaZ?=
+ =?us-ascii?Q?fSdSXMxPIBY2spiD/Y7EQSoAqIxoAbBUr7gMs6Kve5COUJzRb27uCJ0Xhqwj?=
+ =?us-ascii?Q?KXGntRfzhEMm+GlgoyF6PXPFvZvGJwv7qguAcdvW6be/PUmm7RWoAOQGbRed?=
+ =?us-ascii?Q?lEmww9PPtDgB8zlz7mqE7T3GyyJfe380Wsh5loIvSc7Yc648pZdyxo0bwvJO?=
+ =?us-ascii?Q?UryZmHFVCJGLKzKBeL0VTQ53E4XWE44Hmf+KLqBd1RX0KKtiuj/NqJSuOK05?=
+ =?us-ascii?Q?vG8teCneiT9VpQakG6ZaKQqkt5KkSEFsRJ9DjOiZozeApmAK8nTr/9pYlg6q?=
+ =?us-ascii?Q?/SBFvjPxTcxznZvw3mwyfX3hDybk5ZyUD0uORA9QLvzAR3c6uP0E1xZA8P/8?=
+ =?us-ascii?Q?thNUcVCeIvDx2sz/eMrfeEoMAbFW1AB0iq2M2A+CFm4fvRB2fa8D9NwLwFsD?=
+ =?us-ascii?Q?qp2p9psNeS3kzF0zkOtheu7HXKF6jVX8unz0DIvaOhifxrAT6KvhGOvw/vzR?=
+ =?us-ascii?Q?WgOheT6nSHfxyA5w/SvVC/sYaqx1DtfzevGXlBJeWWXE83hoBCikifpoiB0C?=
+ =?us-ascii?Q?WTaPtZ/JACMvs6ueg6by3+k0YzVJO2ExjmsWX72HH734B3rJhXPJeFwZsEQF?=
+ =?us-ascii?Q?HcK8gl22XMZppFvQhVKaIK8q0DXGXHfkTGAUOwkiVhx1btIRLazFqhrWq/OW?=
+ =?us-ascii?Q?2wgMW3ktUnpmxsKy0I6ys8k0hK5P1R4uiqP/YPt+?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb59cbe9-2790-4817-0e36-08db6d0e9506
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2023 19:36:00.1809
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: t86k4idJCiP2RgEUGA3Vvq9SqMLvtwF65kh9wV5Yp+KzB1QMoCYRRPywYXCs5FAgHIzW1SDbyoTAEzBqsmOnJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB9763
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Baolu,
+This patch series introduces support for the eDMA version 3 from
+Freescale. The eDMA v3 brings alterations in the register layout,
+particularly, the separation of channel control registers into
+different channels. The Transfer Control Descriptor (TCD) layout,
+however, remains identical with only the offset being changed.
 
-On Tue, 13 Jun 2023 11:06:03 +0800, Baolu Lu <baolu.lu@linux.intel.com>
-wrote:
+The first ten patches aim at tidying up the existing Freescale
+eDMA code and laying the groundwork for the integration of eDMA v3
+support.
 
-> On 6/10/23 8:13 PM, Baolu Lu wrote:
-> > On 6/3/23 2:22 AM, Jacob Pan wrote: =20
-> >> +ioasid_t iommu_alloc_global_pasid_dev(struct device *dev)
-> >> +{
-> >> +=C2=A0=C2=A0=C2=A0 int ret;
-> >> +=C2=A0=C2=A0=C2=A0 ioasid_t max;
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0 max =3D dev->iommu->max_pasids;
-> >> +=C2=A0=C2=A0=C2=A0 /*
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0 * max_pasids is set up by vendor driver base=
-d on number of PASID=20
-> >> bits
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0 * supported but the IDA allocation is inclus=
-ive.
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0 */
-> >> +=C2=A0=C2=A0=C2=A0 ret =3D ida_alloc_range(&iommu_global_pasid_ida,=20
-> >> IOMMU_FIRST_GLOBAL_PASID, max - 1, GFP_KERNEL);
-> >> +=C2=A0=C2=A0=C2=A0 if (ret < 0)
-> >> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return IOMMU_PASID_INVALID;
-> >> +
-> >> +=C2=A0=C2=A0=C2=A0 return ret;
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(iommu_alloc_global_pasid_dev); =20
-> >=20
-> > "dev->iommu->max_pasids =3D=3D 0" indicates no pasid support on the dev=
-ice.
-> > The code should return IOMMU_PASID_INVALID explicitly. Perhaps we can
-> > make this function like this:
-> >=20
-> > ioasid_t iommu_alloc_global_pasid_dev(struct device *dev)
-> > {
-> >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
-> >=20
-> >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!dev->iommu->max_pasids)
-> >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 return IOMMU_PASID_INVALID;
-> >=20
-> >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
-> >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * max_pasids is set u=
-p by vendor driver based on number of=20
-> > PASID bits
-> >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * supported but the I=
-DA allocation is inclusive.
-> >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D ida_alloc_range(&io=
-mmu_global_pasid_ida,=20
-> > IOMMU_FIRST_GLOBAL_PASID,
-> >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev->iommu->max_pasids - 1, GFP_KERNEL);
-> >=20
-> >  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret < 0 ? IOMMU_PASI=
-D_INVALID : ret;
-> > }
-> > EXPORT_SYMBOL_GPL(iommu_alloc_global_pasid_dev);
-> >=20
-> > Other change in this series looks good to me.
-> >=20
-> > I hope I can queue this series including above change as part of my VT-d
-> > update for v6.5 to Joerg if no objection.
-> >=20
-> > Let's try to re-enable this key feature of Intel idxd driver in v6.5. =
-=20
->=20
-> This series didn't pass my test.
->=20
-> The first time when I run "idxd_ktest.sh -c 1 -t 1 -i 100 -m shared", it
-> passed. But when I run it again, the idxd hardware operation resulted in
-> timed-out issues.
->=20
-Hmm, not sure what happened. Are you using the out of tree idxd_ktest
-kernel module or the dmaengine test sysfs?
+Patch 1-10:
+These patches primarily focus on cleaning up and refactoring the existing
+fsl_edma driver code. This is to accommodate the upcoming changes and new
+features introduced with the eDMA v3.
 
-e.g.
-echo "Config params for DMA test"                  =20
-echo $1 > /sys/module/dmatest/parameters/iterations=20
-#echo 1 > /sys/module/dmatest/parameters/noverify  =20
-echo "" > /sys/module/dmatest/parameters/channel   =20
-echo 1 > /sys/module/dmatest/parameters/run        =20
-sleep 2                                            =20
-echo 0 > /sys/module/dmatest/parameters/run        =20
-echo "Completed!"                                  =20
+Patch 11:
+This patch introduces support for eDMA v3. In addition, this patch has
+been designed with an eye towards future upgradability, specifically for
+transitioning to eDMA v5. The latter involves a significant upgrade
+where the TCD address would need to support 64 bits.
 
-It passed my test many iterations for shared
-in-kernel DSA test, will get your tree and test again.
+Patch 12:
+This patch focuses on the device tree bindings and their modifications
+to properly handle and integrate the changes brought about by eDMA v3
 
+Change from v5 to v6
+- dt-bind: rework it by fixed top level constraint.
 
-Thanks,
+Change from v4 to v5
+- dt-bind, add example for imx93 to trigger make dt_binding_check to
+generate the yaml error. fixed dt_binding_check error. 
+  keep compatible string ordered alphabetically.
 
-Jacob
+Change from v3 to v4.
+- use dma-channel-mask instead of fsl,channel-mask
+- don't use dmamux after v3. only use flags to distinguish the IP
+difference
+- fixed 8qm and imx93 have not CH_MUX register. Previous can work
+because dmamux is 0.
+
+Change from v2 to v3
+- dt-binding: add interrupt-names
+- dt-binding: add minItems
+- dt-binding: add missed property: fsl,channel-mask
+- rework patch 4, removed edma_version to avoid confuse with hardware
+IP version.
+
+Change from v1 to v2
+- fixed issue found by make DT_CHECKER_FLAGS=-m dt_binding_check
+- fixed warning found by kernel test robot
+
+Frank Li (12):
+1   dmaengine: fsl-edma: clean up EXPORT_SYMBOL_GPL in fsl-edma-common.c
+2   dmaengine: fsl-edma: clean up fsl_edma_irq_exit()
+3   dmaengine: fsl-edma: transition from bool fields to bitmask flags in
+     drvdata
+4   dmaengine: fsl-edma: remove v3 from enum edma_version
+5   dmaengine: fsl-edma: move common IRQ handler to common.c
+6   dmaengine: fsl-edma: simply ATTR_DSIZE and ATTR_SSIZE by using ffs()
+7   dmaengine: fsl-edma: refactor using devm_clk_get_enabled
+8   dmaengine: fsl-edma: move clearing of register interrupt into
+     setup_irq function
+9   dmaengine: fsl-edma: refactor chan_name setup and safety
+10  dmaengine: fsl-edma: move tcd into struct fsl_dma_chan
+11  dmaengine: fsl-edma: integrate v3 support
+12  dt-bindings: fsl-dma: fsl-edma: add edma3 compatible string
+
+ .../devicetree/bindings/dma/fsl,edma.yaml     |  19 ++
+ drivers/dma/Makefile                          |   6 +-
+ drivers/dma/fsl-edma-common.c                 | 267 +++++++++++----
+ drivers/dma/fsl-edma-common.h                 | 119 ++++++-
+ drivers/dma/{fsl-edma.c => fsl-edma-main.c}   | 323 ++++++++++++++----
+ drivers/dma/{mcf-edma.c => mcf-edma-main.c}   |  34 +-
+ 6 files changed, 578 insertions(+), 190 deletions(-)
+ rename drivers/dma/{fsl-edma.c => fsl-edma-main.c} (62%)
+ rename drivers/dma/{mcf-edma.c => mcf-edma-main.c} (91%)
+
+-- 
+2.34.1
+

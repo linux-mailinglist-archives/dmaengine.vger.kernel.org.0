@@ -2,120 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10FEC72F47A
-	for <lists+dmaengine@lfdr.de>; Wed, 14 Jun 2023 08:14:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A770372F4C2
+	for <lists+dmaengine@lfdr.de>; Wed, 14 Jun 2023 08:27:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234613AbjFNGOH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 14 Jun 2023 02:14:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35724 "EHLO
+        id S243138AbjFNG1V (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 14 Jun 2023 02:27:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243050AbjFNGOF (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Jun 2023 02:14:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEB581BE3;
-        Tue, 13 Jun 2023 23:14:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6421A63DBD;
-        Wed, 14 Jun 2023 06:14:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F5D6C433CD;
-        Wed, 14 Jun 2023 06:14:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686723241;
-        bh=gKtrtIqzZJoEk6ijfzdhgV+HQxM5jhk7xprFoURO0JM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=H2r0vx2LGQQyw19AhfkRLBx0RW0eL1OK9TtVh3CpZGktkKfPcWjNa9Kha87oDBHYJ
-         Zhz+1dlpE7DDMG5Rk9DPdEbCXbQjz3bl7RVN4MOS7uVarXb8B1sQySCZ7B2/9YBDYy
-         bWwKoJ/OXOR+I+kcLDX8GDODGFXdxmA0nWw5lm6S7BGbqYX1l4Ur5Di8DR63q4QUxL
-         3zvODZVMEkRqeYOGt+1x7Tv6mbJ+MxBc/TkMbJXHV/MNAwSBkaKAubU433Bu7zkjA8
-         am0zD+rwOSYPg+atIZFBO6SgL9tfErJKNXsPEqxIl79QJAcs2cl00cViWXdLU+xgyu
-         ta/KvDCLhzJ3A==
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-786e8de85c1so503991241.1;
-        Tue, 13 Jun 2023 23:14:01 -0700 (PDT)
-X-Gm-Message-State: AC+VfDykUL3Quwvwl/Ybfn/+B7+W+n6zypZ4D9y3G72B8BL9IApbJvxu
-        cY1RulrHMFm91oEx9Y58iH8JMGMQOXXO03nsTmk=
-X-Google-Smtp-Source: ACHHUZ4vqXimisQGWZrncZnp4O3Mb6P9lJW4fWcpmyBbfqrFix7TZ+nNTuq2mkhec+rZw/J5LGOYIIEVD09ISg0wZhM=
-X-Received: by 2002:a4a:c4c4:0:b0:558:bec2:c854 with SMTP id
- g4-20020a4ac4c4000000b00558bec2c854mr8570147ooq.5.1686723220046; Tue, 13 Jun
- 2023 23:13:40 -0700 (PDT)
+        with ESMTP id S242281AbjFNG1U (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 14 Jun 2023 02:27:20 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0CC110E3
+        for <dmaengine@vger.kernel.org>; Tue, 13 Jun 2023 23:27:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686724039; x=1718260039;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=fIxeHj97LZx9dgC11r28UEXB75hD3EgHjNg+NPgV75I=;
+  b=mB4pMvL+yURyyg2L5600QDWUWqBHT88couakS8TIeKWOIE+WyO+kokMs
+   kaYh7Ry/gPD2KpkeKXPU8ICrOb2SnoExadHNKuQOS3hwnnVlOMhgDR+fb
+   CH96HEUVqtOFZl0hIpWUf6Q9KElx5hx6/gK4DCy5De4xVFL1yaT/PqDoA
+   qbJmb/yE9WDcU9Ke1PEFqH3N2t/s2JXa0VhiyDmLvYaaWd6UD6DJbI2BD
+   aQtPr2ytKIy918TlJGd8wLgae6oELeuMRhIulIUWv2xQZ9ze7HhyKO1U1
+   gK3u96DkkhkUYOWtPBARWWbat6JIsc2Lu9PtAGyL6SN960F+CXr4BnLT7
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="356026627"
+X-IronPort-AV: E=Sophos;i="6.00,241,1681196400"; 
+   d="scan'208";a="356026627"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 23:27:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="801788832"
+X-IronPort-AV: E=Sophos;i="6.00,241,1681196400"; 
+   d="scan'208";a="801788832"
+Received: from rex-z390-aorus-pro.sh.intel.com ([10.239.161.21])
+  by FMSMGA003.fm.intel.com with ESMTP; 13 Jun 2023 23:27:17 -0700
+From:   rex.zhang@intel.com
+To:     vkoul@kernel.org, fenghua.yu@intel.com, dave.jiang@intel.com,
+        dmaengine@vger.kernel.org
+Cc:     ramesh.thomas@intel.com, tony.zhu@intel.com, rex.zhang@intel.com
+Subject: [PATCH 1/2] dmaengine: idxd: Modify the dependence of attribute pasid_enabled
+Date:   Wed, 14 Jun 2023 14:27:06 +0800
+Message-Id: <20230614062706.1743078-1-rex.zhang@intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20230612090713.652690195@infradead.org> <20230612093537.693926033@infradead.org>
-In-Reply-To: <20230612093537.693926033@infradead.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 14 Jun 2023 15:13:03 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARwAaw_22AjsheMtNwpVgF7FtKxh08mkg3cP=bY2016hw@mail.gmail.com>
-Message-ID: <CAK7LNARwAaw_22AjsheMtNwpVgF7FtKxh08mkg3cP=bY2016hw@mail.gmail.com>
-Subject: Re: [PATCH v3 04/57] kbuild: Drop -Wdeclaration-after-statement
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     torvalds@linux-foundation.org, keescook@chromium.org,
-        gregkh@linuxfoundation.org, pbonzini@redhat.com, nathan@kernel.org,
-        ndesaulniers@google.com, nicolas@fjasle.eu,
-        catalin.marinas@arm.com, will@kernel.org, vkoul@kernel.org,
-        trix@redhat.com, ojeda@kernel.org, mingo@redhat.com,
-        longman@redhat.com, boqun.feng@gmail.com, dennis@kernel.org,
-        tj@kernel.org, cl@linux.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-        paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com,
-        joel@joelfernandes.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
-        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
-        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
-        john.johansen@canonical.com, paul@paul-moore.com,
-        jmorris@namei.org, serge@hallyn.com, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        llvm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
-        tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
-        luc.vanoostenryck@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 6:39=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> With the advent on scope-based resource management it comes really
-> tedious to abide by the contraints of -Wdeclaration-after-statement.
+From: Rex Zhang <rex.zhang@intel.com>
 
-Where is the context of Linus' suggested-by?
+Kernel PASID and user PASID are separately enabled. User needs to know the
+user PASID enabling status to decide how to use IDXD device in user space.
+This is done via the attribute /sys/bus/dsa/devices/dsa0/pasid_enabled.
+It's unnecessary for user to know the kernel PASID enabling status because
+user won't use the kernel PASID. But instead of showing the user PASID
+enabling status, the attribute shows the kernel PASID enabling status. Fix
+the issue by showing the user PASID enabling status in the attribute.
 
-I do not know where this came from.
-I suddenly got a huge v3 in my mailbox.
+Fixes: 42a1b73852c4 ("dmaengine: idxd: Separate user and kernel pasid enabling")
+Signed-off-by: Rex Zhang <rex.zhang@intel.com>
+Acked-by: Fenghua Yu <fenghua.yu@intel.com>
+Acked-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/dma/idxd/sysfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+index 293739ac5596..b6a0a12412af 100644
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -1480,7 +1480,7 @@ static ssize_t pasid_enabled_show(struct device *dev,
+ {
+ 	struct idxd_device *idxd = confdev_to_idxd(dev);
+ 
+-	return sysfs_emit(buf, "%u\n", device_pasid_enabled(idxd));
++	return sysfs_emit(buf, "%u\n", device_user_pasid_enabled(idxd));
+ }
+ static DEVICE_ATTR_RO(pasid_enabled);
+ 
+-- 
+2.25.1
 
-I see an equivalent patch submitted last year:
-https://lore.kernel.org/lkml/Y1w031iI6Ld29IVT@p183/
-
-Linus rejected it. Did he change his mind?
-
-
-
-> It will still be recommeneded to place declarations at the start of a
-> scope where possible, but it will no longer be enforced.
-
-If you remove the warning, we will not be able to
-detect code that opts out the recommendation
-for no good reason.
-
-
-
-
-
---=20
-Best Regards
-Masahiro Yamada

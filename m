@@ -2,184 +2,124 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C96F733FC9
-	for <lists+dmaengine@lfdr.de>; Sat, 17 Jun 2023 10:57:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAF3C73414D
+	for <lists+dmaengine@lfdr.de>; Sat, 17 Jun 2023 15:37:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232456AbjFQI5t (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 17 Jun 2023 04:57:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40686 "EHLO
+        id S235949AbjFQNhK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 17 Jun 2023 09:37:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230313AbjFQI5t (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Jun 2023 04:57:49 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF7A2120
-        for <dmaengine@vger.kernel.org>; Sat, 17 Jun 2023 01:57:48 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-98377c5d53eso220486766b.0
-        for <dmaengine@vger.kernel.org>; Sat, 17 Jun 2023 01:57:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686992266; x=1689584266;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pgysnMUWPxrDeN0B1Faf6Ufq3sMPZzJpEejdj3yiLTo=;
-        b=Ep4rhGij69HlZdJB6dvhGBslIi5J1X0YN5FQ+uVyl9cBUJW4BfzzKi92yLruwMKJNR
-         x2v9cMCpTHOjdh3EcfEZ3ifxfGvgbxbZUCxDLXg4p/19hlPTRfpC5tBklY13lNSTpCPb
-         TR8Iw4gbKvN2ZSdKBNjvB+zyxe/7LRkOvAlGH50xTHBrn39SakHg6Q57hNlzZsg8R0oG
-         ZcpVtJJg1TTlp33Vx3YoVregwSDu/gJ/5ne2m0Go8KJJZx7lJdGiYMKzXC1K8IqQpWqu
-         g/R6Db3wS5nims712daAO7jHshKPIQ07PCu436EEUmojpzn1i6xX30JJvbK2zMYMhQ11
-         l4wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686992266; x=1689584266;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pgysnMUWPxrDeN0B1Faf6Ufq3sMPZzJpEejdj3yiLTo=;
-        b=MXTF+CvLOE0aa0y5o/tPKGJE2ioQAwh0KHi2qaqPi2Dqs2D+q58ljTey0Dt+5VH8Gm
-         HddIYRUQNCDFitiijO3oWwV1Oe66G7i5GrqZqAYlgi3e7dShKDrUAisefH4Npz8Prxxr
-         +Bam+I20zAQBaN3cQyel5pTUpHQMsW1MMF91Rgda0O4HEw3T4nEyZfHk6zM5Zupda/n+
-         wajWYo74TAzHXybNknE3QvyxYN17ZpiHbGnaEaM7kh5bIZKS8F8SIZaXtL0GNTWIjj2U
-         7nzIM0FPsjk/TBWW3Ugr9QGzw0Q56zb2vXkHC+mc2invu3rgQtLBQYQxgkfxGyRUd3ap
-         wrMA==
-X-Gm-Message-State: AC+VfDy808Sai/l93eAPk6GC65UEXGaVpMi2Xf/is8fhD56E1cxPcC2A
-        kQwozwElUTxIZIBvZ/SqESgzrQ==
-X-Google-Smtp-Source: ACHHUZ61jEiVOPgq3xLBlRirBwI281rOwqromd11/oVJ0r1/1HEzj6D02KClx0KTTDExEFXIXQMDAA==
-X-Received: by 2002:a17:907:7290:b0:96b:48d2:1997 with SMTP id dt16-20020a170907729000b0096b48d21997mr4283094ejc.65.1686992266535;
-        Sat, 17 Jun 2023 01:57:46 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id g26-20020a1709064e5a00b00987ac9cfb8esm368474ejw.67.2023.06.17.01.57.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 Jun 2023 01:57:45 -0700 (PDT)
-Message-ID: <ad189220-424b-89bb-a187-60b0294ae1a7@linaro.org>
-Date:   Sat, 17 Jun 2023 10:57:44 +0200
+        with ESMTP id S234012AbjFQNhI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Jun 2023 09:37:08 -0400
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B270AE72;
+        Sat, 17 Jun 2023 06:37:06 -0700 (PDT)
+Received: from stefanw-SCHENKER ([37.4.248.58]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MCsLo-1qJHWx2N3Q-008rdh; Sat, 17 Jun 2023 15:36:39 +0200
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH V2 0/7] ARM: dts: bcm283x: Improve device-trees and bindings
+Date:   Sat, 17 Jun 2023 15:36:13 +0200
+Message-Id: <20230617133620.53129-1-stefan.wahren@i2se.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v7 12/12] dt-bindings: fsl-dma: fsl-edma: add edma3
- compatible string
-Content-Language: en-US
-To:     Frank Li <Frank.Li@nxp.com>, vkoul@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peng.fan@nxp.com, joy.zou@nxp.com, shenwei.wang@nxp.com,
-        imx@lists.linux.dev
-References: <20230616153438.2299922-1-Frank.Li@nxp.com>
- <20230616153438.2299922-13-Frank.Li@nxp.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230616153438.2299922-13-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:YcK/WR3T6hRaLw1AnRYEOWbBdCZO9EhCjZdqdqs73nVdKHWNmCZ
+ 20NQGWbCY/hqlHi3SeaUojIUqSFa4Zp6DkL7MTtmuyaro5Z0MGjEd2SOK7KkLRSUl+pJQVo
+ vhKkfgNjXl56DrXFxTBMKAF0aaqicxN8CLwL/u+Afz89D8nChAO6OTEK1sMlQEs/Tbiz6IV
+ HfyVn1YxUq8qCgMf71InA==
+UI-OutboundReport: notjunk:1;M01:P0:WRpEgt448HQ=;Jrx4hK3B7Q3em0TSzh5wtA+CGrh
+ x5IVkZUABea9X6Ymu3965wxvZwVk6bzg5CJC3GpRtVdZs0yAJvJJuRmLQgb6RdBgY7u9yftA3
+ JadzRKSiEIcXX7DZGHN8YbxhU2tWn+k6vugMS+kRF9Y2M1wVdd68wT4igPjydHir0pDkT3FgR
+ FnimddScYqvul10fN05NYrjQuNbZ+Izd5Z7pSjX3nPlWpi+a1PdLu+piSUXMXu4+8qMfcPXIm
+ PvkmsEkhM48Nef7MObzLGcKVzAtgdy3dwqu+1uGiz/5guJM5zY6Ju6XDNat2EjGwW45vKjp/7
+ lm2yMqXiedbMX38XwhfRcJqyfuAoGmE1PwyJDeZE8migVNlC4Iv0ZFay86jd+oyZ+gQo26Rjy
+ rCwKbjat3YcvZlfX1AYjK5IlPPpk+JOvuZeAerP7K5VyLprj3J7wj1Uym+SyImJZ9/809uv1G
+ UCnTWrgqHUN3deThwTuR1t1rh+qkwBtkLjrhDKdF41TpHvyWePcZzGOgcxan+SOczFDZ+DtOG
+ u27BWXSESaUJdxvGSTw0Hh41bJwqvxVY986XgzkVTIRal2SV1cTOPcd9oCR+RoVUD0xpuDflt
+ eDUkzlY3f8W1qdkMwO22qRZlBcGewAeeum+ryOFpy0vtYdssiHWNsYsCdm0i0QLwssiVscG4W
+ u0CfwhSWbkgnmfwXUKcpxJKUodnNmNriu5vxZ1X1eA==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 16/06/2023 17:34, Frank Li wrote:
-> Extend Freescale eDMA driver bindings to support eDMA3 IP blocks in
-> i.MX8QM and i.MX8QXP SoCs. In i.MX93, both eDMA3 and eDMA4 are now.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  .../devicetree/bindings/dma/fsl,edma.yaml     | 103 ++++++++++++++++--
->  1 file changed, 96 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/fsl,edma.yaml b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-> index 5fd8fc604261..2363c10e0d1c 100644
-> --- a/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
-> @@ -21,32 +21,41 @@ properties:
->        - enum:
->            - fsl,vf610-edma
->            - fsl,imx7ulp-edma
-> +          - fsl,imx8qm-adma
-> +          - fsl,imx8qm-edma
-> +          - fsl,imx93-edma3
-> +          - fsl,imx93-edma4
->        - items:
->            - const: fsl,ls1028a-edma
->            - const: fsl,vf610-edma
->  
->    reg:
-> -    minItems: 2
-> +    minItems: 1
->      maxItems: 3
->  
->    interrupts:
-> -    minItems: 2
-> -    maxItems: 17
-> +    minItems: 1
-> +    maxItems: 64
->  
->    interrupt-names:
-> -    minItems: 2
-> -    maxItems: 17
-> +    minItems: 1
-> +    maxItems: 64
->  
->    "#dma-cells":
-> -    const: 2
-> +    enum:
-> +      - 2
-> +      - 3
->  
->    dma-channels:
-> -    const: 32
-> +    minItems: 1
-> +    maxItems: 64
->  
->    clocks:
-> +    minItems: 1
->      maxItems: 2
->  
->    clock-names:
-> +    minItems: 1
->      maxItems: 2
->  
->    big-endian:
-> @@ -65,6 +74,26 @@ required:
->  
->  allOf:
->    - $ref: dma-controller.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - fsl,imx8qm-adma
-> +              - fsl,imx8qm-edma
-> +              - fsl,imx93-edma3
-> +              - fsl,imx93-edma4
-> +    then:
-> +      properties:
-> +        "#dma-cells":
-> +          const: 3
-> +        # It is not necessary to write the interrupt name for each channel.
-> +        # instead, you can simply maintain the sequential IRQ numbers as
-> +        # defined for the DMA channels.
-> +        interrupt-names: false
-> +        clock-names:
+This series fix some dtbs_check warning for the Raspberry Pi boards
+and convert 4 txt DT bindings for BCM2835 to YAML.
 
-items:
-  - const: dma
+Changes in V2:
+- drop already applied patches (bcm2835-sdhost, bcm2835-thermal)
+- drop patch "dmaengine: bcm2835: also support generic dma-channel-mask"
+- keep brcm,bcm2835-dma for ABI compatibility which also resolve
+  dependency between patch 2 and 3
+- drop quotes in patch 2 as noted by Rob Herring
+- add interrupt description as suggested by Rob
+- add Rob's and Uwe's Reviewed-by
 
-missing clocks...
 
-oh wait, I already said this. Let's use reviewers time for doing the
-same review, why not. They work for free.
+Stefan Wahren (7):
+  ARM: dts: bcm283x: Fix pinctrl groups
+  dt-bindings: dma: convert bcm2835-dma bindings to YAML
+  ARM: dts: bcm2835: adjust DMA node names
+  dt-bindings: pwm: convert pwm-bcm2835 bindings to YAML
+  ARM: dts: bcm283x: Increase pwm-cells
+  dt-bindings: mailbox: convert bcm2835-mbox bindings to YAML
+  dt-bindings: timer: convert bcm2835-system-timer bindings to YAML
 
-This is a friendly reminder during the review process.
+ .../bindings/dma/brcm,bcm2835-dma.txt         |  83 --------------
+ .../bindings/dma/brcm,bcm2835-dma.yaml        | 102 ++++++++++++++++++
+ .../bindings/mailbox/brcm,bcm2835-mbox.txt    |  26 -----
+ .../bindings/mailbox/brcm,bcm2835-mbox.yaml   |  40 +++++++
+ .../devicetree/bindings/pwm/pwm-bcm2835.txt   |  30 ------
+ .../devicetree/bindings/pwm/pwm-bcm2835.yaml  |  43 ++++++++
+ .../timer/brcm,bcm2835-system-timer.txt       |  22 ----
+ .../timer/brcm,bcm2835-system-timer.yaml      |  48 +++++++++
+ arch/arm/boot/dts/bcm2711.dtsi                |   4 +-
+ arch/arm/boot/dts/bcm2835-common.dtsi         |   2 +-
+ arch/arm/boot/dts/bcm2835-rpi-a-plus.dts      |   1 +
+ arch/arm/boot/dts/bcm2835-rpi-a.dts           |   1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts      |   1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts      |   1 +
+ arch/arm/boot/dts/bcm2835-rpi-b.dts           |   1 +
+ arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts     |   1 +
+ arch/arm/boot/dts/bcm2835-rpi-zero-w.dts      |   2 +
+ arch/arm/boot/dts/bcm2835-rpi-zero.dts        |   1 +
+ arch/arm/boot/dts/bcm2835-rpi.dtsi            |   2 -
+ arch/arm/boot/dts/bcm2836-rpi-2-b.dts         |   1 +
+ arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts     |   1 +
+ arch/arm/boot/dts/bcm2837-rpi-zero-2-w.dts    |   2 +
+ arch/arm/boot/dts/bcm283x.dtsi                |   2 +-
+ 23 files changed, 250 insertions(+), 167 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+ create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-bcm2835.yaml
+ delete mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml
 
-It seems my previous comments were not fully addressed. Maybe my
-feedback got lost between the quotes, maybe you just forgot to apply it.
-Please go back to the previous discussion and either implement all
-requested changes or keep discussing them.
-
-Thank you.
-
-Best regards,
-Krzysztof
+-- 
+2.34.1
 

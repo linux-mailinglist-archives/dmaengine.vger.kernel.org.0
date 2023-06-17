@@ -2,21 +2,21 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 110FD734142
-	for <lists+dmaengine@lfdr.de>; Sat, 17 Jun 2023 15:37:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 589CB734152
+	for <lists+dmaengine@lfdr.de>; Sat, 17 Jun 2023 15:37:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235158AbjFQNhI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 17 Jun 2023 09:37:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40688 "EHLO
+        id S235744AbjFQNhL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 17 Jun 2023 09:37:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232091AbjFQNhH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Jun 2023 09:37:07 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9067B5;
-        Sat, 17 Jun 2023 06:37:05 -0700 (PDT)
+        with ESMTP id S235937AbjFQNhJ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Jun 2023 09:37:09 -0400
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07CE7E76;
+        Sat, 17 Jun 2023 06:37:07 -0700 (PDT)
 Received: from stefanw-SCHENKER ([37.4.248.58]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N49Yn-1q1L6f0zC5-0108qe; Sat, 17 Jun 2023 15:36:40 +0200
+ 1MDyoW-1qIB4O3sYe-009xZN; Sat, 17 Jun 2023 15:36:41 +0200
 From:   Stefan Wahren <stefan.wahren@i2se.com>
 To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -35,223 +35,246 @@ Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
         bcm-kernel-feedback-list@broadcom.com,
         Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V2 1/7] ARM: dts: bcm283x: Fix pinctrl groups
-Date:   Sat, 17 Jun 2023 15:36:14 +0200
-Message-Id: <20230617133620.53129-2-stefan.wahren@i2se.com>
+Subject: [PATCH V2 2/7] dt-bindings: dma: convert bcm2835-dma bindings to YAML
+Date:   Sat, 17 Jun 2023 15:36:15 +0200
+Message-Id: <20230617133620.53129-3-stefan.wahren@i2se.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230617133620.53129-1-stefan.wahren@i2se.com>
 References: <20230617133620.53129-1-stefan.wahren@i2se.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:IY3M0xwlJcn1MHHWzufLssN2h75OOWkxST7zRVe3Aze71fo0TWI
- AizeCsOGFtCvGGHrVqALKQoNzZh067DQ1DvzT1zXzcOkvCHzqSXS2n3CZov4nF+NF2J+YRB
- Lf9MvTXQnWdMhfolPqD34KHbxjxPBsyXT27TiMBlPm1XXMc/5R0VQwoA2YocbR6BZ1m9CbU
- p9IlT0LhX6SryE7po8d6g==
-UI-OutboundReport: notjunk:1;M01:P0:X6pAvDBu4OQ=;zyoofsDWMG++GvPo1YfB/u8FFOH
- HlE1XYcUeGzAusqDKVYGThsSfTkS9xjxIQcRw50iNYNdDN/kwNgK2pmuUhNIQCs1AsMtM7BXz
- +7uddUuEklqA6gG5ok3rvcgyHV2Nl+XDIjdSvXc8P3pPZyodcYgsIrLD/7ZvzG91wYRcWIM9q
- p3QIDfbwcgwNJeNnActWD8MNfDfA8bqTmAm7kNlwvw39dzUagkymZ9ciqwbmUKZxssGLO5Doj
- r++nwI2Wti96Mcaphs9bU9ry9SaEkGCD9kgvgOPvSkmkwHjSJ0wtLQNhqhL6UTT5/ghM5ehK+
- KwoEw+FmgJ+vsbRiMX+KbA8D8aeSXMMIWhyX1Kbwiy4c9Khswwd99NmKutPeCUcXoCvNX8If6
- YcUOadgz665HIVmLER4kbYCIb7m6p/Td2vLGydxLC4z7GGQl/EVVnbFeKTq+QHy/2Wa2ZFQve
- Er4vqaRHGKiB/SflZvVw/8zyF+C3PKA7dcmb4fcNIyQd3VFYBm4hqRWOV2UrO2YAqj9ksBUSn
- JMsREY2bMHUBW1LqNIC36cVy9yesGlJISGFcCG2ljK7/VFDaWTEoGDY82pmGnOSzE3aWZWGni
- BXq62Uj36JM2AMtYwEizaK/fkowddq20TUfJEwBguWREi8PClZjJuvUYU0SjC+a/MIqznRsys
- +Na6/QOos0m7OL5wWRAUvkpYsTtyh6E61nUks5YQ1A==
+X-Provags-ID: V03:K1:SMCweP7CjBUg9TJaFmx+JT9DWEI9Cf+A5pEvrkXawHTf0lH2NoL
+ FN5znBD2IZjkeXfhCMa9FqAvBtUQKBJoy2OHIIaNEGluQqVUyuNQE26P1+5jt1Dt1gCpsp6
+ fH+DE3zFHPZ5cSLCsCR3rsIupTId3E0McqcfRfPI8+N1Mw8cfncOdEfD8Uo1ezk7xAanyBh
+ 1m36rVaLFqzBsXDRth//Q==
+UI-OutboundReport: notjunk:1;M01:P0:24tRoCPrR4M=;SSDp+KJP5S/XIQSmZ3YQgK4YNhv
+ zwyuH4sekOJqZ/V1wStyGKJ03QV+vVXLNxPn9bee5aakudOHRvKgG3PhT/mWyA3tPUJHvHDCg
+ 5u8FJRyrqqGGd0AYwY5iaiiNDZu3B9lbE4UNsKAhyURjEjEQiU88VDkNnVwiuD3RSYnuKlx8o
+ /eexGj7VH99/ox73oSaI6sFmrWD/xjkoiuAE+Gu0i2mW4xVRlJL+7bCg385HjkcBqhFkqpoFG
+ VsmTB4zccV8b8h6XWl1SoosOnn9wXddavVp9XyRnwNLR7TIsAYTSHExpI/U27pOavKMfzVQi9
+ pNlUnqPAuM6mxEm9uk2ZW7hk3okOtDwYY0dIt2xoRJ14/Ffm/WygFXQQV+ogO8rs0yDQq1EYK
+ aRSkH/EmoFgZND3WxYu7IcGu01TZ3Z3vB5F+lfLfgJyAPeo7NM/oZS8Z39Nv153RSmVZxN11g
+ sTcnTnYyo0tYeUbDFJI1u2TuYlF8nsOV+QW/Mtu4I/4Z2ChgCf6tmOejDhLUESRHkAeg5I07D
+ 68Lc87k0TYvqZqoWN659OhG5nbD0AMjdlP5NZ5KHyEL5zhwHu9qjMbvCAQE7tPgYsbH2vr1cj
+ I0fDdlkUacH5IaOi8gizE1wOiSP+1pLFLlyBZiCraS92s5XiPrPe9IHXuIEvUWB+WVAS1H2Zm
+ +O3nPXHByHABzIDbL2YIGAwD+Pryoif+iXHv7ZZ4EQ==
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Currently the dtbs_check for bcm2837 generates warnings like this:
-
-gpio@7e200000: 'pinctrl-0' is a dependency of 'pinctrl-names'
-
-This is caused by the definition of pinctrl-names without matching
-pinctrl group and vice versa. So defining both at the same place
-make the dts files easier to review.
+Convert the DT binding document for bcm2835-dma from .txt to YAML.
 
 Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 ---
- arch/arm/boot/dts/bcm2835-rpi-a-plus.dts   | 1 +
- arch/arm/boot/dts/bcm2835-rpi-a.dts        | 1 +
- arch/arm/boot/dts/bcm2835-rpi-b-plus.dts   | 1 +
- arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts   | 1 +
- arch/arm/boot/dts/bcm2835-rpi-b.dts        | 1 +
- arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts  | 1 +
- arch/arm/boot/dts/bcm2835-rpi-zero-w.dts   | 2 ++
- arch/arm/boot/dts/bcm2835-rpi-zero.dts     | 1 +
- arch/arm/boot/dts/bcm2835-rpi.dtsi         | 2 --
- arch/arm/boot/dts/bcm2836-rpi-2-b.dts      | 1 +
- arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts  | 1 +
- arch/arm/boot/dts/bcm2837-rpi-zero-2-w.dts | 2 ++
- 12 files changed, 13 insertions(+), 2 deletions(-)
+ .../bindings/dma/brcm,bcm2835-dma.txt         |  83 --------------
+ .../bindings/dma/brcm,bcm2835-dma.yaml        | 102 ++++++++++++++++++
+ 2 files changed, 102 insertions(+), 83 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-index 02ce817868ba..069b48272aa5 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-@@ -81,6 +81,7 @@ &gpio {
- 			  "SD_DATA2_R",
- 			  "SD_DATA3_R";
- 
-+	pinctrl-names = "default";
- 	pinctrl-0 = <&gpioout &alt0 &i2s_alt0>;
- 
- 	/* I2S interface */
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-a.dts b/arch/arm/boot/dts/bcm2835-rpi-a.dts
-index 3fdf60eb11dc..2726c00431e8 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-a.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-a.dts
-@@ -83,6 +83,7 @@ &gpio {
- 			  "SD_DATA2_R",
- 			  "SD_DATA3_R";
- 
-+	pinctrl-names = "default";
- 	pinctrl-0 = <&gpioout &alt0 &i2s_alt2>;
- 
- 	/* I2S interface */
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-index 9956fd06a4b6..c57b999a4520 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-@@ -83,6 +83,7 @@ &gpio {
- 			  "SD_DATA2_R",
- 			  "SD_DATA3_R";
- 
-+	pinctrl-names = "default";
- 	pinctrl-0 = <&gpioout &alt0 &i2s_alt0>;
- 
- 	/* I2S interface */
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-index 4e1770afb145..ae6d3a9586ab 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-@@ -83,6 +83,7 @@ &gpio {
- 			  "SD_DATA2_R",
- 			  "SD_DATA3_R";
- 
-+	pinctrl-names = "default";
- 	pinctrl-0 = <&gpioout &alt0 &i2s_alt2>;
- 
- 	/* I2S interface */
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-index eec1d0892d33..72764be75a79 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-@@ -83,6 +83,7 @@ &gpio {
- 			  "SD_DATA2_R",
- 			  "SD_DATA3_R";
- 
-+	pinctrl-names = "default";
- 	pinctrl-0 = <&gpioout &alt0>;
- };
- 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts b/arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts
-index 87958a96c3e0..3f9d198ac3ab 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts
-@@ -73,6 +73,7 @@ &gpio {
- 			  "SD_DATA2_R",
- 			  "SD_DATA3_R";
- 
-+	pinctrl-names = "default";
- 	pinctrl-0 = <&gpioout &alt0>;
- };
- 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-index dbf825985ec0..1f0b163e400c 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-@@ -97,6 +97,7 @@ &gpio {
- 			  "SD_DATA2_R",
- 			  "SD_DATA3_R";
- 
-+	pinctrl-names = "default";
- 	pinctrl-0 = <&gpioout &alt0>;
- };
- 
-@@ -111,6 +112,7 @@ &led_act {
- };
- 
- &sdhci {
-+	pinctrl-names = "default";
- 	pinctrl-0 = <&emmc_gpio34 &gpclk2_gpio43>;
- };
- 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero.dts b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
-index f80e65a825fd..539c19c10946 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-zero.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
-@@ -85,6 +85,7 @@ &gpio {
- 			  "SD_DATA2_R",
- 			  "SD_DATA3_R";
- 
-+	pinctrl-names = "default";
- 	pinctrl-0 = <&gpioout &alt0 &i2s_alt0>;
- 
- 	/* I2S interface */
-diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-index ee9ee9d1fe65..f0acc9390f31 100644
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -26,8 +26,6 @@ vchiq: mailbox@7e00b840 {
- };
- 
- &gpio {
--	pinctrl-names = "default";
+diff --git a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
+deleted file mode 100644
+index b6a8cc0978cd..000000000000
+--- a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
++++ /dev/null
+@@ -1,83 +0,0 @@
+-* BCM2835 DMA controller
 -
- 	gpioout: gpioout {
- 		brcm,pins = <6>;
- 		brcm,function = <BCM2835_FSEL_GPIO_OUT>;
-diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-index 6068ec390081..79918033750e 100644
---- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-+++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-@@ -82,6 +82,7 @@ &gpio {
- 			  "SD_DATA2_R",
- 			  "SD_DATA3_R";
- 
-+	pinctrl-names = "default";
- 	pinctrl-0 = <&gpioout &alt0 &i2s_alt0>;
- 
- 	/* I2S interface */
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts b/arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts
-index cf84e69fced8..72d26d130efa 100644
---- a/arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts
-+++ b/arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts
-@@ -72,6 +72,7 @@ &gpio {
- 			  "SD_DATA2_R",
- 			  "SD_DATA3_R";
- 
-+	pinctrl-names = "default";
- 	pinctrl-0 = <&gpioout &alt0>;
- };
- 
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-zero-2-w.dts b/arch/arm/boot/dts/bcm2837-rpi-zero-2-w.dts
-index b9cc4594398b..85cf594724ef 100644
---- a/arch/arm/boot/dts/bcm2837-rpi-zero-2-w.dts
-+++ b/arch/arm/boot/dts/bcm2837-rpi-zero-2-w.dts
-@@ -95,6 +95,7 @@ &gpio {
- 			  "SD_DATA2_R",
- 			  "SD_DATA3_R";
- 
-+	pinctrl-names = "default";
- 	pinctrl-0 = <&gpioout &alt0>;
- };
- 
-@@ -109,6 +110,7 @@ &led_act {
- };
- 
- &sdhci {
-+	pinctrl-names = "default";
- 	pinctrl-0 = <&emmc_gpio34 &gpclk2_gpio43>;
- };
- 
+-The BCM2835 DMA controller has 16 channels in total.
+-Only the lower 13 channels have an associated IRQ.
+-Some arbitrary channels are used by the firmware
+-(1,3,6,7 in the current firmware version).
+-The channels 0,2 and 3 have special functionality
+-and should not be used by the driver.
+-
+-Required properties:
+-- compatible: Should be "brcm,bcm2835-dma".
+-- reg: Should contain DMA registers location and length.
+-- interrupts: Should contain the DMA interrupts associated
+-		to the DMA channels in ascending order.
+-- interrupt-names: Should contain the names of the interrupt
+-		   in the form "dmaXX".
+-		   Use "dma-shared-all" for the common interrupt line
+-		   that is shared by all dma channels.
+-- #dma-cells: Must be <1>, the cell in the dmas property of the
+-		client device represents the DREQ number.
+-- brcm,dma-channel-mask: Bit mask representing the channels
+-			 not used by the firmware in ascending order,
+-			 i.e. first channel corresponds to LSB.
+-
+-Example:
+-
+-dma: dma@7e007000 {
+-	compatible = "brcm,bcm2835-dma";
+-	reg = <0x7e007000 0xf00>;
+-	interrupts = <1 16>,
+-		     <1 17>,
+-		     <1 18>,
+-		     <1 19>,
+-		     <1 20>,
+-		     <1 21>,
+-		     <1 22>,
+-		     <1 23>,
+-		     <1 24>,
+-		     <1 25>,
+-		     <1 26>,
+-		     /* dma channel 11-14 share one irq */
+-		     <1 27>,
+-		     <1 27>,
+-		     <1 27>,
+-		     <1 27>,
+-		     /* unused shared irq for all channels */
+-		     <1 28>;
+-	interrupt-names = "dma0",
+-			  "dma1",
+-			  "dma2",
+-			  "dma3",
+-			  "dma4",
+-			  "dma5",
+-			  "dma6",
+-			  "dma7",
+-			  "dma8",
+-			  "dma9",
+-			  "dma10",
+-			  "dma11",
+-			  "dma12",
+-			  "dma13",
+-			  "dma14",
+-			  "dma-shared-all";
+-
+-	#dma-cells = <1>;
+-	brcm,dma-channel-mask = <0x7f35>;
+-};
+-
+-
+-DMA clients connected to the BCM2835 DMA controller must use the format
+-described in the dma.txt file, using a two-cell specifier for each channel.
+-
+-Example:
+-
+-bcm2835_i2s: i2s@7e203000 {
+-	compatible = "brcm,bcm2835-i2s";
+-	reg = <	0x7e203000 0x24>;
+-	clocks = <&clocks BCM2835_CLOCK_PCM>;
+-
+-	dmas = <&dma 2>,
+-	       <&dma 3>;
+-	dma-names = "tx", "rx";
+-};
+diff --git a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml
+new file mode 100644
+index 000000000000..5de8421e933a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml
+@@ -0,0 +1,102 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/brcm,bcm2835-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: BCM2835 DMA controller
++
++maintainers:
++  - Nicolas Saenz Julienne <nsaenz@kernel.org>
++
++description:
++  The BCM2835 DMA controller has 16 channels in total. Only the lower
++  13 channels have an associated IRQ. Some arbitrary channels are used by the
++  VideoCore firmware (1,3,6,7 in the current firmware version). The channels
++  0, 2 and 3 have special functionality and should not be used by the driver.
++
++allOf:
++  - $ref: dma-controller.yaml#
++
++properties:
++  compatible:
++    const: brcm,bcm2835-dma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description:
++      Should contain the DMA interrupts associated to the DMA channels in
++      ascending order.
++    minItems: 1
++    maxItems: 16
++
++  interrupt-names:
++    minItems: 1
++    maxItems: 16
++
++  '#dma-cells':
++    description: The single cell represents the DREQ number.
++    const: 1
++
++  brcm,dma-channel-mask:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Bitmask of available DMA channels in ascending order that are
++      not reserved by firmware and are available to the
++      kernel. i.e. first channel corresponds to LSB.
++
++unevaluatedProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#dma-cells"
++  - brcm,dma-channel-mask
++
++examples:
++  - |
++    dma-controller@7e007000 {
++      compatible = "brcm,bcm2835-dma";
++      reg = <0x7e007000 0xf00>;
++      interrupts = <1 16>,
++                   <1 17>,
++                   <1 18>,
++                   <1 19>,
++                   <1 20>,
++                   <1 21>,
++                   <1 22>,
++                   <1 23>,
++                   <1 24>,
++                   <1 25>,
++                   <1 26>,
++                   /* dma channel 11-14 share one irq */
++                   <1 27>,
++                   <1 27>,
++                   <1 27>,
++                   <1 27>,
++                   /* unused shared irq for all channels */
++                   <1 28>;
++      interrupt-names = "dma0",
++                        "dma1",
++                        "dma2",
++                        "dma3",
++                        "dma4",
++                        "dma5",
++                        "dma6",
++                        "dma7",
++                        "dma8",
++                        "dma9",
++                        "dma10",
++                        "dma11",
++                        "dma12",
++                        "dma13",
++                        "dma14",
++                        "dma-shared-all";
++        #dma-cells = <1>;
++        brcm,dma-channel-mask = <0x7f35>;
++    };
++
++...
 -- 
 2.34.1
 

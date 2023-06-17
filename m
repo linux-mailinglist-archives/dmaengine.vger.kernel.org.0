@@ -2,21 +2,21 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAF3C73414D
-	for <lists+dmaengine@lfdr.de>; Sat, 17 Jun 2023 15:37:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 110FD734142
+	for <lists+dmaengine@lfdr.de>; Sat, 17 Jun 2023 15:37:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235949AbjFQNhK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 17 Jun 2023 09:37:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40692 "EHLO
+        id S235158AbjFQNhI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 17 Jun 2023 09:37:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234012AbjFQNhI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Jun 2023 09:37:08 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B270AE72;
-        Sat, 17 Jun 2023 06:37:06 -0700 (PDT)
+        with ESMTP id S232091AbjFQNhH (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Jun 2023 09:37:07 -0400
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9067B5;
+        Sat, 17 Jun 2023 06:37:05 -0700 (PDT)
 Received: from stefanw-SCHENKER ([37.4.248.58]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MCsLo-1qJHWx2N3Q-008rdh; Sat, 17 Jun 2023 15:36:39 +0200
+ 1N49Yn-1q1L6f0zC5-0108qe; Sat, 17 Jun 2023 15:36:40 +0200
 From:   Stefan Wahren <stefan.wahren@i2se.com>
 To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -35,91 +35,223 @@ Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
         bcm-kernel-feedback-list@broadcom.com,
         Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V2 0/7] ARM: dts: bcm283x: Improve device-trees and bindings
-Date:   Sat, 17 Jun 2023 15:36:13 +0200
-Message-Id: <20230617133620.53129-1-stefan.wahren@i2se.com>
+Subject: [PATCH V2 1/7] ARM: dts: bcm283x: Fix pinctrl groups
+Date:   Sat, 17 Jun 2023 15:36:14 +0200
+Message-Id: <20230617133620.53129-2-stefan.wahren@i2se.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230617133620.53129-1-stefan.wahren@i2se.com>
+References: <20230617133620.53129-1-stefan.wahren@i2se.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:YcK/WR3T6hRaLw1AnRYEOWbBdCZO9EhCjZdqdqs73nVdKHWNmCZ
- 20NQGWbCY/hqlHi3SeaUojIUqSFa4Zp6DkL7MTtmuyaro5Z0MGjEd2SOK7KkLRSUl+pJQVo
- vhKkfgNjXl56DrXFxTBMKAF0aaqicxN8CLwL/u+Afz89D8nChAO6OTEK1sMlQEs/Tbiz6IV
- HfyVn1YxUq8qCgMf71InA==
-UI-OutboundReport: notjunk:1;M01:P0:WRpEgt448HQ=;Jrx4hK3B7Q3em0TSzh5wtA+CGrh
- x5IVkZUABea9X6Ymu3965wxvZwVk6bzg5CJC3GpRtVdZs0yAJvJJuRmLQgb6RdBgY7u9yftA3
- JadzRKSiEIcXX7DZGHN8YbxhU2tWn+k6vugMS+kRF9Y2M1wVdd68wT4igPjydHir0pDkT3FgR
- FnimddScYqvul10fN05NYrjQuNbZ+Izd5Z7pSjX3nPlWpi+a1PdLu+piSUXMXu4+8qMfcPXIm
- PvkmsEkhM48Nef7MObzLGcKVzAtgdy3dwqu+1uGiz/5guJM5zY6Ju6XDNat2EjGwW45vKjp/7
- lm2yMqXiedbMX38XwhfRcJqyfuAoGmE1PwyJDeZE8migVNlC4Iv0ZFay86jd+oyZ+gQo26Rjy
- rCwKbjat3YcvZlfX1AYjK5IlPPpk+JOvuZeAerP7K5VyLprj3J7wj1Uym+SyImJZ9/809uv1G
- UCnTWrgqHUN3deThwTuR1t1rh+qkwBtkLjrhDKdF41TpHvyWePcZzGOgcxan+SOczFDZ+DtOG
- u27BWXSESaUJdxvGSTw0Hh41bJwqvxVY986XgzkVTIRal2SV1cTOPcd9oCR+RoVUD0xpuDflt
- eDUkzlY3f8W1qdkMwO22qRZlBcGewAeeum+ryOFpy0vtYdssiHWNsYsCdm0i0QLwssiVscG4W
- u0CfwhSWbkgnmfwXUKcpxJKUodnNmNriu5vxZ1X1eA==
+X-Provags-ID: V03:K1:IY3M0xwlJcn1MHHWzufLssN2h75OOWkxST7zRVe3Aze71fo0TWI
+ AizeCsOGFtCvGGHrVqALKQoNzZh067DQ1DvzT1zXzcOkvCHzqSXS2n3CZov4nF+NF2J+YRB
+ Lf9MvTXQnWdMhfolPqD34KHbxjxPBsyXT27TiMBlPm1XXMc/5R0VQwoA2YocbR6BZ1m9CbU
+ p9IlT0LhX6SryE7po8d6g==
+UI-OutboundReport: notjunk:1;M01:P0:X6pAvDBu4OQ=;zyoofsDWMG++GvPo1YfB/u8FFOH
+ HlE1XYcUeGzAusqDKVYGThsSfTkS9xjxIQcRw50iNYNdDN/kwNgK2pmuUhNIQCs1AsMtM7BXz
+ +7uddUuEklqA6gG5ok3rvcgyHV2Nl+XDIjdSvXc8P3pPZyodcYgsIrLD/7ZvzG91wYRcWIM9q
+ p3QIDfbwcgwNJeNnActWD8MNfDfA8bqTmAm7kNlwvw39dzUagkymZ9ciqwbmUKZxssGLO5Doj
+ r++nwI2Wti96Mcaphs9bU9ry9SaEkGCD9kgvgOPvSkmkwHjSJ0wtLQNhqhL6UTT5/ghM5ehK+
+ KwoEw+FmgJ+vsbRiMX+KbA8D8aeSXMMIWhyX1Kbwiy4c9Khswwd99NmKutPeCUcXoCvNX8If6
+ YcUOadgz665HIVmLER4kbYCIb7m6p/Td2vLGydxLC4z7GGQl/EVVnbFeKTq+QHy/2Wa2ZFQve
+ Er4vqaRHGKiB/SflZvVw/8zyF+C3PKA7dcmb4fcNIyQd3VFYBm4hqRWOV2UrO2YAqj9ksBUSn
+ JMsREY2bMHUBW1LqNIC36cVy9yesGlJISGFcCG2ljK7/VFDaWTEoGDY82pmGnOSzE3aWZWGni
+ BXq62Uj36JM2AMtYwEizaK/fkowddq20TUfJEwBguWREi8PClZjJuvUYU0SjC+a/MIqznRsys
+ +Na6/QOos0m7OL5wWRAUvkpYsTtyh6E61nUks5YQ1A==
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This series fix some dtbs_check warning for the Raspberry Pi boards
-and convert 4 txt DT bindings for BCM2835 to YAML.
+Currently the dtbs_check for bcm2837 generates warnings like this:
 
-Changes in V2:
-- drop already applied patches (bcm2835-sdhost, bcm2835-thermal)
-- drop patch "dmaengine: bcm2835: also support generic dma-channel-mask"
-- keep brcm,bcm2835-dma for ABI compatibility which also resolve
-  dependency between patch 2 and 3
-- drop quotes in patch 2 as noted by Rob Herring
-- add interrupt description as suggested by Rob
-- add Rob's and Uwe's Reviewed-by
+gpio@7e200000: 'pinctrl-0' is a dependency of 'pinctrl-names'
 
+This is caused by the definition of pinctrl-names without matching
+pinctrl group and vice versa. So defining both at the same place
+make the dts files easier to review.
 
-Stefan Wahren (7):
-  ARM: dts: bcm283x: Fix pinctrl groups
-  dt-bindings: dma: convert bcm2835-dma bindings to YAML
-  ARM: dts: bcm2835: adjust DMA node names
-  dt-bindings: pwm: convert pwm-bcm2835 bindings to YAML
-  ARM: dts: bcm283x: Increase pwm-cells
-  dt-bindings: mailbox: convert bcm2835-mbox bindings to YAML
-  dt-bindings: timer: convert bcm2835-system-timer bindings to YAML
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ arch/arm/boot/dts/bcm2835-rpi-a-plus.dts   | 1 +
+ arch/arm/boot/dts/bcm2835-rpi-a.dts        | 1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts   | 1 +
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts   | 1 +
+ arch/arm/boot/dts/bcm2835-rpi-b.dts        | 1 +
+ arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts  | 1 +
+ arch/arm/boot/dts/bcm2835-rpi-zero-w.dts   | 2 ++
+ arch/arm/boot/dts/bcm2835-rpi-zero.dts     | 1 +
+ arch/arm/boot/dts/bcm2835-rpi.dtsi         | 2 --
+ arch/arm/boot/dts/bcm2836-rpi-2-b.dts      | 1 +
+ arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts  | 1 +
+ arch/arm/boot/dts/bcm2837-rpi-zero-2-w.dts | 2 ++
+ 12 files changed, 13 insertions(+), 2 deletions(-)
 
- .../bindings/dma/brcm,bcm2835-dma.txt         |  83 --------------
- .../bindings/dma/brcm,bcm2835-dma.yaml        | 102 ++++++++++++++++++
- .../bindings/mailbox/brcm,bcm2835-mbox.txt    |  26 -----
- .../bindings/mailbox/brcm,bcm2835-mbox.yaml   |  40 +++++++
- .../devicetree/bindings/pwm/pwm-bcm2835.txt   |  30 ------
- .../devicetree/bindings/pwm/pwm-bcm2835.yaml  |  43 ++++++++
- .../timer/brcm,bcm2835-system-timer.txt       |  22 ----
- .../timer/brcm,bcm2835-system-timer.yaml      |  48 +++++++++
- arch/arm/boot/dts/bcm2711.dtsi                |   4 +-
- arch/arm/boot/dts/bcm2835-common.dtsi         |   2 +-
- arch/arm/boot/dts/bcm2835-rpi-a-plus.dts      |   1 +
- arch/arm/boot/dts/bcm2835-rpi-a.dts           |   1 +
- arch/arm/boot/dts/bcm2835-rpi-b-plus.dts      |   1 +
- arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts      |   1 +
- arch/arm/boot/dts/bcm2835-rpi-b.dts           |   1 +
- arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts     |   1 +
- arch/arm/boot/dts/bcm2835-rpi-zero-w.dts      |   2 +
- arch/arm/boot/dts/bcm2835-rpi-zero.dts        |   1 +
- arch/arm/boot/dts/bcm2835-rpi.dtsi            |   2 -
- arch/arm/boot/dts/bcm2836-rpi-2-b.dts         |   1 +
- arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts     |   1 +
- arch/arm/boot/dts/bcm2837-rpi-zero-2-w.dts    |   2 +
- arch/arm/boot/dts/bcm283x.dtsi                |   2 +-
- 23 files changed, 250 insertions(+), 167 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
- create mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml
- delete mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
- create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.yaml
- delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-bcm2835.yaml
- delete mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml
-
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
+index 02ce817868ba..069b48272aa5 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
+@@ -81,6 +81,7 @@ &gpio {
+ 			  "SD_DATA2_R",
+ 			  "SD_DATA3_R";
+ 
++	pinctrl-names = "default";
+ 	pinctrl-0 = <&gpioout &alt0 &i2s_alt0>;
+ 
+ 	/* I2S interface */
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-a.dts b/arch/arm/boot/dts/bcm2835-rpi-a.dts
+index 3fdf60eb11dc..2726c00431e8 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-a.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-a.dts
+@@ -83,6 +83,7 @@ &gpio {
+ 			  "SD_DATA2_R",
+ 			  "SD_DATA3_R";
+ 
++	pinctrl-names = "default";
+ 	pinctrl-0 = <&gpioout &alt0 &i2s_alt2>;
+ 
+ 	/* I2S interface */
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+index 9956fd06a4b6..c57b999a4520 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+@@ -83,6 +83,7 @@ &gpio {
+ 			  "SD_DATA2_R",
+ 			  "SD_DATA3_R";
+ 
++	pinctrl-names = "default";
+ 	pinctrl-0 = <&gpioout &alt0 &i2s_alt0>;
+ 
+ 	/* I2S interface */
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+index 4e1770afb145..ae6d3a9586ab 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+@@ -83,6 +83,7 @@ &gpio {
+ 			  "SD_DATA2_R",
+ 			  "SD_DATA3_R";
+ 
++	pinctrl-names = "default";
+ 	pinctrl-0 = <&gpioout &alt0 &i2s_alt2>;
+ 
+ 	/* I2S interface */
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+index eec1d0892d33..72764be75a79 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+@@ -83,6 +83,7 @@ &gpio {
+ 			  "SD_DATA2_R",
+ 			  "SD_DATA3_R";
+ 
++	pinctrl-names = "default";
+ 	pinctrl-0 = <&gpioout &alt0>;
+ };
+ 
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts b/arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts
+index 87958a96c3e0..3f9d198ac3ab 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-cm1-io1.dts
+@@ -73,6 +73,7 @@ &gpio {
+ 			  "SD_DATA2_R",
+ 			  "SD_DATA3_R";
+ 
++	pinctrl-names = "default";
+ 	pinctrl-0 = <&gpioout &alt0>;
+ };
+ 
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+index dbf825985ec0..1f0b163e400c 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+@@ -97,6 +97,7 @@ &gpio {
+ 			  "SD_DATA2_R",
+ 			  "SD_DATA3_R";
+ 
++	pinctrl-names = "default";
+ 	pinctrl-0 = <&gpioout &alt0>;
+ };
+ 
+@@ -111,6 +112,7 @@ &led_act {
+ };
+ 
+ &sdhci {
++	pinctrl-names = "default";
+ 	pinctrl-0 = <&emmc_gpio34 &gpclk2_gpio43>;
+ };
+ 
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero.dts b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
+index f80e65a825fd..539c19c10946 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-zero.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
+@@ -85,6 +85,7 @@ &gpio {
+ 			  "SD_DATA2_R",
+ 			  "SD_DATA3_R";
+ 
++	pinctrl-names = "default";
+ 	pinctrl-0 = <&gpioout &alt0 &i2s_alt0>;
+ 
+ 	/* I2S interface */
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index ee9ee9d1fe65..f0acc9390f31 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -26,8 +26,6 @@ vchiq: mailbox@7e00b840 {
+ };
+ 
+ &gpio {
+-	pinctrl-names = "default";
+-
+ 	gpioout: gpioout {
+ 		brcm,pins = <6>;
+ 		brcm,function = <BCM2835_FSEL_GPIO_OUT>;
+diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+index 6068ec390081..79918033750e 100644
+--- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
++++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+@@ -82,6 +82,7 @@ &gpio {
+ 			  "SD_DATA2_R",
+ 			  "SD_DATA3_R";
+ 
++	pinctrl-names = "default";
+ 	pinctrl-0 = <&gpioout &alt0 &i2s_alt0>;
+ 
+ 	/* I2S interface */
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts b/arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts
+index cf84e69fced8..72d26d130efa 100644
+--- a/arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts
++++ b/arch/arm/boot/dts/bcm2837-rpi-cm3-io3.dts
+@@ -72,6 +72,7 @@ &gpio {
+ 			  "SD_DATA2_R",
+ 			  "SD_DATA3_R";
+ 
++	pinctrl-names = "default";
+ 	pinctrl-0 = <&gpioout &alt0>;
+ };
+ 
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-zero-2-w.dts b/arch/arm/boot/dts/bcm2837-rpi-zero-2-w.dts
+index b9cc4594398b..85cf594724ef 100644
+--- a/arch/arm/boot/dts/bcm2837-rpi-zero-2-w.dts
++++ b/arch/arm/boot/dts/bcm2837-rpi-zero-2-w.dts
+@@ -95,6 +95,7 @@ &gpio {
+ 			  "SD_DATA2_R",
+ 			  "SD_DATA3_R";
+ 
++	pinctrl-names = "default";
+ 	pinctrl-0 = <&gpioout &alt0>;
+ };
+ 
+@@ -109,6 +110,7 @@ &led_act {
+ };
+ 
+ &sdhci {
++	pinctrl-names = "default";
+ 	pinctrl-0 = <&emmc_gpio34 &gpclk2_gpio43>;
+ };
+ 
 -- 
 2.34.1
 

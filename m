@@ -2,21 +2,21 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F070734155
-	for <lists+dmaengine@lfdr.de>; Sat, 17 Jun 2023 15:37:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3260C73416F
+	for <lists+dmaengine@lfdr.de>; Sat, 17 Jun 2023 15:42:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236398AbjFQNhO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 17 Jun 2023 09:37:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40728 "EHLO
+        id S1346127AbjFQNma (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 17 Jun 2023 09:42:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234607AbjFQNhM (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Jun 2023 09:37:12 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C5B7DA;
-        Sat, 17 Jun 2023 06:37:11 -0700 (PDT)
+        with ESMTP id S236455AbjFQNm1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Jun 2023 09:42:27 -0400
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA1E819A2;
+        Sat, 17 Jun 2023 06:42:22 -0700 (PDT)
 Received: from stefanw-SCHENKER ([37.4.248.58]) by mrelayeu.kundenserver.de
  (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N7zJj-1q6GnA2pc3-0154nC; Sat, 17 Jun 2023 15:36:43 +0200
+ 1M2fDr-1q7UlX1Vhn-0048wI; Sat, 17 Jun 2023 15:36:44 +0200
 From:   Stefan Wahren <stefan.wahren@i2se.com>
 To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -34,30 +34,31 @@ Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
         devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
         bcm-kernel-feedback-list@broadcom.com,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V2 6/7] dt-bindings: mailbox: convert bcm2835-mbox bindings to YAML
-Date:   Sat, 17 Jun 2023 15:36:19 +0200
-Message-Id: <20230617133620.53129-7-stefan.wahren@i2se.com>
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH V2 7/7] dt-bindings: timer: convert bcm2835-system-timer bindings to YAML
+Date:   Sat, 17 Jun 2023 15:36:20 +0200
+Message-Id: <20230617133620.53129-8-stefan.wahren@i2se.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230617133620.53129-1-stefan.wahren@i2se.com>
 References: <20230617133620.53129-1-stefan.wahren@i2se.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:BN/G7vW9/+OwrOJf64TGPnwW5YzRRIk27PgTlhcRzCSfc0brUlW
- ksBPxIXOOflP29UVRJOMrUXLvyz7paYxVQKtRebHImuLSZEQYMhW4HLut1gLnlP0nZjTlrz
- J+KXcOrxBNo2L2+aSHOU6bcKtRLFcb92XLDnjMNjC7c1k85gf2Xv4UwY4xK3kbWGxpBo7US
- o7UJRe9alQqQ9hyQfgzGw==
-UI-OutboundReport: notjunk:1;M01:P0:EUvzvJRXwIs=;PHI27EI6rgPYtu1TJFYQ9ZkqTdl
- jmu3db43i6TwbJSn+BV2022WjElLQab0IsbgYi/5OE2HeCPbmSYa719xd8tI5287nZs8Xmmpg
- INyL2p7d8pYBzhiEhL0QP5mU32yfIP/oPPmrwGnX5nKjkeFftEcbSCjdeVDCh2sxUAbqOSkHN
- pf58TnJp+yI0WrF8Cfnv4kKqJhKnRTuAEtVVkc/Jo8+v1vhND1G074AXJ0tkA7qH/1ZuAHWto
- +JSnUBSZIf80+8iQ5R8RlIF0WqABRic2ZEFia4Sk2JqQHMmAw3b/5/47wL0lQhalyZd1BrKbs
- F4ctHvm7Z+eTESeRsX2FEocXdHK2Tx4kKlCL3FQhsDtlHPL+Z3JxTRZ+Mac5zk6oIhXxkwyfw
- tLmlHCftHDGZoN2+uezOeKNrnaackdD7N79BEzbGeiC01yFqY/B5f+C0hvyDnADhGVeFa8pWA
- VwtwRKcX8cajG5sfLVpuy0DlI5ZDAEIs3m2Bvogp41oIi/pOH1nNnho7a9f9Lg9bk9N10DceD
- ox2cTsAB2Fdkgdp//EEe64n0ZkIfMOhrlS54sSUzhjuxTLgwq0ab2i4Rpy4LGNhYAnB2a/San
- FkcvHTT/fimrd+ptx2z7SFkN5+8VNGFTKnpoJ3XqxowHBdzcBP+y6KhkhlSgwMNbd7i3uiTSg
- 0Qvuqhj0b+AiDbWjvLRzK/8Lxolqe8ooJ5VklVoLpg==
+X-Provags-ID: V03:K1:mVFiliFboW4LEd+X1TQBa6vvRmi7USdo/RW69BmRyNa/pJtjGzS
+ tVQ6dwdnHEHr/ZHHezkQhqcYQeI6DcMTENVHZf6OczxoEATjvn8NKf1lIAxB1OpX4zWvY08
+ 1sP8GK5j5nAf4xocAOTABS5MDo/6bn++VaK84cFyxqD07Z80Bj2+pOq//rMnClwhW6nUT7s
+ OL/kAvNBJ4QbODLW9ofkQ==
+UI-OutboundReport: notjunk:1;M01:P0:inw7a/j3P4k=;k+yIdptIj0BhoNOoxCn068igPV4
+ pOdv6vS4XPRfjQPY+0tiABzI5rL/li6o7aLPUKu0+vnm8sELegztndB4AWp6kSatbYEMVl/Rl
+ dmofJCZDR+0nNYJ9IA2zvBFjwmKZJ5OuZfKbMf54zg4R6piKdgtKxhXpc5dm4pPql2k58PHVZ
+ MMits6+0gfWFcw8fFgH6aKYjupSOMbvR491t7i7m5SQqtlS5Cj7eb6vcdFO06EFOo3w55uVVO
+ 8J5z1G5S+4GfED4nhRqqf94urrlTa5f+FqLnLMHF73PYePsrxL2WpIFbsVgYrTDYQk+4JUKH/
+ 9M19uFHpSDk96dBA8DOV9ktUAn1r5dnO/wH9Z+3ttGfXf/6pTlmhutwTuRH2t6D2r/5gm1TmX
+ JoS8p5nbkFSJI659bjrpCLQZWTYSYA1/+BYsXm6R65xipi9S0hggFPy5ZwP+5cVo11d1XiZg9
+ 3onxo7vKD4LHGnh4XO6ErFtxx0pWJcOd81KBgamDmYK4mDiQCSMj6VdrEn0qCu0HsG70DNuly
+ jIh1kUSbQQI5+fc+DT6/0cXStqt92tYgZ3JtJULUALmWsLBTcP4wlLXecp4zzsacdr26kbmYb
+ nVYOgJAc/+f9OSjjr/h1Mb9pKaMbM6hvj/W/PhoGLVZyjdaR5RscxMlAxqEVlZNj8q59uUy5V
+ A8XOBwuZyW1K2+/+sN8OspHzNhiHDiJMZdxhjJjkhQ==
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
@@ -68,93 +69,99 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Convert the DT binding document for bcm2835-mbox from .txt to YAML.
+Convert the DT binding document for bcm2835-system-timer from .txt
+to YAML.
 
 Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/mailbox/brcm,bcm2835-mbox.txt    | 26 ------------
- .../bindings/mailbox/brcm,bcm2835-mbox.yaml   | 40 +++++++++++++++++++
- 2 files changed, 40 insertions(+), 26 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
- create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.yaml
+ .../timer/brcm,bcm2835-system-timer.txt       | 22 ---------
+ .../timer/brcm,bcm2835-system-timer.yaml      | 48 +++++++++++++++++++
+ 2 files changed, 48 insertions(+), 22 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml
 
-diff --git a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+diff --git a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt b/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
 deleted file mode 100644
-index b48d7d30012c..000000000000
---- a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.txt
+index 844bd5fbd04c..000000000000
+--- a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
 +++ /dev/null
-@@ -1,26 +0,0 @@
--Broadcom BCM2835 VideoCore mailbox IPC
+@@ -1,22 +0,0 @@
+-BCM2835 System Timer
+-
+-The System Timer peripheral provides four 32-bit timer channels and a
+-single 64-bit free running counter. Each channel has an output compare
+-register, which is compared against the 32 least significant bits of the
+-free running counter values, and generates an interrupt.
 -
 -Required properties:
 -
--- compatible:	Should be "brcm,bcm2835-mbox"
--- reg:		Specifies base physical address and size of the registers
--- interrupts:	The interrupt number
--		  See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
--- #mbox-cells:	Specifies the number of cells needed to encode a mailbox
--		  channel. The value shall be 0, since there is only one
--		  mailbox channel implemented by the device.
+-- compatible : should be "brcm,bcm2835-system-timer"
+-- reg : Specifies base physical address and size of the registers.
+-- interrupts : A list of 4 interrupt sinks; one per timer channel.
+-- clock-frequency : The frequency of the clock that drives the counter, in Hz.
 -
 -Example:
 -
--mailbox: mailbox@7e00b880 {
--	compatible = "brcm,bcm2835-mbox";
--	reg = <0x7e00b880 0x40>;
--	interrupts = <0 1>;
--	#mbox-cells = <0>;
+-timer {
+-	compatible = "brcm,bcm2835-system-timer";
+-	reg = <0x7e003000 0x1000>;
+-	interrupts = <1 0>, <1 1>, <1 2>, <1 3>;
+-	clock-frequency = <1000000>;
 -};
--
--firmware: firmware {
--	compatible = "raspberrypi,firmware";
--	mboxes = <&mailbox>;
--	#power-domain-cells = <1>;
--};
-diff --git a/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.yaml b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.yaml
+diff --git a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml b/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml
 new file mode 100644
-index 000000000000..9588817f4511
+index 000000000000..227b44788a48
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/brcm,bcm2835-mbox.yaml
-@@ -0,0 +1,40 @@
++++ b/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml
+@@ -0,0 +1,48 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/mailbox/brcm,bcm2835-mbox.yaml#
++$id: http://devicetree.org/schemas/timer/brcm,bcm2835-system-timer.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Broadcom BCM2835 VideoCore mailbox IPC
++title: BCM2835 System Timer
 +
 +maintainers:
 +  - Stefan Wahren <stefan.wahren@i2se.com>
 +
++description:
++  The System Timer peripheral provides four 32-bit timer channels and a
++  single 64-bit free running counter. Each channel has an output compare
++  register, which is compared against the 32 least significant bits of the
++  free running counter values, and generates an interrupt.
++
 +properties:
 +  compatible:
-+    const: brcm,bcm2835-mbox
++    const: brcm,bcm2835-system-timer
 +
 +  reg:
 +    maxItems: 1
 +
 +  interrupts:
-+    maxItems: 1
++    items:
++      - description: System Timer Compare 0 match (used by VideoCore GPU)
++      - description: System Timer Compare 1 match (usable for ARM core)
++      - description: System Timer Compare 2 match (used by VideoCore GPU)
++      - description: System Timer Compare 3 match (usable for ARM core)
 +
-+  "#mbox-cells":
-+    const: 0
++  clock-frequency: true
 +
 +required:
 +  - compatible
 +  - reg
 +  - interrupts
-+  - "#mbox-cells"
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    mailbox@7e00b880 {
-+      compatible = "brcm,bcm2835-mbox";
-+      reg = <0x7e00b880 0x40>;
-+      interrupts = <0 1>;
-+      #mbox-cells = <0>;
++    timer@7e003000 {
++      compatible = "brcm,bcm2835-system-timer";
++      reg = <0x7e003000 0x1000>;
++      interrupts = <1 0>, <1 1>, <1 2>, <1 3>;
++      clock-frequency = <1000000>;
 +    };
 -- 
 2.34.1

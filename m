@@ -2,167 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3260C73416F
-	for <lists+dmaengine@lfdr.de>; Sat, 17 Jun 2023 15:42:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C70267344CC
+	for <lists+dmaengine@lfdr.de>; Sun, 18 Jun 2023 05:33:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346127AbjFQNma (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 17 Jun 2023 09:42:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42912 "EHLO
+        id S229477AbjFRDdk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 17 Jun 2023 23:33:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236455AbjFQNm1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Jun 2023 09:42:27 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA1E819A2;
-        Sat, 17 Jun 2023 06:42:22 -0700 (PDT)
-Received: from stefanw-SCHENKER ([37.4.248.58]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M2fDr-1q7UlX1Vhn-0048wI; Sat, 17 Jun 2023 15:36:44 +0200
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH V2 7/7] dt-bindings: timer: convert bcm2835-system-timer bindings to YAML
-Date:   Sat, 17 Jun 2023 15:36:20 +0200
-Message-Id: <20230617133620.53129-8-stefan.wahren@i2se.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230617133620.53129-1-stefan.wahren@i2se.com>
-References: <20230617133620.53129-1-stefan.wahren@i2se.com>
+        with ESMTP id S229445AbjFRDdi (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 17 Jun 2023 23:33:38 -0400
+Received: from mail-oo1-xc29.google.com (mail-oo1-xc29.google.com [IPv6:2607:f8b0:4864:20::c29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41439FA
+        for <dmaengine@vger.kernel.org>; Sat, 17 Jun 2023 20:33:37 -0700 (PDT)
+Received: by mail-oo1-xc29.google.com with SMTP id 006d021491bc7-55e163e93d5so1332219eaf.3
+        for <dmaengine@vger.kernel.org>; Sat, 17 Jun 2023 20:33:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687059216; x=1689651216;
+        h=content-transfer-encoding:to:subject:message-id:date:from:sender
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=wWTmMQSsiLodfdKu7C8lcuyX7WesZia949PML8BXbEI=;
+        b=Yg1i1pWU5GTt025oqiO+Fa5DRnlwycRV7fzBXdYJBKG0NdxpYSsicZB2OfgeXACKdb
+         46WGp+EWRipVItU28c9raRy5nHMyju0oz/+DKQra8Yo/ifK2iUGO2swVAJBXEg3ZiHNN
+         1eB8ilQyDp6/buiCBunYPNNe1uKItfvXrFwG54+/PLss6QLrieMTQEqW5YcbL1yv7JIi
+         KDm7a18VNHwiJc+Z4zoTKtgTW0fDctMSC+/IRLqzSlQLHwRbTl+j+8R24xz2pXhEV96S
+         wj3CEDk949g7AO87Q64R7gzRWmJmdF/tYEgR+DP+7GA8OJmyXgoODskx5oc1KELk36b6
+         pW9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687059216; x=1689651216;
+        h=content-transfer-encoding:to:subject:message-id:date:from:sender
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wWTmMQSsiLodfdKu7C8lcuyX7WesZia949PML8BXbEI=;
+        b=R9MaUGwN0RfF1NRX/PYzUuldApnbUu/E5XYEDjpB80BIwvpzRBfqY2EzSjAwOLhplZ
+         uC4S5ww/l3StZxOl7Edeyah7G9ty8ugH3LBuc3ppfuO5YB2CJhPquRdnp3oZu49FiB3r
+         nkr8V6IkuMQacfq/XyRbZYCLOGZBfKu7BQakMhJe3Q1RzOE4HzUIr2I37Uvx9PAXi6p7
+         NiWMn2/g1qrSvWoN621Zfa00WOVWyGySwSO7DWiQeKqyDl9mzDhHBunrkU5Q8NmpSDbW
+         jYsfK/BKMplscRzz2BIjHdK64jake0plUu1rxWOtpeeJln2YYg/TTjJf7o6Xe7RRr7c1
+         WgOQ==
+X-Gm-Message-State: AC+VfDxxxCHxAsPLAhJdP3eCQmass6IqIVtVOq+EeVsH3ocSlt4q2ec0
+        TKmy7VC2B0uVk7i18dTsXhypYIBZ1Hjsee/lLRY=
+X-Google-Smtp-Source: ACHHUZ7FZ2E+IDVAepfUpEzR2FA4RobRbUv2ntIQNha2zxzfscsHEpsOpOTHlbUlxkmh+DYx95RcFdKV8E1du5ESSPI=
+X-Received: by 2002:a4a:3956:0:b0:55b:85b9:68f5 with SMTP id
+ x22-20020a4a3956000000b0055b85b968f5mr3363529oog.3.1687059216485; Sat, 17 Jun
+ 2023 20:33:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:mVFiliFboW4LEd+X1TQBa6vvRmi7USdo/RW69BmRyNa/pJtjGzS
- tVQ6dwdnHEHr/ZHHezkQhqcYQeI6DcMTENVHZf6OczxoEATjvn8NKf1lIAxB1OpX4zWvY08
- 1sP8GK5j5nAf4xocAOTABS5MDo/6bn++VaK84cFyxqD07Z80Bj2+pOq//rMnClwhW6nUT7s
- OL/kAvNBJ4QbODLW9ofkQ==
-UI-OutboundReport: notjunk:1;M01:P0:inw7a/j3P4k=;k+yIdptIj0BhoNOoxCn068igPV4
- pOdv6vS4XPRfjQPY+0tiABzI5rL/li6o7aLPUKu0+vnm8sELegztndB4AWp6kSatbYEMVl/Rl
- dmofJCZDR+0nNYJ9IA2zvBFjwmKZJ5OuZfKbMf54zg4R6piKdgtKxhXpc5dm4pPql2k58PHVZ
- MMits6+0gfWFcw8fFgH6aKYjupSOMbvR491t7i7m5SQqtlS5Cj7eb6vcdFO06EFOo3w55uVVO
- 8J5z1G5S+4GfED4nhRqqf94urrlTa5f+FqLnLMHF73PYePsrxL2WpIFbsVgYrTDYQk+4JUKH/
- 9M19uFHpSDk96dBA8DOV9ktUAn1r5dnO/wH9Z+3ttGfXf/6pTlmhutwTuRH2t6D2r/5gm1TmX
- JoS8p5nbkFSJI659bjrpCLQZWTYSYA1/+BYsXm6R65xipi9S0hggFPy5ZwP+5cVo11d1XiZg9
- 3onxo7vKD4LHGnh4XO6ErFtxx0pWJcOd81KBgamDmYK4mDiQCSMj6VdrEn0qCu0HsG70DNuly
- jIh1kUSbQQI5+fc+DT6/0cXStqt92tYgZ3JtJULUALmWsLBTcP4wlLXecp4zzsacdr26kbmYb
- nVYOgJAc/+f9OSjjr/h1Mb9pKaMbM6hvj/W/PhoGLVZyjdaR5RscxMlAxqEVlZNj8q59uUy5V
- A8XOBwuZyW1K2+/+sN8OspHzNhiHDiJMZdxhjJjkhQ==
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Sender: hubertinecoul@gmail.com
+Received: by 2002:ac9:5b55:0:b0:4d9:6a76:96b3 with HTTP; Sat, 17 Jun 2023
+ 20:33:36 -0700 (PDT)
+From:   "Mrs. Ruth Roberto" <robertoruth48@gmail.com>
+Date:   Sat, 17 Jun 2023 19:33:36 -0800
+X-Google-Sender-Auth: cdVRiWXgWrSgICgdhA9FurFo6zY
+Message-ID: <CAAEzwMkTLiodBhF-hR1AEvWvo=J_nAAD+_zEVPULXgib7zTwQQ@mail.gmail.com>
+Subject: I trust in God
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,LOTS_OF_MONEY,
+        MONEY_FRAUD_3,NA_DOLLARS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Convert the DT binding document for bcm2835-system-timer from .txt
-to YAML.
-
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../timer/brcm,bcm2835-system-timer.txt       | 22 ---------
- .../timer/brcm,bcm2835-system-timer.yaml      | 48 +++++++++++++++++++
- 2 files changed, 48 insertions(+), 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml
-
-diff --git a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt b/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
-deleted file mode 100644
-index 844bd5fbd04c..000000000000
---- a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
-+++ /dev/null
-@@ -1,22 +0,0 @@
--BCM2835 System Timer
--
--The System Timer peripheral provides four 32-bit timer channels and a
--single 64-bit free running counter. Each channel has an output compare
--register, which is compared against the 32 least significant bits of the
--free running counter values, and generates an interrupt.
--
--Required properties:
--
--- compatible : should be "brcm,bcm2835-system-timer"
--- reg : Specifies base physical address and size of the registers.
--- interrupts : A list of 4 interrupt sinks; one per timer channel.
--- clock-frequency : The frequency of the clock that drives the counter, in Hz.
--
--Example:
--
--timer {
--	compatible = "brcm,bcm2835-system-timer";
--	reg = <0x7e003000 0x1000>;
--	interrupts = <1 0>, <1 1>, <1 2>, <1 3>;
--	clock-frequency = <1000000>;
--};
-diff --git a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml b/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml
-new file mode 100644
-index 000000000000..227b44788a48
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/brcm,bcm2835-system-timer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: BCM2835 System Timer
-+
-+maintainers:
-+  - Stefan Wahren <stefan.wahren@i2se.com>
-+
-+description:
-+  The System Timer peripheral provides four 32-bit timer channels and a
-+  single 64-bit free running counter. Each channel has an output compare
-+  register, which is compared against the 32 least significant bits of the
-+  free running counter values, and generates an interrupt.
-+
-+properties:
-+  compatible:
-+    const: brcm,bcm2835-system-timer
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: System Timer Compare 0 match (used by VideoCore GPU)
-+      - description: System Timer Compare 1 match (usable for ARM core)
-+      - description: System Timer Compare 2 match (used by VideoCore GPU)
-+      - description: System Timer Compare 3 match (usable for ARM core)
-+
-+  clock-frequency: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    timer@7e003000 {
-+      compatible = "brcm,bcm2835-system-timer";
-+      reg = <0x7e003000 0x1000>;
-+      interrupts = <1 0>, <1 1>, <1 2>, <1 3>;
-+      clock-frequency = <1000000>;
-+    };
--- 
-2.34.1
-
+Dear,
+It is true we do not know each other before but please bear with me,
+I=E2=80=99m writing you this mail from a Hospital bed. My name is Mrs.
+Ruth Roberto. I am a widow and very sick now. I am suffering from
+Endometrial Cancer which my doctor has confirmed that I will not
+survive it because of some damages. Now because of the condition of my
+health I have decided to donate out my late husband hard earn money
+the sum of ($3, 500,000.00) Three Million, Five Hundred Thousand Us
+Dollars on Charity Purpose through your help.if you are interested get
+back for more details.
+Mrs. Ruth Roberto

@@ -2,149 +2,135 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68E5B734885
-	for <lists+dmaengine@lfdr.de>; Sun, 18 Jun 2023 23:15:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EEB36734887
+	for <lists+dmaengine@lfdr.de>; Sun, 18 Jun 2023 23:15:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229581AbjFRVPT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 18 Jun 2023 17:15:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33418 "EHLO
+        id S229614AbjFRVPk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 18 Jun 2023 17:15:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229482AbjFRVPS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 18 Jun 2023 17:15:18 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DDDE13D;
-        Sun, 18 Jun 2023 14:15:17 -0700 (PDT)
-Received: from [192.168.1.141] ([37.4.248.58]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N49Ul-1q1x8z1GuP-0102WV; Sun, 18 Jun 2023 23:14:56 +0200
-Message-ID: <13ec386b-2305-27da-9765-8fa3ad71146c@i2se.com>
-Date:   Sun, 18 Jun 2023 23:14:55 +0200
+        with ESMTP id S229482AbjFRVPi (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 18 Jun 2023 17:15:38 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B2B31A6;
+        Sun, 18 Jun 2023 14:15:37 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-4f841b7a697so3075457e87.3;
+        Sun, 18 Jun 2023 14:15:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687122935; x=1689714935;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=kDzL659mInwMNE073Jb4Ftlk6P1hdEMNdSJRGCKw9YI=;
+        b=c6Pmlzs5fS2xSN3DeE3uS0xxrFBFE3j/FB43UgBcrDPzeiN5c5U5nc58MUHJoEE7W6
+         T705/CNKQGJbSNyzQQOA5vBocHYiMwQkTJy0ZMiygnxPbpoHqePtUP9GiQ5exNRbjE1S
+         E9yWGAnV6nqR7mUqh5NvC5etDIN2IRCFg8rh5ytU28pdcEeXm4SZ/LOTNQYtPsaypamB
+         BPs3n/Lf48tqmSe6S6BjW8eW6q6/WB2p1Gn+rq5A1L5dxqIT3lzXMyXKxNRZXk1GtZV7
+         9CWOtM2/7mQlRryxIudgiNGqmheKXNqLuwTKlEuyXjFZa5VRTAOl3WvMsUm/dWQ/n4Ca
+         KAAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687122935; x=1689714935;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kDzL659mInwMNE073Jb4Ftlk6P1hdEMNdSJRGCKw9YI=;
+        b=ESYMjhaGACiLJsLQryQWaqKxnfGv33Fojzmx+1ZJlk/nQOJw6tciTAQXI5DtVXoQUC
+         6kyck7rVTD79i+ENptgULHe5GDZoYLqsi27xPy8Ek/JYWJSCRt+BWApbBH25y3emL2jD
+         q12iY+CMD41E8CcBVSe4i3RmyJbOcvQopr5SDQcNEH3xoK9F1VPN3nyJPcN4kaKGlhEb
+         ZscBCDHNYSunnNqAw1XK/Tkl+e00O+gGXz4V9GNSpepIanmIP9pQRlfFF6gfFx8fYoa9
+         vuAL0bl4TCZkt5zre5KAodsZIPDdnSOXbvQ6oooCuQPYcZx7+RelDt+g0i6lAGLBEpS9
+         z+Jw==
+X-Gm-Message-State: AC+VfDytXbbAGFU2PoTV3SoXUwMlXKl9YqUXD+VT7KBiY8PBZ/nIZxTI
+        432j9hLsM1MMSyyY+lv17agAgCbrdFQ=
+X-Google-Smtp-Source: ACHHUZ7m+xQcbaaGrCapaXBaL+68//v4vIMc67+ieFzpk1c8egQVeIBYlxVloIb6Lt9khiY/1ER3QA==
+X-Received: by 2002:a19:2d17:0:b0:4f8:55dd:e726 with SMTP id k23-20020a192d17000000b004f855dde726mr3895472lfj.12.1687122935062;
+        Sun, 18 Jun 2023 14:15:35 -0700 (PDT)
+Received: from mobilestation ([91.193.179.15])
+        by smtp.gmail.com with ESMTPSA id eo13-20020a056512480d00b004f84b7541c5sm1316726lfb.3.2023.06.18.14.15.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Jun 2023 14:15:34 -0700 (PDT)
+Date:   Mon, 19 Jun 2023 00:15:31 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     =?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
+Cc:     Cai Huoqing <cai.huoqing@linux.dev>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Herve Codina <herve.codina@bootlin.com>
+Subject: Re: [PATCH 2/9] dmaengine: dw-edma: Typos fixes
+Message-ID: <20230618211531.xyempyr4yfrram67@mobilestation>
+References: <20230609081654.330857-1-kory.maincent@bootlin.com>
+ <20230609081654.330857-3-kory.maincent@bootlin.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH RFC 00/11] dmaengine: bcm2835: add BCM2711 40-bit DMA
- support
-Content-Language: en-US
-To:     Shengyu Qu <wiagn233@outlook.com>, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>
-Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org,
-        Phil Elwell <phil@raspberrypi.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Lukas Wunner <lukas@wunner.de>,
-        linux-rpi-kernel@lists.infradead.org
-References: <1640606743-10993-1-git-send-email-stefan.wahren@i2se.com>
- <OS3P286MB259736F317E80CBAA2658853985EA@OS3P286MB2597.JPNP286.PROD.OUTLOOK.COM>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <OS3P286MB259736F317E80CBAA2658853985EA@OS3P286MB2597.JPNP286.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:TIm3R3XPlUbydU1vM5V4ahYsqGo22AdiXsrRxOaOlWU9yeSHu9k
- BnFuxrMMKsdukwnss/8wvNbnpvebOU94j8vCP18EBzGpJOCdXGykXjDXCnSzCGmkyYNblME
- qqhmERJEpCXiFV6tC/AEYT46fKK1q9jUCPQA+W7L1ejz1IrwlhSNSfcbaA9cLiDpgqePxDn
- vEIHs2qJspz9W0O62S6lQ==
-UI-OutboundReport: notjunk:1;M01:P0:Xch+nh9eO/Y=;2Slx9wsa2DFcky3IfpoB+BeWYDG
- a6ua9lH8S88U/rSzU2pjJV/CX2hpT9T7iTCQYZ8LW3WjkACIr/TTKl5VCubUBZo52m/+vfdDN
- N31jtUiOUiaG5cIrhXXiEZu6IwVP00iixusExsakUFVxDmOh6dSMlbExnStl0uB+J2Ddx7uEq
- 9glhZBwdo4y8+Wh3/pyAS7Vy1nVXA9I5PydDVgzmJKQzRlquoVLCxCI+MYm1UqD4CD4UjGA/O
- m+q6+Y7fji53TokomhadfkMnVCcrtDWoPl5gtROLE19su1uh0A7vwuI5t3aXgejslkxH2tnHb
- Ubnq6urUsDT7jGWjSAUhJKefW8djAXE9OhaMT7SkDt0PCLL5T7GGM8xEYiuWlFCqMFTEZg+6q
- 71JREDfIX/J8NAxfIrMKrpL3bh1g/BjozeeZGWmOS0iehbafn/KqNhxLULHg8FkF5hVB4u/ut
- eaoFsjccUcHzzM1W9n3HC7WT6zUSDwOb9KymZRTbTGX0iC+cPoIHfJ1yeD9/CFS8t6xet5T7o
- QSesjWiHHw7qMGGm8fdDFfBEk5esdC8KD2kHM/VdMfSQwRoP5wvVpaW88gYEnJfYKnmHFQO3r
- VmqF/1c+WeZiHW1fzmaK4DdVWbUBn+fHHzT9t2riqyS7bNFBh10ccam9vWyJMPAsd0h+kWOC9
- qb39kdq/J8Hn8A7Ffdd0lEW1HDUsW84RzDG/+Al4sQ==
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20230609081654.330857-3-kory.maincent@bootlin.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Sengyu,
+On Fri, Jun 09, 2023 at 10:16:47AM +0200, K�ry Maincent wrote:
+> From: Kory Maincent <kory.maincent@bootlin.com>
+> 
+> Fix "HDMA_V0_REMOTEL_STOP_INT_EN" typo error.
+> Fix "HDMA_V0_LOCAL_STOP_INT_EN" to "HDMA_V0_LOCAL_ABORT_INT_EN" as the STOP
+> bit is already set in the same line.
+> 
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> Fixes: e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA")
 
-Am 18.06.23 um 21:43 schrieb Shengyu Qu:
-> Hello Stefan,
-> 
-> Sorry to reply to this old series, but I wonder what happens to this 
-> series?
+Good catch! Thanks for the patch.
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 
-i never found the time to prepare a newer version. Unfortunately the 
-downstream kernel had a lot of changes regarding this feature recently.
+* It seems to me that the DMA-abort path of the DW HDMA driver hasn't
+* been well tested.
 
+-Serge(y)
+
+> ---
 > 
-> Best regards,
+> This patch is fixing a commit which is only in dmaengine tree and not
+> merged mainline.
+> ---
+>  drivers/dma/dw-edma/dw-hdma-v0-core.c | 2 +-
+>  drivers/dma/dw-edma/dw-hdma-v0-regs.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> Shengyu
+> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> index de87ce6b8585..da8663f45fdb 100644
+> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> @@ -231,7 +231,7 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+>  		/* Interrupt enable&unmask - done, abort */
+>  		tmp = GET_CH_32(dw, chan->dir, chan->id, int_setup) |
+>  		      HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK |
+> -		      HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_STOP_INT_EN;
+> +		      HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
+>  		SET_CH_32(dw, chan->dir, chan->id, int_setup, tmp);
+>  		/* Channel control */
+>  		SET_CH_32(dw, chan->dir, chan->id, control1, HDMA_V0_LINKLIST_EN);
+> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-regs.h b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
+> index a974abdf8aaf..eab5fd7177e5 100644
+> --- a/drivers/dma/dw-edma/dw-hdma-v0-regs.h
+> +++ b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
+> @@ -15,7 +15,7 @@
+>  #define HDMA_V0_LOCAL_ABORT_INT_EN		BIT(6)
+>  #define HDMA_V0_REMOTE_ABORT_INT_EN		BIT(5)
+>  #define HDMA_V0_LOCAL_STOP_INT_EN		BIT(4)
+> -#define HDMA_V0_REMOTEL_STOP_INT_EN		BIT(3)
+> +#define HDMA_V0_REMOTE_STOP_INT_EN		BIT(3)
+>  #define HDMA_V0_ABORT_INT_MASK			BIT(2)
+>  #define HDMA_V0_STOP_INT_MASK			BIT(0)
+>  #define HDMA_V0_LINKLIST_EN			BIT(0)
+> -- 
+> 2.25.1
 > 
->> The BCM2711 has 4 DMA channels with a 40-bit address range, allowing them
->> to access the full 4GB of memory on a Pi 4. This patch series serves as a
->> basis for a discussion (just compile tested, so don't expect anything 
->> working)
->> which include the following points:
->>
->> * correct DT binding and representation for BCM2711
->>
->> According to the vendor DTS [1] the 4 DMA channels are connected to SCB.
->> I'm not sure how this is properly adapted to the mainline DT.
->>
->> * general implementation approach
->>
->> The vendor approach mapped all the BCM2835 control block bits to the 
->> BCM2711
->> layout and the rest of the differences are handled by a lot of 
->> is_40bit_channel
->> conditions. An advantage of this is the small amount of changes to the 
->> driver.
->> But on the down side the code is now much harder to understand and 
->> maintain.
->>
->> This series tries to implement this feature in a more cleaner way
->> while keeping it in the bcm2835-dma driver. Before this series the driver
->> has ~ 1000 lines and after that ~ 1500 lines.
->>
->> So the question is this approach acceptable?
->>
->> Patches 1 - 3 are just clean-ups.
->>
->> Disclaimer: my knowledge about the DMA controller is very limited
->>
->> More information:
->>
->> https://datasheets.raspberrypi.com/bcm2711/bcm2711-peripherals.pdf
->>
->> [1] - 
->> https://github.com/raspberrypi/linux/blob/561deffcf471ba0f7bd48541d06a79d5aa38d297/arch/arm/boot/dts/bcm2711-rpi-ds.dtsi#L47
->> [2] - 
->> https://github.com/raspberrypi/linux/commit/44364bd140b0bc9187c881fbdc4ee358961059d5
->>
->> Stefan Wahren (11):
->>    ARM: dts: bcm283x: Update DMA node name per DT schema
->>    dt-bindings: dma: Convert brcm,bcm2835-dma to json-schema
->>    dmaengine: bcm2835: Support common dma-channel-mask
->>    dmaengine: bcm2835: move CB info generation into separate function
->>    dmaengine: bcm2835: move CB final extra info generation into function
->>    dmaengine: bcm2835: make address increment platform independent
->>    dmaengine: bcm2385: drop info parameters
->>    dmaengine: bcm2835: pass dma_chan to generic functions
->>    dmaengine: bcm2835: introduce multi platform support
->>    dmaengine: bcm2835: add BCM2711 40-bit DMA support
->>    ARM: dts: bcm2711: add bcm2711-dma node
->>
->>   .../devicetree/bindings/dma/brcm,bcm2835-dma.txt   |  83 ---
->>   .../devicetree/bindings/dma/brcm,bcm2835-dma.yaml  | 107 +++
->>   arch/arm/boot/dts/bcm2711.dtsi                     |  18 +-
->>   arch/arm/boot/dts/bcm2835-common.dtsi              |   2 +-
->>   drivers/dma/bcm2835-dma.c                          | 745 
->> +++++++++++++++++----
->>   5 files changed, 734 insertions(+), 221 deletions(-)
->>   delete mode 100644 
->> Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
->>   create mode 100644 
->> Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml
->>

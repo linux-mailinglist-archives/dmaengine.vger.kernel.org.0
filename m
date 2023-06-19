@@ -2,128 +2,92 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 610D17348B1
-	for <lists+dmaengine@lfdr.de>; Sun, 18 Jun 2023 23:48:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95051734BAB
+	for <lists+dmaengine@lfdr.de>; Mon, 19 Jun 2023 08:20:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbjFRVsI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 18 Jun 2023 17:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39262 "EHLO
+        id S229939AbjFSGUJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 19 Jun 2023 02:20:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbjFRVsH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 18 Jun 2023 17:48:07 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F001116;
-        Sun, 18 Jun 2023 14:48:06 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2b47742de92so5406031fa.0;
-        Sun, 18 Jun 2023 14:48:06 -0700 (PDT)
+        with ESMTP id S229940AbjFSGUI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 19 Jun 2023 02:20:08 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E05CF9
+        for <dmaengine@vger.kernel.org>; Sun, 18 Jun 2023 23:20:07 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-9875c2d949eso352680166b.0
+        for <dmaengine@vger.kernel.org>; Sun, 18 Jun 2023 23:20:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687124884; x=1689716884;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=MHhQu46HJCs+E06mp8knd5RyBeyes00wowJAgVA0z4M=;
-        b=Ff37c3lEnLGYe9fmRivd775l5OlE78EW8E3bSOzUIFbhV+QXH1tNIQ473f358tgfUe
-         n/cs7256PlSNejIojidAEMx5YPFK7ErXYc6/NbENxfqsho7nRN0S+sFncYIEcJhc1d3U
-         EmXzs78qJoJ9EOfK6nwESUih/xkYsxmEe7wPZt0g8aMbV417b1rnmJmxfb10CcLsFyqK
-         dGVJbBC8ZTRbrQmDhaNOMzZ8jRN1dzEcoHNBgaQ/QDiNUIZTVsWrt0yNzEH9U7MppKe1
-         JguPeUkhYpq4tC41kFrqCOKo7twwSyLTw3dUFDsexyabi5UKv9W83gWhXG822hrayiOZ
-         3wNA==
+        d=linaro.org; s=google; t=1687155605; x=1689747605;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tafC9rtGrSbEBkVw2li93WM31ICKV4+FzfLVdlGKanI=;
+        b=dPEJ0tP8ft0H1Y6IrgmhNyLHFA1WvqVZZG2hYBY7kuva657ir8JkP6vqC/C9nwAVCr
+         2BJcmm2GievWjQTyduZNEQyQZvatFFvbf4OkaDsQsZncjQHYYLWLP1lgEZ3i6UyTR+Qz
+         1+utCCTUDG5bmyerBPsygBCq8rmhpPSUz3eS5mD+6G8KDzT9SLjcp/38qq4QICgXJi0s
+         8o+rISB6M3mb94t3/KNO2RhguHp6fhm4tC8xy2H1rIQe1IvpSU19WGuXGYCQWfmQr1Yg
+         WbvHrJfAgH/LYasW+hiBJcdPhcUd1O7CQjPxpUg63AAJvaF478FC5Omeje4yFDXs7kUT
+         jkUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687124884; x=1689716884;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20221208; t=1687155605; x=1689747605;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MHhQu46HJCs+E06mp8knd5RyBeyes00wowJAgVA0z4M=;
-        b=fgJB9ytZtjewR9eYOUNVGWDdgyGXV+8LVaFwzzNPMi1Z0OHImxk6i1TQA8BV/YLrID
-         5KA3ZGnGPDkVwiVPWuBtoHRzdemKZMbcFPRQJd+TzLhzq20ex+Rtf/h0bC1Yq5yg/OSo
-         DxokiqcdPw51DN+7E+1ZN1EolZ0VTuj5Mka0lDH44IMi7vhvYfCt6A+LNcIO9WZ/Xtez
-         L5k3euurGavmD7ilDPX6vpH5jXv5PrjPFPyz8uVo5SQRXNfRHyrJegz4J2CnNdf2DIxq
-         5c3YEg/K8NR49OrHJUe+1WkGyoN4Y9fyuDJOjIvJPiQcbLf4TJDibvsy0ZslAtpCRrsO
-         67Wg==
-X-Gm-Message-State: AC+VfDwwpIl6nEA1iEjstgKwbSUaFp5AavwjJPzIuwL9MuwJpHju2yXj
-        xQ/ESSyflrx2Ur/cKJNZjOw=
-X-Google-Smtp-Source: ACHHUZ6ya+HNcdAX9cKgmmPr+85EkMZGrlJg3B5XKrkRv7tVP4E1/KrHpBrhEzRIJQSP1KGdKoNmnw==
-X-Received: by 2002:a19:3844:0:b0:4f8:71bf:a25b with SMTP id d4-20020a193844000000b004f871bfa25bmr144284lfj.9.1687124884329;
-        Sun, 18 Jun 2023 14:48:04 -0700 (PDT)
-Received: from mobilestation ([91.193.179.15])
-        by smtp.gmail.com with ESMTPSA id v13-20020ac2558d000000b004f84436217fsm1655796lfg.73.2023.06.18.14.48.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Jun 2023 14:48:03 -0700 (PDT)
-Date:   Mon, 19 Jun 2023 00:48:00 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     =?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
-Cc:     Cai Huoqing <cai.huoqing@linux.dev>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Herve Codina <herve.codina@bootlin.com>
-Subject: Re: [PATCH 3/9] dmaengine: dw-edma: Add HDMA remote interrupt
- configuration
-Message-ID: <20230618214800.5h4ni43vu2admho5@mobilestation>
-References: <20230609081654.330857-1-kory.maincent@bootlin.com>
- <20230609081654.330857-4-kory.maincent@bootlin.com>
+        bh=tafC9rtGrSbEBkVw2li93WM31ICKV4+FzfLVdlGKanI=;
+        b=DYHoFerUPPnREUhWI8WyY+iVtvdfq8d90Z5w513xZHzZ05JKCB9emou9knTOKMsKZz
+         bSsUTz7wfdt0ZGjiMz5QBdQdkzqmh0m3rrZgxKNIySGbDbFq0Dgjamu2gwCoS8v2X3wL
+         AllUbyiYROyInhuCPgONfc6ZO1wsKAVW/YCbHXzAp3lGe/3BlkpsJkicAEe9v2sjlLra
+         9OZIJZqXXV/uDpTaYCZsTSFWlYX0g+nRgdHRPY8rCOoNiC+lp0UraaFwsM6TXs0xcKxz
+         89IeGmQdXyMHRnWEQBgmMyMH45jQJLJWoXYe3zJZwx4Ob3bzoSFGKZ6MiXZwGldWY2Y5
+         6stA==
+X-Gm-Message-State: AC+VfDyfQh26nYPa5wqcovZCQF3cYr2iuQIcDKtoaKFvDi7NFWsG7H1u
+        F/begEdE+5MZp2yLKNFMAtsztQ==
+X-Google-Smtp-Source: ACHHUZ6KehvgKkuQMI/k2qKPJ3Tw3gEZpAtv5I2vo/yLXgO7Ks+E178QWppZ+XoZnpUgK2+2/GnRCA==
+X-Received: by 2002:a17:907:9810:b0:96f:bcea:df87 with SMTP id ji16-20020a170907981000b0096fbceadf87mr9153893ejc.42.1687155605700;
+        Sun, 18 Jun 2023 23:20:05 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.219.26])
+        by smtp.gmail.com with ESMTPSA id k9-20020a170906128900b00965ffb8407asm14088745ejb.87.2023.06.18.23.20.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 18 Jun 2023 23:20:05 -0700 (PDT)
+Message-ID: <9463188f-b176-c41c-8512-b0255eab27a6@linaro.org>
+Date:   Mon, 19 Jun 2023 08:20:03 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230609081654.330857-4-kory.maincent@bootlin.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v8 12/12] dt-bindings: fsl-dma: fsl-edma: add edma3
+ compatible string
+Content-Language: en-US
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        imx@lists.linux.dev, joy.zou@nxp.com,
+        krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org,
+        peng.fan@nxp.com, robh+dt@kernel.org, shenwei.wang@nxp.com,
+        vkoul@kernel.org
+References: <20230618180925.2350169-1-Frank.Li@nxp.com>
+ <20230618180925.2350169-13-Frank.Li@nxp.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230618180925.2350169-13-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Jun 09, 2023 at 10:16:48AM +0200, Köry Maincent wrote:
-> From: Kory Maincent <kory.maincent@bootlin.com>
+On 18/06/2023 20:09, Frank Li wrote:
+> Extend Freescale eDMA driver bindings to support eDMA3 IP blocks in
+> i.MX8QM and i.MX8QXP SoCs. In i.MX93, both eDMA3 and eDMA4 are now.
 > 
-> Only the local interruption was configured, remote interrupt was left
-> behind. This patch fix it by setting stop and abort remote interrupts when
-> the DW_EDMA_CHIP_LOCAL flag is not set.
-> 
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> Fixes: e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA")
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
-> 
-> This patch is fixing a commit which is only in dmaengine tree and not
-> merged mainline.
-> ---
->  drivers/dma/dw-edma/dw-hdma-v0-core.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> index da8663f45fdb..7bd1a0f742be 100644
-> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> @@ -232,6 +232,8 @@ static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
->  		tmp = GET_CH_32(dw, chan->dir, chan->id, int_setup) |
->  		      HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK |
->  		      HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_ABORT_INT_EN;
 
-> +		if (!(dw->chip->flags & DW_EDMA_CHIP_LOCAL))
-> +			tmp |= HDMA_V0_REMOTE_STOP_INT_EN | HDMA_V0_REMOTE_ABORT_INT_EN;
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Seems reasonable especially seeing there is a code with a similar
-semantic in the dw_hdma_v0_core_write_chunk() method.
+Best regards,
+Krzysztof
 
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-
-Just curious whether we really need to have the local IRQs left
-enabled for the remote device setup... The only case I have in mind is
-that it would be useful to signal a remote end-point host of such
-event in some application-specific environment. It sounds exotic but
-still possible.
-
--Serge(y)
-
->  		SET_CH_32(dw, chan->dir, chan->id, int_setup, tmp);
->  		/* Channel control */
->  		SET_CH_32(dw, chan->dir, chan->id, control1, HDMA_V0_LINKLIST_EN);
-> -- 
-> 2.25.1
-> 

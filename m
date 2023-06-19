@@ -2,92 +2,90 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 95051734BAB
-	for <lists+dmaengine@lfdr.de>; Mon, 19 Jun 2023 08:20:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06783734D66
+	for <lists+dmaengine@lfdr.de>; Mon, 19 Jun 2023 10:17:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229939AbjFSGUJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 19 Jun 2023 02:20:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40954 "EHLO
+        id S229679AbjFSIRo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 19 Jun 2023 04:17:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229940AbjFSGUI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 19 Jun 2023 02:20:08 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E05CF9
-        for <dmaengine@vger.kernel.org>; Sun, 18 Jun 2023 23:20:07 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-9875c2d949eso352680166b.0
-        for <dmaengine@vger.kernel.org>; Sun, 18 Jun 2023 23:20:07 -0700 (PDT)
+        with ESMTP id S229674AbjFSIRn (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 19 Jun 2023 04:17:43 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D034C110
+        for <dmaengine@vger.kernel.org>; Mon, 19 Jun 2023 01:17:41 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-3f8d5262dc8so22540105e9.0
+        for <dmaengine@vger.kernel.org>; Mon, 19 Jun 2023 01:17:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687155605; x=1689747605;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tafC9rtGrSbEBkVw2li93WM31ICKV4+FzfLVdlGKanI=;
-        b=dPEJ0tP8ft0H1Y6IrgmhNyLHFA1WvqVZZG2hYBY7kuva657ir8JkP6vqC/C9nwAVCr
-         2BJcmm2GievWjQTyduZNEQyQZvatFFvbf4OkaDsQsZncjQHYYLWLP1lgEZ3i6UyTR+Qz
-         1+utCCTUDG5bmyerBPsygBCq8rmhpPSUz3eS5mD+6G8KDzT9SLjcp/38qq4QICgXJi0s
-         8o+rISB6M3mb94t3/KNO2RhguHp6fhm4tC8xy2H1rIQe1IvpSU19WGuXGYCQWfmQr1Yg
-         WbvHrJfAgH/LYasW+hiBJcdPhcUd1O7CQjPxpUg63AAJvaF478FC5Omeje4yFDXs7kUT
-         jkUw==
+        d=gmail.com; s=20221208; t=1687162660; x=1689754660;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rJ/7Kbo9gs7zs3QTF5nFKkJrBjocKGAtdax9LA/wsFg=;
+        b=H+0E7pNp9pNZzhSLIjJvRVnOXXbI3e13G2NuiaL4Z5ksLG1VklHI5M6sJeJIyY6xdM
+         cUGIRTVcFwr14+8x+ut4EXKAbRthMtsyth9RkKPsW+Ag720IIXKwY3mPFlVpMWq24DFK
+         B1qyOPQcMy+vYna6qy3OHOl4oG1oFOfTik/U2Njh9DWZ47838GtsBc98V0Aw3OhzCPr0
+         5YjfEc3B/5wMzXnvqYJbYJUvDOmygagBfHdfGofUr5Y2S9yyhpHi6XPBteeceJzx7SeN
+         lsa7dgavhwc51iAjm/UPrM2gEEkDMu67dxskGSvOKbPhMB0LC/fTotZ6piG25Bhz1uIU
+         FXiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687155605; x=1689747605;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tafC9rtGrSbEBkVw2li93WM31ICKV4+FzfLVdlGKanI=;
-        b=DYHoFerUPPnREUhWI8WyY+iVtvdfq8d90Z5w513xZHzZ05JKCB9emou9knTOKMsKZz
-         bSsUTz7wfdt0ZGjiMz5QBdQdkzqmh0m3rrZgxKNIySGbDbFq0Dgjamu2gwCoS8v2X3wL
-         AllUbyiYROyInhuCPgONfc6ZO1wsKAVW/YCbHXzAp3lGe/3BlkpsJkicAEe9v2sjlLra
-         9OZIJZqXXV/uDpTaYCZsTSFWlYX0g+nRgdHRPY8rCOoNiC+lp0UraaFwsM6TXs0xcKxz
-         89IeGmQdXyMHRnWEQBgmMyMH45jQJLJWoXYe3zJZwx4Ob3bzoSFGKZ6MiXZwGldWY2Y5
-         6stA==
-X-Gm-Message-State: AC+VfDyfQh26nYPa5wqcovZCQF3cYr2iuQIcDKtoaKFvDi7NFWsG7H1u
-        F/begEdE+5MZp2yLKNFMAtsztQ==
-X-Google-Smtp-Source: ACHHUZ6KehvgKkuQMI/k2qKPJ3Tw3gEZpAtv5I2vo/yLXgO7Ks+E178QWppZ+XoZnpUgK2+2/GnRCA==
-X-Received: by 2002:a17:907:9810:b0:96f:bcea:df87 with SMTP id ji16-20020a170907981000b0096fbceadf87mr9153893ejc.42.1687155605700;
-        Sun, 18 Jun 2023 23:20:05 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id k9-20020a170906128900b00965ffb8407asm14088745ejb.87.2023.06.18.23.20.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 Jun 2023 23:20:05 -0700 (PDT)
-Message-ID: <9463188f-b176-c41c-8512-b0255eab27a6@linaro.org>
-Date:   Mon, 19 Jun 2023 08:20:03 +0200
+        d=1e100.net; s=20221208; t=1687162660; x=1689754660;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rJ/7Kbo9gs7zs3QTF5nFKkJrBjocKGAtdax9LA/wsFg=;
+        b=gbxmOT7Y3yYFCxo0PpX9dUxzs3TzSTQ6S6vikhtKKtAJ5TBWnPZy0QurOvs6rtVoDA
+         GoZv3/n/oagOWs+8cLxRMP3tRDiyNt1nQ0b+oUuDU+Tq9TCdEzvBCNuKttoK9h7eYFv4
+         gL5g7Qygm4SRlveTuvWSfCfC/ZTkGsexmU5TmGr9DZV41E5NXNMCSdXDFntWcqlPBEyY
+         gD8bBmIkZGUwjzHC2JrwJzorlGDGgtH3iXzxl7OjnBZfuhQwojmRqm7thRaGpLZKnO/H
+         KMGKzgttzfusYFR5Qnshb9JAyZWcKCQoht29+As66PIHOEIQH9yK4kX0S+4p/7aNw+V/
+         Q9/w==
+X-Gm-Message-State: AC+VfDzEFmVuWplAJC70AqVPdPh0jLyjq7PJlDp6xiP0JkNyf+e5mYw9
+        OQCnDIZBlSiZpTP5nx6GQmeLW6H31nVB90xWKA==
+X-Google-Smtp-Source: ACHHUZ4xroxjb554vFvTZkEn5+JHpLoMlGFPbRAigQmrYdpVY3QU8OxUHNXVYdtEk8o5jyLAoD0ypxsEfe9SXsziyUU=
+X-Received: by 2002:a1c:cc07:0:b0:3f7:c92:57a0 with SMTP id
+ h7-20020a1ccc07000000b003f70c9257a0mr7418443wmb.14.1687162659986; Mon, 19 Jun
+ 2023 01:17:39 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v8 12/12] dt-bindings: fsl-dma: fsl-edma: add edma3
- compatible string
-Content-Language: en-US
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        imx@lists.linux.dev, joy.zou@nxp.com,
-        krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org,
-        peng.fan@nxp.com, robh+dt@kernel.org, shenwei.wang@nxp.com,
-        vkoul@kernel.org
-References: <20230618180925.2350169-1-Frank.Li@nxp.com>
- <20230618180925.2350169-13-Frank.Li@nxp.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230618180925.2350169-13-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:6020:a093:b0:28c:2d96:d817 with HTTP; Mon, 19 Jun 2023
+ 01:17:38 -0700 (PDT)
+From:   offer <carlos.charityfoundation102@gmail.com>
+Date:   Sun, 18 Jun 2023 20:17:38 -1200
+Message-ID: <CANef00XgbV60g9JNPDevg0F4pamPVwqqVDfaOzPdrJ7oQVGLrA@mail.gmail.com>
+Subject: Greetings From Saudi Arabia
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=3.8 required=5.0 tests=BAYES_50,DEAR_SOMETHING,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FREEMAIL_REPLY,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 18/06/2023 20:09, Frank Li wrote:
-> Extend Freescale eDMA driver bindings to support eDMA3 IP blocks in
-> i.MX8QM and i.MX8QXP SoCs. In i.MX93, both eDMA3 and eDMA4 are now.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
+Dear Sir,
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Need funding for your project or your business ? We are looking for
+foreign direct investment partners in any of the sectors stated below and we are
+willing to provide financing for up to US$ ten Billion to corporate
+bodies, companies, industries and entrepreneurs with profitable
+business ideas and investment projects that can generate the required
+ROI, so you can draw from this opportunity. We are currently providing
+funds in any of the sectors stated below. Energy & Power,
+construction, Agriculture, Acquisitions, Healthcare or Hospital, Real
+Estate, Oil & Gas, IT, technology, transport, mining,marine
+transportation and manufacturing, Education, hotels, etc. We are
+willing to finance your projects. We have developed a new funding
+method that does not take longer to receive funding from our
+customers. If you are seriously pursuing Foreign Direct Investment or
+Joint Venture for your projects in any of the sectors above or are you
+seeking a Loan to expand your Business or seeking funds to finance
+your business or project ? We are willing to fund your business and we
+would like you to provide us with your comprehensive business plan for
+our team of investment experts to review. Kindly contact me with below
+email: yousefahmedalgosaibi@consultant.com
 
-Best regards,
-Krzysztof
-
+Regards
+Mr. Yousef Ahmed

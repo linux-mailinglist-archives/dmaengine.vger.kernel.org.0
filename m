@@ -2,66 +2,70 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 11615735D88
-	for <lists+dmaengine@lfdr.de>; Mon, 19 Jun 2023 20:41:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 418BE735D9E
+	for <lists+dmaengine@lfdr.de>; Mon, 19 Jun 2023 20:58:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231583AbjFSSlO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 19 Jun 2023 14:41:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55772 "EHLO
+        id S230307AbjFSS6U (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 19 Jun 2023 14:58:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232136AbjFSSlN (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 19 Jun 2023 14:41:13 -0400
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 893CFE6E;
-        Mon, 19 Jun 2023 11:41:09 -0700 (PDT)
-X-GND-Sasl: kory.maincent@bootlin.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1687200068;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bdfkvwi5YASMPpEuIoUnF7CVkCeJJHGf2/I6JPyJWQU=;
-        b=cOrV+fPZMJsmIOrJxWCq30GEPUpalF7Ug4i14220zLMGZOsWLxF/XsoIG2qn5zmhVjdkVN
-        jF3+0bjWITwlFZYaJejasJZeUWPTsA2Q3sKScPC97Y2Noxt9l2CM+LkorzNkixXcorxWAd
-        9cv3emDLNcNtK68YleAjJ/8RdEpMdrU3oPVV7x6RAmLpyBO8BlHKkB99rpQeeinn4WJjnP
-        I+5J2W5NTaSuplTCeCoNrF1S9KM5QhlH/Cc4X6HNGo/V7+rgHOHDZpeOyKx7qKShn4w55M
-        OuFT/cb3STiJBLyfM+RgMJ40bNKgi2THotxhyanA6gkpOMJ3Wo87FfD2VWEXsQ==
-X-GND-Sasl: kory.maincent@bootlin.com
-X-GND-Sasl: kory.maincent@bootlin.com
-X-GND-Sasl: kory.maincent@bootlin.com
-X-GND-Sasl: kory.maincent@bootlin.com
-X-GND-Sasl: kory.maincent@bootlin.com
-X-GND-Sasl: kory.maincent@bootlin.com
-X-GND-Sasl: kory.maincent@bootlin.com
-X-GND-Sasl: kory.maincent@bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E17CD20002;
-        Mon, 19 Jun 2023 18:41:06 +0000 (UTC)
-Date:   Mon, 19 Jun 2023 20:41:05 +0200
-From:   =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Cai Huoqing <cai.huoqing@linux.dev>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Herve Codina <herve.codina@bootlin.com>
-Subject: Re: [PATCH 5/9] dmaengine: dw-edma: HDMA: Fix possible race
- condition in remote setup
-Message-ID: <20230619204105.620f87e6@kmaincent-XPS-13-7390>
-In-Reply-To: <20230619171550.3iyujmbre3dpe5oq@mobilestation.baikal.int>
-References: <20230609081654.330857-1-kory.maincent@bootlin.com>
-        <20230609081654.330857-6-kory.maincent@bootlin.com>
-        <20230619171550.3iyujmbre3dpe5oq@mobilestation.baikal.int>
-Organization: bootlin
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        with ESMTP id S230090AbjFSS6T (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 19 Jun 2023 14:58:19 -0400
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11295198;
+        Mon, 19 Jun 2023 11:58:17 -0700 (PDT)
+Received: from [192.168.1.141] ([37.4.248.58]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MhDIw-1pY9pj0HLu-00eNvT; Mon, 19 Jun 2023 20:58:01 +0200
+Message-ID: <543ca0c5-0051-3968-63cd-7982f95c06c6@i2se.com>
+Date:   Mon, 19 Jun 2023 20:57:59 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH V2 7/7] dt-bindings: timer: convert bcm2835-system-timer
+ bindings to YAML
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-pm@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Rob Herring <robh@kernel.org>
+References: <20230617133620.53129-1-stefan.wahren@i2se.com>
+ <20230617133620.53129-8-stefan.wahren@i2se.com>
+ <02d1d74a-1476-41c8-6d94-3eb477352309@linaro.org>
+Content-Language: en-US
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+In-Reply-To: <02d1d74a-1476-41c8-6d94-3eb477352309@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:kyqNE6onSUIAGhdWOX7TEcOYSR9nJY4ipIuWMVmuruSxsIhOzwG
+ q2igMagosSZnA+2D5Kel9Loe+7DhBLxfTmKCiPEihrjZqP2wLmOQ4mPwN8xV7sNi50MwTkE
+ prt3SUqEjQqTNM5Gv1SwnMq/Qy5ogyoddMH60xBORXDxz2cmavEarrQxgtg/L84b8IzSe+N
+ /SAGdh+B88crbEZ0Lo0hg==
+UI-OutboundReport: notjunk:1;M01:P0:4sXSGuBBSEU=;YtGjuqafvYp7ClZgbhTSoPOUjgV
+ a/BjjruTJSMjPW/mkG/kLTZG/sWk/ZwWo5AhYl6tYh0ApfaIjZLbzpWFZLU4q9pYkp2c+8YuU
+ GppZRT9AkClPW1oWYArwQxkgjb8canfsk26sGIhAnGOxvOs4daBZ8C3lxCR7yaTd/rLqvwFwj
+ SWTe1+57XzDTElV16gVqXBRlMiM2qhq2TP1i7L9uQgK425FJ6CgWiknkFRBgtAVgWTNBhg0z6
+ BTRRho+o4YNXh7suwDbJDgpOeAN3ylI/nDv4LQt/kI6Zk2eyF1vGSO8cnK1WhUR7tT7WO0pke
+ yMXXX1gPPOR4NK/ejqR3cC8vkmdmcyuz7FvK1xej+tKL/1lPvrisSS1gW2tPIB5Uy5+YmBE1p
+ 8bzoLYC/0/qb3x/PWSowRD2OwilFpZyHjrlW5Nd7hi81IGeUuoZehaxZDOuxHDE7b7md/F0HV
+ 8Cdlx6G/H/xsXby+zZk2uP77/I6e+Rv0JgF7y+tIMOFgIr0a94ELeRZhKro+KKKh5+bYjbp2C
+ PkK98bQw6d1X//miCxqfr+cN4V2+/S20RsuQHUVSbl+UypNO/82PnjpG4WQaZRyPl22C1hp6l
+ pqpRgWcu/0sVPW2julRijjaSfZvZxLf/el6nGCmURE3kBcUhsCqZgpTE04JYAE72FhQlw5+e0
+ ru/vMoB5yxRtM/Puu0qhzzBHOjVU6O1JMIEC4hpOhQ==
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,50 +73,38 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, 19 Jun 2023 20:15:50 +0300
-Serge Semin <fancer.lancer@gmail.com> wrote:
+Hi Daniel,
 
-> On Fri, Jun 09, 2023 at 10:16:50AM +0200, K=C3=B6ry Maincent wrote:
-> > From: Kory Maincent <kory.maincent@bootlin.com>
-> >=20
-> > When writing the linked list elements and pointer the control need to be
-> > written at the end. If the control is written and the SAR and DAR not
-> > stored we could face a race condition.
-> >=20
-> > Fixes: e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA")
-> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com> =20
->=20
-> Once again. Is this a hypothetical bug or have you actually
-> experienced the denoted problem? If you do please describe the
-> circumstances, give more details. Otherwise it sounds weird. Here is
-> why.
->=20
-> DW eDMA HW manual states that the control LL DWORD is indeed supposed
-> to be written after the rest of the descriptor DWORDs are written. But
-> AFAICS it's only relevant for the LL tree entries recycling. Current
-> DW eDMA driver design doesn't truly implement that pattern. Instead
-> the DMA transfer is halted at the end of the chunk. Then the engine is
-> recharged with the next chunk and execution is started over. So the
-> runtime recycling isn't implemented (alas) for which the CB flag of
-> the control DWORD needs to be updated only after the rest of the LLI
-> fields.
+Am 19.06.23 um 19:00 schrieb Daniel Lezcano:
+> On 17/06/2023 15:36, Stefan Wahren wrote:
+>> Convert the DT binding document for bcm2835-system-timer from .txt
+>> to YAML.
+>>
+>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> ---
+>>   .../timer/brcm,bcm2835-system-timer.txt       | 22 ---------
+>>   .../timer/brcm,bcm2835-system-timer.yaml      | 48 +++++++++++++++++++
+>>   2 files changed, 48 insertions(+), 22 deletions(-)
+>>   delete mode 100644 
+>> Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
+>>   create mode 100644 
+>> Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml
+>>
+>> diff --git 
+>> a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt b/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
+>> deleted file mode 100644
+>> index 844bd5fbd04c..000000000000
+>> --- 
+>> a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
+> 
+> Appliedp patch #7
 
-This one is only hypothetical. It appears to me that writing the control
-after the configuration of sar and dar is more relevant to prevent race iss=
-ues
-and should be the usual coding choice. Also you are right saying that it wi=
-ll
-be relevant only for the LL tree entries recycling.
-Simple question from non DMA expert: isn't cyclic DMA mode recycle the LL t=
-ree
-entries?=20
+i'm so sorry but i accidentially added a Reviewed-by from Rob, which is 
+wrong here. I should have added to the patch 6 :-(
 
->=20
-> If you described a hypothetical problem then it would be ok to accept
-> the change for the sake of consistency but I would have dropped the
-> Fixes tag and updated the patch description with more details of the
-> race condition you are talking about.
+Regards Stefan
 
-Alright, I will do that.
-
-K=C3=B6ry
+> 
+> Thanks
+> 

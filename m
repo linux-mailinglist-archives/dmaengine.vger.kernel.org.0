@@ -2,108 +2,106 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C46947362CB
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Jun 2023 06:51:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7029C7367C2
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Jun 2023 11:32:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229892AbjFTEv0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 20 Jun 2023 00:51:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46804 "EHLO
+        id S231303AbjFTJcK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 20 Jun 2023 05:32:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229522AbjFTEvZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 20 Jun 2023 00:51:25 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F6710C8;
-        Mon, 19 Jun 2023 21:51:24 -0700 (PDT)
-Received: from [192.168.1.141] ([37.4.248.58]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M42zo-1qBTKN2n5M-00054G; Tue, 20 Jun 2023 06:50:51 +0200
-Message-ID: <10083068-fab1-3e51-c183-e2a435167ad2@i2se.com>
-Date:   Tue, 20 Jun 2023 06:50:50 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH V2 2/7] dt-bindings: dma: convert bcm2835-dma bindings to
- YAML
-To:     Rob Herring <robh@kernel.org>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>, linux-pm@vger.kernel.org,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        devicetree@vger.kernel.org,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        with ESMTP id S231246AbjFTJcJ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 20 Jun 2023 05:32:09 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B4B2A3;
+        Tue, 20 Jun 2023 02:32:08 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id 38308e7fff4ca-2b45e347266so52743361fa.0;
+        Tue, 20 Jun 2023 02:32:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687253524; x=1689845524;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=g6RkSlx8XrZO42soMnBgsxTLxMlxCujpuFknxlHA8No=;
+        b=dErJ47XQjru8Dnpwi9O3bsjz0RkdABiKWekKtr6D+rp4ScIUbSBBTab5ykpNkeqpk5
+         GGx7VSKgpWRXEfEL/o6U0LY9mp9lxcsRjxo2dlL+HD81r8iVx9MoIrwBqHPLb3bPy9Rv
+         5DybStrHiQYDfUMRzbYQjX7BH+rSvAQYLcxZsjkVwpv32gXT9IIScbNIYoRXNLI7tHT6
+         Ly0UuLapXIwAAFfDuW4iGMWhUbTrVHnaw4V5r8vL2TVQkN386rPbHd//rEmINMn6zESq
+         CYS1CsS+V+zhlLl0dE8angqDDEcdmko5rGi00JOjo0Xf8LSKUPZxmWU1ogRMCmwGJiKC
+         xR5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687253524; x=1689845524;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g6RkSlx8XrZO42soMnBgsxTLxMlxCujpuFknxlHA8No=;
+        b=UTMUMbo+YOyzEkPsl4YCpQVFKUFss7P/IAYxDisoJdTlRQ27N8cqhm3fGKQG8JqNYK
+         2qO8Xk7rasiSaaQBQLRJxDHbCG62OpmZAe3flrssGisbj6pUS4NMq5py+2MedWeQHxfS
+         SR8u369BC9MomIAnl6s3t13aak6qlIfXzdqgedEelMbTAbbC/YQFYpO7fVtr5HmBjeLK
+         +PwNPBUtPTI/jsjlfxzQnBQUc3UKHlIr5psarC4gMfcWcmNahefg6lF6OfjATNBsu0cc
+         Cx5ad9elgdj6HWZ90NlueN0tvQvhBW8SdBPcEmK5HumynBl0+vAK+lnIQbj5ZZyn0aB/
+         c+rw==
+X-Gm-Message-State: AC+VfDwPh68oIASMhxajSpmSf2IIJni0t/VXEPdPUe//gTiTvaKyGMrv
+        l54xxYCfRjUpWTcgZlmUfTg=
+X-Google-Smtp-Source: ACHHUZ7QGXkEQcR1w/mpgxAX9QYVbM7QjYWB7mf7+ASrvwJ5KxydoASvzKSFPmgYaRiRwE1L6qaUgA==
+X-Received: by 2002:a2e:8088:0:b0:2b4:7f66:8c92 with SMTP id i8-20020a2e8088000000b002b47f668c92mr2968973ljg.31.1687253523620;
+        Tue, 20 Jun 2023 02:32:03 -0700 (PDT)
+Received: from mobilestation.baikal.int ([94.125.187.42])
+        by smtp.gmail.com with ESMTPSA id n10-20020a2e878a000000b002ad8fc8dda6sm330032lji.17.2023.06.20.02.32.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jun 2023 02:32:03 -0700 (PDT)
+Date:   Tue, 20 Jun 2023 12:32:01 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     =?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
+Cc:     Cai Huoqing <cai.huoqing@linux.dev>,
+        Manivannan Sadhasivam <mani@kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-mmc@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
-        linux-pwm@vger.kernel.org
-References: <20230617133620.53129-1-stefan.wahren@i2se.com>
- <20230617133620.53129-3-stefan.wahren@i2se.com>
- <168721491312.1673983.7120570846265839418.robh@kernel.org>
-Content-Language: en-US
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <168721491312.1673983.7120570846265839418.robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:VKWLyx96kIFaTCi0ZFhPdTmk8Mv0uYKT8yyjMylyRQeFhlZr2zB
- 0SCgVtkvHlqNX7+3pwohYn9u37nMq1Neu3hbSFJdFXTGn00hKvkjGmIMtuaI9oKbuW6Gapm
- kqOyY/9XwgQbUwizhQ246lxUDN3QoYy8Cicxk2jbmIh4mBtM9/5b4qPtkqK6hY/8pgND1zd
- bUoIpNdIQzmSLZ3gp1fWA==
-UI-OutboundReport: notjunk:1;M01:P0:CaJX/oWs7lE=;ECsu5Sz0cJwgPABRHlq1vITW5Mm
- 3DACX5F/VSYi31OW6WeGpAEnh96lvJkX1jmZcd2fk3RtAa9Uutck52w1MotLWaerWqbr8fzik
- Nk8bZkcZKvZ6MUYYFwrkin5agUBRJ5E0stwYpmmnBj5Zc+SeyhqbNXC35AZXooaXC7SsyeCOx
- r6oJ55aJ01aNd2dVFY1Gz6Xp6jOKzIjS7fap7tLoOsdWbINDlOtQBbvN4Z7sozc1yJDsiPcDV
- WyeZkTPUmJIehNZKtXqSATVun+rNfhYTWfMjNjf3PK+mc5wO9sw2/IcRK0GdwVSdTvtsu01gR
- Lc4V6Vvvh5Zix95nWcpORzEFFSt5B69XWHMtyeOW9cQqrv1CP/mp4lWqRnZ2m1sWkhCLR+ii8
- dK9+PK0yfnZLVABtcMcpSaN551ZFerUrng+1mCLYXLCn60SxOW3fDHA76gPG+h20M7vrjiVLD
- tHgrPDWwmwfqAci4gOGbey+ZfLawGB0lBB3Jpouu83v2GNsx/R7obysGh78yeWFcZ9SzyL05O
- cNrWbsVOtiRJfBLGPkDLqFpnUf72FB+pZHteBQjI99CCkdJy9caK1r3n0P0V9RBNpgGulx2pT
- lq8pVtUPwbc8/6lnhlVMYQr1w4PIuQLT1cSJoNzxWrYSnLzAv8/tWZtpG2nFsK6ZsIEHicweR
- x9+nW1i7/sG9KszDVxVdV6l5yW0N75AgiemyMBONsg==
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Herve Codina <herve.codina@bootlin.com>
+Subject: Re: [PATCH 3/9] dmaengine: dw-edma: Add HDMA remote interrupt
+ configuration
+Message-ID: <20230620093201.33vmdmgczwma5iat@mobilestation.baikal.int>
+References: <20230609081654.330857-1-kory.maincent@bootlin.com>
+ <20230609081654.330857-4-kory.maincent@bootlin.com>
+ <20230618214800.5h4ni43vu2admho5@mobilestation>
+ <20230619201647.7cfe12c9@kmaincent-XPS-13-7390>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230619201647.7cfe12c9@kmaincent-XPS-13-7390>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Rob,
+On Mon, Jun 19, 2023 at 08:16:47PM +0200, Köry Maincent wrote:
+> On Mon, 19 Jun 2023 00:48:00 +0300
+> Serge Semin <fancer.lancer@gmail.com> wrote:
+> 
+> > Seems reasonable especially seeing there is a code with a similar
+> > semantic in the dw_hdma_v0_core_write_chunk() method.
+> > 
+> > Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+> > 
+> > Just curious whether we really need to have the local IRQs left
+> > enabled for the remote device setup... The only case I have in mind is
+> > that it would be useful to signal a remote end-point host of such
+> > event in some application-specific environment. It sounds exotic but
+> > still possible.
+> 
+> Thanks for your review.
+> Yes, we do need to let local IRQs enabled. I have tested to remove them and it
+> prevent the remote setup to function correctly on my board. Maybe it needs to be
+> set to know internally when the transfer is done, but it seems weird. I haven't
+> a full explanation for now.
 
-Am 20.06.23 um 00:49 schrieb Rob Herring:
-> On Sat, 17 Jun 2023 15:36:15 +0200, Stefan Wahren wrote:
->> Convert the DT binding document for bcm2835-dma from .txt to YAML.
->>
->> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->> ---
->>   .../bindings/dma/brcm,bcm2835-dma.txt         |  83 --------------
->>   .../bindings/dma/brcm,bcm2835-dma.yaml        | 102 ++++++++++++++++++
->>   2 files changed, 102 insertions(+), 83 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
->>   create mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml
->>
-> 
-> 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
-> 
-> If a tag was not added on purpose, please state why and what changed.
+Ok. Thanks for checking it out.
 
-i was uncertain after replacing the generic dma-channel-mask with the 
-vendor ones. So i decided to drop the reviewed-by.
-
-Best regards
-
-> 
-> Missing tags:
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> 
-> 
+-Serge(y)

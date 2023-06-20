@@ -2,56 +2,44 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C4F81736B97
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Jun 2023 14:07:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83729736D62
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Jun 2023 15:30:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232481AbjFTMHu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 20 Jun 2023 08:07:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45132 "EHLO
+        id S232891AbjFTNaS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 20 Jun 2023 09:30:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232036AbjFTMHt (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 20 Jun 2023 08:07:49 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36557F1;
-        Tue, 20 Jun 2023 05:07:43 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-4f122ff663eso6039797e87.2;
-        Tue, 20 Jun 2023 05:07:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687262860; x=1689854860;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=hIxyfJn46stbA6TKyi/zMvK8a4YI0RbVarM5jbmdCAI=;
-        b=dkuIt6osufFzTki+hy/uy6RdR9DsDdJiZGrP6NI7OaCvLOdGgP7CfO0odxg7ldZoPQ
-         QShVdSHclEcpPl+4R9CaSLRLxj6jhqVbwOLsSQyPDGd2hbGdJZq7n2Ntn+Xk1JhOWgmy
-         jurch4Kqc5RXuHYmK0xOby9chWtbjUKeFO/8qFBTyuSGThWO+RwhZTf7Ccqmy1FnOjln
-         Wr7WBeEMzA6AEcj434yracH0yzQoYPVLQ5JETmadZju+qBN6nAMv8MLcmDxpqOZ4ORS5
-         lzvb28rZPyo1JkuofxIh7sAzPqlK1tvkPjRcAO6Bk4JpJY4S3VlwQpsERRqGu/B4nHvF
-         KWmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687262860; x=1689854860;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hIxyfJn46stbA6TKyi/zMvK8a4YI0RbVarM5jbmdCAI=;
-        b=HjxWwvWH52ueVaQWs5DF19+DCiImYrN+aiMwHklK5+rZoMQUDQxePS3JUKADtCcP33
-         +iZJ6HwV6yvHR/AhWW1/md/Rtzq53o1LTK4vEHz1dx5eU31u6N4fy+GCEpUPKaRo18Fh
-         X8Zs8TInki/5MsV2qRqkk4Sx+3crqsB6nunpBtT0tQ3D4pJcQ4eVu0U1v/nGXsqA/qhG
-         f5tHkrutCfnLL90sS1VTKcVgIpW3ct3GeSOAmdaYxi1aWzYYuEDjt43tGC+do+XYz0a3
-         vc18RyyHwxKmZsOerXZ8DBGqstQ+H3FkDUNjfnbRLgdozNkFMDIf1m4uA7mbLME3IKP0
-         7FfA==
-X-Gm-Message-State: AC+VfDz/t8ibYEtzxNWawWfRbpkufI2FM+yNGdI/cJIhcLqjxIA6ihn1
-        JDS1CBKBKRKjqeDyePt4vsM=
-X-Google-Smtp-Source: ACHHUZ4IIgcrz0VmldYF7wcBKEgY95O5jWYzrGR+Szk9ZQiUVZrfiaKmKImH7VUgbVKmbK0ick+wfw==
-X-Received: by 2002:a19:6909:0:b0:4f8:7513:8cb0 with SMTP id e9-20020a196909000000b004f875138cb0mr2555748lfc.2.1687262859758;
-        Tue, 20 Jun 2023 05:07:39 -0700 (PDT)
-Received: from mobilestation.baikal.int (srv1.baikalchip.ru. [87.245.175.227])
-        by smtp.gmail.com with ESMTPSA id f26-20020a19ae1a000000b004f3b3f5751bsm333936lfc.275.2023.06.20.05.07.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jun 2023 05:07:39 -0700 (PDT)
-Date:   Tue, 20 Jun 2023 15:07:37 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     =?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
+        with ESMTP id S232473AbjFTNaR (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 20 Jun 2023 09:30:17 -0400
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::226])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 406FB188;
+        Tue, 20 Jun 2023 06:30:09 -0700 (PDT)
+X-GND-Sasl: kory.maincent@bootlin.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1687267808;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DPOr629AwqhuK4eWRGDMUfjS0QtiwkNcXPGNugT4mYk=;
+        b=S8+eh6cpEmMe6nuNvstiIpbEhVI4UZtoWhb1JHbjaXLj0iZj2OLO48lGDySiIismD2+emT
+        OD4MG7k8PmjCWUTzbyJu9MzHTxjbmV28KzxiyH0w9YicRhEOiIVUT5BkUW7o/srzPfdday
+        bqKy94Ml6Ad/rfHiDzQHhJM6/8mYmW9Ohhrr6IQVBCM1BVU1VW+ghLykWwUrgiPo10jQMB
+        hMXCXa/xnm8ZL4fAKqL+WGLAN2vnfiigVmxsDldMUE89rvgRpESOCBAgEy3A12P32KK/rA
+        prmgTvuI6Rv8JWnGbcquorr9/jWZ6So/RKV+wNeScgliPYG3o5kwhyVCEmvQ1A==
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 19CEFC0014;
+        Tue, 20 Jun 2023 13:30:06 +0000 (UTC)
+Date:   Tue, 20 Jun 2023 15:30:06 +0200
+From:   =?UTF-8?Q?K=C3=B6ry?= Maincent <kory.maincent@bootlin.com>
+To:     Serge Semin <fancer.lancer@gmail.com>
 Cc:     Cai Huoqing <cai.huoqing@linux.dev>,
         Manivannan Sadhasivam <mani@kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
@@ -59,97 +47,188 @@ Cc:     Cai Huoqing <cai.huoqing@linux.dev>,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Herve Codina <herve.codina@bootlin.com>
-Subject: Re: [PATCH 5/9] dmaengine: dw-edma: HDMA: Fix possible race
- condition in remote setup
-Message-ID: <wqixf5z7yjbcubjhpkormriptrcihcjezjujmwxihdcagzpzom@igfkbjwuwy7e>
+Subject: Re: [PATCH 4/9] dmaengine: dw-edma: HDMA: Add memory barrier before
+ starting the DMA transfer in remote setup
+Message-ID: <20230620153006.036ca3ba@kmaincent-XPS-13-7390>
+In-Reply-To: <tpowhctppelni47dosc27cg4vmzwdqnuvf3rukvmju2guoxzsr@wgxomqzfv6ch>
 References: <20230609081654.330857-1-kory.maincent@bootlin.com>
- <20230609081654.330857-6-kory.maincent@bootlin.com>
- <20230619171550.3iyujmbre3dpe5oq@mobilestation.baikal.int>
- <20230619204105.620f87e6@kmaincent-XPS-13-7390>
+        <20230609081654.330857-5-kory.maincent@bootlin.com>
+        <20230619170201.5hbgte2optjlbx55@mobilestation.baikal.int>
+        <20230619203207.694bfac6@kmaincent-XPS-13-7390>
+        <tpowhctppelni47dosc27cg4vmzwdqnuvf3rukvmju2guoxzsr@wgxomqzfv6ch>
+Organization: bootlin
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230619204105.620f87e6@kmaincent-XPS-13-7390>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Jun 19, 2023 at 08:41:05PM +0200, Köry Maincent wrote:
-> On Mon, 19 Jun 2023 20:15:50 +0300
-> Serge Semin <fancer.lancer@gmail.com> wrote:
-> 
-> > On Fri, Jun 09, 2023 at 10:16:50AM +0200, Köry Maincent wrote:
-> > > From: Kory Maincent <kory.maincent@bootlin.com>
-> > > 
-> > > When writing the linked list elements and pointer the control need to be
-> > > written at the end. If the control is written and the SAR and DAR not
-> > > stored we could face a race condition.
-> > > 
-> > > Fixes: e74c39573d35 ("dmaengine: dw-edma: Add support for native HDMA")
-> > > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>  
-> > 
-> > Once again. Is this a hypothetical bug or have you actually
-> > experienced the denoted problem? If you do please describe the
-> > circumstances, give more details. Otherwise it sounds weird. Here is
-> > why.
-> > 
-> > DW eDMA HW manual states that the control LL DWORD is indeed supposed
-> > to be written after the rest of the descriptor DWORDs are written. But
-> > AFAICS it's only relevant for the LL tree entries recycling. Current
-> > DW eDMA driver design doesn't truly implement that pattern. Instead
-> > the DMA transfer is halted at the end of the chunk. Then the engine is
-> > recharged with the next chunk and execution is started over. So the
-> > runtime recycling isn't implemented (alas) for which the CB flag of
-> > the control DWORD needs to be updated only after the rest of the LLI
-> > fields.
-> 
+On Tue, 20 Jun 2023 14:45:40 +0300
+Serge Semin <fancer.lancer@gmail.com> wrote:
 
-> This one is only hypothetical. It appears to me that writing the control
-> after the configuration of sar and dar is more relevant to prevent race issues
-> and should be the usual coding choice. Also you are right saying that it will
-> be relevant only for the LL tree entries recycling.
-> Simple question from non DMA expert: isn't cyclic DMA mode recycle the LL tree
-> entries? 
+> On Mon, Jun 19, 2023 at 08:32:07PM +0200, K=C3=B6ry Maincent wrote:
+> > On Mon, 19 Jun 2023 20:02:01 +0300
+> > Serge Semin <fancer.lancer@gmail.com> wrote:
+> >  =20
+> > > On Fri, Jun 09, 2023 at 10:16:49AM +0200, K=C3=B6ry Maincent wrote: =
+=20
+> > > > From: Kory Maincent <kory.maincent@bootlin.com>
+> > > >    =20
+> > >  =20
+> > > > The Linked list element and pointer are not stored in the same memo=
+ry as
+> > > > the HDMA controller register. If the doorbell register is toggled b=
+efore
+> > > > the full write of the linked list a race condition error can appear=
+s.
+> > > > In remote setup we can only use a readl to the memory to assured the
+> > > > full write has occurred.
+> > > >=20
+> > > > Fixes: e74c39573d35 ("dmaengine: dw-edma: Add support for native HD=
+MA")
+> > > > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>   =20
+> > >=20
+> > > Is this a hypothetical bug? Have you actually experienced the
+> > > described problem? If so are you sure that it's supposed to be fixed
+> > > as you suggest? =20
+> >  =20
+>=20
+> > I do experienced this problem and this patch fixed it. =20
+>=20
+> Could you give more details of how often does it happen? Is it stably
+> reproducible or does it happen at very rare occasion?
 
-Ideally the driver should have been designed in the way you say:
-define a ring of the Linked List entries and recycle the already used
-entries while the already enabled entries are being handled by the
-DMA-engine (a similar approach is described in the DW PCIe/eDMA hw
-manual). DW eDMA engine CSRs and LLI descriptor provide enough
-functionality for that. Alas the driver implementation is more
-straightforward:
-1. Each DMA-engine config: SG-list, cyclic, interleaved is split up
-into the "burst" entries. SG-list entries are directly mapped to the
-eDMA "burst" entries. Cyclic iterations are unrolled into the
-respective number of eDMA "burst" entries. A similar story with the
-interleaved transactions.
-2. If there is no enough entries in the Linked-List memory to fully
-execute the requested DMA-transfers, then another so called DW eDMA
-"chunk" is allocated.
-3. DW eDMA engine executes the "chunks" one after another stopping at
-the end of each one and recharging the engine with the next "chunk" until
-the last one is finished.
+I have a test example that run DMA stress transfer in 3 threads and
+the issue appear in only few transfers but each time I run my test.
 
-It isn't the most effective architecture, but that's how it was
-originally developed by Gustavo. Anyway discussing it is a good food
-for thoughts for the driver refactoring though.)
 
--Serge(y)
+> > > I am asking because based on the kernel doc
+> > > (Documentation/memory-barriers.txt):
+> > >=20
+> > > *    1. All readX() and writeX() accesses to the same peripheral are
+> > > ordered
+> > > *       with respect to each other. This ensures that MMIO register
+> > > accesses
+> > > *       by the same CPU thread to a particular device will arrive in
+> > > program
+> > > *       order.
+> > > * ...
+> > > * The ordering properties of __iomem pointers obtained with non-defau=
+lt
+> > > * attributes (e.g. those returned by ioremap_wc()) are specific to the
+> > > * underlying architecture and therefore the guarantees listed above c=
+annot
+> > > * generally be relied upon for accesses to these types of mappings.
+> > >=20
+> > > the IOs performed by the accessors are supposed to arrive in the
+> > > program order. Thus SET_CH_32(..., HDMA_V0_DOORBELL_START) performed
+> > > after all the previous SET_CH_32(...) are finished looks correct with
+> > > no need in additional barriers. The results of the later operations
+> > > are supposed to be seen by the device (in our case it's a remote DW
+> > > eDMA controller) before the doorbell update from scratch. From that
+> > > perspective your problem looks as if the IO operations preceding the
+> > > doorbell CSR update aren't finished yet. So you are sure that the LL
+> > > memory is mapped with no additional flags like Write-Combine or some
+> > > caching optimizations? Are you sure that the PCIe IOs are correctly
+> > > implemented in your platform? =20
+> >=20
+> > No, I don't know if there is extra flags or optimizations. =20
+>=20
+> Well, I can't know that either.) The only one who can figure it out is
+> you, at least at this stage (I doubt Gustavo will ever get back to
+> reviewing and testing the driver on his remote eDMA device). I can
+> help if you provide some more details about the platform you are
+> using, about the low-level driver (is it
+> drivers/dma/dw-edma/dw-edma-pcie.o?) which gets to detect the DW eDMA
+> remote device and probes it by the DW eDMA core.
 
-> 
-> > 
-> > If you described a hypothetical problem then it would be ok to accept
-> > the change for the sake of consistency but I would have dropped the
-> > Fixes tag and updated the patch description with more details of the
-> > race condition you are talking about.
-> 
-> Alright, I will do that.
-> 
-> Köry
+No it is another custom driver but also communicating through PCIe. In fact=
+ I
+have a contact to the FPGA designer, I will ask them.
+
+>=20
+> * Though I don't have hardware with the remote DW eDMA setup to try to
+> reproduce and debug the problem discovered by you.
+>=20
+> >  =20
+> > >=20
+> > > I do understand that the eDMA CSRs and the LL memory are mapped by
+> > > different BARs in the remote eDMA setup. But they still belong to the
+> > > same device. So the IO accessors semantic described in the kernel doc
+> > > implies no need in additional barrier. =20
+> >=20
+> > Even if they are on the same device it is two type of memory. =20
+>=20
+> What do you mean by "two types of memory"? From the CPU perspective
+> they are the same. Both are mapped via MMIO by means of a PCIe Root
+> Port outbound memory window.
+
+I was meaning hardware memory. Yes they are mapped via MMIO, but they are
+mapped to two different BAR which may map the CSRs or the memory where LL
+are stored. According to you the write should be ordered but is there a way
+to know that the write has succeed?=20
+
+
+> > I am not an PCIe expert but I suppose the PCIe controller of the board =
+is
+> > sending to both memory and if one of them (LL memory here) is slower in=
+ the
+> > write process then we faced this race issue. We can not find out that t=
+he
+> > write to LL memory has finished before the CSRs even if the write comma=
+nd
+> > has been sent earlier. =20
+>=20
+> From your description there is no guarantee that reading from the
+> remote device solves the race for sure. If writes have been collected
+> in a cache, then the intermediate read shall return a data from the
+> cache with no data being flushed to the device memory. It might be
+> possible that in your case the read just adds some delay enough for
+> some independent activity to flush the cache. Thus the problem you
+> discovered may get back in some other circumstance. Moreover based on
+> the PCI Express specification "A Posted Request must not pass another
+> Posted Request unless a TLP has RO (Relaxed ordering) or IDO (ID-based
+> ordering) flag set." So neither intermediate PCIe switches nor the
+> PCIe host controller is supposed to re-order simple writes unless the
+> Root Port outbound MW is configure to set the denoted flags. In anyway
+> all of that is platform specific. So in order to have it figured out
+> we need more details from the platform from you.
+
+I thought that using a read will solve the issue like the gpio_nand driver
+(gpio_nand_dosync) but I didn't thought of a cache that could return the va=
+lue
+of the read even if the write doesn't fully happen. In the case of a cache =
+how
+could we know that the write is done without using a delay?=20
+
+>=20
+> Meanwhile:
+>=20
+> Q1 are you sure that neither dma_wmb() nor io_stop_wc() help to solve
+> the problem in your case?
+
+dma_wmb is like wmb and is called by the writel function of the doorbell.
+io_stop_wc is doing nothing except or arm64.
+Both of these function won't change anything.
+
+> Q2 Does specifying a delay instead of the dummy read before the
+> doorbell update solve the problem?
+
+Delaying it for at least 4 us before toggling doorbell solves also the issu=
+e.
+This seems long for an equivalent of the readl function right?
+Wouldn't using a read after the write ask to the PCIe controller to check t=
+he
+write has happen? It should be written in the PCIe protocol but not sure I =
+want
+to open the full protocol description document.
+
+K=C3=B6ry

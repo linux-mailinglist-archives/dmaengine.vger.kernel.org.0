@@ -2,68 +2,76 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C986736D6F
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Jun 2023 15:35:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A392F736EC8
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Jun 2023 16:38:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231495AbjFTNfy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 20 Jun 2023 09:35:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36506 "EHLO
+        id S233339AbjFTOiI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 20 Jun 2023 10:38:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232411AbjFTNfy (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 20 Jun 2023 09:35:54 -0400
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::224])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BAB4B7;
-        Tue, 20 Jun 2023 06:35:52 -0700 (PDT)
-X-GND-Sasl: kory.maincent@bootlin.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1687268150;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Uv+fbauLcYmaB3LHoaOohcS26YMyzwdt/TWV8wgjBuY=;
-        b=lUwkRQ0+JfbrLLNfjnrE/nWP3Wg13DCjxCOejSe3er/wIWAlWKpnX8vqtt1L8wvEKZHs0k
-        u8kwYJO+d6N2sGG0bAauaWlTH/5crEoCFVjRNxh7nJkdFv1fHRh1KHYPf9OxZD8VH1W2e5
-        pYkGEp1brBmzRYjoGTEldRb+uG4P0+dHdGogUbEYoZywOg7t1wolsKsiwtZRj4GUWRjdYC
-        D1ZHq9yHysyz5WK5HNlw4tmZVXuLkEbgQ5N6Z3pKT7xQ86EpLQOGZp4bv2eQH6dahuvMfK
-        ev9HGeogjFxVq9X/GsU4J6m7tbO1fvOvR926AfKqpBSC7c+q9r5DVi7eJr3ltA==
-X-GND-Sasl: kory.maincent@bootlin.com
-X-GND-Sasl: kory.maincent@bootlin.com
-X-GND-Sasl: kory.maincent@bootlin.com
-X-GND-Sasl: kory.maincent@bootlin.com
-X-GND-Sasl: kory.maincent@bootlin.com
-X-GND-Sasl: kory.maincent@bootlin.com
-X-GND-Sasl: kory.maincent@bootlin.com
-X-GND-Sasl: kory.maincent@bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0C58BE000A;
-        Tue, 20 Jun 2023 13:35:49 +0000 (UTC)
-Date:   Tue, 20 Jun 2023 15:35:49 +0200
-From:   =?UTF-8?Q?K=C3=B6ry?= Maincent <kory.maincent@bootlin.com>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Cai Huoqing <cai.huoqing@linux.dev>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Herve Codina <herve.codina@bootlin.com>
-Subject: Re: [PATCH 5/9] dmaengine: dw-edma: HDMA: Fix possible race
- condition in remote setup
-Message-ID: <20230620153549.0677da97@kmaincent-XPS-13-7390>
-In-Reply-To: <wqixf5z7yjbcubjhpkormriptrcihcjezjujmwxihdcagzpzom@igfkbjwuwy7e>
-References: <20230609081654.330857-1-kory.maincent@bootlin.com>
-        <20230609081654.330857-6-kory.maincent@bootlin.com>
-        <20230619171550.3iyujmbre3dpe5oq@mobilestation.baikal.int>
-        <20230619204105.620f87e6@kmaincent-XPS-13-7390>
-        <wqixf5z7yjbcubjhpkormriptrcihcjezjujmwxihdcagzpzom@igfkbjwuwy7e>
-Organization: bootlin
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        with ESMTP id S233333AbjFTOiG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 20 Jun 2023 10:38:06 -0400
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C6A5170A;
+        Tue, 20 Jun 2023 07:38:05 -0700 (PDT)
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-340bba768acso23832585ab.2;
+        Tue, 20 Jun 2023 07:38:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687271884; x=1689863884;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GF/VHqh9Z63hL9sa4QxWnH8XWdPzqcxDEJoIRF6jEW4=;
+        b=ilwFOcuEzGVLEAg1iNZx+kSmWXVx+D3HXwZ53v8mtN0xt2VkA+C730LckChfkJEAqJ
+         +qLk8L5fQdoDxatkMRx7LBlztfNnR8oWGuuIyLL+brRfCsqTqZhfw68cDxjTD22DODTV
+         aN4BbPHHP/6FvjusGOnETP+gbahusH+zTEgbvRaAVX8Y1oLI2576eTMjzkziz3FtoYLp
+         hbi0ulHDCtZgMt8s/Xz6Wk4ZrLPhQrnXoX7PbPkn4/4d9QoAAMguD70FztROm1AtLSeQ
+         w04XjYWPSzseYSVOfRPWsAar5LrHKTrL31wjA4VglYmpSGSc/Sn3lHkyGlyedbAC/Byz
+         Zdjg==
+X-Gm-Message-State: AC+VfDzTwphaQ/nZqfH6k7DOF59i6J73fqg5kgWdZ/qpUws8KUzzGHJz
+        Z7Hl39QRO9fYm5/BpOKEGA==
+X-Google-Smtp-Source: ACHHUZ6G1RQDYcnuhSQF4g+EA/8pLz4mpvkXiCrsobO7vcVJIqYb/GzSo7RdqK18AFihbL90RR2gFA==
+X-Received: by 2002:a6b:650c:0:b0:77e:2f33:c33 with SMTP id z12-20020a6b650c000000b0077e2f330c33mr7332406iob.3.1687271884475;
+        Tue, 20 Jun 2023 07:38:04 -0700 (PDT)
+Received: from robh_at_kernel.org ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id ep24-20020a0566384e1800b0042311795f77sm683155jab.83.2023.06.20.07.38.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jun 2023 07:38:03 -0700 (PDT)
+Received: (nullmailer pid 3557803 invoked by uid 1000);
+        Tue, 20 Jun 2023 14:38:01 -0000
+Date:   Tue, 20 Jun 2023 08:38:01 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Scott Branden <sbranden@broadcom.com>,
+        Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>, devicetree@vger.kernel.org,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        linux-mmc@vger.kernel.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH V2 2/7] dt-bindings: dma: convert bcm2835-dma bindings to
+ YAML
+Message-ID: <168727187263.3557572.9123036067040626699.robh@kernel.org>
+References: <20230617133620.53129-1-stefan.wahren@i2se.com>
+ <20230617133620.53129-3-stefan.wahren@i2se.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230617133620.53129-3-stefan.wahren@i2se.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,38 +79,18 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, 20 Jun 2023 15:07:37 +0300
-Serge Semin <fancer.lancer@gmail.com> wrote:
 
-> > This one is only hypothetical. It appears to me that writing the control
-> > after the configuration of sar and dar is more relevant to prevent race
-> > issues and should be the usual coding choice. Also you are right saying
-> > that it will be relevant only for the LL tree entries recycling.
-> > Simple question from non DMA expert: isn't cyclic DMA mode recycle the LL
-> > tree entries?   
+On Sat, 17 Jun 2023 15:36:15 +0200, Stefan Wahren wrote:
+> Convert the DT binding document for bcm2835-dma from .txt to YAML.
 > 
-> Ideally the driver should have been designed in the way you say:
-> define a ring of the Linked List entries and recycle the already used
-> entries while the already enabled entries are being handled by the
-> DMA-engine (a similar approach is described in the DW PCIe/eDMA hw
-> manual). DW eDMA engine CSRs and LLI descriptor provide enough
-> functionality for that. Alas the driver implementation is more
-> straightforward:
-> 1. Each DMA-engine config: SG-list, cyclic, interleaved is split up
-> into the "burst" entries. SG-list entries are directly mapped to the
-> eDMA "burst" entries. Cyclic iterations are unrolled into the
-> respective number of eDMA "burst" entries. A similar story with the
-> interleaved transactions.
-> 2. If there is no enough entries in the Linked-List memory to fully
-> execute the requested DMA-transfers, then another so called DW eDMA
-> "chunk" is allocated.
-> 3. DW eDMA engine executes the "chunks" one after another stopping at
-> the end of each one and recharging the engine with the next "chunk" until
-> the last one is finished.
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> ---
+>  .../bindings/dma/brcm,bcm2835-dma.txt         |  83 --------------
+>  .../bindings/dma/brcm,bcm2835-dma.yaml        | 102 ++++++++++++++++++
+>  2 files changed, 102 insertions(+), 83 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
+>  create mode 100644 Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.yaml
 > 
-> It isn't the most effective architecture, but that's how it was
-> originally developed by Gustavo. Anyway discussing it is a good food
-> for thoughts for the driver refactoring though.)
 
-thanks for enlightening me, then indeed we will never face the issue solved by
-this patches as we won't recycle LL tree entries.
+Reviewed-by: Rob Herring <robh@kernel.org>
+

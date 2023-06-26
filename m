@@ -2,127 +2,118 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA1C073C9F9
-	for <lists+dmaengine@lfdr.de>; Sat, 24 Jun 2023 11:20:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79ECF73D60D
+	for <lists+dmaengine@lfdr.de>; Mon, 26 Jun 2023 04:54:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232909AbjFXJUE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 24 Jun 2023 05:20:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50500 "EHLO
+        id S230436AbjFZCyz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 25 Jun 2023 22:54:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233000AbjFXJUB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 24 Jun 2023 05:20:01 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 814B41FFD
-        for <dmaengine@vger.kernel.org>; Sat, 24 Jun 2023 02:19:58 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-988883b0d8fso186929266b.1
-        for <dmaengine@vger.kernel.org>; Sat, 24 Jun 2023 02:19:58 -0700 (PDT)
+        with ESMTP id S230397AbjFZCyy (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 25 Jun 2023 22:54:54 -0400
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B52EC103
+        for <dmaengine@vger.kernel.org>; Sun, 25 Jun 2023 19:54:49 -0700 (PDT)
+Received: by mail-il1-x136.google.com with SMTP id e9e14a558f8ab-345a31bda6cso6934745ab.1
+        for <dmaengine@vger.kernel.org>; Sun, 25 Jun 2023 19:54:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687598396; x=1690190396;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KfAcGT4J8pUoMJBGxBaLszgHGiS6c9l8JOpUoHeAAOA=;
-        b=yQVzjTKSXVmVV9dLLVhjlfW4hSkCHaHSkFp8XKDuppCzQpGHvyVttjnWT3sZWadL6G
-         Aptg8K8aHU9euO2VsKWw8w5GNb7iZUmQN6s980dsKNw8bDt/Gg0mjyG+1qbTOWHueIrY
-         /Q6bxSUkrx10KI9Bk3ImA6gPyy5RwRLI1IVUQjGo73WdFwY+k9WU2qYNImsGMRH4LVBY
-         NGoLGDAz09o/yosqduTlRt/bCpwDw40AnKJvyTtb5EsV6kYLtwXhkQO6myiWdEiHilCp
-         eezk0kHCVcUBB/e4mc1VfkMXxJnPCuve2SWX/BdtYwhjQIOCgvko85iNcFXLb/8ecU/N
-         rm6g==
+        d=sifive.com; s=google; t=1687748089; x=1690340089;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oe898F/ffsJMUw2yiRdqMyZnDfV5Af+l4vque2ZH6fo=;
+        b=Y8QLvQKDtphi3w29TRqCxG1CgC5SLHTHPJgZvlNl9fNfUwzKI7qQDD8W0/CmtC3ARN
+         yY2w6lOJNtA18kSrIRrefWAI3QurrQntiZuVly1xszJ9c+JrmLuuZTJuYRv6HqWjLYh5
+         WcKSlNLMAa1BWsYaJZSdMuRNyjAGLDygcGtLoqH+XFuHbpuRE05zxU2SC+BOMbXX53Up
+         4aGyoeCD+aRLTb9chp8puDRt74haeM5fB3V9QxUYzsKpnB0v/OPtloGaP1zKFDWAC/dR
+         P5rEry1g1gr5yyV2NN0OaY91N3Bb7P41MrBS+7+DlJD7uE8dgXXeIqBN5i4O8iEcLlAq
+         fWuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687598396; x=1690190396;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KfAcGT4J8pUoMJBGxBaLszgHGiS6c9l8JOpUoHeAAOA=;
-        b=fzGamo9Q/XedylVlaArrXmEIKFtZRkqyHsY1VImF54n/mrs9G2Cxl0rngFeyUn8Xyd
-         bei2rrn4+VDvmL8w2lXInAf1SwzfsjLzmHfDWK7NSbOxYwG39o6UTc5eucMsZ7R72t0G
-         r+ajPpFkmOinfX/vBv1DN7mKzq7Qu/tiJeOXaQw2vXmtLyfK7XUdsMR9N7rRcxWIO0wh
-         /u8V3CSS2M1Kn3V4t9N83w41K6l/tiGfbXJRvhFnEqIFMZxRp+BFKbG5fwWAM5Udevcw
-         M/1HZVQvzVqA1ZC/fwQEuuqr2BgtefjWUkoYV2v1e1vL+fDJ71YQnyB/M33/XQTLfVCz
-         zrXw==
-X-Gm-Message-State: AC+VfDyUg5XIshGia4z98Hq1W4BLgOY+M0+Pl15judoeDCMgz7qKHAGG
-        t3isKbHnhSGRB8vchNcGjrfVGw==
-X-Google-Smtp-Source: ACHHUZ5fG8f481PX14S7vktzFZQMA1l6HoKP1yysFPHfBvGgcLJOb2TMBp2polua7/w5jYwHHssrXQ==
-X-Received: by 2002:a17:907:987:b0:987:6372:c31f with SMTP id bf7-20020a170907098700b009876372c31fmr16230436ejc.37.1687598396633;
-        Sat, 24 Jun 2023 02:19:56 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id p13-20020a1709060e8d00b00989065149d0sm663324ejf.86.2023.06.24.02.19.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 24 Jun 2023 02:19:55 -0700 (PDT)
-Message-ID: <ca3b6a75-2811-6013-28cc-9f6a7854b469@linaro.org>
-Date:   Sat, 24 Jun 2023 11:19:49 +0200
+        d=1e100.net; s=20221208; t=1687748089; x=1690340089;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oe898F/ffsJMUw2yiRdqMyZnDfV5Af+l4vque2ZH6fo=;
+        b=gaq8phys8+RjuEyhQJj1/gi7X21eajVgQS7iNJi5yD3frod/zcvZSeMIfKKDZX8XMp
+         Fy3QTlkUNqF5U0iWMJbKyL+oLmSuou/v00gAYSNqRSXPHi4tU8/VSgslKo4p9YiMUcm0
+         BMXTZzIFEswlyvX1XGQNKh5uIzzemQZK1CB5fMkI9I0O9BXloGPjPGvVdLoZF9VoAEa0
+         7Z6lm2o+4lFWqbsZl+mwoMYtOcffQDwnuq59aS8bET4DrZo2Qqo/nA0Y3icAsIquiZ2y
+         gz8RFYG9ZrLCiQSxPwZ3FfNlTdfoeAPSCi9jowdYy8mAPBDOqtYDF5MePx+fWJ7SCIVB
+         skyA==
+X-Gm-Message-State: AC+VfDymWbIpOB4mLafbSHAQAFZzgXyJoe1f5goxbK95lOq/m5zefqCV
+        R/gox6hJ4wQbz9BtioTTTj59EiHDV1t91aetwbXUDQ==
+X-Google-Smtp-Source: ACHHUZ615xhJwtejY7OBv9Vr1PrPfhnmy/+F15DzYviSu9aEuxrRSqaHPcXGNyMW6ZoCWQh0tDuw9Bif6+WOgKQz52c=
+X-Received: by 2002:a92:d091:0:b0:345:6e6e:5351 with SMTP id
+ h17-20020a92d091000000b003456e6e5351mr6562449ilh.22.1687748089020; Sun, 25
+ Jun 2023 19:54:49 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v2 01/45] dt-bindings: microchip: atmel,at91rm9200-tcb:
- add sam9x60, sam9x7 compatible
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Varshini Rajendran <varshini.rajendran@microchip.com>,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, claudiu.beznea@microchip.com,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org,
-        tglx@linutronix.de, maz@kernel.org, lee@kernel.org,
-        ulf.hansson@linaro.org, tudor.ambarus@linaro.org,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        linus.walleij@linaro.org, p.zabel@pengutronix.de,
-        olivia@selenic.com, a.zummo@towertech.it,
-        radu_nicolae.pirea@upb.ro, richard.genoud@gmail.com,
-        gregkh@linuxfoundation.org, lgirdwood@gmail.com,
-        broonie@kernel.org, wim@linux-watchdog.org, linux@roeck-us.net,
-        arnd@arndb.de, olof@lixom.net, soc@kernel.org,
-        linux@armlinux.org.uk, sre@kernel.org, jerry.ray@microchip.com,
-        horatiu.vultur@microchip.com, durai.manickamkr@microchip.com,
-        andrew@lunn.ch, alain.volmat@foss.st.com,
-        neil.armstrong@linaro.org, mihai.sain@microchip.com,
-        eugen.hristev@collabora.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Cc:     Hari.PrasathGE@microchip.com, cristian.birsan@microchip.com,
-        balamanikandan.gunasundar@microchip.com,
-        manikandan.m@microchip.com, dharma.b@microchip.com,
-        nayabbasha.sayed@microchip.com, balakrishnan.s@microchip.com
-References: <20230623203056.689705-1-varshini.rajendran@microchip.com>
- <20230623203056.689705-2-varshini.rajendran@microchip.com>
- <074048a2-5153-e013-3562-b5cad2ba0954@linaro.org>
-In-Reply-To: <074048a2-5153-e013-3562-b5cad2ba0954@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230531090141.23546-1-zong.li@sifive.com>
+In-Reply-To: <20230531090141.23546-1-zong.li@sifive.com>
+From:   Zong Li <zong.li@sifive.com>
+Date:   Mon, 26 Jun 2023 10:54:38 +0800
+Message-ID: <CANXhq0rVred1YMcV5449yYt+MhOu2NUx9Oa-1xJqbS=o_1Qb6g@mail.gmail.com>
+Subject: Re: [PATCH v3] dmaengine: xilinx: dma: remove arch dependency
+To:     vkoul@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com,
+        radhey.shyam.pandey@amd.com, dmaengine@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 24/06/2023 09:53, Krzysztof Kozlowski wrote:
-> On 23/06/2023 22:30, Varshini Rajendran wrote:
->> Add sam9x60, sam9x7 compatible string support in the schema file.
->>
->> Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
->> ---
->>  .../devicetree/bindings/soc/microchip/atmel,at91rm9200-tcb.yaml | 
-> 
-> 
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+On Wed, May 31, 2023 at 5:01=E2=80=AFPM Zong Li <zong.li@sifive.com> wrote:
+>
+> As following patches, xilinx dma is also now architecture agnostic,
+> and it can be compiled for several architectures. We have verified the
+> CDMA on RISC-V platform, let's remove the ARCH dependency list instead
+> of adding new ARCH.
+>
+> To avoid breaking the s390 build, add a dependency on HAS_IOMEM.
+>
+> 'e8b6c54f6d57 ("net: xilinx: temac: Relax Kconfig dependencies")'
+> 'd7eaf962a90b ("net: axienet: In kconfig remove arch dependency for axi_e=
+mac")'
+>
+> Signed-off-by: Zong Li <zong.li@sifive.com>
+> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+> Suggested-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> ---
+>
+>  Changes in v3:
+>  - Add a dependency on HAS_IOMEM to avoid breaking the s390 build
+>
+>  Changes in v2:
+>  - Remove ARCH dependency list instead of adding new ARCH
+>
+>  drivers/dma/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index f5f422f9b850..fd5a94e67163 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -696,7 +696,7 @@ config XGENE_DMA
+>
+>  config XILINX_DMA
+>         tristate "Xilinx AXI DMAS Engine"
+> -       depends on (ARCH_ZYNQ || MICROBLAZE || ARM64)
+> +       depends on HAS_IOMEM
+>         select DMA_ENGINE
+>         help
+>           Enable support for Xilinx AXI VDMA Soft IP.
+> --
+> 2.17.1
+>
 
-Un-acked. Actually NAK.
-
-This does not match your DTS. Please test your patches before sending.
-
-Best regards,
-Krzysztof
-
+Hi Vinod,
+Linux 6.5-rc1 is opening, could I know if this patch is good for you?
+Would it be considered in this merge window?
+Thanks.

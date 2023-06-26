@@ -2,95 +2,116 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CF2973E5E1
-	for <lists+dmaengine@lfdr.de>; Mon, 26 Jun 2023 18:58:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26D2E73E79A
+	for <lists+dmaengine@lfdr.de>; Mon, 26 Jun 2023 20:16:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230086AbjFZQ6H (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 26 Jun 2023 12:58:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45008 "EHLO
+        id S230517AbjFZSQz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 26 Jun 2023 14:16:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229631AbjFZQ6G (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 26 Jun 2023 12:58:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9108EE70;
-        Mon, 26 Jun 2023 09:58:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 24B5B60F03;
-        Mon, 26 Jun 2023 16:58:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CB6CC433C0;
-        Mon, 26 Jun 2023 16:58:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687798684;
-        bh=/6I63s7oZUF/1wqTNsxPn1YgT6ZobbD3eXioGmc3G/c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o83I7RypfgU8zTzvTx88NpFp0ncROj1AIGY2xPjTLo9lq5ZovSrkJ+qXQI+oOLWS7
-         F+7lc5dnMBj2bX3HRGwoeWczvyWcJNPejITz9faSFfZsfPnUNI0xITp7WqDbTvx3Vy
-         FmtgLyIPFf3k5QfUbwNKBsuX+en4CX1AKRBgF3r5mzqTRw5b8+MajnqO6pvOsT30sQ
-         oqUhgT7W/tH4ctHEhHYG6VbTTvDulIrmwpVGouFSKAZRqCmLfjIEVT2Pm8x/ZRfqPJ
-         drs/77U/uiXaETX/tEqjuVBnH6ndXcSZJg+w+rntr1BX2N2NzFAKL8jtMEuishXFCZ
-         pIvZd54KS2Qfw==
-Date:   Mon, 26 Jun 2023 17:57:59 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: dma: qcom,bam: require one of control
- methods
-Message-ID: <20230626-prewashed-maximum-8402dffe790a@spud>
-References: <20230626145645.646136-1-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S230397AbjFZSQy (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 26 Jun 2023 14:16:54 -0400
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0CCD94;
+        Mon, 26 Jun 2023 11:16:52 -0700 (PDT)
+Received: from [192.168.1.141] ([37.4.248.15]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N63NQ-1pyGlv1Q2S-016R6o; Mon, 26 Jun 2023 20:16:19 +0200
+Message-ID: <47eac53a-8d93-16fa-a8db-68bbd40020a8@i2se.com>
+Date:   Mon, 26 Jun 2023 20:16:18 +0200
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="an2WmpP2EaKyfAAz"
-Content-Disposition: inline
-In-Reply-To: <20230626145645.646136-1-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH V2 7/7] dt-bindings: timer: convert bcm2835-system-timer
+ bindings to YAML
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+To:     Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
+        dmaengine@vger.kernel.org,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-pwm@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-pm@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        Vinod Koul <vkoul@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Scott Branden <sbranden@broadcom.com>
+References: <20230617133620.53129-1-stefan.wahren@i2se.com>
+ <20230617133620.53129-8-stefan.wahren@i2se.com>
+ <02d1d74a-1476-41c8-6d94-3eb477352309@linaro.org>
+ <543ca0c5-0051-3968-63cd-7982f95c06c6@i2se.com>
+Content-Language: en-US
+In-Reply-To: <543ca0c5-0051-3968-63cd-7982f95c06c6@i2se.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Pf+nK9VlP6UkuRXw6XpNBDYvdhpAMd7zCnAyEYISBTYUuWfZsGA
+ KhKvXGty+Tb7YBrwQDkiXzvssgyiuvbh1qNHvlEzU1uVAt5DaVXhSukj4YlEdnFCxs/Kc56
+ 3AMyVt0eNBGYqT6Mww9J1VWG19uSHT850Q67pFWJcxQ70YrI6gKDTGufkCQGnZf5q9B0Eef
+ PkC3ZofiennUM481xaQrg==
+UI-OutboundReport: notjunk:1;M01:P0:9baAdFLbfrw=;I04Bud++nv5QiIFcrr0i7NvorWL
+ bmeG4KE1VO4eQSh+Wj84BLTzHYeNd7sAo9plxWLSlm6+wrJ6+eZSH5Tz5es+/silzRfMkHNvr
+ QX7EBXAf3+4lnnI3dajXM5Bl/lntwtvh/wZlRUBrrYrejthXr6YQE160LSVzKSNCg5liKHvOl
+ MtqTce1vS0xdsg2XNHdDarkIl3Q0yA4v/7tyl1VL+OgBcU92YQVyvzx7+4gq58wcc6vhAxyt5
+ RvPgZ5+Fi/ui0GvojkXoMu4a40PhD4SrnI4gyfPOctRZc9EVW0YcNk5XRXXrNFZcrAOWYNR0n
+ DLudhGKTeokM39AuofC6vHIvSS091Jm9S8XmwQVLhhMKdgw+AHAp5nq2EECpbgqu9/jRwTCH1
+ AyUwgAz38xB9x4D9qJKC5vf7Z5duDMFLOhe0zjUYJxdxr5Es9nqHcdhwV1KgCh+xRELVs67dU
+ A2e8NrLjZYOUovtmKtR+N7fa0tq0N7faVL8B/uwby3e9hCly8/UYPkUBKSWwfF9fFTIeVOqsL
+ IFgnG0Dw/McbUSSnV9+RP3QEpvO3XLK9SiOF6p3HMZwbXaPe8OT5ec8kSkb6tAOjVDtVuB1nH
+ 4Mxn4KibjxdPfaKfCCG/vdsXETLLunRNoixCqqk8IwifTw7aL/NZ2Ukr9ZLELEbFkFJAYaww7
+ aC56FuQq3AdG5s/Yt/gCc4ryMTEhg2wkLZmfXso8RA==
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Rob,
 
---an2WmpP2EaKyfAAz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Am 19.06.23 um 20:57 schrieb Stefan Wahren:
+> Hi Daniel,
+> 
+> Am 19.06.23 um 19:00 schrieb Daniel Lezcano:
+>> On 17/06/2023 15:36, Stefan Wahren wrote:
+>>> Convert the DT binding document for bcm2835-system-timer from .txt
+>>> to YAML.
+>>>
+>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>> ---
+>>>   .../timer/brcm,bcm2835-system-timer.txt       | 22 ---------
+>>>   .../timer/brcm,bcm2835-system-timer.yaml      | 48 +++++++++++++++++++
+>>>   2 files changed, 48 insertions(+), 22 deletions(-)
+>>>   delete mode 100644 
+>>> Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
+>>>   create mode 100644 
+>>> Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.yaml
+>>>
+>>> diff --git 
+>>> a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt b/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
+>>> deleted file mode 100644
+>>> index 844bd5fbd04c..000000000000
+>>> --- 
+>>> a/Documentation/devicetree/bindings/timer/brcm,bcm2835-system-timer.txt
+>>
+>> Appliedp patch #7
+> 
+> i'm so sorry but i accidentially added a Reviewed-by from Rob, which is 
+> wrong here. I should have added to the patch 6 :-(
 
-On Mon, Jun 26, 2023 at 04:56:45PM +0200, Krzysztof Kozlowski wrote:
-> The BAM DMA resources can be controlled remotely (e.g. by trusted
-> environment; needs qcom,powered-remotely or qcom,controlled-remotely
-> properties) or locally.  In the latter case we need to provide its
-> clock.
->=20
-> Require one of methods of such control to properly validate DTS.
+did you noticed the problem about the accidentially wrong added Reviewed-by?
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Best regards
 
-Cheers,
-Conor.
-
---an2WmpP2EaKyfAAz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZJnDlwAKCRB4tDGHoIJi
-0qvEAQCi8S8dOZMpZcg0mY35taaqCaat6zIesocGIE3Hb2Tv9QD/Qzv3V3PMb6UR
-WAHy4wxo3ps6MrCkwY06Fu9ADJt+PQk=
-=q2cz
------END PGP SIGNATURE-----
-
---an2WmpP2EaKyfAAz--
+> 
+> Regards Stefan
+> 
+>>
+>> Thanks
+>>

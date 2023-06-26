@@ -2,153 +2,111 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E52F773DE1C
-	for <lists+dmaengine@lfdr.de>; Mon, 26 Jun 2023 13:50:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C2CC73E296
+	for <lists+dmaengine@lfdr.de>; Mon, 26 Jun 2023 16:56:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230044AbjFZLuN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 26 Jun 2023 07:50:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41926 "EHLO
+        id S230209AbjFZO4x (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 26 Jun 2023 10:56:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229703AbjFZLuL (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 26 Jun 2023 07:50:11 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 331411AD;
-        Mon, 26 Jun 2023 04:50:06 -0700 (PDT)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1qDkjJ-0007Jh-Nv; Mon, 26 Jun 2023 13:50:01 +0200
-Message-ID: <6bc3a7cb-4c3b-62e2-75f7-820f3a589029@leemhuis.info>
-Date:   Mon, 26 Jun 2023 13:50:01 +0200
+        with ESMTP id S230043AbjFZO4w (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 26 Jun 2023 10:56:52 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7C30D3
+        for <dmaengine@vger.kernel.org>; Mon, 26 Jun 2023 07:56:50 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4f76a0a19d4so4537442e87.2
+        for <dmaengine@vger.kernel.org>; Mon, 26 Jun 2023 07:56:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1687791409; x=1690383409;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=27Hbm1nSTxidmaHo4Rsegreg1V1tH8Gk8PNfLl0C8PA=;
+        b=yP0c98lED55xbAKz8zbKU1ATE3K32QLBopwmRpSh8g1Y1Ojq8YClIoGm4+vYsfDFq8
+         ggIT1Qu2kJ0+KUNB0Me+LyObyRutbVBuRbfZXe1Jguah+T60OAoQWMA0O6w6HMP8HuU+
+         DGnxXZ2h1qqG4TCTgMeekRp0ORKF+L76Cskmrf3OLXIVoscwkY5hS4B0KrVo1euF3OJL
+         yH/VPdDAuhlD6fkNmMvX5xUSXioRpTjxEi7z/0ZwBJ2M8yEywwhWKdyE0ef7nsxE72lJ
+         C1dsPkqMDgcfrrjRJpVKxEnIMuFpI9EKvfl2KtTcoomhOyEv831f+hcbGqd/gC3k1XDp
+         rqLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687791409; x=1690383409;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=27Hbm1nSTxidmaHo4Rsegreg1V1tH8Gk8PNfLl0C8PA=;
+        b=AX4pe4E8tm1O18Xq+/TZthWoFEWWRN9mLgY/UjP0qG5RYEdvoxwS7RKoNT5EPA5iK/
+         hVmlmQDSmXBWIpELrtHT8VaTuhbRslse7niDxVKeOOf0gzFdXAh5fvLcOybOzYR17aIj
+         z2G1daYkw+yA+Mn/TFceD5k21BzDcG8bpzLQTjwoGc8DcFsbQhFtMEWAWW9VRFLI/M/H
+         t46QLdt0lhGSaJJTLaEG4ZD2x4z1b0seROgxKy9FMNiXJeFLYv/osHJMgMMFiC873RfE
+         FWEszBsDKVE7znZlIPyT+D0M13k6STIgwltzkb5WSIcGYR08jjrs0dbQAm7MOupUlrhF
+         LXkw==
+X-Gm-Message-State: AC+VfDwu5BMVWQHCV8DfEdS5PRU6Whoze6tnX6N/76mVeMsyOWmshMhs
+        PvSonZXE1lRRtjl2y0+IWiB94g==
+X-Google-Smtp-Source: ACHHUZ6P7QfhEqbtbj9aseFYQVWHwwnAwptFktv1oZjineiJeroop5wpb3fzQZhk2mVjtmuWOBq71Q==
+X-Received: by 2002:a05:6512:3b95:b0:4f9:5d2a:e0f5 with SMTP id g21-20020a0565123b9500b004f95d2ae0f5mr12270695lfv.19.1687791409014;
+        Mon, 26 Jun 2023 07:56:49 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.219.26])
+        by smtp.gmail.com with ESMTPSA id w10-20020a1cf60a000000b003f9bd9e3226sm7945737wmc.7.2023.06.26.07.56.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Jun 2023 07:56:48 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] dt-bindings: dma: qcom,bam: require one of control methods
+Date:   Mon, 26 Jun 2023 16:56:45 +0200
+Message-Id: <20230626145645.646136-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] dmaengine: pl330: Return DMA_PAUSED when transaction is
- paused
-Content-Language: en-US, de-DE
-To:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        linux-serial@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Robert Baldyga <r.baldyga@samsung.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Richard Tresidder <rtresidd@electromag.com.au>,
-        stable@vger.kernel.org
-References: <20230526105434.14959-1-ilpo.jarvinen@linux.intel.com>
-From:   "Linux regression tracking (Thorsten Leemhuis)" 
-        <regressions@leemhuis.info>
-In-Reply-To: <20230526105434.14959-1-ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687780206;e6f7ebd4;
-X-HE-SMSGID: 1qDkjJ-0007Jh-Nv
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 26.05.23 12:54, Ilpo Järvinen wrote:
-> pl330_pause() does not set anything to indicate paused condition which
-> causes pl330_tx_status() to return DMA_IN_PROGRESS. This breaks 8250
-> DMA flush after the fix in commit 57e9af7831dc ("serial: 8250_dma: Fix
-> DMA Rx rearm race"). The function comment for pl330_pause() claims
-> pause is supported but resume is not which is enough for 8250 DMA flush
-> to work as long as DMA status reports DMA_PAUSED when appropriate.
-> 
-> Add PAUSED state for descriptor and mark BUSY descriptors with PAUSED
-> in pl330_pause(). Return DMA_PAUSED from pl330_tx_status() when the
-> descriptor is PAUSED.
-> 
-> Reported-by: Richard Tresidder <rtresidd@electromag.com.au>
-> Tested-by: Richard Tresidder <rtresidd@electromag.com.au>
-> Fixes: 88987d2c7534 ("dmaengine: pl330: add DMA_PAUSE feature")
-> Cc: stable@vger.kernel.org
-> Link: https://lore.kernel.org/linux-serial/f8a86ecd-64b1-573f-c2fa-59f541083f1a@electromag.com.au/
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+The BAM DMA resources can be controlled remotely (e.g. by trusted
+environment; needs qcom,powered-remotely or qcom,controlled-remotely
+properties) or locally.  In the latter case we need to provide its
+clock.
 
-Ilpo, Vinod, Philipp: what happened to this? It seems this fix for a
-regression didn't make any progress since it was posted. Or am I missing
-something?
+Require one of methods of such control to properly validate DTS.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> ---
-> 
-> $ diff -u <(git grep -l -e '\.device_pause' -e '->device_pause') <(git grep -l DMA_PAUSED)
-> 
-> ...tells there might a few other drivers which do not properly return
-> DMA_PAUSED status despite having a pause function.
-> 
->  drivers/dma/pl330.c | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-> index 0d9257fbdfb0..daad25f2c498 100644
-> --- a/drivers/dma/pl330.c
-> +++ b/drivers/dma/pl330.c
-> @@ -403,6 +403,12 @@ enum desc_status {
->  	 * of a channel can be BUSY at any time.
->  	 */
->  	BUSY,
-> +	/*
-> +	 * Pause was called while descriptor was BUSY. Due to hardware
-> +	 * limitations, only termination is possible for descriptors
-> +	 * that have been paused.
-> +	 */
-> +	PAUSED,
->  	/*
->  	 * Sitting on the channel work_list but xfer done
->  	 * by PL330 core
-> @@ -2041,7 +2047,7 @@ static inline void fill_queue(struct dma_pl330_chan *pch)
->  	list_for_each_entry(desc, &pch->work_list, node) {
->  
->  		/* If already submitted */
-> -		if (desc->status == BUSY)
-> +		if (desc->status == BUSY || desc->status == PAUSED)
->  			continue;
->  
->  		ret = pl330_submit_req(pch->thread, desc);
-> @@ -2326,6 +2332,7 @@ static int pl330_pause(struct dma_chan *chan)
->  {
->  	struct dma_pl330_chan *pch = to_pchan(chan);
->  	struct pl330_dmac *pl330 = pch->dmac;
-> +	struct dma_pl330_desc *desc;
->  	unsigned long flags;
->  
->  	pm_runtime_get_sync(pl330->ddma.dev);
-> @@ -2335,6 +2342,10 @@ static int pl330_pause(struct dma_chan *chan)
->  	_stop(pch->thread);
->  	spin_unlock(&pl330->lock);
->  
-> +	list_for_each_entry(desc, &pch->work_list, node) {
-> +		if (desc->status == BUSY)
-> +			desc->status = PAUSED;
-> +	}
->  	spin_unlock_irqrestore(&pch->lock, flags);
->  	pm_runtime_mark_last_busy(pl330->ddma.dev);
->  	pm_runtime_put_autosuspend(pl330->ddma.dev);
-> @@ -2425,7 +2436,7 @@ pl330_tx_status(struct dma_chan *chan, dma_cookie_t cookie,
->  		else if (running && desc == running)
->  			transferred =
->  				pl330_get_current_xferred_count(pch, desc);
-> -		else if (desc->status == BUSY)
-> +		else if (desc->status == BUSY || desc->status == PAUSED)
->  			/*
->  			 * Busy but not running means either just enqueued,
->  			 * or finished and not yet marked done
-> @@ -2442,6 +2453,9 @@ pl330_tx_status(struct dma_chan *chan, dma_cookie_t cookie,
->  			case DONE:
->  				ret = DMA_COMPLETE;
->  				break;
-> +			case PAUSED:
-> +				ret = DMA_PAUSED;
-> +				break;
->  			case PREP:
->  			case BUSY:
->  				ret = DMA_IN_PROGRESS;
+diff --git a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+index c9c34f7cdf5b..a0af90ec86f1 100644
+--- a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
++++ b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
+@@ -95,6 +95,15 @@ required:
+   - qcom,ee
+   - reg
+ 
++anyOf:
++  - required:
++      - qcom,powered-remotely
++  - required:
++      - qcom,controlled-remotely
++  - required:
++      - clocks
++      - clock-names
++
+ additionalProperties: false
+ 
+ examples:
+-- 
+2.34.1
+

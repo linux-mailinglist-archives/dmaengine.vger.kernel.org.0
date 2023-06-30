@@ -2,165 +2,149 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA389741877
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Jun 2023 20:59:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5B877436F3
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Jun 2023 10:22:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229591AbjF1S7Z (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 28 Jun 2023 14:59:25 -0400
-Received: from mga03.intel.com ([134.134.136.65]:10254 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229645AbjF1S5u (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 28 Jun 2023 14:57:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687978670; x=1719514670;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=tqSaGg/x+0pYMu8N0aigk6yCv/LZ/esxOgiIrlihxn0=;
-  b=TA3/KV8KkunJ9V46suPSv4IvsKI2XZUvM45dwsza4lAd39mb7WGS3aJr
-   c2xgM8vY2Lzz7cZqp8ubSGQtKrszX+bjik82JEoMMIG/7eFJc/QM2STer
-   zeSm/4RfiIXrRFjD8hKDpeit66++J86zfrJgFQN3etoIB6YEIfjhrQHu9
-   WiPuL3lxCGkumYJlijS+RiXldpVwvpD93PQ0rBCj60gZI07mc+PmqwXwu
-   QadK7lWkQmqqjieVLK+pmj4+wcWqbIFvFQJraFA2OXHd/LgXR6+3n66fr
-   PFtMPBeCFVFuZ8KOAg0bQR8mo6GU7rYP73VDLkmQgbTwo3+EsIyy3paWa
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10755"; a="365394220"
-X-IronPort-AV: E=Sophos;i="6.01,166,1684825200"; 
-   d="scan'208";a="365394220"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2023 11:57:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10755"; a="841200981"
-X-IronPort-AV: E=Sophos;i="6.01,166,1684825200"; 
-   d="scan'208";a="841200981"
-Received: from nagarw3-mobl1.amr.corp.intel.com ([10.212.93.40])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2023 11:57:47 -0700
-Message-ID: <8f2dd87ad58d5920e7bae4fea4cbe592074406c1.camel@linux.intel.com>
-Subject: Re: [PATCH v6 13/15] crypto: iaa - Add support for
- deflate-iaa-canned compression algorithm
-From:   Tom Zanussi <tom.zanussi@linux.intel.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     davem@davemloft.net, fenghua.yu@intel.com, vkoul@kernel.org,
-        dave.jiang@intel.com, tony.luck@intel.com,
-        wajdi.k.feghali@intel.com, james.guilford@intel.com,
-        kanchana.p.sridhar@intel.com, vinodh.gopal@intel.com,
-        giovanni.cabiddu@intel.com, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org
-Date:   Wed, 28 Jun 2023 13:57:45 -0500
-In-Reply-To: <ZIw/jtxdg6O1O0j3@gondor.apana.org.au>
-References: <20230605201536.738396-1-tom.zanussi@linux.intel.com>
-         <20230605201536.738396-14-tom.zanussi@linux.intel.com>
-         <ZIw/jtxdg6O1O0j3@gondor.apana.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.1-0ubuntu1 
+        id S231766AbjF3IWr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 30 Jun 2023 04:22:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231431AbjF3IWp (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 30 Jun 2023 04:22:45 -0400
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92AED129
+        for <dmaengine@vger.kernel.org>; Fri, 30 Jun 2023 01:22:44 -0700 (PDT)
+Received: by mail-qk1-x730.google.com with SMTP id af79cd13be357-76571dae5feso147745485a.1
+        for <dmaengine@vger.kernel.org>; Fri, 30 Jun 2023 01:22:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1688113363; x=1690705363;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=24mW1z/BqCb5EBJHp3ULvIr3bZwApFxhHmnOyHEIWyI=;
+        b=MvVFGuyKfZ4RfhcbEV9YmVNzMeIxc4lcl9UuH7lRzVqqYIW7z1hmetpngcE66TjiSp
+         Dbd+W/JAvsyRkU1Lt4gibkJYQJwmnR5UExEuKeN2u+Gw6wtBMWnlZe9Ee9S76+3y3N5Q
+         ZVdLeqtzOBMJ8pdPDIJcHy8+aJuNCq0IAzM4BOMXUh6a4CPmPkx4ZBrwdRyuIKx2q8UQ
+         fqJGRrJ+T37eJ9YY0VDUYywTZ9HJXBos5x8HfTism8dGfUew0N8OD2V7Y78Udosc3T0D
+         aFcn7HEjfNIsLkZok4Z2PUEW2RV1GSy2njui6Qw1whU6F436hR8HP0D7tIOU2xUQ4z33
+         SNDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688113363; x=1690705363;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=24mW1z/BqCb5EBJHp3ULvIr3bZwApFxhHmnOyHEIWyI=;
+        b=gGO+wOAN67YOy6GWTLJTsBFYgNMGyb5KzYMWbfAh99tXjXSukIJw5zgiA6cM0uKU9B
+         rta5bCgJI3G55P7Cs211/qKa01THqGwz4Pz7qOGv7OKm6UQPRoGNz3ZnUM5jj12M5VTC
+         F2Vu31prVfE20qLqjlb20OhoNPg/TvFcr21c20KxsRzhv/Ap+K0CF62MtV+MbRqFljBD
+         PMoScMxeYKj+U3Zrz/5xbT8Cu97PnkZR6meNqgPLHLFck/TQNJaUOcCucwb+/2DlmfRp
+         3qNkIu9wtXq6p3RmGvXk+10SZRYm6/Q/5DASDQjg1pQL9V16+RAcVA9RwMRw9WSkXRRF
+         pbIg==
+X-Gm-Message-State: AC+VfDyAD6ER51sVfucpqqX0zVx15wcluNDzSwQHdK6BTTAkt9iVVsWl
+        vbWcuXqbLdY0R+kHXAeGY79rsQ==
+X-Google-Smtp-Source: ACHHUZ7M/I5tDg2Tx8uMTc+kdz6EifYof2eCpYo3fW6wNGsw+33eb+QabNrLyJHUsmo7kjyIkxcwkA==
+X-Received: by 2002:a05:620a:8e0c:b0:767:2736:ecd4 with SMTP id re12-20020a05620a8e0c00b007672736ecd4mr1513344qkn.47.1688113363676;
+        Fri, 30 Jun 2023 01:22:43 -0700 (PDT)
+Received: from localhost.localdomain ([223.233.68.54])
+        by smtp.gmail.com with ESMTPSA id a16-20020aa780d0000000b00666e2dac482sm9462967pfn.124.2023.06.30.01.22.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Jun 2023 01:22:43 -0700 (PDT)
+From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
+To:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org
+Cc:     vkoul@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        andersson@kernel.org, bhupesh.sharma@linaro.org,
+        bhupesh.linux@gmail.com, agross@kernel.org,
+        konrad.dybcio@linaro.org, conor+dt@kernel.org, robh+dt@kernel.org
+Subject: [PATCH v9 0/2] dt-bindings: dma: Add support for SM6115 and QCM2290 SoCs
+Date:   Fri, 30 Jun 2023 13:52:28 +0530
+Message-Id: <20230630082230.2264698-1-bhupesh.sharma@linaro.org>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Herbert,
-=20
-Sorry for the delayed response, I was out on vacation.
+Add support for SM6115 and QCM2290 SoCs in qcom,bam-dma bindings.
+Also increase iommu maxItems for BAM DMA to 6 which is the number
+required on sm8250 SoC.
 
-On Fri, 2023-06-16 at 18:55 +0800, Herbert Xu wrote:
-> On Mon, Jun 05, 2023 at 03:15:34PM -0500, Tom Zanussi wrote:
-> > Add support for a 'canned' compression mode using the IAA
-> > compression
-> > mode in-kernel API.
-> >=20
-> > The IAA 'canned' compression mode is added alongside the existing
-> > 'fixed' compression mode and a crypto algorithm named
-> > 'deflate-iaa-canned' is registered using it.
->=20
-> So you said that canned is not compatible with the generic deflate
-> algorithm.=C2=A0 Does that mean that there is no way for it to decompress
-> something compressed by the generic deflate algorithm, and vice versa
-> its compressed output cannot be decompressed by generic deflate?
->=20
+This patchset is rebased on linux-next/master.
 
-Yes, for the most part...
+Changes since v8:
+-----------------
+- v8 can be viewed here: https://www.spinics.net/lists/linux-crypto/msg72349.html
+- As rest of the patches from v8 have been applied to linux-next, dropped them from v9.
+- Added dma list and maintainer in Cc again as the Cc list got messed up while
+  sending out v8.
 
-In canned mode, the header portion of the deflate block is stored
-separately from the body of the compressed data, but the header and
-body are both compliant with the deflate standard.  It can be
-decompressed with any software deflate decompressor by performing
-a	pre-processing step (basically prepending a deflate block header and
-the description of the codes before the first symbol).  The current
-code doesn=E2=80=99t do that, but it could.
-=20
-IAA canned mode can=E2=80=99t however decompress output generated by generi=
-c
-deflate, that is true.
-=20
-Below [1] are some more clarifying details in case you=E2=80=99re intereste=
-d.
+Changes since v7:
+-----------------
+- v7 can be viewed here: https://lore.kernel.org/linux-arm-msm/20230519214813.2593271-1-bhupesh.sharma@linaro.org/
+- Addressed Stephan's comment about RPM clocks for sm6115 crypto block in dtsi.
+- Also fixed the iommu context ids for sm6115 crypto block in dtsi.
 
-> We don't add an algorithm to the Crypto API if the only
-> implementation
-> is by hardware.=C2=A0 IOW if you are adding a new algorithm, then a
-> software version must be the first patch.
->=20
-=20
-One possibility for supporting canned mode might be to, as mentioned
-above, change the code to prepend the deflate block header and
-description of the codes before the first symbol so that it could be
-decompressed using only generic deflate in software; in that case,
-there would never be a worry about the canned data compressed by the
-IAA hardware being unrecoverable in case of hardware failure.  I=E2=80=99m =
-not
-sure if that would be acceptable or how that would work within the
-crypto framework - please let us know your thoughts on that.
-=20
-If that=E2=80=99s not an option, then I=E2=80=99d propose just dropping the=
- canned
-algorithm for now and resubmitting with fixed mode only for a v7 of
-this series, and later following up with an additional series
-consisting of this patch and a software-only implementation of canned
-mode, as you suggest. Does that make sense?  Please let us know your
-thoughts...
-=20
-Thanks,
-=20
-Tom
-=20
-=20
-[1] [From Vinodh Gopal] Deflate https://www.ietf.org/rfc/rfc1951.txt is
-an LZ77 style algorithm combined with Huffman encoding. LZ77 algorithms
-look for matching strings within a history-window. Deflate defines that
-maximal window to be 32KB. A typical software implementation such as
-zlib/gzip with default settings, would use 32KB as the history-window.
-IAA is a light-weight implementation that only supports a history-
-window of 4KB. There are advanced settings in many Software
-libraries/applications to limit history when compressing; if we limit a
-Software compressor to 4KB history, then any input compressed with such
-Software can always be decompressed by IAA. A special exception is that
-Software compression with default settings that works on a data input
-whose size is <=3D 4KB will always generate an output that can be
-decompressed with IAA; since the original input itself is no bigger
-than 4KB, the larger window of 32KB becomes irrelevant. This is the
-case with the ZSWAP/ZRAM usage and 4KB page compression.
-=20
-The LZ77 symbols in a deflate block can be encoded with 2 styles of
-Huffman codes. In the fixed mode, a predefined Huffman code from the
-standard is used for the encoding. The deflate block header specifies
-the type of block as fixed or dynamic (or stored, for incompressible
-data stored as raw bytes). Dynamic Huffman codes require a compact
-description of the code used for that block, before the encoded symbols
-representing the compressed data. IAA supports these types of codes.
-The choice of codes is made during the compression; the decompressor
-parses the deflate block header to determine the type of codes and does
-not need such information from another context.
-=20
-In addition, IAA defines a "canned mode", where the code is stored
-separately from the compressed bitstream. Here the compressed blob
-would start at the very first encoded symbol. The decompressor needs
-additional context to know what codes were used by the compressor. This
-context is provided to the IAA decompressor when it needs to process a
-canned-mode compressed stream. This can also be decompressed with any
-software deflate decompressor, by performing a pre-processing step
-(basically prepending a deflate block header and the description of the
-codes before the first symbol)
+Changes since v6:
+-----------------
+- v6 can be viewed here: https://lore.kernel.org/linux-arm-msm/20230405072836.1690248-1-bhupesh.sharma@linaro.org/
+- Collected Acks, R-Bs and Tested-by for various patches.
+- Addressed Konrad's comment about iommu sids for sm8150 and sm8250
+  crypto node entries.
+- Addressed Konrad's and Stephan's comments about adding RPM clock for
+  crypto blocks on qcm2290 and sm6115.
 
-> Thanks,
+Changes since v5:
+-----------------
+- v5 can be viewed here: https://lore.kernel.org/linux-arm-msm/20230402100509.1154220-1-bhupesh.sharma@linaro.org/
+- Collected Ack from Rob for [PATCH 01/11].
+- Addressed Georgi's comment about interconnect cells in [PATCH 10/11].
+
+Changes since v4:
+-----------------
+- v4 can be viewed here: https://lore.kernel.org/linux-arm-msm/20230331164323.729093-1-bhupesh.sharma@linaro.org/
+- Collected R-Bs from Konrad for a couple of patches sent in v4.
+- Fixed incorrect email IDs for a couple of patches sent in v3, which I used for
+  some patches created on a different work machine.
+- No functional changes since v3.
+
+Changes since v3:
+-----------------
+- v3 can be viewed here: https://lore.kernel.org/linux-arm-msm/20230328092815.292665-1-bhupesh.sharma@linaro.org/
+- Collected Acks from Krzysztof for a couple of patches sent in v3.
+- Fixed review comments from Krzysztof regarding DMA binding document
+  and also added a couple of new patches which are required to fix the
+  'dtbs_check' errors highlighted after this fix.
+
+Changes since v2:
+-----------------
+- v2 can be viewed here: https://lore.kernel.org/linux-arm-msm/20230322114519.3412469-1-bhupesh.sharma@linaro.org/
+- No functional change since v2. As the sdm845 patch from v1 was accepted in linux-next,
+  dropped it from this version.
+
+Changes since v1:
+-----------------
+- v1 can be viewed here: https://lore.kernel.org/linux-arm-msm/20230321190118.3327360-1-bhupesh.sharma@linaro.org/
+- Folded the BAM DMA dt-binding change.
+  (sent earlier as: https://lore.kernel.org/linux-arm-msm/20230321184811.3325725-1-bhupesh.sharma@linaro.org/)
+- Folded the QCE dt-binding change.
+  (sent earlier as: https://lore.kernel.org/linux-arm-msm/20230320073816.3012198-1-bhupesh.sharma@linaro.org/)
+- Folded Neil's SM8450 dts patch in this series.
+- Addressed review comments from Rob, Stephan and Konrad.
+- Collected Konrad's R-B for [PATCH 5/9].
+
+Bhupesh Sharma (2):
+  dt-bindings: dma: Add support for SM6115 and QCM2290 SoCs
+  dt-bindings: dma: Increase iommu maxItems for BAM DMA
+
+ .../devicetree/bindings/dma/qcom,bam-dma.yaml | 22 ++++++++++++-------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
+
+-- 
+2.38.1
 

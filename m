@@ -2,97 +2,123 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 592BB743F92
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Jun 2023 18:18:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1059744B99
+	for <lists+dmaengine@lfdr.de>; Sun,  2 Jul 2023 00:19:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232460AbjF3QRt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 30 Jun 2023 12:17:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38166 "EHLO
+        id S229820AbjGAWTa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 1 Jul 2023 18:19:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232383AbjF3QR2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 30 Jun 2023 12:17:28 -0400
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B1CDB3ABC;
-        Fri, 30 Jun 2023 09:17:27 -0700 (PDT)
-X-IronPort-AV: E=Sophos;i="6.01,171,1684767600"; 
-   d="scan'208";a="166246347"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 01 Jul 2023 01:17:27 +0900
-Received: from localhost.localdomain (unknown [10.226.93.15])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 4FF0B4015EE4;
-        Sat,  1 Jul 2023 01:17:25 +0900 (JST)
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Hien Huynh <hien.huynh.px@renesas.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v2 2/2] dma: rz-dmac: Fix destination and source data size setting
-Date:   Fri, 30 Jun 2023 17:17:16 +0100
-Message-Id: <20230630161716.586552-3-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230630161716.586552-1-biju.das.jz@bp.renesas.com>
-References: <20230630161716.586552-1-biju.das.jz@bp.renesas.com>
+        with ESMTP id S229446AbjGAWT1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 1 Jul 2023 18:19:27 -0400
+X-Greylist: delayed 1055 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 01 Jul 2023 15:19:26 PDT
+Received: from hall.aurel32.net (hall.aurel32.net [IPv6:2001:bc8:30d7:100::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D63F2E77
+        for <dmaengine@vger.kernel.org>; Sat,  1 Jul 2023 15:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=aurel32.net
+        ; s=202004.hall; h=In-Reply-To:Content-Type:MIME-Version:References:
+        Message-ID:Subject:Cc:To:From:Date:Content-Transfer-Encoding:From:Reply-To:
+        Subject:Content-ID:Content-Description:X-Debbugs-Cc;
+        bh=awuPIRBOTCLPchkWj4ebZYVqHfMO7eHE5JTOy/aYNHY=; b=h1iYvb7zvOgUfccHyUvSVw+BsK
+        PnsLEzDiZPkSggABGw1ftJsK318vzOrCOGkbRnfUWTy6q5I/L1/fU5h4snd1x6nMUoOtPoednRfHn
+        jDf4pcqSQq5ypoiXEDWiVzWKSObeQSm3OOflf71Wxs320FHTYS06VIyVX7Aq5n1Kt/UKKezTKw2NB
+        egE/RmV06MsWgAT1uo8MRvgTCQmTNHUj5wK4b82Yd6YC6/rVmQcZWNJvD3RmyScG9D13dHsYzINDd
+        0q8Gmvk0rngnaNB0TklOPAlI3NZOkARUJ21pFjsJlZJL2US/ySO8atUJ2Xz1yBaUulaL9Lt+5H3xC
+        4DQdTRZw==;
+Received: from [2a01:e34:ec5d:a741:8a4c:7c4e:dc4c:1787] (helo=ohm.rr44.fr)
+        by hall.aurel32.net with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <aurelien@aurel32.net>)
+        id 1qFieo-00F95d-3k; Sun, 02 Jul 2023 00:01:30 +0200
+Received: from aurel32 by ohm.rr44.fr with local (Exim 4.96)
+        (envelope-from <aurelien@aurel32.net>)
+        id 1qFien-00FECR-1d;
+        Sun, 02 Jul 2023 00:01:29 +0200
+Date:   Sun, 2 Jul 2023 00:01:29 +0200
+From:   Aurelien Jarno <aurelien@aurel32.net>
+To:     Walker Chen <walker.chen@starfivetech.com>
+Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v6 4/4] riscv: dts: starfive: add dma controller node
+Message-ID: <ZKCiOQ0IuptKO8kr@aurel32.net>
+Mail-Followup-To: Walker Chen <walker.chen@starfivetech.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <20230322094820.24738-1-walker.chen@starfivetech.com>
+ <20230322094820.24738-5-walker.chen@starfivetech.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230322094820.24738-5-walker.chen@starfivetech.com>
+User-Agent: Mutt/2.2.9 (2022-11-12)
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Hien Huynh <hien.huynh.px@renesas.com>
+On 2023-03-22 17:48, Walker Chen wrote:
+> Add the dma controller node for the Starfive JH7110 SoC.
+> 
+> Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+> Signed-off-by: Walker Chen <walker.chen@starfivetech.com>
+> ---
+>  arch/riscv/boot/dts/starfive/jh7110.dtsi | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/arch/riscv/boot/dts/starfive/jh7110.dtsi b/arch/riscv/boot/dts/starfive/jh7110.dtsi
+> index 17220576b21c..b503b6137743 100644
+> --- a/arch/riscv/boot/dts/starfive/jh7110.dtsi
+> +++ b/arch/riscv/boot/dts/starfive/jh7110.dtsi
+> @@ -510,6 +510,24 @@
+>  			#gpio-cells = <2>;
+>  		};
+>  
+> +		dma: dma-controller@16050000 {
+> +			compatible = "starfive,jh7110-axi-dma";
+> +			reg = <0x0 0x16050000 0x0 0x10000>;
+> +			clocks = <&stgcrg JH7110_STGCLK_DMA1P_AXI>,
+> +				 <&stgcrg JH7110_STGCLK_DMA1P_AHB>;
+> +			clock-names = "core-clk", "cfgr-clk";
+> +			resets = <&stgcrg JH7110_STGRST_DMA1P_AXI>,
+> +				 <&stgcrg JH7110_STGRST_DMA1P_AHB>;
+> +			interrupts = <73>;
+> +			#dma-cells = <1>;
+> +			dma-channels = <4>;
+> +			snps,dma-masters = <1>;
+> +			snps,data-width = <3>;
+> +			snps,block-size = <65536 65536 65536 65536>;
+> +			snps,priority = <0 1 2 3>;
+> +			snps,axi-max-burst-len = <16>;
+> +		};
+> +
+>  		aoncrg: clock-controller@17000000 {
+>  			compatible = "starfive,jh7110-aoncrg";
+>  			reg = <0x0 0x17000000 0x0 0x10000>;
 
-Before setting DDS and SDS values, we need to clear its value first
-otherwise, we get incorrect results when we change/update the DMA bus
-width several times due to the 'OR' expression.
+It appears that this patch has never been applied, although the rest of
+the series has already been merged. Unfortunately it doesn't apply
+anymore due to other changes to that file.
 
-Fixes: 5000d37042a6 ("dmaengine: sh: Add DMAC driver for RZ/G2L SoC")
-Signed-off-by: Hien Huynh <hien.huynh.px@renesas.com>
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-v1->v2:
- * Updated patch header.
----
- drivers/dma/sh/rz-dmac.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Could you please rebase and repost it?
 
-diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
-index 229f642fde6b..331ea80f21b0 100644
---- a/drivers/dma/sh/rz-dmac.c
-+++ b/drivers/dma/sh/rz-dmac.c
-@@ -145,8 +145,10 @@ struct rz_dmac {
- #define CHCFG_REQD			BIT(3)
- #define CHCFG_SEL(bits)			((bits) & 0x07)
- #define CHCFG_MEM_COPY			(0x80400008)
--#define CHCFG_FILL_DDS(a)		(((a) << 16) & GENMASK(19, 16))
--#define CHCFG_FILL_SDS(a)		(((a) << 12) & GENMASK(15, 12))
-+#define CHCFG_FILL_DDS_MASK		GENMASK(19, 16)
-+#define CHCFG_FILL_DDS(a)		(((a) << 16) & CHCFG_FILL_DDS_MASK)
-+#define CHCFG_FILL_SDS_MASK		GENMASK(15, 12)
-+#define CHCFG_FILL_SDS(a)		(((a) << 12) & CHCFG_FILL_SDS_MASK)
- #define CHCFG_FILL_TM(a)		(((a) & BIT(5)) << 22)
- #define CHCFG_FILL_AM(a)		(((a) & GENMASK(4, 2)) << 6)
- #define CHCFG_FILL_LVL(a)		(((a) & BIT(1)) << 5)
-@@ -607,12 +609,14 @@ static int rz_dmac_config(struct dma_chan *chan,
- 	if (val == CHCFG_DS_INVALID)
- 		return -EINVAL;
- 
-+	channel->chcfg &= ~CHCFG_FILL_DDS_MASK;
- 	channel->chcfg |= CHCFG_FILL_DDS(val);
- 
- 	val = rz_dmac_ds_to_val_mapping(config->src_addr_width);
- 	if (val == CHCFG_DS_INVALID)
- 		return -EINVAL;
- 
-+	channel->chcfg &= ~CHCFG_FILL_SDS_MASK;
- 	channel->chcfg |= CHCFG_FILL_SDS(val);
- 
- 	return 0;
 -- 
-2.25.1
-
+Aurelien Jarno                          GPG: 4096R/1DDD8C9B
+aurelien@aurel32.net                     http://aurel32.net

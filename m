@@ -2,136 +2,140 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A4D89745F52
-	for <lists+dmaengine@lfdr.de>; Mon,  3 Jul 2023 17:00:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 095DE747063
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Jul 2023 14:05:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231549AbjGCPA6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 3 Jul 2023 11:00:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43340 "EHLO
+        id S231213AbjGDMFX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 4 Jul 2023 08:05:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231545AbjGCPA5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 3 Jul 2023 11:00:57 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C36BE5E
-        for <dmaengine@vger.kernel.org>; Mon,  3 Jul 2023 08:00:54 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-51d7e8dd118so5777364a12.1
-        for <dmaengine@vger.kernel.org>; Mon, 03 Jul 2023 08:00:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688396453; x=1690988453;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kYc7ssW76JbeyuIAYWb2z/AMKU9mWqY66zI1YvE3ht4=;
-        b=rq3em3i2DhBtDJZbyPiiH/JcD1whzSHiFE+JJXBVtdQ7Tq3p/2ShBpJc/UnO79qBh4
-         dAYkUPQ1m3NvvHRtkMH3gr/vV21L+K5D2Oaeysm1HKEU56G4eV0RWgmGs3Zug6JRw/uv
-         NDODM6ZAIj83FeP3w8oKRGCLKlWZTD4GJ+9T8kg1SDDNmCV2rDMTm4X3HgSCsCy6NtfJ
-         lxwevRsHXWM8SRP3n/IrG6nsLudj15VBgyQsxEulKpwMRoFDf35iMHqw8qkYUFc0x6EE
-         uHW7NSSUAwzgxhgtZC2G5mqIQNeBP2swrKbq18kQrpKjvgEKQDmBVwqP80xWOTJUHgpI
-         EAgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688396453; x=1690988453;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kYc7ssW76JbeyuIAYWb2z/AMKU9mWqY66zI1YvE3ht4=;
-        b=VsoCckWCZPt3Ylxp2U46nyLWo1zaKFkChK7Zd0h1wMr8iF1nlvSiIhWJFSKv4CVgWn
-         mxvpzZ5hjhAkskQQYOwdZHnouIXh0XfacPw/be37Gz0OXXZfxdZ5xbqXbhxwTpsQgJdG
-         EYEWMwi/4S51L9nx3jgwi7jH2hoj8rPrC0KZzXAGjnclwBWMISVBIpZem/Aafp9pP4Ki
-         WLyfk5HiVA4PkgLn0Fus1GCJrB6Hgm8oMJMad/J/MgTf8YV1nEtaFyCG5XkAP5ZGmT0+
-         uNifwbHaS0D2ROhUUGVwjC3la9b3TNz3HM23R1Fr5PlScKHm9VZ6Mb73CzDI7t3yDyiX
-         pktQ==
-X-Gm-Message-State: ABy/qLY8nKkYn2r+7hdSxwmEhZ8Gf72c0fguQL1bKZtYui4tIg4kVt87
-        Aksgdtv1NzZYe0ihJ8OsjHxmXQ==
-X-Google-Smtp-Source: APBJJlFd14wiD2Xpe42nUkkf2jg9Ee7geplQ4o0gKJmte8k6StgWqm4Jvh5aw2ZOGo/GOSZbcFcCpQ==
-X-Received: by 2002:aa7:d7ce:0:b0:51d:f37b:1b4e with SMTP id e14-20020aa7d7ce000000b0051df37b1b4emr7377991eds.19.1688396453073;
-        Mon, 03 Jul 2023 08:00:53 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id k17-20020a1709063e1100b009875a6d28b0sm2266432eji.51.2023.07.03.08.00.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Jul 2023 08:00:52 -0700 (PDT)
-Message-ID: <cf2978dc-9ef9-0b3c-911a-7da97977e412@linaro.org>
-Date:   Mon, 3 Jul 2023 17:00:50 +0200
+        with ESMTP id S231398AbjGDMFU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Jul 2023 08:05:20 -0400
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2113.outbound.protection.outlook.com [40.107.117.113])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1724EE7E;
+        Tue,  4 Jul 2023 05:05:15 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a8CCqTenTaLxhc40DnRxzypEaBHVMYHO0ezqlfthnk8HdYCMGtZr8AY/H+3RofC3FYDt4a3gyVFOoHuTCRbdeNSvYXeDoGd902+3OQFeyngMURQ5XQ/DZqu8CmbYIVfans7I2465icLcqgFSjKdePLHH/cy9bvyGOmQXErT7bKNWpVYirENUNFHOc+16WegZdDt2jCdxijhEKIyH39jpUhYuvj8zvrLqPbFSlj8836u0H5ine4gECZ+u42JevbDlh7Ag7nLxsiNtEQx1+TZ8NicEeYcCEhGxUUIosddRN8Vw/waPE2xrDGKsUgKbD4vnj3GC02QYXg3rl4zos/qgUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=p4d0tcwYrv5GgGAUd/6L2Co9SEbi/PAPzN9VrjkRb1o=;
+ b=AclTDQ/1zK1RoinnfuXsbL+1m0Sf3nldqW9DZD2P9Tl6+gibnvHYIbsaf0zM6jithsJiUI5JsMibqO34x+UiOOJmF9WgKX6V1RNoocI8PNIZjuowO9X3WJkKLD9T22Nllb96dT9ZN4O/8psF2AZZwvTq6FUKnMWEnbgaEFQI1n69BzR+TCMRU1QaZV2t6iXuuc7FJh6o13eJeybKXsxkrI3gxzg8r18XIjSmy7DJ1GOnmmKc3CxH5onZEryGr5ECarfNtjfSmPQoJa06wLY8M3Hw2Xm4u52DwKpAq88/xCNeYKgDfcWgo92hTZXo/+uGhhkXbjdVgY6lzbMVhXa3YA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p4d0tcwYrv5GgGAUd/6L2Co9SEbi/PAPzN9VrjkRb1o=;
+ b=S2BpF4p6JAjleeINFP2wEyyZrbzDgQCF/cTOzC/f6Py/V0vBn7cxlksSu5sjXw6j4b6FlHOg7I020gkOcWK9ClapRoeRZR036XmjtFXwM6TlPkAhrCpEM1XgPetywQdoW5zTNz4uY3p/mshGaXLIHQYikaeagGADTP+5mTocOq9N+BrviJxLM0pUpBwhWi4E5EQBMpz9Tzdst7vgBgopO/9uGGOqHbqDJz+fKCOZrVix1nx6JEctTfU0SPdIGdXDVvX35FEcjPIiHsmAya/0LQ+O7lfkfCW1jfJIccBVU3kAZHR8c8a8+fvXc2vqkoW/EIEsd/SNWYrFQTq9lyIM1Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SG2PR06MB5288.apcprd06.prod.outlook.com (2603:1096:4:1dc::9) by
+ JH0PR06MB6653.apcprd06.prod.outlook.com (2603:1096:990:31::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6544.24; Tue, 4 Jul 2023 12:05:10 +0000
+Received: from SG2PR06MB5288.apcprd06.prod.outlook.com
+ ([fe80::c2b:41ab:3b14:f920]) by SG2PR06MB5288.apcprd06.prod.outlook.com
+ ([fe80::c2b:41ab:3b14:f920%6]) with mapi id 15.20.6544.024; Tue, 4 Jul 2023
+ 12:05:10 +0000
+From:   Minjie Du <duminjie@vivo.com>
+To:     Lizhi Hou <lizhi.hou@amd.com>, Brian Xu <brian.xu@amd.com>,
+        Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Michal Simek <michal.simek@amd.com>,
+        dmaengine@vger.kernel.org (open list:XILINX XDMA DRIVER),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/ZYNQ
+        ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
+Cc:     opensource.kernel@vivo.com, Minjie Du <duminjie@vivo.com>
+Subject: [PATCH v1] drivers: xilinx: Fix Judgment of the return value of the devm_ioremap_resource function
+Date:   Tue,  4 Jul 2023 20:04:58 +0800
+Message-Id: <20230704120458.11125-1-duminjie@vivo.com>
+X-Mailer: git-send-email 2.39.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYAPR04CA0012.apcprd04.prod.outlook.com
+ (2603:1096:404:15::24) To SG2PR06MB5288.apcprd06.prod.outlook.com
+ (2603:1096:4:1dc::9)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v9 00/13] dmaengine: edma: add freescale edma v3 support
-Content-Language: en-US
-To:     Frank Li <Frank.li@nxp.com>
-Cc:     vkoul@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peng.fan@nxp.com, joy.zou@nxp.com, shenwei.wang@nxp.com,
-        imx@lists.linux.dev
-References: <20230620201221.2580428-1-Frank.Li@nxp.com>
- <ZJxHc62V72eVMYu4@lizhi-Precision-Tower-5810>
- <3ce07ab8-9ed0-d5c0-e7da-bb24085cc3f8@linaro.org>
- <ZKLfB7putFfLlAoH@lizhi-Precision-Tower-5810>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <ZKLfB7putFfLlAoH@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG2PR06MB5288:EE_|JH0PR06MB6653:EE_
+X-MS-Office365-Filtering-Correlation-Id: 620ec6c3-8821-45ad-7ce0-08db7c86ea42
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: W4SWH8aj0dX1ClIek7HwWAHlYeyCv58sCx6zpZvqzchK9XPaqTtQJbMOP54vueIEz5SzEfFbYLmAFOAnJbg1i3SqT+03kpgG9JJbcNrsIFhNXEzod8bTTnI4HCL+LnvoEMeIn3/9twL3DsfxvCrZiBAJud8+H4M22yiENlKUX4jVHgP9+4osq+FGIZ0N53R4nFyAIqOn+1+munUcIqcVGDvhLm6f1MhZZtHqRBMIsnHBWxJiiKQcJ6CEVQTJCu6wIESK9rPUehSc/NHkr199UxXIfRb7qbxh8SYJmnsGQmNPANSnc123GBx7023Iq/kP3xMr8rglifLNMk2t+GH8vsaIWCzm2Tyc2ht5VeBDjAsU+BmswPF4FyrMMZWBU1wmv68zZmzYrVMDnkmTDE/089wPQw02G7QLVGjG54zYZjIvQWF0PdF4BHHzysxx4FCCu2JP+jNTPRbbCPAW+34FJTBbVYD4Byx1afz8gttE0jsLltnCwpI6QkSuT1SE3xHpXnXoGyqy2n7IEFL1/NIu+J/e78vEfMJUP+Yk78GvGGfMaxU7Sz2IuDB7hybjriQFhBp6p4cccDVhc344T5mfckVuBzZNKBpqeG0FQAaAqNfIqouGfSnapAG+X+Zr5Aof
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2PR06MB5288.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(346002)(366004)(376002)(39860400002)(136003)(451199021)(110136005)(4744005)(2906002)(478600001)(26005)(6486002)(6666004)(86362001)(41300700001)(52116002)(8936002)(8676002)(5660300002)(36756003)(316002)(6512007)(66556008)(66476007)(66946007)(4326008)(38100700002)(38350700002)(6506007)(1076003)(2616005)(186003)(83380400001)(107886003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DR26hOmZDfnG58AjHjNzpynGaD67DgJHX+woodbBxbR+nFLQ/JwmmOst/u60?=
+ =?us-ascii?Q?4ibsmsMKaNr743T/86KTT33YJq5QEyCA5jDFFiBaL/gzbNdPo3Lmf4CjTRyC?=
+ =?us-ascii?Q?QN97zzNa45fKCUG5Sv2qremjEBFobCjYKyrcCU3Nr8UU5QOTRKaH4j5vPrwk?=
+ =?us-ascii?Q?RGy2KNogdbxm5SFldLDOmaBGXk3RK2rH5BKAlsofToIjSe2g0GlA8Mq3NXYY?=
+ =?us-ascii?Q?NZ7WoDNsr1hWB0qcs3T4QxGdEe3gP60Np3Q3l/R/NbrV52ZZbTpK/rt8bfmx?=
+ =?us-ascii?Q?k/xO/otqrwkNwLDBBX+3wW3XaRSqZOTBi6g30t0DDlOFUKjYJM4VOPmJdqtL?=
+ =?us-ascii?Q?gbtTY8MUj57FdkAvoKhz+1CO5sz/0EibxVQIx7wqMjSJMie3Qze21o1DJRgK?=
+ =?us-ascii?Q?9u06Ww0VN+YclRdTiPjNPPwuCZKfrr3d7FocHLBCiL571zTt2/c7NwVIGrNe?=
+ =?us-ascii?Q?9kHU1NC8Jc5vc0kQweayBQhAtoBNBYz1zQRdNoNX8+e8J4uud6jvWr/FuyvP?=
+ =?us-ascii?Q?5B9kFv1fzfjJIq0PaB/6QMbZIRKSDn4rAaoSiO0sZiL3dA64fE4OoMRawkEe?=
+ =?us-ascii?Q?l31Xe/0sVrlzdO5iVrUWLjcE+L7Ja47W1WQwWvvUUwDSucXzY30xIN/PPzRg?=
+ =?us-ascii?Q?4CVb+fgGZv2zQumBz9GUXQs2voGaEnb2xQngQPTfKvTpD32zD7F6n1f4tgXy?=
+ =?us-ascii?Q?9yvzquvF7bXlfe+7glvozARlYuQmKVXWbV5JBcmzvUcihOycj4gHq2xro/vJ?=
+ =?us-ascii?Q?b63bW/OHfo+tAqob4qxqsjbxtj5CVTQ6LGTazAuPudMoDUgs394RQeCaPoID?=
+ =?us-ascii?Q?VGAJKwSLWYbWgscxzZf/YkbFDOVZxiJB4oENUz7C6YMNp6CgByuA0Suhx4UB?=
+ =?us-ascii?Q?9+W34pIMlwLYonWeUop4QyrbdtmJrgi51hQIp/EgS/lPkjlHzlY6mh/oTC8Y?=
+ =?us-ascii?Q?//ni4j0RQjY3aM4Slm2rLjl5MOTsk3/JSF06/ccmMebqktQKAwU0rKH+c/2P?=
+ =?us-ascii?Q?AunN2uASf3g/44LdyeC/KVQZmjajw+Y76KbuFTovQFBk8p4AiTIHHFLZ+whV?=
+ =?us-ascii?Q?3/oZ4qptvhj0BilI4p6U60qEqrC9vFKlwaLEdCNFc9s+w5aX4tGwoqyhG/in?=
+ =?us-ascii?Q?s6tLsDduY1u+dN0xFrPYBqrBkS2IBUaEOVXLRY48cdv5d/nIGmOl2kOCrEUv?=
+ =?us-ascii?Q?wsx1zCrd8Ps13AKA7mGweUu+340XyXXjprIhWqc9Gb57AYn2Yt553CY495Pc?=
+ =?us-ascii?Q?Z0KKN6wFxT6NLR9LWPKRumsj23MTtSfDxxDt/3z4gnM2b/WU8OHUi/CjbjjV?=
+ =?us-ascii?Q?19H9p2gj+lMxHu0HyVMgEATo+VeRDsQde3qa3CL4wr8TA6C0XUVWQRl/dmh6?=
+ =?us-ascii?Q?IgWLqmLCsteKJAqfeMz6tdxxkWg5tDmm17/husXGRiEzOO3TsoQFcwjiN4F1?=
+ =?us-ascii?Q?z6d7g+MEqDDZxcFPvkXNeWqdqJ9W5qU9b1JtskZ4Zp9ZbQdZnV0/OaEJyBBE?=
+ =?us-ascii?Q?SVWyG1PAI0ilx625B2QbiMN35gmTsvyCYSpzvpw3Rf92QdMFD5Dq612EtiDO?=
+ =?us-ascii?Q?okkOSasgqAPvx++ogBpPraAQv9zP69A9uOzaCpJD?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 620ec6c3-8821-45ad-7ce0-08db7c86ea42
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB5288.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2023 12:05:10.3107
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: diSqHNYMkETvBb9xiGI2mjAz/KjjkbzlOB009AEBAlb23YgsxIICk1w4vhjXTTe4AqWtf6uULezk9IlZ8w82dw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB6653
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 03/07/2023 16:45, Frank Li wrote:
-> On Sun, Jul 02, 2023 at 10:22:22PM +0200, Krzysztof Kozlowski wrote:
->> On 28/06/2023 16:45, Frank Li wrote:
->>> On Tue, Jun 20, 2023 at 04:12:08PM -0400, Frank Li wrote:
->>>> This patch series introduces support for the eDMA version 3 from
->>>> Freescale. The eDMA v3 brings alterations in the register layout,
->>>> particularly, the separation of channel control registers into
->>>> different channels. The Transfer Control Descriptor (TCD) layout,
->>>> however, remains identical with only the offset being changed.
->>>>
->>>> The first 11 patches aim at tidying up the existing Freescale
->>>> eDMA code and laying the groundwork for the integration of eDMA v3
->>>> support.
->>>>
->>>> Patch 1-11:
->>>> These patches primarily focus on cleaning up and refactoring the existing
->>>> fsl_edma driver code. This is to accommodate the upcoming changes and new
->>>> features introduced with the eDMA v3.
->>>>
->>>> Patch 12:
->>>> This patch introduces support for eDMA v3. In addition, this patch has
->>>> been designed with an eye towards future upgradability, specifically for
->>>> transitioning to eDMA v5. The latter involves a significant upgrade
->>>> where the TCD address would need to support 64 bits.
->>>>
->>>> Patch 13:
->>>> This patch focuses on the device tree bindings and their modifications
->>>> to properly handle and integrate the changes brought about by eDMA v3
->>>
->>> @vkoul:
->>>   Do you have chance to check these patches? Any chance to come into 6.5
->>>   All audio parts of i.MX8x and i.MX9 was dependent on these patches.
->>
->> Why do you ping during the merge window?
->>
->> v6.5? And what about having it in next for two weeks? One thing is to
->> ping for something forgotten, different thing is to try squeeze patches
->> skipping our process.
-> 
-> I saw dmaengine tree have not update over 5 weeks.
-> https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git/
+IS_ERR() fix devm_ioremap_resource function return judge.
+Could you help check it out?
+Thank you!
 
-Then you should have pinged during that time.
+Signed-off-by: Minjie Du <duminjie@vivo.com>
+---
+ drivers/dma/xilinx/xdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> And vkoul have not sent out pull request yet. So I just want to check
-> if possible. 
-
-It is merge window. Patches are supposed to be in next for two weeks
-before merge window.
-
-
-
-Best regards,
-Krzysztof
+diff --git a/drivers/dma/xilinx/xdma.c b/drivers/dma/xilinx/xdma.c
+index 93ee298d5..ad5ff6335 100644
+--- a/drivers/dma/xilinx/xdma.c
++++ b/drivers/dma/xilinx/xdma.c
+@@ -892,7 +892,7 @@ static int xdma_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	reg_base = devm_ioremap_resource(&pdev->dev, res);
+-	if (!reg_base) {
++	if (IS_ERR(reg_base)) {
+ 		xdma_err(xdev, "ioremap failed");
+ 		goto failed;
+ 	}
+-- 
+2.39.0
 

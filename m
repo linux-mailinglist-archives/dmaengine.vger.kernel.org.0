@@ -2,91 +2,120 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 66B4B749593
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Jul 2023 08:28:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B510E749603
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Jul 2023 09:07:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233599AbjGFG2f (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 6 Jul 2023 02:28:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49868 "EHLO
+        id S233516AbjGFHHA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Jul 2023 03:07:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233593AbjGFG2f (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Jul 2023 02:28:35 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4758D1997
-        for <dmaengine@vger.kernel.org>; Wed,  5 Jul 2023 23:28:32 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-99384a80af7so31035266b.2
-        for <dmaengine@vger.kernel.org>; Wed, 05 Jul 2023 23:28:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688624911; x=1691216911;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Pqu4vTxoeW2yTwRCEetSQZvh47NKMtjn0RrXMB1JAGg=;
-        b=dRSL6aukgIkfv+NlQasUhI0WW8PrgXzou5v2QVss3xqfKaQ4M1Yt2cin2pOZmhQd17
-         mLGsmRk6KQ96V2gbe6flKfOcIDP8C6aJ94MYdy2hTnRpIigR7o/uS07D4CETNP/87UAG
-         Te3mFVnmowcotJ+p+kvuGY85+Df/k9sYz1L9gl3LDrpMcUkuBaCO8WTequflxZTiDoTT
-         JMZMZqgL5RQtdtgjCToseEau/xKW62TMq6KzpDrpxszgG+HHnYaK/7KRjWMGum9WC1ss
-         tpYb7Y62RIr5F4RyB4vq3Q8QtCd9PUd2GSuCjupyh7ZdQj3zgjJEZ/rUnmhwmkQP56L0
-         GcnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688624911; x=1691216911;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pqu4vTxoeW2yTwRCEetSQZvh47NKMtjn0RrXMB1JAGg=;
-        b=JUHmt0BHwkkq6ZO/SpgcKvcjoUmqBVg+zDWab18/uIeQEMCqVmNxJ77LXFasHa56E2
-         vBtq4zULwr+AoPA3y1fdzj3a/UKJzO6AvDqou7bFciUUA5UrskkHqRVKIpLHX/P/0IH1
-         JHdm2oaa7BNEw/sG9ye2IRrjchgTnCvx9KfKlRA94gIWBh2Twwz/vqgU+zRzb7Bn38KE
-         m0yxaBXNf4b/83lTeWeBToTKlOoQ4ryuBMLmSDSrpIfLCo7S5PUbV6YEZrFS8oPslmMr
-         wcZY6XGsOBBDnfhgfeWuGf7f7861H5HWxrMIqlafIMz1oEfVLDsauoYj5b4h21QWpR3j
-         r+Aw==
-X-Gm-Message-State: ABy/qLY1Gvrr9hIkiTSrjPi8xJU0b6ppKq8CG1Glq/7ukS9Tx3T5nucw
-        bgyR+v8kDGhsJbb26uQGYuDr7Q==
-X-Google-Smtp-Source: APBJJlEu2RGF4uBuUPfkX4wlSxPa3Cu2L5C0YRWwOysyPz8/vFYVscoSMwhTBIDQpkpak+dxq034Sw==
-X-Received: by 2002:a17:906:10cf:b0:991:8328:50e3 with SMTP id v15-20020a17090610cf00b00991832850e3mr696668ejv.9.1688624910680;
-        Wed, 05 Jul 2023 23:28:30 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.26])
-        by smtp.gmail.com with ESMTPSA id lf20-20020a170906ae5400b009920e9a3a73sm372590ejb.115.2023.07.05.23.28.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Jul 2023 23:28:30 -0700 (PDT)
-Message-ID: <e871ad32-dfa4-067d-4f2c-207ffd42aafd@linaro.org>
-Date:   Thu, 6 Jul 2023 08:28:25 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 02/10] dt-bindings: bus: add device tree bindings for
- RIFSC
+        with ESMTP id S233511AbjGFHG7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Jul 2023 03:06:59 -0400
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2137.outbound.protection.outlook.com [40.107.113.137])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12F3912A;
+        Thu,  6 Jul 2023 00:06:57 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LWU96TWGAoz/FNm7YY9AEd0elphNJIX0aigLsDcKtLaM4Poe7BK5E3URAimgmVf5LTD46vcpmzYFihHMwp2rNOia0E7IoYofGfNKgL7iTVVBGjgILDK6pi6EAEAGwIOG63jTwm48ReGa0hOHLXOaqdewOdvHRVRpXfOFfAXF/YHZGY8A54wnahvFHD1LiECxpcZQ1PWqNkC4Ya9cBzGZkfCegt6hc3zx2asnMeSjLqGXFlyw158zxuT84y1DGP9yweKKAfFPbMKeG3t0jOCLiYlMDHc4b5iZN6bZWsa21/SCpSdIainIRi7tXIh18RgtwX9QM9MriXgAGuHjNdIMtQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zcVniUqcCfOe9iB9WVjr8rmf1b0Yy9qCLw5MvV2XXFg=;
+ b=b5k5z/va1/jFmniT/pFSYyBTTFDTLfYPU+cyirA5RXdZOSkB7bY73tItZYyRx2aUUfnoSoZWGRoiFKmQyoxqJeUfvkOlqv4trs85rjcstW+kfFIXtlfpkeY8+pIlRiw7ZQDUdQ80VL+0NAot3PEm7ujyXjGiL6ybYla6GC5kbywoZfvrvHf4FDwobeIL655VqXn1UMi7lpmvBOmlRkrNvaUE/ytAFPW++s/ai1biz96pdU32lm4jIYD/xIwPr42O4OrD1Lp3H+nZfhSMqF6OMS5M5/5ldgIz8aZzFxHHMdywrxnGm54204aT7QAgpmvmiLMHi0K+dCGQ0v/VUh4GiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zcVniUqcCfOe9iB9WVjr8rmf1b0Yy9qCLw5MvV2XXFg=;
+ b=Ous7OHP3NZlk1Lg54oUwZjbDmuBWyjOcGcKodmP+VEd9TG0WvA3EVDe0hNrwtROzR0H16lKiUKzTuzsEoziGjKJBekuZqponnbGv0ycgFPJlrrMZ7StdZ7VoOy46Uu4l+SLrh8dP8bUnBIT/4XwjRWm4ayffYLe4i4xKGNDxPiM=
+Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com (2603:1096:604:bb::5)
+ by OSZPR01MB9649.jpnprd01.prod.outlook.com (2603:1096:604:1d9::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.17; Thu, 6 Jul
+ 2023 07:06:54 +0000
+Received: from OS0PR01MB5922.jpnprd01.prod.outlook.com
+ ([fe80::fc77:6148:d6a:c72b]) by OS0PR01MB5922.jpnprd01.prod.outlook.com
+ ([fe80::fc77:6148:d6a:c72b%4]) with mapi id 15.20.6565.016; Thu, 6 Jul 2023
+ 07:06:52 +0000
+From:   Biju Das <biju.das.jz@bp.renesas.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Hien Huynh <hien.huynh.px@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH v2 2/2] dma: rz-dmac: Fix destination and source data size
+ setting
+Thread-Topic: [PATCH v2 2/2] dma: rz-dmac: Fix destination and source data
+ size setting
+Thread-Index: AQHZq25ew3IkCL4qWUi7XN/bzkogTq+sS3KAgAAOPPA=
+Date:   Thu, 6 Jul 2023 07:06:52 +0000
+Message-ID: <OS0PR01MB5922CD72EA3EFB960698A7E8862CA@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+References: <20230630161716.586552-1-biju.das.jz@bp.renesas.com>
+ <20230630161716.586552-3-biju.das.jz@bp.renesas.com>
+ <ZKZb0x/WCWfghIrr@matsya>
+In-Reply-To: <ZKZb0x/WCWfghIrr@matsya>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-To:     Gatien Chevallier <gatien.chevallier@foss.st.com>,
-        Oleksii_Moisieiev@epam.com, gregkh@linuxfoundation.org,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, alexandre.torgue@foss.st.com,
-        vkoul@kernel.org, jic23@kernel.org, olivier.moysan@foss.st.com,
-        arnaud.pouliquen@foss.st.com, mchehab@kernel.org,
-        fabrice.gasnier@foss.st.com, andi.shyti@kernel.org,
-        ulf.hansson@linaro.org, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, hugues.fruchet@foss.st.com, lee@kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, arnd@kernel.org,
-        richardcochran@gmail.com
-Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org
-References: <20230705172759.1610753-1-gatien.chevallier@foss.st.com>
- <20230705172759.1610753-3-gatien.chevallier@foss.st.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230705172759.1610753-3-gatien.chevallier@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OS0PR01MB5922:EE_|OSZPR01MB9649:EE_
+x-ms-office365-filtering-correlation-id: 091b6acf-359a-4f2c-5894-08db7def9365
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ApQYannVt6hsQh+6PHBs/FDE0DpWoI2KME9obTXZYigJ6K/UGfdWFb5SaZW6b35GQ2IyOp8LRSnM8V+fan8CNVr4d3Yn3pumRjr8ycZy0W/UsIEAF6fWzdrXe58736Fbn1V17LyhRj2VCk5h4k9lLsNCSCgQYYccv1X/VP5scSH9C5EXDED3fF4W+UdD6+0gS/l0yYCdqBIWe93Wg+HW39SI8rI+PDH5CVeXqH21XbKPGMsRyw/kUnnPjZwXVP5JO2zTJbseVpNwnT+rT4mFJbkpUQxWCc9AVDdpwbQl3bAl6Gnxdc+cKK4iX4KmI4TqldGaN9qxraWvjJEw0rCD0KlGtZ85ka5r7dgErr+uF/s+unPyhJ0g72qv+m30Cd/rIHNFeefuyllg7IXhKvS/cUfwmKAJ96v765RmH4Y1QPNUHup40zl+hRP/UWFxeTkOH4BWXiqfbMHc8c9Ibb8i/XzOrW3gSls2o3YU2CYhgVw8QmbQkWXCVK4ygL4Q0CI4JhWMOdFgQ1FZcsv81DgvmFrQrJ1kzeOK8h1AydlG0DxcG/LkpbPxOe3asTKa9MHGLfRhIFiygz8ClpilYV3elZJa8VdsNbfbDdQ+QZkaZeMaDxdCnaW9wF+rxWDKRjKuDq/ur/yAZRslBtGKc87rXw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS0PR01MB5922.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(396003)(346002)(136003)(39860400002)(376002)(451199021)(6506007)(76116006)(64756008)(66476007)(38100700002)(66556008)(66446008)(4326008)(6916009)(66946007)(122000001)(55016003)(186003)(86362001)(33656002)(7696005)(71200400001)(38070700005)(26005)(9686003)(478600001)(53546011)(54906003)(8936002)(41300700001)(8676002)(5660300002)(52536014)(2906002)(316002)(83380400001)(21314003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Cp4yDlCgfSnc9HbqOG7hqg1BYtJUNGgqg3QpXhcdOC6Eg2HkxiKv+DxhwYoI?=
+ =?us-ascii?Q?FvRlajnM9BXWkzE1SCHzGXKkU6y+zGvA25b5sMOloVDpxYSgxlP4HiX+tq+0?=
+ =?us-ascii?Q?vQBgaHv95tmqQo8gkorxUdQf+uVoP/UuR1kaobzNJgFpaPQRMdOxrqg/Wert?=
+ =?us-ascii?Q?zV3JRTy5kJSmx4DAdsyMb/g9aTO34pYWTeoWp1lOwm1RrjUWE0GMbHKQ6GD9?=
+ =?us-ascii?Q?/Habj1BsY01hfaAgE8UeO/oLrBfP/AAGwZtTZxybYb4qkRCW7SwMLeHWZMgy?=
+ =?us-ascii?Q?ool9DpxLpcMZNbaeBVt09CtfUpPs+eDU7cEow8a3UYHoerucvnURd0Y0VSYl?=
+ =?us-ascii?Q?GdYterBpODDe98mC5I7GF6AdeAaUHsgpPY02uYjsS7qqXxBk0CHE7tRSO/oy?=
+ =?us-ascii?Q?p/SaiQkIEPrYL0k/uNJdkmAxyXYjU/vT9pr4z8biOlbtMiF6Ww+Ioen6i3q+?=
+ =?us-ascii?Q?09emv0xlGCGj7RyvwwfcWt+s5pYzq226wJ1w/mYMzSx6PD0OHE5yL4rOhNaQ?=
+ =?us-ascii?Q?RH/CCO143H9WC7B8iSgHy5r/oRl7QExWPiA6hQYokVHkxqcPCNnN0pd6WdbU?=
+ =?us-ascii?Q?n0bIwpU4pMhr7lov0cG+CyLFev4iRMgCxDcyNKRWdmUxnLFxJZ9XhsDEDD7D?=
+ =?us-ascii?Q?WdQrXtXgd3x3++lp4s73yH96+kbIZxbJF5Ftzj8AjQd5d/pLTWhT7QUu66CO?=
+ =?us-ascii?Q?a2a/ZDBPXnV7lNstrQfZmJnrJynjPE+NdCA2gC6VVpx160Kma9ZCtqxTvkbA?=
+ =?us-ascii?Q?bv/5llgjNb8W/hPBjLMvvmfDF9X+aWn3XK9ISWCqr8u/rold0eQd0U0o0dAF?=
+ =?us-ascii?Q?WZW8vEFXlZSrl/CfDUel7J6d4E9YTS64BY5oF7niMVZRnGc1off2oh2I5KhE?=
+ =?us-ascii?Q?fjCUVntRvgnkZik7v2o3SuHsCkmkxcnCX3HVHIGaCGf8wY3HcxslNKsylXY8?=
+ =?us-ascii?Q?XR4oo/OW4igTv1umaryKBPnPx+JFVg0/2GMcElPxKCK3V6FvJ82KpRyECESK?=
+ =?us-ascii?Q?XXyAKx1ScWKGZJTbcDaIoEkehNjfhPlNs4QRj5HeoZQMhrF5i5FA1/oIfVR+?=
+ =?us-ascii?Q?oemShOMMSZzO+z998sM0gXr69RviiGJGwyO0KX/ibV9ZBXGyNvhHJa6dfhe6?=
+ =?us-ascii?Q?uNES6TZp7O+ec2KGJ/F8eAB3Rc4jasNPejHSugCXbyGmw0f624Nu+7ZTeZFi?=
+ =?us-ascii?Q?CgGjLccWo+nuhopcnEGYb3XnYNc1RegMS1E1tooscgKlulL5hRQXHFXaOHMR?=
+ =?us-ascii?Q?/k/IRYzi5xa2mnLJHb/bdlAcXmoB51W4rwhbIAssl+CCgKQrqgCg/EU+PCxS?=
+ =?us-ascii?Q?Zd5uLZTT64W4HnFa3cz7QUH335MYmjNPnIU5GfZ4+QYvqv4ujopwn5oGLlE9?=
+ =?us-ascii?Q?+xCB98jnxnm4zo8tedLMm0yWJ4Z2cSPx/kyvgKuTG9ERjnTVuWJpVPTIIGJa?=
+ =?us-ascii?Q?0E+YyZ85MEg7e15T1Ig+VmPzDahU4KfY5G+/zJjK4wDhBw7PlVJsRJO3zNb9?=
+ =?us-ascii?Q?IXS29EpUsHaZTFMx9pS7TYL+/QIZUEMslhTUsRDt5nzDPhoHzXRis7g1+Niw?=
+ =?us-ascii?Q?7l3xI9eOSvRazQb/aQdLma3UzCR4mAL4MVNpfruW?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OS0PR01MB5922.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 091b6acf-359a-4f2c-5894-08db7def9365
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jul 2023 07:06:52.6598
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ynF8oVgTGlksrKFNS4ebnIL0DfdKTtgOPIAAQmqOsYmapt6yikgA8K0fXrCpe8UUUdNz5HfUO3GwJ5x6m6ebL8y7xuXZAjbGFn/KOFnL9/o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSZPR01MB9649
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -94,143 +123,89 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 05/07/2023 19:27, Gatien Chevallier wrote:
-> Document RIFSC (RIF security controller). RIFSC is a firewall controller
-> composed of different kinds of hardware resources.
-> 
-> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
+Hi Vinod,
 
-A nit, subject: drop second/last, redundant "device tree bindings for".
-The "dt-bindings" prefix is already stating that these are bindings. 4
-words of your 6 word subject is meaningless...
+Thanks for the feedback.
 
-> ---
->  .../bindings/bus/st,stm32-rifsc.yaml          | 101 ++++++++++++++++++
->  1 file changed, 101 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/st,stm32-rifsc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/bus/st,stm32-rifsc.yaml b/Documentation/devicetree/bindings/bus/st,stm32-rifsc.yaml
-> new file mode 100644
-> index 000000000000..68d585ed369c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/st,stm32-rifsc.yaml
+> -----Original Message-----
+> From: Vinod Koul <vkoul@kernel.org>
+> Sent: Thursday, July 6, 2023 7:15 AM
+> To: Biju Das <biju.das.jz@bp.renesas.com>
+> Cc: Hien Huynh <hien.huynh.px@renesas.com>; Geert Uytterhoeven
+> <geert+renesas@glider.be>; Prabhakar Mahadev Lad <prabhakar.mahadev-
+> lad.rj@bp.renesas.com>; dmaengine@vger.kernel.org; linux-renesas-
+> soc@vger.kernel.org
+> Subject: Re: [PATCH v2 2/2] dma: rz-dmac: Fix destination and source
+> data size setting
+>=20
+> On 30-06-23, 17:17, Biju Das wrote:
+> > From: Hien Huynh <hien.huynh.px@renesas.com>
+>=20
+> patch title should be dmaengine: xxx
 
-Filename like compatible, unless you know list of compatibles will
-grow... but then add them.
+Oops, missed that.
 
-> @@ -0,0 +1,101 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bus/st,stm32-rifsc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STM32 Resource isolation framework security controller bindings
+>=20
+> >
+> > Before setting DDS and SDS values, we need to clear its value first
+> > otherwise, we get incorrect results when we change/update the DMA bus
+> > width several times due to the 'OR' expression.
+>=20
+>=20
+> >
+> > Fixes: 5000d37042a6 ("dmaengine: sh: Add DMAC driver for RZ/G2L SoC")
+> > Signed-off-by: Hien Huynh <hien.huynh.px@renesas.com>
+> > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > ---
+> > v1->v2:
+> >  * Updated patch header.
+> > ---
+> >  drivers/dma/sh/rz-dmac.c | 8 ++++++--
+> >  1 file changed, 6 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c index
+> > 229f642fde6b..331ea80f21b0 100644
+> > --- a/drivers/dma/sh/rz-dmac.c
+> > +++ b/drivers/dma/sh/rz-dmac.c
+> > @@ -145,8 +145,10 @@ struct rz_dmac {
+> >  #define CHCFG_REQD			BIT(3)
+> >  #define CHCFG_SEL(bits)			((bits) & 0x07)
+> >  #define CHCFG_MEM_COPY			(0x80400008)
+> > -#define CHCFG_FILL_DDS(a)		(((a) << 16) & GENMASK(19, 16))
+> > -#define CHCFG_FILL_SDS(a)		(((a) << 12) & GENMASK(15, 12))
+> > +#define CHCFG_FILL_DDS_MASK		GENMASK(19, 16)
+> > +#define CHCFG_FILL_DDS(a)		(((a) << 16) & CHCFG_FILL_DDS_MASK)
+> > +#define CHCFG_FILL_SDS_MASK		GENMASK(15, 12)
+> > +#define CHCFG_FILL_SDS(a)		(((a) << 12) & CHCFG_FILL_SDS_MASK)
+>=20
+> Suggestion: Consider using FIELD_PREP and FIELD_GET for this
 
-Drop bindings
+Agreed, will send v3 with these changes.
 
-> +
-> +maintainers:
-> +  - Gatien Chevallier <gatien.chevallier@foss.st.com>
-> +
-> +description: |
-> +  Resource isolation framework (RIF) is a comprehensive set of hardware blocks
-> +  designed to enforce and manage isolation of STM32 hardware resources like
-> +  memory and peripherals.
-> +
-> +  The RIFSC (RIF security controller) is composed of three sets of registers,
-> +  each managing a specific set of hardware resources:
-> +    - RISC registers associated with RISUP logic (resource isolation device unit
-> +      for peripherals), assign all non-RIF aware peripherals to zero, one or
-> +      any security domains (secure, privilege, compartment).
-> +    - RIMC registers: associated with RIMU logic (resource isolation master
-> +      unit), assign all non RIF-aware bus master to one security domain by
-> +      setting secure, privileged and compartment information on the system bus.
-> +      Alternatively, the RISUP logic controlling the device port access to a
-> +      peripheral can assign target bus attributes to this peripheral master port
-> +      (supported attribute: CID).
-> +    - RISC registers associated with RISAL logic (resource isolation device unit
-> +      for address space - Lite version), assign address space subregions to one
-> +      security domains (secure, privilege, compartment).
-> +
-> +properties:
-> +  compatible:
-> +    const: st,stm32mp25-rifsc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 1
-> +
-> +  "#feature-domain-cells":
-> +    const: 1
-> +
-> +  ranges: true
-> +
-> +  feature-domain-controller: true
-> +
-> +patternProperties:
-> +  "^.*@[0-9a-f]+$":
-> +    description: Peripherals
-> +    type: object
-> +    properties:
-> +      feature-domains:
-> +        minItems: 1
-> +        maxItems: 2
-> +        description:
-> +          The first argument must always be a phandle that references to the
-> +          firewall controller of the peripheral. The second can contain the
-> +          platform specific firewall ID of the peripheral.
+Cheers,
+Biju
 
-It does not make much sense to me to have hierarchy parent-child and via
-phandle at the same time. You express the similar relationship twice.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - feature-domain-controller
-> +  - "#feature-domain-cells"
-> +  - ranges
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    // In this example, the usart2 device refers to rifsc as its domain
-> +    // controller.
-> +    // Access rights are verified before creating devices.
-> +
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    rifsc: rifsc-bus@42080000 {
-> +        compatible = "st,stm32mp25-rifsc";
-> +        reg = <0x42080000 0x1000>;
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        ranges;
-> +        feature-domain-controller;
-> +        #feature-domain-cells = <1>;
-> +
-> +        usart2: serial@400e0000 {
-> +            compatible = "st,stm32h7-uart";
-> +            reg = <0x400e0000 0x400>;
-> +            interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
-> +            clocks = <&ck_flexgen_08>;
-> +            feature-domains = <&rifsc 32>;
-> +            status = "disabled";
-
-No status in the examples.
-
-> +        };
-> +    };
-
-Best regards,
-Krzysztof
-
+>=20
+> >  #define CHCFG_FILL_TM(a)		(((a) & BIT(5)) << 22)
+> >  #define CHCFG_FILL_AM(a)		(((a) & GENMASK(4, 2)) << 6)
+> >  #define CHCFG_FILL_LVL(a)		(((a) & BIT(1)) << 5)
+> > @@ -607,12 +609,14 @@ static int rz_dmac_config(struct dma_chan *chan,
+> >  	if (val =3D=3D CHCFG_DS_INVALID)
+> >  		return -EINVAL;
+> >
+> > +	channel->chcfg &=3D ~CHCFG_FILL_DDS_MASK;
+> >  	channel->chcfg |=3D CHCFG_FILL_DDS(val);
+> >
+> >  	val =3D rz_dmac_ds_to_val_mapping(config->src_addr_width);
+> >  	if (val =3D=3D CHCFG_DS_INVALID)
+> >  		return -EINVAL;
+> >
+> > +	channel->chcfg &=3D ~CHCFG_FILL_SDS_MASK;
+> >  	channel->chcfg |=3D CHCFG_FILL_SDS(val);
+> >
+> >  	return 0;
+> > --
+> > 2.25.1
+>=20
+> --
+> ~Vinod

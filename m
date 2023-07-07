@@ -2,282 +2,289 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0129F74B4EF
-	for <lists+dmaengine@lfdr.de>; Fri,  7 Jul 2023 18:10:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD15374B50F
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Jul 2023 18:21:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232604AbjGGQKt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 7 Jul 2023 12:10:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47142 "EHLO
+        id S231909AbjGGQV1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 7 Jul 2023 12:21:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbjGGQKr (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 7 Jul 2023 12:10:47 -0400
-Received: from mx0a-0039f301.pphosted.com (mx0a-0039f301.pphosted.com [148.163.133.242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8704C1FC6;
-        Fri,  7 Jul 2023 09:10:42 -0700 (PDT)
-Received: from pps.filterd (m0174677.ppops.net [127.0.0.1])
-        by mx0a-0039f301.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 367ETmg9026166;
-        Fri, 7 Jul 2023 16:10:07 GMT
-Received: from eur01-he1-obe.outbound.protection.outlook.com (mail-he1eur01lp2056.outbound.protection.outlook.com [104.47.0.56])
-        by mx0a-0039f301.pphosted.com (PPS) with ESMTPS id 3rpmh48a6c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Jul 2023 16:10:06 +0000
+        with ESMTP id S232607AbjGGQV0 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 7 Jul 2023 12:21:26 -0400
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01on2089.outbound.protection.outlook.com [40.107.14.89])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0E051FD9;
+        Fri,  7 Jul 2023 09:21:24 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ibo1XVuWF5cyA0UJ+yXXBGxx46pXE885bTBcwG4SokTJwTREKIAPu6hguMZ9ziEsnQWRMOh/9S5guXrc08iAz0DZcUl9GE9c5QsbXW8gAoN8ZUi0T+6NwZ/Of3LWRFSaxD/eswVz6y/BL+78eISoYllXVRDfGG/fQf53GqRhpm6U6nY7oLrgnepJdIS/YK0NgBW4+S25lGQxNNmlh3icRYX3984FGq/eGQrlHN0u+f/ew27Awb6IhmyBJs0mv5T9IzZpwvzCir8505DDo+Reu+YHLnhtKLo7/1AnsIAtW8XG0WO/02apq8uVtw50wRyNqHZuTWMyoWazpKHq0BA7FA==
+ b=a5NmpCKsOb358/x3UkCqiQ8Y1srqFamilTJAKTpziGCYNPtmbbUDfGaa0pUaG7ZCy7/WkGDPyluK7Hv79LYXoqzc79MKg6aMNQ8l+yq0/qrKlRT4qtBi3BfHJy/J7wGN8CzZB+ILYpI/+hwlRRkfvSiqcuE5caEl7cRKJQJ7whQospBxVuy/g+Mxox3kpNwWRAwGZXpNcZ+Wig8cDu8K3R4G4zJLghe4/9fZsZlNWwFvcpHSCtCoQea8SB78icyaseUr2MOJZcFyJDM6JG/D1zKUbr1fiIhAw6BE3xlZFL8qxT7gXNPmafINM9ueo4uc2yPctR1DIJpS+CqlyCypww==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OSozQZ9A9MyiyPnFB2PBWUomegYp+LeZ14kjdKcsZRg=;
- b=B/efjmniAx7GoYHCEKGSoruq781+9f6q6wrMwU6LtTmddkeNmj6v7E40tcsaWwS5hJvegXl2ucBk1El3ec9QcftD66tce4JszFMcPDy1btBOOEl0RjSCCGAkOuXIlBqOAO6aMEJVDZZ8/Wo/byIExlUdx3hw5Ai+U1E48wF03t1Npe7NdgwHa4sEfZQAJgTVRdlzC8f6bVCkJaTA/VvIw2eeqUbEFU0hpzEET/wTE3AF5E0n+JX+mKHXYA8z5YR5xB2d6kG/uzbr75Raz1oM0UGSLp/LhvCWxn5QWD0YoDkjvMnNbp5E6Zb/HEqi05pLtWBnhc69V56qsuEUQapJTw==
+ bh=kGhARiyZlOWZ2XlAo/LD1W+ckXW993mkfA0hmGzvr1k=;
+ b=UctWy3PLDjXp9mOsIms14EaEH8ZNaQotujqqL0lQpIV4agvXI8TIIwxdarY/FntSkUEY/HFTjk2GrgEFTGIe5LM4Dv8v9AoyhAiRnyuQiiiQCgIVf08ldjrYoraxpGMQHipvsfIHb7PFluxqykMEd7vcLJYSmr/RCQsqoiZxl5s4P+GixILsx7f8+Dxdhj70UOrO7qsqqwvXTGcsTiF+FOJHGE4XGyNqajU5ryVSf2Oc9G7dhck3ms034LZsm20LJehQrwcdsHdO2QprXcgogJKcuiq5XsUxlZrH4TYB4rdJWL5mg+Hyhg04PrsxkUqYiY+4mloamYEZq9I+7tgWkA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=epam.com; dmarc=pass action=none header.from=epam.com;
- dkim=pass header.d=epam.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=epam.com; s=selector2;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OSozQZ9A9MyiyPnFB2PBWUomegYp+LeZ14kjdKcsZRg=;
- b=MwbVL3s+sG4lMt7pCWRkW58ROmMMJjYGGq5WaTsQ3Jnfv1AK2VlfaOPUWXmHX54TdKhhXKlFGiLZmUxTVeCo8wXpJejxefhhMbrzUZzXrFdPPOnkqzJR/KEWA5vmsLho+x/sftecPSP7cP7/PP8dCSLoWWskAjCYz6FgmwSgN8RUGxy+mzL8lDYI84Z/43U0SZ34qMotBKDiscj7G97rWVwloPjblPY34g8Syt0qNerw7QtcKyvQyTfe8VOuqdtJH0MHYceXjW1bhJ97ZeFzyr5SF55BJ/nFFwoX+cwrOSF3zYpx9yoMhYgia9H0O0MwO0no2DEMlfYn0JghE/lgjQ==
-Received: from PA4PR03MB7136.eurprd03.prod.outlook.com (2603:10a6:102:ea::23)
- by AS8PR03MB6824.eurprd03.prod.outlook.com (2603:10a6:20b:29c::9) with
+ bh=kGhARiyZlOWZ2XlAo/LD1W+ckXW993mkfA0hmGzvr1k=;
+ b=VlLVNuLhlDhO6S9vnBMcOiP4DNQFGNB3PPLwygnY8mC5f+10Jbngs/x4chDUg42W5zookWpeIb7ZKpw1CT9G7M+mzPjRkm/c26lNkcX5RObIGFmjeU3t+omeMpn66EM9LKSoeN4ML+JUhJxF0wV3tGn3qFJbHXzexEYfy4zuEl8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by DB9PR04MB8106.eurprd04.prod.outlook.com (2603:10a6:10:24b::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.25; Fri, 7 Jul
- 2023 16:10:03 +0000
-Received: from PA4PR03MB7136.eurprd03.prod.outlook.com
- ([fe80::528d:e0b6:ecc6:25e5]) by PA4PR03MB7136.eurprd03.prod.outlook.com
- ([fe80::528d:e0b6:ecc6:25e5%4]) with mapi id 15.20.6565.016; Fri, 7 Jul 2023
- 16:10:03 +0000
-From:   Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Gatien Chevallier <gatien.chevallier@foss.st.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "krzysztof.kozlowski+dt@linaro.org" 
-        <krzysztof.kozlowski+dt@linaro.org>,
-        "conor+dt@kernel.org" <conor+dt@kernel.org>,
-        "alexandre.torgue@foss.st.com" <alexandre.torgue@foss.st.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "olivier.moysan@foss.st.com" <olivier.moysan@foss.st.com>,
-        "arnaud.pouliquen@foss.st.com" <arnaud.pouliquen@foss.st.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "fabrice.gasnier@foss.st.com" <fabrice.gasnier@foss.st.com>,
-        "andi.shyti@kernel.org" <andi.shyti@kernel.org>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "hugues.fruchet@foss.st.com" <hugues.fruchet@foss.st.com>,
-        "lee@kernel.org" <lee@kernel.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "arnd@kernel.org" <arnd@kernel.org>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH 04/10] dt-bindings: treewide: add feature-domains
- description in binding files
-Thread-Topic: [PATCH 04/10] dt-bindings: treewide: add feature-domains
- description in binding files
-Thread-Index: AQHZr2YotROcBsXjd02uJm3g7CUa76+uVu0AgAAZVQCAAAoQgA==
-Date:   Fri, 7 Jul 2023 16:10:03 +0000
-Message-ID: <87sf9zya79.fsf@epam.com>
-References: <20230705172759.1610753-1-gatien.chevallier@foss.st.com>
- <20230705172759.1610753-5-gatien.chevallier@foss.st.com>
- <875y6vzuga.fsf@epam.com> <20230707152724.GA329615-robh@kernel.org>
-In-Reply-To: <20230707152724.GA329615-robh@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PA4PR03MB7136:EE_|AS8PR03MB6824:EE_
-x-ms-office365-filtering-correlation-id: 69ffbdf5-2320-40d1-179a-08db7f049f3f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PH/lRok4yP9FTY5ayyxH5H435i0U3++p736IzlV+ectHkqJMNc/BEKBOK6h1P1z7YB0RZrtF65iqXG5iyZlPHsvfCoSF43X73IhTHq3wK6hn1b41h8uJ4FOlyy4nWWuIDcNF6uVsnX+JUQwcTk0SDzsCfh4fXA10iBvBL/TyoYlM0xRvvug8O09Z52sx+oRZxN3fCzmkODI1AIjk5W8vwwL4rjY91FZaB/F4g2xrdvAjGVePdFxo1e6WrQCYpSL51aNFD+Qhjd6T799wQ9ToKIRvdZ9k/5J+bXvAQ2XI7e70+IYMCSlMFD+u4LMBCeea0aMBfsJf08Kw9U4pgUjls5SFTlAchRDyzO8/x5p1qfN+cOE+/3KgMulW59u2cvAjkXPbaX7L6hi49YDSWBwwlQ1BDn6+FEqdQd44Jn5Frs3hP6SHeC0J0/vkIfL+P/3KXRZg7f3fdVLlHihbNC9ZSBkj/HyEOnuTuvqbfwF79lGf8fDk4ovmafKMVg+4bPCAhOtiATb52twUKLaamLL7GBlwJfTqwF4YMNc+eJ7q+SY2FDQuc+f4myX74upBr/k7dGXE9CYsGBK4rs8SSS0tw4tiHhl5PMf8x3rtpZnvFuw=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR03MB7136.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(136003)(366004)(39860400002)(396003)(346002)(451199021)(478600001)(54906003)(83380400001)(86362001)(186003)(6506007)(26005)(2616005)(38070700005)(122000001)(38100700002)(71200400001)(36756003)(6512007)(966005)(6486002)(2906002)(316002)(41300700001)(66946007)(76116006)(91956017)(4326008)(64756008)(66556008)(66476007)(66446008)(6916009)(7406005)(7416002)(5660300002)(8936002)(8676002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?u61Wrv8z6Ul/25wyq9PCc/CBK/gx0M48cgQRK2BCb0TZL+2as98fWFyg3L?=
- =?iso-8859-1?Q?nx6T2d0BTFMt4gOYs2iIXNL5Vt+x2H9xM4Xa8gwxk++8U9y96IJCwmzUiI?=
- =?iso-8859-1?Q?61f7jMJiHXtHuynvH5TYw9KMrCHukPtzxvB7gEKx9epMvgmxA51xcvllCp?=
- =?iso-8859-1?Q?6ZKyjm/Z92+Gvj+rrPT46cBO303EUQ4+cK7UAytk6AcTBPBxJviZzun0jL?=
- =?iso-8859-1?Q?TiKbPnkNi7mxGXT5iYKe7sK9qPrlcDIoArD8CTo6Lgf1TTYhAlnCXmhfd3?=
- =?iso-8859-1?Q?5ACZGlO545OaBPmVZmdUsdi/WhZTF2bgkp68kiYYGDdjct9MQmASR2VMaB?=
- =?iso-8859-1?Q?F9TCEMLQBkf3nbY+G98EaOGGJus/iaF7gusV4L5gSWSQqONGnyDXFD+vNI?=
- =?iso-8859-1?Q?rmsISbuX8Ts4KIyajE9mH4WnQ4SI/KDj6d02s0HX9KmsyLzuVsX8oXBBn2?=
- =?iso-8859-1?Q?ro1Ii3Hbmt5p34P22rvxP552pxtjVcS2sgZdVSpQpV01F9jW6ofou/WQA4?=
- =?iso-8859-1?Q?7TRL5xgheDCCwMQL2OQmCjRnAaJ0AJcNsU10SWwJ/HqzXmlFNWo5ot28AW?=
- =?iso-8859-1?Q?LqM1QsJyZyyUCtyev6k4JckaRFnJPDdetcSSI9jDOhqqWExQEc3kZ36hLE?=
- =?iso-8859-1?Q?WUFrFzGZTSkIhRuXYARAEVohxoC/n1ty2TZoaLia49f/fhHvYhTqW2oelG?=
- =?iso-8859-1?Q?EcyZabOPI4H+zN1Y9Sdvhte+KeHTnCPwq1/LlnddFmhMTRFrQuXq6ZBw6C?=
- =?iso-8859-1?Q?Gmq1yhJ+sHsv3TOGv8opp2Hc/cHJXkrfKBDDSFtif+XA+Q+0K96L8NdYJy?=
- =?iso-8859-1?Q?X7VDfXg5If5TeWrIbwa0c2OD6siwrfMGwaeAuCoYWSCya1RQeHcqYUn2be?=
- =?iso-8859-1?Q?9Ou109a/lJ2arq8fK0ZeNZkkmKuWB+MDMdCzHAfdVfVXxb9/9f3JWM5UQe?=
- =?iso-8859-1?Q?J7vwsXpFjErovoT+JFLVgXB/MVR5OJaL5s4aIo6yKSRdH28JLvZDAgfy1G?=
- =?iso-8859-1?Q?SIEV+0J7DgxRzYpp8ahKDlSy+CBeGeI7Cj3kLqwyfLUDECEssoy7VjefYp?=
- =?iso-8859-1?Q?yfq0NQs4oWIX+iDTdS8NH/h7yDnEkxB+L+SlYUBZcMNPwP2ASuyhiuwyqC?=
- =?iso-8859-1?Q?00kkarTERBD8MrnZMJrtW+UoJCM9MCzHGUDTrZHO76teJLv0yGVNMwDYHd?=
- =?iso-8859-1?Q?cPKW6IWWSsDv2a9JaYchMXPwsdJji6HmN82e2QEZ1eVMDP8mCweCDpLf/n?=
- =?iso-8859-1?Q?0e30xZD95cKD/C6LZacM8cNMir4HYlHI7byi1yk/MP+/71yg4U57U/MNiP?=
- =?iso-8859-1?Q?h805xH4t5dwen4WxigMkjthGthLSW1tcGba6QbABfa8OgXuR7wSIoRdIcw?=
- =?iso-8859-1?Q?y9uc1HEFjLTgBKcU9fY9TgCBRx/sL52d/3kxpJoLOql9+h32ajZicrEQfW?=
- =?iso-8859-1?Q?cF4sWjowAcNh2laXIjKyoDJ1ESalHqMKQuxTWvLR0rtsZlpWM85qLnM3jG?=
- =?iso-8859-1?Q?etzKQVHKI4OEbVAZdqcF0JoqF6n3Ak4JkyFBR8N5XlZ6X7MKnhElqRuHgB?=
- =?iso-8859-1?Q?PNxZBONFKk0tCLaV1bGzNjruaAKiZ8mhorwSymUXxsZFS/PQS9K2PKk3oV?=
- =?iso-8859-1?Q?7NwX+9T1SSQjdAbA5C/ksQmElqIqFKlwBs6JmkVtMPc3urwPAeUOEKeA?=
- =?iso-8859-1?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.17; Fri, 7 Jul
+ 2023 16:21:20 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::4a2a:262e:415f:e41c]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::4a2a:262e:415f:e41c%7]) with mapi id 15.20.6565.016; Fri, 7 Jul 2023
+ 16:21:20 +0000
+Date:   Fri, 7 Jul 2023 12:21:03 -0400
+From:   Frank Li <Frank.li@nxp.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peng.fan@nxp.com, joy.zou@nxp.com,
+        shenwei.wang@nxp.com, imx@lists.linux.dev
+Subject: Re: [PATCH v9 12/13] dmaengine: fsl-edma: integrate v3 support
+Message-ID: <ZKg7b/RJyCrmsQQ7@lizhi-Precision-Tower-5810>
+References: <20230620201221.2580428-1-Frank.Li@nxp.com>
+ <20230620201221.2580428-13-Frank.Li@nxp.com>
+ <ZKemOm9OfQK8NkpL@matsya>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZKemOm9OfQK8NkpL@matsya>
+X-ClientProxiedBy: BY3PR05CA0051.namprd05.prod.outlook.com
+ (2603:10b6:a03:39b::26) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
 MIME-Version: 1.0
-X-OriginatorOrg: epam.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|DB9PR04MB8106:EE_
+X-MS-Office365-Filtering-Correlation-Id: b6ab1b6b-7e3e-423d-9b36-08db7f0632ef
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HYnXbw5kBqWJaAls1h3KsFJcj3GN5QPfXM+qHU/YIY/So38w4gjHxpVJmyW9OuLymkQkKXFq5V7Np1UT0eyku2vEMMCV2Htvp1qKPuFzA0SScw2hMWyA/ACEr71GUg+Me/KijtfLyhWWv+Bl9Gd6AXSWGK1LBWY07lXQop+F/15xfqrsoNgFI/z6souNNo4NpwI5v+mu0l64rNnvr/NldmgBh3F0feLXNLlpM7wqEU1OTWnHVqSwl9LthHhZ+2ikLiVpSgt5Kbw5+gNkBI862XUKAh3EUdWdoDPvwwEIP6WUwM7f3VVjGFofcQ9SgnUnIQ0w3opJOc1tgJX7iw35NG2I0n3WAS+3rTdlc7cF9vZjCGbRnl543OItZlHLK7wEX5x99JnaOf88/BiFzjaxAXjPkm7jVe1u5BTc/H+hydLsVnchV9yJUNh2FIOPOIkUlVLdhmlRffng0h6IBHPvdW7UP2laIXrbgnIeTnMOftPiC4brtizzPcx9Z5aNpKNxakh077pzE4I3zREeQPHft+7JjNL83pn0Ky7GB8uF4B8EBoZMkDItiwoq7fOISuoy7BjWzqQGC05mqD+JpCEHKnTSVjGw5YB8hVhxsZE1ogaMMlshpjqQxt3vjxoO1H9n
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(4636009)(396003)(136003)(39860400002)(366004)(376002)(346002)(451199021)(4326008)(6486002)(52116002)(41300700001)(8936002)(6666004)(8676002)(66556008)(38350700002)(38100700002)(6916009)(66476007)(478600001)(83380400001)(186003)(6512007)(316002)(53546011)(6506007)(26005)(9686003)(5660300002)(33716001)(86362001)(2906002)(66946007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Y0aStg/7iRj0t/w37ncIfs2dGHKr4cVqmmdJF9J6coSb7HnW0/jHDCllBebs?=
+ =?us-ascii?Q?fLbCLpdnGFzzFIkbNzKWEs+LdYjnRIDQrvVXzQHBWLWHsIQ4rAGYW/NeEj8u?=
+ =?us-ascii?Q?EvdjgZM2HZ371TTjp/p9AWHVYf6/Qvp7TsP1ipw2wcvQR3EsS/rsZipZWVwj?=
+ =?us-ascii?Q?Q5YcO1gBpSjmhOJg/oN7rmLgmrRDfiD1dvyTe+O2RmKyXxFoFmKdPadVnv/u?=
+ =?us-ascii?Q?QU9nwB4EScxYJrKUNBxhJ8afSZ+l6rZOyxQOjE6Zn2rTw/X4pe7a+26WByBv?=
+ =?us-ascii?Q?F1BCqBOa6dm5z/22AScu9gvek/a+Gqm8zjfRKqHPeMnudwPnecKk7UfRPf7D?=
+ =?us-ascii?Q?2tm8QmsRjo+/ieY5shqdCwkwbodDse8n+7BfI9SXNfLLEYLEyWd+NhT7cEmR?=
+ =?us-ascii?Q?bAgzFYw1zyMZ1OU5ufT8LHI0T15xrgZa2RrtJLOoMwCEBNx9KM8E3LVS0PVx?=
+ =?us-ascii?Q?4+nYtv59ax5PUUyV5C+HT/WosXhAOWei3JLYD+5dRX9YtNP9fKp8PdIW2fVh?=
+ =?us-ascii?Q?hij2DMFkK6rhetM9m7xmdAnAGt3ex6uoCOM74djQpfqDWMSQ8hEBAKc9IU6R?=
+ =?us-ascii?Q?/EbdGcsQh0K5ZXI5MlOxJFPk+IJhrvfpa4Y25R/OgZPtFkrieRksLekMf9wT?=
+ =?us-ascii?Q?BR21WLacPIXfB5JWS1HV391Kg3ipm0tGUu0hhkNRnd25SGqV+0hw29NQURhP?=
+ =?us-ascii?Q?UiL+2Yi79+IPxndlMV8hBUPr1DxJtIxCxtkJMLjGAmlLgzlpzwRhoIjzuudv?=
+ =?us-ascii?Q?S2CWSs6e9IBABnsihdtSN56wBOGoFkolFhU3/LpdZ428234bzHN2kg2oT9qF?=
+ =?us-ascii?Q?uMLaMfvzZ6Oud8FH92zTRVp4J3pJB6Rx4ZULfzY0wSO/08qZa3ZAJ/yCAeNb?=
+ =?us-ascii?Q?9XDln5TdiljeqE8V3l54Arlmc8XzQYc07RC4xM4zmZevPcjTEcAzKUMSnT8k?=
+ =?us-ascii?Q?+XaRRymraaQ8vvTa4UTI/jlYHqFXM4rYIQklo8rcerUfcsgMh3j5PkuNfVDy?=
+ =?us-ascii?Q?QcY6FFKXkH2uAyVBxVcrX5UsQXika/j7Oa8P3Zp0bPbqD5gif3LNu4czbG/e?=
+ =?us-ascii?Q?aE3q0S/KVSu0MvBIXNyY9Nn3f11fORyF5QBCvUtdg51P78zPY6X9b1wItzp2?=
+ =?us-ascii?Q?srocOSK3pdjLp9gzJnOB9yK53SAXvtTWxA7oFwlOigLIe9gypLJw6SsHdc6q?=
+ =?us-ascii?Q?4owmX8C2EuitcFG2YSxvyX5UGOyYsAsfDdIGOxlVpPpPAoCT2SUJrsZsV7Y6?=
+ =?us-ascii?Q?kzeRsyIWMVqYem6VOfEpO4q++uJU0uy37sXJYXkYFfwcOuYBskHazQ0genEH?=
+ =?us-ascii?Q?jyQrDSI1wkfxUUk2NR1AILfmB90wNQYtZb+xMXmn7G6uWM4ztymhG1BM/jt3?=
+ =?us-ascii?Q?lH1oJZzbNVYD1AAbhD8Ign3Gcv5SOkLc5q3RfKjo1Fz1YUolXmZytcI9yT9p?=
+ =?us-ascii?Q?P1GLfRZfe4quiM7WvGnj5lGlO7lVjHevEDH4hh7YA0jlj/JF8Dom151gyOeF?=
+ =?us-ascii?Q?Vjxsf6BJK/1XCsoSgZ9bfN33sh1AKMVho9JdpdBXquk0xSkfCDKGKIck9RaY?=
+ =?us-ascii?Q?0ghSwnhZd2GlYEjy1w0=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6ab1b6b-7e3e-423d-9b36-08db7f0632ef
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR03MB7136.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69ffbdf5-2320-40d1-179a-08db7f049f3f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2023 16:10:03.1269
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2023 16:21:20.6512
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b41b72d0-4e9f-4c26-8a69-f949f367c91d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gcnLG1GWe6yiZfwBReHTsNYiT+H7+QHZODVxgrYQAFuPkKSE26l8dAN2oJ0zyM3p6c40vct8HPiX/lO0uxFuU+NlkJqWfpX5shtn0IvmCl0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR03MB6824
-X-Proofpoint-GUID: DUcJRnC6DagaOdZzqew-X0_SNifoqpYb
-X-Proofpoint-ORIG-GUID: DUcJRnC6DagaOdZzqew-X0_SNifoqpYb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-07_10,2023-07-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- mlxlogscore=999 malwarescore=0 spamscore=0 lowpriorityscore=0 phishscore=0
- clxscore=1011 adultscore=0 bulkscore=0 impostorscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
- definitions=main-2307070150
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Mb2WNmypC2o6bg4QLlER/aZyVO/UKBtv/ePm0mXeEKwzSyahYpbaVZkeqQ/ClcFVuuaOzuP6pmGko4utt1f2TQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8106
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Fri, Jul 07, 2023 at 11:14:26AM +0530, Vinod Koul wrote:
+> On 20-06-23, 16:12, Frank Li wrote:
+> > +		}
+> > +
+> > +		fsl_chan->pd_dev = pd_chan;
+> > +
+> > +		pm_runtime_use_autosuspend(fsl_chan->pd_dev);
+> > +		pm_runtime_set_autosuspend_delay(fsl_chan->pd_dev, 200);
+> > +		pm_runtime_set_active(fsl_chan->pd_dev);
+> > +		//pm_runtime_put_sync_suspend(fsl_chan->pd_dev);
+> 
+> Ouch!
+> 
+> Always remember to run checkpatch on your code before sending!
+> 
 
-Hi Rob,
+./scripts/checkpatch.pl v9-0012-dmaengine-fsl-edma-integrate-v3-support.patch
+total: 0 errors, 0 warnings, 769 lines checked
 
-Rob Herring <robh@kernel.org> writes:
+v9-0012-dmaengine-fsl-edma-integrate-v3-support.patch has no obvious style problems and is ready for submission.
 
-> On Fri, Jul 07, 2023 at 02:07:18PM +0000, Oleksii Moisieiev wrote:
->>=20
->> Gatien Chevallier <gatien.chevallier@foss.st.com> writes:
->>=20
->> > feature-domains is an optional property that allows a peripheral to
->> > refer to one or more feature domain controller(s).
->> >
->> > Description of this property is added to all peripheral binding files =
-of
->> > the peripheral under the STM32 firewall controllers. It allows an accu=
-rate
->> > representation of the hardware, where various peripherals are connecte=
-d
->> > to this firewall bus. The firewall can then check the peripheral acces=
-ses
->> > before allowing it to probe.
->> >
->> > Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
->> > ---
->> >
->> > Disclaimer: Some error with dtbs_check will be observed as I've
->> > considered the property to be generic, as Rob asked
->> >
->> >  Documentation/devicetree/bindings/crypto/st,stm32-hash.yaml  | 4 ++++
->> >  Documentation/devicetree/bindings/dma/st,stm32-dma.yaml      | 4 ++++
->> >  Documentation/devicetree/bindings/dma/st,stm32-dmamux.yaml   | 4 ++++
->> >  Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml      | 4 ++++
->> >  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml  | 4 ++++
->> >  .../devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml      | 4 ++++
->> >  Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml  | 4 ++++
->> >  .../devicetree/bindings/media/cec/st,stm32-cec.yaml          | 4 ++++
->> >  Documentation/devicetree/bindings/media/st,stm32-dcmi.yaml   | 4 ++++
->> >  .../bindings/memory-controllers/st,stm32-fmc2-ebi.yaml       | 4 ++++
->> >  Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml  | 4 ++++
->> >  Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml   | 5 ++++=
-+
->> >  Documentation/devicetree/bindings/mmc/arm,pl18x.yaml         | 4 ++++
->> >  Documentation/devicetree/bindings/net/stm32-dwmac.yaml       | 4 ++++
->> >  Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.yaml | 4 ++++
->> >  .../devicetree/bindings/regulator/st,stm32-vrefbuf.yaml      | 4 ++++
->> >  Documentation/devicetree/bindings/rng/st,stm32-rng.yaml      | 4 ++++
->> >  Documentation/devicetree/bindings/serial/st,stm32-uart.yaml  | 4 ++++
->> >  Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml    | 4 ++++
->> >  Documentation/devicetree/bindings/sound/st,stm32-sai.yaml    | 4 ++++
->> >  .../devicetree/bindings/sound/st,stm32-spdifrx.yaml          | 4 ++++
->> >  Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml     | 4 ++++
->> >  Documentation/devicetree/bindings/spi/st,stm32-spi.yaml      | 4 ++++
->> >  Documentation/devicetree/bindings/usb/dwc2.yaml              | 4 ++++
->> >  24 files changed, 97 insertions(+)
->> >
->> > diff --git a/Documentation/devicetree/bindings/crypto/st,stm32-hash.ya=
-ml b/Documentation/devicetree/bindings/crypto/st,stm32-hash.yaml
->> > index b767ec72a999..daf8dcaef627 100644
->> > --- a/Documentation/devicetree/bindings/crypto/st,stm32-hash.yaml
->> > +++ b/Documentation/devicetree/bindings/crypto/st,stm32-hash.yaml
->> > @@ -50,6 +50,10 @@ properties:
->> >    power-domains:
->> >      maxItems: 1
->> > =20
->> > +  feature-domains:
->> > +    minItems: 1
->> > +    maxItems: 3
->> > +
->>=20
->> I beliewe feature-domains is generic binding. This means that maxItems
->> can be implementation dependend. I would rather drop maxItems so the
->> following format will be possible:
->>=20
->>           feature-domains =3D <&etzpc 1>, <&etzpc 2>, <&some_other_domai=
-n 1 2 3 4>
->>           feature-domain-names =3D "firewall 1", "firewall 2", "other_do=
-main"
->
-> The above already allows this (not -names, but the number of entries).
->>=20
->> Also I beliewe driver will handle feature-domain-names property so it
->> will parse feature-domains only related to the firewall.
->
-> Now I'm curious. What's an example that's not a firewall?
->
-> (Note I'm still not happy with the naming of 'feature' as anything is a=20
-> feature, but that's the least of the issues really.)
->
+anyway, I will fix this.
 
-The alternative usages of feature-domains was originally proposed by me
-here:
-https://lore.kernel.org/lkml/c869d2751125181a55bc8a88c96e3a892b42f37a.16680=
-70216.git.oleksii_moisieiev@epam.com/
+Frank
 
-Also I remember Peng Fan also was interested in those bindings.
-I think the use-case when one node is protected by firewall and also is
-controlled by scmi feature-domain-controller (As was proposed in my
-patch series) may take place.
-
-As for the naming maybe you have some thoughts about better name?
-
-
---=20
-Thanks,
-Oleksii=
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int fsl_edma_probe(struct platform_device *pdev)
+> >  {
+> >  	const struct of_device_id *of_id =
+> > @@ -234,6 +412,7 @@ static int fsl_edma_probe(struct platform_device *pdev)
+> >  	struct fsl_edma_engine *fsl_edma;
+> >  	const struct fsl_edma_drvdata *drvdata = NULL;
+> >  	struct fsl_edma_chan *fsl_chan;
+> > +	u32 chan_mask[2] = {0, 0};
+> >  	struct edma_regs *regs;
+> >  	int len, chans;
+> >  	int ret, i;
+> > @@ -264,8 +443,10 @@ static int fsl_edma_probe(struct platform_device *pdev)
+> >  	if (IS_ERR(fsl_edma->membase))
+> >  		return PTR_ERR(fsl_edma->membase);
+> >  
+> > -	fsl_edma_setup_regs(fsl_edma);
+> > -	regs = &fsl_edma->regs;
+> > +	if (!(drvdata->flags & FSL_EDMA_DRV_SPLIT_REG)) {
+> > +		fsl_edma_setup_regs(fsl_edma);
+> > +		regs = &fsl_edma->regs;
+> > +	}
+> >  
+> >  	if (drvdata->flags & FSL_EDMA_DRV_HAS_DMACLK) {
+> >  		fsl_edma->dmaclk = devm_clk_get_enabled(&pdev->dev, "dma");
+> > @@ -275,9 +456,29 @@ static int fsl_edma_probe(struct platform_device *pdev)
+> >  		}
+> >  	}
+> >  
+> > +	if (drvdata->flags & FSL_EDMA_DRV_HAS_CHCLK) {
+> > +		fsl_edma->chclk = devm_clk_get_enabled(&pdev->dev, "mp");
+> > +		if (IS_ERR(fsl_edma->chclk)) {
+> > +			dev_err(&pdev->dev, "Missing MP block clock.\n");
+> > +			return PTR_ERR(fsl_edma->chclk);
+> > +		}
+> > +	}
+> > +
+> > +	ret = of_property_read_variable_u32_array(np, "dma-channel-mask", chan_mask, 1, 2);
+> > +
+> > +	if (ret > 0) {
+> > +		fsl_edma->chan_masked = chan_mask[1];
+> > +		fsl_edma->chan_masked <<= 32;
+> > +		fsl_edma->chan_masked |= chan_mask[0];
+> > +	}
+> > +
+> >  	for (i = 0; i < fsl_edma->drvdata->dmamuxs; i++) {
+> >  		char clkname[32];
+> >  
+> > +		/* eDMAv3 mux register move to TCD area if ch_mux exist */
+> > +		if (drvdata->flags & FSL_EDMA_DRV_SPLIT_REG)
+> > +			break;
+> > +
+> >  		fsl_edma->muxbase[i] = devm_platform_ioremap_resource(pdev,
+> >  								      1 + i);
+> >  		if (IS_ERR(fsl_edma->muxbase[i])) {
+> > @@ -297,9 +498,18 @@ static int fsl_edma_probe(struct platform_device *pdev)
+> >  
+> >  	fsl_edma->big_endian = of_property_read_bool(np, "big-endian");
+> >  
+> > +	if (drvdata->flags & FSL_EDMA_DRV_HAS_PD) {
+> > +		ret = fsl_edma3_attach_pd(pdev, fsl_edma);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> > +
+> >  	INIT_LIST_HEAD(&fsl_edma->dma_dev.channels);
+> >  	for (i = 0; i < fsl_edma->n_chans; i++) {
+> > -		struct fsl_edma_chan *fsl_chan = &fsl_edma->chans[i];
+> > +		fsl_chan = &fsl_edma->chans[i];
+> > +
+> > +		if (fsl_edma->chan_masked & BIT(i))
+> > +			continue;
+> >  
+> >  		snprintf(fsl_chan->chan_name, sizeof(fsl_chan->chan_name), "%s-CH%02d",
+> >  							   dev_name(&pdev->dev), i);
+> > @@ -310,8 +520,13 @@ static int fsl_edma_probe(struct platform_device *pdev)
+> >  		fsl_chan->idle = true;
+> >  		fsl_chan->dma_dir = DMA_NONE;
+> >  		fsl_chan->vchan.desc_free = fsl_edma_free_desc;
+> > -		fsl_chan->tcd = fsl_edma->membase + EDMA_TCD
+> > -				+ i * sizeof(struct fsl_edma_hw_tcd);
+> > +
+> > +		len = (drvdata->flags & FSL_EDMA_DRV_SPLIT_REG) ?
+> > +				offsetof(struct fsl_edma3_ch_reg, tcd) : 0;
+> > +		fsl_chan->tcd = fsl_edma->membase
+> > +				+ i * drvdata->chreg_space_sz + drvdata->chreg_off + len;
+> > +
+> > +		fsl_chan->pdev = pdev;
+> >  		vchan_init(&fsl_chan->vchan, &fsl_edma->dma_dev);
+> >  
+> >  		edma_write_tcdreg(fsl_chan, 0, csr);
+> > @@ -345,12 +560,25 @@ static int fsl_edma_probe(struct platform_device *pdev)
+> >  
+> >  	fsl_edma->dma_dev.src_addr_widths = FSL_EDMA_BUSWIDTHS;
+> >  	fsl_edma->dma_dev.dst_addr_widths = FSL_EDMA_BUSWIDTHS;
+> > +
+> > +	if (drvdata->flags & FSL_EDMA_DRV_BUS_8BYTE) {
+> > +		fsl_edma->dma_dev.src_addr_widths |= BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
+> > +		fsl_edma->dma_dev.dst_addr_widths |= BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
+> > +	}
+> > +
+> >  	fsl_edma->dma_dev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+> > +	if (drvdata->flags & FSL_EDMA_DRV_DEV_TO_DEV)
+> > +		fsl_edma->dma_dev.directions |= BIT(DMA_DEV_TO_DEV);
+> > +
+> > +	fsl_edma->dma_dev.copy_align = drvdata->flags & FSL_EDMA_DRV_ALIGN_64BYTE ?
+> > +					DMAENGINE_ALIGN_64_BYTES :
+> > +					DMAENGINE_ALIGN_32_BYTES;
+> >  
+> > -	fsl_edma->dma_dev.copy_align = DMAENGINE_ALIGN_32_BYTES;
+> >  	/* Per worst case 'nbytes = 1' take CITER as the max_seg_size */
+> >  	dma_set_max_seg_size(fsl_edma->dma_dev.dev, 0x3fff);
+> >  
+> > +	fsl_edma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
+> > +
+> >  	platform_set_drvdata(pdev, fsl_edma);
+> >  
+> >  	ret = dma_async_device_register(&fsl_edma->dma_dev);
+> > @@ -360,7 +588,9 @@ static int fsl_edma_probe(struct platform_device *pdev)
+> >  		return ret;
+> >  	}
+> >  
+> > -	ret = of_dma_controller_register(np, fsl_edma_xlate, fsl_edma);
+> > +	ret = of_dma_controller_register(np,
+> > +			drvdata->flags & FSL_EDMA_DRV_SPLIT_REG ? fsl_edma3_xlate : fsl_edma_xlate,
+> > +			fsl_edma);
+> >  	if (ret) {
+> >  		dev_err(&pdev->dev,
+> >  			"Can't register Freescale eDMA of_dma. (%d)\n", ret);
+> > @@ -369,7 +599,8 @@ static int fsl_edma_probe(struct platform_device *pdev)
+> >  	}
+> >  
+> >  	/* enable round robin arbitration */
+> > -	edma_writel(fsl_edma, EDMA_CR_ERGA | EDMA_CR_ERCA, regs->cr);
+> > +	if (!(drvdata->flags & FSL_EDMA_DRV_SPLIT_REG))
+> > +		edma_writel(fsl_edma, EDMA_CR_ERGA | EDMA_CR_ERCA, regs->cr);
+> >  
+> >  	return 0;
+> >  }
+> > -- 
+> > 2.34.1
+> 
+> -- 
+> ~Vinod

@@ -2,66 +2,67 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0606B74D793
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Jul 2023 15:31:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B89E74D7DF
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Jul 2023 15:36:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230224AbjGJNbI convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Mon, 10 Jul 2023 09:31:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40950 "EHLO
+        id S232742AbjGJNgt convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Mon, 10 Jul 2023 09:36:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229870AbjGJNbH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 10 Jul 2023 09:31:07 -0400
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75E60FE;
-        Mon, 10 Jul 2023 06:31:06 -0700 (PDT)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-57012b2973eso58153067b3.2;
-        Mon, 10 Jul 2023 06:31:06 -0700 (PDT)
+        with ESMTP id S232708AbjGJNgp (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 10 Jul 2023 09:36:45 -0400
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B040210D;
+        Mon, 10 Jul 2023 06:36:41 -0700 (PDT)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-579dd20b1c8so53838717b3.1;
+        Mon, 10 Jul 2023 06:36:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688995865; x=1691587865;
+        d=1e100.net; s=20221208; t=1688996200; x=1691588200;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8q6Lo61y1jQ/sgP6ZwyTsq6Mh3odLPyFaxqgPmDQa08=;
-        b=Oli8ch3HwPDf4+7vN8K797hcRnX/Vk3vepVZ0xQHUiRJSuG0H5KOJ4CkHy2h2hscK3
-         UCo8e54Vn2OQKz2upVSHwcF9VoPemM8OlwvhsrQ/Iqws6pRRdOUVnCsJluVcudoy6pjs
-         RCSm0t+ItJPcC7Y85plNWInWsOQSlBxnIK6xgYP9HV6Jgq2XQ35v+hA0ucHR+8wf+7zI
-         xXODkSBZBFiAdDywOSJT55ZhiamgZW5SVvXSU/sON0y4SFL7a5uKROuGvddv1sAhbcl1
-         lfSzREPyFAmNHsXesV0O4ZvkqPdD2Ic/PtICT58h1T/EkIgnG49m9kiLgAUdAFiucP5k
-         AO9g==
-X-Gm-Message-State: ABy/qLY0FzYMe7TYABCU+wVj/SQf73KY9/Rn8m+itaHRdLsj4YWOcXhF
-        ZJeXMVFCopeh0yBhQc0XpsUGwG6vfELEQg==
-X-Google-Smtp-Source: APBJJlHvaEbBNdUiX8d+QRJtDtpPoxPg3U51TpaweBCsVvtmHHx/lBUzGqcges7eJJMGXxYF+XgF7Q==
-X-Received: by 2002:a81:4642:0:b0:561:d1b0:3f7e with SMTP id t63-20020a814642000000b00561d1b03f7emr11750631ywa.44.1688995865505;
-        Mon, 10 Jul 2023 06:31:05 -0700 (PDT)
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
-        by smtp.gmail.com with ESMTPSA id t185-20020a0deac2000000b005772e9388cdsm3011166ywe.62.2023.07.10.06.31.05
+        bh=67pjtf+oRi7gdU8hjxfbQGBsCvxHiec9ZrtuJIuCImc=;
+        b=fYgxnkEX+Kl2SGgEjiAH+faw2SEXMSjIcNpzpZattOBKnvrIUbdBlVPkbbwMsw1G1b
+         hsnozsuys7fLs+925k7WQO+fa1QDNLd3ueAuvEThViszGttFX9/xWEPSQAD0mTch7/fD
+         iBW64Q0K4MPIv3Zy/ngkYHhRyseB8pdjvbFmHKcVNzYNTi4NXgjllWnlL0n4T2tXJaGj
+         P+BRgvObEIrbkUaVcVOPg9fhLREi4VsABZy/q3tXhk/sgrpuTvaQfDrYQMZJoXJwk1/7
+         kVCYqBcjSZW5AuQkTSRNXe1jRaw5pkGISFGbOngWmmcWdgP9akrLyiYvKVkIIAQrxZov
+         l4sg==
+X-Gm-Message-State: ABy/qLZCG5JvPgQazAqFt8Jnp3HFGz69atbA4060wyPbMknn88UhjtOK
+        zv6B0EOh/LqRUHv5GFdAUjMJbRONJuAhPg==
+X-Google-Smtp-Source: APBJJlEiN6Y9bQztS8tqTFmJfPwdXRUUl123qxH5wmt/NhqX23H/xSb1/qNbPaj66o0gw7+i7tA0ow==
+X-Received: by 2002:a0d:d1c3:0:b0:56c:fce5:ac2d with SMTP id t186-20020a0dd1c3000000b0056cfce5ac2dmr11706336ywd.39.1688996200240;
+        Mon, 10 Jul 2023 06:36:40 -0700 (PDT)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id z6-20020a818906000000b00576c727498dsm3071645ywf.92.2023.07.10.06.36.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jul 2023 06:31:05 -0700 (PDT)
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-c7a5600d04dso2569237276.3;
-        Mon, 10 Jul 2023 06:31:05 -0700 (PDT)
-X-Received: by 2002:a25:1456:0:b0:c39:9e09:2c71 with SMTP id
- 83-20020a251456000000b00c399e092c71mr8797872ybu.41.1688995865146; Mon, 10 Jul
- 2023 06:31:05 -0700 (PDT)
+        Mon, 10 Jul 2023 06:36:40 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-c5079a9f1c8so5368144276.0;
+        Mon, 10 Jul 2023 06:36:39 -0700 (PDT)
+X-Received: by 2002:a25:414c:0:b0:c68:5213:7537 with SMTP id
+ o73-20020a25414c000000b00c6852137537mr10551556yba.55.1688996199750; Mon, 10
+ Jul 2023 06:36:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230706112150.198941-1-biju.das.jz@bp.renesas.com> <20230706112150.198941-2-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20230706112150.198941-2-biju.das.jz@bp.renesas.com>
+References: <20230706112150.198941-1-biju.das.jz@bp.renesas.com> <20230706112150.198941-3-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20230706112150.198941-3-biju.das.jz@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 10 Jul 2023 15:30:52 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWFZzVSm-6cPyGHQr9dbYpTB-qDg=na=cnQFKDPHqf16g@mail.gmail.com>
-Message-ID: <CAMuHMdWFZzVSm-6cPyGHQr9dbYpTB-qDg=na=cnQFKDPHqf16g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dmaengine: sh: rz-dmac: Improve cleanup order in probe()/remove()
+Date:   Mon, 10 Jul 2023 15:36:25 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVA03t3qEiiO5JDSz0KG2mLHhYp9HdqM+Y1-BV3cXuN9Q@mail.gmail.com>
+Message-ID: <CAMuHMdVA03t3qEiiO5JDSz0KG2mLHhYp9HdqM+Y1-BV3cXuN9Q@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] dmaengine: sh: rz-dmac: Fix destination and source
+ data size setting
 To:     Biju Das <biju.das.jz@bp.renesas.com>
 Cc:     Vinod Koul <vkoul@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
         Hien Huynh <hien.huynh.px@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Pavel Machek <pavel@denx.de>
+        stable@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,18 +71,21 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 On Thu, Jul 6, 2023 at 1:22 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
-> We usually do cleanup in reverse order of init. Currently, in the
-> case of error, this is not followed in rz_dmac_probe(), and similar
-> case for remove().
+> From: Hien Huynh <hien.huynh.px@renesas.com>
 >
-> This patch improves error handling in probe() and cleanup in
-> reverse order of init in the remove().
+> Before setting DDS and SDS values, we need to clear its value first
+> otherwise, we get incorrect results when we change/update the DMA bus
+> width several times due to the 'OR' expression.
 >
-> Reported-by: Pavel Machek <pavel@denx.de>
+> Fixes: 5000d37042a6 ("dmaengine: sh: Add DMAC driver for RZ/G2L SoC")
+> Cc: stable@kernel.org
+> Signed-off-by: Hien Huynh <hien.huynh.px@renesas.com>
 > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 > ---
 > v2->v3:
->  No change.
+>  * Added bitfield.h header file and replaced CHCFG_FILL_{SDS,DDS}
+>    macros with FIELD_PREP.
+>  * Updated commit header 'dma: rz-dmac'->'dmaengine: sh: rz-dmac'.
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 

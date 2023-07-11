@@ -2,131 +2,115 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 76B7E74E40E
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Jul 2023 04:29:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C99E874EE89
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Jul 2023 14:21:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229911AbjGKC3l (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 10 Jul 2023 22:29:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34468 "EHLO
+        id S232196AbjGKMVz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 11 Jul 2023 08:21:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229736AbjGKC3k (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 10 Jul 2023 22:29:40 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E40C91;
-        Mon, 10 Jul 2023 19:29:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689042579; x=1720578579;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=dPL9V5pr/4ZRNU0DEbh4J4CtxUEbZroAQ3X7ZC3he3k=;
-  b=I9HrXm7cKsQDMffG1U5OnNCzVkgriPga7vsW0uC6fceVQnEa1DKrCI0t
-   IsMjY2xnvbXG9shxQ1v8fUj/HeBt0B7CtG4st0kTfDyK8k2mU21aNJdgD
-   jtM/fXUFiUlEowU9+LwxK4puAP+cqQGdcM6HzBrOluQb90yseIRupNNKS
-   jKXodqi0h0O0hfs3Rl723r5slV+cNrfwPDGsUNnff24I7ngFkavvOGCcZ
-   X0jKW1F5rd/DaRk7TlHi87I05rB+7EVtgvJbA30edprXnQs5E76gMnrPR
-   XfmkLmJKYBcuRI4hZLWe3KLu9Yq9Pnhfm8c7emy+swbAYEAumgZGy0tlS
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="344103658"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="344103658"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 19:29:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="1051600620"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="1051600620"
-Received: from chunyeny-mobl1.gar.corp.intel.com (HELO [10.252.187.35]) ([10.252.187.35])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 19:29:32 -0700
-Message-ID: <d6399f56-0528-d923-910c-822611137e2d@linux.intel.com>
-Date:   Tue, 11 Jul 2023 10:29:10 +0800
+        with ESMTP id S232208AbjGKMVQ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Jul 2023 08:21:16 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0435E2713;
+        Tue, 11 Jul 2023 05:20:06 -0700 (PDT)
+Received: from loongson.cn (unknown [112.20.109.108])
+        by gateway (Coremail) with SMTP id _____8AxV_HESK1kK4EDAA--.10297S3;
+        Tue, 11 Jul 2023 20:19:16 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.109.108])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxniPDSK1kBa0oAA--.9337S2;
+        Tue, 11 Jul 2023 20:19:16 +0800 (CST)
+From:   Binbin Zhou <zhoubinbin@loongson.cn>
+To:     Binbin Zhou <zhoubb.aaron@gmail.com>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Huacai Chen <chenhuacai@kernel.org>,
+        loongson-kernel@lists.loongnix.cn, Xuerui Wang <kernel@xen0n.name>,
+        loongarch@lists.linux.dev, Yingkun Meng <mengyingkun@loongson.cn>,
+        Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v3 0/2] New driver for the Loongson LS2X APB DMA Controller
+Date:   Tue, 11 Jul 2023 20:18:59 +0800
+Message-Id: <cover.1689075791.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Cc:     baolu.lu@linux.intel.com, Will Deacon <will@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Zanussi, Tom" <tom.zanussi@intel.com>, rex.zhang@intel.com,
-        xiaochen.shen@intel.com, narayan.ranganathan@intel.com
-Subject: Re: [PATCH v9 0/7] Re-enable IDXD kernel workqueue under DMA API
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux.dev,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        dmaengine@vger.kernel.org, vkoul@kernel.org
-References: <20230621205947.1327094-1-jacob.jun.pan@linux.intel.com>
- <20230710101810.40098ce3@jacob-builder>
-Content-Language: en-US
-From:   Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20230710101810.40098ce3@jacob-builder>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8BxniPDSK1kBa0oAA--.9337S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ur43WFW7JFyDJw18ArWfXrc_yoW8GF4rpa
+        y3ua9akFyjqFW3CrZ3Ga48ur1fZ3WfJ39rWa9xAw1UZ3y7Cryjq3yfKanY9FWUCayIqFWj
+        vFZ5GFyUCFnrZrcCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+        6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+        02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
+        wI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
+        AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+        r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+        IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+        w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+        0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcrWFUUUUU
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 2023/7/11 1:18, Jacob Pan wrote:
-> Hi Baolu, Joerg, and all,
+Hi all:
 
-Hi Jacob,
+This patchset introduces you to the LS2X apbdma controller.
 
-> 
-> Just wondering if there are more comments?
-> 
-> Thanks,
-> 
-> Jacob
-> 
-> On Wed, 21 Jun 2023 13:59:40 -0700, Jacob Pan
-> <jacob.jun.pan@linux.intel.com>  wrote:
-> 
->> Hi Joerg and all,
->>
->> IDXD kernel work queues were disabled due to the flawed use of kernel VA
->> and SVA API.
->> Link:
->> https://lore.kernel.org/linux-iommu/20210511194726.GP1002214@nvidia.com/
->>
->> The solution is to enable it under DMA API where IDXD shared workqueue
->> users can use ENQCMDS to submit work on buffers mapped by DMA API.
->>
->> This patchset adds support for attaching PASID to the device's default
->> domain and the ability to allocate global PASIDs from IOMMU APIs. IDXD
->> driver can then re-enable the kernel work queues and use them under DMA
->> API.
->>
->> This depends on the IOASID removal series. (merged)
->> https://lore.kernel.org/all/ZCaUBJvUMsJyD7EW@8bytes.org/
->>
->>
->> Thanks,
->>
->> Jacob
->>
->> ---
->> Changelog:
->> v9:
->> 	- Fix an IDXD driver issue where user interrupt enable bit got
->> cleared during device enable/disable cycle. Reported and tested by
->> 	  Tony Zhu<tony.zhu@intel.com>
->> 	- Rebased to v6.4-rc7
+The Loongson LS2X APB DMA controller is available on Loongson-2K chips.
+It is a single-channel, configurable DMA controller IP core based on the
+AXI bus, whose main function is to integrate DMA functionality on a chip
+dedicated to carrying data between memory and peripherals in APB bus
+(e.g. nand).
 
-Thanks for fixing this.
+Thanks.
 
-It seems that you missed some review comments for v8. I can help to test
-and merge when all comments are addressed.
+----
+V3:
+patch(1/2)
+  - Add clocks property;
+  - Drop dma-channels property, for we are single-channel dmac.
+patch(2/2)
+  - Add clk support. 
 
-Best regards,
-baolu
+Link to V2:
+https://lore.kernel.org/dmaengine/cover.1686192243.git.zhoubinbin@loongson.cn/
+
+V2:
+patch(1/2)
+  - Minor changes from Conor;
+  - Add Reviewed-by tag.
+patch(2/2)
+  - Fix build errors from lkp@intel.com.
+
+Link to V1:
+https://lore.kernel.org/dmaengine/cover.1685448898.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (2):
+  dt-bindings: dmaengine: Add Loongson LS2X APB DMA controller
+  dmaengine: ls2x-apb: new driver for the Loongson LS2X APB DMA
+    controller
+
+ .../bindings/dma/loongson,ls2x-apbdma.yaml    |  62 ++
+ MAINTAINERS                                   |   7 +
+ drivers/dma/Kconfig                           |  14 +
+ drivers/dma/Makefile                          |   1 +
+ drivers/dma/ls2x-apb-dma.c                    | 684 ++++++++++++++++++
+ 5 files changed, 768 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/loongson,ls2x-apbdma.yaml
+ create mode 100644 drivers/dma/ls2x-apb-dma.c
+
+-- 
+2.39.3
+

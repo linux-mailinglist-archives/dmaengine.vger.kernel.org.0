@@ -2,52 +2,50 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFF6174F5E4
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Jul 2023 18:45:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08E9574F5EE
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Jul 2023 18:45:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231882AbjGKQpF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 11 Jul 2023 12:45:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43422 "EHLO
+        id S233269AbjGKQpR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 11 Jul 2023 12:45:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233386AbjGKQoe (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Jul 2023 12:44:34 -0400
+        with ESMTP id S233210AbjGKQo6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Jul 2023 12:44:58 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F23EB2689;
-        Tue, 11 Jul 2023 09:44:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 270D92706;
+        Tue, 11 Jul 2023 09:44:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C459D61575;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 095B061582;
+        Tue, 11 Jul 2023 16:44:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF95DC433C7;
         Tue, 11 Jul 2023 16:44:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B86B4C433CB;
-        Tue, 11 Jul 2023 16:44:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689093849;
-        bh=G1DK5ii1NUQUnYeNG5eFlZHFIReCO/TJbMdGrps8Hws=;
-        h=From:To:In-Reply-To:References:Subject:Date:From;
-        b=T3sfQcWHd95jmg4/DJhdp1ZirvRO0inDATn2LnjpFim7d/YeferpcrjCP1rf9N9jl
-         Y+R7+MTj4x7VFfn2b0JHaKpV2Sy4EEljt9GSJZV3w2LNouTNNTe2xG7BmzLR6zovk5
-         yHCxhv8IoWdzoZxCddk4DowxwCZLj0NUftIEHklYWgZiUFMAp0htEQ58b0UXFy9isg
-         6Thk+EhHVLvCVVLQ+gshT1yuQN9PhXru8TYMVoPjze/GuQuiPx253vqk3WMQ1KN16G
-         mddnXa3NGu8l65UL8dGyi3pMT5tLXKzJNsv1pXcG/SqMyhXcn6XS8o5QMtOl+0Eo2A
-         giUspka+VN/Ww==
+        s=k20201202; t=1689093852;
+        bh=M25TVuQW3nc5OBxJ1n81TAeulJBKRe5upKcf+dcdqfE=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=e1SXmZ8fiV2JfgyljoRStvsFgPDCa4Ya6Iz5RNppPUYPfGJYoeh+cj7vVD6pmlanU
+         41YtOYRQ3Txzm6ZJFd2cLfzPWrFEyb166UlubpAn1PhcZ9sIkG8BhEjCN8qq01f0U6
+         +jhMrjRsDyZ4zWMZUACKbchEpAf9UjmLddau4gZVpZ79Rfy7ulE2WmUQHbvw0fUCHX
+         Tok29S79mfckTeEXa44DpkgONcikcHxSK0VRni2tfcZKeAuQAENKTzC3Tti81KuwFi
+         jGQxxdCX15qZHGkxL+l4ubUStu6BBANC3NOGekEUHlXowToyvucYnr274pcKjdjnHG
+         05R6XYD6O84TQ==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230626145645.646136-1-krzysztof.kozlowski@linaro.org>
-References: <20230626145645.646136-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH] dt-bindings: dma: qcom,bam: require one of control
- methods
-Message-Id: <168909384531.208679.1905953213881782947.b4-ty@kernel.org>
-Date:   Tue, 11 Jul 2023 22:14:05 +0530
+To:     Sean Wang <sean.wang@mediatek.com>,
+        Johan Hovold <johan+linaro@kernel.org>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20230622075150.885-1-johan+linaro@kernel.org>
+References: <20230622075150.885-1-johan+linaro@kernel.org>
+Subject: Re: [PATCH] dmaengine: mediatek: drop bogus
+ pm_runtime_set_active()
+Message-Id: <168909384943.208679.9917048623209270134.b4-ty@kernel.org>
+Date:   Tue, 11 Jul 2023 22:14:09 +0530
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -63,20 +61,20 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On Mon, 26 Jun 2023 16:56:45 +0200, Krzysztof Kozlowski wrote:
-> The BAM DMA resources can be controlled remotely (e.g. by trusted
-> environment; needs qcom,powered-remotely or qcom,controlled-remotely
-> properties) or locally.  In the latter case we need to provide its
-> clock.
+On Thu, 22 Jun 2023 09:51:50 +0200, Johan Hovold wrote:
+> The runtime PM state must be updated while runtime PM is disabled for
+> the change to take effect.
 > 
-> Require one of methods of such control to properly validate DTS.
+> Drop the bogus pm_runtime_set_active() which left the PM state set to
+> suspended (as it should be or the clock would not be enabled when the
+> device is resumed).
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: dma: qcom,bam: require one of control methods
-      commit: 213d8e122f2d9e2c9bdda6b804cf1082919bece3
+[1/1] dmaengine: mediatek: drop bogus pm_runtime_set_active()
+      commit: 1775a0d9f021739a69e4cf12c049801c9cf1a072
 
 Best regards,
 -- 

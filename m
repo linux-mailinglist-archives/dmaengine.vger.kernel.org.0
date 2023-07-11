@@ -2,47 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF9F174F5D6
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Jul 2023 18:44:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E35A74F5DB
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Jul 2023 18:44:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233332AbjGKQoW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 11 Jul 2023 12:44:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43484 "EHLO
+        id S233253AbjGKQoc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 11 Jul 2023 12:44:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233171AbjGKQoD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Jul 2023 12:44:03 -0400
+        with ESMTP id S232243AbjGKQoI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Jul 2023 12:44:08 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 915071BCB;
-        Tue, 11 Jul 2023 09:43:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF261BE8;
+        Tue, 11 Jul 2023 09:43:55 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D798C6157A;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E0FBD61426;
+        Tue, 11 Jul 2023 16:43:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE8F1C433C9;
         Tue, 11 Jul 2023 16:43:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34699C433C7;
-        Tue, 11 Jul 2023 16:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689093831;
-        bh=DOmKeP3YX1u2v5gN3EN9k0YlWpWPqRpZhwPXxoKbZzA=;
+        s=k20201202; t=1689093834;
+        bh=YWbs68UIgZRzU1siQoXBAlJn+q/gZ5KT+J9UVrgDd8k=;
         h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=akdqRptqIKB2/c8rYMQHZ6uBe8XRBDihxJKYsgKfzkz30JYWGVoLqfVA8oOO8zoMe
-         voUK63VFbmjtpLsaJsNUu7ZHyatKiVPrrYgsAHQi2RF/hoybJYNWLtN3fvwAynHY74
-         +1ZrrSN9T0qwoVpWJLFU1CLvWtP9P92IOQlKgOaenLF+cIuDuO2ds9DpT3c4ophSw0
-         y+4/i06J97z5KoJhLiGeNCcKn6hJMisTLyhCrYJMBV2f++xqTNlRzBxGRGfxdi/+SD
-         EQCxtQHbcHLroWZOdH2unFRj73xnru6IsibuaL3D9XHpw2g1K+9DvCntlRYpVf1Pcf
-         lnY9TTL+es54g==
+        b=o7rpzdvW3SfZVmcm+fcan04N/XVrO+5kVWagZNCg8nI3li5UYSHWeWBX+eFqjlPD+
+         U9jWTNObax5fAwbtBfcHjrCBSwmUu3HhqLAzlvbKrtrhlzxptFcBA/AYMPDE+t/L2J
+         M2A7Fp4pEFR+va4a0K+LLmh6kkLDExKzlR+P7NGF0COhOpnPCNjse8TEYsae3f+NK7
+         K5IQL7js96lOsuoPbG7h2qI6rla6wvmlLnSHyGJcbrJoh43ARwNqxr+MrQoqhtYVhS
+         vXyiH0qhIw9ejMuJ+FioLsfgUwylD8OFNOGdrj2H+ZChbIL67an8qGaJxsqym1Kmsd
+         SnVQySdlW9usg==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Hien Huynh <hien.huynh.px@renesas.com>,
-        dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-In-Reply-To: <20230706112150.198941-1-biju.das.jz@bp.renesas.com>
-References: <20230706112150.198941-1-biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH v3 0/2] RZ/G2L DMA fix/improvements
-Message-Id: <168909382883.208679.2382348572508333015.b4-ty@kernel.org>
-Date:   Tue, 11 Jul 2023 22:13:48 +0530
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Yangtao Li <frank.li@vivo.com>
+Cc:     linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20230705081856.13734-1-frank.li@vivo.com>
+References: <20230705081856.13734-1-frank.li@vivo.com>
+Subject: Re: [PATCH 1/5] dmaengine: qcom: gpi: Use
+ devm_platform_get_and_ioremap_resource()
+Message-Id: <168909383153.208679.15343948792914219046.b4-ty@kernel.org>
+Date:   Tue, 11 Jul 2023 22:13:51 +0530
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -58,28 +60,25 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On Thu, 06 Jul 2023 12:21:48 +0100, Biju Das wrote:
-> This patch series aims to fix/improve RZ/DMAC driver.
+On Wed, 05 Jul 2023 16:18:52 +0800, Yangtao Li wrote:
+> Convert platform_get_resource(), devm_ioremap_resource() to a single
+> call to devm_platform_get_and_ioremap_resource(), as this is exactly
+> what this function does.
 > 
-> The improvement patch is related to fix cleanup order in probe/remove().
-> and fixes patch is related to wrong SDS/DDS settings, when we change/update
-> the DMA bus width several times.
 > 
-> v2->v3:
->  * Added bitfield.h header file and replaced CHCFG_FILL_{SDS,DDS}
->    macros with FIELD_PREP.
->  * Updated commit header 'dma: rz-dmac'->'dmaengine: sh: rz-dmac'.
-> v1->v2:
->  * Update patch header and description.
-> 
-> [...]
 
 Applied, thanks!
 
-[1/2] dmaengine: sh: rz-dmac: Improve cleanup order in probe()/remove()
-      commit: d8fb35d80914846d25833a35acb211e59ee36046
-[2/2] dmaengine: sh: rz-dmac: Fix destination and source data size setting
-      commit: 48f745e247ac05dc23b0ffee189c6faba183a9d7
+[1/5] dmaengine: qcom: gpi: Use devm_platform_get_and_ioremap_resource()
+      commit: d9313d9f1fbc14cae5147c5130bea54aa76ad65f
+[2/5] dmaengine: qcom_hidma: Use devm_platform_get_and_ioremap_resource()
+      commit: a189107deb574fd08018bbf2fe5cd86450a54b13
+[3/5] dmaengine: qcom: hidma_mgmt: Use devm_platform_get_and_ioremap_resource()
+      commit: fe6c2622473f3756a09bd6c42cffca6fbdce391c
+[4/5] dmaengine: shdmac: Convert to devm_platform_ioremap_resource()
+      commit: 0976421c5a339b1b1a89cfba4471a6de761130ed
+[5/5] dmaengine: stm32-dma: Use devm_platform_get_and_ioremap_resource()
+      commit: b402a7eeaa35aaa3300a4ba6bd5b381112ae183c
 
 Best regards,
 -- 

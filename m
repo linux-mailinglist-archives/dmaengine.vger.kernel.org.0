@@ -2,181 +2,144 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 00010751442
-	for <lists+dmaengine@lfdr.de>; Thu, 13 Jul 2023 01:14:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29E1C751585
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Jul 2023 02:51:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233230AbjGLXOJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 12 Jul 2023 19:14:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33458 "EHLO
+        id S232547AbjGMAvt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 12 Jul 2023 20:51:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232452AbjGLXNv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Jul 2023 19:13:51 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C682268D;
-        Wed, 12 Jul 2023 16:13:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689203603; x=1720739603;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=n2NaEeDR2OwIALDSSHu9LXHA2bmh356UsgChcigYQ8o=;
-  b=AOYswIhpCEgMinRbrNAsaandKqzGFlNb+wPHpLCBmB1ObjympO4hEIFv
-   xlIZcRJT5KZQ4EKR2W9PYcPmCPw1CdsZ2aXLYlXOWQTgAcqBApD4HU8Vl
-   lY1W7BbPJ2V+EimbWHhcuFm+/WeAI8yTkOUkmVwEU9O2hKDIn0IHUH60Q
-   nJMahOzZ9msOYXR7lL1DIZFf6ts2ktPsrd4LozCjRdc+g6It+y9HPWhUQ
-   xyNQ7czy2dVj4HtDUgKLZkbsvQFKuErc3W+xo0wRDgOBRIfV7LETQ9RMW
-   hwOipOgEVBAipVyL+0vzY9gKSBDmdYe4D9IRqBo0uJvIDlSHIFtAMYnck
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10769"; a="367655433"
-X-IronPort-AV: E=Sophos;i="6.01,200,1684825200"; 
-   d="scan'208";a="367655433"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2023 16:13:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10769"; a="895772875"
-X-IronPort-AV: E=Sophos;i="6.01,200,1684825200"; 
-   d="scan'208";a="895772875"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga005.jf.intel.com with ESMTP; 12 Jul 2023 16:13:10 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Wed, 12 Jul 2023 16:13:10 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Wed, 12 Jul 2023 16:13:09 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Wed, 12 Jul 2023 16:13:09 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.109)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Wed, 12 Jul 2023 16:13:09 -0700
+        with ESMTP id S229471AbjGMAvt (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Jul 2023 20:51:49 -0400
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2056.outbound.protection.outlook.com [40.107.95.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EA111FFD;
+        Wed, 12 Jul 2023 17:51:48 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bpSlqnJuvIouPbBYwKO/FeSwsexF0HXlYN2O/qAm9yM5NBJWM7pRQA5X8rfoPuYFhxMFrlA2R02uN9apKQCX+92Y2vZtWpA54f20PddFIdTIuMFPlgC7LSbglfWW1btXFXI2AsGB1NFnFyvhsd+TQlQgALvSMuLHV3Cc7w7IR29int6RRkJb4AcwUm/EN+cbMwNeOQC30oPmILZPuDx6/DTCoqww/i+/ekAD53V1z3cjlWarQOkAs244N0fNSTffWE3ipKHawLS3SNVdM//Hu1ZCIfF73+czokHxcN0vtp6MFqKISeEZWktTvRGVgToSOBJ6xAfkcqLmqdJd3PCbxA==
+ b=ZBGG3U/QgILx1XdOIet2Tr6evBqywx5bJ3riyCd7CUX2jQrOX6t/5siFs6Qz8keiJv2g3XuahjWXbmey/Iihu27a0oL3kY3cXzg+sfIwII9WPi4BfiyGiyQAWJXEdwfgbZHLS/a3YVaFgs+DnGGjg3mwo5LRPriVH5QFPfrKr/kRqBoteI2ZCwdvlwBSFkWQSzOX4In55W6sGb4etYkRuaBmn8eTdEqthIbZh2thhtAZCfpmgUjXqju7zkrovu/WJdN4eQBpawpd71O1Y0R3twzJhZyZLP2FaJ24dX1CjAUhfopqE4PrZMMiqY1pypNAnb1+z64C88uEua2yetKtyQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=n2NaEeDR2OwIALDSSHu9LXHA2bmh356UsgChcigYQ8o=;
- b=B6pV9dK7PdMzJTC/B5NcNdj/XX4vO6l7kbjSTFmtPjw4H/mCRYTRTxsnLZ9Nw8yzBjuOHA6dSrE3EN7rHz1dPluztJG2HTy02/NwKDRVD5nQs7JqcQp8Qh4lugZp8wLIvx3zGctB4aSvyD9S2aH0MksYOHwFixrNXkJSp5FeVXqc9WFc7KkZ7UKVM/9hfj2YakmpA6UOAHhS5CZpeIpWo8VCqkvLqbxrsmJONHZQ9aOFoMwEOj9KZs8JzgpCjelXD9Q/KtwQHc4+42l4iQctINpBAofFc7TWqzhCOoCCL5hCY0s+t2Z4oLWbHxjgmeaySmQnYxSSgjDOePQinAIxxw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from IA1PR11MB6097.namprd11.prod.outlook.com (2603:10b6:208:3d7::17)
- by SA2PR11MB4955.namprd11.prod.outlook.com (2603:10b6:806:fa::16) with
+ bh=U2hGIyQkVI6OTJZyYDTiWf/3/BMbpR1ld98IqaPCv4E=;
+ b=UmV9EC9KKf6bcuDMbabSTi4t6MtjyY3dmowN610NjKOjRbBIFhlGJLfNj0mDU7Pe2FxlzYWpIcwehhbAf991XPE7dOVHHt9F/IA69E2S+Ikmv2GNJsH1NhvvK+0GiTgFzD2oDAGqiCWyRmqgMoPeJaXAHyS1XN2759a29qgTg19JDXs6U/8t/TpFhMC/05x7Yxucu1oed7CRpowBi46oyBGk+1Yy3E9iMIqEFEoOqxsNOfMJfaS/DuWYz5mJPBiQTUwzLmdkxKh8qljRPuxe7eiX0daU/YjR4C0eM56btOEq957b2yEye59vscxrq/L5qbAIiH2q3bM7/WFxgsRm+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U2hGIyQkVI6OTJZyYDTiWf/3/BMbpR1ld98IqaPCv4E=;
+ b=H6Kxl9gqavaOAMN724zd+4msd5/8/XtnLWrOVTfUJl6DURchc7XcHC+k0GwhezKSNwY6x05wFUKs3PSBJJjvlZ48jJfIJtI2TkDFPCVWNR3zNwA2Mz2nBUeMVrowlfXu0Qx8wBErWFLQsb3V9vvk2v8pPhPC7vy60RnyUQprwig=
+Received: from BN1PR10CA0007.namprd10.prod.outlook.com (2603:10b6:408:e0::12)
+ by SA1PR12MB7198.namprd12.prod.outlook.com (2603:10b6:806:2bf::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.32; Wed, 12 Jul
- 2023 23:13:07 +0000
-Received: from IA1PR11MB6097.namprd11.prod.outlook.com
- ([fe80::724:7e04:8501:228d]) by IA1PR11MB6097.namprd11.prod.outlook.com
- ([fe80::724:7e04:8501:228d%7]) with mapi id 15.20.6588.017; Wed, 12 Jul 2023
- 23:13:07 +0000
-From:   "Yu, Fenghua" <fenghua.yu@intel.com>
-To:     Tom Zanussi <tom.zanussi@linux.intel.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "vkoul@kernel.org" <vkoul@kernel.org>
-CC:     "Jiang, Dave" <dave.jiang@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Feghali, Wajdi K" <wajdi.k.feghali@intel.com>,
-        "Guilford, James" <james.guilford@intel.com>,
-        "Sridhar, Kanchana P" <kanchana.p.sridhar@intel.com>,
-        "Gopal, Vinodh" <vinodh.gopal@intel.com>,
-        "Cabiddu, Giovanni" <giovanni.cabiddu@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: RE: [PATCH v7 02/14] dmaengine: idxd: add external module driver
- support for dsa_bus_type
-Thread-Topic: [PATCH v7 02/14] dmaengine: idxd: add external module driver
- support for dsa_bus_type
-Thread-Index: AQHZs2HAZYzmJNKunEibFlATGiXQ/K+2xeMg
-Date:   Wed, 12 Jul 2023 23:13:07 +0000
-Message-ID: <IA1PR11MB609789B3076DAB33C4A9039A9B36A@IA1PR11MB6097.namprd11.prod.outlook.com>
-References: <20230710190654.299639-1-tom.zanussi@linux.intel.com>
- <20230710190654.299639-3-tom.zanussi@linux.intel.com>
-In-Reply-To: <20230710190654.299639-3-tom.zanussi@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: IA1PR11MB6097:EE_|SA2PR11MB4955:EE_
-x-ms-office365-filtering-correlation-id: 4fed3b69-e278-425d-9b69-08db832d8da7
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fdcoeuds1RM4b2ifu74Ze5wES56WmIIoogQyfaUmCcQdkpPI5vw8UoXrn0U4c9N9XYGuB1xaxTj0wSoqLlI20F3V7o+Ir51lbDIKmZa0WT4rVXHQsLYkTnIt+gCxFJBw6LOhwu+t9kS+GvMJ2QiVUCwmEHz22pjb+RJwzWkO2+94zG93ZbwseQKEIV4nJZT0AZLKOZqU5twZU0lgBXpX3Ae1meXCHOIfA/iOpbQiflwpB0v6wou18b0FIRRNY+nZ2Jn3TENqiTDDTAOU3EXYQWvseqC2qxmc+SpGe7jS+pCOcd6cn/VOcjXLTCcVeT7Av4A7Kgs0xHTS1USQwOIyT5rEv7Etm6/VIoBx2wtCofDYqrbHiA1mtQoE2JbLryqSQo8/Zw4l7fBppO7LeGDJWc1fqLj72W3ZqUbKTqjRXG/3K/rrwc43xepUEAeU7FaXhOh4p3ZUzd+ZZFbMzhaCOKW398Mslkam/9CPv0Qm8nLtAOmXUYLUudFSJqQrntVg97v36CJwwl5E5CYlDe3AD4Y2+gfk52S0DAY0k6WcRnVqG0d0ary9RM5c0xhK8e6SMwJl14fFsOGru6NAD6EZDPMPqpCDo7n1sOXF7Je7p95g+Ksknp99xHMzhbqLDnGq
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB6097.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(136003)(396003)(346002)(39860400002)(366004)(451199021)(71200400001)(7696005)(82960400001)(478600001)(110136005)(122000001)(54906003)(76116006)(558084003)(8676002)(52536014)(5660300002)(8936002)(2906002)(33656002)(86362001)(38070700005)(4326008)(316002)(66476007)(66946007)(55016003)(64756008)(66446008)(66556008)(38100700002)(41300700001)(26005)(9686003)(6506007)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?FeeTnjBFfY0kdyKwe1j3NRd4vHCS5qDVy3tpe18NNnOxOW8CRMMJ7MxNos/S?=
- =?us-ascii?Q?DP/4XOAFS/NCDU1FtQaE180zGFRZefvmrlAKi13W71fuA5uWnsm+YEktUle3?=
- =?us-ascii?Q?5fDNXPlG+yBY9WbUKlWdFCGPKMS0JD8dkqobPvzv8CcfsHeQisN+nP+zYNqq?=
- =?us-ascii?Q?2oZJbtpZECLiD6M2pXFhmIpllNjO1LTfkukPZFk7wfyFm7gM3+uyGsT8bn2y?=
- =?us-ascii?Q?0iVKX9TjLKKnV1sduTAVu2m5QSJ+aScD05UUmpia1UYNrFLas3oAo5i/Uja3?=
- =?us-ascii?Q?Npl3IhaEuM6k+m7iOnYXVDBMgwFCjEHzyAeW3bb+S66+QQ2Cr6aO6mhcGDLi?=
- =?us-ascii?Q?+UOLZSAhLM0iUCP01kqSd0xBRQ2jwhzrruHl6YHKMzWtxJfTrUlLJO+qavdC?=
- =?us-ascii?Q?F6GNcvVywUexK5Ew+RBhyF5zkcO3rlSQGH9L5muKv3xTMlx4cCljJQLz2hsH?=
- =?us-ascii?Q?axHfgFKC6+L2ufedWS6TG60r7fwQLRAz9/B/Qe6KE5NxwBtCEUHnLQeorKOg?=
- =?us-ascii?Q?r2brYVpcD0UeQPxLj5gPUNAdwYfZHnDLrRyIGaB0ULjzjHokD2UimdZaOOy/?=
- =?us-ascii?Q?3gymbYP8GcEmgpmMDhjHdmWgCdcmO2+qD4O1gDDtZYH2+KnaUdozJk4ScAQS?=
- =?us-ascii?Q?I+cywVsczuAiqbCNC5qGMics7FkSciyn5v3bnDW9C3u/EK2WRSgLUzw0Bh6f?=
- =?us-ascii?Q?Ud2a1N3AWumBsjwqKIQJDTDsAkRE2psZjXY7V7rd9Vw/zdBnUyFS+hbNcvgn?=
- =?us-ascii?Q?AHKRv2fNUgrAQUEx2bALnvnD7WISxr6DcuxxLLQ6k0IGyCYFrje/cKSKK1Qp?=
- =?us-ascii?Q?LiQHjlAjlcsb+BmCdzpDQUJTkzGKR49Nosekz44HrQ2eWr7xh/nUr/eRu3vb?=
- =?us-ascii?Q?j1UDgrTWGGCXbCPqSQP9Xx9NQpr6L4RBgBnL2qbXtRn2j8iHjB+tEbDm7Qmx?=
- =?us-ascii?Q?GPzW0+QcYfrdWAuxAvlLxOzdq0QDuoUK2EDXNEoz64QHTY3ia2jMT50w+49w?=
- =?us-ascii?Q?dBaWRTBhR0GPvbEZOHE1uIUFdJZTMugPtyRNnRHBHIMqrxun+qv+8KcSfmH9?=
- =?us-ascii?Q?/sqzCU3H4jVuqJKqsE5El4MfCwZvlc6aWLmj5tQs5NqHG6BWif/0FWovTzI8?=
- =?us-ascii?Q?NEMTddtLA7oqA7VsV4DKBFnz8ydGf8WikcxMN+OySTpyyNRb7Ca1k/4RoUmk?=
- =?us-ascii?Q?hxGbaphe2BIQ5UHRoVuI6fRcgPIAYOkNPQP4RuvYA72cO/2gp5f6Y1GUeKnC?=
- =?us-ascii?Q?D3m3/WXIJpRncdC0MeLLGEB2K60TIGQ0j+lM4YeMZpZGtT3Cep/iXEGxZaS2?=
- =?us-ascii?Q?MojtAtzwI8Z/ZqlErTZYRMC2x5dASPC4418bLMKAw024qM944jgSE+MKZ+N6?=
- =?us-ascii?Q?wrEmXOmCzQ5s2ZiQH/nKQ6y3ZsfYprXLQvfg6lb38YTkkiBUUJQ9KZm/L1MP?=
- =?us-ascii?Q?wAxlyJgXod/5BBYtwAwVyJ/KvOEQvjilh4qB/amMeV3PL2h9HSwnqlj1OjwU?=
- =?us-ascii?Q?FF/uHs/5bE33C+Az2bpUYmxPZYb/F87o4y1rxRKpjw5KYc3QVuRtAPdLbpCU?=
- =?us-ascii?Q?hdQggc2sezgKnk0TjV6/EAKoY1tsKwHZsGBiECMu?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.31; Thu, 13 Jul
+ 2023 00:51:44 +0000
+Received: from BN8NAM11FT116.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:e0:cafe::f0) by BN1PR10CA0007.outlook.office365.com
+ (2603:10b6:408:e0::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.20 via Frontend
+ Transport; Thu, 13 Jul 2023 00:51:44 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ BN8NAM11FT116.mail.protection.outlook.com (10.13.176.67) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6588.24 via Frontend Transport; Thu, 13 Jul 2023 00:51:44 +0000
+Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 12 Jul
+ 2023 19:51:43 -0500
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB08.amd.com
+ (10.181.40.132) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 12 Jul
+ 2023 17:51:43 -0700
+Received: from [172.19.74.144] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.23 via Frontend
+ Transport; Wed, 12 Jul 2023 19:51:42 -0500
+Message-ID: <c64f5cb7-4750-512d-f105-dff6ec03de12@amd.com>
+Date:   Wed, 12 Jul 2023 17:51:42 -0700
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB6097.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4fed3b69-e278-425d-9b69-08db832d8da7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jul 2023 23:13:07.5811
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [RESEND PATCH V2 QDMA 1/1] dmaengine: amd: qdma: Add AMD QDMA
+ driver
+Content-Language: en-US
+To:     Randy Dunlap <rdunlap@infradead.org>, <vkoul@kernel.org>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Nishad Saraf <nishads@amd.com>, <max.zhen@amd.com>,
+        <sonal.santan@amd.com>
+References: <1689179104-58089-1-git-send-email-lizhi.hou@amd.com>
+ <1689179104-58089-2-git-send-email-lizhi.hou@amd.com>
+ <5955d0ec-cd3a-5ad3-2c28-4ae819d1366d@infradead.org>
+From:   Lizhi Hou <lizhi.hou@amd.com>
+In-Reply-To: <5955d0ec-cd3a-5ad3-2c28-4ae819d1366d@infradead.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT116:EE_|SA1PR12MB7198:EE_
+X-MS-Office365-Filtering-Correlation-Id: 02efce64-82b8-45a8-a0c6-08db833b5427
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 18cywMvPZJa4N4BPnHckThA1Mk6K3vk4+Dd3c6n21YSuUXoVqm6fPw2H4ic0lTfE5KF83T80p7OtqiNEo1MkB+057WkNaL/pgbyDykRfK509MtgW9Tks4Q+7KN4NTF2C6GXFRxkkO8+38pYzwdFwxM8ZJJWQWhVwtI95QeJaWHanbVAUhAn08GZ4TyEsHD1CFhnnXgtbWrkxLALz4Y8Ap4wrsVTW+c2lZDbBhxZbiy5Ut0/oOAhktDwjuOylP5LAqSgi3gPMv1JuTF2eBexvbYbqbiyqobKpwY4JghnCBAjjeIo0J1DU/znI2jwR87Zcy5ism5Yi2sq9gMf6xjuyVlYJPJ9A+S7H1CUgToLZ4x1oIMiijm3kYe0qcijciq9JkrmBnvzM/X4jQEFPTwrYyIaXJ7NM2t2pShhKotxGLo2XpxAtkGWeZ+za6iKjB50zj10OdIfRy+hy3T8z9l7aA3IxrnAXJiwc5dc69E5XxPDja37gkPYV5QY5oLbq0zcU0GaxARTdSfgPTwksTPTci65EGgwjnCkVHLyF6pY/qMj444Zk8NeP7xAB/0RMoCi4i56rgtgBfA+vg/znHQC+4dmdjSIwJmTl8UdJmL7Ekg9n4VeVT21vSxnnita7vOUYxVl1zEVBt8YGJ4c3EwX5dUJFJkhuJ9pprvSXkrpKEfZStgxPu4soujJ5THrYjA8uwhSSTDXEQnBTNj84D5oLIX1w/nWI88QvRE8Z46xBBYN4UkZMjdNLd+alaJVPJuuBgCiAjMIm+DgWFQmqBc+h7i51EcotqH4S6VLX4z6zKQOsyidbVfSHKj1Qu7fcOrtw
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(136003)(376002)(396003)(346002)(451199021)(46966006)(36840700001)(40470700004)(31686004)(478600001)(54906003)(110136005)(40460700003)(47076005)(36860700001)(2616005)(426003)(36756003)(31696002)(40480700001)(86362001)(4744005)(70206006)(2906002)(82310400005)(70586007)(186003)(26005)(53546011)(336012)(356005)(82740400003)(81166007)(41300700001)(16576012)(44832011)(8676002)(316002)(4326008)(8936002)(5660300002)(36900700001)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2023 00:51:44.0936
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zYR3r+tN2kry+TEWl5h/alKnlXsmVKgFLw9S8ZIHRQ7LkwFrqFDO5q7vZGjr2QmieJNqwClzGX716Yti3vPP1g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4955
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 02efce64-82b8-45a8-a0c6-08db833b5427
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT116.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7198
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-> From: Tom Zanussi <tom.zanussi@linux.intel.com>
-> From: Dave Jiang <dave.jiang@intel.com>
->=20
-> Add support to allow an external driver to be registered to the dsa_bus_t=
-ype and
-> also auto-loaded.
->=20
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
+On 7/12/23 14:19, Randy Dunlap wrote:
+> Hi--
+>
+> On 7/12/23 09:25, Lizhi Hou wrote:
+>> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+>> index 644c188d6a11..89b26e68988a 100644
+>> --- a/drivers/dma/Kconfig
+>> +++ b/drivers/dma/Kconfig
+>> @@ -85,6 +85,19 @@ config AMCC_PPC440SPE_ADMA
+>>   	help
+>>   	  Enable support for the AMCC PPC440SPe RAID engines.
+>>   
+>> +config AMD_QDMA
+>> +	tristate "AMD Queue-based DMA"
+>> +	depends on HAS_IOMEM
+>> +	select DMA_ENGINE
+>> +	select DMA_VIRTUAL_CHANNELS
+>> +	select REGMAP_MMIO
+>> +	help
+>> +	  Enable support for the AMD Queue-based DMA subsystem.The primary
+> Need a space...                                  DMA subsystem. The primary
 
-Thanks.
+Oh, ok. I will fix it.
 
--Fenghua
+
+Thanks,
+
+Lizhi
+
+>
+>> +	  mechanism to transfer data using the QDMA is for the QDMA engine to
+>> +	  operate on instructions (descriptors) provided by the host operating
+>> +	  system. Using the descriptors, the QDMA can move data in both the Host
+>> +	  to Card (H2C) direction, or the Card to Host (C2H) direction.

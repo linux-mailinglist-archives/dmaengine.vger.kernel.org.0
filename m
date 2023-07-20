@@ -2,164 +2,192 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D83EA75AD46
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Jul 2023 13:45:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FC2375AFD5
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Jul 2023 15:29:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229689AbjGTLpC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 20 Jul 2023 07:45:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43740 "EHLO
+        id S231974AbjGTN3P (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 20 Jul 2023 09:29:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229528AbjGTLpB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 Jul 2023 07:45:01 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F7DFEC;
-        Thu, 20 Jul 2023 04:45:00 -0700 (PDT)
-Received: from kwepemi500020.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4R69n13dLCzVjmH;
-        Thu, 20 Jul 2023 19:43:33 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- kwepemi500020.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Thu, 20 Jul 2023 19:44:58 +0800
-From:   Jie Hai <haijie1@huawei.com>
-To:     <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] dmaengine: virt-dma : fix vchan error on multi-thread
-Date:   Thu, 20 Jul 2023 19:42:12 +0800
-Message-ID: <20230720114212.51224-1-haijie1@huawei.com>
-X-Mailer: git-send-email 2.33.0
+        with ESMTP id S229517AbjGTN3B (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 Jul 2023 09:29:01 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CC502D77;
+        Thu, 20 Jul 2023 06:28:36 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1b852785a65so6073965ad.0;
+        Thu, 20 Jul 2023 06:28:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689859715; x=1690464515;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=3o5zfhOrGvbkMhIZNHbLcgV0VOFO8KOUPcq8qPlAWh4=;
+        b=II3kNkpXwPdcCl5YHO4c2SdZlaof4sRkgoc/bpxKmFONK+AnVHwT1l7cn4fep4l2pZ
+         RKQPLK4YtMeQSGR5iqY/qohmxFaLzZ1ClUnoBaAnXkyj8ZtgLGPZrxlSRrbXTRR6JuFE
+         1/XRgM2FIIeAEdO8c6Bnsmo11XN81iFNABpU1uWMfxl2AT70aV2t6lD+Lvsz3z0sVruD
+         Uow4lWraZWjlX9pw2usWm2WakkdaoKw1c6bRllOiAPjWueKo+tDHsJogOPb38guW70UF
+         VU2sVcwD6/G14KhffAcn6pAqokkebSFot2kkwvOG6VTqnh2LdN7nEmxQT8ylWbgSo4Lq
+         gfBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689859715; x=1690464515;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3o5zfhOrGvbkMhIZNHbLcgV0VOFO8KOUPcq8qPlAWh4=;
+        b=TqjV+s1zQkdYN47mIkCCe5FpwDkxLvduj45yNSd8nQHNO10uVHPp22/1+VUUS4j+GJ
+         q5gcshwfruENAO9bhjtVzn4D1smLqXzhBbyXQLxMi+pIYdzCy7WaEX6vhhyKdo4qBFU/
+         Qu75T3Ld1VMW4ma8UuB6+JVd33fjDdA/K7xXqnc4LPTZy/mHIBRZjBRQVKJeJr2spnAX
+         eAnQW0/FHZQvM6m+YPlRgXXgKBWLr9jmLi0FM6iXr2MBb90i7Ps3yjkckLeBVCvaNqxI
+         hCjzMYpAJbdXq1CLRG3cgombPJUcMr8xviCQtUroKCGt4DEWhlVcPwWiOK7KVW9/o1RS
+         8wHA==
+X-Gm-Message-State: ABy/qLaFVp/M30aIwkZq8a7ntKoFRzom3T4uRveoyR5IFgXi/lVfVBq2
+        amuhaoni2DIzQvmb1BQ7Dgk=
+X-Google-Smtp-Source: APBJJlHUPUivfHOgoXJP79qDNd5D4J3nF3SUABKNXv3IzHnbDE0pcAqJjXDoFhMrl2kqZtr0UmSiBg==
+X-Received: by 2002:a17:902:c94c:b0:1b7:ca9c:4f5c with SMTP id i12-20020a170902c94c00b001b7ca9c4f5cmr6694496pla.28.1689859715396;
+        Thu, 20 Jul 2023 06:28:35 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id jc15-20020a17090325cf00b001b5247cac3dsm1346340plb.110.2023.07.20.06.28.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Jul 2023 06:28:34 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <def5b29c-3318-2db1-a7fa-612ed1e81be6@roeck-us.net>
+Date:   Thu, 20 Jul 2023 06:28:31 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.69.192.56]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemi500020.china.huawei.com (7.221.188.8)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v3 12/42] dt-bindings: watchdog: Add Cirrus EP93x
+Content-Language: en-US
+To:     nikita.shubin@maquefel.me,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Lennert Buytenhek <kernel@wantstofly.org>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Lukasz Majewski <lukma@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Mark Brown <broonie@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        soc@kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Michael Peters <mpeters@embeddedTS.com>,
+        Kris Bahnsen <kris@embeddedTS.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
+        netdev@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
+        linux-input@vger.kernel.org, alsa-devel@alsa-project.org
+References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
+ <20230605-ep93xx-v3-12-3d63a5f1103e@maquefel.me>
+From:   Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <20230605-ep93xx-v3-12-3d63a5f1103e@maquefel.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-List desc_allocated was introduced for the case of a transfer
-submitted multiple times. But elegating descriptors on the list
-causes other problems.
+On 7/20/23 04:29, Nikita Shubin via B4 Relay wrote:
+> From: Nikita Shubin <nikita.shubin@maquefel.me>
+> 
+> This adds device tree bindings for the Cirrus Logic EP93xx
+> watchdog block used in these SoCs.
+> 
+> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+> ---
+>   .../bindings/watchdog/cirrus,ep9301-wdt.yaml       | 46 ++++++++++++++++++++++
+>   1 file changed, 46 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/cirrus,ep9301-wdt.yaml b/Documentation/devicetree/bindings/watchdog/cirrus,ep9301-wdt.yaml
+> new file mode 100644
+> index 000000000000..d54595174a12
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/cirrus,ep9301-wdt.yaml
+> @@ -0,0 +1,46 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/watchdog/cirrus,ep9301-wdt.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Cirrus Logic EP93xx Watchdog Timer
+> +
+> +maintainers:
+> +  - Nikita Shubin <nikita.shubin@maquefel.me>
+> +  - Alexander Sverdlin <alexander.sverdlin@gmail.com>
+> +
+> +description:
+> +  Cirrus Logic EP93xx SoC family has it's own watchdog implementation
+> +
 
-For example, in the multi-thread scenario, which tasks are
-continuously created and submitted by each thread. If one of
-the threads calls dmaengine_terminate_all, for dirvers using
-vchan_get_all_descriptors, all descriptors will be freed. If
-there's another thread submitting a transfer A by
-vchan_tx_submit, the following results may be generated:
-1. desc A is freeing -> visit wrong address of node prep/next.
-2. desc A is freed -> visit invalid address of A.
+Odd description. Isn't that true for pretty much every devicetree
+bindings file, and pretty much every hardware driver ?
 
-In the above case, calltrace is generated and the system is
-suspended. This can be tested by dmatest.
-
-This patch removes desc_allocated from vchan_get_all_descriptors,
-and add new function 'vchan_get_all_allocated_descs' to get all
-descriptors ever allocated.
-
-And apply vchan_get_all_allocated_descs to free chan resource and
-vchan_get_all_descriptors to terminate all transfers, respectively.
-This avoids freeing up descriptors in use by other threads.
-
-Signed-off-by: Jie Hai <haijie1@huawei.com>
----
- drivers/dma/fsl-edma-common.c |  2 +-
- drivers/dma/fsl-qdma.c        |  2 +-
- drivers/dma/sf-pdma/sf-pdma.c |  2 +-
- drivers/dma/virt-dma.h        | 20 ++++++++++++++++++--
- 4 files changed, 21 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index a06a1575a2a5..c6d2e54ab85d 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -674,7 +674,7 @@ void fsl_edma_free_chan_resources(struct dma_chan *chan)
- 	if (edma->drvdata->dmamuxs)
- 		fsl_edma_chan_mux(fsl_chan, 0, false);
- 	fsl_chan->edesc = NULL;
--	vchan_get_all_descriptors(&fsl_chan->vchan, &head);
-+	vchan_get_all_allocated_descs(&fsl_chan->vchan, &head);
- 	fsl_edma_unprep_slave_dma(fsl_chan);
- 	spin_unlock_irqrestore(&fsl_chan->vchan.lock, flags);
- 
-diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
-index eddb2688f234..5ffd7ba92058 100644
---- a/drivers/dma/fsl-qdma.c
-+++ b/drivers/dma/fsl-qdma.c
-@@ -311,7 +311,7 @@ static void fsl_qdma_free_chan_resources(struct dma_chan *chan)
- 	LIST_HEAD(head);
- 
- 	spin_lock_irqsave(&fsl_chan->vchan.lock, flags);
--	vchan_get_all_descriptors(&fsl_chan->vchan, &head);
-+	vchan_get_all_allocated_descs(&fsl_chan->vchan, &head);
- 	spin_unlock_irqrestore(&fsl_chan->vchan.lock, flags);
- 
- 	vchan_dma_desc_free_list(&fsl_chan->vchan, &head);
-diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
-index d1c6956af452..f35dc68e1a7c 100644
---- a/drivers/dma/sf-pdma/sf-pdma.c
-+++ b/drivers/dma/sf-pdma/sf-pdma.c
-@@ -144,7 +144,7 @@ static void sf_pdma_free_chan_resources(struct dma_chan *dchan)
- 	sf_pdma_disable_request(chan);
- 	kfree(chan->desc);
- 	chan->desc = NULL;
--	vchan_get_all_descriptors(&chan->vchan, &head);
-+	vchan_get_all_allocated_descs(&chan->vchan, &head);
- 	sf_pdma_disclaim_chan(chan);
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- 	vchan_dma_desc_free_list(&chan->vchan, &head);
-diff --git a/drivers/dma/virt-dma.h b/drivers/dma/virt-dma.h
-index e9f5250fbe4d..65b4f3bdecf7 100644
---- a/drivers/dma/virt-dma.h
-+++ b/drivers/dma/virt-dma.h
-@@ -177,13 +177,29 @@ static inline struct virt_dma_desc *vchan_next_desc(struct virt_dma_chan *vc)
- static inline void vchan_get_all_descriptors(struct virt_dma_chan *vc,
- 	struct list_head *head)
- {
--	list_splice_tail_init(&vc->desc_allocated, head);
- 	list_splice_tail_init(&vc->desc_submitted, head);
- 	list_splice_tail_init(&vc->desc_issued, head);
- 	list_splice_tail_init(&vc->desc_completed, head);
- 	list_splice_tail_init(&vc->desc_terminated, head);
- }
- 
-+/**
-+ * vchan_get_all_allocated_descs - obtain all descriptors
-+ * @vc: virtual channel to get descriptors from
-+ * @head: list of descriptors found
-+ *
-+ * vc.lock must be held by caller
-+ *
-+ * Removes all descriptors from internal lists, and provides a list of all
-+ * descriptors found
-+ */
-+static inline void vchan_get_all_allocated_descs(struct virt_dma_chan *vc,
-+	struct list_head *head)
-+{
-+	list_splice_tail_init(&vc->desc_allocated, head);
-+	vchan_get_all_descriptors(vc, head);
-+}
-+
- static inline void vchan_free_chan_resources(struct virt_dma_chan *vc)
- {
- 	struct virt_dma_desc *vd;
-@@ -191,7 +207,7 @@ static inline void vchan_free_chan_resources(struct virt_dma_chan *vc)
- 	LIST_HEAD(head);
- 
- 	spin_lock_irqsave(&vc->lock, flags);
--	vchan_get_all_descriptors(vc, &head);
-+	vchan_get_all_allocated_descs(vc, &head);
- 	list_for_each_entry(vd, &head, node)
- 		dmaengine_desc_clear_reuse(&vd->tx);
- 	spin_unlock_irqrestore(&vc->lock, flags);
--- 
-2.33.0
+> +allOf:
+> +  - $ref: watchdog.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: cirrus,ep9301-wdt
+> +      - items:
+> +          - enum:
+> +              - cirrus,ep9302-wdt
+> +              - cirrus,ep9307-wdt
+> +              - cirrus,ep9312-wdt
+> +              - cirrus,ep9315-wdt
+> +          - const: cirrus,ep9301-wdt
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    watchdog@80940000 {
+> +        compatible = "cirrus,ep9301-wdt";
+> +        reg = <0x80940000 0x08>;
+> +    };
+> +
+> 
 

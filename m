@@ -2,60 +2,27 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8865B75AA2F
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Jul 2023 10:58:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C26A475AB2B
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Jul 2023 11:44:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229864AbjGTI6j (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 20 Jul 2023 04:58:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38342 "EHLO
+        id S231187AbjGTJoQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 20 Jul 2023 05:44:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231426AbjGTIyY (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 Jul 2023 04:54:24 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B93F926A6;
-        Thu, 20 Jul 2023 01:54:22 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-51bece5d935so724990a12.1;
-        Thu, 20 Jul 2023 01:54:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689843261; x=1692435261;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BGYd0XzLOZIaect1B8DLqJQBB8NGVA7ArI9KPRHwCuA=;
-        b=R6F9AvgnvdC0oDU+DTR4MfnnL48BCbJgyhCk9A0VhVWOhqOQpe41/AATzBaPwXrlbp
-         NiVoQ4an/IEe/zBQWtSt4j+0ECY7RSMDaQhEu0LpfpScWHmLaf5l2o7v0GzABUvd19s5
-         w3jdfWKKI2Z7TETv8eOzBN9Q/hcD451Hvdx3NnYuVWduVN2kzLJ7Mi+gd7kIEYAdNLGx
-         PfpKo5/5UeGO/gSzn2N0keUNKeCsk90RxfmW4xQ3nGSsJBlNdtDiyYfRTsLxuM+guq5h
-         JAEcEamXP44sXSMwQx4SSiQZUZV6ASyXLRxNQClqiEF/jwHGMVw/ZkwvX6yxmHqpohoE
-         Ggkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689843261; x=1692435261;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BGYd0XzLOZIaect1B8DLqJQBB8NGVA7ArI9KPRHwCuA=;
-        b=PGsOh5cyVsFDCJ9F86IunraxxFPJzqbz+HCETfFor46JupUBdghCd7ScvNA+o3/zEV
-         Sf7kqVwIkqRNSIV3C2Jz6Z5A+MV70b/QAZj4c5QRjbpeOqYpknealYye7YdomL3phfcL
-         s6qT8oLYaLRSp20KfPmzFWTlYypE5NNR5L+DaV78cvQbLDH3ftrYR2RDyKXV+pOiKbEc
-         j/CgEhoPZF655Qx4atFhmAkrZEEQ60IBvM411bjLlYobYzGnFTe2CE5gh4Y6y70Wapss
-         elOairquS19hKQ7Sbrsf5ztYxD25MJYBRO2czdZGxzuv+QIIhtKKpD1IyEBR1ShNv/gu
-         7yoQ==
-X-Gm-Message-State: ABy/qLbG6Hihp3ZiszXNb6mySFF6gKkZ+JJL0sHwnuTxn7+WPpuJ4M9f
-        StmDqvT0ccXAQxE1bque6xA=
-X-Google-Smtp-Source: APBJJlFMasg2dNIicMwfx1YyIyQvduddQCgLot96389m6Z9iDA5SQh0KK8JlI0qHyY43u+aGtpP/9g==
-X-Received: by 2002:aa7:c504:0:b0:51e:10d8:e066 with SMTP id o4-20020aa7c504000000b0051e10d8e066mr1651697edq.24.1689843260572;
-        Thu, 20 Jul 2023 01:54:20 -0700 (PDT)
-Received: from giga-mm.home ([2a02:1210:8629:800:82ee:73ff:feb8:99e3])
-        by smtp.gmail.com with ESMTPSA id f20-20020a50ee94000000b00521ce1f04b8sm443021edr.12.2023.07.20.01.54.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jul 2023 01:54:20 -0700 (PDT)
-Message-ID: <e4486050b95ad53ba9e1d6080c4b6de4b646dcdd.camel@gmail.com>
-Subject: Re: [PATCH v3 13/42] watchdog: ep93xx: add DT support for Cirrus
- EP93xx
-From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
-To:     nikita.shubin@maquefel.me,
+        with ESMTP id S230062AbjGTJnz (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 Jul 2023 05:43:55 -0400
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E66A12D68;
+        Thu, 20 Jul 2023 02:40:21 -0700 (PDT)
+Received: from [192.168.1.103] (178.176.74.113) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.986.14; Thu, 20 Jul
+ 2023 12:40:10 +0300
+Subject: Re: [PATCH v3 38/42] ata: pata_ep93xx: remove legacy pinctrl use
+To:     <nikita.shubin@maquefel.me>,
         Hartley Sweeten <hsweeten@visionengravers.com>,
         Lennert Buytenhek <kernel@wantstofly.org>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
         Lukasz Majewski <lukma@denx.de>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -73,8 +40,8 @@ To:     nikita.shubin@maquefel.me,
         Guenter Roeck <linux@roeck-us.net>,
         Sebastian Reichel <sre@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Mark Brown <broonie@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -83,33 +50,74 @@ To:     nikita.shubin@maquefel.me,
         Richard Weinberger <richard@nod.at>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Damien Le Moal <dlemoal@kernel.org>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        soc@kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        <soc@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
         Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>,
         Andy Shevchenko <andy@kernel.org>,
         Michael Peters <mpeters@embeddedTS.com>,
         Kris Bahnsen <kris@embeddedTS.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
-        netdev@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
-        linux-input@vger.kernel.org, alsa-devel@alsa-project.org
-Date:   Thu, 20 Jul 2023 10:54:18 +0200
-In-Reply-To: <20230605-ep93xx-v3-13-3d63a5f1103e@maquefel.me>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+        <linux-ide@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>
 References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
-         <20230605-ep93xx-v3-13-3d63a5f1103e@maquefel.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+ <20230605-ep93xx-v3-38-3d63a5f1103e@maquefel.me>
+From:   Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <6316072a-f055-166d-df27-5e3ceb0e68a1@omp.ru>
+Date:   Thu, 20 Jul 2023 12:40:06 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+In-Reply-To: <20230605-ep93xx-v3-38-3d63a5f1103e@maquefel.me>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [178.176.74.113]
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 5.9.59, Database issued on: 07/20/2023 09:02:28
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 178740 [Jul 20 2023]
+X-KSE-AntiSpam-Info: Version: 5.9.59.0
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 524 524 9753033d6953787301affc41bead8ed49c47b39d
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.74.113 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info: 127.0.0.199:7.1.2;omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;178.176.74.113:7.4.1,7.7.3
+X-KSE-AntiSpam-Info: {iprep_blacklist}
+X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.74.113
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 07/20/2023 09:10:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 7/20/2023 4:32:00 AM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -118,17 +126,20 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Nikita,
+Hello!
 
-On Thu, 2023-07-20 at 14:29 +0300, Nikita Shubin via B4 Relay wrote:
+On 7/20/23 2:29 PM, Nikita Shubin via B4 Relay wrote:
+
 > From: Nikita Shubin <nikita.shubin@maquefel.me>
->=20
-> Add OF ID match table.
->=20
+> 
+> Drop legacy acquire/release since we are using pinctrl for this now.
+> 
 > Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
 
-Tested-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
+   I think I've already given you my:
 
---=20
-Alexander Sverdlin.
+Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
 
+[...]
+
+MBR, Sergey

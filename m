@@ -2,62 +2,37 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C442375C9E6
-	for <lists+dmaengine@lfdr.de>; Fri, 21 Jul 2023 16:25:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4293E75CBBC
+	for <lists+dmaengine@lfdr.de>; Fri, 21 Jul 2023 17:30:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231372AbjGUOZV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 21 Jul 2023 10:25:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45968 "EHLO
+        id S231531AbjGUPam (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 21 Jul 2023 11:30:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230344AbjGUOZT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 21 Jul 2023 10:25:19 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 835763586
-        for <dmaengine@vger.kernel.org>; Fri, 21 Jul 2023 07:25:11 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-3fc0aecf15bso17740365e9.1
-        for <dmaengine@vger.kernel.org>; Fri, 21 Jul 2023 07:25:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1689949510; x=1690554310;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nsB9IpIa7yRoJhopQrOjvBc0s3b3yy++co3a2B1PcYw=;
-        b=qIJ3m7pumTVMjEg+kn7UzsmtHcvDLZMe1tywd8h4kIEFsV1IUMrLWSP7L1Gefi6ja3
-         JBnA+rcRqypgsH7goHOUSHZMKZ550EJ6VKVD5dUqYgKEkPNc0iL/P3ucMWjqHbEFD/T0
-         wpz6/3MqeieB5gRPCUiu4XZk3Zcu+o+NiGcka0anh/l9hHDrOL+VgYR/KE3ZF2zZOnUD
-         MAb1XtMCn/3lpC4gapmNe+wJJXmYQVNJ5+2pOFPrvODAU/4zuO7v13RiM6wLSxsILcjv
-         9HuP4O5p+Mpx4YbyqytkaZCphFp9jaYoEi2g4JOc8CmYsngHzwdRUEDe9eA+ql9xnfQE
-         Ybww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689949510; x=1690554310;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nsB9IpIa7yRoJhopQrOjvBc0s3b3yy++co3a2B1PcYw=;
-        b=V1m/XFAx+FT6UQp789o6wd6GXSpzMpfjc28nGra4GN17VUxbgCiY7UGAAFCiqGARto
-         7iWTkudG1N5bOao4ddSJjTUNPL4xFMAw0gPQgbmoG914zZLqXZRSjQj+G5Gs2szsZjRU
-         gk/21MqXTMaogdPNiDSnnJi091TMD+M55bWRKCrd5IzFgxQzYaQrTbmmOI3RdBUzrJo2
-         JCQ6Ci2IDEBPz9Ah8F/3PfBYRmPWvGOsxO0eyj861A4uQ+/TgWH7Z/MQE+IlzrzWo+SH
-         dlEUpKvbfoR7OdvhWaaQbn3ntz+9gpKSCetEpmnVtl2HcZIoOVBTOYcbNkEr7hcJFvKw
-         Tz1A==
-X-Gm-Message-State: ABy/qLZlceAYqkL9WBz45vsKKxZkiIKLqXo7j5Hv4tszW7e+2a2nxVEG
-        khvcImad6Uz/EabwyQfHf45qHQ==
-X-Google-Smtp-Source: APBJJlHgaQ/Hte4XJbr1gx4ukptPaEvJZwQtCDry0efXozCJTjG5+/5hX3FKNFwXVDpSO/L62wwYsQ==
-X-Received: by 2002:a1c:4b0e:0:b0:3fb:a576:3212 with SMTP id y14-20020a1c4b0e000000b003fba5763212mr1443887wma.39.1689949509998;
-        Fri, 21 Jul 2023 07:25:09 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.104])
-        by smtp.gmail.com with ESMTPSA id q9-20020adff789000000b003142439c7bcsm4349281wrp.80.2023.07.21.07.25.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Jul 2023 07:25:09 -0700 (PDT)
-Message-ID: <4313820e-9ddf-0a34-0cca-e356a4314c61@linaro.org>
-Date:   Fri, 21 Jul 2023 16:25:02 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v3 00/42] ep93xx device tree conversion
-Content-Language: en-US
-To:     nikita.shubin@maquefel.me,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
+        with ESMTP id S229801AbjGUPal (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 21 Jul 2023 11:30:41 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7980C30EA;
+        Fri, 21 Jul 2023 08:30:39 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10778"; a="397941557"
+X-IronPort-AV: E=Sophos;i="6.01,222,1684825200"; 
+   d="scan'208";a="397941557"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2023 08:30:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10778"; a="898741295"
+X-IronPort-AV: E=Sophos;i="6.01,222,1684825200"; 
+   d="scan'208";a="898741295"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP; 21 Jul 2023 08:30:22 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andy@kernel.org>)
+        id 1qMs5C-00AR8R-2V;
+        Fri, 21 Jul 2023 18:30:18 +0300
+Date:   Fri, 21 Jul 2023 18:30:18 +0300
+From:   Andy Shevchenko <andy@kernel.org>
+To:     nikita.shubin@maquefel.me
+Cc:     Hartley Sweeten <hsweeten@visionengravers.com>,
         Lennert Buytenhek <kernel@wantstofly.org>,
         Alexander Sverdlin <alexander.sverdlin@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
@@ -77,8 +52,8 @@ To:     nikita.shubin@maquefel.me,
         Guenter Roeck <linux@roeck-us.net>,
         Sebastian Reichel <sre@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Mark Brown <broonie@kernel.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -93,46 +68,217 @@ To:     nikita.shubin@maquefel.me,
         soc@kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
         Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Michael Peters <mpeters@embeddedTS.com>,
-        Kris Bahnsen <kris@embeddedTS.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Michael Peters <mpeters@embeddedts.com>,
+        Kris Bahnsen <kris@embeddedts.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
         linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
         netdev@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
-        linux-input@vger.kernel.org, alsa-devel@alsa-project.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>
+        linux-input@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH v3 05/42] pinctrl: add a Cirrus ep93xx SoC pin controller
+Message-ID: <ZLqkiqUSgohVLnbo@smile.fi.intel.com>
 References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
+ <20230605-ep93xx-v3-5-3d63a5f1103e@maquefel.me>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230605-ep93xx-v3-5-3d63a5f1103e@maquefel.me>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_SOFTFAIL,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 20/07/2023 13:29, Nikita Shubin via B4 Relay wrote:
-> This series aims to convert ep93xx from platform to full device tree support.
+On Thu, Jul 20, 2023 at 02:29:05PM +0300, Nikita Shubin via B4 Relay wrote:
+> From: Nikita Shubin <nikita.shubin@maquefel.me>
 > 
-> The main goal is to receive ACK's to take it via Arnd's arm-soc branch.
+> This adds a pin control (only multiplexing) driver for ep93xx
+> SoC so we can fully convert ep93xx to device tree.
 > 
+> This driver is capable of muxing ep9301/ep9302/ep9307/ep9312/ep9315
+> variants, this is chosen based on "compatible" in device tree.
 
-This approach makes patchset trickier to review with absolutely huge
-Cc-list and inter-dependencies. I don't think this is correct approach.
-This should be split per subsystem whenever possible.
+...
 
-Expect more grunts and complains from 50-other people you Cc-ed.
+> +config PINCTRL_EP93XX
+> +	bool
+> +	depends on OF && (ARCH_EP93XX || COMPILE_TEST)
 
-Best regards,
-Krzysztof
+The OF seems to be functional dependency and not compile time one.
+Thus
+
+	depends on (OF && ARCH_EP93XX) || COMPILE_TEST
+
+> +	select PINMUX
+> +	select GENERIC_PINCONF
+> +	select MFD_SYSCON
+
+...
+
+> +#define EP93XX_SYSCON_DEVCFG_D1ONG	BIT(30) /* not used */
+> +#define EP93XX_SYSCON_DEVCFG_D0ONG	BIT(29) /* not used */
+> +#define EP93XX_SYSCON_DEVCFG_IONU2	BIT(28) /* not used */
+> +#define EP93XX_SYSCON_DEVCFG_GONK	BIT(27) /* done */
+> +#define EP93XX_SYSCON_DEVCFG_TONG	BIT(26) /* not used */
+> +#define EP93XX_SYSCON_DEVCFG_MONG	BIT(25) /* not used */
+> +#define EP93XX_SYSCON_DEVCFG_A2ONG	BIT(22) /* not used */
+> +#define EP93XX_SYSCON_DEVCFG_A1ONG	BIT(21) /* not used */
+> +#define EP93XX_SYSCON_DEVCFG_HONIDE	BIT(11) /* done */
+> +#define EP93XX_SYSCON_DEVCFG_GONIDE	BIT(10) /* done */
+> +#define EP93XX_SYSCON_DEVCFG_PONG	BIT(9) /* done */
+> +#define EP93XX_SYSCON_DEVCFG_EONIDE	BIT(8) /* done */
+> +#define EP93XX_SYSCON_DEVCFG_I2SONSSP	BIT(7) /* done */
+> +#define EP93XX_SYSCON_DEVCFG_I2SONAC97	BIT(6) /* done */
+> +#define EP93XX_SYSCON_DEVCFG_RASONP3	BIT(4) /* done */
+
+> +#define PADS_MASK		(GENMASK(30, 25) | BIT(22) | BIT(21) | GENMASK(11, 6) | BIT(4))
+
+Seems better to spell each bit as by definition given above.
+
+...
+
+> +/* Ordered by bit index */
+> +static const char * const ep93xx_padgroups[] = {
+> +	NULL, NULL, NULL, NULL,
+> +	"RasOnP3",
+> +	NULL,
+> +	"I2SonAC97",
+> +	"I2SonSSP",
+> +	"EonIDE",
+> +	"PonG",
+> +	"GonIDE",
+> +	"HonIDE",
+> +	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+> +	"A1onG",
+> +	"A2onG",
+> +	NULL, NULL,
+> +	"MonG",
+> +	"TonG",
+> +	"GonK",
+> +	"IonU2",
+> +	"D0onG",
+> +	"D1onG",
+
+Instead of tons of NULLs, use
+
+	[NN] = "...",
+
+which is much less error prone.
+
+> +};
+
+...
+
+> +/** ep9301, ep9302*/
+
+Is it really kernel doc (besides missing space)?
+Please, run
+
+	scripts/kernel-doc -v -Wall -none $YOUR_FILE
+
+for each file you contributed in the entire series and fix all warnings.
+
+...
+
+> +static const char *ep93xx_get_group_name(struct pinctrl_dev *pctldev,
+> +					 unsigned int selector)
+> +{
+> +	struct ep93xx_pmx *pmx = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +	switch (pmx->model) {
+> +	case EP93XX_9301_PINCTRL:
+> +		return ep9301_pin_groups[selector].grp.name;
+> +	case EP93XX_9307_PINCTRL:
+> +		return ep9307_pin_groups[selector].grp.name;
+> +	case EP93XX_9312_PINCTRL:
+> +		return ep9312_pin_groups[selector].grp.name;
+> +	}
+
+> +	return NULL;
+
+Use default case instead.
+
+> +}
+
+...
+
+> +	/* Which bits changed */
+> +	before &= PADS_MASK;
+> +	after &= PADS_MASK;
+> +	expected = before & ~grp->mask;
+> +	expected |= grp->value;
+> +	expected &= PADS_MASK;
+
+Instead of above:
+
+	expected = (before & ~grp->mask) | grp->value;
+
+> +	/* Print changed states */
+> +	tmp = expected ^ after;
+
+	tmp = (expected ^ after) & PADS_MASK;
+
+> +	for_each_set_bit(i, &tmp, PADS_MAXBIT) {
+> +		bool enabled = expected & BIT(i);
+> +
+> +		dev_err(pmx->dev,
+> +			    "pin group %s could not be %s: probably a hardware limitation\n",
+> +			    ep93xx_padgroups[i], str_enabled_disabled(enabled));
+
+Wrong indentation.
+
+> +		dev_err(pmx->dev,
+> +				"DeviceCfg before: %08x, after %08x, expected %08x\n",
+> +				before, after, expected);
+
+Wrong indentation.
+
+I believe this one can go to debug level.
+
+> +	}
+
+...
+
+> +	pmx->model = (int)of_device_get_match_data(dev);
+
+(uintptr_t) is more appropriate here.
+
+...
+
+> +	pmx->pctl = devm_pinctrl_register(dev, &ep93xx_pmx_desc, pmx);
+> +	if (IS_ERR(pmx->pctl)) {
+> +		dev_err(dev, "could not register pinmux driver\n");
+> +		return PTR_ERR(pmx->pctl);
+
+Why not dev_err_probe() as elsewhere?
+
+> +	}
+
+...
+
+> +static int __init ep93xx_pmx_init(void)
+> +{
+> +	return platform_driver_register(&ep93xx_pmx_driver);
+> +}
+> +arch_initcall(ep93xx_pmx_init);
+
++ blank line.
+
+Also add everywhere MODULE_DESCRIPTION() as modpost recently started to
+complain (probably with `make W=1` which you should execute anyway for
+your new code).
+
+> +MODULE_IMPORT_NS(EP93XX_SOC);
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 

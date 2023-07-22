@@ -2,88 +2,87 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4631375DCEA
-	for <lists+dmaengine@lfdr.de>; Sat, 22 Jul 2023 16:31:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 354E675DD54
+	for <lists+dmaengine@lfdr.de>; Sat, 22 Jul 2023 17:58:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229653AbjGVObh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 22 Jul 2023 10:31:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35966 "EHLO
+        id S229533AbjGVP64 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 22 Jul 2023 11:58:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbjGVObh (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 22 Jul 2023 10:31:37 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F671FE1;
-        Sat, 22 Jul 2023 07:31:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=fr2ejxWFvKI7dAiO99Gso+JFxyl8RnMHEndv9Ot3w78=; b=E0d08ih9jQN1qmuqfs/B2uDTMU
-        yx0CsdxnFwOmXsLV95TYJg6iHsSj10dFQcunaIGhdVCOadUk3Ut9jg9a7MkXJnHzv1+mfIdDx7tir
-        /eKX9shjqV65jkZKT0mNMZjOmJLO8ogoHUxG0ynHtesj9CWyLYLlosYByVT86ee9bM07ugY5VwHf9
-        8O/khQqMhDBid3dWbfcfX3OErMH3olU90KGuD9wCwJjk5hTgF/Gwb6xu4ojz2h4pEQcc7CeAa8+Sj
-        g3bX9Vf7Hsw+mFKD6gOPv+ezZxsLkGFGutWbwdknN+lsy5a9wqFMRzrq0U6zrvzaqNLy4lYdsQ2dL
-        1Zta3GBA==;
-Received: from [2601:1c2:980:9ec0::2764]
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qNDdp-00Gr7T-0I;
-        Sat, 22 Jul 2023 14:31:29 +0000
-Message-ID: <8ccab042-e24c-c535-fe32-9a2062ba1bec@infradead.org>
-Date:   Sat, 22 Jul 2023 07:31:27 -0700
+        with ESMTP id S229503AbjGVP6z (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 22 Jul 2023 11:58:55 -0400
+Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C74991FDF
+        for <dmaengine@vger.kernel.org>; Sat, 22 Jul 2023 08:58:50 -0700 (PDT)
+Received: from pop-os.home ([86.243.2.178])
+        by smtp.orange.fr with ESMTPA
+        id NF0FqBMdqoFSdNF0FqaSjc; Sat, 22 Jul 2023 17:58:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+        s=t20230301; t=1690041524;
+        bh=7h7BXIi417HcJ7IVXgwp14lvQ+AKlv7jQenrpvVP09g=;
+        h=From:To:Cc:Subject:Date;
+        b=Inif3SLu+aoCjx+IQwQ8bAKNRAckAT1iVU7BanPLRxUxwWZsLpC7aoyXtMKoH/Vwy
+         cq/2OA/xgdpvLghZeidgSATaYfAj0zWhzd8R+HwoQx62WW2l08Z8W0Z4AHXwDnAA8z
+         7JhBU77Eb3GkIHabjaIdYnFDcfleWLcD9NMuDVz+0V/xaBwi/rAcTAGxHowPwLOU9C
+         K7f4J5QcvB7eDpO4q8OmrY0bIChH9mCrM4VNQyUlY+8Irm/U2QJGFqNr2GhcXU7juR
+         YMLJ2/XVkDMFuaC2omqfBoYEgJQKY9jr037SqSgDijIDi9Ak7ac+2wBfAri8ZHw36e
+         ogdxX4dc4I6PA==
+X-ME-Helo: pop-os.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 22 Jul 2023 17:58:44 +0200
+X-ME-IP: 86.243.2.178
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH] dmaengine: ep93xx: Use struct_size()
+Date:   Sat, 22 Jul 2023 17:58:40 +0200
+Message-Id: <36fa11d95b448b5f3f1677da41fe35b9e2751427.1690041500.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH -next] dmaengine: owl-dma: Modify mismatched function name
-Content-Language: en-US
-To:     Zhang Jianhua <chris.zjh@huawei.com>, vkoul@kernel.org,
-        afaerber@suse.de, mani@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20230722153244.2086949-1-chris.zjh@huawei.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20230722153244.2086949-1-chris.zjh@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        T_SPF_HELO_TEMPERROR autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Use struct_size() instead of hand-writing it, when allocating a structure
+with a flex array.
 
+This is less verbose, more robust and more informative.
 
-On 7/22/23 08:32, Zhang Jianhua wrote:
-> No functional modification involved.
-> 
-> drivers/dma/owl-dma.c:208: warning: expecting prototype for struct owl_dma_pchan. Prototype was for struct owl_dma_vchan instead HDRTEST usr/include/sound/asequencer.h
-> 
-> Fixes: 47e20577c24d ("dmaengine: Add Actions Semi Owl family S900 DMA driver")
-> Signed-off-by: Zhang Jianhua <chris.zjh@huawei.com>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+It will also be helpful if the __counted_by() annotation is added with a
+Coccinelle script such as:
+   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=devel/counted_by&id=adc5b3cb48a049563dc673f348eab7b6beba8a9b
+---
+ drivers/dma/ep93xx_dma.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-Thanks.
-
-> ---
->  drivers/dma/owl-dma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
-> index 95a462a1f511..b6e0ac8314e5 100644
-> --- a/drivers/dma/owl-dma.c
-> +++ b/drivers/dma/owl-dma.c
-> @@ -192,7 +192,7 @@ struct owl_dma_pchan {
->  };
->  
->  /**
-> - * struct owl_dma_pchan - Wrapper for DMA ENGINE channel
-> + * struct owl_dma_vchan - Wrapper for DMA ENGINE channel
->   * @vc: wrapped virtual channel
->   * @pchan: the physical channel utilized by this channel
->   * @txd: active transaction on this channel
-
+diff --git a/drivers/dma/ep93xx_dma.c b/drivers/dma/ep93xx_dma.c
+index 5338a94f1a69..5c4a448a1254 100644
+--- a/drivers/dma/ep93xx_dma.c
++++ b/drivers/dma/ep93xx_dma.c
+@@ -1320,11 +1320,9 @@ static int __init ep93xx_dma_probe(struct platform_device *pdev)
+ 	struct ep93xx_dma_platform_data *pdata = dev_get_platdata(&pdev->dev);
+ 	struct ep93xx_dma_engine *edma;
+ 	struct dma_device *dma_dev;
+-	size_t edma_size;
+ 	int ret, i;
+ 
+-	edma_size = pdata->num_channels * sizeof(struct ep93xx_dma_chan);
+-	edma = kzalloc(sizeof(*edma) + edma_size, GFP_KERNEL);
++	edma = kzalloc(struct_size(edma, channels, pdata->num_channels), GFP_KERNEL);
+ 	if (!edma)
+ 		return -ENOMEM;
+ 
 -- 
-~Randy
+2.34.1
+

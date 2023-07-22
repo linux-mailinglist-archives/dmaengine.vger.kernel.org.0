@@ -2,102 +2,72 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E3A575DDB4
-	for <lists+dmaengine@lfdr.de>; Sat, 22 Jul 2023 19:14:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9985775DE05
+	for <lists+dmaengine@lfdr.de>; Sat, 22 Jul 2023 20:08:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229551AbjGVROd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 22 Jul 2023 13:14:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34072 "EHLO
+        id S229710AbjGVSIR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 22 Jul 2023 14:08:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbjGVROc (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 22 Jul 2023 13:14:32 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D567E67;
-        Sat, 22 Jul 2023 10:14:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690046071; x=1721582071;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=/NqgA0E24iFKqv6TOSZM3Z4tMvI5XUmHE6RDNtykCIo=;
-  b=i6EQxJQ4T2ohQ8ML37NC1saU/Tky9ftlyhPyAS95W8iNQAtZuHHHHFxi
-   MSHXRDRkZvcUM+X4agTVIiXQl2Mw0qozCOm53lda6FXFGYAYQvO3P4pe9
-   5POCcC6b+We4w92lZgcM4Smk3F4cvwbybLt+YsS9CSB8DhmqUBGqQFqFu
-   Ope28M2GFzZ9SyC4b+eDlrdrwR+yjRTi4T5mwIn9PcOAb014vYCLWFtM6
-   rTQ7FTs7dYY9bIlu4Iul8uMS8vBdz7bhuhlmYXUq3QOLxQ+iMvHmlHQm2
-   nZ8z/3qCuQkiljQCkEeV17uB9K+rrnXheMNRyBp8cnwr1GZcxbXeohifh
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10779"; a="346815030"
-X-IronPort-AV: E=Sophos;i="6.01,224,1684825200"; 
-   d="scan'208";a="346815030"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2023 10:14:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10779"; a="702386602"
-X-IronPort-AV: E=Sophos;i="6.01,224,1684825200"; 
-   d="scan'208";a="702386602"
-Received: from maggieya-mobl1.amr.corp.intel.com ([10.212.61.70])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2023 10:14:29 -0700
-Message-ID: <6ba5b58f637e3ec8c4b00e407e18dd426db6086f.camel@linux.intel.com>
-Subject: Re: [PATCH v7 12/14] crypto: iaa - Add support for deflate-iaa
- compression algorithm
-From:   Tom Zanussi <tom.zanussi@linux.intel.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     davem@davemloft.net, fenghua.yu@intel.com, vkoul@kernel.org,
-        dave.jiang@intel.com, tony.luck@intel.com,
-        wajdi.k.feghali@intel.com, james.guilford@intel.com,
-        kanchana.p.sridhar@intel.com, vinodh.gopal@intel.com,
-        giovanni.cabiddu@intel.com, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org
-Date:   Sat, 22 Jul 2023 12:14:28 -0500
-In-Reply-To: <ZLsvdS6NbaetDFe1@gondor.apana.org.au>
-References: <20230710190654.299639-1-tom.zanussi@linux.intel.com>
-         <20230710190654.299639-13-tom.zanussi@linux.intel.com>
-         <ZLsvdS6NbaetDFe1@gondor.apana.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.1-0ubuntu1 
+        with ESMTP id S229752AbjGVSIQ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 22 Jul 2023 14:08:16 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D14652D45
+        for <dmaengine@vger.kernel.org>; Sat, 22 Jul 2023 11:08:10 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-98df3dea907so465785266b.3
+        for <dmaengine@vger.kernel.org>; Sat, 22 Jul 2023 11:08:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690049289; x=1690654089;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XwQ9KTk0AvNg4YEGpLO6Mzd1tQ0NGTk2GH4qBYSzWYc=;
+        b=CJDyVkqHNb3HtbkQ5Lf/+57dSKj94z9wFVHEQ4J81+7UiUAxlu47rNC38ta/OcaYnk
+         2Xdv5xIuDOVyvBhCEMgDr8UAzKrvUJCSBv6cpUrgpea74RGmQ0MnukXuitEodR9yjy2w
+         /dnJq8kgu6iCS1lNGjhG5AqMEbRb2Nc0QRe7KE3YE9Ahunhct3pn8P/WgWe1KEARtCo+
+         y6kwD2eTUMDA9eG2rLFFLwe9SPn/bDHpKcwrZhTpx9c91RteTq4Dio+lbrcBscjwFq3/
+         4gVQdQuBkSb+2Tk0GndEYfPwDyyh1kHsLsvjqaKb5DPRAun/gjgE98IB3er/pJMGE4ii
+         TeGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690049289; x=1690654089;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XwQ9KTk0AvNg4YEGpLO6Mzd1tQ0NGTk2GH4qBYSzWYc=;
+        b=DZwZ3MOMIWH38DOvG0VyHxRPCgQQfM7Acx9a8au6S6kZ6VvhT39gqUvNFSvmj3p39Q
+         IAyHXMT1oRESQ24rAHfXbW1ab37G/4WQUz71SO6tnQuBP0PZJgyBmdzl6xFgOw5KWi1v
+         xoditJ0deZYevXBe6JwHvrRDReZXrbadI1oqt/ST2rO9VkFJEbMlY+lv+m8N2a012D3P
+         FxXYNhNXW308VlYY4zv9XKAAOhip/IP0iZs9j1Y1DGM/fyQpXy0a61s0joLwaJ0kXoSV
+         RoLnqWHiOM8Wa/mlc9zuWWQ/eHuxSfEgnX5fvuDHlNG2r/Evf68hfm+cPscF2bfeXPlT
+         Vlzw==
+X-Gm-Message-State: ABy/qLZ2YRVJQ+vMFbtItYToOzHJRAuvhnsOm6HYPnPvJdRBcamhDsGg
+        3dMRKdKfrIud2JU4L+GKz30kLJ08Z1kvXkg88nQ=
+X-Google-Smtp-Source: APBJJlE7rlGInlok1k+1KeCbD24At6gAE+ANQdGxY3y76tiQFbUBao3muPGl3DlQ5h1nlt56J4YfPhfYld5FacMUAok=
+X-Received: by 2002:a17:907:78d5:b0:98d:e605:2bce with SMTP id
+ kv21-20020a17090778d500b0098de6052bcemr4931479ejc.46.1690049289026; Sat, 22
+ Jul 2023 11:08:09 -0700 (PDT)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a17:907:2cc3:b0:986:545c:2dc8 with HTTP; Sat, 22 Jul 2023
+ 11:08:08 -0700 (PDT)
+Reply-To: mrsvl06@gmail.com
+From:   Veronica Lee <msv.willy00@gmail.com>
+Date:   Sat, 22 Jul 2023 20:08:08 +0200
+Message-ID: <CAL7S737DtLLCzHpLGTQhY5T=uYoMQ+5JmKaZZVw9K6JV6XmY3A@mail.gmail.com>
+Subject: re
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+X-Spam-Status: No, score=4.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sat, 2023-07-22 at 13:23 +1200, Herbert Xu wrote:
-> On Mon, Jul 10, 2023 at 02:06:52PM -0500, Tom Zanussi wrote:
-> >=20
-> > Because the IAA hardware has a 4k history-window limitation, only
-> > buffers <=3D 4k, or that have been compressed using a <=3D 4k history
-> > window, are technically compliant with the deflate spec, which
-> > allows
-> > for a window of up to 32k.=C2=A0 Because of this limitation, the IAA
-> > fixed
-> > mode deflate algorithm is given its own algorithm name, 'deflate-
-> > iaa'.
->=20
-> So compressed results produced by this can always be decompressed
-> by the generic algorithm, right?
->=20
-
-Right.
-
-> If it's only when you decompress that you may encounter failures,
-> then I suggest that we still use the same algorithm name, but fall
-> back at run-time if the result cannot be decompressed by the
-> hardware.=C2=A0 Is it possible to fail gracefully and then retry the
-> decompression in this case?
->=20
-
-Yeah, I think that should be possible. I'll try it out and add it to
-the next version.  Thanks for the suggestion!
-
-Tom
-
-
-> Thanks,
-
+16nXnNeV150g15nXp9eZ16jXmSwg15DXoNeZINek15XXoNeUINeQ15zXmdeaINec157XmdeT16Ig
+16nXkdeo16bXldeg15kg15zXl9ec15XXpyDXkNeZ16rXmiDXkNecINeq15TXodehINec15TXqdeZ
+15Eg15zXpNeo15jXmdedDQo=

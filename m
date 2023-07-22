@@ -2,87 +2,102 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 354E675DD54
-	for <lists+dmaengine@lfdr.de>; Sat, 22 Jul 2023 17:58:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E3A575DDB4
+	for <lists+dmaengine@lfdr.de>; Sat, 22 Jul 2023 19:14:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229533AbjGVP64 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 22 Jul 2023 11:58:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50768 "EHLO
+        id S229551AbjGVROd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 22 Jul 2023 13:14:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbjGVP6z (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 22 Jul 2023 11:58:55 -0400
-Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C74991FDF
-        for <dmaengine@vger.kernel.org>; Sat, 22 Jul 2023 08:58:50 -0700 (PDT)
-Received: from pop-os.home ([86.243.2.178])
-        by smtp.orange.fr with ESMTPA
-        id NF0FqBMdqoFSdNF0FqaSjc; Sat, 22 Jul 2023 17:58:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-        s=t20230301; t=1690041524;
-        bh=7h7BXIi417HcJ7IVXgwp14lvQ+AKlv7jQenrpvVP09g=;
-        h=From:To:Cc:Subject:Date;
-        b=Inif3SLu+aoCjx+IQwQ8bAKNRAckAT1iVU7BanPLRxUxwWZsLpC7aoyXtMKoH/Vwy
-         cq/2OA/xgdpvLghZeidgSATaYfAj0zWhzd8R+HwoQx62WW2l08Z8W0Z4AHXwDnAA8z
-         7JhBU77Eb3GkIHabjaIdYnFDcfleWLcD9NMuDVz+0V/xaBwi/rAcTAGxHowPwLOU9C
-         K7f4J5QcvB7eDpO4q8OmrY0bIChH9mCrM4VNQyUlY+8Irm/U2QJGFqNr2GhcXU7juR
-         YMLJ2/XVkDMFuaC2omqfBoYEgJQKY9jr037SqSgDijIDi9Ak7ac+2wBfAri8ZHw36e
-         ogdxX4dc4I6PA==
-X-ME-Helo: pop-os.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 22 Jul 2023 17:58:44 +0200
-X-ME-IP: 86.243.2.178
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH] dmaengine: ep93xx: Use struct_size()
-Date:   Sat, 22 Jul 2023 17:58:40 +0200
-Message-Id: <36fa11d95b448b5f3f1677da41fe35b9e2751427.1690041500.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S229477AbjGVROc (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 22 Jul 2023 13:14:32 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D567E67;
+        Sat, 22 Jul 2023 10:14:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1690046071; x=1721582071;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=/NqgA0E24iFKqv6TOSZM3Z4tMvI5XUmHE6RDNtykCIo=;
+  b=i6EQxJQ4T2ohQ8ML37NC1saU/Tky9ftlyhPyAS95W8iNQAtZuHHHHFxi
+   MSHXRDRkZvcUM+X4agTVIiXQl2Mw0qozCOm53lda6FXFGYAYQvO3P4pe9
+   5POCcC6b+We4w92lZgcM4Smk3F4cvwbybLt+YsS9CSB8DhmqUBGqQFqFu
+   Ope28M2GFzZ9SyC4b+eDlrdrwR+yjRTi4T5mwIn9PcOAb014vYCLWFtM6
+   rTQ7FTs7dYY9bIlu4Iul8uMS8vBdz7bhuhlmYXUq3QOLxQ+iMvHmlHQm2
+   nZ8z/3qCuQkiljQCkEeV17uB9K+rrnXheMNRyBp8cnwr1GZcxbXeohifh
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10779"; a="346815030"
+X-IronPort-AV: E=Sophos;i="6.01,224,1684825200"; 
+   d="scan'208";a="346815030"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2023 10:14:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10779"; a="702386602"
+X-IronPort-AV: E=Sophos;i="6.01,224,1684825200"; 
+   d="scan'208";a="702386602"
+Received: from maggieya-mobl1.amr.corp.intel.com ([10.212.61.70])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2023 10:14:29 -0700
+Message-ID: <6ba5b58f637e3ec8c4b00e407e18dd426db6086f.camel@linux.intel.com>
+Subject: Re: [PATCH v7 12/14] crypto: iaa - Add support for deflate-iaa
+ compression algorithm
+From:   Tom Zanussi <tom.zanussi@linux.intel.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     davem@davemloft.net, fenghua.yu@intel.com, vkoul@kernel.org,
+        dave.jiang@intel.com, tony.luck@intel.com,
+        wajdi.k.feghali@intel.com, james.guilford@intel.com,
+        kanchana.p.sridhar@intel.com, vinodh.gopal@intel.com,
+        giovanni.cabiddu@intel.com, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org
+Date:   Sat, 22 Jul 2023 12:14:28 -0500
+In-Reply-To: <ZLsvdS6NbaetDFe1@gondor.apana.org.au>
+References: <20230710190654.299639-1-tom.zanussi@linux.intel.com>
+         <20230710190654.299639-13-tom.zanussi@linux.intel.com>
+         <ZLsvdS6NbaetDFe1@gondor.apana.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.1-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        T_SPF_HELO_TEMPERROR autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Use struct_size() instead of hand-writing it, when allocating a structure
-with a flex array.
+On Sat, 2023-07-22 at 13:23 +1200, Herbert Xu wrote:
+> On Mon, Jul 10, 2023 at 02:06:52PM -0500, Tom Zanussi wrote:
+> >=20
+> > Because the IAA hardware has a 4k history-window limitation, only
+> > buffers <=3D 4k, or that have been compressed using a <=3D 4k history
+> > window, are technically compliant with the deflate spec, which
+> > allows
+> > for a window of up to 32k.=C2=A0 Because of this limitation, the IAA
+> > fixed
+> > mode deflate algorithm is given its own algorithm name, 'deflate-
+> > iaa'.
+>=20
+> So compressed results produced by this can always be decompressed
+> by the generic algorithm, right?
+>=20
 
-This is less verbose, more robust and more informative.
+Right.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-It will also be helpful if the __counted_by() annotation is added with a
-Coccinelle script such as:
-   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=devel/counted_by&id=adc5b3cb48a049563dc673f348eab7b6beba8a9b
----
- drivers/dma/ep93xx_dma.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> If it's only when you decompress that you may encounter failures,
+> then I suggest that we still use the same algorithm name, but fall
+> back at run-time if the result cannot be decompressed by the
+> hardware.=C2=A0 Is it possible to fail gracefully and then retry the
+> decompression in this case?
+>=20
 
-diff --git a/drivers/dma/ep93xx_dma.c b/drivers/dma/ep93xx_dma.c
-index 5338a94f1a69..5c4a448a1254 100644
---- a/drivers/dma/ep93xx_dma.c
-+++ b/drivers/dma/ep93xx_dma.c
-@@ -1320,11 +1320,9 @@ static int __init ep93xx_dma_probe(struct platform_device *pdev)
- 	struct ep93xx_dma_platform_data *pdata = dev_get_platdata(&pdev->dev);
- 	struct ep93xx_dma_engine *edma;
- 	struct dma_device *dma_dev;
--	size_t edma_size;
- 	int ret, i;
- 
--	edma_size = pdata->num_channels * sizeof(struct ep93xx_dma_chan);
--	edma = kzalloc(sizeof(*edma) + edma_size, GFP_KERNEL);
-+	edma = kzalloc(struct_size(edma, channels, pdata->num_channels), GFP_KERNEL);
- 	if (!edma)
- 		return -ENOMEM;
- 
--- 
-2.34.1
+Yeah, I think that should be possible. I'll try it out and add it to
+the next version.  Thanks for the suggestion!
+
+Tom
+
+
+> Thanks,
 

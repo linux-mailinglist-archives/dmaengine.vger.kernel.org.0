@@ -2,150 +2,78 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7755375EC31
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Jul 2023 09:09:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7B5A75EBDE
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Jul 2023 08:42:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229663AbjGXHJU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 24 Jul 2023 03:09:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51270 "EHLO
+        id S231127AbjGXGm0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 24 Jul 2023 02:42:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjGXHJT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Jul 2023 03:09:19 -0400
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::221])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B22C6138;
-        Mon, 24 Jul 2023 00:09:14 -0700 (PDT)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6C2E524000E;
-        Mon, 24 Jul 2023 07:09:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1690182552;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0OTdgWQ6Vo/4tl1ZM7En0YdjITPLKGIP2IIxkkPFJRM=;
-        b=iC5ZIY44VFrCSUNoeMIdYmOyqSrlrW7N4tyY+Hq53oXBVph3jCQ5ij8fsDynsYh6NybKfF
-        47iBUwR964ggu52YB13yaU1E18wok2aDQAXdbpXfZnCVzqeybMcvNBEm04M8MJv49vz912
-        60p20TKBhztddQMV6EZbSo0vTLzFb3Ok+FWErn92iDiDFjDyPmqRh1JKdYw5xT3hwpwVlV
-        u4k2GthKUnBFuRNrRP/XoPSerupU1HIaiVySzO/QpWk35FaiLI3dwdIhQ2brWGTyOPPUCM
-        8E3/Ier83smwYkYCv/LsZ20OWFpB5I2g8A5epoX659Pa/Omr3Rckh60nqnZ+5A==
-Date:   Mon, 24 Jul 2023 09:09:02 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Andy Shevchenko <andy@kernel.org>
-Cc:     nikita.shubin@maquefel.me,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Lennert Buytenhek <kernel@wantstofly.org>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Lukasz Majewski <lukma@denx.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Vinod Koul <vkoul@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        soc@kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Michael Peters <mpeters@embeddedts.com>,
-        Kris Bahnsen <kris@embeddedts.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
-        netdev@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
-        linux-input@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH v3 24/42] mtd: nand: add support for ts72xx
-Message-ID: <20230724090902.679ea56d@xps-13>
-In-Reply-To: <ZLqx+Osn3gcHjUph@smile.fi.intel.com>
-References: <20230605-ep93xx-v3-0-3d63a5f1103e@maquefel.me>
-        <20230605-ep93xx-v3-24-3d63a5f1103e@maquefel.me>
-        <ZLqx+Osn3gcHjUph@smile.fi.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+        with ESMTP id S230521AbjGXGmX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Jul 2023 02:42:23 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 062D910FA;
+        Sun, 23 Jul 2023 23:41:47 -0700 (PDT)
+Received: from kwepemi500008.china.huawei.com (unknown [172.30.72.57])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4R8VpZ13ptzHqc2;
+        Mon, 24 Jul 2023 14:37:58 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi500008.china.huawei.com
+ (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 24 Jul
+ 2023 14:40:30 +0800
+From:   Ruan Jinjie <ruanjinjie@huawei.com>
+To:     <linus.walleij@linaro.org>, <vkoul@kernel.org>,
+        <akpm@linux-foundation.org>, <dan.j.williams@intel.com>,
+        <srinidhi.kasagar@stericsson.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <ruanjinjie@huawei.com>
+Subject: [PATCH -next] dmaengine: ste_dma40: Add missing IRQ check in d40_probe
+Date:   Mon, 24 Jul 2023 14:41:08 +0000
+Message-ID: <20230724144108.2582917-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.90.53.73]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemi500008.china.huawei.com (7.221.188.139)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Andy,
+From: ruanjinjie <ruanjinjie@huawei.com>
 
-> > +static int ts72xx_nand_attach_chip(struct nand_chip *chip)
-> > +{
-> > +	switch (chip->ecc.engine_type) {
-> > +	case NAND_ECC_ENGINE_TYPE_SOFT:
-> > +		if (chip->ecc.algo =3D=3D NAND_ECC_ALGO_UNKNOWN)
-> > +			chip->ecc.algo =3D NAND_ECC_ALGO_HAMMING;
-> > +		break;
-> > +	case NAND_ECC_ENGINE_TYPE_ON_HOST:
-> > +		return -EINVAL;
-> > +	default: =20
->=20
-> > +		break; =20
->=20
-> Here it will return 0, is it a problem?
+Check for the return value of platform_get_irq(): if no interrupt
+is specified, it wouldn't make sense to call request_irq().
 
-Seems ok, there are two other situations: on-die ECC engine and no ECC
-engine, both do not require any specific handling on the controller
-side.
+Fixes: 8d318a50b3d7 ("DMAENGINE: Support for ST-Ericssons DMA40 block v3")
+Signed-off-by: Ruan Jinjie <ruanjinjie@huawei.com>
+---
+ drivers/dma/ste_dma40.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
->=20
-> > +	}
-> > +
-> > +	return 0;
-> > +} =20
->=20
-> ...
->=20
-> > +static void ts72xx_nand_remove(struct platform_device *pdev)
-> > +{
-> > +	struct ts72xx_nand_data *data =3D platform_get_drvdata(pdev);
-> > +	struct nand_chip *chip =3D &data->chip;
-> > +	int ret;
-> > +
-> > +	ret =3D mtd_device_unregister(nand_to_mtd(chip)); =20
->=20
-> > +	WARN_ON(ret); =20
->=20
-> Why?!  Is it like this in other MTD drivers?
+diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
+index 825001bde42c..89e82508c133 100644
+--- a/drivers/dma/ste_dma40.c
++++ b/drivers/dma/ste_dma40.c
+@@ -3590,6 +3590,10 @@ static int __init d40_probe(struct platform_device *pdev)
+ 	spin_lock_init(&base->lcla_pool.lock);
+ 
+ 	base->irq = platform_get_irq(pdev, 0);
++	if (base->irq < 0) {
++		ret = base->irq;
++		goto destroy_cache;
++	}
+ 
+ 	ret = request_irq(base->irq, d40_handle_interrupt, 0, D40_NAME, base);
+ 	if (ret) {
+-- 
+2.34.1
 
-Yes, we did not yet change the internal machinery to return void, and
-we don't want people to think getting errors there is normal.
-
-> > +	nand_cleanup(chip);
-> > +} =20
->=20
-
-Thanks,
-Miqu=C3=A8l
